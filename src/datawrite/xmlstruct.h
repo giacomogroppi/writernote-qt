@@ -44,6 +44,9 @@ public:
     void stringa_decode_int(const char *, const char *, QList<int>*);
     void decode_checksum();
 
+    /* fa il decode per quanto riguarda i testi senza html */
+    void textdecode(QList<int> *);
+
     int findstart();
 
     bool decode();

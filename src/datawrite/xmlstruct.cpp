@@ -95,8 +95,17 @@ void xmlstruct::loadfile(const char *nomeFile){
 
     this->start = this->findstart();
 
+    if(listatemp[0] != 0)
+        this->self->currenttitle.testi = this->text.substr(this->start,  listatemp[0]).c_str();
+    else
+        this->self->currenttitle.testi = "";
 
-    stringa_decode("<testinohtml>", "</testinohtml>", &this->self->currenttitle.testinohtml);
+    this->start = listatemp[0];
+
+    this->textdecode(&listatemp);
+
+
+    stringa_decode_int("<testinohtml>", "</testinohtml>", &listatemp);
 
     stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
     int i, lung = temp.length();
@@ -187,6 +196,21 @@ void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *vari
 
 }
 
+void xmlstruct::textdecode(QList<int> *lista){
+    if( this->checksum == 0)
+    {
+        this->self->currenttitle.testinohtml.clear();
+        this->self->currenttitle.posizione_iniz.clear();
+        return;
+    }
+
+    int i;
+    for (i = 0; i < this->checksum; i++){
+        this->self->currenttitle.testinohtml[i] = this->text.substr(this->start, lista->at(i)).c_str();
+        this->start = lista->at(i);
+    }
+
+}
 
 int xmlstruct::findstart(){
     /* -> restituisce il punto in cui la lista parte */

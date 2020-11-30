@@ -145,22 +145,18 @@ void MainWindow::on_actionSave_File_triggered()
             return;
     }
 
+    this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+
     savefile savefile_i(this, ui->listWidgetSX->currentItem());
 
-    bool check1 = savefile_i.savefile_check_indice();
-    bool check2 = true;
-    qDebug() << "\nMainWindow::on_actionSave_File_triggered -> dopo";
-    if(!this->self->indice.titolo.length()){
-#ifdef STAMPA
-        qDebug() << "mainwindow::on_actionSave_File_triggered -> Entra per salvare il copybook";
-#endif
-        check2 = savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle.c_str()));
-    }
-    if(!check1 || !check2)
-    {
-        dialog_critic((QString) "We had a problem while saving the file");
-        return;
-    }
+    bool check = savefile_i.savefile_check_indice();
+
+    if(this->self->currentTitle != "")
+        check = check && savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle.c_str()));
+
+    if(!check)
+        return dialog_critic((QString) "We had a problem while saving the file");;
+
 }
 
 /*APERTURA DI UN FILE*/
@@ -197,8 +193,8 @@ void MainWindow::on_actionOpen_triggered()
 /* Funzione che gestisce il doppio click sull'item a sinistra della lista copybook */
 void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 {
-    if(this->self->play_)
-        return redolist(this);;
+    if(this->player->state() == QMediaPlayer::PlayingState)
+        return redolist(this);
 
     if(this->self->currentTitle != ""){
         savecopybook savevariabile(this, item);
@@ -207,8 +203,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
             return redolist(this);
     }
-    /* a questo punto deve aprire il nuovo copybook */
 
+    /* a questo punto deve aprire il nuovo copybook */
     if(this->self->indice.titolo[this->self->indice.titolo.indexOf(item->text())] != ""){
         xmlstruct file_(this->self->path, this->self);
         file_.loadfile((item->text() + ".xml").toUtf8().constData());
@@ -218,15 +214,15 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     this->self->currentTitle = item->text().toUtf8().constData();
 
-    if(this->self->currenttitle.testi.length())
-        this->ui->textEdit->setHtml(this->self->currenttitle.testi);
+    this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
     aggiornotestiriascolto(this);
 }
 
 /* funzione che gestisce il controllo del riascolto dell'audio */
 void MainWindow::on_textEdit_selectionChanged(){
-    if(!this->self->play_) return;
+    if(this->player->state() != QMediaPlayer::PlayingState)
+            return;
 
     QString text = ui->textEdit->textCursor().selectedText();
     int position = ui->textEdit->textCursor().selectionStart();
@@ -432,7 +428,9 @@ void MainWindow::updateProgress(qint64 duration)
 /* editor di testo -> quando cambia il testo scritto */
 void MainWindow::on_textEdit_textChanged()
 {
-    if(this->m_audioRecorder->RecordingStatus != QMediaRecorder::RecordingStatus)
+    this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+
+    if(this->m_audioRecorder->status() != QMediaRecorder::RecordingStatus)
         return;
 
 #ifdef STAMPA

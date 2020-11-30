@@ -64,10 +64,7 @@ bool savefile::compressfile(const char *namefile, const char *text){
 
 /*codice che gestisce il salvataggio del file*/
 bool savefile::savefile_check_file(int posizione){
-    if(!this->parent->self->currenttitle.testi.length())
-        this->parent->self->currenttitle.testi.append(this->parent->ui->textEdit->toHtml());
-    else
-        this->parent->self->currenttitle.testi = this->parent->ui->textEdit->toHtml();
+    this->parent->self->currenttitle.testi = this->parent->ui->textEdit->toHtml();
 
     int i, lenght;
 
@@ -101,7 +98,6 @@ bool savefile::savefile_check_file(int posizione){
     risolve: il non poter scrivere all'interno del testo tag simili a <testi>
     </testi> <testinohtml> </testinohtml> <posizione_iniz> </posizione_iniz>*/
 
-    lenght = this->parent->self->currenttitle.testi.length();
     inttochar(this->parent->self->currenttitle.testi.length(), stringa);
     indicesalvataggio += indicesalvataggio + "<testi>" + (std::string)stringa + "</testi>";
 
@@ -113,8 +109,7 @@ bool savefile::savefile_check_file(int posizione){
     }
 
     indicesalvataggio  += "<start>";
-
-    indicesalvataggio = indicesalvataggio + this->parent->self->currenttitle.testi.toUtf8().constData();
+    indicesalvataggio += this->parent->self->currenttitle.testi.toUtf8().constData();
 
     lenght = this->parent->self->currenttitle.testinohtml.length();
     for (i = 0; i < lenght; i++)
