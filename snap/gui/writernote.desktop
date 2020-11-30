@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=writernote
+Comment=Take notes smart
+Exec=writernote
+Icon=${SNAP}/meta/gui/icon-writernote.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+#MimeType=application/writernote;
+#Patterns=*.write;
+Categories=Network;Application;Utility;TextEditor;

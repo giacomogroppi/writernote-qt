@@ -1,0 +1,11 @@
+{
+    "version":1.0,
+    "video_checksum": 0,
+    "file": {
+        "video":[],
+        "audio":[],
+        "titolo":[],
+        "compressione":[],
+        "file_testo":[]
+    }
+}

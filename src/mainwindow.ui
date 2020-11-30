@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1027</width>
+    <height>671</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QListWidget" name="listWidgetSX">
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QTextEdit" name="textEdit"/>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QPushButton" name="startriascoltobotton">
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../writernote.qrc">
+                <normaloff>:/image/images/play.png</normaloff>:/image/images/play.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="stopriascolto">
+              <property name="maximumSize">
+               <size>
+                <width>25</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../writernote.qrc">
+                <normaloff>:/image/images/stopRecord_.png</normaloff>:/image/images/stopRecord_.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="audioSlider">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="volumeSlider">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QSpinBox" name="spinBox">
+        <property name="minimum">
+         <number>12</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFontComboBox" name="fontComboBox"/>
+      </item>
+      <item>
+       <widget class="QToolButton" name="boldbotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/bold.png</normaloff>:/image/images/bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="inserttablebotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/table.png</normaloff>:/image/images/table.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="listbotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/bullet.png</normaloff>:/image/images/bullet.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="insertimagebotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/image.png</normaloff>:/image/images/image.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1027</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuWriternote">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew_File"/>
+    <addaction name="actionSave_File"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionPrint"/>
+    <addaction name="startrecording"/>
+    <addaction name="stopplaybotton"/>
+    <addaction name="actionImport_Video"/>
+    <addaction name="actionImport_Video_2"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionUndu"/>
+    <addaction name="actionRedo"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionPaste"/>
+    <addaction name="actionSelect_all"/>
+   </widget>
+   <widget class="QMenu" name="menuAudio_option">
+    <property name="title">
+     <string>Audio option</string>
+    </property>
+    <addaction name="actionListen_current_audio"/>
+    <addaction name="actionCreate_new_copybook"/>
+    <addaction name="actionDelete_audio"/>
+    <addaction name="actionDelete_copybook"/>
+    <addaction name="actionConvert_audio_to_text"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionSource_code"/>
+    <addaction name="actionDocumentation"/>
+   </widget>
+   <addaction name="menuWriternote"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuAudio_option"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainbar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNew_File"/>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave_File"/>
+   <addaction name="actionSave_As"/>
+   <addaction name="actionPrint"/>
+   <addaction name="startrecording"/>
+   <addaction name="stopplaybotton"/>
+   <addaction name="pauserecordingbotton"/>
+   <addaction name="actionImport_Video"/>
+  </widget>
+  <widget class="QToolBar" name="simpleactionbar">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionRedo"/>
+   <addaction name="actionCut"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionPaste"/>
+  </widget>
+  <widget class="QToolBar" name="audiobar">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionListen_current_audio"/>
+   <addaction name="actionDelete_audio"/>
+   <addaction name="actionDelete_copybook"/>
+   <addaction name="actionCreate_new_copybook"/>
+   <addaction name="actionConvert_audio_to_text"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNew_File">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme=":/image/images/newFileBig.png" resource="../writernote.qrc">
+     <normaloff>:/image/images/newFileBig.png</normaloff>:/image/images/newFileBig.png</iconset>
+   </property>
+   <property name="text">
+    <string>New File</string>
+   </property>
+  </action>
+  <action name="actionSave_File">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/disk.png</normaloff>:/image/images/disk.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/disk--pencil.png</normaloff>:/image/images/disk--pencil.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/printer.png</normaloff>:/image/images/printer.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+  </action>
+  <action name="startrecording">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/recoding.png</normaloff>:/image/images/recoding.png</iconset>
+   </property>
+   <property name="text">
+    <string>Record</string>
+   </property>
+  </action>
+  <action name="actionImport_Video">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/importVideo.png</normaloff>:/image/images/importVideo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Import Video</string>
+   </property>
+  </action>
+  <action name="stopplaybotton">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/stopRecord_.png</normaloff>:/image/images/stopRecord_.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop Record</string>
+   </property>
+  </action>
+  <action name="actionImport_Video_2">
+   <property name="text">
+    <string>Import Video</string>
+   </property>
+  </action>
+  <action name="actionUndu">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/arrow-curve-180-left.png</normaloff>../images/arrow-curve-180-left.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/arrow-curve.png</normaloff>:/image/images/arrow-curve.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/document-copy.png</normaloff>:/image/images/document-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/scissors.png</normaloff>:/image/images/scissors.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cut</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionSelect_all">
+   <property name="icon">
+    <iconset>
+     <normaloff>../images/selection-input.png</normaloff>../images/selection-input.png</iconset>
+   </property>
+   <property name="text">
+    <string>Select all</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/clipboard-paste-document-text.png</normaloff>:/image/images/clipboard-paste-document-text.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste</string>
+   </property>
+  </action>
+  <action name="actionSource_code">
+   <property name="text">
+    <string>Source code</string>
+   </property>
+  </action>
+  <action name="actionBug_report">
+   <property name="text">
+    <string>Bug report</string>
+   </property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="text">
+    <string>Documentation</string>
+   </property>
+  </action>
+  <action name="actionListen_current_audio">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/manoIcon.png</normaloff>:/image/images/manoIcon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Listen current audio</string>
+   </property>
+  </action>
+  <action name="actionDelete_copybook">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/deleteCopyBook.png</normaloff>:/image/images/deleteCopyBook.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete copybook</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionCreate_new_copybook">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/newFile.png</normaloff>:/image/images/newFile.png</iconset>
+   </property>
+   <property name="text">
+    <string>Create new copybook</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionConvert_audio_to_text">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/text-speech.png</normaloff>:/image/images/text-speech.png</iconset>
+   </property>
+   <property name="text">
+    <string>Convert audio to text</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/blue-folder-open-document.png</normaloff>:/image/images/blue-folder-open-document.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionDelete_audio">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/deleteAudio.png</normaloff>:/image/images/deleteAudio.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete audio</string>
+   </property>
+  </action>
+  <action name="pauserecordingbotton">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/pause-recording.png</normaloff>:/image/images/pause-recording.png</iconset>
+   </property>
+   <property name="text">
+    <string>pauserecording</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../writernote.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -1,0 +1,303 @@
+name: writernote
+version: 1.2.6
+
+summary: Writernote
+
+description: |
+  writernote is a multiplatform application that allows you to take notes by recording audio, 
+  translate it later into text, and listen to it in an intelligent way.
+
+grade: stable
+confinement: strict
+base: core20
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+
+
+
+apps:
+  writernote:
+    command-chain: ["snap/command-chain/alsa-launch"]
+    command: bin/desktop-launch $SNAP/bin/writernote
+    environment:
+      #PYTHONPATH: $SNAP/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
+      #LD_LIBRARY_PATH: $SNAP/usr/lib/writernote:$LD_LIBRARY_PATH
+      ALSA_CONFIG_PATH: /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/alsa/alsa.conf
+
+    #DISABLE_WAYLAND: 1
+
+    plugs:
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - opengl
+      - audio-record
+      - home
+      - pulseaudio
+      - browser-support
+      - network
+      - gsettings
+      - network-bind
+      - audio-playback
+      - network-manager
+
+      - cups-control
+      - removable-media
+
+    slots:
+      - mpris
+
+
+
+
+layout:
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
+    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+
+  /usr/share/alsa:
+    bind: $SNAP/usr/share/alsa
+
+  /usr/share/X11:
+    bind: $SNAP/usr/share/X11
+
+plugs:
+  gsettings:
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/data-dir/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/data-dir/sounds
+    default-provider: gtk-common-themes
+
+parts:
+  alsa-mixin:
+    plugin: dump
+    source: https://github.com/diddlesnaps/snapcraft-alsa.git
+    source-subdir: snapcraft-assets
+    build-packages:
+      - libasound2-dev
+    stage-packages:
+      - libasound2
+      - libasound2-plugins
+
+  writernote:
+    after: [desktop-qt5, alsa-mixin]
+    
+    plugin: make
+    source: .
+
+    override-build: |
+      set -eux
+      make clean
+      qmake -set prefix $SNAPCRAFT_PART_INSTALL
+      qmake
+
+      snapcraftctl build
+      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
+      cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
+
+      # copying image
+      cp -r images $SNAPCRAFT_PART_INSTALL/
+
+
+    build-packages:
+      - qtmultimedia5-dev
+      - libqt5multimediawidgets5
+      - libqt5multimedia5-plugins 
+      - libqt5multimedia5
+      - qtbase5-dev
+      - qt5-qmake
+      - libzip-dev
+      - libxcb-xinerama0-dev
+      - qt5-default
+      - libx11-xcb-dev 
+      - libglu1-mesa-dev 
+      - libxrender-dev 
+      - libxi-dev 
+      - libxkbcommon-dev 
+      - libxkbcommon-x11-dev
+
+      #- libxcursor-dev 
+      #- libxcomposite-dev 
+      #- libxdamage-dev 
+      #- libxrandr-dev 
+      #- libxtst-dev 
+      #- libxss-dev 
+      #- libdbus-1-dev 
+      #- libevent-dev 
+      #- libfontconfig1-dev 
+      #- libcap-dev  
+      #- libudev-dev 
+      #- libpci-dev 
+      #- libnss3-dev  
+      #- libegl1-mesa-dev 
+      #- gperf 
+      #- bison 
+
+      #qmediaplayer
+      - libgstreamer1.0-dev 
+      - libgstreamer-plugins-base1.0-dev 
+      - libgstreamer-plugins-good1.0-dev 
+      - libgstreamer-plugins-bad1.0-dev
+
+      - execstack
+      - libasound2-dev
+      - libopus-dev
+      - qtbase5-private-dev
+      - libglib2.0-dev
+      - libgtk-3-dev
+      - liblzma-dev
+      #- libpulse-dev
+      - libqt5svg5-dev
+      - libqt5waylandclient5-dev
+      - libssl-dev
+      - libxcb1-dev
+      - libxcb-screensaver0-dev
+      - zlib1g-dev
+#
+      #- xdg-desktop-portal
+      #- xdg-desktop-portal-gtk
+
+    stage-packages:
+      # dipendenza run time
+      - libqt5widgets5
+      - libqt5core5a
+
+
+      ## Testing
+      - libxcb-screensaver0-dev
+      - libxcb1-dev
+      - libqt5waylandclient5-dev
+      - libqt5svg5-dev
+      - liblzma-dev
+      - libgtk-3-dev
+      - libglib2.0-dev
+      - qtbase5-private-dev
+      - libopus-dev
+      - execstack
+
+
+      - ffmpeg
+      - qtmultimedia5-dev
+      - libqt5multimediawidgets5
+      - libqt5multimedia5-plugins 
+      - libqt5multimedia5
+      - qt5-qmake
+      - libzip-dev
+      - libxcb-xinerama0-dev
+      - qt5-default
+      - libx11-xcb-dev 
+      #- xdg-desktop-portal
+      #- xdg-desktop-portal-gtk
+      #- xdg-desktop-portal-kde  
+
+      #- libgstreamer1.0-0 
+      #- gstreamer1.0-plugins-base 
+      #- gstreamer1.0-plugins-good 
+      #- gstreamer1.0-plugins-bad 
+      #- gstreamer1.0-plugins-ugly 
+      #- gstreamer1.0-libav 
+      #- gstreamer1.0-doc 
+      #- gstreamer1.0-tools 
+      #- gstreamer1.0-x 
+      #- gstreamer1.0-alsa 
+      #- gstreamer1.0-gl 
+      #- gstreamer1.0-gtk3 
+      #- gstreamer1.0-qt5 
+      #- gstreamer1.0-pulseaudio
+      
+      - pulseaudio
+
+      #- libglu1-mesa-dev 
+      #- libxrender-dev 
+      #- libxi-dev 
+      #- libxkbcommon-dev 
+      #- libxkbcommon-x11-dev
+
+      #- libxcursor-dev 
+      #- libxcomposite-dev 
+      #- libxdamage-dev 
+      #- libxrandr-dev 
+      #- libxtst-dev 
+      #- libxss-dev 
+      #- libdbus-1-dev 
+      #- libevent-dev 
+      #- libfontconfig1-dev 
+      #- libcap-dev  
+      #- libudev-dev 
+      #- libpci-dev 
+      #- libnss3-dev  
+      #- libegl1-mesa-dev 
+      #- gperf 
+      #- bison 
+
+
+      #- libgstreamer1.0-dev 
+      #- libgstreamer-plugins-base1.0-dev 
+      #- libgstreamer-plugins-good1.0-dev 
+      #- libgstreamer-plugins-bad1.0-dev
+
+      - qt5-image-formats-plugins
+      - qtwayland5
+      - libgtk-3-0
+      - liblzma5
+      - libopus0
+      - libpulse0
+      ##- libpulse-dev
+      #- libqt5svg5
+      #- libqt5waylandclient5
+      #- libssl1.1
+      #- libxcb1
+      #- libxcb-screensaver0
+      #- zlib1g-dev
+      #- zlib1g
+#
+      - libasound2-dev 
+      - libasound2
+      - qt5-gtk-platformtheme  
+#
+      #- libcanberra-gtk-module 
+      #- libcanberra-gtk3-module
+      #- libasound2-plugins
+      
+    
+  # Qt checks that ibus-daemon binary is present, otherwise doesn't work
+  ibus:
+    plugin: nil
+    stage-packages:
+      - ibus
+
+  desktop-qt5:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: qt
+    plugin: make
+    make-parameters: ["FLAVOR=qt5"]
+    build-packages:
+      - build-essential
+      - qtbase5-dev
+      - dpkg-dev
+    stage-packages:
+      - libxkbcommon0
+      - ttf-ubuntu-font-family
+      - dmz-cursor-theme
+      - light-themes
+      - adwaita-icon-theme
+      - gnome-themes-standard
+      - shared-mime-info
+      - libqt5gui5
+      - libgdk-pixbuf2.0-0
+      - libqt5svg5 # for loading icon themes which are svg
+      - try: [appmenu-qt5] # not available on core18
+      - locales-all
+      - xdg-user-dirs
+      - fcitx-frontend-qt5
