@@ -21,7 +21,7 @@
 #include <array>
 #include <cstring>
 #include <iostream>
-
+#include "../dialog_critic.h"
 #include <zip.h>
 
 using namespace std;
@@ -195,6 +195,7 @@ void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *vari
 
 }
 
+/* funzione che gestisce la scrittura di testinohtml */
 void xmlstruct::textdecode(QList<int> *lista){
     if( this->checksum == 0)
     {
@@ -203,7 +204,17 @@ void xmlstruct::textdecode(QList<int> *lista){
         return;
     }
 
-    int i;
+    int i, lunghezza = lista->length();
+
+    if (lunghezza < this->checksum){
+#ifdef STAMPA
+        qDebug() << "\nMANCANO: " << this->checksum - lunghezza;
+        return dialog_critic("File is missing data");
+#else
+        return dialog_critic("File is missing data");
+#endif
+}
+
     for (i = 0; i < this->checksum; i++){
         this->self->currenttitle.testinohtml[i] = this->text.substr(this->start, lista->at(i)).c_str();
         this->start = lista->at(i);

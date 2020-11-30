@@ -17,6 +17,12 @@ void MainWindow::on_stopplaybotton_triggered()
 
     messaggio_utente("I begin to sort out the data.\nThis operation may take a while");
 
+#ifdef STAMPA
+    qDebug() << "\n\nsavefile::savefile_check_file testinohtml: -> " << this->self->currenttitle.testinohtml.length();
+    qDebug() << "\n\nsavefile::savefile_check_file posizione_iniz: -> " << this->self->currenttitle.posizione_iniz.length();
+#endif
+
+
     spacchettamento(this);
 
     int i;

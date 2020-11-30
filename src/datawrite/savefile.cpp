@@ -68,7 +68,7 @@ bool savefile::savefile_check_file(int posizione){
 
     int i, lenght;
 
-    char stringa[5];
+    char stringa[500];
     inttochar(this->parent->self->currenttitle.versione, stringa);
     std::string indicesalvataggio = "<?xml version=\"1\" encoding=\"UTF-8\" application=\"writernote\"?><versione>" + (std::string)stringa + "</versione>";
 
@@ -85,6 +85,12 @@ bool savefile::savefile_check_file(int posizione){
     /* inserisce la checksum, che nella lettura serve a ciclare fino a, e controllare l'integrità del dato */
     inttochar(this->parent->self->currenttitle.testinohtml.length(), stringa);
     indicesalvataggio += "<checksum>" + (std::string)stringa + "</checksum>";
+
+#ifdef STAMPA
+    qDebug() << "\n\nsavefile::savefile_check_file checksum: -> " << stringa;
+    qDebug() << "\n\nsavefile::savefile_check_file testinohtml: -> " << this->parent->self->currenttitle.testinohtml.length();
+    qDebug() << "\n\nsavefile::savefile_check_file posizione_iniz: -> " << this->parent->self->currenttitle.posizione_iniz.length();
+#endif
 
     indicesalvataggio += "<audio_position_path>" + this->parent->self->currenttitle.audio_position_path + "</audio_position_path>";
 
@@ -111,9 +117,8 @@ bool savefile::savefile_check_file(int posizione){
     indicesalvataggio  += "<start>";
     indicesalvataggio += this->parent->self->currenttitle.testi.toUtf8().constData();
 
-    lenght = this->parent->self->currenttitle.testinohtml.length();
     for (i = 0; i < lenght; i++)
-        indicesalvataggio = indicesalvataggio + this->parent->self->currenttitle.testinohtml[i].toUtf8().constData();
+        indicesalvataggio += this->parent->self->currenttitle.testinohtml[i].toUtf8().constData();
 
     bool check1 = this->compressfile(( this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(), indicesalvataggio.c_str());
 

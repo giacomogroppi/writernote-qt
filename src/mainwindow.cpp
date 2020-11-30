@@ -351,6 +351,12 @@ void MainWindow::setOutputLocation()
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
+#ifdef STAMPA
+    qDebug() << "\nMainWindow::on_startrecording_triggered testinohtml: -> " << this->self->currenttitle.testinohtml.length();
+    qDebug() << "\nMainWindow::on_startrecording_triggered posizione_iniz: -> " << this->self->currenttitle.posizione_iniz.length();
+#endif
+
+
     this->setOutputLocation();
 #ifdef STAMPA
     qDebug() << "Start recording";
@@ -385,6 +391,9 @@ void MainWindow::on_startrecording_triggered()
 
         this->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
         this->m_audioRecorder->record();
+
+        this->self->currenttitle.testinohtml.clear();
+        this->self->currenttitle.posizione_iniz.clear();
     }
 }
 
@@ -435,24 +444,22 @@ void MainWindow::on_textEdit_textChanged()
     if(this->m_audioRecorder->status() != QMediaRecorder::RecordingStatus)
         return;
 
-#ifdef STAMPA
-    qDebug() << "MainWidow::on_textEdit_textChanged() -> richiamata";
-#endif
-
-    QString text = ui->textEdit->toHtml();
+    QString text = ui->textEdit->toPlainText();
 
     if(this->self->currenttitle.posizione_iniz.length() == 0){
-        this->self->currenttitle.testi.append(text);
-        //self.currenttitle.testinohtml.append(ui->textEdit->toPlainText());
+        this->self->currenttitle.testinohtml.append(text);
         this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
         return;
     }
 
-    /* se non è vuota */
-    if(!this->self->currenttitle.testi.length())
-        this->self->currenttitle.testi.append(text);
-    else
-        this->self->currenttitle.testi = text;
+/*#ifdef STAMPA
+    qDebug() << "\nMainWindow::on_textEdit_textChanged testinohtml: -> " << this->self->currenttitle.testinohtml.length();
+    qDebug() << "\nMainWindow::on_textEdit_textChangedposizione_iniz: -> " << this->self->currenttitle.posizione_iniz.length();
+#endif*/
+
+    /*int i;
+    for(i=0; i< this->self->currenttitle.posizione_iniz.length(); i++)
+        qDebug() << this->self->currenttitle.posizione_iniz[i];*/
 
     this->self->currenttitle.testinohtml.append(ui->textEdit->toPlainText());
     this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
