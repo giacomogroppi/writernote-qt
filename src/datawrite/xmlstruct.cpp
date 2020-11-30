@@ -93,7 +93,7 @@ void xmlstruct::loadfile(const char *nomeFile){
     QList<int> listatemp = {};
     stringa_decode_int("<testi>", "</testi>", &listatemp);
 
-    //this->start = this->findstart();
+    this->start = this->findstart();
 
 
     stringa_decode("<testinohtml>", "</testinohtml>", &this->self->currenttitle.testinohtml);
