@@ -65,9 +65,14 @@ SOURCES += \
 
 HEADERS += \
     src/areyousure.h \
+    src/audiorecord/getbufferlevels.h \
     src/currenttitle/main_include_currenttitle.h \
+    src/currenttitle/redolist.h \
     src/datawrite/renamefile_f_zip.h \
     src/dialog_critic.h \
+    src/chartoint.h \
+    src/newcopybook_.h \
+    src/setting_ui.h \
     src/update_list_copybook.h \
     src/currenttitle/currenttitle_class.h \
     src/datawrite/qfilechoose.h \
@@ -76,7 +81,6 @@ HEADERS += \
     src/mainwindow.h \
     src/savecopybook.h \
     src/self_class.h \
-    #src/struct_main.h \
     src/audiorecord/audiolevel.h\
     src/datawrite/xmlstruct.h \
     src/style/inserttable_class.h

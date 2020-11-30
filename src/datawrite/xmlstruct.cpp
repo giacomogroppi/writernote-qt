@@ -5,11 +5,11 @@
 #ifndef XMLSTRUCT_CPP
 #define XMLSTRUCT_CPP
 
-#include "../self_class.cpp"
+#include "../self_class.h"
 
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../chartoint.cpp"
+#include "../chartoint.h"
 #include <QString>
 #include <QDebug>
 #include <stdlib.h>
@@ -25,7 +25,6 @@
 #include <zip.h>
 
 using namespace std;
-//namespace fs = std::experimental::filesystem;
 
 std::string xmlstruct::filetostring(){
   std::ifstream t(pathFile);

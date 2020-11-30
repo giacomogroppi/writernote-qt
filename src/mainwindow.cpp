@@ -28,18 +28,20 @@
 #include "currenttitle/main_include_currenttitle.h"
 
 /* gestione della lista */
-#include "currenttitle/redolist.cpp"
+#include "currenttitle/redolist.h"
 
-#include "datawrite/xmlstruct.cpp"
+#include "datawrite/xmlstruct.h"
 #include "dialog_critic.h"
 #include "update_list_copybook.h"
-#include "savecopybook.cpp"
-#include "newcopybook_.cpp"
-#include "setting_ui.cpp"
+#include "savecopybook.h"
+#include "newcopybook_.h"
+#include "setting_ui.h"
+
+#include "datawrite/savefile.h"
 
 /* audio record */
-#include "audiorecord/getbufferlevels.cpp"
-#include "audiorecord/displayErrorMessage.cpp"
+#include "audiorecord/getbufferlevels.h"
+//#include "audiorecord/displayErrorMessage.cpp"
 #include "datamanage/sistemazionedatiregistrati.cpp"
 #include <QMediaPlayer>
 

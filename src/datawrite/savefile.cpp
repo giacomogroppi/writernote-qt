@@ -15,7 +15,7 @@
 #include <zip.h>
 #include <glib.h>
 #include <stdlib.h>
-#include "../chartoint.cpp"
+#include "../chartoint.h"
 #include <string.h>
 #include "../self_class.h"
 #include "../mainwindow.h"

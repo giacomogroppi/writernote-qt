@@ -20,7 +20,7 @@ private:
     std::string filetostring();
     void UnZipFile();
     std::string path_;
-    SelfClass *self;
+    SelfClass *self = nullptr;
 public:
     std::string pathFile = "";
     std::string text = "";

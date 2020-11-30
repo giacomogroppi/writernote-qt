@@ -1,6 +1,8 @@
 #ifndef SETTING_UI
 #define SETTING_UI
 
+#include "setting_ui.h"
+
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
 #include <QFontComboBox>

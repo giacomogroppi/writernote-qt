@@ -1,8 +1,6 @@
-#ifndef CURRENT_TITLE_H
-#define CURRENT_TITLE_H
+#ifndef CURRENT_TITLE_CLASS_H
+#define CURRENT_TITLE_CLASS_H
 
-#include "../mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QStringList>
 #include <QList>
 

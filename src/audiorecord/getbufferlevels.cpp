@@ -13,13 +13,13 @@
 #include <QComboBox>
 
 static qreal getPeakValue(const QAudioFormat &format);
-static QList<qreal> getBufferLevels(const QAudioBuffer &buffer);
+QList<qreal> getBufferLevels(const QAudioBuffer &buffer);
 
 template<class T>
 static QList<qreal> getBufferLevels(const T *buffer, int frames, int channels);
 
 // This function returns the maximum possible sample value for a given audio format
-qreal getPeakValue(const QAudioFormat& format)
+static qreal getPeakValue(const QAudioFormat& format)
 {
     // Note: Only the most common sample formats are supported
     if (!format.isValid())

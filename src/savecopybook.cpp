@@ -7,9 +7,9 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include "self_class.h"
-#include "datawrite/savefile.cpp"
+#include "datawrite/savefile.h"
 #include "savecopybook.h"
-#include "datawrite/qfilechoose.cpp"
+#include "datawrite/qfilechoose.h"
 
 /*lib che gestisce il salvaggio di tutti i file*/
 #include "datawrite/xmlstruct.h"

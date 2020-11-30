@@ -1,5 +1,5 @@
-#ifndef CHAR_TO_INT
-#define CHAR_TO_INT
+#ifndef CHAR_TO_INT_CPP
+#define CHAR_TO_INT_CPP
 
 #define MAXSTRNUMERO 20
 #include <iostream>
@@ -45,4 +45,4 @@ void inttochar(int number, char numerostringa[]){
 
 }
 
-#endif //CHAR_TO_INT
+#endif //CHAR_TO_INT_CPP

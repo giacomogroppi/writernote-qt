@@ -1,12 +1,14 @@
 #ifndef NEW_COPY_BOOK
 #define NEW_COPY_BOOK
 
+#include "newcopybook_.h"
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #define LUNGHEZZANOMETEMP 10
 #include <QDebug>
 #include "stringgenerator.cpp"
-#include "chartoint.cpp"
+#include "chartoint.h"
 #include "datawrite/savefile.h"
 
 /*funzione che gestisce la creazione di un nuovo copybook, non fa il controllo se esiste*/
