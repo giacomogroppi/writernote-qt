@@ -66,8 +66,6 @@ void xmlstruct::loadfile(const char *nomeFile){
     stringa_decode("<versione>", "</versione>", &temp);
     self->currenttitle.versione = chartoint(temp[0].toUtf8().constData());
 
-
-    //temp.clear();
     stringa_decode("<se_registrato>", "</se_registrato>", &temp);
     qDebug() << "Se registrato: -> " << temp[0];
     if(temp[0] == "true")
@@ -75,7 +73,6 @@ void xmlstruct::loadfile(const char *nomeFile){
     else
         self->currenttitle.se_registato = false;
 
-    //temp.clear();
     stringa_decode("<se_tradotto>", "</se_tradotto>", &temp);
     qDebug() << "SE TRADOTTO " << temp[0];
     if(temp[0] == "true")
@@ -83,15 +80,12 @@ void xmlstruct::loadfile(const char *nomeFile){
     else
         self->currenttitle.se_tradotto = false;
 
-    //temp.clear();
-
     stringa_decode("<audio_position_path>", "</audio_position_path>", &temp);
 
     self->currenttitle.audio_position_path = temp[0].toUtf8().constData();
 
     this->decode_checksum();
 
-    //temp.clear();
     /* scrittura di posizione_iniz */
     stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
     int i, lung = temp.length();
@@ -112,8 +106,7 @@ void xmlstruct::loadfile(const char *nomeFile){
     else
         this->self->currenttitle.testi = "";
 
-    this->start = listatemp[0];
-
+    this->start += listatemp[0];
 
     stringa_decode_int("<testinohtml>", "</testinohtml>", &listatemp);
 
@@ -221,15 +214,13 @@ void xmlstruct::textdecode(QList<int> *lista){
     if (lunghezza < this->checksum){
 #ifdef STAMPA
         qDebug() << "\nMANCANO: " << this->checksum - lunghezza;
-        return dialog_critic("File is missing data");
-#else
-        return dialog_critic("File is missing data");
 #endif
+        return dialog_critic("File is missing data");
 }
 
     for (i = 0; i < this->checksum; i++){
         this->self->currenttitle.testinohtml.append(this->text.substr(this->start, lista->at(i)).c_str());
-        this->start = lista->at(i);
+        this->start += lista->at(i);
     }
 
 }
