@@ -218,6 +218,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
+
     aggiornotestiriascolto(this);
 
 }
