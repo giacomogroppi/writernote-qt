@@ -19,6 +19,7 @@ DEFINES += "STAMPA"
 
 SOURCES += \
     src/audioplay/aggiornotastiriascolto.cpp \
+    src/audioplay/cambiostatoplayer.cpp \
     src/audioplay/enableriascolto.cpp \
     src/audioplay/playbottonfunction.cpp \
     src/audioplay/riascoltoaudioprogressivo.cpp \

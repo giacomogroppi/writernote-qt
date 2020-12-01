@@ -95,14 +95,14 @@
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QSpinBox" name="spinBox">
+       <widget class="QSpinBox" name="spinBox_fontsize">
         <property name="minimum">
          <number>12</number>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QFontComboBox" name="fontComboBox"/>
+       <widget class="QFontComboBox" name="fontComboBox_fonttipo"/>
       </item>
       <item>
        <widget class="QToolButton" name="boldbotton">
@@ -173,7 +173,6 @@
     <addaction name="startrecording"/>
     <addaction name="stopplaybotton"/>
     <addaction name="actionImport_Video"/>
-    <addaction name="actionImport_Video_2"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -425,6 +424,9 @@
    </property>
   </action>
   <action name="actionListen_current_audio">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../writernote.qrc">
      <normaloff>:/image/images/manoIcon.png</normaloff>:/image/images/manoIcon.png</iconset>

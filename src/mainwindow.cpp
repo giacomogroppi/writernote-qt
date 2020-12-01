@@ -71,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent)
     /* riproduzione dell'audio */
     player = new QMediaPlayer;
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
+    connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
 
     self = new SelfClass;
 }

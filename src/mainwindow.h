@@ -119,6 +119,9 @@ private slots:
 
     void on_listWidgetSX_itemClicked(QListWidgetItem *item);
 
+    /* funzione che gestisce la fine del riascolto dell'audio */
+    void cambiostatoplayer(QMediaPlayer::State);
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
