@@ -8,6 +8,10 @@
 
 /* funzione che gestiste il riascolto dell'audio */
 void MainWindow::riascoltoaudioprogressivo(qint64 position){
+    if(this->player->state() != QMediaPlayer::PlayingState)
+        return;
+
+
 #ifdef STAMPA
     qDebug() << "position" << position;
 #endif

@@ -11,11 +11,16 @@ void MainWindow::on_startriascoltobotton_clicked()
 {
     QIcon icon;
     if(this->player->state() == QMediaPlayer::PlayingState){
-        icon.addFile(QString::fromUtf8("../images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":image/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        this->player->play();
+        qDebug() << "Ho messo il bottone di play";
     }
     else{
-        icon.addFile(QString::fromUtf8("../images/pause-recording.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":image/images/pause-recording.png"), QSize(), QIcon::Normal, QIcon::Off);
+        this->player->pause();
     }
+    qDebug() << "media-> " << this->player->mediaStatus();
+
     this->ui->startriascoltobotton->setIcon(icon);
 }
 

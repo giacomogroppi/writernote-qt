@@ -4,6 +4,7 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
+#include <QDebug>
 
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->self->currenttitle.se_registato){

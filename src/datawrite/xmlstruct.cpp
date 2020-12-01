@@ -66,20 +66,24 @@ void xmlstruct::loadfile(const char *nomeFile){
     stringa_decode("<versione>", "</versione>", &temp);
     self->currenttitle.versione = chartoint(temp[0].toUtf8().constData());
 
+
+    //temp.clear();
     stringa_decode("<se_registrato>", "</se_registrato>", &temp);
+    qDebug() << "Se registrato: -> " << temp[0];
     if(temp[0] == "true")
         self->currenttitle.se_registato = true;
     else
         self->currenttitle.se_registato = false;
 
-    temp.clear();
+    //temp.clear();
     stringa_decode("<se_tradotto>", "</se_tradotto>", &temp);
+    qDebug() << "SE TRADOTTO " << temp[0];
     if(temp[0] == "true")
         self->currenttitle.se_tradotto = true;
     else
         self->currenttitle.se_tradotto = false;
 
-    temp.clear();
+    //temp.clear();
 
     stringa_decode("<audio_position_path>", "</audio_position_path>", &temp);
 
@@ -87,6 +91,7 @@ void xmlstruct::loadfile(const char *nomeFile){
 
     this->decode_checksum();
 
+    //temp.clear();
     /* scrittura di posizione_iniz */
     stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
     int i, lung = temp.length();
@@ -113,8 +118,6 @@ void xmlstruct::loadfile(const char *nomeFile){
     stringa_decode_int("<testinohtml>", "</testinohtml>", &listatemp);
 
     this->textdecode(&listatemp);
-
-
 
 }
 
@@ -157,6 +160,8 @@ void xmlstruct::decode_checksum(){
 void xmlstruct::stringa_decode(const char *variabile_init_, const char *variabile_end_, QStringList *lista){
     /* -> restituisce la lista dei titoli come QStringList */
 
+    lista->clear();
+
     std::string variabile_init = variabile_init_;
     std::string variabile_end = variabile_end_;
 
@@ -179,6 +184,8 @@ void xmlstruct::stringa_decode(const char *variabile_init_, const char *variabil
 
 void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *variabile_end_, QList<int> *lista){
     /* -> restituisce la lista dei testi o dei testinohtml come QList<int> */
+
+    lista->clear();
 
     std::string variabile_init = variabile_init_;
     std::string variabile_end = variabile_end_;
