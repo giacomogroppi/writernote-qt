@@ -124,12 +124,12 @@ void MainWindow::closeEvent (QCloseEvent *event)
 /*creazione di un nuovo file*/
 void MainWindow::on_actionNew_File_triggered()
 {
-    savecopybook checksave(this, ui->listWidgetSX->currentItem());
-    bool check = checksave.check_permission();
+    if(this->self->indice.titolo.length() != 0){
+        savecopybook checksave(this, ui->listWidgetSX->currentItem());
+        bool check = checksave.check_permission();
 
-    if(!check)
-    {
-        dialog_critic((QString)"We had a problem saving the file");
+        if(!check)
+            return;
     }
 
     this->self->currentTitle = "";
@@ -143,7 +143,7 @@ void MainWindow::on_actionSave_File_triggered()
     if(this->self->path == ""){
         qfilechoose file(this);
         if(!file.filechoose())
-                /* se l'utente non ha selezionato nessun file */
+            /* se l'utente non ha selezionato nessun file */
             return;
     }
 
@@ -302,11 +302,9 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         return;
     }
 
-    if(!newcopybook_(this, namecopybook))
-    {
-        dialog_critic("We had a problem saving the copybook");
-        return;
-    }
+    if(!newcopybook_(this, namecopybook))    
+        return dialog_critic("We had a problem saving the copybook");
+
 
     update_list_copybook(this);
 

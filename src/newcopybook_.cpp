@@ -26,6 +26,8 @@ bool newcopybook_(MainWindow *parent, QString stringa){
     parent->ui->textEdit->setHtml((QString)"");
     parent->ui->textEdit->setDisabled(true);
 
+    parent->self->currenttitle.reset();
+
     savefile save_(parent, parent->ui->listWidgetSX->currentItem());
     if(!save_.savefile_check_file(position) || !save_.savefile_check_indice())
         /* vuol dire che si è fallito nel salvare il file */

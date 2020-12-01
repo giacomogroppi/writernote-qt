@@ -59,6 +59,7 @@ char *xmlstruct::readfile(const char *path, const char *namefile){
 
 /* funzione che gestisce il caricamente di un file di tipo zip */
 void xmlstruct::loadfile(const char *nomeFile){
+
     this->text = readfile(path_.c_str(), nomeFile);
 
     QStringList temp = {};
@@ -70,7 +71,6 @@ void xmlstruct::loadfile(const char *nomeFile){
         self->currenttitle.se_registato = true;
     else
         self->currenttitle.se_registato = false;
-
 
     temp.clear();
     stringa_decode("<se_tradotto>", "</se_tradotto>", &temp);
@@ -87,8 +87,16 @@ void xmlstruct::loadfile(const char *nomeFile){
 
     this->decode_checksum();
 
+    /* scrittura di posizione_iniz */
+    stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
+    int i, lung = temp.length();
+    for(i=0; i < lung; i++)
+        self->currenttitle.posizione_iniz.append(chartoint(temp[i].toUtf8().constData()));
+
     /* in questo modo all'interno della lista di interi listatemp ci saranno le lunghezze di tutte le stringhe dei testi,
     che nel caso di "testi" sarà al massimo di lunghezza uno*/
+
+    /* scrive il testi */
     QList<int> listatemp = {};
     stringa_decode_int("<testi>", "</testi>", &listatemp);
 
@@ -101,15 +109,12 @@ void xmlstruct::loadfile(const char *nomeFile){
 
     this->start = listatemp[0];
 
-    this->textdecode(&listatemp);
-
 
     stringa_decode_int("<testinohtml>", "</testinohtml>", &listatemp);
 
-    stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
-    int i, lung = temp.length();
-    for(i=0; i < lung; i++)
-        self->currenttitle.posizione_iniz.append(chartoint(temp[i].toUtf8().constData()));
+    this->textdecode(&listatemp);
+
+
 
 }
 
@@ -173,7 +178,7 @@ void xmlstruct::stringa_decode(const char *variabile_init_, const char *variabil
 }
 
 void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *variabile_end_, QList<int> *lista){
-    /* -> restituisce la lista dei titoli come QStringList */
+    /* -> restituisce la lista dei testi o dei testinohtml come QList<int> */
 
     std::string variabile_init = variabile_init_;
     std::string variabile_end = variabile_end_;
@@ -216,7 +221,7 @@ void xmlstruct::textdecode(QList<int> *lista){
 }
 
     for (i = 0; i < this->checksum; i++){
-        this->self->currenttitle.testinohtml[i] = this->text.substr(this->start, lista->at(i)).c_str();
+        this->self->currenttitle.testinohtml.append(this->text.substr(this->start, lista->at(i)).c_str());
         this->start = lista->at(i);
     }
 

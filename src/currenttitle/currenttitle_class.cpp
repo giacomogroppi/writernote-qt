@@ -6,7 +6,7 @@
 #include <QStringList>
 void currenttitle_class::reset(){
     this->versione=0;
-    this->se_registato = false, se_tradotto = false;
+    this->se_registato = this->se_tradotto = false;
     this->audio_position_path = "";
     this->testi.clear();
     this->testinohtml.clear();

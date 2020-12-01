@@ -10,6 +10,7 @@
 #include "datawrite/savefile.h"
 #include "savecopybook.h"
 #include "datawrite/qfilechoose.h"
+#include "dialog_critic.h"
 
 /*lib che gestisce il salvaggio di tutti i file*/
 #include "datawrite/xmlstruct.h"
@@ -19,8 +20,8 @@ savecopybook::savecopybook(MainWindow *ui, QListWidgetItem *position){
     this->position = position;
 }
 
+/* funzione che gestisce il salvataggio del copybook [chiedendo all'utente se vuole salvare il file o no]*/
 bool savecopybook::check_permission(){
-    /*return True if the user want */
     QMessageBox msgBox;
     msgBox.setText("The document has been modified.");
     msgBox.setInformativeText("Do you want to save your changes?");
@@ -51,12 +52,11 @@ bool savecopybook::check_permission(){
 
     int posizione = this->ui->self->indice.titolo.indexOf(position->text().toUtf8().constData());
 
-    bool check1 = save_class.savefile_check_indice() && save_class.savefile_check_file(posizione);
+    bool check = save_class.savefile_check_indice() && save_class.savefile_check_file(posizione);
+    dialog_critic("We had a problem saving the copybook");
 
-    if (!check1)
-        return false; /* we had a problem saving the file */
 
-    return true;
+    return check;
 }
 
 #endif

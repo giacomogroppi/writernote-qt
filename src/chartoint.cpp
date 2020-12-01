@@ -32,7 +32,7 @@ void inttochar(int number, char numerostringa[]){
         return;
     }
 
-    for(cicli=1, i = 0; cicli < number; cicli *= 10, i++);
+    for(cicli=1, i = 0; cicli <= number; cicli *= 10, i++);
 
     i--;
     cicli /= 10;

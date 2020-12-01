@@ -86,14 +86,9 @@ bool savefile::savefile_check_file(int posizione){
     inttochar(this->parent->self->currenttitle.testinohtml.length(), stringa);
     indicesalvataggio += "<checksum>" + (std::string)stringa + "</checksum>";
 
-#ifdef STAMPA
-    qDebug() << "\n\nsavefile::savefile_check_file checksum: -> " << stringa;
-    qDebug() << "\n\nsavefile::savefile_check_file testinohtml: -> " << this->parent->self->currenttitle.testinohtml.length();
-    qDebug() << "\n\nsavefile::savefile_check_file posizione_iniz: -> " << this->parent->self->currenttitle.posizione_iniz.length();
-#endif
-
     indicesalvataggio += "<audio_position_path>" + this->parent->self->currenttitle.audio_position_path + "</audio_position_path>";
 
+    /* scrive le posizioni a cui vengono registrate nell'audio */
     lenght = this->parent->self->currenttitle.posizione_iniz.length();
     for (i = 0; i < lenght; i++){
         inttochar(this->parent->self->currenttitle.posizione_iniz[i], stringa);
@@ -105,9 +100,9 @@ bool savefile::savefile_check_file(int posizione){
     </testi> <testinohtml> </testinohtml> <posizione_iniz> </posizione_iniz>*/
 
     inttochar(this->parent->self->currenttitle.testi.length(), stringa);
-    indicesalvataggio += indicesalvataggio + "<testi>" + (std::string)stringa + "</testi>";
+    indicesalvataggio += "<testi>" + (std::string)stringa + "</testi>";
 
-
+    /* scrive la lunghezza di ogni oggetto [stringa] dei testinohtml */
     lenght = this->parent->self->currenttitle.testinohtml.length();
     for (i = 0; i < lenght; i++){
         inttochar(this->parent->self->currenttitle.testinohtml[i].length(), stringa);
@@ -117,15 +112,16 @@ bool savefile::savefile_check_file(int posizione){
     indicesalvataggio  += "<start>";
     indicesalvataggio += this->parent->self->currenttitle.testi.toUtf8().constData();
 
+    /* scrive i testinohtml senza spazi e invii tra di loro */
     for (i = 0; i < lenght; i++)
         indicesalvataggio += this->parent->self->currenttitle.testinohtml[i].toUtf8().constData();
 
-    bool check1 = this->compressfile(( this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(), indicesalvataggio.c_str());
+    system("clear");
+    qDebug() << "\n\nQUA\n" << indicesalvataggio.c_str();
 
-    if(!check1)
-        return false;
+    bool check = this->compressfile(( this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(), indicesalvataggio.c_str());
 
-    return true;
+    return check;
 }
 
 /* funzione che gestisce la creazione di una stringa per salvare l'indice */
@@ -147,12 +143,9 @@ bool savefile::savefile_check_indice(){
 
     indicesalvataggio = indicesalvataggio + "</file>";
 
-    bool check1 = this->compressfile("indice.xml", indicesalvataggio.c_str());
+    bool check = this->compressfile("indice.xml", indicesalvataggio.c_str());
 
-    if(!check1)
-        return false;
-
-    return true;
+    return check;
 }
 
 #endif // SAVE_FILE_CPP
