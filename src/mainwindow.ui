@@ -171,7 +171,7 @@
     <addaction name="actionSave_As"/>
     <addaction name="actionPrint"/>
     <addaction name="startrecording"/>
-    <addaction name="stopplaybotton"/>
+    <addaction name="stoprecordingbotton"/>
     <addaction name="actionImport_Video"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -233,7 +233,7 @@
    <addaction name="actionSave_As"/>
    <addaction name="actionPrint"/>
    <addaction name="startrecording"/>
-   <addaction name="stopplaybotton"/>
+   <addaction name="stoprecordingbotton"/>
    <addaction name="pauserecordingbotton"/>
    <addaction name="actionImport_Video"/>
   </widget>
@@ -335,7 +335,7 @@
     <string>Import Video</string>
    </property>
   </action>
-  <action name="stopplaybotton">
+  <action name="stoprecordingbotton">
    <property name="icon">
     <iconset resource="../writernote.qrc">
      <normaloff>:/image/images/stopRecord_.png</normaloff>:/image/images/stopRecord_.png</iconset>

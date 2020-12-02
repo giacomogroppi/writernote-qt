@@ -10,7 +10,7 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
 
         this->ui->volumeSlider->setValue(0);
         this->ui->volumeSlider->setEnabled(false);
-        this->ui->stopplaybotton->setEnabled(false);
+        this->ui->stopriascolto->setEnabled(false);
         this->ui->startrecording->setEnabled(false);
 
         /* pulsante della mano -> se si clicca viene disattivato il riascolto */
@@ -43,7 +43,7 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
         this->ui->audioSlider->setEnabled(true);
 
         this->ui->volumeSlider->setEnabled(false);
-        this->ui->stopplaybotton->setEnabled(true);
+        this->ui->stopriascolto->setEnabled(true);
         this->ui->startrecording->setEnabled(false);
 
         /* pulsante della mano -> se si clicca viene disattivato il riascolto */

@@ -6,11 +6,15 @@
 #include <QDebug>
 #include "../dialog_critic.h"
 
+#include "../setting_ui.h"
+
 /* la funzione gestisce la gestione del click del punsante con la mano */
 void MainWindow::on_actionListen_current_audio_triggered()
 {
     if(this->player->state() == QMediaPlayer::PlayingState){
-        this->ui->textEdit->setEnabled(true);
+
+
+        /*this->ui->textEdit->setEnabled(true);
         this->ui->actionDelete_audio->setEnabled(true);
         this->ui->actionDelete_copybook->setEnabled(true);
         this->ui->actionSave_As->setEnabled(true);
@@ -18,7 +22,7 @@ void MainWindow::on_actionListen_current_audio_triggered()
         this->ui->actionNew_File->setEnabled(true);
 
         this->ui->actionListen_current_audio->setChecked(false);
-        this->ui->stopriascolto->setEnabled(false);
+        this->ui->stopriascolto->setEnabled(false);*/
         this->player->stop();
         return;
     }

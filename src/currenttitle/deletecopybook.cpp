@@ -35,7 +35,7 @@ void f_deletecopybook( MainWindow *parent, const char *copybook = nullptr){
     parent->ui->actionDelete_copybook->setEnabled(false);
 
     parent->ui->stopriascolto->setEnabled(false);
-    parent->ui->stopplaybotton->setEnabled(false);
+    parent->ui->startriascoltobotton->setEnabled(false);
 
     parent->ui->startrecording->setEnabled(false);
     parent->ui->startriascoltobotton->setEnabled(false);

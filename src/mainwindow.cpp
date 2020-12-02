@@ -74,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
 
     self = new SelfClass;
+    setting_ui_start(this);
 }
 
 MainWindow::~MainWindow()
@@ -190,6 +191,8 @@ void MainWindow::on_actionOpen_triggered()
     xmlstruct filefind(pathtemp, this->self);
     filefind.loadindice();
 
+    if(this->self->indice.titolo.length() > 0)
+        this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook(this);
 }
 
@@ -219,9 +222,14 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
+    settingtextedit(this, true);
+    settingstyle(this, true);
+    //this->ui->actionDelete_copybook->setEnabled(true);
+
+    settingaudio_riascoltoinatto(this, false);
 
     aggiornotestiriascolto(this);
-
+    this->ui->actionPrint->setEnabled(true);
 }
 
 /* funzione che gestisce il controllo del riascolto dell'audio */
@@ -308,7 +316,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     if(!newcopybook_(this, namecopybook))    
         return dialog_critic("We had a problem saving the copybook");
 
-
+    this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook(this);
 
 
