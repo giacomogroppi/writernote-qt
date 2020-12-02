@@ -199,6 +199,7 @@ void MainWindow::on_actionOpen_triggered()
 /* Funzione che gestisce il doppio click sull'item a sinistra della lista copybook */
 void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 {
+    qDebug() << "Funzione richiamata";
     if(this->player->state() == QMediaPlayer::PlayingState)
         return redolist(this);
 
@@ -209,6 +210,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
             return redolist(this);
     }
+
+
 
     /* a questo punto deve aprire il nuovo copybook */
     if(this->self->indice.titolo[this->self->indice.titolo.indexOf(item->text())] != ""){

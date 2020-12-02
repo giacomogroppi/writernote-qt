@@ -3,7 +3,10 @@
 
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
+
 #include <QDebug>
+#include <QString>
+
 #include "sistemazionedatiregistrati.cpp"
 #include "../dialog_critic.h"
 
@@ -26,6 +29,9 @@ void MainWindow::on_stoprecordingbotton_triggered()
     settingaudio_riascolto(this, true);
 
     aggiornotestiriascolto(this);
+
+    //this->ui->statusBar->showMessage(tr("Audio save in %1").arg(this->self->currenttitle.audio_position_path));
+    this->ui->statusBar->clearMessage();
 }
 
 
