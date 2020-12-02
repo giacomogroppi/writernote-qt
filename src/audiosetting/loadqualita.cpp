@@ -1,13 +1,27 @@
 #include "loadqualita.h"
 #include "../mainwindow.h"
+#include "ui_mainwindow.h"
 #include <iostream>
 
 #include "definition.h"
 
 /* funzione che viene chiamata tutte le volte che l'utente inizia una registrazione */
-void loadqualita(MainWindow *parent){
+bool loadqualita(MainWindow *parent){
+    oggettodascrivere_t oggettodaleggere;
+
     FILE *fp;
-    fp = fopen(POSIZIONE, "r");
+    fp = fopen(POSIZIONESETTINGS, "r");
+    if(!fp)
+        return false;
+
+
+    fread(&oggettodaleggere, sizeof(oggettodaleggere), 1, fp);
+
+    parent->m_audioRecorder->setAudioInput(oggettodaleggere.audiodevice);
+
+    parent->m_audioRecorder->setEncodingSettings(oggettodaleggere.settings, QVideoEncoderSettings(), oggettodaleggere.container);
+
+    return true;
 
 
     /*m_audioRecorder->setAudioInput(boxValue(padredialogo->ui->audioDeviceBox).toString());

@@ -1,5 +1,5 @@
 #include "savequalita.h"
-#include "../mainwindow.h"
+
 #include "audioqualityoption.h"
 #include "ui_audioqualityoption.h"
 
@@ -14,8 +14,7 @@ static QVariant boxValue(const QComboBox *box)
     return box->itemData(idx);
 }
 
-bool savequalita(MainWindow *parent, audioqualityoption *padredialog){
-
+bool savequalita(audioqualityoption *padredialog){
     oggettodascrivere_t oggettodascrivere;
     oggettodascrivere.audiodevice = boxValue(padredialog->ui->audioDeviceBox).toString();
 
