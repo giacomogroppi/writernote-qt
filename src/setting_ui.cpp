@@ -26,7 +26,7 @@ void setting_ui(MainWindow *parent){
     //myComboBox->connect(myComboBox, SIGNAL(currentFontChanged(const QFont &f)), parent, SLOT(changeTextFont()));
 
 }
-//
+
 #endif // SETTING_UI
 
 /*

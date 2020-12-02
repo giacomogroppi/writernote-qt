@@ -116,9 +116,6 @@ bool savefile::savefile_check_file(int posizione){
     for (i = 0; i < lenght; i++)
         indicesalvataggio += this->parent->self->currenttitle.testinohtml[i].toUtf8().constData();
 
-    system("clear");
-    qDebug() << "\n\nQUA\n" << indicesalvataggio.c_str();
-
     bool check = this->compressfile(( this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(), indicesalvataggio.c_str());
 
     return check;

@@ -64,6 +64,9 @@ layout:
   /usr/share/X11:
     bind: $SNAP/usr/share/X11
 
+  /etc/writernote/:
+    bind: $SNAP_USER_DATA/settings
+
 plugs:
   gsettings:
   gtk-3-themes:
@@ -103,7 +106,7 @@ parts:
       qmake
 
       snapcraftctl build
-      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
+      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/      
       cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
 
       # copying image

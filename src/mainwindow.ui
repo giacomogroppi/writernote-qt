@@ -194,6 +194,7 @@
     <addaction name="actionDelete_audio"/>
     <addaction name="actionDelete_copybook"/>
     <addaction name="actionConvert_audio_to_text"/>
+    <addaction name="actionQuality_setting"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -496,6 +497,11 @@
    </property>
    <property name="text">
     <string>pauserecording</string>
+   </property>
+  </action>
+  <action name="actionQuality_setting">
+   <property name="text">
+    <string>Quality setting</string>
    </property>
   </action>
  </widget>

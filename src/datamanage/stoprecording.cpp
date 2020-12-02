@@ -15,6 +15,7 @@ void MainWindow::on_stopplaybotton_triggered()
     messaggio_utente("I begin to sort out the data.\nThis operation may take a while");
 
     spacchettamento(this);
+    this->self->currenttitle.se_registato = true;
 }
 
 #endif // STOP_RECORDING_CPP

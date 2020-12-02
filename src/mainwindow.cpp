@@ -477,3 +477,4 @@ void MainWindow::on_listWidgetSX_itemClicked(QListWidgetItem *item)
 {
     return redolist(this);
 }
+

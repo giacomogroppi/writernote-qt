@@ -122,6 +122,8 @@ private slots:
     /* funzione che gestisce la fine del riascolto dell'audio */
     void cambiostatoplayer(QMediaPlayer::State);
 
+    void on_actionQuality_setting_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

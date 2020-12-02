@@ -23,8 +23,11 @@ SOURCES += \
     src/audioplay/enableriascolto.cpp \
     src/audioplay/playbottonfunction.cpp \
     src/audioplay/riascoltoaudioprogressivo.cpp \
+    src/audiosetting/audioqualityoption.cpp \
     src/audiorecord/displayErrorMessage.cpp \
     src/audiorecord/getbufferlevels.cpp \
+    src/audiosetting/loadqualita.cpp \
+    src/audiosetting/savequalita.cpp \
     src/chartoint.cpp \
     src/currenttitle/audiototext.cpp \
     src/currenttitle/compressvideo.cpp \
@@ -68,7 +71,11 @@ SOURCES += \
 
 HEADERS += \
     src/areyousure.h \
+    src/audiosetting/audioqualityoption.h \
     src/audiorecord/getbufferlevels.h \
+    src/audiosetting/definition.h \
+    src/audiosetting/loadqualita.h \
+    src/audiosetting/savequalita.h \
     src/currenttitle/main_include_currenttitle.h \
     src/currenttitle/redolist.h \
     src/datawrite/renamefile_f_zip.h \
@@ -89,6 +96,7 @@ HEADERS += \
     src/style/inserttable_class.h
 
 FORMS += \
+    src/audiosetting/audioqualityoption.ui \
     src/mainwindow.ui \
     src/style/inserttable_class.ui
 

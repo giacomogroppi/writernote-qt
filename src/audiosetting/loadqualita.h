@@ -1,0 +1,6 @@
+#ifndef LOADQUALITA_H
+#define LOADQUALITA_H
+
+
+
+#endif // LOADQUALITA_H
