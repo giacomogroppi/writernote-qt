@@ -34,6 +34,7 @@ bool savequalita(audioqualityoption *padredialog){
 
 
     fwrite(&oggettodascrivere, sizeof(oggettodascrivere), 1, fp);
+    fclose(fp);
 
     return true;
 

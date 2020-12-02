@@ -3,10 +3,44 @@
 #include "ui_mainwindow.h"
 #include <iostream>
 
+#include <QFileInfo>
+
 #include "definition.h"
+
+static bool checkexist(){
+    QFileInfo check_file(POSIZIONESETTINGS);
+
+    if(check_file.exists()){
+        return true;
+    }
+
+
+    /* scrive le preferenze base */
+    FILE *fp;
+    fp = fopen(POSIZIONESETTINGS, "w");
+
+    oggettodascrivere_t oggettodascrivere;
+
+    oggettodascrivere.audiodevice = "";
+
+    oggettodascrivere.settings.setCodec((const QString) "");
+    oggettodascrivere.settings.setSampleRate(0);
+    oggettodascrivere.settings.setBitRate(0);
+    oggettodascrivere.settings.setChannelCount(-1);
+    oggettodascrivere.settings.setQuality(QMultimedia::EncodingQuality(2));
+    oggettodascrivere.settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
+
+    oggettodascrivere.container = "";
+
+    fwrite(&oggettodascrivere, sizeof(oggettodascrivere), 1, fp);
+    return true;
+}
 
 /* funzione che viene chiamata tutte le volte che l'utente inizia una registrazione */
 bool loadqualita(MainWindow *parent){
+    if(!checkexist())
+        return false;
+
     oggettodascrivere_t oggettodaleggere;
 
     FILE *fp;
@@ -15,7 +49,11 @@ bool loadqualita(MainWindow *parent){
         return false;
 
 
-    fread(&oggettodaleggere, sizeof(oggettodaleggere), 1, fp);
+    int quanti = fread(&oggettodaleggere, sizeof(oggettodaleggere), 1, fp);
+    fclose(fp);
+    if(quanti < 1)
+        return false;
+
 
     parent->m_audioRecorder->setAudioInput(oggettodaleggere.audiodevice);
 
