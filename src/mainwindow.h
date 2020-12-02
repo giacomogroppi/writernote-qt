@@ -52,6 +52,10 @@ public:
     /* gestione della riproduzione dell'audio */
     QMediaPlayer *player;
 
+
+    /* la funzione serve anche per eliminare l'audio del copybook */
+    void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
+
 public slots:
     void processBuffer(const QAudioBuffer&);
 
@@ -69,7 +73,7 @@ private slots:
 
     void on_actionOpen_triggered();
 
-    void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
+
 
     void on_textEdit_selectionChanged();
 
@@ -123,6 +127,8 @@ private slots:
     void on_actionQuality_setting_triggered();
 
     void on_stoprecordingbotton_triggered();
+
+    void on_actionDelete_audio_triggered();
 
 private:
     /* gestione dell'audio */

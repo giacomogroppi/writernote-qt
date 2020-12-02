@@ -38,11 +38,11 @@ void MainWindow::audiototext_f(){
         return redolist(this);
 }
 
-#include "deleteaudio.cpp"
+#include "deleteaudio.h"
 void MainWindow::deleteaudio_f(){
     if(!this->ui->listWidgetSX->currentItem()->isSelected())
         return redolist(this);
-    deleteaudio(this, this->ui->listWidgetSX->currentItem()->text().toUtf8().constData());
+    deleteaudio(this, this->ui->listWidgetSX->currentItem());
 }
 
 /* funzione che gestisce il click destro sulla lista dei copybook */

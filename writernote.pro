@@ -78,6 +78,7 @@ HEADERS += \
     src/audiosetting/definition.h \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
+    src/currenttitle/deleteaudio.h \
     src/currenttitle/main_include_currenttitle.h \
     src/currenttitle/redolist.h \
     src/datawrite/renamefile_f_zip.h \
