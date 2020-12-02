@@ -77,7 +77,7 @@ void setting_ui_start(MainWindow *parent){
     settingaudio_riascolto(parent, false);
 
     parent->ui->actionPrint->setEnabled(false);
-    parent->ui->actionCreate_new_copybook->setEnabled(false);
+    //parent->ui->actionCreate_new_copybook->setEnabled(false);
     parent->ui->listWidgetSX->setEnabled(false);
 
 }

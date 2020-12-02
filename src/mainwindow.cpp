@@ -135,7 +135,7 @@ void MainWindow::on_actionNew_File_triggered()
     }
 
     this->self->currentTitle = "";
-    this->ui->actionCreate_new_copybook->setEnabled(true);
+    //this->ui->actionCreate_new_copybook->setEnabled(true);
     this->self->currenttitle.reset();
 }
 
@@ -224,9 +224,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     settingtextedit(this, true);
     settingstyle(this, true);
-    //this->ui->actionDelete_copybook->setEnabled(true);
 
-    settingaudio_riascoltoinatto(this, false);
 
     aggiornotestiriascolto(this);
     this->ui->actionPrint->setEnabled(true);
@@ -367,6 +365,10 @@ void MainWindow::on_startrecording_triggered()
 
 
     this->setOutputLocation();
+
+    if(this->self->currenttitle.audio_position_path == "")
+        return;
+
 #ifdef STAMPA
     qDebug() << "Start recording";
 #endif
@@ -377,17 +379,6 @@ void MainWindow::on_startrecording_triggered()
         this->m_audioRecorder->setAudioInput((const QString)"");
 
         QAudioEncoderSettings settings;
-
-        /* parte della funzione che gestisce tutto la definizione delle variabile per la registrazione dell'audio */
-        /*settings.setCodec(boxValue(ui->audioCodecBox).toString());
-        settings.setSampleRate(boxValue(ui->sampleRateBox).toInt());
-        settings.setBitRate(boxValue(ui->bitrateBox).toInt());
-        settings.setChannelCount(boxValue(ui->channelsBox).toInt());
-        settings.setQuality(QMultimedia::EncodingQuality(ui->qualitySlider->value()));
-        settings.setEncodingMode(ui->constantQualityRadioButton->isChecked() ?
-                                 QMultimedia::ConstantQualityEncoding :
-                                 QMultimedia::ConstantBitRateEncoding);
-        */
 
         settings.setCodec((const QString) "");
         settings.setSampleRate(0);
@@ -404,6 +395,9 @@ void MainWindow::on_startrecording_triggered()
         this->self->currenttitle.testinohtml.clear();
         this->self->currenttitle.posizione_iniz.clear();
     }
+
+    this->ui->startrecording->setEnabled(false);
+
 }
 
 
@@ -461,14 +455,6 @@ void MainWindow::on_textEdit_textChanged()
         return;
     }
 
-/*#ifdef STAMPA
-    qDebug() << "\nMainWindow::on_textEdit_textChanged testinohtml: -> " << this->self->currenttitle.testinohtml.length();
-    qDebug() << "\nMainWindow::on_textEdit_textChangedposizione_iniz: -> " << this->self->currenttitle.posizione_iniz.length();
-#endif*/
-
-    /*int i;
-    for(i=0; i< this->self->currenttitle.posizione_iniz.length(); i++)
-        qDebug() << this->self->currenttitle.posizione_iniz[i];*/
 
     this->self->currenttitle.testinohtml.append(ui->textEdit->toPlainText());
     this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
@@ -485,4 +471,3 @@ void MainWindow::on_listWidgetSX_itemClicked(QListWidgetItem *item)
 {
     return redolist(this);
 }
-

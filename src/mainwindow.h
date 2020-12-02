@@ -95,8 +95,6 @@ private slots:
     void riascoltoaudioprogressivo(qint64 position);
     void on_actionListen_current_audio_triggered();
 
-    void on_stopplaybotton_triggered();
-
     void on_startriascoltobotton_clicked();
 
     void on_boldbotton_clicked();
@@ -123,6 +121,8 @@ private slots:
     void cambiostatoplayer(QMediaPlayer::State);
 
     void on_actionQuality_setting_triggered();
+
+    void on_stoprecordingbotton_triggered();
 
 private:
     /* gestione dell'audio */

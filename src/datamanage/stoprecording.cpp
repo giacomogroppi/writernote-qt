@@ -7,8 +7,11 @@
 #include "sistemazionedatiregistrati.cpp"
 #include "../dialog_critic.h"
 
-/* funzione che gestisce lo stop della registrazione */
-void MainWindow::on_stopplaybotton_triggered()
+#include "../audioplay/aggiornotastiriascolto.h"
+
+#include "../setting_ui.h"
+
+void MainWindow::on_stoprecordingbotton_triggered()
 {
     this->m_audioRecorder->stop();
 
@@ -16,6 +19,14 @@ void MainWindow::on_stopplaybotton_triggered()
 
     spacchettamento(this);
     this->self->currenttitle.se_registato = true;
+
+    messaggio_utente("I finished");
+
+    settingaudio_registrazione(this, false);
+    settingaudio_riascolto(this, true);
+
+    aggiornotestiriascolto(this);
 }
+
 
 #endif // STOP_RECORDING_CPP

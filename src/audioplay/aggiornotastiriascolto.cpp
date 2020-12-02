@@ -1,10 +1,14 @@
 #ifndef AGGIORNO_TASTI_RIASCOLTO_CPP
 #define AGGIORNO_TASTI_RIASCOLTO_CPP
 
+#include "aggiornotastiriascolto.h"
+
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
 #include <QDebug>
+
+#include "../setting_ui.h"
 
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->self->currenttitle.se_registato){
@@ -12,10 +16,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         if(!file.exists())
             return;
 
-        /* disable play, stop, pause botton for record audio */
-        parent->ui->pauserecordingbotton->setEnabled(false);
-        parent->ui->startrecording->setEnabled(false);
-        parent->ui->stopriascolto->setEnabled(false);
+        settingaudio_registrazione(parent, false);
 
         /* enable play, pause botton for play audio alreay record */
         parent->ui->stopriascolto->setEnabled(true);
@@ -26,6 +27,11 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->volumeSlider->setEnabled(true);
 
         parent->player->setMedia(QUrl::fromLocalFile(parent->self->currenttitle.audio_position_path.c_str()));
+    }
+    else{
+        /* abilita i tasti per la registrazione */
+        settingaudio_registrazione(parent, true);
+        settingaudio_riascolto(parent, false);
     }
 
     if(parent->self->currenttitle.se_tradotto){
