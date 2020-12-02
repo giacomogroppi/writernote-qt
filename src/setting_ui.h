@@ -12,4 +12,8 @@ void settingaudio_registrazione(MainWindow *parent, bool check);
 /*Funzione che gestisce l'aggiunta della barra per selezionare il font*/
 void setting_ui_start(MainWindow *parent);
 void settingaudio_riascoltoinatto(MainWindow *, bool);
+
+/* gestisce il copia, incolla ... */
+void settingtextedit(MainWindow *parent, bool check);
+
 #endif // SETTING_UI_H

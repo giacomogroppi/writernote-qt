@@ -71,6 +71,7 @@ SOURCES += \
 
 HEADERS += \
     src/areyousure.h \
+    src/audioplay/cambioiconariascolto.h \
     src/audiosetting/audioqualityoption.h \
     src/audiorecord/getbufferlevels.h \
     src/audiosetting/definition.h \

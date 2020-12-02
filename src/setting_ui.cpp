@@ -52,9 +52,10 @@ void settingaudio_riascolto(MainWindow *parent, bool check){
 void settingaudio_riascoltoinatto(MainWindow *parent, bool check){
     /* true attivare pulsante di riascolto in basso */
     parent->ui->startriascoltobotton->setEnabled(check);
-    parent->ui->stoprecordingbotton->setEnabled(check);
+    parent->ui->stopriascolto->setEnabled(check);
     parent->ui->audioSlider->setEnabled(check);
     parent->ui->volumeSlider->setEnabled(check);
+
 
     /* abilitazione o ! per conversione, eliminazione ... */
     parent->ui->actionConvert_audio_to_text->setEnabled(!check);
@@ -62,6 +63,10 @@ void settingaudio_riascoltoinatto(MainWindow *parent, bool check){
     parent->ui->actionDelete_copybook->setEnabled(!check);
     parent->ui->actionCreate_new_copybook->setEnabled(!check);
     parent->ui->actionListen_current_audio->setEnabled(!check);
+
+    if(!check){
+        settingstyle(parent, true);
+    }
 }
 
 /*Funzione che gestisce l'aggiunta della barra per selezionare il font*/
