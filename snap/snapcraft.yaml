@@ -8,9 +8,7 @@ description: |
   translate it later into text, and listen to it in an intelligent way.
 
 grade: stable
-#confinement: strict
-
-confinement: classic
+confinement: strict
 
 base: core20
 
@@ -26,8 +24,6 @@ apps:
     command-chain: ["snap/command-chain/alsa-launch"]
     command: bin/desktop-launch $SNAP/bin/writernote
     environment:
-      #PYTHONPATH: $SNAP/lib/python3.8/site-packages:$SNAP/usr/lib/python3/dist-packages
-      #LD_LIBRARY_PATH: $SNAP/usr/lib/writernote:$LD_LIBRARY_PATH
       ALSA_CONFIG_PATH: /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/alsa/alsa.conf
 
 
@@ -39,7 +35,6 @@ apps:
       - opengl
       - audio-record
       - home
-      - pulseaudio
       - browser-support
       - network
       - gsettings
@@ -183,8 +178,6 @@ parts:
 
       - pulseaudio
 
-
-      #NO
       - qt5-image-formats-plugins
       - qtwayland5
       - libgtk-3-0
@@ -194,8 +187,7 @@ parts:
     
       - libasound2-dev 
       - libasound2
-      - qt5-gtk-platformtheme  
-      #NO
+      - qt5-gtk-platformtheme
 
       - libgstreamer1.0-0 
       - gstreamer1.0-plugins-base 
@@ -212,47 +204,17 @@ parts:
       - gstreamer1.0-qt5 
       - gstreamer1.0-pulseaudio
       
-      #NO
-      ##qmultimedia
-      ##for qt
       - libxrender-dev 
       - libxi-dev 
       - libxkbcommon-dev 
       - libxkbcommon-x11-dev
-
-      #- libxcursor-dev 
-      #- libxcomposite-dev 
-      #- libxdamage-dev 
-      #- libxrandr-dev 
-      #- libxtst-dev 
-      #- libxss-dev 
-      #- libdbus-1-dev 
-      #- libevent-dev 
-      #- libfontconfig1-dev 
-      #- libcap-dev  
-      #- libudev-dev 
-      #- libpci-dev 
-      #- libnss3-dev  
-      #- libegl1-mesa-dev 
-      #- gperf 
-      #- bison 
-      #NO
 
       - libgstreamer1.0-dev 
       - libgstreamer-plugins-base1.0-dev 
       - libgstreamer-plugins-good1.0-dev 
       - libgstreamer-plugins-bad1.0-dev
 
-      #tg
-      #- libpulse-dev
-      #- libqt5svg5
-      #- libqt5waylandclient5
-      #- libssl1.1
-      #- libxcb1
-      #- libxcb-screensaver0
-      #- zlib1g
 
-    
   # Qt checks that ibus-daemon binary is present, otherwise doesn't work
   ibus:
     plugin: nil

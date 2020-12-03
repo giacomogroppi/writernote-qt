@@ -11,15 +11,9 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     if(this->player->state() != QMediaPlayer::PlayingState)
         return;
 
-/*#ifdef STAMPA
-    qDebug() << "position" << position;
-#endif*/
-
     int position_inlist = this->self->currenttitle.posizione_iniz.indexOf(position/1000);
 
     if(position_inlist == -1) return;
-
-
 
     QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + this->self->currenttitle.testinohtml[position_inlist] + "</b>";
     testoGrassetto += self->currenttitle.testinohtml.last().mid(position_inlist, -1) + "</body></html>";
@@ -27,8 +21,6 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     this->ui->textEdit->setHtml(testoGrassetto);
 
     this->ui->audioSlider->blockSignals(true);
-
-    qDebug() << "tempo -> " << this->player->duration();
 
     this->ui->audioSlider->setValue((position*100)/this->player->duration());
 
@@ -39,31 +31,3 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
 }
 
 #endif
-
-/*
-
-self.currentTime = int(position/1000)
-        print("Audio time: {}".format(self.currentTime))
-
-        if self.play_:
-            try:
-                position = self.currentTitleJSON['posizione_iniz'].index(str(self.currentTime))
-                print(self.currentTitleJSON['posizione_iniz'][position])
-            except:
-                ''' in caso la riga sia stata eliminata da data.py '''
-                return False
-
-            ''' next data structure '''
-            try:
-                lung = len(self.currentTitleJSON['testinohtml'][position])
-                testoGrassetto = '<!DOCTYPE html><html><body><b>' + self.currentTitleJSON['testinohtml'][position] + '</b>'
-                testoGrassetto += self.currentTitleJSON['testinohtml'][-1][lung:] + '</body></html>'
-                print(position)
-            except IndexError:
-                print("\nindexerror")
-                pass
-
-            self.editor.setHtml(testoGrassetto)
-
-
-*/
