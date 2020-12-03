@@ -12,7 +12,8 @@ typedef struct {
 
 
 #ifdef __linux__
-    #define POSIZIONESETTINGS "/etc/writernote"
+    #define POSIZIONESETTINGS "/etc/writernote/conficbinary"
+    #define POSIZIONEAUDIOPERMISSION "/etc/writernote/permissionaudio"
 #elif _WIN32
     #define POSIZIONESETTINGS ""
 

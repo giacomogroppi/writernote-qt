@@ -45,9 +45,6 @@ bool savecopybook::check_permission(){
         if(!check) /*vuol dire che l'utente non ha selezionato nessun file o posizione*/
             return false;
     }
-    else
-        qDebug() << "PATH:" << this->ui->self->path.c_str() << "FINEPATH";
-
     savefile save_class(this->ui, this->position);
 
     int posizione = this->ui->self->indice.titolo.indexOf(position->text().toUtf8().constData());

@@ -67,14 +67,12 @@ void xmlstruct::loadfile(const char *nomeFile){
     self->currenttitle.versione = chartoint(temp[0].toUtf8().constData());
 
     stringa_decode("<se_registrato>", "</se_registrato>", &temp);
-    qDebug() << "Se registrato: -> " << temp[0];
     if(temp[0] == "true")
         self->currenttitle.se_registato = true;
     else
         self->currenttitle.se_registato = false;
 
     stringa_decode("<se_tradotto>", "</se_tradotto>", &temp);
-    qDebug() << "SE TRADOTTO " << temp[0];
     if(temp[0] == "true")
         self->currenttitle.se_tradotto = true;
     else

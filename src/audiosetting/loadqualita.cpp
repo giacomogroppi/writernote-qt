@@ -19,6 +19,15 @@ static bool checkexist(){
     FILE *fp;
     fp = fopen(POSIZIONESETTINGS, "w");
 
+    if(!fp)
+    {
+#ifdef STAMPA
+        system("clear");
+        qDebug() << "File non aperto";
+#endif
+        return false;
+    }
+
     oggettodascrivere_t oggettodascrivere;
 
     oggettodascrivere.audiodevice = "";
@@ -54,29 +63,10 @@ bool loadqualita(MainWindow *parent){
     if(quanti < 1)
         return false;
 
-
     parent->m_audioRecorder->setAudioInput(oggettodaleggere.audiodevice);
 
     parent->m_audioRecorder->setEncodingSettings(oggettodaleggere.settings, QVideoEncoderSettings(), oggettodaleggere.container);
 
     return true;
-
-
-    /*m_audioRecorder->setAudioInput(boxValue(padredialogo->ui->audioDeviceBox).toString());
-
-    QAudioEncoderSettings settings;
-    settings.setCodec(boxValue(ui->audioCodecBox).toString());
-    settings.setSampleRate(boxValue(ui->sampleRateBox).toInt());
-    settings.setBitRate(boxValue(ui->bitrateBox).toInt());
-    settings.setChannelCount(boxValue(ui->channelsBox).toInt());
-    settings.setQuality(QMultimedia::EncodingQuality(ui->qualitySlider->value()));
-    settings.setEncodingMode(ui->constantQualityRadioButton->isChecked() ?
-                             QMultimedia::ConstantQualityEncoding :
-                             QMultimedia::ConstantBitRateEncoding);
-
-    QString container = boxValue(ui->containerBox).toString();
-    qDebug() << "\nQString container ->" << container << "FINE";
-    parent->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
-*/
 
 }

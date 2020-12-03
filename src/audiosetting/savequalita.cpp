@@ -29,37 +29,27 @@ bool savequalita(audioqualityoption *padredialog){
 
     FILE *fp;
     fp = fopen(POSIZIONESETTINGS, "w");
-    if(!fp)
-        return false;
+    if(!fp){
+#ifdef STAMPA
+    qDebug() << "File non trovato, o non aperto correttamente";
+        QFile file(POSIZIONESETTINGS);
+        if(file.open(QIODevice::ReadOnly))
+            qDebug() << "File in sola lettura";
+        else{
+            QFileInfo file2(POSIZIONESETTINGS);
+            if(!file2.exists()){
+                qDebug() << "Il file non esiste neanche";
+            }
+        }
 
+#endif
+
+                return false;
+    }
 
     fwrite(&oggettodascrivere, sizeof(oggettodascrivere), 1, fp);
     fclose(fp);
 
     return true;
-
-
-    /*const char *audioDeviceBox = boxValue(padredialog->ui->audioDeviceBox).toString().toUtf8().constData();
-    const char *audioCodecBox = boxValue(padredialog->ui->audioCodecBox).toString().toUtf8().constData();
-    const int sampleRateBox = boxValue(padredialog->ui->sampleRateBox).toInt();
-    const int channelsBox = boxValue(padredialog->ui->channelsBox).toInt();
-    auto qualityslider = QMultimedia::EncodingQuality(padredialog->ui->qualitySlider->value())
-    auto */
-
-    /*m_audioRecorder->setAudioInput(boxValue(padredialogo->ui->audioDeviceBox).toString());
-
-    QAudioEncoderSettings settings;
-    settings.setCodec(boxValue(ui->audioCodecBox).toString());
-    settings.setSampleRate(boxValue(ui->sampleRateBox).toInt());
-    settings.setBitRate(boxValue(ui->bitrateBox).toInt());
-    settings.setChannelCount(boxValue(ui->channelsBox).toInt());
-    settings.setQuality(QMultimedia::EncodingQuality(ui->qualitySlider->value()));
-    settings.setEncodingMode(ui->constantQualityRadioButton->isChecked() ?
-                             QMultimedia::ConstantQualityEncoding :
-                             QMultimedia::ConstantBitRateEncoding);
-
-    QString container = boxValue(ui->containerBox).toString();
-    qDebug() << "\nQString container ->" << container << "FINE";
-    m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);*/
 
 }

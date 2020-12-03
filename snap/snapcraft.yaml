@@ -8,7 +8,10 @@ description: |
   translate it later into text, and listen to it in an intelligent way.
 
 grade: stable
-confinement: strict
+#confinement: strict
+
+confinement: classic
+
 base: core20
 
 architectures:
@@ -27,7 +30,6 @@ apps:
       #LD_LIBRARY_PATH: $SNAP/usr/lib/writernote:$LD_LIBRARY_PATH
       ALSA_CONFIG_PATH: /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/alsa/alsa.conf
 
-    #DISABLE_WAYLAND: 1
 
     plugs:
       - desktop
@@ -64,8 +66,8 @@ layout:
   /usr/share/X11:
     bind: $SNAP/usr/share/X11
 
-  /etc/writernote/:
-    bind: $SNAP_USER_DATA/settings
+  /etc/writernote:
+    bind: $SNAP_DATA/etc/writernote
 
 plugs:
   gsettings:
@@ -130,23 +132,6 @@ parts:
       - libxkbcommon-dev 
       - libxkbcommon-x11-dev
 
-      #- libxcursor-dev 
-      #- libxcomposite-dev 
-      #- libxdamage-dev 
-      #- libxrandr-dev 
-      #- libxtst-dev 
-      #- libxss-dev 
-      #- libdbus-1-dev 
-      #- libevent-dev 
-      #- libfontconfig1-dev 
-      #- libcap-dev  
-      #- libudev-dev 
-      #- libpci-dev 
-      #- libnss3-dev  
-      #- libegl1-mesa-dev 
-      #- gperf 
-      #- bison 
-
       #qmediaplayer
       - libgstreamer1.0-dev 
       - libgstreamer-plugins-base1.0-dev 
@@ -160,22 +145,18 @@ parts:
       - libglib2.0-dev
       - libgtk-3-dev
       - liblzma-dev
-      #- libpulse-dev
       - libqt5svg5-dev
       - libqt5waylandclient5-dev
       - libssl-dev
       - libxcb1-dev
       - libxcb-screensaver0-dev
       - zlib1g-dev
-#
-      #- xdg-desktop-portal
-      #- xdg-desktop-portal-gtk
 
     stage-packages:
       # dipendenza run time
       - libqt5widgets5
       - libqt5core5a
-
+      - ffmpeg
 
       ## Testing
       - libxcb-screensaver0-dev
@@ -190,42 +171,54 @@ parts:
       - execstack
 
 
-      - ffmpeg
       - qtmultimedia5-dev
       - libqt5multimediawidgets5
       - libqt5multimedia5-plugins 
       - libqt5multimedia5
-      - qt5-qmake
+      #- qt5-qmake
       - libzip-dev
       - libxcb-xinerama0-dev
       - qt5-default
       - libx11-xcb-dev 
-      #- xdg-desktop-portal
-      #- xdg-desktop-portal-gtk
-      #- xdg-desktop-portal-kde  
 
-      #- libgstreamer1.0-0 
-      #- gstreamer1.0-plugins-base 
-      #- gstreamer1.0-plugins-good 
-      #- gstreamer1.0-plugins-bad 
-      #- gstreamer1.0-plugins-ugly 
-      #- gstreamer1.0-libav 
-      #- gstreamer1.0-doc 
-      #- gstreamer1.0-tools 
-      #- gstreamer1.0-x 
-      #- gstreamer1.0-alsa 
-      #- gstreamer1.0-gl 
-      #- gstreamer1.0-gtk3 
-      #- gstreamer1.0-qt5 
-      #- gstreamer1.0-pulseaudio
-      
       - pulseaudio
 
-      #- libglu1-mesa-dev 
-      #- libxrender-dev 
-      #- libxi-dev 
-      #- libxkbcommon-dev 
-      #- libxkbcommon-x11-dev
+
+      #NO
+      - qt5-image-formats-plugins
+      - qtwayland5
+      - libgtk-3-0
+      - liblzma5
+      - libopus0
+      - libpulse0
+    
+      - libasound2-dev 
+      - libasound2
+      - qt5-gtk-platformtheme  
+      #NO
+
+      - libgstreamer1.0-0 
+      - gstreamer1.0-plugins-base 
+      - gstreamer1.0-plugins-good 
+      - gstreamer1.0-plugins-bad 
+      - gstreamer1.0-plugins-ugly 
+      - gstreamer1.0-libav 
+      - gstreamer1.0-doc 
+      - gstreamer1.0-tools 
+      - gstreamer1.0-x 
+      - gstreamer1.0-alsa 
+      - gstreamer1.0-gl 
+      - gstreamer1.0-gtk3 
+      - gstreamer1.0-qt5 
+      - gstreamer1.0-pulseaudio
+      
+      #NO
+      ##qmultimedia
+      ##for qt
+      - libxrender-dev 
+      - libxi-dev 
+      - libxkbcommon-dev 
+      - libxkbcommon-x11-dev
 
       #- libxcursor-dev 
       #- libxcomposite-dev 
@@ -243,36 +236,22 @@ parts:
       #- libegl1-mesa-dev 
       #- gperf 
       #- bison 
+      #NO
 
+      - libgstreamer1.0-dev 
+      - libgstreamer-plugins-base1.0-dev 
+      - libgstreamer-plugins-good1.0-dev 
+      - libgstreamer-plugins-bad1.0-dev
 
-      #- libgstreamer1.0-dev 
-      #- libgstreamer-plugins-base1.0-dev 
-      #- libgstreamer-plugins-good1.0-dev 
-      #- libgstreamer-plugins-bad1.0-dev
-
-      - qt5-image-formats-plugins
-      - qtwayland5
-      - libgtk-3-0
-      - liblzma5
-      - libopus0
-      - libpulse0
-      ##- libpulse-dev
+      #tg
+      #- libpulse-dev
       #- libqt5svg5
       #- libqt5waylandclient5
       #- libssl1.1
       #- libxcb1
       #- libxcb-screensaver0
-      #- zlib1g-dev
       #- zlib1g
-#
-      - libasound2-dev 
-      - libasound2
-      - qt5-gtk-platformtheme  
-#
-      #- libcanberra-gtk-module 
-      #- libcanberra-gtk3-module
-      #- libasound2-plugins
-      
+
     
   # Qt checks that ibus-daemon binary is present, otherwise doesn't work
   ibus:

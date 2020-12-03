@@ -50,6 +50,8 @@
 
 #include "style/main_style.cpp"
 
+#include "audiosetting/loadqualita.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -199,7 +201,6 @@ void MainWindow::on_actionOpen_triggered()
 /* Funzione che gestisce il doppio click sull'item a sinistra della lista copybook */
 void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 {
-    qDebug() << "Funzione richiamata";
     if(this->player->state() == QMediaPlayer::PlayingState)
         return redolist(this);
 
@@ -210,8 +211,6 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
             return redolist(this);
     }
-
-
 
     /* a questo punto deve aprire il nuovo copybook */
     if(this->self->indice.titolo[this->self->indice.titolo.indexOf(item->text())] != ""){
@@ -361,38 +360,33 @@ void MainWindow::setOutputLocation()
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
-#ifdef STAMPA
-    qDebug() << "\nMainWindow::on_startrecording_triggered testinohtml: -> " << this->self->currenttitle.testinohtml.length();
-    qDebug() << "\nMainWindow::on_startrecording_triggered posizione_iniz: -> " << this->self->currenttitle.posizione_iniz.length();
-#endif
-
 
     this->setOutputLocation();
 
     if(this->self->currenttitle.audio_position_path == "")
         return;
 
-#ifdef STAMPA
-    qDebug() << "Start recording";
-#endif
-
     if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {
         /* funzione che gestisce l'ingresso dell'audio */
         //m_audioRecorder->setAudioInput(boxValue(ui->audioDeviceBox).toString());
-        this->m_audioRecorder->setAudioInput((const QString)"");
+        /**/
+        if(!loadqualita(this)){
+            /* se il file non esiste o non si è riscontrato un problema si caricano le configurazioni standard */
+            this->m_audioRecorder->setAudioInput((const QString)"");
 
-        QAudioEncoderSettings settings;
+            QAudioEncoderSettings settings;
 
-        settings.setCodec((const QString) "");
-        settings.setSampleRate(0);
-        settings.setBitRate(0);
-        settings.setChannelCount(-1);
-        settings.setQuality(QMultimedia::EncodingQuality(2));
-        settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
+            settings.setCodec((const QString) "");
+            settings.setSampleRate(0);
+            settings.setBitRate(0);
+            settings.setChannelCount(-1);
+            settings.setQuality(QMultimedia::EncodingQuality(2));
+            settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
 
-        QString container = "";
+            QString container = "";
 
-        this->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
+            this->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
+        }
         this->m_audioRecorder->record();
 
         this->self->currenttitle.testinohtml.clear();
@@ -434,7 +428,6 @@ void MainWindow::processBuffer(const QAudioBuffer& buffer)
 void MainWindow::updateProgress(qint64 duration)
 {
     this->self->currentTime = (int)(duration/1000);
-    qDebug() << endl << "AudioRecord:: updatePrograss ";
     if (m_audioRecorder->error() != QMediaRecorder::NoError || duration < 2000)
         return;
 

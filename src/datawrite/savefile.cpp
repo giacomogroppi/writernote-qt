@@ -53,8 +53,6 @@ bool savefile::compressfile(const char *namefile, const char *text){
             qDebug() << "\nsavefile::compressfile -> Abbiamo avuto un problema nel file replace " << zip_strerror(filezip) << endl;
             return false;
         }
-        else
-            qDebug() << "\nsavefile::comressfile -> ho fatto il replace tutto a posto ";
     }
 
     zip_close(filezip);
