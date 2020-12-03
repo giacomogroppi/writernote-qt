@@ -34,7 +34,7 @@ void MainWindow::on_actionListen_current_audio_triggered()
     settingaudio_riascoltoinatto(this, true);
     settingstyle(this, false);
     settingtextedit(this, false);
-
+    this->ui->textEdit->setEnabled(true);
 
     this->ui->actionListen_current_audio->setEnabled(true);
 

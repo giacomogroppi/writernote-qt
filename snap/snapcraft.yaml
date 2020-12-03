@@ -7,7 +7,6 @@ description: |
   writernote is a multiplatform application that allows you to take notes by recording audio, 
   translate it later into text, and listen to it in an intelligent way.
 
-grade: stable
 confinement: strict
 
 base: core20
@@ -17,15 +16,13 @@ architectures:
   - build-on: arm64
   - build-on: armhf
 
-
-
 apps:
   writernote:
     command-chain: ["snap/command-chain/alsa-launch"]
     command: bin/desktop-launch $SNAP/bin/writernote
     environment:
       ALSA_CONFIG_PATH: /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/alsa/alsa.conf
-
+      PULSA_CONFIG_PATH: $SNAP/etc/pulse/client.conf.d/01-enable-autospawn.conf
 
     plugs:
       - desktop
@@ -49,8 +46,6 @@ apps:
       - mpris
 
 
-
-
 layout:
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
@@ -63,6 +58,10 @@ layout:
 
   /etc/writernote:
     bind: $SNAP_DATA/etc/writernote
+
+  /etc/pulse:
+    bind: $SNAP/etc/pulse
+
 
 plugs:
   gsettings:
@@ -176,14 +175,14 @@ parts:
       - qt5-default
       - libx11-xcb-dev 
 
-      - pulseaudio
+      #- pulseaudio
 
       - qt5-image-formats-plugins
       - qtwayland5
       - libgtk-3-0
       - liblzma5
       - libopus0
-      - libpulse0
+      - libpulse-dev
     
       - libasound2-dev 
       - libasound2
