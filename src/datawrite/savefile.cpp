@@ -13,7 +13,7 @@
 
 #include <zlib.h>
 #include <zip.h>
-#include <glib.h>
+//#include <glib.h>
 #include <stdlib.h>
 #include "../chartoint.h"
 #include <string.h>
