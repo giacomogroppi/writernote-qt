@@ -227,7 +227,6 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     settingtextedit(this, true);
     settingstyle(this, true);
 
-
     aggiornotestiriascolto(this);
     this->ui->actionPrint->setEnabled(true);
 }
@@ -245,9 +244,6 @@ void MainWindow::on_textEdit_selectionChanged(){
         if ((position >= this->self->currenttitle.testinohtml[i-1].length()) && (position <= this->self->currenttitle.testinohtml[i+1].length())){
             audio = this->self->currenttitle.posizione_iniz[i];
 
-#ifdef STAMPA
-            qDebug() << "audio: " << audio*1000 ;
-#endif
 
             this->player->setPosition(audio*1000);
             break;
@@ -255,17 +251,11 @@ void MainWindow::on_textEdit_selectionChanged(){
         else if ((i + 1) == this->self->currenttitle.posizione_iniz.length()){
             audio = this->self->currenttitle.posizione_iniz.last();
 
-#ifdef STAMPA
-            qDebug() << "audio2: " << audio*1000;
-#endif
             //self.player.setPosition(audio*1000)
             break;
         }
         i ++;
     }
-#ifdef STAMPA
-    qDebug() << "text: " << text << "\nPosition: " << position;
-#endif
 }
 
 /* funzione che gestisce la creazione di un nuovo copybook */
@@ -346,10 +336,6 @@ void MainWindow::setOutputLocation()
     QString fileName = cacheDir + QLatin1String("/output.wav");
 #else
     QString fileName = QFileDialog::getSaveFileName();
-#endif
-
-#ifdef STAMPA
-    qDebug() << "\nMainWidnwo::setOutputLocation -> Si è scelta la posizione -> " << fileName;
 #endif
 
     this->self->currenttitle.audio_position_path = fileName.toUtf8().constData();;

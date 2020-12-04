@@ -40,7 +40,7 @@ void spacchettamento(MainWindow *parent){
 
     int difference;
 
-    qDebug() << "Passa all'altro ciclo";
+    //qDebug() << "Passa all'altro ciclo";
 
     /* parte di funzione che aggiusta il testo in caso si fosse modificato in mezzo */
     while(!check1(&parent->self->currenttitle.testinohtml)){

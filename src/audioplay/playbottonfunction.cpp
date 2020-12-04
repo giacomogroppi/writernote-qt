@@ -29,8 +29,6 @@ void MainWindow::on_startriascoltobotton_clicked()
     else
         this->player->play();
 
-    qDebug() << "media-> " << this->player->mediaStatus();
-
     this->ui->startriascoltobotton->setIcon(icon);
 }
 
