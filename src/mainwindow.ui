@@ -173,6 +173,7 @@
     <addaction name="startrecording"/>
     <addaction name="stoprecordingbotton"/>
     <addaction name="actionImport_Video"/>
+    <addaction name="actioncompress_video"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -236,6 +237,7 @@
    <addaction name="stoprecordingbotton"/>
    <addaction name="pauserecordingbotton"/>
    <addaction name="actionImport_Video"/>
+   <addaction name="actioncompress_video"/>
   </widget>
   <widget class="QToolBar" name="simpleactionbar">
    <property name="windowTitle">
@@ -502,6 +504,15 @@
   <action name="actionQuality_setting">
    <property name="text">
     <string>Quality setting</string>
+   </property>
+  </action>
+  <action name="actioncompress_video">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/compress-video.png</normaloff>:/image/images/compress-video.png</iconset>
+   </property>
+   <property name="text">
+    <string>compress video</string>
    </property>
   </action>
  </widget>

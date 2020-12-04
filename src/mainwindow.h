@@ -132,6 +132,8 @@ private slots:
 
     void on_actionDelete_audio_triggered();
 
+    void on_actioncompress_video_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

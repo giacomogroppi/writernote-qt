@@ -453,3 +453,8 @@ void MainWindow::on_listWidgetSX_itemClicked(QListWidgetItem *item)
 {
     return redolist(this);
 }
+
+void MainWindow::on_actioncompress_video_triggered()
+{
+
+}

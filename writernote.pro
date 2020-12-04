@@ -67,7 +67,8 @@ SOURCES += \
     src/audioplay/stopriascolto.cpp \
     src/audioplay/aggiornamentostatusbar.cpp \
     src/style/bold.cpp \
-    src/audioplay/main_audioplay.cpp
+    src/audioplay/main_audioplay.cpp \
+    src/videocompress/dialog.cpp
 
 
 HEADERS += \
@@ -97,12 +98,14 @@ HEADERS += \
     src/self_class.h \
     src/audiorecord/audiolevel.h\
     src/datawrite/xmlstruct.h \
-    src/style/inserttable_class.h
+    src/style/inserttable_class.h \
+    src/videocompress/dialog.h
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
     src/mainwindow.ui \
-    src/style/inserttable_class.ui
+    src/style/inserttable_class.ui \
+    src/videocompress/dialog.ui
 
 # for the filesystem
 LIBS += -lstdc++fs -lglib-2.0
@@ -115,4 +118,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += libzip
 
-win32: LIBS += /mingw64/include/
+# testing for windows support and compile
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzip
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzip
+
+INCLUDEPATH += $$PWD/../../../mingw64/include
+DEPENDPATH += $$PWD/../../../mingw64/include

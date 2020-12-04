@@ -27,5 +27,6 @@
         <file>images/manoIcon.png</file>
         <file>images/deleteCopyBook.png</file>
         <file>images/text-speech.png</file>
+        <file>images/compress-video.png</file>
     </qresource>
 </RCC>
