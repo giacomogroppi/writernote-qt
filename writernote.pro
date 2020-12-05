@@ -68,7 +68,9 @@ SOURCES += \
     src/audioplay/aggiornamentostatusbar.cpp \
     src/style/bold.cpp \
     src/audioplay/main_audioplay.cpp \
-    src/videocompress/dialog.cpp
+    src/videocompress/enable_videocompress.cpp \
+    src/videocompress/importvideo_functionmainwindow.cpp \
+    src/videocompress/videocompress_ui.cpp
 
 
 HEADERS += \
@@ -99,13 +101,14 @@ HEADERS += \
     src/audiorecord/audiolevel.h\
     src/datawrite/xmlstruct.h \
     src/style/inserttable_class.h \
-    src/videocompress/dialog.h
+    src/videocompress/enable_videocompress.h \
+    src/videocompress/videocompress_ui.h
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
     src/mainwindow.ui \
     src/style/inserttable_class.ui \
-    src/videocompress/dialog.ui
+    src/videocompress/videocompress_ui.ui
 
 # for the filesystem
 LIBS += -lstdc++fs -lglib-2.0
