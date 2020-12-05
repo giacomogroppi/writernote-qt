@@ -134,6 +134,8 @@ private slots:
 
     void on_actioncompress_video_triggered();
 
+    void on_volumeSlider_actionTriggered(int action);
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

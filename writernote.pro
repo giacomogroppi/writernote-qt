@@ -20,10 +20,12 @@ DEFINES += "STAMPA"
 SOURCES += \
     src/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
+    src/audioplay/audiovolume.cpp \
     src/audioplay/cambiostatoplayer.cpp \
     src/audioplay/enableriascolto.cpp \
     src/audioplay/playbottonfunction.cpp \
     src/audioplay/riascoltoaudioprogressivo.cpp \
+    src/audioplay/updatestatusbar_riascolto.cpp \
     src/audiosetting/audioqualityoption.cpp \
     src/audiorecord/displayErrorMessage.cpp \
     src/audiorecord/getbufferlevels.cpp \

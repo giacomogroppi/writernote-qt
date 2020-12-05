@@ -1,5 +1,3 @@
-#define STAMPA 1/* gestisce la disattivazione delle stringhe di debug */
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QList>
@@ -41,13 +39,15 @@
 
 /* audio record */
 #include "audiorecord/getbufferlevels.h"
-//#include "audiorecord/displayErrorMessage.cpp"
+
+/* da sistemare */
 #include "datamanage/sistemazionedatiregistrati.cpp"
 #include <QMediaPlayer>
 
-/* audio play */
+/* da sistemare */
 #include "audioplay/main_audioplay.cpp"
 
+/* da sistemare */
 #include "style/main_style.cpp"
 
 #include "audiosetting/loadqualita.h"
@@ -409,17 +409,6 @@ void MainWindow::processBuffer(const QAudioBuffer& buffer)
     for (int i = 0; i < levels.count(); ++i)
         this->m_audioLevels.at(i)->setLevel(levels.at(i));
 }
-
-/* funzione che gestisce l'aggiornamento della status bar in base al valore del tempo dell'audio */
-void MainWindow::updateProgress(qint64 duration)
-{
-    this->self->currentTime = (int)(duration/1000);
-    if (m_audioRecorder->error() != QMediaRecorder::NoError || duration < 2000)
-        return;
-
-    this->ui->statusBar->showMessage(tr("Recorded %1 sec").arg(duration / 1000));
-}
-
 
 /* editor di testo -> quando cambia il testo scritto */
 void MainWindow::on_textEdit_textChanged()

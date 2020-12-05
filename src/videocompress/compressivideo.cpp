@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-bool compressvideo(QString *posizionefrom, QString *to, int fps, QString compressione)
+int compressvideo(QString *posizionefrom, QString *to, int fps, QString compressione)
 {
     /* ffmpeg -i input.mp4 -vcodec libx265 -crf 28 output.mp4*/
     QString comando = "ffmpeg -i " + *posizionefrom +  " -vcodec " + compressione + " -crf " + QString::number(fps) + " " + *to;
