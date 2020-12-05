@@ -36,6 +36,8 @@ private slots:
 
     void on_bottonefrom_clicked();
 
+    void on_pushButton_ok_clicked();
+
 private:
 };
 

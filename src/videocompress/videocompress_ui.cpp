@@ -4,6 +4,8 @@
 #include "../mainwindow.h"
 
 #include "enable_videocompress.h"
+#include "../dialog_critic.h"
+#include "compressivideo.h"
 
 videocompress_ui::videocompress_ui(QWidget *parent, MainWindow *padre) :
     QDialog(parent),
@@ -84,3 +86,20 @@ void videocompress_ui::on_textedit_destinazione_textChanged()
 
 
 
+void videocompress_ui::on_pushButton_ok_clicked()
+{
+    QFileInfo file_(this->posizionefrom);
+    if(!file_.exists())
+        return dialog_critic("The source file does not exist: " + this->posizionefrom);
+
+    QFileInfo filedestinazione(this->posizioneto);
+    if(!filedestinazione.isWritable())
+        return dialog_critic("The destination file is not writable : " + this->posizioneto);
+
+    if(!compressvideo(&this->posizionefrom,
+                      &this->posizioneto,
+                      this->ui->fps_combobox->currentIndex()-1,
+                      this->ui->codec_combobox->currentText()))
+        return dialog_critic("We had a problem");
+
+}

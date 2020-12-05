@@ -68,6 +68,7 @@ SOURCES += \
     src/audioplay/aggiornamentostatusbar.cpp \
     src/style/bold.cpp \
     src/audioplay/main_audioplay.cpp \
+    src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \
     src/videocompress/videocompress_ui.cpp
@@ -101,6 +102,7 @@ HEADERS += \
     src/audiorecord/audiolevel.h\
     src/datawrite/xmlstruct.h \
     src/style/inserttable_class.h \
+    src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h
 
