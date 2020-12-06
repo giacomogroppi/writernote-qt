@@ -81,15 +81,8 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::endofthemedia(QMediaPlayer::MediaStatus status){
-    if(status == QMediaPlayer::EndOfMedia){
-        //this->on_actionListen_current_audio_triggered();
-        qDebug() << "END of media";
-        qDebug() << "cliccato: -> " << this->ui->actionListen_current_audio->isChecked();
-
-        ui->actionListen_current_audio->setChecked(false);
-
-        qDebug() << "cliccato: -> " << this->ui->actionListen_current_audio->isChecked();
-    }
+    if(status == QMediaPlayer::EndOfMedia)
+        this->on_actionListen_current_audio_triggered();
 }
 
 MainWindow::~MainWindow()

@@ -14,7 +14,6 @@
 /* la funzione gestisce la gestione del click del punsante con la mano */
 void MainWindow::on_actionListen_current_audio_triggered()
 {
-    this->ui->actionListen_current_audio->setChecked(!this->ui->actionListen_current_audio->isChecked());
     cambioiconariascolto(this);
     if(this->player->state() == QMediaPlayer::PlayingState || this->player->mediaStatus() == QMediaPlayer::EndOfMedia){
 
@@ -27,7 +26,10 @@ void MainWindow::on_actionListen_current_audio_triggered()
         this->player->stop();
         this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
-        //this->ui->actionListen_current_audio->setChecked(!this->ui->actionListen_current_audio->isChecked());
+        /* non è possibile per un bag di qt disabilitare il check del bottone -> quindi si disabilita e riabilità */
+        this->ui->actionListen_current_audio->setEnabled(false);
+        this->ui->actionListen_current_audio->setEnabled(true);
+
         this->ui->statusBar->clearMessage();
         return;
     }
