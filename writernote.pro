@@ -2,6 +2,7 @@ QT       += core gui
 QT       += core
 QT       += widgets
 QT       += multimedia
+QT       += printsupport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = build
@@ -70,6 +71,7 @@ SOURCES += \
     src/audioplay/aggiornamentostatusbar.cpp \
     src/style/bold.cpp \
     src/audioplay/main_audioplay.cpp \
+    src/style/print_action.cpp \
     src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \

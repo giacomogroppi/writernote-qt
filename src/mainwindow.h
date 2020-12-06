@@ -138,6 +138,10 @@ private slots:
 
     void on_spinBox_fontsize_valueChanged(const QString &arg1);
 
+    void on_fontComboBox_fonttipo_currentFontChanged(const QFont &f);
+
+    void on_actionPrint_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

@@ -450,3 +450,8 @@ void MainWindow::on_spinBox_fontsize_valueChanged(const QString &arg1)
 {
     this->ui->textEdit->setCurrentFont(arg1);
 }
+
+void MainWindow::on_fontComboBox_fonttipo_currentFontChanged(const QFont &f)
+{
+    this->ui->textEdit->setCurrentFont(f);
+}
