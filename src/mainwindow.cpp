@@ -180,7 +180,7 @@ void MainWindow::on_actionOpen_triggered()
 #endif
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return dialog_critic("Il file non esiste");
+        return dialog_critic("I can't open this file");
 
     /*fa la conversione per tra i qstring e i std::string*/
     std::string pathtemp = fileName.toUtf8().constData();
@@ -346,7 +346,6 @@ void MainWindow::setOutputLocation()
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
-
     this->setOutputLocation();
 
     if(this->self->currenttitle.audio_position_path == "")

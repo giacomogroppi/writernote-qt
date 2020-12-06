@@ -14,7 +14,6 @@ static bool checkexist(){
         return true;
     }
 
-
     /* scrive le preferenze base */
     FILE *fp;
     fp = fopen(POSIZIONESETTINGS, "w");
@@ -37,44 +36,83 @@ static bool checkexist(){
                 return false;
     }
 
-    oggettodascrivere_t oggettodascrivere;
+    fprintf(fp, "\n");
+    fprintf(fp, "\n");
+    fprintf(fp, "0\n");
+    fprintf(fp, "0\n");
+    fprintf(fp, "-1\n");
+    fprintf(fp, "2\n");
 
-    oggettodascrivere.audiodevice = "";
+    fprintf(fp, "\n");
 
-    oggettodascrivere.settings.setCodec((const QString) "");
-    oggettodascrivere.settings.setSampleRate(0);
-    oggettodascrivere.settings.setBitRate(0);
-    oggettodascrivere.settings.setChannelCount(-1);
-    oggettodascrivere.settings.setQuality(QMultimedia::EncodingQuality(2));
-    oggettodascrivere.settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
-
-    oggettodascrivere.container = "";
-
-    fwrite(&oggettodascrivere, sizeof(oggettodascrivere), 1, fp);
     return true;
 }
 
 /* funzione che viene chiamata tutte le volte che l'utente inizia una registrazione */
 bool loadqualita(MainWindow *parent){
+
     if(!checkexist())
         return false;
-
-    oggettodascrivere_t oggettodaleggere;
 
     FILE *fp;
     fp = fopen(POSIZIONESETTINGS, "r");
     if(!fp)
         return false;
+    /*
+    parent->m_audioRecorder->setAudioInput((const QString)"");
+
+    QAudioEncoderSettings settings;
+
+    settings.setCodec((const QString) "");
+    settings.setSampleRate(0);
+    settings.setBitRate(0);
+    settings.setChannelCount(-1);
+    settings.setQuality(QMultimedia::EncodingQuality(2));
+    settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
+
+    QString container = "";
+
+    this->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);*/
+    char stringa[100];
+    int number, i = 0;
+
+    i += fscanf(fp, "%[^\n]", stringa);
+    parent->m_audioRecorder->setAudioInput(stringa);
+
+    QAudioEncoderSettings settings;
+
+    /* codec */
+    i += fscanf(fp, "%[^\n]", stringa);
+    settings.setCodec(stringa);
 
 
-    int quanti = fread(&oggettodaleggere, sizeof(oggettodaleggere), 1, fp);
+    /* rate */
+    i += fscanf(fp, "%d", &number);
+    settings.setSampleRate(number);
+
+    /* bit rate */
+    i += fscanf(fp, "%d", &number);
+    settings.setBitRate(number);
+
+    /* setChannelCount */
+    i += fscanf(fp, "%d", &number);
+    settings.setChannelCount(number);
+
+    i += fscanf(fp, "%d", &number);
+    settings.setQuality(QMultimedia::EncodingQuality(number));
+
+    settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
+
+    /* container */
+    i += fscanf(fp, "%[^\n]", stringa);
+    settings.setCodec(stringa);
+
     fclose(fp);
-    if(quanti < 1)
+
+    if(i < 7)
         return false;
 
-    parent->m_audioRecorder->setAudioInput(oggettodaleggere.audiodevice);
-
-    parent->m_audioRecorder->setEncodingSettings(oggettodaleggere.settings, QVideoEncoderSettings(), oggettodaleggere.container);
+    parent->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), stringa);
 
     return true;
 

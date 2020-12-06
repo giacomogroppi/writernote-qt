@@ -59,7 +59,6 @@ char *xmlstruct::readfile(const char *path, const char *namefile){
 
 /* funzione che gestisce il caricamente di un file di tipo zip */
 void xmlstruct::loadfile(const char *nomeFile){
-
     this->text = readfile(path_.c_str(), nomeFile);
 
     QStringList temp = {};
@@ -200,12 +199,13 @@ void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *vari
 
 /* funzione che gestisce la scrittura di testinohtml */
 void xmlstruct::textdecode(QList<int> *lista){
+
+    this->self->currenttitle.testinohtml.clear();
+    //this->self->currenttitle.posizione_iniz.clear();
+
     if( this->checksum == 0)
-    {
-        this->self->currenttitle.testinohtml.clear();
-        this->self->currenttitle.posizione_iniz.clear();
         return;
-    }
+
 
     int i, lunghezza = lista->length();
 
@@ -218,6 +218,7 @@ void xmlstruct::textdecode(QList<int> *lista){
 
     for (i = 0; i < this->checksum; i++){
         this->self->currenttitle.testinohtml.append(this->text.substr(this->start, lista->at(i)).c_str());
+        qDebug() << this->self->currenttitle.testinohtml.at(i);
         this->start += lista->at(i);
     }
 

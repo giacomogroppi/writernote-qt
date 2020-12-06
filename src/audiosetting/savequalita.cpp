@@ -15,18 +15,6 @@ static QVariant boxValue(const QComboBox *box)
 }
 
 bool savequalita(audioqualityoption *padredialog){
-    oggettodascrivere_t oggettodascrivere;
-    oggettodascrivere.audiodevice = boxValue(padredialog->ui->audioDeviceBox).toString();
-
-    oggettodascrivere.settings.setCodec(boxValue(padredialog->ui->audioCodecBox).toString());
-    oggettodascrivere.settings.setSampleRate(boxValue(padredialog->ui->sampleRateBox).toInt());
-    oggettodascrivere.settings.setChannelCount(boxValue(padredialog->ui->channelsBox).toInt());
-    oggettodascrivere.settings.setQuality(QMultimedia::EncodingQuality(padredialog->ui->qualitySlider->value()));
-    oggettodascrivere.settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
-
-    oggettodascrivere.container = boxValue(padredialog->ui->containerBox).toString();
-
-
     FILE *fp;
     fp = fopen(POSIZIONESETTINGS, "w");
     if(!fp){
@@ -47,7 +35,17 @@ bool savequalita(audioqualityoption *padredialog){
                 return false;
     }
 
-    fwrite(&oggettodascrivere, sizeof(oggettodascrivere), 1, fp);
+    fprintf(fp, "%s\n", boxValue(padredialog->ui->audioDeviceBox).toString().toUtf8().constData());
+    fprintf(fp, "%d\n", boxValue(padredialog->ui->sampleRateBox).toInt());
+    fprintf(fp, "%s\n", boxValue(padredialog->ui->audioCodecBox).toString().toUtf8().constData());
+    fprintf(fp, "%d\n", boxValue(padredialog->ui->sampleRateBox).toInt());
+    fprintf(fp, "%d\n", boxValue(padredialog->ui->channelsBox).toInt());
+    fprintf(fp, "%d\n", padredialog->ui->qualitySlider->value());
+
+    /* container */
+    fprintf(fp, "%s\n", boxValue(padredialog->ui->containerBox).toString().toUtf8().constData());
+
+
     fclose(fp);
 
     return true;

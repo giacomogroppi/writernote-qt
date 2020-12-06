@@ -4,11 +4,6 @@
 #include <QString>
 #include <QAudioEncoderSettings>
 
-typedef struct {
-    QString audiodevice, container;
-    QAudioEncoderSettings settings;
-
-} oggettodascrivere_t;
 
 
 #ifdef __linux__
