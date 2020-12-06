@@ -21,6 +21,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
     messaggio_utente("I begin to sort out the data.\nThis operation may take a while");
 
     spacchettamento(this);
+
     this->self->currenttitle.se_registato = true;
 
     messaggio_utente("I finished");

@@ -218,7 +218,6 @@ void xmlstruct::textdecode(QList<int> *lista){
 
     for (i = 0; i < this->checksum; i++){
         this->self->currenttitle.testinohtml.append(this->text.substr(this->start, lista->at(i)).c_str());
-        qDebug() << this->self->currenttitle.testinohtml.at(i);
         this->start += lista->at(i);
     }
 

@@ -103,7 +103,7 @@ bool savefile::savefile_check_file(int posizione){
     /* scrive la lunghezza di ogni oggetto [stringa] dei testinohtml */
     lenght = this->parent->self->currenttitle.testinohtml.length();
     for (i = 0; i < lenght; i++){
-        inttochar(this->parent->self->currenttitle.testinohtml[i].length(), stringa);
+        inttochar(this->parent->self->currenttitle.testinohtml.at(i).length(), stringa);
         indicesalvataggio += "<testinohtml>" + (std::string)stringa + "</testinohtml>";
     }
 
