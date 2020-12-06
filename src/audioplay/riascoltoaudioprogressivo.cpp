@@ -16,7 +16,6 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     if(position_inlist == -1) return;
 
     int lenght = this->self->currenttitle.testinohtml.at(position_inlist).length();
-
     QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + this->self->currenttitle.testinohtml[position_inlist] + "</b>";
     testoGrassetto += self->currenttitle.testinohtml.last().mid(lenght, -1) + "</body></html>";
 

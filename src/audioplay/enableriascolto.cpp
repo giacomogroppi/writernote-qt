@@ -16,7 +16,6 @@ void MainWindow::on_actionListen_current_audio_triggered()
 {
     cambioiconariascolto(this);
     if(this->player->state() == QMediaPlayer::PlayingState || this->player->mediaStatus() == QMediaPlayer::EndOfMedia){
-
         settingaudio_riascoltoinatto(this, false);
 
         /* ribilitazione del pulsanti per lo stile, e per modifica su testo [copia, incolla...] */

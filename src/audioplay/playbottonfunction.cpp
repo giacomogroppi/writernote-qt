@@ -9,7 +9,7 @@
 
 void cambioiconariascolto(MainWindow *parent){
     QIcon icon;
-    if(parent->player->state() == QMediaPlayer::PlayingState)
+    if(parent->player->state() == QMediaPlayer::PlayingState || parent->player->mediaStatus() == QMediaPlayer::EndOfMedia)
         icon.addFile(QString::fromUtf8(":image/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
 
     else

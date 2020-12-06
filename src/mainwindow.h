@@ -138,9 +138,6 @@ private slots:
 
     void on_spinBox_fontsize_valueChanged(const QString &arg1);
 
-
-    void endofthemedia(QMediaPlayer::MediaStatus);
-
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

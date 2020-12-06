@@ -74,16 +74,11 @@ MainWindow::MainWindow(QWidget *parent)
     player = new QMediaPlayer;
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
-    connect(player, &QMediaPlayer::mediaStatusChanged, this, &MainWindow::endofthemedia);
 
     self = new SelfClass;
     setting_ui_start(this);
 }
 
-void MainWindow::endofthemedia(QMediaPlayer::MediaStatus status){
-    if(status == QMediaPlayer::EndOfMedia)
-        this->on_actionListen_current_audio_triggered();
-}
 
 MainWindow::~MainWindow()
 {
@@ -418,6 +413,8 @@ void MainWindow::processBuffer(const QAudioBuffer& buffer)
 /* editor di testo -> quando cambia il testo scritto */
 void MainWindow::on_textEdit_textChanged()
 {
+    if(this->player->state() == QMediaPlayer::PlayingState || this->player->state() == QMediaPlayer::PausedState)
+        return;
     this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
     if(this->m_audioRecorder->status() != QMediaRecorder::RecordingStatus)
