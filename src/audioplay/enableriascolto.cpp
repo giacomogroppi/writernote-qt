@@ -14,8 +14,9 @@
 /* la funzione gestisce la gestione del click del punsante con la mano */
 void MainWindow::on_actionListen_current_audio_triggered()
 {
+    this->ui->actionListen_current_audio->setChecked(!this->ui->actionListen_current_audio->isChecked());
     cambioiconariascolto(this);
-    if(this->player->state() == QMediaPlayer::PlayingState){
+    if(this->player->state() == QMediaPlayer::PlayingState || this->player->mediaStatus() == QMediaPlayer::EndOfMedia){
 
         settingaudio_riascoltoinatto(this, false);
 
@@ -23,11 +24,11 @@ void MainWindow::on_actionListen_current_audio_triggered()
         settingstyle(this, true);
         settingtextedit(this, true);
 
-        this->ui->textEdit->setHtml(this->self->currenttitle.testi);
         this->player->stop();
+        this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
-        this->ui->actionListen_current_audio->setChecked(false);
-
+        //this->ui->actionListen_current_audio->setChecked(!this->ui->actionListen_current_audio->isChecked());
+        this->ui->statusBar->clearMessage();
         return;
     }
 

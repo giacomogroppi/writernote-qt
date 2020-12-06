@@ -74,9 +74,22 @@ MainWindow::MainWindow(QWidget *parent)
     player = new QMediaPlayer;
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
+    connect(player, &QMediaPlayer::mediaStatusChanged, this, &MainWindow::endofthemedia);
 
     self = new SelfClass;
     setting_ui_start(this);
+}
+
+void MainWindow::endofthemedia(QMediaPlayer::MediaStatus status){
+    if(status == QMediaPlayer::EndOfMedia){
+        //this->on_actionListen_current_audio_triggered();
+        qDebug() << "END of media";
+        qDebug() << "cliccato: -> " << this->ui->actionListen_current_audio->isChecked();
+
+        ui->actionListen_current_audio->setChecked(false);
+
+        qDebug() << "cliccato: -> " << this->ui->actionListen_current_audio->isChecked();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -442,3 +455,8 @@ void MainWindow::on_listWidgetSX_itemClicked(QListWidgetItem *item)
     return redolist(this);
 }
 
+
+void MainWindow::on_spinBox_fontsize_valueChanged(const QString &arg1)
+{
+    this->ui->textEdit->setCurrentFont(arg1);
+}

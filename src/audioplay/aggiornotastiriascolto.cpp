@@ -29,7 +29,7 @@ void aggiornotestiriascolto(MainWindow *parent){
 
         /* abilita il bottone della mano e lo segna unchecked, in caso sia cliccato per qualche motivo*/
         parent->ui->actionListen_current_audio->setEnabled(true);
-        parent->ui->actionListen_current_audio->setChecked(false);
+        //parent->ui->actionListen_current_audio->setChecked(false);
 
         parent->player->setMedia(QUrl::fromLocalFile(parent->self->currenttitle.audio_position_path.c_str()));
     }
@@ -38,7 +38,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         settingaudio_registrazione(parent, true);
         settingaudio_riascolto(parent, false);
 
-        parent->ui->actionListen_current_audio->setChecked(false);
+        //parent->ui->actionListen_current_audio->setChecked(false);
         parent->ui->actionListen_current_audio->setEnabled(false);
     }
 

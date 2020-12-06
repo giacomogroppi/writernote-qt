@@ -11,7 +11,7 @@
 void MainWindow::on_stopriascolto_clicked()
 {
     this->player->setPosition(0);
-    ui->textEdit->setHtml(this->self->currenttitle.testi);
+    this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
     this->ui->audioSlider->setSliderPosition(0);
 }
