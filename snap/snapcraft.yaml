@@ -97,7 +97,6 @@ parts:
 
     override-build: |
       set -eux
-      make clean
       qmake -set prefix $SNAPCRAFT_PART_INSTALL
       qmake
 
