@@ -115,7 +115,6 @@ FORMS += \
     src/mainwindow.ui \
     src/style/inserttable_class.ui \
     src/videocompress/videocompress_ui.ui \
-    src/table_insert.ui
 
 # for the filesystem
 LIBS += -lstdc++fs -lglib-2.0

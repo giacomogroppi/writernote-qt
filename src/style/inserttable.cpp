@@ -7,7 +7,6 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QDebug>
-#include "ui_table_insert.h"
 
 //#include "inserttable_class.h"
 #include "inserttable_class.cpp"
