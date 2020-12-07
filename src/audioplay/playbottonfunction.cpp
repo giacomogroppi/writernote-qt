@@ -11,7 +11,6 @@ void cambioiconariascolto(MainWindow *parent){
     QIcon icon;
     if(parent->player->state() == QMediaPlayer::PlayingState || parent->player->mediaStatus() == QMediaPlayer::EndOfMedia)
         icon.addFile(QString::fromUtf8(":image/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
-
     else
         icon.addFile(QString::fromUtf8(":image/images/pause-recording.png"), QSize(), QIcon::Normal, QIcon::Off);
 
@@ -21,15 +20,19 @@ void cambioiconariascolto(MainWindow *parent){
 /* funzione play in basso a sinistra */
 void MainWindow::on_startriascoltobotton_clicked()
 {
-    QIcon icon;
     cambioiconariascolto(this);
-
     if(this->player->state() == QMediaPlayer::PlayingState)
         this->player->pause();
     else
         this->player->play();
 
-    this->ui->startriascoltobotton->setIcon(icon);
+    /*QIcon icon;
+    if(this->player->state() == QMediaPlayer::PlayingState || this->player->mediaStatus() == QMediaPlayer::EndOfMedia)
+        icon.addFile(QString::fromUtf8(":image/images/pause-recording.png"), QSize(), QIcon::Normal, QIcon::Off);
+    else{
+        icon.addFile(QString::fromUtf8(":image/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        qDebug() << "\nAggiunta icona stop";
+    }*/
 }
 
 

@@ -31,13 +31,15 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
         this->ui->insertimagebotton->setEnabled(true);
         this->ui->inserttablebotton->setEnabled(true);
         this->ui->listbotton->setEnabled(true);
+        this->ui->boldbotton->setEnabled(true);
 
-        cambioiconariascolto(this);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":image/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+        this->ui->startriascoltobotton->setIcon(icon);
 
         this->ui->statusBar->clearMessage();
 
         this->ui->textEdit->setHtml(this->self->currenttitle.testi);
-
     }
     else if(state == QMediaPlayer::PlayingState || state == QMediaPlayer::PausedState){
         this->ui->listWidgetSX->setEnabled(false);
