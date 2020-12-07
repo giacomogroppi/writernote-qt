@@ -176,10 +176,6 @@ void MainWindow::on_actionOpen_triggered()
 
     QFile file(fileName);
 
-#ifdef STAMPA
-    qDebug() << "File name: " << fileName;
-#endif
-
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return dialog_critic("I can't open this file");
 

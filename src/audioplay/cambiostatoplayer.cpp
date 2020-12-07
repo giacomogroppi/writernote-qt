@@ -36,7 +36,6 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
 
         this->ui->statusBar->clearMessage();
 
-        qDebug() << "\n" << this->self->currenttitle.testi;
         this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
     }
