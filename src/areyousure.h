@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include "mainwindow.h"
 
-bool areyousure(MainWindow *, QString, QString);
+bool areyousure(MainWindow *parent, QString title, QString body);
 
 
 #endif

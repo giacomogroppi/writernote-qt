@@ -22,8 +22,9 @@ bool qfilechoose::filechoose(){
         return false;
 
     this->ui->self->path = nameFile.toUtf8().constData();
-
+#ifdef STAMPA
     qDebug() << "path: " << this->ui->self->path.c_str();
+#endif
     return true;
 }
 

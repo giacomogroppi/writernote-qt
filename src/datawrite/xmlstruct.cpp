@@ -52,8 +52,6 @@ char *xmlstruct::readfile(const char *path, const char *namefile){
 
     //And close the archive
     zip_close(z);
-
-    std::cout << contents;
     return contents;
 }
 

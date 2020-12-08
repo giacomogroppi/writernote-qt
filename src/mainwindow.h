@@ -121,7 +121,7 @@ private slots:
     void renamefile_f();
     void compressvideo_f();
 
-    void on_listWidgetSX_itemClicked(QListWidgetItem *item);
+
 
     /* funzione che gestisce la fine del riascolto dell'audio */
     void cambiostatoplayer(QMediaPlayer::State);
@@ -141,6 +141,7 @@ private slots:
     void on_fontComboBox_fonttipo_currentFontChanged(const QFont &f);
 
     void on_actionPrint_triggered();
+
 
 private:
     /* gestione dell'audio */

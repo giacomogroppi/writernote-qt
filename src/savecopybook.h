@@ -9,9 +9,9 @@ class savecopybook
 {
 private:
     MainWindow *ui;
-    QListWidgetItem *position;
+    QString *position;
 public:
-    savecopybook(MainWindow *, QListWidgetItem *);
+    savecopybook(MainWindow *, QString *);
     bool check_permission();
 };
 

@@ -9,10 +9,10 @@ class savefile
 {
 private:
     MainWindow *parent;
-    QListWidgetItem *position;
+    QString *position;
 
 public:
-    savefile(MainWindow *parent, QListWidgetItem *position)
+    savefile(MainWindow *parent, QString *position)
     {
         this->parent = parent;
         this->position = position;

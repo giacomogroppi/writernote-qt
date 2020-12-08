@@ -12,10 +12,12 @@
 #include "datawrite/qfilechoose.h"
 #include "dialog_critic.h"
 
+#include "areyousure.h"
+
 /*lib che gestisce il salvaggio di tutti i file*/
 #include "datawrite/xmlstruct.h"
 
-savecopybook::savecopybook(MainWindow *ui, QListWidgetItem *position){
+savecopybook::savecopybook(MainWindow *ui, QString *position){
     this->ui = ui;
     this->position = position;
 }
@@ -29,10 +31,10 @@ bool savecopybook::check_permission(){
     msgBox.setDefaultButton(QMessageBox::Save);
     int ret = msgBox.exec();
 
-    if(ret == 8388608)
+    if(ret == QMessageBox::Discard)
         /*close without saving*/
         return true;
-    if(ret == 4194304)
+    if(ret == QMessageBox::Cancel)
         /*cancel*/
         return false;
 
@@ -47,10 +49,11 @@ bool savecopybook::check_permission(){
     }
     savefile save_class(this->ui, this->position);
 
-    int posizione = this->ui->self->indice.titolo.indexOf(position->text().toUtf8().constData());
+    int posizione = this->ui->self->indice.titolo.indexOf(position->toUtf8().constData());
 
     bool check = save_class.savefile_check_indice() && save_class.savefile_check_file(posizione);
-    dialog_critic("We had a problem saving the copybook");
+    if(!check)
+        dialog_critic("We had a problem saving the copybook");
 
 
     return check;

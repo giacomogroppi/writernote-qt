@@ -103,12 +103,12 @@ void MainWindow::closeEvent (QCloseEvent *event)
                 return;
         }
 
-        savefile save_(this, this->ui->listWidgetSX->currentItem());
+        savefile save_(this, &this->self->currentTitle);
 
         bool check = save_.savefile_check_indice();
 
         if(this->self->currentTitle != "")
-            check = check && save_.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle.c_str()));
+            check = check && save_.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));
 
 
         if(check)
@@ -130,7 +130,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 void MainWindow::on_actionNew_File_triggered()
 {
     if(this->self->indice.titolo.length() != 0){
-        savecopybook checksave(this, ui->listWidgetSX->currentItem());
+        savecopybook checksave(this, &self->currentTitle);
         bool check = checksave.check_permission();
 
         if(!check)
@@ -154,12 +154,12 @@ void MainWindow::on_actionSave_File_triggered()
 
     this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
-    savefile savefile_i(this, ui->listWidgetSX->currentItem());
+    savefile savefile_i(this, &self->currentTitle);
 
     bool check = savefile_i.savefile_check_indice();
 
     if(this->self->currentTitle != "")
-        check = check && savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle.c_str()));
+        check = check && savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));
 
     if(!check)
         return dialog_critic((QString) "We had a problem while saving the file");;
@@ -202,7 +202,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         return redolist(this);
 
     if(this->self->currentTitle != ""){
-        savecopybook savevariabile(this, item);
+        savecopybook savevariabile(this, &this->self->currentTitle);
 
         if (!savevariabile.check_permission())
             /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
@@ -218,6 +218,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         this->self->currenttitle.reset();
 
     this->self->currentTitle = item->text().toUtf8().constData();
+    this->setWindowTitle("Writernote - " + this->self->currentTitle);
 
     this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
@@ -259,7 +260,7 @@ void MainWindow::on_textEdit_selectionChanged(){
 void MainWindow::on_actionCreate_new_copybook_triggered()
 {
     if(this->self->currentTitle != ""){
-        savecopybook check(this, ui->listWidgetSX->currentItem());
+        savecopybook check(this, &this->self->currentTitle);
 
         if(!check.check_permission())
             /* l'utente ha detto che non vuole creare un nuovo file, oppure non si è riusciti a salvarlo */
@@ -436,10 +437,10 @@ Siccome per cambiare item è necessario fare doppio click
 e facendo un solo click comunque cambia l'item della lista
 in caso non sia un tasto destro va resettato quello di prima
 */
-void MainWindow::on_listWidgetSX_itemClicked(QListWidgetItem *item)
+/*void MainWindow::on_listWidgetSX_itemClicked(QListWidgetItem *item)
 {
     return redolist(this);
-}
+}*/
 
 
 void MainWindow::on_spinBox_fontsize_valueChanged(const QString &arg1)
@@ -451,3 +452,5 @@ void MainWindow::on_fontComboBox_fonttipo_currentFontChanged(const QFont &f)
 {
     this->ui->textEdit->setCurrentFont(f);
 }
+
+

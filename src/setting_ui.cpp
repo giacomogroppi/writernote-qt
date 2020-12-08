@@ -71,6 +71,8 @@ void settingaudio_riascoltoinatto(MainWindow *parent, bool check){
 
 /*Funzione che gestisce l'aggiunta della barra per selezionare il font*/
 void setting_ui_start(MainWindow *parent){
+    parent->setWindowTitle("Writernote");
+
     settingaudio_registrazione(parent, false);
     settingstyle(parent, false);
     settingtextedit(parent, false);

@@ -28,7 +28,7 @@ bool newcopybook_(MainWindow *parent, QString stringa){
 
     parent->self->currenttitle.reset();
 
-    savefile save_(parent, parent->ui->listWidgetSX->currentItem());
+    savefile save_(parent, &parent->self->currentTitle);
     if(!save_.savefile_check_file(position) || !save_.savefile_check_indice())
         /* vuol dire che si è fallito nel salvare il file */
         return false;

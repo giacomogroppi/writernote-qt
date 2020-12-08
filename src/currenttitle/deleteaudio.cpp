@@ -15,10 +15,12 @@ void deleteaudio(MainWindow *parent, QListWidgetItem *item){
         return;
 
 
-    if(item->text() != parent->self->currentTitle.c_str()){
+    if(item->text() != parent->self->currentTitle){
         /* we need to load the other file */
         parent->on_listWidgetSX_itemDoubleClicked(item);
-        if(item->text() != parent->self->currentTitle.c_str())
+        //parent->on_listWidgetSX_itemClicked(item);
+
+        if(item->text() != parent->self->currentTitle)
             return;
     }
 
