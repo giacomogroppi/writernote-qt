@@ -1,5 +1,4 @@
-#ifndef REDO_LIST_CPP
-#define REDO_LIST_CPP
+#include "redolist.h"
 
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
@@ -15,5 +14,3 @@ void redolist(MainWindow *parent)
     int posizione = parent->self->indice.titolo.indexOf(parent->self->currentTitle, 0);
     parent->ui->listWidgetSX->setCurrentRow(posizione);
 }
-
-#endif

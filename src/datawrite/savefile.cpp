@@ -27,10 +27,9 @@ bool savefile::compressfile(const char *namefile, const char *text){
     namefile: nome file da salvare ("indice.xml", "file2.xml")
     text: testo da scrivere
 */
-    int errorp;
+    int errorp = 0;
 
     zip_t *filezip = zip_open(this->parent->self->path.c_str(), ZIP_CREATE , &errorp);
-
 
     if (filezip == nullptr) {
             zip_error_t ziperror;

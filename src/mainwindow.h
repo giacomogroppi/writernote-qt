@@ -61,6 +61,8 @@ public slots:
     /* la funzione serve anche per eliminare l'audio del copybook */
     void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_actioncompress_video_triggered();
+
 private slots:
     /* registrazione dell'audio */
     void setOutputLocation();
@@ -132,7 +134,6 @@ private slots:
 
     void on_actionDelete_audio_triggered();
 
-    void on_actioncompress_video_triggered();
 
     void on_volumeSlider_actionTriggered(int action);
 

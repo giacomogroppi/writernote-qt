@@ -34,7 +34,6 @@ SOURCES += \
     src/audiosetting/savequalita.cpp \
     src/chartoint.cpp \
     src/currenttitle/audiototext.cpp \
-    src/currenttitle/compressvideo.cpp \
     src/currenttitle/currenttitle_class.cpp \
     src/currenttitle/deleteaudio.cpp \
     src/currenttitle/deletecopybook.cpp \
@@ -72,6 +71,7 @@ SOURCES += \
     src/style/bold.cpp \
     src/audioplay/main_audioplay.cpp \
     src/style/print_action.cpp \
+    src/update_list_copybook.cpp \
     src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \
@@ -87,9 +87,11 @@ HEADERS += \
     src/audiosetting/definition.h \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
+    src/currenttitle/audiototext.h \
     src/currenttitle/deleteaudio.h \
-    src/currenttitle/main_include_currenttitle.h \
+    src/currenttitle/deletecopybook.h \
     src/currenttitle/redolist.h \
+    src/currenttitle/renamefile.h \
     src/datawrite/renamefile_f_zip.h \
     src/dialog_critic.h \
     src/chartoint.h \

@@ -22,9 +22,6 @@
 #include "indice_class.h"
 #include "self_class.h"
 
-/* gestione copybook */
-#include "currenttitle/main_include_currenttitle.h"
-
 /* gestione della lista */
 #include "currenttitle/redolist.h"
 

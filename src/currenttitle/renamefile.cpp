@@ -1,18 +1,23 @@
-#ifndef CURRENT_TITLE_RENAME_FILE_CPP
-#define CURRENT_TITLE_RENAME_FILE_CPP
+#include "renamefile.h"
 
 #include "../mainwindow.h"
-#include "redolist.cpp"
+#include "redolist.h"
 #include "QInputDialog"
 #include "../dialog_critic.h"
 #include "../datawrite/renamefile_f_zip.h"
 #include "../update_list_copybook.h"
 
+#include "ui_mainwindow.h"
+
+#include "../datawrite/savefile.h"
+
 void renamefile(MainWindow *parent, const char *namefile){
+    bool checkname = (parent->ui->listWidgetSX->currentItem()->text() == parent->self->currentTitle);
+
     bool ok;
     QString namecopybook = QInputDialog::getText(parent, "Rename",
                                                  (QString)"Rename " + parent->ui->listWidgetSX->currentItem()->text(), QLineEdit::Normal,
-                                                 "", &ok);
+                                                 parent->ui->listWidgetSX->currentItem()->text(), &ok);
     if(!ok || namecopybook == "")
         return redolist(parent);
 
@@ -29,7 +34,17 @@ void renamefile(MainWindow *parent, const char *namefile){
 
     parent->self->indice.titolo[posizione] = namecopybook;
 
+    savefile file_(parent, &parent->self->currentTitle);
+
+    if(!file_.savefile_check_indice()){
+        renamefile_f_zip(parent->self->path.c_str(), namecopybook.toUtf8().constData(), namefile);
+        dialog_critic("We had an error saving the index of the file");
+        return update_list_copybook(parent);
+    }
+
+    parent->setWindowTitle("Writernote - " + namecopybook);
+    if(checkname)
+        parent->self->currentTitle = namecopybook;
+
     return update_list_copybook(parent);
 }
-
-#endif //CURRENT_TITLE_RENAME_FILE_CPP

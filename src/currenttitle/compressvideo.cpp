@@ -1,5 +1,0 @@
-#ifndef COMPRESS_VIDEO_CPP
-#define COMPRESS_VIDEO_CPP
-
-
-#endif

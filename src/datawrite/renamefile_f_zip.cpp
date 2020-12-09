@@ -5,24 +5,42 @@
 #include "zip.h"
 #include "iostream"
 
+#include "../dialog_critic.h"
+
 bool renamefile_f_zip(const char *namezip, const char *from, const char *dest){
-    int errorp;
+    int errorp = 0;
     zip_t *filezip;
 
-    //filezip = zip_open(namezip, ZIP_SOURCE_WRITE, &errorp);
     filezip = zip_open(namezip, ZIP_CREATE, &errorp);
 
     if(filezip == nullptr)
     {
+        QFile file(namezip);
+        if(file.open(QIODevice::ReadOnly))
+        {
+            dialog_critic("File is only in read mode");
+            return false;
+        }
+        else if(!file.exists()){
+            dialog_critic("File didn't exist");
+            return false;
+        }
+
         zip_error_t ziperror;
         zip_error_init_with_code(&ziperror, errorp);
         throw std::runtime_error("Failed to open output file " + (std::string)from + ": " + zip_error_strerror(&ziperror));
     }
 
     /* ZIP_FL_ENC_UTF_8 */
+    int indice = zip_name_locate(filezip, ((QString)from + ".xml").toUtf8().constData(), ZIP_FL_ENC_STRICT);
 
-    int indice = zip_name_locate(filezip, from, 0);
-    if(zip_file_rename(filezip, indice, dest, ZIP_FL_ENC_UTF_8) == -1){
+    if(indice == -1)
+    {
+        dialog_critic("The file didn't exist in the zip");
+        return false;
+    }
+
+    if(zip_file_rename(filezip, indice, ((QString)dest + ".xml").toUtf8().constData(), 0) == -1){
         zip_error_t ziperror;
         zip_error_init_with_code(&ziperror, errorp);
 

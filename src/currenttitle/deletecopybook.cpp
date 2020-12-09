@@ -1,6 +1,8 @@
 #ifndef DELETE_COPY_BOOK_CPP
 #define DELETE_COPY_BOOK_CPP
 
+#include "deletecopybook.h"
+
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 #include "../areyousure.h"
@@ -10,10 +12,10 @@
 #include "../update_list_copybook.h"
 
 #include <QMediaPlayer>
-#include "redolist.cpp"
+#include "redolist.h"
 
 /* funzione che gestisce l'eliminizione del copybook */
-void f_deletecopybook( MainWindow *parent, const char *copybook = nullptr){
+void f_deletecopybook( MainWindow *parent, const char *copybook){
     if(!areyousure(parent, "Delete copybook", "are you sure you want to delete " + (QString)copybook + "?"))
         return redolist(parent);
 

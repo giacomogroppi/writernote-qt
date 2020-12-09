@@ -1,4 +1,6 @@
-#ifndef AUDIO_TO_TEXT_CPP
-#define AUDIO_TO_TEXT_CPP
+#include "audiototext.h"
+#include "../mainwindow.h"
 
-#endif
+void audiototext(MainWindow *padre, int posizione){
+
+}
