@@ -144,6 +144,10 @@ private slots:
     void on_actionPrint_triggered();
 
 
+    void on_audioSlider_valueChanged(int value);
+
+    void on_volumeSlider_valueChanged(int value);
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

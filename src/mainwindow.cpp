@@ -402,7 +402,8 @@ void MainWindow::processBuffer(const QAudioBuffer& buffer)
 /* editor di testo -> quando cambia il testo scritto */
 void MainWindow::on_textEdit_textChanged()
 {
-    if(this->player->state() == QMediaPlayer::PlayingState || this->player->state() == QMediaPlayer::PausedState)
+    /* se non sta registrando deve uscire */
+    if(this->m_audioRecorder->state() != QMediaRecorder::RecordingState)
         return;
     this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
@@ -444,5 +445,3 @@ void MainWindow::on_fontComboBox_fonttipo_currentFontChanged(const QFont &f)
 {
     this->ui->textEdit->setCurrentFont(f);
 }
-
-

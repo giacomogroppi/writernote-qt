@@ -26,7 +26,9 @@ SOURCES += \
     src/audioplay/enableriascolto.cpp \
     src/audioplay/playbottonfunction.cpp \
     src/audioplay/riascoltoaudioprogressivo.cpp \
+    src/audioplay/slidertimechange.cpp \
     src/audioplay/updatestatusbar_riascolto.cpp \
+    src/audioplay/valuechangeslidervolume.cpp \
     src/audiosetting/audioqualityoption.cpp \
     src/audiorecord/displayErrorMessage.cpp \
     src/audiorecord/getbufferlevels.cpp \

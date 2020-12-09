@@ -14,6 +14,10 @@
 /* la funzione gestisce la gestione del click del punsante con la mano */
 void MainWindow::on_actionListen_current_audio_triggered()
 {
+    /*int i;
+    for(i= 0; i<this->self->currenttitle.testinohtml.length(); i++  )
+        qDebug() << this->self->currenttitle.testinohtml.at(i);*/
+
     if(this->player->state() == QMediaPlayer::PlayingState || this->player->mediaStatus() == QMediaPlayer::EndOfMedia){
         settingaudio_riascoltoinatto(this, false);
 
