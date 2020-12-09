@@ -23,8 +23,8 @@ bool newcopybook_(MainWindow *parent, QString stringa){
 
     int position = parent->self->indice.titolo.indexOf(stringa);
 
-    parent->ui->textEdit->setHtml((QString)"");
-    parent->ui->textEdit->setDisabled(true);
+    /*parent->ui->textEdit->setHtml((QString)"");
+    parent->ui->textEdit->setDisabled(true);*/
 
     parent->self->currenttitle.reset();
 

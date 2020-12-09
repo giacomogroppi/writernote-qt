@@ -256,6 +256,7 @@ void MainWindow::on_textEdit_selectionChanged(){
 /* funzione che gestisce la creazione di un nuovo copybook */
 void MainWindow::on_actionCreate_new_copybook_triggered()
 {
+
     if(this->self->currentTitle != ""){
         savecopybook check(this, &this->self->currentTitle);
 
@@ -293,20 +294,14 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
             || namecopybook.indexOf("</video>") != -1)
         return dialog_critic("You can't use video, compressione, audio and titolo as name of the copybook");
 
-    if(this->self->indice.titolo.indexOf(namecopybook) != -1){
-        dialog_critic("There is a copybook that already has this title");
-        return;
-    }
+    if(this->self->indice.titolo.indexOf(namecopybook) != -1)
+        return dialog_critic("There is a copybook that already has this title");;
 
     if(!newcopybook_(this, namecopybook))    
         return dialog_critic("We had a problem saving the copybook");
 
     this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook(this);
-
-
-    this->ui->actionDelete_copybook->setEnabled(true);
-    this->ui->textEdit->setEnabled(true);
 
 }
 

@@ -32,11 +32,15 @@ void aggiornotestiriascolto(MainWindow *parent){
         //parent->ui->actionListen_current_audio->setChecked(false);
 
         parent->player->setMedia(QUrl::fromLocalFile(parent->self->currenttitle.audio_position_path.c_str()));
+
+        parent->ui->actionDelete_audio->setEnabled(true);
     }
     else{
         /* abilita i tasti per la registrazione */
         settingaudio_registrazione(parent, true);
         settingaudio_riascolto(parent, false);
+
+        parent->ui->actionDelete_audio->setEnabled(false);
 
         //parent->ui->actionListen_current_audio->setChecked(false);
         parent->ui->actionListen_current_audio->setEnabled(false);
