@@ -9,14 +9,11 @@ class savefile
 {
 private:
     MainWindow *parent;
-    QString *position;
+    currenttitle_class *currenttitle;
+    QString *namecopybook;
 
 public:
-    savefile(MainWindow *parent, QString *position)
-    {
-        this->parent = parent;
-        this->position = position;
-    };
+    savefile(MainWindow *parent, currenttitle_class *currenttitle, QString *namecopybook);
     bool savefile_check_indice();
     bool savefile_check_file(int);
     //bool savefile_check_copybook();

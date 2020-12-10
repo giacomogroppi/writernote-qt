@@ -19,8 +19,11 @@ class xmlstruct{
 private:
     std::string filetostring();
     void UnZipFile();
-    std::string path_;
-    SelfClass *self = nullptr;
+    std::string *path_;
+
+    indice_class *indice = nullptr;
+    currenttitle_class *currenttitle = nullptr;
+
 public:
     std::string pathFile = "";
     std::string text = "";
@@ -32,7 +35,7 @@ public:
 
 
 
-    xmlstruct(std::string path_, SelfClass *self){this->path_ = path_; this->self = self;};
+    xmlstruct(std::string *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
 
     int posizione(const int posizionestringa, const char *find);
 

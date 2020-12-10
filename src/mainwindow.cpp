@@ -82,47 +82,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::closeEvent (QCloseEvent *event)
-{
-    if(!this->self->indice.titolo.length())
-        return event->accept();
-
-    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
-                                                                tr("Do you want to save\n"),
-                                                                QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
-                                                                QMessageBox::Yes);
-
-    if (resBtn == QMessageBox::Yes) {
-
-        if(this->self->path == "")
-        {   qfilechoose file(this);
-            if(!file.filechoose())
-                return;
-        }
-
-        savefile save_(this, &this->self->currentTitle);
-
-        bool check = save_.savefile_check_indice();
-
-        if(this->self->currentTitle != "")
-            check = check && save_.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));
-
-
-        if(check)
-            return event->accept();
-
-        else{
-            dialog_critic((QString)"We had a problem saving the file, please retry");
-            return event->ignore();
-        }
-
-    } else if (resBtn == QMessageBox::No)
-        return event->accept();
-
-    else
-        return event->ignore();
-}
-
 /*creazione di un nuovo file*/
 void MainWindow::on_actionNew_File_triggered()
 {
@@ -151,7 +110,7 @@ void MainWindow::on_actionSave_File_triggered()
 
     this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
-    savefile savefile_i(this, &self->currentTitle);
+    savefile savefile_i(this, &this->self->currenttitle, &self->currentTitle);
 
     bool check = savefile_i.savefile_check_indice();
 
@@ -159,7 +118,7 @@ void MainWindow::on_actionSave_File_triggered()
         check = check && savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));
 
     if(!check)
-        return dialog_critic((QString) "We had a problem while saving the file");;
+        return dialog_critic((QString) "We had a problem while saving the file");
 
 }
 
@@ -184,7 +143,8 @@ void MainWindow::on_actionOpen_triggered()
       return dialog_critic("Miss the extantion of the file");
 
     /*inizializza la classe per caricare i file*/
-    xmlstruct filefind(pathtemp, this->self);
+    this->self->path = pathtemp;
+    xmlstruct filefind(&this->self->path, &this->self->indice, &this->self->currenttitle);
     filefind.loadindice();
 
     if(this->self->indice.titolo.length() > 0)
@@ -208,7 +168,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     /* a questo punto deve aprire il nuovo copybook */
     if(this->self->indice.titolo[this->self->indice.titolo.indexOf(item->text())] != ""){
-        xmlstruct file_(this->self->path, this->self);
+        xmlstruct file_(&this->self->path, &this->self->indice, &this->self->currenttitle);
         file_.loadfile((item->text() + ".xml").toUtf8().constData());
     }
     else
@@ -256,14 +216,14 @@ void MainWindow::on_textEdit_selectionChanged(){
 /* funzione che gestisce la creazione di un nuovo copybook */
 void MainWindow::on_actionCreate_new_copybook_triggered()
 {
+    /* aggiornamento -> permette di creare più istante della classe currenttitle, e aprire più file contemporaneamente */
+    //if(this->self->currentTitle != ""){
+    //    savecopybook check(this, &this->self->currentTitle);
 
-    if(this->self->currentTitle != ""){
-        savecopybook check(this, &this->self->currentTitle);
-
-        if(!check.check_permission())
-            /* l'utente ha detto che non vuole creare un nuovo file, oppure non si è riusciti a salvarlo */
-            return;
-    }
+    //    if(!check.check_permission())
+    //        /* l'utente ha detto che non vuole creare un nuovo file, oppure non si è riusciti a salvarlo */
+    //        return;
+    //}
 
     bool ok;
     if(this->self->path == "")
@@ -281,10 +241,9 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
                                                  "", &ok);
 
     if(!ok || namecopybook == "")
-        /* l'utente ha chiuso la finestra */
         return;
 
-    //da fare
+    /* TODO */
     if(namecopybook.indexOf("<titolo>") != -1 || namecopybook.indexOf("</titolo>") != -1
             || namecopybook.indexOf("<audio>") != -1
             || namecopybook.indexOf("</audio>") != -1
@@ -295,9 +254,9 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         return dialog_critic("You can't use video, compressione, audio and titolo as name of the copybook");
 
     if(this->self->indice.titolo.indexOf(namecopybook) != -1)
-        return dialog_critic("There is a copybook that already has this title");;
+        return dialog_critic("There is a copybook that already has this title");
 
-    if(!newcopybook_(this, namecopybook))    
+    if(!newcopybook_(this, namecopybook))
         return dialog_critic("We had a problem saving the copybook");
 
     this->ui->listWidgetSX->setEnabled(true);
@@ -423,17 +382,6 @@ void MainWindow::on_textEdit_textChanged()
     this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
 
 }
-
-
-/*
-Siccome per cambiare item è necessario fare doppio click
-e facendo un solo click comunque cambia l'item della lista
-in caso non sia un tasto destro va resettato quello di prima
-*/
-/*void MainWindow::on_listWidgetSX_itemClicked(QListWidgetItem *item)
-{
-    return redolist(this);
-}*/
 
 
 void MainWindow::on_spinBox_fontsize_valueChanged(const QString &arg1)

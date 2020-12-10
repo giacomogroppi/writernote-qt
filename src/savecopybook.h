@@ -8,8 +8,8 @@
 class savecopybook
 {
 private:
-    MainWindow *ui;
-    QString *position;
+    MainWindow *parent;
+    QString *namecopybook;
 public:
     savecopybook(MainWindow *, QString *);
     bool check_permission();

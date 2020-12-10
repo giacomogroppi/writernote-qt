@@ -17,9 +17,9 @@
 /*lib che gestisce il salvaggio di tutti i file*/
 #include "datawrite/xmlstruct.h"
 
-savecopybook::savecopybook(MainWindow *ui, QString *position){
-    this->ui = ui;
-    this->position = position;
+savecopybook::savecopybook(MainWindow *parent_U, QString *namecopybook_U){
+    this->parent = parent_U;
+    this->namecopybook = namecopybook_U;
 }
 
 /* funzione che gestisce il salvataggio del copybook [chiedendo all'utente se vuole salvare il file o no]*/
@@ -39,17 +39,17 @@ bool savecopybook::check_permission(){
         return false;
 
     /* else save*/
-    if(this->ui->self->path == "")
+    if(this->parent->self->path == "")
     {
-        qfilechoose pathchoose(this->ui);
+        qfilechoose pathchoose(this->parent);
         int check = pathchoose.filechoose();
 
         if(!check) /*vuol dire che l'utente non ha selezionato nessun file o posizione*/
             return false;
     }
-    savefile save_class(this->ui, this->position);
+    savefile save_class(this->parent, &this->parent->self->currenttitle, this->namecopybook);
 
-    int posizione = this->ui->self->indice.titolo.indexOf(position->toUtf8().constData());
+    int posizione = this->parent->self->indice.titolo.indexOf(this->namecopybook->toUtf8().constData());
 
     bool check = save_class.savefile_check_indice() && save_class.savefile_check_file(posizione);
     if(!check)

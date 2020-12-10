@@ -35,7 +35,9 @@ SOURCES += \
     src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
     src/chartoint.cpp \
+    src/closeevent_file.cpp \
     src/currenttitle/audiototext.cpp \
+    src/currenttitle/checksimilecopybook.cpp \
     src/currenttitle/currenttitle_class.cpp \
     src/currenttitle/deleteaudio.cpp \
     src/currenttitle/deletecopybook.cpp \
@@ -90,6 +92,7 @@ HEADERS += \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
     src/currenttitle/audiototext.h \
+    src/currenttitle/checksimilecopybook.h \
     src/currenttitle/deleteaudio.h \
     src/currenttitle/deletecopybook.h \
     src/currenttitle/redolist.h \

@@ -26,6 +26,13 @@
 
 using namespace std;
 
+xmlstruct::xmlstruct(std::string *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U)
+{
+    this->path_ = path_U;
+    this->indice = indice_U;
+    this->currenttitle = currenttitle_U;
+}
+
 std::string xmlstruct::filetostring(){
   std::ifstream t(pathFile);
   std::string text((std::istreambuf_iterator<char>(t)),
@@ -57,27 +64,27 @@ char *xmlstruct::readfile(const char *path, const char *namefile){
 
 /* funzione che gestisce il caricamente di un file di tipo zip */
 void xmlstruct::loadfile(const char *nomeFile){
-    this->text = readfile(path_.c_str(), nomeFile);
+    this->text = readfile(path_->c_str(), nomeFile);
 
     QStringList temp = {};
     stringa_decode("<versione>", "</versione>", &temp);
-    self->currenttitle.versione = chartoint(temp[0].toUtf8().constData());
+    this->currenttitle->versione = chartoint(temp[0].toUtf8().constData());
 
     stringa_decode("<se_registrato>", "</se_registrato>", &temp);
     if(temp[0] == "true")
-        self->currenttitle.se_registato = true;
+        this->currenttitle->se_registato = true;
     else
-        self->currenttitle.se_registato = false;
+        this->currenttitle->se_registato = false;
 
     stringa_decode("<se_tradotto>", "</se_tradotto>", &temp);
     if(temp[0] == "true")
-        self->currenttitle.se_tradotto = true;
+        this->currenttitle->se_tradotto = true;
     else
-        self->currenttitle.se_tradotto = false;
+        this->currenttitle->se_tradotto = false;
 
     stringa_decode("<audio_position_path>", "</audio_position_path>", &temp);
 
-    self->currenttitle.audio_position_path = temp[0].toUtf8().constData();
+    this->currenttitle->audio_position_path = temp[0].toUtf8().constData();
 
     this->decode_checksum();
 
@@ -85,7 +92,7 @@ void xmlstruct::loadfile(const char *nomeFile){
     stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
     int i, lung = temp.length();
     for(i=0; i < lung; i++)
-        self->currenttitle.posizione_iniz.append(chartoint(temp[i].toUtf8().constData()));
+        this->currenttitle->posizione_iniz.append(chartoint(temp[i].toUtf8().constData()));
 
     /* in questo modo all'interno della lista di interi listatemp ci saranno le lunghezze di tutte le stringhe dei testi,
     che nel caso di "testi" sarà al massimo di lunghezza uno*/
@@ -97,9 +104,9 @@ void xmlstruct::loadfile(const char *nomeFile){
     this->start = this->findstart();
 
     if(listatemp[0] != 0)
-        this->self->currenttitle.testi = this->text.substr(this->start,  listatemp[0]).c_str();
+        this->currenttitle->testi = this->text.substr(this->start,  listatemp[0]).c_str();
     else
-        this->self->currenttitle.testi = "";
+        this->currenttitle->testi = "";
 
     this->start += listatemp[0];
 
@@ -110,14 +117,14 @@ void xmlstruct::loadfile(const char *nomeFile){
 }
 
 void xmlstruct::loadindice(){
-    this->text = readfile(path_.c_str(), "indice.xml");
+    this->text = readfile(path_->c_str(), "indice.xml");
 
-    stringa_decode("<testi>", "</testi>", &this->self->indice.titolo);
-    stringa_decode("<audio>", "</audio>", &this->self->indice.audio);
-    stringa_decode("<video>", "</video>", &this->self->indice.video);
-    //stringa_decode("<file_testo>", "</file_testo>", &this->self->indice.file_testo);
+    stringa_decode("<testi>", "</testi>", &this->indice->titolo);
+    stringa_decode("<audio>", "</audio>", &this->indice->audio);
+    stringa_decode("<video>", "</video>", &this->indice->video);
 
-    self->path = path_;
+    /* viene passato direttamente come puntatore -> non c'è bisogno di cambiarlo per this->self->path */
+    /*self->path = this->path_;*/
 }
 
 int xmlstruct::posizione(const int posizionestringa, const char *find){
@@ -197,8 +204,7 @@ void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *vari
 
 /* funzione che gestisce la scrittura di testinohtml */
 void xmlstruct::textdecode(QList<int> *lista){
-
-    this->self->currenttitle.testinohtml.clear();
+    this->currenttitle->testinohtml.clear();
     //this->self->currenttitle.posizione_iniz.clear();
 
     if( this->checksum == 0)
@@ -215,7 +221,7 @@ void xmlstruct::textdecode(QList<int> *lista){
 }
 
     for (i = 0; i < this->checksum; i++){
-        this->self->currenttitle.testinohtml.append(this->text.substr(this->start, lista->at(i)).c_str());
+        this->currenttitle->testinohtml.append(this->text.substr(this->start, lista->at(i)).c_str());
         this->start += lista->at(i);
     }
 

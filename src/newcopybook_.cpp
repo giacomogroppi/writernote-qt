@@ -11,8 +11,9 @@
 #include "chartoint.h"
 #include "datawrite/savefile.h"
 
-/*funzione che gestisce la creazione di un nuovo copybook, non fa il controllo se esiste*/
+#include "currenttitle/currenttitle_class.h"
 
+/*funzione che gestisce la creazione di un nuovo copybook, non fa il controllo se esiste*/
 bool newcopybook_(MainWindow *parent, QString stringa){
     /* inizializzazione per l'indice */
     parent->self->indice.versione = 0;
@@ -23,17 +24,18 @@ bool newcopybook_(MainWindow *parent, QString stringa){
 
     int position = parent->self->indice.titolo.indexOf(stringa);
 
-    /*parent->ui->textEdit->setHtml((QString)"");
-    parent->ui->textEdit->setDisabled(true);*/
+    currenttitle_class *temp = new currenttitle_class;
+    temp->reset();
 
-    parent->self->currenttitle.reset();
-
-    savefile save_(parent, &parent->self->currentTitle);
+    /* in questo modo non c'è bisogno di cambiare copybook per crearne uno nuovo per salvare */
+    savefile save_(parent, temp, &stringa);
     if(!save_.savefile_check_file(position) || !save_.savefile_check_indice())
         /* vuol dire che si è fallito nel salvare il file */
         return false;
 
     return true;
+
+    delete temp;
 }
 
 #endif //NEW_COPY_BOOK
