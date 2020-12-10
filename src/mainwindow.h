@@ -148,6 +148,8 @@ private slots:
 
     void on_volumeSlider_valueChanged(int value);
 
+    void on_actionRedo_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

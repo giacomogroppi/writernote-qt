@@ -38,7 +38,6 @@
 #include "audiorecord/getbufferlevels.h"
 
 /* da sistemare */
-#include "datamanage/sistemazionedatiregistrati.cpp"
 #include <QMediaPlayer>
 
 /* da sistemare */
@@ -392,4 +391,9 @@ void MainWindow::on_spinBox_fontsize_valueChanged(const QString &arg1)
 void MainWindow::on_fontComboBox_fonttipo_currentFontChanged(const QFont &f)
 {
     this->ui->textEdit->setCurrentFont(f);
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    this->ui->textEdit->redo();
 }

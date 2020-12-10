@@ -1,6 +1,8 @@
 #ifndef CHECK_INSERIMENTO_CPP
 #define CHECK_INSERIMENTO_CPP
 
+#include "checkinserimento.h"
+
 #include "iostream"
 #include <QStringList>
 #include <QDebug>

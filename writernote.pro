@@ -47,7 +47,6 @@ SOURCES += \
     src/datamanage/check1.cpp \
     src/datamanage/checkinserimento.cpp \
     src/datamanage/eliminazioneNFrasi.cpp \
-    src/datamanage/sistemazionedatiregistrati.cpp \
     src/datamanage/spacchettamento.cpp \
     src/datamanage/stoprecording.cpp \
     src/datawrite/qfilechoose.cpp \
@@ -97,6 +96,9 @@ HEADERS += \
     src/currenttitle/deletecopybook.h \
     src/currenttitle/redolist.h \
     src/currenttitle/renamefile.h \
+    src/datamanage/check1.h \
+    src/datamanage/checkinserimento.h \
+    src/datamanage/spacchettamento.h \
     src/datawrite/renamefile_f_zip.h \
     src/dialog_critic.h \
     src/chartoint.h \

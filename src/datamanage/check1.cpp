@@ -1,6 +1,3 @@
-#ifndef CHECK_1_CPP
-#define CHECK_1_CPP
-
 #include <QStringList>
 #include <QDebug>
 
@@ -15,4 +12,3 @@ bool check1(QStringList *array){
 }
 
 
-#endif //CHECK_1_CPP

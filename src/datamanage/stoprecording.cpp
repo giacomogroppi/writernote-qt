@@ -7,12 +7,12 @@
 #include <QDebug>
 #include <QString>
 
-#include "sistemazionedatiregistrati.cpp"
 #include "../dialog_critic.h"
 
 #include "../audioplay/aggiornotastiriascolto.h"
 
 #include "../setting_ui.h"
+#include "spacchettamento.h"
 
 void MainWindow::on_stoprecordingbotton_triggered()
 {

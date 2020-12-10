@@ -27,6 +27,9 @@ void MainWindow::closeEvent (QCloseEvent *event)
     temp_lettura->loadindice();
     temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData());
 
+    QString filep = this->self->currenttitle.testi;
+    this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+
     bool check1 = checksimilecopybook(tempcopybook, &this->self->currenttitle);
     check1 = check1 && checksimileindice(&this->self->indice, tempindice);
 
@@ -34,6 +37,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     if(check1)
         return event->accept();
 
+    this->self->currenttitle.testi = filep;
 
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
                                                                 tr("Do you want to save\n"),

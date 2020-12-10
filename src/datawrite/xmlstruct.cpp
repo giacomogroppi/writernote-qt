@@ -2,9 +2,6 @@
   Gestisce la classe fileC che gestisce il decode dei file
   e l'archiviazione dei file
 */
-#ifndef XMLSTRUCT_CPP
-#define XMLSTRUCT_CPP
-
 #include "../self_class.h"
 
 #include "../mainwindow.h"
@@ -241,4 +238,3 @@ int xmlstruct::findstart(){
 
 }
 
-#endif

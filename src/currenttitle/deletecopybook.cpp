@@ -1,6 +1,3 @@
-#ifndef DELETE_COPY_BOOK_CPP
-#define DELETE_COPY_BOOK_CPP
-
 #include "deletecopybook.h"
 
 #include "../mainwindow.h"
@@ -57,5 +54,3 @@ void MainWindow::on_actionDelete_copybook_triggered()
 
     this->self->indice.stampa();
 }
-
-#endif

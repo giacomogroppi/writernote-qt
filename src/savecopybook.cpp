@@ -1,6 +1,3 @@
-#ifndef SAVE_COPY_BOOK_CPP
-#define SAVE_COPY_BOOK_CPP
-
 #include <QMessageBox>
 
 #include "mainwindow.h"
@@ -59,4 +56,3 @@ bool savecopybook::check_permission(){
     return check;
 }
 
-#endif

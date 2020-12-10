@@ -2,8 +2,8 @@
 #define SPACCHETTAMENTO_CPP
 
 #include "../mainwindow.h"
-#include "checkinserimento.cpp"
-#include "check1.cpp"
+#include "checkinserimento.h"
+#include "check1.h"
 
 void spacchettamento(MainWindow *parent){
     int i, j, k, lunghezza = parent->self->currenttitle.testinohtml.length();
