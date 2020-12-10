@@ -7,11 +7,10 @@
 
 </td></tr></table>
 
-
+## Linux
 <table>
 <tr>
 <td>
-## Linux
 
 <img src="readme/linux-example.png" width=100% title="writernote Screenshot on Linux"/>
 </td>
