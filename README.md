@@ -1,11 +1,5 @@
 # Writernote
 
-<table border="0px" ><tr><td width = 600px>
-
-
-</td><td>
-
-</td></tr></table>
 
 ## Linux
 <table>
