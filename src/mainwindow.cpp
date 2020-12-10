@@ -376,7 +376,6 @@ void MainWindow::on_textEdit_textChanged()
         return;
     }
 
-
     this->self->currenttitle.testinohtml.append(ui->textEdit->toPlainText());
     this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
 
@@ -396,4 +395,24 @@ void MainWindow::on_fontComboBox_fonttipo_currentFontChanged(const QFont &f)
 void MainWindow::on_actionRedo_triggered()
 {
     this->ui->textEdit->redo();
+}
+
+void MainWindow::on_actionCut_triggered()
+{
+    this->ui->textEdit->cut();
+}
+
+void MainWindow::on_actionSelect_all_triggered()
+{
+    this->ui->textEdit->selectAll();
+}
+
+void MainWindow::on_actionPaste_triggered()
+{
+    this->ui->textEdit->paste();
+}
+
+void MainWindow::on_actionCopy_triggered()
+{
+    this->ui->textEdit->copy();
 }

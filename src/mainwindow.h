@@ -150,6 +150,14 @@ private slots:
 
     void on_actionRedo_triggered();
 
+    void on_actionCut_triggered();
+
+    void on_actionSelect_all_triggered();
+
+    void on_actionPaste_triggered();
+
+    void on_actionCopy_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
