@@ -27,7 +27,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
 
     QAction *draw = new QAction; // Assumes actions is not empty
     draw->setStatusTip(tr("Draw with your pen [Alpha]"));
-    draw->setText("Draw area");
+    draw->setText("Draw area [beta]");
     menu->addAction(draw);
 
     QAction *keyboard = new QAction;
