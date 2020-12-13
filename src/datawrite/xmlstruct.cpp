@@ -83,14 +83,14 @@ void xmlstruct::loadfile(const char *nomeFile){
     this->currenttitle->audio_position_path = temp[0].toUtf8().constData();
 
     this->decode_checksum();
+    if(this->currenttitle->versione > 0){
+        stringa_decode("<filebinario>", "</filebinario>", &temp);
+        this->currenttitle->posizione_binario = temp[0].toUtf8().constData();
 
-    stringa_decode("<filebinario>", "</filebinario>", &temp);
-    this->currenttitle->posizione_binario = temp[0].toUtf8().constData();
-
-    /* funzione che gestisce la lettura dell'oggetto datastruct */
-    if(this->currenttitle->posizione_binario != "")
-        this->loadbinario();
-
+        /* funzione che gestisce la lettura dell'oggetto datastruct */
+        if(this->currenttitle->posizione_binario != "")
+            this->loadbinario();
+    }
 
     /* scrittura di posizione_iniz */
     stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
