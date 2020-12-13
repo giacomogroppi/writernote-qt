@@ -28,5 +28,11 @@
         <file>images/deleteCopyBook.png</file>
         <file>images/text-speech.png</file>
         <file>images/compress-video.png</file>
+        <file>images/pen-icon.png</file>
+        <file>images/rubber.png</file>
+        <file>images/yellow-icon.png</file>
+        <file>images/red-icon.png</file>
+        <file>images/white-icon.png</file>
+        <file>images/black-icon.png</file>
     </qresource>
 </RCC>

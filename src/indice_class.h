@@ -14,11 +14,7 @@ public:
     QStringList audio = {};
     QStringList titolo = {};
     QStringList compressione = {};
-    //QStringList file_testo = {};
 
-    int scritto = 0;
-
-    //void newfile(char* /*video*/, char* /*audio*/, char* /*titolo*/, char* /*file_testo*/);
     void reset();
     void stampa();
 };

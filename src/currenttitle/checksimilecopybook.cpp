@@ -8,22 +8,56 @@
 /* la funzione confronta due oggetti della classe current title */
 bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 {
-    if(primo->testi != secondo->testi)
-        return false;
-
-
-    if(primo->testinohtml.length() != secondo->testinohtml.length())
-        return false;
-
-
-    int i, len = primo->testinohtml.length();
-    for(i=0; i < len; i++ )
-        if(primo->testinohtml.at(i) != secondo->testinohtml.at(i))
+    if(primo->posizione_binario == ""){
+        if(primo->testi != secondo->testi)
             return false;
 
+        if(primo->testinohtml.length() != secondo->testinohtml.length())
+            return false;
 
-    if(primo->audio_position_path != secondo->audio_position_path)
-        return false;
+        int i, len = primo->testinohtml.length();
+        for(i=0; i < len; i++ )
+            if(primo->testinohtml.at(i) != secondo->testinohtml.at(i))
+                return false;
+
+
+        if(primo->audio_position_path != secondo->audio_position_path)
+            return false;
+
+    }else{
+        int i, len = primo->datatouch->color.length();
+
+        if(len != secondo->datatouch->color.length())
+            return false;
+
+        for(i=0; i < len; i ++)
+            if(primo->datatouch->color.at(i) != secondo->datatouch->color.at(i))
+                return false;
+
+        len = primo->datatouch->posizioneaudio.length();
+        if(len != secondo->datatouch->posizioneaudio.length())
+            return false;
+        for(i = 0; i < len; i++)
+            if(primo->datatouch->posizioneaudio.at(i) != secondo->datatouch->posizioneaudio.at(i))
+                return false;
+
+
+
+        len = primo->datatouch->x.length();
+        if(len != secondo->datatouch->x.length())
+            return false;
+        for(i = 0; i < len; i++)
+            if(primo->datatouch->x.at(i) != secondo->datatouch->x.at(i))
+                return false;
+
+
+        len = primo->datatouch->y.length();
+        if(len != secondo->datatouch->y.length())
+            return false;
+        for(i = 0; i < len; i++)
+            if(primo->datatouch->y.at(i) != secondo->datatouch->y.at(i))
+                return false;
+    }
 
     return true;
 }

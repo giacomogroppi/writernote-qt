@@ -12,13 +12,15 @@ private:
     currenttitle_class *currenttitle;
     QString *namecopybook;
 
+
 public:
     savefile(MainWindow *parent, currenttitle_class *currenttitle, QString *namecopybook);
     bool savefile_check_indice();
     bool savefile_check_file(int);
     //bool savefile_check_copybook();
     bool compressfile(const char *namefile, const char *testo);
-
+    bool compressbinario(const char *namefile, const char *testo, FILE *, QString *);
+    bool salvabinario(int);
 };
 
 #endif // SAVEFILE_H

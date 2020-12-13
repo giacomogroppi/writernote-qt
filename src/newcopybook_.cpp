@@ -5,7 +5,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#define LUNGHEZZANOMETEMP 10
 #include <QDebug>
 #include "stringgenerator.cpp"
 #include "chartoint.h"
@@ -24,18 +23,21 @@ bool newcopybook_(MainWindow *parent, QString stringa){
 
     int position = parent->self->indice.titolo.indexOf(stringa);
 
-    currenttitle_class *temp = new currenttitle_class;
-    temp->reset();
+    currenttitle_class *tempcopybook = new currenttitle_class;
+    tempcopybook->reset();
+    if(parent->typetemp)
+        tempcopybook->posizione_binario = "bin_" + stringa + ".xml";
 
     /* in questo modo non c'è bisogno di cambiare copybook per crearne uno nuovo per salvare */
-    savefile save_(parent, temp, &stringa);
+    savefile save_(parent, tempcopybook, &stringa);
     if(!save_.savefile_check_file(position) || !save_.savefile_check_indice())
         /* vuol dire che si è fallito nel salvare il file */
         return false;
 
     return true;
 
-    delete temp;
+    delete tempcopybook;
+
 }
 
 #endif //NEW_COPY_BOOK

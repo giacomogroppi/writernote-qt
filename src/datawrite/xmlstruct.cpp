@@ -2,6 +2,7 @@
   Gestisce la classe fileC che gestisce il decode dei file
   e l'archiviazione dei file
 */
+#include "xmlstruct.h"
 #include "../self_class.h"
 
 #include "../mainwindow.h"
@@ -12,7 +13,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <QStringList>
-#include "xmlstruct.h"
 #include <string.h>
 #define NOTFOUND -1
 #include <array>
@@ -35,7 +35,6 @@ std::string xmlstruct::filetostring(){
   std::string text((std::istreambuf_iterator<char>(t)),
                    std::istreambuf_iterator<char>());
 
-  //std::cout << "testo: " << text;
 
   return text;
 }
@@ -61,7 +60,7 @@ char *xmlstruct::readfile(const char *path, const char *namefile){
 
 /* funzione che gestisce il caricamente di un file di tipo zip */
 void xmlstruct::loadfile(const char *nomeFile){
-    this->text = readfile(path_->c_str(), nomeFile);
+    this->text = readfile(this->path_->c_str(), nomeFile);
 
     QStringList temp = {};
     stringa_decode("<versione>", "</versione>", &temp);
@@ -84,6 +83,14 @@ void xmlstruct::loadfile(const char *nomeFile){
     this->currenttitle->audio_position_path = temp[0].toUtf8().constData();
 
     this->decode_checksum();
+
+    stringa_decode("<filebinario>", "</filebinario>", &temp);
+    this->currenttitle->posizione_binario = temp[0].toUtf8().constData();
+
+    /* funzione che gestisce la lettura dell'oggetto datastruct */
+    if(this->currenttitle->posizione_binario != "")
+        this->loadbinario();
+
 
     /* scrittura di posizione_iniz */
     stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);

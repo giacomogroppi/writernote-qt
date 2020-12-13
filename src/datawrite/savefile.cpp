@@ -1,6 +1,3 @@
-#ifndef SAVE_FILE_CPP
-#define SAVE_FILE_CPP
-
 #include "savefile.h"
 #include "../self_class.h"
 #include "../indice_class.h"
@@ -13,7 +10,6 @@
 
 #include <zlib.h>
 #include <zip.h>
-//#include <glib.h>
 #include <stdlib.h>
 #include "../chartoint.h"
 #include <string.h>
@@ -26,44 +22,6 @@ savefile::savefile(MainWindow *parent, currenttitle_class *currenttitle, QString
     this->currenttitle = currenttitle;
     this->namecopybook = namecopybook;
 };
-
-/*funzione che gestisce il salvataggio dell'indice*/
-bool savefile::compressfile(const char *namefile, const char *text){
-/*
-    namefile: nome file da salvare ("indice.xml", "file2.xml")
-    text: testo da scrivere
-*/
-    int errorp = 0;
-
-    zip_t *filezip = zip_open(this->parent->self->path.c_str(), ZIP_CREATE , &errorp);
-
-    if (filezip == nullptr) {
-            zip_error_t ziperror;
-            zip_error_init_with_code(&ziperror, errorp);
-            throw std::runtime_error("Failed to open output file " + this->parent->self->path + ": " + zip_error_strerror(&ziperror));
-    }
-
-    zip_source_t *temp;
-    int lunghezzastringa = strlen(text);
-
-    temp = zip_source_buffer(filezip, text, sizeof(char)*lunghezzastringa, 0);
-
-    /* ZIP_FL_ENC_UTF_8 */
-
-    if ( temp == NULL || zip_file_add(filezip, namefile, temp, 0) < 0) {
-        int indice = zip_name_locate(filezip, namefile, 0);
-        if(zip_file_replace(filezip, indice, temp, 0) == -1)
-        {
-            zip_source_free(temp);
-            qDebug() << "\nsavefile::compressfile -> Abbiamo avuto un problema nel file replace " << zip_strerror(filezip) << endl;
-            return false;
-        }
-    }
-
-    zip_close(filezip);
-
-    return true;
-}
 
 /*codice che gestisce il salvataggio del file*/
 bool savefile::savefile_check_file(int posizione){
@@ -88,6 +46,13 @@ bool savefile::savefile_check_file(int posizione){
     /* inserisce la checksum, che nella lettura serve a ciclare fino a, e controllare l'integrità del dato */
     inttochar(this->currenttitle->testinohtml.length(), stringa);
     indicesalvataggio += "<checksum>" + (std::string)stringa + "</checksum>";
+
+    /* salva la posizione del file per il touch all'interno dello zip */
+    indicesalvataggio += "<filebinario>" + this->currenttitle->posizione_binario.toStdString() +"</filebinario>";
+
+    if(this->currenttitle->posizione_binario != "")
+        if(!this->salvabinario(posizione))
+            return false;
 
     indicesalvataggio += "<audio_position_path>" + this->currenttitle->audio_position_path + "</audio_position_path>";
 
@@ -147,5 +112,3 @@ bool savefile::savefile_check_indice(){
 
     return check;
 }
-
-#endif // SAVE_FILE_CPP

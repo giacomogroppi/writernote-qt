@@ -1,11 +1,19 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include "touch/tabletapplication.h"
+#include "touch/tabletcanvas.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
+    TabletApplication app(argc, argv);
+    TabletCanvas *canvas = new TabletCanvas;
+    app.setCanvas(canvas);
+
+    //QApplication a(argc, argv);
+    MainWindow w(nullptr, canvas);
     w.show();
-    return a.exec();
+    return app.exec();
+    //return a.exec();
+
 }

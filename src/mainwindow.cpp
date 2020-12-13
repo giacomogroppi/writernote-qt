@@ -21,7 +21,7 @@
 /*funzione che gestisce l'indice*/
 #include "indice_class.h"
 #include "self_class.h"
-
+#include "style/abilitazioneinput.h"
 /* gestione della lista */
 #include "currenttitle/redolist.h"
 
@@ -33,6 +33,7 @@
 #include "setting_ui.h"
 
 #include "datawrite/savefile.h"
+#include "style/abilitazioneinput.h"
 
 /* audio record */
 #include "audiorecord/getbufferlevels.h"
@@ -47,11 +48,14 @@
 #include "style/main_style.cpp"
 
 #include "audiosetting/loadqualita.h"
+#include "currenttitle/checksimilecopybook.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    this->m_canvas = canvas;
+
     ui->setupUi(this);
 
     /* definizione di cosa serve per la registrazione dell'audio */
@@ -72,7 +76,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
 
     self = new SelfClass;
+
     setting_ui_start(this);
+
+    this->ui->verticalLayout->insertWidget(0, this->m_canvas);
+    this->m_canvas->setHidden(true);
+    abilitazioneinput(this);
 }
 
 
@@ -158,11 +167,19 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         return redolist(this);
 
     if(this->self->currentTitle != ""){
-        savecopybook savevariabile(this, &this->self->currentTitle);
+        /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
+        currenttitle_class *tempcopybook = new currenttitle_class;
 
-        if (!savevariabile.check_permission())
-            /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
-            return redolist(this);
+        xmlstruct *fileload = new xmlstruct(&this->self->path, &this->self->indice, tempcopybook);
+        fileload->loadfile((this->self->currentTitle + ".xml").toUtf8().constData());
+
+        if(!checksimilecopybook(&this->self->currenttitle, tempcopybook)){
+            savecopybook savevariabile(this, &this->self->currentTitle);
+
+            if (!savevariabile.check_permission())
+                /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
+                return redolist(this);
+        }
     }
 
     /* a questo punto deve aprire il nuovo copybook */
@@ -182,7 +199,18 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     settingstyle(this, true);
 
     aggiornotestiriascolto(this);
+    abilitazioneinput(this);
     this->ui->actionPrint->setEnabled(true);
+    qDebug() << "CIAO";
+    /* pass the pointer to the class */
+    if(this->self->currenttitle.posizione_binario != ""){
+        qDebug() << "Faccio il linkaggio";
+        this->m_canvas->data = this->self->currenttitle.datatouch;
+
+        qDebug() << "Linkaggio andato ok";
+        this->m_canvas->loadfile();
+    }
+
 }
 
 /* funzione che gestisce il controllo del riascolto dell'audio */
@@ -212,56 +240,6 @@ void MainWindow::on_textEdit_selectionChanged(){
     }
 }
 
-/* funzione che gestisce la creazione di un nuovo copybook */
-void MainWindow::on_actionCreate_new_copybook_triggered()
-{
-    /* aggiornamento -> permette di creare più istante della classe currenttitle, e aprire più file contemporaneamente */
-    //if(this->self->currentTitle != ""){
-    //    savecopybook check(this, &this->self->currentTitle);
-
-    //    if(!check.check_permission())
-    //        /* l'utente ha detto che non vuole creare un nuovo file, oppure non si è riusciti a salvarlo */
-    //        return;
-    //}
-
-    bool ok;
-    if(this->self->path == "")
-    {
-        /* deve salvare prima di continuare */
-        qfilechoose filec(this);
-        ok = filec.filechoose();
-        if (!ok)
-            return;
-    }
-
-    /* richiede all'utente se vuole salvare il file */
-    QString namecopybook = QInputDialog::getText(this, tr("Get text"),
-                                                 tr("Title: "), QLineEdit::Normal,
-                                                 "", &ok);
-
-    if(!ok || namecopybook == "")
-        return;
-
-    /* TODO */
-    if(namecopybook.indexOf("<titolo>") != -1 || namecopybook.indexOf("</titolo>") != -1
-            || namecopybook.indexOf("<audio>") != -1
-            || namecopybook.indexOf("</audio>") != -1
-            || namecopybook.indexOf("<compressione>") != -1
-            || namecopybook.indexOf("</compressione>") != -1
-            || namecopybook.indexOf("<video>") != -1
-            || namecopybook.indexOf("</video>") != -1)
-        return dialog_critic("You can't use video, compressione, audio and titolo as name of the copybook");
-
-    if(this->self->indice.titolo.indexOf(namecopybook) != -1)
-        return dialog_critic("There is a copybook that already has this title");
-
-    if(!newcopybook_(this, namecopybook))
-        return dialog_critic("We had a problem saving the copybook");
-
-    this->ui->listWidgetSX->setEnabled(true);
-    update_list_copybook(this);
-
-}
 
 /* AUDIO TESTING */
 void MainWindow::togglePause()

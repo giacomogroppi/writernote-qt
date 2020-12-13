@@ -1,15 +1,7 @@
-#ifndef INDICE_CLASS_CPP
-#define INDICE_CLASS_CPP
 #include <iostream>
 #include "indice_class.h"
 #include <QDebug>
-/*funzione per gestire l'indice*/
 
-/*void indice_class::newfile(char video[MAXFILESTR], char audio[MAXFILESTR],
-                           char titolo[MAXFILESTR], char file_testo[MAXFILESTR]){
-	 
-
-}*/
 void indice_class::reset(){
     this->versione=0;
     this->video.clear();
@@ -30,7 +22,3 @@ void indice_class::stampa(){
     }
 }
 
-
-
-
-#endif //INDICE_CLASS_CPP

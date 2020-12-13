@@ -108,7 +108,7 @@
      </layout>
     </item>
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2_stile">
       <item>
        <widget class="QSpinBox" name="spinBox_fontsize">
         <property name="minimum">
@@ -286,6 +286,51 @@
    <addaction name="actionConvert_audio_to_text"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolbarmatita">
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
+   </attribute>
+   <addaction name="actionpen"/>
+   <addaction name="actionrubber"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarcolore">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>20</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionblack"/>
+   <addaction name="actionwhite"/>
+   <addaction name="actionyellow"/>
+   <addaction name="actionred"/>
+  </widget>
   <action name="actionNew_File">
    <property name="checkable">
     <bool>false</bool>
@@ -528,6 +573,60 @@
    </property>
    <property name="text">
     <string>compress video</string>
+   </property>
+  </action>
+  <action name="actionpen">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/pen-icon.png</normaloff>:/image/images/pen-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>pen</string>
+   </property>
+  </action>
+  <action name="actionrubber">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/rubber.png</normaloff>:/image/images/rubber.png</iconset>
+   </property>
+   <property name="text">
+    <string>rubber</string>
+   </property>
+  </action>
+  <action name="actionyellow">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/yellow-icon.png</normaloff>:/image/images/yellow-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>yellow</string>
+   </property>
+  </action>
+  <action name="actionwhite">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/white-icon.png</normaloff>:/image/images/white-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>white</string>
+   </property>
+  </action>
+  <action name="actionblack">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/black-icon.png</normaloff>:/image/images/black-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>black</string>
+   </property>
+  </action>
+  <action name="actionred">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/red-icon.png</normaloff>:/image/images/red-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>red</string>
    </property>
   </action>
  </widget>

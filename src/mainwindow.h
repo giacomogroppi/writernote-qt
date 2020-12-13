@@ -20,6 +20,9 @@
 #include <QComboBox>
 #include <QMediaPlayer>
 
+/*TESTING*/
+#include "touch/tabletcanvas.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -37,7 +40,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr);
     ~MainWindow();
 
     /* gestione variabile self */
@@ -52,9 +55,13 @@ public:
     /* gestione della riproduzione dell'audio */
     QMediaPlayer *player;
 
+    TabletCanvas *m_canvas;
 
+    /* le due funzioni gestiscono il cambio di inserimento */
+    void methodwrite();
+    void methodpen();
 
-
+    bool typetemp = false;
 public slots:
     void processBuffer(const QAudioBuffer&);
 
@@ -157,6 +164,18 @@ private slots:
     void on_actionPaste_triggered();
 
     void on_actionCopy_triggered();
+
+    void on_actionpen_triggered();
+
+    void on_actionrubber_triggered();
+
+    void on_actionblack_triggered();
+
+    void on_actionwhite_triggered();
+
+    void on_actionyellow_triggered();
+
+    void on_actionred_triggered();
 
 private:
     /* gestione dell'audio */

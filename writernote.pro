@@ -1,5 +1,5 @@
-QT       += core gui
 QT       += core
+QT       += gui
 QT       += widgets
 QT       += multimedia
 QT       += printsupport
@@ -41,6 +41,7 @@ SOURCES += \
     src/currenttitle/currenttitle_class.cpp \
     src/currenttitle/deleteaudio.cpp \
     src/currenttitle/deletecopybook.cpp \
+    src/currenttitle/newcopybook.cpp \
     src/currenttitle/redolist.cpp \
     src/currenttitle/renamefile.cpp \
     src/currenttitle/rightclicklistcopybook.cpp \
@@ -49,8 +50,11 @@ SOURCES += \
     src/datamanage/eliminazioneNFrasi.cpp \
     src/datamanage/spacchettamento.cpp \
     src/datamanage/stoprecording.cpp \
+    src/datawrite/compressfile.cpp \
+    src/datawrite/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
     src/datawrite/renamefile_f_zip.cpp \
+    src/datawrite/salvabinario.cpp \
     src/datawrite/savefile.cpp \
     src/dialog_critic.cpp \
     src/indice_class.cpp \
@@ -63,6 +67,7 @@ SOURCES += \
     src/setting_ui.cpp \
     src/stringgenerator.cpp \
     src/audiorecord/audiolevel.cpp \
+    src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
     src/style/inserttable.cpp \
@@ -74,6 +79,12 @@ SOURCES += \
     src/style/bold.cpp \
     src/audioplay/main_audioplay.cpp \
     src/style/print_action.cpp \
+    src/touch/datastruct/datastruct.cpp \
+    src/touch/datastruct/loadfile_tabletcanvas.cpp \
+    src/touch/settingmethod.cpp \
+    src/touch/tabletapplication.cpp \
+    src/touch/tabletcanvas.cpp \
+    src/touch/updatelist.cpp \
     src/update_list_copybook.cpp \
     src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
@@ -104,6 +115,10 @@ HEADERS += \
     src/chartoint.h \
     src/newcopybook_.h \
     src/setting_ui.h \
+    src/style/abilitazioneinput.h \
+    src/touch/datastruct/datastruct.h \
+    src/touch/tabletapplication.h \
+    src//touch/tabletcanvas.h \
     src/update_list_copybook.h \
     src/currenttitle/currenttitle_class.h \
     src/datawrite/qfilechoose.h \

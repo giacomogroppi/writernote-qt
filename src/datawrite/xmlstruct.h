@@ -15,6 +15,8 @@
 #include <QStringList>
 #include "../self_class.h"
 
+#include "../touch/datastruct/datastruct.h"
+
 class xmlstruct{
 private:
     std::string filetostring();
@@ -46,6 +48,8 @@ public:
     void stringa_decode(const char *, const char *, QStringList *);
     void stringa_decode_int(const char *, const char *, QList<int>*);
     void decode_checksum();
+
+    void loadbinario();
 
     /* funzione che gestisce la scrittura di testinohtml */
     void textdecode(QList<int> *);

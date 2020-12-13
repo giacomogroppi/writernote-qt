@@ -11,7 +11,6 @@
 #include "currenttitle/currenttitle_class.h"
 
 #include "datawrite/xmlstruct.h"
-
 #include "currenttitle/checksimilecopybook.h"
 
 void MainWindow::closeEvent (QCloseEvent *event)
