@@ -23,7 +23,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
 void TabletCanvas::laod(QPaintEvent *event, QPainter *painter){
     /* inizia a disegnare i punti */
-
     int i_, len;
     len = this->data->x.length();
 
