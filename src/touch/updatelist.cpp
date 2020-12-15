@@ -10,7 +10,6 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     this->data->posizioneaudio.append(this->time);
     this->data->color.append(this->m_pen.color());
-    qDebug() << "TabletCanva::updatelist -> ok";
 }
 
 void TabletCanvas::gomma_f(QTabletEvent *event){
@@ -21,16 +20,12 @@ void TabletCanvas::gomma_f(QTabletEvent *event){
 
 /* la funzioen gestisce tutti i pixel */
 void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
-    qDebug() << "paintPixmap";
     static qreal maxPenradius = pressureToWidth(1.0);
     painter.setRenderHint(QPainter::Antialiasing);
-
-    qDebug() << "\nposf -> " << event->posF();
-    qDebug() << "pos -> " << event->pos();
-
 
     painter.setPen(this->m_pen);
     painter.drawLine(lastPoint.pos, event->posF());
     update(QRect(lastPoint.pos.toPoint(), event->pos()).normalized()
            .adjusted(-maxPenradius, -maxPenradius, maxPenradius, maxPenradius));
+
 }

@@ -193,7 +193,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     this->self->currentTitle = item->text().toUtf8().constData();
     this->setWindowTitle("Writernote - " + this->self->currentTitle);
 
-    this->ui->textEdit->setHtml(this->self->currenttitle.testi);
+    if(this->self->currenttitle.posizione_binario == "")
+        this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
     settingtextedit(this, true);
     settingstyle(this, true);
@@ -201,14 +202,12 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     aggiornotestiriascolto(this);
     abilitazioneinput(this);
     this->ui->actionPrint->setEnabled(true);
-    qDebug() << "CIAO";
+
     /* pass the pointer to the class */
     if(this->self->currenttitle.posizione_binario != ""){
-        qDebug() << "Faccio il linkaggio";
         this->m_canvas->data = this->self->currenttitle.datatouch;
+        this->m_canvas->loadpixel();
 
-        qDebug() << "Linkaggio andato ok";
-        this->m_canvas->loadfile();
     }
 
 }

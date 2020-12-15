@@ -48,8 +48,7 @@ void TabletCanvas::clear()
 }
 
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
-void TabletCanvas::tabletEvent(QTabletEvent *event)
-{
+void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (event->type()) {
         case QEvent::TabletPress:
             if (!m_deviceDown) {
@@ -95,17 +94,6 @@ void TabletCanvas::initPixmap()
     painter.end();
     m_pixmap = newPixmap;
 }
-
-void TabletCanvas::paintEvent(QPaintEvent *event)
-{
-    if (m_pixmap.isNull())
-        initPixmap();
-    QPainter painter(this);
-    QRect pixmapPortion = QRect(event->rect().topLeft() * devicePixelRatio(),
-                                event->rect().size() * devicePixelRatio());
-    painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
-}
-
 
 
 qreal TabletCanvas::pressureToWidth(qreal pressure)

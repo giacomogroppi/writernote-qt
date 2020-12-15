@@ -18,7 +18,7 @@ if [ $1 == 'compile' ]; then
     make clean
     rm build/writernote
     snapcraft clean
-    multipass launch --name snapcraft-writernote --cpus 20 --mem 24G --disk 100G
+    multipass launch --name snapcraft-writernote --cpus 4 --mem 4G --disk 100G
     snapcraft
 
 elif [ $1 == 'clean' ]; then

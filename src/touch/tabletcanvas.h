@@ -66,7 +66,15 @@ public:
     QColor m_color = Qt::red;
 
     void loadfile();
-    void loadpixel(QPainter &, int x, int y, QColor);
+    bool isloading = false;
+
+    struct PointLoading{
+        int xdrawing;
+        int ydrawing;
+    } pointload;
+    void laod(QPaintEvent*, QPainter *);
+    void loadpixel();
+
 protected:
     void tabletEvent(QTabletEvent *event) override;
     void paintEvent(QPaintEvent *event) override;

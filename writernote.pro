@@ -80,7 +80,8 @@ SOURCES += \
     src/audioplay/main_audioplay.cpp \
     src/style/print_action.cpp \
     src/touch/datastruct/datastruct.cpp \
-    src/touch/datastruct/loadfile_tabletcanvas.cpp \
+    src/touch/datastruct/loadpixel.cpp \
+    src/touch/paintevent/paintevent.cpp \
     src/touch/settingmethod.cpp \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \
