@@ -52,6 +52,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (event->type()) {
         case QEvent::TabletPress:
             if (!m_deviceDown) {
+                updatelist(event);
+
                 m_deviceDown = true;
                 lastPoint.pos = event->pos();
                 lastPoint.pressure = event->pressure();

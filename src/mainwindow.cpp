@@ -81,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     this->ui->verticalLayout->insertWidget(0, this->m_canvas);
     this->m_canvas->setHidden(true);
+
     abilitazioneinput(this);
 }
 
@@ -208,6 +209,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         this->m_canvas->data = this->self->currenttitle.datatouch;
         this->m_canvas->loadpixel();
 
+        this->m_canvas->time = 0;
     }
 
 }
@@ -347,15 +349,8 @@ void MainWindow::on_textEdit_textChanged()
 
     QString text = ui->textEdit->toPlainText();
 
-    if(this->self->currenttitle.posizione_iniz.length() == 0){
-        this->self->currenttitle.testinohtml.append(text);
-        this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
-        return;
-    }
-
     this->self->currenttitle.testinohtml.append(ui->textEdit->toPlainText());
     this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
-
 }
 
 

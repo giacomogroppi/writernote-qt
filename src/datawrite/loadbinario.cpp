@@ -4,6 +4,8 @@
 
 #include <zip.h>
 
+#include "colortoint.h"
+
 /* la funzione gestisce la lettura del file binario */
 void xmlstruct::loadbinario(){
     int err = 0;
@@ -23,6 +25,9 @@ void xmlstruct::loadbinario(){
 
     int lunghezza=0, i;
 
+    zip_fread(f, &lunghezza, sizeof(short int));
+    this->currenttitle->datatouch->numeropagine = lunghezza;
+
     /* carica le x */
     zip_fread(f, &lunghezza, sizeof(int));
     int valoretemp;
@@ -37,6 +42,22 @@ void xmlstruct::loadbinario(){
     for(i=0; i < lunghezza; i++){
         zip_fread(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->y.append(valoretemp);
+    }
+
+    for(i=0; i < lunghezza; i++){
+        zip_fread(f, &valoretemp, sizeof(int));
+        this->currenttitle->datatouch->idtratto.append(valoretemp);
+    }
+
+    zip_fread(f, &this->currenttitle->datatouch->numeropagine, sizeof(short int));
+
+    /* carica i colori */
+    int pointer[3];
+    QColor coloretemp;
+    for(i = 0; i < lunghezza; i++){
+        zip_fread(f, pointer, sizeof(int) * 3);
+        coloretemp.setRgb(*pointer, *(pointer+1), *(pointer + 2));
+        currenttitle->datatouch->color.append(coloretemp);
     }
 
     /* carica la posizione dei testi */

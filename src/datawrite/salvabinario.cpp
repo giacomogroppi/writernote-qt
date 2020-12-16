@@ -4,6 +4,9 @@
 #include <QMessageBox>
 #include <QString>
 #include "zip.h"
+
+#include "colortoint.h"
+
 bool savefile::salvabinario(int posizione){
     QString binario = "";
     int i, lunghezza;
@@ -12,6 +15,8 @@ bool savefile::salvabinario(int posizione){
     FILE *fp = fopen(posizionetemp.toUtf8().constData(), "w");
     if(fp == NULL)
         return false;
+
+    fwrite(&this->currenttitle->datatouch->numeropagine, sizeof(short int), 1, fp);
 
     lunghezza = this->currenttitle->datatouch->x.length();
     fwrite(&lunghezza, sizeof(int), 1, fp);
@@ -22,6 +27,18 @@ bool savefile::salvabinario(int posizione){
     fwrite(&lunghezza, sizeof(int), 1, fp);
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->y[i], sizeof(int), 1, fp);
+
+    for(i=0; i < lunghezza; i++)
+        fwrite(&this->currenttitle->datatouch->idtratto[i], sizeof(int), 1, fp);
+
+    fwrite(&this->currenttitle->datatouch->numeropagine, sizeof(short int), 1, fp);
+
+    /* scrive i colori */
+    int point[3];
+    for(i = 0; i < lunghezza; i++){
+        colortoint(&this->currenttitle->datatouch->color[i], point);
+        fwrite(point, sizeof(int), 3, fp);
+    }
 
     lunghezza = this->currenttitle->datatouch->posizioneaudio.length();
     fwrite(&lunghezza, sizeof(int), 1, fp);

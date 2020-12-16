@@ -9,8 +9,17 @@
 #include <QTabletEvent>
 #include <QWidget>
 
-/* struttura della classe per memorizzare i dati */
 #include "datastruct/datastruct.h"
+
+typedef struct lastpoint_struct{
+    QPointF posd = QPointF(-1, -1);
+    QPointF poss = QPointF(-1, -1);
+}lastpoint_t;
+
+typedef struct{
+    short int delta;
+    bool ismoving_check = false;
+}ismoving_t;
 
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
@@ -75,9 +84,36 @@ public:
     void laod(QPaintEvent*, QPainter *);
     void loadpixel();
 
+    /* funzioni responsabili del riascolto */
+    void riascolto(int);
+    void loadriascolto(QPainter *);
+    bool riascoltovariable = false;
+    int posizione = -1;
+
+    /* touch e zoom */
+    lastpoint_t lastpointzoom;
+    void zoomin(QPaintEvent *);
+    void zoomon(QPaintEvent *);
+
+    bool iszoomin = false;
+    bool iszoomon = false;
+
+    /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
+    ismoving_t ismoving;
+    void ismoving_f(QPaintEvent *event);
+
+    void disegnafoglio();
+    bool disegnofoglio_bool = false;
+
 protected:
     void tabletEvent(QTabletEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
+
+    /* rotella del mouse */
+    void wheelEvent(QWheelEvent *event) override;
+
+    /* gestisce il touch */
+    bool event(QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
 private:

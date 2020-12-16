@@ -1,0 +1,100 @@
+#include "../tabletcanvas.h"
+#include <QEvent>
+#include <QDebug>
+#include "math.h"
+#include <QWheelEvent>
+
+static bool isdefine(QPointF *point){
+    return *point != QPointF(-1, -1);
+}
+
+static int calcolodistanza(QPointF *point1, QPointF *point2){
+    return sqrt(pow(point1->x() - point2->x(), 2) + pow(point1->y() - point2->y(), 2));
+}
+
+bool TabletCanvas::event(QEvent *event){
+
+
+    switch (event->type()) {
+        case QEvent::TouchBegin:
+        case QEvent::TouchUpdate:
+        case QEvent::TouchEnd:
+        {
+            const QTouchEvent *touch = static_cast<QTouchEvent *>(event);
+            const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+            for (const QTouchEvent::TouchPoint &touchPoint : touchPoints) {
+                switch (touchPoint.state()) {
+                case Qt::TouchPointStationary:
+                case Qt::TouchPointReleased:
+                    continue;
+                default:
+                    {
+                        QSizeF diams = touchPoint.ellipseDiameters();
+                        if (diams.isEmpty()) {
+                            /*qreal diameter = MaximumDiameter;
+                            if (touch->device()->capabilities() & QTouchDevice::Pressure)
+                                diameter = MinimumDiameter + (MaximumDiameter - MinimumDiameter) * touchPoint.pressure();
+                            diams = QSizeF(diameter, diameter);*/
+                        }
+
+                        /* stampa la posizione del touch */
+
+                        //qDebug() << "pos() -> " << touchPoint.pos();
+
+
+                        /* a questo punto posso capire se è stato un zoom in o uno zoom on */
+                        if(isdefine(&this->lastpointzoom.posd) && isdefine(&this->lastpointzoom.poss)){
+                            QPointF punto = touchPoint.pos();
+                            bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) < calcolodistanza(&this->lastpointzoom.poss, &punto));
+
+                            if(!check){
+                                if(punto.x() < this->lastpointzoom.poss.x() || punto.y() > this->lastpointzoom.poss.y()){
+                                    this->iszoomin = true;
+                                    this->iszoomon = false;
+                                }
+                                else{
+                                    this->iszoomon = true;
+                                    this->iszoomin = false;
+                                }
+                            }
+                            else{
+                                if(punto.x() > this->lastpointzoom.posd.x() || punto.y() < this->lastpointzoom.posd.y()){
+                                    this->iszoomin = true;
+                                    this->iszoomon = false;
+                                }
+                                else{
+                                    this->iszoomon = true;
+                                    this->iszoomin = false;
+                                }
+                            }
+
+                            /* nella funzione [o zoomin o zoomon] cancello i dati e li setto a -1 */
+                            update();
+                        }
+                        /* altrimenti posso andare a salvare i punti iniziali */
+                        else{
+                            if(!isdefine(&this->lastpointzoom.posd))
+                                this->lastpointzoom.posd = touchPoint.pos();
+                            else{
+                                if(touchPoint.pos().x() > this->lastpointzoom.posd.x()){
+                                    /* deve fare lo scambio */
+                                    QPointF temp = this->lastpointzoom.posd;
+                                    this->lastpointzoom.posd = touchPoint.pos();
+                                    this->lastpointzoom.poss = temp;
+                                }
+                                else
+                                    /* altrimenti vuol dire che il punto a destra è già quello a destra */
+                                    this->lastpointzoom.poss = touchPoint.pos();
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+        default:
+            return QWidget::event(event);
+    }
+    return true;
+}

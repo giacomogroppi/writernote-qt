@@ -5,10 +5,26 @@
 #include <QPainter>
 
 void TabletCanvas::updatelist(QTabletEvent *event){
+    if(this->m_deviceDown){
+        /* se la lunghezza è diversa da zero */
+        if(this->data->idtratto.length())
+            this->data->idtratto.append(this->data->idtratto.last() + 1);
+        else
+            this->data->idtratto.append(0);
+    }
+    else
+        /* se invece il tratto non è ancora finito deve caricare l'id di prima */
+        this->data->idtratto.append(data->idtratto.last());
+
+    if(this->data->idtratto.length()){
+        if(data->idtratto.last() == data->idtratto.at(data->idtratto.length()-1))
+            qDebug() << "uguale tratto";
+    }
+
     this->data->x.append(event->pos().x());
     this->data->y.append(event->pos().y());
 
-    this->data->posizioneaudio.append(this->time);
+    this->data->posizioneaudio.append(this->time/1000);
     this->data->color.append(this->m_pen.color());
 }
 

@@ -1,6 +1,3 @@
-#ifndef STOP_RECORDING_CPP
-#define STOP_RECORDING_CPP
-
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -31,9 +28,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
     aggiornotestiriascolto(this);
 
-    //this->ui->statusBar->showMessage(tr("Audio save in %1").arg(this->self->currenttitle.audio_position_path));
     this->ui->statusBar->clearMessage();
+    this->m_canvas->time = 0;
 }
 
-
-#endif // STOP_RECORDING_CPP

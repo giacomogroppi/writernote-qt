@@ -50,6 +50,7 @@ SOURCES += \
     src/datamanage/eliminazioneNFrasi.cpp \
     src/datamanage/spacchettamento.cpp \
     src/datamanage/stoprecording.cpp \
+    src/datawrite/colortoint.cpp \
     src/datawrite/compressfile.cpp \
     src/datawrite/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
@@ -81,7 +82,14 @@ SOURCES += \
     src/style/print_action.cpp \
     src/touch/datastruct/datastruct.cpp \
     src/touch/datastruct/loadpixel.cpp \
+    src/touch/event/eventmethod.cpp \
+    src/touch/event/mouseevent.cpp \
+    src/touch/event/moving_f.cpp \
+    src/touch/paintevent/disegnofoglio.cpp \
     src/touch/paintevent/paintevent.cpp \
+    src/touch/paintevent/zoomin.cpp \
+    src/touch/paintevent/zoomon.cpp \
+    src/touch/riascolto/riascolto.cpp \
     src/touch/settingmethod.cpp \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \
@@ -111,6 +119,7 @@ HEADERS += \
     src/datamanage/check1.h \
     src/datamanage/checkinserimento.h \
     src/datamanage/spacchettamento.h \
+    src/datawrite/colortoint.h \
     src/datawrite/renamefile_f_zip.h \
     src/dialog_critic.h \
     src/chartoint.h \
