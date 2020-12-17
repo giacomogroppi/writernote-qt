@@ -13,8 +13,6 @@ static int calcolodistanza(QPointF *point1, QPointF *point2){
 }
 
 bool TabletCanvas::event(QEvent *event){
-
-
     switch (event->type()) {
         case QEvent::TouchBegin:
         case QEvent::TouchUpdate:
@@ -30,17 +28,6 @@ bool TabletCanvas::event(QEvent *event){
                 default:
                     {
                         QSizeF diams = touchPoint.ellipseDiameters();
-                        if (diams.isEmpty()) {
-                            /*qreal diameter = MaximumDiameter;
-                            if (touch->device()->capabilities() & QTouchDevice::Pressure)
-                                diameter = MinimumDiameter + (MaximumDiameter - MinimumDiameter) * touchPoint.pressure();
-                            diams = QSizeF(diameter, diameter);*/
-                        }
-
-                        /* stampa la posizione del touch */
-
-                        //qDebug() << "pos() -> " << touchPoint.pos();
-
 
                         /* a questo punto posso capire se è stato un zoom in o uno zoom on */
                         if(isdefine(&this->lastpointzoom.posd) && isdefine(&this->lastpointzoom.poss)){

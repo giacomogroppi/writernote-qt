@@ -21,17 +21,19 @@ bool savefile::salvabinario(int posizione){
     lunghezza = this->currenttitle->datatouch->x.length();
     fwrite(&lunghezza, sizeof(int), 1, fp);
     for(i=0; i < lunghezza; i++)
-        fwrite(&this->currenttitle->datatouch->x[i], sizeof(int), 1, fp);
+        fwrite(&this->currenttitle->datatouch->x[i], sizeof(long int), 1, fp);
 
-    lunghezza = this->currenttitle->datatouch->y.length();
-    fwrite(&lunghezza, sizeof(int), 1, fp);
     for(i=0; i < lunghezza; i++)
-        fwrite(&this->currenttitle->datatouch->y[i], sizeof(int), 1, fp);
+        fwrite(&this->currenttitle->datatouch->y[i], sizeof(long int), 1, fp);
 
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->idtratto[i], sizeof(int), 1, fp);
 
-    fwrite(&this->currenttitle->datatouch->numeropagine, sizeof(short int), 1, fp);
+    for(i=0; i < lunghezza; i++)
+        fwrite(&this->currenttitle->datatouch->pressure[i], sizeof(float), 1, fp);
+
+    for(i=0; i < lunghezza; i++)
+        fwrite(&this->currenttitle->datatouch->rotation[i], sizeof(short int), 1, fp);
 
     /* scrive i colori */
     int point[3];
@@ -40,8 +42,6 @@ bool savefile::salvabinario(int posizione){
         fwrite(point, sizeof(int), 3, fp);
     }
 
-    lunghezza = this->currenttitle->datatouch->posizioneaudio.length();
-    fwrite(&lunghezza, sizeof(int), 1, fp);
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->posizioneaudio[i], sizeof(int), 1, fp);
 

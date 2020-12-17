@@ -16,8 +16,11 @@ public:
 
     QList<long int> x;
     QList<long int> y;
-    QList<long int> posizioneaudio;
+    QList<int> posizioneaudio;
     QList<QColor> color;
+
+    QList<float> pressure;
+    QList<short int> rotation;
 
     QList<int> idtratto;
 

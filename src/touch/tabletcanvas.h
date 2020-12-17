@@ -82,6 +82,9 @@ public:
         int ydrawing;
     } pointload;
     void laod(QPaintEvent*, QPainter *);
+
+    /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
+    void updateBrush_load(float pressure, int yTilt, int xTilt, QColor );
     void loadpixel();
 
     /* funzioni responsabili del riascolto */
@@ -100,10 +103,14 @@ public:
 
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
     ismoving_t ismoving;
-    void ismoving_f(QPaintEvent *event);
+    void ismoving_f(QPaintEvent *event, QPainter *);
 
     void disegnafoglio();
     bool disegnofoglio_bool = false;
+
+
+    void setTabletDevice(QTabletEvent *event)
+     { updateCursor(event); }
 
 protected:
     void tabletEvent(QTabletEvent *event) override;
@@ -117,6 +124,9 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
+    void updateCursor(const QTabletEvent *event);
+    void updateBrush(const QTabletEvent *event);
+
     void initPixmap();
     Qt::BrushStyle brushPattern(qreal value);
     static qreal pressureToWidth(qreal pressure);

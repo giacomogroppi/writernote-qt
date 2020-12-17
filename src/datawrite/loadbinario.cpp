@@ -4,8 +4,6 @@
 
 #include <zip.h>
 
-#include "colortoint.h"
-
 /* la funzione gestisce la lettura del file binario */
 void xmlstruct::loadbinario(){
     int err = 0;
@@ -25,22 +23,20 @@ void xmlstruct::loadbinario(){
 
     int lunghezza=0, i;
 
-    zip_fread(f, &lunghezza, sizeof(short int));
-    this->currenttitle->datatouch->numeropagine = lunghezza;
+    zip_fread(f, &this->currenttitle->datatouch->numeropagine, sizeof(short int));
 
     /* carica le x */
     zip_fread(f, &lunghezza, sizeof(int));
     int valoretemp;
     for(i=0; i < lunghezza; i++)
     {
-        zip_fread(f, &valoretemp, sizeof(int));
+        zip_fread(f, &valoretemp, sizeof(long int));
         this->currenttitle->datatouch->x.append(valoretemp);
     }
 
     /* carica le y */
-    zip_fread(f, &lunghezza, sizeof(int));
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(int));
+        zip_fread(f, &valoretemp, sizeof(long int));
         this->currenttitle->datatouch->y.append(valoretemp);
     }
 
@@ -49,7 +45,15 @@ void xmlstruct::loadbinario(){
         this->currenttitle->datatouch->idtratto.append(valoretemp);
     }
 
-    zip_fread(f, &this->currenttitle->datatouch->numeropagine, sizeof(short int));
+    for(i=0; i < lunghezza; i++){
+        zip_fread(f, &valoretemp, sizeof(float));
+        this->currenttitle->datatouch->pressure.append(valoretemp);
+    }
+
+    for(i=0; i < lunghezza; i++){
+        zip_fread(f, &valoretemp, sizeof(int));
+        this->currenttitle->datatouch->rotation.append(valoretemp);
+    }
 
     /* carica i colori */
     int pointer[3];
@@ -67,7 +71,6 @@ void xmlstruct::loadbinario(){
         zip_fread(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }
-    /* TODO: implement the function to load the color */
 
     zip_fclose(f);
     zip_close(z);
