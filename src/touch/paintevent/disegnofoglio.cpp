@@ -13,13 +13,11 @@ void TabletCanvas::disegnafoglio(){
        last = data->posizionefoglio.last() + NUMEROPIXELPAGINA;
     }
 
-    QColor coloredaappende = QColor(Qt::blue);
-    //rgb -> 0, 0, 255
 
     for(i=0; i < NUMEROPIXELORIZZONALI; i++){
         this->data->x.append(i);
         this->data->y.append(last);
-        this->data->color.append(coloredaappende);
+        this->data->color.append(Qt::blue);
         this->data->posizioneaudio.append(0);
 
         this->data->pressure.append(0.01);

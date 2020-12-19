@@ -11,12 +11,15 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 {
     short int move = event->delta();
 
-    qDebug() << move << " " << this->m_pixmap.height() << " " << data->posizionefoglio.last();
+    //qDebug() << "\n" << move << " " << this->m_pixmap.height() << " " << data->posizionefoglio.last();
+
+    //qDebug() << "Posizione primo foglio" << data->posizionefoglio.first();
 
     if(!itspossibletoscroll(data, this->m_pixmap.height(), move))
         return;
 
-    qDebug() << "Posso spostare";
+
+    //qDebug() << "Posso spostare";
 
     this->m_pixmap.fill(Qt::white);
 
@@ -32,12 +35,12 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         short int delta = - lastpointtouch.ydrawing + event->pos().y();
 
         if(!itspossibletoscroll(data, this->m_pixmap.height(), delta))
-        {
-            qDebug() << "non posso " << delta;
+
+            //qDebug() << "non posso " << delta;
             return;
-        }
-        else
-            qDebug() << "Posso";
+
+        //else
+            //qDebug() << "Posso";
 
 
         this->m_pixmap.fill(Qt::white);
@@ -54,6 +57,6 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 }
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
-    qDebug() << "mouse release";
+    //qDebug() << "mouse release";
     lastpointtouch.xdrawing = lastpointtouch.ydrawing = -1;
 }

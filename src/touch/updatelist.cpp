@@ -5,8 +5,6 @@
 #include <QPainter>
 
 void TabletCanvas::updatelist(QTabletEvent *event){
-    qDebug() << "Update list richiamata";
-
     if(!this->m_deviceDown){
         /* se la lunghezza è diversa da zero */
         if(this->data->idtratto.length())
@@ -28,8 +26,6 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     this->data->posizioneaudio.append(this->time/1000);
 
     this->data->color.append(m_color);
-
-    qDebug() << m_color;
 }
 
 void TabletCanvas::gomma_f(QTabletEvent *event){
