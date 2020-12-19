@@ -6,7 +6,6 @@ void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
     data->posizionefoglio.append(0);
-    return;
 
     int i, last = 0;
 
@@ -14,11 +13,13 @@ void TabletCanvas::disegnafoglio(){
        last = data->posizionefoglio.last() + NUMEROPIXELPAGINA;
     }
 
+    QColor coloredaappende = QColor(Qt::blue);
+    //rgb -> 0, 0, 255
 
     for(i=0; i < NUMEROPIXELORIZZONALI; i++){
         this->data->x.append(i);
         this->data->y.append(last);
-        this->data->color.append(Qt::blue);
+        this->data->color.append(coloredaappende);
         this->data->posizioneaudio.append(0);
 
         this->data->pressure.append(0.01);

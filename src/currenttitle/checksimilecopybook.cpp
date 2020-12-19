@@ -27,17 +27,12 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
     }else{
         int i, len;
 
-        qDebug() << "x";
-
         len = primo->datatouch->x.length();
         if(len != secondo->datatouch->x.length())
             return false;
         for(i = 0; i < len; i++)
             if(primo->datatouch->x.at(i) != secondo->datatouch->x.at(i))
                 return false;
-
-
-        qDebug() << "y";
 
         len = primo->datatouch->y.length();
         if(len != secondo->datatouch->y.length())
@@ -46,7 +41,6 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             if(primo->datatouch->y.at(i) != secondo->datatouch->y.at(i))
                 return false;
 
-        qDebug() << "idtratto";
 
         len = primo->datatouch->idtratto.length();
         if(len != secondo->datatouch->idtratto.length())
@@ -54,8 +48,6 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
         for(i=0; i<len; i++)
             if(primo->datatouch->idtratto.at(i) != secondo->datatouch->idtratto.at(i))
                 return false;
-
-        qDebug() << "color";
 
         len = primo->datatouch->color.length();
         if(len != secondo->datatouch->color.length())
@@ -70,7 +62,6 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
                 return false;
             }
         }
-        qDebug() << "Pressure";
 
         len = primo->datatouch->pressure.length();
         if(len != secondo->datatouch->pressure.length())
@@ -79,7 +70,6 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             if(primo->datatouch->pressure.at(i) != secondo->datatouch->pressure.at(i))
                 return false;
 
-        qDebug() << "rotation";
 
         len = primo->datatouch->rotation.length();
         if(len != secondo->datatouch->rotation.length())
@@ -88,7 +78,6 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             if(primo->datatouch->rotation.at(i) != secondo->datatouch->rotation.at(i))
                 return false;
 
-        qDebug() << "Fine rotation";
 
     }
 
@@ -98,10 +87,6 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 bool checksimileindice(indice_class *primo, indice_class *secondo){
     int i, len;
 
-#ifdef STAMPA
-    qDebug() << "inizio indice\ntitolo";
-#endif
-
     if(primo->titolo.length() != secondo->titolo.length())
         return false;
 
@@ -109,10 +94,6 @@ bool checksimileindice(indice_class *primo, indice_class *secondo){
     for(i=0; i < len; i++)
         if(primo->titolo.at(i) != secondo->titolo.at(i))
             return false;
-
-#ifdef STAMPA
-    qDebug() << "fine indice";
-#endif
 
     return true;
 }

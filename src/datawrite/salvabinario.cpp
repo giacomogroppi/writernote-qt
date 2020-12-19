@@ -36,7 +36,7 @@ bool savefile::salvabinario(int posizione){
 
     /* rotation */
     for(i=0; i < lunghezza; i++)
-        fwrite(&this->currenttitle->datatouch->rotation[i], sizeof(qreal), 1, fp);
+        fwrite(&this->currenttitle->datatouch->rotation[i], sizeof(int), 1, fp);
 
     /* posizionefoglio */
     for(i=0; i < currenttitle->datatouch->posizionefoglio.length(); i++)
@@ -44,13 +44,9 @@ bool savefile::salvabinario(int posizione){
 
     /* colori */
     int point[3];
-    qDebug() << "lunghezza load_ " << lunghezza;
 
     for(i = 0; i < lunghezza; i++){
-        colortoint(&this->currenttitle->datatouch->color[i], point);
-#ifdef STAMPA
-        //qDebug() << *point << point[1] << point[2];
-#endif
+        this->currenttitle->datatouch->color[i].getRgb(&point[0], &point[1], &point[2]);
         fwrite(point, sizeof(int), 3, fp);
     }
 
@@ -88,6 +84,7 @@ bool savefile::compressbinario(const char *namefile, const char *text, FILE *fp,
     else
         qDebug() << "Salvato con successo";
 
+    fclose(fp);
     zip_close(filezip);
 
     /* rimuove i file temp */

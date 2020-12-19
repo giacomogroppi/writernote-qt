@@ -52,7 +52,7 @@ void xmlstruct::loadbinario(){
 
     /* rotation */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(qreal));
+        zip_fread(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->rotation.append(valoretemp);
     }
 
@@ -65,12 +65,12 @@ void xmlstruct::loadbinario(){
     /* colori */
     int pointer[3];
     QColor coloretemp;
-    qDebug() << "lunghezza load " << lunghezza;
     for(i = 0; i < lunghezza; i++){
         zip_fread(f, &pointer[0], sizeof(int));
         zip_fread(f, &pointer[1], sizeof(int));
         zip_fread(f, &pointer[2], sizeof(int));
         coloretemp.setRgb(pointer[0], pointer[1], pointer[2]);
+
         currenttitle->datatouch->color.append(coloretemp);
     }
 

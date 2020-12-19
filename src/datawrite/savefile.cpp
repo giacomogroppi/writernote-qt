@@ -84,9 +84,7 @@ bool savefile::savefile_check_file(int posizione){
     for (i = 0; i < lenght; i++)
         indicesalvataggio += this->currenttitle->testinohtml[i].toUtf8().constData();
 
-    bool check = this->compressfile(( this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(), indicesalvataggio.c_str());
-
-    return check;
+    return this->compressfile(( this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(), indicesalvataggio.c_str());
 }
 
 /* funzione che gestisce la creazione di una stringa per salvare l'indice */
