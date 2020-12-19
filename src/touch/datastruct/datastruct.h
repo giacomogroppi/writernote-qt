@@ -4,7 +4,6 @@
 #include <QList>
 #include <QColor>
 
-
 class datastruct
 {
 public:
@@ -20,11 +19,11 @@ public:
     QList<QColor> color;
 
     QList<float> pressure;
-    QList<short int> rotation;
+    QList<qreal> rotation;
 
     QList<int> idtratto;
 
-    short int numeropagine = 0;
+    QList<int> posizionefoglio;
 };
 
 #endif // DATASTRUCT_H

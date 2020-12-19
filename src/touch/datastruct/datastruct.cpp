@@ -1,5 +1,5 @@
 #include "datastruct.h"
-
+#include <QList>
 #include <QDebug>
 
 datastruct::datastruct()
@@ -18,8 +18,6 @@ void datastruct::stampa(){
 
     int i, len;
     len = this->color.length();
-    for(i=0; i<len; i++)
-        qDebug() << this->color.at(i);
 
     len = this->x.length();
     for(i=0; i<len; i++)
@@ -31,17 +29,21 @@ void datastruct::stampa(){
 int datastruct::last(){
     int i, len = this->y.length(), max = this->y.at(0);
     for(i = 0; i < len; i++){
-        if(max > this->y.at(i))
+        if(max < this->y.at(i))
             max = this->y.at(i);
     }
+
+    int max_ = *std::max_element(y.begin(), y.end());
+    qDebug() << max_;
+
     return max;
 }
 
 int datastruct::first(){
-    int i, len = this->y.length(), max = this->y.at(0);
+    int i, len = this->y.length(), min = this->y.at(0);
     for(i = 0; i < len; i++){
-        if(max > this->y.at(i))
-            max = this->y.at(i);
+        if(min > this->y.at(i))
+            min = this->y.at(i);
     }
-    return max;
+    return min;
 }

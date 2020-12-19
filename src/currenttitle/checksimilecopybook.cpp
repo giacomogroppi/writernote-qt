@@ -25,23 +25,9 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             return false;
 
     }else{
-        int i, len = primo->datatouch->color.length();
+        int i, len;
 
-        if(len != secondo->datatouch->color.length())
-            return false;
-
-        for(i=0; i < len; i ++)
-            if(primo->datatouch->color.at(i) != secondo->datatouch->color.at(i))
-                return false;
-
-        len = primo->datatouch->posizioneaudio.length();
-        if(len != secondo->datatouch->posizioneaudio.length())
-            return false;
-        for(i = 0; i < len; i++)
-            if(primo->datatouch->posizioneaudio.at(i) != secondo->datatouch->posizioneaudio.at(i))
-                return false;
-
-
+        qDebug() << "x";
 
         len = primo->datatouch->x.length();
         if(len != secondo->datatouch->x.length())
@@ -51,12 +37,59 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
                 return false;
 
 
+        qDebug() << "y";
+
         len = primo->datatouch->y.length();
         if(len != secondo->datatouch->y.length())
             return false;
         for(i = 0; i < len; i++)
             if(primo->datatouch->y.at(i) != secondo->datatouch->y.at(i))
                 return false;
+
+        qDebug() << "idtratto";
+
+        len = primo->datatouch->idtratto.length();
+        if(len != secondo->datatouch->idtratto.length())
+            return false;
+        for(i=0; i<len; i++)
+            if(primo->datatouch->idtratto.at(i) != secondo->datatouch->idtratto.at(i))
+                return false;
+
+        qDebug() << "color";
+
+        len = primo->datatouch->color.length();
+        if(len != secondo->datatouch->color.length())
+            return false;
+
+        for(i=0; i<len; i++){
+            //qDebug() << primo->datatouch->color.at(i) << secondo->datatouch->color.at(i);
+            if(primo->datatouch->color.at(i) != secondo->datatouch->color.at(i))
+            {
+                for(; i < len; i++)
+                    qDebug() << primo->datatouch->color.at(i) << secondo->datatouch->color.at(i);
+                return false;
+            }
+        }
+        qDebug() << "Pressure";
+
+        len = primo->datatouch->pressure.length();
+        if(len != secondo->datatouch->pressure.length())
+            return false;
+        for(i=0; i<len; i++)
+            if(primo->datatouch->pressure.at(i) != secondo->datatouch->pressure.at(i))
+                return false;
+
+        qDebug() << "rotation";
+
+        len = primo->datatouch->rotation.length();
+        if(len != secondo->datatouch->rotation.length())
+            return false;
+        for(i=0; i<len; i++)
+            if(primo->datatouch->rotation.at(i) != secondo->datatouch->rotation.at(i))
+                return false;
+
+        qDebug() << "Fine rotation";
+
     }
 
     return true;
@@ -65,21 +98,9 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 bool checksimileindice(indice_class *primo, indice_class *secondo){
     int i, len;
 
-    if(primo->audio.length() != secondo->audio.length())
-        return false;
-
-    len = primo->audio.length();
-    for(i=0; i < len; i++)
-        if(primo->audio.at(i) != secondo->audio.at(i))
-            return false;
-
-    if(primo->compressione.length() != secondo->compressione.length())
-        return false;
-
-    len = primo->compressione.length();
-    for(i=0; i < len; i++)
-        if(primo->compressione.at(i) != secondo->compressione.at(i))
-            return false;
+#ifdef STAMPA
+    qDebug() << "inizio indice\ntitolo";
+#endif
 
     if(primo->titolo.length() != secondo->titolo.length())
         return false;
@@ -89,14 +110,9 @@ bool checksimileindice(indice_class *primo, indice_class *secondo){
         if(primo->titolo.at(i) != secondo->titolo.at(i))
             return false;
 
-
-    if(primo->video.length() != secondo->video.length())
-        return false;
-
-    len = primo->video.length();
-    for(i=0; i < len; i++)
-        if(primo->video.at(i) != secondo->video.at(i))
-            return false;
+#ifdef STAMPA
+    qDebug() << "fine indice";
+#endif
 
     return true;
 }

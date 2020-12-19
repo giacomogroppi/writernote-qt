@@ -16,10 +16,7 @@
 bool newcopybook_(MainWindow *parent, QString stringa){
     /* inizializzazione per l'indice */
     parent->self->indice.versione = 0;
-    parent->self->indice.video.append((QString)"");
-    parent->self->indice.audio.append((QString)"");
     parent->self->indice.titolo.append(stringa);
-    parent->self->indice.compressione.append((QString)"");
 
     int position = parent->self->indice.titolo.indexOf(stringa);
 

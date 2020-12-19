@@ -109,6 +109,9 @@ public:
     bool disegnofoglio_bool = false;
 
 
+    /* struttura per ricordare il last point per il touch */
+    struct PointLoading lastpointtouch;
+
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
 
@@ -123,6 +126,9 @@ protected:
     bool event(QEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
+    /* click rilasciato */
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
 private:
     void updateCursor(const QTabletEvent *event);
     void updateBrush(const QTabletEvent *event);

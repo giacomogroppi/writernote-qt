@@ -124,8 +124,6 @@ void xmlstruct::loadindice(){
     this->text = readfile(path_->c_str(), "indice.xml");
 
     stringa_decode("<testi>", "</testi>", &this->indice->titolo);
-    stringa_decode("<audio>", "</audio>", &this->indice->audio);
-    stringa_decode("<video>", "</video>", &this->indice->video);
 
     /* viene passato direttamente come puntatore -> non c'è bisogno di cambiarlo per this->self->path */
     /*self->path = this->path_;*/

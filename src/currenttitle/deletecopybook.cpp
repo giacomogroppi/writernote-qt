@@ -22,10 +22,6 @@ void f_deletecopybook( MainWindow *parent, const char *copybook){
     int posizione = parent->self->indice.titolo.indexOf(copybook);
 
     parent->self->indice.titolo.removeAt(posizione);
-    parent->self->indice.audio.removeAt(posizione);
-    parent->self->indice.compressione.removeAt(posizione);
-    parent->self->indice.video.removeAt(posizione);
-    //parent->self->indice.file_testo.removeAt(posizione);
 
     parent->self->currenttitle.reset();
 

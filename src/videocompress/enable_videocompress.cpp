@@ -10,7 +10,7 @@
 void enable_videocompress_ui(MainWindow *parent, videocompress_ui *padre)
 {
     /* se è già stato importato il video deve scrivere il path nel text edit from */
-
+    /*
     int index = parent->self->indice.titolo.indexOf(parent->self->currentTitle);
     if(index != -1){
         QString posizione_video = parent->self->indice.video.at(index);
@@ -18,7 +18,7 @@ void enable_videocompress_ui(MainWindow *parent, videocompress_ui *padre)
         if(posizione_video != "")
             padre->ui->plainTextEdit_from->setPlainText(posizione_video);
     }
-
+    */
     padre->ui->codec_combobox->addItem("h264", 0);
     padre->ui->codec_combobox->addItem("h265", 0);
 

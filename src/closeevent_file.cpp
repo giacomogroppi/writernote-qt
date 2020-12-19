@@ -30,6 +30,9 @@ void MainWindow::closeEvent (QCloseEvent *event)
     this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
     bool check1 = checksimilecopybook(tempcopybook, &this->self->currenttitle);
+    if(check1)
+        qDebug() << "Il file va bene";
+
     check1 = check1 && checksimileindice(&this->self->indice, tempindice);
 
     /* se è uguale sia il copybook che l'indice accetta */
@@ -72,4 +75,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     else
         return event->ignore();
+
+    delete tempcopybook;
+    delete tempindice;
+    delete temp_lettura;
 }

@@ -16,29 +16,41 @@ bool savefile::salvabinario(int posizione){
     if(fp == NULL)
         return false;
 
-    fwrite(&this->currenttitle->datatouch->numeropagine, sizeof(short int), 1, fp);
-
+    /* x */
     lunghezza = this->currenttitle->datatouch->x.length();
     fwrite(&lunghezza, sizeof(int), 1, fp);
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->x[i], sizeof(long int), 1, fp);
 
+    /* y */
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->y[i], sizeof(long int), 1, fp);
 
+    /* idtratto */
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->idtratto[i], sizeof(int), 1, fp);
 
+    /* pressure */
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->pressure[i], sizeof(float), 1, fp);
 
+    /* rotation */
     for(i=0; i < lunghezza; i++)
-        fwrite(&this->currenttitle->datatouch->rotation[i], sizeof(short int), 1, fp);
+        fwrite(&this->currenttitle->datatouch->rotation[i], sizeof(qreal), 1, fp);
 
-    /* scrive i colori */
+    /* posizionefoglio */
+    for(i=0; i < currenttitle->datatouch->posizionefoglio.length(); i++)
+        fwrite(&this->currenttitle->datatouch->posizionefoglio[i], sizeof(int), 1, fp);
+
+    /* colori */
     int point[3];
+    qDebug() << "lunghezza load_ " << lunghezza;
+
     for(i = 0; i < lunghezza; i++){
         colortoint(&this->currenttitle->datatouch->color[i], point);
+#ifdef STAMPA
+        //qDebug() << *point << point[1] << point[2];
+#endif
         fwrite(point, sizeof(int), 3, fp);
     }
 

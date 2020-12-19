@@ -13,6 +13,8 @@ CONFIG += c++11
 INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 
 DEFINES += "STAMPA"
+DEFINES += "NUMEROPIXELPAGINA=1200"
+DEFINES += "NUMEROPIXELORIZZONALI=700"
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -83,6 +85,7 @@ SOURCES += \
     src/touch/datastruct/datastruct.cpp \
     src/touch/datastruct/loadpixel.cpp \
     src/touch/event/eventmethod.cpp \
+    src/touch/event/itspossibletoscroll.cpp \
     src/touch/event/mouseevent.cpp \
     src/touch/event/moving_f.cpp \
     src/touch/paintevent/disegnofoglio.cpp \
@@ -127,6 +130,7 @@ HEADERS += \
     src/setting_ui.h \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
+    src/touch/event/itspossibletoscroll.h \
     src/touch/tabletapplication.h \
     src//touch/tabletcanvas.h \
     src/update_list_copybook.h \

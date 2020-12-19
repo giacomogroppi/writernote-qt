@@ -22,7 +22,9 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     this->ismoving_f(event, &painter);
 
     /* se si è arrivati al fondo aggiunge i dati per il nuovo foglio */
-    this->disegnofoglio_bool = this->disegnofoglio_bool || this->data->last() / 1080 > this->data->numeropagine || !this->data->numeropagine;
+    this->disegnofoglio_bool = this->disegnofoglio_bool ||
+            this->data->last() / NUMEROPIXELPAGINA > this->data->posizionefoglio.length() ||
+            !data->posizionefoglio.length();
 
     this->disegnafoglio();
 
@@ -40,6 +42,8 @@ void TabletCanvas::laod(QPaintEvent *event, QPainter *painter){
     int i_, len;
 
     len = this->data->x.length();
+
+    qDebug() << data->x.length() << data->y.length() << data->color.length() << data->idtratto.length() << data->pressure.length();
 
     for(i_ = 0; i_ < len; i_++)
     {
@@ -69,8 +73,6 @@ void TabletCanvas::updateBrush_load(float pressure, int yTilt, int xTilt, QColor
     /* temporary */
     int vValue = 127;
     int hValue = 127;
-
-    qDebug() << vValue << " " << hValue;
 
     switch (m_lineWidthValuator) {
             case PressureValuator:

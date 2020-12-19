@@ -93,22 +93,13 @@ bool savefile::savefile_check_file(int posizione){
 bool savefile::savefile_check_indice(){
     int i, lunghezza = this->parent->self->indice.titolo.length();
 
-    char checksam[10];
-    inttochar(lunghezza, checksam);
+    QString checksum = QString::number(lunghezza);
 
-    std::string indicesalvataggio = "<?xml version=\"1\" encoding=\"UTF-8\" application=\"writernote\"?><chucksam value=" + (std::string)checksam + ">";
+    std::string indicesalvataggio = "<?xml version=\"1\" encoding=\"UTF-8\" application=\"writernote\"?><chucksam value=" + checksum.toStdString() + ">";
     for (i = 0; i < lunghezza; i++)
         indicesalvataggio = indicesalvataggio + "<testi>" + this->parent->self->indice.titolo[i].toUtf8().constData() + "</testi>";
 
-    for (i = 0; i < lunghezza; i++)
-        indicesalvataggio = indicesalvataggio + "<audio>" + this->parent->self->indice.audio[i].toUtf8().constData() + "</audio>";
-
-    for (i = 0; i < lunghezza; i++)
-        indicesalvataggio = indicesalvataggio + "<video>" + this->parent->self->indice.video[i].toUtf8().constData() + "</video>";
-
     indicesalvataggio = indicesalvataggio + "</file>";
 
-    bool check = this->compressfile("indice.xml", indicesalvataggio.c_str());
-
-    return check;
+    return this->compressfile("indice.xml", indicesalvataggio.c_str());;
 }

@@ -22,10 +22,8 @@ void xmlstruct::loadbinario(){
     }
 
     int lunghezza=0, i;
-
-    zip_fread(f, &this->currenttitle->datatouch->numeropagine, sizeof(short int));
-
-    /* carica le x */
+    float temp;
+    /* x */
     zip_fread(f, &lunghezza, sizeof(int));
     int valoretemp;
     for(i=0; i < lunghezza; i++)
@@ -34,38 +32,49 @@ void xmlstruct::loadbinario(){
         this->currenttitle->datatouch->x.append(valoretemp);
     }
 
-    /* carica le y */
+    /* y */
     for(i=0; i < lunghezza; i++){
         zip_fread(f, &valoretemp, sizeof(long int));
         this->currenttitle->datatouch->y.append(valoretemp);
     }
 
+    /* idtratto */
     for(i=0; i < lunghezza; i++){
         zip_fread(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->idtratto.append(valoretemp);
     }
 
+    /* pressure */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(float));
-        this->currenttitle->datatouch->pressure.append(valoretemp);
+        zip_fread(f, &temp, sizeof(float));
+        this->currenttitle->datatouch->pressure.append(temp);
     }
 
+    /* rotation */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(int));
+        zip_fread(f, &valoretemp, sizeof(qreal));
         this->currenttitle->datatouch->rotation.append(valoretemp);
     }
 
-    /* carica i colori */
+    /* posizione foglio */
+    for(i=0; i < lunghezza; i++){
+        zip_fread(f, &valoretemp, sizeof(int));
+        currenttitle->datatouch->posizionefoglio.append(valoretemp);
+    }
+
+    /* colori */
     int pointer[3];
     QColor coloretemp;
+    qDebug() << "lunghezza load " << lunghezza;
     for(i = 0; i < lunghezza; i++){
-        zip_fread(f, pointer, sizeof(int) * 3);
-        coloretemp.setRgb(*pointer, *(pointer+1), *(pointer + 2));
+        zip_fread(f, &pointer[0], sizeof(int));
+        zip_fread(f, &pointer[1], sizeof(int));
+        zip_fread(f, &pointer[2], sizeof(int));
+        coloretemp.setRgb(pointer[0], pointer[1], pointer[2]);
         currenttitle->datatouch->color.append(coloretemp);
     }
 
     /* carica la posizione dei testi */
-    zip_fread(f, &lunghezza, sizeof(int));
     for(i=0; i < lunghezza; i++)
     {
         zip_fread(f, &valoretemp, sizeof(int));

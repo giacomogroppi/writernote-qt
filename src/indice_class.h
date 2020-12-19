@@ -10,10 +10,7 @@ class indice_class
 {
 public:
     int versione=0;
-    QStringList video = {};
-    QStringList audio = {};
     QStringList titolo = {};
-    QStringList compressione = {};
 
     void reset();
     void stampa();
