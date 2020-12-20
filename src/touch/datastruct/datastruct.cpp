@@ -29,12 +29,9 @@ void datastruct::stampa(){
 int datastruct::last(){
     int i, len = this->y.length(), max = this->y.at(0);
     for(i = 0; i < len; i++){
-        if(max < this->y.at(i))
+        if(max < this->y.at(i) && idtratto.at(i) != -1)
             max = this->y.at(i);
     }
-
-    int max_ = *std::max_element(y.begin(), y.end());
-    qDebug() << max_;
 
     return max;
 }

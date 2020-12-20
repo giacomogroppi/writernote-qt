@@ -23,7 +23,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     /* se si è arrivati al fondo aggiunge i dati per il nuovo foglio */
     this->disegnofoglio_bool = this->disegnofoglio_bool ||
-            this->data->last() / NUMEROPIXELPAGINA > this->data->posizionefoglio.length() ||
+            ((this->data->last() / NUMEROPIXELPAGINA) + 1) > this->data->posizionefoglio.length() ||
             !data->posizionefoglio.length();
 
     this->disegnafoglio();
@@ -48,14 +48,24 @@ void TabletCanvas::laod(QPaintEvent *event, QPainter *painter){
     for(i_ = 0; i_ < len; i_++)
     {
         if(this->data->y.at(i_) < this->m_pixmap.size().height() && this->data->y.at(i_) >= 0){
-            //this->m_pen = QPen(this->data->color.at(i_), 1, Qt::SolidLine, Qt::RoundCap);
             /* se cambio il tratto non disegna ma lo carica in lastpoint solamente */
-            if(i_ && this->data->idtratto.at(i_) == this->data->idtratto.at(i_-1)){
+            if(i_ && this->data->idtratto.at(i_) == this->data->idtratto.at(i_-1) && data->idtratto.at(i_) != -1){
                 this->updateBrush_load(data->pressure.at(i_), 127, 127, data->color.at(i_));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(this->lastPoint.pos,
                               QPointF(this->data->x.at(i_), this->data->y.at(i_)));
+            }
+            else if(data->idtratto.at(i_) == -1){
+                /* carica i punti della pagina */
+                updateBrush_load(data->pressure.at(i_), 0, 0, data->color.at(i_));
+
+                painter->setPen(this->m_pen);
+                painter->drawLine(data->x.at(i_), data->y.at(i_)
+                                  , data->x.at(i_ + 1), data->y.at(i_ + 1));
+
+                /* deve andare aventi di un punto in quando ogni riga è formata da due punti */
+                i_++;
             }
 
             lastPoint.pos.setX(this->data->x.at(i_));

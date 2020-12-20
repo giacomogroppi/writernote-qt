@@ -189,7 +189,15 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 void TabletCanvas::initPixmap()
 {
     qreal dpr = devicePixelRatio();
-    QPixmap newPixmap = QPixmap(qRound(width() * dpr), qRound(height() * dpr));
+    int maxw, spacer;
+    if (width() < NUMEROPIXELORIZZONALI)
+        maxw = width();
+    else{
+        spacer = (width() - NUMEROPIXELORIZZONALI)/2;
+        maxw = NUMEROPIXELORIZZONALI;
+    }
+
+    QPixmap newPixmap = QPixmap(qRound(maxw * dpr), qRound(height() * dpr));
     newPixmap.setDevicePixelRatio(dpr);
     newPixmap.fill(Qt::white);
     QPainter painter(&newPixmap);
