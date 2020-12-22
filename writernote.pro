@@ -171,5 +171,7 @@ unix: PKGCONFIG += libzip
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzip
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzip
 
-INCLUDEPATH += $$PWD/../../../mingw64/include
-DEPENDPATH += $$PWD/../../../mingw64/include
+win32:{
+    INCLUDEPATH += $$PWD/../../../mingw64/include
+    DEPENDPATH += $$PWD/../../../mingw64/include
+}
