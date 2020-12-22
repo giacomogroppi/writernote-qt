@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     setting_ui_start(this);
 
-    this->ui->verticalLayout->insertWidget(0, this->m_canvas);
+    this->ui->layouteditor->insertWidget(1, this->m_canvas);
     this->m_canvas->setHidden(true);
 
     abilitazioneinput(this);

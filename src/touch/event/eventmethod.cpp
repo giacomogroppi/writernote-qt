@@ -37,31 +37,46 @@ bool TabletCanvas::event(QEvent *event){
                             if(!check){
                                 if(punto.x() < this->lastpointzoom.poss.x() || punto.y() > this->lastpointzoom.poss.y()){
                                     this->iszoomin = true;
-                                    this->iszoomon = false;
+
+                                    posizionezoom_puntof.setX((punto.x() + lastpointzoom.posd.x())/2);
+                                    posizionezoom_puntof.setY((punto.y() + lastpointzoom.posd.y())/2);
                                 }
                                 else{
                                     this->iszoomon = true;
-                                    this->iszoomin = false;
+
+                                    posizionezoom_puntof.setX((punto.x() + lastpointzoom.posd.x())/2);
+                                    posizionezoom_puntof.setY((punto.y() + lastpointzoom.posd.y())/2);
                                 }
                             }
                             else{
                                 if(punto.x() > this->lastpointzoom.posd.x() || punto.y() < this->lastpointzoom.posd.y()){
                                     this->iszoomin = true;
-                                    this->iszoomon = false;
+
+                                    posizionezoom_puntof.setX((punto.x() + lastpointzoom.poss.x())/2);
+                                    posizionezoom_puntof.setY((punto.y() + lastpointzoom.poss.y())/2);
                                 }
                                 else{
                                     this->iszoomon = true;
-                                    this->iszoomin = false;
+
+                                    posizionezoom_puntof.setX((punto.x() + lastpointzoom.poss.x())/2);
+                                    posizionezoom_puntof.setY((punto.y() + lastpointzoom.poss.y())/2);
                                 }
                             }
 
-                            /* nella funzione [o zoomin o zoomon] cancello i dati e li setto a -1 */
+                            /* riazzera tutti e due i punti */
+                            lastpointzoom.posd.setX(-1);
+                            lastpointzoom.poss.setX(-1);
+
+                            lastpointzoom.poss.setY(-1);
+                            lastpointzoom.poss.setY(-1);
+
                             update();
                         }
                         /* altrimenti posso andare a salvare i punti iniziali */
                         else{
                             if(!isdefine(&this->lastpointzoom.posd))
                                 this->lastpointzoom.posd = touchPoint.pos();
+
                             else{
                                 if(touchPoint.pos().x() > this->lastpointzoom.posd.x()){
                                     /* deve fare lo scambio */

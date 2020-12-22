@@ -4,7 +4,7 @@
 
 void TabletCanvas::paintEvent(QPaintEvent *event){
     if (m_pixmap.isNull())
-        initPixmap();
+        initPixmap(0);
 
     QPainter painter;
     painter.begin(this);
@@ -42,8 +42,6 @@ void TabletCanvas::laod(QPaintEvent *event, QPainter *painter){
     int i_, len;
 
     len = this->data->x.length();
-
-    qDebug() << data->x.length() << data->y.length() << data->color.length() << data->idtratto.length() << data->pressure.length();
 
     for(i_ = 0; i_ < len; i_++)
     {

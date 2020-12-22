@@ -183,6 +183,7 @@ private:
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
+    bool event(QEvent *event) override;
 
 };
 #endif // MAINWINDOW_H

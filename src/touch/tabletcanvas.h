@@ -38,8 +38,6 @@ public:
 
     TabletCanvas();
 
-    bool saveImage(const QString &file);
-    bool loadImage(const QString &file);
     void clear();
     void setAlphaChannelValuator(Valuator type)
         { m_alphaChannelValuator = type; }
@@ -101,6 +99,10 @@ public:
     bool iszoomin = false;
     bool iszoomon = false;
 
+    QPointF posizionezoom_puntof;
+    int deltax;
+    int deltay;
+
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
     ismoving_t ismoving;
     void ismoving_f(QPaintEvent *event, QPainter *);
@@ -133,7 +135,7 @@ private:
     void updateCursor(const QTabletEvent *event);
     void updateBrush(const QTabletEvent *event);
 
-    void initPixmap();
+    void initPixmap(int delta);
     Qt::BrushStyle brushPattern(qreal value);
     static qreal pressureToWidth(qreal pressure);
 

@@ -6,12 +6,15 @@ void TabletCanvas::disegnafoglio(){
     qDebug() << "Disegno foglio richiamata";
 
     int i, last = 0, temp;
-    int lunghezza = this->m_pixmap.width();
+    int lunghezza;
+
+    /*lunghezza = this->m_pixmap.width();*/
+    lunghezza = NUMEROPIXELPAGINA;
 
     if(data->posizionefoglio.length())
        last = data->posizionefoglio.last() + NUMEROPIXELPAGINA;
 
-    temp = last;
+    data->posizionefoglio.append(last);
 
     for(i = 0, last += 10; i < 61; i++, last += 20){
         /* punto inizio riga */
@@ -61,7 +64,6 @@ void TabletCanvas::disegnafoglio(){
 
     this->data->idtratto.append(-1);
 
-    data->posizionefoglio.append(temp);
 
     this->disegnofoglio_bool = false;
     this->isloading = true;

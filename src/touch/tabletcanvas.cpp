@@ -16,29 +16,12 @@ TabletCanvas::TabletCanvas()
     : QWidget(nullptr), m_brush(m_color)
     , m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
 {
+
     resize(500, 500);
     setAutoFillBackground(true);
     setAttribute(Qt::WA_TabletTracking);
 
     this->data = nullptr;
-}
-
-
-bool TabletCanvas::saveImage(const QString &file)
-{
-    return m_pixmap.save(file);
-}
-
-
-bool TabletCanvas::loadImage(const QString &file)
-{
-    bool success = m_pixmap.load(file);
-
-    if (success) {
-        update();
-        return true;
-    }
-    return false;
 }
 
 void TabletCanvas::clear()
@@ -186,30 +169,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 }
 
 
-void TabletCanvas::initPixmap()
-{
-    qreal dpr = devicePixelRatio();
-    int maxw, spacer;
-    if (width() < NUMEROPIXELORIZZONALI)
-        maxw = width();
-    else{
-        spacer = (width() - NUMEROPIXELORIZZONALI)/2;
-        maxw = NUMEROPIXELORIZZONALI;
-    }
-
-    QPixmap newPixmap = QPixmap(qRound(maxw * dpr), qRound(height() * dpr));
-    newPixmap.setDevicePixelRatio(dpr);
-    newPixmap.fill(Qt::white);
-    QPainter painter(&newPixmap);
-    if (!m_pixmap.isNull())
-        painter.drawPixmap(0, 0, m_pixmap);
-    painter.end();
-    m_pixmap = newPixmap;
-
-    this->isloading = true;
-}
-
-
 qreal TabletCanvas::pressureToWidth(qreal pressure)
 {
     return pressure * 10 + 1;
@@ -218,6 +177,6 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 
 void TabletCanvas::resizeEvent(QResizeEvent *)
 {
-    initPixmap();
+    initPixmap(0);
     this->isloading = true;
 }

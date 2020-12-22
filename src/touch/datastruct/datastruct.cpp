@@ -27,6 +27,9 @@ void datastruct::stampa(){
 
 /* la funzione restituisce il massimo valore per le y */
 int datastruct::last(){
+    if(!y.length())
+        return 0;
+
     int i, len = this->y.length(), max = this->y.at(0);
     for(i = 0; i < len; i++){
         if(max < this->y.at(i) && idtratto.at(i) != -1)
