@@ -23,7 +23,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     /* se si è arrivati al fondo aggiunge i dati per il nuovo foglio */
     this->disegnofoglio_bool = this->disegnofoglio_bool ||
-            ((this->data->last() / NUMEROPIXELPAGINA) + 1) > this->data->posizionefoglio.length() ||
+            data->needtocreatenew() ||
             !data->posizionefoglio.length();
 
     this->disegnafoglio();
@@ -42,6 +42,8 @@ void TabletCanvas::laod(QPaintEvent *event, QPainter *painter){
     int i_, len;
 
     len = this->data->x.length();
+
+    m_pixmap.fill(Qt::white);
 
     for(i_ = 0; i_ < len; i_++)
     {

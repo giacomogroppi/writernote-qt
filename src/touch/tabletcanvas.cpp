@@ -160,6 +160,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         case QEvent::TabletRelease:
             if (m_deviceDown && event->buttons() == Qt::NoButton)
                 m_deviceDown = false;
+            isloading = true;
             update();
             break;
         default:

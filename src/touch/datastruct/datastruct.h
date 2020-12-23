@@ -12,6 +12,7 @@ public:
     void stampa();
     int last();
     int first();
+    bool needtocreatenew();
 
     QList<long int> x;
     QList<long int> y;

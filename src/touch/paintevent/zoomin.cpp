@@ -16,9 +16,9 @@ void TabletCanvas::zoomin(QPaintEvent *event){
 
         for(i=0; i < len; i ++){
             if(data->x.at(i) < posizionezoom_puntof.x())
-                data->x[i] += -1;
+                data->x[i] /= 1.1;
             else if(data->x.at(i) > posizionezoom_puntof.x())
-                data->x[i] += 1;
+                data->x[i] *= 1.1;
         }
 
         for(i=0; i < len; i++)
