@@ -86,7 +86,7 @@ void TabletCanvas::updateBrush_load(float pressure, int yTilt, int xTilt, QColor
 
     switch (m_lineWidthValuator) {
             case PressureValuator:
-                m_pen.setWidthF(pressureToWidth(pressure));
+                m_pen.setWidthF(pressureToWidth(pressure/2.00));
                 break;
             case TiltValuator:
                 m_pen.setWidthF(std::max(std::abs(vValue - 127),

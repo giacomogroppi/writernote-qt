@@ -39,7 +39,7 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
 
     switch (m_alphaChannelValuator) {
             case PressureValuator:
-                m_color.setAlphaF(event->pressure());
+                m_color.setAlphaF(event->pressure()/2);
                 break;
             case TangentialPressureValuator:
                 if (event->device() == QTabletEvent::Airbrush)
@@ -62,7 +62,7 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
                 m_color.setHsv(hue, hValue, value, alpha);
                 break;
             case PressureValuator:
-                m_color.setHsv(hue, int(event->pressure() * 255.0), value, alpha);
+                m_color.setHsv(hue, int(event->pressure()/2 * 255.0), value, alpha);
                 break;
             default:
                 ;
@@ -70,7 +70,7 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
 
     switch (m_lineWidthValuator) {
             case PressureValuator:
-                m_pen.setWidthF(pressureToWidth(event->pressure()));
+                m_pen.setWidthF(pressureToWidth(event->pressure()/2));
                 break;
             case TiltValuator:
                 m_pen.setWidthF(std::max(std::abs(vValue - 127),
@@ -82,7 +82,7 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
     if (event->pointerType() == QTabletEvent::Eraser) {
             m_brush.setColor(Qt::white);
             m_pen.setColor(Qt::white);
-            m_pen.setWidthF(event->pressure() * 10 + 1);
+            m_pen.setWidthF(event->pressure()/2 * 10 + 1);
         } else {
             m_brush.setColor(m_color);
             m_pen.setColor(m_color);
