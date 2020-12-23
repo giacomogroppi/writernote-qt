@@ -50,8 +50,11 @@ bool savefile::salvabinario(int posizione){
         fwrite(point, sizeof(int), 3, fp);
     }
 
+    /* posizioneaudio */
     for(i=0; i < lunghezza; i++)
         fwrite(&this->currenttitle->datatouch->posizioneaudio[i], sizeof(int), 1, fp);
+
+    fwrite(&currenttitle->datatouch->zoom, sizeof(float), 1, fp);
 
     fclose(fp);
     fp = fopen(posizionetemp.toUtf8().constData(), "r");

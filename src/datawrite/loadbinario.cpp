@@ -15,8 +15,7 @@ void xmlstruct::loadbinario(){
 
     zip_file *f = zip_fopen(z, this->currenttitle->posizione_binario.toUtf8().constData(), 0);
 
-    if(f == nullptr)
-    {
+    if(f == nullptr){
         qDebug() << "File impossibile da leggere";
         return;
     }
@@ -80,6 +79,9 @@ void xmlstruct::loadbinario(){
         zip_fread(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }
+
+    zip_fread(f, &valoretemp, sizeof(float));
+    this->currenttitle->datatouch->zoom = valoretemp;
 
     zip_fclose(f);
     zip_close(z);

@@ -9,10 +9,10 @@ void TabletCanvas::disegnafoglio(){
     int lunghezza;
 
     /*lunghezza = this->m_pixmap.width();*/
-    lunghezza = NUMEROPIXELPAGINA;
+    lunghezza = NUMEROPIXELPAGINA * data->zoom;
 
     if(data->posizionefoglio.length())
-       last = data->posizionefoglio.last() + NUMEROPIXELPAGINA;
+       last = data->posizionefoglio.last() + NUMEROPIXELPAGINA * data->zoom;
 
     data->posizionefoglio.append(last);
 
@@ -67,5 +67,4 @@ void TabletCanvas::disegnafoglio(){
 
     this->disegnofoglio_bool = false;
     this->isloading = true;
-    update();
 }

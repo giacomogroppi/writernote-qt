@@ -30,8 +30,6 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         if(!itspossibletoscroll(data, this->m_pixmap.height(), delta))
             return;
 
-        this->m_pixmap.fill(Qt::white);
-
         this->ismoving.delta = delta;
         this->ismoving.ismoving_check = true;
     }

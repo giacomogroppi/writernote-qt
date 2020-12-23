@@ -25,6 +25,11 @@ public:
     QList<int> idtratto;
 
     QList<int> posizionefoglio;
+    /* il valore viene settare da 0 a 100 in base a quanto zoom c'è
+    2 -> massimo zoom
+    0 -> minimo zoom
+    */
+    float zoom = 1;
 };
 
 #endif // DATASTRUCT_H

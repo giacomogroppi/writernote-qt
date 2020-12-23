@@ -9,9 +9,9 @@ void TabletCanvas::ismoving_f(QPaintEvent *event, QPainter *painter){
 
     len = this->data->y.length();
 
-    for(i=0; i < len; i++){
+    for(i=0; i < len; i++)
         this->data->y[i] += this->ismoving.delta;
-    }
+
 
     len = data->posizionefoglio.length();
     for(i=0; i< len; i++)
@@ -19,6 +19,4 @@ void TabletCanvas::ismoving_f(QPaintEvent *event, QPainter *painter){
 
     this->ismoving.ismoving_check = false;
     this->isloading = true;
-
-    update();
 }

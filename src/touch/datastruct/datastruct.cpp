@@ -17,8 +17,6 @@ void datastruct::reset(){
 void datastruct::stampa(){
 
     int i, len;
-    len = this->color.length();
-
     len = this->x.length();
     for(i=0; i<len; i++)
         qDebug() << "\nx:" << this->x.at(i) << "\ny: " << this->y.at(i);
