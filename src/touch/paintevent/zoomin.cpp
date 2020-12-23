@@ -13,16 +13,15 @@ void TabletCanvas::zoomin(QPaintEvent *event){
 
         for(i=0; i < len; i ++){
             if(data->x.at(i) < posizionezoom_puntof.x())
-                data->x[i] /= (data->zoom / (data->zoom + 0.05));
+                data->x[i] /= 1.05;
             else if(data->x.at(i) > posizionezoom_puntof.x())
-                data->x[i] *= (data->zoom / data->zoom + 0.05);
-        }
+                data->x[i] *= 1.05;
 
-        for(i=0; i < len; i++)
             if(data->y.at(i) < posizionezoom_puntof.y())
-                data->y[i] /= (data->zoom / data->zoom + 0.05);
+                data->y[i] /= 1.05;
             else if(data->y.at(i) > posizionezoom_puntof.y())
-                data->y[i] *= (data->zoom / data->zoom + 0.05);
+                data->y[i] *= 1.05;
+        }
     }
 
     data->zoom += 0.05;

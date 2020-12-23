@@ -29,7 +29,7 @@ public:
     2 -> massimo zoom
     0 -> minimo zoom
     */
-    float zoom = 1;
+    float zoom = 1.00;
 };
 
 #endif // DATASTRUCT_H
