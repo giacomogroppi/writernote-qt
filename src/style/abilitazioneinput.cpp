@@ -3,7 +3,6 @@
 
 void abilitazioneinput(MainWindow *parent)
 {
-    qDebug() << parent->self->currenttitle.posizione_binario;
     bool check = (parent->self->currenttitle.posizione_binario == "");
 
     parent->m_canvas->setHidden(check);
