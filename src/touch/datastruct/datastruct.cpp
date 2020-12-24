@@ -23,6 +23,30 @@ void datastruct::stampa(){
 
 }
 
+int datastruct::firstx(){
+    int i, min, len;
+    len = x.length();
+    min = x.first();
+    for(i=0; i < len; i++)
+        if(min > x.at(i))
+            min = x.at(i);
+    return min;
+
+}
+
+int datastruct::biggerx(){
+    int i, len = x.length();
+    short int max;
+
+    max = x.first();
+    for(i=0; i < len; i++)
+        if(max < x.at(i))
+            max = x.at(i);
+
+    return max;
+
+}
+
 /* la funzione restituisce il massimo valore per le y */
 int datastruct::last(){
     if(!y.length())
@@ -37,7 +61,7 @@ int datastruct::last(){
     return max;
 }
 
-int datastruct::first(){
+int datastruct::firsty(){
     int i, len = this->y.length(), min = this->y.at(0);
     for(i = 0; i < len; i++){
         if(min > this->y.at(i))

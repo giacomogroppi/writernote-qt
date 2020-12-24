@@ -13,9 +13,14 @@
 
 ## Experimental Features:
 - Import images
+- Zoom in
+- Zoom on
 
 ## To do
-- Introduce touch support
+- Import image
+- Save image into .writer
+- Project .writer to pdf
+- Project .writer to image
 - Convert audio to text
 
 ## Installing

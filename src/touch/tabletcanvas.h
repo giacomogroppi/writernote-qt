@@ -17,7 +17,9 @@ typedef struct lastpoint_struct{
 }lastpoint_t;
 
 typedef struct{
-    short int delta;
+    short int deltay;
+    short int deltax;
+
     bool ismoving_check = false;
 }ismoving_t;
 

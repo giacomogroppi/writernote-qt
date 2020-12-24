@@ -80,8 +80,7 @@ void xmlstruct::loadbinario(){
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }
 
-    zip_fread(f, &valoretemp, sizeof(float));
-    this->currenttitle->datatouch->zoom = valoretemp;
+    zip_fread(f, &this->currenttitle->datatouch->zoom, sizeof(float));
 
     zip_fclose(f);
     zip_close(z);

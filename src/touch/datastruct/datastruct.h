@@ -11,8 +11,15 @@ public:
     void reset();
     void stampa();
     int last();
-    int first();
+
+    int firsty();
+    int firstx();
+
+    int biggerx();
+
     bool needtocreatenew();
+
+
 
     QList<long int> x;
     QList<long int> y;

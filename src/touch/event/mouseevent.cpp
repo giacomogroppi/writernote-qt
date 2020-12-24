@@ -11,12 +11,10 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 {
     short int move = event->delta();
 
-    if(!itspossibletoscroll(data, this->m_pixmap.height(), move))
+    if(!itspossibletoscrolly(data, this->m_pixmap.height(), move))
         return;
 
-    this->m_pixmap.fill(Qt::white);
-
-    this->ismoving.delta = move;
+    this->ismoving.deltay = move;
     this->ismoving.ismoving_check = true;
 
     event->accept();
@@ -25,12 +23,23 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     if(lastpointtouch.xdrawing != -1){
-        short int delta = - lastpointtouch.ydrawing + event->pos().y();
+        short int deltay = - lastpointtouch.ydrawing + event->pos().y();
+        short int deltax = - lastpointtouch.xdrawing + event->pos().x();
 
-        if(!itspossibletoscroll(data, this->m_pixmap.height(), delta))
-            return;
+        if(!itspossibletoscrolly(data, this->m_pixmap.height(), deltay))
+            ismoving.deltay = 0;
+        else
+            ismoving.deltay = deltay;
 
-        this->ismoving.delta = delta;
+
+        if(!itspossibletoscrollx(data, m_pixmap.width(), deltax))
+            this->ismoving.deltax = 0;
+        else
+            this->ismoving.deltax = deltax;
+
+        if(ismoving.deltax == 0)
+            qDebug() << "Non è possibile fare lo scrioll";
+
         this->ismoving.ismoving_check = true;
     }
 
@@ -43,4 +52,5 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
     lastpointtouch.xdrawing = lastpointtouch.ydrawing = -1;
+    event->accept();
 }

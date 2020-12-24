@@ -2,6 +2,7 @@
 #define ITSPOSSIBLETOSCROLL_H
 
 #include "../datastruct/datastruct.h"
-bool itspossibletoscroll(datastruct *, int, int);
+bool itspossibletoscrolly(datastruct *, short int, short int);
+bool itspossibletoscrollx(datastruct *, short int, short int);
 
 #endif // ITSPOSSIBLETOSCROLL_H

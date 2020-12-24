@@ -38,7 +38,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
 void TabletCanvas::laod(QPaintEvent *event, QPainter *painter){
     if(!isloading) return;
-
     /* inizia a disegnare i punti */
     int i_, len;
 
