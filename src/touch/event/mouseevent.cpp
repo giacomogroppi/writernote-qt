@@ -5,8 +5,6 @@
 
 #include <QDebug>
 
-
-
 void TabletCanvas::wheelEvent(QWheelEvent *event)
 {
     short int move = event->delta();
@@ -37,8 +35,8 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         else
             this->ismoving.deltax = deltax;
 
-        if(ismoving.deltax == 0)
-            qDebug() << "Non è possibile fare lo scrioll";
+        /*if(ismoving.deltax == 0)
+            qDebug() << "Non è possibile fare lo scrioll";*/
 
         this->ismoving.ismoving_check = true;
     }

@@ -3,19 +3,26 @@
 
 #include "ui_mainwindow.h"
 
+#include "method/methoddefinition.h"
+
 /* penna */
 void MainWindow::on_actionpen_triggered()
 {
-    this->m_canvas->medotodiinserimento = 0;
+    this->m_canvas->medotodiinserimento = STILO;
 }
 
 /* gomma */
 void MainWindow::on_actionrubber_triggered()
 {
-    this->m_canvas->medotodiinserimento = 1;
+    this->m_canvas->medotodiinserimento = GOMMA;
 
 }
 
+/* taglia */
+void MainWindow::on_actionselezionetext_triggered()
+{
+    this->m_canvas->medotodiinserimento = SELEZIONE;
+}
 
 
 void TabletCanvas::sceltacolorepenna(QColor color){

@@ -11,6 +11,7 @@
 #include <QEvent>
 
 #include "datastruct/datastruct.h"
+#include "method/methoddefinition.h"
 
 TabletCanvas::TabletCanvas()
     : QWidget(nullptr), m_brush(m_color)
@@ -22,6 +23,7 @@ TabletCanvas::TabletCanvas()
     setAttribute(Qt::WA_TabletTracking);
 
     this->data = nullptr;
+    this->medotodiinserimento = STILO;
 }
 
 void TabletCanvas::clear()
@@ -93,9 +95,13 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
 {
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
-        if (event->pointerType() == QTabletEvent::Eraser) {
+        if (event->pointerType() == QTabletEvent::Eraser || this->medotodiinserimento == GOMMA) {
             cursor = QCursor(QPixmap(":image/images/cursor-eraser.png"), 3, 28);
-        } else {
+        }
+        else if(this->medotodiinserimento == SELEZIONE){
+            cursor = QCursor(QPixmap(":image/images/cisors-cut.png"), 3, 28);
+        }
+        else {
             switch (event->device()) {
             case QTabletEvent::Stylus:
                 cursor = QCursor(QPixmap(":image/images/cursor-pencil.png"), 0, 0);
@@ -134,12 +140,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (event->type()) {
         case QEvent::TabletPress:
             if (!m_deviceDown) {
-                updatelist(event);
-
-                m_deviceDown = true;
-                lastPoint.pos = event->pos();
-                lastPoint.pressure = event->pressure();
-                lastPoint.rotation = event->rotation();
+                if(this->medotodiinserimento == STILO)
+                {
+                    updatelist(event);
+                }
+                    m_deviceDown = true;
+                    lastPoint.pos = event->pos();
+                    lastPoint.pressure = event->pressure();
+                    lastPoint.rotation = event->rotation();
             }
             break;
         case QEvent::TabletMove:
@@ -147,14 +155,23 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                         updateCursor(event);
             /* richiamata quando la penna scorre toccando lo schermo */
             if (m_deviceDown) {
-                updateBrush(event);
                 QPainter painter(&m_pixmap);
-                paintPixmap(painter, event);
+                if(this->medotodiinserimento == STILO){
+                    updateBrush(event);
+                    paintPixmap(painter, event);
+                }
+
+                /* se non è settato in STILO non bisogna aggiornare la lista ne scrivere */
                 lastPoint.pos = event->pos();
                 lastPoint.pressure = event->pressure();
                 lastPoint.rotation = event->rotation();
 
-                updatelist(event);
+                if(this->medotodiinserimento == STILO){
+                    updatelist(event);
+                }
+                else if(medotodiinserimento == GOMMA){
+                    gomma(painter);
+                }
             }
             break;
         case QEvent::TabletRelease:

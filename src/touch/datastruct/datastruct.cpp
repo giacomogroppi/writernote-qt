@@ -34,6 +34,16 @@ int datastruct::firstx(){
 
 }
 
+void datastruct::removeat(int i){
+    x.removeAt(i);
+    y.removeAt(i);
+    color.removeAt(i);
+    idtratto.removeAt(i);
+    posizioneaudio.removeAt(i);
+    pressure.removeAt(i);
+    rotation.removeAt(i);
+}
+
 int datastruct::biggerx(){
     int i, len = x.length();
     short int max;

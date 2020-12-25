@@ -92,6 +92,7 @@ SOURCES += \
     src/touch/eventmainwindow.cpp \
     src/touch/initpixmap.cpp \
     src/touch/paintevent/disegnofoglio.cpp \
+    src/touch/paintevent/gomma.cpp \
     src/touch/paintevent/paintevent.cpp \
     src/touch/paintevent/zoomin.cpp \
     src/touch/paintevent/zoomon.cpp \
@@ -134,6 +135,7 @@ HEADERS += \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
+    src/touch/method/methoddefinition.h \
     src/touch/tabletapplication.h \
     src//touch/tabletcanvas.h \
     src/update_list_copybook.h \

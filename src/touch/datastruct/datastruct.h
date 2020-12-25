@@ -16,6 +16,7 @@ public:
     int firstx();
 
     int biggerx();
+    void removeat(int i);
 
     bool needtocreatenew();
 

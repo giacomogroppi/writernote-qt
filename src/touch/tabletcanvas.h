@@ -72,7 +72,8 @@ public:
     /* 0 penna
        1 gomma*/
     int medotodiinserimento;
-    QColor m_color = Qt::red;
+    void gomma(QPainter &painter);
+    QColor m_color = Qt::black;
 
     void loadfile();
     bool isloading = false;

@@ -313,6 +313,7 @@
    </attribute>
    <addaction name="actionpen"/>
    <addaction name="actionrubber"/>
+   <addaction name="actionselezionetext"/>
   </widget>
   <widget class="QToolBar" name="toolBarcolore">
    <property name="windowTitle">
@@ -631,6 +632,15 @@
    </property>
    <property name="text">
     <string>red</string>
+   </property>
+  </action>
+  <action name="actionselezionetext">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/cisors-cut.png</normaloff>:/image/images/cisors-cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>selezionedisegno</string>
    </property>
   </action>
  </widget>

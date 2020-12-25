@@ -177,6 +177,8 @@ private slots:
 
     void on_actionred_triggered();
 
+    void on_actionselezionetext_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
