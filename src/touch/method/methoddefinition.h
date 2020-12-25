@@ -4,6 +4,6 @@
 #define GOMMA 0
 #define STILO 1
 #define SELEZIONE 2
-
+#define IDGOMMA 3
 
 #endif // METHODDEFINITION_H

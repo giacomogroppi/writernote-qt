@@ -113,7 +113,6 @@ public:
     void disegnafoglio();
     bool disegnofoglio_bool = false;
 
-
     /* struttura per ricordare il last point per il touch */
     struct PointLoading lastpointtouch;
 

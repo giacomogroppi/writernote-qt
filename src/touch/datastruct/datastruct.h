@@ -21,7 +21,6 @@ public:
     bool needtocreatenew();
 
 
-
     QList<long int> x;
     QList<long int> y;
     QList<int> posizioneaudio;

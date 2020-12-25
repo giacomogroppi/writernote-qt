@@ -1,6 +1,7 @@
 #include "datastruct.h"
 #include <QList>
 #include <QDebug>
+#include "../method/methoddefinition.h"
 
 datastruct::datastruct()
 {
@@ -43,6 +44,7 @@ void datastruct::removeat(int i){
     pressure.removeAt(i);
     rotation.removeAt(i);
 }
+
 
 int datastruct::biggerx(){
     int i, len = x.length();
