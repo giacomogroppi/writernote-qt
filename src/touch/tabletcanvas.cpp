@@ -177,10 +177,26 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     gomma(painter);
                 }
                 else if(medotodiinserimento == SELEZIONE){
-                    /* per cancellare il quadrato della selezione prima */
-                    isloading = true;
-                    this->square_.pointfine = event->pos();
-                    update(square_.disegno(painter));
+                    if(!this->square_.check){
+                        isloading = true;
+                        this->square_.pointfine = event->pos();
+                        update(square_.disegno(painter));
+                    }
+                    else{
+                        /* capisce se il tocco è stato interno */
+                        if(!this->square_.isinside(event->pos())){
+                            /* se il tocco non è stato interno */
+                            this->square_.reset();
+                            isloading = true;
+                        }
+                        else{
+                            /* a questo punto può muovere di un delta x e y */
+                            QRect recttemp = this->square_.move(event->pos());
+                            isloading = true;
+                            if(!(recttemp == QRect(-1, -1, -1, -1)))
+                                update(recttemp);
+                        }
+                    }
                 }
             }
             break;
