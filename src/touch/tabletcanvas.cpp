@@ -206,9 +206,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 if(medotodiinserimento == SELEZIONE){
                     this->square_.setData(this->data);
                     bool check = this->square_.find();
-                    if(!check)
+                    if(!check){
+                        isloading = true;
                         return this->square_.reset();
-
+                    }
                     QPainter painter(&m_pixmap);
                     update(this->square_.drawsquare(painter));
                 }
