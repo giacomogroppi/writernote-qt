@@ -10,6 +10,7 @@
 #include <QWidget>
 
 #include "datastruct/datastruct.h"
+#include "square/square.h"
 
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
@@ -118,6 +119,11 @@ public:
 
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
+
+    void settingdata(datastruct *data);
+
+    /* square per la selezione */
+    square square_;
 
 protected:
     void tabletEvent(QTabletEvent *event) override;

@@ -144,10 +144,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 {
                     updatelist(event);
                 }
-                    m_deviceDown = true;
-                    lastPoint.pos = event->pos();
-                    lastPoint.pressure = event->pressure();
-                    lastPoint.rotation = event->rotation();
+                else if(medotodiinserimento == SELEZIONE)
+                {
+                    square_.pointinit = event->pos();
+                }
+                m_deviceDown = true;
+                lastPoint.pos = event->pos();
+                lastPoint.pressure = event->pressure();
+                lastPoint.rotation = event->rotation();
             }
             break;
         case QEvent::TabletMove:
@@ -172,14 +176,30 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(medotodiinserimento == GOMMA){
                     gomma(painter);
                 }
+                else if(medotodiinserimento == SELEZIONE){
+                    /* per cancellare il quadrato della selezione prima */
+                    isloading = true;
+                    this->square_.pointfine = event->pos();
+                    update(square_.disegno(painter));
+                }
             }
             break;
         case QEvent::TabletRelease:
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
+                if(medotodiinserimento == SELEZIONE){
+                    this->square_.setData(this->data);
+                    bool check = this->square_.find();
+                    if(!check)
+                        return this->square_.reset();
+
+                    QPainter painter(&m_pixmap);
+                    update(this->square_.drawsquare(painter));
+                }
+                else
+                    update();
+                isloading = true;
             }
-            isloading = true;
-            update();
             break;
         default:
             break;
@@ -198,4 +218,8 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
 {
     initPixmap(0);
     this->isloading = true;
+}
+
+void TabletCanvas::settingdata(datastruct *data){
+    this->data = data;
 }

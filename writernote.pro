@@ -98,6 +98,7 @@ SOURCES += \
     src/touch/paintevent/zoomon.cpp \
     src/touch/riascolto/riascolto.cpp \
     src/touch/settingmethod.cpp \
+    src/touch/square/square.cpp \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \
     src/touch/updatelist.cpp \
@@ -136,6 +137,7 @@ HEADERS += \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
     src/touch/method/methoddefinition.h \
+    src/touch/square/square.h \
     src/touch/tabletapplication.h \
     src//touch/tabletcanvas.h \
     src/update_list_copybook.h \
