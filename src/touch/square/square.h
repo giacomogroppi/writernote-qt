@@ -10,7 +10,7 @@ class square
 public:
     square();
     void reset();
-    QRect disegno(QPainter &painter);
+    QRect disegno(QPainter &painter, QPoint puntofine);
     bool find();
 
     bool isinside(QPoint);

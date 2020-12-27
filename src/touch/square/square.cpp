@@ -12,20 +12,25 @@ square::square()
 }
 
 void square::reset(){
-    this->pointinit = QPoint(-1, -1);
-    this->lastpoint = QPoint(-1, -1);
+    this->pointinit = this->lastpoint = this->pointfine = QPoint(-1, -1);
     check = false;
 }
 
-QRect square::disegno(QPainter &painter){
+QRect square::disegno(QPainter &painter, QPoint puntodifine){
     painter.setPen(penna);
 
     QRect recttemp;
     recttemp.setTopLeft(this->pointinit);
-    recttemp.setBottomRight(this->pointfine);
+    recttemp.setBottomRight(puntodifine);
     painter.drawRect(recttemp);
 
-    return recttemp;
+    /* in questo modo ritorna solamente la porzione di pixmap che deve essere ricaricata */
+    auto rect = QRect(this->pointinit, this->pointfine);
+
+    pointfine = puntodifine;
+
+
+        return rect;
 }
 
 /* la funzione capisce se all'interno del quadrato della selezione c'è qualcosa
@@ -51,14 +56,15 @@ bool square::find(){
     return check;
 }
 
-void square::setData(datastruct *data){this->data = data;}
+void square::setData(datastruct *data){ this->data = data; }
 
 /* la funzione prendere l'elemento più in alto a sinistra e più in basso a destra */
 QRect square::drawsquare(QPainter &painter){
     int i, len, maxx, maxy, minx, miny;
 
     maxx = maxy = 0;
-    minx = miny = data->biggerx();
+    minx = data->x.at(data->idtratto.indexOf(idtratto));
+    miny = data->y.at(data->idtratto.indexOf(idtratto));
 
     len = data->x.length();
     for(i=0; i<len; i++){
@@ -83,7 +89,7 @@ QRect square::drawsquare(QPainter &painter){
 
     this->check = true;
 
-    return this->disegno(painter);
+    return this->disegno(painter, this->pointfine);
 
 }
 
@@ -106,6 +112,7 @@ QRect square::move(QPoint punto){
         lastpoint = punto;
         return QRect(-1, -1, -1, -1);
     }
+
     int deltax, deltay, i, len;
     len = data->x.length();
 
@@ -114,12 +121,10 @@ QRect square::move(QPoint punto){
 
     for(i=0; i<len; i++){
         if(data->idtratto.at(i) == idtratto){
-            data->x[i] += deltax;
-            data->y[i] += deltay;
+            data->x[i] -= deltax;
+            data->y[i] -= deltay;
         }
     }
-
-    qDebug() << "deltax -> " << deltax << "deltay -> " << deltay;
 
     lastpoint = punto;
     /* deve fare il return del quadrato corretto siccome è stato spostato

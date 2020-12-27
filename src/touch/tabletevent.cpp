@@ -51,8 +51,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(medotodiinserimento == SELEZIONE){
                     if(!this->square_.check){
                         isloading = true;
-                        this->square_.pointfine = event->pos();
-                        update(square_.disegno(painter));
+                        square_.disegno(painter, event->pos());
+
+                        update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                     }
                     else{
                         /* capisce se il tocco è stato interno */
@@ -66,7 +67,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                             QRect recttemp = this->square_.move(event->pos());
                             isloading = true;
                             if(!(recttemp == QRect(-1, -1, -1, -1)))
-                                update(recttemp);
+                                update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                         }
                     }
                 }
@@ -80,14 +81,23 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     bool check = this->square_.find();
                     if(!check){
                         isloading = true;
+                        update();
+                        event->accept();
                         return this->square_.reset();
                     }
+
                     QPainter painter(&m_pixmap);
-                    update(this->square_.drawsquare(painter));
+                    //update(this->square_.drawsquare(painter));
+                    this->m_pixmap.fill(Qt::white);
+                    this->square_.drawsquare(painter);
+                    isloading = true;
+
+                    update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                 }
                 else
                     update();
                 isloading = true;
+                update();
             }
             break;
         default:

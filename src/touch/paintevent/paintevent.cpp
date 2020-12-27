@@ -27,7 +27,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     this->disegnafoglio();
 
-    laod(event, &painter);
+    laod(&painter);
 
     /* la funzione viene lanciata quando si sta riascoltando l'audio */
     if(this->riascoltovariable)
@@ -36,8 +36,10 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-void TabletCanvas::laod(QPaintEvent *event, QPainter *painter){
+void TabletCanvas::laod(QPainter *painter){
     if(!isloading) return;
+    qDebug() << "Load";
+
     /* inizia a disegnare i punti */
     int i_, len;
 

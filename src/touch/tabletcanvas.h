@@ -83,7 +83,7 @@ public:
         int xdrawing;
         int ydrawing;
     } pointload;
-    void laod(QPaintEvent*, QPainter *);
+    void laod(QPainter *);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     void updateBrush_load(float pressure, int yTilt, int xTilt, QColor );
