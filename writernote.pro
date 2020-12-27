@@ -101,6 +101,7 @@ SOURCES += \
     src/touch/square/square.cpp \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \
+    src/touch/tabletevent.cpp \
     src/touch/updatelist.cpp \
     src/update_list_copybook.cpp \
     src/videocompress/compressivideo.cpp \

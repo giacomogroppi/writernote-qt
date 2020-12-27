@@ -1,11 +1,13 @@
 #include "square.h"
 #include <QPen>
 #include <QPainter>
+#include <QDebug>
 
 square::square()
 {
     penna.setStyle(Qt::DotLine);
-    penna.setWidth(5);
+    penna.setWidth(2);
+    penna.setColor(QColor::fromRgb(30, 90, 255));
     this->reset();
 }
 
@@ -26,9 +28,14 @@ QRect square::disegno(QPainter &painter){
     return recttemp;
 }
 
+/* la funzione capisce se all'interno del quadrato della selezione c'è qualcosa
+ * in caso salva l'id del tratto e setta la variabile this->check = true, in caso contrario
+ * la setta = false */
 bool square::find(){
     int i, len;
     len = data->x.length();
+
+    this->check = false;
 
     for(i=0;i<len; i++)
         if(data->x.at(i) <= this->pointfine.x()
@@ -38,8 +45,10 @@ bool square::find(){
                 && data->idtratto.at(i) != -1)
         {
             idtratto = data->idtratto.at(i);
+            this->check = true;
+            break;
         }
-    return false;
+    return check;
 }
 
 void square::setData(datastruct *data){this->data = data;}
@@ -48,7 +57,8 @@ void square::setData(datastruct *data){this->data = data;}
 QRect square::drawsquare(QPainter &painter){
     int i, len, maxx, maxy, minx, miny;
 
-    maxx = maxy = minx = miny = 0;
+    maxx = maxy = 0;
+    minx = miny = data->biggerx();
 
     len = data->x.length();
     for(i=0; i<len; i++){
@@ -108,6 +118,9 @@ QRect square::move(QPoint punto){
             data->y[i] += deltay;
         }
     }
+
+    qDebug() << "deltax -> " << deltax << "deltay -> " << deltay;
+
     lastpoint = punto;
     /* deve fare il return del quadrato corretto siccome è stato spostato
      * -> per fare poi l'update */
