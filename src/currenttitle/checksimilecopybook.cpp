@@ -57,19 +57,22 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             if(primo->datatouch->idtratto.at(i) != secondo->datatouch->idtratto.at(i))
                 return false;
 
-        //qDebug() << "colore";
+        qDebug() << "colore";
         len = primo->datatouch->color.length();
         if(len != secondo->datatouch->color.length())
             return false;
 
+        /*int point[6];
         for(i=0; i<len; i++){
-            if(primo->datatouch->color.at(i) != secondo->datatouch->color.at(i))
-            {
-                for(; i < len; i++)
-                    qDebug() << primo->datatouch->color.at(i) << secondo->datatouch->color.at(i);
+            primo->datatouch->color.at(i).getRgb(&point[0], &point[1], &point[2]);
+            secondo->datatouch->color.at(i).getRgb(&point[3], &point[4], &point[5]);
+
+            if(point[0] != point[3]
+                    || point[1] != point[4]
+                    || point[2] != point[5])
                 return false;
-            }
-        }
+
+        }*/
 
         qDebug() << "pressure";
 
