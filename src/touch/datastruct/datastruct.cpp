@@ -59,6 +59,21 @@ int datastruct::biggerx(){
 
 }
 
+/* la funzione restituisce true se il pulto in questione è il primo o l'ultimo */
+bool datastruct::needtochangeid(int i){
+    int len;
+    len = y.length();
+
+    if(i == len || i == 0)
+        return false;
+
+    if(idtratto.at(i) == idtratto.at(i+1) && idtratto.at(i-1) == idtratto.at(i))
+        return true;
+
+    return false;
+
+}
+
 /* la funzione restituisce il massimo valore per le y */
 int datastruct::last(){
     if(!y.length())

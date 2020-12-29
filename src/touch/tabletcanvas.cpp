@@ -98,9 +98,6 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
         if (event->pointerType() == QTabletEvent::Eraser || this->medotodiinserimento == GOMMA) {
             cursor = QCursor(QPixmap(":image/images/cursor-eraser.png"), 3, 28);
         }
-        else if(this->medotodiinserimento == SELEZIONE){
-            cursor = QCursor(QPixmap(":image/images/cisors-cut.png"), 3, 28);
-        }
         else {
             switch (event->device()) {
             case QTabletEvent::Stylus:

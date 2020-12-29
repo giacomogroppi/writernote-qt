@@ -98,6 +98,7 @@ SOURCES += \
     src/touch/paintevent/zoomon.cpp \
     src/touch/riascolto/riascolto.cpp \
     src/touch/settingmethod.cpp \
+    src/touch/square/move.cpp \
     src/touch/square/square.cpp \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \
@@ -130,6 +131,7 @@ HEADERS += \
     src/datamanage/spacchettamento.h \
     src/datawrite/colortoint.h \
     src/datawrite/renamefile_f_zip.h \
+    src/datawrite/sizedata.h \
     src/dialog_critic.h \
     src/chartoint.h \
     src/newcopybook_.h \

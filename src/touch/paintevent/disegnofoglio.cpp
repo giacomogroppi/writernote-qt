@@ -18,8 +18,8 @@ void TabletCanvas::disegnafoglio(){
 
     for(i = 0, last += 10; i < 61; i++, last += 20){
         /* punto inizio riga */
-        this->data->x.append(20);
-        this->data->y.append(last);
+        this->data->x.append(20.00);
+        this->data->y.append((double)last);
         this->data->color.append(Qt::blue);
         this->data->posizioneaudio.append(0);
 
@@ -30,8 +30,8 @@ void TabletCanvas::disegnafoglio(){
 
         /* punto di fine della riga */
 
-        this->data->x.append(lunghezza - 20);
-        this->data->y.append(last);
+        this->data->x.append((double)(lunghezza - 20));
+        this->data->y.append((double)last);
         this->data->color.append(Qt::blue);
         this->data->posizioneaudio.append(0);
 
@@ -43,8 +43,8 @@ void TabletCanvas::disegnafoglio(){
     }
 
     /* punto inizio riga */
-    this->data->x.append(0);
-    this->data->y.append(last);
+    this->data->x.append(0.0);
+    this->data->y.append((double)last);
     this->data->color.append(Qt::blue);
     this->data->posizioneaudio.append(0);
 
@@ -54,8 +54,8 @@ void TabletCanvas::disegnafoglio(){
     this->data->idtratto.append(-1);
 
     /* punto di fine della riga */
-    this->data->x.append(lunghezza);
-    this->data->y.append(last);
+    this->data->x.append((double)lunghezza);
+    this->data->y.append((double)last);
     this->data->color.append(Qt::blue);
     this->data->posizioneaudio.append(0);
 

@@ -38,7 +38,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
 void TabletCanvas::laod(QPainter *painter){
     if(!isloading) return;
-    qDebug() << "Load";
 
     /* inizia a disegnare i punti */
     int i_, len;
@@ -52,9 +51,9 @@ void TabletCanvas::laod(QPainter *painter){
         if(this->data->y.at(i_) < this->m_pixmap.size().height() && this->data->y.at(i_) >= 0){
             /* se cambio il tratto non disegna ma lo carica in lastpoint solamente */
             if(i_ && this->data->idtratto.at(i_) == this->data->idtratto.at(i_ - 1) && data->idtratto.at(i_) != -1
-                    && data->y.at(i_) != 1
-                    && data->y.at(i_) != m_pixmap.height()){
-                this->updateBrush_load(data->pressure.at(i_), 127, 127, data->color.at(i_));
+                    && data->y.at(i_) != 1.00
+                    && data->y.at(i_) != (double)m_pixmap.height()){
+                this->updateBrush_load(data->pressure.at(i_), data->color.at(i_));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(this->lastPoint.pos,
@@ -62,7 +61,7 @@ void TabletCanvas::laod(QPainter *painter){
             }
             else if(data->idtratto.at(i_) == -1){
                 /* carica i punti della pagina */
-                updateBrush_load(data->pressure.at(i_), 0, 0, data->color.at(i_));
+                updateBrush_load(data->pressure.at(i_), data->color.at(i_));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(data->x.at(i_), data->y.at(i_)
@@ -80,7 +79,7 @@ void TabletCanvas::laod(QPainter *painter){
 }
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-void TabletCanvas::updateBrush_load(float pressure, int yTilt, int xTilt, QColor color){
+void TabletCanvas::updateBrush_load(float pressure, QColor color){
     /*int vValue = int(((yTilt + 60.0) / 120.0) * 255);
     int hValue = int(((xTilt + 60.0) / 120.0) * 255);*/
 

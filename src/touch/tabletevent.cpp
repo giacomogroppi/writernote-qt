@@ -14,7 +14,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(medotodiinserimento == SELEZIONE)
                 {
                     if(square_.check){
-                        //qDebug() << "Vero ";
                         square_.lastpoint = event->pos();
                     }
                     else
@@ -47,6 +46,17 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else if(medotodiinserimento == GOMMA){
                     gomma(painter);
+                    if(lastPoint.pos.x() - GOMMASIZE >= 0
+                            && lastPoint.pos.x() + GOMMASIZE < this->m_pixmap.width()
+                            && lastPoint.pos.y() - GOMMASIZE >= 0
+                            && lastPoint.pos.y() + GOMMASIZE < this->m_pixmap.height())
+                        update(QRect(lastPoint.pos.x() - GOMMASIZE,
+                                     lastPoint.pos.y() - GOMMASIZE,
+                                     lastPoint.pos.x() + GOMMASIZE,
+                                     lastPoint.pos.y() + GOMMASIZE));
+                    else
+                        update();
+
                 }
                 else if(medotodiinserimento == SELEZIONE){
                     if(!this->square_.check){
@@ -61,13 +71,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                             /* se il tocco non è stato interno */
                             this->square_.reset();
                             isloading = true;
+                            update(QRect(square_.pointinit, square_.pointfine));
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
-                            QRect recttemp = this->square_.move(event->pos());
+                            this->square_.move(event->pos(), painter);
+                            qDebug() << "Lo sta spostando";
                             isloading = true;
-                            if(!(recttemp == QRect(-1, -1, -1, -1)))
-                                update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
+                            update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                         }
                     }
                 }

@@ -19,10 +19,10 @@ public:
     void removeat(int i);
 
     bool needtocreatenew();
+    bool needtochangeid(int);
 
-
-    QList<long int> x;
-    QList<long int> y;
+    QList<double> x;
+    QList<double> y;
     QList<int> posizioneaudio;
     QList<QColor> color;
 

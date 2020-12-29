@@ -16,25 +16,28 @@ void xmlstruct::loadbinario(){
     zip_file *f = zip_fopen(z, this->currenttitle->posizione_binario.toUtf8().constData(), 0);
 
     if(f == nullptr){
-        qDebug() << "File impossibile da leggere";
+        qDebug() << "xmlstruct::loadbinario -> File impossibile da leggere";
         return;
     }
 
-    int lunghezza=0, i;
+    int lunghezza=0, i, valoretemp;
     float temp;
+    double variabiledouble;
+
     /* x */
     zip_fread(f, &lunghezza, sizeof(int));
-    int valoretemp;
-    for(i=0; i < lunghezza; i++)
-    {
-        zip_fread(f, &valoretemp, sizeof(long int));
-        this->currenttitle->datatouch->x.append(valoretemp);
+
+    qDebug() << "Loadbinario -> lunghezza x -> " << lunghezza;
+
+    for(i=0; i < lunghezza; i++){
+        zip_fread(f, &variabiledouble, sizeof(double));
+        this->currenttitle->datatouch->x.append(variabiledouble);
     }
 
     /* y */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(long int));
-        this->currenttitle->datatouch->y.append(valoretemp);
+        zip_fread(f, &variabiledouble, sizeof(double));
+        this->currenttitle->datatouch->y.append(variabiledouble);
     }
 
     /* idtratto */

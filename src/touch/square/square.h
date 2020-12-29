@@ -15,7 +15,7 @@ public:
 
     bool isinside(QPoint);
     void setData(datastruct *data);
-    QRect move(QPoint);
+    QRect move(QPoint, QPainter &painter);
 
     /* disegna il quadrato attorno all'oggetti che ha selezionato l'utente */
     QRect drawsquare(QPainter &painter);

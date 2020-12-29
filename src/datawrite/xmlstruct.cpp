@@ -39,7 +39,9 @@ std::string xmlstruct::filetostring(){
   return text;
 }
 
-char *xmlstruct::readfile(const char *path, const char *namefile){
+char *xmlstruct::readfile(
+        const char  *path,
+        const char  *namefile){
     int err = 0;
     zip *z = zip_open(path, 0, &err);
 

@@ -27,12 +27,19 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
     }else{
         int i, len;
 
+        qDebug() << "x";
+
         len = primo->datatouch->x.length();
         if(len != secondo->datatouch->x.length())
             return false;
+
+        qDebug() << "Len ok";
+
         for(i = 0; i < len; i++)
             if(primo->datatouch->x.at(i) != secondo->datatouch->x.at(i))
                 return false;
+
+        qDebug() << "y";
 
         len = primo->datatouch->y.length();
         if(len != secondo->datatouch->y.length())
@@ -41,6 +48,7 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             if(primo->datatouch->y.at(i) != secondo->datatouch->y.at(i))
                 return false;
 
+        qDebug() << "idtratto";
 
         len = primo->datatouch->idtratto.length();
         if(len != secondo->datatouch->idtratto.length())
@@ -49,12 +57,12 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             if(primo->datatouch->idtratto.at(i) != secondo->datatouch->idtratto.at(i))
                 return false;
 
+        //qDebug() << "colore";
         len = primo->datatouch->color.length();
         if(len != secondo->datatouch->color.length())
             return false;
 
         for(i=0; i<len; i++){
-            //qDebug() << primo->datatouch->color.at(i) << secondo->datatouch->color.at(i);
             if(primo->datatouch->color.at(i) != secondo->datatouch->color.at(i))
             {
                 for(; i < len; i++)
@@ -63,6 +71,8 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             }
         }
 
+        qDebug() << "pressure";
+
         len = primo->datatouch->pressure.length();
         if(len != secondo->datatouch->pressure.length())
             return false;
@@ -70,6 +80,7 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             if(primo->datatouch->pressure.at(i) != secondo->datatouch->pressure.at(i))
                 return false;
 
+        qDebug() << "Rotation";
 
         len = primo->datatouch->rotation.length();
         if(len != secondo->datatouch->rotation.length())
@@ -77,7 +88,7 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
         for(i=0; i<len; i++)
             if(primo->datatouch->rotation.at(i) != secondo->datatouch->rotation.at(i))
                 return false;
-
+        qDebug() << "Fine";
 
     }
 

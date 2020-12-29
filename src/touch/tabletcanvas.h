@@ -61,8 +61,6 @@ public:
     /* aggiorna la lista dei punti */
     void updatelist(QTabletEvent *event);
 
-    /* la funzione gestisce la gomma */
-    void gomma_f(QTabletEvent *event);
 
     datastruct *data;
 
@@ -86,7 +84,7 @@ public:
     void laod(QPainter *);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-    void updateBrush_load(float pressure, int yTilt, int xTilt, QColor );
+    void updateBrush_load(float , QColor );
     void loadpixel();
 
     /* funzioni responsabili del riascolto */

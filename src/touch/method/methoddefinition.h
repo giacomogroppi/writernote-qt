@@ -6,4 +6,6 @@
 #define SELEZIONE 2
 #define IDGOMMA 3
 
+#define GOMMASIZE 5
+
 #endif // METHODDEFINITION_H

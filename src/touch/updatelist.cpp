@@ -17,8 +17,8 @@ void TabletCanvas::updatelist(QTabletEvent *event){
         this->data->idtratto.append(data->idtratto.last());
 
 
-    this->data->x.append(event->pos().x());
-    this->data->y.append(event->pos().y());
+    this->data->x.append(event->posF().x());
+    this->data->y.append(event->posF().y());
 
     this->data->pressure.append(event->pressure());
     this->data->rotation.append(event->rotation());
@@ -28,11 +28,6 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     this->data->color.append(m_color);
 }
 
-void TabletCanvas::gomma_f(QTabletEvent *event){
-    if(this->medotodiinserimento == 0){
-
-    }
-}
 
 /* la funzioen gestisce tutti i pixel */
 void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
