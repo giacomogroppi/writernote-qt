@@ -167,26 +167,38 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     if(this->player->state() == QMediaPlayer::PlayingState)
         return redolist(this);
 
+    if(this->m_audioRecorder->state() == QAudioRecorder::RecordingState
+       || this->m_audioRecorder->state() == QAudioRecorder::PausedState)
+        return redolist(this);
+
     if(this->self->currentTitle != ""){
         /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
         currenttitle_class *tempcopybook = new currenttitle_class;
-
         xmlstruct *fileload = new xmlstruct(&this->self->path, &this->self->indice, tempcopybook);
-        fileload->loadfile((this->self->currentTitle + ".xml").toUtf8().constData());
+
+        if(!fileload->loadfile((this->self->currentTitle + ".xml").toUtf8().constData())){
+            delete fileload;
+            return dialog_critic("We had a problem opening the current copybook");
+        }
 
         if(!checksimilecopybook(&this->self->currenttitle, tempcopybook)){
-            savecopybook savevariabile(this, &this->self->currentTitle);
+            auto *savevariabile = new savecopybook(this, &this->self->currentTitle);
 
-            if (!savevariabile.check_permission())
+            if (!savevariabile->check_permission()){
                 /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
+                delete savevariabile;
                 return redolist(this);
+            }
         }
     }
 
     /* a questo punto deve aprire il nuovo copybook */
     if(this->self->indice.titolo[this->self->indice.titolo.indexOf(item->text())] != ""){
-        xmlstruct file_(&this->self->path, &this->self->indice, &this->self->currenttitle);
-        file_.loadfile((item->text() + ".xml").toUtf8().constData());
+        auto *file_ = new xmlstruct(&this->self->path, &this->self->indice, &this->self->currenttitle);
+        if(!file_->loadfile((item->text() + ".xml").toUtf8().constData())){
+            delete file_;
+            return dialog_critic("We had a problem opening the new copybook");
+        }
     }
     else
         this->self->currenttitle.reset();
@@ -226,13 +238,15 @@ void MainWindow::on_textEdit_selectionChanged(){
     while (true){
         if ((position >= this->self->currenttitle.testinohtml[i-1].length()) && (position <= this->self->currenttitle.testinohtml[i+1].length())){
             audio = this->self->currenttitle.posizione_iniz[i];
-
+            this->player->setPosition(audio);
 
             this->player->setPosition(audio*1000);
             break;
         }
         else if ((i + 1) == this->self->currenttitle.posizione_iniz.length()){
             audio = this->self->currenttitle.posizione_iniz.last();
+
+            this->player->setPosition(audio);
 
             //self.player.setPosition(audio*1000)
             break;

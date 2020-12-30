@@ -24,7 +24,25 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     xmlstruct *temp_lettura = new xmlstruct(&this->self->path, tempindice, tempcopybook);
     temp_lettura->loadindice();
-    temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData());
+    if(!temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData())){
+        delete temp_lettura;
+
+        QMessageBox msgBox;
+        msgBox.setText("Error:");
+        msgBox.setInformativeText("We had an error opening the current file");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+
+        msgBox.setIcon(QMessageBox::Warning);
+
+        msgBox.setSizeIncrement(300, 10);
+
+        int rec = msgBox.exec();
+
+        if(rec == QMessageBox::Ok)
+            return event->accept();
+        return event->ignore();
+    }
 
     QString filep = this->self->currenttitle.testi;
     this->self->currenttitle.testi = this->ui->textEdit->toHtml();

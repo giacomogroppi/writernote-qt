@@ -30,15 +30,6 @@ xmlstruct::xmlstruct(std::string *path_U, indice_class *indice_U, currenttitle_c
     this->currenttitle = currenttitle_U;
 }
 
-std::string xmlstruct::filetostring(){
-  std::ifstream t(pathFile);
-  std::string text((std::istreambuf_iterator<char>(t)),
-                   std::istreambuf_iterator<char>());
-
-
-  return text;
-}
-
 char *xmlstruct::readfile(
         const char  *path,
         const char  *namefile){
@@ -60,8 +51,125 @@ char *xmlstruct::readfile(
     return contents;
 }
 
+
+bool xmlstruct::loadfile(const char *nameFile){
+    currenttitle->reset();
+
+    int err = 0;
+    int lunghezza, temp, check, i;
+
+    qDebug() << "xmlstruct::loadfile -> Adesso carico i file";
+    zip_t *filezip = zip_open(this->path_->c_str(), 0, &err);
+    if (filezip == NULL)
+        return false;
+
+    struct zip_stat st;
+    zip_stat_init(&st);
+    zip_stat(filezip, nameFile, 0, &st);
+
+    qDebug() << "xmlstruct::loadfile -> ho aperto lo zip";
+
+    qDebug() << "xmlstruct::loadfile nomefiletemp -> " << nameFile;
+
+    zip_file *f = zip_fopen(filezip, nameFile, 0);
+    if(f == NULL){
+        zip_close(filezip);
+        return false;
+    }
+
+    qDebug() << "xmlstruct::loadfile -> aperto il file nello zip";
+
+    zip_fread(f, &currenttitle->versione, sizeof(int));
+    zip_fread(f, &temp, sizeof(int));
+    currenttitle->se_registato = temp;
+
+    zip_fread(f, &temp, sizeof(int));
+    currenttitle->se_tradotto = temp;
+
+    //testi
+    zip_fread(f, &temp, sizeof(int));
+    zip_fread(f, &currenttitle->testi, sizeof(char)*temp);
+
+    // legge quanto è lungo il nome del file
+    zip_fread(f, &temp, sizeof(int));
+
+    qDebug() << "xmlstruct::loadfile -> temp: " << temp;
+
+    if(temp){
+        char *vartempp = (char *)malloc(sizeof(char)*temp);
+
+        if(vartempp == NULL){
+            zip_fclose(f);
+            zip_close(filezip);
+            return false;
+        }
+
+        zip_fread(f, vartempp, sizeof(char)*temp);
+
+        qDebug() << "vartempp " << vartempp;
+
+        //currenttitle->posizione_binario = vartempp;
+        currenttitle->posizione_binario.fromUtf8(vartempp, temp);
+
+
+        qDebug() << vartempp;
+
+        qDebug() << "xmlstruct::loadfile -> " << currenttitle->posizione_binario;
+
+
+        if(currenttitle->posizione_binario != ""){
+            if(!this->loadbinario(filezip)){
+                zip_fclose(f);
+                zip_close(filezip);
+                return false;
+            }
+        }
+    }
+
+    qDebug() << "xmlstruct::loadfile -> letta XXX";
+
+    //testinohtml
+    zip_fread(f, &lunghezza, sizeof(int));
+
+    char *variabiletemp = (char *)malloc(1);
+
+    qDebug() << "xmlstruct::loadfile -> entro nel ciclo -> lunghezza -> " << lunghezza;
+
+    for(i=0; i<lunghezza; i++){
+        zip_fread(f, &temp, sizeof(int));
+
+        //char *variabiletemp = new char[sizeof(char)*temp];
+        variabiletemp = (char *)realloc(variabiletemp, sizeof(char)*temp);
+
+        if(variabiletemp == NULL){
+            zip_fclose(f);
+            zip_close(filezip);
+            return false;
+        }
+
+        zip_fread(f, variabiletemp, sizeof(char)*temp);
+
+        this->currenttitle->testinohtml.append(variabiletemp);
+
+    }
+
+    free(variabiletemp);
+
+    for(i=0; i<lunghezza; i++){
+        zip_fread(f, &temp, sizeof(int));
+
+        currenttitle->posizione_iniz.append(temp);
+    }
+
+    zip_fclose(f);
+    zip_close(filezip);
+
+    qDebug() << "Load file andato correttamente";
+    return true;
+}
+
 /* funzione che gestisce il caricamente di un file di tipo zip */
-void xmlstruct::loadfile(const char *nomeFile){
+/*void xmlstruct::loadfile(const char *nomeFile){
     this->text = readfile(this->path_->c_str(), nomeFile);
 
     QStringList temp = {};
@@ -89,21 +197,15 @@ void xmlstruct::loadfile(const char *nomeFile){
         stringa_decode("<filebinario>", "</filebinario>", &temp);
         this->currenttitle->posizione_binario = temp[0].toUtf8().constData();
 
-        /* funzione che gestisce la lettura dell'oggetto datastruct */
         if(this->currenttitle->posizione_binario != "")
             this->loadbinario();
     }
 
-    /* scrittura di posizione_iniz */
     stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
     int i, lung = temp.length();
     for(i=0; i < lung; i++)
         this->currenttitle->posizione_iniz.append(chartoint(temp[i].toUtf8().constData()));
 
-    /* in questo modo all'interno della lista di interi listatemp ci saranno le lunghezze di tutte le stringhe dei testi,
-    che nel caso di "testi" sarà al massimo di lunghezza uno*/
-
-    /* scrive il testi */
     QList<int> listatemp = {};
     stringa_decode_int("<testi>", "</testi>", &listatemp);
 
@@ -120,7 +222,7 @@ void xmlstruct::loadfile(const char *nomeFile){
 
     this->textdecode(&listatemp);
 
-}
+}*/
 
 void xmlstruct::loadindice(){
     this->text = readfile(path_->c_str(), "indice.xml");

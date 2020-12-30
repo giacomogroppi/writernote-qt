@@ -4,6 +4,7 @@
 #include "../self_class.h"
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
+#include <zip.h>
 
 class savefile
 {
@@ -20,7 +21,7 @@ public:
     //bool savefile_check_copybook();
     bool compressfile(const char *namefile, const char *testo);
     bool compressbinario(const char *namefile, int, void *data , QString *);
-    bool salvabinario(int);
+    bool salvabinario(int, zip_t *);
 
     bool compressfile(const void *, int size, const char *namefile);
 };

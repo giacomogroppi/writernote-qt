@@ -16,23 +16,18 @@ static int sizefile(FILE *fp){
 
 static bool freezip(zip_source_t *files, zip_t *file){
     zip_source_free(files);
-    zip_close(file);
+    //zip_close(file);
     return false;
 }
 
-bool savefile::salvabinario(int posizione){
-    int i, lunghezza, size = 0;
-
-    /*QString posizionetemp = this->parent->self->path.c_str() +(QString)this->parent->self->indice.titolo.at(posizione) + "temp";
-    FILE *fp = fopen(posizionetemp.toUtf8().constData(), "w");
-    if(fp == NULL)
-        return false;*/
+bool savefile::salvabinario(int posizione, zip_t *filezip){
+    int i, lunghezza;
 
     /* x */
     lunghezza = this->currenttitle->datatouch->x.length();
 
-    int error = 0;
-    zip_t *filezip = zip_open(this->parent->self->path.c_str(), ZIP_CREATE, &error);
+    //int error = 0;
+    //zip_t *filezip = zip_open(this->parent->self->path.c_str(), ZIP_CREATE, &error);
 
     zip_source_t *file;/* = zip_source_file(filezip,
                                          ("bin_" + this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(),
@@ -42,31 +37,20 @@ bool savefile::salvabinario(int posizione){
     file = zip_source_buffer_create(0, 0, 0, &errore);
 
 
-    qDebug() << "lunghezza";
+    //qDebug() << "lunghezza";
 
     zip_source_begin_write(file);
     if(zip_source_write(file, &lunghezza, sizeof(int)) == -1)
         return freezip(file, filezip);;
 
-    //fwrite(&lunghezza, sizeof(int), 1, fp);
-    //size = sizeof(int) + /* numero pixel */
-    //        sizeof(double) * lunghezza * 2 + /* x y */
-    //        sizeof(int) * lunghezza * 2 + /* rotation idtratto */
-    //        sizeof(int) * parent->self->currenttitle.datatouch->posizionefoglio.length() /* posizionefoglio */ +
-    //        sizeof(float) * lunghezza + /* pressure */
-    //        sizeof(int) * 3 * lunghezza /* colore */ +
-    //        sizeof(int) * lunghezza + /* posizioneaudio */
-    //        sizeof(float) /* zoom */;
-
-
-    qDebug() << "x";
+    //qDebug() << "x";
 
     for(i=0; i < lunghezza; i++)
         //fwrite(&this->currenttitle->datatouch->x[i], sizeof(double), 1, fp);
         if(zip_source_write(file, &this->currenttitle->datatouch->x[i], sizeof(double)) == -1)
             return freezip(file, filezip);;
 
-    qDebug() << "y";
+    //qDebug() << "y";
 
     /* y */
     for(i=0; i < lunghezza; i++)
@@ -74,7 +58,7 @@ bool savefile::salvabinario(int posizione){
         if(zip_source_write(file, &this->currenttitle->datatouch->y[i], sizeof(double)) == -1)
             return freezip(file, filezip);
 
-    qDebug() << "idtratto";
+    //qDebug() << "idtratto";
 
     /* idtratto */
     for(i=0; i < lunghezza; i++)
@@ -82,7 +66,7 @@ bool savefile::salvabinario(int posizione){
         if(zip_source_write(file, &this->currenttitle->datatouch->idtratto[i], sizeof(int)) == -1)
             return freezip(file, filezip);;
 
-    qDebug() << "pressure";
+    //qDebug() << "pressure";
 
     /* pressure */
     for(i=0; i < lunghezza; i++)
@@ -90,7 +74,7 @@ bool savefile::salvabinario(int posizione){
         if(zip_source_write(file, &this->currenttitle->datatouch->pressure[i], sizeof(float)) == -1)
             return freezip(file, filezip);;
 
-    qDebug() << "rotation";
+    //qDebug() << "rotation";
 
     /* rotation */
     for(i=0; i < lunghezza; i++)
@@ -98,7 +82,7 @@ bool savefile::salvabinario(int posizione){
         if(zip_source_write(file, &this->currenttitle->datatouch->rotation[i], sizeof(int)) == -1)
             return freezip(file, filezip);
 
-    qDebug() << "posizionefoglio";
+    //qDebug() << "posizionefoglio";
 
     /* posizionefoglio */
     for(i=0; i < currenttitle->datatouch->posizionefoglio.length(); i++)
@@ -106,7 +90,7 @@ bool savefile::salvabinario(int posizione){
         if(zip_source_write(file, &currenttitle->datatouch->posizionefoglio[i], sizeof(int)) == -1)
             return freezip(file, filezip);;
 
-    qDebug() << "colori";
+    //qDebug() << "colori";
 
     /* colori */
     int point[3];
@@ -118,7 +102,7 @@ bool savefile::salvabinario(int posizione){
             return freezip(file, filezip);
     }
 
-    qDebug() << "posizioneaudio";
+    //qDebug() << "posizioneaudio";
 
     /* posizioneaudio */
     for(i=0; i < lunghezza; i++)
@@ -126,7 +110,7 @@ bool savefile::salvabinario(int posizione){
         if(zip_source_write(file, &currenttitle->datatouch->posizioneaudio[i], sizeof(int)) == -1)
             return freezip(file, filezip);
 
-    qDebug() << "zoom";
+    //qDebug() << "zoom";
 
     if(zip_source_write(file, &currenttitle->datatouch->zoom, sizeof(float)) == -1)
         return freezip(file, filezip);
@@ -140,8 +124,8 @@ bool savefile::salvabinario(int posizione){
         ze = zip_error_code_zip(error);
         se = zip_error_code_system(error);
 
-        qDebug() << "Errore di commit -> " << ze << se;
-
+        //qDebug() << "Errore di commit -> " << ze << se;
+        return freezip(file, filezip);
     }
 
     if(zip_file_add(filezip,
@@ -150,7 +134,7 @@ bool savefile::salvabinario(int posizione){
                  ZIP_FL_OVERWRITE) == -1)
         return freezip(file, filezip);
 
-    zip_close(filezip);
+    //zip_close(filezip);
     return true;
 
     /* a questo punto carica tutti i dati in una variabile void di una lunghezza calcolata da sizefile */

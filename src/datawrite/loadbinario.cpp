@@ -5,10 +5,7 @@
 #include <zip.h>
 
 /* la funzione gestisce la lettura del file binario */
-void xmlstruct::loadbinario(){
-    int err = 0;
-    zip *z = zip_open(this->path_->c_str(), 0, &err);
-
+bool xmlstruct::loadbinario(zip_t *z){
     struct zip_stat st;
     zip_stat_init(&st);
     zip_stat(z, this->currenttitle->posizione_binario.toUtf8().constData(), 0, &st);
@@ -17,7 +14,7 @@ void xmlstruct::loadbinario(){
 
     if(f == nullptr){
         qDebug() << "xmlstruct::loadbinario -> File impossibile da leggere";
-        return;
+        return false;
     }
 
     int lunghezza=0, i, valoretemp;
@@ -86,6 +83,7 @@ void xmlstruct::loadbinario(){
     zip_fread(f, &this->currenttitle->datatouch->zoom, sizeof(float));
 
     zip_fclose(f);
-    zip_close(z);
+
+    return true;
 }
 

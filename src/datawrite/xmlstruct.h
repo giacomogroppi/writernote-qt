@@ -17,9 +17,10 @@
 
 #include "../touch/datastruct/datastruct.h"
 
+#include <zip.h>
+
 class xmlstruct{
 private:
-    std::string filetostring();
     void UnZipFile();
     std::string *path_;
 
@@ -33,7 +34,8 @@ public:
     int checksum=0, start= 0;
 
     void loadindice();
-    void loadfile(const char *);
+    /*void loadfile(const char *);*/
+    bool loadfile(const char *);
 
 
 
@@ -49,7 +51,7 @@ public:
     void stringa_decode_int(const char *, const char *, QList<int>*);
     void decode_checksum();
 
-    void loadbinario();
+    bool loadbinario(zip_t *);
 
     /* funzione che gestisce la scrittura di testinohtml */
     void textdecode(QList<int> *);

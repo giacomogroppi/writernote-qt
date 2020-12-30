@@ -23,9 +23,76 @@ savefile::savefile(MainWindow *parent, currenttitle_class *currenttitle, QString
     this->namecopybook = namecopybook;
 };
 
-/*codice che gestisce il salvataggio del file*/
 bool savefile::savefile_check_file(int posizione){
-    //this->parent->self->currenttitle.testi = this->parent->ui->textEdit->toHtml();
+    int error, temp, len, i, check;
+    zip_error_t errore;
+
+    check = 0;
+
+    zip_t *filezip = zip_open(parent->self->path.c_str(), ZIP_CREATE, &error);
+
+    zip_source_t *file;
+    file = zip_source_buffer_create(0, 0, 0, &errore);
+    zip_source_begin_write(file);
+
+    check += zip_source_write(file, &currenttitle->versione, sizeof(int));
+
+    temp = (int)currenttitle->se_registato;
+    check += zip_source_write(file, &temp, sizeof(int));
+
+    temp = (int)currenttitle->se_tradotto;
+    check += zip_source_write(file, &temp, sizeof(int));
+
+    temp = currenttitle->testi.length();
+    check += zip_source_write(file, &temp, sizeof(int));
+    check += zip_source_write(file, currenttitle->testi.toUtf8().constData(), sizeof(char)*temp);
+
+    temp = currenttitle->posizione_binario.length();
+    check += zip_source_write(file, &temp, sizeof(int));
+    if(temp) {
+        check += zip_source_write(file, currenttitle->posizione_binario.toUtf8().constData(), sizeof(char)*temp);
+
+        if(currenttitle->posizione_binario != "")
+            this->salvabinario(posizione, filezip);
+    }
+
+    qDebug() << "savefile::savefile_check_file -> ho scritto la posizione del file binario";
+
+    // testinohtml
+    len = currenttitle->testinohtml.length();
+    check += zip_source_write(file, &len, sizeof(int));
+
+    qDebug() << "savefile::savefile_check_file -> len testinohtml";
+
+    for(i=0; i<len; i++){
+        temp = currenttitle->testinohtml.length();
+        check += zip_source_write(file, &temp, sizeof(int));
+
+        check += zip_source_write(file, currenttitle->testinohtml.at(i).toUtf8().constData(), sizeof(char)*temp);
+    }
+
+    for(i=0; i<len; i++){
+        check += zip_source_write(file, &temp, sizeof(int));
+        currenttitle->posizione_iniz.append(temp);
+    }
+
+    qDebug() << "Salvataggio andato correttamente";
+
+    check += zip_source_commit_write(file);
+    check += zip_file_add(filezip,
+                 (parent->self->indice.titolo.at(posizione) + (QString)".xml").toUtf8().constData(),
+                 file,
+                 ZIP_FL_OVERWRITE);
+
+    zip_close(filezip);
+
+    if(check < 0)
+        return false;
+    return true;
+}
+
+/*codice che gestisce il salvataggio del file*/
+/*bool savefile::savefile_check_file(int posizione){
     int i, lenght;
 
     char stringa[500];
@@ -43,11 +110,9 @@ bool savefile::savefile_check_file(int posizione){
     else
         indicesalvataggio += "<se_tradotto>false</se_tradotto>";
 
-    /* inserisce la checksum, che nella lettura serve a ciclare fino a, e controllare l'integrità del dato */
     inttochar(this->currenttitle->testinohtml.length(), stringa);
     indicesalvataggio += "<checksum>" + (std::string)stringa + "</checksum>";
 
-    /* salva la posizione del file per il touch all'interno dello zip */
     indicesalvataggio += "<filebinario>" + this->currenttitle->posizione_binario.toStdString() +"</filebinario>";
 
     if(this->currenttitle->posizione_binario != "")
@@ -56,21 +121,15 @@ bool savefile::savefile_check_file(int posizione){
 
     indicesalvataggio += "<audio_position_path>" + this->currenttitle->audio_position_path + "</audio_position_path>";
 
-    /* scrive le posizioni a cui vengono registrate nell'audio */
     lenght = this->currenttitle->posizione_iniz.length();
     for (i = 0; i < lenght; i++){
         inttochar(this->currenttitle->posizione_iniz[i], stringa);
         indicesalvataggio = indicesalvataggio + "<posizione_iniz>" + (std::string)stringa + "</posizione_iniz>";
     }
 
-    /* nuova struttura dati
-    risolve: il non poter scrivere all'interno del testo tag simili a <testi>
-    </testi> <testinohtml> </testinohtml> <posizione_iniz> </posizione_iniz>*/
-
     inttochar(this->currenttitle->testi.length(), stringa);
     indicesalvataggio += "<testi>" + (std::string)stringa + "</testi>";
 
-    /* scrive la lunghezza di ogni oggetto [stringa] dei testinohtml */
     lenght = this->currenttitle->testinohtml.length();
     for (i = 0; i < lenght; i++){
         inttochar(this->currenttitle->testinohtml.at(i).length(), stringa);
@@ -80,12 +139,11 @@ bool savefile::savefile_check_file(int posizione){
     indicesalvataggio  += "<start>";
     indicesalvataggio += this->currenttitle->testi.toUtf8().constData();
 
-    /* scrive i testinohtml senza spazi e invii tra di loro */
     for (i = 0; i < lenght; i++)
         indicesalvataggio += this->currenttitle->testinohtml[i].toUtf8().constData();
 
     return this->compressfile(( this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(), indicesalvataggio.c_str());
-}
+}*/
 
 /* funzione che gestisce la creazione di una stringa per salvare l'indice */
 bool savefile::savefile_check_indice(){
