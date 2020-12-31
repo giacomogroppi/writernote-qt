@@ -56,10 +56,10 @@ bool xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
 
     int err = 0;
-    int lunghezza, temp, check, i;
+    int lunghezza, temp, i;
 
     qDebug() << "xmlstruct::loadfile -> Adesso carico i file";
-    zip_t *filezip = zip_open(this->path_->c_str(), 0, &err);
+    zip *filezip = zip_open(this->path_->c_str(), 0, &err);
     if (filezip == NULL)
         return false;
 
@@ -88,7 +88,18 @@ bool xmlstruct::loadfile(const char *nameFile){
 
     //testi
     zip_fread(f, &temp, sizeof(int));
-    zip_fread(f, &currenttitle->testi, sizeof(char)*temp);
+    if(temp){
+        qDebug() << "xmlstruct::loadfile -> temp lettura testi -> " << temp;
+
+        char *testi = new char[sizeof(char)*temp];
+
+        zip_fread(f, testi, sizeof(char)*temp);
+        currenttitle->testi = testi;
+    }
+
+    qDebug() << "xmlstruct::loadfile -> prima del delete" <<currenttitle->testi;
+
+
 
     // legge quanto è lungo il nome del file
     zip_fread(f, &temp, sizeof(int));
@@ -96,7 +107,7 @@ bool xmlstruct::loadfile(const char *nameFile){
     qDebug() << "xmlstruct::loadfile -> temp: " << temp;
 
     if(temp){
-        char *vartempp = (char *)malloc(sizeof(char)*temp);
+        char *vartempp = new char[sizeof(char)*temp];
 
         if(vartempp == NULL){
             zip_fclose(f);
@@ -109,13 +120,11 @@ bool xmlstruct::loadfile(const char *nameFile){
         qDebug() << "vartempp " << vartempp;
 
         //currenttitle->posizione_binario = vartempp;
-        currenttitle->posizione_binario.fromUtf8(vartempp, temp);
+        //currenttitle->posizione_binario.fromUtf8(vartempp, -1);
+        qDebug() << "Posizione binario vecchia -> " << currenttitle->posizione_binario;
+        currenttitle->posizione_binario = vartempp;
 
-
-        qDebug() << vartempp;
-
-        qDebug() << "xmlstruct::loadfile -> " << currenttitle->posizione_binario;
-
+        qDebug() << "xmlstruct::loadfile -> posizione_binario -> " << currenttitle->posizione_binario;
 
         if(currenttitle->posizione_binario != ""){
             if(!this->loadbinario(filezip)){
@@ -150,10 +159,9 @@ bool xmlstruct::loadfile(const char *nameFile){
         zip_fread(f, variabiletemp, sizeof(char)*temp);
 
         this->currenttitle->testinohtml.append(variabiletemp);
-
     }
 
-    free(variabiletemp);
+    //free(variabiletemp);
 
     for(i=0; i<lunghezza; i++){
         zip_fread(f, &temp, sizeof(int));

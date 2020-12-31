@@ -39,23 +39,45 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
         int rec = msgBox.exec();
 
-        if(rec == QMessageBox::Ok)
+        delete temp_lettura;
+        delete tempcopybook;
+        delete tempindice;
+
+        if(rec == QMessageBox::Ok){
             return event->accept();
+        }
         return event->ignore();
     }
 
-    QString filep = this->self->currenttitle.testi;
-    this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+    QString filep;
+
+    if(self->currenttitle.posizione_binario == ""){
+        filep = this->self->currenttitle.testi;
+        this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+    }
+
+    qDebug() << "MainWindow::closeEvent -> prima check copybook";
 
     bool check1 = checksimilecopybook(tempcopybook, &this->self->currenttitle);
 
+    qDebug() << "MainWindow::closeEvent -> mentre check copybook";
+
     check1 = check1 && checksimileindice(&this->self->indice, tempindice);
 
-    /* se è uguale sia il copybook che l'indice accetta */
-    if(check1)
-        return event->accept();
+    qDebug() << "MainWindow::closeEvent -> dopo check copybook";
 
-    this->self->currenttitle.testi = filep;
+    /* se è uguale sia il copybook che l'indice accetta */
+    if(check1){
+        delete tempcopybook;
+        delete temp_lettura;
+        delete tempindice;
+        return event->accept();
+    }
+
+
+    if(self->currenttitle.posizione_binario == "")
+        this->self->currenttitle.testi = filep;
+
 
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
                                                                 tr("Do you want to save\n"),
@@ -64,8 +86,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     if (resBtn == QMessageBox::Yes) {
 
-        if(this->self->path == "")
-        {   qfilechoose file(this);
+        if(this->self->path == ""){
+            qfilechoose file(this);
             if(!file.filechoose())
                 return;
         }

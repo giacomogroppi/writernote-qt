@@ -8,21 +8,29 @@
 /* la funzione confronta due oggetti della classe current title */
 bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 {
+    qDebug() << "checksimilecopybook -> inizio -> posizione_binario -> " << primo->posizione_binario;
+
     if(primo->posizione_binario == ""){
         if(primo->testi != secondo->testi)
             return false;
 
+        qDebug() << "testi";
+
         if(primo->testinohtml.length() != secondo->testinohtml.length())
             return false;
+
+        qDebug() << "lenght testinohtml";
 
         int i, len = primo->testinohtml.length();
         for(i=0; i < len; i++ )
             if(primo->testinohtml.at(i) != secondo->testinohtml.at(i))
                 return false;
-
+        qDebug() << "testinohtml";
 
         if(primo->audio_position_path != secondo->audio_position_path)
             return false;
+
+        qDebug() << "finito";
 
     }else{
         int i, len;
