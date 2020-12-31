@@ -11,6 +11,8 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
     qDebug() << "checksimilecopybook -> inizio -> posizione_binario -> " << primo->posizione_binario;
 
     if(primo->posizione_binario == ""){
+        qDebug() << primo->testi << secondo->testi;
+
         if(primo->testi != secondo->testi)
             return false;
 

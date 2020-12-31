@@ -97,8 +97,7 @@ bool xmlstruct::loadfile(const char *nameFile){
         currenttitle->testi = testi;
     }
 
-    qDebug() << "xmlstruct::loadfile -> prima del delete" <<currenttitle->testi;
-
+    qDebug() << "xmlstruct::loadfile -> prima del delete" << currenttitle->testi;
 
 
     // legge quanto è lungo il nome del file
