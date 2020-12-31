@@ -1,5 +1,6 @@
 #include "tabletcanvas.h"
 #include <QPainter>
+#include <QDebug>
 
 /* la funzione gestisce lo il resize della finestra */
 void TabletCanvas::initPixmap(int delta)
@@ -8,27 +9,18 @@ void TabletCanvas::initPixmap(int delta)
     int maxw;
     maxw = width() - delta;
 
-    int i, len = data->x.length();
-    for(i=0; i < len && data->idtratto.at(i) != -1; i++);
+    double maxx = data->biggerx();
 
     /* a questo punto deve fare lo zoom in per aumentare lo zoom */
-    /*while(maxw > data->x.at(i + 1)){
-        posizionezoom_puntof.setX((data->x.at(i) + data->x.at(i + 1 )) / 2);
-        posizionezoom_puntof.setY(0);
+    //while(maxx < (double)maxw){
+    //    maxw --;
+    //}
 
-        this->zoomin(nullptr);
-    }*/
-
-
-    /*while(maxw < data->x.at(i + 1)){
-        posizionezoom_puntof.setX((data->x.at(i) + data->x.at(i + 1 )) / 2);
-        posizionezoom_puntof.setY(0);
-
-        this->zoomin(nullptr);
-    }*/
-
+    qDebug() << "maxw -> " << maxw << "maxx -> " << maxx;
 
     QPixmap newPixmap = QPixmap(qRound(maxw * dpr), qRound(height() * dpr));
+
+
     newPixmap.setDevicePixelRatio(dpr);
     newPixmap.fill(Qt::white);
     QPainter painter(&newPixmap);

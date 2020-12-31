@@ -126,11 +126,13 @@ bool xmlstruct::loadfile(const char *nameFile){
         qDebug() << "xmlstruct::loadfile -> posizione_binario -> " << currenttitle->posizione_binario;
 
         if(currenttitle->posizione_binario != ""){
+            qDebug() << "xmlstruct::loadfile -> lancio loadbinario";
             if(!this->loadbinario(filezip)){
                 zip_fclose(f);
                 zip_close(filezip);
                 return false;
             }
+            qDebug() << "xmlstruct::loadfile -> finito loadfile";
         }
     }
 
@@ -139,27 +141,27 @@ bool xmlstruct::loadfile(const char *nameFile){
     //testinohtml
     zip_fread(f, &lunghezza, sizeof(int));
 
-    char *variabiletemp = (char *)malloc(1);
+    if(lunghezza){
+        char *variabiletemp = (char *)malloc(1);
 
-    qDebug() << "xmlstruct::loadfile -> entro nel ciclo -> lunghezza -> " << lunghezza;
+        qDebug() << "xmlstruct::loadfile -> entro nel ciclo -> lunghezza -> " << lunghezza;
+        for(i=0; i<lunghezza; i++){
+            zip_fread(f, &temp, sizeof(int));
 
-    for(i=0; i<lunghezza; i++){
-        zip_fread(f, &temp, sizeof(int));
+            //char *variabiletemp = new char[sizeof(char)*temp];
+            variabiletemp = (char *)realloc(variabiletemp, sizeof(char)*temp);
 
-        //char *variabiletemp = new char[sizeof(char)*temp];
-        variabiletemp = (char *)realloc(variabiletemp, sizeof(char)*temp);
+            if(variabiletemp == NULL){
+                zip_fclose(f);
+                zip_close(filezip);
+                return false;
+            }
 
-        if(variabiletemp == NULL){
-            zip_fclose(f);
-            zip_close(filezip);
-            return false;
+            zip_fread(f, variabiletemp, sizeof(char)*temp);
+
+            this->currenttitle->testinohtml.append(variabiletemp);
         }
-
-        zip_fread(f, variabiletemp, sizeof(char)*temp);
-
-        this->currenttitle->testinohtml.append(variabiletemp);
     }
-
     //free(variabiletemp);
 
     for(i=0; i<lunghezza; i++){

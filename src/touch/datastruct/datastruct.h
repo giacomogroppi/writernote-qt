@@ -15,11 +15,14 @@ public:
     int firsty();
     int firstx();
 
-    int biggerx();
+    double biggerynoid();
+    double biggerx();
     void removeat(int i);
 
     bool needtocreatenew();
     bool needtochangeid(int);
+
+    double biggery();
 
     QList<double> x;
     QList<double> y;

@@ -96,7 +96,8 @@ bool TabletCanvas::event(QEvent *event){
             break;
         }
         default:
-            return QWidget::event(event);
+            if(data != NULL)
+                return QWidget::event(event);
     }
     return true;
 }

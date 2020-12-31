@@ -15,6 +15,27 @@ void datastruct::reset(){
     this->posizioneaudio.clear();
 }
 
+double datastruct::biggery(){
+    int i, len;
+    double y_ = y.first();
+    len = y.length();
+    for(i=0;i<len;i++)
+        if(y.at(i) > y_)
+            y_ = y.at(i);
+    return y_;
+}
+
+
+auto datastruct::biggerynoid() -> double{
+    int i, len;
+    double y_ = y.first();
+    len = y.length();
+    for(i=0;i<len;i++)
+        if(y.at(i) > y_ && idtratto.at(i) != -1)
+            y_ = y.at(i);
+    return y_;
+}
+
 void datastruct::stampa(){
 
     int i, len;
@@ -29,7 +50,7 @@ int datastruct::firstx(){
     len = x.length();
     min = x.first();
     for(i=0; i < len; i++)
-        if(min > x.at(i))
+        if(min > x.at(i) && idtratto.at(i) != -1)
             min = x.at(i);
     return min;
 
@@ -46,10 +67,14 @@ void datastruct::removeat(int i){
 }
 
 
-int datastruct::biggerx(){
-    int i, len = x.length();
-    short int max;
+double datastruct::biggerx(){
+    int i, len;
 
+    len = x.length();
+
+    double max;
+    if(!len)
+        return 0;
     max = x.first();
     for(i=0; i < len; i++)
         if(max < x.at(i))

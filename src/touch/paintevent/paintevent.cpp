@@ -22,8 +22,10 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     /* se si è arrivati al fondo aggiunge i dati per il nuovo foglio */
     this->disegnofoglio_bool = this->disegnofoglio_bool ||
-            data->needtocreatenew() ||
             !data->posizionefoglio.length();
+
+    if(!this->disegnofoglio_bool)
+        this->disegnofoglio_bool = data->needtocreatenew();
 
     this->disegnafoglio();
 

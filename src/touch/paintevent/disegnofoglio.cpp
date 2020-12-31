@@ -16,7 +16,7 @@ void TabletCanvas::disegnafoglio(){
 
     data->posizionefoglio.append(last);
 
-    for(i = 0, last += 10; i < 61; i++, last += 20){
+    for(i = 0, last += 10; i < 61; i++, last += 40){
         /* punto inizio riga */
         this->data->x.append(20.00);
         this->data->y.append((double)last);
