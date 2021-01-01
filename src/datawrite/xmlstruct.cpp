@@ -54,11 +54,11 @@ char *xmlstruct::readfile(
 
 bool xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
+    currenttitle->datatouch->reset();
 
     int err = 0;
     int lunghezza, temp, i;
 
-    qDebug() << "xmlstruct::loadfile -> Adesso carico i file";
     zip *filezip = zip_open(this->path_->c_str(), 0, &err);
     if (filezip == NULL)
         return false;
@@ -67,17 +67,11 @@ bool xmlstruct::loadfile(const char *nameFile){
     zip_stat_init(&st);
     zip_stat(filezip, nameFile, 0, &st);
 
-    qDebug() << "xmlstruct::loadfile -> ho aperto lo zip";
-
-    qDebug() << "xmlstruct::loadfile nomefiletemp -> " << nameFile;
-
     zip_file *f = zip_fopen(filezip, nameFile, 0);
     if(f == NULL){
         zip_close(filezip);
         return false;
     }
-
-    qDebug() << "xmlstruct::loadfile -> aperto il file nello zip";
 
     zip_fread(f, &currenttitle->versione, sizeof(int));
     zip_fread(f, &temp, sizeof(int));
@@ -89,21 +83,14 @@ bool xmlstruct::loadfile(const char *nameFile){
     //testi
     zip_fread(f, &temp, sizeof(int));
     if(temp){
-        qDebug() << "xmlstruct::loadfile -> temp lettura testi -> " << temp;
-
         char *testi = new char[sizeof(char)*temp];
 
         zip_fread(f, testi, sizeof(char)*temp);
         currenttitle->testi = testi;
     }
 
-    qDebug() << "xmlstruct::loadfile -> prima del delete" << currenttitle->testi;
-
-
     // legge quanto è lungo il nome del file
     zip_fread(f, &temp, sizeof(int));
-
-    qDebug() << "xmlstruct::loadfile -> temp: " << temp;
 
     if(temp){
         char *vartempp = new char[sizeof(char)*temp];
@@ -116,27 +103,16 @@ bool xmlstruct::loadfile(const char *nameFile){
 
         zip_fread(f, vartempp, sizeof(char)*temp);
 
-        qDebug() << "vartempp " << vartempp;
-
-        //currenttitle->posizione_binario = vartempp;
-        //currenttitle->posizione_binario.fromUtf8(vartempp, -1);
-        qDebug() << "Posizione binario vecchia -> " << currenttitle->posizione_binario;
         currenttitle->posizione_binario = vartempp;
 
-        qDebug() << "xmlstruct::loadfile -> posizione_binario -> " << currenttitle->posizione_binario;
-
         if(currenttitle->posizione_binario != ""){
-            qDebug() << "xmlstruct::loadfile -> lancio loadbinario";
             if(!this->loadbinario(filezip)){
                 zip_fclose(f);
                 zip_close(filezip);
                 return false;
             }
-            qDebug() << "xmlstruct::loadfile -> finito loadfile";
         }
     }
-
-    qDebug() << "xmlstruct::loadfile -> letta XXX";
 
     //testinohtml
     zip_fread(f, &lunghezza, sizeof(int));
