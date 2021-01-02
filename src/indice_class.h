@@ -13,7 +13,6 @@ public:
     QStringList titolo = {};
 
     void reset();
-    void stampa();
 };
 
 #endif // INDICE_CLASS_H

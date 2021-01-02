@@ -120,7 +120,6 @@ bool xmlstruct::loadfile(const char *nameFile){
     if(lunghezza){
         char *variabiletemp = (char *)malloc(1);
 
-        qDebug() << "xmlstruct::loadfile -> entro nel ciclo -> lunghezza -> " << lunghezza;
         for(i=0; i<lunghezza; i++){
             zip_fread(f, &temp, sizeof(int));
 
@@ -149,7 +148,6 @@ bool xmlstruct::loadfile(const char *nameFile){
     zip_fclose(f);
     zip_close(filezip);
 
-    qDebug() << "Load file andato correttamente";
     return true;
 }
 
@@ -209,11 +207,52 @@ bool xmlstruct::loadfile(const char *nameFile){
 
 }*/
 
-void xmlstruct::loadindice(){
-    this->text = readfile(path_->c_str(), "indice.xml");
+bool xmlstruct::loadindice(){
+    //this->text = readfile(path_->c_str(), "indice.xml");
 
-    stringa_decode("<testi>", "</testi>", &this->indice->titolo);
+    //stringa_decode("<testi>", "</testi>", &this->indice->titolo);
 
+    indice->reset();
+
+    int err = 0;
+    int lunghezza, temp, i;
+
+    zip *filezip = zip_open(this->path_->c_str(), 0, &err);
+    if (filezip == NULL)
+        return false;
+
+    zip_file *f = zip_fopen(filezip, "indice.xml", 0);
+    if(f == NULL){
+        zip_close(filezip);
+        return false;
+    }
+
+    zip_fread(f, &indice->versione, sizeof(int));
+
+    zip_fread(f, &lunghezza, sizeof(int));
+    if(lunghezza){
+        //char *nomefile = (char *)malloc(1);
+        char *nomefile;
+
+        for(i=0; i<lunghezza; i++){
+            zip_fread(f, &temp, sizeof(int));
+
+            nomefile = new char[temp+1];
+
+            zip_fread(f, nomefile, sizeof(char)*temp);
+
+            nomefile[temp] = '\0';
+
+            indice->titolo.append(nomefile);
+            delete[] nomefile;
+        }
+
+    }
+
+    zip_fclose(f);
+    zip_close(filezip);
+
+    return true;
     /* viene passato direttamente come puntatore -> non c'è bisogno di cambiarlo per this->self->path */
     /*self->path = this->path_;*/
 }

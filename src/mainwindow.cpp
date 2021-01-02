@@ -117,7 +117,8 @@ void MainWindow::on_actionSave_File_triggered()
             return;
     }
 
-    this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+    if(self->currenttitle.posizione_binario == "")
+        this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
     savefile savefile_i(this, &this->self->currenttitle, &self->currentTitle);
 
@@ -137,24 +138,29 @@ void MainWindow::on_actionOpen_triggered()
     /* funzione che gestisce l'apertura di un file */
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/giacomo", "Writernote (*.writer);; All file (* *.*)");
-    if(fileName == "") return;
+    if(fileName == "")
+        return;
 
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return dialog_critic("I can't open this file");
+        return dialog_critic("I can't open this file because of the permission");
 
-    /*fa la conversione per tra i qstring e i std::string*/
     std::string pathtemp = fileName.toUtf8().constData();
 
     auto res = pathtemp.find("writer");
     if (std::string::npos == res)
-      return dialog_critic("Miss the extantion of the file");
+      return dialog_critic("Miss the extension of the file");
 
     /*inizializza la classe per caricare i file*/
     this->self->path = pathtemp;
-    xmlstruct filefind(&this->self->path, &this->self->indice, &this->self->currenttitle);
-    filefind.loadindice();
+    xmlstruct *filefind = new xmlstruct(&this->self->path, &this->self->indice, &this->self->currenttitle);
+    if(!filefind->loadindice()){
+        delete filefind;
+        return dialog_critic("We had a problem reading the file");
+    }
+
+    delete filefind;
 
     if(this->self->indice.titolo.length() > 0)
         this->ui->listWidgetSX->setEnabled(true);

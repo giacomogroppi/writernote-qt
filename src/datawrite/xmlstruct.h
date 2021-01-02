@@ -33,11 +33,9 @@ public:
 
     int checksum=0, start= 0;
 
-    void loadindice();
+    bool loadindice();
     /*void loadfile(const char *);*/
     bool loadfile(const char *);
-
-
 
     xmlstruct(std::string *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
 

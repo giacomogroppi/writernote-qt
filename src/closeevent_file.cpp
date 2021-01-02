@@ -39,7 +39,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
         int rec = msgBox.exec();
 
-        delete temp_lettura;
         delete tempcopybook;
         delete tempindice;
 
@@ -56,15 +55,9 @@ void MainWindow::closeEvent (QCloseEvent *event)
         this->self->currenttitle.testi = this->ui->textEdit->toHtml();
     }
 
-    qDebug() << "MainWindow::closeEvent -> prima check copybook";
-
     bool check1 = checksimilecopybook(tempcopybook, &this->self->currenttitle);
 
-    qDebug() << "MainWindow::closeEvent -> mentre check copybook";
-
     check1 = check1 && checksimileindice(&this->self->indice, tempindice);
-
-    qDebug() << "MainWindow::closeEvent -> dopo check copybook";
 
     /* se è uguale sia il copybook che l'indice accetta */
     if(check1){

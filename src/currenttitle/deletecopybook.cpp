@@ -48,5 +48,4 @@ void MainWindow::on_actionDelete_copybook_triggered()
     this->self->currentTitle = "";
     update_list_copybook(this);
 
-    this->self->indice.stampa();
 }
