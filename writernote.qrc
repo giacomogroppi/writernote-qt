@@ -39,5 +39,6 @@
         <file>images/cursor-felt-marker.png</file>
         <file>images/cursor-pencil.png</file>
         <file>images/cisors-cut.png</file>
+        <file>src/windows/versione.xml</file>
     </qresource>
 </RCC>

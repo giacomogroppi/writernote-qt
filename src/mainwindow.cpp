@@ -50,6 +50,12 @@
 #include "audiosetting/loadqualita.h"
 #include "currenttitle/checksimilecopybook.h"
 
+#ifdef win32
+#include "windows/updatecheck.h"
+#endif
+
+#include "windows/updatecheck.h"
+
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -83,6 +89,13 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     this->m_canvas->setHidden(true);
 
     abilitazioneinput(this);
+
+#ifdef win32
+    auto
+#endif
+    auto *checkupdate = new updatecheck();
+    if(checkupdate->checkupdate())
+        qDebug() << "Ci sono aggiornamenti ";
 }
 
 
