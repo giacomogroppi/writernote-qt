@@ -23,8 +23,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     indice_class *tempindice = new indice_class;
 
     xmlstruct *temp_lettura = new xmlstruct(&this->self->path, tempindice, tempcopybook);
-    temp_lettura->loadindice();
-    if(!temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData())){
+    if(!temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData()) || !temp_lettura->loadindice()){
         delete temp_lettura;
 
         QMessageBox msgBox;
