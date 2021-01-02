@@ -31,8 +31,17 @@ bool savefile::savefile_check_file(int posizione){
 
     zip_t *filezip = zip_open(parent->self->path.c_str(), ZIP_CREATE, &error);
 
+    if(!filezip){
+        return false;
+    }
+
     zip_source_t *file;
     file = zip_source_buffer_create(0, 0, 0, &errore);
+    if(!file){
+        zip_close(filezip);
+        return false;
+    }
+
     zip_source_begin_write(file);
 
     check += zip_source_write(file, &currenttitle->versione, sizeof(int));

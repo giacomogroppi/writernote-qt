@@ -132,7 +132,6 @@ void MainWindow::on_actionSave_File_triggered()
 
 }
 
-/*APERTURA DI UN FILE*/
 void MainWindow::on_actionOpen_triggered()
 {
     /* funzione che gestisce l'apertura di un file */

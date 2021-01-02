@@ -124,7 +124,6 @@ bool savefile::salvabinario(int posizione, zip_t *filezip){
         ze = zip_error_code_zip(error);
         se = zip_error_code_system(error);
 
-        //qDebug() << "Errore di commit -> " << ze << se;
         return freezip(file, filezip);
     }
 

@@ -80,30 +80,32 @@ bool xmlstruct::loadfile(const char *nameFile){
     zip_fread(f, &temp, sizeof(int));
     currenttitle->se_tradotto = temp;
 
-    //testi
+    //testo html
     zip_fread(f, &temp, sizeof(int));
     if(temp){
-        char *testi = new char[sizeof(char)*temp];
+        char *testi = new char[temp + 1];
 
         zip_fread(f, testi, sizeof(char)*temp);
+
+        testi[temp] = '\0';
         currenttitle->testi = testi;
+
+        delete [] testi;
     }
 
     // legge quanto è lungo il nome del file
     zip_fread(f, &temp, sizeof(int));
 
     if(temp){
-        char *vartempp = new char[sizeof(char)*temp];
-
-        if(vartempp == NULL){
-            zip_fclose(f);
-            zip_close(filezip);
-            return false;
-        }
+        char *vartempp = new char[temp + 1];
 
         zip_fread(f, vartempp, sizeof(char)*temp);
 
+        vartempp[temp] = '\0';
+
         currenttitle->posizione_binario = vartempp;
+
+        delete [] vartempp;
 
         if(currenttitle->posizione_binario != ""){
             if(!this->loadbinario(filezip)){
@@ -118,23 +120,19 @@ bool xmlstruct::loadfile(const char *nameFile){
     zip_fread(f, &lunghezza, sizeof(int));
 
     if(lunghezza){
-        char *variabiletemp = (char *)malloc(1);
+        char *variabiletemp;
 
         for(i=0; i<lunghezza; i++){
             zip_fread(f, &temp, sizeof(int));
 
-            //char *variabiletemp = new char[sizeof(char)*temp];
-            variabiletemp = (char *)realloc(variabiletemp, sizeof(char)*temp);
-
-            if(variabiletemp == NULL){
-                zip_fclose(f);
-                zip_close(filezip);
-                return false;
-            }
+            variabiletemp = new char[temp + 1];
 
             zip_fread(f, variabiletemp, sizeof(char)*temp);
 
+            variabiletemp[temp] = '\0';
+
             this->currenttitle->testinohtml.append(variabiletemp);
+            delete [] variabiletemp;
         }
     }
     //free(variabiletemp);
@@ -222,7 +220,13 @@ bool xmlstruct::loadindice(){
         return false;
 
     zip_file *f = zip_fopen(filezip, "indice.xml", 0);
-    if(f == NULL){
+    if(!f){
+        /*int ze, se;
+        zip_error_t *error = zip_get_error(filezip);
+        ze = zip_error_code_zip(error);
+        se = zip_error_code_system(error);*/
+
+
         zip_close(filezip);
         return false;
     }
@@ -257,8 +261,7 @@ bool xmlstruct::loadindice(){
     /*self->path = this->path_;*/
 }
 
-int xmlstruct::posizione(const int posizionestringa, const char *find){
-    /*posizionestringa deve essere il valore del terminatore nell'xml, altrimenti trova quello come ultimo*/
+/*int xmlstruct::posizione(const int posizionestringa, const char *find){
     size_t findvariable;
     findvariable = this->text.find(find, posizionestringa+1);
 
@@ -266,9 +269,9 @@ int xmlstruct::posizione(const int posizionestringa, const char *find){
         return NOTFOUND;
 
     return findvariable;
-}
+}*/
 
-void xmlstruct::decode_checksum(){
+/*void xmlstruct::decode_checksum(){
     std::string checksum_apertura = "<checksum>";
     std::string checksum_chiusura = "</checksum>";
 
@@ -280,10 +283,9 @@ void xmlstruct::decode_checksum(){
 
     this->checksum = chartoint(this->text.substr(checksum_apertura.length() + position_init,
                   position_end - position_init - checksum_apertura.length()).c_str());
-}
+}*/
 
-void xmlstruct::stringa_decode(const char *variabile_init_, const char *variabile_end_, QStringList *lista){
-    /* -> restituisce la lista dei titoli come QStringList */
+/*void xmlstruct::stringa_decode(const char *variabile_init_, const char *variabile_end_, QStringList *lista){
 
     lista->clear();
 
@@ -305,10 +307,10 @@ void xmlstruct::stringa_decode(const char *variabile_init_, const char *variabil
                                                  position_end-position_init-variabile_init_len)));
     }
 
-}
+}*/
 
-void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *variabile_end_, QList<int> *lista){
-    /* -> restituisce la lista dei testi o dei testinohtml come QList<int> */
+/*void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *variabile_end_, QList<int> *lista){
+    // -> restituisce la lista dei testi o dei testinohtml come QList<int>
 
     lista->clear();
 
@@ -330,12 +332,11 @@ void xmlstruct::stringa_decode_int(const char *variabile_init_, const char *vari
                                                  position_end-position_init-variabile_init_len).c_str()));
     }
 
-}
+}*/
 
 /* funzione che gestisce la scrittura di testinohtml */
-void xmlstruct::textdecode(QList<int> *lista){
+/*void xmlstruct::textdecode(QList<int> *lista){
     this->currenttitle->testinohtml.clear();
-    //this->self->currenttitle.posizione_iniz.clear();
 
     if( this->checksum == 0)
         return;
@@ -355,10 +356,10 @@ void xmlstruct::textdecode(QList<int> *lista){
         this->start += lista->at(i);
     }
 
-}
+}*/
 
-int xmlstruct::findstart(){
-    /* -> restituisce il punto in cui la lista parte */
+/*int xmlstruct::findstart(){
+    // -> restituisce il punto in cui la lista parte
 
     std::string variabile_init = "<start>";
 
@@ -369,5 +370,5 @@ int xmlstruct::findstart(){
 
     return position_init + variabile_init_len;
 
-}
+}*/
 
