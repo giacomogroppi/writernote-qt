@@ -1,7 +1,7 @@
 #ifndef UPDATECHECK_H
 #define UPDATECHECK_H
 
-#define POSIZIONEPATHVERSIONE ":src/windows/versione.xml"
+#define POSIZIONEPATHVERSIONE ":/image/src/windows/versione.xml"
 
 class updatecheck
 {
