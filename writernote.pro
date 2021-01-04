@@ -186,8 +186,8 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzi
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzip
 
 win32:{
-    INCLUDEPATH += $$PWD/../../../mingw64/include
-    DEPENDPATH += $$PWD/../../../mingw64/include
+    INCLUDEPATH += C:\mingw64\mingw64\include
+    DEPENDPATH += C:\mingw64\mingw64\include
 }
 
 #unix: PKGCONFIG += nlohmann_json
