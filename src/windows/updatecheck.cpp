@@ -1,39 +1,79 @@
 #include "updatecheck.h"
 
 #include "stdlib.h"
+#include "string.h"
 #include "stdio.h"
 
 #include <cpr/cpr.h>
 
+//#include "encode_base.h"
+
+#include <QFile>
+#include <QTextStream>
+
+//using Base64  = macaron::Base64;
+
 updatecheck::updatecheck()
 {
-    FILE *fp;
-    fp = fopen(POSIZIONEPATHVERSIONE, "r");
+    QFile file(POSIZIONEPATHVERSIONE);
 
-    if(!fp){
+    if(!file.open(QIODevice::ReadOnly)) {
         this->currentversione = -1;
         return;
     }
 
-    if(!fscanf(fp, "%d", &this->currentversione)){
-        this->currentversione = -1;
+    bool ok = false;
+    QTextStream in(&file);
 
+    while(!in.atEnd()) {
+        this->currentversione = in.readLine().toUInt(&ok);
     }
 
-    fclose(fp);
+    file.close();
+}
 
+static QString decode_frombase64(QString stringa){
+    QByteArray b(stringa.toUtf8().constData());
+
+    return b.fromBase64(b);
 }
 
 bool updatecheck::checkupdate(){
     if(this->currentversione == -1)
         return false;
 
-    cpr::Response r = cpr::Get(cpr::Url{"https://api.github.com/repos/whoshuu/cpr/contributors"});
-    r.status_code;                  // 200
-    r.header["content-type"];       // application/json; charset=utf-8
-    auto ciao = r.text;                         // JSON text string
+    int len, lenfinale;
 
+    cpr::Response r = cpr::Get(cpr::Url{SITOGIT});
+    if(r.status_code != 200){
+        // there is no internet connection
+        return false;
+    }
+
+
+    len = r.text.find(NOMECONTENT);
+    lenfinale = r.text.find(NOMEFINE);
+
+    len += strlen(NOMECONTENT) + 3;
+
+    QString stringatemp_int = r.text.substr(len, lenfinale - len - 8).c_str();
+
+    stringatemp_int = decode_frombase64(stringatemp_int);
+
+    bool ok;
+    int versione = stringatemp_int.toInt(&ok);
+
+    if(!ok)
+        return false;
+
+
+    if(versione > this->currentversione)
+        return true;
 
     return true;
 
 }
+
+
+
+

@@ -158,6 +158,7 @@ HEADERS += \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \
+    src/windows/encode_base.h \
     src/windows/updatecheck.h
 
 FORMS += \
@@ -187,3 +188,5 @@ win32:{
     INCLUDEPATH += $$PWD/../../../mingw64/include
     DEPENDPATH += $$PWD/../../../mingw64/include
 }
+
+#unix: PKGCONFIG += nlohmann_json

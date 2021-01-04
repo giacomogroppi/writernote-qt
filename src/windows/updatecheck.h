@@ -2,6 +2,10 @@
 #define UPDATECHECK_H
 
 #define POSIZIONEPATHVERSIONE ":/image/src/windows/versione.xml"
+#define SITOGIT "https://api.github.com/repos/giacomogroppi/writernote-qt/contents/src/windows/versione.xml"
+
+#define NOMECONTENT "\"content\""
+#define NOMEFINE "encoding"
 
 class updatecheck
 {
