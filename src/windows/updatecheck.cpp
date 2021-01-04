@@ -19,8 +19,8 @@
 updatecheck::updatecheck()
 {
     /* for testing */
-    this->currentversione = 0;
-    return;
+    /*this->currentversione = 0;
+    return;*/
 
     QFile file(POSIZIONEPATHVERSIONE);
 
