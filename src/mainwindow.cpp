@@ -54,8 +54,6 @@
 #include "windows/updatecheck.h"
 #endif
 
-#include "windows/updatecheck.h"
-
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -91,11 +89,11 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     abilitazioneinput(this);
 
 #ifdef win32
-    auto
-#endif
     auto *checkupdate = new updatecheck();
     if(checkupdate->checkupdate())
-        qDebug() << "Ci sono aggiornamenti ";
+        checkupdate->mostrafinestra();
+    delete checkupdate;
+#endif
 }
 
 

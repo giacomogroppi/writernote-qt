@@ -1,3 +1,4 @@
+#ifdef win32
 #include "updatecheck.h"
 
 #include "stdlib.h"
@@ -6,15 +7,21 @@
 
 #include <cpr/cpr.h>
 
-//#include "encode_base.h"
-
+#include "mostra_finestra_i.h"
 #include <QFile>
 #include <QTextStream>
+
+#include <QMessageBox>
+#include "../areyousure.h"
 
 //using Base64  = macaron::Base64;
 
 updatecheck::updatecheck()
 {
+    /* for testing */
+    this->currentversione = 0;
+    return;
+
     QFile file(POSIZIONEPATHVERSIONE);
 
     if(!file.open(QIODevice::ReadOnly)) {
@@ -75,5 +82,9 @@ bool updatecheck::checkupdate(){
 }
 
 
-
-
+void updatecheck::mostrafinestra(){
+    if(areyousure(nullptr, "Update Writernote", "Do you want to update writernote?")){
+        mostra_finestra_i("https://github.com/giacomogroppi/writernote-qt/releases");
+    }
+}
+#endif //win32

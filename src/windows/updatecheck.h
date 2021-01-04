@@ -14,6 +14,7 @@ public:
     int currentversione;
 
     bool checkupdate();
+    void mostrafinestra();
 
 };
 

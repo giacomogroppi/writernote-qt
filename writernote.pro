@@ -109,6 +109,7 @@ SOURCES += \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \
     src/videocompress/videocompress_ui.cpp \
+    src/windows/mostra_finestra_i.cpp \
     src/windows/updatecheck.cpp
 
 
@@ -158,6 +159,7 @@ HEADERS += \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \
+    src/windows/mostra_finestra_i.h \
     src/windows/updatecheck.h
 
 FORMS += \
@@ -169,7 +171,7 @@ FORMS += \
 # for the filesystem
 LIBS += -lstdc++fs -lglib-2.0
 
-LIBS += -lcpr
+#LIBS += -lcpr
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
