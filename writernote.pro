@@ -182,12 +182,12 @@ unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += libzip
 
 # testing for windows support and compile
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzip
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../mingw64/lib/ -lzip
+win32:CONFIG(release, debug|release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
+else:win32:CONFIG(debug, debug|release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
 
 win32:{
-    INCLUDEPATH += C:\mingw64\mingw64\include
-    DEPENDPATH += C:\mingw64\mingw64\include
+    INCLUDEPATH += C:\msys64\mingw64\include
+    DEPENDPATH += C:\msys64\mingw64\include
 }
 
 #unix: PKGCONFIG += nlohmann_json
