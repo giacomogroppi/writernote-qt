@@ -169,7 +169,7 @@ FORMS += \
     src/videocompress/videocompress_ui.ui \
 
 # for the filesystem
-LIBS += -lstdc++fs -lglib-2.0
+LIBS += -lglib-2.0
 
 #LIBS += -lcpr
 
