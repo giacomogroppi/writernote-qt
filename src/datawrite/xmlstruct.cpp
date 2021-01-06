@@ -30,27 +30,6 @@ xmlstruct::xmlstruct(std::string *path_U, indice_class *indice_U, currenttitle_c
     this->currenttitle = currenttitle_U;
 }
 
-char *xmlstruct::readfile(
-        const char  *path,
-        const char  *namefile){
-    int err = 0;
-    zip *z = zip_open(path, 0, &err);
-
-    struct zip_stat st;
-    zip_stat_init(&st);
-    zip_stat(z, namefile, 0, &st);
-
-    char *contents = new char[st.size];
-
-    zip_file *f = zip_fopen(z, namefile, 0);
-    zip_fread(f, contents, st.size);
-    zip_fclose(f);
-
-    //And close the archive
-    zip_close(z);
-    return contents;
-}
-
 
 bool xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
@@ -135,7 +114,6 @@ bool xmlstruct::loadfile(const char *nameFile){
             delete [] variabiletemp;
         }
     }
-    //free(variabiletemp);
 
     for(i=0; i<lunghezza; i++){
         zip_fread(f, &temp, sizeof(int));
@@ -149,67 +127,8 @@ bool xmlstruct::loadfile(const char *nameFile){
     return true;
 }
 
-/* funzione che gestisce il caricamente di un file di tipo zip */
-/*void xmlstruct::loadfile(const char *nomeFile){
-    this->text = readfile(this->path_->c_str(), nomeFile);
-
-    QStringList temp = {};
-    stringa_decode("<versione>", "</versione>", &temp);
-    this->currenttitle->versione = chartoint(temp[0].toUtf8().constData());
-
-    stringa_decode("<se_registrato>", "</se_registrato>", &temp);
-    if(temp[0] == "true")
-        this->currenttitle->se_registato = true;
-    else
-        this->currenttitle->se_registato = false;
-
-    stringa_decode("<se_tradotto>", "</se_tradotto>", &temp);
-    if(temp[0] == "true")
-        this->currenttitle->se_tradotto = true;
-    else
-        this->currenttitle->se_tradotto = false;
-
-    stringa_decode("<audio_position_path>", "</audio_position_path>", &temp);
-
-    this->currenttitle->audio_position_path = temp[0].toUtf8().constData();
-
-    this->decode_checksum();
-    if(this->currenttitle->versione > 0){
-        stringa_decode("<filebinario>", "</filebinario>", &temp);
-        this->currenttitle->posizione_binario = temp[0].toUtf8().constData();
-
-        if(this->currenttitle->posizione_binario != "")
-            this->loadbinario();
-    }
-
-    stringa_decode("<posizione_iniz>", "</posizione_iniz>", &temp);
-    int i, lung = temp.length();
-    for(i=0; i < lung; i++)
-        this->currenttitle->posizione_iniz.append(chartoint(temp[i].toUtf8().constData()));
-
-    QList<int> listatemp = {};
-    stringa_decode_int("<testi>", "</testi>", &listatemp);
-
-    this->start = this->findstart();
-
-    if(listatemp[0] != 0)
-        this->currenttitle->testi = this->text.substr(this->start,  listatemp[0]).c_str();
-    else
-        this->currenttitle->testi = "";
-
-    this->start += listatemp[0];
-
-    stringa_decode_int("<testinohtml>", "</testinohtml>", &listatemp);
-
-    this->textdecode(&listatemp);
-
-}*/
 
 bool xmlstruct::loadindice(){
-    //this->text = readfile(path_->c_str(), "indice.xml");
-
-    //stringa_decode("<testi>", "</testi>", &this->indice->titolo);
-
     indice->reset();
 
     int err = 0;

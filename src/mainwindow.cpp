@@ -50,8 +50,11 @@
 #include "audiosetting/loadqualita.h"
 #include "currenttitle/checksimilecopybook.h"
 
-#ifdef win32
+#if defined(WIN32) || defined(WIN64)
 #include "windows/updatecheck.h"
+static inline void settinglib(){
+
+}
 #endif
 
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
@@ -88,7 +91,9 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     abilitazioneinput(this);
 
-#ifdef win32
+#if defined(WIN32) || defined(WIN64)
+    settinglib();
+
     auto *checkupdate = new updatecheck();
     if(checkupdate->checkupdate())
         checkupdate->mostrafinestra();

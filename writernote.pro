@@ -171,7 +171,6 @@ FORMS += \
 # for the filesystem
 LIBS += -lglib-2.0
 
-#LIBS += -lcpr
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -181,13 +180,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 unix: CONFIG += link_pkgconfig
 unix: PKGCONFIG += libzip
 
-# testing for windows support and compile
-win32:CONFIG(release, debug|release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
-else:win32:CONFIG(debug, debug|release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
+win32:CONFIG(release, debug!release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
+else:win32:CONFIG(debug, debug!release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
 
-win32:{
-    INCLUDEPATH += C:\msys64\mingw64\include
-    DEPENDPATH += C:\msys64\mingw64\include
-}
-
-#unix: PKGCONFIG += nlohmann_json
+INCLUDEPATH += C:/msys64/mingw64/include
+DEPENDPATH += C:/msys64/mingw64/include

@@ -18,20 +18,6 @@ bool savequalita(audioqualityoption *padredialog){
     FILE *fp;
     fp = fopen(POSIZIONESETTINGS, "w");
     if(!fp){
-#ifdef STAMPA
-    qDebug() << "File non trovato, o non aperto correttamente";
-        QFile file(POSIZIONESETTINGS);
-        if(file.open(QIODevice::ReadOnly))
-            qDebug() << "File in sola lettura";
-        else{
-            QFileInfo file2(POSIZIONESETTINGS);
-            if(!file2.exists()){
-                qDebug() << "Il file non esiste neanche";
-            }
-        }
-
-#endif
-
                 return false;
     }
 

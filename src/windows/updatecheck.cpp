@@ -1,4 +1,4 @@
-#ifdef win32
+#if defined(WIN32) || defined(WIN64)
 #include "updatecheck.h"
 
 #include "stdlib.h"
