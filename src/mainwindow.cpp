@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QList>
-#include <unistd.h>
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QListWidgetItem>

@@ -19,9 +19,11 @@
 ## To do
 - Import image
 - Save image into .writer
-- Project .writer to pdf
+- Project .writer to pdf [now it is only possible with the option 'keyboard', not pen]
 - Project .writer to image
 - Convert audio to text
+- Compile and distribute for windows
+- Drag and drop image and file to import it
 
 ## Installing
   - Linux: 
