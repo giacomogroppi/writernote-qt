@@ -116,6 +116,7 @@ SOURCES += \
     src/videocompress/importvideo_functionmainwindow.cpp \
     src/videocompress/videocompress_ui.cpp \
     src/windows/mostra_finestra_i.cpp \
+    src/windows/sourcecode_mainwindow.cpp \
     src/windows/updatecheck.cpp
 
 

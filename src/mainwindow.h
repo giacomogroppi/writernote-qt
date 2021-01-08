@@ -186,6 +186,8 @@ private slots:
 
     void on_actiontoppf_triggered();
 
+    void on_actionSource_code_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
