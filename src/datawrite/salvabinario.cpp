@@ -7,13 +7,6 @@
 
 #include "colortoint.h"
 
-static int sizefile(FILE *fp){
-    fseek(fp, 0L, SEEK_END);
-    int size2 = ftell(fp);
-    fseek(fp, 0L, SEEK_SET);
-    return size2;
-}
-
 static bool freezip(zip_source_t *files, zip_t *file){
     zip_source_free(files);
     //zip_close(file);

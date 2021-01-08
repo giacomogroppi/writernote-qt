@@ -29,7 +29,7 @@ bool savefile::savefile_check_file(int posizione){
 
     check = 0;
 
-    zip_t *filezip = zip_open(parent->self->path.c_str(), ZIP_CREATE, &error);
+    zip_t *filezip = zip_open(parent->self->path.toUtf8().constData(), ZIP_CREATE, &error);
 
     if(!filezip){
         return false;
@@ -167,7 +167,7 @@ bool savefile::savefile_check_indice(){
 
     check = 0;
 
-    zip_t *filezip = zip_open(parent->self->path.c_str(), ZIP_CREATE, &error);
+    zip_t *filezip = zip_open(parent->self->path.toUtf8().constData(), ZIP_CREATE, &error);
 
     zip_source_t *file;
     file = zip_source_buffer_create(0, 0, 0, &errore);

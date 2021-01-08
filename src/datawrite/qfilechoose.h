@@ -6,13 +6,17 @@
 
 #include "../self_class.h"
 
+#define TYPEFILEWRITER 0
+#define TYPEFILEPDF 1
+
+
 class qfilechoose
 {
 private:
     MainWindow *ui;
 public:
     qfilechoose(MainWindow *ui);
-    bool filechoose();
+    bool filechoose(QString *, short int type_ = TYPEFILEWRITER);
 
 };
 

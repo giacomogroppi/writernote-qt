@@ -24,6 +24,10 @@ public:
 
     double biggery();
 
+    /* la funzione viene richiamata quando viene compresso il file in un file zip -> false se ci sono dei negativi < 0 */
+    bool ispositivey();
+    bool ispositivex();
+
     QList<double> x;
     QList<double> y;
     QList<int> posizioneaudio;

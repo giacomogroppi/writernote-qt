@@ -23,7 +23,7 @@
 
 using namespace std;
 
-xmlstruct::xmlstruct(std::string *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U)
+xmlstruct::xmlstruct(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U)
 {
     this->path_ = path_U;
     this->indice = indice_U;
@@ -38,7 +38,7 @@ bool xmlstruct::loadfile(const char *nameFile){
     int err = 0;
     int lunghezza, temp, i;
 
-    zip *filezip = zip_open(this->path_->c_str(), 0, &err);
+    zip *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
     if (filezip == NULL)
         return false;
 
@@ -134,7 +134,7 @@ bool xmlstruct::loadindice(){
     int err = 0;
     int lunghezza, temp, i;
 
-    zip *filezip = zip_open(this->path_->c_str(), 0, &err);
+    zip *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
     if (filezip == NULL)
         return false;
 

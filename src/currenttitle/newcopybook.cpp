@@ -51,7 +51,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     {
         /* deve salvare prima di continuare */
         qfilechoose filec(this);
-        ok = filec.filechoose();
+        ok = filec.filechoose(&self->path);
         if (!ok)
             return;
     }

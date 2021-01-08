@@ -40,12 +40,10 @@ bool savefile::compressfile(const char *namefile, const char *text){
 bool savefile::compressfile(const void *dato, int size, const char *namefile){
     int errorp = 0;
 
-    zip_t *filezip = zip_open(this->parent->self->path.c_str(), ZIP_CREATE , &errorp);
+    zip_t *filezip = zip_open(this->parent->self->path.toUtf8().constData(), ZIP_CREATE , &errorp);
 
     if (filezip == nullptr) {
-            zip_error_t ziperror;
-            zip_error_init_with_code(&ziperror, errorp);
-            throw std::runtime_error("Failed to open output file " + this->parent->self->path + ": " + zip_error_strerror(&ziperror));
+        return false;
     }
 
     zip_source_t *temp;

@@ -95,8 +95,8 @@ public:
 
     /* touch e zoom */
     lastpoint_t lastpointzoom;
-    void zoomin(QPaintEvent *);
-    void zoomon(QPaintEvent *);
+    void zoomin(datastruct *datastruct_ = NULL);
+    void zoomon(datastruct *datastruct_ = NULL);
 
     bool iszoomin = false;
     bool iszoomon = false;

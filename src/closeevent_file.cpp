@@ -80,7 +80,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
         if(this->self->path == ""){
             qfilechoose file(this);
-            if(!file.filechoose())
+            if(!file.filechoose(&self->path))
                 return;
         }
 

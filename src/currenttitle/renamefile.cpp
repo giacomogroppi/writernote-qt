@@ -26,8 +26,7 @@ void renamefile(MainWindow *parent, const char *namefile){
 
     int posizione = parent->self->indice.titolo.indexOf(namefile);
 
-    if(!renamefile_f_zip(parent->self->path.c_str(), namefile, namecopybook.toUtf8().constData()))
-    {
+    if(!renamefile_f_zip(parent->self->path.toUtf8().constData(), namefile, namecopybook.toUtf8().constData())){
         dialog_critic(("We had a problem changing the name of the file to " + namecopybook).toUtf8().constData());
         return redolist(parent);
     }
@@ -38,7 +37,7 @@ void renamefile(MainWindow *parent, const char *namefile){
     savefile file_(parent, nullptr, &parent->self->currentTitle);
 
     if(!file_.savefile_check_indice()){
-        renamefile_f_zip(parent->self->path.c_str(), namecopybook.toUtf8().constData(), namefile);
+        renamefile_f_zip(parent->self->path.toUtf8().constData(), namecopybook.toUtf8().constData(), namefile);
         dialog_critic("We had an error saving the index of the file");
         return update_list_copybook(parent);
     }

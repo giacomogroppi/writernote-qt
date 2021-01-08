@@ -87,6 +87,34 @@ double datastruct::biggerx(){
 
 }
 
+bool datastruct::ispositivex(){
+    if(!x.length())
+        return true;
+
+    int i, len;
+    len = x.length();
+
+    for(i=0; i<len; i++)
+        if(x.at(i) < 0)
+            return false;
+    return true;
+}
+
+bool datastruct::ispositivey(){
+    if(!x.length())
+        return true;
+
+    int i, len;
+    len = x.length();
+
+    for(i=0; i<len; i++)
+        if(y.at(i) < 0)
+            return false;
+    return true;
+
+}
+
+
 /* la funzione restituisce true se il pulto in questione è il primo o l'ultimo */
 bool datastruct::needtochangeid(int i){
     int len;

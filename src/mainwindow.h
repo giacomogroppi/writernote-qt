@@ -70,6 +70,9 @@ public slots:
 
     void on_actioncompress_video_triggered();
 
+    /* call by savefrom */
+    void on_actionSave_File_triggered();
+
 private slots:
     /* registrazione dell'audio */
     void setOutputLocation();
@@ -77,7 +80,7 @@ private slots:
 
     void on_actionNew_File_triggered();
     void closeEvent (QCloseEvent *event);
-    void on_actionSave_File_triggered();
+
 
     /* richiamata quando viene modificato qualcosa del testo */
     void on_textEdit_textChanged();
@@ -178,6 +181,10 @@ private slots:
     void on_actionred_triggered();
 
     void on_actionselezionetext_triggered();
+
+    void on_actionSave_As_triggered();
+
+    void on_actiontoppf_triggered();
 
 private:
     /* gestione dell'audio */

@@ -14,8 +14,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
 
-    this->zoomon(event);
-    this->zoomin(event);
+    this->zoomon();
+    this->zoomin();
 
     /* gestisce sia lo spostamento verticale in su e in giù con il mouse e con il touch */
     this->ismoving_f(event, &painter);
@@ -48,7 +48,7 @@ void TabletCanvas::laod(QPainter *painter){
 
     m_pixmap.fill(Qt::white);
 
-    for(i_ = 0; i_ < len; i_++)
+    for(i_ = 0; i_ < len-1; i_++)
     {
         if(this->data->y.at(i_) < this->m_pixmap.size().height() && this->data->y.at(i_) >= 0){
             /* se cambio il tratto non disegna ma lo carica in lastpoint solamente */

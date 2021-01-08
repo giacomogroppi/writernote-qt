@@ -13,7 +13,7 @@
 
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->self->currenttitle.se_registato){
-        QFile file(parent->self->currenttitle.audio_position_path.c_str());
+        QFile file(parent->self->currenttitle.audio_position_path);
         if(!file.exists())
             return dialog_critic("Audio file didn't exist");
 
@@ -31,7 +31,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->actionListen_current_audio->setEnabled(true);
         //parent->ui->actionListen_current_audio->setChecked(false);
 
-        parent->player->setMedia(QUrl::fromLocalFile(parent->self->currenttitle.audio_position_path.c_str()));
+        parent->player->setMedia(QUrl::fromLocalFile(parent->self->currenttitle.audio_position_path));
 
         parent->ui->actionDelete_audio->setEnabled(true);
     }

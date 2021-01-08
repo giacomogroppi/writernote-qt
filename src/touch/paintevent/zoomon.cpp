@@ -1,38 +1,34 @@
 #include "../tabletcanvas.h"
 #include <QDebug>
 
-void TabletCanvas::zoomon(QPaintEvent *event){
-    if(!this->iszoomon) return;
+void TabletCanvas::zoomon(datastruct *datastruct_){
+    if(!this->iszoomon && !datastruct_) return;
 
-    if(data->zoom <= 0.0)
+    /* if it is called by paintevent */
+    if(!datastruct_){
+        datastruct_ = this->data;
+        this->isloading = true;
+        this->iszoomon = false;
+    }
+
+    if(datastruct_->zoom <= 0.0)
         return;
 
     if(m_pixmap.width() == width())
         this->initPixmap(1);
 
     else{
-        int i, len = data->x.length();
+        int i, len = datastruct_->x.length();
 
         for(i=0; i < len; i ++){
-            /*if(data->x.at(i) < posizionezoom_puntof.x())
-                data->x[i] /= 1.05;
-            else if(data->x.at(i) > posizionezoom_puntof.x())
-                data->x[i] *= 1.05;
+            datastruct_->x[i] /= 1.05;
+            datastruct_->x[i] += 1;
 
-            if(data->y.at(i) < posizionezoom_puntof.y())
-                data->y[i] /= 1.05;
-            else if(data->y.at(i) > posizionezoom_puntof.y())
-                data->y[i] *= 1.05;*/
-            data->x[i] /= 1.05;
-            data->x[i] += 1;
-
-            data->y[i] /= 1.05;
-            data->y[i] += 1;
+            datastruct_->y[i] /= 1.05;
+            datastruct_->y[i] += 1;
         }
     }
 
-    data->zoom -= 0.05;
+    datastruct_->zoom -= 0.05;
 
-    this->isloading = true;
-    this->iszoomon = false;
 }

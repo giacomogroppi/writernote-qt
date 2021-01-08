@@ -13,7 +13,7 @@ class SelfClass{
         //SelfClass(){};
         bool registrazione_ = false, play_ = false, controlloscrittura = false;
         int currentTime = 0;
-        std::string nameFile, path;
+        QString path;
 
         QString currentTitle;
 

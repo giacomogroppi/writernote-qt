@@ -13,8 +13,10 @@ CONFIG += c++11
 INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 
 DEFINES += "STAMPA"
-DEFINES += "NUMEROPIXELPAGINA=1200"
-DEFINES += "NUMEROPIXELORIZZONALI=700"
+
+## for support A4 pdf create
+DEFINES += "NUMEROPIXELPAGINA=1400"
+DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -59,12 +61,16 @@ SOURCES += \
     src/datawrite/renamefile_f_zip.cpp \
     src/datawrite/salvabinario.cpp \
     src/datawrite/savefile.cpp \
+    src/datawrite/savefile_mainwindow.cpp \
     src/dialog_critic.cpp \
     src/indice_class.cpp \
     src/main.cpp \
     src/datawrite/xmlstruct.cpp \
     src/mainwindow.cpp \
     src/newcopybook_.cpp \
+    src/pdf/topdf.cpp \
+    src/pdf/translate.cpp \
+    src/pdf/updatebrush_topdf.cpp \
     src/savecopybook.cpp \
     src/self_class.cpp \
     src/setting_ui.cpp \
@@ -137,6 +143,7 @@ HEADERS += \
     src/dialog_critic.h \
     src/chartoint.h \
     src/newcopybook_.h \
+    src/pdf/topdf.h \
     src/setting_ui.h \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \

@@ -3,7 +3,6 @@
 
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
-    qDebug() << "Disegno foglio richiamata";
 
     int i, last = 0;
     int lunghezza;

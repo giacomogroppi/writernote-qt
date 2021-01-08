@@ -22,7 +22,7 @@
 class xmlstruct{
 private:
     void UnZipFile();
-    std::string *path_;
+    QString *path_;
 
     indice_class *indice = nullptr;
     currenttitle_class *currenttitle = nullptr;
@@ -37,7 +37,7 @@ public:
     /*void loadfile(const char *);*/
     bool loadfile(const char *);
 
-    xmlstruct(std::string *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
+    xmlstruct(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
 
     int posizione(const int posizionestringa, const char *find);
 

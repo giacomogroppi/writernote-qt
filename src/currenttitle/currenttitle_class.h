@@ -10,7 +10,7 @@ class currenttitle_class{
 public:
     int versione = 1;
     bool se_registato = false, se_tradotto = false;
-    std::string audio_position_path = "";
+    QString audio_position_path = "";
     QString testi = "";
     QStringList testinohtml = {};
     QList<int> posizione_iniz = {};

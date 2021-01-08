@@ -122,31 +122,6 @@ void MainWindow::on_actionNew_File_triggered()
     this->self->currenttitle.reset();
 }
 
-/* funzione che viene richiamata quando viene salvato */
-void MainWindow::on_actionSave_File_triggered()
-{
-    if(this->self->path == ""){
-        qfilechoose file(this);
-        if(!file.filechoose())
-            /* se l'utente non ha selezionato nessun file */
-            return;
-    }
-
-    if(self->currenttitle.posizione_binario == "")
-        this->self->currenttitle.testi = this->ui->textEdit->toHtml();
-
-    savefile savefile_i(this, &this->self->currenttitle, &self->currentTitle);
-
-    bool check = savefile_i.savefile_check_indice();
-
-    if(this->self->currentTitle != "")
-        check = check && savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));
-
-    if(!check)
-        return dialog_critic((QString) "We had a problem while saving the file");
-
-}
-
 void MainWindow::on_actionOpen_triggered()
 {
     /* funzione che gestisce l'apertura di un file */
@@ -164,10 +139,10 @@ void MainWindow::on_actionOpen_triggered()
 
     auto res = pathtemp.find("writer");
     if (std::string::npos == res)
-      return dialog_critic("Miss the extension of the file");
+        return dialog_critic("Miss the extension of the file");
 
     /*inizializza la classe per caricare i file*/
-    this->self->path = pathtemp;
+    this->self->path = pathtemp.c_str();
     xmlstruct *filefind = new xmlstruct(&this->self->path, &this->self->indice, &this->self->currenttitle);
     if(!filefind->loadindice()){
         delete filefind;
@@ -422,3 +397,5 @@ void MainWindow::on_actionCopy_triggered()
 {
     this->ui->textEdit->copy();
 }
+
+

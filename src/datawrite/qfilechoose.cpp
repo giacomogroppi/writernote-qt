@@ -14,17 +14,27 @@ qfilechoose::qfilechoose(MainWindow *ui)
     this->ui = ui;
 }
 
-bool qfilechoose::filechoose(){
+bool qfilechoose::filechoose(QString *nome, short int type_){
+    QString extention;
+    QString type;
+
+    if(type_ == TYPEFILEWRITER){
+        type = "File Writer (*.writer)";
+        extention = ".writer";
+    }
+    else if(type_ == TYPEFILEPDF){
+        type = "PDF (*.pdf)";
+        extention = ".pdf";
+    }
+
     QString nameFile= QFileDialog::getSaveFileName(this->ui,
-        "Save", ".writer", "Image Files (*.writer)");
+        "Save", extention, type);
 
     if(nameFile == "")
         return false;
 
-    this->ui->self->path = nameFile.toUtf8().constData();
-#ifdef STAMPA
-    qDebug() << "path: " << this->ui->self->path.c_str();
-#endif
+    *nome = nameFile;
+
     return true;
 }
 
