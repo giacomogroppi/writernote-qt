@@ -397,4 +397,3 @@ void MainWindow::on_actionCopy_triggered()
 {
     this->ui->textEdit->copy();
 }
-

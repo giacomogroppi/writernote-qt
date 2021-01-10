@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QColor>
+#include <QImage>
 
 class datastruct
 {
@@ -35,6 +36,8 @@ public:
 
     QList<float> pressure;
     QList<qreal> rotation;
+
+    QList<QImage> immagini = {};
 
     QList<int> idtratto;
 

@@ -188,6 +188,8 @@ private slots:
 
     void on_actionSource_code_triggered();
 
+    void on_insertimagebotton_triggered(QAction *arg1);
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

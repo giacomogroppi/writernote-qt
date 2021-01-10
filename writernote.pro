@@ -63,6 +63,8 @@ SOURCES += \
     src/datawrite/savefile.cpp \
     src/datawrite/savefile_mainwindow.cpp \
     src/dialog_critic.cpp \
+    src/images/imagebutton_mainwindow.cpp \
+    src/images/images.cpp \
     src/indice_class.cpp \
     src/main.cpp \
     src/datawrite/xmlstruct.cpp \
@@ -143,6 +145,7 @@ HEADERS += \
     src/datawrite/sizedata.h \
     src/dialog_critic.h \
     src/chartoint.h \
+    src/images/images.h \
     src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \

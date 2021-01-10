@@ -15,6 +15,7 @@ public:
     QStringList testinohtml = {};
     QList<int> posizione_iniz = {};
 
+
     QString posizione_binario = "";
     datastruct *datatouch;
     void reset();
