@@ -4,9 +4,6 @@
 #include "../touch/datastruct/datastruct.h"
 #include <QString>
 
-bool save_image(datastruct *data, QString path)
-{
-
-}
+bool save_image(datastruct *data, QString path);
 
 #endif // IMAGES_H
