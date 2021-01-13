@@ -5,7 +5,7 @@
 #include "string.h"
 #include "stdio.h"
 
-#include <cpr/cpr.h>
+//#include <cpr/cpr.h>
 
 #include "mostra_finestra_i.h"
 #include <QFile>
@@ -51,9 +51,8 @@ bool updatecheck::checkupdate(){
 
     int len, lenfinale;
 
-    cpr::Response r = cpr::Get(cpr::Url{SITOGIT});
+    /*cpr::Response r = cpr::Get(cpr::Url{SITOGIT});
     if(r.status_code != 200){
-        // there is no internet connection
         return false;
     }
 
@@ -78,7 +77,8 @@ bool updatecheck::checkupdate(){
         return true;
 
     return true;
-
+*/
+    return false;
 }
 
 
