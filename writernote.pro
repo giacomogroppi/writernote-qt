@@ -188,11 +188,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-unix: CONFIG += link_pkgconfig
-unix: PKGCONFIG += libzip
+CONFIG += link_pkgconfig
+PKGCONFIG += libzip
 
-win32:CONFIG(release, debug!release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
-else:win32:CONFIG(debug, debug!release): LIBS += -LC:/msys64/mingw64/lib/ -llibzip.dll
-
-INCLUDEPATH += C:/msys64/mingw64/include
-DEPENDPATH += C:/msys64/mingw64/include
