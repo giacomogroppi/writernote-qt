@@ -35,9 +35,6 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         else
             this->ismoving.deltax = deltax;
 
-        /*if(ismoving.deltax == 0)
-            qDebug() << "Non è possibile fare lo scrioll";*/
-
         this->ismoving.ismoving_check = true;
     }
 

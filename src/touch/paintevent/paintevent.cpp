@@ -52,9 +52,10 @@ void TabletCanvas::laod(QPainter *painter){
     {
         if(this->data->y.at(i_) < this->m_pixmap.size().height() && this->data->y.at(i_) >= 0){
             /* se cambio il tratto non disegna ma lo carica in lastpoint solamente */
-            if(i_ && this->data->idtratto.at(i_) == this->data->idtratto.at(i_ - 1) && data->idtratto.at(i_) != -1
-                    && data->y.at(i_) != 1.00
-                    && data->y.at(i_) != (double)m_pixmap.height()){
+            if(i_ && data->idtratto.at(i_) != -1
+                    && data->y.at(i_) != 0.00
+                    && data->y.at(i_) != (double)m_pixmap.height()
+                    && this->data->idtratto.at(i_) == this->data->idtratto.at(i_ - 1)){
                 this->updateBrush_load(data->pressure.at(i_), data->color.at(i_));
 
                 painter->setPen(this->m_pen);

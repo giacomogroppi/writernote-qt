@@ -31,4 +31,21 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
 
     datastruct_->zoom -= 0.05;
 
+    int i, len, delta;
+    len = datastruct_->x.length();
+
+    for(i=0; i < len; i++)
+        if(datastruct_->idtratto.at(i) == -1)
+            break;
+
+    delta = datastruct_->x.at(i);
+
+    if(delta <= 0)
+        return;
+
+    for(i=0; i<len; i++){
+        datastruct_->x[i] -= delta;
+    }
+
+
 }

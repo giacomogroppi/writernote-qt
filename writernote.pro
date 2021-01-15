@@ -3,6 +3,12 @@ QT       += gui
 QT       += widgets
 QT       += multimedia
 QT       += printsupport
+
+win32:{
+    QT += network
+}
+
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = build
@@ -13,6 +19,8 @@ CONFIG += c++11
 INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 
 DEFINES += "STAMPA"
+
+DEFINES += "TESTING"
 
 ## for support A4 pdf create
 DEFINES += "NUMEROPIXELPAGINA=1400"

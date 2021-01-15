@@ -1,4 +1,4 @@
-#if defined(WIN32) || defined(WIN64)
+#if defined(WIN32) || defined(WIN64) || defined(TESTING)
 #include "updatecheck.h"
 
 #include "stdlib.h"
@@ -6,6 +6,9 @@
 #include "stdio.h"
 
 //#include <cpr/cpr.h>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
 
 #include "mostra_finestra_i.h"
 #include <QFile>
@@ -36,8 +39,20 @@ updatecheck::updatecheck()
         this->currentversione = in.readLine().toUInt(&ok);
     }
 
+
     file.close();
+
+    if(this->currentversione == -1)
+        return;
+
+    manager = new QNetworkAccessManager();
+    request.setUrl(QUrl(SITOGIT));
+
+    reply = manager->get(request);
+
+    QObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
 }
+
 
 static QString decode_frombase64(QString stringa){
     QByteArray b(stringa.toUtf8().constData());
@@ -45,11 +60,15 @@ static QString decode_frombase64(QString stringa){
     return b.fromBase64(b);
 }
 
-bool updatecheck::checkupdate(){
+void updatecheck::checkupdate(){
     if(this->currentversione == -1)
-        return false;
+        return;
 
     int len, lenfinale;
+
+
+
+
 
     /*cpr::Response r = cpr::Get(cpr::Url{SITOGIT});
     if(r.status_code != 200){
@@ -78,7 +97,17 @@ bool updatecheck::checkupdate(){
 
     return true;
 */
-    return false;
+}
+
+void updatecheck::managerFinished(){
+    if(reply->error()){
+        delete manager;
+        return;
+    }
+
+
+
+    this->mostrafinestra();
 }
 
 
@@ -87,4 +116,7 @@ void updatecheck::mostrafinestra(){
         mostra_finestra_i("https://github.com/giacomogroppi/writernote-qt/releases");
     }
 }
+
+
+
 #endif //win32

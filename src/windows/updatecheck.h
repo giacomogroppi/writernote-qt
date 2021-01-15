@@ -7,14 +7,32 @@
 #define NOMECONTENT "\"content\""
 #define NOMEFINE "encoding"
 
-class updatecheck
+#include <QNetworkReply>
+#include <QObject>
+
+class updatecheck: public QObject
 {
+    Q_OBJECT
 public:
     updatecheck();
     int currentversione;
 
-    bool checkupdate();
+    void checkupdate();
     void mostrafinestra();
+
+    void sslErrors(QNetworkReply *, const QList<QSslError> &errors);
+    QNetworkAccessManager *manager;
+    QNetworkRequest request;
+
+    QNetworkReply *reply;
+
+    bool ok = false;
+
+    ~updatecheck(){ };
+
+
+private slots:
+    void managerFinished();
 
 };
 
