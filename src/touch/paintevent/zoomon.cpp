@@ -40,8 +40,13 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
 
     delta = datastruct_->x.at(i);
 
-    if(delta <= 0)
+
+    if(delta <= 0 && m_pixmap.width() < datastruct_->x.at(i+1))
         return;
+
+    if(delta > 0){
+        delta = m_pixmap.width()-datastruct_->x.at(i+1);
+    }
 
     for(i=0; i<len; i++){
         datastruct_->x[i] -= delta;
