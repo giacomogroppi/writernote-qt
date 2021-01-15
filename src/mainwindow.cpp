@@ -51,9 +51,6 @@
 
 #if defined(WIN32) || defined(WIN64) || defined(TESTING)
 #include "windows/updatecheck.h"
-static inline void settinglib(){
-
-}
 #endif
 
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
@@ -91,9 +88,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     abilitazioneinput(this);
 
 #if defined(WIN32) || defined(WIN64) || defined(TESTING)
-
-    auto *checkupdate = new updatecheck();
-    checkupdate->checkupdate();
+    checkupdate = new updatecheck();
 
 #endif
 }

@@ -20,6 +20,8 @@
 #include <QComboBox>
 #include <QMediaPlayer>
 
+#include "windows/updatecheck.h"
+
 /*TESTING*/
 #include "touch/tabletcanvas.h"
 
@@ -62,6 +64,9 @@ public:
     void methodpen();
 
     bool typetemp = false;
+
+    updatecheck *checkupdate;
+
 public slots:
     void processBuffer(const QAudioBuffer&);
 
@@ -189,6 +194,8 @@ private slots:
     void on_actionSource_code_triggered();
 
     void on_insertimagebotton_triggered(QAction *arg1);
+
+    void on_actionCheck_update_triggered();
 
 private:
     /* gestione dell'audio */

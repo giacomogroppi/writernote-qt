@@ -24,16 +24,21 @@ public:
     QNetworkAccessManager *manager;
     QNetworkRequest request;
 
+
     QNetworkReply *reply;
 
-    bool ok = false;
+    void restart();
 
+    bool ok = false;
+    bool mostra = false;
     ~updatecheck(){ };
 
 
 private slots:
     void managerFinished();
 
+private:
+    void start();
 };
 
 #endif // UPDATECHECK_H

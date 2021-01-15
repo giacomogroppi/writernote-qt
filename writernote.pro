@@ -125,6 +125,7 @@ SOURCES += \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \
     src/videocompress/videocompress_ui.cpp \
+    src/windows/check_update_mainwindow.cpp \
     src/windows/mostra_finestra_i.cpp \
     src/windows/sourcecode_mainwindow.cpp \
     src/windows/updatecheck.cpp

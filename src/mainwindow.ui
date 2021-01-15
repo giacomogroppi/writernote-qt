@@ -221,6 +221,7 @@
     </property>
     <addaction name="actionSource_code"/>
     <addaction name="actionDocumentation"/>
+    <addaction name="actionCheck_update"/>
    </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
@@ -649,6 +650,11 @@
    </property>
    <property name="text">
     <string>toppf</string>
+   </property>
+  </action>
+  <action name="actionCheck_update">
+   <property name="text">
+    <string>Check update</string>
    </property>
   </action>
  </widget>
