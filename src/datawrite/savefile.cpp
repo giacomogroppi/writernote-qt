@@ -56,6 +56,10 @@ bool savefile::savefile_check_file(int posizione){
     check += zip_source_write(file, &temp, sizeof(int));
     check += zip_source_write(file, currenttitle->testi.toUtf8().constData(), sizeof(char)*temp);
 
+    temp = currenttitle->audio_position_path.length();
+    check += zip_source_write(file, &temp, sizeof(int));
+    check += zip_source_write(file, currenttitle->audio_position_path.toUtf8().constData(), sizeof(char)*temp);
+
     temp = currenttitle->posizione_binario.length();
     check += zip_source_write(file, &temp, sizeof(int));
     if(temp) {

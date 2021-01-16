@@ -6,7 +6,7 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
-#include <QDebug>
+#include <QString>
 
 #include "../dialog_critic.h"
 #include "../setting_ui.h"
@@ -15,7 +15,7 @@ void aggiornotestiriascolto(MainWindow *parent){
     if(parent->self->currenttitle.se_registato){
         QFile file(parent->self->currenttitle.audio_position_path);
         if(!file.exists())
-            return dialog_critic("Audio file didn't exist");
+            return dialog_critic("Audio " + (QString)parent->self->currenttitle.audio_position_path + " didn't exist");
 
         settingaudio_registrazione(parent, false);
 

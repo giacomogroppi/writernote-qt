@@ -72,6 +72,19 @@ bool xmlstruct::loadfile(const char *nameFile){
         delete [] testi;
     }
 
+    /* audio_position_path */
+    zip_fread(f, &temp, sizeof(int));
+    if(temp){
+        char *audio_position = new char[temp + 1];
+
+        zip_fread(f, audio_position, sizeof(char)*temp);
+
+        audio_position[temp] = '\0';
+        currenttitle->audio_position_path = audio_position;
+
+        delete [] audio_position;
+    }
+
     // legge quanto è lungo il nome del file
     zip_fread(f, &temp, sizeof(int));
 
