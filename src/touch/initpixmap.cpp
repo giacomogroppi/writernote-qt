@@ -9,15 +9,6 @@ void TabletCanvas::initPixmap(int delta)
     int maxw;
     maxw = width() - delta;
 
-    double maxx = data->biggerx();
-
-    /* a questo punto deve fare lo zoom in per aumentare lo zoom */
-    //while(maxx < (double)maxw){
-    //    maxw --;
-    //}
-
-    qDebug() << "maxw -> " << maxw << "maxx -> " << maxx;
-
     QPixmap newPixmap = QPixmap(qRound(maxw * dpr), qRound(height() * dpr));
 
 

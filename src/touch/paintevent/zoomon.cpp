@@ -31,7 +31,7 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
 
     datastruct_->zoom -= 0.05;
 
-    int i, len, delta;
+    int i, len, delta, deltaf;
     len = datastruct_->x.length();
 
     for(i=0; i < len; i++)
@@ -39,17 +39,31 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
             break;
 
     delta = datastruct_->x.at(i);
+    deltaf = datastruct_->x.at(i+1) - m_pixmap.width();
 
+    if(deltaf < 0)
+        deltaf = 0;
 
-    if(delta <= 0 && m_pixmap.width() < datastruct_->x.at(i+1))
+    if(delta <= 0 && !deltaf)
         return;
 
-    if(delta > 0){
-        delta = m_pixmap.width()-datastruct_->x.at(i+1);
+    if(delta > 0 && deltaf > 0){
+        /* in questo caso vuol dire che la pagina è sia più piccola a sinistra che a destra
+           quindi deve spostare tutto a sinistra e ridimensionare il pixmal della dimensione
+           corrente
+           -> altrimenti si può scrivere fuori dal foglio.
+        */
+
+        for(i=0; i<len; i++){
+            datastruct_->x[i] -= delta;
+        }
+
+        this->initPixmap(delta + deltaf);
+        return;
     }
 
     for(i=0; i<len; i++){
-        datastruct_->x[i] -= delta;
+        datastruct_->x[i] -= (delta + deltaf);
     }
 
 
