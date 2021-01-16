@@ -3,13 +3,25 @@
 #include <QDebug>
 
 /* la funzione gestisce lo il resize della finestra */
-void TabletCanvas::initPixmap(int delta)
+void TabletCanvas::initPixmap()
 {
     qreal dpr = devicePixelRatio();
-    int maxw;
-    maxw = width() - delta;
 
-    QPixmap newPixmap = QPixmap(qRound(maxw * dpr), qRound(height() * dpr));
+    /* understand if the user can write outside the page */
+    int len, i, sizex;
+    len = data->x.length();
+    for(i=0; i<len; i++)
+        if(data->idtratto.at(i) == -1)
+            break;
+
+    i = data->x.at(i+1);
+
+    if(width() < i)
+        sizex = width();
+    else
+        sizex = i;
+
+    QPixmap newPixmap = QPixmap(qRound(sizex * dpr), qRound(height() * dpr));
 
 
     newPixmap.setDevicePixelRatio(dpr);
@@ -21,4 +33,5 @@ void TabletCanvas::initPixmap(int delta)
     m_pixmap = newPixmap;
 
     this->isloading = true;
+    update();
 }

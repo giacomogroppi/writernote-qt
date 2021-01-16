@@ -16,7 +16,7 @@ void TabletCanvas::zoomin(datastruct *datastruct_){
         return;
 
     if(m_pixmap.width() < width())
-        this->initPixmap(-1);
+        this->initPixmap();
     else{
         int i, len = datastruct_->x.length();
 

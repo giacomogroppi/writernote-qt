@@ -143,7 +143,7 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
 {
     if(data == NULL)
         return;
-    initPixmap(0);
+    initPixmap();
     this->isloading = true;
 }
 

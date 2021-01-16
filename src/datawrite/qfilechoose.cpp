@@ -26,6 +26,10 @@ bool qfilechoose::filechoose(QString *nome, short int type_){
         type = "PDF (*.pdf)";
         extention = ".pdf";
     }
+    else if(type_ == TYPEAUDIO){
+        type = "Audio (*.wav)";
+        extention = ".wav";
+    }
 
     QString nameFile= QFileDialog::getSaveFileName(this->ui,
         "Save", extention, type);

@@ -15,7 +15,7 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
         return;
 
     if(m_pixmap.width() == width())
-        this->initPixmap(1);
+        this->initPixmap();
 
     else{
         int i, len = datastruct_->x.length();
@@ -58,7 +58,7 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
             datastruct_->x[i] -= delta;
         }
 
-        this->initPixmap(delta + deltaf);
+        this->initPixmap();
         return;
     }
 

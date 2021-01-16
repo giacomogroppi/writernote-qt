@@ -4,7 +4,7 @@
 
 void TabletCanvas::paintEvent(QPaintEvent *event){
     if (m_pixmap.isNull())
-        initPixmap(0);
+        initPixmap();
 
     QPainter painter;
     painter.begin(this);

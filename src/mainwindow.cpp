@@ -253,7 +253,7 @@ void MainWindow::togglePause()
         m_audioRecorder->record();
 }
 
-void MainWindow::setOutputLocation()
+bool MainWindow::setOutputLocation()
 {
 #ifdef Q_OS_WINRT
     // UWP does not allow to store outside the sandbox
@@ -264,18 +264,30 @@ void MainWindow::setOutputLocation()
     }
     QString fileName = cacheDir + QLatin1String("/output.wav");
 #else
-    QString fileName = QFileDialog::getSaveFileName();
+    //QString fileName = QFileDialog::getSaveFileName();
+    auto *qfile = new qfilechoose(this);
+    QString fileName;
+    if(!qfile->filechoose(&fileName, TYPEAUDIO)){
+        delete qfile;
+        return false;
+    }
+    delete qfile;
 #endif
 
-    this->self->currenttitle.audio_position_path = fileName.toUtf8().constData();;
+    this->self->currenttitle.audio_position_path = fileName;
     this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
     this->m_outputLocationSet = true;
+    return true;
 }
 
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
-    this->setOutputLocation();
+    if(this->self->currenttitle.audio_position_path != "")
+        return dialog_critic("You had already record an audio");
+
+    if(!this->setOutputLocation())
+        return;
 
     if(this->self->currenttitle.audio_position_path == "")
         return;

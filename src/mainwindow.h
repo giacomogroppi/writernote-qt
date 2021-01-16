@@ -80,7 +80,7 @@ public slots:
 
 private slots:
     /* registrazione dell'audio */
-    void setOutputLocation();
+    bool setOutputLocation();
     void togglePause();
 
     void on_actionNew_File_triggered();

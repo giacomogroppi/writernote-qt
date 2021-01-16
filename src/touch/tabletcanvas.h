@@ -141,7 +141,7 @@ private:
     void updateCursor(const QTabletEvent *event);
     void updateBrush(const QTabletEvent *event);
 
-    void initPixmap(int delta);
+    void initPixmap();
     Qt::BrushStyle brushPattern(qreal value);
     static qreal pressureToWidth(qreal pressure);
 

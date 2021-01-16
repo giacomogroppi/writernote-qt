@@ -8,7 +8,7 @@
 
 #define TYPEFILEWRITER 0
 #define TYPEFILEPDF 1
-
+#define TYPEAUDIO 2
 
 class qfilechoose
 {
