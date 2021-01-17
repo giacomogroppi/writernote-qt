@@ -69,10 +69,10 @@
     dependence:
       mingw:
         ```bash
-        pacman -S git
-        git clone https://github.com/giacomogroppi/writernote-qt.git
-        ./windows/dipendenze.sh
-        ./windows/compile.sh
+          pacman -S git
+          git clone https://github.com/giacomogroppi/writernote-qt.git
+          ./windows/dipendenze.sh
+          ./windows/compile.sh
         ```
 
 ## File format
