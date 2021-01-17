@@ -139,14 +139,6 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 }
 
 
-void TabletCanvas::resizeEvent(QResizeEvent *)
-{
-    if(data == NULL)
-        return;
-    initPixmap();
-    this->isloading = true;
-}
-
 void TabletCanvas::settingdata(datastruct *data){
     this->data = data;
 }
