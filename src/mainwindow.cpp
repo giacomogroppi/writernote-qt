@@ -16,7 +16,7 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QString>
-#include "datawrite/qfilechoose.cpp"
+#include "datawrite/qfilechoose.h"
 /*funzione che gestisce l'indice*/
 #include "indice_class.h"
 #include "self_class.h"
@@ -40,18 +40,14 @@
 /* da sistemare */
 #include <QMediaPlayer>
 
-/* da sistemare */
-#include "audioplay/main_audioplay.cpp"
-
-/* da sistemare */
-#include "style/main_style.cpp"
-
 #include "audiosetting/loadqualita.h"
 #include "currenttitle/checksimilecopybook.h"
 
 #if defined(WIN32) || defined(WIN64) || defined(TESTING)
 #include "windows/updatecheck.h"
 #endif
+
+#include "audioplay/aggiornotastiriascolto.h"
 
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)

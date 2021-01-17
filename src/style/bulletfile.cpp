@@ -2,6 +2,7 @@
 #define BULLET_FILE_CPP
 
 #include "../mainwindow.h"
+#include "ui_mainwindow.h"
 
 void MainWindow::on_listbotton_clicked()
 {

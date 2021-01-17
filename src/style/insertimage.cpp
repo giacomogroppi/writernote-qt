@@ -3,6 +3,7 @@
 #include <QImage>
 #include <QMessageBox>
 #include "../dialog_critic.h"
+#include "ui_mainwindow.h"
 
 void MainWindow::on_insertimagebotton_clicked()
 {

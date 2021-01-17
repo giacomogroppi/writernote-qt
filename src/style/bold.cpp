@@ -3,6 +3,7 @@
 
 #include "../mainwindow.h"
 #include <QFont>
+#include "ui_mainwindow.h"
 
 void MainWindow::on_boldbotton_clicked()
 {

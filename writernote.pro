@@ -84,19 +84,16 @@ SOURCES += \
     src/savecopybook.cpp \
     src/self_class.cpp \
     src/setting_ui.cpp \
-    src/stringgenerator.cpp \
     src/audiorecord/audiolevel.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
     src/style/inserttable_class.cpp \
     src/style/inserttable_mainwindow.cpp \
-    src/style/main_style.cpp \
     src/audioplay/pausariascolto.cpp \
     src/audioplay/stopriascolto.cpp \
     src/audioplay/aggiornamentostatusbar.cpp \
     src/style/bold.cpp \
-    src/audioplay/main_audioplay.cpp \
     src/style/print_action.cpp \
     src/touch/datastruct/datastruct.cpp \
     src/touch/datastruct/loadpixel.cpp \

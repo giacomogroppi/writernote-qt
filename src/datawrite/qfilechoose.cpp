@@ -1,5 +1,3 @@
-#ifndef Q_FILE_CHOOSE_CPP
-#define Q_FILE_CHOOSE_CPP
 #include "qfilechoose.h"
 #include <QString>
 #include <QDebug>
@@ -41,5 +39,3 @@ bool qfilechoose::filechoose(QString *nome, short int type_){
 
     return true;
 }
-
-#endif

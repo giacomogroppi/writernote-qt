@@ -6,7 +6,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
-#include "stringgenerator.cpp"
 #include "chartoint.h"
 #include "datawrite/savefile.h"
 
