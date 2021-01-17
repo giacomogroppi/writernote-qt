@@ -70,6 +70,7 @@
     dependence:
       
       mingw:
+    
         ```bash
           pacman -S git
           git clone https://github.com/giacomogroppi/writernote-qt.git
