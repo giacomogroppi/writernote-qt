@@ -89,8 +89,8 @@ SOURCES += \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
-    src/style/inserttable.cpp \
     src/style/inserttable_class.cpp \
+    src/style/inserttable_mainwindow.cpp \
     src/style/main_style.cpp \
     src/audioplay/pausariascolto.cpp \
     src/audioplay/stopriascolto.cpp \

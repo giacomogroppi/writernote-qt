@@ -2,7 +2,7 @@
 #define MAIN_STYLE_CPP
 
 #include "bold.cpp"
-#include "inserttable.cpp"
+#include "inserttable_mainwindow.cpp"
 #include "insertimage.cpp"
 #include "bulletfile.cpp"
 

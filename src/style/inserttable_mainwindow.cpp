@@ -1,15 +1,14 @@
 #ifndef INSERT_TABLE_CPP
 #define INSERT_TABLE_CPP
 
-#include "insertTable.h"
+//#include "insertTable.h"
 
 #include "../mainwindow.h"
 #include <QDialog>
 #include <QPushButton>
 #include <QDebug>
 
-//#include "inserttable_class.h"
-#include "inserttable_class.cpp"
+#include "inserttable_class.h"
 
 
 void MainWindow::on_inserttablebotton_clicked()
