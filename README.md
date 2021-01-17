@@ -51,7 +51,7 @@
     ```
 
   - Windows:
-    coming soon
+    [here](https://github.com/giacomogroppi/writernote-qt/releases) you can find all the version for windows.
 
 ## Compiling
   - Linux:
@@ -65,7 +65,15 @@
         qmake writernote.pro
         make -j $nproc
       ```
-  
+  - Windows:
+    dependence:
+      mingw:
+        ```bash
+        pacman -S git
+        git clone https://github.com/giacomogroppi/writernote-qt.git
+        ./windows/dipendenze.sh
+        ./windows/compile.sh
+        ```
 
 ## File format
 
