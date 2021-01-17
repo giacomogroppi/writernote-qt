@@ -66,11 +66,8 @@
         make -j $nproc
       ```
   - Windows:
-    
     dependence:
-      
       mingw:
-    
         ```
           pacman -S git
           git clone https://github.com/giacomogroppi/writernote-qt.git
