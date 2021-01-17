@@ -1,12 +1,8 @@
-#ifndef NEW_COPY_BOOK
-#define NEW_COPY_BOOK
-
 #include "newcopybook_.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
-#include "chartoint.h"
 #include "datawrite/savefile.h"
 
 #include "currenttitle/currenttitle_class.h"
@@ -36,4 +32,3 @@ bool newcopybook_(MainWindow *parent, QString stringa){
 
 }
 
-#endif //NEW_COPY_BOOK

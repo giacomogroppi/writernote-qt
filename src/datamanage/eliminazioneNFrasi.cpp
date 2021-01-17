@@ -1,6 +1,3 @@
-#ifndef ELIMINAZIONE_N_FRASI_CPP
-#define ELIMINAZIONE_N_FRASI_CPP
-
 #include "../mainwindow.h"
 #include "../self_class.h"
 #include "ui_mainwindow.h"
@@ -32,4 +29,3 @@ void eliminazioneNFrasi(MainWindow *parent){
 
 }
 
-#endif //ELIMINAZIONE_N_FRASI_CPP

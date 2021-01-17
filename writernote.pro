@@ -46,7 +46,6 @@ SOURCES += \
     src/audiorecord/getbufferlevels.cpp \
     src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
-    src/chartoint.cpp \
     src/closeevent_file.cpp \
     src/currenttitle/audiototext.cpp \
     src/currenttitle/checksimilecopybook.cpp \
@@ -150,7 +149,6 @@ HEADERS += \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
     src/dialog_critic.h \
-    src/chartoint.h \
     src/images/images.h \
     src/newcopybook_.h \
     src/pdf/topdf.h \

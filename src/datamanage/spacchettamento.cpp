@@ -1,6 +1,3 @@
-#ifndef SPACCHETTAMENTO_CPP
-#define SPACCHETTAMENTO_CPP
-
 #include "../mainwindow.h"
 #include "checkinserimento.h"
 #include "check1.h"
@@ -66,4 +63,4 @@ void spacchettamento(MainWindow *parent){
     }
 }
 
-#endif //SPACCHETTAMENTO_CPP
+

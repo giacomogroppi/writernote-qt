@@ -7,7 +7,6 @@
 
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../chartoint.h"
 #include <QString>
 #include <QDebug>
 #include <stdlib.h>

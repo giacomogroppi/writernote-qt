@@ -1,6 +1,3 @@
-#ifndef RENAME_FILE_F_CPP
-#define RENAME_FILE_F_CPP
-
 #include "../mainwindow.h"
 #include "zip.h"
 #include "iostream"
@@ -54,4 +51,4 @@ bool renamefile_f_zip(const char *namezip, const char *from, const char *dest){
     return true;
 }
 
-#endif
+
