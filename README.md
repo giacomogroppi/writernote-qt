@@ -66,7 +66,9 @@
         make -j $nproc
       ```
   - Windows:
+    
     dependence:
+      
       mingw:
         ```bash
           pacman -S git
