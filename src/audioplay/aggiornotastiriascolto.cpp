@@ -15,7 +15,7 @@ void aggiornotestiriascolto(MainWindow *parent){
     if(parent->self->currenttitle.se_registato){
         QFile file(parent->self->currenttitle.audio_position_path);
         if(!file.exists())
-            return dialog_critic("Audio " + (QString)parent->self->currenttitle.audio_position_path + " didn't exist");
+            return dialog_critic("Audio " + parent->self->currenttitle.audio_position_path + " didn't exist");
 
         settingaudio_registrazione(parent, false);
 

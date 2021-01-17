@@ -38,6 +38,13 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
+/* the function is called every time we need to reload all pixel of pixmap
+ this happens when:
+    - resize
+    - zoom
+    - move with mouse and touch [scroll]
+    - loading all pixel in start
+*/
 void TabletCanvas::laod(QPainter *painter){
     if(!isloading) return;
 
@@ -51,28 +58,28 @@ void TabletCanvas::laod(QPainter *painter){
     for(i_ = 0; i_ < len-1; i_++)
     {
         if(this->data->y.at(i_) < this->m_pixmap.size().height() && this->data->y.at(i_) >= 0){
-            /* se cambio il tratto non disegna ma lo carica in lastpoint solamente */
-            if(i_ && data->idtratto.at(i_) != -1
-                    && data->y.at(i_) != 0.00
-                    && data->y.at(i_) != (double)m_pixmap.height()
-                    && this->data->idtratto.at(i_) == this->data->idtratto.at(i_ - 1)){
-                this->updateBrush_load(data->pressure.at(i_), data->color.at(i_));
-
-                painter->setPen(this->m_pen);
-                painter->drawLine(this->lastPoint.pos,
-                              QPointF(this->data->x.at(i_), this->data->y.at(i_)));
-            }
-            else if(data->idtratto.at(i_) == -1){
-                /* carica i punti della pagina */
+            if(data->idtratto.at(i_) == -1){
                 updateBrush_load(data->pressure.at(i_), data->color.at(i_));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(data->x.at(i_), data->y.at(i_)
                                   , data->x.at(i_ + 1), data->y.at(i_ + 1));
 
-                /* deve andare aventi di un punto in quando ogni riga è formata da due punti */
                 i_++;
             }
+            else if(i_
+                    && data->y.at(i_) != 0.00
+                    && data->y.at(i_) != (double)m_pixmap.height()
+                    && data->x.at(i_) != width()
+                    && this->data->idtratto.at(i_) == this->data->idtratto.at(i_ - 1)){
+                this->updateBrush_load(data->pressure.at(i_), data->color.at(i_));
+
+                painter->setPen(this->m_pen);
+                painter->drawLine(this->lastPoint.pos,
+                              QPointF(this->data->x.at(i_), this->data->y.at(i_)));
+
+            }
+
 
             lastPoint.pos.setX(this->data->x.at(i_));
             lastPoint.pos.setY(this->data->y.at(i_));

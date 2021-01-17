@@ -11,8 +11,19 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
 }
 
 
-bool itspossibletoscrollx(datastruct *data, short int larghezza, short int delta){
-    if(delta < 0)
-        return (data->firstx() > 0);
-    return ((data->biggerx() > NUMEROPIXELORIZZONALI * data->zoom));
+bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
+    /* delta < 0 utente sta spostando verso sinistra */
+    int i, len;
+    len = data->x.length();
+
+    if(len){
+        for(i=0; i<len; i++)
+            if(data->idtratto.at(i) == -1)
+                break;
+        if(delta > 0)
+            return data->x.at(i) - delta < 0;
+        return data->x.at(i+1) > width;
+
+    }
+    return false;
 }

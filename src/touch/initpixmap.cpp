@@ -10,16 +10,26 @@ void TabletCanvas::initPixmap()
     /* understand if the user can write outside the page */
     int len, i, sizex;
     len = data->x.length();
-    for(i=0; i<len; i++)
-        if(data->idtratto.at(i) == -1)
-            break;
+    if(len){
+        for(i=0; i<len; i++)
+            if(data->idtratto.at(i) == -1)
+                break;
 
-    i = data->x.at(i+1);
+        i = data->x.at(i+1) + 20;
 
-    if(width() < i)
-        sizex = width();
-    else
-        sizex = i;
+        if(width() < i)
+            sizex = width();
+        else
+            sizex = i;
+    }
+    else{
+        if(width() < NUMEROPIXELORIZZONALI){
+            sizex = width();
+        }
+        else{
+            sizex = NUMEROPIXELORIZZONALI;
+        }
+    }
 
     QPixmap newPixmap = QPixmap(qRound(sizex * dpr), qRound(height() * dpr));
 
