@@ -2,17 +2,25 @@
 
 void topdf::translate(){
     int i, len;
-    len = this->data->x.length();
 
-    while(data->posizionefoglio.first() < 0){
-        len = data->posizionefoglio.length();
-        for(i=0; i<len; i++){
-            data->posizionefoglio[i] += 1;
-        }
+    int delta, k;
 
-        len = data->x.length();
-        for(i=0; i<len; i++){
-            data->y[i] += 1;
+    delta = data->posizionefoglio.first() < 0;
+    len = data->posizionefoglio.length();
+    for(i=0; i<len; i++)
+        data->posizionefoglio[i] += delta;
+
+
+    len = data->x.length();
+    for(i=0; i<len; i++)
+        data->y[i] += delta;
+
+    for(i=0; i<len; i++){
+        if(data->x.at(i) < 0.0){
+            delta = data->x.at(i);
+
+            for(k=0; k<len; k++)
+                data->x[i] += delta;
         }
     }
 

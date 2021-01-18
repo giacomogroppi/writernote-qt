@@ -28,7 +28,9 @@ private:
 
 
 public:
-
+    ~topdf(){
+        delete data;
+    };
 
     topdf(QString *path);
     bool createpdf();

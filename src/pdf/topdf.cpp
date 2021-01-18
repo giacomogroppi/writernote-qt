@@ -22,15 +22,14 @@ static void newpage(datastruct *datastruct){
 }
 
 /* the function draw the pixel into the painter  */
-inline void topdf::draw( QPainter *painter, double m){
+void topdf::draw( QPainter *painter, double m){
     int i_, len;
 
     len = this->data->x.length();
 
-
     for(i_ = 0; i_ < len; i_++)
     {
-        if(this->data->y.at(i_) < NUMEROPIXELORIZZONALI && this->data->y.at(i_) >= 0){
+        if(this->data->y.at(i_) < (double)NUMEROPIXELORIZZONALI && this->data->y.at(i_) >= 0){
             /* se cambio il tratto non disegna ma lo carica in lastpoint solamente */
             if(i_ && this->data->idtratto.at(i_) == this->data->idtratto.at(i_ - 1) && data->idtratto.at(i_) != -1
                     && data->y.at(i_) != 1.00
@@ -71,14 +70,16 @@ bool topdf::createpdf(){
 
     QPainter painter(&pdfWriter);
 
-    double delta = (double)pdfWriter.height() / (double)NUMEROPIXELORIZZONALI;
+    double delta = (double)pdfWriter.width() / (double)NUMEROPIXELORIZZONALI;
 
     for (i=0; i<lenpagine; ++i) {
         this->draw(&painter, delta);
 
-        newpage(this->data);
+        if(i+1<lenpagine){
+            newpage(this->data);
 
-        pdfWriter.newPage();
+            pdfWriter.newPage();
+        }
     }
     return true;
 }
