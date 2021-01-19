@@ -5,15 +5,14 @@ void topdf::translate(){
 
     int delta, k;
 
-    delta = data->posizionefoglio.first() < 0;
+    delta = data->posizionefoglio.first();
     len = data->posizionefoglio.length();
     for(i=0; i<len; i++)
         data->posizionefoglio[i] += delta;
 
-
     len = data->x.length();
     for(i=0; i<len; i++)
-        data->y[i] += delta;
+        data->y[i] -= delta;
 
     for(i=0; i<len; i++){
         if(data->x.at(i) < 0.0){
