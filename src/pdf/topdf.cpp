@@ -38,11 +38,12 @@ bool topdf::createpdf(){
         if(data->idtratto.at(i) == -1)
             break;
 
+    int size_orizzontale = data->x.at(i+1);
 
-    double delta = (double)pdfWriter.width() / (double)data->x.at(i+1);
+    double delta = (double)pdfWriter.width() / (double)size_orizzontale;
 
     for (i=0; i<lenpagine; ++i) {
-        this->draw(&painter, delta);
+        this->draw(&painter, delta, size_orizzontale);
 
         if(i+1<lenpagine){
             newpage(this->data);
