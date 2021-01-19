@@ -78,6 +78,7 @@ SOURCES += \
     src/datawrite/xmlstruct.cpp \
     src/mainwindow.cpp \
     src/newcopybook_.cpp \
+    src/pdf/draw.cpp \
     src/pdf/topdf.cpp \
     src/pdf/translate.cpp \
     src/pdf/updatebrush_topdf.cpp \
