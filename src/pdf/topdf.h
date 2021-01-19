@@ -14,7 +14,7 @@ private:
 
     MainWindow *parent;
 
-    void draw( QPainter *, double , int );
+    void draw( QPainter *, double , int , int);
     void updateBrush_load(float , QColor );
 
     /* variable to draw */

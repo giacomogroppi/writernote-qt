@@ -1,14 +1,14 @@
 #include "topdf.h"
 
 /* the function draw the pixel into the painter  */
-void topdf::draw( QPainter *painter, double m, int size_orizzontale){
+void topdf::draw( QPainter *painter, double m, int size_orizzontale, int size_verticale){
     int i_, len;
 
     len = this->data->x.length();
 
     for(i_ = 0; i_ < len; i_++)
     {
-        if(this->data->y.at(i_) < (double)size_orizzontale && this->data->y.at(i_) >= 0){
+        if(this->data->y.at(i_)*m < (size_verticale) && this->data->y.at(i_) >= 0){
             /* se cambio il tratto non disegna ma lo carica in lastpoint solamente */
             if(data->idtratto.at(i_) == -1){
                 /* carica i punti della pagina */
