@@ -111,13 +111,17 @@ void MainWindow::on_actionNew_File_triggered()
     this->self->currenttitle.reset();
 }
 
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::on_actionOpen_triggered(char *nomeFile)
 {
-    /* funzione che gestisce l'apertura di un file */
+    QString fileName;
+    if(!nomeFile){
+        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/giacomo", "Writernote (*.writer);; All file (* *.*)");
+        if(fileName == "")
+            return;
+    }else{
+        fileName = nomeFile;
+    }
 
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/giacomo", "Writernote (*.writer);; All file (* *.*)");
-    if(fileName == "")
-        return;
 
     QFile file(fileName);
 

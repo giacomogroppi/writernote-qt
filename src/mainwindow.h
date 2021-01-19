@@ -67,6 +67,8 @@ public:
 
     updatecheck *checkupdate;
 
+    void setFile(int, char **);
+
 public slots:
     void processBuffer(const QAudioBuffer&);
 
@@ -90,7 +92,7 @@ private slots:
     /* richiamata quando viene modificato qualcosa del testo */
     void on_textEdit_textChanged();
 
-    void on_actionOpen_triggered();
+    void on_actionOpen_triggered(char *nomeFile = nullptr);
 
 
 
