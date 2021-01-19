@@ -93,7 +93,6 @@ SOURCES += \
     src/style/inserttable_mainwindow.cpp \
     src/audioplay/pausariascolto.cpp \
     src/audioplay/stopriascolto.cpp \
-    src/audioplay/aggiornamentostatusbar.cpp \
     src/style/bold.cpp \
     src/style/print_action.cpp \
     src/touch/datastruct/datastruct.cpp \

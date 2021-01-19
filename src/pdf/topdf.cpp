@@ -40,14 +40,6 @@ bool topdf::createpdf(){
 
     int size_orizzontale = data->x.at(i+1);
 
-    /*int size_verticale;
-    if(data->posizionefoglio.length() > 1){
-        size_verticale = data->posizionefoglio.at(1) - data->posizionefoglio.first();
-    }
-    else{
-        size_verticale = data->biggerx();
-    }*/
-
     double size_verticale = pdfWriter.height();
 
     double delta = (double)pdfWriter.width() / (double)size_orizzontale;

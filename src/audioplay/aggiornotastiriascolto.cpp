@@ -1,6 +1,3 @@
-#ifndef AGGIORNO_TASTI_RIASCOLTO_CPP
-#define AGGIORNO_TASTI_RIASCOLTO_CPP
-
 #include "aggiornotastiriascolto.h"
 
 #include "../mainwindow.h"
@@ -50,6 +47,3 @@ void aggiornotestiriascolto(MainWindow *parent){
 
     }
 }
-
-
-#endif
