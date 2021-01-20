@@ -73,6 +73,7 @@ SOURCES += \
     src/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \
+    src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
     src/main.cpp \
     src/datawrite/xmlstruct.cpp \
@@ -152,6 +153,7 @@ HEADERS += \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
     src/dialog_critic.h \
+    src/images/image_struct.h \
     src/images/save_images.h \
     src/newcopybook_.h \
     src/pdf/topdf.h \

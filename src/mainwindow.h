@@ -69,6 +69,8 @@ public:
 
     void setFile(int, char **);
 
+    void update_image();
+
 public slots:
     void processBuffer(const QAudioBuffer&);
 
@@ -198,6 +200,8 @@ private slots:
     void on_insertimagebotton_triggered(QAction *arg1);
 
     void on_actionCheck_update_triggered();
+
+    void on_actioninsertImage_triggered();
 
 private:
     /* gestione dell'audio */

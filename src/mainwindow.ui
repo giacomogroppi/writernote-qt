@@ -335,6 +335,7 @@
    <addaction name="actionwhite"/>
    <addaction name="actionyellow"/>
    <addaction name="actionred"/>
+   <addaction name="actioninsertImage"/>
   </widget>
   <action name="actionNew_File">
    <property name="checkable">
@@ -655,6 +656,15 @@
   <action name="actionCheck_update">
    <property name="text">
     <string>Check update</string>
+   </property>
+  </action>
+  <action name="actioninsertImage">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/image.png</normaloff>:/image/images/image.png</iconset>
+   </property>
+   <property name="text">
+    <string>insertImage</string>
    </property>
   </action>
  </widget>

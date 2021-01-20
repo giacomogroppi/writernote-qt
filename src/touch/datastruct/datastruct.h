@@ -5,11 +5,7 @@
 #include <QColor>
 #include <QImage>
 
-struct immagine_S{
-    QImage immagini;
-    QPoint i;
-    QPoint f;
-};
+#include "../../images/image_struct.h"
 
 class datastruct
 {

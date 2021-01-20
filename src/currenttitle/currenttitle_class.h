@@ -6,6 +6,8 @@
 
 #include "../touch/datastruct/datastruct.h"
 
+#include "../images/image_struct.h"
+
 class currenttitle_class{
 public:
     int versione = 1;
@@ -19,6 +21,8 @@ public:
     QString posizione_binario = "";
     datastruct *datatouch;
     void reset();
+
+    QList<struct immagine_S> immagini;
 
     currenttitle_class();
 };
