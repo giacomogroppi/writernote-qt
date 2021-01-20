@@ -2,6 +2,8 @@
 #include <QPainter>
 #include <QDebug>
 
+#include "draw_image.h"
+
 void TabletCanvas::paintEvent(QPaintEvent *event){
     if (m_pixmap.isNull())
         initPixmap();
@@ -85,6 +87,9 @@ void TabletCanvas::laod(QPainter *painter){
             lastPoint.pos.setY(this->data->y.at(i_));
         }
     }
+
+    draw_image(data, painter);
+
     this->isloading = false;
 }
 

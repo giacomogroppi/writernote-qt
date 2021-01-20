@@ -5,6 +5,12 @@
 #include <QColor>
 #include <QImage>
 
+struct immagine_S{
+    QImage immagini;
+    QPoint i;
+    QPoint f;
+};
+
 class datastruct
 {
 public:
@@ -37,7 +43,7 @@ public:
     QList<float> pressure;
     QList<qreal> rotation;
 
-    QList<QImage> immagini = {};
+    QList<struct immagine_S> immagini = {};
 
     QList<int> idtratto;
 

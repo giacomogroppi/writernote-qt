@@ -72,7 +72,7 @@ SOURCES += \
     src/datawrite/savefile_mainwindow.cpp \
     src/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
-    src/images/images.cpp \
+    src/images/save_images.cpp \
     src/indice_class.cpp \
     src/main.cpp \
     src/datawrite/xmlstruct.cpp \
@@ -106,6 +106,7 @@ SOURCES += \
     src/touch/eventmainwindow.cpp \
     src/touch/initpixmap.cpp \
     src/touch/paintevent/disegnofoglio.cpp \
+    src/touch/paintevent/draw_image.cpp \
     src/touch/paintevent/gomma.cpp \
     src/touch/paintevent/paintevent.cpp \
     src/touch/paintevent/zoomin.cpp \
@@ -151,7 +152,7 @@ HEADERS += \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
     src/dialog_critic.h \
-    src/images/images.h \
+    src/images/save_images.h \
     src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \
@@ -159,6 +160,7 @@ HEADERS += \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
     src/touch/method/methoddefinition.h \
+    src/touch/paintevent/draw_image.h \
     src/touch/square/square.h \
     src/touch/tabletapplication.h \
     src//touch/tabletcanvas.h \
