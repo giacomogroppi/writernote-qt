@@ -20,6 +20,8 @@
 #include "../dialog_critic.h"
 #include <zip.h>
 
+#include "../images/save_images.h"
+
 using namespace std;
 
 xmlstruct::xmlstruct(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U)
@@ -34,7 +36,7 @@ bool xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
     currenttitle->datatouch->reset();
 
-    int err = 0;
+    int err = 0, check = 0;
     int lunghezza, temp, i;
 
     zip *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
@@ -51,19 +53,19 @@ bool xmlstruct::loadfile(const char *nameFile){
         return false;
     }
 
-    zip_fread(f, &currenttitle->versione, sizeof(int));
-    zip_fread(f, &temp, sizeof(int));
+    check += zip_fread(f, &currenttitle->versione, sizeof(int));
+    check += zip_fread(f, &temp, sizeof(int));
     currenttitle->se_registato = temp;
 
-    zip_fread(f, &temp, sizeof(int));
+    check += zip_fread(f, &temp, sizeof(int));
     currenttitle->se_tradotto = temp;
 
     //testo html
-    zip_fread(f, &temp, sizeof(int));
+    check += zip_fread(f, &temp, sizeof(int));
     if(temp){
         char *testi = new char[temp + 1];
 
-        zip_fread(f, testi, sizeof(char)*temp);
+        check += zip_fread(f, testi, sizeof(char)*temp);
 
         testi[temp] = '\0';
         currenttitle->testi = testi;
@@ -72,11 +74,11 @@ bool xmlstruct::loadfile(const char *nameFile){
     }
 
     /* audio_position_path */
-    zip_fread(f, &temp, sizeof(int));
+    check += zip_fread(f, &temp, sizeof(int));
     if(temp){
         char *audio_position = new char[temp + 1];
 
-        zip_fread(f, audio_position, sizeof(char)*temp);
+        check += zip_fread(f, audio_position, sizeof(char)*temp);
 
         audio_position[temp] = '\0';
         currenttitle->audio_position_path = audio_position;
@@ -85,12 +87,12 @@ bool xmlstruct::loadfile(const char *nameFile){
     }
 
     // legge quanto è lungo il nome del file
-    zip_fread(f, &temp, sizeof(int));
+    check += zip_fread(f, &temp, sizeof(int));
 
     if(temp){
         char *vartempp = new char[temp + 1];
 
-        zip_fread(f, vartempp, sizeof(char)*temp);
+        check += zip_fread(f, vartempp, sizeof(char)*temp);
 
         vartempp[temp] = '\0';
 
@@ -108,17 +110,17 @@ bool xmlstruct::loadfile(const char *nameFile){
     }
 
     //testinohtml
-    zip_fread(f, &lunghezza, sizeof(int));
+    check += zip_fread(f, &lunghezza, sizeof(int));
 
     if(lunghezza){
         char *variabiletemp;
 
         for(i=0; i<lunghezza; i++){
-            zip_fread(f, &temp, sizeof(int));
+            check += zip_fread(f, &temp, sizeof(int));
 
             variabiletemp = new char[temp + 1];
 
-            zip_fread(f, variabiletemp, sizeof(char)*temp);
+            check += zip_fread(f, variabiletemp, sizeof(char)*temp);
 
             variabiletemp[temp] = '\0';
 
@@ -128,15 +130,19 @@ bool xmlstruct::loadfile(const char *nameFile){
     }
 
     for(i=0; i<lunghezza; i++){
-        zip_fread(f, &temp, sizeof(int));
+        check += zip_fread(f, &temp, sizeof(int));
 
         currenttitle->posizione_iniz.append(temp);
+    }
+
+    if(currenttitle->posizione_binario == ""){
+        check += load_image(currenttitle->datatouch, f);
     }
 
     zip_fclose(f);
     zip_close(filezip);
 
-    return true;
+    return check == 0;
 }
 
 
