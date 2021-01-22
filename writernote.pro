@@ -64,6 +64,8 @@ SOURCES += \
     src/datamanage/stoprecording.cpp \
     src/datawrite/colortoint.cpp \
     src/datawrite/compressfile.cpp \
+    src/datawrite/load/loadfile_xmlstruct.cpp \
+    src/datawrite/load/loadindice_xmlstruct.cpp \
     src/datawrite/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
     src/datawrite/renamefile_f_zip.cpp \

@@ -1,0 +1,48 @@
+#include "../xmlstruct.h"
+
+bool xmlstruct::loadindice(){
+    indice->reset();
+
+    int err = 0;
+    int lunghezza, temp, i;
+
+    zip *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
+    if (filezip == NULL)
+        return false;
+
+    zip_file *f = zip_fopen(filezip, "indice.xml", 0);
+
+    if(!f){
+        zip_close(filezip);
+        return false;
+    }
+
+    zip_fread(f, &indice->versione, sizeof(int));
+
+    zip_fread(f, &lunghezza, sizeof(int));
+    if(lunghezza){
+        //char *nomefile = (char *)malloc(1);
+        char *nomefile;
+
+        for(i=0; i<lunghezza; i++){
+            zip_fread(f, &temp, sizeof(int));
+
+            nomefile = new char[temp+1];
+
+            zip_fread(f, nomefile, sizeof(char)*temp);
+
+            nomefile[temp] = '\0';
+
+            indice->titolo.append(nomefile);
+            delete[] nomefile;
+        }
+
+    }
+
+    zip_fclose(f);
+    zip_close(filezip);
+
+    return true;
+    /* viene passato direttamente come puntatore -> non c'è bisogno di cambiarlo per this->self->path */
+    /*self->path = this->path_;*/
+}
