@@ -1,8 +1,10 @@
 #include "xmlstruct.h"
 
 #include "../currenttitle/currenttitle_class.h"
-
+#include "../images/save_images.h"
 #include <zip.h>
+
+#include "../datawrite/source_read_ext.h"
 
 /* la funzione gestisce la lettura del file binario */
 bool xmlstruct::loadbinario(zip_t *z){
@@ -12,10 +14,11 @@ bool xmlstruct::loadbinario(zip_t *z){
 
     zip_file *f = zip_fopen(z, this->currenttitle->posizione_binario.toUtf8().constData(), 0);
 
-    if(f == nullptr){
-        qDebug() << "xmlstruct::loadbinario -> File impossibile da leggere";
+    int check = 0;
+
+    if(f == nullptr)
         return false;
-    }
+
 
     int lunghezza=0, i, valoretemp;
     float temp;
@@ -24,40 +27,39 @@ bool xmlstruct::loadbinario(zip_t *z){
     /* x */
     zip_fread(f, &lunghezza, sizeof(int));
 
-    qDebug() << "Loadbinario -> lunghezza x -> " << lunghezza;
 
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &variabiledouble, sizeof(double));
+        check += source_read_ext(f, &variabiledouble, sizeof(double));
         this->currenttitle->datatouch->x.append(variabiledouble);
     }
 
     /* y */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &variabiledouble, sizeof(double));
+        check += source_read_ext(f, &variabiledouble, sizeof(double));
         this->currenttitle->datatouch->y.append(variabiledouble);
     }
 
     /* idtratto */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(int));
+        check += source_read_ext(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->idtratto.append(valoretemp);
     }
 
     /* pressure */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &temp, sizeof(float));
+        check += source_read_ext(f, &temp, sizeof(float));
         this->currenttitle->datatouch->pressure.append(temp);
     }
 
     /* rotation */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(int));
+        check += source_read_ext(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->rotation.append(valoretemp);
     }
 
     /* posizione foglio */
     for(i=0; i < lunghezza; i++){
-        zip_fread(f, &valoretemp, sizeof(int));
+        check += source_read_ext(f, &valoretemp, sizeof(int));
         currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }
 
@@ -65,9 +67,9 @@ bool xmlstruct::loadbinario(zip_t *z){
     int pointer[3];
     QColor coloretemp;
     for(i = 0; i < lunghezza; i++){
-        zip_fread(f, &pointer[0], sizeof(int));
-        zip_fread(f, &pointer[1], sizeof(int));
-        zip_fread(f, &pointer[2], sizeof(int));
+        check += source_read_ext(f, &pointer[0], sizeof(int));
+        check += source_read_ext(f, &pointer[1], sizeof(int));
+        check += source_read_ext(f, &pointer[2], sizeof(int));
         coloretemp.setRgb(pointer[0], pointer[1], pointer[2]);
 
         currenttitle->datatouch->color.append(coloretemp);
@@ -76,14 +78,16 @@ bool xmlstruct::loadbinario(zip_t *z){
     /* carica la posizione dei testi */
     for(i=0; i < lunghezza; i++)
     {
-        zip_fread(f, &valoretemp, sizeof(int));
+        check += source_read_ext(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }
 
-    zip_fread(f, &this->currenttitle->datatouch->zoom, sizeof(float));
+    check += source_read_ext(f, &this->currenttitle->datatouch->zoom, sizeof(float));
+
+    check += load_image(&currenttitle->datatouch->immagini, f);
 
     zip_fclose(f);
 
-    return true;
+    return check == 0;
 }
 

@@ -70,6 +70,7 @@ SOURCES += \
     src/datawrite/salvabinario.cpp \
     src/datawrite/savefile.cpp \
     src/datawrite/savefile_mainwindow.cpp \
+    src/datawrite/source_read_ext.cpp \
     src/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \
@@ -152,6 +153,7 @@ HEADERS += \
     src/datawrite/colortoint.h \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
+    src/datawrite/source_read_ext.h \
     src/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \

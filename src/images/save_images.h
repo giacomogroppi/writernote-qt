@@ -2,11 +2,13 @@
 #define SAVE_IMAGES_H
 
 #include "../touch/datastruct/datastruct.h"
-
+#include "../currenttitle/currenttitle_class.h"
 #include "zip.h"
 
-int save_image(datastruct *, zip_source_t *);
+#include <QList>
 
-int load_image(datastruct *, zip_file_t *);
+int save_image(QList<struct immagine_S> *, zip_source_t *);
+
+int load_image(QList<struct immagine_S> *, zip_file_t *);
 
 #endif // SAVE_IMAGES_H

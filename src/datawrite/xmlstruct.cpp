@@ -136,15 +136,14 @@ bool xmlstruct::loadfile(const char *nameFile){
     }
 
     if(currenttitle->posizione_binario == ""){
-        check += load_image(currenttitle->datatouch, f);
+        check += load_image(&currenttitle->immagini, f);
     }
 
     zip_fclose(f);
     zip_close(filezip);
 
-    return check == 0;
+    return check != 0;
 }
-
 
 bool xmlstruct::loadindice(){
     indice->reset();
@@ -157,13 +156,8 @@ bool xmlstruct::loadindice(){
         return false;
 
     zip_file *f = zip_fopen(filezip, "indice.xml", 0);
+
     if(!f){
-        /*int ze, se;
-        zip_error_t *error = zip_get_error(filezip);
-        ze = zip_error_code_zip(error);
-        se = zip_error_code_system(error);*/
-
-
         zip_close(filezip);
         return false;
     }
