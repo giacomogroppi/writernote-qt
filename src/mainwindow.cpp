@@ -55,14 +55,13 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     ui->setupUi(this);
 
-    /* definizione di cosa serve per la registrazione dell'audio */
     m_audioRecorder = new QAudioRecorder(this);
 
     connect(m_audioRecorder, &QAudioRecorder::durationChanged, this, &MainWindow::updateProgress);
     connect(m_audioRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
             &MainWindow::displayErrorMessage);
 
-    /* riproduzione dell'audio */
+
     player = new QMediaPlayer;
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
@@ -313,6 +312,8 @@ void MainWindow::on_startrecording_triggered()
     }
 
     this->ui->startrecording->setEnabled(false);
+    this->ui->stoprecordingbotton->setEnabled(true);
+    this->ui->pauserecordingbotton->setEnabled(true);
 
 }
 

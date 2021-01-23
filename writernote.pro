@@ -73,6 +73,8 @@ SOURCES += \
     src/datawrite/savefile.cpp \
     src/datawrite/savefile_mainwindow.cpp \
     src/datawrite/source_read_ext.cpp \
+    src/datawrite/write/savefile_savefile.cpp \
+    src/datawrite/write/saveindice_savefile.cpp \
     src/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \

@@ -4,6 +4,7 @@
 #include "../source_read_ext.h"
 
 static int load_stringa(zip_file_t *f, QString *stringa){
+    /* return 0 if all is ok, else return -1 */
     int check = 0, temp;
 
     // legge quanto è lungo il nome del file
@@ -91,6 +92,8 @@ bool xmlstruct::loadfile(const char *nameFile){
 
     check += load_stringa(f, &currenttitle->testi);
 
+    check += load_stringa(f, &currenttitle->audio_position_path);
+
     check += load_stringa(f, &currenttitle->posizione_binario);
     if(currenttitle->posizione_binario != ""){
         if(!this->loadbinario(filezip)){
@@ -99,20 +102,6 @@ bool xmlstruct::loadfile(const char *nameFile){
             return false;
         }
     }
-
-    /* audio_position_path */
-    check += load_stringa(f, &currenttitle->audio_position_path);
-/*    check += source_read_ext(f, &temp, sizeof(int));
-    if(temp){
-        char *audio_position = new char[temp + 1];
-
-        check += source_read_ext(f, audio_position, sizeof(char)*temp);
-
-        audio_position[temp] = '\0';
-        currenttitle->audio_position_path = audio_position;
-
-        delete [] audio_position;
-    }*/
 
     check += load_multiplestring(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
