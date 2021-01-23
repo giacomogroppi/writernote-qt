@@ -1,7 +1,7 @@
-#include "../xmlstruct.h"
+#include "xmlstruct.h"
 
-#include "../../images/save_images.h"
-#include "../source_read_ext.h"
+#include "../images/save_images.h"
+#include "../datawrite/source_read_ext.h"
 
 static int load_stringa(zip_file_t *f, QString *stringa){
     /* return 0 if all is ok, else return -1 */
@@ -28,17 +28,13 @@ static int load_stringa(zip_file_t *f, QString *stringa){
 
 static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int> * data){
     int check = 0, i, lunghezza, temp;
-    //testinohtml
+
     check += source_read_ext(f, &lunghezza, sizeof(int));
 
     if(lunghezza){
         char *variabiletemp;
 
         for(i=0; i<lunghezza; i++){
-            /*lista->append("");
-
-            check += load_stringa(f, (QString *)&lista->at(i));*/
-
             check += source_read_ext(f, &temp, sizeof(int));
 
 

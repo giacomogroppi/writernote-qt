@@ -24,7 +24,7 @@
 /* gestione della lista */
 #include "currenttitle/redolist.h"
 
-#include "datawrite/xmlstruct.h"
+#include "dataread/xmlstruct.h"
 #include "dialog_critic.h"
 #include "update_list_copybook.h"
 #include "savecopybook.h"

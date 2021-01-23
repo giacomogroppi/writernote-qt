@@ -11,8 +11,7 @@
 
 #include "areyousure.h"
 
-/*lib che gestisce il salvaggio di tutti i file*/
-#include "datawrite/xmlstruct.h"
+#include "dataread/xmlstruct.h"
 
 savecopybook::savecopybook(MainWindow *parent_U, QString *namecopybook_U){
     this->parent = parent_U;

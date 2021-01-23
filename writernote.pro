@@ -64,9 +64,9 @@ SOURCES += \
     src/datamanage/stoprecording.cpp \
     src/datawrite/colortoint.cpp \
     src/datawrite/compressfile.cpp \
-    src/datawrite/load/loadfile_xmlstruct.cpp \
-    src/datawrite/load/loadindice_xmlstruct.cpp \
-    src/datawrite/loadbinario.cpp \
+    src/dataread/loadfile_xmlstruct.cpp \
+    src/dataread/loadindice_xmlstruct.cpp \
+    src/dataread/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
     src/datawrite/renamefile_f_zip.cpp \
     src/datawrite/salvabinario.cpp \
@@ -81,7 +81,7 @@ SOURCES += \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
     src/main.cpp \
-    src/datawrite/xmlstruct.cpp \
+    src/dataread/xmlstruct.cpp \
     src/mainwindow.cpp \
     src/newcopybook_.cpp \
     src/pdf/draw.cpp \
@@ -178,7 +178,7 @@ HEADERS += \
     src/mainwindow.h \
     src/savecopybook.h \
     src/self_class.h \
-    src/datawrite/xmlstruct.h \
+    src/dataread/xmlstruct.h \
     src/style/inserttable_class.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \

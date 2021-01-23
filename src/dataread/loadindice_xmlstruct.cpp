@@ -1,4 +1,4 @@
-#include "../xmlstruct.h"
+#include "xmlstruct.h"
 
 bool xmlstruct::loadindice(){
     indice->reset();
@@ -21,7 +21,6 @@ bool xmlstruct::loadindice(){
 
     zip_fread(f, &lunghezza, sizeof(int));
     if(lunghezza){
-        //char *nomefile = (char *)malloc(1);
         char *nomefile;
 
         for(i=0; i<lunghezza; i++){
@@ -43,6 +42,4 @@ bool xmlstruct::loadindice(){
     zip_close(filezip);
 
     return true;
-    /* viene passato direttamente come puntatore -> non c'è bisogno di cambiarlo per this->self->path */
-    /*self->path = this->path_;*/
 }

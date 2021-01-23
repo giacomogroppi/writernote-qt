@@ -51,9 +51,8 @@ bool savefile::savefile_check_file(int posizione){
     len = currenttitle->testinohtml.length();
     check += source_write_ext(file, &len, sizeof(int));
 
-
     for(i=0; i<len; i++){
-        temp = currenttitle->testinohtml.length();
+        temp = currenttitle->testinohtml.at(i).length();
         check += source_write_ext(file, &temp, sizeof(int));
 
         check += source_write_ext(file, currenttitle->testinohtml.at(i).toUtf8().constData(), sizeof(char)*temp);
