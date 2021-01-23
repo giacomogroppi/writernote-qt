@@ -53,4 +53,5 @@ void MainWindow::on_actioninsertImage_triggered(){
     this->m_canvas->update();
 
     delete immagine;
+
 }

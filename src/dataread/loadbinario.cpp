@@ -76,8 +76,7 @@ bool xmlstruct::loadbinario(zip_t *z){
     }
 
     /* carica la posizione dei testi */
-    for(i=0; i < lunghezza; i++)
-    {
+    for(i=0; i < lunghezza; i++){
         check += source_read_ext(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }

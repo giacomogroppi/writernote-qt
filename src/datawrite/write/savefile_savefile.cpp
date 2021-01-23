@@ -69,9 +69,14 @@ bool savefile::savefile_check_file(int posizione){
                  file,
                  ZIP_FL_OVERWRITE);
 
-    zip_close(filezip);
 
-    if(check < 0)
+
+    if(check < 0){
+        zip_source_free(file);
+        zip_close(filezip);
         return false;
+    }
+
+    zip_close(filezip);
     return true;
 }

@@ -77,6 +77,7 @@ SOURCES += \
     src/datawrite/write/saveindice_savefile.cpp \
     src/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
+    src/images/load_image.cpp \
     src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
