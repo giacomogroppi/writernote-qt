@@ -36,9 +36,9 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
         for(i=0; i<lunghezza; i++){
             /*lista->append("");
 
-            check += load_stringa(f, (QString *)&lista->at(i));
+            check += load_stringa(f, (QString *)&lista->at(i));*/
 
-            check += source_read_ext(f, &temp, sizeof(int));*/
+            check += source_read_ext(f, &temp, sizeof(int));
 
 
             variabiletemp = new char[temp + 1];
@@ -66,7 +66,7 @@ bool xmlstruct::loadfile(const char *nameFile){
     currenttitle->datatouch->reset();
 
     int err = 0, check = 0;
-    int lunghezza, temp, i;
+    int temp;
 
     zip *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
     if (filezip == NULL)

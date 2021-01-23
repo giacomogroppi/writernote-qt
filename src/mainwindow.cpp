@@ -34,9 +34,6 @@
 #include "datawrite/savefile.h"
 #include "style/abilitazioneinput.h"
 
-/* audio record */
-#include "audiorecord/getbufferlevels.h"
-
 /* da sistemare */
 #include <QMediaPlayer>
 
@@ -49,6 +46,7 @@
 
 #include "audioplay/aggiornotastiriascolto.h"
 
+
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -59,13 +57,8 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     /* definizione di cosa serve per la registrazione dell'audio */
     m_audioRecorder = new QAudioRecorder(this);
-    m_probe = new QAudioProbe(this);
-    connect(m_probe, &QAudioProbe::audioBufferProbed,
-            this, &MainWindow::processBuffer);
-    m_probe->setSource(m_audioRecorder);
 
     connect(m_audioRecorder, &QAudioRecorder::durationChanged, this, &MainWindow::updateProgress);
-
     connect(m_audioRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
             &MainWindow::displayErrorMessage);
 
@@ -334,21 +327,6 @@ void MainWindow::on_pauserecordingbotton_triggered()
         this->m_audioRecorder->record();
 }
 
-void MainWindow::processBuffer(const QAudioBuffer& buffer)
-{
-    if (this->m_audioLevels.count() != buffer.format().channelCount()) {
-        qDeleteAll(this->m_audioLevels);
-        this->m_audioLevels.clear();
-        for (int i = 0; i < buffer.format().channelCount(); ++i) {
-            AudioLevel *level = new AudioLevel(this->ui->centralwidget);
-            this->m_audioLevels.append(level);
-        }
-    }
-
-    QList<qreal> levels = getBufferLevels(buffer);
-    for (int i = 0; i < levels.count(); ++i)
-        this->m_audioLevels.at(i)->setLevel(levels.at(i));
-}
 
 /* editor di testo -> quando cambia il testo scritto */
 void MainWindow::on_textEdit_textChanged()

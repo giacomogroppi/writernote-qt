@@ -41,9 +41,9 @@ SOURCES += \
     src/audioplay/slidertimechange.cpp \
     src/audioplay/updatestatusbar_riascolto.cpp \
     src/audioplay/valuechangeslidervolume.cpp \
+    src/audiorecord/audio_record.cpp \
     src/audiosetting/audioqualityoption.cpp \
     src/audiorecord/displayErrorMessage.cpp \
-    src/audiorecord/getbufferlevels.cpp \
     src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
     src/closeevent_file.cpp \
@@ -89,7 +89,6 @@ SOURCES += \
     src/savecopybook.cpp \
     src/self_class.cpp \
     src/setting_ui.cpp \
-    src/audiorecord/audiolevel.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
@@ -139,7 +138,6 @@ HEADERS += \
     src/audioplay/aggiornotastiriascolto.h \
     src/audioplay/cambioiconariascolto.h \
     src/audiosetting/audioqualityoption.h \
-    src/audiorecord/getbufferlevels.h \
     src/audiosetting/definition.h \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
@@ -178,7 +176,6 @@ HEADERS += \
     src/mainwindow.h \
     src/savecopybook.h \
     src/self_class.h \
-    src/audiorecord/audiolevel.h\
     src/datawrite/xmlstruct.h \
     src/style/inserttable_class.h \
     src/videocompress/compressivideo.h \

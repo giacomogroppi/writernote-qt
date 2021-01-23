@@ -18,7 +18,6 @@ public:
     Ui::audioqualityoption *ui;
     MainWindow *padre;
 
-    QList<AudioLevel*> m_audioLevels;
     bool m_outputLocationSet = false;
 
     explicit audioqualityoption(QWidget *parent = nullptr, MainWindow *padre = nullptr);

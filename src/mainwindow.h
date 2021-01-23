@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QListWidgetItem>
 #include <QUrl>
-#include "audiorecord/audiolevel.h"
 
 /* gestione variabile self */
 #include "self_class.h"
@@ -51,7 +50,6 @@ public:
 
     QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);
     QAudioProbe *m_probe = nullptr;
-    QList<AudioLevel*> m_audioLevels;
     bool m_outputLocationSet = false;
 
     /* gestione della riproduzione dell'audio */
@@ -72,7 +70,6 @@ public:
     void update_image();
 
 public slots:
-    void processBuffer(const QAudioBuffer&);
 
     /* la funzione serve anche per eliminare l'audio del copybook */
     void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
