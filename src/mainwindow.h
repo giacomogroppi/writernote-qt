@@ -200,6 +200,8 @@ private slots:
 
     void on_actioninsertImage_triggered();
 
+    void on_actionnew_sheet_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

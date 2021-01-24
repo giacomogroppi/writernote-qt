@@ -76,6 +76,8 @@ void MainWindow::on_actionQuality_setting_triggered()
 {
     audioqualityoption *insert = new audioqualityoption(nullptr, this);
     insert->exec();
+
+    delete insert;
 }
 
 void audioqualityoption::on_pushButton_clicked()

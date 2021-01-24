@@ -92,6 +92,7 @@ SOURCES += \
     src/savecopybook.cpp \
     src/self_class.cpp \
     src/setting_ui.cpp \
+    src/sheet/newsheet_mainwindow.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \

@@ -336,6 +336,19 @@
    <addaction name="actionyellow"/>
    <addaction name="actionred"/>
    <addaction name="actioninsertImage"/>
+   <addaction name="separator"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionnew_sheet"/>
   </widget>
   <action name="actionNew_File">
    <property name="checkable">
@@ -665,6 +678,15 @@
    </property>
    <property name="text">
     <string>insertImage</string>
+   </property>
+  </action>
+  <action name="actionnew_sheet">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/new-sheetpng</normaloff>:/image/images/new-sheetpng</iconset>
+   </property>
+   <property name="text">
+    <string>new sheet</string>
    </property>
   </action>
  </widget>
