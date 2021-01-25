@@ -338,7 +338,7 @@
    <addaction name="actioninsertImage"/>
    <addaction name="separator"/>
   </widget>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="toolSheet">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>

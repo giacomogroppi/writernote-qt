@@ -10,7 +10,7 @@ void abilitazioneinput(MainWindow *parent)
 
     /* pulsanti matita */
     parent->ui->toolBarcolore->setHidden(check);
-
+    parent->ui->toolSheet->setHidden(check);
 
     parent->ui->spinBox_fontsize->setHidden(!check);
     parent->ui->fontComboBox_fonttipo->setHidden(!check);
@@ -19,5 +19,6 @@ void abilitazioneinput(MainWindow *parent)
     parent->ui->insertimagebotton->setHidden(!check);
     parent->ui->textEdit->setHidden(!check);
     parent->ui->listbotton->setHidden(!check);
+
 
 }
