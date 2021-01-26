@@ -20,6 +20,9 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 }
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
+    if(this->isdrawing)
+        return;
+
     if(lastpointtouch.xdrawing != -1){
         short int deltay = - lastpointtouch.ydrawing + event->pos().y();
         short int deltax = - lastpointtouch.xdrawing + event->pos().x();

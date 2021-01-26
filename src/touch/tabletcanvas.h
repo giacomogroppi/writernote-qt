@@ -105,6 +105,8 @@ public:
     int deltax;
     int deltay;
 
+    bool isdrawing = false;
+
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
     ismoving_t ismoving;
     void ismoving_f(QPaintEvent *event, QPainter *);
