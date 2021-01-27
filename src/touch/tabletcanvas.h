@@ -102,8 +102,9 @@ public:
     QPointF posizionezoom_puntof;
     int deltax;
     int deltay;
-
+#if defined (WIN32) || defined(WIN64)
     bool isdrawing = false;
+#endif
 
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
     ismoving_t ismoving;
