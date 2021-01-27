@@ -15,10 +15,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
                                     event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
-
-    this->zoomon();
-    this->zoomin();
-
     /* gestisce sia lo spostamento verticale in su e in giù con il mouse e con il touch */
     this->ismoving_f(event, &painter);
 

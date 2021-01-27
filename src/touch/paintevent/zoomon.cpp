@@ -2,13 +2,10 @@
 #include <QDebug>
 
 void TabletCanvas::zoomon(datastruct *datastruct_){
-    if(!this->iszoomon && !datastruct_) return;
-
     /* if it is called by paintevent */
     if(!datastruct_){
         datastruct_ = this->data;
         this->isloading = true;
-        this->iszoomon = false;
     }
 
     if(datastruct_->zoom <= 0.0)

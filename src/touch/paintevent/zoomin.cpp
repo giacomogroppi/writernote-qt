@@ -3,14 +3,11 @@
 
 /* automenta lo zoom */
 void TabletCanvas::zoomin(datastruct *datastruct_){
-    if(!this->iszoomin && !datastruct_) return;
-
     /* if it is called by paintevent */
     if(!datastruct_){
         datastruct_ = this->data;
 
         this->isloading = true;
-        this->iszoomin = false;
     }
     if(datastruct_->zoom >= 2.0)
         return;

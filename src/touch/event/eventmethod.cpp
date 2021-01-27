@@ -36,30 +36,30 @@ bool TabletCanvas::event(QEvent *event){
 
                             if(!check){
                                 if(punto.x() < this->lastpointzoom.poss.x() || punto.y() > this->lastpointzoom.poss.y()){
-                                    this->iszoomin = true;
-
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.posd.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.posd.y())/2);
+
+                                    this->zoomin();
                                 }
                                 else{
-                                    this->iszoomon = true;
-
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.posd.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.posd.y())/2);
+
+                                    this->zoomon();
                                 }
                             }
                             else{
                                 if(punto.x() > this->lastpointzoom.posd.x() || punto.y() < this->lastpointzoom.posd.y()){
-                                    this->iszoomin = true;
-
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.poss.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.poss.y())/2);
+
+                                    this->zoomin();
                                 }
                                 else{
-                                    this->iszoomon = true;
-
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.poss.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.poss.y())/2);
+
+                                    zoomon();
                                 }
                             }
 

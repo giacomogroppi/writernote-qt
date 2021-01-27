@@ -98,8 +98,6 @@ public:
     void zoomin(datastruct *datastruct_ = NULL);
     void zoomon(datastruct *datastruct_ = NULL);
 
-    bool iszoomin = false;
-    bool iszoomon = false;
 
     QPointF posizionezoom_puntof;
     int deltax;
