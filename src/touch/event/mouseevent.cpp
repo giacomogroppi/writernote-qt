@@ -13,7 +13,8 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
         return;
 
     this->ismoving.deltay = move;
-    this->ismoving.ismoving_check = true;
+
+    this->ismoving_f();
 
     event->accept();
     update();
@@ -40,7 +41,8 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         else
             this->ismoving.deltax = deltax;
 
-        this->ismoving.ismoving_check = true;
+        if(!ismoving.deltax && !ismoving.deltay)
+            this->ismoving_f();
     }
 
     lastpointtouch.xdrawing = event->pos().x();

@@ -20,8 +20,6 @@ typedef struct lastpoint_struct{
 typedef struct{
     short int deltay;
     short int deltax;
-
-    bool ismoving_check = false;
 }ismoving_t;
 
 QT_BEGIN_NAMESPACE
@@ -108,7 +106,7 @@ public:
 
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
     ismoving_t ismoving;
-    void ismoving_f(QPaintEvent *event, QPainter *);
+    void ismoving_f();
 
     void disegnafoglio();
     bool disegnofoglio_bool = false;

@@ -15,9 +15,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
                                     event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
-    /* gestisce sia lo spostamento verticale in su e in giù con il mouse e con il touch */
-    this->ismoving_f(event, &painter);
-
     /* se si è arrivati al fondo aggiunge i dati per il nuovo foglio */
     this->disegnofoglio_bool = this->disegnofoglio_bool ||
             !data->posizionefoglio.length();
