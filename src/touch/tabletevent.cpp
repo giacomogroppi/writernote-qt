@@ -28,7 +28,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         case QEvent::TabletMove:
         if (event->device() == QTabletEvent::RotationStylus)
                         updateCursor(event);
-            /* richiamata quando la penna scorre toccando lo schermo */
+
+#if defined(WIN32) || defined(WIN64)
+        this->isdrawing = true;
+#endif
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
                 if(this->medotodiinserimento == STILO){
@@ -85,6 +88,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             }
             break;
         case QEvent::TabletRelease:
+#if defined(WIN32) || defined(WIN64)
+            this->isdrawing = true;
+#endif
+
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
                 if(medotodiinserimento == SELEZIONE){

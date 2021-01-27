@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../writernote.qrc">
+    <normaloff>:/image/snap/gui/icon-writernote.png</normaloff>:/image/snap/gui/icon-writernote.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="0">
@@ -177,7 +181,7 @@
      <x>0</x>
      <y>0</y>
      <width>1027</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">

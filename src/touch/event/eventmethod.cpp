@@ -13,6 +13,8 @@ static int calcolodistanza(QPointF *point1, QPointF *point2){
 }
 
 bool TabletCanvas::event(QEvent *event){
+    qDebug() << event->type();
+
     switch (event->type()) {
         case QEvent::TouchBegin:
         case QEvent::TouchUpdate:

@@ -75,10 +75,8 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     abilitazioneinput(this);
 
-#if defined(WIN32) || defined(WIN64) || defined(TESTING)
     checkupdate = new updatecheck();
 
-#endif
 }
 
 

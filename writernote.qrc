@@ -42,5 +42,6 @@
         <file>src/windows/versione.xml</file>
         <file>images/pdf-icon.png</file>
         <file>images/new-sheetpng</file>
+        <file>snap/gui/icon-writernote.png</file>
     </qresource>
 </RCC>
