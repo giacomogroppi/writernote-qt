@@ -41,7 +41,7 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         else
             this->ismoving.deltax = deltax;
 
-        if(!ismoving.deltax && !ismoving.deltay)
+        if(!ismoving.deltax || !ismoving.deltay)
             this->ismoving_f();
     }
 
@@ -49,7 +49,6 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     lastpointtouch.ydrawing = event->pos().y();
 
     event->accept();
-    update();
 }
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
