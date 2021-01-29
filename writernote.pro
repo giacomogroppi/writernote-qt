@@ -81,6 +81,7 @@ SOURCES += \
     src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
+    src/lastedit/lastedit.cpp \
     src/main.cpp \
     src/dataread/xmlstruct.cpp \
     src/mainwindow.cpp \
@@ -92,6 +93,7 @@ SOURCES += \
     src/savecopybook.cpp \
     src/self_class.cpp \
     src/setting_ui.cpp \
+    src/sheet/dialog_sheet.cpp \
     src/sheet/newsheet_mainwindow.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
@@ -161,9 +163,11 @@ HEADERS += \
     src/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \
+    src/lastedit/lastedit.h \
     src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \
+    src/sheet/dialog_sheet.h \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
@@ -191,6 +195,7 @@ HEADERS += \
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
     src/mainwindow.ui \
+    src/sheet/dialog_sheet.ui \
     src/style/inserttable_class.ui \
     src/videocompress/videocompress_ui.ui \
 
