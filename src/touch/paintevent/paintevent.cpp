@@ -4,6 +4,8 @@
 
 #include "draw_image.h"
 
+static bool thereispositive(datastruct *, int, int);
+
 void TabletCanvas::paintEvent(QPaintEvent *event){
     if (m_pixmap.isNull())
         initPixmap();
@@ -24,7 +26,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     this->disegnafoglio();
 
-    laod(&painter);
+    if(this->isloading)
+        laod(&painter);
 
     /* la funzione viene lanciata quando si sta riascoltando l'audio */
     if(this->riascoltovariable)
@@ -33,57 +36,68 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-/* the function is called every time we need to reload all pixel of pixmap
- this happens when:
-    - resize
-    - zoom
-    - move with mouse and touch [scroll]
-    - loading all pixel in start
-*/
 void TabletCanvas::laod(QPainter *painter){
-    if(!isloading) return;
-
-    /* inizia a disegnare i punti */
-    int i_, len;
+    int i, len;
 
     len = this->data->x.length();
 
     m_pixmap.fill(Qt::white);
 
-    for(i_ = 0; i_ < len-1; i_++)
+    for(i = 0; i < len-1; i++)
     {
-        if(this->data->y.at(i_) < this->m_pixmap.size().height() && this->data->y.at(i_) >= 0){
-            if(data->idtratto.at(i_) == -1){
-                updateBrush_load(data->pressure.at(i_), data->color.at(i_));
+        if(this->data->y.at(i) < this->m_pixmap.size().height() && this->data->y.at(i) >= 0){
+            if(data->idtratto.at(i) == -1){
+                updateBrush_load(data->pressure.at(i), data->color.at(i));
 
                 painter->setPen(this->m_pen);
-                painter->drawLine(data->x.at(i_), data->y.at(i_)
-                                  , data->x.at(i_ + 1), data->y.at(i_ + 1));
+                painter->drawLine(data->x.at(i), data->y.at(i)
+                                  , data->x.at(i + 1), data->y.at(i + 1));
 
-                i_++;
+                i++;
             }
-            else if(i_
-                    && data->y.at(i_) != 0.00
-                    && data->y.at(i_) != (double)m_pixmap.height()
-                    && data->x.at(i_) != width()
-                    && this->data->idtratto.at(i_) == this->data->idtratto.at(i_ - 1)){
-                this->updateBrush_load(data->pressure.at(i_), data->color.at(i_));
+            else if(i
+                    && data->y.at(i) != 0.00
+                    && data->y.at(i) != (double)m_pixmap.height()
+                    && data->x.at(i) != width()
+                    && this->data->idtratto.at(i) == this->data->idtratto.at(i - 1)){
+
+
+                this->updateBrush_load(data->pressure.at(i), data->color.at(i));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(this->lastPoint.pos,
-                              QPointF(this->data->x.at(i_), this->data->y.at(i_)));
+                              QPointF(this->data->x.at(i), this->data->y.at(i)));
 
             }
 
+            if(data->y.at(i) <= 0
+                    && thereispositive(data, data->idtratto.at(i), i)){
+                while(data->y.at(i) <= 0){
+                    i++;
+                }
+            }
 
-            lastPoint.pos.setX(this->data->x.at(i_));
-            lastPoint.pos.setY(this->data->y.at(i_));
+
+            lastPoint.pos.setX(this->data->x.at(i));
+            lastPoint.pos.setY(this->data->y.at(i));
         }
     }
 
     draw_image(data, painter);
 
     this->isloading = false;
+}
+
+/* la funzione ritorna true se ci sono dei punti positivi per quel id tratto */
+static bool thereispositive(datastruct *data, int idtratto, int start){
+    int len;
+    len = data->x.length();
+
+    for(; start<len; start++){
+        if(data->idtratto.at(start) == idtratto && data->y.at(start) >= 0.0)
+            return true;
+    }
+    return false;
 }
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
