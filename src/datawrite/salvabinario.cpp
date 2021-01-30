@@ -9,9 +9,8 @@
 
 #include "../images/save_images.h"
 
-static bool freezip(zip_source_t *files, zip_t *file){
+static bool freezip(zip_source_t *files, zip_t *){
     zip_source_free(files);
-    //zip_close(file);
     return false;
 }
 
@@ -72,11 +71,8 @@ bool savefile::salvabinario(int posizione, zip_t *filezip){
             return freezip(file, filezip);;
 
     /* colori */
-    int point[3];
-
     for(i = 0; i < lunghezza; i++){
-        this->currenttitle->datatouch->color[i].getRgb(&point[0], &point[1], &point[2]);
-        if(zip_source_write(file, point, sizeof(int) * 3) < 0)
+        if(zip_source_write(file, &currenttitle->datatouch->color.at(i), sizeof(struct colore_s)) < 0)
             return freezip(file, filezip);
     }
 

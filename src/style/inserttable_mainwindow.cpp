@@ -1,8 +1,6 @@
 #ifndef INSERT_TABLE_CPP
 #define INSERT_TABLE_CPP
 
-//#include "insertTable.h"
-
 #include "../mainwindow.h"
 #include <QDialog>
 #include <QPushButton>

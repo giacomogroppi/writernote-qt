@@ -16,6 +16,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
         /* se invece il tratto non è ancora finito deve caricare l'id di prima */
         this->data->idtratto.append(data->idtratto.last());
 
+    struct colore_s colore;
 
     this->data->x.append(event->posF().x());
     this->data->y.append(event->posF().y());
@@ -25,7 +26,12 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     this->data->posizioneaudio.append(this->time/1000);
 
-    this->data->color.append(m_color);
+    m_color.getRgb(&colore.colore[0],
+            &colore.colore[1],
+            &colore.colore[2],
+            &colore.colore[3]);
+
+    this->data->color.append(colore);
 }
 
 

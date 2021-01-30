@@ -36,18 +36,33 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
+static QColor setColor_(const struct colore_s *colore){
+    QColor temp;
+    temp.setRgb(colore->colore[0],
+            colore->colore[1],
+            colore->colore[2],
+            colore->colore[3]);
+
+    return temp;
+}
+
 void TabletCanvas::laod(QPainter *painter){
     int i, len;
 
-    len = this->data->x.length();
-
     m_pixmap.fill(Qt::white);
 
-    for(i = 0; i < len-1; i++)
+    for(i = 0, len = this->data->x.length(); i < len-1; i++)
     {
+        if(data->y.at(i) <= 0
+                && thereispositive(data, data->idtratto.at(i), i)){
+            while(data->y.at(i) <= 0){
+                i++;
+            }
+        }
+
         if(this->data->y.at(i) < this->m_pixmap.size().height() && this->data->y.at(i) >= 0){
             if(data->idtratto.at(i) == -1){
-                updateBrush_load(data->pressure.at(i), data->color.at(i));
+                updateBrush_load(data->pressure.at(i), setColor_(&this->data->color.at(i)));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(data->x.at(i), data->y.at(i)
@@ -62,19 +77,12 @@ void TabletCanvas::laod(QPainter *painter){
                     && this->data->idtratto.at(i) == this->data->idtratto.at(i - 1)){
 
 
-                this->updateBrush_load(data->pressure.at(i), data->color.at(i));
+                this->updateBrush_load(data->pressure.at(i), setColor_(&this->data->color.at(i)));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(this->lastPoint.pos,
                               QPointF(this->data->x.at(i), this->data->y.at(i)));
 
-            }
-
-            if(data->y.at(i) <= 0
-                    && thereispositive(data, data->idtratto.at(i), i)){
-                while(data->y.at(i) <= 0){
-                    i++;
-                }
             }
 
 

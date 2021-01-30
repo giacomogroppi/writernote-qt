@@ -8,20 +8,12 @@
 /* la funzione confronta due oggetti della classe current title */
 bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 {
-    qDebug() << "checksimilecopybook -> inizio -> posizione_binario -> " << primo->posizione_binario;
-
     if(primo->posizione_binario == ""){
-        qDebug() << primo->testi << secondo->testi;
-
         if(primo->testi != secondo->testi)
             return false;
 
-        qDebug() << "testi";
-
         if(primo->testinohtml.length() != secondo->testinohtml.length())
             return false;
-
-        qDebug() << "lenght testinohtml";
 
         int i, len = primo->testinohtml.length();
         for(i=0; i < len; i++ )
@@ -35,17 +27,13 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
     }else{
         int i, len;
 
-        qDebug() << "x";
-
         len = primo->datatouch->x.length();
         if(len != secondo->datatouch->x.length())
             return false;
 
-
         for(i = 0; i < len; i++)
             if(primo->datatouch->x.at(i) != secondo->datatouch->x.at(i))
                 return false;
-
 
         len = primo->datatouch->y.length();
         if(len != secondo->datatouch->y.length())
@@ -67,17 +55,12 @@ bool checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
         if(len != secondo->datatouch->color.length())
             return false;
 
-        /*int point[6];
-        for(i=0; i<len; i++){
-            primo->datatouch->color.at(i).getRgb(&point[0], &point[1], &point[2]);
-            secondo->datatouch->color.at(i).getRgb(&point[3], &point[4], &point[5]);
+        int k;
+        for(i=0; i<len; i++)
+            for(k=0; k<4; k++)
+                if(primo->datatouch->color.at(i).colore[k] != secondo->datatouch->color.at(i).colore[k])
+                    return false;
 
-            if(point[0] != point[3]
-                    || point[1] != point[4]
-                    || point[2] != point[5])
-                return false;
-
-        }*/
 
 
         len = primo->datatouch->pressure.length();

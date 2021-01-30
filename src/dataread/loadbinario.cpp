@@ -64,13 +64,13 @@ bool xmlstruct::loadbinario(zip_t *z){
     }
 
     /* colori */
-    int pointer[3];
-    QColor coloretemp;
+    struct colore_s coloretemp;
     for(i = 0; i < lunghezza; i++){
-        check += source_read_ext(f, &pointer[0], sizeof(int));
-        check += source_read_ext(f, &pointer[1], sizeof(int));
-        check += source_read_ext(f, &pointer[2], sizeof(int));
-        coloretemp.setRgb(pointer[0], pointer[1], pointer[2]);
+        /*check += source_read_ext(f, &coloretemp.colore[0], sizeof(int));
+        check += source_read_ext(f, &coloretemp.colore[1], sizeof(int));
+        check += source_read_ext(f, &coloretemp.colore[2], sizeof(int));
+        check += source_read_ext(f, &coloretemp.colore[2], sizeof(int));*/
+        source_read_ext(f, &coloretemp, sizeof(struct colore_s));
 
         currenttitle->datatouch->color.append(coloretemp);
     }

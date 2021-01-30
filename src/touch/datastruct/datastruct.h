@@ -7,6 +7,10 @@
 
 #include "../../images/image_struct.h"
 
+struct colore_s{
+    int colore[4];
+};
+
 class datastruct
 {
 public:
@@ -34,7 +38,7 @@ public:
     QList<double> x;
     QList<double> y;
     QList<int> posizioneaudio;
-    QList<QColor> color;
+    QList<struct colore_s> color;
 
     QList<float> pressure;
     QList<qreal> rotation;
