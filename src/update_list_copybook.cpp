@@ -14,7 +14,7 @@ void update_list_copybook(MainWindow *parent){
     for(i=0 ; i < lunghezzalista; i++)
         parent->ui->listWidgetSX->addItem(parent->self->indice.titolo[i]);
 
-    /* setta il current item della lista dei copybook */
+
 
     int posizione = parent->self->indice.titolo.indexOf(parent->self->currentTitle);
     parent->ui->listWidgetSX->setCurrentRow(posizione);
