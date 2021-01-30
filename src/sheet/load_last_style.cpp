@@ -4,6 +4,9 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 
+#define DEFAULTTHICKNESS 5
+#define DEFAULTN 20
+
 /*static QDataStream& operator<<(QDataStream& out, const style_struct& v) {
     out << v.nx << v.ny << v.colore;
     return out;
@@ -27,7 +30,9 @@ style_struct * load_last_style(){
     default_setting.colore[2] = 255;
     default_setting.colore[3] = 1;
 
-    default_setting.nx = default_setting.ny = 20;
+    default_setting.nx = default_setting.ny = DEFAULTN;
+
+    default_setting.thickness = DEFAULTTHICKNESS;
 
     style_struct *style_temp = new style_struct;
 

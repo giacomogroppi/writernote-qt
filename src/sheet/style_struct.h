@@ -6,6 +6,7 @@
 struct style_struct{
     int nx, ny;
     int colore[4];
+    int thickness;
 };
 
 
