@@ -57,12 +57,6 @@ bool xmlstruct::loadbinario(zip_t *z){
         this->currenttitle->datatouch->rotation.append(valoretemp);
     }
 
-    /* posizione foglio */
-    for(i=0; i < lunghezza; i++){
-        check += source_read_ext(f, &valoretemp, sizeof(int));
-        currenttitle->datatouch->posizionefoglio.append(valoretemp);
-    }
-
     /* colori */
     struct colore_s coloretemp;
     for(i = 0; i < lunghezza; i++){
@@ -79,6 +73,13 @@ bool xmlstruct::loadbinario(zip_t *z){
     for(i=0; i < lunghezza; i++){
         check += source_read_ext(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
+    }
+
+    /* posizione foglio */
+    check += source_read_ext(f, &lunghezza, sizeof(int));
+    for(i=0; i < lunghezza; i++){
+        check += source_read_ext(f, &valoretemp, sizeof(int));
+        currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }
 
     check += source_read_ext(f, &this->currenttitle->datatouch->zoom, sizeof(float));
