@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Sheet</class>
- <widget class="QDialog" name="Sheet">
+ <class>dialog_sheet</class>
+ <widget class="QDialog" name="dialog_sheet">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,21 +11,8 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Sheet</string>
+   <string>Dialog</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>190</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>PushButton</string>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections/>

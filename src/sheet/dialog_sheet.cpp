@@ -6,9 +6,6 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
     ui(new Ui::dialog_sheet)
 {
     ui->setupUi(this);
-
-    this->setWindowTitle("Title");
-
 }
 
 dialog_sheet::~dialog_sheet()
