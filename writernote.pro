@@ -136,7 +136,8 @@ SOURCES += \
     src/windows/check_update_mainwindow.cpp \
     src/windows/mostra_finestra_i.cpp \
     src/windows/sourcecode_mainwindow.cpp \
-    src/windows/updatecheck.cpp
+    src/windows/updatecheck.cpp \
+    src/sheet/load_last_style.cpp
 
 
 HEADERS += \
@@ -190,7 +191,8 @@ HEADERS += \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \
     src/windows/mostra_finestra_i.h \
-    src/windows/updatecheck.h
+    src/windows/updatecheck.h \
+    load_last_style.h
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
