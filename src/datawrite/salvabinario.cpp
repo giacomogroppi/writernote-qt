@@ -63,13 +63,6 @@ bool savefile::salvabinario(int posizione, zip_t *filezip){
         if(zip_source_write(file, &this->currenttitle->datatouch->rotation[i], sizeof(int)) == -1)
             return freezip(file, filezip);
 
-    //qDebug() << "posizionefoglio";
-
-    /* posizionefoglio */
-    for(i=0; i < currenttitle->datatouch->posizionefoglio.length(); i++)
-        if(zip_source_write(file, &currenttitle->datatouch->posizionefoglio[i], sizeof(int)) == -1)
-            return freezip(file, filezip);;
-
     /* colori */
     for(i = 0; i < lunghezza; i++){
         if(zip_source_write(file, &currenttitle->datatouch->color.at(i), sizeof(struct colore_s)) < 0)
@@ -80,6 +73,14 @@ bool savefile::salvabinario(int posizione, zip_t *filezip){
     /* posizioneaudio */
     for(i=0; i < lunghezza; i++)
         if(zip_source_write(file, &currenttitle->datatouch->posizioneaudio[i], sizeof(int)) == -1)
+            return freezip(file, filezip);
+
+    /* posizionefoglio */
+    lunghezza = currenttitle->datatouch->posizionefoglio.length();
+    if(zip_source_write(file, &lunghezza, sizeof(int)) == -1)
+            return freezip(file, filezip);
+    for(i=0; i < lunghezza; i++)
+        if(zip_source_write(file, &currenttitle->datatouch->posizionefoglio[i], sizeof(int)) == -1)
             return freezip(file, filezip);
 
     if(zip_source_write(file, &currenttitle->datatouch->zoom, sizeof(float)) == -1)
