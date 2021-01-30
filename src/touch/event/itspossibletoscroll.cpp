@@ -12,15 +12,16 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
     if (delta < 0){
         int i, len, pos;
         len = data->x.length();
-        for(i=0, pos = 0; i<len; i++){
+        for(i=0, pos = 0; i<len; i++)
             /* takes the point of the last page below */
-            if(data->idtratto.at(i) == -1 && data->y.at(i) > pos)
+            if(data->idtratto[i] == IDORIZZONALE && data->y[i] > pos)
                 pos = data->y.at(i);
-        }
 
         return pos > altezza;
     }
-    return (data->posizionefoglio.first() < 0);
+
+    /* the first element is added from disegnofoglio */
+    return data->y.first() < 0;
 }
 
 
@@ -31,8 +32,9 @@ bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
 
     if(len){
         for(i=0; i<len; i++)
-            if(data->idtratto.at(i) == -1)
+            if(data->idtratto.at(i) == -5)
                 break;
+
         if(delta > 0)
             return (data->x.at(i) + delta) < 0;
         return data->x.at(i+1) > width;

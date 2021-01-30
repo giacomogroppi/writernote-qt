@@ -22,7 +22,7 @@ void TabletCanvas::disegnafoglio(){
     if(this->data->x.length() == 0){
         this->data->x.append(0);
         this->data->y.append(0);
-        this->data->idtratto.append(-2);
+        this->data->idtratto.append(-5);
 
         /* no matter what color it is, it is not drawn */
         this->data->color.append(coloretemp_struttura);

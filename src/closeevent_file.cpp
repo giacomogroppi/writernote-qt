@@ -54,7 +54,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
         this->self->currenttitle.testi = this->ui->textEdit->toHtml();
     }
 
-    bool check1 = checksimilecopybook(tempcopybook, &this->self->currenttitle);
+    bool check1 = checksimilecopybook(tempcopybook, &this->self->currenttitle) == OK;
 
     check1 = check1 && checksimileindice(&this->self->indice, tempindice);
 

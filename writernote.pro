@@ -46,6 +46,10 @@ SOURCES += \
     src/audiorecord/displayErrorMessage.cpp \
     src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
+    src/autosave/autosave_.cpp \
+    src/autosave/autosave_mainwindow.cpp \
+    src/lastedit/enableredoundo_mainwindow.cpp \
+    src/lastedit/redoundo.cpp \
     src/closeevent_file.cpp \
     src/currenttitle/audiototext.cpp \
     src/currenttitle/checksimilecopybook.cpp \
@@ -81,7 +85,6 @@ SOURCES += \
     src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
-    src/lastedit/lastedit.cpp \
     src/main.cpp \
     src/dataread/xmlstruct.cpp \
     src/mainwindow.cpp \
@@ -148,6 +151,8 @@ HEADERS += \
     src/audiosetting/definition.h \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
+    src/autosave/autosave_.h \
+    src/lastedit/redoundo.h \
     src/currenttitle/audiototext.h \
     src/currenttitle/checksimilecopybook.h \
     src/currenttitle/deleteaudio.h \
@@ -164,7 +169,6 @@ HEADERS += \
     src/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \
-    src/lastedit/lastedit.h \
     src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \

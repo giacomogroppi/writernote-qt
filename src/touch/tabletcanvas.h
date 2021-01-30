@@ -122,6 +122,8 @@ public:
     /* square per la selezione */
     square square_;
 
+    bool enableredoundu = true;
+
 protected:
     void tabletEvent(QTabletEvent *event) override;
     void paintEvent(QPaintEvent *event) override;

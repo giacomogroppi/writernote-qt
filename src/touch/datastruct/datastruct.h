@@ -7,6 +7,15 @@
 
 #include "../../images/image_struct.h"
 
+/*
+    IDVERTICALE -> linee verticali
+    IDORIZZONALE -> linee orizzonali
+
+*/
+
+#define IDVERTICALE -2
+#define IDORIZZONALE -1
+
 struct colore_s{
     int colore[4];
 };

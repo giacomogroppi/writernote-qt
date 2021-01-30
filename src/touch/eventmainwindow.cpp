@@ -5,6 +5,8 @@
 
 /* la funzione gestisce l'inquadramento del pixmap con la dimensione degli spacer */
 bool MainWindow::event(QEvent *event){
+    qDebug() << event->type();
+
     /*if(event->type() != QEvent::Resize && event->type() != QEvent::UpdateRequest)
         if(!this->m_canvas->iszoomin && !this->m_canvas->iszoomin)
             return QWidget::event(event);

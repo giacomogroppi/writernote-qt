@@ -159,7 +159,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             return dialog_critic("We had a problem opening the current copybook");
         }
 
-        if(!checksimilecopybook(&this->self->currenttitle, tempcopybook)){
+        if(checksimilecopybook(&this->self->currenttitle, tempcopybook) != OK){
             auto *savevariabile = new savecopybook(this, &this->self->currentTitle);
 
             if (!savevariabile->check_permission()){

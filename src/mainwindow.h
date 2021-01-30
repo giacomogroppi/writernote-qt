@@ -69,6 +69,9 @@ public:
 
     void update_image();
 
+    /* false -> not enable */
+    bool autosave = false;
+    bool enableredoundu = false;
 public slots:
 
     /* la funzione serve anche per eliminare l'audio del copybook */
@@ -201,6 +204,10 @@ private slots:
     void on_actioninsertImage_triggered();
 
     void on_actionnew_sheet_triggered();
+
+    void on_actionEnable_redo_undo_triggered();
+
+    void on_actionAuto_Save_triggered();
 
 private:
     /* gestione dell'audio */

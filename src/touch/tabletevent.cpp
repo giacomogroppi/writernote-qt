@@ -5,6 +5,10 @@
 
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
+
+    /* TODO -> implement this function to call redoundu.copy(); */
+    /*if(this->enableredoundu);*/
+
     switch (event->type()) {
         case QEvent::TabletPress:
             if (!m_deviceDown) {

@@ -22,8 +22,6 @@
 
 #include "../dialog_critic.h"
 
-//using Base64  = macaron::Base64;
-
 void updatecheck::start(){
     QFile file(POSIZIONEPATHVERSIONE);
 
@@ -68,7 +66,8 @@ static QString decode_frombase64(QString stringa){
 
 void updatecheck::managerFinished(){
     if(reply->error()){
-        dialog_critic("We had a problem with internet connection");
+        if(mostra)
+            dialog_critic("We had a problem with internet connection");
         delete manager;
         return;
     }
@@ -85,7 +84,7 @@ void updatecheck::managerFinished(){
 
     int version = testo.toInt(&check);
 
-    if(!check){
+    if(!check && mostra){
         return dialog_critic("We had a problem while reading the current version");
     }
 
