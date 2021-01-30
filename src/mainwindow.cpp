@@ -178,9 +178,10 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             return dialog_critic("We had a problem opening the new copybook");
         }
     }
-    else
+    else{
         this->self->currenttitle.reset();
-
+        this->self->currenttitle.datatouch->reset();
+    }
     this->self->currentTitle = item->text().toUtf8().constData();
     this->setWindowTitle("Writernote - " + this->self->currentTitle);
 
