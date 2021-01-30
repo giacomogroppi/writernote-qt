@@ -18,9 +18,9 @@ void MainWindow::on_actionSave_File_triggered()
     if(self->currenttitle.posizione_binario == "")
         this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
-    savefile savefile_i(this, &this->self->currenttitle, &self->currentTitle);
+    savefile savefile_i(&self->path, &this->self->currenttitle, &self->currentTitle);
 
-    bool check = savefile_i.savefile_check_indice();
+    bool check = savefile_i.savefile_check_indice(&self->indice);
 
     if(this->self->currentTitle != "")
         check = check && savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));

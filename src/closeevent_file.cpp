@@ -84,9 +84,9 @@ void MainWindow::closeEvent (QCloseEvent *event)
                 return;
         }
 
-        savefile save_(this, &this->self->currenttitle, &this->self->currentTitle);
+        savefile save_(&self->path, &this->self->currenttitle, &this->self->currentTitle);
 
-        bool check = save_.savefile_check_indice();
+        bool check = save_.savefile_check_indice(&self->indice);
 
         if(this->self->currentTitle != "")
             check = check && save_.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));

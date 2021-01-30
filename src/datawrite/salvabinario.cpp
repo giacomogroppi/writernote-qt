@@ -92,7 +92,7 @@ bool savefile::salvabinario(int posizione, zip_t *filezip){
         return freezip(file, filezip);
 
     if(zip_file_add(filezip,
-                 ("bin_" + this->parent->self->indice.titolo[posizione] + (QString)".xml").toUtf8().constData(),
+                 ("bin_" + *this->namecopybook + (QString)".xml").toUtf8().constData(),
                  file,
                  ZIP_FL_OVERWRITE) == -1)
         return freezip(file, filezip);

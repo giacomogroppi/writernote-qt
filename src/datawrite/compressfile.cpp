@@ -40,7 +40,7 @@ bool savefile::compressfile(const char *namefile, const char *text){
 bool savefile::compressfile(const void *dato, int size, const char *namefile){
     int errorp = 0;
 
-    zip_t *filezip = zip_open(this->parent->self->path.toUtf8().constData(), ZIP_CREATE , &errorp);
+    zip_t *filezip = zip_open(this->path->toUtf8().constData(), ZIP_CREATE , &errorp);
 
     if (filezip == nullptr) {
         return false;

@@ -4,7 +4,7 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 
-static QDataStream& operator<<(QDataStream& out, const style_struct& v) {
+/*static QDataStream& operator<<(QDataStream& out, const style_struct& v) {
     out << v.nx << v.ny << v.colore;
     return out;
 }
@@ -18,7 +18,7 @@ static QDataStream& operator>>(QDataStream& in, style_struct& v) {
         in >> v.colore[i];
 
     return in;
-}
+}*/
 
 style_struct * load_last_style(){
     style_struct default_setting;

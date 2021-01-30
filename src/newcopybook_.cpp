@@ -21,8 +21,8 @@ bool newcopybook_(MainWindow *parent, QString stringa){
         tempcopybook->posizione_binario = "bin_" + stringa + ".xml";
 
     /* in questo modo non c'è bisogno di cambiare copybook per crearne uno nuovo per salvare */
-    savefile save_(parent, tempcopybook, &stringa);
-    if(!save_.savefile_check_file(position) || !save_.savefile_check_indice())
+    savefile save_(&parent->self->path, tempcopybook, &stringa);
+    if(!save_.savefile_check_file(position) || !save_.savefile_check_indice(&parent->self->indice))
         /* vuol dire che si è fallito nel salvare il file */
         return false;
 

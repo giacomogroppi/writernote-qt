@@ -9,14 +9,14 @@
 class savefile
 {
 private:
-    MainWindow *parent;
+    QString *path;
     currenttitle_class *currenttitle;
     QString *namecopybook;
 
 
 public:
-    savefile(MainWindow *parent, currenttitle_class *currenttitle, QString *namecopybook);
-    bool savefile_check_indice();
+    savefile(QString *, currenttitle_class *currenttitle, QString *namecopybook);
+    bool savefile_check_indice(indice_class *);
     bool savefile_check_file(int);
     //bool savefile_check_copybook();
     bool compressfile(const char *namefile, const char *testo);

@@ -43,11 +43,11 @@ bool savecopybook::check_permission(){
         if(!check) /*vuol dire che l'utente non ha selezionato nessun file o posizione*/
             return false;
     }
-    savefile save_class(this->parent, &this->parent->self->currenttitle, this->namecopybook);
+    savefile save_class(&this->parent->self->path, &this->parent->self->currenttitle, this->namecopybook);
 
     int posizione = this->parent->self->indice.titolo.indexOf(this->namecopybook->toUtf8().constData());
 
-    bool check = save_class.savefile_check_indice() && save_class.savefile_check_file(posizione);
+    bool check = save_class.savefile_check_indice(&parent->self->indice) && save_class.savefile_check_file(posizione);
     if(!check)
         dialog_critic("We had a problem saving the copybook");
 

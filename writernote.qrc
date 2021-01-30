@@ -43,5 +43,6 @@
         <file>images/pdf-icon.png</file>
         <file>images/new-sheetpng</file>
         <file>snap/gui/icon-writernote.png</file>
+        <file>images/arrow-curve-180-left.png</file>
     </qresource>
 </RCC>

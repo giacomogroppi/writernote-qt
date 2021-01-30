@@ -15,8 +15,8 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
-savefile::savefile(MainWindow *parent, currenttitle_class *currenttitle, QString *namecopybook){
-    //this->parent = parent;
+savefile::savefile(QString *path, currenttitle_class *currenttitle, QString *namecopybook){
+    this->path = path;
     this->currenttitle = currenttitle;
     this->namecopybook = namecopybook;
 };

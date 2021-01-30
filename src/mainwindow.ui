@@ -439,8 +439,8 @@
   </action>
   <action name="actionUndu">
    <property name="icon">
-    <iconset>
-     <normaloff>../images/arrow-curve-180-left.png</normaloff>../images/arrow-curve-180-left.png</iconset>
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/arrow-curve-180-left.png</normaloff>:/image/images/arrow-curve-180-left.png</iconset>
    </property>
    <property name="text">
     <string>Undo</string>

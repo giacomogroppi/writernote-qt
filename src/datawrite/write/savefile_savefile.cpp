@@ -7,7 +7,7 @@ bool savefile::savefile_check_file(int posizione){
 
     check = 0;
 
-    zip_t *filezip = zip_open(parent->self->path.toUtf8().constData(), ZIP_CREATE, &error);
+    zip_t *filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
 
     if(!filezip){
         return false;
@@ -65,7 +65,7 @@ bool savefile::savefile_check_file(int posizione){
 
     check += zip_source_commit_write(file);
     check += zip_file_add(filezip,
-                 (parent->self->indice.titolo.at(posizione) + (QString)".xml").toUtf8().constData(),
+                 (*this->namecopybook + (QString)".xml").toUtf8().constData(),
                  file,
                  ZIP_FL_OVERWRITE);
 
