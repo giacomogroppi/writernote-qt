@@ -96,8 +96,10 @@ SOURCES += \
     src/savecopybook.cpp \
     src/self_class.cpp \
     src/setting_ui.cpp \
+    src/sheet/color_pixmap.cpp \
     src/sheet/dialog_sheet.cpp \
     src/sheet/newsheet_mainwindow.cpp \
+    src/sheet/pixmap.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
@@ -132,6 +134,7 @@ SOURCES += \
     src/touch/tabletevent.cpp \
     src/touch/updatelist.cpp \
     src/update_list_copybook.cpp \
+    src/utils/color/color_chooser.cpp \
     src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \
@@ -172,7 +175,9 @@ HEADERS += \
     src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \
+    src/sheet/color_pixmap.h \
     src/sheet/dialog_sheet.h \
+    src/sheet/pixmap.h \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
@@ -191,6 +196,7 @@ HEADERS += \
     src/self_class.h \
     src/dataread/xmlstruct.h \
     src/style/inserttable_class.h \
+    src/utils/color/color_chooser.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \

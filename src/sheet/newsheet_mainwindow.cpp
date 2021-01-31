@@ -3,10 +3,6 @@
 #include <QSettings>
 
 /* it load the last configuration for the file */
-static int load_last(){
-
-}
-
 void MainWindow::on_actionnew_sheet_triggered()
 {
     QSettings settings(QString("config_sheet"), QSettings::IniFormat);
