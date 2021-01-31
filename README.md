@@ -13,16 +13,12 @@
 
 ## Experimental Features:
 - Import images
-- Zoom in
-- Zoom on
+- Pdf export
+- Zoom in and Zoom on
 
 ## To do
-- Import image
-- Save image into .writer
-- Project .writer to pdf [now it is only possible with the option 'keyboard', not pen]
 - Project .writer to image
 - Convert audio to text
-- Compile and distribute for windows
 - Drag and drop image and file to import it
 
 ## Installing
@@ -68,7 +64,7 @@
   - Windows:
     dependence:
       mingw:
-        ```
+        ```bash
         pacman -S git
         git clone https://github.com/giacomogroppi/writernote-qt.git
         ./windows/dipendenze.sh
