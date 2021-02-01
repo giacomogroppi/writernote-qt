@@ -12,6 +12,8 @@
 #include "datastruct/datastruct.h"
 #include "square/square.h"
 
+#define IDTRATTOZERO -5
+
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
     QPointF poss = QPointF(-1, -1);

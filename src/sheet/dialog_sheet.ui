@@ -36,7 +36,7 @@
          <item>
           <widget class="QLabel" name="label_orizzontal">
            <property name="text">
-            <string>Number of orizzontal line</string>
+            <string>Number of vertical line</string>
            </property>
           </widget>
          </item>
@@ -63,7 +63,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Number of vertical line</string>
+            <string>Number of horizontal line</string>
            </property>
           </widget>
          </item>

@@ -85,14 +85,12 @@ void dialog_sheet::on_t_valueChanged(int arg1)
 void dialog_sheet::on_x_valueChanged(int arg1)
 {
     this->style.style[current].nx = arg1;
-    //value_change();
     draw();
 }
 
 void dialog_sheet::on_y_valueChanged(int arg1)
 {
-    this->style.style[current].nx = arg1;
-    //value_change();
+    this->style.style[current].ny = arg1;
     draw();
 }
 
@@ -133,6 +131,9 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
     msgBox.setInformativeText("Do you want to save your changes?");
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Save);
+
+
+
     int ret = msgBox.exec();
 
     if(ret != QMessageBox::Save)

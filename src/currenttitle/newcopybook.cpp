@@ -52,8 +52,10 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         /* deve salvare prima di continuare */
         qfilechoose filec(this);
         ok = filec.filechoose(&self->path);
-        if (!ok)
+        if (!ok){
+            //goto stop;
             return;
+        }
     }
 
     /* richiede all'utente se vuole salvare il file */
@@ -64,18 +66,9 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     if(!ok || namecopybook == "")
         return;
 
-    /* TODO */
-    if(namecopybook.indexOf("<titolo>") != -1 || namecopybook.indexOf("</titolo>") != -1
-            || namecopybook.indexOf("<audio>") != -1
-            || namecopybook.indexOf("</audio>") != -1
-            || namecopybook.indexOf("<compressione>") != -1
-            || namecopybook.indexOf("</compressione>") != -1
-            || namecopybook.indexOf("<video>") != -1
-            || namecopybook.indexOf("</video>") != -1)
-        return dialog_critic("You can't use video, compressione, audio and titolo as name of the copybook");
-
     if(this->self->indice.titolo.indexOf(namecopybook) != -1)
         return dialog_critic("There is a copybook that already has this title");
+
 
     if(!newcopybook_(this, namecopybook))
         return dialog_critic("We had a problem saving the copybook");
@@ -83,4 +76,9 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook(this);
 
+/*stop:{
+    delete menu;
+    delete keyboard;
+    delete draw;
+    }*/
 }
