@@ -7,6 +7,9 @@
 #include "color_pixmap.h"
 
 #include <QCloseEvent>
+#include <QGraphicsScene>
+
+QColor settaggiocolore(int *);
 
 namespace Ui {
 class dialog_sheet;
@@ -30,7 +33,9 @@ private slots:
     void on_y_valueChanged(int arg1);
 
 
-    void closeEvent (QCloseEvent *event);
+    void closeEvent (QCloseEvent *event) override;
+
+    void on_pushButton_color_clicked();
 
 private:
     Ui::dialog_sheet *ui;
@@ -39,8 +44,22 @@ private:
 
     color_pixmap *pixmaps;
 
+    QPixmap pixmapColor, pixmapDraw;
+
     style_struct style;
     int current = 0;
+
+    QPalette pal;
+    QPen penna;
+
+    void initPixmap();
+
+    void draw();
+
+    QGraphicsScene *m_graphicsScene;
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // DIALOG_SHEET_H

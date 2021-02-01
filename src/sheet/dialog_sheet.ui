@@ -20,6 +20,16 @@
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
      <item>
+      <widget class="QGraphicsView" name="graphicsView"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_disegno">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -31,7 +41,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="x"/>
+          <widget class="QSpinBox" name="x">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>25</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -39,13 +56,26 @@
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="label_vertical">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
             <string>Number of vertical line</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="y"/>
+          <widget class="QSpinBox" name="y">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>25</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -59,7 +89,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QSpinBox" name="t"/>
+          <widget class="QSpinBox" name="t">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>25</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -69,6 +106,19 @@
           <widget class="QLabel" name="label_color">
            <property name="text">
             <string>Color</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_color">
+           <property name="maximumSize">
+            <size>
+             <width>25</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
            </property>
           </widget>
          </item>

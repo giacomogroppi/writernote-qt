@@ -98,6 +98,7 @@ SOURCES += \
     src/setting_ui.cpp \
     src/sheet/color_pixmap.cpp \
     src/sheet/dialog_sheet.cpp \
+    src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
     src/sheet/pixmap.cpp \
     src/style/abilitazioneinput.cpp \

@@ -2,7 +2,8 @@
 
 pixmap::pixmap(QWidget *)
 {
-
+    setAutoFillBackground(true);
+    setAttribute(Qt::WA_TabletTracking);
 }
 
 void pixmap::set(int *pointer){

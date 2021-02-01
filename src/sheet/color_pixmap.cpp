@@ -6,7 +6,8 @@
 
 color_pixmap::color_pixmap(QWidget *parent) : QWidget(parent)
 {
-
+    setAutoFillBackground(true);
+    setAttribute(Qt::WA_TabletTracking);
 }
 
 void color_pixmap::set(style_struct_S *data){
@@ -33,7 +34,7 @@ void color_pixmap::paintEvent(QPaintEvent *event){
     short int width = this->width();
 
     short int spessore_x = height / this->style->nx;
-    short int spessore_y = width / this->style->ny;
+    //short int spessore_y = width / this->style->ny;
 
     QPainter painter(&this->pixmap);
 

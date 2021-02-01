@@ -23,20 +23,24 @@ static QDataStream& operator>>(QDataStream& in, style_struct& v) {
     return in;
 }*/
 
+void load_default(struct style_struct *default_setting){
+    int i;
+    default_setting->quanti = 0;
+    for(i=0; i<QUANTESTRUCT; i++){
+        default_setting->style[i].colore[1] = default_setting->style[i].colore[0] = 0;
+        default_setting->style[i].colore[2] = 255;
+        default_setting->style[i].colore[3] = 1;
+
+        default_setting->style[i].nx = default_setting->style[i].ny = DEFAULTN;
+
+        default_setting->style[i].thickness = DEFAULTTHICKNESS;
+    }
+}
+
 style_struct * load_last_style(){
     style_struct default_setting;
 
-    int i;
-    default_setting.quanti = 0;
-    for(i=0; i<QUANTESTRUCT; i++){
-        default_setting.style[i].colore[1] = default_setting.style[i].colore[0] = 0;
-        default_setting.style[i].colore[2] = 255;
-        default_setting.style[i].colore[3] = 1;
-
-        default_setting.style[i].nx = default_setting.style[i].ny = DEFAULTN;
-
-        default_setting.style[i].thickness = DEFAULTTHICKNESS;
-    }
+    load_default(&default_setting);
 
     style_struct *style_temp = new style_struct;
 
