@@ -139,6 +139,6 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 }
 
 
-void TabletCanvas::settingdata(datastruct *data){
+void TabletCanvas::settingdata(currenttitle_class *data){
     this->data = data;
 }

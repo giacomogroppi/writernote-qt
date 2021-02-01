@@ -5,26 +5,26 @@ void topdf::translate(){
 
     int delta, k;
 
-    delta = data->posizionefoglio.first();
-    len = data->posizionefoglio.length();
+    delta = data->datatouch->posizionefoglio.first();
+    len = data->datatouch->posizionefoglio.length();
     for(i=0; i<len; i++)
-        data->posizionefoglio[i] += delta;
+        data->datatouch->posizionefoglio[i] += delta;
 
-    len = data->x.length();
+    len = data->datatouch->x.length();
     for(i=0; i<len; i++)
-        data->y[i] -= delta;
+        data->datatouch->y[i] -= delta;
 
     for(i=0; i<len; i++){
-        if(data->x.at(i) < 0.0){
-            delta = data->x.at(i);
+        if(data->datatouch->x.at(i) < 0.0){
+            delta = data->datatouch->x.at(i);
 
             for(k=0; k<len; k++)
-                data->x[i] += delta;
+                data->datatouch->x[i] += delta;
         }
     }
 
-    while(data->zoom != 1.00){
-        if(data->zoom < 1.00)
+    while(data->datatouch->zoom != 1.00){
+        if(data->datatouch->zoom < 1.00)
             parent->m_canvas->zoomin(this->data);
         else
             parent->m_canvas->zoomon(this->data);

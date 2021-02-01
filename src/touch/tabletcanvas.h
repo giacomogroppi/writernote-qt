@@ -9,7 +9,8 @@
 #include <QTabletEvent>
 #include <QWidget>
 
-#include "datastruct/datastruct.h"
+#include "../currenttitle/currenttitle_class.h"
+
 #include "square/square.h"
 
 #define IDTRATTOZERO -5
@@ -62,7 +63,7 @@ public:
     void updatelist(QTabletEvent *event);
 
 
-    datastruct *data;
+    currenttitle_class *data;
 
     /* al passaggio a mainwindow il puntatore verrà cambiato con il valore del tempo della registrazione se e solo se sta registrando
     in caso contrario rimarrà sempre zero*/
@@ -72,6 +73,10 @@ public:
        1 gomma*/
     int medotodiinserimento;
     void gomma(QPainter &painter);
+    void gomma_delete();
+
+    QList<int> gomma_delete_id;
+
     QColor m_color = Qt::black;
 
     void loadfile();
@@ -95,8 +100,8 @@ public:
 
     /* touch e zoom */
     lastpoint_t lastpointzoom;
-    void zoomin(datastruct *datastruct_ = NULL);
-    void zoomon(datastruct *datastruct_ = NULL);
+    void zoomin(currenttitle_class *datastruct_ = NULL);
+    void zoomon(currenttitle_class *datastruct_ = NULL);
 
 
     QPointF posizionezoom_puntof;
@@ -119,12 +124,15 @@ public:
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
 
-    void settingdata(datastruct *data);
+    void settingdata(currenttitle_class *data);
 
     /* square per la selezione */
     square square_;
 
     bool enableredoundu = true;
+
+    /* false remove only what enter in GOMMASIZE else all the line */
+    bool gomma_cancella = false;
 
 protected:
     void tabletEvent(QTabletEvent *event) override;

@@ -26,19 +26,19 @@ bool topdf::createpdf(){
 
     int i, lenpagine;
 
-    lenpagine = this->data->posizionefoglio.length();
+    lenpagine = data->datatouch->posizionefoglio.length();
 
     QPdfWriter pdfWriter(*this->path);
     pdfWriter.setPageSize(QPageSize(QPageSize::A4));
 
     QPainter painter(&pdfWriter);
 
-    int len = data->x.length();
+    int len = data->datatouch->x.length();
     for(i=0; i<len; i++)
-        if(data->idtratto.at(i) == -1)
+        if(data->datatouch->idtratto.at(i) == -1)
             break;
 
-    int size_orizzontale = data->x.at(i+1);
+    int size_orizzontale = data->datatouch->x.at(i+1);
 
     double size_verticale = pdfWriter.height();
 
@@ -48,7 +48,7 @@ bool topdf::createpdf(){
         this->draw(&painter, delta, size_orizzontale, size_verticale);
 
         if(i+1<lenpagine){
-            newpage(this->data);
+            newpage(data->datatouch);
 
             pdfWriter.newPage();
         }
@@ -74,7 +74,7 @@ void MainWindow::on_actiontoppf_triggered()
 
     topdf *filepdf = new topdf(&path_pdf);
 
-    filepdf->copy(this->self->currenttitle.datatouch);
+    filepdf->copy(&self->currenttitle);
 
 
     if(!filepdf->createpdf()){

@@ -19,10 +19,10 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     /* se si è arrivati al fondo aggiunge i dati per il nuovo foglio */
     this->disegnofoglio_bool = this->disegnofoglio_bool ||
-            !data->posizionefoglio.length();
+            !data->datatouch->posizionefoglio.length();
 
     if(!this->disegnofoglio_bool)
-        this->disegnofoglio_bool = data->needtocreatenew();
+        this->disegnofoglio_bool = data->datatouch->needtocreatenew();
 
     this->disegnafoglio();
 
@@ -51,43 +51,43 @@ void TabletCanvas::laod(QPainter *painter){
 
     m_pixmap.fill(Qt::white);
 
-    for(i = 0, len = this->data->x.length(); i < len-1; i++)
+    for(i = 0, len = data->datatouch->x.length(); i < len-1; i++)
     {
-        if(data->y.at(i) <= 0
-                && thereispositive(data, data->idtratto.at(i), i)){
-            while(data->y.at(i) <= 0){
+        if(data->datatouch->y.at(i) <= 0
+                && thereispositive(data->datatouch, data->datatouch->idtratto.at(i), i)){
+            while(data->datatouch->y.at(i) <= 0){
                 i++;
             }
         }
 
-        if(this->data->y.at(i) < this->m_pixmap.size().height() && this->data->y.at(i) >= 0){
-            if(data->idtratto.at(i) == -1){
-                updateBrush_load(data->pressure.at(i), setColor_(&this->data->color.at(i)));
+        if(data->datatouch->y.at(i) < this->m_pixmap.size().height() && data->datatouch->y.at(i) >= 0){
+            if(data->datatouch->idtratto.at(i) == -1){
+                updateBrush_load(data->datatouch->pressure.at(i), setColor_(&data->datatouch->color.at(i)));
 
                 painter->setPen(this->m_pen);
-                painter->drawLine(data->x.at(i), data->y.at(i)
-                                  , data->x.at(i + 1), data->y.at(i + 1));
+                painter->drawLine(data->datatouch->x.at(i), data->datatouch->y.at(i)
+                                  , data->datatouch->x.at(i + 1), data->datatouch->y.at(i + 1));
 
                 i++;
             }
             else if(i
-                    && data->y.at(i) != 0.00
-                    && data->y.at(i) != (double)m_pixmap.height()
-                    && data->x.at(i) != width()
-                    && this->data->idtratto.at(i) == this->data->idtratto.at(i - 1)){
+                    && data->datatouch->y.at(i) != 0.00
+                    && data->datatouch->y.at(i) != (double)m_pixmap.height()
+                    && data->datatouch->x.at(i) != width()
+                    && data->datatouch->idtratto.at(i) == data->datatouch->idtratto.at(i - 1)){
 
 
-                this->updateBrush_load(data->pressure.at(i), setColor_(&this->data->color.at(i)));
+                this->updateBrush_load(data->datatouch->pressure.at(i), setColor_(&data->datatouch->color.at(i)));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(this->lastPoint.pos,
-                              QPointF(this->data->x.at(i), this->data->y.at(i)));
+                              QPointF(data->datatouch->x.at(i), data->datatouch->y.at(i)));
 
             }
 
 
-            lastPoint.pos.setX(this->data->x.at(i));
-            lastPoint.pos.setY(this->data->y.at(i));
+            lastPoint.pos.setX(data->datatouch->x.at(i));
+            lastPoint.pos.setY(data->datatouch->y.at(i));
         }
     }
 

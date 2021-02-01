@@ -99,7 +99,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
                 if(medotodiinserimento == SELEZIONE){
-                    this->square_.setData(this->data);
+                    this->square_.setData(data->datatouch);
                     bool check = this->square_.find();
                     if(!check){
                         isloading = true;
@@ -116,8 +116,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                     update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                 }
-                else
-                    update();
+                else if(gomma_cancella){
+                    this->gomma_delete();
+                }
                 isloading = true;
                 update();
             }

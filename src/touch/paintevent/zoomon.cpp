@@ -1,42 +1,42 @@
 #include "../tabletcanvas.h"
 #include <QDebug>
 
-void TabletCanvas::zoomon(datastruct *datastruct_){
+void TabletCanvas::zoomon(currenttitle_class *datastruct_){
     /* if it is called by paintevent */
     if(!datastruct_){
         datastruct_ = this->data;
         this->isloading = true;
     }
 
-    if(datastruct_->zoom <= 0.0)
+    if(datastruct_->datatouch->zoom <= 0.0)
         return;
 
     if(m_pixmap.width() == width())
         this->initPixmap();
 
     else{
-        int i, len = datastruct_->x.length();
+        int i, len = datastruct_->datatouch->x.length();
 
         for(i=0; i < len; i ++){
-            datastruct_->x[i] /= 1.05;
-            datastruct_->x[i] += 1;
+            datastruct_->datatouch->x[i] /= 1.05;
+            datastruct_->datatouch->x[i] += 1;
 
-            datastruct_->y[i] /= 1.05;
-            datastruct_->y[i] += 1;
+            datastruct_->datatouch->y[i] /= 1.05;
+            datastruct_->datatouch->y[i] += 1;
         }
     }
 
-    datastruct_->zoom -= 0.05;
+    datastruct_->datatouch->zoom -= 0.05;
 
     int i, len, delta, deltaf;
-    len = datastruct_->x.length();
+    len = datastruct_->datatouch->x.length();
 
     for(i=0; i < len; i++)
-        if(datastruct_->idtratto.at(i) == -1)
+        if(datastruct_->datatouch->idtratto.at(i) == -1)
             break;
 
-    delta = datastruct_->x.at(i);
-    deltaf = datastruct_->x.at(i+1) - m_pixmap.width();
+    delta = datastruct_->datatouch->x.at(i);
+    deltaf = datastruct_->datatouch->x.at(i+1) - m_pixmap.width();
 
     if(deltaf < 0)
         deltaf = 0;
@@ -52,7 +52,7 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
         */
 
         for(i=0; i<len; i++){
-            datastruct_->x[i] -= delta;
+            datastruct_->datatouch->x[i] -= delta;
         }
 
         this->initPixmap();
@@ -60,7 +60,7 @@ void TabletCanvas::zoomon(datastruct *datastruct_){
     }
 
     for(i=0; i<len; i++){
-        datastruct_->x[i] -= (delta + deltaf);
+        datastruct_->datatouch->x[i] -= (delta + deltaf);
     }
 
 

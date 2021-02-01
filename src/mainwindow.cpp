@@ -197,7 +197,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     /* pass the pointer to the class */
     if(this->self->currenttitle.posizione_binario != ""){
-        this->m_canvas->settingdata(this->self->currenttitle.datatouch);
+        this->m_canvas->settingdata(&this->self->currenttitle);
         this->m_canvas->loadpixel();
 
         this->m_canvas->time = 0;

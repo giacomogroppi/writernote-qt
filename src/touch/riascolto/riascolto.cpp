@@ -14,7 +14,7 @@ void TabletCanvas::loadriascolto(QPainter *painter){
     /* inizia a disegnare i punti */
     int i_, len;
 
-    len = this->data->posizioneaudio.length();
+    len = data->datatouch->posizioneaudio.length();
 
     this->m_pen = QPen(Qt::black, 2, Qt::DashDotLine, Qt::RoundCap);
 
@@ -24,20 +24,20 @@ void TabletCanvas::loadriascolto(QPainter *painter){
     {
         if(i_)
             painter->drawLine(this->lastPoint.pos,
-                          QPointF(this->data->x.at(i_), this->data->y.at(i_)));
+                          QPointF(data->datatouch->x.at(i_), data->datatouch->y.at(i_)));
 
-        lastPoint.pos.setX(this->data->x.at(i_));
-        lastPoint.pos.setY(this->data->y.at(i_));
+        lastPoint.pos.setX(data->datatouch->x.at(i_));
+        lastPoint.pos.setY(data->datatouch->y.at(i_));
     }
 
 
     for(; i_ < len; i_++){
         if(i_ != this->posizione)
             painter->drawLine(this->lastPoint.pos,
-                          QPointF(this->data->x.at(i_), this->data->y.at(i_)));
+                          QPointF(data->datatouch->x.at(i_), data->datatouch->y.at(i_)));
 
-        lastPoint.pos.setX(this->data->x.at(i_));
-        lastPoint.pos.setY(this->data->y.at(i_));
+        lastPoint.pos.setX(data->datatouch->x.at(i_));
+        lastPoint.pos.setY(data->datatouch->y.at(i_));
     }
 
 }

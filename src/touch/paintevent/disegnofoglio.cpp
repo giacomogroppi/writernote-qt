@@ -8,27 +8,27 @@ void TabletCanvas::disegnafoglio(){
     int lunghezza;
 
     /*lunghezza = this->m_pixmap.width();*/
-    lunghezza = NUMEROPIXELPAGINA * data->zoom;
+    lunghezza = NUMEROPIXELPAGINA * data->datatouch->zoom;
 
-    if(data->posizionefoglio.length())
-       last = data->posizionefoglio.last() + NUMEROPIXELPAGINA * data->zoom;
+    if(data->datatouch->posizionefoglio.length())
+       last = data->datatouch->posizionefoglio.last() + NUMEROPIXELPAGINA * data->datatouch->zoom;
 
-    data->posizionefoglio.append(last);
+    data->datatouch->posizionefoglio.append(last);
 
     QColor coloretemp(Qt::blue);
     struct colore_s coloretemp_struttura;
 
     /* insert a point (0, 0) */
-    if(this->data->x.length() == 0){
-        this->data->x.append(0);
-        this->data->y.append(0);
-        this->data->idtratto.append(-5);
+    if(this->data->datatouch->x.length() == 0){
+        this->data->datatouch->x.append(0);
+        this->data->datatouch->y.append(0);
+        this->data->datatouch->idtratto.append(-5);
 
         /* no matter what color it is, it is not drawn */
-        this->data->color.append(coloretemp_struttura);
-        this->data->pressure.append(0);
-        this->data->rotation.append(0);
-        this->data->posizioneaudio.append(0);
+        this->data->datatouch->color.append(coloretemp_struttura);
+        this->data->datatouch->pressure.append(0);
+        this->data->datatouch->rotation.append(0);
+        this->data->datatouch->posizioneaudio.append(0);
     }
 
     coloretemp.getRgb(&coloretemp_struttura.colore[0],
@@ -38,51 +38,51 @@ void TabletCanvas::disegnafoglio(){
 
     for(i = 0, last += 10; i < 61; i++, last += 40){
         /* punto inizio riga */
-        this->data->x.append(20.00);
-        this->data->y.append((double)last);
-        this->data->color.append(coloretemp_struttura);
-        this->data->posizioneaudio.append(0);
+        this->data->datatouch->x.append(20.00);
+        this->data->datatouch->y.append((double)last);
+        this->data->datatouch->color.append(coloretemp_struttura);
+        this->data->datatouch->posizioneaudio.append(0);
 
-        this->data->pressure.append(0.001);
-        this->data->rotation.append(0);
+        this->data->datatouch->pressure.append(0.001);
+        this->data->datatouch->rotation.append(0);
 
-        this->data->idtratto.append(-1);
+        this->data->datatouch->idtratto.append(-1);
 
         /* punto di fine della riga */
 
-        this->data->x.append((double)(lunghezza - 20));
-        this->data->y.append((double)last);
-        this->data->color.append(coloretemp_struttura);
-        this->data->posizioneaudio.append(0);
+        this->data->datatouch->x.append((double)(lunghezza - 20));
+        this->data->datatouch->y.append((double)last);
+        this->data->datatouch->color.append(coloretemp_struttura);
+        this->data->datatouch->posizioneaudio.append(0);
 
-        this->data->pressure.append(0.001);
-        this->data->rotation.append(0);
+        this->data->datatouch->pressure.append(0.001);
+        this->data->datatouch->rotation.append(0);
 
-        this->data->idtratto.append(-1);
+        this->data->datatouch->idtratto.append(-1);
 
     }
 
     /* punto inizio riga */
-    this->data->x.append(0.0);
-    this->data->y.append((double)last);
-    this->data->color.append(coloretemp_struttura);
-    this->data->posizioneaudio.append(0);
+    this->data->datatouch->x.append(0.0);
+    this->data->datatouch->y.append((double)last);
+    this->data->datatouch->color.append(coloretemp_struttura);
+    this->data->datatouch->posizioneaudio.append(0);
 
-    this->data->pressure.append(0.001);
-    this->data->rotation.append(0);
+    this->data->datatouch->pressure.append(0.001);
+    this->data->datatouch->rotation.append(0);
 
-    this->data->idtratto.append(-1);
+    this->data->datatouch->idtratto.append(-1);
 
     /* punto di fine della riga */
-    this->data->x.append((double)lunghezza);
-    this->data->y.append((double)last);
-    this->data->color.append(coloretemp_struttura);
-    this->data->posizioneaudio.append(0);
+    this->data->datatouch->x.append((double)lunghezza);
+    this->data->datatouch->y.append((double)last);
+    this->data->datatouch->color.append(coloretemp_struttura);
+    this->data->datatouch->posizioneaudio.append(0);
 
-    this->data->pressure.append(0.001);
-    this->data->rotation.append(0);
+    this->data->datatouch->pressure.append(0.001);
+    this->data->datatouch->rotation.append(0);
 
-    this->data->idtratto.append(-1);
+    this->data->datatouch->idtratto.append(-1);
 
 
     this->disegnofoglio_bool = false;

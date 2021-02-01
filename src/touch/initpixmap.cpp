@@ -9,13 +9,13 @@ void TabletCanvas::initPixmap()
 
     /* understand if the user can write outside the page */
     int len, i, sizex;
-    len = data->x.length();
+    len = data->datatouch->x.length();
     if(len){
         for(i=0; i<len; i++)
-            if(data->idtratto.at(i) == -1)
+            if(data->datatouch->idtratto.at(i) == -1)
                 break;
 
-        i = data->x.at(i+1) + 20;
+        i = data->datatouch->x.at(i+1) + 20;
 
         if(width() < i)
             sizex = width();

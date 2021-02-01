@@ -18,7 +18,13 @@ void dialog_sheet::paintEvent(QPaintEvent *event){
     penna.setColor(settaggiocolore(style.style[current].colore));
     penna.setWidth(style.style[current].thickness);
 
-    QPainter painter(this->ui->graphicsView);
+    penna.setStyle(Qt::PenStyle::SolidLine);
+
+    //QPainter painter(this->ui->graphicsView);
+
+    QPainter painter(this);
+
+    painter.setPen(QPen(Qt::blue, 40, Qt::PenStyle::SolidLine));
 
     painter.setPen(penna);
 
@@ -39,6 +45,6 @@ void dialog_sheet::paintEvent(QPaintEvent *event){
         painter.drawLine(spessore_y * i, 0, spessore_y * i, width);
     }
 
-    painter.end();
-    this->ui->graphicsView->update();
+    //painter.end();
+    //this->ui->graphicsView->update();
 }

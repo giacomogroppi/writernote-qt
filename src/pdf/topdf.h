@@ -7,7 +7,7 @@
 class topdf
 {
 private:
-    datastruct *data;
+    currenttitle_class *data;
     QString *path;
 
     void translate();
@@ -25,8 +25,6 @@ private:
     } lastPoint;
     QPen penna;
 
-
-
 public:
     ~topdf(){
         delete data;
@@ -35,18 +33,18 @@ public:
     topdf(QString *path);
     bool createpdf();
 
-    inline void copy(datastruct *datastruct_){
-            this->data = new datastruct;
+    inline void copy(currenttitle_class *datastruct_){
+            this->data = new currenttitle_class;
 
-            this->data->x = datastruct_->x;
-            this->data->y = datastruct_->y;
-            this->data->color = datastruct_->color;
-            this->data->idtratto = datastruct_->idtratto;
-            this->data->posizioneaudio = datastruct_->posizioneaudio;
-            this->data->posizionefoglio = datastruct_->posizionefoglio;
-            this->data->pressure = datastruct_->pressure;
-            this->data->rotation = datastruct_->rotation;
-            this->data->zoom = datastruct_->zoom;
+            data->datatouch->x = datastruct_->datatouch->x;
+            data->datatouch->y = datastruct_->datatouch->y;
+            data->datatouch->color = datastruct_->datatouch->color;
+            data->datatouch->idtratto = datastruct_->datatouch->idtratto;
+            data->datatouch->posizioneaudio = datastruct_->datatouch->posizioneaudio;
+            data->datatouch->posizionefoglio = datastruct_->datatouch->posizionefoglio;
+            data->datatouch->pressure = datastruct_->datatouch->pressure;
+            data->datatouch->rotation = datastruct_->datatouch->rotation;
+            data->datatouch->zoom = datastruct_->datatouch->zoom;
     }
 };
 
