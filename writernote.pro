@@ -96,11 +96,9 @@ SOURCES += \
     src/savecopybook.cpp \
     src/self_class.cpp \
     src/setting_ui.cpp \
-    src/sheet/color_pixmap.cpp \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
-    src/sheet/pixmap.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
@@ -176,9 +174,7 @@ HEADERS += \
     src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \
-    src/sheet/color_pixmap.h \
     src/sheet/dialog_sheet.h \
-    src/sheet/pixmap.h \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \

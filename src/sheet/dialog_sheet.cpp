@@ -33,27 +33,16 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
     pal.setColor(QPalette::Window, settaggiocolore(style.style[0].colore));
     ui->pushButton_color->setPalette(pal);
 
-    /*
-    this->pixmaps = new color_pixmap;
-    this->pixmapd = new pixmap;
-
-    ui->horizontalLayout_main->insertWidget(0, this->pixmaps);
-    ui->horizontalLayout_color->insertWidget(1, this->pixmapd);
-
-    ui->x->setValue(this->style.style[0].nx);
-    ui->y->setValue(this->style.style[0].ny);
-    ui->t->setValue(this->style.style[0].thickness);
-
-    this->pixmapd->set(this->style.style[0].colore);
-
-    this->pixmaps->set(&this->style.style[0]);
-    */
     this->current = 0;
-
-    draw();
 
     m_graphicsScene = new QGraphicsScene(this);
     ui->graphicsView->setScene(m_graphicsScene);
+
+    this->updateList();
+
+    setValue();
+
+    draw();
 }
 
 QColor settaggiocolore(int *colore_){
@@ -66,8 +55,6 @@ QColor settaggiocolore(int *colore_){
 
 dialog_sheet::~dialog_sheet()
 {
-    delete pixmapd;
-    delete pixmaps;
     delete ui;
 }
 
@@ -157,4 +144,31 @@ void dialog_sheet::on_pushButton_color_clicked()
             &style.style[current].colore[3]);
 
     draw();
+}
+
+void dialog_sheet::updateList(){
+    int i;
+
+    ui->listWidget->clear();
+
+    for(i=0; i<QUANTESTRUCT; i++){
+        ui->listWidget->addItem((QString)style.style->nome);
+    }
+}
+
+void dialog_sheet::setValue(){
+    ui->t->setValue(style.style[current].thickness);
+    ui->y->setValue(style.style[current].ny);
+    ui->x->setValue(style.style[current].nx);
+}
+
+/* need to change item and reset the value */
+void dialog_sheet::on_listWidget_itemClicked(QListWidgetItem *)
+{
+    int position = ui->listWidget->currentIndex().row();
+    this->current = position;
+
+    draw();
+
+    setValue();
 }

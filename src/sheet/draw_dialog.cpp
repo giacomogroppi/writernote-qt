@@ -3,6 +3,8 @@
 #include "ui_dialog_sheet.h"
 #include <QPainter>
 
+#include <QDebug>
+
 void dialog_sheet::draw(){
     ui->pushButton_color->setAutoFillBackground(true);
     QPalette pal = ui->pushButton_color->palette();
@@ -11,22 +13,14 @@ void dialog_sheet::draw(){
 
     ui->pushButton_color->update();
 
-    update();
-}
 
-void dialog_sheet::paintEvent(QPaintEvent *event){
+    m_graphicsScene->clear();
+
+    /* draw the line */
     penna.setColor(settaggiocolore(style.style[current].colore));
     penna.setWidth(style.style[current].thickness);
 
     penna.setStyle(Qt::PenStyle::SolidLine);
-
-    //QPainter painter(this->ui->graphicsView);
-
-    QPainter painter(this);
-
-    painter.setPen(QPen(Qt::blue, 40, Qt::PenStyle::SolidLine));
-
-    painter.setPen(penna);
 
     int i;
 
@@ -36,15 +30,20 @@ void dialog_sheet::paintEvent(QPaintEvent *event){
     short int spessore_x = height / style.style[current].nx;
     short int spessore_y = width / style.style[current].ny;
 
+    //m_graphicsScene->addLine(0, 0, 200, 200, penna);
 
+    /* vertical line */
     for(i=1; i<style.style[current].nx; i++){
-        painter.drawLine(0, spessore_x * i, height, spessore_x * i);
+        m_graphicsScene->addLine(spessore_x * i, 0, spessore_x * i, height, penna);
     }
 
     for(i=1; i<style.style[current].ny; i++){
-        painter.drawLine(spessore_y * i, 0, spessore_y * i, width);
+        m_graphicsScene->addLine(0, spessore_y * i, width, spessore_y * i, penna);
     }
 
-    //painter.end();
-    //this->ui->graphicsView->update();
+}
+
+
+void dialog_sheet::resizeEvent(QResizeEvent *){
+    draw();
 }

@@ -11,4 +11,6 @@ void MainWindow::on_actionnew_sheet_triggered()
 
     dialog_sheet *dialog = new dialog_sheet;
     dialog->exec();
+
+    delete dialog;
 }

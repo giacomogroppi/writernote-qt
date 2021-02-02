@@ -3,11 +3,12 @@
 
 #include <QDialog>
 
-#include "pixmap.h"
-#include "color_pixmap.h"
-
 #include <QCloseEvent>
 #include <QGraphicsScene>
+
+#include <QListWidgetItem>
+
+#include "style_struct.h"
 
 QColor settaggiocolore(int *);
 
@@ -37,12 +38,11 @@ private slots:
 
     void on_pushButton_color_clicked();
 
+    void on_listWidget_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::dialog_sheet *ui;
 
-    pixmap *pixmapd;
-
-    color_pixmap *pixmaps;
 
     QPixmap pixmapColor, pixmapDraw;
 
@@ -58,8 +58,11 @@ private:
 
     QGraphicsScene *m_graphicsScene;
 
+    void updateList();
+    void setValue();
 protected:
-    void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+
 };
 
 #endif // DIALOG_SHEET_H

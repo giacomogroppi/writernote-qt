@@ -19,6 +19,8 @@ struct style_struct{
     struct style_struct_S style[QUANTESTRUCT];
 };
 
+Q_DECLARE_METATYPE(style_struct_S);
+
 Q_DECLARE_METATYPE(style_struct);
 
 
