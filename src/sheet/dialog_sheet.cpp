@@ -55,6 +55,7 @@ QColor settaggiocolore(int *colore_){
 
 dialog_sheet::~dialog_sheet()
 {
+    delete m_graphicsScene;
     delete ui;
 }
 
