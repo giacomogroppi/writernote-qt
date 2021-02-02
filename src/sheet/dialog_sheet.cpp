@@ -8,6 +8,10 @@
 
 #include <QMessageBox>
 
+#include <QInputDialog>
+
+#include "../dialog_critic.h"
+
 dialog_sheet::dialog_sheet(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dialog_sheet)
@@ -62,7 +66,6 @@ dialog_sheet::~dialog_sheet()
 void dialog_sheet::on_t_valueChanged(int arg1)
 {
     this->style.style[current].thickness = arg1;
-    //value_change();
     draw();
 }
 
@@ -118,19 +121,18 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
     msgBox.setDefaultButton(QMessageBox::Save);
 
 
-
     int ret = msgBox.exec();
 
     if(ret != QMessageBox::Save)
-    {
-        delete last;
-        return;
-    }
+        goto delete_;
+
 
     save_last_style(&style);
 
-    delete last;
     return event->accept();
+
+    delete_:
+    delete last;
 }
 
 void dialog_sheet::on_pushButton_color_clicked()
@@ -172,4 +174,20 @@ void dialog_sheet::on_listWidget_itemClicked(QListWidgetItem *)
     draw();
 
     setValue();
+}
+
+/* doble click on the item */
+void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
+{
+    bool ok;
+    QString newName = QInputDialog::getText(this, tr("Name"),
+                                                 tr("Title: "), QLineEdit::Normal,
+                                                 "", &ok);
+    if(!ok || newName.isEmpty())
+        return;
+
+    if(newName.length() > STRNOME)
+        return dialog_critic("The maximum number of letters for the word is " + QString::number(STRNOME));
+
+    strcpy(style.style[current].nome, newName.toUtf8().constData());
 }

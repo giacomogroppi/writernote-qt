@@ -29,22 +29,27 @@ void load_default(struct style_struct *default_setting){
 }
 
 style_struct_S * load_default_drawing(){
-    style_struct default_setting;
-
-    load_default(&default_setting);
-
-    style_struct_S *style_temp = new style_struct_S;
+    style_struct *style_temp;
 
     QSettings setting("writernote", "style");
     setting.beginGroup("style");
 
-    QVariant value = setting.value("style_form_default", QVariant::fromValue(default_setting));
+    QVariant value = setting.value("style_form_default", QVariant::fromValue(0));
 
-    *style_temp = value.value<style_struct_S>();
+    bool ok;
+
+    int indice = value.toInt(&ok);
+
+
+    if(!ok)
+        return NULL;
 
     setting.endGroup();
 
-    return style_temp;
+
+    style_temp = load_last_style();
+
+    return &style_temp->style[indice];
 }
 
 void save_default_drawing(struct style_struct_S *data){
