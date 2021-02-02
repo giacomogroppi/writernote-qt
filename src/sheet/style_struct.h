@@ -3,9 +3,12 @@
 
 #define QUANTESTRUCT 5
 
+#define STRNOME 40
+
 #include <QMetaType>
 
 struct style_struct_S{
+    char nome[STRNOME + 1];
     int nx, ny;
     int colore[4];
     int thickness;

@@ -27,9 +27,6 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
         load_default(&style);
     }
 
-    QPixmap pix;
-    ui->label_disegno->setPixmap(pix);
-
     ui->pushButton_color->setAutoFillBackground(true); // IMPORTANT!
     pal = ui->pushButton_color->palette();
 
