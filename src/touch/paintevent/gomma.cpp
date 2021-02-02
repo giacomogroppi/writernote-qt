@@ -22,6 +22,8 @@ void TabletCanvas::gomma(QPainter &painter){
 
                 id = data->datatouch->idtratto[i];
 
+                gomma_delete_id.append(id);
+
                 for(; i<len; i++){
                     if(data->datatouch->idtratto[i] != id)
                         break;

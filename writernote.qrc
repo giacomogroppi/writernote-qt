@@ -44,5 +44,6 @@
         <file>images/new-sheetpng</file>
         <file>snap/gui/icon-writernote.png</file>
         <file>images/arrow-curve-180-left.png</file>
+        <file>images/choose-color-icon.png</file>
     </qresource>
 </RCC>

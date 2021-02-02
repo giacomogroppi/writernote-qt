@@ -209,6 +209,8 @@ private slots:
 
     void on_actionAuto_Save_triggered();
 
+    void on_actionchoose_color_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

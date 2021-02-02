@@ -228,6 +228,7 @@
     <addaction name="actionSource_code"/>
     <addaction name="actionDocumentation"/>
     <addaction name="actionCheck_update"/>
+    <addaction name="actionBug_report"/>
    </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
@@ -342,6 +343,7 @@
    <addaction name="actionwhite"/>
    <addaction name="actionyellow"/>
    <addaction name="actionred"/>
+   <addaction name="actionchoose_color"/>
    <addaction name="actioninsertImage"/>
    <addaction name="separator"/>
   </widget>
@@ -710,6 +712,15 @@
    </property>
    <property name="text">
     <string>Enable redo undo</string>
+   </property>
+  </action>
+  <action name="actionchoose_color">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/choose-color-icon.png</normaloff>:/image/images/choose-color-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>choose-color</string>
    </property>
   </action>
  </widget>
