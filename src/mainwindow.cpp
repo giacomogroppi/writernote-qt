@@ -45,7 +45,9 @@
 #endif
 
 #include "audioplay/aggiornotastiriascolto.h"
+#include "utils/setting_define.h"
 
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)
@@ -76,6 +78,19 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     abilitazioneinput(this);
 
     checkupdate = new updatecheck();
+
+    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    setting.beginGroup(GROUPNAME_GEOMETRY);
+    QSize value = setting.value(KEY_SIZE).toSize();
+
+    this->setSizeIncrement(value);
+
+
+    QRect value_rect = setting.value(KEY_GEOMETRY).toRect();
+    this->setGeometry(value_rect);
+
+    setting.endGroup();
+
 
 }
 

@@ -42,6 +42,8 @@ private slots:
 
     void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::dialog_sheet *ui;
 

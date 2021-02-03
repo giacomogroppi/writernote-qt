@@ -12,6 +12,8 @@
 
 #include "../dialog_critic.h"
 
+#include "setting_color.h"
+
 dialog_sheet::dialog_sheet(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dialog_sheet)
@@ -49,13 +51,7 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
     draw();
 }
 
-QColor settaggiocolore(int *colore_){
-    QColor colore = QColor::fromRgb(colore_[0],
-            colore_[1],
-            colore_[2],
-            colore_[3]);
-    return colore;
-}
+
 
 dialog_sheet::~dialog_sheet()
 {
@@ -123,16 +119,21 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
 
     int ret = msgBox.exec();
 
-    if(ret != QMessageBox::Save)
-        goto delete_;
+    if(ret == QMessageBox::Cancel){
+        delete last;
+        return event->ignore();
+    }
+    else if(ret == QMessageBox::Discard){
+        delete last;
+        return event->accept();
+    }
 
 
     save_last_style(&style);
 
-    return event->accept();
-
-    delete_:
     delete last;
+
+    return event->accept();
 }
 
 void dialog_sheet::on_pushButton_color_clicked()
@@ -155,7 +156,7 @@ void dialog_sheet::updateList(){
     ui->listWidget->clear();
 
     for(i=0; i<QUANTESTRUCT; i++){
-        ui->listWidget->addItem((QString)style.style->nome);
+        ui->listWidget->addItem((QString)style.style[i].nome);
     }
 }
 
@@ -190,4 +191,12 @@ void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
         return dialog_critic("The maximum number of letters for the word is " + QString::number(STRNOME));
 
     strcpy(style.style[current].nome, newName.toUtf8().constData());
+
+    this->updateList();
+}
+
+/* default style */
+void dialog_sheet::on_pushButton_clicked()
+{
+    save_default_drawing(&current);
 }

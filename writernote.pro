@@ -99,6 +99,7 @@ SOURCES += \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
+    src/sheet/setting_color.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
@@ -175,6 +176,7 @@ HEADERS += \
     src/pdf/topdf.h \
     src/setting_ui.h \
     src/sheet/dialog_sheet.h \
+    src/sheet/setting_color.h \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
@@ -194,6 +196,7 @@ HEADERS += \
     src/dataread/xmlstruct.h \
     src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
+    src/utils/setting_define.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \

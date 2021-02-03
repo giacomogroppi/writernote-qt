@@ -13,8 +13,18 @@
 #include "dataread/xmlstruct.h"
 #include "currenttitle/checksimilecopybook.h"
 
+#include <QSettings>
+#include "utils/setting_define.h"
+
 void MainWindow::closeEvent (QCloseEvent *event)
 {
+    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    setting.beginGroup(GROUPNAME_GEOMETRY);
+
+    setting.setValue(KEY_SIZE, this->size());
+    setting.endGroup();
+
+
     if(!this->self->indice.titolo.length())
         return event->accept();
 

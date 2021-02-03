@@ -13,6 +13,12 @@ int main(int argc, char *argv[])
     //QApplication a(argc, argv);
     MainWindow w(nullptr, canvas);
 
+    app.setApplicationName("writernote");
+    app.setApplicationVersion("1.3.12");
+    app.setOrganizationDomain("https://github.com/giacomogroppi/writernote-qt");
+    app.setOrganizationName("writernote");
+
+
     if(argc != 1){
         w.setFile(argc-1, argv);
     }

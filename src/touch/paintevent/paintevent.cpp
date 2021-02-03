@@ -51,7 +51,7 @@ void TabletCanvas::laod(QPainter *painter){
 
     m_pixmap.fill(Qt::white);
 
-    for(i = 0, len = data->datatouch->x.length(); i < len-1; i++)
+    for(i = 1, len = data->datatouch->x.length(); i < len-1; i++)
     {
         if(data->datatouch->y.at(i) <= 0
                 && thereispositive(data->datatouch, data->datatouch->idtratto.at(i), i)){
@@ -61,7 +61,7 @@ void TabletCanvas::laod(QPainter *painter){
         }
 
         if(data->datatouch->y.at(i) < this->m_pixmap.size().height() && data->datatouch->y.at(i) >= 0){
-            if(data->datatouch->idtratto.at(i) == -1){
+            if(data->datatouch->idtratto.at(i) == IDORIZZONALE){
                 updateBrush_load(data->datatouch->pressure.at(i), setColor_(&data->datatouch->color.at(i)));
 
                 painter->setPen(this->m_pen);

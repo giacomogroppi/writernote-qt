@@ -148,6 +148,13 @@ line</string>
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Make default style</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
