@@ -14,7 +14,7 @@
 
 #include "string.h"
 
-void load_default(struct style_struct *default_setting){
+void load_default(style_struct *default_setting){
     int i;
     default_setting->quanti = 0;
     for(i=0; i<QUANTESTRUCT; i++){
