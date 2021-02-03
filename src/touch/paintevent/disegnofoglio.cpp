@@ -39,7 +39,7 @@ void TabletCanvas::disegnafoglio(){
     if(this->data->datatouch->x.length() == 0){
         this->data->datatouch->x.append(0);
         this->data->datatouch->y.append(0);
-        this->data->datatouch->idtratto.append(-5);
+        this->data->datatouch->idtratto.append(IDTRATTOZERO);
 
         /* no matter what color it is, it is not drawn */
         this->data->datatouch->color.append(coloretemp_struttura);
@@ -47,8 +47,6 @@ void TabletCanvas::disegnafoglio(){
         this->data->datatouch->rotation.append(DEFAULTROTATION);
         this->data->datatouch->posizioneaudio.append(0);
     }
-
-    qDebug() << coloretemp;
 
     coloretemp.getRgb(&coloretemp_struttura.colore[0],
             &coloretemp_struttura.colore[1],

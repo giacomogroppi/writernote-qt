@@ -87,7 +87,6 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     setting.endGroup();
 
-
 }
 
 
@@ -96,7 +95,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-/*creazione di un nuovo file*/
+/* create new file */
 void MainWindow::on_actionNew_File_triggered()
 {
     if(this->self->indice.titolo.length() != 0){

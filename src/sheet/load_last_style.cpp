@@ -76,7 +76,7 @@ void save_default_drawing(int *data){
     QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
-    setting.setValue(KEYDEFAULTSTYLE, QVariant::fromValue(*data));
+    setting.setValue(KEYDEFAULTSTYLE, *data);
 
     setting.endGroup();
 }
