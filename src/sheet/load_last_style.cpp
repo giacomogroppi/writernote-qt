@@ -30,7 +30,7 @@ void load_default(style_struct *default_setting){
     }
 }
 
-void load_default_onlystyle(struct style_struct_S *default_setting){
+void load_default_onlystyle( style_struct_S *default_setting){
     strcpy(default_setting->nome, DEFAULTNOME);
 
     default_setting->colore[1] = default_setting->colore[0] = 0;
