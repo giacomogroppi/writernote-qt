@@ -16,4 +16,7 @@ void save_default_drawing(int *);
 
 void load_default(struct style_struct *);
 
+/* the function is called by disegnofoglio */
+void load_default_onlystyle(struct style_struct_S *default_setting);
+
 #endif // LOAD_LAST_STYLE_H

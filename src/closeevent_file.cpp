@@ -21,7 +21,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
 
-    setting.setValue(KEY_SIZE, this->size());
+    setting.setValue(KEY_GEOMETRY, this->geometry());
     setting.endGroup();
 
 

@@ -30,13 +30,24 @@ void load_default(struct style_struct *default_setting){
     }
 }
 
+void load_default_onlystyle(struct style_struct_S *default_setting){
+    strcpy(default_setting->nome, DEFAULTNOME);
+
+    default_setting->colore[1] = default_setting->colore[0] = 0;
+    default_setting->colore[2] = 255;
+    default_setting->colore[3] = DEFAULTALFA;
+
+    default_setting->nx = default_setting->ny = DEFAULTN;
+
+    default_setting->thickness = DEFAULTTHICKNESS;
+
+}
+
 int load_default_drawing_index(){
     QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
     bool ok;
-
-
 
     int indice = setting.value(KEYDEFAULTSTYLE, QVariant::fromValue(0)).toInt(&ok);
 
@@ -45,6 +56,7 @@ int load_default_drawing_index(){
     if(!ok)
         return -1;
     return indice;
+
 }
 
 style_struct_S * load_default_drawing(){

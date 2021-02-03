@@ -25,6 +25,10 @@ void TabletCanvas::disegnafoglio(){
     data->datatouch->posizionefoglio.append(last);
 
     struct style_struct_S *style = load_default_drawing();
+    if(style == NULL){
+        style = new struct style_struct_S;
+        load_default_onlystyle(style);
+    }
 
     QColor coloretemp(settaggiocolore(style->colore));
 

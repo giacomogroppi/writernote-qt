@@ -12,6 +12,5 @@
 /* group for the size */
 #define GROUPNAME_GEOMETRY "geometry"
 #define KEY_GEOMETRY "geometry_key"
-#define KEY_SIZE "size_key"
 
 #endif // SETTING_DEFINE_H

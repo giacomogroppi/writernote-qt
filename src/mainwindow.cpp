@@ -81,10 +81,6 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
-    QSize value = setting.value(KEY_SIZE).toSize();
-
-    this->setSizeIncrement(value);
-
 
     QRect value_rect = setting.value(KEY_GEOMETRY).toRect();
     this->setGeometry(value_rect);
