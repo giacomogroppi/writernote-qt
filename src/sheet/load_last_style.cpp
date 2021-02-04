@@ -4,29 +4,32 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 
-#define DEFAULTTHICKNESS 1
-#define DEFAULTN 20
-#define DEFAULTNOME "Undefined"
-
-#define DEFAULTALFA 254
-
 #include "../utils/setting_define.h"
 
 #include "string.h"
 
-void load_default(style_struct *default_setting){
+static void load_default_(style_struct *data, int indice, const char *name){
+    strcpy(data->style[indice].nome, name);
+
+    data->style[indice].colore[1] = data->style[indice].colore[0] = 0;
+    data->style[indice].colore[2] = 255;
+    data->style[indice].colore[3] = DEFAULTALFA;
+
+    data->style[indice].nx = data->style[indice].ny = DEFAULTN;
+
+    data->style[indice].thickness = DEFAULTTHICKNESS;
+}
+
+void load_default(style_struct *default_setting, const char *name, int indice){
     int i;
     default_setting->quanti = 0;
+
+    if(indice != -1){
+        return load_default_(default_setting, indice, name);
+    }
+
     for(i=0; i<QUANTESTRUCT; i++){
-        strcpy(default_setting->style[i].nome, DEFAULTNOME);
-
-        default_setting->style[i].colore[1] = default_setting->style[i].colore[0] = 0;
-        default_setting->style[i].colore[2] = 255;
-        default_setting->style[i].colore[3] = DEFAULTALFA;
-
-        default_setting->style[i].nx = default_setting->style[i].ny = DEFAULTN;
-
-        default_setting->style[i].thickness = DEFAULTTHICKNESS;
+        load_default_(default_setting, i, DEFAULTNOME);
     }
 }
 
@@ -84,7 +87,7 @@ void save_default_drawing(int *data){
 style_struct * load_last_style(){
     style_struct default_setting;
 
-    load_default(&default_setting);
+    load_default(&default_setting, DEFAULTNOME);
 
     style_struct *style_temp = new style_struct;
 

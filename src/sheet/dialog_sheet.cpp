@@ -29,6 +29,10 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
         style.style[i] = style_last_save->style[i];
     }
 
+    /*if(style.quanti == 0){
+        load_default(&style, DEFAU);
+        style.quanti = 1;
+    }*/
 
     ui->pushButton_color->setAutoFillBackground(true); // IMPORTANT!
     pal = ui->pushButton_color->palette();
@@ -100,6 +104,10 @@ inline bool operator==(const struct style_struct& lhs, const struct style_struct
 }
 
 void dialog_sheet::closeEvent (QCloseEvent *event){
+
+    /* save function */
+    this->on_pushButton_3_clicked();
+
     style_struct *last = load_last_style();
 
     if(*last == style){
@@ -152,7 +160,7 @@ void dialog_sheet::updateList(){
 
     ui->listWidget->clear();
 
-    for(i=0; i<QUANTESTRUCT; i++){
+    for(i=0; i<style.quanti; i++){
         ui->listWidget->addItem((QString)style.style[i].nome);
     }
 }
@@ -174,7 +182,7 @@ void dialog_sheet::on_listWidget_itemClicked(QListWidgetItem *)
     setValue();
 }
 
-/* doble click on the item */
+/* double click on the item */
 void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
 {
     bool ok;
@@ -196,4 +204,35 @@ void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
 void dialog_sheet::on_pushButton_clicked()
 {
     save_default_drawing(&current);
+}
+
+/* save */
+void dialog_sheet::on_pushButton_3_clicked()
+{
+    /*for(i=0, style.quanti = 0; i<QUANTESTRUCT; i++)
+        style.quanti += strcmp(style.style[i].nome, DEFAULTNOME) != 0;*/
+
+
+    save_last_style(&style);
+
+}
+
+/* create new style */
+void dialog_sheet::on_pushButton_2_clicked()
+{
+    if(style.quanti > QUANTESTRUCT)
+        return dialog_critic("You cannot create more than " + QString::number(QUANTESTRUCT));
+
+    bool ok;
+    QString newName = QInputDialog::getText(this, tr("Name"),
+                                                 tr("Title: "), QLineEdit::Normal,
+                                                 "", &ok);
+    if(!ok || newName.isEmpty()){
+
+    }
+
+    load_default(&style, newName.toUtf8().constData(), style.quanti);
+    style.quanti ++;
+
+    this->updateList();
 }
