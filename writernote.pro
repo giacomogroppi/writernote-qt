@@ -202,7 +202,7 @@ HEADERS += \
     src/videocompress/videocompress_ui.h \
     src/windows/mostra_finestra_i.h \
     src/windows/updatecheck.h \
-    load_last_style.h
+    src/sheet/load_last_style.h
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
