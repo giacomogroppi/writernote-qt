@@ -230,9 +230,16 @@
     <addaction name="actionCheck_update"/>
     <addaction name="actionBug_report"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionnew_sheet"/>
+   </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAudio_option"/>
+   <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainbar">
@@ -695,7 +702,7 @@
      <normaloff>:/image/images/new-sheetpng</normaloff>:/image/images/new-sheetpng</iconset>
    </property>
    <property name="text">
-    <string>new sheet</string>
+    <string>Manage sheet</string>
    </property>
   </action>
   <action name="actionAuto_Save">

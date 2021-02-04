@@ -29,9 +29,6 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
         style.style[i] = style_last_save->style[i];
     }
 
-    if(style.quanti == 0){
-        load_default(&style);
-    }
 
     ui->pushButton_color->setAutoFillBackground(true); // IMPORTANT!
     pal = ui->pushButton_color->palette();

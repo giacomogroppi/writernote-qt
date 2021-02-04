@@ -4,7 +4,7 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 
-#define DEFAULTTHICKNESS 5
+#define DEFAULTTHICKNESS 1
 #define DEFAULTN 20
 #define DEFAULTNOME "Undefined"
 
