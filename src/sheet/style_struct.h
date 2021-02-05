@@ -6,6 +6,7 @@
 #define STRNOME 40
 
 #include <QMetaType>
+#include <QDataStream>
 
 struct style_struct_S{
     char nome[STRNOME + 1];
@@ -23,6 +24,5 @@ struct style_struct{
 Q_DECLARE_METATYPE(style_struct_S);
 
 Q_DECLARE_METATYPE(style_struct);
-
 
 #endif // STYLE_STRUCT_H

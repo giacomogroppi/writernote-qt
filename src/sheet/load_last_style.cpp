@@ -4,7 +4,7 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 
-
+#include <QDebug>
 
 #include "../utils/setting_define.h"
 
@@ -24,11 +24,12 @@ static void load_default_(style_struct *data, int indice, const char *name){
 
 void load_default(style_struct *default_setting, const char *name, int indice){
     int i;
-    default_setting->quanti = 0;
 
     if(indice != -1){
         return load_default_(default_setting, indice, name);
     }
+
+    default_setting->quanti = 0;
 
     for(i=0; i<QUANTESTRUCT; i++){
         load_default_(default_setting, i, DEFAULTNOME);
@@ -62,7 +63,6 @@ int load_default_drawing_index(){
         return -1;
 
     return indice;
-
 }
 
 /* la funzione è utilizzata per aver subito la struttura di che cosa deve disegnare */
@@ -88,17 +88,23 @@ void save_default_drawing(int *data){
     setting.endGroup();
 }
 
+/* la funzione restituisce la struct per dialog_sheet */
 style_struct * load_last_style(){
     style_struct default_setting;
 
     load_default(&default_setting, DEFAULTNOME);
 
-    style_struct *style_temp = new style_struct;
+    style_struct *style_temp;
 
     QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
-    *style_temp = setting.value(KEYSTYLE, QVariant::fromValue(default_setting)).value<style_struct>();
+    QByteArray data_byte;
+
+    data_byte = setting.value(KEYSTYLE, QVariant::fromValue(default_setting)).toByteArray();
+
+
+    style_temp = (style_struct *)data_byte.data();
 
     setting.endGroup();
 
@@ -109,7 +115,14 @@ void save_last_style(style_struct *style_v){
     QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
-    setting.setValue(KEYSTYLE, QVariant::fromValue(*style_v));
+    QByteArray array;
+    array.append((const char *)style_v, sizeof(style_struct));
+
+    QVariant variant(array);
+
+    //setting.setValue(KEYSTYLE, QVariant::fromValue(*style_v));
+
+    setting.setValue(KEYSTYLE, variant);
 
     setting.endGroup();
 }

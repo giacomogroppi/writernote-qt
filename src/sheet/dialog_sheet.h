@@ -57,7 +57,7 @@ private:
 
     QPixmap pixmapColor, pixmapDraw;
 
-    style_struct style;
+    style_struct style_element;
     int current = 0;
 
     QPalette pal;

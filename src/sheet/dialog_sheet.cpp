@@ -23,17 +23,17 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
     style_struct *style_last_save = load_last_style();
 
     int i;
-    style.quanti = style_last_save->quanti;
+    style_element.quanti = style_last_save->quanti;
 
     for(i=0; i<QUANTESTRUCT; i++){
-        style.style[i] = style_last_save->style[i];
+        style_element.style[i] = style_last_save->style[i];
     }
 
 
     ui->pushButton_color->setAutoFillBackground(true); // IMPORTANT!
     pal = ui->pushButton_color->palette();
 
-    pal.setColor(QPalette::Window, settaggiocolore(style.style[0].colore));
+    pal.setColor(QPalette::Window, settaggiocolore(style_element.style[0].colore));
     ui->pushButton_color->setPalette(pal);
 
     this->current = 0;
@@ -43,7 +43,7 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
 
     this->updateList();
 
-    if(style.quanti == 0){
+    if(style_element.quanti == 0){
         this->hide(true);
         return;
     }
@@ -72,24 +72,24 @@ dialog_sheet::~dialog_sheet()
 
 void dialog_sheet::on_t_valueChanged(int arg1)
 {
-    this->style.style[current].thickness = arg1;
+    style_element.style[current].thickness = arg1;
     draw();
 }
 
 
 void dialog_sheet::on_x_valueChanged(int arg1)
 {
-    this->style.style[current].nx = arg1;
+    style_element.style[current].nx = arg1;
     draw();
 }
 
 void dialog_sheet::on_y_valueChanged(int arg1)
 {
-    this->style.style[current].ny = arg1;
+    style_element.style[current].ny = arg1;
     draw();
 }
 
-inline bool operator==(const struct style_struct& lhs, const struct style_struct& rhs)
+inline bool operator==(const style_struct& lhs, const style_struct& rhs)
 {
     bool check = lhs.quanti == rhs.quanti;
 
@@ -120,7 +120,7 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
 
     style_struct *last = load_last_style();
 
-    if(*last == style){
+    if(*last == style_element){
         delete last;
         return;
     }
@@ -144,7 +144,7 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
     }
 
 
-    save_last_style(&style);
+    save_last_style(&style_element);
 
     delete last;
 
@@ -157,10 +157,10 @@ void dialog_sheet::on_pushButton_color_clicked()
     if(!color.isValid())
         return;
 
-    color.getRgb(&style.style[current].colore[0],
-            &style.style[current].colore[1],
-            &style.style[current].colore[2],
-            &style.style[current].colore[3]);
+    color.getRgb(&style_element.style[current].colore[0],
+            &style_element.style[current].colore[1],
+            &style_element.style[current].colore[2],
+            &style_element.style[current].colore[3]);
 
     draw();
 }
@@ -170,15 +170,15 @@ void dialog_sheet::updateList(){
 
     ui->listWidget->clear();
 
-    for(i=0; i<style.quanti; i++){
-        ui->listWidget->addItem((QString)style.style[i].nome);
+    for(i=0; i<style_element.quanti; i++){
+        ui->listWidget->addItem((QString)style_element.style[i].nome);
     }
 }
 
 void dialog_sheet::setValue(){
-    ui->t->setValue(style.style[current].thickness);
-    ui->y->setValue(style.style[current].ny);
-    ui->x->setValue(style.style[current].nx);
+    ui->t->setValue(style_element.style[current].thickness);
+    ui->y->setValue(style_element.style[current].ny);
+    ui->x->setValue(style_element.style[current].nx);
 }
 
 /* need to change item and reset the value */
@@ -212,7 +212,7 @@ void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
     if(newName.length() > STRNOME)
         return dialog_critic("The maximum number of letters for the word is " + QString::number(STRNOME));
 
-    strcpy(style.style[current].nome, newName.toUtf8().constData());
+    strcpy(style_element.style[current].nome, newName.toUtf8().constData());
 
     this->updateList();
 }
@@ -230,14 +230,14 @@ void dialog_sheet::on_pushButton_3_clicked()
         style.quanti += strcmp(style.style[i].nome, DEFAULTNOME) != 0;*/
 
 
-    save_last_style(&style);
+    save_last_style(&style_element);
 
 }
 
 /* create new style */
 void dialog_sheet::on_pushButton_2_clicked()
 {
-    if(style.quanti > QUANTESTRUCT)
+    if(style_element.quanti > QUANTESTRUCT)
         return dialog_critic("You cannot create more than " + QString::number(QUANTESTRUCT));
 
     bool ok;
@@ -249,8 +249,8 @@ void dialog_sheet::on_pushButton_2_clicked()
     }
 
 
-    load_default(&style, newName.toUtf8().constData(), style.quanti);
-    style.quanti ++;
+    load_default(&style_element, newName.toUtf8().constData(), style_element.quanti);
+    style_element.quanti ++;
 
     this->updateList();
 }
