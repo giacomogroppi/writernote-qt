@@ -4,6 +4,6 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
-bool loadqualita(MainWindow *parent);
+void loadqualita(MainWindow *parent);
 
 #endif // LOADQUALITA_H

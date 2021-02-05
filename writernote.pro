@@ -151,7 +151,6 @@ HEADERS += \
     src/audioplay/aggiornotastiriascolto.h \
     src/audioplay/cambioiconariascolto.h \
     src/audiosetting/audioqualityoption.h \
-    src/audiosetting/definition.h \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
     src/autosave/autosave_.h \

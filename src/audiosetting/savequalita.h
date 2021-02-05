@@ -3,6 +3,6 @@
 
 #include "audioqualityoption.h"
 
-bool savequalita(audioqualityoption *padredialog);
+void savequalita(audioqualityoption *padredialog);
 
 #endif // SAVEQUALITA_H

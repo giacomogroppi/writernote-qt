@@ -50,7 +50,7 @@ void load_default_onlystyle( style_struct_S *default_setting){
 }
 
 int load_default_drawing_index(){
-    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
     bool ok;
@@ -80,7 +80,7 @@ style_struct_S * load_default_drawing(){
 }
 
 void save_default_drawing(int *data){
-    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
     setting.setValue(KEYDEFAULTSTYLE, *data);
@@ -96,7 +96,7 @@ style_struct * load_last_style(){
 
     style_struct *style_temp;
 
-    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
     QByteArray data_byte;
@@ -112,7 +112,7 @@ style_struct * load_last_style(){
 }
 
 void save_last_style(style_struct *style_v){
-    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
     QByteArray array;

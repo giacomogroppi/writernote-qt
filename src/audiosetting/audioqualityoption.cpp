@@ -12,8 +12,6 @@ audioqualityoption::audioqualityoption(QWidget *parent, MainWindow *padre) :
     ui->setupUi(this);
     this->padre = padre;
 
-
-
     //audio devices
     ui->audioDeviceBox->addItem(tr("Default"), QVariant(QString()));
     for (auto &device: this->padre->m_audioRecorder->audioInputs()) {
@@ -82,8 +80,7 @@ void MainWindow::on_actionQuality_setting_triggered()
 
 void audioqualityoption::on_pushButton_clicked()
 {
-    if(savequalita(this))
-        dialog_critic("We had a error saving the config");
+    savequalita(this);
 
     this->close();
 }

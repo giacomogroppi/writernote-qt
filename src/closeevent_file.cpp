@@ -18,7 +18,7 @@
 
 void MainWindow::closeEvent (QCloseEvent *event)
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
 
     setting.setValue(KEY_GEOMETRY, this->geometry());

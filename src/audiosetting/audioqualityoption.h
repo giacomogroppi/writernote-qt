@@ -33,8 +33,6 @@ private slots:
 private:
 
 
-
-
 };
 
 #endif // AUDIOQUALITYOPTION_H

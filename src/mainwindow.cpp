@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     checkupdate = new updatecheck();
 
-    QSettings setting(ORGANIZATIONAME, APPLICATIONAME);
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
 
     QRect value_rect = setting.value(KEY_GEOMETRY).toRect();
@@ -293,12 +293,8 @@ void MainWindow::on_startrecording_triggered()
     if(this->self->currenttitle.audio_position_path == "")
         return;
 
-    if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {
-        /* funzione che gestisce l'ingresso dell'audio */
-        //m_audioRecorder->setAudioInput(boxValue(ui->audioDeviceBox).toString());
-        /**/
-        if(!loadqualita(this)){
-            /* se il file non esiste o non si è riscontrato un problema si caricano le configurazioni standard */
+    if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {        
+        /*if(!loadqualita(this)){
             this->m_audioRecorder->setAudioInput((const QString)"");
 
             QAudioEncoderSettings settings;
@@ -313,7 +309,10 @@ void MainWindow::on_startrecording_triggered()
             QString container = "";
 
             this->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
-        }
+        }*/
+
+        loadqualita(this);
+
         this->m_audioRecorder->record();
 
         this->self->currenttitle.testinohtml.clear();
