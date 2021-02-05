@@ -29,10 +29,6 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
         style.style[i] = style_last_save->style[i];
     }
 
-    /*if(style.quanti == 0){
-        load_default(&style, DEFAU);
-        style.quanti = 1;
-    }*/
 
     ui->pushButton_color->setAutoFillBackground(true); // IMPORTANT!
     pal = ui->pushButton_color->palette();
@@ -47,12 +43,26 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
 
     this->updateList();
 
+    if(style.quanti == 0){
+        this->hide(true);
+        return;
+    }
     setValue();
 
     draw();
 }
 
 
+/* la funzione è responsabile di nascondere i pulsanti che non si possono cliccare */
+void dialog_sheet::hide(bool check){
+    /* check == true disable */
+    ui->graphicsView->setDisabled(check);
+    ui->pushButton->setDisabled(check);
+    ui->y->setDisabled(check);
+    ui->t->setDisabled(check);
+    ui->x->setDisabled(check);
+    ui->pushButton_color->setDisabled(check);
+}
 
 dialog_sheet::~dialog_sheet()
 {
@@ -180,6 +190,13 @@ void dialog_sheet::on_listWidget_itemClicked(QListWidgetItem *)
     draw();
 
     setValue();
+
+    /*
+     * the buttons for insertion are activated, as
+     * previously there were no active styles and
+     * they were deactivated
+    */
+    this->hide(false);
 }
 
 /* double click on the item */
@@ -228,8 +245,9 @@ void dialog_sheet::on_pushButton_2_clicked()
                                                  tr("Title: "), QLineEdit::Normal,
                                                  "", &ok);
     if(!ok || newName.isEmpty()){
-
+        return;
     }
+
 
     load_default(&style, newName.toUtf8().constData(), style.quanti);
     style.quanti ++;

@@ -27,10 +27,15 @@ void dialog_sheet::draw(){
     short int height = ui->graphicsView->height();
     short int width = ui->graphicsView->width();
 
-    short int spessore_x = height / style.style[current].nx;
-    short int spessore_y = width / style.style[current].ny;
+    short int  spessore_x, spessore_y;
 
-    //m_graphicsScene->addLine(0, 0, 200, 200, penna);
+    spessore_x = spessore_y = 0;
+
+    if(style.style[current].nx)
+        spessore_x = height / style.style[current].nx;
+
+    if(style.style[current].ny)
+        spessore_y = width / style.style[current].ny;
 
     /* vertical line */
     for(i=1; i<style.style[current].nx; i++){

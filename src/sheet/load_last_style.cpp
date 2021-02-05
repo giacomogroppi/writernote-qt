@@ -4,6 +4,8 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 
+
+
 #include "../utils/setting_define.h"
 
 #include "string.h"
@@ -52,16 +54,18 @@ int load_default_drawing_index(){
 
     bool ok;
 
-    int indice = setting.value(KEYDEFAULTSTYLE, QVariant::fromValue(0)).toInt(&ok);
+    int indice = setting.value(KEYDEFAULTSTYLE, QVariant::fromValue(-1)).toInt(&ok);
 
     setting.endGroup();
 
     if(!ok)
         return -1;
+
     return indice;
 
 }
 
+/* la funzione è utilizzata per aver subito la struttura di che cosa deve disegnare */
 style_struct_S * load_default_drawing(){
     style_struct *style_temp;
 

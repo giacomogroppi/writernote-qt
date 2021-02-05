@@ -184,7 +184,7 @@ HEADERS += \
     src/touch/paintevent/draw_image.h \
     src/touch/square/square.h \
     src/touch/tabletapplication.h \
-    src//touch/tabletcanvas.h \
+    src/touch/tabletcanvas.h \
     src/update_list_copybook.h \
     src/currenttitle/currenttitle_class.h \
     src/datawrite/qfilechoose.h \

@@ -49,6 +49,9 @@ private slots:
     void on_pushButton_2_clicked();
 
 private:
+
+    void hide(bool);
+
     Ui::dialog_sheet *ui;
 
 
