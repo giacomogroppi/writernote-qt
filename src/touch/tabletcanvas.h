@@ -10,7 +10,7 @@
 #include <QWidget>
 
 #include "../currenttitle/currenttitle_class.h"
-
+#include "zoom/zoom_control.h"
 #include "square/square.h"
 
 #define IDTRATTOZERO -5
@@ -41,6 +41,9 @@ public:
     Q_ENUM(Valuator)
 
     TabletCanvas();
+    ~TabletCanvas(){
+        delete zoom;
+    };
 
     void clear();
     void setAlphaChannelValuator(Valuator type)
@@ -133,6 +136,8 @@ public:
 
     /* false remove only what enter in GOMMASIZE else all the line */
     bool gomma_cancella = false;
+
+    zoom_control *zoom = NULL;
 
 protected:
     void tabletEvent(QTabletEvent *event) override;

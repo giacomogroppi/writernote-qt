@@ -133,6 +133,7 @@ SOURCES += \
     src/touch/tabletcanvas.cpp \
     src/touch/tabletevent.cpp \
     src/touch/updatelist.cpp \
+    src/touch/zoom/zoom_control.cpp \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
     src/videocompress/compressivideo.cpp \
@@ -184,6 +185,7 @@ HEADERS += \
     src/touch/square/square.h \
     src/touch/tabletapplication.h \
     src/touch/tabletcanvas.h \
+    src/touch/zoom/zoom_control.h \
     src/update_list_copybook.h \
     src/currenttitle/currenttitle_class.h \
     src/datawrite/qfilechoose.h \

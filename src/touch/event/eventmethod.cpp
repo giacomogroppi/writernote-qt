@@ -4,15 +4,16 @@
 #include "math.h"
 #include <QWheelEvent>
 
-static bool isdefine(QPointF *point){
-    return *point != QPointF(-1, -1);
-}
-
 static int calcolodistanza(QPointF *point1, QPointF *point2){
     return sqrt(pow(point1->x() - point2->x(), 2) + pow(point1->y() - point2->y(), 2));
 }
 
+static inline void ridefine(struct lastpoint_struct *);
+static inline QPointF puntoameta(QPointF &, QPointF &);
+
 bool TabletCanvas::event(QEvent *event){
+    QPointF temp;
+
     //qDebug() << event->type();
 
     switch (event->type()) {
@@ -26,46 +27,55 @@ bool TabletCanvas::event(QEvent *event){
                 switch (touchPoint.state()) {
                 case Qt::TouchPointStationary:
                 case Qt::TouchPointReleased:
+                    ridefine(&lastpointzoom);
                     continue;
                 default:
                     {
-                        QSizeF diams = touchPoint.ellipseDiameters();
-
                         /* a questo punto posso capire se è stato un zoom in o uno zoom on */
-                        if(isdefine(&this->lastpointzoom.posd) && isdefine(&this->lastpointzoom.poss)){
+                        if(this->lastpointzoom.posd != QPointF(-1, -1) &&
+                                this->lastpointzoom.poss != QPointF(-1, -1)){
                             QPointF punto = touchPoint.pos();
-                            bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) < calcolodistanza(&this->lastpointzoom.poss, &punto));
+                            bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) > calcolodistanza(&this->lastpointzoom.poss, &punto));
 
-                            if(!check){
-                                if(punto.x() < this->lastpointzoom.poss.x() || punto.y() > this->lastpointzoom.poss.y()){
+                            /*
+                             * if the registered point
+                             * is closer to the left point
+                            */
+                            temp = puntoameta(lastpointzoom.poss, punto);
+                            if(check){
+                                this->zoom->zoom(temp,
+                                            calcolodistanza(&lastpointzoom.poss, &punto));
+
+                                /*if(punto.x() < this->lastpointzoom.poss.x() || punto.y() > this->lastpointzoom.poss.y()){
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.posd.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.posd.y())/2);
 
-                                    this->zoomin();
+                                    zoomin();
                                 }
                                 else{
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.posd.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.posd.y())/2);
 
-                                    this->zoomon();
-                                }
+                                    zoomon();
+                                }*/
                             }
                             else{
-                                if(punto.x() > this->lastpointzoom.posd.x() || punto.y() < this->lastpointzoom.posd.y()){
+                                this->zoom->zoom(temp,
+                                                 calcolodistanza(&lastpointzoom.posd, &punto));
+                                /*if(punto.x() > this->lastpointzoom.posd.x() || punto.y() < this->lastpointzoom.posd.y()){
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.poss.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.poss.y())/2);
 
-                                    this->zoomin();
+                                    zoomin();
                                 }
                                 else{
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.poss.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.poss.y())/2);
 
                                     zoomon();
-                                }
+                                }*/
                             }
 
-                            /* riazzera tutti e due i punti */
                             lastpointzoom.posd.setX(-1);
                             lastpointzoom.poss.setX(-1);
 
@@ -76,7 +86,7 @@ bool TabletCanvas::event(QEvent *event){
                         }
                         /* altrimenti posso andare a salvare i punti iniziali */
                         else{
-                            if(!isdefine(&this->lastpointzoom.posd))
+                            if(this->lastpointzoom.posd != QPointF(-1, -1))
                                 this->lastpointzoom.posd = touchPoint.pos();
 
                             else{
@@ -91,6 +101,9 @@ bool TabletCanvas::event(QEvent *event){
                                     this->lastpointzoom.poss = touchPoint.pos();
                             }
                         }
+
+                        qDebug() << lastpointzoom.posd << lastpointzoom.poss;
+
                     }
                     break;
                 }
@@ -102,4 +115,14 @@ bool TabletCanvas::event(QEvent *event){
                 return QWidget::event(event);
     }
     return true;
+}
+
+static inline void ridefine(struct lastpoint_struct *point){
+    point->posd = QPointF(-1, -1);
+    point->poss = QPointF(-1, -1);
+}
+
+static inline QPointF puntoameta(QPointF &puntouno, QPointF &puntodue){
+    return QPointF((puntouno.x() - puntodue.x())/2,
+                (puntouno.y() + puntodue.y())/2);
 }

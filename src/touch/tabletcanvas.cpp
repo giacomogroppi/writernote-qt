@@ -24,6 +24,10 @@ TabletCanvas::TabletCanvas()
 
     this->data = nullptr;
     this->medotodiinserimento = STILO;
+
+    if(!zoom){
+        zoom = new zoom_control;
+    }
 }
 
 void TabletCanvas::clear()
@@ -141,4 +145,5 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 
 void TabletCanvas::settingdata(currenttitle_class *data){
     this->data = data;
+    this->zoom->settingData(data->datatouch);
 }
