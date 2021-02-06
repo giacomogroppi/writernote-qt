@@ -16,6 +16,16 @@
 #include <QSettings>
 #include "utils/setting_define.h"
 
+static void setting_autosave(bool check){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_REDOUNDO);
+
+    setting.setValue(KEY_REDOUNDO, check);
+
+    setting.endGroup();
+
+}
+
 void MainWindow::closeEvent (QCloseEvent *event)
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -24,6 +34,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
     setting.setValue(KEY_GEOMETRY, this->geometry());
     setting.endGroup();
 
+
+    setting_autosave(enableredoundo);
 
     if(!this->self->indice.titolo.length())
         return event->accept();

@@ -23,8 +23,8 @@ void topdf::translate(){
         }
     }
 
-    while(data->datatouch->zoom != 1.00){
-        if(data->datatouch->zoom < 1.00)
+    while(data->datatouch->zoom != (long double)1){
+        if(data->datatouch->zoom < (long double)1)
             parent->m_canvas->zoomin(this->data);
         else
             parent->m_canvas->zoomon(this->data);

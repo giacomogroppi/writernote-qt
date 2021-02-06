@@ -17,10 +17,10 @@ void TabletCanvas::disegnafoglio(){
     int lunghezza;
 
     /*lunghezza = this->m_pixmap.width();*/
-    lunghezza = NUMEROPIXELPAGINA * data->datatouch->zoom;
+    lunghezza = (long double)NUMEROPIXELPAGINA * data->datatouch->zoom;
 
     if(data->datatouch->posizionefoglio.length())
-       last = data->datatouch->posizionefoglio.last() + NUMEROPIXELPAGINA * data->datatouch->zoom;
+       last = data->datatouch->posizionefoglio.last() + (long double)NUMEROPIXELPAGINA * data->datatouch->zoom;
 
     data->datatouch->posizionefoglio.append(last);
 

@@ -3,6 +3,8 @@
 
 #include <QDebug>
 
+#include "../dialog_critic.h"
+
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
 
@@ -36,6 +38,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 #if defined(WIN32) || defined(WIN64)
         this->isdrawing = true;
 #endif
+
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
                 if(this->medotodiinserimento == STILO){
@@ -95,6 +98,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 #if defined(WIN32) || defined(WIN64)
             this->isdrawing = true;
 #endif
+
+            /* last save and undo redo */
+            if(m_redoundo)
+                this->m_redoundo->copy();
+
+            if(m_autosave)
+                if(!this->m_autosave->save())
+                    dialog_critic("We had a problem saving the copybook");
 
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;

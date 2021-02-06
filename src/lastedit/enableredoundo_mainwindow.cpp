@@ -3,12 +3,12 @@
 
 void MainWindow::on_actionEnable_redo_undo_triggered()
 {
-    if(this->enableredoundu)
-        ui->actionEnable_redo_undo->setText("Disable redo undo");
+    if(this->enableredoundo)
+        ui->actionEnable_redo_undo->setText(REDO_UNDO_DISABLE);
     else
-        ui->actionEnable_redo_undo->setText("Enable redo undo");
+        ui->actionEnable_redo_undo->setText(REDO_UNDO_ENABLE);
 
-    enableredoundu = !enableredoundu;
+    enableredoundo = !enableredoundo;
 
-    this->m_canvas->enableredoundu = enableredoundu;
+    this->m_canvas->enableredoundu = enableredoundo;
 }

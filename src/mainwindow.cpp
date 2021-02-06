@@ -49,6 +49,8 @@
 
 #include <QSettings>
 
+#include "utils/settings/setting_load.h"
+
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -87,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     setting.endGroup();
 
+    setting_load(this);
 }
 
 

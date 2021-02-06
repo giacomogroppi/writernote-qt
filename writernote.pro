@@ -48,6 +48,7 @@ SOURCES += \
     src/audiosetting/savequalita.cpp \
     src/autosave/autosave_.cpp \
     src/autosave/autosave_mainwindow.cpp \
+    src/lastedit/copy.cpp \
     src/lastedit/enableredoundo_mainwindow.cpp \
     src/lastedit/redoundo.cpp \
     src/closeevent_file.cpp \
@@ -85,6 +86,7 @@ SOURCES += \
     src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
+    src/lastedit/scala.cpp \
     src/main.cpp \
     src/dataread/xmlstruct.cpp \
     src/mainwindow.cpp \
@@ -136,6 +138,7 @@ SOURCES += \
     src/touch/zoom/zoom_control.cpp \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
+    src/utils/settings/setting_load.cpp \
     src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \
@@ -198,6 +201,7 @@ HEADERS += \
     src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
     src/utils/setting_define.h \
+    src/utils/settings/setting_load.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \

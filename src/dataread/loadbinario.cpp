@@ -82,7 +82,7 @@ bool xmlstruct::loadbinario(zip_t *z){
         currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }
 
-    check += source_read_ext(f, &this->currenttitle->datatouch->zoom, sizeof(float));
+    check += source_read_ext(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
 
     check += load_image(&currenttitle->datatouch->immagini, f);
 

@@ -15,6 +15,9 @@
 
 #define IDTRATTOZERO -5
 
+#include "../lastedit/redoundo.h"
+#include "../autosave/autosave_.h"
+
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
     QPointF poss = QPointF(-1, -1);
@@ -127,7 +130,7 @@ public:
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
 
-    void settingdata(currenttitle_class *data);
+    void settingdata(currenttitle_class *data, QString *namecopybook, int posizione);
 
     /* square per la selezione */
     square square_;
@@ -138,6 +141,13 @@ public:
     bool gomma_cancella = false;
 
     zoom_control *zoom = NULL;
+
+    /* autosave */
+    autosave_ *m_autosave = NULL;
+    void setAutoSave(bool v, QString &copybookname, int posizione);
+
+    /* redoundo */
+    redoundo *m_redoundo = NULL;
 
 protected:
     void tabletEvent(QTabletEvent *event) override;
@@ -153,6 +163,8 @@ protected:
     /* click rilasciato */
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+
+
 private:
     void updateCursor(const QTabletEvent *event);
     void updateBrush(const QTabletEvent *event);
@@ -175,6 +187,8 @@ private:
         qreal pressure = 0;
         qreal rotation = 0;
     } lastPoint;
+
+
 };
 //! [0]
 

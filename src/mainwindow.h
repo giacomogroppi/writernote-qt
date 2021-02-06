@@ -21,6 +21,9 @@
 
 #include "windows/updatecheck.h"
 
+#define REDO_UNDO_DISABLE "Disable redo undo"
+#define REDO_UNDO_ENABLE "Enable redo undo"
+
 /*TESTING*/
 #include "touch/tabletcanvas.h"
 
@@ -71,7 +74,9 @@ public:
 
     /* false -> not enable */
     bool autosave = false;
-    bool enableredoundu = false;
+    bool enableredoundo = true;
+
+
 public slots:
 
     /* la funzione serve anche per eliminare l'audio del copybook */

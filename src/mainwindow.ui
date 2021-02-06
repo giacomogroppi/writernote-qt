@@ -718,7 +718,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Enable redo undo</string>
+    <string>Disable redo undo</string>
    </property>
   </action>
   <action name="actionchoose_color">

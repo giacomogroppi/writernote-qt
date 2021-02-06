@@ -22,4 +22,12 @@
 #define KEY_QUALITY_SLIDER "qualitySlider"
 #define KEY_CONTAINER_BOX "containerBox"
 
+/* autosave */
+#define GROUPNAME_AUTOSAVE "autosave_group"
+#define KEY_AUTOSAVE "key_autosave"
+
+/* redoundo */
+#define GROUPNAME_REDOUNDO "redoundo"
+#define KEY_REDOUNDO "redoundo_key"
+
 #endif // SETTING_DEFINE_H

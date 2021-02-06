@@ -11,15 +11,15 @@
 class autosave_
 {
 private:
-    currenttitle_class *current;
+    currenttitle_class *m_current;
 
-    savefile *save_savefile;
-    QString *copybook;
+    savefile *m_save_savefile;
+    QString m_copybook;
 
-    int posizione;
+    int m_posizione;
 
 public:
-    autosave_(currenttitle_class *, QString *, int);
+    void setting_data(currenttitle_class *, QString &, int);
 
     int save();
 };

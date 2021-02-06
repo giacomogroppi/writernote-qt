@@ -83,7 +83,7 @@ bool savefile::salvabinario(int posizione, zip_t *filezip){
         if(zip_source_write(file, &currenttitle->datatouch->posizionefoglio[i], sizeof(int)) == -1)
             return freezip(file, filezip);
 
-    if(zip_source_write(file, &currenttitle->datatouch->zoom, sizeof(float)) == -1)
+    if(zip_source_write(file, &currenttitle->datatouch->zoom, sizeof(long double)) == -1)
         return freezip(file, filezip);
 
     if(!save_image(&currenttitle->datatouch->immagini, file))

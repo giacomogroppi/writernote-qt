@@ -4,12 +4,12 @@
 #include "math.h"
 #include <QWheelEvent>
 
-static int calcolodistanza(QPointF *point1, QPointF *point2){
-    return sqrt(pow(point1->x() - point2->x(), 2) + pow(point1->y() - point2->y(), 2));
-}
+static inline long double calcolodistanza(QPointF *point1, QPointF *point2);
 
 static inline void ridefine(struct lastpoint_struct *);
 static inline QPointF puntoameta(QPointF &, QPointF &);
+
+static inline bool its_inside(QPointF &left, QPointF &right, QPointF &move);
 
 bool TabletCanvas::event(QEvent *event){
     QPointF temp;
@@ -35,7 +35,9 @@ bool TabletCanvas::event(QEvent *event){
                         if(this->lastpointzoom.posd != QPointF(-1, -1) &&
                                 this->lastpointzoom.poss != QPointF(-1, -1)){
                             QPointF punto = touchPoint.pos();
-                            bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) > calcolodistanza(&this->lastpointzoom.poss, &punto));
+                            bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) > calcolodistanza(&this->lastpointzoom.poss, &punto)), d;
+
+                            //d = its_inside(lastpointzoom.poss, lastpointzoom.posd, punto);
 
                             /*
                              * if the registered point
@@ -44,7 +46,8 @@ bool TabletCanvas::event(QEvent *event){
                             temp = puntoameta(lastpointzoom.poss, punto);
                             if(check){
                                 this->zoom->zoom(temp,
-                                            calcolodistanza(&lastpointzoom.poss, &punto));
+                                            calcolodistanza(&lastpointzoom.poss, &punto)/calcolodistanza(&lastpointzoom.poss, &lastpointzoom.posd));
+
 
                                 /*if(punto.x() < this->lastpointzoom.poss.x() || punto.y() > this->lastpointzoom.poss.y()){
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.posd.x())/2);
@@ -61,7 +64,7 @@ bool TabletCanvas::event(QEvent *event){
                             }
                             else{
                                 this->zoom->zoom(temp,
-                                                 calcolodistanza(&lastpointzoom.posd, &punto));
+                                                 calcolodistanza(&lastpointzoom.poss, &lastpointzoom.poss)/calcolodistanza(&lastpointzoom.posd, &punto));
                                 /*if(punto.x() > this->lastpointzoom.posd.x() || punto.y() < this->lastpointzoom.posd.y()){
                                     posizionezoom_puntof.setX((punto.x() + lastpointzoom.poss.x())/2);
                                     posizionezoom_puntof.setY((punto.y() + lastpointzoom.poss.y())/2);
@@ -101,9 +104,6 @@ bool TabletCanvas::event(QEvent *event){
                                     this->lastpointzoom.poss = touchPoint.pos();
                             }
                         }
-
-                        qDebug() << lastpointzoom.posd << lastpointzoom.poss;
-
                     }
                     break;
                 }
@@ -126,3 +126,13 @@ static inline QPointF puntoameta(QPointF &puntouno, QPointF &puntodue){
     return QPointF((puntouno.x() - puntodue.x())/2,
                 (puntouno.y() + puntodue.y())/2);
 }
+
+static inline long double calcolodistanza(QPointF *point1, QPointF *point2){
+    return sqrt(pow(point1->x() - point2->x(), 2) + pow(point1->y() - point2->y(), 2));
+}
+
+/*static inline bool its_inside(QPointF &left, QPointF &right, QPointF &move){
+    bool check;
+    check = left.x() <= move.x() && right.x() >= move.x();
+    return check;
+}*/

@@ -16,14 +16,14 @@ private:
      *
      *  true -> inverse operation
     */
-    void trasla(QPointF &, int delta = 0);
+    void trasla(QPointF &, long double delta = 0);
 
 public:
     zoom_control();
 
     void settingData(datastruct *data_struct){data = data_struct;}
 
-    void zoom(QPointF &, int);
+    void zoom(QPointF &, long double);
 
 };
 
