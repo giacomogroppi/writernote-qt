@@ -49,7 +49,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     bool ok;
     if(this->self->path == "")
     {
-        /* ask to where to save file */
+        /* asks where you want to save the new one */
         qfilechoose filec(this);
         ok = filec.filechoose(&self->path);
         if (!ok){
@@ -57,7 +57,6 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         }
     }
 
-    /* richiede all'utente se vuole salvare il file */
     QString namecopybook = QInputDialog::getText(this, tr("Get text"),
                                                  tr("Title: "), QLineEdit::Normal,
                                                  "", &ok);
@@ -75,9 +74,4 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook(this);
 
-/*stop:{
-    delete menu;
-    delete keyboard;
-    delete draw;
-    }*/
 }
