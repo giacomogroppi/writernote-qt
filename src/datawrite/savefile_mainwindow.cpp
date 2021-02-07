@@ -18,12 +18,12 @@ void MainWindow::on_actionSave_File_triggered()
     if(self->currenttitle.posizione_binario == "")
         this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
-    savefile savefile_i(&self->path, &this->self->currenttitle, &self->currentTitle);
+    savefile savefile_i(&self->path, &this->self->currenttitle);
 
     bool check = savefile_i.savefile_check_indice(&self->indice);
 
     if(this->self->currentTitle != "")
-        check = check && savefile_i.savefile_check_file(this->self->indice.titolo.indexOf(this->self->currentTitle));
+        check = check && savefile_i.savefile_check_file();
 
     if(!check && c)
         return dialog_critic((QString) "We had a problem while saving the file");

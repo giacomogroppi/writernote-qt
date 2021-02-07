@@ -4,16 +4,18 @@
 
 #include <QList>
 
-void autosave_::setting_data(currenttitle_class *data, QString &copybook, int posizione){
+void autosave_::setting_data(currenttitle_class *data, QString &path){
     this->m_current = data;
-    this->m_copybook = copybook;
-    this->m_posizione = posizione;
-    this->m_save_savefile = new savefile(nullptr, data, &copybook);
+
+    this->m_path = path;
+
+    this->m_savefile = new savefile(&this->m_path, m_current);
 }
 
 int autosave_::save(){
-    if(!this->m_save_savefile->savefile_check_file(m_posizione))
+    if(!this->m_savefile->savefile_check_file())
         return ERRORESALVATAGGIO;
 
     return OK;
 }
+

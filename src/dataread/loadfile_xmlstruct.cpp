@@ -99,6 +99,8 @@ bool xmlstruct::loadfile(const char *nameFile){
         }
     }
 
+    check += load_stringa(f, &currenttitle->nome_copybook);
+
     check += load_multiplestring(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
     if(currenttitle->posizione_binario == ""){

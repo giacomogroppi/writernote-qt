@@ -146,26 +146,29 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 }
 
 
-void TabletCanvas::settingdata(currenttitle_class *data, QString *namecopybook, int posizione){
+void TabletCanvas::settingdata(currenttitle_class *data, QString &path){
     this->data = data;
     this->zoom->settingData(data->datatouch);
 
     if(this->m_autosave)
-        m_autosave->setting_data(data, *namecopybook, posizione);
+        m_autosave->setting_data(data, path);
 
     if(this->m_redoundo)
         m_redoundo->setting_data(data);
 }
 
-void TabletCanvas::setAutoSave(bool v, QString &copybookname, int posizione){
+void TabletCanvas::setAutoSave(bool v, QString &path){
     /* v == true -> set autosave true */
     if(v){
         if(!m_autosave)
             m_autosave = new autosave_;
-        m_autosave->setting_data(data, copybookname, posizione);
+        m_autosave->setting_data(data, path);
     }
     else{
-        if(m_autosave)
+        if(m_autosave){
             delete m_autosave;
+            m_autosave = NULL;
+        }
+
     }
 };

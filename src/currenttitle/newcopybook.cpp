@@ -49,11 +49,10 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     bool ok;
     if(this->self->path == "")
     {
-        /* deve salvare prima di continuare */
+        /* ask to where to save file */
         qfilechoose filec(this);
         ok = filec.filechoose(&self->path);
         if (!ok){
-            //goto stop;
             return;
         }
     }

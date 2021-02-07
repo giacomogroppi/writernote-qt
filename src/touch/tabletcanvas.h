@@ -130,7 +130,7 @@ public:
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
 
-    void settingdata(currenttitle_class *data, QString *namecopybook, int posizione);
+    void settingdata(currenttitle_class *data, QString &path);
 
     /* square per la selezione */
     square square_;
@@ -144,7 +144,7 @@ public:
 
     /* autosave */
     autosave_ *m_autosave = NULL;
-    void setAutoSave(bool v, QString &copybookname, int posizione);
+    void setAutoSave(bool v, QString &path);
 
     /* redoundo */
     redoundo *m_redoundo = NULL;

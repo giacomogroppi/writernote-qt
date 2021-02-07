@@ -10,6 +10,8 @@
 
 class currenttitle_class{
 public:
+    QString nome_copybook;
+
     int versione = 1;
     bool se_registato = false, se_tradotto = false;
     QString audio_position_path = "";

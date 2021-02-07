@@ -1,7 +1,7 @@
 #include "../savefile.h"
 #include "../source_read_ext.h"
 
-bool savefile::savefile_check_file(int posizione){
+bool savefile::savefile_check_file(){
     int error, temp, len, i, check;
     zip_error_t errore;
 
@@ -9,9 +9,9 @@ bool savefile::savefile_check_file(int posizione){
 
     zip_t *filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
 
-    if(!filezip){
+    if(!filezip)
         return false;
-    }
+
 
     zip_source_t *file;
     file = zip_source_buffer_create(0, 0, 0, &errore);
@@ -44,8 +44,16 @@ bool savefile::savefile_check_file(int posizione){
         check += source_write_ext(file, currenttitle->posizione_binario.toUtf8().constData(), sizeof(char)*temp);
 
         if(currenttitle->posizione_binario != "")
-            this->salvabinario(posizione, filezip);
+            this->salvabinario(filezip);
     }
+
+    /* name copybook */
+    temp = currenttitle->nome_copybook.length();
+    check += source_write_ext(file, &temp, sizeof(int));
+    if(temp)
+        check += source_write_ext(file, currenttitle->nome_copybook.toUtf8().constData(), sizeof(char)*temp);
+
+
 
     // testinohtml
     len = currenttitle->testinohtml.length();
@@ -65,7 +73,7 @@ bool savefile::savefile_check_file(int posizione){
 
     check += zip_source_commit_write(file);
     check += zip_file_add(filezip,
-                 (*this->namecopybook + (QString)".xml").toUtf8().constData(),
+                 (currenttitle->nome_copybook + (QString)".xml").toUtf8().constData(),
                  file,
                  ZIP_FL_OVERWRITE);
 
