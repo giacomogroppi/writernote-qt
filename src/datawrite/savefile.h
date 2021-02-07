@@ -2,8 +2,6 @@
 #define SAVEFILE_H
 
 #include "../self_class.h"
-//#include "../mainwindow.h"
-//#include "ui_mainwindow.h"
 #include <zip.h>
 
 class savefile
