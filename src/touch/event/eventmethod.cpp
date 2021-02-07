@@ -35,7 +35,7 @@ bool TabletCanvas::event(QEvent *event){
                         if(this->lastpointzoom.posd != QPointF(-1, -1) &&
                                 this->lastpointzoom.poss != QPointF(-1, -1)){
                             QPointF punto = touchPoint.pos();
-                            bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) > calcolodistanza(&this->lastpointzoom.poss, &punto)), d;
+                            bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) > calcolodistanza(&this->lastpointzoom.poss, &punto));
 
                             //d = its_inside(lastpointzoom.poss, lastpointzoom.posd, punto);
 

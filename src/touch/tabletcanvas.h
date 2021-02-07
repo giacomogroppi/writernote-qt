@@ -106,9 +106,6 @@ public:
 
     /* touch e zoom */
     lastpoint_t lastpointzoom;
-    void zoomin(currenttitle_class *datastruct_ = NULL);
-    void zoomon(currenttitle_class *datastruct_ = NULL);
-
 
     QPointF posizionezoom_puntof;
     int deltax;

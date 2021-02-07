@@ -1,5 +1,7 @@
 #include "topdf.h"
 
+#define ERRORE 0.01
+
 void topdf::translate(){
     int i, len;
 
@@ -23,10 +25,13 @@ void topdf::translate(){
         }
     }
 
-    while(data->datatouch->zoom != (long double)1){
-        if(data->datatouch->zoom < (long double)1)
-            parent->m_canvas->zoomin(this->data);
-        else
-            parent->m_canvas->zoomon(this->data);
-    }
+    long double temp = (long double)1 - data->datatouch->zoom;
+
+    if(data->datatouch->zoom == (long double)1)
+        return;
+
+    QPointF temp_point = QPointF(1, 1);
+
+    parent->m_canvas->zoom->zoom(temp_point, temp);
+
 }

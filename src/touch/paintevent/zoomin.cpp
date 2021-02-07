@@ -2,8 +2,7 @@
 #include <QDebug>
 
 /* automenta lo zoom */
-void TabletCanvas::zoomin(currenttitle_class *datastruct_){
-    /* if it is called by paintevent */
+/*void TabletCanvas::zoomin(currenttitle_class *datastruct_){
     if(!datastruct_){
         datastruct_ = this->data;
 
@@ -28,4 +27,4 @@ void TabletCanvas::zoomin(currenttitle_class *datastruct_){
 
     data->datatouch->zoom += 0.05;
 
-}
+}*/

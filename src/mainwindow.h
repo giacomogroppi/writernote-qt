@@ -68,7 +68,7 @@ public:
 
     updatecheck *checkupdate;
 
-    void setFile(int, char **);
+    void setFile(char **);
 
     void update_image();
 
@@ -93,7 +93,7 @@ private slots:
     void togglePause();
 
     void on_actionNew_File_triggered();
-    void closeEvent (QCloseEvent *event);
+    void closeEvent (QCloseEvent *event) override;
 
 
     /* richiamata quando viene modificato qualcosa del testo */

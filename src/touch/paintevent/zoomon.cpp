@@ -1,8 +1,7 @@
 #include "../tabletcanvas.h"
 #include <QDebug>
 
-void TabletCanvas::zoomon(currenttitle_class *datastruct_){
-    /* if it is called by paintevent */
+/*void TabletCanvas::zoomon(currenttitle_class *datastruct_){
     if(!datastruct_){
         datastruct_ = this->data;
         this->isloading = true;
@@ -45,11 +44,6 @@ void TabletCanvas::zoomon(currenttitle_class *datastruct_){
         return;
 
     if(delta > 0 && deltaf > 0){
-        /* in questo caso vuol dire che la pagina è sia più piccola a sinistra che a destra
-           quindi deve spostare tutto a sinistra e ridimensionare il pixmal della dimensione
-           corrente
-           -> altrimenti si può scrivere fuori dal foglio.
-        */
 
         for(i=0; i<len; i++){
             datastruct_->datatouch->x[i] -= delta;
@@ -64,4 +58,4 @@ void TabletCanvas::zoomon(currenttitle_class *datastruct_){
     }
 
 
-}
+}*/

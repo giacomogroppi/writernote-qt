@@ -29,6 +29,10 @@ void zoom_control::trasla(QPointF &point_translate, long double delta){
 }
 
 void zoom_control::zoom(QPointF &point_translate, long double delta){
+
+    if(data->zoom + delta > (long double)2 || data->zoom + delta < (long double)0)
+        return;
+
     trasla(point_translate);
 
     int i, len;
@@ -38,7 +42,7 @@ void zoom_control::zoom(QPointF &point_translate, long double delta){
         data->y[i] *= delta;
     }
 
-    data->zoom += delta/((long double)10);
+    data->zoom += delta;
 
     trasla(point_translate, delta);
 }
