@@ -37,6 +37,7 @@ void MainWindow::on_actionrubber_triggered()
 
         connect(rubber, &rubber_ui::close_instance, this, &destroy_rubber);
 
+
         /*QMenu *menu = new QMenu(this);
         menu->setTitle("Choose input method");
 
