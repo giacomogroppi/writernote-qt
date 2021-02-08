@@ -11,6 +11,10 @@
 /* penna */
 void MainWindow::on_actionpen_triggered()
 {
+    if(m_canvas->medotodiinserimento == STILO){
+        this->m_pen->show();
+    }
+
     this->m_canvas->medotodiinserimento = STILO;
 }
 

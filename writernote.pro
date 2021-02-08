@@ -129,6 +129,9 @@ SOURCES += \
     src/touch/paintevent/paintevent.cpp \
     src/touch/paintevent/zoomin.cpp \
     src/touch/paintevent/zoomon.cpp \
+    src/touch/pen/load_settings_pen_ui.cpp \
+    src/touch/pen/pen_ui.cpp \
+    src/touch/pen/save_settings_pen_ui.cpp \
     src/touch/riascolto/riascolto.cpp \
     src/touch/rubber/load_setting_rubber_ui.cpp \
     src/touch/rubber/rubber_ui.cpp \
@@ -193,6 +196,7 @@ HEADERS += \
     src/touch/event/itspossibletoscroll.h \
     src/touch/method/methoddefinition.h \
     src/touch/paintevent/draw_image.h \
+    src/touch/pen/pen_ui.h \
     src/touch/rubber/rubber_ui.h \
     src/touch/square/square.h \
     src/touch/tabletapplication.h \
@@ -224,6 +228,7 @@ FORMS += \
     src/mainwindow.ui \
     src/sheet/dialog_sheet.ui \
     src/style/inserttable_class.ui \
+    src/touch/pen/pen_ui.ui \
     src/touch/rubber/rubber_ui.ui \
     src/videocompress/videocompress_ui.ui \
 

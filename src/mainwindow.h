@@ -22,6 +22,7 @@
 #include "windows/updatecheck.h"
 
 #include "touch/rubber/rubber_ui.h"
+#include "touch/pen/pen_ui.h"
 
 #define REDO_UNDO_DISABLE "Disable redo undo"
 #define REDO_UNDO_ENABLE "Enable redo undo"
@@ -80,7 +81,7 @@ public:
 
 
     rubber_ui *m_rubber;
-
+    pen_ui *m_pen;
 
 public slots:
 

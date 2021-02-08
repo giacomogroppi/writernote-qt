@@ -14,6 +14,7 @@
 #include "square/square.h"
 
 #include "rubber/rubber_ui.h"
+#include "pen/pen_ui.h"
 
 #define IDTRATTOZERO -5
 
@@ -138,6 +139,7 @@ public:
 
     /* class for menu */
     rubber_ui *m_rubber;
+    pen_ui *m_pen_ui;
 
     zoom_control *zoom = NULL;
 

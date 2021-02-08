@@ -92,9 +92,10 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     setting_load(this);
 
     this->m_rubber = new rubber_ui;
+    this->m_pen = new pen_ui;
 
     this->m_canvas->m_rubber = m_rubber;
-
+    this->m_canvas->m_pen_ui = m_pen;
 }
 
 
@@ -102,6 +103,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete m_rubber;
+    delete m_pen;
 }
 
 /* create new file */

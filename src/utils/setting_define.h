@@ -30,9 +30,15 @@
 #define GROUPNAME_REDOUNDO "redoundo"
 #define KEY_REDOUNDO "redoundo_key"
 
-/* redoundo */
+/* rubber */
 #define GROUPNAME_RUBBER "rubber_group"
 #define KEY_RUBBER_SIZE "rubber_key_size"
 #define KEY_RUBBER_TYPE "rubber_key_type"
+
+/* pen ui */
+#define GROUP_PEN "group_pen"
+#define KEY_PEN_SIZE "pen_key_size"
+#define KEY_PEN_TYPE "type_of_pen_key"
+#define KEY_PEN_TIPO_TRATTO "key_tipo_tratto"
 
 #endif // SETTING_DEFINE_H
