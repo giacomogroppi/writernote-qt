@@ -12,7 +12,7 @@ void TabletCanvas::gomma(QPainter &painter){
     x = lastPoint.pos.x();
     y = lastPoint.pos.y();
 
-    if(this->gomma_cancella){
+    if(m_rubber->m_type_gomma == TOTALE){
         for(i=0; i<len; i++){
             if(isin(data->datatouch->x.at(i),
                     data->datatouch->y.at(i),

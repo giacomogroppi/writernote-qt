@@ -21,6 +21,8 @@
 
 #include "windows/updatecheck.h"
 
+#include "touch/rubber/rubber_ui.h"
+
 #define REDO_UNDO_DISABLE "Disable redo undo"
 #define REDO_UNDO_ENABLE "Enable redo undo"
 
@@ -75,6 +77,9 @@ public:
     /* false -> not enable */
     bool autosave = false;
     bool enableredoundo = true;
+
+
+    rubber_ui *m_rubber;
 
 
 public slots:

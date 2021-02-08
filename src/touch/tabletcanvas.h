@@ -13,6 +13,8 @@
 #include "zoom/zoom_control.h"
 #include "square/square.h"
 
+#include "rubber/rubber_ui.h"
+
 #define IDTRATTOZERO -5
 
 #include "../lastedit/redoundo.h"
@@ -134,8 +136,8 @@ public:
 
     bool enableredoundu = true;
 
-    /* false remove only what enter in GOMMASIZE else all the line */
-    bool gomma_cancella = false;
+    /* class for menu */
+    rubber_ui *m_rubber;
 
     zoom_control *zoom = NULL;
 

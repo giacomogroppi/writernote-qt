@@ -90,12 +90,18 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     setting.endGroup();
 
     setting_load(this);
+
+    this->m_rubber = new rubber_ui;
+
+    this->m_canvas->m_rubber = m_rubber;
+
 }
 
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete m_rubber;
 }
 
 /* create new file */

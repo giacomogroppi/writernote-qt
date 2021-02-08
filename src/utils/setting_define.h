@@ -30,4 +30,9 @@
 #define GROUPNAME_REDOUNDO "redoundo"
 #define KEY_REDOUNDO "redoundo_key"
 
+/* redoundo */
+#define GROUPNAME_RUBBER "rubber_group"
+#define KEY_RUBBER_SIZE "rubber_key_size"
+#define KEY_RUBBER_TYPE "rubber_key_type"
+
 #endif // SETTING_DEFINE_H

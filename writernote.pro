@@ -130,7 +130,10 @@ SOURCES += \
     src/touch/paintevent/zoomin.cpp \
     src/touch/paintevent/zoomon.cpp \
     src/touch/riascolto/riascolto.cpp \
+    src/touch/rubber/load_setting_rubber_ui.cpp \
     src/touch/rubber/rubber_ui.cpp \
+    src/touch/rubber/save_setting_rubber_ui.cpp \
+    src/touch/rubber/update_data.cpp \
     src/touch/settingmethod.cpp \
     src/touch/square/move.cpp \
     src/touch/square/square.cpp \

@@ -56,14 +56,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else if(medotodiinserimento == GOMMA){
                     gomma(painter);
-                    if(lastPoint.pos.x() - GOMMASIZE >= 0
-                            && lastPoint.pos.x() + GOMMASIZE < this->m_pixmap.width()
-                            && lastPoint.pos.y() - GOMMASIZE >= 0
-                            && lastPoint.pos.y() + GOMMASIZE < this->m_pixmap.height())
-                        update(QRect(lastPoint.pos.x() - GOMMASIZE,
-                                     lastPoint.pos.y() - GOMMASIZE,
-                                     lastPoint.pos.x() + GOMMASIZE,
-                                     lastPoint.pos.y() + GOMMASIZE));
+                    if(lastPoint.pos.x() - m_rubber->m_size_gomma >= 0
+                            && lastPoint.pos.x() + m_rubber->m_size_gomma < this->m_pixmap.width()
+                            && lastPoint.pos.y() - m_rubber->m_size_gomma >= 0
+                            && lastPoint.pos.y() + m_rubber->m_size_gomma < this->m_pixmap.height())
+                        update(QRect(lastPoint.pos.x() - m_rubber->m_size_gomma,
+                                     lastPoint.pos.y() - m_rubber->m_size_gomma,
+                                     lastPoint.pos.x() + m_rubber->m_size_gomma,
+                                     lastPoint.pos.y() + m_rubber->m_size_gomma));
                     else
                         update();
 
@@ -127,7 +127,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                     update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                 }
-                else if(gomma_cancella){
+                else if(m_rubber->m_type_gomma == TOTALE){
                     this->gomma_delete();
                 }
                 isloading = true;

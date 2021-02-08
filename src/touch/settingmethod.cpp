@@ -15,54 +15,16 @@ void MainWindow::on_actionpen_triggered()
 }
 
 
+
 /* gomma */
 void MainWindow::on_actionrubber_triggered()
 {
     if(m_canvas->medotodiinserimento == GOMMA){
-
-
-
-        rubber_ui *rubber = new rubber_ui;
-
+        this->m_rubber->show();
         QPoint hostRect = this->cursor().pos();
-        rubber->move(hostRect.x(), hostRect.y());
-
-        rubber->exec();
-
-        /*QMenu *menu = new QMenu(this);
-        menu->setTitle("Choose input method");
-
-        QAction *cancella_id = new QAction;
-        cancella_id->setText("Draw area [beta]");
-        menu->addAction(cancella_id);
-
-        QAction *delete_noid = new QAction;
-        delete_noid->setText("Just delete what you touch");
-        menu->addAction(delete_noid);
-
-        connect(cancella_id, &QAction::triggered, this, [&]{
-            this->m_canvas->gomma_cancella = true;
-        });
-        connect(delete_noid, &QAction::triggered, this, [&]{
-            this->m_canvas->gomma_cancella = false;
-        });
-
-
-        auto hostRect = this->cursor().pos();
-        menu->move(hostRect.x(), hostRect.y());
-
-        if(!menu->exec()){
-            goto delete_;
-            return;
-        }
-
-        goto delete_;
-
-    delete_:
-        delete menu;
-        delete cancella_id;
-        delete delete_noid;*/
+        m_rubber->move(hostRect.x(), hostRect.y());
     }
+
     this->m_canvas->medotodiinserimento = GOMMA;
 
 }
