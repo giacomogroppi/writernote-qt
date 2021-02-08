@@ -45,5 +45,7 @@
         <file>snap/gui/icon-writernote.png</file>
         <file>images/arrow-curve-180-left.png</file>
         <file>images/choose-color-icon.png</file>
+        <file>images/linea-parziale.png</file>
+        <file>images/linea-totale.png</file>
     </qresource>
 </RCC>

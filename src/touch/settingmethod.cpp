@@ -4,8 +4,9 @@
 #include "ui_mainwindow.h"
 
 #include "method/methoddefinition.h"
-
 #include "../utils/color/color_chooser.h"
+
+#include "rubber/rubber_ui.h"
 
 /* penna */
 void MainWindow::on_actionpen_triggered()
@@ -13,11 +14,30 @@ void MainWindow::on_actionpen_triggered()
     this->m_canvas->medotodiinserimento = STILO;
 }
 
+rubber_ui *rubber;
+
+void destroy_rubber(){
+    /* it's call when rubber is destroy */
+
+    qDebug() << "Distruggo la schermata";
+
+    delete rubber;
+}
+
 /* gomma */
 void MainWindow::on_actionrubber_triggered()
 {
     if(m_canvas->medotodiinserimento == GOMMA){
-        QMenu *menu = new QMenu(this);
+        rubber = new rubber_ui;
+
+        QPoint hostRect = this->cursor().pos();
+        rubber->move(hostRect.x(), hostRect.y());
+
+        rubber->show();
+
+        connect(rubber, &rubber_ui::close_instance, this, &destroy_rubber);
+
+        /*QMenu *menu = new QMenu(this);
         menu->setTitle("Choose input method");
 
         QAction *cancella_id = new QAction;
@@ -49,10 +69,9 @@ void MainWindow::on_actionrubber_triggered()
     delete_:
         delete menu;
         delete cancella_id;
-        delete delete_noid;
+        delete delete_noid;*/
     }
     this->m_canvas->medotodiinserimento = GOMMA;
-
 
 }
 

@@ -48,6 +48,8 @@ SOURCES += \
     src/audiosetting/savequalita.cpp \
     src/autosave/autosave_.cpp \
     src/autosave/autosave_mainwindow.cpp \
+    src/cloud/cloud_controll.cpp \
+    src/cloud/cloud_ui.cpp \
     src/lastedit/copy.cpp \
     src/lastedit/enableredoundo_mainwindow.cpp \
     src/lastedit/redoundo.cpp \
@@ -128,6 +130,7 @@ SOURCES += \
     src/touch/paintevent/zoomin.cpp \
     src/touch/paintevent/zoomon.cpp \
     src/touch/riascolto/riascolto.cpp \
+    src/touch/rubber/rubber_ui.cpp \
     src/touch/settingmethod.cpp \
     src/touch/square/move.cpp \
     src/touch/square/square.cpp \
@@ -158,6 +161,8 @@ HEADERS += \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
     src/autosave/autosave_.h \
+    src/cloud/cloud_controll.h \
+    src/cloud/cloud_ui.h \
     src/lastedit/redoundo.h \
     src/currenttitle/audiototext.h \
     src/currenttitle/checksimilecopybook.h \
@@ -185,6 +190,7 @@ HEADERS += \
     src/touch/event/itspossibletoscroll.h \
     src/touch/method/methoddefinition.h \
     src/touch/paintevent/draw_image.h \
+    src/touch/rubber/rubber_ui.h \
     src/touch/square/square.h \
     src/touch/tabletapplication.h \
     src/touch/tabletcanvas.h \
@@ -211,9 +217,11 @@ HEADERS += \
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
+    src/cloud/cloud_ui.ui \
     src/mainwindow.ui \
     src/sheet/dialog_sheet.ui \
     src/style/inserttable_class.ui \
+    src/touch/rubber/rubber_ui.ui \
     src/videocompress/videocompress_ui.ui \
 
 # for the filesystem
