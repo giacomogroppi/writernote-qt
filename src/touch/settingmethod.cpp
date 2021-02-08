@@ -14,29 +14,20 @@ void MainWindow::on_actionpen_triggered()
     this->m_canvas->medotodiinserimento = STILO;
 }
 
-rubber_ui *rubber;
-
-void destroy_rubber(){
-    /* it's call when rubber is destroy */
-
-    qDebug() << "Distruggo la schermata";
-
-    delete rubber;
-}
 
 /* gomma */
 void MainWindow::on_actionrubber_triggered()
 {
     if(m_canvas->medotodiinserimento == GOMMA){
-        rubber = new rubber_ui;
+
+
+
+        rubber_ui *rubber = new rubber_ui;
 
         QPoint hostRect = this->cursor().pos();
         rubber->move(hostRect.x(), hostRect.y());
 
-        rubber->show();
-
-        connect(rubber, &rubber_ui::close_instance, this, &destroy_rubber);
-
+        rubber->exec();
 
         /*QMenu *menu = new QMenu(this);
         menu->setTitle("Choose input method");
