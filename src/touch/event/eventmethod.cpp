@@ -48,15 +48,16 @@ bool TabletCanvas::event(QEvent *event){
                             temp = puntoameta(lastpointzoom.poss, punto);
 
                             long double temp_distance;
+                            long double temp_distance_right_left = calcolodistanza(&lastpointzoom.poss, &lastpointzoom.posd);
 
                             if(check){
-                                temp_distance = calcolodistanza(&lastpointzoom.posd, &punto)/calcolodistanza(&lastpointzoom.poss, &lastpointzoom.posd);
+                                temp_distance = calcolodistanza(&lastpointzoom.posd, &punto)/temp_distance_right_left;
                                 this->zoom->zoom(temp,
                                             temp_distance);
 
                             }
                             else{
-                                temp_distance = calcolodistanza(&lastpointzoom.poss, &punto)/calcolodistanza(&lastpointzoom.posd, &lastpointzoom.poss);
+                                temp_distance = calcolodistanza(&lastpointzoom.poss, &punto)/temp_distance_right_left;
                                 this->zoom->zoom(temp,
                                                  temp_distance);
                             }

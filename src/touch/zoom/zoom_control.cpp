@@ -46,7 +46,7 @@ void zoom_control::zoom(QPointF &point_translate, long double delta){
         data->y[i] *= delta;
     }
 
-    delta = (delta >= 1) ? delta/(long double)10 : -1*delta;
+    delta = (delta >= (long double)1) ? delta : -1/delta;
 
     data->zoom += delta;
 
