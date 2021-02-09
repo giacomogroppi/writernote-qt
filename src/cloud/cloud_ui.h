@@ -15,6 +15,9 @@ public:
     explicit cloud_ui(QWidget *parent = nullptr);
     ~cloud_ui();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::cloud_ui *ui;
 };

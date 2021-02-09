@@ -5,13 +5,13 @@
 #define COLORE 1
 #define XCHECK 2
 #define YCHECK 3
-#define ROTATION 3
-#define PRESSURE 4
-#define IDTRATTO 5
+#define ROTATION 4
+#define PRESSURE 5
+#define IDTRATTO 6
 
-#define TESTINOHTML 6
-#define TESTI 7
-#define AUDIOPOSITION 8
+#define TESTINOHTML 7
+#define TESTI 8
+#define AUDIOPOSITION 9
 
 #include "currenttitle_class.h"
 #include "../indice_class.h"

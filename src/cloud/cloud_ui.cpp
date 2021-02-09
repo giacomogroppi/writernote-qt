@@ -12,3 +12,8 @@ cloud_ui::~cloud_ui()
 {
     delete ui;
 }
+
+void cloud_ui::on_pushButton_clicked()
+{
+    this->hide();
+}
