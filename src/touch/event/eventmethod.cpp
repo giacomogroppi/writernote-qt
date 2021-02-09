@@ -50,7 +50,7 @@ bool TabletCanvas::event(QEvent *event){
                             long double temp_distance;
 
                             if(check){
-                                temp_distance = calcolodistanza(&lastpointzoom.poss, &punto)/calcolodistanza(&lastpointzoom.poss, &lastpointzoom.posd);
+                                temp_distance = calcolodistanza(&lastpointzoom.posd, &punto)/calcolodistanza(&lastpointzoom.poss, &lastpointzoom.posd);
                                 this->zoom->zoom(temp,
                                             temp_distance);
 

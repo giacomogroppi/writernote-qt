@@ -101,7 +101,12 @@ style_struct * load_last_style(){
 
     QByteArray data_byte;
 
-    data_byte = setting.value(KEYSTYLE, QVariant::fromValue(default_setting)).toByteArray();
+
+    QStringList ciao = setting.allKeys();
+
+    QByteArray array_temp((const char *)&default_setting, sizeof(style_struct));
+
+    data_byte = setting.value(KEYSTYLE, array_temp).toByteArray();
 
 
     style_temp = (style_struct *)data_byte.data();

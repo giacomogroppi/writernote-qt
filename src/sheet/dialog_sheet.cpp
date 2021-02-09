@@ -120,10 +120,9 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
 
     style_struct *last = load_last_style();
 
-    if(*last == style_element){
-        delete last;
+    if(*last == style_element)
         return;
-    }
+
 
     QMessageBox msgBox;
     msgBox.setText("The document has been modified.");
