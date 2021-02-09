@@ -13,6 +13,11 @@
 #define DEFAULT_TYPE SPESSORE
 #define DEFAULT_TYPE_TRATTO CONTINUA
 
+struct last_color{
+    bool ok;
+    QColor color;
+};
+
 namespace Ui {
 class pen_ui;
 }
@@ -21,6 +26,10 @@ class pen_ui : public QWidget
 {
     Q_OBJECT
 
+public:
+    explicit pen_ui(QWidget *parent = nullptr);
+    ~pen_ui();
+
     void save_settings();
     void load_settings();
 
@@ -28,9 +37,7 @@ class pen_ui : public QWidget
     int m_spessore_pen = DEFAULTSPESSORE;
     int m_type_tratto = DEFAULT_TYPE_TRATTO;
 
-public:
-    explicit pen_ui(QWidget *parent = nullptr);
-    ~pen_ui();
+    struct last_color m_last_color;
 
 private slots:
     void on_slider_size_valueChanged(int value);

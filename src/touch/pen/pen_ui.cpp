@@ -18,6 +18,8 @@ pen_ui::pen_ui(QWidget *parent) :
     load_settings();
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+
+    m_last_color.ok = false;
 }
 
 pen_ui::~pen_ui()

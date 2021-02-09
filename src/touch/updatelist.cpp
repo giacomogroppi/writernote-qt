@@ -4,17 +4,51 @@
 #include <QDebug>
 #include <QPainter>
 
+#define MAXPOINT 20
+
+static bool neet_to_change_color(datastruct *data, int id){
+    int i, len, how;
+
+    len = data->x.length();
+
+    for(i=0, how = 0; i<len; i++){
+        if(data->idtratto[i] == id){
+            how ++;
+        }
+    }
+    return how == MAXPOINT;
+}
+
 void TabletCanvas::updatelist(QTabletEvent *event){
     if(!this->m_deviceDown){
-        /* se la lunghezza è diversa da zero */
         if(this->data->datatouch->idtratto.length())
             this->data->datatouch->idtratto.append(this->data->datatouch->idtratto.last() + 1);
         else
             this->data->datatouch->idtratto.append(0);
     }
-    else
-        /* se invece il tratto non è ancora finito deve caricare l'id di prima */
+    else{
+        if(this->m_pen_ui->m_type_tratto == TRATTI){
+            if(neet_to_change_color(data->datatouch, data->datatouch->idtratto.last())){
+                if(m_pen_ui->m_last_color.ok == false){
+
+                    /* save the current color */
+                    m_pen_ui->m_last_color.ok = true;
+                    m_pen_ui->m_last_color.color = m_color;
+
+                    /* he need to change color into white */
+                    this->m_color = Qt::white;
+                }
+                else{
+                    /* restore the last color */
+                    m_pen_ui->m_last_color.ok = false;
+
+                    this->m_color = m_pen_ui->m_last_color.color;
+                }
+            }
+        }
+
         this->data->datatouch->idtratto.append(data->datatouch->idtratto.last());
+    }
 
     struct colore_s colore;
 
