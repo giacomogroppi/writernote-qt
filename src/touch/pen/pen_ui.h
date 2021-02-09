@@ -47,6 +47,9 @@ private:
     Ui::pen_ui *ui;
 
     void list_update();
+
+protected:
+    bool event(QEvent *) override;
 };
 
 #endif // PEN_UI_H

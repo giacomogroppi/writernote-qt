@@ -16,6 +16,8 @@ pen_ui::pen_ui(QWidget *parent) :
     ui->button_tratti->setCheckable(true);
 
     load_settings();
+
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 }
 
 pen_ui::~pen_ui()
@@ -33,6 +35,8 @@ void pen_ui::list_update(){
 
     ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
     ui->button_size->setChecked(m_type_pen == SPESSORE);
+
+    ui->slider_size->setDisabled(m_type_pen == PRESSIONE);
 }
 
 void pen_ui::on_slider_size_valueChanged(int value)
@@ -62,6 +66,8 @@ void pen_ui::on_button_pressure_clicked()
 
     ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
     ui->button_size->setChecked(m_type_pen == SPESSORE);
+
+    ui->slider_size->setDisabled(false);
 }
 
 void pen_ui::on_button_size_clicked()
@@ -70,4 +76,13 @@ void pen_ui::on_button_size_clicked()
 
     ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
     ui->button_size->setChecked(m_type_pen == SPESSORE);
+
+    ui->slider_size->setDisabled(true);
+}
+
+bool pen_ui::event(QEvent *event){
+    if(event->type() == QEvent::WindowDeactivate)
+        this->hide();
+
+    return QWidget::event(event);
 }
