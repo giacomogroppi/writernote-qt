@@ -12,13 +12,11 @@ int main(int argc, char *argv[])
     TabletCanvas *canvas = new TabletCanvas;
     app.setCanvas(canvas);
 
-    struct last_file *m_last_open = NULL;
+    last_file *m_last_open = NULL;
     if(argc == 1){
-        m_last_open = new struct last_file;
-
         last_open a(nullptr);
 
-        a.setDataReturn(&last_file);
+        a.setDataReturn(&m_last_open);
 
         if(a.load_data_() != 0){
             a.exec();
