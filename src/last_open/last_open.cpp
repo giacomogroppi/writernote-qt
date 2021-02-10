@@ -82,7 +82,6 @@ void last_open::on_clicked(int index)
     QFile file((QString)m_last[index].posizione);
 
     if(file.exists()){
-        m_last_file = new last_file *;
         *m_last_file = new last_file;
         copy(*m_last_file, m_last[index].posizione, NULL, m_last[index].type);
 
