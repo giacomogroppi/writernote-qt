@@ -57,7 +57,6 @@ static void save_data_f(QSettings &setting, int quanti, QList<last_file *> &m_li
     QByteArray array;
 
     for(i=0; i<quanti; i++){
-        array.clear();
         array.append((const char *)m_lista.at(i), sizeof(last_file));
     }
 
