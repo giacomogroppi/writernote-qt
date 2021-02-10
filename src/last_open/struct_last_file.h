@@ -8,10 +8,13 @@
 #define TYPE_COMPUTER 0
 #define TYPE_CLOUD 1
 
+#define MAXSTR_ MAXSTR+1
+#define MAXMOD_ MAXMOD+1
+
 struct last_file{
-    char posizione[MAXSTR+1];
+    char posizione[MAXSTR_];
     short int type;
-    char last_modification[MAXMOD+1];
+    char last_modification[MAXMOD_];
 };
 
 Q_DECLARE_METATYPE(last_file);

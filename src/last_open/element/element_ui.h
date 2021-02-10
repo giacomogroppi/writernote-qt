@@ -16,9 +16,9 @@ public:
     explicit element_ui(QWidget *parent = nullptr);
     ~element_ui();
 
-    void setData(last_file *);
+    void setData(last_file *, int index);
 
-    int index = 0;
+    int m_index = 0;
 
 private:
     void set_main();

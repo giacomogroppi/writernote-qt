@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
 
         last_open a(nullptr);
 
+        a.setDataReturn(&last_file);
+
         if(a.load_data_() != 0){
             a.exec();
         }
@@ -31,9 +33,11 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("https://github.com/giacomogroppi/writernote-qt");
     app.setOrganizationName("writernote");*/
 
+    if(m_last_open != NULL)
+        w.setFile(m_last_open->posizione);
 
     if(argc != 1){
-        w.setFile(argv);
+        w.setFile(argv[1]);
     }
 
     w.show();

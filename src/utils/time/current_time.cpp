@@ -2,13 +2,9 @@
 
 QTime current_time()
 {
-    QTime temp;
-    temp.currentTime();
-    return temp;
-
+    return QTime::currentTime();
 }
 
 QString current_time_string(){
-    QTime temp = current_time();
-    return temp.toString();
+    return QTime::currentTime().toString();
 }

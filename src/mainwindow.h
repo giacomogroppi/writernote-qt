@@ -71,7 +71,7 @@ public:
 
     updatecheck *checkupdate;
 
-    void setFile(char **);
+    void setFile(char *);
 
     void update_image();
 

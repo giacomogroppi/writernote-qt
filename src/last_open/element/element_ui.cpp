@@ -15,10 +15,10 @@ element_ui::~element_ui()
     delete ui;
 }
 
-void element_ui::setData(last_file *data)
+void element_ui::setData(last_file *data, int index)
 {
     m_data = data;
-
+    m_index = index;
     set_main();
 }
 
@@ -38,6 +38,9 @@ void element_ui::set_main()
 bool element_ui::event(QEvent *event)
 {
     qDebug() << event->type();
+
+    if(event->type() == QEvent::MouseButtonPress)
+        emit on_pressed(this->m_index);
 
     return QWidget::event(event);
 }

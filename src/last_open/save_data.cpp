@@ -18,6 +18,8 @@ void save_data(QString &path, int type)
 
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
 
+    setting.beginGroup(GROUPNAME_LAST_FILE);
+
     quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
 
     last_file *m_lista = load_data(setting);
@@ -35,11 +37,10 @@ void save_data(QString &path, int type)
     QString time_now = current_time_string();
 
     if(uguale){
-        if((QString)m_lista[i].last_modification != time_now)
-            strcpy(m_lista[i].last_modification, time_now.toUtf8().constData());
+        strcpy(m_lista[i].last_modification, time_now.toUtf8().constData());
     }
     else{
-        quanti += 1;
+        quanti ++;
         last_file *temp_e = new last_file;
         strcpy(temp_e->last_modification, time_now.toUtf8().constData());
         strcpy(temp_e->posizione, path.toUtf8().constData());
