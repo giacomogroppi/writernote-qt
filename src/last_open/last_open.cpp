@@ -5,17 +5,24 @@
 #include "../utils/setting_define.h"
 #include <QAction>
 
+#include "load_data.h"
+
 last_open::last_open(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::last_open)
 {
     ui->setupUi(this);
-
-    load_data();
 }
 
 last_open::~last_open()
 {
+    int i, len;
+
+    len = m_lista.length();
+    for(i=0; i<len; i++){
+        delete m_lista.at(i);
+    }
+
     delete ui;
 }
 
@@ -24,28 +31,26 @@ void last_open::setting_data(last_file *data)
     m_last_file = data;
 }
 
-int last_open::load_data()
+int last_open::load_data_()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_LAST_FILE);
 
     int quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
-
     int i;
 
-    QList<QAction *> lista;
-    QAction *temp;
+    element_ui *temp_element_ui;
 
-    QString temp_testo;
+    QList<last_file *> temp_struct = load_data(setting, quanti);
 
     for(i=0; i<quanti; i++){
-        temp = new QAction;
+        temp_element_ui = new element_ui;
 
-        temp_testo = setting.value((QString)KAY_BASE_FILE + QString::number(i)).toString();
+        temp_element_ui->setData(temp_struct.at(i));
 
-        temp->setText(temp_testo);
+        m_lista.append(temp_element_ui);
 
-        lista.append(temp);
+        ui->verticalLayout->addWidget(temp_element_ui);
     }
 
     setting.endGroup();

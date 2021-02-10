@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>last_open</class>
- <widget class="QDialog" name="last_open">
+ <class>element_ui</class>
+ <widget class="QWidget" name="element_ui">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>441</height>
+    <width>422</width>
+    <height>70</height>
    </rect>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>70</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
+      <widget class="QLabel" name="label_path">
+       <property name="text">
+        <string>path</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_where">
+         <property name="text">
+          <string>where</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -32,9 +52,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="open_button">
+        <widget class="QLabel" name="label_last_edit">
          <property name="text">
-          <string>Open</string>
+          <string>lastmod</string>
          </property>
         </widget>
        </item>

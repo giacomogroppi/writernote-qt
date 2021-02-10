@@ -3,17 +3,11 @@
 
 #include <QDialog>
 
-#define MAXSTR 100
-
-#define TYPE_COMPUTER 0
-#define TYPE_CLOUD 1
-
 #include <QList>
 
-struct last_file{
-    char posizione[MAXSTR];
-    short int type;
-};
+#include "element/element_ui.h"
+#include "struct_last_file.h"
+
 
 namespace Ui {
 class last_open;
@@ -29,13 +23,13 @@ public:
 
     void setting_data(struct last_file *);
 
-    int load_data();
+    int load_data_();
 private:
     struct last_file *m_last_file;
 
     Ui::last_open *ui;
 
-
+    QList<element_ui *> m_lista;
 };
 
 #endif // LAST_OPEN_H

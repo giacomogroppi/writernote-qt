@@ -50,7 +50,9 @@ SOURCES += \
     src/autosave/autosave_mainwindow.cpp \
     src/cloud/cloud_controll.cpp \
     src/cloud/cloud_ui.cpp \
+    src/last_open/element/element_ui.cpp \
     src/last_open/last_open.cpp \
+    src/last_open/load_data.cpp \
     src/last_open/save_data.cpp \
     src/lastedit/copy.cpp \
     src/lastedit/enableredoundo_mainwindow.cpp \
@@ -150,6 +152,7 @@ SOURCES += \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
     src/utils/settings/setting_load.cpp \
+    src/utils/time/current_time.cpp \
     src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
     src/videocompress/importvideo_functionmainwindow.cpp \
@@ -171,8 +174,11 @@ HEADERS += \
     src/autosave/autosave_.h \
     src/cloud/cloud_controll.h \
     src/cloud/cloud_ui.h \
+    src/last_open/element/element_ui.h \
     src/last_open/last_open.h \
+    src/last_open/load_data.h \
     src/last_open/save_data.h \
+    src/last_open/struct_last_file.h \
     src/lastedit/redoundo.h \
     src/currenttitle/audiototext.h \
     src/currenttitle/checksimilecopybook.h \
@@ -219,6 +225,7 @@ HEADERS += \
     src/utils/color/color_chooser.h \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \
+    src/utils/time/current_time.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \
@@ -229,6 +236,7 @@ HEADERS += \
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
     src/cloud/cloud_ui.ui \
+    src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \
     src/mainwindow.ui \
     src/sheet/dialog_sheet.ui \

@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
         last_open a(nullptr);
 
-        if(a.load_data() != 0){
+        if(a.load_data_() != 0){
             a.exec();
         }
     }
