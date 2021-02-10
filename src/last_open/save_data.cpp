@@ -7,10 +7,12 @@
 
 #include "../utils/setting_define.h"
 
-static void save_data_f(QSettings &, int quanti, QList<last_file *> &m_lista);
+static void save_data_f(QSettings &, int quanti, last_file * m_lista);
 
 void save_data(QString &path, int type)
 {
+    Q_UNUSED(type)
+
     int quanti, i;
     bool uguale;
 
@@ -18,10 +20,10 @@ void save_data(QString &path, int type)
 
     quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
 
-    QList<last_file *> m_lista = load_data(setting, quanti);
+    last_file *m_lista = load_data(setting);
 
     for(i=0, uguale = false; i<quanti && !uguale; i++){
-        if((QString)m_lista.at(i)->posizione ==  path.toUtf8().constData()){
+        if((QString)m_lista[i].posizione ==  path.toUtf8().constData()){
             uguale = true;
         }
     }
@@ -33,8 +35,8 @@ void save_data(QString &path, int type)
     QString time_now = current_time_string();
 
     if(uguale){
-        if((QString)m_lista.at(i)->last_modification != time_now)
-            strcpy(m_lista[i]->last_modification, time_now.toUtf8().constData());
+        if((QString)m_lista[i].last_modification != time_now)
+            strcpy(m_lista[i].last_modification, time_now.toUtf8().constData());
     }
     else{
         quanti += 1;
@@ -44,21 +46,24 @@ void save_data(QString &path, int type)
 
         temp_e->type = TYPE_COMPUTER;
 
-        m_lista.append(temp_e);
+        last_file *temp_file = new last_file[quanti];
+
+        int i;
+        for(i=0; i<quanti; i++){
+            memccpy(temp_file, m_lista, quanti, sizeof(last_file));
+        }
+
     }
 
     save_data_f(setting, quanti, m_lista);
 }
 
-static void save_data_f(QSettings &setting, int quanti, QList<last_file *> &m_lista){
+static void save_data_f(QSettings &setting, int quanti, last_file *m_lista){
     setting.setValue(KEY_LAST_FILE_QUANTI, quanti);
 
-    int i;
     QByteArray array;
 
-    for(i=0; i<quanti; i++){
-        array.append((const char *)m_lista.at(i), sizeof(last_file));
-    }
+    array.append((const char *)m_lista, sizeof(last_file)*quanti);
 
     setting.setValue(KAY_LAST_BASE_FILE, array);
 

@@ -6,6 +6,6 @@
 
 #include <QList>
 
-QList<last_file *> load_data(QSettings &setting, int quanti);
+last_file *load_data(QSettings &setting);
 
 #endif // LOAD_DATA_H

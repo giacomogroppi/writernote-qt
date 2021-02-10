@@ -41,12 +41,12 @@ int last_open::load_data_()
 
     element_ui *temp_element_ui;
 
-    QList<last_file *> temp_struct = load_data(setting, quanti);
+    last_file * temp_struct = load_data(setting);
 
     for(i=0; i<quanti; i++){
         temp_element_ui = new element_ui;
 
-        temp_element_ui->setData(temp_struct.at(i));
+        temp_element_ui->setData(&temp_struct[i]);
 
         m_lista.append(temp_element_ui);
 
