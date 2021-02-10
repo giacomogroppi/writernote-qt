@@ -41,4 +41,9 @@
 #define KEY_PEN_TYPE "type_of_pen_key"
 #define KEY_PEN_TIPO_TRATTO "key_tipo_tratto"
 
+/* last file open*/
+#define GROUPNAME_LAST_FILE "group_last_file"
+#define KEY_LAST_FILE_QUANTI "quanti_last_file"
+#define KAY_BASE_FILE "key_base_"
+
 #endif // SETTING_DEFINE_H
