@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
 
-    QRect value_rect = setting.value(KEY_GEOMETRY).toRect();
+    QRect value_rect = setting.value(KEY_GEOMETRY, this->geometry()).toRect();
     this->setGeometry(value_rect);
 
     setting.endGroup();

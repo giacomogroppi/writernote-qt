@@ -1,18 +1,13 @@
-#include "save_data.h"
+#include "struct_last_file.h"
 
 #include <QSettings>
 #include "../utils/setting_define.h"
-#include "load_data.h"
 #include "../utils/time/current_time.h"
 
 #include "../utils/setting_define.h"
 
-static void save_data_f(QSettings &, int quanti, last_file * m_lista);
-
-void save_data(QString &path, int type)
+void save_data(QString &path, int type, int owner_type, char *owner)
 {
-    Q_UNUSED(type)
-
     int quanti, i;
     bool uguale;
 
@@ -22,7 +17,9 @@ void save_data(QString &path, int type)
 
     quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
 
-    last_file *m_lista = load_data(setting);
+    last_file *m_lista = NULL;
+    if(quanti)
+        m_lista = load_data(setting);
 
     for(i=0, uguale = false; i<quanti && !uguale; i++){
         if((QString)m_lista[i].posizione ==  path.toUtf8().constData()){
@@ -45,21 +42,27 @@ void save_data(QString &path, int type)
         strcpy(temp_e->last_modification, time_now.toUtf8().constData());
         strcpy(temp_e->posizione, path.toUtf8().constData());
 
+        temp_e->owner.type_user = owner_type;
+
+        if(owner)
+            strcpy(temp_e->posizione, owner);
+
         temp_e->type = TYPE_COMPUTER;
 
         last_file *temp_file = new last_file[quanti];
 
-        int i;
-        for(i=0; i<quanti; i++){
-            memccpy(temp_file, m_lista, quanti, sizeof(last_file));
-        }
+        if(m_lista)
+            memccpy(temp_file, m_lista, quanti-1, sizeof(last_file));
 
+        memccpy(&temp_file[quanti-1], temp_e, 1, sizeof(last_file));
+
+        return save_data_f(setting, quanti, temp_file);
     }
 
     save_data_f(setting, quanti, m_lista);
 }
 
-static void save_data_f(QSettings &setting, int quanti, last_file *m_lista){
+void save_data_f(QSettings &setting, int quanti, last_file *m_lista){
     setting.setValue(KEY_LAST_FILE_QUANTI, quanti);
 
     QByteArray array;

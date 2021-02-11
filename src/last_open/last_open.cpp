@@ -5,8 +5,6 @@
 #include "../utils/setting_define.h"
 #include <QAction>
 
-#include "load_data.h"
-
 #include <QFile>
 #include <QFileInfo>
 
@@ -52,14 +50,16 @@ int last_open::load_data_()
     setting.beginGroup(GROUPNAME_LAST_FILE);
 
     m_quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
+    if(m_quanti == 0)
+        return 0;
+
     int i;
 
     element_ui *temp_element_ui;
 
     last_file * temp_struct = NULL;
 
-    if(m_quanti)
-        temp_struct = load_data(setting);
+    temp_struct = load_data(setting);
 
     for(i=0; i<m_quanti; i++){
         temp_element_ui = new element_ui;
@@ -74,6 +74,8 @@ int last_open::load_data_()
     setting.endGroup();
 
     this->m_last = temp_struct;
+
+    this->updateList();
 
     return m_quanti;
 }

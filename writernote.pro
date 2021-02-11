@@ -176,8 +176,6 @@ HEADERS += \
     src/cloud/cloud_ui.h \
     src/last_open/element/element_ui.h \
     src/last_open/last_open.h \
-    src/last_open/load_data.h \
-    src/last_open/save_data.h \
     src/last_open/struct_last_file.h \
     src/lastedit/redoundo.h \
     src/currenttitle/audiototext.h \

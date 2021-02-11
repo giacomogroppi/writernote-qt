@@ -1,15 +1,12 @@
 #include "enable_videocompress.h"
 
 #include "videocompress_ui.h"
-#include "../mainwindow.h"
-#include "ui_mainwindow.h"
 
 #include "ui_videocompress_ui.h"
 
 /* funzione responsabile della scrittura delle preferenze */
-void enable_videocompress_ui(MainWindow *parent, videocompress_ui *padre)
+void enable_videocompress_ui(videocompress_ui *padre)
 {
-    /* se è già stato importato il video deve scrivere il path nel text edit from */
     /*
     int index = parent->self->indice.titolo.indexOf(parent->self->currentTitle);
     if(index != -1){

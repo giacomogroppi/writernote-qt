@@ -13,7 +13,7 @@ videocompress_ui::videocompress_ui(QWidget *parent, MainWindow *padre) :
 {
     ui->setupUi(this);
     this->padre = padre;
-    enable_videocompress_ui(this->padre, this);
+    enable_videocompress_ui(this);
 
 }
 

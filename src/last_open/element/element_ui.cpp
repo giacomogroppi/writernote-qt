@@ -19,6 +19,7 @@ void element_ui::setData(last_file *data, int index)
 {
     m_data = data;
     m_index = index;
+
     set_main();
 }
 
@@ -33,6 +34,12 @@ void element_ui::set_main()
     else{
         ui->label_where->setText("Local");
     }
+
+    if(m_data->owner.type_user == TYPE_OWNER_YOU)
+        ui->owner_type->setText("You");
+    else
+        ui->owner->setText(m_data->owner.name);
+
 }
 
 bool element_ui::event(QEvent *event)

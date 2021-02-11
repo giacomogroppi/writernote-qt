@@ -16,7 +16,7 @@
 #include <QSettings>
 #include "utils/setting_define.h"
 
-#include "last_open/save_data.h"
+#include "last_open/struct_last_file.h"
 
 static void setting_autosave(bool check){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -46,7 +46,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
      * TODO: after create cloud instance, pass the right
      * value
     */
-    save_data(self->path, TYPE_COMPUTER);
+    save_data(self->path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
 
     /* apre il file in file e lo carica nell'oggetto, e lo confronta */
     currenttitle_class *tempcopybook = new currenttitle_class;
