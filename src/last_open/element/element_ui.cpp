@@ -46,7 +46,7 @@ bool element_ui::event(QEvent *event)
 {
     qDebug() << event->type();
 
-    if(event->type() == QEvent::MouseButtonPress)
+    if(event->type() == QEvent::MouseButtonRelease)
         emit on_pressed(this->m_index);
 
     return QWidget::event(event);

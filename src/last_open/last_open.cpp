@@ -59,21 +59,24 @@ int last_open::load_data_()
 
     last_file * temp_struct = NULL;
 
-    temp_struct = load_data(setting);
+    if(m_quanti)
+        temp_struct = load_data(setting);
 
     for(i=0; i<m_quanti; i++){
         temp_element_ui = new element_ui;
 
         temp_element_ui->setData(&temp_struct[i], i);
 
-        connect(temp_element_ui, SIGNAL(on_pressed), this, SLOT(on_clicked));
+        connect(temp_element_ui, SIGNAL(on_pressed(int)), this, SLOT(on_clicked(int)));
 
         m_lista.append(temp_element_ui);
     }
 
     setting.endGroup();
 
-    this->m_last = temp_struct;
+    this->m_last = new last_file[m_quanti];
+    memccpy(m_last, temp_struct, m_quanti, sizeof(last_file));
+
 
     this->updateList();
 
@@ -95,6 +98,8 @@ void last_open::deleteIn(int index){
 
 void last_open::on_clicked(int index)
 {
+    QString testing_struct_integraty = m_last[index].posizione;
+
     QFile file((QString)m_last[index].posizione);
 
     if(file.exists()){
