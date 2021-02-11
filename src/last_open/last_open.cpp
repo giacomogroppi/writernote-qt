@@ -37,6 +37,15 @@ void last_open::setDataReturn(last_file **data){
     m_last_file = data;
 }
 
+void last_open::updateList(){
+    int i, len;
+    len = m_lista.length();
+
+    for(i=0; i<len; i++){
+        ui->verticalLayout->addWidget(m_lista.at(i));
+    }
+};
+
 int last_open::load_data_()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -57,9 +66,9 @@ int last_open::load_data_()
 
         temp_element_ui->setData(&temp_struct[i], i);
 
-        m_lista.append(temp_element_ui);
+        connect(temp_element_ui, SIGNAL(on_pressed), this, SLOT(on_clicked));
 
-        ui->verticalLayout->addWidget(temp_element_ui);
+        m_lista.append(temp_element_ui);
     }
 
     setting.endGroup();
@@ -73,8 +82,13 @@ void last_open::deleteIn(int index){
     int i;
     for(i=index; i<m_quanti; i++){
         copy(&m_last[i], m_last[i].posizione, m_last[i].last_modification, m_last[i].type);
+
+        m_lista.at(i)->decrease();
     }
     m_quanti --;
+
+    delete m_lista.at(index);
+    this->m_lista.removeAt(index);
 }
 
 void last_open::on_clicked(int index)
@@ -90,7 +104,15 @@ void last_open::on_clicked(int index)
     else{
         dialog_critic("The file didn't exist");
 
+        int i, len;
+        len = m_lista.length();
+        for(i=0; i<len; i++){
+            ui->verticalLayout->removeWidget(m_lista.at(i));
+        }
+
         deleteIn(index);
+
+        this->updateList();
     }
 }
 

@@ -44,3 +44,7 @@ bool element_ui::event(QEvent *event)
 
     return QWidget::event(event);
 }
+
+void element_ui::decrease(){
+    this->m_index --;
+}

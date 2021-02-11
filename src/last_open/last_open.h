@@ -28,6 +28,8 @@ public:
     int load_data_();
 
 private:
+    void updateList();
+
     last_file **m_last_file;
 
     last_file *m_last;

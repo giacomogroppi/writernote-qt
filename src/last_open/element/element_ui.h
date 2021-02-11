@@ -20,6 +20,8 @@ public:
 
     int m_index = 0;
 
+    void decrease();
+
 private:
     void set_main();
 
