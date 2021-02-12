@@ -46,4 +46,10 @@
 #define KEY_LAST_FILE_QUANTI "quanti_last_file"
 #define KAY_LAST_BASE_FILE "key_base_"
 
+#define FILE_NAME_USER_CLOUD "writernote-user"
+
+#define GROUPNAME_USER_CLOUD_IS_DEFINED "group-user-is-defined"
+#define GROUPNAME_USER_CLOUD "group-user"
+
+
 #endif // SETTING_DEFINE_H

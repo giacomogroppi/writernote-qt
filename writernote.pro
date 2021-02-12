@@ -50,6 +50,7 @@ SOURCES += \
     src/autosave/autosave_mainwindow.cpp \
     src/cloud/cloud_controll.cpp \
     src/cloud/cloud_ui.cpp \
+    src/cloud/struct_user.cpp \
     src/last_open/element/element_ui.cpp \
     src/last_open/last_open.cpp \
     src/last_open/load_data.cpp \
@@ -174,6 +175,7 @@ HEADERS += \
     src/autosave/autosave_.h \
     src/cloud/cloud_controll.h \
     src/cloud/cloud_ui.h \
+    src/cloud/struct_user.h \
     src/last_open/element/element_ui.h \
     src/last_open/last_open.h \
     src/last_open/struct_last_file.h \
