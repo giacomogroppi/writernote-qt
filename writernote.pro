@@ -4,19 +4,19 @@ QT       += widgets
 QT       += multimedia
 QT       += printsupport
 
-win32:{
-    QT += network
-}
+QT += network
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = build
 RESOURCES     = writernote.qrc
-CONFIG += c++11
+CONFIG += c++17
 
-#for glibconfig.h
-INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
+!android{
+    #for glibconfig.h
+    INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
+}
 
 DEFINES += "STAMPA"
 
@@ -245,8 +245,6 @@ FORMS += \
     src/touch/rubber/rubber_ui.ui \
     src/videocompress/videocompress_ui.ui \
 
-# for the filesystem
-LIBS += -lglib-2.0
 
 
 # Default rules for deployment.
@@ -254,5 +252,19 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-CONFIG += link_pkgconfig
-PKGCONFIG += libzip
+
+android{
+    QT += androidextras
+    #LIBS += -L$$PWD/android/libzip/libzip-android-1.0.1/libs/armeabi-v7a/libzip.a
+
+    LIBS += -L$$PWD/android/libzip/libzip-android-1.0.1/libs/armeabi-v7a/libzip.so
+
+
+    INCLUDEPATH += $$PWD/android/libzip/libzip-android-1.0.1/jni/
+
+}else{
+    CONFIG += link_pkgconfig
+    PKGCONFIG += libzip
+}
+
+

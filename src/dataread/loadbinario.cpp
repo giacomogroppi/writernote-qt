@@ -12,7 +12,7 @@ bool xmlstruct::loadbinario(zip_t *z){
     zip_stat_init(&st);
     zip_stat(z, this->currenttitle->posizione_binario.toUtf8().constData(), 0, &st);
 
-    zip_file *f = zip_fopen(z, this->currenttitle->posizione_binario.toUtf8().constData(), 0);
+    zip_file_t *f = zip_fopen(z, this->currenttitle->posizione_binario.toUtf8().constData(), 0);
 
     int check = 0;
 

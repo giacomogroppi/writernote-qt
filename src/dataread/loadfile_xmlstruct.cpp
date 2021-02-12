@@ -65,7 +65,7 @@ bool xmlstruct::loadfile(const char *nameFile){
     int err = 0, check = 0;
     int temp;
 
-    zip *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
+    zip_t *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
     if (filezip == NULL)
         return false;
 
@@ -73,7 +73,7 @@ bool xmlstruct::loadfile(const char *nameFile){
     zip_stat_init(&st);
     zip_stat(filezip, nameFile, 0, &st);
 
-    zip_file *f = zip_fopen(filezip, nameFile, 0);
+    zip_file_t *f = zip_fopen(filezip, nameFile, 0);
     if(f == NULL){
         zip_close(filezip);
         return false;

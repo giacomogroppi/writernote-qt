@@ -49,7 +49,7 @@ public:
     void stringa_decode_int(const char *, const char *, QList<int>*);
     void decode_checksum();
 
-    bool loadbinario(zip_t *);
+    bool loadbinario(struct zip *);
 
     /* funzione che gestisce la scrittura di testinohtml */
     void textdecode(QList<int> *);

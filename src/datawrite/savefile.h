@@ -2,6 +2,7 @@
 #define SAVEFILE_H
 
 #include "../self_class.h"
+
 #include <zip.h>
 
 class savefile

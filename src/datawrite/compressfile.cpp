@@ -40,18 +40,17 @@ bool savefile::compressfile(const char *namefile, const char *text){
 bool savefile::compressfile(const void *dato, int size, const char *namefile){
     int errorp = 0;
 
-    zip_t *filezip = zip_open(this->path->toUtf8().constData(), ZIP_CREATE , &errorp);
+    struct zip *filezip = zip_open(this->path->toUtf8().constData(), ZIP_CREATE , &errorp);
 
     if (filezip == nullptr) {
         return false;
     }
 
-    zip_source_t *temp;
+    struct zip_source *temp;
 
     temp = zip_source_buffer(filezip, dato, size, 0);
 
     /* ZIP_FL_ENC_UTF_8 */
-
     if ( temp == NULL || zip_file_add(filezip, namefile, temp, 0) < 0) {
         int indice = zip_name_locate(filezip, namefile, 0);
         if(zip_file_replace(filezip, indice, temp, 0) == -1){
