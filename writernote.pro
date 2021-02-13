@@ -18,9 +18,11 @@ CONFIG += c++17
     INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 }
 
-DEFINES += "STAMPA"
+## it disable all cloud file for compile [for testing remove #]
+#DEFINES += "NO_CLOUD"
 
-DEFINES += "TESTING"
+# URL change from url to local ip
+DEFINES += "CLOUD_TESTING"
 
 ## for support A4 pdf create
 DEFINES += "NUMEROPIXELPAGINA=1400"
@@ -176,6 +178,7 @@ HEADERS += \
     src/cloud/cloud_controll.h \
     src/cloud/cloud_ui.h \
     src/cloud/struct_user.h \
+    src/cloud/url.h \
     src/last_open/element/element_ui.h \
     src/last_open/last_open.h \
     src/last_open/struct_last_file.h \

@@ -40,9 +40,7 @@
 #include "audiosetting/loadqualita.h"
 #include "currenttitle/checksimilecopybook.h"
 
-#if defined(WIN32) || defined(WIN64) || defined(TESTING)
 #include "windows/updatecheck.h"
-#endif
 
 #include "audioplay/aggiornotastiriascolto.h"
 #include "utils/setting_define.h"

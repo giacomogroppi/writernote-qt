@@ -1,4 +1,3 @@
-#if defined(WIN32) || defined(WIN64) || defined(TESTING)
 #include "updatecheck.h"
 
 #include "stdlib.h"
@@ -110,4 +109,3 @@ void updatecheck::restart(){
     this->mostra = true;
 }
 
-#endif //win32
