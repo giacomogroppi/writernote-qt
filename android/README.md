@@ -1,6 +1,6 @@
-it contains libzip for android
+it contains a script to compile libzip for android
 
-to download the right library of libzip run lib_libzip_compile.sh
+before compile you need to exe lib_libzip_compile.sh
 to compile it run ./build.sh
 
 to compile android application you need a openjdk 8, and gradle
