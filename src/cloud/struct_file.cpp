@@ -1,7 +1,7 @@
 #include "struct_file.h"
 
 struct_file * bytearray_tostruct_file(QByteArray &array){
-    if(array.size() != sizeof(struct struct_file) || !array.size())
+    if(array.size() != sizeof(struct struct_file))
         return NULL;
 
     struct_file * m_temp;
