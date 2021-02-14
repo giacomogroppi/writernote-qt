@@ -84,7 +84,7 @@ SOURCES += \
     src/dataread/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
     src/datawrite/renamefile_f_zip.cpp \
-    src/datawrite/salvabinario.cpp \
+    src/datawrite/write/salvabinario.cpp \
     src/datawrite/savefile.cpp \
     src/datawrite/savefile_mainwindow.cpp \
     src/datawrite/source_read_ext.cpp \
@@ -92,7 +92,6 @@ SOURCES += \
     src/datawrite/write/saveindice_savefile.cpp \
     src/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
-    src/images/load_image.cpp \
     src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \

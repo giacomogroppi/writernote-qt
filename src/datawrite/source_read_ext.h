@@ -1,5 +1,5 @@
-#ifndef SOURCE_READ_EXT
-#define SOURCE_READ_EXT
+#ifndef SOURCE_READ_EXT_
+#define SOURCE_READ_EXT_
 
 #include "zip.h"
 

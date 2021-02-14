@@ -5,6 +5,8 @@
 
 #include <zip.h>
 
+#define WRITE_ON_SIZE(x,y,z,filezip) if(zip_source_write(x,y,z)==-1)return freezip(x,filezip);
+
 class savefile
 {
 private:
