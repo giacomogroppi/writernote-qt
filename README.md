@@ -13,13 +13,15 @@
 
 ## Experimental Features:
 - Import images
-- Pdf export
 - Zoom in and Zoom on
+- Personal sheet
 
 ## To do
 - Project .writer to image
 - Convert audio to text
 - Drag and drop image and file to import it
+- Cloud
+- Compile for IOS and mac
 
 ## Installing
   - Linux: 
