@@ -15,6 +15,8 @@
 - Import images
 - Zoom in and Zoom on
 - Personal sheet
+- Rubber
+- Android support
 
 ## To do
 - Project .writer to image
