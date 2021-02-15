@@ -6,7 +6,7 @@
 
 #include "../datawrite/source_read_ext.h"
 
-#define SOURCE_READ_ZIP_PRIVATE(x, y, z) if(zip_fread(x, y, z)==-1)
+#define SOURCE_READ_ZIP_PRIVATE(x, y, z) zip_fread(x, y, z)==-1
 #define SOURCE_READ_ZIP(x, y, z) check+=SOURCE_READ_ZIP_PRIVATE(x, y, z)
 
 /* la funzione gestisce la lettura del file binario */
