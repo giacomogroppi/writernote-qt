@@ -222,6 +222,10 @@ private slots:
 
     void on_actionchoose_color_triggered();
 
+    void on_button_left_hide_clicked();
+
+    void on_button_right_hide_clicked();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
@@ -229,6 +233,8 @@ private:
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     bool event(QEvent *event) override;
+
+    void resizeEvent(QResizeEvent *event) override;
 
 };
 #endif // MAINWINDOW_H

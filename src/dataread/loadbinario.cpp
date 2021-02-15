@@ -69,7 +69,7 @@ bool xmlstruct::loadbinario(zip_t *z){
     /* colori */
     struct colore_s coloretemp;
     for(i = 0; i < lunghezza; i++){
-        SOURCE_READ_ZIP(f, &cloretemp, sizeof(struct colore_s));
+        SOURCE_READ_ZIP(f, &coloretemp, sizeof(struct colore_s));
         //source_read_ext(f, &coloretemp, sizeof(struct colore_s));
 
         currenttitle->datatouch->color.append(coloretemp);

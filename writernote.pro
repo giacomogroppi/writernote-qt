@@ -154,6 +154,7 @@ SOURCES += \
     src/touch/zoom/zoom_control.cpp \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
+    src/utils/resize_mainwindow/resize.cpp \
     src/utils/settings/setting_load.cpp \
     src/utils/time/current_time.cpp \
     src/videocompress/compressivideo.cpp \

@@ -18,6 +18,8 @@
 
 #include "last_open/struct_last_file.h"
 
+static void setting_hide_list(bool check);
+
 static void setting_autosave(bool check){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_REDOUNDO);
@@ -36,7 +38,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     setting.setValue(KEY_GEOMETRY, this->geometry());
     setting.endGroup();
 
-
+    setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
 
     if(!this->self->indice.titolo.length())
@@ -139,4 +141,13 @@ void MainWindow::closeEvent (QCloseEvent *event)
     delete tempcopybook;
     delete tempindice;
     delete temp_lettura;
+}
+
+static void setting_hide_list(bool check){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_LIST_HIDDEN);
+
+    setting.setValue(KEY_LIST_HIDDEN, check);
+
+    setting.endGroup();
 }

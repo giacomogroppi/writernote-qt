@@ -51,5 +51,9 @@
 #define GROUPNAME_USER_CLOUD_IS_DEFINED "group-user-is-defined"
 #define GROUPNAME_USER_CLOUD "group-user"
 
+/* list left hidden */
+#define GROUPNAME_LIST_HIDDEN "list_left_group"
+#define KEY_LIST_HIDDEN "key_list_left"
+
 
 #endif // SETTING_DEFINE_H
