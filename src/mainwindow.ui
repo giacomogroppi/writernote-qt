@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>972</width>
-    <height>670</height>
+    <width>967</width>
+    <height>629</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,21 +50,53 @@
             <height>16777215</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">border: none;</string>
+          </property>
           <property name="text">
            <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../writernote.qrc">
+            <normaloff>:/image/images/icon-hide-left.png.png</normaloff>:/image/images/icon-hide-left.png.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>10</width>
+            <height>10</height>
+           </size>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="button_right_hide">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="maximumSize">
            <size>
             <width>10</width>
             <height>16777215</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">border: none;</string>
+          </property>
           <property name="text">
            <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../writernote.qrc">
+            <normaloff>:/image/images/icon-hide-right.png</normaloff>:/image/images/icon-hide-right.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>10</width>
+            <height>10</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -212,8 +244,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>972</width>
-     <height>21</height>
+     <width>967</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">

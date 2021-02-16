@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 void MainWindow::resizeEvent(QResizeEvent *event){
+    return event->accept();
     short int height = this->ui->listWidgetSX->height();
     this->ui->button_left_hide->setFixedHeight(height);
     this->ui->button_right_hide->setFixedHeight(height);

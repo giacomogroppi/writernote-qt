@@ -98,8 +98,6 @@ void last_open::deleteIn(int index){
 
 void last_open::on_clicked(int index)
 {
-    QString testing_struct_integraty = m_last[index].posizione;
-
     QFile file((QString)m_last[index].posizione);
 
     if(file.exists()){

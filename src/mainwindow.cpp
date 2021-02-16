@@ -94,6 +94,9 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
 
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
+
+    ui->button_left_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    ui->button_right_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
 

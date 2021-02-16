@@ -47,5 +47,7 @@
         <file>images/choose-color-icon.png</file>
         <file>images/linea-parziale.png</file>
         <file>images/linea-totale.png</file>
+        <file>images/icon-hide-left.png.png</file>
+        <file>images/icon-hide-right.png</file>
     </qresource>
 </RCC>
