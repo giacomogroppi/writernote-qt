@@ -1,7 +1,3 @@
-/*
-  Gestisce la classe fileC che gestisce il decode dei file
-  e l'archiviazione dei file
-*/
 #include "xmlstruct.h"
 #include "../self_class.h"
 

@@ -21,11 +21,9 @@ public:
     savefile(QString *path, currenttitle_class *currenttitle);
     bool savefile_check_indice(indice_class *);
     bool savefile_check_file();
-    //bool savefile_check_copybook();
-    bool compressfile(const char *namefile, const char *testo);
+
     bool salvabinario(zip_t *);
 
-    bool compressfile(const void *, int size, const char *namefile);
 };
 
 #endif // SAVEFILE_H

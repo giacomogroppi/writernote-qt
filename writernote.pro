@@ -78,7 +78,6 @@ SOURCES += \
     src/datamanage/spacchettamento.cpp \
     src/datamanage/stoprecording.cpp \
     src/datawrite/colortoint.cpp \
-    src/datawrite/compressfile.cpp \
     src/dataread/loadfile_xmlstruct.cpp \
     src/dataread/loadindice_xmlstruct.cpp \
     src/dataread/loadbinario.cpp \
