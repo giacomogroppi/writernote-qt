@@ -55,8 +55,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
     indice_class *tempindice = new indice_class;
 
     xmlstruct *temp_lettura = new xmlstruct(&self->path, tempindice, tempcopybook);
-    bool check1_testing = temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData());
-    check1_testing = check1_testing && temp_lettura->loadindice();
 
     if(!temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData()) || !temp_lettura->loadindice()){
         delete temp_lettura;
