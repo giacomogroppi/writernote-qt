@@ -1,6 +1,5 @@
 #include "datastruct.h"
 #include <QList>
-#include <QDebug>
 #include "../method/methoddefinition.h"
 
 datastruct::datastruct()
@@ -37,15 +36,6 @@ auto datastruct::biggerynoid() -> double{
         if(y.at(i) > y_ && idtratto.at(i) != -1)
             y_ = y.at(i);
     return y_;
-}
-
-void datastruct::stampa(){
-
-    int i, len;
-    len = this->x.length();
-    for(i=0; i<len; i++)
-        qDebug() << "\nx:" << this->x.at(i) << "\ny: " << this->y.at(i);
-
 }
 
 int datastruct::firstx(){

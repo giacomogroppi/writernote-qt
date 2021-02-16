@@ -1,9 +1,5 @@
-#ifndef RIASCOLTO_AUDIO_PROGRESSIVO_CPP
-#define RIASCOLTO_AUDIO_PROGRESSIVO_CPP
-
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QDebug"
 #include "../self_class.h"
 
 /* funzione che gestiste il riascolto dell'audio */
@@ -39,5 +35,3 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
 
     this->ui->statusBar->showMessage(tr("%1 second").arg(position / 1000));
 }
-
-#endif

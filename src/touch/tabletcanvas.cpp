@@ -5,8 +5,6 @@
 #include <QtMath>
 #include <cstdlib>
 
-#include <QDebug>
-
 #include <QTabletEvent>
 #include <QEvent>
 

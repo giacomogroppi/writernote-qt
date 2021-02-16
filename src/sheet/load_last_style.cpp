@@ -4,8 +4,6 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QSettings>
 
-#include <QDebug>
-
 #include "../utils/setting_define.h"
 
 #include "string.h"

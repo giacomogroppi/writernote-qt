@@ -5,7 +5,6 @@
 #include "cambioiconariascolto.h"
 
 void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
-    //qDebug() << "cambiostatoplayer richiamata";
     /* l'utente ha deciso di stoppare l'audio oppure è finito */
     if(state == QMediaPlayer::StoppedState){
         this->ui->audioSlider->setValue(0);

@@ -1,7 +1,6 @@
 #include "square.h"
 #include <QPen>
 #include <QPainter>
-#include <QDebug>
 
 square::square()
 {

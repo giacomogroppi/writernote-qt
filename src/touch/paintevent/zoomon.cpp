@@ -1,5 +1,4 @@
 #include "../tabletcanvas.h"
-#include <QDebug>
 
 /*void TabletCanvas::zoomon(currenttitle_class *datastruct_){
     if(!datastruct_){

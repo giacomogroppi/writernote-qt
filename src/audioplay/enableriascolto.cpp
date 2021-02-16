@@ -1,6 +1,5 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
 #include "../utils/dialog_critic/dialog_critic.h"
 
 #include "../setting_ui.h"

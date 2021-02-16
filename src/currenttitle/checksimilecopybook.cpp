@@ -3,7 +3,6 @@
 #include "currenttitle_class.h"
 #include "../indice_class.h"
 
-#include <QDebug>
 
 /* la funzione confronta due oggetti della classe current title */
 int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)

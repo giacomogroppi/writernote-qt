@@ -1,5 +1,4 @@
 #include "../tabletcanvas.h"
-#include <QDebug>
 
 #include "../../sheet/load_last_style.h"
 #include "../../sheet/setting_color.h"

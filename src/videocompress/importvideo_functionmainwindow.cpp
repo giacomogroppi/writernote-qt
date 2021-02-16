@@ -3,8 +3,6 @@
 
 #include "videocompress_ui.h"
 
-#include <QDebug>
-
 void MainWindow::on_actioncompress_video_triggered()
 {
     videocompress_ui *videocompress = new videocompress_ui(nullptr, this);

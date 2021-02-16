@@ -14,7 +14,6 @@
 #include <QFileDialog>
 #include <QMediaRecorder>
 #include <QStandardPaths>
-#include <QDebug>
 #include <iostream>
 #include <QComboBox>
 #include <QMediaPlayer>

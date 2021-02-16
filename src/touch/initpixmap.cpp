@@ -1,6 +1,5 @@
 #include "tabletcanvas.h"
 #include <QPainter>
-#include <QDebug>
 
 /* la funzione gestisce lo il resize della finestra */
 void TabletCanvas::initPixmap()

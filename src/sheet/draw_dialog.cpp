@@ -3,7 +3,6 @@
 #include "ui_dialog_sheet.h"
 #include <QPainter>
 
-#include <QDebug>
 
 void dialog_sheet::draw(){
     ui->pushButton_color->setAutoFillBackground(true);

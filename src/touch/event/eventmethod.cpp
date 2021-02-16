@@ -1,6 +1,5 @@
 #include "../tabletcanvas.h"
 #include <QEvent>
-#include <QDebug>
 #include "math.h"
 #include <QWheelEvent>
 
@@ -15,8 +14,6 @@ static inline bool its_inside(QPointF &left, QPointF &right, QPointF &move);
 
 bool TabletCanvas::event(QEvent *event){
     QPointF temp;
-
-    //qDebug() << event->type();
 
     switch (event->type()) {
         case QEvent::TouchBegin:

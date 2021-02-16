@@ -1,7 +1,6 @@
 #include "element_ui.h"
 #include "ui_element_ui.h"
 
-#include <QDebug>
 #define NONE ""
 
 element_ui::element_ui(QWidget *parent) :
@@ -49,8 +48,6 @@ void element_ui::set_main()
 
 bool element_ui::event(QEvent *event)
 {
-    qDebug() << event->type();
-
     if(event->type() == QEvent::MouseButtonRelease)
         emit on_pressed(this->m_index);
 

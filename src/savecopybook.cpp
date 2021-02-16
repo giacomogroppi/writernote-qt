@@ -2,7 +2,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
 #include "self_class.h"
 #include "datawrite/savefile.h"
 #include "savecopybook.h"

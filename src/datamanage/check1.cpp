@@ -1,5 +1,4 @@
 #include <QStringList>
-#include <QDebug>
 
 bool check1(QStringList *array){
     int i, lunghezza = array->length();

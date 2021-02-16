@@ -1,8 +1,6 @@
 #include "tabletcanvas.h"
 #include "method/methoddefinition.h"
 
-#include <QDebug>
-
 #include "../utils/dialog_critic/dialog_critic.h"
 
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
@@ -82,7 +80,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                         else{
                             /* a questo punto può muovere di un delta x e y */
                             this->square_.move(event->pos(), painter);
-                            qDebug() << "Lo sta spostando";
                             isloading = true;
                             update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                         }

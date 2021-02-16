@@ -1,6 +1,8 @@
 #include "../tabletcanvas.h"
 #include <QDebug>
 
+/* TODO -> remove zoomin.cpp and zoomon.cpp */
+
 /* automenta lo zoom */
 /*void TabletCanvas::zoomin(currenttitle_class *datastruct_){
     if(!datastruct_){

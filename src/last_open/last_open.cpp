@@ -17,6 +17,9 @@ last_open::last_open(QWidget *parent) :
     ui(new Ui::last_open)
 {
     ui->setupUi(this);
+
+    /* the user can not resize the window */
+    setFixedSize(this->size());
 }
 
 last_open::~last_open()

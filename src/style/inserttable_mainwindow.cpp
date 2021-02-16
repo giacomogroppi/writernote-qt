@@ -4,7 +4,6 @@
 #include "../mainwindow.h"
 #include <QDialog>
 #include <QPushButton>
-#include <QDebug>
 
 #include "inserttable_class.h"
 

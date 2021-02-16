@@ -1,6 +1,5 @@
 #include "qfilechoose.h"
 #include <QString>
-#include <QDebug>
 #include <QFileDialog>
 #include "../self_class.h"
 

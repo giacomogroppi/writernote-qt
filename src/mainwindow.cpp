@@ -4,7 +4,6 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QListWidgetItem>
-#include <QDebug>
 
 #include <fstream>
 #include <cstdint>

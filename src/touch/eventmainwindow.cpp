@@ -1,7 +1,6 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QDebug>
 
 /* la funzione gestisce l'inquadramento del pixmap con la dimensione degli spacer */
 bool MainWindow::event(QEvent *event){

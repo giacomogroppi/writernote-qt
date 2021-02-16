@@ -1,7 +1,6 @@
 #include "tabletcanvas.h"
 
 #include <QTabletEvent>
-#include <QDebug>
 #include <QPainter>
 
 #define MAXPOINT 20

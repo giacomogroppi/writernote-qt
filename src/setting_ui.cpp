@@ -4,7 +4,6 @@
 #include "mainwindow.h"
 #include <QFontComboBox>
 #include <QToolBar>
-#include <QDebug>
 
 /* il file divide a scaglioni l'attivazione o il disabilitamento dei pulsanti */
 

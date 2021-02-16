@@ -2,8 +2,6 @@
 #include <QString>
 #include <QStringList>
 
-#include <QDebug>
-
 #include "../touch/datastruct/datastruct.h"
 
 currenttitle_class::currenttitle_class(){

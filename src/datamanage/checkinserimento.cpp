@@ -2,7 +2,6 @@
 
 #include "iostream"
 #include <QStringList>
-#include <QDebug>
 
 bool checkinserimento(QList<QString> *lista, int max){
     int i = 0, lencompare;

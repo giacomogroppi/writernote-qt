@@ -2,7 +2,6 @@
 #include "inserttable_class.h"
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QDebug"
 #include <QTextCursor>
 
 inserttable_class::inserttable_class(QWidget *parent, Ui::MainWindow *padre) :

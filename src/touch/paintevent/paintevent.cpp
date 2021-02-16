@@ -1,6 +1,5 @@
 #include "../tabletcanvas.h"
 #include <QPainter>
-#include <QDebug>
 
 #include "draw_image.h"
 

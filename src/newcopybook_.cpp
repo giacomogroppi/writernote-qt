@@ -2,7 +2,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
 #include "datawrite/savefile.h"
 
 #include "currenttitle/currenttitle_class.h"
