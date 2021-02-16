@@ -128,26 +128,25 @@ void MainWindow::on_actionOpen_triggered(char *nomeFile)
     QString fileName;
     if(!nomeFile){
         fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/giacomo", "Writernote (*.writer);; All file (* *.*)");
-        if(fileName == "")
-            return;
     }else{
         fileName = nomeFile;
     }
 
+    if(fileName == "")
+        return;
 
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return dialog_critic("I can't open this file because of the permission");
 
-    std::string pathtemp = fileName.toUtf8().constData();
+    //std::string pathtemp = fileName.toUtf8().constData();
 
-    auto res = pathtemp.find("writer");
-    if (std::string::npos == res)
-        return dialog_critic("Miss the extension of the file");
+    if(fileName.indexOf(".writer") == -1)
+        return dialog_critic("Are you sure it's a writernote file?");
 
-    /*inizializza la classe per caricare i file*/
-    this->self->path = pathtemp.c_str();
+    self->path = fileName;
+
     xmlstruct *filefind = new xmlstruct(&this->self->path, &this->self->indice, &this->self->currenttitle);
     if(!filefind->loadindice()){
         delete filefind;

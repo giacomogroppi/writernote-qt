@@ -41,7 +41,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
 
-    if(!this->self->indice.titolo.length())
+    if(!this->self->indice.titolo.length() || self->currentTitle == "")
         return event->accept();
 
     /*
@@ -54,7 +54,10 @@ void MainWindow::closeEvent (QCloseEvent *event)
     currenttitle_class *tempcopybook = new currenttitle_class;
     indice_class *tempindice = new indice_class;
 
-    xmlstruct *temp_lettura = new xmlstruct(&this->self->path, tempindice, tempcopybook);
+    xmlstruct *temp_lettura = new xmlstruct(&self->path, tempindice, tempcopybook);
+    bool check1_testing = temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData());
+    check1_testing = check1_testing && temp_lettura->loadindice();
+
     if(!temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData()) || !temp_lettura->loadindice()){
         delete temp_lettura;
 

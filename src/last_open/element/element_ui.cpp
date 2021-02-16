@@ -2,6 +2,7 @@
 #include "ui_element_ui.h"
 
 #include <QDebug>
+#define NONE ""
 
 element_ui::element_ui(QWidget *parent) :
     QWidget(parent),
@@ -35,11 +36,15 @@ void element_ui::set_main()
         ui->label_where->setText("Local");
     }
 
-    if(m_data->owner.type_user == TYPE_OWNER_YOU)
+    if(m_data->owner.type_user == TYPE_OWNER_YOU){
         ui->owner_type->setText("You");
-    else
-        ui->owner->setText(m_data->owner.name);
 
+        ui->owner->setText(NONE);
+    }
+    else{
+        ui->owner_type->setText(NONE);
+        ui->owner->setText(m_data->owner.name);
+    }
 }
 
 bool element_ui::event(QEvent *event)
