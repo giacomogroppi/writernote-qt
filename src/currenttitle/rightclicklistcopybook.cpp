@@ -14,7 +14,7 @@
 #include "audiototext.h"
 #include "renamefile.h"
 
-#include "../areyousure.h"
+#include "../utils/areyousure/areyousure.h"
 
 void MainWindow::deletecopybook_f(){
     if(!this->ui->listWidgetSX->currentItem()->isSelected())

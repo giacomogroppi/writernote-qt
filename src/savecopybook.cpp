@@ -9,7 +9,7 @@
 #include "datawrite/qfilechoose.h"
 #include "dialog_critic.h"
 
-#include "areyousure.h"
+#include "utils/areyousure/areyousure.h"
 
 #include "dataread/xmlstruct.h"
 

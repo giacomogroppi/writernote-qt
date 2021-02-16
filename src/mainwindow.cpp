@@ -48,6 +48,7 @@
 #include <QSettings>
 
 #include "utils/settings/setting_load.h"
+#include "windows/mostra_finestra_i.h"
 
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
     : QMainWindow(parent)
@@ -297,6 +298,19 @@ void MainWindow::on_startrecording_triggered()
 {
     if(this->self->currenttitle.audio_position_path != "")
         return dialog_critic("You had already record an audio");
+
+/* only on snap package we have this proble */
+//#ifdef SNAP
+    QMessageBox::StandardButton resBtn = QMessageBox::question( nullptr, "Warning",
+                                                                "to record audio I need permissions, type on a snap connect terminal writernote: audio-record\notherwise I will not be able to record audio",
+                                                                QMessageBox::Ok | QMessageBox::Cancel | QMessageBox::Help,
+                                                                QMessageBox::Ok);
+
+    if(resBtn == QMessageBox::Help){
+
+    }
+
+//#endif
 
     if(!this->setOutputLocation())
         return;

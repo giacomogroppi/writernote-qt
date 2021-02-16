@@ -33,7 +33,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/areyousure.cpp \
+    src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
     src/audioplay/cambiostatoplayer.cpp \
@@ -168,7 +168,7 @@ SOURCES += \
 
 
 HEADERS += \
-    src/areyousure.h \
+    src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
     src/audioplay/cambioiconariascolto.h \
     src/audiosetting/audioqualityoption.h \
