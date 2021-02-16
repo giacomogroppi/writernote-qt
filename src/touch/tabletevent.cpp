@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){

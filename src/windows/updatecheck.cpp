@@ -14,12 +14,12 @@
 #include <QTextStream>
 
 #include <QMessageBox>
-#include "../areyousure.h"
+#include "../utils/areyousure/areyousure.h"
 
 #include <QJsonArray>
 #include <QJsonDocument>
 
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 void updatecheck::start(){
     QFile file(POSIZIONEPATHVERSIONE);

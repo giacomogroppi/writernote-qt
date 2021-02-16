@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QString>
 
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 #include "../audioplay/aggiornotastiriascolto.h"
 

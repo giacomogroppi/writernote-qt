@@ -26,12 +26,9 @@ private:
     indice_class *indice = nullptr;
     currenttitle_class *currenttitle = nullptr;
 
+    bool loadbinario(struct zip *);
+
 public:
-    std::string pathFile = "";
-    std::string text = "";
-
-    int checksum=0, start= 0;
-
     bool loadindice();
 
     bool loadfile(const char *);
@@ -39,7 +36,6 @@ public:
     xmlstruct(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
 
 
-    bool loadbinario(struct zip *);
 
 };
 

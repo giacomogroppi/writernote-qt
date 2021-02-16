@@ -3,7 +3,7 @@
 #include "../mainwindow.h"
 #include "redolist.h"
 #include "QInputDialog"
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 #include "../datawrite/renamefile_f_zip.h"
 #include "../update_list_copybook.h"
 

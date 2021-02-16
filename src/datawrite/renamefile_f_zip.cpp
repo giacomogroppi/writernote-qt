@@ -2,7 +2,7 @@
 #include "zip.h"
 #include "iostream"
 
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 bool renamefile_f_zip(const char *namezip, const char *from, const char *dest){
     int errorp = 0;

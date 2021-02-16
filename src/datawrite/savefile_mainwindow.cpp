@@ -2,7 +2,7 @@
 #include "qfilechoose.h"
 
 #include "savefile.h"
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 static inline const char *stringa(QString *nomevecchio, QString *nomenuovo){
     return ("cp " + *nomevecchio + " " + *nomenuovo).toUtf8().constData();

@@ -6,10 +6,8 @@
 #include <QListWidgetItem>
 #include <QDebug>
 
-/* filesystem controll */
 #include <fstream>
 #include <cstdint>
-//#include <filesystem>
 #include <QFile>
 #include <iostream>
 #include <string.h>
@@ -17,15 +15,14 @@
 #include <QFileDialog>
 #include <QString>
 #include "datawrite/qfilechoose.h"
-/*funzione che gestisce l'indice*/
-#include "indice_class.h"
+
 #include "self_class.h"
 #include "style/abilitazioneinput.h"
-/* gestione della lista */
+
 #include "currenttitle/redolist.h"
 
 #include "dataread/xmlstruct.h"
-#include "dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 #include "update_list_copybook.h"
 #include "savecopybook.h"
 #include "newcopybook_.h"
@@ -34,10 +31,9 @@
 #include "datawrite/savefile.h"
 #include "style/abilitazioneinput.h"
 
-/* da sistemare */
 #include <QMediaPlayer>
 
-#include "audiosetting/loadqualita.h"
+//#include "audiosetting/loadqualita.h"
 #include "currenttitle/checksimilecopybook.h"
 
 #include "windows/updatecheck.h"
@@ -292,65 +288,6 @@ bool MainWindow::setOutputLocation()
     this->m_outputLocationSet = true;
     return true;
 }
-
-/* funzione che gestisce lo start della registrazione */
-void MainWindow::on_startrecording_triggered()
-{
-    if(this->self->currenttitle.audio_position_path != "")
-        return dialog_critic("You had already record an audio");
-
-/* only on snap package we have this proble */
-//#ifdef SNAP
-    QMessageBox::StandardButton resBtn = QMessageBox::question( nullptr, "Warning",
-                                                                "to record audio I need permissions, type on a snap connect terminal writernote: audio-record\notherwise I will not be able to record audio",
-                                                                QMessageBox::Ok | QMessageBox::Cancel | QMessageBox::Help,
-                                                                QMessageBox::Ok);
-
-    if(resBtn == QMessageBox::Help){
-
-    }
-
-//#endif
-
-    if(!this->setOutputLocation())
-        return;
-
-    if(this->self->currenttitle.audio_position_path == "")
-        return;
-
-    if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {        
-        /*if(!loadqualita(this)){
-            this->m_audioRecorder->setAudioInput((const QString)"");
-
-            QAudioEncoderSettings settings;
-
-            settings.setCodec((const QString) "");
-            settings.setSampleRate(0);
-            settings.setBitRate(0);
-            settings.setChannelCount(-1);
-            settings.setQuality(QMultimedia::EncodingQuality(2));
-            settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
-
-            QString container = "";
-
-            this->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
-        }*/
-
-        loadqualita(this);
-
-        this->m_audioRecorder->record();
-
-        this->self->currenttitle.testinohtml.clear();
-        this->self->currenttitle.posizione_iniz.clear();
-    }
-
-    this->ui->startrecording->setEnabled(false);
-    this->ui->stoprecordingbotton->setEnabled(true);
-    this->ui->pauserecordingbotton->setEnabled(true);
-
-}
-
-
 
 /* funzionche che viene invocata quando la registrazione dell'audio viene messa in pausa */
 void MainWindow::on_pauserecordingbotton_triggered()

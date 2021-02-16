@@ -3,7 +3,7 @@
 #include "../mainwindow.h"
 
 #include "savequalita.h"
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 audioqualityoption::audioqualityoption(QWidget *parent, MainWindow *padre) :
     QDialog(parent),

@@ -33,6 +33,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/audiorecord/start_recording.cpp \
     src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
@@ -89,7 +90,7 @@ SOURCES += \
     src/datawrite/source_read_ext.cpp \
     src/datawrite/write/savefile_savefile.cpp \
     src/datawrite/write/saveindice_savefile.cpp \
-    src/dialog_critic.cpp \
+    src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
@@ -197,7 +198,7 @@ HEADERS += \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
     src/datawrite/source_read_ext.h \
-    src/dialog_critic.h \
+    src/utils/dialog_critic/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \
     src/newcopybook_.h \

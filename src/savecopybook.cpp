@@ -7,7 +7,7 @@
 #include "datawrite/savefile.h"
 #include "savecopybook.h"
 #include "datawrite/qfilechoose.h"
-#include "dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 #include "utils/areyousure/areyousure.h"
 

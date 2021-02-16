@@ -6,7 +6,7 @@
 
 #include "datawrite/qfilechoose.h"
 #include "datawrite/savefile.h"
-#include "dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 #include "currenttitle/currenttitle_class.h"
 

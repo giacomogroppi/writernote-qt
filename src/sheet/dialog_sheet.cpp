@@ -10,7 +10,7 @@
 
 #include <QInputDialog>
 
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 #include "setting_color.h"
 
@@ -30,7 +30,7 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
     }
 
 
-    ui->pushButton_color->setAutoFillBackground(true); // IMPORTANT!
+    ui->pushButton_color->setAutoFillBackground(true);
     pal = ui->pushButton_color->palette();
 
     pal.setColor(QPalette::Window, settaggiocolore(style_element.style[0].colore));

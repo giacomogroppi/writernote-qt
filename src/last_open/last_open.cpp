@@ -8,7 +8,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 static void copy(last_file *s, char *pos = NULL, char *last_mod = NULL, int type = TYPE_CLOUD);
 

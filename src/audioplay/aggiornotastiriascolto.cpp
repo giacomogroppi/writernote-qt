@@ -5,7 +5,7 @@
 #include <QFile>
 #include <QString>
 
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 #include "../setting_ui.h"
 
 void aggiornotestiriascolto(MainWindow *parent){

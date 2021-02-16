@@ -4,7 +4,7 @@
 #include "../mainwindow.h"
 
 #include "enable_videocompress.h"
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 #include "compressivideo.h"
 
 videocompress_ui::videocompress_ui(QWidget *parent, MainWindow *padre) :

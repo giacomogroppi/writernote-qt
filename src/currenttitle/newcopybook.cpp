@@ -3,7 +3,7 @@
 
 #include <QInputDialog>
 #include "../datawrite/qfilechoose.h"
-#include "../dialog_critic.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 #include "../newcopybook_.h"
 #include "../update_list_copybook.h"
 

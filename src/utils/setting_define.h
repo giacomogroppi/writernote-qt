@@ -55,5 +55,10 @@
 #define GROUPNAME_LIST_HIDDEN "list_left_group"
 #define KEY_LIST_HIDDEN "key_list_left"
 
+#ifdef SNAP
+/* permission for audio snapcraft */
+#define GROUPNAME_AUDIO_PERMISSION "audio_permission_snapcraft"
+#define KEY_AUDIO_PERMISSION "key_audio_permission_snapcraft"
+#endif //snap
 
 #endif // SETTING_DEFINE_H

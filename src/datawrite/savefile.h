@@ -13,6 +13,7 @@ private:
     QString *path;
     currenttitle_class *currenttitle;
 
+    bool salvabinario(zip_t *);
 
 public:
 
@@ -21,8 +22,6 @@ public:
     savefile(QString *path, currenttitle_class *currenttitle);
     bool savefile_check_indice(indice_class *);
     bool savefile_check_file();
-
-    bool salvabinario(zip_t *);
 
 };
 
