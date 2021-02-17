@@ -3,7 +3,7 @@
 #include <QPainter>
 #include "../method/methoddefinition.h"
 
-static inline bool isin(int , int , int, int , int);
+static inline bool isin(int , int , int, int , int, rubber_ui *);
 
 void TabletCanvas::gomma(QPainter &painter){
     int i, len, x, y, id, temp, k;
@@ -18,7 +18,8 @@ void TabletCanvas::gomma(QPainter &painter){
                     data->datatouch->y.at(i),
                     x,
                     y,
-                    data->datatouch->idtratto[i])){
+                    data->datatouch->idtratto[i],
+                    m_rubber)){
 
                 id = data->datatouch->idtratto[i];
 
@@ -45,7 +46,8 @@ void TabletCanvas::gomma(QPainter &painter){
                     data->datatouch->y[i],
                     x,
                     y,
-                    data->datatouch->idtratto[i])){
+                    data->datatouch->idtratto[i],
+                    m_rubber)){
 
                 painter.drawPoint(data->datatouch->x.at(i), data->datatouch->y.at(i));
 
@@ -87,11 +89,11 @@ void TabletCanvas::gomma_delete(){
 }
 
 
-static inline bool isin(int x, int y, int lastPointx, int lastPointy, int idtratto){
-    if(lastPointx - GOMMASIZE < x
-            && lastPointx + GOMMASIZE > x
-            && lastPointy - GOMMASIZE < y
-            && lastPointy + GOMMASIZE > y
+static inline bool isin(int x, int y, int lastPointx, int lastPointy, int idtratto, rubber_ui *m_rubber){
+    if(lastPointx - m_rubber->m_size_gomma < x
+            && lastPointx + m_rubber->m_size_gomma > x
+            && lastPointy - m_rubber->m_size_gomma < y
+            && lastPointy + m_rubber->m_size_gomma > y
             && idtratto != IDORIZZONALE)
             return true;
     return false;
