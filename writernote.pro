@@ -282,7 +282,7 @@ android{
 }else{
     CONFIG += link_pkgconfig
     PKGCONFIG += libzip
-    LIBS += -llcryptopp552
+    LIBS += -lcrypto++
 }
 
 
