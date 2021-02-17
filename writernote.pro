@@ -38,6 +38,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/cloud/button_mainwindow.cpp \
+    src/cloud/utils/toencrypt.cpp \
     src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
@@ -173,6 +174,7 @@ SOURCES += \
 
 
 HEADERS += \
+    src/cloud/utils/toencrypt.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
     src/audioplay/cambioiconariascolto.h \
@@ -280,6 +282,7 @@ android{
 }else{
     CONFIG += link_pkgconfig
     PKGCONFIG += libzip
+    LIBS += -llcryptopp552
 }
 
 

@@ -109,6 +109,9 @@ parts:
 
 
     build-packages:
+      - libcrypto++-dev 
+      - libcrypto++-doc 
+      - libcrypto++-utils
       - qtmultimedia5-dev
       - libqt5multimediawidgets5
       - libqt5multimedia5-plugins 
