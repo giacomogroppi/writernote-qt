@@ -149,6 +149,11 @@ parts:
       - zlib1g-dev
 
     stage-packages:
+      ## cripto library
+      - libcrypto++-dev 
+      - libcrypto++-doc 
+      - libcrypto++-utils
+      
       # dipendenza run time
       - libqt5widgets5
       - libqt5core5a
