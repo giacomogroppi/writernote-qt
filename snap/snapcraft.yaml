@@ -105,7 +105,7 @@ parts:
       cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
 
       # copying image
-      cp -r images $SNAPCRAFT_PART_INSTALL/
+      #cp -r images $SNAPCRAFT_PART_INSTALL/
 
 
     build-packages:

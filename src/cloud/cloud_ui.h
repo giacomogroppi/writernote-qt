@@ -1,18 +1,18 @@
 #ifndef CLOUD_UI_H
 #define CLOUD_UI_H
 
-#include <QWidget>
+#include <QDialog>
 
 namespace Ui {
 class cloud_ui;
 }
 
-class cloud_ui : public QWidget
+class cloud_ui : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit cloud_ui(QWidget *parent = nullptr);
+    explicit cloud_ui(QDialog *parent = nullptr);
     ~cloud_ui();
 
 private slots:

@@ -329,6 +329,7 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave_File"/>
    <addaction name="actionSave_As"/>
+   <addaction name="actioncloud"/>
    <addaction name="actionPrint"/>
    <addaction name="startrecording"/>
    <addaction name="stoprecordingbotton"/>
@@ -792,6 +793,15 @@
    </property>
    <property name="text">
     <string>choose-color</string>
+   </property>
+  </action>
+  <action name="actioncloud">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/cloud-icon.png</normaloff>:/image/images/cloud-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>cloud</string>
    </property>
   </action>
  </widget>

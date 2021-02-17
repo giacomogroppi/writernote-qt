@@ -3,14 +3,17 @@
 #include <QPainter>
 #include "../method/methoddefinition.h"
 
-static inline bool isin(int , int , int, int , int, rubber_ui *);
+static inline bool isin(double x, double y, double, double , int, rubber_ui *);
 
 void TabletCanvas::gomma(QPainter &painter){
-    int i, len, x, y, id, temp, k;
+    int i, len, id, temp, k;
     len = data->datatouch->y.length();
+
+    double x, y;
 
     x = lastPoint.pos.x();
     y = lastPoint.pos.y();
+
 
     if(m_rubber->m_type_gomma == TOTALE){
         for(i=0; i<len; i++){
@@ -37,10 +40,10 @@ void TabletCanvas::gomma(QPainter &painter){
             }
         }
     }
-    else{
+    else if(m_rubber->m_type_gomma == PARZIALE){
         QPen pennatemp;
         pennatemp.setColor(Qt::white);
-        pennatemp.setWidth(GOMMASIZE);
+        pennatemp.setWidth(m_rubber->m_size_gomma);
         for(i=0; i<len; i++){
             if(isin(data->datatouch->x[i],
                     data->datatouch->y[i],
@@ -89,7 +92,7 @@ void TabletCanvas::gomma_delete(){
 }
 
 
-static inline bool isin(int x, int y, int lastPointx, int lastPointy, int idtratto, rubber_ui *m_rubber){
+static inline bool isin(double x, double y, double lastPointx, double lastPointy, int idtratto, rubber_ui *m_rubber){
     if(lastPointx - m_rubber->m_size_gomma < x
             && lastPointx + m_rubber->m_size_gomma > x
             && lastPointy - m_rubber->m_size_gomma < y

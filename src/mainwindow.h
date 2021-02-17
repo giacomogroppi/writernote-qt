@@ -225,6 +225,8 @@ private slots:
 
     void on_button_right_hide_clicked();
 
+    void on_actioncloud_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

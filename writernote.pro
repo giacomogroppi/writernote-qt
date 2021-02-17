@@ -24,6 +24,9 @@ CONFIG += c++17
 # URL change from url to local ip
 DEFINES += "CLOUD_TESTING"
 
+## for enable cloud instance [remove when compiling for release] [see https://github.com/giacomogroppi/writernote-qt/blob/master/help/compile-cloud.md]
+DEFINES += "CLOUD"
+
 ## for support A4 pdf create
 DEFINES += "NUMEROPIXELPAGINA=1400"
 DEFINES += "NUMEROPIXELORIZZONALI=980"
@@ -34,6 +37,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 SOURCES += \
     src/audiorecord/start_recording.cpp \
+    src/cloud/button_mainwindow.cpp \
     src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \

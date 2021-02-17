@@ -49,5 +49,6 @@
         <file>images/linea-totale.png</file>
         <file>images/icon-hide-left.png.png</file>
         <file>images/icon-hide-right.png</file>
+        <file>images/cloud-icon.png</file>
     </qresource>
 </RCC>
