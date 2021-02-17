@@ -350,3 +350,10 @@ void MainWindow::on_actionCopy_triggered()
 {
     this->ui->textEdit->copy();
 }
+
+void MainWindow::on_actionVersion_triggered()
+{
+#ifdef VERSION
+    messaggio_utente("Current version is " + (QString)VERSION);
+#endif // version
+}

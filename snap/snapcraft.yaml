@@ -98,7 +98,7 @@ parts:
     override-build: |
       set -eux
       qmake -set prefix $SNAPCRAFT_PART_INSTALL
-      qmake DEFINES+="SNAP"
+      qmake DEFINES+="SNAP" DEFINES+=SNAP_VERSION
 
       snapcraftctl build
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/      

@@ -293,6 +293,7 @@
     <addaction name="actionDocumentation"/>
     <addaction name="actionCheck_update"/>
     <addaction name="actionBug_report"/>
+    <addaction name="actionVersion"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -802,6 +803,11 @@
    </property>
    <property name="text">
     <string>cloud</string>
+   </property>
+  </action>
+  <action name="actionVersion">
+   <property name="text">
+    <string>Version</string>
    </property>
   </action>
  </widget>

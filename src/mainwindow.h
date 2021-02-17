@@ -227,6 +227,8 @@ private slots:
 
     void on_actioncloud_triggered();
 
+    void on_actionVersion_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
