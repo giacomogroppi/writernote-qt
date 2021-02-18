@@ -7,6 +7,8 @@
 #define TYPE_ABBONATO 1
 #define TYPE_NONABBONATO 0
 
+#define NOT_USER_RECENT -1
+
 struct name_s{
     char m_name[STRLEN_NAME+1];
     char m_surname[STRLEN_NAME+1];

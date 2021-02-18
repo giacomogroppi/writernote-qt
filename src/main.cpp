@@ -6,8 +6,14 @@
 
 #include "last_open/last_open.h"
 
+#include "cloud/struct_user.h"
+
 int main(int argc, char *argv[])
 {
+    struct struct_user *user;
+    user = load_recent_user();
+
+
     TabletApplication app(argc, argv);
     TabletCanvas *canvas = new TabletCanvas;
     app.setCanvas(canvas);
@@ -26,11 +32,6 @@ int main(int argc, char *argv[])
     //QApplication a(argc, argv);
     MainWindow w(nullptr, canvas);
 
-    /*app.setApplicationName("writernote");
-    app.setApplicationVersion("1.3.12");
-    app.setOrganizationDomain("https://github.com/giacomogroppi/writernote-qt");
-    app.setOrganizationName("writernote");*/
-
     if(m_last_open != NULL)
         w.setFile(m_last_open->posizione);
 
@@ -39,6 +40,10 @@ int main(int argc, char *argv[])
     }
 
     w.show();
-    return app.exec();
+    int exit_code = app.exec();
 
+    if(user)
+        delete user;
+
+    return exit_code;
 }

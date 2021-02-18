@@ -15,7 +15,6 @@
 #include <QString>
 #include "datawrite/qfilechoose.h"
 
-#include "self_class.h"
 #include "style/abilitazioneinput.h"
 
 #include "currenttitle/redolist.h"
@@ -30,9 +29,6 @@
 #include "datawrite/savefile.h"
 #include "style/abilitazioneinput.h"
 
-#include <QMediaPlayer>
-
-//#include "audiosetting/loadqualita.h"
 #include "currenttitle/checksimilecopybook.h"
 
 #include "windows/updatecheck.h"
@@ -45,11 +41,12 @@
 #include "utils/settings/setting_load.h"
 #include "windows/mostra_finestra_i.h"
 
-MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas)
+MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user *user)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     this->m_canvas = canvas;
+    this->m_user = user;
 
     ui->setupUi(this);
 

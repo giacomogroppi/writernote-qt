@@ -26,6 +26,8 @@
 #define REDO_UNDO_DISABLE "Disable redo undo"
 #define REDO_UNDO_ENABLE "Enable redo undo"
 
+#include "cloud/struct_user.h"
+
 /*TESTING*/
 #include "touch/tabletcanvas.h"
 
@@ -46,7 +48,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr);
+    MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr, struct struct_user *user = nullptr);
     ~MainWindow();
 
     /* gestione variabile self */
@@ -81,6 +83,8 @@ public:
 
     rubber_ui *m_rubber;
     pen_ui *m_pen;
+
+    struct struct_user *m_user;
 
 public slots:
 

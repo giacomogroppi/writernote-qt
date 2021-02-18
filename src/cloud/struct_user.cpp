@@ -3,6 +3,10 @@
 #include "../utils/setting_define.h"
 #include <QSettings>
 
+#include "stdio.h"
+#include "stdlib.h"
+#include <QDataStream>
+
 void save_recent_user(struct struct_user *data){
     QSettings setting(ORGANIZATIONAME, FILE_NAME_USER_CLOUD);
     setting.beginGroup(GROUPNAME_USER_CLOUD);
@@ -17,7 +21,6 @@ void save_recent_user(struct struct_user *data){
 
 }
 
-
 /*
  * after calling this function you need
  * to free up the memory at the end
@@ -31,8 +34,13 @@ struct struct_user * load_recent_user(){
 
 
     QByteArray array;
+    QByteArray default_loading;
+    default_loading.append((QString)NOT_USER_RECENT);
 
-    array = setting.value(GROUPNAME_USER_CLOUD).toByteArray();
+    array = setting.value(GROUPNAME_USER_CLOUD, default_loading).toByteArray();
+
+    if(array.toStdString() == std::to_string(NOT_USER_RECENT))
+        return NULL;
 
 
     /* memory of array.data() is automaticaly relised after function end */
