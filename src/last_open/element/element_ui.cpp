@@ -48,9 +48,10 @@ void element_ui::set_main()
 
 bool element_ui::event(QEvent *event)
 {
-    if(event->type() == QEvent::MouseButtonRelease)
+    if(event->type() == QEvent::MouseButtonRelease){
         emit on_pressed(this->m_index);
-
+        return true;
+    }
     return QWidget::event(event);
 }
 

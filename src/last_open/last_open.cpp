@@ -123,6 +123,10 @@ void last_open::on_clicked(int index)
 
         deleteIn(index);
 
+        QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+        setting.beginGroup(GROUPNAME_LAST_FILE);
+        save_data_f(setting, m_quanti, this->m_last);
+
         this->updateList();
     }
 }
