@@ -2,15 +2,22 @@
 #include <QEvent>
 #include "math.h"
 #include <QWheelEvent>
+#include <QDebug>
 
 static inline long double calcolodistanza(QPointF *point1, QPointF *point2);
 
 static inline void scambio(QPointF *, QPointF *);
 
-static inline void ridefine(struct lastpoint_struct *);
 static inline QPointF puntoameta(QPointF &, QPointF &);
 
-static inline bool its_inside(QPointF &left, QPointF &right, QPointF &move);
+#define ISDEFINE_RIGHT(x) x.posd!=QPointF(-1,-1)
+#define ISDEFINE_LEFT(x) x.poss!=QPointF(-1,-1)
+
+#define ISDEFINE(x) ISDEFINE_RIGHT(x)&&ISDEFINE_LEFT(x)
+
+#define PRIVATE_RIDEFINE -1,-1
+#define RIDEFINE_POINT(x) x=QPointF(PRIVATE_RIDEFINE)
+#define RIDEFINE(x) RIDEFINE_POINT(x.poss),RIDEFINE_POINT(x.posd)
 
 bool TabletCanvas::event(QEvent *event){
     QPointF temp;
@@ -20,19 +27,15 @@ bool TabletCanvas::event(QEvent *event){
         case QEvent::TouchUpdate:
         case QEvent::TouchEnd:
         {
-            const QTouchEvent *touch = static_cast<QTouchEvent *>(event);
             const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
             for (const QTouchEvent::TouchPoint &touchPoint : touchPoints) {
                 switch (touchPoint.state()) {
                 case Qt::TouchPointStationary:
                 case Qt::TouchPointReleased:
-                    //ridefine(&lastpointzoom);
                     continue;
                 default:
                     {
-                        /* a questo punto posso capire se è stato un zoom in o uno zoom on */
-                        if(this->lastpointzoom.posd != QPointF(-1, -1) &&
-                                this->lastpointzoom.poss != QPointF(-1, -1)){
+                        if(ISDEFINE(lastpointzoom)){
                             QPointF punto = touchPoint.pos();
                             bool check = (calcolodistanza(&this->lastpointzoom.posd, &punto) > calcolodistanza(&this->lastpointzoom.poss, &punto));
 
@@ -59,16 +62,10 @@ bool TabletCanvas::event(QEvent *event){
                                                  temp_distance);
                             }
 
-                            lastpointzoom.posd.setX(-1);
-                            lastpointzoom.poss.setX(-1);
-
-                            lastpointzoom.poss.setY(-1);
-                            lastpointzoom.poss.setY(-1);
+                            RIDEFINE(lastpointzoom);
 
                             isloading = true;
-                            update();
                         }
-
                         else{
                             if(this->lastpointzoom.posd == QPointF(-1, -1)){
                                 this->lastpointzoom.posd = touchPoint.pos();
@@ -89,6 +86,8 @@ bool TabletCanvas::event(QEvent *event){
                     break;
                 }
             }
+            if(isloading)
+                update();
             break;
         }
         default:
@@ -96,11 +95,6 @@ bool TabletCanvas::event(QEvent *event){
                 return QWidget::event(event);
     }
     return true;
-}
-
-static inline void ridefine(struct lastpoint_struct *point){
-    point->posd = QPointF(-1, -1);
-    point->poss = QPointF(-1, -1);
 }
 
 static inline QPointF puntoameta(QPointF &puntouno, QPointF &puntodue){

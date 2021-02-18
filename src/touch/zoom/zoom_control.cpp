@@ -34,16 +34,13 @@ void zoom_control::trasla(QPointF &point_translate, long double delta){
 void zoom_control::zoom(QPointF &point_translate, long double delta){
     qDebug() << (double)data->zoom << " Delta -> " << (double) delta;
 
-    delta = (delta >= (long double)1) ? delta : -((long double)1)/delta;
-
-    if((data->zoom + delta)/D < (long double)0)
+    /* TODO */
+    if(data->zoom > 2 || data->zoom < 0)
         return;
 
-    if((data->zoom + delta)/D > (long double)2)
-        return;
+    /*if(delta > (long double)1){
 
-    //if((data->zoom + (delta/10)) > (long double)2 || (data->zoom + (delta/10)) < (long double)0)
-    //    return;
+    }*/
 
     trasla(point_translate);
 
@@ -54,8 +51,9 @@ void zoom_control::zoom(QPointF &point_translate, long double delta){
         data->y[i] *= delta;
     }
 
-    data->zoom += delta;
-
-
     trasla(point_translate, delta);
+
+    delta = (delta >= (long double)1) ? (delta-1) : (-((long double)1)/delta+1);
+
+    data->zoom += delta;
 }
