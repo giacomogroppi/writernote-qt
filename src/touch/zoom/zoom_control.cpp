@@ -32,7 +32,7 @@ void zoom_control::trasla(QPointF &point_translate, long double delta){
 #define D 2
 
 void zoom_control::zoom(QPointF &point_translate, long double delta){
-    qDebug() << (double)data->zoom << " Delta -> " << (double) delta;
+    //qDebug() << (double)data->zoom << " Delta -> " << (double) delta;
 
     /* TODO */
     if(delta < (long double)1){
