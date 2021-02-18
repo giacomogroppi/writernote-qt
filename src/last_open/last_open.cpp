@@ -9,6 +9,9 @@
 #include <QFileInfo>
 
 #include "../utils/dialog_critic/dialog_critic.h"
+#include "../datawrite/qfilechoose.h"
+
+#include "string.h"
 
 static void copy(last_file *s, char *pos = NULL, char *last_mod = NULL, int type = TYPE_CLOUD);
 
@@ -19,7 +22,7 @@ last_open::last_open(QWidget *parent) :
     ui->setupUi(this);
 
     /* the user can not resize the window */
-    setFixedSize(this->size());
+    //setFixedSize(this->size());
 }
 
 last_open::~last_open()
@@ -132,4 +135,25 @@ static void copy(last_file *s, char *pos, char *last_mod, int type){
 
     if(last_mod)
         memcpy(&s->last_modification, last_mod, sizeof(char)*MAXMOD_);
+}
+
+void last_open::on_open_button_clicked()
+{
+    QString path;
+    qfilechoose chooser(nullptr);
+    if(!chooser.filechoose(&path, TYPEFILEWRITER))
+        return;
+
+    QFile file(path);
+
+    if(!file.exists()){
+        return dialog_critic("The file didn't exist");
+    }
+
+    *m_last_file = new last_file;
+
+    strcpy((*m_last_file)->posizione, path.toUtf8().constData());
+
+    this->close();
+
 }

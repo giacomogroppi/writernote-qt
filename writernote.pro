@@ -18,14 +18,13 @@ CONFIG += c++17
     INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 }
 
-## it disable all cloud file for compile [for testing remove #]
-#DEFINES += "NO_CLOUD"
-
-# URL change from url to local ip
-DEFINES += "CLOUD_TESTING"
-
 ## for enable cloud instance [remove when compiling for release] [see https://github.com/giacomogroppi/writernote-qt/blob/master/help/compile-cloud.md]
-DEFINES += "CLOUD"
+
+#DEFINES += "CLOUD"
+
+defined(CLOUD){
+    DEFINES += "CLOUD_TESTING"
+}
 
 ## for support A4 pdf create
 DEFINES += "NUMEROPIXELPAGINA=1400"

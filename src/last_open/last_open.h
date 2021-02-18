@@ -42,6 +42,7 @@ private:
     int m_quanti;
 private slots:
     void on_clicked(int);
+    void on_open_button_clicked();
 };
 
 #endif // LAST_OPEN_H

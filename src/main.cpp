@@ -48,8 +48,10 @@ int main(int argc, char *argv[])
     w.show();
     int exit_code = app.exec();
 
+#ifdef CLOUD
     if(user)
         delete user;
+#endif
 
     return exit_code;
 }
