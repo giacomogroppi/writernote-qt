@@ -174,6 +174,7 @@ SOURCES += \
 
 
 HEADERS += \
+    src/cloud/utils/shared_definition.h \
     src/cloud/utils/toencrypt.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \

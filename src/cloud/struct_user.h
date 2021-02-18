@@ -20,12 +20,12 @@ struct struct_user{
     struct name_s m_name;
     struct mail_s m_mail;
 
-    int m_abilitato;
+    int m_money_into_account;
 };
 
 /*
  * it's store the last friend, in qsetting under
- * $HOME/.config/Writernote/...
+ * $HOME/.config/writernote/...
 */
 struct struct_friend{
     int m_type_frind;
