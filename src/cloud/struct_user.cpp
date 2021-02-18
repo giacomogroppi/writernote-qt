@@ -7,6 +7,8 @@
 #include "stdlib.h"
 #include <QDataStream>
 
+#ifdef CLOUD
+
 void save_recent_user(struct struct_user *data){
     QSettings setting(ORGANIZATIONAME, FILE_NAME_USER_CLOUD);
     setting.beginGroup(GROUPNAME_USER_CLOUD);
@@ -53,3 +55,4 @@ struct struct_user * load_recent_user(){
     return user;
 
 }
+#endif //CLOUD

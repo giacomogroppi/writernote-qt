@@ -90,6 +90,10 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     ui->button_left_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->button_right_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+#ifndef CLOUD
+    ui->actioncloud->setVisible(false);
+#endif
 }
 
 

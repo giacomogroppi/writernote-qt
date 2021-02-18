@@ -10,9 +10,10 @@
 
 int main(int argc, char *argv[])
 {
+#ifdef CLOUD
     struct struct_user *user;
     user = load_recent_user();
-
+#endif
 
     TabletApplication app(argc, argv);
     TabletCanvas *canvas = new TabletCanvas;
@@ -30,7 +31,12 @@ int main(int argc, char *argv[])
     }
 
     //QApplication a(argc, argv);
+
+#ifdef CLOUD
+    MainWindow w(nullptr, canvas, user);
+#else
     MainWindow w(nullptr, canvas);
+#endif
 
     if(m_last_open != NULL)
         w.setFile(m_last_open->posizione);
