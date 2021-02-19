@@ -1,6 +1,8 @@
 #include "toencrypt.h"
 #include "stdio.h"
 
+#ifdef CLOUD
+
 #include "crypto++/cryptlib.h"
 #include "crypto++/sha.h"
 #include "crypto++/hex.h"
@@ -13,8 +15,6 @@
 #include "cryptopp/filters.h"
 
 #include "cryptopp/base64.h"
-
-#ifdef CLOUD
 
 static const char * SHA256HashString(std::string );
 
