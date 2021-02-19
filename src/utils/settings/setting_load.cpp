@@ -32,6 +32,14 @@ static void setting_load_auto_save(MainWindow *parent){
 
 void setting_load(MainWindow *parent)
 {
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_GEOMETRY);
+
+    QRect value_rect = setting.value(KEY_GEOMETRY, parent->geometry()).toRect();
+    parent->setGeometry(value_rect);
+
+    setting.endGroup();
+
     setting_load_redoundo(parent);
     setting_load_auto_save(parent);
     setting_load_list_hidden(parent);

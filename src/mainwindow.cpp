@@ -72,14 +72,6 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     checkupdate = new updatecheck();
 
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_GEOMETRY);
-
-    QRect value_rect = setting.value(KEY_GEOMETRY, this->geometry()).toRect();
-    this->setGeometry(value_rect);
-
-    setting.endGroup();
-
     setting_load(this);
 
     this->m_rubber = new rubber_ui;

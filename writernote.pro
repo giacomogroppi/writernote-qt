@@ -285,10 +285,10 @@ android{
     PKGCONFIG += libzip
     defined(CLOUD){
         unix{
-            LIBS += -lcrypto++   
+            PKGCONFIG += libcrypto
         }
         else{
-            PKGCONFIG += libcrypto
+            LIBS += crypto++
         }
     }
 }

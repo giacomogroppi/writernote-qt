@@ -1,7 +1,7 @@
 #include "abilitazioneinput.h"
 #include "ui_mainwindow.h"
 
-#define CHECK parent->self->currenttitle.m_touch
+#define CHECK !parent->self->currenttitle.m_touch
 
 void abilitazioneinput(MainWindow *parent)
 {
@@ -19,6 +19,4 @@ void abilitazioneinput(MainWindow *parent)
     parent->ui->insertimagebotton->setHidden(!CHECK);
     parent->ui->textEdit->setHidden(!CHECK);
     parent->ui->listbotton->setHidden(!CHECK);
-
-
 }
