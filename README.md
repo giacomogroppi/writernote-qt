@@ -70,9 +70,9 @@
       mingw:
       ```
         pacman -S git
-          git clone https://github.com/giacomogroppi/writernote-qt.git
-          ./windows/dipendenze.sh
-          ./windows/compile.sh
+        git clone https://github.com/giacomogroppi/writernote-qt.git
+        ./windows/dipendenze.sh
+        ./windows/compile.sh
       ```
 
 ## File format
