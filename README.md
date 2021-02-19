@@ -60,7 +60,7 @@
       in case you can install all the dependence by install all the package from build-packages and the stage-packages in snapcraft.yaml [writernote]
 
     compily:
-      ```bash
+      ```
         mkdir build
         qmake writernote.pro
         make -j $nproc
@@ -68,12 +68,12 @@
   - Windows:
     dependence:
       mingw:
-        ```bash
+      ```
         pacman -S git
-        git clone https://github.com/giacomogroppi/writernote-qt.git
-        ./windows/dipendenze.sh
-        ./windows/compile.sh
-        ```
+          git clone https://github.com/giacomogroppi/writernote-qt.git
+          ./windows/dipendenze.sh
+          ./windows/compile.sh
+      ```
 
 ## File format
 
