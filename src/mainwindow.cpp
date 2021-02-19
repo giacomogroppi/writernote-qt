@@ -203,7 +203,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     this->self->currentTitle = item->text().toUtf8().constData();
     this->setWindowTitle("Writernote - " + this->self->currentTitle);
 
-    if(this->self->currenttitle.posizione_binario == "")
+    if(this->self->currenttitle.m_touch)
         this->ui->textEdit->setHtml(this->self->currenttitle.testi);
 
     settingtextedit(this, true);
@@ -214,7 +214,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     this->ui->actionPrint->setEnabled(true);
 
     /* pass the pointer to the class */
-    if(this->self->currenttitle.posizione_binario != ""){
+    if(this->self->currenttitle.m_touch){
         this->m_canvas->settingdata(&self->currenttitle, self->path);
         this->m_canvas->loadpixel();
 

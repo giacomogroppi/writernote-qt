@@ -7,7 +7,7 @@
 /* la funzione confronta due oggetti della classe current title */
 int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 {
-    if(primo->posizione_binario == ""){
+    if(primo->m_touch){
         if(primo->testi != secondo->testi)
             return TESTI;
 

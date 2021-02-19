@@ -13,7 +13,7 @@
 void MainWindow::on_stoprecordingbotton_triggered()
 {
     this->m_audioRecorder->stop();
-    if(self->currenttitle.posizione_binario.isEmpty()){
+    if(self->currenttitle.m_touch){
         bool ok = false;
         if(self->currenttitle.testinohtml.length() > 10000){
             ok = true;

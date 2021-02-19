@@ -12,7 +12,7 @@ class currenttitle_class{
 public:
     QString nome_copybook;
 
-    int versione = 1;
+    qint32 versione = 1;
     bool se_registato = false, se_tradotto = false;
     QString audio_position_path = "";
     QString testi = "";
@@ -20,7 +20,7 @@ public:
     QList<int> posizione_iniz = {};
 
 
-    QString posizione_binario = "";
+    bool m_touch = false;
     datastruct *datatouch;
     void reset();
 

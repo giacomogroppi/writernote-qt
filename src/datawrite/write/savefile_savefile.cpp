@@ -1,11 +1,11 @@
 #include "../savefile.h"
 #include "../source_read_ext.h"
 
+#define SOURCE_WRITE(x, y, z) if(zip_source_write(x, y, z)==-1) goto delete_;
+
 bool savefile::savefile_check_file(){
     int error, temp, len, i, check;
     zip_error_t errore;
-
-    check = 0;
 
     zip_t *filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
 
@@ -22,69 +22,70 @@ bool savefile::savefile_check_file(){
 
     zip_source_begin_write(file);
 
-    check += source_write_ext(file, &currenttitle->versione, sizeof(int));
-
-    temp = (int)currenttitle->se_registato;
-    check += source_write_ext(file, &temp, sizeof(int));
-
-    temp = (int)currenttitle->se_tradotto;
-    check += source_write_ext(file, &temp, sizeof(int));
-
-    temp = currenttitle->testi.length();
-    check += source_write_ext(file, &temp, sizeof(int));
-    check += source_write_ext(file, currenttitle->testi.toUtf8().constData(), sizeof(char)*temp);
-
-    temp = currenttitle->audio_position_path.length();
-    check += source_write_ext(file, &temp, sizeof(int));
-    check += source_write_ext(file, currenttitle->audio_position_path.toUtf8().constData(), sizeof(char)*temp);
-
-    temp = currenttitle->posizione_binario.length();
-    check += source_write_ext(file, &temp, sizeof(int));
-    if(temp) {
-        check += source_write_ext(file, currenttitle->posizione_binario.toUtf8().constData(), sizeof(char)*temp);
-
-        if(currenttitle->posizione_binario != "")
-            this->salvabinario(filezip);
-    }
+    SOURCE_WRITE(file, &currenttitle->versione, sizeof(qint32))
 
     /* name copybook */
     temp = currenttitle->nome_copybook.length();
-    check += source_write_ext(file, &temp, sizeof(int));
+    SOURCE_WRITE(file, &temp, sizeof(qint32))
     if(temp)
-        check += source_write_ext(file, currenttitle->nome_copybook.toUtf8().constData(), sizeof(char)*temp);
+        SOURCE_WRITE(file, currenttitle->nome_copybook.toUtf8().constData(), sizeof(char)*temp)
 
+
+    temp = (int)currenttitle->se_registato;
+    SOURCE_WRITE(file, &temp, sizeof(qint32))
+
+    temp = (int)currenttitle->se_tradotto;
+    SOURCE_WRITE(file, &temp, sizeof(qint32))
+
+    temp = currenttitle->testi.length();
+    SOURCE_WRITE(file, &temp, sizeof(qint32));
+    SOURCE_WRITE(file, currenttitle->testi.toUtf8().constData(), sizeof(char)*temp)
+
+    temp = currenttitle->audio_position_path.length();
+    SOURCE_WRITE(file, &temp, sizeof(qint32))
+
+    SOURCE_WRITE(file, currenttitle->audio_position_path.toUtf8().constData(), sizeof(char)*temp)
+
+    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(qint32))
+
+    if(temp) {
+        if(currenttitle->m_touch)
+            this->salvabinario(filezip);
+    }
 
 
     // testinohtml
     len = currenttitle->testinohtml.length();
-    check += source_write_ext(file, &len, sizeof(int));
+    SOURCE_WRITE(file, &len, sizeof(qint32))
 
     for(i=0; i<len; i++){
         temp = currenttitle->testinohtml.at(i).length();
-        check += source_write_ext(file, &temp, sizeof(int));
+        SOURCE_WRITE(file, &temp, sizeof(qint32))
 
-        check += source_write_ext(file, currenttitle->testinohtml.at(i).toUtf8().constData(), sizeof(char)*temp);
+        SOURCE_WRITE(file, currenttitle->testinohtml.at(i).toUtf8().constData(), sizeof(char)*temp)
     }
 
     for(i=0; i<len; i++){
         temp = currenttitle->posizione_iniz.at(i);
-        check += source_write_ext(file, &temp, sizeof(int));
+        SOURCE_WRITE(file, &temp, sizeof(qint32))
     }
 
+    check = 0;
     check += zip_source_commit_write(file);
     check += zip_file_add(filezip,
                  (currenttitle->nome_copybook + (QString)".xml").toUtf8().constData(),
                  file,
                  ZIP_FL_OVERWRITE);
 
+    if(check != 0)
+        goto delete_;
 
-
-    if(check < 0){
-        zip_source_free(file);
-        zip_close(filezip);
-        return false;
-    }
 
     zip_close(filezip);
     return true;
+
+    delete_:
+        zip_source_free(file);
+        zip_close(filezip);
+        return false;
 }

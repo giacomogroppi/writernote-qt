@@ -13,9 +13,7 @@ static bool c = true;
 /* funzione che viene richiamata quando viene salvato */
 void MainWindow::on_actionSave_File_triggered()
 {
-
-
-    if(self->currenttitle.posizione_binario == "")
+    if(self->currenttitle.m_touch)
         this->self->currenttitle.testi = this->ui->textEdit->toHtml();
 
     savefile savefile_i(&self->path, &this->self->currenttitle);

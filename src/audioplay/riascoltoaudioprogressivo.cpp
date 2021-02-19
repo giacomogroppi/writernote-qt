@@ -8,7 +8,7 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
         return;
 
     /* scrittura */
-    if(self->currenttitle.posizione_binario == ""){
+    if(self->currenttitle.m_touch){
        int position_inlist = this->self->currenttitle.posizione_iniz.indexOf(position/1000);
        if(position_inlist == -1) return;
 

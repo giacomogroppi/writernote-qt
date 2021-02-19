@@ -234,6 +234,7 @@ HEADERS += \
     src/dataread/xmlstruct.h \
     src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
+    src/utils/posizione_binario.h \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \
     src/utils/time/current_time.h \

@@ -82,7 +82,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     QString filep;
 
-    if(self->currenttitle.posizione_binario == ""){
+    if(self->currenttitle.m_touch){
         filep = this->self->currenttitle.testi;
         this->self->currenttitle.testi = this->ui->textEdit->toHtml();
     }
@@ -100,7 +100,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    if(self->currenttitle.posizione_binario == "")
+    if(self->currenttitle.m_touch)
         this->self->currenttitle.testi = filep;
 
 
