@@ -18,8 +18,8 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
 
     last_file *m_lista = NULL;
-    if(quanti)
-        m_lista = load_data(setting);
+
+    m_lista = load_data(setting, quanti);
 
     for(i=0, uguale = false; i<quanti && !uguale; i++){
         if((QString)m_lista[i].posizione ==  path.toUtf8().constData()){
@@ -60,6 +60,9 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     }
 
     save_data_f(setting, quanti, m_lista);
+
+    if(m_lista)
+        delete m_lista;
 }
 
 void save_data_f(QSettings &setting, int quanti, last_file *m_lista){

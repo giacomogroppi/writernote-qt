@@ -3,8 +3,16 @@
 
 #include <QBitArray>
 
-last_file * load_data(QSettings &setting)
+/*
+ * data return from array.data() is released
+ * after the function end
+*/
+
+last_file * load_data(QSettings &setting, int quanti)
 {
+    if(quanti == 0)
+        return NULL;
+
     last_file *temp;
 
     QByteArray array;
@@ -12,6 +20,10 @@ last_file * load_data(QSettings &setting)
 
     temp = (last_file *)array.data();
 
+    last_file *temp_return;
+    temp_return = new last_file[quanti];
 
-    return temp;
+    memccpy(temp_return, temp, quanti, sizeof(last_file));
+
+    return temp_return;
 }

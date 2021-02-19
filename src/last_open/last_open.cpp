@@ -20,9 +20,6 @@ last_open::last_open(QWidget *parent) :
     ui(new Ui::last_open)
 {
     ui->setupUi(this);
-
-    /* the user can not resize the window */
-    //setFixedSize(this->size());
 }
 
 last_open::~last_open()
@@ -50,6 +47,9 @@ void last_open::updateList(){
     }
 };
 
+/*
+ * the function is call by main
+*/
 int last_open::load_data_()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -63,15 +63,12 @@ int last_open::load_data_()
 
     element_ui *temp_element_ui;
 
-    last_file * temp_struct = NULL;
-
-    if(m_quanti)
-        temp_struct = load_data(setting);
+    m_last = load_data(setting, m_quanti);
 
     for(i=0; i<m_quanti; i++){
         temp_element_ui = new element_ui;
 
-        temp_element_ui->setData(&temp_struct[i], i);
+        temp_element_ui->setData(&m_last[i], i);
 
         connect(temp_element_ui, SIGNAL(on_pressed(int)), this, SLOT(on_clicked(int)));
 
@@ -79,10 +76,6 @@ int last_open::load_data_()
     }
 
     setting.endGroup();
-
-    this->m_last = new last_file[m_quanti];
-    memccpy(m_last, temp_struct, m_quanti, sizeof(last_file));
-
 
     this->updateList();
 

@@ -38,6 +38,6 @@ void save_data(QString &path, int type = TYPE_COMPUTER, int owner_TYPE = TYPE_OW
 void save_data_f(QSettings &, int quanti, last_file * m_lista);
 
 /* file load */
-last_file *load_data(QSettings &setting);
+last_file *load_data(QSettings &setting, int quanti);
 
 #endif // STRUCT_LAST_FILE_H
