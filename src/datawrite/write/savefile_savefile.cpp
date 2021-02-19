@@ -2,6 +2,7 @@
 #include "../source_read_ext.h"
 
 #define SOURCE_WRITE(x, y, z) if(zip_source_write(x, y, z)==-1) goto delete_;
+#define SAVE_BINARY(x) if(salvabinario(x)==false)goto delete_;
 
 bool savefile::savefile_check_file(){
     int error, temp, len, i, check;
@@ -50,7 +51,7 @@ bool savefile::savefile_check_file(){
 
     if(temp) {
         if(currenttitle->m_touch)
-            this->salvabinario(filezip);
+            SAVE_BINARY(filezip);
     }
 
 
@@ -71,11 +72,24 @@ bool savefile::savefile_check_file(){
     }
 
     check = 0;
-    check += zip_source_commit_write(file);
+
+#define ERROR -1
+    /*
+     * Upon successful completion 0 is returned. Otherwise, -1 is returned
+     * and the error information in source is set to indicate the error.
+    */
+    check += zip_source_commit_write(file)==ERROR;
+
+    /*
+     * Upon successful completion, zip_file_add() returns the index of
+     * the new file in the archive, and zip_file_replace() returns 0.
+     * Otherwise, -1 is returned and the error code in archive is set
+     * to indicate the error.
+    */
     check += zip_file_add(filezip,
                  (currenttitle->nome_copybook + (QString)".xml").toUtf8().constData(),
                  file,
-                 ZIP_FL_OVERWRITE);
+                 ZIP_FL_OVERWRITE)==ERROR;
 
     if(check != 0)
         goto delete_;

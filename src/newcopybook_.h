@@ -3,5 +3,5 @@
 
 #include "mainwindow.h"
 
-bool newcopybook_(MainWindow *parent, QString stringa);
+bool newcopybook_(MainWindow *parent, QString &stringa);
 #endif // NEWCOPYBOOK__H

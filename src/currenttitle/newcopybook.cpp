@@ -38,7 +38,6 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     connect(draw, &QAction::triggered, this, &MainWindow::methodpen);
     connect(keyboard, &QAction::triggered, this, &MainWindow::methodwrite);
 
-
     auto hostRect = this->cursor().pos();
     menu->move(hostRect.x(), hostRect.y());
 
