@@ -14,6 +14,8 @@
 
 #include "cryptopp/base64.h"
 
+#ifdef CLOUD
+
 static const char * SHA256HashString(std::string );
 
 const char * toencrypt(const char *data)
@@ -37,3 +39,4 @@ static const char * SHA256HashString(std::string aString){
 
     return temp;
 }
+#endif //CLOUD
