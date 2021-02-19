@@ -282,7 +282,14 @@ android{
 }else{
     CONFIG += link_pkgconfig
     PKGCONFIG += libzip
-    LIBS += -lcrypto++
+    define(CLOUD){
+        unix{
+            LIBS += -lcrypto++   
+        }
+        else{
+            PKGCONFIG += libcrypto
+        }
+    }
 }
 
 
