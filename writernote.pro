@@ -37,6 +37,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/cloud/button_mainwindow.cpp \
+    src/cloud/utils/downloadfile.cpp \
     src/cloud/utils/toencrypt.cpp \
     src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
@@ -173,6 +174,7 @@ SOURCES += \
 
 
 HEADERS += \
+    src/cloud/utils/downloadfile.h \
     src/cloud/utils/shared_definition.h \
     src/cloud/utils/toencrypt.h \
     src/utils/areyousure/areyousure.h \

@@ -12,6 +12,7 @@
 #include "../datawrite/qfilechoose.h"
 
 #include "string.h"
+#include "../cloud/utils/downloadfile.h"
 
 static void copy(last_file *s, char *pos = NULL, char *last_mod = NULL, int type = TYPE_CLOUD);
 
@@ -35,7 +36,7 @@ last_open::~last_open()
 }
 
 void last_open::setDataReturn(last_file **data){
-    m_last_file = data;
+    m_style_return = data;
 }
 
 void last_open::updateList(){
@@ -71,6 +72,16 @@ int last_open::load_data_()
         temp_element_ui->setData(&m_last[i], i);
 
         connect(temp_element_ui, SIGNAL(on_pressed(int)), this, SLOT(on_clicked(int)));
+        connect(temp_element_ui, SIGNAL(deleteIn(int)), this, SLOT(deleteInElement(int)));
+
+#ifdef CLOUD
+        connect(temp_element_ui, SIGNAL(downloadIn(int)), this, SLOT(downloadIn(int)));
+#endif // CLOUD
+
+        /*
+         * void deleteIn(int);
+         * void downloadIn(int);
+        */
 
         m_lista.append(temp_element_ui);
     }
@@ -100,27 +111,15 @@ void last_open::on_clicked(int index)
     QFile file((QString)m_last[index].posizione);
 
     if(file.exists()){
-        *m_last_file = new last_file;
-        copy(*m_last_file, m_last[index].posizione, NULL, m_last[index].type);
+        *m_style_return = new last_file;
+        copy(*m_style_return, m_last[index].posizione, NULL, m_last[index].type);
 
         this->close();
     }
     else{
         dialog_critic("The file didn't exist");
 
-        int i, len;
-        len = m_lista.length();
-        for(i=0; i<len; i++){
-            ui->verticalLayout->removeWidget(m_lista.at(i));
-        }
-
-        deleteIn(index);
-
-        QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-        setting.beginGroup(GROUPNAME_LAST_FILE);
-        save_data_f(setting, m_quanti, this->m_last);
-
-        this->updateList();
+        this->deleteInElement(index);
     }
 }
 
@@ -147,10 +146,34 @@ void last_open::on_open_button_clicked()
         return dialog_critic("The file didn't exist");
     }
 
-    *m_last_file = new last_file;
+    *m_style_return = new last_file;
 
-    strcpy((*m_last_file)->posizione, path.toUtf8().constData());
+    strcpy((*m_style_return)->posizione, path.toUtf8().constData());
 
     this->close();
 
+}
+
+void last_open::deleteInElement(int index){
+    int i, len;
+    len = m_lista.length();
+    for(i=0; i<len; i++){
+        ui->verticalLayout->removeWidget(m_lista.at(i));
+    }
+
+    deleteIn(index);
+
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_LAST_FILE);
+    save_data_f(setting, m_quanti, this->m_last);
+
+    this->updateList();
+}
+
+void last_open::downloadIn(int index){
+#ifdef CLOUD
+    downloadfile(nullptr, "", "");
+#else
+    dialog_critic("Your version of writernote was not\ncompiled without the cloud package");
+#endif
 }

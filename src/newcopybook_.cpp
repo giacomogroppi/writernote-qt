@@ -16,6 +16,7 @@ bool newcopybook_(MainWindow *parent, QString& stringa){
 
     tempcopybook.nome_copybook = stringa;
 
+    tempcopybook.m_touch = parent->typetemp;
 
     savefile save_(&parent->self->path, &tempcopybook);
     if(!save_.savefile_check_file() || !save_.savefile_check_indice(&parent->self->indice)){

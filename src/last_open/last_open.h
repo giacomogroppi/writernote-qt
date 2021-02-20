@@ -30,7 +30,7 @@ public:
 private:
     void updateList();
 
-    last_file **m_last_file;
+    last_file **m_style_return;
 
     last_file *m_last;
 
@@ -43,6 +43,8 @@ private:
 private slots:
     void on_clicked(int);
     void on_open_button_clicked();
+    void deleteInElement(int);
+    void downloadIn(int);
 };
 
 #endif // LAST_OPEN_H

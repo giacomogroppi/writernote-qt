@@ -74,6 +74,7 @@ bool savefile::savefile_check_file(){
     check = 0;
 
 #define ERROR -1
+#define OK 0
     /*
      * Upon successful completion 0 is returned. Otherwise, -1 is returned
      * and the error information in source is set to indicate the error.
@@ -91,7 +92,7 @@ bool savefile::savefile_check_file(){
                  file,
                  ZIP_FL_OVERWRITE)==ERROR;
 
-    if(check != 0)
+    if(check != OK)
         goto delete_;
 
 

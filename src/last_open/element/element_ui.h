@@ -31,10 +31,15 @@ private:
 
 signals:
     void on_pressed(int);
+    void deleteIn(int);
+    void downloadIn(int);
 
 protected:
     bool event(QEvent *event) override;
 
+private slots:
+    void on_button_delete_clicked();
+    void on_button_download_clicked();
 };
 
 #endif // ELEMENT_UI_H

@@ -8,6 +8,10 @@ element_ui::element_ui(QWidget *parent) :
     ui(new Ui::element_ui)
 {
     ui->setupUi(this);
+
+#ifndef CLOUD
+    this->ui->button_download->setVisible(false);
+#endif
 }
 
 element_ui::~element_ui()
@@ -30,6 +34,11 @@ void element_ui::set_main()
 
     if(m_data->type == TYPE_CLOUD){
         ui->label_where->setText("Cloud");
+
+#ifdef CLOUD
+        this->ui->button_download->setVisible(true);
+#endif
+
     }
     else{
         ui->label_where->setText("Local");
@@ -44,6 +53,7 @@ void element_ui::set_main()
         ui->owner_type->setText(NONE);
         ui->owner->setText(m_data->owner.name);
     }
+
 }
 
 bool element_ui::event(QEvent *event)
@@ -57,4 +67,14 @@ bool element_ui::event(QEvent *event)
 
 void element_ui::decrease(){
     this->m_index --;
+}
+
+void element_ui::on_button_delete_clicked()
+{
+    emit deleteIn(this->m_index);
+}
+
+void element_ui::on_button_download_clicked()
+{
+    emit downloadIn(this->m_index);
 }
