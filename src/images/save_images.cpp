@@ -9,7 +9,8 @@
 
 int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
 {
-    int len, i, temp;
+    int len, i;
+    size_t temp;
     len = data->length();
 
     QByteArray arr;
@@ -21,7 +22,7 @@ int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
     for(i=0; i<len; i++){
         temp = data->at(i).immagini.sizeInBytes();
 
-        SOURCE_WRITE(file_zip, &temp, sizeof(int));
+        SOURCE_WRITE(file_zip, &temp, sizeof(size_t));
         //if(zip_source_write(file_zip, &temp, sizeof(int)) == -1) return ERROR;
 
         SOURCE_WRITE(file_zip, data->at(i).immagini.bits(), temp);
@@ -47,18 +48,21 @@ int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
     return OK;
 }
 
-
 #define SOURCE_READ_EXT(x, y, z) check+=zip_fread(x, y, z) == -1
-#define SOURCE_READ(x, y, z) if(zip_fread(x, y, z) == -1) return ERROR;
+
+#define ARGUMENT(x, y, z) if(zip_fread(x, y,z)==-1)
+
+#define SOURCE_READ(x, y, z) ARGUMENT(x,y,z)goto free_;
+#define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
 static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
     void *data_read;
 
     QByteArray array;
 
-    int temp;
+    size_t temp;
 
-    SOURCE_READ(file_zip, &temp, sizeof(int));
+    FIRST_SOURCE_READ(file_zip, &temp, sizeof(size_t));
     //check += source_read_ext(file_zip, &temp, sizeof(int));
 
     data_read = malloc(temp);
@@ -89,7 +93,13 @@ static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
     //check += source_read_ext(file_zip, &temp, sizeof(int));
     temp_immagine->f.setY(temp);
 
+
+    free(data_read);
     return OK;
+
+    free_:
+    free(data_read);
+    return ERROR;
 }
 
 int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){
