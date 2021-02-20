@@ -1,6 +1,5 @@
 #include "redolist.h"
 
-#include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
 /*
@@ -9,8 +8,8 @@ voglia passare a un altro copybook, reimpostare quello precedente.
 */
 void redolist(MainWindow *parent)
 {
-    if(parent->self->currentTitle == "")
+    if(parent->m_currentTitle == "")
         return;
-    int posizione = parent->self->indice.titolo.indexOf(parent->self->currentTitle, 0);
+    int posizione = parent->m_indice.titolo.indexOf(parent->m_currentTitle, 0);
     parent->ui->listWidgetSX->setCurrentRow(posizione);
 }

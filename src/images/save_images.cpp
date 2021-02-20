@@ -49,46 +49,47 @@ int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
 
 
 #define SOURCE_READ_EXT(x, y, z) check+=zip_fread(x, y, z) == -1
+#define SOURCE_READ(x, y, z) if(zip_fread(x, y, z) == -1) return ERROR;
 
-static bool load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
+static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
     void *data_read;
 
     QByteArray array;
 
-    int temp, check = 0;
+    int temp;
 
-    check += source_read_ext(file_zip, &temp, sizeof(int));
+    SOURCE_READ(file_zip, &temp, sizeof(int));
+    //check += source_read_ext(file_zip, &temp, sizeof(int));
 
     data_read = malloc(temp);
 
     if(!data_read)
         return ERROR;
 
-    SOURCE_READ_EXT(file_zip, data_read, temp);
+    SOURCE_READ(file_zip, data_read, temp);
     //check += source_read_ext(file_zip, data_read, temp);
 
     array.setRawData((const char *)data_read, temp);
 
     temp_immagine->immagini.loadFromData(array);
 
-    SOURCE_READ_EXT(file_zip, &temp, sizeof(int));
+    SOURCE_READ(file_zip, &temp, sizeof(int));
     //check += source_read_ext(file_zip, &temp, sizeof(int));
     temp_immagine->i.setX(temp);
 
-    SOURCE_READ_EXT(file_zip, &temp, sizeof(int));
+    SOURCE_READ(file_zip, &temp, sizeof(int));
     //check += source_read_ext(file_zip, &temp, sizeof(int));
     temp_immagine->i.setY(temp);
 
-    SOURCE_READ_EXT(file_zip, &temp, sizeof(int));
+    SOURCE_READ(file_zip, &temp, sizeof(int));
     //check += source_read_ext(file_zip, &temp, sizeof(int));
     temp_immagine->f.setX(temp);
 
-    SOURCE_READ_EXT(file_zip, &temp, sizeof(int));
+    SOURCE_READ(file_zip, &temp, sizeof(int));
     //check += source_read_ext(file_zip, &temp, sizeof(int));
     temp_immagine->f.setY(temp);
 
-    /* if check > 0 it means at some passed zip_fread return -1 [error] */
-    return (check > 0) ? ERROR : OK;
+    return OK;
 }
 
 int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){

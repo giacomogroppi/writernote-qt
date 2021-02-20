@@ -5,9 +5,6 @@
 #include <QListWidgetItem>
 #include <QUrl>
 
-/* gestione variabile self */
-#include "self_class.h"
-
 #include <QAudioProbe>
 #include <QAudioRecorder>
 #include <QDir>
@@ -25,6 +22,8 @@
 
 #define REDO_UNDO_DISABLE "Disable redo undo"
 #define REDO_UNDO_ENABLE "Enable redo undo"
+#include "currenttitle/currenttitle_class.h"
+#include "indice_class.h"
 
 #include "cloud/struct_user.h"
 
@@ -51,8 +50,14 @@ public:
     MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr, struct struct_user *user = nullptr);
     ~MainWindow();
 
-    /* gestione variabile self */
-    SelfClass *self;
+    QString m_currentTitle;
+
+    /* data to manage all */
+    int m_currentTime = 0;
+    QString m_path;
+
+    indice_class m_indice;
+    currenttitle_class m_currenttitle;
     Ui::MainWindow *ui;
 
     QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);

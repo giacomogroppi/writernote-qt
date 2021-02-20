@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include "mainwindow.h"
-#include "self_class.h"
 
 class savecopybook
 {

@@ -9,13 +9,13 @@ void update_list_copybook(MainWindow *parent){
     /*pulisce la lista*/
     parent->ui->listWidgetSX->clear();
 
-    int lunghezzalista = parent->self->indice.titolo.length();
+    int lunghezzalista = parent->m_indice.titolo.length();
 
     for(i=0 ; i < lunghezzalista; i++)
-        parent->ui->listWidgetSX->addItem(parent->self->indice.titolo[i]);
+        parent->ui->listWidgetSX->addItem(parent->m_indice.titolo[i]);
 
 
 
-    int posizione = parent->self->indice.titolo.indexOf(parent->self->currentTitle);
+    int posizione = parent->m_indice.titolo.indexOf(parent->m_currentTitle);
     parent->ui->listWidgetSX->setCurrentRow(posizione);
 }

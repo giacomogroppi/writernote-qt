@@ -27,7 +27,7 @@ void MainWindow::compressvideo_f(){
     if(!this->ui->listWidgetSX->currentItem()->isSelected())
         return redolist(this);
 
-    if(this->ui->listWidgetSX->currentItem()->text() != this->self->currentTitle){
+    if(this->ui->listWidgetSX->currentItem()->text() != this->m_currentTitle){
             if(!areyousure(this, "Warning", "For compress video you need to change the current copybook\nDo you want to continue?"))
                 return;
 

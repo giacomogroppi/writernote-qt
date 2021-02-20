@@ -12,7 +12,7 @@
 #include "../datawrite/savefile.h"
 
 void renamefile(MainWindow *parent, const char *namefile){
-    bool checkname = (parent->ui->listWidgetSX->currentItem()->text() == parent->self->currentTitle);
+    bool checkname = (parent->ui->listWidgetSX->currentItem()->text() == parent->m_currentTitle);
 
     bool ok;
     QString namecopybook = QInputDialog::getText(parent, "Rename",
@@ -21,30 +21,30 @@ void renamefile(MainWindow *parent, const char *namefile){
     if(!ok || namecopybook == "")
         return redolist(parent);
 
-    if(parent->self->indice.titolo.indexOf(namecopybook.toUtf8().constData()) != -1)
+    if(parent->m_indice.titolo.indexOf(namecopybook.toUtf8().constData()) != -1)
         return dialog_critic("a file with this name already exists");
 
-    int posizione = parent->self->indice.titolo.indexOf(namefile);
+    int posizione = parent->m_indice.titolo.indexOf(namefile);
 
-    if(!renamefile_f_zip(parent->self->path.toUtf8().constData(), namefile, namecopybook.toUtf8().constData())){
+    if(!renamefile_f_zip(parent->m_path.toUtf8().constData(), namefile, namecopybook.toUtf8().constData())){
         dialog_critic(("We had a problem changing the name of the file to " + namecopybook).toUtf8().constData());
         return redolist(parent);
     }
 
-    parent->self->indice.titolo[posizione] = namecopybook;
+    parent->m_indice.titolo[posizione] = namecopybook;
 
     /* non c'è bisogno di passargli l'oggetto della classe in quanto salva solamente l'indice */
-    savefile file_(&parent->self->path, nullptr);
+    savefile file_(&parent->m_path, nullptr);
 
-    if(!file_.savefile_check_indice(&parent->self->indice)){
-        renamefile_f_zip(parent->self->path.toUtf8().constData(), namecopybook.toUtf8().constData(), namefile);
+    if(!file_.savefile_check_indice(&parent->m_indice)){
+        renamefile_f_zip(parent->m_path.toUtf8().constData(), namecopybook.toUtf8().constData(), namefile);
         dialog_critic("We had an error saving the index of the file");
         return update_list_copybook(parent);
     }
 
     parent->setWindowTitle("Writernote - " + namecopybook);
     if(checkname)
-        parent->self->currentTitle = namecopybook;
+        parent->m_currentTitle = namecopybook;
 
     return update_list_copybook(parent);
 }

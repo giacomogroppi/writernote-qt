@@ -1,7 +1,8 @@
 #include "abilitazioneinput.h"
 #include "ui_mainwindow.h"
 
-#define CHECK !parent->self->currenttitle.m_touch
+#define CHECK !parent->m_currenttitle.m_touch
+#define PARENTUI parent->ui
 
 void abilitazioneinput(MainWindow *parent)
 {
@@ -9,14 +10,14 @@ void abilitazioneinput(MainWindow *parent)
     parent->ui->toolbarmatita->setHidden(CHECK);
 
     /* pulsanti matita */
-    parent->ui->toolBarcolore->setHidden(CHECK);
-    parent->ui->toolSheet->setHidden(CHECK);
+    PARENTUI->toolBarcolore->setHidden(CHECK);
+    PARENTUI->toolSheet->setHidden(CHECK);
 
-    parent->ui->spinBox_fontsize->setHidden(!CHECK);
-    parent->ui->fontComboBox_fonttipo->setHidden(!CHECK);
-    parent->ui->boldbotton->setHidden(!CHECK);
-    parent->ui->inserttablebotton->setHidden(!CHECK);
-    parent->ui->insertimagebotton->setHidden(!CHECK);
-    parent->ui->textEdit->setHidden(!CHECK);
-    parent->ui->listbotton->setHidden(!CHECK);
+    PARENTUI->spinBox_fontsize->setHidden(!CHECK);
+    PARENTUI->fontComboBox_fonttipo->setHidden(!CHECK);
+    PARENTUI->boldbotton->setHidden(!CHECK);
+    PARENTUI->inserttablebotton->setHidden(!CHECK);
+    PARENTUI->insertimagebotton->setHidden(!CHECK);
+    PARENTUI->textEdit->setHidden(!CHECK);
+    PARENTUI->listbotton->setHidden(!CHECK);
 }

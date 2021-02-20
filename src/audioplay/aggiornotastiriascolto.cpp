@@ -9,10 +9,10 @@
 #include "../setting_ui.h"
 
 void aggiornotestiriascolto(MainWindow *parent){
-    if(parent->self->currenttitle.se_registato){
-        QFile file(parent->self->currenttitle.audio_position_path);
+    if(parent->m_currenttitle.se_registato){
+        QFile file(parent->m_currenttitle.audio_position_path);
         if(!file.exists())
-            return dialog_critic("Audio " + parent->self->currenttitle.audio_position_path + " didn't exist");
+            return dialog_critic("Audio " + parent->m_currenttitle.audio_position_path + " didn't exist");
 
         settingaudio_registrazione(parent, false);
 
@@ -28,7 +28,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->actionListen_current_audio->setEnabled(true);
         //parent->ui->actionListen_current_audio->setChecked(false);
 
-        parent->player->setMedia(QUrl::fromLocalFile(parent->self->currenttitle.audio_position_path));
+        parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle.audio_position_path));
 
         parent->ui->actionDelete_audio->setEnabled(true);
     }
@@ -43,7 +43,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->actionListen_current_audio->setEnabled(false);
     }
 
-    if(parent->self->currenttitle.se_tradotto){
+    if(parent->m_currenttitle.se_tradotto){
 
     }
 }

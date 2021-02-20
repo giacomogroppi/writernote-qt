@@ -13,14 +13,14 @@ static bool c = true;
 /* funzione che viene richiamata quando viene salvato */
 void MainWindow::on_actionSave_File_triggered()
 {
-    if(self->currenttitle.m_touch)
-        this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+    if(m_currenttitle.m_touch)
+        this->m_currenttitle.testi = this->ui->textEdit->toHtml();
 
-    savefile savefile_i(&self->path, &this->self->currenttitle);
+    savefile savefile_i(&m_path, &m_currenttitle);
 
-    bool check = savefile_i.savefile_check_indice(&self->indice);
+    bool check = savefile_i.savefile_check_indice(&m_indice);
 
-    if(this->self->currentTitle != "")
+    if(this->m_currentTitle != "")
         check = check && savefile_i.savefile_check_file();
 
     if(!check && c)
@@ -31,21 +31,21 @@ void MainWindow::on_actionSave_File_triggered()
 
 void MainWindow::on_actionSave_As_triggered()
 {
-    QString posizione = this->self->path;
+    QString posizione = this->m_path;
 
     qfilechoose file(this);
-    if(!file.filechoose(&self->path))
+    if(!file.filechoose(&m_path))
         /* se l'utente non ha selezionato nessun file */
        return;
 
     if(posizione != ""){
         int command;
 #if defined(unix)
-        command = system(stringa(&posizione, &this->self->path));
+        command = system(stringa(&posizione, &m_path));
 #endif
         if(command){
-            dialog_critic("We had a problem saving a copy of " + posizione + " to " + self->path);
-            self->path = posizione;
+            dialog_critic("We had a problem saving a copy of " + posizione + " to " + m_path);
+            m_path = posizione;
             return;
         }
 
@@ -54,9 +54,9 @@ void MainWindow::on_actionSave_As_triggered()
         /*save the file in the new path -> keeping the current file the same*/
         this->on_actionSave_File_triggered();
         if(c){
-            dialog_critic("We had a problem saving the copybook in " + self->path);
+            dialog_critic("We had a problem saving the copybook in " + m_path);
         }
-        self->path = posizione;
+        m_path = posizione;
     }
     else
         return this->on_actionSave_File_triggered();

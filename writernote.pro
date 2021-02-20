@@ -39,6 +39,8 @@ SOURCES += \
     src/cloud/button_mainwindow.cpp \
     src/cloud/utils/downloadfile.cpp \
     src/cloud/utils/toencrypt.cpp \
+    src/touch/text/text_ui/text_ui.cpp \
+    src/touch/text/text_widgets/text_widgets.cpp \
     src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
@@ -110,7 +112,6 @@ SOURCES += \
     src/pdf/translate.cpp \
     src/pdf/updatebrush_topdf.cpp \
     src/savecopybook.cpp \
-    src/self_class.cpp \
     src/setting_ui.cpp \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
@@ -177,6 +178,8 @@ HEADERS += \
     src/cloud/utils/downloadfile.h \
     src/cloud/utils/shared_definition.h \
     src/cloud/utils/toencrypt.h \
+    src/touch/text/text_ui/text_ui.h \
+    src/touch/text/text_widgets/text_widgets.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
     src/audioplay/cambioiconariascolto.h \
@@ -232,7 +235,6 @@ HEADERS += \
     src/indice_class.h \
     src/mainwindow.h \
     src/savecopybook.h \
-    src/self_class.h \
     src/dataread/xmlstruct.h \
     src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
@@ -257,6 +259,8 @@ FORMS += \
     src/style/inserttable_class.ui \
     src/touch/pen/pen_ui.ui \
     src/touch/rubber/rubber_ui.ui \
+    src/touch/text/text_ui/text_ui.ui \
+    src/touch/text/text_widgets/text_widgets.ui \
     src/videocompress/videocompress_ui.ui \
 
 

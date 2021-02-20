@@ -9,7 +9,7 @@
 
 /*funzione che gestisce la creazione di un nuovo copybook, non fa il controllo se esiste*/
 bool newcopybook_(MainWindow *parent, QString& stringa){
-    parent->self->indice.titolo.append(stringa);
+    parent->m_indice.titolo.append(stringa);
 
     currenttitle_class tempcopybook;
     tempcopybook.reset();
@@ -18,8 +18,8 @@ bool newcopybook_(MainWindow *parent, QString& stringa){
 
     tempcopybook.m_touch = parent->typetemp;
 
-    savefile save_(&parent->self->path, &tempcopybook);
-    if(!save_.savefile_check_file() || !save_.savefile_check_indice(&parent->self->indice)){
+    savefile save_(&parent->m_path, &tempcopybook);
+    if(!save_.savefile_check_file() || !save_.savefile_check_indice(&parent->m_indice)){
         return false;
     }
 

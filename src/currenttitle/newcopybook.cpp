@@ -46,11 +46,11 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         return;
 
     bool ok;
-    if(this->self->path == "")
+    if(this->m_path == "")
     {
         /* asks where you want to save the new one */
         qfilechoose filec(this);
-        ok = filec.filechoose(&self->path);
+        ok = filec.filechoose(&m_path);
         if (!ok){
             return;
         }
@@ -63,7 +63,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     if(!ok || namecopybook == "")
         return;
 
-    if(this->self->indice.titolo.indexOf(namecopybook) != -1)
+    if(this->m_indice.titolo.indexOf(namecopybook) != -1)
         return dialog_critic("There is a copybook that already has this title");
 
 

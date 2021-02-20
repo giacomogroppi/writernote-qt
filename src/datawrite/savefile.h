@@ -1,7 +1,8 @@
 #ifndef SAVEFILE_H
 #define SAVEFILE_H
 
-#include "../self_class.h"
+#include "../currenttitle/currenttitle_class.h"
+#include "../indice_class.h"
 
 #include <zip.h>
 

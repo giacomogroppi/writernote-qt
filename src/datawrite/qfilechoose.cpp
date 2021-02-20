@@ -1,7 +1,6 @@
 #include "qfilechoose.h"
 #include <QString>
 #include <QFileDialog>
-#include "../self_class.h"
 
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"

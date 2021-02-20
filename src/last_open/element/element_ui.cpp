@@ -3,6 +3,8 @@
 
 #define NONE ""
 
+#define HIDE_CLOUD ui->button_download->setVisible(false);
+
 element_ui::element_ui(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::element_ui)
@@ -10,7 +12,7 @@ element_ui::element_ui(QWidget *parent) :
     ui->setupUi(this);
 
 #ifndef CLOUD
-    this->ui->button_download->setVisible(false);
+    HIDE_CLOUD
 #endif
 }
 

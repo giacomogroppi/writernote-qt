@@ -41,22 +41,22 @@ void MainWindow::closeEvent (QCloseEvent *event)
     setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
 
-    if(!this->self->indice.titolo.length() || self->currentTitle == "")
+    if(!m_indice.titolo.length() || m_currentTitle == "")
         return event->accept();
 
     /*
      * TODO: after create cloud instance, pass the right
      * value
     */
-    save_data(self->path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
+    save_data(m_path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
 
     /* apre il file in file e lo carica nell'oggetto, e lo confronta */
     currenttitle_class *tempcopybook = new currenttitle_class;
     indice_class *tempindice = new indice_class;
 
-    xmlstruct *temp_lettura = new xmlstruct(&self->path, tempindice, tempcopybook);
+    xmlstruct *temp_lettura = new xmlstruct(&m_path, tempindice, tempcopybook);
 
-    if(!temp_lettura->loadfile((this->self->currentTitle + ".xml").toUtf8().constData()) || !temp_lettura->loadindice()){
+    if(!temp_lettura->loadfile((m_currentTitle + ".xml").toUtf8().constData()) || !temp_lettura->loadindice()){
         delete temp_lettura;
 
         QMessageBox msgBox;
@@ -82,14 +82,14 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     QString filep;
 
-    if(self->currenttitle.m_touch){
-        filep = this->self->currenttitle.testi;
-        this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+    if(m_currenttitle.m_touch){
+        filep = m_currenttitle.testi;
+        m_currenttitle.testi = this->ui->textEdit->toHtml();
     }
 
-    bool check1 = checksimilecopybook(tempcopybook, &this->self->currenttitle) == OK;
+    bool check1 = checksimilecopybook(tempcopybook, &m_currenttitle) == OK;
 
-    check1 = check1 && checksimileindice(&this->self->indice, tempindice);
+    check1 = check1 && checksimileindice(&m_indice, tempindice);
 
     /* se è uguale sia il copybook che l'indice accetta */
     if(check1){
@@ -100,8 +100,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    if(self->currenttitle.m_touch)
-        this->self->currenttitle.testi = filep;
+    if(m_currenttitle.m_touch)
+        m_currenttitle.testi = filep;
 
 
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
@@ -111,17 +111,17 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     if (resBtn == QMessageBox::Yes) {
 
-        if(this->self->path == ""){
+        if(m_path == ""){
             qfilechoose file(this);
-            if(!file.filechoose(&self->path))
+            if(!file.filechoose(&m_path))
                 return;
         }
 
-        savefile save_(&self->path, &this->self->currenttitle);
+        savefile save_(&m_path, &m_currenttitle);
 
-        bool check = save_.savefile_check_indice(&self->indice);
+        bool check = save_.savefile_check_indice(&m_indice);
 
-        if(this->self->currentTitle != "")
+        if(m_currentTitle != "")
             check = check && save_.savefile_check_file();
 
 

@@ -5,11 +5,11 @@
 void MainWindow::updateProgress(qint64 duration)
 {
     /* ogni volta che si aggiorna il tempo cambia la variabile nella classe in TabletCanvas -> quando viene scritto qualcosa lo inserisce */
-    if(this->self->currenttitle.m_touch){
+    if(this->m_currenttitle.m_touch){
         m_canvas->time = duration;
     }
 
-    this->self->currentTime = (int)(duration/1000);
+    //this->currentTime = (int)(duration/1000);
     if (m_audioRecorder->error() != QMediaRecorder::NoError)
         return;
 

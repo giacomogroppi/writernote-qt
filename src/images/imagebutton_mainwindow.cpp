@@ -34,7 +34,7 @@ void MainWindow::on_insertimagebotton_triggered(QAction *){
         return;
 
 
-    self->currenttitle.immagini.append(*immagine);
+    m_currenttitle.immagini.append(*immagine);
 
     this->update_image();
 
@@ -47,7 +47,7 @@ void MainWindow::on_actioninsertImage_triggered(){
     if(!immagine)
         return;
 
-    self->currenttitle.datatouch->immagini.append(*immagine);
+    m_currenttitle.datatouch->immagini.append(*immagine);
 
     this->m_canvas->isloading = true;
     this->m_canvas->update();

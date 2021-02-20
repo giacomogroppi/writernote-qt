@@ -61,8 +61,6 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
 
-    self = new SelfClass;
-
     setting_ui_start(this);
 
     this->ui->layouteditor->insertWidget(1, this->m_canvas);
@@ -99,17 +97,17 @@ MainWindow::~MainWindow()
 /* create new file */
 void MainWindow::on_actionNew_File_triggered()
 {
-    if(this->self->indice.titolo.length() != 0){
-        savecopybook checksave(this, &self->currentTitle);
+    if(this->m_indice.titolo.length() != 0){
+        savecopybook checksave(this, &m_currentTitle);
         bool check = checksave.check_permission();
 
         if(!check)
             return;
     }
 
-    this->self->currentTitle = "";
+    this->m_currentTitle = "";
     //this->ui->actionCreate_new_copybook->setEnabled(true);
-    this->self->currenttitle.reset();
+    this->m_currenttitle.reset();
 }
 
 void MainWindow::on_actionOpen_triggered(char *nomeFile)
@@ -134,17 +132,14 @@ void MainWindow::on_actionOpen_triggered(char *nomeFile)
     if(fileName.indexOf(".writer") == -1)
         return dialog_critic("Are you sure it's a writernote file?");
 
-    self->path = fileName;
+    m_path = fileName;
 
-    xmlstruct *filefind = new xmlstruct(&this->self->path, &this->self->indice, &this->self->currenttitle);
-    if(!filefind->loadindice()){
-        delete filefind;
+    xmlstruct filefind(&m_path, &m_indice, &m_currenttitle);
+    if(!filefind.loadindice())
         return dialog_critic("We had a problem reading the file");
-    }
 
-    delete filefind;
 
-    if(this->self->indice.titolo.length() > 0)
+    if(this->m_indice.titolo.length() > 0)
         this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook(this);
 }
@@ -159,44 +154,42 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
        || this->m_audioRecorder->state() == QAudioRecorder::PausedState)
         return redolist(this);
 
-    if(this->self->currentTitle != ""){
+    if(m_currentTitle != ""){
         /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
-        currenttitle_class *tempcopybook = new currenttitle_class;
-        xmlstruct *fileload = new xmlstruct(&this->self->path, &this->self->indice, tempcopybook);
+        currenttitle_class tempcopybook;
+        xmlstruct fileload(&m_path, &m_indice, &tempcopybook);
 
-        if(!fileload->loadfile((this->self->currentTitle + ".xml").toUtf8().constData())){
-            delete fileload;
+        if(!fileload.loadfile((m_currentTitle + ".xml").toUtf8().constData())){
             return dialog_critic("We had a problem opening the current copybook");
         }
 
-        if(checksimilecopybook(&this->self->currenttitle, tempcopybook) != OK){
-            auto *savevariabile = new savecopybook(this, &this->self->currentTitle);
+        if(checksimilecopybook(&m_currenttitle, &tempcopybook) != OK){
+            savecopybook savevariabile(this, &m_currentTitle);
 
-            if (!savevariabile->check_permission()){
+            if (!savevariabile.check_permission())
                 /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
-                delete savevariabile;
                 return redolist(this);
-            }
+
         }
     }
 
     /* a questo punto deve aprire il nuovo copybook */
-    if(this->self->indice.titolo[this->self->indice.titolo.indexOf(item->text())] != ""){
-        auto *file_ = new xmlstruct(&this->self->path, &this->self->indice, &this->self->currenttitle);
+    if(m_indice.titolo[m_indice.titolo.indexOf(item->text())] != ""){
+        auto *file_ = new xmlstruct(&m_path, &m_indice, &m_currenttitle);
         if(!file_->loadfile((item->text() + ".xml").toUtf8().constData())){
             delete file_;
             return dialog_critic("We had a problem opening the new copybook");
         }
     }
     else{
-        this->self->currenttitle.reset();
-        this->self->currenttitle.datatouch->reset();
+        m_currenttitle.reset();
+        m_currenttitle.datatouch->reset();
     }
-    this->self->currentTitle = item->text().toUtf8().constData();
-    this->setWindowTitle("Writernote - " + this->self->currentTitle);
+    m_currentTitle = item->text().toUtf8().constData();
+    this->setWindowTitle("Writernote - " + m_currentTitle);
 
-    if(this->self->currenttitle.m_touch)
-        this->ui->textEdit->setHtml(this->self->currenttitle.testi);
+    if(m_currenttitle.m_touch)
+        this->ui->textEdit->setHtml(m_currenttitle.testi);
 
     settingtextedit(this, true);
     settingstyle(this, true);
@@ -206,8 +199,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     this->ui->actionPrint->setEnabled(true);
 
     /* pass the pointer to the class */
-    if(this->self->currenttitle.m_touch){
-        this->m_canvas->settingdata(&self->currenttitle, self->path);
+    if(m_currenttitle.m_touch){
+        this->m_canvas->settingdata(&m_currenttitle, m_path);
         this->m_canvas->loadpixel();
 
         this->m_canvas->time = 0;
@@ -225,15 +218,15 @@ void MainWindow::on_textEdit_selectionChanged(){
 
     int i = 1, audio;
     while (true){
-        if ((position >= this->self->currenttitle.testinohtml[i-1].length()) && (position <= this->self->currenttitle.testinohtml[i+1].length())){
-            audio = this->self->currenttitle.posizione_iniz[i];
+        if ((position >= m_currenttitle.testinohtml[i-1].length()) && (position <= m_currenttitle.testinohtml[i+1].length())){
+            audio = m_currenttitle.posizione_iniz[i];
             this->player->setPosition(audio);
 
             this->player->setPosition(audio*1000);
             break;
         }
-        else if ((i + 1) == this->self->currenttitle.posizione_iniz.length()){
-            audio = this->self->currenttitle.posizione_iniz.last();
+        else if ((i + 1) == m_currenttitle.posizione_iniz.length()){
+            audio = m_currenttitle.posizione_iniz.last();
 
             this->player->setPosition(audio);
 
@@ -275,7 +268,7 @@ bool MainWindow::setOutputLocation()
     delete qfile;
 #endif
 
-    this->self->currenttitle.audio_position_path = fileName;
+    m_currenttitle.audio_position_path = fileName;
     this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
     this->m_outputLocationSet = true;
     return true;
@@ -297,15 +290,15 @@ void MainWindow::on_textEdit_textChanged()
     /* se non sta registrando deve uscire */
     if(this->m_audioRecorder->state() != QMediaRecorder::RecordingState)
         return;
-    this->self->currenttitle.testi = this->ui->textEdit->toHtml();
+    this->m_currenttitle.testi = this->ui->textEdit->toHtml();
 
     if(this->m_audioRecorder->status() != QMediaRecorder::RecordingStatus)
         return;
 
     QString text = ui->textEdit->toPlainText();
 
-    this->self->currenttitle.testinohtml.append(ui->textEdit->toPlainText());
-    this->self->currenttitle.posizione_iniz.append(this->self->currentTime);
+    m_currenttitle.testinohtml.append(ui->textEdit->toPlainText());
+    m_currenttitle.posizione_iniz.append(m_currentTime);
 }
 
 

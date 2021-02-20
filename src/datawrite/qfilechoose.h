@@ -4,8 +4,6 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "../self_class.h"
-
 #define TYPEFILEWRITER 0
 #define TYPEFILEPDF 1
 #define TYPEAUDIO 2

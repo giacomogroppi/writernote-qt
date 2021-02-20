@@ -18,7 +18,7 @@ void MainWindow::on_actionListen_current_audio_triggered()
         settingtextedit(this, true);
 
         this->player->stop();
-        this->ui->textEdit->setHtml(this->self->currenttitle.testi);
+        this->ui->textEdit->setHtml(m_currenttitle.testi);
 
         /* non è possibile per un bag di qt disabilitare il check del bottone -> quindi si disabilita e riabilità */
         this->ui->actionListen_current_audio->setEnabled(false);
@@ -36,7 +36,7 @@ void MainWindow::on_actionListen_current_audio_triggered()
 
     this->ui->actionListen_current_audio->setEnabled(true);
 
-    if(this->self->currenttitle.versione > 1)
+    if(m_currenttitle.versione > 1)
         return dialog_critic("You created this file with a too recent version of writernote.\nUpdate it to be able to play this audio");
 
     this->player->play();

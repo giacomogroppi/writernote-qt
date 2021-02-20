@@ -59,27 +59,22 @@ bool topdf::createpdf(){
 
 void MainWindow::on_actiontoppf_triggered()
 {
-    if(!self->currenttitle.datatouch->x.length())
+    if(!m_currenttitle.datatouch->x.length())
         return dialog_critic("There is nothing to convert to pdf");
 
-    qfilechoose *temp = new qfilechoose(this);
+    qfilechoose temp(this);
     QString path_pdf;
 
-    if(!temp->filechoose(&path_pdf, TYPEFILEPDF)){
-        delete temp;
+    if(!temp.filechoose(&path_pdf, TYPEFILEPDF))
         return;
-    }
-
-    delete temp;
-
-    topdf *filepdf = new topdf(&path_pdf);
-
-    filepdf->copy(&self->currenttitle);
 
 
-    if(!filepdf->createpdf()){
+    topdf filepdf(&path_pdf);
+
+    filepdf.copy(&m_currenttitle);
+
+
+    if(!filepdf.createpdf()){
         dialog_critic("We had a problem saving the file to " + path_pdf);
     }
-
-    delete filepdf;
 }

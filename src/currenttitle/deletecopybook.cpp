@@ -19,11 +19,12 @@ void f_deletecopybook( MainWindow *parent, const char *copybook){
     if(parent->player->state() != QMediaPlayer::StoppedState)
         parent->player->stop();
 
-    int posizione = parent->self->indice.titolo.indexOf(copybook);
+    int posizione = parent->m_indice.titolo.indexOf(copybook);
 
-    parent->self->indice.titolo.removeAt(posizione);
 
-    parent->self->currenttitle.reset();
+    parent->m_indice.titolo.removeAt(posizione);
+
+    parent->m_currenttitle.reset();
 
     parent->ui->textEdit->setEnabled(false);
     parent->ui->actionDelete_audio->setEnabled(false);
@@ -41,11 +42,11 @@ void f_deletecopybook( MainWindow *parent, const char *copybook){
 
 void MainWindow::on_actionDelete_copybook_triggered()
 {
-    if (this->self->currentTitle == "")
+    if (m_currentTitle.isEmpty())
         return;
 
-    f_deletecopybook(this, this->self->currentTitle.toUtf8().constData());
-    this->self->currentTitle = "";
+    f_deletecopybook(this, m_currentTitle.toUtf8().constData());
+    this->m_currentTitle = "";
     update_list_copybook(this);
 
 }

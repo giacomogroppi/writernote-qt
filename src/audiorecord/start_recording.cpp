@@ -18,7 +18,7 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
-    if(this->self->currenttitle.audio_position_path != "")
+    if(this->m_currenttitle.audio_position_path != "")
         return dialog_critic("You had already record an audio");
 
 /* only on snap package we have this proble */
@@ -44,7 +44,7 @@ void MainWindow::on_startrecording_triggered()
     if(!this->setOutputLocation())
         return;
 
-    if(this->self->currenttitle.audio_position_path == "")
+    if(this->m_currenttitle.audio_position_path == "")
         return;
 
     if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {
@@ -52,8 +52,8 @@ void MainWindow::on_startrecording_triggered()
 
         this->m_audioRecorder->record();
 
-        this->self->currenttitle.testinohtml.clear();
-        this->self->currenttitle.posizione_iniz.clear();
+        this->m_currenttitle.testinohtml.clear();
+        this->m_currenttitle.posizione_iniz.clear();
     }
 
     this->ui->startrecording->setEnabled(false);

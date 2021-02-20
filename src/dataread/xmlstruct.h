@@ -1,9 +1,6 @@
 #ifndef XMLSTRUCT_H
 #define XMLSTRUCT_H
 
-#include "../mainwindow.h"
-#include "ui_mainwindow.h"
-
 #include <iostream>
 #include <cstdlib>
 
@@ -12,7 +9,9 @@
 #include <streambuf>
 #include <QList>
 #include <QStringList>
-#include "../self_class.h"
+
+#include "../currenttitle/currenttitle_class.h"
+#include "../indice_class.h"
 
 #include "../touch/datastruct/datastruct.h"
 
@@ -20,7 +19,6 @@
 
 class xmlstruct{
 private:
-    //void UnZipFile();
     QString *path_;
 
     indice_class *indice = nullptr;

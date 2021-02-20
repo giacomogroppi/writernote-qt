@@ -2,7 +2,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "self_class.h"
 #include "datawrite/savefile.h"
 #include "savecopybook.h"
 #include "datawrite/qfilechoose.h"
@@ -34,17 +33,17 @@ bool savecopybook::check_permission(){
         return false;
 
     /* else save*/
-    if(this->parent->self->path == "")
+    if(parent->m_path == "")
     {
         qfilechoose pathchoose(this->parent);
-        int check = pathchoose.filechoose(&parent->self->path);
+        int check = pathchoose.filechoose(&parent->m_path);
 
         if(!check) /*vuol dire che l'utente non ha selezionato nessun file o posizione*/
             return false;
     }
-    savefile save_class(&this->parent->self->path, &this->parent->self->currenttitle);
+    savefile save_class(&this->parent->m_path, &this->parent->m_currenttitle);
 
-    bool check = save_class.savefile_check_indice(&parent->self->indice) && save_class.savefile_check_file();
+    bool check = save_class.savefile_check_indice(&parent->m_indice) && save_class.savefile_check_file();
     if(!check)
         dialog_critic("We had a problem saving the copybook");
 
