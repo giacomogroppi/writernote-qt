@@ -104,6 +104,11 @@ void last_open::deleteIn(int index){
 
     delete m_lista.at(index);
     this->m_lista.removeAt(index);
+
+    if(m_quanti == 0){
+        *m_style_return = NULL;
+        this->close();
+    }
 }
 
 void last_open::on_clicked(int index)
