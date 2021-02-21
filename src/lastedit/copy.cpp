@@ -41,7 +41,7 @@ void redoundo::copy_b(currenttitle_class *dest, currenttitle_class *src){
         if(!ok)
             break;
 
-    }while(temp != OK);
+    }while(temp != OK_CHECK);
 }
 
 void redoundo::copy(){

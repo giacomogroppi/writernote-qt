@@ -7,8 +7,7 @@
 
 #include <QList>
 
-#define OK 0
-#define ERROR 1
+#include "../utils/common_error_definition.h"
 
 #define SOURCE_WRITE(x, y, z) if(zip_source_write(x, y, z) == -1) return ERROR
 

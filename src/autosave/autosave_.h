@@ -5,9 +5,7 @@
 
 #include "../datawrite/savefile.h"
 
-
-#define ERRORESALVATAGGIO 1
-#define OK 0
+#include "../utils/common_error_definition.h"
 
 class autosave_
 {

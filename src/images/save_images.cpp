@@ -112,7 +112,7 @@ int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){
     for(i=0; i<len; i++){
         if(load_image_(temp_immagine, file_zip) != OK){
             delete temp_immagine;
-            return -1;
+            return ERROR;
         }
 
         data->append(*temp_immagine);

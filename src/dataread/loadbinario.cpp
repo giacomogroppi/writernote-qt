@@ -7,7 +7,9 @@
 #include "../datawrite/source_read_ext.h"
 
 #define SOURCE_READ_ZIP_PRIVATE(x, y, z) zip_fread(x, y, z)==-1
-#define SOURCE_READ_ZIP(x, y, z) check+=SOURCE_READ_ZIP_PRIVATE(x, y, z)
+//#define SOURCE_READ_ZIP(x, y, z) check+=SOURCE_READ_ZIP_PRIVATE(x, y, z)
+#define SOURCE_READ_ZIP(x, y, z) if(SOURCE_READ_ZIP_PRIVATE(x, y, z))goto delete_
+#define READ_IMAGE(x, y) if(load_image(x, y)==ERROR)goto delete_
 
 #include "../utils/posizione_binario.h"
 
@@ -19,7 +21,7 @@ bool xmlstruct::loadbinario(zip_t *z){
 
     zip_file_t *f = zip_fopen(z, POSIZIONEBINARIO(this->currenttitle->nome_copybook), 0);
 
-    int check = 0;
+    //int check = 0;
 
     if(f == nullptr)
         return false;
@@ -57,14 +59,12 @@ bool xmlstruct::loadbinario(zip_t *z){
     /* pressure */
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_ZIP(f, &temp, sizeof(float));
-        //check += source_read_ext(f, &temp, sizeof(float));
         this->currenttitle->datatouch->pressure.append(temp);
     }
 
     /* rotation */
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_ZIP(f, &valoretemp, sizeof(int));
-        //check += source_read_ext(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->rotation.append(valoretemp);
     }
 
@@ -72,34 +72,32 @@ bool xmlstruct::loadbinario(zip_t *z){
     struct colore_s coloretemp;
     for(i = 0; i < lunghezza; i++){
         SOURCE_READ_ZIP(f, &coloretemp, sizeof(struct colore_s));
-        //source_read_ext(f, &coloretemp, sizeof(struct colore_s));
-
         currenttitle->datatouch->color.append(coloretemp);
     }
 
     /* carica la posizione dei testi */
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_ZIP(f, &valoretemp, sizeof(int));
-        check += source_read_ext(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }
 
     /* posizione foglio */
     SOURCE_READ_ZIP(f, &lunghezza, sizeof(int));
-    //check += source_read_ext(f, &lunghezza, sizeof(int));
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_ZIP(f, &valoretemp, sizeof(int));
-        //check += source_read_ext(f, &valoretemp, sizeof(int));
         currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }
     
     SOURCE_READ_ZIP(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
-    //check += source_read_ext(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
 
-    check += load_image(&currenttitle->datatouch->immagini, f);
+    READ_IMAGE(&currenttitle->datatouch->immagini, f);
 
     zip_fclose(f);
 
-    return check == 0;
+    return true;
+
+    delete_:
+    zip_fclose(f);
+    return false;
 }
 

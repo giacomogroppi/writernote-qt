@@ -43,7 +43,7 @@ bool savecopybook::check_permission(){
     }
     savefile save_class(&this->parent->m_path, &this->parent->m_currenttitle);
 
-    bool check = save_class.savefile_check_indice(&parent->m_indice) && save_class.savefile_check_file();
+    bool check = save_class.savefile_check_indice(&parent->m_indice)==OK && save_class.savefile_check_file()==OK;
     if(!check)
         dialog_critic("We had a problem saving the copybook");
 

@@ -19,7 +19,7 @@ bool newcopybook_(MainWindow *parent, QString& stringa){
     tempcopybook.m_touch = parent->typetemp;
 
     savefile save_(&parent->m_path, &tempcopybook);
-    if(!save_.savefile_check_file() || !save_.savefile_check_indice(&parent->m_indice)){
+    if(save_.savefile_check_file()!=OK || save_.savefile_check_indice(&parent->m_indice)!=OK){
         return false;
     }
 

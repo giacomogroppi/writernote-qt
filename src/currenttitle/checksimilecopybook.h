@@ -1,7 +1,7 @@
 #ifndef CHECKSIMILECOPYBOOK_H
 #define CHECKSIMILECOPYBOOK_H
 
-#define OK 0
+#define OK_CHECK 0
 #define COLORE 1
 #define XCHECK 2
 #define YCHECK 3

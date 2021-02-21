@@ -1,24 +1,25 @@
 #include "../savefile.h"
 #include "../source_read_ext.h"
+#include "../../utils/common_error_definition.h"
 
 #define SOURCE_WRITE(x, y, z) if(zip_source_write(x, y, z)==-1) goto delete_;
-#define SAVE_BINARY(x) if(salvabinario(x)==false)goto delete_;
+#define SAVE_BINARY(x) if(salvabinario(x)==ERROR)goto delete_;
 
-bool savefile::savefile_check_file(){
+int savefile::savefile_check_file(){
     int error, temp, len, i, check;
     zip_error_t errore;
 
     zip_t *filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
 
     if(!filezip)
-        return false;
+        return ERROR;
 
 
     zip_source_t *file;
     file = zip_source_buffer_create(0, 0, 0, &errore);
     if(!file){
         zip_close(filezip);
-        return false;
+        return ERROR;
     }
 
     zip_source_begin_write(file);
@@ -73,13 +74,13 @@ bool savefile::savefile_check_file(){
 
     check = 0;
 
-#define ERROR -1
-#define OK 0
+#define ERROR_PRIVATE -1
+#define OK_PRIVATE 0
     /*
      * Upon successful completion 0 is returned. Otherwise, -1 is returned
      * and the error information in source is set to indicate the error.
     */
-    check += zip_source_commit_write(file)==ERROR;
+    check += zip_source_commit_write(file)==ERROR_PRIVATE;
 
     /*
      * Upon successful completion, zip_file_add() returns the index of
@@ -90,17 +91,17 @@ bool savefile::savefile_check_file(){
     check += zip_file_add(filezip,
                  (currenttitle->nome_copybook + (QString)".xml").toUtf8().constData(),
                  file,
-                 ZIP_FL_OVERWRITE)==ERROR;
+                 ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
 
-    if(check != OK)
+    if(check != OK_PRIVATE)
         goto delete_;
 
 
     zip_close(filezip);
-    return true;
+    return OK;
 
     delete_:
         zip_source_free(file);
         zip_close(filezip);
-        return false;
+        return ERROR;
 }

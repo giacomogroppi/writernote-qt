@@ -3,7 +3,7 @@
 #include "../../indice_class.h"
 
 /* funzione che gestisce la creazione di una stringa per salvare l'indice */
-bool savefile::savefile_check_indice(indice_class *indice){
+int savefile::savefile_check_indice(indice_class *indice){
     int error, temp, len, i, check;
     zip_error_t errore;
 
@@ -40,7 +40,7 @@ bool savefile::savefile_check_indice(indice_class *indice){
     zip_close(filezip);
 
     if(check < 0)
-        return false;
+        return ERROR;
 
-    return true;
+    return OK;
 }

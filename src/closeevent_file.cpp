@@ -119,10 +119,10 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
         savefile save_(&m_path, &m_currenttitle);
 
-        bool check = save_.savefile_check_indice(&m_indice);
+        bool check = save_.savefile_check_indice(&m_indice)==OK;
 
         if(m_currentTitle != "")
-            check = check && save_.savefile_check_file();
+            check = check && (save_.savefile_check_file()==OK);
 
 
         if(check)

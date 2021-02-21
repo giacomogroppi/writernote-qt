@@ -78,7 +78,7 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 
     }
 
-    return OK;
+    return OK_CHECK;
 }
 
 bool checksimileindice(indice_class *primo, indice_class *secondo){

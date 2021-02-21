@@ -209,6 +209,7 @@ HEADERS += \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
     src/datawrite/source_read_ext.h \
+    src/utils/common_error_definition.h \
     src/utils/dialog_critic/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \

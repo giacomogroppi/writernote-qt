@@ -2,9 +2,7 @@
 
 #include "../images/save_images.h"
 #include "../datawrite/source_read_ext.h"
-
-#define ERROR 1
-#define OK 0
+#include "../utils/common_error_definition.h"
 
 #define SOURCE_READ(x, y, z) if(zip_fread(x, y, z)==-1)return ERROR
 

@@ -13,9 +13,6 @@ void autosave_::setting_data(currenttitle_class *data, QString &path){
 }
 
 int autosave_::save(){
-    if(!this->m_savefile->savefile_check_file())
-        return ERRORESALVATAGGIO;
-
-    return OK;
+    return this->m_savefile->savefile_check_file();
 }
 

@@ -34,9 +34,9 @@ void renamefile(MainWindow *parent, const char *namefile){
     parent->m_indice.titolo[posizione] = namecopybook;
 
     /* non c'è bisogno di passargli l'oggetto della classe in quanto salva solamente l'indice */
-    savefile file_(&parent->m_path, nullptr);
+    savefile file_(&parent->m_path, NULL);
 
-    if(!file_.savefile_check_indice(&parent->m_indice)){
+    if(file_.savefile_check_indice(&parent->m_indice) != OK){
         renamefile_f_zip(parent->m_path.toUtf8().constData(), namecopybook.toUtf8().constData(), namefile);
         dialog_critic("We had an error saving the index of the file");
         return update_list_copybook(parent);
