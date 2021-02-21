@@ -4,9 +4,13 @@
 #include "../method/methoddefinition.h"
 
 static bool isin(double x, double y, double, double , int, rubber_ui *);
+static void changeId(int, currenttitle_class *);
+
+#define POSITION_ALFA 3
+#define DECREASE 2
 
 void TabletCanvas::gomma(QPainter &painter){
-    int i, len, id, temp, k;
+    int i, len, id;
     len = data->datatouch->y.length();
 
     double x, y;
@@ -33,7 +37,7 @@ void TabletCanvas::gomma(QPainter &painter){
                         break;
 
                     /* decreases alfa */
-                    data->datatouch->color[i].colore[3] /= 2;
+                    data->datatouch->color[i].colore[POSITION_ALFA] /= DECREASE;
 
                 }
                 i--;
@@ -55,11 +59,7 @@ void TabletCanvas::gomma(QPainter &painter){
                 painter.drawPoint(data->datatouch->x.at(i), data->datatouch->y.at(i));
 
                 if(data->datatouch->needtochangeid(i)){
-                    /* se il punto è in mezzo alla lista deve cambiare l'id di tutto quello che viene dopo */
-                    id = data->datatouch->idtratto.last() + 1;
-                    temp = data->datatouch->idtratto.at(i);
-                    for(k=0; data->datatouch->idtratto.at(i) == temp; k++)
-                        data->datatouch->idtratto[k] = id;
+                    changeId(i, data);
                 }
 
                 data->datatouch->removeat(i);
@@ -69,6 +69,10 @@ void TabletCanvas::gomma(QPainter &painter){
 
 }
 
+/*
+ * the function is call when the user left
+ * the screen with the pen
+*/
 void TabletCanvas::gomma_delete(){
     if(gomma_delete_id.isEmpty())
         return;
@@ -91,6 +95,16 @@ void TabletCanvas::gomma_delete(){
     update();
 }
 
+#define DELTA 1
+
+static void changeId(int i,
+                     currenttitle_class *data){
+    int id = data->datatouch->idtratto.last() + DELTA;
+    int temp = data->datatouch->idtratto.at(i);
+
+    for(int k=0; data->datatouch->idtratto.at(k) == temp; k++)
+        data->datatouch->idtratto[k] = id;
+}
 
 static bool isin(double x,
                  double y,

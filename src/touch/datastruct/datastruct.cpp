@@ -105,7 +105,12 @@ bool datastruct::ispositivey(){
 }
 
 
-/* la funzione restituisce true se il pulto in questione è il primo o l'ultimo */
+/*
+ * the function return true if the point to delete is in the
+ * middle of a stretch
+ *
+ * return false if it's the first point or the lastone
+ */
 bool datastruct::needtochangeid(int i){
     int len;
     len = y.length();
