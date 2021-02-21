@@ -18,7 +18,7 @@ void MainWindow::on_actionSave_File_triggered()
 
     savefile savefile_i(&m_path, &m_currenttitle);
 
-    bool check = savefile_i.savefile_check_indice(&m_indice) != OK;
+    bool check = savefile_i.savefile_check_indice(&m_indice) == OK;
 
     if(this->m_currentTitle != "")
         check = check && (savefile_i.savefile_check_file()!=OK);
