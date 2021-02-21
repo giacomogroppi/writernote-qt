@@ -24,7 +24,7 @@ private:
     indice_class *indice = nullptr;
     currenttitle_class *currenttitle = nullptr;
 
-    bool loadbinario(struct zip *);
+    int loadbinario(struct zip *);
 
 public:
     bool loadindice();

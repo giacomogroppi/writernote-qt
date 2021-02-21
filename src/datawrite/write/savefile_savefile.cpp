@@ -24,31 +24,31 @@ int savefile::savefile_check_file(){
 
     zip_source_begin_write(file);
 
-    SOURCE_WRITE(file, &currenttitle->versione, sizeof(qint32))
+    SOURCE_WRITE(file, &currenttitle->versione, sizeof(int))
 
     /* name copybook */
     temp = currenttitle->nome_copybook.length();
-    SOURCE_WRITE(file, &temp, sizeof(qint32))
+    SOURCE_WRITE(file, &temp, sizeof(int))
     if(temp)
         SOURCE_WRITE(file, currenttitle->nome_copybook.toUtf8().constData(), sizeof(char)*temp)
 
 
     temp = (int)currenttitle->se_registato;
-    SOURCE_WRITE(file, &temp, sizeof(qint32))
+    SOURCE_WRITE(file, &temp, sizeof(int))
 
     temp = (int)currenttitle->se_tradotto;
-    SOURCE_WRITE(file, &temp, sizeof(qint32))
+    SOURCE_WRITE(file, &temp, sizeof(int))
 
     temp = currenttitle->testi.length();
     SOURCE_WRITE(file, &temp, sizeof(qint32));
     SOURCE_WRITE(file, currenttitle->testi.toUtf8().constData(), sizeof(char)*temp)
 
     temp = currenttitle->audio_position_path.length();
-    SOURCE_WRITE(file, &temp, sizeof(qint32))
+    SOURCE_WRITE(file, &temp, sizeof(int))
 
     SOURCE_WRITE(file, currenttitle->audio_position_path.toUtf8().constData(), sizeof(char)*temp)
 
-    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(qint32))
+    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(int))
 
     if(temp) {
         if(currenttitle->m_touch)
@@ -58,18 +58,18 @@ int savefile::savefile_check_file(){
 
     // testinohtml
     len = currenttitle->testinohtml.length();
-    SOURCE_WRITE(file, &len, sizeof(qint32))
+    SOURCE_WRITE(file, &len, sizeof(int))
 
     for(i=0; i<len; i++){
         temp = currenttitle->testinohtml.at(i).length();
-        SOURCE_WRITE(file, &temp, sizeof(qint32))
+        SOURCE_WRITE(file, &temp, sizeof(int))
 
         SOURCE_WRITE(file, currenttitle->testinohtml.at(i).toUtf8().constData(), sizeof(char)*temp)
     }
 
     for(i=0; i<len; i++){
         temp = currenttitle->posizione_iniz.at(i);
-        SOURCE_WRITE(file, &temp, sizeof(qint32))
+        SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
     check = 0;

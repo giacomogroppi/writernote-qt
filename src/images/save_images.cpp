@@ -48,13 +48,6 @@ int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
     return OK;
 }
 
-#define SOURCE_READ_EXT(x, y, z) check+=zip_fread(x, y, z) == -1
-
-#define ARGUMENT(x, y, z) if(zip_fread(x, y,z)==-1)
-
-#define SOURCE_READ(x, y, z) ARGUMENT(x,y,z)goto free_;
-#define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
-
 static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
     void *data_read;
 
@@ -102,17 +95,19 @@ static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
     return ERROR;
 }
 
+//#define SOURCE_READ(x, y, z) if(zip_fread(x, y, z)==-1)goto delete_
+
 int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){
-    int i, len, check = 0;
+    int i, len;
 
     struct immagine_S *temp_immagine = new struct immagine_S;
 
-    check += source_read_ext(file_zip, &len, sizeof(int));
+    //check += source_read_ext(file_zip, &len, sizeof(int));
+    SOURCE_READ(file_zip, &len, sizeof(int));
 
     for(i=0; i<len; i++){
         if(load_image_(temp_immagine, file_zip) != OK){
-            delete temp_immagine;
-            return ERROR;
+            goto free_;
         }
 
         data->append(*temp_immagine);
@@ -120,5 +115,9 @@ int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){
 
     delete temp_immagine;
 
-    return check;
+    return OK;
+
+    free_:
+    delete temp_immagine;
+    return ERROR;
 }

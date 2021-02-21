@@ -14,7 +14,7 @@
 #include "../utils/posizione_binario.h"
 
 /* la funzione gestisce la lettura del file binario */
-bool xmlstruct::loadbinario(zip_t *z){
+int xmlstruct::loadbinario(zip_t *z){
     struct zip_stat st;
     zip_stat_init(&st);
     zip_stat(z, POSIZIONEBINARIO(currenttitle->nome_copybook), 0, &st);
@@ -94,10 +94,10 @@ bool xmlstruct::loadbinario(zip_t *z){
 
     zip_fclose(f);
 
-    return true;
+    return OK;
 
     delete_:
     zip_fclose(f);
-    return false;
+    return ERROR;
 }
 

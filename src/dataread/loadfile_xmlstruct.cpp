@@ -111,7 +111,7 @@ bool xmlstruct::loadfile(const char *nameFile){
     SOURCE_READ(f, &currenttitle->m_touch, sizeof(bool));
 
     if(currenttitle->m_touch){
-        if(!this->loadbinario(filezip)){
+        if(this->loadbinario(filezip) == ERROR){
             zip_fclose(f);
             zip_close(filezip);
             return false;
