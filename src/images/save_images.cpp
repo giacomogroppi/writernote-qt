@@ -7,6 +7,8 @@
 
 #include "../datawrite/source_read_ext.h"
 
+#define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
+
 int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
 {
     int len, i;
@@ -22,27 +24,21 @@ int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
     for(i=0; i<len; i++){
         temp = data->at(i).immagini.sizeInBytes();
 
-        SOURCE_WRITE(file_zip, &temp, sizeof(size_t));
-        //if(zip_source_write(file_zip, &temp, sizeof(int)) == -1) return ERROR;
+        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(size_t));
 
-        SOURCE_WRITE(file_zip, data->at(i).immagini.bits(), temp);
-        //if(zip_source_write(file_zip, data->at(i).immagini.bits(), temp) == -1) return ERROR;
+        SOURCE_WRITE_RETURN(file_zip, data->at(i).immagini.bits(), temp);
 
         temp = data->at(i).i.x();
-        SOURCE_WRITE(file_zip, &temp, sizeof(int));
-        //if(zip_source_write(file_zip, &temp, sizeof(int)) == -1) return ERROR;
+        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
 
         temp = data->at(i).i.y();
-        SOURCE_WRITE(file_zip, &temp, sizeof(int));
-        //if(zip_source_write(file_zip, &temp, sizeof(int)) == -1) return ERROR;
+        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
 
         temp = data->at(i).f.x();
-        SOURCE_WRITE(file_zip, &temp, sizeof(int));
-        //if(zip_source_write(file_zip, &temp, sizeof(int)) == -1) return ERROR;
+        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
 
         temp = data->at(i).f.y();
-        SOURCE_WRITE(file_zip, &temp, sizeof(int));
-        //if(zip_source_write(file_zip, &temp, sizeof(int)) == -1) return ERROR;
+        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
     }
 
     return OK;
@@ -56,54 +52,50 @@ static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
     size_t temp;
 
     FIRST_SOURCE_READ(file_zip, &temp, sizeof(size_t));
-    //check += source_read_ext(file_zip, &temp, sizeof(int));
 
     data_read = malloc(temp);
 
     if(!data_read)
         return ERROR;
 
-    SOURCE_READ(file_zip, data_read, temp);
-    //check += source_read_ext(file_zip, data_read, temp);
+    SOURCE_READ_GOTO(file_zip, data_read, temp);
 
     array.setRawData((const char *)data_read, temp);
 
     temp_immagine->immagini.loadFromData(array);
 
-    SOURCE_READ(file_zip, &temp, sizeof(int));
-    //check += source_read_ext(file_zip, &temp, sizeof(int));
+    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
     temp_immagine->i.setX(temp);
 
-    SOURCE_READ(file_zip, &temp, sizeof(int));
-    //check += source_read_ext(file_zip, &temp, sizeof(int));
+    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
     temp_immagine->i.setY(temp);
 
-    SOURCE_READ(file_zip, &temp, sizeof(int));
-    //check += source_read_ext(file_zip, &temp, sizeof(int));
+    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
     temp_immagine->f.setX(temp);
 
-    SOURCE_READ(file_zip, &temp, sizeof(int));
-    //check += source_read_ext(file_zip, &temp, sizeof(int));
+    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
     temp_immagine->f.setY(temp);
 
 
     free(data_read);
     return OK;
 
+    /*
+     * we cannot return ERROR directly
+     * otherwise the memory allocated
+     * with the malloc is lost
+    */
     free_:
     free(data_read);
     return ERROR;
 }
-
-//#define SOURCE_READ(x, y, z) if(zip_fread(x, y, z)==-1)goto delete_
 
 int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){
     int i, len;
 
     struct immagine_S *temp_immagine = new struct immagine_S;
 
-    //check += source_read_ext(file_zip, &len, sizeof(int));
-    SOURCE_READ(file_zip, &len, sizeof(int));
+    SOURCE_READ_GOTO(file_zip, &len, sizeof(int));
 
     for(i=0; i<len; i++){
         if(load_image_(temp_immagine, file_zip) != OK){
@@ -114,7 +106,6 @@ int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){
     }
 
     delete temp_immagine;
-
     return OK;
 
     free_:

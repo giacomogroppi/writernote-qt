@@ -4,8 +4,6 @@
 #include "../datawrite/source_read_ext.h"
 #include "../utils/common_error_definition.h"
 
-#define SOURCE_READ(x, y, z) if(zip_fread(x, y, z)==-1)return ERROR
-
 static int load_stringa(zip_file_t *f, QString *stringa){
     /* return 0 if all is ok, else return -1 */
     int temp;
@@ -88,46 +86,49 @@ bool xmlstruct::loadfile(const char *nameFile){
         return false;
     }
 
-    SOURCE_READ(f, &currenttitle->versione, sizeof(qint32));
+    SOURCE_READ_GOTO(f, &currenttitle->versione, sizeof(int));
 
     if(load_stringa(f, &currenttitle->nome_copybook) != OK)
-        return false;
+        goto free_;
 
-    SOURCE_READ(f, &temp, sizeof(qint32));
+    SOURCE_READ_GOTO(f, &temp, sizeof(int));
 
     currenttitle->se_registato = temp;
 
-    SOURCE_READ(f, &temp, sizeof(qint32));
-    //check += source_read_ext(f, &temp, sizeof(int));
+    SOURCE_READ_GOTO(f, &temp, sizeof(int));
     currenttitle->se_tradotto = temp;
 
     if(load_stringa(f, &currenttitle->testi) != OK)
-        return false;
+        goto free_;
 
     if(load_stringa(f, &currenttitle->audio_position_path) != OK)
-        return false;
+        goto free_;
 
 
-    SOURCE_READ(f, &currenttitle->m_touch, sizeof(bool));
+    SOURCE_READ_GOTO(f, &currenttitle->m_touch, sizeof(bool));
 
     if(currenttitle->m_touch){
         if(this->loadbinario(filezip) == ERROR){
-            zip_fclose(f);
-            zip_close(filezip);
-            return false;
+            goto free_;
         }
     }
 
     if(load_multiplestring(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz) != OK)
-        return false;
+        goto free_;
 
     if(currenttitle->m_touch){
         if(load_image(&currenttitle->immagini, f) != OK)
-            return false;
+            goto free_;
     }
 
     zip_fclose(f);
     zip_close(filezip);
 
     return true;
+
+
+    free_:
+    zip_fclose(f);
+    zip_close(filezip);
+    return false;
 }

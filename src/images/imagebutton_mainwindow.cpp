@@ -28,30 +28,24 @@ static struct immagine_S *insert_image(){
     return immagine_temp;
 }
 
-void MainWindow::on_insertimagebotton_triggered(QAction *){
+static void addImage(currenttitle_class *m_currenttitle){
     struct immagine_S *immagine = insert_image();
     if(!immagine)
         return;
 
 
-    m_currenttitle.immagini.append(*immagine);
-
-    this->update_image();
+    m_currenttitle->immagini.append(*immagine);
 
     delete immagine;
 }
 
+/* touch */
+void MainWindow::on_insertimagebotton_triggered(QAction *){
+    addImage(&m_currenttitle);
+    this->update_image();
+}
+
 void MainWindow::on_actioninsertImage_triggered(){
-     struct immagine_S *immagine = insert_image();
-
-    if(!immagine)
-        return;
-
-    m_currenttitle.datatouch->immagini.append(*immagine);
-
-    this->m_canvas->isloading = true;
-    this->m_canvas->update();
-
-    delete immagine;
+    addImage(&m_currenttitle);
 
 }

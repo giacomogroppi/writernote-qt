@@ -69,9 +69,6 @@ int savefile::salvabinario(zip_t *filezip){
 
     WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(long double), filezip);
 
-    if(save_image(&currenttitle->datatouch->immagini, file) != OK)
-        return freezip(file, filezip);
-
     if(zip_source_commit_write(file) == -1)
         return freezip(file, filezip);
 

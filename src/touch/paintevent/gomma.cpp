@@ -3,7 +3,7 @@
 #include <QPainter>
 #include "../method/methoddefinition.h"
 
-static inline bool isin(double x, double y, double, double , int, rubber_ui *);
+static bool isin(double x, double y, double, double , int, rubber_ui *);
 
 void TabletCanvas::gomma(QPainter &painter){
     int i, len, id, temp, k;
@@ -92,12 +92,18 @@ void TabletCanvas::gomma_delete(){
 }
 
 
-static inline bool isin(double x, double y, double lastPointx, double lastPointy, int idtratto, rubber_ui *m_rubber){
+static bool isin(double x,
+                 double y,
+                 double lastPointx,
+                 double lastPointy,
+                 int idtratto,
+                 rubber_ui *m_rubber){
     if(lastPointx - m_rubber->m_size_gomma < x
             && lastPointx + m_rubber->m_size_gomma > x
             && lastPointy - m_rubber->m_size_gomma < y
             && lastPointy + m_rubber->m_size_gomma > y
-            && idtratto != IDORIZZONALE)
+            && idtratto != IDORIZZONALE
+            && idtratto != IDVERTICALE)
             return true;
     return false;
 }

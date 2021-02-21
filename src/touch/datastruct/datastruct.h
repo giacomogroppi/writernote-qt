@@ -52,7 +52,7 @@ public:
     QList<float> pressure;
     QList<qreal> rotation;
 
-    QList<struct immagine_S> immagini = {};
+    //QList<struct immagine_S> immagini = {};
 
     QList<int> idtratto;
 

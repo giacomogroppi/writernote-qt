@@ -1,9 +1,7 @@
 #include "../savefile.h"
 #include "../source_read_ext.h"
 #include "../../utils/common_error_definition.h"
-
-#define SOURCE_WRITE(x, y, z) if(zip_source_write(x, y, z)==-1) goto delete_;
-#define SAVE_BINARY(x) if(salvabinario(x)==ERROR)goto delete_;
+#include "../../images/save_images.h"
 
 int savefile::savefile_check_file(){
     int error, temp, len, i, check;
@@ -71,6 +69,10 @@ int savefile::savefile_check_file(){
         temp = currenttitle->posizione_iniz.at(i);
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
+
+    /* save images */
+    if(save_image(&currenttitle->immagini, file)!=OK)
+        goto delete_;
 
     check = 0;
 
