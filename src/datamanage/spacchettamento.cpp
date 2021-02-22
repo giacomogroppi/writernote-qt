@@ -36,6 +36,7 @@ void spacchettamento::esecuzione(){
                 }
             }
         }
+        emit progress(i/lunghezza);
     }
 
     int difference;
@@ -64,4 +65,6 @@ void spacchettamento::esecuzione(){
                 ++i;
         }
     }
+
+    emit finished();
 }
