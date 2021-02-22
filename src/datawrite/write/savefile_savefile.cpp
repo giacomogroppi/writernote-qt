@@ -45,7 +45,7 @@ int savefile::savefile_check_file(){
 
     SOURCE_WRITE(file, currenttitle->audio_position_path.toUtf8().constData(), sizeof(char)*temp)
 
-    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(int))
+    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(bool))
 
     if(currenttitle->m_touch)
         SAVE_BINARY(filezip);
