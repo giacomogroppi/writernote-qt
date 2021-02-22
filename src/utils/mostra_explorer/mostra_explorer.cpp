@@ -6,16 +6,18 @@
 
 static void mostra(const char *comando);
 
+#ifdef unix
+#define APPLICATION_NAME "nautilus "
+#elif defined(win32) || defined(64)
+#define APPLICATION_NAME "explorer "
+#endif
+
 void mostra_explorer(const char *posizione)
 {
     const char *comando;
 
-#ifdef unix
-    comando = ((QString)"nautilus " + posizione).toUtf8().constData();
+    comando = ((QString)APPLICATION_NAME + posizione).toUtf8().constData();
 
-#elif defined(win32) || defined(win64)
-    comando = ((QString)"explorer " + posizione).toUtf8().constData();
-#endif
     QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
 }
 
