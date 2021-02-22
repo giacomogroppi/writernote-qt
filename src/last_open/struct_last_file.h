@@ -7,6 +7,7 @@
 #define MAXSTR 100
 #define MAXMOD 10
 
+/* the file is in your computer or in cloud */
 #define TYPE_COMPUTER 0
 #define TYPE_CLOUD 1
 

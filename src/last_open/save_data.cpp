@@ -22,7 +22,7 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     m_lista = load_data(setting, quanti);
 
     for(i=0, uguale = false; i<quanti && !uguale; i++){
-        if((QString)m_lista[i].posizione ==  path.toUtf8().constData()){
+        if((QString)m_lista[i].posizione ==  path){
             uguale = true;
         }
     }
@@ -78,7 +78,7 @@ void save_data_f(QSettings &setting, int quanti, last_file *m_lista){
 
     array.append((const char *)m_lista, sizeof(last_file)*quanti);
 
-    setting.setValue(KAY_LAST_BASE_FILE, array);
+    setting.setValue(KEY_LAST_BASE_FILE, array);
 
     setting.endGroup();
 }

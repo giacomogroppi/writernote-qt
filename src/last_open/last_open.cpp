@@ -75,7 +75,9 @@ int last_open::load_data_()
     m_last = load_data(setting, m_quanti);
 
     if(m_last == NULL){
-        remove_key(KAY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
+        remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
+        remove_key(KEY_LAST_FILE_QUANTI, GROUPNAME_LAST_FILE);
+
         return 0;
     }
 
@@ -238,7 +240,7 @@ static int recent_private(QString first, QString second){
 }
 
 /*
- * the function return false if we need to change position
+ * the function return true if we need to change position
 */
 static bool recent(last_file *first, last_file *second){
     int res = recent_private((QString)first->last_modification_g, (QString)second->last_modification_g);
@@ -268,9 +270,14 @@ static bool recent(last_file *first, last_file *second){
 */
 static void tidyup(last_file *m_data, int m_quanti){
     int k;
+    last_file temp;
     for(int i=0; i<m_quanti; i++){
-        for(k=0; i<m_quanti; k++){
-
+        for(k=1; k<m_quanti; k++){
+            if(recent(&m_data[i], &m_data[k])){
+                temp = m_data[i];
+                m_data[i] = m_data[k];
+                m_data[k] = temp;
+            }
         }
     }
 }

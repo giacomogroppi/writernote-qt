@@ -162,6 +162,7 @@ SOURCES += \
     src/touch/zoom/zoom_control.cpp \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
+    src/utils/mostra_explorer/mostra_explorer.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/remove_key/remove_key.cpp \
     src/utils/resize_mainwindow/resize.cpp \
@@ -245,6 +246,7 @@ HEADERS += \
     src/dataread/xmlstruct.h \
     src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
+    src/utils/mostra_explorer/mostra_explorer.h \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
     src/utils/remove_key/remove_key.h \

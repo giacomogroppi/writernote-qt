@@ -37,6 +37,7 @@ void element_ui::set_main()
 
     if(m_data->type == TYPE_CLOUD){
         ui->label_where->setText("Cloud");
+        ui->open_exe->setVisible(false);
 
 #ifdef CLOUD
         this->ui->button_download->setVisible(true);
@@ -80,4 +81,11 @@ void element_ui::on_button_delete_clicked()
 void element_ui::on_button_download_clicked()
 {
     emit downloadIn(this->m_index);
+}
+
+#include "../../utils/mostra_explorer/mostra_explorer.h"
+
+void element_ui::on_open_exe_clicked()
+{
+    mostra_explorer(m_data->posizione);
 }

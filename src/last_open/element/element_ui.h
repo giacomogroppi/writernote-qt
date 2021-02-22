@@ -40,6 +40,7 @@ protected:
 private slots:
     void on_button_delete_clicked();
     void on_button_download_clicked();
+    void on_open_exe_clicked();
 };
 
 #endif // ELEMENT_UI_H

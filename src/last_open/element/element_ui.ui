@@ -74,6 +74,10 @@
        <property name="text">
         <string/>
        </property>
+       <property name="icon">
+        <iconset resource="../../../writernote.qrc">
+         <normaloff>:/image/images/open_icon.png</normaloff>:/image/images/open_icon.png</iconset>
+       </property>
       </widget>
      </item>
     </layout>
