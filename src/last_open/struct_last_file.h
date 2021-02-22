@@ -24,7 +24,8 @@ struct owner_struct{
 struct last_file{
     char posizione[MAXSTR_];
     unsigned short int type;
-    char last_modification[MAXMOD_];
+    char last_modification_o[MAXMOD_];
+    char last_modification_g[MAXMOD_];
 
     struct owner_struct owner;
 };

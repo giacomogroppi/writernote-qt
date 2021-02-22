@@ -31,7 +31,8 @@ void element_ui::setData(last_file *data, int index)
 
 void element_ui::set_main()
 {
-    ui->label_last_edit->setText(m_data->last_modification);
+    ui->label_last_edit_time->setText((QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o);
+
     ui->label_path->setText(m_data->posizione);
 
     if(m_data->type == TYPE_CLOUD){

@@ -18,6 +18,10 @@ last_file * load_data(QSettings &setting, int quanti)
     QByteArray array;
     array = setting.value(KAY_LAST_BASE_FILE).toByteArray();
 
+    /* check the integrity of data */
+    if(array.size() != sizeof(last_file)*quanti)
+        return NULL;
+
     temp = (last_file *)array.data();
 
     last_file *temp_return;

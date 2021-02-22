@@ -18,7 +18,7 @@ class last_open : public QDialog
     Q_OBJECT
 
 public:
-    void setDataReturn(last_file **data);
+    void setDataReturn(char **data);
 
     explicit last_open(QWidget *parent = nullptr);
     ~last_open();
@@ -30,7 +30,7 @@ public:
 private:
     void updateList();
 
-    last_file **m_style_return;
+    char **m_style_return;
 
     last_file *m_last;
 

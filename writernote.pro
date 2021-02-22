@@ -163,6 +163,7 @@ SOURCES += \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
+    src/utils/remove_key/remove_key.cpp \
     src/utils/resize_mainwindow/resize.cpp \
     src/utils/settings/setting_load.cpp \
     src/utils/time/current_time.cpp \
@@ -246,6 +247,7 @@ HEADERS += \
     src/utils/color/color_chooser.h \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
+    src/utils/remove_key/remove_key.h \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \
     src/utils/time/current_time.h \

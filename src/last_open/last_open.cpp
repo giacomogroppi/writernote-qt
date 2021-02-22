@@ -13,8 +13,15 @@
 
 #include "string.h"
 #include "../cloud/utils/downloadfile.h"
+#include "../utils/remove_key/remove_key.h"
 
-static void copy(last_file *s, char *pos = NULL, char *last_mod = NULL, int type = TYPE_CLOUD);
+static void copy(last_file *s,
+                 char *pos = NULL,
+                 char *last_mod_o = NULL,
+                 char *last_mod_g= NULL,
+                 int type = TYPE_CLOUD);
+
+static void tidyup(last_file *, int);
 
 last_open::last_open(QWidget *parent) :
     QDialog(parent),
@@ -35,7 +42,7 @@ last_open::~last_open()
     delete ui;
 }
 
-void last_open::setDataReturn(last_file **data){
+void last_open::setDataReturn(char **data){
     m_style_return = data;
 }
 
@@ -48,8 +55,9 @@ void last_open::updateList(){
     }
 };
 
+
 /*
- * the function is call by main
+ * the function is call by main.cpp
 */
 int last_open::load_data_()
 {
@@ -65,6 +73,13 @@ int last_open::load_data_()
     element_ui *temp_element_ui;
 
     m_last = load_data(setting, m_quanti);
+
+    if(m_last == NULL){
+        remove_key(KAY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
+        return 0;
+    }
+
+    tidyup(m_last, m_quanti);
 
     for(i=0; i<m_quanti; i++){
         temp_element_ui = new element_ui;
@@ -96,7 +111,7 @@ int last_open::load_data_()
 void last_open::deleteIn(int index){
     int i;
     for(i=index; i<m_quanti; i++){
-        copy(&m_last[i], m_last[i].posizione, m_last[i].last_modification, m_last[i].type);
+        copy(&m_last[i], m_last[i].posizione, m_last[i].last_modification_o, m_last[i].last_modification_g, m_last[i].type);
 
         m_lista.at(i)->decrease();
     }
@@ -116,8 +131,10 @@ void last_open::on_clicked(int index)
     QFile file((QString)m_last[index].posizione);
 
     if(file.exists()){
-        *m_style_return = new last_file;
-        copy(*m_style_return, m_last[index].posizione, NULL, m_last[index].type);
+        *m_style_return = new char[strlen(m_last[index].posizione)+1];
+        strcpy(*m_style_return, m_last[index].posizione);
+
+        //copy(*m_style_return, m_last[index].posizione, NULL, NULL, m_last[index].type);
 
         this->close();
     }
@@ -128,14 +145,17 @@ void last_open::on_clicked(int index)
     }
 }
 
-static void copy(last_file *s, char *pos, char *last_mod, int type){
+static void copy(last_file *s, char *pos, char *last_mod_o, char *last_mod_g, int type){
     memcpy(&s->type, &type, sizeof(int));
 
     if(pos)
         memcpy(&s->posizione, pos, sizeof(char)*MAXSTR_);
 
-    if(last_mod)
-        memcpy(&s->last_modification, last_mod, sizeof(char)*MAXMOD_);
+    if(last_mod_o)
+        memcpy(&s->last_modification_o, last_mod_o, sizeof(char)*MAXMOD_);
+
+    if(last_mod_g)
+        memcpy(&s->last_modification_g, last_mod_g, sizeof(char)*MAXMOD_);
 }
 
 void last_open::on_open_button_clicked()
@@ -151,9 +171,9 @@ void last_open::on_open_button_clicked()
         return dialog_critic("The file didn't exist");
     }
 
-    *m_style_return = new last_file;
+    *m_style_return = new char[path.length()+1];
 
-    strcpy((*m_style_return)->posizione, path.toUtf8().constData());
+    strcpy(*m_style_return, path.toUtf8().constData());
 
     this->close();
 
@@ -182,3 +202,76 @@ void last_open::downloadIn(int index){
     dialog_critic("Your version of writernote was not\ncompiled without the cloud package");
 #endif
 }
+
+
+#define CARATTERE ':'
+
+static void remove_c(QString *stringa){
+    int i,len = stringa->length();
+    for(i=0; i<len; i++)
+        if(stringa->at(i) == CARATTERE)
+            stringa->remove(i);
+}
+
+/*
+ * return MAX if the first time is after the second
+ * return MIN if the second time is after the first
+*/
+#define SAME 0
+#define MIN -1
+#define MAX 1
+static int recent_private(QString first, QString second){
+
+    remove_c(&first);
+    remove_c(&second);
+
+    int m_first, m_second;
+    m_first = atoi(first.toUtf8().constData());
+    m_second = atoi(first.toUtf8().constData());
+
+    if(m_first == m_second)
+        return SAME;
+    if(m_first > m_second)
+        return MAX;
+
+    return MIN;
+}
+
+/*
+ * the function return false if we need to change position
+*/
+static bool recent(last_file *first, last_file *second){
+    int res = recent_private((QString)first->last_modification_g, (QString)second->last_modification_g);
+
+    if(res == SAME){
+        res = recent_private((QString)first->last_modification_o, (QString)second->last_modification_o);
+
+        if (res == SAME)
+            /* if they are the saim time */
+            return false;
+
+        if(res == MIN)
+            return true;
+
+        return false;
+    }
+
+    /*
+     * if res == MIN the second time is after [we need to change]
+    */
+    return res == MIN;
+
+}
+
+/*
+ * la funzione riordina i file dal più recente al più vecchio
+*/
+static void tidyup(last_file *m_data, int m_quanti){
+    int k;
+    for(int i=0; i<m_quanti; i++){
+        for(k=0; i<m_quanti; k++){
+
+        }
+    }
+}
+

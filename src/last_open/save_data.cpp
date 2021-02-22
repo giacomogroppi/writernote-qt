@@ -32,14 +32,20 @@ void save_data(QString &path, int type, int owner_type, char *owner)
      * name like path
     */
     QString time_now = current_time_string();
+    QString day_now = current_day_string();
+
+#define TOCHAR toUtf8().constData()
 
     if(uguale){
-        strcpy(m_lista[i].last_modification, time_now.toUtf8().constData());
+        strcpy(m_lista[i].last_modification_o, time_now.TOCHAR);
+        strcpy(m_lista[i].last_modification_g, day_now.TOCHAR);
     }
     else{
         quanti ++;
         last_file *temp_e = new last_file;
-        strcpy(temp_e->last_modification, time_now.toUtf8().constData());
+        strcpy(temp_e->last_modification_o, time_now.TOCHAR);
+        strcpy(temp_e->last_modification_g, day_now.TOCHAR);
+
         strcpy(temp_e->posizione, path.toUtf8().constData());
 
         temp_e->owner.type_user = owner_type;

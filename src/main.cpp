@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     TabletCanvas *canvas = new TabletCanvas;
     app.setCanvas(canvas);
 
-    last_file *m_last_open = NULL;
+    char * m_last_open = NULL;
     if(argc == 1){
         last_open a(nullptr);
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 #endif
 
     if(m_last_open != NULL)
-        w.setFile(m_last_open->posizione);
+        w.setFile(m_last_open);
 
     if(argc != 1){
         w.setFile(argv[1]);
