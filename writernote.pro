@@ -97,6 +97,8 @@ SOURCES += \
     src/datawrite/source_read_ext.cpp \
     src/datawrite/write/savefile_savefile.cpp \
     src/datawrite/write/saveindice_savefile.cpp \
+    src/utils/bug_repo/bug_repo_ui.cpp \
+    src/utils/copy_text.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \
@@ -209,7 +211,9 @@ HEADERS += \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
     src/datawrite/source_read_ext.h \
+    src/utils/bug_repo/bug_repo_ui.h \
     src/utils/common_error_definition.h \
+    src/utils/copy_text.h \
     src/utils/dialog_critic/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \
@@ -262,6 +266,7 @@ FORMS += \
     src/touch/rubber/rubber_ui.ui \
     src/touch/text/text_ui/text_ui.ui \
     src/touch/text/text_widgets/text_widgets.ui \
+    src/utils/bug_repo/bug_repo_ui.ui \
     src/videocompress/videocompress_ui.ui \
 
 

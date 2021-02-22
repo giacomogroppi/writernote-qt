@@ -238,6 +238,8 @@ private slots:
 
     void on_actionVersion_triggered();
 
+    void on_actionBug_report_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
