@@ -162,6 +162,7 @@ SOURCES += \
     src/touch/zoom/zoom_control.cpp \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
+    src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/resize_mainwindow/resize.cpp \
     src/utils/settings/setting_load.cpp \
     src/utils/time/current_time.cpp \
@@ -244,6 +245,7 @@ HEADERS += \
     src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
     src/utils/posizione_binario.h \
+    src/utils/progress_bar/progress_bar_ui.h \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \
     src/utils/time/current_time.h \
@@ -267,6 +269,7 @@ FORMS += \
     src/touch/text/text_ui/text_ui.ui \
     src/touch/text/text_widgets/text_widgets.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
+    src/utils/progress_bar/progress_bar_ui.ui \
     src/videocompress/videocompress_ui.ui \
 
 

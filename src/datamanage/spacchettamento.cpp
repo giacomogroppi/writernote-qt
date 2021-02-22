@@ -1,10 +1,11 @@
 #include "../mainwindow.h"
 #include "checkinserimento.h"
 #include "check1.h"
+#include "spacchettamento.h"
 
-#define CURRENTTITLE parent->m_currenttitle
+#define CURRENTTITLE m_parent->m_currenttitle
 
-void spacchettamento(MainWindow *parent){
+void spacchettamento::esecuzione(){
     int i, j, k, lunghezza = CURRENTTITLE.testinohtml.length();
     for(i = 1; i < lunghezza; i++){
         while(!checkinserimento(&CURRENTTITLE.testinohtml, i)){
@@ -64,5 +65,3 @@ void spacchettamento(MainWindow *parent){
         }
     }
 }
-
-

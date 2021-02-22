@@ -10,19 +10,31 @@
 #include "../setting_ui.h"
 #include "spacchettamento.h"
 
+#include "../utils/progress_bar/progress_bar_ui.h"
+#include <QThread>
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
+
+
 void MainWindow::on_stoprecordingbotton_triggered()
 {
     this->m_audioRecorder->stop();
-    if(m_currenttitle.m_touch){
-        bool ok = false;
-        if(m_currenttitle.testinohtml.length() > 10000){
-            ok = true;
-            messaggio_utente("I begin to sort out the data.\nThis operation may take a while");
-        }
-        spacchettamento(this);
 
-        if(ok)
-            messaggio_utente("I finished");
+    /* if we are in keyboard mode */
+    if(!m_currenttitle.m_touch){
+        progress_bar_ui * m_bar = new progress_bar_ui;
+        spacchettamento * m_spac = new spacchettamento(this);
+
+        QObject::connect(m_spac, &spacchettamento::progress, m_bar, &progress_bar_ui::progress_);
+        QObject::connect(m_spac, &spacchettamento::finished, m_bar, &progress_bar_ui::finished_);
+
+        QFuture<void> future1 = QtConcurrent::run( m_spac, &spacchettamento::esecuzione );
+
+        m_bar->exec();
+
+        delete m_spac;
+        delete m_bar;
+
     }
 
     m_currenttitle.se_registato = true;
@@ -35,4 +47,3 @@ void MainWindow::on_stoprecordingbotton_triggered()
     this->ui->statusBar->clearMessage();
     this->m_canvas->time = 0;
 }
-
