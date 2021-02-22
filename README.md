@@ -59,7 +59,7 @@
       it's raccomend to download qt creator, with all the component, from the official website.
       in case you can install all the dependence by install all the package from build-packages and the stage-packages in snapcraft.yaml [writernote]
 
-    compily:
+    compile:
       ```
         mkdir build
         qmake writernote.pro
