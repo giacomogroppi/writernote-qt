@@ -74,6 +74,9 @@
         ./windows/dipendenze.sh
         ./windows/compile.sh
       ```
+  - Android:
+    In /android you can find all the rule to compile writernote for android.
+    It's an experimental project and a lot of things don't work for android.
 
 ## File format
 
