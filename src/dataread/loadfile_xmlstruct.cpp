@@ -4,6 +4,7 @@
 #include "../datawrite/source_read_ext.h"
 #include "../utils/common_error_definition.h"
 
+#define LOAD_STRINGA(x, y) if(load_stringa(x,y) == ERROR) goto free_;
 static int load_stringa(zip_file_t *f, QString *stringa){
     /* return 0 if all is ok, else return -1 */
     int temp;
@@ -29,6 +30,7 @@ static int load_stringa(zip_file_t *f, QString *stringa){
     return OK;
 }
 
+#define LOAD_MULTIPLESTRING(x, y, z) if(load_multiplestring(x,y,z) == ERROR) goto free_;
 static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int> * data){
     int check = 0, i, lunghezza, temp;
 
@@ -46,7 +48,6 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
             variabiletemp = new char[temp + 1];
 
             SOURCE_READ(f, variabiletemp, sizeof(char)*temp);
-            //check += source_read_ext(f, variabiletemp, sizeof(char)*temp);
 
             variabiletemp[temp] = '\0';
 
@@ -57,7 +58,6 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 
     for(i=0; i<lunghezza; i++){
         SOURCE_READ(f, &temp, sizeof(qint32));
-        //check += source_read_ext(f, &temp, sizeof(int));
 
         data->append(temp);
     }
@@ -65,6 +65,8 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
     return OK;
 }
 
+#define LOAD_IMAGE(x,y) if(load_image(x, y) != OK)goto free_;
+#define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
 bool xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
     currenttitle->datatouch->reset();
@@ -88,8 +90,7 @@ bool xmlstruct::loadfile(const char *nameFile){
 
     SOURCE_READ_GOTO(f, &currenttitle->versione, sizeof(int));
 
-    if(load_stringa(f, &currenttitle->nome_copybook) != OK)
-        goto free_;
+    LOAD_STRINGA(f, &currenttitle->nome_copybook)
 
     SOURCE_READ_GOTO(f, &temp, sizeof(int));
 
@@ -98,28 +99,19 @@ bool xmlstruct::loadfile(const char *nameFile){
     SOURCE_READ_GOTO(f, &temp, sizeof(int));
     currenttitle->se_tradotto = temp;
 
-    if(load_stringa(f, &currenttitle->testi) != OK)
-        goto free_;
+    LOAD_STRINGA(f, &currenttitle->testi)
 
-    if(load_stringa(f, &currenttitle->audio_position_path) != OK)
-        goto free_;
-
+    LOAD_STRINGA(f, &currenttitle->audio_position_path)
 
     SOURCE_READ_GOTO(f, &currenttitle->m_touch, sizeof(bool));
 
     if(currenttitle->m_touch){
-        if(this->loadbinario(filezip) == ERROR){
-            goto free_;
-        }
+        LOAD_BINARIO(filezip);
     }
 
-    if(load_multiplestring(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz) != OK)
-        goto free_;
+    LOAD_MULTIPLESTRING(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz)
 
-    if(currenttitle->m_touch){
-        if(load_image(&currenttitle->immagini, f) != OK)
-            goto free_;
-    }
+    LOAD_IMAGE(&currenttitle->immagini, f);
 
     zip_fclose(f);
     zip_close(filezip);

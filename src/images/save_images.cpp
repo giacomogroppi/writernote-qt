@@ -15,11 +15,7 @@ int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
     size_t temp;
     len = data->length();
 
-    QByteArray arr;
-    QBuffer buffer(&arr);
-
-    if(zip_source_write(file_zip, &len, sizeof(int)) == -1)
-        return ERROR;
+    SOURCE_WRITE_RETURN(file_zip, &len, sizeof(int));
 
     for(i=0; i<len; i++){
         temp = data->at(i).immagini.sizeInBytes();

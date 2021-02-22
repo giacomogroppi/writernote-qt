@@ -3,6 +3,8 @@
 #include "../../utils/common_error_definition.h"
 #include "../../images/save_images.h"
 
+#define SAVE_IMAGE(x, y) if(save_image(x, y) != OK) goto delete_;
+
 int savefile::savefile_check_file(){
     int error, temp, len, i, check;
     zip_error_t errore;
@@ -30,12 +32,9 @@ int savefile::savefile_check_file(){
     if(temp)
         SOURCE_WRITE(file, currenttitle->nome_copybook.toUtf8().constData(), sizeof(char)*temp)
 
+    SOURCE_WRITE(file, &currenttitle->se_registato, sizeof(bool))
 
-    temp = (int)currenttitle->se_registato;
-    SOURCE_WRITE(file, &temp, sizeof(int))
-
-    temp = (int)currenttitle->se_tradotto;
-    SOURCE_WRITE(file, &temp, sizeof(int))
+    SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(bool))
 
     temp = currenttitle->testi.length();
     SOURCE_WRITE(file, &temp, sizeof(qint32));
@@ -48,16 +47,12 @@ int savefile::savefile_check_file(){
 
     SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(int))
 
-    if(temp) {
-        if(currenttitle->m_touch)
-            SAVE_BINARY(filezip);
-    }
+    if(currenttitle->m_touch)
+        SAVE_BINARY(filezip);
 
-
-    // testinohtml
+    /* testinohtml */
     len = currenttitle->testinohtml.length();
     SOURCE_WRITE(file, &len, sizeof(int))
-
     for(i=0; i<len; i++){
         temp = currenttitle->testinohtml.at(i).length();
         SOURCE_WRITE(file, &temp, sizeof(int))
@@ -65,14 +60,14 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, currenttitle->testinohtml.at(i).toUtf8().constData(), sizeof(char)*temp)
     }
 
+    /* posizione_iniz */
     for(i=0; i<len; i++){
         temp = currenttitle->posizione_iniz.at(i);
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
     /* save images */
-    if(save_image(&currenttitle->immagini, file)!=OK)
-        goto delete_;
+    SAVE_IMAGE(&currenttitle->immagini, file)
 
     check = 0;
 
