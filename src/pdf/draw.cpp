@@ -9,7 +9,12 @@
 */
 
 /* the function draw the pixel into the painter  */
-void topdf::draw( QPainter *painter, double m, int size_orizzontale, int size_verticale){
+void topdf::draw( QPainter *painter,
+                  double m,
+                  int size_orizzontale,
+                  int size_verticale,
+                  double *y_last){
+
     int i_, len;
 
 
@@ -47,6 +52,8 @@ void topdf::draw( QPainter *painter, double m, int size_orizzontale, int size_ve
 
             lastPoint.pos.setX(C(data).at(i_).m_x);
             lastPoint.pos.setY(C(data).at(i_).m_y);
+
+            *y_last = C(data).at(i_).m_y;
 
         /*
          * last data struct

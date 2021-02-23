@@ -37,9 +37,6 @@ public:
     void stampa();
     double last();
 
-    double firsty();
-    double firstx();
-
     double biggerynoid();
     double biggerx();
     void removeat(int i);

@@ -81,39 +81,6 @@ auto datastruct::biggerynoid() -> double{
     return y_;*/
 }
 
-/*NO ID ORIZZONTALE VERICALE*/
-double datastruct::firstx(){
-    if(m_point.isEmpty())
-        return 0;
-
-    int i, len, temp;
-    double min;
-
-    len = m_point.length();
-    min = m_point.first().m_x;
-
-    for(i=0; i<len; i++){
-        if(min > m_point.at(i).m_x){
-            temp = m_point.at(i).idtratto;
-            if(temp != IDVERTICALE && temp != IDORIZZONALE){
-                min = m_point.at(i).m_x;
-            }
-        }
-    }
-    /*
-     * last data struct
-    */
-    /*
-    len = x.length();
-    min = x.first();
-    for(i=0; i < len; i++)
-        if(min > x.at(i) && idtratto.at(i) != -1)
-            min = x.at(i);
-    */
-    return min;
-
-}
-
 void datastruct::removeat(int i){
     m_point.removeAt(i);
 
@@ -136,7 +103,7 @@ double datastruct::biggerx(){
     double max;
 
     len = m_point.length();
-    max = m_point.at(i).m_x;
+    max = m_point.first().m_x;
 
     for(i=0; i<len; i++){
         if(max < m_point.at(i).m_x){
@@ -223,13 +190,4 @@ double datastruct::last(){
     }*/
 
     return max;
-}
-
-int datastruct::firsty(){
-    int i, len = this->y.length(), min = this->y.at(0);
-    for(i = 0; i < len; i++){
-        if(min > this->y.at(i))
-            min = this->y.at(i);
-    }
-    return min;
 }

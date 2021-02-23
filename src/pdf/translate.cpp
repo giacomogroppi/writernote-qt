@@ -5,13 +5,37 @@
 void topdf::translate(){
     int i, len;
 
-    int delta, k;
+    int k;
+    double delta_y, delta_x;
 
-    delta = data->datatouch->posizionefoglio.first();
+    delta_y = data->datatouch->m_point.first().m_y;
+    delta_x = data->datatouch->m_point.first().m_x;
+
     len = data->datatouch->posizionefoglio.length();
-    for(i=0; i<len; i++)
-        data->datatouch->posizionefoglio[i] += delta;
 
+    for(i=0; i<len; i++)
+        data->datatouch->posizionefoglio[i] += delta_y;
+
+    /* move y */
+    len = data->datatouch->m_point.length();
+    for(i=0; i<len; i++)
+        data->datatouch->m_point.operator[](i).m_y -= delta_y;
+
+    /*
+     * move x
+     * the first point on the list is always initialized (0, 0)
+    */
+    QPointF(data->datatouch->m_point.first().m_x,
+            data->datatouch->m_point.first().m_y);
+
+    for(i=0; i<len; i++){
+        data->datatouch->m_point.operator[](i).m_x -= delta_x;
+    }
+
+    /*
+     * last data struct
+    */
+    /*
     len = data->datatouch->x.length();
     for(i=0; i<len; i++)
         data->datatouch->y[i] -= delta;
@@ -23,8 +47,12 @@ void topdf::translate(){
             for(k=0; k<len; k++)
                 data->datatouch->x[i] += delta;
         }
-    }
+    }*/
 
+    /*
+     * TODO -> adjust the zoom increase
+     *         and fix this piece of code
+    */
     long double temp = (long double)1 - data->datatouch->zoom;
 
     if(data->datatouch->zoom == (long double)1)

@@ -106,6 +106,8 @@ style_struct * load_last_style(){
 
     data_byte = setting.value(KEYSTYLE, array_temp).toByteArray();
 
+    if(data_byte.size() != sizeof(style_struct))
+        return NULL;
 
     style_temp = (style_struct *)data_byte.data();
 

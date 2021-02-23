@@ -12,13 +12,23 @@ topdf::topdf(QString *path)
     this->path = path;
 }
 
-static void newpage(datastruct *datastruct){
+static void newpage(datastruct *datastruct, double temp){
     int i, len;
+    len = datastruct->m_point.length();
+
+    for(i=0; i<len; i++){
+        datastruct->m_point.operator[](i).m_y += temp;
+    }
+
+    /*
+     * last data struct
+    */
+    /*
     len = datastruct->x.length();
 
     for(i=0; i<len; i++){
         datastruct->x[i] += NUMEROPIXELPAGINA;
-    }
+    }*/
 }
 
 bool topdf::createpdf(){
@@ -33,22 +43,35 @@ bool topdf::createpdf(){
 
     QPainter painter(&pdfWriter);
 
+    int len = data->datatouch->m_point.length();
+    for(i=0; i<len; i++)
+        if(data->datatouch->m_point.at(i).idtratto == IDORIZZONALE)
+            break;
+
+    int size_orizzontale = data->datatouch->m_point.at(i).m_x;
+
+    /*
+     * last data struct
+    */
+    /*
     int len = data->datatouch->x.length();
     for(i=0; i<len; i++)
         if(data->datatouch->idtratto.at(i) == -1)
             break;
 
     int size_orizzontale = data->datatouch->x.at(i+1);
+    */
 
     double size_verticale = pdfWriter.height();
 
     double delta = (double)pdfWriter.width() / (double)size_orizzontale;
+    double temp_return;
 
     for (i=0; i<lenpagine; ++i) {
-        this->draw(&painter, delta, size_orizzontale, size_verticale);
+        this->draw(&painter, delta, size_orizzontale, size_verticale, &temp_return);
 
         if(i+1<lenpagine){
-            newpage(data->datatouch);
+            newpage(data->datatouch, temp_return);
 
             pdfWriter.newPage();
         }
@@ -59,7 +82,7 @@ bool topdf::createpdf(){
 
 void MainWindow::on_actiontoppf_triggered()
 {
-    if(!m_currenttitle.datatouch->x.length())
+    if(m_currenttitle.datatouch->m_point.isEmpty())
         return dialog_critic("There is nothing to convert to pdf");
 
     qfilechoose temp(this);
