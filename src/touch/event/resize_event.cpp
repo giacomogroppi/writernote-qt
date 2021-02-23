@@ -6,18 +6,25 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
         return;
 
     int i, len;
-    len = data->datatouch->x.length();
+    len = data->datatouch->m_point.length();
+    //len = data->datatouch->x.length();
     if(len){
         for(i=0; i<len; i++)
-            if(data->datatouch->idtratto.at(i) == IDORIZZONALE)
+            if(data->datatouch->m_point.at(i).idtratto == IDORIZZONALE)
                 break;
 
-        short int delta;
-        delta = data->datatouch->x.at(i+1);
-        if(delta < width() && data->datatouch->x.at(i) < 0){
-            delta = data->datatouch->x.at(i);
+        /*for(i=0; i<len; i++)
+            if(data->datatouch->idtratto.at(i) == IDORIZZONALE)
+                break;*/
+
+        double delta;
+        //delta = data->datatouch->x.at(i+1);
+        delta = data->datatouch->m_point.at(i+1).m_x;
+        if(delta < width() && data->datatouch->m_point.at(i).m_x < 0){
+            delta = data->datatouch->m_point.at(i).m_x;
             for(i=0; i<len; i++)
-                data->datatouch->x[i] += delta;
+                data->datatouch->m_point.operator[](i).m_x += delta;
+                //data->datatouch->x[i] += delta;
         }
     }
 

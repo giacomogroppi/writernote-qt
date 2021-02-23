@@ -1,6 +1,9 @@
 #include "audiototext.h"
 #include "../mainwindow.h"
 
-void audiototext(MainWindow *padre, int posizione){
+/*
+ * TODO: -> write this function to translate audio to text
+*/
+void audiototext(MainWindow *padre, int index){
 
 }

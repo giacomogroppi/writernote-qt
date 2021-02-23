@@ -27,8 +27,8 @@ typedef struct lastpoint_struct{
 }lastpoint_t;
 
 typedef struct{
-    short int deltay;
-    short int deltax;
+    double deltay;
+    double deltax;
 }ismoving_t;
 
 QT_BEGIN_NAMESPACE

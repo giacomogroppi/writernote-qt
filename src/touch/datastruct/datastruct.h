@@ -46,6 +46,8 @@ public:
 
     double biggery();
 
+    /* the function return the index of the id*/
+    unsigned int positionId(int id);
 
     /*
      * change all this list with a QList<struct point_s>
@@ -64,7 +66,7 @@ public:
 
     QList<int> idtratto;*/
 
-    QList<int> posizionefoglio;
+    QList<double> posizionefoglio;
 
     QList<struct point_s> m_point;
 

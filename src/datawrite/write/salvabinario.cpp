@@ -66,7 +66,7 @@ int savefile::salvabinario(zip_t *filezip){
     WRITE_ON_SIZE(file, &lunghezza, sizeof(int), filezip);
 
     for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio[i], sizeof(int), filezip);
+        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio[i], sizeof(double), filezip);
 
     WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(long double), filezip);
 

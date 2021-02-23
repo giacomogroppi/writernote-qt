@@ -10,18 +10,18 @@ class square
 public:
     square();
     void reset();
-    QRect disegno(QPainter &painter, QPoint puntofine);
+    QRect disegno(QPainter &painter, QPointF puntofine);
     bool find();
 
-    bool isinside(QPoint);
+    bool isinside(QPointF);
     void setData(datastruct *data);
-    QRect move(QPoint, QPainter &painter);
+    QRect move(QPointF, QPainter &painter);
 
     /* disegna il quadrato attorno all'oggetti che ha selezionato l'utente */
     QRect drawsquare(QPainter &painter);
 
-    QPoint pointinit;
-    QPoint pointfine;
+    QPointF pointinit;
+    QPointF pointfine;
 
     datastruct *data;
     int idtratto;
@@ -30,7 +30,7 @@ public:
     bool check;
 
     /* definizione per i punti di spostamento */
-    QPoint lastpoint;
+    QPointF lastpoint;
 
 };
 

@@ -50,6 +50,19 @@ double datastruct::biggery(){
     return y_;*/
 }
 
+unsigned int datastruct::positionId(int id)
+{
+    unsigned int len, i;
+    len = m_point.length();
+
+    for(i=0; i<len; i++){
+        if(m_point.at(i).idtratto == id)
+            return i;
+    }
+
+    return 0;
+}
+
 
 auto datastruct::biggerynoid() -> double{
     if(m_point.isEmpty())

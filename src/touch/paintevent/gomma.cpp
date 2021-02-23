@@ -4,14 +4,15 @@
 #include "../method/methoddefinition.h"
 
 static bool isin(double x, double y, double, double , int, rubber_ui *);
-static void changeId(int, currenttitle_class *);
+static void changeId(unsigned int, currenttitle_class *);
 
 #define POSITION_ALFA 3
 #define DECREASE 2
 
 void TabletCanvas::gomma(QPainter &painter){
-    int i, len, id;
-    len = data->datatouch->y.length();
+    int id;
+    unsigned int i, len;
+    len = data->datatouch->m_point.length();
 
     double x, y;
 
@@ -21,6 +22,27 @@ void TabletCanvas::gomma(QPainter &painter){
 
     if(m_rubber->m_type_gomma == TOTALE){
         for(i=0; i<len; i++){
+            if(isin(data->datatouch->m_point.at(i).m_x,
+                    data->datatouch->m_point.at(i).m_y,
+                    x,
+                    y,
+                    data->datatouch->m_point.at(i).idtratto,
+                    m_rubber)){
+                id = data->datatouch->m_point.at(i).idtratto;
+
+                gomma_delete_id.append(id);
+                for(; i<len; i++){
+                    if(data->datatouch->m_point.at(i).idtratto != id)
+                        break;
+
+                    data->datatouch->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
+                }
+                i--;
+            }
+        }
+
+        /*last data struct*/
+        /*for(i=0; i<len; i++){
             if(isin(data->datatouch->x.at(i),
                     data->datatouch->y.at(i),
                     x,
@@ -36,19 +58,40 @@ void TabletCanvas::gomma(QPainter &painter){
                     if(data->datatouch->idtratto[i] != id)
                         break;
 
-                    /* decreases alfa */
                     data->datatouch->color[i].colore[POSITION_ALFA] /= DECREASE;
 
                 }
                 i--;
             }
-        }
+        }*/
+
     }
     else if(m_rubber->m_type_gomma == PARZIALE){
         QPen pennatemp;
         pennatemp.setColor(Qt::white);
         pennatemp.setWidth(m_rubber->m_size_gomma);
         for(i=0; i<len; i++){
+            if(isin(data->datatouch->m_point.at(i).m_x,
+                    data->datatouch->m_point.at(i).m_y,
+                    x,
+                    y,
+                    data->datatouch->m_point.at(i).idtratto,
+                    m_rubber)){
+
+                painter.drawPoint(data->datatouch->m_point.at(i).m_x, data->datatouch->m_point.at(i).m_y);
+
+                if(data->datatouch->needtochangeid(i)){
+                    changeId(i, data);
+                }
+
+                data->datatouch->removeat(i);
+            }
+        }
+
+        /*
+         * last data struct
+        */
+        /*for(i=0; i<len; i++){
             if(isin(data->datatouch->x[i],
                     data->datatouch->y[i],
                     x,
@@ -64,7 +107,7 @@ void TabletCanvas::gomma(QPainter &painter){
 
                 data->datatouch->removeat(i);
             }
-        }
+        }*/
     }
 
 }
@@ -77,17 +120,29 @@ void TabletCanvas::gomma_delete(){
     if(gomma_delete_id.isEmpty())
         return;
 
-    int i, k, len, len_cancella;
+    int k, len_cancella;
 
-    len = data->datatouch->x.length();
+    unsigned int i, len;
+
+    len = data->datatouch->m_point.length();
     len_cancella = gomma_delete_id.length();
 
     for(k=0; k<len_cancella; k++){
         for(i=0; i<len; i++){
-            if(data->datatouch->idtratto.at(i) == gomma_delete_id.at(i))
+            if(data->datatouch->m_point.at(i).idtratto == gomma_delete_id.at(i))
                 this->data->datatouch->removeat(i);
         }
     }
+
+    /*
+     * last data struct
+    */
+    /*for(k=0; k<len_cancella; k++){
+        for(i=0; i<len; i++){
+            if(data->datatouch->idtratto.at(i) == gomma_delete_id.at(i))
+                this->data->datatouch->removeat(i);
+        }
+    }*/
 
     gomma_delete_id.clear();
 
@@ -97,14 +152,26 @@ void TabletCanvas::gomma_delete(){
 
 #define DELTA 1
 
-static void changeId(int i,
+static void changeId(unsigned int i,
+                     currenttitle_class *data){
+    int id = data->datatouch->m_point.last().idtratto + DELTA;
+    int temp = data->datatouch->m_point.at(i).idtratto;
+
+    for(; data->datatouch->m_point.at(i).idtratto == temp; i++)
+        data->datatouch->m_point.operator[](i).idtratto = id;
+}
+
+/*
+ * last data struct
+*/
+/*static void changeId(int i,
                      currenttitle_class *data){
     int id = data->datatouch->idtratto.last() + DELTA;
     int temp = data->datatouch->idtratto.at(i);
 
     for(int k=0; data->datatouch->idtratto.at(k) == temp; k++)
         data->datatouch->idtratto[k] = id;
-}
+}*/
 
 static bool isin(double x,
                  double y,

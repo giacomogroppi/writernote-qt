@@ -77,10 +77,10 @@ int xmlstruct::loadbinario(zip_t *z){
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }
     */
-    int valoretemp;
+    double valoretemp;
     SOURCE_READ_GOTO(f, &len, sizeof(int));
     for(i=0; i < len; i++){
-        SOURCE_READ_GOTO(f, &valoretemp, sizeof(int));
+        SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
         currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }
     
