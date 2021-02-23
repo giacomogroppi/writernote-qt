@@ -1,6 +1,4 @@
 # Writernote
-
-
 ## Linux
 <table>
 <tr>
@@ -90,3 +88,6 @@ The application is entirely developed by Giacomo Groppi.
 For developing new features, write a Ticket, so others know what you are doing. For development create a fork, and use the test as base. Create a Pull request for each fix. Do not create big pull requests, as long as you don't break anything features also can be merged, even if they are not 100% finished.. To report a problem send an email to the same address [possible with the error log and/or with a photo].
 
 See [GitHub:writernote](http://github.com/giacomogroppi/writernote-qt) for current development.
+
+# Todo
+In the code there are some references to TODOs
