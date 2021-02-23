@@ -13,6 +13,21 @@ QDate current_day(){
     return QDate::currentDate();
 }
 
+#define SPACER ":"
+#define TOSTRING(x) QString::number(x)
+
+#define C 3
+
 QString current_day_string(){
-    return current_day().toString();
+    int day[C];
+    day[0] = QDate::currentDate().year();
+    day[1] = QDate::currentDate().month();
+    day[2] = QDate::currentDate().day();
+
+    QString string_return = "";
+    for(int i=0; i<C; i++){
+        string_return += TOSTRING(day[i]) + SPACER;
+    }
+
+    return string_return;
 }
