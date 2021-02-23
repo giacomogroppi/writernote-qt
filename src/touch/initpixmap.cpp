@@ -8,13 +8,16 @@ void TabletCanvas::initPixmap()
 
     /* understand if the user can write outside the page */
     int len, i, sizex;
-    len = data->datatouch->x.length();
+
+    len = data->datatouch->m_point.length();
     if(len){
         for(i=0; i<len; i++)
-            if(data->datatouch->idtratto.at(i) == -1)
+            if(data->datatouch->m_point.at(i).idtratto == IDORIZZONALE)
                 break;
+            /*if(data->datatouch->idtratto.at(i) == -1)
+                break;*/
 
-        i = data->datatouch->x.at(i+1) + 20;
+        i = data->datatouch->m_point.at(i+1).m_x + 20;
 
         if(width() < i)
             sizex = width();

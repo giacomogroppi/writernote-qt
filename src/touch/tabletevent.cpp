@@ -75,7 +75,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                             /* se il tocco non è stato interno */
                             this->square_.reset();
                             isloading = true;
-                            update(QRect(square_.pointinit, square_.pointfine));
+                            update(QRect(square_.pointinit.toPoint(), square_.pointfine.toPoint()));
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */

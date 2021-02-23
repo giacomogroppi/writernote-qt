@@ -8,17 +8,39 @@
 static bool neet_to_change_color(datastruct *data, int id){
     int i, len, how;
 
-    len = data->x.length();
+    len = data->m_point.length();
+    //len = data->x.length();
 
+    for(i=0, how = 0; i<len; i++){
+        if(data->m_point.at(i).idtratto == id)
+            how ++;
+    }
+
+    /*
+     * last data struct
+    */
+    /*
     for(i=0, how = 0; i<len; i++){
         if(data->idtratto[i] == id){
             how ++;
         }
-    }
+    }*/
     return how == MAXPOINT;
 }
 
 void TabletCanvas::updatelist(QTabletEvent *event){
+    struct point_s temp_point;
+
+    if(!this->m_deviceDown){
+        if(this->data->datatouch->m_point.length())
+            data->datatouch->m_point.append();
+    }
+
+
+
+
+
+
     if(!this->m_deviceDown){
         if(this->data->datatouch->idtratto.length())
             this->data->datatouch->idtratto.append(this->data->datatouch->idtratto.last() + 1);

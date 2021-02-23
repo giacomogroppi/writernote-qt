@@ -24,7 +24,7 @@ QRect square::disegno(QPainter &painter, QPointF puntodifine){
     painter.drawRect(recttemp);
 
     /* in questo modo ritorna solamente la porzione di pixmap che deve essere ricaricata */
-    auto rect = QRect(this->pointinit.toPoint(), this->pointfine.toPoint();
+    auto rect = QRect(this->pointinit.toPoint(), this->pointfine.toPoint());
 
     pointfine = puntodifine;
 
