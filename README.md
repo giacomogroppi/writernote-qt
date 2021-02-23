@@ -9,10 +9,6 @@
 </tr>
 </table>
 
-<b>
-  index
-</b>
-
 ## Experimental Features:
 - Import images
 - Zoom in and Zoom on
