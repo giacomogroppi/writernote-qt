@@ -11,14 +11,17 @@
     IDVERTICALE -> linee verticali
     IDORIZZONALE -> linee orizzonali
 */
+
+#define NCOLOR 4
+
 struct colore_s{
-    int colore[4];
+    int colore[NCOLOR];
 };
 
 struct point_s{
     double m_x, m_y, rotation;
     float m_pressure;
-    int m_posizioneaudio, m_posizione_foglio;
+    int m_posizioneaudio;
     struct colore_s m_color;
     int idtratto;
 };
@@ -64,9 +67,9 @@ public:
     QList<float> pressure;
     QList<qreal> rotation;
 
-    QList<int> idtratto;
+    QList<int> idtratto;*/
 
-    QList<int> posizionefoglio;*/
+    QList<int> posizionefoglio;
 
     QList<struct point_s> m_point;
 

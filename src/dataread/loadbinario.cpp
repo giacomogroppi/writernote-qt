@@ -17,17 +17,26 @@ int xmlstruct::loadbinario(zip_t *z){
 
     zip_file_t *f = zip_fopen(z, POSIZIONEBINARIO(this->currenttitle->nome_copybook), 0);
 
-    //int check = 0;
-
     if(f == nullptr)
         return false;
 
+    int i, len;
+    SOURCE_READ_GOTO(f, &len, sizeof(size_t));
 
+    struct point_s temp_point;
+    for(i=0; i<len; i++){
+        SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
+        currenttitle->datatouch->m_point.append(temp_point);
+    }
+
+    /*
+     * for the last data struct
+    */
+    /*
     int lunghezza=0, i, valoretemp;
     float temp;
     double variabiledouble;
 
-    /* x lenght*/
     SOURCE_READ(f, &lunghezza, sizeof(int));
 
 
@@ -36,46 +45,41 @@ int xmlstruct::loadbinario(zip_t *z){
         this->currenttitle->datatouch->x.append(variabiledouble);
     }
 
-    /* y */
+
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_GOTO(f, &variabiledouble, sizeof(double));
         this->currenttitle->datatouch->y.append(variabiledouble);
     }
 
-    /* idtratto */
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_GOTO(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->idtratto.append(valoretemp);
     }
 
-    /* pressure */
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_GOTO(f, &temp, sizeof(float));
         this->currenttitle->datatouch->pressure.append(temp);
     }
 
-    /* rotation */
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_GOTO(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->rotation.append(valoretemp);
     }
 
-    /* colori */
     struct colore_s coloretemp;
     for(i = 0; i < lunghezza; i++){
         SOURCE_READ_GOTO(f, &coloretemp, sizeof(struct colore_s));
         currenttitle->datatouch->color.append(coloretemp);
     }
 
-    /* carica la posizione dei testi */
     for(i=0; i < lunghezza; i++){
         SOURCE_READ_GOTO(f, &valoretemp, sizeof(int));
         this->currenttitle->datatouch->posizioneaudio.append(valoretemp);
     }
-
-    /* posizione foglio */
-    SOURCE_READ_GOTO(f, &lunghezza, sizeof(int));
-    for(i=0; i < lunghezza; i++){
+    */
+    int valoretemp;
+    SOURCE_READ_GOTO(f, &len, sizeof(int));
+    for(i=0; i < len; i++){
         SOURCE_READ_GOTO(f, &valoretemp, sizeof(int));
         currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }

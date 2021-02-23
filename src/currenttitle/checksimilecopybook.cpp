@@ -3,6 +3,10 @@
 #include "currenttitle_class.h"
 #include "../indice_class.h"
 
+#include <stdio.h>
+#include <string.h>
+
+#define P(x) x->datatouch->m_point
 
 /* la funzione confronta due oggetti della classe current title */
 int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
@@ -26,6 +30,37 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
     }else{
         int i, len;
 
+        len = P(primo).length();
+        if(len != P(secondo).length())
+            return LEN;
+
+        for(i=0; i<len; i++){
+            if(P(primo).at(i).idtratto != P(secondo).at(i).idtratto)
+                return IDTRATTO;
+            if(P(primo).at(i).m_x != P(secondo).at(i).m_x)
+                return XCHECK;
+            if(P(primo).at(i).m_y != P(secondo).at(i).m_y)
+                return YCHECK;
+
+            if(memcmp(&P(primo).at(i).m_color,
+                      &P(secondo).at(i).m_color,
+                      sizeof(struct colore_s)) != 0)
+                return COLORE;
+
+            if(P(primo).at(i).m_posizioneaudio != P(secondo).at(i).m_posizioneaudio)
+                return AUDIOPOSITION;
+
+            if(P(primo).at(i).m_pressure != P(secondo).at(i).m_pressure)
+                return PRESSURE;
+
+            if(P(primo).at(i).rotation != P(secondo).at(i).rotation)
+                return ROTATION;
+        }
+
+        /*
+         * last data struct
+        */
+        /*
         len = primo->datatouch->x.length();
         if(len != secondo->datatouch->x.length())
             return XCHECK;
@@ -74,7 +109,7 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
             return ROTATION;
         for(i=0; i<len; i++)
             if(primo->datatouch->rotation.at(i) != secondo->datatouch->rotation.at(i))
-                return ROTATION;
+                return ROTATION;*/
 
     }
 

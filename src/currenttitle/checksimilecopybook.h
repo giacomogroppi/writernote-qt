@@ -13,6 +13,11 @@
 #define TESTI 8
 #define AUDIOPOSITION 9
 
+/*
+ * for the new data struct
+*/
+#define LEN 10
+
 #include "currenttitle_class.h"
 #include "../indice_class.h"
 

@@ -94,7 +94,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
     /* se è uguale sia il copybook che l'indice accetta */
     if(check1){
         delete tempcopybook;
-        delete temp_lettura;
         delete tempindice;
         return event->accept();
     }
@@ -141,7 +140,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     delete tempcopybook;
     delete tempindice;
-    delete temp_lettura;
 }
 
 static void setting_hide_list(bool check){
