@@ -67,7 +67,7 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 
 #define LOAD_IMAGE(x,y) if(load_image(x, y) != OK)goto free_;
 #define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
-bool xmlstruct::loadfile(const char *nameFile){
+int xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
     currenttitle->datatouch->reset();
 
@@ -89,6 +89,9 @@ bool xmlstruct::loadfile(const char *nameFile){
     }
 
     SOURCE_READ_GOTO(f, &currenttitle->versione, sizeof(int));
+
+    if(currenttitle->versione < VERSIONE)
+        goto error_version;
 
     LOAD_STRINGA(f, &currenttitle->nome_copybook)
 
@@ -116,11 +119,19 @@ bool xmlstruct::loadfile(const char *nameFile){
     zip_fclose(f);
     zip_close(filezip);
 
-    return true;
+    return OK;
 
 
     free_:
     zip_fclose(f);
     zip_close(filezip);
-    return false;
+    return ERROR;
+
+    /*
+     * in case we can not operate with the file because it's too old
+    */
+    error_version:
+    zip_fclose(f);
+    zip_close(filezip);
+    return ERROR_VERSION;
 }

@@ -7,5 +7,6 @@
 */
 #define ERROR 0
 #define OK 1
+#define ERROR_VERSION 2
 
 #endif // COMMON_ERROR_DEFINITION_H

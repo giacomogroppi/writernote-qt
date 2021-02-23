@@ -8,11 +8,14 @@
 
 #include "../images/image_struct.h"
 
+#define CURRENT_VERSION_CURRENT_TITLE 2
+#define MIN_VERSION_CURRENT_TITLE 2
+
 class currenttitle_class{
 public:
     QString nome_copybook;
 
-    int versione = 1;
+    int versione = CURRENT_VERSION_CURRENT_TITLE;
     bool se_registato = false, se_tradotto = false;
     QString audio_position_path = "";
     QString testi = "";

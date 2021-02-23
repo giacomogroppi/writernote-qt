@@ -29,7 +29,7 @@ private:
 public:
     bool loadindice();
 
-    bool loadfile(const char *);
+    int loadfile(const char *);
 
     xmlstruct(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
 

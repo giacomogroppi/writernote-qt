@@ -19,7 +19,17 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     }
     else {
         /* parte responsabile della penna */
-        int position_inlist = m_currenttitle.datatouch->posizioneaudio.indexOf(position/1000);
+        int position_inlist, i = 0, len, position_temp;
+
+        len = m_currenttitle.datatouch->m_point.length();
+        for(i=0, position_temp = position/1000; i < len; i++){
+            if(m_currenttitle.datatouch->m_point.at(i).m_posizioneaudio == position_temp){
+                position_inlist = i;
+                break;
+            }
+        }
+
+        /*int position_inlist = m_currenttitle.datatouch->posizioneaudio.indexOf(position/1000);*/
         if(position_inlist == -1) return;
 
         this->m_canvas->riascolto(position_inlist);

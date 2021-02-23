@@ -10,15 +10,21 @@
 /*
     IDVERTICALE -> linee verticali
     IDORIZZONALE -> linee orizzonali
-
 */
-
-#define IDVERTICALE -2
-#define IDORIZZONALE -1
-
 struct colore_s{
     int colore[4];
 };
+
+struct point_s{
+    double m_x, m_y, rotation;
+    float m_pressure;
+    int m_posizioneaudio, m_posizione_foglio;
+    struct colore_s m_color;
+    int idtratto;
+};
+
+#define IDVERTICALE -2
+#define IDORIZZONALE -1
 
 class datastruct
 {
@@ -40,11 +46,17 @@ public:
 
     double biggery();
 
-    /* la funzione viene richiamata quando viene compresso il file in un file zip -> false se ci sono dei negativi < 0 */
     bool ispositivey();
     bool ispositivex();
 
-    QList<double> x;
+    /*
+     * change all this list with a QList<struct point_s>
+     *  - more easy to read in file
+     *  - to store
+     *  - to save in file
+     *  - more scalable
+    */
+    /*QList<double> x;
     QList<double> y;
     QList<int> posizioneaudio;
     QList<struct colore_s> color;
@@ -52,15 +64,12 @@ public:
     QList<float> pressure;
     QList<qreal> rotation;
 
-    //QList<struct immagine_S> immagini = {};
-
     QList<int> idtratto;
 
-    QList<int> posizionefoglio;
-    /* il valore viene settare da 0 a 100 in base a quanto zoom c'è
-    2 -> massimo zoom
-    0 -> minimo zoom
-    */
+    QList<int> posizionefoglio;*/
+
+    QList<struct point_s> m_point;
+
     long double zoom = 1.00;
 };
 
