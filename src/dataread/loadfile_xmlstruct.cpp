@@ -90,7 +90,7 @@ int xmlstruct::loadfile(const char *nameFile){
 
     SOURCE_READ_GOTO(f, &currenttitle->versione, sizeof(int));
 
-    if(currenttitle->versione < VERSIONE)
+    if(currenttitle->isOkVersion())
         goto error_version;
 
     LOAD_STRINGA(f, &currenttitle->nome_copybook)

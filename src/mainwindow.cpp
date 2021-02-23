@@ -159,7 +159,11 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         currenttitle_class tempcopybook;
         xmlstruct fileload(&m_path, &m_indice, &tempcopybook);
 
-        if(!fileload.loadfile((m_currentTitle + ".xml").toUtf8().constData())){
+        int temp = fileload.loadfile((m_currentTitle + ".xml").toUtf8().constData());
+        if(temp == ERROR_VERSION){
+            return dialog_critic("the version you created this file with is too old to read");
+        }
+        if(temp == ERROR){
             return dialog_critic("We had a problem opening the current copybook");
         }
 

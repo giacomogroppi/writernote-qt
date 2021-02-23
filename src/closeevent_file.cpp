@@ -54,10 +54,10 @@ void MainWindow::closeEvent (QCloseEvent *event)
     currenttitle_class *tempcopybook = new currenttitle_class;
     indice_class *tempindice = new indice_class;
 
-    xmlstruct *temp_lettura = new xmlstruct(&m_path, tempindice, tempcopybook);
+    xmlstruct temp_lettura(&m_path, tempindice, tempcopybook);
 
-    if(!temp_lettura->loadfile((m_currentTitle + ".xml").toUtf8().constData()) || !temp_lettura->loadindice()){
-        delete temp_lettura;
+    if(temp_lettura.loadfile((m_currentTitle + ".xml").toUtf8().constData()) != OK
+            || !temp_lettura.loadindice()){
 
         QMessageBox msgBox;
         msgBox.setText("Error:");

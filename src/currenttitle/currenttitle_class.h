@@ -22,6 +22,11 @@ public:
     QStringList testinohtml = {};
     QList<int> posizione_iniz = {};
 
+    bool isOkVersion(){
+        if(this->versione < MIN_VERSION_CURRENT_TITLE)
+            return false;
+        return true;
+    }
 
     bool m_touch = false;
     datastruct *datatouch;
