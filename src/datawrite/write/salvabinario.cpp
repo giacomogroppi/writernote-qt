@@ -17,9 +17,6 @@ static int freezip(zip_source_t *files, zip_t *){
 int savefile::salvabinario(zip_t *filezip){
     int i, lunghezza;
 
-    /* x */
-    lunghezza = this->currenttitle->datatouch->x.length();
-
     zip_source_t *file;
 
     zip_error_t errore;
@@ -28,39 +25,43 @@ int savefile::salvabinario(zip_t *filezip){
 
     zip_source_begin_write(file);
 
-    WRITE_ON_SIZE(file, &lunghezza, sizeof(int), filezip);
+    //lunghezza = currenttitle->datatouch->m_point.length();
+    lunghezza = currenttitle->datatouch->m_point.length();
+    WRITE_ON_SIZE(file, &lunghezza, sizeof(size_t), filezip);
 
-    /*if(zip_source_write(file, &lunghezza, sizeof(int)) == -1)
-        return freezip(file, filezip);*/
+    for(i = 0; i<lunghezza; i++){
+        WRITE_ON_SIZE(file, &currenttitle->datatouch->m_point[i], sizeof(struct point_s), filezip);
+    }
+
+    /*
+     * last data struct
+    */
+    /*lunghezza = this->currenttitle->datatouch->x.length();
+    WRITE_ON_SIZE(file, &lunghezza, sizeof(int), filezip);
 
 
     for(i=0; i < lunghezza; i++)
         WRITE_ON_SIZE(file, &this->currenttitle->datatouch->x[i], sizeof(double), filezip);
 
-    /* y */
     for(i=0; i < lunghezza; i++)
         WRITE_ON_SIZE(file, &this->currenttitle->datatouch->y[i], sizeof(double), filezip);
 
     for(i=0; i < lunghezza; i++)
         WRITE_ON_SIZE(file, &this->currenttitle->datatouch->idtratto[i], sizeof(int), filezip);
 
-    /* pressure */
     for(i=0; i < lunghezza; i++)
         WRITE_ON_SIZE(file, &this->currenttitle->datatouch->pressure[i], sizeof(float), filezip);
 
-    /* rotation */
     for(i=0; i < lunghezza; i++)
         WRITE_ON_SIZE(file, &this->currenttitle->datatouch->rotation[i], sizeof(int), filezip);
 
-    /* colori */
     for(i = 0; i < lunghezza; i++)
         WRITE_ON_SIZE(file, &currenttitle->datatouch->color.at(i), sizeof(struct colore_s), filezip);
 
-    /* posizioneaudio */
     for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizioneaudio[i], sizeof(int), filezip);
+        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizioneaudio[i], sizeof(int), filezip);*/
 
-    /* posizionefoglio */
+
     lunghezza = currenttitle->datatouch->posizionefoglio.length();
     WRITE_ON_SIZE(file, &lunghezza, sizeof(int), filezip);
 

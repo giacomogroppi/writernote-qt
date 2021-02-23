@@ -98,6 +98,7 @@ SOURCES += \
     src/datawrite/write/savefile_savefile.cpp \
     src/datawrite/write/saveindice_savefile.cpp \
     src/utils/bug_repo/bug_repo_ui.cpp \
+    src/utils/color/setcolor.cpp \
     src/utils/copy_text.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
@@ -215,6 +216,7 @@ HEADERS += \
     src/datawrite/sizedata.h \
     src/datawrite/source_read_ext.h \
     src/utils/bug_repo/bug_repo_ui.h \
+    src/utils/color/setcolor.h \
     src/utils/common_error_definition.h \
     src/utils/copy_text.h \
     src/utils/dialog_critic/dialog_critic.h \

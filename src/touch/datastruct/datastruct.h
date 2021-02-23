@@ -35,10 +35,10 @@ public:
     datastruct();
     void reset();
     void stampa();
-    int last();
+    double last();
 
-    int firsty();
-    int firstx();
+    double firsty();
+    double firstx();
 
     double biggerynoid();
     double biggerx();
@@ -49,8 +49,6 @@ public:
 
     double biggery();
 
-    bool ispositivey();
-    bool ispositivex();
 
     /*
      * change all this list with a QList<struct point_s>

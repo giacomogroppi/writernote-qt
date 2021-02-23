@@ -2,6 +2,7 @@
 #include <QPainter>
 
 #include "draw_image.h"
+#include "../../utils/color/setcolor.h"
 
 static bool thereispositive(datastruct *, int, int);
 
@@ -35,15 +36,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-static QColor setColor_(const struct colore_s *colore){
-    QColor temp;
-    temp.setRgb(colore->colore[0],
-            colore->colore[1],
-            colore->colore[2],
-            colore->colore[3]);
-
-    return temp;
-}
 
 void TabletCanvas::laod(QPainter *painter){
     int i, len;
@@ -61,7 +53,7 @@ void TabletCanvas::laod(QPainter *painter){
 
         if(data->datatouch->y.at(i) < this->m_pixmap.size().height() && data->datatouch->y.at(i) >= 0){
             if(data->datatouch->idtratto.at(i) == IDORIZZONALE){
-                updateBrush_load(data->datatouch->pressure.at(i), setColor_(&data->datatouch->color.at(i)));
+                updateBrush_load(data->datatouch->pressure.at(i), setcolor(&data->datatouch->color.at(i)));
 
                 painter->setPen(this->m_pen);
                 painter->drawLine(data->datatouch->x.at(i), data->datatouch->y.at(i)
