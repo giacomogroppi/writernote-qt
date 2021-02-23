@@ -10,9 +10,14 @@ static void copyidtratto(QList<int> *, QList<int> *);*/
 
 
 static void copycolor(QList<struct point_s> *, QList<struct point_s> *);
-static void copycoordinate(QList<struct point_s> *, QList<struct point_s> *);
+
+static void copycoordinatey(QList<struct point_s> *, QList<struct point_s> *);
+static void copycoordinatex(QList<struct point_s> *, QList<struct point_s> *);
+
 static void copypressure(QList<struct point_s> *, QList<struct point_s> *);
 static void copyidtratto(QList<struct point_s> *, QList<struct point_s> *);
+
+static void copyall(QList<struct point_s>  *, QList<struct point_s> *);
 
 void redoundo::copy_b(currenttitle_class *dest, currenttitle_class *src){
     int temp = COLORE;
@@ -23,26 +28,34 @@ void redoundo::copy_b(currenttitle_class *dest, currenttitle_class *src){
         ok = false;
 
         switch (temp) {
+            case LEN:
+                copyall(&src->datatouch->m_point, &dest->datatouch->m_point);
+                break;
+
             case COLORE:
                 copycolor(&src->datatouch->m_point, &dest->datatouch->m_point);
                 /*copycolor(&src->datatouch->color, &dest->datatouch->color);*/
                 ok = true;
                 break;
+
             case XCHECK:
-                copycoordinate(&src->datatouch->m_point, &dest->datatouch->m_point);
+                copycoordinatex(&src->datatouch->m_point, &dest->datatouch->m_point);
                 /*copycoordinate(&src->datatouch->x, &dest->datatouch->x);*/
                 ok = true;
                 break;
+
             case YCHECK:
-                copycoordinate(&src->datatouch->m_point, &dest->datatouch->m_point);
+                copycoordinatey(&src->datatouch->m_point, &dest->datatouch->m_point);
                 /*copycoordinate(&src->datatouch->y, &dest->datatouch->y);*/
                 ok = true;
                 break;
+
             case PRESSURE:
                 copypressure(&src->datatouch->m_point, &dest->datatouch->m_point);
                 /*copypressure(&src->datatouch->pressure, &dest->datatouch->pressure);*/
                 ok = true;
                 break;
+
             case IDTRATTO:
                 copyidtratto(&src->datatouch->m_point, &dest->datatouch->m_point);
                 /*copyidtratto(&src->datatouch->idtratto, &dest->datatouch->idtratto);*/
@@ -65,16 +78,47 @@ void redoundo::copy(){
 }
 
 static void copycolor(QList<struct point_s> *src, QList<struct point_s> *dest){
-    int i, len = src->length();
-
+    int i, len = src->length(), k;
 
     for(i=0; i<len; i++){
+        for(k=0; k<NCOLOR; k++){
+            dest->operator[](i).m_color.colore[k] = src->operator[](i).m_color.colore[k];
+        }
     }
-
 }
-static void copycoordinate(QList<struct point_s> *, QList<struct point_s> *);
-static void copypressure(QList<struct point_s> *, QList<struct point_s> *);
-static void copyidtratto(QList<struct point_s> *, QList<struct point_s> *);
+
+static void copycoordinatey(QList<struct point_s> *src, QList<struct point_s> *dest){
+    int i, len;
+    for(i=0, len = src->length(); i<len; i++){
+        dest->operator[](i).m_y = src->operator[](i).m_y;
+    }
+}
+
+static void copycoordinatex(QList<struct point_s> *src, QList<struct point_s> *dest){
+    int i, len;
+    for(i=0, len = src->length(); i<len; i++){
+        dest->operator[](i).m_x = src->operator[](i).m_x;
+    }
+}
+
+static void copypressure(QList<struct point_s> *src, QList<struct point_s> *dest){
+    int i, len = src->length();
+    for(i=0; i<len; i++){
+        dest->operator[](i).m_pressure = src->operator[](i).m_pressure;
+    }
+}
+
+static void copyidtratto(QList<struct point_s> *src, QList<struct point_s> *dest){
+    int i, len;
+    for(i=0, len = src->length(); i<len; i++){
+        dest->operator[](i).idtratto = src->operator[](i).idtratto;
+    }
+}
+
+static void copyall(QList<struct point_s>  *src, QList<struct point_s> *dest){
+    dest->clear();
+    *dest = *src;
+}
 
 
 /*
