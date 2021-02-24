@@ -18,9 +18,16 @@ struct mail_s{
     char m_mail[STRLEN_MAIL+1];
 };
 
+/*
+ * sha 256 len is 64 caracter [one for termination caracter]
+*/
+#define STRPASS 65
+
 struct struct_user{
     struct name_s m_name;
     struct mail_s m_mail;
+
+    char password[STRPASS];
 
     int m_money_into_account;
 };

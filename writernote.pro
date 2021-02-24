@@ -20,7 +20,7 @@ CONFIG += c++17
 
 ## for enable cloud instance [remove when compiling for release] [see https://github.com/giacomogroppi/writernote-qt/blob/master/help/compile-cloud.md]
 
-#DEFINES += "CLOUD"
+DEFINES += "CLOUD"
 
 defined(CLOUD){
     DEFINES += "CLOUD_TESTING"

@@ -1,7 +1,9 @@
 #ifndef URL_H
 #define URL_H
 
-#ifndef NO_CLOUD
+#ifdef CLOUD
+
+#define PORT 8080
 
 #ifdef CLOUD_TESTING
 #define URL_SERVER "127.0.0.1"
@@ -10,6 +12,6 @@
 #define URL_SERVER "writernote-b.ddns.net"
 #endif //CLOUD_TESTING
 
-#endif //NO_CLOUD
+#endif //CLOUD
 
 #endif // URL_H
