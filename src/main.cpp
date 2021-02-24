@@ -21,8 +21,11 @@ int main(int argc, char *argv[])
 
     char * m_last_open = NULL;
     if(argc == 1){
+#ifdef CLOUD
+        last_open a(nullptr, user);
+#else
         last_open a(nullptr);
-
+#endif
         a.setDataReturn(&m_last_open);
 
         if(a.load_data_() != 0){

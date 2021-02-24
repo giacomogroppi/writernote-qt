@@ -39,4 +39,5 @@ static const char * SHA256HashString(std::string aString){
 
     return temp;
 }
+
 #endif //CLOUD

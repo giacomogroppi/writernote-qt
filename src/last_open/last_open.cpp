@@ -14,6 +14,7 @@
 #include "string.h"
 #include "../cloud/utils/downloadfile.h"
 #include "../utils/remove_key/remove_key.h"
+#include "../datawrite/qfilechoose.h"
 
 static void copy(last_file *s,
                  char *pos = NULL,
@@ -23,11 +24,12 @@ static void copy(last_file *s,
 
 static void tidyup(last_file *, int);
 
-last_open::last_open(QWidget *parent) :
+last_open::last_open(QWidget *parent, struct struct_user *user) :
     QDialog(parent),
     ui(new Ui::last_open)
 {
     ui->setupUi(this);
+    m_user = user;
 }
 
 last_open::~last_open()
@@ -199,7 +201,13 @@ void last_open::deleteInElement(int index){
 
 void last_open::downloadIn(int index){
 #ifdef CLOUD
-    downloadfile(nullptr, "", "");
+    QString m_to;
+    qfilechoose temp(NULL);
+    if(!temp.filechoose(&m_to))
+        return;
+
+    dowloadfile(m_user, m_last->posizione, m_to);
+
 #else
     Q_UNUSED(index);
     dialog_critic("Your version of writernote was not\ncompiled without the cloud package");

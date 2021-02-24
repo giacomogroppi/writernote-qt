@@ -6,6 +6,14 @@
 
 #include "shared_definition.h"
 
-int dowloadfile(struct struct_user *, QString &namefile, QString &to);
+enum downloadfile{
+    not_register,
+    passoword_wronge,
+    server_error,
+    file_not_exist,
+    ok
+};
+
+downloadfile dowloadfile(struct struct_user *, const char *namefile, QString &to);
 
 #endif // DOWNLOADFILE_H

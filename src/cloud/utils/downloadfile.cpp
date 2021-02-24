@@ -4,8 +4,8 @@
  * todo:
  * implement this function to download a file from the server
 */
-int dowloadfile(struct_user *user, QString &namefile, QString &to)
+downloadfile dowloadfile(struct_user *user, const char *namefile, QString &to)
 {
 
-    return 0;
+    return downloadfile::ok;
 }
