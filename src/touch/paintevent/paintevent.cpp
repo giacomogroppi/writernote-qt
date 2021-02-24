@@ -27,7 +27,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     this->disegnafoglio();
 
     if(this->isloading)
-        laod(&painter);
+        load(&painter);
 
     /* la funzione viene lanciata quando si sta riascoltando l'audio */
     if(this->riascoltovariable)
@@ -38,10 +38,19 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
 #define C(x) x->datatouch->m_point
 
-void TabletCanvas::laod(QPainter *painter){
+void TabletCanvas::load(QPainter *painter,
+                        double m,
+                        int size_orizzontale,
+                        int size_verticale,
+                        double *y_last){
     int i, len;
 
     m_pixmap.fill(Qt::white);
+
+    if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
+        size_orizzontale = width();
+        size_verticale = m_pixmap.height();
+    }
 
     for(i = 1, len = C(data).length(); i < len-1; i++)
     {
@@ -66,21 +75,27 @@ void TabletCanvas::laod(QPainter *painter){
             }
             else if(i
                     && C(data).at(i).m_y != (double)0
-                    && C(data).at(i).m_y != (double)m_pixmap.height()
-                    && C(data).at(i).m_x != width()
+                    && C(data).at(i).m_y != (double)size_orizzontale
+                    && C(data).at(i).m_x != size_verticale
                     && C(data).at(i).idtratto == C(data).at(i - 1).idtratto){
 
 
                 this->updateBrush_load(C(data).at(i).m_pressure, setcolor(&C(data).at(i).m_color));
 
                 painter->setPen(this->m_pen);
-                painter->drawLine(this->lastPoint.pos,
-                              QPointF(C(data).at(i).m_x, C(data).at(i).m_y));
+                painter->drawLine(this->lastPoint.pos*m,
+                              QPointF(C(data).at(i).m_x*m, C(data).at(i).m_y*m));
 
             }
 
             lastPoint.pos.setX(C(data).at(i).m_x);
             lastPoint.pos.setY(C(data).at(i).m_y);
+
+            /*
+             * for pdf export
+            */
+            if(y_last)
+                *y_last = C(data).at(i).m_y;
         }
     }
 

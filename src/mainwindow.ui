@@ -257,7 +257,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave_As"/>
     <addaction name="actionPrint"/>
-    <addaction name="actiontoppf"/>
+    <addaction name="actiontopdf"/>
     <addaction name="startrecording"/>
     <addaction name="stoprecordingbotton"/>
     <addaction name="actionAuto_Save"/>
@@ -739,7 +739,7 @@
     <string>selezionedisegno</string>
    </property>
   </action>
-  <action name="actiontoppf">
+  <action name="actiontopdf">
    <property name="icon">
     <iconset resource="../writernote.qrc">
      <normaloff>:/image/images/pdf-icon.png</normaloff>:/image/images/pdf-icon.png</iconset>

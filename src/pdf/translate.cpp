@@ -5,7 +5,6 @@
 void topdf::translate(){
     int i, len;
 
-    int k;
     double delta_y, delta_x;
 
     delta_y = data->datatouch->m_point.first().m_y;

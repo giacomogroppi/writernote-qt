@@ -7,9 +7,10 @@
 #include <QPdfWriter>
 #include <QPageSize>
 
-topdf::topdf(QString *path)
+topdf::topdf(QString *path, TabletCanvas *canvas)
 {
     this->path = path;
+    m_canvas = canvas;
 }
 
 static void newpage(datastruct *datastruct, double temp){
@@ -79,8 +80,7 @@ bool topdf::createpdf(){
     return true;
 }
 
-
-void MainWindow::on_actiontoppf_triggered()
+void MainWindow::on_actiontopdf_triggered()
 {
     if(m_currenttitle.datatouch->m_point.isEmpty())
         return dialog_critic("There is nothing to convert to pdf");
@@ -92,7 +92,7 @@ void MainWindow::on_actiontoppf_triggered()
         return;
 
 
-    topdf filepdf(&path_pdf);
+    topdf filepdf(&path_pdf, m_canvas);
 
     filepdf.copy(&m_currenttitle);
 

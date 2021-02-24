@@ -15,7 +15,13 @@ void topdf::draw( QPainter *painter,
                   int size_verticale,
                   double *y_last){
 
-    int i_, len;
+    m_canvas->load(painter,
+                   m,
+                   size_orizzontale,
+                   size_verticale,
+                   y_last);
+
+/*    int i_, len;
 
 
     len = C(data).length();
@@ -54,7 +60,7 @@ void topdf::draw( QPainter *painter,
             lastPoint.pos.setY(C(data).at(i_).m_y);
 
             *y_last = C(data).at(i_).m_y;
-
+*/
         /*
          * last data struct
         */
@@ -89,6 +95,6 @@ void topdf::draw( QPainter *painter,
 
             lastPoint.pos.setX(data->datatouch->x.at(i_));
             lastPoint.pos.setY(data->datatouch->y.at(i_));*/
-        }
-    }
+        //}
+    //}
 }

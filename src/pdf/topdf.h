@@ -3,10 +3,13 @@
 #include "../touch/datastruct/datastruct.h"
 #include "../mainwindow.h"
 
+#include "../touch/tabletcanvas.h"
 
 class topdf
 {
 private:
+    TabletCanvas *m_canvas;
+
     currenttitle_class *data;
     QString *path;
 
@@ -30,7 +33,7 @@ public:
         delete data;
     };
 
-    topdf(QString *path);
+    topdf(QString *path, TabletCanvas *canvas);
     bool createpdf();
 
     inline void copy(currenttitle_class *datastruct_){

@@ -143,8 +143,6 @@ SOURCES += \
     src/touch/paintevent/draw_image.cpp \
     src/touch/paintevent/gomma.cpp \
     src/touch/paintevent/paintevent.cpp \
-    src/touch/paintevent/zoomin.cpp \
-    src/touch/paintevent/zoomon.cpp \
     src/touch/pen/load_settings_pen_ui.cpp \
     src/touch/pen/pen_ui.cpp \
     src/touch/pen/save_settings_pen_ui.cpp \

@@ -212,8 +212,6 @@ private slots:
 
     void on_actionSave_As_triggered();
 
-    void on_actiontoppf_triggered();
-
     void on_actionSource_code_triggered();
 
     void on_insertimagebotton_triggered(QAction *arg1);
@@ -239,6 +237,8 @@ private slots:
     void on_actionVersion_triggered();
 
     void on_actionBug_report_triggered();
+
+    void on_actiontopdf_triggered();
 
 private:
     /* gestione dell'audio */

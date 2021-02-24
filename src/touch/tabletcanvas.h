@@ -95,7 +95,13 @@ public:
         int xdrawing;
         int ydrawing;
     } pointload;
-    void laod(QPainter *);
+
+#define DEFAULT_PASS_ARGUMENT_LOAD -1
+    void load(QPainter *,
+              double m = (double)1,
+              int size_orizzontale = DEFAULT_PASS_ARGUMENT_LOAD,
+              int size_verticale = DEFAULT_PASS_ARGUMENT_LOAD,
+              double *y_last = NULL);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     void updateBrush_load(float , QColor );
