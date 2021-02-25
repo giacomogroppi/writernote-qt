@@ -52,7 +52,7 @@
 /* cloud */
 #define GROUPNAME_CLOUD_USER "groupname-cloud-user"
 #define KEY_USER_CLOUD_IS_DEFINED "key-user-is-defined" /* bool value. true -> ok false -> return null */
-#define KEY_GROUPNAME_USER_CLOUD "key-user"
+#define KEY_USER_CLOUD_STRUCT "key-user"
 #endif
 
 /* list left hidden */

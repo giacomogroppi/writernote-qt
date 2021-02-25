@@ -13,13 +13,15 @@
 
 void save_recent_user(struct struct_user *data){
     QSettings setting(ORGANIZATIONAME, FILE_NAME_USER_CLOUD);
-    setting.beginGroup(GROUPNAME_USER_CLOUD);
+    setting.beginGroup(GROUPNAME_CLOUD_USER);
 
 
-    setting.setValue(GROUPNAME_USER_CLOUD_IS_DEFINED, true);
+    setting.setValue(KEY_USER_CLOUD_IS_DEFINED, true);
 
     QByteArray array;
     array.setRawData((const char *)data, sizeof(struct struct_user));
+
+    setting.setValue(KEY_USER_CLOUD_STRUCT, array);
 
     setting.endGroup();
 
@@ -35,15 +37,17 @@ struct struct_user * load_recent_user(){
     QSettings setting(ORGANIZATIONAME, FILE_NAME_USER_CLOUD);
     setting.beginGroup(GROUPNAME_CLOUD_USER);
 
-    if(!setting.value(KEY_USER_CLOUD_IS_DEFINED, false).toBool())
-        return user;
+    if(!setting.value(KEY_USER_CLOUD_IS_DEFINED, false).toBool()){
+        setting.endGroup();
+        return user; /*NULL*/
+    }
 
 
     QByteArray array;
     QByteArray default_loading;
     default_loading.append((QString)NOT_USER_RECENT);
 
-    array = setting.value(KEY_GROUPNAME_USER_CLOUD, default_loading).toByteArray();
+    array = setting.value(KEY_USER_CLOUD_STRUCT, default_loading).toByteArray();
 
     if(array == (QString)NOT_USER_RECENT){
         setting.endGroup();
@@ -56,7 +60,7 @@ struct struct_user * load_recent_user(){
      * return null and delete the key inside the settings
     */
     if(array.size() != sizeof(struct struct_user)){
-        remove_key(KEY_USER_CLOUD_IS_DEFINED, GROUPNAME_CLOUD_USER);
+        remove_key(KEY_USER_CLOUD_STRUCT, GROUPNAME_CLOUD_USER);
         setting.setValue(KEY_USER_CLOUD_IS_DEFINED, false);
         setting.endGroup();
 
