@@ -8,6 +8,8 @@ namespace n_request {
 
         download_file = 2,
         save_file = 3,
+
+        balance = 4,
     };
 }
 

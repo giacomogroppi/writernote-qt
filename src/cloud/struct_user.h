@@ -1,22 +1,12 @@
 #ifndef STRUCT_USER_H
 #define STRUCT_USER_H
 
-#define STRLEN_NAME 100
-#define STRLEN_MAIL 50
-
 #define TYPE_ABBONATO 1
 #define TYPE_NONABBONATO 0
 
 #define NOT_USER_RECENT -1
 
-struct name_s{
-    char m_name[STRLEN_NAME+1];
-    char m_surname[STRLEN_NAME+1];
-};
-
-struct mail_s{
-    char m_mail[STRLEN_MAIL+1];
-};
+#include "struct_mail.h"
 
 /*
  * sha 256 len is 64 caracter [one for termination caracter]

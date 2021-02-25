@@ -18,7 +18,7 @@ cloud_controll::cloud_controll(struct struct_user *user)
 
 }
 
-n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_request, struct_user *user)
+n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_request, void **pointer, struct_user *user)
 {
     if (user == nullptr && m_user == NULL){
         return n_error_cloud::not_login;

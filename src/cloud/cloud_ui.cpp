@@ -2,12 +2,27 @@
 #include "ui_cloud_ui.h"
 #include <QMessageBox>
 #include "../windows/mostra_finestra_i.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
-cloud_ui::cloud_ui(QDialog *parent) :
+cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
     QDialog(parent),
+    m_controll(cloud),
     ui(new Ui::cloud_ui)
 {
     ui->setupUi(this);
+
+    void *pointer;
+    auto res = m_controll->action(n_request::balance, &pointer);
+    if(res != n_error_cloud::ok){
+        if(res == n_error_cloud::password_wrong){
+            dialog_critic("Your password is wronge");
+        }else if(res == n_error_cloud::server_down){
+            dialog_critic("Unfortunately i can't connect with the server");
+        }
+
+    }else{
+        ui->balance->setText(QString::number(* (int*) pointer));
+    }
 }
 
 cloud_ui::~cloud_ui()
@@ -36,6 +51,7 @@ void cloud_ui::on_ac_1_clicked()
 {
     mostra_finestra_i(WEB1);
 }
+
 #define WEB3 "https://writernote-b.ddns.net/3_m"
 void cloud_ui::on_ac_3_clicked()
 {

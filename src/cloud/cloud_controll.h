@@ -25,7 +25,7 @@ public:
     cloud_controll(struct struct_user *user = NULL);
 
     /*by default it will be use m_user [from the instance of the class]*/
-    n_error_cloud::e_error_cloud action(n_request::e_request, struct struct_user *user = NULL);
+    n_error_cloud::e_error_cloud action(n_request::e_request, void **pointer,struct struct_user *user = NULL);
 
 private:
     QTcpSocket *m_socket = NULL;

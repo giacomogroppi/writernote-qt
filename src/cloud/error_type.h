@@ -10,7 +10,8 @@ namespace n_error_cloud {
         not_login = 1,
         not_register = 2,
         password_wrong = 3,
-        ok = 4
+        ok = 4,
+        server_down = 5
 
     };
 }
