@@ -48,8 +48,12 @@
 
 #define FILE_NAME_USER_CLOUD "writernote-user"
 
-#define GROUPNAME_USER_CLOUD_IS_DEFINED "group-user-is-defined"
-#define GROUPNAME_USER_CLOUD "group-user"
+#ifdef CLOUD
+/* cloud */
+#define GROUPNAME_CLOUD_USER "groupname-cloud-user"
+#define KEY_USER_CLOUD_IS_DEFINED "key-user-is-defined" /* bool value. true -> ok false -> return null */
+#define KEY_GROUPNAME_USER_CLOUD "key-user"
+#endif
 
 /* list left hidden */
 #define GROUPNAME_LIST_HIDDEN "list_left_group"

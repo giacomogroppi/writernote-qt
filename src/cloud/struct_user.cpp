@@ -7,6 +7,8 @@
 #include "stdlib.h"
 #include <QDataStream>
 
+#include "../utils/remove_key/remove_key.h"
+
 #ifdef CLOUD
 
 void save_recent_user(struct struct_user *data){
@@ -31,7 +33,9 @@ struct struct_user * load_recent_user(){
     struct struct_user *user = NULL;
 
     QSettings setting(ORGANIZATIONAME, FILE_NAME_USER_CLOUD);
-    if(!setting.value(GROUPNAME_USER_CLOUD_IS_DEFINED, false).toBool())
+    setting.beginGroup(GROUPNAME_CLOUD_USER);
+
+    if(!setting.value(KEY_USER_CLOUD_IS_DEFINED, false).toBool())
         return user;
 
 
@@ -39,11 +43,27 @@ struct struct_user * load_recent_user(){
     QByteArray default_loading;
     default_loading.append((QString)NOT_USER_RECENT);
 
-    array = setting.value(GROUPNAME_USER_CLOUD, default_loading).toByteArray();
+    array = setting.value(KEY_GROUPNAME_USER_CLOUD, default_loading).toByteArray();
 
-    if(array.toStdString() == std::to_string(NOT_USER_RECENT))
+    if(array == (QString)NOT_USER_RECENT){
+        setting.endGroup();
         return NULL;
+    }
 
+    /*
+     * either the data has been corrupted or the user
+     * struct had to be changed and you have to
+     * return null and delete the key inside the settings
+    */
+    if(array.size() != sizeof(struct struct_user)){
+        remove_key(KEY_USER_CLOUD_IS_DEFINED, GROUPNAME_CLOUD_USER);
+        setting.setValue(KEY_USER_CLOUD_IS_DEFINED, false);
+        setting.endGroup();
+
+        return NULL;
+    }
+
+    setting.endGroup();
 
     /* memory of array.data() is automaticaly relised after function end */
     void *temp = array.data();
@@ -53,6 +73,7 @@ struct struct_user * load_recent_user(){
     memcpy(user, temp, sizeof(struct struct_user));
 
     return user;
+
 
 }
 #endif //CLOUD
