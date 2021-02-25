@@ -7,12 +7,16 @@
 #include "last_open/last_open.h"
 
 #include "cloud/struct_user.h"
+#include "cloud/cloud_controll.h"
 
 int main(int argc, char *argv[])
 {
 #ifdef CLOUD
     struct struct_user *user;
     user = load_recent_user();
+
+    cloud_controll m_cloud(user);
+
 #endif
 
     TabletApplication app(argc, argv);

@@ -180,6 +180,8 @@ SOURCES += \
 
 
 HEADERS += \
+    src/cloud/error_type.h \
+    src/cloud/request_type.h \
     src/cloud/utils/downloadfile.h \
     src/cloud/utils/shared_definition.h \
     src/cloud/utils/toencrypt.h \

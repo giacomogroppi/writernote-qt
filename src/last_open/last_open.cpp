@@ -24,12 +24,15 @@ static void copy(last_file *s,
 
 static void tidyup(last_file *, int);
 
-last_open::last_open(QWidget *parent, struct struct_user *user) :
+last_open::last_open(QWidget *parent,
+                     struct struct_user *user,
+                     cloud_controll *controll) :
     QDialog(parent),
     ui(new Ui::last_open)
 {
     ui->setupUi(this);
     m_user = user;
+    m_controll = controll;
 }
 
 last_open::~last_open()

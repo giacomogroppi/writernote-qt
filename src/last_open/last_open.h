@@ -8,6 +8,7 @@
 #include "element/element_ui.h"
 #include "struct_last_file.h"
 #include "../cloud/struct_user.h"
+#include "../cloud/cloud_controll.h"
 
 namespace Ui {
 class last_open;
@@ -20,7 +21,9 @@ class last_open : public QDialog
 public:
     void setDataReturn(char **data);
 
-    explicit last_open(QWidget *parent = nullptr, struct struct_user *user = nullptr);
+    explicit last_open(QWidget *parent = nullptr,
+                       struct struct_user *user = nullptr,
+                       cloud_controll *controll = nullptr);
     ~last_open();
 
     void setting_data(struct last_file *);
@@ -30,6 +33,8 @@ public:
     struct struct_user *m_user;
 
 private:
+    cloud_controll *m_controll;
+
     void updateList();
 
     char **m_style_return;
