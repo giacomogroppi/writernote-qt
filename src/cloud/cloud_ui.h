@@ -16,7 +16,11 @@ public:
     ~cloud_ui();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_button_info_clicked();
+
+    void on_close_button_clicked();
+
+    void on_ac_1_clicked();
 
 private:
     Ui::cloud_ui *ui;

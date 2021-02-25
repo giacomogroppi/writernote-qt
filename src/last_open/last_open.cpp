@@ -26,13 +26,15 @@ static void tidyup(last_file *, int);
 
 last_open::last_open(QWidget *parent,
                      struct struct_user *user,
-                     cloud_controll *controll) :
+                     cloud_controll *controll,
+                     bool *close_all) :
     QDialog(parent),
     ui(new Ui::last_open)
 {
     ui->setupUi(this);
     m_user = user;
     m_controll = controll;
+    m_closeall = close_all;
 }
 
 last_open::~last_open()
@@ -294,3 +296,9 @@ static void tidyup(last_file *m_data, int m_quanti){
     }
 }
 
+
+void last_open::on_close_all_clicked()
+{
+    *m_closeall = true;
+    this->close();
+}

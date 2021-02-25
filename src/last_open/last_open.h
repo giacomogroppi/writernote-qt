@@ -23,7 +23,8 @@ public:
 
     explicit last_open(QWidget *parent = nullptr,
                        struct struct_user *user = nullptr,
-                       cloud_controll *controll = nullptr);
+                       cloud_controll *controll = nullptr,
+                       bool *m_closeall = nullptr);
     ~last_open();
 
     void setting_data(struct last_file *);
@@ -47,11 +48,13 @@ private:
 
     void deleteIn(int);
     int m_quanti;
+    bool *m_closeall;
 private slots:
     void on_clicked(int);
     void on_open_button_clicked();
     void deleteInElement(int);
     void downloadIn(int);
+    void on_close_all_clicked();
 };
 
 #endif // LAST_OPEN_H

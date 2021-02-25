@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 
 #endif
 
+    bool close_all = false;
     TabletApplication app(argc, argv);
     TabletCanvas *canvas = new TabletCanvas;
     app.setCanvas(canvas);
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
     char * m_last_open = NULL;
     if(argc == 1){
 #ifdef CLOUD
-        last_open a(nullptr, user);
+        last_open a(nullptr, user, &m_cloud, &close_all);
 #else
         last_open a(nullptr);
 #endif
@@ -35,6 +36,17 @@ int main(int argc, char *argv[])
         if(a.load_data_() != 0){
             a.exec();
         }
+    }
+
+    /*
+     * set by load_open to true if the user want to quit all
+    */
+    if(close_all){
+#ifdef CLOUD
+        if(user)
+            delete user;
+#endif
+        return 0;
     }
 
     //QApplication a(argc, argv);

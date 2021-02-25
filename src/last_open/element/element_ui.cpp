@@ -46,6 +46,9 @@ void element_ui::set_main()
     }
     else{
         ui->label_where->setText("Local");
+#ifdef CLOUD
+        this->ui->button_download->setVisible(false);
+#endif
     }
 
     if(m_data->owner.type_user == TYPE_OWNER_YOU){
