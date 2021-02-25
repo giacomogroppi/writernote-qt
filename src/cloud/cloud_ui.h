@@ -22,6 +22,12 @@ private slots:
 
     void on_ac_1_clicked();
 
+    void on_ac_3_clicked();
+
+    void on_ac_6_clicked();
+
+    void on_ac_12_clicked();
+
 private:
     Ui::cloud_ui *ui;
 };

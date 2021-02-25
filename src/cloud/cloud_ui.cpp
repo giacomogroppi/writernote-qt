@@ -36,3 +36,20 @@ void cloud_ui::on_ac_1_clicked()
 {
     mostra_finestra_i(WEB1);
 }
+#define WEB3 "https://writernote-b.ddns.net/3_m"
+void cloud_ui::on_ac_3_clicked()
+{
+    mostra_finestra_i(WEB3);
+}
+
+#define WEB6 "https://writernote-b.ddns.net/6_m"
+void cloud_ui::on_ac_6_clicked()
+{
+    mostra_finestra_i(WEB6);
+}
+
+#define WEB12 "https://writernote-b.ddns.net/6_m"
+void cloud_ui::on_ac_12_clicked()
+{
+    mostra_finestra_i(WEB12);
+}
