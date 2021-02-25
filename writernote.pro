@@ -22,7 +22,8 @@ CONFIG += c++17
 
 DEFINES += "CLOUD"
 
-defined(CLOUD){
+contains(DEFINES, CLOUD){
+    message("Testing enable")
     DEFINES += "CLOUD_TESTING"
 }
 
@@ -302,13 +303,18 @@ android{
 }else{
     CONFIG += link_pkgconfig
     PKGCONFIG += libzip
-    defined(CLOUD){
+
+    contains(DEFINES, CLOUD){
+        message( "Adding lib for crypto" )
         unix{
-            PKGCONFIG += libcrypto
+            LIBS += -lcryptopp
         }
         else{
             LIBS += crypto++
         }
+    }
+    else{
+        message("cloud disable for compilation")
     }
 }
 

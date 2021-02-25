@@ -4,17 +4,17 @@
 #ifdef CLOUD
 
 #include "crypto++/cryptlib.h"
-#include "crypto++/sha.h"
-#include "crypto++/hex.h"
+#include "crypto++/modes.h"
+#include "crypto++/filters.h"
+#include "crypto++/aes.h"
+#include "crypto++/osrng.h"
+#include "crypto++/strciphr.h"
 
 #include <iostream>
 #include <iomanip>
 
-#include "cryptopp/modes.h"
-#include "cryptopp/aes.h"
-#include "cryptopp/filters.h"
-
 #include "cryptopp/base64.h"
+
 
 static const char * SHA256HashString(std::string );
 
@@ -27,6 +27,7 @@ const char * toencrypt(const char *data)
 static const char * SHA256HashString(std::string aString){
     std::string digest;
     CryptoPP::SHA256 hash;
+
 
     CryptoPP::StringSource foo(aString, true,
     new CryptoPP::HashFilter(hash,
