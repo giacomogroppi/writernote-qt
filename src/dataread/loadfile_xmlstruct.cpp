@@ -6,18 +6,14 @@
 
 #define LOAD_STRINGA(x, y) if(load_stringa(x,y) == ERROR) goto free_;
 static int load_stringa(zip_file_t *f, QString *stringa){
-    /* return 0 if all is ok, else return -1 */
     int temp;
 
-    // legge quanto è lungo il nome del file
-    SOURCE_READ(f, &temp, sizeof(qint32));
-    //check += source_read_ext(f, &temp, sizeof(int));
+    SOURCE_READ(f, &temp, sizeof(int));
 
     if(temp){
         char *vartempp = new char[temp + 1];
 
         SOURCE_READ(f, vartempp, sizeof(char)*temp);
-        //check += source_read_ext(f, vartempp, sizeof(char)*temp);
 
         vartempp[temp] = '\0';
 
@@ -64,7 +60,7 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 
     return OK;
 }
-
+#define CLOSE_ZIP(x, y) zip_fclose(x);zip_close(y);
 #define LOAD_IMAGE(x,y) if(load_image(x, y) != OK)goto free_;
 #define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
 int xmlstruct::loadfile(const char *nameFile){
@@ -95,12 +91,9 @@ int xmlstruct::loadfile(const char *nameFile){
 
     LOAD_STRINGA(f, &currenttitle->nome_copybook)
 
-    SOURCE_READ_GOTO(f, &temp, sizeof(int));
+    SOURCE_READ_GOTO(f, &currenttitle->se_registato, sizeof(bool));
 
-    currenttitle->se_registato = temp;
-
-    SOURCE_READ_GOTO(f, &temp, sizeof(int));
-    currenttitle->se_tradotto = temp;
+    SOURCE_READ_GOTO(f, &currenttitle->se_tradotto, sizeof(bool));
 
     LOAD_STRINGA(f, &currenttitle->testi)
 
@@ -116,22 +109,18 @@ int xmlstruct::loadfile(const char *nameFile){
 
     LOAD_IMAGE(&currenttitle->immagini, f);
 
-    zip_fclose(f);
-    zip_close(filezip);
-
+    CLOSE_ZIP(f, filezip);
     return OK;
 
 
     free_:
-    zip_fclose(f);
-    zip_close(filezip);
+    CLOSE_ZIP(f, filezip);
     return ERROR;
 
     /*
      * in case we can not operate with the file because it's too old
     */
     error_version:
-    zip_fclose(f);
-    zip_close(filezip);
+    CLOSE_ZIP(f, filezip);
     return ERROR_VERSION;
 }

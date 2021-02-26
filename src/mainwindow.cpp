@@ -179,9 +179,14 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     /* a questo punto deve aprire il nuovo copybook */
     if(m_indice.titolo[m_indice.titolo.indexOf(item->text())] != ""){
         auto *file_ = new xmlstruct(&m_path, &m_indice, &m_currenttitle);
-        if(!file_->loadfile((item->text() + ".xml").toUtf8().constData())){
+        int res = file_->loadfile((item->text() + ".xml").toUtf8().constData());
+
+        if(res == ERROR){
             delete file_;
             return dialog_critic("We had a problem opening the new copybook");
+        }else if(res == ERROR_VERSION){
+            delete file_;
+            return dialog_critic("The version you created this file with is too old");
         }
     }
     else{

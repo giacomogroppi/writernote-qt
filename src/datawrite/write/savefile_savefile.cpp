@@ -4,6 +4,9 @@
 #include "../../images/save_images.h"
 
 #define SAVE_IMAGE(x, y) if(save_image(x, y) != OK) goto delete_;
+#define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
+
+static int save_string(zip_source_t *, const char *);
 
 int savefile::savefile_check_file(){
     int error, temp, len, i, check;
@@ -26,24 +29,15 @@ int savefile::savefile_check_file(){
 
     SOURCE_WRITE(file, &currenttitle->versione, sizeof(int))
 
-    /* name copybook */
-    temp = currenttitle->nome_copybook.length();
-    SOURCE_WRITE(file, &temp, sizeof(int))
-    if(temp)
-        SOURCE_WRITE(file, currenttitle->nome_copybook.toUtf8().constData(), sizeof(char)*temp)
+    SAVE_STRINGA(file, currenttitle->nome_copybook.toUtf8().constData());
 
     SOURCE_WRITE(file, &currenttitle->se_registato, sizeof(bool))
 
     SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(bool))
 
-    temp = currenttitle->testi.length();
-    SOURCE_WRITE(file, &temp, sizeof(qint32));
-    SOURCE_WRITE(file, currenttitle->testi.toUtf8().constData(), sizeof(char)*temp)
+    SAVE_STRINGA(file, currenttitle->testi.toUtf8().constData());
 
-    temp = currenttitle->audio_position_path.length();
-    SOURCE_WRITE(file, &temp, sizeof(int))
-
-    SOURCE_WRITE(file, currenttitle->audio_position_path.toUtf8().constData(), sizeof(char)*temp)
+    SAVE_STRINGA(file, currenttitle->audio_position_path.toUtf8().constData())
 
     SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(bool))
 
@@ -53,12 +47,9 @@ int savefile::savefile_check_file(){
     /* testinohtml */
     len = currenttitle->testinohtml.length();
     SOURCE_WRITE(file, &len, sizeof(int))
-    for(i=0; i<len; i++){
-        temp = currenttitle->testinohtml.at(i).length();
-        SOURCE_WRITE(file, &temp, sizeof(int))
+    for(i=0; i<len; i++)
+        SAVE_STRINGA(file, currenttitle->testinohtml.at(i).toUtf8().constData())
 
-        SOURCE_WRITE(file, currenttitle->testinohtml.at(i).toUtf8().constData(), sizeof(char)*temp)
-    }
 
     /* posizione_iniz */
     for(i=0; i<len; i++){
@@ -66,7 +57,6 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
-    /* save images */
     SAVE_IMAGE(&currenttitle->immagini, file)
 
     check = 0;
@@ -101,4 +91,17 @@ int savefile::savefile_check_file(){
         zip_source_free(file);
         zip_close(filezip);
         return ERROR;
+}
+
+/*
+ * return ERROR or OK
+*/
+static int save_string(zip_source_t *file, const char *stringa){
+    int size = strlen(stringa);
+    SOURCE_WRITE_RETURN(file, &size, sizeof(int));
+
+    SOURCE_WRITE_RETURN(file, stringa, sizeof(char)*size);
+
+    return OK;
+
 }

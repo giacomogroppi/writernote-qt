@@ -6,8 +6,10 @@
 
 #include "last_open/last_open.h"
 
+#ifdef CLOUD
 #include "cloud/struct_user.h"
 #include "cloud/cloud_controll.h"
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -25,24 +27,21 @@ int main(int argc, char *argv[])
     app->setCanvas(canvas);
 
     char * m_last_open = NULL;
-    last_open *a = NULL;
 
     if(argc == 1){
 
 #ifdef CLOUD
-        a = new last_open(nullptr, user, &m_cloud, &close_all);
+        last_open a(nullptr, user, &m_cloud, &close_all);
 #else
         last_open a(nullptr);
 #endif
-        a->setDataReturn(&m_last_open);
+        a.setDataReturn(&m_last_open);
 
-        if(a->load_data_() != 0){
-            a->exec();
+        if(a.load_data_() != 0){
+            a.exec();
         }
     }
 
-    if(a)
-        delete a;
 
     /*
      * set by load_open to true if the user want to quit all

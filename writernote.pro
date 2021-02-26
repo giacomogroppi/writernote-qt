@@ -22,7 +22,7 @@ CONFIG += c++17
 
 ## for enable cloud instance [remove when compiling for release] [see https://github.com/giacomogroppi/writernote-qt/blob/master/help/compile-cloud.md]
 
-DEFINES += "CLOUD"
+#DEFINES += "CLOUD"
 
 contains(DEFINES, CLOUD){
     message("Testing enable")
@@ -39,10 +39,6 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 SOURCES += \
     src/audiorecord/start_recording.cpp \
-    src/cloud/button_mainwindow.cpp \
-    src/cloud/on_select.cpp \
-    src/cloud/utils/downloadfile.cpp \
-    src/cloud/utils/toencrypt.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/utils/areyousure/areyousure.cpp \
@@ -62,10 +58,6 @@ SOURCES += \
     src/audiosetting/savequalita.cpp \
     src/autosave/autosave_.cpp \
     src/autosave/autosave_mainwindow.cpp \
-    src/cloud/cloud_controll.cpp \
-    src/cloud/cloud_ui.cpp \
-    src/cloud/struct_file.cpp \
-    src/cloud/struct_user.cpp \
     src/last_open/element/element_ui.cpp \
     src/last_open/last_open.cpp \
     src/last_open/load_data.cpp \
@@ -179,16 +171,11 @@ SOURCES += \
     src/windows/mostra_finestra_i.cpp \
     src/windows/sourcecode_mainwindow.cpp \
     src/windows/updatecheck.cpp \
-    src/sheet/load_last_style.cpp
+    src/sheet/load_last_style.cpp \
+    src/cloud/button_mainwindow.cpp
 
 
 HEADERS += \
-    src/cloud/error_type.h \
-    src/cloud/request_type.h \
-    src/cloud/struct_mail.h \
-    src/cloud/utils/downloadfile.h \
-    src/cloud/utils/shared_definition.h \
-    src/cloud/utils/toencrypt.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
     src/utils/areyousure/areyousure.h \
@@ -198,11 +185,6 @@ HEADERS += \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
     src/autosave/autosave_.h \
-    src/cloud/cloud_controll.h \
-    src/cloud/cloud_ui.h \
-    src/cloud/struct_file.h \
-    src/cloud/struct_user.h \
-    src/cloud/url.h \
     src/last_open/element/element_ui.h \
     src/last_open/last_open.h \
     src/last_open/struct_last_file.h \
@@ -269,7 +251,6 @@ HEADERS += \
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
-    src/cloud/cloud_ui.ui \
     src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \
     src/mainwindow.ui \
@@ -311,6 +292,33 @@ android{
     PKGCONFIG += libzip
 
     contains(DEFINES, CLOUD){
+
+        ## cloud file add
+        SOURCES += \
+            src/cloud/cloud_controll.cpp \
+            src/cloud/cloud_ui.cpp \
+            src/cloud/struct_file.cpp \
+            src/cloud/struct_user.cpp \
+            src/cloud/on_select.cpp \
+            src/cloud/utils/downloadfile.cpp \
+            src/cloud/utils/toencrypt.cpp
+
+        HEADERS += \
+            src/cloud/cloud_controll.h \
+            src/cloud/cloud_ui.h \
+            src/cloud/struct_file.h \
+            src/cloud/struct_user.h \
+            src/cloud/url.h \
+            src/cloud/error_type.h \
+            src/cloud/request_type.h \
+            src/cloud/struct_mail.h \
+            src/cloud/utils/downloadfile.h \
+            src/cloud/utils/shared_definition.h \
+            src/cloud/utils/toencrypt.h
+
+        FORMS += \
+            src/cloud/cloud_ui.ui
+
         message( "Adding lib for crypto" )
         unix{
             LIBS += -lcryptopp
