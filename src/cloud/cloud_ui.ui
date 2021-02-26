@@ -181,7 +181,7 @@
        <item>
         <layout class="QHBoxLayout" name="layout_repeat_password">
          <item>
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="label_repeat">
            <property name="text">
             <string>Repeat
 password</string>
@@ -232,6 +232,13 @@ password</string>
           <widget class="QPushButton" name="button_log">
            <property name="text">
             <string>log on</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="button_register">
+           <property name="text">
+            <string>Register</string>
            </property>
           </widget>
          </item>

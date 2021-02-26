@@ -11,7 +11,12 @@ cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
 {
     ui->setupUi(this);
 
+    this->setWindowTitle(NAME);
+
     this->refresh();
+
+    ui->edit_repeat->setHidden(true);
+    ui->label_repeat->setHidden(true);
 }
 
 cloud_ui::~cloud_ui()
@@ -58,3 +63,5 @@ void cloud_ui::on_ac_12_clicked()
 {
     mostra_finestra_i(WEB12);
 }
+
+

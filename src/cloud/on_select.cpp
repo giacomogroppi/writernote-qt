@@ -3,9 +3,13 @@
 
 #include "../utils/dialog_critic/dialog_critic.h"
 
-void cloud_ui::on_tab_main_currentChanged(int)
+void cloud_ui::on_tab_main_currentChanged(int index)
 {
     this->refresh();
+
+    if(index == POSITION_LOG){
+        this->on_button_log_clicked();
+    }
 }
 
 
@@ -15,8 +19,18 @@ void cloud_ui::on_tab_main_currentChanged(int)
  * temp = false -> show lon on
 */
 static void show_log_in(cloud_ui *cloud, bool temp, struct struct_user *user){
-    if(temp)
+    cloud->ui->button_register->setHidden(!temp);
+
+    cloud->ui->button_register->setCheckable(temp);
+    cloud->ui->button_log->setCheckable(temp);
+
+    if(temp){
+        cloud->setWindowTitle((QString)NAME + " - log in");
+        cloud->ui->button_register->setChecked(false);
+        cloud->ui->button_log->setChecked(true);
+
         cloud->ui->button_log->setText("Log in");
+    }
     else
         cloud->ui->button_log->setText("Log on");
 
@@ -29,7 +43,6 @@ static void show_log_in(cloud_ui *cloud, bool temp, struct struct_user *user){
 
     cloud->ui->edit_repeat->setHidden(!temp);
 }
-
 
 
 /*
@@ -66,4 +79,24 @@ void cloud_ui::refresh(){
 
         ui->balance->setText(QString::number(* (int*) pointer));
     }
+}
+
+
+void cloud_ui::on_button_log_clicked()
+{
+    this->ui->button_log->setChecked(true);
+    this->ui->button_register->setChecked(false);
+
+    this->ui->edit_repeat->setHidden(true);
+    this->ui->label_repeat->setHidden(true);
+}
+
+void cloud_ui::on_button_register_clicked()
+{
+    this->ui->button_log->setChecked(false);
+    this->ui->button_register->setChecked(true);
+
+    this->setWindowTitle((QString)NAME + " - register");
+    this->ui->edit_repeat->setHidden(false);
+    ui->label_repeat->setHidden(false);
 }

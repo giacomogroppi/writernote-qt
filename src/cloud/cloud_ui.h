@@ -4,6 +4,9 @@
 #include <QDialog>
 #include "../cloud/cloud_controll.h"
 
+#define NAME "Cloud controll"
+#define POSITION_LOG 1
+
 namespace Ui {
 class cloud_ui;
 }
@@ -34,6 +37,10 @@ private slots:
 
     void on_ac_12_clicked();
 
+
+    void on_button_log_clicked();
+
+    void on_button_register_clicked();
 
 private:
     cloud_controll *m_controll;
