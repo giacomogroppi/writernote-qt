@@ -146,7 +146,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPlainTextEdit" name="plainTextEdit">
+          <widget class="QPlainTextEdit" name="edit_mail">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -167,7 +167,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit">
+          <widget class="QTextEdit" name="edit_pass">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -189,7 +189,7 @@ password</string>
           </widget>
          </item>
          <item>
-          <widget class="QTextEdit" name="textEdit_2">
+          <widget class="QTextEdit" name="edit_repeat">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -236,7 +236,7 @@ password</string>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="button_pass">
            <property name="text">
             <string>change 
 password</string>
