@@ -15,28 +15,34 @@ int main(int argc, char *argv[])
     struct struct_user *user;
     user = load_recent_user();
 
-    cloud_controll m_cloud(user);
+    cloud_controll * m_cloud = new cloud_controll(user);
 
 #endif
 
     bool close_all = false;
-    TabletApplication app(argc, argv);
+    TabletApplication *app = new TabletApplication(argc, argv);
     TabletCanvas *canvas = new TabletCanvas;
-    app.setCanvas(canvas);
+    app->setCanvas(canvas);
 
     char * m_last_open = NULL;
+    last_open *a = NULL;
+
     if(argc == 1){
+
 #ifdef CLOUD
-        last_open a(nullptr, user, &m_cloud, &close_all);
+        a = new last_open(nullptr, user, m_cloud, &close_all);
 #else
         last_open a(nullptr);
 #endif
-        a.setDataReturn(&m_last_open);
+        a->setDataReturn(&m_last_open);
 
-        if(a.load_data_() != 0){
-            a.exec();
+        if(a->load_data_() != 0){
+            a->exec();
         }
     }
+
+    if(a)
+        delete a;
 
     /*
      * set by load_open to true if the user want to quit all
@@ -48,8 +54,6 @@ int main(int argc, char *argv[])
 #endif
         return 0;
     }
-
-    //QApplication a(argc, argv);
 
 #ifdef CLOUD
     MainWindow w(nullptr, canvas, user);
@@ -65,7 +69,7 @@ int main(int argc, char *argv[])
     }
 
     w.show();
-    int exit_code = app.exec();
+    int exit_code = app->exec();
 
 #ifdef CLOUD
     if(user)

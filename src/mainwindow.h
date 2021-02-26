@@ -65,7 +65,7 @@ public:
     bool m_outputLocationSet = false;
 
     /* gestione della riproduzione dell'audio */
-    QMediaPlayer *player;
+    QMediaPlayer *player = nullptr;
 
     TabletCanvas *m_canvas;
 

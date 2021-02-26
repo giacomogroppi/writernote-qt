@@ -12,7 +12,6 @@
 #include <string.h>
 #include <QInputDialog>
 #include <QFileDialog>
-#include <QString>
 #include "datawrite/qfilechoose.h"
 
 #include "style/abilitazioneinput.h"
@@ -55,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     connect(m_audioRecorder, &QAudioRecorder::durationChanged, this, &MainWindow::updateProgress);
     connect(m_audioRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
             &MainWindow::displayErrorMessage);
-
 
     player = new QMediaPlayer;
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);

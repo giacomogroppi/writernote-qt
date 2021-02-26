@@ -98,8 +98,12 @@ parts:
     override-build: |
       set -eux
       qmake -set prefix $SNAPCRAFT_PART_INSTALL
-      qmake DEFINES+="SNAP" DEFINES+=SNAP_VERSION
 
+      pwd
+
+      make clean
+      qmake DEFINES+="SNAP" DEFINES+=SNAP_VERSION
+      
       snapcraftctl build
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/      
       cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/

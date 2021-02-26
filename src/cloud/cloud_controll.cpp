@@ -24,11 +24,20 @@ n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_reque
         return n_error_cloud::not_login;
     }
 
-    if(m_request == n_request::e_request::login_user){
-        if(!m_socket->isWritable()){
-            if(this->connect_socket() != n_error_socket::ok_socket)
-                emit error_connection();
+    if(!m_socket->isWritable()){
+        if(this->connect_socket() != n_error_socket::ok_socket){
+            emit error_connection();
+            return n_error_cloud::server_down;
         }
+    }
+
+
+
+    if(m_request == n_request::login_user){
+
+    }else if(m_request == n_request::balance){
+        if(user == nullptr)
+            return n_error_cloud::not_login;
     }
 
     return n_error_cloud::ok;
