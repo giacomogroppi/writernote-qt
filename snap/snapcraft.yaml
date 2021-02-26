@@ -99,9 +99,6 @@ parts:
       set -eux
       qmake -set prefix $SNAPCRAFT_PART_INSTALL
 
-      pwd
-
-      make clean
       qmake DEFINES+="SNAP" DEFINES+=SNAP_VERSION
       
       snapcraftctl build
