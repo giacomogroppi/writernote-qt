@@ -8,7 +8,7 @@ static void mostra(const char *comando);
 
 #ifdef unix
 #define APPLICATION_NAME "nautilus "
-#elif defined(win32) || defined(win64)
+#elif _WIN64
 #define APPLICATION_NAME "explorer "
 #endif
 
