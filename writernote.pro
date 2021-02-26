@@ -40,6 +40,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/cloud/button_mainwindow.cpp \
+    src/cloud/on_select.cpp \
     src/cloud/utils/downloadfile.cpp \
     src/cloud/utils/toencrypt.cpp \
     src/touch/text/text_ui/text_ui.cpp \

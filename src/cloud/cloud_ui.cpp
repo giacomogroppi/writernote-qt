@@ -11,23 +11,7 @@ cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
 {
     ui->setupUi(this);
 
-    void *pointer;
-    auto res = m_controll->action(n_request::balance, &pointer);
-    if(res != n_error_cloud::ok){
-        if(res == n_error_cloud::password_wrong){
-            dialog_critic("Your password is wronge");
-        }else if(res == n_error_cloud::server_down){
-            dialog_critic("Unfortunately i can't connect with the server");
-        }else if(res == n_error_cloud::not_login){
-            /* setting balance to hide */
-            ui->balance->setHidden(true);
-        }else if(res == n_error_cloud::error_no_internet){
-            messaggio_utente("It seems you don't have internet");
-        }
-
-    }else{
-        ui->balance->setText(QString::number(* (int*) pointer));
-    }
+    this->refresh();
 }
 
 cloud_ui::~cloud_ui()

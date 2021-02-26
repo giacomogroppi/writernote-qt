@@ -27,8 +27,8 @@
 
 #include "cloud/struct_user.h"
 
-/*TESTING*/
 #include "touch/tabletcanvas.h"
+#include "cloud/cloud_controll.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -47,7 +47,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr, struct struct_user *user = nullptr);
+    MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr, struct struct_user *user = nullptr, cloud_controll *cloud = nullptr);
     ~MainWindow();
 
     QString m_currentTitle;
@@ -90,6 +90,8 @@ public:
     pen_ui *m_pen;
 
     struct struct_user *m_user;
+
+    cloud_controll *m_cloud;
 
 public slots:
 

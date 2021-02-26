@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tab_main">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="subscription">
       <attribute name="title">
@@ -229,7 +229,7 @@ password</string>
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="button_log">
            <property name="text">
             <string>log on</string>
            </property>

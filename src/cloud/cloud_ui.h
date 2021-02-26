@@ -16,6 +16,11 @@ public:
     explicit cloud_ui(QDialog *parent = nullptr, cloud_controll *m_controll = nullptr);
     ~cloud_ui();
 
+    Ui::cloud_ui *ui;
+
+public slots:
+    void on_tab_main_currentChanged(int index);
+
 private slots:
     void on_button_info_clicked();
 
@@ -29,9 +34,12 @@ private slots:
 
     void on_ac_12_clicked();
 
+
 private:
     cloud_controll *m_controll;
-    Ui::cloud_ui *ui;
+
+    void refresh();
+
 };
 
 #endif // CLOUD_UI_H

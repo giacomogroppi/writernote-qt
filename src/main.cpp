@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     struct struct_user *user;
     user = load_recent_user();
 
-    cloud_controll * m_cloud = new cloud_controll(user);
+    cloud_controll m_cloud(user);
 
 #endif
 
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     if(argc == 1){
 
 #ifdef CLOUD
-        a = new last_open(nullptr, user, m_cloud, &close_all);
+        a = new last_open(nullptr, user, &m_cloud, &close_all);
 #else
         last_open a(nullptr);
 #endif
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     }
 
 #ifdef CLOUD
-    MainWindow w(nullptr, canvas, user);
+    MainWindow w(nullptr, canvas, user, &m_cloud);
 #else
     MainWindow w(nullptr, canvas);
 #endif
