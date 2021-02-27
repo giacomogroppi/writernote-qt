@@ -85,7 +85,7 @@ int xmlstruct::loadbinario(zip_t *z){
         currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }
     
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(double));
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
 
     zip_fclose(f);
 
