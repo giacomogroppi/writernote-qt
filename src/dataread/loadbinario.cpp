@@ -21,7 +21,7 @@ int xmlstruct::loadbinario(zip_t *z){
         return false;
 
     int i, len;
-    SOURCE_READ_GOTO(f, &len, sizeof(size_t));
+    SOURCE_READ_GOTO(f, &len, sizeof(int));
 
     struct point_s temp_point;
     for(i=0; i<len; i++){
@@ -78,13 +78,14 @@ int xmlstruct::loadbinario(zip_t *z){
     }
     */
     double valoretemp;
+    
     SOURCE_READ_GOTO(f, &len, sizeof(int));
     for(i=0; i < len; i++){
         SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
         currenttitle->datatouch->posizionefoglio.append(valoretemp);
     }
     
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(double));
 
     zip_fclose(f);
 
