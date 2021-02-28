@@ -220,12 +220,11 @@ void last_open::downloadIn(int index){
 }
 
 
-#define CARATTERE ':'
-
+#define CARACTER ':'
 static void remove_c(QString *stringa){
     int i,len = stringa->length();
     for(i=0; i<len; i++)
-        if(stringa->at(i) == CARATTERE)
+        if(stringa->at(i) == CARACTER)
             stringa->remove(i);
 }
 
@@ -247,6 +246,7 @@ static int recent_private(QString first, QString second){
 
     if(m_first == m_second)
         return SAME;
+
     if(m_first > m_second)
         return MAX;
 
@@ -284,13 +284,17 @@ static bool recent(last_file *first, last_file *second){
 */
 static void tidyup(last_file *m_data, int m_quanti){
     int k;
-    last_file temp;
+    size_t s;
+    s = sizeof(last_file);
+
+    last_file *temp = new last_file;
     for(int i=0; i<m_quanti; i++){
         for(k=1; k<m_quanti; k++){
             if(recent(&m_data[i], &m_data[k])){
-                temp = m_data[i];
-                m_data[i] = m_data[k];
-                m_data[k] = temp;
+                memcpy(temp, &m_data[i], s);
+                memcpy(&m_data[i], &m_data[k], s);
+                memcpy(&m_data[k], temp, s);
+
             }
         }
     }
