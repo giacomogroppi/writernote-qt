@@ -82,16 +82,19 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     QString filep;
 
-    if(m_currenttitle.m_touch){
+    /*
+     * if we are in keyboard mode
+    */
+    if(!m_currenttitle.m_touch){
         filep = m_currenttitle.testi;
         m_currenttitle.testi = this->ui->textEdit->toHtml();
     }
 
-    bool check1 = checksimilecopybook(tempcopybook, &m_currenttitle) == OK;
+    bool check1 = checksimilecopybook(tempcopybook, &m_currenttitle) != OK_CHECK;
 
-    check1 = check1 && checksimileindice(&m_indice, tempindice);
+    check1 = check1 && (checksimileindice(&m_indice, tempindice) != OK_CHECK);
 
-    /* se è uguale sia il copybook che l'indice accetta */
+    /* if all is equal close app */
     if(check1){
         delete tempcopybook;
         delete tempindice;
@@ -99,7 +102,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    if(m_currenttitle.m_touch)
+    if(!m_currenttitle.m_touch)
         m_currenttitle.testi = filep;
 
 
