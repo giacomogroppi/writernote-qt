@@ -271,6 +271,14 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+win32{
+    message("Win 32 compilation")
+}
+
+win64{
+    message("Win 64 comilation")
+}
+
 
 android{
     QT += androidextras
@@ -289,7 +297,21 @@ android{
 
 }else{
     CONFIG += link_pkgconfig
-    PKGCONFIG += libzip
+
+
+    if(win32|win64):CONFIG(debug, debug|release){
+        ## if we are build qt for debug in qt creator we need to add libzip.a manualy
+
+        message("Debug windows enable")
+        LIBS += C:\msys64\mingw64\lib\libzip.dll.a
+
+        INCLUDEPATH += C:\msys64\mingw64\include
+
+    }
+    else{
+        PKGCONFIG += libzip
+    }
+
 
     contains(DEFINES, CLOUD){
 

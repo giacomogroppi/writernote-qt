@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-
+#define N
 #include <QApplication>
 #include "touch/tabletapplication.h"
 #include "touch/tabletcanvas.h"
