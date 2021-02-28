@@ -30,30 +30,30 @@ static int load_stringa(zip_file_t *f, QString *stringa){
 static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int> * data){
     int check = 0, i, lunghezza, temp;
 
-    SOURCE_READ(f, &lunghezza, sizeof(qint32));
-    //check += source_read_ext(f, &lunghezza, sizeof(int));
-
-    if(lunghezza){
-        char *variabiletemp;
-
-        for(i=0; i<lunghezza; i++){
-            SOURCE_READ(f, &temp, sizeof(qint32));
-            check += source_read_ext(f, &temp, sizeof(int));
+    SOURCE_READ(f, &lunghezza, sizeof(int));
+    if(!lunghezza)
+        return OK;
 
 
-            variabiletemp = new char[temp + 1];
-
-            SOURCE_READ(f, variabiletemp, sizeof(char)*temp);
-
-            variabiletemp[temp] = '\0';
-
-            lista->append(variabiletemp);
-            delete [] variabiletemp;
-        }
-    }
+    char *variabiletemp;
 
     for(i=0; i<lunghezza; i++){
-        SOURCE_READ(f, &temp, sizeof(qint32));
+        SOURCE_READ(f, &temp, sizeof(int));
+        check += source_read_ext(f, &temp, sizeof(int));
+
+        variabiletemp = new char[temp + 1];
+
+        SOURCE_READ(f, variabiletemp, sizeof(char)*temp);
+
+        variabiletemp[temp] = '\0';
+
+        lista->append(variabiletemp);
+        delete [] variabiletemp;
+    }
+
+
+    for(i=0; i<lunghezza; i++){
+        SOURCE_READ(f, &temp, sizeof(int));
 
         data->append(temp);
     }
@@ -63,12 +63,12 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 #define CLOSE_ZIP(x, y) zip_fclose(x);zip_close(y);
 #define LOAD_IMAGE(x,y) if(load_image(x, y) != OK)goto free_;
 #define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
+
 int xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
     currenttitle->datatouch->reset();
 
     int err = 0;
-    int temp;
 
     zip_t *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
     if (filezip == NULL)

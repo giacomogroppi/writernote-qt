@@ -18,6 +18,8 @@ QDate current_day(){
 
 #define C 3
 
+static QString to_string(int);
+
 QString current_day_string(){
     int day[C];
     day[0] = QDate::currentDate().year();
@@ -26,8 +28,16 @@ QString current_day_string(){
 
     QString string_return = "";
     for(int i=0; i<C; i++){
-        string_return += TOSTRING(day[i]) + SPACER;
+        string_return += to_string(day[i]) + SPACER;
     }
 
     return string_return;
+}
+
+static QString to_string(int num){
+    QString t = TOSTRING(num);
+    if(t.length() == 1)
+        t = "0" + t;
+
+    return t;
 }
