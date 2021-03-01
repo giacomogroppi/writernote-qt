@@ -1,6 +1,8 @@
 #ifndef MOSTRA_EXPLORER_H
 #define MOSTRA_EXPLORER_H
 
-void mostra_explorer(const char *posizione);
+#include <QString>
+
+void mostra_explorer(QString );
 
 #endif // MOSTRA_EXPLORER_H
