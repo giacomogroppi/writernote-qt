@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 #ifdef CLOUD
         last_open a(nullptr, user, &m_cloud, &close_all);
 #else
-        last_open a(nullptr);
+        last_open a(nullptr, nullptr, nullptr, &close_all);
 #endif
         a.setDataReturn(&m_last_open);
 
