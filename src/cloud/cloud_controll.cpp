@@ -20,6 +20,10 @@ cloud_controll::cloud_controll(struct struct_user *user)
 
 n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_request, void **pointer, struct_user *user)
 {
+    if(this->m_request)
+        return n_error_cloud::wait;
+
+    QByteArray array;
     if (user == NULL && m_user == NULL){
         return n_error_cloud::not_login;
     }
@@ -32,12 +36,29 @@ n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_reque
     }
 
 
-
     if(m_request == n_request::login_user){
+        if(user == nullptr)
+            return n_error_cloud::not_login;
+
+        int temp = m_request;
+        array.append((const char *)&temp, sizeof(int));
+
+        array.append((const char *)user, sizeof(struct struct_user));
+
+        m_socket->write(array);
+
+        /*
+         * if it takes more than TIME_RESPONE ms to respond
+        */
+        if(!m_socket->waitForBytesWritten(TIME_RESPONE))
+            return n_error_cloud::server_down;
+
+
 
     }else if(m_request == n_request::balance){
         if(user == nullptr)
             return n_error_cloud::not_login;
+
     }
 
     return n_error_cloud::ok;

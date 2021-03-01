@@ -54,6 +54,9 @@ void cloud_ui::refresh(){
     auto res = m_controll->action(n_request::balance, &pointer);
 
     if(res != n_error_cloud::ok){
+        if(res == n_error_cloud::wait)
+            return; /*TODO*/
+
         if(res == n_error_cloud::password_wrong){
             dialog_critic("Your password is wronge");
 

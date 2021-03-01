@@ -17,11 +17,31 @@ cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
 
     ui->edit_repeat->setHidden(true);
     ui->label_repeat->setHidden(true);
+
+    /*
+     * when the server replied to our request, we connect
+     * the cloud controll function, which will be issued
+     * by void readyread () and analyze the data
+    */
+    QObject::connect(cloud, &cloud_controll::readyReadExt, this, &cloud_ui::readyRead);
 }
 
 cloud_ui::~cloud_ui()
 {
     delete ui;
+}
+
+void cloud_ui::readyRead(QByteArray &data){
+    const char *temp = data.data();
+    int return_command;
+    memcpy(&return_command, temp, sizeof(int));
+
+    if(return_command == n_error_cloud::password_wrong){
+        messaggio_utente("Password wrong");
+    }else if(return_command == n_error_cloud::ok){
+        save_recent_user(m_controll->m_user);
+    }
+
 }
 
 void cloud_ui::on_button_info_clicked()

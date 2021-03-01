@@ -23,6 +23,7 @@ public:
 
 public slots:
     void on_tab_main_currentChanged(int index);
+    void readyRead(QByteArray &data);
 
 private slots:
     void on_button_info_clicked();

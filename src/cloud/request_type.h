@@ -13,5 +13,4 @@ namespace n_request {
     };
 }
 
-
 #endif // REQUEST_TYPE_H

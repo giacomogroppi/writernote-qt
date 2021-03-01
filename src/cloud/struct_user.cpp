@@ -45,7 +45,7 @@ struct struct_user * load_recent_user(){
 
     QByteArray array;
     QByteArray default_loading;
-    default_loading.append((QString)NOT_USER_RECENT);
+    default_loading.append(NOT_USER_RECENT);
 
     array = setting.value(KEY_USER_CLOUD_STRUCT, default_loading).toByteArray();
 
