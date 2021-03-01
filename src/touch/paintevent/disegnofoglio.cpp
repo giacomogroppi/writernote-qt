@@ -106,6 +106,13 @@ static inline qreal widthToPressure(int v){
     return (v-1)*10;
 }
 
+
+/*
+ * to maintain compatibility with all devices it is not so important to draw the new sheet in a fixed size.
+ * however, it is important to draw the sheet with the same shape as the one drawn previously.
+ * not to break the smoothness and all the features
+*/
+
 static int width_(datastruct *data){
     if(data->posizionefoglio.isEmpty())
         return NUMEROPIXELPAGINA;
@@ -118,8 +125,19 @@ static int width_(datastruct *data){
         }
     }
 
-    return -1;
+    int temp_ = INT32_MIN;
+
+    for(i=0; i<len; i++){
+        if(data->m_point.at(i).m_x > temp_ &&
+                data->m_point.at(i).idtratto != IDVERTICALE){
+            temp_ = data->m_point.at(i).m_x;
+        }
+    }
+
+
+    return temp_;
 }
+
 static int height_(datastruct *data){
     if(data->posizionefoglio.isEmpty())
         return NUMEROPIXELORIZZONALI;
@@ -145,7 +163,7 @@ static int height_(datastruct *data){
     }
 
     /*
-     * temp_ now contains the largest value with the IDORIZZONALE id written
+     * temp_ now contains the largest value with the IDORIZZONALE is written
     */
 
     return temp_;
