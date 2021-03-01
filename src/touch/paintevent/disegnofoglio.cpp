@@ -8,8 +8,12 @@
 #define DEFAULTPOSIZIONEAUDIO 0
 
 #include "../../utils/color/setcolor.h"
+#include "../../utils/dialog_critic/dialog_critic.h"
 
 static qreal widthToPressure(int);
+
+static int height_(datastruct *);
+static int width_(datastruct *);
 
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
@@ -17,7 +21,14 @@ void TabletCanvas::disegnafoglio(){
     int i, last = 0;
     int lunghezza;
 
-    /*lunghezza = this->m_pixmap.width();*/
+    int height, width;
+
+    width = width_(data->datatouch);
+    height = height_(data->datatouch);
+
+    if(width == -1 || height == -1)
+        return dialog_critic("We had an internal problem, restarting writer note might fix the problem");
+
     lunghezza = (long double)NUMEROPIXELPAGINA * data->datatouch->zoom;
 
     if(data->datatouch->posizionefoglio.length())
@@ -44,18 +55,6 @@ void TabletCanvas::disegnafoglio(){
 
         data->datatouch->m_point.append(temp);
 
-        /*
-         * last data struct
-        */
-        /*this->data->datatouch->x.append(0);
-        this->data->datatouch->y.append(0);
-        this->data->datatouch->idtratto.append(IDTRATTOZERO);
-
-
-        this->data->datatouch->color.append(coloretemp_struttura);
-        this->data->datatouch->pressure.append(0);
-        this->data->datatouch->rotation.append(DEFAULTROTATION);
-        this->data->datatouch->posizioneaudio.append(0);*/
     }
 
     coloretemp = setcolor(&coloretemp_struttura);
@@ -63,8 +62,19 @@ void TabletCanvas::disegnafoglio(){
 
     float pressure_default = widthToPressure(style->thickness);
 
-    for(i = 0, last += 10; i < 61; i++, last += 40){
-        /* starting point */
+
+
+    int deltax = height / style->nx;
+    int deltay = width / style->ny;
+
+    /*
+     * orizzonal line
+    */
+    for(i=0; i<deltax; i++){
+
+    }
+
+    /*for(i = 0, last += 10; i < 61; i++, last += 40){
         temp_point.m_x = DISTANCEFROMLEFTANDRIGHT;
         temp_point.m_y = (double)last;
 
@@ -76,62 +86,15 @@ void TabletCanvas::disegnafoglio(){
 
         data->datatouch->m_point.append(temp_point);
 
-        /*
-         * last data struct
-        */
-        /*
-        this->data->datatouch->x.append(DISTANCEFROMLEFTANDRIGHT);
-        this->data->datatouch->y.append((double)last);
-        this->data->datatouch->color.append(coloretemp_struttura);
-        this->data->datatouch->posizioneaudio.append(DEFAULTPOSIZIONEAUDIO);
-
-        this->data->datatouch->pressure.append(widthToPressure(style->thickness));
-        this->data->datatouch->rotation.append(DEFAULTROTATION);
-
-        this->data->datatouch->idtratto.append(IDORIZZONALE);*/
 
         temp_point.m_x = (double)(lunghezza - DISTANCEFROMLEFTANDRIGHT);
         temp_point.m_y = (double)last;
 
         data->datatouch->m_point.append(temp_point);
-        /*
-         * last point touch
-        */
-        /*
-        // End of the line
-        this->data->datatouch->x.append((double)(lunghezza - DISTANCEFROMLEFTANDRIGHT));
-        this->data->datatouch->y.append((double)last);
-        this->data->datatouch->color.append(coloretemp_struttura);
-        this->data->datatouch->posizioneaudio.append(DEFAULTPOSIZIONEAUDIO);
 
-        this->data->datatouch->pressure.append(widthToPressure(style->thickness));
-        this->data->datatouch->rotation.append(DEFAULTROTATION);
+    }*/
 
-        this->data->datatouch->idtratto.append(IDORIZZONALE);*/
 
-    }
-
-    /*
-    this->data->datatouch->x.append(0);
-    this->data->datatouch->y.append((double)last);
-    this->data->datatouch->color.append(coloretemp_struttura);
-    this->data->datatouch->posizioneaudio.append(DEFAULTPOSIZIONEAUDIO);
-
-    this->data->datatouch->pressure.append(widthToPressure(style->thickness));
-    this->data->datatouch->rotation.append(DEFAULTROTATION);
-
-    this->data->datatouch->idtratto.append(IDVERTICALE);
-
-    this->data->datatouch->x.append((double)lunghezza);
-    this->data->datatouch->y.append((double)last);
-    this->data->datatouch->color.append(coloretemp_struttura);
-    this->data->datatouch->posizioneaudio.append(DEFAULTPOSIZIONEAUDIO);
-
-    this->data->datatouch->pressure.append(widthToPressure(style->thickness));
-    this->data->datatouch->rotation.append(DEFAULTROTATION);
-
-    this->data->datatouch->idtratto.append(IDVERTICALE);
-*/
     /*
      * TODO -> add x drawing
     */
@@ -141,4 +104,49 @@ void TabletCanvas::disegnafoglio(){
 
 static inline qreal widthToPressure(int v){
     return (v-1)*10;
+}
+
+static int width_(datastruct *data){
+    if(data->posizionefoglio.isEmpty())
+        return NUMEROPIXELPAGINA;
+
+    int i, len;
+
+    for(i=0, len = data->m_point.length(); i<len-1; i++){
+        if(data->m_point.at(i).idtratto == IDORIZZONALE){
+            return data->m_point.at(i+1).m_x;
+        }
+    }
+
+    return -1;
+}
+static int height_(datastruct *data){
+    if(data->posizionefoglio.isEmpty())
+        return NUMEROPIXELORIZZONALI;
+
+    int i, len;
+    for(i=0, len = data->m_point.length(); i<len-1;i++){
+        if(data->m_point.at(i).idtratto == IDVERTICALE){
+            return data->m_point.at(i+1).m_y;
+        }
+
+    }
+
+    int temp_ = INT32_MIN;
+
+    /*
+     * there are points with horizons
+    */
+    for(i=0; i<len; i++){
+        if(data->m_point.at(i).m_y > temp_
+                && data->m_point.at(i).idtratto != IDORIZZONALE){
+            temp_ = data->m_point.at(i).m_y;
+        }
+    }
+
+    /*
+     * temp_ now contains the largest value with the IDORIZZONALE id written
+    */
+
+    return temp_;
 }

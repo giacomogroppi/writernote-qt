@@ -2,6 +2,6 @@
 
 
 void TabletCanvas::loadpixel(){
-    this->isloading = true;
-    update();
+    this->resizeEvent(nullptr);
+
 }

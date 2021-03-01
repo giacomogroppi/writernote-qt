@@ -33,8 +33,8 @@ class datastruct
 {
 public:
     datastruct();
+    double biggerxNoId();
     void reset();
-    void stampa();
     double last();
 
     double biggerynoid();

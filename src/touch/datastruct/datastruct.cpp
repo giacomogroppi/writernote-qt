@@ -38,16 +38,6 @@ double datastruct::biggery(){
     }
     return y_;
 
-    /*
-     * last data struct
-    */
-    /*
-    double y_ = y.first();
-    len = y.length();
-    for(i=0;i<len;i++)
-        if(y.at(i) > y_)
-            y_ = y.at(i);
-    return y_;*/
 }
 
 unsigned int datastruct::positionId(int id)
@@ -82,32 +72,11 @@ auto datastruct::biggerynoid() -> double{
     }
     return y_;
 
-    /*
-     * last data struct
-    */
-    /*
-    double y_ = y.first();
-    len = y.length();
-    for(i=0;i<len;i++)
-        if(y.at(i) > y_ && idtratto.at(i) != -1)
-            y_ = y.at(i);
-    return y_;*/
 }
 
 void datastruct::removeat(int i){
     m_point.removeAt(i);
 
-    /*
-     * last data struct
-    */
-    /*
-    x.removeAt(i);
-    y.removeAt(i);
-    color.removeAt(i);
-    idtratto.removeAt(i);
-    posizioneaudio.removeAt(i);
-    pressure.removeAt(i);
-    rotation.removeAt(i);*/
 }
 
 /*YES IDVERTICALE ORIZZONTALE*/
@@ -140,6 +109,25 @@ double datastruct::biggerx(){
     return max;
 
 }
+
+/*No IDVERTICALE ORIZZONTALE*/
+double datastruct::biggerxNoId(){
+    int i, len;
+    double max;
+
+    len = m_point.length();
+    max = m_point.first().m_x;
+
+    for(i=0; i<len; i++){
+        if(max < m_point.at(i).m_x && m_point.at(i).idtratto != IDVERTICALE && m_point.at(i).idtratto != IDORIZZONALE){
+            max = m_point.at(i).m_x;
+        }
+    }
+
+    return max;
+
+}
+
 
 /*
  * the function return true if the point to delete is in the
