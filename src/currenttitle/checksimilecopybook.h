@@ -22,6 +22,6 @@
 #include "../indice_class.h"
 
 int checksimilecopybook(currenttitle_class *, currenttitle_class *);
-bool checksimileindice(indice_class *, indice_class *);
+int checksimileindice(indice_class *, indice_class *);
 
 #endif // CHECKSIMILECOPYBOOK_H

@@ -11,7 +11,7 @@
 /* la funzione confronta due oggetti della classe current title */
 int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
 {
-    if(primo->m_touch){
+    if(!primo->m_touch){
         if(primo->testi != secondo->testi)
             return TESTI;
 
@@ -116,16 +116,16 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo)
     return OK_CHECK;
 }
 
-bool checksimileindice(indice_class *primo, indice_class *secondo){
+int checksimileindice(indice_class *primo, indice_class *secondo){
     int i, len;
 
     if(primo->titolo.length() != secondo->titolo.length())
-        return false;
+        return LEN;
 
     len = primo->titolo.length();
     for(i=0; i < len; i++)
         if(primo->titolo.at(i) != secondo->titolo.at(i))
-            return false;
+            return LEN;
 
-    return true;
+    return OK_CHECK;
 }

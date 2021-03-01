@@ -90,9 +90,9 @@ void MainWindow::closeEvent (QCloseEvent *event)
         m_currenttitle.testi = this->ui->textEdit->toHtml();
     }
 
-    bool check1 = checksimilecopybook(tempcopybook, &m_currenttitle) != OK_CHECK;
+    bool check1 = checksimilecopybook(tempcopybook, &m_currenttitle) == OK_CHECK;
 
-    check1 = check1 && (checksimileindice(&m_indice, tempindice) != OK_CHECK);
+    check1 = check1 && (checksimileindice(&m_indice, tempindice) == OK_CHECK);
 
     /* if all is equal close app */
     if(check1){
