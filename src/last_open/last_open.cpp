@@ -215,7 +215,7 @@ void last_open::downloadIn(int index){
 
 #else
     Q_UNUSED(index);
-    dialog_critic("Your version of writernote was not\ncompiled without the cloud package");
+    dialog_critic("Your version of writernote was\ncompiled without the cloud support");
 #endif
 }
 

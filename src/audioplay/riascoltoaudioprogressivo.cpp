@@ -6,8 +6,8 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     if(this->player->state() != QMediaPlayer::PlayingState)
         return;
 
-    /* scrittura */
-    if(m_currenttitle.m_touch){
+    /* keyboard */
+    if(!m_currenttitle.m_touch){
        int position_inlist = m_currenttitle.posizione_iniz.indexOf(position/1000);
        if(position_inlist == -1) return;
 
@@ -19,7 +19,7 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     }
     else {
         /* parte responsabile della penna */
-        int position_inlist, i = 0, len, position_temp;
+        int position_inlist = 0, i, len, position_temp;
 
         len = m_currenttitle.datatouch->m_point.length();
         for(i=0, position_temp = position/1000; i < len; i++){

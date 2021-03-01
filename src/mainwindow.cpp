@@ -196,7 +196,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     m_currentTitle = item->text().toUtf8().constData();
     this->setWindowTitle("Writernote - " + m_currentTitle);
 
-    if(m_currenttitle.m_touch)
+    if(!m_currenttitle.m_touch)
         this->ui->textEdit->setHtml(m_currenttitle.testi);
 
     settingtextedit(this, true);
