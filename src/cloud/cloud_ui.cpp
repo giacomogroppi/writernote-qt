@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include "../windows/mostra_finestra_i.h"
 #include "../utils/dialog_critic/dialog_critic.h"
+#include "../utils/checkpassword/checkpassword.h"
 
 cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
     QDialog(parent),
@@ -98,4 +99,62 @@ void cloud_ui::on_ac_12_clicked()
     mostra_finestra_i(WEB12);
 }
 
+/*
+ * ok button
+*/
+void cloud_ui::on_button_ok_clicked()
+{
+    if(ui->button_log->isChecked()){
+        if(ui->button_log->text() == TEXT_LOG_IN){
+            /*
+             * he need to log in
+            */
 
+            int pass = checkpassword(ui->edit_pass->toPlainText().toUtf8().constData(), ui->edit_repeat->toPlainText().toUtf8().constData());
+
+            if(pass == PASS_LEN){
+                messaggio_utente(MESSAGE_PASSWORD_NOT_LENGTH + (QString)MINSTRLEN);
+
+            }else if (pass == PASS_NOT_S) {
+                return messaggio_utente("Passwords do not match");
+
+            } else if(pass == PASS_N){
+                return messaggio_utente(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMN + " uppercase");
+
+            } else if(pass == PASS_M){
+                return messaggio_utente(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMM + " number");
+
+            }
+
+
+            struct_user *temp_user = new struct struct_user;
+
+            strcpy(temp_user->m_mail.m_mail, ui->edit_mail->toPlainText().toUtf8().constData());
+            strcpy(temp_user->password, ui->edit_pass->toPlainText().toUtf8().constData());
+
+            auto res = this->m_controll->action(n_request::login_user, temp_user);
+
+            if(res == n_error_cloud::error_no_internet)
+                return messaggio_utente(MESSAGE_NOT_INTERNET);
+            else if(res == n_error_cloud::server_down)
+                return messaggio_utente(MESSAGE_SERVER_DOWN);
+
+
+        }else if(ui->button_log->text() == TEXT_LOG_ON){
+            /*
+             * he need to delete user from qsetting and clear user from cloud_controll
+            */
+            this->m_controll->cleanUser();
+
+            ui->button_log->setText(TEXT_LOG_IN);
+            ui->button_register->setText("Register");
+
+        }
+    }else if(ui->button_register->isChecked()){
+        /* register new user */
+        struct struct_user *temp_user = new struct struct_user;
+
+
+
+    }
+}

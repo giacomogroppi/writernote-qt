@@ -1,4 +1,6 @@
 #include "cloud_controll.h"
+#include "../utils/remove_key/remove_key.h"
+#include "../utils/setting_define.h"
 
 cloud_controll::cloud_controll(struct struct_user *user)
 {
@@ -18,16 +20,20 @@ cloud_controll::cloud_controll(struct struct_user *user)
 
 }
 
-n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_request, void **pointer, struct_user *user)
+n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_request, struct_user *user)
 {
     if(this->m_request)
         return n_error_cloud::wait;
 
+    if (user == NULL && m_user == NULL)
+        return n_error_cloud::not_login;
+
+    if(user != NULL){
+        save_recent_user(user);
+        m_user = user;
+    }
 
     QByteArray array;
-    if (user == NULL && m_user == NULL){
-        return n_error_cloud::not_login;
-    }
 
     this->m_last_request = m_request;
 
@@ -91,6 +97,44 @@ n_error_cloud::e_error_cloud cloud_controll::registerUser(struct struct_user *us
     this->m_request = true;
 
     return n_error_cloud::ok;
+}
+
+bool cloud_controll::write(QByteArray &array, n_request::e_request r){
+    this->m_socket->write(array);
+
+    if(!this->m_socket->waitForBytesWritten(TIME_WRITE))
+        return false;
+
+    this->m_last_request = r;
+    this->m_request = true;
+
+    return true;
+}
+
+n_error_cloud::e_error_cloud cloud_controll::loginUser(struct struct_user *user){
+    if(user == nullptr)
+        return n_error_cloud::internal_error;
+
+    int temp = n_request::login_user;
+    QByteArray array;
+    array.append((const char *)&temp, sizeof(int));
+
+    array.append((const char *)user, sizeof(struct struct_user));
+
+    if(!this->write(array, n_request::login_user))
+        return n_error_cloud::server_down;
+
+    return n_error_cloud::ok;
+}
+
+void cloud_controll::cleanUser()
+{
+    if(this->m_user)
+        delete this->m_user;
+
+    remove_key(GROUPNAME_CLOUD_USER, KEY_USER_CLOUD_IS_DEFINED);
+    remove_key(GROUPNAME_CLOUD_USER, KEY_USER_CLOUD_STRUCT);
+
 }
 
 n_error_socket::e_error_socket cloud_controll::connect_socket()

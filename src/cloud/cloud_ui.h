@@ -4,6 +4,9 @@
 #include <QDialog>
 #include "../cloud/cloud_controll.h"
 
+#define TEXT_LOG_IN "Log in"
+#define TEXT_LOG_ON "Log on"
+
 #define NAME "Cloud controll"
 #define POSITION_LOG 1
 
@@ -42,6 +45,8 @@ private slots:
     void on_button_log_clicked();
 
     void on_button_register_clicked();
+
+    void on_button_ok_clicked();
 
 private:
     void serverDown();

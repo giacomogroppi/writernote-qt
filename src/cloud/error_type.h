@@ -10,6 +10,12 @@
 #define PRIVATE_WAIT 6
 #define PRIVATE_INTERNAL_ERROR 7
 
+#define MESSAGE_NOT_INTERNET "It seems you don't have internet."
+#define MESSAGE_NOT_REGISTER "It appears that you are not registered to the cloud service."
+#define MESSAGE_SERVER_DOWN "The server is currently unreachable, please try again later."
+#define MESSAGE_PASSWORD_NOT_LENGTH "The password must contain at least "
+#define MESSAGE_PASSWORD_NOT_M "Within the password you must enter at least "
+
 /*
  * common error that we can resive from the server
 */

@@ -30,13 +30,24 @@ public:
     cloud_controll(struct struct_user *user = NULL);
 
     /*by default it will be use m_user [from the instance of the class]*/
-    n_error_cloud::e_error_cloud action(n_request::e_request, void **pointer, struct struct_user *user = NULL);
+    n_error_cloud::e_error_cloud action(n_request::e_request, struct struct_user *user = NULL);
 
     struct struct_user *m_user; /* in case NULL is set by cloud_controll::cloud_controll */
 
     n_error_cloud::e_error_cloud registerUser(struct_user *user);
+    n_error_cloud::e_error_cloud loginUser(struct_user *user);
+
+    /*
+     * remove the current user if exist
+    */
+    void cleanUser();
 
 private:
+    /*
+     * return true if all is written in the socket correctly
+    */
+    bool write(QByteArray &,  n_request::e_request);
+
     /*
      * in m_last_request is store the last
      * request we had made

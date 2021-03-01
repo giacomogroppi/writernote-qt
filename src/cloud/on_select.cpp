@@ -29,10 +29,10 @@ static void show_log_in(cloud_ui *cloud, bool temp, struct struct_user *user){
         cloud->ui->button_register->setChecked(false);
         cloud->ui->button_log->setChecked(true);
 
-        cloud->ui->button_log->setText("Log in");
+        cloud->ui->button_log->setText(TEXT_LOG_IN);
     }
     else
-        cloud->ui->button_log->setText("Log on");
+        cloud->ui->button_log->setText(TEXT_LOG_ON);
 
     cloud->ui->button_pass->setHidden(temp);
 
@@ -50,15 +50,14 @@ static void show_log_in(cloud_ui *cloud, bool temp, struct struct_user *user){
  * ask for balance
 */
 void cloud_ui::refresh(){
-    void *pointer;
-    auto res = m_controll->action(n_request::balance, &pointer);
+    auto res = m_controll->action(n_request::balance);
 
     if(res != n_error_cloud::ok){
         if(res == n_error_cloud::wait)
             return; /*TODO*/
 
         if(res == n_error_cloud::password_wrong){
-            dialog_critic("Your password is wronge");
+            dialog_critic("Your password is wrong");
 
             show_log_in(this, true, m_controll->m_user);
 
@@ -77,10 +76,6 @@ void cloud_ui::refresh(){
             messaggio_utente("It seems you don't have internet");
         }
 
-    }else{
-        show_log_in(this, false, m_controll->m_user);
-
-        ui->balance->setText(QString::number(* (int*) pointer));
     }
 }
 
