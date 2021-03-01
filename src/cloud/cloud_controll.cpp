@@ -48,7 +48,7 @@ n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_reque
         m_socket->write(array);
 
         /*
-         * if it takes more than TIME_RESPONE ms to respond
+         * if it takes more than TIME_RESPONE ms to send data
         */
         if(!m_socket->waitForBytesWritten(TIME_RESPONE))
             return n_error_cloud::server_down;
