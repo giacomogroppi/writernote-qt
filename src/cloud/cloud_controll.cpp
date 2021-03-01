@@ -23,10 +23,13 @@ n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_reque
     if(this->m_request)
         return n_error_cloud::wait;
 
+
     QByteArray array;
     if (user == NULL && m_user == NULL){
         return n_error_cloud::not_login;
     }
+
+    this->m_last_request = m_request;
 
     if(!m_socket->isWritable()){
         if(this->connect_socket() != n_error_socket::ok_socket){
@@ -48,18 +51,44 @@ n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_reque
         m_socket->write(array);
 
         /*
-         * if it takes more than TIME_RESPONE ms to send data
+         * if it takes more than TIME_WRITE ms to send data
         */
-        if(!m_socket->waitForBytesWritten(TIME_RESPONE))
+        if(!m_socket->waitForBytesWritten(TIME_WRITE))
             return n_error_cloud::server_down;
 
-
+        this->m_request = true;
 
     }else if(m_request == n_request::balance){
         if(user == nullptr)
             return n_error_cloud::not_login;
 
     }
+
+    return n_error_cloud::ok;
+}
+
+/*
+ * send data to the server to make a new user
+*/
+n_error_cloud::e_error_cloud cloud_controll::registerUser(struct struct_user *user)
+{
+    if(user == nullptr)
+        return n_error_cloud::internal_error;
+
+    QByteArray array;
+    int temp = n_request::register_user;
+
+    array.append((const char *) &temp, sizeof(int));
+
+    array.append((const char *)user, sizeof(struct struct_user));
+
+    this->m_socket->write(array);
+
+    if(!this->m_socket->waitForBytesWritten(TIME_WRITE))
+        return n_error_cloud::server_down;
+
+    this->m_last_request = n_request::register_user;
+    this->m_request = true;
 
     return n_error_cloud::ok;
 }
@@ -82,7 +111,9 @@ void cloud_controll::error_socket(QAbstractSocket::SocketError){
 }
 
 void cloud_controll::ready_read(){
-
+    emit this->readyReadExt(m_socket->readAll(), this->m_last_request);
+    this->m_request = false;
+    this->m_last_request = n_request::none;
 }
 
 void cloud_controll::disconnected(){

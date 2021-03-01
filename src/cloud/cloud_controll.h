@@ -13,7 +13,7 @@
 /*
  * time waiting for responde. [int ms]
 */
-#define TIME_RESPONE 3000
+#define TIME_WRITE 3000
 
 namespace n_error_socket {
     enum e_error_socket{
@@ -34,14 +34,15 @@ public:
 
     struct struct_user *m_user; /* in case NULL is set by cloud_controll::cloud_controll */
 
+    n_error_cloud::e_error_cloud registerUser(struct_user *user);
+
 private:
     /*
-     * if the m_request is set to true
-     * it means that the system is
-     * waiting for a response from the server,
-     * otherwise it is set to false
+     * in m_last_request is store the last
+     * request we had made
     */
     bool m_request = false;
+    n_request::e_request m_last_request = n_request::none;
 
     QTcpSocket *m_socket = NULL;
 
@@ -49,7 +50,7 @@ private:
     n_error_socket::e_error_socket connect_socket();
 
 signals:
-    void readyReadExt(QByteArray &);
+    void readyReadExt(QByteArray, n_request::e_request);
 
 public slots:
     void error_socket(QAbstractSocket::SocketError);

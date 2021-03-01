@@ -8,7 +8,7 @@
 #define PRIVATE_CLOUD_OK 4
 #define PRIVATE_CLOUD_SERVER_DOWN 5
 #define PRIVATE_WAIT 6
-
+#define PRIVATE_INTERNAL_ERROR 7
 
 /*
  * common error that we can resive from the server
@@ -21,7 +21,8 @@ namespace n_error_cloud {
         password_wrong = PRIVATE_CLOUD_PASSWORD_WRONG,
         ok = PRIVATE_CLOUD_OK,
         server_down = PRIVATE_CLOUD_SERVER_DOWN,
-        wait = PRIVATE_WAIT
+        wait = PRIVATE_WAIT,
+        internal_error = PRIVATE_INTERNAL_ERROR
     };
 }
 

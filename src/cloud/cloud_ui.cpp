@@ -31,17 +31,31 @@ cloud_ui::~cloud_ui()
     delete ui;
 }
 
-void cloud_ui::readyRead(QByteArray &data){
+void cloud_ui::readyRead(QByteArray data, n_request::e_request last_command){
     const char *temp = data.data();
     int return_command;
     memcpy(&return_command, temp, sizeof(int));
 
-    if(return_command == n_error_cloud::password_wrong){
-        messaggio_utente("Password wrong");
-    }else if(return_command == n_error_cloud::ok){
-        save_recent_user(m_controll->m_user);
-    }
+    if(last_command == n_request::login_user){
+        if(return_command == n_error_cloud::password_wrong){
+            messaggio_utente("Password wrong");
+        }else if(return_command == n_error_cloud::ok){
+            save_recent_user(m_controll->m_user);
+        }
+    }else if(last_command == n_request::register_user){
+        if(return_command == n_error_cloud::server_down)
+            return serverDown();
 
+        if(return_command == n_error_cloud::ok){
+            messaggio_utente("Successful registration");
+        }else{
+            messaggio_utente("Something went wrong");
+        }
+    }
+}
+
+void cloud_ui::serverDown(){
+    messaggio_utente("Unfortunately the server is not reachable, please try again in some time");
 }
 
 void cloud_ui::on_button_info_clicked()
