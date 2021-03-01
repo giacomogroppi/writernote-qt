@@ -26,7 +26,7 @@ void TabletCanvas::disegnafoglio(){
     width = width_(data->datatouch);
     height = height_(data->datatouch);
 
-    if(width == -1 || height == -1)
+    if(width == INT32_MIN || height == INT32_MIN)
         return dialog_critic("We had an internal problem, restarting writer note might fix the problem");
 
     lunghezza = (long double)NUMEROPIXELPAGINA * data->datatouch->zoom;
@@ -128,8 +128,7 @@ static int width_(datastruct *data){
     int temp_ = INT32_MIN;
 
     for(i=0; i<len; i++){
-        if(data->m_point.at(i).m_x > temp_ &&
-                data->m_point.at(i).idtratto != IDVERTICALE){
+        if(data->m_point.at(i).m_x > temp_){
             temp_ = data->m_point.at(i).m_x;
         }
     }
@@ -156,14 +155,13 @@ static int height_(datastruct *data){
      * there are points with horizons
     */
     for(i=0; i<len; i++){
-        if(data->m_point.at(i).m_y > temp_
-                && data->m_point.at(i).idtratto != IDORIZZONALE){
+        if(data->m_point.at(i).m_y > temp_){
             temp_ = data->m_point.at(i).m_y;
         }
     }
 
     /*
-     * temp_ now contains the largest value with the IDORIZZONALE is written
+     * temp_ now contains the largest value in y written
     */
 
     return temp_;
