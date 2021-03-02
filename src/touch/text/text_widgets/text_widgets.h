@@ -6,6 +6,13 @@
 
 #include "../../datastruct/datastruct.h"
 
+#define D_X 0.0
+#define D_Y 0.0
+#define D_XF 60.0
+#define D_YF 20.0
+
+#define MAXSTR 500
+
 /*
  * this point contain all information for the text
  * into all file
@@ -17,6 +24,9 @@ struct pointText{
     int size; /* size of the text */
     int alfa;
     struct colore_s color; /* color of the text */
+
+    /* for saving reason is better to have memory serialize */
+    char m_text[MAXSTR + 1 ];
 };
 
 namespace Ui {
@@ -44,6 +54,9 @@ private:
     QList<pointText> m_lista;
 
     Ui::text_widgets *ui;
+
+protected:
+    bool event(QEvent *event) override;
 };
 
 #endif // TEXT_WIDGETS_H

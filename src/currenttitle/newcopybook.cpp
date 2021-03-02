@@ -21,7 +21,6 @@ void MainWindow::methodwrite(){
 /* funzione che gestisce la creazione di un nuovo copybook */
 void MainWindow::on_actionCreate_new_copybook_triggered()
 {
-    /* chiede all'utente se vuole creare un nuovo fai per scrivere a tastiera o con la penna */
     QMenu *menu = new QMenu(this);
     menu->setTitle("Choose input method");
 
@@ -39,7 +38,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     connect(keyboard, &QAction::triggered, this, &MainWindow::methodwrite);
 
     auto hostRect = this->cursor().pos();
-    menu->move(hostRect.x(), hostRect.y());
+    menu->move(hostRect);
 
     /* if the user didn't click on the menu */
     if(!menu->exec())

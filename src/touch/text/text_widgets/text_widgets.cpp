@@ -6,6 +6,7 @@
  * or want to modify an element
 */
 
+#include <QDebug>
 
 text_widgets::text_widgets(QWidget *parent, datastruct *data) :
     QWidget(parent),
@@ -25,6 +26,19 @@ text_widgets::~text_widgets()
 */
 bool text_widgets::isIn(QPointF point)
 {
+    int i, len;
+    len = this->m_lista.length();
+
+    double x, y;
+    x = point.x();
+    y = point.y();
+
+    for(i=0; i<len; i++)
+        if(m_lista.at(i).x < x && m_lista.at(i).y > y
+                && m_lista.at(i).xf > x && m_lista.at(i).yf > y)
+            return true;
+
+
     return false;
 }
 
@@ -70,5 +84,39 @@ int text_widgets::loadData(zip_file_t *file)
 }
 
 void text_widgets::createNew(QPointF point){
+    pointText temp;
+
+    double x, y;
+    x = point.x();
+    y = point.y();
+
+
+    /*
+     * centers the point on where the user clicks
+    */
+    temp.x = D_X + x;
+    temp.y = D_Y + y;
+
+    temp.xf = D_XF + x;
+    temp.yf = D_YF + y;
+
+    temp.m_text[0] = '\0';
+
+    if(this->isHidden())
+        this->show();
+
+    /* he move himself */
+    auto hostRect = this->cursor().pos();
+    this->move(hostRect);
+
+    m_lista.append(temp);
 
 }
+
+bool text_widgets::event(QEvent *event)
+{
+    qDebug() << "Event from text_widgets" << event->type();
+
+    return QWidget::event(event);
+}
+
