@@ -294,6 +294,7 @@
     <addaction name="actionCheck_update"/>
     <addaction name="actionBug_report"/>
     <addaction name="actionVersion"/>
+    <addaction name="actionAbout_Qt"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -808,6 +809,11 @@
   <action name="actionVersion">
    <property name="text">
     <string>Version</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

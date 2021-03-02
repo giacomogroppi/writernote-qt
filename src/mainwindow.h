@@ -242,6 +242,8 @@ private slots:
 
     void on_actiontopdf_triggered();
 
+    void on_actionAbout_Qt_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

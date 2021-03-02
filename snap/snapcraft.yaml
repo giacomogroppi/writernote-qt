@@ -99,7 +99,10 @@ parts:
       set -eux
       qmake -set prefix $SNAPCRAFT_PART_INSTALL
 
-      qmake DEFINES+="SNAP" DEFINES+=SNAP_VERSION
+      printf "%s\n" "$(SNAPCRAFT_PROJECT_VERSION)"
+      make clean
+
+      qmake DEFINES+="SNAP" DEFINES+=SNAPCRAFT_PROJECT_VERSION
       
       snapcraftctl build
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/      

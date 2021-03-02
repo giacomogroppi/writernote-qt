@@ -39,6 +39,7 @@ SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
+    src/utils/aboutQt/aboutqt.cpp \
     src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
@@ -177,6 +178,7 @@ SOURCES += \
 HEADERS += \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
+    src/utils/aboutQt/aboutqt.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
     src/audioplay/cambioiconariascolto.h \
