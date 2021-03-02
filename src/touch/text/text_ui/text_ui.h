@@ -2,6 +2,11 @@
 #define TEXT_UI_H
 
 #include <QWidget>
+#include <QColor>
+#include <QFont>
+
+#include "../../datastruct/datastruct.h"
+#define D_SIZE 8
 
 namespace Ui {
 class text_ui;
@@ -15,9 +20,23 @@ public:
     explicit text_ui(QWidget *parent = nullptr);
     ~text_ui();
 
+    colore_s m_currentDcolor = {0, 0, 255, 255};
+    int m_currentSize = D_SIZE;
+    QFont m_font;
+
+    void loadData();
+    void saveData();
 
 private:
     Ui::text_ui *ui;
+    void drawButton();
+
+protected:
+    bool event(QEvent *event) override;
+private slots:
+    void on_button_color_clicked();
+    void on_spinBox_valueChanged(int arg1);
+    void on_fontComboBox_currentFontChanged(const QFont &f);
 };
 
 #endif // TEXT_UI_H

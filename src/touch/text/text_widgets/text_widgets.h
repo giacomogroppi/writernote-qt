@@ -54,7 +54,6 @@ private:
     QList<pointText> m_lista;
 
     Ui::text_widgets *ui;
-
 protected:
     bool event(QEvent *event) override;
 };

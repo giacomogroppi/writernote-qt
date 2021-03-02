@@ -7,3 +7,5 @@ QColor settaggiocolore(int *colore_){
             colore_[3]);
     return colore;
 }
+
+

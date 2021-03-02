@@ -59,6 +59,11 @@
 #define GROUPNAME_LIST_HIDDEN "list_left_group"
 #define KEY_LIST_HIDDEN "key_list_left"
 
+#define GROUPNAME_TEXT_PEN "groupname-text-pen"
+#define KEY_TEXT_PEN_SIZE "groupname-text-pen-size"
+#define KEY_TEXT_PEN_COLOR "groupname-text-pen-color"
+#define KEY_TEXT_PEN_FONT "groupname-text-pen-font"
+
 #ifdef SNAP
 /* permission for audio snapcraft */
 #define GROUPNAME_AUDIO_PERMISSION "audio_permission_snapcraft"

@@ -63,36 +63,6 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     }
 
 
-    /*
-     * last data struct
-    */
-    /*if(!this->m_deviceDown){
-        if(this->data->datatouch->idtratto.length())
-            this->data->datatouch->idtratto.append(this->data->datatouch->idtratto.last() + 1);
-        else
-            this->data->datatouch->idtratto.append(0);
-    }
-    else{
-        if(this->m_pen_ui->m_type_tratto == TRATTI){
-            if(neet_to_change_color(data->datatouch, data->datatouch->idtratto.last())){
-                if(m_pen_ui->m_last_color.ok == false){
-                    m_pen_ui->m_last_color.ok = true;
-                    m_pen_ui->m_last_color.color = m_color;
-
-                    this->m_color = Qt::white;
-                }
-                else{
-
-                    m_pen_ui->m_last_color.ok = false;
-
-                    this->m_color = m_pen_ui->m_last_color.color;
-                }
-            }
-        }
-
-        this->data->datatouch->idtratto.append(data->datatouch->idtratto.last());
-    }*/
-
     struct colore_s colore;
 
     temp_point.m_x = event->posF().x();
@@ -102,28 +72,12 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     temp_point.m_posizioneaudio = time/1000;
 
-    /*
-     * last data struct
-    */
-    /*
-    this->data->datatouch->x.append(event->posF().x());
-    this->data->datatouch->y.append(event->posF().y());
 
-    this->data->datatouch->pressure.append(event->pressure());
-    this->data->datatouch->rotation.append(event->rotation());
-
-    this->data->datatouch->posizioneaudio.append(this->time/1000);*/
-
-    m_color = setcolor(&colore);
-    /*m_color.getRgb(&colore.colore[0],
-            &colore.colore[1],
-            &colore.colore[2],
-            &colore.colore[3]);*/
+    setcolor_struct(&colore, m_color);
 
     memcpy(&temp_point.m_color, &colore, sizeof(struct colore_s));
 
     data->datatouch->m_point.append(temp_point);
-    //this->data->datatouch->color.append(colore);
 }
 
 

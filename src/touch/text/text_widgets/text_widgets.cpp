@@ -113,9 +113,12 @@ void text_widgets::createNew(QPointF point){
 
 }
 
+
+
 bool text_widgets::event(QEvent *event)
 {
-    qDebug() << "Event from text_widgets" << event->type();
+    if(event->type() == QEvent::WindowDeactivate)
+        this->hide();
 
     return QWidget::event(event);
 }

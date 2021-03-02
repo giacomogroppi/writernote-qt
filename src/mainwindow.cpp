@@ -77,6 +77,11 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     this->m_text_w = new text_widgets(this);
 
+    this->m_text_w->setHidden(true);
+    this->m_text->setHidden(true);
+    this->m_pen->setHidden(true);
+    this->m_rubber->setHidden(true);
+
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
     this->m_canvas->m_text = m_text;
