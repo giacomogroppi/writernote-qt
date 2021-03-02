@@ -21,7 +21,7 @@ TabletCanvas::TabletCanvas()
     setAttribute(Qt::WA_TabletTracking);
 
     this->data = nullptr;
-    this->medotodiinserimento = STILO;
+    this->medotodiinserimento = METHOD_STILO;
 
     if(!zoom){
         zoom = new zoom_control;
@@ -100,7 +100,7 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
 {
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
-        if (event->pointerType() == QTabletEvent::Eraser || this->medotodiinserimento == GOMMA) {
+        if (event->pointerType() == QTabletEvent::Eraser || this->medotodiinserimento == METHOD_GOMMA) {
             cursor = QCursor(QPixmap(":image/images/cursor-eraser.png"), 3, 28);
         }
         else {

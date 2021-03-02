@@ -15,6 +15,7 @@ public:
     explicit text_ui(QWidget *parent = nullptr);
     ~text_ui();
 
+
 private:
     Ui::text_ui *ui;
 };

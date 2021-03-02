@@ -71,11 +71,17 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     setting_load(this);
 
-    this->m_rubber = new rubber_ui;
-    this->m_pen = new pen_ui;
+    this->m_rubber = new rubber_ui(this);
+    this->m_pen = new pen_ui(this);
+    this->m_text = new text_ui(this);
+
+    this->m_text_w = new text_widgets(this);
 
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
+    this->m_canvas->m_text = m_text;
+
+    this->m_canvas->m_text_w = m_text_w;
 
     ui->button_left_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->button_right_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -357,3 +363,4 @@ void MainWindow::on_actionVersion_triggered()
     messaggio_utente("Current version is " + (QString)VERSION_STRING);
 #endif // version
 }
+

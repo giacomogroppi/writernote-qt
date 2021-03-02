@@ -396,6 +396,7 @@
    <addaction name="actionpen"/>
    <addaction name="actionrubber"/>
    <addaction name="actionselezionetext"/>
+   <addaction name="actioninsertText"/>
   </widget>
   <widget class="QToolBar" name="toolBarcolore">
    <property name="windowTitle">
@@ -814,6 +815,15 @@
   <action name="actionAbout_Qt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actioninsertText">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/insertText.png</normaloff>:/image/images/insertText.png</iconset>
+   </property>
+   <property name="text">
+    <string>insertText</string>
    </property>
   </action>
  </widget>

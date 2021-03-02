@@ -21,6 +21,9 @@
 #include "../lastedit/redoundo.h"
 #include "../autosave/autosave_.h"
 
+#include "text/text_ui/text_ui.h"
+#include "text/text_widgets/text_widgets.h"
+
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
     QPointF poss = QPointF(-1, -1);
@@ -146,6 +149,9 @@ public:
     /* class for menu */
     rubber_ui *m_rubber;
     pen_ui *m_pen_ui;
+    text_ui *m_text;
+
+    text_widgets *m_text_w;
 
     zoom_control *zoom = NULL;
 

@@ -51,5 +51,6 @@
         <file>images/icon-hide-right.png</file>
         <file>images/cloud-icon.png</file>
         <file>images/download.png</file>
+        <file>images/insertText.png</file>
     </qresource>
 </RCC>

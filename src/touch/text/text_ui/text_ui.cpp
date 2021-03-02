@@ -12,3 +12,4 @@ text_ui::~text_ui()
 {
     delete ui;
 }
+

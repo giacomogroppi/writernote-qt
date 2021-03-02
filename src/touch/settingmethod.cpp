@@ -11,11 +11,11 @@
 /* penna */
 void MainWindow::on_actionpen_triggered()
 {
-    if(m_canvas->medotodiinserimento == STILO){
+    if(m_canvas->medotodiinserimento == METHOD_STILO){
         this->m_pen->show();
     }
 
-    this->m_canvas->medotodiinserimento = STILO;
+    this->m_canvas->medotodiinserimento = METHOD_STILO;
 }
 
 
@@ -23,22 +23,32 @@ void MainWindow::on_actionpen_triggered()
 /* gomma */
 void MainWindow::on_actionrubber_triggered()
 {
-    if(m_canvas->medotodiinserimento == GOMMA){
+    if(m_canvas->medotodiinserimento == METHOD_GOMMA){
         this->m_rubber->show();
         QPoint hostRect = this->cursor().pos();
-        m_rubber->move(hostRect.x(), hostRect.y());
+        m_rubber->move(hostRect);
     }
 
-    this->m_canvas->medotodiinserimento = GOMMA;
+    this->m_canvas->medotodiinserimento = METHOD_GOMMA;
 
 }
 
 /* taglia */
 void MainWindow::on_actionselezionetext_triggered()
 {
-    this->m_canvas->medotodiinserimento = SELEZIONE;
+    this->m_canvas->medotodiinserimento = METHOD_SELEZIONE;
 }
 
+/* insert text */
+void MainWindow::on_actioninsertText_triggered()
+{
+    if(m_canvas->medotodiinserimento == METHOD_TEXT){
+        this->m_text->show();
+        auto hostRect = this->cursor().pos();
+        m_text->move(hostRect);
+    }
+    this->m_canvas->medotodiinserimento = METHOD_TEXT;
+}
 
 void MainWindow::on_actionchoose_color_triggered()
 {

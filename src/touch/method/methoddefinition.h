@@ -1,10 +1,11 @@
 #ifndef METHODDEFINITION_H
 #define METHODDEFINITION_H
 
-#define GOMMA 0
-#define STILO 1
-#define SELEZIONE 2
-#define IDGOMMA 3
+#define METHOD_GOMMA 0
+#define METHOD_STILO 1
+#define METHOD_SELEZIONE 2
+#define METHOD_IDGOMMA 3
+#define METHOD_TEXT 4
 
 #define GOMMASIZE 5
 

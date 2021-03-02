@@ -17,9 +17,6 @@
 
 #include "windows/updatecheck.h"
 
-#include "touch/rubber/rubber_ui.h"
-#include "touch/pen/pen_ui.h"
-
 #define REDO_UNDO_DISABLE "Disable redo undo"
 #define REDO_UNDO_ENABLE "Enable redo undo"
 #include "currenttitle/currenttitle_class.h"
@@ -88,6 +85,9 @@ public:
 
     rubber_ui *m_rubber;
     pen_ui *m_pen;
+    text_ui *m_text;
+
+    text_widgets *m_text_w;
 
     struct struct_user *m_user;
 
@@ -243,6 +243,8 @@ private slots:
     void on_actiontopdf_triggered();
 
     void on_actionAbout_Qt_triggered();
+
+    void on_actioninsertText_triggered();
 
 private:
     /* gestione dell'audio */
