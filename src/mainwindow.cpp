@@ -345,9 +345,15 @@ void MainWindow::on_actionCopy_triggered()
     this->ui->textEdit->copy();
 }
 
+#define VERSION_MAJOR 4.432.234
+
+#define STRINGIZE2(s) #s
+#define STRINGIZE(s) STRINGIZE2(s)
+#define VERSION_STRING STRINGIZE(VERSION_SNAPCRAFT)
+
 void MainWindow::on_actionVersion_triggered()
 {
-#ifdef VERSION
-    messaggio_utente("Current version is " + (QString)VERSION);
+#ifdef VERSION_SNAPCRAFT
+    messaggio_utente("Current version is " + (QString)VERSION_STRING);
 #endif // version
 }

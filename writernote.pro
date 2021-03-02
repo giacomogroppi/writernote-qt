@@ -18,6 +18,17 @@ CONFIG += c++17
     INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 }
 
+## Snapcraft support
+contains(DEFINES, SNAP){
+    message("Snapcraft enable")
+}
+
+## Support for version print in snapcraft
+contains(DEFINES, VERSION_SNAPCRAFT){
+    message("Version for snapcraft add. Version: $$VERSION_SNAPCRAFT")
+}
+
+
 ## for enable cloud instance [remove when compiling for release] [see https://github.com/giacomogroppi/writernote-qt/blob/master/help/compile-cloud.md]
 
 DEFINES += "CLOUD"

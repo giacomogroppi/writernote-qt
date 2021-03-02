@@ -99,11 +99,11 @@ parts:
       set -eux
       qmake -set prefix $SNAPCRAFT_PART_INSTALL
 
-      printf "%s\n" "$(SNAPCRAFT_PROJECT_VERSION)"
-      make clean
+      #printf "%s\n" "$(SNAPCRAFT_PROJECT_VERSION)"
+      #make clean
 
-      qmake DEFINES+="SNAP" DEFINES+=SNAPCRAFT_PROJECT_VERSION
-      
+      qmake DEFINES+="SNAP" DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION
+
       snapcraftctl build
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/      
       cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
