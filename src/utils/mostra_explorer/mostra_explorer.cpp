@@ -4,6 +4,8 @@
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 
+#include "../../windows/mostra_finestra_i.h"
+
 static void mostra(const char *comando);
 
 #ifdef unix
@@ -29,7 +31,8 @@ void mostra_explorer(QString posizione)
 #ifdef _WIN64
     mostra(comando);
 #elif unix
-    QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
+    mostra_finestra_i(posizione.toUtf8().constData());
+    //QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
 #endif
 
 }
