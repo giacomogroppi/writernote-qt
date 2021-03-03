@@ -11,8 +11,8 @@
 #include <QInputDialog>
 
 #include "../utils/dialog_critic/dialog_critic.h"
-
-#include "setting_color.h"
+#include "../utils/color/setcolor.h"
+#include "string.h"
 
 dialog_sheet::dialog_sheet(QWidget *parent) :
     QDialog(parent),
@@ -33,7 +33,9 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
     ui->pushButton_color->setAutoFillBackground(true);
     pal = ui->pushButton_color->palette();
 
-    pal.setColor(QPalette::Window, settaggiocolore(style_element.style[0].colore));
+    pal.setColor(
+                QPalette::Window, setcolor(&style_element.style[0].colore));
+
     ui->pushButton_color->setPalette(pal);
 
     this->current = 0;
@@ -95,11 +97,11 @@ inline bool operator==(const style_struct& lhs, const style_struct& rhs)
 
     if(!check) return false;
 
-    int i, k;
+    int i;
     for(i=0; i<QUANTESTRUCT; i++){
-        for(k=0; k<4; k++)
-            if(lhs.style[i].colore[k] != rhs.style[i].colore[k])
-                return false;
+        if(memcmp(&lhs.style[i].colore, &rhs.style[i].colore, sizeof(colore_s)) != 0)
+            return false;
+
         if(lhs.style[i].nx != rhs.style[i].nx)
             return false;
 
@@ -156,10 +158,7 @@ void dialog_sheet::on_pushButton_color_clicked()
     if(!color.isValid())
         return;
 
-    color.getRgb(&style_element.style[current].colore[0],
-            &style_element.style[current].colore[1],
-            &style_element.style[current].colore[2],
-            &style_element.style[current].colore[3]);
+    setcolor_struct(&style_element.style[current].colore, color);
 
     draw();
 }

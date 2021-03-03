@@ -14,7 +14,7 @@ QColor setcolor(const struct colore_s *colore){
 /*
  * the function set the value of
 */
-void setcolor_struct(colore_s *color, QColor &color_){
+void setcolor_struct(colore_s *color, QColor color_){
     color_.getRgb(&color->colore[0],
             &color->colore[1],
             &color->colore[2],

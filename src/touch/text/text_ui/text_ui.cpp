@@ -24,12 +24,6 @@ text_ui::~text_ui()
     delete ui;
 }
 
-static void setBlack(colore_s *color){
-    for(int i=0; i<3; i++)
-        color->colore[i] = 0;
-    color->colore[3] = 255;
-}
-
 void text_ui::loadData()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -37,7 +31,8 @@ void text_ui::loadData()
 
     QByteArray array;
     colore_s temp;
-    setBlack(&temp);
+
+    setcolor_struct(&temp, QColor(Qt::black));
 
     array.append((const char *)&temp);
 

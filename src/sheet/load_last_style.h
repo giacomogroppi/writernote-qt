@@ -7,8 +7,6 @@
 #define DEFAULTN 20
 #define DEFAULTNOME "Undefined"
 
-#define DEFAULTALFA 254
-
 style_struct * load_last_style();
 void save_last_style(style_struct *);
 

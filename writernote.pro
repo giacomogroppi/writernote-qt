@@ -126,7 +126,6 @@ SOURCES += \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
-    src/sheet/setting_color.cpp \
     src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
@@ -226,7 +225,6 @@ HEADERS += \
     src/pdf/topdf.h \
     src/setting_ui.h \
     src/sheet/dialog_sheet.h \
-    src/sheet/setting_color.h \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \

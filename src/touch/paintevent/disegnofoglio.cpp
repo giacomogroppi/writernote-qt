@@ -1,7 +1,7 @@
 #include "../tabletcanvas.h"
 
 #include "../../sheet/load_last_style.h"
-#include "../../sheet/setting_color.h"
+#include "../../utils/color/setcolor.h"
 
 #define DISTANCEFROMLEFTANDRIGHT 0
 #define DEFAULTROTATION 0
@@ -41,7 +41,7 @@ void TabletCanvas::disegnafoglio(){
         load_default_onlystyle(style);
     }
 
-    QColor coloretemp(settaggiocolore(style->colore));
+    QColor coloretemp(setcolor(&style->colore));
 
     struct colore_s coloretemp_struttura;
 

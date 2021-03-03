@@ -69,7 +69,7 @@ void pen_ui::on_button_pressure_clicked()
     ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
     ui->button_size->setChecked(m_type_pen == SPESSORE);
 
-    ui->slider_size->setDisabled(false);
+    ui->slider_size->setDisabled(true);
 }
 
 void pen_ui::on_button_size_clicked()
@@ -79,7 +79,7 @@ void pen_ui::on_button_size_clicked()
     ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
     ui->button_size->setChecked(m_type_pen == SPESSORE);
 
-    ui->slider_size->setDisabled(true);
+    ui->slider_size->setDisabled(false);
 }
 
 bool pen_ui::event(QEvent *event){

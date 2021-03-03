@@ -5,15 +5,14 @@
 #include <QtCore/QSettings>
 
 #include "../utils/setting_define.h"
+#include "../utils/color/setcolor.h"
 
 #include "string.h"
 
 static void load_default_(style_struct *data, int indice, const char *name){
     strcpy(data->style[indice].nome, name);
 
-    data->style[indice].colore[1] = data->style[indice].colore[0] = 0;
-    data->style[indice].colore[2] = 255;
-    data->style[indice].colore[3] = DEFAULTALFA;
+    setcolor_struct(&data->style[indice].colore, QColor(Qt::black));
 
     data->style[indice].nx = data->style[indice].ny = DEFAULTN;
 
@@ -37,9 +36,7 @@ void load_default(style_struct *default_setting, const char *name, int indice){
 void load_default_onlystyle( style_struct_S *default_setting){
     strcpy(default_setting->nome, DEFAULTNOME);
 
-    default_setting->colore[1] = default_setting->colore[0] = 0;
-    default_setting->colore[2] = 255;
-    default_setting->colore[3] = DEFAULTALFA;
+    setcolor_struct(&default_setting->colore, QColor(Qt::black));
 
     default_setting->nx = default_setting->ny = DEFAULTN;
 

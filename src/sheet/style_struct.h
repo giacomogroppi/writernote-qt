@@ -8,10 +8,17 @@
 #include <QMetaType>
 #include <QDataStream>
 
+#include "../touch/datastruct/datastruct.h"
+
+
 struct style_struct_S{
     char nome[STRNOME + 1];
     int nx, ny;
-    int colore[4];
+
+    struct colore_s colore;
+    //int colore[4];
+
+
     int thickness;
 };
 
