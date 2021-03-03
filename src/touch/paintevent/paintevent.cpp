@@ -52,8 +52,12 @@ void TabletCanvas::load(QPainter *painter,
         size_verticale = m_pixmap.height();
     }
 
+    QColor current_color = this->m_color;
+
     for(i = 1, len = C(data).length(); i < len-1; i++)
     {
+        m_pen.setColor(setcolor(&data->datatouch->m_point.at(i).m_color));
+
         if(C(data).at(i).m_x <= 0
                 && thereispositive(data->datatouch, C(data).at(i).idtratto, i)){
             while(C(data).at(i).m_y <= 0){
@@ -100,6 +104,8 @@ void TabletCanvas::load(QPainter *painter,
     }
 
     draw_image(data, painter);
+
+    this->m_pen.setColor(current_color);
 
     this->isloading = false;
 }

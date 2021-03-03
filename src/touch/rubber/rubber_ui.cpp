@@ -83,7 +83,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                     data->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
                 }
 
-                a = a;
+                printf("");
 
                 i--;
             }
