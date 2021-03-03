@@ -16,7 +16,7 @@ static double howDelta(datastruct *data, bool v, int height){
 
     if(v){
         f = data->m_point.first().m_y;
-        return f;
+        return -f;
     }else{
         int i, len;
         f = data->m_point.first().m_y;
@@ -49,6 +49,10 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
     this->isloading = true;
     update();
 }
+
+/*
+ * the function is called when the user scrolls with his finger
+*/
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 #if defined(WIN32) || defined(WIN64)

@@ -45,9 +45,11 @@ void TabletCanvas::load(QPainter *painter,
                         int size_orizzontale,
                         int size_verticale,
                         double *y_last){
-    int i, len;
+    int i, len, k;
 
     m_pixmap.fill(Qt::white);
+
+    double xtemp[2], ytemp[2];
 
     if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
         size_orizzontale = width();
@@ -55,13 +57,16 @@ void TabletCanvas::load(QPainter *painter,
     }
 
     QColor current_color = this->m_color;
+    this->m_pen.setStyle(Qt::PenStyle::SolidLine);
 
     for(i = 1, len = C(data).length(); i < len-1; i++)
     {
         m_pen.setColor(setcolor(&data->datatouch->m_point.at(i).m_color));
 
         if(C(data).at(i).m_x <= 0
-                && thereispositive(data->datatouch, C(data).at(i).idtratto, i) && C(data).at(i).idtratto != IDVERTICALE && C(data).at(i).idtratto != IDORIZZONALE){
+                && thereispositive(data->datatouch, C(data).at(i).idtratto, i)
+                && C(data).at(i).idtratto != IDVERTICALE
+                && C(data).at(i).idtratto != IDORIZZONALE){
             while(C(data).at(i).m_y <= 0){
                 i++;
             }
@@ -75,15 +80,25 @@ void TabletCanvas::load(QPainter *painter,
 
                 SET_PEN;
 
-                painter->drawLine(C(data).at(i).m_x, C(data).at(i).m_y
-                                  , C(data).at(i + 1).m_x, C(data).at(i + 1).m_y);
+                for(k=0; k<2; k++){
+                    xtemp[k] = C(data).at(i+k).m_x;
+                    ytemp[k] = C(data).at(i+k).m_y;
+
+                    xtemp[k] = (xtemp[k] < 0) ? 0 : xtemp[k];
+                    ytemp[k] = (ytemp[k] < 0) ? 0 : ytemp[k];
+
+                    xtemp[k] = (xtemp[k] > size_orizzontale) ? (double)size_orizzontale : xtemp[k];
+                    ytemp[k] = (ytemp[k] > size_verticale) ? (double)size_verticale : ytemp[k];
+                }
+
+                /*painter->drawLine(C(data).at(i).m_x, C(data).at(i).m_y
+                                  , C(data).at(i + 1).m_x, C(data).at(i + 1).m_y);*/
+
+                painter->drawLine(xtemp[0], ytemp[0], xtemp[1], ytemp[1]);
 
                 i++;
             }
-            else if(i
-                    && C(data).at(i).m_y != (double)0
-                    && C(data).at(i).m_y != (double)size_orizzontale
-                    && C(data).at(i).m_x != size_verticale
+            else if(C(data).at(i).m_x != size_verticale
                     && C(data).at(i).idtratto == C(data).at(i - 1).idtratto){
 
 
@@ -118,16 +133,11 @@ void TabletCanvas::load(QPainter *painter,
 static bool thereispositive(datastruct *data, int idtratto, int start){
     int len;
     len = data->m_point.length();
-    //len = data->x.length();
 
     for(; start<len; start++)
         if(data->m_point.at(start).idtratto == idtratto && data->m_point.at(start).m_y >= 0.0)
             return true;
-    /*
-    for(; start<len; start++){
-        if(data->idtratto.at(start) == idtratto && data->y.at(start) >= 0.0)
-            return true;
-    }*/
+
     return false;
 }
 
