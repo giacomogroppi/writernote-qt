@@ -153,6 +153,7 @@ void TabletCanvas::settingdata(currenttitle_class *data, QString &path){
 
     if(this->m_redoundo)
         m_redoundo->setting_data(data);
+
 }
 
 void TabletCanvas::setAutoSave(bool v, QString &path){

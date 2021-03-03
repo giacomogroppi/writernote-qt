@@ -4,8 +4,6 @@
 
 #include "../utils/dialog_critic/dialog_critic.h"
 
-static bool isIn_rubber(rubber_ui *, QPointF, datastruct *);
-
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (event->type()) {
@@ -29,8 +27,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             }
             break;
         case QEvent::TabletMove:
-        if (event->deviceType() == QTabletEvent::RotationStylus)
-                        updateCursor(event);
+            if (event->deviceType() == QTabletEvent::RotationStylus)
+                updateCursor(event);
 
 #if defined(WIN32) || defined(WIN64)
         this->isdrawing = true;
@@ -133,8 +131,4 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             break;
     }
     event->accept();
-}
-
-static bool isIn_rubber(rubber_ui *m_rubber, QPointF point, datastruct *data){
-
 }
