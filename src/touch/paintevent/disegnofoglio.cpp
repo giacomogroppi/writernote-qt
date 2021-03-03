@@ -41,15 +41,11 @@ void TabletCanvas::disegnafoglio(){
         load_default_onlystyle(style);
     }
 
-    QColor coloretemp(setcolor(&style->colore));
-
-    struct colore_s coloretemp_struttura;
-
     /* insert a point (0, 0) */
     addPointZero(data);
 
-    coloretemp = setcolor(&coloretemp_struttura);
     struct point_s temp_point;
+    memcpy(&temp_point.m_color, &style->colore, sizeof(colore_s));
 
     float pressure_default = widthToPressure(style->thickness);
 

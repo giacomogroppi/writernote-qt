@@ -53,6 +53,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
     int id;
     bool need_reload = false;
     unsigned int i, len;
+
     len = data->m_point.length();
 
     double x, y;
@@ -74,12 +75,16 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 need_reload = true;
 
                 gomma_delete_id.append(id);
-                for(; i<len; i++){
+                int a = 0;
+                for(; i<len; i++, a++){
                     if(data->m_point.at(i).idtratto != id)
                         break;
 
                     data->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
                 }
+
+                a = a;
+
                 i--;
             }
         }

@@ -3,21 +3,12 @@
 
 #include "../tabletcanvas.h"
 
-/* la funezione controlla se è possibile spostare in su lo schermo per uno scroll
- * dall'alto verso il basso
-*/
+
 bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
 {
-    /* delta > 0
-     *
-     * .
-     * .
-     * .
-     * .
-     * .
-     * \/
-     *
-     *
+    qDebug() << "Scroll delta" << delta;
+
+    /*
      * delta < 0
      *
      * ^
@@ -30,24 +21,15 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
     if(data->m_point.isEmpty())
         return false;
 
-    /*if(data->x.length() == 0)
-        return false;*/
-
     if (delta < 0){
         int i;
-        double len, pos;
+        double len, pos = data->m_point.first().m_y;
 
         len = data->m_point.length();
-        for(i=0, pos = 0; i<len; i++){
-            if(data->m_point.at(i).m_y == IDORIZZONALE && data->m_point.at(i).m_y > pos)
+        for(i=0; i<len; i++){
+            if(data->m_point.at(i).m_y > pos)
                 pos = data->m_point.at(i).m_y;
         }
-
-        /* last data struct
-        len = data->x.length();
-        for(i=0, pos = 0; i<len; i++)
-            if(data->idtratto[i] == IDORIZZONALE && data->y[i] > pos)
-                pos = data->y.at(i);*/
 
         return pos + delta > altezza;
     }
@@ -55,8 +37,6 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
     /* the first element is added from disegnofoglio */
     return data->m_point.first().m_y + delta < 0;
 
-    /*last data struct*/
-    //return data->y.first() + delta < 0;
 }
 
 

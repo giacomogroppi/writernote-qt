@@ -102,14 +102,19 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     CHECKABLE(ui->actionselezionetext);
     CHECKABLE(ui->actioninsertText);
 
+    ui->actionpen->setChecked(true);
+
 }
 
 
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    /* they are automatically eliminated thanks to qt */
+    /*
     delete m_rubber;
-    delete m_pen;
+    delete m_pen;*/
 }
 
 /* create new file */
