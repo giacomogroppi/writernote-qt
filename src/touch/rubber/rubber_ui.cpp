@@ -13,6 +13,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
+
 }
 
 

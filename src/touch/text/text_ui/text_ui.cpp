@@ -15,6 +15,8 @@ text_ui::text_ui(QWidget *parent) :
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+
+    this->loadData();
 }
 
 text_ui::~text_ui()
@@ -24,7 +26,7 @@ text_ui::~text_ui()
 
 static void setBlack(colore_s *color){
     for(int i=0; i<3; i++)
-        color->colore[0] = 0;
+        color->colore[i] = 0;
     color->colore[3] = 255;
 }
 
@@ -76,7 +78,18 @@ void text_ui::loadData()
 
 void text_ui::saveData()
 {
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_TEXT_PEN);
 
+    setting.setValue(KEY_TEXT_PEN_FONT, this->m_font.toString());
+    setting.setValue(KEY_TEXT_PEN_FONT, this->m_currentSize);
+
+    QByteArray array;
+    array.append((const char *)&this->m_currentDcolor, sizeof(this->m_currentDcolor));
+
+    setting.setValue(KEY_TEXT_PEN_COLOR, array);
+
+    setting.endGroup();
 }
 
 bool text_ui::event(QEvent *event)

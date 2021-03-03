@@ -94,6 +94,14 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 #ifndef CLOUD
     ui->actioncloud->setVisible(false);
 #endif
+
+#define CHECKABLE(x) x->setCheckable(true)
+
+    CHECKABLE(ui->actionpen);
+    CHECKABLE(ui->actionrubber);
+    CHECKABLE(ui->actionselezionetext);
+    CHECKABLE(ui->actioninsertText);
+
 }
 
 
