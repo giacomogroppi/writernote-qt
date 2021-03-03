@@ -104,7 +104,7 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
             cursor = QCursor(QPixmap(":image/images/cursor-eraser.png"), 3, 28);
         }
         else {
-            switch (event->device()) {
+            switch (event->deviceType()) {
             case QTabletEvent::Stylus:
                 cursor = QCursor(QPixmap(":image/images/cursor-pencil.png"), 0, 0);
                 break;

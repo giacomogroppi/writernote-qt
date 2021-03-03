@@ -75,13 +75,16 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     setcolor_struct(&colore, m_color);
 
-    memcpy(&temp_point.m_color, &colore, sizeof(struct colore_s));
+    memcpy(&temp_point.m_color, &colore, sizeof(colore_s));
 
     data->datatouch->m_point.append(temp_point);
 }
 
 
-/* la funzioen gestisce tutti i pixel */
+/*
+ * the function is called from TabletCanvas::tabletEvent
+ * and print the data in the painter
+*/
 void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
     static qreal maxPenradius = pressureToWidth(1.0);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -90,5 +93,7 @@ void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
     painter.drawLine(lastPoint.pos, event->posF());
     update(QRect(lastPoint.pos.toPoint(), event->pos()).normalized()
            .adjusted(-maxPenradius, -maxPenradius, maxPenradius, maxPenradius));
+
+
 
 }

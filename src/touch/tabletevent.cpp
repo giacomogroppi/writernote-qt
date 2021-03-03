@@ -1,7 +1,10 @@
 #include "tabletcanvas.h"
 #include "method/methoddefinition.h"
 
+
 #include "../utils/dialog_critic/dialog_critic.h"
+
+static bool isIn_rubber(rubber_ui *, QPointF, datastruct *);
 
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
@@ -26,7 +29,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             }
             break;
         case QEvent::TabletMove:
-        if (event->device() == QTabletEvent::RotationStylus)
+        if (event->deviceType() == QTabletEvent::RotationStylus)
                         updateCursor(event);
 
 #if defined(WIN32) || defined(WIN64)
@@ -37,10 +40,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 QPainter painter(&m_pixmap);
                 if(this->medotodiinserimento == METHOD_STILO){
                     updateBrush(event);
+
                     paintPixmap(painter, event);
                 }
 
-                /* se non è settato in STILO non bisogna aggiornare la lista ne scrivere */
                 lastPoint.pos = event->pos();
                 lastPoint.pressure = event->pressure();
                 lastPoint.rotation = event->rotation();
@@ -49,16 +52,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     updatelist(event);
                 }
                 else if(medotodiinserimento == METHOD_GOMMA){
-                    gomma(painter);
-                    if(lastPoint.pos.x() - m_rubber->m_size_gomma >= 0
-                            && lastPoint.pos.x() + m_rubber->m_size_gomma < this->m_pixmap.width()
-                            && lastPoint.pos.y() - m_rubber->m_size_gomma >= 0
-                            && lastPoint.pos.y() + m_rubber->m_size_gomma < this->m_pixmap.height())
-                        update(QRect(lastPoint.pos.x() - m_rubber->m_size_gomma,
-                                     lastPoint.pos.y() - m_rubber->m_size_gomma,
-                                     lastPoint.pos.x() + m_rubber->m_size_gomma,
-                                     lastPoint.pos.y() + m_rubber->m_size_gomma));
-                    else
+
+                    if(m_rubber->actionRubber(data->datatouch, event->posF(), painter))
                         update();
 
                 }
@@ -128,7 +123,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                 }
                 else if(m_rubber->m_type_gomma == TOTALE){
-                    this->gomma_delete();
+                    this->m_rubber->clearList(data->datatouch);
                 }
                 isloading = true;
                 update();
@@ -138,4 +133,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             break;
     }
     event->accept();
+}
+
+static bool isIn_rubber(rubber_ui *m_rubber, QPointF point, datastruct *data){
+
 }

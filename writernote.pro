@@ -147,7 +147,6 @@ SOURCES += \
     src/touch/initpixmap.cpp \
     src/touch/paintevent/disegnofoglio.cpp \
     src/touch/paintevent/draw_image.cpp \
-    src/touch/paintevent/gomma.cpp \
     src/touch/paintevent/paintevent.cpp \
     src/touch/pen/load_settings_pen_ui.cpp \
     src/touch/pen/pen_ui.cpp \

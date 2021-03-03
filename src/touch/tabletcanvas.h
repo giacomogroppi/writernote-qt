@@ -84,10 +84,6 @@ public:
     /* 0 penna
        1 gomma*/
     int medotodiinserimento;
-    void gomma(QPainter &painter);
-    void gomma_delete();
-
-    QList<int> gomma_delete_id;
 
     QColor m_color = Qt::black;
 
