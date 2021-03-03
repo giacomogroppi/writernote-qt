@@ -9,13 +9,14 @@
  * returns the value of how much we can scroll
  * v == true delta < 0
 */
-static double howDelta(datastruct *data, bool v){
+static double howDelta(datastruct *data, bool v, int height){
     double f = 0.0;
     if(data->m_point.isEmpty())
         return f;
 
     if(v){
         f = data->m_point.first().m_y;
+        return f;
     }else{
         int i, len;
         f = data->m_point.first().m_y;
@@ -26,7 +27,7 @@ static double howDelta(datastruct *data, bool v){
                 f = data->m_point.at(i).m_y;
     }
 
-    return f;
+    return -(f-(double)height);
 }
 
 void TabletCanvas::wheelEvent(QWheelEvent *event)
@@ -34,9 +35,10 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
     double move = event->delta();
 
     if(!itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), move)){
-        move = howDelta(data->datatouch, move > 0);
+        move = howDelta(data->datatouch, move > 0, m_pixmap.height());
         if(move == 0.0)
             return;
+        printf("33 fdasf dsa fsdafdsa");
     }
 
     this->ismoving.deltay = move;

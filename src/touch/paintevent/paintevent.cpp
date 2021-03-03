@@ -61,7 +61,7 @@ void TabletCanvas::load(QPainter *painter,
         m_pen.setColor(setcolor(&data->datatouch->m_point.at(i).m_color));
 
         if(C(data).at(i).m_x <= 0
-                && thereispositive(data->datatouch, C(data).at(i).idtratto, i)){
+                && thereispositive(data->datatouch, C(data).at(i).idtratto, i) && C(data).at(i).idtratto != IDVERTICALE && C(data).at(i).idtratto != IDORIZZONALE){
             while(C(data).at(i).m_y <= 0){
                 i++;
             }
