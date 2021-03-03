@@ -37,6 +37,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 }
 
 #define C(x) x->datatouch->m_point
+#define UPDATE_LOAD updateBrush_load(C(data).at(i).m_pressure, setcolor(&C(data).at(i).m_color))
+#define SET_PEN painter->setPen(this->m_pen)
 
 void TabletCanvas::load(QPainter *painter,
                         double m,
@@ -68,10 +70,11 @@ void TabletCanvas::load(QPainter *painter,
         if(C(data).at(i).m_y < this->m_pixmap.size().height()
                 && C(data).at(i).m_y >= 0){
 
-            if(C(data).at(i).idtratto == IDORIZZONALE){
-                updateBrush_load(C(data).at(i).m_pressure, setcolor(&C(data).at(i).m_color));
+            if(C(data).at(i).idtratto == IDORIZZONALE || C(data).at(i).idtratto == IDVERTICALE){
+                UPDATE_LOAD;
 
-                painter->setPen(this->m_pen);
+                SET_PEN;
+
                 painter->drawLine(C(data).at(i).m_x, C(data).at(i).m_y
                                   , C(data).at(i + 1).m_x, C(data).at(i + 1).m_y);
 
@@ -84,9 +87,10 @@ void TabletCanvas::load(QPainter *painter,
                     && C(data).at(i).idtratto == C(data).at(i - 1).idtratto){
 
 
-                this->updateBrush_load(C(data).at(i).m_pressure, setcolor(&C(data).at(i).m_color));
+                UPDATE_LOAD;
 
-                painter->setPen(this->m_pen);
+                SET_PEN;
+
                 painter->drawLine(this->lastPoint.pos*m,
                               QPointF(C(data).at(i).m_x*m, C(data).at(i).m_y*m));
 
