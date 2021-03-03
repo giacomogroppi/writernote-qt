@@ -38,7 +38,6 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
         move = howDelta(data->datatouch, move > 0, m_pixmap.height());
         if(move == 0.0)
             return;
-        printf("33 fdasf dsa fsdafdsa");
     }
 
     this->ismoving.deltay = move;
