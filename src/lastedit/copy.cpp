@@ -72,6 +72,8 @@ void redoundo::copy_b(currenttitle_class *dest, currenttitle_class *src){
 void redoundo::copy(){
     this->scala(1);
 
+    return;
+    /* not working */
     copy_b(this->m_lista.at(indice), m_current);
 
     this->indice ++;

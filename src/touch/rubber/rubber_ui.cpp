@@ -51,6 +51,7 @@ void rubber_ui::on_partial_button_clicked()
 */
 bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &painter){
     int id;
+    bool need_reload = false;
     unsigned int i, len;
     len = data->m_point.length();
 
@@ -70,6 +71,8 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
                 id = data->m_point.at(i).idtratto;
 
+                need_reload = true;
+
                 gomma_delete_id.append(id);
                 for(; i<len; i++){
                     if(data->m_point.at(i).idtratto != id)
@@ -80,7 +83,6 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 i--;
             }
         }
-
     }
     else if(this->m_type_gomma == PARZIALE){
         QPen pennatemp;
@@ -95,6 +97,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                     x,
                     y,
                     data->m_point.at(i).idtratto)){
+                need_reload = true;
 
                 painter.drawPoint(data->m_point.at(i).m_x, data->m_point.at(i).m_y);
 
@@ -108,7 +111,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
     }
 
-    return true;
+    return need_reload;
 }
 
 /*
