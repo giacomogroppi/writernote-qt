@@ -27,7 +27,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             }
             break;
         case QEvent::TabletMove:
-            if (event->deviceType() == QTabletEvent::RotationStylus)
+            if (event->device() == QTabletEvent::RotationStylus)
                 updateCursor(event);
 
 #if defined(WIN32) || defined(WIN64)

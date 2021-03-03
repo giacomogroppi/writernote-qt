@@ -31,7 +31,7 @@ contains(DEFINES, VERSION_SNAPCRAFT){
 
 ## for enable cloud instance [remove when compiling for release] [see https://github.com/giacomogroppi/writernote-qt/blob/master/help/compile-cloud.md]
 
-DEFINES += "CLOUD"
+#DEFINES += "CLOUD"
 
 contains(DEFINES, CLOUD){
     message("Testing enable")

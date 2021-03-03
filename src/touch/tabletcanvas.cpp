@@ -104,7 +104,8 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
             cursor = QCursor(QPixmap(":image/images/cursor-eraser.png"), 3, 28);
         }
         else {
-            switch (event->deviceType()) {
+            /* deviceType we can't change event->device to deviceType because in qt 5.12.* it's not support [and it't the version for pacakge qt support] */
+            switch (event->device()) {
             case QTabletEvent::Stylus:
                 cursor = QCursor(QPixmap(":image/images/cursor-pencil.png"), 0, 0);
                 break;
