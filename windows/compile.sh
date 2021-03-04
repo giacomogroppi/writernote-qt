@@ -10,5 +10,3 @@ make release -j $nproc
 ldd ./build/writernote.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
 
 windeployqt.exe ./build/writernote.exe --force
-
-C:\Program Files (x86)\Inno Setup 6> .\ISCC.exe windows\package.iss
