@@ -9,12 +9,17 @@
 </tr>
 </table>
 
+## Features:
+- 
+
 ## Experimental Features:
 - Import images
 - Zoom in and Zoom on
 - Personal sheet
 - Rubber
 - Android support
+- Last open file
+- Pen [different types of pen]
 
 ## To do
 - Project .writer to image
@@ -71,6 +76,11 @@
         git clone https://github.com/giacomogroppi/writernote-qt.git
         ./windows/dipendenze.sh
         ./windows/compile.sh
+      ```
+      power Shell: [to create an installation file]
+      ```
+        cd windows
+        .\package.bat
       ```
   - Android:
     In /android you can find all the rule to compile writernote for android.
