@@ -47,9 +47,6 @@ void TabletCanvas::disegnafoglio(){
     struct point_s temp_point;
     memcpy(&temp_point.m_color, &style->colore, sizeof(colore_s));
 
-    float pressure_default = widthToPressure(style->thickness);
-
-
 
     double deltax = height / style->nx;
     double deltay = (double)width / (double)style->ny;

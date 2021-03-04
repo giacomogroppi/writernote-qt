@@ -76,8 +76,8 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 need_reload = true;
 
                 gomma_delete_id.append(id);
-                int a = 0;
-                for(; i<len && data->m_point.at(i).idtratto == id; i++, a++)
+
+                for(; i<len && data->m_point.at(i).idtratto == id; i++)
                     data->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
 
 
@@ -107,6 +107,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 }
 
                 data->removeat(i);
+                len --;
             }
         }
 
@@ -118,12 +119,25 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 /*
  * call when the user left the screen
 */
+static void removeR(QList<int> *list){
+    int i, len;
+    len = list->length();
+    for(i=0; i<len; i++){
+        if(list->indexOf(list->at(i)) != -1){
+            list->removeAt(i);
+            len --;
+        }
+    }
+}
+
 bool rubber_ui::clearList(datastruct *data)
 {
     if(gomma_delete_id.isEmpty())
         return false;
 
     int k, len_cancella;
+
+    removeR(&this->gomma_delete_id);
 
     unsigned int i, len;
 
@@ -132,8 +146,10 @@ bool rubber_ui::clearList(datastruct *data)
 
     for(k=0; k<len_cancella; k++){
         for(i=0; i<len; i++){
-            if(data->m_point.at(i).idtratto == gomma_delete_id.at(i))
+            if(data->m_point.at(i).idtratto == gomma_delete_id.at(k)){
                 data->removeat(i);
+                len --;
+            }
         }
     }
 
@@ -141,6 +157,7 @@ bool rubber_ui::clearList(datastruct *data)
 
     return true;
 }
+
 
 bool rubber_ui::isin(double x,
                  double y,

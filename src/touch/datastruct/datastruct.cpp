@@ -53,6 +53,19 @@ unsigned int datastruct::positionId(int id)
     return 0;
 }
 
+static inline void d(point_s *point, int alfa){
+    point->m_color.colore[3] /= alfa;
+}
+
+void datastruct::decreaseAlfa(int id, int decrease)
+{
+    int i, len = this->m_point.length();
+
+    for(i=0; i<len; i++)
+        if(m_point.at(i).idtratto == id)
+            d(&m_point.operator[](i), decrease);
+}
+
 
 auto datastruct::biggerynoid() -> double{
     if(m_point.isEmpty())

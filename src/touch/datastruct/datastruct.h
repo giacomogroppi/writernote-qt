@@ -49,6 +49,8 @@ public:
     /* the function return the index of the id*/
     unsigned int positionId(int id);
 
+    void decreaseAlfa(int, int);
+
     /*
      * change all this list with a QList<struct point_s>
      *  - more easy to read in file

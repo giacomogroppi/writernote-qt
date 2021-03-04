@@ -19,6 +19,10 @@ static inline QPointF puntoameta(QPointF &, QPointF &);
 #define RIDEFINE_POINT(x) x=QPointF(PRIVATE_RIDEFINE)
 #define RIDEFINE(x) RIDEFINE_POINT(x.poss),RIDEFINE_POINT(x.posd)
 
+/*
+ * this function only manage zoom
+*/
+
 bool TabletCanvas::event(QEvent *event){
     QPointF temp;
     bool needToResize = false;
@@ -99,6 +103,9 @@ bool TabletCanvas::event(QEvent *event){
             if(data != NULL)
                 return QWidget::event(event);
     }
+    if(data != NULL)
+        return QWidget::event(event);
+    //return true;
     return true;
 }
 
