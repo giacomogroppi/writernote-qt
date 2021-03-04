@@ -61,6 +61,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
     x = lastPoint.x();
     y = lastPoint.y();
 
+    this->penna.setStyle(Qt::SolidLine);
 
     if(this->m_type_gomma == TOTALE){
         for(i=0; i<len; i++){
@@ -76,14 +77,9 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
                 gomma_delete_id.append(id);
                 int a = 0;
-                for(; i<len; i++, a++){
-                    if(data->m_point.at(i).idtratto != id)
-                        break;
-
+                for(; i<len && data->m_point.at(i).idtratto == id; i++, a++)
                     data->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
-                }
 
-                printf("");
 
                 i--;
             }

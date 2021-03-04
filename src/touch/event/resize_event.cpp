@@ -13,12 +13,9 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
             if(data->datatouch->m_point.at(i).idtratto == IDORIZZONALE)
                 break;
 
-        /*for(i=0; i<len; i++)
-            if(data->datatouch->idtratto.at(i) == IDORIZZONALE)
-                break;*/
 
         double delta;
-        //delta = data->datatouch->x.at(i+1);
+
         delta = data->datatouch->m_point.at(i+1).m_x;
         if(delta < width() && data->datatouch->m_point.at(i).m_x < 0){
             delta = data->datatouch->m_point.at(i).m_x;

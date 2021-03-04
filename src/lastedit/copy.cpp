@@ -74,7 +74,7 @@ void redoundo::copy(){
 
     return;
     /* not working */
-    copy_b(this->m_lista.at(indice), m_current);
+    copy_b(this->m_lista.operator[](indice), m_current);
 
     this->indice ++;
 }
@@ -82,10 +82,13 @@ void redoundo::copy(){
 static void copycolor(QList<struct point_s> *src, QList<struct point_s> *dest){
     int i, len = src->length(), k;
 
+
     for(i=0; i<len; i++){
+        memcpy(&dest->operator[](i).m_color, &src->operator[](i).m_color, sizeof(colore_s));
+        /*
         for(k=0; k<NCOLOR; k++){
             dest->operator[](i).m_color.colore[k] = src->operator[](i).m_color.colore[k];
-        }
+        }*/
     }
 }
 

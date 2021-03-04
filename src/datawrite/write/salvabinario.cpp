@@ -32,40 +32,12 @@ int savefile::salvabinario(zip_t *filezip){
         WRITE_ON_SIZE(file, &currenttitle->datatouch->m_point[i], sizeof(struct point_s), filezip);
     }
 
-    /*
-     * last data struct
-    */
-    /*lunghezza = this->currenttitle->datatouch->x.length();
-    WRITE_ON_SIZE(file, &lunghezza, sizeof(int), filezip);
-
-
-    for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &this->currenttitle->datatouch->x[i], sizeof(double), filezip);
-
-    for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &this->currenttitle->datatouch->y[i], sizeof(double), filezip);
-
-    for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &this->currenttitle->datatouch->idtratto[i], sizeof(int), filezip);
-
-    for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &this->currenttitle->datatouch->pressure[i], sizeof(float), filezip);
-
-    for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &this->currenttitle->datatouch->rotation[i], sizeof(int), filezip);
-
-    for(i = 0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->color.at(i), sizeof(struct colore_s), filezip);
-
-    for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizioneaudio[i], sizeof(int), filezip);*/
-
 
     lunghezza = currenttitle->datatouch->posizionefoglio.length();
     WRITE_ON_SIZE(file, &lunghezza, sizeof(int), filezip);
 
     for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio[i], sizeof(double), filezip);
+        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio.operator[](i), sizeof(double), filezip);
 
     WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(long double), filezip);
 

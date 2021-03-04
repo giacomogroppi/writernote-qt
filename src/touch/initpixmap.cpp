@@ -14,10 +14,8 @@ void TabletCanvas::initPixmap()
         for(i=0; i<len; i++)
             if(data->datatouch->m_point.at(i).idtratto == IDORIZZONALE)
                 break;
-            /*if(data->datatouch->idtratto.at(i) == -1)
-                break;*/
 
-        i = data->datatouch->m_point.at(i+1).m_x + 20;
+        i = data->datatouch->m_point.at(i+1).m_x;
 
         if(width() < i)
             sizex = width();
