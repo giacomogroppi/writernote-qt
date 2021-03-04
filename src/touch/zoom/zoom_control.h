@@ -17,13 +17,13 @@ private:
      *  true -> inverse operation
     */
     void trasla(QPointF &, long double delta = 0);
-
+    bool needToResize(int widthP, int maxWidth);
 public:
     zoom_control();
 
     void settingData(datastruct *data_struct){data = data_struct;}
 
-    void zoom(QPointF &, long double);
+    bool zoom(QPointF &, long double, int widthP, int maxWidth);
 
 };
 

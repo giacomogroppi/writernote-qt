@@ -59,6 +59,9 @@ void topdf::translate(){
 
     QPointF temp_point = QPointF(1, 1);
 
-    parent->m_canvas->zoom->zoom(temp_point, temp);
+    /*
+     * we can pass any value as we are not interested in resizing
+    */
+    parent->m_canvas->zoom->zoom(temp_point, temp, 0, 0);
 
 }

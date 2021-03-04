@@ -21,6 +21,7 @@ static inline QPointF puntoameta(QPointF &, QPointF &);
 
 bool TabletCanvas::event(QEvent *event){
     QPointF temp;
+    bool needToResize = false;
 
     switch (event->type()) {
         case QEvent::TouchBegin:
@@ -52,14 +53,14 @@ bool TabletCanvas::event(QEvent *event){
 
                             if(check){
                                 temp_distance = calcolodistanza(&lastpointzoom.posd, &punto)/temp_distance_right_left;
-                                this->zoom->zoom(temp,
-                                            temp_distance);
+                                needToResize = needToResize || this->zoom->zoom(temp,
+                                            temp_distance, m_pixmap.width(), this->width());
 
                             }
                             else{
                                 temp_distance = calcolodistanza(&lastpointzoom.poss, &punto)/temp_distance_right_left;
-                                this->zoom->zoom(temp,
-                                                 temp_distance);
+                                needToResize = needToResize || this->zoom->zoom(temp,
+                                                 temp_distance, m_pixmap.width(), this->width());
                             }
 
                             RIDEFINE(lastpointzoom);
@@ -82,10 +83,14 @@ bool TabletCanvas::event(QEvent *event){
                                     this->lastpointzoom.poss = touchPoint.pos();
                             }
                         }
+
                     }
                     break;
                 }
             }
+            if(needToResize)
+                this->resizeEvent(NULL);
+
             if(isloading)
                 update();
             break;
