@@ -40,7 +40,7 @@ private:
 
     char **m_style_return;
 
-    last_file *m_last;
+    last_file *m_last = NULL;
 
     Ui::last_open *ui;
 

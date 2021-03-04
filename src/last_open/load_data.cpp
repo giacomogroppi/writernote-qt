@@ -6,6 +6,11 @@
 /*
  * data return from array.data() is released
  * after the function end
+ *
+ * the function return a pointer to an last_file
+ * in size of [quanti]
+ *
+ * the memory is release when it's close last_open instance
 */
 
 last_file * load_data(QSettings &setting, int quanti)
@@ -18,6 +23,18 @@ last_file * load_data(QSettings &setting, int quanti)
     QByteArray array;
     array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
 
+    /*
+     * we do not know why, but currently it seems that
+     *  the array returns only part of what the data is,
+     * it's all mark everything else to zero, so for now we disable it
+     *
+     * in unix like systems the system works perfectly
+     * only in windows we have this problem
+    */
+#if defined(WIN32) || defined(WIN64)
+    //return NULL;
+#endif
+
     /* check the integrity of data */
     if(array.size() != sizeof(last_file)*quanti)
         return NULL;
@@ -25,9 +42,15 @@ last_file * load_data(QSettings &setting, int quanti)
     temp = (last_file *)array.data();
 
     last_file *temp_return;
+
     temp_return = new last_file[quanti];
 
+#if defined(WIN32) || defined(WIN64)
+    for(int i=0; i<quanti; i++){
+        memcpy(&temp_return[i], &temp[i], sizeof(last_file));
+    }
+#elif defined(unix)
     memccpy(temp_return, temp, quanti, sizeof(last_file));
-
+#endif
     return temp_return;
 }

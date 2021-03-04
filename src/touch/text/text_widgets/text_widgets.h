@@ -11,7 +11,7 @@
 #define D_XF 60.0
 #define D_YF 20.0
 
-#define MAXSTR 500
+#define MAXSTR_W 500
 
 /*
  * this point contain all information for the text
@@ -26,7 +26,7 @@ struct pointText{
     struct colore_s color; /* color of the text */
 
     /* for saving reason is better to have memory serialize */
-    char m_text[MAXSTR + 1 ];
+    char m_text[MAXSTR_W + 1 ];
 };
 
 namespace Ui {

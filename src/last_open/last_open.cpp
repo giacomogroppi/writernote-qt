@@ -46,6 +46,9 @@ last_open::~last_open()
         delete m_lista.at(i);
     }
 
+    /*if(this->m_last)
+        delete [] m_last;*/
+
     delete ui;
 }
 
@@ -87,6 +90,20 @@ int last_open::load_data_()
 
         return 0;
     }
+
+    /*
+     * check that the position of the files is not
+     * null, in case it translates all elements
+    */
+    for(int i=0, k; i<m_quanti; i++){
+        if(strlen(m_last[i].posizione) == 0){
+            for(k=i; k<m_quanti-1; k++){
+                memcpy(&m_last[k], &m_last[k+1], sizeof(last_file));
+            }
+            m_quanti --;
+        }
+    }
+
 
     tidyup(m_last, m_quanti);
 
@@ -158,13 +175,13 @@ static void copy(last_file *s, char *pos, char *last_mod_o, char *last_mod_g, in
     memcpy(&s->type, &type, sizeof(int));
 
     if(pos)
-        memcpy(&s->posizione, pos, sizeof(char)*MAXSTR_);
+        memcpy(&s->posizione, pos, sizeof(char)*MAXSTR__FILE);
 
     if(last_mod_o)
-        memcpy(&s->last_modification_o, last_mod_o, sizeof(char)*MAXMOD_);
+        memcpy(&s->last_modification_o, last_mod_o, sizeof(char)*MAXMOD__FILE);
 
     if(last_mod_g)
-        memcpy(&s->last_modification_g, last_mod_g, sizeof(char)*MAXMOD_);
+        memcpy(&s->last_modification_g, last_mod_g, sizeof(char)*MAXMOD__FILE);
 }
 
 void last_open::on_open_button_clicked()
@@ -283,11 +300,15 @@ static bool recent(last_file *first, last_file *second){
  * la funzione riordina i file dal più recente al più vecchio
 */
 static void tidyup(last_file *m_data, int m_quanti){
+    //if(m_quanti == 1 || m_quanti == 0)
+    //    return;
+
     int k;
     size_t s;
     s = sizeof(last_file);
 
     last_file *temp = new last_file;
+
     for(int i=0; i<m_quanti; i++){
         for(k=1; k<m_quanti; k++){
             if(recent(&m_data[i], &m_data[k])){
@@ -298,6 +319,8 @@ static void tidyup(last_file *m_data, int m_quanti){
             }
         }
     }
+
+    delete temp;
 }
 
 

@@ -85,10 +85,7 @@ static void copycolor(QList<struct point_s> *src, QList<struct point_s> *dest){
 
     for(i=0; i<len; i++){
         memcpy(&dest->operator[](i).m_color, &src->operator[](i).m_color, sizeof(colore_s));
-        /*
-        for(k=0; k<NCOLOR; k++){
-            dest->operator[](i).m_color.colore[k] = src->operator[](i).m_color.colore[k];
-        }*/
+
     }
 }
 
