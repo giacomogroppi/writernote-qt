@@ -23,17 +23,6 @@ last_file * load_data(QSettings &setting, int quanti)
     QByteArray array;
     array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
 
-    /*
-     * we do not know why, but currently it seems that
-     *  the array returns only part of what the data is,
-     * it's all mark everything else to zero, so for now we disable it
-     *
-     * in unix like systems the system works perfectly
-     * only in windows we have this problem
-    */
-#if defined(WIN32) || defined(WIN64)
-    //return NULL;
-#endif
 
     /* check the integrity of data */
     if(array.size() != sizeof(last_file)*quanti)
