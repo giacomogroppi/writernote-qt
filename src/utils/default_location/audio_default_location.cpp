@@ -16,7 +16,8 @@ audio_default_location::audio_default_location(QWidget *parent) :
 
     auto res = audio_default::load_default();
 
-    SET_CHECK(res == audio_default::external);
+
+    SET_CHECK(res == audio_default::external || res == audio_default::not_define);
 
 }
 
@@ -51,7 +52,7 @@ audio_default::n_audio_recod audio_default::load_default(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_AUDIO_POSITION);
 
-    int temp = setting.value(KEY_AUDIO_POSITION_TYPE, audio_default::internal).toInt();
+    int temp = setting.value(KEY_AUDIO_POSITION_TYPE, audio_default::not_define).toInt();
 
     setting.endGroup();
 

@@ -10,7 +10,8 @@ class audio_default_location;
 namespace audio_default {
     enum n_audio_recod{
         internal,
-        external
+        external,
+        not_define
     };
     n_audio_recod load_default();
 };
