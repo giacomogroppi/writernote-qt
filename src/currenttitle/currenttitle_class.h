@@ -8,15 +8,25 @@
 
 #include "../images/image_struct.h"
 
-#define CURRENT_VERSION_CURRENT_TITLE 2
+#define CURRENT_VERSION_CURRENT_TITLE 3
 #define MIN_VERSION_CURRENT_TITLE 2
+
+#include <QByteArray>
+
+namespace audio_record {
+    enum n_audio_record{
+        not_record,
+        record_file,
+        record_zip
+    };
+};
 
 class currenttitle_class{
 public:
     QString nome_copybook;
 
     int versione = CURRENT_VERSION_CURRENT_TITLE;
-    bool se_registato = false, se_tradotto = false;
+    bool se_tradotto = false;
     QString audio_position_path = "";
     QString testi = "";
     QStringList testinohtml = {};
@@ -33,6 +43,9 @@ public:
     void reset();
 
     QList<struct immagine_S> immagini;
+
+    audio_record::n_audio_record se_registato = audio_record::not_record;
+    QByteArray audio_data;
 
     currenttitle_class();
 };

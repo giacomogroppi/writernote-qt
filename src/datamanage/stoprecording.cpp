@@ -37,7 +37,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
     }
 
-    m_currenttitle.se_registato = true;
+    //m_currenttitle.se_registato = true;
 
     settingaudio_registrazione(this, false);
     settingaudio_riascolto(this, true);

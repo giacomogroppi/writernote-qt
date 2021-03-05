@@ -246,6 +246,9 @@ private slots:
 
     void on_actioninsertText_triggered();
 
+    void setInZipAudio();
+    void setExtAudio();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

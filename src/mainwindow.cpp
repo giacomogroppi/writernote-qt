@@ -190,7 +190,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             return dialog_critic("We had a problem opening the current copybook");
         }
 
-        if(checksimilecopybook(&m_currenttitle, &tempcopybook) != OK){
+        if(checksimilecopybook(&m_currenttitle, &tempcopybook, false) != OK){
             savecopybook savevariabile(this, &m_currentTitle);
 
             if (!savevariabile.check_permission())
@@ -279,6 +279,18 @@ void MainWindow::togglePause()
         m_audioRecorder->record();
 }
 
+void MainWindow::setInZipAudio(){
+    this->m_currenttitle.se_registato = audio_record::record_zip;
+}
+
+void MainWindow::setExtAudio(){
+    this->m_currenttitle.se_registato = audio_record::record_file;
+
+}
+
+/*
+ * TODO make an android version of the function
+*/
 bool MainWindow::setOutputLocation()
 {
 #ifdef Q_OS_WINRT
@@ -291,19 +303,53 @@ bool MainWindow::setOutputLocation()
     QString fileName = cacheDir + QLatin1String("/output.wav");
 #else
     //QString fileName = QFileDialog::getSaveFileName();
-    auto *qfile = new qfilechoose(this);
-    QString fileName;
-    if(!qfile->filechoose(&fileName, TYPEAUDIO)){
-        delete qfile;
-        return false;
-    }
-    delete qfile;
+
 #endif
 
-    m_currenttitle.audio_position_path = fileName;
-    this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
-    this->m_outputLocationSet = true;
-    return true;
+    QMenu *menu = new QMenu(this);
+    menu->setTitle("Chose output location file");
+
+    QAction *internal = new QAction; // Assumes actions is not empty
+    internal->setStatusTip(tr("Into writernote file [Beta]"));
+    internal->setText("Internal file[Beta]");
+    menu->addAction(internal);
+
+    QAction *ext = new QAction;
+    ext->setStatusTip("External file");
+    ext->setText("External file");
+    menu->addAction(ext);
+
+    connect(internal, &QAction::triggered, this, &MainWindow::setInZipAudio);
+    connect(ext, &QAction::triggered, this, &MainWindow::setExtAudio);
+
+    auto hostRect = this->cursor().pos();
+    menu->move(hostRect);
+
+    if(!menu->exec())
+        return false;
+
+
+    if(this->m_currenttitle.se_registato == audio_record::record_file){
+        auto *qfile = new qfilechoose(this);
+        QString fileName;
+        if(!qfile->filechoose(&fileName, TYPEAUDIO)){
+            delete qfile;
+            return false;
+        }
+        delete qfile;
+
+        m_currenttitle.audio_position_path = fileName;
+        this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
+        this->m_outputLocationSet = true;
+        return true;
+
+    }
+    else if(this->m_currenttitle.se_registato == audio_record::record_zip){
+        this->m_audioRecorder->setOutputLocation(QUrl::fromAce(this->m_currenttitle.audio_data));
+        return true;
+    }
+
+    return false;
 }
 
 /* funzionche che viene invocata quando la registrazione dell'audio viene messa in pausa */

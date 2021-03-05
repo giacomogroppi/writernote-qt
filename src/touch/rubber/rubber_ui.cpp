@@ -88,7 +88,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
     else if(this->m_type_gomma == PARZIALE){
         QPen pennatemp;
         pennatemp.setColor(Qt::white);
-        pennatemp.setWidth(this->m_size_gomma);
+        pennatemp.setWidth(1);
 
         painter.setPen(penna);
 

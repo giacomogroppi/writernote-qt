@@ -17,6 +17,8 @@ private:
 
     int salvabinario(zip_t *);
 
+    int savefile_check_2(zip_source_t *file, currenttitle_class *currenttitle, zip_t *filezip);
+
 public:
 
     void setting_data(currenttitle_class *m_current){currenttitle = m_current;}

@@ -14,6 +14,7 @@ short int source_write_ext(zip_source_t *, const void *, int);
 #define ARGUMENT(x, y, z) if(zip_fread(x, y,z)==-1)
 
 #define SOURCE_READ_GOTO(x, y, z) ARGUMENT(x,y,z)goto free_;
+#define SOURCE_READ_RETURN(x, y, z) ARGUMENT(x, y, z)return ERROR;
 
 /* write */
 #define SOURCE_WRITE(x, y, z) if(zip_source_write(x, y, z)==-1) goto delete_;

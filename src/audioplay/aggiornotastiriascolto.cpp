@@ -9,7 +9,7 @@
 #include "../setting_ui.h"
 
 void aggiornotestiriascolto(MainWindow *parent){
-    if(parent->m_currenttitle.se_registato){
+    if(parent->m_currenttitle.se_registato != audio_record::not_record){
         QFile file(parent->m_currenttitle.audio_position_path);
         if(!file.exists())
             return dialog_critic("Audio " + parent->m_currenttitle.audio_position_path + " didn't exist");
@@ -26,9 +26,11 @@ void aggiornotestiriascolto(MainWindow *parent){
 
         /* abilita il bottone della mano e lo segna unchecked, in caso sia cliccato per qualche motivo*/
         parent->ui->actionListen_current_audio->setEnabled(true);
-        //parent->ui->actionListen_current_audio->setChecked(false);
 
-        parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle.audio_position_path));
+        if(parent->m_currenttitle.se_registato == audio_record::record_file)
+            parent->player->setMedia(QMediaContent(QUrl::fromAce(parent->m_currenttitle.audio_data)));
+        else
+            parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle.audio_position_path));
 
         parent->ui->actionDelete_audio->setEnabled(true);
     }

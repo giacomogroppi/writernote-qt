@@ -18,10 +18,13 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
+    if(this->m_currenttitle.se_registato != audio_record::not_record)
+        return messaggio_utente("You had already record and audio");
+    /*
     if(this->m_currenttitle.audio_position_path != "")
-        return dialog_critic("You had already record an audio");
+        return dialog_critic("You had already record an audio");*/
 
-/* only on snap package we have this proble */
+/* only on snap package we have this problem */
 #ifdef SNAP
     if(!load()){
         QMessageBox::StandardButton resBtn = QMessageBox::question( nullptr, "Warning",

@@ -10,7 +10,8 @@ currenttitle_class::currenttitle_class(){
 
 void currenttitle_class::reset(){
     this->versione = 1;
-    this->se_registato = this->se_tradotto = false;
+    this->se_registato = audio_record::not_record;
+    this->se_tradotto = false;
     this->audio_position_path = "";
     this->m_touch = false;
     this->testi.clear();

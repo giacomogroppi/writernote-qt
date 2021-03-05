@@ -7,6 +7,7 @@
 #define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
 
 static int save_string(zip_source_t *, const char *);
+static int save_audio_file(QByteArray & array, zip_source_t *file);
 
 int savefile::savefile_check_file(){
     int error, temp, len, i, check;
@@ -57,6 +58,9 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
+    if(save_audio_file(currenttitle->audio_data, file) != OK)
+        goto delete_;
+
     SAVE_IMAGE(&currenttitle->immagini, file)
 
     check = 0;
@@ -104,4 +108,15 @@ static int save_string(zip_source_t *file, const char *stringa){
 
     return OK;
 
+}
+
+static int save_audio_file(QByteArray & array, zip_source_t *file){
+    void *data = array.data();
+    int size = array.size();
+
+    SOURCE_WRITE_RETURN(file, &size, sizeof(int));
+
+    SOURCE_WRITE_RETURN(file, data, size);
+
+    return OK;
 }

@@ -8,10 +8,13 @@
 #define ROTATION 4
 #define PRESSURE 5
 #define IDTRATTO 6
+#define POSIZIONE_FOGLIO 7
 
-#define TESTINOHTML 7
-#define TESTI 8
-#define AUDIOPOSITION 9
+#define TESTINOHTML 8
+#define TESTI 9
+#define AUDIOPOSITION 10
+
+#define LEN_POSIZIONEFOGLIO 11
 
 /*
  * for the new data struct
@@ -21,7 +24,7 @@
 #include "currenttitle_class.h"
 #include "../indice_class.h"
 
-int checksimilecopybook(currenttitle_class *, currenttitle_class *);
+int checksimilecopybook(currenttitle_class *, currenttitle_class *, bool );
 int checksimileindice(indice_class *, indice_class *);
 
 #endif // CHECKSIMILECOPYBOOK_H

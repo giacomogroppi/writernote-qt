@@ -38,6 +38,9 @@ contains(DEFINES, CLOUD){
     DEFINES += "CLOUD_TESTING"
 }
 
+# this macro is used to enable all compatibility with the file
+DEFINES += "ALL_VERSION"
+
 ## for support A4 pdf create
 DEFINES += "NUMEROPIXELPAGINA=1400"
 DEFINES += "NUMEROPIXELORIZZONALI=980"
