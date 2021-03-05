@@ -70,4 +70,7 @@
 #define KEY_AUDIO_PERMISSION "key_audio_permission_snapcraft"
 #endif //snap
 
+#define GROUPNAME_AUDIO_POSITION "groupname-audio-position"
+#define KEY_AUDIO_POSITION_TYPE "key-audio-position-type" /* int */
+
 #endif // SETTING_DEFINE_H

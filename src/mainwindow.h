@@ -249,6 +249,8 @@ private slots:
     void setInZipAudio();
     void setExtAudio();
 
+    void on_actionDefault_save_location_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

@@ -110,6 +110,7 @@ SOURCES += \
     src/utils/checkpassword/checkpassword.cpp \
     src/utils/color/setcolor.cpp \
     src/utils/copy_text.cpp \
+    src/utils/default_location/audio_default_location.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \
@@ -220,6 +221,7 @@ HEADERS += \
     src/utils/color/setcolor.h \
     src/utils/common_error_definition.h \
     src/utils/copy_text.h \
+    src/utils/default_location/audio_default_location.h \
     src/utils/dialog_critic/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \
@@ -274,6 +276,7 @@ FORMS += \
     src/touch/text/text_ui/text_ui.ui \
     src/touch/text/text_widgets/text_widgets.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
+    src/utils/default_location/audio_default_location.ui \
     src/utils/progress_bar/progress_bar_ui.ui \
     src/videocompress/videocompress_ui.ui \
 

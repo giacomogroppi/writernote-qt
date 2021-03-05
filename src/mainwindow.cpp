@@ -428,3 +428,8 @@ void MainWindow::on_actionVersion_triggered()
 #endif // version
 }
 
+
+void MainWindow::on_actionDefault_save_location_triggered()
+{
+
+}

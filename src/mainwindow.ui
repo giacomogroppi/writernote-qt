@@ -284,6 +284,7 @@
     <addaction name="actionDelete_copybook"/>
     <addaction name="actionConvert_audio_to_text"/>
     <addaction name="actionQuality_setting"/>
+    <addaction name="actionDefault_save_location"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -824,6 +825,11 @@
    </property>
    <property name="text">
     <string>insertText</string>
+   </property>
+  </action>
+  <action name="actionDefault_save_location">
+   <property name="text">
+    <string>Default save location</string>
    </property>
   </action>
  </widget>
