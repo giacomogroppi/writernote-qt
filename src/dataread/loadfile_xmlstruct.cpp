@@ -7,7 +7,7 @@
 #define LOAD_STRINGA(x, y) if(load_stringa(x,y) == ERROR) goto free_;
 #define LOAD_STRINGA_RETURN(x, y) if(load_stringa(x, y) == ERROR)return ERROR;
 
-static int load_audio(QByteArray *array, zip_t *file, const char *namecopybook);
+static int load_audio(QByteArray *array, zip_t *file, QString &namecopybook);
 
 static int load_stringa(zip_file_t *f, QString *stringa){
     int temp;
@@ -98,7 +98,7 @@ int xmlstruct::loadfile(const char *nameFile){
     int temp_versione;
     SOURCE_READ_GOTO(f, &temp_versione, sizeof(int));
 
-    if(temp_versione == 2){
+    if(temp_versione <= 2){
 #ifdef ALL_VERSION
         if(load_file_2(currenttitle, f, filezip) != OK)
             goto free_;
@@ -144,10 +144,14 @@ int xmlstruct::loadfile(const char *nameFile){
 }
 
 #ifdef ALL_VERSION
+/*
+ * this version of the file did not allow to save the audio
+ * inside the file, the variable if_registrato was therefore
+ * of type bool, so we cannot read an internal as in the
+ * following versions.
+ * furthermore we are obliged to read the audio_potion_path string
+*/
 int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip){
-    /*if(currenttitle->isOkVersion())
-        goto error_version;*/
-
     LOAD_STRINGA_RETURN(f, &currenttitle->nome_copybook);
 
     bool temp;
@@ -156,7 +160,6 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
         this->currenttitle->se_registato = audio_record::record_file;
     else
         this->currenttitle->se_registato = audio_record::not_record;
-
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
@@ -182,13 +185,15 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
 int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip)
 {
-    LOAD_STRINGA_RETURN(f, &currenttitle->nome_copybook)
+    LOAD_STRINGA_RETURN(f, &currenttitle->nome_copybook);
 
-    SOURCE_READ_RETURN(f, &currenttitle->se_registato, sizeof(int));
+    int temp;
+    SOURCE_READ_RETURN(f, &temp, sizeof(int));
+    currenttitle->se_registato = static_cast<audio_record::n_audio_record>(temp);
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
-    LOAD_STRINGA_RETURN(f, &currenttitle->testi)
+    LOAD_STRINGA_RETURN(f, &currenttitle->testi);
 
     LOAD_STRINGA_RETURN(f, &currenttitle->audio_position_path)
 
@@ -201,7 +206,7 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
     if(currenttitle->se_registato == audio_record::record_zip)
-        LOAD_AUDIO(&currenttitle->audio_data, filezip, currenttitle->nome_copybook.toUtf8().constData());
+        LOAD_AUDIO(&currenttitle->audio_data, filezip, currenttitle->nome_copybook);
 
     LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
 
@@ -209,22 +214,36 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 }
 
 /*
- * the function automatically opens and closes the file containing the audio
+ * the function automatically opens and
+ * closes the file containing the audio
+ * TODO -> adjust the function so that more
+ * than one audio file can be read, and add
+ * the currenttitle data to support more
+ * than one audio
 */
-static int load_audio(QByteArray *array, zip_t *file, const char *namecopybook){
+#define CLOSE_ZIP_AUDIO(x) zip_fclose(x)
+static int load_audio(QByteArray *array, zip_t *file, QString &namecopybook){
     int size;
-    void * audio_data;
+    void * audio_data = nullptr;
 
     zip_file_t *f;
-    f = zip_fopen(file, namecopybook, 0);
+    f = zip_fopen(file, (namecopybook + "audio.wav").toUtf8().constData(), 0);
     if(f == NULL)
         return ERROR;
 
-    SOURCE_READ_RETURN(f, &size, sizeof(int));
+    SOURCE_READ_GOTO(f, &size, sizeof(int));
 
-    SOURCE_READ_RETURN(f, audio_data, size);
+    SOURCE_READ_GOTO(f, audio_data, size);
 
     array->append((const char *)audio_data, size);
 
+
+    CLOSE_ZIP_AUDIO(f);
     return OK;
+
+
+    free_:
+    CLOSE_ZIP_AUDIO(f);
+    return ERROR;
+
 }

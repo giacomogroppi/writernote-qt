@@ -9,7 +9,11 @@
 static int save_string(zip_source_t *, const char *);
 static int save_audio_file(QByteArray & array, zip_source_t *file);
 
+static void setCurrentVersion(currenttitle_class *data);
+
 int savefile::savefile_check_file(){
+    setCurrentVersion(currenttitle);
+
     int error, temp, len, i, check;
     zip_error_t errore;
 
@@ -32,7 +36,11 @@ int savefile::savefile_check_file(){
 
     SAVE_STRINGA(file, currenttitle->nome_copybook.toUtf8().constData());
 
-    SOURCE_WRITE(file, &currenttitle->se_registato, sizeof(bool))
+    /*{
+        int temp = static_cast<int>(currenttitle->se_registato);
+        SOURCE_WRITE(file, &temp, sizeof(int))
+    }*/
+    SOURCE_WRITE(file, &currenttitle->se_registato, sizeof(int));
 
     SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(bool))
 
@@ -119,4 +127,8 @@ static int save_audio_file(QByteArray & array, zip_source_t *file){
     SOURCE_WRITE_RETURN(file, data, size);
 
     return OK;
+}
+
+static void setCurrentVersion(currenttitle_class *data){
+    data->versione = CURRENT_VERSION_CURRENT_TITLE;
 }
