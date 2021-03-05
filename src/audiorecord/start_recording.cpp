@@ -49,8 +49,6 @@ void MainWindow::on_startrecording_triggered()
     if(!this->setOutputLocation())
         return;
 
-    if(this->m_currenttitle.audio_position_path == "")
-        return;
 
     if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {
         loadqualita(this);

@@ -36,11 +36,10 @@ int savefile::savefile_check_file(){
 
     SAVE_STRINGA(file, currenttitle->nome_copybook.toUtf8().constData());
 
-    /*{
+    {
         int temp = static_cast<int>(currenttitle->se_registato);
         SOURCE_WRITE(file, &temp, sizeof(int))
-    }*/
-    SOURCE_WRITE(file, &currenttitle->se_registato, sizeof(int));
+    }
 
     SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(bool))
 

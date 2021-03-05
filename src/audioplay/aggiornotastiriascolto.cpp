@@ -10,9 +10,12 @@
 
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->m_currenttitle.se_registato != audio_record::not_record){
-        QFile file(parent->m_currenttitle.audio_position_path);
-        if(!file.exists())
-            return dialog_critic("Audio " + parent->m_currenttitle.audio_position_path + " didn't exist");
+
+        if(parent->m_currenttitle.se_registato == audio_record::record_file){
+            QFile file(parent->m_currenttitle.audio_position_path);
+            if(!file.exists())
+                return dialog_critic("Audio " + parent->m_currenttitle.audio_position_path + " didn't exist");
+        }
 
         settingaudio_registrazione(parent, false);
 

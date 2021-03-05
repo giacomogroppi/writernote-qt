@@ -94,7 +94,6 @@ int xmlstruct::loadfile(const char *nameFile){
         return false;
     }
 
-
     int temp_versione;
     SOURCE_READ_GOTO(f, &temp_versione, sizeof(int));
 
@@ -220,6 +219,8 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
  * than one audio file can be read, and add
  * the currenttitle data to support more
  * than one audio
+ *
+ * TODO -> load audio into the buffer only if you are really opening a new copybook
 */
 #define CLOSE_ZIP_AUDIO(x) zip_fclose(x)
 static int load_audio(QByteArray *array, zip_t *file, QString &namecopybook){
