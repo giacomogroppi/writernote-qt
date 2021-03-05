@@ -111,6 +111,7 @@ SOURCES += \
     src/utils/color/setcolor.cpp \
     src/utils/copy_text.cpp \
     src/utils/default_location/audio_default_location.cpp \
+    src/utils/default_location/location_audiorecord.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \

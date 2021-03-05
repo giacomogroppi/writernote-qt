@@ -288,70 +288,6 @@ void MainWindow::setExtAudio(){
 
 }
 
-/*
- * TODO make an android version of the function
-*/
-bool MainWindow::setOutputLocation()
-{
-#ifdef Q_OS_WINRT
-    // UWP does not allow to store outside the sandbox
-    const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-    if (!QDir().mkpath(cacheDir)) {
-        qWarning() << "Failed to create cache directory";
-        return;
-    }
-    QString fileName = cacheDir + QLatin1String("/output.wav");
-#else
-    //QString fileName = QFileDialog::getSaveFileName();
-
-#endif
-
-    QMenu *menu = new QMenu(this);
-    menu->setTitle("Chose output location file");
-
-    QAction *internal = new QAction; // Assumes actions is not empty
-    internal->setStatusTip(tr("Into writernote file [Beta]"));
-    internal->setText("Internal file[Beta]");
-    menu->addAction(internal);
-
-    QAction *ext = new QAction;
-    ext->setStatusTip("External file");
-    ext->setText("External file");
-    menu->addAction(ext);
-
-    connect(internal, &QAction::triggered, this, &MainWindow::setInZipAudio);
-    connect(ext, &QAction::triggered, this, &MainWindow::setExtAudio);
-
-    auto hostRect = this->cursor().pos();
-    menu->move(hostRect);
-
-    if(!menu->exec())
-        return false;
-
-
-    if(this->m_currenttitle.se_registato == audio_record::record_file){
-        auto *qfile = new qfilechoose(this);
-        QString fileName;
-        if(!qfile->filechoose(&fileName, TYPEAUDIO)){
-            delete qfile;
-            return false;
-        }
-        delete qfile;
-
-        m_currenttitle.audio_position_path = fileName;
-        this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
-        this->m_outputLocationSet = true;
-        return true;
-
-    }
-    else if(this->m_currenttitle.se_registato == audio_record::record_zip){
-        this->m_audioRecorder->setOutputLocation(QUrl::fromAce(this->m_currenttitle.audio_data));
-        return true;
-    }
-
-    return false;
-}
-
 /* funzionche che viene invocata quando la registrazione dell'audio viene messa in pausa */
 void MainWindow::on_pauserecordingbotton_triggered()
 {
@@ -428,8 +364,3 @@ void MainWindow::on_actionVersion_triggered()
 #endif // version
 }
 
-
-void MainWindow::on_actionDefault_save_location_triggered()
-{
-
-}

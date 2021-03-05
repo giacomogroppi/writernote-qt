@@ -7,6 +7,8 @@
 
 #include "../audiosetting/loadqualita.h"
 #include "../utils/setting_define.h"
+#include "../datawrite/qfilechoose.h"
+#include "../utils/default_location/audio_default_location.h"
 
 #include <QSettings>
 
@@ -88,3 +90,85 @@ static void save(){
     setting.endGroup();
 }
 #endif //snap
+
+
+#define DELETE_MENU(x) if(x)delete x
+
+/*
+ * TODO make an android version of the function
+*/
+bool MainWindow::setOutputLocation()
+{
+#ifdef Q_OS_WINRT
+    // UWP does not allow to store outside the sandbox
+    const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    if (!QDir().mkpath(cacheDir)) {
+        qWarning() << "Failed to create cache directory";
+        return;
+    }
+    QString fileName = cacheDir + QLatin1String("/output.wav");
+#else
+    //QString fileName = QFileDialog::getSaveFileName();
+
+#endif
+
+    QMenu *menu = nullptr;
+    QAction *internal = nullptr, *ext = nullptr;
+
+    QPoint hostRect;
+
+    if(audio_default::load_default() != audio_default::not_define)
+        goto procede;
+
+    menu = new QMenu(this);
+    menu->setTitle("Chose output location file");
+
+    internal = new QAction(menu); // Assumes actions is not empty
+    internal->setStatusTip(tr("Into writernote file [Beta]"));
+    internal->setText("Internal file[Beta]");
+    menu->addAction(internal);
+
+    ext = new QAction(menu);
+    ext->setStatusTip("External file");
+    ext->setText("External file");
+    menu->addAction(ext);
+
+    connect(internal, &QAction::triggered, this, &MainWindow::setInZipAudio);
+    connect(ext, &QAction::triggered, this, &MainWindow::setExtAudio);
+
+    hostRect = this->cursor().pos();
+    menu->move(hostRect);
+
+    if(!menu->exec())
+        goto free_;
+
+
+    procede:
+    if(this->m_currenttitle.se_registato == audio_record::record_file){
+        auto *qfile = new qfilechoose(this);
+        QString fileName;
+        if(!qfile->filechoose(&fileName, TYPEAUDIO)){
+            delete qfile;
+            return false;
+        }
+        delete qfile;
+
+        m_currenttitle.audio_position_path = fileName;
+        this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
+        this->m_outputLocationSet = true;
+        goto ok;
+
+    }
+    else if(this->m_currenttitle.se_registato == audio_record::record_zip){
+        this->m_audioRecorder->setOutputLocation(QUrl::fromAce(this->m_currenttitle.audio_data));
+        goto ok;
+    }
+
+    free_:
+    DELETE_MENU(menu);
+    return false;
+
+    ok:
+    DELETE_MENU(menu);
+    return true;
+}
