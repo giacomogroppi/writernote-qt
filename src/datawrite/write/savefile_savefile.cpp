@@ -7,9 +7,12 @@
 #define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
 
 static int save_string(zip_source_t *, const char *);
-static int save_audio_file(QByteArray & array, zip_source_t *file);
+static int save_audio_file(QByteArray & array, zip_t *file, QString &);
 
 static void setCurrentVersion(currenttitle_class *data);
+
+#define ERROR_PRIVATE -1
+#define OK_PRIVATE 0
 
 int savefile::savefile_check_file(){
     setCurrentVersion(currenttitle);
@@ -65,15 +68,13 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
-    if(save_audio_file(currenttitle->audio_data, file) != OK)
+    if(save_audio_file(currenttitle->audio_data, filezip, currenttitle->nome_copybook) != OK)
         goto delete_;
 
     SAVE_IMAGE(&currenttitle->immagini, file)
 
     check = 0;
 
-#define ERROR_PRIVATE -1
-#define OK_PRIVATE 0
     /*
      * Upon successful completion 0 is returned. Otherwise, -1 is returned
      * and the error information in source is set to indicate the error.
@@ -117,15 +118,41 @@ static int save_string(zip_source_t *file, const char *stringa){
 
 }
 
-static int save_audio_file(QByteArray & array, zip_source_t *file){
+static int save_audio_file(QByteArray &array, zip_t *filezip, QString &namecopybook){
+    zip_source_t *file;
+    zip_error_t errore;
+    int check;
+
+    file = zip_source_buffer_create(0, 0, 0, &errore);
+    if(!file)
+        return ERROR;
+
+    zip_source_begin_write(file);
+
     void *data = array.data();
     int size = array.size();
 
     SOURCE_WRITE_RETURN(file, &size, sizeof(int));
 
-    SOURCE_WRITE_RETURN(file, data, size);
+    SOURCE_WRITE(file, data, size);
+
+    check = 0;
+
+    check += zip_source_commit_write(file)==ERROR_PRIVATE;
+
+    check += zip_file_add(filezip,
+                 (namecopybook + "audio.wav").toUtf8().constData(),
+                 file,
+                 ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
+
+    if(check != OK_PRIVATE)
+        goto delete_;
 
     return OK;
+
+    delete_:
+    zip_source_free(file);
+    return ERROR;
 }
 
 static void setCurrentVersion(currenttitle_class *data){

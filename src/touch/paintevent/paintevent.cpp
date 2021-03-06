@@ -17,7 +17,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
                                     event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
-    /* se si è arrivati al fondo aggiunge i dati per il nuovo foglio */
+
     this->disegnofoglio_bool = this->disegnofoglio_bool ||
             !data->datatouch->posizionefoglio.length();
 
