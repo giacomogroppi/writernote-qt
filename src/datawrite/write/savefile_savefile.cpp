@@ -159,10 +159,12 @@ int save_audio_file(QByteArray &array, QString &namecopybook, QString &path){
     if(check != OK_PRIVATE)
         goto delete_;
 
+    zip_close(filezip);
     return OK;
 
     delete_:
     zip_source_free(file);
+    zip_close(filezip);
     return ERROR;
 }
 
