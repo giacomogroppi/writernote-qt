@@ -58,6 +58,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="close_button">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="close_all">
        <property name="text">
         <string>Close all</string>

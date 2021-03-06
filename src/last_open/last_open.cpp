@@ -329,3 +329,8 @@ void last_open::on_close_all_clicked()
     *m_closeall = true;
     this->close();
 }
+
+void last_open::on_close_button_clicked()
+{
+    this->close();
+}

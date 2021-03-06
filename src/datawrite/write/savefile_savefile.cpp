@@ -48,7 +48,7 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
-    SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(bool))
+    SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(bool));
 
     SAVE_STRINGA(file, currenttitle->testi.toUtf8().constData());
 
@@ -59,9 +59,11 @@ int savefile::savefile_check_file(){
     if(currenttitle->m_touch)
         SAVE_BINARY(filezip);
 
+
     /* testinohtml */
     len = currenttitle->testinohtml.length();
-    SOURCE_WRITE(file, &len, sizeof(int))
+    SOURCE_WRITE(file, &len, sizeof(int));
+
     for(i=0; i<len; i++)
         SAVE_STRINGA(file, currenttitle->testinohtml.at(i).toUtf8().constData())
 
@@ -112,12 +114,11 @@ int savefile::savefile_check_file(){
 */
 static int save_string(zip_source_t *file, const char *stringa){
     int size = strlen(stringa);
-    SOURCE_WRITE_RETURN(file, &size, sizeof(int));
+    SOURCE_WRITE_RETURN(file, &size, sizeof(size));
 
     SOURCE_WRITE_RETURN(file, stringa, sizeof(char)*size);
 
     return OK;
-
 }
 
 int save_audio_file(QByteArray &array, QString &namecopybook, QString &path){

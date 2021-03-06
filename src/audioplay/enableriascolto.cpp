@@ -36,8 +36,8 @@ void MainWindow::on_actionListen_current_audio_triggered()
 
     this->ui->actionListen_current_audio->setEnabled(true);
 
-    if(m_currenttitle.versione > 1)
-        return dialog_critic("You created this file with a too recent version of writernote.\nUpdate it to be able to play this audio");
+    /*if(m_currenttitle.versione > 1)
+        return dialog_critic("You created this file with a too recent version of writernote.\nUpdate it to be able to play this audio");*/
 
     this->player->play();
     //this->ui->actionListen_current_audio->setChecked(true);

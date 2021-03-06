@@ -33,8 +33,10 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->actionListen_current_audio->setEnabled(true);
 
         if(parent->m_currenttitle.se_registato == audio_record::record_file){
-            if(load_audio(&parent->m_currenttitle.audio_data, parent->m_currenttitle.nome_copybook, parent->m_path) != OK)
-                return dialog_critic("We had a problem loading the audio");
+            /* if it's not laoded */
+            if(parent->m_currenttitle.audio_data.isEmpty())
+                if(load_audio(&parent->m_currenttitle.audio_data, parent->m_currenttitle.nome_copybook, parent->m_path) != OK)
+                    return dialog_critic("We had a problem loading the audio");
 
             parent->player->setMedia(QMediaContent(QUrl::fromAce(parent->m_currenttitle.audio_data)));
         }

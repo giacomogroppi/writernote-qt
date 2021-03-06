@@ -10,12 +10,12 @@
 static int load_stringa(zip_file_t *f, QString *stringa){
     int temp;
 
-    SOURCE_READ(f, &temp, sizeof(int));
+    SOURCE_READ_RETURN(f, &temp, sizeof(int));
 
     if(temp){
         char *vartempp = new char[temp + 1];
 
-        SOURCE_READ(f, vartempp, sizeof(char)*temp);
+        SOURCE_READ_RETURN(f, vartempp, sizeof(char)*temp);
 
         vartempp[temp] = '\0';
 
@@ -32,32 +32,23 @@ static int load_stringa(zip_file_t *f, QString *stringa){
 #define LOAD_MULTIPLESTRING_RETURN(x, y, z) if(load_multiplestring(x,y,z) == ERROR) return ERROR;
 
 static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int> * data){
-    int check = 0, i, lunghezza, temp;
+    int i, lunghezza, temp;
 
-    SOURCE_READ(f, &lunghezza, sizeof(int));
+    SOURCE_READ_RETURN(f, &lunghezza, sizeof(int));
     if(!lunghezza)
         return OK;
 
 
-    char *variabiletemp;
+    QString temp_;
 
     for(i=0; i<lunghezza; i++){
-        SOURCE_READ(f, &temp, sizeof(int));
-        check += source_read_ext(f, &temp, sizeof(int));
+        LOAD_STRINGA_RETURN(f, &temp_);
 
-        variabiletemp = new char[temp + 1];
-
-        SOURCE_READ(f, variabiletemp, sizeof(char)*temp);
-
-        variabiletemp[temp] = '\0';
-
-        lista->append(variabiletemp);
-        delete [] variabiletemp;
+        lista->append(temp_);
     }
 
-
     for(i=0; i<lunghezza; i++){
-        SOURCE_READ(f, &temp, sizeof(int));
+        SOURCE_READ_RETURN(f, &temp, sizeof(int));
 
         data->append(temp);
     }
@@ -202,12 +193,10 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
-    /*if(currenttitle->se_registato == audio_record::record_zip)
-        LOAD_AUDIO(&currenttitle->audio_data, filezip, currenttitle->nome_copybook);*/
-
     LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
 
     return OK;
+
 }
 
 /*
