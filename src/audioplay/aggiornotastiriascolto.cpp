@@ -8,6 +8,8 @@
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../setting_ui.h"
 
+#include "../dataread/xmlstruct.h"
+
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->m_currenttitle.se_registato != audio_record::not_record){
 
@@ -30,8 +32,12 @@ void aggiornotestiriascolto(MainWindow *parent){
         /* abilita il bottone della mano e lo segna unchecked, in caso sia cliccato per qualche motivo*/
         parent->ui->actionListen_current_audio->setEnabled(true);
 
-        if(parent->m_currenttitle.se_registato == audio_record::record_file)
+        if(parent->m_currenttitle.se_registato == audio_record::record_file){
+            if(load_audio(&parent->m_currenttitle.audio_data, parent->m_currenttitle.nome_copybook, parent->m_path) != OK)
+                return dialog_critic("We had a problem loading the audio");
+
             parent->player->setMedia(QMediaContent(QUrl::fromAce(parent->m_currenttitle.audio_data)));
+        }
         else
             parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle.audio_position_path));
 

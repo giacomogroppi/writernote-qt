@@ -7,12 +7,16 @@
 #define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
 
 static int save_string(zip_source_t *, const char *);
-static int save_audio_file(QByteArray & array, zip_t *file, QString &);
 
 static void setCurrentVersion(currenttitle_class *data);
 
 #define ERROR_PRIVATE -1
 #define OK_PRIVATE 0
+
+/*
+ * the function save the copybook and all it's data
+ * if save_audio == true -> save also the audio
+*/
 
 int savefile::savefile_check_file(){
     setCurrentVersion(currenttitle);
@@ -68,8 +72,6 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
-    if(save_audio_file(currenttitle->audio_data, filezip, currenttitle->nome_copybook) != OK)
-        goto delete_;
 
     SAVE_IMAGE(&currenttitle->immagini, file)
 
@@ -118,14 +120,23 @@ static int save_string(zip_source_t *file, const char *stringa){
 
 }
 
-static int save_audio_file(QByteArray &array, zip_t *filezip, QString &namecopybook){
+int save_audio_file(QByteArray &array, QString &namecopybook, QString &path){
     zip_source_t *file;
+    zip_t *filezip;
+
     zip_error_t errore;
-    int check;
+    int check, error;
+
+    filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
+
+    if(!filezip)
+        return ERROR;
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
-    if(!file)
+    if(!file){
+        zip_close(filezip);
         return ERROR;
+    }
 
     zip_source_begin_write(file);
 

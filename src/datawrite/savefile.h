@@ -9,6 +9,8 @@
 
 #define WRITE_ON_SIZE(x,y,z,filezip) if(zip_source_write(x,y,z)==-1)return freezip(x,filezip);
 
+int save_audio_file(QByteArray & array, QString &namecopybook, QString &path);
+
 class savefile
 {
 private:

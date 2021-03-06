@@ -17,6 +17,11 @@
 
 #include <zip.h>
 
+/*
+ * call then we are starting an audio
+*/
+int load_audio(QByteArray *array, QString &namecopybook, QString &path);
+
 class xmlstruct{
 private:
     QString *path_;

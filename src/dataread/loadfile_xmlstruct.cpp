@@ -7,8 +7,6 @@
 #define LOAD_STRINGA(x, y) if(load_stringa(x,y) == ERROR) goto free_;
 #define LOAD_STRINGA_RETURN(x, y) if(load_stringa(x, y) == ERROR)return ERROR;
 
-static int load_audio(QByteArray *array, zip_t *file, QString &namecopybook);
-
 static int load_stringa(zip_file_t *f, QString *stringa){
     int temp;
 
@@ -204,8 +202,8 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
-    if(currenttitle->se_registato == audio_record::record_zip)
-        LOAD_AUDIO(&currenttitle->audio_data, filezip, currenttitle->nome_copybook);
+    /*if(currenttitle->se_registato == audio_record::record_zip)
+        LOAD_AUDIO(&currenttitle->audio_data, filezip, currenttitle->nome_copybook);*/
 
     LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
 
@@ -222,13 +220,18 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
  *
  * TODO -> load audio into the buffer only if you are really opening a new copybook
 */
-#define CLOSE_ZIP_AUDIO(x) zip_fclose(x)
-static int load_audio(QByteArray *array, zip_t *file, QString &namecopybook){
-    int size;
+#define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); zip_close(y)
+int load_audio(QByteArray *array, QString &namecopybook, QString &path){
+    int size, error;
     void * audio_data = nullptr;
 
+    zip_t *file_zip = zip_open(path.toUtf8().constData(), 0, &error);
+
+    if(!file_zip)
+        return ERROR;
+
     zip_file_t *f;
-    f = zip_fopen(file, (namecopybook + "audio.wav").toUtf8().constData(), 0);
+    f = zip_fopen(file_zip, (namecopybook + "audio.wav").toUtf8().constData(), 0);
     if(f == NULL)
         return ERROR;
 
@@ -239,12 +242,11 @@ static int load_audio(QByteArray *array, zip_t *file, QString &namecopybook){
     array->append((const char *)audio_data, size);
 
 
-    CLOSE_ZIP_AUDIO(f);
+    CLOSE_ZIP_AUDIO(f, file_zip);
     return OK;
 
-
     free_:
-    CLOSE_ZIP_AUDIO(f);
+    CLOSE_ZIP_AUDIO(f, file_zip);
     return ERROR;
 
 }

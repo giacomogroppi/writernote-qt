@@ -94,6 +94,7 @@ public:
     cloud_controll *m_cloud;
 
 public slots:
+    void progressBuffer(const QAudioBuffer &buffer);
 
     /* la funzione serve anche per eliminare l'audio del copybook */
     void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);

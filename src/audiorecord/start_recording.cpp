@@ -53,6 +53,11 @@ void MainWindow::on_startrecording_triggered()
     if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {
         loadqualita(this);
 
+        /*
+         * we reserve 32 MB for the buffer of the audio
+        */
+        this->m_currenttitle.audio_data.reserve(32*1024*1024);
+
         this->m_audioRecorder->record();
 
         this->m_currenttitle.testinohtml.clear();
@@ -169,4 +174,20 @@ bool MainWindow::setOutputLocation()
     ok:
     DELETE_MENU(menu);
     return true;
+}
+
+#include <QDebug>
+
+/*
+ * this function append the data from the audio record buffer
+ * to the buffer on the currenttitle
+*/
+void MainWindow::progressBuffer(const QAudioBuffer &buffer){
+    /*
+     * only if we are saving the audio into a writernote file
+     * we need to allocate it into a buffer
+    */
+    if(m_currenttitle.se_registato == audio_record::record_zip){
+        this->m_currenttitle.audio_data.append(buffer.constData<char>(), buffer.byteCount());
+    }
 }
