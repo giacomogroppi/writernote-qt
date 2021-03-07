@@ -18,6 +18,7 @@ private:
 
     void scala(short numero);
 
+    void append();
 public:
     redoundo(currenttitle_class *);
 

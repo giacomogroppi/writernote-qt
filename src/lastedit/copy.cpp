@@ -79,13 +79,23 @@ void redoundo::copy_b(currenttitle_class *dest, currenttitle_class *src){
     }while(temp != OK_CHECK);
 }
 
+void redoundo::append(){
+    if(m_lista.length() == QUANTIINDICI)
+        return;
+
+    auto temp = new currenttitle_class;
+    m_lista.append(temp);
+}
+
 void redoundo::copy(){
+    this->append();
 
     if(this->indice < QUANTIINDICI){
         copy_b(m_lista.operator[](indice), m_current);
         this->indice ++;
         return;
     }
+
     currenttitle_class *title_temp = m_lista.at(0);
     for(int i=0; i<QUANTIINDICI-1; i++){
         m_lista.operator[](i) = m_lista.at(i);
