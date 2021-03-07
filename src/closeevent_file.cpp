@@ -85,12 +85,12 @@ void MainWindow::closeEvent (QCloseEvent *event)
     /*
      * if we are in keyboard mode
     */
-    if(!m_currenttitle.m_touch){
-        filep = m_currenttitle.testi;
-        m_currenttitle.testi = this->ui->textEdit->toHtml();
+    if(!m_currenttitle->m_touch){
+        filep = m_currenttitle->testi;
+        m_currenttitle->testi = this->ui->textEdit->toHtml();
     }
 
-    bool check1 = checksimilecopybook(tempcopybook, &m_currenttitle, false) == OK_CHECK;
+    bool check1 = checksimilecopybook(tempcopybook, m_currenttitle, false) == OK_CHECK;
 
     check1 = check1 && (checksimileindice(&m_indice, tempindice) == OK_CHECK);
 
@@ -102,8 +102,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    if(!m_currenttitle.m_touch)
-        m_currenttitle.testi = filep;
+    if(!m_currenttitle->m_touch)
+        m_currenttitle->testi = filep;
 
 
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
@@ -119,7 +119,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
                 return;
         }
 
-        savefile save_(&m_path, &m_currenttitle);
+        savefile save_(&m_path, m_currenttitle);
 
         bool check = save_.savefile_check_indice(&m_indice)==OK;
 

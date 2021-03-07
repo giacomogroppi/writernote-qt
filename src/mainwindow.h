@@ -56,7 +56,7 @@ public:
     QString m_path;
 
     indice_class m_indice;
-    currenttitle_class m_currenttitle;
+    currenttitle_class *m_currenttitle;
     Ui::MainWindow *ui;
 
     QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);
@@ -257,6 +257,8 @@ private slots:
 
     void on_actionDefault_save_location_triggered();
 
+    void on_actionUndu_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
@@ -266,6 +268,10 @@ protected:
     bool event(QEvent *event) override;
 
     void resizeEvent(QResizeEvent *event) override;
+
+signals:
+    void UndoT();
+    void RedoT();
 
 };
 #endif // MAINWINDOW_H

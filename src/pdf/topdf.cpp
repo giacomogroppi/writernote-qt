@@ -82,7 +82,7 @@ bool topdf::createpdf(){
 
 void MainWindow::on_actiontopdf_triggered()
 {
-    if(m_currenttitle.datatouch->m_point.isEmpty())
+    if(m_currenttitle->datatouch->m_point.isEmpty())
         return dialog_critic("There is nothing to convert to pdf");
 
     qfilechoose temp(this);
@@ -94,7 +94,7 @@ void MainWindow::on_actiontopdf_triggered()
 
     topdf filepdf(&path_pdf, m_canvas);
 
-    filepdf.copy(&m_currenttitle);
+    filepdf.copy(m_currenttitle);
 
 
     if(!filepdf.createpdf()){

@@ -41,7 +41,7 @@ bool savecopybook::check_permission(){
         if(!check) /*vuol dire che l'utente non ha selezionato nessun file o posizione*/
             return false;
     }
-    savefile save_class(&this->parent->m_path, &this->parent->m_currenttitle);
+    savefile save_class(&this->parent->m_path, this->parent->m_currenttitle);
 
     bool check = save_class.savefile_check_indice(&parent->m_indice)==OK && save_class.savefile_check_file()==OK;
     if(!check)

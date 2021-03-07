@@ -50,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     ui->setupUi(this);
 
+    this->m_currenttitle = new currenttitle_class;
+
     m_audioRecorder = new QAudioRecorder(this);
 
     connect(m_audioRecorder, &QAudioRecorder::durationChanged, this, &MainWindow::updateProgress);
@@ -97,6 +99,11 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     this->m_canvas->m_text_w = m_text_w;
 
+    /* redo and undo */
+    connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);
+    connect(this, &MainWindow::UndoT, m_canvas, &TabletCanvas::Undo);
+
+
     ui->button_left_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->button_right_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
@@ -139,7 +146,7 @@ void MainWindow::on_actionNew_File_triggered()
 
     this->m_currentTitle = "";
     //this->ui->actionCreate_new_copybook->setEnabled(true);
-    this->m_currenttitle.reset();
+    this->m_currenttitle->reset();
 }
 
 void MainWindow::on_actionOpen_triggered(char *nomeFile)
@@ -166,7 +173,7 @@ void MainWindow::on_actionOpen_triggered(char *nomeFile)
 
     m_path = fileName;
 
-    xmlstruct filefind(&m_path, &m_indice, &m_currenttitle);
+    xmlstruct filefind(&m_path, &m_indice, m_currenttitle);
     if(!filefind.loadindice())
         return dialog_critic("We had a problem reading the file");
 
@@ -199,7 +206,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             return dialog_critic("We had a problem opening the current copybook");
         }
 
-        if(checksimilecopybook(&m_currenttitle, &tempcopybook, false) != OK){
+        if(checksimilecopybook(m_currenttitle, &tempcopybook, false) != OK){
             savecopybook savevariabile(this, &m_currentTitle);
 
             if (!savevariabile.check_permission())
@@ -211,7 +218,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     /* a questo punto deve aprire il nuovo copybook */
     if(m_indice.titolo[m_indice.titolo.indexOf(item->text())] != ""){
-        auto *file_ = new xmlstruct(&m_path, &m_indice, &m_currenttitle);
+        auto *file_ = new xmlstruct(&m_path, &m_indice, m_currenttitle);
         int res = file_->loadfile((item->text() + ".xml").toUtf8().constData());
 
         if(res == ERROR){
@@ -223,14 +230,14 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         }
     }
     else{
-        m_currenttitle.reset();
-        m_currenttitle.datatouch->reset();
+        m_currenttitle->reset();
+        m_currenttitle->datatouch->reset();
     }
     m_currentTitle = item->text().toUtf8().constData();
     this->setWindowTitle("Writernote - " + m_currentTitle);
 
-    if(!m_currenttitle.m_touch)
-        this->ui->textEdit->setHtml(m_currenttitle.testi);
+    if(!m_currenttitle->m_touch)
+        this->ui->textEdit->setHtml(m_currenttitle->testi);
 
     settingtextedit(this, true);
     settingstyle(this, true);
@@ -240,8 +247,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     this->ui->actionPrint->setEnabled(true);
 
     /* pass the pointer to the class */
-    if(m_currenttitle.m_touch){
-        this->m_canvas->settingdata(&m_currenttitle, m_path);
+    if(m_currenttitle->m_touch){
+        this->m_canvas->settingdata(m_currenttitle, m_path);
         this->m_canvas->loadpixel();
 
         this->m_canvas->time = 0;
@@ -259,15 +266,15 @@ void MainWindow::on_textEdit_selectionChanged(){
 
     int i = 1, audio;
     while (true){
-        if ((position >= m_currenttitle.testinohtml[i-1].length()) && (position <= m_currenttitle.testinohtml[i+1].length())){
-            audio = m_currenttitle.posizione_iniz[i];
+        if ((position >= m_currenttitle->testinohtml[i-1].length()) && (position <= m_currenttitle->testinohtml[i+1].length())){
+            audio = m_currenttitle->posizione_iniz[i];
             this->player->setPosition(audio);
 
             this->player->setPosition(audio*1000);
             break;
         }
-        else if ((i + 1) == m_currenttitle.posizione_iniz.length()){
-            audio = m_currenttitle.posizione_iniz.last();
+        else if ((i + 1) == m_currenttitle->posizione_iniz.length()){
+            audio = m_currenttitle->posizione_iniz.last();
 
             this->player->setPosition(audio);
 
@@ -289,11 +296,11 @@ void MainWindow::togglePause()
 }
 
 void MainWindow::setInZipAudio(){
-    this->m_currenttitle.se_registato = audio_record::record_zip;
+    this->m_currenttitle->se_registato = audio_record::record_zip;
 }
 
 void MainWindow::setExtAudio(){
-    this->m_currenttitle.se_registato = audio_record::record_file;
+    this->m_currenttitle->se_registato = audio_record::record_file;
 
 }
 
@@ -313,15 +320,15 @@ void MainWindow::on_textEdit_textChanged()
     /* se non sta registrando deve uscire */
     if(this->m_audioRecorder->state() != QMediaRecorder::RecordingState)
         return;
-    this->m_currenttitle.testi = this->ui->textEdit->toHtml();
+    this->m_currenttitle->testi = this->ui->textEdit->toHtml();
 
     if(this->m_audioRecorder->status() != QMediaRecorder::RecordingStatus)
         return;
 
     QString text = ui->textEdit->toPlainText();
 
-    m_currenttitle.testinohtml.append(ui->textEdit->toPlainText());
-    m_currenttitle.posizione_iniz.append(m_currentTime);
+    m_currenttitle->testinohtml.append(ui->textEdit->toPlainText());
+    m_currenttitle->posizione_iniz.append(m_currentTime);
 }
 
 
@@ -337,6 +344,11 @@ void MainWindow::on_fontComboBox_fonttipo_currentFontChanged(const QFont &f)
 
 void MainWindow::on_actionRedo_triggered()
 {
+    if(this->m_currenttitle->m_touch){
+        this->m_canvas->m_redoundo->redo(&this->m_currenttitle);
+        emit RedoT();
+        return;
+    }
     this->ui->textEdit->redo();
 }
 
@@ -373,3 +385,14 @@ void MainWindow::on_actionVersion_triggered()
 #endif // version
 }
 
+
+void MainWindow::on_actionUndu_triggered()
+{
+    if(m_currenttitle->m_touch){
+        this->m_canvas->m_redoundo->undo(&this->m_currenttitle);
+        emit UndoT();
+        return;
+    }
+
+    ui->textEdit->undo();
+}

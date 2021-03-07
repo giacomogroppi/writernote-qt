@@ -198,6 +198,17 @@ private:
     } lastPoint;
 
 
+public slots:
+
+#define PRIVATE_UPDATE this->isloading = true; this->update()
+
+    void RedoM(){
+        PRIVATE_UPDATE;
+    }
+    void Undo(){
+        PRIVATE_UPDATE;
+    }
+
 };
 //! [0]
 

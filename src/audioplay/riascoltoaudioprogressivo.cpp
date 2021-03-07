@@ -7,13 +7,13 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
         return;
 
     /* keyboard */
-    if(!m_currenttitle.m_touch){
-       int position_inlist = m_currenttitle.posizione_iniz.indexOf(position/1000);
+    if(!m_currenttitle->m_touch){
+       int position_inlist = m_currenttitle->posizione_iniz.indexOf(position/1000);
        if(position_inlist == -1) return;
 
-       int lenght = m_currenttitle.testinohtml.at(position_inlist).length();
-       QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + m_currenttitle.testinohtml[position_inlist] + "</b>";
-       testoGrassetto += m_currenttitle.testinohtml.last().mid(lenght, -1) + "</body></html>";
+       int lenght = m_currenttitle->testinohtml.at(position_inlist).length();
+       QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + m_currenttitle->testinohtml[position_inlist] + "</b>";
+       testoGrassetto += m_currenttitle->testinohtml.last().mid(lenght, -1) + "</body></html>";
 
        this->ui->textEdit->setHtml(testoGrassetto);
     }
@@ -21,9 +21,9 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
         /* parte responsabile della penna */
         int position_inlist = 0, i, len, position_temp;
 
-        len = m_currenttitle.datatouch->m_point.length();
+        len = m_currenttitle->datatouch->m_point.length();
         for(i=0, position_temp = position/1000; i < len; i++){
-            if(m_currenttitle.datatouch->m_point.at(i).m_posizioneaudio == position_temp){
+            if(m_currenttitle->datatouch->m_point.at(i).m_posizioneaudio == position_temp){
                 position_inlist = i;
                 break;
             }

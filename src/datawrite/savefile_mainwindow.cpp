@@ -13,10 +13,10 @@ static bool c = true;
 /* funzione che viene richiamata quando viene salvato */
 void MainWindow::on_actionSave_File_triggered()
 {
-    if(m_currenttitle.m_touch)
-        this->m_currenttitle.testi = this->ui->textEdit->toHtml();
+    if(m_currenttitle->m_touch)
+        this->m_currenttitle->testi = this->ui->textEdit->toHtml();
 
-    savefile savefile_i(&m_path, &m_currenttitle);
+    savefile savefile_i(&m_path, m_currenttitle);
 
     bool check = savefile_i.savefile_check_indice(&m_indice) == OK;
 

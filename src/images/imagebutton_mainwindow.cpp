@@ -41,11 +41,11 @@ static void addImage(currenttitle_class *m_currenttitle){
 
 /* touch */
 void MainWindow::on_insertimagebotton_triggered(QAction *){
-    addImage(&m_currenttitle);
+    addImage(m_currenttitle);
     this->update_image();
 }
 
 void MainWindow::on_actioninsertImage_triggered(){
-    addImage(&m_currenttitle);
+    addImage(m_currenttitle);
 
 }

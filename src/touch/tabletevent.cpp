@@ -7,7 +7,7 @@
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (event->type()) {
-        case QEvent::TabletPress:
+        case QEvent::TabletPress: /* first point touch */
             if (!m_deviceDown) {
                 if(this->medotodiinserimento == METHOD_STILO)
                     updatelist(event);
@@ -26,7 +26,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 lastPoint.rotation = event->rotation();
             }
             break;
-        case QEvent::TabletMove:
+        case QEvent::TabletMove: /* user move the pen */
             if (event->device() == QTabletEvent::RotationStylus)
                 updateCursor(event);
 
@@ -56,14 +56,13 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                 }
                 else if(medotodiinserimento == METHOD_SELEZIONE){
-                    if(!this->square_.check){
+                    if(!this->square_.check){ /* it means that he has not learned anything */
                         isloading = true;
                         square_.disegno(painter, event->pos());
 
                         update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                     }
                     else{
-                        /* capisce se il tocco è stato interno */
                         if(!this->square_.isinside(event->pos())){
                             /* se il tocco non è stato interno */
                             this->square_.reset();
@@ -87,7 +86,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
             }
             break;
-        case QEvent::TabletRelease:
+        case QEvent::TabletRelease: /* pen leaves the tablet */
+
 #if defined(WIN32) || defined(WIN64)
             this->isdrawing = true;
 #endif

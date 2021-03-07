@@ -129,7 +129,9 @@ QRect square::drawsquare(QPainter &painter){
 
 }
 
-/* la funzione resistuisce vero se è intero il punto altrimenti false */
+/* la funzione resistuisce
+ * vero se è intero il punto è interno
+*/
 bool square::isinside(QPointF point){
     if(!this->check)
         return false;

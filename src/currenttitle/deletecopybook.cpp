@@ -24,7 +24,7 @@ void f_deletecopybook( MainWindow *parent, const char *copybook){
 
     parent->m_indice.titolo.removeAt(posizione);
 
-    parent->m_currenttitle.reset();
+    parent->m_currenttitle->reset();
 
     parent->ui->textEdit->setEnabled(false);
     parent->ui->actionDelete_audio->setEnabled(false);

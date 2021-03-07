@@ -11,13 +11,12 @@ class redoundo
 private:
     QList<currenttitle_class *> m_lista;
 
+    /* 0 <= indice <= 10 */
     unsigned short int indice = 0;
 
     currenttitle_class *m_current;
 
     void scala(short numero);
-
-    currenttitle_class *m_temp = NULL;
 
 public:
     redoundo(currenttitle_class *);
@@ -31,8 +30,8 @@ public:
 
     void copy();
 
-    void undo();
-    void redo();
+    void undo(currenttitle_class **);
+    void redo(currenttitle_class **);
 
     void copy_b(currenttitle_class *, currenttitle_class *);
 

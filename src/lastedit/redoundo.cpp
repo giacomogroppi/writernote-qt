@@ -2,8 +2,6 @@
 
 #include "../currenttitle/checksimilecopybook.h"
 
-
-
 redoundo::redoundo(currenttitle_class *data)
 {
     this->m_current = data;
@@ -15,34 +13,25 @@ redoundo::redoundo(currenttitle_class *data)
         temp = new currenttitle_class;
         this->m_lista.append(temp);
     }
-
-    m_temp = new currenttitle_class;
 }
 
-void redoundo::redo(){
-    if(indice == 10)
+void redoundo::redo( currenttitle_class **data){
+    if(indice == 10){
         return;
+    }
 
-    copy_b(m_temp, m_current);
-
-    copy_b(m_current, m_lista.at(indice+1));
-
-    copy_b(m_lista.at(indice), m_temp);
+    *data = m_lista.at(indice+1);
 
     indice ++;
 }
 
 
 /* reset the currenttitle */
-void redoundo::undo(){
+void redoundo::undo(currenttitle_class **data){
     if(indice == 0)
         return;
 
-    copy_b(m_temp, m_current);
-
-    copy_b(m_current, m_lista.at(indice-1));
-
-    copy_b(m_lista.at(indice), m_temp);
+    *data = m_lista.at(indice-1);
 
     indice --;
 }

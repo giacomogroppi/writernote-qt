@@ -20,7 +20,7 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
-    if(this->m_currenttitle.se_registato != audio_record::not_record)
+    if(this->m_currenttitle->se_registato != audio_record::not_record)
         return messaggio_utente("You had already record and audio");
     /*
     if(this->m_currenttitle.audio_position_path != "")
@@ -56,12 +56,12 @@ void MainWindow::on_startrecording_triggered()
         /*
          * we reserve 32 MB for the buffer of the audio
         */
-        this->m_currenttitle.audio_data.reserve(32*1024*1024);
+        this->m_currenttitle->audio_data.reserve(32*1024*1024);
 
         this->m_audioRecorder->record();
 
-        this->m_currenttitle.testinohtml.clear();
-        this->m_currenttitle.posizione_iniz.clear();
+        this->m_currenttitle->testinohtml.clear();
+        this->m_currenttitle->posizione_iniz.clear();
     }
 
     this->ui->startrecording->setEnabled(false);
@@ -147,7 +147,7 @@ bool MainWindow::setOutputLocation()
 
 
     procede:
-    if(this->m_currenttitle.se_registato == audio_record::record_file){
+    if(this->m_currenttitle->se_registato == audio_record::record_file){
         auto *qfile = new qfilechoose(this);
         QString fileName;
         if(!qfile->filechoose(&fileName, TYPEAUDIO)){
@@ -156,19 +156,19 @@ bool MainWindow::setOutputLocation()
         }
         delete qfile;
 
-        m_currenttitle.audio_position_path = fileName;
+        m_currenttitle->audio_position_path = fileName;
         this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
         this->m_outputLocationSet = true;
         goto ok;
 
     }
-    else if(this->m_currenttitle.se_registato == audio_record::record_zip){
-        this->m_audioRecorder->setOutputLocation(QUrl::fromAce(this->m_currenttitle.audio_data));
+    else if(this->m_currenttitle->se_registato == audio_record::record_zip){
+        this->m_audioRecorder->setOutputLocation(QUrl::fromAce(this->m_currenttitle->audio_data));
         goto ok;
     }
 
     free_:
-    m_currenttitle.se_registato = audio_record::not_record;
+    m_currenttitle->se_registato = audio_record::not_record;
     DELETE_MENU(menu);
     return false;
 
@@ -188,7 +188,7 @@ void MainWindow::progressBuffer(const QAudioBuffer &buffer){
      * only if we are saving the audio into a writernote file
      * we need to allocate it into a buffer
     */
-    if(m_currenttitle.se_registato == audio_record::record_zip){
-        this->m_currenttitle.audio_data.append(buffer.constData<char>(), buffer.byteCount());
+    if(m_currenttitle->se_registato == audio_record::record_zip){
+        this->m_currenttitle->audio_data.append(buffer.constData<char>(), buffer.byteCount());
     }
 }

@@ -22,15 +22,15 @@ void deleteaudio(MainWindow *parent, QListWidgetItem *item){
             return;
     }
 
-    CURRENTTITLE.testinohtml.clear();
-    CURRENTTITLE.posizione_iniz.clear();
-    CURRENTTITLE.se_registato = audio_record::not_record;
+    CURRENTTITLE->testinohtml.clear();
+    CURRENTTITLE->posizione_iniz.clear();
+    CURRENTTITLE->se_registato = audio_record::not_record;
 
     /*
      * TODO -> remove the file on the zip
     */
 
-    CURRENTTITLE.audio_position_path = "";
+    CURRENTTITLE->audio_position_path = "";
 
     aggiornotestiriascolto(parent);
 }

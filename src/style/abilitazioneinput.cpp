@@ -1,7 +1,7 @@
 #include "abilitazioneinput.h"
 #include "ui_mainwindow.h"
 
-#define CHECK !parent->m_currenttitle.m_touch
+#define CHECK !parent->m_currenttitle->m_touch
 #define PARENTUI parent->ui
 
 void abilitazioneinput(MainWindow *parent)

@@ -25,7 +25,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
     this->m_audioRecorder->stop();
 
     /* if we are in keyboard mode */
-    if(!m_currenttitle.m_touch){
+    if(!m_currenttitle->m_touch){
         progress_bar_ui * m_bar = new progress_bar_ui;
         spacchettamento * m_spac = new spacchettamento(this);
 
@@ -41,11 +41,11 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
     }
 
-    if(m_currenttitle.se_registato == audio_record::record_zip){
-        if(save_audio_file(m_currenttitle.audio_data, m_currenttitle.nome_copybook, m_path) != OK)
+    if(m_currenttitle->se_registato == audio_record::record_zip){
+        if(save_audio_file(m_currenttitle->audio_data, m_currenttitle->nome_copybook, m_path) != OK)
             dialog_critic("We had a problem saving the audio into " + m_path);
 
-        savefile m_save(&m_path, &m_currenttitle);
+        savefile m_save(&m_path, m_currenttitle);
         if(m_save.savefile_check_file() != OK)
             dialog_critic("We had a problem saving the current copybook");
 
