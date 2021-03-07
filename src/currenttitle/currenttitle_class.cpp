@@ -17,4 +17,6 @@ void currenttitle_class::reset(){
     this->testi.clear();
     this->testinohtml.clear();
     this-> posizione_iniz.clear();
+
+    this->audio_data.clear();
 }
