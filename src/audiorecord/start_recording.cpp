@@ -168,6 +168,7 @@ bool MainWindow::setOutputLocation()
     }
 
     free_:
+    m_currenttitle.se_registato = audio_record::not_record;
     DELETE_MENU(menu);
     return false;
 

@@ -32,16 +32,21 @@ void aggiornotestiriascolto(MainWindow *parent){
         /* abilita il bottone della mano e lo segna unchecked, in caso sia cliccato per qualche motivo*/
         parent->ui->actionListen_current_audio->setEnabled(true);
 
-        if(parent->m_currenttitle.se_registato == audio_record::record_file){
+        if(parent->m_currenttitle.se_registato == audio_record::record_zip){
             /* if it's not laoded */
             if(parent->m_currenttitle.audio_data.isEmpty())
                 if(load_audio(&parent->m_currenttitle.audio_data, parent->m_currenttitle.nome_copybook, parent->m_path) != OK)
                     return dialog_critic("We had a problem loading the audio");
 
-            parent->player->setMedia(QMediaContent(QUrl::fromAce(parent->m_currenttitle.audio_data)));
+            parent->m_buffer->setData(parent->m_currenttitle.audio_data);
+            parent->m_buffer->open(QIODevice::ReadOnly);
+
+            parent->player->setMedia(QMediaContent(), parent->m_buffer);
+
         }
-        else
+        else{
             parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle.audio_position_path));
+        }
 
         parent->ui->actionDelete_audio->setEnabled(true);
     }

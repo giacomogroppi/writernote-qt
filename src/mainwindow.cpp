@@ -66,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
 
+
+    this->m_buffer = new QBuffer(this);
+
     setting_ui_start(this);
 
     this->ui->layouteditor->insertWidget(1, this->m_canvas);

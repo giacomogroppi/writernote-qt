@@ -7,6 +7,8 @@
 #define LOAD_STRINGA(x, y) if(load_stringa(x,y) == ERROR) goto free_;
 #define LOAD_STRINGA_RETURN(x, y) if(load_stringa(x, y) == ERROR)return ERROR;
 
+static size_t sizeFile(zip_t *filezip, const char *namefile);
+
 static int load_stringa(zip_file_t *f, QString *stringa){
     int temp;
 
@@ -211,7 +213,7 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 */
 #define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); zip_close(y)
 int load_audio(QByteArray *array, QString &namecopybook, QString &path){
-    int size, error;
+    int error;
     void * audio_data = nullptr;
 
     zip_t *file_zip = zip_open(path.toUtf8().constData(), 0, &error);
@@ -219,16 +221,19 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     if(!file_zip)
         return ERROR;
 
+    size_t size_audio = sizeFile(file_zip, namecopybook.toUtf8().constData());
+
+    if(!size_audio)
+        return ERROR;
+
     zip_file_t *f;
     f = zip_fopen(file_zip, (namecopybook + "audio.wav").toUtf8().constData(), 0);
     if(f == NULL)
         return ERROR;
 
-    SOURCE_READ_GOTO(f, &size, sizeof(int));
+    SOURCE_READ_GOTO(f, audio_data, size_audio);
 
-    SOURCE_READ_GOTO(f, audio_data, size);
-
-    array->append((const char *)audio_data, size);
+    array->append((const char *)audio_data, size_audio);
 
 
     CLOSE_ZIP_AUDIO(f, file_zip);
@@ -238,4 +243,13 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     CLOSE_ZIP_AUDIO(f, file_zip);
     return ERROR;
 
+}
+
+static size_t sizeFile(zip_t *filezip, const char *namefile){
+    struct zip_stat st;
+    zip_stat_init(&st);
+    if(zip_stat(filezip, namefile, 0, &st) != 0)
+        return 0;
+
+    return st.size;
 }

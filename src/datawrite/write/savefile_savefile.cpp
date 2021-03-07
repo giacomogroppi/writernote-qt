@@ -141,12 +141,11 @@ int save_audio_file(QByteArray &array, QString &namecopybook, QString &path){
 
     zip_source_begin_write(file);
 
-    void *data = array.data();
-    int size = array.size();
+    //int size = array.size();
 
-    SOURCE_WRITE_RETURN(file, &size, sizeof(int));
+    //SOURCE_WRITE_RETURN(file, &size, sizeof(int));
 
-    SOURCE_WRITE(file, data, size);
+    SOURCE_WRITE(file, array.data(), array.size());
 
     check = 0;
 

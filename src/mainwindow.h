@@ -15,6 +15,8 @@
 #include <QComboBox>
 #include <QMediaPlayer>
 
+#include <QBuffer>
+
 #include "windows/updatecheck.h"
 
 #define REDO_UNDO_DISABLE "Disable redo undo"
@@ -92,6 +94,9 @@ public:
     struct struct_user *m_user;
 
     cloud_controll *m_cloud;
+
+    /* manage audio player */
+    QBuffer *m_buffer = nullptr;
 
 public slots:
     void progressBuffer(const QAudioBuffer &buffer);
