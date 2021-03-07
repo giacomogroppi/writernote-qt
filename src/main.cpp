@@ -56,6 +56,10 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    if(argc != 1 && !strcmp(argv[1], "--help")){
+        printf(HELP_COMMAND);
+        return 0;
+    }
 
     if(argc != 2 && argc != 1){
         printf("Error");
