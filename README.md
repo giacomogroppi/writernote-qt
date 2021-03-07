@@ -10,7 +10,21 @@
 </table>
 
 ## Features:
-- 
+- Pen support
+  - Zoom in and zoom on
+  - Rubber size and type
+  - Pen size option and type
+  - Move object
+  - Insert image
+  - Enter text in pen mode
+- Export file as PDF
+- Print file
+- Keyboard support
+- Audio record [support for write mode only]:
+  - Include file in writernote file
+  - or decide to save the file in a specific location
+  - listen to the audio again and visually see what was being written [only keyboard]
+
 
 ## Experimental Features:
 - Import images
