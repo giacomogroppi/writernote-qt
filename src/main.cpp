@@ -184,5 +184,7 @@ static int extractAudio(const char *path, const char *namecopybook, const char *
 
     fclose(fp);
 
+    DELETE_T;
+
     return OK_EXTRACT_AUDIO;
 }
