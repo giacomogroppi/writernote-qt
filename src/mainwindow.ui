@@ -302,6 +302,7 @@
      <string>Options</string>
     </property>
     <addaction name="actionnew_sheet"/>
+    <addaction name="actionExtract_audio"/>
    </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
@@ -830,6 +831,11 @@
   <action name="actionDefault_save_location">
    <property name="text">
     <string>Default save location</string>
+   </property>
+  </action>
+  <action name="actionExtract_audio">
+   <property name="text">
+    <string>Extract audio</string>
    </property>
   </action>
  </widget>

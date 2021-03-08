@@ -259,6 +259,8 @@ private slots:
 
     void on_actionUndu_triggered();
 
+    void on_actionExtract_audio_triggered();
+
 private:
     /* gestione dell'audio */
     void clearAudioLevels();

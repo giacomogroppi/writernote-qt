@@ -171,6 +171,7 @@ SOURCES += \
     src/touch/zoom/zoom_control.cpp \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
+    src/utils/extract_audio/extractAudioMain.cpp \
     src/utils/extract_audio/extract_audio.cpp \
     src/utils/extract_audio/extract_audio_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
