@@ -40,6 +40,11 @@ void aggiornotestiriascolto(MainWindow *parent){
                 if(load_audio(&parent->m_currenttitle->audio_data, parent->m_currenttitle->nome_copybook, parent->m_path) != OK)
                     return dialog_critic("We had a problem loading the audio");
 
+            if(parent->m_buffer->isOpen()){
+                /* we have to close the buffer otherwise we cannot overwrite the data */
+                parent->m_buffer->close();
+            }
+
             parent->m_buffer->setData(parent->m_currenttitle->audio_data);
 
             if(!parent->m_buffer->open(QIODevice::ReadOnly))

@@ -4,12 +4,18 @@
 #define MAX 100
 #define MIN 0
 
-progress_bar_ui::progress_bar_ui(QWidget *parent) :
+progress_bar_ui::progress_bar_ui(QWidget *parent,
+                                 const char *title,
+                                 const char *body) :
     QDialog(parent),
     ui(new Ui::progress_bar_ui)
 {
     ui->setupUi(this);
     ui->progressBar->setMaximum(MAX);
+
+    this->setWindowTitle(title);
+    ui->label_main->setText(body);
+
 }
 
 progress_bar_ui::~progress_bar_ui()

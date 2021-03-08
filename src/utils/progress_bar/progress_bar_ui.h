@@ -12,7 +12,9 @@ class progress_bar_ui : public QDialog
     Q_OBJECT
 
 public:
-    explicit progress_bar_ui(QWidget *parent = nullptr);
+    explicit progress_bar_ui(QWidget *parent = nullptr,
+                             const char *title = nullptr,
+                             const char *body = nullptr);
     ~progress_bar_ui();
 
 public slots:

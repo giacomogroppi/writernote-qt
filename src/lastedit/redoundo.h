@@ -37,10 +37,6 @@ public:
     void copy_b(currenttitle_class *, currenttitle_class *);
 
     void setting_data(currenttitle_class *data){
-        int i;
-        for(i=0; i<QUANTIINDICI; i++){
-            m_lista[i]->reset();
-        }
         m_current = data;
 
         indice = 0;

@@ -31,6 +31,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
         QObject::connect(m_spac, &spacchettamento::progress, m_bar, &progress_bar_ui::progress_);
         QObject::connect(m_spac, &spacchettamento::finished, m_bar, &progress_bar_ui::finished_);
+        QObject::connect(m_bar, &progress_bar_ui::closeForce, m_spac, &spacchettamento::exit);
 
         QFuture<void> future1 = QtConcurrent::run( m_spac, &spacchettamento::esecuzione );
 
