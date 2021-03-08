@@ -17,36 +17,12 @@
 #include "cloud/cloud_controll.h"
 #endif
 
+static int extract_(const char *, const char *, const char *);
+
 int main(int argc, char *argv[])
 {
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
-        int res = extract_audio(argv[1], argv[2], argv[3]);
-        if(res == OK_EXTRACT_AUDIO){
-            printf("File extract correctly into %s", argv[3]);
-            return 0;
-        }
-        if(res == ERROR_NO_COPYBOOK){
-            printf("There seems to be no copybook with this name inside the file\n");
-            return -1;
-        }
-        if(res == ERROR_LOAD_FILE){
-            printf("We had a problem uploading the file\n");
-            return -1;
-        }
-        if(res == ERROR_NOT_RECORD){
-            printf("The copybook you entered has not been registered\n");
-            return -1;
-        }
-        if(res == ERROR_LOAD_AUDIO){
-            printf("We had a problem reading the audio\n");
-            return -1;
-        }
-        if(res == ERROR_OPEN_TO){
-            printf("Path %s is not valid\n", argv[3]);
-            return -1;
-        }
-        printf("Unknown error\n");
-        return -1;
+        return extract_(argv[2], argv[3], argv[4]);
     }
 
     if(argc != 1 && !strcmp(argv[1], "--help")){
@@ -127,4 +103,35 @@ int main(int argc, char *argv[])
 #endif
 
     return exit_code;
+}
+
+static int extract_(const char *f, const char *s, const char *t){
+    auto res = extract_audio(f, s, t);
+
+    if(res == extract::ok){
+        printf("File extract correctly into %s", t);
+        return 0;
+    }
+    if(res == extract::no_copybook){
+        printf("There seems to be no copybook with this name inside the file\n");
+        return -1;
+    }
+    if(res == extract::load_file){
+        printf("We had a problem uploading the file\n");
+        return -1;
+    }
+    if(res == extract::not_record){
+        printf("The copybook you entered has not been registered\n");
+        return -1;
+    }
+    if(res == extract::load_audio){
+        printf("We had a problem reading the audio\n");
+        return -1;
+    }
+    if(res == extract::open_to){
+        printf("Path to save [%s] is not valid\n", t);
+        return -1;
+    }
+    printf("Unknown error\n");
+    return -1;
 }

@@ -95,11 +95,41 @@ void extract_audio_ui::on_extract_to_clicked()
     if(!file_temp.exists())
         return dialog_critic("The file didn't exist");
 
-    int res = extract_audio(ui->edit_path->toPlainText().TOUTF,
+    auto res = extract_audio(ui->edit_path->toPlainText().TOUTF,
                             ui->comboBox->currentText().TOUTF,
                             ui->to_exit->toPlainText().TOUTF);
 
+    switch (res) {
+    case extract::ok:
+        return messaggio_utente("Extraction complite to " + ui->edit_path->toPlainText());
 
+    case extract::load_audio:
+        return dialog_critic("I had a problem reading the audio");
+
+    case extract::no_copybook:
+        /*
+         * the function was created to work in main, and opens
+         * the index of its own to check that this copybook
+         * exists, if it returns xxx, it means that the data has
+         * changed since we originally read it, to now, or
+         * there was an opening error
+        */
+        return dialog_critic("I had an internal problem, please retry");
+
+    case extract::not_record:
+        /*
+         * TODO: -> find a way to warn the user first of
+         * the fact that and the copybook is not registered
+        */
+        return messaggio_utente(ui->comboBox->currentText() + " is not recorder");
+    case extract::open_to:
+        return dialog_critic("I had a problem saving the file in " + ui->to_exit->toPlainText());
+
+    case extract::load_file:
+        return dialog_critic("We had a problem uploading the file");
+    default:
+        break;
+    }
 
 }
 
