@@ -26,6 +26,10 @@ private slots:
 
     void on_edit_path_textChanged();
 
+    void on_open_to_clicked();
+
+    void on_open_from_clicked();
+
 private:
 
     void ChangeColor(QColor);

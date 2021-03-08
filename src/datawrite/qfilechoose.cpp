@@ -5,6 +5,11 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
+/*
+ * this function is use for
+ * save [not for loading]
+*/
+
 qfilechoose::qfilechoose(MainWindow *ui)
 {
     this->ui = ui;

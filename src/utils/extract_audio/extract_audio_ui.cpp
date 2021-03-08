@@ -6,6 +6,7 @@
 #include "../dialog_critic/dialog_critic.h"
 
 #include <QDebug>
+#include "../../datawrite/qfilechoose.h"
 
 #define TOUTF toUtf8().constData()
 
@@ -136,4 +137,36 @@ void extract_audio_ui::on_extract_to_clicked()
 void extract_audio_ui::on_edit_path_textChanged()
 {
     this->iswriting = true;
+}
+
+/*
+ * open file to
+*/
+void extract_audio_ui::on_open_to_clicked()
+{
+    QString temp_path;
+    qfilechoose m_file (nullptr);
+    if(!m_file.filechoose(&temp_path, TYPEAUDIO))
+        return;
+
+    ui->to_exit->setPlainText(temp_path);
+
+}
+
+/*
+ * open writernote file
+*/
+#ifdef WIN32
+#define HOME "USERPROFILE"
+#elif unix
+#define HOME "$HOME"
+#endif
+
+void extract_audio_ui::on_open_from_clicked()
+{
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), getenv(HOME), "Writernote (*.writer);; All file (* *.*)");
+
+    ui->edit_path->setPlainText(fileName);
+
 }

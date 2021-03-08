@@ -157,7 +157,7 @@ void MainWindow::on_actionOpen_triggered(char *nomeFile)
 {
     QString fileName;
     if(!nomeFile){
-        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/giacomo", "Writernote (*.writer);; All file (* *.*)");
+        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*.writer);; All file (* *.*)");
     }else{
         fileName = nomeFile;
     }

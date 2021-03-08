@@ -13,7 +13,7 @@ class qfilechoose
 private:
     MainWindow *ui;
 public:
-    qfilechoose(MainWindow *ui);
+    qfilechoose(MainWindow *ui = nullptr);
     bool filechoose(QString *, short int type_ = TYPEFILEWRITER);
 
 };
