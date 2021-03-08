@@ -159,12 +159,13 @@ void extract_audio_ui::on_open_to_clicked()
 #ifdef WIN32
 #define HOME "USERPROFILE"
 #elif unix
-#define HOME "$HOME"
+#define HOME "HOME"
 #endif
 
 void extract_audio_ui::on_open_from_clicked()
 {
     QString fileName;
+
     fileName = QFileDialog::getOpenFileName(this, tr("Open File"), getenv(HOME), "Writernote (*.writer);; All file (* *.*)");
 
     ui->edit_path->setPlainText(fileName);
