@@ -171,6 +171,8 @@ SOURCES += \
     src/touch/zoom/zoom_control.cpp \
     src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
+    src/utils/extract_audio/extract_audio.cpp \
+    src/utils/extract_audio/extract_audio_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/remove_key/remove_key.cpp \
@@ -251,6 +253,8 @@ HEADERS += \
     src/dataread/xmlstruct.h \
     src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
+    src/utils/extract_audio/extract_audio.h \
+    src/utils/extract_audio/extract_audio_ui.h \
     src/utils/mostra_explorer/mostra_explorer.h \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
@@ -278,6 +282,7 @@ FORMS += \
     src/touch/text/text_widgets/text_widgets.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
     src/utils/default_location/audio_default_location.ui \
+    src/utils/extract_audio/extract_audio_ui.ui \
     src/utils/progress_bar/progress_bar_ui.ui \
     src/videocompress/videocompress_ui.ui \
 

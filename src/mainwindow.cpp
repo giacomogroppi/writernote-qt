@@ -68,6 +68,11 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
 
+    connect(player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
+        [=](QMediaPlayer::Error error){
+        Q_UNUSED(error)
+        messaggio_utente("We had an internal error with this error code: " + player->errorString());
+    });
 
     this->m_buffer = new QBuffer(this);
 
@@ -121,7 +126,6 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     ui->actionpen->setChecked(true);
 
 }
-
 
 MainWindow::~MainWindow()
 {

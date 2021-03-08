@@ -7,17 +7,10 @@
 #include "string.h"
 
 #include "dataread/xmlstruct.h"
-
-#define COMMAND_EXTRACT "--extract"
-#define OK_EXTRACT_AUDIO 1
-#define ERROR_NO_COPYBOOK 2
-#define ERROR_LOAD_FILE 3
-#define ERROR_NOT_RECORD 4
-#define ERROR_LOAD_AUDIO 5
-#define ERROR_OPEN_TO 6
-static int extractAudio(const char *path, const char *namecopybook, const char *path_to);
+#include "utils/extract_audio/extract_audio.h"
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file, the name of the copybook, \nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
+#define COMMAND_EXTRACT "--extract"
 
 #ifdef CLOUD
 #include "cloud/struct_user.h"
@@ -27,7 +20,7 @@ static int extractAudio(const char *path, const char *namecopybook, const char *
 int main(int argc, char *argv[])
 {
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
-        int res = extractAudio(argv[1], argv[2], argv[3]);
+        int res = extract_audio(argv[1], argv[2], argv[3]);
         if(res == OK_EXTRACT_AUDIO){
             printf("File extract correctly into %s", argv[3]);
             return 0;
@@ -107,6 +100,8 @@ int main(int argc, char *argv[])
         if(user)
             delete user;
 #endif
+        delete app;
+        delete canvas;
         return 0;
     }
 
@@ -132,63 +127,4 @@ int main(int argc, char *argv[])
 #endif
 
     return exit_code;
-}
-
-
-#define DELETE_T delete indice; \
-    delete title; \
-    delete m_data;
-
-/*
- * the function extract an audio from a copybook, into path_to
-*/
-static int extractAudio(const char *path, const char *namecopybook, const char *path_to){
-    QString m_path = path, m_namecopybook = namecopybook, m_path_to = path_to;
-
-    indice_class * indice = new indice_class;
-    currenttitle_class * title = new currenttitle_class;
-
-    xmlstruct * m_data = new xmlstruct(&m_path, indice, title);
-
-    if(m_data->loadindice() != OK){
-        DELETE_T;
-        return ERROR_LOAD_FILE;
-    }
-
-    if(indice->titolo.indexOf(namecopybook) == -1){
-        DELETE_T;
-        return ERROR_NO_COPYBOOK;
-    }
-
-    if(m_data->loadfile(namecopybook) != OK){
-        DELETE_T;
-        return ERROR_LOAD_FILE;
-    }
-
-    if(title->se_registato == audio_record::not_record){
-        DELETE_T;
-        return ERROR_NOT_RECORD;
-    }
-
-    if(load_audio(&title->audio_data, m_namecopybook, m_path) != OK)
-    {
-        DELETE_T;
-        return ERROR_LOAD_AUDIO;
-    }
-
-    FILE *fp = fopen(path_to, "w");
-    if(!fp){
-        DELETE_T;
-        return ERROR_OPEN_TO;
-    }
-
-    auto size_audio = title->audio_data.size();
-
-    fwrite(title->audio_data.data(), size_audio, 1, fp);
-
-    fclose(fp);
-
-    DELETE_T;
-
-    return OK_EXTRACT_AUDIO;
 }

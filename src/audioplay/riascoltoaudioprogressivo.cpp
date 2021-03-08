@@ -1,7 +1,11 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
-/* funzione che gestiste il riascolto dell'audio */
+#include "../utils/dialog_critic/dialog_critic.h"
+
+/* funzione che gestiste il riascolto dell'audio
+ * viene richiamata quando l'audio viene riprodotto
+*/
 void MainWindow::riascoltoaudioprogressivo(qint64 position){
     if(this->player->state() != QMediaPlayer::PlayingState)
         return;
@@ -36,6 +40,10 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     }
 
     this->ui->audioSlider->blockSignals(true);
+
+    int duration = player->duration();
+    if(!duration)
+        return messaggio_utente("The audio seems blank");
 
     this->ui->audioSlider->setValue((position*100)/this->player->duration());
 

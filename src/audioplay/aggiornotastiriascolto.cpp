@@ -9,6 +9,8 @@
 #include "../setting_ui.h"
 
 #include "../dataread/xmlstruct.h"
+#define ERROR_AUDIO "We had an internal problem with audio, please \nclose the application and open it again"
+
 
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->m_currenttitle->se_registato != audio_record::not_record){
@@ -39,9 +41,18 @@ void aggiornotestiriascolto(MainWindow *parent){
                     return dialog_critic("We had a problem loading the audio");
 
             parent->m_buffer->setData(parent->m_currenttitle->audio_data);
-            parent->m_buffer->open(QIODevice::ReadOnly);
+
+            if(!parent->m_buffer->open(QIODevice::ReadOnly))
+                return dialog_critic(ERROR_AUDIO);
+
+            if(!parent->m_buffer->isOpen() || !parent->m_buffer->isReadable())
+                return dialog_critic(ERROR_AUDIO);
 
             parent->player->setMedia(QMediaContent(), parent->m_buffer);
+
+            int ciao = parent->player->duration();
+
+            ciao = 3;
 
         }
         else{
