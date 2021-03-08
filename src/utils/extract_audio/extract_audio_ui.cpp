@@ -168,6 +168,9 @@ void extract_audio_ui::on_open_from_clicked()
 
     fileName = QFileDialog::getOpenFileName(this, tr("Open File"), getenv(HOME), "Writernote (*.writer);; All file (* *.*)");
 
+    if(fileName.isEmpty())
+        return;
+
     ui->edit_path->setPlainText(fileName);
 
 }
