@@ -50,10 +50,6 @@ void aggiornotestiriascolto(MainWindow *parent){
 
             parent->player->setMedia(QMediaContent(), parent->m_buffer);
 
-            int ciao = parent->player->duration();
-
-            ciao = 3;
-
         }
         else{
             parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle->audio_position_path));
