@@ -56,7 +56,7 @@ void MainWindow::on_startrecording_triggered()
         /*
          * we reserve 32 MB for the buffer of the audio
         */
-        this->m_currenttitle->audio_data.reserve(32*1024*1024);
+        //this->m_currenttitle->audio_data.reserve(32*1024*1024);
 
         this->m_audioRecorder->record();
 

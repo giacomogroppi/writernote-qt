@@ -174,6 +174,7 @@ SOURCES += \
     src/utils/extract_audio/extract_audio.cpp \
     src/utils/extract_audio/extract_audio_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
+    src/utils/path/get_path.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/remove_key/remove_key.cpp \
     src/utils/resize_mainwindow/resize.cpp \
@@ -256,6 +257,7 @@ HEADERS += \
     src/utils/extract_audio/extract_audio.h \
     src/utils/extract_audio/extract_audio_ui.h \
     src/utils/mostra_explorer/mostra_explorer.h \
+    src/utils/path/get_path.h \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
     src/utils/remove_key/remove_key.h \

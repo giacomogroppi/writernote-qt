@@ -53,7 +53,7 @@ void aggiornotestiriascolto(MainWindow *parent){
             if(!parent->m_buffer->isOpen() || !parent->m_buffer->isReadable())
                 return dialog_critic(ERROR_AUDIO);
 
-            parent->player->setMedia(QMediaContent(), parent->m_buffer);
+            parent->player->setMedia(QMediaContent(QUrl("")), parent->m_buffer);
 
         }
         else{
