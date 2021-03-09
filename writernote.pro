@@ -178,6 +178,7 @@ SOURCES += \
     src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/remove_key/remove_key.cpp \
     src/utils/resize_mainwindow/resize.cpp \
+    src/utils/retry/retry_ui.cpp \
     src/utils/settings/setting_load.cpp \
     src/utils/time/current_time.cpp \
     src/videocompress/compressivideo.cpp \
@@ -261,6 +262,7 @@ HEADERS += \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
     src/utils/remove_key/remove_key.h \
+    src/utils/retry/retry_ui.h \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \
     src/utils/time/current_time.h \
@@ -286,6 +288,7 @@ FORMS += \
     src/utils/default_location/audio_default_location.ui \
     src/utils/extract_audio/extract_audio_ui.ui \
     src/utils/progress_bar/progress_bar_ui.ui \
+    src/utils/retry/retry_ui.ui \
     src/videocompress/videocompress_ui.ui \
 
 

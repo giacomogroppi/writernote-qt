@@ -28,15 +28,9 @@ static bool createTempFolder(QString &path);
 
 const char * get_path(path::e_path var)
 {
-    QString temp;
-
     if(var == path::audio_pos){
-        temp = getenv(POS_HOME);
+        QString temp = get_path_no_controll();
 
-        PLUSS(temp);
-        temp += FOLDERNAME;
-
-        PLUSS(temp);
         if(!createTempFolder(temp))
             return NULL;
 
@@ -58,4 +52,18 @@ static bool createTempFolder(QString &path){
     }
 
     return true;
+}
+
+/*
+ * the function does not check if the
+ * folder to save the audio exists
+*/
+const char *get_path_no_controll(){
+    QString temp = getenv(POS_HOME);
+
+    PLUSS(temp);
+    temp += FOLDERNAME;
+
+    PLUSS(temp);
+    return temp.toUtf8().constData();
 }

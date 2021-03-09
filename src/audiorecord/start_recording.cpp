@@ -10,6 +10,8 @@
 #include "../datawrite/qfilechoose.h"
 #include "../utils/default_location/audio_default_location.h"
 
+#include "../utils/path/get_path.h"
+
 #include <QSettings>
 
 #ifdef SNAP
@@ -46,8 +48,10 @@ void MainWindow::on_startrecording_triggered()
     }
 #endif //snap
 
-    if(!this->setOutputLocation())
+    if(!this->setOutputLocation()){
+        m_currenttitle->se_registato = audio_record::not_record;
         return;
+    }
 
 
     if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {
@@ -163,7 +167,21 @@ bool MainWindow::setOutputLocation()
 
     }
     else if(this->m_currenttitle->se_registato == audio_record::record_zip){
-        this->m_audioRecorder->setOutputLocation(QUrl::fromAce(this->m_currenttitle->audio_data));
+        const char * path = get_path(path::audio_pos);
+        if(!path){
+            dialog_critic("I had an internal problem with the audio");
+            return false;
+        }
+
+        /*
+         * what it does is go to create a temporary file to save the audio.
+         * we can't save it in a qbytearray
+        */
+        QString temp_p = path;
+        temp_p += m_currenttitle->nome_copybook + "_temp.wav";
+
+        /* testing */
+        this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(temp_p));
         goto ok;
     }
 
@@ -177,11 +195,11 @@ bool MainWindow::setOutputLocation()
     return true;
 }
 
-#include <QDebug>
-
 /*
  * this function append the data from the audio record buffer
  * to the buffer on the currenttitle
+ *
+ * unused function
 */
 void MainWindow::progressBuffer(const QAudioBuffer &buffer){
     /*

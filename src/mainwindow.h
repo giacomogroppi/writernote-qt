@@ -60,7 +60,7 @@ public:
     Ui::MainWindow *ui;
 
     QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);
-    QAudioProbe *m_probe = nullptr;
+    //QAudioProbe *m_probe = nullptr;
     bool m_outputLocationSet = false;
 
     /* gestione della riproduzione dell'audio */

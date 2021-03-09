@@ -9,6 +9,7 @@ namespace path {
     };
 }
 
+const char *get_path_no_controll();
 const char * get_path(path::e_path);
 
 #endif // GET_PATH_H

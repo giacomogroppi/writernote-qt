@@ -16,6 +16,11 @@
 #include <QtConcurrent/QtConcurrent>
 
 #include "../datawrite/savefile.h"
+#include <QMessageBox>
+#include "../utils/path/get_path.h"
+
+static void removeAudio(currenttitle_class *);
+static bool saveAudio(currenttitle_class * , QString &path);
 
 void MainWindow::on_stoprecordingbotton_triggered()
 {
@@ -43,12 +48,8 @@ void MainWindow::on_stoprecordingbotton_triggered()
     }
 
     if(m_currenttitle->se_registato == audio_record::record_zip){
-        if(save_audio_file(m_currenttitle->audio_data, m_currenttitle->nome_copybook, m_path) != OK)
-            dialog_critic("We had a problem saving the audio into " + m_path);
-
-        savefile m_save(&m_path, m_currenttitle);
-        if(m_save.savefile_check_file() != OK)
-            dialog_critic("We had a problem saving the current copybook");
+        if(!saveAudio(m_currenttitle, m_path))
+            removeAudio(m_currenttitle);
 
     }
 
@@ -59,4 +60,28 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
     this->ui->statusBar->clearMessage();
     this->m_canvas->time = 0;
+}
+
+static bool saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
+    const char * path = get_path_no_controll();
+    if(!path){
+        if(!QFile::exists(path))
+            dialog_critic("For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name");
+
+
+    }
+
+    if(save_audio_file(m_currenttitle->audio_data, m_currenttitle->nome_copybook, m_path) != OK)
+        dialog_critic("We had a problem saving the audio into " + m_path);
+
+    savefile m_save(&m_path, m_currenttitle);
+    if(m_save.savefile_check_file() != OK)
+        dialog_critic("We had a problem saving the current copybook");
+
+    return true;
+}
+
+static void removeAudio(currenttitle_class *data){
+    data->se_registato = audio_record::not_record;
+    data->audio_data.clear();
 }
