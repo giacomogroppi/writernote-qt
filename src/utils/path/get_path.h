@@ -9,6 +9,8 @@ namespace path {
     };
 }
 
+#define POS_TEMP_AUDIO "_temp.wav"
+
 const char *get_path_no_controll();
 const char * get_path(path::e_path);
 

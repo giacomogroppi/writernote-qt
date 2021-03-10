@@ -178,7 +178,7 @@ bool MainWindow::setOutputLocation()
          * we can't save it in a qbytearray
         */
         QString temp_p = path;
-        temp_p += m_currenttitle->nome_copybook + "_temp.wav";
+        temp_p += m_currenttitle->nome_copybook + POS_TEMP_AUDIO;
 
         /* testing */
         this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(temp_p));

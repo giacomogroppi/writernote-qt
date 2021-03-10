@@ -18,8 +18,8 @@
 #include "../datawrite/savefile.h"
 #include <QMessageBox>
 #include "../utils/path/get_path.h"
+#include "../utils/retry/retry_ui.h"
 
-static void removeAudio(currenttitle_class *);
 static bool saveAudio(currenttitle_class * , QString &path);
 
 void MainWindow::on_stoprecordingbotton_triggered()
@@ -49,7 +49,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
     if(m_currenttitle->se_registato == audio_record::record_zip){
         if(!saveAudio(m_currenttitle, m_path))
-            removeAudio(m_currenttitle);
+            /* TODO -> reset button */;
 
     }
 
@@ -62,20 +62,54 @@ void MainWindow::on_stoprecordingbotton_triggered()
     this->m_canvas->time = 0;
 }
 
+
+/*
+ * to connect two object we need a qobject
+*/
+class reciver: public QObject{
+    Q_OBJECT
+private:
+    currenttitle_class *m_current;
+    bool *m_exist;
+public:
+    reciver(currenttitle_class *data, bool *m_exist){
+        this->m_current = data;
+        this->m_exist = m_exist;
+    }
+
+    bool exist();
+public slots:
+    void retry();
+    void close();
+
+signals:
+    void resultRetry(bool);
+};
+
 static bool saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
     const char * path = get_path_no_controll();
-    if(!path){
-        if(!QFile::exists(path))
-            dialog_critic("For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name");
 
+    if(!QFile::exists(path)){
+        bool save = false;
 
+        reciver m_reciver(m_currenttitle, &save);
+        retry_ui m_r(nullptr, "Audio missing", "For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name", "The file does not exist");
+
+        QObject::connect(&m_r, &retry_ui::retry, &m_reciver, &reciver::retry);
+        QObject::connect(&m_r, &retry_ui::close, &m_reciver, &reciver::close);
+
+        QObject::connect(&m_reciver, &reciver::resultRetry, &m_r, &retry_ui::resultRetry);
+
+        m_r.exec();
+
+        if(!save)
+            return false;
     }
 
     if(save_audio_file(m_currenttitle->audio_data, m_currenttitle->nome_copybook, m_path) != OK)
         dialog_critic("We had a problem saving the audio into " + m_path);
 
-    savefile m_save(&m_path, m_currenttitle);
-    if(m_save.savefile_check_file() != OK)
+    if(savefile(&m_path, m_currenttitle).savefile_check_file() != OK)
         dialog_critic("We had a problem saving the current copybook");
 
     return true;
@@ -84,4 +118,26 @@ static bool saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
 static void removeAudio(currenttitle_class *data){
     data->se_registato = audio_record::not_record;
     data->audio_data.clear();
+}
+
+/*
+ * return true if the audio file exist
+*/
+bool reciver::exist(){
+    QString path = get_path_no_controll();
+    return QFile::exists(path + this->m_current->nome_copybook + POS_TEMP_AUDIO);
+}
+
+void reciver::retry(){
+    *this->m_exist = true;
+    emit resultRetry(this->exist());
+}
+
+/*
+ * this function is call if the user
+ * close the window
+*/
+void reciver::close(){
+    this->m_current->posizione_iniz.clear();
+    this->m_current->testinohtml.clear();
 }
