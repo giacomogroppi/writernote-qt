@@ -7,8 +7,9 @@
 #define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
 
 static int save_string(zip_source_t *, const char *);
-
 static void setCurrentVersion(currenttitle_class *data);
+
+#include <QFile>
 
 #define ERROR_PRIVATE -1
 #define OK_PRIVATE 0
@@ -121,11 +122,18 @@ static int save_string(zip_source_t *file, const char *stringa){
     return OK;
 }
 
-int save_audio_file(QByteArray &array, QString &namecopybook, QString &path){
+int save_audio_file(const char *posAudio, QString &namecopybook, QString &path){
     zip_source_t *file;
     zip_t *filezip;
 
     zip_error_t errore;
+
+    QFile file_temp(posAudio);
+    if(!file_temp.open(QIODevice::ReadOnly))
+        return ERROR;
+
+    QByteArray array = file_temp.readAll();
+
     int check, error;
 
     filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
@@ -140,10 +148,6 @@ int save_audio_file(QByteArray &array, QString &namecopybook, QString &path){
     }
 
     zip_source_begin_write(file);
-
-    //int size = array.size();
-
-    //SOURCE_WRITE_RETURN(file, &size, sizeof(int));
 
     SOURCE_WRITE(file, array.data(), array.size());
 
@@ -160,9 +164,11 @@ int save_audio_file(QByteArray &array, QString &namecopybook, QString &path){
         goto delete_;
 
     zip_close(filezip);
+    file_temp.close();
     return OK;
 
     delete_:
+    file_temp.close();
     zip_source_free(file);
     zip_close(filezip);
     return ERROR;

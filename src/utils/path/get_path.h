@@ -10,6 +10,7 @@ namespace path {
 }
 
 #define POS_TEMP_AUDIO "_temp.wav"
+#define POS_AUDIO(x) x->nome_copybook + POS_TEMP_AUDIO
 
 const char *get_path_no_controll();
 const char * get_path(path::e_path);

@@ -22,7 +22,7 @@
 
 #include "retry_save_audio.h"
 
-static bool saveAudio(currenttitle_class * , QString &path);
+static void saveAudio(currenttitle_class * , QString &path);
 
 void MainWindow::on_stoprecordingbotton_triggered()
 {
@@ -50,9 +50,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
     }
 
     if(m_currenttitle->se_registato == audio_record::record_zip){
-        if(!saveAudio(m_currenttitle, m_path))
-            /* TODO -> reset button */;
-
+        saveAudio(m_currenttitle, m_path);
     }
 
     settingaudio_registrazione(this, false);
@@ -65,8 +63,8 @@ void MainWindow::on_stoprecordingbotton_triggered()
 }
 
 
-static bool saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
-    const char * path = get_path_no_controll();
+static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
+    QString path = get_path_no_controll() + POS_AUDIO(m_currenttitle);
 
     if(!QFile::exists(path)){
         bool save = false;
@@ -84,8 +82,6 @@ static bool saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
         delete m_reciver;
         delete m_r;
 
-        if(!save)
-            return false;
     }
 
     if(save_audio_file(m_currenttitle->audio_data, m_currenttitle->nome_copybook, m_path) != OK)
@@ -94,5 +90,4 @@ static bool saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
     if(savefile(&m_path, m_currenttitle).savefile_check_file() != OK)
         dialog_critic("We had a problem saving the current copybook");
 
-    return true;
 }
