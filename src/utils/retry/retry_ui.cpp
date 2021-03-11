@@ -25,20 +25,23 @@ retry_ui::~retry_ui()
 /*
  * if result is ok
 */
-void retry_ui::resultRetry(bool check)
+void retry_ui::resultRetry_reciver(bool check)
 {
+    if(check)
+        this->close();
+
     QString temp = this->message + "\n" + this->messageError;
     this->ui->text->setText(temp);
 }
 
 void retry_ui::on_button_retry_clicked()
 {
-    emit retry();
+    emit ui_retry();
 }
 
 void retry_ui::on_button_close_clicked()
 {
-    emit close();
+    emit ui_close();
 }
 
 void retry_ui::closeEvent(QCloseEvent *event)

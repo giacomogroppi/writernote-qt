@@ -20,11 +20,12 @@ private:
     Ui::retry_ui *ui;
 
 public slots:
-    void resultRetry(bool check);
+    void resultRetry_reciver(bool check);
 
 signals:
-    void retry();
-    void close();
+    void ui_retry();
+    void ui_close();
+
 private slots:
     void on_button_retry_clicked();
     void on_button_close_clicked();
