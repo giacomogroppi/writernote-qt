@@ -174,6 +174,7 @@ SOURCES += \
     src/utils/extract_audio/extractAudioMain.cpp \
     src/utils/extract_audio/extract_audio.cpp \
     src/utils/extract_audio/extract_audio_ui.cpp \
+    src/utils/make_default/make_default_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
     src/utils/path/get_path.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
@@ -259,6 +260,7 @@ HEADERS += \
     src/utils/color/color_chooser.h \
     src/utils/extract_audio/extract_audio.h \
     src/utils/extract_audio/extract_audio_ui.h \
+    src/utils/make_default/make_default_ui.h \
     src/utils/mostra_explorer/mostra_explorer.h \
     src/utils/path/get_path.h \
     src/utils/posizione_binario.h \
@@ -289,6 +291,7 @@ FORMS += \
     src/utils/bug_repo/bug_repo_ui.ui \
     src/utils/default_location/audio_default_location.ui \
     src/utils/extract_audio/extract_audio_ui.ui \
+    src/utils/make_default/make_default_ui.ui \
     src/utils/progress_bar/progress_bar_ui.ui \
     src/utils/retry/retry_ui.ui \
     src/videocompress/videocompress_ui.ui \

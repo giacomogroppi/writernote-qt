@@ -3,6 +3,9 @@
 #include "../../utils/common_error_definition.h"
 #include "../../images/save_images.h"
 
+#include "../../currenttitle/currenttitle_class.h"
+#include "../../indice_class.h"
+
 #define SAVE_IMAGE(x, y) if(save_image(x, y) != OK) goto delete_;
 #define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
 

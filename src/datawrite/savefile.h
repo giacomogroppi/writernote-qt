@@ -1,11 +1,12 @@
 #ifndef SAVEFILE_H
 #define SAVEFILE_H
 
-#include "../currenttitle/currenttitle_class.h"
-#include "../indice_class.h"
-
 #include <zip.h>
 #include "../utils/common_error_definition.h"
+#include <QString>
+
+class currenttitle_class;
+class indice_class;
 
 #define WRITE_ON_SIZE(x,y,z,filezip) if(zip_source_write(x,y,z)==-1)return freezip(x,filezip);
 

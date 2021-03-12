@@ -21,8 +21,26 @@
 #include "../utils/retry/retry_ui.h"
 
 #include "retry_save_audio.h"
+#include "../utils/areyousure/areyousure.h"
+
+#include <QSettings>
+#include "../utils/setting_define.h"
+
+#include "../utils/make_default/make_default_ui.h"
 
 static void saveAudio(currenttitle_class * , QString &path);
+
+namespace removeAudio {
+    enum n_removeAudio: unsigned short int{
+        remove_ok,
+        not_remove_ok,
+        ask
+    };
+
+    static n_removeAudio removeAudioSettingsLoad();
+    static void removeAudioSettingsSave(n_removeAudio);
+}
+
 
 void MainWindow::on_stoprecordingbotton_triggered()
 {
@@ -62,7 +80,6 @@ void MainWindow::on_stoprecordingbotton_triggered()
     this->m_canvas->time = 0;
 }
 
-
 static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
     QString path = get_path_no_controll() + POS_AUDIO(m_currenttitle);
 
@@ -82,12 +99,74 @@ static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
         delete m_reciver;
         delete m_r;
 
+        if(!save)
+            return;
+
     }
 
-    if(save_audio_file(m_currenttitle->audio_data, m_currenttitle->nome_copybook, m_path) != OK)
+
+
+    if(save_audio_file(path.toUtf8().constData(), m_currenttitle->nome_copybook, m_path) != OK)
         dialog_critic("We had a problem saving the audio into " + m_path);
 
     if(savefile(&m_path, m_currenttitle).savefile_check_file() != OK)
         dialog_critic("We had a problem saving the current copybook");
+
+    removeAudio::n_removeAudio temp = removeAudio::removeAudioSettingsLoad();
+
+    if(temp == removeAudio::ask){
+        /* remove audio */
+        make_default_ui temp_ui(nullptr, "Remove temp audio", "With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove or keep it? the location of the file is " + path);
+
+        QObject::connect(&temp_ui, &make_default_ui::no, [=](bool var){
+            if(var)
+                removeAudio::removeAudioSettingsSave(removeAudio::not_remove_ok);
+        });
+
+        QObject::connect(&temp_ui, &make_default_ui::yes, [=](bool var){
+            if(var)
+                removeAudio::removeAudioSettingsSave(removeAudio::remove_ok);
+
+        });
+
+        temp_ui.exec();
+
+        temp = removeAudio::removeAudioSettingsLoad();
+    }
+
+    if(temp == removeAudio::remove_ok){
+        if(!QFile::remove(path))
+                dialog_critic("We had a problem removing audio locate in " + path);
+    }
+
+}
+
+
+/*
+ * this function return true if the user want
+*/
+static removeAudio::n_removeAudio removeAudio::removeAudioSettingsLoad(){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_AUDIO_REMOVE_RECORD);
+
+    int temp = setting.value(KEY_AUDIO_REMOVE_RECORD, false).toInt();
+
+    setting.endGroup();
+
+    auto temp_ = static_cast<removeAudio::n_removeAudio>(temp);
+
+    return temp_;
+}
+
+
+static void removeAudio::removeAudioSettingsSave(removeAudio::n_removeAudio val){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_AUDIO_REMOVE_RECORD);
+
+    int temp = static_cast<int>(val);
+
+    setting.setValue(KEY_AUDIO_REMOVE_RECORD, temp);
+
+    setting.endGroup();
 
 }

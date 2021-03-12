@@ -73,4 +73,8 @@
 #define GROUPNAME_AUDIO_POSITION "groupname-audio-position"
 #define KEY_AUDIO_POSITION_TYPE "key-audio-position-type" /* int */
 
+/* remove audio from temp folder */
+#define GROUPNAME_AUDIO_REMOVE_RECORD "groupname-audio-remove"
+#define KEY_AUDIO_REMOVE_RECORD "key-audio-remove"
+
 #endif // SETTING_DEFINE_H
