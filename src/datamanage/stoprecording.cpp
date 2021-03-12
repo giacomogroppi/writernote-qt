@@ -80,6 +80,8 @@ void MainWindow::on_stoprecordingbotton_triggered()
     this->m_canvas->time = 0;
 }
 
+static bool needRemove;
+
 static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
     QString path = get_path_no_controll() + POS_AUDIO(m_currenttitle);
 
@@ -115,18 +117,21 @@ static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
     removeAudio::n_removeAudio temp = removeAudio::removeAudioSettingsLoad();
 
     if(temp == removeAudio::ask){
+        needRemove = false;
+
         /* remove audio */
         make_default_ui temp_ui(nullptr, "Remove temp audio", "With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove or keep it? the location of the file is " + path);
 
         QObject::connect(&temp_ui, &make_default_ui::no, [=](bool var){
             if(var)
                 removeAudio::removeAudioSettingsSave(removeAudio::not_remove_ok);
+            needRemove = false;
         });
 
         QObject::connect(&temp_ui, &make_default_ui::yes, [=](bool var){
             if(var)
                 removeAudio::removeAudioSettingsSave(removeAudio::remove_ok);
-
+            needRemove = true;
         });
 
         temp_ui.exec();
@@ -134,7 +139,7 @@ static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
         temp = removeAudio::removeAudioSettingsLoad();
     }
 
-    if(temp == removeAudio::remove_ok){
+    if(temp == removeAudio::remove_ok || needRemove){
         if(!QFile::remove(path))
                 dialog_critic("We had a problem removing audio locate in " + path);
     }
