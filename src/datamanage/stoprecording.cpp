@@ -31,7 +31,7 @@
 static void saveAudio(currenttitle_class * , QString &path);
 
 namespace removeAudio {
-    enum n_removeAudio: unsigned short int{
+    enum n_removeAudio: int{
         remove_ok,
         not_remove_ok,
         ask
