@@ -26,6 +26,7 @@
 #include <QSettings>
 #include "../utils/setting_define.h"
 
+#include "../utils/permission/permission.h"
 #include "../utils/make_default/make_default_ui.h"
 
 static void saveAudio(currenttitle_class * , QString &path);
@@ -40,7 +41,6 @@ namespace removeAudio {
     static n_removeAudio removeAudioSettingsLoad();
     static void removeAudioSettingsSave(n_removeAudio);
 }
-
 
 void MainWindow::on_stoprecordingbotton_triggered()
 {
@@ -140,8 +140,12 @@ static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
     }
 
     if(temp == removeAudio::remove_ok || needRemove){
-        if(!QFile::remove(path))
+        if(!QFile::remove(path)){
+            if(!permission::open(path.toUtf8().constData(), permission::writeOnly))
+                dialog_critic("I don't have permission to remove file locate in " + path);
+            else
                 dialog_critic("We had a problem removing audio locate in " + path);
+        }
     }
 
 }

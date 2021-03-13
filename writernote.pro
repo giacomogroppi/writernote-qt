@@ -177,6 +177,7 @@ SOURCES += \
     src/utils/make_default/make_default_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
     src/utils/path/get_path.cpp \
+    src/utils/permission/permission.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/remove_key/remove_key.cpp \
     src/utils/resize_mainwindow/resize.cpp \
@@ -263,6 +264,7 @@ HEADERS += \
     src/utils/make_default/make_default_ui.h \
     src/utils/mostra_explorer/mostra_explorer.h \
     src/utils/path/get_path.h \
+    src/utils/permission/permission.h \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
     src/utils/remove_key/remove_key.h \
