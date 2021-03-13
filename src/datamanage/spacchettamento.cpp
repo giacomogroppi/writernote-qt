@@ -75,6 +75,7 @@ void spacchettamento::esecuzione(){
 
             if(CURRENTTITLE->testinohtml[i].length() == CURRENTTITLE->testinohtml[i-1].length()
                     || CURRENTTITLE->testinohtml[i][CURRENTTITLE->testinohtml[i].length() - 1] == ' '){
+
                 CURRENTTITLE->testinohtml.removeAt(i);
                 CURRENTTITLE->posizione_iniz.removeAt(i);
                 -- lunghezza;

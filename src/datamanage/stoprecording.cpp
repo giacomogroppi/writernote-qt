@@ -107,7 +107,6 @@ static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
     }
 
 
-
     if(save_audio_file(path.toUtf8().constData(), m_currenttitle->nome_copybook, m_path) != OK)
         dialog_critic("We had a problem saving the audio into " + m_path);
 
@@ -135,8 +134,6 @@ static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
         });
 
         temp_ui.exec();
-
-        temp = removeAudio::removeAudioSettingsLoad();
     }
 
     if(temp == removeAudio::remove_ok || needRemove){
@@ -158,7 +155,7 @@ static removeAudio::n_removeAudio removeAudio::removeAudioSettingsLoad(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_AUDIO_REMOVE_RECORD);
 
-    int temp = setting.value(KEY_AUDIO_REMOVE_RECORD, false).toInt();
+    int temp = setting.value(KEY_AUDIO_REMOVE_RECORD, removeAudio::ask).toInt();
 
     setting.endGroup();
 
