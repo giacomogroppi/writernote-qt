@@ -44,6 +44,15 @@
 - Compile for IOS and mac
 - Ask for classic confinement snapcraft
 
+## Known bugs:
+- Rubber
+- Pen size [pen size is not yet supported]
+- Playing an audio in pen mode is not dynamic but static
+- Save image:
+  - In pen mode, moving an image is not supported
+  - In keyboard mode it is possible to add images, and move them, but when the file is closed the images will be deleted, as with linux systems [snapcraft], a temporary position of the file is created, which will be deleted when closed, in windows systems instead the image will be automatically added if and only if it is not moved to disk, as the html link inside the file remains
+
+
 ## Installing
   - Linux: 
     
