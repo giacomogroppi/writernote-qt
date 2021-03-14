@@ -21,7 +21,7 @@
 - Print file
 - Keyboard support
 - Audio record [support for write mode only]:
-  - Include file in writernote file
+  - Include audio file in writernote file
   - or decide to save the file in a specific location
   - listen to the audio again and visually see what was being written [only keyboard]
 
@@ -34,6 +34,7 @@
 - Android support
 - Last open file
 - Pen [different types of pen]
+- Insert text into pen mode 
 
 ## To do
 - Project .writer to image
@@ -41,6 +42,7 @@
 - Drag and drop image and file to import it
 - Cloud
 - Compile for IOS and mac
+- Ask for classic confinement snapcraft
 
 ## Installing
   - Linux: 
