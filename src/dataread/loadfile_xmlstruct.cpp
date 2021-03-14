@@ -212,7 +212,8 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
  * TODO -> load audio into the buffer only if you are really opening a new copybook
 */
 #define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
-    zip_close(y)
+    zip_close(y); \
+    if(audio_data) free(audio_data);
 
 #define NAME_AUDIO(x) (x+"audio.wav")
 
