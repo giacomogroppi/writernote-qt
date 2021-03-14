@@ -23,6 +23,7 @@ private slots:
     void on_button_yes_clicked();
 
 private:
+    bool alreadyDecide = false;
     Ui::make_default_ui *ui;
 
 signals:

@@ -211,7 +211,11 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
  *
  * TODO -> load audio into the buffer only if you are really opening a new copybook
 */
-#define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); zip_close(y)
+#define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
+    zip_close(y)
+
+#define NAME_AUDIO(x) (x+"audio.wav")
+
 int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     int error;
     void * audio_data = nullptr;
@@ -221,15 +225,19 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     if(!file_zip)
         return ERROR;
 
-    size_t size_audio = sizeFile(file_zip, namecopybook.toUtf8().constData());
+    size_t size_audio = sizeFile(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData());
 
     if(!size_audio)
         return ERROR;
 
     zip_file_t *f;
-    f = zip_fopen(file_zip, (namecopybook + "audio.wav").toUtf8().constData(), 0);
+    f = zip_fopen(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData(), 0);
     if(f == NULL)
         return ERROR;
+
+    audio_data = malloc(size_audio);
+    if(!audio_data)
+        goto free_;
 
     SOURCE_READ_GOTO(f, audio_data, size_audio);
 
@@ -248,6 +256,12 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
 static size_t sizeFile(zip_t *filezip, const char *namefile){
     struct zip_stat st;
     zip_stat_init(&st);
+
+    /*
+     * Upon successful completion 0 is returned. Otherwise,
+     * -1 is returned and the error information in archive
+     * is set to indicate the error
+    */
     if(zip_stat(filezip, namefile, 0, &st) != 0)
         return 0;
 
