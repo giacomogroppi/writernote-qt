@@ -23,6 +23,7 @@
 
 #include "text/text_ui/text_ui.h"
 #include "text/text_widgets/text_widgets.h"
+#include "../sheet/fast-sheet/fast_sheet_ui.h"
 
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
@@ -148,6 +149,8 @@ public:
     text_ui *m_text;
 
     text_widgets *m_text_w;
+
+    fast_sheet_ui *m_sheet;
 
     zoom_control *zoom = NULL;
 

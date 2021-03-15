@@ -29,10 +29,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     if(this->isloading)
         load(&painter);
 
-    /* la funzione viene lanciata quando si sta riascoltando l'audio */
-    if(this->riascoltovariable)
-        this->loadriascolto(&painter);
-
     painter.end();
 }
 
@@ -40,11 +36,15 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 #define UPDATE_LOAD updateBrush_load(C(data).at(i).m_pressure, setcolor(&C(data).at(i).m_color))
 #define SET_PEN painter->setPen(this->m_pen)
 
+/*
+ * TODO -> implement this function to play audio
+*/
 void TabletCanvas::load(QPainter *painter,
                         double m,
                         int size_orizzontale,
                         int size_verticale,
                         double *y_last){
+
     int i, len, k;
 
     m_pixmap.fill(Qt::white);

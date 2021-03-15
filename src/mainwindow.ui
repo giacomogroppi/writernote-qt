@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>967</width>
-    <height>629</height>
+    <height>664</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -434,7 +434,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionnew_sheet"/>
+   <addaction name="actionlastStyle"/>
   </widget>
   <action name="actionNew_File">
    <property name="checkable">
@@ -836,6 +836,15 @@
   <action name="actionExtract_audio">
    <property name="text">
     <string>Extract audio</string>
+   </property>
+  </action>
+  <action name="actionlastStyle">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/new-sheetpng</normaloff>:/image/images/new-sheetpng</iconset>
+   </property>
+   <property name="text">
+    <string>lastStyle</string>
    </property>
   </action>
  </widget>

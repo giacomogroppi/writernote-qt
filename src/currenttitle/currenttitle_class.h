@@ -48,6 +48,9 @@ public:
     QByteArray audio_data;
 
     currenttitle_class();
+
+    static void copy(currenttitle_class *src, currenttitle_class *dest);
+
 };
 
 #endif

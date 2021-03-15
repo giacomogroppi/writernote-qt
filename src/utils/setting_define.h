@@ -77,4 +77,9 @@
 #define GROUPNAME_AUDIO_REMOVE_RECORD "groupname-audio-remove"
 #define KEY_AUDIO_REMOVE_RECORD "key-audio-remove"
 
+/* auto create new sheet */
+#define GROUPNAME_AUTO_CREATE_SHEET "groupname-auto-sheet"
+#define KEY_AUTO_CREATE_SHEET "key-auto-create-sheet" /* bool -> true automatic creation*/
+#define KEY_AUTO_CREATE_STYLE_FAST "key-auto-create-fast" /* fast style selectable from mainwindow */
+
 #endif // SETTING_DEFINE_H

@@ -52,6 +52,8 @@ SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
+    src/sheet/fast-sheet/fast_sheet_ui.cpp \
+    src/sheet/fast_sheet.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/utils/aboutQt/aboutqt.cpp \
@@ -200,6 +202,7 @@ SOURCES += \
 HEADERS += \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/datamanage/retry_save_audio.h \
+    src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
     src/utils/aboutQt/aboutqt.h \
@@ -287,6 +290,7 @@ FORMS += \
     src/last_open/last_open.ui \
     src/mainwindow.ui \
     src/sheet/dialog_sheet.ui \
+    src/sheet/fast-sheet/fast_sheet_ui.ui \
     src/style/inserttable_class.ui \
     src/touch/pen/pen_ui.ui \
     src/touch/rubber/rubber_ui.ui \

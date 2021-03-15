@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>fast_sheet_ui</class>
+ <widget class="QWidget" name="fast_sheet_ui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>424</width>
+    <height>275</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QListView" name="list_sheet"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="white_sheet">
+     <property name="text">
+      <string>No line</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="lines_sheet">
+     <property name="text">
+      <string>Only lines</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="shared_sheet">
+     <property name="text">
+      <string>Squared sheet</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="autocreate_sheet">
+     <property name="text">
+      <string>Auto create new sheet</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

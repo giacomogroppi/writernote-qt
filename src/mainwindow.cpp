@@ -93,6 +93,9 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     this->m_text_w = new text_widgets(this);
 
+    this->m_sheet = new fast_sheet_ui(this);
+
+    this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
     this->m_text->setHidden(true);
     this->m_pen->setHidden(true);
@@ -101,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
     this->m_canvas->m_text = m_text;
+    this->m_canvas->m_sheet = this->m_sheet;
 
     this->m_canvas->m_text_w = m_text_w;
 

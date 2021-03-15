@@ -23,6 +23,7 @@
 #define REDO_UNDO_ENABLE "Enable redo undo"
 #include "currenttitle/currenttitle_class.h"
 #include "indice_class.h"
+#include "sheet/fast-sheet/fast_sheet_ui.h"
 
 #include "cloud/struct_user.h"
 
@@ -97,6 +98,8 @@ public:
 
     /* manage audio player */
     QBuffer *m_buffer = nullptr;
+
+    fast_sheet_ui *m_sheet = nullptr;
 
 public slots:
     void progressBuffer(const QAudioBuffer &buffer);
@@ -260,6 +263,8 @@ private slots:
     void on_actionUndu_triggered();
 
     void on_actionExtract_audio_triggered();
+
+    void on_actionlastStyle_triggered();
 
 private:
     /* gestione dell'audio */
