@@ -4,7 +4,7 @@
 #include <QSettings>
 
 #include <QMetaType>
-#define MAXSTR 100
+#define MAXSTR 200
 #define MAXMOD 10
 
 /* the file is in your computer or in cloud */

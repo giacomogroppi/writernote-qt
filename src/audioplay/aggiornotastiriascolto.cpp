@@ -58,6 +58,9 @@ void aggiornotestiriascolto(MainWindow *parent){
         }
 
         parent->ui->actionDelete_audio->setEnabled(true);
+
+        parent->ui->stoprecordingbotton->setEnabled(false);
+        parent->ui->pauserecordingbotton->setEnabled(false);
     }
     else{
         /* abilita i tasti per la registrazione */

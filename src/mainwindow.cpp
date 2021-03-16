@@ -58,15 +58,12 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     connect(m_audioRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
             &MainWindow::displayErrorMessage);
 
-    /*this->m_probe = new QAudioProbe(this);
-
-    connect(m_probe, &QAudioProbe::audioBufferProbed, this, &MainWindow::progressBuffer);
-
-    this->m_probe->setSource(this->m_audioRecorder);*/
-
     player = new QMediaPlayer(this);
     connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
     connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
+    connect(player, &QMediaPlayer::durationChanged, [=](qint64 duration){
+        qDebug() << "Duration change " << duration;
+    });
 
     connect(player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
         [=](QMediaPlayer::Error error){

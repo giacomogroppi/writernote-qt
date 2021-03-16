@@ -11,30 +11,30 @@
 
 int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
 {
-    int len, i;
-    size_t temp;
+    int len, i, temp_i;
+    size_t temp_s;
     len = data->length();
 
     SOURCE_WRITE_RETURN(file_zip, &len, sizeof(int));
 
     for(i=0; i<len; i++){
-        temp = data->at(i).immagini.sizeInBytes();
+        temp_s = data->at(i).immagini.sizeInBytes();
 
-        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(size_t));
+        SOURCE_WRITE_RETURN(file_zip, &temp_s, sizeof(size_t));
 
-        SOURCE_WRITE_RETURN(file_zip, data->at(i).immagini.bits(), temp);
+        SOURCE_WRITE_RETURN(file_zip, data->at(i).immagini.bits(), temp_s);
 
-        temp = data->at(i).i.x();
-        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
+        temp_i = data->at(i).i.x();
+        SOURCE_WRITE_RETURN(file_zip, &temp_i, sizeof(int));
 
-        temp = data->at(i).i.y();
-        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
+        temp_i = data->at(i).i.y();
+        SOURCE_WRITE_RETURN(file_zip, &temp_i, sizeof(int));
 
-        temp = data->at(i).f.x();
-        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
+        temp_i = data->at(i).f.x();
+        SOURCE_WRITE_RETURN(file_zip, &temp_i, sizeof(int));
 
-        temp = data->at(i).f.y();
-        SOURCE_WRITE_RETURN(file_zip, &temp, sizeof(int));
+        temp_i = data->at(i).f.y();
+        SOURCE_WRITE_RETURN(file_zip, &temp_i, sizeof(int));
     }
 
     return OK;
@@ -45,32 +45,33 @@ static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
 
     QByteArray array;
 
-    size_t temp;
+    size_t temp_s;
+    int temp_i;
 
-    FIRST_SOURCE_READ(file_zip, &temp, sizeof(size_t));
+    FIRST_SOURCE_READ(file_zip, &temp_s, sizeof(size_t));
 
-    data_read = malloc(temp);
+    data_read = malloc(temp_s);
 
     if(!data_read)
         return ERROR;
 
-    SOURCE_READ_GOTO(file_zip, data_read, temp);
+    SOURCE_READ_GOTO(file_zip, data_read, temp_s);
 
-    array.setRawData((const char *)data_read, temp);
+    array.setRawData((const char *)data_read, temp_s);
 
     temp_immagine->immagini.loadFromData(array);
 
-    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
-    temp_immagine->i.setX(temp);
+    SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
+    temp_immagine->i.setX(temp_i);
 
-    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
-    temp_immagine->i.setY(temp);
+    SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
+    temp_immagine->i.setY(temp_i);
 
-    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
-    temp_immagine->f.setX(temp);
+    SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
+    temp_immagine->f.setX(temp_i);
 
-    SOURCE_READ_GOTO(file_zip, &temp, sizeof(int));
-    temp_immagine->f.setY(temp);
+    SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
+    temp_immagine->f.setY(temp_i);
 
 
     free(data_read);

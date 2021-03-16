@@ -42,6 +42,8 @@ private:
 protected:
     bool event(QEvent *event) override;
 
+private slots:
+    void on_white_sheet_clicked();
 };
 
 #endif // FAST_SHEET_UI_H

@@ -3,6 +3,8 @@
 
 #include "../utils/dialog_critic/dialog_critic.h"
 
+#include <QDebug>
+
 /* funzione che gestiste il riascolto dell'audio
  * viene richiamata quando l'audio viene riprodotto
 */
@@ -16,7 +18,7 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
        if(position_inlist == -1) return;
 
        int lenght = m_currenttitle->testinohtml.at(position_inlist).length();
-       QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + m_currenttitle->testinohtml[position_inlist] + "</b>";
+       QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + m_currenttitle->testinohtml.at(position_inlist) + "</b>";
        testoGrassetto += m_currenttitle->testinohtml.last().mid(lenght, -1) + "</body></html>";
 
        this->ui->textEdit->setHtml(testoGrassetto);
@@ -45,7 +47,7 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
     if(!duration)
         return messaggio_utente("The audio seems blank");
 
-    this->ui->audioSlider->setValue((position*100)/this->player->duration());
+    this->ui->audioSlider->setValue((position*100)/duration);
 
     this->ui->audioSlider->blockSignals(false);
 

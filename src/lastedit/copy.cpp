@@ -88,6 +88,7 @@ void redoundo::append(){
 }
 
 void redoundo::copy(){
+    return;
     this->append();
 
     if(this->indice < QUANTIINDICI){

@@ -81,3 +81,8 @@ bool fast_sheet_ui::event(QEvent *event)
 
     return QWidget::event(event);
 }
+
+void fast_sheet_ui::on_white_sheet_clicked()
+{
+
+}
