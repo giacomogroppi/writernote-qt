@@ -5,12 +5,16 @@
 
 #include <QDebug>
 
+#define UPDATE_S(x) ui->statusBar->showMessage(tr("%1 second").arg(x / 1000));
+
 /* funzione che gestiste il riascolto dell'audio
  * viene richiamata quando l'audio viene riprodotto
 */
 void MainWindow::riascoltoaudioprogressivo(qint64 position){
     if(this->player->state() != QMediaPlayer::PlayingState)
         return;
+
+    UPDATE_S(position)
 
     /* keyboard */
     if(!m_currenttitle->m_touch){
@@ -51,6 +55,4 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
 
     this->ui->audioSlider->blockSignals(false);
 
-
-    this->ui->statusBar->showMessage(tr("%1 second").arg(position / 1000));
 }

@@ -322,18 +322,14 @@ void MainWindow::on_pauserecordingbotton_triggered()
 /* editor di testo -> quando cambia il testo scritto */
 void MainWindow::on_textEdit_textChanged()
 {
-    /* se non sta registrando deve uscire */
     if(this->m_audioRecorder->state() != QMediaRecorder::RecordingState)
         return;
+
     this->m_currenttitle->testi = this->ui->textEdit->toHtml();
 
-    if(this->m_audioRecorder->status() != QMediaRecorder::RecordingStatus)
-        return;
-
-    QString text = ui->textEdit->toPlainText();
-
     m_currenttitle->testinohtml.append(ui->textEdit->toPlainText());
-    m_currenttitle->posizione_iniz.append(m_currentTime);
+
+    m_currenttitle->posizione_iniz.append(this->m_audioRecorder->duration()/1000);
 }
 
 
