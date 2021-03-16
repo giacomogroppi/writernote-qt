@@ -31,7 +31,6 @@ static void setting_autosave(bool check){
 }
 
 #include <QDebug>
-#define PRINT qDebug() << "Qua";
 
 void MainWindow::closeEvent (QCloseEvent *event)
 {
