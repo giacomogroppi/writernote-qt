@@ -4,7 +4,9 @@
 #include "../utils/setting_define.h"
 #include "../utils/time/current_time.h"
 
+#define TOCHAR toUtf8().constData()
 #include "../utils/setting_define.h"
+#include "../utils/remove_key/remove_key.h"
 
 void save_data(QString &path, int type, int owner_type, char *owner)
 {
@@ -21,6 +23,11 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
     m_lista = load_data(setting, quanti);
 
+    if(!m_lista){
+        remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
+        quanti = 0;
+    }
+
     for(i=0, uguale = false; i<quanti && !uguale; i++){
         if((QString)m_lista[i].posizione ==  path){
             uguale = true;
@@ -34,24 +41,23 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     QString time_now = current_time_string();
     QString day_now = current_day_string();
 
-#define TOCHAR toUtf8().constData()
-
     if(uguale){
-        strcpy(m_lista[i].last_modification_o, time_now.TOCHAR);
-        strcpy(m_lista[i].last_modification_g, day_now.TOCHAR);
+        strncpy(m_lista[i].last_modification_o, time_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
+        strncpy(m_lista[i].last_modification_g, day_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
     }
     else{
         quanti ++;
         last_file *temp_e = new last_file;
-        strcpy(temp_e->last_modification_o, time_now.TOCHAR);
-        strcpy(temp_e->last_modification_g, day_now.TOCHAR);
+        strncpy(temp_e->last_modification_o, time_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
+        strncpy(temp_e->last_modification_g, day_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
 
-        strcpy(temp_e->posizione, path.toUtf8().constData());
+        strncpy(temp_e->posizione, path.toUtf8().constData(), sizeof(char)*MAXSTR__FILE);
 
         temp_e->owner.type_user = owner_type;
 
+        /* cloud */
         if(owner)
-            strcpy(temp_e->posizione, owner);
+            strncpy(temp_e->posizione, owner, sizeof(char)*MAXSTR__FILE);
 
         temp_e->type = TYPE_COMPUTER;
 
@@ -62,13 +68,20 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
         memccpy(&temp_file[quanti-1], temp_e, 1, sizeof(last_file));
 
-        return save_data_f(setting, quanti, temp_file);
+        save_data_f(setting, quanti, temp_file);
+
+        delete [] temp_file;
+        if(m_lista)
+            delete m_lista;
+
+        return;
     }
 
     save_data_f(setting, quanti, m_lista);
 
     if(m_lista)
         delete m_lista;
+
 }
 
 void save_data_f(QSettings &setting, int quanti, last_file *m_lista){

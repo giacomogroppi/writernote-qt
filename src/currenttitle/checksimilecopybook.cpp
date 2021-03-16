@@ -35,7 +35,9 @@ static int checkSpeed(currenttitle_class *first, currenttitle_class *second){
     if(len != second->datatouch->m_point.length())
         return IDTRATTO;
     for(i=0; i<len; i++){
-        if(memcmp(&P(first).operator[](i), &P(second).operator[](i), sizeof(point_s)) != 0)
+        if(memcmp(&P(first).operator[](i),
+                  &P(second).operator[](i),
+                  sizeof(point_s)) != 0)
             return IDTRATTO;
     }
 
@@ -57,8 +59,8 @@ static int checkSlow(currenttitle_class *first, currenttitle_class *second){
         if(P(first).at(i).m_y != P(second).at(i).m_y)
             return YCHECK;
 
-        if(memcmp(&P(first).at(i).m_color,
-                  &P(second).at(i).m_color,
+        if(memcmp(&P(first).operator[](i).m_color,
+                  &P(second).operator[](i).m_color,
                   sizeof(struct colore_s)) != 0)
             return COLORE;
 

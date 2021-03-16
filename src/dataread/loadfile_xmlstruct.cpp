@@ -221,6 +221,8 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     int error;
     void * audio_data = nullptr;
 
+    array->clear();
+
     zip_t *file_zip = zip_open(path.toUtf8().constData(), 0, &error);
 
     if(!file_zip)

@@ -102,8 +102,6 @@ public:
     fast_sheet_ui *m_sheet = nullptr;
 
 public slots:
-    void progressBuffer(const QAudioBuffer &buffer);
-
     /* la funzione serve anche per eliminare l'audio del copybook */
     void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
 

@@ -9,7 +9,6 @@
 
 /* funzione che viene chiamata tutte le volte che l'utente inizia una registrazione */
 void loadqualita(MainWindow *parent){
-
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_AUDIO);
 
@@ -19,9 +18,6 @@ void loadqualita(MainWindow *parent){
     QAudioEncoderSettings setting_audio;
     setting_audio.setSampleRate(
                 setting.value(KEY_SAMPLE_RATE_BOX, 0).toInt());
-
-    //setting_audio.set
-
 
 
     setting_audio.setCodec(
@@ -40,23 +36,9 @@ void loadqualita(MainWindow *parent){
 
     setting_audio.setChannelCount(setting.value(KEY_CHANNELS_BOX, -1).toInt());
 
-    /*
-    parent->m_audioRecorder->setAudioInput((const QString)"");
-
-    QAudioEncoderSettings settings;
-
-    settings.setCodec((const QString) "");
-    settings.setSampleRate(0);
-    settings.setBitRate(0);
-    settings.setChannelCount(-1);
-    settings.setQuality(QMultimedia::EncodingQuality(2));
-    settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
-
-    QString container = "";
-
-    this->m_audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);*/
-
     QString stringa = setting.value(KEY_CONTAINER_BOX, "").toString();
+
+    setting.endGroup();
 
     parent->m_audioRecorder->setEncodingSettings(setting_audio, QVideoEncoderSettings(), stringa);
 

@@ -194,19 +194,3 @@ bool MainWindow::setOutputLocation()
     DELETE_MENU(menu);
     return true;
 }
-
-/*
- * this function append the data from the audio record buffer
- * to the buffer on the currenttitle
- *
- * unused function
-*/
-void MainWindow::progressBuffer(const QAudioBuffer &buffer){
-    /*
-     * only if we are saving the audio into a writernote file
-     * we need to allocate it into a buffer
-    */
-    if(m_currenttitle->se_registato == audio_record::record_zip){
-        this->m_currenttitle->audio_data.append(buffer.constData<char>(), buffer.byteCount());
-    }
-}
