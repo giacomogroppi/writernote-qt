@@ -27,6 +27,10 @@
 
 #include "cloud/struct_user.h"
 
+#define STRINGIZE2(s) #s
+#define STRINGIZE(s) STRINGIZE2(s)
+#define VERSION_STRING STRINGIZE(VERSION_SNAPCRAFT)
+
 #include "touch/tabletcanvas.h"
 #include "cloud/cloud_controll.h"
 

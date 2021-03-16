@@ -379,9 +379,6 @@ void MainWindow::on_actionCopy_triggered()
 
 #define VERSION_MAJOR 4.432.234
 
-#define STRINGIZE2(s) #s
-#define STRINGIZE(s) STRINGIZE2(s)
-#define VERSION_STRING STRINGIZE(VERSION_SNAPCRAFT)
 
 void MainWindow::on_actionVersion_triggered()
 {

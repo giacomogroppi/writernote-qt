@@ -19,6 +19,7 @@
 #include "last_open/struct_last_file.h"
 
 static void setting_hide_list(bool check);
+static void setting_geometry(QRect );
 
 static void setting_autosave(bool check){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -30,15 +31,9 @@ static void setting_autosave(bool check){
 
 }
 
-#include <QDebug>
-
 void MainWindow::closeEvent (QCloseEvent *event)
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_GEOMETRY);
-
-    setting.setValue(KEY_GEOMETRY, this->geometry());
-    setting.endGroup();
+    setting_geometry(this->geometry());
 
     setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
@@ -47,16 +42,16 @@ void MainWindow::closeEvent (QCloseEvent *event)
         return event->accept();
 
     /*
-     * TODO: after create cloud instance, pass the right
-     * value
+     * TODO: after enable cloud support,
+     * pass the right value
     */
     save_data(m_path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
 
     /* apre il file in file e lo carica nell'oggetto, e lo confronta */
-    currenttitle_class *tempcopybook = new currenttitle_class;
-    indice_class *tempindice = new indice_class;
+    currenttitle_class tempcopybook;
+    indice_class tempindice;
 
-    xmlstruct temp_lettura(&m_path, tempindice, tempcopybook);
+    xmlstruct temp_lettura(&m_path, &tempindice, &tempcopybook);
 
     if(temp_lettura.loadfile((m_currentTitle + ".xml").toUtf8().constData()) != OK
             || !temp_lettura.loadindice()){
@@ -72,9 +67,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
         msgBox.setSizeIncrement(300, 10);
 
         int rec = msgBox.exec();
-
-        delete tempcopybook;
-        delete tempindice;
 
         if(rec == QMessageBox::Ok){
             return event->accept();
@@ -92,14 +84,12 @@ void MainWindow::closeEvent (QCloseEvent *event)
         m_currenttitle->testi = this->ui->textEdit->toHtml();
     }
 
-    bool check1 = checksimilecopybook(tempcopybook, m_currenttitle, false) == OK_CHECK;
+    bool check1 = checksimilecopybook(&tempcopybook, m_currenttitle, false) == OK_CHECK;
 
-    check1 = check1 && (checksimileindice(&m_indice, tempindice) == OK_CHECK);
+    check1 = check1 && (checksimileindice(&m_indice, &tempindice) == OK_CHECK);
 
     /* if all is equal close app */
     if(check1){
-        delete tempcopybook;
-        delete tempindice;
         return event->accept();
     }
 
@@ -143,8 +133,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
     else
         return event->ignore();
 
-    delete tempcopybook;
-    delete tempindice;
 }
 
 static void setting_hide_list(bool check){
@@ -153,5 +141,13 @@ static void setting_hide_list(bool check){
 
     setting.setValue(KEY_LIST_HIDDEN, check);
 
+    setting.endGroup();
+}
+
+static void setting_geometry(QRect rect){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_GEOMETRY);
+
+    setting.setValue(KEY_GEOMETRY, rect);
     setting.endGroup();
 }

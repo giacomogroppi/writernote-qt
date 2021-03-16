@@ -33,6 +33,12 @@ public:
     bool mostra = false;
     ~updatecheck(){ };
 
+    /* importance of the update */
+    enum n_priority: char{
+        high = 'h',
+        low = 'l',
+        critical = 'c'
+    };
 
 private slots:
     void managerFinished();
