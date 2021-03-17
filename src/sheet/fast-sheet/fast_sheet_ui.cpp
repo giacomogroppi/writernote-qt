@@ -16,6 +16,8 @@ fast_sheet_ui::fast_sheet_ui(QWidget *parent) :
     ui->white_sheet->setCheckable(true);
     ui->lines_sheet->setCheckable(true);
 
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+
 }
 
 fast_sheet_ui::~fast_sheet_ui()
@@ -77,7 +79,8 @@ void fast_sheet_ui::load(){
 
 bool fast_sheet_ui::event(QEvent *event)
 {
-
+    if(event->type() == QEvent::WindowDeactivate)
+        this->hide();
 
     return QWidget::event(event);
 }

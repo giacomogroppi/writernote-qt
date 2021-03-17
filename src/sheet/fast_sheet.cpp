@@ -3,7 +3,9 @@
 
 void MainWindow::on_actionlastStyle_triggered()
 {
-    this->m_sheet->setHidden(false);
-    auto rect = this->cursor().pos();
-    this->m_sheet->move(rect);
+    this->m_sheet->show();
+
+    QPoint hostRect = this->cursor().pos();
+    m_sheet->move(hostRect);
+
 }
