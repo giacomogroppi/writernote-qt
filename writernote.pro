@@ -3,7 +3,7 @@ QT       += gui
 QT       += widgets
 QT       += multimedia
 QT       += printsupport
-QT       += pdf
+#QT       += pdf
 QT       += network
 
 
