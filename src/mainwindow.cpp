@@ -40,6 +40,8 @@
 #include "utils/settings/setting_load.h"
 #include "windows/mostra_finestra_i.h"
 
+#include <QTimer>
+
 MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user *user, cloud_controll *cloud)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -126,6 +128,8 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     ui->actionpen->setChecked(true);
 
+    m_timer = new QTimer(this);
+    QObject::connect(m_timer, &QTimer::timeout, this, &MainWindow::showRiascolto);
 }
 
 MainWindow::~MainWindow()

@@ -31,15 +31,16 @@ static void setting_autosave(bool check){
 
 }
 
+#define accept_event(x) setting_geometry(this->geometry()); \
+    setting_hide_list(ui->listWidgetSX->isHidden()); \
+    setting_autosave(enableredoundo); \
+    return x->accept();
+
 void MainWindow::closeEvent (QCloseEvent *event)
 {
-    setting_geometry(this->geometry());
-
-    setting_hide_list(ui->listWidgetSX->isHidden());
-    setting_autosave(enableredoundo);
-
-    if(!m_indice.titolo.length() || m_currentTitle == "")
-        return event->accept();
+    if(!m_indice.titolo.length() || m_currentTitle == ""){
+        accept_event(event);
+    }
 
     /*
      * TODO: after enable cloud support,
@@ -69,7 +70,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
         int rec = msgBox.exec();
 
         if(rec == QMessageBox::Ok){
-            return event->accept();
+            accept_event(event);
         }
         return event->ignore();
     }
@@ -90,7 +91,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     /* if all is equal close app */
     if(check1){
-        return event->accept();
+        accept_event(event);
     }
 
 
@@ -119,16 +120,18 @@ void MainWindow::closeEvent (QCloseEvent *event)
             check = check && (save_.savefile_check_file()==OK);
 
 
-        if(check)
-            return event->accept();
-
+        if(check){
+            accept_event(event);
+        }
         else{
             dialog_critic((QString)"We had a problem saving the file, please retry");
             return event->ignore();
         }
 
     } else if (resBtn == QMessageBox::No)
-        return event->accept();
+    {
+        return accept_event(event);
+    }
 
     else
         return event->ignore();

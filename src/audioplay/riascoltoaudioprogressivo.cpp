@@ -3,9 +3,35 @@
 
 #include "../utils/dialog_critic/dialog_critic.h"
 
-#include <QDebug>
-
 #define UPDATE_S(x) ui->statusBar->showMessage(tr("%1 second").arg(x / 1000));
+#include <QRunnable>
+#include <QTimer>
+#include <QThreadPool>
+
+static int p_index;
+static double p_time;
+static int p_count;
+
+static int current_p_index = 0;
+
+void MainWindow::showRiascolto(){
+    int somma = p_index + current_p_index;
+
+    int lenght = m_currenttitle->testinohtml.at(somma).length();
+    QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + m_currenttitle->testinohtml.at(somma) + "</b>";
+    testoGrassetto += m_currenttitle->testinohtml.last().mid(lenght, -1) + "</body></html>";
+
+    this->ui->textEdit->setHtml(testoGrassetto);
+
+    current_p_index ++;
+
+    if(current_p_index * p_time < 1){
+        this->m_timer->start(p_time*1000);
+    }
+    else
+        this->m_timer->stop();
+}
+
 
 /* funzione che gestiste il riascolto dell'audio
  * viene richiamata quando l'audio viene riprodotto
@@ -18,14 +44,17 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
 
     /* keyboard */
     if(!m_currenttitle->m_touch){
-       int position_inlist = m_currenttitle->posizione_iniz.indexOf(position/1000);
-       if(position_inlist == -1) return;
+        p_index = m_currenttitle->posizione_iniz.indexOf(position/1000);
+        if(p_index == -1)
+            return;
 
-       int lenght = m_currenttitle->testinohtml.at(position_inlist).length();
-       QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + m_currenttitle->testinohtml.at(position_inlist) + "</b>";
-       testoGrassetto += m_currenttitle->testinohtml.last().mid(lenght, -1) + "</body></html>";
+        current_p_index = 0;
 
-       this->ui->textEdit->setHtml(testoGrassetto);
+        p_count = m_currenttitle->posizione_iniz.count(position/1000);
+
+        p_time = 1/(double)p_count;
+
+        this->m_timer->start(p_time*1000);
     }
     else {
         /* parte responsabile della penna */

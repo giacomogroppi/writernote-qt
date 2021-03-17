@@ -54,6 +54,8 @@ public:
     MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr, struct struct_user *user = nullptr, cloud_controll *cloud = nullptr);
     ~MainWindow();
 
+    QTimer *m_timer;
+
     QString m_currentTitle;
 
     /* data to manage all */
@@ -268,6 +270,7 @@ private slots:
 
     void on_actionlastStyle_triggered();
 
+    void showRiascolto();
 private:
     /* gestione dell'audio */
     void clearAudioLevels();
