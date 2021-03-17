@@ -19,12 +19,11 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
     quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
 
-    last_file *m_lista = NULL;
+    last_file *m_lista;
 
     m_lista = load_data(setting, quanti);
 
     if(!m_lista){
-        remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
         quanti = 0;
     }
 
@@ -51,7 +50,7 @@ void save_data(QString &path, int type, int owner_type, char *owner)
         strncpy(temp_e->last_modification_o, time_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
         strncpy(temp_e->last_modification_g, day_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
 
-        strncpy(temp_e->posizione, path.toUtf8().constData(), sizeof(char)*MAXSTR__FILE);
+        strncpy(temp_e->posizione, path.TOCHAR, sizeof(char)*MAXSTR__FILE);
 
         temp_e->owner.type_user = owner_type;
 

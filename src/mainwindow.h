@@ -271,9 +271,6 @@ private slots:
     void on_actionlastStyle_triggered();
 
     void showRiascolto();
-private:
-    /* gestione dell'audio */
-    void clearAudioLevels();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;

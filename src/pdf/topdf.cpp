@@ -6,6 +6,7 @@
 
 #include <QPdfWriter>
 #include <QPageSize>
+#include <QPdfDocument>
 
 topdf::topdf(QString *path, TabletCanvas *canvas)
 {
