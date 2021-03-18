@@ -62,22 +62,15 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
         temp_append.type = TYPE_COMPUTER;
 
-        //last_file *temp_file = new last_file[quanti];
-        //last_file *temp_file = (last_file *) malloc( sizeof(last_file) * quanti);
         QByteArray temp_file ;
 
         if(m_lista)
-            //memccpy(temp_file, m_lista, quanti-1, sizeof(last_file));
             temp_file.append((const char *)m_lista, sizeof(last_file)*(quanti-1));
 
-        //memcpy(&temp_file[quanti-1], &temp_append, sizeof(last_file));
         temp_file.append((const char *)&temp_append, sizeof(last_file));
 
         save_quanti(quanti);
         save_data_f(temp_file);
-        //save_data_f(quanti, temp_file);
-
-        //free(temp_file);
 
         if(m_lista)
             delete m_lista;
