@@ -61,6 +61,8 @@ int load_quanti(){
     bool temp;
     int res = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt(&temp);
 
+    setting.endGroup();
+
     return (temp) ? res: 0;
 
 }
