@@ -68,7 +68,7 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
         if(m_lista)
             //memccpy(temp_file, m_lista, quanti-1, sizeof(last_file));
-            temp_file.append((const char *)temp_file, sizeof(last_file)*(quanti-1));
+            temp_file.append((const char *)m_lista, sizeof(last_file)*(quanti-1));
 
         //memcpy(&temp_file[quanti-1], &temp_append, sizeof(last_file));
         temp_file.append((const char *)&temp_append, sizeof(last_file));
