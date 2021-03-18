@@ -13,16 +13,20 @@
  * the memory is release when it's close last_open instance
 */
 
-last_file * load_data(QSettings &setting, int quanti)
+last_file * load_data(int quanti)
 {
     if(quanti == 0)
         return NULL;
 
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_LAST_FILE);
+
+    setting.sync();
+
     last_file *temp;
 
-    QByteArray array;
-    array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
-
+    auto array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
+    setting.endGroup();
 
     /* check the integrity of data */
     if(array.size() != sizeof(last_file)*quanti)
@@ -42,4 +46,21 @@ last_file * load_data(QSettings &setting, int quanti)
     memccpy(temp_return, temp, quanti, sizeof(last_file));
 #endif
     return temp_return;
+}
+
+/*
+ * we can directly understand how many
+ * files there are by dividing the
+ * size of the qbytearray by its size.
+ * as a matter of error control we save
+ * its size with another key
+*/
+int load_quanti(){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_LAST_FILE);
+    bool temp;
+    int res = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt(&temp);
+
+    return (temp) ? res: 0;
+
 }

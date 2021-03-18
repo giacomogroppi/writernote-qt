@@ -8,20 +8,22 @@
 #include "../utils/setting_define.h"
 #include "../utils/remove_key/remove_key.h"
 
+#include <QDebug>
+#include <QFile>
+
+static void setData(last_file *, QString & time_now, QString & day_now);
+static void setPosition(last_file * data, QString &pos);
+
 void save_data(QString &path, int type, int owner_type, char *owner)
 {
     int quanti, i;
     bool uguale;
 
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-
-    setting.beginGroup(GROUPNAME_LAST_FILE);
-
-    quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
+    quanti = load_quanti();
 
     last_file *m_lista;
 
-    m_lista = load_data(setting, quanti);
+    m_lista = load_data(quanti);
 
     if(!m_lista){
         quanti = 0;
@@ -41,56 +43,99 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     QString day_now = current_day_string();
 
     if(uguale){
-        strncpy(m_lista[i].last_modification_o, time_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
-        strncpy(m_lista[i].last_modification_g, day_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
+        setData(&m_lista[i], time_now, day_now);
     }
     else{
         quanti ++;
-        last_file *temp_e = new last_file;
-        strncpy(temp_e->last_modification_o, time_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
-        strncpy(temp_e->last_modification_g, day_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
+        last_file temp_append;
 
-        strncpy(temp_e->posizione, path.TOCHAR, sizeof(char)*MAXSTR__FILE);
+        setData(&temp_append, time_now, day_now);
 
-        temp_e->owner.type_user = owner_type;
+        setPosition(&temp_append, path);
+
+        temp_append.owner.type_user = owner_type;
 
         /* cloud */
-        if(owner)
-            strncpy(temp_e->posizione, owner, sizeof(char)*MAXSTR__FILE);
+        if(owner){
+            qDebug("Change position because it's owner is external ");
+            QString owner_string = owner;
+            setPosition(&temp_append, owner_string);
+        }
 
-        temp_e->type = TYPE_COMPUTER;
+        temp_append.type = TYPE_COMPUTER;
 
-        last_file *temp_file = new last_file[quanti];
+        //last_file *temp_file = new last_file[quanti];
+        //last_file *temp_file = (last_file *) malloc( sizeof(last_file) * quanti);
+        QByteArray temp_file ;
 
         if(m_lista)
-            memccpy(temp_file, m_lista, quanti-1, sizeof(last_file));
+            //memccpy(temp_file, m_lista, quanti-1, sizeof(last_file));
+            temp_file.append((const char *)temp_file, sizeof(last_file)*(quanti-1));
 
-        memccpy(&temp_file[quanti-1], temp_e, 1, sizeof(last_file));
+        //memcpy(&temp_file[quanti-1], &temp_append, sizeof(last_file));
+        temp_file.append((const char *)&temp_append, sizeof(last_file));
 
-        save_data_f(setting, quanti, temp_file);
+        save_quanti(quanti);
+        save_data_f(temp_file);
+        //save_data_f(quanti, temp_file);
 
-        delete [] temp_file;
+        //free(temp_file);
+
         if(m_lista)
             delete m_lista;
 
         return;
     }
 
-    save_data_f(setting, quanti, m_lista);
+    save_data_f(quanti, m_lista);
 
     if(m_lista)
         delete m_lista;
 
 }
 
-void save_data_f(QSettings &setting, int quanti, last_file *m_lista){
+void save_quanti(int quanti){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_LAST_FILE);
     setting.setValue(KEY_LAST_FILE_QUANTI, quanti);
+    setting.endGroup();
+}
+
+void save_data_f(int quanti, last_file *m_lista){
+    save_quanti(quanti);
 
     QByteArray array;
 
     array.append((const char *)m_lista, sizeof(last_file)*quanti);
 
-    setting.setValue(KEY_LAST_BASE_FILE, array);
+    save_data_f(array);
+}
 
+
+/*
+ * I don't know why, and apparently it's a bug,
+ * but when we save a dynamic array, which in
+ * this case is a qbytearray, we automatically
+ * lose some data, or in any case we have some
+ * wrong data, even if we read it immediately.
+ * so for now it is not disabled.
+ *
+ * TODO -> implement a method in which only
+ * strings and numbers are saved, and not structs
+*/
+void save_data_f(QByteArray &array){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_LAST_FILE);
+    setting.setValue(KEY_LAST_BASE_FILE, array);
     setting.endGroup();
 }
+
+static void setData(last_file *data, QString & time_now, QString & day_now){
+    strncpy(data->last_modification_o, time_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
+    strncpy(data->last_modification_g, day_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
+}
+
+static void setPosition(last_file * data, QString &pos){
+    strncpy(data->posizione, pos.TOCHAR, sizeof(char)*MAXSTR__FILE);
+}
+

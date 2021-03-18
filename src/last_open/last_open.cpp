@@ -71,10 +71,8 @@ void last_open::updateList(){
 */
 int last_open::load_data_()
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_LAST_FILE);
+    m_quanti = load_quanti();
 
-    m_quanti = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt();
     if(m_quanti == 0)
         return 0;
 
@@ -82,7 +80,7 @@ int last_open::load_data_()
 
     element_ui *temp_element_ui;
 
-    m_last = load_data(setting, m_quanti);
+    m_last = load_data(m_quanti);
 
     if(m_last == NULL){
         remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
@@ -95,15 +93,23 @@ int last_open::load_data_()
      * check that the position of the files is not
      * null, in case it translates all elements
     */
-    for(int i=0, k; i<m_quanti; i++){
-        if(strlen(m_last[i].posizione) == 0){
-            for(k=i; k<m_quanti-1; k++){
-                memcpy(&m_last[k], &m_last[k+1], sizeof(last_file));
+    {
+        bool check = false;
+        for(int i=0, k; i<m_quanti; i++){
+            if(strlen(m_last[i].posizione) == 0){
+                for(k=i; k<m_quanti-1; k++){
+                    memcpy(&m_last[k], &m_last[k+1], sizeof(last_file));
+                }
+                m_quanti --;
+
+                check = true;
             }
-            m_quanti --;
+        }
+
+        if(check){
+            save_data_f(m_quanti, m_last);
         }
     }
-
 
     tidyup(m_last, m_quanti);
 
@@ -119,15 +125,9 @@ int last_open::load_data_()
         connect(temp_element_ui, SIGNAL(downloadIn(int)), this, SLOT(downloadIn(int)));
 #endif // CLOUD
 
-        /*
-         * void deleteIn(int);
-         * void downloadIn(int);
-        */
-
         m_lista.append(temp_element_ui);
     }
 
-    setting.endGroup();
 
     this->updateList();
 
@@ -214,9 +214,7 @@ void last_open::deleteInElement(int index){
 
     deleteIn(index);
 
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_LAST_FILE);
-    save_data_f(setting, m_quanti, this->m_last);
+    save_data_f(m_quanti, this->m_last);
 
     this->updateList();
 }

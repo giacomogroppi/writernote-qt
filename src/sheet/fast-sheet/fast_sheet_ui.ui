@@ -15,6 +15,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Sheet</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QListView" name="list_sheet"/>
    </item>
    <item>
