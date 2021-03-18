@@ -46,8 +46,8 @@ last_open::~last_open()
         delete m_lista.at(i);
     }
 
-    /*if(this->m_last)
-        delete [] m_last;*/
+    if(this->m_last)
+        free(this->m_last);
 
     delete ui;
 }

@@ -36,14 +36,14 @@ last_file * load_data(int quanti)
 
     last_file *temp_return;
 
-    temp_return = new last_file[quanti];
+    temp_return = (last_file *)malloc(sizeof(last_file)*quanti);
 
 #if defined(WIN32) || defined(WIN64)
     for(int i=0; i<quanti; i++){
         memcpy(&temp_return[i], &temp[i], sizeof(last_file));
     }
 #elif defined(unix)
-    memccpy(temp_return, temp, quanti, sizeof(last_file));
+    memcpy(temp_return, temp, sizeof(last_file)*quanti);
 #endif
     return temp_return;
 }

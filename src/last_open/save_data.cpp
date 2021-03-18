@@ -4,7 +4,7 @@
 #include "../utils/setting_define.h"
 #include "../utils/time/current_time.h"
 
-#define TOCHAR toUtf8().constData()
+#define TOCHAR(x) x.toUtf8().constData()
 #include "../utils/setting_define.h"
 #include "../utils/remove_key/remove_key.h"
 
@@ -21,16 +21,14 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
     quanti = load_quanti();
 
-    last_file *m_lista;
-
-    m_lista = load_data(quanti);
+    auto m_lista = load_data(quanti);
 
     if(!m_lista){
         quanti = 0;
     }
 
     for(i=0, uguale = false; i<quanti && !uguale; i++){
-        if((QString)m_lista[i].posizione ==  path){
+        if(strcmp(m_lista[i].posizione, TOCHAR(path)) == 0){
             uguale = true;
         }
     }
@@ -131,11 +129,11 @@ void save_data_f(QByteArray &array){
 }
 
 static void setData(last_file *data, QString & time_now, QString & day_now){
-    strncpy(data->last_modification_o, time_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
-    strncpy(data->last_modification_g, day_now.TOCHAR, sizeof(char)*MAXMOD__FILE);
+    strncpy(data->last_modification_g, TOCHAR(day_now), sizeof(data->last_modification_g));
+    strncpy(data->last_modification_o, TOCHAR(time_now), sizeof(data->last_modification_o));
 }
 
 static void setPosition(last_file * data, QString &pos){
-    strncpy(data->posizione, pos.TOCHAR, sizeof(char)*MAXSTR__FILE);
+    strncpy(data->posizione, TOCHAR(pos), sizeof(data->posizione));
 }
 
