@@ -21,8 +21,6 @@ last_file * load_data(int quanti)
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_LAST_FILE);
 
-    setting.sync();
-
     last_file *temp;
 
     auto array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
