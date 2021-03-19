@@ -253,7 +253,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="page">
         <property name="styleSheet">
          <string notr="true">border: none;</string>
         </property>

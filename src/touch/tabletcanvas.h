@@ -200,6 +200,7 @@ private:
         qreal rotation = 0;
     } lastPoint;
 
+    void updatePageCount();
 
 public slots:
 
@@ -211,6 +212,9 @@ public slots:
     void Undo(){
         PRIVATE_UPDATE;
     }
+
+signals:
+    void updatePageCount_s(int);
 
 };
 //! [0]

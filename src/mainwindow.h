@@ -117,6 +117,8 @@ public slots:
     void on_actionSave_File_triggered();
 
 private slots:
+    void updatePageCount(int);
+
     /* registrazione dell'audio */
     bool setOutputLocation();
     void togglePause();

@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     this->ui->layouteditor->insertWidget(1, this->m_canvas);
     this->m_canvas->setHidden(true);
+    QObject::connect(m_canvas, &TabletCanvas::updatePageCount_s, this, &MainWindow::updatePageCount);
 
     abilitazioneinput(this);
 

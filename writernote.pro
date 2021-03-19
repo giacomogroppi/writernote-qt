@@ -60,6 +60,7 @@ SOURCES += \
     src/frompdf/frompdf.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
+    src/touch/pageCount.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/utils/aboutQt/aboutqt.cpp \
