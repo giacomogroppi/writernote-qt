@@ -62,15 +62,15 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
         temp_append.type = TYPE_COMPUTER;
 
-        QByteArray temp_file ;
+        QByteArray array ;
 
         if(m_lista)
-            temp_file.append((const char *)m_lista, sizeof(last_file)*(quanti-1));
+            array.append((const char *)m_lista, sizeof(last_file)*(quanti-1));
 
-        temp_file.append((const char *)&temp_append, sizeof(last_file));
+        array.append((const char *)&temp_append, sizeof(last_file));
 
         save_quanti(quanti);
-        save_data_f(temp_file);
+        save_data_f(array);
 
         if(m_lista)
             delete m_lista;

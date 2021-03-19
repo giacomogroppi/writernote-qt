@@ -1,2 +1,2 @@
-C:\msys64\usr\bin\bash -lc "./compile.sh"
+C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
 start .\package.bat
