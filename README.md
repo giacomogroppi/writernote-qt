@@ -43,6 +43,7 @@
 - Cloud
 - Compile for IOS and mac
 - Ask for classic confinement snapcraft
+- Load file from pdf
 
 ## Known bugs:
 - Rubber
