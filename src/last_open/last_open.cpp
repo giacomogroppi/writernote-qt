@@ -136,8 +136,9 @@ int last_open::load_data_()
 
 void last_open::deleteIn(int index){
     int i;
-    for(i=index; i<m_quanti; i++){
-        copy(&m_last[i], m_last[i].posizione, m_last[i].last_modification_o, m_last[i].last_modification_g, m_last[i].type);
+    for(i=index; i<m_quanti-1; i++){
+        memcpy(&m_last[i], &m_last[i+1], sizeof(*m_last));
+        //copy(&m_last[i], m_last[i].posizione, m_last[i].last_modification_o, m_last[i].last_modification_g, m_last[i].type);
 
         m_lista.at(i)->decrease();
     }
