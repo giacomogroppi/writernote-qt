@@ -18,8 +18,66 @@
     <normaloff>:/image/snap/gui/icon-writernote.png</normaloff>:/image/snap/gui/icon-writernote.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2_stile">
+      <item>
+       <widget class="QSpinBox" name="spinBox_fontsize">
+        <property name="minimum">
+         <number>12</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFontComboBox" name="fontComboBox_fonttipo"/>
+      </item>
+      <item>
+       <widget class="QToolButton" name="boldbotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/bold.png</normaloff>:/image/images/bold.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="inserttablebotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/table.png</normaloff>:/image/images/table.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="listbotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/bullet.png</normaloff>:/image/images/bullet.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="insertimagebotton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/image.png</normaloff>:/image/images/image.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -179,59 +237,28 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_2_stile">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QSpinBox" name="spinBox_fontsize">
-        <property name="minimum">
-         <number>12</number>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
-       <widget class="QFontComboBox" name="fontComboBox_fonttipo"/>
-      </item>
-      <item>
-       <widget class="QToolButton" name="boldbotton">
+       <widget class="QLabel" name="label">
+        <property name="styleSheet">
+         <string notr="true">border: none;</string>
+        </property>
         <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/bold.png</normaloff>:/image/images/bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="inserttablebotton">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/table.png</normaloff>:/image/images/table.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="listbotton">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/bullet.png</normaloff>:/image/images/bullet.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="insertimagebotton">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/image.png</normaloff>:/image/images/image.png</iconset>
+         <string>Page</string>
         </property>
        </widget>
       </item>
