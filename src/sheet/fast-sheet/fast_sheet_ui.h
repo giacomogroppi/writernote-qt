@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "../load_last_style.h"
 #include <QEvent>
+#include <QListWidgetItem>
 
 namespace Ui {
 class fast_sheet_ui;
@@ -49,6 +50,15 @@ protected:
 
 private slots:
     void on_white_sheet_clicked();
+    void on_lines_sheet_clicked();
+    void on_shared_sheet_clicked();
+    void on_list_sheet_itemClicked(QListWidgetItem *item);
+    void on_autocreate_sheet_clicked();
+
+signals:
+    /* if res == true hide new page button */
+    void changeButton(bool res);
+
 };
 
 #endif // FAST_SHEET_UI_H

@@ -3,7 +3,6 @@ QT       += gui
 QT       += widgets
 QT       += multimedia
 QT       += printsupport
-#QT       += pdf
 QT       += network
 
 
@@ -23,7 +22,7 @@ contains(DEFINES, SNAP){
     message("Snapcraft enable")
 }
 
-## Support for version print in snapcraft
+## Support for version
 contains(DEFINES, VERSION_SNAPCRAFT){
     message("Version for snapcraft add. Version: $$VERSION_SNAPCRAFT")
 }
@@ -326,7 +325,6 @@ win32{
 win64{
     message("Win 64 comilation")
 }
-
 
 android{
     QT += androidextras

@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QListView" name="list_sheet"/>
+    <widget class="QListWidget" name="list_sheet"/>
    </item>
    <item>
     <widget class="QPushButton" name="white_sheet">

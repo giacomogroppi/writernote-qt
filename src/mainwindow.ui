@@ -462,6 +462,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionlastStyle"/>
+   <addaction name="actionnewPage"/>
   </widget>
   <action name="actionNew_File">
    <property name="checkable">
@@ -872,6 +873,15 @@
    </property>
    <property name="text">
     <string>lastStyle</string>
+   </property>
+  </action>
+  <action name="actionnewPage">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/newPage.png</normaloff>:/image/images/newPage.png</iconset>
+   </property>
+   <property name="text">
+    <string>newPage</string>
    </property>
   </action>
  </widget>

@@ -4,6 +4,17 @@
 #include "../../utils/setting_define.h"
 #include <QSettings>
 #include <QAction>
+#include "../../utils/dialog_critic/dialog_critic.h"
+#include "../load_last_style.h"
+
+#define setCheckedM(x)     ui->white_sheet->setChecked(x == n_style::white); \
+    ui->lines_sheet->setChecked(x == n_style::line); \
+    ui->shared_sheet->setChecked(x == n_style::square); \
+    uncheck(ui->list_sheet);
+
+static void uncheck(QListWidget *list){
+    list->unsetCursor();
+}
 
 fast_sheet_ui::fast_sheet_ui(QWidget *parent) :
     QWidget(parent),
@@ -25,6 +36,8 @@ fast_sheet_ui::~fast_sheet_ui()
     if(this->m_style)
         delete m_style;
 
+    this->save();
+
     delete ui;
 }
 
@@ -44,6 +57,7 @@ void fast_sheet_ui::load(){
     this->auto_create = setting.value(KEY_AUTO_CREATE_SHEET, true).toBool();
 
     this->ui->autocreate_sheet->setChecked(this->auto_create);
+    emit changeButton(!this->auto_create);
 
     /* load style */
     auto temp = load_last_style();
@@ -72,9 +86,7 @@ void fast_sheet_ui::load(){
 
     this->m_how = static_cast<n_style>(res);
 
-    ui->white_sheet->setChecked(m_how == n_style::white);
-    ui->lines_sheet->setChecked(m_how == n_style::line);
-    ui->shared_sheet->setChecked(m_how == n_style::square);
+    setCheckedM(this->m_how);
 }
 
 bool fast_sheet_ui::event(QEvent *event)
@@ -87,5 +99,62 @@ bool fast_sheet_ui::event(QEvent *event)
 
 void fast_sheet_ui::on_white_sheet_clicked()
 {
+    m_how = fast_sheet_ui::white;
 
+    setCheckedM(m_how);
+}
+
+
+void fast_sheet_ui::on_lines_sheet_clicked()
+{
+    m_how = fast_sheet_ui::line;
+
+    setCheckedM(m_how);
+}
+
+void fast_sheet_ui::on_shared_sheet_clicked()
+{
+    m_how = fast_sheet_ui::square;
+
+    setCheckedM(m_how);
+}
+
+void fast_sheet_ui::on_list_sheet_itemClicked(QListWidgetItem *item)
+{
+    m_how = fast_sheet_ui::empty;
+
+    setCheckedM(m_how);
+
+    QString temp = item->text();
+    int in = 0;
+    bool find = false;
+
+    for(in=0; in < m_style->quanti; in++){
+        if(m_style->style[in].nome == temp){
+            find = true;
+            break;
+        }
+    }
+
+    if(find)
+        save_default_drawing(&in);
+    else
+        dialog_critic("We had a big problem figuring out what style you clicked");
+}
+
+void fast_sheet_ui::on_autocreate_sheet_clicked()
+{
+    this->auto_create = ui->autocreate_sheet->isChecked();
+    emit changeButton(auto_create);
+}
+
+void fast_sheet_ui::save(){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_AUTO_CREATE_SHEET);
+
+    setting.setValue(KEY_AUTO_CREATE_SHEET, this->auto_create);
+
+    setting.setValue(KEY_AUTO_CREATE_STYLE_FAST, static_cast<int>(m_how));
+
+    setting.endGroup();
 }

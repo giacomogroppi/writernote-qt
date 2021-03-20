@@ -131,6 +131,11 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
 
     m_timer = new QTimer(this);
     QObject::connect(m_timer, &QTimer::timeout, this, &MainWindow::showRiascolto);
+
+    QObject::connect(m_sheet, &fast_sheet_ui::changeButton, [=](bool res){
+        ui->actionnewPage->setVisible(!res);
+    });
+
 }
 
 MainWindow::~MainWindow()
