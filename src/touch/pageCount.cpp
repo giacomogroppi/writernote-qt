@@ -17,24 +17,28 @@ void TabletCanvas::updatePageCount(){
 
     if(!len)
         return;
+
     if(len == 1 && len != lastPage)
     {
         lastPage = 1;
-        emit updatePageCount_s(1);
+        emit updatePageCount_s(len);
         return;
     }
 
-    unsigned int i, size_h = this->m_pixmap.height();
+    unsigned int i;
     bool find = false;
 
-    for(i=0, len = data->datatouch->posizionefoglio.length()-1; i<len; i++){
-        if(data->datatouch->posizionefoglio.at(i) < 0 && data->datatouch->posizionefoglio.at(i+1) > size_h){
+    len = data->datatouch->posizionefoglio.length();
+
+    for(i=0; i<len-1; i++){
+        if(data->datatouch->posizionefoglio.at(i+1) > 0){
             find = true;
             break;
         }
     }
+
     if(!find){
-        lastPage = data->datatouch->posizionefoglio.length();
+        lastPage = len;
         emit updatePageCount_s((int)lastPage);
         return;
     }
