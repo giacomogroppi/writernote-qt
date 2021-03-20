@@ -16,7 +16,10 @@ class fast_sheet_ui : public QWidget
 public:
     enum n_style: int{
         line, /* draw only line */
-        white,
+        white, /*
+                * in this case sheet drawing draws a single
+                * line, at the end of the sheet, of the
+                * same color as the sheet */
         empty, /* draw from default style in last style */
         square /* draw square */
     };
@@ -29,6 +32,8 @@ public:
 
     /* this function is call when we need to reload all style  */
     void needToReload();
+
+    inline n_style WhatIsSelected(){ return this->m_how; }
 
 private:
     void load();

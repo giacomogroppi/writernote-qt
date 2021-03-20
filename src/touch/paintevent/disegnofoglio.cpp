@@ -18,40 +18,80 @@ static double width_(datastruct *);
 static void addPointZero(currenttitle_class *);
 static double getLastPoint(currenttitle_class *);
 
+
+/*
+ * remove this define and add option to change
+ * color, size line
+*/
+#define TEMP_COLOR Qt::black
+#define TEMP_TICK 2
+#define TEMP_N_X 20
+#define TEMP_SQUARE 20
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
-    double last, height, width;
+    double last, height_p, width_p;
     int i;
 
-    width = width_(data->datatouch);
-    height = height_(data->datatouch);
+    width_p = width_(data->datatouch);
+    height_p = height_(data->datatouch);
 
-    if(width == INT32_MIN || height == INT32_MIN)
-        return dialog_critic("We had an internal problem, restarting writer note might fix the problem");
+    if(width_p == INT32_MIN || height_p == INT32_MIN)
+        return dialog_critic("We had an internal problem, restarting writernote might fix the problem");
 
     /* he get the last point draw */
     last = getLastPoint(data);
 
     data->datatouch->posizionefoglio.append(last);
 
-    struct style_struct_S *style = load_default_drawing();
-    if(style == NULL){
-        style = new style_struct_S;
-        load_default_onlystyle(style);
+    struct style_struct_S *style = nullptr;
+
+    auto res = this->m_sheet->WhatIsSelected();
+
+    bool fast = false;
+
+    if(res != fast_sheet_ui::empty)
+        style = (style_struct_S *)malloc(sizeof(style_struct_S));
+
+
+    if(res == fast_sheet_ui::empty){
+        style = load_default_drawing();
+        if(style == NULL){
+            style = new style_struct_S;
+            load_default_onlystyle(style);
+        }
+    }else if(res == fast_sheet_ui::line){
+        fast = true;
+
+        style->nx = TEMP_N_X;
+        style->ny = 0;
     }
+    else if(res == fast_sheet_ui::square){
+        fast = true;
+
+        style->nx = TEMP_SQUARE;
+        style->ny = TEMP_SQUARE;
+    }
+
+    if(fast){
+        setcolor_struct(&style->colore, TEMP_COLOR);
+        style->thickness = TEMP_TICK;
+    }
+
 
     /* insert a point (0, 0) */
     addPointZero(data);
 
+
     struct point_s temp_point;
     memcpy(&temp_point.m_color, &style->colore, sizeof(colore_s));
 
-
-    double deltax = height / style->nx;
-    double deltay = (double)width / (double)style->ny;
+    double deltax = height_p / style->nx;
+    double deltay = (double)width_p / (double)style->ny;
 
     double temp = deltax;
+
+    temp_point.m_pressure = widthToPressure(style->thickness);
 
     for(i=0; i<style->nx; i++){
         temp_point.idtratto = IDORIZZONALE;
@@ -60,7 +100,7 @@ void TabletCanvas::disegnafoglio(){
 
         data->datatouch->m_point.append(temp_point);
 
-        temp_point.m_x = width;
+        temp_point.m_x = width_p;
         data->datatouch->m_point.append(temp_point);
 
         deltax += temp;
@@ -75,7 +115,7 @@ void TabletCanvas::disegnafoglio(){
 
         data->datatouch->m_point.append(temp_point);
 
-        temp_point.m_y = height + last;
+        temp_point.m_y = height_p + last;
         data->datatouch->m_point.append(temp_point);
 
         deltay += temp;
