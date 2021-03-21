@@ -10,10 +10,13 @@
 #define setCheckedM(x)     ui->white_sheet->setChecked(x == n_style::white); \
     ui->lines_sheet->setChecked(x == n_style::line); \
     ui->shared_sheet->setChecked(x == n_style::square); \
-    uncheck(ui->list_sheet);
+    uncheck(ui->list_sheet, x);
 
-static void uncheck(QListWidget *list){
-    list->unsetCursor();
+static void uncheck(QListWidget *list, fast_sheet_ui::n_style temp){
+    if(temp != fast_sheet_ui::empty)
+        list->unsetCursor();
+
+    //list->currentItem()->setCheckState(Qt::CheckState::Unchecked);
 }
 
 fast_sheet_ui::fast_sheet_ui(QWidget *parent) :

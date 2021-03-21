@@ -8,7 +8,7 @@ static bool thereispositive(datastruct *, int, int);
 
 void TabletCanvas::paintEvent(QPaintEvent *event){
     if (m_pixmap.isNull())
-        initPixmap();
+        initPixmap(false);
 
     QPainter painter;
     painter.begin(this);

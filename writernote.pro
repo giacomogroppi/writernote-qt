@@ -56,7 +56,6 @@ SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
-    src/frompdf/frompdf.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
     src/touch/pageCount.cpp \
@@ -208,7 +207,6 @@ SOURCES += \
 HEADERS += \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/datamanage/retry_save_audio.h \
-    src/frompdf/frompdf.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
@@ -405,11 +403,16 @@ android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
 
 ANDROID_EXTRA_LIBS = /home/giacomo/Android/Sdk/android_openssl/latest/arm/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libssl_1_1.so
 
-unix:{
+unix:contains(DEFINES, PDFSUPPORT){
     message("Add support for pdf")
 
     LIBS += -L/usr/lib/x86_64-linux-gnu/ -lQt5Pdfium
 
     INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
     DEPENDPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
+
+    SOURCES += \
+        src/frompdf/frompdf.cpp
+    HEADERS += \
+        src/frompdf/frompdf.h
 }

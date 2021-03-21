@@ -25,6 +25,6 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
         }
     }
 
-    initPixmap();
+    initPixmap(true);
     this->isloading = true;
 }

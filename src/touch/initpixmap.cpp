@@ -2,7 +2,7 @@
 #include <QPainter>
 
 /* la funzione gestisce lo il resize della finestra */
-void TabletCanvas::initPixmap()
+void TabletCanvas::initPixmap(bool paint)
 {
     qreal dpr = devicePixelRatio();
 
@@ -43,5 +43,7 @@ void TabletCanvas::initPixmap()
     m_pixmap = newPixmap;
 
     this->isloading = true;
-    update();
+
+    if(paint)
+        update();
 }

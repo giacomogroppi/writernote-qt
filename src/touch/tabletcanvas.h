@@ -181,7 +181,8 @@ private:
     void updateCursor(const QTabletEvent *event);
     void updateBrush(const QTabletEvent *event);
 
-    void initPixmap();
+    /* if paint == true launch update() */
+    void initPixmap(bool paint);
     Qt::BrushStyle brushPattern(qreal value);
     static qreal pressureToWidth(qreal pressure);
 

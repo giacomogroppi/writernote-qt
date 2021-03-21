@@ -33,6 +33,11 @@ class datastruct
 {
 public:
     datastruct();
+
+    inline bool isempty(){
+        return this->m_point.isEmpty();
+    };
+
     double biggerxNoId();
     void reset();
     double last();

@@ -124,7 +124,7 @@ bool MainWindow::setOutputLocation()
 
     QPoint hostRect;
 
-    if(audio_default::load_default() != audio_default::not_define)
+    if(audio_default_location::load_default() != audio_default_location::not_define)
         goto procede;
 
     menu = new QMenu(this);

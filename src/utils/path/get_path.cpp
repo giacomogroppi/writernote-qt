@@ -5,9 +5,8 @@
 #define SPACER "/"
 
 #else
-#define POS_HOME
-#define SPACER "\"
-
+#define POS_HOME "HOMEPATH"
+#define SPACER "\\"
 #endif
 
 #define PLUSS(x) x+=SPACER
