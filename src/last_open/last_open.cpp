@@ -306,20 +306,19 @@ static void tidyup(last_file *m_data, int m_quanti){
     size_t s;
     s = sizeof(last_file);
 
-    last_file *temp = new last_file;
+    last_file temp;
 
     for(int i=0; i<m_quanti; i++){
         for(k=1; k<m_quanti; k++){
             if(recent(&m_data[i], &m_data[k])){
-                memcpy(temp, &m_data[i], s);
+                memcpy(&temp, &m_data[i], s);
                 memcpy(&m_data[i], &m_data[k], s);
-                memcpy(&m_data[k], temp, s);
+                memcpy(&m_data[k], &temp, s);
 
             }
         }
     }
 
-    delete temp;
 }
 
 

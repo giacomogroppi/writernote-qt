@@ -104,7 +104,7 @@ void updatecheck::managerFinished(){
 void updatecheck::managerFinished(){
     if(reply->error()){
         if(mostra)
-            dialog_critic("We had a problem with internet connection");
+            dialog_critic("We had a problem with internet connection " + reply->errorString());
         delete manager;
         return;
     }

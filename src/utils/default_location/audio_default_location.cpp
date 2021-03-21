@@ -14,10 +14,20 @@ audio_default_location::audio_default_location(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    auto res = audio_default_location::load_default();
+    m_lastchoise = audio_default_location::load_default();
+
+    this->ui->button_ext->setCheckable(true);
+    this->ui->button_into->setCheckable(true);
 
 
-    SET_CHECK(res == audio_default_location::external || res == n_audio_record::not_define);
+    if(m_lastchoise == audio_default_location::not_define){
+        this->ui->button_ext->setChecked(false);
+        this->ui->button_into->setChecked(false);
+
+        return;
+    }
+
+    SET_CHECK(m_lastchoise);
 
 }
 
@@ -38,12 +48,7 @@ void audio_default_location::save_data(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_AUDIO_POSITION);
 
-    int temp;
-    if(ui->button_into->isChecked()){
-        temp = audio_default_location::internal;
-    }
-    else
-        temp = audio_default_location::external;
+    int temp = this->m_lastchoise;
 
     setting.setValue(KEY_AUDIO_POSITION_TYPE, temp);
 
