@@ -96,7 +96,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
             /* last save and undo redo */
             if(m_redoundo)
-                this->m_redoundo->copy();
+                this->m_redoundo->copy(this->data);
 
             if(m_autosave)
                 if(!this->m_autosave->save())

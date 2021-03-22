@@ -83,16 +83,16 @@ void redoundo::append(){
     if(m_lista.length() == QUANTIINDICI)
         return;
 
-    auto temp = new currenttitle_class;
+    currenttitle_class * temp = new currenttitle_class;
     m_lista.append(temp);
 }
 
-void redoundo::copy(){
+void redoundo::copy(currenttitle_class *m_temp){
     return;
     this->append();
 
     if(this->indice < QUANTIINDICI){
-        copy_b(m_lista.operator[](indice), m_current);
+        copy_b(m_lista.at(indice), m_temp);
         this->indice ++;
         return;
     }
@@ -107,7 +107,7 @@ void redoundo::copy(){
     * modifying the value of the list,
     * but we are using the pointer
     */
-    copy_b(m_lista.at(indice), this->m_current);
+    copy_b(m_lista.at(indice), m_temp);
 }
 
 static inline void copycolor(QList<struct point_s> *src, QList<struct point_s> *dest){

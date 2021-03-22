@@ -4,12 +4,30 @@
 #include "../currenttitle/currenttitle_class.h"
 #define QUANTIINDICI 10
 
+class lista_copybook{
+public:
+    lista_copybook (){
+        for(int i=0; i<QUANTIINDICI; i++){
+            m_list[i] = NULL;
+        }
+    }
 
+
+    inline void clear(){
+        for(int i=0; i<QUANTIINDICI; i++){
+            if(m_list[i])
+                delete m_list[i];
+        }
+    }
+
+    currenttitle_class *m_list[QUANTIINDICI];
+
+};
 
 class redoundo
 {
 private:
-    QList<currenttitle_class *> m_lista;
+    lista_copybook m_list;
 
     /* 0 <= indice <= 10 */
     unsigned short int indice = 0;
@@ -29,7 +47,7 @@ public:
         }
     };
 
-    void copy();
+    void copy(currenttitle_class *);
 
     void undo(currenttitle_class **);
     void redo(currenttitle_class **);
