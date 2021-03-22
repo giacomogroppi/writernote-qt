@@ -25,10 +25,9 @@ fast_sheet_ui::fast_sheet_ui(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->load();
-
     ui->white_sheet->setCheckable(true);
     ui->lines_sheet->setCheckable(true);
+    ui->shared_sheet->setCheckable(true);
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
@@ -63,7 +62,7 @@ void fast_sheet_ui::load(){
     emit changeButton(!this->auto_create);
 
     /* load style */
-    auto temp = load_last_style();
+    const style_struct * temp = load_last_style();
 
     if(temp){
         this->m_style = new style_struct;
@@ -72,6 +71,7 @@ void fast_sheet_ui::load(){
     }else{
         this->m_style = nullptr;
         ui->list_sheet->reset();
+        this->on_autocreate_sheet_clicked();
         return;
     }
 
@@ -90,6 +90,8 @@ void fast_sheet_ui::load(){
     this->m_how = static_cast<n_style>(res);
 
     setCheckedM(this->m_how);
+
+    this->on_autocreate_sheet_clicked();
 }
 
 bool fast_sheet_ui::event(QEvent *event)

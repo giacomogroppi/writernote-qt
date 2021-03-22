@@ -11,6 +11,14 @@
 #include "datastruct/datastruct.h"
 #include "method/methoddefinition.h"
 
+void TabletCanvas::restoreO()
+{
+    if(this->data->datatouch->repositioning()){
+        this->isloading = true;
+        update();
+    }
+}
+
 TabletCanvas::TabletCanvas()
     : QWidget(nullptr), m_brush(m_color)
     , m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)

@@ -9,7 +9,6 @@ datastruct::datastruct()
 
 bool datastruct::repositioning()
 {
-    int i, len;
     if(m_point.isEmpty() || m_point.first().m_x == 0.0 || m_point.first().m_y == 0)
         return false;
 

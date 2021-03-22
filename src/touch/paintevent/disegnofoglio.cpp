@@ -24,9 +24,9 @@ static double getLastPoint(currenttitle_class *);
  * color, size line
 */
 #define TEMP_COLOR Qt::black
-#define TEMP_TICK 2
-#define TEMP_N_X 20
-#define TEMP_SQUARE 20
+#define TEMP_TICK 1
+#define TEMP_N_X 40
+#define TEMP_SQUARE 40
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
@@ -75,7 +75,7 @@ void TabletCanvas::disegnafoglio(){
 
     if(fast){
         setcolor_struct(&style->colore, TEMP_COLOR);
-        style->thickness = TEMP_TICK;
+        style->thickness =  widthToPressure(TEMP_TICK);
     }
 
 

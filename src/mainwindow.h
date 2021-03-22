@@ -274,6 +274,10 @@ private slots:
 
     void showRiascolto();
 
+    void on_actionrestore_button_triggered();
+
+    void on_actionnewPage_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     bool event(QEvent *event) override;

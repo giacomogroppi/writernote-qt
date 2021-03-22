@@ -463,6 +463,7 @@
    </attribute>
    <addaction name="actionlastStyle"/>
    <addaction name="actionnewPage"/>
+   <addaction name="actionrestore_button"/>
   </widget>
   <action name="actionNew_File">
    <property name="checkable">
@@ -882,6 +883,15 @@
    </property>
    <property name="text">
     <string>newPage</string>
+   </property>
+  </action>
+  <action name="actionrestore_button">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/restore-icon.png</normaloff>:/image/images/restore-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>restore-button</string>
    </property>
   </action>
  </widget>

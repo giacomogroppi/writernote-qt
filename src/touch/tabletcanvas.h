@@ -46,6 +46,12 @@ class TabletCanvas : public QWidget
     Q_OBJECT
 
 public:
+    void restoreO();
+    inline void needUpdate(){
+        this->isloading = true;
+        update();
+    };
+
     enum Valuator { PressureValuator, TangentialPressureValuator,
                     TiltValuator, VTiltValuator, HTiltValuator, NoValuator };
     Q_ENUM(Valuator)
@@ -175,7 +181,6 @@ protected:
     /* click rilasciato */
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-
 
 private:
     bool isWriting = false;

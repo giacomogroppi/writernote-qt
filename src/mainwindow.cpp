@@ -136,6 +136,8 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
         ui->actionnewPage->setVisible(!res);
     });
 
+    m_sheet->needToReload();
+
 }
 
 MainWindow::~MainWindow()
@@ -403,4 +405,16 @@ void MainWindow::on_actionUndu_triggered()
     }
 
     ui->textEdit->undo();
+}
+
+void MainWindow::on_actionrestore_button_triggered()
+{
+    this->m_canvas->restoreO();
+}
+
+/* new page */
+void MainWindow::on_actionnewPage_triggered()
+{
+    m_canvas->disegnofoglio_bool = true;
+    m_canvas->needUpdate();
 }
