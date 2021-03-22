@@ -34,8 +34,9 @@ static int checkSpeed(currenttitle_class *first, currenttitle_class *second){
     len = first->datatouch->m_point.length();
     if(len != second->datatouch->m_point.length())
         return IDTRATTO;
+
     for(i=0; i<len; i++){
-        if(memcmp(&P(first).operator[](i),
+        if(memcmp(&P(second).operator[](i),
                   &P(second).operator[](i),
                   sizeof(point_s)) != 0)
             return IDTRATTO;
@@ -82,16 +83,35 @@ static int checkSlow(currenttitle_class *first, currenttitle_class *second){
  * it's a much faster function if you don't care
  * what the difference is
  */
+#define scala(x, y) x->datatouch->scala_all(y.operator*=(-1));
+
 int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, bool speed)
 {
     if(!primo->m_touch)
         return checkIndiceSlow(primo, secondo);
 
-    if(speed)
-        return checkSpeed(primo, secondo);
+    int res;
+    QPointF first_point, second_point;
 
-    return checkSlow(primo, secondo);
+    first_point = primo->datatouch->scala_all();
+    second_point = secondo->datatouch->scala_all();
 
+
+    if(speed){
+        res = checkSpeed(primo, secondo);
+
+        scala(primo, first_point);
+        scala(secondo, second_point);
+
+        return res;
+    }
+
+    res = checkSlow(primo, secondo);
+
+    scala(primo, first_point);
+    scala(secondo, second_point);
+
+    return res;
 }
 
 int checksimileindice(indice_class *primo, indice_class *secondo){

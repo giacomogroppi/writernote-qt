@@ -6,6 +6,8 @@
 
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
+    isWriting = true;
+
     switch (event->type()) {
         case QEvent::TabletPress: /* first point touch */
             if (!m_deviceDown) {

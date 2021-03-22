@@ -7,6 +7,54 @@ datastruct::datastruct()
 
 }
 
+bool datastruct::repositioning()
+{
+    int i, len;
+    if(m_point.isEmpty() || m_point.first().m_x == 0.0 || m_point.first().m_y == 0)
+        return false;
+
+    QPointF point_temp(-m_point.first().m_x, -m_point.first().m_y);
+    this->scala_all(point_temp);
+
+    return true;
+}
+
+QPointF datastruct::scala_all()
+{
+    if(this->m_point.isEmpty())
+        return QPointF(0, 0);
+
+    QPointF point(-m_point.first().m_x, -m_point.first().m_y);
+
+    scala_all(point);
+
+    return point;
+}
+
+void datastruct::scala_all(QPointF &point)
+{
+    this->scala_x(point.x());
+    this->scala_y(point.y());
+}
+
+void datastruct::scala_x(double scala)
+{
+    int i, len;
+    len = this->m_point.length();
+    for(i=0; i<len; i++){
+        m_point.operator[](i).m_x += scala;
+    }
+}
+
+void datastruct::scala_y(double scala)
+{
+    int i, len;
+    len = this->m_point.length();
+    for(i=0; i<len; i++){
+        m_point.operator[](i).m_y += scala;
+    }
+}
+
 void datastruct::reset(){
     m_point.clear();
 

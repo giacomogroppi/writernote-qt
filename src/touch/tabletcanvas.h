@@ -178,6 +178,8 @@ protected:
 
 
 private:
+    bool isWriting = false;
+
     void updateCursor(const QTabletEvent *event);
     void updateBrush(const QTabletEvent *event);
 

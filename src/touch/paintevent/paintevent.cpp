@@ -7,6 +7,10 @@
 static bool thereispositive(datastruct *, int, int);
 
 void TabletCanvas::paintEvent(QPaintEvent *event){
+    if(!isWriting)
+        isloading = true;
+    isWriting = false;
+
     if (m_pixmap.isNull())
         initPixmap(false);
 

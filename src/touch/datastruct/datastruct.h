@@ -38,6 +38,14 @@ public:
         return this->m_point.isEmpty();
     };
 
+    bool repositioning();
+
+    void scala_all(QPointF &);
+    QPointF scala_all();
+
+    void scala_x(double scala);
+    void scala_y(double scala);
+
     double biggerxNoId();
     void reset();
     double last();
