@@ -36,7 +36,7 @@ static int checkSpeed(currenttitle_class *first, currenttitle_class *second){
         return IDTRATTO;
 
     for(i=0; i<len; i++){
-        if(memcmp(&P(second).operator[](i),
+        if(memcmp(&P(first).operator[](i),
                   &P(second).operator[](i),
                   sizeof(point_s)) != 0)
             return IDTRATTO;
