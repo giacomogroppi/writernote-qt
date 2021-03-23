@@ -56,6 +56,7 @@ SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
+    src/lastedit/lista_copybook.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
     src/touch/pageCount.cpp \
@@ -206,6 +207,7 @@ SOURCES += \
 HEADERS += \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/datamanage/retry_save_audio.h \
+    src/lastedit/lista_copybook.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \

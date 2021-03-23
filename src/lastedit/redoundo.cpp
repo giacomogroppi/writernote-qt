@@ -9,6 +9,7 @@ redoundo::redoundo(currenttitle_class *data)
 }
 
 void redoundo::redo( currenttitle_class **data){
+    return;
     if(indice == 10){
         return;
     }
@@ -21,6 +22,7 @@ void redoundo::redo( currenttitle_class **data){
 
 /* reset the currenttitle */
 void redoundo::undo(currenttitle_class **data){
+    return;
     if(indice == 0)
         return;
 
