@@ -6,7 +6,7 @@ git pull
 version=$(git describe --tags --abbrev=0)
 ## version contain the version of the last tag on github
 
-qmake writernote.pro DEFINES+=VERSION_SNAPCRAFT=$version DEFINES+=QT_NO_DEBUG_OUTPUT
+qmake writernote.pro DEFINES+="VERSION_SNAPCRAFT=$version" DEFINES+=QT_NO_DEBUG_OUTPUT
 make release -j $nproc 
 
 ldd ./build/writernote.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
