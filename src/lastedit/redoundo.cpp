@@ -13,7 +13,7 @@ void redoundo::redo( currenttitle_class **data){
         return;
     }
 
-    *data = m_lista.at(indice+1);
+    *data = m_list.m_list[indice+1];
 
     indice ++;
 }
@@ -24,7 +24,7 @@ void redoundo::undo(currenttitle_class **data){
     if(indice == 0)
         return;
 
-    *data = m_lista.at(indice-1);
+    *data = m_list.m_list[indice-1];
 
     indice --;
 }

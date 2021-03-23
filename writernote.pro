@@ -125,7 +125,6 @@ SOURCES += \
     src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
-    src/lastedit/scala.cpp \
     src/main.cpp \
     src/dataread/xmlstruct.cpp \
     src/mainwindow.cpp \

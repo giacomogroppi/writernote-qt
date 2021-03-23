@@ -12,6 +12,7 @@ public:
         }
     }
 
+    void append();
 
     inline void clear(){
         for(int i=0; i<QUANTIINDICI; i++){
@@ -20,9 +21,24 @@ public:
         }
     }
 
+    int lenght();
+
     currenttitle_class *m_list[QUANTIINDICI];
 
 };
+
+void lista_copybook::append(){
+    auto len = this->lenght();
+
+    auto temp = new currenttitle_class;
+    m_list[len] = temp;
+}
+
+int lista_copybook::lenght(){
+    int i;
+    for(i=0; m_list[i] != nullptr; i++);
+    return i;
+}
 
 class redoundo
 {
@@ -34,8 +50,6 @@ private:
 
     currenttitle_class *m_current;
 
-    void scala(short numero);
-
     void append();
 public:
     redoundo(currenttitle_class *);
@@ -43,7 +57,7 @@ public:
     ~redoundo(){
         int i;
         for(i=0; i<QUANTIINDICI; i++){
-            delete m_lista[i];
+            delete m_list.m_list[i];
         }
     };
 
