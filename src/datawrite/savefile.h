@@ -8,7 +8,7 @@
 class currenttitle_class;
 class indice_class;
 
-#define WRITE_ON_SIZE(x,y,z,filezip) if(zip_source_write(x,y,z)==-1)return freezip(x,filezip);
+#define WRITE_ON_SIZE(x,y,z) if(zip_source_write(x,y,z)==-1)goto error;
 
 int save_audio_file(const char *posAudio, QString &namecopybook, QString &path);
 

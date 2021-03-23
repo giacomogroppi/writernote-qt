@@ -40,7 +40,7 @@ private:
     void load();
     void save();
 
-    style_struct *m_style;
+    style_struct *m_style = nullptr;
     n_style m_how = n_style::empty;
 
     Ui::fast_sheet_ui *ui;

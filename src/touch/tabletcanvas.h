@@ -58,7 +58,8 @@ public:
 
     TabletCanvas();
     ~TabletCanvas(){
-        delete zoom;
+        if(zoom)
+            delete zoom;
     };
 
     void clear();

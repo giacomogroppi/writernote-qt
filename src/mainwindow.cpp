@@ -104,14 +104,13 @@ MainWindow::MainWindow(QWidget *parent, TabletCanvas *canvas, struct struct_user
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
     this->m_canvas->m_text = m_text;
-    this->m_canvas->m_sheet = this->m_sheet;
+    this->m_canvas->m_sheet = m_sheet;
 
     this->m_canvas->m_text_w = m_text_w;
 
     /* redo and undo */
     connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);
     connect(this, &MainWindow::UndoT, m_canvas, &TabletCanvas::Undo);
-
 
     ui->button_left_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     ui->button_right_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);

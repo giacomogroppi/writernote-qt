@@ -76,13 +76,11 @@ int main(int argc, char *argv[])
         if(user)
             delete user;
 #endif
-        delete app;
-        delete canvas;
         return 0;
     }
 
 #ifdef CLOUD
-    MainWindow w(nullptr, canvas, user, &m_cloud);
+    MainWindow w(nullptr, &canvas, user, &m_cloud);
 #else
     MainWindow w(nullptr, canvas);
 #endif
