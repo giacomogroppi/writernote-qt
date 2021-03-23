@@ -48,6 +48,8 @@ void fast_sheet_ui::needToReload()
     if(this->m_style)
         delete this->m_style;
 
+    this->m_style = nullptr;
+
     this->load();
 }
 
