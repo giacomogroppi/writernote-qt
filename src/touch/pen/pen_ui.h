@@ -3,16 +3,6 @@
 
 #include <QWidget>
 
-#define SPESSORE 1
-#define PRESSIONE 2
-
-#define CONTINUA 2
-#define TRATTI 4
-
-#define DEFAULTSPESSORE 1
-#define DEFAULT_TYPE SPESSORE
-#define DEFAULT_TYPE_TRATTO CONTINUA
-
 struct last_color{
     bool ok;
     QColor color;
@@ -33,9 +23,19 @@ public:
     void save_settings();
     void load_settings();
 
-    int m_type_pen = DEFAULT_TYPE;
-    int m_spessore_pen = DEFAULTSPESSORE;
-    int m_type_tratto = DEFAULT_TYPE_TRATTO;
+    enum n_tratto: int{
+        continua,   /* ------------- */
+        tratti      /* - - - - - - - */
+    };
+
+    enum n_pressione: int{
+        spessore, /* the size of the pen is decide manually */
+        pressione /* the size of the pen is decide by the pressure of the pen on the screen */
+    };
+
+    n_pressione m_type_pen = n_pressione::pressione;
+    int m_spessore_pen = 1;
+    n_tratto m_type_tratto = n_tratto::continua;
 
     struct last_color m_last_color;
 
