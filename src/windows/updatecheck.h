@@ -7,6 +7,10 @@
 #define NOMECONTENT "\"content\""
 #define NOMEFINE "encoding"
 
+#ifndef VERSION_SNAPCRAFT
+#define NO_VER_DEF "[no version available]"
+#endif
+
 #include <QNetworkReply>
 #include <QObject>
 

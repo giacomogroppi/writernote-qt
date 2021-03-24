@@ -391,7 +391,9 @@ void MainWindow::on_actionVersion_triggered()
 {
 #ifdef VERSION_SNAPCRAFT
     messaggio_utente("Current version is " + (QString)VERSION_STRING);
-#endif // version
+#else
+    messaggio_utente("Current version is " + (QString)NO_VER_DEF);
+#endif
 }
 
 

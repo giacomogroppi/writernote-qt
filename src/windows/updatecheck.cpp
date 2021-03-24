@@ -102,6 +102,12 @@ void updatecheck::managerFinished(){
 #define POSNAME "name"
 
 void updatecheck::managerFinished(){
+#ifndef VERSION_SNAPCRAFT
+    if(mostra)
+        dialog_critic("This version of writernote was not compiled following the \ninstructions for setting the version, \nso I can't tell if there are any updates");
+    return;
+#endif
+
     if(reply->error()){
         if(mostra)
             dialog_critic("We had a problem with internet connection " + reply->errorString());
