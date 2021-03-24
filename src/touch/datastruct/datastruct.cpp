@@ -128,10 +128,10 @@ void datastruct::reset(){
     this->x.clear();
     this->y.clear();
     this->posizioneaudio.clear();
-    this->idtratto.clear();
+    this->idtratto.clear();*/
     this->zoom = 1.00;
     this->posizionefoglio.clear();
-    */
+    
 }
 
 double datastruct::biggery(){
