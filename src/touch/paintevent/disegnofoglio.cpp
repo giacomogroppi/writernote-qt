@@ -1,4 +1,4 @@
-#include "../tabletcanvas.h"
+﻿#include "../tabletcanvas.h"
 
 #include "../../sheet/load_last_style.h"
 #include "../../utils/color/setcolor.h"
@@ -28,7 +28,7 @@ static double getLastPoint(currenttitle_class *);
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
-static bool setStylePrivate(bool *, struct style_struct_S *, fast_sheet_ui::n_style);
+static style_struct_S * setStylePrivate(bool *, fast_sheet_ui::n_style);
 
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
@@ -55,12 +55,10 @@ void TabletCanvas::disegnafoglio(){
 
     bool fast = false;
 
-    if(res != fast_sheet_ui::empty)
-        style = (style_struct_S *)malloc(sizeof(style_struct_S));
-
-
     /* set style value */
-    if(!setStylePrivate(&fast, style, res)){
+    style = setStylePrivate(&fast, res);
+
+    if(!style){
         disegnofoglio_bool = false;
         return;
     }
@@ -83,6 +81,7 @@ void TabletCanvas::disegnafoglio(){
     double temp = deltax;
 
     temp_point.m_pressure = widthToPressure(style->thickness);
+
 
     for(i=0; i<style->nx; i++){
         temp_point.idtratto = IDORIZZONALE;
@@ -116,45 +115,50 @@ void TabletCanvas::disegnafoglio(){
     this->disegnofoglio_bool = false;
     this->isloading = true;
 
-    if(res != fast_sheet_ui::empty){
-        free(style);
-    }
+    free(style);
 
 }
 
-static bool setStylePrivate(bool *fast, style_struct_S *style, fast_sheet_ui::n_style res){
+static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
+
+    style_struct_S * mall_style = (style_struct_S *)malloc(sizeof(style_struct_S)), * temporary;
+
+    if(!mall_style)
+        return NULL;
+
     if(res == fast_sheet_ui::empty){
-        style = load_default_drawing();
-        if(style == NULL){
-            style = new style_struct_S;
-            load_default_onlystyle(style);
+        temporary = load_default_drawing();
+        if(temporary == NULL){
+            load_default_onlystyle(mall_style);
+        }else{
+            memcpy(mall_style, temporary, sizeof(style_struct_S));
         }
     }else if(res == fast_sheet_ui::line){
         *fast = true;
 
-        style->nx = TEMP_N_X;
-        style->ny = 0;
+        mall_style->nx = TEMP_N_X;
+        mall_style->ny = 0;
     }
     else if(res == fast_sheet_ui::square){
         *fast = true;
 
-        style->nx = TEMP_SQUARE;
-        style->ny = TEMP_SQUARE;
+        mall_style->nx = TEMP_SQUARE;
+        mall_style->ny = TEMP_SQUARE;
     }
     else if(res == fast_sheet_ui::white){
         /* we set the color manually */
-        setcolor_struct(&style->colore, Qt::black);
+        setcolor_struct(&mall_style->colore, Qt::black);
 
-        style->nx = 1;
-        style->ny = 1;
+        mall_style->nx = 1;
+        mall_style->ny = 1;
     }else{
-        free(style);
+        free(mall_style);
         dialog_critic("You have to change style. This is\nnot already supported in writernote");
 
-        return false;
+        return NULL;
     }
 
-    return true;
+    return mall_style;
 }
 
 

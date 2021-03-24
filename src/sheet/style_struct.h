@@ -14,10 +14,12 @@
 struct style_struct_S{
     char nome[STRNOME + 1];
     int nx, ny;
+    /*
+     * nx : number of orizzonal line
+     * ny : number of vertical line
+    */
 
     struct colore_s colore;
-    //int colore[4];
-
 
     int thickness;
 };
