@@ -115,17 +115,37 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
     return need_reload;
 }
 
+static unsigned int m(QList<int> * list, int number, int index, int len){
+    unsigned f;
+    len = list->length();
+
+    for(f = 0; index<len; index++){
+        if(list->at(index) == number)
+            ++f;
+    }
+
+    return f;
+}
+
 /*
  * call when the user left the screen
+ * this function remove the duplicate number
 */
 static void removeR(QList<int> *list){
-    int i, len;
+    int i, len, time, k;
+
     len = list->length();
+
     for(i=0; i<len; i++){
-        if(list->indexOf(list->at(i)) != -1){
-            list->removeAt(i);
-            len --;
+        time = m(list, list->at(i), i, len);
+        if(time){
+            for(k=0; k<time; k++){
+                list->removeAt(i);
+            }
         }
+
+        len -= time;
+
     }
 }
 
