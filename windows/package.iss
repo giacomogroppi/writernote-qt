@@ -41,6 +41,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "C:\msys64\home\giack\writernote-qt\build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\msys64\home\giack\writernote-qt\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\msys64\mingw64\lib\libssl.dll.a"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
