@@ -91,7 +91,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         case QEvent::TabletRelease: /* pen leaves the tablet */
 
 #if defined(WIN32) || defined(WIN64)
-            this->isdrawing = true;
+            this->isdrawing = false;
 #endif
 
             /* last save and undo redo */
