@@ -31,19 +31,19 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     this->disegnafoglio();
 
     if(this->isloading)
-        load(&painter);
+        load(painter);
 
     painter.end();
 }
 
 #define C(x) x->datatouch->m_point
 #define UPDATE_LOAD updateBrush_load(C(data).at(i).m_pressure, setcolor(&C(data).at(i).m_color))
-#define SET_PEN painter->setPen(this->m_pen)
+#define SET_PEN painter.setPen(this->m_pen)
 
 /*
  * TODO -> implement this function to play audio
 */
-void TabletCanvas::load(QPainter *painter,
+void TabletCanvas::load(QPainter &painter,
                         double m,
                         int size_orizzontale,
                         int size_verticale,
@@ -67,16 +67,24 @@ void TabletCanvas::load(QPainter *painter,
     {
         m_pen.setColor(setcolor(&data->datatouch->m_point.at(i).m_color));
 
+        /*
+         * la funzione trasla tutti i punti finche non ne
+         * trova uno positivo, in modo da non perdere tempo
+         * a ciclare
+         *
+         * the function translates all the points until it
+         * finds a positive one, so as not to waste time cycling
+        */
         if(C(data).at(i).m_x <= 0
                 && thereispositive(data->datatouch, C(data).at(i).idtratto, i)
-                && C(data).at(i).idtratto != IDVERTICALE
-                && C(data).at(i).idtratto != IDORIZZONALE){
+                && C(data).at(i).idtratto != IDORIZZONALE
+                && C(data).at(i).idtratto != IDVERTICALE){
             while(C(data).at(i).m_y <= 0){
                 i++;
             }
         }
 
-        if(C(data).at(i).m_y < this->m_pixmap.size().height()
+        if(C(data).at(i).m_y < size_verticale
                 && C(data).at(i).m_y >= 0){
 
             if(C(data).at(i).idtratto == IDORIZZONALE || C(data).at(i).idtratto == IDVERTICALE){
@@ -85,6 +93,12 @@ void TabletCanvas::load(QPainter *painter,
                 SET_PEN;
 
                 for(k=0; k<2; k++){
+                    /* we can draw objects which are outside the pixmap
+                        qt automatically understands that you have to set negative points,
+                        and those that are too high such as the margins of the pixmap
+                    */
+
+                    /*
                     xtemp[k] = C(data).at(i+k).m_x;
                     ytemp[k] = C(data).at(i+k).m_y;
 
@@ -93,12 +107,16 @@ void TabletCanvas::load(QPainter *painter,
 
                     xtemp[k] = (xtemp[k] > size_orizzontale) ? (double)size_orizzontale : xtemp[k];
                     ytemp[k] = (ytemp[k] > size_verticale) ? (double)size_verticale : ytemp[k];
+                    */
+
+                    xtemp[k] = C(data).at(i+k).m_x;
+                    ytemp[k] = C(data).at(i+k).m_y;
+
                 }
 
-                /*painter->drawLine(C(data).at(i).m_x, C(data).at(i).m_y
-                                  , C(data).at(i + 1).m_x, C(data).at(i + 1).m_y);*/
-
-                painter->drawLine(xtemp[0], ytemp[0], xtemp[1], ytemp[1]);
+                painter.drawLine(
+                            xtemp[0], ytemp[0],
+                            xtemp[1], ytemp[1]);
 
                 i++;
             }
@@ -110,7 +128,7 @@ void TabletCanvas::load(QPainter *painter,
 
                 SET_PEN;
 
-                painter->drawLine(this->lastPoint.pos*m,
+                painter.drawLine(this->lastPoint.pos*m,
                               QPointF(C(data).at(i).m_x*m, C(data).at(i).m_y*m));
 
             }
@@ -138,8 +156,8 @@ static bool thereispositive(datastruct *data, int idtratto, int start){
     int len;
     len = data->m_point.length();
 
-    for(; start<len; start++)
-        if(data->m_point.at(start).idtratto == idtratto && data->m_point.at(start).m_y >= 0.0)
+    for(; start<len && data->m_point.at(start).idtratto == idtratto; start++)
+        if(data->m_point.at(start).m_y >= 0.0)
             return true;
 
     return false;

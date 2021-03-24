@@ -69,7 +69,7 @@ bool topdf::createpdf(){
     double temp_return;
 
     for (i=0; i<lenpagine; ++i) {
-        this->draw(&painter, delta, size_orizzontale, size_verticale, &temp_return);
+        this->draw(painter, delta, size_orizzontale, size_verticale, &temp_return);
 
         if(i+1<lenpagine){
             newpage(data->datatouch, temp_return);

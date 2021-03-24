@@ -28,6 +28,8 @@ static double getLastPoint(currenttitle_class *);
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
+static bool setStylePrivate(bool *, struct style_struct_S *, fast_sheet_ui::n_style);
+
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
@@ -57,41 +59,16 @@ void TabletCanvas::disegnafoglio(){
         style = (style_struct_S *)malloc(sizeof(style_struct_S));
 
 
-    if(res == fast_sheet_ui::empty){
-        style = load_default_drawing();
-        if(style == NULL){
-            style = new style_struct_S;
-            load_default_onlystyle(style);
-        }
-    }else if(res == fast_sheet_ui::line){
-        fast = true;
-
-        style->nx = TEMP_N_X;
-        style->ny = 0;
-    }
-    else if(res == fast_sheet_ui::square){
-        fast = true;
-
-        style->nx = TEMP_SQUARE;
-        style->ny = TEMP_SQUARE;
-    }
-    else if(res == fast_sheet_ui::white){
-        /* we set the color manually */
-        setcolor_struct(&style->colore, Qt::black);
-
-        style->nx = 1;
-        style->ny = 1;
-    }else{
-        free(style);
-        this->disegnofoglio_bool = false;
-        return dialog_critic("You have to change style. This is\nnot already supported in writernote");
+    /* set style value */
+    if(!setStylePrivate(&fast, style, res)){
+        disegnofoglio_bool = false;
+        return;
     }
 
     if(fast){
         setcolor_struct(&style->colore, TEMP_COLOR);
         style->thickness =  widthToPressure(TEMP_TICK);
     }
-
 
     /* insert a point (0, 0) */
     addPointZero(data);
@@ -144,6 +121,42 @@ void TabletCanvas::disegnafoglio(){
     }
 
 }
+
+static bool setStylePrivate(bool *fast, style_struct_S *style, fast_sheet_ui::n_style res){
+    if(res == fast_sheet_ui::empty){
+        style = load_default_drawing();
+        if(style == NULL){
+            style = new style_struct_S;
+            load_default_onlystyle(style);
+        }
+    }else if(res == fast_sheet_ui::line){
+        *fast = true;
+
+        style->nx = TEMP_N_X;
+        style->ny = 0;
+    }
+    else if(res == fast_sheet_ui::square){
+        *fast = true;
+
+        style->nx = TEMP_SQUARE;
+        style->ny = TEMP_SQUARE;
+    }
+    else if(res == fast_sheet_ui::white){
+        /* we set the color manually */
+        setcolor_struct(&style->colore, Qt::black);
+
+        style->nx = 1;
+        style->ny = 1;
+    }else{
+        free(style);
+        dialog_critic("You have to change style. This is\nnot already supported in writernote");
+
+        return false;
+    }
+
+    return true;
+}
+
 
 static inline qreal widthToPressure(int v){
     return (v-1)*10;

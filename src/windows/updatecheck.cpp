@@ -139,7 +139,6 @@ void updatecheck::managerFinished(){
     }
 }
 
-
 void updatecheck::mostrafinestra(){
     if(areyousure(nullptr, "Update Writernote", "Do you want to update writernote?")){
         mostra_finestra_i("https://github.com/giacomogroppi/writernote-qt/releases");

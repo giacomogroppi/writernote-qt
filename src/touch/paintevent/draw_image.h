@@ -3,6 +3,6 @@
 #include <QPainter>
 #include "../../currenttitle/currenttitle_class.h"
 
-void draw_image(currenttitle_class *, QPainter *);
+void draw_image(currenttitle_class *, QPainter &);
 
 #endif // DRAW_IMAGE_H

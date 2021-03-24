@@ -9,7 +9,7 @@
 */
 
 /* the function draw the pixel into the painter  */
-void topdf::draw( QPainter *painter,
+void topdf::draw( QPainter &painter,
                   double m,
                   int size_orizzontale,
                   int size_verticale,
