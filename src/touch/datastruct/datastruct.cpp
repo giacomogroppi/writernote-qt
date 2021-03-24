@@ -267,23 +267,8 @@ bool datastruct::needtochangeid(int i){
 
     int temp_id = m_point.at(i).idtratto;
 
-    if(temp_id == m_point.at(i-1).idtratto
-            && temp_id == m_point.at(i+1).idtratto)
-        return true;
-
-    /*
-     * last data struct
-    */
-    /*
-    len = y.length();
-
-    if(i == len || i == 0)
-        return false;
-
-    if(idtratto.at(i) == idtratto.at(i+1) && idtratto.at(i-1) == idtratto.at(i))
-        return true;
-    */
-    return false;
+    return (temp_id == m_point.at(i-1).idtratto
+            && temp_id == m_point.at(i+1).idtratto);
 
 }
 
