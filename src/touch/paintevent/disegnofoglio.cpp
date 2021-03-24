@@ -27,6 +27,7 @@ static double getLastPoint(currenttitle_class *);
 #define TEMP_TICK 1
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
+
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
@@ -36,8 +37,10 @@ void TabletCanvas::disegnafoglio(){
     width_p = width_(data->datatouch);
     height_p = height_(data->datatouch);
 
-    if(width_p == INT32_MIN || height_p == INT32_MIN)
-        return dialog_critic("We had an internal problem, restarting writernote might fix the problem");
+    if(width_p == INT32_MIN || height_p == INT32_MIN){
+        dialog_critic("We had an internal problem, restarting writernote might fix the problem");
+        disegnofoglio_bool = false;
+    }
 
     /* he get the last point draw */
     last = getLastPoint(data);
@@ -71,6 +74,17 @@ void TabletCanvas::disegnafoglio(){
 
         style->nx = TEMP_SQUARE;
         style->ny = TEMP_SQUARE;
+    }
+    else if(res == fast_sheet_ui::white){
+        /* we set the color manually */
+        setcolor_struct(&style->colore, Qt::black);
+
+        style->nx = 1;
+        style->ny = 1;
+    }else{
+        free(style);
+        this->disegnofoglio_bool = false;
+        return dialog_critic("You have to change style. This is\nnot already supported in writernote");
     }
 
     if(fast){
@@ -124,6 +138,11 @@ void TabletCanvas::disegnafoglio(){
 
     this->disegnofoglio_bool = false;
     this->isloading = true;
+
+    if(res != fast_sheet_ui::empty){
+        free(style);
+    }
+
 }
 
 static inline qreal widthToPressure(int v){
