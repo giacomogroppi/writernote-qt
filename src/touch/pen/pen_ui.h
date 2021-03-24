@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#define DefaultS 1
+
 struct last_color{
     bool ok;
     QColor color;
@@ -34,7 +36,7 @@ public:
     };
 
     n_pressione m_type_pen = n_pressione::pressione;
-    int m_spessore_pen = 1;
+    int m_spessore_pen = DefaultS;
     n_tratto m_type_tratto = n_tratto::continua;
 
     struct last_color m_last_color;

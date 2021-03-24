@@ -4,6 +4,11 @@
 void rubber_ui::update_data(){
     ui->size_slider->setValue(m_size_gomma);
 
-    ui->totale_button->setChecked(this->m_type_gomma == TOTALE);
-    ui->partial_button->setChecked(this->m_type_gomma == PARZIALE);
+    const bool m_type = (this->m_type_gomma == e_type_rubber::total);
+
+    ui->totale_button->setChecked(m_type);
+    ui->partial_button->setChecked(!m_type);
+
+    ui->size_slider->setEnabled(!m_type);
+
 }

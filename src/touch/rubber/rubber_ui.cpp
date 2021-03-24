@@ -32,18 +32,17 @@ bool rubber_ui::event(QEvent *event){
 
 void rubber_ui::on_totale_button_clicked()
 {
-    this->m_type_gomma = TOTALE;
-    ui->totale_button->setChecked(this->m_type_gomma == TOTALE);
-    ui->partial_button->setChecked(this->m_type_gomma == PARZIALE);
+    this->m_type_gomma = e_type_rubber::total;
+
+    this->update_data();
 }
 
 void rubber_ui::on_partial_button_clicked()
 {
-    m_type_gomma = PARZIALE;
-    ui->totale_button->setChecked(this->m_type_gomma == TOTALE);
-    ui->partial_button->setChecked(this->m_type_gomma == PARZIALE);
-}
+    m_type_gomma = e_type_rubber::partial;
 
+    this->update_data();
+}
 
 /*
  * this function is call by tabletEvent
@@ -63,7 +62,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
     this->penna.setStyle(Qt::SolidLine);
 
-    if(this->m_type_gomma == TOTALE){
+    if(this->m_type_gomma == e_type_rubber::total){
         for(i=0; i<len; i++){
             if(isin(data->m_point.at(i).m_x,
                     data->m_point.at(i).m_y,
@@ -85,7 +84,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
             }
         }
     }
-    else if(this->m_type_gomma == PARZIALE){
+    else if(this->m_type_gomma == e_type_rubber::partial){
         QPen pennatemp;
         pennatemp.setColor(Qt::white);
         pennatemp.setWidth(1);

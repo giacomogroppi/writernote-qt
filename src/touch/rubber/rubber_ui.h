@@ -6,9 +6,6 @@
 #include <QPainter>
 #include <QPen>
 
-#define TOTALE 1
-#define PARZIALE 2
-
 #define DEFAULT_GOMMA_SIZE 5
 
 #define POSITION_ALFA 3
@@ -29,8 +26,13 @@ public:
     void save_settings();
     void load_settings();
 
+    enum e_type_rubber: int{
+        total, /* delete all the point with the saim id */
+        partial /* delete what the user touch with the pen */
+    };
+
     int m_size_gomma = DEFAULT_GOMMA_SIZE;
-    int m_type_gomma = TOTALE;
+    e_type_rubber m_type_gomma = e_type_rubber::total;
 
     bool actionRubber(datastruct *, QPointF, QPainter &);
     bool clearList(datastruct *);

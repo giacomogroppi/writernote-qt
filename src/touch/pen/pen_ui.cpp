@@ -32,13 +32,16 @@ pen_ui::~pen_ui()
 void pen_ui::list_update(){
     ui->slider_size->setValue(m_spessore_pen);
 
-    ui->button_continua->setChecked(m_type_tratto == CONTINUA);
-    ui->button_tratti->setChecked(m_type_tratto == TRATTI);
+    ui->button_continua->setChecked(m_type_tratto == n_tratto::continua);
+    ui->button_tratti->setChecked(m_type_tratto == n_tratto::tratti);
 
-    ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
-    ui->button_size->setChecked(m_type_pen == SPESSORE);
+    ui->button_pressure->setChecked(m_type_pen == n_pressione::pressione);
 
-    ui->slider_size->setDisabled(m_type_pen == PRESSIONE);
+    const bool temp = m_type_pen == n_pressione::spessore;
+    ui->button_size->setChecked(temp);
+
+    ui->slider_size->setDisabled(temp);
+    ui->slider_size->setSliderPosition(this->m_spessore_pen);
 }
 
 void pen_ui::on_slider_size_valueChanged(int value)
@@ -48,38 +51,30 @@ void pen_ui::on_slider_size_valueChanged(int value)
 
 void pen_ui::on_button_continua_clicked()
 {
-    m_type_tratto = CONTINUA;
+    m_type_tratto = n_tratto::continua;
 
-    ui->button_continua->setChecked(m_type_tratto == CONTINUA);
-    ui->button_tratti->setChecked(m_type_tratto == TRATTI);
+    this->list_update();
 }
 
 void pen_ui::on_button_tratti_clicked()
 {
-    m_type_tratto = TRATTI;
+    m_type_tratto = n_tratto::tratti;
 
-    ui->button_continua->setChecked(m_type_tratto == CONTINUA);
-    ui->button_tratti->setChecked(m_type_tratto == TRATTI);
+    this->list_update();
 }
 
 void pen_ui::on_button_pressure_clicked()
 {
-    m_type_pen = PRESSIONE;
+    m_type_pen = n_pressione::pressione;
 
-    ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
-    ui->button_size->setChecked(m_type_pen == SPESSORE);
-
-    ui->slider_size->setDisabled(true);
+   this->list_update();
 }
 
 void pen_ui::on_button_size_clicked()
 {
-    m_type_pen = SPESSORE;
+    m_type_pen = n_pressione::spessore;
 
-    ui->button_pressure->setChecked(m_type_pen == PRESSIONE);
-    ui->button_size->setChecked(m_type_pen == SPESSORE);
-
-    ui->slider_size->setDisabled(false);
+    this->list_update();
 }
 
 bool pen_ui::event(QEvent *event){

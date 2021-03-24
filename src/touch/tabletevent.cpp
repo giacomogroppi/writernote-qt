@@ -122,9 +122,11 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                     update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                 }
-                else if(m_rubber->m_type_gomma == TOTALE){
+
+                else if(m_rubber->m_type_gomma == rubber_ui::total){
                     this->m_rubber->clearList(data->datatouch);
                 }
+
                 isloading = true;
                 update();
             }
