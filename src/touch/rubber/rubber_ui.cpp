@@ -102,7 +102,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 painter.drawPoint(data->m_point.at(i).m_x, data->m_point.at(i).m_y);
 
                 if(data->needtochangeid(i)){
-                    changeId(i, data);
+                    data->changeId(i);
                 }
 
                 data->removeat(i);
@@ -193,13 +193,8 @@ bool rubber_ui::isin(double x,
     return false;
 }
 
-#define DELTA 1
-
 void rubber_ui::changeId(unsigned int i,
                      datastruct *data){
-    int id = data->m_point.last().idtratto + DELTA;
-    int temp = data->m_point.at(i).idtratto;
 
-    for(; data->m_point.at(i).idtratto == temp; i++)
-        data->m_point.operator[](i).idtratto = id;
+
 }

@@ -7,6 +7,69 @@ datastruct::datastruct()
 
 }
 
+/* the function restores the ids, as
+ * there may be holes, when we go
+ * to eliminate some strokes written
+ * with the pen
+*/
+void datastruct::reorganize()
+{
+    int i, len, last, k;
+    len = m_point.length();
+
+    if(!len)
+        return;
+
+    last = m_point.first().idtratto;
+
+}
+
+/*
+ * this function change the id of all point
+ * with the same id of m_point[i]
+*/
+void datastruct::changeId(unsigned int i)
+{
+    int id = maxId() + 1;
+    int temp = m_point.at(i).idtratto;
+
+    for(; m_point.at(i).idtratto == temp; i++)
+        m_point.operator[](i).idtratto = id;
+}
+
+/* the function returns true if the id is available */
+bool datastruct::isAvailable(int id)
+{
+    int i, len = m_point.length();
+    for(i=0; i<len; ++i)
+        if(m_point.at(i).idtratto == id)
+            return 0;
+
+
+    return 1;
+}
+
+/*
+ * the function returns the maximum value of the id
+*/
+int datastruct::maxId()
+{
+    int maxId = 0;
+    if(m_point.isEmpty())
+        return maxId;
+
+    int i, len;
+    len = m_point.length();
+
+    for(i=0; i<len; ++i){
+        if(m_point.at(i).idtratto > maxId)
+            maxId = m_point.at(i).idtratto;
+    }
+
+    return maxId;
+
+}
+
 bool datastruct::repositioning()
 {
     if(m_point.isEmpty() || m_point.first().m_x == 0.0 || m_point.first().m_y == 0)

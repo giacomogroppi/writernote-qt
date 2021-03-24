@@ -34,6 +34,13 @@ class datastruct
 public:
     datastruct();
 
+    void reorganize();
+
+    void changeId(unsigned int i);
+
+    bool isAvailable(int id);
+    int maxId();
+
     inline bool isempty(){
         return this->m_point.isEmpty();
     };
