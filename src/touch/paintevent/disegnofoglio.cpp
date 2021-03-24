@@ -42,6 +42,7 @@ void TabletCanvas::disegnafoglio(){
     if(width_p == INT32_MIN || height_p == INT32_MIN){
         dialog_critic("We had an internal problem, restarting writernote might fix the problem");
         disegnofoglio_bool = false;
+        return;
     }
 
     /* he get the last point draw */
