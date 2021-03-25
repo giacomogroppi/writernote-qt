@@ -70,6 +70,7 @@ int datastruct::maxId()
 
 }
 
+
 void datastruct::inverso(QPointF &point){
     point = QPointF(point.x(), point.y());
 }

@@ -12,12 +12,9 @@
 
 static qreal widthToPressure(int);
 
-static double height_(datastruct *);
 static double width_(datastruct *);
 
 static void addPointZero(currenttitle_class *);
-static double getLastPoint(currenttitle_class *);
-
 
 /*
  * remove this define and add option to change
@@ -33,7 +30,15 @@ static style_struct_S * setStylePrivate(bool *, fast_sheet_ui::n_style);
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
+    bool fast = false;
+
+    struct point_s temp_point;
     QPointF p_traslation = data->datatouch->scala_all();
+    fast_sheet_ui::n_style res;
+
+    struct style_struct_S *style = nullptr;
+
+    double deltax, deltay, temp;
 
     double last, height_p, width_p;
     int i;
@@ -41,31 +46,23 @@ void TabletCanvas::disegnafoglio(){
     width_p = width_(data->datatouch);
 
     height_p = int((double)width_p * double(4.0/3.0));
-    /*height_p = height_(data->datatouch);*/
 
     if(width_p == INT32_MIN || height_p == INT32_MIN){
-        dialog_critic("We had an internal problem, restarting writernote might fix the problem");
-        disegnofoglio_bool = false;
-        return;
+        goto error_;
     }
 
     /* he get the last point draw */
-    last = getLastPoint(data);
+    last = data->datatouch->biggery();
 
     data->datatouch->posizionefoglio.append(last);
 
-    struct style_struct_S *style = nullptr;
-
-    auto res = this->m_sheet->WhatIsSelected();
-
-    bool fast = false;
+    res = this->m_sheet->WhatIsSelected();
 
     /* set style value */
     style = setStylePrivate(&fast, res);
 
     if(!style){
-        disegnofoglio_bool = false;
-        return;
+        goto error_;
     }
 
     if(fast){
@@ -77,13 +74,13 @@ void TabletCanvas::disegnafoglio(){
     addPointZero(data);
 
 
-    struct point_s temp_point;
+
     memcpy(&temp_point.m_color, &style->colore, sizeof(colore_s));
 
-    double deltax = height_p / style->nx;
-    double deltay = (double)width_p / (double)style->ny;
+    deltax = height_p / style->nx;
+    deltay = (double)width_p / (double)style->ny;
 
-    double temp = deltax;
+    temp = deltax;
 
     temp_point.m_pressure = widthToPressure(style->thickness);
 
@@ -127,6 +124,12 @@ void TabletCanvas::disegnafoglio(){
 
     datastruct::inverso(p_traslation);
     data->datatouch->scala_all(p_traslation);
+
+    return;
+
+    error_:
+    dialog_critic("We had an internal problem, restarting writernote might fix the problem");
+    disegnofoglio_bool = false;
 
 }
 
@@ -207,38 +210,7 @@ static double width_(datastruct *data){
     return temp_;
 }
 
-static double height_(datastruct *data){
-    if(data->posizionefoglio.isEmpty())
-        return NUMEROPIXELORIZZONALI;
 
-    int i, len;
-    for(i=0, len = data->m_point.length(); i<len-1;i++){
-        if(data->m_point.at(i).idtratto == IDVERTICALE){
-            return (data->m_point.at(i).m_y - data->m_point.at(i+1).m_y);
-        }
-    }
-
-    /*
-     * if there isn't vertical line
-    */
-
-    double temp_ = (double)INT32_MIN;
-
-    /*
-     * there are points with horizons
-    */
-    for(i=0; i<len; i++){
-        if(data->m_point.at(i).m_y > temp_){
-            temp_ = data->m_point.at(i).m_y;
-        }
-    }
-
-    /*
-     * temp_ now contains the largest value in y written
-    */
-
-    return temp_;
-}
 
 static void addPointZero(currenttitle_class *data){
     if(data->datatouch->m_point.length() == 0){
@@ -251,19 +223,3 @@ static void addPointZero(currenttitle_class *data){
     }
 }
 
-
-static double getLastPoint(currenttitle_class *data){
-    if(data->datatouch->m_point.isEmpty())
-        return (double) 0;
-
-    int i, len;
-    double p = data->datatouch->m_point.first().m_y;
-
-    len = data->datatouch->m_point.length();
-    for(i=0; i<len; i++){
-        if(data->datatouch->m_point.at(i).m_y > p)
-            p = data->datatouch->m_point.at(i).m_y;
-    }
-
-    return p;
-}
