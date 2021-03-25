@@ -33,6 +33,8 @@ static style_struct_S * setStylePrivate(bool *, fast_sheet_ui::n_style);
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
+    QPointF p_traslation = data->datatouch->scala_all();
+
     double last, height_p, width_p;
     int i;
 
@@ -84,8 +86,8 @@ void TabletCanvas::disegnafoglio(){
     temp_point.m_pressure = widthToPressure(style->thickness);
 
 
+    temp_point.idtratto = IDORIZZONALE;
     for(i=0; i<style->nx; i++){
-        temp_point.idtratto = IDORIZZONALE;
         temp_point.m_x = 0;
         temp_point.m_y = last + deltax;
 
@@ -98,9 +100,9 @@ void TabletCanvas::disegnafoglio(){
     }
 
 
+    temp_point.idtratto = IDVERTICALE;
     temp = deltay;
     for(i=0; i<style->ny; i++){
-        temp_point.idtratto = IDVERTICALE;
         temp_point.m_x = deltay;
         temp_point.m_y = last; /* corrisponde to 0 */
 
@@ -117,6 +119,12 @@ void TabletCanvas::disegnafoglio(){
     this->isloading = true;
 
     free(style);
+
+    if(p_traslation == QPointF(0, 0))
+        return;
+
+    datastruct::inverso(p_traslation);
+    data->datatouch->scala_all(p_traslation);
 
 }
 
@@ -167,7 +175,6 @@ static inline qreal widthToPressure(int v){
     return (v-1)*10;
 }
 
-
 /*
  * to maintain compatibility with all devices it is not so important to draw the new sheet in a fixed size.
  * however, it is important to draw the sheet with the same shape as the one drawn previously.
@@ -182,7 +189,7 @@ static double width_(datastruct *data){
 
     for(i=0, len = data->m_point.length(); i<len-1; i++){
         if(data->m_point.at(i).idtratto == IDORIZZONALE){
-            return data->m_point.at(i+1).m_x;
+            return (data->m_point.at(i).m_x - data->m_point.at(i+1).m_x);
         }
     }
 
@@ -205,9 +212,13 @@ static double height_(datastruct *data){
     int i, len;
     for(i=0, len = data->m_point.length(); i<len-1;i++){
         if(data->m_point.at(i).idtratto == IDVERTICALE){
-            return data->m_point.at(i+1).m_y;
+            return (data->m_point.at(i).m_y - data->m_point.at(i+1).m_y);
         }
     }
+
+    /*
+     * if there isn't vertical line
+    */
 
     double temp_ = (double)INT32_MIN;
 

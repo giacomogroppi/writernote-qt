@@ -70,6 +70,10 @@ int datastruct::maxId()
 
 }
 
+void datastruct::inverso(QPointF &point){
+    point = QPointF(point.x(), point.y());
+}
+
 bool datastruct::repositioning()
 {
     if(m_point.isEmpty() || m_point.first().m_x == 0.0 || m_point.first().m_y == 0)
@@ -120,15 +124,6 @@ void datastruct::scala_y(double scala)
 void datastruct::reset(){
     m_point.clear();
 
-    /*
-     * last data struct
-    */
-    /*
-    this->color.clear();
-    this->x.clear();
-    this->y.clear();
-    this->posizioneaudio.clear();
-    this->idtratto.clear();*/
     this->zoom = 1.00;
     this->posizionefoglio.clear();
     
@@ -242,7 +237,9 @@ double datastruct::biggerxNoId(){
     max = m_point.first().m_x;
 
     for(i=0; i<len; i++){
-        if(max < m_point.at(i).m_x && m_point.at(i).idtratto != IDVERTICALE && m_point.at(i).idtratto != IDORIZZONALE){
+        if(max < m_point.at(i).m_x
+                && m_point.at(i).idtratto != IDVERTICALE
+                && m_point.at(i).idtratto != IDORIZZONALE){
             max = m_point.at(i).m_x;
         }
     }
@@ -282,21 +279,9 @@ double datastruct::last(){
     len = m_point.length();
 
     for(i=0; i<len; i++){
-
+        if(max < m_point.at(i).m_y)
+            max = m_point.at(i).m_y;
     }
-
-    /*
-     * last data struct
-    */
-    /*
-    if(y.isEmpty())
-        return 0;
-
-    int i, len = this->y.length(), max = this->y.at(0);
-    for(i = 0; i < len; i++){
-        if(max < this->y.at(i) && idtratto.at(i) != -1)
-            max = this->y.at(i);
-    }*/
 
     return max;
 }

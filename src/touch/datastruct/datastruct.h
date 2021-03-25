@@ -45,6 +45,7 @@ public:
         return this->m_point.isEmpty();
     };
 
+    static void inverso(QPointF &point);
     bool repositioning();
 
     void scala_all(QPointF &);
