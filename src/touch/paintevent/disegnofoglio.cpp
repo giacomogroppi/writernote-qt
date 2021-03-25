@@ -39,7 +39,9 @@ void TabletCanvas::disegnafoglio(){
     int i;
 
     width_p = width_(data->datatouch);
-    height_p = height_(data->datatouch);
+
+    height_p = int((double)width_p * double(4.0/3.0));
+    /*height_p = height_(data->datatouch);*/
 
     if(width_p == INT32_MIN || height_p == INT32_MIN){
         dialog_critic("We had an internal problem, restarting writernote might fix the problem");
