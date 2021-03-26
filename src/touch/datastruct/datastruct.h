@@ -36,7 +36,7 @@ public:
 
     void reorganize();
 
-    double maxXIdOrizzonal(bool *find);
+    bool maxXIdOrizzonal(double *val);
 
     void changeId(unsigned int i);
 

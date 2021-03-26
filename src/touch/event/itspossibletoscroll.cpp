@@ -7,7 +7,8 @@
 
 bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
 {
-    qDebug() << "Scroll delta" << delta;
+    qDebug() << "Scroll delta " << delta;
+    qDebug() << "Page number " << data->posizionefoglio.length();
 
     /* finger action:
      * delta < 0
@@ -45,10 +46,9 @@ bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
     if(delta > 0)
         return (data->m_point.first().m_x - delta) <= 0.0;
 
-    bool find;
-    double res = data->maxXIdOrizzonal(&find);
+    double res;
 
-    if(!find){
+    if(!data->maxXIdOrizzonal(&res)){
         return false;
     }
 

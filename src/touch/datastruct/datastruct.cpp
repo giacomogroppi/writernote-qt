@@ -24,7 +24,7 @@ void datastruct::reorganize()
 
 }
 
-double datastruct::maxXIdOrizzonal(bool *find)
+bool datastruct::maxXIdOrizzonal(double *val)
 {
     int i, len = m_point.length();
 
@@ -38,15 +38,12 @@ double datastruct::maxXIdOrizzonal(bool *find)
             goto return_;
     }
 
-    if(find)
-        *find = false;
-    return 0;
+    *val = 0;
+    return false;
 
     return_:
-    if(find)
-        *find = true;
-    return m_point.at(i).m_x;
-
+    *val = m_point.at(i).m_x;
+    return true;
 }
 
 /*
