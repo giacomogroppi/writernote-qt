@@ -36,8 +36,7 @@ public:
 
     void reorganize();
 
-#define NotFind -1.0
-    double maxXIdOrizzonal();
+    double maxXIdOrizzonal(bool *find);
 
     void changeId(unsigned int i);
 

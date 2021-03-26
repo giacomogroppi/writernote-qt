@@ -24,7 +24,7 @@ void datastruct::reorganize()
 
 }
 
-double datastruct::maxXIdOrizzonal()
+double datastruct::maxXIdOrizzonal(bool *find)
 {
     int i, len = m_point.length();
 
@@ -35,10 +35,18 @@ double datastruct::maxXIdOrizzonal()
     for(i=0; i<len; i++){
         __point = m_point.at(i);
         if(__point.m_x > pos && __point.idtratto == IDORIZZONALE)
-            return m_point.at(i).m_x;
+            goto return_;
     }
 
-    return NotFind;
+    if(find)
+        *find = false;
+    return 0;
+
+    return_:
+    if(find)
+        *find = true;
+    return m_point.at(i).m_x;
+
 }
 
 /*

@@ -45,9 +45,10 @@ bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
     if(delta > 0)
         return (data->m_point.first().m_x - delta) <= 0.0;
 
-    double res = data->maxXIdOrizzonal();
+    bool find;
+    double res = data->maxXIdOrizzonal(&find);
 
-    if(res == NotFind){
+    if(!find){
         return false;
     }
 
