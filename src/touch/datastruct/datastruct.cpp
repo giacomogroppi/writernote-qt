@@ -101,7 +101,10 @@ QPointF datastruct::scala_all()
 void datastruct::scala_all(QPointF &point)
 {
     this->scala_x(point.x());
-    this->scala_y(point.y());
+
+    double _point = point.y();
+    this->scala_y(_point);
+    this->scala_posizionefoglio(_point);
 }
 
 void datastruct::scala_x(double scala)
@@ -110,6 +113,13 @@ void datastruct::scala_x(double scala)
     len = this->m_point.length();
     for(i=0; i<len; i++){
         m_point.operator[](i).m_x += scala;
+    }
+}
+
+void datastruct::scala_posizionefoglio(double scala){
+    int i, len;
+    for(i=0, len = posizionefoglio.length(); i<len; ++i){
+        posizionefoglio.operator[](i) += scala;
     }
 }
 

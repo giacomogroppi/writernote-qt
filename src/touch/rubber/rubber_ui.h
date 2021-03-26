@@ -38,7 +38,6 @@ public:
     bool clearList(datastruct *);
 
 private:
-    void changeId(unsigned int, datastruct *);
     bool isin(double x, double y, double, double , int);
 
     QPen penna;

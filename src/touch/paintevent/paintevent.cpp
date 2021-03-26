@@ -187,4 +187,3 @@ void TabletCanvas::updateBrush_load(float pressure, QColor color){
     m_pen.setColor(color);
 
 }
-

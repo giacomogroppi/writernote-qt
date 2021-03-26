@@ -8,16 +8,14 @@ void TabletCanvas::ismoving_f(){
 
     len = data->datatouch->m_point.length();
 
-    for(i=0; i < len; i++)
-    {
-        data->datatouch->m_point.operator[](i).m_x += this->ismoving.deltax;
-        data->datatouch->m_point.operator[](i).m_y += this->ismoving.deltay;
-    }
 
+    /*
+     * remove the struct and change with a qpointf
+    */
 
-    len = data->datatouch->posizionefoglio.length();
-    for(i=0; i< len; i++)
-        data->datatouch->posizionefoglio[i] += ismoving.deltay;
+    QPointF _point(ismoving.deltax, ismoving.deltay);
+
+    data->datatouch->scala_all(_point);
 
     this->isloading = true;
     update();

@@ -6,9 +6,11 @@
 #define MyAppPublisher "writernote"
 #define MyAppURL "https://github.com/giacomogroppi/writernote-qt"
 #define MyAppExeName "writernote.exe"
-#define MyAppAssocName "Writernote File"
+#define MyAppAssocName "Writernote"
 #define MyAppAssocExt ".writer"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
+#define MyAppIcoName "../images/icon-writernote.png"
+#define IconPath "C:\msys64\home\giack\writernote-qt\images\icon-writernote.ico"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -25,6 +27,8 @@ DefaultDirName={autopf}\{#MyAppName}
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
 LicenseFile=C:\msys64\home\giack\writernote-qt\LICENSE
+SetupIconFile={#IconPath}
+
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputBaseFilename=writernote_setup
@@ -41,6 +45,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "C:\msys64\home\giack\writernote-qt\build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\msys64\home\giack\writernote-qt\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#IconPath}"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\msys64\mingw64\lib\libssl.dll.a"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -54,6 +59,8 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#IconPath}"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#IconPath}"
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent

@@ -53,6 +53,7 @@ public:
 
     void scala_x(double scala);
     void scala_y(double scala);
+    void scala_posizionefoglio(double scala);
 
     double biggerxNoId();
     void reset();

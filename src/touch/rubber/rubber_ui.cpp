@@ -193,8 +193,3 @@ bool rubber_ui::isin(double x,
     return false;
 }
 
-void rubber_ui::changeId(unsigned int i,
-                     datastruct *data){
-
-
-}
