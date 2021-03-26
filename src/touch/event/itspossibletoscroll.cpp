@@ -27,11 +27,11 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
 
         pos = data->biggery();
 
-        return pos + delta > altezza;
+        return (pos + delta) > altezza;
     }
 
     /* the first element is added from disegnofoglio */
-    return data->m_point.first().m_y + delta < 0;
+    return (data->m_point.first().m_y + delta) < 0;
 }
 
 bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
@@ -43,9 +43,9 @@ bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
     ifEmpty(data);
 
     if(delta > 0)
-        return (data->m_point.first().m_x) - delta <= 0.0;
+        return (data->m_point.first().m_x - delta) <= 0.0;
 
-    int res = data->maxXIdOrizzonal();
+    double res = data->maxXIdOrizzonal();
 
     if(res == NotFind){
         return false;

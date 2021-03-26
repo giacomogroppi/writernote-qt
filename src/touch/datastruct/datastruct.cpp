@@ -24,7 +24,7 @@ void datastruct::reorganize()
 
 }
 
-int datastruct::maxXIdOrizzonal()
+double datastruct::maxXIdOrizzonal()
 {
     int i, len = m_point.length();
 
