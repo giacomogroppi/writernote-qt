@@ -19,7 +19,7 @@ void dialog_sheet::draw(){
 
     /* draw the line */
     penna.setColor(setcolor(&style_element.style[current].colore));
-    penna.setWidth(style_element.style[current].thickness);
+    penna.setWidthF(style_element.style[current].thickness);
 
     penna.setStyle(Qt::PenStyle::SolidLine);
 

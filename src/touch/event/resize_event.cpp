@@ -12,6 +12,8 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
             goto init_;
         }
 
+        if(delta < width() && data->datatouch->m_point.)
+
         data->datatouch->scala_x(delta);
     }
 

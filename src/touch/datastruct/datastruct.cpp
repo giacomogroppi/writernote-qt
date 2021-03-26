@@ -2,6 +2,19 @@
 #include <QList>
 #include "../method/methoddefinition.h"
 
+unsigned int datastruct::posIdOrizzonal()
+{
+    unsigned int i, len;
+    len = m_point.length();
+
+    for(i=0; i<len; ++i){
+        if(m_point.at(i).idtratto == IDORIZZONALE)
+            return i;
+    }
+
+    return 0;
+}
+
 datastruct::datastruct()
 {
 
@@ -28,21 +41,36 @@ bool datastruct::maxXIdOrizzonal(double *val)
 {
     int i, len = m_point.length();
 
-    double pos = m_point.first().m_x;
 
-    point_s & __point = m_point.first();
-
+    /*
+     * in this point of the code we are assuming
+     * that the section is composed of two points,
+     * in case of data loss it does not warn
+    */
     for(i=0; i<len; i++){
-        __point = m_point.at(i);
-        if(__point.m_x > pos && __point.idtratto == IDORIZZONALE)
+        if(m_point.at(i).idtratto == IDORIZZONALE)
             goto return_;
     }
 
-    *val = 0;
     return false;
 
     return_:
+    *val = m_point.at(i+1).m_x;
+    return true;
+}
+
+bool datastruct::minXIdOrizzonal(double *val)
+{
+    if(this->isempty())
+        return false;
+
+    unsigned int i = this->posIdOrizzonal();
+
+    if(!i)
+        return false;
+
     *val = m_point.at(i).m_x;
+
     return true;
 }
 

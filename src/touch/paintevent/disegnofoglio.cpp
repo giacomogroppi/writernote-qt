@@ -10,7 +10,7 @@
 #include "../../utils/color/setcolor.h"
 #include "../../utils/dialog_critic/dialog_critic.h"
 
-static qreal widthToPressure(int);
+static double widthToPressure(double);
 
 static double width_(datastruct *);
 
@@ -176,7 +176,7 @@ static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
 }
 
 
-static inline qreal widthToPressure(int v){
+static inline double widthToPressure(double v){
     return v/10.0;
 }
 
