@@ -1,24 +1,39 @@
 #include "../tabletcanvas.h"
 
+static void checkPosition(datastruct *);
+
 void TabletCanvas::resizeEvent(QResizeEvent *)
 {
     if(data == NULL)
         return;
 
+    checkPosition(data->datatouch);
+
     if(!data->datatouch->isempty()){
-        double delta;
+        unsigned int i = data->datatouch->posIdOrizzonal();
 
-        if(!data->datatouch->maxXIdOrizzonal(&delta)){
-            goto init_;
-        }
+        if(- data->datatouch->m_point.at(i).m_x + data->datatouch->m_point.at(i+1).m_x )
 
-        if(delta < width() && data->datatouch->m_point.)
-
-        data->datatouch->scala_x(delta);
     }
 
     init_:
 
     initPixmap(true);
     this->isloading = true;
+}
+
+
+static void checkPosition(datastruct *data){
+    if(data->isempty())
+        return;
+
+    point_s & __point = data->m_point.first();
+    double res;
+
+    if(__point.m_x > 0){
+        res = __point.m_x;
+    }
+
+    data->scala_x(-res);
+
 }

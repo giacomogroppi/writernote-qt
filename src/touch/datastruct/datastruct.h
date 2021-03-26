@@ -31,14 +31,14 @@ struct point_s{
 
 class datastruct
 {
-private:
+public:
     /*
      * this function return the index of the first
      * point with idtratto == IDORIZZONALE
     */
     unsigned int posIdOrizzonal();
 
-public:
+
     datastruct();
 
     void reorganize();
