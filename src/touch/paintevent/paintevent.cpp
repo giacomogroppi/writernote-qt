@@ -21,12 +21,11 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
                                     event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
+    disegnofoglio_bool += data->datatouch->posizionefoglio.isEmpty();
 
-    this->disegnofoglio_bool = this->disegnofoglio_bool ||
-            !data->datatouch->posizionefoglio.length();
-
-    if(!this->disegnofoglio_bool)
+    if(this->m_sheet->auto_create && !disegnofoglio_bool){
         this->disegnofoglio_bool = data->datatouch->needtocreatenew();
+    }
 
     this->disegnafoglio();
 
