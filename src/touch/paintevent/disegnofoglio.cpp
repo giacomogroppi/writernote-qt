@@ -177,7 +177,7 @@ static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
 
 
 static inline qreal widthToPressure(int v){
-    return (v-1)*10;
+    return v/10.0;
 }
 
 /*
