@@ -2,7 +2,7 @@
 #include <QList>
 #include "../method/methoddefinition.h"
 
-void datastruct::adjastHeight(int height)
+void datastruct::adjustHeight(int height)
 {
     double _maxy = biggery();
 

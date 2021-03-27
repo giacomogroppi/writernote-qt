@@ -21,7 +21,7 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
         if(res < 0)
             data->datatouch->scala_x(-res);
 
-        data->datatouch->adjastHeight(height());
+        data->datatouch->adjustHeight(height());
 
     }
 
@@ -40,7 +40,7 @@ static void checkPosition(datastruct *data){
     double res;
 
     if(__point.m_x <= 0)
-    return;
+        return;
     res = __point.m_x;
 
     data->scala_x(-res);

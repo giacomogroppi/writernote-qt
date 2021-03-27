@@ -32,7 +32,7 @@ struct point_s{
 class datastruct
 {
 public:
-    void adjastHeight(int height);
+    void adjustHeight(int height);
 
     /*
      * this function return the index of the first
