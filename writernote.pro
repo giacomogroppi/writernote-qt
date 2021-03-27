@@ -252,7 +252,6 @@ HEADERS += \
     src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
-    src/touch/method/methoddefinition.h \
     src/touch/paintevent/draw_image.h \
     src/touch/pen/pen_ui.h \
     src/touch/rubber/rubber_ui.h \

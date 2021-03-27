@@ -52,7 +52,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(medotodiinserimento == e_method::rubber){
 
                     if(m_rubber->actionRubber(data->datatouch, event->posF(), painter))
-                        update();
+                        isloading = true;
 
                 }
                 else if(medotodiinserimento == e_method::selection){
