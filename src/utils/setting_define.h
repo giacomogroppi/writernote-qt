@@ -82,4 +82,8 @@
 #define KEY_AUTO_CREATE_SHEET "key-auto-create-sheet" /* bool -> true automatic creation*/
 #define KEY_AUTO_CREATE_STYLE_FAST "key-auto-create-fast" /* fast style selectable from mainwindow */
 
+/* last method used */
+#define GROUPNAME_METHOD_TOUCH "groupname-method-touch"
+#define KEY_METHOD_TOUCH "key-method-touch" /* int */
+
 #endif // SETTING_DEFINE_H

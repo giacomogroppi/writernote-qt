@@ -1,6 +1,4 @@
 #include "tabletcanvas.h"
-#include "method/methoddefinition.h"
-
 
 #include "../utils/dialog_critic/dialog_critic.h"
 
@@ -11,10 +9,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (event->type()) {
         case QEvent::TabletPress: /* first point touch */
             if (!m_deviceDown) {
-                if(this->medotodiinserimento == METHOD_STILO)
+                if(this->medotodiinserimento == e_method::pen)
                     updatelist(event);
 
-                else if(medotodiinserimento == METHOD_SELEZIONE)
+                else if(medotodiinserimento == e_method::selection)
                 {
                     if(square_.check){
                         square_.lastpoint = event->pos();
@@ -38,7 +36,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
-                if(this->medotodiinserimento == METHOD_STILO){
+                if(this->medotodiinserimento == e_method::pen){
                     updateBrush(event);
 
                     paintPixmap(painter, event);
@@ -48,16 +46,16 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 lastPoint.pressure = event->pressure();
                 lastPoint.rotation = event->rotation();
 
-                if(this->medotodiinserimento == METHOD_STILO){
+                if(this->medotodiinserimento == e_method::pen){
                     updatelist(event);
                 }
-                else if(medotodiinserimento == METHOD_GOMMA){
+                else if(medotodiinserimento == e_method::rubber){
 
                     if(m_rubber->actionRubber(data->datatouch, event->posF(), painter))
                         update();
 
                 }
-                else if(medotodiinserimento == METHOD_SELEZIONE){
+                else if(medotodiinserimento == e_method::selection){
                     if(!this->square_.check){ /* it means that he has not learned anything */
                         isloading = true;
                         square_.disegno(painter, event->pos());
@@ -78,7 +76,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                             update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                         }
                     }
-                }else if(medotodiinserimento == METHOD_TEXT){
+                }else if(medotodiinserimento == e_method::text){
                     if(m_text_w->isIn(event->posF())){
 
                     }
@@ -104,7 +102,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
-                if(medotodiinserimento == METHOD_SELEZIONE){
+                if(medotodiinserimento == e_method::selection){
                     this->square_.setData(data->datatouch);
                     bool check = this->square_.find();
                     if(!check){

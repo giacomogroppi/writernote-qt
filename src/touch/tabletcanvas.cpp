@@ -9,7 +9,11 @@
 #include <QEvent>
 
 #include "datastruct/datastruct.h"
-#include "method/methoddefinition.h"
+#include "../utils/setting_define.h"
+#include <QSettings>
+
+static void saveLastMethod(TabletCanvas::e_method);
+static void loadLastMeghod(TabletCanvas *);
 
 void TabletCanvas::restoreO()
 {
@@ -29,7 +33,7 @@ TabletCanvas::TabletCanvas()
     setAttribute(Qt::WA_TabletTracking);
 
     this->data = nullptr;
-    this->medotodiinserimento = METHOD_STILO;
+    this->medotodiinserimento = e_method::pen;
 
     if(!zoom){
         zoom = new zoom_control;
@@ -37,6 +41,15 @@ TabletCanvas::TabletCanvas()
 
     m_redoundo = new redoundo(data);
 
+    loadLastMeghod(this);
+
+}
+
+TabletCanvas::~TabletCanvas(){
+    if(zoom)
+        delete zoom;
+
+    saveLastMethod(this->medotodiinserimento);
 }
 
 void TabletCanvas::clear()
@@ -108,7 +121,7 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
 {
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
-        if (event->pointerType() == QTabletEvent::Eraser || this->medotodiinserimento == METHOD_GOMMA) {
+        if (event->pointerType() == QTabletEvent::Eraser || this->medotodiinserimento == e_method::rubber) {
             cursor = QCursor(QPixmap(":image/images/cursor-eraser.png"), 3, 28);
         }
         else {
@@ -180,3 +193,25 @@ void TabletCanvas::setAutoSave(bool v, QString &path){
 
     }
 };
+
+
+static void saveLastMethod(TabletCanvas::e_method val){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_METHOD_TOUCH);
+
+    setting.setValue(KEY_METHOD_TOUCH, val);
+    setting.endGroup();
+
+}
+
+static void loadLastMeghod(TabletCanvas *p){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+
+    setting.beginGroup(GROUPNAME_METHOD_TOUCH);
+
+    p->medotodiinserimento = static_cast<TabletCanvas::e_method>(setting.value(KEY_METHOD_TOUCH, TabletCanvas::pen).toInt());
+
+    setting.endGroup();
+
+}
+

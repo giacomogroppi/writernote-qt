@@ -3,7 +3,6 @@
 
 #include "ui_mainwindow.h"
 
-#include "method/methoddefinition.h"
 #include "../utils/color/color_chooser.h"
 
 #include "rubber/rubber_ui.h"
@@ -14,7 +13,7 @@
 /* penna */
 void MainWindow::on_actionpen_triggered()
 {
-    if(m_canvas->medotodiinserimento == METHOD_STILO){
+    if(m_canvas->medotodiinserimento == TabletCanvas::e_method::pen){
         this->m_pen->show();
 
         auto hostRect = cursor().pos();
@@ -25,7 +24,7 @@ void MainWindow::on_actionpen_triggered()
 
     }
 
-    this->m_canvas->medotodiinserimento = METHOD_STILO;
+    this->m_canvas->medotodiinserimento = TabletCanvas::e_method::pen;
 
     SET_NOT_CHECK(ui->actionrubber);
     SET_NOT_CHECK(ui->actioninsertText);
@@ -36,7 +35,7 @@ void MainWindow::on_actionpen_triggered()
 /* gomma */
 void MainWindow::on_actionrubber_triggered()
 {
-    if(m_canvas->medotodiinserimento == METHOD_GOMMA){
+    if(m_canvas->medotodiinserimento == TabletCanvas::e_method::rubber){
         this->m_rubber->show();
 
         QPoint hostRect = this->cursor().pos();
@@ -46,7 +45,7 @@ void MainWindow::on_actionrubber_triggered()
 
     }
 
-    this->m_canvas->medotodiinserimento = METHOD_GOMMA;
+    this->m_canvas->medotodiinserimento = TabletCanvas::e_method::rubber;
 
     SET_NOT_CHECK(ui->actionpen);
     SET_NOT_CHECK(ui->actioninsertText);
@@ -56,7 +55,7 @@ void MainWindow::on_actionrubber_triggered()
 /* taglia */
 void MainWindow::on_actionselezionetext_triggered()
 {
-    this->m_canvas->medotodiinserimento = METHOD_SELEZIONE;
+    this->m_canvas->medotodiinserimento = TabletCanvas::e_method::selection;
 
     SET_CHECK(ui->actionselezionetext);
 
@@ -68,7 +67,7 @@ void MainWindow::on_actionselezionetext_triggered()
 /* insert text */
 void MainWindow::on_actioninsertText_triggered()
 {
-    if(m_canvas->medotodiinserimento == METHOD_TEXT){
+    if(m_canvas->medotodiinserimento == TabletCanvas::e_method::text){
         if(m_text->isHidden()){
             this->m_text->show();
         }
@@ -83,7 +82,7 @@ void MainWindow::on_actioninsertText_triggered()
 
 
     }
-    this->m_canvas->medotodiinserimento = METHOD_TEXT;
+    this->m_canvas->medotodiinserimento = TabletCanvas::e_method::text;
 
     SET_NOT_CHECK(ui->actionpen);
     SET_NOT_CHECK(ui->actionrubber);

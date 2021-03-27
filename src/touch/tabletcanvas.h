@@ -53,14 +53,11 @@ public:
     };
 
     enum Valuator { PressureValuator, TangentialPressureValuator,
-                    TiltValuator, VTiltValuator, HTiltValuator, NoValuator };
-    Q_ENUM(Valuator)
+                        TiltValuator, VTiltValuator, HTiltValuator, NoValuator };
+        Q_ENUM(Valuator)
 
     TabletCanvas();
-    ~TabletCanvas(){
-        if(zoom)
-            delete zoom;
-    };
+    ~TabletCanvas();
 
     void clear();
     void setAlphaChannelValuator(Valuator type)
@@ -89,9 +86,15 @@ public:
     in caso contrario rimarrà sempre zero*/
     int time = 0;
 
-    /* 0 penna
-       1 gomma*/
-    int medotodiinserimento;
+    enum e_method: int{
+        rubber,
+        pen,
+        selection, /* selezione di del testo all'interno del foglio */
+        text
+
+    };
+
+    e_method medotodiinserimento;
 
     QColor m_color = Qt::black;
 

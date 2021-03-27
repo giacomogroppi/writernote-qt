@@ -1,6 +1,5 @@
 #include "datastruct.h"
 #include <QList>
-#include "../method/methoddefinition.h"
 
 void datastruct::adjustHeight(int height)
 {
