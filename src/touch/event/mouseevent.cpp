@@ -5,39 +5,13 @@
 
 #include <QDebug>
 
-/*
- * returns the value of how much we can scroll
- * v == true delta < 0
-*/
-static double howDelta(datastruct *data, bool v, int height){
-    double f = 0.0;
-    if(data->m_point.isEmpty())
-        return f;
-
-    if(v){
-        f = data->m_point.first().m_y;
-        return -f;
-    }else{
-        int i, len;
-        f = data->m_point.first().m_y;
-
-        len = data->m_point.length();
-        for(i=0; i<len; i++)
-            if(data->m_point.at(i).m_y > f)
-                f = data->m_point.at(i).m_y;
-    }
-
-    return -(f-(double)height);
-}
 
 void TabletCanvas::wheelEvent(QWheelEvent *event)
 {
     double move = event->delta();
 
-    if(!itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), move)){
-        move = howDelta(data->datatouch, move > 0, m_pixmap.height());
-        if(move == 0.0)
-            return;
+    if(!itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), &move)){
+        return;
     }
 
     this->ismoving.deltay = move;
@@ -61,16 +35,17 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 #endif
 
     if(lastpointtouch.xdrawing != -1){
-        short int deltay = - lastpointtouch.ydrawing + event->pos().y();
-        short int deltax = - lastpointtouch.xdrawing + event->pos().x();
+        double deltay, deltax;
+        deltay = - lastpointtouch.ydrawing + event->pos().y();
+        deltax = - lastpointtouch.xdrawing + event->pos().x();
 
-        if(!itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), deltay))
+        if(!itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), &deltay))
             ismoving.deltay = 0;
         else
             ismoving.deltay = deltay;
 
 
-        if(!itspossibletoscrollx(data->datatouch, m_pixmap.width(), deltax))
+        if(!itspossibletoscrollx(data->datatouch, m_pixmap.width(), &deltax))
             this->ismoving.deltax = 0;
         else
             this->ismoving.deltax = deltax;

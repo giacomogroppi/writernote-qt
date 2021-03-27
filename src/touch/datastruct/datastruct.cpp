@@ -194,14 +194,20 @@ double datastruct::biggery(){
     if(m_point.isEmpty())
         return (double)0;
 
-    int i, len;
-    double y_ = m_point.first().m_y;
+    unsigned int i, len;
+    double y_;
+    point_s & __point = m_point.first();
+
+    y_ = m_point.first().m_y;
     len = m_point.length();
 
     for(i=0; i<len; i++){
-        if(m_point.at(i).m_y > y_)
-            y_ = m_point.at(i).m_y;
+        __point = m_point.at(i);
+
+        if(__point.m_y > y_)
+            y_ = __point.m_y;
     }
+
     return y_;
 
 }

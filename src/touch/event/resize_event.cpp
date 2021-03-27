@@ -12,8 +12,14 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
     if(!data->datatouch->isempty()){
         unsigned int i = data->datatouch->posIdOrizzonal();
 
-        if(- data->datatouch->m_point.at(i).m_x + data->datatouch->m_point.at(i+1).m_x )
+        if(!i)
+            goto init_;
 
+        double res;
+        res = data->datatouch->m_point.at(i).m_x;
+
+        if(res < 0)
+            data->datatouch->scala_x(-res);
     }
 
     init_:
@@ -30,9 +36,9 @@ static void checkPosition(datastruct *data){
     point_s & __point = data->m_point.first();
     double res;
 
-    if(__point.m_x > 0){
-        res = __point.m_x;
-    }
+    if(__point.m_x <= 0)
+    return;
+    res = __point.m_x;
 
     data->scala_x(-res);
 

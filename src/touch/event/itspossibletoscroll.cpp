@@ -4,10 +4,14 @@
 #define ifEmpty(data) if(data->isempty()) \
     return false;
 
+/*
+ * __pos_delta is set when it's not possible to move from delta
+ * and __pos_delta is set to the maximus delta we can have
+*/
 
-bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
+bool itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_delta)
 {
-    qDebug() << "Scroll delta " << delta;
+    qDebug() << "Scroll delta " << *__pos_delta;
     qDebug() << "Page number " << data->posizionefoglio.length();
 
     /* finger action:
@@ -23,19 +27,28 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, short int delta)
 
     ifEmpty(data)
 
-    if (delta < 0){
+    if (*__pos_delta < 0.0){
         double pos;
 
         pos = data->biggery();
 
-        return (pos + delta) > altezza;
+
+        if((pos + *__pos_delta) > altezza){
+            return true;
+        }
+
+        if(pos < altezza)
+            return false;
+
+        *__pos_delta = double(altezza - pos);
+        return true;
     }
 
     /* the first element is added from disegnofoglio */
-    return (data->m_point.first().m_y + delta) < 0;
+    return (data->m_point.first().m_y + *__pos_delta) < 0;
 }
 
-bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
+bool itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta){
     /* finger action:
         delta < 0 <------
         delta > 0 ------>
@@ -43,14 +56,16 @@ bool itspossibletoscrollx(datastruct *data, short int width, short int delta){
 
     ifEmpty(data);
 
-    if(delta > 0)
-        return (data->m_point.first().m_x - delta) <= 0.0;
-
+    if(*__pos_delta > 0){
+        qDebug() << "ispossibiletoscrollx first " << ((data->m_point.first().m_x - *__pos_delta) <= 0);
+        return (data->m_point.first().m_x - *__pos_delta) <= 0.0;
+    }
     double res;
 
     if(!data->maxXIdOrizzonal(&res)){
         return false;
     }
 
-    return (res + delta) > width;
+    qDebug() << "ispossibletoscrollx second " << int(res + *__pos_delta > width);
+    return (res + *__pos_delta) > width;
 }
