@@ -129,18 +129,22 @@ int datastruct::maxId()
 
 
 void datastruct::inverso(QPointF &point){
-    point = QPointF(point.x(), point.y());
+    point = QPointF(-point.x(), -point.y());
 }
 
-bool datastruct::repositioning()
+void datastruct::repositioning()
 {
-    if(m_point.isEmpty() || m_point.first().m_x == 0.0 || m_point.first().m_y == 0)
-        return false;
+    if(isempty())
+        return;
 
-    QPointF point_temp(-m_point.first().m_x, -m_point.first().m_y);
+    point_s & __point = m_point.first();
+
+    if(__point.m_x == 0.0 && __point.m_y == 0)
+        return;
+
+    QPointF point_temp(- __point.m_x, - __point.m_y);
     this->scala_all(point_temp);
 
-    return true;
 }
 
 QPointF datastruct::scala_all()

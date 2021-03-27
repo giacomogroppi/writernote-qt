@@ -34,6 +34,7 @@ void TabletCanvas::disegnafoglio(){
 
     struct point_s temp_point;
     QPointF p_traslation = data->datatouch->scala_all();
+
     fast_sheet_ui::n_style res;
 
     struct style_struct_S *style = nullptr;
@@ -47,7 +48,7 @@ void TabletCanvas::disegnafoglio(){
 
     height_p = int((double)width_p * double(4.0/3.0));
 
-    if(width_p == INT32_MIN || height_p == INT32_MIN){
+    if(width_p == INT32_MIN){
         goto error_;
     }
 
