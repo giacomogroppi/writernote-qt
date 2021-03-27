@@ -44,8 +44,18 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_de
         return true;
     }
 
-    /* the first element is added from disegnofoglio */
-    return (data->m_point.first().m_y + *__pos_delta) < 0;
+    if((data->m_point.first().m_y + *__pos_delta) < 0){
+        return true;
+    }
+
+    double temp = data->m_point.first().m_y;
+    if(temp < 0){
+        * __pos_delta = temp;
+        return true;
+    }
+
+    return false;
+
 }
 
 bool itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta){
