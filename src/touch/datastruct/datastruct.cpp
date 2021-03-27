@@ -2,6 +2,14 @@
 #include <QList>
 #include "../method/methoddefinition.h"
 
+void datastruct::adjastHeight(int height)
+{
+    double _maxy = biggery();
+
+    if(_maxy < height)
+        scala_y((height-_maxy));
+}
+
 unsigned int datastruct::posIdOrizzonal()
 {
     unsigned int i, len;
