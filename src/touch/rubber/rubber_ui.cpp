@@ -188,7 +188,8 @@ bool rubber_ui::isin(double x,
             && lastPointy - m_size_gomma < y
             && lastPointy + m_size_gomma > y
             && idtratto != IDORIZZONALE
-            && idtratto != IDVERTICALE)
+            && idtratto != IDVERTICALE
+            && idtratto != IDTRATTOZERO)
             return true;
     return false;
 }

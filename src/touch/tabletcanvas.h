@@ -16,8 +16,6 @@
 #include "rubber/rubber_ui.h"
 #include "pen/pen_ui.h"
 
-#define IDTRATTOZERO -5
-
 #include "../lastedit/redoundo.h"
 #include "../autosave/autosave_.h"
 

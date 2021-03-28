@@ -1,5 +1,6 @@
 #include "datastruct.h"
 #include <QList>
+#include <QDebug>
 
 void datastruct::adjustHeight(int height)
 {
@@ -152,7 +153,9 @@ QPointF datastruct::scala_all()
     if(this->m_point.isEmpty())
         return QPointF(0, 0);
 
-    QPointF point(-m_point.first().m_x, -m_point.first().m_y);
+    QPointF point(m_point.first().m_x, m_point.first().m_y);
+
+    datastruct::inverso(point);
 
     scala_all(point);
 
@@ -170,7 +173,7 @@ void datastruct::scala_all(QPointF &point)
 
 void datastruct::scala_x(double scala)
 {
-    int i, len;
+    unsigned int i, len;
     len = this->m_point.length();
     for(i=0; i<len; i++){
         m_point.operator[](i).m_x += scala;
@@ -178,7 +181,7 @@ void datastruct::scala_x(double scala)
 }
 
 void datastruct::scala_posizionefoglio(double scala){
-    int i, len;
+    unsigned int i, len;
     for(i=0, len = posizionefoglio.length(); i<len; ++i){
         posizionefoglio.operator[](i) += scala;
     }

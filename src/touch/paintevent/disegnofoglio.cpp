@@ -74,11 +74,9 @@ void TabletCanvas::disegnafoglio(){
     /* insert a point (0, 0) */
     addPointZero(data);
 
-
-
     memcpy(&temp_point.m_color, &style->colore, sizeof(colore_s));
 
-    deltax = height_p / style->nx;
+    deltax = (double)height_p / (double)style->nx;
     deltay = (double)width_p / (double)style->ny;
 
     temp = deltax;
@@ -214,7 +212,7 @@ static double width_(datastruct *data){
 
 
 static void addPointZero(currenttitle_class *data){
-    if(data->datatouch->m_point.length() == 0){
+    if(data->datatouch->isempty()){
         struct point_s temp;
         temp.idtratto = IDTRATTOZERO;
         temp.m_x = 0;

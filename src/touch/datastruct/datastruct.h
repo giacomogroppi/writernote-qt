@@ -26,6 +26,7 @@ struct point_s{
     int idtratto;
 };
 
+#define IDTRATTOZERO -5
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
 

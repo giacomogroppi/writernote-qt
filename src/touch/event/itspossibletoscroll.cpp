@@ -67,15 +67,33 @@ bool itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta
     ifEmpty(data);
 
     if(*__pos_delta > 0){
-        qDebug() << "ispossibiletoscrollx first " << ((data->m_point.first().m_x - *__pos_delta) <= 0);
-        return (data->m_point.first().m_x - *__pos_delta) <= 0.0;
+
+        point_s & __point = data->m_point.first();
+
+        if((__point.m_x - *__pos_delta) <= 0.0)
+            return true;
+
+        if(__point.m_x < 0.0){
+            *__pos_delta = __point.m_x;
+            return true;
+        }
+
+        return false;
     }
+
     double res;
 
     if(!data->maxXIdOrizzonal(&res)){
         return false;
     }
 
-    qDebug() << "ispossibletoscrollx second " << int(res + *__pos_delta > width);
-    return (res + *__pos_delta) > width;
+    if ((res + *__pos_delta) > width)
+        return true;
+
+    if(res > width){
+        *__pos_delta = double(res - width);
+        return true;
+    }
+    return false;
+
 }
