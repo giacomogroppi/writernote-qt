@@ -289,7 +289,9 @@ auto datastruct::biggerynoid() -> double{
     for(i=0; i<len; i++){
         if(m_point.at(i).m_y > y_){
             temp = m_point.at(i).idtratto;
-            if(temp != IDVERTICALE && temp != IDORIZZONALE){
+            if(temp != IDVERTICALE
+                    && temp != IDORIZZONALE
+                    && temp != IDTRATTOZERO){
                 y_ = m_point.at(i).m_y;
             }
         }
@@ -340,13 +342,23 @@ double datastruct::biggerxNoId(){
     double max;
 
     len = m_point.length();
-    max = m_point.first().m_x;
+    if(!len)
+        return 0;
+
+    const point_s * __point = &m_point.first();
+
+
+    max = __point->m_x;
+
 
     for(i=0; i<len; i++){
-        if(max < m_point.at(i).m_x
-                && m_point.at(i).idtratto != IDVERTICALE
-                && m_point.at(i).idtratto != IDORIZZONALE){
-            max = m_point.at(i).m_x;
+        __point = &m_point.at(i);
+
+        if(max < __point->m_x
+                && __point->idtratto != IDVERTICALE
+                && __point->idtratto != IDORIZZONALE
+                && __point->idtratto != IDTRATTOZERO){
+            max = __point->m_x;
         }
     }
 
@@ -380,13 +392,20 @@ double datastruct::last(){
     if(m_point.isEmpty())
         return (double)0;
 
-    double max = m_point.first().m_y;
+
+    double max;
     int i, len;
     len = m_point.length();
 
+    const point_s * __point = &m_point.first();
+    max = __point->m_y;
+
     for(i=0; i<len; i++){
-        if(max < m_point.at(i).m_y)
-            max = m_point.at(i).m_y;
+        __point = &m_point.at(i);
+
+        if(max < __point->m_y){
+            max = __point->m_y;
+        }
     }
 
     return max;
