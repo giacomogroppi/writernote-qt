@@ -7,29 +7,40 @@ void TabletCanvas::initPixmap(bool paint)
     qreal dpr = devicePixelRatio();
 
     /* understand if the user can write outside the page */
-    int len, i, sizex;
+    int sizex;
+    double _res;
 
-    len = data->datatouch->m_point.length();
-    if(len){
-        for(i=0; i<len; i++)
-            if(data->datatouch->m_point.at(i).idtratto == IDORIZZONALE)
-                break;
+    if(!data->datatouch->isempty()){
 
-        i = data->datatouch->m_point.at(i+1).m_x;
+        if(!data->datatouch->maxXIdOrizzonal(&_res)){
+            goto not_find;
+        }
 
-        if(width() < i)
+        if(width() < _res)
             sizex = width();
         else
-            sizex = i;
+            sizex = _res;
+
+        goto find;
+
+    }
+
+    /*
+     * if he didn't find the point orizzonal,
+     * he go here
+    */
+
+    not_find:
+
+    if(width() < NUMEROPIXELORIZZONALI){
+        sizex = width();
     }
     else{
-        if(width() < NUMEROPIXELORIZZONALI){
-            sizex = width();
-        }
-        else{
-            sizex = NUMEROPIXELORIZZONALI;
-        }
+        sizex = NUMEROPIXELORIZZONALI;
     }
+
+
+    find:
 
     QPixmap newPixmap = QPixmap(qRound(sizex * dpr), qRound(height() * dpr));
 

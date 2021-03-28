@@ -18,7 +18,8 @@ bool datastruct::needtocreatenew(){
     for(i=0; i<len; i++){
         if(m_point.at(i).m_y > maxy
                 && m_point.at(i).idtratto != IDVERTICALE
-                && m_point.at(i).idtratto != IDORIZZONALE)
+                && m_point.at(i).idtratto != IDORIZZONALE
+                && m_point.at(i).idtratto != IDTRATTOZERO)
             maxy = m_point.at(i).m_y;
     }
 
