@@ -130,7 +130,7 @@ int datastruct::maxId()
 
 
 void datastruct::inverso(QPointF &point){
-    point = QPointF(-point.x(), -point.y());
+    point *= -1.0;
 }
 
 void datastruct::repositioning()
@@ -143,7 +143,11 @@ void datastruct::repositioning()
     if(__point.m_x == 0.0 && __point.m_y == 0)
         return;
 
-    QPointF point_temp(- __point.m_x, - __point.m_y);
+    QPointF point_temp(__point.m_x,__point.m_y);
+
+
+    datastruct::inverso(point_temp);
+
     this->scala_all(point_temp);
 
 }
@@ -153,7 +157,9 @@ QPointF datastruct::scala_all()
     if(this->m_point.isEmpty())
         return QPointF(0, 0);
 
-    QPointF point(m_point.first().m_x, m_point.first().m_y);
+    point_s & __point = m_point.first();
+
+    QPointF point(__point.m_x, __point.m_y);
 
     datastruct::inverso(point);
 
@@ -164,6 +170,9 @@ QPointF datastruct::scala_all()
 
 void datastruct::scala_all(QPointF &point)
 {
+    if(point == QPointF(0, 0))
+        return;
+
     this->scala_x(point.x());
 
     double _point = point.y();

@@ -118,9 +118,6 @@ void TabletCanvas::disegnafoglio(){
 
     free(style);
 
-    if(p_traslation == QPointF(0, 0))
-        return;
-
     datastruct::inverso(p_traslation);
     data->datatouch->scala_all(p_traslation);
 

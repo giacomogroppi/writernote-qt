@@ -83,7 +83,6 @@ static int checkSlow(currenttitle_class *first, currenttitle_class *second){
  * it's a much faster function if you don't care
  * what the difference is
  */
-#define scala(x, y) x->datatouch->scala_all(y.operator*=(-1));
 
 int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, bool speed)
 {
@@ -100,16 +99,23 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, 
     if(speed){
         res = checkSpeed(primo, secondo);
 
-        scala(primo, first_point);
-        scala(secondo, second_point);
+        datastruct::inverso(first_point);
+        datastruct::inverso(second_point);
+
+        primo->datatouch->scala_all(first_point);
+        secondo->datatouch->scala_all(second_point);
 
         return res;
     }
 
     res = checkSlow(primo, secondo);
 
-    scala(primo, first_point);
-    scala(secondo, second_point);
+
+    datastruct::inverso(first_point);
+    datastruct::inverso(second_point);
+
+    primo->datatouch->scala_all(first_point);
+    secondo->datatouch->scala_all(second_point);
 
     return res;
 }
