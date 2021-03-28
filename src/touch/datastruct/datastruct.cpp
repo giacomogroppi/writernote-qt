@@ -235,16 +235,16 @@ double datastruct::biggery(){
 
     unsigned int i, len;
     double y_;
-    point_s & __point = m_point.first();
+    const point_s * __point = &m_point.first();
 
-    y_ = m_point.first().m_y;
+    y_ = __point->m_y;
     len = m_point.length();
 
     for(i=0; i<len; i++){
-        __point = m_point.at(i);
+        __point = &m_point.at(i);
 
-        if(__point.m_y > y_)
-            y_ = __point.m_y;
+        if(__point->m_y > y_)
+            y_ = __point->m_y;
     }
 
     return y_;
