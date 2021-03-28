@@ -97,17 +97,6 @@ void TabletCanvas::load(QPainter &painter,
                         and those that are too high such as the margins of the pixmap
                     */
 
-                    /*
-                    xtemp[k] = C(data).at(i+k).m_x;
-                    ytemp[k] = C(data).at(i+k).m_y;
-
-                    xtemp[k] = (xtemp[k] < 0) ? 0 : xtemp[k];
-                    ytemp[k] = (ytemp[k] < 0) ? 0 : ytemp[k];
-
-                    xtemp[k] = (xtemp[k] > size_orizzontale) ? (double)size_orizzontale : xtemp[k];
-                    ytemp[k] = (ytemp[k] > size_verticale) ? (double)size_verticale : ytemp[k];
-                    */
-
                     xtemp[k] = C(data).at(i+k).m_x;
                     ytemp[k] = C(data).at(i+k).m_y;
 
