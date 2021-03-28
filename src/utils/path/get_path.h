@@ -5,7 +5,8 @@ namespace path {
     enum e_path: unsigned int{
         home,
         nameuser,
-        audio_pos /* this return the folder to save the temporary audio */
+        audio_pos, /* this return the folder to save the temporary audio */
+        log /* default position log */
     };
 }
 

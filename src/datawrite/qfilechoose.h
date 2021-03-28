@@ -7,6 +7,7 @@
 #define TYPEFILEWRITER 0
 #define TYPEFILEPDF 1
 #define TYPEAUDIO 2
+#define TYPELOG 3
 
 class qfilechoose
 {
@@ -14,7 +15,7 @@ private:
     MainWindow *ui;
 public:
     qfilechoose(MainWindow *ui = nullptr);
-    bool filechoose(QString *, short int type_ = TYPEFILEWRITER);
+    static bool filechoose(QString *, short int type_ = TYPEFILEWRITER);
 
 };
 

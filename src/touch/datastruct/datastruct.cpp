@@ -4,6 +4,22 @@
 
 void datastruct::adjustHeight(int height)
 {
+    point_s & __point = m_point.first();
+    QPointF _traslation_point(0.0, 0.0);
+
+    if(__point.m_x > 0.0){
+        _traslation_point.setX(__point.m_x);
+    }
+
+    if(__point.m_y > 0.0){
+        _traslation_point.setY(__point.m_y);
+    }
+
+    if(_traslation_point != QPointF(0.0, 0.0)){
+        datastruct::inverso(_traslation_point);
+        scala_all(_traslation_point);
+    }
+
     double _maxy = biggery();
 
     if(_maxy < height)

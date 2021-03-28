@@ -86,4 +86,8 @@
 #define GROUPNAME_METHOD_TOUCH "groupname-method-touch"
 #define KEY_METHOD_TOUCH "key-method-touch" /* int */
 
+/* log position */
+#define GROUPNAME_LOG_POSITION "groupname-log-position"
+#define KEY_LOG_POSITION "key-log-position" /* QString */
+#define KEY_LOG_POSITION_DEFINE "key-log-position-define" /* int */
 #endif // SETTING_DEFINE_H

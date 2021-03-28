@@ -35,6 +35,15 @@ const char * get_path(path::e_path var)
 
         return temp.toUtf8().constData();
     }
+
+    if(var == path::log){
+        QString temp = get_path_no_controll();
+        temp += "writernote-log";
+        if(!createTempFolder(temp))
+            return NULL;
+        return temp.toUtf8().constData();
+    }
+
     if(var == path::home){
         return getenv(POS_HOME);
     }

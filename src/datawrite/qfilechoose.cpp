@@ -30,9 +30,19 @@ bool qfilechoose::filechoose(QString *nome, short int type_){
     else if(type_ == TYPEAUDIO){
         type = "Audio (*.wav)";
         extention = ".wav";
+    } else if(type_ == TYPELOG){
+        QString dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory",
+                                                        "",
+                                                        QFileDialog::ShowDirsOnly
+                                                        | QFileDialog::DontResolveSymlinks);
+        if(dir == "")
+            return false;
+
+        *nome = dir;
+        return true;
     }
 
-    QString nameFile= QFileDialog::getSaveFileName(this->ui,
+    QString nameFile= QFileDialog::getSaveFileName(nullptr,
         "Save", extention, type);
 
     if(nameFile == "")

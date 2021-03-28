@@ -1,6 +1,7 @@
 #include "permission.h"
 
 #include <QFile>
+#include <QDir>
 
 bool permission::open(const char *file, e_permission request)
 {
@@ -28,3 +29,9 @@ bool permission::open(const char *file, e_permission request)
     return false;
 
 }
+
+bool permission::folderExist(const char *file){
+    QDir direct(file);
+    return direct.exists();
+}
+
