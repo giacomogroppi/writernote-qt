@@ -121,6 +121,9 @@ void TabletCanvas::disegnafoglio(){
     datastruct::inverso(p_traslation);
     data->datatouch->scala_all(p_traslation);
 
+    if(data->datatouch->posizionefoglio.length() == 1)
+        this->resizeEvent(nullptr);
+
     return;
 
     error_:
