@@ -48,7 +48,10 @@ void TabletCanvas::load(QPainter &painter,
                         int size_verticale,
                         double *y_last){
 
-    int i, len, k;
+    int i, len, k, _lastid;
+    const point_s * __point;
+
+    bool _need_reload = false;
 
     m_pixmap.fill(Qt::white);
 
@@ -62,9 +65,12 @@ void TabletCanvas::load(QPainter &painter,
     QColor current_color = this->m_color;
     this->m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    for(i = 1, len = C(data).length(); i < len-1; i++)
-    {
-        m_pen.setColor(setcolor(&data->datatouch->m_point.at(i).m_color));
+    _lastid = C(data).first().idtratto;
+
+    for(i = 1, len = C(data).length(); i < len-1; i++){
+        __point = &data->datatouch->m_point.at(i);
+
+        m_pen.setColor(setcolor(&__point->m_color));
 
         /*
          * la funzione trasla tutti i punti finche non ne
@@ -74,19 +80,25 @@ void TabletCanvas::load(QPainter &painter,
          * the function translates all the points until it
          * finds a positive one, so as not to waste time cycling
         */
+        _need_reload = false;
         if(C(data).at(i).m_x <= 0
-                && thereispositive(data->datatouch, C(data).at(i).idtratto, i)
-                && C(data).at(i).idtratto != IDORIZZONALE
-                && C(data).at(i).idtratto != IDVERTICALE){
+                && thereispositive(data->datatouch, __point->idtratto, i)
+                && __point->idtratto != IDORIZZONALE
+                && __point->idtratto != IDVERTICALE){
             while(C(data).at(i).m_y <= 0){
-                i++;
+                ++i;
             }
+            _need_reload = true;
         }
 
-        if(C(data).at(i).m_y < size_verticale
-                && C(data).at(i).m_y >= 0){
+        if(_need_reload)
+            __point = &data->datatouch->m_point.at(i);
 
-            if(C(data).at(i).idtratto == IDORIZZONALE || C(data).at(i).idtratto == IDVERTICALE){
+        if(__point->m_y < size_verticale
+                && __point->m_y >= 0){
+
+            if(__point->idtratto == IDORIZZONALE
+                    || __point->idtratto == IDVERTICALE){
                 UPDATE_LOAD;
 
                 SET_PEN;
@@ -106,10 +118,10 @@ void TabletCanvas::load(QPainter &painter,
                             xtemp[0], ytemp[0],
                             xtemp[1], ytemp[1]);
 
-                i++;
+                ++i;
             }
-            else if(C(data).at(i).m_x != size_verticale
-                    && C(data).at(i).idtratto == C(data).at(i - 1).idtratto){
+            else if(__point->m_x != size_verticale
+                    && __point->idtratto == _lastid){
 
 
                 UPDATE_LOAD;
@@ -130,6 +142,9 @@ void TabletCanvas::load(QPainter &painter,
             if(y_last)
                 *y_last = C(data).at(i).m_y;
         }
+
+        _lastid = __point->idtratto;
+
     }
 
     draw_image(data, painter);
