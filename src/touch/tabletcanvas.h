@@ -100,8 +100,9 @@ public:
     bool isloading = false;
 
     struct PointLoading{
-        int xdrawing;
-        int ydrawing;
+        double xdrawing;
+        double ydrawing;
+        bool set = false;
     } pointload;
 
 #define DEFAULT_PASS_ARGUMENT_LOAD -1

@@ -21,6 +21,8 @@ void TabletCanvas::restoreO()
     this->isloading = true;
     update();
 
+    lastpointtouch.set = false;
+
 }
 
 TabletCanvas::TabletCanvas()

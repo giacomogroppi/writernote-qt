@@ -37,10 +37,15 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         return;
 #endif
 
-    if(lastpointtouch.xdrawing != -1){
+    double posPointX, posPointY;
+
+    posPointX = event->screenPos().x();
+    posPointY = event->screenPos().y();
+
+    if(lastpointtouch.set){
         double deltay, deltax;
-        deltay = - lastpointtouch.ydrawing + event->pos().y();
-        deltax = - lastpointtouch.xdrawing + event->pos().x();
+        deltay = - lastpointtouch.ydrawing + posPointY;
+        deltax = - lastpointtouch.xdrawing + posPointX;
 
         if(!scroll::itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), &deltay))
             ismoving.deltay = 0;
@@ -55,15 +60,17 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 
         if(!ismoving.deltax || !ismoving.deltay)
             this->ismoving_f();
+
     }
 
-    lastpointtouch.xdrawing = event->pos().x();
-    lastpointtouch.ydrawing = event->pos().y();
+    lastpointtouch.xdrawing = posPointX;
+    lastpointtouch.ydrawing = posPointY;
 
     event->accept();
+    lastpointtouch.set = true;
 }
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
-    lastpointtouch.xdrawing = lastpointtouch.ydrawing = -1;
+    lastpointtouch.set = false;
     event->accept();
 }
