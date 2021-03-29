@@ -12,9 +12,9 @@
 
 bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_delta)
 {
-    qDebug() << "scroll y -> x: " << data->m_point.first().m_x;
+    /*qDebug() << "scroll y -> x: " << data->m_point.first().m_x;
     qDebug() << "scroll y -> y: " << data->m_point.first().m_y;
-    qDebug() << "scroll y -> delta: " << *__pos_delta;
+    qDebug() << "scroll y -> delta: " << *__pos_delta;*/
 
     /* finger action:
      * delta < 0
@@ -69,20 +69,19 @@ bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__p
     ifEmpty(data);
 
 
-    qDebug() << "scroll x -> x: " << data->m_point.first().m_x;
+    /*qDebug() << "scroll x -> x: " << data->m_point.first().m_x;
     qDebug() << "scroll x -> y: " << data->m_point.first().m_y;
 
-    qDebug() << "scroll x -> delta " << *__pos_delta;
+    qDebug() << "scroll x -> delta " << *__pos_delta;*/
 
     if(*__pos_delta > 0.0){
 
         const point_s * __point = &data->m_point.first();
 
-        if((__point->m_x - *__pos_delta) < 0.0)
+        if((__point->m_x + *__pos_delta) < 0.0)
             return true;
 
         if(__point->m_x < 0.0){
-            qDebug() << "Minore di zero";
             *__pos_delta = __point->m_x;
             return true;
         }
@@ -90,17 +89,19 @@ bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__p
         return false;
     }
 
+    /* __pos_delta < 0.0*/
+
     double res;
 
     if(!data->maxXIdOrizzonal(&res)){
         return false;
     }
 
-    if ((res + *__pos_delta) > width)
+    if ((res + *__pos_delta) > (double)width)
         return true;
 
-    if(res > width){
-        *__pos_delta = double(res - width);
+    if(res > (double)width){
+        *__pos_delta = double(res - (double)width);
         return true;
     }
     return false;
