@@ -12,10 +12,6 @@
 
 bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_delta)
 {
-    /*qDebug() << "scroll y -> x: " << data->m_point.first().m_x;
-    qDebug() << "scroll y -> y: " << data->m_point.first().m_y;
-    qDebug() << "scroll y -> delta: " << *__pos_delta;*/
-
     /* finger action:
      * delta < 0
      *
@@ -67,12 +63,6 @@ bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__p
     */
 
     ifEmpty(data);
-
-
-    /*qDebug() << "scroll x -> x: " << data->m_point.first().m_x;
-    qDebug() << "scroll x -> y: " << data->m_point.first().m_y;
-
-    qDebug() << "scroll x -> delta " << *__pos_delta;*/
 
     if(*__pos_delta > 0.0){
 
