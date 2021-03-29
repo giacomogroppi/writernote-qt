@@ -49,6 +49,9 @@ void rubber_ui::on_partial_button_clicked()
  * it returns true if it actually deleted something, otherwise it returns false
 */
 bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &painter){
+    if(data->isempty())
+        return false;
+
     int id;
     bool need_reload = false;
     unsigned int i, len;
@@ -60,27 +63,33 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
     x = lastPoint.x();
     y = lastPoint.y();
 
+    const point_s *__point = & data->m_point.first();
+
     this->penna.setStyle(Qt::SolidLine);
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(i=0; i<len; i++){
-            if(isin(data->m_point.at(i).m_x,
-                    data->m_point.at(i).m_y,
+            __point = &data->m_point.at(i);
+
+            if(isin(__point->m_x,
+                    __point->m_y,
                     x,
                     y,
-                    data->m_point.at(i).idtratto)){
+                    __point->idtratto)){
 
-                id = data->m_point.at(i).idtratto;
+                id = __point->idtratto;
 
                 need_reload = true;
 
                 gomma_delete_id.append(id);
 
-                for(; i<len && data->m_point.at(i).idtratto == id; i++)
+                for(; i<len && data->m_point.at(i).idtratto == id; i++){
                     data->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
+                }
 
+                --i;
 
-                i--;
+                __point = &data->m_point.at(i);
             }
         }
     }

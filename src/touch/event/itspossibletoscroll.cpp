@@ -1,4 +1,5 @@
 #include "itspossibletoscroll.h"
+#include "../datastruct/datastruct.h"
 #include <QDebug>
 
 #define ifEmpty(data) if(data->isempty()) \
@@ -9,7 +10,7 @@
  * and __pos_delta is set to the maximus delta we can have
 */
 
-bool itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_delta)
+bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_delta)
 {
     qDebug() << "x: " << data->m_point.first().m_x;
     qDebug() << "y: " << data->m_point.first().m_y;
@@ -59,7 +60,7 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_de
 
 }
 
-bool itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta){
+bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta){
     /* finger action:
         delta < 0 <------
         delta > 0 ------>
