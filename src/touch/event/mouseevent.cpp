@@ -14,7 +14,10 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
         return;
     }
 
+    qDebug() << "Ritorna true -> move: " << move;
+
     this->ismoving.deltay = move;
+    this->ismoving.deltax = 0;
 
     this->ismoving_f();
 

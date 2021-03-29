@@ -32,6 +32,9 @@ struct point_s{
 
 class datastruct
 {
+private:
+    int minId();
+
 public:
     void adjustHeight(int height);
 

@@ -11,8 +11,9 @@
 
 bool itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_delta)
 {
-    qDebug() << "Scroll delta " << *__pos_delta;
-    qDebug() << "Page number " << data->posizionefoglio.length();
+    qDebug() << "x: " << data->m_point.first().m_x;
+    qDebug() << "y: " << data->m_point.first().m_y;
+    qDebug() << "delta: " << *__pos_delta;
 
     /* finger action:
      * delta < 0
@@ -32,7 +33,6 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_de
 
         pos = data->biggery();
 
-
         if((pos + *__pos_delta) > altezza){
             return true;
         }
@@ -44,13 +44,14 @@ bool itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_de
         return true;
     }
 
-    if((data->m_point.first().m_y + *__pos_delta) < 0){
+    const point_s * __point = &data->m_point.first();
+
+    if((__point->m_y + *__pos_delta) < 0){
         return true;
     }
 
-    double temp = data->m_point.first().m_y;
-    if(temp < 0){
-        * __pos_delta = temp;
+    if(__point->m_y < 0){
+        * __pos_delta = - __point->m_y;
         return true;
     }
 
@@ -66,15 +67,19 @@ bool itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta
 
     ifEmpty(data);
 
-    if(*__pos_delta > 0){
 
-        point_s & __point = data->m_point.first();
+    qDebug() << data->m_point.first().m_x;
+    qDebug() << data->m_point.first().m_y;
 
-        if((__point.m_x - *__pos_delta) <= 0.0)
+    if(*__pos_delta > 0.0){
+
+        const point_s * __point = &data->m_point.first();
+
+        if((__point->m_x - *__pos_delta) < 0.0)
             return true;
 
-        if(__point.m_x < 0.0){
-            *__pos_delta = __point.m_x;
+        if(__point->m_x < 0.0){
+            *__pos_delta = __point->m_x;
             return true;
         }
 

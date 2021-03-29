@@ -2,6 +2,27 @@
 #include <QList>
 #include <QDebug>
 
+int datastruct::minId()
+{
+    if(isempty())
+        return 0;
+
+    /*
+     * we initialize the id to zero
+     * as the traits have a negative id
+    */
+    int _minId = 0;
+
+    const point_s * __point = &m_point.first();
+    for(int i=0, len = m_point.length(); i<len; i++){
+        if(__point->idtratto < _minId){
+            _minId = __point->idtratto;
+        }
+    }
+
+    return _minId;
+}
+
 void datastruct::adjustHeight(int height)
 {
     point_s & __point = m_point.first();
@@ -44,6 +65,10 @@ datastruct::datastruct()
 
 }
 
+static void reorganize_p(datastruct *data, int index, unsigned int len){
+
+}
+
 /* the function restores the ids, as
  * there may be holes, when we go
  * to eliminate some strokes written
@@ -51,13 +76,24 @@ datastruct::datastruct()
 */
 void datastruct::reorganize()
 {
-    int i, len, last, k;
+    int i, len, _lastId, secondI;
     len = m_point.length();
 
     if(!len)
         return;
 
-    last = m_point.first().idtratto;
+    secondI = minId();
+
+    const point_s * __point = &m_point.first();
+
+    _lastId = __point->idtratto;
+
+    for(i=0; i<len; ++i){
+        __point = &m_point.at(i);
+        if(__point->idtratto != secondI+1){
+
+        }
+    }
 
 }
 
