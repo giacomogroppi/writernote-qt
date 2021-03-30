@@ -58,11 +58,6 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
     len = data->m_point.length();
 
-    double x, y;
-
-    x = lastPoint.x();
-    y = lastPoint.y();
-
     const point_s *__point = & data->m_point.first();
 
     this->penna.setStyle(Qt::SolidLine);
@@ -71,11 +66,9 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
         for(i=0; i<len; i++){
             __point = &data->m_point.at(i);
 
-            if(isin(__point->m_x,
-                    __point->m_y,
-                    x,
-                    y,
-                    __point->idtratto)){
+            if(isin(__point,
+                    lastPoint,
+                    data)){
 
                 id = __point->idtratto;
 
@@ -101,11 +94,12 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
         painter.setPen(penna);
 
         for(i=0; i<len; i++){
-            if(isin(data->m_point.at(i).m_x,
-                    data->m_point.at(i).m_y,
-                    x,
-                    y,
-                    data->m_point.at(i).idtratto)){
+
+            __point = & data->m_point.at(i);
+
+            if(isin(__point,
+                    lastPoint,
+                    data)){
                 need_reload = true;
 
                 painter.drawPoint(data->m_point.at(i).m_x, data->m_point.at(i).m_y);
@@ -187,19 +181,13 @@ bool rubber_ui::clearList(datastruct *data)
 }
 
 
-bool rubber_ui::isin(double x,
-                 double y,
-                 double lastPointx,
-                 double lastPointy,
-                 int idtratto){
-    if(lastPointx - m_size_gomma < x
-            && lastPointx + m_size_gomma > x
-            && lastPointy - m_size_gomma < y
-            && lastPointy + m_size_gomma > y
-            && idtratto != IDORIZZONALE
-            && idtratto != IDVERTICALE
-            && idtratto != IDTRATTOZERO)
-            return true;
-    return false;
+bool rubber_ui::isin(const point_s * __point,
+                 QPointF & point_t,
+                 datastruct *data){
+    return point_t.x() - m_size_gomma < __point->m_x
+            && point_t.x() + m_size_gomma > __point->m_x
+            && point_t.y() - m_size_gomma < __point->m_y
+            && point_t.y() + m_size_gomma > __point->m_y
+            && data->isIdUser(__point);
 }
 

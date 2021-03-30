@@ -38,7 +38,9 @@ public:
     bool clearList(datastruct *);
 
 private:
-    bool isin(double x, double y, double, double , int);
+    bool isin(const point_s * __point,
+              QPointF &point_t,
+              datastruct *data);
 
     QPen penna;
 
