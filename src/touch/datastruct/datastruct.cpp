@@ -492,7 +492,7 @@ double datastruct::biggerxNoId(){
  *
  * return false if it's the first point or the lastone
  */
-bool datastruct::needtochangeid(int i){
+bool datastruct::needtochangeid(const int i){
     int len;
     len = m_point.length();
 

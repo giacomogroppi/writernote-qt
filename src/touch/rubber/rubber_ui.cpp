@@ -58,9 +58,11 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
     len = data->m_point.length();
 
-    const point_s *__point = & data->m_point.first();
+    const point_s *__point;
 
     this->penna.setStyle(Qt::SolidLine);
+
+    drawAreaRubber(painter, lastPoint);
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(i=0; i<len; i++){
@@ -81,8 +83,6 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 }
 
                 --i;
-
-                __point = &data->m_point.at(i);
             }
         }
     }
@@ -180,14 +180,24 @@ bool rubber_ui::clearList(datastruct *data)
     return true;
 }
 
+void rubber_ui::drawAreaRubber(QPainter &painter, QPointF &point)
+{
+    QPen m_penna;
+    m_penna.setColor(Qt::white);
+    m_penna.setWidth(this->m_size_gomma);
+
+    painter.setPen(m_penna);
+
+    painter.drawPoint(point);
+}
+
 
 bool rubber_ui::isin(const point_s * __point,
                  QPointF & point_t,
                  datastruct *data){
-    return point_t.x() - m_size_gomma < __point->m_x
-            && point_t.x() + m_size_gomma > __point->m_x
-            && point_t.y() - m_size_gomma < __point->m_y
-            && point_t.y() + m_size_gomma > __point->m_y
+    return (point_t.x() - m_size_gomma) < __point->m_x
+            && (point_t.x() + m_size_gomma) > __point->m_x
+            && (point_t.y() - m_size_gomma) < __point->m_y
+            && (point_t.y() + m_size_gomma) > __point->m_y
             && data->isIdUser(__point);
 }
-

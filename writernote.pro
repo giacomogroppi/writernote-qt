@@ -58,6 +58,7 @@ SOURCES += \
     src/datamanage/retry_save_audio.cpp \
     src/lastedit/lista_copybook.cpp \
     src/log/controll_log.cpp \
+    src/log/log_ui/log_ui.cpp \
     src/log/writelog.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
@@ -212,6 +213,7 @@ HEADERS += \
     src/datamanage/retry_save_audio.h \
     src/lastedit/lista_copybook.h \
     src/log/controll_log.h \
+    src/log/log_ui/log_ui.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/copy/copy.h \
     src/touch/text/text_ui/text_ui.h \
@@ -298,6 +300,7 @@ FORMS += \
     src/audiosetting/audioqualityoption.ui \
     src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \
+    src/log/log_ui/log_ui.ui \
     src/mainwindow.ui \
     src/sheet/dialog_sheet.ui \
     src/sheet/fast-sheet/fast_sheet_ui.ui \
