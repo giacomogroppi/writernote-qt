@@ -1,4 +1,4 @@
-#include "copy.h"
+#include "copy_selection.h"
 
 copy::copy(QObject *parent) : QObject(parent)
 {

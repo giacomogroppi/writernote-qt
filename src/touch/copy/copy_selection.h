@@ -1,5 +1,5 @@
-#ifndef COPY_H
-#define COPY_H
+#ifndef COPY_SELECTION_H
+#define COPY_SELECTION_H
 
 #include <QObject>
 #include "../datastruct/datastruct.h"
@@ -25,4 +25,4 @@ private:
 
 };
 
-#endif // COPY_H
+#endif // COPY_SELECTION_H
