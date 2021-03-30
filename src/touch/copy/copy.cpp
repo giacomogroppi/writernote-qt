@@ -47,6 +47,7 @@ void copy::past_selection(datastruct *data_past, QPointF &point_past)
     len = this->m_data.m_point.length();
 
     const point_s * __point;
+    point_s __append;
 
     for(i=0; i<len; i++){
         __point = & m_data.m_point.at(i);
@@ -54,6 +55,15 @@ void copy::past_selection(datastruct *data_past, QPointF &point_past)
         if(!data_past->isAvailable(__point->idtratto)){
             m_data.changeId(i, data_past->maxId()+1);
         }
+
+        memcpy(&__append, __point, sizeof(__append));
+
+        /* we move the point from (0, 0) to point_past */
+        __append.m_y += point_past.y();
+        __append.m_x += point_past.x();
+
+        data_past->m_point.append(__append);
+
     }
 
 }
