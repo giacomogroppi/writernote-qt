@@ -56,6 +56,7 @@ SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
+    src/lastedit/copy_lastedit.cpp \
     src/lastedit/lista_copybook.cpp \
     src/log/controll_log.cpp \
     src/log/log_ui/log_ui.cpp \
@@ -88,7 +89,6 @@ SOURCES += \
     src/last_open/last_open.cpp \
     src/last_open/load_data.cpp \
     src/last_open/save_data.cpp \
-    src/lastedit/copy.cpp \
     src/lastedit/enableredoundo_mainwindow.cpp \
     src/lastedit/redoundo.cpp \
     src/closeevent_file.cpp \

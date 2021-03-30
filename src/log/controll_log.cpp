@@ -10,7 +10,9 @@
 #include "../utils/permission/permission.h"
 #include "../utils/time/current_time.h"
 
-controll_log::controll_log(QObject *parent) : QObject(parent)
+#include "../mainwindow.h"
+
+controll_log::controll_log(QObject *parent, MainWindow *parent_widgets) : QObject(parent)
 {
     if(loadData()){
         dialog_critic("We had a problem loading the path for log, do you want to set a position? ");
@@ -32,6 +34,8 @@ controll_log::controll_log(QObject *parent) : QObject(parent)
         }
 
     }
+
+    this->m_log = new log_ui(parent_widgets, &pos);
 
 }
 

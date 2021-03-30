@@ -2,12 +2,15 @@
 #define CONTROLL_LOG_H
 
 #include <QObject>
+#include "log_ui/log_ui.h"
+
+class MainWindow;
 
 class controll_log : public QObject
 {
     Q_OBJECT
 public:
-    explicit controll_log(QObject *parent = nullptr);
+    explicit controll_log(QObject *parent, MainWindow *parent_widget);
     ~controll_log();
 
     enum type_write: int{
@@ -29,6 +32,8 @@ public:
 
 signals:
 private:
+
+    log_ui *m_log;
 
     enum errorWriting: unsigned int{
         ok_writing,
