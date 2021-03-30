@@ -61,6 +61,7 @@ SOURCES += \
     src/log/writelog.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
+    src/touch/copy/copy.cpp \
     src/touch/pageCount.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
@@ -212,6 +213,7 @@ HEADERS += \
     src/lastedit/lista_copybook.h \
     src/log/controll_log.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
+    src/touch/copy/copy.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
     src/utils/aboutQt/aboutqt.h \

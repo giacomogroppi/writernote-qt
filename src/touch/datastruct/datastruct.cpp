@@ -23,6 +23,39 @@ int datastruct::minId()
     return _minId;
 }
 
+/*
+ * return true if the
+ * point is write by user
+*/
+bool datastruct::isIdUser(const point_s *__point)
+{
+    return __point->idtratto != IDTRATTOZERO
+            && __point->idtratto != IDVERTICALE
+            && __point->idtratto != IDORIZZONALE;
+}
+
+bool datastruct::isinside(QPointF &topleft, QPointF &bottonright, unsigned int index)
+{
+    return isinside(topleft.x(),
+                    topleft.y(),
+                    bottonright.x(),
+                    bottonright.y(),
+                    index);
+}
+
+bool datastruct::isinside(double x1, double y1, double x2, double y2, unsigned int index)
+{
+    const point_s *__point;
+
+    __point = &m_point.at(index);
+
+    return __point->m_x > x1
+            && __point->m_y > y1
+            && __point->m_x < x2
+            && __point->m_y < y2
+            && isIdUser(__point) ;
+}
+
 void datastruct::adjustHeight(int height)
 {
     point_s & __point = m_point.first();
@@ -311,6 +344,51 @@ void datastruct::decreaseAlfa(int id, int decrease)
     for(i=0; i<len; i++)
         if(m_point.at(i).idtratto == id)
             d(&m_point.operator[](i), decrease);
+}
+
+double datastruct::miny()
+{
+    unsigned int i, len;
+
+    len = m_point.length();
+
+    const point_s * __point = &m_point.first();
+
+    double min = __point->m_y;
+
+    for(i=0; i<len; ++i){
+        __point = &m_point.at(i);
+
+        if(__point->m_y < min){
+            min = __point->m_y;
+        }
+
+    }
+
+    return min;
+
+}
+
+double datastruct::minx()
+{
+    unsigned int i, len;
+
+    len = m_point.length();
+
+    const point_s * __point = &m_point.first();
+
+    double min = __point->m_x;
+
+    for(i=0; i<len; ++i){
+        __point = &m_point.at(i);
+
+        if(__point->m_x < min){
+            min = __point->m_x;
+        }
+
+    }
+
+    return min;
 }
 
 

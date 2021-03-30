@@ -36,6 +36,12 @@ private:
     int minId();
 
 public:
+
+    bool isIdUser(const point_s * __point);
+
+    bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);
+    bool isinside(double x1, double y1, double x2, double y2, unsigned int index);
+
     void adjustHeight(int height);
 
     /*
@@ -89,22 +95,8 @@ public:
 
     void decreaseAlfa(int, int);
 
-    /*
-     * change all this list with a QList<struct point_s>
-     *  - more easy to read in file
-     *  - to store
-     *  - to save in file
-     *  - more scalable
-    */
-    /*QList<double> x;
-    QList<double> y;
-    QList<int> posizioneaudio;
-    QList<struct colore_s> color;
-
-    QList<float> pressure;
-    QList<qreal> rotation;
-
-    QList<int> idtratto;*/
+    double miny();
+    double minx();
 
     QList<double> posizionefoglio;
 
