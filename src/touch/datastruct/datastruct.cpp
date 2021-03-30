@@ -171,9 +171,14 @@ bool datastruct::minXIdOrizzonal(double *val)
  * this function change the id of all point
  * with the same id of m_point[i]
 */
-void datastruct::changeId(unsigned int i)
+void datastruct::changeId(unsigned int i, int base)
 {
-    int id = maxId() + 1;
+    int id;
+    if(base == -1)
+        id = maxId() + 1;
+    else
+        id = base;
+
     int temp = m_point.at(i).idtratto;
 
     for(; m_point.at(i).idtratto == temp; i++)

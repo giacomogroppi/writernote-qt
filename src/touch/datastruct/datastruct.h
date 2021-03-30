@@ -58,7 +58,7 @@ public:
     bool maxXIdOrizzonal(double *val);
     bool minXIdOrizzonal(double *val);
 
-    void changeId(unsigned int i);
+    void changeId(unsigned int i, int base = -1);
 
     bool isAvailable(int id);
     int maxId();

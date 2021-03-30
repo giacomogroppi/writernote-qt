@@ -37,6 +37,27 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
 
 }
 
+/*
+ * the function past the last copy of datastruct
+*/
+void copy::past_selection(datastruct *data_past, QPointF &point_past)
+{
+    unsigned int i, len;
+
+    len = this->m_data.m_point.length();
+
+    const point_s * __point;
+
+    for(i=0; i<len; i++){
+        __point = & m_data.m_point.at(i);
+
+        if(!data_past->isAvailable(__point->idtratto)){
+            m_data.changeId(i, data_past->maxId()+1);
+        }
+    }
+
+}
+
 bool copy::isSomeThingCopy()
 {
     return !this->m_data.isempty();

@@ -12,6 +12,7 @@ public:
     explicit copy(QObject *parent = nullptr);
 
     void copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonright);
+    void past_selection(datastruct *data, QPointF &point_past);
 
     bool isSomeThingCopy();
 
