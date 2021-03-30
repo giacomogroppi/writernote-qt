@@ -59,6 +59,8 @@ controll_log::e_setOut controll_log::setOut(QString &_path)
         }
 
     }
+
+    return e_setOut::ref;
 }
 
 void controll_log::saveData(){
