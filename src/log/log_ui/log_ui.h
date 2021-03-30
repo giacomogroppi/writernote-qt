@@ -37,9 +37,11 @@ private:
         enable /* ok */
     };
 
-    permi m_permi;
+    QString getNameLog();
 
-    QString pos_log;
+    permi m_permi = permi::enable;
+
+    QString pos_log = "";
 
     void saveData();
     int loadData();
@@ -52,14 +54,11 @@ private:
 protected:
     void closeEvent(QCloseEvent *) override;
 
-signals:
-    /* emit when the user want to change location of log */
-    void changePosition(QString);
-
 private slots:
     void on_button_close_clicked();
     void on_button_enable_log_clicked();
     void on_Button_open_log_clicked();
+    void on_button_change_position_clicked();
 };
 
 #endif // LOG_UI_H

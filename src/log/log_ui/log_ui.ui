@@ -36,6 +36,19 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="button_change_position">
+       <property name="maximumSize">
+        <size>
+         <width>180</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Change position log</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

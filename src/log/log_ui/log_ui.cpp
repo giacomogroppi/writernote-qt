@@ -7,6 +7,12 @@
 
 #include "../../utils/time/current_time.h"
 #include "../../utils/mostra_explorer/mostra_explorer.h"
+#include "../../utils/dialog_critic/dialog_critic.h"
+#include "../../utils/slash/slash.h"
+
+#include <QDir>
+#include <QFile>
+#include <QFileDialog>
 
 log_ui::log_ui(QWidget *parent) :
     QWidget(parent),
@@ -69,6 +75,14 @@ void log_ui::write(QString stringa, log_ui::type_write var)
 
     fclose(fp);
 
+}
+
+QString log_ui::getNameLog()
+{
+    QString temp;
+    temp = pos_log + slash::__slash() + current_day_string() + current_time_string();
+
+    return temp;
 }
 
 void log_ui::closeEvent(QCloseEvent *event)
@@ -180,4 +194,29 @@ void log_ui::on_button_enable_log_clicked()
 void log_ui::on_Button_open_log_clicked()
 {
     mostra_explorer(pos_log);
+}
+
+void log_ui::on_button_change_position_clicked()
+{
+    QString __temp_dir;
+
+    FILE *fp;
+
+    __temp_dir = QFileDialog::getExistingDirectory();
+
+    if(__temp_dir == ""){
+        return;
+    }
+
+    fp = fopen((__temp_dir + "/" + "Temp.txt").toUtf8().constData(), "w");
+    if(!fp){
+        dialog_critic("Impossibile write a file into that position");
+        return;
+    }
+
+    m_permi = permi::enable;
+    this->pos_log =
+
+
+
 }

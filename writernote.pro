@@ -285,6 +285,7 @@ HEADERS += \
     src/utils/retry/retry_ui.h \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \
+    src/utils/slash/slash.h \
     src/utils/time/current_time.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
