@@ -518,8 +518,12 @@ static struct returnIdMinY idMinY(datastruct *, QList<int> &);
  * la funzione trasla tutti i punti che sono nel QRectF
  * al punto QPointF &.
  * che sarebbe il punto di tocco dell'utente sullo schermo
+ *
+ * the function return true if there are same point
+ * that he had traslated
+ * so we need to update all
 */
-void datastruct::MovePoint(QRectF &rect, QPointF __touch){
+bool datastruct::MovePoint(QRectF &rect, QPointF __touch){
     unsigned int i, len, k;
     int __last_id, __pos;
 
@@ -549,7 +553,7 @@ void datastruct::MovePoint(QRectF &rect, QPointF __touch){
 
     if(__id.isEmpty())
         /* there is not id to move */
-        return;
+        return false;
 
     struct returnIdMinY min = idMinY(this, __id);
 
@@ -572,6 +576,7 @@ void datastruct::MovePoint(QRectF &rect, QPointF __touch){
         }
     }
 
+    return true;
 }
 
 static struct returnIdMinY idMinY(datastruct *data, QList<int> & id){

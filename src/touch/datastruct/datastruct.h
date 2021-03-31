@@ -39,7 +39,7 @@ public:
     void removePointId(QList<int> &list);
     void removePointId(int id, int len = -1);
 
-    void MovePoint( QRectF &, QPointF);
+    bool MovePoint( QRectF &, QPointF);
 
     static bool isIdUser(const point_s * __point);
 

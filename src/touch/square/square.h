@@ -7,7 +7,11 @@
 
 class square
 {
+private:
+    bool __need_reload = false;
 public:
+    void needReload(QPainter &);
+
     square();
     void reset();
     QRectF disegno(QPainter &painter, QPointF puntofine);
@@ -15,7 +19,7 @@ public:
 
     bool isinside(QPointF);
     void setData(datastruct *data);
-    QRectF move(QPointF, QPainter &painter);
+    QRectF move(QPointF, QPainter &painter, datastruct *data);
 
     /* disegna il quadrato attorno all'oggetti che ha selezionato l'utente */
     QRectF drawsquare(QPainter &painter);
@@ -23,7 +27,6 @@ public:
     QPointF pointinit;
     QPointF pointfine;
 
-    datastruct *data;
     int idtratto;
 
     QPen penna;

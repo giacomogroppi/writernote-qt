@@ -68,40 +68,26 @@ QRectF square::drawsquare(QPainter &painter){
 
     minx = data->m_point.at(data->positionId(idtratto)).m_x;
     miny = data->m_point.at(data->positionId(idtratto)).m_y;
-    /*minx = data->x.at(data->idtratto.indexOf(idtratto));
-    miny = data->y.at(data->idtratto.indexOf(idtratto));*/
 
+    const point_s * __point;
 
     len = data->m_point.length();
     for(i=0; i<len; i++){
-        if(data->m_point.at(i).idtratto == idtratto){
-            if(data->m_point.at(i).m_x < minx)
-                minx = data->m_point.at(i).m_x;
-            else if(data->m_point.at(i).m_x > maxx)
-                maxx = data->m_point.at(i).m_x;
+        __point = & data->m_point.at(i);
+
+        if(__point->idtratto == idtratto){
+            if(__point->m_x < minx)
+                minx = __point->m_x;
+            else if(__point->m_x > maxx)
+                maxx = __point->m_x;
 
 
-            if(data->m_point.at(i).m_y < miny)
-                miny = data->m_point.at(i).m_y;
-            else if(data->m_point.at(i).m_y > maxy)
-                maxy = data->m_point.at(i).m_y;
+            if(__point->m_y < miny)
+                miny = __point->m_y;
+            else if(__point->m_y > maxy)
+                maxy = __point->m_y;
         }
     }
-
-    /*
-    for(i=0; i<len; i++){
-        if(data->idtratto.at(i) == idtratto){
-            if(data->x.at(i) < minx)
-                minx = data->x.at(i);
-            if(data->y.at(i) < miny)
-                miny = data->y.at(i);
-
-            if(data->x.at(i) > maxx)
-                maxx = data->x.at(i);
-            if(data->y.at(i) > miny)
-                maxy = data->y.at(i);
-        }
-    }*/
 
     pointinit.setX(minx);
     pointinit.setY(miny);
