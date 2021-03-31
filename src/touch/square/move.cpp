@@ -20,7 +20,7 @@ QRectF square::move(QPointF punto, QPainter &painter, datastruct *data){
     }
 
     struct delta __delta;
-    unsigned int i, len;
+    unsigned int  len;
 
     len = data->m_point.length();
 
@@ -34,19 +34,6 @@ QRectF square::move(QPointF punto, QPainter &painter, datastruct *data){
                     punto))
         return QRectF(0, 0, 0, 0);
 
-    /*
-    for(i=0; i<len; i++){
-        if(data->m_point.at(i).idtratto == idtratto){
-            data->m_point.operator[](i).m_x -= deltax;
-            data->m_point.operator[](i).m_y -= deltay;
-        }
-    }
-
-    painter.drawRect(this->pointinit.x() - deltax,
-                     this->pointinit.y() - deltay,
-                     this->pointfine.x() - deltax,
-                     this->pointfine.y() - deltay);
-*/
 
     lastpoint = punto;
 
@@ -56,56 +43,13 @@ QRectF square::move(QPointF punto, QPainter &painter, datastruct *data){
     this->pointfine.setX(pointfine.x() - __delta.x);
     this->pointfine.setY(pointfine.y() - __delta.y);
 
+    /*
+     * in questo caso dobbiamo per forza aggiornare tutto il pixmap
+    */
+    this->__need_reload = true;
 
-    return QRectF(
-                pointinit,
-                pointfine);
-}
 
-/*
- * la funzione viene richiamata quando
-*/
-
-QRectF square::findObjectToDraw(datastruct *data)
-{
-    QPointF min, max;
-    unsigned i, len;
-    QRectF __r_rect;
-
-    const point_s * __point;
-
-    len = data->m_point.length();
-
-    __point = & data->m_point.first();
-
-    min.setX(__point->m_x);
-    max.setX(__point->m_x);
-
-    min.setY(__point->m_y);
-    max.setY(__point->m_y);
-
-    for(i=0; i<len; i++){
-        __point = & data->m_point.at(i);
-
-        if(this->m_id.indexOf(__point->idtratto) != -1){
-            if(__point->m_x < min.x())
-                min.setX(__point->m_x);
-
-            else if(__point->m_x > max.x())
-                max.setX(__point->m_x);
-
-            if(__point->m_y < min.y())
-                min.setY(__point->m_y);
-            else if(__point->m_y > max.y())
-                max.setY(__point->m_y);
-        }
-    }
-
-    __r_rect.setBottomLeft(min);
-    __r_rect.setBottomRight(max);
-
-    return __r_rect;
-
+    return QRectF(pointinit, pointfine);
 }
 
 void square::needReload(QPainter &painter){
@@ -115,5 +59,27 @@ void square::needReload(QPainter &painter){
     painter.drawRect(QRectF(pointinit, pointfine));
 
     __need_reload = false;
+}
+
+/*
+ * la funcione cambia i punti, in caso l'utente non abbia tracciato il
+ * rettangolo da in alto a sinistra a in alto a destra
+*/
+void square::adjustPoint()
+{
+    double __temp;
+
+    if(pointinit.x() > pointfine.x()){
+        __temp = pointfine.x();
+        pointfine.setX(pointinit.x());
+        pointinit.setX(__temp);
+    }
+
+    if(pointfine.y() > pointfine.y()){
+        __temp = pointfine.y();
+        pointfine.setY(pointinit.x());
+        pointinit.setY(__temp);
+    }
+
 }
 

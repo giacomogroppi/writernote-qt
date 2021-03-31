@@ -7,6 +7,7 @@ static QRectF __rect ;
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
+    bool check;
 
     switch (event->type()) {
         case QEvent::TabletPress: /* first point touch */
@@ -16,11 +17,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                 else if(medotodiinserimento == e_method::selection)
                 {
-                    if(square_.check){
-                        square_.lastpoint = event->pos();
-                    }
-                    else
-                        square_.pointinit = event->pos();
+                    square_.disegno(event->posF());
                 }
                 m_deviceDown = true;
                 lastPoint.pos = event->pos();
@@ -58,26 +55,25 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                 }
                 else if(medotodiinserimento == e_method::selection){
-                    if(!this->square_.check){ /* it means that he has not learned anything */
-                        isloading = true;
-                        square_.disegno(painter, event->pos());
+                    if(!this->square_.check){ /* it means that the user not select anything */
+                        square_.disegno(event->posF());
 
                         update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
                     }
                     else{
-                        if(!this->square_.isinside(event->pos())){
+                        if(!this->square_.isinside(event->posF())){
                             /* se il tocco non è stato interno */
                             this->square_.reset();
                             isloading = true;
-                            update(QRect(square_.pointinit.toPoint(), square_.pointfine.toPoint()));
+                            update();
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
-                            __rect = this->square_.move(event->pos(), painter, data->datatouch);
+                            __rect = this->square_.move(event->posF(), painter, data->datatouch);
 
                             if(__rect != QRectF(0, 0, 0, 0))
                                 isloading = true;
-                            update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
+                            update();
                         }
                     }
                 }else if(medotodiinserimento == e_method::text){
@@ -107,24 +103,21 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
                 if(medotodiinserimento == e_method::selection){
-
-                    bool check = this->square_.find(data->datatouch);
-
-                    if(!check){
-                        isloading = true;
-                        update();
-                        event->accept();
-                        return this->square_.reset();
+                    if(this->square_.check){
+                        square_.adjustPoint();
                     }
+                    else{
 
-                    QPainter painter(&m_pixmap);
+                        check = this->square_.find(data->datatouch);
 
-                    this->m_pixmap.fill(Qt::white);
-                    this->square_.drawsquare(painter, data->datatouch);
+                        if(check){
+                            /* if he find something to move */
+                        }
 
-                    isloading = true;
+                        isloading = true;
 
-                    update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
+                        update();
+                    }
                 }
 
                 else if(m_rubber->m_type_gomma == rubber_ui::total){

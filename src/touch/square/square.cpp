@@ -11,25 +11,35 @@ square::square()
     this->reset();
 }
 
+#define RESET QPointF(-1, -1)
+
 void square::reset(){
-    this->pointinit = this->lastpoint = this->pointfine = QPoint(-1, -1);
+    this->pointinit = this->lastpoint = this->pointfine = RESET;
     check = false;
+    __need_reload = false;
 }
 
-QRectF square::disegno(QPainter &painter, QPointF puntodifine){
-    painter.setPen(penna);
+QRectF square::disegno(QPointF puntofine)
+{
+    QRectF __res;
 
-    QRectF recttemp;
-    recttemp.setTopLeft(pointinit);
-    recttemp.setBottomRight(puntodifine);
-    painter.drawRect(recttemp);
+    if(pointinit == RESET){
+        pointinit = puntofine;
 
-    /* in questo modo ritorna solamente la porzione di pixmap che deve essere ricaricata */
-    QRectF rect = QRectF(pointinit, pointfine);
+        /* we don't need yet to draw somethings */
+        this->__need_reload = false;
+        this->check = false;
 
-    pointfine = puntodifine;
+        return __res;
+    }
 
-    return rect;
+    if(pointinit.x() > puntofine.x()){
+        QPointF temporary = pointinit;
+        pointinit = puntofine;
+        puntofine = temporary;
+    }
+
+
 }
 
 /* la funzione capisce se all'interno del quadrato della selezione c'è qualcosa
@@ -56,49 +66,12 @@ bool square::find(datastruct *data){
         }
     }
 
-    return check;
-}
-
-/* la funzione prendere l'elemento più in alto a sinistra e più in basso a destra */
-QRectF square::drawsquare(QPainter &painter, datastruct *data){
-    unsigned int i, len;
-    double maxx, maxy, minx, miny;
-
-    maxx = maxy = 0;
-
-    minx = data->m_point.at(data->positionId(idtratto)).m_x;
-    miny = data->m_point.at(data->positionId(idtratto)).m_y;
-
-    const point_s * __point;
-
-    len = data->m_point.length();
-    for(i=0; i<len; i++){
-        __point = & data->m_point.at(i);
-
-        if(__point->idtratto == idtratto){
-            if(__point->m_x < minx)
-                minx = __point->m_x;
-            else if(__point->m_x > maxx)
-                maxx = __point->m_x;
-
-
-            if(__point->m_y < miny)
-                miny = __point->m_y;
-            else if(__point->m_y > maxy)
-                maxy = __point->m_y;
-        }
+    if(!check){
+        __need_reload = false;
+        check = false;
     }
 
-    pointinit.setX(minx);
-    pointinit.setY(miny);
-
-    pointfine.setX(maxx);
-    pointfine.setY(maxy);
-
-    this->check = true;
-
-    return this->disegno(painter, this->pointfine);
-
+    return check;
 }
 
 /* la funzione resistuisce

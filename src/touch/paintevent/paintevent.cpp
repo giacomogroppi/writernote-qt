@@ -32,6 +32,13 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     if(this->isloading)
         load(painter);
 
+
+    /*
+     * la funzione disegna il rect per spostare l'oggetto
+     * in caso non ci sia niente da disegnare non disegna niente
+    */
+    this->square_.needReload(painter);
+
     painter.end();
 }
 
