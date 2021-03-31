@@ -215,7 +215,7 @@ void log_ui::on_button_change_position_clicked()
     }
 
     m_permi = permi::enable;
-    this->pos_log =
+    this->pos_log = getNameLog();
 
 
 

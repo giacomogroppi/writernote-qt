@@ -10,15 +10,15 @@ class square
 public:
     square();
     void reset();
-    QRect disegno(QPainter &painter, QPointF puntofine);
+    QRectF disegno(QPainter &painter, QPointF puntofine);
     bool find();
 
     bool isinside(QPointF);
     void setData(datastruct *data);
-    QRect move(QPointF, QPainter &painter);
+    QRectF move(QPointF, QPainter &painter);
 
     /* disegna il quadrato attorno all'oggetti che ha selezionato l'utente */
-    QRect drawsquare(QPainter &painter);
+    QRectF drawsquare(QPainter &painter);
 
     QPointF pointinit;
     QPointF pointfine;

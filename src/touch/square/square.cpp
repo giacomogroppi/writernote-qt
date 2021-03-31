@@ -15,16 +15,16 @@ void square::reset(){
     check = false;
 }
 
-QRect square::disegno(QPainter &painter, QPointF puntodifine){
+QRectF square::disegno(QPainter &painter, QPointF puntodifine){
     painter.setPen(penna);
 
-    QRect recttemp;
-    recttemp.setTopLeft(this->pointinit.toPoint());
-    recttemp.setBottomRight(puntodifine.toPoint());
+    QRectF recttemp;
+    recttemp.setTopLeft(pointinit);
+    recttemp.setBottomRight(puntodifine);
     painter.drawRect(recttemp);
 
     /* in questo modo ritorna solamente la porzione di pixmap che deve essere ricaricata */
-    auto rect = QRect(this->pointinit.toPoint(), this->pointfine.toPoint());
+    QRectF rect = QRectF(pointinit, pointfine);
 
     pointfine = puntodifine;
 
@@ -54,27 +54,13 @@ bool square::find(){
             break;
         }
 
-        /*
-         * last data struct
-        */
-        /*
-        if(data->x.at(i) <= this->pointfine.x()
-                && data->y.at(i) <= this->pointfine.y()
-                && data->x.at(i) >= this->pointinit.x()
-                && data->y.at(i) >= this->pointinit.y()
-                && data->idtratto.at(i) != -1)
-        {
-            idtratto = data->idtratto.at(i);
-            this->check = true;
-            break;
-        }*/
     return check;
 }
 
 void square::setData(datastruct *data){ this->data = data; }
 
 /* la funzione prendere l'elemento più in alto a sinistra e più in basso a destra */
-QRect square::drawsquare(QPainter &painter){
+QRectF square::drawsquare(QPainter &painter){
     unsigned int i, len;
     double maxx, maxy, minx, miny;
 
