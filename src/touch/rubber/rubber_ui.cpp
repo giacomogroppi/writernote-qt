@@ -76,7 +76,8 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
                 need_reload = true;
 
-                gomma_delete_id.append(id);
+                if(gomma_delete_id.indexOf(id) == -1)
+                    gomma_delete_id.append(id);
 
                 for(; i<len && data->m_point.at(i).idtratto == id; i++){
                     data->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
@@ -130,36 +131,15 @@ static unsigned int m(QList<int> * list, int number, int index, int len){
     return f;
 }
 
-/*
- * call when the user left the screen
- * this function remove the duplicate number
-*/
-static void removeR(QList<int> *list){
-    int i, len, time, k;
-
-    len = list->length();
-
-    for(i=0; i<len; i++){
-        time = m(list, list->at(i), i, len);
-        if(time){
-            for(k=0; k<time; k++){
-                list->removeAt(i);
-            }
-        }
-
-        len -= time;
-
-    }
-}
 
 bool rubber_ui::clearList(datastruct *data)
 {
     if(gomma_delete_id.isEmpty())
         return false;
 
-    int k, len_cancella;
+    data->removePointId(gomma_delete_id);
 
-    removeR(&this->gomma_delete_id);
+    /*int k, len_cancella;
 
     unsigned int i, len;
 
@@ -173,7 +153,7 @@ bool rubber_ui::clearList(datastruct *data)
                 len --;
             }
         }
-    }
+    }*/
 
     gomma_delete_id.clear();
 

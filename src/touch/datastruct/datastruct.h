@@ -36,6 +36,8 @@ private:
     int minId();
 public:
 
+    void removePointId(QList<int> &list);
+    void removePointId(int id, int len = -1);
 
     void MovePoint( QRectF &, QPointF);
 
