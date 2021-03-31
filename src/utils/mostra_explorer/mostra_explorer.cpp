@@ -8,9 +8,9 @@
 
 static void mostra(const char *comando);
 
-#ifdef unix
+#if defined(unix)
 #define APPLICATION_NAME "nautilus "
-#elif _WIN64
+#elif defined(WIN32) || defined(WIN64)
 #define APPLICATION_NAME "explorer "
 static void replace(char *data);
 #endif
@@ -28,7 +28,7 @@ void mostra_explorer(QString posizione)
     /*
      * in windows we don't need to run it in an other thread
     */
-#ifdef _WIN64
+#if defined(WIN32) || defined(WIN64)
     mostra(comando);
 #elif unix
     mostra_finestra_i(posizione.toUtf8().constData());
@@ -54,7 +54,7 @@ static QString remove_s(const char *stringa){
         if(stringa[i] == S)
             break;
 
-#ifdef _WIN64
+#if defined(WIN32) || defined(WIN64)
     /*
      * we can't modify the data return from .toutf8.constdata() [QString]
     */
@@ -76,7 +76,7 @@ static QString remove_s(const char *stringa){
 
 }
 
-#ifdef _WIN64
+#if defined(WIN64) || defined(WIN32)
 #define C '\\'
 
 static void replace(char *data){

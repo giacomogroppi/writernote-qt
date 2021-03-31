@@ -156,7 +156,7 @@ void extract_audio_ui::on_open_to_clicked()
 /*
  * open writernote file
 */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 #define HOME "USERPROFILE"
 #elif unix
 #define HOME "HOME"
