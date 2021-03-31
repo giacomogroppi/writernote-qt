@@ -107,8 +107,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
                 if(medotodiinserimento == e_method::selection){
-                    this->square_.setData(data->datatouch);
-                    bool check = this->square_.find();
+
+                    bool check = this->square_.find(data->datatouch);
+
                     if(!check){
                         isloading = true;
                         update();
@@ -117,9 +118,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     }
 
                     QPainter painter(&m_pixmap);
-                    //update(this->square_.drawsquare(painter));
+
                     this->m_pixmap.fill(Qt::white);
-                    this->square_.drawsquare(painter);
+                    this->square_.drawsquare(painter, data->datatouch);
+
                     isloading = true;
 
                     update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));

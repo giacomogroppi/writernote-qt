@@ -3,31 +3,33 @@
 #include <QPainter>
 #include <QPointF>
 
-#include "../datastruct/datastruct.h"
+class datastruct;
 
 class square
 {
 private:
     bool __need_reload = false;
+
+    QRectF findObjectToDraw(datastruct *);
+
 public:
     void needReload(QPainter &);
 
     square();
     void reset();
     QRectF disegno(QPainter &painter, QPointF puntofine);
-    bool find();
+    bool find(datastruct *data);
 
     bool isinside(QPointF);
-    void setData(datastruct *data);
     QRectF move(QPointF, QPainter &painter, datastruct *data);
 
     /* disegna il quadrato attorno all'oggetti che ha selezionato l'utente */
-    QRectF drawsquare(QPainter &painter);
+    QRectF drawsquare(QPainter &painter, datastruct *data);
 
     QPointF pointinit;
     QPointF pointfine;
 
-    int idtratto;
+    QList<int> m_id;
 
     QPen penna;
     bool check;

@@ -1,6 +1,7 @@
 #include "square.h"
 #include <QPen>
 #include <QPainter>
+#include "../datastruct/datastruct.h"
 
 square::square()
 {
@@ -33,34 +34,33 @@ QRectF square::disegno(QPainter &painter, QPointF puntodifine){
 
 /* la funzione capisce se all'interno del quadrato della selezione c'è qualcosa
  * in caso salva l'id del tratto e setta la variabile this->check = true, in caso contrario
- * la setta = false */
-bool square::find(){
+ * la setta = false e fa il return
+*/
+bool square::find(datastruct *data){
     unsigned int i, len;
 
     len = data->m_point.length();
 
     this->check = false;
 
-    for(i=0;i<len; i++)
-        if(data->m_point.at(i).m_x <= this->pointfine.x()
-                && data->m_point.at(i).m_y <= this->pointfine.y()
-                && data->m_point.at(i).m_x >= this->pointfine.x()
-                && data->m_point.at(i).m_y >= this->pointfine.y()
-                && data->m_point.at(i).idtratto != IDVERTICALE
-                && data->m_point.at(i).idtratto != IDORIZZONALE)
-        {
-            idtratto = data->m_point.at(i).idtratto;
+    const point_s * __point;
+
+    for(i=0;i<len; i++){
+        __point = & data->m_point.at(i);
+        if(data->isinside(pointinit, pointfine, __point)){
+
+            if(m_id.indexOf(__point->idtratto))
+                m_id.append(__point->idtratto);
+
             this->check = true;
-            break;
         }
+    }
 
     return check;
 }
 
-void square::setData(datastruct *data){ this->data = data; }
-
 /* la funzione prendere l'elemento più in alto a sinistra e più in basso a destra */
-QRectF square::drawsquare(QPainter &painter){
+QRectF square::drawsquare(QPainter &painter, datastruct *data){
     unsigned int i, len;
     double maxx, maxy, minx, miny;
 
