@@ -41,11 +41,12 @@ public:
 
     void MovePoint( QRectF &, QPointF);
 
-    bool isIdUser(const point_s * __point);
+    static bool isIdUser(const point_s * __point);
 
     bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);
     bool isinside(double x1, double y1, double x2, double y2, unsigned int index);
-    bool isinside(QPointF &topleft, QPointF &bottonright, const point_s *__point);
+    static bool isinside(QPointF &topleft, QPointF &bottonright, const point_s *__point);
+    static bool isinside(QPointF &topleft, QPointF &bottonright, QPointF &point);
 
     void adjustHeight(int height);
 

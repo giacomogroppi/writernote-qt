@@ -122,13 +122,8 @@ bool square::isinside(QPointF point){
     if(!this->check)
         return false;
 
-    if(pointinit.x() <= point.x()
-            && pointinit.y() <= point.y()
-            && pointfine.x() >= point.x()
-            && pointfine.y() >= point.y())
-        return true;
+    return datastruct::isinside(pointinit, pointfine, point);
 
-    return false;
 }
 
 
