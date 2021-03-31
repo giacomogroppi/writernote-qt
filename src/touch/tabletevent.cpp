@@ -17,7 +17,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                 else if(medotodiinserimento == e_method::selection)
                 {
-                    square_.disegno(event->posF());
+                    square_.updatePoint(event->posF());
                 }
                 m_deviceDown = true;
                 lastPoint.pos = event->pos();
@@ -56,9 +56,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else if(medotodiinserimento == e_method::selection){
                     if(!this->square_.check){ /* it means that the user not select anything */
-                        square_.disegno(event->posF());
+                        square_.updatePoint(event->posF());
 
-                        update(QRect(QPoint(0, 0), QPoint(m_pixmap.width(), m_pixmap.height())));
+                        update();
                     }
                     else{
                         if(!this->square_.isinside(event->posF())){

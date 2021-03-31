@@ -19,7 +19,7 @@ void square::reset(){
     __need_reload = false;
 }
 
-QRectF square::disegno(QPointF puntofine)
+QRectF square::updatePoint(QPointF puntofine)
 {
     QRectF __res;
 
