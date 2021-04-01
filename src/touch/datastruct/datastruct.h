@@ -51,8 +51,8 @@ public:
     static bool isinside(QPointF &topleft, QPointF &bottonright, QPointF &point);
 
 
-    bool adjustAll(unsigned int width,
-                   unsigned int height);
+    bool adjustAll(const unsigned int width,
+                   const unsigned int height);
     bool adjustWidth(unsigned int width, bool controllRepo, bool __not_set = true);
     void adjustHeight(unsigned int height, bool controllRepo);
 

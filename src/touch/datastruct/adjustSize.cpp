@@ -57,8 +57,8 @@ bool datastruct::adjustWidth(unsigned int width,
  * the function consider the fact that the
  * height of one sheet is bigger than the width
 */
-bool datastruct::adjustAll(unsigned int width,
-                           unsigned int height){
+bool datastruct::adjustAll(const unsigned int width,
+                           const unsigned int height){
     adjustHeight(height, true);
     return adjustWidth(width, false);
 }
