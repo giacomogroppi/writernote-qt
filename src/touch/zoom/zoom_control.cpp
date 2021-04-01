@@ -6,34 +6,15 @@ zoom_control::zoom_control()
 
 }
 
-void zoom_control::trasla(QPointF &point_translate, long double delta){
-    unsigned int i, len;
-    len = data->m_point.length();
-
-    if(point_translate == QPointF(0, 0))
+void zoom_control::trasla(QPointF point_translate, long double delta){
+    if(point_translate == QPointF(0.0, 0.0))
         return;
 
-    double x, y;
-    x = point_translate.x();
-    y = point_translate.y();
-
-    if(delta){
-        x *= (-1*delta);
-        y *= (-1*delta);
+    if(!delta){
+        datastruct::inverso(point_translate);
     }
 
-    for(i=0; i<len; i++){
-        data->m_point.operator[](i).m_x -= x;
-        data->m_point.operator[](i).m_y -= y;
-    }
-
-    /*
-     * last data struct
-    */
-    /*for(i=0; i<len; i++){
-        data->x[i] -= x;
-        data->y[i] -= y;
-    }*/
+    data->scala_all(point_translate);
 
 }
 
