@@ -17,7 +17,7 @@ private:
      *  true -> inverse operation
     */
     void trasla(QPointF , long double delta = 0);
-    bool needToResize(int widthP, int maxWidth);
+    bool needToResizeWidth(int widthP, int maxWidth);
 public:
     zoom_control();
 

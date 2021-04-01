@@ -42,7 +42,7 @@ bool datastruct::adjustWidth(unsigned int width,
 
             return adjustWidth(width,
                                controllRepo,
-                               true);
+                               false);
         }else{
             return false;
         }
@@ -52,8 +52,13 @@ bool datastruct::adjustWidth(unsigned int width,
 
 }
 
-void datastruct::adjustAll(unsigned int width,
+/*
+ * la funzione ritorna adjustWidth
+ * the function consider the fact that the
+ * height of one sheet is bigger than the width
+*/
+bool datastruct::adjustAll(unsigned int width,
                            unsigned int height){
     adjustHeight(height, true);
-    adjustWidth(width, false);
+    return adjustWidth(width, false);
 }

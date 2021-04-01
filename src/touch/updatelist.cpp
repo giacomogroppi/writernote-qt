@@ -22,14 +22,11 @@ static bool need_to_change_color(datastruct *data, int id){
     return (how % MAXPOINT) ? 0 : 1;
 }
 
-void TabletCanvas::updatelist(QTabletEvent *event){
-    struct point_s temp_point;
+static point_s temp_point;
 
+void TabletCanvas::updatelist(QTabletEvent *event){
     if(!this->m_deviceDown){
-        if(this->data->datatouch->m_point.length())
-            temp_point.idtratto = data->datatouch->m_point.last().idtratto + 1;
-        else
-            temp_point.idtratto = 0;
+        temp_point.idtratto = (data->datatouch->m_point.length()) ? data->datatouch->maxId() + 1 : 0;
     }
     else{
         if(m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
@@ -55,9 +52,6 @@ void TabletCanvas::updatelist(QTabletEvent *event){
         temp_point.idtratto = data->datatouch->m_point.last().idtratto;
     }
 
-
-    struct colore_s colore;
-
     temp_point.m_x = event->posF().x();
     temp_point.m_y = event->posF().y();
     temp_point.m_pressure = event->pressure();
@@ -66,9 +60,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     temp_point.m_posizioneaudio = time/1000;
 
 
-    setcolor_struct(&colore, m_color);
-
-    memcpy(&temp_point.m_color, &colore, sizeof(colore_s));
+    setcolor_struct(&temp_point.m_color, m_color);
 
     data->datatouch->m_point.append(temp_point);
 }
