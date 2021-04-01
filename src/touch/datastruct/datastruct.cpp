@@ -167,12 +167,16 @@ int datastruct::maxId()
     int i, len;
     len = m_point.length();
 
+    const point_s *__point;
+
     for(i=0; i<len; ++i){
-        if(m_point.at(i).idtratto > maxId)
-            maxId = m_point.at(i).idtratto;
+        __point = & m_point.at(i);
+        if(__point->idtratto > maxId){
+            maxId = __point->idtratto;
+        }
     }
 
-    return maxId;
+    return (maxId > 0) ? maxId : 0;
 
 }
 

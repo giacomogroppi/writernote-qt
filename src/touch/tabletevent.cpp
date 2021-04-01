@@ -12,11 +12,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (event->type()) {
         case QEvent::TabletPress: /* first point touch */
             if (!m_deviceDown) {
-                if(this->medotodiinserimento == e_method::pen)
+                if(this->medotodiinserimento == e_method::pen){
                     updatelist(event);
-
-                else if(medotodiinserimento == e_method::selection)
-                {
+                }
+                else if(medotodiinserimento == e_method::selection){
                     square_.updatePoint(event->posF());
                 }
                 m_deviceDown = true;

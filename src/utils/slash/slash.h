@@ -5,7 +5,7 @@ class slash
 {
 public:
     static inline const char *__slash(){
-#if defined (WIN32) || defined(WIN64)
+#if defined (WIN32) || defined(WIN64) || defined(__OS2__)
         return "\\";
 #elif defined(unix)
         return "/";
