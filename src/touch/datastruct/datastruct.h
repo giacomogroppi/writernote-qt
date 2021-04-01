@@ -91,7 +91,6 @@ public:
 
     double biggerxNoId();
     void reset();
-    double last();
 
     double biggerynoid();
     double biggerx();
