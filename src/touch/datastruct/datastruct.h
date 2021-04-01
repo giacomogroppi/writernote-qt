@@ -36,6 +36,8 @@ private:
     int minId();
 public:
 
+    void controllForRepositioning();
+
     void removePointId(QList<int> &list);
     void removePointId(int id, int len = -1);
 
@@ -48,7 +50,11 @@ public:
     static bool isinside(QPointF &topleft, QPointF &bottonright, const point_s *__point);
     static bool isinside(QPointF &topleft, QPointF &bottonright, QPointF &point);
 
-    void adjustHeight(int height);
+
+    void adjustAll(unsigned int width,
+                   unsigned int height);
+    bool adjustWidth(unsigned int width, bool controllRepo, bool __not_set = false);
+    void adjustHeight(unsigned int height, bool controllRepo);
 
     /*
      * this function return the index of the first

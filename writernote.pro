@@ -63,6 +63,8 @@ SOURCES += \
     src/sheet/fast_sheet.cpp \
     src/touch/copy/copy_selection.cpp \
     src/touch/copy/copy_widgets.cpp \
+    src/touch/datastruct/adjustSize.cpp \
+    src/touch/datastruct/controllForRepositioning.cpp \
     src/touch/datastruct/isinside.cpp \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/pageCount.cpp \

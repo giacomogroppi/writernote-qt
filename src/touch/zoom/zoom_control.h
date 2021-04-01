@@ -18,12 +18,19 @@ private:
     */
     void trasla(QPointF , long double delta = 0);
     bool needToResize(int widthP, int maxWidth);
+    void controllHeight(const unsigned int height
+                        const unsigned int maxheight);
 public:
     zoom_control();
 
     void settingData(datastruct *data_struct){data = data_struct;}
 
-    bool zoom(QPointF &, long double, int widthP, int maxWidth);
+    bool zoom(QPointF &,
+              long double,
+              const unsigned int widthP,
+              const unsigned int maxWidth,
+              const unsigned int height,
+              const unsigned int maxHeight);
 
 };
 
