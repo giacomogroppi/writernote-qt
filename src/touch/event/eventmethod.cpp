@@ -62,7 +62,8 @@ bool TabletCanvas::event(QEvent *event){
                                             m_pixmap.width(),
                                             this->width(),
                                             m_pixmap.height(),
-                                            this->height());
+                                            this->height(),
+                                            data->datatouch);
 
                             }
                             else{
@@ -72,7 +73,8 @@ bool TabletCanvas::event(QEvent *event){
                                             m_pixmap.width(),
                                             this->width(),
                                             m_pixmap.height(),
-                                            this->height());
+                                            this->height(),
+                                            data->datatouch);
                             }
 
                             RIDEFINE(lastpointzoom);

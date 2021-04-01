@@ -1,13 +1,16 @@
 #include "zoom_control.h"
 #include <QDebug>
 #include "../event/itspossibletoscroll.h"
+#include "../datastruct/datastruct.h"
 
 zoom_control::zoom_control()
 {
 
 }
 
-void zoom_control::trasla(QPointF point_translate, long double delta){
+void zoom_control::trasla(QPointF point_translate,
+                          datastruct *data,
+                          long double delta){
     if(point_translate == QPointF(0.0, 0.0))
         return;
 
@@ -30,7 +33,8 @@ bool zoom_control::zoom(QPointF &point_translate,
                         const unsigned int width,
                         const unsigned int maxWidth,
                         const unsigned int height,
-                        const unsigned int maxHeight){
+                        const unsigned int maxHeight,
+                        datastruct *data){
     //qDebug() << (double)data->zoom << " Delta -> " << (double) delta;
 
     /* TODO */
@@ -45,7 +49,7 @@ bool zoom_control::zoom(QPointF &point_translate,
         }
     }
 
-    trasla(point_translate);
+    trasla(point_translate, data);
 
     unsigned int i, len;
 
@@ -54,7 +58,7 @@ bool zoom_control::zoom(QPointF &point_translate,
         data->m_point.operator[](i).m_y *= delta;
     }
 
-    trasla(point_translate, delta);
+    trasla(point_translate, data, delta);
 
     delta = (delta >= (long double)1) ? (delta-1) : (-((long double)1)/delta+1);
 
@@ -67,7 +71,8 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     return needToResizeWidth(
                 width,
-                maxWidth);
+                maxWidth,
+                data);
 }
 
 /*
@@ -76,16 +81,23 @@ bool zoom_control::zoom(QPointF &point_translate,
  *
  * only in zoom on
 */
-bool zoom_control::needToResizeWidth(int widthP, int maxWidth){
+bool zoom_control::needToResizeWidth(int width,
+                                     int maxWidth,
+                                     datastruct *data){
     /* if it's in max size possibile in the screen */
-    if(widthP == maxWidth)
+    if(width == maxWidth)
         return false;
 
+    double __temp = data->biggerx();
+
+    return (__temp > width);
+
+    /*
     int i, len = data->m_point.length();
     for(i=0; i<len; i++)
         if(data->m_point.at(i).m_x > widthP
                 && data->m_point.at(i).m_x < maxWidth)
             return true;
 
-    return false;
+    return false;*/
 }

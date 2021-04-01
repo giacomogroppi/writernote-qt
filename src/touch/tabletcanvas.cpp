@@ -170,7 +170,6 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 
 void TabletCanvas::settingdata(currenttitle_class *data, QString &path){
     this->data = data;
-    this->zoom->settingData(data->datatouch);
 
     if(this->m_autosave)
         m_autosave->setting_data(data, path);

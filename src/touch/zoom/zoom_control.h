@@ -1,14 +1,12 @@
 #ifndef ZOOM_CONTROL_H
 #define ZOOM_CONTROL_H
 
-#include "../datastruct/datastruct.h"
+class datastruct;
 #include <QPointF>
 
 class zoom_control
 {
 private:
-    datastruct *data;
-
     /*
      *  la funzione prense il punto passatogli
      *  e sposta il punto in (1,1) per facilitare i conti
@@ -16,19 +14,22 @@ private:
      *
      *  true -> inverse operation
     */
-    void trasla(QPointF , long double delta = 0);
-    bool needToResizeWidth(int widthP, int maxWidth);
+    void trasla(QPointF ,
+                datastruct *data,
+                long double delta = 0);
+    bool needToResizeWidth(int widthP,
+                           int maxWidth,
+                           datastruct *data);
 public:
     zoom_control();
-
-    void settingData(datastruct *data_struct){data = data_struct;}
 
     bool zoom(QPointF &,
               long double,
               const unsigned int widthP,
               const unsigned int maxWidth,
               const unsigned int height,
-              const unsigned int maxHeight);
+              const unsigned int maxHeight,
+              datastruct *data);
 
 };
 

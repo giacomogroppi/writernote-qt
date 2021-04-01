@@ -62,6 +62,12 @@ void topdf::translate(){
     /*
      * we can pass any value as we are not interested in resizing
     */
-    parent->m_canvas->zoom->zoom(temp_point, temp, 0, 0, 0, 0);
+    parent->m_canvas->zoom->zoom(temp_point,
+                                 temp,
+                                 0,
+                                 0,
+                                 0,
+                                 0,
+                                 data->datatouch);
 
 }
