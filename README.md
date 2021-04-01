@@ -46,7 +46,7 @@
 - Load file from pdf
 
 ## Known bugs:
-- Rubber
+- Rubber [partial]
 - Pen size [pen size is not yet supported]
 - Playing an audio in pen mode is not dynamic but static
 - Save image:
