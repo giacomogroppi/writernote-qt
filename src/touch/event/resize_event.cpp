@@ -7,6 +7,9 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
     if(data == NULL)
         return;
 
+    data->datatouch->controllForRepositioning();
+
+    /*
     checkPosition(data->datatouch);
 
     if(!data->datatouch->isempty()){
@@ -21,17 +24,17 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
         if(res < 0)
             data->datatouch->scala_x(-res);
 
-        data->datatouch->adjustHeight(height());
+        data->datatouch->adjustHeight(height(), true);
 
     }
 
-    init_:
+    init_:*/
 
     initPixmap(true);
     this->isloading = true;
 }
 
-
+/*
 static void checkPosition(datastruct *data){
     if(data->isempty())
         return;
@@ -46,4 +49,4 @@ static void checkPosition(datastruct *data){
     data->scala_x(-res);
 
 }
-
+*/

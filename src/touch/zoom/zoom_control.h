@@ -18,8 +18,6 @@ private:
     */
     void trasla(QPointF , long double delta = 0);
     bool needToResize(int widthP, int maxWidth);
-    void controllHeight(const unsigned int height
-                        const unsigned int maxheight);
 public:
     zoom_control();
 

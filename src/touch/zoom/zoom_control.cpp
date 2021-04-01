@@ -60,7 +60,8 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     data->zoom += delta;
 
-    data->adjustHeight(height);
+    data->adjustHeight(height, true);
+
 
     return needToResize(
                 widthP,

@@ -34,6 +34,10 @@ bool datastruct::isIdUser(const point_s *__point)
             && __point->idtratto != IDORIZZONALE;
 }
 
+/*
+ * return the index of the first point with
+ * idtratto == IDORIZZONALE
+*/
 unsigned int datastruct::posIdOrizzonal()
 {
     unsigned int i, len;

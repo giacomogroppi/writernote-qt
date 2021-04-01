@@ -58,13 +58,21 @@ bool TabletCanvas::event(QEvent *event){
                             if(check){
                                 temp_distance = calcolodistanza(&lastpointzoom.posd, &punto)/temp_distance_right_left;
                                 needToResize = needToResize || this->zoom->zoom(temp,
-                                            temp_distance, m_pixmap.width(), this->width());
+                                            temp_distance,
+                                            m_pixmap.width(),
+                                            this->width(),
+                                            m_pixmap.height(),
+                                            this->height());
 
                             }
                             else{
                                 temp_distance = calcolodistanza(&lastpointzoom.poss, &punto)/temp_distance_right_left;
                                 needToResize = needToResize || this->zoom->zoom(temp,
-                                                 temp_distance, m_pixmap.width(), this->width());
+                                            temp_distance,
+                                            m_pixmap.width(),
+                                            this->width(),
+                                            m_pixmap.height(),
+                                            this->height());
                             }
 
                             RIDEFINE(lastpointzoom);
