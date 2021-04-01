@@ -468,30 +468,6 @@ bool datastruct::needtochangeid(const int i){
 
 }
 
-/* max y in the list */
-double datastruct::last(){
-    if(m_point.isEmpty())
-        return (double)0;
-
-
-    double max;
-    int i, len;
-    len = m_point.length();
-
-    const point_s * __point = &m_point.first();
-    max = __point->m_y;
-
-    for(i=0; i<len; i++){
-        __point = &m_point.at(i);
-
-        if(max < __point->m_y){
-            max = __point->m_y;
-        }
-    }
-
-    return max;
-}
-
 struct returnIdMinY{
     double x, y;
 };
