@@ -124,6 +124,7 @@ void TabletCanvas::load(QPainter &painter,
                             xtemp[0], ytemp[0],
                             xtemp[1], ytemp[1]);
 
+                __point = & data->datatouch->m_point.at(i);
                 ++i;
             }
             else if(__point->m_x != size_verticale
@@ -139,8 +140,8 @@ void TabletCanvas::load(QPainter &painter,
 
             }
 
-            lastPoint.pos.setX(C(data).at(i).m_x);
-            lastPoint.pos.setY(C(data).at(i).m_y);
+            lastPoint.pos.setX(__point->m_x);
+            lastPoint.pos.setY(__point->m_y);
 
             /*
              * for pdf export
