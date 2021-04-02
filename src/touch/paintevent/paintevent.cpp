@@ -121,8 +121,8 @@ void TabletCanvas::load(QPainter &painter,
                 }
 
                 painter.drawLine(
-                            xtemp[0], ytemp[0],
-                            xtemp[1], ytemp[1]);
+                            xtemp[0]*m, ytemp[0]*m,
+                            xtemp[1]*m, ytemp[1]*m);
 
                 __point = & data->datatouch->m_point.at(i);
                 ++i;
