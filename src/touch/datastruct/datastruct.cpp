@@ -539,6 +539,29 @@ bool datastruct::MovePoint(QRectF &rect, QPointF __touch){
     return true;
 }
 
+
+/*
+ * return true if the user has written something
+*/
+bool datastruct::userWrittenSomething()
+{
+    unsigned int i, len;
+    const point_s * __point;
+
+    len = m_point.length();
+
+    if(!len)
+        return false;
+
+    for(i=0; i<len; ++i){
+        __point = & m_point.at(i);
+        if(datastruct::isIdUser(__point))
+            return true;
+    }
+
+    return false;
+}
+
 static struct returnIdMinY idMinY(datastruct *data, QList<int> & id){
     struct returnIdMinY __min;
     const point_s *__point;

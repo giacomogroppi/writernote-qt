@@ -122,7 +122,7 @@ int log_ui::loadData(){
             return 1;
 
         pos_log = _pos;
-        pos_log += "/";
+        pos_log += slash::__slash();
         pos_log += "writernote-log-" + current_day_string() + current_time_string() + ".txt";
     }
 
@@ -208,7 +208,7 @@ void log_ui::on_button_change_position_clicked()
         return;
     }
 
-    fp = fopen((__temp_dir + "/" + "Temp.txt").toUtf8().constData(), "w");
+    fp = fopen((__temp_dir + slash::__slash() + "Temp.txt").toUtf8().constData(), "w");
     if(!fp){
         dialog_critic("Impossibile write a file into that position");
         return;

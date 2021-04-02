@@ -1,6 +1,7 @@
 #include "datastruct.h"
 
-void datastruct::adjustHeight(unsigned int height, bool controllRepo)
+void datastruct::adjustHeight(unsigned int height,
+                              bool controllRepo)
 {
     if(controllRepo)
         controllForRepositioning();

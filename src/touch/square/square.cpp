@@ -11,8 +11,6 @@ square::square()
     this->reset();
 }
 
-#define RESET QPointF(-1, -1)
-
 void square::reset(){
     this->pointinit = this->lastpoint = this->pointfine = RESET;
     check = false;

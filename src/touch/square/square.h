@@ -3,6 +3,8 @@
 #include <QPainter>
 #include <QPointF>
 
+#define RESET QPointF(-1, -1)
+
 class datastruct;
 
 class square

@@ -43,6 +43,8 @@ public:
 
     bool MovePoint( QRectF &, QPointF);
 
+    bool userWrittenSomething();
+
     static bool isIdUser(const point_s * __point);
 
     bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);

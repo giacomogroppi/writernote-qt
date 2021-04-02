@@ -14,7 +14,7 @@ static QRectF rect;
    restituisce il rettangolo per l'update del widgets
 */
 void square::move(QPointF punto, QPainter &painter, datastruct *data){
-    if(lastpoint == QPointF(-1, -1)){
+    if(lastpoint == RESET){
         lastpoint = punto;
         return;
     }
