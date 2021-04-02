@@ -75,7 +75,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
         return event->ignore();
     }
 
-    QString filep;
+    QString filep, __message ;
 
     /*
      * if we are in keyboard mode
@@ -104,8 +104,15 @@ void MainWindow::closeEvent (QCloseEvent *event)
         m_currenttitle->testi = filep;
     }
 
+
+    if(m_path.isEmpty())
+        __message = "Do you want to save?";
+    else
+        __message = "Do you wanto to save in " + m_path + "?";
+
+
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
-                                                                tr("Do you want to save\n"),
+                                                                __message,
                                                                 QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
                                                                 QMessageBox::Yes);
 
