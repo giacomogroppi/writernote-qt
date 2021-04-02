@@ -95,9 +95,14 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    if(!m_currenttitle->m_touch)
+    if(m_currenttitle->m_touch){
+        if(!m_currenttitle->datatouch->userWrittenSomething()){
+            accept_event(event);
+        }
+    }
+    else{
         m_currenttitle->testi = filep;
-
+    }
 
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
                                                                 tr("Do you want to save\n"),
