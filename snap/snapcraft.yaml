@@ -163,7 +163,6 @@ parts:
       - libqt5core5a
       - ffmpeg
 
-      ## Testing
       - libxcb-screensaver0-dev
       - libxcb1-dev
       - libqt5waylandclient5-dev
@@ -180,7 +179,7 @@ parts:
       - libqt5multimediawidgets5
       - libqt5multimedia5-plugins 
       - libqt5multimedia5
-      #- qt5-qmake
+
       - libzip-dev
       - libxcb-xinerama0-dev
       - qt5-default
