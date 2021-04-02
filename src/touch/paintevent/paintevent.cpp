@@ -43,8 +43,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 }
 
 #define C(x) x->datatouch->m_point
-#define UPDATE_LOAD updateBrush_load(C(data).at(i).m_pressure, setcolor(&C(data).at(i).m_color))
-#define SET_PEN painter.setPen(this->m_pen)
+#define UPDATE_LOAD(x) updateBrush_load(x->m_pressure, setcolor(&x->m_color))
+#define SET_PEN(x) painter.setPen(x)
 
 /*
  * TODO -> implement this function to play audio
@@ -106,9 +106,9 @@ void TabletCanvas::load(QPainter &painter,
 
             if(__point->idtratto == IDORIZZONALE
                     || __point->idtratto == IDVERTICALE){
-                UPDATE_LOAD;
+                UPDATE_LOAD(__point);
 
-                SET_PEN;
+                SET_PEN(m_pen);
 
                 for(k=0; k<2; k++){
                     /* we can draw objects which are outside the pixmap
@@ -131,9 +131,9 @@ void TabletCanvas::load(QPainter &painter,
                     && __point->idtratto == _lastid){
 
 
-                UPDATE_LOAD;
+                UPDATE_LOAD(__point);
 
-                SET_PEN;
+                SET_PEN(m_pen);
 
                 painter.drawLine(this->lastPoint.pos*m,
                               QPointF(C(data).at(i).m_x*m, C(data).at(i).m_y*m));

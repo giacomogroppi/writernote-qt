@@ -23,9 +23,11 @@ static inline QPointF puntoameta(QPointF &, QPointF &);
  * this function only manage zoom
 */
 
+static QPointF temp;
+static bool needToResize;
+
 bool TabletCanvas::event(QEvent *event){
-    QPointF temp;
-    bool needToResize = false;
+    needToResize = false;
 
     switch (event->type()) {
         case QEvent::TouchBegin:

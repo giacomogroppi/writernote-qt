@@ -2,8 +2,6 @@
 
 #include "../utils/dialog_critic/dialog_critic.h"
 
-static QRectF __rect ;
-
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
@@ -56,7 +54,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(medotodiinserimento == e_method::selection){
                     if(!this->square_.check){ /* it means that the user not select anything */
                         square_.updatePoint(event->posF());
-
+                        isloading = true;
                         update();
                     }
                     else{
@@ -68,10 +66,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
-                            __rect = this->square_.move(event->posF(), painter, data->datatouch);
+                            this->square_.move(event->posF(), painter, data->datatouch);
 
-                            if(__rect != QRectF(0, 0, 0, 0))
-                                isloading = true;
+                            isloading = true;
                             update();
                         }
                     }

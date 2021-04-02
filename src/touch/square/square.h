@@ -29,7 +29,7 @@ public:
     bool find(datastruct *data);
 
     bool isinside(QPointF);
-    QRectF move(QPointF, QPainter &painter, datastruct *data);
+    void move(QPointF, QPainter &painter, datastruct *data);
 
     QList<int> m_id;
 

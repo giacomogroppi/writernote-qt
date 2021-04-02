@@ -13,10 +13,10 @@ static QRectF rect;
    e aver calcolato precedentemente l'id del tratto, lo sposta di un delta x e y
    restituisce il rettangolo per l'update del widgets
 */
-QRectF square::move(QPointF punto, QPainter &painter, datastruct *data){
+void square::move(QPointF punto, QPainter &painter, datastruct *data){
     if(lastpoint == QPointF(-1, -1)){
         lastpoint = punto;
-        return QRectF();
+        return;
     }
 
     struct delta __delta;
@@ -32,7 +32,7 @@ QRectF square::move(QPointF punto, QPainter &painter, datastruct *data){
 
     if(!data->MovePoint(rect,
                     punto))
-        return QRectF(0, 0, 0, 0);
+        return;
 
 
     lastpoint = punto;
@@ -49,12 +49,14 @@ QRectF square::move(QPointF punto, QPainter &painter, datastruct *data){
     this->__need_reload = true;
 
 
-    return QRectF(pointinit, pointfine);
+    return;
 }
 
 void square::needReload(QPainter &painter){
-    if(!this->__need_reload || !this->check)
+    if(!this->__need_reload)
         return;
+
+    painter.setPen(this->penna);
 
     painter.drawRect(QRectF(pointinit, pointfine));
 
