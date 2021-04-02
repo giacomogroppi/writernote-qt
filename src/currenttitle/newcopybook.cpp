@@ -24,12 +24,12 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     QMenu *menu = new QMenu(this);
     menu->setTitle("Choose input method");
 
-    QAction *draw = new QAction; // Assumes actions is not empty
+    QAction *draw = new QAction(menu); // Assumes actions is not empty
     draw->setStatusTip(tr("Draw with your pen [Alpha]"));
     draw->setText("Draw area [beta]");
     menu->addAction(draw);
 
-    QAction *keyboard = new QAction;
+    QAction *keyboard = new QAction(menu);
     keyboard->setStatusTip("Write with your keyboard");
     keyboard->setText("Plain text");
     menu->addAction(keyboard);
@@ -45,7 +45,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         return;
 
     bool ok;
-    if(this->m_path == "")
+    if(this->m_path.isEmpty())
     {
         /* asks where you want to save the new one */
         qfilechoose filec(this);

@@ -104,8 +104,7 @@ void TabletCanvas::load(QPainter &painter,
         if(__point->m_y < size_verticale
                 && __point->m_y >= 0){
 
-            if(__point->idtratto == IDORIZZONALE
-                    || __point->idtratto == IDVERTICALE){
+            if(!datastruct::isIdUser(__point)){
                 UPDATE_LOAD(__point);
 
                 SET_PEN(m_pen);
