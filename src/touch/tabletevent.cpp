@@ -7,7 +7,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
     bool check;
 
-    switch (event->type()) {
+    auto eventType = event->type();
+
+    switch (eventType) {
         case QEvent::TabletPress: /* first point touch */
             if (!m_deviceDown) {
                 if(this->medotodiinserimento == e_method::pen){
