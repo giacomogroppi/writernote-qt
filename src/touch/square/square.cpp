@@ -17,10 +17,8 @@ void square::reset(){
     __need_reload = false;
 }
 
-QRectF square::updatePoint(QPointF puntofine)
+void square::updatePoint(QPointF puntofine)
 {
-    QRectF __res;
-
     if(pointinit == RESET){
         pointinit = puntofine;
 
@@ -28,7 +26,7 @@ QRectF square::updatePoint(QPointF puntofine)
         this->__need_reload = false;
         this->check = false;
 
-        return __res;
+        return;
     }
 
     if(pointinit.x() > puntofine.x()){

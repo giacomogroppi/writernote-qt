@@ -27,7 +27,7 @@ public:
 
     square();
     void reset();
-    QRectF updatePoint(QPointF puntofine);
+    void updatePoint(QPointF puntofine);
     bool find(datastruct *data);
 
     bool isinside(QPointF);
