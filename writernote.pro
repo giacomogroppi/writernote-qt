@@ -131,6 +131,7 @@ SOURCES += \
     src/utils/copy_text.cpp \
     src/utils/default_location/audio_default_location.cpp \
     src/utils/default_location/location_audiorecord.cpp \
+    src/utils/default_option/default_option_ui.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/images/save_images.cpp \
@@ -257,6 +258,7 @@ HEADERS += \
     src/utils/common_error_definition.h \
     src/utils/copy_text.h \
     src/utils/default_location/audio_default_location.h \
+    src/utils/default_option/default_option_ui.h \
     src/utils/dialog_critic/dialog_critic.h \
     src/images/image_struct.h \
     src/images/save_images.h \
@@ -321,6 +323,7 @@ FORMS += \
     src/touch/text/text_widgets/text_widgets.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
     src/utils/default_location/audio_default_location.ui \
+    src/utils/default_option/default_option_ui.ui \
     src/utils/extract_audio/extract_audio_ui.ui \
     src/utils/make_default/make_default_ui.ui \
     src/utils/progress_bar/progress_bar_ui.ui \
