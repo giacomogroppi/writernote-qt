@@ -72,7 +72,7 @@ void TabletCanvas::load(QPainter &painter,
     QColor current_color = this->m_color;
     this->m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    _lastid = C(data).first().idtratto;
+    _lastid = C(data).first().idtratto; /* it should be IDFIRSTPOINT */
 
     for(i = 1, len = C(data).length(); i < len-1; i++){
         __point = &data->datatouch->m_point.at(i);
@@ -101,8 +101,8 @@ void TabletCanvas::load(QPainter &painter,
         if(_need_reload)
             __point = &data->datatouch->m_point.at(i);*/
 
-        if(__point->m_y < size_verticale
-                && __point->m_y >= 0){
+        /*if(__point->m_y < size_verticale
+                && __point->m_y >= 0)*/{
 
             if(!datastruct::isIdUser(__point)){
                 UPDATE_LOAD(__point);
@@ -127,8 +127,8 @@ void TabletCanvas::load(QPainter &painter,
                 __point = & data->datatouch->m_point.at(i);
                 ++i;
             }
-            else if(__point->m_x != size_verticale
-                    && __point->idtratto == _lastid){
+            else if(/*__point->m_x != size_verticale
+                    &&*/ __point->idtratto == _lastid){
 
 
                 UPDATE_LOAD(__point);
