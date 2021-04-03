@@ -24,7 +24,10 @@
   - Include audio file in writernote file
   - or decide to save the file in a specific location
   - listen to the audio again and visually see what was being written [only keyboard]
-
+- Create style of sheet
+- Dynamically decide how to create the sheet
+- Extract audio from writernote file
+- When closing the application, the program understands if the user has written something
 
 ## Experimental Features:
 - Import images
@@ -40,7 +43,6 @@
 - Project .writer to image
 - Convert audio to text
 - Drag and drop image and file to import it
-- Cloud
 - Compile for IOS and mac
 - Ask for classic confinement snapcraft
 - Load file from pdf
