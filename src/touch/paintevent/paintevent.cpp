@@ -87,7 +87,7 @@ void TabletCanvas::load(QPainter &painter,
          * the function translates all the points until it
          * finds a positive one, so as not to waste time cycling
         */
-        _need_reload = false;
+        /*_need_reload = false;
         if(C(data).at(i).m_x <= 0
                 && thereispositive(data->datatouch, __point->idtratto, i)
                 && __point->idtratto != IDORIZZONALE
@@ -99,7 +99,7 @@ void TabletCanvas::load(QPainter &painter,
         }
 
         if(_need_reload)
-            __point = &data->datatouch->m_point.at(i);
+            __point = &data->datatouch->m_point.at(i);*/
 
         if(__point->m_y < size_verticale
                 && __point->m_y >= 0){
@@ -136,7 +136,7 @@ void TabletCanvas::load(QPainter &painter,
                 SET_PEN(m_pen);
 
                 painter.drawLine(this->lastPoint.pos*m,
-                              QPointF(C(data).at(i).m_x*m, C(data).at(i).m_y*m));
+                              QPointF(__point->m_x*m, __point->m_y*m));
 
             }
 
@@ -147,7 +147,7 @@ void TabletCanvas::load(QPainter &painter,
              * for pdf export
             */
             if(y_last)
-                *y_last = C(data).at(i).m_y;
+                *y_last = __point->m_y;
         }
 
         _lastid = __point->idtratto;
