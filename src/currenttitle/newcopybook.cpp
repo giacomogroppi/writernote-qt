@@ -20,7 +20,9 @@ void MainWindow::methodwrite(){
 
 static QMenu *menu = nullptr;
 
-/* funzione che gestisce la creazione di un nuovo copybook */
+/*
+ * manage creation new copybook
+ */
 void MainWindow::on_actionCreate_new_copybook_triggered()
 {
     if(!menu){
