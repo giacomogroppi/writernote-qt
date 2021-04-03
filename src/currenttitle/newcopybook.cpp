@@ -18,26 +18,30 @@ void MainWindow::methodwrite(){
     this->typetemp = false;
 }
 
+static QMenu *menu = nullptr;
+
 /* funzione che gestisce la creazione di un nuovo copybook */
 void MainWindow::on_actionCreate_new_copybook_triggered()
 {
-    QMenu *menu = new QMenu(this);
-    menu->setTitle("Choose input method");
+    if(!menu){
+        menu = new QMenu(this);
+        menu->setTitle("Choose input method");
 
-    QAction *draw = new QAction(menu); // Assumes actions is not empty
-    draw->setStatusTip(tr("Draw with your pen [Alpha]"));
-    draw->setText("Draw area [beta]");
-    menu->addAction(draw);
+        QAction *draw = new QAction(menu); // Assumes actions is not empty
+        draw->setStatusTip(tr("Draw with your pen [Alpha]"));
+        draw->setText("Draw area [beta]");
+        menu->addAction(draw);
 
-    QAction *keyboard = new QAction(menu);
-    keyboard->setStatusTip("Write with your keyboard");
-    keyboard->setText("Plain text");
-    menu->addAction(keyboard);
+        QAction *keyboard = new QAction(menu);
+        keyboard->setStatusTip("Write with your keyboard");
+        keyboard->setText("Plain text");
+        menu->addAction(keyboard);
 
-    connect(draw, &QAction::triggered, this, &MainWindow::methodpen);
-    connect(keyboard, &QAction::triggered, this, &MainWindow::methodwrite);
+        connect(draw, &QAction::triggered, this, &MainWindow::methodpen);
+        connect(keyboard, &QAction::triggered, this, &MainWindow::methodwrite);
+    }
 
-    auto hostRect = this->cursor().pos();
+    QPoint hostRect = this->cursor().pos();
     menu->move(hostRect);
 
     /* if the user didn't click on the menu */
