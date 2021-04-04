@@ -278,6 +278,8 @@ private slots:
 
     void on_actionnewPage_triggered();
 
+    void on_actionDefault_method_write_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     bool event(QEvent *event) override;

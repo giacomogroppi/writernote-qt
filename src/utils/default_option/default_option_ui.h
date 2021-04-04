@@ -15,17 +15,20 @@ class default_option_ui : public QDialog
 
 public:
     enum e_result: int{
-        close,
         first,
         second,
-        error
+        error,
+        none
     };
 
     explicit default_option_ui(QWidget *parent = nullptr,
                                QString first_button = QString(),
                                QString second_button = QString(),
-                               QString title = QString());
+                               QString title = QString(),
+                               QString text = QString());
     ~default_option_ui();
+
+    void setChecked(e_result);
 
 private slots:
     void on_button_cancel_clicked();
@@ -44,8 +47,6 @@ private:
 signals:
     void result(enum e_result);
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
 
 };
 

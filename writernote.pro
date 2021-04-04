@@ -55,6 +55,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/currenttitle/default_type/default_type.cpp \
+    src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
     src/lastedit/copy_lastedit.cpp \

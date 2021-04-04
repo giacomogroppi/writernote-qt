@@ -4,7 +4,8 @@
 default_option_ui::default_option_ui(QWidget *parent,
                                      QString first_button,
                                      QString second_button,
-                                     QString title) :
+                                     QString title,
+                                     QString text) :
     QDialog(parent),
     ui(new Ui::default_option_ui)
 {
@@ -16,6 +17,8 @@ default_option_ui::default_option_ui(QWidget *parent,
     ui->first_text->setText(first_button);
     ui->second_text->setText(second_button);
     this->setWindowTitle(title);
+
+    ui->text->setText(text);
 }
 
 default_option_ui::~default_option_ui()
@@ -23,15 +26,24 @@ default_option_ui::~default_option_ui()
     delete ui;
 }
 
-void default_option_ui::on_button_cancel_clicked()
+void default_option_ui::setChecked(default_option_ui::e_result val)
 {
-    emit result(e_result::close);
+    if(val == default_option_ui::first){
+        res = 1;
+    }
+    else if(val == default_option_ui::second){
+        res = 2;
+    }
+    else if(val == default_option_ui::none){
+        res = -1;
+    }
+
+    this->updateStatus();
 }
 
-void default_option_ui::closeEvent(QCloseEvent *event)
+void default_option_ui::on_button_cancel_clicked()
 {
-    emit result(e_result::close);
-    event->accept();
+    this->close();
 }
 
 void default_option_ui::on_button_ok_clicked()

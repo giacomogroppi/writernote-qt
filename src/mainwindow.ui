@@ -336,6 +336,7 @@
     </property>
     <addaction name="actionnew_sheet"/>
     <addaction name="actionExtract_audio"/>
+    <addaction name="actionDefault_method_write"/>
    </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
@@ -898,6 +899,11 @@
    </property>
    <property name="text">
     <string>restore-button</string>
+   </property>
+  </action>
+  <action name="actionDefault_method_write">
+   <property name="text">
+    <string>Default method write</string>
    </property>
   </action>
  </widget>
