@@ -57,4 +57,3 @@ int savefile::salvabinario(zip_t *filezip){
     return ERROR;
 
 }
-

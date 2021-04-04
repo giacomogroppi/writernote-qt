@@ -8,6 +8,7 @@
 #include "../update_list_copybook.h"
 
 #include "../touch/datastruct/datastruct.h"
+#include "default_type/default_type.h"
 
 void MainWindow::methodpen(){
     this->typetemp = true;
@@ -25,30 +26,39 @@ static QMenu *menu = nullptr;
  */
 void MainWindow::on_actionCreate_new_copybook_triggered()
 {
-    if(!menu){
-        menu = new QMenu(this);
-        menu->setTitle("Choose input method");
+    auto __res = default_type::load_preference_copybook();
+    if(__res == default_type::not_set){
+        if(!menu){
+            menu = new QMenu(this);
+            menu->setTitle("Choose input method");
 
-        QAction *draw = new QAction(menu); // Assumes actions is not empty
-        draw->setStatusTip(tr("Draw with your pen [Alpha]"));
-        draw->setText("Draw area [beta]");
-        menu->addAction(draw);
+            QAction *draw = new QAction(menu); // Assumes actions is not empty
+            draw->setStatusTip(tr("Draw with your pen [Alpha]"));
+            draw->setText("Draw area [beta]");
+            menu->addAction(draw);
 
-        QAction *keyboard = new QAction(menu);
-        keyboard->setStatusTip("Write with your keyboard");
-        keyboard->setText("Plain text");
-        menu->addAction(keyboard);
+            QAction *keyboard = new QAction(menu);
+            keyboard->setStatusTip("Write with your keyboard");
+            keyboard->setText("Plain text");
+            menu->addAction(keyboard);
 
-        connect(draw, &QAction::triggered, this, &MainWindow::methodpen);
-        connect(keyboard, &QAction::triggered, this, &MainWindow::methodwrite);
+            connect(draw, &QAction::triggered, this, &MainWindow::methodpen);
+            connect(keyboard, &QAction::triggered, this, &MainWindow::methodwrite);
+        }
+
+        QPoint hostRect = this->cursor().pos();
+        menu->move(hostRect);
+
+        /* if the user didn't click on the menu */
+        if(!menu->exec())
+            return;
+    }
+    else if(__res == default_type::pen){
+        this->methodpen();
+    }else if(__res == default_type::key){
+        this->methodwrite();
     }
 
-    QPoint hostRect = this->cursor().pos();
-    menu->move(hostRect);
-
-    /* if the user didn't click on the menu */
-    if(!menu->exec())
-        return;
 
     bool ok;
     if(this->m_path.isEmpty())

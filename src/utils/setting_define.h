@@ -90,4 +90,9 @@
 #define GROUPNAME_LOG_POSITION "groupname-log-position"
 #define KEY_LOG_POSITION "key-log-position" /* QString */
 #define KEY_LOG_POSITION_DEFINE "key-log-position-define" /* int */
+
+/* default type of inpunt */
+#define GROURPNAME_DEFAULT_INSERT "groupname-default-insert"
+#define KEY_DEFAULT_INSERT "key-default-insert-method"
+
 #endif // SETTING_DEFINE_H

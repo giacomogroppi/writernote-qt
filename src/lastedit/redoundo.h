@@ -11,10 +11,10 @@ private:
     /* 0 <= indice <= 10 */
     unsigned short int indice = 0;
 
-    currenttitle_class *m_current;
+    currenttitle_class **m_current;
 
 public:
-    redoundo(currenttitle_class *);
+    redoundo(currenttitle_class **);
 
     ~redoundo(){
         m_list.clear();
@@ -27,7 +27,7 @@ public:
 
     void copy_b(currenttitle_class *, currenttitle_class *);
 
-    void setting_data(currenttitle_class *data){
+    void setting_data(currenttitle_class **data){
         m_current = data;
 
         indice = 0;

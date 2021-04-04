@@ -41,7 +41,7 @@ TabletCanvas::TabletCanvas()
         zoom = new zoom_control;
     }
 
-    m_redoundo = new redoundo(data);
+    m_redoundo = new redoundo(&data);
 
     loadLastMeghod(this);
 
@@ -172,10 +172,10 @@ void TabletCanvas::settingdata(currenttitle_class *data, QString &path){
     this->data = data;
 
     if(this->m_autosave)
-        m_autosave->setting_data(data, path);
+        m_autosave->setting_data(&data, path);
 
     if(this->m_redoundo)
-        m_redoundo->setting_data(data);
+        m_redoundo->setting_data(&data);
 
 }
 
@@ -184,7 +184,7 @@ void TabletCanvas::setAutoSave(bool v, QString &path){
     if(v){
         if(!m_autosave)
             m_autosave = new autosave_;
-        m_autosave->setting_data(data, path);
+        m_autosave->setting_data(&data, path);
     }
     else{
         if(m_autosave){

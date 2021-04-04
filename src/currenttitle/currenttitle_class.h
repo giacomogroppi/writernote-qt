@@ -22,6 +22,8 @@ namespace audio_record {
 };
 
 class currenttitle_class{
+private:
+    size_t createSingleControll();
 public:
     QString nome_copybook;
 

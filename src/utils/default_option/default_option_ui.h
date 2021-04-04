@@ -23,7 +23,8 @@ public:
 
     explicit default_option_ui(QWidget *parent = nullptr,
                                QString first_button = QString(),
-                               QString second_button = QString());
+                               QString second_button = QString(),
+                               QString title = QString());
     ~default_option_ui();
 
 private slots:

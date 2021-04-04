@@ -2,7 +2,7 @@
 
 #include "../currenttitle/checksimilecopybook.h"
 
-redoundo::redoundo(currenttitle_class *data)
+redoundo::redoundo(currenttitle_class **data)
 {
     this->m_current = data;
 

@@ -10,7 +10,7 @@
 class autosave_
 {
 private:
-    currenttitle_class *m_current;
+    currenttitle_class **m_current;
 
     savefile *m_savefile;
 
@@ -19,7 +19,7 @@ private:
     int m_posizione;
 
 public:
-    void setting_data(currenttitle_class *, QString &);
+    void setting_data(currenttitle_class **, QString &);
 
 
 

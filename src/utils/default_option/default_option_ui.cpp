@@ -3,7 +3,8 @@
 
 default_option_ui::default_option_ui(QWidget *parent,
                                      QString first_button,
-                                     QString second_button) :
+                                     QString second_button,
+                                     QString title) :
     QDialog(parent),
     ui(new Ui::default_option_ui)
 {
@@ -14,6 +15,7 @@ default_option_ui::default_option_ui(QWidget *parent,
 
     ui->first_text->setText(first_button);
     ui->second_text->setText(second_button);
+    this->setWindowTitle(title);
 }
 
 default_option_ui::~default_option_ui()

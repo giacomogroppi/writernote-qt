@@ -24,6 +24,8 @@ struct point_s{
     int m_posizioneaudio;
     struct colore_s m_color;
     int idtratto;
+
+    size_t createControll();
 };
 
 #define IDTRATTOZERO -5
