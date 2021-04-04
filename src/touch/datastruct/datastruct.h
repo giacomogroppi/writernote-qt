@@ -121,6 +121,11 @@ public:
     QList<struct point_s> m_point;
 
     long double zoom = 1.00;
+
+    unsigned int length(){
+        return m_point.length();
+    }
+
 };
 
 #endif // DATASTRUCT_H

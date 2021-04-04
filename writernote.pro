@@ -71,6 +71,7 @@ SOURCES += \
     src/touch/datastruct/isinside.cpp \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/pageCount.cpp \
+    src/touch/reduce_size/reduce_size.cpp \
     src/touch/square/draw_square.cpp \
     src/touch/square/size/size_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \
@@ -226,6 +227,7 @@ HEADERS += \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
+    src/touch/reduce_size/reduce_size.h \
     src/touch/square/size/size_square.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
