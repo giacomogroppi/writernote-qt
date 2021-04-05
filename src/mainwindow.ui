@@ -337,6 +337,7 @@
     <addaction name="actionnew_sheet"/>
     <addaction name="actionExtract_audio"/>
     <addaction name="actionDefault_method_write"/>
+    <addaction name="actionReduce_size_file"/>
    </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
@@ -904,6 +905,11 @@
   <action name="actionDefault_method_write">
    <property name="text">
     <string>Default method write</string>
+   </property>
+  </action>
+  <action name="actionReduce_size_file">
+   <property name="text">
+    <string>Reduce size file</string>
    </property>
   </action>
  </widget>

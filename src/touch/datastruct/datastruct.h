@@ -104,7 +104,7 @@ public:
     void removeat(int i);
 
     bool needtocreatenew();
-    bool needtochangeid(const int);
+    bool needtochangeid(const unsigned int);
 
     double biggery();
 

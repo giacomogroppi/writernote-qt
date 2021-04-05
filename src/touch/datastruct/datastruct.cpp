@@ -436,9 +436,7 @@ double datastruct::biggerxNoId(){
         __point = &m_point.at(i);
 
         if(max < __point->m_x
-                && __point->idtratto != IDVERTICALE
-                && __point->idtratto != IDORIZZONALE
-                && __point->idtratto != IDTRATTOZERO){
+                && isIdUser(__point)){
             max = __point->m_x;
         }
     }
@@ -449,13 +447,13 @@ double datastruct::biggerxNoId(){
 
 
 /*
- * the function return true if the point to delete is in the
- * middle of a stretch
+ * the function return true if the point in position i
+ * is in the middle of a stretch
  *
  * return false if it's the first point or the lastone
  */
-bool datastruct::needtochangeid(const int i){
-    int len;
+bool datastruct::needtochangeid(const unsigned int i){
+    unsigned int len;
     len = m_point.length();
 
     if(!i || i == len)

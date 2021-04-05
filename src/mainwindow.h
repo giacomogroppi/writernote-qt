@@ -280,6 +280,8 @@ private slots:
 
     void on_actionDefault_method_write_triggered();
 
+    void on_actionReduce_size_file_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     bool event(QEvent *event) override;
