@@ -71,6 +71,7 @@ SOURCES += \
     src/touch/datastruct/isinside.cpp \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/pageCount.cpp \
+    src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
     src/touch/square/draw_square.cpp \
     src/touch/square/size/size_square.cpp \

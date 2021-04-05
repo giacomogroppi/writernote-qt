@@ -419,8 +419,3 @@ void MainWindow::on_actionnewPage_triggered()
     m_canvas->disegnofoglio_bool = true;
     m_canvas->needUpdate();
 }
-
-void MainWindow::on_actionReduce_size_file_triggered()
-{
-
-}
