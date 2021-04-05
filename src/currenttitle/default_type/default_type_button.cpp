@@ -15,15 +15,8 @@ void MainWindow::on_actionDefault_method_write_triggered()
                                       "Pen",
                                       "Keyboard",
                                       "Insert method",
-                                      "With writernote you can write in two way, one with the pen, and with the keyboard, choose the default choise or enter cancel");
+                                      "With writernote you can write in two way, one with the pen,\n and with the keyboard, choose the default choise or enter cancel");
 
-        if(__res == default_type::pen){
-            n_def->setChecked(default_option_ui::first);
-        }else if(__res == default_type::not_set){
-            n_def->setChecked(default_option_ui::none);
-        }else if(__res == default_type::key){
-            n_def->setChecked(default_option_ui::second);
-        }
 
         QObject::connect(n_def, &default_option_ui::result, [&](default_option_ui::e_result res){
             if(res == default_option_ui::first){
@@ -34,11 +27,20 @@ void MainWindow::on_actionDefault_method_write_triggered()
             else{
                 __res = default_type::not_set;
             }
+
             __need_save = true;
         });
 
     }
 
+
+    if(__res == default_type::pen){
+        n_def->setChecked(default_option_ui::first);
+    }else if(__res == default_type::not_set){
+        n_def->setChecked(default_option_ui::none);
+    }else if(__res == default_type::key){
+        n_def->setChecked(default_option_ui::second);
+    }
 
     n_def->exec();
 
