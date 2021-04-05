@@ -26,6 +26,7 @@ struct point_s{
     int idtratto;
 
     size_t createControll();
+    bool isIdUser();
 };
 
 #define IDTRATTOZERO -5
@@ -47,7 +48,14 @@ public:
 
     bool userWrittenSomething();
 
-    static bool isIdUser(const point_s * __point);
+    /*
+     * return true if the user has written this point
+    */
+    static inline bool isIdUser(const point_s * __point){
+        return __point->idtratto != IDTRATTOZERO
+            && __point->idtratto != IDVERTICALE
+            && __point->idtratto != IDORIZZONALE;
+    }
 
     bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);
     bool isinside(double x1, double y1, double x2, double y2, unsigned int index);
@@ -127,5 +135,14 @@ public:
     }
 
 };
+
+/*
+ * return true if the user
+ * has written this point
+*/
+inline bool point_s::isIdUser()
+{
+    return datastruct::isIdUser(this);
+}
 
 #endif // DATASTRUCT_H

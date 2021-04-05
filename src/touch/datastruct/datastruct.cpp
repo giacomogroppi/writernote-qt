@@ -24,17 +24,6 @@ int datastruct::minId()
 }
 
 /*
- * return true if the
- * point is write by user
-*/
-bool datastruct::isIdUser(const point_s *__point)
-{
-    return __point->idtratto != IDTRATTOZERO
-            && __point->idtratto != IDVERTICALE
-            && __point->idtratto != IDORIZZONALE;
-}
-
-/*
  * return the index of the first point with
  * idtratto == IDORIZZONALE
 */
