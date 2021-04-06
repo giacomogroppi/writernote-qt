@@ -3,7 +3,7 @@
 static size_t data;
 int i;
 
-size_t point_s::createControll(){
+size_t point_s::createControll() const{
     data = 0;
     data += m_x;
     data += m_y;

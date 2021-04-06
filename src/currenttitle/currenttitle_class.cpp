@@ -36,16 +36,12 @@ size_t currenttitle_class::createSingleControll()
     size_t data = 0;
     unsigned int i, len;
 
-    point_s * __point;
-
-
     if(m_touch){
         len = datatouch->m_point.length();
         if(!len)
             return data;
         for(i=0; i<len; ++i){
-            __point = (point_s *) & datatouch->m_point.at(i);
-            data += __point->createControll();
+            data += datatouch->m_point.at(i).createControll();
         }
     }
 

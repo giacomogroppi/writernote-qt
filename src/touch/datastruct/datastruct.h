@@ -25,8 +25,8 @@ struct point_s{
     struct colore_s m_color;
     int idtratto;
 
-    size_t createControll();
-    bool isIdUser();
+    size_t createControll() const;
+    bool isIdUser() const;
 };
 
 #define IDTRATTOZERO -5
@@ -140,7 +140,7 @@ public:
  * return true if the user
  * has written this point
 */
-inline bool point_s::isIdUser()
+inline bool point_s::isIdUser() const
 {
     return datastruct::isIdUser(this);
 }

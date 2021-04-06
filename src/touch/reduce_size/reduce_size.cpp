@@ -77,10 +77,10 @@ static unsigned int __howReduce(datastruct *data,
     unsigned int count;
     int idtratto = data->m_point.at(*i).idtratto;
 
-    point_s * __point;
+    const point_s * __point;
 
     for(count = 0; *i<len; ++(*i)){
-        __point = (point_s *) & data->m_point.at(*i);
+        __point = & data->m_point.at(*i);
         if(__point->idtratto != idtratto
                 || !__point->isIdUser())
             break;
