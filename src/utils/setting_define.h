@@ -95,4 +95,7 @@
 #define GROURPNAME_DEFAULT_INSERT "groupname-default-insert"
 #define KEY_DEFAULT_INSERT "key-default-insert-method"
 
+#define GROUPNAME_LAST_LANGUAGE "groupname-last-language"
+#define KEY_LAST_LANGUAGE "key-last-language"
+
 #endif // SETTING_DEFINE_H

@@ -8,6 +8,7 @@
 
 #include "dataread/xmlstruct.h"
 #include "utils/extract_audio/extract_audio.h"
+#include "utils/changeLanguage.h"
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file, the name of the copybook, \nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
 #define COMMAND_EXTRACT "--extract"
@@ -48,6 +49,9 @@ int main(int argc, char *argv[])
 
     bool close_all = false;
     TabletApplication *app = new TabletApplication(argc, argv);
+
+    language_manager::setLanguage(app);
+
     TabletCanvas *canvas = new TabletCanvas;
     app->setCanvas(canvas);
 
@@ -80,9 +84,9 @@ int main(int argc, char *argv[])
     }
 
 #ifdef CLOUD
-    MainWindow w(nullptr, &canvas, user, &m_cloud, app);
+    MainWindow w(nullptr, &canvas, user, &m_cloud);
 #else
-    MainWindow w(nullptr, canvas, nullptr, nullptr, app);
+    MainWindow w(nullptr, canvas, nullptr, nullptr);
 #endif
 
     if(m_last_open != NULL)

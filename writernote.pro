@@ -262,6 +262,7 @@ HEADERS += \
     src/datawrite/sizedata.h \
     src/datawrite/source_read_ext.h \
     src/utils/bug_repo/bug_repo_ui.h \
+    src/utils/changeLanguage.h \
     src/utils/checkpassword/checkpassword.h \
     src/utils/color/setcolor.h \
     src/utils/common_error_definition.h \

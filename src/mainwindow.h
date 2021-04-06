@@ -56,8 +56,7 @@ public:
     MainWindow(QWidget *parent = nullptr,
                TabletCanvas *canvas = nullptr,
                struct struct_user *user = nullptr,
-               cloud_controll *cloud = nullptr,
-               TabletApplication *_app = nullptr);
+               cloud_controll *cloud = nullptr);
     ~MainWindow();
 
     QTimer *m_timer;
@@ -299,12 +298,6 @@ protected:
 signals:
     void UndoT();
     void RedoT();
-
-private:
-
-    QString LoadLastLanguage();
-    void SaveLastLanguage(QString &);
-    void setApplication(TabletApplication *_app);
 
 
 };

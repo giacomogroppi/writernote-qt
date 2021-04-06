@@ -45,16 +45,13 @@
 MainWindow::MainWindow(QWidget *parent,
                        TabletCanvas *canvas,
                        struct struct_user *user,
-                       cloud_controll *cloud,
-                       TabletApplication *_app)
+                       cloud_controll *cloud)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     this->m_cloud = cloud;
     this->m_canvas = canvas;
     this->m_user = user;
-
-    this->setApplication(_app);
 
     ui->setupUi(this);
 
