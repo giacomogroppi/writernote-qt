@@ -9,7 +9,8 @@ QT       += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = build
-RESOURCES     = writernote.qrc
+RESOURCES     = writernote.qrc \
+    language.qrc
 CONFIG += c++17
 
 !android{

@@ -338,6 +338,7 @@
     <addaction name="actionExtract_audio"/>
     <addaction name="actionDefault_method_write"/>
     <addaction name="actionReduce_size_file"/>
+    <addaction name="actionChange_language"/>
    </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
@@ -910,6 +911,11 @@
   <action name="actionReduce_size_file">
    <property name="text">
     <string>Reduce size file</string>
+   </property>
+  </action>
+  <action name="actionChange_language">
+   <property name="text">
+    <string>Change language</string>
    </property>
   </action>
  </widget>

@@ -282,6 +282,8 @@ private slots:
 
     void on_actionReduce_size_file_triggered();
 
+    void on_actionChange_language_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     bool event(QEvent *event) override;
