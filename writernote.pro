@@ -18,6 +18,8 @@ CONFIG += c++17
     INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 }
 
+TRANSLATIONS +=  language/it.ts
+
 ## Snapcraft support
 contains(DEFINES, SNAP){
     message("Snapcraft enable")
@@ -444,3 +446,6 @@ unix:contains(DEFINES, PDFSUPPORT){
     HEADERS += \
         src/frompdf/frompdf.h
 }
+
+DISTFILES += \
+    language/it.ts

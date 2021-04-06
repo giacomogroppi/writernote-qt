@@ -467,12 +467,12 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="24"/>
         <source>Sample rate:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="34"/>
         <source>Audio Codec:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="41"/>
@@ -482,7 +482,7 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="48"/>
         <source>File Container:</source>
-        <translation>Tipo di output</translation>
+        <translation>Tipo di output:</translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="64"/>
@@ -497,7 +497,7 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="89"/>
         <source>Constant Quality:</source>
-        <translation>Qualità dell&apos;audio</translation>
+        <translation>Qualità dell&apos;audio:</translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="120"/>
@@ -524,23 +524,23 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="14"/>
         <source>Report Issue</source>
-        <translation type="unfinished"></translation>
+        <translation>Riporta un problema</translation>
     </message>
     <message>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="20"/>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="58"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="42"/>
         <source>Open Github</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri github</translation>
     </message>
     <message>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="49"/>
         <source>Copy mail</source>
-        <translation type="unfinished"></translation>
+        <translation>Copia la mail</translation>
     </message>
 </context>
 <context>
@@ -548,104 +548,106 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Cloud</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="24"/>
         <source>Subscription</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbonati</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="32"/>
         <source>My balance</source>
-        <translation type="unfinished"></translation>
+        <translation>Il mio conto</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="39"/>
         <source>0 months</source>
-        <translation type="unfinished"></translation>
+        <translation>0 mesi</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="50"/>
         <source>Buy months</source>
-        <translation type="unfinished"></translation>
+        <translation>Compra dei mesi
+di abbonamento</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="59"/>
         <source>Add 1 months for 2.99€</source>
-        <translation type="unfinished"></translation>
+        <translation>Compra 1 mese per 2.99€</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="66"/>
         <source>Add 3 months for 5.99€</source>
-        <translation type="unfinished"></translation>
+        <translation>Compra 3 mese per 5.99€</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="73"/>
         <source>Add 6 months for 9.99€</source>
-        <translation type="unfinished"></translation>
+        <translation>Compra 6 mese per 9.99€</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="80"/>
         <source>Add 12 months for 14.99€</source>
-        <translation type="unfinished"></translation>
+        <translation>Compra 12 mese per 14.99€</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="124"/>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Info</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="136"/>
         <source>login</source>
-        <translation type="unfinished"></translation>
+        <translation>Accedi</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="144"/>
         <source>Mail</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="165"/>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="186"/>
         <source>Repeat
 password</source>
-        <translation type="unfinished"></translation>
+        <translation>Ripeti 
+password</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="223"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="262"/>
         <source>log on</source>
-        <translation type="unfinished"></translation>
+        <translation>Scollegati</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="269"/>
         <source>Register</source>
-        <translation type="unfinished"></translation>
+        <translation>Registrati</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="276"/>
         <source>change 
 password</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia password</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="287"/>
         <source>contacts</source>
-        <translation type="unfinished"></translation>
+        <translation>Contatti</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="321"/>
         <source>close</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi</translation>
     </message>
 </context>
 <context>
@@ -653,7 +655,7 @@ password</source>
     <message>
         <location filename="../src/touch/copy/copy_widgets.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -661,28 +663,28 @@ password</source>
     <message>
         <location filename="../src/utils/default_option/default_option_ui.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/default_option/default_option_ui.ui" line="20"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/default_option/default_option_ui.ui" line="29"/>
         <location filename="../src/utils/default_option/default_option_ui.ui" line="36"/>
         <source>PushButton</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/default_option/default_option_ui.ui" line="60"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cencella</translation>
     </message>
     <message>
         <location filename="../src/utils/default_option/default_option_ui.ui" line="67"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -690,57 +692,57 @@ password</source>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="14"/>
         <source>Sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Stili</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="30"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="43"/>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuovo</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="93"/>
         <source>Number of 
 vertical line</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero di linee verticali</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="121"/>
         <source>Number of 
 horizontal 
 line</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero di linee orizzontali</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="150"/>
         <source>Thickness</source>
-        <translation type="unfinished"></translation>
+        <translation>Spessore linee</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="177"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Colore</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="199"/>
         <source>Make default style</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendi stile di default</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.cpp" line="204"/>
         <location filename="../src/sheet/dialog_sheet.cpp" line="242"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.cpp" line="205"/>
         <location filename="../src/sheet/dialog_sheet.cpp" line="243"/>
         <source>Title: </source>
-        <translation type="unfinished"></translation>
+        <translation>Titolo: </translation>
     </message>
 </context>
 <context>
@@ -748,32 +750,32 @@ line</source>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="20"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="28"/>
         <source>path</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="92"/>
         <source>where</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="112"/>
         <source>lastmod</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="123"/>
         <source>own</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="143"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -781,43 +783,43 @@ line</source>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="22"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="45"/>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="93"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="56"/>
         <source>Title copybook</source>
-        <translation type="unfinished"></translation>
+        <translation>Titolo del copybook</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="70"/>
         <source>To</source>
-        <translation type="unfinished"></translation>
+        <translation>A</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="130"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="137"/>
         <source>Extract</source>
-        <translation type="unfinished"></translation>
+        <translation>Estrei</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.cpp" line="169"/>
         <source>Open File</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri file</translation>
     </message>
 </context>
 <context>
@@ -825,32 +827,32 @@ line</source>
     <message>
         <location filename="../src/sheet/fast-sheet/fast_sheet_ui.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/sheet/fast-sheet/fast_sheet_ui.ui" line="20"/>
         <source>Sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Stili</translation>
     </message>
     <message>
         <location filename="../src/sheet/fast-sheet/fast_sheet_ui.ui" line="30"/>
         <source>No line</source>
-        <translation type="unfinished"></translation>
+        <translation>Vuoto, foglio bianco</translation>
     </message>
     <message>
         <location filename="../src/sheet/fast-sheet/fast_sheet_ui.ui" line="37"/>
         <source>Only lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo linee</translation>
     </message>
     <message>
         <location filename="../src/sheet/fast-sheet/fast_sheet_ui.ui" line="44"/>
         <source>Squared sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Quadretti</translation>
     </message>
     <message>
         <location filename="../src/sheet/fast-sheet/fast_sheet_ui.ui" line="51"/>
         <source>Auto create new sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Creazione automatica del foglio</translation>
     </message>
 </context>
 <context>
@@ -858,32 +860,32 @@ line</source>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="20"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="30"/>
         <source>Rows: </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="44"/>
         <source>Columns:</source>
-        <translation type="unfinished"></translation>
+        <translation>Colonne:</translation>
     </message>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="58"/>
         <source>Cell spacing: </source>
-        <translation type="unfinished"></translation>
+        <translation>Spazio tra le celle: </translation>
     </message>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="72"/>
         <source>Cell padding:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="84"/>
         <source>Insert</source>
-        <translation type="unfinished"></translation>
+        <translation>Insertisci</translation>
     </message>
 </context>
 <context>

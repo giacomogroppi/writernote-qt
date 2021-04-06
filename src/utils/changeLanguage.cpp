@@ -3,10 +3,15 @@
 #include <QStringList>
 #include <QInputDialog>
 
+#include "../utils/dialog_critic/dialog_critic.h"
+#include "../touch/tabletapplication.h"
+
 /*
  * now writernote support only
  * it and en
 */
+
+TabletApplication *__app;
 
 #define IT "Italiano"
 #define EN "English"
@@ -24,10 +29,18 @@ void MainWindow::on_actionChange_language_triggered()
 
 
     if(lan_dect == IT){
-        __t.load(":/language/language/it.qm");
+        if(!__t.load(":/language/language/it.qm"))
+            return dialog_critic("We had a problem loading " + lan_dect );
     }
 
+    if(lan_dect != EN)
+        __app->installTranslator(&__t);
+
+    this->update();
+
+}
 
 
-
+void MainWindow::setApplication(TabletApplication *_app){
+    __app = _app;
 }

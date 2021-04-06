@@ -80,9 +80,9 @@ int main(int argc, char *argv[])
     }
 
 #ifdef CLOUD
-    MainWindow w(nullptr, &canvas, user, &m_cloud);
+    MainWindow w(nullptr, &canvas, user, &m_cloud, app);
 #else
-    MainWindow w(nullptr, canvas);
+    MainWindow w(nullptr, canvas, nullptr, nullptr, app);
 #endif
 
     if(m_last_open != NULL)

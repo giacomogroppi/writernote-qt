@@ -27,6 +27,8 @@
 
 #include "cloud/struct_user.h"
 
+class TabletApplication;
+
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s) STRINGIZE2(s)
 #define VERSION_STRING STRINGIZE(VERSION_SNAPCRAFT)
@@ -51,7 +53,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr, TabletCanvas *canvas = nullptr, struct struct_user *user = nullptr, cloud_controll *cloud = nullptr);
+    MainWindow(QWidget *parent = nullptr,
+               TabletCanvas *canvas = nullptr,
+               struct struct_user *user = nullptr,
+               cloud_controll *cloud = nullptr,
+               TabletApplication *_app = nullptr);
     ~MainWindow();
 
     QTimer *m_timer;
@@ -293,6 +299,13 @@ protected:
 signals:
     void UndoT();
     void RedoT();
+
+private:
+
+    QString LoadLastLanguage();
+    void SaveLastLanguage(QString &);
+    void setApplication(TabletApplication *_app);
+
 
 };
 #endif // MAINWINDOW_H
