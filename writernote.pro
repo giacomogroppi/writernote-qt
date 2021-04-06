@@ -130,6 +130,7 @@ SOURCES += \
     src/datawrite/write/savefile_savefile.cpp \
     src/datawrite/write/saveindice_savefile.cpp \
     src/utils/bug_repo/bug_repo_ui.cpp \
+    src/utils/changeLanguage.cpp \
     src/utils/checkpassword/checkpassword.cpp \
     src/utils/color/setcolor.cpp \
     src/utils/copy_text.cpp \

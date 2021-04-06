@@ -14,7 +14,7 @@ size_t reduce_size::calculate_min_size(datastruct *data){
 
     __size = howMuchPoint(data);
 
-    return current_size(data) - ((__size/2) * sizeof(data->m_point.first()));
+    return current_size(data) - ((__size/2) * sizeof(point_s));
 }
 
 size_t reduce_size::current_size(datastruct *data){
@@ -23,7 +23,7 @@ size_t reduce_size::current_size(datastruct *data){
     if(data->isempty())
         return 0;
 
-    size = sizeof(data->m_point.first()) * data->m_point.length();
+    size = sizeof(point_s) * data->m_point.length();
 
     size += sizeof(data->posizionefoglio.first()) * data->posizionefoglio.length();
 
