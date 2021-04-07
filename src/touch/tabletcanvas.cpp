@@ -1,4 +1,5 @@
 #include "tabletcanvas.h"
+#include "../mainwindow.h"
 
 #include <QCoreApplication>
 #include <QPainter>
@@ -13,7 +14,7 @@
 #include <QSettings>
 
 static void saveLastMethod(TabletCanvas::e_method);
-static void loadLastMeghod(TabletCanvas *);
+static void loadLastMethod(TabletCanvas *);
 
 void TabletCanvas::restoreO()
 {
@@ -35,7 +36,6 @@ TabletCanvas::TabletCanvas()
     setAttribute(Qt::WA_TabletTracking);
 
     this->data = nullptr;
-    this->medotodiinserimento = e_method::pen;
 
     if(!zoom){
         zoom = new zoom_control;
@@ -43,8 +43,8 @@ TabletCanvas::TabletCanvas()
 
     m_redoundo = new redoundo(&data);
 
-    loadLastMeghod(this);
-
+    loadLastMethod(this);
+    parent->updateTouch();
 }
 
 TabletCanvas::~TabletCanvas(){
@@ -205,7 +205,7 @@ static void saveLastMethod(TabletCanvas::e_method val){
 
 }
 
-static void loadLastMeghod(TabletCanvas *p){
+static void loadLastMethod(TabletCanvas *p){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
 
     setting.beginGroup(GROUPNAME_METHOD_TOUCH);

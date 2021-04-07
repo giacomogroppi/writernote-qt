@@ -23,6 +23,8 @@
 #include "text/text_widgets/text_widgets.h"
 #include "../sheet/fast-sheet/fast_sheet_ui.h"
 
+class MainWindow;
+
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
     QPointF poss = QPointF(-1, -1);
@@ -44,6 +46,8 @@ class TabletCanvas : public QWidget
     Q_OBJECT
 
 public:
+    MainWindow *parent;
+
     void restoreO();
     inline void needUpdate(){
         this->isloading = true;
@@ -72,7 +76,7 @@ public:
     void paintPixmap(QPainter &painter, QTabletEvent *event);
 
     /* funzione che setta il cambio dell'inserimento -> penna, gomma... */
-    void sceltacolorepenna(QColor);
+    void sceltacolorepenna(const QColor);
 
     /* aggiorna la lista dei punti */
     void updatelist(QTabletEvent *event);

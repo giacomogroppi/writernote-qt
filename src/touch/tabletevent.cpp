@@ -1,5 +1,5 @@
 #include "tabletcanvas.h"
-
+#include <QDebug>
 #include "../utils/dialog_critic/dialog_critic.h"
 
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
@@ -10,7 +10,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     auto eventType = event->type();
 
     switch (eventType) {
-        case QEvent::TabletPress: /* first point touch */
+        case QEvent::TabletPress: /* when the user release the tablet */
             if (!m_deviceDown) {
                 if(this->medotodiinserimento == e_method::pen){
                     updatelist(event);

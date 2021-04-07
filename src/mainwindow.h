@@ -53,6 +53,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    void updateTouch();
+
     MainWindow(QWidget *parent = nullptr,
                TabletCanvas *canvas = nullptr,
                struct struct_user *user = nullptr,
@@ -291,7 +293,6 @@ private slots:
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
-    bool event(QEvent *event) override;
 
     void resizeEvent(QResizeEvent *event) override;
 

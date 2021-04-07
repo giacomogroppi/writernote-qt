@@ -19,16 +19,11 @@ void MainWindow::on_actionpen_triggered()
         auto hostRect = cursor().pos();
         m_pen->move(hostRect);
 
-        SET_CHECK(ui->actionpen);
-
-
     }
 
     this->m_canvas->medotodiinserimento = TabletCanvas::e_method::pen;
 
-    SET_NOT_CHECK(ui->actionrubber);
-    SET_NOT_CHECK(ui->actioninsertText);
-    SET_NOT_CHECK(ui->actionselezionetext);
+    updateTouch();
 }
 
 
@@ -41,15 +36,11 @@ void MainWindow::on_actionrubber_triggered()
         QPoint hostRect = this->cursor().pos();
         m_rubber->move(hostRect);
 
-        SET_CHECK(ui->actionrubber);
-
     }
 
     this->m_canvas->medotodiinserimento = TabletCanvas::e_method::rubber;
 
-    SET_NOT_CHECK(ui->actionpen);
-    SET_NOT_CHECK(ui->actioninsertText);
-    SET_NOT_CHECK(ui->actionselezionetext);
+    updateTouch();
 }
 
 /* taglia */
@@ -57,11 +48,7 @@ void MainWindow::on_actionselezionetext_triggered()
 {
     this->m_canvas->medotodiinserimento = TabletCanvas::e_method::selection;
 
-    SET_CHECK(ui->actionselezionetext);
-
-    SET_NOT_CHECK(ui->actionpen);
-    SET_NOT_CHECK(ui->actioninsertText);
-    SET_NOT_CHECK(ui->actionrubber);
+    updateTouch();
 }
 
 /* insert text */
@@ -78,15 +65,10 @@ void MainWindow::on_actioninsertText_triggered()
         auto hostRect = this->cursor().pos();
         m_text->move(hostRect);
 
-        SET_CHECK(ui->actioninsertText);
-
-
     }
     this->m_canvas->medotodiinserimento = TabletCanvas::e_method::text;
 
-    SET_NOT_CHECK(ui->actionpen);
-    SET_NOT_CHECK(ui->actionrubber);
-    SET_NOT_CHECK(ui->actionselezionetext);
+    updateTouch();
 }
 
 void MainWindow::on_actionchoose_color_triggered()
@@ -98,28 +80,43 @@ void MainWindow::on_actionchoose_color_triggered()
     m_canvas->sceltacolorepenna(color);
 }
 
-void TabletCanvas::sceltacolorepenna(QColor color){
+void TabletCanvas::sceltacolorepenna(const QColor color){
     this->m_color = color;
     this->m_pen.setColor(this->m_color);
 }
 
+void MainWindow::updateTouch(){
+    ui->actionpen->setChecked(m_canvas->medotodiinserimento == TabletCanvas::pen);
+    ui->actionrubber->setChecked(m_canvas->medotodiinserimento == TabletCanvas::rubber);
+    ui->actionselezionetext->setChecked(m_canvas->medotodiinserimento == TabletCanvas::selection);
+    ui->actioninsertText->setChecked(m_canvas->medotodiinserimento == TabletCanvas::text);
+
+    ui->actionblack->setChecked(m_canvas->m_color == Qt::black);
+    ui->actionwhite->setChecked(m_canvas->m_color == Qt::white);
+    ui->actionyellow->setChecked(m_canvas->m_color == Qt::yellow);
+    ui->actionred->setChecked(m_canvas->m_color == Qt::red);
+}
 
 void MainWindow::on_actionblack_triggered()
 {
     this->m_canvas->sceltacolorepenna(Qt::black);
+    updateTouch();
 }
 
 void MainWindow::on_actionwhite_triggered()
 {
     this->m_canvas->sceltacolorepenna(Qt::white);
+    updateTouch();
 }
 
 void MainWindow::on_actionyellow_triggered()
 {
     this->m_canvas->sceltacolorepenna(Qt::yellow);
+    updateTouch();
 }
 
 void MainWindow::on_actionred_triggered()
 {
     this->m_canvas->sceltacolorepenna(Qt::red);
+    updateTouch();
 }

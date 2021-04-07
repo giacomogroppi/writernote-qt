@@ -175,7 +175,6 @@ SOURCES += \
     src/touch/event/mouseevent.cpp \
     src/touch/event/moving_f.cpp \
     src/touch/event/resize_event.cpp \
-    src/touch/eventmainwindow.cpp \
     src/touch/initpixmap.cpp \
     src/touch/paintevent/disegnofoglio.cpp \
     src/touch/paintevent/draw_image.cpp \

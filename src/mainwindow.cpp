@@ -50,7 +50,11 @@ MainWindow::MainWindow(QWidget *parent,
     , ui(new Ui::MainWindow)
 {
     this->m_cloud = cloud;
+
     this->m_canvas = canvas;
+    this->m_canvas->parent = this;
+
+
     this->m_user = user;
 
     ui->setupUi(this);
@@ -128,6 +132,11 @@ MainWindow::MainWindow(QWidget *parent,
     CHECKABLE(ui->actionrubber);
     CHECKABLE(ui->actionselezionetext);
     CHECKABLE(ui->actioninsertText);
+
+    CHECKABLE(ui->actionwhite);
+    CHECKABLE(ui->actionblack);
+    CHECKABLE(ui->actionred);
+    CHECKABLE(ui->actionyellow);
 
     ui->actionpen->setChecked(true);
 
