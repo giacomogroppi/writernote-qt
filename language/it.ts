@@ -343,7 +343,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="918"/>
         <source>Change language</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/audioplay/updatestatusbar_riascolto.cpp" line="16"/>
