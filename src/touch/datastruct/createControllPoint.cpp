@@ -1,7 +1,7 @@
 #include "datastruct.h"
 
 static size_t data;
-int i;
+static int i;
 
 size_t point_s::createControll() const{
     data = 0;

@@ -27,7 +27,7 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
         __point = &data->m_point.at(i);
 
 
-        if(data->isinside(topleft, bottonright, i)){
+        if(data->isinside(topleft, bottonright, __point)){
             this->m_data.m_point.append(*__point);
         }
 

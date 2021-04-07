@@ -42,7 +42,7 @@ public:
     void controllForRepositioning();
 
     void removePointId(QList<int> &list);
-    void removePointId(int id, int len = -1);
+    void removePointId(int id, unsigned int *len = nullptr);
 
     bool MovePoint( QRectF &, QPointF);
 

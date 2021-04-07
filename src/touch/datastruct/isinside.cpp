@@ -11,15 +11,9 @@ bool datastruct::isinside(QPointF &topleft, QPointF &bottonright, unsigned int i
 
 bool datastruct::isinside(double x1, double y1, double x2, double y2, unsigned int index)
 {
-    const point_s *__point;
+    QPointF __topleft(x1, y1), bottonright(x2, y2);
 
-    __point = &m_point.at(index);
-
-    return __point->m_x > x1
-            && __point->m_y > y1
-            && __point->m_x < x2
-            && __point->m_y < y2
-            && isIdUser(__point) ;
+    return datastruct::isinside(__topleft, bottonright, &m_point.at(index));
 }
 
 bool datastruct::isinside(QPointF &topleft, QPointF &bottonright, const point_s *__point){

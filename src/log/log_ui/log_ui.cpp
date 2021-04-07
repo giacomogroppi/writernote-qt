@@ -88,7 +88,7 @@ QString log_ui::getNameLog()
 void log_ui::closeEvent(QCloseEvent *event)
 {
     /* we don't want to close actualy */
-    this->close();
+    this->hide();
 
     event->ignore();
 }

@@ -47,4 +47,6 @@ void MainWindow::on_actionDefault_method_write_triggered()
     if(__need_save)
         default_type::save_preference_copybook(__res);
 
+    __need_save = false;
+
 }

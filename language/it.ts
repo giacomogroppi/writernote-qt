@@ -40,305 +40,310 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="350"/>
-        <location filename="../src/mainwindow.ui" line="419"/>
-        <location filename="../src/mainwindow.ui" line="440"/>
-        <location filename="../src/mainwindow.ui" line="464"/>
+        <location filename="../src/mainwindow.ui" line="351"/>
+        <location filename="../src/mainwindow.ui" line="420"/>
+        <location filename="../src/mainwindow.ui" line="441"/>
+        <location filename="../src/mainwindow.ui" line="465"/>
         <source>toolBar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="381"/>
-        <location filename="../src/mainwindow.ui" line="397"/>
+        <location filename="../src/mainwindow.ui" line="382"/>
+        <location filename="../src/mainwindow.ui" line="398"/>
         <source>toolBar_2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="488"/>
+        <location filename="../src/mainwindow.ui" line="489"/>
         <source>New File</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="497"/>
+        <location filename="../src/mainwindow.ui" line="498"/>
         <source>Save File</source>
         <translation>Salva il file</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="500"/>
+        <location filename="../src/mainwindow.ui" line="501"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="509"/>
+        <location filename="../src/mainwindow.ui" line="510"/>
         <source>Save As...</source>
         <translation>Salva con...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="512"/>
+        <location filename="../src/mainwindow.ui" line="513"/>
         <source>Ctrl+Shift+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="521"/>
+        <location filename="../src/mainwindow.ui" line="522"/>
         <source>Print</source>
         <translation>Stampa</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="530"/>
+        <location filename="../src/mainwindow.ui" line="531"/>
         <source>Record</source>
         <translation>Registra</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="539"/>
-        <location filename="../src/mainwindow.ui" line="553"/>
+        <location filename="../src/mainwindow.ui" line="540"/>
+        <location filename="../src/mainwindow.ui" line="554"/>
         <source>Import Video</source>
         <translation>Importa un video</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="548"/>
+        <location filename="../src/mainwindow.ui" line="549"/>
         <source>Stop Record</source>
         <translation>Finisci la registrazione</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="562"/>
+        <location filename="../src/mainwindow.ui" line="563"/>
         <source>Undo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="571"/>
+        <location filename="../src/mainwindow.ui" line="572"/>
         <source>Redo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="580"/>
+        <location filename="../src/mainwindow.ui" line="581"/>
         <source>Copy</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="583"/>
+        <location filename="../src/mainwindow.ui" line="584"/>
         <source>Ctrl+C</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="592"/>
+        <location filename="../src/mainwindow.ui" line="593"/>
         <source>Cut</source>
         <translation>Taglia</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="595"/>
+        <location filename="../src/mainwindow.ui" line="596"/>
         <source>Ctrl+X</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="604"/>
+        <location filename="../src/mainwindow.ui" line="605"/>
         <source>Select all</source>
         <translation>Seleziona tutto</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="613"/>
+        <location filename="../src/mainwindow.ui" line="614"/>
         <source>Paste</source>
         <translation>Incolla</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="618"/>
+        <location filename="../src/mainwindow.ui" line="619"/>
         <source>Source code</source>
         <translation>Codice sorgente</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="623"/>
+        <location filename="../src/mainwindow.ui" line="624"/>
         <source>Bug report</source>
         <translation>Riporta un bug</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="628"/>
+        <location filename="../src/mainwindow.ui" line="629"/>
         <source>Documentation</source>
         <translation>Documentazione</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="640"/>
+        <location filename="../src/mainwindow.ui" line="641"/>
         <source>Listen current audio</source>
         <translation>Ascolta il corrente file</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="649"/>
+        <location filename="../src/mainwindow.ui" line="650"/>
         <source>Delete copybook</source>
         <translation>Elimina il quaderno</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="652"/>
+        <location filename="../src/mainwindow.ui" line="653"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="661"/>
+        <location filename="../src/mainwindow.ui" line="662"/>
         <source>Create new copybook</source>
         <translation>Crea un nuovo quaderno</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="664"/>
+        <location filename="../src/mainwindow.ui" line="665"/>
         <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="673"/>
+        <location filename="../src/mainwindow.ui" line="674"/>
         <source>Convert audio to text</source>
         <translation>Converti il testo in audio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="682"/>
+        <location filename="../src/mainwindow.ui" line="683"/>
         <source>Open file</source>
         <translation>Apri un file</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="685"/>
+        <location filename="../src/mainwindow.ui" line="686"/>
         <source>Ctrl+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="694"/>
+        <location filename="../src/mainwindow.ui" line="695"/>
         <source>Delete audio</source>
         <translation>Elimina l&apos;audio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="703"/>
+        <location filename="../src/mainwindow.ui" line="704"/>
         <source>pauserecording</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="708"/>
+        <location filename="../src/mainwindow.ui" line="709"/>
         <source>Quality setting</source>
         <translation>Qualità dell&apos;audio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="717"/>
+        <location filename="../src/mainwindow.ui" line="718"/>
         <location filename="../src/currenttitle/rightclicklistcopybook.cpp" line="77"/>
         <source>compress video</source>
         <translation>Comprimi un video</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="726"/>
+        <location filename="../src/mainwindow.ui" line="727"/>
         <source>pen</source>
         <translation>Penna</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="735"/>
+        <location filename="../src/mainwindow.ui" line="736"/>
         <source>rubber</source>
         <translation>Gomma</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="744"/>
+        <location filename="../src/mainwindow.ui" line="745"/>
         <source>yellow</source>
         <translation>Giallo</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="753"/>
+        <location filename="../src/mainwindow.ui" line="754"/>
         <source>white</source>
         <translation>Bianco</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="762"/>
+        <location filename="../src/mainwindow.ui" line="763"/>
         <source>black</source>
         <translation>Nero</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="771"/>
+        <location filename="../src/mainwindow.ui" line="772"/>
         <source>red</source>
         <translation>Rosso</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="780"/>
+        <location filename="../src/mainwindow.ui" line="781"/>
         <source>selezionedisegno</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="789"/>
+        <location filename="../src/mainwindow.ui" line="790"/>
         <source>toppf</source>
         <translation>Esporta in pdf</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="794"/>
+        <location filename="../src/mainwindow.ui" line="795"/>
         <source>Check update</source>
         <translation>Controlla aggiornamenti</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="803"/>
+        <location filename="../src/mainwindow.ui" line="804"/>
         <source>insertImage</source>
         <translation>Inserisci immagini</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="812"/>
+        <location filename="../src/mainwindow.ui" line="813"/>
         <source>Manage sheet</source>
         <translation>Modifica pagine di default</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="820"/>
+        <location filename="../src/mainwindow.ui" line="821"/>
         <source>Auto Save</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="828"/>
+        <location filename="../src/mainwindow.ui" line="829"/>
         <source>Disable redo undo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="837"/>
+        <location filename="../src/mainwindow.ui" line="838"/>
         <source>choose-color</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="846"/>
+        <location filename="../src/mainwindow.ui" line="847"/>
         <source>cloud</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="851"/>
+        <location filename="../src/mainwindow.ui" line="852"/>
         <source>Version</source>
         <translation>Versione</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="856"/>
+        <location filename="../src/mainwindow.ui" line="857"/>
         <source>About Qt</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="865"/>
+        <location filename="../src/mainwindow.ui" line="866"/>
         <source>insertText</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="870"/>
+        <location filename="../src/mainwindow.ui" line="871"/>
         <source>Default save location</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="875"/>
+        <location filename="../src/mainwindow.ui" line="876"/>
         <source>Extract audio</source>
         <translation>Estrai un audio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="884"/>
+        <location filename="../src/mainwindow.ui" line="885"/>
         <source>lastStyle</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="893"/>
+        <location filename="../src/mainwindow.ui" line="894"/>
         <source>newPage</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="902"/>
+        <location filename="../src/mainwindow.ui" line="903"/>
         <source>restore-button</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="907"/>
+        <location filename="../src/mainwindow.ui" line="908"/>
         <source>Default method write</source>
         <translation>Default metodo di inserimento</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="912"/>
+        <location filename="../src/mainwindow.ui" line="913"/>
         <source>Reduce size file</source>
         <translation>Riduci dimensione dei file</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="918"/>
+        <source>Change language</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/audioplay/updatestatusbar_riascolto.cpp" line="16"/>
@@ -411,7 +416,7 @@
         <translation>Elimina l&apos;audio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="172"/>
+        <location filename="../src/mainwindow.cpp" line="175"/>
         <source>Open File</source>
         <translation>Apri un file</translation>
     </message>
@@ -893,22 +898,22 @@ line</source>
     <message>
         <location filename="../src/last_open/last_open.ui" line="14"/>
         <source>Recent files</source>
-        <translation type="unfinished"></translation>
+        <translation>File recenti</translation>
     </message>
     <message>
         <location filename="../src/last_open/last_open.ui" line="37"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri</translation>
     </message>
     <message>
         <location filename="../src/last_open/last_open.ui" line="63"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi</translation>
     </message>
     <message>
         <location filename="../src/last_open/last_open.ui" line="70"/>
         <source>Close all</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi tutto</translation>
     </message>
 </context>
 <context>
@@ -916,32 +921,32 @@ line</source>
     <message>
         <location filename="../src/log/log_ui/log_ui.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/log/log_ui/log_ui.ui" line="22"/>
         <source>Position of log</source>
-        <translation type="unfinished"></translation>
+        <translation>Posizione log</translation>
     </message>
     <message>
         <location filename="../src/log/log_ui/log_ui.ui" line="35"/>
         <source>Open current log</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri log</translation>
     </message>
     <message>
         <location filename="../src/log/log_ui/log_ui.ui" line="48"/>
         <source>Change position log</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia posizione log</translation>
     </message>
     <message>
         <location filename="../src/log/log_ui/log_ui.ui" line="101"/>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation>Disabilita</translation>
     </message>
     <message>
         <location filename="../src/log/log_ui/log_ui.ui" line="114"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi</translation>
     </message>
 </context>
 <context>
@@ -949,27 +954,27 @@ line</source>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="20"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="26"/>
         <source>text</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="33"/>
         <source>Remember my choice</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricorda la mia scelta</translation>
     </message>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="55"/>
         <source>Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>Si</translation>
     </message>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="62"/>
         <source>No</source>
-        <translation type="unfinished"></translation>
+        <translation>No</translation>
     </message>
 </context>
 <context>
@@ -977,22 +982,22 @@ line</source>
     <message>
         <location filename="../src/touch/pen/pen_ui.ui" line="20"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/touch/pen/pen_ui.ui" line="37"/>
         <source>By size</source>
-        <translation type="unfinished"></translation>
+        <translation>Grandezza</translation>
     </message>
     <message>
         <location filename="../src/touch/pen/pen_ui.ui" line="44"/>
         <source>Pressure</source>
-        <translation type="unfinished"></translation>
+        <translation>Pressione</translation>
     </message>
     <message>
         <location filename="../src/touch/pen/pen_ui.ui" line="103"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Grandezza</translation>
     </message>
 </context>
 <context>
@@ -1000,17 +1005,17 @@ line</source>
     <message>
         <location filename="../src/utils/progress_bar/progress_bar_ui.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/progress_bar/progress_bar_ui.ui" line="20"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/progress_bar/progress_bar_ui.ui" line="49"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi</translation>
     </message>
 </context>
 <context>
@@ -1018,22 +1023,22 @@ line</source>
     <message>
         <location filename="../src/utils/retry/retry_ui.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/retry/retry_ui.ui" line="20"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/retry/retry_ui.ui" line="42"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Riprova</translation>
     </message>
     <message>
         <location filename="../src/utils/retry/retry_ui.ui" line="49"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiudi</translation>
     </message>
 </context>
 <context>
@@ -1041,22 +1046,22 @@ line</source>
     <message>
         <location filename="../src/touch/rubber/rubber_ui.ui" line="20"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/touch/rubber/rubber_ui.ui" line="35"/>
         <source>Total</source>
-        <translation type="unfinished"></translation>
+        <translation>Totale</translation>
     </message>
     <message>
         <location filename="../src/touch/rubber/rubber_ui.ui" line="42"/>
         <source>Partial</source>
-        <translation type="unfinished"></translation>
+        <translation>Parziale</translation>
     </message>
     <message>
         <location filename="../src/touch/rubber/rubber_ui.ui" line="55"/>
         <source>size rubber</source>
-        <translation type="unfinished"></translation>
+        <translation>Grandezza gomma</translation>
     </message>
 </context>
 <context>
@@ -1064,22 +1069,22 @@ line</source>
     <message>
         <location filename="../src/touch/text/text_ui/text_ui.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/touch/text/text_ui/text_ui.ui" line="22"/>
         <source>Font type</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/touch/text/text_ui/text_ui.ui" line="36"/>
         <source>Text size</source>
-        <translation type="unfinished"></translation>
+        <translation>Grandezza testo</translation>
     </message>
     <message>
         <location filename="../src/touch/text/text_ui/text_ui.ui" line="50"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Colore</translation>
     </message>
 </context>
 <context>
@@ -1087,12 +1092,12 @@ line</source>
     <message>
         <location filename="../src/touch/text/text_widgets/text_widgets.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/touch/text/text_widgets/text_widgets.ui" line="23"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;pre style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:130.769%; font-family:&apos;monospace&apos;;&quot;&gt;&lt;br/&gt;&lt;/pre&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1100,43 +1105,43 @@ line</source>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="20"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="44"/>
         <source>From</source>
-        <translation type="unfinished"></translation>
+        <translation>Posizione</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="56"/>
         <source>To</source>
-        <translation type="unfinished"></translation>
+        <translation>A</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="68"/>
         <source>codec</source>
-        <translation type="unfinished"></translation>
+        <translation>Codec</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="80"/>
         <source>fps</source>
-        <translation type="unfinished"></translation>
+        <translation>FPS</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="125"/>
         <location filename="../src/videocompress/videocompress_ui.ui" line="176"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="197"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="204"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella</translation>
     </message>
 </context>
 </TS>

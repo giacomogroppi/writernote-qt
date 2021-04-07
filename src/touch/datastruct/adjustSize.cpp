@@ -41,7 +41,7 @@ bool datastruct::adjustHeight(unsigned int height,
 /*
  * la funzione viene chiamata quando si zoom diminuendo lo zoom
  * per evitare problemi si controlla che il pixel più grosso all'interno della
- * pagina sia fuori dal pixmap, in larghezza, in caso sia fuori, si verifica se
+ * pagina sia fuori dal pixmap, in larghezza, in caso sia dentro, si verifica se
  * è possibile spostare tutti i dati a destra, se si si sposta e si rifà il
  * controllo che siano fuori, in caso contrario si fa il return di false e
  * bisogna rifare il pixmap
@@ -54,39 +54,22 @@ bool datastruct::adjustWidth(unsigned int width,
 
     const point_s *__point = & m_point.first();
     QPointF __t(0.0, 0.0);
-    const double b_x = biggerx();
-    double __translation;
 
+    double __translation = biggerx();
 
-    if(b_x < width){
-        __translation = width - b_x;
+    if(__translation < width){
+        __translation = width - __translation;
         if(__point->m_x + __translation > 0)
             return false;
 
         __t.setX(__translation);
         this->scala_all(__t);
+
+        if(biggerx() < width)
+            return false;
     }
 
     return true;
-
-    /*
-    if(b_x <= width){
-        if(__not_set){
-            __t.setX(__point->m_x);
-
-            datastruct::inverso(__t);
-            this->scala_all(__t);
-
-            return adjustWidth(width,
-                               controllRepo,
-                               false);
-        }else{
-            return false;
-        }
-    }*/
-
-    return true;
-
 }
 
 /*
