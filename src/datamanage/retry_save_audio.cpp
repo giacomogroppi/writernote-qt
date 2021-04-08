@@ -30,7 +30,7 @@ void retry_save_audio::close(){
         return;
 
     /* reset audio */
-    this->m_current->se_registato = audio_record::not_record;
+    this->m_current->se_registato = currenttitle_class::not_record;
     this->m_current->testinohtml.clear();
     this->m_current->posizione_iniz.clear();
 

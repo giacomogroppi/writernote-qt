@@ -31,7 +31,7 @@ void currenttitle_class::copy(currenttitle_class *src, currenttitle_class *dest)
 
 }
 
-size_t currenttitle_class::createSingleControll()
+size_t currenttitle_class::createSingleControll() const
 {
     size_t data = 0;
     unsigned int i, len;
@@ -51,7 +51,7 @@ size_t currenttitle_class::createSingleControll()
 
 void currenttitle_class::reset(){
     this->versione = 1;
-    this->se_registato = audio_record::not_record;
+    this->se_registato = currenttitle_class::not_record;
     this->se_tradotto = false;
     this->audio_position_path = "";
     this->m_touch = false;

@@ -5,7 +5,7 @@ merge_currenttitle::n_merge merge_currenttitle::controll(
         currenttitle_class *first,
         currenttitle_class *second)
 {
-    if(first->se_registato != audio_record::not_record && second->se_registato != audio_record::not_record)
+    if(first->se_registato != currenttitle_class::not_record && second->se_registato != currenttitle_class::not_record)
         return audio_same;
 
     if(first->m_touch + second->m_touch == 1)

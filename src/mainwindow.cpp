@@ -325,11 +325,11 @@ void MainWindow::togglePause()
 }
 
 void MainWindow::setInZipAudio(){
-    this->m_currenttitle->se_registato = audio_record::record_zip;
+    this->m_currenttitle->se_registato = currenttitle_class::record_zip;
 }
 
 void MainWindow::setExtAudio(){
-    this->m_currenttitle->se_registato = audio_record::record_file;
+    this->m_currenttitle->se_registato = currenttitle_class::record_file;
 
 }
 

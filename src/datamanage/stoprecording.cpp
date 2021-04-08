@@ -67,7 +67,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
     }
 
-    if(m_currenttitle->se_registato == audio_record::record_zip){
+    if(m_currenttitle->se_registato == currenttitle_class::record_zip){
         saveAudio(m_currenttitle, m_path);
     }
 

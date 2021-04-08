@@ -147,9 +147,9 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
     bool temp;
     SOURCE_READ_RETURN(f, &temp, sizeof(bool));
     if(temp)
-        this->currenttitle->se_registato = audio_record::record_file;
+        this->currenttitle->se_registato = currenttitle_class::record_file;
     else
-        this->currenttitle->se_registato = audio_record::not_record;
+        this->currenttitle->se_registato = currenttitle_class::not_record;
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
@@ -179,7 +179,7 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     int temp;
     SOURCE_READ_RETURN(f, &temp, sizeof(int));
-    currenttitle->se_registato = static_cast<audio_record::n_audio_record>(temp);
+    currenttitle->se_registato = static_cast<currenttitle_class::n_audio_record>(temp);
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 

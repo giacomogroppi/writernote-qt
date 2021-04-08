@@ -33,7 +33,7 @@ extract::n_extract extract_audio(const char *path, const char *namecopybook, con
         return extract::load_file;
     }
 
-    if(title->se_registato == audio_record::not_record){
+    if(title->se_registato == currenttitle_class::not_record){
         DELETE_T;
         return extract::not_record;
     }
