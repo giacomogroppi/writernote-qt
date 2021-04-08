@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->m_canvas = canvas;
     this->m_canvas->parent = this;
-
+    updateTouch();
 
     this->m_user = user;
 

@@ -44,7 +44,6 @@ TabletCanvas::TabletCanvas()
     m_redoundo = new redoundo(&data);
 
     loadLastMethod(this);
-    parent->updateTouch();
 }
 
 TabletCanvas::~TabletCanvas(){

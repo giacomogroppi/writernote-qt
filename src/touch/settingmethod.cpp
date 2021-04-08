@@ -4,13 +4,12 @@
 #include "ui_mainwindow.h"
 
 #include "../utils/color/color_chooser.h"
-
+#include "../utils/dialog_critic/dialog_critic.h"
 #include "rubber/rubber_ui.h"
 
 #define SET_CHECK(x) x->setChecked(true)
 #define SET_NOT_CHECK(x) x->setChecked(false)
 
-/* penna */
 void MainWindow::on_actionpen_triggered()
 {
     if(m_canvas->medotodiinserimento == TabletCanvas::e_method::pen){
@@ -26,8 +25,6 @@ void MainWindow::on_actionpen_triggered()
     updateTouch();
 }
 
-
-/* gomma */
 void MainWindow::on_actionrubber_triggered()
 {
     if(m_canvas->medotodiinserimento == TabletCanvas::e_method::rubber){
@@ -43,7 +40,6 @@ void MainWindow::on_actionrubber_triggered()
     updateTouch();
 }
 
-/* taglia */
 void MainWindow::on_actionselezionetext_triggered()
 {
     this->m_canvas->medotodiinserimento = TabletCanvas::e_method::selection;
@@ -82,7 +78,7 @@ void MainWindow::on_actionchoose_color_triggered()
 
 void TabletCanvas::sceltacolorepenna(const QColor color){
     this->m_color = color;
-    this->m_pen.setColor(this->m_color);
+    this->m_pen.setColor(m_color);
 }
 
 void MainWindow::updateTouch(){
