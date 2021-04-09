@@ -110,7 +110,8 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 }
 
                 data->removeat(i);
-                len --;
+                --len;
+                --i;
             }
         }
 
