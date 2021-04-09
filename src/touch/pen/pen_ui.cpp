@@ -42,6 +42,8 @@ void pen_ui::list_update(){
 
     ui->slider_size->setDisabled(temp);
     ui->slider_size->setSliderPosition(m_spessore_pen);
+
+    ui->slider_size->setEnabled(temp);
 }
 
 void pen_ui::on_slider_size_valueChanged(int value)
