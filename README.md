@@ -28,6 +28,7 @@
 - Dynamically decide how to create the sheet
 - Extract audio from writernote file
 - When closing the application, the program understands if the user has written something
+- Decrease file size [only in pen mode]
 
 ## Experimental Features:
 - Import images
@@ -46,6 +47,7 @@
 - Compile for IOS and mac
 - Ask for classic confinement snapcraft
 - Load file from pdf
+- Change the color from an array of three ints to unsigned char, and create the module to read the last version
 
 ## Known bugs:
 - Rubber [partial]
