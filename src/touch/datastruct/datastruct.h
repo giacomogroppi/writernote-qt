@@ -95,7 +95,7 @@ public:
     };
 
     static void inverso(QPointF &point);
-    void repositioning();
+    bool repositioning();
 
     void scala_all(QPointF &);
     QPointF scala_all();

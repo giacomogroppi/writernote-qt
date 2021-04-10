@@ -135,7 +135,6 @@ SOURCES += \
     src/utils/bug_repo/bug_repo_ui.cpp \
     src/utils/changeLanguage.cpp \
     src/utils/checkpassword/checkpassword.cpp \
-    src/utils/color/setcolor.cpp \
     src/utils/copy_text.cpp \
     src/utils/default_location/audio_default_location.cpp \
     src/utils/default_location/location_audiorecord.cpp \

@@ -174,23 +174,29 @@ void datastruct::inverso(QPointF &point){
     point *= -1.0;
 }
 
-void datastruct::repositioning()
+/*
+ * return true if the first point is different
+ * from (0.0, 0.0)
+*/
+bool datastruct::repositioning()
 {
     if(isempty())
-        return;
+        return false;
 
-    point_s & __point = m_point.first();
+    const point_s * __point = &m_point.first();
 
-    if(__point.m_x == 0.0 && __point.m_y == 0)
-        return;
+    if(__point->m_x == 0.0
+            && __point->m_y == 0.0)
+        return false;
 
-    QPointF point_temp(__point.m_x,__point.m_y);
+    QPointF point_temp(__point->m_x, __point->m_y);
 
 
     datastruct::inverso(point_temp);
 
-    this->scala_all(point_temp);
+    scala_all(point_temp);
 
+    return true;
 }
 
 QPointF datastruct::scala_all()

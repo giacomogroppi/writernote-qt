@@ -18,9 +18,10 @@ static void loadLastMethod(TabletCanvas *);
 
 void TabletCanvas::restoreO()
 {
-    this->data->datatouch->repositioning();
-    this->isloading = true;
-    update();
+    if(this->data->datatouch->repositioning()){
+        this->isloading = true;
+        update();
+    }
 
     lastpointtouch.set = false;
 
