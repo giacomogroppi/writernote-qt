@@ -55,10 +55,13 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
     int id;
     bool need_reload = false;
     unsigned int i, len;
+    const point_s *__point;
+    QPen pennatemp;
+
+    pennatemp.setColor(Qt::white);
+    pennatemp.setWidth(1);
 
     len = data->m_point.length();
-
-    const point_s *__point;
 
     this->penna.setStyle(Qt::SolidLine);
 
@@ -79,23 +82,16 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 if(gomma_delete_id.indexOf(id) == -1)
                     gomma_delete_id.append(id);
 
-                for(; i<len && data->m_point.at(i).idtratto == id; i++){
-                    data->m_point.operator[](i).m_color.colore[POSITION_ALFA] /= DECREASE;
-                }
+                i = data->decreaseAlfa(id, DECREASE, i);
 
                 --i;
             }
         }
     }
     else if(this->m_type_gomma == e_type_rubber::partial){
-        QPen pennatemp;
-        pennatemp.setColor(Qt::white);
-        pennatemp.setWidth(1);
-
         painter.setPen(penna);
 
         for(i=0; i<len; i++){
-
             __point = & data->m_point.at(i);
 
             if(isin(__point,
@@ -139,22 +135,6 @@ bool rubber_ui::clearList(datastruct *data)
         return false;
 
     data->removePointId(gomma_delete_id);
-
-    /*int k, len_cancella;
-
-    unsigned int i, len;
-
-    len = data->m_point.length();
-    len_cancella = gomma_delete_id.length();
-
-    for(k=0; k<len_cancella; k++){
-        for(i=0; i<len; i++){
-            if(data->m_point.at(i).idtratto == gomma_delete_id.at(k)){
-                data->removeat(i);
-                len --;
-            }
-        }
-    }*/
 
     gomma_delete_id.clear();
 

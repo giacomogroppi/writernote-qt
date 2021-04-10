@@ -119,7 +119,7 @@ public:
     /* the function return the index of the id*/
     unsigned int positionId(int id);
 
-    void decreaseAlfa(int, int);
+    unsigned decreaseAlfa(int id, unsigned char decrese, unsigned int index);
 
     double miny();
     double minx();

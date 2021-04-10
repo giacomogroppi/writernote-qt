@@ -289,17 +289,22 @@ unsigned int datastruct::positionId(int id)
     return 0;
 }
 
-static inline void d(point_s *point, int alfa){
+static inline void d(point_s *point,
+                     unsigned char alfa){
+    /*3 is the position of alfa*/
     point->m_color.colore[3] /= alfa;
 }
 
-void datastruct::decreaseAlfa(int id, int decrease)
+unsigned datastruct::decreaseAlfa(int id,
+                                  unsigned char decrease,
+                                  unsigned int index)
 {
-    int i, len = this->m_point.length();
+    unsigned int len = this->m_point.length();
 
-    for(i=0; i<len; i++)
-        if(m_point.at(i).idtratto == id)
-            d(&m_point.operator[](i), decrease);
+    for(; index<len && m_point.at(index).idtratto == id; index++)
+            d(&m_point.operator[](index), decrease);
+
+    return index;
 }
 
 double datastruct::miny()
