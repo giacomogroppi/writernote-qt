@@ -72,6 +72,7 @@ SOURCES += \
     src/touch/datastruct/controllForRepositioning.cpp \
     src/touch/datastruct/createControllPoint.cpp \
     src/touch/datastruct/isinside.cpp \
+    src/touch/datastruct/moveAll.cpp \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/pageCount.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \

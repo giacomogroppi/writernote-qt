@@ -54,24 +54,35 @@ bool datastruct::adjustWidth(unsigned int width,
     const point_s *__point = & m_point.first();
     QPointF __t(0.0, 0.0);
 
+    scala_all();
+
     double __translation = biggerx();
 
     if(__translation < width){
         __translation = width - __translation;
         if(__point->m_x + __translation > 0)
-            return false;
+            goto make;
 
         __t.setX(__translation);
         this->scala_all(__t);
 
         if(biggerx() < width)
-            return false;
+            goto make;
 
     }
 
-    if(__translation - at(0)->m_x > width)
-        return false;
+    goto not_make;
 
+
+    make:
+    /* we need to make the pixmap */
+    restoreLastTranslation();
+    return false;
+
+
+    not_make:
+    /* we don't need to make a new pixmap */
+    restoreLastTranslation();
     return true;
 }
 

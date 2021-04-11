@@ -37,8 +37,12 @@ class datastruct
 {
 private:
     int minId();
+
+    QPointF __last_translation;
+
 public:
 
+    void restoreLastTranslation();
     void controllForRepositioning();
 
     void removePointId(QList<int> &list);
