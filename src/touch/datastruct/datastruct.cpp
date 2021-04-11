@@ -12,9 +12,12 @@ int datastruct::minId()
      * as the traits have a negative id
     */
     int _minId = 0;
+    uint i, len;
+    const point_s * __point = firstPoint();
 
-    const point_s * __point = &m_point.first();
-    for(int i=0, len = m_point.length(); i<len; i++){
+    len = length();
+
+    for(i=0, len = m_point.length(); i<len; i++){
         if(__point->idtratto < _minId){
             _minId = __point->idtratto;
         }
@@ -46,6 +49,18 @@ datastruct::datastruct()
     __last_translation.setY(0);
 }
 
+void datastruct::moveNextPoint(uint *pos)
+{
+    uint len;
+    int id;
+
+    id = at(*pos)->idtratto;
+
+    len = length();
+
+    for(;at(*pos)->idtratto == id && *pos < len; ++(*pos));
+}
+
 static void reorganize_p(datastruct *data, int index, unsigned int len){
 
 }
@@ -57,23 +72,30 @@ static void reorganize_p(datastruct *data, int index, unsigned int len){
 */
 void datastruct::reorganize()
 {
-    int i, len, _lastId, secondI;
-    len = m_point.length();
+    uint i, len;
+    int _lastId, secondI;
+    len = length();
 
     if(!len)
         return;
 
-    secondI = minId();
-
-    const point_s * __point = &m_point.first();
+    const point_s * __point = firstPoint();
 
     _lastId = __point->idtratto;
+    secondI = minId();
 
     for(i=0; i<len; ++i){
-        __point = &m_point.at(i);
+        if(!datastruct::isIdUser(__point))
+            continue;
+
+        __point = at(i);
         if(__point->idtratto != secondI+1){
 
         }
+
+        for(;at(i)->idtratto == _lastId; ++i);
+        __point = at(i);
+
     }
 
 }

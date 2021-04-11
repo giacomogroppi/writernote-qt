@@ -83,6 +83,8 @@ public:
 
     datastruct();
 
+    void moveNextPoint(uint *pos);
+
     void reorganize();
 
     bool maxXIdOrizzonal(double *val);
@@ -126,6 +128,8 @@ public:
                           uchar decrese,
                           unsigned int index);
 
+    uchar removePage(uint page);
+
     double miny();
     double minx();
 
@@ -135,11 +139,18 @@ public:
 
     long double zoom = 1.00;
 
-    unsigned int length(){
+    inline uint length(){
         return m_point.length();
     }
 
-    inline const point_s * at(unsigned int i){
+    /*
+     * this function don't provent buffer overload
+    */
+    inline const point_s * firstPoint(){
+        return at(0);
+    }
+
+    inline const point_s * at(uint i){
         return & m_point.at(i);
     }
 
