@@ -47,8 +47,7 @@ bool datastruct::adjustHeight(unsigned int height,
  * bisogna rifare il pixmap
 */
 bool datastruct::adjustWidth(unsigned int width,
-                             bool controllRepo,
-                             bool __not_set){
+                             bool controllRepo){
     if(controllRepo)
         controllForRepositioning();
 
@@ -67,7 +66,11 @@ bool datastruct::adjustWidth(unsigned int width,
 
         if(biggerx() < width)
             return false;
+
     }
+
+    if(__translation - at(0)->m_x > width)
+        return false;
 
     return true;
 }

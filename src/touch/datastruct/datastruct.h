@@ -66,8 +66,7 @@ public:
     bool adjustAll(const unsigned int width,
                    const unsigned int height);
     bool adjustWidth(unsigned int width,
-                     bool controllRepo,
-                     bool __not_set = true);
+                     bool controllRepo);
     bool adjustHeight(unsigned int height,
                       bool controllRepo);
 
@@ -119,7 +118,9 @@ public:
     /* the function return the index of the id*/
     unsigned int positionId(int id);
 
-    unsigned decreaseAlfa(int id, unsigned char decrese, unsigned int index);
+    unsigned decreaseAlfa(int id,
+                          uchar decrese,
+                          unsigned int index);
 
     double miny();
     double minx();
@@ -132,6 +133,10 @@ public:
 
     unsigned int length(){
         return m_point.length();
+    }
+
+    inline const point_s * at(unsigned int i){
+        return & m_point.at(i);
     }
 
 };

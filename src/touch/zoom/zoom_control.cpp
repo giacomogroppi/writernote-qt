@@ -30,10 +30,10 @@ void zoom_control::trasla(QPointF point_translate,
 
 bool zoom_control::zoom(QPointF &point_translate,
                         long double delta,
-                        const unsigned int width,
-                        const unsigned int maxWidth,
-                        const unsigned int height,
-                        const unsigned int maxHeight,
+                        const uint width,
+                        const uint maxWidth,
+                        const uint height,
+                        const uint maxHeight,
                         datastruct *data){
     //qDebug() << (double)data->zoom << " Delta -> " << (double) delta;
 
@@ -65,39 +65,9 @@ bool zoom_control::zoom(QPointF &point_translate,
     data->zoom += delta;
 
     data->adjustHeight(height, true);
-    if(data->adjustAll(height, width))
-        return true;
 
-
-    return needToResizeWidth(
-                width,
-                maxWidth,
-                data);
-}
-
-/*
- * function return true if we need
- * to change the size of m_pixmap
- *
- * only in zoom on
-*/
-bool zoom_control::needToResizeWidth(int width,
-                                     int maxWidth,
-                                     datastruct *data){
-    /* if it's in max size possibile in the screen */
     if(width == maxWidth)
         return false;
 
-    double __temp = data->biggerx();
-
-    return (__temp > width);
-
-    /*
-    int i, len = data->m_point.length();
-    for(i=0; i<len; i++)
-        if(data->m_point.at(i).m_x > widthP
-                && data->m_point.at(i).m_x < maxWidth)
-            return true;
-
-    return false;*/
+    return data->adjustAll(height, width);
 }

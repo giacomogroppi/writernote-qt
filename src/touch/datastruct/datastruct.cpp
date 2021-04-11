@@ -296,7 +296,7 @@ unsigned int datastruct::positionId(int id)
 }
 
 unsigned datastruct::decreaseAlfa(int id,
-                                  unsigned char decrease,
+                                  uchar decrease,
                                   unsigned int index)
 {
     unsigned int len = this->m_point.length();

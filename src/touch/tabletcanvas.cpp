@@ -25,7 +25,7 @@ void TabletCanvas::restoreO()
 
     lastpointtouch.set = false;
 
-    if(data->datatouch->biggerx() > m_pixmap.width())
+    if(data->datatouch->biggerx() - data->datatouch->m_point.first().m_x > m_pixmap.width())
         this->resizeEvent(nullptr);
 
 }
