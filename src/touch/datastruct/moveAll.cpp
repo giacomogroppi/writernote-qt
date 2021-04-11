@@ -48,9 +48,9 @@ QPointF datastruct::scala_all()
         return __last_translation;
     }
 
-    point_s & __point = m_point.first();
+    const point_s * __point = & m_point.first();
 
-    __last_translation = QPointF(__point.m_x, __point.m_y);
+    __last_translation = QPointF(__point->m_x, __point->m_y);
 
     datastruct::inverso(__last_translation);
 
@@ -66,9 +66,8 @@ void datastruct::scala_all(QPointF &point)
 
     this->scala_x(point.x());
 
-    double _point = point.y();
-    this->scala_y(_point);
-    this->scala_posizionefoglio(_point);
+    this->scala_y(point.y());
+    this->scala_posizionefoglio(point.y());
 }
 
 void datastruct::scala_x(double scala)
