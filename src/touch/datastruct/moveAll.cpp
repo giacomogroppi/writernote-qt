@@ -41,11 +41,10 @@ void datastruct::restoreLastTranslation(){
     __last_translation = QPointF(0, 0);
 }
 
-QPointF datastruct::scala_all()
+void datastruct::scala_all()
 {
     if(this->m_point.isEmpty()){
         this->__last_translation = QPointF(0, 0);
-        return __last_translation;
     }
 
     const point_s * __point = & m_point.first();
@@ -55,11 +54,9 @@ QPointF datastruct::scala_all()
     datastruct::inverso(__last_translation);
 
     scala_all(__last_translation);
-
-    return __last_translation;
 }
 
-void datastruct::scala_all(QPointF &point)
+void datastruct::scala_all(const QPointF &point)
 {
     if(point == QPointF(0, 0))
         return;

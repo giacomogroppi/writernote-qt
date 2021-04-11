@@ -100,8 +100,8 @@ public:
     static void inverso(QPointF &point);
     bool repositioning();
 
-    void scala_all(QPointF &);
-    QPointF scala_all();
+    void scala_all(const QPointF &);
+    void scala_all();
 
     void scala_x(double scala);
     void scala_y(double scala);

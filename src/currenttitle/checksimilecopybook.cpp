@@ -90,32 +90,24 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, 
         return checkIndiceSlow(primo, secondo);
 
     int res;
-    QPointF first_point, second_point;
 
-    first_point = primo->datatouch->scala_all();
-    second_point = secondo->datatouch->scala_all();
+    primo->datatouch->scala_all();
+    secondo->datatouch->scala_all();
 
 
     if(speed){
         res = checkSpeed(primo, secondo);
 
-        datastruct::inverso(first_point);
-        datastruct::inverso(second_point);
-
-        primo->datatouch->scala_all(first_point);
-        secondo->datatouch->scala_all(second_point);
+        primo->datatouch->restoreLastTranslation();
+        secondo->datatouch->restoreLastTranslation();
 
         return res;
     }
 
     res = checkSlow(primo, secondo);
 
-
-    datastruct::inverso(first_point);
-    datastruct::inverso(second_point);
-
-    primo->datatouch->scala_all(first_point);
-    secondo->datatouch->scala_all(second_point);
+    primo->datatouch->restoreLastTranslation();
+    secondo->datatouch->restoreLastTranslation();
 
     return res;
 }

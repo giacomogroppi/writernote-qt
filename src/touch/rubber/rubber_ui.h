@@ -9,7 +9,7 @@
 #define DEFAULT_GOMMA_SIZE 5
 
 #define POSITION_ALFA 3
-#define DECREASE 2
+#define DECREASE 4
 
 namespace Ui {
 class rubber_ui;

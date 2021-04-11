@@ -33,7 +33,7 @@ void TabletCanvas::disegnafoglio(){
     bool fast = false;
 
     struct point_s temp_point;
-    QPointF p_traslation = data->datatouch->scala_all();
+    data->datatouch->scala_all();
 
     fast_sheet_ui::n_style res;
 
@@ -118,8 +118,7 @@ void TabletCanvas::disegnafoglio(){
 
     free(style);
 
-    datastruct::inverso(p_traslation);
-    data->datatouch->scala_all(p_traslation);
+    data->datatouch->restoreLastTranslation();
 
     if(data->datatouch->posizionefoglio.length() == 1)
         this->resizeEvent(nullptr);
