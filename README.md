@@ -14,9 +14,10 @@
   - Zoom in and zoom on
   - Rubber size and type
   - Pen size option and type
-  - Move object
+  - Move object with the pen
   - Insert image
   - Enter text in pen mode
+  - Reposition the page in case the application has encountered a bug
 - Export file as PDF
 - Print file
 - Keyboard support
@@ -33,12 +34,11 @@
 ## Experimental Features:
 - Import images
 - Zoom in and Zoom on
-- Personal sheet
-- Rubber
 - Android support
-- Last open file
 - Pen [different types of pen]
 - Insert text into pen mode 
+- Remove page
+- Insert image into file
 
 ## To do
 - Project .writer to image
@@ -48,6 +48,7 @@
 - Ask for classic confinement snapcraft
 - Load file from pdf
 - Change the color from an array of three ints to unsigned char, and create the module to read the last version
+- Add a size_t variable inside within each file to check if we have lost any data within the file
 
 ## Known bugs:
 - Rubber [partial]
