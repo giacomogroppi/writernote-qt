@@ -83,7 +83,9 @@ public:
 
     datastruct();
 
-    void moveNextPoint(uint *pos);
+    void moveNextPoint(uint *pos,
+                       uint len = 0,
+                       int id = -6);
 
     void reorganize();
 

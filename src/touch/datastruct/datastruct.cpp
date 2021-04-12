@@ -16,8 +16,10 @@ int datastruct::minId()
     const point_s * __point = firstPoint();
 
     len = length();
+    _minId = __point->idtratto;
 
-    for(i=0, len = m_point.length(); i<len; i++){
+    for(i=0; i<len; i++){
+        __point = at(i);
         if(__point->idtratto < _minId){
             _minId = __point->idtratto;
         }
@@ -32,11 +34,11 @@ int datastruct::minId()
 */
 unsigned int datastruct::posIdOrizzonal()
 {
-    unsigned int i, len;
+    uint i, len;
     len = m_point.length();
 
     for(i=0; i<len; ++i){
-        if(m_point.at(i).idtratto == IDORIZZONALE)
+        if(at(i)->idtratto == IDORIZZONALE)
             return i;
     }
 
@@ -49,14 +51,20 @@ datastruct::datastruct()
     __last_translation.setY(0);
 }
 
-void datastruct::moveNextPoint(uint *pos)
+/*
+ * the function take a pointer to a unsigned
+ * int and move the index to the next point
+ * with a differente id
+*/
+void datastruct::moveNextPoint(uint *pos,
+                               uint len,
+                               int id)
 {
-    uint len;
-    int id;
+    if(id == -6)
+        id = at(*pos)->idtratto;
 
-    id = at(*pos)->idtratto;
-
-    len = length();
+    if(!len)
+        len = length();
 
     for(;at(*pos)->idtratto == id && *pos < len; ++(*pos));
 }
@@ -95,9 +103,7 @@ void datastruct::reorganize()
 
         }
 
-        for(;at(i)->idtratto == _lastId; ++i);
-        __point = at(i);
-
+        moveNextPoint(&i);
     }
 
 }
