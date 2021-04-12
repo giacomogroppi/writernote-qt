@@ -75,6 +75,7 @@ SOURCES += \
     src/touch/datastruct/moveAll.cpp \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/datastruct/removePage.cpp \
+    src/touch/datastruct/reorganize.cpp \
     src/touch/pageCount.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \

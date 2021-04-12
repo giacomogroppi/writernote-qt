@@ -55,10 +55,13 @@ public:
     /*
      * return true if the user has written this point
     */
+    static inline bool isIdUser(const int id){
+        return id != IDTRATTOZERO
+                && id != IDVERTICALE
+                && id != IDORIZZONALE;
+    }
     static inline bool isIdUser(const point_s * __point){
-        return __point->idtratto != IDTRATTOZERO
-            && __point->idtratto != IDVERTICALE
-            && __point->idtratto != IDORIZZONALE;
+        return isIdUser(__point->idtratto);
     }
 
     bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);

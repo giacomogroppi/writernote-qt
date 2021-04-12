@@ -69,45 +69,6 @@ void datastruct::moveNextPoint(uint *pos,
     for(;at(*pos)->idtratto == id && *pos < len; ++(*pos));
 }
 
-static void reorganize_p(datastruct *data, int index, unsigned int len){
-
-}
-
-/* the function restores the ids, as
- * there may be holes, when we go
- * to eliminate some strokes written
- * with the pen
-*/
-void datastruct::reorganize()
-{
-    uint i, len;
-    int _lastId, secondI;
-    len = length();
-
-    if(!len)
-        return;
-
-    const point_s * __point = firstPoint();
-
-
-    _lastId = __point->idtratto;
-    secondI = minId();
-
-    for(i=0; i<len; ++i){
-        __point = at(i);
-
-        if(!datastruct::isIdUser(__point))
-            continue;
-
-        if(__point->idtratto != secondI+1){
-
-        }
-
-        moveNextPoint(&i);
-    }
-
-}
-
 bool datastruct::maxXIdOrizzonal(double *val)
 {
     int i, len = m_point.length();
