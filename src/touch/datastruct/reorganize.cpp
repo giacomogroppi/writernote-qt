@@ -66,21 +66,4 @@ void datastruct::reorganize()
     }
 
 
-
-    for(i=0; i<len; ++i){
-        __point = at(i);
-
-        if(!datastruct::isIdUser(__point))
-            continue;
-
-        if(__point->idtratto > (_lastId + 1)){
-
-            changeId(i, )
-        }
-
-        moveNextPoint(&i);
-        i -= 1;
-        _lastId = __point->idtratto;
-    }
-
 }
