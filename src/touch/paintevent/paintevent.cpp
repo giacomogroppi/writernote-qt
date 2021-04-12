@@ -79,76 +79,48 @@ void TabletCanvas::load(QPainter &painter,
 
         m_pen.setColor(setcolor(&__point->m_color));
 
-        /*
-         * la funzione trasla tutti i punti finche non ne
-         * trova uno positivo, in modo da non perdere tempo
-         * a ciclare
-         *
-         * the function translates all the points until it
-         * finds a positive one, so as not to waste time cycling
-        */
-        /*_need_reload = false;
-        if(C(data).at(i).m_x <= 0
-                && thereispositive(data->datatouch, __point->idtratto, i)
-                && __point->idtratto != IDORIZZONALE
-                && __point->idtratto != IDVERTICALE){
-            while(C(data).at(i).m_y <= 0){
-                ++i;
+        if(!datastruct::isIdUser(__point)){
+            UPDATE_LOAD(__point);
+
+            SET_PEN(m_pen);
+
+            for(k=0; k<2; k++){
+                /*  we can draw objects which are outside the pixmap
+                    qt automatically understands that you have to set negative points,
+                    and those that are too high such as the margins of the pixmap
+                */
+
+                xtemp[k] = C(data).at(i+k).m_x;
+                ytemp[k] = C(data).at(i+k).m_y;
+
             }
-            _need_reload = true;
-        }
 
-        if(_need_reload)
-            __point = &data->datatouch->m_point.at(i);*/
-
-        /*if(__point->m_y < size_verticale
-                && __point->m_y >= 0)*/{
-
-            if(!datastruct::isIdUser(__point)){
-                UPDATE_LOAD(__point);
-
-                SET_PEN(m_pen);
-
-                for(k=0; k<2; k++){
-                    /* we can draw objects which are outside the pixmap
-                        qt automatically understands that you have to set negative points,
-                        and those that are too high such as the margins of the pixmap
-                    */
-
-                    xtemp[k] = C(data).at(i+k).m_x;
-                    ytemp[k] = C(data).at(i+k).m_y;
-
-                }
-
-                painter.drawLine(
-                            xtemp[0]*m, ytemp[0]*m,
-                            xtemp[1]*m, ytemp[1]*m);
+            painter.drawLine(
+                xtemp[0]*m, ytemp[0]*m,
+                xtemp[1]*m, ytemp[1]*m);
 
                 __point = & data->datatouch->m_point.at(i);
                 ++i;
-            }
-            else if(/*__point->m_x != size_verticale
-                    &&*/ __point->idtratto == _lastid){
+        }
+        else if(__point->idtratto == _lastid){
+            UPDATE_LOAD(__point);
 
+            SET_PEN(m_pen);
 
-                UPDATE_LOAD(__point);
+            painter.drawLine(this->lastPoint.pos*m,
+                QPointF(__point->m_x*m, __point->m_y*m));
 
-                SET_PEN(m_pen);
+        }
 
-                painter.drawLine(this->lastPoint.pos*m,
-                              QPointF(__point->m_x*m, __point->m_y*m));
-
-            }
-
-            lastPoint.pos.setX(__point->m_x);
-            lastPoint.pos.setY(__point->m_y);
+        lastPoint.pos.setX(__point->m_x);
+        lastPoint.pos.setY(__point->m_y);
 
             /*
              * for pdf export
             */
-            if(y_last)
-                *y_last = __point->m_y;
-        }
+        if(y_last)
+            *y_last = __point->m_y;
+
 
         _lastid = __point->idtratto;
 

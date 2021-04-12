@@ -81,14 +81,16 @@ void datastruct::reorganize()
 
     const point_s * __point = firstPoint();
 
+
     _lastId = __point->idtratto;
     secondI = minId();
 
     for(i=0; i<len; ++i){
+        __point = at(i);
+
         if(!datastruct::isIdUser(__point))
             continue;
 
-        __point = at(i);
         if(__point->idtratto != secondI+1){
 
         }
