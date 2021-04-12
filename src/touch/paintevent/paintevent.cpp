@@ -43,7 +43,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 }
 
 #define C(x) x->datatouch->m_point
-#define UPDATE_LOAD(x) updateBrush_load(x->m_pressure, setcolor(&x->m_color))
+#define UPDATE_LOAD(x, zoom) updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color))
 #define SET_PEN(x) painter.setPen(x)
 
 /*
@@ -80,7 +80,7 @@ void TabletCanvas::load(QPainter &painter,
         m_pen.setColor(setcolor(&__point->m_color));
 
         if(!datastruct::isIdUser(__point)){
-            UPDATE_LOAD(__point);
+            UPDATE_LOAD(__point, data->datatouch->zoom);
 
             SET_PEN(m_pen);
 
@@ -103,7 +103,7 @@ void TabletCanvas::load(QPainter &painter,
                 ++i;
         }
         else if(__point->idtratto == _lastid){
-            UPDATE_LOAD(__point);
+            UPDATE_LOAD(__point, data->datatouch->zoom);
 
             SET_PEN(m_pen);
 
