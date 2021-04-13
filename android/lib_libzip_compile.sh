@@ -3,7 +3,8 @@
 rm libzip-android-0.9.3/
 rm 0.9.3.zip
 
-wget https://github.com/dec1/libzip-android/archive/libzip_1.2.0.zip
+wget https://codeload.github.com/julienr/libzip-android/zip/refs/tags/0.9.3
+#wget https://github.com/dec1/libzip-android/archive/libzip_1.2.0.zip
 unzip v1.0.1.zip -d libzip
 
 cd libzip/libzip-android-1.0.1

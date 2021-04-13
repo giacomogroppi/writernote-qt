@@ -35,6 +35,11 @@ last_open::last_open(QWidget *parent,
     m_user = user;
     m_controll = controll;
     m_closeall = close_all;
+
+#if defined(__ANDROID__)
+    this->setWindowState(Qt::WindowFullScreen);
+#endif
+
 }
 
 last_open::~last_open()

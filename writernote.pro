@@ -359,7 +359,8 @@ win64{
 android{
     QT += androidextras
 
-    LIBS += $$PWD/android/libzip/libzip-android-1.0.1/obj/local/armeabi-v7a/libzip.a
+    LIBS += $$PWD/android/libzip-android-1.0.1/obj/local/armeabi-v7a/libzip.a
+    #LIBS += $$PWD/android/libzip/libzip-android-1.0.1/obj/local/armeabi-v7a/libzip.a
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
@@ -369,7 +370,7 @@ android{
         android/res/values/libs.xml
 
 
-    INCLUDEPATH += $$PWD/android/libzip/libzip-android-1.0.1/jni/
+    INCLUDEPATH += $$PWD/android/libzip-android-1.0.1/jni/
 
 }else{
     CONFIG += link_pkgconfig
