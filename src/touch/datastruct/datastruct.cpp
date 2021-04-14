@@ -170,7 +170,7 @@ void datastruct::reset(){
 }
 
 double datastruct::biggery(){
-    if(m_point.isEmpty())
+    if(isempty())
         return (double)0;
 
     unsigned int i, len;
