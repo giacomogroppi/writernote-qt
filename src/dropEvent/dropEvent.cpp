@@ -29,7 +29,8 @@ void MainWindow::dropEvent(QDropEvent *event){
     }
 
     if(find == 1){
-        this->on_actionOpen_triggered(__path_to_load.toUtf8().constData());
+        if(this->m_path != __path_to_load)
+            this->on_actionOpen_triggered(__path_to_load.toUtf8().constData());
     }else{
         messaggio_utente("The file you are trying to open does not have the file writernote extension");
     }

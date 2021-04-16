@@ -296,11 +296,8 @@ private slots:
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
-
     void resizeEvent(QResizeEvent *event) override;
-
     void dropEvent(QDropEvent *event) override;
-
     void dragEnterEvent(QDragEnterEvent *event) override;
 
 

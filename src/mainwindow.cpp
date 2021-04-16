@@ -149,6 +149,8 @@ MainWindow::MainWindow(QWidget *parent,
 
     m_sheet->needToReload();
 
+    setAcceptDrops(true);
+
 }
 
 MainWindow::~MainWindow()
