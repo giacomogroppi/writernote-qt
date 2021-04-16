@@ -10,7 +10,7 @@ void MainWindow::updatePageCount(int pageCount)
 
 }
 
-static uint lastPage = -1;
+static uint lastPage = 0;
 
 void TabletCanvas::updatePageCount(){
     uint len = data->datatouch->posizionefoglio.length();
