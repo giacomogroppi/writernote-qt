@@ -10,7 +10,7 @@ void MainWindow::updatePageCount(int pageCount)
 
 }
 
-static uint lastPage = 0;
+static uint lastPage = -1;
 
 void TabletCanvas::updatePageCount(){
     uint len = data->datatouch->posizionefoglio.length();
@@ -18,33 +18,25 @@ void TabletCanvas::updatePageCount(){
     if(!len)
         return;
 
-    if(len == 1 && len != lastPage){
+    if(len == 1 && lastPage == 0){
         lastPage = 1;
+        parent->updatePageCount(lastPage);
 
-        parent->updatePageCount(len);
         return;
     }
 
-    unsigned int i;
-    bool find = false;
-
-    len = data->datatouch->posizionefoglio.length();
-
-    for(i=0; i<len-1; i++){
-        if(data->datatouch->posizionefoglio.at(i+1) > 0){
-            find = true;
+    uint i;
+    for(i=0; i<len; ++i){
+        if(data->datatouch->posizionefoglio.at(i) < 0)
             break;
-        }
     }
 
-    if(!find){
-        lastPage = len;
-        parent->updatePageCount((int)lastPage);
-        return;
-    }
+    ++i;
 
     if(lastPage != i){
         lastPage = i;
-        parent->updatePageCount(i+1);
+
+        parent->updatePageCount(lastPage);
     }
+
 }

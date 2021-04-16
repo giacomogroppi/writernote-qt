@@ -12,6 +12,8 @@ void TabletCanvas::ismoving_f(){
 
     data->datatouch->scala_all(_point);
 
+    updatePageCount();
+
     this->isloading = true;
     update();
 }
