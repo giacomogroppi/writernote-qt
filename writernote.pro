@@ -61,6 +61,7 @@ SOURCES += \
     src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
+    src/dropEvent/dropEvent.cpp \
     src/lastedit/copy_lastedit.cpp \
     src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \

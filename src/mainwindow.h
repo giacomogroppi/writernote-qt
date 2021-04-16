@@ -15,6 +15,9 @@
 #include <QComboBox>
 #include <QMediaPlayer>
 
+/* for drag file into writernote */
+#include <QDropEvent>
+
 #include <QBuffer>
 
 #include "windows/updatecheck.h"
@@ -114,6 +117,8 @@ public:
 
     fast_sheet_ui *m_sheet = nullptr;
 
+    void updatePageCount(int);
+
 public slots:
     /* la funzione serve anche per eliminare l'audio del copybook */
     void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
@@ -124,8 +129,6 @@ public slots:
     void on_actionSave_File_triggered();
 
 private slots:
-    void updatePageCount(int);
-
     /* registrazione dell'audio */
     bool setOutputLocation();
     void togglePause();
@@ -137,7 +140,7 @@ private slots:
     /* richiamata quando viene modificato qualcosa del testo */
     void on_textEdit_textChanged();
 
-    void on_actionOpen_triggered(char *nomeFile = nullptr);
+    void on_actionOpen_triggered(const char *nomeFile = nullptr);
 
 
 
@@ -295,6 +298,11 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
 
     void resizeEvent(QResizeEvent *event) override;
+
+    void dropEvent(QDropEvent *event) override;
+
+    void dragEnterEvent(QDragEnterEvent *event) override;
+
 
 signals:
     void UndoT();

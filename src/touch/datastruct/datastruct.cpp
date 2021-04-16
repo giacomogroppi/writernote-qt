@@ -28,6 +28,20 @@ int datastruct::minId()
     return _minId;
 }
 
+uint datastruct::move_to_positive(uint len)
+{
+    uint i;
+    if(!len)
+        len = length();
+
+    for(i=0; i<len; ++i){
+        if(at(i)->m_y >= 0.0)
+            return i;
+    }
+
+    return 0;
+}
+
 /*
  * return the index of the first point with
  * idtratto == IDORIZZONALE

@@ -228,9 +228,6 @@ public slots:
         PRIVATE_UPDATE;
     }
 
-signals:
-    void updatePageCount_s(int);
-
 };
 //! [0]
 

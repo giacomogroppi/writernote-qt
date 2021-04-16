@@ -42,6 +42,8 @@ private:
 
 public:
 
+    uint move_to_positive(uint len);
+
     void restoreLastTranslation();
     void controllForRepositioning();
 

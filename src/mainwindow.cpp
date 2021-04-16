@@ -85,7 +85,6 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->ui->layouteditor->insertWidget(1, this->m_canvas);
     this->m_canvas->setHidden(true);
-    QObject::connect(m_canvas, &TabletCanvas::updatePageCount_s, this, &MainWindow::updatePageCount);
 
     abilitazioneinput(this);
 
@@ -178,7 +177,7 @@ void MainWindow::on_actionNew_File_triggered()
     this->m_currenttitle->reset();
 }
 
-void MainWindow::on_actionOpen_triggered(char *nomeFile)
+void MainWindow::on_actionOpen_triggered(const char *nomeFile)
 {
     QString fileName;
     if(!nomeFile){
