@@ -30,10 +30,14 @@ static style_struct_S * setStylePrivate(bool *, fast_sheet_ui::n_style);
 void TabletCanvas::disegnafoglio(){
     if(!disegnofoglio_bool) return;
 
-    bool fast = false;
+    bool fast = false, need_scale = false;
 
     struct point_s temp_point;
-    data->datatouch->scala_all();
+
+    if(!data->datatouch->isempty()){
+        need_scale = true;
+        data->datatouch->scala_all();
+    }
 
     fast_sheet_ui::n_style res;
 
@@ -118,7 +122,8 @@ void TabletCanvas::disegnafoglio(){
 
     free(style);
 
-    data->datatouch->restoreLastTranslation();
+    if(need_scale)
+        data->datatouch->restoreLastTranslation();
 
     if(data->datatouch->posizionefoglio.length() == 1)
         this->resizeEvent(nullptr);

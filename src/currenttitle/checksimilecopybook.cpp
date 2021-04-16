@@ -90,10 +90,18 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, 
         return checkIndiceSlow(primo, secondo);
 
     int res;
+    bool __first_need_res, __second_need_res;
+    __first_need_res = __second_need_res = false;
 
-    primo->datatouch->scala_all();
-    secondo->datatouch->scala_all();
+    if(!primo->datatouch->isempty()){
+        primo->datatouch->scala_all();
+        __first_need_res = true;
+    }
 
+    if(!secondo->datatouch->isempty()){
+        secondo->datatouch->scala_all();
+        __second_need_res = true;
+    }
 
     if(speed){
         res = checkSpeed(primo, secondo);
@@ -106,8 +114,10 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, 
 
     res = checkSlow(primo, secondo);
 
-    primo->datatouch->restoreLastTranslation();
-    secondo->datatouch->restoreLastTranslation();
+    if(__first_need_res)
+        primo->datatouch->restoreLastTranslation();
+    if(__second_need_res)
+        secondo->datatouch->restoreLastTranslation();
 
     return res;
 }

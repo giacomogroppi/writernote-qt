@@ -97,7 +97,7 @@
       ```
         mkdir build
         qmake writernote.pro
-        make -j $nproc
+        make
       ```
   - Windows:
     dependence:
