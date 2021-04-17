@@ -9,5 +9,6 @@
 #define OK 1
 #define ERROR_VERSION 2
 #define ERROR_VERION_NEW 3
+#define ERROR_CONTROLL 4 /* return when the data is corrupted */
 
 #endif // COMMON_ERROR_DEFINITION_H

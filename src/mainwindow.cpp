@@ -39,7 +39,7 @@
 
 #include "utils/settings/setting_load.h"
 #include "windows/mostra_finestra_i.h"
-
+#include "utils/areyousure/areyousure.h"
 #include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent,
@@ -150,7 +150,7 @@ MainWindow::MainWindow(QWidget *parent,
     m_sheet->needToReload();
 
     setAcceptDrops(true);
-
+    updatePageCount(-1);
 }
 
 MainWindow::~MainWindow()
@@ -248,15 +248,15 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     /* a questo punto deve aprire il nuovo copybook */
     if(m_indice.titolo[m_indice.titolo.indexOf(item->text())] != ""){
-        auto *file_ = new xmlstruct(&m_path, &m_indice, m_currenttitle);
-        int res = file_->loadfile((item->text() + ".xml").toUtf8().constData());
+        int res = xmlstruct(&m_path, &m_indice, m_currenttitle).loadfile((item->text() + ".xml").toUtf8().constData());
 
         if(res == ERROR){
-            delete file_;
             return dialog_critic("We had a problem opening the new copybook");
         }else if(res == ERROR_VERSION){
-            delete file_;
             return dialog_critic("The version you created this file with is too old");
+        }else if(res == ERROR_CONTROLL){
+            if(!areyousure(nullptr, "The file is corrupted", "Do you want to open the file anyway?"))
+                return;
         }
     }
     else{

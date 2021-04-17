@@ -4,7 +4,11 @@
 
 void MainWindow::updatePageCount(int pageCount)
 {
-    QString text = "Page: " + QString::number(pageCount) + " of " + QString::number(this->m_currenttitle->datatouch->posizionefoglio.length());
+    QString text;
+
+    ui->page->setHidden(pageCount == -1);
+
+    text = "Page: " + QString::number(pageCount) + " of " + QString::number(this->m_currenttitle->datatouch->posizionefoglio.length());
 
     this->ui->page->setText(text);
 
@@ -15,8 +19,10 @@ static uint lastPage = 0;
 void TabletCanvas::updatePageCount(){
     uint len = data->datatouch->posizionefoglio.length();
 
-    if(!len)
+    if(!len){
+        parent->updatePageCount(-1);
         return;
+    }
 
     if(len == 1 && lastPage == 0){
         lastPage = 1;
