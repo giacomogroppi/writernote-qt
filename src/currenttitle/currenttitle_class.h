@@ -7,15 +7,15 @@
 #include "../touch/datastruct/datastruct.h"
 #include "../images/image_struct.h"
 
-#define CURRENT_VERSION_CURRENT_TITLE 3
+#define CURRENT_VERSION_CURRENT_TITLE 4
 #define MIN_VERSION_CURRENT_TITLE 2
 
 #include <QByteArray>
 
 class currenttitle_class{
-private:
-    size_t createSingleControll() const;
 public:
+    size_t createSingleControll() const;
+
     QString nome_copybook;
 
     int versione = CURRENT_VERSION_CURRENT_TITLE;

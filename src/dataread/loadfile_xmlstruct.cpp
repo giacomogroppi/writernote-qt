@@ -63,7 +63,7 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 #define LOAD_IMAGE_RETURN(x, y) if(load_image(x, y) != OK) return ERROR;
 
 #define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
-#define LOAD_BINARIO_RETURN(x) if(loadbinario(x) == ERROR) return ERROR;
+#define LOAD_BINARIO_RETURN(x, function) if(function(x) == ERROR) return ERROR;
 
 int xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
@@ -101,7 +101,11 @@ int xmlstruct::loadfile(const char *nameFile){
         if(load_file_3(currenttitle, f, filezip) != OK)
             goto free_;
 
-    }else if(temp_versione > 3)
+    }else if(temp_versione == 4){
+        if(load_file_4(currenttitle, f, filezip) != OK)
+            goto free_;
+    }
+    else if(temp_versione > 4)
         goto error_new_version;
 
 
@@ -135,6 +139,9 @@ int xmlstruct::loadfile(const char *nameFile){
     return ERROR_VERION_NEW;
 }
 
+#define LOAD_AUDIO(x, y, z) if(load_audio(x, y, z) != OK) return ERROR;
+
+
 #ifdef ALL_VERSION
 /*
  * this version of the file did not allow to save the audio
@@ -162,7 +169,7 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
     SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
 
     if(currenttitle->m_touch){
-        LOAD_BINARIO_RETURN(filezip);
+        LOAD_BINARIO_RETURN(filezip, loadbinario_0);
     }
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz)
@@ -171,9 +178,6 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     return OK;
 }
-#endif
-
-#define LOAD_AUDIO(x, y, z) if(load_audio(x, y, z) != OK) return ERROR;
 
 int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip)
 {
@@ -192,7 +196,7 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
     SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
 
     if(currenttitle->m_touch){
-        LOAD_BINARIO_RETURN(filezip);
+        LOAD_BINARIO_RETURN(filezip, loadbinario_0);
     }
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
@@ -201,6 +205,46 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     return OK;
 
+}
+
+#endif
+
+int xmlstruct::load_file_4(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip){
+    LOAD_STRINGA_RETURN(f, &currenttitle->nome_copybook);
+
+    int temp;
+    uchar controllo_parita = 0;
+
+    SOURCE_READ_RETURN(f, &temp, sizeof(int));
+    currenttitle->se_registato = static_cast<currenttitle_class::n_audio_record>(temp);
+
+    SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
+
+    LOAD_STRINGA_RETURN(f, &currenttitle->testi);
+
+    LOAD_STRINGA_RETURN(f, &currenttitle->audio_position_path)
+
+    SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
+
+    if(currenttitle->m_touch){
+        temp = loadbinario_1(filezip);
+        if(temp == ERROR){
+            return temp;
+        }
+        else if(temp == ERROR_CONTROLL){
+            /* we want to continue to load the file, but we need to return we had a problem */
+            controllo_parita = 1;
+        }
+    }
+
+    LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
+
+    LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
+
+    if(controllo_parita)
+        return ERROR_CONTROLL;
+
+    return OK;
 }
 
 /*

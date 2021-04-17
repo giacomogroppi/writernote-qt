@@ -16,6 +16,7 @@ static int freezip(zip_source_t *files){
 
 int savefile::salvabinario(zip_t *filezip){
     int i, lunghezza;
+    size_t controll;
 
     zip_source_t *file;
 
@@ -40,6 +41,9 @@ int savefile::salvabinario(zip_t *filezip){
         WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio.operator[](i), sizeof(double));
 
     WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(long double));
+
+    controll = currenttitle->createSingleControll();
+    WRITE_ON_SIZE(file, &controll, sizeof(size_t));
 
     if(zip_source_commit_write(file) == -1)
         return freezip(file);

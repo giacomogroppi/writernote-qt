@@ -15,7 +15,7 @@
 #define NCOLOR 4
 
 struct colore_s{
-    int colore[NCOLOR];
+    uchar colore[NCOLOR];
 };
 
 struct point_s{

@@ -29,14 +29,13 @@ private:
     indice_class *indice = nullptr;
     currenttitle_class *currenttitle = nullptr;
 
-    int loadbinario(struct zip *);
-
 #ifdef ALL_VERSION
     int load_file_2(currenttitle_class *, zip_file_t *f, zip_t *filezip);
-#endif
-
     int load_file_3(currenttitle_class *, zip_file_t *f, zip_t *filezip);
-
+    int loadbinario_0(struct zip *);
+#endif
+    int load_file_4(currenttitle_class *, zip_file_t *f, zip_t *filezip);
+    int loadbinario_1(struct zip *);
 
 public:
     bool loadindice();
