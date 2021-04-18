@@ -38,11 +38,26 @@ int xmlstruct::loadbinario_0(zip_t *z){
         return false;
 
     int i, len;
+    uint k;
     SOURCE_READ_GOTO(f, &len, sizeof(int));
 
+    struct point_last point_lettura;
     struct point_s temp_point;
+
     for(i=0; i<len; i++){
-        SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_last));
+        SOURCE_READ_GOTO(f, &point_lettura, sizeof(struct point_last));
+
+        temp_point.idtratto = point_lettura.idtratto;
+        for(k=0; k<NCOLOR; ++k){
+            temp_point.m_color.colore[k] = point_lettura.m_color.colore[k];
+        }
+
+        temp_point.m_posizioneaudio = point_lettura.m_posizioneaudio;
+        temp_point.m_x = point_lettura.m_x;
+        temp_point.m_y = point_lettura.m_y;
+        temp_point.m_pressure = point_lettura.m_pressure;
+        temp_point.rotation = point_lettura.rotation;
+
         currenttitle->datatouch->m_point.append(temp_point);
     }
 
