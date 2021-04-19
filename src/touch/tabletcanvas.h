@@ -48,7 +48,14 @@ class TabletCanvas : public QWidget
 public:
     MainWindow *parent;
 
-    void scrollKinetic();
+
+#define default_speed_value 5
+    int m_scrolling_speed = default_speed_value;
+    void saveScrollingSetting();
+    void loadScrollinSetting();
+
+    void scrollKinetic(QPointF first, QPointF second);
+    void updateTimeScroll();
 
     void restoreO();
     inline void needUpdate(){

@@ -98,4 +98,8 @@
 #define GROUPNAME_LAST_LANGUAGE "groupname-last-language"
 #define KEY_LAST_LANGUAGE "key-last-language"
 
+/* tablet scrolling speed */
+#define GROUPNAME_SPEED_SCROLLING "groupname-speed-scrolling"
+#define KEY_SPEED_SCROLLING "key-speed-scrolling"
+
 #endif // SETTING_DEFINE_H
