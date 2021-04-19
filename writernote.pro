@@ -82,6 +82,7 @@ SOURCES += \
     src/touch/reduce_size/reduce_size.cpp \
     src/touch/scrollKinetic/loadScrollSettings.cpp \
     src/touch/scrollKinetic/scrollKinetic.cpp \
+    src/touch/scrollKinetic/ui_scroll/ui_scroll.cpp \
     src/touch/square/draw_square.cpp \
     src/touch/square/size/size_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \
@@ -237,6 +238,7 @@ HEADERS += \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
     src/touch/reduce_size/reduce_size.h \
+    src/touch/scrollKinetic/ui_scroll/ui_scroll.h \
     src/touch/square/size/size_square.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
@@ -333,6 +335,7 @@ FORMS += \
     src/touch/copy/copy_widgets.ui \
     src/touch/pen/pen_ui.ui \
     src/touch/rubber/rubber_ui.ui \
+    src/touch/scrollKinetic/ui_scroll/ui_scroll.ui \
     src/touch/text/text_ui/text_ui.ui \
     src/touch/text/text_widgets/text_widgets.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
