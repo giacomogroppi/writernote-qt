@@ -15,8 +15,15 @@ public:
     explicit ui_scroll(QWidget *parent = nullptr);
     ~ui_scroll();
 
+    void reset(uint enable, int speed);
+
 private:
     Ui::ui_scroll *ui;
+
+signals:
+
+    void updateData(uchar enable, int speed);
+
 };
 
 #endif // UI_SCROLL_H

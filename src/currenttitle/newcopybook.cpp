@@ -69,6 +69,11 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         if (!ok){
             return;
         }
+
+        /* if the file already exists we want to delete all the copybook already exist */
+        if(QFile::exists(m_path)){
+            QFile::remove(m_path);
+        }
     }
 
     QString namecopybook = QInputDialog::getText(this, tr("Get text"),

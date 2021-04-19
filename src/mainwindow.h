@@ -294,6 +294,8 @@ private slots:
 
     void on_actionChange_language_triggered();
 
+    void on_actionScroll_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

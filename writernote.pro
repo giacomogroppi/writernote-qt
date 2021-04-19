@@ -82,6 +82,7 @@ SOURCES += \
     src/touch/reduce_size/reduce_size.cpp \
     src/touch/scrollKinetic/loadScrollSettings.cpp \
     src/touch/scrollKinetic/scrollKinetic.cpp \
+    src/touch/scrollKinetic/scroll_mainwindow.cpp \
     src/touch/scrollKinetic/ui_scroll/ui_scroll.cpp \
     src/touch/square/draw_square.cpp \
     src/touch/square/size/size_square.cpp \
