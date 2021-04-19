@@ -15,26 +15,62 @@ using std::chrono::system_clock;
 
 static long last_time;
 static QTimer * timer = nullptr;
+static int speed_x, speed_y;
+static long delta_time;
+
+static int how_time = 0;
 
 static inline long current_time(){
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
+    int delta_x, delta_y;
     if(!timer){
         timer = new QTimer(this);
         QObject::connect(timer, &QTimer::timeout, [=]{
 
+            //qDebug() << "Inside: " << how_time << delta_time << speed_x << speed_y;
+
+            if(how_time){
+                delta_time /= this->m_scrolling_speed;
+                timer->start(1);
+
+                speed_x /= ((m_scrolling_speed)/4);
+                speed_y /= ((m_scrolling_speed)/4);
+
+            }else{
+                timer->stop();
+            }
+
+            -- how_time;
+
         });
     }
-    long delta;
-    int speed;
-    delta = last_time - current_time();
 
+    timer->stop();
 
+    delta_time = last_time - current_time();
 
+    ++ delta_time;
+
+    delta_x = first.x() - second.x();
+    delta_y = first.y() - second.y();
+
+    speed_x = delta_x / delta_time;
+    speed_y = delta_y / delta_time;
+
+    how_time = m_scrolling_speed * 100;
+
+    qDebug() << "Outside: " << how_time << delta_time << speed_x << speed_y << delta_x << delta_y;
+
+    timer->start(1);
 }
 
 void TabletCanvas::updateTimeScroll(){
+    if(timer)
+        timer->stop();
+
+
     last_time = current_time();
 }

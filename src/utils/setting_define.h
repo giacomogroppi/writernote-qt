@@ -100,6 +100,7 @@
 
 /* tablet scrolling speed */
 #define GROUPNAME_SPEED_SCROLLING "groupname-speed-scrolling"
-#define KEY_SPEED_SCROLLING "key-speed-scrolling"
+#define KEY_SPEED_SCROLLING "key-speed-scrolling" /* int */
+#define KEY_SPEED_SCROLLING_ENABLE "key-speed-scrolling-enable" /* bool */
 
 #endif // SETTING_DEFINE_H

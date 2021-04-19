@@ -8,6 +8,7 @@ void TabletCanvas::saveScrollingSetting(){
 
 
     setting.setValue(KEY_SPEED_SCROLLING, this->m_scrolling_speed);
+    setting.setValue(KEY_SPEED_SCROLLING_ENABLE, this->m_scrolling_speed_enable);
 
     setting.endGroup();
 }
@@ -22,6 +23,8 @@ void TabletCanvas::loadScrollinSetting(){
     if(!ok){
         m_scrolling_speed = default_speed_value;
     }
+
+    this->m_scrolling_speed_enable = setting.value(KEY_SPEED_SCROLLING_ENABLE, true).toBool();
 
     setting.endGroup();
 }

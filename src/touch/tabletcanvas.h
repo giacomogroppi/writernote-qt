@@ -51,6 +51,7 @@ public:
 
 #define default_speed_value 5
     int m_scrolling_speed = default_speed_value;
+    bool m_scrolling_speed_enable = true;
     void saveScrollingSetting();
     void loadScrollinSetting();
 

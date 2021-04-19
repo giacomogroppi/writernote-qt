@@ -15,13 +15,14 @@ inline QColor setcolor(const struct colore_s *colore){
 inline void setcolor_struct(colore_s *color, QColor color_){
     int val[NCOLOR];
 
-    for(uchar i=0; i<NCOLOR; ++i){
-        val[i] = color->colore[i];
-    }
-
     color_.getRgb(&val[0],
             &val[1],
             &val[2],
             &val[3]);
+
+    for(uchar i=0; i<NCOLOR; ++i){
+        color->colore[i] = val[i];
+    }
+
 }
 #endif // SETCOLOR_H
