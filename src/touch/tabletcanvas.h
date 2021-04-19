@@ -25,6 +25,11 @@
 
 class MainWindow;
 
+struct PointLoading{
+    QPointF point;
+    bool set = false;
+};
+
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
     QPointF poss = QPointF(-1, -1);
@@ -47,6 +52,8 @@ class TabletCanvas : public QWidget
 
 public:
     MainWindow *parent;
+
+    struct PointLoading pointload;
 
 
 #define default_speed_value 5
@@ -112,12 +119,6 @@ public:
 
     void loadfile();
     bool isloading = false;
-
-    struct PointLoading{
-        double xdrawing;
-        double ydrawing;
-        bool set = false;
-    } pointload;
 
 #define DEFAULT_PASS_ARGUMENT_LOAD -1
     void load(QPainter &,
