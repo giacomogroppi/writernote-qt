@@ -12,3 +12,20 @@ ui_scroll::~ui_scroll()
 {
     delete ui;
 }
+
+void ui_scroll::reset(uint enable, int speed)
+{
+    ui->checkBox->setChecked(enable);
+    ui->spinBox->setValue(speed);
+}
+
+void ui_scroll::on_pushButton_clicked()
+{
+    this->close();
+}
+
+void ui_scroll::on_pushButton_2_clicked()
+{
+    emit updateData((uchar)ui->checkBox->isChecked(),
+                    ui->spinBox->value());
+}
