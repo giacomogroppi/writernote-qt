@@ -80,6 +80,7 @@ SOURCES += \
     src/touch/pageCount.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
+    src/touch/scrollKinetic/scrollKinetic.cpp \
     src/touch/square/draw_square.cpp \
     src/touch/square/size/size_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \

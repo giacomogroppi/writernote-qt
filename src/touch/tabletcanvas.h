@@ -48,6 +48,8 @@ class TabletCanvas : public QWidget
 public:
     MainWindow *parent;
 
+    void scrollKinetic();
+
     void restoreO();
     inline void needUpdate(){
         this->isloading = true;
