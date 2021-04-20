@@ -25,7 +25,7 @@
 
 class MainWindow;
 
-struct PointLoading{
+struct PointSettable {
     QPointF point;
     bool set = false;
 };
@@ -48,7 +48,7 @@ class TabletCanvas : public QWidget
 public:
     MainWindow *parent;
 
-    struct PointLoading pointload;
+    struct PointSettable pointload;
 
 
 #define default_speed_value 5
@@ -143,14 +143,14 @@ public:
 #endif
 
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
-    struct PointLoading ismoving;
+    struct PointSettable ismoving;
     void ismoving_f();
 
     void disegnafoglio();
     bool disegnofoglio_bool = false;
 
     /* struttura per ricordare il last point per il touch */
-    struct PointLoading lastpointtouch;
+    struct PointSettable lastpointtouch;
 
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }

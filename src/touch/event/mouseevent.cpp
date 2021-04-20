@@ -29,7 +29,7 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
  * the function is called when the user scrolls with his finger
 */
 
-static struct PointLoading __last_point_move;
+static struct PointSettable __last_point_move;
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 #if defined(WIN32) || defined(WIN64)
