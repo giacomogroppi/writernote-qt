@@ -35,11 +35,6 @@ typedef struct lastpoint_struct{
     QPointF poss = QPointF(-1, -1);
 }lastpoint_t;
 
-typedef struct{
-    double deltay;
-    double deltax;
-}ismoving_t;
-
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
 class QString;
@@ -148,7 +143,7 @@ public:
 #endif
 
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
-    ismoving_t ismoving;
+    struct PointLoading ismoving;
     void ismoving_f();
 
     void disegnafoglio();

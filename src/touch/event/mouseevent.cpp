@@ -14,8 +14,8 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
         return;
     }
 
-    this->ismoving.deltay = move;
-    this->ismoving.deltax = 0;
+    this->ismoving.point.setY(move);
+    this->ismoving.point.setX(0);
 
     this->ismoving_f();
 
@@ -43,17 +43,17 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         deltax = - lastpointtouch.point.x() + event->screenPos().x();
 
         if(!scroll::itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), &deltay))
-            ismoving.deltay = 0;
+            ismoving.point.setY(0);
         else
-            ismoving.deltay = deltay;
+            ismoving.point.setY(deltay);
 
 
         if(!scroll::itspossibletoscrollx(data->datatouch, m_pixmap.width(), &deltax))
-            this->ismoving.deltax = 0;
+            this->ismoving.point.setX(0);
         else
-            this->ismoving.deltax = deltax;
+            this->ismoving.point.setX(deltax);
 
-        if(!ismoving.deltax || !ismoving.deltay)
+        if(!ismoving.point.x() || !ismoving.point.y())
             this->ismoving_f();
 
     }
@@ -82,7 +82,8 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
 
     qDebug() << "Release: " << lastpointtouch.point << event->screenPos();
 
-    if(m_scrolling_speed_enable && __last_point_move.set){
+    if(m_scrolling_speed_enable
+            && __last_point_move.set){
         scrollKinetic(__last_point_move.point,
                       lastpointtouch.point);
     }
