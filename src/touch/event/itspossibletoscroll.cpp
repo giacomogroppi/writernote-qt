@@ -3,7 +3,7 @@
 #include <QDebug>
 
 #define ifEmpty(data) if(data->isempty()) \
-    return false;
+    goto c_not_move;
 
 /*
  * __pos_delta is set when it's not possible to move from delta
@@ -23,11 +23,12 @@ bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * 
      *
     */
 
+    double pos;
+    const point_s * __point;
+
     ifEmpty(data)
 
     if (*__pos_delta < 0.0){
-        double pos;
-
         pos = data->biggery();
 
         if((pos + *__pos_delta) > altezza){
@@ -35,13 +36,13 @@ bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * 
         }
 
         if(pos < altezza)
-            return false;
+            goto c_not_move;
 
         *__pos_delta = double(altezza - pos);
         return true;
     }
 
-    const point_s * __point = &data->m_point.first();
+    __point = &data->m_point.first();
 
     if((__point->m_y + *__pos_delta) < 0){
         return true;
@@ -52,6 +53,9 @@ bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * 
         return true;
     }
 
+    c_not_move:
+
+    *__pos_delta = 0.0;
     return false;
 
 }
@@ -62,11 +66,13 @@ bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__p
         delta > 0 ------>
     */
 
+    const point_s * __point;
+    double res;
+
     ifEmpty(data);
 
     if(*__pos_delta > 0.0){
-
-        const point_s * __point = &data->m_point.first();
+        __point = &data->m_point.first();
 
         if((__point->m_x + *__pos_delta) < 0.0)
             return true;
@@ -76,15 +82,13 @@ bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__p
             return true;
         }
 
-        return false;
+        goto c_not_move;
     }
 
     /* __pos_delta < 0.0*/
 
-    double res;
-
     if(!data->maxXIdOrizzonal(&res)){
-        return false;
+        goto c_not_move;
     }
 
     if ((res + *__pos_delta) > (double)width)
@@ -94,6 +98,9 @@ bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__p
         *__pos_delta = double(res - (double)width);
         return true;
     }
+
+    c_not_move:
+    *__pos_delta = 0.0;
     return false;
 
 }

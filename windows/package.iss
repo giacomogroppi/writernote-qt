@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "writernote"
-#define MyAppVersion "1.3.10"
+#define MyAppVersion "_"
 #define MyAppPublisher "writernote"
 #define MyAppURL "https://github.com/giacomogroppi/writernote-qt"
 #define MyAppExeName "writernote.exe"
