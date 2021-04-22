@@ -16,6 +16,8 @@ class currenttitle_class{
 public:
     size_t createSingleControll() const;
 
+    bool isEmpty() const;
+
     QString nome_copybook;
 
     int versione = CURRENT_VERSION_CURRENT_TITLE;

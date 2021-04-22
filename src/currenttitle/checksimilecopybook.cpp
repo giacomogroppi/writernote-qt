@@ -8,9 +8,11 @@
 
 #define P(x) x->datatouch->m_point
 
-static int checkPositionAudio(currenttitle_class *first, currenttitle_class *second);
+static int checkPositionAudio(const currenttitle_class *first,
+                              const currenttitle_class *second);
 
-static int checkIndiceSlow(currenttitle_class *primo, currenttitle_class * secondo){
+static int checkIndiceSlow(const currenttitle_class *primo,
+                           const currenttitle_class * secondo){
     if(primo->testi != secondo->testi)
         return TESTI;
 
@@ -28,7 +30,8 @@ static int checkIndiceSlow(currenttitle_class *primo, currenttitle_class * secon
     return OK_CHECK;
 }
 
-static int checkSpeed(currenttitle_class *first, currenttitle_class *second){
+static int checkSpeed(const currenttitle_class *first,
+                      const currenttitle_class *second){
     int i, len;
 
     len = first->datatouch->m_point.length();
@@ -45,7 +48,8 @@ static int checkSpeed(currenttitle_class *first, currenttitle_class *second){
     return checkPositionAudio(first, second);
 }
 
-static int checkSlow(currenttitle_class *first, currenttitle_class *second){
+static int checkSlow(const currenttitle_class *first,
+                     const currenttitle_class *second){
     int i, len;
 
     len = P(first).length();
@@ -84,7 +88,7 @@ static int checkSlow(currenttitle_class *first, currenttitle_class *second){
  * what the difference is
  */
 
-int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, bool speed)
+int checksimilecopybook(const currenttitle_class *primo, const currenttitle_class *secondo, bool speed)
 {
     if(!primo->m_touch)
         return checkIndiceSlow(primo, secondo);
@@ -122,7 +126,8 @@ int checksimilecopybook(currenttitle_class *primo, currenttitle_class *secondo, 
     return res;
 }
 
-int checksimileindice(indice_class *primo, indice_class *secondo){
+int checksimileindice(const indice_class *primo,
+                      const indice_class *secondo){
     int i, len;
 
     if(primo->titolo.length() != secondo->titolo.length())
@@ -136,7 +141,8 @@ int checksimileindice(indice_class *primo, indice_class *secondo){
     return OK_CHECK;
 }
 
-static int checkPositionAudio(currenttitle_class *first, currenttitle_class *second){
+static int checkPositionAudio(const currenttitle_class *first,
+                              const currenttitle_class *second){
     int len = first->datatouch->posizionefoglio.length(), i;
 
     if(second->datatouch->posizionefoglio.length() != len)

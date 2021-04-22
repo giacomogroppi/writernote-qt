@@ -31,6 +31,10 @@ void currenttitle_class::copy(currenttitle_class *src, currenttitle_class *dest)
 
 }
 
+bool currenttitle_class::isEmpty() const{
+    return (m_touch) ? datatouch->isempty() : this->testi.isEmpty();
+}
+
 size_t currenttitle_class::createSingleControll() const
 {
     size_t data = 0;

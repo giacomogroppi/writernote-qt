@@ -24,7 +24,10 @@
 #include "currenttitle_class.h"
 #include "../indice_class.h"
 
-int checksimilecopybook(currenttitle_class *, currenttitle_class *, bool );
-int checksimileindice(indice_class *, indice_class *);
+int checksimilecopybook(const currenttitle_class *,
+                        const currenttitle_class *,
+                        bool );
+int checksimileindice(const indice_class *,
+                      const indice_class *);
 
 #endif // CHECKSIMILECOPYBOOK_H

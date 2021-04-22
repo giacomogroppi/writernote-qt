@@ -65,6 +65,7 @@ SOURCES += \
     src/lastedit/copy_lastedit.cpp \
     src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \
+    src/needToSave.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
     src/touch/copy/copy_selection.cpp \

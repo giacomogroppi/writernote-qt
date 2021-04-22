@@ -51,12 +51,25 @@ class QAudioBuffer;
 
 QT_END_NAMESPACE
 
+class xmlstruct;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
     void updateTouch();
+
+    enum n_need_save: uchar{
+        unable_load,
+        not_, /* we don't have to save the file */
+        need_save, /* we need to save */
+        only_writernote /* writernote change something insede */
+    };
+
+    enum n_need_save needToSave(xmlstruct *xml,
+                                currenttitle_class * tmp_read,
+                                indice_class *tmp_ind) const;
 
     MainWindow(QWidget *parent = nullptr,
                TabletCanvas *canvas = nullptr,
