@@ -7,7 +7,7 @@
 #include "ui_mainwindow.h"
 
 
-static struct immagine_S *insert_image(){
+static struct immagine_S *insert_image(const char *__pos){
 
     QString posizionefoto;
 
@@ -28,8 +28,9 @@ static struct immagine_S *insert_image(){
     return immagine_temp;
 }
 
-static void addImage(currenttitle_class *m_currenttitle){
-    struct immagine_S *immagine = insert_image();
+static void addImage(currenttitle_class *m_currenttitle,
+                     const char *__pos){
+    struct immagine_S *immagine = insert_image(__pos);
     if(!immagine)
         return;
 
@@ -41,11 +42,11 @@ static void addImage(currenttitle_class *m_currenttitle){
 
 /* touch */
 void MainWindow::on_insertimagebotton_triggered(QAction *){
-    addImage(m_currenttitle);
+    addImage(m_currenttitle, nullptr);
     this->update_image();
 }
 
 void MainWindow::on_actioninsertImage_triggered(){
-    addImage(m_currenttitle);
+    addImage(m_currenttitle, nullptr);
 
 }

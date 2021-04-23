@@ -2,44 +2,49 @@
 #include <QMimeData>
 #include "../utils/dialog_critic/dialog_critic.h"
 
-/*
- * return 1 if he can accent
-*/
-static uchar IsAvailable(const QString &);
+#define WRITERNOTE 1
+#define IMAGE 2
+
 
 void MainWindow::dropEvent(QDropEvent *event){
     const QMimeData* mimeData = event->mimeData();
 
     QString __path_to_load;
     uchar find = 0;
+    uint i;
+    QImage image;
 
-    // check for our needed mime type, here a file or a list of files
-    if (mimeData->hasUrls())
-    {
-         QList<QUrl> urlList = mimeData->urls();
+    QList<QUrl> urlList;
 
-        // extract the local paths of the files
-        for (int i = 0; i < urlList.size() && i < 32 && !find; ++i)
-        {
-            if(IsAvailable(urlList.at(i).toLocalFile())){
-                __path_to_load = urlList.at(i).toLocalFile();
-                find = 1;
-            }
+    if (!mimeData->hasUrls())
+        return;
+
+    urlList = mimeData->urls();
+
+    for(i = 0; i < (uint)urlList.size() && i < 32 && !find; ++i){
+        const QString & __path = urlList.at(i).toLocalFile();
+
+        if(__path.indexOf(".writernote") != -1){
+            __path_to_load = urlList.at(i).toLocalFile();
+            find = WRITERNOTE;
+        }else if(image.load(__path)){
+            find = IMAGE;
         }
     }
 
-    if(find == 1){
+    if(find == WRITERNOTE){
         if(this->m_path != __path_to_load)
             this->on_actionOpen_triggered(__path_to_load.toUtf8().constData());
-    }else{
-        messaggio_utente("The file you are trying to open does not have the file writernote extension");
+    }else if(find == IMAGE){
+
+    }
+
+
+    else{
+        messaggio_utente("The file you are trying to open does not have a compatible extention");
     }
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event){
     event->acceptProposedAction();
-}
-
-static uchar IsAvailable(const QString &pos){
-    return pos.indexOf(".writer") != -1;
 }
