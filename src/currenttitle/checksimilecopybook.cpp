@@ -88,7 +88,9 @@ static int checkSlow(const currenttitle_class *first,
  * what the difference is
  */
 
-int checksimilecopybook(const currenttitle_class *primo, const currenttitle_class *secondo, bool speed)
+int checksimilecopybook(const currenttitle_class *primo,
+                        const currenttitle_class *secondo,
+                        const bool speed)
 {
     if(!primo->m_touch)
         return checkIndiceSlow(primo, secondo);

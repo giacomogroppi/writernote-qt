@@ -16,6 +16,9 @@ static void setPosition(last_file * data, QString &pos);
 
 void save_data(QString &path, int type, int owner_type, char *owner)
 {
+    if(path.isEmpty())
+        return;
+
     int quanti, i;
     bool uguale;
 

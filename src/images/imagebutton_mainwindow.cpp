@@ -6,6 +6,10 @@
 #include "image_struct.h"
 #include "ui_mainwindow.h"
 
+/*
+ * todo -> give the user the possibility to decide how to upload the image
+*/
+#define delta_point 200
 
 static struct immagine_S *insert_image(const char *__pos,
                                        struct PointSettable * point){
@@ -24,9 +28,14 @@ static struct immagine_S *insert_image(const char *__pos,
     QImage immagine(posizionefoto);
     immagine_temp->immagini = immagine;
 
-    immagine_temp->i = QPoint(0, 0);
-    immagine_temp->f = QPoint(150, 150);
-
+    if(point){
+        immagine_temp->i = point->point.toPoint();
+        immagine_temp->f = point->point.toPoint() + QPoint(delta_point, delta_point);
+    }
+    else{
+        immagine_temp->i = QPoint(0, 0);
+        immagine_temp->f = QPoint(delta_point, delta_point);
+    }
     return immagine_temp;
 }
 

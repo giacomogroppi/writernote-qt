@@ -26,7 +26,7 @@
 
 int checksimilecopybook(const currenttitle_class *,
                         const currenttitle_class *,
-                        bool );
+                        const bool );
 int checksimileindice(const indice_class *,
                       const indice_class *);
 

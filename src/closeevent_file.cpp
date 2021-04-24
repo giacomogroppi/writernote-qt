@@ -31,17 +31,8 @@ static void setting_autosave(bool check){
 
 }
 
-#define accept_event(x) setting_geometry(this->geometry()); \
-    setting_hide_list(ui->listWidgetSX->isHidden()); \
-    setting_autosave(enableredoundo); \
-    return x->accept();
-
 void MainWindow::closeEvent (QCloseEvent *event)
 {
-    if(!m_indice.titolo.length() || m_currentTitle == ""){
-        accept_event(event);
-    }
-
     /*
      * TODO: after enable cloud support,
      * pass the right value
@@ -57,6 +48,17 @@ void MainWindow::closeEvent (QCloseEvent *event)
     n_need_save __res = needToSave(&temp_lettura,
                             &tempcopybook,
                             &tempindice);
+
+    QString filep, __message;
+
+    QMessageBox::StandardButton resBtn;
+    bool check;
+    savefile save_(&m_path, m_currenttitle);
+    qfilechoose file(nullptr);
+
+    if(!m_indice.titolo.length() || m_currentTitle == ""){
+        goto accept_event;
+    }
 
     if(__res == n_need_save::unable_load){
 
@@ -76,12 +78,11 @@ void MainWindow::closeEvent (QCloseEvent *event)
         int rec = msgBox.exec();
 
         if(rec == QMessageBox::Ok){
-            accept_event(event);
+            goto accept_event;
         }
         return event->ignore();
     }
 
-    QString filep, __message ;
 
     /*
      * if we are in keyboard mode
@@ -91,11 +92,18 @@ void MainWindow::closeEvent (QCloseEvent *event)
         m_currenttitle->testi = this->ui->textEdit->toHtml();
     }
 
+    /*
     bool check1 = checksimilecopybook(&tempcopybook, m_currenttitle, false) == OK_CHECK;
 
     check1 = check1 && (checksimileindice(&m_indice, &tempindice) == OK_CHECK);
+    */
 
-    /* if all is equal close app */
+    if(__res == n_need_save::not_
+            || __res == n_need_save::only_writernote){
+        goto accept_event;
+    }
+
+    /*
     if(check1){
         accept_event(event);
     }
@@ -108,7 +116,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
     else{
         m_currenttitle->testi = filep;
-    }
+    }*/
 
 
     if(m_path.isEmpty())
@@ -117,10 +125,10 @@ void MainWindow::closeEvent (QCloseEvent *event)
         __message = "Do you wanto to save in " + m_path + "?";
 
 
-    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "writernote",
-                                                                __message,
-                                                                QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
-                                                                QMessageBox::Yes);
+    resBtn = QMessageBox::question( this, "writernote",
+                                    __message,
+                                    QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+                                    QMessageBox::Yes);
 
     if (resBtn == QMessageBox::Yes) {
 
@@ -130,29 +138,33 @@ void MainWindow::closeEvent (QCloseEvent *event)
                 return;
         }
 
-        savefile save_(&m_path, m_currenttitle);
-
-        bool check = save_.savefile_check_indice(&m_indice)==OK;
+        check = save_.savefile_check_indice(&m_indice)==OK;
 
         if(m_currentTitle != "")
             check = check && (save_.savefile_check_file()==OK);
 
 
         if(check){
-            accept_event(event);
+            goto accept_event;
         }
         else{
-            dialog_critic((QString)"We had a problem saving the file, please retry");
+            dialog_critic("We had a problem saving the file, please retry, or change the position of the file");
             return event->ignore();
         }
 
     } else if (resBtn == QMessageBox::No)
     {
-        return accept_event(event);
+        goto accept_event;
     }
 
     else
         return event->ignore();
+
+    accept_event:
+    setting_geometry(this->geometry()); \
+    setting_hide_list(ui->listWidgetSX->isHidden()); \
+    setting_autosave(enableredoundo); \
+    return event->accept();
 
 }
 

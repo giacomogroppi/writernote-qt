@@ -64,7 +64,7 @@ public:
     void updateTouch();
 
     enum n_need_save: uchar{
-        unable_load,
+        unable_load, /*we had trouble loading the file*/
         not_, /* we don't have to save the file */
         need_save, /* we need to save */
         only_writernote /* writernote change something insede */
