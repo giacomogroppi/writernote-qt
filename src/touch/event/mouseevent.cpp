@@ -60,8 +60,6 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 
     updateTimeScroll();
 
-    qDebug() << "Press: " << event->screenPos();
-
     /* we need to save this point only if the user use kinetic scroll */
     if(m_scrolling_speed_enable){
         if(lastpointtouch.set){
@@ -79,8 +77,6 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
 
     event->accept();
-
-    qDebug() << "Release: " << lastpointtouch.point << event->screenPos();
 
     if(m_scrolling_speed_enable
             && __last_point_move.set){
