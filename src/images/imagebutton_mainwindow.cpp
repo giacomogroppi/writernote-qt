@@ -7,16 +7,18 @@
 #include "ui_mainwindow.h"
 
 
-static struct immagine_S *insert_image(const char *__pos){
-
+static struct immagine_S *insert_image(const char *__pos,
+                                       struct PointSettable * point){
     QString posizionefoto;
 
-    posizionefoto = QFileDialog::getOpenFileName(nullptr,
-                                                 "Open images",
-                                                 "JPEG (*.jpg, *.jpeg);;PNG (*.png);;All Files (*)");
+    if(!__pos){
+        posizionefoto = QFileDialog::getOpenFileName(nullptr,
+                                                     "Open images",
+                                                     "JPEG (*.jpg, *.jpeg);;PNG (*.png);;All Files (*)");
 
-    if(posizionefoto == "")
-        return NULL;
+        if(posizionefoto == "")
+            return NULL;
+    }
 
     struct immagine_S *immagine_temp = new struct immagine_S;
     QImage immagine(posizionefoto);
@@ -28,9 +30,11 @@ static struct immagine_S *insert_image(const char *__pos){
     return immagine_temp;
 }
 
-static void addImage(currenttitle_class *m_currenttitle,
-                     const char *__pos){
-    struct immagine_S *immagine = insert_image(__pos);
+void addImage(currenttitle_class *m_currenttitle,
+                     const char *__pos,
+                     struct PointSettable * point){
+
+    struct immagine_S *immagine = insert_image(__pos, point);
     if(!immagine)
         return;
 
@@ -42,11 +46,11 @@ static void addImage(currenttitle_class *m_currenttitle,
 
 /* touch */
 void MainWindow::on_insertimagebotton_triggered(QAction *){
-    addImage(m_currenttitle, nullptr);
+    addImage(m_currenttitle, nullptr, nullptr);
     this->update_image();
 }
 
 void MainWindow::on_actioninsertImage_triggered(){
-    addImage(m_currenttitle, nullptr);
+    addImage(m_currenttitle, nullptr, nullptr);
 
 }

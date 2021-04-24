@@ -51,6 +51,9 @@ class QAudioBuffer;
 
 QT_END_NAMESPACE
 
+void addImage(currenttitle_class *m_currenttitle,
+                     const char *__pos,
+                     struct PointSettable * point);
 class xmlstruct;
 
 class MainWindow : public QMainWindow
