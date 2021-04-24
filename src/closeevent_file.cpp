@@ -33,6 +33,7 @@ static void setting_autosave(bool check){
 
 void MainWindow::closeEvent (QCloseEvent *event)
 {
+    qDebug() << "Close event call";
     /*
      * TODO: after enable cloud support,
      * pass the right value
@@ -133,7 +134,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     if (resBtn == QMessageBox::Yes) {
 
         if(m_path == ""){
-            qfilechoose file(this);
+            qfilechoose file(nullptr);
             if(!file.filechoose(&m_path))
                 return;
         }
@@ -152,8 +153,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
             return event->ignore();
         }
 
-    } else if (resBtn == QMessageBox::No)
-    {
+    }else if (resBtn == QMessageBox::No){
         goto accept_event;
     }
 
@@ -161,6 +161,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
         return event->ignore();
 
     accept_event:
+    qDebug() << "Accept event";
     setting_geometry(this->geometry()); \
     setting_hide_list(ui->listWidgetSX->isHidden()); \
     setting_autosave(enableredoundo); \

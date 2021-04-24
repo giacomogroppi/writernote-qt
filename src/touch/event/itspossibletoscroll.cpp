@@ -6,6 +6,7 @@
     goto c_not_move;
 
 /*
+ * return true if we can move
  * __pos_delta is set when it's not possible to move from delta
  * and __pos_delta is set to the maximus delta we can have
 */
@@ -60,6 +61,9 @@ bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * 
 
 }
 
+/*
+ * return true if we can move
+*/
 bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta){
     /* finger action:
         delta < 0 <------
