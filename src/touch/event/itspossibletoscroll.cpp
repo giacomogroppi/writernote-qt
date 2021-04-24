@@ -48,7 +48,7 @@ bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * 
         return true;
     }
 
-    if(__point->m_y < 0){
+    if(__point->m_y < (double)0){
         * __pos_delta = - __point->m_y;
         return true;
     }

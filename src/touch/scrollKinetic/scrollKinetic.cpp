@@ -42,12 +42,13 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
                 delta_time /= this->m_scrolling_speed;
                 timer->start(1);
 
-                speed_x /= ((m_scrolling_speed)/4);
-                speed_y /= ((m_scrolling_speed)/4);
+                speed_x /= ((m_scrolling_speed)/2);
+                speed_y /= ((m_scrolling_speed)/2);
 
                 __delta = (double) speed_x;
                 if(!scroll::itspossibletoscrollx(data->datatouch, m_pixmap.width(), & __delta)){
                     ismoving.set = 1;
+                    qDebug() << "Non posso scorrere first";
                 }
 
                 ismoving.point.setX(__delta);
@@ -55,12 +56,15 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
                 __delta = (double) speed_y;
                 if(!scroll::itspossibletoscrolly(data->datatouch, m_pixmap.height(), &__delta)){
                     ismoving.set = 1;
+                    qDebug() << "Non posso scorrere second";
                 }
 
-                if(ismoving.set){
+                if(!ismoving.set){
                     timer->stop();
                     return;
                 }
+
+                qDebug() << ismoving.point;
 
                 ismoving.point.setY(__delta);
 
@@ -88,9 +92,16 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
     speed_x = delta_x / delta_time;
     speed_y = delta_y / delta_time;
 
+    speed_x *= 100;
+    speed_y *= 100;
+
     how_time = m_scrolling_speed * 100;
 
-    qDebug() << "Outside: " << how_time << delta_time << speed_x << speed_y << delta_x << delta_y;
+    qDebug() << "Outside: " << how_time << "delta time " <<delta_time <<
+             "speed x " << speed_x <<
+             "speed y" << speed_y <<
+             "delta x" << delta_x <<
+             "delta y" << delta_y;
 
     timer->start(1);
 }
