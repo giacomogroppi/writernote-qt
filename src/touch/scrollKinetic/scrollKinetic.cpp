@@ -37,7 +37,7 @@ static inline long current_time(){
 
 #define def_val 1.0
 
-static inline void dec_speed(double &var, int scrolling_speed);
+static inline void dec_speed(double &var, double scrolling_speed);
 
 void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
     int delta_x, delta_y;
@@ -104,8 +104,8 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
     speed_x = delta_x / delta_time;
     speed_y = delta_y / delta_time;
 
-    speed_x *= -50.0;
-    speed_y *= -50.0;
+    speed_x *= -25.0;
+    speed_y *= -25.0;
 
     how_time = m_scrolling_speed * 100.0;
 
@@ -126,15 +126,16 @@ void TabletCanvas::updateTimeScroll(){
     last_time = current_time();
 }
 
-static inline void dec_speed(double &var, int scrolling_speed){
+static inline void dec_speed(double &var, double scrolling_speed){
     uchar cont = 1;
-    if(var > (double)scrolling_speed/2){
-        var -= (double)scrolling_speed/2;
+    scrolling_speed /= 5.0;
+    if(var > (double)scrolling_speed){
+        var -= (double)scrolling_speed;
         cont = 0;
     }
     else{
-        if(var < - (double)scrolling_speed/2){
-            var += (double)scrolling_speed/2;
+        if(var < - (double)scrolling_speed){
+            var += (double)scrolling_speed;
             cont = 0;
         }
     }
