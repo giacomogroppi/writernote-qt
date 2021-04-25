@@ -228,7 +228,11 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         currenttitle_class tempcopybook;
         xmlstruct fileload(&m_path, &m_indice, &tempcopybook);
 
+        auto res = this->needToSave(&fileload, &tempcopybook, nullptr);
+
+
         int temp = fileload.loadfile((m_currentTitle + ".xml").toUtf8().constData());
+
         if(temp == ERROR_VERSION){
             return dialog_critic("the version you created this file with is too old to read");
         }
@@ -236,11 +240,12 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             return dialog_critic("We had a problem opening the current copybook");
         }
 
+
         if(checksimilecopybook(m_currenttitle, &tempcopybook, false) != OK){
             savecopybook savevariabile(this, &m_currentTitle);
 
+            /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
             if (!savevariabile.check_permission())
-                /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
                 return redolist(this);
 
         }

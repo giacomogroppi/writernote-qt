@@ -129,7 +129,7 @@ public:
     double biggery();
 
     /* the function return the index of the id*/
-    unsigned int positionId(int id);
+    uint positionId(int id);
 
     unsigned decreaseAlfa(int id,
                           uchar decrese,

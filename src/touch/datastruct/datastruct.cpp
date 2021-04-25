@@ -205,7 +205,7 @@ double datastruct::biggery(){
 
 }
 
-unsigned int datastruct::positionId(int id)
+uint datastruct::positionId(int id)
 {
     unsigned int len, i;
     len = m_point.length();
@@ -281,20 +281,22 @@ auto datastruct::biggerynoid() -> double{
     if(m_point.isEmpty())
         return (double)0;
 
-    int i, len, temp;
+    uint i, len;
     double y_ = m_point.first().m_y;
-    len = m_point.length();
 
-    for(i=0; i<len; i++){
-        if(m_point.at(i).m_y > y_){
-            temp = m_point.at(i).idtratto;
-            if(temp != IDVERTICALE
-                    && temp != IDORIZZONALE
-                    && temp != IDTRATTOZERO){
+    const point_s * __point;
+
+    len = length();
+
+    for(i=0; i<len; ++i){
+        __point = at(i);
+
+        if(__point->m_y > y_
+                && datastruct::isIdUser(__point)){
                 y_ = m_point.at(i).m_y;
-            }
         }
     }
+
     return y_;
 
 }

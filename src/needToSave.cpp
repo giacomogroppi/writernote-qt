@@ -26,8 +26,12 @@ enum MainWindow::n_need_save
         m_currenttitle->testi = this->ui->textEdit->toHtml();
     }
 
-    check1 = checksimilecopybook(tmp_read, m_currenttitle, false) == OK_CHECK
-            && checksimileindice(&m_indice, tmp_ind) == OK_CHECK;
+    check1 = checksimilecopybook(tmp_read, m_currenttitle, false) == OK_CHECK;
+
+    /* if we pass nullptr */
+    if(tmp_ind){
+        check1 = check1 && checksimileindice(&m_indice, tmp_ind) == OK_CHECK;
+    }
 
     if(check1)
         return n_need_save::not_;

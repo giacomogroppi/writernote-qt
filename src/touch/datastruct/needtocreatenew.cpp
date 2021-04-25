@@ -6,22 +6,16 @@
 
 bool datastruct::needtocreatenew(){
 
-    if(m_point.isEmpty() || posizionefoglio.isEmpty())
+    uint len = posizionefoglio.length();
+
+    if(isempty()
+            || posizionefoglio.isEmpty()
+            || len == 1)
         return true;
 
+    double maxy;
 
-    int i, len;
-    len = m_point.length();
+    maxy = this->biggerynoid();
 
-    double maxy = m_point.first().m_y;
-
-    for(i=0; i<len; i++){
-        if(m_point.at(i).m_y > maxy
-                && m_point.at(i).idtratto != IDVERTICALE
-                && m_point.at(i).idtratto != IDORIZZONALE
-                && m_point.at(i).idtratto != IDTRATTOZERO)
-            maxy = m_point.at(i).m_y;
-    }
-
-    return maxy > posizionefoglio.last();
+    return maxy > posizionefoglio.at(len-2);
 }

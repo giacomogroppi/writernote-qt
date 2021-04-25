@@ -40,6 +40,13 @@ void TabletCanvas::updatePageCount(){
             find = 0;
     }
 
+    if(data->datatouch->posizionefoglio.at(i) > m_pixmap.height()){
+        qDebug() << "Height pixmap" << m_pixmap.height() << data->datatouch->posizionefoglio.at(i);
+        --i;
+    }
+
+    ++i;
+
     if(find){
         parent->updatePageCount(data->datatouch->posizionefoglio.length());
         return;
