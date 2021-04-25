@@ -8,6 +8,7 @@
 #include <QTimer>
 
 #include "../event/itspossibletoscroll.h"
+#include "../../utils/abs.h"
 
 using std::chrono::duration_cast;
 using std::chrono::milliseconds;
@@ -32,34 +33,27 @@ static inline long current_time(){
 #define def_comp 1000.0
 
 #define cont_scoll(speed, valore) \
-    (speed >= valore)
+    (__abs(speed) >= valore)
 
 #define def_val 1.0
+
+static inline void dec_speed(double &var, int scrolling_speed);
 
 void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
     int delta_x, delta_y;
     if(!timer){
         timer = new QTimer(this);
         QObject::connect(timer, &QTimer::timeout, [=]{
-
-            //qDebug() << "Inside: " << how_time << delta_time << speed_x << speed_y;
-
             double __delta;
             ismoving.set = 0;
             ismoving.point = QPointF(0, 0);
 
             if(how_time){
                 delta_time /= this->m_scrolling_speed;
-                timer->start(1);
+                timer->start(10);
 
-                speed_x /= 1.05;
-                speed_y /= 1.05;
-
-                /*
-                speed_x /= double((m_scrolling_speed)/2);
-                speed_y /= double((m_scrolling_speed)/2);*/
-
-                qDebug() << "delta x " << speed_x << "delta y " << speed_y;
+                dec_speed(speed_x, m_scrolling_speed);
+                dec_speed(speed_y, m_scrolling_speed);
 
                 __delta = (double) speed_x;
                 if(cont_scoll(__delta, def_val)
@@ -73,15 +67,12 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
                 if(cont_scoll(__delta, def_val)
                         && scroll::itspossibletoscrolly(data->datatouch, m_pixmap.height(), &__delta)){
                     ismoving.set = 1;
-                    qDebug() << "can scroll y";
-                }else{
-                    qDebug() << "can't scroll y";
                 }
 
                 ismoving.point.setY(__delta);
 
                 if(!ismoving.set){
-                    qDebug() << "Stoppato il timer";
+                    qDebug() << "timer stop";
                     timer->stop();
                     return;
                 }
@@ -113,22 +104,16 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
     speed_x = delta_x / delta_time;
     speed_y = delta_y / delta_time;
 
-    speed_x *= -100.0;
-    speed_y *= -100.0;
-
-
-    /*controll_speed(speed_x, def_comp, >);
-    controll_speed(speed_y, def_comp, >);
-    controll_speed(speed_x, def_comp, <);
-    controll_speed(speed_y, def_comp, <);*/
+    speed_x *= -50.0;
+    speed_y *= -50.0;
 
     how_time = m_scrolling_speed * 100.0;
 
-    qDebug() << "Outside: " << how_time << "delta time " <<delta_time <<
+    /*qDebug() << "Outside: " << how_time << "delta time " <<delta_time <<
              "speed x " << speed_x <<
              "speed y" << speed_y <<
              "delta x" << delta_x <<
-             "delta y" << delta_y;
+             "delta y" << delta_y;*/
 
     timer->start(1);
 }
@@ -139,4 +124,22 @@ void TabletCanvas::updateTimeScroll(){
 
     __last_time = last_time;
     last_time = current_time();
+}
+
+static inline void dec_speed(double &var, int scrolling_speed){
+    uchar cont = 1;
+    if(var > (double)scrolling_speed/2){
+        var -= (double)scrolling_speed/2;
+        cont = 0;
+    }
+    else{
+        if(var < - (double)scrolling_speed/2){
+            var += (double)scrolling_speed/2;
+            cont = 0;
+        }
+    }
+
+    if(cont){
+        var = 0.0;
+    }
 }

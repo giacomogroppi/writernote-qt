@@ -187,15 +187,15 @@ double datastruct::biggery(){
     if(isempty())
         return (double)0;
 
-    unsigned int i, len;
+    uint i, len;
     double y_;
-    const point_s * __point = &m_point.first();
+    const point_s * __point = firstPoint();
 
     y_ = __point->m_y;
-    len = m_point.length();
+    len = length();
 
     for(i=0; i<len; i++){
-        __point = &m_point.at(i);
+        __point = at(i);
 
         if(__point->m_y > y_)
             y_ = __point->m_y;

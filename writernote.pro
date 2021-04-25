@@ -245,6 +245,7 @@ HEADERS += \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
     src/utils/aboutQt/aboutqt.h \
+    src/utils/abs.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
     src/audioplay/cambioiconariascolto.h \

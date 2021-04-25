@@ -11,7 +11,9 @@
  * and __pos_delta is set to the maximus delta we can have
 */
 
-bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * __pos_delta)
+bool scroll::itspossibletoscrolly(datastruct *data,
+                                  const short int altezza,
+                                  double * __pos_delta)
 {
     /* finger action:
      * delta < 0
@@ -36,8 +38,10 @@ bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * 
             return true;
         }
 
-        if(pos < altezza)
+        if(pos < altezza){
+            qDebug() << pos << altezza << __pos_delta;
             goto c_not_move;
+        }
 
         *__pos_delta = double(altezza - pos);
         return true;
@@ -64,7 +68,9 @@ bool scroll::itspossibletoscrolly(datastruct *data, short int altezza, double * 
 /*
  * return true if we can move
 */
-bool scroll::itspossibletoscrollx(datastruct *data, short int width, double *__pos_delta){
+bool scroll::itspossibletoscrollx(datastruct *data,
+                                  const short int width,
+                                  double *__pos_delta){
     /* finger action:
         delta < 0 <------
         delta > 0 ------>
