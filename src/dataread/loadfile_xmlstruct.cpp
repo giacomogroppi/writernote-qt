@@ -136,7 +136,7 @@ int xmlstruct::loadfile(const char *nameFile){
 #endif
     error_new_version:
     CLOSE_ZIP(f, filezip);
-    return ERROR_VERION_NEW;
+    return ERROR_VERSION_NEW;
 }
 
 #define LOAD_AUDIO(x, y, z) if(load_audio(x, y, z) != OK) return ERROR;

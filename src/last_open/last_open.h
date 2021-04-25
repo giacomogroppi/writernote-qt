@@ -56,6 +56,7 @@ private slots:
     void downloadIn(int);
     void on_close_all_clicked();
     void on_close_button_clicked();
+    void on_option_button_clicked();
 };
 
 #endif // LAST_OPEN_H

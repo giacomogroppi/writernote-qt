@@ -62,6 +62,8 @@ SOURCES += \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
     src/dropEvent/dropEvent.cpp \
+    src/last_open/option/button_main.cpp \
+    src/last_open/option/option_last_open_ui.cpp \
     src/lastedit/copy_lastedit.cpp \
     src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \
@@ -234,6 +236,7 @@ HEADERS += \
     src/currenttitle/default_type/default_type.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/datamanage/retry_save_audio.h \
+    src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
@@ -330,6 +333,7 @@ FORMS += \
     src/audiosetting/audioqualityoption.ui \
     src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \
+    src/last_open/option/option_last_open_ui.ui \
     src/log/log_ui/log_ui.ui \
     src/mainwindow.ui \
     src/sheet/dialog_sheet.ui \

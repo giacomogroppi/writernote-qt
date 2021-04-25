@@ -46,6 +46,12 @@
 #define KEY_LAST_FILE_QUANTI "quanti_last_file"
 #define KEY_LAST_BASE_FILE "key_base_"
 
+/* method: uchar */
+#define KEY_LAST_FILE_METHOD "key-last-file-method"
+
+/* number: int */
+#define KEY_LAST_FILE_NUMBER "key-last-file-numbero"
+
 #define FILE_NAME_USER_CLOUD "writernote-user"
 
 #ifdef CLOUD

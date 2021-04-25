@@ -8,12 +8,18 @@ enum MainWindow::n_need_save
             xmlstruct *xml,
             currenttitle_class * tmp_read,
             indice_class *tmp_ind) const{
-    QString filep, __message ;
-    bool check1;
+    QString filep;
+    int check1;
 
+    check1 = xml->loadfile((m_currentTitle + ".xml").toUtf8().constData());
 
-    if(xml->loadfile((m_currentTitle + ".xml").toUtf8().constData()) != OK
-            || !xml->loadindice()){
+    if(check1 != ERROR_VERSION_NEW){
+        if(check1 != OK){
+            return n_need_save::unable_load;
+        }
+    }
+
+    if(!xml->loadindice() != OK){
         return n_need_save::unable_load;
     }
 
@@ -32,6 +38,8 @@ enum MainWindow::n_need_save
     if(tmp_ind){
         check1 = check1 && checksimileindice(&m_indice, tmp_ind) == OK_CHECK;
     }
+
+    m_currenttitle->testi = filep;
 
     if(check1)
         return n_need_save::not_;

@@ -223,13 +223,10 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
        || this->m_audioRecorder->state() == QAudioRecorder::PausedState)
         return redolist(this);
 
+    /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
     if(m_currentTitle != ""){
-        /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
         currenttitle_class tempcopybook;
         xmlstruct fileload(&m_path, &m_indice, &tempcopybook);
-
-        auto res = this->needToSave(&fileload, &tempcopybook, nullptr);
-
 
         int temp = fileload.loadfile((m_currentTitle + ".xml").toUtf8().constData());
 
@@ -242,6 +239,12 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
 
         if(checksimilecopybook(m_currenttitle, &tempcopybook, false) != OK){
+            if(m_currenttitle->m_touch){
+                if(!m_currenttitle->datatouch->userWrittenSomething()){
+                    goto load_;
+                }
+            }
+
             savecopybook savevariabile(this, &m_currentTitle);
 
             /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
@@ -250,6 +253,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
         }
     }
+
+    load_:
 
     /* a questo punto deve aprire il nuovo copybook */
     if(m_indice.titolo[m_indice.titolo.indexOf(item->text())] != ""){
