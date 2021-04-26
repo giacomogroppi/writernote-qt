@@ -88,7 +88,9 @@ void option_last_open_ui::on_ok_button_clicked()
 {
     data.pos = ui->spinBox->value();
 
-    emit changeSomething(data.val, data.pos);
+    saveData();
+
+    this->close();
 }
 
 void option_last_open_ui::on_cancel_button_clicked()

@@ -101,13 +101,15 @@ int last_open::load_data_()
         }
     }
 
-    if(data.val == option_last_open_ui::open_last){
+    m_last = load_data(m_quanti);
 
+    if(data.val == option_last_open_ui::open_last){
+        on_click_ex(m_last[0].posizione);
+
+        return 0;
     }
 
     element_ui *temp_element_ui;
-
-    m_last = load_data(m_quanti);
 
     if(m_last == NULL){
         remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);

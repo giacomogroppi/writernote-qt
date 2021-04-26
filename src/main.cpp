@@ -20,8 +20,7 @@
 
 static int extract_(const char *, const char *, const char *);
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
         return extract_(argv[2], argv[3], argv[4]);
     }
@@ -66,7 +65,7 @@ int main(int argc, char *argv[])
 #endif
         a.setDataReturn(&m_last_open);
 
-        if(a.load_data_() != 0){
+        if(a.load_data_() > 0){
             a.exec();
         }
     }
@@ -91,6 +90,8 @@ int main(int argc, char *argv[])
 
     if(m_last_open != NULL)
         w.setFile(m_last_open);
+
+    delete m_last_open;
 
     if(argc != 1){
         w.setFile(argv[1]);
