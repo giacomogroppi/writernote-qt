@@ -461,20 +461,54 @@ bool datastruct::MovePoint(QRectF &rect, QPointF __touch){
 /*
  * return true if the user has written something
 */
-bool datastruct::userWrittenSomething()
+bool datastruct::userWrittenSomething(datastruct *s_data, uint i)
 {
-    unsigned int i, len;
-    const point_s * __point;
+    uint len, _len;
+    const point_s * __point, *__s_p;
 
-    len = m_point.length();
+    len = length();
 
-    if(!len)
+    if(s_data){
+        scala_all();
+        s_data->scala_all();
+
+        _len = s_data->length();
+
+        for(i=0; i<len && i<_len; ++i){
+            __s_p = s_data->at(i);
+            __point = at(i);
+
+            if(memcmp(__s_p, __point, sizeof(point_s)) != 0)
+                goto ret_;
+        }
+
+        if(i < len){
+            userWrittenSomething(nullptr, i);
+        }
+        else{
+            if(i < _len){
+                s_data->userWrittenSomething(nullptr, i);
+            }
+        }
+
+
+        ret_:
+        restoreLastTranslation();
+        s_data->restoreLastTranslation();
+        return true;
+
+    }
+    else{
+        if(!len)
+            return false;
+
+        for(; i<len; ++i){
+            __point = & m_point.at(i);
+            if(datastruct::isIdUser(__point))
+                return true;
+        }
+
         return false;
-
-    for(i=0; i<len; ++i){
-        __point = & m_point.at(i);
-        if(datastruct::isIdUser(__point))
-            return true;
     }
 
     return false;

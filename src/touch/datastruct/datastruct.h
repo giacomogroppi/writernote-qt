@@ -52,7 +52,7 @@ public:
 
     bool MovePoint( QRectF &, QPointF);
 
-    bool userWrittenSomething();
+    bool userWrittenSomething(datastruct *s_data, uint i);
 
     /*
      * return true if the user has written this point

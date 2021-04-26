@@ -228,6 +228,13 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         currenttitle_class tempcopybook;
         xmlstruct fileload(&m_path, &m_indice, &tempcopybook);
 
+        auto _res = needToSave(&fileload, &tempcopybook, nullptr);
+
+        if(_res == n_need_save::unable_load){
+            return dialog_critic("We had a problem opening the current copybook");
+        }
+
+        /*
         int temp = fileload.loadfile((m_currentTitle + ".xml").toUtf8().constData());
 
         if(temp == ERROR_VERSION){
@@ -235,15 +242,9 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         }
         if(temp == ERROR){
             return dialog_critic("We had a problem opening the current copybook");
-        }
+        }*/
 
-
-        if(checksimilecopybook(m_currenttitle, &tempcopybook, false) != OK){
-            if(m_currenttitle->m_touch){
-                if(!m_currenttitle->datatouch->userWrittenSomething()){
-                    goto load_;
-                }
-            }
+        if(_res == n_need_save::need_save){
 
             savecopybook savevariabile(this, &m_currentTitle);
 
@@ -253,8 +254,6 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
         }
     }
-
-    load_:
 
     /* a questo punto deve aprire il nuovo copybook */
     if(m_indice.titolo[m_indice.titolo.indexOf(item->text())] != ""){

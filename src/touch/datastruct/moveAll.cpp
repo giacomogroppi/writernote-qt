@@ -43,8 +43,9 @@ void datastruct::restoreLastTranslation(){
 
 void datastruct::scala_all()
 {
-    if(this->m_point.isEmpty()){
+    if(isempty()){
         this->__last_translation = QPointF(0, 0);
+        return;
     }
 
     const point_s * __point = & m_point.first();

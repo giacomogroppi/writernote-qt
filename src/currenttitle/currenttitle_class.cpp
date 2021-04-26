@@ -8,6 +8,11 @@ currenttitle_class::currenttitle_class(){
     this->datatouch = new datastruct;
 }
 
+currenttitle_class::~currenttitle_class()
+{
+    delete datatouch;
+}
+
 void currenttitle_class::copy(currenttitle_class *src, currenttitle_class *dest)
 {
     dest->audio_position_path = src->audio_position_path;

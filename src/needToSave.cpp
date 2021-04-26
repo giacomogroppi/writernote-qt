@@ -19,7 +19,7 @@ enum MainWindow::n_need_save
         }
     }
 
-    if(!xml->loadindice() != OK){
+    if(!xml->loadindice()){
         return n_need_save::unable_load;
     }
 
@@ -32,7 +32,7 @@ enum MainWindow::n_need_save
         m_currenttitle->testi = this->ui->textEdit->toHtml();
     }
 
-    check1 = checksimilecopybook(tmp_read, m_currenttitle, false) == OK_CHECK;
+    check1 = checksimilecopybook(tmp_read, m_currenttitle, true) == OK_CHECK;
 
     /* if we pass nullptr */
     if(tmp_ind){
@@ -45,8 +45,7 @@ enum MainWindow::n_need_save
         return n_need_save::not_;
 
     if(m_currenttitle->m_touch){
-        if(!m_currenttitle->datatouch->userWrittenSomething()
-                && !tmp_read->datatouch->userWrittenSomething()){
+        if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read->datatouch, 0)){
             return n_need_save::only_writernote;
         }
     }

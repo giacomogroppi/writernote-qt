@@ -18,7 +18,6 @@ static uint lastPage = 0;
 
 void TabletCanvas::updatePageCount(){
     uint len, i;
-    uchar find = 1;
 
     len = data->datatouch->posizionefoglio.length();
 
@@ -35,22 +34,13 @@ void TabletCanvas::updatePageCount(){
     }
 
 
-    for(i=0; i<len && find; ++i){
-        if(data->datatouch->posizionefoglio.at(i) >= 0.0)
-            find = 0;
-    }
-
-    if(data->datatouch->posizionefoglio.at(i) > m_pixmap.height()){
-        qDebug() << "Height pixmap" << m_pixmap.height() << data->datatouch->posizionefoglio.at(i);
-        --i;
+    for(i=0; i<len; ++i){
+        if(data->datatouch->posizionefoglio.at(i) >= 0.0){
+            break;
+        }
     }
 
     ++i;
-
-    if(find){
-        parent->updatePageCount(data->datatouch->posizionefoglio.length());
-        return;
-    }
 
     if(lastPage != i){
         lastPage = i;

@@ -39,8 +39,8 @@ static int checkSpeed(const currenttitle_class *first,
         return IDTRATTO;
 
     for(i=0; i<len; i++){
-        if(memcmp(&P(first).operator[](i),
-                  &P(second).operator[](i),
+        if(memcmp(&P(first).at(i),
+                  &P(second).at(i),
                   sizeof(point_s)) != 0)
             return IDTRATTO;
     }
@@ -96,18 +96,9 @@ int checksimilecopybook(const currenttitle_class *primo,
         return checkIndiceSlow(primo, secondo);
 
     int res;
-    bool __first_need_res, __second_need_res;
-    __first_need_res = __second_need_res = false;
 
-    if(!primo->datatouch->isempty()){
-        primo->datatouch->scala_all();
-        __first_need_res = true;
-    }
-
-    if(!secondo->datatouch->isempty()){
-        secondo->datatouch->scala_all();
-        __second_need_res = true;
-    }
+    primo->datatouch->scala_all();
+    secondo->datatouch->scala_all();
 
     if(speed){
         res = checkSpeed(primo, secondo);
@@ -120,10 +111,10 @@ int checksimilecopybook(const currenttitle_class *primo,
 
     res = checkSlow(primo, secondo);
 
-    if(__first_need_res)
-        primo->datatouch->restoreLastTranslation();
-    if(__second_need_res)
-        secondo->datatouch->restoreLastTranslation();
+
+    primo->datatouch->restoreLastTranslation();
+
+    secondo->datatouch->restoreLastTranslation();
 
     return res;
 }
