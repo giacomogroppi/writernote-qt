@@ -45,7 +45,7 @@ jobs:
       - name: Compile
         run: |
           qmake
-          make release -j $(nproc)
+          make -j $(nproc)
           
       # Runs a set of commands using the runners shell
       - name: Run application
