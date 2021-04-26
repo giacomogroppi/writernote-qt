@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>509</width>
-    <height>298</height>
+    <height>203</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>509</width>
+    <height>203</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -26,9 +32,9 @@ always open the last file you closed.</string>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <spacer name="horizontalSpacer_2">
+      <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -47,51 +53,17 @@ always open the last file you closed.</string>
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+      <widget class="QPushButton" name="pushButton_disable">
+       <property name="text">
+        <string>Disable</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_always_enable">
        <property name="text">
         <string>Always open the last file</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_disable">
-       <property name="text">
-        <string>Disable</string>
        </property>
       </widget>
      </item>

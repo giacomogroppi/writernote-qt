@@ -189,7 +189,8 @@ double datastruct::biggery(){
 
     uint i, len;
     double y_;
-    const point_s * __point = firstPoint();
+
+    const point_s * __point = at(0);
 
     y_ = __point->m_y;
     len = length();

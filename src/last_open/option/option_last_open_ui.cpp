@@ -9,7 +9,9 @@ option_last_open_ui::option_last_open_ui(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
+    ui->pushButton_always_enable->setCheckable(true);
+    ui->pushButton_enable->setCheckable(true);
+    ui->pushButton_disable->setCheckable(true);
 
     loadData();
 }
@@ -49,31 +51,44 @@ void option_last_open_ui::loadData()
 
 
     setting.endGroup();
+
+    updateShow();
 }
 
 void option_last_open_ui::updateShow()
 {
+    ui->spinBox->setValue(data.pos);
 
+    ui->spinBox->setEnabled(data.val == option::enable);
+
+    ui->pushButton_always_enable->setChecked(data.val == option::open_last);
+    ui->pushButton_disable->setChecked(data.val == option::disable);
+    ui->pushButton_enable->setChecked(data.val == option::enable);
 }
 
 void option_last_open_ui::on_pushButton_enable_clicked()
 {
-
+    data.val = option::enable;
+    updateShow();
 }
 
 void option_last_open_ui::on_pushButton_always_enable_clicked()
 {
-
+    data.val = option::open_last;
+    updateShow();
 }
 
 void option_last_open_ui::on_pushButton_disable_clicked()
 {
-
+    data.val = option::disable;
+    updateShow();
 }
 
 void option_last_open_ui::on_ok_button_clicked()
 {
+    data.pos = ui->spinBox->value();
 
+    emit changeSomething(data.val, data.pos);
 }
 
 void option_last_open_ui::on_cancel_button_clicked()
@@ -81,3 +96,10 @@ void option_last_open_ui::on_cancel_button_clicked()
     this->close();
 }
 
+
+void option_last_open_ui::on_spinBox_valueChanged(int arg1)
+{
+    if(!arg1){
+        on_pushButton_disable_clicked();
+    }
+}

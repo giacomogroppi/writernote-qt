@@ -33,7 +33,6 @@ void TabletCanvas::updatePageCount(){
         return;
     }
 
-
     for(i=0; i<len; ++i){
         if(data->datatouch->posizionefoglio.at(i) >= 0.0){
             break;

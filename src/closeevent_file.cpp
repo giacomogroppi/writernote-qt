@@ -161,6 +161,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
         return event->ignore();
 
     accept_event:
+    qDebug() << "Accept event";
+
     setting_geometry(this->geometry());
     setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);

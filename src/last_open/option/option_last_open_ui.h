@@ -24,8 +24,8 @@ public:
     ~option_last_open_ui();
 
     struct __r {
-        enum option val;
-        char pos = option_last_open_ui_def_num;
+        enum option val; /* type */
+        char pos = option_last_open_ui_def_num; /* number of lastopen file to show */
     };
 
     inline struct __r getData(){
@@ -58,6 +58,7 @@ private slots:
     void on_cancel_button_clicked();
 
 
+    void on_spinBox_valueChanged(int arg1);
 };
 
 #endif // OPTION_LAST_OPEN_UI_H

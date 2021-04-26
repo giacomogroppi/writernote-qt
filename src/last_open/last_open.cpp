@@ -16,6 +16,8 @@
 #include "../utils/remove_key/remove_key.h"
 #include "../datawrite/qfilechoose.h"
 
+#include "option/option_last_open_ui.h"
+
 static void copy(last_file *s,
                  char *pos = NULL,
                  char *last_mod_o = NULL,
@@ -81,7 +83,27 @@ int last_open::load_data_()
     if(m_quanti == 0)
         return 0;
 
-    int i;
+    int i, __val;
+
+    option_last_open_ui option(nullptr);
+
+    struct option_last_open_ui::__r data = option.getData();
+
+    if(data.val == option_last_open_ui::disable)
+        return 0;
+
+    if(data.val == option_last_open_ui::enable){
+        if(data.pos == -1){
+            __val = 255;
+        }
+        else{
+            __val = data.pos;
+        }
+    }
+
+    if(data.val == option_last_open_ui::open_last){
+
+    }
 
     element_ui *temp_element_ui;
 
@@ -118,7 +140,7 @@ int last_open::load_data_()
 
     tidyup(m_last, m_quanti);
 
-    for(i=0; i<m_quanti; i++){
+    for(i=0; i<m_quanti && i < __val; i++){
         temp_element_ui = new element_ui;
 
         temp_element_ui->setData(&m_last[i], i);
@@ -158,26 +180,32 @@ void last_open::deleteIn(int index){
     }
 }
 
-void last_open::on_clicked(int index)
-{
-    QFile file((QString)m_last[index].posizione);
-
-    if(file.exists()){
-        *m_style_return = new char[strlen(m_last[index].posizione)+1];
-        strcpy(*m_style_return, m_last[index].posizione);
-
-        //copy(*m_style_return, m_last[index].posizione, NULL, NULL, m_last[index].type);
+/* return 1 if the file didn't exist */
+uchar last_open::on_click_ex(const char *pos){
+    if(QFile::exists(pos)){
+        *m_style_return = new char[strlen(pos)+1];
+        strcpy(*m_style_return, pos);
 
         this->close();
+        return 0;
     }
-    else{
+    return 1;
+}
+
+void last_open::on_clicked(int index)
+{
+    if(on_click_ex(m_last[index].posizione)){
         dialog_critic("The file didn't exist");
 
         this->deleteInElement(index);
     }
 }
 
-static void copy(last_file *s, char *pos, char *last_mod_o, char *last_mod_g, int type){
+static void copy(last_file *s,
+                 char *pos,
+                 char *last_mod_o,
+                 char *last_mod_g,
+                 int type){
     memcpy(&s->type, &type, sizeof(int));
 
     if(pos)

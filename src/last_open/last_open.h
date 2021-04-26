@@ -34,6 +34,8 @@ public:
     struct struct_user *m_user;
 
 private:
+    uchar on_click_ex(const char *pos);
+
     cloud_controll *m_controll;
 
     void updateList();
