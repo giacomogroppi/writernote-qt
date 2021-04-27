@@ -52,9 +52,6 @@ jobs:
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
 
-      - name: Package
-        release:
-          types:
-            - created:
-              - name: Create package for windows
-                run: echo ""
+        if: github.event_type == "release"
+        - name: Create package for windows
+          run: echo ""
