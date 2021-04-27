@@ -43,4 +43,18 @@ jobs:
 
 
       - name: Download dependency
-        run: echo ""
+        run: |
+          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
+          C:\msys64\usr\bin\bash -lc "./windows/dipendenze.sh"
+      
+      - name: Build
+        run: | 
+          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
+          C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
+
+      - name: Package
+        release:
+          types:
+            - created:
+              - name: Create package for windows
+                run: echo ""

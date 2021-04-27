@@ -1,5 +1,7 @@
-pacman -S git
-pacman -S mingw-w64-x86_64-toolchain \
+pacman --noconfirm -Sy
+
+pacman --noconfirm -S git
+pacman --noconfirm -S mingw-w64-x86_64-toolchain \
           mingw-w64-x86_64-cmake \
           patch \
           mingw-w64-x86_64-cppunit \
@@ -7,7 +9,7 @@ pacman -S mingw-w64-x86_64-toolchain \
           cmake
 
 
-pacman -S mingw-w64-x86_64-qt5 \
+pacman --noconfirm -S mingw-w64-x86_64-qt5 \
           mingw-w64-x86_64-libzip \
           mingw-w64-x86_64-glib2
 
