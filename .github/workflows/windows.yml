@@ -26,6 +26,8 @@ jobs:
         working-directory: windows
         env:
           HOME: ${{ runner.workspace }}/writernote-qt
+          MSYS2_ARCH: x86_64
+          MSYSTEM: MINGW64
           
       - name: Build
         run: |
@@ -35,6 +37,8 @@ jobs:
         working-directory: windows
         env:
           HOME: ${{ runner.workspace }}/writernote-qt
+          MSYS2_ARCH: x86_64
+          MSYSTEM: MINGW64
 
       - name: Create package for windows
         run: |
