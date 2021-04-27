@@ -30,6 +30,14 @@
 - Extract audio from writernote file
 - When closing the application, the program understands if the user has written something
 - Decrease file size [only in pen mode]
+- Open last open file 
+   3 options:
+    - Set the number of recent files to show
+    - Disable the option, and show writernote directly
+    - Directly open the last opened file
+- Drag and drop:
+  - Image
+  - Writernote file
 
 ## Experimental Features:
 - Import images
