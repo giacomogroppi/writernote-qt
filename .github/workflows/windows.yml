@@ -24,7 +24,9 @@ jobs:
           C:\msys64\usr\bin\bash -lc ./windows/dipendenze.sh #$(pwd)"/windows/dipendenze.sh"
         shell: cmd
         working-directory: windows
-      
+        env:
+          HOME: ${{ runner.workspace }}/writernote-qt
+          
       - name: Build
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
