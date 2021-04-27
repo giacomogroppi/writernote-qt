@@ -30,10 +30,11 @@ jobs:
       - name: Build
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          C:\msys64\usr\bin\bash -lc "./compile.sh"
+          C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
         shell: cmd
         working-directory: windows
-
+        env:
+          HOME: ${{ runner.workspace }}/writernote-qt
 
       - name: Create package for windows
         run: |
