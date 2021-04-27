@@ -43,9 +43,7 @@ jobs:
       - name: Download dependency
         run: |
           set PATH="%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          ls
-          pwd
-          #C:\msys64\usr\bin\bash -lc "./windows/dipendenze.sh"
+          C:\msys64\usr\bin\bash -lc "cd windows; ./dipendenze.sh"
           
       
       - name: Build
