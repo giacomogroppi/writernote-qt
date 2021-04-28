@@ -1,9 +1,8 @@
 name: Windows package
 
 on:
-  release:
-    types:
-      - created
+  push:
+  pull_request:
 
   workflow_dispatch:
 
@@ -41,6 +40,8 @@ jobs:
           MSYSTEM: MINGW64
 
       - name: Create package for windows
+        #if: ${{ github.event_name == 'release' }}
         run: |
-          echo ""
+          wget https://jrsoftware.org/download.php/is.exe
+          start is.exe
         
