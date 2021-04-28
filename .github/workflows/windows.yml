@@ -48,11 +48,11 @@ jobs:
 
           tar -xf $(GITHUB_WORKSPACE)\innoextract-1.9-windows.zip
 
-          $(GITHUB_WORKSPACE)\innoextract.exe is.exe
+          C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE\innoextract.exe is.exe"
 
-          mv $(GITHUB_WORKSPACE)/app "C:\Program Files (x86)\Inno Setup 6\"
+          C:\msys64\usr\bin\bash -lc "mv $GITHUB_WORKSPACE/app "C:\Program Files (x86)\Inno Setup 6\""
 
-          start $(GITHUB_WORKSPACE)/windows/compile.bat
+          C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/windows/compile.bat"
           
           echo "Packaging successful"
 
