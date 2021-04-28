@@ -45,7 +45,7 @@ jobs:
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip"
           
-          tar -xf innoextractor*
+          tar -xf innoextract-1.9-windows.zip
 
           C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe"     
 
