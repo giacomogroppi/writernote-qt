@@ -16,5 +16,4 @@ jobs:
       - name: Run a one-line script
         run: |
           sudo apt -y install snapcraft
-          cd writernote-qt
           snapcraft
