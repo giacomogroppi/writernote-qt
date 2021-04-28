@@ -51,6 +51,9 @@ jobs:
 
           ./innoextract.exe is.exe
 
+
+          echo "Move folder"
+
           mv app "C:\Program Files (x86)\Inno Setup 6\"
 
           start ./windows/compile.bat
