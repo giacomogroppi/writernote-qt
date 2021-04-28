@@ -43,8 +43,8 @@ jobs:
         #if: ${{ github.event_name == 'release' }}
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip"
-          C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe"
+          C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip --directory-prefix=${{ runner.workspace }}"
+          C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe --directory-prefix=${{ runner.workspace }}"
 
           tar -xf ${{ runner.workspace }}/innoextract-1.9-windows.zip
 
