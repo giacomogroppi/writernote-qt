@@ -46,7 +46,7 @@ jobs:
           C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip --directory-prefix=$GITHUB_WORKSPACE"
           C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe --directory-prefix=$GITHUB_WORKSPACE"
 
-          tar -xf ${{GITHUB_WORKSPACE}}\innoextract-1.9-windows.zip
+           C:\msys64\usr\bin\bash -lc "tar -xf $GITHUB_WORKSPACE\innoextract-1.9-windows.zip"
 
           C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE\innoextract.exe is.exe"
 
