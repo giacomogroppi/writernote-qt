@@ -47,11 +47,9 @@ jobs:
 
           C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe"     
 
-          .\innoextract.exe is.exe
-          
-          echo $(pwd)
+          ${{ runner.workspace }}/writernote-qt/innoextract.exe is.exe
 
-          mv app "C:\Program Files (x86)\Inno Setup 6\"
+          mv ${{ runner.workspace }}/writernote-qt/app "C:\Program Files (x86)\Inno Setup 6\"
 
           start ./windows/compile.bat
           
