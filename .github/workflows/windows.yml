@@ -47,7 +47,7 @@ jobs:
 
           C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe"     
 
-          ${{ runner.workspace }}/writernote-qt/innoextract.exe is.exe
+          ${{ runner.workspace }}\writernote-qt\innoextract.exe is.exe
 
           mv ${{ runner.workspace }}/writernote-qt/app "C:\Program Files (x86)\Inno Setup 6\"
 
