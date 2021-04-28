@@ -49,7 +49,7 @@ jobs:
 
           .\innoextract.exe is.exe
           
-          echo $pwd
+          echo $(pwd)
 
           mv app "C:\Program Files (x86)\Inno Setup 6\"
 
