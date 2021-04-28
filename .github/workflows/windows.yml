@@ -49,9 +49,8 @@ jobs:
 
           C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe"     
 
-          ./innoextract.exe is.exe
-
-
+          C:\msys64\usr\bin\bash -lc "./innoextract.exe is.exe"
+          
           echo "Move folder"
 
           mv app "C:\Program Files (x86)\Inno Setup 6\"
