@@ -15,5 +15,8 @@ jobs:
 
       - name: Run a one-line script
         run: |
-          sudo apt -y install snapcraft
+          sudo apt -y install snapd
+          sudo snap install snapcraft --classic
+          sudo snap install multipass
+          
           snapcraft
