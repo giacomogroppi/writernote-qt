@@ -49,7 +49,7 @@ jobs:
 
           C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe"     
 
-          C:\msys64\usr\bin\bash -lc "./innoextract.exe is.exe"
+          .\innoextract.exe is.exe
           
           echo "Move folder"
 
