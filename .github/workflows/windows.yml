@@ -42,6 +42,24 @@ jobs:
       - name: Create package for windows
         #if: ${{ github.event_name == 'release' }}
         run: |
-          wget https://jrsoftware.org/download.php/is.exe
-          start is.exe
-        
+          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
+          C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip"
+          
+          tar -xf innoextractor*
+
+          C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe"     
+
+          ./innoextract.exe is.exe
+
+          mv app "C:\Program Files (x86)\Inno Setup 6\"
+
+          start ./windows/compile.bat
+          
+          echo "Packaging successful"
+
+        shell: cmd
+        working-directory: windows
+        env:
+          HOME: ${{ runner.workspace }}/writernote-qt
+          MSYS2_ARCH: x86_64
+          MSYSTEM: MINGW64
