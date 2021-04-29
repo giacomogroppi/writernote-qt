@@ -64,7 +64,7 @@ jobs:
       - name: Extract innoextract and iss.exe
         shell: powershell
         run: |
-          $destination_folder = D:/a/writernote-qt/
+          $destination_folder = "D:/a/writernote-qt/"
           Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder 
           
           cd $destination_folder
