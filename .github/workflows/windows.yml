@@ -59,9 +59,9 @@ jobs:
         shell: powershell
         run: |
           Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
-          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "iss.exe"
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
 
-      - name: Extract innoextract and iss.exe
+      - name: Extract innoextract and is.exe
         shell: powershell
         run: |
           $destination_folder = "D:/a/writernote-qt/"
@@ -70,7 +70,7 @@ jobs:
           cd $destination_folder
           .\innoextract.exe "$destination_folder\is.exe"
 
-      - name: Move iss package
+      - name: Move is package
         shell: powershell
         run: |
           $dest_win = "C:\Program Files (x86)\Inno Setup 6\"
