@@ -18,7 +18,7 @@ jobs:
 
 
       - name: Download dependency
-        if: ${{ github.event_name == 'release' }} # skip for testing
+        #if: ${{ github.event_name == 'release' }} # skip for testing
         run: |
           set PATH="%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc ./windows/dipendenze.sh #$(pwd)"/windows/dipendenze.sh"
@@ -30,7 +30,7 @@ jobs:
           MSYSTEM: MINGW64
           
       - name: Build
-        if: ${{ github.event_name == 'release' }} # skip for testing
+        #if: ${{ github.event_name == 'release' }} # skip for testing
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
