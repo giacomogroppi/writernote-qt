@@ -72,7 +72,7 @@ jobs:
         #if: ${{ github.event_name == 'release' }}
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          C:\msys64\usr\bin\bash -lc "mv $GITHUB_WORKSPACE/innoextract.exe is.exe"
+          C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/innoextract.exe is.exe"
           C:\msys64\usr\bin\bash -lc "mv $GITHUB_WORKSPACE/app "C:\Program Files (x86)\Inno Setup 6\""
           C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/windows/compile.bat"
           
