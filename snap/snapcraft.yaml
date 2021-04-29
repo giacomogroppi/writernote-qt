@@ -41,7 +41,7 @@ apps:
 
       - cups-control
       - removable-media
-      
+
     slots:
       - mpris
 

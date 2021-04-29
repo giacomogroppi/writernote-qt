@@ -29,6 +29,7 @@ jobs:
           MSYSTEM: MINGW64
           
       - name: Build
+        if: ${{ github.event_name == 'release' }} # skip for testing
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
@@ -39,25 +40,29 @@ jobs:
           MSYS2_ARCH: x86_64
           MSYSTEM: MINGW64
 
-      - name: Download for package
+      #- name: Download for package
         #if: ${{ github.event_name == 'release' }}
-        run: |
-          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          #C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip --directory-prefix=$GITHUB_WORKSPACE"
-          #C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe --directory-prefix=$GITHUB_WORKSPACE"
-
-        shell: cmd
-        working-directory: windows
-        env:
-          GITHUB_WORKSPACE: GITHUB_WORKSPACE
-          HOME: ${{ runner.workspace }}/writernote-qt
-          MSYS2_ARCH: x86_64
-          MSYSTEM: MINGW64
+      #  run: |
+      #    set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
+      #    #C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip --directory-prefix=$GITHUB_WORKSPACE"
+      #    #C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe --directory-prefix=$GITHUB_WORKSPACE"
+      #  shell: cmd
+      #  working-directory: windows
+      #  env:
+      #    GITHUB_WORKSPACE: GITHUB_WORKSPACE
+      #    HOME: ${{ runner.workspace }}/writernote-qt
+      #    MSYS2_ARCH: x86_64
+      #    MSYSTEM: MINGW64
           
-      - name: extract innoextract
+      - name: download for package
         shell: powershell
         run: |
           Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "innoextract-1.9-windows.zip"
+
+      - name: extract innoextract
+        shell: powershell
+        run: |
           Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath . 
           
       - name: Create package for windows
@@ -65,13 +70,10 @@ jobs:
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE\innoextract.exe is.exe"
-
           C:\msys64\usr\bin\bash -lc "mv $GITHUB_WORKSPACE/app "C:\Program Files (x86)\Inno Setup 6\""
-
           C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/windows/compile.bat"
           
           echo "Packaging successful"
-
         shell: cmd
         working-directory: windows
         env:

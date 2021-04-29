@@ -24,7 +24,9 @@ static void copy(last_file *s,
                  char *last_mod_g= NULL,
                  int type = TYPE_CLOUD);
 
-static void tidyup(last_file *, int);
+static void tidyup(last_file *,
+                   int,
+                   struct option_last_open_ui::__r * data);
 
 last_open::last_open(QWidget *parent,
                      struct struct_user *user,
@@ -140,7 +142,7 @@ int last_open::load_data_()
         }
     }
 
-    tidyup(m_last, m_quanti);
+    tidyup(m_last, m_quanti, &data);
 
     for(i=0; i<m_quanti && i < __val; i++){
         temp_element_ui = new element_ui;
@@ -331,11 +333,19 @@ static bool recent(last_file *first, last_file *second){
 }
 
 /*
- * la funzione riordina i file dal più recente al più vecchio
+ * la funzione riordina i file dal
+ * più recente al più vecchio
+ * In caso ci siano più copybook
+ * del numero settato dall'utente,
+ * li alimina automaticamente
+ *
+ * the function reorders files
+ * from newest to oldest
 */
-static void tidyup(last_file *m_data, int m_quanti){
-    //if(m_quanti == 1 || m_quanti == 0)
-    //    return;
+static void tidyup(last_file *m_data,
+                   int m_quanti,
+                   option_last_open_ui::__r *data){
+
 
     int k;
     size_t s;
