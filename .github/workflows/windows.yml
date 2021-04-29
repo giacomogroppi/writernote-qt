@@ -44,8 +44,7 @@ jobs:
 
 
       - name: install innosetup
-        run: |
-        choco install innosetup
+        run: choco install innosetup
 
       - name: Compile package for windows
         shell: powershell
