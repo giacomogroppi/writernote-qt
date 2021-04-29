@@ -18,6 +18,7 @@ jobs:
 
 
       - name: Download dependency
+        if: ${{ github.event_name == 'release' }} # skip for testing
         run: |
           set PATH="%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc ./windows/dipendenze.sh #$(pwd)"/windows/dipendenze.sh"
@@ -63,7 +64,7 @@ jobs:
       - name: extract innoextract
         shell: powershell
         run: |
-          Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath . 
+          Expand-Archive -Force -Path innoextract-1.9-windows.zip #-DestinationPath . 
           
       - name: Create package for windows
         #if: ${{ github.event_name == 'release' }}

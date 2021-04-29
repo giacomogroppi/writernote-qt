@@ -42,6 +42,10 @@ private:
 
 public:
 
+    void append(const point_s *point){
+        m_point.append(*point);
+    }
+
     uint move_to_positive(uint len);
 
     void restoreLastTranslation();
