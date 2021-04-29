@@ -43,8 +43,8 @@ jobs:
         #if: ${{ github.event_name == 'release' }}
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip --directory-prefix=$GITHUB_WORKSPACE"
-          C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe --directory-prefix=$GITHUB_WORKSPACE"
+          #C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip --directory-prefix=$GITHUB_WORKSPACE"
+          #C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe --directory-prefix=$GITHUB_WORKSPACE"
 
         shell: cmd
         working-directory: windows
@@ -57,7 +57,8 @@ jobs:
       - name: extract innoextract
         shell: powershell
         run: |
-          Expand-Archive -Force -Path $env:GITHUB_WORKSPACE/innoextract-1.9-windows.zip -DestinationPath $env:GITHUB_WORKSPACE 
+          Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
+          Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath . 
           
       - name: Create package for windows
         #if: ${{ github.event_name == 'release' }}
