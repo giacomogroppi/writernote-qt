@@ -62,18 +62,30 @@ jobs:
           Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
 
-      - name: extract innoextract
+      - name: Extract innoextract
         shell: powershell
         run: |
           $destination_folder = "D:/a/writernote-qt/"
           Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder 
           
-      - name: Create package for windows
+      - name: Extract iss.exe
+        shell: powershell
+        run: |
+          $dest = "D:/a/writernote-qt/"
+          $dest/innoextract.exe $dest/is.exe"
+
+      - name: Move iss package
+        shell: powershell
+        run: |
+          $dest_win = "C:\Program Files (x86)\Inno Setup 6\"
+          $dest = "D:/a/writernote-qt/"
+          mv $dest/app $dest_win
+
+      - name: Compile package for windows
         #if: ${{ github.event_name == 'release' }}
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/../innoextract.exe $GITHUB_WORKSPACE/../is.exe"
-          C:\msys64\usr\bin\bash -lc "mv $GITHUB_WORKSPACE/../app "C:\Program Files (x86)\Inno Setup 6\""
+          
           C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/windows/compile.bat"
           
           echo "Packaging successful"
