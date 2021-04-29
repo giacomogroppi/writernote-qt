@@ -71,7 +71,7 @@ jobs:
       - name: Extract iss.exe
         shell: powershell
         run: |
-          $dest = "D:/a/writernote-qt/"
+          $dest = "D:/a/writernote-qt"
           cd $dest
           .\innoextract.exe "$dest\is.exe"
 
