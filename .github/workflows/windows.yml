@@ -65,7 +65,8 @@ jobs:
       - name: extract innoextract
         shell: powershell
         run: |
-          Expand-Archive -Force -Path innoextract-1.9-windows.zip #-DestinationPath . 
+          $destination_folder = D:/a/writernote-qt/writernote-qt/app
+          Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder 
           
       - name: Create package for windows
         #if: ${{ github.event_name == 'release' }}
