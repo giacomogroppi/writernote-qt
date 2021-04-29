@@ -57,7 +57,7 @@ jobs:
       - name: extract innoextract
         shell: powershell
         run: |
-          Expand-Archive -Path $env:GITHUB_WORKSPACE/innoextract-1.9-windows.zip -DestinationPath $env:GITHUB_WORKSPACE
+          Expand-Archive -Path $env:GITHUB_WORKSPACE/innoextract-1.9-windows.zip -DestinationPath $env:GITHUB_WORKSPACE -force
           
       - name: Create package for windows
         #if: ${{ github.event_name == 'release' }}
