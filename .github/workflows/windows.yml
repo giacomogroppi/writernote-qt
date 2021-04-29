@@ -54,7 +54,7 @@ jobs:
       #    HOME: ${{ runner.workspace }}/writernote-qt
       #    MSYS2_ARCH: x86_64
       #    MSYSTEM: MINGW64
-          
+
       - name: download innoextract, innosetup
         shell: powershell
         run: |
@@ -64,13 +64,13 @@ jobs:
       - name: Extract innoextract and is.exe
         shell: powershell
         run: |
-          $destination_folder = "D:/a/writernote-qt/"
+          $destination_folder = "D:/a/writernote-qt"
           Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder 
           
           cd $destination_folder
           .\innoextract.exe "$destination_folder\is.exe"
 
-      - name: Move is package
+      - name: Move to program
         shell: powershell
         run: |
           $dest_win = "C:\Program Files (x86)\Inno Setup 6\"
