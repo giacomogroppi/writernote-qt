@@ -75,7 +75,7 @@ jobs:
           
           cd $curr_dir
           
-          ./windows/compile.bat
+          windows/compile.bat
           
         shell: cmd
         working-directory: windows
