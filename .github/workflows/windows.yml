@@ -38,42 +38,55 @@ jobs:
           MSYS2_ARCH: x86_64
           MSYSTEM: MINGW64
 
-      - name: download innoextract, innosetup
-        shell: powershell
+      - name: install choco
         run: |
-          $destination_folder = "D:/a/writernote-qt"
-          
-          cd $destination_folder
+          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-          Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
-          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
 
-      - name: Extract innoextract and is.exe
-        shell: powershell
+      - name: install innosetup
         run: |
-          $destination_folder = "D:/a/writernote-qt"
-          cd $destination_folder
+        choco install innosetup
 
-          Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder           
-          .\innoextract.exe "$destination_folder\is.exe"
-
-      - name: Move to program
-        shell: powershell
-        run: |
-          $dest_win = "C:\Program Files (x86)\Inno Setup 6\"
-          $dest = "D:\a\writernote-qt\"
-          mv $dest\app $dest_win
+      #- name: download innoextract, innosetup
+      #  shell: powershell
+      #  run: |
+      #    $destination_folder = "D:/a/writernote-qt"
+      #    
+      #    cd $destination_folder
+#
+      #    Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
+      #    Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
+#
+      #- name: Extract innoextract and is.exe
+      #  shell: powershell
+      #  run: |
+      #    $destination_folder = "D:/a/writernote-qt"
+      #    cd $destination_folder
+#
+      #    Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder           
+      #    .\innoextract.exe "$destination_folder\is.exe"
+#
+      #- name: Move to program
+      #  shell: powershell
+      #  run: |
+      #    $dest_win = "C:\Program Files (x86)\Inno Setup 6\"
+      #    $dest = "D:\a\writernote-qt\"
+      #    mv $dest\app $dest_win
 
       - name: Compile package for windows
         shell: powershell
         run: |
-          $curr_dir = "D:\a\writernote-qt\writernote-qt"
-          cd $curr_dir
-          
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "$curr_dir\windows\package.iss"
-      
+          cd $curr_dir          
+          #"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "$curr_dir\windows\package.iss"
+          cd windows
+          iscc "package.iss"
+
+        env:
+          curr_dir: D:\a\writernote-qt\writernote-qt
+
       - name: Update package to release
         if: ${{ github.event_name == 'release' }}
         shell: powershell
         run: |
           echo ""
+        
