@@ -71,7 +71,7 @@ jobs:
       - name: extract is.exe
         shell: powershell
         run: |
-        $env:GITHUB_WORKSPACE\innoextract.exe is.exe
+          $env:GITHUB_WORKSPACE\innoextract.exe is.exe
 
       - name: Create package for windows
         #if: ${{ github.event_name == 'release' }}
