@@ -80,7 +80,7 @@ jobs:
         shell: cmd
         working-directory: windows
         env:
-          GITHUB_WORKSPACE: GITHUB_WORKSPACE
+          GITHUB_WORKSPACE: "D:/a/writernote-qt/"
           HOME: ${{ runner.workspace }}
           MSYS2_ARCH: x86_64
           MSYSTEM: MINGW64
