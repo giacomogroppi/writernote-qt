@@ -70,7 +70,7 @@ jobs:
           $curr_dir = "D:\a\writernote-qt\writernote-qt"
           cd $curr_dir
           
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" .\windows\package.iss
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "windows\package.iss"
       
       - name: Update package to release
         if: ${{ github.event_name == 'release' }}
