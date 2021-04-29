@@ -55,17 +55,17 @@ jobs:
       #    MSYS2_ARCH: x86_64
       #    MSYSTEM: MINGW64
           
-      - name: download for package
+      - name: download innoextract, innosetup
         shell: powershell
         run: |
-          #$destination_folder = D:/a/writernote-qt/writernote-qt/
+          #$destination_folder = D:/a/writernote-qt/
           Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
 
       - name: extract innoextract
         shell: powershell
         run: |
-          $destination_folder = "D:/a/writernote-qt/writernote-qt/app"
+          $destination_folder = "D:/a/writernote-qt/app"
           Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder 
           
       - name: Create package for windows
