@@ -41,20 +41,6 @@ jobs:
           MSYS2_ARCH: x86_64
           MSYSTEM: MINGW64
 
-      #- name: Download for package
-        #if: ${{ github.event_name == 'release' }}
-      #  run: |
-      #    set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-      #    #C:\msys64\usr\bin\bash -lc "wget https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip --directory-prefix=$GITHUB_WORKSPACE"
-      #    #C:\msys64\usr\bin\bash -lc "wget https://jrsoftware.org/download.php/is.exe --directory-prefix=$GITHUB_WORKSPACE"
-      #  shell: cmd
-      #  working-directory: windows
-      #  env:
-      #    GITHUB_WORKSPACE: GITHUB_WORKSPACE
-      #    HOME: ${{ runner.workspace }}/writernote-qt
-      #    MSYS2_ARCH: x86_64
-      #    MSYSTEM: MINGW64
-
       - name: download innoextract, innosetup
         shell: powershell
         run: |
@@ -84,11 +70,15 @@ jobs:
       - name: Compile package for windows
         #if: ${{ github.event_name == 'release' }}
         run: |
+          $curr_dir = "D:/a/writernote-qt/"
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           
-          C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/windows/compile.bat"
+          cd $curr_dir
           
-          echo "Packaging successful"
+          $curr_dir/windows/compile.bat
+          
+          echo Packaging successful
+          
         shell: cmd
         working-directory: windows
         env:
