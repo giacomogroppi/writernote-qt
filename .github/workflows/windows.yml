@@ -72,14 +72,14 @@ jobs:
         shell: powershell
         run: |
           $dest = "D:/a/writernote-qt/"
-          $dest/innoextract.exe $dest/is.exe"
+          $dest\innoextract.exe $dest\is.exe"
 
       - name: Move iss package
         shell: powershell
         run: |
           $dest_win = "C:\Program Files (x86)\Inno Setup 6\"
-          $dest = "D:/a/writernote-qt/"
-          mv $dest/app $dest_win
+          $dest = "D:\a\writernote-qt\"
+          mv $dest\app $dest_win
 
       - name: Compile package for windows
         #if: ${{ github.event_name == 'release' }}
