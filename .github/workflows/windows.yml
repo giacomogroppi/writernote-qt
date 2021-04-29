@@ -74,5 +74,5 @@ jobs:
           $curr_dir = "D:/a/writernote-qt/"
           cd $curr_dir
           
-          windows/compile.bat
+          start windows/compile.bat
           
