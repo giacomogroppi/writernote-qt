@@ -75,9 +75,7 @@ jobs:
           
           cd $curr_dir
           
-          $curr_dir/windows/compile.bat
-          
-          echo Packaging successful
+          ./windows/compile.bat
           
         shell: cmd
         working-directory: windows
