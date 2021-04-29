@@ -65,14 +65,18 @@ jobs:
       - name: extract innoextract
         shell: powershell
         run: |
-          $destination_folder = "D:/a/writernote-qt/app"
+          $destination_folder = "D:/a/writernote-qt/"
           Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder 
           
+      - name: extract is.exe
+        shell: powershell
+        run: |
+        $env:GITHUB_WORKSPACE\innoextract.exe is.exe
+
       - name: Create package for windows
         #if: ${{ github.event_name == 'release' }}
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE\innoextract.exe is.exe"
           C:\msys64\usr\bin\bash -lc "mv $GITHUB_WORKSPACE/app "C:\Program Files (x86)\Inno Setup 6\""
           C:\msys64\usr\bin\bash -lc "$GITHUB_WORKSPACE/windows/compile.bat"
           
