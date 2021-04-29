@@ -3,7 +3,7 @@
 
 #define MyAppName "writernote"
 #define MyAppVersion "_"
-#define MyAppPublisher "writernote"
+#define MyAppPublisher "Writernote"
 #define MyAppURL "https://github.com/giacomogroppi/writernote-qt"
 #define MyAppExeName "writernote.exe"
 #define MyAppAssocName "Writernote"

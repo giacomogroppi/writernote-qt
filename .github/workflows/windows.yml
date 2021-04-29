@@ -47,32 +47,6 @@ jobs:
         run: |
         choco install innosetup
 
-      #- name: download innoextract, innosetup
-      #  shell: powershell
-      #  run: |
-      #    $destination_folder = "D:/a/writernote-qt"
-      #    
-      #    cd $destination_folder
-#
-      #    Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
-      #    Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
-#
-      #- name: Extract innoextract and is.exe
-      #  shell: powershell
-      #  run: |
-      #    $destination_folder = "D:/a/writernote-qt"
-      #    cd $destination_folder
-#
-      #    Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder           
-      #    .\innoextract.exe "$destination_folder\is.exe"
-#
-      #- name: Move to program
-      #  shell: powershell
-      #  run: |
-      #    $dest_win = "C:\Program Files (x86)\Inno Setup 6\"
-      #    $dest = "D:\a\writernote-qt\"
-      #    mv $dest\app $dest_win
-
       - name: Compile package for windows
         shell: powershell
         run: |
@@ -86,7 +60,9 @@ jobs:
 
       - name: Update package to release
         if: ${{ github.event_name == 'release' }}
-        shell: powershell
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         run: |
-          echo ""
+          gh release upload "${{ steps.get_version.outputs.version }}" ./bin/glab_${{ steps.get_version.outputs.version-without-v }}_Windows_x86_64_installer.exe checksums.txt --clobber
         
