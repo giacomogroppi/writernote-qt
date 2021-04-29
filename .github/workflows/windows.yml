@@ -72,7 +72,8 @@ jobs:
         shell: powershell
         run: |
           $dest = "D:/a/writernote-qt/"
-          $dest\innoextract.exe "$dest\is.exe"
+          cd $dest
+          .\innoextract.exe "$dest\is.exe"
 
       - name: Move iss package
         shell: powershell
