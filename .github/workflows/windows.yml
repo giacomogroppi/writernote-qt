@@ -74,5 +74,5 @@ jobs:
           $curr_dir = "D:\a\writernote-qt\writernote-qt"
           cd $curr_dir
           
-          $curr_dir\windows/package.bat
+          .\windows\package.bat
       
