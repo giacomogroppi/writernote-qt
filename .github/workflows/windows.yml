@@ -49,7 +49,7 @@ jobs:
       - name: Compile package for windows
         shell: powershell
         run: |
-          cd $curr_dir          
+          #cd $curr_dir          
           #"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "$curr_dir\windows\package.iss"
           cd windows
           iscc "package.iss"
