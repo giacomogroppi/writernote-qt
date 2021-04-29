@@ -71,8 +71,8 @@ jobs:
         #if: ${{ github.event_name == 'release' }}
         shell: powershell
         run: |
-          $curr_dir = "D:/a/writernote-qt/"
+          $curr_dir = "D:\a\writernote-qt"
           cd $curr_dir
           
-          start windows/compile.bat
+          start $curr_dir\windows/compile.bat
           
