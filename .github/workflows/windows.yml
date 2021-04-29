@@ -62,18 +62,14 @@ jobs:
           Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "is.exe"
 
-      - name: Extract innoextract
+      - name: Extract innoextract and iss.exe
         shell: powershell
         run: |
-          $destination_folder = "D:/a/writernote-qt/"
+          $destination_folder = "D:/a/writernote-qt"
           Expand-Archive -Force -Path innoextract-1.9-windows.zip -DestinationPath $destination_folder 
           
-      - name: Extract iss.exe
-        shell: powershell
-        run: |
-          $dest = "D:/a/writernote-qt"
-          cd $dest
-          .\innoextract.exe "$dest\is.exe"
+          cd $destination_folder
+          .\innoextract.exe "$destination_folder\is.exe"
 
       - name: Move iss package
         shell: powershell
