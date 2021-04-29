@@ -58,7 +58,7 @@ jobs:
       - name: download innoextract, innosetup
         shell: powershell
         run: |
-          $destination_folder = D:/a/writernote-qt/
+          #$destination_folder = D:/a/writernote-qt/
           Invoke-WebRequest -Uri "https://constexpr.org/innoextract/files/innoextract-1.9-windows.zip" -OutFile "innoextract-1.9-windows.zip"
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "iss.exe"
 
