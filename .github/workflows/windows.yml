@@ -69,7 +69,7 @@ jobs:
           curr_dir: D:\a\writernote-qt\writernote-qt
 
       - name: Update package to release
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name == 'release'
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
