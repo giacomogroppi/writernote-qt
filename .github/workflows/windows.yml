@@ -2,7 +2,18 @@ name: Windows package
 
 on:
   push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - '!.github/workflows/windows.yml'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - '!.github/workflows/windows.yml'
+
 
   workflow_dispatch:
 
