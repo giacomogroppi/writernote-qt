@@ -74,5 +74,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         run: |
-          gh release upload "${{ steps.get_version.outputs.version }}" ./bin/glab_${{ steps.get_version.outputs.version-without-v }}_Windows_x86_64_installer.exe checksums.txt --clobber
+          gh release upload "${{ steps.get_version.outputs.version }}" ./SETUP.exe --clobber
         
