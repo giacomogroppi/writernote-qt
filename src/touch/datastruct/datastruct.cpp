@@ -521,15 +521,15 @@ static struct returnIdMinY idMinY(datastruct *data, QList<int> & id){
 
     unsigned int i, len;
 
-    __point = & data->m_point.first();
+    __point = data->firstPoint();
 
     __min.x = __point->m_x;
     __min.y = __point->m_y;
 
-    len = data->m_point.length();
+    len = data->length();
 
     for(i=0; i<len; ++i){
-        __point = & data->m_point.at(i);
+        __point = data->at(i);
 
         if(id.indexOf(__point->idtratto) != -1){
             if(__point->m_x < __min.x)

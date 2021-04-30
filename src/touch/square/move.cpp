@@ -22,7 +22,7 @@ void square::move(QPointF punto, QPainter &painter, datastruct *data){
     struct delta __delta;
     unsigned int  len;
 
-    len = data->m_point.length();
+    len = data->length();
 
     __delta.x = lastpoint.x() - punto.x();
     __delta.y = lastpoint.y() - punto.y();

@@ -93,10 +93,10 @@ void TabletCanvas::disegnafoglio(){
         temp_point.m_x = 0;
         temp_point.m_y = last + deltax;
 
-        data->datatouch->m_point.append(temp_point);
+        data->datatouch->append(temp_point);
 
         temp_point.m_x = width_p;
-        data->datatouch->m_point.append(temp_point);
+        data->datatouch->append(temp_point);
 
         deltax += temp;
     }
@@ -108,10 +108,10 @@ void TabletCanvas::disegnafoglio(){
         temp_point.m_x = deltay;
         temp_point.m_y = last; /* corrisponde to 0 */
 
-        data->datatouch->m_point.append(temp_point);
+        data->datatouch->append(temp_point);
 
         temp_point.m_y = height_p + last;
-        data->datatouch->m_point.append(temp_point);
+        data->datatouch->append(temp_point);
 
         deltay += temp;
 
@@ -195,17 +195,17 @@ static double width_(datastruct *data){
 
     int i, len;
 
-    for(i=0, len = data->m_point.length(); i<len-1; i++){
-        if(data->m_point.at(i).idtratto == IDORIZZONALE){
-            return (data->m_point.at(i).m_x - data->m_point.at(i+1).m_x);
+    for(i=0, len = data->length(); i<len-1; i++){
+        if(data->at(i)->idtratto == IDORIZZONALE){
+            return (data->at(i)->m_x - data->at(i+1)->m_x);
         }
     }
 
     double temp_ = (double)INT32_MIN;
 
     for(i=0; i<len; i++){
-        if(data->m_point.at(i).m_x > temp_){
-            temp_ = data->m_point.at(i).m_x;
+        if(data->at(i)->m_x > temp_){
+            temp_ = data->at(i)->m_x;
         }
     }
 
@@ -222,7 +222,7 @@ static void addPointZero(currenttitle_class *data){
         temp.m_x = 0;
         temp.m_y = 0;
 
-        data->datatouch->m_point.append(temp);
+        data->datatouch->append(temp);
     }
 }
 

@@ -25,7 +25,7 @@ public:
     void undo(currenttitle_class **);
     void redo(currenttitle_class **);
 
-    void copy_b(currenttitle_class *, currenttitle_class *);
+    void copy_b(currenttitle_class *, const currenttitle_class *);
 
     void setting_data(currenttitle_class **data){
         m_current = data;

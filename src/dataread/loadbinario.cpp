@@ -58,7 +58,7 @@ int xmlstruct::loadbinario_0(zip_t *z){
         temp_point.m_pressure = point_lettura.m_pressure;
         temp_point.rotation = point_lettura.rotation;
 
-        currenttitle->datatouch->m_point.append(temp_point);
+        currenttitle->datatouch->append(temp_point);
     }
 
     double valoretemp;
@@ -100,7 +100,7 @@ int xmlstruct::loadbinario_1(struct zip *z){
     struct point_s temp_point;
     for(i=0; i<len; i++){
         SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
-        currenttitle->datatouch->m_point.append(temp_point);
+        currenttitle->datatouch->append(temp_point);
     }
 
     double valoretemp;

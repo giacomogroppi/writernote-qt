@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define P(x) x->datatouch->m_point
+#define P(x) x->datatouch
 
 static int checkPositionAudio(const currenttitle_class *first,
                               const currenttitle_class *second);
@@ -32,16 +32,16 @@ static int checkIndiceSlow(const currenttitle_class *primo,
 
 static int checkSpeed(const currenttitle_class *first,
                       const currenttitle_class *second){
-    int i, len;
+    uint i, len;
 
-    len = first->datatouch->m_point.length();
-    if(len != second->datatouch->m_point.length())
+    len = first->datatouch->length();
+    if(len != second->datatouch->length())
         return IDTRATTO;
 
     for(i=0; i<len; i++){
-        if(memcmp(&P(first).at(i),
-                  &P(second).at(i),
-                  sizeof(point_s)) != 0)
+        if(memcmp(first->datatouch->at(i),
+                  second->datatouch->at(i),
+                  datastruct::getSizeOne()) != 0)
             return IDTRATTO;
     }
 
@@ -50,32 +50,32 @@ static int checkSpeed(const currenttitle_class *first,
 
 static int checkSlow(const currenttitle_class *first,
                      const currenttitle_class *second){
-    int i, len;
+    uint i, len;
 
-    len = P(first).length();
-    if(len != P(second).length())
+    len = P(first)->length();
+    if(len != P(second)->length())
         return LEN;
 
     for(i=0; i<len; i++){
-        if(P(first).at(i).idtratto != P(second).at(i).idtratto)
+        if(P(first)->at(i)->idtratto != P(second)->at(i)->idtratto)
             return IDTRATTO;
-        if(P(first).at(i).m_x != P(second).at(i).m_x)
+        if(P(first)->at(i)->m_x != P(second)->at(i)->m_x)
             return XCHECK;
-        if(P(first).at(i).m_y != P(second).at(i).m_y)
+        if(P(first)->at(i)->m_y != P(second)->at(i)->m_y)
             return YCHECK;
 
-        if(memcmp(&P(first).operator[](i).m_color,
-                  &P(second).operator[](i).m_color,
+        if(memcmp(&first->datatouch->at(i)->m_color,
+                  &second->datatouch->at(i)->m_color,
                   sizeof(struct colore_s)) != 0)
             return COLORE;
 
-        if(P(first).at(i).m_posizioneaudio != P(second).at(i).m_posizioneaudio)
+        if(P(first)->at(i)->m_posizioneaudio != P(second)->at(i)->m_posizioneaudio)
             return AUDIOPOSITION;
 
-        if(P(first).at(i).m_pressure != P(second).at(i).m_pressure)
+        if(P(first)->at(i)->m_pressure != P(second)->at(i)->m_pressure)
             return PRESSURE;
 
-        if(P(first).at(i).rotation != P(second).at(i).rotation)
+        if(P(first)->at(i)->rotation != P(second)->at(i)->rotation)
             return ROTATION;
     }
     return OK_CHECK;

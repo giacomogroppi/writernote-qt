@@ -42,7 +42,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-#define C(x) x->datatouch->m_point
+#define C(x) x->datatouch
 #define UPDATE_LOAD(x, zoom) updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color))
 #define SET_PEN(x) painter.setPen(x)
 
@@ -72,10 +72,10 @@ void TabletCanvas::load(QPainter &painter,
     QColor current_color = this->m_color;
     this->m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    _lastid = C(data).first().idtratto; /* it should be IDFIRSTPOINT */
+    _lastid = C(data)->firstPoint()->idtratto; /* it should be IDFIRSTPOINT */
 
-    for(i = 1, len = C(data).length(); i < len-1; i++){
-        __point = &data->datatouch->m_point.at(i);
+    for(i = 1, len = C(data)->length(); i < len-1; i++){
+        __point = data->datatouch->at(i);
 
         m_pen.setColor(setcolor(&__point->m_color));
 
@@ -90,8 +90,8 @@ void TabletCanvas::load(QPainter &painter,
                     and those that are too high such as the margins of the pixmap
                 */
 
-                xtemp[k] = C(data).at(i+k).m_x;
-                ytemp[k] = C(data).at(i+k).m_y;
+                xtemp[k] = C(data)->at(i+k)->m_x;
+                ytemp[k] = C(data)->at(i+k)->m_y;
 
             }
 
@@ -99,7 +99,7 @@ void TabletCanvas::load(QPainter &painter,
                 xtemp[0]*m, ytemp[0]*m,
                 xtemp[1]*m, ytemp[1]*m);
 
-                __point = & data->datatouch->m_point.at(i);
+                __point = data->datatouch->at(i);
                 ++i;
         }
         else if(__point->idtratto == _lastid){
@@ -136,10 +136,10 @@ void TabletCanvas::load(QPainter &painter,
 /* la funzione ritorna true se ci sono dei punti positivi per quel id tratto */
 static bool thereispositive(datastruct *data, int idtratto, int start){
     int len;
-    len = data->m_point.length();
+    len = data->length();
 
-    for(; start<len && data->m_point.at(start).idtratto == idtratto; start++)
-        if(data->m_point.at(start).m_y >= 0.0)
+    for(; start<len && data->at(start)->idtratto == idtratto; start++)
+        if(data->at(start)->m_y >= 0.0)
             return true;
 
     return false;

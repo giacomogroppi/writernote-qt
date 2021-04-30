@@ -60,9 +60,9 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
         /* parte responsabile della penna */
         int position_inlist = 0, i, len, position_temp;
 
-        len = m_currenttitle->datatouch->m_point.length();
+        len = m_currenttitle->datatouch->length();
         for(i=0, position_temp = position/1000; i < len; i++){
-            if(m_currenttitle->datatouch->m_point.at(i).m_posizioneaudio == position_temp){
+            if(m_currenttitle->datatouch->at(i)->m_posizioneaudio == position_temp){
                 position_inlist = i;
                 break;
             }

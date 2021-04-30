@@ -45,14 +45,14 @@ void square::updatePoint(QPointF puntofine)
 bool square::find(datastruct *data){
     unsigned int i, len;
 
-    len = data->m_point.length();
+    len = data->length();
 
     this->check = false;
 
     const point_s * __point;
 
     for(i=0;i<len; i++){
-        __point = & data->m_point.at(i);
+        __point = data->at(i);
         if(data->isinside(pointinit, pointfine, __point)){
 
             if(m_id.indexOf(__point->idtratto))

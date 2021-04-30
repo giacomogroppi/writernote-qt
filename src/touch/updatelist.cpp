@@ -9,10 +9,10 @@
 static bool need_to_change_color(datastruct *data, int id){
     int i, len, how;
 
-    len = data->m_point.length();
+    len = data->length();
 
     for(i=0, how = 0; i<len; i++){
-        if(data->m_point.at(i).idtratto == id)
+        if(data->at(i)->idtratto == id)
             how ++;
     }
 
@@ -26,11 +26,11 @@ static point_s temp_point;
 
 void TabletCanvas::updatelist(QTabletEvent *event){
     if(!this->m_deviceDown){
-        temp_point.idtratto = (data->datatouch->m_point.length()) ? data->datatouch->maxId() + 1 : 0;
+        temp_point.idtratto = (data->datatouch->length()) ? data->datatouch->maxId() + 1 : 0;
     }
     else{
         if(m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
-            if(need_to_change_color(data->datatouch, data->datatouch->m_point.last().idtratto)){
+            if(need_to_change_color(data->datatouch, data->datatouch->lastPoint()->idtratto)){
                 if(m_pen_ui->m_last_color.ok == false){
                     /* save the current color */
 
@@ -49,7 +49,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
             }
         }
 
-        temp_point.idtratto = data->datatouch->m_point.last().idtratto;
+        temp_point.idtratto = data->datatouch->lastPoint()->idtratto;
     }
 
     temp_point.m_x = event->posF().x();
@@ -62,7 +62,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     setcolor_struct(&temp_point.m_color, m_color);
 
-    data->datatouch->m_point.append(temp_point);
+    data->datatouch->append(temp_point);
 }
 
 

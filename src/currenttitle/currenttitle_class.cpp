@@ -13,15 +13,18 @@ currenttitle_class::~currenttitle_class()
     delete datatouch;
 }
 
-void currenttitle_class::copy(currenttitle_class *src, currenttitle_class *dest)
+void currenttitle_class::copy(const currenttitle_class *src,
+                              currenttitle_class *dest)
 {
     dest->audio_position_path = src->audio_position_path;
     dest->immagini = src->immagini;
     dest->m_touch = src->m_touch;
 
-    dest->datatouch->m_point = src->datatouch->m_point;
+    dest->datatouch->operator=(*src->datatouch);
+
+    /*dest->datatouch->m_point = src->datatouch->m_point;
     dest->datatouch->zoom = src->datatouch->zoom;
-    dest->datatouch->posizionefoglio = src->datatouch->posizionefoglio;
+    dest->datatouch->posizionefoglio = src->datatouch->posizionefoglio;*/
 
     dest->nome_copybook = src->nome_copybook;
     dest->posizione_iniz = src->posizione_iniz;
@@ -46,11 +49,11 @@ size_t currenttitle_class::createSingleControll() const
     unsigned int i, len;
 
     if(m_touch){
-        len = datatouch->m_point.length();
+        len = datatouch->length();
         if(!len)
             return data;
         for(i=0; i<len; ++i){
-            data += datatouch->m_point.at(i).createControll();
+            data += datatouch->at(i)->createControll();
         }
     }
 

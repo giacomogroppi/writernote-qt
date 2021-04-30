@@ -51,7 +51,7 @@ public:
     currenttitle_class();
     ~currenttitle_class();
 
-    static void copy(currenttitle_class *src, currenttitle_class *dest);
+    static void copy(const currenttitle_class *src, currenttitle_class *dest);
 
 };
 

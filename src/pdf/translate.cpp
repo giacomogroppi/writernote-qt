@@ -7,8 +7,8 @@ void topdf::translate(){
 
     double delta_y, delta_x;
 
-    delta_y = data->datatouch->m_point.first().m_y;
-    delta_x = data->datatouch->m_point.first().m_x;
+    delta_y = data->datatouch->firstPoint()->m_y;
+    delta_x = data->datatouch->firstPoint()->m_x;
 
     len = data->datatouch->posizionefoglio.length();
 
@@ -16,19 +16,19 @@ void topdf::translate(){
         data->datatouch->posizionefoglio[i] += delta_y;
 
     /* move y */
-    len = data->datatouch->m_point.length();
+    len = data->datatouch->length();
     for(i=0; i<len; i++)
-        data->datatouch->m_point.operator[](i).m_y -= delta_y;
+        data->datatouch->at_mod(i)->m_y -= delta_y;
 
     /*
      * move x
      * the first point on the list is always initialized (0, 0)
     */
-    QPointF(data->datatouch->m_point.first().m_x,
-            data->datatouch->m_point.first().m_y);
+    QPointF(data->datatouch->firstPoint()->m_x,
+            data->datatouch->firstPoint()->m_y);
 
     for(i=0; i<len; i++){
-        data->datatouch->m_point.operator[](i).m_x -= delta_x;
+        data->datatouch->at_mod(i)->m_x -= delta_x;
     }
 
     /*

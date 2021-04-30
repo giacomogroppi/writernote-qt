@@ -26,11 +26,11 @@ int savefile::salvabinario(zip_t *filezip){
 
     zip_source_begin_write(file);
 
-    lunghezza = currenttitle->datatouch->m_point.length();
+    lunghezza = currenttitle->datatouch->length();
     WRITE_ON_SIZE(file, &lunghezza, sizeof(int));
 
     for(i = 0; i<lunghezza; i++){
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->m_point[i], sizeof(struct point_s));
+        WRITE_ON_SIZE(file, currenttitle->datatouch->at_mod(i), sizeof(struct point_s));
     }
 
 

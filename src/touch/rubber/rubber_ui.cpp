@@ -61,7 +61,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
     pennatemp.setColor(Qt::white);
     pennatemp.setWidth(1);
 
-    len = data->m_point.length();
+    len = data->length();
 
     this->penna.setStyle(Qt::SolidLine);
 
@@ -69,7 +69,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(i=0; i<len; i++){
-            __point = &data->m_point.at(i);
+            __point = data->at(i);
 
             if(isin(__point,
                     lastPoint,
@@ -92,14 +92,14 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
         painter.setPen(penna);
 
         for(i=0; i<len; i++){
-            __point = & data->m_point.at(i);
+            __point = data->at(i);
 
             if(isin(__point,
                     lastPoint,
                     data)){
                 need_reload = true;
 
-                painter.drawPoint(data->m_point.at(i).m_x, data->m_point.at(i).m_y);
+                painter.drawPoint(data->at(i)->m_x, data->at(i)->m_y);
 
                 if(data->needtochangeid(i)){
                     data->changeId(i);

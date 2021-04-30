@@ -23,7 +23,7 @@ size_t reduce_size::current_size(datastruct *data){
     if(data->isempty())
         return 0;
 
-    size = sizeof(point_s) * data->m_point.length();
+    size = data->getSizeOne() * data->length();
 
     size += sizeof(data->posizionefoglio.first()) * data->posizionefoglio.length();
 
@@ -44,7 +44,7 @@ void reduce_size::decrese(datastruct *data){
     }
 
     for(i=0; i<len; ++i){
-        __point = & data->m_point.at(i);
+        __point = data->at(i);
 
         if(!datastruct::isIdUser(__point)){
             /* we CAN'T remove the point we draw */
@@ -59,7 +59,7 @@ void reduce_size::decrese(datastruct *data){
         }
 
         if(__cont){
-            data->m_point.removeAt(i);
+            data->removeAt(i);
             --len;
         }
 
@@ -75,12 +75,12 @@ static unsigned int __howReduce(datastruct *data,
                       unsigned int len){
 
     unsigned int count;
-    int idtratto = data->m_point.at(*i).idtratto;
+    int idtratto = data->at(*i)->idtratto;
 
     const point_s * __point;
 
     for(count = 0; *i<len; ++(*i)){
-        __point = & data->m_point.at(*i);
+        __point = data->at(*i);
         if(__point->idtratto != idtratto
                 || !__point->isIdUser())
             break;

@@ -21,14 +21,14 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
     y2 = bottonright.y();*/
 
     const point_s *__point;
-    len = data->m_point.length();
+    len = data->length();
 
     for(i=0; i<len; i++){
-        __point = &data->m_point.at(i);
+        __point = data->at(i);
 
 
         if(data->isinside(topleft, bottonright, __point)){
-            this->m_data.m_point.append(*__point);
+            m_data.append(__point);
         }
 
     }
@@ -44,13 +44,13 @@ void copy::past_selection(datastruct *data_past, QPointF &point_past)
 {
     unsigned int i, len;
 
-    len = this->m_data.m_point.length();
+    len = this->m_data.length();
 
     const point_s * __point;
     point_s __append;
 
     for(i=0; i<len; i++){
-        __point = & m_data.m_point.at(i);
+        __point = m_data.at(i);
 
         if(!data_past->isAvailable(__point->idtratto)){
             m_data.changeId(i, data_past->maxId()+1);
@@ -62,7 +62,7 @@ void copy::past_selection(datastruct *data_past, QPointF &point_past)
         __append.m_y += point_past.y();
         __append.m_x += point_past.x();
 
-        data_past->m_point.append(__append);
+        data_past->append(&__append);
 
     }
 

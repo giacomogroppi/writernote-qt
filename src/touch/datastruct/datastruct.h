@@ -40,8 +40,20 @@ private:
 
     QPointF __last_translation;
 
+    /*
+     * make this item private for a new datastruct
+    */
+    QList<struct point_s> m_point;
+
 public:
 
+    void removeAt(const uint i){
+        m_point.removeAt(i);
+    }
+
+    void append(const point_s &point){
+        m_point.append(point);
+    }
     void append(const point_s *point){
         m_point.append(*point);
     }
@@ -146,11 +158,9 @@ public:
 
     QList<double> posizionefoglio;
 
-    QList<struct point_s> m_point;
-
     long double zoom = 1.00;
 
-    inline uint length(){
+    inline uint length() const {
         return m_point.length();
     }
 
@@ -161,8 +171,45 @@ public:
         return at(0);
     }
 
-    inline const point_s * at(uint i){
+    inline const point_s * lastPoint(){
+        return at(length()-1);
+    }
+
+    inline const point_s * at(uint i) const {
         return & m_point.at(i);
+    }
+
+    /*
+     * lower, but return a modify pointer
+    */
+    inline point_s * at_mod(uint i){
+        return &m_point.operator[](i);
+    }
+
+    static inline size_t getSizeOne(){
+        return sizeof(point_s);
+    }
+
+    /*
+     * quando si va a usare = come operatore
+     * tra due qlist, non viene triggerata immediatamente
+     * la copia, in quanto qt usa memoria
+     * condivisa, quando la seconda lista viene
+     * modificata allora si genera la copia automatica
+    */
+    datastruct& operator=(const datastruct& other)
+    {
+        if (this == &other)
+            return *this;
+
+        this->m_point = other.m_point;
+        this->zoom = other.zoom;
+        this->posizionefoglio = other.posizionefoglio;
+
+        this->__last_translation = other.__last_translation;
+
+
+        return *this;
     }
 
 };

@@ -51,11 +51,13 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     trasla(point_translate, data);
 
-    unsigned int i, len;
+    uint i, len;
 
-    for(i=0, len = data->m_point.length(); i<len; i++){
-        data->m_point.operator[](i).m_x *= delta;
-        data->m_point.operator[](i).m_y *= delta;
+    len = data->length();
+
+    for(i=0; i<len; ++i){
+        data->at_mod(i)->m_x *= delta;
+        data->at_mod(i)->m_y *= delta;
     }
 
     trasla(point_translate, data, delta);

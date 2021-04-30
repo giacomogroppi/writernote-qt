@@ -15,10 +15,10 @@ topdf::topdf(QString *path, TabletCanvas *canvas)
 
 static void newpage(datastruct *datastruct, double temp){
     int i, len;
-    len = datastruct->m_point.length();
+    len = datastruct->length();
 
     for(i=0; i<len; i++){
-        datastruct->m_point.operator[](i).m_y += temp;
+        datastruct->at_mod(i)->m_y += temp;
     }
 
     /*
@@ -44,12 +44,12 @@ bool topdf::createpdf(){
 
     QPainter painter(&pdfWriter);
 
-    int len = data->datatouch->m_point.length();
+    int len = data->datatouch->length();
     for(i=0; i<len; i++)
-        if(data->datatouch->m_point.at(i).idtratto == IDORIZZONALE)
+        if(data->datatouch->at(i)->idtratto == IDORIZZONALE)
             break;
 
-    int size_orizzontale = data->datatouch->m_point.at(i).m_x;
+    int size_orizzontale = data->datatouch->at(i)->m_x;
 
     /*
      * last data struct
@@ -82,7 +82,7 @@ bool topdf::createpdf(){
 
 void MainWindow::on_actiontopdf_triggered()
 {
-    if(m_currenttitle->datatouch->m_point.isEmpty())
+    if(m_currenttitle->datatouch->isempty())
         return dialog_critic("There is nothing to convert to pdf");
 
     qfilechoose temp(this);

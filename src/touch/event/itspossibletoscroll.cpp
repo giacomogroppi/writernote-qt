@@ -47,7 +47,7 @@ bool scroll::itspossibletoscrolly(datastruct *data,
         return true;
     }
 
-    __point = &data->m_point.first();
+    __point = data->firstPoint();
 
     if((__point->m_y + *__pos_delta) < 0){
         return true;
@@ -82,7 +82,7 @@ bool scroll::itspossibletoscrollx(datastruct *data,
     ifEmpty(data);
 
     if(*__pos_delta > 0.0){
-        __point = &data->m_point.first();
+        __point = data->firstPoint();
 
         if((__point->m_x + *__pos_delta) < 0.0)
             return true;
