@@ -9,9 +9,10 @@
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
-int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
+int save_image(QList<struct immagine_S> *data,
+               zip_source_t *file_zip)
 {
-    int len, i, temp_i;
+    uint len, i, temp_i;
     size_t temp_s;
     len = data->length();
 
@@ -40,7 +41,8 @@ int save_image(QList<struct immagine_S> *data, zip_source_t *file_zip)
     return OK;
 }
 
-static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
+static int load_image_(struct immagine_S *temp_immagine,
+                       zip_file_t *file_zip){
     void *data_read;
 
     QByteArray array;
@@ -87,7 +89,8 @@ static int load_image_(struct immagine_S *temp_immagine,  zip_file_t *file_zip){
     return ERROR;
 }
 
-int load_image(QList<struct immagine_S> *data, zip_file_t *file_zip){
+int load_image(QList<struct immagine_S> *data,
+               zip_file_t *file_zip){
     int i, len;
 
     struct immagine_S *temp_immagine = new struct immagine_S;
