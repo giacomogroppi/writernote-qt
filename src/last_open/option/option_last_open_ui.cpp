@@ -13,6 +13,9 @@ option_last_open_ui::option_last_open_ui(QWidget *parent) :
     ui->pushButton_enable->setCheckable(true);
     ui->pushButton_disable->setCheckable(true);
 
+    ui->spinBox->setMaximum(30);
+    ui->spinBox->setMinimum(0);
+
     loadData();
 }
 
@@ -69,6 +72,11 @@ void option_last_open_ui::updateShow()
 void option_last_open_ui::on_pushButton_enable_clicked()
 {
     data.val = option::enable;
+
+    if(!ui->spinBox->value()){
+        on_spinBox_valueChanged(1);
+    }
+
     updateShow();
 }
 
@@ -104,4 +112,7 @@ void option_last_open_ui::on_spinBox_valueChanged(int arg1)
     if(!arg1){
         on_pushButton_disable_clicked();
     }
+
+    data.pos = arg1;
+
 }

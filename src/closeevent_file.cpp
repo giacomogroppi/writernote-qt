@@ -167,8 +167,9 @@ void MainWindow::closeEvent (QCloseEvent *event)
     setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
 
-    return event->accept();
+    event->accept();
 
+    qDebug() << "accepted";
 }
 
 static void setting_hide_list(bool check){
