@@ -55,6 +55,7 @@ void addImage(currenttitle_class *m_currenttitle,
                      const char *__pos,
                      struct PointSettable * point);
 class xmlstruct;
+class ui_scroll;
 
 class MainWindow : public QMainWindow
 {

@@ -6,6 +6,7 @@ ui_scroll::ui_scroll(QWidget *parent) :
     ui(new Ui::ui_scroll)
 {
     ui->setupUi(this);
+
 }
 
 ui_scroll::~ui_scroll()
@@ -19,13 +20,14 @@ void ui_scroll::reset(uint enable, int speed)
     ui->spinBox->setValue(speed);
 }
 
-void ui_scroll::on_pushButton_clicked()
+void ui_scroll::on_pushButton_cancel_clicked()
 {
     this->close();
 }
 
-void ui_scroll::on_pushButton_2_clicked()
+void ui_scroll::on_pushButton_ok_clicked()
 {
     emit updateData((uchar)ui->checkBox->isChecked(),
                     ui->spinBox->value());
+    this->close();
 }

@@ -47,6 +47,8 @@ TabletCanvas::TabletCanvas()
 
     m_redoundo = new redoundo(&data);
 
+    loadScrollinSetting();
+
     loadLastMethod(this);
 }
 
@@ -55,6 +57,7 @@ TabletCanvas::~TabletCanvas(){
         delete zoom;
 
     saveLastMethod(this->medotodiinserimento);
+    saveScrollingSetting();
 }
 
 void TabletCanvas::clear()

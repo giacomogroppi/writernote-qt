@@ -42,6 +42,8 @@
 #include "utils/areyousure/areyousure.h"
 #include <QTimer>
 
+#include "touch/scrollKinetic/ui_scroll/ui_scroll.h"
+
 MainWindow::MainWindow(QWidget *parent,
                        TabletCanvas *canvas,
                        struct struct_user *user,

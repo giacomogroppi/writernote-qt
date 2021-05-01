@@ -25,8 +25,8 @@ signals:
     void updateData(uchar enable, int speed);
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void on_pushButton_cancel_clicked();
+    void on_pushButton_ok_clicked();
 };
 
 #endif // UI_SCROLL_H
