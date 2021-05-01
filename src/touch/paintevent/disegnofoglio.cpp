@@ -3,6 +3,8 @@
 #include "../../sheet/load_last_style.h"
 #include "../../utils/color/setcolor.h"
 
+#include <QDebug>
+
 #define DISTANCEFROMLEFTANDRIGHT 0
 #define DEFAULTROTATION 0
 #define DEFAULTPOSIZIONEAUDIO 0
@@ -15,6 +17,20 @@ static double widthToPressure(double);
 static double width_(datastruct *);
 
 static void addPointZero(currenttitle_class *);
+static void drawLineOrizzontal(datastruct *data,
+                         point_s *point,
+                         style_struct_S *style,
+                         const double &last,
+                         double &deltax,
+                         const double &width_p,
+                         const double &ct_del);
+
+static void drawLineVertical(datastruct *data,
+                         point_s *point,
+                         style_struct_S *style,
+                         const double &last,
+                         double &deltay,
+                         const double &height_p);
 
 /*
  * remove this define and add option to change
@@ -28,33 +44,25 @@ static void addPointZero(currenttitle_class *);
 static style_struct_S * setStylePrivate(bool *, fast_sheet_ui::n_style);
 
 void TabletCanvas::disegnafoglio(){
-    if(!disegnofoglio_bool) return;
+    if(!disegnofoglio_bool)
+        return;
 
     bool fast = false, need_scale = false;
 
     struct point_s temp_point;
+    struct style_struct_S *style = nullptr;
+    fast_sheet_ui::n_style res;
+
+    double deltax, deltay, ct_del, last, height_p, width_p;
 
     if(!data->datatouch->isempty()){
         need_scale = true;
         data->datatouch->scala_all();
     }
 
-    fast_sheet_ui::n_style res;
-
-    struct style_struct_S *style = nullptr;
-
-    double deltax, deltay, temp;
-
-    double last, height_p, width_p;
-    int i;
-
     width_p = width_(data->datatouch);
-
+    qDebug() << width_p;
     height_p = int((double)width_p * double(4.0/3.0));
-
-    if(width_p == INT32_MIN){
-        goto error_;
-    }
 
     /* he get the last point draw */
     last = data->datatouch->biggery();
@@ -78,44 +86,20 @@ void TabletCanvas::disegnafoglio(){
     /* insert a point (0, 0) */
     addPointZero(data);
 
-    memcpy(&temp_point.m_color, &style->colore, sizeof(colore_s));
+    memcpy(&temp_point.m_color, &style->colore, sizeof(style->colore));
 
-    deltax = (double)height_p / (double)style->nx;
-    deltay = (double)width_p / (double)style->ny;
+    deltax = height_p / (double)style->nx;
+    deltay = width_p / (double)style->ny;
 
-    temp = deltax;
+    ct_del = deltax;
 
     temp_point.m_pressure = widthToPressure(style->thickness);
 
 
-    temp_point.idtratto = IDORIZZONALE;
-    for(i=0; i<style->nx; i++){
-        temp_point.m_x = 0;
-        temp_point.m_y = last + deltax;
+    /* draw the orizzontal line */
+    drawLineOrizzontal(data->datatouch, &temp_point, style, last, deltax, width_p, ct_del);
 
-        data->datatouch->append(temp_point);
-
-        temp_point.m_x = width_p;
-        data->datatouch->append(temp_point);
-
-        deltax += temp;
-    }
-
-
-    temp_point.idtratto = IDVERTICALE;
-    temp = deltay;
-    for(i=0; i<style->ny; i++){
-        temp_point.m_x = deltay;
-        temp_point.m_y = last; /* corrisponde to 0 */
-
-        data->datatouch->append(temp_point);
-
-        temp_point.m_y = height_p + last;
-        data->datatouch->append(temp_point);
-
-        deltay += temp;
-
-    }
+    drawLineVertical(data->datatouch, &temp_point, style, last, deltay, height_p);
 
     this->disegnofoglio_bool = false;
     this->isloading = true;
@@ -128,6 +112,7 @@ void TabletCanvas::disegnafoglio(){
     if(data->datatouch->posizionefoglio.length() == 1)
         this->resizeEvent(nullptr);
 
+
     return;
 
     error_:
@@ -138,7 +123,9 @@ void TabletCanvas::disegnafoglio(){
 
 static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
 
-    style_struct_S * mall_style = (style_struct_S *)malloc(sizeof(style_struct_S)), * temporary;
+    style_struct_S * mall_style, * temporary;
+
+    mall_style = (style_struct_S *)malloc(sizeof(style_struct_S));
 
     if(!mall_style)
         return NULL;
@@ -193,29 +180,22 @@ static double width_(datastruct *data){
     if(data->posizionefoglio.isEmpty())
         return NUMEROPIXELPAGINA;
 
-    int i, len;
+    uint i, len;
 
-    for(i=0, len = data->length(); i<len-1; i++){
+    len = data->length();
+
+    for(i=0; i<len-1; i++){
         if(data->at(i)->idtratto == IDORIZZONALE){
-            return (data->at(i)->m_x - data->at(i+1)->m_x);
+            return (data->at(i+1)->m_x - data->at(i)->m_x);
         }
     }
 
-    double temp_ = (double)INT32_MIN;
-
-    for(i=0; i<len; i++){
-        if(data->at(i)->m_x > temp_){
-            temp_ = data->at(i)->m_x;
-        }
-    }
-
-
-    return temp_;
+    return data->biggerx();
 }
 
 
 
-static void addPointZero(currenttitle_class *data){
+static void addPointZero(currenttitle_class *data){    
     if(data->datatouch->isempty()){
         struct point_s temp;
         temp.idtratto = IDTRATTOZERO;
@@ -226,3 +206,55 @@ static void addPointZero(currenttitle_class *data){
     }
 }
 
+static void drawLineOrizzontal(datastruct *data,
+                            point_s *point,
+                            style_struct_S *style,
+                            const double &last,
+                            double &deltax,
+                            const double &width_p,
+                            const double &ct_del){
+    qDebug() << deltax;
+
+    uint i;
+    point->idtratto = IDORIZZONALE;
+
+    for(i=0; i< (uint)style->nx; ++i){
+        point->m_x = 0;
+        point->m_y = last + deltax;
+
+        data->append(point);
+
+        point->m_x = width_p;
+        data->append(point);
+
+        deltax += ct_del;
+    }
+}
+
+static void drawLineVertical(datastruct *data,
+                            point_s *point,
+                            style_struct_S *style,
+                            const double &last,
+                            double &deltay,
+                            const double &height_p){
+    double ct_del;
+    uint i;
+
+    point->idtratto = IDVERTICALE;
+    ct_del = deltay;
+
+    qDebug() << "drawLineVerical" << deltay <<  ct_del;
+
+    for(i=0; i< (uint)style->ny; i++){
+        point->m_x = deltay;
+        point->m_y = last; /* corrisponde to 0 */
+
+        data->append(point);
+
+        point->m_y = height_p + last;
+        data->append(point);
+
+        deltay += ct_del;
+
+    }
+}

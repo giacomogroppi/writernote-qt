@@ -4,7 +4,7 @@
 #include "style_struct.h"
 
 #define DEFAULTTHICKNESS 1
-#define DEFAULTN 20
+#define DEFAULTN 40
 #define DEFAULTNOME "Undefined"
 
 style_struct * load_last_style();
