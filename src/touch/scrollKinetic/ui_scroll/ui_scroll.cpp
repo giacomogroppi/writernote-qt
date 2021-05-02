@@ -48,7 +48,7 @@ void ui_scroll::on_spinBox_valueChanged(int arg1)
     }
 }
 
-void ui_scroll::on_checkBox_stateChanged(int arg1)
+void ui_scroll::on_checkBox_stateChanged(int)
 {
     if(ui->checkBox->isChecked()){
         ui->spinBox->setEnabled(true);

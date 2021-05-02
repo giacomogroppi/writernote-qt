@@ -45,6 +45,8 @@ private:
     */
     QList<struct point_s> m_point;
 
+    bool userWrittenSomething(uint i);
+
 public:
 
     void removeAt(const uint i){
@@ -64,11 +66,11 @@ public:
     void controllForRepositioning();
 
     void removePointId(QList<int> &list);
-    void removePointId(int id, unsigned int *len = nullptr);
+    void removePointId(int id, uint *len = nullptr);
 
     bool MovePoint( QRectF &, QPointF);
 
-    bool userWrittenSomething(datastruct *s_data, uint i);
+    bool userWrittenSomething(datastruct *s_data);
 
     /*
      * return true if the user has written this point
@@ -99,7 +101,7 @@ public:
      * this function return the index of the first
      * point with idtratto == IDORIZZONALE
     */
-    unsigned int posIdOrizzonal();
+    uint posIdOrizzonal();
 
 
     datastruct();

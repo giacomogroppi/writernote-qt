@@ -45,7 +45,7 @@ enum MainWindow::n_need_save
         return n_need_save::not_;
 
     if(m_currenttitle->m_touch){
-        if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read->datatouch, 0)){
+        if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read->datatouch)){
             return n_need_save::only_writernote;
         }
     }

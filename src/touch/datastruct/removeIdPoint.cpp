@@ -12,7 +12,7 @@ void datastruct::removePointId(QList<int> &list){
 }
 
 void datastruct::removePointId(int id,
-                               unsigned int *len){
+                               uint *len){
     unsigned int i;
     bool need_delete = false;
     if(!len){
