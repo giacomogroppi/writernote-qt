@@ -58,12 +58,13 @@
 ## To do
 - Project .writer to image
 - Convert audio to text
-- Drag and drop image and file to import it
 - Compile for IOS and mac
 - Ask for classic confinement snapcraft
 - Load file from pdf
-- Change the color from an array of three ints to unsigned char, and create the module to read the last version
-- Add a size_t variable inside within each file to check if we have lost any data within the file
+- Create launcher for windows and linux to:
+  - Send log information to a server
+  - Restart the application
+- Create external program to update writernote, it automatically has to download a zip archive of the latest release on github, extract it, and update the files
 
 ## Known bugs:
 - Rubber [partial]
