@@ -81,5 +81,5 @@ jobs:
           $pos = "D:\a\writernote-qt\writernote-qt\windows"
 
           Rename-Item $pos\Output\writernote_setup.exe "writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").exe"
-          gh release upload "$($env:GITHUB_REF -replace "refs/tags/")" "$pos\writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").exe" --clobber
+          gh release upload "$($env:GITHUB_REF -replace "refs/tags/")" "$pos\Output\writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").exe" --clobber
         
