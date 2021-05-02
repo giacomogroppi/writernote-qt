@@ -78,7 +78,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         shell: powershell
         run: |
-          $new_name = ${{git describe --tags --abbrev=0}}
-          Rename-Item Output\writernote_setup.exe "$new_name.exe"
-          gh release upload "${{ steps.get_version.outputs.version }}" ./${{new_name}}.exe --clobber
+          $new_name = 
+          Rename-Item Output\writernote_setup.exe "${{git describe --tags --abbrev=0}}.exe"
+          gh release upload "${{ steps.get_version.outputs.version }}" ./${{git describe --tags --abbrev=0}}.exe --clobber
         
