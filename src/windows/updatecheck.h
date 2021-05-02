@@ -22,7 +22,6 @@ public:
     int currentversione;
 
     void checkupdate();
-    void mostrafinestra();
 
     void sslErrors(QNetworkReply *, const QList<QSslError> &errors);
     QNetworkAccessManager *manager;

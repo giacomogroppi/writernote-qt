@@ -21,6 +21,8 @@
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../mainwindow.h"
 
+#include "showmessageupdate.h"
+
 static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver);
 
 void updatecheck::start(){
@@ -64,41 +66,6 @@ static QString decode_frombase64(QString stringa){
     return b.fromBase64(b);
 }
 
-/* //last update check
-void updatecheck::managerFinished(){
-    if(reply->error()){
-        if(mostra)
-            dialog_critic("We had a problem with internet connection");
-        delete manager;
-        return;
-    }
-
-    QString testo = reply->readAll();
-
-    QJsonDocument doc = QJsonDocument::fromJson(testo.toUtf8());
-
-    bool check;
-
-    testo = decode_frombase64(doc["content"].toString());
-
-    testo = testo.mid(0, testo.length()-1);
-
-    int version = testo.toInt(&check);
-
-    if(!check && mostra){
-        return dialog_critic("We had a problem while reading the current version");
-    }
-
-    if(version < this->currentversione){
-        mostra = false;
-        return this->mostrafinestra();
-    }
-
-    if(mostra){
-        messaggio_utente("There is no update available");
-    }
-}*/
-
 #define POSNAME "name"
 
 void updatecheck::managerFinished(){
@@ -118,7 +85,7 @@ void updatecheck::managerFinished(){
         delete manager;
         return;
     }
-
+    QString __mess;
     QString testo = reply->readAll();
 
     QJsonDocument doc = QJsonDocument::fromJson(testo.toUtf8());
@@ -129,23 +96,22 @@ void updatecheck::managerFinished(){
         auto res = priority(doc, testo, VERSION_STRING);
 
         if(res == n_priority::critical){
-            messaggio_utente("There is a very important update to do");
+            __mess = "There is a very important update to do";
         }else if(res == n_priority::high){
-            messaggio_utente("There is an importat update to do");
+            __mess = "There is an importat update to do";
+        }else{
+            __mess = "There is an update to do";
         }
 
         mostra = false;
-        return this->mostrafinestra();
+        ShowMessageUpdate show(nullptr, __mess);
+
+        show.exec();
+        return;
     }
 
     if(mostra){
         messaggio_utente("There is no update available");
-    }
-}
-
-void updatecheck::mostrafinestra(){
-    if(areyousure(nullptr, "Update Writernote", "Do you want to update writernote?")){
-        mostra_finestra_i("https://github.com/giacomogroppi/writernote-qt/releases");
     }
 }
 
