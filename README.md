@@ -9,6 +9,13 @@
 </tr>
 </table>
 
+<a href="https://snapcraft.io/writernote">
+  <img alt="writernote" src="https://snapcraft.io/writernote/badge.svg" />
+</a>
+<a href="https://snapcraft.io/writernote">
+  <img alt="writernote" src="https://snapcraft.io/writernote/trending.svg?name=0" />
+</a>
+
 ## Features:
 - Pen support
   - Zoom in and zoom on
