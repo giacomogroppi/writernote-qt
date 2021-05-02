@@ -80,8 +80,6 @@ jobs:
         run: |
           $pos = "D:\a\writernote-qt\writernote-qt\windows"
 
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-          Rename-Item $pos\Output\writernote_setup.exe "writernote_setup_${{ RELEASE_VERSION }}.exe"
-          gh release upload "${{ env.RELEASE_VERSION }}" ./"writernote_setup_${{ RELEASE_VERSION }}.exe" --clobber
+          Rename-Item $pos\Output\writernote_setup.exe "writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").exe"
+          gh release upload "${{ env.RELEASE_VERSION }}" ./"writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").exe" --clobber
         
