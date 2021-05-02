@@ -73,7 +73,7 @@ jobs:
 
       - name: Update package to release
         if: github.event_name == 'release'
-        continue-on-error: true
+        #continue-on-error: true
         env:
           GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         shell: powershell
@@ -83,5 +83,5 @@ jobs:
           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
           Rename-Item $pos\Output\writernote_setup.exe "${{ env.RELEASE_VERSION }}.exe"
-          gh release upload "${{ steps.get_version.outputs.version }}" ./$${{ env.RELEASE_VERSION }}.exe --clobber
+          gh release upload "${{ env.RELEASE_VERSION }}" ./${{ env.RELEASE_VERSION }}.exe --clobber
         
