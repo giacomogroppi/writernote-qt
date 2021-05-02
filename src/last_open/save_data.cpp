@@ -24,7 +24,7 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
     quanti = load_quanti();
 
-    auto m_lista = load_data(quanti);
+    last_file * m_lista = load_data(quanti);
 
     if(!m_lista){
         quanti = 0;
@@ -76,7 +76,7 @@ void save_data(QString &path, int type, int owner_type, char *owner)
         save_data_f(array);
 
         if(m_lista)
-            delete m_lista;
+            free(m_lista);
 
         return;
     }
@@ -84,7 +84,7 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     save_data_f(quanti, m_lista);
 
     if(m_lista)
-        delete m_lista;
+        free(m_lista);
 
 }
 

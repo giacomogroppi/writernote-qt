@@ -8,7 +8,7 @@
  * after the function end
  *
  * the function return a pointer to an last_file
- * in size of [quanti]
+ * in size of [quanti] allocate with malloc
  *
  * the memory is release when it's close last_open instance
 */
