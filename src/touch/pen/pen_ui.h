@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#define DefaultS 1
+#define DefaultS 0.30
 
 struct last_color{
     bool ok;
@@ -36,7 +36,7 @@ public:
     };
 
     n_pressione m_type_pen = n_pressione::pressione;
-    int m_spessore_pen = DefaultS;
+    double m_spessore_pen = DefaultS;
     n_tratto m_type_tratto = n_tratto::continua;
 
     struct last_color m_last_color;
@@ -51,6 +51,8 @@ private slots:
     void on_button_pressure_clicked();
 
     void on_button_size_clicked();
+
+    void on_slider_size_sliderMoved(int position);
 
 private:
     Ui::pen_ui *ui;

@@ -54,7 +54,12 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     temp_point.m_x = event->posF().x();
     temp_point.m_y = event->posF().y();
-    temp_point.m_pressure = event->pressure();
+
+    if(m_pen_ui->m_type_pen == pen_ui::pressione)
+        temp_point.m_pressure = event->pressure();
+    else
+        temp_point.m_pressure = m_pen_ui->m_spessore_pen;
+
     temp_point.rotation = event->rotation();
 
     temp_point.m_posizioneaudio = time/1000;

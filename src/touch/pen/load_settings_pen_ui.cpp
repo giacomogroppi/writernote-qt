@@ -7,9 +7,15 @@ void pen_ui::load_settings(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUP_PEN);
 
-    m_spessore_pen = setting.value(KEY_PEN_SIZE, DefaultS).toInt();
+    bool ok;
+
+    m_spessore_pen = setting.value(KEY_PEN_SIZE, DefaultS).toDouble(&ok);
     m_type_pen = static_cast<n_pressione>(setting.value(KEY_PEN_TYPE, n_pressione::pressione).toInt());
     m_type_tratto = static_cast<n_tratto>(setting.value(KEY_PEN_TIPO_TRATTO, n_tratto::continua).toInt());
+
+    if(!ok){
+        m_spessore_pen = DefaultS;
+    }
 
     setting.endGroup();
 

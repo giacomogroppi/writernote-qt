@@ -1,6 +1,8 @@
 #include "pen_ui.h"
 #include "ui_pen_ui.h"
 
+#include <QDebug>
+
 pen_ui::pen_ui(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::pen_ui)
@@ -8,7 +10,7 @@ pen_ui::pen_ui(QWidget *parent) :
     ui->setupUi(this);
 
     ui->slider_size->setMinimum(1);
-    ui->slider_size->setMaximum(5);
+    ui->slider_size->setMaximum(30);
 
     ui->button_continua->setCheckable(true);
     ui->button_pressure->setCheckable(true);
@@ -84,4 +86,10 @@ bool pen_ui::event(QEvent *event){
         this->hide();
 
     return QWidget::event(event);
+}
+
+void pen_ui::on_slider_size_sliderMoved(int position)
+{
+    this->m_spessore_pen = double(position)/2000.0;
+    qDebug() << m_spessore_pen;
 }
