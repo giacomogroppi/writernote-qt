@@ -74,11 +74,15 @@ public:
 
     /*
      * return true if the user has written this point
+     *
+     * all the point writernote draw have id < 0
     */
     static inline bool isIdUser(const int id){
-        return id != IDTRATTOZERO
+        return id >= 0;
+
+        /*return id != IDTRATTOZERO
                 && id != IDVERTICALE
-                && id != IDORIZZONALE;
+                && id != IDORIZZONALE;*/
     }
     static inline bool isIdUser(const point_s * __point){
         return isIdUser(__point->idtratto);

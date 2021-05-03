@@ -19,31 +19,32 @@ bool datastruct::userWrittenSomething(uint i)
 bool datastruct::userWrittenSomething(datastruct *s_data)
 {
     uint l_first, l_sec, i;
-    const point_s * __point, *__s_p;
+    const point_s * __f_p, *__s_p;
 
     l_first = length();
+    l_sec = s_data->length();
 
     scala_all();
     s_data->scala_all();
 
-    l_sec = s_data->length();
-
     for(i=0; i<l_first && i<l_sec; ++i){
         __s_p = s_data->at(i);
-        __point = at(i);
+        __f_p = at(i);
 
-        if(memcmp(__s_p, __point, sizeof(point_s)) != 0)
+        if(memcmp(__s_p, __f_p, sizeof(*__f_p)) != 0)
             goto ret_;
     }
 
+    if(l_first == l_sec)
+        return false;
+
     if(i < l_first){
-        userWrittenSomething(i);
+        return userWrittenSomething(i);
     }
-    else{
-        if(i < l_sec){
-            s_data->userWrittenSomething(i);
-        }
+    if(i < l_sec){
+        return s_data->userWrittenSomething(i);
     }
+
 
 
     ret_:
