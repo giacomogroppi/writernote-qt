@@ -236,29 +236,17 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
             return dialog_critic("We had a problem opening the current copybook");
         }
 
-        /*
-        int temp = fileload.loadfile((m_currentTitle + ".xml").toUtf8().constData());
-
-        if(temp == ERROR_VERSION){
-            return dialog_critic("the version you created this file with is too old to read");
-        }
-        if(temp == ERROR){
-            return dialog_critic("We had a problem opening the current copybook");
-        }*/
-
         if(_res == n_need_save::need_save){
 
             savecopybook savevariabile(this, &m_currentTitle);
 
-            /* in caso l'utente abbia cancellato la richiesta o ci sia stato un problema interno */
             if (!savevariabile.check_permission())
                 return redolist(this);
 
         }
     }
 
-    /* a questo punto deve aprire il nuovo copybook */
-    if(m_indice.titolo[m_indice.titolo.indexOf(item->text())] != ""){
+    if(m_indice.titolo.at(m_indice.titolo.indexOf(item->text())) != ""){
         int res = xmlstruct(&m_path, &m_indice, m_currenttitle).loadfile((item->text() + ".xml").toUtf8().constData());
 
         if(res == ERROR){

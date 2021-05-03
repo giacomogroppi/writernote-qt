@@ -83,7 +83,9 @@ void save_default_drawing(int *data){
     setting.endGroup();
 }
 
-/* la funzione restituisce la struct per dialog_sheet */
+/*
+ * la funzione restituisce la struct per dialog_sheet
+*/
 style_struct * load_last_style(){
     style_struct default_setting;
 

@@ -7,11 +7,6 @@
 #include "../../utils/dialog_critic/dialog_critic.h"
 #include "../load_last_style.h"
 
-#define setCheckedM(x)     ui->white_sheet->setChecked(x == n_style::white); \
-    ui->lines_sheet->setChecked(x == n_style::line); \
-    ui->shared_sheet->setChecked(x == n_style::square); \
-    uncheck(ui->list_sheet, x);
-
 static void uncheck(QListWidget *list, fast_sheet_ui::n_style temp){
     if(temp != fast_sheet_ui::empty)
         list->unsetCursor();
@@ -31,6 +26,7 @@ fast_sheet_ui::fast_sheet_ui(QWidget *parent) :
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
+    this->load();
 }
 
 fast_sheet_ui::~fast_sheet_ui()
@@ -55,8 +51,10 @@ void fast_sheet_ui::needToReload()
 
 void fast_sheet_ui::load(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-
     setting.beginGroup(GROUPNAME_AUTO_CREATE_SHEET);
+
+    QAction * action;
+    uint i, len;
 
     this->auto_create = setting.value(KEY_AUTO_CREATE_SHEET, true).toBool();
 
@@ -74,26 +72,47 @@ void fast_sheet_ui::load(){
         this->m_style = nullptr;
         ui->list_sheet->reset();
         this->on_autocreate_sheet_clicked();
-        return;
+        goto cont_;
     }
 
-    QAction * action;
+    len = ui->list_sheet->count();
 
-    for(int i=0; i<QUANTESTRUCT && i < m_style->quanti; i++){
+    /*
+     * we want to add the item first, and in the new step edit
+     * when this works is executed the first time, the number
+     * of objects in the list is zero, but since we want to be
+     *  able to execute it later, and we don't want to delete
+     *  the list every time and create new objects,
+     *  we dynamically add and hidden objects from the list
+    */
+    for(i=len; i < (uint)m_style->quanti && i<QUANTESTRUCT; ++i){
         action = new QAction(this);
-
-        action->setText(m_style->style[i].nome);
-
         ui->list_sheet->addAction(action);
     }
 
-    int res = setting.value(KEY_AUTO_CREATE_STYLE_FAST, n_style::empty).toInt();
+    for(i=len; i >= (uint)m_style->quanti; --i){
+        ui->list_sheet->item(i)->setHidden(true);
+    }
 
-    this->m_how = static_cast<n_style>(res);
+    for(i=0; i<QUANTESTRUCT && i < (uint)m_style->quanti; i++){
+        //action = new QAction(this);
 
-    setCheckedM(this->m_how);
+        ui->list_sheet->item(i)->setText(m_style->style[i].nome);
+
+        //action->setText(m_style->style[i].nome);
+
+        //ui->list_sheet->addAction(action);
+    }
+
+    cont_:
+
+    this->m_how = static_cast<n_style>(setting.value(KEY_AUTO_CREATE_STYLE_FAST, n_style::empty).toInt());
+
+    updateCheck();
 
     this->on_autocreate_sheet_clicked();
+
+    setting.endGroup();
 }
 
 bool fast_sheet_ui::event(QEvent *event)
@@ -108,7 +127,7 @@ void fast_sheet_ui::on_white_sheet_clicked()
 {
     m_how = fast_sheet_ui::white;
 
-    setCheckedM(m_how);
+    updateCheck();
 }
 
 
@@ -116,21 +135,21 @@ void fast_sheet_ui::on_lines_sheet_clicked()
 {
     m_how = fast_sheet_ui::line;
 
-    setCheckedM(m_how);
+    updateCheck();
 }
 
 void fast_sheet_ui::on_shared_sheet_clicked()
 {
     m_how = fast_sheet_ui::square;
 
-    setCheckedM(m_how);
+    updateCheck();
 }
 
 void fast_sheet_ui::on_list_sheet_itemClicked(QListWidgetItem *item)
 {
     m_how = fast_sheet_ui::empty;
 
-    setCheckedM(m_how);
+    updateCheck();
 
     QString temp = item->text();
     int in = 0;
@@ -161,7 +180,15 @@ void fast_sheet_ui::save(){
 
     setting.setValue(KEY_AUTO_CREATE_SHEET, this->auto_create);
 
-    setting.setValue(KEY_AUTO_CREATE_STYLE_FAST, static_cast<int>(m_how));
+    setting.setValue(KEY_AUTO_CREATE_STYLE_FAST, m_how);
 
     setting.endGroup();
+}
+
+void fast_sheet_ui::updateCheck()
+{
+    ui->white_sheet->setChecked(m_how == n_style::white);
+    ui->lines_sheet->setChecked(m_how == n_style::line);
+    ui->shared_sheet->setChecked(m_how == n_style::square);
+    uncheck(ui->list_sheet, m_how);
 }

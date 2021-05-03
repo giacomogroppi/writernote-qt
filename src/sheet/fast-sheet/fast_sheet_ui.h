@@ -45,6 +45,8 @@ private:
 
     Ui::fast_sheet_ui *ui;
 
+    void updateCheck();
+
 protected:
     bool event(QEvent *event) override;
 
