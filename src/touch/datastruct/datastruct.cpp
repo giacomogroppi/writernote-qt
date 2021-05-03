@@ -135,7 +135,7 @@ void datastruct::changeId(unsigned int i, int base)
     int temp = m_point.at(i).idtratto;
 
     for(; m_point.at(i).idtratto == temp; i++)
-        m_point.operator[](i).idtratto = id;
+        at_mod(i)->idtratto = id;
 }
 
 /* the function returns true if the id is available */
