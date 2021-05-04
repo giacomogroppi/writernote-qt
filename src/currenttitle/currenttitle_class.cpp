@@ -46,7 +46,7 @@ bool currenttitle_class::isEmpty() const{
 size_t currenttitle_class::createSingleControll() const
 {
     size_t data = 0;
-    unsigned int i, len;
+    uint i, len;
 
     if(m_touch){
         len = datatouch->length();
@@ -69,7 +69,9 @@ void currenttitle_class::reset(){
     this->m_touch = false;
     this->testi.clear();
     this->testinohtml.clear();
-    this-> posizione_iniz.clear();
+    this->posizione_iniz.clear();
 
     this->audio_data.clear();
+
+    this->datatouch->reset();
 }

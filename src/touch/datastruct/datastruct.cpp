@@ -160,9 +160,8 @@ int datastruct::maxId()
 void datastruct::reset(){
     m_point.clear();
 
-    this->zoom = 1.00;
-    this->posizionefoglio.clear();
-    
+    zoom = 1.00;
+    posizionefoglio.clear();
 }
 
 double datastruct::biggery(){

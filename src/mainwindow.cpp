@@ -168,17 +168,41 @@ MainWindow::~MainWindow()
 /* create new file */
 void MainWindow::on_actionNew_File_triggered()
 {
-    if(this->m_indice.titolo.length() != 0){
-        savecopybook checksave(this, &m_currentTitle);
-        bool check = checksave.check_permission();
+    bool check;
+    savecopybook checksave(this, &m_currentTitle);
+    xmlstruct xml(&m_path, &m_indice, m_currenttitle);
+    currenttitle_class __curr;
+    indice_class __ind;
+    n_need_save __res;
+
+    if(this->m_indice.titolo.length() == 0)
+        goto __continue;
+
+    __res = needToSave(&xml, &__curr, &__ind);
+
+    if(__res == n_need_save::not_
+            || __res == n_need_save::only_writernote)
+        goto __continue;
+
+    if(areyousure(nullptr, "Unable to load file", "Unable to load file located in "+m_path)){
+        check = checksave.check_permission();
 
         if(!check)
             return;
     }
 
-    this->m_currentTitle = "";
-    //this->ui->actionCreate_new_copybook->setEnabled(true);
-    this->m_currenttitle->reset();
+    __continue:
+
+    setWindowTitle("Writernote");
+    updatePageCount(-1);
+    m_currentTitle = "";
+    m_currenttitle->reset();
+    m_indice.reset();
+    ui->listWidgetSX->clear();
+    m_canvas->clear();
+    setting_load(this);
+    abilitazioneinput(this);
+    setting_ui_start(this);
 }
 
 void MainWindow::on_actionOpen_triggered(const char *nomeFile)

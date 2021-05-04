@@ -55,6 +55,9 @@ void TabletCanvas::load(QPainter &painter,
                         int size_verticale,
                         double *y_last){
 
+    if(data->datatouch->isempty())
+        return;
+
     int i, len, k, _lastid;
     const point_s * __point;
 

@@ -10,7 +10,7 @@ void datastruct::controllForRepositioning(){
 
 
     QPointF __translation(0, 0);
-    const point_s * __point = & m_point.first();
+    const point_s * __point = firstPoint();
 
     if(__point->m_x > 0){
         __translation.setX(__point->m_x);
