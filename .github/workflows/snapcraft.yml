@@ -7,7 +7,7 @@ on:
       - '**.md'
       - 'LICENSE'
       - '.github/**'
-      - '!.github/workflows/linux.yml'
+      - '!.github/workflows/snapcraft.yml'
 
   pull_request:
     branches: [ master ]
