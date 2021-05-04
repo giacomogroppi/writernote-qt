@@ -201,18 +201,19 @@ uint datastruct::positionId(int id)
     return 0;
 }
 
-unsigned datastruct::decreaseAlfa(int id,
+uint datastruct::decreaseAlfa(int id,
                                   uchar decrease,
                                   uint len)
 {
-    uint i = length();
+    uint i;
+    point_s *__point;
 
     for(i=0; i<len; ++i){
-        if(at(i)->idtratto != id)
-            continue;
+        __point = at_mod(i);
 
-        at_mod(i)->m_color.colore[3] /= decrease;
-
+        if(__point->idtratto == id){
+            __point->m_color.colore[3] /= decrease;
+        }
     }
 
     return i;

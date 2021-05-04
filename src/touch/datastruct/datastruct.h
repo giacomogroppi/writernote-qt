@@ -153,7 +153,7 @@ public:
     /* the function return the index of the id*/
     uint positionId(int id);
 
-    unsigned decreaseAlfa(int id,
+    uint decreaseAlfa(int id,
                           uchar decrese,
                           uint len);
 

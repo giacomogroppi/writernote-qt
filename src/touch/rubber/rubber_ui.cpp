@@ -73,14 +73,14 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
             if(isin(__point,
                     lastPoint,
-                    data)){
+                    data) &&
+                    gomma_delete_id.indexOf(id) == -1){
 
                 id = __point->idtratto;
 
                 need_reload = true;
 
-                if(gomma_delete_id.indexOf(id) == -1)
-                    gomma_delete_id.append(id);
+                gomma_delete_id.append(id);
 
                 i = data->decreaseAlfa(id, DECREASE, len);
 
