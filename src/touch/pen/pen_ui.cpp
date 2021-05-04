@@ -11,7 +11,7 @@ pen_ui::pen_ui(QWidget *parent) :
     ui->setupUi(this);
 
     ui->slider_size->setMinimum(1);
-    ui->slider_size->setMaximum(30);
+    ui->slider_size->setMaximum(100);
 
     ui->button_continua->setCheckable(true);
     ui->button_pressure->setCheckable(true);
