@@ -1,4 +1,4 @@
-name: Snap
+name: Linux build
 
 on:
   push:
@@ -16,7 +16,7 @@ on:
       - '**.md'
       - 'LICENSE'
       - '.github/**'
-      - '!.github/workflows/snapcraft.yml'
+      - '!.github/workflows/linux.yml'
 
   workflow_dispatch:
 
@@ -27,19 +27,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
           sudo apt -y install libzip-dev
 
-      - name: First set up.
-        run: |
-          sudo apt-get purge --autoremove lxd
-          sudo snap install --classic snapcraft
-          sudo snap install lxd
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.13.2
+        with:
+          version: 5.15.2 # optional, default is 5.15.2
+          modules: multimedia # optional
           
-          sudo chown root:root /
-          sudo usermod -aG lxd $USER
-          sudo snap run lxd init --auto
-          sudo snap run lxd waitready
+      - name: Compile
+        run: |
+          qmake
+          make -j $(nproc)
           
