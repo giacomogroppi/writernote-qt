@@ -15,9 +15,9 @@ void datastruct::changeId(uint i, uint len, int base)
             return;
     }
 
-    int temp = m_point.at(i).idtratto;
+    int temp = at(i)->idtratto;
 
-    for(; m_point.at(i).idtratto == temp
-        && i<len; i++)
+    for(; i<len && m_point.at(i).idtratto == temp;
+        i++)
         at_mod(i)->idtratto = base;
 }

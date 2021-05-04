@@ -155,7 +155,7 @@ public:
 
     unsigned decreaseAlfa(int id,
                           uchar decrese,
-                          unsigned int index);
+                          uint len);
 
     uchar removePage(uint page);
 

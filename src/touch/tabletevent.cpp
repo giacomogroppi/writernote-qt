@@ -57,21 +57,18 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     if(!this->square_.check){ /* it means that the user not select anything */
                         square_.updatePoint(event->posF());
                         isloading = true;
-                        update();
                     }
                     else{
                         if(!this->square_.isinside(event->posF())){
                             /* se il tocco non è stato interno */
                             this->square_.reset();
                             isloading = true;
-                            update();
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
                             this->square_.move(event->posF(), painter, data->datatouch);
 
                             isloading = true;
-                            update();
                         }
                     }
                 }else if(medotodiinserimento == e_method::text){
@@ -114,7 +111,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                         isloading = true;
 
-                        update();
                     }
                 }
 
@@ -123,11 +119,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
 
                 isloading = true;
-                update();
             }
             break;
         default:
             break;
     }
+
+    if(isloading)
+        update();
+
     event->accept();
 }

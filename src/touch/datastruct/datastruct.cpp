@@ -203,15 +203,19 @@ uint datastruct::positionId(int id)
 
 unsigned datastruct::decreaseAlfa(int id,
                                   uchar decrease,
-                                  unsigned int index)
+                                  uint len)
 {
-    unsigned int len = this->m_point.length();
+    uint i = length();
 
-    for(; index<len && m_point.at(index).idtratto == id; index++){
-        m_point.operator[](index).m_color.colore[3] /= decrease;
+    for(i=0; i<len; ++i){
+        if(at(i)->idtratto != id)
+            continue;
+
+        at_mod(i)->m_color.colore[3] /= decrease;
+
     }
 
-    return index;
+    return i;
 }
 
 double datastruct::miny()

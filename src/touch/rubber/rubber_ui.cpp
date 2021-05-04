@@ -82,7 +82,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 if(gomma_delete_id.indexOf(id) == -1)
                     gomma_delete_id.append(id);
 
-                i = data->decreaseAlfa(id, DECREASE, i);
+                i = data->decreaseAlfa(id, DECREASE, len);
 
                 --i;
             }
@@ -102,7 +102,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 painter.drawPoint(data->at(i)->m_x, data->at(i)->m_y);
 
                 if(data->needtochangeid(i)){
-                    data->changeId(len, i);
+                    data->changeId(i, len);
                 }
 
                 data->removeat(i);
@@ -115,19 +115,6 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
 
     return need_reload;
 }
-
-static unsigned int m(QList<int> * list, int number, int index, int len){
-    unsigned f;
-    len = list->length();
-
-    for(f = 0; index<len; index++){
-        if(list->at(index) == number)
-            ++f;
-    }
-
-    return f;
-}
-
 
 bool rubber_ui::clearList(datastruct *data)
 {
