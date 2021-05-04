@@ -25,7 +25,7 @@ public:
 
     struct __r {
         enum option val; /* type */
-        char pos = option_last_open_ui_def_num; /* number of lastopen file to show */
+        int pos = option_last_open_ui_def_num; /* number of lastopen file to show */
     };
 
     inline struct __r getData(){

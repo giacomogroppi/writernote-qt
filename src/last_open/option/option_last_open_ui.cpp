@@ -13,8 +13,8 @@ option_last_open_ui::option_last_open_ui(QWidget *parent) :
     ui->pushButton_enable->setCheckable(true);
     ui->pushButton_disable->setCheckable(true);
 
-    ui->spinBox->setMaximum(30);
-    ui->spinBox->setMinimum(0);
+    ui->spinBox->setMaximum(126);
+    ui->spinBox->setMinimum(1);
 
     loadData();
 }
@@ -50,8 +50,9 @@ void option_last_open_ui::loadData()
         data.val = option::enable;
     }
 
-    data.pos = setting.value(KEY_LAST_FILE_NUMBER, option_last_open_ui_def_num).toChar().toLatin1();
-
+    data.pos = setting.value(KEY_LAST_FILE_NUMBER, option_last_open_ui_def_num).toInt(&ok_t);
+    if(!ok_t || data.pos <= 0)
+        data.pos = option_last_open_ui_def_num;
 
     setting.endGroup();
 
