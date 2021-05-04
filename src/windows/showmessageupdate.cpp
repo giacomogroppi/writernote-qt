@@ -14,8 +14,8 @@ ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
     ui->setupUi(this);
 
     ui->label->setText(body);
-    ui->label_curr_ver->setText(VERSION_STRING);
-    ui->label_new_ver->setText(new_ver);
+    ui->label_curr_ver_val->setText(VERSION_STRING);
+    ui->label_new_ver_val->setText(new_ver);
 
 #if !defined(unix)
     ui->pushButton_terminal_command->setHidden(true);
