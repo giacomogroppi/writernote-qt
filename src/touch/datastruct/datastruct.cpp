@@ -364,7 +364,7 @@ bool datastruct::needtochangeid(const unsigned int i){
     unsigned int len;
     len = m_point.length();
 
-    if(!i || i == len)
+    if(!i || (i+1) >= len)
         return false;
 
     int temp_id = m_point.at(i).idtratto;

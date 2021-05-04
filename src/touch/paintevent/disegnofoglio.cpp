@@ -88,6 +88,9 @@ void TabletCanvas::disegnafoglio(){
 
     memcpy(&temp_point.m_color, &style->colore, sizeof(style->colore));
 
+    style->nx ++;
+    style->ny ++;
+
     deltax = height_p / (double)style->nx;
     deltay = width_p / (double)style->ny;
 
