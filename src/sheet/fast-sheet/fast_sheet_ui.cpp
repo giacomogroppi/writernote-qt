@@ -90,7 +90,7 @@ void fast_sheet_ui::load(){
         ui->list_sheet->addAction(action);
     }
 
-    for(i=len; i >= (uint)m_style->quanti; --i){
+    for(i=len; i > (uint)m_style->quanti; --i){
         ui->list_sheet->item(i)->setHidden(true);
     }
 

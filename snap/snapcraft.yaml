@@ -23,6 +23,7 @@ apps:
     environment:
       ALSA_CONFIG_PATH: /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/alsa/alsa.conf
       PULSA_CONFIG_PATH: $SNAP/etc/pulse/client.conf.d/01-enable-autospawn.conf
+      DISABLE_WAYLAND: 1
 
     plugs:
       - desktop
@@ -153,6 +154,12 @@ parts:
       - zlib1g-dev
 
     stage-packages:
+      ## wayland support
+      - libwayland-dev
+      - libwayland-egl1-mesa
+      - libwayland-server0
+      - libgles2-mesa-dev
+
       ## cripto library
       - libcrypto++-dev 
       - libcrypto++-doc 
