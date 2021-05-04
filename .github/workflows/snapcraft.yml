@@ -43,3 +43,5 @@ jobs:
           sudo snap run lxd init --auto
           sudo snap run lxd waitready
           
+      - name: writernote snap build.
+        run: sg lxd -c 'snap run snapcraft --use-lxd'
