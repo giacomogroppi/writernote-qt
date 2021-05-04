@@ -2,8 +2,11 @@
 #include "pen_ui.h"
 
 #include <QSettings>
+#include <QDebug>
 
 void pen_ui::save_settings(){
+    qDebug() << "save m_spessore_pen " << m_spessore_pen;
+
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUP_PEN);
 

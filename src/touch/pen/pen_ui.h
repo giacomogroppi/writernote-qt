@@ -51,9 +51,6 @@ private slots:
     void on_button_pressure_clicked();
 
     void on_button_size_clicked();
-
-    void on_slider_size_sliderMoved(int position);
-
 private:
     Ui::pen_ui *ui;
 

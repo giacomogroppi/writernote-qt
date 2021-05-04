@@ -1,6 +1,6 @@
 #include "../../utils/setting_define.h"
 #include "pen_ui.h"
-
+#include <QDebug>
 #include <QSettings>
 
 void pen_ui::load_settings(){
@@ -16,6 +16,8 @@ void pen_ui::load_settings(){
     if(!ok){
         m_spessore_pen = DefaultS;
     }
+
+    qDebug() << "load spessore_pen: " << m_spessore_pen;
 
     setting.endGroup();
 

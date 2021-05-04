@@ -2,7 +2,7 @@
 
 #include <QTabletEvent>
 #include <QPainter>
-
+#include <QDebug>
 #define MAXPOINT 20
 #include "../utils/color/setcolor.h"
 
@@ -54,6 +54,8 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     temp_point.m_x = event->posF().x();
     temp_point.m_y = event->posF().y();
+
+    qDebug() << event->pressure() << m_pen_ui->m_spessore_pen;
 
     if(m_pen_ui->m_type_pen == pen_ui::pressione)
         temp_point.m_pressure = event->pressure();
