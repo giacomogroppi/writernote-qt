@@ -2,18 +2,20 @@
 #include "ui_showmessageupdate.h"
 #include "../utils/copy_text.h"
 #include "mostra_finestra_i.h"
+#include "../mainwindow.h"
 #define URL_PROG "https://github.com/giacomogroppi/writernote-qt/releases"
 
 
 ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
-                                     QString body) :
+                                     QString body, QString new_ver) :
     QDialog(parent),
     ui(new Ui::ShowMessageUpdate)
 {
     ui->setupUi(this);
 
     ui->label->setText(body);
-
+    ui->label_curr_ver->setText(VERSION_STRING);
+    ui->label_new_ver->setText(new_ver);
 
 #if !defined(unix)
     ui->pushButton_terminal_command->setHidden(true);

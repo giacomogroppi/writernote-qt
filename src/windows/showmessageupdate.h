@@ -14,7 +14,8 @@ class ShowMessageUpdate : public QDialog
 
 public:
     explicit ShowMessageUpdate(QWidget *parent = nullptr,
-                               QString body = "");
+                               QString body = "",
+                               QString new_ver = "");
     ~ShowMessageUpdate();
 
 private slots:

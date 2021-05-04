@@ -19,7 +19,6 @@ class updatecheck: public QObject
     Q_OBJECT
 public:
     updatecheck();
-    int currentversione;
 
     void checkupdate();
 

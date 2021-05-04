@@ -26,28 +26,7 @@
 static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver);
 
 void updatecheck::start(){
-    QFile file(POSIZIONEPATHVERSIONE);
-
-    if(!file.open(QIODevice::ReadOnly)) {
-        this->currentversione = -1;
-        return;
-    }
-
-    bool ok = false;
-    QTextStream in(&file);
-
-    while(!in.atEnd()) {
-        this->currentversione = in.readLine().toUInt(&ok);
-    }
-
-
-    file.close();
-
-    if(this->currentversione == -1)
-        return;
-
     manager = new QNetworkAccessManager();
-    //request.setUrl(QUrl(SITOGIT));
     request.setUrl(QUrl("https://api.github.com/repos/giacomogroppi/writernote-qt/tags"));
     reply = manager->get(request);
 
@@ -57,13 +36,6 @@ void updatecheck::start(){
 updatecheck::updatecheck()
 {
     this->start();
-}
-
-
-static QString decode_frombase64(QString stringa){
-    QByteArray b(stringa.toUtf8().constData());
-
-    return b.fromBase64(b);
 }
 
 #define POSNAME "name"
@@ -104,7 +76,7 @@ void updatecheck::managerFinished(){
         }
 
         mostra = false;
-        ShowMessageUpdate show(nullptr, __mess);
+        ShowMessageUpdate show(nullptr, __mess, testo);
 
         show.exec();
         return;
