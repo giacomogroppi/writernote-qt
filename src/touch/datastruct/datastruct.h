@@ -119,7 +119,7 @@ public:
     bool maxXIdOrizzonal(double *val);
     bool minXIdOrizzonal(double *val);
 
-    void changeId(unsigned int i, int base = -1);
+    void changeId(uint i, uint len, int base = -1);
 
     bool isAvailable(int id);
     int maxId();

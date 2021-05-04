@@ -73,6 +73,7 @@ SOURCES += \
     src/touch/copy/copy_selection.cpp \
     src/touch/copy/copy_widgets.cpp \
     src/touch/datastruct/adjustSize.cpp \
+    src/touch/datastruct/changeId.cpp \
     src/touch/datastruct/controllForRepositioning.cpp \
     src/touch/datastruct/createControllPoint.cpp \
     src/touch/datastruct/isinside.cpp \

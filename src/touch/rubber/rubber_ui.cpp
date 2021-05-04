@@ -102,7 +102,7 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                 painter.drawPoint(data->at(i)->m_x, data->at(i)->m_y);
 
                 if(data->needtochangeid(i)){
-                    data->changeId(i);
+                    data->changeId(len, i);
                 }
 
                 data->removeat(i);
