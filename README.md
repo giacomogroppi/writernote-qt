@@ -65,6 +65,7 @@
   - Send log information to a server
   - Restart the application
 - Create external program to update writernote, it automatically has to download a zip archive of the latest release on github, extract it, and update the files
+- Group
 
 ## Known bugs:
 - Rubber [partial]
