@@ -222,8 +222,6 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return dialog_critic("I can't open this file because of the permission");
 
-    //std::string pathtemp = fileName.toUtf8().constData();
-
     if(fileName.indexOf(".writer") == -1)
         return dialog_critic("Are you sure it's a writernote file?");
 
@@ -249,22 +247,22 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
        || this->m_audioRecorder->state() == QAudioRecorder::PausedState)
         return redolist(this);
 
+    n_need_save _res;
+    currenttitle_class tmp;
+    xmlstruct fileload(&m_path, nullptr, &tmp);
+
+    savecopybook __save(this, &m_currentTitle);
+
     /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
     if(m_currentTitle != ""){
-        currenttitle_class tempcopybook;
-        xmlstruct fileload(&m_path, &m_indice, &tempcopybook);
-
-        auto _res = needToSave(&fileload, &tempcopybook, nullptr);
+        _res = needToSave(&fileload, &tmp, nullptr);
 
         if(_res == n_need_save::unable_load){
             return dialog_critic("We had a problem opening the current copybook");
         }
 
         if(_res == n_need_save::need_save){
-
-            savecopybook savevariabile(this, &m_currentTitle);
-
-            if (!savevariabile.check_permission())
+            if (!__save.check_permission())
                 return redolist(this);
 
         }

@@ -71,9 +71,9 @@ int xmlstruct::loadfile(const char *nameFile){
 
     int err = 0;
 
-    const char *path__ = path_->toUtf8().constData();
-
-    zip_t *filezip = zip_open(path__, ZIP_CREATE, &err);
+    zip_t *filezip = zip_open(path_->toUtf8().constData(),
+                              ZIP_CREATE,
+                              &err);
     if (filezip == NULL)
         return false;
 

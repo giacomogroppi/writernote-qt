@@ -61,7 +61,7 @@ void TabletCanvas::disegnafoglio(){
     }
 
     width_p = width_(data->datatouch);
-    qDebug() << width_p;
+
     height_p = int((double)width_p * double(4.0/3.0));
 
     /* he get the last point draw */
@@ -88,8 +88,12 @@ void TabletCanvas::disegnafoglio(){
 
     memcpy(&temp_point.m_color, &style->colore, sizeof(style->colore));
 
-    style->nx ++;
-    style->ny ++;
+
+    if(style->nx <= 0)
+        style->nx = 1;
+
+    if(style->ny <= 0)
+        style->ny = 1;
 
     deltax = height_p / (double)style->nx;
     deltay = width_p / (double)style->ny;
@@ -101,7 +105,7 @@ void TabletCanvas::disegnafoglio(){
 
     /* draw the orizzontal line */
     drawLineOrizzontal(data->datatouch, &temp_point, style, last, deltax, width_p, ct_del);
-
+    /* draw vertical line */
     drawLineVertical(data->datatouch, &temp_point, style, last, deltay, height_p);
 
     this->disegnofoglio_bool = false;
