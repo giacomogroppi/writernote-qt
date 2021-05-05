@@ -158,11 +158,6 @@ MainWindow::MainWindow(QWidget *parent,
 MainWindow::~MainWindow()
 {
     delete ui;
-
-    /* they are automatically eliminated thanks to qt */
-    /*
-    delete m_rubber;
-    delete m_pen;*/
 }
 
 /* create new file */
@@ -253,6 +248,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     savecopybook __save(this, &m_currentTitle);
 
+    int res;
+
     /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
     if(m_currentTitle != ""){
         _res = needToSave(&fileload, &tmp, nullptr);
@@ -269,7 +266,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     }
 
     if(m_indice.titolo.at(m_indice.titolo.indexOf(item->text())) != ""){
-        int res = xmlstruct(&m_path, &m_indice, m_currenttitle).loadfile((item->text() + ".xml").toUtf8().constData());
+        res = xmlstruct(&m_path, &m_indice, m_currenttitle).loadfile((item->text() + ".xml").toUtf8().constData());
 
         if(res == ERROR){
             return dialog_critic("We had a problem opening the new copybook");
