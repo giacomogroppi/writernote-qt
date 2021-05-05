@@ -21,21 +21,13 @@ static void newpage(datastruct *datastruct, double temp){
         datastruct->at_mod(i)->m_y += temp;
     }
 
-    /*
-     * last data struct
-    */
-    /*
-    len = datastruct->x.length();
-
-    for(i=0; i<len; i++){
-        datastruct->x[i] += NUMEROPIXELPAGINA;
-    }*/
 }
 
 bool topdf::createpdf(){
     this->translate();
 
-    int i, lenpagine;
+    uint i, lenpagine;
+    double size_orizzontale, size_verticale, delta, temp_ret;
 
     lenpagine = data->datatouch->posizionefoglio.length();
 
@@ -44,35 +36,16 @@ bool topdf::createpdf(){
 
     QPainter painter(&pdfWriter);
 
-    int len = data->datatouch->length();
-    for(i=0; i<len; i++)
-        if(data->datatouch->at(i)->idtratto == IDORIZZONALE)
-            break;
+    size_orizzontale = data->datatouch->biggerx();
 
-    int size_orizzontale = data->datatouch->at(i)->m_x;
+    size_verticale = pdfWriter.height();
 
-    /*
-     * last data struct
-    */
-    /*
-    int len = data->datatouch->x.length();
-    for(i=0; i<len; i++)
-        if(data->datatouch->idtratto.at(i) == -1)
-            break;
-
-    int size_orizzontale = data->datatouch->x.at(i+1);
-    */
-
-    double size_verticale = pdfWriter.height();
-
-    double delta = (double)pdfWriter.width() / (double)size_orizzontale;
-    double temp_return;
-
+    delta = (double)pdfWriter.width() / (double)size_orizzontale;
     for (i=0; i<lenpagine; ++i) {
-        this->draw(painter, delta, size_orizzontale, size_verticale, &temp_return);
+        this->draw(painter, delta, size_orizzontale, size_verticale, &temp_ret);
 
         if(i+1<lenpagine){
-            newpage(data->datatouch, temp_return);
+            newpage(data->datatouch, temp_ret);
 
             pdfWriter.newPage();
         }

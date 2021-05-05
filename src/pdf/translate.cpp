@@ -3,50 +3,7 @@
 #define ERRORE 0.01
 
 void topdf::translate(){
-    int i, len;
-
-    double delta_y, delta_x;
-
-    delta_y = data->datatouch->firstPoint()->m_y;
-    delta_x = data->datatouch->firstPoint()->m_x;
-
-    len = data->datatouch->posizionefoglio.length();
-
-    for(i=0; i<len; i++)
-        data->datatouch->posizionefoglio[i] += delta_y;
-
-    /* move y */
-    len = data->datatouch->length();
-    for(i=0; i<len; i++)
-        data->datatouch->at_mod(i)->m_y -= delta_y;
-
-    /*
-     * move x
-     * the first point on the list is always initialized (0, 0)
-    */
-    QPointF(data->datatouch->firstPoint()->m_x,
-            data->datatouch->firstPoint()->m_y);
-
-    for(i=0; i<len; i++){
-        data->datatouch->at_mod(i)->m_x -= delta_x;
-    }
-
-    /*
-     * last data struct
-    */
-    /*
-    len = data->datatouch->x.length();
-    for(i=0; i<len; i++)
-        data->datatouch->y[i] -= delta;
-
-    for(i=0; i<len; i++){
-        if(data->datatouch->x.at(i) < 0.0){
-            delta = data->datatouch->x.at(i);
-
-            for(k=0; k<len; k++)
-                data->datatouch->x[i] += delta;
-        }
-    }*/
+    data->datatouch->scala_all();
 
     /*
      * TODO -> adjust the zoom increase

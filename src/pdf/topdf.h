@@ -39,20 +39,7 @@ public:
     inline void copy(currenttitle_class *datastruct_){
             this->data = new currenttitle_class;
 
-            this->data->m_touch = datastruct_->m_touch;
-
-            /*
-             * last data struct
-            */
-            /*data->datatouch->x = datastruct_->datatouch->x;
-            data->datatouch->y = datastruct_->datatouch->y;
-            data->datatouch->color = datastruct_->datatouch->color;
-            data->datatouch->idtratto = datastruct_->datatouch->idtratto;
-            data->datatouch->posizioneaudio = datastruct_->datatouch->posizioneaudio;
-            data->datatouch->posizionefoglio = datastruct_->datatouch->posizionefoglio;
-            data->datatouch->pressure = datastruct_->datatouch->pressure;
-            data->datatouch->rotation = datastruct_->datatouch->rotation;
-            data->datatouch->zoom = datastruct_->datatouch->zoom;*/
+            *this->data->datatouch = *datastruct_->datatouch;
     }
 };
 

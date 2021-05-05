@@ -307,19 +307,6 @@ double datastruct::biggerx(){
         }
     }
 
-    /*
-     * last data struct
-    */
-    /*
-    len = x.length();
-
-    if(!len)
-        return 0;
-    max = x.first();
-    for(i=0; i < len; i++)
-        if(max < x.at(i))
-            max = x.at(i);*/
-
     return max;
 
 }
