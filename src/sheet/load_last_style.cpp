@@ -108,7 +108,9 @@ style_struct * load_last_style(){
     if(data_byte.size() != sizeof(style_struct))
         return NULL;
 
-    style_temp = (style_struct *)data_byte.data();
+    style_temp = (style_struct *)malloc(sizeof(style_struct));
+
+    memcpy(style_temp, data_byte.data(), sizeof(style_struct));
 
     setting.endGroup();
 

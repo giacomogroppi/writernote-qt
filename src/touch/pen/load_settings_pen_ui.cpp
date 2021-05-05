@@ -17,8 +17,6 @@ void pen_ui::load_settings(){
         m_spessore_pen = DefaultS;
     }
 
-    qDebug() << "load spessore_pen: " << m_spessore_pen;
-
     setting.endGroup();
 
     this->list_update();

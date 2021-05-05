@@ -11,6 +11,8 @@
 
 #include "datastruct/datastruct.h"
 #include "../utils/setting_define.h"
+
+#include "../utils/dialog_critic/dialog_critic.h"
 #include <QSettings>
 
 static void saveLastMethod(TabletCanvas::e_method);
@@ -182,7 +184,6 @@ void TabletCanvas::settingdata(currenttitle_class *data, QString &path){
 
     if(this->m_redoundo)
         m_redoundo->setting_data(&data);
-
 }
 
 void TabletCanvas::setAutoSave(bool v, QString &path){

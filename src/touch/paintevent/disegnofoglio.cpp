@@ -70,14 +70,12 @@ void TabletCanvas::disegnafoglio(){
     data->datatouch->posizionefoglio.append(last);
 
     res = this->m_sheet->WhatIsSelected();
-
     /* set style value */
     style = setStylePrivate(&fast, res);
 
     if(!style){
         goto error_;
     }
-
     if(fast){
         setcolor_struct(&style->colore, TEMP_COLOR);
         style->thickness =  widthToPressure(TEMP_TICK);
@@ -85,7 +83,6 @@ void TabletCanvas::disegnafoglio(){
 
     /* insert a point (0, 0) */
     addPointZero(data);
-
     memcpy(&temp_point.m_color, &style->colore, sizeof(style->colore));
 
 
@@ -94,14 +91,11 @@ void TabletCanvas::disegnafoglio(){
 
     if(style->ny <= 0)
         style->ny = 1;
-
     deltax = height_p / (double)style->nx;
     deltay = width_p / (double)style->ny;
-
     ct_del = deltax;
 
     temp_point.m_pressure = widthToPressure(style->thickness);
-
 
     /* draw the orizzontal line */
     drawLineOrizzontal(data->datatouch, &temp_point, style, last, deltax, width_p, ct_del);
@@ -110,7 +104,6 @@ void TabletCanvas::disegnafoglio(){
 
     this->disegnofoglio_bool = false;
     this->isloading = true;
-
     free(style);
 
     if(need_scale)
@@ -118,7 +111,6 @@ void TabletCanvas::disegnafoglio(){
 
     if(data->datatouch->posizionefoglio.length() == 1)
         this->resizeEvent(nullptr);
-
 
     return;
 
@@ -136,6 +128,10 @@ static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
 
     if(!mall_style)
         return NULL;
+
+    if(res == fast_sheet_ui::empty){
+        res = fast_sheet_ui::square;
+    }
 
     if(res == fast_sheet_ui::empty){
         temporary = load_default_drawing();

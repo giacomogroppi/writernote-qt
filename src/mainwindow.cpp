@@ -221,7 +221,6 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
         return dialog_critic("Are you sure it's a writernote file?");
 
     m_path = fileName;
-
     xmlstruct filefind(&m_path, &m_indice, m_currenttitle);
     if(!filefind.loadindice())
         return dialog_critic("We had a problem reading the file");
@@ -230,6 +229,7 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
     if(this->m_indice.titolo.length() > 0)
         this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook(this);
+
 }
 
 /* Funzione che gestisce il doppio click sull'item a sinistra della lista copybook */
@@ -298,10 +298,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     if(m_currenttitle->m_touch){
         this->m_canvas->settingdata(m_currenttitle, m_path);
         this->m_canvas->loadpixel();
-
         this->m_canvas->time = 0;
     }
-
 }
 
 /* funzione che gestisce il controllo del riascolto dell'audio */
