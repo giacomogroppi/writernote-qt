@@ -16,8 +16,9 @@ public:
     updater(QWidget *parent = nullptr);
     ~updater();
 
-    bool downloadFile(QString &l);
-    bool exstractFile(QString &l, QString &dest);
+    bool downloadFile(QString url, QString dest);
+    bool exstractFile(QString l, const QString &dest);
+    void downloadUpdate();
 
 private:
     Ui::updater *ui;

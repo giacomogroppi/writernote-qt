@@ -6,6 +6,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     updater w;
-    w.show();
+
+    w.downloadUpdate();
+
     return a.exec();
 }
