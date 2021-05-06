@@ -219,8 +219,11 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
         return dialog_critic("I can't open this file because of the permission");
 
 #ifndef ANDROID
-    if(fileName.indexOf(".writer") == -1)
-        return dialog_critic("Are you sure it's a writernote file?");
+    if(fileName.indexOf(".writer") == -1){
+        if(!areyousure(nullptr, "Error", "The file does not have the writernote extension, do you want to open it anyway?")){
+            return;
+        }
+    }
 #endif
 
     m_path = fileName;
