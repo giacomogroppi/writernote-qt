@@ -122,7 +122,7 @@ void TabletCanvas::disegnafoglio(){
 
 static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
 
-    style_struct_S * mall_style, * temporary;
+    style_struct_S * mall_style;
 
     mall_style = (style_struct_S *)malloc(sizeof(style_struct_S));
 
@@ -133,14 +133,7 @@ static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
         res = fast_sheet_ui::square;
     }
 
-    if(res == fast_sheet_ui::empty){
-        temporary = load_default_drawing();
-        if(temporary == NULL){
-            load_default_onlystyle(mall_style);
-        }else{
-            memcpy(mall_style, temporary, sizeof(style_struct_S));
-        }
-    }else if(res == fast_sheet_ui::line){
+    if(res == fast_sheet_ui::line){
         *fast = true;
 
         mall_style->nx = TEMP_N_X;

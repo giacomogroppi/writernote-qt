@@ -95,18 +95,15 @@ void fast_sheet_ui::load(){
     }
 
     for(i=0; i<QUANTESTRUCT && i < (uint)m_style->quanti; i++){
-        //action = new QAction(this);
-
         ui->list_sheet->item(i)->setText(m_style->style[i].nome);
-
-        //action->setText(m_style->style[i].nome);
-
-        //ui->list_sheet->addAction(action);
     }
 
     cont_:
 
     this->m_how = static_cast<n_style>(setting.value(KEY_AUTO_CREATE_STYLE_FAST, n_style::empty).toInt());
+    if(m_how == n_style::empty){
+        m_how = n_style::square;
+    }
 
     updateCheck();
 
