@@ -1,4 +1,5 @@
 #include "xmlstruct.h"
+#include "../utils/dialog_critic/dialog_critic.h"
 
 bool xmlstruct::loadindice(){
     indice->reset();
@@ -6,9 +7,13 @@ bool xmlstruct::loadindice(){
     int err = 0;
     int lunghezza, temp, i;
 
-    zip *filezip = zip_open(this->path_->toUtf8().constData(), 0, &err);
-    if (filezip == NULL)
+    zip *filezip = zip_open(this->path_->toUtf8().constData(),
+                            ZIP_RDONLY,
+                            &err);
+    if (filezip == NULL){
+        dialog_critic("First");
         return false;
+    }
 
     zip_file *f = zip_fopen(filezip, "indice.xml", 0);
 

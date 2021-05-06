@@ -198,6 +198,7 @@ void MainWindow::on_actionNew_File_triggered()
     setting_load(this);
     abilitazioneinput(this);
     setting_ui_start(this);
+    m_path = "";
 }
 
 void MainWindow::on_actionOpen_triggered(const char *nomeFile)
@@ -217,8 +218,10 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return dialog_critic("I can't open this file because of the permission");
 
+#ifndef ANDROID
     if(fileName.indexOf(".writer") == -1)
         return dialog_critic("Are you sure it's a writernote file?");
+#endif
 
     m_path = fileName;
     xmlstruct filefind(&m_path, &m_indice, m_currenttitle);
