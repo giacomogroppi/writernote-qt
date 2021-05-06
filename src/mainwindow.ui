@@ -342,11 +342,20 @@
     <addaction name="actionScroll"/>
     <addaction name="actionLast_open_file"/>
    </widget>
+   <widget class="QMenu" name="menuFile_restore">
+    <property name="title">
+     <string>File restore</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionOption"/>
+    <addaction name="actionRestore_file"/>
+   </widget>
    <addaction name="menuWriternote"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAudio_option"/>
    <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuFile_restore"/>
   </widget>
   <widget class="QToolBar" name="mainbar">
    <property name="windowTitle">
@@ -928,6 +937,16 @@
   <action name="actionLast_open_file">
    <property name="text">
     <string>Last open file</string>
+   </property>
+  </action>
+  <action name="actionOption">
+   <property name="text">
+    <string>Option</string>
+   </property>
+  </action>
+  <action name="actionRestore_file">
+   <property name="text">
+    <string>Restore file</string>
    </property>
   </action>
  </widget>

@@ -315,6 +315,8 @@ private slots:
 
     void on_actionLast_open_file_triggered();
 
+    void on_actionRestore_file_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

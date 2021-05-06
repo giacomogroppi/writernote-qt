@@ -229,7 +229,7 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
     m_path = fileName;
     xmlstruct filefind(&m_path, &m_indice, m_currenttitle);
     if(!filefind.loadindice())
-        return dialog_critic("We had a problem reading the file");
+        return dialog_critic("We had a problem reading the index of the file");
 
 
     if(this->m_indice.titolo.length() > 0)

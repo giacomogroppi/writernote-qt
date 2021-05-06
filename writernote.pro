@@ -68,6 +68,8 @@ SOURCES += \
     src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \
     src/needToSave.cpp \
+    src/restore_file/restore_file.cpp \
+    src/restore_file/restore_file_critic.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
     src/touch/copy/copy_selection.cpp \
@@ -242,6 +244,7 @@ HEADERS += \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
+    src/restore_file/restore_file_critic.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
