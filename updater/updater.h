@@ -4,6 +4,11 @@
 #include <QMainWindow>
 #include <QString>
 
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QList>
+#include <QSslError>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class updater; }
 QT_END_NAMESPACE
@@ -18,9 +23,19 @@ public:
 
     bool downloadFile(QString url, QString dest);
     bool exstractFile(QString l, const QString &dest);
+
+private slots:
     void downloadUpdate();
 
 private:
+
+    void sslErrors(QNetworkReply *, const QList<QSslError> &errors);
+    QNetworkAccessManager *manager;
+    QNetworkRequest request;
+
+
+    QNetworkReply *reply;
+
     Ui::updater *ui;
 };
 #endif // UPDATER_H

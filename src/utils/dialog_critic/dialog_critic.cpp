@@ -1,6 +1,5 @@
 #include "dialog_critic.h"
 
-#include "ui_mainwindow.h"
 #include <QMessageBox>
 
 void dialog_critic(QString stringa){

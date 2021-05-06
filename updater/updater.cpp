@@ -1,18 +1,27 @@
 #include "updater.h"
 #include "ui_updater.h"
 #include "../src/utils/dialog_critic/dialog_critic.h"
+#include "../src/utils/path/get_path.h"
 
 #define OK_POWER_EXT 0
 #define OK_POWER_DOWN 0
 
 #include <QFile>
 #include <QDir>
+#include <QJsonDocument>
 
 updater::updater(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::updater)
 {
     ui->setupUi(this);
+
+    manager = new QNetworkAccessManager();
+    request.setUrl(QUrl("https://api.github.com/repos/giacomogroppi/writernote-qt/tags"));
+    reply = manager->get(request);
+
+    QObject::connect(reply, &QNetworkReply::finished, this, &updater::downloadUpdate);
+
 }
 
 updater::~updater()
@@ -60,22 +69,41 @@ bool updater::exstractFile(QString l, const QString &dest)
 void updater::downloadUpdate()
 {
     QDir __dir(POS + "\\writernote.exe");
+    QString url, testo, dest;
+    QJsonDocument doc;
 
-    if(!QFile::exists(POS)){
-        if(__dir.exists()){
-            goto go;
+    if(reply->error()){
+        dialog_critic("We had this problem " + reply->errorString());
+        delete manager;
+        return;
+    }
+
+    /*if(!QFile::exists(POS)){
+        if(!__dir.exists()){
+            return dialog_critic("I cant find writernote in " + POS);
         }
+    }*/
 
-        return dialog_critic("I cant find writernote in " + POS);
+    testo = reply->readAll();
 
+    doc = QJsonDocument::fromJson(testo.toUtf8());
+
+    dest = get_path(path::home);
+    dest += "\\Download\\writernote_setup.zip";
+
+    testo = doc[0]["name"].toString();
+    testo = "https://github.com/giacomogroppi/writernote-qt/releases/download/" + testo + "/writernote_setup_" + testo + ".zip";
+
+    if(!downloadFile(url, dest)){
+        dialog_critic("I had a problem downloading the file");
     }
 
 
-    go:
+}
 
-
-
-    return;
+void updater::sslErrors(QNetworkReply *, const QList<QSslError> &errors)
+{
+    messaggio_utente("I can't check the current version becouse I had a problem\n");
 }
 
 

@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT       += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -10,11 +10,13 @@ CONFIG += c++11
 
 SOURCES += \
     ../src/utils/dialog_critic/dialog_critic.cpp \
+    ../src/utils/path/get_path.cpp \
     main.cpp \
     updater.cpp
 
 HEADERS += \
     ../src/utils/dialog_critic/dialog_critic.h \
+    ../src/utils/path/get_path.h \
     updater.h
 
 FORMS += \
