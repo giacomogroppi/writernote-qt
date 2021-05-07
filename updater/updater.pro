@@ -11,12 +11,14 @@ CONFIG += c++11
 DESTDIR = build
 
 SOURCES += \
+    ../src/utils/areyousure/areyousure.cpp \
     ../src/utils/dialog_critic/dialog_critic.cpp \
     ../src/utils/path/get_path.cpp \
     main.cpp \
     updater.cpp
 
 HEADERS += \
+    ../src/utils/areyousure/areyousure.h \
     ../src/utils/dialog_critic/dialog_critic.h \
     ../src/utils/path/get_path.h \
     updater.h

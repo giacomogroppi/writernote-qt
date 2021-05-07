@@ -3,7 +3,7 @@
 #include <QMessageBox>
 
 
-bool areyousure(MainWindow *parent, QString title, QString body){
+bool areyousure(QWidget *parent, QString title, QString body){
     QMessageBox::StandardButton resBtn = QMessageBox::question( parent, title,
                                                                 body,
                                                                 QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,

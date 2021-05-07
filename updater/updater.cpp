@@ -2,13 +2,17 @@
 #include "ui_updater.h"
 #include "../src/utils/dialog_critic/dialog_critic.h"
 #include "../src/utils/path/get_path.h"
+#include "../src/utils/areyousure/areyousure.h"
 
 #define OK_POWER_EXT 0
 #define OK_POWER_DOWN 0
 
 #include <QFile>
 #include <QDir>
+#include <QDebug>
 #include <QJsonDocument>
+
+#define POS (QString)"C:\\Program Files (x86)\\writernote\\"
 
 updater::updater(QWidget *parent)
     : QMainWindow(parent)
@@ -52,7 +56,7 @@ bool updater::downloadFile(QString url, QString dest)
 
 }
 
-bool updater::exstractFile(QString l, const QString &dest)
+bool updater::extractFile(QString l, const QString &dest)
 {
     int res;
 
@@ -67,12 +71,33 @@ bool updater::exstractFile(QString l, const QString &dest)
     return false;
 }
 
-#define POS (QString)"C:\\Program Files (x86)\\writernote\\"
+bool updater::moveWithA(QString l, const QString to)
+{
+    int res;
+
+    l = "Start-Process powershell -Verb runAs Move-Item -Path " + l + " -Destination " + to;
+
+    res = system(l.toUtf8().constData());
+
+    return !res;
+}
+
+bool updater::removeFile(QString l)
+{
+    int res;
+
+    l = "powershell " + l;
+
+    res = system(l.toUtf8().constData());
+
+    return !res;
+
+}
 
 void updater::downloadUpdate()
 {
     QDir __dir(POS + "\\writernote.exe");
-    QString testo, dest;
+    QString testo, dest, ver;
     QJsonDocument doc;
 
     if(reply->error()){
@@ -83,7 +108,8 @@ void updater::downloadUpdate()
 
     if(!QFile::exists(POS)){
         if(!__dir.exists()){
-            return dialog_critic("I cant find writernote in " + POS);
+            dialog_critic("I cant find writernote in " + POS);
+            //goto close;
         }
     }
 
@@ -94,14 +120,43 @@ void updater::downloadUpdate()
     dest = "C:" + (QString)get_path(path::home);
     dest += "\\Downloads\\writernote_setup.zip";
 
-    testo = doc[0]["name"].toString();
-    testo = "https://github.com/giacomogroppi/writernote-qt/releases/download/" + testo + "/writernote_setup_" + testo + ".zip";
+    ver = doc[0]["name"].toString();
+    testo = "https://github.com/giacomogroppi/writernote-qt/releases/download/" + ver + "/writernote_setup_" + ver + ".zip";
 
     if(!downloadFile(testo, dest)){
         dialog_critic("I had a problem downloading the file");
+        goto close;
     }
 
+    /* to run powershell as amministrator use:
+        Start-Process powershell -Verb runAs
 
+        we need this for move object into c:\programs
+    */
+
+    testo = dest.mid(0, dest.indexOf(".zip"));
+
+    if(!extractFile(dest, testo)){
+        dialog_critic("We had a problem extracting the zip");
+        goto close;
+    }
+
+    if(!moveWithA(testo, __dir.currentPath())){
+        dialog_critic("We had a problem move writernote.exe to " + __dir.currentPath());
+        goto close;
+    }
+
+    if(!areyousure(nullptr, "Remove file", "Do you want to remove the temporary file?")){
+        goto close;
+    }
+
+    removeFile(testo);
+    removeFile(dest);
+
+    messaggio_utente("Writernote was updated successfully to version " + ver);
+
+    close:
+    this->close();
 }
 
 void updater::sslErrors(QNetworkReply *, const QList<QSslError> &errors)

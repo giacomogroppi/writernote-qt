@@ -22,7 +22,10 @@ public:
     ~updater();
 
     bool downloadFile(QString url, QString dest);
-    bool exstractFile(QString l, const QString &dest);
+    bool extractFile(QString l, const QString &dest);
+
+    bool moveWithA(QString l, const QString to);
+    bool removeFile(QString l);
 
 private slots:
     void downloadUpdate();
