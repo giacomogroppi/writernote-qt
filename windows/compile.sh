@@ -16,5 +16,6 @@ ldd ./build/writernote.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp 
 cd updater
 /mingw64/bin/qmake updater.pro
 make release -j $nproc
-/mingw64/bin/windeployqt.exe ./updater.exe --force
+ldd ./release/writernote.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./release
+/mingw64/bin/windeployqt.exe release/updater.exe --force
 
