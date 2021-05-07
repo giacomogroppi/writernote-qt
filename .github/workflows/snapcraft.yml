@@ -7,6 +7,8 @@ on:
       - '**.md'
       - 'LICENSE'
       - '.github/**'
+      - 'updater/**'
+      - 'windows/**'
       - '!.github/workflows/snapcraft.yml'
 
   pull_request:
