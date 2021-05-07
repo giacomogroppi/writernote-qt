@@ -1,0 +1,2 @@
+For windows we are distributing the application with a manual installation, and this does not allow us to distribute updates automatically, without the user, manually, downloading the new version, and installing it.
+The updater module, on the other hand, is able to locate the installation folder, download the new version, and automatically replace the files in the installation folder.
