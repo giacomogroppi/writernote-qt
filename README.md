@@ -140,6 +140,37 @@ The _.writer format is a compressed archive, in which a file `` indice.xml '' ca
 
 When the file is open, only the indice.xml and the file of the copybook is loaded.
 
+## Directory structure
+- 3rdparty: all script for compile external library that we can't download directly
+- andreoid: all roles for compile writernote for android
+- images: all images
+- language: all translation
+- snap: snapcraft instructions for release the app in the snapstore
+- windows: all script for compile writernote for windows
+- updater: updater Qt project for update writernote [windows]
+- src: [all file for application]
+  - audioplay: file for play an audio
+  - audiorecord: file for record an audio
+  - audiosetting: file for load the setting of the audio
+  - autosave: module for manage autosave
+  - cloud: cloud file
+  - currenttitle: class for the copybook
+  - datamanage: file for manage file after stop recording of audio
+  - dataread: module for read file .writer 
+  - datawrite: module for writernote file .writer
+  - dropEvent: file for manage drop event:
+    - image
+    - writernote file
+  - frompdf: module for load a pdf
+  - image: file for manage image inside writernote
+  - last_open: mdule for load the last open file
+  - lastedit: module for manage redo and redo
+  - log/log_ui: module for manage writernote log
+  - pdf: export pdf
+  - restore_file: module for restore lost file after crash
+
+
+
 
 ## Development
 The application is entirely developed by Giacomo Groppi.
