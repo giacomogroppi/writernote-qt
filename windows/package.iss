@@ -50,6 +50,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+Source: "..\updater\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\updater\build\updater.exe"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
 Source: "{#IconPath}"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\msys64\mingw64\lib\libssl.dll.a"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 

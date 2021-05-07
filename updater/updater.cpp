@@ -32,18 +32,20 @@ updater::~updater()
 bool updater::downloadFile(QString url, QString dest)
 {
     int res;
-    res = system("powershell");
+    res = system("powershell echo hello");
 
-    if(!res){
+    if(res){
         dialog_critic("It seams that you don't have installed powershell");
         return false;
     }
 
     url = "Invoke-WebRequest -uri " + url + " -Method \"GET\"  -Outfile " + dest;
+    url = "powershell " + url;
 
     res = system(url.toUtf8().constData());
 
     if(res != OK_POWER_DOWN){
+        dialog_critic(url);
         return false;
     }
     return true;
@@ -55,6 +57,7 @@ bool updater::exstractFile(QString l, const QString &dest)
     int res;
 
     l = "Expand-Archive -Path " + l + " -destinationPath " + dest;
+    l = "powershell " + l;
 
     res = system(l.toUtf8().constData());
 
@@ -69,7 +72,7 @@ bool updater::exstractFile(QString l, const QString &dest)
 void updater::downloadUpdate()
 {
     QDir __dir(POS + "\\writernote.exe");
-    QString url, testo, dest;
+    QString testo, dest;
     QJsonDocument doc;
 
     if(reply->error()){
@@ -78,23 +81,23 @@ void updater::downloadUpdate()
         return;
     }
 
-    /*if(!QFile::exists(POS)){
+    if(!QFile::exists(POS)){
         if(!__dir.exists()){
             return dialog_critic("I cant find writernote in " + POS);
         }
-    }*/
+    }
 
     testo = reply->readAll();
 
     doc = QJsonDocument::fromJson(testo.toUtf8());
 
-    dest = get_path(path::home);
-    dest += "\\Download\\writernote_setup.zip";
+    dest = "C:" + (QString)get_path(path::home);
+    dest += "\\Downloads\\writernote_setup.zip";
 
     testo = doc[0]["name"].toString();
     testo = "https://github.com/giacomogroppi/writernote-qt/releases/download/" + testo + "/writernote_setup_" + testo + ".zip";
 
-    if(!downloadFile(url, dest)){
+    if(!downloadFile(testo, dest)){
         dialog_critic("I had a problem downloading the file");
     }
 
@@ -103,6 +106,7 @@ void updater::downloadUpdate()
 
 void updater::sslErrors(QNetworkReply *, const QList<QSslError> &errors)
 {
+    Q_UNUSED(errors);
     messaggio_utente("I can't check the current version becouse I had a problem\n");
 }
 
