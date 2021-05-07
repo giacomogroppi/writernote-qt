@@ -214,9 +214,10 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
         return;
 
     QFile file(fileName);
-
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return dialog_critic("I can't open this file because of the permission");
+
+    file.close();
 
 #ifndef ANDROID
     if(fileName.indexOf(".writer") == -1){

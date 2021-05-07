@@ -28,6 +28,28 @@ int datastruct::minId()
     return _minId;
 }
 
+void datastruct::moveIfNegative(uint &p, const uint len,
+                                const uint height,
+                                const uint width){
+    uint r;
+    const point_s *point;
+
+    r = p;
+
+
+    for(; p<len; ++p){
+        point = at(p);
+
+
+        if((point->m_y >= 0.0 && point->m_x >= 0.0) &&
+                (point->m_y <= height && point->m_x <= width)){
+            p = r;
+            return;
+        }
+    }
+
+}
+
 uint datastruct::move_to_positive(uint len)
 {
     uint i;

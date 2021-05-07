@@ -49,6 +49,8 @@ private:
 
 public:
 
+    void moveIfNegative(uint &p, const uint len, const uint height, const uint width);
+
     void removeAt(const uint i){
         m_point.removeAt(i);
     }
