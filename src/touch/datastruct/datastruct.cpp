@@ -32,22 +32,26 @@ void datastruct::moveIfNegative(uint &p, const uint len,
                                 const uint height,
                                 const uint width){
     uint r;
+    int last_id;
     const point_s *point;
 
     r = p;
 
-
     for(; p<len; ++p){
         point = at(p);
-
+        if(!datastruct::isIdUser(point))
+            return;
 
         if((point->m_y >= 0.0 && point->m_x >= 0.0) &&
                 (point->m_y <= height && point->m_x <= width)){
-            p = r;
-            return;
+            goto restore;
         }
     }
 
+    return;
+
+    restore:
+    p = r;
 }
 
 uint datastruct::move_to_positive(uint len)

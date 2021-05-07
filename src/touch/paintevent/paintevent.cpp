@@ -58,10 +58,9 @@ void TabletCanvas::load(QPainter &painter,
     if(data->datatouch->isempty())
         return;
 
-    int i, len, k, _lastid;
+    uint i, len, k;
+    int _lastid;
     const point_s * __point;
-
-    bool _need_reload = false;
 
     m_pixmap.fill(Qt::white);
 
@@ -78,6 +77,13 @@ void TabletCanvas::load(QPainter &painter,
     _lastid = C(data)->firstPoint()->idtratto; /* it should be IDFIRSTPOINT */
 
     for(i = 1, len = C(data)->length(); i < len-1; i++){
+        if(_lastid != C(data)->at(i)->idtratto){
+            data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
+        }
+
+        if(i >= len)
+            break;
+
         __point = data->datatouch->at(i);
 
         m_pen.setColor(setcolor(&__point->m_color));
