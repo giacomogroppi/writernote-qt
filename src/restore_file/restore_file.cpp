@@ -6,3 +6,8 @@ void MainWindow::on_actionRestore_file_triggered()
 {
 
 }
+
+void MainWindow::on_actionOption_triggered()
+{
+
+}

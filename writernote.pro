@@ -70,6 +70,7 @@ SOURCES += \
     src/needToSave.cpp \
     src/restore_file/restore_file.cpp \
     src/restore_file/restore_file_critic.cpp \
+    src/restore_file/ui/setting_restore_ui.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
     src/touch/copy/copy_selection.cpp \
@@ -245,6 +246,7 @@ HEADERS += \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
     src/restore_file/restore_file_critic.h \
+    src/restore_file/ui/setting_restore_ui.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
@@ -343,6 +345,7 @@ FORMS += \
     src/last_open/option/option_last_open_ui.ui \
     src/log/log_ui/log_ui.ui \
     src/mainwindow.ui \
+    src/restore_file/ui/setting_restore_ui.ui \
     src/sheet/dialog_sheet.ui \
     src/sheet/fast-sheet/fast_sheet_ui.ui \
     src/style/inserttable_class.ui \

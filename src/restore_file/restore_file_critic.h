@@ -10,8 +10,6 @@
 class restore_file_critic
 {
 public:
-    restore_file_critic();
-
     enum n_err: int{
 
     };

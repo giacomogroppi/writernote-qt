@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>setting_restore_ui</class>
+ <widget class="QDialog" name="setting_restore_ui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>459</width>
+    <height>372</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>431</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>writernote allows you to set how often to save your work,
+ and how often to save a copy in case the 
+application has a bug.
+the two modules are separate, so you can decide 
+to disable autosave, without disabling saving a copy to disk.</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_autosave">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>190</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto save</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_autosave">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>230</y>
+     <width>92</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enable</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_temp">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>230</y>
+     <width>92</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enable</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_message">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>350</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>190</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save temporary copy</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox_autosave">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>260</y>
+     <width>44</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox_temp">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>260</y>
+     <width>44</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
