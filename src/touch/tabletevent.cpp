@@ -2,9 +2,15 @@
 #include <QDebug>
 #include "../utils/dialog_critic/dialog_critic.h"
 
+bool need_save_auto = false;
+bool need_save_tmp = false;
+
 /* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
+    need_save_auto = true;
+    need_save_tmp = true;
+
     bool check;
 
     auto eventType = event->type();

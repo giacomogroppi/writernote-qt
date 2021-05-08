@@ -30,6 +30,8 @@ struct PointSettable {
     bool set = false;
 };
 
+
+
 typedef struct lastpoint_struct{
     QPointF posd = QPointF(-1, -1);
     QPointF poss = QPointF(-1, -1);

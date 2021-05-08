@@ -2,6 +2,7 @@
 #define SETTING_RESTORE_UI_H
 
 #include <QDialog>
+#include <QString>
 
 struct __data{
     /* true enable */
@@ -27,7 +28,8 @@ class setting_restore_ui : public QDialog
 public:
     explicit setting_restore_ui(QWidget *parent = nullptr,
                                 currenttitle_class **curr = nullptr,
-                                indice_class *ind = nullptr);
+                                indice_class *ind = nullptr,
+                                QString *pp = nullptr);
     ~setting_restore_ui();
 
     struct __data getData () const
@@ -41,6 +43,13 @@ public:
     }
 
 private:
+
+    QString *m_path;
+
+    void startTimerSetting();
+
+    QTimer *m_first;
+    QTimer *m_sec;
 
     currenttitle_class **m_curr;
     indice_class *m_ind;
@@ -59,6 +68,12 @@ signals:
     void dataChange();
 
 private slots:
+    /* autosave */
+    void firstTimer();
+
+    /* tmp file */
+    void secondTimer();
+
     void on_pushButton_ok_clicked();
     void on_pushButton_close_clicked();
     void on_spinBox_temp_valueChanged(int arg1);

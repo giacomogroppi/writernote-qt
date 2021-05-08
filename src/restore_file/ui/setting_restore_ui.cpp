@@ -3,6 +3,9 @@
 #include "../../utils/setting_define.h"
 #include "../../indice_class.h"
 #include "../../currenttitle/currenttitle_class.h"
+#include "../../datawrite/savefile.h"
+#include "../../utils/dialog_critic/dialog_critic.h"
+#include "../../utils/slash/slash.h"
 
 #include <QSettings>
 #include <QTimer>
@@ -11,13 +14,23 @@
 #define MAX_SAVE 3600
 #define MIN_SAVE 1
 
+extern bool need_save_auto;
+extern bool need_save_tmp;
+
 setting_restore_ui::setting_restore_ui(QWidget *parent,
                                        currenttitle_class **curr,
-                                       indice_class *ind) :
+                                       indice_class *ind,
+                                       QString *pp) :
     QDialog(parent),
     ui(new Ui::setting_restore_ui)
 {
     ui->setupUi(this);
+
+    m_first = new QTimer(this);
+    m_sec = new QTimer(this);
+
+    QObject::connect(m_first, &QTimer::timeout, this, &setting_restore_ui::firstTimer);
+    QObject::connect(m_sec, &QTimer::timeout, this, &setting_restore_ui::secondTimer);
 
     ui->spinBox_autosave->setMaximum(MAX_SAVE);
     ui->spinBox_autosave->setMinimum(MIN_SAVE);
@@ -31,8 +44,25 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
 
     this->m_curr = curr;
     this->m_ind = ind;
+    this->m_path = pp;
 
     loadData();
+
+    startTimerSetting();
+
+}
+
+void setting_restore_ui::startTimerSetting(){
+    m_first->stop();
+    m_sec->stop();
+
+    if(m_data.autosave){
+        m_first->setInterval(m_data.t_autosave*1000);
+    }
+
+    if(m_data.temp_file){
+        m_sec->setInterval(m_data.t_temp_file*1000);
+    }
 
 }
 
@@ -80,6 +110,75 @@ void setting_restore_ui::saveData()
 
 
     setting.endGroup();
+}
+
+void setting_restore_ui::firstTimer()
+{
+    savefile ff(m_path, *m_curr);
+    int res;
+
+    if(!need_save_auto){
+        goto start_timer;
+        return;
+    }
+
+    if((*m_curr)->nome_copybook == ""){
+        /* it's not loaded */
+        goto start_timer;
+    }
+
+    res = ff.savefile_check_file() == OK
+            && ff.savefile_check_indice(m_ind);
+
+    if(!res){
+        dialog_critic("We had a problem saving the file in " + *m_path);
+    }
+
+    start_timer:
+    need_save_auto = false;
+    m_first->start(m_data.t_autosave);
+
+}
+
+static int try_save = 0;
+
+void setting_restore_ui::secondTimer()
+{    
+    QStringList list = m_path->split(slash::__slash());
+    int res;
+    QString path = "";
+
+    savefile ff(&path, *m_curr);
+
+    if(!need_save_tmp)
+        goto start_timer;
+
+    for(res = 0; res<list.length()-1; ++res){
+        path += list.at(res);
+    }
+
+    path = "." + list.last() + "_tmp" ;
+
+    if((*m_curr)->nome_copybook == ""){
+        /* it's not loaded */
+        goto start_timer;
+    }
+
+    res = ff.savefile_check_file() == OK
+            && ff.savefile_check_indice(m_ind) == OK;
+
+    if(!res){
+        if(try_save > 5){
+            dialog_critic("We had a problem saving the temporary file in " + path + " for " + QString::number(try_save));
+        }
+    }
+
+    try_save = 0;
+
+    start_timer:
+    need_save_tmp = false;
+    m_first->start(m_data.t_autosave);
+
 }
 
 void setting_restore_ui::on_pushButton_ok_clicked()
