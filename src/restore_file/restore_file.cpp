@@ -22,11 +22,13 @@ void MainWindow::on_actionOption_triggered()
         QObject::connect(m_setting, &setting_restore_ui::dataChange, [=](){
             change = true;
         });
+
+        alreadyconnect = true;
     }
 
     m_setting->exec();
 
-    if(change){
+    if(!change){
         m_setting->setData(&data);
     }
 
