@@ -41,7 +41,7 @@
 #include "windows/mostra_finestra_i.h"
 #include "utils/areyousure/areyousure.h"
 #include <QTimer>
-
+#include "restore_file/ui/setting_restore_ui.h"
 #include "touch/scrollKinetic/ui_scroll/ui_scroll.h"
 
 MainWindow::MainWindow(QWidget *parent,
@@ -101,6 +101,8 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_text_w = new text_widgets(this);
 
     this->m_sheet = new fast_sheet_ui(this);
+
+    this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice);
 
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);

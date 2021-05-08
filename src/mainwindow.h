@@ -56,6 +56,7 @@ void addImage(currenttitle_class *m_currenttitle,
                      struct PointSettable * point);
 class xmlstruct;
 class ui_scroll;
+class setting_restore_ui;
 
 class MainWindow : public QMainWindow
 {
@@ -115,7 +116,6 @@ public:
     void update_image();
 
     /* false -> not enable */
-    bool autosave = false;
     bool enableredoundo = true;
 
 
@@ -135,6 +135,7 @@ public:
     fast_sheet_ui *m_sheet = nullptr;
 
     void updatePageCount(int);
+    setting_restore_ui *m_setting;
 
 public slots:
     /* la funzione serve anche per eliminare l'audio del copybook */
@@ -267,8 +268,6 @@ private slots:
     void on_actionnew_sheet_triggered();
 
     void on_actionEnable_redo_undo_triggered();
-
-    void on_actionAuto_Save_triggered();
 
     void on_actionchoose_color_triggered();
 

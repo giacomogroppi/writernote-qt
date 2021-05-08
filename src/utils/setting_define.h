@@ -22,10 +22,6 @@
 #define KEY_QUALITY_SLIDER "qualitySlider"
 #define KEY_CONTAINER_BOX "containerBox"
 
-/* autosave */
-#define GROUPNAME_AUTOSAVE "autosave_group"
-#define KEY_AUTOSAVE "key_autosave"
-
 /* redoundo */
 #define GROUPNAME_REDOUNDO "redoundo"
 #define KEY_REDOUNDO "redoundo_key"
@@ -108,5 +104,12 @@
 #define GROUPNAME_SPEED_SCROLLING "groupname-speed-scrolling"
 #define KEY_SPEED_SCROLLING "key-speed-scrolling" /* int */
 #define KEY_SPEED_SCROLLING_ENABLE "key-speed-scrolling-enable" /* bool */
+
+/* integrity of data and autosave */
+#define GROUPNAME_INT "groupname-int"
+#define KEY_INT_AUTOSAVE_ENABLE "key-int-autosave-enable"
+#define KEY_INT_AUTOSAVE_TIME "key-int-autosave-time" /* uint -> second */
+#define KEY_INT_TMP_ENABLE "key-int-tmp-enable"
+#define KEY_INT_TMP_TIME "key-int-tmp-time" /* uint -> second */
 
 #endif // SETTING_DEFINE_H

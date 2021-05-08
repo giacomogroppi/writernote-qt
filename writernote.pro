@@ -113,7 +113,6 @@ SOURCES += \
     src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
     src/autosave/autosave_.cpp \
-    src/autosave/autosave_mainwindow.cpp \
     src/last_open/element/element_ui.cpp \
     src/last_open/last_open.cpp \
     src/last_open/load_data.cpp \

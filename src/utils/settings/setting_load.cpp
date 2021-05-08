@@ -21,15 +21,6 @@ static void setting_load_redoundo(MainWindow *parent){
     setting.endGroup();
 }
 
-static void setting_load_auto_save(MainWindow *parent){
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_AUTOSAVE);
-
-    parent->autosave = setting.value(KEY_AUTOSAVE, false).toBool();
-
-    setting.endGroup();
-}
-
 void setting_load(MainWindow *parent)
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -41,7 +32,6 @@ void setting_load(MainWindow *parent)
     setting.endGroup();
 
     setting_load_redoundo(parent);
-    setting_load_auto_save(parent);
     setting_load_list_hidden(parent);
 }
 
