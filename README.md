@@ -168,7 +168,22 @@ When the file is open, only the indice.xml and the file of the copybook is loade
   - log/log_ui: module for manage writernote log
   - pdf: export pdf
   - restore_file: module for restore lost file after crash
-
+  - sheet: style for the sheel
+  - utils: some modules
+  - windows: manage update
+  - touch: 
+    - copy: files to copy area
+    - datastruct: class for manage data 
+    - event: event for touch, resize event, mouse event ...
+    - paintevent: module to draw object to pixmap
+    - reduce_size: module to reduce precision of file
+    - riascolto: module to load and play audio dynamically
+    - rubber: rubber
+    - scrollKentic: module for scrolling kinetic [pen mode]
+    - square: module to move object with finger
+    - text: insert text into file
+    - zoom: module to manage zoom
+    
 
 
 
