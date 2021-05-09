@@ -7,6 +7,8 @@
 #include "../../utils/dialog_critic/dialog_critic.h"
 #include "../../utils/slash/slash.h"
 
+#include "../get_name_tmp.h"
+
 #include <QSettings>
 #include <QTimer>
 #include <QDebug>
@@ -143,21 +145,16 @@ void setting_restore_ui::firstTimer()
 static int try_save = 0;
 
 void setting_restore_ui::secondTimer()
-{    
-    QStringList list = m_path->split(slash::__slash());
+{
     int res;
-    QString path = "";
+    QString path;
+
+    path = get_name_tmp::get(m_path);
 
     savefile ff(&path, *m_curr);
 
     if(!need_save_tmp)
         goto start_timer;
-
-    for(res = 0; res<list.length()-1; ++res){
-        path += list.at(res);
-    }
-
-    path = "." + list.last() + "_tmp" ;
 
     if((*m_curr)->nome_copybook == ""){
         /* it's not loaded */

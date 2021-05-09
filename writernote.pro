@@ -246,6 +246,7 @@ HEADERS += \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
+    src/restore_file/get_name_tmp.h \
     src/restore_file/restore_file_critic.h \
     src/restore_file/ui/setting_restore_ui.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
