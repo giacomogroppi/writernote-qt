@@ -8,8 +8,7 @@
 
 ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
                                      QString body,
-                                     QString new_ver,
-                                     bool *c) :
+                                     QString new_ver) :
     QDialog(parent),
     ui(new Ui::ShowMessageUpdate)
 {
@@ -23,9 +22,7 @@ ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
     ui->pushButton_terminal_command->setHidden(true);
 #endif
 
-#if defined(WIN32) || defined(WIN64)
-    this->click = c;
-#else
+#if !(defined(WIN32) || defined(WIN64))
     ui->pushButton_update_now->setHidden(true);
 #endif
 }

@@ -15,8 +15,7 @@ class ShowMessageUpdate : public QDialog
 public:
     explicit ShowMessageUpdate(QWidget *parent = nullptr,
                                QString body = "",
-                               QString new_ver = "",
-                               bool *c = nullptr);
+                               QString new_ver = "");
     ~ShowMessageUpdate();
 
 private slots:
@@ -31,9 +30,6 @@ private slots:
     void on_pushButton_update_now_clicked();
 
 private:
-#if defined(WIN32) || defined(WIN64)
-    bool *click;
-#endif
 
     Ui::ShowMessageUpdate *ui;
 };
