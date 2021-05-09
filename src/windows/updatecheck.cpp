@@ -77,7 +77,9 @@ void updatecheck::managerFinished(){
         }
 
         mostra = false;
-        action->setVisible(true);
+        if(action)
+            action->setVisible(true);
+
         ShowMessageUpdate show(nullptr, __mess, testo);
 
         show.exec();
