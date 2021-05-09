@@ -11,6 +11,7 @@
 #define NO_VER_DEF "[no version available]"
 #endif
 
+#include <QAction>
 #include <QNetworkReply>
 #include <QObject>
 
@@ -18,7 +19,7 @@ class updatecheck: public QObject
 {
     Q_OBJECT
 public:
-    updatecheck();
+    updatecheck(QAction *action_update);
 
     void checkupdate();
 
@@ -46,6 +47,8 @@ private slots:
     void managerFinished();
 
 private:
+    QAction *action;
+
     void start();
 };
 

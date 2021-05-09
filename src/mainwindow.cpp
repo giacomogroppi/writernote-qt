@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     abilitazioneinput(this);
 
-    checkupdate = new updatecheck();
+    checkupdate = new updatecheck(ui->actionUpdate_writernote);
 
     setting_load(this);
 
@@ -155,6 +155,10 @@ MainWindow::MainWindow(QWidget *parent,
 
     setAcceptDrops(true);
     updatePageCount(-1);
+
+
+    /* by default */
+    ui->actionUpdate_writernote->setVisible(false);
 }
 
 MainWindow::~MainWindow()

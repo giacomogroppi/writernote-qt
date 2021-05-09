@@ -33,8 +33,9 @@ void updatecheck::start(){
     QObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
 }
 
-updatecheck::updatecheck()
+updatecheck::updatecheck(QAction *a)
 {
+    action = a;
     this->start();
 }
 
@@ -76,6 +77,7 @@ void updatecheck::managerFinished(){
         }
 
         mostra = false;
+        action->setVisible(true);
         ShowMessageUpdate show(nullptr, __mess, testo);
 
         show.exec();

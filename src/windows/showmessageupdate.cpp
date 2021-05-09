@@ -4,10 +4,12 @@
 #include "mostra_finestra_i.h"
 #include "../mainwindow.h"
 #define URL_PROG "https://github.com/giacomogroppi/writernote-qt/releases"
-
+#include "../../updater/launch_updater/launch_updater.h"
 
 ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
-                                     QString body, QString new_ver) :
+                                     QString body,
+                                     QString new_ver,
+                                     bool *c) :
     QDialog(parent),
     ui(new Ui::ShowMessageUpdate)
 {
@@ -21,6 +23,11 @@ ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
     ui->pushButton_terminal_command->setHidden(true);
 #endif
 
+#if defined(WIN32) || defined(WIN64)
+    this->click = c;
+#else
+    ui->pushButton_update_now->setHidden(true);
+#endif
 }
 
 ShowMessageUpdate::~ShowMessageUpdate()
@@ -46,4 +53,9 @@ void ShowMessageUpdate::on_pushButton_terminal_command_clicked()
 void ShowMessageUpdate::on_pushButton_brow_clicked()
 {
     mostra_finestra_i(URL_PROG);
+}
+
+void ShowMessageUpdate::on_pushButton_update_now_clicked()
+{
+    launch_updater::launch();
 }

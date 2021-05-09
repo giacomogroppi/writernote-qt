@@ -386,6 +386,7 @@
    <addaction name="pauserecordingbotton"/>
    <addaction name="actionImport_Video"/>
    <addaction name="actioncompress_video"/>
+   <addaction name="actionUpdate_writernote"/>
   </widget>
   <widget class="QToolBar" name="simpleactionbar">
    <property name="windowTitle">
@@ -938,6 +939,15 @@
   <action name="actionRestore_file">
    <property name="text">
     <string>Restore file</string>
+   </property>
+  </action>
+  <action name="actionUpdate_writernote">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/update-icon.png</normaloff>:/image/images/update-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Update writernote</string>
    </property>
   </action>
  </widget>

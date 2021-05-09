@@ -99,6 +99,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButton_update_now">
+       <property name="text">
+        <string>Update Now</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="pushButton_terminal_command">
        <property name="text">
         <string>Copy bash command</string>

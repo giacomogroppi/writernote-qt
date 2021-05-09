@@ -54,5 +54,6 @@
         <file>images/insertText.png</file>
         <file>images/newPage.png</file>
         <file>images/restore-icon.png</file>
+        <file>images/update-icon.png</file>
     </qresource>
 </RCC>

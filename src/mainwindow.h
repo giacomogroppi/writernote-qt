@@ -318,6 +318,8 @@ private slots:
 
     void on_actionOption_triggered();
 
+    void on_actionUpdate_writernote_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;

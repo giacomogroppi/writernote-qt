@@ -229,12 +229,14 @@ SOURCES += \
     src/videocompress/importvideo_functionmainwindow.cpp \
     src/videocompress/videocompress_ui.cpp \
     src/windows/check_update_mainwindow.cpp \
+    src/windows/main_updater.cpp \
     src/windows/mostra_finestra_i.cpp \
     src/windows/showmessageupdate.cpp \
     src/windows/sourcecode_mainwindow.cpp \
     src/windows/updatecheck.cpp \
     src/sheet/load_last_style.cpp \
-    src/cloud/button_mainwindow.cpp
+    src/cloud/button_mainwindow.cpp \
+    updater/launch_updater/launch_updater.cpp
 
 
 HEADERS += \
@@ -335,7 +337,8 @@ HEADERS += \
     src/windows/mostra_finestra_i.h \
     src/windows/showmessageupdate.h \
     src/windows/updatecheck.h \
-    src/sheet/load_last_style.h
+    src/sheet/load_last_style.h \
+    updater/launch_updater/launch_updater.h
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
