@@ -49,6 +49,17 @@ private:
 
 public:
 
+    static inline bool point_mid(const point_s *f,
+                                    const point_s *s,
+                                    const QPointF pp,
+                                    const double size){
+        double x, y, m, q;
+
+        m = (f->m_y - s->m_y)/(f->m_x - f->m_x);
+
+        return false;
+    }
+
     void moveIfNegative(uint &p, const uint len, const uint height, const uint width);
 
     void removeAt(const uint i){

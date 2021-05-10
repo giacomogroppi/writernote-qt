@@ -76,6 +76,8 @@ bool scroll::itspossibletoscrollx(datastruct *data,
         delta > 0 ------>
     */
 
+    qDebug() << *__pos_delta;
+
     const point_s * __point;
     double res;
 
@@ -88,14 +90,14 @@ bool scroll::itspossibletoscrollx(datastruct *data,
             return true;
 
         if(__point->m_x < 0.0){
-            *__pos_delta = __point->m_x;
+            *__pos_delta = - __point->m_x;
             return true;
         }
 
         goto c_not_move;
     }
 
-    /* __pos_delta < 0.0*/
+    /* __pos_delta < 0.0 */
 
     if(!data->maxXIdOrizzonal(&res)){
         goto c_not_move;
@@ -105,7 +107,7 @@ bool scroll::itspossibletoscrollx(datastruct *data,
         return true;
 
     if(res > (double)width){
-        *__pos_delta = double(res - (double)width);
+        *__pos_delta = - double(res - (double)width);
         return true;
     }
 

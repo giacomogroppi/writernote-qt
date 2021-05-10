@@ -28,30 +28,42 @@ int datastruct::minId()
     return _minId;
 }
 
+#define mov_if_neg(p, x) \
+    p = x; \
+    return;
+
 void datastruct::moveIfNegative(uint &p, const uint len,
                                 const uint height,
                                 const uint width){
     uint r;
-    int last_id;
-    const point_s *point;
+    const point_s *f, *s;
 
     r = p;
 
-    for(; p<len; ++p){
-        point = at(p);
-        if(!datastruct::isIdUser(point))
+    for(; p<len-1; ++p){
+
+        f = at(p);
+        s = at(p+1);
+
+        if(!datastruct::isIdUser(f))
             return;
 
-        if((point->m_y >= 0.0 && point->m_x >= 0.0) &&
-                (point->m_y <= height && point->m_x <= width)){
-            goto restore;
+        if((f->m_y >= 0.0 && f->m_x >= 0.0) &&
+                (f->m_y <= height && f->m_x <= width)){
+            mov_if_neg(p, r);
+            return;
+        }
+
+        if(s->idtratto == f->idtratto
+                && std::abs((f->m_y + s->m_y)/2) < height
+                && std::abs((f->m_x + s->m_x)/2) < width){
+            mov_if_neg(p, r);
+        }
+
+        if(f->idtratto != s->idtratto){
+            p = r;
         }
     }
-
-    return;
-
-    restore:
-    p = r;
 }
 
 uint datastruct::move_to_positive(uint len)
