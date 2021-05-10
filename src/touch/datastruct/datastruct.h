@@ -49,13 +49,45 @@ private:
 
 public:
 
+    /*
+     * la funzione ritorna vero se e solo se la retta che congiunge
+     * i due punti passa per il quadrato tra pp-size come topleft
+     * e pp+size come bottomright
+    */
     static inline bool point_mid(const point_s *f,
                                     const point_s *s,
                                     const QPointF pp,
                                     const double size){
         double x, y, m, q;
+        double pos_y[2], pos_x[2];
+
+        pos_y[0] = pp.y() - size;
+        pos_y[1] = pp.y() + size;
+
+        pos_x[0] = pp.x() - size;
+        pos_x[1] = pp.x() + size;
 
         m = (f->m_y - s->m_y)/(f->m_x - f->m_x);
+        q = f->m_y - f->m_x*m;
+
+        if(std::abs(m) > 0.5){
+            x = (pos_y[0]-q)/m;
+            if(x <= pos_x[0] && x >= pos_x[1]){
+                return true;
+            }
+
+            x = (pos_y[1]-q)/m;
+            if(x <= pos_x[0] && x >= pos_x[1]){
+                return true;
+            }
+        }else{
+            y = pos_x[0]*m + q;
+
+
+
+        }
+
+
 
         return false;
     }
