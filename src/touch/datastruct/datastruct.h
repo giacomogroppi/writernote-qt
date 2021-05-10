@@ -70,7 +70,9 @@ public:
         m = (f->m_y - s->m_y)/(f->m_x - f->m_x);
         q = f->m_y - f->m_x*m;
 
-        if(std::abs(m) > 0.5){
+        m = std::abs(m);
+
+        if(m > 0.5){
             x = (pos_y[0]-q)/m;
             if(x <= pos_x[0] && x >= pos_x[1]){
                 return true;
