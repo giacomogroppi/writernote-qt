@@ -59,11 +59,11 @@ void setting_restore_ui::startTimerSetting(){
     m_sec->stop();
 
     if(m_data.autosave){
-        m_first->setInterval(m_data.t_autosave*1000);
+        m_first->start(m_data.t_autosave*1000);
     }
 
     if(m_data.temp_file){
-        m_sec->setInterval(m_data.t_temp_file*1000);
+        m_sec->start(m_data.t_temp_file*1000);
     }
 
 }
