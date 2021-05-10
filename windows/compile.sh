@@ -18,5 +18,5 @@ cd updater
 make release -j $nproc
 ldd ./build/updater.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
 /mingw64/bin/windeployqt.exe build/updater.exe --force
-cd ..
+
 

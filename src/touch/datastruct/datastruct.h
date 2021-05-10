@@ -33,6 +33,13 @@ struct point_s{
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
 
+#define WRIT_CHANG(arr, tmp) \
+    if(arr[0] < arr[1]){ \
+        tmp = arr[0]; \
+        arr[0] = arr[1]; \
+        arr[1] = tmp; \
+    }
+
 class datastruct
 {
 private:
@@ -49,9 +56,17 @@ private:
 
 public:
 
+    static inline bool point_mid_square(const point_s *f,
+                                        const point_s *s,
+                                        const QPointF pp,
+                                        const double size){
+        return datastruct::point_mid(f, s, pp, -size) ||
+                datastruct::point_mid(f, s, pp, size);
+    }
+
     /*
      * la funzione ritorna vero se e solo se la retta che congiunge
-     * i due punti passa per il quadrato tra pp-size come topleft
+     * i due punti passa per il quadrato tra pp come topleft
      * e pp+size come bottomright
     */
     static inline bool point_mid(const point_s *f,
@@ -61,11 +76,14 @@ public:
         double x, y, m, q;
         double pos_y[2], pos_x[2];
 
-        pos_y[0] = pp.y() - size;
+        pos_y[0] = pp.y();
         pos_y[1] = pp.y() + size;
 
-        pos_x[0] = pp.x() - size;
+        pos_x[0] = pp.x();
         pos_x[1] = pp.x() + size;
+
+        WRIT_CHANG(pos_y, x);
+        WRIT_CHANG(pos_x, x);
 
         m = (f->m_y - s->m_y)/(f->m_x - f->m_x);
         q = f->m_y - f->m_x*m;
