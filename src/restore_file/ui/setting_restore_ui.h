@@ -12,6 +12,8 @@ struct __data{
     uint t_autosave;
     uint t_temp_file;
 
+    bool remove_file; /* false do not remove the file after writernote close */
+
 };
 
 namespace Ui {
@@ -42,7 +44,18 @@ public:
         updateWindow();
     }
 
+    /* call this function when change copybook or close writernote */
+    void changeCopybookFile(){
+        if(m_data.remove_file
+                && m_data.temp_file
+                && *m_path != ""){
+            deleteFile();
+        }
+    }
+
 private:
+
+    void deleteFile();
 
     QString *m_path;
 
@@ -80,6 +93,7 @@ private slots:
     void on_spinBox_autosave_valueChanged(int arg1);
     void on_checkBox_autosave_stateChanged(int arg1);
     void on_checkBox_temp_stateChanged(int arg1);
+    void on_checkBox_remove_stateChanged(int arg1);
 };
 
 #endif // SETTING_RESTORE_UI_H

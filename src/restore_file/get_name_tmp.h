@@ -24,8 +24,8 @@ public:
             }
         }
 
-        path.insert(last_pos, '.');
-        path.append('_tmp');
+        path.insert(last_pos+1, '.');
+        path += "_tmp";
 
         return path;
 

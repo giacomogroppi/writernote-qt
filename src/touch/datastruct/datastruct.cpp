@@ -61,7 +61,7 @@ void datastruct::moveIfNegative(uint &p, const uint len,
         }
 
         if(f->idtratto != s->idtratto){
-            p = r;
+            r = p;
         }
     }
 }

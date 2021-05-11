@@ -12,6 +12,7 @@
 #include <QSettings>
 #include <QTimer>
 #include <QDebug>
+#include <QFile>
 
 #define MAX_SAVE 3600
 #define MIN_SAVE 1
@@ -69,8 +70,19 @@ void setting_restore_ui::startTimerSetting(){
 
 setting_restore_ui::~setting_restore_ui()
 {
+    this->changeCopybookFile();
+
     saveData();
     delete ui;
+}
+
+void setting_restore_ui::deleteFile()
+{
+    QString ff = get_name_tmp::get(m_path);
+
+    if(!QFile::remove(ff)){
+        messaggio_utente("I had a problem removing the temp file in " + ff);
+    }
 }
 
 void setting_restore_ui::updateWindow()
@@ -93,6 +105,8 @@ void setting_restore_ui::loadData()
     m_data.temp_file = setting.value(KEY_INT_TMP_ENABLE, true).toBool();
     m_data.t_temp_file = setting.value(KEY_INT_TMP_TIME, 5).toUInt();
 
+    m_data.remove_file = setting.value(KEY_INT_REMOVE_FILE_ENABLE, true).toBool();
+
     setting.endGroup();
 
     this->updateWindow();
@@ -109,6 +123,7 @@ void setting_restore_ui::saveData()
     setting.setValue(KEY_INT_TMP_ENABLE, m_data.temp_file);
     setting.setValue(KEY_INT_TMP_TIME, m_data.t_temp_file);
 
+    setting.setValue(KEY_INT_REMOVE_FILE_ENABLE, m_data.remove_file);
 
     setting.endGroup();
 }
@@ -218,4 +233,9 @@ void setting_restore_ui::on_checkBox_autosave_stateChanged(int arg1)
 void setting_restore_ui::on_checkBox_temp_stateChanged(int arg1)
 {
     m_data.temp_file = arg1;
+}
+
+void setting_restore_ui::on_checkBox_remove_stateChanged(int arg1)
+{
+    m_data.remove_file = arg1;
 }

@@ -109,6 +109,7 @@
 #define GROUPNAME_INT "groupname-int"
 #define KEY_INT_AUTOSAVE_ENABLE "key-int-autosave-enable"
 #define KEY_INT_AUTOSAVE_TIME "key-int-autosave-time" /* uint -> second */
+#define KEY_INT_REMOVE_FILE_ENABLE "key-int-remove-file-enable" /* bool */
 #define KEY_INT_TMP_ENABLE "key-int-tmp-enable"
 #define KEY_INT_TMP_TIME "key-int-tmp-time" /* uint -> second */
 
