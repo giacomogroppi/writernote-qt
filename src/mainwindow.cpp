@@ -102,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->m_sheet = new fast_sheet_ui(this);
 
-    this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice);
+    this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice, &m_path);
 
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);

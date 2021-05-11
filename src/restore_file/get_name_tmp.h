@@ -9,9 +9,28 @@ class get_name_tmp
 {
 public:
     inline static QString get(QString *m_path){
-        QStringList list = m_path->split(slash::__slash());
+        QStringList list;
         int i;
-        QString path = "";
+        QString path;
+        char sl;
+        uchar last_pos;
+
+        path = *m_path;
+        sl = slash::__slash();
+
+        for(i=0; i<m_path->length(); ++i){
+            if(m_path->at(i) == sl){
+                last_pos = i;
+            }
+        }
+
+        path.insert(last_pos, '.');
+        path.append('_tmp');
+
+        return path;
+
+        /*list = m_path->split(sl);
+        path = "";
 
         for(i = 0; i<list.length()-1; ++i){
             path += list.at(i);
@@ -19,7 +38,7 @@ public:
 
         path = "." + list.last() + "_tmp" ;
 
-        return path;
+        return path;*/
     }
 };
 

@@ -4,11 +4,11 @@
 class slash
 {
 public:
-    static inline const char *__slash(){
+    static inline char __slash(){
 #if defined (WIN32) || defined(WIN64) || defined(__OS2__)
-        return "\\";
+        return '\\';
 #elif defined(unix)
-        return "/";
+        return '/';
 #endif
     };
 };

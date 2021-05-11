@@ -40,7 +40,6 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
     ui->spinBox_temp->setMaximum(MAX_SAVE);
     ui->spinBox_temp->setMinimum(MIN_SAVE);
 
-
     ui->checkBox_autosave->setCheckable(true);
     ui->checkBox_temp->setCheckable(true);
 
@@ -138,7 +137,7 @@ void setting_restore_ui::firstTimer()
 
     start_timer:
     need_save_auto = false;
-    m_first->start(m_data.t_autosave);
+    startTimerSetting();
 
 }
 
@@ -174,7 +173,7 @@ void setting_restore_ui::secondTimer()
 
     start_timer:
     need_save_tmp = false;
-    m_first->start(m_data.t_autosave);
+    startTimerSetting();
 
 }
 
