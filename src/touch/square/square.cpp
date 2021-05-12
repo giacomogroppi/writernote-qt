@@ -28,12 +28,6 @@ void square::updatePoint(QPointF __point)
 
     pointfine.point = __point;
 
-    /*if(pointinit.point.x() > __point.x()){
-        QPointF temporary = pointinit.point;
-        pointinit.point = __point;
-        pointfine.point = temporary;
-    }*/
-
     __need_reload = true;
 
 }
