@@ -11,6 +11,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     need_save_auto = true;
     need_save_tmp = true;
 
+    bool sel = true;
     bool check;
 
     auto eventType = event->type();
@@ -22,7 +23,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     updatelist(event);
                 }
                 else if(medotodiinserimento == e_method::selection){
-                    square_.updatePoint(event->posF());
+                    m_square.updatePoint(event->posF());
                 }
                 m_deviceDown = true;
                 lastPoint.pos = event->pos();
@@ -60,23 +61,24 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                 }
                 else if(medotodiinserimento == e_method::selection){
-                    if(!this->square_.check){ /* it means that the user not select anything */
-                        square_.updatePoint(event->posF());
+                    if(!m_square.check){ /* it means that the user not select anything */
+                        m_square.updatePoint(event->posF());
                         isloading = true;
                     }
                     else{
-                        if(!this->square_.isinside(event->posF())){
+                        if(!m_square.isinside(event->posF())){
                             /* se il tocco non è stato interno */
-                            this->square_.reset();
+                            m_square.reset();
                             isloading = true;
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
-                            this->square_.move(event->posF(), painter, data->datatouch);
+                            m_square.move(event->posF(), painter, data->datatouch);
 
                             isloading = true;
                         }
                     }
+                    sel = false;
                 }else if(medotodiinserimento == e_method::text){
                     if(m_text_w->isIn(event->posF())){
 
@@ -104,12 +106,12 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
                 if(medotodiinserimento == e_method::selection){
-                    if(this->square_.check){
-                        square_.adjustPoint();
+                    if(m_square.check){
+                        m_square.adjustPoint();
                     }
                     else{
 
-                        check = this->square_.find(data->datatouch);
+                        check = m_square.find(data->datatouch);
 
                         if(check){
                             /* if he find something to move */
@@ -129,6 +131,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             break;
         default:
             break;
+    }
+
+    if(sel){
+        m_square.reset();
     }
 
     if(isloading)

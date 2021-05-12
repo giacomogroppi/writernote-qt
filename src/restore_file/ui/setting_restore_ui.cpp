@@ -70,7 +70,7 @@ void setting_restore_ui::startTimerSetting(){
 
 setting_restore_ui::~setting_restore_ui()
 {
-    this->changeCopybookFile();
+    //this->changeCopybookFile();
 
     saveData();
     delete ui;

@@ -12,30 +12,27 @@ square::square()
     this->reset();
 }
 
-void square::reset(){
-    pointinit.set = lastpoint.set = pointfine.set = false;
-    check = false;
-    __need_reload = false;
-}
 
-void square::updatePoint(QPointF puntofine)
+void square::updatePoint(QPointF __point)
 {
     if(!pointinit.set){
-        pointinit.point = puntofine;
+        pointinit.point = __point;
+        pointinit.set = true;
 
         /* we don't need yet to draw somethings */
-        this->__need_reload = false;
-        this->check = false;
+        __need_reload = false;
+        check = false;
 
         return;
     }
 
-    if(pointinit.point.x() > puntofine.x()){
+    if(pointinit.point.x() > __point.x()){
         QPointF temporary = pointinit.point;
-        pointinit.point = puntofine;
-        puntofine = temporary;
+        pointinit.point = __point;
+        pointfine.point = temporary;
     }
 
+    __need_reload = true;
 
 }
 

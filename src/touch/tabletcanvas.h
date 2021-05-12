@@ -153,7 +153,7 @@ public:
     void settingdata(currenttitle_class *data, QString &path);
 
     /* square per la selezione */
-    square square_;
+    square m_square;
 
     bool enableredoundu = true;
 

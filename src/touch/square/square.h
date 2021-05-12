@@ -24,7 +24,13 @@ public:
     void adjustPoint();
 
     square();
-    void reset();
+
+    inline void reset(){
+        pointinit.set = lastpoint.set = pointfine.set = false;
+        check = false;
+        __need_reload = false;
+    }
+
     void updatePoint(QPointF puntofine);
     bool find(datastruct *data);
 

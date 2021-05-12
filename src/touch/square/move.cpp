@@ -57,8 +57,6 @@ void square::needReload(QPainter &painter){
     painter.setPen(this->penna);
 
     painter.drawRect(QRectF(pointinit.point, pointfine.point));
-
-    __need_reload = false;
 }
 
 /*

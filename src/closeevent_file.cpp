@@ -15,7 +15,7 @@
 
 #include <QSettings>
 #include "utils/setting_define.h"
-
+#include "restore_file/ui/setting_restore_ui.h"
 #include "last_open/struct_last_file.h"
 
 static void setting_hide_list(bool check);
@@ -166,6 +166,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
     setting_geometry(this->geometry());
     setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
+
+    m_setting->changeCopybookFile();
 
     event->accept();
 
