@@ -95,27 +95,21 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             this->isdrawing = false;
 #endif
 
-            /* last save and undo redo */
+            /*
+             * last save and undo redo
+            * TODO -> change this call to a timer
+            */
             if(m_redoundo)
                 this->m_redoundo->copy(this->data);
-
-            if(m_autosave)
-                if(!this->m_autosave->save())
-                    dialog_critic("We had a problem saving the copybook");
 
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;
                 if(medotodiinserimento == e_method::selection){
-                    if(m_square.check){
-                        m_square.adjustPoint();
-                    }
-                    else{
+                    sel = false;
+                    m_square.adjustPoint();
 
-                        check = m_square.find(data->datatouch);
-
-                        if(check){
-                            /* if he find something to move */
-                        }
+                    if(!m_square.check){
+                        m_square.find(data->datatouch);
 
                         isloading = true;
 

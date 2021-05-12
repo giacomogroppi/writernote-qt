@@ -1,6 +1,8 @@
 #include "square.h"
 #include <QPainter>
 #include "size/size_square.h"
+
+#include <QDebug>
 #include "../datastruct/datastruct.h"
 
 struct delta{
@@ -14,13 +16,14 @@ static QRectF rect;
    restituisce il rettangolo per l'update del widgets
 */
 void square::move(QPointF punto, QPainter &painter, datastruct *data){
-    if(lastpoint.set){
+    if(!lastpoint.set){
         lastpoint.point = punto;
+        lastpoint.set = true;
         return;
     }
 
     struct delta __delta;
-    unsigned int  len;
+    uint len;
 
     len = data->length();
 
@@ -51,6 +54,8 @@ void square::move(QPointF punto, QPainter &painter, datastruct *data){
 }
 
 void square::needReload(QPainter &painter){
+    qDebug() << "square::needReload " << __need_reload;
+
     if(!this->__need_reload)
         return;
 
@@ -65,18 +70,22 @@ void square::needReload(QPainter &painter){
 */
 void square::adjustPoint()
 {
-    double __temp;
-
-    if(pointinit.point.x() > pointfine.point.x()){
-        __temp = pointfine.point.x();
-        pointfine.point.setX(pointinit.point.x());
-        pointinit.point.setX(__temp);
+    if(!pointinit.set || !pointinit.set){
+        return;
     }
 
-    if(pointfine.point.y() > pointfine.point.y()){
-        __temp = pointfine.point.y();
+    double __tmp;
+
+    if(pointinit.point.x() > pointfine.point.x()){
+        __tmp = pointfine.point.x();
+        pointfine.point.setX(pointinit.point.x());
+        pointinit.point.setX(__tmp);
+    }
+
+    if(pointinit.point.y() > pointfine.point.y()){
+        __tmp = pointfine.point.y();
         pointfine.point.setY(pointinit.point.x());
-        pointinit.point.setY(__temp);
+        pointinit.point.setY(__tmp);
     }
 
 }

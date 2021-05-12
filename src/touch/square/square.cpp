@@ -2,7 +2,7 @@
 #include <QPen>
 #include <QPainter>
 #include "../datastruct/datastruct.h"
-
+#include <QDebug>
 
 square::square()
 {
@@ -43,15 +43,15 @@ void square::updatePoint(QPointF __point)
  * la setta = false e fa il return
 */
 bool square::find(datastruct *data){
-    unsigned int i, len;
-
-    len = data->length();
-
-    this->check = false;
-
+    uint i, len;
     const point_s * __point;
 
-    for(i=0;i<len; i++){
+    len = data->length();
+    this->check = false;
+
+    this->adjustPoint();
+
+    for(i=0;i<len; ++i){
         __point = data->at(i);
         if(data->isinside(pointinit.point, pointfine.point, __point)){
 
@@ -63,9 +63,12 @@ bool square::find(datastruct *data){
     }
 
     if(!check){
-        __need_reload = false;
-        check = false;
+        reset();
+    }else{
+        __need_reload = true;
     }
+
+    qDebug() << "square::find " << __need_reload;
 
     return check;
 }
