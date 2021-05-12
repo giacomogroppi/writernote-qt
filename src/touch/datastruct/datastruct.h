@@ -18,6 +18,12 @@ struct colore_s{
     uchar colore[NCOLOR];
 };
 
+/* canvas */
+struct PointSettable {
+    QPointF point;
+    bool set = false;
+};
+
 struct point_s{
     double m_x, m_y, rotation;
     float m_pressure;
@@ -90,7 +96,7 @@ public:
 
         m = std::abs(m);
 
-        if(m > 0.5){
+        if(m > 1){
             x = (pos_y[0]-q)/m;
             if(x <= pos_x[0] && x >= pos_x[1]){
                 return true;

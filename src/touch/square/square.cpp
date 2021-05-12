@@ -3,6 +3,7 @@
 #include <QPainter>
 #include "../datastruct/datastruct.h"
 
+
 square::square()
 {
     penna.setStyle(Qt::DotLine);
@@ -12,15 +13,15 @@ square::square()
 }
 
 void square::reset(){
-    this->pointinit = this->lastpoint = this->pointfine = RESET;
+    pointinit.set = lastpoint.set = pointfine.set = false;
     check = false;
     __need_reload = false;
 }
 
 void square::updatePoint(QPointF puntofine)
 {
-    if(pointinit == RESET){
-        pointinit = puntofine;
+    if(!pointinit.set){
+        pointinit.point = puntofine;
 
         /* we don't need yet to draw somethings */
         this->__need_reload = false;
@@ -29,9 +30,9 @@ void square::updatePoint(QPointF puntofine)
         return;
     }
 
-    if(pointinit.x() > puntofine.x()){
-        QPointF temporary = pointinit;
-        pointinit = puntofine;
+    if(pointinit.point.x() > puntofine.x()){
+        QPointF temporary = pointinit.point;
+        pointinit.point = puntofine;
         puntofine = temporary;
     }
 
@@ -53,7 +54,7 @@ bool square::find(datastruct *data){
 
     for(i=0;i<len; i++){
         __point = data->at(i);
-        if(data->isinside(pointinit, pointfine, __point)){
+        if(data->isinside(pointinit.point, pointfine.point, __point)){
 
             if(m_id.indexOf(__point->idtratto))
                 m_id.append(__point->idtratto);
@@ -77,7 +78,7 @@ bool square::isinside(QPointF point){
     if(!this->check)
         return false;
 
-    return datastruct::isinside(pointinit, pointfine, point);
+    return datastruct::isinside(pointinit.point, pointfine.point, point);
 
 }
 

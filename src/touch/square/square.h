@@ -3,9 +3,7 @@
 #include <QPainter>
 #include <QPointF>
 
-#define RESET QPointF(-1, -1)
-
-class datastruct;
+#include "../datastruct/datastruct.h"
 
 class square
 {
@@ -17,8 +15,8 @@ private:
     bool __need_reload = false;
     QRectF findObjectToDraw(datastruct *);
 
-    QPointF pointinit;
-    QPointF pointfine;
+    PointSettable pointinit;
+    PointSettable pointfine;
 
 public:
     void needReload(QPainter &);
@@ -37,11 +35,11 @@ public:
 
     QPen penna;
 
-    /* if true: it means that the user has not previously selected anything */
+    /* if true: it means that the user has not previously selected comething */
     bool check;
 
     /* definizione per i punti di spostamento */
-    QPointF lastpoint;
+    PointSettable lastpoint;
 
 };
 
