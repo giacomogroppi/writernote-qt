@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QColor>
+#include <QDebug>
 #include <QImage>
 
 #include "../../images/image_struct.h"
@@ -139,7 +140,8 @@ public:
     void removePointId(QList<int> &list);
     void removePointId(int id, uint *len = nullptr);
 
-    bool MovePoint( QRectF &, QPointF);
+    void MovePoint(QList<int> &id, QPointF &__t);
+    bool MovePoint(QRectF &, QPointF);
 
     bool userWrittenSomething(datastruct *s_data);
 

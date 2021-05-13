@@ -8,52 +8,45 @@ struct delta{
     double x, y;
 };
 
-static QRectF rect;
-
-/* la funzione dopo aver ricevuto come parametro il secondo punto per spostare
-   e aver calcolato precedentemente l'id del tratto, lo sposta di un delta x e y
-   restituisce il rettangolo per l'update del widgets
+/*
+ * the function is call when check is set to true
 */
-void square::move(QPointF punto, QPainter &painter, datastruct *data){
+void square::move(QPointF punto, datastruct *data){
+    if(!check){
+        return this->reset();
+    }
+
     if(!lastpoint.set){
         lastpoint.point = punto;
         lastpoint.set = true;
         return;
     }
 
-    struct delta __delta;
-    uint len;
+    if(!datastruct::isinside(pointinit.point, pointfine.point, punto)){
+        return this->reset();
+    }
 
-    len = data->length();
+    QPointF __point;
 
-    __delta.x = lastpoint.point.x() - punto.x();
-    __delta.y = lastpoint.point.y() - punto.y();
+    __point.setX(lastpoint.point.x() - punto.x());
+    __point.setY(lastpoint.point.y() - punto.y());
 
-    rect.setTopLeft(pointinit.point);
-    rect.setBottomRight(pointfine.point);
-
-    if(!data->MovePoint(rect,
-                    punto))
-        return;
-
+    data->MovePoint(m_id, __point);
 
     lastpoint.point = punto;
 
-    pointinit.point.setX(pointinit.point.x() - __delta.x);
-    pointinit.point.setY(pointinit.point.y() - __delta.y);
+    pointinit.point.setX(pointinit.point.x() - __point.x());
+    pointinit.point.setY(pointinit.point.y() - __point.y());
 
-    pointfine.point.setX(pointfine.point.x() - __delta.x);
-    pointfine.point.setY(pointfine.point.y() - __delta.y);
+    pointfine.point.setX(pointfine.point.x() - __point.x());
+    pointfine.point.setY(pointfine.point.y() - __point.y());
 
-    /*
-     * in questo caso dobbiamo per forza aggiornare tutto il pixmap
-    */
-    this->__need_reload = true;
+    __need_reload = true;
 
 }
 
 void square::needReload(QPainter &painter){
-    qDebug() << "square::needReload " << __need_reload;
+    //qDebug() << "square::needReload " << __need_reload;
 
     if(!this->__need_reload)
         return;

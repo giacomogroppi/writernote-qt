@@ -81,6 +81,7 @@ SOURCES += \
     src/touch/datastruct/createControllPoint.cpp \
     src/touch/datastruct/isinside.cpp \
     src/touch/datastruct/moveAll.cpp \
+    src/touch/datastruct/movePoint.cpp \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/datastruct/removePage.cpp \
     src/touch/datastruct/reorganize.cpp \

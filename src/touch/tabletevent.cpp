@@ -23,7 +23,12 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     updatelist(event);
                 }
                 else if(medotodiinserimento == e_method::selection){
-                    m_square.updatePoint(event->posF());
+                    if(m_square.check){
+                        m_square.move(event->posF(), data->datatouch);
+                    }
+                    else{
+                        m_square.updatePoint(event->posF());
+                    }
                     sel = false;
                 }
                 m_deviceDown = true;
@@ -72,7 +77,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
-                            m_square.move(event->posF(), painter, data->datatouch);
+                            m_square.move(event->posF(), data->datatouch);
                         }
                     }
                     isloading = true;

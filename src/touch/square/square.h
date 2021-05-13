@@ -29,13 +29,14 @@ public:
         pointinit.set = lastpoint.set = pointfine.set = false;
         check = false;
         __need_reload = false;
+        m_id.clear();
     }
 
     void updatePoint(QPointF puntofine);
     bool find(datastruct *data);
 
     bool isinside(QPointF);
-    void move(QPointF, QPainter &painter, datastruct *data);
+    void move(QPointF, datastruct *data);
 
     QList<int> m_id;
 
