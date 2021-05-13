@@ -39,6 +39,7 @@ void square::updatePoint(QPointF __point)
 bool square::find(datastruct *data){
     uint i, len;
     const point_s * __point;
+    QRectF __rect;
 
     len = data->length();
     this->check = false;
@@ -49,20 +50,20 @@ bool square::find(datastruct *data){
         __point = data->at(i);
         if(data->isinside(pointinit.point, pointfine.point, __point)){
 
-            if(m_id.indexOf(__point->idtratto))
+            if(m_id.indexOf(__point->idtratto) == -1)
                 m_id.append(__point->idtratto);
 
             this->check = true;
         }
     }
 
+    findObjectToDraw(data, pointinit.point, pointfine.point);
+
     if(!check){
         reset();
     }else{
         __need_reload = true;
     }
-
-    qDebug() << "square::find " << __need_reload;
 
     return check;
 }

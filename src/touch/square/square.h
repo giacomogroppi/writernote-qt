@@ -13,7 +13,7 @@ private:
      * il rettangono
     */
     bool __need_reload = false;
-    QRectF findObjectToDraw(datastruct *);
+    void findObjectToDraw(datastruct *, QPointF &t_l, QPointF &b_r);
 
     PointSettable pointinit;
     PointSettable pointfine;

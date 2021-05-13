@@ -1,6 +1,5 @@
 #include "square.h"
 #include <QPainter>
-#include "size/size_square.h"
 
 #include <QDebug>
 #include "../datastruct/datastruct.h"

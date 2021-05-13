@@ -93,7 +93,6 @@ SOURCES += \
     src/touch/scrollKinetic/scroll_mainwindow.cpp \
     src/touch/scrollKinetic/ui_scroll/ui_scroll.cpp \
     src/touch/square/draw_square.cpp \
-    src/touch/square/size/size_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/utils/aboutQt/aboutqt.cpp \
@@ -254,7 +253,6 @@ HEADERS += \
     src/touch/copy/copy_widgets.h \
     src/touch/reduce_size/reduce_size.h \
     src/touch/scrollKinetic/ui_scroll/ui_scroll.h \
-    src/touch/square/size/size_square.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
     src/utils/aboutQt/aboutqt.h \

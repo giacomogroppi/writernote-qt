@@ -8,11 +8,9 @@
  *  uguale, e si sposta tutto il tratto
 */
 
-QRectF square::findObjectToDraw(datastruct *data)
+void square::findObjectToDraw(datastruct *data, QPointF &t_l, QPointF &b_r)
 {
-    QPointF min, max;
-    unsigned i, len;
-    QRectF __r_rect;
+    uint i, len;
 
     const point_s * __point;
 
@@ -20,32 +18,26 @@ QRectF square::findObjectToDraw(datastruct *data)
 
     __point = data->firstPoint();
 
-    min.setX(__point->m_x);
-    max.setX(__point->m_x);
+    t_l.setX(__point->m_x);
+    b_r.setX(__point->m_x);
 
-    min.setY(__point->m_y);
-    max.setY(__point->m_y);
+    t_l.setY(__point->m_y);
+    b_r.setY(__point->m_y);
 
     for(i=0; i<len; i++){
         __point = data->at(i);
 
         if(this->m_id.indexOf(__point->idtratto) != -1){
-            if(__point->m_x < min.x())
-                min.setX(__point->m_x);
+            if(__point->m_x < t_l.x())
+                t_l.setX(__point->m_x);
 
-            else if(__point->m_x > max.x())
-                max.setX(__point->m_x);
+            else if(__point->m_x > b_r.x())
+                b_r.setX(__point->m_x);
 
-            if(__point->m_y < min.y())
-                min.setY(__point->m_y);
-            else if(__point->m_y > max.y())
-                max.setY(__point->m_y);
+            if(__point->m_y < t_l.y())
+                t_l.setY(__point->m_y);
+            else if(__point->m_y > b_r.y())
+                b_r.setY(__point->m_y);
         }
     }
-
-    __r_rect.setBottomLeft(min);
-    __r_rect.setBottomRight(max);
-
-    return __r_rect;
-
 }
