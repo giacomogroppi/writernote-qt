@@ -39,7 +39,6 @@ void square::updatePoint(QPointF __point)
 bool square::find(datastruct *data){
     uint i, len;
     const point_s * __point;
-    QRectF __rect;
 
     len = data->length();
     this->check = false;

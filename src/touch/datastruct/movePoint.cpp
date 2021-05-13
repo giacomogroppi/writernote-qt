@@ -32,7 +32,7 @@ void datastruct::MovePoint(QList<int> &id, QPointF &__t){
             }
             --i;
 
-            id.removeAt(__pos);
+            //id.removeAt(__pos);
 
         }
     }
