@@ -24,6 +24,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else if(medotodiinserimento == e_method::selection){
                     m_square.updatePoint(event->posF());
+                    sel = false;
                 }
                 m_deviceDown = true;
                 lastPoint.pos = event->pos();
@@ -63,21 +64,18 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(medotodiinserimento == e_method::selection){
                     if(!m_square.check){ /* it means that the user not select anything */
                         m_square.updatePoint(event->posF());
-                        isloading = true;
                     }
                     else{
                         if(!m_square.isinside(event->posF())){
                             /* se il tocco non è stato interno */
                             m_square.reset();
-                            isloading = true;
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
                             m_square.move(event->posF(), painter, data->datatouch);
-
-                            isloading = true;
                         }
                     }
+                    isloading = true;
                     sel = false;
                 }else if(medotodiinserimento == e_method::text){
                     if(m_text_w->isIn(event->posF())){
@@ -87,10 +85,11 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                         m_text_w->createNew(event->posF());
                     }
                 }
+            }else{
+                sel = false;
             }
             break;
         case QEvent::TabletRelease: /* pen leaves the tablet */
-
 #if defined(WIN32) || defined(WIN64)
             this->isdrawing = false;
 #endif
