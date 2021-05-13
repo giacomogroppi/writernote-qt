@@ -18,6 +18,10 @@ private:
     PointSettable pointinit;
     PointSettable pointfine;
 
+    QList<int> m_id;
+
+    QPen penna;
+
 public:
     void needReload(QPainter &);
 
@@ -37,10 +41,6 @@ public:
 
     bool isinside(QPointF);
     void move(QPointF, datastruct *data);
-
-    QList<int> m_id;
-
-    QPen penna;
 
     /* if true: it means that the user has not previously selected comething */
     bool check;
