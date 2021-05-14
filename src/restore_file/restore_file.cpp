@@ -11,7 +11,8 @@ static bool alreadyconnect = false;
 */
 void MainWindow::on_actionRestore_file_triggered()
 {
-
+    ui_restore __r(nullptr, m_path);
+    __r.exec();
 }
 
 void MainWindow::on_actionOption_triggered()
