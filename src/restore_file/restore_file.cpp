@@ -1,10 +1,14 @@
 #include "../mainwindow.h"
 #include "restore_file_critic.h"
 #include "ui/setting_restore_ui.h"
+#include "ui_restore/ui_restore.h"
 
 static bool change;
 static bool alreadyconnect = false;
 
+/*
+ * restore file dialog
+*/
 void MainWindow::on_actionRestore_file_triggered()
 {
 
