@@ -31,15 +31,18 @@ void square::move(QPointF punto, datastruct *data){
     __point.setX(lastpoint.point.x() - punto.x());
     __point.setY(lastpoint.point.y() - punto.y());
 
+
+    datastruct::inverso(__point);
+
     data->MovePoint(m_id, __point);
 
     lastpoint.point = punto;
 
-    pointinit.point.setX(pointinit.point.x() - __point.x());
-    pointinit.point.setY(pointinit.point.y() - __point.y());
+    pointinit.point.setX(pointinit.point.x() + __point.x());
+    pointinit.point.setY(pointinit.point.y() + __point.y());
 
-    pointfine.point.setX(pointfine.point.x() - __point.x());
-    pointfine.point.setY(pointfine.point.y() - __point.y());
+    pointfine.point.setX(pointfine.point.x() + __point.x());
+    pointfine.point.setY(pointfine.point.y() + __point.y());
 
     __need_reload = true;
 
