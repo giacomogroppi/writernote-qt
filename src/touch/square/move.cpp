@@ -48,17 +48,6 @@ void square::move(QPointF punto, datastruct *data){
 
 }
 
-void square::needReload(QPainter &painter){
-    //qDebug() << "square::needReload " << __need_reload;
-
-    if(!this->__need_reload)
-        return;
-
-    painter.setPen(this->penna);
-
-    painter.drawRect(QRectF(pointinit.point, pointfine.point));
-}
-
 /*
  * la funcione cambia i punti, in caso l'utente non abbia tracciato il
  * rettangolo da in alto a sinistra a in alto a destra
