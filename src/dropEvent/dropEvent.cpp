@@ -1,7 +1,7 @@
 #include "../mainwindow.h"
 #include <QMimeData>
 #include "../utils/dialog_critic/dialog_critic.h"
-
+#include "../utils/common_def.h"
 #define WRITERNOTE 1
 #define IMAGE 2
 
@@ -25,7 +25,7 @@ void MainWindow::dropEvent(QDropEvent *event){
     for(i = 0; i < (uint)urlList.size() && i < 32 && !find; ++i){
         const QString & __path = urlList.at(i).toLocalFile();
 
-        if(__path.indexOf(".writernote") != -1){
+        if(__path.indexOf("." + APP_EXT) != -1){
             __path_to_load = __path;
             find = WRITERNOTE;
         }else if(image.load(__path)){

@@ -43,6 +43,7 @@
 #include <QTimer>
 #include "restore_file/ui/setting_restore_ui.h"
 #include "touch/scrollKinetic/ui_scroll/ui_scroll.h"
+#include "utils/common_def.h"
 
 MainWindow::MainWindow(QWidget *parent,
                        TabletCanvas *canvas,
@@ -211,7 +212,7 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
 {
     QString fileName;
     if(!nomeFile){
-        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*.writer);; All file (* *.*)");
+        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; All file (* *.*)");
     }else{
         fileName = nomeFile;
     }
@@ -226,7 +227,7 @@ void MainWindow::on_actionOpen_triggered(const char *nomeFile)
     file.close();
 
 #ifndef ANDROID
-    if(fileName.indexOf(".writer") == -1){
+    if(fileName.indexOf(APP_EXT) == -1){
         if(!areyousure(nullptr, "Error", "The file does not have the writernote extension, do you want to open it anyway?")){
             return;
         }

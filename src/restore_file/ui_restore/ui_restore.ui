@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Restore file</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -49,7 +49,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QListView" name="listView"/>
+    <widget class="QListWidget" name="listWidget"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -74,9 +74,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="ok_button">
+      <widget class="QPushButton" name="ok_restore">
        <property name="text">
-        <string>Ok</string>
+        <string>Restore</string>
        </property>
       </widget>
      </item>

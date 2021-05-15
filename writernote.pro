@@ -289,6 +289,7 @@ HEADERS += \
     src/utils/changeLanguage.h \
     src/utils/checkpassword/checkpassword.h \
     src/utils/color/setcolor.h \
+    src/utils/common_def.h \
     src/utils/common_error_definition.h \
     src/utils/copy_text.h \
     src/utils/default_location/audio_default_location.h \

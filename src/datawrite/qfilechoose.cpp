@@ -4,6 +4,7 @@
 
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
+#include "../utils/common_def.h"
 
 /*
  * this function is use for
@@ -20,7 +21,7 @@ bool qfilechoose::filechoose(QString *nome, short int type_){
     QString type;
 
     if(type_ == TYPEFILEWRITER){
-        type = "File Writer (*.writer)";
+        type = "File Writer (*." + APP_EXT + ")";
         extention = ".writer";
     }
     else if(type_ == TYPEFILEPDF){

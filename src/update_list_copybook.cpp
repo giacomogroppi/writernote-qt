@@ -4,18 +4,17 @@
 #include "ui_mainwindow.h"
 
 void update_list_copybook(MainWindow *parent){
-    int i;
+    int i, len, pos;
 
-    /*pulisce la lista*/
     parent->ui->listWidgetSX->clear();
 
-    int lunghezzalista = parent->m_indice.titolo.length();
+    len = parent->m_indice.titolo.length();
 
-    for(i=0 ; i < lunghezzalista; i++)
-        parent->ui->listWidgetSX->addItem(parent->m_indice.titolo[i]);
+    for(i=0 ; i < len; i++){
+        parent->ui->listWidgetSX->addItem(parent->m_indice.titolo.at(i));
+    }
 
 
-
-    int posizione = parent->m_indice.titolo.indexOf(parent->m_currentTitle);
-    parent->ui->listWidgetSX->setCurrentRow(posizione);
+    pos = parent->m_indice.titolo.indexOf(parent->m_currentTitle);
+    parent->ui->listWidgetSX->setCurrentRow(pos);
 }
