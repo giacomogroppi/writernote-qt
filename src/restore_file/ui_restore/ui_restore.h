@@ -33,8 +33,8 @@ private:
     void removeNotWriternote(QStringList &l);
     void updateList();
 
-    savefile *m_save;
-    xmlstruct *m_xml;
+    savefile *m_save = nullptr;
+    xmlstruct *m_xml = nullptr;
     indice_class *m_ind;
     currenttitle_class *m_curr;
 

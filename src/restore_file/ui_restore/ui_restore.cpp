@@ -22,15 +22,18 @@ ui_restore::ui_restore(QWidget *parent, QString path) :
         __l = get_file_dir::get(path);
     }
 
+    updateList();
 }
 
 ui_restore::~ui_restore()
 {
-
     delete m_curr;
     delete m_ind;
-    delete m_save;
-    delete m_xml;
+
+    if(m_save)
+        delete m_save;
+    if(m_xml)
+        delete m_xml;
 
     delete ui;
 }

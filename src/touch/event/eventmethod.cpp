@@ -29,7 +29,9 @@ static bool needToResize;
 bool TabletCanvas::event(QEvent *event){
     needToResize = false;
 
-    switch (event->type()) {
+    auto type = event->type();
+
+    switch (type) {
         case QEvent::TouchBegin:
         case QEvent::TouchUpdate:
         case QEvent::TouchEnd:

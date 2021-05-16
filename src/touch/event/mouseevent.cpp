@@ -2,7 +2,7 @@
 #include <QWheelEvent>
 
 #include "itspossibletoscroll.h"
-
+#include "../../mainwindow.h"
 #include <QDebug>
 
 
@@ -30,15 +30,39 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 */
 
 static struct PointSettable __last_point_move;
+static bool leave = false;
+static bool first_touch = true;
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
+    double deltay, deltax;
+
+    QTabletEvent *tab_event;
+    QEvent::Type __type;
+    QPointF p = event->pos();
+
+    if(parent->touch_or_pen){
+        if(leave){
+            __type = QEvent::TabletRelease;
+            leave = false;
+            first_touch = true;
+        }
+
+        if(first_touch){
+            first_touch = false;
+            __type = QEvent::TabletPress;
+        }
+
+        tab_event = new QTabletEvent(__type, p, event->globalPos(), 0, QTabletEvent::Airbrush, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
+        tabletEvent(tab_event);
+        delete tab_event;
+        return;
+    }
 #if defined(WIN32) || defined(WIN64)
     if(this->isdrawing && m_deviceDown)
         return;
 #endif
 
     if(lastpointtouch.set){
-        double deltay, deltax;
         deltay = - lastpointtouch.point.y() + event->screenPos().y();
         deltax = - lastpointtouch.point.x() + event->screenPos().x();
 
@@ -86,5 +110,6 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
 
     __last_point_move.set = false;
     lastpointtouch.set = false;
+    leave = true;
 
 }

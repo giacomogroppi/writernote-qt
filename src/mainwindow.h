@@ -82,6 +82,11 @@ public:
                cloud_controll *cloud = nullptr);
     ~MainWindow();
 
+    /* false -> use pen
+    *  true -> use touch for drawing
+    */
+    bool touch_or_pen = true;
+
     QTimer *m_timer;
 
     QString m_currentTitle;

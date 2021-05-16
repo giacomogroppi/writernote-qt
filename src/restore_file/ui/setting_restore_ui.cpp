@@ -70,8 +70,6 @@ void setting_restore_ui::startTimerSetting(){
 
 setting_restore_ui::~setting_restore_ui()
 {
-    //this->changeCopybookFile();
-
     saveData();
     delete ui;
 }
@@ -79,6 +77,10 @@ setting_restore_ui::~setting_restore_ui()
 void setting_restore_ui::deleteFile()
 {
     QString ff = get_name_tmp::get(m_path);
+
+    if(!QFile::exists(ff)){
+        return;
+    }
 
     if(!QFile::remove(ff)){
         messaggio_utente("I had a problem removing the temp file in " + ff);

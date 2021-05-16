@@ -12,9 +12,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     need_save_tmp = true;
 
     bool sel = true;
-    bool check;
 
     auto eventType = event->type();
+
+    qDebug() << eventType;
 
     switch (eventType) {
         case QEvent::TabletPress: /* when the user release the tablet */
