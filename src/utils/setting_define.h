@@ -113,4 +113,7 @@
 #define KEY_INT_TMP_ENABLE "key-int-tmp-enable"
 #define KEY_INT_TMP_TIME "key-int-tmp-time" /* uint -> second */
 
+#define GROUPNAME_INSERT_METHOD_PEN_MOUSE "groupname-insert-method-pen-mouse"
+#define KEY_INSERT_METHOD_PEN_MOUSE "key-insert-method-pen-mouse" /* bool */
+
 #endif // SETTING_DEFINE_H

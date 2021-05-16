@@ -45,11 +45,11 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
             __type = QEvent::TabletRelease;
             leave = false;
             first_touch = true;
-        }
-
-        if(first_touch){
+        }else if(first_touch){
             first_touch = false;
             __type = QEvent::TabletPress;
+        }else{
+            __type = QEvent::TabletMove;
         }
 
         tab_event = new QTabletEvent(__type, p, event->globalPos(), 0, QTabletEvent::Airbrush, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);

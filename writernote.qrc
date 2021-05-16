@@ -55,5 +55,6 @@
         <file>images/newPage.png</file>
         <file>images/restore-icon.png</file>
         <file>images/update-icon.png</file>
+        <file>images/pen_option.webp</file>
     </qresource>
 </RCC>

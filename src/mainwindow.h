@@ -85,7 +85,9 @@ public:
     /* false -> use pen
     *  true -> use touch for drawing
     */
-    bool touch_or_pen = true;
+    bool touch_or_pen = false;
+    void update_touch_or_pen();
+    void loadPenOrMouse();
 
     QTimer *m_timer;
 
@@ -324,6 +326,8 @@ private slots:
     void on_actionOption_triggered();
 
     void on_actionUpdate_writernote_triggered();
+
+    void on_actionPen_or_Mouse_triggered();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;

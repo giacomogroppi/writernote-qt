@@ -484,6 +484,7 @@
    <addaction name="actionlastStyle"/>
    <addaction name="actionnewPage"/>
    <addaction name="actionrestore_button"/>
+   <addaction name="actionPen_or_Mouse"/>
   </widget>
   <action name="actionNew_File">
    <property name="checkable">
@@ -948,6 +949,18 @@
    </property>
    <property name="text">
     <string>Update writernote</string>
+   </property>
+  </action>
+  <action name="actionPen_or_Mouse">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/pen_option.webp</normaloff>:/image/images/pen_option.webp</iconset>
+   </property>
+   <property name="text">
+    <string>Pen or Mouse</string>
    </property>
   </action>
  </widget>

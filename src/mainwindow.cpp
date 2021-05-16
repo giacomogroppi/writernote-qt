@@ -164,7 +164,17 @@ MainWindow::MainWindow(QWidget *parent,
 
 MainWindow::~MainWindow()
 {
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_INSERT_METHOD_PEN_MOUSE);
+    setting.setValue(KEY_INSERT_METHOD_PEN_MOUSE, this->touch_or_pen);
+    setting.endGroup();
+
     delete ui;
+}
+
+void MainWindow::update_touch_or_pen()
+{
+    ui->actionPen_or_Mouse->setChecked(this->touch_or_pen);
 }
 
 /* create new file */
@@ -454,6 +464,7 @@ void MainWindow::on_actionUndu_triggered()
     ui->textEdit->undo();
 }
 
+/* restore file to the original position (0, 0) */
 void MainWindow::on_actionrestore_button_triggered()
 {
     this->m_canvas->restoreO();
@@ -464,4 +475,17 @@ void MainWindow::on_actionnewPage_triggered()
 {
     m_canvas->disegnofoglio_bool = true;
     m_canvas->needUpdate();
+}
+
+void MainWindow::loadPenOrMouse(){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_INSERT_METHOD_PEN_MOUSE);
+    touch_or_pen = setting.value(KEY_INSERT_METHOD_PEN_MOUSE, false).toBool();
+    setting.endGroup();
+}
+
+void MainWindow::on_actionPen_or_Mouse_triggered()
+{
+    touch_or_pen = !touch_or_pen;
+    update_touch_or_pen();
 }
