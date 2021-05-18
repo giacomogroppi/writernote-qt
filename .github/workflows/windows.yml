@@ -82,7 +82,7 @@ jobs:
           $build = "D:\a\writernote-qt\writernote-qt\build"
 
           # make zip to upload
-          Compress-Archive -Path $build\writernote.exe -DestinationPath "writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").zip"
+          Compress-Archive -Path $build\* -DestinationPath "writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").zip"
 
           Rename-Item $pos\Output\writernote_setup.exe "writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").exe"
           gh release upload "$($env:GITHUB_REF -replace "refs/tags/")" "$pos\Output\writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").exe" "writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" --clobber
