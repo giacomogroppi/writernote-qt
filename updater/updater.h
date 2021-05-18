@@ -21,7 +21,7 @@ public:
     updater(QWidget *parent = nullptr);
     ~updater();
 
-    bool downloadFile(QString url, QString dest);
+    bool downloadFile(QString url, const QString dest);
     bool extractFile(QString l, const QString &dest);
 
     bool moveWithA(QString l, const QString to);

@@ -4,9 +4,6 @@
 #include "../src/utils/path/get_path.h"
 #include "../src/utils/areyousure/areyousure.h"
 
-#define OK_POWER_EXT 0
-#define OK_POWER_DOWN 0
-
 #include <QFile>
 #include <QDir>
 #include <QDebug>
@@ -33,7 +30,7 @@ updater::~updater()
     delete ui;
 }
 
-bool updater::downloadFile(QString url, QString dest)
+bool updater::downloadFile(QString url, const QString dest)
 {
     int res;
     res = system("powershell echo hello");
@@ -43,39 +40,47 @@ bool updater::downloadFile(QString url, QString dest)
         return false;
     }
 
+    if(QFile::exists(dest)){
+        if(!QFile::remove(dest)){
+            messaggio_utente("Before update writernote remove this file " + dest);
+            return false;
+        }
+    }
+
     url = "Invoke-WebRequest -uri " + url + " -Method \"GET\"  -Outfile " + dest;
     url = "powershell " + url;
 
     res = system(url.toUtf8().constData());
 
-    if(res != OK_POWER_DOWN){
-        dialog_critic(url);
-        return false;
-    }
-    return true;
+    return !res;
 
 }
 
 bool updater::extractFile(QString l, const QString &dest)
 {
     int res;
+    QDir __dir(dest);
+
+    if(__dir.exists()){
+        if(!__dir.removeRecursively()){
+            messaggio_utente("I can't update writernote becouse I can't remove this folder: " + dest);
+            return false;
+        }
+    }
 
     l = "Expand-Archive -Path " + l + " -destinationPath " + dest;
     l = "powershell " + l;
 
     res = system(l.toUtf8().constData());
 
-    if(res != OK_POWER_EXT){
-        return true;
-    }
-    return false;
+    return !res;
 }
 
 bool updater::moveWithA(QString l, const QString to)
 {
     int res;
 
-    l = "Start-Process powershell -Verb runAs Move-Item -Path " + l + " -Destination " + to;
+    l = "powershell Start-Process powershell -Verb runAs Move-Item -Path " + l + " -Destination " + to;
 
     res = system(l.toUtf8().constData());
 
@@ -94,9 +99,10 @@ bool updater::removeFile(QString l)
 
 }
 
+#define pos_installation POS + "\\writernote.exe"
 void updater::downloadUpdate()
 {
-    QDir __dir(POS + "\\writernote.exe");
+    QDir __dir(POS);
     QString testo, dest, ver;
     QJsonDocument doc;
 
@@ -109,7 +115,7 @@ void updater::downloadUpdate()
     if(!QFile::exists(POS)){
         if(!__dir.exists()){
             dialog_critic("I cant find writernote in " + POS);
-            //goto close;
+            goto close;
         }
     }
 
@@ -141,8 +147,10 @@ void updater::downloadUpdate()
         goto close;
     }
 
-    if(!moveWithA(testo, __dir.currentPath())){
-        dialog_critic("We had a problem move writernote.exe to " + __dir.currentPath());
+    testo += "\\*";
+
+    if(!moveWithA(testo, POS)){
+        dialog_critic("We had a problem move writernote.exe to " + POS);
         goto close;
     }
 
