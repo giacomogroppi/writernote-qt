@@ -174,7 +174,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::update_touch_or_pen()
 {
-    ui->actionPen_or_Mouse->setChecked(this->touch_or_pen);
+    ui->actionPen_or_Mouse->setChecked(!this->touch_or_pen);
 }
 
 /* create new file */
