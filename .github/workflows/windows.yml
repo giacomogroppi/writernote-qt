@@ -79,7 +79,8 @@ jobs:
         shell: powershell
         run: |
           $pos = "D:\a\writernote-qt\writernote-qt\windows"
-          $build = "D:\a\writernote-qt\writernote-qt\build
+          $build = "D:\a\writernote-qt\writernote-qt\build"
+
           # make zip to upload
           Compress-Archive -Path $build\writernote.exe -DestinationPath "writernote_setup_$($env:GITHUB_REF -replace "refs/tags/").zip"
 
