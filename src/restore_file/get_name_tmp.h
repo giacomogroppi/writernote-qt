@@ -8,7 +8,7 @@
 class get_name_tmp
 {
 public:
-    inline static QString get(QString *m_path){
+    inline static QString get(const QString *m_path){
         QStringList list;
         int i;
         QString path;
@@ -29,16 +29,6 @@ public:
 
         return path;
 
-        /*list = m_path->split(sl);
-        path = "";
-
-        for(i = 0; i<list.length()-1; ++i){
-            path += list.at(i);
-        }
-
-        path = "." + list.last() + "_tmp" ;
-
-        return path;*/
     }
 };
 

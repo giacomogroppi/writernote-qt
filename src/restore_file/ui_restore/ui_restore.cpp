@@ -4,6 +4,8 @@
 #include "../../utils/common_def.h"
 #include <QDir>
 #include <QFileDialog>
+#include "../../utils/slash/slash.h"
+#include "../get_name_tmp.h"
 
 ui_restore::ui_restore(QWidget *parent, QString path) :
     QDialog(parent),
@@ -17,10 +19,6 @@ ui_restore::ui_restore(QWidget *parent, QString path) :
     this->path = path;
 
     ui->plainTextEdit->setPlainText(path);
-
-    if(path != ""){
-        __l = get_file_dir::get(path);
-    }
 
     updateList();
 }
@@ -59,6 +57,8 @@ void ui_restore::on_pushButton_open_clicked()
         return;
     }
 
+    path = dir;
+
     __l = get_file_dir::get(path);
 
     updateList();
@@ -68,14 +68,30 @@ void ui_restore::on_pushButton_open_clicked()
 void ui_restore::removeNotWriternote(QStringList &l)
 {
     uint i, len;
+    QStringList list;
+    QString tmp;
+
     len = l.length();
 
     for(i=0; i<len; ++i){
-        if(l.at(i).indexOf(APP_EXT) == -1){
+        list = l.at(i).split(slash::__slash());
+        QString &string = (QString &)list.last();
+
+        if(string.indexOf(APP_EXT) == -1){
+            l.removeAt(i);
+            --len;
+            --i;
+            continue;
+        }
+
+        tmp = get_name_tmp::get(&l.at(i));
+
+        if(!QFile::exists(tmp)){
             l.removeAt(i);
             --len;
             --i;
         }
+
     }
 
 }
@@ -83,6 +99,8 @@ void ui_restore::removeNotWriternote(QStringList &l)
 void ui_restore::updateList()
 {
     uint i, len;
+
+    removeNotWriternote(__l);
 
     len = __l.length();
     ui->listWidget->clear();

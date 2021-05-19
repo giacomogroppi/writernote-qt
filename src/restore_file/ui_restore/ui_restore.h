@@ -30,7 +30,7 @@ private slots:
     void on_pushButton_open_clicked();
 
 private:
-    void removeNotWriternote(QStringList &l);
+    static void removeNotWriternote(QStringList &l);
     void updateList();
 
     savefile *m_save = nullptr;
