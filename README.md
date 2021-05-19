@@ -59,7 +59,6 @@
 - Project .writer to image
 - Convert audio to text
 - Compile for IOS and mac
-- Ask for classic confinement snapcraft
 - Load file from pdf
 - Create launcher for windows and linux to:
   - Send log information to a server
