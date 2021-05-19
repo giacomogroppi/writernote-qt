@@ -154,6 +154,8 @@ parts:
       - zlib1g-dev
 
     stage-packages:
+      - libglib2.0-0
+
       ## wayland support
       - libwayland-dev
       - libwayland-egl1-mesa
