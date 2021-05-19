@@ -103,14 +103,11 @@ parts:
       #printf "%s\n" "$(SNAPCRAFT_PROJECT_VERSION)"
       #make clean
 
-      qmake DEFINES+="SNAP" DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION DEFINES+=QT_NO_DEBUG_OUTPUT
+      qmake DEFINES+="SNAP" DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION #DEFINES+=QT_NO_DEBUG_OUTPUT
 
       snapcraftctl build
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/      
       cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
-
-      # copying image
-      #cp -r images $SNAPCRAFT_PART_INSTALL/
 
 
     build-packages:

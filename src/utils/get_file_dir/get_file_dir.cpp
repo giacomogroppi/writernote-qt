@@ -1,5 +1,5 @@
 #include "get_file_dir.h"
-
+#include <QDebug>
 
 QStringList get_file_dir::get(QString &dir)
 {
@@ -8,6 +8,8 @@ QStringList get_file_dir::get(QString &dir)
     while (iterator.hasNext()) {
         __l.append(iterator.next());
     }
+
+    qDebug() << __l;
 
     return __l;
 }
