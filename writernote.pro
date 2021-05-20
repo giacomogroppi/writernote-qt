@@ -62,12 +62,14 @@ SOURCES += \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/datamanage/retry_save_audio.cpp \
     src/dropEvent/dropEvent.cpp \
+    src/filelost.cpp \
     src/last_open/option/button_main.cpp \
     src/last_open/option/option_last_open_ui.cpp \
     src/lastedit/copy_lastedit.cpp \
     src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \
     src/needToSave.cpp \
+    src/open_file.cpp \
     src/restore_file/restore_file.cpp \
     src/restore_file/restore_file_critic.cpp \
     src/restore_file/ui/setting_restore_ui.cpp \
@@ -245,6 +247,7 @@ HEADERS += \
     src/currenttitle/default_type/default_type.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/datamanage/retry_save_audio.h \
+    src/filelost.h \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
@@ -311,7 +314,6 @@ HEADERS += \
     src/touch/tabletapplication.h \
     src/touch/tabletcanvas.h \
     src/touch/zoom/zoom_control.h \
-    src/update_list_copybook.h \
     src/currenttitle/currenttitle_class.h \
     src/datawrite/qfilechoose.h \
     src/datawrite/savefile.h \

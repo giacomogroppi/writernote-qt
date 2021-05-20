@@ -5,7 +5,6 @@
 #include "../datawrite/qfilechoose.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../newcopybook_.h"
-#include "../update_list_copybook.h"
 
 #include "../touch/datastruct/datastruct.h"
 #include "default_type/default_type.h"
@@ -91,6 +90,6 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
         return dialog_critic("We had a problem saving the copybook");
 
     this->ui->listWidgetSX->setEnabled(true);
-    update_list_copybook(this);
+    update_list_copybook();
 
 }

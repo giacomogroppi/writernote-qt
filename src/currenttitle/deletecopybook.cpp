@@ -6,13 +6,11 @@
 #include <QMessageBox>
 #include <QString>
 
-#include "../update_list_copybook.h"
-
 #include <QMediaPlayer>
 #include "redolist.h"
 
 /* funzione che gestisce l'eliminizione del copybook */
-void f_deletecopybook( MainWindow *parent, const char *copybook){
+void f_deletecopybook(MainWindow *parent, const char *copybook){
     if(!areyousure(parent, "Delete copybook", "are you sure you want to delete " + (QString)copybook + "?"))
         return redolist(parent);
 
@@ -47,6 +45,6 @@ void MainWindow::on_actionDelete_copybook_triggered()
 
     f_deletecopybook(this, m_currentTitle.toUtf8().constData());
     this->m_currentTitle = "";
-    update_list_copybook(this);
+    update_list_copybook();
 
 }

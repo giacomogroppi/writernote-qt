@@ -100,6 +100,12 @@ void ui_restore::updateList()
 {
     uint i, len;
 
+    ui->plainTextEdit->setPlainText(path);
+
+    if(this->path.indexOf(APP_EXT) == -1){
+
+    }
+
     removeNotWriternote(__l);
 
     len = __l.length();

@@ -20,7 +20,6 @@
 
 #include "dataread/xmlstruct.h"
 #include "utils/dialog_critic/dialog_critic.h"
-#include "update_list_copybook.h"
 #include "savecopybook.h"
 #include "newcopybook_.h"
 #include "setting_ui.h"
@@ -160,6 +159,8 @@ MainWindow::MainWindow(QWidget *parent,
 
     /* by default */
     ui->actionUpdate_writernote->setVisible(false);
+
+    loadPenOrMouse();
 }
 
 MainWindow::~MainWindow()
@@ -216,46 +217,6 @@ void MainWindow::on_actionNew_File_triggered()
     abilitazioneinput(this);
     setting_ui_start(this);
     m_path = "";
-}
-
-void MainWindow::on_actionOpen_triggered(const char *nomeFile)
-{
-    QString fileName;
-    if(!nomeFile){
-        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; All file (* *.*)");
-    }else{
-        fileName = nomeFile;
-    }
-
-    if(fileName == "")
-        return;
-
-    QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return dialog_critic("I can't open this file because of the permission");
-
-    file.close();
-
-#ifndef ANDROID
-    if(fileName.indexOf(APP_EXT) == -1){
-        if(!areyousure(nullptr, "Error", "The file does not have the writernote extension, do you want to open it anyway?")){
-            return;
-        }
-    }
-#endif
-
-    xmlstruct filefind(&fileName, &m_indice, m_currenttitle);
-    if(!filefind.loadindice())
-        return dialog_critic("We had a problem reading the index of the file");
-
-    this->m_setting->changeCopybookFile();
-
-    m_path = fileName;
-
-    if(this->m_indice.titolo.length() > 0)
-        this->ui->listWidgetSX->setEnabled(true);
-    update_list_copybook(this);
-
 }
 
 /* Funzione che gestisce il doppio click sull'item a sinistra della lista copybook */
@@ -482,6 +443,7 @@ void MainWindow::loadPenOrMouse(){
     setting.beginGroup(GROUPNAME_INSERT_METHOD_PEN_MOUSE);
     touch_or_pen = setting.value(KEY_INSERT_METHOD_PEN_MOUSE, false).toBool();
     setting.endGroup();
+    update_touch_or_pen();
 }
 
 void MainWindow::on_actionPen_or_Mouse_triggered()

@@ -13,7 +13,7 @@ public:
         int i;
         QString path;
         char sl;
-        uchar last_pos;
+        uchar last_pos=0;
 
         path = *m_path;
         sl = slash::__slash();

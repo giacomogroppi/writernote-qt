@@ -34,8 +34,9 @@ void MainWindow::dropEvent(QDropEvent *event){
     }
 
     if(find == WRITERNOTE){
-        if(this->m_path != __path_to_load)
-            this->on_actionOpen_triggered(__path_to_load.toUtf8().constData());
+        if(this->m_path != __path_to_load){
+            openFile(__path_to_load.toUtf8().constData());
+        }
     }else if(find == IMAGE){
         point = new PointSettable;
         point->point = event->posF();

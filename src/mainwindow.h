@@ -144,6 +144,9 @@ public:
     void updatePageCount(int);
     setting_restore_ui *m_setting;
 
+    void openFile(const char *pos);
+    void update_list_copybook();
+
 public slots:
     /* la funzione serve anche per eliminare l'audio del copybook */
     void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
@@ -165,7 +168,7 @@ private slots:
     /* richiamata quando viene modificato qualcosa del testo */
     void on_textEdit_textChanged();
 
-    void on_actionOpen_triggered(const char *nomeFile = nullptr);
+    void on_actionOpen_triggered();
 
 
 
