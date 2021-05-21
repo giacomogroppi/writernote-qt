@@ -5,7 +5,10 @@
 #include <QDir>
 #include <QFileDialog>
 #include "../../utils/slash/slash.h"
+#include "../get_name_available.h"
+#include "../restore_file_critic.h"
 #include "../get_name_tmp.h"
+#include "../../utils/dialog_critic/dialog_critic.h"
 
 ui_restore::ui_restore(QWidget *parent, QString path) :
     QDialog(parent),
@@ -39,11 +42,6 @@ ui_restore::~ui_restore()
 void ui_restore::on_close_button_clicked()
 {
     this->close();
-}
-
-void ui_restore::on_ok_restore_clicked()
-{
-
 }
 
 void ui_restore::on_pushButton_open_clicked()
@@ -115,4 +113,48 @@ void ui_restore::updateList()
         ui->listWidget->addItem(__l.at(i));
     }
 
+}
+
+void ui_restore::on_ok_restore_clicked()
+{
+    QString pos_res, name_copy;
+    QDir __dir(path);
+    int index;
+    bool ok;
+    restore_file_critic::n_err __res;
+
+    if(path != "" && path.indexOf(APP_EXT) != -1){
+        if(!QFile::exists(get_name_tmp::get(path))){
+            ui->message_label->setText("In " + path + " I can't find a restore file");
+            return;
+        }
+
+        pos_res = path;
+
+    }else if(!__dir.exists()){
+        ui->message_label->setText("Select a file before restore any file");
+    }else{
+        index = ui->listWidget->currentRow();
+        if(index == -1){
+            if(ui->listWidget->count() > 0){
+                ui->message_label->setText("Select a file in the list");
+            }
+            return;
+        }else{
+            pos_res = path + slash::__slash() + ui->listWidget->item(index)->text();
+        }
+    }
+
+    name_copy = get_name_available::get(pos_res, ok);
+    if(!ok){
+        return messaggio_utente("It seams that that in the file you try to restore there is no copybook");
+    }
+
+    __res = restore_file_critic::restore_file(pos_res, name_copy);
+
+    if(__res == restore_file_critic::restore_ok){
+        messaggio_utente("Copybook restore");
+    }else{
+        dialog_critic("We had a problem restoring the file");
+    }
 }

@@ -25,9 +25,9 @@ public:
 private slots:
     void on_close_button_clicked();
 
-    void on_ok_restore_clicked();
-
     void on_pushButton_open_clicked();
+
+    void on_ok_restore_clicked();
 
 private:
     static void removeNotWriternote(QStringList &l);
@@ -39,7 +39,9 @@ private:
     currenttitle_class *m_curr;
 
     QStringList __l;
+
     QString path;
+
     Ui::ui_restore *ui;
 };
 

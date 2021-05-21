@@ -57,6 +57,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 SOURCES += \
     src/audiorecord/start_recording.cpp \
+    src/changeCopybook.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
@@ -70,6 +71,7 @@ SOURCES += \
     src/log/log_ui/log_ui.cpp \
     src/needToSave.cpp \
     src/open_file.cpp \
+    src/restore_file/get_name_available.cpp \
     src/restore_file/restore_file.cpp \
     src/restore_file/restore_file_critic.cpp \
     src/restore_file/ui/setting_restore_ui.cpp \
@@ -251,6 +253,7 @@ HEADERS += \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
+    src/restore_file/get_name_available.h \
     src/restore_file/get_name_tmp.h \
     src/restore_file/restore_file_critic.h \
     src/restore_file/ui/setting_restore_ui.h \

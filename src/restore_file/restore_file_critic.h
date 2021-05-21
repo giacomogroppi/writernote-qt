@@ -18,11 +18,9 @@ public:
     };
 
 
-    /* all = true, copy all copybook in the file restore */
     static enum n_err
             restore_file(const QString & path,
-                         const QString & name_copybook,
-                         const bool all);
+                         const QString & name_copybook);
 
 };
 

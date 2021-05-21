@@ -24,7 +24,7 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path);
 
 class xmlstruct{
 private:
-    QString *path_;
+    const QString *path_;
 
     indice_class *indice = nullptr;
     currenttitle_class *currenttitle = nullptr;
@@ -45,10 +45,10 @@ public:
         return loadfile(path.toUtf8().constData());
     }
 
-    xmlstruct(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
-    xmlstruct(QString &path_U, indice_class &indice_U, currenttitle_class &currenttitle_U);
+    xmlstruct(const QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
+    xmlstruct(const QString &path_U, indice_class &indice_U, currenttitle_class &currenttitle_U);
 
-    void setData(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
+    void setData(const QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
 
 };
 
