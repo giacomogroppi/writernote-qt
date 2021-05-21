@@ -41,10 +41,14 @@ public:
     bool loadindice();
 
     int loadfile(const char *);
+    int loadfile(const QString &path){
+        return loadfile(path.toUtf8().constData());
+    }
 
     xmlstruct(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
+    xmlstruct(QString &path_U, indice_class &indice_U, currenttitle_class &currenttitle_U);
 
-
+    void setData(QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U);
 
 };
 

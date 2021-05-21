@@ -23,11 +23,22 @@ private:
     int savefile_check_2(zip_source_t *file, currenttitle_class *currenttitle, zip_t *filezip);
 
 public:
-    void updateData(currenttitle_class *);
-
     void setting_data(currenttitle_class *m_current){currenttitle = m_current;}
 
-    savefile(QString *path, currenttitle_class *currenttitle);
+    savefile(QString *path, currenttitle_class *currenttitle){
+        setData(path, currenttitle);
+    }
+    savefile(QString &path, currenttitle_class &currenttitle){
+        setData(&path, &currenttitle);
+    }
+
+    void setData(QString *p, currenttitle_class *curr){
+        if(p){
+            this->path = p;
+        }
+        this->currenttitle = curr;
+    }
+
     int savefile_check_indice(indice_class *);
     int savefile_check_file();
 

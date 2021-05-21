@@ -11,26 +11,18 @@ class restore_file_critic
 {
 public:
     enum n_err: int{
-
+        error_load_index,
+        error_load_file,
+        error_save_file,
+        restore_ok
     };
 
-    static QString add_prefix(const QString &string){
-        int index;
-        QString res = string;
 
-
-        index = res.indexOf(".writer");
-        if(index != -1){
-            res = res.mid(0, index) + VAL_RES + ".writer";
-        }else{
-            res = string + VAL_RES + "." + NAME_EXT;
-        }
-
-        return res;
-    }
-
+    /* all = true, copy all copybook in the file restore */
     static enum n_err
-            restore_file(QString & path);
+            restore_file(const QString & path,
+                         const QString & name_copybook,
+                         const bool all);
 
 };
 

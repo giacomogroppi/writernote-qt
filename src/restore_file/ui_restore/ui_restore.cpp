@@ -84,7 +84,7 @@ void ui_restore::removeNotWriternote(QStringList &l)
             continue;
         }
 
-        tmp = get_name_tmp::get(&l.at(i));
+        tmp = get_name_tmp::get(l.at(i));
 
         if(!QFile::exists(tmp)){
             l.removeAt(i);

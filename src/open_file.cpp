@@ -38,13 +38,15 @@ void MainWindow::openFile(const char *pos){
 
     if(fileLost::exe(fileName)){
         if(areyousure(nullptr, "Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
-            if(restore_file_critic::restore_file(fileName)){
+            if(restore_file_critic::restore_file(fileName,
+                                                 "",
+                                                 true)){
                 messaggio_utente("File restore correcty");
             }else{
                 return dialog_critic("If not restore correctly");
             }
         }else{
-            QString tmp = get_name_tmp::get(&fileName);
+            QString tmp = get_name_tmp::get(fileName);
             QFile::remove(tmp);
         }
     }

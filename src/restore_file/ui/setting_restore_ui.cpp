@@ -76,7 +76,7 @@ setting_restore_ui::~setting_restore_ui()
 
 void setting_restore_ui::deleteFile()
 {
-    QString ff = get_name_tmp::get(m_path);
+    QString ff = get_name_tmp::get(*m_path);
 
     if(!QFile::exists(ff)){
         return;
@@ -165,7 +165,7 @@ void setting_restore_ui::secondTimer()
     int res;
     QString path;
 
-    path = get_name_tmp::get(m_path);
+    path = get_name_tmp::get(*m_path);
 
     savefile ff(&path, *m_curr);
 

@@ -9,13 +9,4 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
-savefile::savefile(QString *path, currenttitle_class *currenttitle){
-    this->path = path;
-    this->currenttitle = currenttitle;
-};
-
-void savefile::updateData(currenttitle_class *_d)
-{
-    this->currenttitle = _d;
-}
 

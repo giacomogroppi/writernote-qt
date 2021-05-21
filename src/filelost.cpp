@@ -11,7 +11,7 @@ bool fileLost::exe(const QString &path)
         return false;
     }
 
-    __p = get_name_tmp::get(&path);
+    __p = get_name_tmp::get(path);
 
     return QFile::exists(__p);
 }
