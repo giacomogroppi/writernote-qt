@@ -353,8 +353,8 @@
    <addaction name="menuEdit"/>
    <addaction name="menuAudio_option"/>
    <addaction name="menuOptions"/>
-   <addaction name="menuHelp"/>
    <addaction name="menuFile_restore"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainbar">
    <property name="windowTitle">
