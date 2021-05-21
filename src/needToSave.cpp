@@ -19,8 +19,10 @@ enum MainWindow::n_need_save
         }
     }
 
-    if(!xml->loadindice()){
-        return n_need_save::unable_load;
+    if(tmp_ind){
+        if(!xml->loadindice()){
+            return n_need_save::unable_load;
+        }
     }
 
 
