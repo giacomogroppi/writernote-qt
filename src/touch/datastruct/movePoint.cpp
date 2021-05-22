@@ -24,7 +24,7 @@ void datastruct::MovePoint(QList<int> &id, QPointF &__t){
         if(__pos != -1){
             __last_id = m_point.at(i).idtratto;
 
-            for(; m_point.at(i).idtratto == __last_id && i<len; i++){
+            for(; i<len && m_point.at(i).idtratto == __last_id; i++){
                 __point = at_mod(i);
 
                 __point->m_x += __t.x();
