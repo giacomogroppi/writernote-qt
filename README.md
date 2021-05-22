@@ -45,6 +45,8 @@
 - Drag and drop:
   - Image
   - Writernote file
+- Draw with mouse
+- In case the application closes unexpectedly it is possible to recover the file, also setting the saving time of the restore file
 
 ## Experimental Features:
 - Import images
