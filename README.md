@@ -69,8 +69,6 @@
 - Group
 
 ## Known bugs:
-- Rubber [partial]
-- Pen size [pen size is not yet supported]
 - Playing an audio in pen mode is not dynamic but static
 - Save image:
   - In pen mode, moving an image is not supported
