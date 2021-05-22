@@ -15,7 +15,7 @@ int save_audio_file(const char *posAudio, QString &namecopybook, QString &path);
 class savefile
 {
 private:
-    QString *path;
+    const QString *path;
     currenttitle_class *currenttitle;
 
     int salvabinario(zip_t *);
@@ -25,14 +25,14 @@ private:
 public:
     void setting_data(currenttitle_class *m_current){currenttitle = m_current;}
 
-    savefile(QString *path, currenttitle_class *currenttitle){
+    savefile(const QString *path, currenttitle_class *currenttitle){
         setData(path, currenttitle);
     }
-    savefile(QString &path, currenttitle_class &currenttitle){
+    savefile(const QString &path, currenttitle_class &currenttitle){
         setData(&path, &currenttitle);
     }
 
-    void setData(QString *p, currenttitle_class *curr){
+    void setData(const QString *p, currenttitle_class *curr){
         if(p){
             this->path = p;
         }

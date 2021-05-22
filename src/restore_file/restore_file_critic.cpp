@@ -14,14 +14,14 @@ restore_file_critic::n_err restore_file_critic::restore_file(const QString &path
     indice_class ind;
 
     xmlstruct xml(pos, ind, cur);
-    savefile save(pos, cur);
+    savefile save(path, cur);
 
 
     if(!xml.loadindice()){
         return restore_file_critic::n_err::error_load_index;
     }
 
-    if(xml.loadfile(name_copybook) != OK){
+    if(xml.loadfile(name_copybook+".xml") != OK){
         return restore_file_critic::n_err::error_load_file;
     }
 

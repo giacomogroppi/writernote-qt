@@ -16,6 +16,8 @@ ui_restore::ui_restore(QWidget *parent, QString path) :
 {
     ui->setupUi(this);
 
+    ui->message_label->setText("");
+
     m_curr = new currenttitle_class;
     m_ind = new indice_class;
 
@@ -100,10 +102,6 @@ void ui_restore::updateList()
 
     ui->plainTextEdit->setPlainText(path);
 
-    if(this->path.indexOf(APP_EXT) == -1){
-
-    }
-
     removeNotWriternote(__l);
 
     len = __l.length();
@@ -111,6 +109,12 @@ void ui_restore::updateList()
 
     for(i=0; i<len; ++i){
         ui->listWidget->addItem(__l.at(i));
+    }
+
+    if(!len){
+        if(!ui->listWidget->count()){
+            ui->message_label->setText("There is no file to restore");
+        }
     }
 
 }
@@ -141,11 +145,11 @@ void ui_restore::on_ok_restore_clicked()
             }
             return;
         }else{
-            pos_res = path + slash::__slash() + ui->listWidget->item(index)->text();
+            pos_res = ui->listWidget->item(index)->text();
         }
     }
 
-    name_copy = get_name_available::get(pos_res, ok);
+    name_copy = get_name_available::get(get_name_tmp::get(pos_res), ok);
     if(!ok){
         return messaggio_utente("It seams that that in the file you try to restore there is no copybook");
     }

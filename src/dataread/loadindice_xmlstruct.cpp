@@ -15,7 +15,6 @@ bool xmlstruct::loadindice(){
                             ZIP_RDONLY,
                             &err);
     if (filezip == NULL){
-        messaggio_utente(QString::number(err));
         return false;
     }
 

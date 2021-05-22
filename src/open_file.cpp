@@ -9,10 +9,17 @@
 #include "restore_file/ui/setting_restore_ui.h"
 #include "restore_file/restore_file_critic.h"
 
+#include "restore_file/get_name_available.h"
+
 #include <QFile>
 
 void MainWindow::openFile(const char *pos){
     QString fileName;
+    bool ok;
+    QString path, tmp;
+
+    xmlstruct xml(&fileName, &m_indice, m_currenttitle);
+
     if(!pos){
         fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; All file (* *.*)");
     }else{
@@ -38,20 +45,31 @@ void MainWindow::openFile(const char *pos){
 
     if(fileLost::exe(fileName)){
         if(areyousure(nullptr, "Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
+            path = get_name_available::get(fileName, ok);
+
+            if(!ok){
+                if(areyousure(nullptr, "No copybook", "I could not find any copybook in the file, continue?")){
+                    goto load;
+                }else{
+                    return;
+                }
+            }
+
             if(restore_file_critic::restore_file(fileName,
-                                                 "")){
+                                                 path)){
                 messaggio_utente("File restore correcty");
             }else{
                 return dialog_critic("If not restore correctly");
             }
         }else{
-            QString tmp = get_name_tmp::get(fileName);
+            tmp = get_name_tmp::get(fileName);
             QFile::remove(tmp);
         }
     }
 
-    xmlstruct filefind(&fileName, &m_indice, m_currenttitle);
-    if(!filefind.loadindice())
+    load:
+
+    if(!xml.loadindice())
         return dialog_critic("We had a problem reading the index of the file");
 
     this->m_setting->changeCopybookFile();

@@ -46,9 +46,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     xmlstruct temp_lettura(&m_path, &tempindice, &tempcopybook);
 
-    n_need_save __res = needToSave(&temp_lettura,
-                            &tempcopybook,
-                            &tempindice);
+    n_need_save __res;
 
     QString filep, __message;
 
@@ -61,11 +59,11 @@ void MainWindow::closeEvent (QCloseEvent *event)
         goto accept_event;
     }
 
+    __res = needToSave(&temp_lettura,
+                       &tempcopybook,
+                       &tempindice);
+
     if(__res == n_need_save::unable_load){
-
-    /*if(temp_lettura.loadfile((m_currentTitle + ".xml").toUtf8().constData()) != OK
-            || !temp_lettura.loadindice()){*/
-
         QMessageBox msgBox;
         msgBox.setText("Error:");
         msgBox.setInformativeText("We had an error opening the current file");

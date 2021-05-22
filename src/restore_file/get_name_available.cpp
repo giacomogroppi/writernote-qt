@@ -4,9 +4,7 @@
 
 QString get_name_available::get(const QString &path, bool &ok)
 {
-    QString pos;
     uint i, len;
-
     indice_class ind;
     currenttitle_class curr;
 
@@ -21,7 +19,7 @@ QString get_name_available::get(const QString &path, bool &ok)
 
     for(i=0; i<len; ++i){
         /* there is only one copybook that load without error */
-        if(xml.loadfile(ind.titolo.at(i)) == OK){
+        if(xml.loadfile(ind.titolo.at(i)+".xml") != ERROR){
             ok = true;
             return ind.titolo.at(i);
         }
