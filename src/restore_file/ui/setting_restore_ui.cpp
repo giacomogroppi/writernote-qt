@@ -94,6 +94,8 @@ void setting_restore_ui::updateWindow()
 
     ui->checkBox_temp->setChecked(m_data.temp_file);
     ui->spinBox_temp->setValue(m_data.t_temp_file);
+
+    ui->checkBox_remove->setChecked(m_data.remove_file);
 }
 
 void setting_restore_ui::loadData()
