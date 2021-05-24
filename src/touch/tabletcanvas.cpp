@@ -214,7 +214,6 @@ static void saveLastMethod(TabletCanvas::e_method val){
 
 static void loadLastMethod(TabletCanvas *p){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-
     setting.beginGroup(GROUPNAME_METHOD_TOUCH);
 
     p->medotodiinserimento = static_cast<TabletCanvas::e_method>(setting.value(KEY_METHOD_TOUCH, TabletCanvas::pen).toInt());

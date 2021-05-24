@@ -82,10 +82,10 @@ void TabletCanvas::sceltacolorepenna(const QColor color){
 }
 
 void MainWindow::updateTouch(){
-    ui->actionpen->setChecked(m_canvas->medotodiinserimento == TabletCanvas::pen);
-    ui->actionrubber->setChecked(m_canvas->medotodiinserimento == TabletCanvas::rubber);
-    ui->actionselezionetext->setChecked(m_canvas->medotodiinserimento == TabletCanvas::selection);
-    ui->actioninsertText->setChecked(m_canvas->medotodiinserimento == TabletCanvas::text);
+    ui->actionpen->setChecked(              m_canvas->medotodiinserimento == TabletCanvas::pen);
+    ui->actionrubber->setChecked(           m_canvas->medotodiinserimento == TabletCanvas::rubber);
+    ui->actionselezionetext->setChecked(    m_canvas->medotodiinserimento == TabletCanvas::selection);
+    ui->actioninsertText->setChecked(       m_canvas->medotodiinserimento == TabletCanvas::text);
 
     ui->actionblack->setChecked(m_canvas->m_color == Qt::black);
     ui->actionwhite->setChecked(m_canvas->m_color == Qt::white);

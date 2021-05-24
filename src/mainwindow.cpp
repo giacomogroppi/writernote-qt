@@ -142,8 +142,6 @@ MainWindow::MainWindow(QWidget *parent,
 
     updateTouch();
 
-    ui->actionpen->setChecked(true);
-
     m_timer = new QTimer(this);
     QObject::connect(m_timer, &QTimer::timeout, this, &MainWindow::showRiascolto);
 
