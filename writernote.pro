@@ -397,7 +397,6 @@ android{
     QT += androidextras
 
     LIBS += $$PWD/android/libzip-android-1.0.1/obj/local/armeabi-v7a/libzip.a
-    #LIBS += $$PWD/android/libzip/libzip-android-1.0.1/obj/local/armeabi-v7a/libzip.a
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 

@@ -2,7 +2,7 @@
 #include "time.h"
 
 #include <chrono>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <ctime>
 #include <QDebug>
 #include <QTimer>
