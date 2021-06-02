@@ -69,6 +69,7 @@
 - Group
 
 ## Known bugs:
+- Include audio file into .writer file
 - Playing an audio in pen mode is not dynamic but static
 - Save image:
   - In pen mode, moving an image is not supported
