@@ -112,7 +112,8 @@ void TabletCanvas::load(QPainter &painter,
                 ++i;
         }
         else if(__point->idtratto == _lastid){
-            if(m_pos_ris >= 0 && (uint)m_pos_ris > i){
+            qDebug() << __point->m_posizioneaudio << m_pos_ris;
+            if(__point->m_posizioneaudio == m_pos_ris){
                 UPDATE_LOAD(__point, data->datatouch->zoom, 4);
             }else{
                 UPDATE_LOAD(__point, data->datatouch->zoom, 1);

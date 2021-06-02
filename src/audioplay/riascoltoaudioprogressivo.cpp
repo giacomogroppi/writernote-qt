@@ -57,7 +57,7 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
         this->m_timer->start(p_time*1000);
     }
     else {
-        /* parte responsabile della penna */
+        /*
         int position_inlist = 0, i, len, position_temp;
 
         len = m_currenttitle->datatouch->length();
@@ -68,10 +68,9 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
             }
         }
 
-        /*int position_inlist = m_currenttitle.datatouch->posizioneaudio.indexOf(position/1000);*/
         if(position_inlist == -1) return;
-
-        this->m_canvas->riascolto(position_inlist);
+        */
+        this->m_canvas->riascolto(position/1000);
     }
 
     this->ui->audioSlider->blockSignals(true);

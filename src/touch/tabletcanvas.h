@@ -124,6 +124,10 @@ public:
     /* funzioni responsabili del riascolto */
     void riascolto(int);
     bool riascoltovariable = false;
+
+    /*
+     * indice la posizione del replay
+    */
     int m_pos_ris = -1;
 
     /* touch e zoom */
