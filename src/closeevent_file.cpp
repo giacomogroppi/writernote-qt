@@ -33,7 +33,6 @@ static void setting_autosave(bool check){
 
 void MainWindow::closeEvent (QCloseEvent *event)
 {
-    qDebug() << "Close event call";
     /*
      * TODO: after enable cloud support,
      * pass the right value
@@ -159,8 +158,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
         return event->ignore();
 
     accept_event:
-    qDebug() << "Accept event";
-
     setting_geometry(this->geometry());
     setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
@@ -168,8 +165,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
     m_setting->changeCopybookFile();
 
     event->accept();
-
-    qDebug() << "accepted";
 }
 
 static void setting_hide_list(bool check){

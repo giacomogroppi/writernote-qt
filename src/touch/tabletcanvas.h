@@ -123,9 +123,8 @@ public:
 
     /* funzioni responsabili del riascolto */
     void riascolto(int);
-    void loadriascolto(QPainter *);
     bool riascoltovariable = false;
-    int posizione = -1;
+    int m_pos_ris = -1;
 
     /* touch e zoom */
     lastpoint_t lastpointzoom;

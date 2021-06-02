@@ -5,7 +5,7 @@
 void MainWindow::updateProgress(qint64 duration)
 {
     /* ogni volta che si aggiorna il tempo cambia la variabile nella classe in TabletCanvas -> quando viene scritto qualcosa lo inserisce */
-    if(this->m_currenttitle->m_touch){
+    if(m_currenttitle->m_touch){
         m_canvas->time = duration;
     }
 

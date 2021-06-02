@@ -43,7 +43,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 }
 
 #define C(x) x->datatouch
-#define UPDATE_LOAD(x, zoom) updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color))
+#define UPDATE_LOAD(x, zoom, div) updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div))
 #define SET_PEN(x) painter.setPen(x)
 
 /*
@@ -61,17 +61,17 @@ void TabletCanvas::load(QPainter &painter,
     uint i, len, k;
     int _lastid;
     const point_s * __point;
+    QColor current_color;
+    double xtemp[2], ytemp[2];
 
     m_pixmap.fill(Qt::white);
-
-    double xtemp[2], ytemp[2];
 
     if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
         size_orizzontale = width();
         size_verticale = m_pixmap.height();
     }
 
-    QColor current_color = this->m_color;
+    current_color = this->m_color;
     this->m_pen.setStyle(Qt::PenStyle::SolidLine);
 
     _lastid = C(data)->firstPoint()->idtratto; /* it should be IDFIRSTPOINT */
@@ -89,7 +89,7 @@ void TabletCanvas::load(QPainter &painter,
         m_pen.setColor(setcolor(&__point->m_color));
 
         if(!datastruct::isIdUser(__point)){
-            UPDATE_LOAD(__point, data->datatouch->zoom);
+            UPDATE_LOAD(__point, data->datatouch->zoom, 1);
 
             SET_PEN(m_pen);
 
@@ -112,9 +112,12 @@ void TabletCanvas::load(QPainter &painter,
                 ++i;
         }
         else if(__point->idtratto == _lastid){
-            UPDATE_LOAD(__point, data->datatouch->zoom);
-
-            SET_PEN(m_pen);
+            if(m_pos_ris >= 0 && (uint)m_pos_ris > i){
+                UPDATE_LOAD(__point, data->datatouch->zoom, 4);
+            }else{
+                UPDATE_LOAD(__point, data->datatouch->zoom, 1);
+            }
+            painter.setPen(m_pen);
 
             painter.drawLine(this->lastPoint.pos*m,
                 QPointF(__point->m_x*m, __point->m_y*m));
@@ -124,9 +127,9 @@ void TabletCanvas::load(QPainter &painter,
         lastPoint.pos.setX(__point->m_x);
         lastPoint.pos.setY(__point->m_y);
 
-            /*
-             * for pdf export
-            */
+        /*
+        * for pdf export
+        */
         if(y_last)
             *y_last = __point->m_y;
 
