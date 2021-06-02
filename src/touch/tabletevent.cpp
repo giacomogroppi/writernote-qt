@@ -5,7 +5,6 @@
 bool need_save_auto = false;
 bool need_save_tmp = false;
 
-/* funzione che viene richiamata tutte le volte che si muove qualcosa sulla tabella */
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
     need_save_auto = true;
@@ -45,7 +44,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 #if defined(WIN32) || defined(WIN64)
         this->isdrawing = true;
 #endif
-
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
                 if(this->medotodiinserimento == e_method::pen){

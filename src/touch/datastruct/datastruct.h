@@ -109,7 +109,7 @@ public:
             }
         }else{
             y = pos_x[0]*m + q;
-
+            Q_UNUSED(y);
 
 
         }

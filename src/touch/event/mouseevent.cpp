@@ -30,22 +30,19 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 */
 
 static struct PointSettable __last_point_move;
-static bool leave = false;
 static bool first_touch = true;
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     double deltay, deltax;
+
+    qDebug() << "mouse Move Event";
 
     QTabletEvent *tab_event;
     QEvent::Type __type;
     QPointF p = event->pos();
 
     if(parent->touch_or_pen){
-        if(leave){
-            __type = QEvent::TabletRelease;
-            leave = false;
-            first_touch = true;
-        }else if(first_touch){
+        if(first_touch){
             first_touch = false;
             __type = QEvent::TabletPress;
         }else{
@@ -99,6 +96,8 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 }
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
+    qDebug() << "Mouse Release Event";
+    QTabletEvent *tab_event;
 
     event->accept();
 
@@ -110,6 +109,12 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
 
     __last_point_move.set = false;
     lastpointtouch.set = false;
-    leave = true;
+
+    if(parent->touch_or_pen){
+        tab_event = new QTabletEvent(QTabletEvent::TabletRelease, event->pos(), event->globalPos(), 0, QTabletEvent::Airbrush, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
+        tabletEvent(tab_event);
+        delete tab_event;
+    }
+    first_touch = true;
 
 }
