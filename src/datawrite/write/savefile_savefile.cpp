@@ -125,17 +125,21 @@ static int save_string(zip_source_t *file, const char *stringa){
     return OK;
 }
 
-int save_audio_file(const char *posAudio, QString &namecopybook, QString &path){
+int save_audio_file(const char *posAudio,
+                    const QString &namecopybook,
+                    const QString &path){
     zip_source_t *file;
     zip_t *filezip;
-
     zip_error_t errore;
-
     QFile file_temp(posAudio);
+    QByteArray array;
+
     if(!file_temp.open(QIODevice::ReadOnly))
         return ERROR;
 
-    QByteArray array = file_temp.readAll();
+    array = file_temp.readAll();
+
+    file_temp.close();
 
     int check, error;
 

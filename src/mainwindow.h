@@ -178,7 +178,6 @@ private slots:
 
     void on_startrecording_triggered();
 
-    //void on_stoprecordingbotton_triggered();
     void on_pauserecordingbotton_triggered();
 
     /* funzione che gestisce l'aggiornamento della status bar */
