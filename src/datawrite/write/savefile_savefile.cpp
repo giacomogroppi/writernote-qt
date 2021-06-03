@@ -29,12 +29,11 @@ int savefile::savefile_check_file(){
     zip_error_t errore;
 
     zip_t *filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
+    zip_source_t *file;
 
     if(!filezip)
         return ERROR;
 
-
-    zip_source_t *file;
     file = zip_source_buffer_create(0, 0, 0, &errore);
     if(!file){
         zip_close(filezip);
@@ -131,17 +130,23 @@ int save_audio_file(const char *posAudio,
     zip_source_t *file;
     zip_t *filezip;
     zip_error_t errore;
-    QFile file_temp(posAudio);
+    /*QFile file_temp(posAudio);*/
     QByteArray array;
 
-    if(!file_temp.open(QIODevice::ReadOnly))
-        return ERROR;
-
-    array = file_temp.readAll();
-
-    file_temp.close();
-
     int check, error;
+
+    /*
+     * becouse we can't open the audio and past
+     * all the data into, we read one byte by
+     * one by one
+    */
+    uchar __data;
+    FILE *fp;
+
+    fp = fopen(posAudio, "r");
+
+    if(!fp)
+        return ERROR;
 
     filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
 
@@ -156,7 +161,12 @@ int save_audio_file(const char *posAudio,
 
     zip_source_begin_write(file);
 
-    SOURCE_WRITE(file, array.data(), array.size());
+    fread(&__data, sizeof(uchar), 1, fp);
+    while(!feof(fp)){
+        fread(&__data, sizeof(uchar), 1, fp);
+
+        SOURCE_WRITE(file, &__data, sizeof(__data));
+    }
 
     check = 0;
 
@@ -171,11 +181,11 @@ int save_audio_file(const char *posAudio,
         goto delete_;
 
     zip_close(filezip);
-    file_temp.close();
+    fclose(fp);
     return OK;
 
     delete_:
-    file_temp.close();
+    fclose(fp);
     zip_source_free(file);
     zip_close(filezip);
     return ERROR;
