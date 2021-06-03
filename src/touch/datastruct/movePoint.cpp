@@ -16,8 +16,6 @@ void datastruct::MovePoint(QList<int> &id, QPointF &__t){
 
     len = length();
 
-    qDebug() << id.length();
-
     for(i=0; i<len; ++i){
         __pos = id.indexOf(m_point.at(i).idtratto);
 

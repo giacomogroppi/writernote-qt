@@ -52,7 +52,6 @@ void pen_ui::list_update(){
 void pen_ui::on_slider_size_valueChanged(int value)
 {
     m_spessore_pen = double(value)/delta;
-    qDebug() << m_spessore_pen;
 }
 
 void pen_ui::on_button_continua_clicked()

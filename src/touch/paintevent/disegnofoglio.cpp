@@ -209,7 +209,7 @@ static void drawLineOrizzontal(datastruct *data,
                             double &deltax,
                             const double &width_p,
                             const double &ct_del){
-    qDebug() << deltax;
+    //qDebug() << deltax;
 
     uint i;
     point->idtratto = IDORIZZONALE;
@@ -239,7 +239,7 @@ static void drawLineVertical(datastruct *data,
     point->idtratto = IDVERTICALE;
     ct_del = deltay;
 
-    qDebug() << "drawLineVerical" << deltay <<  ct_del;
+    //qDebug() << "drawLineVerical" << deltay <<  ct_del;
 
     for(i=0; i< (uint)style->ny; i++){
         point->m_x = deltay;

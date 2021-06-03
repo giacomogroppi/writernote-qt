@@ -72,7 +72,7 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
                 ismoving.point.setY(__delta);
 
                 if(!ismoving.set){
-                    qDebug() << "timer stop";
+                    //qDebug() << "timer stop";
                     timer->stop();
                     return;
                 }

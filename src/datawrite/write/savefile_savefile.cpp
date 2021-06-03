@@ -133,7 +133,7 @@ int save_audio_file(const char *posAudio,
     /*QFile file_temp(posAudio);*/
     QByteArray array;
 
-    int check, error;
+    int check = 0, error;
 
     /*
      * becouse we can't open the audio and past
@@ -161,14 +161,11 @@ int save_audio_file(const char *posAudio,
 
     zip_source_begin_write(file);
 
-    fread(&__data, sizeof(uchar), 1, fp);
-    while(!feof(fp)){
+    do{
         fread(&__data, sizeof(uchar), 1, fp);
 
         SOURCE_WRITE(file, &__data, sizeof(__data));
-    }
-
-    check = 0;
+    }while(!feof(fp));
 
     check += zip_source_commit_write(file)==ERROR_PRIVATE;
 

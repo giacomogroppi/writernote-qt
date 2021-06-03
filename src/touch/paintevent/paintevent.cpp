@@ -1,6 +1,6 @@
 #include "../tabletcanvas.h"
 #include <QPainter>
-
+#include "../../mainwindow.h"
 #include "draw_image.h"
 #include "../../utils/color/setcolor.h"
 
@@ -58,12 +58,14 @@ void TabletCanvas::load(QPainter &painter,
     if(data->datatouch->isempty())
         return;
 
+    bool is_play;
     uint i, len, k;
     int _lastid;
     const point_s * __point;
     QColor current_color;
     double xtemp[2], ytemp[2];
 
+    is_play = parent->player->state() == QMediaPlayer::PlayingState;
     m_pixmap.fill(Qt::white);
 
     if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
@@ -112,8 +114,8 @@ void TabletCanvas::load(QPainter &painter,
                 ++i;
         }
         else if(__point->idtratto == _lastid){
-            qDebug() << __point->m_posizioneaudio << m_pos_ris;
-            if(__point->m_posizioneaudio == m_pos_ris){
+            qDebug() << "Paint Event : " << __point->m_posizioneaudio << m_pos_ris;
+            if(is_play && __point->m_posizioneaudio > m_pos_ris){
                 UPDATE_LOAD(__point, data->datatouch->zoom, 4);
             }else{
                 UPDATE_LOAD(__point, data->datatouch->zoom, 1);

@@ -35,7 +35,7 @@ static bool first_touch = true;
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     double deltay, deltax;
 
-    qDebug() << "mouse Move Event";
+    //qDebug() << "mouse Move Event";
 
     QTabletEvent *tab_event;
     QEvent::Type __type;
@@ -96,7 +96,7 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
 }
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
-    qDebug() << "Mouse Release Event";
+    //qDebug() << "Mouse Release Event";
     QTabletEvent *tab_event;
 
     event->accept();
