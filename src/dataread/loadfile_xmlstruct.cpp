@@ -266,32 +266,41 @@ int xmlstruct::load_file_4(currenttitle_class *currenttitle, zip_file_t *f, zip_
 int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     int error;
     void * audio_data = nullptr;
+    size_t size_audio;
+    zip_t *file_zip;
+    zip_file_t *f;
+
+    uchar __r;
+    size_t tmp;
 
     array->clear();
 
-    zip_t *file_zip = zip_open(path.toUtf8().constData(), 0, &error);
+    file_zip = zip_open(path.toUtf8().constData(), 0, &error);
 
     if(!file_zip)
         return ERROR;
 
-    size_t size_audio = sizeFile(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData());
+    size_audio = sizeFile(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData());
 
     if(!size_audio)
         return ERROR;
 
-    zip_file_t *f;
     f = zip_fopen(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData(), 0);
     if(f == NULL)
         return ERROR;
 
     audio_data = malloc(size_audio);
-    if(!audio_data)
-        goto free_;
+    if(audio_data){
+        SOURCE_READ_GOTO(f, audio_data, size_audio);
 
-    SOURCE_READ_GOTO(f, audio_data, size_audio);
+        array->append((const char *)audio_data, size_audio);
+    }else{
+        for(tmp = 0; tmp < size_audio; ++tmp){
+            SOURCE_READ_GOTO(f, &__r, sizeof(uchar));
 
-    array->append((const char *)audio_data, size_audio);
-
+            array->append(__r);
+        }
+    }
 
     CLOSE_ZIP_AUDIO(f, file_zip);
     return OK;
