@@ -161,11 +161,15 @@ int save_audio_file(const char *posAudio,
 
     zip_source_begin_write(file);
 
-    do{
+    while(1){
         fread(&__data, sizeof(uchar), 1, fp);
 
+        if(feof(fp)){
+            break;
+        }
+
         SOURCE_WRITE(file, &__data, sizeof(__data));
-    }while(!feof(fp));
+    };
 
     check += zip_source_commit_write(file)==ERROR_PRIVATE;
 
