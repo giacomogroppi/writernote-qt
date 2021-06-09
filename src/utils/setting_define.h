@@ -116,4 +116,8 @@
 #define GROUPNAME_INSERT_METHOD_PEN_MOUSE "groupname-insert-method-pen-mouse"
 #define KEY_INSERT_METHOD_PEN_MOUSE "key-insert-method-pen-mouse" /* bool */
 
+/* highlighter */
+#define GROUPNAME_HIGHLIGHTER "groupname-highlighter"
+#define KEY_HIGHLIGHTER_ALFA "key-highlighter-alfa"
+
 #endif // SETTING_DEFINE_H

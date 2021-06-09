@@ -15,7 +15,20 @@ public:
     explicit ui_highlighter(QWidget *parent = nullptr);
     ~ui_highlighter();
 
+    inline uchar getAlfa(){
+        return m_data.alfa;
+    }
+
 private:
+    struct data{
+        uchar alfa;
+    };
+
+    struct data m_data;
+
+    void loadSettings();
+    void saveSettings();
+
     Ui::ui_highlighter *ui;
 };
 

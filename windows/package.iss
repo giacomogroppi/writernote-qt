@@ -7,6 +7,7 @@
 #define MyAppAssocExt ".writer"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 #define IconPath "..\images\icon-writernote.ico"
+;#define IconPath "C:\Users\giamg\Desktop\PROVA.ico"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -37,8 +38,9 @@ WizardStyle=modern
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
-; [Tasks]
-; Name: desktopicon; Description: "{cm:CreateDesktopIcon}"; Flags: checkedonce
+[Tasks]
+Name: modifypath; Description: "Add ""{app}"" to your PATH";
+Name: fileassoc; Description: "Associate .writer files with Writernote"; Flags: unchecked
 
 [Files]
 Source: "..\build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
@@ -49,18 +51,24 @@ Source: "{#IconPath}"; DestDir: "{app}"
 Source: "C:\msys64\mingw64\lib\libssl.dll.a"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Registry]
-Root: HKCR; Subkey: "{#MyAppAssocExt}"; ValueType: string; ValueName: ""; ValueData: "Writernote file"; Flags: uninsdeletevalue
-Root: HKCR; Subkey: "{#MyAppName}"; ValueType: string; ValueName: ""; ValueData: "My Program File"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "{#MyAppName}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\writernote.exe"
-Root: HKCR; Subkey: "{#MyAppName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\writernote.exe"" ""%1"""
+Root: HKCR; Subkey: ".writer"; ValueType: string; ValueName: ""; ValueData: "writernote"; Flags: uninsdeletevalue; Tasks: fileassoc
+Root: HKCR; Subkey: "writernote"; ValueType: string; ValueName: ""; ValueData: "Writernote File"; Flags: uninsdeletekey; Tasks: fileassoc
+Root: HKCR; Subkey: "writernote\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\icon-writernote.ico,0"; Tasks: fileassoc
+Root: HKCR; Subkey: "writernote\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\writernote.exe"" ""%1"""; Tasks: fileassoc
 
 [Icons]
-Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; 
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; 
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{src}\{#IconPath}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\writernote.exe"; WorkingDir: "{app}"
+Name: "{group}\Writernote"; Filename: "{app}\writernote.exe"; IconFilename: "{app}\icon-writernote.ico" 
+; Name: "{group}\writernote"; Filename: "{app}\writernote.exe"; IconFilename: {app}\icon-writernote.ico
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+const
+	ModPathName = 'modifypath';
+	ModPathType = 'user';
+function ModPathDir(): TArrayOfString;
+begin
+	setArrayLength(Result, 1);
+	Result[0] := ExpandConstant('{app}');
+end;
