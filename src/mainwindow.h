@@ -27,7 +27,7 @@
 #include "currenttitle/currenttitle_class.h"
 #include "indice_class.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
-
+#include "touch/highlighter/ui_highlighter.h"
 #include "cloud/struct_user.h"
 
 class TabletApplication;
@@ -129,6 +129,7 @@ public:
     rubber_ui *m_rubber;
     pen_ui *m_pen;
     text_ui *m_text;
+    ui_highlighter *m_highlighter;
 
     text_widgets *m_text_w;
 
@@ -330,6 +331,8 @@ private slots:
     void on_actionUpdate_writernote_triggered();
 
     void on_actionPen_or_Mouse_triggered();
+
+    void on_actionhighlighter_triggered();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;

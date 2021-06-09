@@ -446,6 +446,7 @@
    <addaction name="actionrubber"/>
    <addaction name="actionselezionetext"/>
    <addaction name="actioninsertText"/>
+   <addaction name="actionhighlighter"/>
   </widget>
   <widget class="QToolBar" name="toolBarcolore">
    <property name="windowTitle">
@@ -961,6 +962,15 @@
    </property>
    <property name="text">
     <string>Pen or Mouse</string>
+   </property>
+  </action>
+  <action name="actionhighlighter">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/highlighter.png</normaloff>:/image/images/highlighter.png</iconset>
+   </property>
+   <property name="text">
+    <string>highlighter</string>
    </property>
   </action>
  </widget>

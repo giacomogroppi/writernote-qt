@@ -58,5 +58,6 @@
         <file>images/pen_option.webp</file>
         <file>images/icon-writernote.ico</file>
         <file>images/icon-writernote.png</file>
+        <file>images/highlighter.png</file>
     </qresource>
 </RCC>

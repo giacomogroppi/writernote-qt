@@ -23,6 +23,8 @@
 #include "text/text_widgets/text_widgets.h"
 #include "../sheet/fast-sheet/fast_sheet_ui.h"
 
+#include "highlighter/ui_highlighter.h"
+
 class MainWindow;
 
 typedef struct lastpoint_struct{
@@ -98,8 +100,9 @@ public:
     enum e_method: int{
         rubber,
         pen,
-        selection, /* selezione di del testo all'interno del foglio */
-        text
+        selection,
+        text,
+        highlighter
 
     };
 
@@ -164,6 +167,7 @@ public:
     rubber_ui *m_rubber;
     pen_ui *m_pen_ui;
     text_ui *m_text;
+    ui_highlighter *m_highlighter;
 
     text_widgets *m_text_w;
 

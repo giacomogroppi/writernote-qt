@@ -97,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_rubber = new rubber_ui(this);
     this->m_pen = new pen_ui(this);
     this->m_text = new text_ui(this);
+    this->m_highlighter = new ui_highlighter(this);
 
     this->m_text_w = new text_widgets(this);
 
@@ -109,11 +110,13 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_text->setHidden(true);
     this->m_pen->setHidden(true);
     this->m_rubber->setHidden(true);
+    this->m_highlighter->setHidden(true);
 
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
     this->m_canvas->m_text = m_text;
     this->m_canvas->m_sheet = m_sheet;
+    this->m_canvas->m_highlighter = m_highlighter;
 
     this->m_canvas->m_text_w = m_text_w;
 
@@ -134,6 +137,7 @@ MainWindow::MainWindow(QWidget *parent,
     CHECKABLE(ui->actionrubber);
     CHECKABLE(ui->actionselezionetext);
     CHECKABLE(ui->actioninsertText);
+    CHECKABLE(ui->actionhighlighter);
 
     CHECKABLE(ui->actionwhite);
     CHECKABLE(ui->actionblack);
@@ -379,3 +383,4 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
     touch_or_pen = !touch_or_pen;
     update_touch_or_pen();
 }
+

@@ -12,6 +12,9 @@ ui_highlighter::ui_highlighter(QWidget *parent) :
 
     loadSettings();
 
+    ui->slider->setMinimum(0);
+    ui->slider->setMaximum(254);
+
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
 }
@@ -40,3 +43,18 @@ void ui_highlighter::saveSettings()
 
     setting.endGroup();
 }
+
+bool ui_highlighter::event(QEvent *event)
+{
+    if(event->type() == QEvent::WindowDeactivate)
+        this->hide();
+
+    return QWidget::event(event);
+
+}
+
+void ui_highlighter::on_horizontalSlider_actionTriggered(int action)
+{
+    m_data.alfa = action;
+}
+

@@ -10,6 +10,20 @@
 #define SET_CHECK(x) x->setChecked(true)
 #define SET_NOT_CHECK(x) x->setChecked(false)
 
+void MainWindow::on_actionhighlighter_triggered()
+{
+    if(m_canvas->medotodiinserimento == TabletCanvas::e_method::highlighter){
+        this->m_highlighter->show();
+
+        auto hostRect = cursor().pos();
+        m_highlighter->move(hostRect);
+    }
+
+    this->m_canvas->medotodiinserimento = TabletCanvas::e_method::highlighter;
+
+    updateTouch();
+}
+
 void MainWindow::on_actionpen_triggered()
 {
     if(m_canvas->medotodiinserimento == TabletCanvas::e_method::pen){
@@ -86,6 +100,7 @@ void MainWindow::updateTouch(){
     ui->actionrubber->setChecked(           m_canvas->medotodiinserimento == TabletCanvas::rubber);
     ui->actionselezionetext->setChecked(    m_canvas->medotodiinserimento == TabletCanvas::selection);
     ui->actioninsertText->setChecked(       m_canvas->medotodiinserimento == TabletCanvas::text);
+    ui->actionhighlighter->setChecked(      m_canvas->medotodiinserimento == TabletCanvas::highlighter);
 
     ui->actionblack->setChecked(m_canvas->m_color == Qt::black);
     ui->actionwhite->setChecked(m_canvas->m_color == Qt::white);

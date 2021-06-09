@@ -19,6 +19,9 @@ public:
         return m_data.alfa;
     }
 
+private slots:
+    void on_horizontalSlider_actionTriggered(int action);
+
 private:
     struct data{
         uchar alfa;
@@ -30,6 +33,9 @@ private:
     void saveSettings();
 
     Ui::ui_highlighter *ui;
+
+protected:
+    bool event(QEvent *) override;
 };
 
 #endif // UI_HIGHLIGHTER_H
