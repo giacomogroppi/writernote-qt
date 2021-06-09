@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../writernote.qrc">
-    <normaloff>:/image/snap/gui/icon-writernote.png</normaloff>:/image/snap/gui/icon-writernote.png</iconset>
+    <normaloff>:/image/images/icon-writernote.png</normaloff>:/image/images/icon-writernote.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -278,7 +278,7 @@
      <x>0</x>
      <y>0</y>
      <width>967</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">

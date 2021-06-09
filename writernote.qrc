@@ -56,5 +56,7 @@
         <file>images/restore-icon.png</file>
         <file>images/update-icon.png</file>
         <file>images/pen_option.webp</file>
+        <file>images/icon-writernote.ico</file>
+        <file>images/icon-writernote.png</file>
     </qresource>
 </RCC>
