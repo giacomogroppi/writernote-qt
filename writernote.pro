@@ -91,6 +91,7 @@ SOURCES += \
     src/touch/datastruct/removePage.cpp \
     src/touch/datastruct/reorganize.cpp \
     src/touch/datastruct/writtenSomething.cpp \
+    src/touch/highlighter/ui_highlighter.cpp \
     src/touch/pageCount.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
@@ -261,6 +262,7 @@ HEADERS += \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
+    src/touch/highlighter/ui_highlighter.h \
     src/touch/reduce_size/reduce_size.h \
     src/touch/scrollKinetic/ui_scroll/ui_scroll.h \
     src/touch/text/text_ui/text_ui.h \
@@ -363,6 +365,7 @@ FORMS += \
     src/sheet/fast-sheet/fast_sheet_ui.ui \
     src/style/inserttable_class.ui \
     src/touch/copy/copy_widgets.ui \
+    src/touch/highlighter/ui_highlighter.ui \
     src/touch/pen/pen_ui.ui \
     src/touch/rubber/rubber_ui.ui \
     src/touch/scrollKinetic/ui_scroll/ui_scroll.ui \
