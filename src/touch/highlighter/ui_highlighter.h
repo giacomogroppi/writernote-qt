@@ -17,12 +17,13 @@ public:
     explicit ui_highlighter(QWidget *parent = nullptr, bool *same = nullptr, pen_ui * par = nullptr);
     ~ui_highlighter();
 
-    inline uchar getAlfa(){
-        return m_data.alfa;
-    }
+    uchar getAlfa();
+    double getSize(const double pressure);
 
     bool *same_data = nullptr;
     pen_ui *m_pen = nullptr;
+
+    void updateList();
 
 private slots:
     void on_slider_actionTriggered(int action);
@@ -33,8 +34,6 @@ private:
     struct data{
         uchar alfa;
     };
-
-    void updateList();
 
     struct data m_data;
 

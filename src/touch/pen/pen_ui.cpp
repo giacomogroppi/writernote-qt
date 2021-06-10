@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #define delta 200.0
+#include "../highlighter/ui_highlighter.h"
 
 pen_ui::pen_ui(QWidget *parent) :
     QWidget(parent),
@@ -33,6 +34,8 @@ pen_ui::~pen_ui()
 }
 
 void pen_ui::list_update(){
+    ui->checkBox->setChecked(same_data);
+
     ui->slider_size->setValue(m_spessore_pen);
 
     ui->button_continua->setChecked(m_type_tratto == n_tratto::continua);
@@ -47,6 +50,10 @@ void pen_ui::list_update(){
     ui->slider_size->setSliderPosition(m_spessore_pen*delta);
 
     ui->slider_size->setEnabled(temp);
+
+    if(same_data){
+        this->m_highlighter->updateList();
+    }
 }
 
 void pen_ui::on_slider_size_valueChanged(int value)
@@ -72,7 +79,7 @@ void pen_ui::on_button_pressure_clicked()
 {
     m_type_pen = n_pressione::pressione;
 
-   this->list_update();
+    this->list_update();
 }
 
 void pen_ui::on_button_size_clicked()
@@ -88,3 +95,10 @@ bool pen_ui::event(QEvent *event){
 
     return QWidget::event(event);
 }
+
+void pen_ui::on_checkBox_stateChanged(int arg1)
+{
+    same_data = arg1;
+    this->m_highlighter->updateList();
+}
+

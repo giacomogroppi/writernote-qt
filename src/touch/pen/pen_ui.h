@@ -39,8 +39,17 @@ public:
         pressione /* the size of the pen is decide by the pressure of the pen on the screen */
     };
 
-    n_pressione m_type_pen = n_pressione::pressione;
-    double m_spessore_pen = DefaultS;
+    double getSize(const double pressure){
+        if(m_type_pen == n_pressione::pressione){
+            return pressure;
+        }
+        return m_spessore_pen;
+    }
+
+    inline double get_size_private(){
+        return m_spessore_pen;
+    };
+
     n_tratto m_type_tratto = n_tratto::continua;
 
     struct last_color m_last_color;
@@ -62,7 +71,12 @@ private slots:
     void on_button_pressure_clicked();
 
     void on_button_size_clicked();
+    void on_checkBox_stateChanged(int arg1);
+
 private:
+    n_pressione m_type_pen = n_pressione::pressione;
+    double m_spessore_pen = DefaultS;
+
     Ui::pen_ui *ui;
 
     void list_update();

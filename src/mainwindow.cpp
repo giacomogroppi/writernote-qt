@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_rubber = new rubber_ui(this);
     this->m_pen = new pen_ui(this);
     this->m_text = new text_ui(this);
-    this->m_highlighter = new ui_highlighter(this, &m_pen->same_data);
+    this->m_highlighter = new ui_highlighter(this, &m_pen->same_data, m_pen);
 
     m_pen->m_highlighter = m_highlighter;
 

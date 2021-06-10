@@ -60,7 +60,12 @@ bool ui_highlighter::event(QEvent *event)
 
 void ui_highlighter::updateList()
 {
-    ui->slider->setValue(m_data.alfa);
+    ui->same_data->setChecked(this->same_data);
+    if(same_data){
+        ui->slider->setValue(m_pen->get_size_private()*100);
+    }else{
+        ui->slider->setValue(m_data.alfa);
+    }
 }
 
 
@@ -74,5 +79,16 @@ void ui_highlighter::on_checkBox_stateChanged(int arg1)
     if(same_data){
         *same_data = arg1;
     }
+}
+
+double ui_highlighter::getSize(const double pressure){
+    if(same_data){
+        return m_pen->getSize(pressure);
+    }
+
+}
+
+uchar ui_highlighter::getAlfa(){
+    //return () ? m_data.alfa : m_pen;
 }
 
