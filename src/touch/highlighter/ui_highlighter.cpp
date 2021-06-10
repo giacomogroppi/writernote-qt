@@ -32,6 +32,7 @@ void ui_highlighter::loadSettings()
     m_data.alfa = setting.value(KEY_HIGHLIGHTER_ALFA, 50).toInt();
 
     setting.endGroup();
+    updateList();
 }
 
 void ui_highlighter::saveSettings()
@@ -53,7 +54,13 @@ bool ui_highlighter::event(QEvent *event)
 
 }
 
-void ui_highlighter::on_horizontalSlider_actionTriggered(int action)
+void ui_highlighter::updateList()
+{
+    ui->slider->setValue(m_data.alfa);
+}
+
+
+void ui_highlighter::on_slider_actionTriggered(int action)
 {
     m_data.alfa = action;
 }

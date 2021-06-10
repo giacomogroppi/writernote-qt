@@ -25,11 +25,24 @@ static bool need_to_change_color(datastruct *data, int id){
 static point_s temp_point;
 
 void TabletCanvas::updatelist(QTabletEvent *event){
+    double size;
+    uchar alfa;
+
+    size = (m_pen_ui->m_type_pen == pen_ui::pressione) ? 0 : m_pen_ui->m_spessore_pen;
+
+    if(medotodiinserimento == e_method::highlighter){
+        size = 0;
+        alfa = m_highlighter->getAlfa();
+    }else{
+        alfa = 255;
+    }
+
     if(!this->m_deviceDown){
         temp_point.idtratto = (data->datatouch->length()) ? data->datatouch->maxId() + 1 : 0;
     }
     else{
-        if(m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
+        if(medotodiinserimento == e_method::pen
+                && m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
             if(need_to_change_color(data->datatouch, data->datatouch->lastPoint()->idtratto)){
                 if(m_pen_ui->m_last_color.ok == false){
                     /* save the current color */
@@ -55,19 +68,23 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     temp_point.m_x = event->posF().x();
     temp_point.m_y = event->posF().y();
 
-    qDebug() << event->pressure() << m_pen_ui->m_spessore_pen;
-
-    if(m_pen_ui->m_type_pen == pen_ui::pressione)
+    if(!size)
         temp_point.m_pressure = event->pressure();
     else
         temp_point.m_pressure = m_pen_ui->m_spessore_pen;
+
 
     temp_point.rotation = event->rotation();
 
     temp_point.m_posizioneaudio = time/1000;
 
-
     setcolor_struct(&temp_point.m_color, m_color);
+
+    if(alfa != 255){
+        qDebug() << "alfa: " << alfa;
+    }
+
+    temp_point.m_color.colore[3] = alfa;
 
     data->datatouch->append(temp_point);
 }

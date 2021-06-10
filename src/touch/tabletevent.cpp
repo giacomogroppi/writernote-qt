@@ -19,7 +19,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     switch (eventType) {
         case QEvent::TabletPress: /* when the user release the tablet */
             if (!m_deviceDown) {
-                if(this->medotodiinserimento == e_method::pen){
+                if(medotodiinserimento == e_method::pen
+                        || medotodiinserimento == e_method::highlighter){
                     updatelist(event);
                 }
                 else if(medotodiinserimento == e_method::selection){
@@ -46,7 +47,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 #endif
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
-                if(this->medotodiinserimento == e_method::pen){
+                if(medotodiinserimento == e_method::pen
+                        || medotodiinserimento == e_method::highlighter){
                     updateBrush(event);
 
                     paintPixmap(painter, event);
@@ -56,7 +58,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 lastPoint.pressure = event->pressure();
                 lastPoint.rotation = event->rotation();
 
-                if(this->medotodiinserimento == e_method::pen){
+                if(this->medotodiinserimento == e_method::pen
+                        || medotodiinserimento == e_method::highlighter){
                     updatelist(event);
                 }
                 else if(medotodiinserimento == e_method::rubber){

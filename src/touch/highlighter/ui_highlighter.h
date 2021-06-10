@@ -20,12 +20,14 @@ public:
     }
 
 private slots:
-    void on_horizontalSlider_actionTriggered(int action);
+    void on_slider_actionTriggered(int action);
 
 private:
     struct data{
         uchar alfa;
     };
+
+    void updateList();
 
     struct data m_data;
 
