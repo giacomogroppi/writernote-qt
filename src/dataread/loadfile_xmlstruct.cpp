@@ -271,7 +271,6 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     zip_file_t *f;
 
     uchar __r;
-    size_t tmp;
 
     array->clear();
 
@@ -295,10 +294,11 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
 
         array->append((const char *)audio_data, size_audio);
     }else{
-        for(tmp = 0; tmp < size_audio; ++tmp){
+        while(size_audio){
             SOURCE_READ_GOTO(f, &__r, sizeof(uchar));
 
             array->append(__r);
+            size_audio --;
         }
     }
 

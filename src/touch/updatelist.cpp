@@ -68,8 +68,10 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     temp_point.m_x = event->posF().x();
     temp_point.m_y = event->posF().y();
 
-    if(!size)
+    if(!size){
         temp_point.m_pressure = event->pressure();
+        temp_point.m_pressure = (medotodiinserimento == e_method::highlighter) ? temp_point.m_pressure*100 : temp_point.m_pressure;
+    }
     else
         temp_point.m_pressure = m_pen_ui->m_spessore_pen;
 
