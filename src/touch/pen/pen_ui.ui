@@ -111,6 +111,13 @@
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QCheckBox" name="checkBox">
+      <property name="text">
+       <string>Same data for highlighter</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>

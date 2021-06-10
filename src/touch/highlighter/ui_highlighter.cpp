@@ -3,17 +3,21 @@
 
 #include <QSettings>
 #include "../../utils/setting_define.h"
+#include "../pen/pen_ui.h"
 
-ui_highlighter::ui_highlighter(QWidget *parent) :
+ui_highlighter::ui_highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     QDialog(parent),
     ui(new Ui::ui_highlighter)
 {
     ui->setupUi(this);
 
+    same_data = same;
+    m_pen = pen;
+
     loadSettings();
 
     ui->slider->setMinimum(0);
-    ui->slider->setMaximum(254);
+    ui->slider->setMaximum(127);
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
@@ -63,5 +67,12 @@ void ui_highlighter::updateList()
 void ui_highlighter::on_slider_actionTriggered(int action)
 {
     m_data.alfa = action;
+}
+
+void ui_highlighter::on_checkBox_stateChanged(int arg1)
+{
+    if(same_data){
+        *same_data = arg1;
+    }
 }
 

@@ -5,6 +5,8 @@
 
 #define DefaultS 0.30
 
+class ui_highlighter;
+
 struct last_color{
     bool ok;
     QColor color;
@@ -21,6 +23,8 @@ class pen_ui : public QWidget
 public:
     explicit pen_ui(QWidget *parent = nullptr);
     ~pen_ui();
+
+    ui_highlighter * m_highlighter;
 
     void save_settings();
     void load_settings();
@@ -40,6 +44,13 @@ public:
     n_tratto m_type_tratto = n_tratto::continua;
 
     struct last_color m_last_color;
+
+    /*
+     * if true we need to use the same
+     *  data for highlighter and pen
+    */
+    bool same_data;
+    void change_data();
 
 private slots:
     void on_slider_size_valueChanged(int value);
