@@ -100,6 +100,13 @@ the highlighter</string>
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QCheckBox" name="checkbox_up">
+     <property name="text">
+      <string>Place the highlighter stroke under the text</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

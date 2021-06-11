@@ -122,5 +122,6 @@
 #define KEY_HIGHLIGHTER_ALFA "key-highlighter-alfa"
 #define KEY_HIGHLIGHTER_SIZE "key-highlighter-size" /* int */
 #define KEY_HIGHLIGHTER_SPESS "key-highlighter-spess" /* bool */
+#define KEY_HIGHLIGHTER_SOTTO "key-highlighter-sotto" /* bool */
 
 #endif // SETTING_DEFINE_H

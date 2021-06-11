@@ -11,6 +11,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     need_save_tmp = true;
 
     bool sel = true;
+    bool highlighter = medotodiinserimento == e_method::highlighter;
 
     auto eventType = event->type();
 
@@ -48,7 +49,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
                 if(medotodiinserimento == e_method::pen
-                        || medotodiinserimento == e_method::highlighter){
+                        || highlighter){
                     updateBrush(event);
 
                     paintPixmap(painter, event);
@@ -58,8 +59,12 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 lastPoint.pressure = event->pressure();
                 lastPoint.rotation = event->rotation();
 
+                if(highlighter){
+                    m_highlighter->append(data->datatouch->length());
+                }
+
                 if(this->medotodiinserimento == e_method::pen
-                        || medotodiinserimento == e_method::highlighter){
+                        || highlighter){
                     updatelist(event);
                 }
                 else if(medotodiinserimento == e_method::rubber){
@@ -125,6 +130,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(m_rubber->m_type_gomma == rubber_ui::total){
                     this->m_rubber->clearList(data->datatouch);
                 }
+
+                m_highlighter->moveAll(data->datatouch);
 
                 isloading = true;
             }

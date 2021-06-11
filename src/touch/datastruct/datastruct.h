@@ -291,6 +291,10 @@ public:
         return *this;
     }
 
+    QList<struct point_s> * get_list(){
+        return &m_point;
+    }
+
 };
 
 /*

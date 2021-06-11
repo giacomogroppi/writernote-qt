@@ -4,6 +4,7 @@
 #include <QSettings>
 #include "../../utils/setting_define.h"
 #include "../pen/pen_ui.h"
+#include "../datastruct/datastruct.h"
 
 #include <QDebug>
 
@@ -45,6 +46,7 @@ void ui_highlighter::loadSettings()
     m_data.alfa = setting.value(KEY_HIGHLIGHTER_ALFA, 50).toInt();
     m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 100).toInt();
     m_data.pressure = setting.value(KEY_HIGHLIGHTER_SPESS, true).toBool();
+    m_data.tratto_sotto = setting.value(KEY_HIGHLIGHTER_SOTTO, true).toBool();
 
     setting.endGroup();
     updateList();
@@ -58,6 +60,7 @@ void ui_highlighter::saveSettings()
     setting.setValue(KEY_HIGHLIGHTER_ALFA, m_data.alfa);
     setting.setValue(KEY_HIGHLIGHTER_SIZE, m_data.size);
     setting.setValue(KEY_HIGHLIGHTER_SPESS, m_data.pressure);
+    setting.setValue(KEY_HIGHLIGHTER_SOTTO, m_data.tratto_sotto);
 
     setting.endGroup();
 }
@@ -68,7 +71,6 @@ bool ui_highlighter::event(QEvent *event)
         this->hide();
 
     return QWidget::event(event);
-
 }
 
 void ui_highlighter::updateList()
@@ -108,10 +110,19 @@ double ui_highlighter::getSize(const double pressure){
     return (m_data.pressure) ? pressure*ADD : m_data.size*ADD;
 }
 
-uchar ui_highlighter::getAlfa(){
-    return m_data.alfa;
-}
+void ui_highlighter::moveAll(datastruct *data)
+{
+    uint i, len;
+    QList<point_s > * __p = data->get_list();
 
+    len = __data.length();
+
+    for(i=1; i<=len; ++i){
+        __p->move(__data.at(i-1), i);
+    }
+
+    __data.clear();
+}
 
 void ui_highlighter::on_button_size_clicked()
 {
@@ -158,3 +169,11 @@ void ui_highlighter::on_same_data_stateChanged(int arg1)
     updateList();
     m_pen->list_update();
 }
+
+void ui_highlighter::on_checkbox_up_stateChanged(int arg1)
+{
+    m_data.tratto_sotto = arg1;
+
+    updateList();
+}
+
