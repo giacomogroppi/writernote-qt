@@ -33,6 +33,8 @@ public:
     void moveAll(datastruct *);
 
     void append(int i){
+        if(!m_data.tratto_sotto)
+            return;
         __data.append(i);
     }
 

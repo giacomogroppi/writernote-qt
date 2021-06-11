@@ -115,12 +115,16 @@ void ui_highlighter::moveAll(datastruct *data)
     uint i, len;
     QList<point_s > * __p = data->get_list();
 
+    if(!m_data.tratto_sotto)
+        goto clear;
+
     len = __data.length();
 
     for(i=1; i<=len; ++i){
         __p->move(__data.at(i-1), i);
     }
 
+    clear:
     __data.clear();
 }
 
