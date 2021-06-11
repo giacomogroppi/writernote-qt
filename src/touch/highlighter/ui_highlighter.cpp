@@ -79,16 +79,18 @@ void ui_highlighter::on_checkBox_stateChanged(int arg1)
     if(same_data){
         *same_data = arg1;
     }
+
+    m_pen->list_update();
 }
 
 double ui_highlighter::getSize(const double pressure){
     if(same_data){
         return m_pen->getSize(pressure);
     }
-
+    return (m_data.pressure) ? pressure : m_data.size;
 }
 
 uchar ui_highlighter::getAlfa(){
-    //return () ? m_data.alfa : m_pen;
+    return m_data.alfa;
 }
 

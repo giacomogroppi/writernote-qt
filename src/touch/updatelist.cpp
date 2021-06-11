@@ -22,23 +22,17 @@ static bool need_to_change_color(datastruct *data, int id){
     return (how % MAXPOINT) ? 0 : 1;
 }
 
-static point_s temp_point;
+static point_s tmp_point;
 
 void TabletCanvas::updatelist(QTabletEvent *event){
     double size;
     uchar alfa;
 
-    size = (m_pen_ui->m_type_pen == pen_ui::pressione) ? 0 : m_pen_ui->m_spessore_pen;
-
-    if(medotodiinserimento == e_method::highlighter){
-        size = 0;
-        alfa = m_highlighter->getAlfa();
-    }else{
-        alfa = 255;
-    }
+    size = event->pressure();
+    alfa = (medotodiinserimento == e_method::highlighter) ? m_highlighter->getAlfa() : 255;
 
     if(!this->m_deviceDown){
-        temp_point.idtratto = (data->datatouch->length()) ? data->datatouch->maxId() + 1 : 0;
+        tmp_point.idtratto = (data->datatouch->length()) ? data->datatouch->maxId() + 1 : 0;
     }
     else{
         if(medotodiinserimento == e_method::pen
@@ -62,33 +56,41 @@ void TabletCanvas::updatelist(QTabletEvent *event){
             }
         }
 
-        temp_point.idtratto = data->datatouch->lastPoint()->idtratto;
+        tmp_point.idtratto = data->datatouch->lastPoint()->idtratto;
     }
 
-    temp_point.m_x = event->posF().x();
-    temp_point.m_y = event->posF().y();
+    tmp_point.m_x = event->posF().x();
+    tmp_point.m_y = event->posF().y();
 
-    if(!size){
+    if(medotodiinserimento == e_method::highlighter){
+        size = m_highlighter->getSize(size);
+    }else{
+        size = m_pen_ui->getSize(size);
+    }
+
+    tmp_point.m_pressure = size;
+
+    /*if(!size){
         temp_point.m_pressure = event->pressure();
         temp_point.m_pressure = (medotodiinserimento == e_method::highlighter) ? temp_point.m_pressure*100 : temp_point.m_pressure;
     }
     else
-        temp_point.m_pressure = m_pen_ui->m_spessore_pen;
+        temp_point.m_pressure = m_pen_ui->m_spessore_pen;*/
 
 
-    temp_point.rotation = event->rotation();
+    tmp_point.rotation = event->rotation();
 
-    temp_point.m_posizioneaudio = time/1000;
+    tmp_point.m_posizioneaudio = time/1000;
 
-    setcolor_struct(&temp_point.m_color, m_color);
+    setcolor_struct(&tmp_point.m_color, m_color);
 
     if(alfa != 255){
         qDebug() << "alfa: " << alfa;
     }
 
-    temp_point.m_color.colore[3] = alfa;
+    tmp_point.m_color.colore[3] = alfa;
 
-    data->datatouch->append(temp_point);
+    data->datatouch->append(tmp_point);
 }
 
 
@@ -97,6 +99,9 @@ void TabletCanvas::updatelist(QTabletEvent *event){
  * and print the data in the painter
 */
 void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
+    Q_UNUSED(painter);
+    Q_UNUSED(event);
+
     isloading = true;
     update();
     return;

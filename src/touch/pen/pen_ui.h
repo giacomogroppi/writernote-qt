@@ -61,6 +61,8 @@ public:
     bool same_data;
     void change_data();
 
+    void list_update();
+
 private slots:
     void on_slider_size_valueChanged(int value);
 
@@ -78,8 +80,6 @@ private:
     double m_spessore_pen = DefaultS;
 
     Ui::pen_ui *ui;
-
-    void list_update();
 
 protected:
     bool event(QEvent *) override;

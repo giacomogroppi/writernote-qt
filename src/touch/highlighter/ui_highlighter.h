@@ -33,6 +33,8 @@ private slots:
 private:
     struct data{
         uchar alfa;
+        double size;
+        uchar pressure : 1; /* 1 -> pressure */
     };
 
     struct data m_data;
