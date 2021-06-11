@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>223</width>
-    <height>130</height>
+    <height>252</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>223</width>
-    <height>130</height>
+    <width>9999</width>
+    <height>9999</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,66 @@ the highlighter</string>
     </widget>
    </item>
    <item>
-    <widget class="QSlider" name="slider">
+    <widget class="QSlider" name="slider_alfa">
+     <property name="styleSheet">
+      <string notr="true">.QSlider {
+    min-height: 40px;
+    max-height: 40px;
+}
+
+.QSlider::groove:horizontal {
+    border: 1px solid gray;
+    height: 5px;
+    background: white;
+}
+
+.QSlider::handle:horizontal {
+    background: gray;
+    border: 5px solid gray;
+    width: 25px;
+    height: 50px;
+    margin: -12px -24px;
+}</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Type</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="button_pressure">
+       <property name="text">
+        <string>Pressure</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="button_size">
+       <property name="text">
+        <string>Size</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Size</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QSlider" name="slider_size">
      <property name="styleSheet">
       <string notr="true">.QSlider {
     min-height: 40px;

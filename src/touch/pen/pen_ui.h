@@ -50,6 +50,18 @@ public:
         return m_spessore_pen;
     };
 
+    inline bool IsPressure(){
+        return m_type_pen == n_pressione::pressione;
+    }
+
+    inline void setType(bool pressure){
+        if(pressure){
+            m_type_pen = n_pressione::pressione;
+        }else{
+            m_type_pen = n_pressione::spessore;
+        }
+    }
+
     n_tratto m_type_tratto = n_tratto::continua;
 
     struct last_color m_last_color;

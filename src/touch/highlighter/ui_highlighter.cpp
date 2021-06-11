@@ -16,8 +16,11 @@ ui_highlighter::ui_highlighter(QWidget *parent, bool *same, pen_ui *pen) :
 
     loadSettings();
 
-    ui->slider->setMinimum(0);
-    ui->slider->setMaximum(127);
+    ui->button_pressure->setCheckable(true);
+    ui->button_size->setCheckable(true);
+
+    ui->slider_alfa->setMinimum(0);
+    ui->slider_alfa->setMaximum(127);
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
@@ -60,12 +63,22 @@ bool ui_highlighter::event(QEvent *event)
 
 void ui_highlighter::updateList()
 {
+    bool pressure;
+
     ui->same_data->setChecked(this->same_data);
+    ui->slider_alfa->setValue(m_data.alfa);
+
     if(same_data){
-        ui->slider->setValue(m_pen->get_size_private()*100);
+        ui->slider_size->setValue(m_pen->get_size_private());
+        pressure = m_pen->IsPressure();
     }else{
-        ui->slider->setValue(m_data.alfa);
+        pressure = m_data.pressure;
+        ui->slider_size->setValue(m_data.size);
     }
+
+    ui->button_pressure->setChecked(pressure);
+    ui->button_size->setChecked(pressure);
+
 }
 
 
@@ -92,5 +105,31 @@ double ui_highlighter::getSize(const double pressure){
 
 uchar ui_highlighter::getAlfa(){
     return m_data.alfa;
+}
+
+
+void ui_highlighter::on_button_size_clicked()
+{
+    if(same_data){
+        m_pen->setType(true);
+    }else{
+        m_data.pressure = 0;
+    }
+
+    m_pen->list_update();
+    updateList();
+}
+
+
+void ui_highlighter::on_button_pressure_clicked()
+{
+    if(same_data){
+        m_pen->setType(false);
+    }else{
+        m_data.pressure = 1;
+    }
+
+    m_pen->list_update();
+    updateList();
 }
 

@@ -30,6 +30,10 @@ private slots:
 
     void on_checkBox_stateChanged(int arg1);
 
+    void on_button_size_clicked();
+
+    void on_button_pressure_clicked();
+
 private:
     struct data{
         uchar alfa;
