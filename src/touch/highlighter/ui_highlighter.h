@@ -7,6 +7,8 @@ namespace Ui {
 class ui_highlighter;
 }
 
+#define ADD 100
+
 class pen_ui;
 
 class ui_highlighter : public QDialog
@@ -28,11 +30,13 @@ public:
 private slots:
     void on_slider_actionTriggered(int action);
 
-    void on_checkBox_stateChanged(int arg1);
-
     void on_button_size_clicked();
 
     void on_button_pressure_clicked();
+
+    void on_slider_size_actionTriggered(int action);
+
+    void on_same_data_stateChanged(int arg1);
 
 private:
     struct data{

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>223</width>
-    <height>252</height>
+    <width>604</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -31,24 +31,7 @@ the highlighter</string>
    <item>
     <widget class="QSlider" name="slider_alfa">
      <property name="styleSheet">
-      <string notr="true">.QSlider {
-    min-height: 40px;
-    max-height: 40px;
-}
-
-.QSlider::groove:horizontal {
-    border: 1px solid gray;
-    height: 5px;
-    background: white;
-}
-
-.QSlider::handle:horizontal {
-    background: gray;
-    border: 5px solid gray;
-    width: 25px;
-    height: 50px;
-    margin: -12px -24px;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -95,11 +78,7 @@ the highlighter</string>
     max-height: 40px;
 }
 
-.QSlider::groove:horizontal {
-    border: 1px solid gray;
-    height: 5px;
-    background: white;
-}
+
 
 .QSlider::handle:horizontal {
     background: gray;

@@ -51,7 +51,7 @@ void pen_ui::list_update(){
 
     ui->slider_size->setEnabled(temp);
 
-    if(same_data){
+    if(same_data && m_highlighter){
         this->m_highlighter->updateList();
     }
 }

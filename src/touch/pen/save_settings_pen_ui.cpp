@@ -11,7 +11,7 @@ void pen_ui::save_settings(){
     setting.setValue(KEY_PEN_SIZE, m_spessore_pen);
     setting.setValue(KEY_PEN_TYPE, m_type_pen);
     setting.setValue(KEY_PEN_TIPO_TRATTO, m_type_tratto);
+    setting.setValue(KEY_PEN_SAME_DATA, same_data);
 
     setting.endGroup();
-
 }

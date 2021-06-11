@@ -36,6 +36,7 @@
 #define KEY_PEN_SIZE "pen_key_size"
 #define KEY_PEN_TYPE "type_of_pen_key"
 #define KEY_PEN_TIPO_TRATTO "key_tipo_tratto"
+#define KEY_PEN_SAME_DATA "key-same-data-pen"
 
 /* last file open*/
 #define GROUPNAME_LAST_FILE "group_last_file"
@@ -119,5 +120,7 @@
 /* highlighter */
 #define GROUPNAME_HIGHLIGHTER "groupname-highlighter"
 #define KEY_HIGHLIGHTER_ALFA "key-highlighter-alfa"
+#define KEY_HIGHLIGHTER_SIZE "key-highlighter-size" /* int */
+#define KEY_HIGHLIGHTER_SPESS "key-highlighter-spess" /* bool */
 
 #endif // SETTING_DEFINE_H

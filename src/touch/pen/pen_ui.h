@@ -24,7 +24,7 @@ public:
     explicit pen_ui(QWidget *parent = nullptr);
     ~pen_ui();
 
-    ui_highlighter * m_highlighter;
+    ui_highlighter * m_highlighter = nullptr;
 
     void save_settings();
     void load_settings();
@@ -60,6 +60,11 @@ public:
         }else{
             m_type_pen = n_pressione::spessore;
         }
+    }
+
+    void setWidthTratto(const int size){
+        m_spessore_pen = size;
+        list_update();
     }
 
     n_tratto m_type_tratto = n_tratto::continua;
