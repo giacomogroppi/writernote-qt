@@ -2,7 +2,7 @@
 Name=writernote
 Comment=Take notes smart
 Exec=writernote
-Icon=${SNAP}/meta/gui/icon-writernote.png
+Icon=${SNAP}/meta/gui/writernote-second-icon.png
 Terminal=false
 Type=Application
 Encoding=UTF-8
