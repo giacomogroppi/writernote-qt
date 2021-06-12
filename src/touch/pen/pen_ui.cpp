@@ -2,7 +2,7 @@
 #include "ui_pen_ui.h"
 
 #include <QDebug>
-#define delta 200.0
+#define DELTA 200.0
 #include "../highlighter/ui_highlighter.h"
 
 pen_ui::pen_ui(QWidget *parent) :
@@ -47,7 +47,7 @@ void pen_ui::list_update(){
     ui->button_size->setChecked(temp);
 
     ui->slider_size->setDisabled(temp);
-    ui->slider_size->setSliderPosition(m_spessore_pen*delta);
+    ui->slider_size->setSliderPosition(m_spessore_pen*DELTA);
 
     ui->slider_size->setEnabled(temp);
 
@@ -58,7 +58,7 @@ void pen_ui::list_update(){
 
 void pen_ui::on_slider_size_valueChanged(int value)
 {
-    m_spessore_pen = double(value)/delta;
+    m_spessore_pen = double(value)/DELTA;
 }
 
 void pen_ui::on_button_continua_clicked()
