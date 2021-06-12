@@ -40,7 +40,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: modifypath; Description: "Add ""{app}"" to your PATH";
-Name: fileassoc; Description: "Associate .writer files with Writernote"; Flags: unchecked
+Name: fileassoc; Description: "Associate .writer files with Writernote"; Flags: checkablealone
 
 [Files]
 Source: "..\build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion

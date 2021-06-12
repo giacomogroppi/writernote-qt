@@ -11,7 +11,7 @@
 static int mostra(const char *comando);
 
 #if defined(unix)
-#define APPLICATION_NAME "nautilus "
+#define APPLICATION_NAME (QString)"nautilus "
 #elif defined(WIN32) || defined(WIN64) || defined(__OS2__)
 #define APPLICATION_NAME (QString)"explorer.exe "
 static void replace(char *data);
