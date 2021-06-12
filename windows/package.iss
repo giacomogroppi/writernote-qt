@@ -7,7 +7,6 @@
 #define MyAppAssocExt ".writer"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 #define IconPath "..\images\icon-writernote.ico"
-;#define IconPath "C:\Users\giamg\Desktop\PROVA.ico"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
