@@ -99,6 +99,7 @@ bool pen_ui::event(QEvent *event){
 void pen_ui::on_checkBox_stateChanged(int arg1)
 {
     same_data = arg1;
-    this->m_highlighter->updateList();
+    if(m_highlighter)
+        this->m_highlighter->updateList();
 }
 

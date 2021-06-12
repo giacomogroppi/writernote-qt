@@ -5,13 +5,15 @@
 #include <QtConcurrent/QtConcurrent>
 
 #include "../../windows/mostra_finestra_i.h"
+#include "../dialog_critic/dialog_critic.h"
+#include "../slash/slash.h"
 
-static void mostra(const char *comando);
+static int mostra(const char *comando);
 
 #if defined(unix)
 #define APPLICATION_NAME "nautilus "
 #elif defined(WIN32) || defined(WIN64) || defined(__OS2__)
-#define APPLICATION_NAME "explorer "
+#define APPLICATION_NAME (QString)"explorer.exe "
 static void replace(char *data);
 #endif
 
@@ -23,13 +25,16 @@ void mostra_explorer(QString posizione)
 
     posizione = remove_s(posizione.toUtf8().constData());
 
-    comando = ((QString)APPLICATION_NAME + posizione).toUtf8().constData();
+    comando = (APPLICATION_NAME + posizione).toUtf8().constData();
 
     /*
      * in windows we don't need to run it in an other thread
     */
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
-    mostra(comando);
+    if(mostra(comando)){
+        dialog_critic("We had a problem opening " + APPLICATION_NAME);
+    }
+
 #elif unix
     mostra_finestra_i(posizione.toUtf8().constData());
     //QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
@@ -38,35 +43,32 @@ void mostra_explorer(QString posizione)
 }
 
 
-static void mostra(const char *comando){
-    system(comando);
+static int mostra(const char *comando){
+    return system(comando);
 }
-
-#define S '/'
-
 
 static QString remove_s(const char *stringa){
     int i, len;
+    char *tmp;
+    QString string_r;
 
     len = strlen(stringa);
 
     for(i=len; i>0; i--)
-        if(stringa[i] == S)
+        if(stringa[i] == slash::__slash())
             break;
 
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
     /*
      * we can't modify the data return from .toutf8.constdata() [QString]
     */
-    QString string_r;
-    char * temp = new char [len];
+    tmp = new char [len];
 
-    memcpy(temp, stringa, sizeof(char)*len);
+    memcpy(tmp, stringa, sizeof(char)*len);
 
-    replace(temp);
-    string_r = temp;
+    string_r = tmp;
 
-    delete [] temp;
+    delete [] tmp;
 
     return string_r.mid(0, i);
 
@@ -75,14 +77,3 @@ static QString remove_s(const char *stringa){
 #endif
 
 }
-
-#if defined(WIN64) || defined(WIN32) || defined(__OS2__)
-#define C '\\'
-
-static void replace(char *data){
-    for(int i=0; data[i] != '\0'; i++)
-        if(data[i] == S)
-            data[i] = C;
-
-}
-#endif
