@@ -8,6 +8,9 @@
 
 #include <QDebug>
 
+#define MAX_ALFA 32
+#define MIN_ALFA 1
+
 ui_highlighter::ui_highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     QDialog(parent),
     ui(new Ui::ui_highlighter)
@@ -20,8 +23,8 @@ ui_highlighter::ui_highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     ui->button_pressure->setCheckable(true);
     ui->button_size->setCheckable(true);
 
-    ui->slider_alfa->setMinimum(0);
-    ui->slider_alfa->setMaximum(127);
+    ui->slider_alfa->setMinimum(MIN_ALFA);
+    ui->slider_alfa->setMaximum(MAX_ALFA);
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
@@ -43,8 +46,8 @@ void ui_highlighter::loadSettings()
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_HIGHLIGHTER);
 
-    m_data.alfa = setting.value(KEY_HIGHLIGHTER_ALFA, 50).toInt();
-    m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 100).toInt();
+    m_data.alfa = setting.value(KEY_HIGHLIGHTER_ALFA, MAX_ALFA).toInt();
+    m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 20).toInt();
     m_data.pressure = setting.value(KEY_HIGHLIGHTER_SPESS, true).toBool();
     m_data.tratto_sotto = setting.value(KEY_HIGHLIGHTER_SOTTO, true).toBool();
 
@@ -131,7 +134,7 @@ void ui_highlighter::moveAll(datastruct *data)
 void ui_highlighter::on_button_size_clicked()
 {
     if(*same_data){
-        m_pen->setType(true);
+        m_pen->setType(false);
     }else{
         m_data.pressure = 0;
     }
@@ -144,7 +147,7 @@ void ui_highlighter::on_button_size_clicked()
 void ui_highlighter::on_button_pressure_clicked()
 {
     if(*same_data){
-        m_pen->setType(false);
+        m_pen->setType(true);
     }else{
         m_data.pressure = 1;
     }
