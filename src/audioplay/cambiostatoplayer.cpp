@@ -39,6 +39,8 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
         this->ui->statusBar->clearMessage();
 
         this->ui->textEdit->setHtml(this->m_currenttitle->testi);
+
+        m_canvas->m_pos_ris = -1;
     }
     else if(state == QMediaPlayer::PlayingState || state == QMediaPlayer::PausedState){
         this->ui->listWidgetSX->setEnabled(false);

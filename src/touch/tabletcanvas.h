@@ -126,7 +126,6 @@ public:
 
     /* funzioni responsabili del riascolto */
     void riascolto(int);
-    bool riascoltovariable = false;
 
     /*
      * indice la posizione del replay
