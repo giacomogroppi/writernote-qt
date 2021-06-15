@@ -47,7 +47,7 @@ void ui_highlighter::loadSettings()
     setting.beginGroup(GROUPNAME_HIGHLIGHTER);
 
     m_data.alfa = setting.value(KEY_HIGHLIGHTER_ALFA, MAX_ALFA).toInt();
-    m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 20).toInt();
+    m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 7).toInt();
     m_data.pressure = setting.value(KEY_HIGHLIGHTER_SPESS, true).toBool();
     m_data.tratto_sotto = setting.value(KEY_HIGHLIGHTER_SOTTO, true).toBool();
 
@@ -101,7 +101,7 @@ void ui_highlighter::updateList()
 }
 
 
-void ui_highlighter::on_slider_actionTriggered(int action)
+void ui_highlighter::on_slider_alfa_actionTriggered(int action)
 {
     m_data.alfa = action;
 }
@@ -181,4 +181,3 @@ void ui_highlighter::on_checkbox_up_stateChanged(int arg1)
 
     updateList();
 }
-

@@ -59,5 +59,6 @@
         <file>images/icon-writernote.ico</file>
         <file>images/icon-writernote.png</file>
         <file>images/highlighter.png</file>
+        <file>images/pen_option.png</file>
     </qresource>
 </RCC>

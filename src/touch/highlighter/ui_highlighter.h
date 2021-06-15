@@ -41,7 +41,7 @@ public:
     void updateList();
 
 private slots:
-    void on_slider_actionTriggered(int action);
+    //void on_slider_actionTriggered(int action);
 
     void on_button_size_clicked();
 
@@ -52,6 +52,8 @@ private slots:
     void on_same_data_stateChanged(int arg1);
 
     void on_checkbox_up_stateChanged(int arg1);
+
+    void on_slider_alfa_actionTriggered(int action);
 
 private:
 

@@ -278,7 +278,7 @@
      <x>0</x>
      <y>0</y>
      <width>967</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">
@@ -958,7 +958,7 @@
    </property>
    <property name="icon">
     <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/pen_option.webp</normaloff>:/image/images/pen_option.webp</iconset>
+     <normaloff>:/image/images/pen_option.png</normaloff>:/image/images/pen_option.png</iconset>
    </property>
    <property name="text">
     <string>Pen or Mouse</string>
