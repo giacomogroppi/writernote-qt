@@ -110,6 +110,7 @@ double ui_highlighter::getSize(const double pressure){
     if(*same_data){
         return m_pen->getSize(pressure)*ADD*ADD;
     }
+    qDebug() << "high size: " << m_data.size*ADD;
     return (m_data.pressure) ? pressure*ADD : m_data.size*ADD;
 }
 
@@ -159,13 +160,11 @@ void ui_highlighter::on_button_pressure_clicked()
 void ui_highlighter::on_slider_size_actionTriggered(int action)
 {
     if(*same_data){
-        m_pen->setWidthTratto(action);
+        m_pen->setWidthTratto(double(action)/100);
     }else{
-        m_data.size = action;
+        m_data.size = double(action)/100;
     }
-
 }
-
 
 void ui_highlighter::on_same_data_stateChanged(int arg1)
 {
