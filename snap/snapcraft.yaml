@@ -106,7 +106,8 @@ parts:
       qmake DEFINES+="SNAP" DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION #DEFINES+=QT_NO_DEBUG_OUTPUT
 
       snapcraftctl build
-      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/      
+      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
+      ldd build/writernote
       cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
 
 
@@ -173,8 +174,8 @@ parts:
       - libxcb1-dev
       - libqt5waylandclient5-dev
       - libqt5svg5-dev
-      - liblzma-dev
-      - libgtk-3-dev
+      #- liblzma-dev
+      #- libgtk-3-dev
       - libglib2.0-dev
       - qtbase5-private-dev
       - libopus-dev

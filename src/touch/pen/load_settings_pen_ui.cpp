@@ -17,6 +17,8 @@ void pen_ui::load_settings(){
         m_spessore_pen = DefaultS;
     }
 
+    same_data = setting.value(KEY_PEN_SAME_DATA, false).toBool();
+
     setting.endGroup();
 
     this->list_update();
