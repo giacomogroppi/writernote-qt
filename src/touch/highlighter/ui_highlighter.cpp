@@ -108,7 +108,7 @@ void ui_highlighter::on_slider_actionTriggered(int action)
 
 double ui_highlighter::getSize(const double pressure){
     if(*same_data){
-        return m_pen->getSize(pressure)*ADD;
+        return m_pen->getSize(pressure)*ADD*ADD;
     }
     return (m_data.pressure) ? pressure*ADD : m_data.size*ADD;
 }
@@ -143,7 +143,6 @@ void ui_highlighter::on_button_size_clicked()
     updateList();
 }
 
-
 void ui_highlighter::on_button_pressure_clicked()
 {
     if(*same_data){
@@ -162,7 +161,7 @@ void ui_highlighter::on_slider_size_actionTriggered(int action)
     if(*same_data){
         m_pen->setWidthTratto(action);
     }else{
-        m_data.pressure = action;
+        m_data.size = action;
     }
 
 }
