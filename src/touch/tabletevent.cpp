@@ -15,13 +15,13 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
     auto eventType = event->type();
 
-    qDebug() << eventType;
+    //qDebug() << eventType;
 
     switch (eventType) {
         case QEvent::TabletPress: /* when the user release the tablet */
             if (!m_deviceDown) {
                 if(medotodiinserimento == e_method::pen
-                        || medotodiinserimento == e_method::highlighter){
+                        || highlighter){
                     updatelist(event);
                 }
                 else if(medotodiinserimento == e_method::selection){

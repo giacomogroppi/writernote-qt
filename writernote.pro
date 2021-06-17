@@ -61,6 +61,8 @@ SOURCES += \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
+    src/currenttitle/option/main_exe.cpp \
+    src/currenttitle/option/ui_option_copybook.cpp \
     src/datamanage/retry_save_audio.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
@@ -249,6 +251,7 @@ SOURCES += \
 HEADERS += \
     src/currenttitle/default_type/default_type.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
+    src/currenttitle/option/ui_option_copybook.h \
     src/datamanage/retry_save_audio.h \
     src/filelost.h \
     src/last_open/option/option_last_open_ui.h \
@@ -354,6 +357,7 @@ HEADERS += \
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
+    src/currenttitle/option/ui_option_copybook.ui \
     src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \
     src/last_open/option/option_last_open_ui.ui \

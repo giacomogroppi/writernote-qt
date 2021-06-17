@@ -43,6 +43,7 @@
 #include "restore_file/ui/setting_restore_ui.h"
 #include "touch/scrollKinetic/ui_scroll/ui_scroll.h"
 #include "utils/common_def.h"
+#include "currenttitle/option/ui_option_copybook.h"
 
 MainWindow::MainWindow(QWidget *parent,
                        TabletCanvas *canvas,
@@ -101,10 +102,9 @@ MainWindow::MainWindow(QWidget *parent,
 
     m_pen->m_highlighter = m_highlighter;
 
+    this->m_option_copybook = new ui_option_copybook(this);
     this->m_text_w = new text_widgets(this);
-
     this->m_sheet = new fast_sheet_ui(this);
-
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice, &m_path);
 
     this->m_sheet->setHidden(true);
@@ -385,4 +385,5 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
     touch_or_pen = !touch_or_pen;
     update_touch_or_pen();
 }
+
 

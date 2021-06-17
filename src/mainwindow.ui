@@ -340,6 +340,7 @@
     <addaction name="actionChange_language"/>
     <addaction name="actionScroll"/>
     <addaction name="actionLast_open_file"/>
+    <addaction name="actionCopybook"/>
    </widget>
    <widget class="QMenu" name="menuFile_restore">
     <property name="title">
@@ -971,6 +972,11 @@
    </property>
    <property name="text">
     <string>highlighter</string>
+   </property>
+  </action>
+  <action name="actionCopybook">
+   <property name="text">
+    <string>Copybook</string>
    </property>
   </action>
  </widget>

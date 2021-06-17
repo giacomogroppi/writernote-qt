@@ -31,6 +31,7 @@
 #include "cloud/struct_user.h"
 
 class TabletApplication;
+class ui_option_copybook;
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s) STRINGIZE2(s)
@@ -132,6 +133,7 @@ public:
     ui_highlighter *m_highlighter;
 
     text_widgets *m_text_w;
+    ui_option_copybook *m_option_copybook;
 
     struct struct_user *m_user;
 
@@ -333,6 +335,8 @@ private slots:
     void on_actionPen_or_Mouse_triggered();
 
     void on_actionhighlighter_triggered();
+
+    void on_actionCopybook_triggered();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;

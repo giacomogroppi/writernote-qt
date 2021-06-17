@@ -62,7 +62,7 @@ public:
         }
     }
 
-    void setWidthTratto(const int size){
+    void setWidthTratto(const double size){
         m_spessore_pen = size;
         list_update();
     }

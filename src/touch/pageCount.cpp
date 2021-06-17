@@ -39,7 +39,8 @@ void TabletCanvas::updatePageCount(){
         }
     }
 
-    ++i;
+    if(i < (uint)data->datatouch->posizionefoglio.length())
+        ++i;
 
     if(lastPage != i){
         lastPage = i;
