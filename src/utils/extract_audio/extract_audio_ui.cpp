@@ -59,7 +59,7 @@ bool extract_audio_ui::event(QEvent *event)
          * click outside the box
         */
         if(event->type() == QEvent::MouseButtonPress && !ui->edit_path->toPlainText().isEmpty()){
-            QFile file(ui->edit_path->toPlainText().TOUTF);
+            QFile file(ui->edit_path->toPlainText());
             if(file.exists()){
                 this->ChangeColor(Qt::green);
             }

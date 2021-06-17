@@ -10,7 +10,9 @@
 /*
  * the function extract an audio from a copybook, into path_to
 */
-extract::n_extract extract_audio(const char *path, const char *namecopybook, const char *path_to){
+extract::n_extract extract_audio(const char *path,
+                                 const char *namecopybook,
+                                 const char *path_to){
     QString m_path = path, m_namecopybook = namecopybook, m_path_to = path_to;
 
     indice_class * indice = new indice_class;
