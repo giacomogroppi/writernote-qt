@@ -92,7 +92,7 @@ void extract_audio_ui::on_button_close_clicked()
 
 void extract_audio_ui::on_extract_to_clicked()
 {
-    QFile file_temp = QFile(ui->edit_path->toPlainText().TOUTF);
+    QFile file_temp(ui->edit_path->toPlainText());
     if(!file_temp.exists())
         return dialog_critic("The file didn't exist");
 
