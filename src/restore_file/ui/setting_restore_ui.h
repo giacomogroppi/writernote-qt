@@ -6,13 +6,13 @@
 
 struct __data{
     /* true enable */
-    bool autosave;
-    bool temp_file;
+    bool autosave : 1;
+    bool temp_file : 1;
 
     uint t_autosave;
     uint t_temp_file;
 
-    bool remove_file; /* false do not remove the file after writernote close */
+    bool remove_file : 1; /* false do not remove the file after writernote close */
 
 };
 
