@@ -48,7 +48,8 @@ public:
     void changeCopybookFile(){
         if(m_data.remove_file
                 && m_data.temp_file
-                && *m_path != ""){
+                && (*m_path != ""
+                || tmp_path != "")){
             deleteFile();
         }
     }
@@ -57,6 +58,7 @@ private:
 
     void deleteFile();
 
+    QString tmp_path;
     QString *m_path;
 
     void startTimerSetting();

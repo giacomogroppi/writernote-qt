@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>566</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,12 +18,15 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>381</width>
-     <height>31</height>
+     <width>421</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="text">
-    <string>With writernote you </string>
+    <string>With writernote you can quickly decide what the application 
+should do with your files, individually deciding for each mode 
+the creation time of the temporary 
+file, to set the autosave, and other things.</string>
    </property>
   </widget>
  </widget>

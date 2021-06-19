@@ -76,7 +76,7 @@ setting_restore_ui::~setting_restore_ui()
 
 void setting_restore_ui::deleteFile()
 {
-    QString ff = get_name_tmp::get(*m_path);
+    QString ff = (*m_path != "") ? get_name_tmp::get(*m_path) : get_name_tmp::get(tmp_path);
 
     if(!QFile::exists(ff)){
         return;

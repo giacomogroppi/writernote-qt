@@ -250,6 +250,7 @@ SOURCES += \
 
 HEADERS += \
     src/currenttitle/default_type/default_type.h \
+    src/currenttitle/option/modality_data.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/currenttitle/option/ui_option_copybook.h \
     src/datamanage/retry_save_audio.h \
