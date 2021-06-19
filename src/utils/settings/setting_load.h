@@ -1,10 +1,8 @@
 #ifndef SETTING_LOAD_H
 #define SETTING_LOAD_H
 
-#include "../../mainwindow.h"
-#include "ui_mainwindow.h"
+class MainWindow;
 
-
-void setting_load(MainWindow *);
+void setting_load(MainWindow *parent);
 
 #endif // SETTING_LOAD_H

@@ -12,6 +12,8 @@
 
 #include <QByteArray>
 
+#define DEF_METHOD true
+
 class currenttitle_class{
 public:
     size_t createSingleControll() const;
@@ -28,12 +30,10 @@ public:
     QList<int> posizione_iniz = {};
 
     bool isOkVersion() const{
-        if(this->versione < MIN_VERSION_CURRENT_TITLE)
-            return false;
-        return true;
+        return this->versione >= MIN_VERSION_CURRENT_TITLE;
     }
 
-    bool m_touch = false;
+    bool m_touch = DEF_METHOD;
     datastruct *datatouch;
     void reset();
 

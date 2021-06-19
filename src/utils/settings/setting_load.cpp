@@ -2,6 +2,8 @@
 
 #include <QSettings>
 #include "../setting_define.h"
+#include "../../mainwindow.h"
+#include "ui_mainwindow.h"
 
 static void setting_load_list_hidden(MainWindow *);
 
@@ -21,8 +23,7 @@ static void setting_load_redoundo(MainWindow *parent){
     setting.endGroup();
 }
 
-void setting_load(MainWindow *parent)
-{
+static void geometry(MainWindow *parent){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
 
@@ -30,9 +31,22 @@ void setting_load(MainWindow *parent)
     parent->setGeometry(value_rect);
 
     setting.endGroup();
+}
 
+void MainWindow::loadPenOrMouse(){
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_INSERT_METHOD_PEN_MOUSE);
+    touch_or_pen = setting.value(KEY_INSERT_METHOD_PEN_MOUSE, false).toBool();
+    setting.endGroup();
+    update_touch_or_pen();
+}
+
+void setting_load(MainWindow *parent)
+{
+    geometry(parent);
     setting_load_redoundo(parent);
     setting_load_list_hidden(parent);
+    parent->loadPenOrMouse();
 }
 
 static void hideinstart(MainWindow *parent, bool check){

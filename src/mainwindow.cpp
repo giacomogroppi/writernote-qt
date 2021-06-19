@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent,
     setting_ui_start(this);
 
     this->ui->layouteditor->insertWidget(1, this->m_canvas);
-    this->m_canvas->setHidden(true);
+    //this->m_canvas->setHidden(true);
 
     abilitazioneinput(this);
 
@@ -217,7 +217,6 @@ void MainWindow::on_actionNew_File_triggered()
     m_indice.reset();
     ui->listWidgetSX->clear();
     m_canvas->clear();
-    setting_load(this);
     abilitazioneinput(this);
     setting_ui_start(this);
     m_path = "";
@@ -231,7 +230,8 @@ void MainWindow::on_textEdit_selectionChanged(){
     QString text = ui->textEdit->textCursor().selectedText();
     int position = ui->textEdit->textCursor().selectionStart();
 
-    int i = 1, audio;
+    int i = 1;
+    qint64 audio;
     while (true){
         if ((position >= m_currenttitle->testinohtml[i-1].length()) && (position <= m_currenttitle->testinohtml[i+1].length())){
             audio = m_currenttitle->posizione_iniz[i];
@@ -370,14 +370,6 @@ void MainWindow::on_actionnewPage_triggered()
 {
     m_canvas->disegnofoglio_bool = true;
     m_canvas->needUpdate();
-}
-
-void MainWindow::loadPenOrMouse(){
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_INSERT_METHOD_PEN_MOUSE);
-    touch_or_pen = setting.value(KEY_INSERT_METHOD_PEN_MOUSE, false).toBool();
-    setting.endGroup();
-    update_touch_or_pen();
 }
 
 void MainWindow::on_actionPen_or_Mouse_triggered()

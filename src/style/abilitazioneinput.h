@@ -1,7 +1,7 @@
 #ifndef ABILITAZIONEINPUT_H
 #define ABILITAZIONEINPUT_H
 
-#include "../mainwindow.h"
+class MainWindow;
 
 void abilitazioneinput(MainWindow *);
 

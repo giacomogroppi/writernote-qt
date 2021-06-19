@@ -66,7 +66,7 @@ void currenttitle_class::reset(){
     this->se_registato = currenttitle_class::not_record;
     this->se_tradotto = false;
     this->audio_position_path = "";
-    this->m_touch = false;
+    this->m_touch = DEF_METHOD;
     this->testi.clear();
     this->testinohtml.clear();
     this->posizione_iniz.clear();
