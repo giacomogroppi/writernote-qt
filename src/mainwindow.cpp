@@ -165,6 +165,12 @@ MainWindow::MainWindow(QWidget *parent,
     ui->actionUpdate_writernote->setVisible(false);
 
     loadPenOrMouse();
+
+    if(m_currenttitle->m_touch){
+        this->m_canvas->settingdata(m_currenttitle, m_path);
+        this->m_canvas->loadpixel();
+        this->m_canvas->time = 0;
+    }
 }
 
 MainWindow::~MainWindow()
@@ -253,7 +259,6 @@ void MainWindow::on_textEdit_selectionChanged(){
 }
 
 
-/* AUDIO TESTING */
 void MainWindow::togglePause()
 {
     if (m_audioRecorder->state() != QMediaRecorder::PausedState)
@@ -335,9 +340,6 @@ void MainWindow::on_actionCopy_triggered()
     this->ui->textEdit->copy();
 }
 
-#define VERSION_MAJOR 4.432.234
-
-
 void MainWindow::on_actionVersion_triggered()
 {
 #ifdef VERSION_SNAPCRAFT
@@ -346,7 +348,6 @@ void MainWindow::on_actionVersion_triggered()
     messaggio_utente("Current version is " + (QString)NO_VER_DEF);
 #endif
 }
-
 
 void MainWindow::on_actionUndu_triggered()
 {

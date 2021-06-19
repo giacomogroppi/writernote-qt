@@ -110,7 +110,6 @@ public:
 
     QColor m_color = Qt::black;
 
-    void loadfile();
     bool isloading = false;
 
 #define DEFAULT_PASS_ARGUMENT_LOAD -1

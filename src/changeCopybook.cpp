@@ -65,14 +65,14 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     this->setWindowTitle("Writernote - " + m_currentTitle);
 
     if(!m_currenttitle->m_touch)
-        this->ui->textEdit->setHtml(m_currenttitle->testi);
+        ui->textEdit->setHtml(m_currenttitle->testi);
 
     settingtextedit(this, true);
     settingstyle(this, true);
 
     aggiornotestiriascolto(this);
     abilitazioneinput(this);
-    this->ui->actionPrint->setEnabled(true);
+    ui->actionPrint->setEnabled(true);
 
     /* pass the pointer to the class */
     if(m_currenttitle->m_touch){
