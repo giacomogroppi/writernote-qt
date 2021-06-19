@@ -66,6 +66,8 @@ class MainWindow : public QMainWindow
 public:
     void updateTouch();
 
+    void openFirstCopybook();
+
     enum n_need_save: uchar{
         unable_load, /*we had trouble loading the file*/
         not_, /* we don't have to save the file */

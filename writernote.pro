@@ -72,6 +72,7 @@ SOURCES += \
     src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \
     src/needToSave.cpp \
+    src/openFirstCopybook.cpp \
     src/open_file.cpp \
     src/restore_file/get_name_available.cpp \
     src/restore_file/restore_file.cpp \

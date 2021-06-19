@@ -12,9 +12,9 @@
 #include <QFile>
 
 static void setData(last_file *, QString & time_now, QString & day_now);
-static void setPosition(last_file * data, QString &pos);
+static void setPosition(last_file * data, const QString &pos);
 
-void save_data(QString &path, int type, int owner_type, char *owner)
+void save_data(const QString &path, int type, int owner_type, char *owner)
 {
     if(path.isEmpty())
         return;
@@ -25,12 +25,13 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     quanti = load_quanti();
 
     last_file * m_lista = load_data(quanti);
+    QString owner_string;
 
     if(!m_lista){
         quanti = 0;
     }
 
-    for(i=0, uguale = false; i<quanti && !uguale; i++){
+    for(i=0, uguale = false; i<quanti && !uguale; ++i){
         if(strcmp(m_lista[i].posizione, TOCHAR(path)) == 0){
             uguale = true;
         }
@@ -49,6 +50,7 @@ void save_data(QString &path, int type, int owner_type, char *owner)
     else{
         quanti ++;
         last_file temp_append;
+        QByteArray array ;
 
         setData(&temp_append, time_now, day_now);
 
@@ -58,14 +60,11 @@ void save_data(QString &path, int type, int owner_type, char *owner)
 
         /* cloud */
         if(owner){
-            qDebug("Change position because it's owner is external ");
-            QString owner_string = owner;
+            owner_string = owner;
             setPosition(&temp_append, owner_string);
         }
 
         temp_append.type = TYPE_COMPUTER;
-
-        QByteArray array ;
 
         if(m_lista)
             array.append((const char *)m_lista, sizeof(last_file)*(quanti-1));
@@ -117,7 +116,7 @@ void save_data_f(int quanti, last_file *m_lista){
  * TODO -> implement a method in which only
  * strings and numbers are saved, and not structs
 */
-void save_data_f(QByteArray &array){
+void save_data_f(const QByteArray &array){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_LAST_FILE);
     setting.setValue(KEY_LAST_BASE_FILE, array);
@@ -129,7 +128,7 @@ static void setData(last_file *data, QString & time_now, QString & day_now){
     strncpy(data->last_modification_o, TOCHAR(time_now), sizeof(data->last_modification_o));
 }
 
-static void setPosition(last_file * data, QString &pos){
+static void setPosition(last_file * data, const QString &pos){
     strncpy(data->posizione, TOCHAR(pos), sizeof(data->posizione));
 }
 

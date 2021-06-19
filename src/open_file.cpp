@@ -79,6 +79,8 @@ void MainWindow::openFile(const char *pos){
     if(this->m_indice.titolo.length() > 0)
         this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook();
+
+    this->openFirstCopybook();
 }
 
 void MainWindow::on_actionOpen_triggered()

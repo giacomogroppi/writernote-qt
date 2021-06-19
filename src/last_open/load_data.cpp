@@ -19,11 +19,13 @@ last_file * load_data(int quanti)
         return NULL;
 
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    QByteArray array;
+    last_file *temp;
+    last_file *temp_return;
+
     setting.beginGroup(GROUPNAME_LAST_FILE);
 
-    last_file *temp;
-
-    auto array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
+    array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
     setting.endGroup();
 
     /* check the integrity of data */
@@ -32,9 +34,11 @@ last_file * load_data(int quanti)
 
     temp = (last_file *)array.data();
 
-    last_file *temp_return;
 
     temp_return = (last_file *)malloc(sizeof(last_file)*quanti);
+
+    if(!temp_return)
+        return NULL;
 
     memcpy(temp_return, temp, sizeof(last_file)*quanti);
 
