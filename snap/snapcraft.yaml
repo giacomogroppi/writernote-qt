@@ -112,6 +112,7 @@ parts:
 
 
     build-packages:
+      - libpoppler-qt5-dev
       - libcrypto++-dev 
       - libcrypto++-doc 
       - libcrypto++-utils
@@ -153,6 +154,9 @@ parts:
 
     stage-packages:
       - libglib2.0-0
+      
+      # pdf
+      - libpoppler-qt5-dev
 
       ## wayland support
       - libwayland-dev
