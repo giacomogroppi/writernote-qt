@@ -76,7 +76,8 @@ public:
         unable_load, /*we had trouble loading the file*/
         not_, /* we don't have to save the file */
         need_save, /* we need to save */
-        only_writernote /* writernote change something insede */
+        only_writernote, /* writernote change something insede */
+        no_path
     };
 
     enum n_need_save needToSave(xmlstruct *xml,

@@ -11,6 +11,12 @@ enum MainWindow::n_need_save
     QString filep;
     int check1;
 
+    if(xml->getPath() == ""){
+        if(!m_currenttitle->datatouch->userWrittenSomething(nullptr))
+            return n_need_save::only_writernote;
+        return n_need_save::no_path;
+    }
+
     check1 = xml->loadfile((m_currentTitle + ".xml").toUtf8().constData());
 
     if(check1 != ERROR_VERSION_NEW){

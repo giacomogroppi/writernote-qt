@@ -38,6 +38,10 @@ private:
     int loadbinario_1(struct zip *);
 
 public:
+    QString getPath(){
+        return *path_;
+    };
+
     bool loadindice();
 
     int loadfile(const char *);

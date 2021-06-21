@@ -82,39 +82,15 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    /*
-     * if we are in keyboard mode
-    */
     if(!m_currenttitle->m_touch){
         filep = m_currenttitle->testi;
         m_currenttitle->testi = this->ui->textEdit->toHtml();
     }
 
-    /*
-    bool check1 = checksimilecopybook(&tempcopybook, m_currenttitle, false) == OK_CHECK;
-
-    check1 = check1 && (checksimileindice(&m_indice, &tempindice) == OK_CHECK);
-    */
-
     if(__res == n_need_save::not_
             || __res == n_need_save::only_writernote){
         goto accept_event;
     }
-
-    /*
-    if(check1){
-        accept_event(event);
-    }
-
-
-    if(m_currenttitle->m_touch){
-        if(!m_currenttitle->datatouch->userWrittenSomething()){
-            accept_event(event);
-        }
-    }
-    else{
-        m_currenttitle->testi = filep;
-    }*/
 
 
     if(m_path.isEmpty())
