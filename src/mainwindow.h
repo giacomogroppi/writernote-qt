@@ -30,6 +30,7 @@
 #include "touch/highlighter/ui_highlighter.h"
 #include "cloud/struct_user.h"
 
+class frompdf;
 class TabletApplication;
 class ui_option_copybook;
 
@@ -138,7 +139,7 @@ public:
     pen_ui *m_pen;
     text_ui *m_text;
     ui_highlighter *m_highlighter;
-
+    frompdf *m_from_pdf;
     text_widgets *m_text_w;
     ui_option_copybook *m_option_copybook;
 

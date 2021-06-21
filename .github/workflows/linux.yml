@@ -31,6 +31,7 @@ jobs:
 
       - name: Run a one-line script
         run: |
+          sudo apt install libpoppler-qt5-dev
           sudo apt -y install libzip-dev
 
       - name: Install Qt

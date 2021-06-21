@@ -9,8 +9,6 @@ frompdf::frompdf(currenttitle_class *data)
     m_data = data;
 }
 
-#define IMG_PDF_HEIGHT 292
-#define IMG_PDF_WIDTH 210
 frompdf::load_res frompdf::load(const QString &pos)
 {
     uint i, len;

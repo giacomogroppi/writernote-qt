@@ -9,6 +9,8 @@ class currenttitle_class;
 #include <QPainter>
 
 #include "poppler-qt5.h"
+#define IMG_PDF_HEIGHT 292
+#define IMG_PDF_WIDTH 210
 
 class frompdf
 {
@@ -35,14 +37,30 @@ public:
     load_res load(const QString &);
 
     inline void draw(QPainter &painter,
-                     const uint height,
-                     const uint width){
+                     const uint pwidth,
+                     const int rend_width,
+                     const int rend_heigth){
         uint i, len;
-        QRect rect_area(0, 0, width, height);
+        QRect rect_area;
 
         len = images.length();
 
         for(i=0; i<len; ++i){
+            rect_area = QRect(pwidth*i,
+                              (IMG_PDF_HEIGHT/IMG_PDF_WIDTH)*pwidth*i,
+                              pwidth*(i+1),
+                              (IMG_PDF_HEIGHT/IMG_PDF_WIDTH)*pwidth*(i+1));
+
+            if(rect_area.bottomRight().x() < 0)
+                continue;
+            if(rect_area.topLeft().x() > rend_width)
+                continue;
+
+            if(rect_area.bottomRight().y() < 0)
+                continue;
+            if(rect_area.topLeft().y() > rend_heigth)
+                continue;
+
             painter.drawImage(rect_area, m_image.at(i));
         }
     }

@@ -25,6 +25,8 @@
 
 #include "highlighter/ui_highlighter.h"
 
+
+class frompdf;
 class MainWindow;
 
 typedef struct lastpoint_struct{
@@ -166,7 +168,7 @@ public:
     pen_ui *m_pen_ui;
     text_ui *m_text;
     ui_highlighter *m_highlighter;
-
+    frompdf * m_from_pdf;
     text_widgets *m_text_w;
 
     fast_sheet_ui *m_sheet;
