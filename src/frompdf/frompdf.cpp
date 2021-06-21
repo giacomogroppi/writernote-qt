@@ -1,5 +1,5 @@
 #include "frompdf.h"
-#include <QPdfium>
+
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../currenttitle/currenttitle_class.h"
 #include "../utils/permission/permission.h"
@@ -9,31 +9,35 @@ frompdf::frompdf(currenttitle_class *data)
     m_data = data;
 }
 
-bool frompdf::isvalid(QString &pos){
-    QPdfium pdf(pos);
-    return pdf.isValid();
-}
-
-void frompdf::add(QString &pos)
+#define IMG_PDF_HEIGHT 292
+#define IMG_PDF_WIDTH 210
+frompdf::load_res frompdf::load(const QString &pos)
 {
-    if(permission::open(pos.toUtf8().constData(), permission::readOnly)){
-        return dialog_critic("The file is not readable");
+    uint i, len;
+    QImage image;
+
+    images.clear();
+    doc = Poppler::Document::load(pos);
+
+    if(!doc){
+        dialog_critic("The file is not readable");
+        return load_res::not_valid_pdf;
     }
 
-    if(!isvalid(pos)){
-        return dialog_critic("The pdf is not valid");
+    len = doc->numPages();
+
+    for(i=0; i<len; ++i){
+        image = doc->page("0")->renderToImage(
+                                    5 * IMG_PDF_HEIGHT,
+                                    5 * IMG_PDF_HEIGHT);
+
+        if(image.isNull())
+            return load_res::not_valid_page;
+
+        images.append(image);
+
     }
 
-    QPdfium pdf(pos);
-    int i, len;
-    QImage temp;
 
-    for(i=0, len = pdf.pageCount(); i<len; i++){
-        temp = pdf.page(i).image();
-        if(temp.isNull()){
-            return dialog_critic("I had a problem reading page " + QString::number(i));
-        }
-    }
-
-
+    return load_res::ok;
 }

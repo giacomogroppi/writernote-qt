@@ -481,13 +481,19 @@ android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
 
 ANDROID_EXTRA_LIBS = /home/giacomo/Android/Sdk/android_openssl/latest/arm/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libssl_1_1.so
 
+DEFINES += "PDFSUPPORT"
+
 unix:contains(DEFINES, PDFSUPPORT){
     message("Add support for pdf")
 
-    LIBS += -L/usr/lib/x86_64-linux-gnu/ -lQt5Pdfium
+    #LIBS += -L/usr/lib/x86_64-linux-gnu/ -lQt5Pdfium
 
-    INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
-    DEPENDPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
+    #INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
+    #DEPENDPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
+
+    INCLUDEPATH  += /usr/include/poppler/qt5
+    LIBS         += -L/usr/lib -lpoppler-qt5
+
 
     SOURCES += \
         src/frompdf/frompdf.cpp
