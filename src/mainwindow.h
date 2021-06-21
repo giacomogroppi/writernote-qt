@@ -67,6 +67,10 @@ public:
     void updateTouch();
 
     void openFirstCopybook();
+    void createFirstCopybook();
+    void createCopybook(const QString &name, const bool touch);
+    QString getNameCopybook();
+    void updateTitle(currenttitle_class *__curr);
 
     enum n_need_save: uchar{
         unable_load, /*we had trouble loading the file*/

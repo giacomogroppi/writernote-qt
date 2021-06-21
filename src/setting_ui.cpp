@@ -5,8 +5,6 @@
 #include <QFontComboBox>
 #include <QToolBar>
 
-/* il file divide a scaglioni l'attivazione o il disabilitamento dei pulsanti */
-
 void settingstyle(MainWindow *parent, bool check){
     parent->ui->spinBox_fontsize->setEnabled(check);
     parent->ui->fontComboBox_fonttipo->setEnabled(check);
@@ -81,7 +79,7 @@ void setting_ui_start(MainWindow *parent){
 
     parent->ui->actionPrint->setEnabled(false);
     //parent->ui->actionCreate_new_copybook->setEnabled(false);
-    parent->ui->listWidgetSX->setEnabled(false);
+    //parent->ui->listWidgetSX->setEnabled(false);
     parent->ui->stoprecordingbotton->setEnabled(false);
 
 }

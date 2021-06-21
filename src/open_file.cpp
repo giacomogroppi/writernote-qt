@@ -81,6 +81,7 @@ void MainWindow::openFile(const char *pos){
     update_list_copybook();
 
     this->openFirstCopybook();
+    this->createFirstCopybook();
 }
 
 void MainWindow::on_actionOpen_triggered()

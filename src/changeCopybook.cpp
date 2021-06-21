@@ -62,7 +62,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         m_currenttitle->datatouch->reset();
     }
     m_currentTitle = item->text();
-    this->setWindowTitle("Writernote - " + m_currentTitle);
+    updateTitle(m_currenttitle);
 
     if(!m_currenttitle->m_touch)
         ui->textEdit->setHtml(m_currenttitle->testi);

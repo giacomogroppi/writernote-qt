@@ -13,6 +13,10 @@ public:
     QStringList titolo = {};
 
     void reset();
+
+    bool isEmpty(){
+        return !titolo.length();
+    }
 };
 
 #endif // INDICE_CLASS_H

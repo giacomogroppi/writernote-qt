@@ -171,6 +171,8 @@ MainWindow::MainWindow(QWidget *parent,
         this->m_canvas->loadpixel();
         this->m_canvas->time = 0;
     }
+
+    openFirstCopybook();
 }
 
 MainWindow::~MainWindow()
