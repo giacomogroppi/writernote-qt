@@ -3,7 +3,10 @@
 #include "../../mainwindow.h"
 #include "draw_image.h"
 #include "../../utils/color/setcolor.h"
+
+#ifdef PDFSUPPORT
 #include "../../frompdf/frompdf.h"
+#endif
 
 static bool thereispositive(datastruct *, int, int);
 
@@ -66,8 +69,10 @@ void TabletCanvas::load(QPainter &painter,
     QColor current_color;
     double xtemp[2], ytemp[2];
 
+#ifdef PDFSUPPORT
     this->m_from_pdf->draw(painter, data->datatouch->biggerx(),
                            m_pixmap.width(), m_pixmap.height());
+#endif
 
     is_play = parent->player->state() == QMediaPlayer::PlayingState;
     m_pixmap.fill(Qt::white);

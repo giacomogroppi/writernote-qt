@@ -139,7 +139,9 @@ public:
     pen_ui *m_pen;
     text_ui *m_text;
     ui_highlighter *m_highlighter;
+#ifdef PDFSUPPORT
     frompdf *m_from_pdf;
+#endif
     text_widgets *m_text_w;
     ui_option_copybook *m_option_copybook;
 

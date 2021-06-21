@@ -168,7 +168,9 @@ public:
     pen_ui *m_pen_ui;
     text_ui *m_text;
     ui_highlighter *m_highlighter;
+#ifdef PDFSUPPORT
     frompdf * m_from_pdf;
+#endif
     text_widgets *m_text_w;
 
     fast_sheet_ui *m_sheet;

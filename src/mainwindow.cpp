@@ -44,7 +44,10 @@
 #include "touch/scrollKinetic/ui_scroll/ui_scroll.h"
 #include "utils/common_def.h"
 #include "currenttitle/option/ui_option_copybook.h"
+
+#ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
+#endif
 
 MainWindow::MainWindow(QWidget *parent,
                        TabletCanvas *canvas,
@@ -107,8 +110,9 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_text_w = new text_widgets(this);
     this->m_sheet = new fast_sheet_ui(this);
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice, &m_path);
+#ifdef PDFSUPPORT
     this->m_from_pdf = new frompdf(m_currenttitle);
-
+#endif
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
     this->m_text->setHidden(true);
@@ -116,7 +120,10 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
 
+#ifdef PDFSUPPORT
     this->m_canvas->m_from_pdf = m_from_pdf;
+#endif
+
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
     this->m_canvas->m_text = m_text;
