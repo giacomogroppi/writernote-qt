@@ -492,7 +492,7 @@ contains(DEFINES, PDFSUPPORT){
     message("Enable pdf support")
 }
 
-unix:contains(DEFINES, PDFSUPP message("Add support for pdf")ORT){
+unix:contains(DEFINES, PDFSUPPORT){
     INCLUDEPATH  += /usr/include/poppler/qt5
     LIBS         += -L/usr/lib -lpoppler-qt5
 }
