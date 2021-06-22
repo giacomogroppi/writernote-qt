@@ -192,7 +192,9 @@ MainWindow::~MainWindow()
     setting.setValue(KEY_INSERT_METHOD_PEN_MOUSE, this->touch_or_pen);
     setting.endGroup();
 
+#ifdef PDFSUPPORT
     delete m_from_pdf;
+#endif
 
     delete ui;
 }
