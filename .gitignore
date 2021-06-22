@@ -1,0 +1,10 @@
+*.slo
+*.lo
+*.o
+*.obj
+build/*
+moc_*
+qrc*
+Makefile
+.qmake.stash
+*.user

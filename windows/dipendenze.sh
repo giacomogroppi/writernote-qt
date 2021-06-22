@@ -11,6 +11,7 @@ pacman --noconfirm -S mingw-w64-x86_64-toolchain \
 
 pacman --noconfirm -S mingw-w64-x86_64-qt5 \
           mingw-w64-x86_64-libzip \
-          mingw-w64-x86_64-glib2
+          mingw-w64-x86_64-glib2 \
+          mingw-w64-x86_64-poppler
 
 
