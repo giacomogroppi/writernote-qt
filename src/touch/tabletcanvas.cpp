@@ -20,7 +20,7 @@ static void loadLastMethod(TabletCanvas *);
 
 void TabletCanvas::restoreO()
 {
-    if(this->data->datatouch->repositioning()){
+    if(this->data->datatouch->repositioning(m_from_pdf)){
         this->isloading = true;
         update();
     }

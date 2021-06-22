@@ -97,14 +97,14 @@ int checksimilecopybook(const currenttitle_class *primo,
 
     int res;
 
-    primo->datatouch->scala_all();
-    secondo->datatouch->scala_all();
+    primo->datatouch->scala_all(nullptr);
+    secondo->datatouch->scala_all(nullptr);
 
     if(speed){
         res = checkSpeed(primo, secondo);
 
-        primo->datatouch->restoreLastTranslation();
-        secondo->datatouch->restoreLastTranslation();
+        primo->datatouch->restoreLastTranslation(nullptr);
+        secondo->datatouch->restoreLastTranslation(nullptr);
 
         return res;
     }
@@ -112,9 +112,9 @@ int checksimilecopybook(const currenttitle_class *primo,
     res = checkSlow(primo, secondo);
 
 
-    primo->datatouch->restoreLastTranslation();
+    primo->datatouch->restoreLastTranslation(nullptr);
 
-    secondo->datatouch->restoreLastTranslation();
+    secondo->datatouch->restoreLastTranslation(nullptr);
 
     return res;
 }

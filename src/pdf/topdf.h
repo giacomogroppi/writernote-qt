@@ -13,7 +13,7 @@ private:
     currenttitle_class *data;
     QString *path;
 
-    void translate();
+    void translate(frompdf *m_pdf);
 
     MainWindow *parent;
 
@@ -34,7 +34,7 @@ public:
     };
 
     topdf(QString *path, TabletCanvas *canvas);
-    bool createpdf();
+    bool createpdf(frompdf *m_pdf);
 
     inline void copy(currenttitle_class *datastruct_){
             this->data = new currenttitle_class;

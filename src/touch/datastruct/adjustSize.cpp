@@ -9,11 +9,12 @@
  * riusciti a coprire la parte di pixmap fuori dal
  * foglio
 */
-bool datastruct::adjustHeight(unsigned int height,
-                              bool controllRepo)
+bool datastruct::adjustHeight(const uint height,
+                              const bool controllRepo,
+                              frompdf *m_pdf)
 {
     if(controllRepo)
-        controllForRepositioning();
+        controllForRepositioning(m_pdf);
 
     QPointF __point(0.0, 0.0);
     const point_s * __first = &m_point.first();
@@ -29,7 +30,7 @@ bool datastruct::adjustHeight(unsigned int height,
             return false;
 
         __point.setY(__traslation);
-        scala_all(__point);
+        scala_all(__point, m_pdf);
 
         __point.setY(biggery());
         if(__point.y() < height)
@@ -46,15 +47,16 @@ bool datastruct::adjustHeight(unsigned int height,
  * controllo che siano fuori, in caso contrario si fa il return di false e
  * bisogna rifare il pixmap
 */
-bool datastruct::adjustWidth(unsigned int width,
-                             bool controllRepo){
+bool datastruct::adjustWidth(const uint width,
+                             const bool controllRepo,
+                             frompdf *m_pdf){
     if(controllRepo)
-        controllForRepositioning();
+        controllForRepositioning(m_pdf);
 
     const point_s *__point = & m_point.first();
     QPointF __t(0.0, 0.0);
 
-    scala_all();
+    scala_all(m_pdf);
 
     double __translation = biggerx();
 
@@ -64,7 +66,7 @@ bool datastruct::adjustWidth(unsigned int width,
             goto make;
 
         __t.setX(__translation);
-        this->scala_all(__t);
+        this->scala_all(__t, m_pdf);
 
         if(biggerx() < width)
             goto make;
@@ -76,13 +78,13 @@ bool datastruct::adjustWidth(unsigned int width,
 
     make:
     /* we need to make the pixmap */
-    restoreLastTranslation();
+    restoreLastTranslation(m_pdf);
     return false;
 
 
     not_make:
     /* we don't need to make a new pixmap */
-    restoreLastTranslation();
+    restoreLastTranslation(m_pdf);
     return true;
 }
 
@@ -91,7 +93,8 @@ bool datastruct::adjustWidth(unsigned int width,
  * the function consider the fact that the
  * height of one sheet is bigger than the width
 */
-bool datastruct::adjustAll(const unsigned int width,
-                           const unsigned int height){
-    return adjustWidth(width, false) || adjustHeight(height, true);
+bool datastruct::adjustAll(const uint width,
+                           const uint height,
+                           frompdf *m_pdf){
+    return adjustWidth(width, false, m_pdf) || adjustHeight(height, true, m_pdf);
 }

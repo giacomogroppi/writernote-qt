@@ -87,6 +87,6 @@ void copy::adjastTranslation()
 
     /* we suppose that all point have x and y > 0 */
 
-    m_data.scala_all(min);
+    m_data.scala_all(min, nullptr);
 
 }

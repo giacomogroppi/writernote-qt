@@ -1,6 +1,7 @@
 #ifndef ZOOM_CONTROL_H
 #define ZOOM_CONTROL_H
 
+class frompdf;
 class datastruct;
 #include <QPointF>
 
@@ -16,6 +17,7 @@ private:
     */
     void trasla(QPointF ,
                 datastruct *data,
+                frompdf *m_pdf,
                 long double delta = 0);
 public:
     zoom_control();
@@ -26,7 +28,7 @@ public:
               const uint maxWidth,
               const uint height,
               const uint maxHeight,
-              datastruct *data);
+              datastruct *data, frompdf *m_pdf);
 
 };
 

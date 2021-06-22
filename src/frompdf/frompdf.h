@@ -29,7 +29,10 @@ private:
 public:    
     static bool isvalid(QString &pos);
 
-    void traslation(const double x,
+    void translation(const QPointF &point){
+        translation(point.x(), point.y());
+    }
+    void translation(const double x,
                     const double y){
         m_translation.x += x;
         m_translation.y += y;

@@ -10,6 +10,7 @@ zoom_control::zoom_control()
 
 void zoom_control::trasla(QPointF point_translate,
                           datastruct *data,
+                          frompdf *m_pdf,
                           long double delta){
     if(point_translate == QPointF(0.0, 0.0))
         return;
@@ -18,7 +19,7 @@ void zoom_control::trasla(QPointF point_translate,
         datastruct::inverso(point_translate);
     }
 
-    data->scala_all(point_translate);
+    data->scala_all(point_translate, m_pdf);
 
 }
 
@@ -34,7 +35,8 @@ bool zoom_control::zoom(QPointF &point_translate,
                         const uint maxWidth,
                         const uint height,
                         const uint maxHeight,
-                        datastruct *data){
+                        datastruct *data,
+                        frompdf *m_pdf){
     //qDebug() << (double)data->zoom << " Delta -> " << (double) delta;
 
     /* TODO */
@@ -49,7 +51,7 @@ bool zoom_control::zoom(QPointF &point_translate,
         }
     }
 
-    trasla(point_translate, data);
+    trasla(point_translate, data, m_pdf);
 
     uint i, len;
 
@@ -60,16 +62,16 @@ bool zoom_control::zoom(QPointF &point_translate,
         data->at_mod(i)->m_y *= delta;
     }
 
-    trasla(point_translate, data, delta);
+    trasla(point_translate, data, m_pdf, delta);
 
     delta = (delta >= (long double)1) ? (delta-1) : (-((long double)1)/delta+1);
 
     data->zoom += delta;
 
-    data->adjustHeight(height, true);
+    data->adjustHeight(height, true, m_pdf);
 
     if(width == maxWidth)
         return false;
 
-    return data->adjustAll(height, width);
+    return data->adjustAll(height, width, m_pdf);
 }

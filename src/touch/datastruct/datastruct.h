@@ -8,6 +8,8 @@
 
 #include "../../images/image_struct.h"
 
+class frompdf;
+
 /*
     IDVERTICALE -> linee verticali
     IDORIZZONALE -> linee orizzonali
@@ -60,6 +62,10 @@ private:
     QList<struct point_s> m_point;
 
     bool userWrittenSomething(uint i);
+
+    void scala_x(double scala);
+    void scala_y(double scala);
+    void scala_posizionefoglio(double scala);
 
 public:
 
@@ -134,8 +140,8 @@ public:
 
     uint move_to_positive(uint len);
 
-    void restoreLastTranslation();
-    void controllForRepositioning();
+    void restoreLastTranslation(frompdf *m_pdf);
+    void controllForRepositioning(frompdf *m_pdf);
 
     void removePointId(QList<int> &list);
     void removePointId(int id, uint *len = nullptr);
@@ -167,12 +173,15 @@ public:
     static bool isinside(QPointF &topleft, QPointF &bottonright, QPointF &point);
 
 
-    bool adjustAll(const unsigned int width,
-                   const unsigned int height);
-    bool adjustWidth(unsigned int width,
-                     bool controllRepo);
-    bool adjustHeight(unsigned int height,
-                      bool controllRepo);
+    bool adjustAll(const uint width,
+                   const uint height,
+                   frompdf *m_pdf);
+    bool adjustWidth(const uint width,
+                     bool controllRepo,
+                     frompdf *m_pdf);
+    bool adjustHeight(const uint height,
+                      const bool controllRepo,
+                      frompdf *m_pdf);
 
     /*
      * this function return the index of the first
@@ -202,14 +211,10 @@ public:
     };
 
     static void inverso(QPointF &point);
-    bool repositioning();
+    bool repositioning(frompdf *m_pdf);
 
-    void scala_all(const QPointF &);
-    void scala_all();
-
-    void scala_x(double scala);
-    void scala_y(double scala);
-    void scala_posizionefoglio(double scala);
+    void scala_all(const QPointF &, frompdf *);
+    void scala_all(frompdf *);
 
     double biggerxNoId();
     void reset();
