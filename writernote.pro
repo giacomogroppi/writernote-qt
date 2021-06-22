@@ -483,25 +483,25 @@ ANDROID_EXTRA_LIBS = /home/giacomo/Android/Sdk/android_openssl/latest/arm/libcry
 
 DEFINES += "PDFSUPPORT"
 
-unix:contains(DEFINES, PDFSUPPORT){
-    message("Add support for pdf")
-
-    #LIBS += -L/usr/lib/x86_64-linux-gnu/ -lQt5Pdfium
-
-    #INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
-    #DEPENDPATH += /usr/include/x86_64-linux-gnu/qt5/QtPdfium
-
-    INCLUDEPATH  += /usr/include/poppler/qt5
-    LIBS         += -L/usr/lib -lpoppler-qt5
-
-
+contains(DEFINES, PDFSUPPORT){
     SOURCES += \
         src/frompdf/frompdf.cpp
     HEADERS += \
         src/frompdf/frompdf.h
+
+    message("Enable pdf support")
 }
 
-win32:DEFINES-="PDFSUPPORT"
+unix:contains(DEFINES, PDFSUPP message("Add support for pdf")ORT){
+    INCLUDEPATH  += /usr/include/poppler/qt5
+    LIBS         += -L/usr/lib -lpoppler-qt5
+}
+
+#win32:DEFINES-="PDFSUPPORT"
+win32:contains(DEFINES, PDFSUPPORT){
+    INCLUDEPATH  += C:\msys64\mingw64\include\poppler\qt5
+    LIBS         += C:\msys64\mingw64\lib\libpoppler-qt5.dll.a
+}
 
 DISTFILES += \
     language/it.ts
