@@ -6,6 +6,7 @@ class currenttitle_class;
 #include <QString>
 #include <QList>
 #include <QImage>
+#include <QMap>
 #include <QPainter>
 
 #include "poppler-qt5.h"
@@ -17,14 +18,27 @@ class frompdf
 private:
     currenttitle_class *m_data;
 
-    QList<QImage> images;
-
-
     Poppler::Document *doc = nullptr;
     QList<QImage> m_image;
 
-public:
+    struct translation{
+        double y;
+        double x;
+    }m_translation;
+
+public:    
     static bool isvalid(QString &pos);
+
+    void traslation(const double x,
+                    const double y){
+        m_translation.x += x;
+        m_translation.y += y;
+    }
+
+    void getPosition(double &x, double &y){
+        x = m_translation.x;
+        y = m_translation.y;
+    }
 
     frompdf(currenttitle_class *);
 
@@ -34,7 +48,13 @@ public:
         not_valid_page
     };
 
-    load_res load(const QString &);
+    inline void reset(){
+        m_image.clear();
+    }
+
+    /* return true if all load correctly */
+    bool load(const QStringList &path, QMap<load_res, uchar> &index);
+    load_res load(const QString &, const bool clear);
 
     inline void draw(QPainter &painter,
                      const uint pwidth,
@@ -43,7 +63,7 @@ public:
         uint i, len;
         QRect rect_area;
 
-        len = images.length();
+        len = m_image.length();
 
         for(i=0; i<len; ++i){
             rect_area = QRect(pwidth*i,

@@ -501,5 +501,7 @@ unix:contains(DEFINES, PDFSUPPORT){
         src/frompdf/frompdf.h
 }
 
+win32:DEFINES-="PDFSUPPORT"
+
 DISTFILES += \
     language/it.ts
