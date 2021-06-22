@@ -74,14 +74,14 @@ public:
                               pwidth*(i+1),
                               (IMG_PDF_HEIGHT/IMG_PDF_WIDTH)*pwidth*(i+1));
 
-            if(rect_area.bottomRight().x() < 0)
+            if(rect_area.bottomRight().x()+m_translation.x < 0)
                 continue;
-            if(rect_area.topLeft().x() > rend_width)
+            if(rect_area.topLeft().x()+m_translation.x > rend_width)
                 continue;
 
-            if(rect_area.bottomRight().y() < 0)
+            if(rect_area.bottomRight().y()+m_translation.y < 0)
                 continue;
-            if(rect_area.topLeft().y() > rend_heigth)
+            if(rect_area.topLeft().y()+m_translation.y > rend_heigth)
                 continue;
 
             painter.drawImage(rect_area, m_image.at(i));
