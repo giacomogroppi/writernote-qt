@@ -51,10 +51,14 @@ public:
                 && (*m_path != ""
                 || tmp_path != "")){
             deleteFile();
+            tmp_path = "";
         }
     }
 
 private:
+
+    /* when the user has not selected a location to save the file, it is automatically saved as a temporary file in the /home/user/.writernote folder */
+    void decidePath();
 
     void deleteFile();
 

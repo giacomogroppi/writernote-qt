@@ -6,7 +6,8 @@ namespace path {
         home,
         nameuser,
         audio_pos, /* this return the folder to save the temporary audio */
-        log /* default position log */
+        log, /* default position log */
+        tmp_file_not_save
     };
 }
 

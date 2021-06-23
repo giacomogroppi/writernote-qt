@@ -6,8 +6,10 @@
 #include "../../datawrite/savefile.h"
 #include "../../utils/dialog_critic/dialog_critic.h"
 #include "../../utils/slash/slash.h"
-
+#include "../../utils/path/get_path.h"
 #include "../get_name_tmp.h"
+#include "../../utils/time/current_time.h"
+#include "../../utils/common_def.h"
 
 #include <QSettings>
 #include <QTimer>
@@ -72,6 +74,11 @@ setting_restore_ui::~setting_restore_ui()
 {
     saveData();
     delete ui;
+}
+
+void setting_restore_ui::decidePath()
+{
+
 }
 
 void setting_restore_ui::deleteFile()
@@ -167,8 +174,16 @@ void setting_restore_ui::secondTimer()
     int res;
     QString path;
 
-    path = get_name_tmp::get(*m_path);
-
+    if(*m_path != ""){
+        path = get_name_tmp::get(*m_path);
+    }else{
+        if(tmp_path == ""){
+            path = get_path(path::tmp_file_not_save);
+            tmp_path = path + slash::__slash() + "writernote_unsave_" + current_day_string() + current_time_string();
+            tmp_path.replace(" ", "");
+            tmp_path.append("." + APP_EXT);
+        }
+    }
     savefile ff(&path, *m_curr);
 
     if(!need_save_tmp)

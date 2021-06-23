@@ -25,6 +25,7 @@ public:
         }
 
         path.insert(last_pos+1, '.');
+
         path += "_tmp";
 
         return path;

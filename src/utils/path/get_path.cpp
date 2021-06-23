@@ -27,21 +27,29 @@ static bool createTempFolder(QString &path);
 
 const char * get_path(path::e_path var)
 {
+    QString tmp;
     if(var == path::audio_pos){
-        QString temp = get_path_no_controll();
+        tmp = get_path_no_controll();
 
-        if(!createTempFolder(temp))
+        if(!createTempFolder(tmp))
             return NULL;
 
-        return temp.toUtf8().constData();
+        return tmp.toUtf8().constData();
     }
 
     if(var == path::log){
-        QString temp = get_path_no_controll();
-        temp += "writernote-log";
-        if(!createTempFolder(temp))
+        tmp = get_path_no_controll();
+        tmp += "writernote-log";
+        if(!createTempFolder(tmp))
             return NULL;
-        return temp.toUtf8().constData();
+        return tmp.toUtf8().constData();
+    }
+
+    if(var == path::tmp_file_not_save){
+        tmp = get_path_no_controll();
+        if(!createTempFolder(tmp))
+            return NULL;
+        return tmp.toUtf8().constData();
     }
 
     if(var == path::home){
