@@ -169,6 +169,9 @@ void setting_restore_ui::firstTimer()
 
 static int try_save = 0;
 
+/*
+ * tmp file
+*/
 void setting_restore_ui::secondTimer()
 {
     int res;
@@ -179,8 +182,9 @@ void setting_restore_ui::secondTimer()
     }else{
         if(tmp_path == ""){
             path = get_path(path::tmp_file_not_save);
-            tmp_path = path + slash::__slash() + "writernote_unsave_" + current_day_string() + current_time_string();
+            tmp_path = path + "writernote_unsave_" + current_day_string() + current_time_string();
             tmp_path.replace(" ", "");
+            tmp_path.replace(":", "");
             tmp_path.append("." + APP_EXT);
         }
     }

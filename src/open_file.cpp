@@ -37,18 +37,18 @@ void MainWindow::openFile(const char *pos){
 
 #ifndef ANDROID
     if(fileName.indexOf(APP_EXT) == -1){
-        if(!areyousure(nullptr, "Error", "The file does not have the writernote extension, do you want to open it anyway?")){
+        if(!areyousure("Error", "The file does not have the writernote extension, do you want to open it anyway?")){
             return;
         }
     }
 #endif
 
     if(fileLost::exe(fileName)){
-        if(areyousure(nullptr, "Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
+        if(areyousure("Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
             path = get_name_available::get(fileName, ok);
 
             if(!ok){
-                if(areyousure(nullptr, "No copybook", "I could not find any copybook in the file, continue?")){
+                if(areyousure("No copybook", "I could not find any copybook in the file, continue?")){
                     goto load;
                 }else{
                     return;

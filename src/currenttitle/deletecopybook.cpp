@@ -11,7 +11,7 @@
 
 /* funzione che gestisce l'eliminizione del copybook */
 void f_deletecopybook(MainWindow *parent, const char *copybook){
-    if(!areyousure(parent, "Delete copybook", "are you sure you want to delete " + (QString)copybook + "?"))
+    if(!areyousure("Delete copybook", "are you sure you want to delete " + (QString)copybook + "?"))
         return redolist(parent);
 
     if(parent->player->state() != QMediaPlayer::StoppedState)

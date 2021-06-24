@@ -17,7 +17,7 @@ void MainWindow::on_actionReduce_size_file_triggered()
     __c = reduce_size::current_size(m_currenttitle->datatouch);
     __e = reduce_size::calculate_min_size(m_currenttitle->datatouch);
 
-    if(areyousure(nullptr, "Reduce file writernote",
+    if(areyousure("Reduce file writernote",
                   "With writernote you can decide to decrease the size of the files, decreasing the precision of the strokes you draw\nThe current size is "
                   + QString::number(__c) + " byte"
                   + " the min size is "

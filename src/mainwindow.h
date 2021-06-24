@@ -15,6 +15,8 @@
 #include <QComboBox>
 #include <QMediaPlayer>
 
+#define NAME_UNSAVE (QString)"Unsaved copybook"
+
 /* for drag file into writernote */
 #include <QDropEvent>
 #define CHECKABLE(x) x->setCheckable(true)

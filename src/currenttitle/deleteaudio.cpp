@@ -9,7 +9,7 @@
 #define CURRENTTITLE parent->m_currenttitle
 
 void deleteaudio(MainWindow *parent, QListWidgetItem *item){
-    if(!areyousure(parent, "", "Are you sure you want to delete the copybook?"))
+    if(!areyousure("", "Are you sure you want to delete the copybook?"))
         return;
 
 

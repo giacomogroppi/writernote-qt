@@ -5,8 +5,8 @@
 #include <QDialog>
 #include <QMessageBox>
 
-static inline bool areyousure(QWidget *parent, QString title, QString body){
-    QMessageBox::StandardButton resBtn = QMessageBox::question( parent, title,
+static inline bool areyousure(const QString &title, const QString body){
+    QMessageBox::StandardButton resBtn = QMessageBox::question( nullptr, title,
                                                                 body,
                                                                 QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
                                                                 QMessageBox::Yes);

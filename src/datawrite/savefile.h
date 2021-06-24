@@ -27,6 +27,10 @@ private:
 public:
     void setting_data(currenttitle_class *m_current){currenttitle = m_current;}
 
+    savefile(const QString &path, currenttitle_class *current){
+        setData(&path, current);
+    }
+
     savefile(const QString *path, currenttitle_class *currenttitle){
         setData(path, currenttitle);
     }

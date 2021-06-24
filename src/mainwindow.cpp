@@ -207,7 +207,7 @@ void MainWindow::on_actionNew_File_triggered()
             || __res == n_need_save::only_writernote)
         goto __continue;
 
-    if(areyousure(nullptr, "Unable to load file", "Unable to load file located in "+m_path)){
+    if(areyousure("Unable to load file", "Unable to load file located in "+m_path)){
         check = checksave.check_permission();
 
         if(!check)

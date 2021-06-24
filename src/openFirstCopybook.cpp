@@ -40,7 +40,6 @@ void MainWindow::createCopybook(const QString &name, const bool touch)
     abilitazioneinput(this);
 }
 
-#define NAME_UNSAVE (QString)"Unsaved copybook"
 QString MainWindow::getNameCopybook()
 {
     uint len;

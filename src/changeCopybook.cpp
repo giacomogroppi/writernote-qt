@@ -58,7 +58,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         }else if(res == ERROR_VERSION){
             return dialog_critic("The version you created this file with is too old");
         }else if(res == ERROR_CONTROLL){
-            if(!areyousure(nullptr, "The file is corrupted", "Do you want to open the file anyway?"))
+            if(!areyousure("The file is corrupted", "Do you want to open the file anyway?"))
                 return;
         }
     }
