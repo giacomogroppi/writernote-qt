@@ -82,20 +82,23 @@ int main(int argc, char *argv[]){
         return 0;
     }
 
+    char *f = (m_last_open) ? m_last_open : argv[1];
+
 #ifdef CLOUD
-    MainWindow w(nullptr, &canvas, user, &m_cloud);
+    MainWindow w(nullptr, &canvas, user, &m_cloud, f);
 #else
-    MainWindow w(nullptr, canvas, nullptr, nullptr);
+
+    MainWindow w(nullptr, canvas, nullptr, nullptr, f);
 #endif
 
-    if(m_last_open != NULL)
-        w.setFile(m_last_open);
+    //if(m_last_open != NULL)
+    //    w.setFile(m_last_open);
 
-    delete m_last_open;
+    //delete m_last_open;
 
-    if(argc != 1){
-        w.setFile(argv[1]);
-    }
+    //if(argc != 1){
+    //    w.setFile(argv[1]);
+    //}
 
     w.show();
     int exit_code = app->exec();

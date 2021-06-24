@@ -52,7 +52,8 @@
 MainWindow::MainWindow(QWidget *parent,
                        TabletCanvas *canvas,
                        struct struct_user *user,
-                       cloud_controll *cloud)
+                       cloud_controll *cloud,
+                       const char *path)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -183,6 +184,9 @@ MainWindow::MainWindow(QWidget *parent,
     }
 
     openFirstCopybook();
+
+    if(path)
+        openFile(path);
 }
 
 MainWindow::~MainWindow()

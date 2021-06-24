@@ -141,7 +141,6 @@ SOURCES += \
     src/datamanage/check1.cpp \
     src/datamanage/checkinserimento.cpp \
     src/datamanage/eliminazioneNFrasi.cpp \
-    src/datamanage/setFile_mainwindow.cpp \
     src/datamanage/spacchettamento.cpp \
     src/datamanage/stoprecording.cpp \
     src/datawrite/colortoint.cpp \

@@ -88,7 +88,8 @@ public:
     MainWindow(QWidget *parent = nullptr,
                TabletCanvas *canvas = nullptr,
                struct struct_user *user = nullptr,
-               cloud_controll *cloud = nullptr);
+               cloud_controll *cloud = nullptr,
+               const char *open = nullptr);
     ~MainWindow();
 
     /* false -> use pen
@@ -126,8 +127,6 @@ public:
     bool typetemp = false;
 
     updatecheck *checkupdate;
-
-    void setFile(char *);
 
     void update_image();
 
