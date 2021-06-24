@@ -83,7 +83,7 @@ void setting_restore_ui::decidePath()
 
 void setting_restore_ui::deleteFile()
 {
-    QString ff = (*m_path != "") ? get_name_tmp::get(*m_path) : get_name_tmp::get(tmp_path);
+    QString ff = (*m_path != "") ? get_name_tmp::get(*m_path) : tmp_path;
 
     if(!QFile::exists(ff)){
         return;
@@ -188,6 +188,7 @@ void setting_restore_ui::secondTimer()
             tmp_path.append("." + APP_EXT);
         }
     }
+    path = (tmp_path == "") ? path : tmp_path;
     savefile ff(&path, *m_curr);
 
     if(!need_save_tmp)
