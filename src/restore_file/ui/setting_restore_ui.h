@@ -55,6 +55,10 @@ public:
         }
     }
 
+    QString get_curr_name_tmp() const{
+        return tmp_path;
+    }
+
 private:
 
     /* when the user has not selected a location to save the file, it is automatically saved as a temporary file in the /home/user/.writernote folder */

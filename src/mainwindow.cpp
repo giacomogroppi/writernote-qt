@@ -1,41 +1,22 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QList>
-#include <QCloseEvent>
 #include <QMessageBox>
 #include <QListWidgetItem>
-
-#include <fstream>
-#include <cstdint>
-#include <QFile>
-#include <iostream>
-#include <string.h>
-#include <QInputDialog>
-#include <QFileDialog>
 #include "datawrite/qfilechoose.h"
-
 #include "style/abilitazioneinput.h"
-
 #include "currenttitle/redolist.h"
-
 #include "dataread/xmlstruct.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "savecopybook.h"
 #include "newcopybook_.h"
 #include "setting_ui.h"
-
 #include "datawrite/savefile.h"
 #include "style/abilitazioneinput.h"
-
 #include "currenttitle/checksimilecopybook.h"
-
 #include "windows/updatecheck.h"
-
 #include "audioplay/aggiornotastiriascolto.h"
 #include "utils/setting_define.h"
-
 #include <QSettings>
-
 #include "utils/settings/setting_load.h"
 #include "windows/mostra_finestra_i.h"
 #include "utils/areyousure/areyousure.h"
@@ -144,8 +125,6 @@ MainWindow::MainWindow(QWidget *parent,
     ui->actioncloud->setVisible(false);
 #endif
 
-#define CHECKABLE(x) x->setCheckable(true)
-
     CHECKABLE(ui->actionpen);
     CHECKABLE(ui->actionrubber);
     CHECKABLE(ui->actionselezionetext);
@@ -187,6 +166,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     if(path)
         openFile(path);
+    resFileTmpInTmpFolder();
 }
 
 MainWindow::~MainWindow()

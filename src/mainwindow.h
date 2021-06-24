@@ -17,7 +17,7 @@
 
 /* for drag file into writernote */
 #include <QDropEvent>
-
+#define CHECKABLE(x) x->setCheckable(true)
 #include <QBuffer>
 
 #include "windows/updatecheck.h"
@@ -65,6 +65,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    void resFileTmpInTmpFolder();
+
     void updateTouch();
 
     void openFirstCopybook();

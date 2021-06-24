@@ -75,6 +75,7 @@ SOURCES += \
     src/openFirstCopybook.cpp \
     src/open_file.cpp \
     src/restore_file/get_name_available.cpp \
+    src/restore_file/resFileTmpInTmpFolder.cpp \
     src/restore_file/restore_file.cpp \
     src/restore_file/restore_file_critic.cpp \
     src/restore_file/ui/setting_restore_ui.cpp \
@@ -106,7 +107,6 @@ SOURCES += \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/utils/aboutQt/aboutqt.cpp \
-    src/utils/areyousure/areyousure.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
     src/audioplay/cambiostatoplayer.cpp \
