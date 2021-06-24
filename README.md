@@ -28,7 +28,7 @@
 - Export file as PDF
 - Print file
 - Keyboard support
-- Audio record [support for write mode only]:
+- Audio record:
   - Include audio file in writernote file
   - or decide to save the file in a specific location
   - listen to the audio again and visually see what was being written [only keyboard]
@@ -47,6 +47,7 @@
   - Writernote file
 - Draw with mouse
 - In case the application closes unexpectedly it is possible to recover the file, also setting the saving time of the restore file
+- Ready pdf file and take notes
 
 ## Experimental Features:
 - Import images
