@@ -11,12 +11,7 @@
  * save [not for loading]
 */
 
-qfilechoose::qfilechoose(MainWindow *ui)
-{
-    this->ui = ui;
-}
-
-bool qfilechoose::filechoose(QString *nome, short int type_){
+bool qfilechoose::filechoose(QString &nome, short int type_){
     QString extention;
     QString type;
 
@@ -39,7 +34,7 @@ bool qfilechoose::filechoose(QString *nome, short int type_){
         if(dir == "")
             return false;
 
-        *nome = dir;
+        nome = dir;
         return true;
     }
 
@@ -49,7 +44,7 @@ bool qfilechoose::filechoose(QString *nome, short int type_){
     if(nameFile == "")
         return false;
 
-    *nome = nameFile;
+    nome = nameFile;
 
     return true;
 }

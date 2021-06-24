@@ -152,13 +152,10 @@ bool MainWindow::setOutputLocation()
 
     procede:
     if(this->m_currenttitle->se_registato == currenttitle_class::record_file){
-        auto *qfile = new qfilechoose(this);
         QString fileName;
-        if(!qfile->filechoose(&fileName, TYPEAUDIO)){
-            delete qfile;
+        if(!qfilechoose::filechoose(fileName, TYPEAUDIO)){
             return false;
         }
-        delete qfile;
 
         m_currenttitle->audio_position_path = fileName;
         this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));

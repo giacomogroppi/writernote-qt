@@ -58,10 +58,9 @@ void MainWindow::on_actiontopdf_triggered()
     if(m_currenttitle->datatouch->isempty())
         return dialog_critic("There is nothing to convert to pdf");
 
-    qfilechoose temp(this);
     QString path_pdf;
 
-    if(!temp.filechoose(&path_pdf, TYPEFILEPDF))
+    if(!qfilechoose::filechoose(path_pdf, TYPEFILEPDF))
         return;
 
 

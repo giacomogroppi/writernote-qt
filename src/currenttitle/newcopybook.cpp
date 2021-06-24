@@ -63,8 +63,7 @@ void MainWindow::on_actionCreate_new_copybook_triggered()
     if(this->m_path.isEmpty())
     {
         /* asks where you want to save the new one */
-        qfilechoose filec(this);
-        ok = filec.filechoose(&m_path);
+        ok = qfilechoose::filechoose(m_path);
         if (!ok){
             return;
         }

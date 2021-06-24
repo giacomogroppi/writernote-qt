@@ -52,7 +52,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
     QMessageBox::StandardButton resBtn;
     bool check;
     savefile save_(&m_path, m_currenttitle);
-    qfilechoose file(nullptr);
 
     if(!m_indice.titolo.length() || m_currentTitle == ""){
         goto accept_event;
@@ -107,8 +106,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     if (resBtn == QMessageBox::Yes) {
 
         if(m_path == ""){
-            qfilechoose file(nullptr);
-            if(!file.filechoose(&m_path))
+            if(!qfilechoose::filechoose(m_path))
                 return;
         }
 

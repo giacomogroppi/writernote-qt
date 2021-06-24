@@ -15,6 +15,11 @@
 
 void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 {
+    /* in case the user has not yet saved the file */
+    if(this->m_path == ""){
+        return;
+    }
+
     if(this->player->state() == QMediaPlayer::PlayingState)
         return redolist(this);
 

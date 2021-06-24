@@ -35,8 +35,7 @@ bool savecopybook::check_permission(){
     /* else save*/
     if(parent->m_path == "")
     {
-        qfilechoose pathchoose(this->parent);
-        int check = pathchoose.filechoose(&parent->m_path);
+        bool check = qfilechoose::filechoose(parent->m_path);
 
         if(!check) /*vuol dire che l'utente non ha selezionato nessun file o posizione*/
             return false;

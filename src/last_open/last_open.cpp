@@ -225,8 +225,7 @@ static void copy(last_file *s,
 void last_open::on_open_button_clicked()
 {
     QString path;
-    qfilechoose chooser(nullptr);
-    if(!chooser.filechoose(&path, TYPEFILEWRITER))
+    if(!qfilechoose::filechoose(path, TYPEFILEWRITER))
         return;
 
     QFile file(path);

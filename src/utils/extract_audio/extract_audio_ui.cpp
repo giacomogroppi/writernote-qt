@@ -4,7 +4,7 @@
 #include "extract_audio.h"
 #include "QFile"
 #include "../dialog_critic/dialog_critic.h"
-
+#include <QFileDialog>
 #include <QDebug>
 #include "../../datawrite/qfilechoose.h"
 
@@ -145,8 +145,7 @@ void extract_audio_ui::on_edit_path_textChanged()
 void extract_audio_ui::on_open_to_clicked()
 {
     QString temp_path;
-    qfilechoose m_file (nullptr);
-    if(!m_file.filechoose(&temp_path, TYPEAUDIO))
+    if(!qfilechoose::filechoose(temp_path, TYPEAUDIO))
         return;
 
     ui->to_exit->setPlainText(temp_path);
