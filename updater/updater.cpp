@@ -154,7 +154,7 @@ void updater::downloadUpdate()
         goto close;
     }
 
-    if(!areyousure(nullptr, "Remove file", "Do you want to remove the temporary file?")){
+    if(!areyousure("Remove file", "Do you want to remove the temporary file?")){
         goto close;
     }
 
