@@ -18,7 +18,29 @@ void MainWindow::openFile(const char *pos){
     bool ok;
     QString path, tmp;
 
-    xmlstruct xml(&fileName, &m_indice, m_currenttitle);
+
+    currenttitle_class curr;
+    indice_class ind;
+    xmlstruct xml(&m_path, &ind, &curr);
+
+    n_need_save res_save = this->needToSave(&xml, &curr, &ind );
+
+    /*
+     * in case there is already open a file, we need to controll if the
+     * current file has beed modified
+    */
+    if(res_save == n_need_save::need_save){
+        if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
+            savefile save(&m_path, m_currenttitle);
+            if(save.savefile_check_indice(&m_indice) != OK || save.savefile_check_file() != OK){
+                if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
+                    return;
+                }
+            }
+        }
+    }
+
+    xml.setData(&fileName, &m_indice, m_currenttitle);
 
     if(!pos){
         fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; All file (* *.*)");
@@ -79,6 +101,8 @@ void MainWindow::openFile(const char *pos){
     if(this->m_indice.titolo.length() > 0)
         this->ui->listWidgetSX->setEnabled(true);
     update_list_copybook();
+
+    this->m_currenttitle->reset();
 
     this->openFirstCopybook();
     this->createFirstCopybook();
