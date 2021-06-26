@@ -5,8 +5,6 @@
 void MainWindow::openFirstCopybook(){
     auto item = ui->listWidgetSX->item(0);
 
-
-
     if(!item){
         createFirstCopybook();
 

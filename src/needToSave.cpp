@@ -42,7 +42,6 @@ enum MainWindow::n_need_save
 
     check1 = checksimilecopybook(tmp_read, m_currenttitle, true) == OK_CHECK;
 
-    /* if we pass nullptr */
     if(tmp_ind){
         check1 = check1 && checksimileindice(&m_indice, tmp_ind) == OK_CHECK;
     }
@@ -56,6 +55,10 @@ enum MainWindow::n_need_save
         if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read->datatouch)){
             return n_need_save::only_writernote;
         }
+    }
+
+    if(this->m_currenttitle->isEmpty()){
+        return n_need_save::not_;
     }
 
     return n_need_save::need_save;

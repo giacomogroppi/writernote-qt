@@ -50,8 +50,11 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         m_setting->changeCopybookFile();
     }
 
-    if(m_indice.titolo.at(m_indice.titolo.indexOf(item->text())) != ""){
-        res = xmlstruct(&m_path, &m_indice, m_currenttitle).loadfile((item->text() + ".xml").toUtf8().constData());
+    if(m_indice.titolo.at(
+                m_indice.titolo.indexOf(item->text()))
+            != ""){
+        fileload.setData(&m_path, &m_indice, m_currenttitle);
+        res = fileload.loadfile(item->text() + ".xml");
 
         if(res == ERROR){
             return dialog_critic("We had a problem opening the new copybook");
