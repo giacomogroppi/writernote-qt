@@ -4,7 +4,8 @@
 #include <zip.h>
 #include "../utils/common_error_definition.h"
 #include <QString>
-
+#define ERROR_PRIVATE -1
+#define OK_PRIVATE 0
 class currenttitle_class;
 class indice_class;
 
@@ -25,6 +26,9 @@ private:
     int savefile_check_2(zip_source_t *file, currenttitle_class *currenttitle, zip_t *filezip);
 
 public:
+    static int saveArrayIntoFile(const QString &from, const QString& name_coby,
+                                 const QString path, zip_t *filezip, const QString &suffix);
+
     void setting_data(currenttitle_class *m_current){currenttitle = m_current;}
 
     savefile(const QString &path, currenttitle_class *current){

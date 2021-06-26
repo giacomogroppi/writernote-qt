@@ -14,9 +14,6 @@ static void setCurrentVersion(currenttitle_class *data);
 
 #include <QFile>
 
-#define ERROR_PRIVATE -1
-#define OK_PRIVATE 0
-
 /*
  * the function save the copybook and all it's data
  * if save_audio == true -> save also the audio
@@ -127,69 +124,8 @@ static int save_string(zip_source_t *file, const char *stringa){
 int save_audio_file(const char *posAudio,
                     const QString &namecopybook,
                     const QString &path){
-    zip_source_t *file;
-    zip_t *filezip;
-    zip_error_t errore;
-    /*QFile file_temp(posAudio);*/
-    QByteArray array;
+    return savefile::saveArrayIntoFile(posAudio, namecopybook, path, nullptr, "audio.wav" );
 
-    int check = 0, error;
-
-    /*
-     * becouse we can't open the audio and past
-     * all the data into, we read one byte by
-     * one by one
-    */
-    uchar __data;
-    FILE *fp;
-
-    fp = fopen(posAudio, "r");
-
-    if(!fp)
-        return ERROR;
-
-    filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
-
-    if(!filezip)
-        return ERROR;
-
-    file = zip_source_buffer_create(0, 0, 0, &errore);
-    if(!file){
-        zip_close(filezip);
-        return ERROR;
-    }
-
-    zip_source_begin_write(file);
-
-    while(1){
-        fread(&__data, sizeof(uchar), 1, fp);
-
-        if(feof(fp)){
-            break;
-        }
-
-        SOURCE_WRITE(file, &__data, sizeof(__data));
-    };
-
-    check += zip_source_commit_write(file)==ERROR_PRIVATE;
-
-    check += zip_file_add(filezip,
-                 (namecopybook + "audio.wav").toUtf8().constData(),
-                 file,
-                 ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
-
-    if(check != OK_PRIVATE)
-        goto delete_;
-
-    zip_close(filezip);
-    fclose(fp);
-    return OK;
-
-    delete_:
-    fclose(fp);
-    zip_source_free(file);
-    zip_close(filezip);
-    return ERROR;
 }
 
 static void setCurrentVersion(currenttitle_class *data){

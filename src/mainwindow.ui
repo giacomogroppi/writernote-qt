@@ -469,6 +469,7 @@
    <addaction name="actionwhite"/>
    <addaction name="actionyellow"/>
    <addaction name="actionred"/>
+   <addaction name="actionbrown_color"/>
    <addaction name="actionchoose_color"/>
    <addaction name="actioninsertImage"/>
    <addaction name="separator"/>
@@ -977,6 +978,15 @@
   <action name="actionCopybook">
    <property name="text">
     <string>Copybook</string>
+   </property>
+  </action>
+  <action name="actionbrown_color">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/brown-icon.png</normaloff>:/image/images/brown-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>brown_color</string>
    </property>
   </action>
  </widget>

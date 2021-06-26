@@ -143,14 +143,12 @@ SOURCES += \
     src/datamanage/eliminazioneNFrasi.cpp \
     src/datamanage/spacchettamento.cpp \
     src/datamanage/stoprecording.cpp \
-    src/datawrite/colortoint.cpp \
     src/dataread/loadfile_xmlstruct.cpp \
     src/dataread/loadindice_xmlstruct.cpp \
     src/dataread/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
     src/datawrite/renamefile_f_zip.cpp \
     src/datawrite/write/salvabinario.cpp \
-    src/datawrite/savefile.cpp \
     src/datawrite/savefile_mainwindow.cpp \
     src/datawrite/source_read_ext.cpp \
     src/datawrite/write/savefile_savefile.cpp \
@@ -293,7 +291,6 @@ HEADERS += \
     src/datamanage/check1.h \
     src/datamanage/checkinserimento.h \
     src/datamanage/spacchettamento.h \
-    src/datawrite/colortoint.h \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/sizedata.h \
     src/datawrite/source_read_ext.h \
@@ -301,6 +298,7 @@ HEADERS += \
     src/utils/changeLanguage.h \
     src/utils/checkpassword/checkpassword.h \
     src/utils/color/setcolor.h \
+    src/utils/color_define_rgb.h \
     src/utils/common_def.h \
     src/utils/common_error_definition.h \
     src/utils/copy_text.h \

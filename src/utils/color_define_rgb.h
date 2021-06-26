@@ -1,0 +1,6 @@
+#ifndef COLOR_DEFINE_RGB_H
+#define COLOR_DEFINE_RGB_H
+
+#define COLOR_BROWN QColor(150, 75, 0)
+
+#endif // COLOR_DEFINE_RGB_H

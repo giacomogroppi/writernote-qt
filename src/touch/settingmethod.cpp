@@ -6,6 +6,7 @@
 #include "../utils/color/color_chooser.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "rubber/rubber_ui.h"
+#include "../utils/color_define_rgb.h"
 
 #define SET_CHECK(x) x->setChecked(true)
 #define SET_NOT_CHECK(x) x->setChecked(false)
@@ -106,6 +107,7 @@ void MainWindow::updateTouch(){
     ui->actionwhite->setChecked(m_canvas->m_color == Qt::white);
     ui->actionyellow->setChecked(m_canvas->m_color == Qt::yellow);
     ui->actionred->setChecked(m_canvas->m_color == Qt::red);
+    ui->actionbrown_color->setChecked(m_canvas->m_color == COLOR_BROWN);
 }
 
 void MainWindow::on_actionblack_triggered()
@@ -130,4 +132,9 @@ void MainWindow::on_actionred_triggered()
 {
     this->m_canvas->sceltacolorepenna(Qt::red);
     updateTouch();
+}
+
+void MainWindow::on_actionbrown_color_triggered()
+{
+    this->m_canvas->sceltacolorepenna(COLOR_BROWN);
 }

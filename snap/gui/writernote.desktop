@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=writernote
+Name=Writernote
 Comment=Take notes smart
 Exec=writernote
 Icon=${SNAP}/meta/gui/writernote-second-icon.png

@@ -4,9 +4,7 @@
 #include <QMessageBox>
 #include <QString>
 #include "zip.h"
-
-#include "../colortoint.h"
-
+#include "../source_read_ext.h"
 #include "../../images/save_images.h"
 
 static int freezip(zip_source_t *files){
@@ -58,6 +56,75 @@ int savefile::salvabinario(zip_t *filezip){
 
     error:
     zip_source_free(file);
+    return ERROR;
+
+}
+
+int savefile::saveArrayIntoFile(const QString &from,
+                                const QString &name_coby,
+                                const QString path,
+                                zip_t *filezip,
+                                const QString &suffix)
+{
+    QString __fin = name_coby + suffix;
+
+    zip_source_t *file;
+    zip_error_t errore;
+    QByteArray array;
+
+    int check = 0, error;
+
+    uchar __data;
+    FILE *fp;
+
+    fp = fopen(from.toUtf8().constData(), "r");
+
+    if(!fp)
+        return ERROR;
+
+    if(!filezip){
+        filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
+
+        if(!filezip)
+            return ERROR;
+    }
+
+    file = zip_source_buffer_create(0, 0, 0, &errore);
+    if(!file){
+        zip_close(filezip);
+        return ERROR;
+    }
+
+    zip_source_begin_write(file);
+
+    while(1){
+        fread(&__data, sizeof(uchar), 1, fp);
+
+        if(feof(fp)){
+            break;
+        }
+
+        SOURCE_WRITE(file, &__data, sizeof(__data));
+    };
+
+    check += zip_source_commit_write(file)==ERROR_PRIVATE;
+
+    check += zip_file_add(filezip,
+                 (__fin).toUtf8().constData(),
+                 file,
+                 ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
+
+    if(check != OK_PRIVATE)
+        goto delete_;
+
+    zip_close(filezip);
+    fclose(fp);
+    return OK;
+
+    delete_:
+    fclose(fp);
+    zip_source_free(file);
+    zip_close(filezip);
     return ERROR;
 
 }
