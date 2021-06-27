@@ -207,7 +207,7 @@ public:
     int maxId();
 
     inline bool isempty(){
-        return this->m_point.isEmpty() || userWrittenSomething(int(0));
+        return this->m_point.isEmpty();
     };
 
     static void inverso(QPointF &point);

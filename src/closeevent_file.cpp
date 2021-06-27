@@ -63,8 +63,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     if(__res == n_need_save::unable_load){
         QMessageBox msgBox;
-        msgBox.setText("Error:");
-        msgBox.setInformativeText("We had an error opening the current file");
+        msgBox.setText("Error");
+        msgBox.setInformativeText("We had an error opening the current file, do you want to close anyway?");
         msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Cancel);
 

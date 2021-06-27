@@ -3,6 +3,13 @@
 #include "ui_mainwindow.h"
 #include "currenttitle/checksimilecopybook.h"
 
+/*
+ * tmp_read and tmp_ind
+ * they are temporary objects, which are used by him to
+ * understand the file currently used, that of MainWindow,
+ *  has been modified
+*/
+
 enum MainWindow::n_need_save
         MainWindow::needToSave(
             xmlstruct *xml,
@@ -57,7 +64,7 @@ enum MainWindow::n_need_save
         }
     }
 
-    if(this->m_currenttitle->isEmpty()){
+    if(this->m_currenttitle->isEmpty() || m_currenttitle->datatouch->userWrittenSomething(nullptr)){
         return n_need_save::not_;
     }
 

@@ -1,5 +1,4 @@
 #include "xmlstruct.h"
-
 #include <QString>
 
 xmlstruct::xmlstruct(const QString *path_U, indice_class *indice_U, currenttitle_class *currenttitle_U)

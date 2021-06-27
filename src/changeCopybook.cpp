@@ -34,7 +34,8 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     savecopybook __save(this, &m_currentTitle);
     int res;
 
-    /* capisce se il currenttitle è cambiato, in caso contrario non chiede se si è sicuri di volerlo cambiare */
+    const QString new_title = item->text();
+
     if(m_currentTitle != ""){
         _res = needToSave(&fileload, &tmp, nullptr);
 
@@ -51,10 +52,10 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     }
 
     if(m_indice.titolo.at(
-                m_indice.titolo.indexOf(item->text()))
+                m_indice.titolo.indexOf(new_title))
             != ""){
         fileload.setData(&m_path, &m_indice, m_currenttitle);
-        res = fileload.loadfile(item->text() + ".xml");
+        res = fileload.loadfile(new_title + ".xml");
 
         if(res == ERROR){
             return dialog_critic("We had a problem opening the new copybook");
@@ -69,7 +70,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         m_currenttitle->reset();
         m_currenttitle->datatouch->reset();
     }
-    m_currentTitle = item->text();
+    m_currentTitle = new_title;
     updateTitle(m_currenttitle);
 
     if(!m_currenttitle->m_touch)

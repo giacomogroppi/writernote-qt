@@ -59,7 +59,7 @@ void TabletCanvas::load(QPainter &painter,
                         int size_verticale,
                         double *y_last){
 
-    if(data->datatouch->isempty())
+    if(data->isEmpty())
         return;
 
     bool is_play;
