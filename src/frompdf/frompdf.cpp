@@ -94,7 +94,7 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     if(clear)
         this->reset();
 
-    doc = Poppler::Document::load(pos);
+    doc = Poppler::Document::loadFromData(pos);
 
     if(!doc){
         dialog_critic("The file is not readable");
