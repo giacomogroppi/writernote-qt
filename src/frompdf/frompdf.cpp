@@ -62,7 +62,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
     uint i;
 
     for(i=0; i<m_data->count_pdf; ++i){
-        const QString &ref_str = m_data->nome_copybook + "_pdf_" + QString::number(uint(i));
+        const QString &ref_str = frompdf::getName(m_data->nome_copybook, i);
 
         size = xmlstruct::sizeFile(fileZip, ref_str);
         fp = zip_fopen(fileZip,
@@ -73,12 +73,11 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
             return load_res::not_valid_pdf;
         }
 
-        do {
+        while(size) {
             zip_fread(fp, &__read, 1);
             arr.append(__read);
             --size;
         }
-        while(size);
 
 
         load_from_row(arr, clear);

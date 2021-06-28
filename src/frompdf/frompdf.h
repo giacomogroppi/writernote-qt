@@ -27,6 +27,10 @@ private:
         double x;
     }m_translation;
 
+    static inline QString getName(const QString &p, const uint i){
+        return p + "_pdf_" + QString::number(uint(i));
+    }
+
 public:    
     static bool isvalid(QString &pos);
 
