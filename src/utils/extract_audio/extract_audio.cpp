@@ -40,7 +40,7 @@ extract::n_extract extract_audio(const char *path,
         return extract::not_record;
     }
 
-    if(load_audio(&title->audio_data, m_namecopybook, m_path) != OK)
+    if(load_audio(title->audio_data, m_namecopybook, m_path) != OK)
     {
         DELETE_T;
         return extract::load_audio;

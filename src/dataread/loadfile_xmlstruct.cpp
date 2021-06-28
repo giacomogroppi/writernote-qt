@@ -7,8 +7,6 @@
 #define LOAD_STRINGA(x, y) if(load_stringa(x,y) == ERROR) goto free_;
 #define LOAD_STRINGA_RETURN(x, y) if(load_stringa(x, y) == ERROR)return ERROR;
 
-static size_t sizeFile(zip_t *filezip, const char *namefile);
-
 static int load_stringa(zip_file_t *f, QString *stringa){
     int temp;
 
@@ -258,28 +256,26 @@ int xmlstruct::load_file_4(currenttitle_class *currenttitle, zip_file_t *f, zip_
  * TODO -> load audio into the buffer only if you are really opening a new copybook
 */
 #define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
-    zip_close(y); \
-    if(audio_data) free(audio_data);
+    zip_close(y);
 
 #define NAME_AUDIO(x) (x+"audio.wav")
 
-int load_audio(QByteArray *array, QString &namecopybook, QString &path){
+int load_audio(QByteArray &array, const QString &namecopybook, const QString &path){
     int error;
-    void * audio_data = nullptr;
     size_t size_audio;
     zip_t *file_zip;
     zip_file_t *f;
 
     uchar __r;
 
-    array->clear();
+    array.clear();
 
     file_zip = zip_open(path.toUtf8().constData(), 0, &error);
 
     if(!file_zip)
         return ERROR;
 
-    size_audio = sizeFile(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData());
+    size_audio = xmlstruct::sizeFile(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData());
 
     if(!size_audio)
         return ERROR;
@@ -288,18 +284,11 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
     if(f == NULL)
         return ERROR;
 
-    audio_data = malloc(size_audio);
-    if(audio_data){
-        SOURCE_READ_GOTO(f, audio_data, size_audio);
+    while(size_audio){
+        SOURCE_READ_GOTO(f, &__r, sizeof(uchar));
 
-        array->append((const char *)audio_data, size_audio);
-    }else{
-        while(size_audio){
-            SOURCE_READ_GOTO(f, &__r, sizeof(uchar));
-
-            array->append(__r);
-            size_audio --;
-        }
+        array.append(__r);
+        size_audio --;
     }
 
     CLOSE_ZIP_AUDIO(f, file_zip);
@@ -311,7 +300,7 @@ int load_audio(QByteArray *array, QString &namecopybook, QString &path){
 
 }
 
-static size_t sizeFile(zip_t *filezip, const char *namefile){
+size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile){
     struct zip_stat st;
     zip_stat_init(&st);
 

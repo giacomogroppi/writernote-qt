@@ -137,4 +137,5 @@ void MainWindow::on_actionred_triggered()
 void MainWindow::on_actionbrown_color_triggered()
 {
     this->m_canvas->sceltacolorepenna(COLOR_BROWN);
+    updateTouch();
 }

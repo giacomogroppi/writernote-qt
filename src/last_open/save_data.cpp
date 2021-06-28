@@ -32,7 +32,7 @@ void save_data(const QString &path, int type, int owner_type, char *owner)
     }
 
     for(i=0, uguale = false; i<quanti && !uguale; ++i){
-        if(strcmp(m_lista[i].posizione, TOCHAR(path)) == 0){
+        if(strcmp(m_lista[i].posizione, path.toUtf8().constData()) == 0){
             uguale = true;
         }
     }

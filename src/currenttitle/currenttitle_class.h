@@ -37,6 +37,8 @@ public:
     datastruct *datatouch;
     void reset();
 
+    uint count_pdf = 0;
+
     QList<struct immagine_S> immagini;
 
     enum n_audio_record{

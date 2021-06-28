@@ -8,6 +8,7 @@
 #include "restore_file/get_name_tmp.h"
 #include "restore_file/ui/setting_restore_ui.h"
 #include "restore_file/restore_file_critic.h"
+#include "frompdf/frompdf.h"
 
 #include "restore_file/get_name_available.h"
 
@@ -18,7 +19,7 @@ void MainWindow::openFile(const char *pos){
     bool ok;
     QString path, tmp;
 
-
+    frompdf::load_res __res;
     currenttitle_class curr;
     indice_class ind;
     xmlstruct xml(&m_path, &ind, &curr);
@@ -43,7 +44,7 @@ void MainWindow::openFile(const char *pos){
     xml.setData(&fileName, &m_indice, m_currenttitle);
 
     if(!pos){
-        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; All file (* *.*)");
+        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; Pdf (*.pdf);; All file (* *.*)");
     }else{
         fileName = pos;
     }
@@ -58,14 +59,15 @@ void MainWindow::openFile(const char *pos){
     file.close();
 
 #ifndef ANDROID
-    if(fileName.indexOf(APP_EXT) == -1){
-        if(!areyousure("Error", "The file does not have the writernote extension, do you want to open it anyway?")){
+    if(fileName.indexOf(APP_EXT) == -1
+            && fileName.indexOf(".pdf") != -1){
+        if(!areyousure("Error", "The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?")){
             return;
         }
     }
 #endif
 
-    if(fileLost::exe(fileName)){
+    if(fileName.indexOf(".pdf") != -1 && fileLost::exe(fileName)){
         if(areyousure("Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
             path = get_name_available::get(fileName, ok);
 
@@ -90,22 +92,32 @@ void MainWindow::openFile(const char *pos){
     }
 
     load:
+    const bool pdf = fileName.indexOf(".pdf") != -1;
 
-    if(!xml.loadindice())
-        return dialog_critic("We had a problem reading the index of the file");
+    if(pdf){
+        __res = m_from_pdf->load(fileName, false);
 
-    this->m_setting->changeCopybookFile();
+        if(__res == frompdf::load_res::ok){
 
-    m_path = fileName;
+        }
+    }
+    else {
+        if(!xml.loadindice())
+            return dialog_critic("We had a problem reading the index of the file");
 
-    if(this->m_indice.titolo.length() > 0)
-        this->ui->listWidgetSX->setEnabled(true);
-    update_list_copybook();
+        this->m_setting->changeCopybookFile();
 
-    this->m_currenttitle->reset();
+        m_path = fileName;
 
-    this->openFirstCopybook();
-    this->createFirstCopybook();
+        if(this->m_indice.titolo.length() > 0)
+            this->ui->listWidgetSX->setEnabled(true);
+        update_list_copybook();
+
+        this->m_currenttitle->reset();
+
+        this->openFirstCopybook();
+        this->createFirstCopybook();
+    }
 }
 
 void MainWindow::on_actionOpen_triggered()

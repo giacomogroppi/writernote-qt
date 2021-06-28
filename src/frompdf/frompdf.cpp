@@ -3,6 +3,7 @@
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../currenttitle/currenttitle_class.h"
 #include "../utils/permission/permission.h"
+#include "../dataread/xmlstruct.h"
 
 frompdf::frompdf(currenttitle_class *data)
 {
@@ -29,7 +30,63 @@ bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index)
     return !index.isEmpty();
 }
 
-frompdf::load_res frompdf::load(const QString &pos, const bool clear)
+frompdf::load_res frompdf::load(const QString &path, const bool clear)
+{
+    FILE *fp;
+    QByteArray arr;
+    uchar __read;
+
+    fp = fopen(path.toUtf8().constData(), "r");
+
+    if(!fp){
+        return load_res::not_valid_pdf;
+    }
+
+    do {
+        fread(&__read, 1, 1, fp);
+        arr.append(__read);
+    }
+    while(!feof(fp));
+
+
+    return load_from_row(arr, clear);
+}
+
+frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
+{
+    zip_file_t *fp;
+    QByteArray arr;
+    uchar __read;
+    size_t size;
+
+    uint i;
+
+    for(i=0; i<m_data->count_pdf; ++i){
+        const QString &ref_str = m_data->nome_copybook + "_pdf_" + QString::number(uint(i));
+
+        size = xmlstruct::sizeFile(fileZip, ref_str);
+        fp = zip_fopen(fileZip,
+                       ref_str.toUtf8().constData()
+                       , 0);
+
+        if(!fp){
+            return load_res::not_valid_pdf;
+        }
+
+        do {
+            zip_fread(fp, &__read, 1);
+            arr.append(__read);
+            --size;
+        }
+        while(size);
+
+
+        load_from_row(arr, clear);
+    }
+
+}
+
+frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear)
 {
     uint i, len;
     QImage image;

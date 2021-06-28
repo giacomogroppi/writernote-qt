@@ -20,7 +20,7 @@
 /*
  * call then we are starting an audio
 */
-int load_audio(QByteArray *array, QString &namecopybook, QString &path);
+int load_audio(QByteArray &array, const QString &namecopybook, const QString &path);
 
 class xmlstruct{
 private:
@@ -38,6 +38,11 @@ private:
     int loadbinario_1(struct zip *);
 
 public:
+    static size_t sizeFile(zip_t *filezip, const QString &namefile){
+        return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
+    }
+    static size_t sizeFile(zip_t *filezip, const char *namefile);
+
     QString getPath(){
         return *path_;
     };

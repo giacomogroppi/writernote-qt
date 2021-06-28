@@ -3,6 +3,7 @@
 
 class currenttitle_class;
 
+#include "zip.h"
 #include <QString>
 #include <QList>
 #include <QImage>
@@ -57,7 +58,13 @@ public:
 
     /* return true if all load correctly */
     bool load(const QStringList &path, QMap<load_res, uchar> &index);
+
     load_res load(const QString &, const bool clear);
+
+    /* it load from a zip_t file all the pdf for the current copybook */
+    load_res load(zip_t *, const bool clear);
+
+    load_res load_from_row(const QByteArray &, const bool clear);
 
     inline void draw(QPainter &painter,
                      const uint pwidth,

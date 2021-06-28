@@ -36,7 +36,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         if(parent->m_currenttitle->se_registato == currenttitle_class::record_zip){
             /* if it's not laoded */
             if(parent->m_currenttitle->audio_data.isEmpty())
-                if(load_audio(&parent->m_currenttitle->audio_data, parent->m_currenttitle->nome_copybook, parent->m_path) != OK)
+                if(load_audio(parent->m_currenttitle->audio_data, parent->m_currenttitle->nome_copybook, parent->m_path) != OK)
                     return dialog_critic("We had a problem loading the audio");
 
             if(parent->m_buffer->isOpen()){
