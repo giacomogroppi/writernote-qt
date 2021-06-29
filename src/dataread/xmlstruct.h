@@ -42,6 +42,10 @@ public:
         return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
     }
     static size_t sizeFile(zip_t *filezip, const char *namefile);
+    static int load_stringa(zip_file_t *f, QString &stringa);
+    static int readFile(zip_t *fileZip, QByteArray &arr,
+                        const bool clear, const QString &name,
+                        const bool closeZip);
 
     QString getPath(){
         return *path_;

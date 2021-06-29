@@ -4,10 +4,10 @@
 #include "../datawrite/source_read_ext.h"
 #include "../utils/common_error_definition.h"
 
-#define LOAD_STRINGA(x, y) if(load_stringa(x,y) == ERROR) goto free_;
-#define LOAD_STRINGA_RETURN(x, y) if(load_stringa(x, y) == ERROR)return ERROR;
+#define LOAD_STRINGA(x, y) if(xmlstruct::load_stringa(x,y) == ERROR) goto free_;
+#define LOAD_STRINGA_RETURN(x, y) if(xmlstruct::load_stringa(x, y) == ERROR)return ERROR;
 
-static int load_stringa(zip_file_t *f, QString *stringa){
+int xmlstruct::load_stringa(zip_file_t *f, QString &stringa){
     int temp;
 
     SOURCE_READ_RETURN(f, &temp, sizeof(int));
@@ -19,13 +19,50 @@ static int load_stringa(zip_file_t *f, QString *stringa){
 
         vartempp[temp] = '\0';
 
-        *stringa = vartempp;
+        stringa = vartempp;
 
         delete [] vartempp;
 
     }
 
     return OK;
+}
+
+int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
+                        const bool clear, const QString &path,
+                        const bool closeZip)
+{
+    if(clear)
+        arr.clear();
+
+    size_t size;
+    zip_file_t *file;
+    uchar __r;
+
+    size = xmlstruct::sizeFile(fileZip, path);
+
+    file = zip_fopen(fileZip, path.toUtf8().constData(), 0);
+    if(file == NULL)
+        return ERROR;
+
+    while(size){
+        SOURCE_READ_GOTO(file, &__r, sizeof(uchar));
+
+        arr.append(__r);
+        size --;
+    }
+
+    zip_fclose(file);
+    if(closeZip)
+        zip_close(fileZip);
+
+    return OK;
+
+    free_:
+    zip_fclose(file);
+    if(closeZip)
+        zip_close(fileZip);
+    return ERROR;
 }
 
 #define LOAD_MULTIPLESTRING(x, y, z) if(load_multiplestring(x,y,z) == ERROR) goto free_;
@@ -42,7 +79,7 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
     QString temp_;
 
     for(i=0; i<lunghezza; i++){
-        LOAD_STRINGA_RETURN(f, &temp_);
+        LOAD_STRINGA_RETURN(f, temp_);
 
         lista->append(temp_);
     }
@@ -149,7 +186,7 @@ int xmlstruct::loadfile(const char *nameFile){
  * furthermore we are obliged to read the audio_potion_path string
 */
 int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip){
-    LOAD_STRINGA_RETURN(f, &currenttitle->nome_copybook);
+    LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
 
     bool temp;
     SOURCE_READ_RETURN(f, &temp, sizeof(bool));
@@ -160,9 +197,9 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
-    LOAD_STRINGA_RETURN(f, &currenttitle->testi)
+    LOAD_STRINGA_RETURN(f, currenttitle->testi)
 
-    LOAD_STRINGA_RETURN(f, &currenttitle->audio_position_path)
+    LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
 
     SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
 
@@ -179,7 +216,7 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
 int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip)
 {
-    LOAD_STRINGA_RETURN(f, &currenttitle->nome_copybook);
+    LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
 
     int temp;
     SOURCE_READ_RETURN(f, &temp, sizeof(int));
@@ -187,9 +224,9 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
-    LOAD_STRINGA_RETURN(f, &currenttitle->testi);
+    LOAD_STRINGA_RETURN(f, currenttitle->testi);
 
-    LOAD_STRINGA_RETURN(f, &currenttitle->audio_position_path)
+    LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
 
     SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
 
@@ -208,7 +245,7 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 #endif
 
 int xmlstruct::load_file_4(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip){
-    LOAD_STRINGA_RETURN(f, &currenttitle->nome_copybook);
+    LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
 
     int temp;
     uchar controllo_parita = 0;
@@ -218,9 +255,9 @@ int xmlstruct::load_file_4(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
-    LOAD_STRINGA_RETURN(f, &currenttitle->testi);
+    LOAD_STRINGA_RETURN(f, currenttitle->testi);
 
-    LOAD_STRINGA_RETURN(f, &currenttitle->audio_position_path)
+    LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
 
     SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
 
@@ -262,11 +299,7 @@ int xmlstruct::load_file_4(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
 int load_audio(QByteArray &array, const QString &namecopybook, const QString &path){
     int error;
-    size_t size_audio;
     zip_t *file_zip;
-    zip_file_t *f;
-
-    uchar __r;
 
     array.clear();
 
@@ -275,6 +308,9 @@ int load_audio(QByteArray &array, const QString &namecopybook, const QString &pa
     if(!file_zip)
         return ERROR;
 
+    error = xmlstruct::readFile(file_zip, array, true, NAME_AUDIO(namecopybook), false);
+
+    /*
     size_audio = xmlstruct::sizeFile(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData());
 
     if(!size_audio)
@@ -297,6 +333,10 @@ int load_audio(QByteArray &array, const QString &namecopybook, const QString &pa
     free_:
     CLOSE_ZIP_AUDIO(f, file_zip);
     return ERROR;
+*/
+
+    zip_close(file_zip);
+    return error;
 
 }
 
