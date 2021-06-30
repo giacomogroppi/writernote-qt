@@ -23,7 +23,7 @@ static bool load();
 void MainWindow::on_startrecording_triggered()
 {
     if(this->m_currenttitle->se_registato != currenttitle_class::not_record)
-        return messaggio_utente("You had already record and audio");
+        return user_message("You had already record and audio");
     /*
     if(this->m_currenttitle.audio_position_path != "")
         return dialog_critic("You had already record an audio");*/

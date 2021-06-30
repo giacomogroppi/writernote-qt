@@ -90,7 +90,7 @@ void setting_restore_ui::deleteFile()
     }
 
     if(!QFile::remove(ff)){
-        messaggio_utente("I had a problem removing the temp file in " + ff);
+        user_message("I had a problem removing the temp file in " + ff);
     }
 }
 

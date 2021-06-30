@@ -2,16 +2,16 @@
 
 #include <QMessageBox>
 
-void dialog_critic(QString stringa){
+void dialog_critic(const QString &str){
     QMessageBox msgBox;
-    msgBox.setText(stringa);
+    msgBox.setText(str);
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.exec();
 }
 
-void messaggio_utente(QString stringa){
+void user_message(const QString &str){
     QMessageBox msgBox;
-    msgBox.setText(stringa);
+    msgBox.setText(str);
     msgBox.exec();
 }
 

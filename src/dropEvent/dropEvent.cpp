@@ -46,7 +46,7 @@ void MainWindow::dropEvent(QDropEvent *event){
         delete point;
     }
     else{
-        messaggio_utente("The file you are trying to open does not have a compatible extention");
+        user_message("The file you are trying to open does not have a compatible extention");
     }
 }
 

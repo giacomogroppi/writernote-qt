@@ -10,7 +10,7 @@ void MainWindow::on_actionReduce_size_file_triggered()
         return;
 
     if(!m_currenttitle->m_touch)
-        return messaggio_utente("You can decrease the size of files created with the pen only");
+        return user_message("You can decrease the size of files created with the pen only");
 
     size_t __c, __e;
 
@@ -27,7 +27,7 @@ void MainWindow::on_actionReduce_size_file_triggered()
         reduce_size::decrese(m_currenttitle->datatouch);
 
         __c = reduce_size::current_size(m_currenttitle->datatouch);
-        messaggio_utente("The current size is now "
+        user_message("The current size is now "
                         + QString::number(__c) + " byte");
 
     }

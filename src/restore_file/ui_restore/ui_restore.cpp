@@ -151,13 +151,13 @@ void ui_restore::on_ok_restore_clicked()
 
     name_copy = get_name_available::get(get_name_tmp::get(pos_res), ok);
     if(!ok){
-        return messaggio_utente("It seams that that in the file you try to restore there is no copybook");
+        return user_message("It seams that that in the file you try to restore there is no copybook");
     }
 
     __res = restore_file_critic::restore_file(pos_res, name_copy);
 
     if(__res == restore_file_critic::restore_ok){
-        messaggio_utente("Copybook restore");
+        user_message("Copybook restore");
     }else{
         dialog_critic("We had a problem restoring the file");
     }

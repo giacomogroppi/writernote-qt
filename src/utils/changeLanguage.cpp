@@ -73,7 +73,7 @@ void MainWindow::on_actionChange_language_triggered()
 
     language_manager::saveCurrentLanguage(lan_dect);
 
-    messaggio_utente("Ok you need to restart writernote to change your language");
+    user_message("Ok you need to restart writernote to change your language");
 
 
 }

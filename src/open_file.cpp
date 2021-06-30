@@ -81,7 +81,7 @@ void MainWindow::openFile(const char *pos){
 
             if(restore_file_critic::restore_file(fileName,
                                                  path)){
-                messaggio_utente("File restore correcty");
+                user_message("File restore correcty");
             }else{
                 return dialog_critic("If not restore correctly");
             }

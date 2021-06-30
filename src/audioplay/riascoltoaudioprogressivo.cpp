@@ -77,7 +77,7 @@ void MainWindow::riascoltoaudioprogressivo(qint64 position){
 
     int duration = player->duration();
     if(!duration)
-        return messaggio_utente("The audio seems blank");
+        return user_message("The audio seems blank");
 
     this->ui->audioSlider->setValue((position*100)/duration);
 

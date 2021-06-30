@@ -65,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent,
     connect(player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
         [=](QMediaPlayer::Error error){
         Q_UNUSED(error)
-        messaggio_utente("We had an internal error with this error code: " + player->errorString());
+        user_message("We had an internal error with this error code: " + player->errorString());
     });
 
     this->m_buffer = new QBuffer(this);
@@ -344,9 +344,9 @@ void MainWindow::on_actionCopy_triggered()
 void MainWindow::on_actionVersion_triggered()
 {
 #ifdef VERSION_SNAPCRAFT
-    messaggio_utente("Current version is " + (QString)VERSION_STRING);
+    user_message("Current version is " + (QString)VERSION_STRING);
 #else
-    messaggio_utente("Current version is " + (QString)NO_VER_DEF + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__);
+    user_message("Current version is " + (QString)NO_VER_DEF + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__);
 #endif
 }
 

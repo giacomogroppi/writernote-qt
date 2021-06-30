@@ -56,7 +56,7 @@ bool topdf::createpdf(frompdf *m_pdf){
 void MainWindow::on_actiontopdf_triggered()
 {
     if(m_currenttitle->datatouch->isempty())
-        return messaggio_utente("There is nothing to convert to pdf");
+        return user_message("There is nothing to convert to pdf");
 
     QString path_pdf;
 

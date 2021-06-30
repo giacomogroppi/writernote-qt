@@ -102,7 +102,7 @@ void extract_audio_ui::on_extract_to_clicked()
 
     switch (res) {
     case extract::ok:
-        return messaggio_utente("Extraction complite to " + ui->edit_path->toPlainText());
+        return user_message("Extraction complite to " + ui->edit_path->toPlainText());
 
     case extract::load_audio:
         return dialog_critic("I had a problem reading the audio");
@@ -122,7 +122,7 @@ void extract_audio_ui::on_extract_to_clicked()
          * TODO: -> find a way to warn the user first of
          * the fact that and the copybook is not registered
         */
-        return messaggio_utente(ui->comboBox->currentText() + " is not recorder");
+        return user_message(ui->comboBox->currentText() + " is not recorder");
     case extract::open_to:
         return dialog_critic("I had a problem saving the file in " + ui->to_exit->toPlainText());
 

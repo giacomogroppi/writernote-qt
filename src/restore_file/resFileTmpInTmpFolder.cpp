@@ -57,7 +57,7 @@ void MainWindow::resFileTmpInTmpFolder(){
                                         QMessageBox::Yes);
 
         if(resBtn == QMessageBox::Help){
-            messaggio_utente("Last time you used writernote, it probably quit unexpectedly, if you want to recover the file, click YES, otherwise Ignore to delete the temporary file.");
+            user_message("Last time you used writernote, it probably quit unexpectedly, if you want to recover the file, click YES, otherwise Ignore to delete the temporary file.");
             --i;
             continue;
         }
@@ -82,7 +82,7 @@ void MainWindow::resFileTmpInTmpFolder(){
             }
 
             if(__res == restore_file_critic::restore_ok){
-                messaggio_utente("Saved in " + res);
+                user_message("Saved in " + res);
             }
         }
 

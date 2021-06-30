@@ -87,7 +87,7 @@ void updatecheck::managerFinished(){
     }
 
     if(mostra){
-        messaggio_utente("There is no update available");
+        user_message("There is no update available");
     }
 }
 

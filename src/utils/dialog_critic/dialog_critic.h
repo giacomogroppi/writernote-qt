@@ -3,8 +3,8 @@
 
 #include <QString>
 
-void dialog_critic(QString);
+void dialog_critic(const QString &);
 
-void messaggio_utente(QString);
+void user_message(const QString &);
 
 #endif // DIALOG_CRITIC_H

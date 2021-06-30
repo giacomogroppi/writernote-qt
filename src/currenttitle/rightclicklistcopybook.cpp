@@ -47,9 +47,9 @@ void MainWindow::renamefile_f(){
 
 
 void MainWindow::audiototext_f(){
-    messaggio_utente("This option is not implemented in the current version");
+    user_message("This option is not implemented in the current version");
     if(!this->ui->listWidgetSX->currentItem()->isSelected()){
-        messaggio_utente("This version of writernote is not yet capable of translating audio to text");
+        user_message("This version of writernote is not yet capable of translating audio to text");
         return redolist(this);
     }
 }
