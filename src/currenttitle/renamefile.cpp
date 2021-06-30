@@ -10,11 +10,12 @@
 
 #include "../datawrite/savefile.h"
 
-void renamefile(MainWindow *parent, const char *namefile){
-    bool checkname = (parent->ui->listWidgetSX->currentItem()->text() == parent->m_currentTitle);
+void renamefile(MainWindow *parent, const QString &namefile){
+    const bool checkname = (parent->ui->listWidgetSX->currentItem()->text() == parent->m_currentTitle);
     bool ok;
     QString namecopybook;
     int posizione;
+    savefile __save(&parent->m_path, NULL);
 
     namecopybook = QInputDialog::getText(parent, "Rename",
                                                  (QString)"Rename " + parent->ui->listWidgetSX->currentItem()->text(), QLineEdit::Normal,
@@ -34,9 +35,7 @@ void renamefile(MainWindow *parent, const char *namefile){
 
     parent->m_indice.titolo[posizione] = namecopybook;
 
-    savefile file_(&parent->m_path, NULL);
-
-    if(file_.savefile_check_indice(&parent->m_indice) != OK){
+    if(__save.savefile_check_indice(&parent->m_indice) != OK){
         renamefile_f_zip(parent->m_path.toUtf8().constData(), namecopybook.toUtf8().constData(), namefile);
         dialog_critic("We had an error saving the index of the file");
         return parent->update_list_copybook();

@@ -2,10 +2,12 @@
 #include "../mainwindow.h"
 #include "zip.h"
 #include "iostream"
-
+#include "../dataread/xmlstruct.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 
-bool renamefile_f_zip(const char *namezip, const char *from, const char *dest){
+bool renamefile_f_zip(const QString &namezip,
+                      const QString &from,
+                      const QString &dest){
     int errorp = 0;
     zip_t *filezip;
     QFile file(namezip);

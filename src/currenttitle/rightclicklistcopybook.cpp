@@ -41,7 +41,7 @@ void MainWindow::renamefile_f(){
     if(!this->ui->listWidgetSX->currentItem()->isSelected())
         return redolist(this);
 
-    renamefile(this, this->ui->listWidgetSX->currentItem()->text().toUtf8().constData());
+    renamefile(this, this->ui->listWidgetSX->currentItem()->text());
 
 }
 

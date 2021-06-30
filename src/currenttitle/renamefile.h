@@ -1,8 +1,9 @@
 #ifndef RENAMEFILE_H
 #define RENAMEFILE_H
 
-#include "../mainwindow.h"
+class MainWindow;
+class QString;
 
-void renamefile(MainWindow *parent, const char *namefile);
+void renamefile(MainWindow *parent, const QString &name);
 
 #endif // RENAMEFILE_H
