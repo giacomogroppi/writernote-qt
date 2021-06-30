@@ -12,9 +12,11 @@
 
 void renamefile(MainWindow *parent, const char *namefile){
     bool checkname = (parent->ui->listWidgetSX->currentItem()->text() == parent->m_currentTitle);
-
     bool ok;
-    QString namecopybook = QInputDialog::getText(parent, "Rename",
+    QString namecopybook;
+    int posizione;
+
+    namecopybook = QInputDialog::getText(parent, "Rename",
                                                  (QString)"Rename " + parent->ui->listWidgetSX->currentItem()->text(), QLineEdit::Normal,
                                                  parent->ui->listWidgetSX->currentItem()->text(), &ok);
     if(!ok || namecopybook == "")
@@ -23,7 +25,7 @@ void renamefile(MainWindow *parent, const char *namefile){
     if(parent->m_indice.titolo.indexOf(namecopybook.toUtf8().constData()) != -1)
         return dialog_critic("a file with this name already exists");
 
-    int posizione = parent->m_indice.titolo.indexOf(namefile);
+    posizione = parent->m_indice.titolo.indexOf(namefile);
 
     if(!renamefile_f_zip(parent->m_path.toUtf8().constData(), namefile, namecopybook.toUtf8().constData())){
         dialog_critic(("We had a problem changing the name of the file to " + namecopybook).toUtf8().constData());
