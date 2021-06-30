@@ -52,6 +52,16 @@ frompdf::load_res frompdf::load(const QString &path, const bool clear)
     return load_from_row(arr, clear);
 }
 
+QStringList frompdf::get_name_pdf(){
+    uint i;
+    QStringList __l;
+    for(i=0; i<m_data->count_pdf; ++i){
+        __l.append(frompdf::getName(m_data->nome_copybook, i));
+    }
+
+    return __l;
+}
+
 frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
 {
     zip_file_t *fp;
@@ -59,10 +69,17 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
     uchar __read;
     size_t size;
 
+    QStringList __name;
     uint i;
 
+    if(clear)
+        arr.clear();
+
+    __name = get_name_pdf();
+
+
     for(i=0; i<m_data->count_pdf; ++i){
-        const QString &ref_str = frompdf::getName(m_data->nome_copybook, i);
+        const QString &ref_str = __name.at(i);
 
         size = xmlstruct::sizeFile(fileZip, ref_str);
         fp = zip_fopen(fileZip,
@@ -79,10 +96,10 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
             --size;
         }
 
-
-        load_from_row(arr, clear);
+        load_from_row(arr, false);
     }
 
+    return frompdf::load_res::ok;
 }
 
 frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear)

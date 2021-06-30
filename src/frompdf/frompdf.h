@@ -60,6 +60,8 @@ public:
         m_image.clear();
     }
 
+    QStringList get_name_pdf();
+
     /* return true if all load correctly */
     bool load(const QStringList &path, QMap<load_res, uchar> &index);
 

@@ -60,7 +60,7 @@ public:
 
     bool loadindice();
 
-    int loadfile(const char *);
+    int loadfile(const char *path);
     int loadfile(const QString &path){
         return loadfile(path.toUtf8().constData());
     }
