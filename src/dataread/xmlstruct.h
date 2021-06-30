@@ -25,7 +25,7 @@ int load_audio(QByteArray &array, const QString &namecopybook, const QString &pa
 inline zip_file_t *zip_fopen(zip_t *zip, const QString &path, zip_flags_t flag){
     return zip_fopen(zip, path.toUtf8().constData(), flag);
 };
-inline zip_t *_Nullable zip_open(const QString &path, int check, int *ok){
+inline zip_t *zip_open(const QString &path, int check, int *ok){
     return zip_open(path.toUtf8().constData(), check, ok);
 }
 
