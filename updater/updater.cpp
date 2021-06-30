@@ -42,7 +42,7 @@ bool updater::downloadFile(QString url, const QString dest)
 
     if(QFile::exists(dest)){
         if(!QFile::remove(dest)){
-            messaggio_utente("Before update writernote remove this file " + dest);
+            user_message("Before update writernote remove this file " + dest);
             return false;
         }
     }
@@ -63,7 +63,7 @@ bool updater::extractFile(QString l, const QString &dest)
 
     if(__dir.exists()){
         if(!__dir.removeRecursively()){
-            messaggio_utente("I can't update writernote becouse I can't remove this folder: " + dest);
+            user_message("I can't update writernote becouse I can't remove this folder: " + dest);
             return false;
         }
     }
@@ -161,7 +161,7 @@ void updater::downloadUpdate()
     removeFile(testo);
     removeFile(dest);
 
-    messaggio_utente("Writernote was updated successfully to version " + ver);
+    user_message("Writernote was updated successfully to version " + ver);
 
     close:
     this->close();
@@ -170,7 +170,7 @@ void updater::downloadUpdate()
 void updater::sslErrors(QNetworkReply *, const QList<QSslError> &errors)
 {
     Q_UNUSED(errors);
-    messaggio_utente("I can't check the current version becouse I had a problem\n");
+    user_message("I can't check the current version becouse I had a problem\n");
 }
 
 
