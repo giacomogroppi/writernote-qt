@@ -4,6 +4,7 @@
 #include "../currenttitle/currenttitle_class.h"
 #include "../utils/permission/permission.h"
 #include "../dataread/xmlstruct.h"
+#include "../dataread/load_from_file.h"
 
 frompdf::frompdf(currenttitle_class *data)
 {
@@ -32,22 +33,11 @@ bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index)
 
 frompdf::load_res frompdf::load(const QString &path, const bool clear)
 {
-    FILE *fp;
     QByteArray arr;
-    uchar __read;
 
-    fp = fopen(path.toUtf8().constData(), "r");
-
-    if(!fp){
+    if(!load_from_file::exe(arr, path, false)){
         return load_res::not_valid_pdf;
     }
-
-    do {
-        fread(&__read, 1, 1, fp);
-        arr.append(__read);
-    }
-    while(!feof(fp));
-
 
     return load_from_row(arr, clear);
 }
@@ -64,10 +54,11 @@ QStringList frompdf::get_name_pdf(){
 
 frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
 {
-    zip_file_t *fp;
-    QByteArray arr;
+    /*zip_file_t *fp;
     uchar __read;
-    size_t size;
+    size_t size;*/
+
+    QByteArray arr;
 
     QStringList __name;
     uint i;
@@ -81,10 +72,13 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
     for(i=0; i<m_data->count_pdf; ++i){
         const QString &ref_str = __name.at(i);
 
-        size = xmlstruct::sizeFile(fileZip, ref_str);
+        xmlstruct::readFile(fileZip, arr, clear, ref_str, false);
+
+        /*size = xmlstruct::sizeFile(fileZip, ref_str);
         fp = zip_fopen(fileZip,
                        ref_str.toUtf8().constData()
                        , 0);
+
 
         if(!fp){
             return load_res::not_valid_pdf;
@@ -94,7 +88,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
             zip_fread(fp, &__read, 1);
             arr.append(__read);
             --size;
-        }
+        }*/
 
         load_from_row(arr, false);
     }

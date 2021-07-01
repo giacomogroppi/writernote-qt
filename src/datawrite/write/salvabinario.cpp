@@ -70,7 +70,6 @@ int savefile::saveArrayIntoFile(const QString &from,
 
     zip_source_t *file;
     zip_error_t errore;
-    QByteArray array;
 
     int check = 0, error;
 
@@ -85,13 +84,16 @@ int savefile::saveArrayIntoFile(const QString &from,
     if(!filezip){
         filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
 
-        if(!filezip)
+        if(!filezip){
+            fclose(fp);
             return ERROR;
+        }
     }
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
     if(!file){
         zip_close(filezip);
+        fclose(fp);
         return ERROR;
     }
 

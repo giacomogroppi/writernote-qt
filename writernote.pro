@@ -64,6 +64,7 @@ SOURCES += \
     src/currenttitle/option/main_exe.cpp \
     src/currenttitle/option/ui_option_copybook.cpp \
     src/datamanage/retry_save_audio.cpp \
+    src/dataread/load_from_file.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
     src/last_open/option/button_main.cpp \
@@ -252,6 +253,7 @@ HEADERS += \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/currenttitle/option/ui_option_copybook.h \
     src/datamanage/retry_save_audio.h \
+    src/dataread/load_from_file.h \
     src/filelost.h \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
