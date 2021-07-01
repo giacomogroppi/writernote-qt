@@ -10,7 +10,7 @@ void datastruct::inverso(QPointF &point){
  * return true if the first point is different
  * from (0.0, 0.0)
 */
-bool datastruct::repositioning(frompdf *m_pdf)
+bool datastruct::repositioning()
 {
     if(isempty())
         return false;
@@ -26,23 +26,23 @@ bool datastruct::repositioning(frompdf *m_pdf)
 
     datastruct::inverso(point_temp);
 
-    scala_all(point_temp, m_pdf);
+    scala_all(point_temp);
 
     return true;
 }
 
-void datastruct::restoreLastTranslation(frompdf *m_pdf){
+void datastruct::restoreLastTranslation(){
     if(__last_translation == QPointF(0, 0))
         return;
 
     datastruct::inverso(__last_translation);
 
-    scala_all(__last_translation, m_pdf);
+    scala_all(__last_translation);
 
     __last_translation = QPointF(0, 0);
 }
 
-void datastruct::scala_all(frompdf *m_pdf)
+void datastruct::scala_all()
 {
     if(isempty()){
         this->__last_translation = QPointF(0, 0);
@@ -55,13 +55,13 @@ void datastruct::scala_all(frompdf *m_pdf)
 
     datastruct::inverso(__last_translation);
 
-    scala_all(__last_translation, m_pdf);
+    scala_all(__last_translation);
 }
 
 /*
  * pass m_pdf only if you want to translate also the pdf
  */
-void datastruct::scala_all(const QPointF &point, frompdf *m_pdf)
+void datastruct::scala_all(const QPointF &point)
 {
     if(point == QPointF(0, 0))
         return;

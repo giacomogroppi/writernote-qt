@@ -10,11 +10,10 @@
  * foglio
 */
 bool datastruct::adjustHeight(const uint height,
-                              const bool controllRepo,
-                              frompdf *m_pdf)
+                              const bool controllRepo)
 {
     if(controllRepo)
-        controllForRepositioning(m_pdf);
+        controllForRepositioning();
 
     QPointF __point(0.0, 0.0);
     const point_s * __first = &m_point.first();
@@ -30,7 +29,7 @@ bool datastruct::adjustHeight(const uint height,
             return false;
 
         __point.setY(__traslation);
-        scala_all(__point, m_pdf);
+        scala_all(__point);
 
         __point.setY(biggery());
         if(__point.y() < height)
@@ -48,15 +47,14 @@ bool datastruct::adjustHeight(const uint height,
  * bisogna rifare il pixmap
 */
 bool datastruct::adjustWidth(const uint width,
-                             const bool controllRepo,
-                             frompdf *m_pdf){
+                             const bool controllRepo){
     if(controllRepo)
-        controllForRepositioning(m_pdf);
+        controllForRepositioning();
 
     const point_s *__point = & m_point.first();
     QPointF __t(0.0, 0.0);
 
-    scala_all(m_pdf);
+    scala_all();
 
     double __translation = biggerx();
 
@@ -66,7 +64,7 @@ bool datastruct::adjustWidth(const uint width,
             goto make;
 
         __t.setX(__translation);
-        this->scala_all(__t, m_pdf);
+        this->scala_all(__t);
 
         if(biggerx() < width)
             goto make;
@@ -78,13 +76,13 @@ bool datastruct::adjustWidth(const uint width,
 
     make:
     /* we need to make the pixmap */
-    restoreLastTranslation(m_pdf);
+    restoreLastTranslation();
     return false;
 
 
     not_make:
     /* we don't need to make a new pixmap */
-    restoreLastTranslation(m_pdf);
+    restoreLastTranslation();
     return true;
 }
 
@@ -94,7 +92,6 @@ bool datastruct::adjustWidth(const uint width,
  * height of one sheet is bigger than the width
 */
 bool datastruct::adjustAll(const uint width,
-                           const uint height,
-                           frompdf *m_pdf){
-    return adjustWidth(width, false, m_pdf) || adjustHeight(height, true, m_pdf);
+                           const uint height){
+    return adjustWidth(width, false) || adjustHeight(height, true);
 }

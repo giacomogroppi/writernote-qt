@@ -8,14 +8,13 @@
 
 #include "../../images/image_struct.h"
 
-class frompdf;
-
 /*
     IDVERTICALE -> linee verticali
     IDORIZZONALE -> linee orizzonali
 */
 
 #define NCOLOR 4
+class frompdf;
 
 struct colore_s{
     uchar colore[NCOLOR];
@@ -66,6 +65,8 @@ private:
     void scala_x(double scala);
     void scala_y(double scala);
     void scala_posizionefoglio(double scala);
+
+    frompdf *m_pdf;
 
 public:
 
@@ -140,8 +141,8 @@ public:
 
     uint move_to_positive(uint len);
 
-    void restoreLastTranslation(frompdf *m_pdf);
-    void controllForRepositioning(frompdf *m_pdf);
+    void restoreLastTranslation();
+    void controllForRepositioning();
 
     void removePointId(QList<int> &list);
     void removePointId(int id, uint *len = nullptr);
@@ -174,14 +175,11 @@ public:
 
 
     bool adjustAll(const uint width,
-                   const uint height,
-                   frompdf *m_pdf);
+                   const uint height);
     bool adjustWidth(const uint width,
-                     bool controllRepo,
-                     frompdf *m_pdf);
+                     bool controllRepo);
     bool adjustHeight(const uint height,
-                      const bool controllRepo,
-                      frompdf *m_pdf);
+                      const bool controllRepo);
 
     /*
      * this function return the index of the first
@@ -190,7 +188,8 @@ public:
     uint posIdOrizzonal();
 
 
-    datastruct();
+    datastruct(frompdf *m_pdf);
+    //~datastruct();
 
     void moveNextPoint(uint *pos,
                        uint len = 0,
@@ -211,10 +210,10 @@ public:
     };
 
     static void inverso(QPointF &point);
-    bool repositioning(frompdf *m_pdf);
+    bool repositioning();
 
-    void scala_all(const QPointF &, frompdf *);
-    void scala_all(frompdf *);
+    void scala_all(const QPointF &);
+    void scala_all();
 
     double biggerxNoId();
     void reset();

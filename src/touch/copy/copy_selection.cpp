@@ -2,16 +2,21 @@
 
 copy::copy(QObject *parent) : QObject(parent)
 {
+    this->m_data = new datastruct(nullptr);
+}
 
+copy::~copy()
+{
+    delete this->m_data;
 }
 
 void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonright){
     if(data->isempty())
         return;
 
-    this->m_data.reset();
+    this->m_data->reset();
 
-    unsigned i, len;
+    uint i, len;
     /*double x1, x2, y1, y2;
 
     x1 = topleft.x();
@@ -28,7 +33,7 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
 
 
         if(data->isinside(topleft, bottonright, __point)){
-            m_data.append(__point);
+            m_data->append(__point);
         }
 
     }
@@ -44,16 +49,16 @@ void copy::past_selection(datastruct *data_past, QPointF &point_past)
 {
     unsigned int i, len;
 
-    len = this->m_data.length();
+    len = this->m_data->length();
 
     const point_s * __point;
     point_s __append;
 
     for(i=0; i<len; i++){
-        __point = m_data.at(i);
+        __point = m_data->at(i);
 
         if(!data_past->isAvailable(__point->idtratto)){
-            m_data.changeId(i, data_past->maxId()+1);
+            m_data->changeId(i, data_past->maxId()+1);
         }
 
         memcpy(&__append, __point, sizeof(__append));
@@ -70,23 +75,23 @@ void copy::past_selection(datastruct *data_past, QPointF &point_past)
 
 bool copy::isSomeThingCopy()
 {
-    return !this->m_data.isempty();
+    return !this->m_data->isempty();
 }
 
 void copy::adjastTranslation()
 {
-    if(this->m_data.isempty())
+    if(this->m_data->isempty())
         return;
 
     QPointF min;
-    min.setX(this->m_data.minx());
-    min.setY(this->m_data.miny());
+    min.setX(this->m_data->minx());
+    min.setY(this->m_data->miny());
 
 
     datastruct::inverso(min);
 
     /* we suppose that all point have x and y > 0 */
 
-    m_data.scala_all(min, nullptr);
+    m_data->scala_all(min);
 
 }

@@ -26,10 +26,10 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
     if(s_data)
         l_sec = s_data->length();
 
-    scala_all(nullptr);
+    scala_all();
 
     if(s_data){
-        s_data->scala_all(nullptr);
+        s_data->scala_all();
     }else{
         i=0;
         goto single;
@@ -63,9 +63,9 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
 
 
     ret_:
-    restoreLastTranslation(nullptr);
+    restoreLastTranslation();
 
     if(s_data)
-        s_data->restoreLastTranslation(nullptr);
+        s_data->restoreLastTranslation();
     return check;
 }

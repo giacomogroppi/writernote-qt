@@ -6,7 +6,7 @@
 
 #include "../touch/datastruct/datastruct.h"
 #include "../images/image_struct.h"
-
+class frompdf;
 #define CURRENT_VERSION_CURRENT_TITLE 4
 #define MIN_VERSION_CURRENT_TITLE 2
 
@@ -19,6 +19,8 @@ public:
     size_t createSingleControll() const;
 
     bool isEmpty() const;
+
+    frompdf *m_pdf;
 
     QString nome_copybook;
 

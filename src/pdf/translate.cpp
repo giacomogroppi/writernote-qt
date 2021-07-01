@@ -2,8 +2,8 @@
 
 #define ERRORE 0.01
 
-void topdf::translate(frompdf *m_pdf){
-    data->datatouch->scala_all(m_pdf);
+void topdf::translate(){
+    data->datatouch->scala_all();
 
     /*
      * TODO -> adjust the zoom increase
@@ -25,7 +25,6 @@ void topdf::translate(frompdf *m_pdf){
                                  0,
                                  0,
                                  0,
-                                 data->datatouch,
-                                 m_pdf);
+                                 data->datatouch);
 
 }

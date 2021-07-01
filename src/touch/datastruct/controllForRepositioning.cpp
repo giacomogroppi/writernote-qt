@@ -4,7 +4,7 @@
  * this function only manage the case in which
  * the first point is positive
 */
-void datastruct::controllForRepositioning(frompdf *m_pdf){
+void datastruct::controllForRepositioning(){
     if(isempty())
         return;
 
@@ -22,6 +22,6 @@ void datastruct::controllForRepositioning(frompdf *m_pdf){
 
     datastruct::inverso(__translation);
 
-    this->scala_all(__translation, m_pdf);
+    this->scala_all(__translation);
 
 }

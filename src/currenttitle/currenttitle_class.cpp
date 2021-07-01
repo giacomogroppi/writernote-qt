@@ -3,13 +3,16 @@
 #include <QStringList>
 
 #include "../touch/datastruct/datastruct.h"
+#include "../frompdf/frompdf.h"
 
 currenttitle_class::currenttitle_class(){
-    this->datatouch = new datastruct;
+    this->m_pdf = new frompdf(this);
+    this->datatouch = new datastruct(m_pdf);
 }
 
 currenttitle_class::~currenttitle_class()
 {
+    delete m_pdf;
     delete datatouch;
 }
 

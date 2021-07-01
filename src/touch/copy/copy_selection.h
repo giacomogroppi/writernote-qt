@@ -2,7 +2,7 @@
 #define COPY_SELECTION_H
 
 #include <QObject>
-#include "../datastruct/datastruct.h"
+#include "../../currenttitle/currenttitle_class.h"
 #include <QPointF>
 
 class copy : public QObject
@@ -10,6 +10,7 @@ class copy : public QObject
     Q_OBJECT
 public:
     explicit copy(QObject *parent = nullptr);
+    ~copy();
 
     void copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonright);
     void past_selection(datastruct *data, QPointF &point_past);
@@ -21,7 +22,7 @@ signals:
 private:
     void adjastTranslation();
 
-    datastruct m_data;
+    datastruct *m_data;
 
 };
 

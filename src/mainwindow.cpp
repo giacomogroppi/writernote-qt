@@ -92,19 +92,13 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_text_w = new text_widgets(this);
     this->m_sheet = new fast_sheet_ui(this);
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice, &m_path);
-#ifdef PDFSUPPORT
-    this->m_from_pdf = new frompdf(m_currenttitle);
-#endif
+
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
     this->m_text->setHidden(true);
     this->m_pen->setHidden(true);
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
-
-#ifdef PDFSUPPORT
-    this->m_canvas->m_from_pdf = m_from_pdf;
-#endif
 
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;
@@ -176,10 +170,6 @@ MainWindow::~MainWindow()
     setting.beginGroup(GROUPNAME_INSERT_METHOD_PEN_MOUSE);
     setting.setValue(KEY_INSERT_METHOD_PEN_MOUSE, this->touch_or_pen);
     setting.endGroup();
-
-#ifdef PDFSUPPORT
-    delete m_from_pdf;
-#endif
 
     delete ui;
 }

@@ -23,8 +23,8 @@ static void newpage(datastruct *datastruct, double temp){
 
 }
 
-bool topdf::createpdf(frompdf *m_pdf){
-    this->translate(m_pdf);
+bool topdf::createpdf(){
+    this->translate();
 
     uint i, lenpagine;
     double size_orizzontale, size_verticale, delta, temp_ret;
@@ -69,7 +69,7 @@ void MainWindow::on_actiontopdf_triggered()
     filepdf.copy(m_currenttitle);
 
 
-    if(!filepdf.createpdf(m_from_pdf)){
+    if(!filepdf.createpdf()){
         dialog_critic("We had a problem saving the file to " + path_pdf);
     }
 }

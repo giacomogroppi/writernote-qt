@@ -95,7 +95,7 @@ void MainWindow::openFile(const char *pos){
     const bool pdf = fileName.indexOf(".pdf") != -1;
 
     if(pdf){
-        __res = m_from_pdf->load(fileName, false);
+        __res = m_currenttitle->m_pdf->load(fileName, false);
 
         if(__res == frompdf::load_res::ok){
 
