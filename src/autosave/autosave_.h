@@ -1,7 +1,7 @@
 #ifndef AUTOSAVE__H
 #define AUTOSAVE__H
 
-#include "../currenttitle/currenttitle_class.h"
+#include "../currenttitle/document.h"
 
 #include "../datawrite/savefile.h"
 
@@ -10,7 +10,7 @@
 class autosave_
 {
 private:
-    currenttitle_class **m_current;
+    Document **m_current;
 
     savefile *m_savefile;
 
@@ -19,7 +19,7 @@ private:
     int m_posizione;
 
 public:
-    void setting_data(currenttitle_class **, QString &);
+    void setting_data(Document **, QString &);
 
 
 

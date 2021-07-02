@@ -11,7 +11,7 @@ void lista_copybook::append(){
     if(len == QUANTIINDICI)
         return;
 
-    currenttitle_class *temp = new currenttitle_class;
+    Document *temp = new Document;
     m_list[len] = temp;
 
 }

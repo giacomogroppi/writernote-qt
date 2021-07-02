@@ -18,7 +18,7 @@ ui_restore::ui_restore(QWidget *parent, QString path) :
 
     ui->message_label->setText("");
 
-    m_curr = new currenttitle_class;
+    m_curr = new Document;
     m_ind = new indice_class;
 
     this->path = path;

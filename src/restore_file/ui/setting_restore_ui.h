@@ -20,7 +20,7 @@ namespace Ui {
 class setting_restore_ui;
 }
 
-class currenttitle_class;
+class Document;
 class indice_class;
 
 class setting_restore_ui : public QDialog
@@ -29,7 +29,7 @@ class setting_restore_ui : public QDialog
 
 public:
     explicit setting_restore_ui(QWidget *parent = nullptr,
-                                currenttitle_class **curr = nullptr,
+                                Document **curr = nullptr,
                                 indice_class *ind = nullptr,
                                 QString *pp = nullptr);
     ~setting_restore_ui();
@@ -74,7 +74,7 @@ private:
     QTimer *m_first;
     QTimer *m_sec;
 
-    currenttitle_class **m_curr;
+    Document **m_curr;
     indice_class *m_ind;
 
     void updateWindow();

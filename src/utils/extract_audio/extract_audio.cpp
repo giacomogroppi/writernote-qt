@@ -1,6 +1,6 @@
 #include "extract_audio.h"
 #include "../../dataread/xmlstruct.h"
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 #include "../common_error_definition.h"
 
 #define DELETE_T delete indice; \
@@ -16,7 +16,7 @@ extract::n_extract extract_audio(const char *path,
     QString m_path = path, m_namecopybook = namecopybook, m_path_to = path_to;
 
     indice_class * indice = new indice_class;
-    currenttitle_class * title = new currenttitle_class;
+    Document * title = new Document;
 
     xmlstruct * m_data = new xmlstruct(&m_path, indice, title);
 
@@ -35,7 +35,7 @@ extract::n_extract extract_audio(const char *path,
         return extract::load_file;
     }
 
-    if(title->se_registato == currenttitle_class::not_record){
+    if(title->se_registato == Document::not_record){
         DELETE_T;
         return extract::not_record;
     }

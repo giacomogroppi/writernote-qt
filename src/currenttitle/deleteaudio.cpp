@@ -24,7 +24,7 @@ void deleteaudio(MainWindow *parent, QListWidgetItem *item){
 
     CURRENTTITLE->testinohtml.clear();
     CURRENTTITLE->posizione_iniz.clear();
-    CURRENTTITLE->se_registato = currenttitle_class::not_record;
+    CURRENTTITLE->se_registato = Document::not_record;
 
     /*
      * TODO -> remove the file on the zip

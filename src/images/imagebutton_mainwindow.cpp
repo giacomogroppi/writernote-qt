@@ -39,7 +39,7 @@ static struct immagine_S *insert_image(const char *__pos,
     return immagine_temp;
 }
 
-void addImage(currenttitle_class *m_currenttitle,
+void addImage(Document *m_currenttitle,
                      const char *__pos,
                      struct PointSettable * point){
 

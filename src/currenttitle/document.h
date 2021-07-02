@@ -14,7 +14,7 @@ class frompdf;
 
 #define DEF_METHOD true
 
-class currenttitle_class{
+class Document{
 public:
     size_t createSingleControll() const;
 
@@ -52,10 +52,10 @@ public:
     n_audio_record se_registato = n_audio_record::not_record;
     QByteArray audio_data;
 
-    currenttitle_class();
-    ~currenttitle_class();
+    Document();
+    ~Document();
 
-    static void copy(const currenttitle_class *src, currenttitle_class *dest);
+    static void copy(const Document *src, Document *dest);
 
 };
 

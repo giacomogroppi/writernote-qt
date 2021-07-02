@@ -9,7 +9,7 @@
 #include <QTabletEvent>
 #include <QWidget>
 
-#include "../currenttitle/currenttitle_class.h"
+#include "../currenttitle/document.h"
 #include "zoom/zoom_control.h"
 #include "square/square.h"
 
@@ -91,7 +91,7 @@ public:
     void updatelist(QTabletEvent *event);
 
 
-    currenttitle_class *data;
+    Document *data;
 
     /* al passaggio a mainwindow il puntatore verrà cambiato con il valore del tempo della registrazione se e solo se sta registrando
     in caso contrario rimarrà sempre zero*/
@@ -154,7 +154,7 @@ public:
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
 
-    void settingdata(currenttitle_class *data, QString &path);
+    void settingdata(Document *data, QString &path);
 
     /* square per la selezione */
     square m_square;

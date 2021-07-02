@@ -6,7 +6,7 @@ QString get_name_available::get(const QString &path, bool &ok)
 {
     uint i, len;
     indice_class ind;
-    currenttitle_class curr;
+    Document curr;
 
     xmlstruct xml(path, ind, curr);
 

@@ -176,7 +176,7 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 }
 
 
-void TabletCanvas::settingdata(currenttitle_class *data, QString &path){
+void TabletCanvas::settingdata(Document *data, QString &path){
     this->data = data;
 
     if(this->m_autosave)

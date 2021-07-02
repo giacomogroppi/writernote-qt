@@ -16,7 +16,7 @@ static double widthToPressure(double);
 
 static double width_(datastruct *);
 
-static void addPointZero(currenttitle_class *);
+static void addPointZero(Document *);
 static void drawLineOrizzontal(datastruct *data,
                          point_s *point,
                          style_struct_S *style,
@@ -191,7 +191,7 @@ static double width_(datastruct *data){
 
 
 
-static void addPointZero(currenttitle_class *data){    
+static void addPointZero(Document *data){
     if(data->datatouch->isempty()){
         struct point_s temp;
         temp.idtratto = IDTRATTOZERO;

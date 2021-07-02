@@ -38,7 +38,7 @@ restore_file_critic::n_err restore_file_critic::restore_file_direct(const QStrin
                                                                     const QString &path_save,
                                                                     const QString &name_copybook)
 {
-    currenttitle_class cur;
+    Document cur;
     indice_class ind;
 
     xmlstruct xml(path_load, ind, cur);

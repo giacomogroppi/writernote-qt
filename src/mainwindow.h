@@ -26,7 +26,7 @@
 
 #define REDO_UNDO_DISABLE "Disable redo undo"
 #define REDO_UNDO_ENABLE "Enable redo undo"
-#include "currenttitle/currenttitle_class.h"
+#include "currenttitle/document.h"
 #include "indice_class.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/highlighter/ui_highlighter.h"
@@ -55,7 +55,7 @@ class QAudioBuffer;
 
 QT_END_NAMESPACE
 
-void addImage(currenttitle_class *m_currenttitle,
+void addImage(Document *m_currenttitle,
                      const char *__pos,
                      struct PointSettable * point);
 class xmlstruct;
@@ -75,7 +75,7 @@ public:
     void createFirstCopybook();
     void createCopybook(const QString &name, const bool touch);
     QString getNameCopybook();
-    void updateTitle(currenttitle_class *__curr);
+    void updateTitle(Document *__curr);
 
     enum n_need_save: uchar{
         unable_load, /*we had trouble loading the file*/
@@ -86,7 +86,7 @@ public:
     };
 
     enum n_need_save needToSave(xmlstruct *xml,
-                                currenttitle_class * tmp_read,
+                                Document * tmp_read,
                                 indice_class *tmp_ind) const;
 
     MainWindow(QWidget *parent = nullptr,
@@ -112,7 +112,7 @@ public:
     QString m_path;
 
     indice_class m_indice;
-    currenttitle_class *m_currenttitle;
+    Document *m_currenttitle;
     Ui::MainWindow *ui;
 
     QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);

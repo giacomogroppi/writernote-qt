@@ -2,7 +2,7 @@
 #define RUBBER_UI_H
 
 #include <QWidget>
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 #include <QPainter>
 #include <QPen>
 

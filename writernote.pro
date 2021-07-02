@@ -60,6 +60,7 @@ SOURCES += \
     src/changeCopybook.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
+    src/currenttitle/document.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/currenttitle/option/main_exe.cpp \
     src/currenttitle/option/ui_option_copybook.cpp \
@@ -132,7 +133,6 @@ SOURCES += \
     src/closeevent_file.cpp \
     src/currenttitle/audiototext.cpp \
     src/currenttitle/checksimilecopybook.cpp \
-    src/currenttitle/currenttitle_class.cpp \
     src/currenttitle/deleteaudio.cpp \
     src/currenttitle/deletecopybook.cpp \
     src/currenttitle/newcopybook.cpp \
@@ -249,6 +249,7 @@ SOURCES += \
 
 HEADERS += \
     src/currenttitle/default_type/default_type.h \
+    src/currenttitle/document.h \
     src/currenttitle/option/modality_data.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/currenttitle/option/ui_option_copybook.h \
@@ -323,7 +324,6 @@ HEADERS += \
     src/touch/tabletapplication.h \
     src/touch/tabletcanvas.h \
     src/touch/zoom/zoom_control.h \
-    src/currenttitle/currenttitle_class.h \
     src/datawrite/qfilechoose.h \
     src/datawrite/savefile.h \
     src/indice_class.h \

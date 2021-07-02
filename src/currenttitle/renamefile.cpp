@@ -19,7 +19,7 @@ void renamefile(MainWindow *parent, const QString &namefile){
     int posizione;
     QStringList __l;
 
-    currenttitle_class curr;
+    Document curr;
     savefile __save(parent->m_path, curr);
     xmlstruct xml(&parent->m_path, nullptr, &curr);
 

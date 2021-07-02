@@ -185,15 +185,15 @@ int xmlstruct::loadfile(const char *nameFile){
  * following versions.
  * furthermore we are obliged to read the audio_potion_path string
 */
-int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip){
+int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip){
     LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
 
     bool temp;
     SOURCE_READ_RETURN(f, &temp, sizeof(bool));
     if(temp)
-        this->currenttitle->se_registato = currenttitle_class::record_file;
+        this->currenttitle->se_registato = Document::record_file;
     else
-        this->currenttitle->se_registato = currenttitle_class::not_record;
+        this->currenttitle->se_registato = Document::not_record;
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
@@ -214,13 +214,13 @@ int xmlstruct::load_file_2(currenttitle_class *currenttitle, zip_file_t *f, zip_
     return OK;
 }
 
-int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip)
+int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip)
 {
     LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
 
     int temp;
     SOURCE_READ_RETURN(f, &temp, sizeof(int));
-    currenttitle->se_registato = static_cast<currenttitle_class::n_audio_record>(temp);
+    currenttitle->se_registato = static_cast<Document::n_audio_record>(temp);
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
@@ -244,14 +244,14 @@ int xmlstruct::load_file_3(currenttitle_class *currenttitle, zip_file_t *f, zip_
 
 #endif
 
-int xmlstruct::load_file_4(currenttitle_class *currenttitle, zip_file_t *f, zip_t *filezip){
+int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip){
     LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
 
     int temp;
     uchar controllo_parita = 0;
 
     SOURCE_READ_RETURN(f, &temp, sizeof(int));
-    currenttitle->se_registato = static_cast<currenttitle_class::n_audio_record>(temp);
+    currenttitle->se_registato = static_cast<Document::n_audio_record>(temp);
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 

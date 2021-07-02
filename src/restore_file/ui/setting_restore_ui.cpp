@@ -2,7 +2,7 @@
 #include "ui_setting_restore_ui.h"
 #include "../../utils/setting_define.h"
 #include "../../indice_class.h"
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 #include "../../datawrite/savefile.h"
 #include "../../utils/dialog_critic/dialog_critic.h"
 #include "../../utils/slash/slash.h"
@@ -23,7 +23,7 @@ extern bool need_save_auto;
 extern bool need_save_tmp;
 
 setting_restore_ui::setting_restore_ui(QWidget *parent,
-                                       currenttitle_class **curr,
+                                       Document **curr,
                                        indice_class *ind,
                                        QString *pp) :
     QDialog(parent),

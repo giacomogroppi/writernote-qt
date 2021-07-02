@@ -1,6 +1,6 @@
 #include "checksimilecopybook.h"
 
-#include "currenttitle_class.h"
+#include "document.h"
 #include "../indice_class.h"
 
 #include <stdio.h>
@@ -8,11 +8,11 @@
 
 #define P(x) x->datatouch
 
-static int checkPositionAudio(const currenttitle_class *first,
-                              const currenttitle_class *second);
+static int checkPositionAudio(const Document *first,
+                              const Document *second);
 
-static int checkIndiceSlow(const currenttitle_class *primo,
-                           const currenttitle_class * secondo){
+static int checkIndiceSlow(const Document *primo,
+                           const Document *secondo){
     if(primo->testi != secondo->testi)
         return TESTI;
 
@@ -30,8 +30,8 @@ static int checkIndiceSlow(const currenttitle_class *primo,
     return OK_CHECK;
 }
 
-static int checkSpeed(const currenttitle_class *first,
-                      const currenttitle_class *second){
+static int checkSpeed(const Document *first,
+                      const Document *second){
     uint i, len;
 
     len = first->datatouch->length();
@@ -48,8 +48,8 @@ static int checkSpeed(const currenttitle_class *first,
     return checkPositionAudio(first, second);
 }
 
-static int checkSlow(const currenttitle_class *first,
-                     const currenttitle_class *second){
+static int checkSlow(const Document *first,
+                     const Document *second){
     uint i, len;
 
     len = P(first)->length();
@@ -88,8 +88,8 @@ static int checkSlow(const currenttitle_class *first,
  * what the difference is
  */
 
-int checksimilecopybook(const currenttitle_class *primo,
-                        const currenttitle_class *secondo,
+int checksimilecopybook(const Document *primo,
+                        const Document *secondo,
                         const bool speed)
 {
     if(!primo->m_touch)
@@ -134,8 +134,8 @@ int checksimileindice(const indice_class *primo,
     return OK_CHECK;
 }
 
-static int checkPositionAudio(const currenttitle_class *first,
-                              const currenttitle_class *second){
+static int checkPositionAudio(const Document *first,
+                              const Document *second){
     int len = first->datatouch->posizionefoglio.length(), i;
 
     if(second->datatouch->posizionefoglio.length() != len)

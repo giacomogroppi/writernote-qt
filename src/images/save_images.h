@@ -2,7 +2,7 @@
 #define SAVE_IMAGES_H
 
 #include "../touch/datastruct/datastruct.h"
-#include "../currenttitle/currenttitle_class.h"
+#include "../currenttitle/document.h"
 #include "zip.h"
 
 #include <QList>

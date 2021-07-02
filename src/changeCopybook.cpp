@@ -28,7 +28,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         return redolist(this);
 
     n_need_save _res;
-    currenttitle_class tmp;
+    Document tmp;
     xmlstruct fileload(&m_path, nullptr, &tmp);
 
     savecopybook __save(this, &m_currentTitle);

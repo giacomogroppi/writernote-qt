@@ -91,7 +91,7 @@ void spacchettamento::esecuzione(){
     }
 }
 
-void spacchettamento::copy(currenttitle_class *dest, currenttitle_class *src){
+void spacchettamento::copy(Document *dest, const Document *src){
     /* we only need this things  */
     dest->posizione_iniz = src->posizione_iniz;
     dest->testinohtml = src->testinohtml;

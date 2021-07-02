@@ -2,13 +2,13 @@
 
 #include "../currenttitle/checksimilecopybook.h"
 
-redoundo::redoundo(currenttitle_class **data)
+redoundo::redoundo(Document **data)
 {
     this->m_current = data;
 
 }
 
-void redoundo::redo( currenttitle_class **data){
+void redoundo::redo(Document **data){
     return;
     if(indice == 10){
         return;
@@ -21,7 +21,7 @@ void redoundo::redo( currenttitle_class **data){
 
 
 /* reset the currenttitle */
-void redoundo::undo(currenttitle_class **data){
+void redoundo::undo(Document **data){
     return;
     if(indice == 0)
         return;

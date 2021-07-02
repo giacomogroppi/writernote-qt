@@ -13,9 +13,9 @@
 
 
 void aggiornotestiriascolto(MainWindow *parent){
-    if(parent->m_currenttitle->se_registato != currenttitle_class::not_record){
+    if(parent->m_currenttitle->se_registato != Document::not_record){
 
-        if(parent->m_currenttitle->se_registato == currenttitle_class::record_file){
+        if(parent->m_currenttitle->se_registato == Document::record_file){
             if(QFile::exists(parent->m_currenttitle->audio_position_path))
                 return dialog_critic("Audio " + parent->m_currenttitle->audio_position_path + " didn't exist");
         }
@@ -33,7 +33,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         /* abilita il bottone della mano e lo segna unchecked, in caso sia cliccato per qualche motivo*/
         parent->ui->actionListen_current_audio->setEnabled(true);
 
-        if(parent->m_currenttitle->se_registato == currenttitle_class::record_zip){
+        if(parent->m_currenttitle->se_registato == Document::record_zip){
             /* if it's not laoded */
             if(parent->m_currenttitle->audio_data.isEmpty())
                 if(load_audio(parent->m_currenttitle->audio_data, parent->m_currenttitle->nome_copybook, parent->m_path) != OK)

@@ -20,7 +20,7 @@ void MainWindow::openFile(const char *pos){
     QString path, tmp;
 
     frompdf::load_res __res;
-    currenttitle_class curr;
+    Document curr;
     indice_class ind;
     xmlstruct xml(&m_path, &ind, &curr);
 

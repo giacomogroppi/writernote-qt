@@ -4,14 +4,14 @@
 #include "ui_mainwindow.h"
 #include "datawrite/savefile.h"
 
-#include "currenttitle/currenttitle_class.h"
+#include "currenttitle/document.h"
 #include "utils/posizione_binario.h"
 
 /*funzione che gestisce la creazione di un nuovo copybook, non fa il controllo se esiste*/
 bool newcopybook_(MainWindow *parent, QString& stringa){
     parent->m_indice.titolo.append(stringa);
 
-    currenttitle_class tempcopybook;
+    Document tempcopybook;
     tempcopybook.reset();
 
     tempcopybook.nome_copybook = stringa;

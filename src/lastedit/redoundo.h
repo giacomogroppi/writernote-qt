@@ -11,23 +11,23 @@ private:
     /* 0 <= indice <= 10 */
     unsigned short int indice = 0;
 
-    currenttitle_class **m_current;
+    Document **m_current;
 
 public:
-    redoundo(currenttitle_class **);
+    redoundo(Document **);
 
     ~redoundo(){
         m_list.clear();
     };
 
-    void copy(currenttitle_class *);
+    void copy(Document *);
 
-    void undo(currenttitle_class **);
-    void redo(currenttitle_class **);
+    void undo(Document **);
+    void redo(Document **);
 
-    void copy_b(currenttitle_class *, const currenttitle_class *);
+    void copy_b(Document *, const Document *);
 
-    void setting_data(currenttitle_class **data){
+    void setting_data(Document **data){
         m_current = data;
 
         indice = 0;

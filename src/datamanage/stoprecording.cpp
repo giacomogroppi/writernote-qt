@@ -29,7 +29,7 @@
 #include "../utils/permission/permission.h"
 #include "../utils/make_default/make_default_ui.h"
 
-static void saveAudio(currenttitle_class * , QString &path);
+static void saveAudio(Document * , QString &path);
 
 namespace removeAudio {
     enum n_removeAudio: int{
@@ -67,7 +67,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
     }
 
-    if(m_currenttitle->se_registato == currenttitle_class::record_zip){
+    if(m_currenttitle->se_registato == Document::record_zip){
         saveAudio(m_currenttitle, m_path);
     }
 
@@ -82,7 +82,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
 
 static bool needRemove;
 
-static void saveAudio(currenttitle_class *m_currenttitle, QString &m_path){
+static void saveAudio(Document *m_currenttitle, QString &m_path){
     QString path = get_path_no_controll() + POS_AUDIO(m_currenttitle);
 
     if(!QFile::exists(path)){

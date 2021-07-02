@@ -10,7 +10,7 @@ class topdf
 private:
     TabletCanvas *m_canvas;
 
-    currenttitle_class *data;
+    Document *data;
     QString *path;
 
     void translate();
@@ -36,8 +36,8 @@ public:
     topdf(QString *path, TabletCanvas *canvas);
     bool createpdf();
 
-    inline void copy(currenttitle_class *datastruct_){
-            this->data = new currenttitle_class;
+    inline void copy(Document *datastruct_){
+            this->data = new Document;
 
             *this->data->datatouch = *datastruct_->datatouch;
     }

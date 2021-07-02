@@ -1,23 +1,23 @@
-#include "currenttitle_class.h"
+#include "document.h"
 #include <QString>
 #include <QStringList>
 
 #include "../touch/datastruct/datastruct.h"
 #include "../frompdf/frompdf.h"
 
-currenttitle_class::currenttitle_class(){
+Document::Document(){
     this->m_pdf = new frompdf(this);
     this->datatouch = new datastruct(m_pdf);
 }
 
-currenttitle_class::~currenttitle_class()
+Document::~Document()
 {
     delete m_pdf;
     delete datatouch;
 }
 
-void currenttitle_class::copy(const currenttitle_class *src,
-                              currenttitle_class *dest)
+void Document::copy(const Document *src,
+                              Document *dest)
 {
     dest->audio_position_path = src->audio_position_path;
     dest->immagini = src->immagini;
@@ -42,11 +42,11 @@ void currenttitle_class::copy(const currenttitle_class *src,
 
 }
 
-bool currenttitle_class::isEmpty() const{
+bool Document::isEmpty() const{
     return (m_touch) ? datatouch->isempty() : this->testi.isEmpty();
 }
 
-size_t currenttitle_class::createSingleControll() const
+size_t Document::createSingleControll() const
 {
     size_t data = 0;
     uint i, len;
@@ -64,9 +64,9 @@ size_t currenttitle_class::createSingleControll() const
     return data;
 }
 
-void currenttitle_class::reset(){
+void Document::reset(){
     this->versione = 1;
-    this->se_registato = currenttitle_class::not_record;
+    this->se_registato = Document::not_record;
     this->se_tradotto = false;
     this->audio_position_path = "";
     this->m_touch = DEF_METHOD;

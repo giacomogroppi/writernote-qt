@@ -22,7 +22,7 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_startrecording_triggered()
 {
-    if(this->m_currenttitle->se_registato != currenttitle_class::not_record)
+    if(this->m_currenttitle->se_registato != Document::not_record)
         return user_message("You had already record and audio");
     /*
     if(this->m_currenttitle.audio_position_path != "")
@@ -49,7 +49,7 @@ void MainWindow::on_startrecording_triggered()
 #endif //snap
 
     if(!this->setOutputLocation()){
-        m_currenttitle->se_registato = currenttitle_class::not_record;
+        m_currenttitle->se_registato = Document::not_record;
         return;
     }
 
@@ -151,7 +151,7 @@ bool MainWindow::setOutputLocation()
 
 
     procede:
-    if(this->m_currenttitle->se_registato == currenttitle_class::record_file){
+    if(this->m_currenttitle->se_registato == Document::record_file){
         QString fileName;
         if(!qfilechoose::filechoose(fileName, TYPEAUDIO)){
             return false;
@@ -163,7 +163,7 @@ bool MainWindow::setOutputLocation()
         goto ok;
 
     }
-    else if(this->m_currenttitle->se_registato == currenttitle_class::record_zip){
+    else if(this->m_currenttitle->se_registato == Document::record_zip){
         const char * path = get_path(path::audio_pos);
         if(!path){
             dialog_critic("I had an internal problem with the audio");
@@ -183,7 +183,7 @@ bool MainWindow::setOutputLocation()
     }
 
     free_:
-    m_currenttitle->se_registato = currenttitle_class::not_record;
+    m_currenttitle->se_registato = Document::not_record;
     DELETE_MENU(menu);
     return false;
 

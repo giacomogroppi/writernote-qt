@@ -11,7 +11,7 @@ static inline void copyidtratto(const datastruct *, datastruct *);
 
 static inline void copyall(const datastruct *, datastruct *);
 
-void redoundo::copy_b(currenttitle_class *dest, const currenttitle_class *src){
+void redoundo::copy_b(Document *dest, const Document *src){
     int temp = COLORE;
     bool ok;
 
@@ -71,7 +71,7 @@ void redoundo::copy_b(currenttitle_class *dest, const currenttitle_class *src){
 }
 
 
-void redoundo::copy(currenttitle_class *m_temp){
+void redoundo::copy(Document *m_temp){
     return;
 
     if(indice < QUANTIINDICI){
@@ -82,7 +82,7 @@ void redoundo::copy(currenttitle_class *m_temp){
         return;
     }
 
-    currenttitle_class * title_temp = m_list.m_list[0];
+    Document * title_temp = m_list.m_list[0];
 
     /* must translate all objects to the left by one position */
     for(int i=0; i<QUANTIINDICI-1; i++){

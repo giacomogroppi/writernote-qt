@@ -1,12 +1,12 @@
 #include "frompdf.h"
 
 #include "../utils/dialog_critic/dialog_critic.h"
-#include "../currenttitle/currenttitle_class.h"
+#include "../currenttitle/document.h"
 #include "../utils/permission/permission.h"
 #include "../dataread/xmlstruct.h"
 #include "../dataread/load_from_file.h"
 
-frompdf::frompdf(currenttitle_class *data)
+frompdf::frompdf(Document *data)
 {
     m_data = data;
 }

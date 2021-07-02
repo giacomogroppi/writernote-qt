@@ -21,11 +21,11 @@
 */
 #define LEN 10
 
-#include "currenttitle_class.h"
+#include "document.h"
 #include "../indice_class.h"
 
-int checksimilecopybook(const currenttitle_class *,
-                        const currenttitle_class *,
+int checksimilecopybook(const Document *,
+                        const Document *,
                         const bool );
 int checksimileindice(const indice_class *,
                       const indice_class *);

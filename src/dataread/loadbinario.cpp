@@ -1,6 +1,6 @@
 #include "xmlstruct.h"
 
-#include "../currenttitle/currenttitle_class.h"
+#include "../currenttitle/document.h"
 #include "../images/save_images.h"
 #include <zip.h>
 

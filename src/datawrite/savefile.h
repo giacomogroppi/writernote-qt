@@ -6,7 +6,7 @@
 #include <QString>
 #define ERROR_PRIVATE -1
 #define OK_PRIVATE 0
-class currenttitle_class;
+class Document;
 class indice_class;
 
 #define WRITE_ON_SIZE(x,y,z) if(zip_source_write(x,y,z)==-1)goto error;
@@ -19,30 +19,30 @@ class savefile
 {
 private:
     const QString *path;
-    currenttitle_class *currenttitle;
+    Document *currenttitle;
 
     int salvabinario(zip_t *);
 
-    int savefile_check_2(zip_source_t *file, currenttitle_class *currenttitle, zip_t *filezip);
+    int savefile_check_2(zip_source_t *file, Document *currenttitle, zip_t *filezip);
 
 public:
     static int saveArrayIntoFile(const QString &from, const QString& name_coby,
                                  const QString path, zip_t *filezip, const QString &suffix);
 
-    void setting_data(currenttitle_class *m_current){currenttitle = m_current;}
+    void setting_data(Document *m_current){currenttitle = m_current;}
 
-    savefile(const QString &path, currenttitle_class *current){
+    savefile(const QString &path, Document *current){
         setData(&path, current);
     }
 
-    savefile(const QString *path, currenttitle_class *currenttitle){
+    savefile(const QString *path, Document *currenttitle){
         setData(path, currenttitle);
     }
-    savefile(const QString &path, currenttitle_class &currenttitle){
+    savefile(const QString &path, Document &currenttitle){
         setData(&path, &currenttitle);
     }
 
-    void setData(const QString *p, currenttitle_class *curr){
+    void setData(const QString *p, Document *curr){
         if(p){
             this->path = p;
         }

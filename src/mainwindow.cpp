@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     ui->setupUi(this);
 
-    this->m_currenttitle = new currenttitle_class;
+    this->m_currenttitle = new Document;
 
     m_audioRecorder = new QAudioRecorder(this);
 
@@ -185,7 +185,7 @@ void MainWindow::on_actionNew_File_triggered()
     bool check;
     savecopybook checksave(this, &m_currentTitle);
     xmlstruct xml(&m_path, &m_indice, m_currenttitle);
-    currenttitle_class __curr;
+    Document __curr;
     indice_class __ind;
     n_need_save __res;
 
@@ -259,11 +259,11 @@ void MainWindow::togglePause()
 }
 
 void MainWindow::setInZipAudio(){
-    this->m_currenttitle->se_registato = currenttitle_class::record_zip;
+    this->m_currenttitle->se_registato = Document::record_zip;
 }
 
 void MainWindow::setExtAudio(){
-    this->m_currenttitle->se_registato = currenttitle_class::record_file;
+    this->m_currenttitle->se_registato = Document::record_file;
 
 }
 

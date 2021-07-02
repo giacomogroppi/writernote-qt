@@ -13,7 +13,7 @@ public:
     spacchettamento(MainWindow *parent){
         m_parent = parent;
 
-        b = new currenttitle_class;
+        b = new Document;
 
         this->copy(b, parent->m_currenttitle);
     }
@@ -25,13 +25,13 @@ public:
 private:
     MainWindow *m_parent;
 
-    void copy(currenttitle_class *dest, currenttitle_class *src);
+    void copy(Document *dest, const Document *src);
 
     /*
      * in case the user quit the window, we need to reset to the currenttitle we receve
      * we work only on b [NOT THE CURRENT TITLE PASS]
     */
-    currenttitle_class *b;
+    Document *b;
 
 signals:
     void progress(int);

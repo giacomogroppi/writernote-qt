@@ -50,7 +50,7 @@ QString MainWindow::getNameCopybook()
     return NAME_UNSAVE + " - " + len;
 }
 
-void MainWindow::updateTitle(currenttitle_class *__curr)
+void MainWindow::updateTitle(Document *__curr)
 {
     setWindowTitle("Writernote - " + __curr->nome_copybook);
 }

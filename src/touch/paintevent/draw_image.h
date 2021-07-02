@@ -1,8 +1,8 @@
 #ifndef DRAW_IMAGE_H
 #define DRAW_IMAGE_H
 #include <QPainter>
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 
-void draw_image(currenttitle_class *, QPainter &);
+void draw_image(Document *, QPainter &);
 
 #endif // DRAW_IMAGE_H

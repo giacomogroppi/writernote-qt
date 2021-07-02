@@ -1,6 +1,6 @@
 #ifndef SETCOLOR_H
 #define SETCOLOR_H
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 #include <QDebug>
 
 /*

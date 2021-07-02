@@ -1,7 +1,7 @@
 #include "draw_image.h"
 #include <QRect>
 
-void draw_image(currenttitle_class *data, QPainter &painter){
+void draw_image(Document *data, QPainter &painter){
     int i, len;
 
     len = data->immagini.length();

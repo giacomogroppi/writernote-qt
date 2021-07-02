@@ -8,7 +8,7 @@
 #include "datawrite/savefile.h"
 #include "utils/dialog_critic/dialog_critic.h"
 
-#include "currenttitle/currenttitle_class.h"
+#include "currenttitle/document.h"
 
 #include "dataread/xmlstruct.h"
 #include "currenttitle/checksimilecopybook.h"
@@ -40,7 +40,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     save_data(m_path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
 
     /* apre il file in file e lo carica nell'oggetto, e lo confronta */
-    currenttitle_class tempcopybook;
+    Document tempcopybook;
     indice_class tempindice;
 
     xmlstruct temp_lettura(&m_path, &tempindice, &tempcopybook);

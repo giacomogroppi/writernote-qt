@@ -1,7 +1,7 @@
 #ifndef FROMPDF_H
 #define FROMPDF_H
 
-class currenttitle_class;
+class Document;
 
 #include "zip.h"
 #include <QString>
@@ -17,7 +17,7 @@ class currenttitle_class;
 class frompdf
 {
 private:
-    currenttitle_class *m_data;
+    Document *m_data;
 
     Poppler::Document *doc = nullptr;
     QList<QImage> m_image;
@@ -48,7 +48,7 @@ public:
         y = m_translation.y;
     }
 
-    frompdf(currenttitle_class *);
+    frompdf(Document *);
 
     enum load_res: uchar{
         ok,

@@ -3,14 +3,14 @@
 #include "../../utils/common_error_definition.h"
 #include "../../images/save_images.h"
 
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 #include "../../indice_class.h"
 
 #define SAVE_IMAGE(x, y) if(save_image(x, y) != OK) goto delete_;
 #define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
 
 static int save_string(zip_source_t *, const char *);
-static void setCurrentVersion(currenttitle_class *data);
+static void setCurrentVersion(Document *data);
 
 #include <QFile>
 
@@ -128,6 +128,6 @@ int save_audio_file(const char *posAudio,
 
 }
 
-static void setCurrentVersion(currenttitle_class *data){
+static void setCurrentVersion(Document *data){
     data->versione = CURRENT_VERSION_CURRENT_TITLE;
 }

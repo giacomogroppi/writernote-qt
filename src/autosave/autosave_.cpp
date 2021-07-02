@@ -4,7 +4,7 @@
 #include "../touch/tabletcanvas.h"
 #include <QList>
 
-void autosave_::setting_data(currenttitle_class **data, QString &path){
+void autosave_::setting_data(Document **data, QString &path){
     this->m_current = data;
 
     this->m_path = path;

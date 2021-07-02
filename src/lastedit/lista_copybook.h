@@ -2,7 +2,7 @@
 #define LISTA_COPYBOOK_H
 
 #define QUANTIINDICI 10
-#include "../currenttitle/currenttitle_class.h"
+#include "../currenttitle/document.h"
 
 class lista_copybook{
 public:
@@ -25,7 +25,7 @@ public:
 
     int lenght();
 
-    currenttitle_class *m_list[QUANTIINDICI];
+    Document *m_list[QUANTIINDICI];
 
 };
 

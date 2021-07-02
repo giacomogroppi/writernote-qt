@@ -2,7 +2,7 @@
 #define COPY_SELECTION_H
 
 #include <QObject>
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 #include <QPointF>
 
 class copy : public QObject

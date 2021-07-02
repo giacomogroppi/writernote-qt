@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "../../indice_class.h"
-#include "../../currenttitle/currenttitle_class.h"
+#include "../../currenttitle/document.h"
 
 namespace Ui {
 class extract_audio_ui;
@@ -49,7 +49,7 @@ private:
     */
     bool ext = false;
     indice_class *m_indice = nullptr;
-    currenttitle_class *m_current = nullptr;
+    Document *m_current = nullptr;
 
     Ui::extract_audio_ui *ui;
 

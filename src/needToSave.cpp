@@ -13,7 +13,7 @@
 enum MainWindow::n_need_save
         MainWindow::needToSave(
             xmlstruct *xml,
-            currenttitle_class * tmp_read,
+            Document * tmp_read,
             indice_class *tmp_ind) const{
     QString filep;
     int check1;
