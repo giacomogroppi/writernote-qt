@@ -153,19 +153,19 @@ parts:
       - zlib1g-dev
 
     stage-packages:
-      - libglib2.0-0
+      #- libglib2.0-0
       
       # pdf
-      - libpoppler-qt5-dev
+      - libpoppler-qt5-1 #dev
 
       ## wayland support
-      - libwayland-dev
+      - libwayland-bin #dev
       - libwayland-egl1-mesa
       - libwayland-server0
-      - libgles2-mesa-dev
+      - libgles2-mesa #-dev
 
       ## cripto library
-      - libcrypto++-dev 
+      - libcrypto++6 #-dev 
       - libcrypto++-doc 
       - libcrypto++-utils
       
@@ -174,15 +174,15 @@ parts:
       - libqt5core5a
       - ffmpeg
 
-      - libxcb-screensaver0-dev
-      - libxcb1-dev
-      - libqt5waylandclient5-dev
+      - libxcb-screensaver0 #-dev
+      - libxcb1 #-dev
+      - libqt5waylandclient5 #-dev
       - libqt5svg5-dev
       #- liblzma-dev
       #- libgtk-3-dev
-      - libglib2.0-dev
-      - qtbase5-private-dev
-      - libopus-dev
+      - libglib2.0-0 #dev
+      #- qtbase5-private-dev
+      - libopus0 #-dev
       - execstack
 
 
@@ -191,7 +191,7 @@ parts:
       - libqt5multimedia5-plugins 
       - libqt5multimedia5
 
-      - libzip-dev
+      - libzip5 #-dev
       - libxcb-xinerama0-dev
       - qt5-default
       - libx11-xcb-dev 
@@ -202,14 +202,14 @@ parts:
       - qtwayland5
       - libgtk-3-0
       - liblzma5
-      - libopus0
-      - libpulse-dev
+      #- libopus0
+      - libpulse0 #-dev
     
-      - libasound2-dev 
+      #- libasound2-dev 
       - libasound2
       - qt5-gtk-platformtheme
 
-      - libgstreamer1.0-0 
+      #- libgstreamer1.0-0 
       - gstreamer1.0-plugins-base 
       - gstreamer1.0-plugins-good 
       - gstreamer1.0-plugins-bad 
@@ -224,15 +224,15 @@ parts:
       - gstreamer1.0-qt5 
       - gstreamer1.0-pulseaudio
       
-      - libxrender-dev 
+      - libxrender1 #-dev 
       - libxi-dev 
-      - libxkbcommon-dev 
-      - libxkbcommon-x11-dev
+      - libxkbcommon0 #-dev 
+      - libxkbcommon-x11-0 #dev
 
-      - libgstreamer1.0-dev 
-      - libgstreamer-plugins-base1.0-dev 
-      - libgstreamer-plugins-good1.0-dev 
-      - libgstreamer-plugins-bad1.0-dev
+      - libgstreamer1.0-0 #dev 
+      - libgstreamer-plugins-base1.0-0 #dev 
+      - libgstreamer-plugins-good1.0-0 #dev 
+      - libgstreamer-plugins-bad1.0-0 #dev
 
 
   # Qt checks that ibus-daemon binary is present, otherwise doesn't work
