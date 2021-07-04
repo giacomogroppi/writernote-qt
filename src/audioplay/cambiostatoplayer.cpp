@@ -12,8 +12,8 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
 
         this->ui->volumeSlider->setValue(0);
         this->ui->volumeSlider->setEnabled(false);
-        this->ui->stopriascolto->setEnabled(false);
-        this->ui->startrecording->setEnabled(false);
+        this->ui->stop_play->setEnabled(false);
+        this->ui->start_rec->setEnabled(false);
 
         this->ui->actionImport_Video->setEnabled(true);
         this->ui->actionDelete_audio->setEnabled(true);
@@ -34,7 +34,7 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
 
         QIcon icon;
         icon.addFile(QString::fromUtf8(":image/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
-        this->ui->startriascoltobotton->setIcon(icon);
+        this->ui->start_play->setIcon(icon);
 
         this->ui->statusBar->clearMessage();
 
@@ -48,8 +48,8 @@ void MainWindow::cambiostatoplayer(QMediaPlayer::State state){
         this->ui->audioSlider->setEnabled(true);
 
         this->ui->volumeSlider->setEnabled(false);
-        this->ui->stopriascolto->setEnabled(true);
-        this->ui->startrecording->setEnabled(false);
+        this->ui->stop_play->setEnabled(true);
+        this->ui->start_rec->setEnabled(false);
 
         /* pulsante della mano -> se si clicca viene disattivato il riascolto */
         this->ui->actionListen_current_audio->setChecked(true);

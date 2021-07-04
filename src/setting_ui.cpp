@@ -24,8 +24,8 @@ void settingtextedit(MainWindow *parent, bool check){
 
 void settingaudio_registrazione(MainWindow *parent, bool check){
     parent->ui->pauserecordingbotton->setEnabled(check);
-    parent->ui->startrecording->setEnabled(check);
-    parent->ui->stoprecordingbotton->setEnabled(!check);
+    parent->ui->start_rec->setEnabled(check);
+    parent->ui->stop_rec->setEnabled(!check);
     parent->ui->pauserecordingbotton->setEnabled(!check);
 
     parent->ui->actionImport_Video->setEnabled(check);
@@ -39,16 +39,16 @@ void settingaudio_riascolto(MainWindow *parent, bool check){
     parent->ui->actionConvert_audio_to_text->setEnabled(check);
 
     /* pulsanti in basso a sinistra per il riascolto dell'audio */
-    parent->ui->startriascoltobotton->setEnabled(check);
-    parent->ui->stopriascolto->setEnabled(check);
+    parent->ui->start_play->setHidden(check);
+    parent->ui->stop_play->setEnabled(check);
     parent->ui->audioSlider->setEnabled(check);
     parent->ui->volumeSlider->setEnabled(check);
 }
 
 void settingaudio_riascoltoinatto(MainWindow *parent, bool check){
     /* true attivare pulsante di riascolto in basso */
-    parent->ui->startriascoltobotton->setEnabled(check);
-    parent->ui->stopriascolto->setEnabled(check);
+    parent->ui->start_play->setHidden(check);
+    parent->ui->stop_play->setEnabled(check);
     parent->ui->audioSlider->setEnabled(check);
     parent->ui->volumeSlider->setEnabled(check);
 
@@ -80,6 +80,6 @@ void setting_ui_start(MainWindow *parent){
     parent->ui->actionPrint->setEnabled(false);
     //parent->ui->actionCreate_new_copybook->setEnabled(false);
     //parent->ui->listWidgetSX->setEnabled(false);
-    parent->ui->stoprecordingbotton->setEnabled(false);
+    parent->ui->stop_rec->setEnabled(false);
 
 }

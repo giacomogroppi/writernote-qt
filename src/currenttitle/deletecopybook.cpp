@@ -19,7 +19,6 @@ void f_deletecopybook(MainWindow *parent, const char *copybook){
 
     int posizione = parent->m_indice.titolo.indexOf(copybook);
 
-
     parent->m_indice.titolo.removeAt(posizione);
 
     parent->m_currenttitle->reset();
@@ -28,11 +27,10 @@ void f_deletecopybook(MainWindow *parent, const char *copybook){
     parent->ui->actionDelete_audio->setEnabled(false);
     parent->ui->actionDelete_copybook->setEnabled(false);
 
-    parent->ui->stopriascolto->setEnabled(false);
-    parent->ui->startriascoltobotton->setEnabled(false);
+    parent->ui->start_play->setHidden(false);
+    parent->ui->stop_play->setHidden(false);
 
-    parent->ui->startrecording->setEnabled(false);
-    parent->ui->startriascoltobotton->setEnabled(false);
+    parent->ui->start_rec->setEnabled(false);
 
     parent->ui->textEdit->setHtml("");
 

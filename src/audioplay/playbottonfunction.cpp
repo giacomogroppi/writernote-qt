@@ -14,7 +14,7 @@ void cambioiconariascolto(MainWindow *parent){
     else
         icon.addFile(QString::fromUtf8(":image/images/pause-recording.png"), QSize(), QIcon::Normal, QIcon::Off);
 
-    parent->ui->startriascoltobotton->setIcon(icon);
+    parent->ui->start_play->setIcon(icon);
 }
 
 /* funzione play in basso a sinistra */

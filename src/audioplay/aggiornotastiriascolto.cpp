@@ -23,12 +23,12 @@ void aggiornotestiriascolto(MainWindow *parent){
         settingaudio_registrazione(parent, false);
 
         /* enable play, pause botton for play audio alreay record */
-        parent->ui->stopriascolto->setEnabled(true);
-        parent->ui->startriascoltobotton->setEnabled(true);
+        parent->ui->stop_play->setHidden(true);
+        parent->ui->start_play->setHidden(true);
 
         /* volume and audio slider */
-        parent->ui->audioSlider->setEnabled(true);
-        parent->ui->volumeSlider->setEnabled(true);
+        parent->ui->audioSlider->setHidden(true);
+        parent->ui->volumeSlider->setHidden(true);
 
         /* abilita il bottone della mano e lo segna unchecked, in caso sia cliccato per qualche motivo*/
         parent->ui->actionListen_current_audio->setEnabled(true);
@@ -58,7 +58,7 @@ void aggiornotestiriascolto(MainWindow *parent){
 
         parent->ui->actionDelete_audio->setEnabled(true);
 
-        parent->ui->stoprecordingbotton->setEnabled(false);
+        parent->ui->stop_rec->setEnabled(false);
         parent->ui->pauserecordingbotton->setEnabled(false);
     }
     else{

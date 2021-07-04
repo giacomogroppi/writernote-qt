@@ -170,7 +170,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QPushButton" name="startriascoltobotton">
+             <widget class="QPushButton" name="start_play">
               <property name="maximumSize">
                <size>
                 <width>25</width>
@@ -187,7 +187,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="stopriascolto">
+             <widget class="QPushButton" name="stop_play">
               <property name="maximumSize">
                <size>
                 <width>25</width>
@@ -291,8 +291,8 @@
     <addaction name="actionSave_As"/>
     <addaction name="actionPrint"/>
     <addaction name="actiontopdf"/>
-    <addaction name="startrecording"/>
-    <addaction name="stoprecordingbotton"/>
+    <addaction name="start_rec"/>
+    <addaction name="stop_rec"/>
     <addaction name="actionEnable_redo_undo"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -382,8 +382,8 @@
    <addaction name="actionSave_As"/>
    <addaction name="actioncloud"/>
    <addaction name="actionPrint"/>
-   <addaction name="startrecording"/>
-   <addaction name="stoprecordingbotton"/>
+   <addaction name="start_rec"/>
+   <addaction name="stop_rec"/>
    <addaction name="pauserecordingbotton"/>
    <addaction name="actionImport_Video"/>
    <addaction name="actioncompress_video"/>
@@ -537,7 +537,7 @@
     <string>Print</string>
    </property>
   </action>
-  <action name="startrecording">
+  <action name="start_rec">
    <property name="icon">
     <iconset resource="../writernote.qrc">
      <normaloff>:/image/images/recoding.png</normaloff>:/image/images/recoding.png</iconset>
@@ -555,7 +555,7 @@
     <string>Import Video</string>
    </property>
   </action>
-  <action name="stoprecordingbotton">
+  <action name="stop_rec">
    <property name="icon">
     <iconset resource="../writernote.qrc">
      <normaloff>:/image/images/stopRecord_.png</normaloff>:/image/images/stopRecord_.png</iconset>

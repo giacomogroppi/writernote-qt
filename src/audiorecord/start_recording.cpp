@@ -68,8 +68,8 @@ void MainWindow::on_startrecording_triggered()
         this->m_currenttitle->posizione_iniz.clear();
     }
 
-    this->ui->startrecording->setEnabled(false);
-    this->ui->stoprecordingbotton->setEnabled(true);
+    this->ui->start_rec->setEnabled(false);
+    this->ui->stop_rec->setEnabled(true);
     this->ui->pauserecordingbotton->setEnabled(true);
 
 }
