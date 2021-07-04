@@ -27,8 +27,8 @@ void f_deletecopybook(MainWindow *parent, const char *copybook){
     parent->ui->actionDelete_audio->setEnabled(false);
     parent->ui->actionDelete_copybook->setEnabled(false);
 
-    parent->ui->start_play->setHidden(false);
-    parent->ui->stop_play->setHidden(false);
+    parent->ui->start_play->setHidden(true);
+    parent->ui->stop_play->setHidden(true);
 
     parent->ui->start_rec->setEnabled(false);
 

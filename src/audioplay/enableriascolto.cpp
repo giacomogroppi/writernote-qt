@@ -41,5 +41,5 @@ void MainWindow::on_actionListen_current_audio_triggered()
 
     this->player->play();
     //this->ui->actionListen_current_audio->setChecked(true);
-    this->ui->stop_play->setEnabled(true);
+    this->ui->stop_play->setHidden(false);
 }

@@ -39,18 +39,18 @@ void settingaudio_riascolto(MainWindow *parent, bool check){
     parent->ui->actionConvert_audio_to_text->setEnabled(check);
 
     /* pulsanti in basso a sinistra per il riascolto dell'audio */
-    parent->ui->start_play->setHidden(check);
-    parent->ui->stop_play->setEnabled(check);
-    parent->ui->audioSlider->setEnabled(check);
-    parent->ui->volumeSlider->setEnabled(check);
+    parent->ui->start_play->setHidden(!check);
+    parent->ui->stop_play->setHidden(!check);
+    parent->ui->audioSlider->setHidden(!check);
+    parent->ui->volumeSlider->setHidden(!check);
 }
 
 void settingaudio_riascoltoinatto(MainWindow *parent, bool check){
     /* true attivare pulsante di riascolto in basso */
-    parent->ui->start_play->setHidden(check);
-    parent->ui->stop_play->setEnabled(check);
-    parent->ui->audioSlider->setEnabled(check);
-    parent->ui->volumeSlider->setEnabled(check);
+    parent->ui->start_play->setHidden(!check);
+    parent->ui->stop_play->setHidden(!check);
+    parent->ui->audioSlider->setHidden(!check);
+    parent->ui->volumeSlider->setHidden(!check);
 
 
     /* abilitazione o ! per conversione, eliminazione ... */
