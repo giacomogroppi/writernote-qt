@@ -40,8 +40,9 @@ private:
     int load_file_2(Document *, zip_file_t *f, zip_t *filezip);
     int load_file_3(Document *, zip_file_t *f, zip_t *filezip);
     int loadbinario_0(struct zip *);
-#endif
     int load_file_4(Document *, zip_file_t *f, zip_t *filezip);
+#endif
+    int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip);
     int loadbinario_1(struct zip *);
 
 public:

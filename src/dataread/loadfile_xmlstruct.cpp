@@ -1,8 +1,8 @@
 #include "xmlstruct.h"
-
 #include "../images/save_images.h"
 #include "../datawrite/source_read_ext.h"
 #include "../utils/common_error_definition.h"
+#include "../frompdf/frompdf.h"
 
 #define LOAD_STRINGA(x, y) if(xmlstruct::load_stringa(x,y) == ERROR) goto free_;
 #define LOAD_STRINGA_RETURN(x, y) if(xmlstruct::load_stringa(x, y) == ERROR)return ERROR;
@@ -140,7 +140,11 @@ int xmlstruct::loadfile(const char *nameFile){
         if(load_file_4(currenttitle, f, filezip) != OK)
             goto free_;
     }
-    else if(temp_versione > 4)
+    else if(temp_versione == 4){
+        if(load_file_5(currenttitle, f, filezip) != OK)
+            goto free_;
+    }
+    else if(temp_versione > 5)
         goto error_new_version;
 
 
@@ -242,8 +246,6 @@ int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
 }
 
-#endif
-
 int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip){
     LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
 
@@ -267,6 +269,54 @@ int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip
             return temp;
         }
         else if(temp == ERROR_CONTROLL){
+            /* we want to continue to load the file, but we need to return we had a problem */
+            controllo_parita = 1;
+        }
+    }
+
+    LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
+
+    LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
+
+    if(controllo_parita)
+        return ERROR_CONTROLL;
+
+    return OK;
+}
+
+#endif
+
+int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
+{
+    LOAD_STRINGA_RETURN(f, doc->nome_copybook);
+
+    int tmp;
+    uchar controllo_parita = 0;
+    frompdf::load_res res;
+
+    SOURCE_READ_RETURN(f, &tmp, sizeof(int));
+    doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+
+    SOURCE_READ_RETURN(f, &doc->se_tradotto, sizeof(bool));
+
+    LOAD_STRINGA_RETURN(f, doc->testi);
+
+    LOAD_STRINGA_RETURN(f, doc->audio_position_path)
+
+    SOURCE_READ_RETURN(f, &doc->m_touch, sizeof(bool));
+    SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(uint));
+
+    res = doc->m_pdf->load(filezip, true);
+    if(res != frompdf::ok)
+        return ERROR;
+
+
+    if(doc->m_touch){
+        tmp = loadbinario_1(filezip);
+        if(tmp == ERROR){
+            return tmp;
+        }
+        else if(tmp == ERROR_CONTROLL){
             /* we want to continue to load the file, but we need to return we had a problem */
             controllo_parita = 1;
         }
@@ -309,31 +359,6 @@ int load_audio(QByteArray &array, const QString &namecopybook, const QString &pa
         return ERROR;
 
     error = xmlstruct::readFile(file_zip, array, true, NAME_AUDIO(namecopybook), false);
-
-    /*
-    size_audio = xmlstruct::sizeFile(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData());
-
-    if(!size_audio)
-        return ERROR;
-
-    f = zip_fopen(file_zip, NAME_AUDIO(namecopybook).toUtf8().constData(), 0);
-    if(f == NULL)
-        return ERROR;
-
-    while(size_audio){
-        SOURCE_READ_GOTO(f, &__r, sizeof(uchar));
-
-        array.append(__r);
-        size_audio --;
-    }
-
-    CLOSE_ZIP_AUDIO(f, file_zip);
-    return OK;
-
-    free_:
-    CLOSE_ZIP_AUDIO(f, file_zip);
-    return ERROR;
-*/
 
     zip_close(file_zip);
     return error;

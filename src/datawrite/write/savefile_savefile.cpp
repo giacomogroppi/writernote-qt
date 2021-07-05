@@ -55,10 +55,10 @@ int savefile::savefile_check_file(){
     SAVE_STRINGA(file, currenttitle->audio_position_path.toUtf8().constData())
 
     SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(bool))
+    SOURCE_WRITE(file, &currenttitle->count_pdf, sizeof(uchar));
 
     if(currenttitle->m_touch)
         SAVE_BINARY(filezip);
-
 
     /* testinohtml */
     len = currenttitle->testinohtml.length();
