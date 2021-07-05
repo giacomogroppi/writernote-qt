@@ -73,9 +73,8 @@ MainWindow::MainWindow(QWidget *parent,
     setting_ui_start(this);
 
     this->ui->layouteditor->insertWidget(1, this->m_canvas);
-    //this->m_canvas->setHidden(true);
 
-    abilitazioneinput(this);
+    contrUi();
 
     checkupdate = new updatecheck(ui->actionUpdate_writernote);
 
@@ -214,7 +213,7 @@ void MainWindow::on_actionNew_File_triggered()
     m_indice.reset();
     ui->listWidgetSX->clear();
     m_canvas->clear();
-    abilitazioneinput(this);
+    contrUi();
     setting_ui_start(this);
     m_path = "";
 }

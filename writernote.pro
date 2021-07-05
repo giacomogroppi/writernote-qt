@@ -58,6 +58,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/changeCopybook.cpp \
+    src/controllUi.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/document.cpp \

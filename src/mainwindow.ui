@@ -384,7 +384,7 @@
    <addaction name="actionPrint"/>
    <addaction name="start_rec"/>
    <addaction name="stop_rec"/>
-   <addaction name="pauserecordingbotton"/>
+   <addaction name="pause_rec"/>
    <addaction name="actionImport_Video"/>
    <addaction name="actioncompress_video"/>
    <addaction name="actionUpdate_writernote"/>
@@ -710,13 +710,16 @@
     <string>Delete audio</string>
    </property>
   </action>
-  <action name="pauserecordingbotton">
+  <action name="pause_rec">
    <property name="icon">
     <iconset resource="../writernote.qrc">
      <normaloff>:/image/images/pause-recording.png</normaloff>:/image/images/pause-recording.png</iconset>
    </property>
    <property name="text">
     <string>pauserecording</string>
+   </property>
+   <property name="toolTip">
+    <string>Pause Recording</string>
    </property>
   </action>
   <action name="actionQuality_setting">

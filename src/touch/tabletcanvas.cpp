@@ -20,6 +20,11 @@ static void loadLastMethod(TabletCanvas *);
 
 void TabletCanvas::restoreO()
 {
+    if(data->datatouch->isempty()){
+        disegnafoglio();
+        return;
+    }
+
     if(this->data->datatouch->repositioning()){
         this->isloading = true;
         update();

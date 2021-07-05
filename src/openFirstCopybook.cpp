@@ -35,7 +35,7 @@ void MainWindow::createCopybook(const QString &name, const bool touch)
 
     update_list_copybook();
 
-    abilitazioneinput(this);
+    contrUi();
 }
 
 QString MainWindow::getNameCopybook()

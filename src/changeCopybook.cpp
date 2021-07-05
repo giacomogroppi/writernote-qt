@@ -76,11 +76,10 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
     if(!m_currenttitle->m_touch)
         ui->textEdit->setHtml(m_currenttitle->testi);
 
-    settingtextedit(this, true);
-    settingstyle(this, true);
+    contrUi();
 
     aggiornotestiriascolto(this);
-    abilitazioneinput(this);
+    contrUi();
     ui->actionPrint->setEnabled(true);
 
     /* pass the pointer to the class */

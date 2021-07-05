@@ -71,8 +71,7 @@ void MainWindow::on_stoprecordingbotton_triggered()
         saveAudio(m_currenttitle, m_path);
     }
 
-    settingaudio_registrazione(this, false);
-    settingaudio_riascolto(this, true);
+    contrUi();
 
     aggiornotestiriascolto(this);
 

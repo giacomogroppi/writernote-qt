@@ -3,6 +3,6 @@
 
 class MainWindow;
 
-void abilitazioneinput(MainWindow *);
+//void abilitazioneinput(MainWindow *);
 
 #endif // ABILITAZIONEINPUT_H

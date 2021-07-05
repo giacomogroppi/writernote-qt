@@ -70,7 +70,7 @@ void MainWindow::on_startrecording_triggered()
 
     this->ui->start_rec->setEnabled(false);
     this->ui->stop_rec->setEnabled(true);
-    this->ui->pauserecordingbotton->setEnabled(true);
+    this->ui->pause_rec->setEnabled(true);
 
 }
 

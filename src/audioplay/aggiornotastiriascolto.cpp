@@ -7,7 +7,6 @@
 
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../setting_ui.h"
-
 #include "../dataread/xmlstruct.h"
 #define ERROR_AUDIO "We had an internal problem with audio, please \nclose the application and open it again"
 
@@ -20,15 +19,7 @@ void aggiornotestiriascolto(MainWindow *parent){
                 return dialog_critic("Audio " + parent->m_currenttitle->audio_position_path + " didn't exist");
         }
 
-        settingaudio_registrazione(parent, false);
-
-        /* enable play, pause botton for play audio alreay record */
-        parent->ui->stop_play->setHidden(false);
-        parent->ui->start_play->setHidden(false);
-
-        /* volume and audio slider */
-        parent->ui->audioSlider->setHidden(false);
-        parent->ui->volumeSlider->setHidden(false);
+        parent->contrUi();
 
         /* abilita il bottone della mano e lo segna unchecked, in caso sia cliccato per qualche motivo*/
         parent->ui->actionListen_current_audio->setEnabled(true);
@@ -59,12 +50,11 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->actionDelete_audio->setEnabled(true);
 
         parent->ui->stop_rec->setEnabled(false);
-        parent->ui->pauserecordingbotton->setEnabled(false);
+        parent->ui->pause_rec->setEnabled(false);
     }
     else{
         /* abilita i tasti per la registrazione */
-        settingaudio_registrazione(parent, true);
-        settingaudio_riascolto(parent, false);
+        parent->contrUi();
 
         parent->ui->actionDelete_audio->setEnabled(false);
 

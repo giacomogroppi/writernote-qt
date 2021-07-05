@@ -68,7 +68,7 @@ class MainWindow : public QMainWindow
 
 public:
     void resFileTmpInTmpFolder();
-
+    void contrUi();
     void updateTouch();
 
     void openFirstCopybook();
