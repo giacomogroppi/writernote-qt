@@ -3,13 +3,16 @@
 
 void MainWindow::contrUi(){
     const bool already_rec =    m_currenttitle->se_registato != Document::not_record;
+
     const bool is_rec =         m_audioRecorder->state() == QAudioRecorder::RecordingState;
-    const bool is_pause =       m_audioRecorder->state() == QAudioRecorder::PausedState;
+    const bool is_pause_rec =       m_audioRecorder->state() == QAudioRecorder::PausedState;
+
     const bool is_touch =       m_currenttitle->m_touch;
+
     const bool is_play =        player->state() == QMediaPlayer::PlayingState;
 
     ui->pause_rec->setEnabled(is_rec);
-    ui->start_rec->setEnabled(!already_rec && is_pause);
+    ui->start_rec->setEnabled(!already_rec && !is_pause_rec && !is_rec);
     ui->stop_rec->setEnabled(is_rec);
 
     m_canvas->setHidden(!is_touch);
