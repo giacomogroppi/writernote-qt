@@ -3,7 +3,6 @@
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include "datawrite/qfilechoose.h"
-#include "style/abilitazioneinput.h"
 #include "currenttitle/redolist.h"
 #include "dataread/xmlstruct.h"
 #include "utils/dialog_critic/dialog_critic.h"
@@ -11,7 +10,6 @@
 #include "newcopybook_.h"
 #include "setting_ui.h"
 #include "datawrite/savefile.h"
-#include "style/abilitazioneinput.h"
 #include "currenttitle/checksimilecopybook.h"
 #include "windows/updatecheck.h"
 #include "audioplay/aggiornotastiriascolto.h"

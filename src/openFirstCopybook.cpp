@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "style/abilitazioneinput.h"
 
 void MainWindow::openFirstCopybook(){
     auto item = ui->listWidgetSX->item(0);

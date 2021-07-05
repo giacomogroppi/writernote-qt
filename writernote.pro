@@ -180,7 +180,6 @@ SOURCES += \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
-    src/style/abilitazioneinput.cpp \
     src/style/bulletfile.cpp \
     src/style/insertimage.cpp \
     src/style/inserttable_class.cpp \
@@ -315,7 +314,6 @@ HEADERS += \
     src/pdf/topdf.h \
     src/setting_ui.h \
     src/sheet/dialog_sheet.h \
-    src/style/abilitazioneinput.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
     src/touch/paintevent/draw_image.h \

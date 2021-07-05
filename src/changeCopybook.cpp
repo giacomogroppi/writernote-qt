@@ -1,15 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include "dataread/xmlstruct.h"
 #include "datawrite/savefile.h"
 #include "currenttitle/redolist.h"
 #include "savecopybook.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "utils/areyousure/areyousure.h"
-
 #include "setting_ui.h"
-#include "style/abilitazioneinput.h"
 #include "restore_file/ui/setting_restore_ui.h"
 #include "audioplay/aggiornotastiriascolto.h"
 
