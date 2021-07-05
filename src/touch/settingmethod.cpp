@@ -108,6 +108,7 @@ void MainWindow::updateTouch(){
     ui->actionyellow->setChecked(m_canvas->m_color == Qt::yellow);
     ui->actionred->setChecked(m_canvas->m_color == Qt::red);
     ui->actionbrown_color->setChecked(m_canvas->m_color == COLOR_BROWN);
+    ui->actionpurple->setChecked(m_canvas->m_color == COLOR_PURPLE);
 }
 
 void MainWindow::on_actionblack_triggered()
@@ -137,5 +138,11 @@ void MainWindow::on_actionred_triggered()
 void MainWindow::on_actionbrown_color_triggered()
 {
     this->m_canvas->sceltacolorepenna(COLOR_BROWN);
+    updateTouch();
+}
+
+void MainWindow::on_actionpurple_triggered()
+{
+    this->m_canvas->sceltacolorepenna(COLOR_PURPLE);
     updateTouch();
 }

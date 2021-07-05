@@ -127,6 +127,7 @@ MainWindow::MainWindow(QWidget *parent,
     CHECKABLE(ui->actionred);
     CHECKABLE(ui->actionyellow);
     CHECKABLE(ui->actionbrown_color);
+    CHECKABLE(ui->actionpurple);
 
     updateTouch();
 
@@ -366,3 +367,4 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
     touch_or_pen = !touch_or_pen;
     update_touch_or_pen();
 }
+

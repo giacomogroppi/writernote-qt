@@ -351,6 +351,8 @@ private slots:
 
     void on_actionbrown_color_triggered();
 
+    void on_actionpurple_triggered();
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
