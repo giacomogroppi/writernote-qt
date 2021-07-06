@@ -43,6 +43,7 @@ jobs:
       
       - name: Build
         run: |
+          ls "C:\Program Files (x86)\Windows Kits\"
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
         shell: cmd
