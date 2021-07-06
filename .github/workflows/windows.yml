@@ -25,10 +25,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: GuillaumeFalourd/setup-windows10-sdk-action@v1
-        with:
-          sdk-version: 19041
-      
                   
       - name: Download dependency
         run: |
@@ -41,6 +37,15 @@ jobs:
           MSYS2_ARCH: x86_64
           MSYSTEM: MINGW64
       
+      - name: install choco
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+      - name: install innosetup
+        run: choco install innosetup
+
+      - name: install windows sdk
+        run: choco install windows-sdk-10.0
+
       - name: Build
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
@@ -51,15 +56,7 @@ jobs:
           HOME: ${{ runner.workspace }}/writernote-qt
           MSYS2_ARCH: x86_64
           MSYSTEM: MINGW64
-
-      - name: install choco
-        run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-
-
-      - name: install innosetup
-        run: choco install innosetup
-
+      
       - name: Compile package for windows
         shell: powershell
         run: |
