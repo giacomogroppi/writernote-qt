@@ -25,16 +25,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: fbactions/setup-winsdk@v1
+      - uses: GuillaumeFalourd/setup-windows10-sdk-action@v1
         with:
-          winsdk-build-version: 19041
-
-      - name: Setup Git for Windows SDK
-        uses: git-for-windows/setup-git-for-windows-sdk@v1.0.1
-        with:
-          flavor: full
-          architecture: x86_64
-          path: C:/Program Files (x86)
+          sdk-version: 19041
+      
                   
       - name: Download dependency
         run: |
