@@ -51,7 +51,10 @@ jobs:
         with:
           python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-      - run: python script.py
+      
+      - name: find file
+        run: |
+          python script.py
 
       - name: Build
         run: |
