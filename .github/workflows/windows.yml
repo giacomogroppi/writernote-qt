@@ -29,10 +29,13 @@ jobs:
         with:
           winsdk-build-version: 19041
 
-      - name: Install MinGW
-        uses: egor-tensin/setup-mingw@v2
-
-
+      - name: Setup Git for Windows SDK
+        uses: git-for-windows/setup-git-for-windows-sdk@v1.0.1
+        with:
+          flavor: full
+          architecture: x86_64
+          path: C:/Program Files (x86)
+                  
       - name: Download dependency
         run: |
           set PATH="%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
