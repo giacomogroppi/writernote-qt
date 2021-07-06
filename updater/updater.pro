@@ -29,3 +29,11 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32 {
+    WINSDK_DIR = C:/Program Files (x86)/Windows Kits/10/bin/10.0.19041.0/x64
+    WIN_PWD = $$replace(PWD, /, \\)
+    OUT_PWD_WIN = $$replace(OUT_PWD, /, \\)
+    QMAKE_POST_LINK = "$$WINSDK_DIR/bin/x64/mt.exe -manifest $$quote($$WIN_PWD\\$$basename(TARGET).manifest) -outputresource:$$quote($$OUT_PWD_WIN\\${DESTDIR_TARGET};1)"
+}
+RC_FILE = res_manifest.rc
