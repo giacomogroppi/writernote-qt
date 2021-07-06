@@ -46,7 +46,6 @@ jobs:
       - name: install windows sdk
         run: choco install windows-sdk-10.0
 
-      - name: Install python
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
