@@ -43,7 +43,7 @@ jobs:
       
       - name: Build
         run: |
-          $res = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x86" -Include mt.exe -File -Recurse
+          $res = Get-ChildItem -Path "C:\" -Include mt.exe -File -Recurse
           Write-Output "value: " + $res
           powershell "\"$res\" -manifest updater.exe.manifest"
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
