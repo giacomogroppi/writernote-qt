@@ -3,7 +3,7 @@
 
 
 /* gestisce lo stop dell'ascolto dell'audio */
-void MainWindow::on_stopriascolto_clicked()
+void MainWindow::on_stop_play_clicked()
 {
     this->on_actionListen_current_audio_triggered();
 }

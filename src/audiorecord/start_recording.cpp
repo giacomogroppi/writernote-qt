@@ -20,7 +20,7 @@ static bool load();
 #endif //snap
 
 /* funzione che gestisce lo start della registrazione */
-void MainWindow::on_startrecording_triggered()
+void MainWindow::on_start_rec_triggered()
 {
     if(this->m_currenttitle->se_registato != Document::not_record)
         return user_message("You had already record and audio");

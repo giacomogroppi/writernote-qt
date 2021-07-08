@@ -190,26 +190,16 @@ private slots:
 
     void on_actionCreate_new_copybook_triggered();
 
-    void on_startrecording_triggered();
-
-    void on_pauserecordingbotton_triggered();
-
     /* funzione che gestisce l'aggiornamento della status bar */
     void updateProgress(qint64 duration);
 
     /* funzione che gestisce la visualizzazione di un errore per la registrazione del video */
     void displayErrorMessage();
 
-    //void on_startriascolto_clicked();
-
-    void on_stopriascolto_clicked();
-
     /* riascolto audio */
     /* funzione che gestisce l'inserimento del testo formattato correttamente */
     void riascoltoaudioprogressivo(qint64 position);
     void on_actionListen_current_audio_triggered();
-
-    void on_startriascoltobotton_clicked();
 
     void on_boldbotton_clicked();
 
@@ -235,8 +225,6 @@ private slots:
     void cambiostatoplayer(QMediaPlayer::State);
 
     void on_actionQuality_setting_triggered();
-
-    void on_stoprecordingbotton_triggered();
 
     void on_actionDelete_audio_triggered();
 
@@ -352,6 +340,16 @@ private slots:
     void on_actionbrown_color_triggered();
 
     void on_actionpurple_triggered();
+
+    void on_start_rec_triggered();
+
+    void on_pause_rec_triggered();
+
+    void on_stop_play_clicked();
+
+    void on_start_play_clicked();
+
+    void on_stop_rec_triggered();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;

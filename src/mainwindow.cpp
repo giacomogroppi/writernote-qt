@@ -266,7 +266,7 @@ void MainWindow::setExtAudio(){
 }
 
 /* funzionche che viene invocata quando la registrazione dell'audio viene messa in pausa */
-void MainWindow::on_pauserecordingbotton_triggered()
+void MainWindow::on_pause_rec_triggered()
 {
     if (this->m_audioRecorder->state() != QMediaRecorder::PausedState)
         this->m_audioRecorder->pause();
@@ -367,4 +367,3 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
     touch_or_pen = !touch_or_pen;
     update_touch_or_pen();
 }
-

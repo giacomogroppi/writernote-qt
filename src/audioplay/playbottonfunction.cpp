@@ -18,7 +18,7 @@ void cambioiconariascolto(MainWindow *parent){
 }
 
 /* funzione play in basso a sinistra */
-void MainWindow::on_startriascoltobotton_clicked()
+void MainWindow::on_start_play_clicked()
 {
     cambioiconariascolto(this);
     if(this->player->state() == QMediaPlayer::PlayingState)

@@ -42,7 +42,7 @@ namespace removeAudio {
     static void removeAudioSettingsSave(n_removeAudio);
 }
 
-void MainWindow::on_stoprecordingbotton_triggered()
+void MainWindow::on_stop_rec_triggered()
 {
     if(this->m_audioRecorder->state() == QMediaRecorder::StoppedState)
         return;
