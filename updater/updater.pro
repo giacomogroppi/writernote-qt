@@ -43,7 +43,12 @@ win32 {
     OUT_PWD_WIN = $$replace(OUT_PWD, /, \\)
 
     TO = $$OUT_PWD_WIN\\${DESTDIR_TARGET}
+    message("posizione")
+    message($$TO)
     TO = $$replace($$TO, /, \\)
+
+    message("posizione")
+    message($$TO)
 
     QMAKE_POST_LINK = "'$$WINSDK_DIR' -manifest '$$quote($$WIN_PWD\\$$basename(TARGET).exe.manifest)' -outputresource:$$quote($$TO;1)"
 }
