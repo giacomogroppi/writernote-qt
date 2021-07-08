@@ -42,7 +42,7 @@ win32 {
     WIN_PWD = $$replace(PWD, /, \\)
     OUT_PWD_WIN = $$replace(OUT_PWD, /, \\)
 
-    TO = $$OUT_PWD_WIN\\${DESTDIR_TARGET}
+    TO = "$$OUT_PWD_WIN\\build\\updater.exe"
     message("posizione")
     message($$TO)
     TO = $$replace($$TO, /, \\)
