@@ -41,7 +41,7 @@ int save_image(QList<struct immagine_S> *data,
     return OK;
 }
 
-static int load_image_(struct immagine_S *temp_immagine,
+static int load_image_(struct immagine_S &temp_immagine,
                        zip_file_t *file_zip){
     void *data_read;
 
@@ -61,19 +61,19 @@ static int load_image_(struct immagine_S *temp_immagine,
 
     array.setRawData((const char *)data_read, temp_s);
 
-    temp_immagine->immagini.loadFromData(array);
+    temp_immagine.immagini.loadFromData(array);
 
     SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
-    temp_immagine->i.setX(temp_i);
+    temp_immagine.i.setX(temp_i);
 
     SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
-    temp_immagine->i.setY(temp_i);
+    temp_immagine.i.setY(temp_i);
 
     SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
-    temp_immagine->f.setX(temp_i);
+    temp_immagine.f.setX(temp_i);
 
     SOURCE_READ_GOTO(file_zip, &temp_i, sizeof(int));
-    temp_immagine->f.setY(temp_i);
+    temp_immagine.f.setY(temp_i);
 
 
     free(data_read);
@@ -92,8 +92,7 @@ static int load_image_(struct immagine_S *temp_immagine,
 int load_image(QList<struct immagine_S> *data,
                zip_file_t *file_zip){
     int i, len;
-
-    struct immagine_S *temp_immagine = new struct immagine_S;
+    struct immagine_S temp_immagine;
 
     SOURCE_READ_GOTO(file_zip, &len, sizeof(int));
 
@@ -102,13 +101,11 @@ int load_image(QList<struct immagine_S> *data,
             goto free_;
         }
 
-        data->append(*temp_immagine);
+        data->append(temp_immagine);
     }
 
-    delete temp_immagine;
     return OK;
 
     free_:
-    delete temp_immagine;
     return ERROR;
 }

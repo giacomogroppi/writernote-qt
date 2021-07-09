@@ -102,49 +102,50 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 
 int xmlstruct::loadfile(const char *nameFile){
     currenttitle->reset();
-    currenttitle->datatouch->reset();
-
     int err = 0;
+    zip_t *filezip;
+    zip_file_t *f;
+    struct zip_stat st;
+    int tmp_ver;
 
-    zip_t *filezip = zip_open(path_->toUtf8().constData(),
-                              ZIP_CREATE,
-                              &err);
+    filezip = zip_open(path_->toUtf8().constData(),
+                       ZIP_CREATE,
+                       &err);
+
     if (filezip == NULL)
         return false;
 
-    struct zip_stat st;
     zip_stat_init(&st);
     zip_stat(filezip, nameFile, 0, &st);
 
-    zip_file_t *f = zip_fopen(filezip, nameFile, 0);
+    f = zip_fopen(filezip, nameFile, 0);
     if(f == NULL){
         zip_close(filezip);
         return false;
     }
 
-    int temp_versione;
-    SOURCE_READ_GOTO(f, &temp_versione, sizeof(int));
+    SOURCE_READ_GOTO(f, &tmp_ver, sizeof(int));
 
-    if(temp_versione <= 2){
+    if(tmp_ver <= 2){
 #ifdef ALL_VERSION
         if(load_file_2(currenttitle, f, filezip) != OK)
             goto free_;
 #else
         goto ERROR_VERSION;
 #endif
-    }else if(temp_versione == 3){
+    }else if(tmp_ver == 3){
         if(load_file_3(currenttitle, f, filezip) != OK)
             goto free_;
 
-    }else if(temp_versione == 4){
+    }else if(tmp_ver == 4){
         if(load_file_4(currenttitle, f, filezip) != OK)
             goto free_;
     }
-    else if(temp_versione == 5){
+    else if(tmp_ver == 5){
         if(load_file_5(currenttitle, f, filezip) != OK)
             goto free_;
     }
-    else if(temp_versione > 5)
+    else if(tmp_ver > 5)
         goto error_new_version;
 
 
@@ -159,7 +160,6 @@ int xmlstruct::loadfile(const char *nameFile){
 
     CLOSE_ZIP(f, filezip);
     return OK;
-
 
     free_:
     CLOSE_ZIP(f, filezip);
@@ -303,8 +303,8 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
 
     LOAD_STRINGA_RETURN(f, doc->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &doc->m_touch, sizeof(bool));
-    SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(uint));
+    SOURCE_READ_RETURN(f, &doc->m_touch, sizeof(doc->m_touch));
+    SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
 
     res = doc->m_pdf->load(filezip, true);
     if(res != frompdf::ok)

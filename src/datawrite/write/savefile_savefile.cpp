@@ -25,8 +25,10 @@ int savefile::savefile_check_file(){
     int error, temp, len, i, check;
     zip_error_t errore;
 
-    zip_t *filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
+    zip_t *filezip;
     zip_source_t *file;
+
+    filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
 
     if(!filezip)
         return ERROR;

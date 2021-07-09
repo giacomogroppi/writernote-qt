@@ -77,4 +77,5 @@ void Document::reset(){
     this->audio_data.clear();
 
     this->datatouch->reset();
+    this->count_pdf = 0;
 }
