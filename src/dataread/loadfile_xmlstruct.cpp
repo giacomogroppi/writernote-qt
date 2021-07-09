@@ -140,7 +140,7 @@ int xmlstruct::loadfile(const char *nameFile){
         if(load_file_4(currenttitle, f, filezip) != OK)
             goto free_;
     }
-    else if(temp_versione == 4){
+    else if(temp_versione == 5){
         if(load_file_5(currenttitle, f, filezip) != OK)
             goto free_;
     }
