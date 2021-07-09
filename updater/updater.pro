@@ -45,6 +45,6 @@ win32 {
     TO = "$$OUT_PWD_WIN\\build\\updater.exe"
     FROM = '$$OUT_PWD_WIN\\$$basename(TARGET).exe.manifest'
     message($$FROM)
-    QMAKE_POST_LINK = "'$$WINSDK_DIR' -manifest '$$FROM' -outputresource:$$TO;1"
+    QMAKE_POST_LINK = "'$$WINSDK_DIR' -manifest '$$FROM' -outputresource:'$$TO';1"
 }
 #RC_FILE = res_manifest.rc
