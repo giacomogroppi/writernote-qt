@@ -59,7 +59,6 @@ jobs:
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
-          C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\mt.exe -manifest D:\a\writernote-qt\writernote-qt\updater\updater.exe.manifest -outputresource:D:\a\writernote-qt\writernote-qt\updater\build\updater.exe;1
         shell: cmd
         working-directory: windows
         env:
@@ -67,6 +66,12 @@ jobs:
           MSYS2_ARCH: x86_64
           MSYSTEM: MINGW64
       
+      - name: Add manifest
+        run: |
+          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
+          &'C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\mt.exe' -manifest D:\a\writernote-qt\writernote-qt\updater\updater.exe.manifest -outputresource:D:\a\writernote-qt\writernote-qt\updater\build\updater.exe;1
+        shell: powershell
+
       - name: Compile package for windows
         shell: powershell
         run: |
