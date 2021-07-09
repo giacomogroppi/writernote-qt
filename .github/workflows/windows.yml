@@ -68,7 +68,7 @@ jobs:
       
       - name: Add manifest
         run: |
-          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin
+          #set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin
           &'C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\mt.exe' -manifest D:\a\writernote-qt\writernote-qt\updater\updater.exe.manifest -outputresource:D:\a\writernote-qt\writernote-qt\updater\build\updater.exe;1
         shell: powershell
 
