@@ -50,14 +50,14 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
-    SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(bool));
+    SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(currenttitle->se_tradotto));
 
     SAVE_STRINGA(file, currenttitle->testi.toUtf8().constData());
 
     SAVE_STRINGA(file, currenttitle->audio_position_path.toUtf8().constData())
 
-    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(bool))
-    SOURCE_WRITE(file, &currenttitle->count_pdf, sizeof(uchar));
+    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(currenttitle->m_touch))
+    SOURCE_WRITE(file, &currenttitle->count_pdf, sizeof(currenttitle->count_pdf));
 
     if(currenttitle->m_touch)
         SAVE_BINARY(filezip);

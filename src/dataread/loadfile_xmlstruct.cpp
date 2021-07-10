@@ -297,7 +297,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
 
-    SOURCE_READ_RETURN(f, &doc->se_tradotto, sizeof(bool));
+    SOURCE_READ_RETURN(f, &doc->se_tradotto, sizeof(doc->se_tradotto));
 
     LOAD_STRINGA_RETURN(f, doc->testi);
 
