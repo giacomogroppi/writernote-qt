@@ -1,0 +1,53 @@
+name: macos build
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'updater/**'
+      - 'windows/**'
+      - '!.github/workflows/macos.yml'
+
+  pull_request:
+    branches: [ master ]
+
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - '!.github/workflows/macos.yml'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.13.2
+        with:
+          version: 5.15.2
+          modules: multimedia
+
+      - name: Install brew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - name: Download dep
+        run: |
+          brew install git
+          brew install libzip
+          brew install poppler
+          brew install qt
+
+      - name: Compile
+        run: |
+          qmake
+          make -j $(nproc)
+          

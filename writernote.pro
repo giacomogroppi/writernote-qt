@@ -5,6 +5,7 @@ QT       += multimedia
 QT       += printsupport
 QT       += network
 
+macx: DEFINES += "MACOS"
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -428,7 +429,12 @@ android{
         INCLUDEPATH += C:\msys64\mingw64\include
 
     }
-    else{
+    else:macx{
+        DEFINES -= "PDFSUPPORT"
+        message(MacOS build)
+        INCLUDEPATH += /usr/local/opt/libzip/include
+        LIBS += /usr/local/opt/libzip/lib/libzip.5.dylib
+    }else{
         PKGCONFIG += libzip
     }
 
@@ -490,12 +496,16 @@ contains(DEFINES, PDFSUPPORT){
     message("Enable pdf support")
 }
 
-unix:contains(DEFINES, PDFSUPPORT){
+macx:contains(DEFINES, PDFSUPPORT){
+    INCLUDEPATH += /usr/local/opt/poppler/include/poppler/qt5
+    LIBS += /usr/local/Cellar/poppler/21.07.0/lib/libpoppler-qt5.dylib
+}
+else:unix:contains(DEFINES, PDFSUPPORT){
+    message(Unix pdf support enable)
     INCLUDEPATH  += /usr/include/poppler/qt5
     LIBS         += -L/usr/lib -lpoppler-qt5
 }
 
-#win32:DEFINES-="PDFSUPPORT"
 win32:contains(DEFINES, PDFSUPPORT){
     INCLUDEPATH  += C:\msys64\mingw64\include\poppler\qt5
     LIBS         += C:\msys64\mingw64\lib\libpoppler-qt5.dll.a

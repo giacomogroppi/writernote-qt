@@ -15,6 +15,8 @@ static int mostra(const char *comando);
 #elif defined(WIN32) || defined(WIN64) || defined(__OS2__)
 #define APPLICATION_NAME (QString)"explorer.exe "
 static void replace(char *data);
+#elif defined(MACOS)
+#define APPLICATION_NAME (QString)"open "
 #endif
 
 static QString remove_s(const char *);

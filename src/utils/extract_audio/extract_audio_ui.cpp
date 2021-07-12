@@ -157,7 +157,7 @@ void extract_audio_ui::on_open_to_clicked()
 */
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
 #define HOME "USERPROFILE"
-#elif unix
+#elif unix || MACOS
 #define HOME "HOME"
 #endif
 
