@@ -1,3 +1,3 @@
 qmake
 make -j $(nproc)
-python3 get_deb.py $PATH
+python3 macos-build/get_deb.py $(pwd)build/writernote.app
