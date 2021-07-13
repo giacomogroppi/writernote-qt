@@ -19,6 +19,23 @@ def get_dep(pos_lib: str) -> list[str]:
 
     return list
 
+
+def analise(list: list[str]) -> list[str]:
+    list_sec = []
+    for i, line in enumerate(list):
+        list_sec.append(line)
+        list_sec[i] = list_sec[i][1:]
+
+        try:
+            ind = list_sec[i].index('(')
+    
+            list_sec[i] = list_sec[i][:ind-1]
+
+        except:
+            pass
+
+    return list
+
 if __name__ == "__main__":
     pos_bin = sys.argv[1]
 
