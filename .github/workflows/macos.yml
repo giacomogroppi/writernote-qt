@@ -41,9 +41,12 @@ jobs:
 
       - name: Download dep
         run: |
+          echo $(pwd)
+          cd writernote-qt 
           /bin/bash ./macos-build/dep.sh
 
       - name: Compile
         run: |
+          cd writernote-qt
           /bin/bash ./macos-build/compile.sh
           
