@@ -16,7 +16,7 @@ def get_dep(pos_lib: str) -> list[str]:
     with open(pos_lib, "r") as file:
         lines = file.readlines()
         for line in lines:
-            list.append(file.readline())
+            list.append(line)
 
     return list
 
