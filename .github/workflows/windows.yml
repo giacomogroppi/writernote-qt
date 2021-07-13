@@ -7,12 +7,14 @@ on:
       - 'LICENSE'
       - '.github/**'
       - '!.github/workflows/windows.yml'
+      - 'macos-build/**'
   pull_request:
     paths-ignore:
       - '**.md'
       - 'LICENSE'
       - '.github/**'
       - '!.github/workflows/windows.yml'
+      - 'macos-build/**'
 
   release:
     types:
