@@ -24,6 +24,6 @@ if __name__ == "__main__":
     ind = pos_bin.index("writernote.app")
     pos_dest = pos_bin[:ind] + "lib_list.txt"
 
-    save_dep(pos_bin + SUFF, pos_dest)
+    save_dep(pos_bin + "/" + SUFF, pos_dest)
 
     print(get_dep(pos_dest))
