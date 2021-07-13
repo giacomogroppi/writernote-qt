@@ -43,10 +43,10 @@ jobs:
         run: |
           echo $(pwd)
           echo $(ls)
-          /bin/bash ./macos-build/dep.sh
+          ./macos-build/dep.sh
 
       - name: Compile
         run: |
           cd writernote-qt
-          /bin/bash ./macos-build/compile.sh
+          ./macos-build/compile.sh
           
