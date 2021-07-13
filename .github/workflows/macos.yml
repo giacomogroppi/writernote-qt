@@ -41,8 +41,6 @@ jobs:
 
       - name: Download dep
         run: |
-          echo $(pwd)
-          echo $(ls)
           ./macos-build/dep.sh
 
       - name: Compile
