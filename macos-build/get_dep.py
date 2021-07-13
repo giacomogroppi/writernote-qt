@@ -32,7 +32,7 @@ def analise(list: list[str]) -> list[str]:
         except:
             pass
 
-    return list
+    return list_sec
 
 if __name__ == "__main__":
     pos_bin = sys.argv[1]
