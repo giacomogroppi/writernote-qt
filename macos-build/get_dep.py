@@ -26,13 +26,9 @@ def analise(list: list[str]) -> list[str]:
         list_sec.append(line)
         list_sec[i] = list_sec[i][1:]
 
-        try:
-            ind = list_sec[i].index('(')
-    
-            list_sec[i] = list_sec[i][:ind-1]
+        ind = list_sec[i].index('(')
+        list_sec[i] = list_sec[i][:ind-1]
 
-        except:
-            pass
 
     return list
 
