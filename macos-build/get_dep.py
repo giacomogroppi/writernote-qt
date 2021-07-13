@@ -12,9 +12,11 @@ def save_dep(pos_binary: str, dest_list:str) -> None:
 
 def get_dep(pos_lib: str) -> list[str]:
     list = []
-    
+
     with open(pos_lib, "r") as file:
-        list.append(file.readline)
+        lines = file.readlines()
+        for line in lines:
+            list.append(file.readline())
 
     return list
 
