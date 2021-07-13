@@ -45,6 +45,5 @@ jobs:
 
       - name: Compile
         run: |
-          cd writernote-qt
           ./macos-build/compile.sh
           
