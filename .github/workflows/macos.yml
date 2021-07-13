@@ -41,13 +41,9 @@ jobs:
 
       - name: Download dep
         run: |
-          brew install git
-          brew install libzip
-          brew install poppler
-          brew install qt
+          /bin/bash ./macos-build/dep.sh
 
       - name: Compile
         run: |
-          qmake
-          make -j $(nproc)
+          /bin/bash ./macos-build/compile.sh
           
