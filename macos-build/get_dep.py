@@ -8,7 +8,7 @@ def save_dep(pos_binary: str, dest_list:str) -> None:
     string = ""
 
     os.system(COMMAND + pos_binary + " >> " + dest_list)
-
+    os.system("cat "+ dest_list)
 
 def get_dep(pos_lib: str) -> list[str]:
     list = []
