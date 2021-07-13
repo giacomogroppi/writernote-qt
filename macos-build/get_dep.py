@@ -40,4 +40,6 @@ if __name__ == "__main__":
 
     save_dep(pos_bin + "/" + SUFF, pos_dest)
 
-    print(get_dep(pos_dest))
+    list = get_dep(pos_dest)
+
+    print(analise(list))
