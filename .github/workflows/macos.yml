@@ -78,6 +78,21 @@ jobs:
           make clean
           cp -r $QT_PREFIX $LibrariesPath/qt-cache
 
+      - name: Build libzip
+        run: |
+          curl -L https://libzip.org/download/libzip-1.5.2.tar.gz -o libzip.tar.gz
+          tar xf libzip.tar.gz
+          cd libzip-* || exit
+          mkdir build
+          cd build || exit
+          echo "Build LibZip"
+          pwd
+          cd build
+          cmake ..
+          cd ..
+          make -j8
+          make install
+
       - name: Download dep
         run: |
           ./macos-build/dep.sh
