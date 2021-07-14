@@ -28,7 +28,9 @@ jobs:
 
     env:
       QT: "5_15_2"
-
+      QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
+      PREFIX: "/usr/local/macos"
+      
     steps:
       - uses: actions/checkout@v2
 
