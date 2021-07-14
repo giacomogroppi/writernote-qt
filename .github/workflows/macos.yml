@@ -30,14 +30,14 @@ jobs:
       QT: "5_15_2"
       QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
       PREFIX: "/usr/local/macos"
-      
+
     steps:
       - uses: actions/checkout@v2
 
       - name: First set up
         run: |
-          brew install automake fdk-aac lame libass libtool libvorbis libvpx \
-            ninja opus sdl shtool texi2html theora x264 xvid yasm pkg-config
+          brew install automake libtool libvorbis libvpx \
+            ninja opus sdl pkg-config
 
       #- name: Install Qt
       #  uses: jurplel/install-qt-action@v2.13.2
