@@ -3,7 +3,9 @@ import os
 from typing import List
 
 COMMAND = "otool -L "
+SUFF_LIB = "Contents/Resources/lib/"
 SUFF = "Contents/MacOS/writernote"
+COPY = "cp "
 
 def save_dep(pos_binary: str, dest_list:str) -> None:
     string = ""
@@ -39,16 +41,14 @@ def analise(list: list[str]) -> list[str]:
 
         try:
             ind = list_sec[i].index('/usr/local')
-            print("not delete: ", list_sec[i])
+            #print("not delete: ", list_sec[i])
         except:
-            print("delete: ", list_sec[i])
+            #print("delete: ", list_sec[i])
             del list_sec[i]
             i -= 1
 
 
         i += 1
-
-
 
     return list_sec
 
@@ -59,6 +59,15 @@ def remove_double(list_dep: list[str]) -> list[str]:
             newlist.append(i)
 
     return newlist
+
+def copy_dep(app_path: str, list_dep: list[str]) -> bool:
+    os.mkdir(app_path + "/" + SUFF_LIB)
+
+    for dep in list_dep:
+        if os.system(COPY + app_path + "/" + SUFF_LIB + " " + dep) != 0:
+            return False
+
+    return True
 
 if __name__ == "__main__":
     pos_bin = sys.argv[1]
@@ -72,5 +81,9 @@ if __name__ == "__main__":
     list = analise(list)
     list = remove_double(list)
 
-    for dep in list:
-        print(dep)
+    if not copy_dep(pos_bin, list):
+        print("Error copy")
+        exit(1)
+    else:
+        print("Ok")
+        exit(0)
