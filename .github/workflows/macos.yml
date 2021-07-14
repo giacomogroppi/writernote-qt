@@ -26,18 +26,55 @@ jobs:
   build:
     runs-on: macos-latest
 
+    env:
+      QT: "5_15_2"
+
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2.13.2
-        with:
-          version: 5.15.2
-          modules: multimedia
-
-      - name: Install brew
+      - name: First set up
         run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew install automake fdk-aac lame libass libtool libvorbis libvpx \
+            ninja opus sdl shtool texi2html theora x264 xvid yasm pkg-config
+
+      #- name: Install Qt
+      #  uses: jurplel/install-qt-action@v2.13.2
+      #  with:
+      #    version: 5.15.2
+      #    modules: multimedia
+
+      - name: Build Qt 5.15.2
+        run: | 
+          mkdir build_qt
+          git clone git://code.qt.io/qt/qt5.git qt_$QT
+          cd qt_$QT
+          perl init-repository --module-subset=qtbase,qtimageformats
+          git checkout v5.15.2
+          git submodule update qtbase
+          git submodule update qtimageformats
+          cd qtbase
+          find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
+          cd ..
+          ./configure \
+          -prefix "$QT_PREFIX" \
+          -debug \
+          -force-debug-info \
+          -opensource \
+          -confirm-license \
+          -static \
+          -opengl desktop \
+          -no-openssl \
+          -securetransport \
+          -nomake examples \
+          -nomake tests \
+          -platform macx-clang \
+          -I "$PREFIX/include" \
+          LIBJPEG_LIBS="$PREFIX/lib/libjpeg.a" \
+          ZLIB_LIBS="$PREFIX/lib/libz.a"
+          make -j$(nproc)
+          sudo make install
+          make clean
+          cp -r $QT_PREFIX $LibrariesPath/qt-cache
 
       - name: Download dep
         run: |
