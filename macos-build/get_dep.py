@@ -39,8 +39,9 @@ def analise(list: list[str]) -> list[str]:
 
         try:
             ind = list_sec[i].index('/usr/local')
-            print(ind)
+            print("not delete: ", list_sec[i])
         except:
+            print("delete: ", list_sec[i])
             del list_sec[i]
             i -= 1
 
@@ -51,6 +52,14 @@ def analise(list: list[str]) -> list[str]:
 
     return list_sec
 
+def remove_double(list_dep: list[str]) -> list[str]:
+    newlist = []
+    for i in list_dep:
+        if i not in newlist:
+            newlist.append(i)
+
+    return newlist
+
 if __name__ == "__main__":
     pos_bin = sys.argv[1]
 
@@ -60,8 +69,8 @@ if __name__ == "__main__":
     save_dep(pos_bin + "/" + SUFF, pos_dest)
 
     list = get_dep(pos_dest)
-
     list = analise(list)
+    list = remove_double(list)
 
     for dep in list:
         print(dep)
