@@ -1,5 +1,6 @@
 import sys
 import os
+from typing import List
 
 COMMAND = "otool -L "
 SUFF = "Contents/MacOS/writernote"
@@ -32,6 +33,15 @@ def analise(list: list[str]) -> list[str]:
         except:
             pass
 
+        list_sec[i].replace("\n", "")
+        list_sec[i].replace("\t", "")
+
+        try:
+            ind = list_sec[i].index('/usr/local')
+            del list_sec[i]
+        except:
+            pass
+
     return list_sec
 
 if __name__ == "__main__":
@@ -44,4 +54,7 @@ if __name__ == "__main__":
 
     list = get_dep(pos_dest)
 
-    print(analise(list))
+    list = analise(list)
+
+    for dep in list:
+        print(dep)
