@@ -23,8 +23,8 @@ def get_dep(pos_lib: str) -> list[str]:
 
 def analise(list: list[str]) -> list[str]:
     list_sec = []
-    remove = []
-    for i, line in enumerate(list):
+    i = 0
+    for line in list:
         list_sec.append(line)
         list_sec[i] = list_sec[i][1:]
 
@@ -39,12 +39,13 @@ def analise(list: list[str]) -> list[str]:
 
         try:
             ind = list_sec[i].index('/usr/local')
-            remove.append(i)
+            del list_sec[i]
         except:
-            pass
+            i -= 1
 
-    for i in remove:
-        del list_sec[i]
+        i += 1
+
+
 
     return list_sec
 
