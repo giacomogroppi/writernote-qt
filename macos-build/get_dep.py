@@ -43,7 +43,7 @@ def analise(list: list[str]) -> list[str]:
         except:
             pass
 
-    for i in len(remove):
+    for i in remove:
         del list_sec[i]
 
     return list_sec
