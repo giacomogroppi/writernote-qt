@@ -39,9 +39,11 @@ def analise(list: list[str]) -> list[str]:
 
         try:
             ind = list_sec[i].index('/usr/local')
-            del list_sec[i]
+            print(ind)
         except:
+            del list_sec[i]
             i -= 1
+
 
         i += 1
 
