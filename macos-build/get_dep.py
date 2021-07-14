@@ -65,7 +65,10 @@ def get_name_lib(lib: str) -> str:
     return list[-1]
 
 def copy_dep(app_path: str, list_dep: list[str]) -> bool:
-    os.mkdir(app_path + "/" + SUFF_LIB)
+    try:
+        os.mkdir(app_path + "/" + SUFF_LIB)
+    except:
+        print("Directory already exist")
 
     for dep in list_dep:
         name = get_name_lib(dep)
