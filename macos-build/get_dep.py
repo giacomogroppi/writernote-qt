@@ -72,7 +72,7 @@ def copy_dep(app_path: str, list_dep: list[str]) -> bool:
 
     for dep in list_dep:
         name = get_name_lib(dep)
-        if os.system(COPY + app_path + "/" + SUFF_LIB + name + " " + dep) != 0:
+        if os.system(COPY + dep + " " + app_path + "/" + SUFF_LIB + name ) != 0:
             return False
 
     return True
