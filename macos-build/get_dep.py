@@ -60,11 +60,16 @@ def remove_double(list_dep: list[str]) -> list[str]:
 
     return newlist
 
+def get_name_lib(lib: str) -> str:
+    list = lib.split('/')
+    return list[-1]
+
 def copy_dep(app_path: str, list_dep: list[str]) -> bool:
     os.mkdir(app_path + "/" + SUFF_LIB)
 
     for dep in list_dep:
-        if os.system(COPY + app_path + "/" + SUFF_LIB + " " + dep) != 0:
+        name = get_name_lib(dep)
+        if os.system(COPY + app_path + "/" + SUFF_LIB + name + " " + dep) != 0:
             return False
 
     return True
