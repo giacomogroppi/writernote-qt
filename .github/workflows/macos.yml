@@ -170,7 +170,7 @@ jobs:
             -DZLIB_INCLUDE_DIR=build/zlib/distrib/include \
             -DZLIB_LIBRARY_DEBUG=build/zlib/distrib/lib/zlib.lib \
             -DZLIB_LIBRARY_RELEASE=build/zlib/distrib/lib/zlib.lib
-      - name: libzip: Build
+      - name: libzip Build
         if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
         shell: bash
         run: |
