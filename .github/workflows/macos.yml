@@ -116,7 +116,7 @@ jobs:
           echo $(ls)
           cd zlib-1.2.11
 
-          cmake -H$PREFIX_LIB/ -B$PREFIX_LIB/zlib/ \
+          cmake . -B$PREFIX_LIB/zlib/ \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib/distrib \
             -DBIN_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/bin \
             -DLIB_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/lib \
