@@ -31,6 +31,8 @@ jobs:
       QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
       PREFIX: "/usr/local/macos"
       PREFIX_LIB: "3rdparty"
+      CACHE_KEY: cache-key-ci
+
     steps:
       - uses: actions/checkout@v2
 
