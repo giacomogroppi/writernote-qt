@@ -45,6 +45,21 @@ jobs:
       #    version: 5.15.2
       #    modules: multimedia
 
+      - name: Qt 5.15.2 cache.
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.LibrariesPath }}/qt-cache
+          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/qtbase_5_15_2/*') }}
+
+      - name: Use cached Qt 5.15.2.
+        if: steps.cache-qt.outputs.cache-hit == 'true'
+        run: |
+          cd $LibrariesPath
+          mv qt-cache Qt-5.15.2
+          sudo mkdir -p $QT_PREFIX
+          sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
+
       - name: Build Qt 5.15.2
         run: | 
           mkdir build_qt
@@ -76,6 +91,7 @@ jobs:
           make -j$(nproc)
           sudo make install
           make clean
+          echo $(LibrariesPath)
           cp -r $QT_PREFIX $LibrariesPath/qt-cache
 
       - name: Build libzip
