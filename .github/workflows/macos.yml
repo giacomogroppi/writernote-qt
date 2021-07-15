@@ -129,6 +129,8 @@ jobs:
       - name: "zlib: Configure"
         #if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         run: |
+          mkdir -p $PREFIX_LIB/zlib-ng
+
           cmake -H$PREFIX_LIB/zlib-ng -Bbuild/zlib/build \
             -DCMAKE_INSTALL_PREFIX=build/zlib/distrib \
             -DBIN_INSTALL_DIR=build/zlib/distrib/bin \
