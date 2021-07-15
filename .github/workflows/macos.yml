@@ -65,7 +65,7 @@ jobs:
       - name: Build Qt 5.15.2
         run: |
           echo prefisso: $(QT_PREFIX)
-          echo "${LibrariesPath}"
+          echo lib path: "${LibrariesPath}"
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
           cd qt_$QT
