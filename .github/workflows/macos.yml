@@ -30,7 +30,7 @@ jobs:
       QT: "5_15_2"
       QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
       PREFIX: "/usr/local/macos"
-
+      PREFIX_LIB: "3rdparty"
     steps:
       - uses: actions/checkout@v2
 
@@ -40,6 +40,10 @@ jobs:
             ninja opus sdl pkg-config
 
           sudo mdutil -a -i off
+
+      - name: Create tmp folder library
+        run: |
+          echo Create tmp library folder
 
       #- name: Install Qt
       #  uses: jurplel/install-qt-action@v2.13.2
@@ -51,13 +55,13 @@ jobs:
         id: cache-qt
         uses: actions/cache@v2
         with:
-          path: ${{ env.LibrariesPath }}/qt-cache
+          path: ${{ env.PREFIX_LIB }}/qt-cache
           key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/qtbase_5_15_2/*') }}
 
       - name: Use cached Qt 5.15.2.
         if: steps.cache-qt.outputs.cache-hit == 'true'
         run: |
-          cd $LibrariesPath
+          cd $PREFIX_LIB
           mv qt-cache Qt-5.15.2
           sudo mkdir -p $QT_PREFIX
           sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
@@ -65,7 +69,7 @@ jobs:
       - name: Build Qt 5.15.2
         run: |
           echo prefisso: $(QT_PREFIX)
-          echo lib path: "${LibrariesPath}"
+          echo lib path: "${PREFIX_LIB}"
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
           cd qt_$QT
@@ -95,9 +99,9 @@ jobs:
           make -j$(nproc)
           sudo make install
           make clean
-          echo LibrariesPath: $(LibrariesPath)
+          echo LibrariesPath: $(PREFIX_LIB)
           echo QT_PREFIX: $(QT_PREFIX)
-          #cp -r $QT_PREFIX $LibrariesPath/qt-cache
+          cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
 
       - name: zlib Information
         shell: bash
