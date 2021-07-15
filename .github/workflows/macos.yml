@@ -110,8 +110,8 @@ jobs:
         shell: bash
         id: zlib-info
         run: |
-          mkdir -p "${PWD}/3rdparty/zlib-ng"
-          cd "${PWD}/3rdparty/zlib-ng/"
+          mkdir -p $PREFIX_LIB/zlib-ng
+          cd $PREFIX_LIB/zlib-ng/
           version=$(git describe --tags --long --abbrev=8 HEAD)
           echo "zlib: ${version}"
           echo "::set-output name=version::${version}"
@@ -127,7 +127,7 @@ jobs:
         if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         shell: bash
         run: |
-          cmake -H3rdparty/zlib-ng -Bbuild/zlib/build \
+          cmake -H$(PREFIX_LIB)/zlib-ng -Bbuild/zlib/build \
             -DCMAKE_INSTALL_PREFIX=build/zlib/distrib \
             -DBIN_INSTALL_DIR=build/zlib/distrib/bin \
             -DLIB_INSTALL_DIR=build/zlib/distrib/lib \
@@ -147,7 +147,8 @@ jobs:
         shell: bash
         id: libzip-info
         run: |
-          cd "${PWD}/3rdparty/libzip/"
+          mkdir -p $PREFIX_LIB/libzip/
+          cd $PREFIX_LIB/libzip/
           version=$(git describe --tags --long --abbrev=8 HEAD)
           echo "libzip: ${version}"
           echo "::set-output name=version::${version}"
@@ -162,7 +163,7 @@ jobs:
         if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
         shell: bash
         run: |
-          cmake -H3rdparty/libzip -Bbuild/libzip/build \
+          cmake -H$(PREFIX_LIB)/libzip -Bbuild/libzip/build \
             -DCMAKE_INSTALL_PREFIX=build/libzip/distrib \
             -DCMAKE_BUILD_TYPE=Release \
             -DENABLE_BZIP2=OFF \
