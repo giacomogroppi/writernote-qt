@@ -110,8 +110,7 @@ jobs:
       - name: "zlib: Configure && Build"
         #if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         run: |
-
-          https://github.com/madler/zlib/archive/refs/tags/$ZLIB_VER.zip
+          wget https://github.com/madler/zlib/archive/refs/tags/$ZLIB_VER.zip
           unzip $ZLIB_VER -d zlib
           cd zlib
           cd zlib-$ZLIB_VER
@@ -130,23 +129,6 @@ jobs:
 
           cmake --build $PREFIX_LIB/zlib/ --config Release --target INSTALL
 
-
-      #- name: "libzip: Information"
-      #  shell: bash
-      #  id: libzip-info
-      #  run: |
-      #    mkdir -p $PREFIX_LIB/libzip/
-      #    cd $PREFIX_LIB/libzip/
-      #    version=$(git describe --tags --long --abbrev=8 HEAD)
-      #    echo "libzip: ${version}"
-      #    echo "::set-output name=version::${version}"
-      - name: libzip Cache
-        uses: actions/cache@v2
-        id: libzip-cache
-        with:
-          path: |
-            build/libzip/distrib
-          key: libzip-${{steps.zlib-info.outputs.version}}-${{steps.libzip-info.outputs.version}}-${{ matrix.id }}-${{ hashFiles('**/libzip/*') }}
       - name: "libzip: Configure"
         if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
         shell: bash
@@ -169,15 +151,12 @@ jobs:
             -DZLIB_INCLUDE_DIR=build/zlib/distrib/include \
             -DZLIB_LIBRARY_DEBUG=build/zlib/distrib/lib/zlib.lib \
             -DZLIB_LIBRARY_RELEASE=build/zlib/distrib/lib/zlib.lib
-      - name: libzip Build
-        if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
-        shell: bash
-        run: |
+
           cmake --build build/libzip/build --config Release --target INSTALL
 
-      - name: Download dep
-        run: |
-          ./macos-build/dep.sh
+      #- name: Download dep
+      #  run: |
+      #    ./macos-build/dep.sh
 
       - name: Compile
         run: |
