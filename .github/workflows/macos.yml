@@ -107,7 +107,6 @@ jobs:
           cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
 
       - name: zlib Information
-        shell: bash
         id: zlib-info
         run: |
           mkdir -p $(PREFIX_LIB)/zlib-ng
@@ -125,7 +124,6 @@ jobs:
           key: zlib-${{steps.zlib-info.outputs.version}}-${{ matrix.id }}-${{ secrets.CACHE_VERSION }}
       - name: "zlib: Configure"
         if: "steps.zlib-cache.outputs.cache-hit != 'true'"
-        shell: bash
         run: |
           cmake -H$(PREFIX_LIB)/zlib-ng -Bbuild/zlib/build \
             -DCMAKE_INSTALL_PREFIX=build/zlib/distrib \
