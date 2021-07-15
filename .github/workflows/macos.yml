@@ -63,7 +63,9 @@ jobs:
           sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
 
       - name: Build Qt 5.15.2
-        run: | 
+        run: |
+          echo prefisso: $(QT_PREFIX)
+          echo "${LibrariesPath}"
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
           cd qt_$QT
@@ -101,7 +103,8 @@ jobs:
         shell: bash
         id: zlib-info
         run: |
-          cd "${PWD}/third-party/zlib-ng/"
+          mkdir -p "${PWD}/3rdparty/zlib-ng"
+          cd "${PWD}/3rdparty/zlib-ng/"
           version=$(git describe --tags --long --abbrev=8 HEAD)
           echo "zlib: ${version}"
           echo "::set-output name=version::${version}"
@@ -117,7 +120,7 @@ jobs:
         if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         shell: bash
         run: |
-          cmake -Hthird-party/zlib-ng -Bbuild/zlib/build \
+          cmake -H3rdparty/zlib-ng -Bbuild/zlib/build \
             -DCMAKE_INSTALL_PREFIX=build/zlib/distrib \
             -DBIN_INSTALL_DIR=build/zlib/distrib/bin \
             -DLIB_INSTALL_DIR=build/zlib/distrib/lib \
@@ -137,7 +140,7 @@ jobs:
         shell: bash
         id: libzip-info
         run: |
-          cd "${PWD}/third-party/libzip/"
+          cd "${PWD}/3rdparty/libzip/"
           version=$(git describe --tags --long --abbrev=8 HEAD)
           echo "libzip: ${version}"
           echo "::set-output name=version::${version}"
@@ -152,7 +155,7 @@ jobs:
         if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
         shell: bash
         run: |
-          cmake -Hthird-party/libzip -Bbuild/libzip/build \
+          cmake -H3rdparty/libzip -Bbuild/libzip/build \
             -DCMAKE_INSTALL_PREFIX=build/libzip/distrib \
             -DCMAKE_BUILD_TYPE=Release \
             -DENABLE_BZIP2=OFF \
