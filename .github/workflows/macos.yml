@@ -113,6 +113,7 @@ jobs:
           wget https://github.com/madler/zlib/archive/refs/tags/$ZLIB_VER.zip
           unzip $ZLIB_VER.zip -d zlib
           cd zlib
+          echo $(ls)
           cd zlib-$ZLIB_VER
 
           cmake -H$PREFIX_LIB/ -B$PREFIX_LIB/zlib/ \
