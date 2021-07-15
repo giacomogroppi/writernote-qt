@@ -32,6 +32,7 @@ jobs:
       PREFIX: "/usr/local/macos"
       PREFIX_LIB: "/Users/runner/work/writernote-qt/writernote-qt/3rdparty"
       CACHE_KEY: cache-key-ci
+      ZLIB_VER: "v1.2.11"
 
     steps:
       - uses: actions/checkout@v2
@@ -106,47 +107,31 @@ jobs:
           echo QT_PREFIX: $(QT_PREFIX)
           cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
 
-      #- name: zlib Information
-      #  id: zlib-info
-      #  run: |
-      #    cd $PREFIX_LIB
-      #    mkdir -p $PREFIX_LIB/zlib-ng
-      #    cd $PREFIX_LIB/zlib-ng/
-      #    version=$(git describe --tags --long --abbrev=8 HEAD)
-      #    echo "zlib: ${version}"
-      #    echo "::set-output name=version::${version}"
-
-      #- name: zlib Cache
-      #  uses: actions/cache@v2
-      #  id: zlib-cache
-      #  with:
-      #    path: |
-      #      build/zlib/distrib
-      #    key: zlib-${{steps.zlib-info.outputs.version}}-${{ matrix.id }}-${{ hashFiles('**/zlib/*') }}
-
-      
-
-      - name: "zlib: Configure"
+      - name: "zlib: Configure && Build"
         #if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         run: |
-          mkdir -p $PREFIX_LIB/zlib-ng
 
-          cmake -H$PREFIX_LIB/zlib-ng -Bbuild/zlib/build \
-            -DCMAKE_INSTALL_PREFIX=build/zlib/distrib \
-            -DBIN_INSTALL_DIR=build/zlib/distrib/bin \
-            -DLIB_INSTALL_DIR=build/zlib/distrib/lib \
-            -DINC_INSTALL_DIR=build/zlib/distrib/include \
-            -DPKGCONFIG_INSTALL_DIR=build/zlib/distrib/lib/pkgconfig \
-            -DMAN_INSTALL_DIR=build/zlib/distrib/share/man \
+          https://github.com/madler/zlib/archive/refs/tags/$ZLIB_VER.zip
+          unzip $ZLIB_VER -d zlib
+          cd zlib
+          cd zlib-$ZLIB_VER
+
+          cmake -H$PREFIX_LIB/ -B$PREFIX_LIB/zlib/ \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib/distrib \
+            -DBIN_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/bin \
+            -DLIB_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/lib \
+            -DINC_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/include \
+            -DPKGCONFIG_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/lib/pkgconfig \
+            -DMAN_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/share/man \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=OFF \
             -DZLIB_COMPAT=ON \
             -DZLIB_ENABLE_TESTS=OFF
-      - name: zlib Build
-        #if: "steps.zlib-cache.outputs.cache-hit != 'true'"
-        shell: bash
+
         run: |
-          cmake --build build/zlib/build --config Release --target INSTALL
+          cmake --build $PREFIX_LIB/zlib/ --config Release --target INSTALL
+
+
       #- name: "libzip: Information"
       #  shell: bash
       #  id: libzip-info
