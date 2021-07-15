@@ -70,6 +70,7 @@ jobs:
 
       - name: Build Qt 5.15.2
         run: |
+          exit
           echo prefisso: $(QT_PREFIX)
           echo lib path: $PREFIX_LIB
           mkdir build_qt
