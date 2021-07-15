@@ -39,6 +39,8 @@ jobs:
           brew install automake libtool libvorbis libvpx \
             ninja opus sdl pkg-config
 
+          sudo mdutil -a -i off
+
       #- name: Install Qt
       #  uses: jurplel/install-qt-action@v2.13.2
       #  with:
@@ -91,102 +93,88 @@ jobs:
           make -j$(nproc)
           sudo make install
           make clean
-          echo $(LibrariesPath)
-          cp -r $QT_PREFIX $LibrariesPath/qt-cache
+          echo LibrariesPath: $(LibrariesPath)
+          echo QT_PREFIX: $(QT_PREFIX)
+          #cp -r $QT_PREFIX $LibrariesPath/qt-cache
 
-      - name: "zlib: Information"
-      shell: bash
-      id: zlib-info
-      run: |
-        cd "${PWD}/third-party/zlib-ng/"
-        version=$(git describe --tags --long --abbrev=8 HEAD)
-        echo "zlib: ${version}"
-        echo "::set-output name=version::${version}"
-        
-    - name: "zlib: Cache"
-      uses: actions/cache@v2
-      id: zlib-cache
-      with:
-        path: |
-          build/zlib/distrib
-        key: zlib-${{steps.zlib-info.outputs.version}}-${{ matrix.id }}-${{ secrets.CACHE_VERSION }}
-    - name: "zlib: Configure"
-      if: "steps.zlib-cache.outputs.cache-hit != 'true'"
-      shell: bash
-      run: |
-        cmake -Hthird-party/zlib-ng -Bbuild/zlib/build \
-          -DCMAKE_INSTALL_PREFIX=build/zlib/distrib \
-          -DBIN_INSTALL_DIR=build/zlib/distrib/bin \
-          -DLIB_INSTALL_DIR=build/zlib/distrib/lib \
-          -DINC_INSTALL_DIR=build/zlib/distrib/include \
-          -DPKGCONFIG_INSTALL_DIR=build/zlib/distrib/lib/pkgconfig \
-          -DMAN_INSTALL_DIR=build/zlib/distrib/share/man \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DBUILD_SHARED_LIBS=OFF \
-          -DZLIB_COMPAT=ON \
-          -DZLIB_ENABLE_TESTS=OFF
-    - name: "zlib: Build"
-      if: "steps.zlib-cache.outputs.cache-hit != 'true'"
-      shell: bash
-      run: |
-        cmake --build build/zlib/build --config Release --target INSTALL
-    - name: "libzip: Information"
-      shell: bash
-      id: libzip-info
-      run: |
-        cd "${PWD}/third-party/libzip/"
-        version=$(git describe --tags --long --abbrev=8 HEAD)
-        echo "libzip: ${version}"
-        echo "::set-output name=version::${version}"
-    - name: "libzip: Cache"
-      uses: actions/cache@v2
-      id: libzip-cache
-      with:
-        path: |
-          build/libzip/distrib
-        key: libzip-${{steps.zlib-info.outputs.version}}-${{steps.libzip-info.outputs.version}}-${{ matrix.id }}-${{ secrets.CACHE_VERSION }}
-    - name: "libzip: Configure"
-      if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
-      shell: bash
-      run: |
-        cmake -Hthird-party/libzip -Bbuild/libzip/build \
-          -DCMAKE_INSTALL_PREFIX=build/libzip/distrib \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DENABLE_BZIP2=OFF \
-          -DENABLE_LZMA=OFF \
-          -DENABLE_COMMONCRYPTO=OFF \
-          -DENABLE_GNUTLS=OFF \
-          -DENABLE_MBEDTLS=OFF \
-          -DENABLE_OPENSSL=OFF \
-          -DENABLE_WINDOWS_CRYPTO=OFF \
-          -DBUILD_DOC=OFF \
-          -DBUILD_EXAMPLES=OFF \
-          -DBUILD_REGRESS=OFF \
-          -DBUILD_SHARED_LIBS=OFF \
-          -DBUILD_TOOLS=OFF \
-          -DZLIB_INCLUDE_DIR=build/zlib/distrib/include \
-          -DZLIB_LIBRARY_DEBUG=build/zlib/distrib/lib/zlib.lib \
-          -DZLIB_LIBRARY_RELEASE=build/zlib/distrib/lib/zlib.lib
-    - name: "libzip: Build"
-      if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
-      shell: bash
-      run: |
-        cmake --build build/libzip/build --config Release --target INSTALL
-
-      - name: Build libzip
+      - name: zlib Information
+        shell: bash
+        id: zlib-info
         run: |
-          curl -L https://libzip.org/download/libzip-1.5.2.tar.gz -o libzip.tar.gz
-          tar xf libzip.tar.gz
-          cd libzip-* || exit
-          mkdir build
-          cd build || exit
-          echo "Build LibZip"
-          pwd
-          cd build
-          cmake ..
-          cd ..
-          make -j8
-          make install
+          cd "${PWD}/third-party/zlib-ng/"
+          version=$(git describe --tags --long --abbrev=8 HEAD)
+          echo "zlib: ${version}"
+          echo "::set-output name=version::${version}"
+
+      - name: zlib Cache
+        uses: actions/cache@v2
+        id: zlib-cache
+        with:
+          path: |
+            build/zlib/distrib
+          key: zlib-${{steps.zlib-info.outputs.version}}-${{ matrix.id }}-${{ secrets.CACHE_VERSION }}
+      - name: "zlib: Configure"
+        if: "steps.zlib-cache.outputs.cache-hit != 'true'"
+        shell: bash
+        run: |
+          cmake -Hthird-party/zlib-ng -Bbuild/zlib/build \
+            -DCMAKE_INSTALL_PREFIX=build/zlib/distrib \
+            -DBIN_INSTALL_DIR=build/zlib/distrib/bin \
+            -DLIB_INSTALL_DIR=build/zlib/distrib/lib \
+            -DINC_INSTALL_DIR=build/zlib/distrib/include \
+            -DPKGCONFIG_INSTALL_DIR=build/zlib/distrib/lib/pkgconfig \
+            -DMAN_INSTALL_DIR=build/zlib/distrib/share/man \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DZLIB_COMPAT=ON \
+            -DZLIB_ENABLE_TESTS=OFF
+      - name: zlib Build
+        if: "steps.zlib-cache.outputs.cache-hit != 'true'"
+        shell: bash
+        run: |
+          cmake --build build/zlib/build --config Release --target INSTALL
+      - name: "libzip: Information"
+        shell: bash
+        id: libzip-info
+        run: |
+          cd "${PWD}/third-party/libzip/"
+          version=$(git describe --tags --long --abbrev=8 HEAD)
+          echo "libzip: ${version}"
+          echo "::set-output name=version::${version}"
+      - name: libzip Cache
+        uses: actions/cache@v2
+        id: libzip-cache
+        with:
+          path: |
+            build/libzip/distrib
+          key: libzip-${{steps.zlib-info.outputs.version}}-${{steps.libzip-info.outputs.version}}-${{ matrix.id }}-${{ secrets.CACHE_VERSION }}
+      - name: "libzip: Configure"
+        if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
+        shell: bash
+        run: |
+          cmake -Hthird-party/libzip -Bbuild/libzip/build \
+            -DCMAKE_INSTALL_PREFIX=build/libzip/distrib \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DENABLE_BZIP2=OFF \
+            -DENABLE_LZMA=OFF \
+            -DENABLE_COMMONCRYPTO=OFF \
+            -DENABLE_GNUTLS=OFF \
+            -DENABLE_MBEDTLS=OFF \
+            -DENABLE_OPENSSL=OFF \
+            -DENABLE_WINDOWS_CRYPTO=OFF \
+            -DBUILD_DOC=OFF \
+            -DBUILD_EXAMPLES=OFF \
+            -DBUILD_REGRESS=OFF \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_TOOLS=OFF \
+            -DZLIB_INCLUDE_DIR=build/zlib/distrib/include \
+            -DZLIB_LIBRARY_DEBUG=build/zlib/distrib/lib/zlib.lib \
+            -DZLIB_LIBRARY_RELEASE=build/zlib/distrib/lib/zlib.lib
+      - name: libzip: Build
+        if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
+        shell: bash
+        run: |
+          cmake --build build/libzip/build --config Release --target INSTALL
 
       - name: Download dep
         run: |
