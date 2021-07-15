@@ -128,7 +128,6 @@ jobs:
             -DZLIB_COMPAT=ON \
             -DZLIB_ENABLE_TESTS=OFF
 
-        run: |
           cmake --build $PREFIX_LIB/zlib/ --config Release --target INSTALL
 
 
