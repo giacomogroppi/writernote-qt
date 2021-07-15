@@ -114,7 +114,7 @@ jobs:
           unzip $ZLIB_VER.zip -d zlib
           cd zlib
           echo $(ls)
-          cd zlib-$ZLIB_VER
+          cd zlib-1.2.11
 
           cmake -H$PREFIX_LIB/ -B$PREFIX_LIB/zlib/ \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib/distrib \
