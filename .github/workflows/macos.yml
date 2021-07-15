@@ -109,7 +109,7 @@ jobs:
       - name: zlib Information
         id: zlib-info
         run: |
-          mkdir -p $(PREFIX_LIB)/zlib-ng
+          mkdir -p $PREFIX_LIB/zlib-ng
           cd $PREFIX_LIB/zlib-ng/
           version=$(git describe --tags --long --abbrev=8 HEAD)
           echo "zlib: ${version}"
