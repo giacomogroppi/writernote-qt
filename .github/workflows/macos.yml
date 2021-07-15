@@ -111,7 +111,7 @@ jobs:
         #if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         run: |
           wget https://github.com/madler/zlib/archive/refs/tags/$ZLIB_VER.zip
-          unzip $ZLIB_VER -d zlib
+          unzip $ZLIB_VER.zip -d zlib
           cd zlib
           cd zlib-$ZLIB_VER
 
