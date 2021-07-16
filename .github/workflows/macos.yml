@@ -132,9 +132,9 @@ jobs:
 
       - name: "libzip: Configure and Build"
         run: |
-          echo $(ls) $(pwd)
+          echo $(pwd)
           cd $PREFIX_LIB/libzip
-
+          echo $(pwd)
           cmake . -B/libzip \
             -DCMAKE_INSTALL_PREFIX=build/libzip/distrib \
             -DCMAKE_BUILD_TYPE=Release \
