@@ -117,18 +117,18 @@ jobs:
           cd $PREFIX_LIB/zlib-ng
 
           cmake . -B$PREFIX_LIB/zlib-ng/ \
-            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib/distrib \
-            -DBIN_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/bin \
-            -DLIB_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/lib \
-            -DINC_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/include \
-            -DPKGCONFIG_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/lib/pkgconfig \
-            -DMAN_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/share/man \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib-ng/distrib \
+            -DBIN_INSTALL_DIR=$PREFIX_LIB/zlib-ng/distrib/bin \
+            -DLIB_INSTALL_DIR=$PREFIX_LIB/zlib-ng/distrib/lib \
+            -DINC_INSTALL_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
+            -DPKGCONFIG_INSTALL_DIR=$PREFIX_LIB/zlib-ng/distrib/lib/pkgconfig \
+            -DMAN_INSTALL_DIR=$PREFIX_LIB/zlib-ng/distrib/share/man \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=OFF \
             -DZLIB_COMPAT=ON \
             -DZLIB_ENABLE_TESTS=OFF
 
-          cmake --build $PREFIX_LIB/zlib/ --config Release --target INSTALL
+          cmake --build $PREFIX_LIB/zlib-ng/ --config Release --target INSTALL
 
       - name: "libzip: Configure"
         if: "(steps.zlib-cache.outputs.cache-hit != 'true') || (steps.libzip-cache.outputs.cache-hit != 'true')"
@@ -149,9 +149,9 @@ jobs:
             -DBUILD_REGRESS=OFF \
             -DBUILD_SHARED_LIBS=OFF \
             -DBUILD_TOOLS=OFF \
-            -DZLIB_INCLUDE_DIR=build/zlib/distrib/include \
-            -DZLIB_LIBRARY_DEBUG=build/zlib/distrib/lib/zlib.lib \
-            -DZLIB_LIBRARY_RELEASE=build/zlib/distrib/lib/zlib.lib
+            -DZLIB_INCLUDE_DIR=build/zlib-ng/distrib/include \
+            -DZLIB_LIBRARY_DEBUG=build/zlib-ng/distrib/lib/zlib.lib \
+            -DZLIB_LIBRARY_RELEASE=build/zlib-ng/distrib/lib/zlib.lib
 
           cmake --build build/libzip/build --config Release --target INSTALL
 
