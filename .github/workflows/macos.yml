@@ -74,6 +74,7 @@ jobs:
           sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
 
       - name: Build Qt 5.15.2
+        if: steps.chache-qt.outputs.cache-hit != 'true'
         run: |
           echo prefisso: $(QT_PREFIX)
           echo lib path: $PREFIX_LIB
