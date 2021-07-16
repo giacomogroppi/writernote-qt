@@ -114,7 +114,7 @@ jobs:
       - name: "zlib: Configure && Build"
         #if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         run: |
-          cd $PREFIX_LIB
+          cd $PREFIX_LIB/zlib-ng
 
           cmake . -B$PREFIX_LIB/zlib-ng/ \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib/distrib \
