@@ -137,7 +137,7 @@ jobs:
           echo $(pwd)
           mkdir build
           cd build
-          cmake .. -B/libzip \
+          cmake .. -B$PREFIX_LIB/libzip \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/libzip/distrib \
             -DCMAKE_BUILD_TYPE=Release \
             -DENABLE_BZIP2=OFF \
