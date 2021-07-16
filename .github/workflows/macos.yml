@@ -156,7 +156,7 @@ jobs:
             -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib
 
-          cmake --build build/libzip/build --config Release --target INSTALL
+          cmake --build $PREFIX_LIB/libzip/build --config Release --target INSTALL
 
       #- name: Download dep
       #  run: |
