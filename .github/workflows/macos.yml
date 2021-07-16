@@ -35,7 +35,11 @@ jobs:
       ZLIB_VER: "v1.2.11"
 
     steps:
-      - uses: actions/checkout@v2
+      - name: "Clone"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
       - name: First set up
         run: |
@@ -110,13 +114,9 @@ jobs:
       - name: "zlib: Configure && Build"
         #if: "steps.zlib-cache.outputs.cache-hit != 'true'"
         run: |
-          wget https://github.com/madler/zlib/archive/refs/tags/$ZLIB_VER.zip
-          unzip $ZLIB_VER.zip -d zlib
-          cd zlib
-          echo $(ls)
-          cd zlib-1.2.11
+          cd $PREFIX_LIB
 
-          cmake . -B$PREFIX_LIB/zlib/ \
+          cmake . -B$PREFIX_LIB/zlib-ng/ \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib/distrib \
             -DBIN_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/bin \
             -DLIB_INSTALL_DIR=$PREFIX_LIB/zlib/distrib/lib \
