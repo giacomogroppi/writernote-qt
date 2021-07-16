@@ -138,7 +138,7 @@ jobs:
           mkdir build
           cd build
           cmake .. -B/libzip \
-            -DCMAKE_INSTALL_PREFIX=build/libzip/distrib \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/libzip/distrib \
             -DCMAKE_BUILD_TYPE=Release \
             -DENABLE_BZIP2=OFF \
             -DENABLE_LZMA=OFF \
