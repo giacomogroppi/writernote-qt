@@ -1,0 +1,3 @@
+[submodule "3rdparty/libzip"]
+	path = 3rdparty/libzip
+	url = https://github.com/nih-at/libzip
