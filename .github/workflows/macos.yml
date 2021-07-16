@@ -152,9 +152,9 @@ jobs:
             -DBUILD_REGRESS=OFF \
             -DBUILD_SHARED_LIBS=OFF \
             -DBUILD_TOOLS=OFF \
-            -DZLIB_INCLUDE_DIR=build/zlib-ng/distrib/include \
-            -DZLIB_LIBRARY_DEBUG=build/zlib-ng/distrib/lib/zlib.lib \
-            -DZLIB_LIBRARY_RELEASE=build/zlib-ng/distrib/lib/zlib.lib
+            -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
+            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib
 
           cmake --build build/libzip/build --config Release --target INSTALL
 
