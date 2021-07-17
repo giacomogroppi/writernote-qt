@@ -47,6 +47,8 @@ jobs:
           brew install automake libtool libvorbis libvpx \
             ninja opus sdl pkg-config
 
+          brew install qt libzip poppler
+
           sudo mdutil -a -i off
 
       - name: MozJPEG.
@@ -197,10 +199,13 @@ jobs:
       - name: Build
         run: |
           
-          $QT_PREFIX/bin/qmake writernote.pro \
-            DEFINES+="CI_MAC" \
-            LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
-            INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
+          qmake
+          #$QT_PREFIX/bin/qmake writernote.pro \
+          #  DEFINES+="CI_MAC" \
+          #  LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
+          #  INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
 
-          make -j$(nproc) --target install          
+          make -j$(nproc) 
+          sudo make INSTALLS   
+          echo $(ls)       
           

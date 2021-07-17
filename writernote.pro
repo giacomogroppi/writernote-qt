@@ -486,10 +486,9 @@ android{
 }
 
 contains(DEFINES, "CI_MAC"){
-    INSTALLS += TARGET
-    DESTDIR += $$PWD/build/
-    TARGET.path = $$PWD/build/
-    LIBS += -L$$PWD/build/
+    target.path = $$PWD/build/writernote.app
+
+    INSTALLS += target
     message(The $$TEMPLATE $$TARGET will be installed in $$DESTDIR)
 }
 
