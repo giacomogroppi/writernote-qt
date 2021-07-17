@@ -164,8 +164,11 @@ jobs:
 
           curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
           tar xf poppler.tar.xz
+          echo 1: $(ls)
           rm poppler.tar.xz
+          echo 2: $(ls)
           mv poppler-* poppler
+          echo 3: $(ls)
           cd poppler || exit
           
           mkdir build
