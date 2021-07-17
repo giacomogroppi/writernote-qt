@@ -160,7 +160,6 @@ jobs:
       - name: Build poppler-qt5
         run: |
           cd $PREFIX_LIB
-          mkdir poppler
 
           curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
           tar xf poppler.tar.xz
