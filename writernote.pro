@@ -432,13 +432,9 @@ android{
     else:macx{
         DEFINES -= "PDFSUPPORT"
         message(MacOS build)
-        contains(DESINES, "CI_MAC"){
-            message(Compile for CI)
-        }
-        else{
-            INCLUDEPATH += /usr/local/opt/libzip/include
-            LIBS += /usr/local/opt/libzip/lib/libzip.5.dylib
-        }
+        INCLUDEPATH += /usr/local/opt/libzip/include
+        LIBS += /usr/local/opt/libzip/lib/libzip.5.dylib
+        
     }else{
         PKGCONFIG += libzip
     }
