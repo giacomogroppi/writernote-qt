@@ -69,7 +69,6 @@ jobs:
         if: steps.cache-qt.outputs.cache-hit == 'true'
         run: |
           cd $PREFIX_LIB
-          exit
           mv qt-cache Qt-5.15.2
           sudo mkdir -p $QT_PREFIX
           sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
