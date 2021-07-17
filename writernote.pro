@@ -482,7 +482,7 @@ android{
 }
 
 contains(DEFINES, "CI_MAC"){
-    target.path = $$PWD/build/writernote.app
+    target.path = $$PWD/build
 
     INSTALLS += target
     message(The $$TEMPLATE $$TARGET will be installed in $$DESTDIR)

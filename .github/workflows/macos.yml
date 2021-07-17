@@ -206,7 +206,8 @@ jobs:
       - name: Build
         run: |
           
-          qmake writernote.pro DEFINES+="CI_MAC"
+          qmake writernote.pro \
+            DEFINES+="CI_MAC"
           #$QT_PREFIX/bin/qmake writernote.pro \
           #  DEFINES+="CI_MAC" \
           #  LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
