@@ -212,7 +212,7 @@ jobs:
           #  LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
           #  INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
 
-          make -j$(nproc) 
-          sudo make INSTALLS   
+          make -j$(nproc)
+          sudo make install   
           echo $(ls)       
           

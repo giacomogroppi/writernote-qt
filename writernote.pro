@@ -508,6 +508,7 @@ macx:contains(DEFINES, PDFSUPPORT){
     INCLUDEPATH += /usr/local/opt/poppler/include/poppler/qt5
     LIBS += /usr/local/Cellar/poppler/21.07.0/lib/libpoppler-qt5.dylib
 }
+
 else:unix:contains(DEFINES, PDFSUPPORT){
     message(Unix pdf support enable)
     INCLUDEPATH  += /usr/include/poppler/qt5
