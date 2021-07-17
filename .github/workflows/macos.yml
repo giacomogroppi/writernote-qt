@@ -162,5 +162,6 @@ jobs:
           exit
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC"
-          
+
+          cat Makefile          
           
