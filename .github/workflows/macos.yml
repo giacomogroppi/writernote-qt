@@ -66,7 +66,7 @@ jobs:
           key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/qtbase_5_15_2/*') }}
 
       - name: Use cached Qt 5.15.2.
-        if: steps.cache-qt.outputs.cache-hit == 'true' && ${{env.RESET_CACHE}} != 'true'
+        if: steps.cache-qt.outputs.cache-hit == 'true'
         run: |
           cd $PREFIX_LIB
           exit
@@ -75,7 +75,7 @@ jobs:
           sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
 
       - name: Build Qt 5.15.2
-        if: steps.cache-qt.outputs.cache-hit != 'true' || ${{ env.RESET_CACHE }} == 'true'
+        if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
