@@ -48,15 +48,18 @@ jobs:
 
           sudo mdutil -a -i off
 
-      - name: Create tmp folder library
+      - name: MozJPEG.
         run: |
-          echo Create tmp library folder
-
-      #- name: Install Qt
-      #  uses: jurplel/install-qt-action@v2.13.2
-      #  with:
-      #    version: 5.15.2
-      #    modules: multimedia
+          cd $LibrariesPath
+          git clone -b v4.0.1-rc2 $GIT/mozilla/mozjpeg.git
+          cd mozjpeg
+          cmake -B build . \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_INSTALL_PREFIX=$PREFIX \
+          -DWITH_JPEG8=ON \
+          -DPNG_SUPPORTED=OFF
+          cmake --build build -j$(nproc)
+          sudo cmake --install build
 
       - name: Qt 5.15.2 cache.
         id: cache-qt
@@ -153,6 +156,25 @@ jobs:
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib
 
           cmake --build $PREFIX_LIB/libzip/ --config Release --target install
+
+      - name: Build poppler-qt5
+        run: |
+          cd $PREFIX_LIB
+          mkdir poppler
+
+          curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
+          tar xf poppler.tar.xz
+          rm poppler.tar.xz
+          mv poppler-* poppler
+          cd poppler || exit
+          
+          mkdir build
+          
+          cd build || exit
+          pwd
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_LIB/poppler ..
+          make -j8
+          make install
 
       - name: Build
         run: |
