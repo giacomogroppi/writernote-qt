@@ -485,6 +485,14 @@ android{
     }
 }
 
+contains(DEFINES, "CI_MAC"){
+    INSTALLS += TARGET
+    DESTDIR += $$PWD/build/
+    TARGET.path = $$PWD/build/
+    LIBS += -L$$PWD/build/
+    message(The $$TEMPLATE $$TARGET will be installed in $$DESTDIR)
+}
+
 
 android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
 
