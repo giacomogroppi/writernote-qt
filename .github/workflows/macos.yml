@@ -44,7 +44,7 @@ jobs:
       - name: First set up
         run: |
           brew install automake libtool libvorbis libvpx \
-            ninja opus sdl pkg-config jhbuild
+            ninja opus sdl pkg-config
 
           sudo mdutil -a -i off
 
@@ -170,9 +170,6 @@ jobs:
           cmake -DCMAKE_INSTALL_PREFIX:PATH="$HOME"/gtk/inst ..
           make -j$(nproc)
           make install
-
-          jhbuild build freetype fontconfig
-          jhbuild buildone -acf cairo
 
       - name: Build poppler-qt5
         run: |
