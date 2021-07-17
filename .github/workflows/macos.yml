@@ -200,7 +200,7 @@ jobs:
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
-            INCLUDEPATH = "$PREFIX_LIB/libzip/lib"
+            INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
 
           make -j$(nproc) --target install          
           
