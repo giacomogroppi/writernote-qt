@@ -31,6 +31,7 @@ jobs:
       QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
       PREFIX: "/usr/local/macos"
       PREFIX_LIB: "/Users/runner/work/writernote-qt/writernote-qt/3rdparty"
+      PROJECT_PATH: "/Users/runner/work/writernote-qt/writernote-qt/"
       CACHE_KEY: cache-key-ci
       ZLIB_VER: "v1.2.11"
       RESET_CACHE: 'false'
@@ -195,8 +196,7 @@ jobs:
 
       - name: Build
         run: |
-          cd $QT_PREFIX
-          echo $(ls)
+          
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
