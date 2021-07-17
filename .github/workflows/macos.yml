@@ -157,13 +157,10 @@ jobs:
 
       - name: Build
         run: |
-          cd $PREFIX_LIB/libzip/
-          cd lib
-          echo $(ls)
-          exit
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
-            LIB+=""
+            LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
+            INCLUDEPATH = "$PREFIX_LIB/libzip/lib"
 
-          cat Makefile          
+          make -j$(nproc) --target install          
           
