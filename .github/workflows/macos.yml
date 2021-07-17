@@ -44,7 +44,7 @@ jobs:
       - name: First set up
         run: |
           brew install automake libtool libvorbis libvpx \
-            ninja opus sdl pkg-config
+            ninja opus sdl pkg-config jhbuild
 
           sudo mdutil -a -i off
 
