@@ -51,6 +51,13 @@ jobs:
 
           sudo mdutil -a -i off
 
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.13.2
+        with:
+          version: 5.15.2 # optional, default is 5.15.2
+          modules: multimedia # optional
+          
+
       - name: MozJPEG.
         run: |
           cd $LibrariesPath
