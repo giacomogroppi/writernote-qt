@@ -76,8 +76,6 @@ jobs:
       - name: Build Qt 5.15.2
         if: steps.chache-qt.outputs.cache-hit != 'true'
         run: |
-          echo prefisso: $(QT_PREFIX)
-          echo lib path: $PREFIX_LIB
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
           cd qt_$QT
@@ -158,12 +156,8 @@ jobs:
 
           cmake --build $PREFIX_LIB/libzip/ --config Release --target install
 
-      #- name: Download dep
-      #  run: |
-      #    ./macos-build/dep.sh
-
-      - name: Compile
+      - name: Build
         run: |
-          exit
-          ./macos-build/compile.sh
+          cd $QT_PREFIX
+          echo $(ls)
           
