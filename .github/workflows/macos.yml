@@ -157,8 +157,26 @@ jobs:
 
           cmake --build $PREFIX_LIB/libzip/ --config Release --target install
 
+      - name: Build openjpg
+        run: |
+          export PATH="$HOME/.new_local/bin:$PATH"
+
+          curl -L https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz -o openjpeg.tar.gz
+          tar xf openjpeg.tar.gz
+          cd openjpeg-* || exit
+          mkdir build
+          cd build || exit
+          pwd
+          cmake -DCMAKE_INSTALL_PREFIX:PATH="$HOME"/gtk/inst ..
+          make -j$(nproc)
+          make install
+
+          jhbuild build freetype fontconfig
+          jhbuild buildone -acf cairo
+
       - name: Build poppler-qt5
         run: |
+          export PATH="$HOME/.new_local/bin:$PATH"
           cd $PREFIX_LIB
 
           curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
@@ -175,7 +193,7 @@ jobs:
           cd build || exit
           pwd
           cmake -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_LIB/poppler ..
-          make -j8
+          make -j$(nproc)
           make install
 
       - name: Build
