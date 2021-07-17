@@ -158,10 +158,12 @@ jobs:
       - name: Build
         run: |
           cd $PREFIX_LIB/libzip/
+          cd lib
           echo $(ls)
           exit
           $QT_PREFIX/bin/qmake writernote.pro \
-            DEFINES+="CI_MAC"
+            DEFINES+="CI_MAC" \
+            LIB+=""
 
           cat Makefile          
           

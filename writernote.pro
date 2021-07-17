@@ -433,7 +433,7 @@ android{
         DEFINES -= "PDFSUPPORT"
         message(MacOS build)
         contains(DESINES, "CI_MAC"){
-
+            message(Compile for CI)
         }
         else{
             INCLUDEPATH += /usr/local/opt/libzip/include
