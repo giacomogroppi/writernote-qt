@@ -171,27 +171,27 @@ jobs:
           make -j$(nproc)
           make install
 
-      - name: Build poppler-qt5
-        run: |
-          export PATH="$HOME/.new_local/bin:$PATH"
-          cd $PREFIX_LIB
+      #- name: Build poppler-qt5
+      #  run: |
+      #    export PATH="$HOME/.new_local/bin:$PATH"
+      #    cd $PREFIX_LIB
 
-          curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
-          tar xf poppler.tar.xz
-          echo 1: $(ls)
-          rm poppler.tar.xz
-          echo 2: $(ls)
-          mv poppler-* poppler
-          echo 3: $(ls)
-          cd poppler || exit
-          
-          mkdir build
-          
-          cd build || exit
-          pwd
-          cmake -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_LIB/poppler ..
-          make -j$(nproc)
-          make install
+      #    curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
+      #    tar xf poppler.tar.xz
+      #    echo 1: $(ls)
+      #    rm poppler.tar.xz
+      #    echo 2: $(ls)
+      #    mv poppler-* poppler
+      #    echo 3: $(ls)
+      #    cd poppler || exit
+      #    
+      #    mkdir build
+      #    
+      #    cd build || exit
+      #    pwd
+      #    cmake -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_LIB/poppler ..
+      #    make -j$(nproc)
+      #    make install
 
       - name: Build
         run: |
