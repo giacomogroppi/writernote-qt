@@ -157,6 +157,8 @@ jobs:
 
       - name: Build
         run: |
+          cd $QT_PREFIX
+          echo $(ls)
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
