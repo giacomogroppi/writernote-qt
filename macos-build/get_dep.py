@@ -7,6 +7,14 @@ SUFF_LIB = "Contents/Resources/lib/"
 SUFF = "Contents/MacOS/writernote"
 COPY = "cp "
 
+COMMAND_TOOL = "install_name_tool "
+COMMAND_SUFF = " -change "
+COMMAND_BEFORE = " @rpath"
+
+def move_single(path_lib: str) -> bool:
+    return os.system(COMMAND_TOOL + COMMAND_SUFF + COMMAND_BEFORE + path_lib)
+
+
 def save_dep(pos_binary: str, dest_list:str) -> None:
     string = ""
 
@@ -72,7 +80,8 @@ def copy_dep(app_path: str, list_dep: list[str]) -> bool:
 
     for dep in list_dep:
         name = get_name_lib(dep)
-        if os.system(COPY + dep + " " + app_path + "/" + SUFF_LIB + name ) != 0:
+        ref = app_path + "/" + SUFF_LIB + name
+        if os.system(COPY + dep + " " + ref ) != 0 or move_single(ref):
             return False
 
     return True
