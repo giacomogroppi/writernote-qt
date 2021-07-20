@@ -24,15 +24,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-file(GLOB helloworld_SRC CONFIGURE_DEPENDS "*.h" "*.cpp")
-
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package( Qt5Multimedia REQUIRED )
-find_package( Qt5MultimediaWidgets REQUIRED )
+find_package(Qt5Multimedia REQUIRED )
+find_package(Qt5MultimediaWidgets REQUIRED )
+find_package(Qt5PrintSupport REQUIRED)
 
 SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
+set(QT_USE_PRINTSUPPORT TRUE)
 
 set(PROJECT_SOURCES
     src/audiorecord/start_recording.cpp 
@@ -280,5 +280,15 @@ set_target_properties(
 	AUTOGEN_SOURCE_GROUP "Qt Files"
 )
 
-target_link_libraries(writernote PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
-target_link_libraries(writernote PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
+add_definitions(-DALL_VERSION)
+add_definitions(-DNUMEROPIXELORIZZONALI=980)
+add_definitions(-DNUMEROPIXELPAGINA=1400)
+add_definitions(-DPDF_SUPPORT)
+
+target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::PrintSupport)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
+target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
+target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libpoppler-qt5.so)
