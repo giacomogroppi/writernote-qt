@@ -213,7 +213,11 @@ jobs:
           #  LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
           #  INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
 
-          make -j$(nproc)
+          #make -j$(nproc)
           sudo make install   
-          echo $(ls)       
+          echo $(ls)
+      
+      - name: Lib
+        run: |
+          python3 macos-build/get_dep.py $(pwd)/build/writernote.pro        
           

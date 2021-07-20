@@ -1,24 +1,24 @@
-#ifndef UI_SCROLL_H
-#define UI_SCROLL_H
+#ifndef SCROLL_H
+#define SCROLL_H
 
 #include <QDialog>
 
 namespace Ui {
-class ui_scroll;
+class scroll;
 }
 
-class ui_scroll : public QDialog
+class scroll : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ui_scroll(QWidget *parent = nullptr);
-    ~ui_scroll();
+    explicit scroll(QWidget *parent = nullptr);
+    ~scroll();
 
     void reset(uint enable, int speed);
 
 private:
-    Ui::ui_scroll *ui;
+    Ui::scroll *ui;
 
 signals:
 
@@ -31,4 +31,4 @@ private slots:
     void on_checkBox_stateChanged(int arg1);
 };
 
-#endif // UI_SCROLL_H
+#endif // SCROLL_H

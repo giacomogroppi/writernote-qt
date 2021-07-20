@@ -1,5 +1,5 @@
-#ifndef UI_RESTORE_H
-#define UI_RESTORE_H
+#ifndef RESTORE_H
+#define RESTORE_H
 
 #include <QDialog>
 #include <QString>
@@ -10,17 +10,17 @@
 #include "../../currenttitle/document.h"
 
 namespace Ui {
-class ui_restore;
+class restore;
 }
 
-class ui_restore : public QDialog
+class restore : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ui_restore(QWidget *parent = nullptr,
+    explicit restore(QWidget *parent = nullptr,
                         QString path = "");
-    ~ui_restore();
+    ~restore();
 
 private slots:
     void on_close_button_clicked();
@@ -42,7 +42,7 @@ private:
 
     QString path;
 
-    Ui::ui_restore *ui;
+    Ui::restore *ui;
 };
 
-#endif // UI_RESTORE_H
+#endif // RESTORE_H

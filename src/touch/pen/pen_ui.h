@@ -5,7 +5,7 @@
 
 #define DefaultS 0.30
 
-class ui_highlighter;
+class highlighter;
 
 struct last_color{
     bool ok;
@@ -24,7 +24,7 @@ public:
     explicit pen_ui(QWidget *parent = nullptr);
     ~pen_ui();
 
-    ui_highlighter * m_highlighter = nullptr;
+    highlighter * m_highlighter = nullptr;
 
     void save_settings();
     void load_settings();

@@ -1,40 +1,40 @@
-#include "ui_scroll.h"
+#include "scroll.h"
 
 #include <QDebug>
-#include "ui_ui_scroll.h"
+#include "ui_scroll.h"
 
-ui_scroll::ui_scroll(QWidget *parent) :
+scroll::scroll(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ui_scroll)
+    ui(new Ui::scroll)
 {
     ui->setupUi(this);
 
 }
 
-ui_scroll::~ui_scroll()
+scroll::~scroll()
 {
     delete ui;
 }
 
-void ui_scroll::reset(uint enable, int speed)
+void scroll::reset(uint enable, int speed)
 {
     ui->checkBox->setChecked(enable);
     ui->spinBox->setValue(speed);
 }
 
-void ui_scroll::on_pushButton_cancel_clicked()
+void scroll::on_pushButton_cancel_clicked()
 {
     this->close();
 }
 
-void ui_scroll::on_pushButton_ok_clicked()
+void scroll::on_pushButton_ok_clicked()
 {
     emit updateData((uchar)ui->checkBox->isChecked(),
                     ui->spinBox->value());
     this->close();
 }
 
-void ui_scroll::on_spinBox_valueChanged(int arg1)
+void scroll::on_spinBox_valueChanged(int arg1)
 {
     bool __app = true;
     if(arg1 <= 0){
@@ -48,7 +48,7 @@ void ui_scroll::on_spinBox_valueChanged(int arg1)
     }
 }
 
-void ui_scroll::on_checkBox_stateChanged(int)
+void scroll::on_checkBox_stateChanged(int)
 {
     if(ui->checkBox->isChecked()){
         ui->spinBox->setEnabled(true);

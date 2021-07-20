@@ -1,8 +1,7 @@
 #ifndef LOADQUALITA_H
 #define LOADQUALITA_H
 
-#include "../mainwindow.h"
-#include "ui_mainwindow.h"
+class MainWindow;
 
 void loadqualita(MainWindow *parent);
 

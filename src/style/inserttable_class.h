@@ -1,7 +1,6 @@
 #ifndef INSERTTABLE_CLASS_H
 #define INSERTTABLE_CLASS_H
 #include "../mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QDialog>
 
 namespace Ui {

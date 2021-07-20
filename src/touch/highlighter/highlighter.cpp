@@ -1,5 +1,5 @@
+#include "highlighter.h"
 #include "ui_highlighter.h"
-#include "ui_ui_highlighter.h"
 
 #include <QSettings>
 #include "../../utils/setting_define.h"
@@ -11,9 +11,9 @@
 #define MAX_ALFA 32
 #define MIN_ALFA 1
 
-ui_highlighter::ui_highlighter(QWidget *parent, bool *same, pen_ui *pen) :
+highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     QDialog(parent),
-    ui(new Ui::ui_highlighter)
+    ui(new Ui::highlighter)
 {
     ui->setupUi(this);
 
@@ -34,14 +34,14 @@ ui_highlighter::ui_highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     loadSettings();
 }
 
-ui_highlighter::~ui_highlighter()
+highlighter::~highlighter()
 {
     saveSettings();
 
     delete ui;
 }
 
-void ui_highlighter::loadSettings()
+void highlighter::loadSettings()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_HIGHLIGHTER);
@@ -55,7 +55,7 @@ void ui_highlighter::loadSettings()
     updateList();
 }
 
-void ui_highlighter::saveSettings()
+void highlighter::saveSettings()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_HIGHLIGHTER);
@@ -68,7 +68,7 @@ void ui_highlighter::saveSettings()
     setting.endGroup();
 }
 
-bool ui_highlighter::event(QEvent *event)
+bool highlighter::event(QEvent *event)
 {
     if(event->type() == QEvent::WindowDeactivate)
         this->hide();
@@ -76,7 +76,7 @@ bool ui_highlighter::event(QEvent *event)
     return QWidget::event(event);
 }
 
-void ui_highlighter::updateList()
+void highlighter::updateList()
 {
     bool pressure;
 
@@ -101,12 +101,12 @@ void ui_highlighter::updateList()
 }
 
 
-void ui_highlighter::on_slider_alfa_actionTriggered(int action)
+void highlighter::on_slider_alfa_actionTriggered(int action)
 {
     m_data.alfa = action;
 }
 
-double ui_highlighter::getSize(const double pressure){
+double highlighter::getSize(const double pressure){
     if(*same_data){
         return m_pen->getSize(pressure)*ADD*ADD;
     }
@@ -114,7 +114,7 @@ double ui_highlighter::getSize(const double pressure){
     return (m_data.pressure) ? pressure*ADD : m_data.size*ADD;
 }
 
-void ui_highlighter::moveAll(datastruct *data)
+void highlighter::moveAll(datastruct *data)
 {
     uint i, len;
     QList<point_s > * __p = data->get_list();
@@ -132,7 +132,7 @@ void ui_highlighter::moveAll(datastruct *data)
     __data.clear();
 }
 
-void ui_highlighter::on_button_size_clicked()
+void highlighter::on_button_size_clicked()
 {
     if(*same_data){
         m_pen->setType(false);
@@ -144,7 +144,7 @@ void ui_highlighter::on_button_size_clicked()
     updateList();
 }
 
-void ui_highlighter::on_button_pressure_clicked()
+void highlighter::on_button_pressure_clicked()
 {
     if(*same_data){
         m_pen->setType(true);
@@ -157,7 +157,7 @@ void ui_highlighter::on_button_pressure_clicked()
 }
 
 
-void ui_highlighter::on_slider_size_actionTriggered(int action)
+void highlighter::on_slider_size_actionTriggered(int action)
 {
     if(*same_data){
         m_pen->setWidthTratto(double(action)/100);
@@ -166,16 +166,16 @@ void ui_highlighter::on_slider_size_actionTriggered(int action)
     }
 }
 
-void ui_highlighter::on_same_data_stateChanged(int arg1)
+void highlighter::on_same_data_stateChanged(int arg1)
 {
-    qDebug() << arg1 << "ui_highlighter::on_same_data_stateChanged";
+    qDebug() << arg1 << "highlighter::on_same_data_stateChanged";
     *same_data = arg1;
 
     updateList();
     m_pen->list_update();
 }
 
-void ui_highlighter::on_checkbox_up_stateChanged(int arg1)
+void highlighter::on_checkbox_up_stateChanged(int arg1)
 {
     m_data.tratto_sotto = arg1;
 

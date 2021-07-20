@@ -29,12 +29,12 @@
 #include "currenttitle/document.h"
 #include "indice_class.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
-#include "touch/highlighter/ui_highlighter.h"
+#include "touch/highlighter/highlighter.h"
 #include "cloud/struct_user.h"
 
 class frompdf;
 class TabletApplication;
-class ui_option_copybook;
+class option_copybook;
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s) STRINGIZE2(s)
@@ -141,10 +141,10 @@ public:
     rubber_ui *m_rubber;
     pen_ui *m_pen;
     text_ui *m_text;
-    ui_highlighter *m_highlighter;
+    highlighter *m_highlighter;
 
     text_widgets *m_text_w;
-    ui_option_copybook *m_option_copybook;
+    option_copybook *m_option_copybook;
 
     struct struct_user *m_user;
 

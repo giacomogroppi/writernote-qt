@@ -1,5 +1,5 @@
 #include "ui_restore.h"
-#include "ui_ui_restore.h"
+#include "restore.h"
 #include "../../utils/get_file_dir/get_file_dir.h"
 #include "../../utils/common_def.h"
 #include <QDir>
@@ -10,9 +10,9 @@
 #include "../get_name_tmp.h"
 #include "../../utils/dialog_critic/dialog_critic.h"
 
-ui_restore::ui_restore(QWidget *parent, QString path) :
+restore::restore(QWidget *parent, QString path) :
     QDialog(parent),
-    ui(new Ui::ui_restore)
+    ui(new Ui::restore)
 {
     ui->setupUi(this);
 
@@ -28,7 +28,7 @@ ui_restore::ui_restore(QWidget *parent, QString path) :
     updateList();
 }
 
-ui_restore::~ui_restore()
+restore::~restore()
 {
     delete m_curr;
     delete m_ind;
@@ -41,12 +41,12 @@ ui_restore::~ui_restore()
     delete ui;
 }
 
-void ui_restore::on_close_button_clicked()
+void restore::on_close_button_clicked()
 {
     this->close();
 }
 
-void ui_restore::on_pushButton_open_clicked()
+void restore::on_pushButton_open_clicked()
 {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                 "",
@@ -65,7 +65,7 @@ void ui_restore::on_pushButton_open_clicked()
 
 }
 
-void ui_restore::removeNotWriternote(QStringList &l)
+void restore::removeNotWriternote(QStringList &l)
 {
     uint i, len;
     QStringList list;
@@ -96,7 +96,7 @@ void ui_restore::removeNotWriternote(QStringList &l)
 
 }
 
-void ui_restore::updateList()
+void restore::updateList()
 {
     uint i, len;
 
@@ -119,7 +119,7 @@ void ui_restore::updateList()
 
 }
 
-void ui_restore::on_ok_restore_clicked()
+void restore::on_ok_restore_clicked()
 {
     QString pos_res, name_copy;
     QDir __dir(path);

@@ -12,19 +12,16 @@
 #include "../currenttitle/document.h"
 #include "zoom/zoom_control.h"
 #include "square/square.h"
-
 #include "rubber/rubber_ui.h"
 #include "pen/pen_ui.h"
-
 #include "../lastedit/redoundo.h"
 #include "../autosave/autosave_.h"
-
 #include "text/text_ui/text_ui.h"
 #include "text/text_widgets/text_widgets.h"
 #include "../sheet/fast-sheet/fast_sheet_ui.h"
+#include "highlighter/highlighter.h"
 
-#include "highlighter/ui_highlighter.h"
-
+class highlighter;
 class MainWindow;
 
 typedef struct lastpoint_struct{
@@ -162,10 +159,10 @@ public:
     bool enableredoundu = true;
 
     /* class for menu */
-    rubber_ui *m_rubber;
-    pen_ui *m_pen_ui;
-    text_ui *m_text;
-    ui_highlighter *m_highlighter;
+    class rubber_ui *m_rubber;
+    class pen_ui *m_pen_ui;
+    class text_ui *m_text;
+    class highlighter *m_highlighter;
 
     text_widgets *m_text_w;
 

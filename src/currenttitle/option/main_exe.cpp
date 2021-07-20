@@ -1,5 +1,5 @@
 #include "../../mainwindow.h"
-#include "ui_option_copybook.h"
+#include "option_copybook.h"
 
 void MainWindow::on_actionCopybook_triggered()
 {

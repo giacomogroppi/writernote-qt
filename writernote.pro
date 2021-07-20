@@ -65,7 +65,7 @@ SOURCES += \
     src/currenttitle/document.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/currenttitle/option/main_exe.cpp \
-    src/currenttitle/option/ui_option_copybook.cpp \
+    src/currenttitle/option/option_copybook.cpp \
     src/datamanage/retry_save_audio.cpp \
     src/dataread/load_from_file.cpp \
     src/dropEvent/dropEvent.cpp \
@@ -83,7 +83,7 @@ SOURCES += \
     src/restore_file/restore_file.cpp \
     src/restore_file/restore_file_critic.cpp \
     src/restore_file/ui/setting_restore_ui.cpp \
-    src/restore_file/ui_restore/ui_restore.cpp \
+    src/restore_file/ui_restore/restore.cpp \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
     src/touch/copy/copy_selection.cpp \
@@ -99,14 +99,14 @@ SOURCES += \
     src/touch/datastruct/removePage.cpp \
     src/touch/datastruct/reorganize.cpp \
     src/touch/datastruct/writtenSomething.cpp \
-    src/touch/highlighter/ui_highlighter.cpp \
+    src/touch/highlighter/highlighter.cpp \
     src/touch/pageCount.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
     src/touch/scrollKinetic/loadScrollSettings.cpp \
     src/touch/scrollKinetic/scrollKinetic.cpp \
     src/touch/scrollKinetic/scroll_mainwindow.cpp \
-    src/touch/scrollKinetic/ui_scroll/ui_scroll.cpp \
+    src/touch/scrollKinetic/ui_scroll/scroll.cpp \
     src/touch/square/draw_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
@@ -120,7 +120,6 @@ SOURCES += \
     src/audioplay/slidertimechange.cpp \
     src/audioplay/updatestatusbar_riascolto.cpp \
     src/audioplay/valuechangeslidervolume.cpp \
-    src/audiorecord/audio_record.cpp \
     src/audiosetting/audioqualityoption.cpp \
     src/audiorecord/displayErrorMessage.cpp \
     src/audiosetting/loadqualita.cpp \
@@ -185,7 +184,6 @@ SOURCES += \
     src/style/insertimage.cpp \
     src/style/inserttable_class.cpp \
     src/style/inserttable_mainwindow.cpp \
-    src/audioplay/pausariascolto.cpp \
     src/audioplay/stopriascolto.cpp \
     src/style/bold.cpp \
     src/style/print_action.cpp \
@@ -253,7 +251,7 @@ HEADERS += \
     src/currenttitle/document.h \
     src/currenttitle/option/modality_data.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
-    src/currenttitle/option/ui_option_copybook.h \
+    src/currenttitle/option/option_copybook.h \
     src/datamanage/retry_save_audio.h \
     src/dataread/load_from_file.h \
     src/filelost.h \
@@ -264,13 +262,13 @@ HEADERS += \
     src/restore_file/get_name_tmp.h \
     src/restore_file/restore_file_critic.h \
     src/restore_file/ui/setting_restore_ui.h \
-    src/restore_file/ui_restore/ui_restore.h \
+    src/restore_file/ui_restore/restore.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
-    src/touch/highlighter/ui_highlighter.h \
+    src/touch/highlighter/highlighter.h \
     src/touch/reduce_size/reduce_size.h \
-    src/touch/scrollKinetic/ui_scroll/ui_scroll.h \
+    src/touch/scrollKinetic/ui_scroll/scroll.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
     src/utils/aboutQt/aboutqt.h \
@@ -358,22 +356,22 @@ HEADERS += \
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
-    src/currenttitle/option/ui_option_copybook.ui \
+    src/currenttitle/option/option_copybook.ui \
     src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \
     src/last_open/option/option_last_open_ui.ui \
     src/log/log_ui/log_ui.ui \
     src/mainwindow.ui \
     src/restore_file/ui/setting_restore_ui.ui \
-    src/restore_file/ui_restore/ui_restore.ui \
+    src/restore_file/ui_restore/restore.ui \
     src/sheet/dialog_sheet.ui \
     src/sheet/fast-sheet/fast_sheet_ui.ui \
     src/style/inserttable_class.ui \
     src/touch/copy/copy_widgets.ui \
-    src/touch/highlighter/ui_highlighter.ui \
+    src/touch/highlighter/highlighter.ui \
     src/touch/pen/pen_ui.ui \
     src/touch/rubber/rubber_ui.ui \
-    src/touch/scrollKinetic/ui_scroll/ui_scroll.ui \
+    src/touch/scrollKinetic/ui_scroll/scroll.ui \
     src/touch/text/text_ui/text_ui.ui \
     src/touch/text/text_widgets/text_widgets.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
@@ -489,7 +487,7 @@ contains(DEFINES, "CI_MAC"){
 }
 
 
-android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
+#android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
 
 ANDROID_EXTRA_LIBS = /home/giacomo/Android/Sdk/android_openssl/latest/arm/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libssl_1_1.so
 

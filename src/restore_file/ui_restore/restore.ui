@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ui_restore</class>
- <widget class="QDialog" name="ui_restore">
+ <class>restore</class>
+ <widget class="QDialog" name="restore">
   <property name="geometry">
    <rect>
     <x>0</x>

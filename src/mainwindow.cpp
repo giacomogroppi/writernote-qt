@@ -20,9 +20,9 @@
 #include "utils/areyousure/areyousure.h"
 #include <QTimer>
 #include "restore_file/ui/setting_restore_ui.h"
-#include "touch/scrollKinetic/ui_scroll/ui_scroll.h"
+#include "touch/scrollKinetic/ui_scroll/scroll.h"
 #include "utils/common_def.h"
-#include "currenttitle/option/ui_option_copybook.h"
+#include "currenttitle/option/option_copybook.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -81,11 +81,11 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_rubber = new rubber_ui(this);
     this->m_pen = new pen_ui(this);
     this->m_text = new text_ui(this);
-    this->m_highlighter = new ui_highlighter(this, &m_pen->same_data, m_pen);
+    this->m_highlighter = new highlighter(this, &m_pen->same_data, m_pen);
 
     m_pen->m_highlighter = m_highlighter;
 
-    this->m_option_copybook = new ui_option_copybook(this);
+    this->m_option_copybook = new option_copybook(this);
     this->m_text_w = new text_widgets(this);
     this->m_sheet = new fast_sheet_ui(this);
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice, &m_path);

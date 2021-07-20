@@ -3,7 +3,7 @@
 
 #include <QDebug>
 #define DELTA 200.0
-#include "../highlighter/ui_highlighter.h"
+#include "../highlighter/highlighter.h"
 
 pen_ui::pen_ui(QWidget *parent) :
     QWidget(parent),
