@@ -35,6 +35,7 @@ SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
 set(PROJECT_SOURCES
+    src/frompdf/frompdf.cpp
     src/audiorecord/start_recording.cpp 
     src/changeCopybook.cpp 
     src/controllUi.cpp 
@@ -252,6 +253,8 @@ set(PROJECT_SOURCES
     src/videocompress/videocompress_ui.ui 
     src/windows/showmessageupdate.ui
 
+    writernote.qrc
+    language.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
