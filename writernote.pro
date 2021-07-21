@@ -477,15 +477,7 @@ android{
     }
 }
 
-contains(DEFINES, "CI_MAC"){
-    target.path = $$PWD/build
-
-    INSTALLS += target
-    message(The $$TEMPLATE $$TARGET will be installed in $$DESTDIR)
-}
-
-
-#android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
+android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
 
 ANDROID_EXTRA_LIBS = /home/giacomo/Android/Sdk/android_openssl/latest/arm/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libssl_1_1.so
 
@@ -501,8 +493,24 @@ contains(DEFINES, PDFSUPPORT){
 }
 
 macx:contains(DEFINES, PDFSUPPORT){
-    INCLUDEPATH += /usr/local/opt/poppler/include/poppler/qt5
-    LIBS += /usr/local/Cellar/poppler/21.07.0/lib/libpoppler-qt5.dylib
+    $POPPLER_INCLUDE = /usr/local/opt/poppler/include/poppler/qt5
+    $POPPLER_INCLUDE_CI = /usr/local/opt/poppler-qt5/include/poppler/qt5
+    $POPPLER_INCLUDE_FIN = ""
+
+    if(exists($${POPPLER_INCLUDE}/poppler-qt5.h)){
+        $${POPPLER_INCLUDE} = $${POPPLER_INCLUDE}
+    }else{
+        if(exists($${POPPLER_INCLUDE_CI}/poppler-qt5.h)){
+            $$POPPLER_INCLUDE_FIN = $${POPPLER_INCLUDE_CI}
+        }else{
+            error("Can't locate poppler-qt5 for build")
+        }
+    }
+    INCLUDEPATH += $${POPPLER_INCLUDE_FIN}
+    message(Poppler include dir $${POPPLER_INCLUDE_FIN})
+
+    #INCLUDEPATH += /usr/local/opt/poppler/include/poppler/qt5
+    LIBS += /usr/local/Cellar/poppler-qt5/21.07.0/lib/libpoppler-qt5.dylib
 }
 
 else:unix:contains(DEFINES, PDFSUPPORT){
