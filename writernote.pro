@@ -384,8 +384,6 @@ FORMS += \
     src/videocompress/videocompress_ui.ui \
     src/windows/showmessageupdate.ui
 
-
-
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

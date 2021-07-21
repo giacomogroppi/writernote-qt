@@ -52,7 +52,7 @@ void updatecheck::managerFinished(){
         if(mostra)
 #if defined(unix)
             dialog_critic("We had a problem with internet connection " + reply->errorString());
-#elif defined(WIN32) || defined(WIN64)
+#elif defined(WIN32) || defined(WIN64) || defined(MACOS)
             dialog_critic("We had a problem with internet connection " + reply->errorString() + "\nReinstall the app, or download the ssl libraries.");
 #endif
         delete manager;

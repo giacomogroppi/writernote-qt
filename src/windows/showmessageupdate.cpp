@@ -22,7 +22,7 @@ ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
     ui->pushButton_terminal_command->setHidden(true);
 #endif
 
-#if !(defined(WIN32) || defined(WIN64))
+#if !(defined(WIN32) || defined(WIN64) || defined(MACOS))
     ui->pushButton_update_now->setHidden(true);
 #endif
 }

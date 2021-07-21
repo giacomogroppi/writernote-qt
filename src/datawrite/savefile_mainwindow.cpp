@@ -48,7 +48,7 @@ void MainWindow::on_actionSave_As_triggered()
 
     if(posizione != ""){
         int command;
-#if defined(unix)
+#if defined(unix) || defined(MACOS)
         command = system(move_file(posizione, m_path));
 #endif
         if(command){

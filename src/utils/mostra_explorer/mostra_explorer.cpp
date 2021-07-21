@@ -10,11 +10,13 @@
 
 static int mostra(const char *comando);
 
-#if defined(unix)
+#if defined(unix) && !defined(MACOS)
 #define APPLICATION_NAME (QString)"nautilus "
 #elif defined(WIN32) || defined(WIN64) || defined(__OS2__)
 #define APPLICATION_NAME (QString)"explorer.exe "
 static void replace(char *data);
+#elif defined(MACOS)
+#define APPLICATION_NAME (QString)"open "
 #elif defined(MACOS)
 #define APPLICATION_NAME (QString)"open "
 #endif
@@ -37,7 +39,7 @@ void mostra_explorer(QString posizione)
         dialog_critic("We had a problem opening " + APPLICATION_NAME);
     }
 
-#elif unix
+#elif unix || MACOS
     mostra_finestra_i(posizione.toUtf8().constData());
     //QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
 #endif
@@ -74,7 +76,7 @@ static QString remove_s(const char *stringa){
 
     return string_r.mid(0, i);
 
-#elif unix
+#elif unix || MACOS
     return QString::fromUtf8(stringa, i);
 #endif
 

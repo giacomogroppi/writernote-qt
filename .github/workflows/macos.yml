@@ -208,7 +208,7 @@ jobs:
           
           echo File: $(ls /usr/local/opt/poppler/include/)
           echo File: $(ls /usr/local/opt/poppler/include/poppler)
-          echo File: $(ls /usr/local/opt/poppler/include/poppler/qt5)
+          echo File: $(ls /usr/local/opt/poppler/include/poppler/qt6)
 
 
           qmake writernote.pro \

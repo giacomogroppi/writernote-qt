@@ -1,15 +1,13 @@
 #include "get_path.h"
+#include "../slash/slash.h"
 
-#ifdef unix
+#if defined(unix) || defined(MACOS)
 #define POS_HOME "HOME"
-#define SPACER "/"
-
-#else
+#elif WIN32
 #define POS_HOME "HOMEPATH"
-#define SPACER "\\"
 #endif
 
-#define PLUSS(x) x+=SPACER
+#define PLUSS(x) x+=slash::__slash()
 #define FOLDERNAME ".writernote"
 #define NAME_USER "USERNAME" /* saim form linux and windows */
 #include <QDir>

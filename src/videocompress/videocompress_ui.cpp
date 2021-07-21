@@ -102,9 +102,9 @@ void videocompress_ui::on_pushButton_ok_clicked()
 #ifdef WIN32
     if(i == 1)
         return dialog_critic("We had a problem, maybe ffmpeg is not installed in your system");
-#elif unix
+#elif unix || defined(MACOS)
     if(i == 32512)
-        return dialog_critic("ffmpeg is not installed in your system");
+        return dialog_critic("Ffmpeg is not installed in your system");
 #endif
 
     return dialog_critic("We had a problem");
