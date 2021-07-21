@@ -493,15 +493,15 @@ contains(DEFINES, PDFSUPPORT){
 }
 
 macx:contains(DEFINES, PDFSUPPORT){
-    $POPPLER_INCLUDE = /usr/local/opt/poppler/include/poppler/qt5
-    $POPPLER_INCLUDE_CI = /usr/local/opt/poppler-qt5/include/poppler/qt5
-    $POPPLER_INCLUDE_FIN = ""
+    POPPLER_INCLUDE = /usr/local/opt/poppler/include/poppler/qt5
+    POPPLER_INCLUDE_CI = /usr/local/opt/poppler-qt5/include/poppler/qt5
+    POPPLER_INCLUDE_FIN = ""
 
     if(exists($${POPPLER_INCLUDE}/poppler-qt5.h)){
-        $${POPPLER_INCLUDE} = $${POPPLER_INCLUDE}
+        POPPLER_INCLUDE_FIN = $${POPPLER_INCLUDE}
     }else{
         if(exists($${POPPLER_INCLUDE_CI}/poppler-qt5.h)){
-            $$POPPLER_INCLUDE_FIN = $${POPPLER_INCLUDE_CI}
+            POPPLER_INCLUDE_FIN = $${POPPLER_INCLUDE_CI}
         }else{
             error("Can't locate poppler-qt5 for build")
         }
