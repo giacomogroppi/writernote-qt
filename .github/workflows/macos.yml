@@ -210,6 +210,8 @@ jobs:
           echo File: $(ls /usr/local/opt/poppler/include/poppler)
           echo File: $(ls /usr/local/opt/poppler/include/poppler/qt6)
 
+          echo poppler: echo $(pkg-config --cflags-only-I poppler-qt5)
+          exit
 
           qmake writernote.pro \
             DEFINES+="CI_MAC"
