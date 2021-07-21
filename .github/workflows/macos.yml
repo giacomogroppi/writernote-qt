@@ -208,8 +208,6 @@ jobs:
         
           echo File: $(ls /usr/local/opt/poppler-qt5/lib)
         
-
-          exit
           qmake writernote.pro \
             DEFINES+="CI_MAC"
           #$QT_PREFIX/bin/qmake writernote.pro \
