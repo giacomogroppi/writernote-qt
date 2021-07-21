@@ -47,7 +47,7 @@ jobs:
           brew install automake libtool libvorbis libvpx \
             ninja opus sdl pkg-config cmake
           brew install libzip qt@5
-          brew install poppler --with-qt5
+          brew install poppler-qt5
 
           sudo mdutil -a -i off
 
