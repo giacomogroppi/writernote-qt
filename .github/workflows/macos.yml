@@ -210,7 +210,7 @@ jobs:
           echo File: $(ls /usr/local/opt)
           echo File: $(ls /usr/local/opt/poppler-qt5)
 
-          echo File: $(ls /usr/local/opt/poppler-qt5/include/poppler)
+          echo File: $(ls /usr/local/opt/poppler-qt5/include/poppler/qt5)
           exit
           qmake writernote.pro \
             DEFINES+="CI_MAC"
