@@ -213,7 +213,6 @@ jobs:
 
 
           echo poppler: $(pkg-config --cflags-only-I poppler-qt5)
-          exit
 
           qmake writernote.pro \
             DEFINES+="CI_MAC"
