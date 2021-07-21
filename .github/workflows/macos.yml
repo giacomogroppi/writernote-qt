@@ -47,7 +47,7 @@ jobs:
           brew install automake libtool libvorbis libvpx \
             ninja opus sdl pkg-config cmake poppler
 
-          brew install qt libzip poppler
+          brew install qt libzip poppler qt@5
 
           sudo mdutil -a -i off
 
@@ -208,9 +208,11 @@ jobs:
           
           echo File: $(ls /usr/local/opt/poppler/include/)
           echo File: $(ls /usr/local/opt/poppler/include/poppler)
-          echo File: $(ls /usr/local/opt/poppler/include/poppler/qt6)
+          echo File qt6: $(ls /usr/local/opt/poppler/include/poppler/qt6)
+          echo File qt5: $(ls /usr/local/opt/poppler/include/poppler/qt5)
 
-          echo poppler: echo $(pkg-config --cflags-only-I poppler-qt5)
+
+          echo poppler: $(pkg-config --cflags-only-I poppler-qt5)
           exit
 
           qmake writernote.pro \
@@ -225,5 +227,5 @@ jobs:
       
       - name: Lib
         run: |
-          python3 macos-build/get_dep.py $(pwd)/build/writernote.pro        
+          python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
           
