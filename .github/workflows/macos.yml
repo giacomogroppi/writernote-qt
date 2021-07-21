@@ -206,6 +206,10 @@ jobs:
       - name: Build
         run: |
           
+          echo File: $(ls /usr/local)
+          echo File: $(ls /usr/local/opt)
+          echo File: $(ls /usr/local/opt/poppler)
+
           echo File: $(ls /usr/local/opt/poppler/include/)
           echo File: $(ls /usr/local/opt/poppler/include/poppler)
           echo File qt6: $(ls /usr/local/opt/poppler/include/poppler/qt6)
@@ -213,7 +217,7 @@ jobs:
 
 
           echo poppler: $(pkg-config --cflags-only-I poppler-qt5)
-
+          exit
           qmake writernote.pro \
             DEFINES+="CI_MAC"
           #$QT_PREFIX/bin/qmake writernote.pro \
