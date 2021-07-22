@@ -40,18 +40,22 @@ def analise(list: list[str]) -> list[str]:
 
         try:
             ind = list_sec[i].index('(')
-            list_sec[i] = list_sec[i][:ind-1]
-        except:
+            list_sec[i] = list_sec[i][:ind]
+        except ValueError:
+            pass
+
+        try: 
+            ind = list_sec[i].index(' ')
+            list_sec[i] = list_sec[i][:ind]
+        except ValueError:
             pass
 
         list_sec[i].replace("\n", "")
         list_sec[i].replace("\t", "")
 
         try:
-            ind = list_sec[i].index('/usr/local')
-            #print("not delete: ", list_sec[i])
+            ind = list_sec[i].index('/usr/')
         except:
-            #print("delete: ", list_sec[i])
             del list_sec[i]
             i -= 1
 
@@ -97,6 +101,11 @@ if __name__ == "__main__":
     list = get_dep(pos_dest)
     list = analise(list)
     list = remove_double(list)
+
+    for line in list:
+        print(list)
+
+    exit(0)
 
     if not copy_dep(pos_bin, list):
         print("Error copy")
