@@ -100,7 +100,7 @@ jobs:
           cd qtbase
           #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
           cd ..
-          configure -prefix "$QT_PREFIX" \
+          ./configure -prefix "$QT_PREFIX" \
            -static \
            -static-runtime \
            -release \
