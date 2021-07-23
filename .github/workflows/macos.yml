@@ -51,11 +51,11 @@ jobs:
 
           sudo mdutil -a -i off
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2.13.2
-        with:
-          version: 5.15.2 # optional, default is 5.15.2
-          modules: multimedia # optional
+      #- name: Install Qt
+      #  uses: jurplel/install-qt-action@v2.13.2
+      #  with:
+      #    version: 5.15.2 # optional, default is 5.15.2
+      #    modules: multimedia # optional
           
 
       - name: MozJPEG.
@@ -208,12 +208,13 @@ jobs:
         
           echo File: $(ls /usr/local/opt/poppler-qt5/lib)
         
-          qmake writernote.pro \
-            DEFINES+="CI_MAC"
-          #$QT_PREFIX/bin/qmake writernote.pro \
-          #  DEFINES+="CI_MAC" \
-          #  LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
-          #  INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
+          #qmake writernote.pro \
+          #  DEFINES+="CI_MAC"
+          
+          $QT_PREFIX/bin/qmake writernote.pro \
+            DEFINES+="CI_MAC" \
+            LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
+            INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
 
           make -j$(nproc)
           echo $(ls)

@@ -53,11 +53,11 @@ def analise(list: list[str]) -> list[str]:
         list_sec[i].replace("\n", "")
         list_sec[i].replace("\t", "")
 
-        try:
-            ind = list_sec[i].index('/usr/')
-        except:
-            del list_sec[i]
-            i -= 1
+        #try:
+        #    ind = list_sec[i].index('/usr/')
+        #except:
+        #    del list_sec[i]
+        #    i -= 1
 
 
         i += 1
