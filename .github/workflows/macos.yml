@@ -98,7 +98,7 @@ jobs:
           git submodule update qtimageformats
           git submodule update qtmultimedia
           cd qtbase
-          find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
+          #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
           cd ..
           configure -prefix "$QT_PREFIX" \
            -static \
