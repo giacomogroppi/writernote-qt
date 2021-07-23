@@ -87,7 +87,7 @@ jobs:
           sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
 
       - name: Build Qt 5.15.2
-        #if: steps.cache-qt.outputs.cache-hit != 'true'
+        if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
@@ -100,25 +100,41 @@ jobs:
           cd qtbase
           find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
           cd ..
-          ./configure \
-          -prefix "$QT_PREFIX" \
-          -debug \
-          -force-debug-info \
-          -opensource \
-          -confirm-license \
-          -static \
-          -opengl desktop \
-          -no-openssl \
-          -securetransport \
-          -nomake examples \
-          -nomake tests \
-          -platform macx-clang \
-          -I "$PREFIX/include" \
-          LIBJPEG_LIBS="$PREFIX/lib/libjpeg.a" \
-          ZLIB_LIBS="$PREFIX/lib/libz.a"
-
-          cat Makefile | grep 'qtmultimedia'
-          exit
+          configure -prefix "$QT_PREFIX" \
+           -static \
+           -static-runtime \
+           -release \
+           -opensource \
+           -confirm-license \
+           -qt-zlib \
+           -qt-pcre \
+           -qt-libpng \
+           -qt-libjpeg \
+           -qt-freetype \
+           -opengl desktop \
+           -sql-sqlite \
+           -make libs \
+           -nomake tools \
+           -nomake examples \
+           -nomake tests \
+           -skip qtwebengine
+          
+          # ./configure \
+          #-prefix "$QT_PREFIX" \
+          #-debug \
+          #-force-debug-info \
+          #-opensource \
+          #-confirm-license \
+          #-static \
+          #-opengl desktop \
+          #-no-openssl \
+          #-securetransport \
+          #-nomake examples \
+          #-nomake tests \
+          #-platform macx-clang \
+          #-I "$PREFIX/include" \
+          #LIBJPEG_LIBS="$PREFIX/lib/libjpeg.a" \
+          #ZLIB_LIBS="$PREFIX/lib/libz.a"
 
           make -j$(nproc)
           sudo make install
@@ -216,6 +232,8 @@ jobs:
           #qmake writernote.pro \
           #  DEFINES+="CI_MAC"
           
+          echo Qt_PREFIX ls: $(ls $QT_PREFIX)
+
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
