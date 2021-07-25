@@ -220,6 +220,7 @@ jobs:
       
       - name: Lib static
         run: |
+          cd build
           export LIB_PATH=Contents/Resources/lib/
 
           mkdir writernote.app/$LIB_PATH
