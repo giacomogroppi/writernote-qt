@@ -75,7 +75,7 @@ jobs:
         id: cache-qt
         uses: actions/cache@v2
         with:
-          path: ${{ env.PREFIX_LIB }}
+          path: ${{ env.PREFIX_LIB }}/qt-cache
           key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/README.git') }}
 
       - name: Use cached Qt 5.15.2.
