@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.PREFIX_LIB }}
-          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/README.md') }}
+          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/README.git') }}
 
       - name: Use cached Qt 5.15.2.
         if: steps.cache-qt.outputs.cache-hit == 'true'
