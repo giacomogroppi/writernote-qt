@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.PREFIX_LIB }}/qt-cache
-          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/qtbase_5_15_2/*') }}
+          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/qt5/*') }}
 
       - name: Use cached Qt 5.15.2.
         if: steps.cache-qt.outputs.cache-hit == 'true'
@@ -233,6 +233,12 @@ jobs:
           #  DEFINES+="CI_MAC"
           
           echo Qt_PREFIX ls: $(ls $QT_PREFIX)
+          cd $QT_PREFIX
+          echo $(ls)
+          cd qtmultimedia*
+          echo $(ls)
+
+          exit
 
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
