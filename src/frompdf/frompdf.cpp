@@ -54,12 +54,7 @@ QStringList frompdf::get_name_pdf(){
 
 frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
 {
-    /*zip_file_t *fp;
-    uchar __read;
-    size_t size;*/
-
     QByteArray arr;
-
     QStringList __name;
     uint i;
 
@@ -73,22 +68,6 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
         const QString &ref_str = __name.at(i);
 
         xmlstruct::readFile(fileZip, arr, clear, ref_str, false);
-
-        /*size = xmlstruct::sizeFile(fileZip, ref_str);
-        fp = zip_fopen(fileZip,
-                       ref_str.toUtf8().constData()
-                       , 0);
-
-
-        if(!fp){
-            return load_res::not_valid_pdf;
-        }
-
-        while(size) {
-            zip_fread(fp, &__read, 1);
-            arr.append(__read);
-            --size;
-        }*/
 
         load_from_row(arr, false);
     }

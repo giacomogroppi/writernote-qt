@@ -218,7 +218,20 @@ jobs:
           make -j$(nproc)
           echo $(ls)
       
-      - name: Lib
+      - name: Lib static
         run: |
+          LIB_PATH = "Contents/Resources/lib/"
+
+          mkdir $LIB_PATH
+          
+          cp /usr/local/opt/libzip/lib/libzip.5.dylib writernote.app/$LIB_PATH/
+          cp /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib writernote.app/$LIB_PATH/
+
+          install_name_tool -change /usr/local/opt/libzip/lib/libzip.5.dylib @rpath/$LIB_PATH/ writernote.app
+          install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @rpath/$LIB_PATH/ writernote.app
+
+      - name: Lib runtime
+        run: |
+          exit
           python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
           
