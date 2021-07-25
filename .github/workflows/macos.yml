@@ -220,7 +220,7 @@ jobs:
       
       - name: Lib static
         run: |
-          export LIB_PATH="Contents/Resources/lib/"
+          export $LIB_PATH="Contents/Resources/lib/"
 
           mkdir $LIB_PATH
           
