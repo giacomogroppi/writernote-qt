@@ -76,7 +76,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.PREFIX_LIB }}/qt-cache
-          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-${{ hashFiles('**/README.git') }}
+          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-qtmulmedia-1
 
       - name: Use cached Qt 5.15.2.
         if: steps.cache-qt.outputs.cache-hit == 'true'
@@ -120,23 +120,6 @@ jobs:
            -nomake tests \
            -skip qtwebengine
           
-          # ./configure \
-          #-prefix "$QT_PREFIX" \
-          #-debug \
-          #-force-debug-info \
-          #-opensource \
-          #-confirm-license \
-          #-static \
-          #-opengl desktop \
-          #-no-openssl \
-          #-securetransport \
-          #-nomake examples \
-          #-nomake tests \
-          #-platform macx-clang \
-          #-I "$PREFIX/include" \
-          #LIBJPEG_LIBS="$PREFIX/lib/libjpeg.a" \
-          #ZLIB_LIBS="$PREFIX/lib/libz.a"
-
           make -j$(nproc)
           sudo make install
           make clean
@@ -227,20 +210,6 @@ jobs:
 
       - name: Build
         run: |
-        
-          echo File: $(ls /usr/local/opt/poppler-qt5/lib)
-        
-          #qmake writernote.pro \
-          #  DEFINES+="CI_MAC"
-          
-          echo Qt_PREFIX ls: $(ls $QT_PREFIX)
-          cd $QT_PREFIX
-          echo $(ls)
-          cd qtmultimedia*
-          echo $(ls)
-
-          exit
-
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
