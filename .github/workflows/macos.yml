@@ -235,8 +235,8 @@ jobs:
           cp /usr/local/opt/libzip/lib/libzip.5.dylib build/writernote.app/$LIB_PATH/
           cp /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib build/writernote.app/$LIB_PATH/
 
-          install_name_tool -change /usr/local/opt/libzip/lib/libzip.5.dylib @rpath/$LIB_PATH/ $PROJECT_PATH/build/writernote.app/$POS_BIN
-          install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @rpath/$LIB_PATH/ $PROJECT_PATH/build/writernote.app/$POS_BIN
+          install_name_tool -change /usr/local/opt/libzip/lib/libzip.5.dylib @rpath/$LIB_PATH/libzip.5.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
+          install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @rpath/$LIB_PATH/libpoppler-qt5.1.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
 
       - name: Lib runtime
         run: |
@@ -254,8 +254,10 @@ jobs:
           export BUILD=$POS/build
 
           # make zip to upload
-          zip -r "$POS/macos_setup_$VERSION.zip" $BUILD/writernote.app
+          cd $BUILD
+          zip -r "$POS/macos_writernote_setup_$VERSION.zip" writernote.app
+          cd ..
 
-          mv $BUILD/writernote.app "$BUILD/macos_setup_$VERSION.app"
-          gh release upload "$VERSION" "$POS/macos_setup_$VERSION.zip" --clobber
+          mv $BUILD/writernote.app "$BUILD/macos_writernote_setup_$VERSION.app"
+          gh release upload "$VERSION" "$POS/macos_writernote_setup_$VERSION.zip" --clobber
         
