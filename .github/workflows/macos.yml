@@ -39,7 +39,6 @@ jobs:
       CACHE_KEY: cache-key-ci
       ZLIB_VER: "v1.2.11"
       RESET_CACHE: 'false'
-      version: $(git describe --tags --abbrev=0)
     
     steps:
       - name: "Clone"
@@ -192,36 +191,37 @@ jobs:
           make -j$(nproc)
           make install
 
-      #- name: Build poppler-qt5
-      #  run: |
-      #    export PATH="$HOME/.new_local/bin:$PATH"
-      #    cd $PREFIX_LIB
-
-      #    curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
-      #    tar xf poppler.tar.xz
-      #    echo 1: $(ls)
-      #    rm poppler.tar.xz
-      #    echo 2: $(ls)
-      #    mv poppler-* poppler
-      #    echo 3: $(ls)
-      #    cd poppler || exit
-      #    
-      #    mkdir build
-      #    
-      #    cd build || exit
-      #    pwd
-      #    cmake -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_LIB/poppler ..
-      #    make -j$(nproc)
-      #    make install
+      - name: Build poppler-qt5
+        if: false
+        run: |
+          export PATH="$HOME/.new_local/bin:$PATH"
+          cd $PREFIX_LIB
+          curl https://poppler.freedesktop.org/poppler-0.72.0.tar.xz -o poppler.tar.xz
+          tar xf poppler.tar.xz
+          echo 1: $(ls)
+          rm poppler.tar.xz
+          echo 2: $(ls)
+          mv poppler-* poppler
+          echo 3: $(ls)
+          cd poppler || exit
+          
+          mkdir build
+          
+          cd build || exit
+          pwd
+          cmake -DCMAKE_INSTALL_PREFIX:PATH=$PREFIX_LIB/poppler ..
+          make -j$(nproc)
+          make install
 
       - name: Build
         run: |
+          export VERSION=$(git describe --tags --abbrev=0)
           
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
             INCLUDEPATH+="$PREFIX_LIB/libzip/lib" \
-            DEFINES+="VERSION_SNAPCRAFT=$version"
+            DEFINES+="VERSION_SNAPCRAFT=$VERSION"
 
           make -j$(nproc)
           echo $(ls)
@@ -248,12 +248,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         run: |
+          export VERSION=$(git describe --tags --abbrev=0)
+          
           export POS=$PWD
           export BUILD=$POS/build
 
           # make zip to upload
-          zip -r "$POS/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" $BUILD/writernote.app
+          zip -r "$POS/macos_setup_$VERSION.zip" $BUILD/writernote.app
 
-          mv $BUILD/macos_setup_.app "$BUILD/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").app"
-          gh release upload "$($env:GITHUB_REF -replace "refs/tags/")" "$BUILD/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").app" "$POS/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" --clobber
+          mv $BUILD/macos_setup_.app "$BUILD/macos_setup_$VERSION.app"
+          gh release upload "$VERSION" "$BUILD/macos_setup_$VERSION.app" "$POS/macos_setup_$VERSION.zip" --clobber
         
