@@ -20,6 +20,10 @@ on:
       - '.github/**'
       - '!.github/workflows/macos.yml'
 
+  release:
+    types:
+      - published
+
   workflow_dispatch:
 
 jobs:
@@ -213,17 +217,17 @@ jobs:
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
-            INCLUDEPATH+="$PREFIX_LIB/libzip/lib"
+            INCLUDEPATH+="$PREFIX_LIB/libzip/lib" \
+            DEFINES+="VERSION_SNAPCRAFT=$($env:GITHUB_REF -replace "refs/tags/").zip"
 
           make -j$(nproc)
           echo $(ls)
       
       - name: Lib static
         run: |
-          cd build
           export LIB_PATH=Contents/Resources/lib/
 
-          mkdir writernote.app/$LIB_PATH
+          mkdir build/writernote.app/$LIB_PATH
           
           cp /usr/local/opt/libzip/lib/libzip.5.dylib writernote.app/$LIB_PATH/
           cp /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib writernote.app/$LIB_PATH/
@@ -236,3 +240,17 @@ jobs:
           exit
           python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
           
+      - name: Package and upload
+        if: github.event_name == 'release'
+        env:
+          GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
+        run: |
+          export POS=$PWD
+          export BUILD=$POS/build
+
+          # make zip to upload
+          zip -r $BUILD/writernote.app "$POS/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").zip"
+
+          mv $BUILD/macos_setup_.app "macos_setup_$($env:GITHUB_REF -replace "refs/tags/").app"
+          gh release upload "$($env:GITHUB_REF -replace "refs/tags/")" "$BUILD/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").app" "$POS/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" --clobber
+        
