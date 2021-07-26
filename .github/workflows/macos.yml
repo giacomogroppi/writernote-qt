@@ -214,11 +214,13 @@ jobs:
 
       - name: Build
         run: |
+          export version=$(git describe --tags --abbrev=0)
+          
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
             LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
             INCLUDEPATH+="$PREFIX_LIB/libzip/lib" \
-            DEFINES+="VERSION_SNAPCRAFT=$($env:GITHUB_REF -replace "refs/tags/").zip"
+            DEFINES+="VERSION_SNAPCRAFT=$version"
 
           make -j$(nproc)
           echo $(ls)
