@@ -1,4 +1,4 @@
-name: Windows package
+name: Windows
 
 on:
   push:
