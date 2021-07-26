@@ -39,6 +39,8 @@ jobs:
       CACHE_KEY: cache-key-ci
       ZLIB_VER: "v1.2.11"
       RESET_CACHE: 'false'
+      version: $(git describe --tags --abbrev=0)
+    
     steps:
       - name: "Clone"
         uses: actions/checkout@v2
@@ -214,7 +216,6 @@ jobs:
 
       - name: Build
         run: |
-          export version=$(git describe --tags --abbrev=0)
           
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
