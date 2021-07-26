@@ -1,4 +1,4 @@
-name: macos build
+name: MacOS
 
 on:
   push:
@@ -256,6 +256,6 @@ jobs:
           # make zip to upload
           zip -r "$POS/macos_setup_$VERSION.zip" $BUILD/writernote.app
 
-          mv $BUILD/macos_setup_.app "$BUILD/macos_setup_$VERSION.app"
+          mv $BUILD/writernote.app "$BUILD/macos_setup_$VERSION.app"
           gh release upload "$VERSION" "$BUILD/macos_setup_$VERSION.app" "$POS/macos_setup_$VERSION.zip" --clobber
         
