@@ -249,7 +249,7 @@ jobs:
           export BUILD=$POS/build
 
           # make zip to upload
-          zip -r $BUILD/writernote.app "$POS/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").zip"
+          zip -r "$POS/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" $BUILD/writernote.app
 
           mv $BUILD/macos_setup_.app "$BUILD/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").app"
           gh release upload "$($env:GITHUB_REF -replace "refs/tags/")" "$BUILD/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").app" "$POS/macos_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" --clobber
