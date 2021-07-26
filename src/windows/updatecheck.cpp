@@ -65,7 +65,7 @@ void updatecheck::managerFinished(){
 
     testo = doc[0][POSNAME].toString();
 
-    if(VERSION_STRING != testo && testo != "TESTING"){
+    if(VERSION_STRING != testo && testo.toUpper() != "TESTING"){
         auto res = priority(doc, testo, VERSION_STRING);
 
         if(res == n_priority::critical){
