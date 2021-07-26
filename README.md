@@ -1,4 +1,6 @@
 # Writernote
+[![Snap](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml) [![Linux build](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux.yml)
+[![Windows package](https://github.com/giacomogroppi/writernote-qt/actions/workflows/windows.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/windows.yml) [![macos build](https://github.com/giacomogroppi/writernote-qt/actions/workflows/macos.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/macos.yml)
 ## Linux
 <table>
 <tr>
