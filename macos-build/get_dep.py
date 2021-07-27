@@ -99,7 +99,7 @@ def main(list: list[str]) -> list[str]:
         list_new_dep = analise(list_new_dep)
 
         list_new_dep = main(list_new_dep)
-        for dep_sec in list:
+        for dep_sec in list_new_dep:
             if dep_sec not in list:
                 list.append(dep_sec)
 
