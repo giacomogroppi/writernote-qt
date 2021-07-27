@@ -130,9 +130,6 @@ int xmlstruct::loadfile(const char *nameFile){
 #ifdef ALL_VERSION
         if(load_file_2(currenttitle, f, filezip) != OK)
             goto free_;
-#else
-        goto ERROR_VERSION;
-#endif
     }else if(tmp_ver == 3){
         if(load_file_3(currenttitle, f, filezip) != OK)
             goto free_;
@@ -141,6 +138,9 @@ int xmlstruct::loadfile(const char *nameFile){
         if(load_file_4(currenttitle, f, filezip) != OK)
             goto free_;
     }
+#else
+        goto ERROR_VERSION;
+#endif
     else if(tmp_ver == 5){
         if(load_file_5(currenttitle, f, filezip) != OK)
             goto free_;

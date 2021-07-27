@@ -53,6 +53,7 @@ jobs:
             ninja opus sdl pkg-config cmake
           brew install libzip qt@5
           brew install poppler-qt5
+          brew install nss
 
           sudo mdutil -a -i off
 
@@ -240,7 +241,6 @@ jobs:
 
       - name: Lib runtime
         run: |
-          exit
           python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
           
       - name: Package and upload
