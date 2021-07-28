@@ -431,7 +431,7 @@ android{
         message(MacOS build)
         INCLUDEPATH += /usr/local/opt/libzip/include
         LIBS += /usr/local/opt/libzip/lib/libzip.5.dylib
-        INCLUDEPATH += $$PWD/3rdparty/libzip/lib
+        INCLUDEPATH += $$PWD/3rdparty/libzip/distrib/include
         LIBS += $$PWD/3rdparty/libzip/libzip.a
         
     }else{
