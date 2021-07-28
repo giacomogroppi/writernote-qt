@@ -15,17 +15,6 @@ def move_single(path_lib: str) -> bool:
     return os.system(COMMAND_TOOL + COMMAND_SUFF + COMMAND_BEFORE + path_lib)
 
 
-def save_dep(pos_binary: str, dest_list:str) -> list[str]:
-    os.system(COMMAND + pos_binary + " >> " + dest_list)
-    list = []
-
-    with open(dest_list, "r") as file:
-        lines = file.readlines()
-        for line in lines:
-            list.append(line)
-
-    return list
-
 def remove_double(list_dep: list[str]) -> list[str]:
     newlist = []
     for i in list_dep:
@@ -34,7 +23,15 @@ def remove_double(list_dep: list[str]) -> list[str]:
 
     return newlist
 
-def analise(list: list[str]) -> list[str]:
+def get_dep(pos_binary: str, dest_list: str) -> list[str]:
+    os.system(COMMAND + pos_binary + " >> " + dest_list)
+    list = []
+
+    with open(dest_list, "r") as file:
+        lines = file.readlines()
+        for line in lines:
+            list.append(line)
+
     list_sec = []
     i = 0
     for line in list:
@@ -95,8 +92,7 @@ pos_dest = pos_bin[:ind] + "lib_list.txt"
 
 def main(list: list[str]) -> list[str]:
     for dep in list:
-        list_new_dep = save_dep(dep, pos_dest)
-        list_new_dep = analise(list_new_dep)
+        list_new_dep = get_dep(dep, pos_dest)
 
         list_new_dep = main(list_new_dep)
         for dep_sec in list_new_dep:
@@ -109,8 +105,7 @@ if __name__ == "__main__":
     
     pos_exe = pos_bin + "/" + SUFF
 
-    list = save_dep(pos_exe, pos_dest)
-    list = analise(list)
+    list = get_dep(pos_exe, pos_dest)
 
     lista = main(list)
 

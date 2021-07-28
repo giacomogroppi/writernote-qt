@@ -512,7 +512,9 @@ macx:contains(DEFINES, PDFSUPPORT){
     message(Poppler include dir $${POPPLER_INCLUDE_FIN})
 
     #INCLUDEPATH += /usr/local/opt/poppler/include/poppler/qt5
-    LIBS += /usr/local/Cellar/poppler-qt5/21.07.0/lib/libpoppler-qt5.dylib
+
+    #LIBS += /usr/local/Cellar/poppler-qt5/21.07.0/lib/libpoppler-qt5.dylib
+    LIBS += /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.dylib
 }
 
 else:unix:contains(DEFINES, PDFSUPPORT){
