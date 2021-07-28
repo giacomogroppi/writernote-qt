@@ -36,7 +36,6 @@ def get_dep(pos_binary: str, dest_list: str) -> list[str]:
     i = 0
     for line in list:
         list_sec.append(line)
-        list_sec[i] = list_sec[i][1:]
 
         try:
             ind = list_sec[i].index('(')
@@ -44,12 +43,7 @@ def get_dep(pos_binary: str, dest_list: str) -> list[str]:
         except ValueError:
             pass
 
-        try: 
-            ind = list_sec[i].index(' ')
-            list_sec[i] = list_sec[i][:ind]
-        except ValueError:
-            pass
-
+        list_sec[i].replace(" ", "")
         list_sec[i].replace("\n", "")
         list_sec[i].replace("\t", "")
 
