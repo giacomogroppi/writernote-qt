@@ -109,6 +109,8 @@ if __name__ == "__main__":
 
     lista = main(list)
 
+    print("List for all dep: ")
+    print_dep(lista)
 
     if not copy_dep(pos_bin, list):
         print("Error copy")
