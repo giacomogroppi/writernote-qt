@@ -498,7 +498,7 @@ macx:contains(DEFINES, PDFSUPPORT){
     #POPPLER_INCLUDE = /usr/local/opt/poppler/include/poppler/qt5
     #POPPLER_INCLUDE_CI = /usr/local/opt/poppler-qt5/include/poppler/qt5
     #POPPLER_INCLUDE_FIN = ""
-#
+
     #if(exists($${POPPLER_INCLUDE}/poppler-qt5.h)){
     #    POPPLER_INCLUDE_FIN = $${POPPLER_INCLUDE}
     #}else{
@@ -510,10 +510,11 @@ macx:contains(DEFINES, PDFSUPPORT){
     #}
     #INCLUDEPATH += $${POPPLER_INCLUDE_FIN}
     #message(Poppler include dir $${POPPLER_INCLUDE_FIN})
-#
+
     ##INCLUDEPATH += /usr/local/opt/poppler/include/poppler/qt5
 
     #LIBS += /usr/local/Cellar/poppler-qt5/21.07.0/lib/libpoppler-qt5.dylib
+    message(Add lib for poppler)
     INCLUDEPATH = /usr/local/opt/poppler-qt5/include/poppler/qt5
     LIBS += /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.dylib
 }
