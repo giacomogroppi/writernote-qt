@@ -228,6 +228,7 @@ jobs:
           echo $(ls)
       
       - name: Lib static
+        if: false
         run: |
           export LIB_PATH=Contents/Resources/lib/
           export POS_BIN=Contents/MacOS/writernote
