@@ -220,8 +220,8 @@ jobs:
           
           $QT_PREFIX/bin/qmake writernote.pro \
             DEFINES+="CI_MAC" \
-            LIB+="$PREFIX_LIB/libzip/lib/libzip.a" \
-            INCLUDEPATH+="$PREFIX_LIB/libzip/lib" \
+            LIB+="$PREFIX_LIB/libzip/distrib/lib/libzip.a" \
+            INCLUDEPATH+="$PREFIX_LIB/libzip/distrib/include" \
             DEFINES+="VERSION_SNAPCRAFT=$VERSION"
 
           make -j$(nproc)
