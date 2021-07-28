@@ -91,12 +91,16 @@ pos_dest = pos_bin[:ind] + "lib_list.txt"
 
 
 def main(list: list[str]) -> list[str]:
+    print("call to main")
     for dep in list:
+        print("dep: ", dep)
         list_new_dep = get_dep(dep, pos_dest)
 
         list_new_dep = main(list_new_dep)
+        print("list_new_dep ", list_new_dep)
         for dep_sec in list_new_dep:
             if dep_sec not in list:
+                print("add ", dep_sec)
                 list.append(dep_sec)
 
     return remove_double(list)
