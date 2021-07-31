@@ -33,10 +33,6 @@ def get_dep(pos_binary: str, dest_list: str) -> list[str]:
         for line in lines:
             list.append(line)
 
-    print("list from get dep First:", list)
-    list.pop(0)
-    list.pop(1)
-    print("list from get dep second:", list)
     list_sec = []
     i = 0
     for line in list:
@@ -59,6 +55,12 @@ def get_dep(pos_binary: str, dest_list: str) -> list[str]:
             i -= 1
 
         i += 1
+
+    list = list_sec
+
+    print("list from get dep First:", list)
+    list.pop(0)
+    print("list from get dep second:", list)
 
     return remove_double(list_sec)
 
