@@ -35,6 +35,7 @@ def get_dep(pos_binary: str, dest_list: str) -> list[str]:
 
     print("list from get dep First:", list)
     list.pop(0)
+    list.pop(1)
     print("list from get dep second:", list)
     list_sec = []
     i = 0
