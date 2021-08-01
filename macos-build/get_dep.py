@@ -98,7 +98,7 @@ def main(list: list[str]) -> list[str]:
     print("call to main")
     for dep in list:
         print("dep: ", dep)
-        list_new_dep = get_dep(dep, pos_dest)
+        list_new_dep = get_dep(dep, pos_dest, False)
 
         list_new_dep = main(list_new_dep)
         print("list_new_dep ", list_new_dep)
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     
     pos_exe = pos_bin + "/" + SUFF
 
-    list = get_dep(pos_exe, pos_dest)
+    list = get_dep(pos_exe, pos_dest, True)
 
     lista = main(list)
 
