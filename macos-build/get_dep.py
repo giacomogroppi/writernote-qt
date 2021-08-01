@@ -23,7 +23,7 @@ def remove_double(list_dep: list[str]) -> list[str]:
 
     return newlist
 
-def get_dep(pos_binary: str, dest_list: str) -> list[str]:
+def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
     os.system("rm " + dest_list)
     os.system(COMMAND + pos_binary + " >> " + dest_list)
     list = []
@@ -33,7 +33,10 @@ def get_dep(pos_binary: str, dest_list: str) -> list[str]:
         for line in lines:
             list.append(line)
 
-    list = list[2:]
+    if binary:
+        list = list[1:]
+    else:
+        list = list[2:]
 
     list_sec = []
     i = 0
