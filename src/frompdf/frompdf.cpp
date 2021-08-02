@@ -5,6 +5,7 @@
 #include "../utils/permission/permission.h"
 #include "../dataread/xmlstruct.h"
 #include "../dataread/load_from_file.h"
+#include "../dataread/readlistarray.h"
 
 frompdf::frompdf(Document *data)
 {
@@ -54,7 +55,25 @@ QStringList frompdf::get_name_pdf(){
 
 frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
 {
-    QByteArray arr;
+    QList<QByteArray> arr;
+    QStringList __name;
+    uint i;
+
+    __name = get_name_pdf();
+
+    if(readListArray::read(__name, fileZip, arr, clear) != OK){
+        return frompdf::load_res::not_valid_pdf;
+    }
+
+    for (i=0; i<m_data->count_pdf; ++i){
+        auto res = load_from_row(arr.at(i), false);
+        if(res != frompdf::load_res::ok)
+            return res;
+    }
+
+    return frompdf::load_res::ok;
+
+    /*QByteArray arr;
     QStringList __name;
     uint i;
 
@@ -72,7 +91,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
         load_from_row(arr, false);
     }
 
-    return frompdf::load_res::ok;
+    return frompdf::load_res::ok;*/
 }
 
 frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear)

@@ -1,5 +1,4 @@
 #include "readlistarray.h"
-#include "../utils/common_error_definition.h"
 
 uchar readListArray::read(const QStringList &list_name,
                           zip_t *zip_file,

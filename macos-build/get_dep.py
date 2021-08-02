@@ -100,10 +100,11 @@ def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
 
     for dep_exe in list_file:
         for real_dep in list_dep:
-            command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + dep_exe + " " + pos_lib + get_name_lib(real_dep)
-            print("Command: ", command)
+            if dep_exe in get_name_lib(real_dep):
+                command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + dep_exe + " " + pos_lib + get_name_lib(real_dep)
+                print("Command: ", command)
 
-            os.system(command)
+                os.system(command)
     
     return True
 
