@@ -97,14 +97,13 @@ def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
     
     print("List of all dep in lib: ")
     print_dep(list_file)
+    
+    for real_dep in list_dep:
+        for dep_exe in list_file:
+            command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + get_name_lib(real_dep) + " " + pos_lib + dep_exe
+            print("Command: ", command)
 
-    for dep_exe in list_file:
-        for real_dep in list_dep:
-            if dep_exe in get_name_lib(real_dep):
-                command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + dep_exe + " " + pos_lib + get_name_lib(real_dep)
-                print("Command: ", command)
-
-                os.system(command)
+            os.system(command)
     
     return True
 
