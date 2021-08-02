@@ -92,14 +92,15 @@ def print_dep(list: list[str]) -> None:
         print(line)
 
 def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
-    list_file = file_in_folder(pos_bin + "/Contents/Resources/lib")
+    pos_lib = pos_bin + "/" + SUFF_LIB
+    list_file = file_in_folder(pos_lib)
     
     print("List of all dep in lib: ")
     print_dep(list_file)
 
     for dep_exe in list_file:
         for real_dep in list_dep:
-            command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + dep_exe
+            command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + dep_exe + " " + pos_lib + get_name_lib(real_dep)
             print("Command: ", command)
 
             os.system(command)
