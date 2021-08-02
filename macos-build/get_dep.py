@@ -65,7 +65,7 @@ def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
 
     list = list_sec
 
-    print("list from get dep:", list)
+    #print("list from get dep:", list)
 
     return remove_double(list_sec)
 
@@ -89,14 +89,18 @@ def copy_dep(app_path: str, list_dep: list[str]) -> bool:
 
 def print_dep(list: list[str]) -> None:
     for line in list:
-        print(list)
+        print(line)
 
 def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
     list_file = file_in_folder(pos_bin + "/Contents/Resources/lib")
     
+    print("List of all dep in lib: ")
+    print_dep(list_file)
+
     for dep_exe in list_file:
         for real_dep in list_dep:
-            os.system(COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + dep_exe)
+            command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + dep_exe
+            os.system(command)
     
     return True
 
