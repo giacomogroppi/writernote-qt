@@ -1,6 +1,8 @@
 import sys
 import os
 from typing import List
+from os import listdir
+from os.path import isfile, join
 
 COMMAND = "otool -L "
 SUFF_LIB = "Contents/Resources/lib/"
@@ -11,9 +13,9 @@ COMMAND_TOOL = "install_name_tool "
 COMMAND_SUFF = " -change "
 COMMAND_BEFORE = " @executable_path"
 
-def move_single(path_lib: str, real_path: str) -> bool:
-    os.system(COMMAND_TOOL + COMMAND_SUFF + " " + real_path + COMMAND_BEFORE + path_lib)
-    return False
+def file_in_folder(path: str) -> list[str]:
+    return [f for f in listdir(path) if isfile(join(path, f))]
+
 
 def remove_double(list_dep: list[str]) -> list[str]:
     newlist = []
@@ -80,7 +82,7 @@ def copy_dep(app_path: str, list_dep: list[str]) -> bool:
     for dep in list_dep:
         name = get_name_lib(dep)
         ref = app_path + "/" + SUFF_LIB + name
-        if os.system(COPY + dep + " " + ref ) != 0 or move_single(ref, dep):
+        if os.system(COPY + dep + " " + ref ) != 0:
             return False
 
     return True
@@ -89,22 +91,31 @@ def print_dep(list: list[str]) -> None:
     for line in list:
         print(list)
 
+def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
+    list_file = file_in_folder(pos_bin + "/Contents/Resources/lib")
+    
+    for dep_exe in list_file:
+        for real_dep in list_dep:
+            os.system(COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + dep_exe)
+    
+    return True
+
 pos_bin = sys.argv[1]
 ind = pos_bin.index("writernote.app")
 pos_dest = pos_bin[:ind] + "lib_list.txt"
 
 
 def main(list: list[str]) -> list[str]:
-    print("call to main")
+    #print("call to main")
     for dep in list:
-        print("dep: ", dep)
+        #print("dep: ", dep)
         list_new_dep = get_dep(dep, pos_dest, False)
 
         list_new_dep = main(list_new_dep)
-        print("list_new_dep ", list_new_dep)
+        #print("list_new_dep ", list_new_dep)
         for dep_sec in list_new_dep:
             if dep_sec not in list:
-                print("add ", dep_sec)
+                #print("add ", dep_sec)
                 list.append(dep_sec)
 
     return remove_double(list)
@@ -123,6 +134,8 @@ if __name__ == "__main__":
     if not copy_dep(pos_bin, list):
         print("Error copy")
         exit(1)
-    else:
-        print("Ok")
-        exit(0)
+
+    if not change_dep(pos_bin, list):
+        print("Error change dep")
+        exit(1)
+

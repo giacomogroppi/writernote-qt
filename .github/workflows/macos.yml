@@ -242,8 +242,14 @@ jobs:
 
       - name: Lib runtime
         run: |
-          python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
+          export LIB_PATH=Contents/Resources/lib/
+          export POS_BIN=Contents/MacOS/writernote
           
+          python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
+
+          install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @executable_path/../Resources/lib/libpoppler-qt5.1.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
+          otool -L $(pwd)/build/writernote.app/Contents/MacOS/writernote
+
       - name: Package and upload
         if: github.event_name == 'release'
         env:
