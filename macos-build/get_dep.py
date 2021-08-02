@@ -106,7 +106,7 @@ def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
 
             os.system(command)
     
-    return change_id(pos_bin, list_dep)
+    return change_id(pos_bin)
 
 def change_id(pos_bin: str) -> bool:
     pos_lib = pos_bin + "/" + SUFF_LIB
