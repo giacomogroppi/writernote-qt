@@ -67,6 +67,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    void setSizeButton(int size);
     void resFileTmpInTmpFolder();
     void contrUi();
     void updateTouch();

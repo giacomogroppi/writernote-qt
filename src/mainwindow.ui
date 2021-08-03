@@ -578,11 +578,6 @@
     <string>Stop Record</string>
    </property>
   </action>
-  <action name="actionImport_Video_2">
-   <property name="text">
-    <string>Import Video</string>
-   </property>
-  </action>
   <action name="actionUndu">
    <property name="icon">
     <iconset resource="../writernote.qrc">

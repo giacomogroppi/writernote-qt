@@ -104,7 +104,7 @@
     sudo snap connect writernote:audio-record
     ```
 
-  - Windows:
+  - Windows and MacOS:
     [here](https://github.com/giacomogroppi/writernote-qt/releases) you can find all the version for windows.
 
 ## Compiling
