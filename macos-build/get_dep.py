@@ -124,7 +124,7 @@ def change_id(pos_bin: str) -> bool:
     list_file = file_in_folder(pos_lib)
 
     for dep_exe in list_file:
-        command = COMMAND_TOOL + COMMAND_ID + " " + dep_exe + COMMAND_ID_SUFF + "/" + dep_exe + " " + pos_lib + dep_exe
+        command = COMMAND_TOOL + COMMAND_ID + " " + COMMAND_ID_SUFF + "/" + " " + pos_lib + dep_exe
         print("Second command: ", command)
 
         os.system(command)
