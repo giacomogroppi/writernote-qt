@@ -12,8 +12,8 @@ COPY = "cp "
 COMMAND_TOOL = "install_name_tool "
 COMMAND_SUFF = " -change "
 COMMAND_ID = " -id "
-COMMAND_BEFORE = " @rpath"
-COMMAND_ID_SUFF = " @executable_path/../lib"
+COMMAND_BEFORE = " @executable_path/../Resources/lib/"
+COMMAND_ID_SUFF = " @executable_path/../Resources"
 
 def file_in_folder(path: str) -> list[str]:
     return [f for f in listdir(path) if isfile(join(path, f))]
