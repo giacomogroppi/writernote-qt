@@ -12,7 +12,7 @@ COPY = "cp "
 COMMAND_TOOL = "install_name_tool "
 COMMAND_SUFF = " -change "
 COMMAND_ID = " -id "
-COMMAND_BEFORE = " @executable_path/../Resources/lib/"
+COMMAND_BEFORE = " @executable_path/../Resources/lib"
 COMMAND_ID_SUFF = " @executable_path/../Resources"
 
 def file_in_folder(path: str) -> list[str]:
