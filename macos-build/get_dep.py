@@ -58,7 +58,7 @@ def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
         list_sec[i].replace("\t", "")
 
         try:
-            ind = list_sec[i].index('/usr/local/opt')
+            ind = list_sec[i].index('/usr/local/')
         except:
             del list_sec[i]
             i -= 1
