@@ -13,7 +13,7 @@ COMMAND_TOOL = "install_name_tool "
 COMMAND_SUFF = " -change "
 COMMAND_ID = " -id "
 COMMAND_BEFORE = " @rpath"
-COMMAND_ID_SUFF = " @executable_path/../lib/"
+COMMAND_ID_SUFF = " @executable_path/../lib"
 
 def file_in_folder(path: str) -> list[str]:
     return [f for f in listdir(path) if isfile(join(path, f))]
@@ -89,6 +89,17 @@ def copy_dep(app_path: str, list_dep: list[str]) -> bool:
 
     return True
 
+def get_pos(path: str) -> str:
+    list = path.split('/')
+    lista = list[1:]
+    
+    string_ret = ""
+    for a in list[:-1]:
+        string_ret += '/' + a
+
+    return string_ret
+
+
 def print_dep(list: list[str]) -> None:
     for line in list:
         print(line)
@@ -102,8 +113,8 @@ def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
     
     for real_dep in list_dep:
         for dep_exe in list_file:
-            command = COMMAND_TOOL + COMMAND_ID + " " + COMMAND_ID_SUFF + get_name_lib(real_dep) + " " + pos_lib + dep_exe
-
+            command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + get_name_lib(real_dep) + " " + pos_lib + dep_exe
+            print("First command: ", command)
             os.system(command)
     
     return change_id(pos_bin)
@@ -114,7 +125,7 @@ def change_id(pos_bin: str) -> bool:
 
     for dep_exe in list_file:
         command = COMMAND_TOOL + COMMAND_ID + " " + dep_exe + COMMAND_ID_SUFF + "/" + dep_exe + " " + pos_lib + dep_exe
-        print("Command: ", command)
+        print("Second command: ", command)
 
         os.system(command)
 
