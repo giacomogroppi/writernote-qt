@@ -245,7 +245,7 @@ jobs:
           export LIB_PATH=Contents/Resources/lib/
           export POS_BIN=Contents/MacOS/writernote
           
-          python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
+          sudo python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
 
           install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @executable_path/../Resources/lib/libpoppler-qt5.1.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
 
