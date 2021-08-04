@@ -36,6 +36,7 @@ jobs:
       RESET_CACHE: 'false'
       SDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/sdk"
       NDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/ndk"
+      JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
       QT_PREFIX: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/qt_build"
 
     steps:
@@ -52,12 +53,9 @@ jobs:
       
       - name: Install openJDK
         run: |
-          echo pwd $(pwd)
-          echo home $HOME
-
           curl -L https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_linux-aarch64_bin.tar.gz -o openjdk-linux.tar.gz
           tar -xf openjdk-linux.tar.gz
-          mv jdk* jdk
+          mv jdk* $JDK_PATH
 
       - name: Download and set SDK 
         run: |
@@ -89,7 +87,7 @@ jobs:
       - name: Build Qt 5.15.2
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
-          export JAVA_HOME=$HOME/jdk
+          export JAVA_HOME=$JDK_PATH
           export PATH=$JAVA_HOME/bin:$PATH
 
           mkdir build_qt
