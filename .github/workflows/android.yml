@@ -67,7 +67,7 @@ jobs:
 
       - name: Download and set NDK
         run: |
-          curl -L https://dl.google.com/android/repository/android-ndk-r20-linux-x86_64.zip -o ndk.zip
+          curl -L https://dl.google.com/android/repository/android-ndk-r22b-linux-x86_64.zip -o ndk.zip
           unzip ndk.zip
           mv android-ndk-r20 $NDK_PATH
 
@@ -103,6 +103,11 @@ jobs:
           cd qtbase
           #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
           cd ..
+
+          echo $QT_PREFIX 
+          echo $NDK_PATH
+          echo $SDK_PATH
+        
           ./configure \ 
             -xplatform android-clang \
             -prefix $QT_PREFIX \
