@@ -27,6 +27,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      QT: "5_15_2"
+      QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
+      PREFIX: "/usr/local/android"
+      PREFIX_LIB: "/home/runner/work/writernote-qt/writernote-qt/3rdparty"
+      PROJECT_PATH: "/home/runner/work/writernote-qt/writernote-qt/"
+      CACHE_KEY: cache-key-ci
+      ZLIB_VER: "v1.2.11"
+      RESET_CACHE: 'false'
 
     steps:
       - name: "Clone"
@@ -35,10 +44,74 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Run a one-line script
+      - name: Set up dep
         run: |
           sudo apt install snapd ninja-build
       
+      - name: Install openJDK
+        echo pwd $(pwd)
+        echo Home $(HOME)
+        curl -L https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_linux-aarch64_bin.tar.gz -o openjdk-linux.tar.gz
+        tar -xf openjdk-linux.tar.gz
+        mv jdk* jdk
+
+      - name: Qt 5.15.2 cache.
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.PREFIX_LIB }}/qt-cache
+          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-qtmulmedia-1
+
+      - name: Use cached Qt 5.15.2.
+        if: steps.cache-qt.outputs.cache-hit == 'true'
+        run: |
+          cd $PREFIX_LIB
+          mv qt-cache Qt-5.15.2
+          sudo mkdir -p $QT_PREFIX
+          sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
+
+      - name: Build Qt 5.15.2
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: |
+          export JAVA_HOME=$HOME/jdk
+          export PATH=$JAVA_HOME/bin:$PATH
+
+          mkdir build_qt
+          git clone git://code.qt.io/qt/qt5.git qt_$QT
+          cd qt_$QT
+          perl init-repository --module-subset=qtbase,qtimageformats,qtmultimedia
+          git checkout v5.15.2
+          git submodule update qtbase
+          git submodule update qtimageformats
+          git submodule update qtmultimedia
+          cd qtbase
+          #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
+          cd ..
+          ./configure \
+           -prefix "$QT_PREFIX" \
+           -static \
+           -static-runtime \
+           -release \
+           -opensource \
+           -confirm-license \
+           -qt-zlib \
+           -qt-pcre \
+           -qt-libpng \
+           -qt-libjpeg \
+           -qt-freetype \
+           -opengl desktop \
+           -sql-sqlite \
+           -make libs \
+           -nomake tools \
+           -nomake examples \
+           -nomake tests \
+           -skip qtwebengine
+          
+          make -j$(nproc)
+          sudo make install
+          make clean
+          
+          cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
 
       - name: Compile
         run: |
