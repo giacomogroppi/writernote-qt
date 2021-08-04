@@ -69,7 +69,7 @@ jobs:
         run: |
           curl -L https://dl.google.com/android/repository/android-ndk-r22b-linux-x86_64.zip -o ndk.zip
           unzip ndk.zip
-          mv android-ndk-r20 $NDK_PATH
+          mv android-ndk-r22 $NDK_PATH
 
       - name: Qt 5.15.2 cache.
         id: cache-qt
