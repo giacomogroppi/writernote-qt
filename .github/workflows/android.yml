@@ -29,13 +29,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       QT: "5_15_2"
-      QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
-      PREFIX: "/usr/local/android"
       PREFIX_LIB: "/home/runner/work/writernote-qt/writernote-qt/3rdparty"
       PROJECT_PATH: "/home/runner/work/writernote-qt/writernote-qt/"
       CACHE_KEY: cache-key-ci
       ZLIB_VER: "v1.2.11"
       RESET_CACHE: 'false'
+      SDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/sdk"
+      NDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/ndk"
+      QT_PREFIX: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/qt_build"
 
     steps:
       - name: "Clone"
@@ -47,6 +48,7 @@ jobs:
       - name: Set up dep
         run: |
           sudo apt install snapd ninja-build
+          sudo snap install cmake --classic
       
       - name: Install openJDK
         run: |
@@ -56,6 +58,18 @@ jobs:
           curl -L https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_linux-aarch64_bin.tar.gz -o openjdk-linux.tar.gz
           tar -xf openjdk-linux.tar.gz
           mv jdk* jdk
+
+      - name: Download and set SDK 
+        run: |
+          curl -L https://dl.google.com/android/repository/platform-tools_r31.0.3-linux.zip -o sdk.zip
+          unzip sdk.zip
+          mv platform-tools $SDK_PATH
+
+      - name: Download and set NDK
+        run: |
+          curl -L https://dl.google.com/android/repository/android-ndk-r20-linux-x86_64.zip -o ndk.zip
+          unzip ndk.zip
+          mv android-ndk-r20 $NDK_PATH
 
       - name: Qt 5.15.2 cache.
         id: cache-qt
@@ -89,25 +103,34 @@ jobs:
           cd qtbase
           #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
           cd ..
-          ./configure \
-           -prefix "$QT_PREFIX" \
-           -static \
-           -static-runtime \
-           -release \
-           -opensource \
-           -confirm-license \
-           -qt-zlib \
-           -qt-pcre \
-           -qt-libpng \
-           -qt-libjpeg \
-           -qt-freetype \
-           -opengl desktop \
-           -sql-sqlite \
-           -make libs \
-           -nomake tools \
-           -nomake examples \
-           -nomake tests \
-           -skip qtwebengine
+          ./configure \ 
+            -xplatform android-clang \
+            -prefix $QT_PREFIX \
+            -disable-rpath \
+            -nomake tests \
+            -nomake examples \
+            -android-ndk $NDK_PATH \
+            -android-sdk $SDK_PATH \
+            -no-warnings-are-errors
+          #./configure \
+          # -prefix "$QT_PREFIX" \
+          # -static \
+          # -static-runtime \
+          # -release \
+          # -opensource \
+          # -confirm-license \
+          # -qt-zlib \
+          # -qt-pcre \
+          # -qt-libpng \
+          # -qt-libjpeg \
+          # -qt-freetype \
+          # -opengl desktop \
+          # -sql-sqlite \
+          # -make libs \
+          # -nomake tools \
+          # -nomake examples \
+          # -nomake tests \
+          # -skip qtwebengine
           
           make -j$(nproc)
           sudo make install
@@ -117,5 +140,5 @@ jobs:
 
       - name: Compile
         run: |
-          qmake
-          make -j $(nproc)
+          $QT_PREFIX/bin/qmake .
+          make -j$(nproc)
