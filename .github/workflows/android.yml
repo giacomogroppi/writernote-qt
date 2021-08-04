@@ -111,7 +111,11 @@ jobs:
             -nomake examples \
             -android-ndk $NDK_PATH \
             -android-sdk $SDK_PATH \
-            -no-warnings-are-errors
+            -no-warnings-are-errors \
+            -static \
+            -opensource \
+            -confirm-license
+
           #./configure \
           # -prefix "$QT_PREFIX" \
           # -static \
