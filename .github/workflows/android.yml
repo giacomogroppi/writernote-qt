@@ -1,0 +1,46 @@
+name: Android
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'updater/**'
+      - 'windows/**'
+      - 'macos-build/**'
+      - '!.github/workflows/android.yml'
+
+  pull_request:
+    branches: [ master ]
+
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'macos-build/**'
+      - '!.github/workflows/android.yml'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Clone"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Run a one-line script
+        run: |
+          sudo apt install snapd ninja-build
+      
+
+      - name: Compile
+        run: |
+          qmake
+          make -j $(nproc)
