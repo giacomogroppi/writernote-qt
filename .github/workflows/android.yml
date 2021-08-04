@@ -132,8 +132,13 @@ jobs:
           # -nomake tests \
           # -skip qtwebengine
           
+          echo run make
           make -j$(nproc)
+          
+          echo run sudo make install
           sudo make install
+
+          echo run make clean
           make clean
           
           cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
