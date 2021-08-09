@@ -2,7 +2,7 @@
 
 copy::copy(QObject *parent) : QObject(parent)
 {
-    this->m_data = new datastruct(nullptr);
+    this->m_data = new datastruct(nullptr, nullptr);
 }
 
 copy::~copy()

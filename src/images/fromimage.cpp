@@ -1,4 +1,4 @@
-#include "save_images.h"
+#include "fromimage.h"
 #include "stdlib.h"
 #include <QBuffer>
 #include <QByteArray>
@@ -6,6 +6,7 @@
 #include <QList>
 
 #include "../datawrite/source_read_ext.h"
+#include "../currenttitle/document.h"
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
@@ -108,4 +109,15 @@ int load_image(QList<struct immagine_S> *data,
 
     free_:
     return ERROR;
+}
+
+QStringList fromimage::get_name_img()
+{
+    uint i;
+    QStringList list;
+    for(i=0; i<doc->count_img; ++i){
+        list.append(fromimage::getName(doc->nome_copybook, i));
+    }
+
+    return list;
 }

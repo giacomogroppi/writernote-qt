@@ -5,7 +5,8 @@
 #include <QList>
 
 #include "../touch/datastruct/datastruct.h"
-#include "../images/image_struct.h"
+
+class fromimage;
 class frompdf;
 #define CURRENT_VERSION_CURRENT_TITLE 5
 #define MIN_VERSION_CURRENT_TITLE 2
@@ -21,6 +22,7 @@ public:
     bool isEmpty() const;
 
     frompdf *m_pdf;
+    fromimage *m_img;
 
     QString nome_copybook;
 
@@ -40,8 +42,7 @@ public:
     void reset();
 
     uint count_pdf = 0;
-
-    QList<struct immagine_S> immagini;
+    uint count_img = 0;
 
     enum n_audio_record{
         not_record,

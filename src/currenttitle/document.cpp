@@ -4,10 +4,12 @@
 
 #include "../touch/datastruct/datastruct.h"
 #include "../frompdf/frompdf.h"
+#include "../images/fromimage.h"
 
 Document::Document(){
+    this->m_img = new fromimage(this);
     this->m_pdf = new frompdf(this);
-    this->datatouch = new datastruct(m_pdf);
+    this->datatouch = new datastruct(m_pdf, m_img);
 }
 
 Document::~Document()
@@ -20,7 +22,6 @@ void Document::copy(const Document *src,
                               Document *dest)
 {
     dest->audio_position_path = src->audio_position_path;
-    dest->immagini = src->immagini;
     dest->m_touch = src->m_touch;
 
     dest->datatouch->operator=(*src->datatouch);
@@ -78,4 +79,8 @@ void Document::reset(){
 
     this->datatouch->reset();
     this->count_pdf = 0;
+    this->count_img = 0;
+
+    this->m_pdf->reset();
+    this->m_img->reset();
 }

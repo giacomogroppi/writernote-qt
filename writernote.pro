@@ -71,6 +71,7 @@ SOURCES += \
     src/dataread/readlistarray.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
+    src/images/fromimage.cpp \
     src/last_open/option/button_main.cpp \
     src/last_open/option/option_last_open_ui.cpp \
     src/lastedit/copy_lastedit.cpp \
@@ -166,7 +167,6 @@ SOURCES += \
     src/utils/default_option/default_option_ui.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
-    src/images/save_images.cpp \
     src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
     src/main.cpp \
@@ -258,6 +258,7 @@ HEADERS += \
     src/dataread/load_from_file.h \
     src/dataread/readlistarray.h \
     src/filelost.h \
+    src/images/fromimage.h \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
@@ -310,8 +311,6 @@ HEADERS += \
     src/utils/default_location/audio_default_location.h \
     src/utils/default_option/default_option_ui.h \
     src/utils/dialog_critic/dialog_critic.h \
-    src/images/image_struct.h \
-    src/images/save_images.h \
     src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \

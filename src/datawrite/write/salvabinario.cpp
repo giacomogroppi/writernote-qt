@@ -5,7 +5,7 @@
 #include <QString>
 #include "zip.h"
 #include "../source_read_ext.h"
-#include "../../images/save_images.h"
+#include "../../images/fromimage.h"
 
 static int freezip(zip_source_t *files){
     zip_source_free(files);

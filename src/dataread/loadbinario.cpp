@@ -1,7 +1,7 @@
 #include "xmlstruct.h"
 
 #include "../currenttitle/document.h"
-#include "../images/save_images.h"
+#include "../images/fromimage.h"
 #include <zip.h>
 
 #include "../datawrite/source_read_ext.h"

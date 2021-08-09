@@ -1,7 +1,7 @@
 #include "../savefile.h"
 #include "../source_read_ext.h"
 #include "../../utils/common_error_definition.h"
-#include "../../images/save_images.h"
+#include "../../images/fromimage.h"
 
 #include "../../currenttitle/document.h"
 #include "../../indice_class.h"

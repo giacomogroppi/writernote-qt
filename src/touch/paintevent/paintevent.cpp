@@ -7,6 +7,7 @@
 #ifdef PDFSUPPORT
 #include "../../frompdf/frompdf.h"
 #endif
+#include "../../images/fromimage.h"
 
 static bool thereispositive(datastruct *, int, int);
 
@@ -73,6 +74,9 @@ void TabletCanvas::load(QPainter &painter,
     this->data->m_pdf->draw(painter, data->datatouch->biggerx(),
                            m_pixmap.width(), m_pixmap.height());
 #endif
+
+    this->data->m_img->draw(painter, data->datatouch->biggerx(),
+                              m_pixmap.width(), m_pixmap.height());
 
     is_play = parent->player->state() == QMediaPlayer::PlayingState;
     m_pixmap.fill(Qt::white);

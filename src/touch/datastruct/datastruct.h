@@ -6,8 +6,6 @@
 #include <QDebug>
 #include <QImage>
 
-#include "../../images/image_struct.h"
-
 /*
     IDVERTICALE -> linee verticali
     IDORIZZONALE -> linee orizzonali
@@ -15,6 +13,7 @@
 
 #define NCOLOR 4
 class frompdf;
+class fromimage;
 
 struct colore_s{
     uchar colore[NCOLOR];
@@ -67,6 +66,7 @@ private:
     void scala_posizionefoglio(double scala);
 
     frompdf *m_pdf;
+    fromimage *m_img;
 
 public:
 
@@ -188,7 +188,7 @@ public:
     uint posIdOrizzonal();
 
 
-    datastruct(frompdf *m_pdf);
+    datastruct(frompdf *m_pdf, fromimage *m_img);
     //~datastruct();
 
     void moveNextPoint(uint *pos,
