@@ -2,6 +2,7 @@
 #include <QMimeData>
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../utils/common_def.h"
+#include "../images/fromimage.h"
 #define WRITERNOTE 1
 #define IMAGE 2
 
@@ -41,7 +42,7 @@ void MainWindow::dropEvent(QDropEvent *event){
         point = new PointSettable;
         point->point = event->posF();
 
-        addImage(m_currenttitle, m_path.toUtf8().constData(), point);
+        this->m_currenttitle->m_img->addImage(m_currenttitle, m_path.toUtf8().constData(), point);
 
         delete point;
     }

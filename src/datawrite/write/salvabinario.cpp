@@ -6,6 +6,7 @@
 #include "zip.h"
 #include "../source_read_ext.h"
 #include "../../images/fromimage.h"
+#include "../../currenttitle/document.h"
 
 static int freezip(zip_source_t *files){
     zip_source_free(files);

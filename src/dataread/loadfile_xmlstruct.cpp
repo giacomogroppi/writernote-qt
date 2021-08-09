@@ -95,7 +95,6 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 
 #define CLOSE_ZIP(x, y) zip_fclose(x);zip_close(y);
 #define LOAD_IMAGE(x,y) if(load_image(x, y) != OK)goto free_;
-#define LOAD_IMAGE_RETURN(x, y) if(load_image(x, y) != OK) return ERROR;
 
 #define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
 #define LOAD_BINARIO_RETURN(x, function) if(function(x) == ERROR) return ERROR;
@@ -124,7 +123,7 @@ int xmlstruct::loadfile(const char *nameFile){
         return false;
     }
 
-    SOURCE_READ_GOTO(f, &tmp_ver, sizeof(int));
+    SOURCE_READ_GOTO(f, &tmp_ver, sizeof(tmp_ver));
 
     if(tmp_ver <= 2){
 #ifdef ALL_VERSION
@@ -213,8 +212,6 @@ int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz)
 
-    LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
-
     return OK;
 }
 
@@ -239,8 +236,6 @@ int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip
     }
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
-
-    LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
 
     return OK;
 
@@ -276,8 +271,6 @@ int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
-    LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
-
     if(controllo_parita)
         return ERROR_CONTROLL;
 
@@ -293,6 +286,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
     int tmp;
     uchar controllo_parita = 0;
     frompdf::load_res res;
+    fromimage::load_res res_img;
 
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
@@ -305,6 +299,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
 
     SOURCE_READ_RETURN(f, &doc->m_touch, sizeof(doc->m_touch));
     SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
+    SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
 
     res = doc->m_pdf->load(filezip, true);
     if(res != frompdf::ok)
@@ -324,7 +319,10 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
-    LOAD_IMAGE_RETURN(&currenttitle->immagini, f);
+    res_img = doc->m_img->load(filezip, true);
+    if(res_img != fromimage::load_res::ok){
+        return ERROR;
+    }
 
     if(controllo_parita)
         return ERROR_CONTROLL;

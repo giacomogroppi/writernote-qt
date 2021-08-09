@@ -55,9 +55,6 @@ class QAudioBuffer;
 
 QT_END_NAMESPACE
 
-void addImage(Document *m_currenttitle,
-                     const char *__pos,
-                     struct PointSettable * point);
 class xmlstruct;
 class ui_scroll;
 class setting_restore_ui;
