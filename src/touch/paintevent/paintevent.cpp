@@ -1,7 +1,6 @@
 #include "../tabletcanvas.h"
 #include <QPainter>
 #include "../../mainwindow.h"
-#include "draw_image.h"
 #include "../../utils/color/setcolor.h"
 
 #ifdef PDFSUPPORT
@@ -12,6 +11,9 @@
 static bool thereispositive(datastruct *, int, int);
 
 void TabletCanvas::paintEvent(QPaintEvent *event){
+    QPainter painter;
+    QRect pixmapPortion;
+
     if(!isWriting)
         isloading = true;
     isWriting = false;
@@ -19,10 +21,9 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     if (m_pixmap.isNull())
         initPixmap(false);
 
-    QPainter painter;
     painter.begin(this);
 
-    QRect pixmapPortion = QRect(event->rect().topLeft() * devicePixelRatio(),
+    pixmapPortion = QRect(event->rect().topLeft() * devicePixelRatio(),
                                     event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
@@ -153,8 +154,6 @@ void TabletCanvas::load(QPainter &painter,
         _lastid = __point->idtratto;
 
     }
-
-    draw_image(data, painter);
 
     this->m_pen.setColor(current_color);
 

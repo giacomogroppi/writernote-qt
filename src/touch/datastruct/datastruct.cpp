@@ -97,9 +97,10 @@ unsigned int datastruct::posIdOrizzonal()
     return 0;
 }
 
-datastruct::datastruct(frompdf *m_pdf)
+datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
 {
     this->m_pdf = m_pdf;
+    this->m_img = m_img;
     __last_translation.setX(0);
     __last_translation.setY(0);
 }

@@ -11,6 +11,15 @@
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
+fromimage::load_res fromimage::load(zip_t *file, const bool clear){
+
+    return fromimage::load_res::ok;
+}
+
+uchar fromimage::save(zip_t *file) const{
+    return OK;
+}
+
 int save_image(QList<struct immagine_S> *data,
                zip_source_t *file_zip)
 {

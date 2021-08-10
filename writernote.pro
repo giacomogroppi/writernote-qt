@@ -199,7 +199,6 @@ SOURCES += \
     src/touch/event/resize_event.cpp \
     src/touch/initpixmap.cpp \
     src/touch/paintevent/disegnofoglio.cpp \
-    src/touch/paintevent/draw_image.cpp \
     src/touch/paintevent/paintevent.cpp \
     src/touch/pen/load_settings_pen_ui.cpp \
     src/touch/pen/pen_ui.cpp \
@@ -317,7 +316,6 @@ HEADERS += \
     src/sheet/dialog_sheet.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
-    src/touch/paintevent/draw_image.h \
     src/touch/pen/pen_ui.h \
     src/touch/rubber/rubber_ui.h \
     src/touch/square/square.h \
