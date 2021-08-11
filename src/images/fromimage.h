@@ -31,6 +31,7 @@ private:
     immagine_S *insert_image(const char *__pos,
                       struct PointSettable * point);
 
+
 public:
     enum load_res: uchar{
         ok,
@@ -62,6 +63,10 @@ public:
     void reset(){
         m_img.clear();
     }
+
+private:
+    static load_res load_single(const QByteArray &arr, struct immagine_S &img);
+    static load_res load_multiple(const QList<QByteArray> &arr, QList<struct immagine_S> &);
 };
 
 #endif // FROMIMAGE_H

@@ -2,22 +2,47 @@
 #include "stdlib.h"
 #include <QBuffer>
 #include <QByteArray>
-
 #include <QList>
 #include <QFileDialog>
 
+#include "../dataread/readlistarray.h"
 #include "../datawrite/source_read_ext.h"
 #include "../currenttitle/document.h"
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
 fromimage::load_res fromimage::load(zip_t *file, const bool clear){
+    QList<QByteArray> arr;
+    QStringList name_list;
+    uchar res;
 
-    return fromimage::load_res::ok;
+    if(clear){
+        this->m_img.clear();
+    }
+
+    name_list = this->get_name_img();
+
+    res = readListArray::read(name_list, file, arr, clear);
+
+    if(res != OK){
+        return fromimage::load_res::error;
+    }
+
+    return fromimage::load_multiple(arr, this->m_img);
 }
 
 uchar fromimage::save(zip_t *file) const{
     return OK;
+}
+
+fromimage::load_res fromimage::load_single(const QByteArray &arr, immagine_S &img)
+{
+
+}
+
+fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr, QList<immagine_S> &img)
+{
+
 }
 
 int save_image(QList<struct immagine_S> *data,
