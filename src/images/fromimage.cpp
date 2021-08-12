@@ -37,12 +37,41 @@ uchar fromimage::save(zip_t *file) const{
 
 fromimage::load_res fromimage::load_single(const QByteArray &arr, immagine_S &img)
 {
+    const size_t size_meta = sizeof(double)*4;
+    QByteArray arr_mid;
+    double d[4];
+    uint i;
+    char val;
 
+    for(i=0; i<size_meta; ++i){
+        val = arr.at(i);
+        memcpy(&d[i],  &val, sizeof(char));
+    }
+    img.i = QPointF(d[0], d[1]);
+    img.f = QPointF(d[2], d[3]);
+
+    arr_mid = arr.mid(size_meta);
+
+    img.immagini.loadFromData(arr_mid);
+
+    return load_res::ok;
 }
 
-fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr, QList<immagine_S> &img)
+fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr, QList<immagine_S> &img_l)
 {
+    uint i, len;
+    fromimage::load_res res;
+    struct immagine_S img;
 
+    len = arr.length();
+    for(i=0; i<len; ++i){
+        res = fromimage::load_single(arr.at(i), img);
+        if(res != fromimage::load_res::ok)
+            return res;
+        img_l.append(img);
+    }
+
+    return fromimage::load_res::ok;
 }
 
 int save_image(QList<struct immagine_S> *data,

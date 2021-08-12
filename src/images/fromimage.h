@@ -13,8 +13,8 @@
 class Document;
 struct immagine_S{
     QImage immagini;
-    QPoint i;
-    QPoint f;
+    QPointF i;
+    QPointF f;
 };
 
 class fromimage{
