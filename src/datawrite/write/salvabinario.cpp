@@ -63,7 +63,7 @@ int savefile::salvabinario(zip_t *filezip){
 
 int savefile::saveArrayIntoFile(const QString &from,
                                 const QString &name_coby,
-                                const QString path,
+                                const QString &path,
                                 zip_t *filezip,
                                 const QString &suffix)
 {

@@ -26,8 +26,11 @@ private:
     int savefile_check_2(zip_source_t *file, Document *currenttitle, zip_t *filezip);
 
 public:
-    static int saveArrayIntoFile(const QString &from, const QString& name_coby,
-                                 const QString path, zip_t *filezip, const QString &suffix);
+    /*
+     * if filezip is NULL it will open the file
+    */
+    static int saveArrayIntoFile(const QString &from, const QString &name_coby,
+                                 const QString &path, zip_t *filezip, const QString &suffix);
 
     void setting_data(Document *m_current){currenttitle = m_current;}
 

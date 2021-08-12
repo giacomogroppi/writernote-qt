@@ -64,6 +64,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    uchar addPdf(const QString &path);
     void setSizeButton(int size);
     void resFileTmpInTmpFolder();
     void contrUi();

@@ -111,9 +111,6 @@ int savefile::savefile_check_file(){
         return ERROR;
 }
 
-/*
- * return ERROR or OK
-*/
 static int save_string(zip_source_t *file, const char *stringa){
     int size = strlen(stringa);
     SOURCE_WRITE_RETURN(file, &size, sizeof(size));

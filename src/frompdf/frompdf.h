@@ -14,6 +14,8 @@ class Document;
 #define IMG_PDF_HEIGHT 292
 #define IMG_PDF_WIDTH 210
 
+#define SUFFIX_PDF "_pdf_"
+
 class frompdf
 {
 private:
@@ -27,8 +29,12 @@ private:
         double x;
     }m_translation;
 
+    static inline QString getNameNoCopy(const uint i){
+        return SUFFIX_PDF + QString::number(uint(i));
+    }
+
     static inline QString getName(const QString &p, const uint i){
-        return p + "_pdf_" + QString::number(uint(i));
+        return p + frompdf::getNameNoCopy(i);
     }
 
 public:    
@@ -64,13 +70,13 @@ public:
 
     /* return true if all load correctly */
     bool load(const QStringList &path, QMap<load_res, uchar> &index);
-
     load_res load(const QString &, const bool clear);
-
     /* it load from a zip_t file all the pdf for the current copybook */
     load_res load(zip_t *, const bool clear);
-
     load_res load_from_row(const QByteArray &, const bool clear);
+
+    load_res save(zip_t *filezip, const QStringList &path, const QString &path_writernote_file);
+    load_res save(zip_t *filezip, const QString &path, const QString &path_writernote_file);
 
     inline void draw(QPainter &painter,
                      const uint pwidth,

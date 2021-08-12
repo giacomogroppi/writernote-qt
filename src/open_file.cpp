@@ -98,7 +98,9 @@ void MainWindow::openFile(const char *pos){
         __res = m_currenttitle->m_pdf->load(fileName, false);
 
         if(__res == frompdf::load_res::ok){
-
+            auto ress = this->addPdf(fileName);
+            if(ress != OK)
+                return;
         }
     }
     else {

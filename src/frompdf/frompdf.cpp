@@ -6,6 +6,7 @@
 #include "../dataread/xmlstruct.h"
 #include "../dataread/load_from_file.h"
 #include "../dataread/readlistarray.h"
+#include "../datawrite/savefile.h"
 
 frompdf::frompdf(Document *data)
 {
@@ -73,25 +74,6 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
 
     return frompdf::load_res::ok;
 
-    /*QByteArray arr;
-    QStringList __name;
-    uint i;
-
-    if(clear)
-        arr.clear();
-
-    __name = get_name_pdf();
-
-
-    for(i=0; i<m_data->count_pdf; ++i){
-        const QString &ref_str = __name.at(i);
-
-        xmlstruct::readFile(fileZip, arr, clear, ref_str, false);
-
-        load_from_row(arr, false);
-    }
-
-    return frompdf::load_res::ok;*/
 }
 
 frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear)
@@ -124,5 +106,35 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     }
 
 
+    return load_res::ok;
+}
+
+frompdf::load_res frompdf::save(zip_t *filezip,
+                                const QStringList &path,
+                                const QString &path_writernote_file)
+{
+    frompdf::load_res res;
+    uint i, len;
+
+    this->m_data->count_pdf = path.length();
+    len = this->m_data->count_pdf;
+
+    for(i=0; i<len; ++i){
+        res = this->save(filezip,
+                         path.at(i),
+                         path_writernote_file);
+    }
+}
+
+frompdf::load_res frompdf::save(zip_t *filezip,
+                                const QString &path,
+                                const QString &path_writernote_file)
+{
+    if(savefile::saveArrayIntoFile(path,
+                                   this->m_data->nome_copybook,
+                                   path_writernote_file,
+                                   filezip,
+                                   frompdf::getNameNoCopy(m_data->count_pdf)) != OK)
+        return load_res::not_valid_pdf;
     return load_res::ok;
 }
