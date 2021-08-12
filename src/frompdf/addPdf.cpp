@@ -12,6 +12,7 @@ uchar MainWindow::addPdf(const QString &path){
     frompdf::load_res res;
 
     if(m_path == ""){
+        dialog_critic("Before use pdf it's necessery to save the current file");
         return ERROR;
     }
 
