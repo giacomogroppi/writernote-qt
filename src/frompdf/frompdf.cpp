@@ -123,7 +123,10 @@ frompdf::load_res frompdf::save(zip_t *filezip,
         res = this->save(filezip,
                          path.at(i),
                          path_writernote_file);
+        if(res != frompdf::load_res::ok)
+            return res;
     }
+    return frompdf::load_res::ok;
 }
 
 frompdf::load_res frompdf::save(zip_t *filezip,

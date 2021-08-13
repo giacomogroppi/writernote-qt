@@ -11,6 +11,11 @@ uchar MainWindow::addPdf(const QString &path){
     */
     frompdf::load_res res;
 
+    if(!this->m_currenttitle->m_touch){
+        dialog_critic("Pdf annotation and reading is not support in keyboard mode");
+        return ERROR;
+    }
+
     if(m_path == ""){
         dialog_critic("Before use pdf it's necessery to save the current file");
         return ERROR;
