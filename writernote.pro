@@ -57,6 +57,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/addExt.cpp \
     src/audiorecord/start_recording.cpp \
     src/changeCopybook.cpp \
     src/controllUi.cpp \
@@ -71,7 +72,6 @@ SOURCES += \
     src/dataread/readlistarray.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
-    src/frompdf/addPdf.cpp \
     src/images/fromimage.cpp \
     src/last_open/option/button_main.cpp \
     src/last_open/option/option_last_open_ui.cpp \

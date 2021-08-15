@@ -828,7 +828,7 @@
      <normaloff>:/image/images/image.png</normaloff>:/image/images/image.png</iconset>
    </property>
    <property name="text">
-    <string>insertImage</string>
+    <string>insert Image</string>
    </property>
   </action>
   <action name="actionnew_sheet">

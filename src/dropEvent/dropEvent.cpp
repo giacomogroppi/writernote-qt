@@ -14,7 +14,7 @@ void MainWindow::dropEvent(QDropEvent *event){
     uchar find = 0;
     uint i;
     QImage image;
-    PointSettable * point;
+    PointSettable point;
 
     QList<QUrl> urlList;
 
@@ -39,12 +39,10 @@ void MainWindow::dropEvent(QDropEvent *event){
             openFile(__path_to_load.toUtf8().constData());
         }
     }else if(find == IMAGE){
-        point = new PointSettable;
-        point->point = event->posF();
+        point.point = event->posF();
 
-        this->m_currenttitle->m_img->addImage(m_currenttitle, m_path.toUtf8().constData(), point);
+        this->m_currenttitle->m_img->addImage(__path_to_load, &point, this->m_path);
 
-        delete point;
     }
     else{
         user_message("The file you are trying to open does not have a compatible extention");

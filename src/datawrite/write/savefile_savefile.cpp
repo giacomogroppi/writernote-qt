@@ -76,9 +76,6 @@ int savefile::savefile_check_file(){
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
 
-
-    currenttitle->m_img->save(filezip);
-
     check = 0;
 
     /*

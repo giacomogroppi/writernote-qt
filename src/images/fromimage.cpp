@@ -8,8 +8,40 @@
 #include "../dataread/readlistarray.h"
 #include "../datawrite/source_read_ext.h"
 #include "../currenttitle/document.h"
+#include "../datawrite/savefile.h"
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
+
+fromimage::load_res fromimage::save(zip_t *file,
+                                    const QStringList &path,
+                                    const QString &path_writernote_file) const{
+    fromimage::load_res res;
+    uint i, len;
+
+    doc->count_img = path.length();
+    len = doc->count_img;
+
+    for(i=0; i<len; ++i){
+        res = this->save(file,
+                         path.at(i),
+                         path_writernote_file);
+        if(res != fromimage::load_res::ok)
+            return res;
+    }
+    return fromimage::load_res::ok;
+}
+
+fromimage::load_res fromimage::save(zip_t *file,
+                                    const QString &path,
+                                    const QString &path_writernote_file) const{
+    if(savefile::saveArrayIntoFile(path,
+                                   doc->nome_copybook,
+                                   path_writernote_file,
+                                   file,
+                                   fromimage::getNameNoCopy(doc->count_img)) != OK)
+        return load_res::error;
+    return load_res::ok;
+}
 
 fromimage::load_res fromimage::load(zip_t *file, const bool clear){
     QList<QByteArray> arr;
@@ -29,10 +61,6 @@ fromimage::load_res fromimage::load(zip_t *file, const bool clear){
     }
 
     return fromimage::load_multiple(arr, this->m_img);
-}
-
-uchar fromimage::save(zip_t *file) const{
-    return OK;
 }
 
 fromimage::load_res fromimage::load_single(const QByteArray &arr, immagine_S &img)
@@ -186,45 +214,50 @@ QStringList fromimage::get_name_img()
     return list;
 }
 
-immagine_S * fromimage::insert_image(const char *__pos, PointSettable *point)
+uchar fromimage::insert_image(QString &pos,
+                              const PointSettable *point,
+                              struct immagine_S &img)
 {
-    QString posizionefoto;
-
-    if(!__pos){
-        posizionefoto = QFileDialog::getOpenFileName(nullptr,
+    if(pos == ""){
+        pos = QFileDialog::getOpenFileName(nullptr,
                                                      "Open images",
                                                      "JPEG (*.jpg, *.jpeg);;PNG (*.png);;All Files (*)");
 
-        if(posizionefoto == "")
-            return NULL;
+        if(pos == "")
+            return ERROR;
     }
 
     struct immagine_S *immagine_temp = new struct immagine_S;
-    QImage immagine(posizionefoto);
+    QImage immagine(pos);
     immagine_temp->immagini = immagine;
 
     if(point){
         immagine_temp->i = point->point.toPoint();
-        immagine_temp->f = point->point.toPoint() + QPoint(delta_point, delta_point);
+        immagine_temp->f = point->point.toPoint() + QPoint(DELTA_POINT, DELTA_POINT);
     }
     else{
         immagine_temp->i = QPoint(0, 0);
-        immagine_temp->f = QPoint(delta_point, delta_point);
+        immagine_temp->f = QPoint(DELTA_POINT, DELTA_POINT);
     }
-    return immagine_temp;
+
+    return OK;
 }
 
 /*
  * add image from position
 */
-void fromimage::addImage(Document *m_currenttitle, const char *__pos, PointSettable *point)
+void fromimage::addImage(QString &pos,
+                         const PointSettable *point,
+                         const QString &path_writernote)
 {
-    struct immagine_S *immagine = insert_image(__pos, point);
-    if(!immagine)
+    struct immagine_S img;
+
+    if(insert_image(pos, point, img) != OK)
         return;
 
+    this->doc->count_img ++;
 
-    this->m_img.append(*immagine);
+    this->m_img.append(img);
 
-    delete immagine;
+    this->save(nullptr, pos, path_writernote);
 }

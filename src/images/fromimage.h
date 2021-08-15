@@ -9,7 +9,7 @@
 #include <QImage>
 #include <QPainter>
 
-#define delta_point 200
+#define DELTA_POINT 200
 #define SUFFIX_IMG "_img_"
 
 class Document;
@@ -34,8 +34,9 @@ private:
         return p + fromimage::getNameNoCopy(i);
     }
 
-    immagine_S *insert_image(const char *__pos,
-                      struct PointSettable * point);
+    uchar insert_image(QString &__pos,
+                      const PointSettable *point,
+                      struct immagine_S &img);
 
 
 public:
@@ -44,16 +45,18 @@ public:
         error
     };
 
-    void addImage(Document *m_currenttitle,
-                         const char *__pos,
-                         struct PointSettable * point);
+    void addImage(QString &__pos,
+                  const PointSettable *point,
+                  const QString &writernote_file);
 
     inline fromimage(Document *doc){
         this->doc = doc;
     }
 
     fromimage::load_res load(zip_t *file, const bool clear);
-    uchar save(zip_t *file) const;
+
+    fromimage::load_res save(zip_t *file, const QStringList &path, const QString &path_writernote_file) const;
+    fromimage::load_res save(zip_t *file, const QString &path, const QString &path_writernote_file) const;
 
     inline void move(const QPointF &translation){
 

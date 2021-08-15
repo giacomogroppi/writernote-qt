@@ -1,6 +1,7 @@
-#include "../mainwindow.h"
-#include "frompdf.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "mainwindow.h"
+#include "frompdf/frompdf.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "images/fromimage.h"
 
 uchar MainWindow::addPdf(const QString &path){
     /*
