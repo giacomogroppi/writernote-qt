@@ -5,7 +5,7 @@
 #include "../images/fromimage.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 
-static bool Message(const QString m_path){
+static bool Message(const QString &m_path){
     if(m_path == ""){
         dialog_critic("It's not possible to add image without saving this file");
         return false;
