@@ -319,7 +319,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
-    res_img = doc->m_img->load(filezip, true);
+    res_img = doc->m_img->load(filezip, f);
     if(res_img != fromimage::load_res::ok){
         return ERROR;
     }

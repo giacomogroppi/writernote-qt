@@ -42,7 +42,8 @@ private:
 public:
     enum load_res: uchar{
         ok,
-        error
+        error,
+        err_meta_data
     };
 
     void addImage(QString &__pos,
@@ -53,7 +54,7 @@ public:
         this->doc = doc;
     }
 
-    fromimage::load_res load(zip_t *file, const bool clear);
+    fromimage::load_res load(zip_t *filezip, zip_file_t *file);
 
     fromimage::load_res save(zip_t *file, const QStringList &path, const QString &path_writernote_file) const;
     fromimage::load_res save(zip_t *file, const QString &path, const QString &path_writernote_file) const;
@@ -111,8 +112,11 @@ public:
     }
 
 private:
-    static load_res load_single(const QByteArray &arr, struct immagine_S &img);
-    static load_res load_multiple(const QList<QByteArray> &arr, QList<struct immagine_S> &);
+    load_res load_meta(zip_file_t *file);
+
+    load_res load_single(const QByteArray &arr,
+                         struct immagine_S &img);
+    load_res load_multiple(const QList<QByteArray> &arr);
 };
 
 #endif // FROMIMAGE_H
