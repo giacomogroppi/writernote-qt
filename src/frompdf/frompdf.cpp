@@ -150,7 +150,7 @@ frompdf::load_res frompdf::save_metadata(zip_source_t *file)
 {
     uint i;
     for(i=0; i<m_data->count_pdf; ++i){
-        if(zip_source_write(file, &m_translation, sizeof(struct s_translation)) == -1){
+        if(zip_source_write(file, &m_translation, sizeof(this->m_translation)) == -1){
             return load_res::no_metadata;
         }
     }
@@ -161,7 +161,7 @@ frompdf::load_res frompdf::load_metadata(zip_file_t *file)
 {
     uint i;
     for(i=0; i<m_data->count_pdf; ++i){
-        if(zip_fread(file, &m_translation, sizeof(s_translation)) == -1)
+        if(zip_fread(file, &m_translation, sizeof(this->m_translation)) == -1)
             return load_res::no_metadata;
     }
     return load_res::ok;
