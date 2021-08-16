@@ -24,7 +24,7 @@ private:
     Poppler::Document *doc = nullptr;
     QList<QImage> m_image;
 
-    struct translation{
+    struct s_translation{
         double y;
         double x;
     }m_translation;
@@ -59,7 +59,8 @@ public:
     enum load_res: uchar{
         ok,
         not_valid_pdf,
-        not_valid_page
+        not_valid_page,
+        no_metadata
     };
 
     inline void reset(){
@@ -72,11 +73,13 @@ public:
     bool load(const QStringList &path, QMap<load_res, uchar> &index);
     load_res load(const QString &, const bool clear);
     /* it load from a zip_t file all the pdf for the current copybook */
-    load_res load(zip_t *, const bool clear);
+    load_res load(zip_t *filezip, zip_file_t *file);
     load_res load_from_row(const QByteArray &, const bool clear);
 
     load_res save(zip_t *filezip, const QStringList &path, const QString &path_writernote_file);
     load_res save(zip_t *filezip, const QString &path, const QString &path_writernote_file);
+
+    load_res save_metadata(zip_source_t *file);
 
     inline void draw(QPainter &painter,
                      const uint pwidth,
@@ -106,7 +109,8 @@ public:
             painter.drawImage(rect_area, m_image.at(i));
         }
     }
-
+private:
+    load_res load_metadata(zip_file_t *file);
 };
 
 #endif // FROMPDF_H

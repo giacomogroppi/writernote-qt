@@ -43,6 +43,11 @@ fromimage::load_res fromimage::save(zip_t *file,
     return load_res::ok;
 }
 
+fromimage::load_res fromimage::save_metadata(zip_source_t *file)
+{
+
+}
+
 fromimage::load_res fromimage::load_meta(zip_file_t *file)
 {
     uint i;
@@ -63,7 +68,7 @@ fromimage::load_res fromimage::load_meta(zip_file_t *file)
 
 fromimage::load_res fromimage::load(zip_t *filezip,
                                     zip_file_t *file){
-    QList<QByteArray> arr, metadata;
+    QList<QByteArray> arr;
     QStringList name_list;
     uchar res;
 

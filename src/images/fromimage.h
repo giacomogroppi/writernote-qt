@@ -58,6 +58,7 @@ public:
 
     fromimage::load_res save(zip_t *file, const QStringList &path, const QString &path_writernote_file) const;
     fromimage::load_res save(zip_t *file, const QString &path, const QString &path_writernote_file) const;
+    fromimage::load_res save_metadata(zip_source_t *file);
 
     inline void move(const QPointF &translation){
         uint i, len;

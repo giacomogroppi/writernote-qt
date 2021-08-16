@@ -54,7 +54,7 @@ QStringList frompdf::get_name_pdf(){
     return __l;
 }
 
-frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
+frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
 {
     QList<QByteArray> arr;
     QStringList __name;
@@ -62,7 +62,11 @@ frompdf::load_res frompdf::load(zip_t *fileZip, const bool clear)
 
     __name = get_name_pdf();
 
-    if(readListArray::read(__name, fileZip, arr, clear) != OK){
+    if(this->load_metadata(file) != load_res::ok){
+        return load_res::no_metadata;
+    }
+
+    if(readListArray::read(__name, fileZip, arr, false) != OK){
         return frompdf::load_res::not_valid_pdf;
     }
 
@@ -139,5 +143,26 @@ frompdf::load_res frompdf::save(zip_t *filezip,
                                    filezip,
                                    frompdf::getNameNoCopy(m_data->count_pdf)) != OK)
         return load_res::not_valid_pdf;
+    return load_res::ok;
+}
+
+frompdf::load_res frompdf::save_metadata(zip_source_t *file)
+{
+    uint i;
+    for(i=0; i<m_data->count_pdf; ++i){
+        if(zip_source_write(file, &m_translation, sizeof(struct s_translation)) == -1){
+            return load_res::no_metadata;
+        }
+    }
+    return load_res::ok;
+}
+
+frompdf::load_res frompdf::load_metadata(zip_file_t *file)
+{
+    uint i;
+    for(i=0; i<m_data->count_pdf; ++i){
+        if(zip_fread(file, &m_translation, sizeof(s_translation)) == -1)
+            return load_res::no_metadata;
+    }
     return load_res::ok;
 }

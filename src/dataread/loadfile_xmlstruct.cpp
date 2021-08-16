@@ -301,11 +301,6 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
     SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
     SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
 
-    res = doc->m_pdf->load(filezip, true);
-    if(res != frompdf::ok)
-        return ERROR;
-
-
     if(doc->m_touch){
         tmp = loadbinario_1(filezip);
         if(tmp == ERROR){
@@ -323,6 +318,10 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
     if(res_img != fromimage::load_res::ok){
         return ERROR;
     }
+
+    res = doc->m_pdf->load(filezip, f);
+    if(res != frompdf::ok)
+        return ERROR;
 
     if(controllo_parita)
         return ERROR_CONTROLL;

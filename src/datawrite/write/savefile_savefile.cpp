@@ -2,7 +2,7 @@
 #include "../source_read_ext.h"
 #include "../../utils/common_error_definition.h"
 #include "../../images/fromimage.h"
-
+#include "../../frompdf/frompdf.h"
 #include "../../currenttitle/document.h"
 #include "../../indice_class.h"
 
@@ -23,6 +23,9 @@ int savefile::savefile_check_file(){
 
     int error, temp, len, i, check;
     zip_error_t errore;
+
+    fromimage::load_res res_img;
+    frompdf::load_res res_pdf;
 
     zip_t *filezip;
     zip_source_t *file;
@@ -75,6 +78,14 @@ int savefile::savefile_check_file(){
         temp = currenttitle->posizione_iniz.at(i);
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
+
+    res_img = currenttitle->m_img->save_metadata(file);
+    if(res_img != fromimage::load_res::ok)
+        goto delete_;
+
+    res_pdf = currenttitle->m_pdf->save_metadata(file);
+    if(res_pdf != frompdf::load_res::ok)
+        goto delete_;
 
     check = 0;
 
