@@ -56,21 +56,21 @@ fromimage::load_res fromimage::save_metadata(zip_source_t *file)
         val[2] = img.f.x();
         val[3] = img.f.y();
 
-        if(zip_source_write(file, val, sizeof(double))*4 == -1)
+        if(zip_source_write(file, val, sizeof(double)*4) == -1)
             return load_res::err_meta_data;
     }
 
     return load_res::ok;
 }
 
-fromimage::load_res fromimage::load_meta(zip_file_t *file)
+fromimage::load_res fromimage::load_metadata(zip_file_t *file)
 {
     uint i;
     double val[4];
     struct immagine_S img;
 
     for(i=0; i<this->doc->count_img; ++i){
-        if(zip_fread(file, &val, sizeof (double)*4) == -1)
+        if(zip_fread(file, val, sizeof (double)*4) == -1)
             return load_res::error;
         img.i = QPointF(val[0], val[1]);
         img.f = QPointF(val[2], val[3]);
@@ -91,7 +91,7 @@ fromimage::load_res fromimage::load(zip_t *filezip,
 
     name_list = this->get_name_img();
 
-    if(this->load_meta(file) != load_res::ok)
+    if(this->load_metadata(file) != load_res::ok)
         return load_res::err_meta_data;
 
     res = readListArray::read(name_list, filezip, arr, false);
@@ -105,12 +105,8 @@ fromimage::load_res fromimage::load(zip_t *filezip,
 fromimage::load_res fromimage::load_single(const QByteArray &arr,
                                            struct immagine_S &img)
 {
-    const size_t size_meta = sizeof(double)*4;
-    QByteArray arr_mid;
-
-    arr_mid = arr.mid(size_meta);
-
-    img.immagini.loadFromData(arr_mid);
+    if(!img.immagini.loadFromData(arr))
+        return load_res::error;
 
     return load_res::ok;
 }

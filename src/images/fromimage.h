@@ -87,23 +87,26 @@ public:
                      const int rend_heigth) const{
         Q_UNUSED(pwidth);
         uint i, len;
-        QRectF rect;
+        QRectF rect, from;
+        uchar check;
 
         len = this->m_img.length();
         for(i=0; i<len; ++i){
             const struct immagine_S &img = m_img.at(i);
-            if(img.f.y() < 0)
-                continue;
-            if(img.f.x() < 0)
-                continue;
-            if(img.i.y() > rend_width)
-                continue;
-            if(img.i.x() > rend_heigth)
+            from = img.immagini.rect();
+
+            check = (img.f.y() < (double)0) +
+                    (img.f.x() < (double)0) +
+                    (img.i.y() > (double)rend_width) +
+                    (img.i.x() > (double)rend_heigth);
+
+
+            if(check)
                 continue;
 
             rect = QRectF(img.i, img.f);
 
-            painter.drawImage(rect, img.immagini, rect);
+            painter.drawImage(rect, img.immagini, from);
 
         }
     }
@@ -113,7 +116,7 @@ public:
     }
 
 private:
-    load_res load_meta(zip_file_t *file);
+    load_res load_metadata(zip_file_t *file);
 
     load_res load_single(const QByteArray &arr,
                          struct immagine_S &img);
