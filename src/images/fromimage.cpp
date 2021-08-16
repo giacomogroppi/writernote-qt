@@ -9,6 +9,8 @@
 #include "../datawrite/source_read_ext.h"
 #include "../currenttitle/document.h"
 #include "../datawrite/savefile.h"
+#include "../dataread/xmlstruct.h"
+#include "../dataread/load_from_file.h"
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
@@ -31,9 +33,23 @@ fromimage::load_res fromimage::save(zip_t *file,
     return fromimage::load_res::ok;
 }
 
+fromimage::load_res fromimage::get_in_file(QByteArray &arr, const QString &path) const
+{
+    if(load_from_file::exe(arr, path, false) != OK){
+        return load_res::error;
+    }
+    return load_res::ok;
+}
+
 fromimage::load_res fromimage::save(zip_t *file,
                                     const QString &path,
                                     const QString &path_writernote_file) const{
+
+    QByteArray arr;
+
+    if(this->get_in_file(arr, path) != load_res::ok)
+        return load_res::error;
+
     if(savefile::saveArrayIntoFile(path,
                                    doc->nome_copybook,
                                    path_writernote_file,

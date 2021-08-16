@@ -131,8 +131,6 @@ public:
 
     updatecheck *checkupdate;
 
-    void update_image();
-
     /* false -> not enable */
     bool enableredoundo = true;
 

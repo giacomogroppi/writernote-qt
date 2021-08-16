@@ -121,6 +121,8 @@ private:
     load_res load_single(const QByteArray &arr,
                          struct immagine_S &img);
     load_res load_multiple(const QList<QByteArray> &arr);
+
+    load_res get_in_file(QByteArray &arr, const QString &path) const;
 };
 
 #endif // FROMIMAGE_H

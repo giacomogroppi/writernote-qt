@@ -168,7 +168,6 @@ SOURCES += \
     src/utils/default_option/default_option_ui.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
-    src/images/update_image_mainwindow.cpp \
     src/indice_class.cpp \
     src/main.cpp \
     src/dataread/xmlstruct.cpp \

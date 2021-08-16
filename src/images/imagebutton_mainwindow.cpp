@@ -23,7 +23,7 @@ void MainWindow::on_insertimagebotton_triggered(QAction *){
 
     pos = "";
     m_currenttitle->m_img->addImage(pos, nullptr, this->m_path);
-    this->update_image();
+    this->m_canvas->update();
 }
 
 void MainWindow::on_actioninsertImage_triggered(){
