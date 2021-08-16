@@ -4,7 +4,7 @@
 #include <QByteArray>
 #include <QList>
 #include <QFileDialog>
-
+#include "zip.h"
 #include "../dataread/readlistarray.h"
 #include "../datawrite/source_read_ext.h"
 #include "../currenttitle/document.h"
@@ -45,7 +45,22 @@ fromimage::load_res fromimage::save(zip_t *file,
 
 fromimage::load_res fromimage::save_metadata(zip_source_t *file)
 {
+    uint i;
+    double val[4];
 
+    for(i=0; i<doc->count_img; ++i){
+        const struct immagine_S &img = m_img.at(i);
+
+        val[0] = img.i.x();
+        val[1] = img.i.y();
+        val[2] = img.f.x();
+        val[3] = img.f.y();
+
+        if(zip_source_write(file, val, sizeof(double))*4 == -1)
+            return load_res::err_meta_data;
+    }
+
+    return load_res::ok;
 }
 
 fromimage::load_res fromimage::load_meta(zip_file_t *file)
