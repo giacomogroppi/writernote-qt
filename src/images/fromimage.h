@@ -59,13 +59,31 @@ public:
     fromimage::load_res save(zip_t *file, const QString &path, const QString &path_writernote_file) const;
 
     inline void move(const QPointF &translation){
+        uint i, len;
+        struct immagine_S *img;
+        double x, y;
 
+        x = translation.x();
+        y = translation.y();
+
+        len = this->m_img.length();
+
+        for(i=0; i<len; ++i){
+            img = (immagine_S *)&m_img.at(i);
+
+            img->f.setX(img->f.x() + x);
+            img->f.setY(img->f.y() + y);
+
+            img->i.setX(img->i.x() + x);
+            img->i.setY(img->i.y() + y);
+        }
     }
 
     inline void draw(QPainter &painter,
                      const uint pwidth,
                      const int rend_width,
                      const int rend_heigth) const{
+        Q_UNUSED(pwidth);
         uint i, len;
         QRectF rect;
 
