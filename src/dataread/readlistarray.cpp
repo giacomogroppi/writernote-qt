@@ -14,7 +14,7 @@ uchar readListArray::read(const QStringList &list_name,
     for(i=0; i<(uchar)list_name.length(); ++i){
         arr.clear();
         const QString &ref = list_name.at(i);
-        if(xmlstruct::readFile(zip_file, arr, false, ref, false) != ERROR)
+        if(xmlstruct::readFile(zip_file, arr, false, ref, false) != OK)
             return ERROR;
         list_arr.append(arr);
     }

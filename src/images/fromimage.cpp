@@ -33,37 +33,25 @@ fromimage::load_res fromimage::save(zip_t *file,
     return fromimage::load_res::ok;
 }
 
-fromimage::load_res fromimage::get_in_file(QByteArray &arr, const QString &path) const
-{
-    if(load_from_file::exe(arr, path, false) != OK){
-        return load_res::error;
-    }
-    return load_res::ok;
-}
-
 fromimage::load_res fromimage::save(zip_t *file,
                                     const QString &path,
                                     const QString &path_writernote_file) const{
 
-    QByteArray arr;
-    QString path_tmp;
+    QByteArray img_in_byte;
 
-    if(this->get_in_file(arr, path) != load_res::ok)
+    if(this->get_img_bytearray(img_in_byte, path) != load_res::ok){
+        return load_res::error;
+    }
+
+    if(savefile::saveArrIntoFile(img_in_byte, path) != OK)
         return load_res::error;
 
-
-    this->get_tmp_name_for_save(path_tmp);
-    if(savefile::saveArrIntoFile(arr, path_tmp) != OK)
-        return load_res::error;
-
-    if(savefile::saveArrayIntoFile(path_tmp,
+    if(savefile::saveArrayIntoFile(path,
                                    doc->nome_copybook,
                                    path_writernote_file,
                                    file,
                                    fromimage::getNameNoCopy(doc->count_img)) != OK)
         return load_res::error;
-
-    QFile::remove(path_tmp);
 
     return load_res::ok;
 }
@@ -88,9 +76,19 @@ fromimage::load_res fromimage::save_metadata(zip_source_t *file)
     return load_res::ok;
 }
 
-void fromimage::get_tmp_name_for_save(QString &path) const
+fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString &path) const
 {
-    path = doc->nome_copybook + doc->count_img + "_img";
+    QImage img(path);
+    QBuffer buffer(&arr);
+
+    if(!buffer.open(QIODevice::WriteOnly)){
+        return load_res::error;
+    }
+    if(!img.save(&buffer)){
+        return load_res::error;
+    }
+
+    return load_res::ok;
 }
 
 fromimage::load_res fromimage::load_metadata(zip_file_t *file)
@@ -209,9 +207,8 @@ void fromimage::addImage(QString &pos,
     if(insert_image(pos, point, img) != OK)
         return;
 
-    this->doc->count_img ++;
-
     this->m_img.append(img);
 
     this->save(nullptr, pos, path_writernote);
+    this->doc->count_img ++;
 }
