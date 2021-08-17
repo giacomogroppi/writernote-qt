@@ -46,11 +46,13 @@ fromimage::load_res fromimage::save(zip_t *file,
                                     const QString &path_writernote_file) const{
 
     QByteArray arr;
+    QString path_tmp;
 
     if(this->get_in_file(arr, path) != load_res::ok)
         return load_res::error;
 
-
+    if(savefile::saveArrIntoFile(arr, path_tmp) != OK)
+        return load_res::error;
 
     if(savefile::saveArrayIntoFile(path,
                                    doc->nome_copybook,
@@ -79,6 +81,11 @@ fromimage::load_res fromimage::save_metadata(zip_source_t *file)
     }
 
     return load_res::ok;
+}
+
+void fromimage::get_tmp_name_for_save(QString &path)
+{
+    path = doc->nome_copybook + doc->count_img + "_img";
 }
 
 fromimage::load_res fromimage::load_metadata(zip_file_t *file)
