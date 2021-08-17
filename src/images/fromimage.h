@@ -43,7 +43,8 @@ public:
     enum load_res: uchar{
         ok,
         error,
-        err_meta_data
+        err_meta_data,
+        err_image_not_valid
     };
 
     void addImage(QString &__pos,

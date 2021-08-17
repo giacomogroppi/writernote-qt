@@ -81,10 +81,19 @@ fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString 
     QImage img(path);
     QBuffer buffer(&arr);
 
+    arr.clear();
+
+    if(img.isNull()){
+        return load_res::err_image_not_valid;
+    }
+
     if(!buffer.open(QIODevice::WriteOnly)){
         return load_res::error;
     }
-    if(!img.save(&buffer)){
+
+    buffer.seek(0);
+
+    if(!img.save(&buffer, "PNG")){
         return load_res::error;
     }
 
@@ -133,7 +142,7 @@ fromimage::load_res fromimage::load(zip_t *filezip,
 fromimage::load_res fromimage::load_single(const QByteArray &arr,
                                            struct immagine_S &img)
 {
-    if(!img.immagini.loadFromData(arr))
+    if(!img.immagini.loadFromData(arr, "PNG"))
         return load_res::error;
 
     return load_res::ok;
