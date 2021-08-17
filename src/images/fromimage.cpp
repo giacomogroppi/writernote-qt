@@ -51,15 +51,20 @@ fromimage::load_res fromimage::save(zip_t *file,
     if(this->get_in_file(arr, path) != load_res::ok)
         return load_res::error;
 
+
+    this->get_tmp_name_for_save(path_tmp);
     if(savefile::saveArrIntoFile(arr, path_tmp) != OK)
         return load_res::error;
 
-    if(savefile::saveArrayIntoFile(path,
+    if(savefile::saveArrayIntoFile(path_tmp,
                                    doc->nome_copybook,
                                    path_writernote_file,
                                    file,
                                    fromimage::getNameNoCopy(doc->count_img)) != OK)
         return load_res::error;
+
+    QFile::remove(path_tmp);
+
     return load_res::ok;
 }
 
@@ -83,7 +88,7 @@ fromimage::load_res fromimage::save_metadata(zip_source_t *file)
     return load_res::ok;
 }
 
-void fromimage::get_tmp_name_for_save(QString &path)
+void fromimage::get_tmp_name_for_save(QString &path) const
 {
     path = doc->nome_copybook + doc->count_img + "_img";
 }

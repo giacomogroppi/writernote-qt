@@ -116,7 +116,7 @@ public:
     }
 
 private:
-    void get_tmp_name_for_save(QString &path);
+    void get_tmp_name_for_save(QString &path) const;
     load_res load_metadata(zip_file_t *file);
 
     load_res load_single(const QByteArray &arr,
