@@ -31,6 +31,8 @@ public:
     */
     static int saveArrayIntoFile(const QString &from, const QString &name_coby,
                                  const QString &path, zip_t *filezip, const QString &suffix);
+    static int saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
+                                 const QString &path, zip_t *filezip, const QString &suffix);
 
     void setting_data(Document *m_current){currenttitle = m_current;}
 
@@ -56,7 +58,6 @@ public:
     int savefile_check_file();
 
     static uchar saveArrIntoFile(const QByteArray &arr, const QString &path);
-
 };
 
 #endif // SAVEFILE_H
