@@ -50,6 +50,8 @@ fromimage::load_res fromimage::save(zip_t *file,
     if(this->get_in_file(arr, path) != load_res::ok)
         return load_res::error;
 
+
+
     if(savefile::saveArrayIntoFile(path,
                                    doc->nome_copybook,
                                    path_writernote_file,

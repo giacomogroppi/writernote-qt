@@ -55,6 +55,8 @@ public:
     int savefile_check_indice(indice_class *);
     int savefile_check_file();
 
+    static uchar saveArrIntoFile(const QByteArray &arr, const QString &path);
+
 };
 
 #endif // SAVEFILE_H

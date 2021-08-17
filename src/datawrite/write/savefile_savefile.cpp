@@ -119,6 +119,29 @@ int savefile::savefile_check_file(){
         return ERROR;
 }
 
+uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)
+{
+    FILE *fp;
+    uchar byte;
+    int i, len;
+
+    len = arr.length();
+    fp = fopen(path.toUtf8().constData(), "w");
+
+    if(!fp)
+        return ERROR;
+
+    for(i=0; i<len; ++i){
+        byte = arr.at(i);
+
+        if(fwrite(&byte, sizeof(byte), 1, fp)<1)
+            return ERROR;
+    }
+
+    fclose(fp);
+    return OK;
+}
+
 static int save_string(zip_source_t *file, const char *stringa){
     int size = strlen(stringa);
     SOURCE_WRITE_RETURN(file, &size, sizeof(size));
