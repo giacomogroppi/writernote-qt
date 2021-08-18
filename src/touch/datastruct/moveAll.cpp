@@ -1,6 +1,7 @@
 #include "datastruct.h"
 #include <QPointF>
 #include "../../frompdf/frompdf.h"
+#include "../../images/fromimage.h"
 
 void datastruct::inverso(QPointF &point){
     point *= -1.0;
@@ -71,13 +72,17 @@ void datastruct::scala_all(const QPointF &point)
     this->scala_y(point.y());
     this->scala_posizionefoglio(point.y());
 
+#ifdef PDFSUPPORT
     if(m_pdf)
         m_pdf->translation(point);
+#endif
+
+    m_img->move(point);
 }
 
 void datastruct::scala_x(double scala)
 {
-    unsigned int i, len;
+    uint i, len;
     len = this->m_point.length();
     for(i=0; i<len; i++){
         m_point.operator[](i).m_x += scala;
@@ -93,7 +98,7 @@ void datastruct::scala_posizionefoglio(double scala){
 
 void datastruct::scala_y(double scala)
 {
-    int i, len;
+    uint i, len;
     len = this->m_point.length();
     for(i=0; i<len; i++){
         m_point.operator[](i).m_y += scala;
