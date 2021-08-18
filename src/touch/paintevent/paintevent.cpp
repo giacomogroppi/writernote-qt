@@ -71,14 +71,6 @@ void TabletCanvas::load(QPainter &painter,
     QColor current_color;
     double xtemp[2], ytemp[2];
 
-#ifdef PDFSUPPORT
-    this->data->m_pdf->draw(painter, data->datatouch->biggerx(),
-                           m_pixmap.width(), m_pixmap.height());
-#endif
-
-    this->data->m_img->draw(painter, data->datatouch->biggerx(),
-                              m_pixmap.width(), m_pixmap.height());
-
     is_play = parent->player->state() == QMediaPlayer::PlayingState;
     m_pixmap.fill(Qt::white);
 
@@ -90,9 +82,51 @@ void TabletCanvas::load(QPainter &painter,
     current_color = this->m_color;
     this->m_pen.setStyle(Qt::PenStyle::SolidLine);
 
+    len = data->datatouch->length();
+    for(i=1; i<len-1; ++i){
+        if(i>=len)
+            break;
+        __point = data->datatouch->at(i);
+        m_pen.setColor(setcolor(&__point->m_color));
+
+        if(datastruct::isIdUser(__point))
+            continue;
+
+        UPDATE_LOAD(__point, data->datatouch->zoom, 1);
+
+        SET_PEN(m_pen);
+
+        for(k=0; k<2; k++){
+            /*  we can draw objects which are outside the pixmap
+                qt automatically understands that you have to set negative points,
+                and those that are too high such as the margins of the pixmap
+            */
+
+            xtemp[k] = C(data)->at(i+k)->m_x;
+            ytemp[k] = C(data)->at(i+k)->m_y;
+
+        }
+
+        painter.drawLine(
+            xtemp[0]*m, ytemp[0]*m,
+            xtemp[1]*m, ytemp[1]*m);
+
+        __point = data->datatouch->at(i);
+        ++i;
+    }
+
+#ifdef PDFSUPPORT
+    this->data->m_pdf->draw(painter, data->datatouch->biggerx(),
+                           m_pixmap.width(), m_pixmap.height());
+#endif
+
+    this->data->m_img->draw(painter, data->datatouch->biggerx(),
+                              m_pixmap.width(), m_pixmap.height());
+
+
     _lastid = C(data)->firstPoint()->idtratto; /* it should be IDFIRSTPOINT */
 
-    for(i = 1, len = C(data)->length(); i < len-1; i++){
+    for(i = 1, len = C(data)->length(); i < len-1; ++i){
         if(_lastid != C(data)->at(i)->idtratto){
             data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
         }
@@ -105,6 +139,7 @@ void TabletCanvas::load(QPainter &painter,
         m_pen.setColor(setcolor(&__point->m_color));
 
         if(!datastruct::isIdUser(__point)){
+            goto stack;
             UPDATE_LOAD(__point, data->datatouch->zoom, 1);
 
             SET_PEN(m_pen);
@@ -126,9 +161,10 @@ void TabletCanvas::load(QPainter &painter,
 
                 __point = data->datatouch->at(i);
                 ++i;
+                stack:
+                printf("cont");
         }
         else if(__point->idtratto == _lastid){
-            //qDebug() << "Paint Event : " << __point->m_posizioneaudio << m_pos_ris;
             if(is_play && __point->m_posizioneaudio > m_pos_ris){
                 UPDATE_LOAD(__point, data->datatouch->zoom, 4);
             }else{
@@ -158,18 +194,6 @@ void TabletCanvas::load(QPainter &painter,
     this->m_pen.setColor(current_color);
 
     this->isloading = false;
-}
-
-/* la funzione ritorna true se ci sono dei punti positivi per quel id tratto */
-static bool thereispositive(datastruct *data, int idtratto, int start){
-    int len;
-    len = data->length();
-
-    for(; start<len && data->at(start)->idtratto == idtratto; start++)
-        if(data->at(start)->m_y >= 0.0)
-            return true;
-
-    return false;
 }
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
