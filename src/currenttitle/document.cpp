@@ -16,6 +16,7 @@ Document::~Document()
 {
     delete m_pdf;
     delete datatouch;
+    delete m_img;
 }
 
 void Document::copy(const Document *src,
