@@ -13,7 +13,8 @@
 #define SUFFIX_IMG "_img_"
 
 class Document;
-struct immagine_S{
+struct immagine_s{
+    QByteArray arr;
     QImage immagini;
     QPointF i;
     QPointF f;
@@ -23,7 +24,7 @@ class fromimage{
 private:
     Document *doc;
 
-    QList<struct immagine_S> m_img;
+    QList<struct immagine_s> m_img;
     inline QStringList get_name_img();
 
     static inline QString getNameNoCopy(const uint i){
@@ -36,7 +37,7 @@ private:
 
     uchar insert_image(QString &__pos,
                       const PointSettable *point,
-                      struct immagine_S &img);
+                      struct immagine_s &img);
 
 
 public:
@@ -63,7 +64,7 @@ public:
 
     inline void move(const QPointF &translation){
         uint i, len;
-        struct immagine_S *img;
+        struct immagine_s *img;
         double x, y;
 
         x = translation.x();
@@ -72,7 +73,7 @@ public:
         len = this->m_img.length();
 
         for(i=0; i<len; ++i){
-            img = (immagine_S *)&m_img.at(i);
+            img = (immagine_s *)&m_img.at(i);
 
             img->f.setX(img->f.x() + x);
             img->f.setY(img->f.y() + y);
@@ -93,7 +94,7 @@ public:
 
         len = this->m_img.length();
         for(i=0; i<len; ++i){
-            const struct immagine_S &img = m_img.at(i);
+            const struct immagine_s &img = m_img.at(i);
             from = img.immagini.rect();
 
             check = (img.f.y() < (double)0) +
@@ -121,7 +122,7 @@ private:
     load_res load_metadata(zip_file_t *file);
 
     load_res load_single(const QByteArray &arr,
-                         struct immagine_S &img);
+                         struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);
 };
 

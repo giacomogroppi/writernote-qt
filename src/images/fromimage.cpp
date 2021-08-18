@@ -64,7 +64,7 @@ fromimage::load_res fromimage::save_metadata(zip_source_t *file)
     double val[4];
 
     for(i=0; i<doc->count_img; ++i){
-        const struct immagine_S &img = m_img.at(i);
+        const struct immagine_s &img = m_img.at(i);
 
         val[0] = img.i.x();
         val[1] = img.i.y();
@@ -106,7 +106,7 @@ fromimage::load_res fromimage::load_metadata(zip_file_t *file)
 {
     uint i;
     double val[4];
-    struct immagine_S img;
+    struct immagine_s img;
 
     for(i=0; i<this->doc->count_img; ++i){
         if(zip_fread(file, val, sizeof (double)*4) == -1)
@@ -142,9 +142,10 @@ fromimage::load_res fromimage::load(zip_t *filezip,
 }
 
 fromimage::load_res fromimage::load_single(const QByteArray &arr,
-                                           struct immagine_S &img)
+                                           struct immagine_s &img)
 {
-    if(!img.immagini.loadFromData(arr, "PNG"))
+    img.arr = arr;
+    if(!img.immagini.loadFromData(img.arr, "PNG"))
         return load_res::error;
 
     if(img.immagini.isNull())
@@ -157,7 +158,7 @@ fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr)
 {
     uint i, len;
     fromimage::load_res res;
-    struct immagine_S img;
+    struct immagine_s img;
 
     len = arr.length();
     for(i=0; i<len; ++i){
@@ -183,7 +184,7 @@ QStringList fromimage::get_name_img()
 
 uchar fromimage::insert_image(QString &pos,
                               const PointSettable *point,
-                              struct immagine_S &img)
+                              struct immagine_s &img)
 {
     if(pos == ""){
         pos = QFileDialog::getOpenFileName(nullptr,
@@ -216,7 +217,7 @@ void fromimage::addImage(QString &pos,
                          const PointSettable *point,
                          const QString &path_writernote)
 {
-    struct immagine_S img;
+    struct immagine_s img;
 
     if(insert_image(pos, point, img) != OK)
         return;
