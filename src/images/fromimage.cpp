@@ -48,11 +48,6 @@ fromimage::load_res fromimage::save(zip_t *file,
     if(img.isNull())
         return load_res::err_image_not_valid;
 
-    /*if(savefile::saveArrayIntoFile(img_in_byte, doc->nome_copybook, path_writernote_file, ))
-
-    if(savefile::saveArrIntoFile(img_in_byte, path_tmp) != OK)
-        return load_res::error;*/
-
     if(savefile::saveArrayIntoFile(img_in_byte,
                                    doc->nome_copybook,
                                    path_writernote_file,
