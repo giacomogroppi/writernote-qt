@@ -3,6 +3,7 @@
 
 class Document;
 
+#include "../touch/datastruct/datastruct.h"
 #include "zip.h"
 #include <QString>
 #include <QList>
@@ -25,8 +26,10 @@ private:
     QList<QImage> m_image;
 
     struct s_translation{
-        double y;
-        double x;
+        double y1;
+        double x1;
+        double y2;
+        double x2;
     }m_translation;
 
     static inline QString getNameNoCopy(const uint i){
@@ -45,16 +48,18 @@ public:
     }
     void translation(const double x,
                     const double y){
-        m_translation.x += x;
-        m_translation.y += y;
+        m_translation.x1 += x;
+        m_translation.y1 += y;
+        m_translation.x2 += x;
+        m_translation.y2 += y;
     }
 
-    void getPosition(double &x, double &y){
-        x = m_translation.x;
-        y = m_translation.y;
+    void getPosition(QPointF &topLeft, QPointF &bottomRight){
+        topLeft = QPointF(m_translation.x1, m_translation.y1);
+        bottomRight = QPointF(m_translation.x2, m_translation.y2);
     }
 
-    frompdf(Document *);
+    frompdf(Document *doc);
 
     enum load_res: uchar{
         ok,
@@ -87,28 +92,45 @@ public:
                      const int rend_heigth){
         uint i, len;
         QRect rect_area;
+        uchar check;
+        size_t height;
 
         len = m_image.length();
+        height = 0;
 
         for(i=0; i<len; ++i){
+            const QImage &img = m_image.at(i);
+
             rect_area = QRect(pwidth*i,
                               (IMG_PDF_HEIGHT/IMG_PDF_WIDTH)*pwidth*i,
                               pwidth*(i+1),
                               (IMG_PDF_HEIGHT/IMG_PDF_WIDTH)*pwidth*(i+1));
 
-            if(rect_area.bottomRight().x()+m_translation.x < 0)
-                continue;
-            if(rect_area.topLeft().x()+m_translation.x > rend_width)
+            check = (m_translation.y2 < (double)0) +
+                (m_translation.x2 < (double)0) +
+                (m_translation.y1 > (double)rend_width) +
+                (m_translation.x1 > (double)rend_heigth);
+
+            if(check)
                 continue;
 
-            if(rect_area.bottomRight().y()+m_translation.y < 0)
-                continue;
-            if(rect_area.topLeft().y()+m_translation.y > rend_heigth)
-                continue;
+            /*
+             * we need to add all the
+             * height of all the image we draw
+             * before
+            */
+            height += img.height();
 
-            painter.drawImage(rect_area, m_image.at(i));
+            painter.drawImage(rect_area, img);
         }
     }
+
+    uchar insert_pdf(QString &pos,
+                     const PointSettable *point);
+
+    void addPdf(QString &pos,
+                      const PointSettable *point,
+                      const QString &path_writernote);
 private:
     load_res load_metadata(zip_file_t *file);
 };

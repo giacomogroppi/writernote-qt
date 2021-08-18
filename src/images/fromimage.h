@@ -101,7 +101,6 @@ public:
                     (img.i.y() > (double)rend_width) +
                     (img.i.x() > (double)rend_heigth);
 
-
             if(check)
                 continue;
 

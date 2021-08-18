@@ -7,6 +7,7 @@
 #include "../dataread/load_from_file.h"
 #include "../dataread/readlistarray.h"
 #include "../datawrite/savefile.h"
+#include <QFileDialog>
 
 frompdf::frompdf(Document *data)
 {
@@ -165,4 +166,52 @@ frompdf::load_res frompdf::load_metadata(zip_file_t *file)
             return load_res::no_metadata;
     }
     return load_res::ok;
+}
+
+/*
+ * add image from position
+*/
+void frompdf::addPdf(QString &pos,
+                         const PointSettable *point,
+                         const QString &path_writernote)
+{
+    m_data->datatouch->scala_all();
+    if(insert_pdf(pos, point) != OK)
+        goto err;
+
+
+    this->save(nullptr, pos, path_writernote);
+    this->m_data->count_pdf ++;
+
+    err:
+    m_data->datatouch->restoreLastTranslation();
+}
+
+uchar frompdf::insert_pdf(QString &pos,
+                          const PointSettable *point)
+{
+    if(pos == ""){
+        pos = QFileDialog::getOpenFileName(nullptr,
+                                                     "Open images",
+                                                     "JPEG (*.jpg, *.jpeg);;PNG (*.png);;All Files (*)");
+
+        if(pos == "")
+            return ERROR;
+    }
+
+    if(point){
+        m_translation.x1 = point->point.toPoint().x();
+        m_translation.y1 = point->point.toPoint().y();
+
+        m_translation.x2 = point->point.toPoint().x() + double(NUMEROPIXELPAGINA);
+        m_translation.y2 = point->point.toPoint().y() + double(NUMEROPIXELORIZZONALI);
+    }
+    else{
+        m_translation.x1 = m_translation.y1 = double(0);
+
+        m_translation.x2 = double(NUMEROPIXELPAGINA);
+        m_translation.y2 = double(NUMEROPIXELORIZZONALI);
+    }
+
+    return OK;
 }
