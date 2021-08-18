@@ -144,8 +144,7 @@ fromimage::load_res fromimage::load(zip_t *filezip,
 fromimage::load_res fromimage::load_single(const QByteArray &arr,
                                            struct immagine_s &img)
 {
-    img.arr = arr;
-    if(!img.immagini.loadFromData(img.arr, "PNG"))
+    if(!img.immagini.loadFromData(arr, "PNG"))
         return load_res::error;
 
     if(img.immagini.isNull())
@@ -154,6 +153,10 @@ fromimage::load_res fromimage::load_single(const QByteArray &arr,
     return load_res::ok;
 }
 
+/*
+ * in m_img sono già presenti tutte le immagini con i metadati
+ * dobbiamo solo cambiare l'immagine e l'array
+*/
 fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr)
 {
     uint i, len;
@@ -162,10 +165,9 @@ fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr)
 
     len = arr.length();
     for(i=0; i<len; ++i){
-        res = fromimage::load_single(arr.at(i), img);
+        res = fromimage::load_single(arr.at(i), m_img.operator[](i));
         if(res != fromimage::load_res::ok)
             return res;
-        m_img.append(img);
     }
 
     return fromimage::load_res::ok;

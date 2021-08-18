@@ -14,7 +14,6 @@
 
 class Document;
 struct immagine_s{
-    QByteArray arr;
     QImage immagini;
     QPointF i;
     QPointF f;
