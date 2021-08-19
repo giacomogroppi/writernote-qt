@@ -80,7 +80,7 @@ void datastruct::scala_all(const QPointF &point)
     m_img->move(point);
 }
 
-void datastruct::scala_x(double scala)
+void datastruct::scala_x(const double scala)
 {
     uint i, len;
     len = this->m_point.length();
@@ -89,14 +89,14 @@ void datastruct::scala_x(double scala)
     }
 }
 
-void datastruct::scala_posizionefoglio(double scala){
+void datastruct::scala_posizionefoglio(const double scala){
     unsigned int i, len;
     for(i=0, len = posizionefoglio.length(); i<len; ++i){
         posizionefoglio.operator[](i) += scala;
     }
 }
 
-void datastruct::scala_y(double scala)
+void datastruct::scala_y(const double scala)
 {
     uint i, len;
     len = this->m_point.length();

@@ -9,6 +9,17 @@
 #include "../datawrite/savefile.h"
 #include <QFileDialog>
 
+void frompdf::translation(const double x, const double y)
+{
+    if(!m_data->count_pdf)
+        return;
+
+    m_translation.x1 += x;
+    m_translation.y1 += y;
+    m_translation.x2 += x;
+    m_translation.y2 += y;
+}
+
 frompdf::frompdf(Document *data)
 {
     m_data = data;
@@ -175,6 +186,13 @@ void frompdf::addPdf(QString &pos,
                          const PointSettable *point,
                          const QString &path_writernote)
 {
+    if(path_writernote == "")
+        return dialog_critic("Before add a pdf you need to save this file");
+    if(m_data->count_pdf)
+        return user_message("It's not possible to add more than one pdf");
+    if(!m_data->m_touch)
+        return user_message("It's not possible to pdf in keyboard mode");
+
     m_data->datatouch->scala_all();
     if(insert_pdf(pos, point) != OK)
         goto err;

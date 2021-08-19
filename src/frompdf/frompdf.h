@@ -46,13 +46,7 @@ public:
     void translation(const QPointF &point){
         translation(point.x(), point.y());
     }
-    void translation(const double x,
-                    const double y){
-        m_translation.x1 += x;
-        m_translation.y1 += y;
-        m_translation.x2 += x;
-        m_translation.y2 += y;
-    }
+    void translation(const double x, const double y);
 
     void getPosition(QPointF &topLeft, QPointF &bottomRight){
         topLeft = QPointF(m_translation.x1, m_translation.y1);

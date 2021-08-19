@@ -61,9 +61,9 @@ private:
 
     bool userWrittenSomething(uint i);
 
-    void scala_x(double scala);
-    void scala_y(double scala);
-    void scala_posizionefoglio(double scala);
+    void scala_x(const double scala);
+    void scala_y(const double scala);
+    void scala_posizionefoglio(const double scala);
 
     frompdf *m_pdf;
     fromimage *m_img;
