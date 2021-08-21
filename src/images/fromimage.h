@@ -24,7 +24,8 @@ private:
     Document *doc;
 
     QList<struct immagine_s> m_img;
-    inline QStringList get_name_img();
+    QStringList get_name_img();
+    static QStringList get_name_img(const Document &doc);
 
     static inline QString getNameNoCopy(const uint i){
         return SUFFIX_IMG + QString::number(uint(i));
@@ -82,18 +83,18 @@ public:
         }
     }
 
-    inline void draw(QPainter &painter,
-                     const uint pwidth,
-                     const int rend_width,
-                     const int rend_heigth) const{
+    static inline void draw(QPainter &painter,
+                            const uint pwidth,
+                            const int rend_width,
+                            const int rend_heigth,
+                            const QList<immagine_s> &list){
         Q_UNUSED(pwidth);
-        uint i, len;
+        uint i;
         QRectF rect, from;
         uchar check;
 
-        len = this->m_img.length();
-        for(i=0; i<len; ++i){
-            const struct immagine_s &img = m_img.at(i);
+        for(i=0; i<(uint)list.length(); ++i){
+            const struct immagine_s &img = list.at(i);
             from = img.immagini.rect();
 
             check = (img.f.y() < (double)0) +
@@ -109,6 +110,13 @@ public:
             painter.drawImage(rect, img.immagini, from);
 
         }
+    }
+
+    inline void draw(QPainter &painter,
+                     const uint pwidth,
+                     const int rend_width,
+                     const int rend_heigth) const{
+        return fromimage::draw(painter, pwidth, rend_width, rend_heigth, this->m_img);
     }
 
     void reset(){

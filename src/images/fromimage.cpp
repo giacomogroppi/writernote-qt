@@ -175,10 +175,15 @@ fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr)
 
 QStringList fromimage::get_name_img()
 {
+    return fromimage::get_name_img(*this->doc);
+}
+
+QStringList fromimage::get_name_img(const Document &doc)
+{
     uint i;
     QStringList list;
-    for(i=0; i<doc->count_img; ++i){
-        list.append(fromimage::getName(doc->nome_copybook, i));
+    for(i=0; i<doc.count_img; ++i){
+        list.append(fromimage::getName(doc.nome_copybook, i));
     }
 
     return list;
