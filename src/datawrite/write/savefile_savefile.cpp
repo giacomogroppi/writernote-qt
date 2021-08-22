@@ -144,7 +144,7 @@ uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)
 
 int savefile::saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
                                 const QString &path, zip_t *filezip,
-                                const QString &suffix)
+                                const QString &suffix, const bool closeZip)
 {
     QString __fin = name_coby + suffix;
     zip_source_t *file;
@@ -184,12 +184,15 @@ int savefile::saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
     if(check != OK_PRIVATE)
         goto delete_;
 
-    zip_close(filezip);
+    if(closeZip)
+        zip_close(filezip);
     return OK;
 
     delete_:
     zip_source_free(file);
-    zip_close(filezip);
+
+    if(closeZip)
+        zip_close(filezip);
     return ERROR;
 }
 

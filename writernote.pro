@@ -71,6 +71,7 @@ SOURCES += \
     src/dataread/readlistarray.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
+    src/frompdf/metadata.cpp \
     src/images/fromimage.cpp \
     src/last_open/option/button_main.cpp \
     src/last_open/option/option_last_open_ui.cpp \

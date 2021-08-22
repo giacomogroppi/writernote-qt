@@ -74,7 +74,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
 
     __name = get_name_pdf();
 
-    if(this->load_metadata(file) != load_res::ok){
+    if(file && this->load_metadata(file) != load_res::ok){
         return load_res::no_metadata;
     }
 
@@ -83,7 +83,9 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
     }
 
     for (i=0; i<m_data->count_pdf; ++i){
-        auto res = load_from_row(arr.at(i), false);
+        auto res = load_from_row(arr.at(i),
+                                 false,
+                                 file != nullptr);
         if(res != frompdf::load_res::ok)
             return res;
     }
@@ -92,10 +94,10 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
 
 }
 
-frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear)
+frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear, const bool FirstLoad)
 {
     uint i, len;
-    QImage image;
+    QImage img;
 
     if(clear)
         this->reset();
@@ -110,17 +112,19 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     len = doc->numPages();
 
     for(i=0; i<len; ++i){
-        image = doc->page(QString::number(i))->renderToImage(
+        img = doc->page(QString::number(i))->renderToImage(
                                     5 * IMG_PDF_HEIGHT,
                                     5 * IMG_PDF_HEIGHT);
 
-        if(image.isNull())
+        if(img.isNull())
             return load_res::not_valid_page;
 
-        m_image.append(image);
+        m_image.operator[](i).immagini = img;
 
     }
 
+    if(FirstLoad)
+        this->adjast();
 
     return load_res::ok;
 }
@@ -153,29 +157,9 @@ frompdf::load_res frompdf::save(zip_t *filezip,
                                    this->m_data->nome_copybook,
                                    path_writernote_file,
                                    filezip,
-                                   frompdf::getNameNoCopy(m_data->count_pdf)) != OK)
+                                   frompdf::getNameNoCopy(m_data->count_pdf),
+                                   false) != OK)
         return load_res::not_valid_pdf;
-    return load_res::ok;
-}
-
-frompdf::load_res frompdf::save_metadata(zip_source_t *file)
-{
-    uint i;
-    for(i=0; i<m_data->count_pdf; ++i){
-        if(zip_source_write(file, &m_translation, sizeof(this->m_translation)) == -1){
-            return load_res::no_metadata;
-        }
-    }
-    return load_res::ok;
-}
-
-frompdf::load_res frompdf::load_metadata(zip_file_t *file)
-{
-    uint i;
-    for(i=0; i<m_data->count_pdf; ++i){
-        if(zip_fread(file, &m_translation, sizeof(this->m_translation)) == -1)
-            return load_res::no_metadata;
-    }
     return load_res::ok;
 }
 
@@ -186,6 +170,17 @@ void frompdf::addPdf(QString &pos,
                          const PointSettable *point,
                          const QString &path_writernote)
 {
+    zip_t *fileZip;
+    int ok;
+    frompdf::load_res res;
+
+    fileZip = zip_open(path_writernote, ZIP_CREATE, &ok);
+    if(!fileZip){
+        res = frompdf::load_res::no_valid_path;
+        goto err;
+    }
+
+
     if(path_writernote == "")
         return dialog_critic("Before add a pdf you need to save this file");
     if(m_data->count_pdf)
@@ -197,12 +192,36 @@ void frompdf::addPdf(QString &pos,
     if(insert_pdf(pos, point) != OK)
         goto err;
 
+    res = this->save(fileZip, pos, path_writernote);
+    if(res != load_res::ok)
+        goto err;
 
-    this->save(nullptr, pos, path_writernote);
     this->m_data->count_pdf ++;
 
+    this->load(fileZip, nullptr);
+
     err:
+    if(res == load_res::no_valid_path)
+        dialog_critic("We had trouble opening " + path_writernote);
+    else if(res != load_res::ok)
+        dialog_critic("We had some error");
+
     m_data->datatouch->restoreLastTranslation();
+}
+
+void frompdf::adjast()
+{
+    int i, height;
+
+    height = 0;
+
+    for(i=0; i<this->m_image.length(); ++i){
+        m_image.operator[](i).i = QPointF(height, NUMEROPIXELPAGINA);
+        m_image.operator[](i).f = QPointF(height + NUMEROPIXELORIZZONALI, NUMEROPIXELPAGINA);
+
+        height += NUMEROPIXELORIZZONALI;
+    }
+
 }
 
 uchar frompdf::insert_pdf(QString &pos,

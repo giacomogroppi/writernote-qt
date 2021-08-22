@@ -12,6 +12,7 @@ class Document;
 #include <QPainter>
 
 #include "poppler-qt5.h"
+#include "../images/fromimage.h"
 #define IMG_PDF_HEIGHT 292
 #define IMG_PDF_WIDTH 210
 
@@ -23,14 +24,7 @@ private:
     Document *m_data;
 
     Poppler::Document *doc = nullptr;
-    QList<QImage> m_image;
-
-    struct s_translation{
-        double y1;
-        double x1;
-        double y2;
-        double x2;
-    }m_translation;
+    QList<immagine_s> m_image;
 
     static inline QString getNameNoCopy(const uint i){
         return SUFFIX_PDF + QString::number(uint(i));
@@ -48,18 +42,14 @@ public:
     }
     void translation(const double x, const double y);
 
-    void getPosition(QPointF &topLeft, QPointF &bottomRight){
-        topLeft = QPointF(m_translation.x1, m_translation.y1);
-        bottomRight = QPointF(m_translation.x2, m_translation.y2);
-    }
-
     frompdf(Document *doc);
 
     enum load_res: uchar{
         ok,
         not_valid_pdf,
         not_valid_page,
-        no_metadata
+        no_metadata,
+        no_valid_path
     };
 
     inline void reset(){
@@ -73,7 +63,7 @@ public:
     load_res load(const QString &, const bool clear);
     /* it load from a zip_t file all the pdf for the current copybook */
     load_res load(zip_t *filezip, zip_file_t *file);
-    load_res load_from_row(const QByteArray &, const bool clear);
+    load_res load_from_row(const QByteArray &, const bool clear, const bool FirstLoad);
 
     load_res save(zip_t *filezip, const QStringList &path, const QString &path_writernote_file);
     load_res save(zip_t *filezip, const QString &path, const QString &path_writernote_file);
@@ -84,7 +74,9 @@ public:
                      const uint pwidth,
                      const int rend_width,
                      const int rend_heigth){
-        uint i, len;
+        return fromimage::draw(painter, pwidth, rend_width, rend_heigth, m_image);
+
+        /*uint i, len;
         QRect rect_area;
         uchar check;
         size_t height;
@@ -106,17 +98,17 @@ public:
                 (m_translation.x1 > (double)rend_heigth);
 
             if(check)
-                continue;
+                continue;*/
 
             /*
              * we need to add all the
              * height of all the image we draw
              * before
             */
-            height += img.height();
+            /*height += img.height();
 
             painter.drawImage(rect_area, img);
-        }
+        }*/
     }
 
     uchar insert_pdf(QString &pos,
@@ -126,6 +118,7 @@ public:
                       const PointSettable *point,
                       const QString &path_writernote);
 private:
+    void adjast();
     load_res load_metadata(zip_file_t *file);
 };
 
