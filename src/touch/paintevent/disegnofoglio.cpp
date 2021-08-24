@@ -174,7 +174,7 @@ static inline double widthToPressure(double v){
 
 static double width_(datastruct *data){
     if(data->posizionefoglio.isEmpty())
-        return NUMEROPIXELPAGINA;
+        return NUMEROPIXELVERTICALI;
 
     uint i, len;
 

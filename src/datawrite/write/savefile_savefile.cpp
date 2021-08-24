@@ -208,7 +208,7 @@ static int save_string(zip_source_t *file, const char *stringa){
 int save_audio_file(const char *posAudio,
                     const QString &namecopybook,
                     const QString &path){
-    return savefile::saveArrayIntoFile((const QString)posAudio, namecopybook, path, nullptr, "audio.wav" );
+    return savefile::saveArrayIntoFile((const QString)posAudio, namecopybook, path, nullptr, "audio.wav", true);
 
 }
 

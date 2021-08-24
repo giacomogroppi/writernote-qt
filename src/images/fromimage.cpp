@@ -52,7 +52,7 @@ fromimage::load_res fromimage::save(zip_t *file,
                                    doc->nome_copybook,
                                    path_writernote_file,
                                    file,
-                                   fromimage::getNameNoCopy(doc->count_img)) != OK)
+                                   fromimage::getNameNoCopy(doc->count_img), true) != OK)
         return load_res::error;
 
     return load_res::ok;

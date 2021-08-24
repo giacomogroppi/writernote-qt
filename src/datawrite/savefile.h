@@ -30,7 +30,7 @@ public:
      * if filezip is NULL it will open the file
     */
     static int saveArrayIntoFile(const QString &from, const QString &name_coby,
-                                 const QString &path, zip_t *filezip, const QString &suffix);
+                                 const QString &path, zip_t *filezip, const QString &suffix, const bool closeZip);
     static int saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
                                  const QString &path, zip_t *filezip, const QString &suffix, const bool closeZip);
 

@@ -304,7 +304,7 @@ double datastruct::minx()
 }
 
 
-auto datastruct::biggerynoid() -> double{
+double datastruct::biggerynoid() const{
     if(m_point.isEmpty())
         return (double)0;
 
@@ -334,7 +334,7 @@ void datastruct::removeat(int i){
 }
 
 /*YES IDVERTICALE ORIZZONTALE*/
-double datastruct::biggerx(){
+double datastruct::biggerx() const{
     int i, len;
     double max;
 

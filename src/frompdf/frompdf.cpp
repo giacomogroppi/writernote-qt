@@ -9,15 +9,17 @@
 #include "../datawrite/savefile.h"
 #include <QFileDialog>
 
-void frompdf::translation(const double x, const double y)
+void frompdf::translation(const QPointF &point)
 {
+    int i;
     if(!m_data->count_pdf)
         return;
 
-    m_translation.x1 += x;
-    m_translation.y1 += y;
-    m_translation.x2 += x;
-    m_translation.y2 += y;
+    for(i=0; i<this->m_image.length(); ++i){
+        this->m_image.operator[](i).topLeft += point;
+        this->m_image.operator[](i).bottomRigth += point;
+    }
+
 }
 
 frompdf::frompdf(Document *data)
@@ -53,7 +55,10 @@ frompdf::load_res frompdf::load(const QString &path, const bool clear)
         return load_res::not_valid_pdf;
     }
 
-    return load_from_row(arr, clear);
+    /*
+     *  if we do the load with this function is always the firstLost
+    */
+    return load_from_row(arr, clear, true, 0);
 }
 
 QStringList frompdf::get_name_pdf(){
@@ -85,7 +90,8 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
     for (i=0; i<m_data->count_pdf; ++i){
         auto res = load_from_row(arr.at(i),
                                  false,
-                                 file != nullptr);
+                                 file != nullptr,
+                                 i);
         if(res != frompdf::load_res::ok)
             return res;
     }
@@ -94,10 +100,18 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
 
 }
 
-frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear, const bool FirstLoad)
+frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear,
+                                         const bool FirstLoad, const uchar IndexPdf)
 {
+    /*
+     * in the current version we cannot upload more
+     * than one pdf at the same time
+    */
+    assert(IndexPdf > 0);
+
     uint i, len;
     QImage img;
+    struct immagine_s imgAppend;
 
     if(clear)
         this->reset();
@@ -119,12 +133,14 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
         if(img.isNull())
             return load_res::not_valid_page;
 
-        m_image.operator[](i).immagini = img;
+        imgAppend.immagini = img;
+
+        this->m_image.operator[](i).img.append(imgAppend);
 
     }
 
     if(FirstLoad)
-        this->adjast();
+        this->adjast(IndexPdf);
 
     return load_res::ok;
 }
@@ -209,24 +225,23 @@ void frompdf::addPdf(QString &pos,
     m_data->datatouch->restoreLastTranslation();
 }
 
-void frompdf::adjast()
+void frompdf::adjast(const uchar indexPdf)
 {
-    int i, height;
+    QPointF size = m_data->datatouch->get_size_page();
+    assert(indexPdf > 0);
 
-    height = 0;
-
-    for(i=0; i<this->m_image.length(); ++i){
-        m_image.operator[](i).i = QPointF(height, NUMEROPIXELPAGINA);
-        m_image.operator[](i).f = QPointF(height + NUMEROPIXELORIZZONALI, NUMEROPIXELPAGINA);
-
-        height += NUMEROPIXELORIZZONALI;
-    }
+    m_image.operator[](indexPdf).topLeft = QPointF(0, 0);
+    m_image.operator[](indexPdf).bottomRigth = size;
 
 }
 
 uchar frompdf::insert_pdf(QString &pos,
                           const PointSettable *point)
 {
+    assert(this->m_image.length());
+    Pdf pdf;
+    const QPointF size = this->m_data->datatouch->get_size_page();
+
     if(pos == ""){
         pos = QFileDialog::getOpenFileName(nullptr,
                                                      "Open images",
@@ -237,18 +252,15 @@ uchar frompdf::insert_pdf(QString &pos,
     }
 
     if(point){
-        m_translation.x1 = point->point.toPoint().x();
-        m_translation.y1 = point->point.toPoint().y();
-
-        m_translation.x2 = point->point.toPoint().x() + double(NUMEROPIXELPAGINA);
-        m_translation.y2 = point->point.toPoint().y() + double(NUMEROPIXELORIZZONALI);
+        pdf.topLeft = point->point;
+        pdf.bottomRigth = point->point + size;
     }
     else{
-        m_translation.x1 = m_translation.y1 = double(0);
-
-        m_translation.x2 = double(NUMEROPIXELPAGINA);
-        m_translation.y2 = double(NUMEROPIXELORIZZONALI);
+        pdf.topLeft = QPointF(0.0, 0.0);
+        pdf.bottomRigth = size;
     }
+
+    this->m_image.append(pdf);
 
     return OK;
 }

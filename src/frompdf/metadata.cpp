@@ -7,7 +7,9 @@ frompdf::load_res frompdf::save_metadata(zip_source_t *file)
     double pos[4];
 
     for(i=0; i<m_data->count_pdf; ++i){
-        if(zip_source_write(file, &m_translation, sizeof(this->m_translation)) == -1){
+
+
+        if(zip_source_write(file, pos, sizeof(double)*4) == -1){
             return load_res::no_metadata;
         }
     }
@@ -18,15 +20,17 @@ frompdf::load_res frompdf::load_metadata(zip_file_t *file)
 {
     uint i;
     double pos[4];
-    struct immagine_s img;
+    Pdf pdf;
+
+    const QPointF size = this->m_data->datatouch->get_size_page();
 
     for(i=0; i<m_data->count_pdf; ++i){
         if(zip_fread(file, pos, sizeof(double)*4) == -1)
             return load_res::no_metadata;
-        img.i = QPointF(pos[0], pos[1]);
-        img.f = QPointF(pos[2], pos[3]);
+        pdf.topLeft = QPointF(pos[0], pos[1]);
+        pdf.bottomRigth = QPointF(pos[2], pos[3]);
 
-        m_image.append(img);
+        this->m_image.append(pdf);
     }
 
     return load_res::ok;

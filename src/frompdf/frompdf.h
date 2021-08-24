@@ -18,13 +18,23 @@ class Document;
 
 #define SUFFIX_PDF "_pdf_"
 
+class Pdf{
+public:
+    /* indice la parte in alto a sinistra della prima immagine */
+    QPointF topLeft;
+
+    /* indica la parte in basso a destra della prima immagine */
+    QPointF bottomRigth;
+    QList<immagine_s> img;
+};
+
 class frompdf
 {
 private:
     Document *m_data;
 
     Poppler::Document *doc = nullptr;
-    QList<immagine_s> m_image;
+    QList<Pdf> m_image;
 
     static inline QString getNameNoCopy(const uint i){
         return SUFFIX_PDF + QString::number(uint(i));
@@ -37,10 +47,10 @@ private:
 public:    
     static bool isvalid(QString &pos);
 
-    void translation(const QPointF &point){
-        translation(point.x(), point.y());
+    void translation(const QPointF &point);
+    inline void translation(const double x, const double y){
+        translation(QPointF(x, y));
     }
-    void translation(const double x, const double y);
 
     frompdf(Document *doc);
 
@@ -63,7 +73,8 @@ public:
     load_res load(const QString &, const bool clear);
     /* it load from a zip_t file all the pdf for the current copybook */
     load_res load(zip_t *filezip, zip_file_t *file);
-    load_res load_from_row(const QByteArray &, const bool clear, const bool FirstLoad);
+    load_res load_from_row(const QByteArray &, const bool clear,
+                           const bool FirstLoad, const uchar IndexPdf);
 
     load_res save(zip_t *filezip, const QStringList &path, const QString &path_writernote_file);
     load_res save(zip_t *filezip, const QString &path, const QString &path_writernote_file);
@@ -74,7 +85,9 @@ public:
                      const uint pwidth,
                      const int rend_width,
                      const int rend_heigth){
-        return fromimage::draw(painter, pwidth, rend_width, rend_heigth, m_image);
+        int i;
+        for(i=0; i<this->m_image.length(); ++i)
+            fromimage::draw(painter, pwidth, rend_width, rend_heigth, m_image.at(i).img);
 
         /*uint i, len;
         QRect rect_area;
@@ -118,7 +131,7 @@ public:
                       const PointSettable *point,
                       const QString &path_writernote);
 private:
-    void adjast();
+    void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);
 };
 

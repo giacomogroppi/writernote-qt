@@ -65,7 +65,7 @@ int savefile::saveArrayIntoFile(const QString &from,
                                 const QString &name_coby,
                                 const QString &path,
                                 zip_t *filezip,
-                                const QString &suffix)
+                                const QString &suffix, const bool closeZip)
 {
     QString __fin = name_coby + suffix;
 
@@ -120,14 +120,16 @@ int savefile::saveArrayIntoFile(const QString &from,
     if(check != OK_PRIVATE)
         goto delete_;
 
-    zip_close(filezip);
+    if(closeZip)
+        zip_close(filezip);
     fclose(fp);
     return OK;
 
     delete_:
     fclose(fp);
     zip_source_free(file);
-    zip_close(filezip);
+    if(closeZip)
+        zip_close(filezip);
     return ERROR;
 
 }

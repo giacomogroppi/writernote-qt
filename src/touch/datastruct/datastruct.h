@@ -69,7 +69,6 @@ private:
     fromimage *m_img;
 
 public:
-
     static inline bool point_mid_square(const point_s *f,
                                         const point_s *s,
                                         const QPointF pp,
@@ -218,8 +217,8 @@ public:
     double biggerxNoId();
     void reset();
 
-    double biggerynoid();
-    double biggerx();
+    double biggerynoid() const;
+    double biggerx() const;
     void removeat(int i);
 
     bool needtocreatenew();
@@ -299,6 +298,12 @@ public:
         return &m_point;
     }
 
+    QPointF get_size_page() const{
+        if(!this->posizionefoglio.length())
+            return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
+        const point_s &ref = m_point.first();
+        return QPointF( biggerx() - ref.m_x, posizionefoglio.first() - ref.m_y);
+    }
 };
 
 /*
