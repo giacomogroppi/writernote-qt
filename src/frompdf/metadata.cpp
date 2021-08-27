@@ -1,13 +1,18 @@
 #include "frompdf.h"
 #include "../currenttitle/document.h"
 
+static inline void copy(const QPointF &point, double *data);
+
 frompdf::load_res frompdf::save_metadata(zip_source_t *file)
 {
     uint i;
     double pos[4];
 
     for(i=0; i<m_data->count_pdf; ++i){
+        const Pdf &pdf = this->m_image.at(i);
 
+        copy(pdf.topLeft, pos);
+        copy(pdf.bottomRigth, &pos[2]);
 
         if(zip_source_write(file, pos, sizeof(double)*4) == -1){
             return load_res::no_metadata;
@@ -22,7 +27,7 @@ frompdf::load_res frompdf::load_metadata(zip_file_t *file)
     double pos[4];
     Pdf pdf;
 
-    const QPointF size = this->m_data->datatouch->get_size_page();
+    //const QPointF size = this->m_data->datatouch->get_size_page();
 
     for(i=0; i<m_data->count_pdf; ++i){
         if(zip_fread(file, pos, sizeof(double)*4) == -1)
@@ -34,4 +39,9 @@ frompdf::load_res frompdf::load_metadata(zip_file_t *file)
     }
 
     return load_res::ok;
+}
+
+static inline void copy(const QPointF &point, double *data){
+    data[0] = point.x();
+    data[1] = point.y();
 }

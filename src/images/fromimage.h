@@ -87,28 +87,39 @@ public:
                             const uint pwidth,
                             const int rend_width,
                             const int rend_heigth,
+                            const immagine_s &img){
+        Q_UNUSED(pwidth);
+        uchar check;
+        QRectF from, rect;
+
+        from = img.immagini.rect();
+
+        check = (img.f.y() < (double)0) +
+                (img.f.x() < (double)0) +
+                (img.i.y() > (double)rend_width) +
+                (img.i.x() > (double)rend_heigth);
+
+        if(check)
+            return;
+
+        rect = QRectF(img.i, img.f);
+
+        painter.drawImage(rect, img.immagini, from);
+
+    }
+
+    static inline void draw(QPainter &painter,
+                            const uint pwidth,
+                            const int rend_width,
+                            const int rend_heigth,
                             const QList<immagine_s> &list){
         Q_UNUSED(pwidth);
         uint i;
-        QRectF rect, from;
-        uchar check;
 
         for(i=0; i<(uint)list.length(); ++i){
             const struct immagine_s &img = list.at(i);
-            from = img.immagini.rect();
 
-            check = (img.f.y() < (double)0) +
-                    (img.f.x() < (double)0) +
-                    (img.i.y() > (double)rend_width) +
-                    (img.i.x() > (double)rend_heigth);
-
-            if(check)
-                continue;
-
-            rect = QRectF(img.i, img.f);
-
-            painter.drawImage(rect, img.immagini, from);
-
+            fromimage::draw(painter, pwidth, rend_width, rend_heigth, img);
         }
     }
 
