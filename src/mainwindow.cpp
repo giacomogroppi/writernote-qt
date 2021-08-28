@@ -161,7 +161,7 @@ MainWindow::MainWindow(QWidget *parent,
         openFile(path);
     resFileTmpInTmpFolder();
 
-    this->setSizeButton(50);
+    this->setSizeButton(20);
 }
 
 MainWindow::~MainWindow()
