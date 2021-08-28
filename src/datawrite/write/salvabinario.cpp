@@ -67,19 +67,14 @@ int savefile::saveArrayIntoFile(const QString &from,
                                 zip_t *filezip,
                                 const QString &suffix, const bool closeZip)
 {
-    QString __fin = name_coby + suffix;
-
+    const QString __fin = name_coby + suffix;
     zip_source_t *file;
     zip_error_t errore;
-
     int check = 0, error;
-
     uchar __data;
     FILE *fp;
 
-    fp = fopen(from.toUtf8().constData(), "r");
-
-    if(!fp)
+    if(!(fp = fopen(from.toUtf8().constData(), "r")))
         return ERROR;
 
     if(!filezip){
@@ -93,7 +88,8 @@ int savefile::saveArrayIntoFile(const QString &from,
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
     if(!file){
-        zip_close(filezip);
+        if(closeZip)
+            zip_close(filezip);
         fclose(fp);
         return ERROR;
     }
@@ -128,6 +124,7 @@ int savefile::saveArrayIntoFile(const QString &from,
     delete_:
     fclose(fp);
     zip_source_free(file);
+
     if(closeZip)
         zip_close(filezip);
     return ERROR;

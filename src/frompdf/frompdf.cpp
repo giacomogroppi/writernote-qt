@@ -8,6 +8,7 @@
 #include "../dataread/readlistarray.h"
 #include "../datawrite/savefile.h"
 #include <QFileDialog>
+#include "../dataread/load_from_file.h"
 
 void frompdf::translation(const QPointF &point)
 {
@@ -107,7 +108,6 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
      * in the current version we cannot upload more
      * than one pdf at the same time
     */
-    assert(IndexPdf > 0);
 
     uint i, len;
     QImage img;
@@ -115,6 +115,10 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
 
     if(clear)
         this->reset();
+
+    if(FirstLoad){
+        this->init_FirstLoad();
+    }
 
     doc = Poppler::Document::loadFromData(pos);
 
@@ -126,7 +130,7 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     len = doc->numPages();
 
     for(i=0; i<len; ++i){
-        img = doc->page(QString::number(i))->renderToImage(
+        img = doc->page(QString::number(i+1))->renderToImage(
                                     5 * IMG_PDF_HEIGHT,
                                     5 * IMG_PDF_HEIGHT);
 
@@ -135,7 +139,7 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
 
         imgAppend.immagini = img;
 
-        this->m_image.operator[](i).img.append(imgAppend);
+        this->m_image.operator[](IndexPdf).img.append(imgAppend);
 
     }
 
@@ -169,13 +173,19 @@ frompdf::load_res frompdf::save(zip_t *filezip,
                                 const QString &path,
                                 const QString &path_writernote_file)
 {
-    if(savefile::saveArrayIntoFile(path,
+    //QByteArray arr;
+
+    //if(!load_from_file::exe(arr, path, false))
+    //    return load_res::no_valid_path;
+
+    if(savefile::saveArrayIntoFile((const QString &)path,
                                    this->m_data->nome_copybook,
                                    path_writernote_file,
                                    filezip,
                                    frompdf::getNameNoCopy(m_data->count_pdf),
-                                   false) != OK)
+                                   true) != OK)
         return load_res::not_valid_pdf;
+
     return load_res::ok;
 }
 
@@ -205,8 +215,10 @@ void frompdf::addPdf(QString &pos,
         return user_message("It's not possible to pdf in keyboard mode");
 
     m_data->datatouch->scala_all();
-    if(insert_pdf(pos, point) != OK)
+    if(insert_pdf(pos, point) != OK){
+        res = load_res::not_valid_pdf;
         goto err;
+    }
 
     res = this->save(fileZip, pos, path_writernote);
     if(res != load_res::ok)
@@ -238,7 +250,7 @@ void frompdf::adjast(const uchar indexPdf)
 uchar frompdf::insert_pdf(QString &pos,
                           const PointSettable *point)
 {
-    assert(this->m_image.length());
+    assert(this->m_image.length() == 0);
     Pdf pdf;
     const QPointF size = this->m_data->datatouch->get_size_page();
 

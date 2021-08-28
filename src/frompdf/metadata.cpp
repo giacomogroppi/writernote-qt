@@ -41,6 +41,12 @@ frompdf::load_res frompdf::load_metadata(zip_file_t *file)
     return load_res::ok;
 }
 
+void frompdf::init_FirstLoad()
+{
+    Pdf pdf;
+    this->m_image.append(pdf);
+}
+
 static inline void copy(const QPointF &point, double *data){
     data[0] = point.x();
     data[1] = point.y();

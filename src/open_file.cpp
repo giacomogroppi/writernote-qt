@@ -59,7 +59,7 @@ void MainWindow::openFile(const char *pos){
     file.close();
 
 #ifndef ANDROID
-    if(fileName.indexOf(APP_EXT) == -1
+    if(fileName.indexOf(APP_EXT) != -1
             && fileName.indexOf(".pdf") != -1){
         if(!areyousure("Error", "The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?")){
             return;
@@ -95,11 +95,11 @@ void MainWindow::openFile(const char *pos){
     const bool pdf = fileName.indexOf(".pdf") != -1;
 
     if(pdf){
-        __res = m_currenttitle->m_pdf->load(fileName, false);
+        m_currenttitle->m_pdf->addPdf(fileName, nullptr, this->m_path);
 
-        if(__res == frompdf::load_res::ok){
+        /*if(__res == frompdf::load_res::ok){
             m_currenttitle->m_pdf->addPdf(fileName, nullptr, this->m_path);
-        }
+        }*/
     }
     else {
         if(!xml.loadindice())

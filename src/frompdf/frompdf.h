@@ -133,6 +133,13 @@ public:
 private:
     void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);
+
+
+    /*
+     * this function only append a pdf to
+     * the list
+    */
+    void init_FirstLoad();
 };
 
 #endif // FROMPDF_H
