@@ -52,6 +52,10 @@ public:
     }
 
     frompdf(Document *doc);
+    ~frompdf(){
+        if(this->doc)
+            delete doc;
+    }
 
     enum load_res: uchar{
         ok,
@@ -91,14 +95,14 @@ public:
         int i, k;
         QRectF size = this->m_data->datatouch->size_first_page();
 
-        const double x = std::abs(size.topLeft().x() - size.bottomRight().x());
+        //const double x = std::abs(size.topLeft().x() - size.bottomRight().x());
         const double y = std::abs(size.topLeft().y() - size.bottomRight().y());
 
         for(i=0; i<this->m_image.length(); ++i){
             const Pdf &pdf = this->m_image.at(i);
             for(k=0; k<pdf.img.length(); ++k){
                 fromimage::draw(painter, size, pdf.img.at(i).immagini);
-                size.adjust(x, y, x, y);
+                size.adjust(0, y, 0, y);
             }
         }
     }
@@ -113,7 +117,7 @@ private:
     void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);
 
-    uint resolution = 72;
+    uint resolution = 500;//72
 
     /*
      * this function only append a pdf to
