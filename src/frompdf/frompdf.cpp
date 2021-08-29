@@ -91,7 +91,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
     for (i=0; i<m_data->count_pdf; ++i){
         auto res = load_from_row(arr.at(i),
                                  false,
-                                 file != nullptr,
+                                 file == nullptr,
                                  i);
         if(res != frompdf::load_res::ok)
             return res;
