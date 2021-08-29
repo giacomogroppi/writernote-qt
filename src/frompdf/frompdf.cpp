@@ -112,6 +112,7 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     uint i, len;
     QImage img;
     struct immagine_s imgAppend;
+    const auto size = m_data->datatouch->get_size_page();
 
     if(clear)
         this->reset();
@@ -131,8 +132,8 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
 
     for(i=0; i<len; ++i){
         img = doc->page(QString::number(i+1))->renderToImage(
-                                    5 * IMG_PDF_HEIGHT,
-                                    5 * IMG_PDF_HEIGHT);
+                                    size.x(),
+                                    size.y());
 
         if(img.isNull())
             return load_res::not_valid_page;

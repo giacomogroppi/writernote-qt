@@ -84,15 +84,23 @@ public:
     }
 
     static inline void draw(QPainter &painter,
+                            const QRectF & rect,
+                            const QImage &img){
+        const QRectF draw = img.rect();
+
+        painter.drawImage(rect, img, draw);
+    }
+
+    static inline void draw(QPainter &painter,
                             const uint pwidth,
                             const int rend_width,
                             const int rend_heigth,
                             const immagine_s &img){
         Q_UNUSED(pwidth);
         uchar check;
-        QRectF from, rect;
+        //QRectF from, rect;
 
-        from = img.immagini.rect();
+        //from = img.immagini.rect();
 
         check = (img.f.y() < (double)0) +
                 (img.f.x() < (double)0) +
@@ -102,9 +110,10 @@ public:
         if(check)
             return;
 
-        rect = QRectF(img.i, img.f);
+        fromimage::draw(painter, QRectF(img.i, img.f), img.immagini);
 
-        painter.drawImage(rect, img.immagini, from);
+        //rect = QRectF(img.i, img.f);
+        //painter.drawImage(rect, img.immagini, from);
 
     }
 

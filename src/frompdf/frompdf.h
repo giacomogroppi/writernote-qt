@@ -1,9 +1,8 @@
 #ifndef FROMPDF_H
 #define FROMPDF_H
 
-class Document;
-
 #include "../touch/datastruct/datastruct.h"
+#include "../currenttitle/document.h"
 #include "zip.h"
 #include <QString>
 #include <QList>
@@ -85,43 +84,23 @@ public:
                      const uint pwidth,
                      const int rend_width,
                      const int rend_heigth){
-        int i;
-        for(i=0; i<this->m_image.length(); ++i)
-            fromimage::draw(painter, pwidth, rend_width, rend_heigth, m_image.at(i).img);
+        Q_UNUSED(pwidth);
+        Q_UNUSED(rend_width);
+        Q_UNUSED(rend_heigth);
 
-        /*uint i, len;
-        QRect rect_area;
-        uchar check;
-        size_t height;
+        int i, k;
+        QRectF size = this->m_data->datatouch->size_first_page();
 
-        len = m_image.length();
-        height = 0;
+        const double x = std::abs(size.topLeft().x() - size.bottomRight().x());
+        const double y = std::abs(size.topLeft().y() - size.bottomRight().y());
 
-        for(i=0; i<len; ++i){
-            const QImage &img = m_image.at(i);
-
-            rect_area = QRect(pwidth*i,
-                              (IMG_PDF_HEIGHT/IMG_PDF_WIDTH)*pwidth*i,
-                              pwidth*(i+1),
-                              (IMG_PDF_HEIGHT/IMG_PDF_WIDTH)*pwidth*(i+1));
-
-            check = (m_translation.y2 < (double)0) +
-                (m_translation.x2 < (double)0) +
-                (m_translation.y1 > (double)rend_width) +
-                (m_translation.x1 > (double)rend_heigth);
-
-            if(check)
-                continue;*/
-
-            /*
-             * we need to add all the
-             * height of all the image we draw
-             * before
-            */
-            /*height += img.height();
-
-            painter.drawImage(rect_area, img);
-        }*/
+        for(i=0; i<this->m_image.length(); ++i){
+            const Pdf &pdf = this->m_image.at(i);
+            for(k=0; k<pdf.img.length(); ++k){
+                fromimage::draw(painter, size, pdf.img.at(i).immagini);
+                size.adjust(x, y, x, y);
+            }
+        }
     }
 
     uchar insert_pdf(QString &pos,

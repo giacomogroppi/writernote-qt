@@ -298,11 +298,27 @@ public:
         return &m_point;
     }
 
-    QPointF get_size_page() const{
+    inline QPointF get_size_page() const{
         if(!this->posizionefoglio.length())
             return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
         const point_s &ref = m_point.first();
         return QPointF( biggerx() - ref.m_x, posizionefoglio.first() - ref.m_y);
+    }
+    inline QPointF get_size_first_page(){
+        if(!this->posizionefoglio.length())
+            return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
+
+        return QPointF(this->m_point.first().m_x, biggery()/double(posizionefoglio.length()));
+    }
+    inline double currentHeight(){
+        if(isempty())
+            return double(NUMEROPIXELORIZZONALI);
+        return (biggery()-m_point.first().m_y)/double(posizionefoglio.length());
+    }
+
+    inline QRectF size_first_page(){
+        const point_s &ref = m_point.first();
+        return QRectF(ref.m_x, ref.m_y, biggerx(), biggery()/double(posizionefoglio.length()));
     }
 };
 
