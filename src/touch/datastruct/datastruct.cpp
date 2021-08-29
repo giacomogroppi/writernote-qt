@@ -204,29 +204,6 @@ void datastruct::reset(){
     posizionefoglio.clear();
 }
 
-double datastruct::biggery(){
-    if(isempty())
-        return (double)0;
-
-    uint i, len;
-    double y_;
-
-    const point_s * __point = at(0);
-
-    y_ = __point->m_y;
-    len = length();
-
-    for(i=0; i<len; i++){
-        __point = at(i);
-
-        if(__point->m_y > y_)
-            y_ = __point->m_y;
-    }
-
-    return y_;
-
-}
-
 uint datastruct::positionId(int id)
 {
     unsigned int len, i;
@@ -330,24 +307,6 @@ double datastruct::biggerynoid() const{
 
 void datastruct::removeat(int i){
     m_point.removeAt(i);
-
-}
-
-/*YES IDVERTICALE ORIZZONTALE*/
-double datastruct::biggerx() const{
-    int i, len;
-    double max;
-
-    len = m_point.length();
-    max = m_point.first().m_x;
-
-    for(i=0; i<len; i++){
-        if(max < m_point.at(i).m_x){
-            max = m_point.at(i).m_x;
-        }
-    }
-
-    return max;
 
 }
 

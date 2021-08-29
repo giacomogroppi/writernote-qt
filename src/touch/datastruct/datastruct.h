@@ -204,7 +204,7 @@ public:
     bool isAvailable(int id);
     int maxId();
 
-    inline bool isempty(){
+    inline bool isempty() const{
         return this->m_point.isEmpty();
     };
 
@@ -218,13 +218,47 @@ public:
     void reset();
 
     double biggerynoid() const;
-    double biggerx() const;
+    double biggerx() const{
+        int i, len;
+        double max;
+
+        len = m_point.length();
+        max = m_point.first().m_x;
+
+        for(i=0; i<len; i++){
+            if(max < m_point.at(i).m_x){
+                max = m_point.at(i).m_x;
+            }
+        }
+
+        return max;
+    }
     void removeat(int i);
 
     bool needtocreatenew();
     bool needtochangeid(const unsigned int);
 
-    double biggery();
+    double biggery() const{
+        if(isempty())
+            return (double)0;
+
+        uint i, len;
+        double y_;
+
+        const point_s * __point = at(0);
+
+        y_ = __point->m_y;
+        len = length();
+
+        for(i=0; i<len; i++){
+            __point = at(i);
+
+            if(__point->m_y > y_)
+                y_ = __point->m_y;
+        }
+
+        return y_;
+    }
 
     /* the function return the index of the id*/
     uint positionId(int id);
@@ -302,7 +336,7 @@ public:
         if(!this->posizionefoglio.length())
             return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
         const point_s &ref = m_point.first();
-        return QPointF( biggerx() - ref.m_x, posizionefoglio.first() - ref.m_y);
+        return QPointF( biggerx() - ref.m_x, biggery()/double(posizionefoglio.length()) - ref.m_y);
     }
     inline QPointF get_size_first_page(){
         if(!this->posizionefoglio.length())

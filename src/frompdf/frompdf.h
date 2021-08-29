@@ -113,6 +113,7 @@ private:
     void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);
 
+    uint resolution = 72;
 
     /*
      * this function only append a pdf to
