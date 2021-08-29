@@ -173,17 +173,12 @@ frompdf::load_res frompdf::save(zip_t *filezip,
                                 const QString &path,
                                 const QString &path_writernote_file)
 {
-    //QByteArray arr;
-
-    //if(!load_from_file::exe(arr, path, false))
-    //    return load_res::no_valid_path;
-
     if(savefile::saveArrayIntoFile((const QString &)path,
                                    this->m_data->nome_copybook,
                                    path_writernote_file,
                                    filezip,
                                    frompdf::getNameNoCopy(m_data->count_pdf),
-                                   true) != OK)
+                                   false) != OK)
         return load_res::not_valid_pdf;
 
     return load_res::ok;
@@ -235,6 +230,7 @@ void frompdf::addPdf(QString &pos,
         dialog_critic("We had some error");
 
     m_data->datatouch->restoreLastTranslation();
+    zip_close(fileZip);
 }
 
 void frompdf::adjast(const uchar indexPdf)
