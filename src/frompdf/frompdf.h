@@ -95,8 +95,7 @@ public:
         int i, k;
         QRectF size = this->m_data->datatouch->size_first_page();
 
-        //const double x = std::abs(size.topLeft().x() - size.bottomRight().x());
-        const double y = std::abs(size.topLeft().y() - size.bottomRight().y());
+        const double y = this->m_data->datatouch->currentHeight();
 
         for(i=0; i<this->m_image.length(); ++i){
             const Pdf &pdf = this->m_image.at(i);

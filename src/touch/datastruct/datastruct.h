@@ -344,11 +344,10 @@ public:
 
         return QPointF(this->m_point.first().m_x, biggery()/double(posizionefoglio.length()));
     }
-    inline double currentHeight(){
-        if(isempty())
-            return double(NUMEROPIXELORIZZONALI);
-        return (biggery()-m_point.first().m_y)/double(posizionefoglio.length());
-    }
+
+
+    inline double currentWidth();
+    inline double currentHeight();
 
     inline QRectF size_first_page(){
         const point_s &ref = m_point.first();
@@ -363,6 +362,18 @@ public:
 inline bool point_s::isIdUser() const
 {
     return datastruct::isIdUser(this);
+}
+
+inline double datastruct::currentHeight(){
+    if(isempty())
+        return double(NUMEROPIXELORIZZONALI);
+    return (biggery()-m_point.first().m_y)/double(posizionefoglio.length());
+}
+
+inline double datastruct::currentWidth(){
+    if(isempty())
+        return double(NUMEROPIXELVERTICALI);
+    return (biggerx() - m_point.first().m_x);
 }
 
 #endif // DATASTRUCT_H
