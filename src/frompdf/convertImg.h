@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QThread>
-#include <poppler/qt5/poppler-qt5.h>
+#include "poppler-qt5.h"
 #include <QImage>
 
 class convertImg: public QThread{
