@@ -232,6 +232,7 @@ SOURCES += \
     src/utils/resize_mainwindow/resize.cpp \
     src/utils/retry/retry_ui.cpp \
     src/utils/settings/setting_load.cpp \
+    src/utils/threadcount.cpp \
     src/utils/time/current_time.cpp \
     src/videocompress/compressivideo.cpp \
     src/videocompress/enable_videocompress.cpp \
@@ -346,6 +347,7 @@ HEADERS += \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \
     src/utils/slash/slash.h \
+    src/utils/threadcount.h \
     src/utils/time/current_time.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
