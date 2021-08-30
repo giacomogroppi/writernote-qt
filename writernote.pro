@@ -71,6 +71,7 @@ SOURCES += \
     src/dataread/readlistarray.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
+    src/frompdf/convertimg.cpp \
     src/frompdf/metadata.cpp \
     src/images/fromimage.cpp \
     src/last_open/option/button_main.cpp \
@@ -257,6 +258,7 @@ HEADERS += \
     src/dataread/load_from_file.h \
     src/dataread/readlistarray.h \
     src/filelost.h \
+    src/frompdf/convertImg.h \
     src/images/fromimage.h \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \

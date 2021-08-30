@@ -9,6 +9,10 @@
 #include "../datawrite/savefile.h"
 #include <QFileDialog>
 #include "../dataread/load_from_file.h"
+#include "../utils/areyousure/areyousure.h"
+#include "convertImg.h"
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
 
 void frompdf::translation(const QPointF &point)
 {
@@ -112,6 +116,8 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     uint i, len;
     QImage img;
     struct immagine_s imgAppend;
+    QList<Poppler::Page *> page;
+    QList<convertImg *> conv;
 
     if(clear)
         this->reset();
@@ -123,22 +129,45 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     doc = Poppler::Document::loadFromData(pos);
 
     if(!doc){
-        dialog_critic("The file is not readable");
+        if(areyousure("Pdf error loading", "it seems the pdf file is correct, do you want to remove it?")){
+            this->m_data->count_pdf = 0;
+            return load_res::ok;
+        }
         return load_res::not_valid_pdf;
     }
 
     len = doc->numPages();
 
     for(i=0; i<len; ++i){
-        img = doc->page(QString::number(i+1))->renderToImage(resolution, resolution);
+        page.append(doc->page(QString::number(i+1)));
+        this->m_image.operator[](IndexPdf).img.append(imgAppend);
+        conv.append(new convertImg(page.at(i), &m_image.operator[](IndexPdf).img.operator[](i).immagini, resolution));
+    }
+
+    for(i=0; i<len; ++i){
+        conv.at(i)->start();
+
+        /*img = page.at(i)->renderToImage(resolution, resolution);
 
         if(img.isNull())
             return load_res::not_valid_page;
 
         imgAppend.immagini = img;
 
-        this->m_image.operator[](IndexPdf).img.append(imgAppend);
+        this->m_image.operator[](IndexPdf).img.operator[](i).immagini = imgAppend.immagini;
+        //this->m_image.operator[](IndexPdf).img.append(imgAppend);*/
+    }
 
+    for(i=0; i<(uint)conv.length(); ++i){
+        conv.at(i)->wait();
+    }
+    for(i=0; i<(uint)conv.length(); ++i){
+        delete conv.at(i);
+    }
+
+    for(i=0; i<this->m_image.at(IndexPdf).img.at(i).immagini.isNull(); ++i){
+        dialog_critic("We had a problem processing an image");
+        return load_res::not_valid_pdf;
     }
 
     if(FirstLoad)
