@@ -12,7 +12,7 @@ class button_size : public QDialog
     Q_OBJECT
 
 public:
-    explicit button_size(QWidget *parent = nullptr);
+    explicit button_size(QWidget *parent = nullptr, int size = 20);
     ~button_size();
 
 private:

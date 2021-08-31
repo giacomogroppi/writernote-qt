@@ -1,13 +1,15 @@
 #include "button_size.h"
 #include "ui_button_size.h"
 
-button_size::button_size(QWidget *parent) :
+button_size::button_size(QWidget *parent, int size) :
     QDialog(parent),
     ui(new Ui::button_size)
 {
     ui->setupUi(this);
     ui->horizontalSlider->setMinimum(5);
     ui->horizontalSlider->setMaximum(100);
+
+    ui->horizontalSlider->setValue(size);
 }
 
 button_size::~button_size()

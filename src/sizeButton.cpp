@@ -15,11 +15,10 @@ void MainWindow::setSizeButton(int size){
         set_size(size_res);
     }
     if(size == -2){
-        button_size dialog;
+        button_size dialog(nullptr, size_res);
         set_size(size_res);
 
         QObject::connect(&dialog, &button_size::update_size, [=](int val){
-            qDebug() << val;
             update_size(val, this);
             size_res = val;
         });
