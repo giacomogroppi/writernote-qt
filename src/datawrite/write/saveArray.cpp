@@ -14,7 +14,7 @@ int savefile::saveArrayIntoFile(const QString &from,
     uchar __data;
     FILE *fp;
 
-#if defined(UNIX) || defined(MACOS)
+#if defined(unix) || defined(MACOS)
     if(!(fp = fopen(from.toUtf8().constData(), "r")))
         return ERROR;
 #elif defined(WIN32) || defined (WIN64)
@@ -42,7 +42,7 @@ int savefile::saveArrayIntoFile(const QString &from,
     zip_source_begin_write(file);
 
     while(1){
-        fread(&__data, 1, 1, fp);
+        fread(&__data, sizeof(uchar), 1, fp);
 
         if(feof(fp)){
             break;

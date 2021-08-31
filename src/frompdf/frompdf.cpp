@@ -145,6 +145,12 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     }
 
     for(i=0; i<len; ++i){
+        QObject::connect(conv.at(i), &convertImg::finished, [=](){
+            qDebug() << "finito: ";
+        });
+    }
+
+    for(i=0; i<len; ++i){
         conv.at(i)->start();
 
         /*img = page.at(i)->renderToImage(resolution, resolution);
