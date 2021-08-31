@@ -69,6 +69,7 @@ SOURCES += \
     src/datamanage/retry_save_audio.cpp \
     src/dataread/load_from_file.cpp \
     src/dataread/readlistarray.cpp \
+    src/datawrite/write/saveArray.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
     src/frompdf/convertimg.cpp \

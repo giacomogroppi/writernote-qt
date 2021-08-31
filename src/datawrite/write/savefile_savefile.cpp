@@ -142,62 +142,6 @@ uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)
     return OK;
 }
 
-int savefile::saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
-                                const QString &path, zip_t *filezip,
-                                const QString &suffix, const bool closeZip)
-{
-    const QString __fin = name_coby + suffix;
-    zip_source_t *file;
-    zip_error_t errore;
-    int check = 0, error;
-    uchar __data;
-    int i;
-    const int len = arr.length();
-
-    if(!filezip){
-        filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
-
-        if(!filezip)
-            return ERROR;
-    }
-
-    file = zip_source_buffer_create(0, 0, 0, &errore);
-    if(!file){
-        if(closeZip)
-            zip_close(filezip);
-        return ERROR;
-    }
-
-    zip_source_begin_write(file);
-
-    for(i=0; i<len; ++i){
-        __data = arr.at(i);
-
-        SOURCE_WRITE(file, &__data, sizeof(__data));
-    }
-
-    check += zip_source_commit_write(file)==ERROR_PRIVATE;
-
-    check += zip_file_add(filezip,
-                 (__fin).toUtf8().constData(),
-                 file,
-                 ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
-
-    if(check != OK_PRIVATE)
-        goto delete_;
-
-    if(closeZip)
-        zip_close(filezip);
-    return OK;
-
-    delete_:
-    zip_source_free(file);
-
-    if(closeZip)
-        zip_close(filezip);
-    return ERROR;
-}
-
 static int save_string(zip_source_t *file, const char *stringa){
     int size = strlen(stringa);
     SOURCE_WRITE_RETURN(file, &size, sizeof(size));
