@@ -124,4 +124,7 @@
 #define KEY_HIGHLIGHTER_SPESS "key-highlighter-spess" /* bool */
 #define KEY_HIGHLIGHTER_SOTTO "key-highlighter-sotto" /* bool */
 
+/* size button */
+#define GROUPNAME_SIZE_BUTTON "groupname-size-button"
+#define KEY_SIZE_BUTTON "key-size-button"
 #endif // SETTING_DEFINE_H

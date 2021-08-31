@@ -64,7 +64,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    void setSizeButton(int size);
+
+    /* -1 load from QSettings, -2 for show a slider */
+    void setSizeButton(int size = -1);
     void resFileTmpInTmpFolder();
     void contrUi();
     void updateTouch();
@@ -348,6 +350,10 @@ private slots:
     void on_start_play_clicked();
 
     void on_stop_rec_triggered();
+
+    void on_actionRemove_current_PDF_triggered();
+
+    void on_actionSize_button_triggered();
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;

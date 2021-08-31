@@ -67,6 +67,7 @@ public:
 
     inline void reset(){
         m_image.clear();
+        this->m_data->count_pdf = 0;
     }
 
     QStringList get_name_pdf();

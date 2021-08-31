@@ -161,7 +161,7 @@ MainWindow::MainWindow(QWidget *parent,
         openFile(path);
     resFileTmpInTmpFolder();
 
-    this->setSizeButton(20);
+    this->setSizeButton();
 }
 
 MainWindow::~MainWindow()
@@ -369,3 +369,10 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
     touch_or_pen = !touch_or_pen;
     update_touch_or_pen();
 }
+
+
+void MainWindow::on_actionRemove_current_PDF_triggered()
+{
+    this->m_currenttitle->m_pdf->reset();
+}
+

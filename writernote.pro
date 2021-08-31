@@ -58,6 +58,7 @@ DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 SOURCES += \
     src/audiorecord/start_recording.cpp \
+    src/button/button_size.cpp \
     src/changeCopybook.cpp \
     src/controllUi.cpp \
     src/currenttitle/default_type/default_type.cpp \
@@ -251,6 +252,7 @@ SOURCES += \
 
 
 HEADERS += \
+    src/button/button_size.h \
     src/currenttitle/default_type/default_type.h \
     src/currenttitle/document.h \
     src/currenttitle/option/modality_data.h \
@@ -360,6 +362,7 @@ HEADERS += \
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
+    src/button/button_size.ui \
     src/currenttitle/option/option_copybook.ui \
     src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \

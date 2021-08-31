@@ -291,7 +291,7 @@
      <x>0</x>
      <y>0</y>
      <width>967</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">
@@ -354,6 +354,8 @@
     <addaction name="actionScroll"/>
     <addaction name="actionLast_open_file"/>
     <addaction name="actionCopybook"/>
+    <addaction name="actionRemove_current_PDF"/>
+    <addaction name="actionSize_button"/>
    </widget>
    <widget class="QMenu" name="menuFile_restore">
     <property name="title">
@@ -1011,6 +1013,16 @@
    </property>
    <property name="text">
     <string>purple</string>
+   </property>
+  </action>
+  <action name="actionRemove_current_PDF">
+   <property name="text">
+    <string>Remove current PDF</string>
+   </property>
+  </action>
+  <action name="actionSize_button">
+   <property name="text">
+    <string>Size button</string>
    </property>
   </action>
  </widget>
