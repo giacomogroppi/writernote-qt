@@ -4,7 +4,7 @@
 #if defined(unix) || defined(MACOS)
 #define POS_HOME "HOME"
 #elif WIN32
-#define POS_HOME "HOMEPATH"
+#define POS_HOME "USERPROFILE"
 #endif
 
 #define PLUSS(x) x+=slash::__slash()
@@ -23,41 +23,41 @@ static bool createTempFolder(QString &path);
  * folder -> return NULL
 */
 
-const char * get_path(path::e_path var)
+QString get_path(path::e_path var)
 {
     QString tmp;
     if(var == path::audio_pos){
         tmp = get_path_no_controll();
 
         if(!createTempFolder(tmp))
-            return NULL;
+            return "";
 
-        return tmp.toUtf8().constData();
+        return tmp;
     }
 
     if(var == path::log){
         tmp = get_path_no_controll();
         tmp += "writernote-log";
         if(!createTempFolder(tmp))
-            return NULL;
-        return tmp.toUtf8().constData();
+            return "";
+        return tmp;
     }
 
     if(var == path::tmp_file_not_save){
         tmp = get_path_no_controll();
         if(!createTempFolder(tmp))
-            return NULL;
-        return tmp.toUtf8().constData();
+            return "";
+        return tmp;
     }
 
     if(var == path::home){
-        return getenv(POS_HOME);
+        return (QString)getenv(POS_HOME);
     }
     if(var == path::nameuser){
         return getenv(NAME_USER);
     }
 
-    return NULL;
+    return "";
 }
 
 static bool createTempFolder(QString &path){
@@ -72,12 +72,12 @@ static bool createTempFolder(QString &path){
  * the function does not check if the
  * folder to save the audio exists
 */
-const char *get_path_no_controll(){
+QString get_path_no_controll(){
     QString temp = getenv(POS_HOME);
 
     PLUSS(temp);
     temp += FOLDERNAME;
 
     PLUSS(temp);
-    return temp.toUtf8().constData();
+    return temp;
 }

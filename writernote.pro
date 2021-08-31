@@ -300,7 +300,6 @@ HEADERS += \
     src/datamanage/checkinserimento.h \
     src/datamanage/spacchettamento.h \
     src/datawrite/renamefile_f_zip.h \
-    src/datawrite/sizedata.h \
     src/datawrite/source_read_ext.h \
     src/utils/bug_repo/bug_repo_ui.h \
     src/utils/changeLanguage.h \

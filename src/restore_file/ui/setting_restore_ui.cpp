@@ -83,7 +83,7 @@ void setting_restore_ui::decidePath()
 
 void setting_restore_ui::deleteFile()
 {
-    QString ff = (*m_path != "") ? get_name_tmp::get(*m_path) : tmp_path;
+    const QString ff = (*m_path != "") ? get_name_tmp::get(*m_path) : tmp_path;
 
     if(!QFile::exists(ff)){
         return;

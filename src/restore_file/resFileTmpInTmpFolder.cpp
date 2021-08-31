@@ -15,7 +15,7 @@ void MainWindow::resFileTmpInTmpFolder(){
     QStringList __l;
     QString __pos;
     QMessageBox::StandardButton resBtn;
-    const int pos_ext = QString("." + APP_EXT).length();
+    const int pos_ext = QString("." + APP_EXT).length(); // posizione dell'estensione di APP_EXT da destra a sinistra
     QString __path;
     restore_file_critic::n_err __res;
     uint i, len, count;

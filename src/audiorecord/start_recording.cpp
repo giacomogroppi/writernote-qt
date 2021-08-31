@@ -164,8 +164,8 @@ bool MainWindow::setOutputLocation()
 
     }
     else if(this->m_currenttitle->se_registato == Document::record_zip){
-        const char * path = get_path(path::audio_pos);
-        if(!path){
+        const QString path = get_path(path::audio_pos);
+        if(path == ""){
             dialog_critic("I had an internal problem with the audio");
             return false;
         }

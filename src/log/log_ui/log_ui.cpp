@@ -107,7 +107,7 @@ int log_ui::loadData(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_LOG_POSITION);
 
-    const char *_pos;
+    QString _pos;
 
     this->m_permi = static_cast<permi>(setting.value(KEY_LOG_POSITION_DEFINE, permi::enable).toInt());
 
@@ -118,7 +118,7 @@ int log_ui::loadData(){
 
     if(pos_log == ""){
         _pos = get_path(path::audio_pos);
-        if(!_pos)
+        if(_pos == "")
             return 1;
 
         pos_log = _pos;
