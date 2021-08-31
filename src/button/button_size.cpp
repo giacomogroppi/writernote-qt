@@ -20,9 +20,8 @@ void button_size::on_pushButton_clicked()
     this->close();
 }
 
-
-void button_size::on_horizontalSlider_actionTriggered(int action)
+void button_size::on_horizontalSlider_valueChanged(int value)
 {
-    emit update_size(action);
+    emit update_size(value);
 }
 

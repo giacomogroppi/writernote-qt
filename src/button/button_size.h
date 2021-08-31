@@ -21,7 +21,7 @@ signals:
     void update_size(int val);
 private slots:
     void on_pushButton_clicked();
-    void on_horizontalSlider_actionTriggered(int action);
+    void on_horizontalSlider_valueChanged(int value);
 };
 
 #endif // BUTTON_SIZE_H

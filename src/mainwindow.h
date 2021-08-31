@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QListWidgetItem>
 #include <QUrl>
-
+#include <QDebug>
 #include <QAudioProbe>
 #include <QAudioRecorder>
 #include <QDir>
