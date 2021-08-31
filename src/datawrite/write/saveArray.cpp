@@ -13,10 +13,14 @@ int savefile::saveArrayIntoFile(const QString &from,
     int check = 0, error;
     uchar __data;
     FILE *fp;
-    size_t size_file;
 
+#if defined(UNIX) || defined(MACOS)
     if(!(fp = fopen(from.toUtf8().constData(), "r")))
         return ERROR;
+#elif defined(WIN32) || defined (WIN64)
+    if(!(fp = fopen(from.toUtf8().constData(), "rb")))
+        return ERROR;
+#endif
 
     if(!filezip){
         filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
@@ -26,10 +30,6 @@ int savefile::saveArrayIntoFile(const QString &from,
             return ERROR;
         }
     }
-
-    fseek(fp, 0L, SEEK_END);
-    size_file = ftell(fp);
-    fseek(fp, 0L, SEEK_SET);
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
     if(!file){
@@ -41,12 +41,12 @@ int savefile::saveArrayIntoFile(const QString &from,
 
     zip_source_begin_write(file);
 
-    while(size_file --){
+    while(1){
         fread(&__data, 1, 1, fp);
 
-        /*if(feof(fp)){
+        if(feof(fp)){
             break;
-        }*/
+        }
         SOURCE_WRITE(file, &__data, sizeof(__data));
     };
 
