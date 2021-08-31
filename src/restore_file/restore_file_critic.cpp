@@ -44,7 +44,7 @@ restore_file_critic::n_err restore_file_critic::restore_file_direct(const QStrin
     xmlstruct xml(path_load, ind, cur);
     savefile save(path_save, cur);
 
-    if(xml.loadfile(name_copybook+".xml") != OK){
+    if(xml.loadfile(name_copybook+".xml", false, false) != OK){
         return restore_file_critic::n_err::error_load_file;
     }
 

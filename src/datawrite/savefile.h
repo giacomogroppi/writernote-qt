@@ -34,6 +34,8 @@ public:
     static int saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
                                  const QString &path, zip_t *filezip, const QString &suffix, const bool closeZip);
 
+    static uchar save_string(zip_source_t *file, const char *str);
+
     void setting_data(Document *m_current){currenttitle = m_current;}
 
     savefile(const QString &path, Document *current){

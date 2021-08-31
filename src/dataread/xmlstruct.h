@@ -42,7 +42,8 @@ private:
     int loadbinario_0(struct zip *);
     int load_file_4(Document *, zip_file_t *f, zip_t *filezip);
 #endif
-    int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip);
+    int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
+                    const bool LoadPdf, const bool LoadImg);
     int loadbinario_1(struct zip *);
 
 public:
@@ -61,9 +62,9 @@ public:
 
     bool loadindice();
 
-    int loadfile(const char *path);
-    int loadfile(const QString &path){
-        return loadfile(path.toUtf8().constData());
+    int loadfile(const char *path, const bool LoadPdf, const bool LoadImg);
+    int loadfile(const QString &path, const bool LoadPdf, const bool LoadImg){
+        return loadfile(path.toUtf8().constData(), LoadPdf, LoadImg);
     }
 
     xmlstruct(const QString *path_U, indice_class *indice_U, Document *currenttitle_U);

@@ -24,7 +24,7 @@ enum MainWindow::n_need_save
         return n_need_save::no_path;
     }
 
-    check1 = xml->loadfile((m_currentTitle + ".xml").toUtf8().constData());
+    check1 = xml->loadfile((m_currentTitle + ".xml").toUtf8().constData(), false, false);
 
     if(check1 != ERROR_VERSION_NEW){
         if(check1 != OK){

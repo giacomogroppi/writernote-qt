@@ -34,7 +34,7 @@ void renamefile(MainWindow *parent, const QString &namefile){
 
     posizione = parent->m_indice.titolo.indexOf(namefile);
 
-    if(xml.loadfile(select+"xml") == ERROR){
+    if(xml.loadfile(select+"xml", false, false) == ERROR){
         return dialog_critic("We had a problem loading \"" + select +"\"\nPlease retry");
     }
 

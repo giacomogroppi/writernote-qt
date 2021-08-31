@@ -10,7 +10,7 @@ void MainWindow::openFirstCopybook(){
         m_currentTitle = m_indice.titolo.first();
         updateTitle(m_currenttitle);
     }else{
-        this->on_listWidgetSX_itemDoubleClicked(item);
+        this->openCopybook(item, false);
     }
 }
 

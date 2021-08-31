@@ -99,7 +99,7 @@ static int load_multiplestring(zip_file_t *f, QList<QString> * lista, QList<int>
 #define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
 #define LOAD_BINARIO_RETURN(x, function) if(function(x) == ERROR) return ERROR;
 
-int xmlstruct::loadfile(const char *nameFile){
+int xmlstruct::loadfile(const char *nameFile, const bool LoadPdf, const bool LoadImg){
     currenttitle->reset();
     int err = 0;
     zip_t *filezip;
@@ -112,7 +112,7 @@ int xmlstruct::loadfile(const char *nameFile){
                        &err);
 
     if (filezip == NULL)
-        return false;
+        return ERROR;
 
     zip_stat_init(&st);
     zip_stat(filezip, nameFile, 0, &st);
@@ -120,7 +120,7 @@ int xmlstruct::loadfile(const char *nameFile){
     f = zip_fopen(filezip, nameFile, 0);
     if(f == NULL){
         zip_close(filezip);
-        return false;
+        return ERROR;
     }
 
     SOURCE_READ_GOTO(f, &tmp_ver, sizeof(tmp_ver));
@@ -141,7 +141,7 @@ int xmlstruct::loadfile(const char *nameFile){
         goto ERROR_VERSION;
 #endif
     else if(tmp_ver == 5){
-        if(load_file_5(currenttitle, f, filezip) != OK)
+        if(load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg) != OK)
             goto free_;
     }
     else if(tmp_ver > 5)
@@ -279,7 +279,8 @@ int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
 #endif
 
-int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
+int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
+                           const bool LoadPdf, const bool LoadImg)
 {
     LOAD_STRINGA_RETURN(f, doc->nome_copybook);
 
@@ -314,15 +315,18 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip)
 
     LOAD_MULTIPLESTRING_RETURN(f, &currenttitle->testinohtml, &currenttitle->posizione_iniz);
 
-    res_img = doc->m_img->load(filezip, f);
-    if(res_img != fromimage::load_res::ok){
-        return ERROR;
+    if(LoadImg){
+        res_img = doc->m_img->load(filezip, f);
+        if(res_img != fromimage::load_res::ok){
+            return ERROR;
+        }
     }
 
-    res = doc->m_pdf->load(filezip, f);
-    if(res != frompdf::ok)
-        return ERROR;
-
+    if(LoadPdf){
+        res = doc->m_pdf->load(filezip, f);
+        if(res != frompdf::ok)
+            return ERROR;
+    }
     if(controllo_parita)
         return ERROR_CONTROLL;
 

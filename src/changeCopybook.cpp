@@ -10,8 +10,7 @@
 #include "restore_file/ui/setting_restore_ui.h"
 #include "audioplay/aggiornotastiriascolto.h"
 
-void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
-{
+void MainWindow::openCopybook(QListWidgetItem *item, const bool checkCurrent){
     /* in case the user has not yet saved the file */
     if(this->m_path == ""){
         return;
@@ -33,7 +32,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
 
     const QString new_title = item->text();
 
-    if(m_currentTitle != ""){
+    if(m_currentTitle != "" && checkCurrent){
         _res = needToSave(&fileload, &tmp, nullptr);
 
         if(_res == n_need_save::unable_load){
@@ -52,7 +51,7 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
                 m_indice.titolo.indexOf(new_title))
             != ""){
         fileload.setData(&m_path, &m_indice, m_currenttitle);
-        res = fileload.loadfile(new_title + ".xml");
+        res = fileload.loadfile(new_title + ".xml", true, true);
 
         if(res == ERROR){
             return dialog_critic("We had a problem opening the new copybook");
@@ -85,4 +84,9 @@ void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
         this->m_canvas->loadpixel();
         this->m_canvas->time = 0;
     }
+}
+
+void MainWindow::on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item)
+{
+    this->openCopybook(item, true);
 }

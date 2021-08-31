@@ -6,9 +6,8 @@
 #include "../../currenttitle/document.h"
 #include "../../indice_class.h"
 
-#define SAVE_STRINGA(x, y) if(save_string(x, y) != OK) goto delete_;
+#define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
-static int save_string(zip_source_t *, const char *);
 static void setCurrentVersion(Document *data);
 
 #include <QFile>
@@ -142,7 +141,7 @@ uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)
     return OK;
 }
 
-static int save_string(zip_source_t *file, const char *stringa){
+uchar savefile::save_string(zip_source_t *file, const char *stringa){
     int size = strlen(stringa);
     SOURCE_WRITE_RETURN(file, &size, sizeof(size));
 

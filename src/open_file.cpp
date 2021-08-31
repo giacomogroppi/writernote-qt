@@ -19,27 +19,11 @@ void MainWindow::openFile(const char *pos){
     bool ok;
     QString path, tmp;
 
-    frompdf::load_res __res;
     Document curr;
     indice_class ind;
     xmlstruct xml(&m_path, &ind, &curr);
 
-    n_need_save res_save = this->needToSave(&xml, &curr, &ind );
-
-    /*
-     * in case there is already open a file, we need to controll if the
-     * current file has beed modified
-    */
-    if(res_save == n_need_save::need_save){
-        if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
-            savefile save(&m_path, m_currenttitle);
-            if(save.savefile_check_indice(&m_indice) != OK || save.savefile_check_file() != OK){
-                if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
-                    return;
-                }
-            }
-        }
-    }
+    n_need_save res_save;
 
     xml.setData(&fileName, &m_indice, m_currenttitle);
 
@@ -102,6 +86,23 @@ void MainWindow::openFile(const char *pos){
         }*/
     }
     else {
+        res_save = this->needToSave(&xml, &curr, &ind );
+
+        /*
+         * in case there is already open a file, we need to controll if the
+         * current file has beed modified
+        */
+        if(res_save == n_need_save::need_save){
+            if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
+                savefile save(&m_path, m_currenttitle);
+                if(save.savefile_check_indice(&m_indice) != OK || save.savefile_check_file() != OK){
+                    if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
+                        return;
+                    }
+                }
+            }
+        }
+
         if(!xml.loadindice())
             return dialog_critic("We had a problem reading the index of the file");
 

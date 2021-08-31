@@ -15,7 +15,7 @@ void deleteaudio(MainWindow *parent, QListWidgetItem *item){
 
     if(item->text() != parent->m_currentTitle){
         /* we need to load the other file */
-        parent->on_listWidgetSX_itemDoubleClicked(item);
+        parent->openCopybook(item, true);
         //parent->on_listWidgetSX_itemClicked(item);
 
         if(item->text() != parent->m_currentTitle)

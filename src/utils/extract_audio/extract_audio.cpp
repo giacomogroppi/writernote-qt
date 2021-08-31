@@ -30,7 +30,7 @@ extract::n_extract extract_audio(const char *path,
         return extract::no_copybook;
     }
 
-    if(m_data->loadfile(namecopybook) != OK){
+    if(m_data->loadfile(namecopybook, false, false) != OK){
         DELETE_T;
         return extract::load_file;
     }

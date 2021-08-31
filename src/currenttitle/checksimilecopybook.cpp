@@ -92,6 +92,11 @@ int checksimilecopybook(const Document *primo,
                         const Document *secondo,
                         const bool speed)
 {
+    if(primo->count_img != secondo->count_img)
+        return LEN;
+    if(primo->count_pdf != secondo->count_pdf)
+        return LEN;
+
     if(!primo->m_touch)
         return checkIndiceSlow(primo, secondo);
 

@@ -157,6 +157,8 @@ public:
     void openFile(const char *pos);
     void update_list_copybook();
 
+    void openCopybook(QListWidgetItem *item, const bool checkCurrent);
+
 public slots:
     /* la funzione serve anche per eliminare l'audio del copybook */
     void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
