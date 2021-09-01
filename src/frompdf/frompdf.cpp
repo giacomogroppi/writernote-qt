@@ -114,7 +114,6 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     */
 
     uint i, len;
-    QImage img;
     struct immagine_s imgAppend;
     QList<Poppler::Page *> page;
     QList<convertImg *> conv;
@@ -248,7 +247,12 @@ void frompdf::addPdf(QString &pos,
 
     this->m_data->count_pdf ++;
 
-    this->load(fileZip, nullptr);
+
+    /* in order to upload the pdf file we have to reopen the zip file */
+    zip_close(fileZip);
+    fileZip = zip_open(path_writernote, ZIP_CREATE, &ok);
+
+    res = this->load(fileZip, nullptr);
 
     err:
     if(res == load_res::no_valid_path)
@@ -263,7 +267,6 @@ void frompdf::addPdf(QString &pos,
 void frompdf::adjast(const uchar indexPdf)
 {
     QPointF size = m_data->datatouch->get_size_page();
-    assert(indexPdf > 0);
 
     m_image.operator[](indexPdf).topLeft = QPointF(0, 0);
     m_image.operator[](indexPdf).bottomRigth = size;
