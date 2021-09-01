@@ -8,3 +8,4 @@ qrc*
 Makefile
 .qmake.stash
 *.user
+ui*.h
