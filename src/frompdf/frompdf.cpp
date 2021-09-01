@@ -13,6 +13,7 @@
 #include "convertImg.h"
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
+#include "../touch/tabletcanvas.h"
 
 void frompdf::translation(const QPointF &point)
 {
@@ -32,7 +33,7 @@ frompdf::frompdf(Document *data)
     m_data = data;
 }
 
-bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index)
+bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index, TabletCanvas *canvas)
 {
     uint i, len;
     load_res __r;
@@ -43,7 +44,7 @@ bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index)
     len = path.length();
 
     for(i=0; i<len; ++i){
-        __r = load(path.at(i), false);
+        __r = load(path.at(i), false, canvas);
         if(__r != load_res::ok){
             index.insert(__r, i);
         }
@@ -52,7 +53,7 @@ bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index)
     return !index.isEmpty();
 }
 
-frompdf::load_res frompdf::load(const QString &path, const bool clear)
+frompdf::load_res frompdf::load(const QString &path, const bool clear, TabletCanvas *canvas)
 {
     QByteArray arr;
 
@@ -63,7 +64,7 @@ frompdf::load_res frompdf::load(const QString &path, const bool clear)
     /*
      *  if we do the load with this function is always the firstLost
     */
-    return load_from_row(arr, clear, true, 0);
+    return load_from_row(arr, clear, true, 0, canvas);
 }
 
 QStringList frompdf::get_name_pdf(){
@@ -76,7 +77,9 @@ QStringList frompdf::get_name_pdf(){
     return __l;
 }
 
-frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
+frompdf::load_res frompdf::load(zip_t *fileZip,
+                                zip_file_t *file,
+                                TabletCanvas *canvas)
 {
     QList<QByteArray> arr;
     QStringList __name;
@@ -96,7 +99,8 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
         auto res = load_from_row(arr.at(i),
                                  false,
                                  file == nullptr,
-                                 i);
+                                 i,
+                                 canvas);
         if(res != frompdf::load_res::ok)
             return res;
     }
@@ -105,8 +109,19 @@ frompdf::load_res frompdf::load(zip_t *fileZip, zip_file_t *file)
 
 }
 
+void frompdf::resizing(TabletCanvas *canvas, const uint lenPdf){
+    if(!canvas)
+        return;
+
+    uint i = m_data->datatouch->num_page();
+    for(; i<lenPdf; ++i){
+        canvas->disegnafoglio();
+    }
+}
+
 frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear,
-                                         const bool FirstLoad, const uchar IndexPdf)
+                                         const bool FirstLoad, const uchar IndexPdf,
+                                         TabletCanvas *canvas)
 {
     /*
      * in the current version we cannot upload more
@@ -136,6 +151,7 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     }
 
     len = doc->numPages();
+    this->resizing(canvas, len);
 
     for(i=0; i<len; ++i){
         page.append(doc->page(QString::number(i+1)));
@@ -214,8 +230,9 @@ frompdf::load_res frompdf::save(zip_t *filezip,
  * add image from position
 */
 void frompdf::addPdf(QString &pos,
-                         const PointSettable *point,
-                         const QString &path_writernote)
+                     const PointSettable *point,
+                     const QString &path_writernote,
+                     TabletCanvas *canvas)
 {
     zip_t *fileZip;
     int ok;
@@ -252,7 +269,7 @@ void frompdf::addPdf(QString &pos,
     zip_close(fileZip);
     fileZip = zip_open(path_writernote, ZIP_CREATE, &ok);
 
-    res = this->load(fileZip, nullptr);
+    res = this->load(fileZip, nullptr, canvas);
 
     err:
     if(res == load_res::no_valid_path)

@@ -17,6 +17,8 @@
 
 #define SUFFIX_PDF "_pdf_"
 
+class TabletCanvas;
+
 class Pdf{
 public:
     /* indice la parte in alto a sinistra della prima immagine */
@@ -73,12 +75,15 @@ public:
     QStringList get_name_pdf();
 
     /* return true if all load correctly */
-    bool load(const QStringList &path, QMap<load_res, uchar> &index);
-    load_res load(const QString &, const bool clear);
+    bool load(const QStringList &path, QMap<load_res, uchar> &index, TabletCanvas *canvas);
+    load_res load(const QString &, const bool clear, TabletCanvas *canvas);
     /* it load from a zip_t file all the pdf for the current copybook */
-    load_res load(zip_t *filezip, zip_file_t *file);
+    load_res load(zip_t *filezip, zip_file_t *file, TabletCanvas *);
     load_res load_from_row(const QByteArray &, const bool clear,
-                           const bool FirstLoad, const uchar IndexPdf);
+                           const bool FirstLoad, const uchar IndexPdf,
+                           TabletCanvas *canvas);
+
+    void resizing(TabletCanvas *canvas, const uint lenPdf);
 
     load_res save(zip_t *filezip, const QStringList &path, const QString &path_writernote_file);
     load_res save(zip_t *filezip, const QString &path, const QString &path_writernote_file);
@@ -111,8 +116,9 @@ public:
                      const PointSettable *point);
 
     void addPdf(QString &pos,
-                      const PointSettable *point,
-                      const QString &path_writernote);
+                const PointSettable *point,
+                const QString &path_writernote,
+                TabletCanvas *canvas);
 private:
     void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);

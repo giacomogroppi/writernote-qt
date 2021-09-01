@@ -323,7 +323,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
     }
 
     if(LoadPdf){
-        res = doc->m_pdf->load(filezip, f);
+        res = doc->m_pdf->load(filezip, f, nullptr);
         if(res != frompdf::ok)
             return ERROR;
     }

@@ -77,6 +77,10 @@ public:
                 datastruct::point_mid(f, s, pp, size);
     }
 
+    inline uint num_page() const{
+        return this->posizionefoglio.length();
+    }
+
     /*
      * la funzione ritorna vero se e solo se la retta che congiunge
      * i due punti passa per il quadrato tra pp come topleft

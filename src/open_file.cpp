@@ -79,7 +79,7 @@ void MainWindow::openFile(const char *pos){
     const bool pdf = fileName.indexOf(".pdf") != -1;
 
     if(pdf){
-        m_currenttitle->m_pdf->addPdf(fileName, nullptr, this->m_path);
+        m_currenttitle->m_pdf->addPdf(fileName, nullptr, this->m_path, this->m_canvas);
 
         /*if(__res == frompdf::load_res::ok){
             m_currenttitle->m_pdf->addPdf(fileName, nullptr, this->m_path);
