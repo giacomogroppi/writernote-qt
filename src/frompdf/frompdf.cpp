@@ -115,6 +115,7 @@ void frompdf::resizing(TabletCanvas *canvas, const uint lenPdf){
 
     uint i = m_data->datatouch->num_page();
     for(; i<lenPdf; ++i){
+        canvas->disegnofoglio_bool = true;
         canvas->disegnafoglio();
     }
 }
@@ -187,6 +188,9 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
 
     if(FirstLoad)
         this->adjast(IndexPdf);
+
+    if(canvas)
+        canvas->update();
 
     return load_res::ok;
 }

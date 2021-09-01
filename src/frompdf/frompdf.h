@@ -107,7 +107,13 @@ public:
             const Pdf &pdf = this->m_image.at(i);
             for(k=0; k<pdf.img.length(); ++k){
                 fromimage::draw(painter, size, pdf.img.at(i).immagini);
-                size.adjust(0, y, 0, y);
+
+                /*size = QRectF(size.topLeft().rx(),
+                              size.topLeft().ry() + y,
+                              size.bottomRight().rx(),
+                              size.bottomRight().ry() + y);*/
+
+                size.adjust(0, y, 0, double(1.2)*y);
             }
         }
     }
