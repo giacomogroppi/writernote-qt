@@ -13,15 +13,19 @@
  * the memory is release when it's close last_open instance
 */
 
-last_file * load_data(int quanti)
+bool load_data(const int quanti, QList<last_file> &ret)
 {
     if(quanti == 0)
-        return NULL;
+        return false;
 
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     QByteArray array;
-    last_file *temp;
-    last_file *temp_return;
+    //last_file *temp;
+    const size_t size = sizeof(last_file);
+    uchar data;
+    int i;
+    size_t k;
+    last_file file;
 
     setting.beginGroup(GROUPNAME_LAST_FILE);
 
@@ -30,19 +34,20 @@ last_file * load_data(int quanti)
 
     /* check the integrity of data */
     if(array.size() != sizeof(last_file)*quanti)
-        return NULL;
+        return false;
 
-    temp = (last_file *)array.data();
+    //temp = (last_file *)array.data();
 
+    for(i=0; i<quanti; ++i){
+        for(k=0; k<size; ++k){
+            data = array.at(i+k);
 
-    temp_return = (last_file *)malloc(sizeof(last_file)*quanti);
+            memcpy(&file, &data, sizeof(data));
+        }
+        ret.append(file);
+    }
 
-    if(!temp_return)
-        return NULL;
-
-    memcpy(temp_return, temp, sizeof(last_file)*quanti);
-
-    return temp_return;
+    return true;
 }
 
 /*

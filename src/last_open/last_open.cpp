@@ -55,9 +55,6 @@ last_open::~last_open()
         delete m_lista.at(i);
     }
 
-    if(this->m_last)
-        free(this->m_last);
-
     delete ui;
 }
 
@@ -103,17 +100,17 @@ int last_open::load_data_()
         }
     }
 
-    m_last = load_data(m_quanti);
+    const bool ok = load_data(m_quanti, this->m_last);
 
     if(data.val == option_last_open_ui::open_last){
-        on_click_ex(m_last[0].posizione);
+        on_click_ex(m_last.first().posizione);
 
         return 0;
     }
 
     element_ui *temp_element_ui;
 
-    if(m_last == NULL){
+    if(!ok){
         remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
         remove_key(KEY_LAST_FILE_QUANTI, GROUPNAME_LAST_FILE);
 
@@ -142,7 +139,7 @@ int last_open::load_data_()
         }
     }
 
-    tidyup(m_last, m_quanti, &data);
+    //tidyup(m_last, m_quanti, &data);
 
     for(i=0; i<m_quanti && i < __val; i++){
         temp_element_ui = new element_ui;
@@ -168,7 +165,7 @@ int last_open::load_data_()
 void last_open::deleteIn(int index){
     int i;
     for(i=index; i<m_quanti-1; i++){
-        memcpy(&m_last[i], &m_last[i+1], sizeof(*m_last));
+        memcpy(&m_last[i], &m_last[i+1], sizeof(last_file));
         //copy(&m_last[i], m_last[i].posizione, m_last[i].last_modification_o, m_last[i].last_modification_g, m_last[i].type);
 
         m_lista.at(i)->decrease();

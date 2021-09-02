@@ -117,7 +117,7 @@ void TabletCanvas::load(QPainter &painter,
 
 #ifdef PDFSUPPORT
     this->data->m_pdf->draw(painter, data->datatouch->biggerx(),
-                           m_pixmap.width(), m_pixmap.height());
+                           m_pixmap.width(), m_pixmap.height(), m);
 #endif
 
     this->data->m_img->draw(painter, data->datatouch->biggerx(),

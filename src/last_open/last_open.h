@@ -42,7 +42,7 @@ private:
 
     char **m_style_return;
 
-    last_file *m_last = NULL;
+    QList<last_file> m_last;
 
     Ui::last_open *ui;
 

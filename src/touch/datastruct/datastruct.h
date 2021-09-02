@@ -353,7 +353,7 @@ public:
     inline double currentWidth();
     inline double currentHeight();
 
-    inline QRectF size_first_page(){
+    inline QRectF pos_first_page(){
         const point_s &ref = m_point.first();
         return QRectF(ref.m_x, ref.m_y, biggerx(), biggery()/double(posizionefoglio.length()));
     }

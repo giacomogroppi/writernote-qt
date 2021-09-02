@@ -42,7 +42,11 @@ bool topdf::createpdf(){
 
     delta = (double)pdfWriter.width() / (double)size_orizzontale;
     for (i=0; i<lenpagine; ++i) {
-        this->draw(painter, delta, size_orizzontale, size_verticale, &temp_ret);
+        this->draw(painter,
+                   delta,
+                   size_orizzontale,
+                   size_verticale,
+                   &temp_ret);
 
         if(i+1<lenpagine){
             newpage(data->datatouch, temp_ret);
@@ -63,7 +67,6 @@ void MainWindow::on_actiontopdf_triggered()
     if(!qfilechoose::filechoose(path_pdf, TYPEFILEPDF))
         return;
 
-
     topdf filepdf(&path_pdf, m_canvas);
 
     filepdf.copy(m_currenttitle);
@@ -71,5 +74,7 @@ void MainWindow::on_actiontopdf_triggered()
 
     if(!filepdf.createpdf()){
         dialog_critic("We had a problem saving the file to " + path_pdf);
+        return;
     }
+    user_message("Pdf file save in " + path_pdf);
 }

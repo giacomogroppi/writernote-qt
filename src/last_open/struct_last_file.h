@@ -37,12 +37,12 @@ Q_DECLARE_METATYPE(last_file);
 
 /* file save */
 void save_data(const QString &path, int type = TYPE_COMPUTER, int owner_TYPE = TYPE_OWNER_YOU, char *owner = NULL);
-void save_data_f(int quanti, last_file * m_lista);
+void save_data_f(int quanti, const QList<last_file> &m_lista);
 void save_quanti(int quanti);
 void save_data_f(const QByteArray &);
 
 /* file load */
-last_file *load_data(int quanti);
+bool load_data(const int quanti, QList<last_file> &);
 int load_quanti();
 
 #endif // STRUCT_LAST_FILE_H

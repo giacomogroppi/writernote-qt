@@ -93,30 +93,35 @@ public:
     inline void draw(QPainter &painter,
                      const uint pwidth,
                      const int rend_width,
-                     const int rend_heigth){
+                     const int rend_heigth,
+                     double delta){
         Q_UNUSED(pwidth);
         Q_UNUSED(rend_width);
         Q_UNUSED(rend_heigth);
 
         int i, k;
-        QRectF size = this->m_data->datatouch->size_first_page();
+        QRectF size = this->m_data->datatouch->pos_first_page();
+        size = QRectF(size.topLeft().x()*delta,
+                      size.topLeft().y()*delta,
+                      size.bottomRight().x()*delta,
+                      size.bottomRight().y()*delta);
 
-        const double y = this->m_data->datatouch->currentHeight();
+        const double y = this->m_data->datatouch->currentHeight()*delta;
 
         for(i=0; i<this->m_image.length(); ++i){
             const Pdf &pdf = this->m_image.at(i);
             for(k=0; k<pdf.img.length(); ++k){
                 fromimage::draw(painter, size, pdf.img.at(i).immagini);
 
-                /*qDebug() << size.height() << std::abs(size.topLeft().y() - size.bottomRight().y());
+                qDebug() << size << delta;
 
-                size = QRectF(size.topLeft().rx(),
+                /*size = QRectF(size.topLeft().rx(),
                               size.topLeft().ry() + y,
                               size.bottomRight().rx(),
                               size.bottomRight().ry());*/
 
-                size.adjust(0, y, 0, 0);
-                size.setHeight(y);
+                size.adjust(0, y*delta, 0, 0);
+                size.setHeight(y*delta);
             }
         }
     }
@@ -132,7 +137,7 @@ private:
     void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);
 
-    uint resolution = 500;//72
+    uint resolution = 1000;//72
 
     /*
      * this function only append a pdf to
