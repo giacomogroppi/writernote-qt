@@ -84,7 +84,7 @@ public:
     }
 
     static inline void draw(QPainter &painter,
-                            const QRectF & rect,
+                            const QRectF &rect,
                             const QImage &img){
         const QRectF draw = img.rect();
 

@@ -108,12 +108,15 @@ public:
             for(k=0; k<pdf.img.length(); ++k){
                 fromimage::draw(painter, size, pdf.img.at(i).immagini);
 
-                /*size = QRectF(size.topLeft().rx(),
+                /*qDebug() << size.height() << std::abs(size.topLeft().y() - size.bottomRight().y());
+
+                size = QRectF(size.topLeft().rx(),
                               size.topLeft().ry() + y,
                               size.bottomRight().rx(),
-                              size.bottomRight().ry() + y);*/
+                              size.bottomRight().ry());*/
 
-                size.adjust(0, y, 0, double(1.2)*y);
+                size.adjust(0, y, 0, 0);
+                size.setHeight(y);
             }
         }
     }
