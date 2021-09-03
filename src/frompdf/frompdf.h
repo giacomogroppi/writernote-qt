@@ -94,34 +94,45 @@ public:
                      const uint pwidth,
                      const int rend_width,
                      const int rend_heigth,
-                     double delta){
+                     double delta,
+                     const bool IsExportingPdf){
         Q_UNUSED(pwidth);
-        Q_UNUSED(rend_width);
-        Q_UNUSED(rend_heigth);
 
         int i, k;
+        double y, x = 0;
         QRectF size = this->m_data->datatouch->pos_first_page();
-        size = QRectF(size.topLeft().x()*delta,
-                      size.topLeft().y()*delta,
-                      size.bottomRight().x()*delta,
-                      size.bottomRight().y()*delta);
 
-        const double y = this->m_data->datatouch->currentHeight()*delta;
+        if(IsExportingPdf){
+            size = QRectF(0,
+                          0,
+                          double(rend_width)*delta,
+                          double(rend_heigth)*delta);
+            y = rend_heigth*delta;
+            x = rend_width*delta;
+        }else{
+            size = QRectF(size.topLeft().x()*delta,
+                          size.topLeft().y()*delta,
+                          size.bottomRight().x()*delta,
+                          size.bottomRight().y()*delta);
+            y = this->m_data->datatouch->currentHeight()*delta;
+        }
 
         for(i=0; i<this->m_image.length(); ++i){
             const Pdf &pdf = this->m_image.at(i);
             for(k=0; k<pdf.img.length(); ++k){
                 fromimage::draw(painter, size, pdf.img.at(i).immagini);
 
-                qDebug() << size << delta;
+                qDebug() << size << rend_heigth << rend_width << x << y;
 
-                /*size = QRectF(size.topLeft().rx(),
-                              size.topLeft().ry() + y,
-                              size.bottomRight().rx(),
-                              size.bottomRight().ry());*/
+                size = QRectF(size.topLeft().x(),
+                              size.topLeft().y() + y,
+                              size.bottomRight().x() + x,
+                              size.bottomRight().y() + y);
 
-                size.adjust(0, y*delta, 0, 0);
-                size.setHeight(y*delta);
+                //size.adjust(0, y, 0, 0);
+                size.setHeight(y);
+                if(IsExportingPdf)
+                    size.setWidth(x);
             }
         }
     }

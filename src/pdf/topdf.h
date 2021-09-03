@@ -17,7 +17,14 @@ private:
 
     MainWindow *parent;
 
-    void draw(QPainter &, double m, int size_orizzontale, int size_verticale, double *y_last);
+    void draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, double *y_last){
+        m_canvas->load(painter,
+                       m,
+                       size_orizzontale,
+                       size_verticale,
+                       y_last);
+    }
+
     void updateBrush_load(float , QColor );
 
     /* variable to draw */
@@ -42,17 +49,5 @@ public:
             *this->data->datatouch = *datastruct_->datatouch;
     }
 };
-
-void topdf::draw(QPainter &painter,
-                 double m,
-                 int size_orizzontale,
-                 int size_verticale,
-                 double *y_last){
-    m_canvas->load(painter,
-                   m,
-                   size_orizzontale,
-                   size_verticale,
-                   y_last);
-}
 
 #endif // TOPDF_H
