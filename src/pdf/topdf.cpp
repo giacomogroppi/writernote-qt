@@ -44,7 +44,7 @@ bool topdf::createpdf(){
         this->draw(painter,
                    delta,
                    size_orizzontale,
-                   size_verticale,
+                   size_verticale/delta,
                    &tmp_ret);
 
         if(i+1<lenpage){
