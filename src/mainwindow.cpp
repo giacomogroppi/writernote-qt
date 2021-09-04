@@ -334,7 +334,7 @@ void MainWindow::on_actionCopy_triggered()
 void MainWindow::on_actionVersion_triggered()
 {
 #ifdef VERSION_SNAPCRAFT
-    user_message("Current version is " + (QString)VERSION_STRING);
+    user_message("Current version is " + (QString)VERSION_STRING + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__);
 #else
     user_message("Current version is " + (QString)NO_VER_DEF + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__);
 #endif

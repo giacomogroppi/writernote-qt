@@ -36,13 +36,13 @@ bool load_data(const int quanti, QList<last_file> &ret)
     if(array.size() != sizeof(last_file)*quanti)
         return false;
 
-    //temp = (last_file *)array.data();
-
     for(i=0; i<quanti; ++i){
         for(k=0; k<size; ++k){
             data = array.at(i+k);
 
-            memcpy(&file, &data, sizeof(data));
+            size_t point = (size_t )&file + k;
+
+            memcpy((void *)point, &data, sizeof(data));
         }
         ret.append(file);
     }

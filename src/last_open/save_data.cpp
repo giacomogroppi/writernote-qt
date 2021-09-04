@@ -34,9 +34,10 @@ void save_data(const QString &path, int type, int owner_type, char *owner)
     if(!load_data(quanti, m_lista))
         quanti = 0;
 
-    for(i=0, uguale = false; i<quanti && !uguale; ++i){
+    for(i=0, uguale = false; i<quanti; ++i){
         if(strcmp(m_lista.at(i).posizione, path.toUtf8().constData()) == 0){
             uguale = true;
+            break;
         }
     }
 
