@@ -181,9 +181,6 @@ jobs:
         run: |
           cd 3rdparty
 
-          # export variable for poppler build
-          export testdatadir=/
-
           git clone https://github.com/freedesktop/poppler.git
           cd poppler
 
@@ -192,6 +189,7 @@ jobs:
 
           cmake -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=install \
+            -DTESTDATADIR=/
           	-DANDROID_TOOLCHAIN=clang  cmake -H. -Bbuild
 
           make install -j$(nproc --all)
