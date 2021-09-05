@@ -51,9 +51,9 @@ jobs:
           sudo apt install snapd ninja-build
           sudo snap install cmake --classic
       
-      - name: Install openJDK
+      - name: Download openJDK
         run: |
-          curl -L https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_linux-aarch64_bin.tar.gz -o openjdk-linux.tar.gz
+          curl -L https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u262-b10/openlogic-openjdk-8u262-b10-linux-x64.tar.gz -o openjdk-linux.tar.gz
           tar -xf openjdk-linux.tar.gz
           mv jdk* $JDK_PATH
 
@@ -106,9 +106,8 @@ jobs:
           echo $NDK_PATH
           echo $SDK_PATH
         
-          ./configure \ 
-            -xplatform android-clang \
-            -prefix $QT_PREFIX \
+          ./configure -xplatform android-clang \
+            -prefix "$QT_PREFIX" \
             -disable-rpath \
             -nomake tests \
             -nomake examples \
@@ -117,7 +116,8 @@ jobs:
             -no-warnings-are-errors \
             -static \
             -opensource \
-            -confirm-license
+            -confirm-license \
+            -android-ndk-host linux-x86_64/
 
           #./configure \
           # -prefix "$QT_PREFIX" \
