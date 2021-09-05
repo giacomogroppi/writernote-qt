@@ -180,6 +180,10 @@ jobs:
       - name: Build poppler
         run: |
           cd 3rdparty
+
+          # export variable for poppler build
+          export testdatadir=/
+
           git clone https://github.com/freedesktop/poppler.git
           cd poppler
 
