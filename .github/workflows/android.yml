@@ -72,9 +72,10 @@ jobs:
       - name: Download qt
         uses: jurplel/install-qt-action@v2
         with:
+          host: 'linux'
           version: 5.12.5
-          target: android
-          #modules: 'multimedia'
+          target: 'android'
+          modules: 'multimedia'
 
 
       #- name: Qt 5.15.2 cache.
