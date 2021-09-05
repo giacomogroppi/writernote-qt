@@ -179,6 +179,9 @@ jobs:
       
       - name: Compile
         run: |
-          #$QT_PREFIX/bin/qmake .
+          ls 3rdparty/libzip/android/install/armeabi-v7a/include/
+          ls 3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/lib/libzip.a
+          exit
+
           qmake
           make -j$(nproc) apk
