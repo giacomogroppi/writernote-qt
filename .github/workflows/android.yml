@@ -165,7 +165,7 @@ jobs:
           #export PATH=${ANDROID_NDK}:$PATH
           #export NDK_PROJECT_PATH=./
           
-          /home/$USER/Android/Sdk/ndk/21.3.6528147/ndk-build APP_STL=c++_shared     \
+          $NDK_PATH/build/ndk-build APP_STL=c++_shared     \
                     APP_PLATFORM=android-16    \
                     APP_ABI="armeabi-v7a"     \
                     NDK_TOOLCHAIN_VERSION=5   \
