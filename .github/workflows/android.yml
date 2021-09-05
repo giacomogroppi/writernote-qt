@@ -188,7 +188,9 @@ jobs:
           git clone https://github.com/freedesktop/poppler.git
           cd poppler
 
-          cmake -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+          ls
+
+          cmake . -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=install \
             -DTESTDATADIR=/ \
             -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \ 
