@@ -179,7 +179,7 @@ jobs:
       
       - name: install lib for build poppler
         run: |
-          sudo apt-get install -y libfreetype6-dev
+          sudo apt-get install -y libfreetype-dev libfreetype6-dev
 
       - name: Build poppler
         run: |
