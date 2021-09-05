@@ -161,7 +161,7 @@ jobs:
 
       - name: Build libzip
         run: |
-          cd 3rdparty/libzip
+          cd 3rdparty
           #ANDROID_NDK=/home/$USER/Android/Sdk/ndk/22.0.7026061/
           #export PATH=${ANDROID_NDK}:$PATH
           #export NDK_PROJECT_PATH=./
