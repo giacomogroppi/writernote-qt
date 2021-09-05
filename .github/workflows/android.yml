@@ -187,8 +187,11 @@ jobs:
 
           git clone https://github.com/freedesktop/poppler.git
           cd poppler
+          mkdir build
+          mkdir install
 
-          ls
+          cmake .
+          exit
 
           cmake . -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=install \
