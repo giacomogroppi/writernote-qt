@@ -72,7 +72,7 @@ jobs:
       - name: Download qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: '5.12.5'
+          version: 5.12.5
           target: android
           #modules: 'multimedia'
 
