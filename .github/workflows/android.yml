@@ -177,6 +177,10 @@ jobs:
           #          $@
           
       
+      - name: install lib for build poppler
+        run: |
+          sudo apt-get install -y libfreetype6-dev
+
       - name: Build poppler
         run: |
           cd 3rdparty
