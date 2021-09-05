@@ -404,6 +404,7 @@ win64{
 }
 
 android{
+    message(Enable android build)
     QT += androidextras
 
     LIBS += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/lib/libzip.a
