@@ -193,7 +193,9 @@ jobs:
 
           cmake -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=install \
-            -DTESTDATADIR=/
+            -DTESTDATADIR=/ \
+            -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \ 
+            -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
           	-DANDROID_TOOLCHAIN=clang  cmake -H. -Bbuild
 
           make install -j$(nproc --all)
