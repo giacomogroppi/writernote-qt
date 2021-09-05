@@ -167,7 +167,7 @@ jobs:
           #export NDK_PROJECT_PATH=./
           
           chmod +x android
-          android/do.sh OFF $NDK_PATH
+          libzip.sh OFF $NDK_PATH
 
           #$NDK_PATH/build/ndk-build APP_STL=c++_shared     \
           #          APP_PLATFORM=android-16    \
