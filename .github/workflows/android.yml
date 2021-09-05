@@ -74,7 +74,7 @@ jobs:
         with:
           version: '5.12.5'
           target: android
-          modules: 'multimedia'
+          #modules: 'multimedia'
 
 
       #- name: Qt 5.15.2 cache.
