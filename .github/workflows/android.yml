@@ -177,6 +177,22 @@ jobs:
           #          $@
           
       
+      - name: Build poppler
+        run: |
+          cd 3rdparty
+          git clone https://github.com/freedesktop/poppler.git
+          cd poppler
+
+          mkdir install
+          mkdir build
+
+	        cmake -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+            -DCMAKE_INSTALL_PREFIX=install \
+          	-DANDROID_TOOLCHAIN=clang  cmake -H. -Bbuild
+
+          make install -j$(nproc --all)
+          
+
       - name: Compile
         run: |
           qmake
