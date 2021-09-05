@@ -186,7 +186,7 @@ jobs:
           mkdir install
           mkdir build
 
-	        cmake -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+          cmake -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=install \
           	-DANDROID_TOOLCHAIN=clang  cmake -H. -Bbuild
 
