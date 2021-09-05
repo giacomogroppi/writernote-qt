@@ -166,7 +166,7 @@ jobs:
           #export PATH=${ANDROID_NDK}:$PATH
           #export NDK_PROJECT_PATH=./
           
-          chmod +x android
+          chmod +x libzip.sh
           libzip.sh OFF $NDK_PATH
 
           #$NDK_PATH/build/ndk-build APP_STL=c++_shared     \
