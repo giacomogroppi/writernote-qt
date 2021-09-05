@@ -53,9 +53,9 @@ jobs:
       
       - name: Download openJDK
         run: |
-          curl -L https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u262-b10/openlogic-openjdk-8u262-b10-linux-x64.tar.gz -o openjdk-linux.tar.gz
+          curl -L https://download.java.net/openjdk/jdk8u41/ri/openjdk-8u41-b04-linux-x64-14_jan_2020.tar.gz -o openjdk-linux.tar.gz
           tar -xf openjdk-linux.tar.gz
-          mv jdk* $JDK_PATH
+          mv java* $JDK_PATH
 
       - name: Download and set SDK 
         run: |
