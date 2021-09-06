@@ -37,8 +37,11 @@ jobs:
       SDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/sdk"
       NDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/ndk"
       JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
+      LIB_JPEG_TURBO: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo"
       QT_PREFIX: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/qt_build"
-
+      POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
+      ANDROID_VERSION: 21
+      TOOLCHAIN: "clang"
     steps:
       - name: "Clone"
         uses: actions/checkout@v2
@@ -77,88 +80,6 @@ jobs:
           target: 'android'
           modules: 'multimedia'
 
-
-      #- name: Qt 5.15.2 cache.
-      #  id: cache-qt
-      #  uses: actions/cache@v2
-      #  with:
-      #    path: ${{ env.PREFIX_LIB }}/qt-cache
-      #    key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-qtmulmedia-1
-
-      #- name: Use cached Qt 5.15.2.
-      #  if: steps.cache-qt.outputs.cache-hit == 'true'
-      #  run: |
-      #    cd $PREFIX_LIB
-      #    mv qt-cache Qt-5.15.2
-      #    sudo mkdir -p $QT_PREFIX
-      #    sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
-
-      #- name: Build Qt 5.15.2
-      #  if: steps.cache-qt.outputs.cache-hit != 'true' && false
-      #  run: |
-      #    export JAVA_HOME=$JDK_PATH
-      #    export PATH=$JAVA_HOME/bin:$PATH
-
-      #    mkdir build_qt
-      #    git clone git://code.qt.io/qt/qt5.git qt_$QT
-      #    cd qt_$QT
-      #    perl init-repository --module-subset=qtbase,qtimageformats,qtmultimedia
-      #    git checkout v5.15.2
-      #    git submodule update qtbase
-      #    git submodule update qtimageformats
-      #    git submodule update qtmultimedia
-      #    cd qtbase
-      #    #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
-      #    cd ..
-
-      #    echo $QT_PREFIX 
-      #    echo $NDK_PATH
-      #    echo $SDK_PATH
-      #  
-      #    ./configure -xplatform android-clang \
-      #      -prefix "$QT_PREFIX" \
-      #      -disable-rpath \
-      #      -nomake tests \
-      #      -nomake examples \
-      #      -android-ndk $NDK_PATH \
-      #      -android-sdk $SDK_PATH \
-      #      -no-warnings-are-errors \
-      #      -static \
-      #      -opensource \
-      #      -confirm-license \
-      #      -android-ndk-host linux-x86_64/
-
-      #    #./configure \
-      #    # -prefix "$QT_PREFIX" \
-      #    # -static \
-      #    # -static-runtime \
-      #    # -release \
-      #    # -opensource \
-      #    # -confirm-license \
-      #    # -qt-zlib \
-      #    # -qt-pcre \
-      #    # -qt-libpng \
-      #    # -qt-libjpeg \
-      #    # -qt-freetype \
-      #    # -opengl desktop \
-      #    # -sql-sqlite \
-      #    # -make libs \
-      #    # -nomake tools \
-      #    # -nomake examples \
-      #    # -nomake tests \
-      #    # -skip qtwebengine
-      #    
-      #    echo run make
-      #    make -j$(nproc)
-      #    
-      #    echo run sudo make install
-      #    sudo make install
-
-      #    echo run make clean
-      #    make clean
-      #    
-      #    cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
-
       - name: Build libzip
         run: |
           cd 3rdparty
@@ -168,20 +89,35 @@ jobs:
           
           chmod +x libzip.sh
           ./libzip.sh OFF $NDK_PATH
-
-          #$NDK_PATH/build/ndk-build APP_STL=c++_shared     \
-          #          APP_PLATFORM=android-16    \
-          #          APP_ABI="armeabi-v7a"     \
-          #          NDK_TOOLCHAIN_VERSION=5   \
-          #          NDK_PROJECT_PATH=./       \
-          #          $@
-          
       
+      - name: Build libjpeg-turbo
+        run: |
+          cd $PREFIX_LIB
+          git clone https://github.com/libjpeg-turbo/libjpeg-turbo
+
+          cd  libjpeg-turbo
+          mkdir install
+          mkdir build
+
+          cd build
+
+          cmake .. -G"Unix Makefiles" \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_ARM_MODE=arm \
+            -DANDROID_PLATFORM=android-$ANDROID_VERSION \
+            -DANDROID_TOOLCHAIN=$TOOLCHAIN \
+            -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
+            -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \ 
+            -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install
+          
+          sudo make install -j$(nproc --all)
+
+
       - name: install lib for build poppler
         run: |
-          sudo apt-get install -y libfreetype-dev libfreetype6-dev
+          sudo apt-get install -y libfreetype-dev libfreetype6-dev liblcms2-dev libtiff5-dev
 
-      - name: Build poppler
+          - name: Build poppler
         run: |
           cd 3rdparty
 
@@ -190,14 +126,14 @@ jobs:
           mkdir build
           mkdir install
 
-          cmake . -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-            -DCMAKE_INSTALL_PREFIX=install \
-            -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \ 
+          cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install \
+            -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
             -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
-          	-DANDROID_TOOLCHAIN=clang #\
-            #-Bbuild
+          	-DANDROID_TOOLCHAIN=clang \
+            -DCMAKE_BUILD_TYPE=Release
 
-          make install -j$(nproc --all)
+          sudo make install -j$(nproc --all)
           
 
       - name: Compile
