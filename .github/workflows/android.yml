@@ -101,7 +101,7 @@ jobs:
 
           cd build
 
-          ls
+          echo $(ls)
           exit
 
           cmake .. -G"Unix Makefiles" \
