@@ -104,7 +104,7 @@ jobs:
           cd build
 
           echo $(pwd)
-          echo $(ls)
+          echo $(ls ..)
 
 
           cmake .. -G"Unix Makefiles" \
