@@ -138,7 +138,10 @@ jobs:
             -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
             -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
           	-DANDROID_TOOLCHAIN=clang \
-            -DCMAKE_BUILD_TYPE=Release
+            -DCMAKE_BUILD_TYPE=Release \
+            -DANDROID_PLATFORM=$ANDROID_VERSION \
+            -DJPEG_LIBRARY=$LIB_JPEG_TURBO/install/liblibturbojpeg.a \
+            -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include/
 
           sudo make install -j$(nproc --all)
           
