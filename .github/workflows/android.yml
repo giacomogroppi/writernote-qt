@@ -100,7 +100,6 @@ jobs:
           mkdir build
 
           echo $(ls)
-          exit
 
           cd build
 
