@@ -111,8 +111,8 @@ jobs:
             -DANDROID_PLATFORM=android-$ANDROID_VERSION \
             -DANDROID_TOOLCHAIN=$TOOLCHAIN \
             -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
-            -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \ 
-            -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \ 
+            -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+            -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \
             -B$LIB_JPEG_TURBO/build
           
           sudo make install -j$(nproc --all)
