@@ -141,7 +141,8 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DANDROID_PLATFORM=$ANDROID_VERSION \
             -DJPEG_LIBRARY=$LIB_JPEG_TURBO/install/liblibturbojpeg.a \
-            -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include/
+            -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include/ \
+            -D_FILE_OFFSET_BITS=64
 
           sudo make install -j$(nproc --all)
           
