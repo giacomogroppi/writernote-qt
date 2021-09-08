@@ -159,8 +159,8 @@ jobs:
             #-DENABLE_LIBOPENJPEG=unmaintained \
             -DENABLE_CMS=none \
             -DENABLE_DCTDECODER=unmaintained \
-            -DBUILD_SHARED_LIBS=OFF 
-
+            -DBUILD_SHARED_LIBS=OFF \
+            -DOpenJPEG_DIR=/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo/install/lib/pkgconfig/
 
           sudo make install -j$(nproc --all)
           
