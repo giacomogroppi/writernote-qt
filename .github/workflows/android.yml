@@ -89,8 +89,6 @@ jobs:
           
           chmod +x libzip.sh
           ./libzip.sh OFF $NDK_PATH
-      
-      - name: Build libjpeg
 
       - name: Build libjpeg-turbo
         run: |
