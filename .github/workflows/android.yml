@@ -90,6 +90,8 @@ jobs:
           chmod +x libzip.sh
           ./libzip.sh OFF $NDK_PATH
       
+      - name: Build libjpeg
+
       - name: Build libjpeg-turbo
         run: |
           cd $PREFIX_LIB
@@ -112,7 +114,8 @@ jobs:
             -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
             -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \
-            -B$LIB_JPEG_TURBO/build
+            -B$LIB_JPEG_TURBO/build \
+            -DWITH_JPEG8=1
           
           cd build
           sudo make install -j$(nproc --all)
