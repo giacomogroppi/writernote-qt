@@ -191,7 +191,6 @@ jobs:
             -DENABLE_DCTDECODER=unmaintained \
             -DBUILD_SHARED_LIBS=OFF \
             -DOpenJPEG_DIR=/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo/install/lib/pkgconfig/ \
-            #-DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
             -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4
 
           sudo make install -j$(nproc --all)
