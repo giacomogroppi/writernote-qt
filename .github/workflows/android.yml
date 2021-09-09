@@ -43,6 +43,7 @@ jobs:
       POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
       LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
       LIBPNG_MAKEFILE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/makefile.libpng.clang"
+      NSS_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/nss"
       ANDROID_VERSION: 21
       TOOLCHAIN: "clang"
     steps:
@@ -148,6 +149,30 @@ jobs:
           
           cd build
           sudo make install -j$(nproc --all)
+
+      - name: Build nss
+        run: |
+          cd $PREFIX_LIB
+          curl -L https://github.com/nss-dev/nss/archive/refs/tags/NSS_3_70_RTM.tar.gz -o download.nss.tar.gz
+          tar -xf download.nss.tar.gz
+
+          mv nss-NSS_3_70_RTM $NSS_PATH
+
+          export ANDROID_NDK=$NDK_PATH
+          export ANDROID_PREFIX=$NSS_PATH/install
+          export ANDROID_TOOLCHAIN=$TOOLCHAIN
+          export ANDROID_SYSROOT=armeabi-v7a
+          export OS_TARGET_RELEASE=$ANDROID_VERSION
+
+          mkdir $ANDROID_PREFIX
+
+          cd $NSS_PATH
+
+          export OS_TARGET=Android
+          export BUILD_OPT=1
+          export USE_64=1
+
+          make 
 
 
       - name: install lib for build poppler
