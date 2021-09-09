@@ -98,7 +98,9 @@ jobs:
           cd $PREFIX_LIB
           curl -L https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.tar.gz -o libpng.tar.gz
           mv libpng* $LIBPNG_PATH
-          cp $LIBPNG_MAKEFILE $LIBPNG_PATH/Makefile
+          cp $LIBPNG_MAKEFILE $LIBPNG_PATH/
+          cd $LIBPNG_PATH
+          mv makefile.libpng.clang Makefile
           make
 
       - name: Build openjpeg
