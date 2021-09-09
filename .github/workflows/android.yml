@@ -39,7 +39,7 @@ jobs:
       JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
       LIB_JPEG_TURBO: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo"
       LIB_OPENJPEG: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libopenjpeg"
-      QT_PREFIX: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/qt_build"
+      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/5.15.2/android/"
       POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
       LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
       LIBPNG_MAKEFILE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/makefile.libpng.clang"
@@ -194,7 +194,8 @@ jobs:
             -DENABLE_DCTDECODER=unmaintained \
             -DBUILD_SHARED_LIBS=OFF \
             -DOpenJPEG_DIR=/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo/install/lib/pkgconfig/ \
-            -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4
+            -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4 \
+            -DCMAKE_PREFIX_PATH=$QT_PREFIX
 
           sudo make install -j$(nproc --all)
           
