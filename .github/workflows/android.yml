@@ -154,6 +154,8 @@ jobs:
         run: |
           sudo apt-get install -y libfreetype-dev libfreetype6-dev liblcms2-dev libtiff5-dev
 
+          cp $LIB_OPENJPEG/install/lib/openjpeg-2.4/OpenJPEGTargets.cmake $LIB_OPENJPEG/install/lib/openjpeg-2.4/OpenJPEGConfig.cmake
+
       - name: Build poppler
         run: |
           cd 3rdparty
