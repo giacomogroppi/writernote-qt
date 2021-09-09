@@ -86,9 +86,6 @@ jobs:
       - name: Build libzip
         run: |
           cd 3rdparty
-          #ANDROID_NDK=/home/$USER/Android/Sdk/ndk/22.0.7026061/
-          #export PATH=${ANDROID_NDK}:$PATH
-          #export NDK_PROJECT_PATH=./
           
           chmod +x libzip.sh
           ./libzip.sh OFF $NDK_PATH
@@ -115,7 +112,7 @@ jobs:
           cd $PREFIX_LIB
           curl -L https://github.com/uclouvain/openjpeg/archive/refs/tags/v2.4.0.tar.gz -o openjpeg.tar.gz
           tar -xf openjpeg.tar.gz 
-          mv openjpeg* $LIB_OPENJPEG
+          mv openjpeg.tar.gz $LIB_OPENJPEG
 
           cd openjpeg
           mkdir build
