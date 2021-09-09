@@ -101,7 +101,6 @@ jobs:
           tar -xf libpng.tar.gz
           rm libpng.tar.gz
           
-          echo $(ls)
           mv libpng-1.6.35 libpng
 
           echo $(ls)

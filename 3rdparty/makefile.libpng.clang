@@ -12,7 +12,7 @@ ZLIBINC = ../zlib
 ZLIBLIB = ../zlib
 
 # Compiler, linker, lib and other tools
-CC = /home/giacomo/testing_android/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/clang
+CC = /home/runner/work/writernote-qt/writernote-qt/3rdparty/ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/clang
 LD = $(CC)
 AR_RC = ar rcs
 RANLIB = ranlib
