@@ -172,7 +172,7 @@ jobs:
           export BUILD_OPT=1
           export USE_64=1
 
-          make 
+          make nss_build_all
 
 
       - name: install lib for build poppler
