@@ -99,9 +99,10 @@ jobs:
           curl -L https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.tar.gz -o libpng.tar.gz
 
           tar -xf libpng.tar.gz
+          rm libpng.tar.gz
+          
           echo $(ls)
-
-          mv libpng* libpng
+          mv libpng-1.6.35 libpng
 
           echo $(ls)
           echo $(pwd)
