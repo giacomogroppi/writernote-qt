@@ -39,7 +39,7 @@ jobs:
       JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
       LIB_JPEG_TURBO: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo"
       LIB_OPENJPEG: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libopenjpeg"
-      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/5.15.2/android/"
+      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/5.15.2/android/lib/cmake/Qt5Core"
       POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
       LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
       LIBPNG_MAKEFILE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/makefile.libpng.clang"
@@ -126,28 +126,28 @@ jobs:
 
           make install -j$(nproc) 
 
-      #- name: Build libjpeg-turbo
-      #  run: |
-      #    cd $PREFIX_LIB
-      #    git clone https://github.com/libjpeg-turbo/libjpeg-turbo
+      - name: Build libjpeg-turbo
+        run: |
+          cd $PREFIX_LIB
+          git clone https://github.com/libjpeg-turbo/libjpeg-turbo
 
-      #    cd  libjpeg-turbo
-      #    mkdir install
-      #    mkdir build
+          cd  libjpeg-turbo
+          mkdir install
+          mkdir build
 
-      #    cmake -G"Unix Makefiles" \
-      #      -DANDROID_ABI=arm64-v8a \
-      #      -DANDROID_ARM_MODE=arm \
-      #      -DANDROID_PLATFORM=android-$ANDROID_VERSION \
-      #      -DANDROID_TOOLCHAIN=$TOOLCHAIN \
-      #      -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
-      #      -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-      #      -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \
-      #      -B$LIB_JPEG_TURBO/build \
-      #      -DWITH_JPEG8=1
-      #    
-      #    cd build
-      #    sudo make install -j$(nproc --all)
+          cmake -G"Unix Makefiles" \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_ARM_MODE=arm \
+            -DANDROID_PLATFORM=android-$ANDROID_VERSION \
+            -DANDROID_TOOLCHAIN=$TOOLCHAIN \
+            -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
+            -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+            -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \
+            -B$LIB_JPEG_TURBO/build \
+            -DWITH_JPEG8=1
+          
+          cd build
+          sudo make install -j$(nproc --all)
 
 
       - name: install lib for build poppler
@@ -167,6 +167,8 @@ jobs:
           cd poppler
           mkdir build
           mkdir install
+
+          export CMAKE_PREFIX_PATH=$QT_PREFIX
 
           cd build
 
@@ -195,7 +197,8 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF \
             -DOpenJPEG_DIR=/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo/install/lib/pkgconfig/ \
             -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4 \
-            -DCMAKE_PREFIX_PATH=$QT_PREFIX
+            -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
+            -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ 
 
           sudo make install -j$(nproc --all)
           
