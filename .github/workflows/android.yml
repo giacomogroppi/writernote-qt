@@ -124,6 +124,7 @@ jobs:
             -G"Unix Makefiles" \
             -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake
 
+          make -j$(nproc)
 
       - name: Build libjpeg-turbo
         run: |
