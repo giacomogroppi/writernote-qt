@@ -38,7 +38,7 @@ jobs:
       NDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/ndk"
       JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
       LIB_JPEG_TURBO: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo"
-      LIB_OPENJPEG: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/openjpeg"
+      LIB_OPENJPEG: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libopenjpeg"
       QT_PREFIX: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/qt_build"
       POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
       LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
@@ -114,9 +114,7 @@ jobs:
           tar -xf openjpeg.tar.gz 
           echo $(ls)
 
-          mv openjpeg.tar.gz $LIB_OPENJPEG
-
-          rm openjpeg.tar.gz
+          mv openjpeg.tar.gz libopenjpeg
 
           cd $LIB_OPENJPEG
           mkdir build
