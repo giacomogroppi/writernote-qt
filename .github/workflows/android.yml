@@ -156,6 +156,9 @@ jobs:
 
           cp $LIB_OPENJPEG/install/lib/openjpeg-2.4/OpenJPEGTargets.cmake $LIB_OPENJPEG/install/lib/openjpeg-2.4/OpenJPEGConfig.cmake
 
+          echo $(ls $LIB_OPENJPEG/install/lib/openjpeg-2.4/)
+
+
       - name: Build poppler
         run: |
           cd 3rdparty
