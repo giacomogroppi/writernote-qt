@@ -185,11 +185,12 @@ jobs:
             -DENABLE_GTK_DOC=OFF \
             -DENABLE_QT6=OFF \
             -DENABLE_QT5=ON \
-            #-DENABLE_LIBOPENJPEG=unmaintained \
             -DENABLE_CMS=none \
             -DENABLE_DCTDECODER=unmaintained \
             -DBUILD_SHARED_LIBS=OFF \
-            -DOpenJPEG_DIR=/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo/install/lib/pkgconfig/
+            -DOpenJPEG_DIR=/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo/install/lib/pkgconfig/ \
+            #-DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
+            -DOpenJPEG_DIR=$LIB_OPENJPEG/install
 
           sudo make install -j$(nproc --all)
           
