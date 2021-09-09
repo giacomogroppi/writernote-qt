@@ -114,7 +114,9 @@ jobs:
           tar -xf openjpeg.tar.gz 
           mv openjpeg.tar.gz $LIB_OPENJPEG
 
-          cd openjpeg
+          rm openjpeg.tar.gz
+
+          cd $LIB_OPENJPEG
           mkdir build
           mkdir install
 
