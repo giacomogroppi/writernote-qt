@@ -100,10 +100,7 @@ jobs:
           
           mv libpng-1.6.35 libpng
 
-          echo $(ls)
-          echo $(pwd)
-
-          cp $LIBPNG_MAKEFILE $LIBPNG_PATH/Makefile
+          mv $LIBPNG_MAKEFILE $LIBPNG_PATH/Makefile
           cd $LIBPNG_PATH
           make
 
@@ -112,11 +109,9 @@ jobs:
           cd $PREFIX_LIB
           curl -L https://github.com/uclouvain/openjpeg/archive/refs/tags/v2.4.0.tar.gz -o openjpeg.tar.gz
           tar -xf openjpeg.tar.gz 
-          
-          echo $(ls)
-          echo $(pwd)
+          rm openjpeg.tar.gz
 
-          mv openjpeg.tar.gz libopenjpeg
+          mv openjpeg-2.4.0 libopenjpeg
 
           cd $LIB_OPENJPEG
           mkdir build
