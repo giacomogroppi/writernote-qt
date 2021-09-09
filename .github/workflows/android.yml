@@ -126,28 +126,28 @@ jobs:
 
           make install -j$(nproc) 
 
-      - name: Build libjpeg-turbo
-        run: |
-          cd $PREFIX_LIB
-          git clone https://github.com/libjpeg-turbo/libjpeg-turbo
+      #- name: Build libjpeg-turbo
+      #  run: |
+      #    cd $PREFIX_LIB
+      #    git clone https://github.com/libjpeg-turbo/libjpeg-turbo
 
-          cd  libjpeg-turbo
-          mkdir install
-          mkdir build
+      #    cd  libjpeg-turbo
+      #    mkdir install
+      #    mkdir build
 
-          cmake -G"Unix Makefiles" \
-            -DANDROID_ABI=arm64-v8a \
-            -DANDROID_ARM_MODE=arm \
-            -DANDROID_PLATFORM=android-$ANDROID_VERSION \
-            -DANDROID_TOOLCHAIN=$TOOLCHAIN \
-            -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
-            -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-            -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \
-            -B$LIB_JPEG_TURBO/build \
-            -DWITH_JPEG8=1
-          
-          cd build
-          sudo make install -j$(nproc --all)
+      #    cmake -G"Unix Makefiles" \
+      #      -DANDROID_ABI=arm64-v8a \
+      #      -DANDROID_ARM_MODE=arm \
+      #      -DANDROID_PLATFORM=android-$ANDROID_VERSION \
+      #      -DANDROID_TOOLCHAIN=$TOOLCHAIN \
+      #      -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
+      #      -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+      #      -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \
+      #      -B$LIB_JPEG_TURBO/build \
+      #      -DWITH_JPEG8=1
+      #    
+      #    cd build
+      #    sudo make install -j$(nproc --all)
 
 
       - name: install lib for build poppler
@@ -190,7 +190,7 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF \
             -DOpenJPEG_DIR=/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo/install/lib/pkgconfig/ \
             #-DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
-            -DOpenJPEG_DIR=$LIB_OPENJPEG/install
+            -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4
 
           sudo make install -j$(nproc --all)
           
