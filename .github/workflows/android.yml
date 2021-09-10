@@ -198,7 +198,7 @@ jobs:
           ./autogen.sh
           ./configure --enable-shared=no --prefix=$PATH_FREETYPE --host=aarch64-linux-android 
           make -j$(nproc) 
-          make install
+          #make install
           popd
 
 
