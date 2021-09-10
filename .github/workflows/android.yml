@@ -44,6 +44,7 @@ jobs:
       LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
       LIBPNG_MAKEFILE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/makefile.libpng.clang"
       NSS_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/nss"
+      PATH_FREETYPE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/freetype"
       ANDROID_VERSION: 21
       TOOLCHAIN: "clang"
     steps:
@@ -183,6 +184,23 @@ jobs:
 
           echo $(ls $LIB_OPENJPEG/install/lib/openjpeg-2.4/)
 
+      - name: Build freetype
+        run: |
+          cd $PREFIX_LIB
+
+          wget https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.xz
+          tar xvfh freetype-2.10.1.tar.xz
+          
+          mv freetype-2.10.1 $PATH_FREETYPE
+          cd $PATH_FREETYPE
+
+          CFLAGS=-std=gnu99 STANDALONE_EXTRA="--arch arm64" /opt/helpers/build-standalone 
+          ./autogen.sh
+          ./configure --enable-shared=no --prefix=$PATH_FREETYPE --host=aarch64-linux-android 
+          make -j$(nproc) 
+          make install
+          popd
+
 
       - name: Build poppler
         run: |
@@ -202,8 +220,8 @@ jobs:
 
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install \
-            -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
-            -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
+            -DFREETYPE_LIBRARY=$PATH_FREETYPE/lib/libfreetype.a \
+            -DFREETYPE_INCLUDE_DIRS=$PATH_FREETYPE/include/freetype2/freetype \
             -DANDROID_TOOLCHAIN=clang \
             -DCMAKE_BUILD_TYPE=Release \
             -DANDROID_PLATFORM=$ANDROID_VERSION \
