@@ -194,11 +194,13 @@ jobs:
           mv freetype-2.10.1 $PATH_FREETYPE
           cd $PATH_FREETYPE
 
+          mkdir install
+
           CFLAGS=-std=gnu99 STANDALONE_EXTRA="--arch arm64"
           ./autogen.sh
-          ./configure --enable-shared=no --prefix=$PATH_FREETYPE --host=aarch64-linux-android 
+          ./configure --enable-shared=no --prefix=$PATH_FREETYPE/install --host=aarch64-linux-android 
           make -j$(nproc) 
-          #make install
+          make install
 
 
       - name: Build poppler
