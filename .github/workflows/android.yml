@@ -241,7 +241,7 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF \
             -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
             -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
-            -DOpenJPEG_DIR=$LIB_JPEG/install/lib/openjpeg-2.4
+            -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4
 
 
 
