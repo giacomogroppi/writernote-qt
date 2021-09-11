@@ -217,10 +217,36 @@ jobs:
 
           cd build
 
+          #cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+          #  -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install \
+          #  -DFREETYPE_LIBRARY=$PATH_FREETYPE/install/lib/libfreetype.a \
+          #  -DFREETYPE_INCLUDE_DIRS=$PATH_FREETYPE/install/include/freetype2/freetype \
+          #  -DANDROID_TOOLCHAIN=clang \
+          #  -DCMAKE_BUILD_TYPE=Release \
+          #  -DANDROID_PLATFORM=$ANDROID_VERSION \
+          #  -DJPEG_LIBRARY=$LIB_JPEG_TURBO/install/lib/libjpeg.a \
+          #  -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include \
+          #  -D_FILE_OFFSET_BITS=64 \
+          #  -DENABLE_BOOST=OFF \
+          #  -DBUILD_GTK_TESTS=OFF \
+          #  -DBUILD_QT5_TESTS=OFF \
+          #  -DBUILD_QT6_TESTS=OFF \
+          #  -DBUILD_CPP_TESTS=OFF \
+          #  -DBUILD_MANUAL_TESTS=OFF \
+          #  -DENABLE_UTILS=OFF \
+          #  -DENABLE_GTK_DOC=OFF \
+          #  -DENABLE_QT6=OFF \
+          #  -DENABLE_QT5=ON \
+          #  -DENABLE_CMS=none \
+          #  -DBUILD_SHARED_LIBS=OFF \
+          #  -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
+          #  -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
+          #  -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4
+
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install \
-            -DFREETYPE_LIBRARY=$PATH_FREETYPE/install/lib/libfreetype.a \
-            -DFREETYPE_INCLUDE_DIRS=$PATH_FREETYPE/install/include/freetype2/freetype \
+            -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
+            -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
             -DANDROID_TOOLCHAIN=clang \
             -DCMAKE_BUILD_TYPE=Release \
             -DANDROID_PLATFORM=$ANDROID_VERSION \
@@ -242,7 +268,6 @@ jobs:
             -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
             -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
             -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4
-
 
 
           sudo make install -j$(nproc --all)
