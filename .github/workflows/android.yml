@@ -180,8 +180,6 @@ jobs:
         run: |
           sudo apt-get install -y liblcms2-dev libtiff5-dev
 
-          echo $(ls $PATH_FREETYPE/install/include/freetype2/freetype)
-
       - name: Build freetype
         run: |
           cd $PREFIX_LIB
@@ -200,7 +198,11 @@ jobs:
           make -j$(nproc) 
           make install
 
-
+      - name: Tmp file
+        run: |
+          echo 1: $(ls $PATH_FREETYPE/install/include/freetype2/freetype)
+          echo 2: $(ls $PATH_FREETYPE/install/include/freetype2/)
+          echo 3: $(ls $PATH_FREETYPE/install/include/)
       - name: Build poppler
         run: |
           cd 3rdparty
