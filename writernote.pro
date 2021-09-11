@@ -506,7 +506,7 @@ android:contains(DEFINES, PDFSUPPORT){
     INCLUDEPATH += 3rdparty/poppler/install/include/poppler/qt5
     LIBS += 3rdparty/poppler/install/lib/libpoppler-qt5.a
 }
-macx:contains(DEFINES, PDFSUPPORT){
+else:macx:contains(DEFINES, PDFSUPPORT){
     POPPLER_INCLUDE = /usr/local/opt/poppler/include/poppler/qt5
     POPPLER_INCLUDE_CI = /usr/local/opt/poppler-qt5/include/poppler/qt5
     POPPLER_INCLUDE_FIN = ""
