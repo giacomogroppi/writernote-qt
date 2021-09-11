@@ -407,8 +407,8 @@ android{
     message(Enable android build)
     QT += androidextras
 
-    LIBS += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/lib/libzip.a
-    INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/include/
+    LIBS += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/arm64-v8a/lib/libzip.a
+    INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/arm64-v8a/include/
     #LIBS += $$PWD/android/libzip-android-1.0.1/obj/local/armeabi-v7a/libzip.a
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
