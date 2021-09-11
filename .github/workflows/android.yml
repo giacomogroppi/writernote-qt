@@ -219,8 +219,8 @@ jobs:
 
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
             -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install \
-            -DFREETYPE_LIBRARY=$PATH_FREETYPE/lib/libfreetype.a \
-            -DFREETYPE_INCLUDE_DIRS=$PATH_FREETYPE/include/freetype2/freetype \
+            -DFREETYPE_LIBRARY=$PATH_FREETYPE/install/lib/libfreetype.a \
+            -DFREETYPE_INCLUDE_DIRS=$PATH_FREETYPE/install/include/freetype2/freetype \
             -DANDROID_TOOLCHAIN=clang \
             -DCMAKE_BUILD_TYPE=Release \
             -DANDROID_PLATFORM=$ANDROID_VERSION \
