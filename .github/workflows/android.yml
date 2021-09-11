@@ -180,7 +180,7 @@ jobs:
         run: |
           sudo apt-get install -y liblcms2-dev libtiff5-dev
 
-          echo $(ls $LIB_OPENJPEG/install/lib/openjpeg-2.4/)
+          echo $(ls $PATH_FREETYPE/install/include/freetype2/freetype)
 
       - name: Build freetype
         run: |
