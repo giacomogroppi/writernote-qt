@@ -270,8 +270,11 @@ jobs:
             -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
             -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
             -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4 \
-            -DQt5Gui_DIR=$QT_PREFIX/lib/cmake/Qt5Gui
-
+            -DQt5Gui_DIR=$QT_PREFIX/lib/cmake/Qt5Gui \
+            -DQt5Core_DIR=$QT_PREFIX/lib/cmake/Qt5Core \
+            -DQt5Xml_DIR=$QT_PREFIX/lib/cmake/Qt5Xml \
+            -DQt5Widgets_DIR=$QT_PREFIX/lib/cmake/Qt5Widgets \
+            -DQt5Test_DIR=$QT_PREFIX/lib/cmake/Qt5Test 
 
           sudo make install -j$(nproc --all)
           
