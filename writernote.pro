@@ -407,9 +407,18 @@ android{
     message(Enable android build)
     QT += androidextras
 
-    LIBS += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/arm64-v8a/lib/libzip.a
-    INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/arm64-v8a/include/
-    #LIBS += $$PWD/android/libzip-android-1.0.1/obj/local/armeabi-v7a/libzip.a
+    equals(ANDROID_ABIS,"arm64-v8a"){
+        message(Enable arm64-v8a android build for libzip)
+
+        LIBS += $$PWD/3rdparty/libzip/android/build/arm64-v8a/../../install/arm64-v8a/lib/libzip.a
+        INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/arm64-v8a/../../install/arm64-v8a/include/
+    }
+    equals(ANDROID_ABIS,"armeabi-v7a"){
+        message(Enable armeabi-v7a android build for libzip)
+
+        LIBS += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/lib/libzip.a
+        INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/include/
+    }
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
@@ -503,8 +512,18 @@ contains(DEFINES, PDFSUPPORT){
 }
 
 android:contains(DEFINES, PDFSUPPORT){
-    INCLUDEPATH += 3rdparty/poppler/install/include/poppler/qt5
-    LIBS += 3rdparty/poppler/install/lib/libpoppler-qt5.a
+    equals(ANDROID_ABIS,"arm64-v8a"){
+        message(Enable arm64-v8a android build for poppler)
+
+        INCLUDEPATH += 3rdparty/poppler/install-arm64-v8a/include/poppler/qt5
+        LIBS += 3rdparty/poppler/install-arm64-v8a/lib/libpoppler-qt5.a
+    }
+    equals(ANDROID_ABIS,"armeabi-v7a"){
+        message(Enable armeabi-v7a android build for poppler)
+
+        INCLUDEPATH += 3rdparty/poppler/install-armeabi-v7a/include/poppler/qt5
+        LIBS += 3rdparty/poppler/install-armeabi-v7a/lib/libpoppler-qt5.a
+    }
 }
 else:macx:contains(DEFINES, PDFSUPPORT){
     POPPLER_INCLUDE = /usr/local/opt/poppler/include/poppler/qt5
