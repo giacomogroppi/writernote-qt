@@ -219,9 +219,9 @@ jobs:
 
           cd build
 
-          # arm64-v8
+          # arm64-v8a
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install-arm64-v8 \
+            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install-arm64-v8a \
             -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
             -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
             -DANDROID_TOOLCHAIN=clang \
