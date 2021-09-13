@@ -373,6 +373,8 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
 
 void MainWindow::on_actionRemove_current_PDF_triggered()
 {
+#ifdef PDFSUPPORT
     this->m_currenttitle->m_pdf->reset();
+#endif // PDFSUPPORT
 }
 

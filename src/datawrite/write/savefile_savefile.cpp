@@ -24,7 +24,10 @@ int savefile::savefile_check_file(){
     zip_error_t errore;
 
     fromimage::load_res res_img;
+
+#ifdef PDFSUPPORT
     frompdf::load_res res_pdf;
+#endif // PDFSUPPORT
 
     zip_t *filezip;
     zip_source_t *file;
@@ -82,10 +85,11 @@ int savefile::savefile_check_file(){
     if(res_img != fromimage::load_res::ok)
         goto delete_;
 
+#ifdef PDFSUPPORT
     res_pdf = currenttitle->m_pdf->save_metadata(file);
     if(res_pdf != frompdf::load_res::ok)
         goto delete_;
-
+#endif // PDFSUPPORT
     check = 0;
 
     /*

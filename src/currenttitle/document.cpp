@@ -82,6 +82,8 @@ void Document::reset(){
     this->count_pdf = 0;
     this->count_img = 0;
 
+#ifdef PDFSUPPORT
     this->m_pdf->reset();
+#endif // PDFSUPPORT
     this->m_img->reset();
 }

@@ -1,6 +1,18 @@
 #ifndef FROMPDF_H
 #define FROMPDF_H
 
+#include <QtGlobal>
+
+#ifndef PDFSUPPORT
+class frompdf{
+public:
+    uchar var;
+    frompdf(void *null){Q_UNUSED(null)};
+};
+#endif
+
+#ifdef PDFSUPPORT
+
 #include "../touch/datastruct/datastruct.h"
 #include "../currenttitle/document.h"
 #include "zip.h"
@@ -156,5 +168,5 @@ private:
     */
     void init_FirstLoad();
 };
-
+#endif // PDFSUPPORT
 #endif // FROMPDF_H

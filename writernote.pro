@@ -73,8 +73,6 @@ SOURCES += \
     src/datawrite/write/saveArray.cpp \
     src/dropEvent/dropEvent.cpp \
     src/filelost.cpp \
-    src/frompdf/convertimg.cpp \
-    src/frompdf/metadata.cpp \
     src/images/fromimage.cpp \
     src/last_open/option/button_main.cpp \
     src/last_open/option/option_last_open_ui.cpp \
@@ -501,9 +499,12 @@ android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
 ANDROID_EXTRA_LIBS = /home/giacomo/Android/Sdk/android_openssl/latest/arm/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/arm64/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86/libssl_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libcrypto_1_1.so /home/giacomo/Android/Sdk/android_openssl/latest/x86_64/libssl_1_1.so
 
 DEFINES += "PDFSUPPORT"
+android: DEFINES -= "PDFSUPPORT"
 
 contains(DEFINES, PDFSUPPORT){
     SOURCES += \
+        src/frompdf/convertimg.cpp \
+        src/frompdf/metadata.cpp \
         src/frompdf/frompdf.cpp
     HEADERS += \
         src/frompdf/frompdf.h

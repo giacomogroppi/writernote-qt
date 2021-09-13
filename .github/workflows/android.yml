@@ -293,6 +293,8 @@ jobs:
 
       - name: Compile
         run: |
+          export ANDROID_NDK_ROOT=$NDK_PATH
+
           qmake ANDROID_ABIS=armeabi-v7a
           make -j$(nproc) apk
 

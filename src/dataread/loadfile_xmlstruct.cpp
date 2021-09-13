@@ -286,7 +286,6 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
 
     int tmp;
     uchar controllo_parita = 0;
-    frompdf::load_res res;
     fromimage::load_res res_img;
 
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
@@ -322,11 +321,13 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
         }
     }
 
+#ifdef PDFSUPPORT
     if(LoadPdf){
-        res = doc->m_pdf->load(filezip, f, nullptr);
+        auto res = doc->m_pdf->load(filezip, f, nullptr);
         if(res != frompdf::ok)
             return ERROR;
     }
+#endif
     if(controllo_parita)
         return ERROR_CONTROLL;
 

@@ -1,5 +1,6 @@
 #include "frompdf.h"
 
+#ifdef PDFSUPPORT
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../currenttitle/document.h"
 #include "../utils/permission/permission.h"
@@ -323,3 +324,5 @@ uchar frompdf::insert_pdf(QString &pos,
 
     return OK;
 }
+
+#endif

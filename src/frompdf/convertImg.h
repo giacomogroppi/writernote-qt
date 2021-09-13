@@ -1,6 +1,8 @@
 #ifndef CONVERTIMG_H
 #define CONVERTIMG_H
 
+#ifdef PDFSUPPORT
+
 #include <QObject>
 #include <QThread>
 #include "poppler-qt5.h"
@@ -30,5 +32,5 @@ inline convertImg::~convertImg()
 {
     delete page;
 }
-
+#endif
 #endif // CONVERTIMG_H
