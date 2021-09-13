@@ -296,5 +296,7 @@ jobs:
           qmake ANDROID_ABIS=armeabi-v7a
           make -j$(nproc) apk
 
+          make clean
+
           qmake ANDROID_ABIS=arm64-v8a
           make -j$(nproc) apk

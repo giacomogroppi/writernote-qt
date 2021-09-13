@@ -517,12 +517,16 @@ android:contains(DEFINES, PDFSUPPORT){
 
         INCLUDEPATH += 3rdparty/poppler/install-arm64-v8a/include/poppler/qt5
         LIBS += 3rdparty/poppler/install-arm64-v8a/lib/libpoppler-qt5.a
+        LIBS += 3rdparty/poppler/install-arm64-v8a/lib/libpoppler-cpp.a
+        LIBS += 3rdparty/poppler/install-arm64-v8a/lib/libpoppler.a
     }
     equals(ANDROID_ABIS,armeabi-v7a){
         message(Enable armeabi-v7a android build for poppler)
 
         INCLUDEPATH += 3rdparty/poppler/install-armeabi-v7a/include/poppler/qt5
         LIBS += 3rdparty/poppler/install-armeabi-v7a/lib/libpoppler-qt5.a
+        LIBS += 3rdparty/poppler/install-armeabi-v7a/lib/libpoppler.a
+        LIBS += 3rdparty/poppler/install-armeabi-v7a/lib/libpoppler-cpp.a
     }
 }
 else:macx:contains(DEFINES, PDFSUPPORT){
