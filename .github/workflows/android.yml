@@ -93,6 +93,7 @@ jobs:
           ./libzip.sh OFF $NDK_PATH
 
       - name: Build libpng
+        if: true
         run: |
           cd $PREFIX_LIB
           curl -L https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.tar.gz -o libpng.tar.gz
@@ -107,6 +108,7 @@ jobs:
           make
 
       - name: Build openjpeg
+        if: true
         run: |
           cd $PREFIX_LIB
           curl -L https://github.com/uclouvain/openjpeg/archive/refs/tags/v2.4.0.tar.gz -o openjpeg.tar.gz
@@ -129,6 +131,7 @@ jobs:
           make install -j$(nproc) 
 
       - name: Build libjpeg-turbo
+        if: true
         run: |
           cd $PREFIX_LIB
           git clone https://github.com/libjpeg-turbo/libjpeg-turbo
@@ -181,6 +184,7 @@ jobs:
           sudo apt-get install -y liblcms2-dev libtiff5-dev
 
       - name: Build freetype
+        if: true
         run: |
           cd $PREFIX_LIB
 
@@ -199,11 +203,13 @@ jobs:
           make install
 
       - name: Tmp file
+        if: true
         run: |
           echo 1: $(ls $PATH_FREETYPE/install/include/freetype2/freetype)
           echo 2: $(ls $PATH_FREETYPE/install/include/freetype2/)
           echo 3: $(ls $PATH_FREETYPE/install/include/)
       - name: Build poppler
+        if: true
         run: |
           cd 3rdparty
 
