@@ -308,3 +308,7 @@ jobs:
 
           qmake ANDROID_ABIS=arm64-v8a
           make -j$(nproc) apk
+      
+      - name: Utils
+        run: |
+          cat  /home/runner/work/writernote-qt/writernote-qt/android-writernote-deployment-settings.json
