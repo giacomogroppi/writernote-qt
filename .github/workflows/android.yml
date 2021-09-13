@@ -255,9 +255,9 @@ jobs:
           sudo make install -j$(nproc --all)
           make clean
 
-          #armv7a
+          #armeabi-v7a
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install-armv7a \
+            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install-armeabi-v7a \
             -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
             -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
             -DANDROID_TOOLCHAIN=clang \
@@ -286,7 +286,7 @@ jobs:
             -DQt5Xml_DIR=$QT_PREFIX/lib/cmake/Qt5Xml \
             -DQt5Widgets_DIR=$QT_PREFIX/lib/cmake/Qt5Widgets \
             -DQt5Test_DIR=$QT_PREFIX/lib/cmake/Qt5Test \
-            -DANDROID_ABI=armv7a
+            -DANDROID_ABI=armeabi-v7a
 
           sudo make install -j$(nproc --all)
           make clean
