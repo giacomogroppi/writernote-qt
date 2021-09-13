@@ -26,6 +26,8 @@ contains(DEFINES, SNAP){
     message("Snapcraft enable")
 }
 
+message($$ANDROID_ABIS)
+
 ## Support for version
 contains(DEFINES, VERSION_SNAPCRAFT){
     message("Version for snapcraft add. Version: $$VERSION_SNAPCRAFT")

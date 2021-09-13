@@ -219,8 +219,9 @@ jobs:
 
           cd build
 
+          # arm64-v8
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install \
+            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install-arm64-v8 \
             -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
             -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
             -DANDROID_TOOLCHAIN=clang \
@@ -252,9 +253,45 @@ jobs:
             -DANDROID_ABI=arm64-v8a
 
           sudo make install -j$(nproc --all)
-          
+          make clean
+
+          #armv7a
+          cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
+            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install-armv7a \
+            -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
+            -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
+            -DANDROID_TOOLCHAIN=clang \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DANDROID_PLATFORM=$ANDROID_VERSION \
+            -DJPEG_LIBRARY=$LIB_JPEG_TURBO/install/lib/libjpeg.a \
+            -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include \
+            -D_FILE_OFFSET_BITS=64 \
+            -DENABLE_BOOST=OFF \
+            -DBUILD_GTK_TESTS=OFF \
+            -DBUILD_QT5_TESTS=OFF \
+            -DBUILD_QT6_TESTS=OFF \
+            -DBUILD_CPP_TESTS=OFF \
+            -DBUILD_MANUAL_TESTS=OFF \
+            -DENABLE_UTILS=OFF \
+            -DENABLE_GTK_DOC=OFF \
+            -DENABLE_QT6=OFF \
+            -DENABLE_QT5=ON \
+            -DENABLE_CMS=none \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
+            -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
+            -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4 \
+            -DQt5Gui_DIR=$QT_PREFIX/lib/cmake/Qt5Gui \
+            -DQt5Core_DIR=$QT_PREFIX/lib/cmake/Qt5Core \
+            -DQt5Xml_DIR=$QT_PREFIX/lib/cmake/Qt5Xml \
+            -DQt5Widgets_DIR=$QT_PREFIX/lib/cmake/Qt5Widgets \
+            -DQt5Test_DIR=$QT_PREFIX/lib/cmake/Qt5Test \
+            -DANDROID_ABI=armv7a
+
+          sudo make install -j$(nproc --all)
+          make clean
 
       - name: Compile
         run: |
           qmake
-          make -j$(nproc) apk
+          make -j$(nproc) ANDROID_ABIS="armabi-v7a" apk
