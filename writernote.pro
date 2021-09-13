@@ -512,13 +512,13 @@ contains(DEFINES, PDFSUPPORT){
 }
 
 android:contains(DEFINES, PDFSUPPORT){
-    equals(ANDROID_ABIS,"arm64-v8a"){
+    equals(ANDROID_ABIS,arm64-v8a){
         message(Enable arm64-v8a android build for poppler)
 
         INCLUDEPATH += 3rdparty/poppler/install-arm64-v8a/include/poppler/qt5
         LIBS += 3rdparty/poppler/install-arm64-v8a/lib/libpoppler-qt5.a
     }
-    equals(ANDROID_ABIS,"armeabi-v7a"){
+    equals(ANDROID_ABIS,armeabi-v7a){
         message(Enable armeabi-v7a android build for poppler)
 
         INCLUDEPATH += 3rdparty/poppler/install-armeabi-v7a/include/poppler/qt5

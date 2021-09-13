@@ -293,8 +293,8 @@ jobs:
 
       - name: Compile
         run: |
-          qmake ANDROID_ABIS="armabi-v7a"
+          qmake ANDROID_ABIS=armabi-v7a
           make -j$(nproc) apk
 
-          qmake ANDROID_ABIS="arm64-v8a"
+          qmake ANDROID_ABIS=arm64-v8a
           make -j$(nproc) apk
