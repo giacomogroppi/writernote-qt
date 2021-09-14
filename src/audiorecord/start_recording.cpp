@@ -106,14 +106,14 @@ static void save(){
 */
 bool MainWindow::setOutputLocation()
 {
-#ifdef Q_OS_WINRT
+#if defined (Q_OS_WINRT) || defined (ANDROID)
     // UWP does not allow to store outside the sandbox
     const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     if (!QDir().mkpath(cacheDir)) {
         qWarning() << "Failed to create cache directory";
         return;
     }
-    QString fileName = cacheDir + QLatin1String("/output.wav");
+    QString fileName = cacheDir + QLatin1String( "/output.wav");
 #else
     //QString fileName = QFileDialog::getSaveFileName();
 

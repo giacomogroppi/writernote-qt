@@ -13,7 +13,6 @@
 
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->m_currenttitle->se_registato != Document::not_record){
-
         if(parent->m_currenttitle->se_registato == Document::record_file){
             if(QFile::exists(parent->m_currenttitle->audio_position_path))
                 return dialog_critic("Audio " + parent->m_currenttitle->audio_position_path + " didn't exist");
@@ -44,7 +43,11 @@ void aggiornotestiriascolto(MainWindow *parent){
 
         }
         else{
+#ifndef ANDROID
             parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle->audio_position_path));
+#else
+            user_message("The copybook you are opening has an audio external to the writernote file, it is not possible to load the file because you are on android");
+#endif
         }
 
         parent->ui->actionDelete_audio->setEnabled(true);

@@ -46,6 +46,8 @@ jobs:
       NSS_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/nss"
       PATH_FREETYPE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/freetype"
       ANDROID_VERSION: 28
+      armeabi_v7a_pos: "/home/runner/work/writernote-qt/writernote-qt/writernote-armeabi-v7a.apk"
+      arm64_v8a_pos: "/home/runner/work/writernote-qt/writernote-qt/writernote-arm64-v8a.apk"
       TOOLCHAIN: "clang"
     steps:
       - name: "Clone"
@@ -154,31 +156,6 @@ jobs:
           cd build
           sudo make install -j$(nproc --all)
 
-      #- name: Build nss
-      #  run: |
-      #    cd $PREFIX_LIB
-      #    curl -L https://github.com/nss-dev/nss/archive/refs/tags/NSS_3_70_RTM.tar.gz -o download.nss.tar.gz
-      #    tar -xf download.nss.tar.gz
-
-      #    mv nss-NSS_3_70_RTM $NSS_PATH
-
-      #    export ANDROID_NDK=$NDK_PATH
-      #    export ANDROID_PREFIX=$NSS_PATH/install
-      #    export ANDROID_TOOLCHAIN=$TOOLCHAIN
-      #    export ANDROID_SYSROOT=armeabi-v7a
-      #    export OS_TARGET_RELEASE=$ANDROID_VERSION
-
-      #    mkdir $ANDROID_PREFIX
-
-      #    cd $NSS_PATH
-
-      #    export OS_TARGET=Android
-      #    export BUILD_OPT=1
-      #    export USE_64=1
-
-      #    make nss_build_all
-
-
       - name: install lib for build poppler
         run: |
           sudo apt-get install -y liblcms2-dev libtiff5-dev
@@ -202,12 +179,6 @@ jobs:
           make -j$(nproc) 
           make install
 
-      - name: Tmp file
-        if: false
-        run: |
-          echo 1: $(ls $PATH_FREETYPE/install/include/freetype2/freetype)
-          echo 2: $(ls $PATH_FREETYPE/install/include/freetype2/)
-          echo 3: $(ls $PATH_FREETYPE/install/include/)
       - name: Build poppler
         if: false
         run: |
@@ -304,11 +275,25 @@ jobs:
           qmake ANDROID_ABIS=armeabi-v7a
           make -j$(nproc) apk
 
+          cp /home/runner/work/writernote-qt/writernote-qt/android-build/writernote.apk $armeabi_v7a_pos
+
           make clean
 
           qmake ANDROID_ABIS=arm64-v8a
           make -j$(nproc) apk
+          cp /home/runner/work/writernote-qt/writernote-qt/android-build/writernote.apk $arm64_v8a_pos
       
-      - name: Utils
+      - name: Upload file
+        if: github.event_name == 'release'
+        env:
+          GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         run: |
-          cat  /home/runner/work/writernote-qt/writernote-qt/android-writernote-deployment-settings.json
+          export VERSION=$(git describe --tags --abbrev=0)
+          export NAME_UP_ARMEABI=writernote-$VERSION-armeabi-v7a.app
+          export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.app
+
+          mv $armeabi_v7a_pos $NAME_UP_ARMEABI
+          mv $arm64_v8a_pos $NAME_UP_ARM64
+
+          gh release upload "$VERSION" $NAME_UP_ARMEABI --clobber
+          gh release upload "$VERSION" $NAME_UP_ARM64 --clobber

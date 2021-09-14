@@ -6,6 +6,7 @@ QT       += printsupport
 QT       += network
 
 macx: DEFINES += "MACOS"
+android: DEFINES += "ANDROID"
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

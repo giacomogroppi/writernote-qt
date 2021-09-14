@@ -1,2 +1,2 @@
 #!/usr/bin/bash
-grep -rnw '/home/giacomo/writernote-c/src/' -e $1
+grep -rnw '/home/giacomo/writernote-qt/src/' -e $1
