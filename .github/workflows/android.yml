@@ -22,11 +22,11 @@ on:
       - 'macos-build/**'
       - '!.github/workflows/android.yml'
 
-  workflow_dispatch:
-  
   release:
     types:
       - published
+
+  workflow_dispatch:
 
 jobs:
   build:
