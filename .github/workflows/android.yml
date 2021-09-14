@@ -293,8 +293,8 @@ jobs:
           GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         run: |
           export VERSION=$(git describe --tags --abbrev=0)
-          export NAME_UP_ARMEABI=writernote-$VERSION-armeabi-v7a.app
-          export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.app
+          export NAME_UP_ARMEABI=writernote-$VERSION-armeabi-v7a.apk
+          export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.apk
 
           mv $armeabi_v7a_pos $NAME_UP_ARMEABI
           mv $arm64_v8a_pos $NAME_UP_ARM64
