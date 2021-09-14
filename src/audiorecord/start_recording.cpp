@@ -111,7 +111,7 @@ bool MainWindow::setOutputLocation()
     const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     if (!QDir().mkpath(cacheDir)) {
         qWarning() << "Failed to create cache directory";
-        return;
+        return false;
     }
     QString fileName = cacheDir + QLatin1String( "/output.wav");
 #else
