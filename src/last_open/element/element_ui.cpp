@@ -10,7 +10,7 @@ element_ui::element_ui(QWidget *parent) :
     ui(new Ui::element_ui)
 {
     ui->setupUi(this);
-
+    this->item = new QListWidgetItem;
 #ifndef CLOUD
     HIDE_CLOUD
 #endif
@@ -60,6 +60,7 @@ void element_ui::set_main()
         ui->owner_type->setText(NONE);
         ui->owner->setText(m_data->owner.name);
     }
+
 
 }
 

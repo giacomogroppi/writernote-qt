@@ -223,6 +223,7 @@ SOURCES += \
     src/utils/extract_audio/extract_audio.cpp \
     src/utils/extract_audio/extract_audio_ui.cpp \
     src/utils/get_file_dir/get_file_dir.cpp \
+    src/utils/get_path_application.cpp \
     src/utils/make_default/make_default_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
     src/utils/path/get_path.cpp \
@@ -336,6 +337,7 @@ HEADERS += \
     src/utils/extract_audio/extract_audio.h \
     src/utils/extract_audio/extract_audio_ui.h \
     src/utils/get_file_dir/get_file_dir.h \
+    src/utils/get_path_application.h \
     src/utils/make_default/make_default_ui.h \
     src/utils/mostra_explorer/mostra_explorer.h \
     src/utils/path/get_path.h \

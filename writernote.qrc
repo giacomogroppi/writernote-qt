@@ -62,5 +62,6 @@
         <file>images/pen_option.png</file>
         <file>images/brown-icon.png</file>
         <file>images/purple.png</file>
+        <file>images/not_define.png</file>
     </qresource>
 </RCC>

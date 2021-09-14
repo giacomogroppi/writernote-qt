@@ -5,15 +5,24 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 #include "../utils/common_def.h"
+#include "../utils/get_path_application.h"
+#include "../utils/get_file_dir/get_file_dir.h"
+#include "../utils/common_def.h"
 
 /*
  * this function is use for
  * save [not for loading]
 */
 
+static void removeNotWriternote(QStringList &ref, const QString &ext);
+
 bool qfilechoose::filechoose(QString &nome, short int type_){
     QString extention;
     QString type;
+    QString dir, nameFile;
+#ifdef ANDROID
+    QStringList list;
+#endif // ANDROID
 
     if(type_ == TYPEFILEWRITER){
         type = "File Writer (*." + APP_EXT + ")";
@@ -27,19 +36,29 @@ bool qfilechoose::filechoose(QString &nome, short int type_){
         type = "Audio (*.wav)";
         extention = ".wav";
     } else if(type_ == TYPELOG){
-        QString dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory",
+#ifndef ANDROID
+        dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory",
                                                         "",
                                                         QFileDialog::ShowDirsOnly
                                                         | QFileDialog::DontResolveSymlinks);
+#else
+
+#endif
         if(dir == "")
             return false;
 
         nome = dir;
         return true;
     }
-
-    QString nameFile= QFileDialog::getSaveFileName(nullptr,
+#ifndef ANDROID
+    nameFile= QFileDialog::getSaveFileName(nullptr,
         "Save", extention, type);
+#else
+    dir = get_path_application::exe();
+    list = get_file_dir::get(dir);
+
+    removeNotWriternote(list, extention);
+#endif
 
     if(nameFile == "")
         return false;
@@ -47,4 +66,14 @@ bool qfilechoose::filechoose(QString &nome, short int type_){
     nome = nameFile;
 
     return true;
+}
+
+static void removeNotWriternote(QStringList &ref, const QString &ext){
+    int i;
+
+    for(i=0; i<ref.length(); ++i){
+        if(ref.at(i).indexOf(ext) != -1){
+            ref.removeAt(i);
+        }
+    }
 }

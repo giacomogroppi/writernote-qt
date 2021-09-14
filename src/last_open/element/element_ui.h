@@ -2,6 +2,7 @@
 #define ELEMENT_UI_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 #include "../struct_last_file.h"
 
 namespace Ui {
@@ -23,6 +24,7 @@ public:
     void decrease();
 
 private:
+    QListWidgetItem *item;
     void set_main();
 
     Ui::element_ui *ui;

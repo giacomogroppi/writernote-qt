@@ -67,8 +67,6 @@ def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
 
     list = list_sec
 
-    #print("list from get dep:", list)
-
     return remove_double(list_sec)
 
 def get_name_lib(lib: str) -> str:

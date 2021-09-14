@@ -4,7 +4,7 @@
 #include <QDialog>
 
 #include <QList>
-
+#include <QListWidgetItem>
 #include "element/element_ui.h"
 #include "struct_last_file.h"
 #include "../cloud/struct_user.h"
@@ -46,6 +46,7 @@ private:
 
     Ui::last_open *ui;
 
+    QList<QListWidgetItem *> m_item;
     QList<element_ui *> m_lista;
 
     void deleteIn(int);

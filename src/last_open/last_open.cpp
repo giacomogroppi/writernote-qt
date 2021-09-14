@@ -18,14 +18,8 @@
 
 #include "option/option_last_open_ui.h"
 
-static void copy(last_file *s,
-                 char *pos = NULL,
-                 char *last_mod_o = NULL,
-                 char *last_mod_g= NULL,
-                 int type = TYPE_CLOUD);
-
-static void tidyup(last_file *,
-                   int,
+static void tidyup(QList<last_file> &ref,
+                   const int m_quanti,
                    struct option_last_open_ui::__r * data);
 
 last_open::last_open(QWidget *parent,
@@ -40,7 +34,7 @@ last_open::last_open(QWidget *parent,
     m_controll = controll;
     m_closeall = close_all;
 
-#if defined(__ANDROID__)
+#ifdef ANDROID
     this->setWindowState(Qt::WindowFullScreen);
 #endif
 
@@ -65,9 +59,19 @@ void last_open::setDataReturn(char **data){
 void last_open::updateList(){
     int i, len;
     len = m_lista.length();
+    ui->listWidget->setIconSize(QSize(200, 200));
 
     for(i=0; i<len; i++){
-        ui->verticalLayout->addWidget(m_lista.at(i));
+        //ui->listWidget->addItem(m_item.operator[](i));
+        //ui->listWidget->setItemWidget(m_item.operator[](i), m_lista.operator[](i));
+        //ui->verticalLayout->addWidget(m_lista.at(i));
+        QIcon icon(":image/images/not_define.png");
+
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText("/home/tmp/writernote.writer\nYou");
+        item->setIcon(icon);
+
+        ui->listWidget->addItem(item);
     }
 };
 
@@ -109,6 +113,7 @@ int last_open::load_data_()
     }
 
     element_ui *temp_element_ui;
+    QListWidgetItem *item;
 
     if(!ok){
         remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
@@ -139,10 +144,11 @@ int last_open::load_data_()
         }
     }
 
-    //tidyup(m_last, m_quanti, &data);
+    tidyup(m_last, m_quanti, &data);
 
-    for(i=0; i<m_quanti && i < __val; i++){
+    for(i=0; (i<m_quanti) && (i < __val); i++){
         temp_element_ui = new element_ui;
+        item = new QListWidgetItem("");
 
         temp_element_ui->setData(&m_last[i], i);
 
@@ -154,6 +160,7 @@ int last_open::load_data_()
 #endif // CLOUD
 
         m_lista.append(temp_element_ui);
+        m_item.append(item);
     }
 
 
@@ -166,7 +173,6 @@ void last_open::deleteIn(int index){
     int i;
     for(i=index; i<m_quanti-1; i++){
         memcpy(&m_last[i], &m_last[i+1], sizeof(last_file));
-        //copy(&m_last[i], m_last[i].posizione, m_last[i].last_modification_o, m_last[i].last_modification_g, m_last[i].type);
 
         m_lista.at(i)->decrease();
     }
@@ -200,23 +206,6 @@ void last_open::on_clicked(int index)
 
         this->deleteInElement(index);
     }
-}
-
-static void copy(last_file *s,
-                 char *pos,
-                 char *last_mod_o,
-                 char *last_mod_g,
-                 int type){
-    memcpy(&s->type, &type, sizeof(int));
-
-    if(pos)
-        memcpy(&s->posizione, pos, sizeof(char)*MAXSTR__FILE);
-
-    if(last_mod_o)
-        memcpy(&s->last_modification_o, last_mod_o, sizeof(char)*MAXMOD__FILE);
-
-    if(last_mod_g)
-        memcpy(&s->last_modification_g, last_mod_g, sizeof(char)*MAXMOD__FILE);
 }
 
 void last_open::on_open_button_clicked()
@@ -268,64 +257,12 @@ void last_open::downloadIn(int index){
 #endif
 }
 
+static void dochange(last_file &first, last_file &second){
+    last_file tmp;
 
-#define CARACTER ':'
-static void remove_c(QString *stringa){
-    int i,len = stringa->length();
-    for(i=0; i<len; i++)
-        if(stringa->at(i) == CARACTER)
-            stringa->remove(i);
-}
-
-/*
- * return MAX if the first time is after the second
- * return MIN if the second time is after the first
-*/
-#define SAME 0
-#define MIN -1
-#define MAX 1
-static int recent_private(QString first, QString second){
-
-    remove_c(&first);
-    remove_c(&second);
-
-    int m_first, m_second;
-    m_first = atoi(first.toUtf8().constData());
-    m_second = atoi(first.toUtf8().constData());
-
-    if(m_first == m_second)
-        return SAME;
-
-    if(m_first > m_second)
-        return MAX;
-
-    return MIN;
-}
-
-/*
- * the function return true if we need to change position
-*/
-static bool recent(last_file *first, last_file *second){
-    int res = recent_private((QString)first->last_modification_g, (QString)second->last_modification_g);
-
-    if(res == SAME){
-        res = recent_private((QString)first->last_modification_o, (QString)second->last_modification_o);
-
-        if (res == SAME)
-            /* if they are the saim time */
-            return false;
-
-        if(res == MIN)
-            return true;
-
-        return false;
-    }
-
-    /*
-     * if res == MIN the second time is after [we need to change]
-    */
-    return res == MIN;
-
+    memcpy(&tmp, &first, sizeof(tmp));
+    memcpy(&first, &second, sizeof(tmp));
+    memcpy(&second, &tmp, sizeof(tmp));
 }
 
 /*
@@ -338,25 +275,30 @@ static bool recent(last_file *first, last_file *second){
  * the function reorders files
  * from newest to oldest
 */
-static void tidyup(last_file *m_data,
-                   int m_quanti,
+#define REMOVE_CHAR(str, str2, c) str.remove(c); \
+    str2.remove(c)
+
+static void tidyup(QList<last_file> &ref,
+                   const int m_quanti,
                    option_last_open_ui::__r *data){
 
 
-    int k;
-    size_t s;
-    s = sizeof(last_file);
+    Q_UNUSED(data);
 
-    last_file temp;
+    int i, k;
+    QString first, second;
 
-    for(int i=0; i<m_quanti; i++){
-        for(k=1; k<m_quanti; k++){
-            if(recent(&m_data[i], &m_data[k])){
-                memcpy(&temp, &m_data[i], s);
-                memcpy(&m_data[i], &m_data[k], s);
-                memcpy(&m_data[k], &temp, s);
+    for(i=0; i<m_quanti-1; ++i){
+        for(k=i+1; k<m_quanti; ++k){
+            first = ref.at(i).last_modification_g + (QString)ref.at(i).last_modification_o;
+            second = ref.at(k).last_modification_g + (QString)ref.at(i).last_modification_o;
 
+            REMOVE_CHAR(first, second, ':');
+
+            if(atoi(first.toUtf8().constData()) < atoi(second.toUtf8().constData())){
+                dochange(ref.operator[](i), ref.operator[](k));
             }
+
         }
     }
 
