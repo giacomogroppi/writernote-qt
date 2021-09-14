@@ -23,6 +23,10 @@ on:
       - '!.github/workflows/android.yml'
 
   workflow_dispatch:
+  
+  release:
+    types:
+      - published
 
 jobs:
   build:
