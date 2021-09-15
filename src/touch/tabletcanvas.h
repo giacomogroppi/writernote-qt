@@ -133,7 +133,7 @@ public:
                      const MainWindow *parent = NULL);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-    static void updateBrush_load(float pressure, QColor color,
+    static void updateBrush_load(double pressure, QColor color,
                                  Valuator m_lineWidthValuator,QPen &m_pen, QBrush &m_brush);
     void loadpixel();
 

@@ -209,7 +209,7 @@ void TabletCanvas::load(QPainter &painter,
 }
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-void TabletCanvas::updateBrush_load(float pressure, QColor color,
+void TabletCanvas::updateBrush_load(double pressure, QColor color,
                                     Valuator m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
     /* temporary */
     int vValue = 127;
