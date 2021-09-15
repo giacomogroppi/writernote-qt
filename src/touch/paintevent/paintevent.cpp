@@ -36,7 +36,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     this->disegnafoglio();
 
     if(this->isloading)
-        load(painter, this->data, isloading, m_color, m_pen, m_brush, lastPoint, m_pos_ris, &m_pixmap);
+        load(painter, this->data, isloading, m_color, m_pen, m_brush, lastPoint, m_pos_ris, &m_pixmap, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
 
 
     /*
@@ -85,6 +85,7 @@ void TabletCanvas::load(QPainter &painter,
     m_pixmap->fill(Qt::white);
 
     if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
+        assert(!parent);
         size_orizzontale = parent->m_canvas->width();
         size_verticale = m_pixmap->height();
     }
