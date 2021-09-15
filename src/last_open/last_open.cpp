@@ -62,12 +62,7 @@ void last_open::updateList(){
     ui->listWidget->setIconSize(QSize(200, 200));
 
     for(i=0; i<len; i++){
-        //ui->listWidget->addItem(m_item.operator[](i));
-        //ui->listWidget->setItemWidget(m_item.operator[](i), m_lista.operator[](i));
-        //ui->verticalLayout->addWidget(m_lista.at(i));
-        QIcon icon(":image/images/not_define.png");
-
-        ui->listWidget->addItem(this->m_item.at(i));
+        ui->listWidget->addItem(this->m_lista.at(i)->getItem());
     }
 };
 
@@ -144,19 +139,10 @@ int last_open::load_data_()
 
     for(i=0; (i<m_quanti) && (i < __val); i++){
         temp_element_ui = new element_ui;
-        item = new QListWidgetItem;
 
-        temp_element_ui->setData(&m_last[i], i, item);
-
-        connect(temp_element_ui, SIGNAL(on_pressed(int)), this, SLOT(on_clicked(int)));
-        connect(temp_element_ui, SIGNAL(deleteIn(int)), this, SLOT(deleteInElement(int)));
-
-#ifdef CLOUD
-        connect(temp_element_ui, SIGNAL(downloadIn(int)), this, SLOT(downloadIn(int)));
-#endif // CLOUD
+        temp_element_ui->setData(&m_last[i]);
 
         m_lista.append(temp_element_ui);
-        m_item.append(item);
     }
 
 
@@ -169,8 +155,6 @@ void last_open::deleteIn(int index){
     int i;
     for(i=index; i<m_quanti-1; i++){
         memcpy(&m_last[i], &m_last[i+1], sizeof(last_file));
-
-        m_lista.at(i)->decrease();
     }
     m_quanti --;
 

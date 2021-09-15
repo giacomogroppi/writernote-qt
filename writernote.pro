@@ -366,7 +366,6 @@ FORMS += \
     src/audiosetting/audioqualityoption.ui \
     src/button/button_size.ui \
     src/currenttitle/option/option_copybook.ui \
-    src/last_open/element/element_ui.ui \
     src/last_open/last_open.ui \
     src/last_open/option/option_last_open_ui.ui \
     src/log/log_ui/log_ui.ui \

@@ -46,7 +46,6 @@ private:
 
     Ui::last_open *ui;
 
-    QList<QListWidgetItem *> m_item;
     QList<element_ui *> m_lista;
 
     void deleteIn(int);
