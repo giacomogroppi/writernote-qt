@@ -17,7 +17,7 @@ private:
 
     MainWindow *parent;
 
-    void draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, double *y_last){
+    void draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, double *y_last, const bool withPdf){
         bool isloading = true;
         QColor color = Qt::black;
         QPen m_pen;
@@ -33,6 +33,7 @@ private:
                        lastPoint,
                        -1,
                        nullptr,
+                       withPdf,
                        m,
                        size_orizzontale,
                        size_verticale,
@@ -55,7 +56,7 @@ public:
     };
 
     topdf(QString *path, TabletCanvas *canvas);
-    bool createpdf();
+    bool createpdf(const bool withPdf);
 
     inline void copy(Document *datastruct_){
             this->data = new Document;

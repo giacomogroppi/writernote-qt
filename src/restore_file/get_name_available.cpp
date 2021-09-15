@@ -2,13 +2,17 @@
 #include "../utils/common_error_definition.h"
 #include "../dataread/xmlstruct.h"
 
-QString get_name_available::get(const QString &path, bool &ok)
+QString get_name_available::get(const QString &path, bool &ok, Document *doc)
 {
     uint i, len;
     indice_class ind;
-    Document curr;
+    const bool needDelete = doc == nullptr;
+    if(needDelete)
+        doc = new Document;
+    else
+        doc->reset();
 
-    xmlstruct xml(path, ind, curr);
+    xmlstruct xml(path, ind, *doc);
 
     if(!xml.loadindice()){
         ok = false;
@@ -21,6 +25,9 @@ QString get_name_available::get(const QString &path, bool &ok)
         /* there is only one copybook that load without error */
         if(xml.loadfile(ind.titolo.at(i)+".xml", false, false) != ERROR){
             ok = true;
+            if(needDelete)
+                delete doc;
+
             return ind.titolo.at(i);
         }
     }

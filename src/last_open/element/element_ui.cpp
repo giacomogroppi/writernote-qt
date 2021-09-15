@@ -1,5 +1,6 @@
 #include "element_ui.h"
 #include "ui_element_ui.h"
+#include "../../preview/preview.h"
 
 #define NONE ""
 
@@ -21,21 +22,28 @@ element_ui::~element_ui()
     delete ui;
 }
 
-void element_ui::setData(last_file *data, int index)
+void element_ui::setData(last_file *data, int index, QListWidgetItem *item)
 {
     m_data = data;
     m_index = index;
 
-    set_main();
+    set_main(item);
 }
 
-void element_ui::set_main()
+void element_ui::set_main(QListWidgetItem *item)
 {
+    QString text;
+    QIcon icon;
+    QImage img;
+    text = m_data->posizione;
+    text += "  " + (QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o;
+
     ui->label_last_edit_time->setText((QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o);
 
     ui->label_path->setText(m_data->posizione);
 
     if(m_data->type == TYPE_CLOUD){
+        text += "\nCloud";
         ui->label_where->setText("Cloud");
         ui->open_exe->setVisible(false);
 
@@ -45,6 +53,7 @@ void element_ui::set_main()
 
     }
     else{
+        text += "\nLocal";
         ui->label_where->setText("Local");
 #ifdef CLOUD
         this->ui->button_download->setVisible(false);
@@ -52,16 +61,24 @@ void element_ui::set_main()
     }
 
     if(m_data->owner.type_user == TYPE_OWNER_YOU){
+        text += "             You";
         ui->owner_type->setText("You");
 
         ui->owner->setText(NONE);
     }
     else{
+        text += "";
         ui->owner_type->setText(NONE);
         ui->owner->setText(m_data->owner.name);
     }
 
-
+    item->setText(text);
+    if(!preview::get(img, false, m_data->posizione)){
+        item->setIcon(QIcon(":image/images/not_define.png"));
+    }else{
+        icon = QPixmap::fromImage(img);
+        item->setIcon(icon);
+    }
 }
 
 bool element_ui::event(QEvent *event)

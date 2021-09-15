@@ -17,15 +17,14 @@ public:
     explicit element_ui(QWidget *parent = nullptr);
     ~element_ui();
 
-    void setData(last_file *, int index);
+    void setData(last_file *, int index, QListWidgetItem *item);
 
     int m_index = 0;
 
     void decrease();
-
 private:
     QListWidgetItem *item;
-    void set_main();
+    void set_main(QListWidgetItem *item);
 
     Ui::element_ui *ui;
 

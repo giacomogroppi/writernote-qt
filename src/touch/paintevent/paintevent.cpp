@@ -36,7 +36,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     this->disegnafoglio();
 
     if(this->isloading)
-        load(painter, this->data, isloading, m_color, m_pen, m_brush, lastPoint, m_pos_ris, &m_pixmap, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
+        load(painter, this->data, isloading, m_color, m_pen, m_brush, lastPoint, m_pos_ris, &m_pixmap, true, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
 
 
     /*
@@ -49,8 +49,13 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 }
 
 #define C(x) x->datatouch
-#define UPDATE_LOAD(x, zoom, div, m_lineWidthValuator, m_pen, m_brush ) updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div), m_lineWidthValuator, m_pen, m_brush)
-
+#define UPDATE_LOAD(x, zoom, div, m_lineWidthValuator, m_pen, m_brush ) \
+    if(parent){ \
+        updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div), m_lineWidthValuator, m_pen, m_brush); \
+    } \
+    else{ \
+        updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush); \
+    }
 
 /*
  * TODO -> implement this function to play audio
@@ -64,6 +69,7 @@ void TabletCanvas::load(QPainter &painter,
                         Point &lastPoint,
                         int m_pos_ris,
                         QPixmap *m_pixmap,
+                        const bool withPdf,
                         double m,
                         int size_orizzontale,
                         int size_verticale,
@@ -82,10 +88,11 @@ void TabletCanvas::load(QPainter &painter,
 
     if(parent)
         is_play = parent->player->state() == QMediaPlayer::PlayingState;
-    m_pixmap->fill(Qt::white);
+    if(m_pixmap)
+        m_pixmap->fill(Qt::white);
 
     if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
-        assert(!parent);
+        assert(parent);
         size_orizzontale = parent->m_canvas->width();
         size_verticale = m_pixmap->height();
     }
@@ -122,13 +129,13 @@ void TabletCanvas::load(QPainter &painter,
             xtemp[0]*m, ytemp[0]*m,
             xtemp[1]*m, ytemp[1]*m);
 
-        __point = data->datatouch->at(i);
         ++i;
     }
 
 #ifdef PDFSUPPORT
-    data->m_pdf->draw(painter, data->datatouch->biggerx(), size_orizzontale,
-                      size_verticale, m, y_last != NULL);
+    if(withPdf)
+        data->m_pdf->draw(painter, data->datatouch->biggerx(), size_orizzontale,
+                          size_verticale, m, y_last != NULL);
 #endif
 
     data->m_img->draw(painter, data->datatouch->biggerx(),
@@ -203,7 +210,7 @@ void TabletCanvas::load(QPainter &painter,
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
 void TabletCanvas::updateBrush_load(float pressure, QColor color,
-                                    Valuator &m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
+                                    Valuator m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
     /* temporary */
     int vValue = 127;
     int hValue = 127;

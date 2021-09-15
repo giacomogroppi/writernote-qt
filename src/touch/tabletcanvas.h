@@ -125,6 +125,7 @@ public:
                      Point &lastPoint,
                      int m_pos_ris,
                      QPixmap *m_pixmap,
+                     const bool withPdf,
                      double m = (double)1,
                      int size_orizzontale = DEFAULT_PASS_ARGUMENT_LOAD,
                      int size_verticale = DEFAULT_PASS_ARGUMENT_LOAD,
@@ -133,7 +134,7 @@ public:
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(float pressure, QColor color,
-                                 Valuator &m_lineWidthValuator,QPen &m_pen, QBrush &m_brush);
+                                 Valuator m_lineWidthValuator,QPen &m_pen, QBrush &m_brush);
     void loadpixel();
 
     /* funzioni responsabili del riascolto */

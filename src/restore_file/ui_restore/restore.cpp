@@ -149,7 +149,7 @@ void restore::on_ok_restore_clicked()
         }
     }
 
-    name_copy = get_name_available::get(get_name_tmp::get(pos_res), ok);
+    name_copy = get_name_available::get(get_name_tmp::get(pos_res), ok, nullptr);
     if(!ok){
         return user_message("It seams that that in the file you try to restore there is no copybook");
     }

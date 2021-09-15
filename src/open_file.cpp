@@ -53,7 +53,7 @@ void MainWindow::openFile(const char *pos){
 
     if(fileName.indexOf(".pdf") != -1 && fileLost::exe(fileName)){
         if(areyousure("Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
-            path = get_name_available::get(fileName, ok);
+            path = get_name_available::get(fileName, ok, nullptr);
 
             if(!ok){
                 if(areyousure("No copybook", "I could not find any copybook in the file, continue?")){

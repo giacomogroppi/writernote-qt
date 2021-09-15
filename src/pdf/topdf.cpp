@@ -24,7 +24,7 @@ static void newpage(datastruct *datastruct, const double tmp){
 
 }
 
-bool topdf::createpdf(){
+bool topdf::createpdf(const bool withPdf){
     this->translate();
 
     QPdfWriter pdfWriter(*this->path);
@@ -45,7 +45,7 @@ bool topdf::createpdf(){
                    delta,
                    size_orizzontale,
                    size_verticale/delta,
-                   &tmp_ret);
+                   &tmp_ret, withPdf);
 
         if(i+1<lenpage){
             newpage(data->datatouch, tmp_ret);
@@ -71,7 +71,7 @@ void MainWindow::on_actiontopdf_triggered()
     filepdf.copy(m_currenttitle);
 
 
-    if(!filepdf.createpdf()){
+    if(!filepdf.createpdf(true)){
         dialog_critic("We had a problem saving the file to " + path_pdf);
         return;
     }

@@ -67,11 +67,7 @@ void last_open::updateList(){
         //ui->verticalLayout->addWidget(m_lista.at(i));
         QIcon icon(":image/images/not_define.png");
 
-        QListWidgetItem *item = new QListWidgetItem;
-        item->setText("/home/tmp/writernote.writer\nYou");
-        item->setIcon(icon);
-
-        ui->listWidget->addItem(item);
+        ui->listWidget->addItem(this->m_item.at(i));
     }
 };
 
@@ -148,9 +144,9 @@ int last_open::load_data_()
 
     for(i=0; (i<m_quanti) && (i < __val); i++){
         temp_element_ui = new element_ui;
-        item = new QListWidgetItem("");
+        item = new QListWidgetItem;
 
-        temp_element_ui->setData(&m_last[i], i);
+        temp_element_ui->setData(&m_last[i], i, item);
 
         connect(temp_element_ui, SIGNAL(on_pressed(int)), this, SLOT(on_clicked(int)));
         connect(temp_element_ui, SIGNAL(deleteIn(int)), this, SLOT(deleteInElement(int)));
