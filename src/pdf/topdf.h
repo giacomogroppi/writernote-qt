@@ -18,7 +18,21 @@ private:
     MainWindow *parent;
 
     void draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, double *y_last){
+        bool isloading = true;
+        QColor color = Qt::black;
+        QPen m_pen;
+        QBrush m_brush;
+        struct TabletCanvas::Point lastPoint;
+
         m_canvas->load(painter,
+                       this->data,
+                       isloading,
+                       color,
+                       m_pen,
+                       m_brush,
+                       lastPoint,
+                       -1,
+                       nullptr,
                        m,
                        size_orizzontale,
                        size_verticale,

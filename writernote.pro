@@ -83,6 +83,7 @@ SOURCES += \
     src/needToSave.cpp \
     src/openFirstCopybook.cpp \
     src/open_file.cpp \
+    src/preview/preview.cpp \
     src/restore_file/get_name_available.cpp \
     src/restore_file/resFileTmpInTmpFolder.cpp \
     src/restore_file/restore_file.cpp \
@@ -266,6 +267,7 @@ HEADERS += \
     src/last_open/option/option_last_open_ui.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
+    src/preview/preview.h \
     src/restore_file/get_name_available.h \
     src/restore_file/get_name_tmp.h \
     src/restore_file/restore_file_critic.h \

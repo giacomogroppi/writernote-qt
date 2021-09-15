@@ -40,6 +40,12 @@ class TabletCanvas : public QWidget
     Q_OBJECT
 
 public:
+    struct Point {
+        QPointF pos;
+        qreal pressure = 0;
+        qreal rotation = 0;
+    } lastPoint;
+
     MainWindow *parent;
 
     struct PointSettable pointload;
@@ -110,14 +116,24 @@ public:
     bool isloading = false;
 
 #define DEFAULT_PASS_ARGUMENT_LOAD -1
-    void load(QPainter &,
-              double m = (double)1,
-              int size_orizzontale = DEFAULT_PASS_ARGUMENT_LOAD,
-              int size_verticale = DEFAULT_PASS_ARGUMENT_LOAD,
-              double *y_last = NULL);
+    static void load(QPainter &,
+                     const Document *data,
+                     bool &isloading,
+                     QColor &m_color,
+                     QPen &pen,
+                     QBrush &m_brush,
+                     Point &lastPoint,
+                     int m_pos_ris,
+                     QPixmap *m_pixmap,
+                     double m = (double)1,
+                     int size_orizzontale = DEFAULT_PASS_ARGUMENT_LOAD,
+                     int size_verticale = DEFAULT_PASS_ARGUMENT_LOAD,
+                     double *y_last = NULL,
+                     const MainWindow *parent = NULL);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-    void updateBrush_load(float , QColor );
+    static void updateBrush_load(float pressure, QColor color,
+                                 Valuator &m_lineWidthValuator,QPen &m_pen, QBrush &m_brush);
     void loadpixel();
 
     /* funzioni responsabili del riascolto */
@@ -211,12 +227,6 @@ private:
     QBrush m_brush;
     QPen m_pen;
     bool m_deviceDown = false;
-
-    struct Point {
-        QPointF pos;
-        qreal pressure = 0;
-        qreal rotation = 0;
-    } lastPoint;
 
     void updatePageCount();
 

@@ -36,7 +36,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     this->disegnafoglio();
 
     if(this->isloading)
-        load(painter);
+        load(painter, this->data, isloading, m_color, m_pen, m_brush, lastPoint, m_pos_ris, &m_pixmap);
 
 
     /*
@@ -49,17 +49,26 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 }
 
 #define C(x) x->datatouch
-#define UPDATE_LOAD(x, zoom, div) updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div))
-#define SET_PEN(x) painter.setPen(x)
+#define UPDATE_LOAD(x, zoom, div, m_lineWidthValuator, m_pen, m_brush ) updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div), m_lineWidthValuator, m_pen, m_brush)
+
 
 /*
  * TODO -> implement this function to play audio
 */
 void TabletCanvas::load(QPainter &painter,
+                        const Document *data,
+                        bool &isloading,
+                        QColor &m_color,
+                        QPen &m_pen,
+                        QBrush &m_brush,
+                        Point &lastPoint,
+                        int m_pos_ris,
+                        QPixmap *m_pixmap,
                         double m,
                         int size_orizzontale,
                         int size_verticale,
-                        double *y_last){
+                        double *y_last,
+                        const MainWindow *parent){
 
     if(data->isEmpty())
         return;
@@ -71,16 +80,17 @@ void TabletCanvas::load(QPainter &painter,
     QColor current_color;
     double xtemp[2], ytemp[2];
 
-    is_play = parent->player->state() == QMediaPlayer::PlayingState;
-    m_pixmap.fill(Qt::white);
+    if(parent)
+        is_play = parent->player->state() == QMediaPlayer::PlayingState;
+    m_pixmap->fill(Qt::white);
 
     if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
-        size_orizzontale = width();
-        size_verticale = m_pixmap.height();
+        size_orizzontale = parent->m_canvas->width();
+        size_verticale = m_pixmap->height();
     }
 
-    current_color = this->m_color;
-    this->m_pen.setStyle(Qt::PenStyle::SolidLine);
+    current_color = m_color;
+    m_pen.setStyle(Qt::PenStyle::SolidLine);
 
     len = data->datatouch->length();
     for(i=1; i<len-1; ++i){
@@ -92,9 +102,9 @@ void TabletCanvas::load(QPainter &painter,
         if(datastruct::isIdUser(__point))
             continue;
 
-        UPDATE_LOAD(__point, data->datatouch->zoom, 1);
+        UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
 
-        SET_PEN(m_pen);
+        painter.setPen(m_pen);
 
         for(k=0; k<2; k++){
             /*  we can draw objects which are outside the pixmap
@@ -116,12 +126,12 @@ void TabletCanvas::load(QPainter &painter,
     }
 
 #ifdef PDFSUPPORT
-    this->data->m_pdf->draw(painter, data->datatouch->biggerx(), size_orizzontale,
-                            size_verticale, m, y_last != NULL);
+    data->m_pdf->draw(painter, data->datatouch->biggerx(), size_orizzontale,
+                      size_verticale, m, y_last != NULL);
 #endif
 
-    this->data->m_img->draw(painter, data->datatouch->biggerx(),
-                              m_pixmap.width(), m_pixmap.height());
+    data->m_img->draw(painter, data->datatouch->biggerx(),
+                      size_orizzontale, size_verticale);
 
 
     _lastid = C(data)->firstPoint()->idtratto; /* it should be IDFIRSTPOINT */
@@ -160,13 +170,13 @@ void TabletCanvas::load(QPainter &painter,
         }
         else if(__point->idtratto == _lastid){
             if(is_play && __point->m_posizioneaudio > m_pos_ris){
-                UPDATE_LOAD(__point, data->datatouch->zoom, 4);
+                UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
             }else{
-                UPDATE_LOAD(__point, data->datatouch->zoom, 1);
+                UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
             }
             painter.setPen(m_pen);
 
-            painter.drawLine(this->lastPoint.pos*m,
+            painter.drawLine(lastPoint.pos*m,
                 QPointF(__point->m_x*m, __point->m_y*m));
 
         }
@@ -185,16 +195,14 @@ void TabletCanvas::load(QPainter &painter,
 
     }
 
-    this->m_pen.setColor(current_color);
+    m_pen.setColor(current_color);
 
-    this->isloading = false;
+    isloading = false;
 }
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-void TabletCanvas::updateBrush_load(float pressure, QColor color){
-    /*int vValue = int(((yTilt + 60.0) / 120.0) * 255);
-    int hValue = int(((xTilt + 60.0) / 120.0) * 255);*/
-
+void TabletCanvas::updateBrush_load(float pressure, QColor color,
+                                    Valuator &m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
     /* temporary */
     int vValue = 127;
     int hValue = 127;
