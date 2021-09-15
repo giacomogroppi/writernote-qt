@@ -33,8 +33,8 @@ void element_ui::setData(last_file *data, int index, QListWidgetItem *item)
 void element_ui::set_main(QListWidgetItem *item)
 {
     QString text;
-    QIcon icon;
-    QImage img;
+    const int height=175, width = 175;
+    QPixmap img(width, height);
     text = m_data->posizione;
     text += "  " + (QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o;
 
@@ -73,11 +73,10 @@ void element_ui::set_main(QListWidgetItem *item)
     }
 
     item->setText(text);
-    if(!preview::get(img, false, m_data->posizione)){
+    if(!preview::get(img, false, m_data->posizione, width, height)){
         item->setIcon(QIcon(":image/images/not_define.png"));
     }else{
-        icon = QPixmap::fromImage(img);
-        item->setIcon(icon);
+        item->setIcon(img);
     }
 }
 
