@@ -59,7 +59,7 @@ void last_open::setDataReturn(char **data){
 void last_open::updateList(){
     int i, len;
     len = m_lista.length();
-    ui->listWidget->setIconSize(QSize(200, 200));
+    ui->listWidget->setIconSize(QSize(300, 300));
 
     for(i=0; i<len; i++){
         ui->listWidget->addItem(this->m_lista.at(i)->getItem());
@@ -104,7 +104,6 @@ int last_open::load_data_()
     }
 
     element_ui *temp_element_ui;
-    QListWidgetItem *item;
 
     if(!ok){
         remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
@@ -295,3 +294,15 @@ void last_open::on_close_button_clicked()
 {
     this->close();
 }
+
+void last_open::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+    int i;
+    for(i=0; i<this->m_lista.length(); ++i){
+        if(m_lista.at(i)->getItem() == item){
+            break;
+        }
+    }
+    this->on_clicked(i);
+}
+

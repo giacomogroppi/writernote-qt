@@ -27,7 +27,7 @@ void element_ui::setData(last_file *data)
 void element_ui::set_main()
 {
     QString text;
-    const int height=175, width = 175;
+    const int height=400, width = 400;
     QPixmap img(width, height);
     text = m_data->posizione;
     text += "  " + (QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o;
