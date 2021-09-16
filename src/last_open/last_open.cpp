@@ -1,22 +1,18 @@
 #include "last_open.h"
 #include "ui_last_open.h"
-
 #include <QSettings>
 #include "../utils/setting_define.h"
 #include <QAction>
-
 #include <QFile>
 #include <QFileInfo>
-
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../datawrite/qfilechoose.h"
-
 #include "string.h"
 #include "../cloud/utils/downloadfile.h"
 #include "../utils/remove_key/remove_key.h"
 #include "../datawrite/qfilechoose.h"
-
 #include "option/option_last_open_ui.h"
+#include "widget_parent/widget_parent.h"
 
 static void tidyup(QList<last_file> &ref,
                    const int m_quanti,
@@ -140,16 +136,14 @@ int last_open::load_data_()
     }
 
     tidyup(m_last, m_quanti, &data);
-
     for(i=0; (i<m_quanti) && (i < __val); i++){
-        temp_element_ui = new element_ui;
-
-        temp_element_ui->setData(&m_last[i]);
+        temp_element_ui = new element_ui(nullptr, &m_last.at(i));
 
         m_lista.append(temp_element_ui);
     }
 
-
+    widget_parent *wid = new widget_parent(nullptr, &m_last);
+    this->ui->scrollArea->setWidget(wid);
     this->updateList();
 
     return m_quanti;

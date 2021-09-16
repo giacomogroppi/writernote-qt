@@ -77,6 +77,7 @@ SOURCES += \
     src/images/fromimage.cpp \
     src/last_open/option/button_main.cpp \
     src/last_open/option/option_last_open_ui.cpp \
+    src/last_open/widget_parent/widget_parent.cpp \
     src/lastedit/copy_lastedit.cpp \
     src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \
@@ -265,6 +266,7 @@ HEADERS += \
     src/frompdf/convertImg.h \
     src/images/fromimage.h \
     src/last_open/option/option_last_open_ui.h \
+    src/last_open/widget_parent/widget_parent.h \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
     src/preview/preview.h \
@@ -368,6 +370,7 @@ FORMS += \
     src/currenttitle/option/option_copybook.ui \
     src/last_open/last_open.ui \
     src/last_open/option/option_last_open_ui.ui \
+    src/last_open/widget_parent/widget_parent.ui \
     src/log/log_ui/log_ui.ui \
     src/mainwindow.ui \
     src/restore_file/ui/setting_restore_ui.ui \
@@ -390,7 +393,8 @@ FORMS += \
     src/utils/progress_bar/progress_bar_ui.ui \
     src/utils/retry/retry_ui.ui \
     src/videocompress/videocompress_ui.ui \
-    src/windows/showmessageupdate.ui
+    src/windows/showmessageupdate.ui \
+    src/last_open/element/element_ui.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
