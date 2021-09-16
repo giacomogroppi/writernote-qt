@@ -36,7 +36,12 @@ last_open::last_open(QWidget *parent,
 
 #ifdef ANDROID
     this->setWindowState(Qt::WindowFullScreen);
+    this->ui->open_button->setHidden(true);
 #endif
+
+    if(!m_closeall){
+        this->ui->close_all->hide();
+    }
 
 }
 
@@ -286,7 +291,8 @@ static void tidyup(QList<last_file> &ref,
 
 void last_open::on_close_all_clicked()
 {
-    *m_closeall = true;
+    if(m_closeall)
+        *m_closeall = true;
     this->close();
 }
 
