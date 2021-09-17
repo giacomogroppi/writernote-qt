@@ -18,13 +18,13 @@ class widget_parent : public QWidget
 public:
     explicit widget_parent(QWidget *parent = nullptr, QList<last_file> *ref = nullptr);
     ~widget_parent();
-
+    void updateList();
 private:
     Ui::widget_parent *ui;
     QList<element_ui *> m_element;
     QList<last_file> *m_last_file;
 
-    void updateList();
+
     void clean();
 protected:
     void resizeEvent(QResizeEvent *event) override;

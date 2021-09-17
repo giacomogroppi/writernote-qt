@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QListWidgetItem>
 #include "../struct_last_file.h"
+#include "imageWidget/imageWidget.h"
 
 namespace Ui {
 class element_ui;
@@ -17,14 +18,12 @@ public:
     explicit element_ui(QWidget *parent = nullptr, const last_file *data = nullptr);
     ~element_ui();
 
-    inline QListWidgetItem *getItem()
-    { return this->item; }
     void decrease();
 private:
-    QListWidgetItem *item;
     void set_main();
     Ui::element_ui *ui;
     const last_file *m_data = NULL;
+    imageWidget *img_widget;
 signals:
     void on_pressed(int);
     void deleteIn(int);

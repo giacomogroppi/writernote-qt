@@ -9,6 +9,7 @@
 #include "struct_last_file.h"
 #include "../cloud/struct_user.h"
 #include "../cloud/cloud_controll.h"
+#include "widget_parent/widget_parent.h"
 
 namespace Ui {
 class last_open;
@@ -34,6 +35,7 @@ public:
     struct struct_user *m_user;
 
 private:
+    widget_parent *m_parent;
     /* open file */
     uchar on_click_ex(const char *pos);
 
@@ -60,7 +62,6 @@ private slots:
     void on_close_all_clicked();
     void on_close_button_clicked();
     void on_option_button_clicked();
-    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
 };
 
 #endif // LAST_OPEN_H

@@ -58,13 +58,7 @@ void last_open::setDataReturn(char **data){
 }
 
 void last_open::updateList(){
-    int i, len;
-    len = m_lista.length();
-    ui->listWidget->setIconSize(QSize(300, 300));
-
-    for(i=0; i<len; i++){
-        ui->listWidget->addItem(this->m_lista.at(i)->getItem());
-    }
+    m_parent->updateList();
 };
 
 
@@ -78,7 +72,7 @@ int last_open::load_data_()
     if(m_quanti == 0)
         return 0;
 
-    int i, __val;
+    int __val;
 
     option_last_open_ui option(nullptr);
 
@@ -103,8 +97,6 @@ int last_open::load_data_()
 
         return 0;
     }
-
-    element_ui *temp_element_ui;
 
     if(!ok){
         remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
@@ -136,14 +128,9 @@ int last_open::load_data_()
     }
 
     tidyup(m_last, m_quanti, &data);
-    for(i=0; (i<m_quanti) && (i < __val); i++){
-        temp_element_ui = new element_ui(nullptr, &m_last.at(i));
 
-        m_lista.append(temp_element_ui);
-    }
-
-    widget_parent *wid = new widget_parent(nullptr, &m_last);
-    this->ui->scrollArea->setWidget(wid);
+    this->m_parent = new widget_parent(nullptr, &m_last);
+    this->ui->scrollArea->setWidget(m_parent);
     this->updateList();
 
     return m_quanti;
@@ -293,16 +280,5 @@ void last_open::on_close_all_clicked()
 void last_open::on_close_button_clicked()
 {
     this->close();
-}
-
-void last_open::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
-{
-    int i;
-    for(i=0; i<this->m_lista.length(); ++i){
-        if(m_lista.at(i)->getItem() == item){
-            break;
-        }
-    }
-    this->on_clicked(i);
 }
 

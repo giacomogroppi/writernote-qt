@@ -1,6 +1,7 @@
 #include "widget_parent.h"
 #include "ui_widget_parent.h"
 #include "../element/element_ui.h"
+#include <QDebug>
 
 widget_parent::widget_parent(QWidget *parent, QList<last_file> *ref) :
     QWidget(parent),
@@ -39,10 +40,10 @@ void widget_parent::updateList()
 
     const int width_all = this->width();
     const int width_single = this->m_element.first()->width();
-    //const int space = 20; // space for item
-    const int len = (width_single / width_all);// * space;
+    const int space = ui->gridLayout->spacing(); // space for item
+    const int len = (width_all / width_single ) * space;
 
-    for(i=0, k=0; (k*i) < m_last_file->length(); ++i){
+    for(i=0, k=1; (k*i) < m_last_file->length(); ++i){
         for(k=0; k<len && k < m_last_file->length(); ++k){
             this->ui->gridLayout->addWidget(m_element.operator[](i), i, k);
         }

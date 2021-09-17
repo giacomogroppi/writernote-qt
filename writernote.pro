@@ -249,11 +249,13 @@ SOURCES += \
     src/windows/updatecheck.cpp \
     src/sheet/load_last_style.cpp \
     src/cloud/button_mainwindow.cpp \
-    updater/launch_updater/launch_updater.cpp
+    updater/launch_updater/launch_updater.cpp \
+    src/last_open/element/imageWidget/imageWidget.cpp
 
 
 HEADERS += \
     src/button/button_size.h \
+    src/last_open/element/imageWidget/imageWidget.h \
     src/currenttitle/default_type/default_type.h \
     src/currenttitle/document.h \
     src/currenttitle/option/modality_data.h \

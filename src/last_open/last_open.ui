@@ -59,14 +59,11 @@
         <x>0</x>
         <y>0</y>
         <width>710</width>
-        <height>68</height>
+        <height>171</height>
        </rect>
       </property>
      </widget>
     </widget>
-   </item>
-   <item>
-    <widget class="QListWidget" name="listWidget"/>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">

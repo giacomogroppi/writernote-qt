@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>303</width>
-    <height>102</height>
+    <width>270</width>
+    <height>345</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>16777215</width>
-    <height>102</height>
+    <width>270</width>
+    <height>345</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -21,69 +21,69 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3_path">
-     <item>
-      <widget class="QLabel" name="label_path">
-       <property name="text">
-        <string>path</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_delete">
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../writernote.qrc">
-         <normaloff>:/image/images/deleteCopyBook.png</normaloff>:/image/images/deleteCopyBook.png</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="button_download">
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../writernote.qrc">
-         <normaloff>:/image/images/download.png</normaloff>:/image/images/download.png</iconset>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="open_exe">
-       <property name="maximumSize">
-        <size>
-         <width>25</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../writernote.qrc">
-         <normaloff>:/image/images/open_icon.png</normaloff>:/image/images/open_icon.png</iconset>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3_path">
+       <item>
+        <widget class="QLabel" name="label_last_edit_time">
+         <property name="text">
+          <string>lastmod</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="button_delete">
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../writernote.qrc">
+           <normaloff>:/image/images/deleteCopyBook.png</normaloff>:/image/images/deleteCopyBook.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="button_download">
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../writernote.qrc">
+           <normaloff>:/image/images/download.png</normaloff>:/image/images/download.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="open_exe">
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../writernote.qrc">
+           <normaloff>:/image/images/open_icon.png</normaloff>:/image/images/open_icon.png</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -107,9 +107,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="label_last_edit_time">
+        <widget class="QLabel" name="label_path">
          <property name="text">
-          <string>lastmod</string>
+          <string>path</string>
          </property>
         </widget>
        </item>

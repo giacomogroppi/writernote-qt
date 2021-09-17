@@ -12,7 +12,6 @@ element_ui::element_ui(QWidget *parent, const last_file *data) :
 {
     ui->setupUi(this);
 
-    this->item = new QListWidgetItem;
     assert(data);
 
     m_data = data;
@@ -21,35 +20,39 @@ element_ui::element_ui(QWidget *parent, const last_file *data) :
 
 element_ui::~element_ui()
 {
-    delete this->item;
+    delete this->img_widget;
+    delete ui;
 }
 
 void element_ui::set_main()
 {
-    QString text;
     const int height=400, width = 400;
     QPixmap img(width, height);
-    text = m_data->posizione;
-    text += "  " + (QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o;
+
+    ui->label_path->setFont(QFont("Helvetica", 11));
+    ui->label_path->setText(m_data->posizione);
+    ui->label_last_edit_time->setText((QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o);
 
     if(m_data->type == TYPE_CLOUD)
-        text += "\nCloud";
+        ui->label_where->setText("Cloud");
     else
-        text += "\nLocal";
+        ui->label_where->setHidden(true);
 
 #ifdef CLOUD
     if(m_data->owner.type_user == TYPE_OWNER_YOU)
         text += "             You";
     else
-        text += "";
+        text += "Not you";
+#else
+    ui->owner_type->setHidden(true);
+    ui->owner->setHidden(true);
 #endif
 
-    item->setText(text);
     if(!preview::get(img, false, m_data->posizione, width, height)){
-        item->setIcon(QIcon(":image/images/not_define.png"));
-    }else{
-        item->setIcon(img);
+        img = QPixmap(":image/images/not_define.png");
     }
+    img_widget = new imageWidget(nullptr, &img);
+    this->ui->verticalLayout->addWidget(img_widget, 0);
 }
 
 bool element_ui::event(QEvent *event)
