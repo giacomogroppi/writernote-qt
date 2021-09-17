@@ -39,8 +39,8 @@ void widget_parent::updateList()
 
     const int width_all = this->width();
     const int width_single = this->m_element.first()->width();
-    const int space = 20; // space for item
-    const int len = (width_single / width_all) * space;
+    //const int space = 20; // space for item
+    const int len = (width_single / width_all);// * space;
 
     for(i=0, k=0; (k*i) < m_last_file->length(); ++i){
         for(k=0; k<len && k < m_last_file->length(); ++k){
