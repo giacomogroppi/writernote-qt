@@ -5,13 +5,16 @@
 #include "../../utils/slash/slash.h"
 #define NONE ""
 
-element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName) :
+element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index) :
     QWidget(parent),
     ui(new Ui::element_ui)
 {
     ui->setupUi(this);
 
+    this->m_index = m_index;
+
     assert(data);
+    assert(m_index != -1);
 
     m_data = data;
     set_main();
@@ -29,7 +32,7 @@ void element_ui::showOnlyname(const bool showOnlyName){
         return;
     for(i=0; i<name.length(); ++i){
         index = name.indexOf(slash);
-        second_index = name.mid(index, -1).indexOf(slash);
+        second_index = name.midRef(index, -1).indexOf(slash);
 
         if(index == -1 || second_index == -1)
             return;
@@ -93,10 +96,10 @@ void element_ui::set_main()
 
 bool element_ui::event(QEvent *event)
 {
-    /*if(event->type() == QEvent::MouseButtonRelease){
+    if(event->type() == QEvent::MouseButtonRelease){
         emit on_pressed(this->m_index);
         return true;
-    }*/
+    }
     return QWidget::event(event);
 }
 
@@ -105,12 +108,12 @@ void element_ui::decrease(){
 
 void element_ui::on_button_delete_clicked()
 {
-    //emit deleteIn(this->m_index);
+    emit deleteIn(this->m_index);
 }
 
 void element_ui::on_button_download_clicked()
 {
-    //emit downloadIn(this->m_index);
+    emit downloadIn(this->m_index);
 }
 
 #include "../../utils/mostra_explorer/mostra_explorer.h"

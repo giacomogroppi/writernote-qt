@@ -3,7 +3,7 @@
 #include "../element/element_ui.h"
 #include <QDebug>
 
-widget_parent::widget_parent(QWidget *parent, last_file *ref) :
+widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName) :
     QWidget(parent),
     ui(new Ui::widget_parent)
 {
@@ -12,10 +12,11 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref) :
     this->m_last_file = ref;
 
     assert(ref);
+    assert(!parent);
     ui->setupUi(this);
 
     for(i=0; i<m_last_file->length(); ++i){
-        el = new element_ui(nullptr, &m_last_file->at(i));
+        el = new element_ui(nullptr, &m_last_file->at(i), showOnlyName, i);
         this->m_element.append(el);
     }
 

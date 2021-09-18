@@ -105,6 +105,13 @@ always open the last file you closed.</string>
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="showOnlyName">
+       <property name="text">
+        <string>Show only name</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="cancel_button">
        <property name="text">
         <string>Close</string>

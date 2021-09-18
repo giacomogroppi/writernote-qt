@@ -26,6 +26,7 @@ public:
     struct __r {
         enum option val; /* type */
         int pos = option_last_open_ui_def_num; /* number of lastopen file to show */
+        bool showOnlyName = false;
     };
 
     inline struct __r getData(){
@@ -59,6 +60,7 @@ private slots:
 
 
     void on_spinBox_valueChanged(int arg1);
+    void on_showOnlyName_stateChanged(int arg1);
 };
 
 #endif // OPTION_LAST_OPEN_UI_H

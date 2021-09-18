@@ -2,6 +2,7 @@
 #include "ui_option_last_open_ui.h"
 #include <QSettings>
 #include "../../utils/setting_define.h"
+#include <QDebug>
 
 option_last_open_ui::option_last_open_ui(QWidget *parent) :
     QDialog(parent),
@@ -31,7 +32,7 @@ void option_last_open_ui::saveData()
 
     setting.setValue(KEY_LAST_FILE_METHOD, data.val);
     setting.setValue(KEY_LAST_FILE_NUMBER, data.pos);
-
+    setting.setValue(KEY_LAST_FILE_SHOW_ONLY_NAME, data.showOnlyName);
     setting.endGroup();
 }
 
@@ -54,6 +55,8 @@ void option_last_open_ui::loadData()
     if(!ok_t || data.pos <= 0)
         data.pos = option_last_open_ui_def_num;
 
+    data.showOnlyName = setting.value(KEY_LAST_FILE_SHOW_ONLY_NAME, false).toBool();
+
     setting.endGroup();
 
     updateShow();
@@ -68,6 +71,8 @@ void option_last_open_ui::updateShow()
     ui->pushButton_always_enable->setChecked(data.val == option::open_last);
     ui->pushButton_disable->setChecked(data.val == option::disable);
     ui->pushButton_enable->setChecked(data.val == option::enable);
+
+    ui->showOnlyName->setChecked(data.showOnlyName);
 }
 
 void option_last_open_ui::on_pushButton_enable_clicked()
@@ -117,3 +122,9 @@ void option_last_open_ui::on_spinBox_valueChanged(int arg1)
     data.pos = arg1;
 
 }
+
+void option_last_open_ui::on_showOnlyName_stateChanged(int arg1)
+{
+    this->data.showOnlyName = arg1;
+}
+

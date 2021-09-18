@@ -101,7 +101,7 @@ int last_open::load_data_()
 
     this->m_last.tidyup();
 
-    this->m_parent = new widget_parent(nullptr, &m_last);
+    this->m_parent = new widget_parent(nullptr, &m_last, data.showOnlyName);
     this->ui->scrollArea->setWidget(m_parent);
     this->updateList();
 

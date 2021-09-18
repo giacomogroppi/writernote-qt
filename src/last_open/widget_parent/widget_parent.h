@@ -16,7 +16,7 @@ class widget_parent : public QWidget
     Q_OBJECT
 
 public:
-    explicit widget_parent(QWidget *parent = nullptr, last_file *ref = nullptr);
+    explicit widget_parent(QWidget *parent = nullptr, last_file *ref = nullptr, const bool showOnlyName = false);
     ~widget_parent();
     void updateList();
 
