@@ -41,7 +41,7 @@ void widget_parent::updateList()
     const int width_all = this->width();
     const int width_single = this->m_element.first()->width();
     const int space = ui->gridLayout->spacing(); // space for item
-    const uint len = width_all / (width_single+space*2);
+    const uint len = width_all / (width_single+space*4);
     const uint len_list = m_last_file->length();
 
     for(i=0, k=1; (k*i) < len_list; ++i){
