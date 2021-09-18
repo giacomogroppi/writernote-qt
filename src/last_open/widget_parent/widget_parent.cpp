@@ -52,13 +52,11 @@ void widget_parent::updateList()
 
 void widget_parent::clean()
 {
-    int i, k;
-    const int row = this->ui->gridLayout->rowCount();
-    const int column =this->ui->gridLayout->columnCount();
-    for(i=0; i<row; ++i){
-        for(k=0; k<column; ++k){
-            ui->gridLayout->removeWidget(this->m_element.at(i));
-        }
+    int i;
+    const int count = this->ui->gridLayout->count();
+
+    for(i=0; i < count; ++i){
+        ui->gridLayout->removeWidget(this->m_element.at(i));
     }
 }
 

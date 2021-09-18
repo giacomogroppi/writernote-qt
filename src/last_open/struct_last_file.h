@@ -54,7 +54,7 @@ public:
 
     bool load_data();
 
-    static void removeDouble(QList<last_file_s> &file);
+    void removeDouble();
     void tidyup();
 };
 

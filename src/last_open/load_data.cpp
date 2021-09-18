@@ -31,13 +31,8 @@ bool last_file::load_data()
     const uint len = array.size() / size;
 
     for(i=0; i<len; ++i){
-        for(k=0; k<size; ++k){
-            data = array.at(i+k);
-
-            size_t point = (size_t )&file + k;
-
-            memcpy((void *)point, &data, sizeof(data));
-        }
+        const char *data = array.mid(i*size, size*(i+1)).constData();
+        memcpy(&file, data, sizeof(last_file_s));
         m_data.append(file);
     }
 

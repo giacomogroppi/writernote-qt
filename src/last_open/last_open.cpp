@@ -14,9 +14,6 @@
 #include "option/option_last_open_ui.h"
 #include "widget_parent/widget_parent.h"
 
-static void tidyup(QList<last_file> &ref,
-                   struct option_last_open_ui::__r * data);
-
 last_open::last_open(QWidget *parent,
                      struct struct_user *user,
                      cloud_controll *controll,
@@ -67,7 +64,7 @@ void last_open::updateList(){
 int last_open::load_data_()
 {
     int __val;
-    uint i, k;
+    uint i;
     option_last_open_ui option(nullptr);
 
     struct option_last_open_ui::__r data = option.getData();
@@ -125,9 +122,10 @@ void last_open::deleteIn(int index){
 
 /* return 1 if the file didn't exist */
 uchar last_open::on_click_ex(const char *pos){
+    const size_t len = strlen(pos);
     if(QFile::exists(pos)){
-        *m_style_return = new char[strlen(pos)+1];
-        strcpy(*m_style_return, pos);
+        *m_style_return = new char[len+1];
+        strncpy(*m_style_return, pos, len);
 
         this->close();
         return 0;
