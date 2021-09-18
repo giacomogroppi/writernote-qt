@@ -17,32 +17,45 @@
 #define TYPE_OWNER_YOU 0
 #define TYPE_OWNER_EXTERNAL 1
 
-struct owner_struct{
+struct owner_s{
     unsigned short int type_user;
     char name[MAXSTR__FILE];
 };
 
-struct last_file{
+struct last_file_s{
     char posizione[MAXSTR__FILE];
     unsigned short int type;
     char last_modification_o[MAXMOD__FILE]; /* time */
     char last_modification_g[MAXMOD__FILE]; /* day */
 
-    struct owner_struct owner;
+    struct owner_s owner;
 };
 
+class last_file{
+private:
 
-Q_DECLARE_METATYPE(last_file);
+public:
+    QList<last_file_s> m_data;
 
+    inline uint length() const
+    { return m_data.length(); }
+    inline const last_file_s & at(int i) const
+    { return m_data.at(i); }
+    inline last_file_s & at_mod(int i)
+    { return m_data.operator[](i); }
+    inline void removeAt(int i)
+    { m_data.removeAt(i); }
 
-/* file save */
-void save_data(const QString &path, int type = TYPE_COMPUTER, int owner_TYPE = TYPE_OWNER_YOU, char *owner = NULL);
-void save_data_f(int quanti, const QList<last_file> &m_lista);
-void save_quanti(int quanti);
-void save_data_f(const QByteArray &);
+    void save_quanti(int quanti);
+    void save_data_setting(const QByteArray &arr);
+    void save_data_setting();
 
-/* file load */
-bool load_data(const int quanti, QList<last_file> &);
-int load_quanti();
+    static void save_data(const QString &path, int type = TYPE_COMPUTER, int owner_TYPE = TYPE_OWNER_YOU, const char *owner = nullptr);
+
+    bool load_data();
+
+    static void removeDouble(QList<last_file_s> &file);
+    void tidyup();
+};
 
 #endif // STRUCT_LAST_FILE_H

@@ -37,7 +37,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
      * TODO: after enable cloud support,
      * pass the right value
     */
-    save_data(m_path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
+    last_file::save_data(m_path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
 
     /* apre il file in file e lo carica nell'oggetto, e lo confronta */
     Document tempcopybook;

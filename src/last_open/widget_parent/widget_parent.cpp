@@ -3,12 +3,12 @@
 #include "../element/element_ui.h"
 #include <QDebug>
 
-widget_parent::widget_parent(QWidget *parent, QList<last_file> *ref) :
+widget_parent::widget_parent(QWidget *parent, last_file *ref) :
     QWidget(parent),
     ui(new Ui::widget_parent)
 {
     element_ui *el;
-    int i;
+    uint i;
     this->m_last_file = ref;
 
     assert(ref);
@@ -33,7 +33,7 @@ widget_parent::~widget_parent()
 
 void widget_parent::updateList()
 {
-    int i, k;
+    uint i, k;
     this->clean();
     if(!m_element.length())
         return;
@@ -41,7 +41,7 @@ void widget_parent::updateList()
     const int width_all = this->width();
     const int width_single = this->m_element.first()->width();
     const int space = ui->gridLayout->spacing(); // space for item
-    const int len = (width_all / width_single ) * space;
+    const uint len = (width_all / width_single ) * space;
 
     for(i=0, k=1; (k*i) < m_last_file->length(); ++i){
         for(k=0; k<len && k < m_last_file->length(); ++k){

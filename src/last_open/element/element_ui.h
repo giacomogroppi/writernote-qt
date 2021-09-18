@@ -15,14 +15,14 @@ class element_ui : public QWidget
     Q_OBJECT
 
 public:
-    explicit element_ui(QWidget *parent = nullptr, const last_file *data = nullptr);
+    explicit element_ui(QWidget *parent = nullptr, const last_file_s *data = nullptr);
     ~element_ui();
 
     void decrease();
 private:
     void set_main();
     Ui::element_ui *ui;
-    const last_file *m_data = NULL;
+    const last_file_s *m_data = NULL;
     imageWidget *img_widget;
 signals:
     void on_pressed(int);

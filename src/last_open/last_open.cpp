@@ -15,7 +15,6 @@
 #include "widget_parent/widget_parent.h"
 
 static void tidyup(QList<last_file> &ref,
-                   const int m_quanti,
                    struct option_last_open_ui::__r * data);
 
 last_open::last_open(QWidget *parent,
@@ -67,40 +66,27 @@ void last_open::updateList(){
 */
 int last_open::load_data_()
 {
-    m_quanti = load_quanti();
-
-    if(m_quanti == 0)
-        return 0;
-
     int __val;
-
+    uint i, k;
     option_last_open_ui option(nullptr);
 
     struct option_last_open_ui::__r data = option.getData();
-
     if(data.val == option_last_open_ui::disable)
         return 0;
-
     if(data.val == option_last_open_ui::enable){
-        if(data.val <= 0){
+        if(data.val <= 0)
             __val = 255;
-        }
-        else{
+        else
             __val = data.pos;
-        }
+
     }
 
-    const bool ok = load_data(m_quanti, this->m_last);
+    const bool ok = this->m_last.load_data();
+    if(!ok)
+        return 0;
 
     if(data.val == option_last_open_ui::open_last){
-        on_click_ex(m_last.first().posizione);
-
-        return 0;
-    }
-
-    if(!ok){
-        remove_key(KEY_LAST_BASE_FILE, GROUPNAME_LAST_FILE);
-        remove_key(KEY_LAST_FILE_QUANTI, GROUPNAME_LAST_FILE);
+        on_click_ex(m_last.at(0).posizione);
 
         return 0;
     }
@@ -109,44 +95,29 @@ int last_open::load_data_()
      * check that the position of the files is not
      * null, in case it translates all elements
     */
-    {
-        bool check = false;
-        for(int i=0, k; i<m_quanti; i++){
-            if(strlen(m_last[i].posizione) == 0){
-                for(k=i; k<m_quanti-1; k++){
-                    memcpy(&m_last[k], &m_last[k+1], sizeof(last_file));
-                }
-                m_quanti --;
 
-                check = true;
-            }
-        }
-
-        if(check){
-            save_data_f(m_quanti, m_last);
-        }
+    for(i=0; i<m_last.length(); ++i){
+        if(!strlen(m_last.at(i).posizione))
+            m_last.removeAt(i);
     }
 
-    tidyup(m_last, m_quanti, &data);
+
+    this->m_last.tidyup();
 
     this->m_parent = new widget_parent(nullptr, &m_last);
     this->ui->scrollArea->setWidget(m_parent);
     this->updateList();
 
-    return m_quanti;
+    return m_last.length();
 }
 
 void last_open::deleteIn(int index){
-    int i;
-    for(i=index; i<m_quanti-1; i++){
-        memcpy(&m_last[i], &m_last[i+1], sizeof(last_file));
-    }
-    m_quanti --;
+    this->m_last.removeAt(index);
 
     delete m_lista.at(index);
     this->m_lista.removeAt(index);
 
-    if(m_quanti == 0){
+    if(this->m_last.length() == 0){
         *m_style_return = NULL;
         this->close();
     }
@@ -166,7 +137,7 @@ uchar last_open::on_click_ex(const char *pos){
 
 void last_open::on_clicked(int index)
 {
-    if(on_click_ex(m_last[index].posizione)){
+    if(on_click_ex(m_last.at(index).posizione)){
         dialog_critic("The file didn't exist");
 
         this->deleteInElement(index);
@@ -202,7 +173,7 @@ void last_open::deleteInElement(int index){
 
     deleteIn(index);
 
-    save_data_f(m_quanti, this->m_last);
+    this->m_last.save_data_setting();
 
     this->updateList();
 }
@@ -222,52 +193,7 @@ void last_open::downloadIn(int index){
 #endif
 }
 
-static void dochange(last_file &first, last_file &second){
-    last_file tmp;
 
-    memcpy(&tmp, &first, sizeof(tmp));
-    memcpy(&first, &second, sizeof(tmp));
-    memcpy(&second, &tmp, sizeof(tmp));
-}
-
-/*
- * la funzione riordina i file dal
- * più recente al più vecchio
- * In caso ci siano più copybook
- * del numero settato dall'utente,
- * li alimina automaticamente
- *
- * the function reorders files
- * from newest to oldest
-*/
-#define REMOVE_CHAR(str, str2, c) str.remove(c); \
-    str2.remove(c)
-
-static void tidyup(QList<last_file> &ref,
-                   const int m_quanti,
-                   option_last_open_ui::__r *data){
-
-
-    Q_UNUSED(data);
-
-    int i, k;
-    QString first, second;
-
-    for(i=0; i<m_quanti-1; ++i){
-        for(k=i+1; k<m_quanti; ++k){
-            first = ref.at(i).last_modification_g + (QString)ref.at(i).last_modification_o;
-            second = ref.at(k).last_modification_g + (QString)ref.at(i).last_modification_o;
-
-            REMOVE_CHAR(first, second, ':');
-
-            if(atoi(first.toUtf8().constData()) < atoi(second.toUtf8().constData())){
-                dochange(ref.operator[](i), ref.operator[](k));
-            }
-
-        }
-    }
-
-}
 
 
 void last_open::on_close_all_clicked()

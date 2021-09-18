@@ -13,30 +13,24 @@
  * the memory is release when it's close last_open instance
 */
 
-bool load_data(const int quanti, QList<last_file> &ret)
+bool last_file::load_data()
 {
-    if(quanti == 0)
-        return false;
-
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     QByteArray array;
-    //last_file *temp;
-    const size_t size = sizeof(last_file);
+    const size_t size = sizeof(last_file_s);
     uchar data;
-    int i;
+    uint i;
     size_t k;
-    last_file file;
+    last_file_s file;
 
     setting.beginGroup(GROUPNAME_LAST_FILE);
 
     array = setting.value(KEY_LAST_BASE_FILE).toByteArray();
     setting.endGroup();
 
-    /* check the integrity of data */
-    if(array.size() != sizeof(last_file)*quanti)
-        return false;
+    const uint len = array.size() / size;
 
-    for(i=0; i<quanti; ++i){
+    for(i=0; i<len; ++i){
         for(k=0; k<size; ++k){
             data = array.at(i+k);
 
@@ -44,27 +38,8 @@ bool load_data(const int quanti, QList<last_file> &ret)
 
             memcpy((void *)point, &data, sizeof(data));
         }
-        ret.append(file);
+        m_data.append(file);
     }
 
     return true;
-}
-
-/*
- * we can directly understand how many
- * files there are by dividing the
- * size of the qbytearray by its size.
- * as a matter of error control we save
- * its size with another key
-*/
-int load_quanti(){
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_LAST_FILE);
-    bool temp;
-    int res = setting.value(KEY_LAST_FILE_QUANTI, 0).toInt(&temp);
-
-    setting.endGroup();
-
-    return (temp) ? res: 0;
-
 }

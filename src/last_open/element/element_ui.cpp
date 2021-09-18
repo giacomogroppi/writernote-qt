@@ -6,7 +6,7 @@
 #define NONE ""
 
 
-element_ui::element_ui(QWidget *parent, const last_file *data) :
+element_ui::element_ui(QWidget *parent, const last_file_s *data) :
     QWidget(parent),
     ui(new Ui::element_ui)
 {

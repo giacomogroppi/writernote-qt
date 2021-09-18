@@ -16,13 +16,14 @@ class widget_parent : public QWidget
     Q_OBJECT
 
 public:
-    explicit widget_parent(QWidget *parent = nullptr, QList<last_file> *ref = nullptr);
+    explicit widget_parent(QWidget *parent = nullptr, last_file *ref = nullptr);
     ~widget_parent();
     void updateList();
+
 private:
     Ui::widget_parent *ui;
     QList<element_ui *> m_element;
-    QList<last_file> *m_last_file;
+    last_file *m_last_file;
 
 
     void clean();
