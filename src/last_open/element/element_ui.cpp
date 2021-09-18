@@ -2,11 +2,10 @@
 #include "../../preview/preview.h"
 #include "../../utils/mostra_explorer/mostra_explorer.h"
 #include "ui_element_ui.h"
-
+#include "../../utils/slash/slash.h"
 #define NONE ""
 
-
-element_ui::element_ui(QWidget *parent, const last_file_s *data) :
+element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName) :
     QWidget(parent),
     ui(new Ui::element_ui)
 {
@@ -16,6 +15,39 @@ element_ui::element_ui(QWidget *parent, const last_file_s *data) :
 
     m_data = data;
     set_main();
+    this->showOnlyname(showOnlyName);
+}
+
+void element_ui::showOnlyname(const bool showOnlyName){
+    int i;
+    QString name = this->m_data->posizione;
+    char slash = slash::__slash();
+    int index;
+    int second_index;
+
+    if(!showOnlyName)
+        return;
+    for(i=0; i<name.length(); ++i){
+        index = name.indexOf(slash);
+        second_index = name.mid(index, -1).indexOf(slash);
+
+        if(index == -1 || second_index == -1)
+            return;
+
+    }
+
+}
+
+int element_ui::numslash(const QString &str, const char slash)
+{
+    int i, count;
+
+    count = 0;
+    for(i=0; i<str.length(); ++i){
+        if(str.at(i) == slash)
+            count ++;
+    }
+    return count;
 }
 
 element_ui::~element_ui()
@@ -26,17 +58,21 @@ element_ui::~element_ui()
 
 void element_ui::set_main()
 {
-    const int height=400, width = 400;
+    const int height = 400, width = 400;
     QPixmap img(width, height);
 
     ui->label_path->setFont(QFont("Helvetica", 11));
     ui->label_path->setText(m_data->posizione);
     ui->label_last_edit_time->setText((QString)m_data->last_modification_g + " " + (QString)m_data->last_modification_o);
 
-    if(m_data->type == TYPE_CLOUD)
+    if(m_data->type == TYPE_CLOUD){
         ui->label_where->setText("Cloud");
-    else
+        ui->button_download->setHidden(false);
+    }
+    else{
+        ui->button_download->setHidden(true);
         ui->label_where->setHidden(true);
+    }
 
 #ifdef CLOUD
     if(m_data->owner.type_user == TYPE_OWNER_YOU)

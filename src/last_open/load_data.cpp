@@ -18,9 +18,7 @@ bool last_file::load_data()
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     QByteArray array;
     const size_t size = sizeof(last_file_s);
-    uchar data;
     uint i;
-    size_t k;
     last_file_s file;
 
     setting.beginGroup(GROUPNAME_LAST_FILE);
@@ -32,7 +30,7 @@ bool last_file::load_data()
 
     for(i=0; i<len; ++i){
         const char *data = array.mid(i*size, size*(i+1)).constData();
-        memcpy(&file, data, sizeof(last_file_s));
+        memcpy(&file, data, size);
         m_data.append(file);
     }
 

@@ -15,11 +15,13 @@ class element_ui : public QWidget
     Q_OBJECT
 
 public:
-    explicit element_ui(QWidget *parent = nullptr, const last_file_s *data = nullptr);
+    explicit element_ui(QWidget *parent = nullptr, const last_file_s *data = nullptr, const bool showOnlyName = false);
     ~element_ui();
 
     void decrease();
+    void showOnlyname(const bool showOnlyName);
 private:
+    int numslash(const QString &, const char slash);
     void set_main();
     Ui::element_ui *ui;
     const last_file_s *m_data = NULL;

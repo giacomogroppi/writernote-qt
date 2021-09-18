@@ -43,13 +43,11 @@ void pen_ui::list_update(){
 
     ui->button_pressure->setChecked(m_type_pen == n_pressione::pressione);
 
-    const bool temp = m_type_pen == n_pressione::spessore;
-    ui->button_size->setChecked(temp);
+    const bool spessore = m_type_pen == n_pressione::spessore;
+    ui->button_size->setChecked(spessore);
 
-    ui->slider_size->setDisabled(temp);
     ui->slider_size->setSliderPosition(m_spessore_pen*DELTA);
-
-    ui->slider_size->setEnabled(temp);
+    ui->slider_size->setEnabled(spessore);
 
     if(same_data && m_highlighter){
         this->m_highlighter->updateList();
@@ -59,7 +57,6 @@ void pen_ui::list_update(){
 void pen_ui::on_slider_size_valueChanged(int value)
 {
     m_spessore_pen = double(value)/DELTA;
-    list_update();
 }
 
 void pen_ui::on_button_continua_clicked()

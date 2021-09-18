@@ -41,11 +41,12 @@ void widget_parent::updateList()
     const int width_all = this->width();
     const int width_single = this->m_element.first()->width();
     const int space = ui->gridLayout->spacing(); // space for item
-    const uint len = (width_all / width_single ) * space;
+    const uint len = width_all / (width_single+space*2);
+    const uint len_list = m_last_file->length();
 
-    for(i=0, k=1; (k*i) < m_last_file->length(); ++i){
-        for(k=0; k<len && k < m_last_file->length(); ++k){
-            this->ui->gridLayout->addWidget(m_element.operator[](i), i, k);
+    for(i=0, k=1; (k*i) < len_list; ++i){
+        for(k=0; k<len && k < len_list; ++k){
+            this->ui->gridLayout->addWidget(m_element.operator[](i+k), i, k);
         }
     }
 }
