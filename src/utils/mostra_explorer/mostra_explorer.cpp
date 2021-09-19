@@ -7,6 +7,7 @@
 #include "../../windows/mostra_finestra_i.h"
 #include "../dialog_critic/dialog_critic.h"
 #include "../slash/slash.h"
+#include <QDesktopServices>
 
 static int mostra(const char *comando);
 
@@ -40,7 +41,7 @@ void mostra_explorer(QString posizione)
     }
 
 #elif unix || MACOS
-    mostra_finestra_i(posizione.toUtf8().constData());
+    mostra_finestra_i(posizione);
     //QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
 #endif
 

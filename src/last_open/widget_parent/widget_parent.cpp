@@ -2,8 +2,9 @@
 #include "ui_widget_parent.h"
 #include "../element/element_ui.h"
 #include <QDebug>
+#include "../last_open.h"
 
-widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName) :
+widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName, last_open *parent_sec) :
     QWidget(parent),
     ui(new Ui::widget_parent)
 {
@@ -12,12 +13,22 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnl
     this->m_last_file = ref;
 
     assert(ref);
-    assert(!parent);
+    assert(parent_sec != nullptr);
+
+    this->parent = parent_sec;
     ui->setupUi(this);
 
     for(i=0; i<m_last_file->length(); ++i){
         el = new element_ui(nullptr, &m_last_file->at(i), showOnlyName, i);
         this->m_element.append(el);
+
+        connect(el, &element_ui::on_pressed, parent_sec, &last_open::on_clicked);
+        connect(el, &element_ui::deleteIn, parent_sec, &last_open::deleteInElement);
+
+#ifdef CLOUD
+        connect(el, &element_ui::downloadIn, parent_sec, &last_open::downloadIn);
+#endif
+
     }
 
     this->updateList();
@@ -50,6 +61,21 @@ void widget_parent::updateList()
             this->ui->gridLayout->addWidget(m_element.operator[](i+k), i, k);
         }
     }
+}
+
+void widget_parent::decrease(const int index)
+{
+    uint i;
+
+    this->clean();
+    this->m_last_file->removeAt(index);
+    delete this->m_element.at(index);
+    this->m_element.removeAt(index);
+
+    for(i=index; i<m_last_file->length(); ++i){
+        this->m_element.operator[](i)->decrease();
+    }
+    this->updateList();
 }
 
 void widget_parent::clean()

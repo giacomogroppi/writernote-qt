@@ -47,7 +47,7 @@ public:
     { m_data.removeAt(i); }
 
     void save_quanti(int quanti);
-    void save_data_setting(const QByteArray &arr);
+    static void save_data_setting(const QByteArray &arr);
     void save_data_setting();
 
     static void save_data(const QString &path, int type = TYPE_COMPUTER, int owner_TYPE = TYPE_OWNER_YOU, const char *owner = nullptr);

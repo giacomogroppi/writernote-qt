@@ -3,7 +3,7 @@
 #include "../../utils/mostra_explorer/mostra_explorer.h"
 #include "ui_element_ui.h"
 #include "../../utils/slash/slash.h"
-#define NONE ""
+#include "../../utils/common_def.h"
 
 element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index) :
     QWidget(parent),
@@ -31,7 +31,9 @@ void element_ui::showOnlyname(const bool showOnlyName){
     if(!list.length())
         return;
 
-    ui->label_path->setText(list.last());
+    const QString &ref = list.last();
+    int index = ref.lastIndexOf("."+APP_EXT);
+    ui->label_path->setText(ref.mid(0, index));
 
 }
 
@@ -98,6 +100,7 @@ bool element_ui::event(QEvent *event)
 }
 
 void element_ui::decrease(){
+    this->m_index --;
 }
 
 void element_ui::on_button_delete_clicked()

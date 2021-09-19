@@ -39,13 +39,7 @@ last_open::last_open(QWidget *parent,
 
 last_open::~last_open()
 {
-    int i, len;
-
-    len = m_lista.length();
-    for(i=0; i<len; i++){
-        delete m_lista.at(i);
-    }
-
+    delete m_parent;
     delete ui;
 }
 
@@ -101,7 +95,7 @@ int last_open::load_data_()
 
     this->m_last.tidyup();
 
-    this->m_parent = new widget_parent(nullptr, &m_last, data.showOnlyName);
+    this->m_parent = new widget_parent(nullptr, &m_last, data.showOnlyName, this);
     this->ui->scrollArea->setWidget(m_parent);
     this->updateList();
 
@@ -109,10 +103,7 @@ int last_open::load_data_()
 }
 
 void last_open::deleteIn(int index){
-    this->m_last.removeAt(index);
-
-    delete m_lista.at(index);
-    this->m_lista.removeAt(index);
+    this->m_parent->decrease(index);
 
     if(this->m_last.length() == 0){
         *m_style_return = NULL;
@@ -163,16 +154,9 @@ void last_open::on_open_button_clicked()
 }
 
 void last_open::deleteInElement(int index){
-    int i, len;
-    len = m_lista.length();
-    for(i=0; i<len; i++){
-        ui->verticalLayout->removeWidget(m_lista.at(i));
-    }
-
     deleteIn(index);
 
     this->m_last.save_data_setting();
-
     this->updateList();
 }
 
@@ -190,9 +174,6 @@ void last_open::downloadIn(int index){
     dialog_critic("Your version of writernote was\ncompiled without the cloud support");
 #endif
 }
-
-
-
 
 void last_open::on_close_all_clicked()
 {

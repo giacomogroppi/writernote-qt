@@ -49,11 +49,9 @@ private:
 
     Ui::last_open *ui;
 
-    QList<element_ui *> m_lista;
-
     void deleteIn(int);
     bool *m_closeall;
-private slots:
+public slots:
     void on_clicked(int);
     void on_open_button_clicked();
     void deleteInElement(int);
