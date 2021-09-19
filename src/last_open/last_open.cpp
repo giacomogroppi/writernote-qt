@@ -116,7 +116,7 @@ uchar last_open::on_click_ex(const char *pos){
     const size_t len = strlen(pos);
     if(QFile::exists(pos)){
         *m_style_return = new char[len+1];
-        strncpy(*m_style_return, pos, len);
+        strncpy(*m_style_return, pos, len+1);
 
         this->close();
         return 0;

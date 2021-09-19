@@ -56,7 +56,7 @@ void widget_parent::updateList()
     const uint len = width_all / (width_single+space*4);
     const uint len_list = m_last_file->length();
 
-    for(i=0, k=1; (k*i) < len_list; ++i){
+    for(i=0, k=1; (k*i) < len_list && i < len_list; ++i){
         for(k=0; k<len && k < len_list; ++k){
             this->ui->gridLayout->addWidget(m_element.operator[](i+k), i, k);
         }

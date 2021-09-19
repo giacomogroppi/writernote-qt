@@ -37,6 +37,8 @@ void MainWindow::openFile(const char *pos){
         return;
 
     QFile file(fileName);
+    if (!file.exists())
+        return dialog_critic("I can't open the file because it doesn't exist");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return dialog_critic("I can't open this file because of the permission");
 
