@@ -26,7 +26,12 @@ public:
     struct __r {
         enum option val; /* type */
         int pos = option_last_open_ui_def_num; /* number of lastopen file to show */
+#ifdef ANDROID
+        const bool showOnlyName = true;
+#else
         bool showOnlyName = false;
+#endif
+
     };
 
     inline struct __r getData(){

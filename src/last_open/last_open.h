@@ -21,11 +21,15 @@ class last_open : public QDialog
 
 public:
     void setDataReturn(char **data);
-
-    explicit last_open(QWidget *parent = nullptr,
-                       struct struct_user *user = nullptr,
-                       cloud_controll *controll = nullptr,
-                       bool *m_closeall = nullptr);
+    enum Method: uchar{
+        OpenFile, /* for android -> last_open will open the folder where all the file are store, and ask the user when he want to save the file */
+        OpenRecent /* for android and desktop system */
+    };
+    explicit last_open(QWidget *parent,
+                       struct struct_user *user,
+                       cloud_controll *controll,
+                       bool *m_closeall,
+                       Method method);
     ~last_open();
 
     void setting_data(struct last_file_s *);
@@ -35,6 +39,7 @@ public:
     struct struct_user *m_user;
 
 private:
+    Method m_currentMethod;
     widget_parent *m_parent;
     /* open file */
     uchar on_click_ex(const char *pos);

@@ -8,7 +8,7 @@
 class get_file_dir
 {
 public:
-    static QStringList get(QString &dir);
+    static QStringList get(const QString &dir);
 };
 
 #endif // GET_FILE_DIR_H

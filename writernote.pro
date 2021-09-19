@@ -8,6 +8,9 @@ QT       += network
 macx: DEFINES += "MACOS"
 android: DEFINES += "ANDROID"
 
+#Use for testing
+#DEFINES += "ANDROID"
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = build
@@ -226,6 +229,7 @@ SOURCES += \
     src/utils/extract_audio/extract_audio_ui.cpp \
     src/utils/get_file_dir/get_file_dir.cpp \
     src/utils/get_path_application.cpp \
+    src/utils/lastModification/lastmodification.cpp \
     src/utils/make_default/make_default_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
     src/utils/path/get_path.cpp \
@@ -344,6 +348,7 @@ HEADERS += \
     src/utils/extract_audio/extract_audio_ui.h \
     src/utils/get_file_dir/get_file_dir.h \
     src/utils/get_path_application.h \
+    src/utils/lastModification/lastmodification.h \
     src/utils/make_default/make_default_ui.h \
     src/utils/mostra_explorer/mostra_explorer.h \
     src/utils/path/get_path.h \

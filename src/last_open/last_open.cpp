@@ -13,11 +13,13 @@
 #include "../datawrite/qfilechoose.h"
 #include "option/option_last_open_ui.h"
 #include "widget_parent/widget_parent.h"
+#include "../utils/get_path_application.h"
 
 last_open::last_open(QWidget *parent,
                      struct struct_user *user,
                      cloud_controll *controll,
-                     bool *close_all) :
+                     bool *close_all,
+                     Method method) :
     QDialog(parent),
     ui(new Ui::last_open)
 {
@@ -25,6 +27,7 @@ last_open::last_open(QWidget *parent,
     m_user = user;
     m_controll = controll;
     m_closeall = close_all;
+    m_currentMethod = method;
 
 #ifdef ANDROID
     this->setWindowState(Qt::WindowFullScreen);
@@ -60,6 +63,7 @@ int last_open::load_data_()
     int __val;
     uint i;
     option_last_open_ui option(nullptr);
+    bool ok;
 
     struct option_last_open_ui::__r data = option.getData();
     if(data.val == option_last_open_ui::disable)
@@ -72,9 +76,15 @@ int last_open::load_data_()
 
     }
 
-    const bool ok = this->m_last.load_data();
-    if(!ok)
-        return 0;
+    if(m_currentMethod == Method::OpenRecent){
+        ok = this->m_last.load_data();
+        if(!ok)
+            return 0;
+    }else{
+        ok = this->m_last.load_folder(get_path_application::exe());
+        if(!ok)
+            return 0;
+    }
 
     if(data.val == option_last_open_ui::open_last){
         on_click_ex(m_last.at(0).posizione);

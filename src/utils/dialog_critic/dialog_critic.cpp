@@ -4,6 +4,9 @@
 
 void dialog_critic(const QString &str){
     QMessageBox msgBox;
+#ifdef ANDROID
+    msgBox.setWindowState(Qt::WindowFullScreen);
+#endif // ANDROID
     msgBox.setText(str);
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.exec();
@@ -11,6 +14,9 @@ void dialog_critic(const QString &str){
 
 void user_message(const QString &str){
     QMessageBox msgBox;
+#ifdef ANDROID
+    msgBox.setWindowState(Qt::WindowFullScreen);
+#endif // ANDROID
     msgBox.setText(str);
     msgBox.exec();
 }

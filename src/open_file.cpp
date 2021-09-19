@@ -9,9 +9,8 @@
 #include "restore_file/ui/setting_restore_ui.h"
 #include "restore_file/restore_file_critic.h"
 #include "frompdf/frompdf.h"
-
+#include "last_open/last_open.h"
 #include "restore_file/get_name_available.h"
-
 #include <QFile>
 
 void MainWindow::openFile(const char *pos){

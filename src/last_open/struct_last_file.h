@@ -53,6 +53,7 @@ public:
     static void save_data(const QString &path, int type = TYPE_COMPUTER, int owner_TYPE = TYPE_OWNER_YOU, const char *owner = nullptr);
 
     bool load_data();
+    bool load_folder(const QString &path);
 
     void removeDouble();
     void tidyup();

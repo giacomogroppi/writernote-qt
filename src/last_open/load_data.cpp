@@ -1,8 +1,11 @@
 #include "struct_last_file.h"
 #include "../utils/setting_define.h"
-
+#include "../utils/get_file_dir/get_file_dir.h"
 #include <QBitArray>
-
+#include <QFile>
+#include <QFileInfo>
+#include <QDateTime>
+#include "../utils/lastModification/lastmodification.h"
 /*
  * data return from array.data() is released
  * after the function end
@@ -35,4 +38,27 @@ bool last_file::load_data()
     }
 
     return true;
+}
+
+bool last_file::load_folder(const QString &path)
+{
+    const QStringList file = get_file_dir::get(path);
+    const uint len = file.length();
+    uint i;
+    last_file_s object;
+
+    for(i=0; i<len; ++i){
+        const QString &ref = file.at(i);
+
+        strncpy(object.last_modification_g, lastModification::day(ref).toUtf8().constData(), MAXMOD__FILE);
+        strncpy(object.last_modification_o, lastModification::hour(ref).toUtf8().constData(), MAXMOD__FILE);
+
+        strncpy(object.posizione, ref.toUtf8().constData(), MAXSTR__FILE);
+        object.owner.type_user = 0;
+        object.type = TYPE_COMPUTER;
+
+        this->m_data.append(object);
+    }
+
+    return this->m_data.length();
 }

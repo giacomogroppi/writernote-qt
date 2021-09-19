@@ -17,6 +17,10 @@ option_last_open_ui::option_last_open_ui(QWidget *parent) :
     ui->spinBox->setMaximum(126);
     ui->spinBox->setMinimum(1);
 
+#ifdef ANDROID
+    ui->showOnlyName->setHidden(true);
+#endif
+
     loadData();
 }
 
@@ -32,7 +36,9 @@ void option_last_open_ui::saveData()
 
     setting.setValue(KEY_LAST_FILE_METHOD, data.val);
     setting.setValue(KEY_LAST_FILE_NUMBER, data.pos);
+#ifndef ANDROID
     setting.setValue(KEY_LAST_FILE_SHOW_ONLY_NAME, data.showOnlyName);
+#endif
     setting.endGroup();
 }
 
@@ -55,8 +61,9 @@ void option_last_open_ui::loadData()
     if(!ok_t || data.pos <= 0)
         data.pos = option_last_open_ui_def_num;
 
+#ifndef ANDROID
     data.showOnlyName = setting.value(KEY_LAST_FILE_SHOW_ONLY_NAME, false).toBool();
-
+#endif
     setting.endGroup();
 
     updateShow();
@@ -125,6 +132,10 @@ void option_last_open_ui::on_spinBox_valueChanged(int arg1)
 
 void option_last_open_ui::on_showOnlyName_stateChanged(int arg1)
 {
+#ifdef ANDROID
+    Q_UNUSED(arg1);
+#else
     this->data.showOnlyName = arg1;
+#endif
 }
 
