@@ -22,22 +22,16 @@ element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool show
 }
 
 void element_ui::showOnlyname(const bool showOnlyName){
-    int i;
     QString name = this->m_data->posizione;
-    char slash = slash::__slash();
-    int index;
-    int second_index;
+    const char slash = slash::__slash();
+    const QStringList list = name.split(slash);
 
     if(!showOnlyName)
         return;
-    for(i=0; i<name.length(); ++i){
-        index = name.indexOf(slash);
-        second_index = name.midRef(index, -1).indexOf(slash);
+    if(!list.length())
+        return;
 
-        if(index == -1 || second_index == -1)
-            return;
-
-    }
+    ui->label_path->setText(list.last());
 
 }
 
