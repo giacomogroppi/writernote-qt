@@ -18,13 +18,11 @@ public:
 
 
     static enum n_err
-            restore_file(const QString & path_save,
-                         const QString & name_copybook);
+            restore_file(const QString & path_save);
 
     static enum n_err
             restore_file_direct(const QString & path_load,
-                                const QString & path_save,
-                                const QString & name_copybook);
+                                const QString & path_save);
 
 };
 

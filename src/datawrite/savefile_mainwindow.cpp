@@ -27,10 +27,7 @@ void MainWindow::on_actionSave_File_triggered()
     if(m_currenttitle->m_touch)
         this->m_currenttitle->testi = this->ui->textEdit->toHtml();
 
-    check = savefile_i.savefile_check_indice(&m_indice) == OK;
-
-    if(this->m_currentTitle != "")
-        check = check && (savefile_i.savefile_check_file()==OK);
+    check = (savefile_i.savefile_check_file()==OK);
 
     if(!check && c)
         return dialog_critic("We had a problem while saving the file");

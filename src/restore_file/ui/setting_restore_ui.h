@@ -21,7 +21,6 @@ class setting_restore_ui;
 }
 
 class Document;
-class indice_class;
 
 class setting_restore_ui : public QDialog
 {
@@ -30,7 +29,6 @@ class setting_restore_ui : public QDialog
 public:
     explicit setting_restore_ui(QWidget *parent = nullptr,
                                 Document **curr = nullptr,
-                                indice_class *ind = nullptr,
                                 QString *pp = nullptr);
     ~setting_restore_ui();
 
@@ -75,7 +73,6 @@ private:
     QTimer *m_sec;
 
     Document **m_curr;
-    indice_class *m_ind;
 
     void updateWindow();
 

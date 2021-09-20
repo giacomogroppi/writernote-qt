@@ -24,7 +24,6 @@ extern bool need_save_tmp;
 
 setting_restore_ui::setting_restore_ui(QWidget *parent,
                                        Document **curr,
-                                       indice_class *ind,
                                        QString *pp) :
     QDialog(parent),
     ui(new Ui::setting_restore_ui)
@@ -47,7 +46,6 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
     ui->checkBox_temp->setCheckable(true);
 
     this->m_curr = curr;
-    this->m_ind = ind;
     this->m_path = pp;
 
     loadData();
@@ -154,8 +152,7 @@ void setting_restore_ui::firstTimer()
         goto start_timer;
     }
 
-    res = ff.savefile_check_file() == OK
-            && ff.savefile_check_indice(m_ind);
+    res = ff.savefile_check_file() == OK;
 
     if(!res){
         dialog_critic("We had a problem saving the file in " + *m_path);
@@ -199,8 +196,7 @@ void setting_restore_ui::secondTimer()
         goto start_timer;
     }
 
-    res = ff.savefile_check_file() == OK
-            && ff.savefile_check_indice(m_ind) == OK;
+    res = ff.savefile_check_file() == OK;
 
     if(!res){
         if(try_save > 5){

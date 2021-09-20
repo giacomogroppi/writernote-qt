@@ -10,7 +10,7 @@
 #include "utils/extract_audio/extract_audio.h"
 #include "utils/changeLanguage.h"
 
-#define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file, the name of the copybook, \nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
+#define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file\nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
 #define COMMAND_EXTRACT "--extract"
 
 #ifdef CLOUD
@@ -18,11 +18,11 @@
 #include "cloud/cloud_controll.h"
 #endif
 
-static int extract_(const char *, const char *, const char *);
+static int extract_(const char *path, const char *path_to);
 
 int main(int argc, char *argv[]){
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
-        return extract_(argv[2], argv[3], argv[4]);
+        return extract_(argv[2], argv[3]);
     }
 
     if(argc != 1 && !strcmp(argv[1], "--help")){
@@ -111,16 +111,12 @@ int main(int argc, char *argv[]){
     return exit_code;
 }
 
-static int extract_(const char *f, const char *s, const char *t){
-    auto res = extract_audio(f, s, t);
+static int extract_(const char *path, const char *path_to){
+    auto res = extract_audio(path, path_to);
 
     if(res == extract::ok){
-        printf("File extract correctly into %s", t);
+        printf("File extract correctly into %s", path_to);
         return 0;
-    }
-    if(res == extract::no_copybook){
-        printf("There seems to be no copybook with this name inside the file\n");
-        return -1;
     }
     if(res == extract::load_file){
         printf("We had a problem uploading the file\n");
@@ -135,7 +131,7 @@ static int extract_(const char *f, const char *s, const char *t){
         return -1;
     }
     if(res == extract::open_to){
-        printf("Path to save [%s] is not valid\n", t);
+        printf("Path to save [%s] is not valid\n", path_to);
         return -1;
     }
     printf("Unknown error\n");

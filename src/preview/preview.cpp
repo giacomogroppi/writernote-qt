@@ -6,7 +6,6 @@
 #include "../touch/tabletcanvas.h"
 #include "../currenttitle/document.h"
 #include "../dataread/xmlstruct.h"
-#include "../restore_file/get_name_available.h"
 
 void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const int height, const int width)
 {
@@ -27,13 +26,16 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
 
 }
 
-bool preview::get(QPixmap &ref, const bool withPdf, const QString &path, const int height, const int width)
+bool preview::get(QPixmap &ref, const bool withPdf,
+                  const QString &path, const int height, const int width)
 {
     Document doc;
     bool ok;
-    get_name_available::get(path, ok, &doc);
+    xmlstruct xml(path, doc);
 
-    if(!ok)
+    ok = xml.loadfile(false, false);
+
+    if(ok != OK)
         return false;
 
     preview::get(ref, doc, withPdf, height, width);
@@ -44,6 +46,8 @@ bool preview::get(QPixmap &ref, const bool withPdf, const QString &path, const i
 void preview::get_all(QList<QPixmap> &ref, Document &doc, const bool withPdf)
 {
     uint i, len;
+    Q_UNUSED(ref);
+    Q_UNUSED(withPdf);
     len = doc.datatouch->length();
 
     for(i=0; i<len; ++i){

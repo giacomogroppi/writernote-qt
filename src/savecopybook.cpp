@@ -11,9 +11,8 @@
 
 #include "dataread/xmlstruct.h"
 
-savecopybook::savecopybook(MainWindow *parent_U, QString *namecopybook_U){
+savecopybook::savecopybook(MainWindow *parent_U){
     this->parent = parent_U;
-    this->namecopybook = namecopybook_U;
 }
 
 /* funzione che gestisce il salvataggio del copybook [chiedendo all'utente se vuole salvare il file o no]*/
@@ -42,7 +41,7 @@ bool savecopybook::check_permission(){
     }
     savefile save_class(&this->parent->m_path, this->parent->m_currenttitle);
 
-    bool check = save_class.savefile_check_indice(&parent->m_indice)==OK && save_class.savefile_check_file()==OK;
+    const bool check = save_class.savefile_check_file() == OK;
     if(!check)
         dialog_critic("We had a problem saving the copybook");
 

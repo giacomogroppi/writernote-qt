@@ -5,7 +5,6 @@
 #include <QDir>
 #include <QFileDialog>
 #include "../../utils/slash/slash.h"
-#include "../get_name_available.h"
 #include "../restore_file_critic.h"
 #include "../get_name_tmp.h"
 #include "../../utils/dialog_critic/dialog_critic.h"
@@ -19,7 +18,6 @@ restore::restore(QWidget *parent, QString path) :
     ui->message_label->setText("");
 
     m_curr = new Document;
-    m_ind = new indice_class;
 
     this->path = path;
 
@@ -31,7 +29,6 @@ restore::restore(QWidget *parent, QString path) :
 restore::~restore()
 {
     delete m_curr;
-    delete m_ind;
 
     if(m_save)
         delete m_save;
@@ -121,10 +118,9 @@ void restore::updateList()
 
 void restore::on_ok_restore_clicked()
 {
-    QString pos_res, name_copy;
+    QString pos_res;
     QDir __dir(path);
     int index;
-    bool ok;
     restore_file_critic::n_err __res;
 
     if(path != "" && path.indexOf(APP_EXT) != -1){
@@ -149,12 +145,7 @@ void restore::on_ok_restore_clicked()
         }
     }
 
-    name_copy = get_name_available::get(get_name_tmp::get(pos_res), ok, nullptr);
-    if(!ok){
-        return user_message("It seams that that in the file you try to restore there is no copybook");
-    }
-
-    __res = restore_file_critic::restore_file(pos_res, name_copy);
+    __res = restore_file_critic::restore_file(pos_res);
 
     if(__res == restore_file_critic::restore_ok){
         user_message("Copybook restore");

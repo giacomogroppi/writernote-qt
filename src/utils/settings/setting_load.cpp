@@ -5,8 +5,6 @@
 #include "../../mainwindow.h"
 #include "ui_mainwindow.h"
 
-static void setting_load_list_hidden(MainWindow *);
-
 static void setting_load_redoundo(MainWindow *parent){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_REDOUNDO);
@@ -45,24 +43,5 @@ void setting_load(MainWindow *parent)
 {
     geometry(parent);
     setting_load_redoundo(parent);
-    setting_load_list_hidden(parent);
     parent->loadPenOrMouse();
-}
-
-static void hideinstart(MainWindow *parent, bool check){
-    parent->ui->button_left_hide->setHidden(check);
-    parent->ui->listWidgetSX->setHidden(check);
-
-    parent->ui->button_right_hide->setHidden(!check);
-}
-
-static void setting_load_list_hidden(MainWindow *parent){
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_LIST_HIDDEN);
-
-    bool temp = setting.value(KEY_LIST_HIDDEN, false).toBool();
-
-    hideinstart(parent, temp);
-
-    setting.endGroup();
 }

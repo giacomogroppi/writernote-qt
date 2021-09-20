@@ -6,7 +6,6 @@
 #include <QStringList>
 #include "../../datawrite/savefile.h"
 #include "../../dataread/xmlstruct.h"
-#include "../../indice_class.h"
 #include "../../currenttitle/document.h"
 
 namespace Ui {
@@ -35,7 +34,6 @@ private:
 
     savefile *m_save = nullptr;
     xmlstruct *m_xml = nullptr;
-    indice_class *m_ind;
     Document *m_curr;
 
     QStringList __l;

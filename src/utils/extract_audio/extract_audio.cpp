@@ -3,62 +3,37 @@
 #include "../../currenttitle/document.h"
 #include "../common_error_definition.h"
 
-#define DELETE_T delete indice; \
-    delete title; \
-    delete m_data;
-
 /*
  * the function extract an audio from a copybook, into path_to
 */
-extract::n_extract extract_audio(const char *path,
-                                 const char *namecopybook,
-                                 const char *path_to){
-    QString m_path = path, m_namecopybook = namecopybook, m_path_to = path_to;
+extract::n_extract extract_audio(const QString &path,
+                                 const QString &path_to){
+    Document doc;
+    size_t size_audio;
+    xmlstruct m_data(path, doc);
 
-    indice_class * indice = new indice_class;
-    Document * title = new Document;
-
-    xmlstruct * m_data = new xmlstruct(&m_path, indice, title);
-
-    if(m_data->loadindice() != OK){
-        DELETE_T;
+    if(m_data.loadfile(false, false) != OK){
         return extract::load_file;
     }
 
-    if(indice->titolo.indexOf(namecopybook) == -1){
-        DELETE_T;
-        return extract::no_copybook;
-    }
-
-    if(m_data->loadfile(namecopybook, false, false) != OK){
-        DELETE_T;
-        return extract::load_file;
-    }
-
-    if(title->se_registato == Document::not_record){
-        DELETE_T;
+    if(doc.se_registato == Document::not_record){
         return extract::not_record;
     }
 
-    if(load_audio(title->audio_data, m_namecopybook, m_path) != OK)
-    {
-        DELETE_T;
+    if(load_audio(doc.audio_data, path) != OK){
         return extract::load_audio;
     }
 
-    FILE *fp = fopen(path_to, "w");
+    FILE *fp = fopen(path_to.toUtf8().constData(), "w");
     if(!fp){
-        DELETE_T;
         return extract::open_to;
     }
 
-    auto size_audio = title->audio_data.size();
+    size_audio = doc.audio_data.size();
 
-    fwrite(title->audio_data.data(), size_audio, 1, fp);
+    fwrite(doc.audio_data.data(), size_audio, 1, fp);
 
     fclose(fp);
-
-    DELETE_T;
 
     return extract::ok;
 }

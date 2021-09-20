@@ -7,7 +7,6 @@
 #define ERROR_PRIVATE -1
 #define OK_PRIVATE 0
 class Document;
-class indice_class;
 
 #define WRITE_ON_SIZE(x,y,z) if(zip_source_write(x,y,z)==-1)goto error;
 
@@ -56,7 +55,6 @@ public:
         this->currenttitle = curr;
     }
 
-    int savefile_check_indice(indice_class *);
     int savefile_check_file();
 
     static uchar saveArrIntoFile(const QByteArray &arr, const QString &path);

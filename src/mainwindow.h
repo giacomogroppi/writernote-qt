@@ -27,7 +27,6 @@
 #define REDO_UNDO_DISABLE "Disable redo undo"
 #define REDO_UNDO_ENABLE "Enable redo undo"
 #include "currenttitle/document.h"
-#include "indice_class.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/highlighter/highlighter.h"
 #include "cloud/struct_user.h"
@@ -71,9 +70,6 @@ public:
     void contrUi();
     void updateTouch();
 
-    void openFirstCopybook();
-    void createFirstCopybook();
-    void createCopybook(const QString &name, const bool touch);
     QString getNameCopybook();
     void updateTitle(Document *__curr);
 
@@ -86,8 +82,7 @@ public:
     };
 
     enum n_need_save needToSave(xmlstruct *xml,
-                                Document * tmp_read,
-                                indice_class *tmp_ind) const;
+                                Document * tmp_read) const;
 
     MainWindow(QWidget *parent = nullptr,
                TabletCanvas *canvas = nullptr,
@@ -105,13 +100,10 @@ public:
 
     QTimer *m_timer;
 
-    QString m_currentTitle;
-
     /* data to manage all */
     int m_currentTime = 0;
     QString m_path;
 
-    indice_class m_indice;
     Document *m_currenttitle;
     Ui::MainWindow *ui;
 
@@ -157,14 +149,8 @@ public:
     setting_restore_ui *m_setting;
 
     void openFile(const char *pos);
-    void update_list_copybook();
-
-    void openCopybook(QListWidgetItem *item, const bool checkCurrent);
 
 public slots:
-    /* la funzione serve anche per eliminare l'audio del copybook */
-    void on_listWidgetSX_itemDoubleClicked(QListWidgetItem *item);
-
     void on_actioncompress_video_triggered();
 
     /* call by savefrom */
@@ -188,8 +174,6 @@ private slots:
 
     void on_textEdit_selectionChanged();
 
-    void on_actionCreate_new_copybook_triggered();
-
     /* funzione che gestisce l'aggiornamento della status bar */
     void updateProgress(qint64 duration);
 
@@ -208,18 +192,6 @@ private slots:
     void on_insertimagebotton_clicked();
 
     void on_listbotton_clicked();
-
-    void on_actionDelete_copybook_triggered();
-
-
-    /* funzioni per gestire il click sull'item della lista */
-    void deleteaudio_f();
-    void deletecopybook_f();
-    void audiototext_f();
-    void renamefile_f();
-    void compressvideo_f();
-
-
 
     /* funzione che gestisce la fine del riascolto dell'audio */
     void cambiostatoplayer(QMediaPlayer::State);
@@ -281,10 +253,6 @@ private slots:
     void on_actionEnable_redo_undo_triggered();
 
     void on_actionchoose_color_triggered();
-
-    void on_button_left_hide_clicked();
-
-    void on_button_right_hide_clicked();
 
     void on_actioncloud_triggered();
 
@@ -356,8 +324,6 @@ private slots:
     void on_actionSize_button_triggered();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
     void dropEvent(QDropEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;
 

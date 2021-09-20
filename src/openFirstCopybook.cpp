@@ -1,52 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-void MainWindow::openFirstCopybook(){
-    auto item = ui->listWidgetSX->item(0);
-
-    if(!item){
-        createFirstCopybook();
-
-        m_currentTitle = m_indice.titolo.first();
-        updateTitle(m_currenttitle);
-    }else{
-        this->openCopybook(item, false);
-    }
-}
-
-void MainWindow::createFirstCopybook(){
-    if(!m_indice.isEmpty())
-        return;
-
-    QString name;
-
-    name = getNameCopybook();
-
-    createCopybook(name, true);
-    ui->listWidgetSX->setEnabled(true);
-}
-
-void MainWindow::createCopybook(const QString &name, const bool touch)
-{
-    m_indice.titolo.append(name);
-    m_currenttitle->m_touch = touch;
-    m_currenttitle->nome_copybook = name;
-
-    update_list_copybook();
-
-    contrUi();
-}
-
 QString MainWindow::getNameCopybook()
 {
-    uint len;
-    len = m_indice.titolo.length();
+    const bool unsave = this->m_path == "";
 
-    if(!len){
+    if(!unsave){
         return NAME_UNSAVE;
     }
 
-    return NAME_UNSAVE + " - " + len;
+    /*
+     * todo: return name without position
+    */
+    assert(0);
+    return this->m_path;
 }
 
 void MainWindow::updateTitle(Document *__curr)

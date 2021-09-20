@@ -14,9 +14,8 @@ class extract_audio_ui : public QDialog
     Q_OBJECT
 
 public:
-    explicit extract_audio_ui(QWidget *parent = nullptr,
-                              indice_class *indice = nullptr,
-                              QString *path = nullptr);
+    explicit extract_audio_ui(QWidget *parent,
+                              const QString *path);
     ~extract_audio_ui();
 
 private slots:
@@ -39,8 +38,6 @@ private:
     */
     bool iswriting = false;
 
-    void setData();
-
     /*
      * true if we create it,
      * false if the system pass
@@ -48,7 +45,6 @@ private:
      * it's use for delete
     */
     bool ext = false;
-    indice_class *m_indice = nullptr;
     Document *m_current = nullptr;
 
     Ui::extract_audio_ui *ui;

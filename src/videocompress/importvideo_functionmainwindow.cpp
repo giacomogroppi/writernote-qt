@@ -5,7 +5,7 @@
 
 void MainWindow::on_actioncompress_video_triggered()
 {
-    videocompress_ui *videocompress = new videocompress_ui(nullptr, this);
+    videocompress_ui videocompress(nullptr, this);
 
-    videocompress->exec();
+    videocompress.exec();
 }

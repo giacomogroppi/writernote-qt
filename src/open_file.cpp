@@ -10,7 +10,6 @@
 #include "restore_file/restore_file_critic.h"
 #include "frompdf/frompdf.h"
 #include "last_open/last_open.h"
-#include "restore_file/get_name_available.h"
 #include <QFile>
 
 void MainWindow::openFile(const char *pos){
@@ -19,12 +18,11 @@ void MainWindow::openFile(const char *pos){
     QString path, tmp;
 
     Document curr;
-    indice_class ind;
-    xmlstruct xml(&m_path, &ind, &curr);
+    xmlstruct xml(&m_path, &curr);
 
     n_need_save res_save;
 
-    xml.setData(&fileName, &m_indice, m_currenttitle);
+    xml.setData(&fileName, m_currenttitle);
 
     if(!pos){
         fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; Pdf (*.pdf);; All file (* *.*)");
@@ -54,18 +52,8 @@ void MainWindow::openFile(const char *pos){
 
     if(fileName.indexOf(".pdf") != -1 && fileLost::exe(fileName)){
         if(areyousure("Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
-            path = get_name_available::get(fileName, ok, nullptr);
 
-            if(!ok){
-                if(areyousure("No copybook", "I could not find any copybook in the file, continue?")){
-                    goto load;
-                }else{
-                    return;
-                }
-            }
-
-            if(restore_file_critic::restore_file(fileName,
-                                                 path)){
+            if(restore_file_critic::restore_file(fileName)){
                 user_message("File restore correcty");
             }else{
                 return dialog_critic("If not restore correctly");
@@ -76,7 +64,6 @@ void MainWindow::openFile(const char *pos){
         }
     }
 
-    load:
     const bool pdf = fileName.indexOf(".pdf") != -1;
 
     if(pdf){
@@ -87,7 +74,7 @@ void MainWindow::openFile(const char *pos){
 #endif
     }
     else {
-        res_save = this->needToSave(&xml, &curr, &ind );
+        res_save = this->needToSave(&xml, &curr );
 
         /*
          * in case there is already open a file, we need to controll if the
@@ -96,7 +83,7 @@ void MainWindow::openFile(const char *pos){
         if(res_save == n_need_save::need_save){
             if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
                 savefile save(&m_path, m_currenttitle);
-                if(save.savefile_check_indice(&m_indice) != OK || save.savefile_check_file() != OK){
+                if(save.savefile_check_file() != OK){
                     if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
                         return;
                     }
@@ -104,21 +91,12 @@ void MainWindow::openFile(const char *pos){
             }
         }
 
-        if(!xml.loadindice())
-            return dialog_critic("We had a problem reading the index of the file");
-
         this->m_setting->changeCopybookFile();
 
         m_path = fileName;
 
-        if(this->m_indice.titolo.length() > 0)
-            this->ui->listWidgetSX->setEnabled(true);
-        update_list_copybook();
-
         this->m_currenttitle->reset();
 
-        this->openFirstCopybook();
-        this->createFirstCopybook();
     }
 }
 

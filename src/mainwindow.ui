@@ -82,83 +82,6 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QListWidget" name="listWidgetSX">
-          <property name="maximumSize">
-           <size>
-            <width>150</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="currentRow">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="button_left_hide">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>10</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border: none;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="../writernote.qrc">
-            <normaloff>:/image/images/icon-hide-left.png.png</normaloff>:/image/images/icon-hide-left.png.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>10</width>
-            <height>10</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="button_right_hide">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>10</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border: none;</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="../writernote.qrc">
-            <normaloff>:/image/images/icon-hide-right.png</normaloff>:/image/images/icon-hide-right.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>10</width>
-            <height>10</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <layout class="QHBoxLayout" name="layouteditor">
@@ -291,7 +214,7 @@
      <x>0</x>
      <y>0</y>
      <width>967</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">
@@ -324,10 +247,7 @@
      <string>Audio option</string>
     </property>
     <addaction name="actionListen_current_audio"/>
-    <addaction name="actionCreate_new_copybook"/>
     <addaction name="actionDelete_audio"/>
-    <addaction name="actionDelete_copybook"/>
-    <addaction name="actionConvert_audio_to_text"/>
     <addaction name="actionQuality_setting"/>
     <addaction name="actionDefault_save_location"/>
    </widget>
@@ -432,9 +352,6 @@
    </attribute>
    <addaction name="actionListen_current_audio"/>
    <addaction name="actionDelete_audio"/>
-   <addaction name="actionDelete_copybook"/>
-   <addaction name="actionCreate_new_copybook"/>
-   <addaction name="actionConvert_audio_to_text"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolbarmatita">
@@ -665,39 +582,6 @@
    </property>
    <property name="text">
     <string>Listen current audio</string>
-   </property>
-  </action>
-  <action name="actionDelete_copybook">
-   <property name="icon">
-    <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/deleteCopyBook.png</normaloff>:/image/images/deleteCopyBook.png</iconset>
-   </property>
-   <property name="text">
-    <string>Delete copybook</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+D</string>
-   </property>
-  </action>
-  <action name="actionCreate_new_copybook">
-   <property name="icon">
-    <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/newFile.png</normaloff>:/image/images/newFile.png</iconset>
-   </property>
-   <property name="text">
-    <string>Create new copybook</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
-  </action>
-  <action name="actionConvert_audio_to_text">
-   <property name="icon">
-    <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/text-speech.png</normaloff>:/image/images/text-speech.png</iconset>
-   </property>
-   <property name="text">
-    <string>Convert audio to text</string>
    </property>
   </action>
   <action name="actionOpen">

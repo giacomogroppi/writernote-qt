@@ -2,6 +2,8 @@
 #include "../../indice_class.h"
 #include "../source_read_ext.h"
 
+#ifdef val
+
 /* funzione che gestisce la creazione di una stringa per salvare l'indice */
 int savefile::savefile_check_indice(indice_class *indice){
     int error, temp, len, i, check;
@@ -62,3 +64,4 @@ int savefile::savefile_check_indice(indice_class *indice){
         zip_close(filezip);
         return ERROR;
 }
+#endif

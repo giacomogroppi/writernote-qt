@@ -124,21 +124,6 @@ int checksimilecopybook(const Document *primo,
     return res;
 }
 
-int checksimileindice(const indice_class *primo,
-                      const indice_class *secondo){
-    int i, len;
-
-    if(primo->titolo.length() != secondo->titolo.length())
-        return LEN;
-
-    len = primo->titolo.length();
-    for(i=0; i < len; i++)
-        if(primo->titolo.at(i) != secondo->titolo.at(i))
-            return LEN;
-
-    return OK_CHECK;
-}
-
 static int checkPositionAudio(const Document *first,
                               const Document *second){
     int len = first->datatouch->posizionefoglio.length(), i;

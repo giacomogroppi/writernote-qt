@@ -13,8 +13,7 @@
 enum MainWindow::n_need_save
         MainWindow::needToSave(
             xmlstruct *xml,
-            Document * tmp_read,
-            indice_class *tmp_ind) const{
+            Document * tmp_read) const{
     QString filep;
     int check1;
 
@@ -24,20 +23,13 @@ enum MainWindow::n_need_save
         return n_need_save::no_path;
     }
 
-    check1 = xml->loadfile((m_currentTitle + ".xml").toUtf8().constData(), false, false);
+    check1 = xml->loadfile(false, false);
 
     if(check1 != ERROR_VERSION_NEW){
         if(check1 != OK){
             return n_need_save::unable_load;
         }
     }
-
-    if(tmp_ind){
-        if(!xml->loadindice()){
-            return n_need_save::unable_load;
-        }
-    }
-
 
     /*
      * if we are in keyboard mode
@@ -48,10 +40,6 @@ enum MainWindow::n_need_save
     }
 
     check1 = checksimilecopybook(tmp_read, m_currenttitle, true) == OK_CHECK;
-
-    if(tmp_ind){
-        check1 = check1 && checksimileindice(&m_indice, tmp_ind) == OK_CHECK;
-    }
 
     m_currenttitle->testi = filep;
 

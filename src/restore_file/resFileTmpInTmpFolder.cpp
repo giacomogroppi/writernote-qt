@@ -67,7 +67,7 @@ void MainWindow::resFileTmpInTmpFolder(){
                 --i;
             }
 
-            __res = restore_file_critic::restore_file_direct(res, __path, NAME_UNSAVE);
+            __res = restore_file_critic::restore_file_direct(res, __path);
 
             if(__res == restore_file_critic::error_load_file){
                 if(areyousure("Error", "Error loading the file " + res + "\nDelete the file?")){

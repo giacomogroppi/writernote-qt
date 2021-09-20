@@ -3,11 +3,9 @@
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include "datawrite/qfilechoose.h"
-#include "currenttitle/redolist.h"
 #include "dataread/xmlstruct.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "savecopybook.h"
-#include "newcopybook_.h"
 #include "setting_ui.h"
 #include "datawrite/savefile.h"
 #include "currenttitle/checksimilecopybook.h"
@@ -88,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_option_copybook = new option_copybook(this);
     this->m_text_w = new text_widgets(this);
     this->m_sheet = new fast_sheet_ui(this);
-    this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_indice, &m_path);
+    this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_path);
 
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
@@ -108,9 +106,6 @@ MainWindow::MainWindow(QWidget *parent,
     /* redo and undo */
     connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);
     connect(this, &MainWindow::UndoT, m_canvas, &TabletCanvas::Undo);
-
-    ui->button_left_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    ui->button_right_hide->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
 #ifndef CLOUD
     ui->actioncloud->setVisible(false);
@@ -155,8 +150,6 @@ MainWindow::MainWindow(QWidget *parent,
         this->m_canvas->time = 0;
     }
 
-    openFirstCopybook();
-
     if(path)
         openFile(path);
     resFileTmpInTmpFolder();
@@ -183,16 +176,12 @@ void MainWindow::update_touch_or_pen()
 void MainWindow::on_actionNew_File_triggered()
 {
     bool check;
-    savecopybook checksave(this, &m_currentTitle);
-    xmlstruct xml(&m_path, &m_indice, m_currenttitle);
+    savecopybook checksave(this);
+    xmlstruct xml(&m_path, m_currenttitle);
     Document __curr;
-    indice_class __ind;
     n_need_save __res;
 
-    if(this->m_indice.titolo.length() == 0)
-        goto __continue;
-
-    __res = needToSave(&xml, &__curr, &__ind);
+    __res = needToSave(&xml, &__curr);
 
     if(__res == n_need_save::not_
             || __res == n_need_save::only_writernote)
@@ -209,10 +198,7 @@ void MainWindow::on_actionNew_File_triggered()
 
     setWindowTitle("Writernote");
     updatePageCount(-1);
-    m_currentTitle = "";
     m_currenttitle->reset();
-    m_indice.reset();
-    ui->listWidgetSX->clear();
     m_canvas->clear();
     contrUi();
     setting_ui_start(this);
@@ -377,4 +363,3 @@ void MainWindow::on_actionRemove_current_PDF_triggered()
     this->m_currenttitle->m_pdf->reset();
 #endif // PDFSUPPORT
 }
-

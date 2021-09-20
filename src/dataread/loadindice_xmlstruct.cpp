@@ -2,6 +2,9 @@
 #include "../utils/dialog_critic/dialog_critic.h"
 #include <QDebug>
 
+#define MESSAGE ""
+
+/*
 bool xmlstruct::loadindice(){
     indice->reset();
 
@@ -27,6 +30,10 @@ bool xmlstruct::loadindice(){
 
     zip_fread(f, &indice->versione, sizeof(int));
 
+    if(indice->versione == VER_MULTIPLE_CURRENT_TITLE){
+
+    }
+
     zip_fread(f, &lunghezza, sizeof(int));
     if(lunghezza){
         for(i=0; i<lunghezza; i++){
@@ -49,3 +56,4 @@ bool xmlstruct::loadindice(){
 
     return true;
 }
+*/

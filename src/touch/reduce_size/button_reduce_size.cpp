@@ -6,7 +6,7 @@
 
 void MainWindow::on_actionReduce_size_file_triggered()
 {
-    if(this->m_currentTitle == "")
+    if(this->m_path == "")
         return;
 
     if(!m_currenttitle->m_touch)

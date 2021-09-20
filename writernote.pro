@@ -73,6 +73,9 @@ SOURCES += \
     src/currenttitle/option/option_copybook.cpp \
     src/datamanage/retry_save_audio.cpp \
     src/dataread/load_from_file.cpp \
+    src/dataread/old_version/ver_2/load_file_ver_2.cpp \
+    src/dataread/old_version/ver_3/load_file_ver_3.cpp \
+    src/dataread/old_version/ver_4/load_file_ver_4.cpp \
     src/dataread/readlistarray.cpp \
     src/datawrite/write/saveArray.cpp \
     src/dropEvent/dropEvent.cpp \
@@ -88,7 +91,6 @@ SOURCES += \
     src/openFirstCopybook.cpp \
     src/open_file.cpp \
     src/preview/preview.cpp \
-    src/restore_file/get_name_available.cpp \
     src/restore_file/resFileTmpInTmpFolder.cpp \
     src/restore_file/restore_file.cpp \
     src/restore_file/restore_file_critic.cpp \
@@ -143,14 +145,10 @@ SOURCES += \
     src/lastedit/enableredoundo_mainwindow.cpp \
     src/lastedit/redoundo.cpp \
     src/closeevent_file.cpp \
-    src/currenttitle/audiototext.cpp \
     src/currenttitle/checksimilecopybook.cpp \
     src/currenttitle/deleteaudio.cpp \
-    src/currenttitle/deletecopybook.cpp \
     src/currenttitle/newcopybook.cpp \
-    src/currenttitle/redolist.cpp \
     src/currenttitle/renamefile.cpp \
-    src/currenttitle/rightclicklistcopybook.cpp \
     src/datamanage/check1.cpp \
     src/datamanage/checkinserimento.cpp \
     src/datamanage/eliminazioneNFrasi.cpp \
@@ -179,7 +177,6 @@ SOURCES += \
     src/main.cpp \
     src/dataread/xmlstruct.cpp \
     src/mainwindow.cpp \
-    src/newcopybook_.cpp \
     src/pdf/topdf.cpp \
     src/pdf/translate.cpp \
     src/pdf/updatebrush_topdf.cpp \
@@ -222,7 +219,6 @@ SOURCES += \
     src/touch/tabletevent.cpp \
     src/touch/updatelist.cpp \
     src/touch/zoom/zoom_control.cpp \
-    src/update_list_copybook.cpp \
     src/utils/color/color_chooser.cpp \
     src/utils/extract_audio/extractAudioMain.cpp \
     src/utils/extract_audio/extract_audio.cpp \
@@ -236,7 +232,6 @@ SOURCES += \
     src/utils/permission/permission.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/remove_key/remove_key.cpp \
-    src/utils/resize_mainwindow/resize.cpp \
     src/utils/retry/retry_ui.cpp \
     src/utils/settings/setting_load.cpp \
     src/utils/threadcount.cpp \
@@ -276,7 +271,6 @@ HEADERS += \
     src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
     src/preview/preview.h \
-    src/restore_file/get_name_available.h \
     src/restore_file/get_name_tmp.h \
     src/restore_file/restore_file_critic.h \
     src/restore_file/ui/setting_restore_ui.h \
@@ -302,11 +296,8 @@ HEADERS += \
     src/last_open/last_open.h \
     src/last_open/struct_last_file.h \
     src/lastedit/redoundo.h \
-    src/currenttitle/audiototext.h \
     src/currenttitle/checksimilecopybook.h \
     src/currenttitle/deleteaudio.h \
-    src/currenttitle/deletecopybook.h \
-    src/currenttitle/redolist.h \
     src/currenttitle/renamefile.h \
     src/datamanage/check1.h \
     src/datamanage/checkinserimento.h \
@@ -324,7 +315,6 @@ HEADERS += \
     src/utils/default_location/audio_default_location.h \
     src/utils/default_option/default_option_ui.h \
     src/utils/dialog_critic/dialog_critic.h \
-    src/newcopybook_.h \
     src/pdf/topdf.h \
     src/setting_ui.h \
     src/sheet/dialog_sheet.h \

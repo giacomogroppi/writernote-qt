@@ -17,10 +17,15 @@
 
 #include <zip.h>
 
+#define LOAD_MULTIPLESTRING(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) goto free_;
+#define LOAD_MULTIPLESTRING_RETURN(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) return ERROR;
+#define LOAD_STRINGA(x, y) if(xmlstruct::load_stringa(x,y) == ERROR) goto free_;
+#define LOAD_STRINGA_RETURN(x, y) if(xmlstruct::load_stringa(x, y) == ERROR)return ERROR;
+
 /*
  * call then we are starting an audio
 */
-int load_audio(QByteArray &array, const QString &namecopybook, const QString &path);
+int load_audio(QByteArray &array, const QString &path);
 
 inline zip_file_t *zip_fopen(zip_t *zip, const QString &path, zip_flags_t flag){
     return zip_fopen(zip, path.toUtf8().constData(), flag);
@@ -33,7 +38,6 @@ class xmlstruct{
 private:
     const QString *path_;
 
-    indice_class *indice = nullptr;
     Document *currenttitle = nullptr;
 
 #ifdef ALL_VERSION
@@ -45,6 +49,8 @@ private:
     int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
                     const bool LoadPdf, const bool LoadImg);
     int loadbinario_1(struct zip *);
+
+    static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
 
 public:
     static size_t sizeFile(zip_t *filezip, const QString &namefile){
@@ -60,17 +66,16 @@ public:
         return *path_;
     };
 
+    /*
     bool loadindice();
+    */
 
-    int loadfile(const char *path, const bool LoadPdf, const bool LoadImg);
-    int loadfile(const QString &path, const bool LoadPdf, const bool LoadImg){
-        return loadfile(path.toUtf8().constData(), LoadPdf, LoadImg);
-    }
+    int loadfile(const bool LoadPdf, const bool LoadImg);
 
-    xmlstruct(const QString *path_U, indice_class *indice_U, Document *currenttitle_U);
-    xmlstruct(const QString &path_U, indice_class &indice_U, Document &currenttitle_U);
+    xmlstruct(const QString *path_U, Document *currenttitle_U);
+    xmlstruct(const QString &path_U, Document &currenttitle_U);
 
-    void setData(const QString *path_U, indice_class *indice_U, Document *currenttitle_U);
+    void setData(const QString *path_U, Document *currenttitle_U);
 
 };
 

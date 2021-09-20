@@ -27,7 +27,5 @@
 int checksimilecopybook(const Document *,
                         const Document *,
                         const bool );
-int checksimileindice(const indice_class *,
-                      const indice_class *);
 
 #endif // CHECKSIMILECOPYBOOK_H

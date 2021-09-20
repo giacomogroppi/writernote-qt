@@ -8,19 +8,9 @@
 
 #define CURRENTTITLE parent->m_currenttitle
 
-void deleteaudio(MainWindow *parent, QListWidgetItem *item){
-    if(!areyousure("", "Are you sure you want to delete the copybook?"))
+void deleteaudio(MainWindow *parent){
+    if(!areyousure("", "Are you sure you want to delete the audio?"))
         return;
-
-
-    if(item->text() != parent->m_currentTitle){
-        /* we need to load the other file */
-        parent->openCopybook(item, true);
-        //parent->on_listWidgetSX_itemClicked(item);
-
-        if(item->text() != parent->m_currentTitle)
-            return;
-    }
 
     CURRENTTITLE->testinohtml.clear();
     CURRENTTITLE->posizione_iniz.clear();
@@ -37,5 +27,5 @@ void deleteaudio(MainWindow *parent, QListWidgetItem *item){
 
 void MainWindow::on_actionDelete_audio_triggered()
 {
-    deleteaudio(this, this->ui->listWidgetSX->currentItem());
+    deleteaudio(this);
 }

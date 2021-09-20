@@ -1,6 +1,6 @@
 #include "extract_audio_ui.h"
 #include "ui_extract_audio_ui.h"
-
+#include "../../datawrite/qfilechoose.h"
 #include "extract_audio.h"
 #include "QFile"
 #include "../dialog_critic/dialog_critic.h"
@@ -8,30 +8,15 @@
 #include <QDebug>
 #include "../../datawrite/qfilechoose.h"
 
-#define TOUTF toUtf8().constData()
-
-extract_audio_ui::extract_audio_ui(QWidget *parent, indice_class *indice, QString *path) :
+extract_audio_ui::extract_audio_ui(QWidget *parent, const QString *path) :
     QDialog(parent),
-    m_indice(indice),
-
     ui(new Ui::extract_audio_ui)
 {
     ui->setupUi(this);
 
-    if(this->m_indice != nullptr){
+    if(path){
         this->ui->edit_path->setPlainText(*path);
         this->ext = false;
-    }
-
-
-
-}
-
-void extract_audio_ui::setData(){
-    int i, len;
-    len = m_indice->titolo.length();
-    for(i=0; i<len; i++){
-        this->ui->comboBox->addItem(m_indice->titolo.at(i));
     }
 }
 
@@ -78,8 +63,6 @@ extract_audio_ui::~extract_audio_ui()
     delete ui;
 
     if(this->ext){
-        if(m_indice)
-            delete m_indice;
         if(m_current)
             delete m_current;
     }
@@ -96,9 +79,8 @@ void extract_audio_ui::on_extract_to_clicked()
     if(!file_temp.exists())
         return dialog_critic("The file didn't exist");
 
-    auto res = extract_audio(ui->edit_path->toPlainText().TOUTF,
-                            ui->comboBox->currentText().TOUTF,
-                            ui->to_exit->toPlainText().TOUTF);
+    auto res = extract_audio(ui->edit_path->toPlainText(),
+                            ui->to_exit->toPlainText());
 
     switch (res) {
     case extract::ok:
@@ -107,22 +89,12 @@ void extract_audio_ui::on_extract_to_clicked()
     case extract::load_audio:
         return dialog_critic("I had a problem reading the audio");
 
-    case extract::no_copybook:
-        /*
-         * the function was created to work in main, and opens
-         * the index of its own to check that this copybook
-         * exists, if it returns xxx, it means that the data has
-         * changed since we originally read it, to now, or
-         * there was an opening error
-        */
-        return dialog_critic("I had an internal problem, please retry");
-
     case extract::not_record:
         /*
          * TODO: -> find a way to warn the user first of
          * the fact that and the copybook is not registered
         */
-        return user_message(ui->comboBox->currentText() + " is not recorder");
+        return user_message("This file is not recorder");
     case extract::open_to:
         return dialog_critic("I had a problem saving the file in " + ui->to_exit->toPlainText());
 
@@ -152,22 +124,11 @@ void extract_audio_ui::on_open_to_clicked()
 
 }
 
-/*
- * open writernote file
-*/
-#if defined(WIN32) || defined(WIN64) || defined(__OS2__)
-#define HOME "USERPROFILE"
-#elif unix || MACOS
-#define HOME "HOME"
-#endif
-
 void extract_audio_ui::on_open_from_clicked()
 {
     QString fileName;
 
-    fileName = QFileDialog::getOpenFileName(this, tr("Open File"), getenv(HOME), "Writernote (*.writer);; All file (* *.*)");
-
-    if(fileName.isEmpty())
+    if(!qfilechoose::filechoose(fileName, TYPEFILEWRITER))
         return;
 
     ui->edit_path->setPlainText(fileName);

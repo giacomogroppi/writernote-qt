@@ -18,7 +18,6 @@
 #include "restore_file/ui/setting_restore_ui.h"
 #include "last_open/struct_last_file.h"
 
-static void setting_hide_list(bool check);
 static void setting_geometry(QRect );
 
 static void setting_autosave(bool check){
@@ -41,9 +40,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     /* apre il file in file e lo carica nell'oggetto, e lo confronta */
     Document tempcopybook;
-    indice_class tempindice;
 
-    xmlstruct temp_lettura(&m_path, &tempindice, &tempcopybook);
+    xmlstruct temp_lettura(&m_path, &tempcopybook);
 
     n_need_save __res;
 
@@ -53,13 +51,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
     bool check;
     savefile save_(&m_path, m_currenttitle);
 
-    if(!m_indice.titolo.length() || m_currentTitle == ""){
-        goto accept_event;
-    }
-
     __res = needToSave(&temp_lettura,
-                       &tempcopybook,
-                       &tempindice);
+                       &tempcopybook);
 
     if(__res == n_need_save::unable_load){
         QMessageBox msgBox;
@@ -109,11 +102,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
             if(!qfilechoose::filechoose(m_path))
                 return;
         }
-
-        check = save_.savefile_check_indice(&m_indice)==OK;
-
-        if(m_currentTitle != "")
-            check = check && (save_.savefile_check_file()==OK);
+        check = save_.savefile_check_file() == OK;
 
 
         if(check){
@@ -133,21 +122,11 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     accept_event:
     setting_geometry(this->geometry());
-    setting_hide_list(ui->listWidgetSX->isHidden());
     setting_autosave(enableredoundo);
 
     m_setting->changeCopybookFile();
 
     event->accept();
-}
-
-static void setting_hide_list(bool check){
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_LIST_HIDDEN);
-
-    setting.setValue(KEY_LIST_HIDDEN, check);
-
-    setting.endGroup();
 }
 
 static void setting_geometry(QRect rect){
