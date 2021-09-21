@@ -15,6 +15,8 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
     QPen m_pen;
     QBrush m_brush;
     struct TabletCanvas::Point lastPoint;
+    if(doc.isEmpty())
+        return;
     const double size_orizzontale = doc.datatouch->biggerx();
     const double delta = (double)width / (double)size_orizzontale;
 

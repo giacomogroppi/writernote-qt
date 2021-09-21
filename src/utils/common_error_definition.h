@@ -10,5 +10,6 @@
 #define ERROR_VERSION 2
 #define ERROR_VERSION_NEW 3
 #define ERROR_CONTROLL 4 /* return when the data is corrupted */
+#define ERROR_MULTIPLE_COPYBOOK 5
 
 #endif // COMMON_ERROR_DEFINITION_H

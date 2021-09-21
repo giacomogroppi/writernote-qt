@@ -3,18 +3,14 @@
 
 #include <iostream>
 #include <cstdlib>
-
 #include <string>
 #include <fstream>
 #include <streambuf>
 #include <QList>
 #include <QStringList>
-
 #include "../currenttitle/document.h"
 #include "../indice_class.h"
-
 #include "../touch/datastruct/datastruct.h"
-
 #include <zip.h>
 
 #define LOAD_MULTIPLESTRING(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) goto free_;
@@ -53,7 +49,7 @@ private:
     int loadbinario_1(struct zip *);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
-
+    static uchar controllOldVersion(zip_t *file);
 public:
     static size_t sizeFile(zip_t *filezip, const QString &namefile){
         return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());

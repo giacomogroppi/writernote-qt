@@ -87,6 +87,19 @@ int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<i
     return OK;
 }
 
+uchar xmlstruct::controllOldVersion(zip_t *file)
+{
+    zip_file_t *tt;
+
+    tt = zip_fopen(file, "indice.xml", 0);
+    if(tt == NULL){
+        return 0;
+    }
+    zip_fclose(tt);
+    zip_close(file);
+    return 1;
+}
+
 #define CLOSE_ZIP(x, y) zip_fclose(x);zip_close(y);
 #define LOAD_IMAGE(x,y) if(load_image(x, y) != OK)goto free_;
 
@@ -94,12 +107,12 @@ int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<i
 #define LOAD_BINARIO_RETURN(x, function) if(function(x) == ERROR) return ERROR;
 
 int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
-    currenttitle->reset();
     int err = 0;
     zip_t *filezip;
     zip_file_t *f;
-    struct zip_stat st;
     int tmp_ver;
+
+    currenttitle->reset();
 
     filezip = zip_open(path_->toUtf8().constData(),
                        ZIP_CREATE,
@@ -108,8 +121,8 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
     if (filezip == NULL)
         return ERROR;
 
-    zip_stat_init(&st);
-    zip_stat(filezip, NAME_FILE, 0, &st);
+    if(xmlstruct::controllOldVersion(filezip))
+        return ERROR_MULTIPLE_COPYBOOK;
 
     f = zip_fopen(filezip, NAME_FILE, 0);
     if(f == NULL){

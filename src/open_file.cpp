@@ -104,6 +104,9 @@ void MainWindow::openFile(const char *pos){
                 this->m_currenttitle->reset();
                 this->m_path = "";
             }
+        }else if(res == ERROR_MULTIPLE_COPYBOOK){
+            user_message("Writernote has decided to completely change the file format, now it will no longer be possible to have more than one copybook in a file. \nTo use files created with writernote versions lower than or equal to 1.5.2h you must:\nOpen the file with a compressed archive manager, extract all the files that have the same prefix, i.e. the copybook name, and move them into a new writernote file, changing all the names of the same copybook with the prefix data.");
+            this->m_path = "";
         }
     }
 }
