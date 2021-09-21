@@ -102,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_canvas->m_highlighter = m_highlighter;
 
     this->m_canvas->m_text_w = m_text_w;
+    this->m_canvas->data = this->m_currenttitle;
 
     /* redo and undo */
     connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);

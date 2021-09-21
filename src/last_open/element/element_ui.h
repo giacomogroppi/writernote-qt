@@ -21,7 +21,6 @@ public:
     void decrease();
     void showOnlyname(const bool showOnlyName);
 private:
-    int numslash(const QString &, const char slash);
     void set_main();
     Ui::element_ui *ui;
     const last_file_s *m_data = NULL;

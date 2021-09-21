@@ -14,15 +14,10 @@
 
 void MainWindow::openFile(const char *pos){
     QString fileName;
-    bool ok;
     QString path, tmp;
-
     Document curr;
-    xmlstruct xml(&m_path, &curr);
-
+    xmlstruct xml(&fileName, m_currenttitle);
     n_need_save res_save;
-
-    xml.setData(&fileName, m_currenttitle);
 
     if(!pos){
         fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; Pdf (*.pdf);; All file (* *.*)");
@@ -42,6 +37,7 @@ void MainWindow::openFile(const char *pos){
     file.close();
 
 #ifndef ANDROID
+    // check if the file exist
     if(fileName.indexOf(APP_EXT) != -1
             && fileName.indexOf(".pdf") != -1){
         if(!areyousure("Error", "The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?")){
@@ -50,6 +46,7 @@ void MainWindow::openFile(const char *pos){
     }
 #endif
 
+    // restore lost file
     if(fileName.indexOf(".pdf") != -1 && fileLost::exe(fileName)){
         if(areyousure("Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
 
@@ -64,17 +61,18 @@ void MainWindow::openFile(const char *pos){
         }
     }
 
-    const bool pdf = fileName.indexOf(".pdf") != -1;
 
+    // check if is pdf or we need to save the current document
+    const bool pdf = fileName.indexOf(".pdf") != -1;
     if(pdf){
 #ifdef PDFSUPPORT
         m_currenttitle->m_pdf->addPdf(fileName, nullptr, this->m_path, this->m_canvas);
 #else
         user_message("Pdf support is not enable in this version");
-#endif
+#endif // PDFSUPPORT
     }
     else {
-        res_save = this->needToSave(&xml, &curr );
+        res_save = this->needToSave(&xml, &curr);
 
         /*
          * in case there is already open a file, we need to controll if the
@@ -94,9 +92,19 @@ void MainWindow::openFile(const char *pos){
         this->m_setting->changeCopybookFile();
 
         m_path = fileName;
-
-        this->m_currenttitle->reset();
-
+        const auto res = xml.loadfile(true, true);
+        if(res == OK){
+            return;
+        }else if(res == ERROR_VERSION){
+            dialog_critic("You cannot read this file because it was created with a too old version of writernote");
+        }else if(res == ERROR_VERSION_NEW){
+            dialog_critic("You cannot read this file because it was created with a newer version of writernote");
+        }else if(res == ERROR_CONTROLL){
+            if(!areyousure("Error opening file", "This file is correct, do you want to open it anyway?")){
+                this->m_currenttitle->reset();
+                this->m_path = "";
+            }
+        }
     }
 }
 

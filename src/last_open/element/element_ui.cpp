@@ -33,18 +33,6 @@ void element_ui::showOnlyname(const bool showOnlyName){
     ui->label_path->setText(res);
 }
 
-int element_ui::numslash(const QString &str, const char slash)
-{
-    int i, count;
-
-    count = 0;
-    for(i=0; i<str.length(); ++i){
-        if(str.at(i) == slash)
-            count ++;
-    }
-    return count;
-}
-
 element_ui::~element_ui()
 {
     delete this->img_widget;

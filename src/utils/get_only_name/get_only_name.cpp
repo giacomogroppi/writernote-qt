@@ -12,5 +12,5 @@ QString get_only_name::exe(const QString &path)
         return "";
 
     int index = list.last().lastIndexOf("."+APP_EXT);
-    return path.mid(0, index);
+    return list.last().mid(0, index);
 }
