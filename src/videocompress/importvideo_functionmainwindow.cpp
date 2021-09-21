@@ -3,8 +3,7 @@
 
 #include "videocompress_ui.h"
 
-void MainWindow::on_actioncompress_video_triggered()
-{
+void MainWindow::on_actioncompress_video_triggered(){
     videocompress_ui videocompress(nullptr, this);
 
     videocompress.exec();

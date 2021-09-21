@@ -30,9 +30,9 @@ int xmlstruct::loadbinario_0(zip_t *z){
 
     struct zip_stat st;
     zip_stat_init(&st);
-    zip_stat(z, POSIZIONEBINARIO(currenttitle->nome_copybook), 0, &st);
+    zip_stat(z, NAME_BIN, 0, &st);
 
-    zip_file_t *f = zip_fopen(z, POSIZIONEBINARIO(this->currenttitle->nome_copybook), 0);
+    zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
 
     if(f == nullptr)
         return false;
@@ -87,9 +87,9 @@ int xmlstruct::loadbinario_1(struct zip *z){
     size_t controll;
 
     zip_stat_init(&st);
-    zip_stat(z, POSIZIONEBINARIO(currenttitle->nome_copybook), 0, &st);
+    zip_stat(z, NAME_BIN, 0, &st);
 
-    zip_file_t *f = zip_fopen(z, POSIZIONEBINARIO(this->currenttitle->nome_copybook), 0);
+    zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
 
     if(f == nullptr)
         return false;

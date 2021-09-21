@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/get_only_name/get_only_name.h"
 
 QString MainWindow::getNameCopybook()
 {
@@ -16,7 +17,11 @@ QString MainWindow::getNameCopybook()
     return this->m_path;
 }
 
-void MainWindow::updateTitle(Document *__curr)
+void MainWindow::updateTitle()
 {
-    setWindowTitle("Writernote - " + __curr->nome_copybook);
+    const QString name = get_only_name::exe(this->m_path);
+    if(name == ""){
+        setWindowTitle("Writernote");
+    }
+    setWindowTitle("Writernote - " + name);
 }

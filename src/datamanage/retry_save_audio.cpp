@@ -16,7 +16,7 @@ retry_save_audio::~retry_save_audio()
 
 bool retry_save_audio::exist(){
     QString path = get_path_no_controll();
-    return QFile::exists(path + this->m_current->nome_copybook + POS_TEMP_AUDIO);
+    return QFile::exists(path + POS_TEMP_AUDIO);
 }
 
 void retry_save_audio::retry(){

@@ -13,8 +13,7 @@ namespace path {
     };
 }
 
-#define POS_TEMP_AUDIO "_temp.wav"
-#define POS_AUDIO(x) x->nome_copybook + POS_TEMP_AUDIO
+#define POS_TEMP_AUDIO "tmp_audio.wav"
 
 QString get_path_no_controll();
 QString get_path(path::e_path);

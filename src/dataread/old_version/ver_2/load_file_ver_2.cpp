@@ -11,9 +11,10 @@
  * furthermore we are obliged to read the audio_potion_path string
 */
 int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip){
-    LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
-
+    QString tmp_str;
     bool temp;
+
+    LOAD_STRINGA_RETURN(f, tmp_str);
     SOURCE_READ_RETURN(f, &temp, sizeof(bool));
     if(temp)
         this->currenttitle->se_registato = Document::record_file;

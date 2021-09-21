@@ -147,11 +147,6 @@ void setting_restore_ui::firstTimer()
         return;
     }
 
-    if((*m_curr)->nome_copybook == ""){
-        /* it's not loaded */
-        goto start_timer;
-    }
-
     res = ff.savefile_check_file() == OK;
 
     if(!res){
@@ -190,11 +185,6 @@ void setting_restore_ui::secondTimer()
 
     if(!need_save_tmp)
         goto start_timer;
-
-    if((*m_curr)->nome_copybook == ""){
-        /* it's not loaded */
-        goto start_timer;
-    }
 
     res = ff.savefile_check_file() == OK;
 

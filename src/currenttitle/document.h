@@ -8,7 +8,11 @@
 
 class fromimage;
 class frompdf;
-#define CURRENT_VERSION_CURRENT_TITLE 5
+#define NAME_FILE "data.xml"
+#define NAME_BIN "data_bin.xml"
+#define NAME_AUDIO "data_audio.mp4"
+
+#define CURRENT_VERSION_CURRENT_TITLE 6
 #define MIN_VERSION_CURRENT_TITLE 2
 
 #include <QByteArray>
@@ -23,8 +27,6 @@ public:
 
     frompdf *m_pdf;
     fromimage *m_img;
-
-    QString nome_copybook;
 
     int versione = CURRENT_VERSION_CURRENT_TITLE;
     bool se_tradotto = false;

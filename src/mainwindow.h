@@ -71,7 +71,7 @@ public:
     void updateTouch();
 
     QString getNameCopybook();
-    void updateTitle(Document *__curr);
+    void updateTitle();
 
     enum n_need_save: uchar{
         unable_load, /*we had trouble loading the file*/
@@ -115,12 +115,6 @@ public:
     QMediaPlayer *player = nullptr;
 
     TabletCanvas *m_canvas;
-
-    /* le due funzioni gestiscono il cambio di inserimento */
-    void methodwrite();
-    void methodpen();
-
-    bool typetemp = false;
 
     updatecheck *checkupdate;
 

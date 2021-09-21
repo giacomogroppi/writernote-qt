@@ -48,7 +48,7 @@ int savefile::salvabinario(zip_t *filezip){
         return freezip(file);
 
     if(zip_file_add(filezip,
-                 ("bin_" + currenttitle->nome_copybook + (QString)".xml").toUtf8().constData(),
+                 NAME_BIN,
                  file,
                  ZIP_FL_OVERWRITE) == -1)
         return freezip(file);

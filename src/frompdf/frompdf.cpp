@@ -72,7 +72,7 @@ QStringList frompdf::get_name_pdf(){
     uint i;
     QStringList __l;
     for(i=0; i<m_data->count_pdf; ++i){
-        __l.append(frompdf::getName(m_data->nome_copybook, i));
+        __l.append(frompdf::getName(i));
     }
 
     return __l;
@@ -221,10 +221,9 @@ frompdf::load_res frompdf::save(zip_t *filezip,
                                 const QString &path_writernote_file)
 {
     if(savefile::saveArrayIntoFile((const QString &)path,
-                                   this->m_data->nome_copybook,
                                    path_writernote_file,
                                    filezip,
-                                   frompdf::getNameNoCopy(m_data->count_pdf),
+                                   frompdf::getName(m_data->count_pdf),
                                    false) != OK)
         return load_res::not_valid_pdf;
 

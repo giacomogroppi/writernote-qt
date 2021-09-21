@@ -1,17 +1,13 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <QMessageBox>
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../windows/mostra_finestra_i.h"
-
 #include "../audiosetting/loadqualita.h"
 #include "../utils/setting_define.h"
 #include "../datawrite/qfilechoose.h"
 #include "../utils/default_location/audio_default_location.h"
-
 #include "../utils/path/get_path.h"
-
 #include <QSettings>
 
 #ifdef SNAP
@@ -175,7 +171,7 @@ bool MainWindow::setOutputLocation()
          * we can't save it in a qbytearray
         */
         QString temp_p = path;
-        temp_p += POS_AUDIO(m_currenttitle);
+        temp_p += NAME_AUDIO;
 
         /* testing */
         this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(temp_p));

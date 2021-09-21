@@ -4,6 +4,7 @@
 #include "ui_element_ui.h"
 #include "../../utils/slash/slash.h"
 #include "../../utils/common_def.h"
+#include "../../utils/get_only_name/get_only_name.h"
 
 element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index) :
     QWidget(parent),
@@ -22,19 +23,14 @@ element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool show
 }
 
 void element_ui::showOnlyname(const bool showOnlyName){
-    QString name = this->m_data->posizione;
-    const char slash = slash::__slash();
-    const QStringList list = name.split(slash);
-
     if(!showOnlyName)
         return;
-    if(!list.length())
+
+    const QString res = get_only_name::exe(m_data->posizione);
+    if(res == "")
         return;
 
-    const QString &ref = list.last();
-    int index = ref.lastIndexOf("."+APP_EXT);
-    ui->label_path->setText(ref.mid(0, index));
-
+    ui->label_path->setText(res);
 }
 
 int element_ui::numslash(const QString &str, const char slash)

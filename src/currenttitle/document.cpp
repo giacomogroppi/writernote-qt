@@ -31,7 +31,6 @@ void Document::copy(const Document *src,
     dest->datatouch->zoom = src->datatouch->zoom;
     dest->datatouch->posizionefoglio = src->datatouch->posizionefoglio;*/
 
-    dest->nome_copybook = src->nome_copybook;
     dest->posizione_iniz = src->posizione_iniz;
     dest->se_registato = src->se_registato;
 

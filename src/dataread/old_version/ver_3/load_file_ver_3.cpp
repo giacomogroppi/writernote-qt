@@ -6,9 +6,10 @@
 
 int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip)
 {
-    LOAD_STRINGA_RETURN(f, currenttitle->nome_copybook);
-
     int temp;
+    QString tmp_str;
+
+    LOAD_STRINGA_RETURN(f, tmp_str);
     SOURCE_READ_RETURN(f, &temp, sizeof(int));
     currenttitle->se_registato = static_cast<Document::n_audio_record>(temp);
 

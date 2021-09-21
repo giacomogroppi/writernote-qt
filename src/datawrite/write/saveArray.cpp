@@ -2,12 +2,11 @@
 #include "../source_read_ext.h"
 
 int savefile::saveArrayIntoFile(const QString &from,
-                                const QString &name_coby,
                                 const QString &path,
                                 zip_t *filezip,
-                                const QString &suffix, const bool closeZip)
+                                const QString &name,
+                                const bool closeZip)
 {
-    const QString __fin = name_coby + suffix;
     zip_source_t *file;
     zip_error_t errore;
     int check = 0, error;
@@ -53,7 +52,7 @@ int savefile::saveArrayIntoFile(const QString &from,
     check += zip_source_commit_write(file)==ERROR_PRIVATE;
 
     check += zip_file_add(filezip,
-                 (__fin).toUtf8().constData(),
+                 (name).toUtf8().constData(),
                  file,
                  ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
 
@@ -75,11 +74,10 @@ int savefile::saveArrayIntoFile(const QString &from,
 
 }
 
-int savefile::saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
+int savefile::saveArrayIntoFile(const QByteArray &arr,
                                 const QString &path, zip_t *filezip,
-                                const QString &suffix, const bool closeZip)
+                                const QString &name, const bool closeZip)
 {
-    const QString __fin = name_coby + suffix;
     zip_source_t *file;
     zip_error_t errore;
     int check = 0, error;
@@ -112,7 +110,7 @@ int savefile::saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
     check += zip_source_commit_write(file)==ERROR_PRIVATE;
 
     check += zip_file_add(filezip,
-                 (__fin).toUtf8().constData(),
+                 (name).toUtf8().constData(),
                  file,
                  ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
 

@@ -49,12 +49,8 @@ private:
     Poppler::Document *doc = nullptr;
     QList<Pdf> m_image;
 
-    static inline QString getNameNoCopy(const uint i){
+    static inline QString getName(const uint i){
         return SUFFIX_PDF + QString::number(uint(i));
-    }
-
-    static inline QString getName(const QString &p, const uint i){
-        return p + frompdf::getNameNoCopy(i);
     }
 
 public:    

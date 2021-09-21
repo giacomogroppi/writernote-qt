@@ -5,12 +5,11 @@
 #include "../../frompdf/frompdf.h"
 #include "../../currenttitle/document.h"
 #include "../../indice_class.h"
+#include <QFile>
 
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
 static void setCurrentVersion(Document *data);
-
-#include <QFile>
 
 /*
  * the function save the copybook and all it's data
@@ -46,8 +45,6 @@ int savefile::savefile_check_file(){
     zip_source_begin_write(file);
 
     SOURCE_WRITE(file, &currenttitle->versione, sizeof(int))
-
-    SAVE_STRINGA(file, currenttitle->nome_copybook.toUtf8().constData());
 
     {
         int temp = static_cast<int>(currenttitle->se_registato);
@@ -105,7 +102,7 @@ int savefile::savefile_check_file(){
      * to indicate the error.
     */
     check += zip_file_add(filezip,
-                 (currenttitle->nome_copybook + (QString)".xml").toUtf8().constData(),
+                 NAME_FILE,
                  file,
                  ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
 
@@ -155,9 +152,8 @@ uchar savefile::save_string(zip_source_t *file, const char *stringa){
 }
 
 int save_audio_file(const char *posAudio,
-                    const QString &namecopybook,
                     const QString &path){
-    return savefile::saveArrayIntoFile((const QString)posAudio, namecopybook, path, nullptr, "audio.wav", true);
+    return savefile::saveArrayIntoFile((const QString)posAudio, path, nullptr, NAME_AUDIO, true);
 
 }
 

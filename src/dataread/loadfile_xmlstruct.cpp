@@ -100,7 +100,6 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
     zip_file_t *f;
     struct zip_stat st;
     int tmp_ver;
-    const char *nameFile = "data";
 
     filezip = zip_open(path_->toUtf8().constData(),
                        ZIP_CREATE,
@@ -110,9 +109,9 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
         return ERROR;
 
     zip_stat_init(&st);
-    zip_stat(filezip, nameFile, 0, &st);
+    zip_stat(filezip, NAME_FILE, 0, &st);
 
-    f = zip_fopen(filezip, nameFile, 0);
+    f = zip_fopen(filezip, NAME_FILE, 0);
     if(f == NULL){
         zip_close(filezip);
         return ERROR;
@@ -131,15 +130,17 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
     }else if(tmp_ver == 4){
         if(load_file_4(currenttitle, f, filezip) != OK)
             goto free_;
+    }else if(tmp_ver == 5){
+        if(load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg) != OK)
+            goto free_;
+    }else if(tmp_ver == 6){
+        if(load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg) != OK)
+            goto free_;
     }
 #else
         goto ERROR_VERSION;
 #endif
-    else if(tmp_ver == 5){
-        if(load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg) != OK)
-            goto free_;
-    }
-    else if(tmp_ver > 5)
+    else if(tmp_ver > 6)
         goto error_new_version;
 
 
@@ -172,14 +173,57 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
     return ERROR_VERSION_NEW;
 }
 
-int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
-                           const bool LoadPdf, const bool LoadImg)
-{
-    LOAD_STRINGA_RETURN(f, doc->nome_copybook);
+/*
+ * the function automatically opens and
+ * closes the file containing the audio
+ * TODO -> adjust the function so that more
+ * than one audio file can be read, and add
+ * the currenttitle data to support more
+ * than one audio
+ *
+ * TODO -> load audio into the buffer only if you are really opening a new copybook
+*/
+#define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
+    zip_close(y);
 
+int load_audio(QByteArray &array, const QString &path){
+    int error;
+    zip_t *file_zip;
+
+    array.clear();
+
+    file_zip = zip_open(path.toUtf8().constData(), 0, &error);
+
+    if(!file_zip)
+        return ERROR;
+
+    error = xmlstruct::readFile(file_zip, array, true, NAME_AUDIO, false);
+
+    zip_close(file_zip);
+    return error;
+
+}
+
+size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile){
+    struct zip_stat st;
+    zip_stat_init(&st);
+
+    /*
+     * Upon successful completion 0 is returned. Otherwise,
+     * -1 is returned and the error information in archive
+     * is set to indicate the error
+    */
+    if(zip_stat(filezip, namefile, 0, &st) != 0)
+        return 0;
+
+    return st.size;
+}
+
+int xmlstruct::load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg){
     int tmp;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
+
 
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
@@ -225,54 +269,4 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
         return ERROR_CONTROLL;
 
     return OK;
-}
-
-/*
- * the function automatically opens and
- * closes the file containing the audio
- * TODO -> adjust the function so that more
- * than one audio file can be read, and add
- * the currenttitle data to support more
- * than one audio
- *
- * TODO -> load audio into the buffer only if you are really opening a new copybook
-*/
-#define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
-    zip_close(y);
-
-#define NAME_AUDIO(x) (x+"audio.wav")
-
-int load_audio(QByteArray &array, const QString &path){
-    int error;
-    zip_t *file_zip;
-
-    array.clear();
-
-    file_zip = zip_open(path.toUtf8().constData(), 0, &error);
-
-    if(!file_zip)
-        return ERROR;
-
-    assert(0);
-    // replace "" with the actual name
-    error = xmlstruct::readFile(file_zip, array, true, "", false);
-
-    zip_close(file_zip);
-    return error;
-
-}
-
-size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile){
-    struct zip_stat st;
-    zip_stat_init(&st);
-
-    /*
-     * Upon successful completion 0 is returned. Otherwise,
-     * -1 is returned and the error information in archive
-     * is set to indicate the error
-    */
-    if(zip_stat(filezip, namefile, 0, &st) != 0)
-        return 0;
-
-    return st.size;
 }

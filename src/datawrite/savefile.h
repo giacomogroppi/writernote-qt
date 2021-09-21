@@ -11,7 +11,6 @@ class Document;
 #define WRITE_ON_SIZE(x,y,z) if(zip_source_write(x,y,z)==-1)goto error;
 
 int save_audio_file(const char *posAudio,
-                    const QString &namecopybook,
                     const QString &path);
 
 class savefile
@@ -28,10 +27,10 @@ public:
     /*
      * if filezip is NULL it will open the file
     */
-    static int saveArrayIntoFile(const QString &from, const QString &name_coby,
-                                 const QString &path, zip_t *filezip, const QString &suffix, const bool closeZip);
-    static int saveArrayIntoFile(const QByteArray &arr, const QString &name_coby,
-                                 const QString &path, zip_t *filezip, const QString &suffix, const bool closeZip);
+    static int saveArrayIntoFile(const QString &from,
+                                 const QString &path, zip_t *filezip, const QString &name, const bool closeZip);
+    static int saveArrayIntoFile(const QByteArray &arr,
+                                 const QString &path, zip_t *filezip, const QString &name, const bool closeZip);
 
     static uchar save_string(zip_source_t *file, const char *str);
 

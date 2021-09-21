@@ -76,6 +76,7 @@ SOURCES += \
     src/dataread/old_version/ver_2/load_file_ver_2.cpp \
     src/dataread/old_version/ver_3/load_file_ver_3.cpp \
     src/dataread/old_version/ver_4/load_file_ver_4.cpp \
+    src/dataread/old_version/ver_5/load_file_ver_5.cpp \
     src/dataread/readlistarray.cpp \
     src/datawrite/write/saveArray.cpp \
     src/dropEvent/dropEvent.cpp \
@@ -224,6 +225,7 @@ SOURCES += \
     src/utils/extract_audio/extract_audio.cpp \
     src/utils/extract_audio/extract_audio_ui.cpp \
     src/utils/get_file_dir/get_file_dir.cpp \
+    src/utils/get_only_name/get_only_name.cpp \
     src/utils/get_path_application.cpp \
     src/utils/lastModification/lastmodification.cpp \
     src/utils/make_default/make_default_ui.cpp \
@@ -337,6 +339,7 @@ HEADERS += \
     src/utils/extract_audio/extract_audio.h \
     src/utils/extract_audio/extract_audio_ui.h \
     src/utils/get_file_dir/get_file_dir.h \
+    src/utils/get_only_name/get_only_name.h \
     src/utils/get_path_application.h \
     src/utils/lastModification/lastmodification.h \
     src/utils/make_default/make_default_ui.h \

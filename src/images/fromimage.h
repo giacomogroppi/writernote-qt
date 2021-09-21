@@ -27,12 +27,8 @@ private:
     QStringList get_name_img();
     static QStringList get_name_img(const Document &doc);
 
-    static inline QString getNameNoCopy(const uint i){
+    static inline QString getName(const uint i){
         return SUFFIX_IMG + QString::number(uint(i));
-    }
-
-    static inline QString getName(const QString &p, const uint i){
-        return p + fromimage::getNameNoCopy(i);
     }
 
     uchar insert_image(QString &__pos,

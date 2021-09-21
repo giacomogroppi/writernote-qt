@@ -49,10 +49,9 @@ fromimage::load_res fromimage::save(zip_t *file,
         return load_res::err_image_not_valid;
 
     if(savefile::saveArrayIntoFile(img_in_byte,
-                                   doc->nome_copybook,
                                    path_writernote_file,
                                    file,
-                                   fromimage::getNameNoCopy(doc->count_img), true) != OK)
+                                   fromimage::getName(doc->count_img), true) != OK)
         return load_res::error;
 
     return load_res::ok;
@@ -183,7 +182,7 @@ QStringList fromimage::get_name_img(const Document &doc)
     uint i;
     QStringList list;
     for(i=0; i<doc.count_img; ++i){
-        list.append(fromimage::getName(doc.nome_copybook, i));
+        list.append(fromimage::getName(i));
     }
 
     return list;

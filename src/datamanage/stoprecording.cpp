@@ -82,7 +82,7 @@ void MainWindow::on_stop_rec_triggered()
 static bool needRemove;
 
 static void saveAudio(Document *m_currenttitle, QString &m_path){
-    QString path = get_path_no_controll() + POS_AUDIO(m_currenttitle);
+    QString path = get_path_no_controll() + NAME_AUDIO;
 
     if(!QFile::exists(path)){
         bool save = false;
@@ -106,7 +106,7 @@ static void saveAudio(Document *m_currenttitle, QString &m_path){
     }
 
 
-    if(save_audio_file(path.toUtf8().constData(), m_currenttitle->nome_copybook, m_path) != OK)
+    if(save_audio_file(path.toUtf8().constData(), m_path) != OK)
         dialog_critic("We had a problem saving the audio into " + m_path);
 
     if(savefile(&m_path, m_currenttitle).savefile_check_file() != OK)
