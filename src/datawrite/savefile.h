@@ -24,6 +24,7 @@ private:
     int savefile_check_2(zip_source_t *file, Document *currenttitle, zip_t *filezip);
 
 public:
+    static void removeFile(zip_t *file, const QString &name);
     /*
      * if filezip is NULL it will open the file
     */

@@ -16,9 +16,7 @@ static int freezip(zip_source_t *files){
 int savefile::salvabinario(zip_t *filezip){
     int i, lunghezza;
     size_t controll;
-
     zip_source_t *file;
-
     zip_error_t errore;
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
@@ -59,4 +57,12 @@ int savefile::salvabinario(zip_t *filezip){
     zip_source_free(file);
     return ERROR;
 
+}
+
+void savefile::removeFile(zip_t *file, const QString &name)
+{
+    struct zip_stat stat;
+    zip_stat_init(&stat);
+    zip_stat(file, name.toUtf8().constData(), 0, &stat);
+    zip_delete(file, stat.index);
 }

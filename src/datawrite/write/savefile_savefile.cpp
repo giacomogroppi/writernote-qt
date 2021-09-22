@@ -10,7 +10,6 @@
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
 static void setCurrentVersion(Document *data);
-
 /*
  * the function save the copybook and all it's data
  * if save_audio == true -> save also the audio
@@ -35,6 +34,9 @@ int savefile::savefile_check_file(){
 
     if(!filezip)
         return ERROR;
+
+    /* remove old file formact */
+    savefile::removeFile(filezip, "indice.xml");
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
     if(!file){
