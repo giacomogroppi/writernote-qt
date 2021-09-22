@@ -7,7 +7,7 @@ default_type::e_type_copybook default_type::load_preference_copybook()
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROURPNAME_DEFAULT_INSERT);
 
-    e_type_copybook res = static_cast<e_type_copybook>(setting.value(KEY_DEFAULT_INSERT, e_type_copybook::not_set).toInt());
+    e_type_copybook res = static_cast<e_type_copybook>(setting.value(KEY_DEFAULT_INSERT, e_type_copybook::pen).toInt());
 
     setting.endGroup();
 

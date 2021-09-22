@@ -21,14 +21,15 @@ public:
         none
     };
 
-    explicit default_option_ui(QWidget *parent = nullptr,
-                               QString first_button = QString(),
-                               QString second_button = QString(),
-                               QString title = QString(),
-                               QString text = QString());
+    explicit default_option_ui(QWidget *parent,
+                               QString first_button,
+                               QString second_button,
+                               QString title,
+                               QString text,
+                               const uchar First);
     ~default_option_ui();
 
-    void setChecked(e_result);
+    void setChecked(e_result val);
 
 private slots:
     void on_button_cancel_clicked();

@@ -5,7 +5,7 @@ default_option_ui::default_option_ui(QWidget *parent,
                                      QString first_button,
                                      QString second_button,
                                      QString title,
-                                     QString text) :
+                                     QString text, const uchar First) :
     QDialog(parent),
     ui(new Ui::default_option_ui)
 {
@@ -18,7 +18,14 @@ default_option_ui::default_option_ui(QWidget *parent,
     ui->second_text->setText(second_button);
     this->setWindowTitle(title);
 
+    ui->first_text->setCheckable(true);
+    ui->second_text->setCheckable(true);
+
     ui->text->setText(text);
+
+    res = First;
+
+    this->updateStatus();
 }
 
 default_option_ui::~default_option_ui()

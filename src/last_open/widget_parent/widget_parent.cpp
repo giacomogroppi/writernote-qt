@@ -50,6 +50,7 @@ void widget_parent::updateList()
     if(!m_element.length())
         return;
 
+    uint count = 0;
     const int width_all = this->width();
     const int width_single = this->m_element.first()->width();
     const int space = ui->gridLayout->spacing(); // space for item
@@ -62,10 +63,10 @@ void widget_parent::updateList()
     last_width = width_all;
 
     this->clean();
-
-    for(i=0, k=1; (k*i) < len_list && i < len_list; ++i){
-        for(k=0; k<len && k < len_list; ++k){
-            this->ui->gridLayout->addWidget(m_element.operator[](i+k), i, k);
+    for(i=0; count < len_list && i < len_list; ++i){
+        for(k=0; k<len && count < len_list; ++k){
+            this->ui->gridLayout->addWidget(m_element.operator[](i*len+k), i, k);
+            count ++;
         }
     }
 }
