@@ -13,7 +13,7 @@ class imageWidget : public QWidget
     Q_OBJECT
 
 public:
-    imageWidget(QWidget *parent = 0, QPixmap *pixmap = nullptr);
+    imageWidget(QWidget *parent, QPixmap *pixmap);
     ~imageWidget();
 private:
     QGridLayout* gridLayout;

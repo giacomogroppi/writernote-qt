@@ -35,7 +35,7 @@ void element_ui::showOnlyname(const bool showOnlyName){
 
 element_ui::~element_ui()
 {
-    delete this->img_widget;
+    delete img_widget;
     delete ui;
 }
 
