@@ -130,8 +130,6 @@ public:
             for(k=0; k<pdf.img.length(); ++k){
                 fromimage::draw(painter, size, pdf.img.at(i).immagini);
 
-                qDebug() << size << rend_heigth << rend_width << x << y;
-
                 size = QRectF(size.topLeft().x(),
                               size.topLeft().y() + y,
                               size.bottomRight().x() + x,
