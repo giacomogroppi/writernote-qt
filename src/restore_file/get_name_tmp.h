@@ -10,19 +10,13 @@ class get_name_tmp
 public:
     inline static QString get(const QString &m_path){
         QStringList list;
-        int i;
         QString path;
-        char sl;
+        const char sl = slash::__slash();
         uchar last_pos=0;
 
         path = m_path;
-        sl = slash::__slash();
 
-        for(i=0; i<m_path.length(); ++i){
-            if(m_path.at(i) == sl){
-                last_pos = i;
-            }
-        }
+        last_pos = path.lastIndexOf(sl);
 
         path.insert(last_pos+1, '.');
 

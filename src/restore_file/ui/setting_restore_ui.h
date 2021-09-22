@@ -27,9 +27,9 @@ class setting_restore_ui : public QDialog
     Q_OBJECT
 
 public:
-    explicit setting_restore_ui(QWidget *parent = nullptr,
-                                Document **curr = nullptr,
-                                QString *pp = nullptr);
+    explicit setting_restore_ui(QWidget *parent,
+                                Document **curr,
+                                QString *pp);
     ~setting_restore_ui();
 
     struct __data getData () const

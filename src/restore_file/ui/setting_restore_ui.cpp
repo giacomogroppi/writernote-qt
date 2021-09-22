@@ -137,6 +137,7 @@ void setting_restore_ui::saveData()
     setting.endGroup();
 }
 
+// first timer -> autosave
 void setting_restore_ui::firstTimer()
 {
     savefile ff(m_path, *m_curr);
@@ -144,7 +145,6 @@ void setting_restore_ui::firstTimer()
 
     if(!need_save_auto){
         goto start_timer;
-        return;
     }
 
     res = ff.savefile_check_file() == OK;
@@ -161,30 +161,30 @@ void setting_restore_ui::firstTimer()
 
 static int try_save = 0;
 
-/*
- * tmp file
-*/
+// second timer -> tmp file
 void setting_restore_ui::secondTimer()
 {
     int res;
     QString path;
+    savefile ff(&path, *m_curr);
+
+    if(!need_save_tmp)
+        goto start_timer;
 
     if(*m_path != ""){
         path = get_name_tmp::get(*m_path);
     }else{
         if(tmp_path == ""){
             path = get_path(path::tmp_file_not_save);
-            tmp_path = path + "writernote_unsave_" + current_day_string() + current_time_string();
+            tmp_path = path + "/writernote_unsave_" + current_day_string() + current_time_string();
             tmp_path.replace(" ", "");
             tmp_path.replace(":", "");
             tmp_path.append("." + APP_EXT);
         }
     }
     path = (tmp_path == "") ? path : tmp_path;
-    savefile ff(&path, *m_curr);
 
-    if(!need_save_tmp)
-        goto start_timer;
+    qDebug() << "Save tmp file in: " << path;
 
     res = ff.savefile_check_file() == OK;
 
