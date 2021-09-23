@@ -63,5 +63,6 @@
         <file>images/brown-icon.png</file>
         <file>images/purple.png</file>
         <file>images/not_define.png</file>
+        <file>images/recent-file-icon.png</file>
     </qresource>
 </RCC>
