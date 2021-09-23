@@ -1,10 +1,7 @@
 import os
+import sys
 
-
-def ricorsione(lista: list, ramo: str, show = False) -> list[str]:
-    if show:
-        print("Ramo " + ramo)
-
+def ricorsione(lista: list, ramo: str) -> list[str]:
     lista_sec = []
 
 
@@ -30,19 +27,13 @@ def ricorsione(lista: list, ramo: str, show = False) -> list[str]:
     return lista_sec
 
 
-def main(stringa: str, show: bool) -> None:
-    """
-    :param stringa: indice la posizione in cui è il progetto
-    :param show: true show all fine output
-    :return:
-    """
-
+def main(stringa: str) -> None:
     os.path.join(stringa)
     lista = os.listdir(stringa)
 
-    tmp = ricorsione(lista, stringa, show)
+    tmp = ricorsione(lista, stringa)
     for x in tmp:
         print(x)
 
 if __name__ == "__main__":
-    main("/home/giacomo/writernote-qt/src", True)
+    main(sys.argv[1])
