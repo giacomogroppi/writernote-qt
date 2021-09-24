@@ -6,6 +6,8 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include "../utils/lastModification/lastmodification.h"
+#include "../utils/removenotwriternote.h"
+#include "../utils/common_def.h"
 /*
  * data return from array.data() is released
  * after the function end
@@ -49,6 +51,9 @@ bool last_file::load_folder(const QString &path)
 
     for(i=0; i<len; ++i){
         const QString &ref = file.at(i);
+
+        if(ref.indexOf('.' + APP_EXT) == -1)
+            continue;
 
         strncpy(object.last_modification_g, lastModification::day(ref).toUtf8().constData(), MAXMOD__FILE);
         strncpy(object.last_modification_o, lastModification::hour(ref).toUtf8().constData(), MAXMOD__FILE);

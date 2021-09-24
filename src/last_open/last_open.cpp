@@ -88,10 +88,12 @@ int last_open::load_data_()
 
             return 0;
         }
-    }else{
+    }else if(m_currentMethod == Method::OpenFile){
         ok = this->m_last.load_folder(get_path_application::exe());
         if(!ok)
             return 0;
+    }else{
+        assert(0);
     }
 
     /*

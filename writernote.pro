@@ -235,6 +235,7 @@ SOURCES += \
     src/utils/permission/permission.cpp \
     src/utils/progress_bar/progress_bar_ui.cpp \
     src/utils/remove_key/remove_key.cpp \
+    src/utils/removenotwriternote.cpp \
     src/utils/retry/retry_ui.cpp \
     src/utils/settings/setting_load.cpp \
     src/utils/threadcount.cpp \
@@ -350,6 +351,7 @@ HEADERS += \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
     src/utils/remove_key/remove_key.h \
+    src/utils/removenotwriternote.h \
     src/utils/retry/retry_ui.h \
     src/utils/setting_define.h \
     src/utils/settings/setting_load.h \

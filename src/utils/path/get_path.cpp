@@ -1,5 +1,6 @@
 #include "get_path.h"
 #include "../slash/slash.h"
+#include "../get_path_application.h"
 
 #if defined(unix) || defined(MACOS)
 #define POS_HOME "HOME"
@@ -7,7 +8,6 @@
 #define POS_HOME "USERPROFILE"
 #endif
 
-#define PLUSS(x) x+=slash::__slash()
 #define FOLDERNAME ".writernote"
 #define NAME_USER "USERNAME" /* saim form linux and windows */
 #include <QDir>
@@ -26,9 +26,8 @@ static bool createTempFolder(QString &path);
 QString get_path(path::e_path var)
 {
     QString tmp;
+    tmp = get_path_no_controll();
     if(var == path::audio_pos){
-        tmp = get_path_no_controll();
-
         if(!createTempFolder(tmp))
             return "";
 
@@ -36,7 +35,6 @@ QString get_path(path::e_path var)
     }
 
     if(var == path::log){
-        tmp = get_path_no_controll();
         tmp += "writernote-log";
         if(!createTempFolder(tmp))
             return "";
@@ -44,7 +42,6 @@ QString get_path(path::e_path var)
     }
 
     if(var == path::tmp_file_not_save){
-        tmp = get_path_no_controll();
         if(!createTempFolder(tmp))
             return "";
         return tmp;
@@ -73,11 +70,14 @@ static bool createTempFolder(QString &path){
  * folder to save the audio exists
 */
 QString get_path_no_controll(){
-    QString temp = getenv(POS_HOME);
+    return get_path_application::exe();
 
-    PLUSS(temp);
-    temp += FOLDERNAME;
+    /*QString tmp = getenv(POS_HOME);
+    const char slash = slash::__slash();
 
-    PLUSS(temp);
-    return temp;
+    tmp += slash;
+    tmp += FOLDERNAME;
+
+    tmp += slash;
+    return tmp;*/
 }

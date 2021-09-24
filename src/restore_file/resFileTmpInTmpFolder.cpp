@@ -29,8 +29,6 @@ void MainWindow::resFileTmpInTmpFolder(){
         return;
     }
 
-    QString tmp = __l.at(0).mid(__l.at(0).length() - pos_ext);
-
     for(i=0, count=0; i<len; ++i){
         const QString &ref = __l.at(i);
         const int index = ref.lastIndexOf(slash);
