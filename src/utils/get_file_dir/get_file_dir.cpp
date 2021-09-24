@@ -4,7 +4,7 @@
 QStringList get_file_dir::get(const QString &dir)
 {
     QStringList __l;
-    QDirIterator iterator(dir, QDirIterator::Subdirectories);
+    QDirIterator iterator(dir, QDir::AllEntries | QDir::Hidden | QDir::System );
     while (iterator.hasNext()) {
         __l.append(iterator.next());
     }

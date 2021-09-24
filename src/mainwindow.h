@@ -317,6 +317,8 @@ private slots:
 
     void on_actionSize_button_triggered();
 
+    void on_actionRecent_file_triggered();
+
 protected:
     void dropEvent(QDropEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;

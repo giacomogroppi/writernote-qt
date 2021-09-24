@@ -40,7 +40,7 @@ public:
 
 private:
     Method m_currentMethod;
-    widget_parent *m_parent;
+    widget_parent *m_parent = nullptr;
     /* open file */
     uchar on_click_ex(const char *pos);
 

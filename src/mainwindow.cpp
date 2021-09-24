@@ -364,3 +364,4 @@ void MainWindow::on_actionRemove_current_PDF_triggered()
     this->m_currenttitle->m_pdf->reset();
 #endif // PDFSUPPORT
 }
+

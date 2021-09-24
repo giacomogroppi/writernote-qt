@@ -8,7 +8,7 @@
 #include "../datawrite/qfilechoose.h"
 #include "../dataread/xmlstruct.h"
 #include "../utils/areyousure/areyousure.h"
-
+#include "../utils/slash/slash.h"
 #include <QMessageBox>
 
 void MainWindow::resFileTmpInTmpFolder(){
@@ -19,6 +19,7 @@ void MainWindow::resFileTmpInTmpFolder(){
     QString __path;
     restore_file_critic::n_err __res;
     uint i, len, count;
+    const char slash = slash::__slash();
 
     __pos = get_path(path::tmp_file_not_save);
     __l = get_file_dir::get(__pos);
@@ -31,14 +32,25 @@ void MainWindow::resFileTmpInTmpFolder(){
     QString tmp = __l.at(0).mid(__l.at(0).length() - pos_ext);
 
     for(i=0, count=0; i<len; ++i){
-        if(__l.at(i).length() > pos_ext
-                && __l.at(i).mid(__l.at(i).length() - pos_ext) == "."+APP_EXT){
+        const QString &ref = __l.at(i);
+        const int index = ref.lastIndexOf(slash);
+        if(ref.at(index + 1) != '.')
+            goto remove;
+
+        if(ref.length() > pos_ext
+                && ref.mid(ref.length() - pos_ext) == "."+APP_EXT){
             count++;
-        }else{
+            continue;
+        }/*else{
             __l.removeAt(i);
             len--;
             i--;
-        }
+        }*/
+
+        remove:
+        __l.removeAt(i);
+        len--;
+        i--;
     }
 
     /*

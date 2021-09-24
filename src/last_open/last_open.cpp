@@ -34,6 +34,8 @@ last_open::last_open(QWidget *parent,
     this->ui->open_button->setHidden(true);
 #endif
 
+    ui->option_button->setHidden(m_currentMethod == Method::OpenFile);
+
     if(!m_closeall){
         this->ui->close_all->hide();
     }
@@ -42,7 +44,8 @@ last_open::last_open(QWidget *parent,
 
 last_open::~last_open()
 {
-    delete m_parent;
+    if(m_parent)
+        delete m_parent;
     delete ui;
 }
 
@@ -80,16 +83,15 @@ int last_open::load_data_()
         ok = this->m_last.load_data();
         if(!ok)
             return 0;
+        if(data.val == option_last_open_ui::open_last){
+            on_click_ex(m_last.at(0).posizione);
+
+            return 0;
+        }
     }else{
         ok = this->m_last.load_folder(get_path_application::exe());
         if(!ok)
             return 0;
-    }
-
-    if(data.val == option_last_open_ui::open_last){
-        on_click_ex(m_last.at(0).posizione);
-
-        return 0;
     }
 
     /*

@@ -84,6 +84,7 @@ SOURCES += \
     src/images/fromimage.cpp \
     src/last_open/option/button_main.cpp \
     src/last_open/option/option_last_open_ui.cpp \
+    src/last_open/recentFileMainWindow.cpp \
     src/last_open/widget_parent/widget_parent.cpp \
     src/lastedit/copy_lastedit.cpp \
     src/lastedit/lista_copybook.cpp \
