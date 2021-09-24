@@ -8,8 +8,6 @@
 #endif
 #include "../../images/fromimage.h"
 
-static bool thereispositive(datastruct *, int, int);
-
 void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
@@ -86,8 +84,8 @@ void TabletCanvas::load(QPainter &painter,
     QColor current_color;
     double xtemp[2], ytemp[2];
 
-    if(parent)
-        is_play = parent->player->state() == QMediaPlayer::PlayingState;
+    is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
+
     if(m_pixmap)
         m_pixmap->fill(Qt::white);
 

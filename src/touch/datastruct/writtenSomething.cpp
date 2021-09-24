@@ -20,7 +20,7 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
 {
     uint l_first, l_sec, i;
     const point_s * __f_p, *__s_p;
-    bool check;
+    bool check = false;
 
     l_first = length();
     if(s_data)
@@ -56,7 +56,7 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
         check = userWrittenSomething(i);
     }
 
-    if(i < l_sec && s_data){
+    if((i < l_sec) && s_data){
         check = s_data->userWrittenSomething(i);
     }
 

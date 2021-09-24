@@ -9,7 +9,9 @@
 #include "../slash/slash.h"
 #include <QDesktopServices>
 
+#if defined(WIN32) || defined(WIN64) || defined(__OS2__)
 static int mostra(const char *comando);
+#endif // WIN
 
 #if defined(unix) && !defined(MACOS)
 #define APPLICATION_NAME (QString)"nautilus "
@@ -22,63 +24,38 @@ static void replace(char *data);
 #define APPLICATION_NAME (QString)"open "
 #endif
 
-static QString remove_s(const char *);
+static QString remove_file(const QString &path);
 
 void mostra_explorer(QString posizione)
 {
-    const char *comando;
-
-    posizione = remove_s(posizione.toUtf8().constData());
-
-    comando = (APPLICATION_NAME + posizione).toUtf8().constData();
-
     /*
      * in windows we don't need to run it in an other thread
     */
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
+    const char *comando;
+    comando = (APPLICATION_NAME + posizione).toUtf8().constData();
     if(mostra(comando)){
         dialog_critic("We had a problem opening " + APPLICATION_NAME);
     }
 
 #elif unix || MACOS
+    posizione = remove_file(posizione.toUtf8().constData());
     mostra_finestra_i(posizione);
     //QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
 #endif
 
 }
 
-
+#if defined(WIN32) || defined(WIN64) || defined(__OS2__)
 static int mostra(const char *comando){
     return system(comando);
 }
-
-static QString remove_s(const char *stringa){
-    int i, len;
-    char *tmp;
-    QString string_r;
-
-    len = strlen(stringa);
-
-    for(i=len; i>0; i--)
-        if(stringa[i] == slash::__slash())
-            break;
-
-#if defined(WIN32) || defined(WIN64) || defined(__OS2__)
-    /*
-     * we can't modify the data return from .toutf8.constdata() [QString]
-    */
-    tmp = new char [len];
-
-    memcpy(tmp, stringa, sizeof(char)*len);
-
-    string_r = tmp;
-
-    delete [] tmp;
-
-    return string_r.mid(0, i);
-
-#elif unix || MACOS
-    return QString::fromUtf8(stringa, i);
 #endif
+
+static QString remove_file(const QString &path){
+    const char slash = slash::__slash();
+    const int indexLast = path.lastIndexOf(slash);
+
+    return path.mid(0, indexLast);
 
 }

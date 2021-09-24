@@ -27,7 +27,7 @@ static void removeIdUser(datastruct *data, QList<int>&list){
 
 void datastruct::reorganize()
 {
-    uint i, len, k;
+    uint i, len;
     int _lastId, id;
     len = length();
 

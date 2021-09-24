@@ -14,8 +14,6 @@
  * save [not for loading]
 */
 
-static void removeNotWriternote(QStringList &ref, const QString &ext);
-
 bool qfilechoose::filechoose(QString &nome, short int type_){
     QString extention;
     QString type;
@@ -66,14 +64,4 @@ bool qfilechoose::filechoose(QString &nome, short int type_){
     nome = nameFile;
 
     return true;
-}
-
-static void removeNotWriternote(QStringList &ref, const QString &ext){
-    int i;
-
-    for(i=0; i<ref.length(); ++i){
-        if(ref.at(i).indexOf(ext) != -1){
-            ref.removeAt(i);
-        }
-    }
 }
