@@ -8,7 +8,7 @@
 #include "../utils/get_path_application.h"
 #include "../utils/get_file_dir/get_file_dir.h"
 #include "../utils/common_def.h"
-
+#include "../utils/removenotwriternote.h"
 /*
  * this function is use for
  * save [not for loading]
@@ -55,7 +55,7 @@ bool qfilechoose::filechoose(QString &nome, short int type_){
     dir = get_path_application::exe();
     list = get_file_dir::get(dir);
 
-    removeNotWriternote(list, extention);
+    removeNotWriternote::exe(list);
 #endif
 
     if(nameFile == "")

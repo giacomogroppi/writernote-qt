@@ -7,7 +7,7 @@
 class removeNotWriternote
 {
 public:
-    void exe(QStringList &ref);
+    static void exe(QStringList &ref);
 };
 
 #endif // REMOVENOTWRITERNOTE_H
