@@ -112,6 +112,14 @@ jobs:
           
           cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
 
+      - name: Download qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          host: 'linux'
+          version: 5.15.2
+          target: 'ios'
+          modules: 'multimedia'
+
       - name: Use libzip prebuild
         run: |
           wget https://github.com/damaex/ios-lib/releases/download/latest/zip-ios.tar.gz
@@ -129,5 +137,5 @@ jobs:
 
       - name: Build writernote
         run: |
-          $QT_PREFIX/bin/qmake
+          qmake
           make -j$(nproc)
