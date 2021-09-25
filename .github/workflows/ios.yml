@@ -115,7 +115,7 @@ jobs:
       - name: Download qt
         uses: jurplel/install-qt-action@v2
         with:
-          host: 'linux'
+          host: 'mac'
           version: 5.15.2
           target: 'ios'
           modules: 'multimedia'
