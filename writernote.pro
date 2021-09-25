@@ -411,7 +411,7 @@ win32{
 }
 
 win64{
-    message("Win 64 comilation")
+    message("Win 64 compilation")
 }
 
 ios{
@@ -419,8 +419,7 @@ ios{
     INCLUDEPATH += 3rdparty/libzip/include/include
     LIBS += 3rdparty/libzip/libzip.a
 }
-
-android{
+else:android{
     message(Enable android build)
     QT += androidextras
 
