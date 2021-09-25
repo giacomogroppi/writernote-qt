@@ -129,5 +129,5 @@ jobs:
 
       - name: Build writernote
         run: |
-          $QT_PREFIX/qmake
+          $QT_PREFIX/bin/qmake
           make -j$(nproc)
