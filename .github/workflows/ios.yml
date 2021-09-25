@@ -122,3 +122,12 @@ jobs:
 
           sudo rm -r $PREFIX_LIB/libzip
           mv libzip $PREFIX_LIB/libzip
+
+      - name: Tmp
+        run: |
+          echo $(ls $QT_PREFIX)
+
+      - name: Build writernote
+        run: |
+          $QT_PREFIX/qmake
+          make -j$(nproc)

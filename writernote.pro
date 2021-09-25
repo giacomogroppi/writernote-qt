@@ -7,6 +7,7 @@ QT       += network
 
 macx: DEFINES += "MACOS"
 android: DEFINES += "ANDROID"
+ios: DEFINES += "IOS"
 
 #Use for testing
 #DEFINES += "ANDROID"
@@ -411,6 +412,12 @@ win32{
 
 win64{
     message("Win 64 comilation")
+}
+
+ios{
+    message(Enable ios build)
+    INCLUDEPATH += 3rdparty/libzip/include/include
+    LIBS += 3rdparty/libzip/libzip.a
 }
 
 android{
