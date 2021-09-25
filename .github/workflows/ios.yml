@@ -99,7 +99,6 @@ jobs:
            -qt-libpng \
            -qt-libjpeg \
            -qt-freetype \
-           -opengl desktop \
            -sql-sqlite \
            -make libs \
            -nomake tools \
