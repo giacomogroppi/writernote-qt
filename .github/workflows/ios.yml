@@ -62,7 +62,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.PREFIX_LIB }}/qt-cache
-          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-qtmulmedia-1
+          key: ${{ runner.OS }}-qt-ios-${{ env.CACHE_KEY }}-qtmulmedia-1
 
       - name: Use cached Qt 5.15.2.
         if: steps.cache-qt.outputs.cache-hit == 'true'
