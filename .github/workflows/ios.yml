@@ -118,7 +118,7 @@ jobs:
           tar -xf zip-ios.tar.gz
           mkdir libzip
           mv include libzip/
-          mv libs libzip/
+          mv lib libzip/
 
           sudo rm -r $PREFIX_LIB/libzip
           mv libzip $PREFIX_LIB/libzip
