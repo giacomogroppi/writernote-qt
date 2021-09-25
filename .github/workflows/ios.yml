@@ -137,5 +137,5 @@ jobs:
 
       - name: Build writernote
         run: |
-          qmake
+          /Users/runner/work/writernote-qt/Qt/5.15.2/ios/bin/qmake
           make -j$(nproc)
