@@ -125,7 +125,7 @@ jobs:
 
       - name: Tmp
         run: |
-          echo $(ls $QT_PREFIX)
+          echo $(ls $QT_PREFIX/bin)
 
       - name: Build writernote
         run: |
