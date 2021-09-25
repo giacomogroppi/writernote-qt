@@ -518,6 +518,7 @@ android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
 
 DEFINES += "PDFSUPPORT"
 android: DEFINES -= "PDFSUPPORT"
+ios: DEFINES -= "PDFSUPPORT"
 
 contains(DEFINES, PDFSUPPORT){
     SOURCES += \
