@@ -111,3 +111,14 @@ jobs:
           make clean
           
           cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
+
+      - name: Use libzip prebuild
+        run: |
+          wget https://github.com/damaex/ios-lib/releases/download/latest/zip-ios.tar.gz
+          tar -xf zip-ios.tar.gz
+          mkdir libzip
+          mv include libzip/
+          mv libs libzip/
+
+          sudo rm -r $PREFIX_LIB/libzip
+          mv libzip $PREFIX_LIB/libzip
