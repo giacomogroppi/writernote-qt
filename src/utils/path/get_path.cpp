@@ -2,7 +2,7 @@
 #include "../slash/slash.h"
 #include "../get_path_application.h"
 
-#if defined(unix) || defined(MACOS)
+#if defined(unix) || defined(MACOS) || defined(IOS_WRITERNOTE)
 #define POS_HOME "HOME"
 #elif WIN32
 #define POS_HOME "USERPROFILE"
