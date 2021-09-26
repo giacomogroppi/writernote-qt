@@ -1,16 +1,23 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
+#ifndef IOS
+
 #include <QPrintDialog>
 #include <QDialog>
 #include <QPrinter>
 
-/* stampa */
 void MainWindow::on_actionPrint_triggered()
 {
-    QPrinter *printer = new QPrinter;
-    QPrintDialog *dialogprint = new QPrintDialog(printer);
+#ifdef ANDROID
+#elif IOS
+#else
+    QPrinter printer;
+    QPrintDialog dialogprint(&printer);
 
-    if (dialogprint->exec() == QDialog::Accepted)
-        this->ui->textEdit->print(printer);
+    if (dialogprint.exec() == QDialog::Accepted)
+        this->ui->textEdit->print(&printer);
+#endif
 }
+
+#endif

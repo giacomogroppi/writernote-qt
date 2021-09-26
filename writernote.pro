@@ -2,7 +2,7 @@ QT       += core
 QT       += gui
 QT       += widgets
 QT       += multimedia
-QT       += printsupport
+!ios:QT       += printsupport
 QT       += network
 
 macx: DEFINES += "MACOS"
