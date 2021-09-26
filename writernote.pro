@@ -419,6 +419,7 @@ ios{
     LIBS += 3rdparty/libzip/lib/libzip.a
 }
 else:android{
+    include(3rdparty/android_openssl/openssl.pri)
     message(Enable android build)
     QT += androidextras
 

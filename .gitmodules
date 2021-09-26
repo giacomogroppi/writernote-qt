@@ -4,3 +4,6 @@
 [submodule "3rdparty/zlib-ng"]
 	path = 3rdparty/zlib-ng
 	url = https://github.com/zlib-ng/zlib-ng/
+[submodule "android_openssl"]
+	path = android_openssl
+	url = https://github.com/KDAB/android_openssl
