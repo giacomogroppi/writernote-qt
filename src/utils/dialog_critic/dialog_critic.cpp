@@ -4,7 +4,7 @@
 
 void dialog_critic(const QString &str){
     QMessageBox msgBox;
-#ifdef ANDROID
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     msgBox.setWindowState(Qt::WindowFullScreen);
 #endif // ANDROID
     msgBox.setText(str);
@@ -14,7 +14,7 @@ void dialog_critic(const QString &str){
 
 void user_message(const QString &str){
     QMessageBox msgBox;
-#ifdef ANDROID
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     msgBox.setWindowState(Qt::WindowFullScreen);
 #endif // ANDROID
     msgBox.setText(str);

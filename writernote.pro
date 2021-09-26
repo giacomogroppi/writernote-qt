@@ -6,8 +6,8 @@ QT       += multimedia
 QT       += network
 
 macx: DEFINES += "MACOS"
-android: DEFINES += "ANDROID"
-ios: DEFINES += "IOS"
+android: DEFINES += "ANDROID_WRITERNOTE"
+ios: DEFINES += "IOS_WRITERNOTE"
 
 #Use for testing
 #DEFINES += "ANDROID"

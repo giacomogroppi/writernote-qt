@@ -36,7 +36,7 @@ void MainWindow::openFile(const char *pos){
 
     file.close();
 
-#ifndef ANDROID
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     // check if the file exist
     if(fileName.indexOf(APP_EXT) != -1
             && fileName.indexOf(".pdf") != -1){

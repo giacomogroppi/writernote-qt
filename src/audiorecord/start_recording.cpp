@@ -102,7 +102,7 @@ static void save(){
 */
 bool MainWindow::setOutputLocation()
 {
-#if defined (Q_OS_WINRT) || defined (ANDROID)
+#if defined (Q_OS_WINRT) || defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     // UWP does not allow to store outside the sandbox
     const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     if (!QDir().mkpath(cacheDir)) {

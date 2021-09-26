@@ -26,7 +26,7 @@ public:
     struct __r {
         enum option val; /* type */
         int pos = option_last_open_ui_def_num; /* number of lastopen file to show */
-#ifdef ANDROID
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
         const bool showOnlyName = true;
 #else
         bool showOnlyName = false;

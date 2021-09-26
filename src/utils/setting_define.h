@@ -48,7 +48,7 @@
 
 /* number: int */
 #define KEY_LAST_FILE_NUMBER "key-last-file-numbero"
-#ifndef ANDROID
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
 #define KEY_LAST_FILE_SHOW_ONLY_NAME "key-last-file-show-only-name"
 #endif // ANDROID
 

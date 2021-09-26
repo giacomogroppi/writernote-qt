@@ -9,8 +9,8 @@
 
 void MainWindow::on_actionPrint_triggered()
 {
-#ifdef ANDROID
-#elif IOS
+#ifdef ANDROID_WRITERNOTE
+#elif IOS_WRITERNOTE
 #else
     QPrinter printer;
     QPrintDialog dialogprint(&printer);

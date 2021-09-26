@@ -29,7 +29,7 @@ last_open::last_open(QWidget *parent,
     m_closeall = close_all;
     m_currentMethod = method;
 
-#ifdef ANDROID
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->setWindowState(Qt::WindowFullScreen);
     this->ui->open_button->setHidden(true);
 #endif

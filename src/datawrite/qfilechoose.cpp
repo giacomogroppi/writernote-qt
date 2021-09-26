@@ -18,9 +18,9 @@ bool qfilechoose::filechoose(QString &nome, short int type_){
     QString extention;
     QString type;
     QString dir, nameFile;
-#ifdef ANDROID
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     QStringList list;
-#endif // ANDROID
+#endif // ANDROID IOS
 
     if(type_ == TYPEFILEWRITER){
         type = "File Writer (*." + APP_EXT + ")";
@@ -34,7 +34,7 @@ bool qfilechoose::filechoose(QString &nome, short int type_){
         type = "Audio (*.wav)";
         extention = ".wav";
     } else if(type_ == TYPELOG){
-#ifndef ANDROID
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
         dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory",
                                                         "",
                                                         QFileDialog::ShowDirsOnly
@@ -48,7 +48,7 @@ bool qfilechoose::filechoose(QString &nome, short int type_){
         nome = dir;
         return true;
     }
-#ifndef ANDROID
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     nameFile= QFileDialog::getSaveFileName(nullptr,
         "Save", extention, type);
 #else
