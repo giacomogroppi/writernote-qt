@@ -229,7 +229,6 @@ SOURCES += \
     src/utils/extract_audio/extract_audio_ui.cpp \
     src/utils/get_file_dir/get_file_dir.cpp \
     src/utils/get_only_name/get_only_name.cpp \
-    src/utils/get_path_application.cpp \
     src/utils/lastModification/lastmodification.cpp \
     src/utils/make_default/make_default_ui.cpp \
     src/utils/mostra_explorer/mostra_explorer.cpp \
