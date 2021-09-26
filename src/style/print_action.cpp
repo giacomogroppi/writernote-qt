@@ -1,7 +1,7 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 
-#ifndef IOS
+#ifndef IOS_WRITERNOTE
 
 #include <QPrintDialog>
 #include <QDialog>
