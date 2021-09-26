@@ -512,8 +512,6 @@ else:android{
     }
 }
 
-android: include(/home/giacomo/Android/Sdk/android_openssl/openssl.pri)
-
 #ANDROID_EXTRA_LIBS = 
 
 DEFINES += "PDFSUPPORT"
