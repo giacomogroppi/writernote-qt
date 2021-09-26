@@ -417,7 +417,7 @@ win64{
 ios{
     message(Enable ios build)
     INCLUDEPATH += 3rdparty/libzip/include/include
-    LIBS += 3rdparty/libzip/libzip.a
+    LIBS += 3rdparty/libzip/lib/libzip.a
 }
 else:android{
     message(Enable android build)
