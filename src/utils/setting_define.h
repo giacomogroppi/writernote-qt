@@ -107,7 +107,9 @@
 
 /* integrity of data and autosave */
 #define GROUPNAME_INT "groupname-int"
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
 #define KEY_INT_AUTOSAVE_ENABLE "key-int-autosave-enable"
+#endif
 #define KEY_INT_AUTOSAVE_TIME "key-int-autosave-time" /* uint -> second */
 #define KEY_INT_REMOVE_FILE_ENABLE "key-int-remove-file-enable" /* bool */
 #define KEY_INT_TMP_ENABLE "key-int-tmp-enable"

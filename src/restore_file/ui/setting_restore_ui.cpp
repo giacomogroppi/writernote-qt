@@ -62,10 +62,11 @@ void setting_restore_ui::startTimerSetting(){
         m_first->start(m_data.t_autosave*1000);
     }
 
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     if(m_data.temp_file){
         m_sec->start(m_data.t_temp_file*1000);
     }
-
+#endif
 }
 
 setting_restore_ui::~setting_restore_ui()
@@ -96,8 +97,14 @@ void setting_restore_ui::updateWindow()
 {
     ui->checkBox_autosave->setChecked(m_data.autosave);
     ui->spinBox_autosave->setValue(m_data.t_autosave);
-
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     ui->checkBox_temp->setChecked(m_data.temp_file);
+#else
+    ui->checkBox_temp->setHidden(true);
+    ui->checkBox_temp->setHidden(true);
+    ui->spinBox_temp->setHidden(true);
+#endif
+
     ui->spinBox_temp->setValue(m_data.t_temp_file);
 
     ui->checkBox_remove->setChecked(m_data.remove_file);
@@ -107,6 +114,7 @@ void setting_restore_ui::loadData()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_INT);
+
 
     m_data.autosave = setting.value(KEY_INT_AUTOSAVE_ENABLE, false).toBool();
     m_data.t_autosave = setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt();

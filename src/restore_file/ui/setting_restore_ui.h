@@ -6,9 +6,12 @@
 
 struct __data{
     /* true enable */
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
+    const bool autosave = true;
+#else
     bool autosave : 1;
     bool temp_file : 1;
-
+#endif
     uint t_autosave;
     uint t_temp_file;
 
@@ -42,6 +45,8 @@ public:
         updateWindow();
     }
 
+/* if we are in android or ios we don't want to save a tmp file, because we already set autosave to true */
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     /* call this function when change copybook or close writernote */
     void changeCopybookFile(){
         if(m_data.remove_file
@@ -52,6 +57,7 @@ public:
             tmp_path = "";
         }
     }
+#endif
 
     QString get_curr_name_tmp() const{
         return tmp_path;
