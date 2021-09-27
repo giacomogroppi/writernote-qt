@@ -436,12 +436,12 @@ else:android{
         INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/include/
     }
 
+    message($$ANDROID_ABIS)
+
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
     DISTFILES += \
-        android/AndroidManifest.xml \
-        android/build.gradle \
-        android/res/values/libs.xml
+        android/AndroidManifest.xml
 
 
     INCLUDEPATH += $$PWD/android/libzip-android-1.0.1/jni/
@@ -585,3 +585,5 @@ win32:contains(DEFINES, PDFSUPPORT){
 
 DISTFILES += \
     language/it.ts
+
+ANDROID_EXTRA_LIBS =

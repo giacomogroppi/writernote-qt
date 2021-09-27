@@ -6,6 +6,10 @@
 int compressvideo(QString *posizionefrom, QString *to, int fps, QString compressione)
 {
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
+    Q_UNUSED(posizionefrom);
+    Q_UNUSED(to);
+    Q_UNUSED(fps);
+    Q_UNUSED(compressione);
     user_message("Video compress is not available on your platform");
 #else
     /* ffmpeg -i input.mp4 -vcodec libx265 -crf 28 output.mp4*/

@@ -121,6 +121,7 @@ jobs:
           modules: 'multimedia'
 
       - name: Use libzip prebuild
+        if: false
         run: |
           wget https://github.com/damaex/ios-lib/releases/download/latest/zip-ios.tar.gz
           tar -xf zip-ios.tar.gz
@@ -131,9 +132,12 @@ jobs:
           sudo rm -r $PREFIX_LIB/libzip
           mv libzip $PREFIX_LIB/libzip
 
-      - name: Tmp
+      - name: Build libzip
         run: |
-          echo $(ls $QT_PREFIX/bin)
+          git clone https://github.com/damaex/ios-lib/
+          cd ios-lib
+          git submodule update --init --recursive
+          ./build.sh
 
       - name: Build writernote
         run: |
