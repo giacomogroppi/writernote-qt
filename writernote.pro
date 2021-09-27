@@ -436,6 +436,13 @@ else:android{
         INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/armeabi-v7a/../../install/armeabi-v7a/include/
     }
 
+    equals(ANDROID_ABIS, "x86"){
+        message(Enable x86 android build for libzip)
+
+        LIBS += $$PWD/3rdparty/libzip/android/build/x86/../../install/x86/lib/libzip.a
+        INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/x86/../../install/x86/include/
+    }
+
     message($$ANDROID_ABIS)
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
