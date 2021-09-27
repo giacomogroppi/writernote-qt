@@ -124,7 +124,10 @@ void MainWindow::closeEvent (QCloseEvent *event)
     setting_geometry(this->geometry());
     setting_autosave(enableredoundo);
 
+
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     m_setting->changeCopybookFile();
+#endif
 
     event->accept();
 }

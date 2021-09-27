@@ -11,9 +11,9 @@ struct __data{
 #else
     bool autosave : 1;
     bool temp_file : 1;
+    uint t_temp_file;
 #endif
     uint t_autosave;
-    uint t_temp_file;
 
     bool remove_file : 1; /* false do not remove the file after writernote close */
 
@@ -40,7 +40,7 @@ public:
         return m_data;
     }
 
-    void setData(struct __data *data){
+    void setData(const struct __data *data){
         memcpy(&m_data, data, sizeof(struct __data));
         updateWindow();
     }
@@ -102,10 +102,16 @@ private slots:
 
     void on_pushButton_ok_clicked();
     void on_pushButton_close_clicked();
+
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     void on_spinBox_temp_valueChanged(int arg1);
+#endif
     void on_spinBox_autosave_valueChanged(int arg1);
+
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     void on_checkBox_autosave_stateChanged(int arg1);
     void on_checkBox_temp_stateChanged(int arg1);
+#endif
     void on_checkBox_remove_stateChanged(int arg1);
 };
 

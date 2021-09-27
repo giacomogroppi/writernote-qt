@@ -89,7 +89,9 @@ void MainWindow::openFile(const char *pos){
             }
         }
 
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
         this->m_setting->changeCopybookFile();
+#endif
 
         m_path = fileName;
         const auto res = xml.loadfile(true, true);

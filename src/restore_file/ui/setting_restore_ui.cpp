@@ -99,13 +99,12 @@ void setting_restore_ui::updateWindow()
     ui->spinBox_autosave->setValue(m_data.t_autosave);
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     ui->checkBox_temp->setChecked(m_data.temp_file);
+    ui->spinBox_temp->setValue(m_data.t_temp_file);
 #else
     ui->checkBox_temp->setHidden(true);
     ui->checkBox_temp->setHidden(true);
     ui->spinBox_temp->setHidden(true);
 #endif
-
-    ui->spinBox_temp->setValue(m_data.t_temp_file);
 
     ui->checkBox_remove->setChecked(m_data.remove_file);
 }
@@ -116,11 +115,14 @@ void setting_restore_ui::loadData()
     setting.beginGroup(GROUPNAME_INT);
 
 
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     m_data.autosave = setting.value(KEY_INT_AUTOSAVE_ENABLE, false).toBool();
-    m_data.t_autosave = setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt();
 
     m_data.temp_file = setting.value(KEY_INT_TMP_ENABLE, true).toBool();
     m_data.t_temp_file = setting.value(KEY_INT_TMP_TIME, 5).toUInt();
+#endif
+
+    m_data.t_autosave = setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt();
 
     m_data.remove_file = setting.value(KEY_INT_REMOVE_FILE_ENABLE, true).toBool();
 
@@ -134,11 +136,14 @@ void setting_restore_ui::saveData()
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_INT);
 
-    setting.setValue(KEY_INT_AUTOSAVE_ENABLE, m_data.autosave);
     setting.setValue(KEY_INT_AUTOSAVE_TIME, m_data.t_autosave);
+
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
+    setting.setValue(KEY_INT_AUTOSAVE_ENABLE, m_data.autosave);
 
     setting.setValue(KEY_INT_TMP_ENABLE, m_data.temp_file);
     setting.setValue(KEY_INT_TMP_TIME, m_data.t_temp_file);
+#endif
 
     setting.setValue(KEY_INT_REMOVE_FILE_ENABLE, m_data.remove_file);
 
@@ -221,6 +226,8 @@ void setting_restore_ui::on_pushButton_close_clicked()
     this->close();
 }
 
+
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
 void setting_restore_ui::on_spinBox_temp_valueChanged(int arg1)
 {
     m_data.t_temp_file = arg1;
@@ -230,17 +237,23 @@ void setting_restore_ui::on_spinBox_temp_valueChanged(int arg1)
 
     updateWindow();
 }
+#endif
 
 void setting_restore_ui::on_spinBox_autosave_valueChanged(int arg1)
 {
     m_data.t_autosave = arg1;
+
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     if(m_data.t_autosave < m_data.t_temp_file){
         m_data.t_temp_file = m_data.t_autosave;
     }
+#endif
 
     updateWindow();
 }
 
+
+#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
 void setting_restore_ui::on_checkBox_autosave_stateChanged(int arg1)
 {
     /* arg1 == 0 the user disable */
@@ -252,6 +265,7 @@ void setting_restore_ui::on_checkBox_temp_stateChanged(int arg1)
 {
     m_data.temp_file = arg1;
 }
+#endif
 
 void setting_restore_ui::on_checkBox_remove_stateChanged(int arg1)
 {

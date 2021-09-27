@@ -18,9 +18,7 @@ void MainWindow::on_actionRestore_file_triggered()
 void MainWindow::on_actionOption_triggered()
 {
     change = false;
-    struct __data data;
-
-    data = m_setting->getData();
+    const struct __data data = m_setting->getData();;
 
     /* we don't want to connect the function everytime */
     if(!alreadyconnect){
