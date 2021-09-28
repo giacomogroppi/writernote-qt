@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QJsonDocument>
+#include <QProcess>
 
 #define POS (QString)"C:\\Program Files (x86)\\writernote\\"
 
@@ -56,10 +57,13 @@ bool updater::downloadFile(QString url, const QString dest)
 
 }
 
-bool updater::extractFile(QString l, const QString &dest)
+bool updater::extractFile(const QString &path, const QString &dest)
 {
-    int res;
     QDir __dir(dest);
+    const QString programm = "powershell";
+    QProcess process;
+    QStringList list;
+    const size_t timeout = /* second */ 10 * 1000;
 
     if(__dir.exists()){
         if(!__dir.removeRecursively()){
@@ -68,12 +72,15 @@ bool updater::extractFile(QString l, const QString &dest)
         }
     }
 
-    l = "Expand-Archive -Path " + l + " -destinationPath " + dest;
-    l = "powershell " + l;
+    list.append("Expand-Archive");
+    list.append("-Path");
+    list.append(path);
+    list.append("-destinationPath");
+    list.append(dest);
 
-    res = system(l.toUtf8().constData());
+    process.start(programm, list);
 
-    return !res;
+    return process.waitForFinished(timeout);
 }
 
 bool updater::moveWithA(QString l, const QString to)

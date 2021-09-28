@@ -25,10 +25,11 @@ public:
         error_internal
     };
 
-    void write(QString,
-               enum type_write);
+    void write(const QString &message,
+               enum type_write type);
 
 private:
+    static void addTime(QString &message);
     Ui::log_ui *ui;
 
     enum permi: int {

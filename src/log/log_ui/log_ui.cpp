@@ -1,15 +1,13 @@
 #include "log_ui.h"
 #include "ui_log_ui.h"
-
 #include <QSettings>
 #include "../../utils/setting_define.h"
 #include "../../utils/path/get_path.h"
-
 #include "../../utils/time/current_time.h"
 #include "../../utils/mostra_explorer/mostra_explorer.h"
 #include "../../utils/dialog_critic/dialog_critic.h"
 #include "../../utils/slash/slash.h"
-
+#include "../../utils/time/current_time.h"
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
@@ -42,25 +40,22 @@ void log_ui::showAll()
         return;
     }
 
-
-
-
 }
 
-void log_ui::write(QString stringa, log_ui::type_write var)
+void log_ui::write(const QString &stringa, log_ui::type_write var)
 {
     if(m_permi != permi::enable)
         return;
 
     FILE *fp;
-    const char * stringa_;
+    QString tmp;
 
     if(var == log_ui::info)
-        stringa = "info: " + stringa;
+        tmp = "info: " + stringa;
     else if(var == log_ui::error_internal)
-        stringa = "internal error: " + stringa;
+        tmp = "internal error: " + stringa;
     else
-        stringa = "CRITIC ERROR: " + stringa;
+        tmp = "CRITIC ERROR: " + stringa;
 
     fp = fopen(this->pos_log.toUtf8().constData(), "a");
 
@@ -70,11 +65,16 @@ void log_ui::write(QString stringa, log_ui::type_write var)
         return;
     }
 
-    stringa_ = stringa.toUtf8().constData();
-    fprintf(fp, "%s", stringa_);
+    log_ui::addTime(tmp);
+
+    fprintf(fp, "\n%s", tmp.toUtf8().constData());
 
     fclose(fp);
+}
 
+void log_ui::addTime(QString &message)
+{
+    message = current_day_string() + current_time_string() + message;
 }
 
 QString log_ui::getNameLog()
@@ -217,6 +217,6 @@ void log_ui::on_button_change_position_clicked()
     m_permi = permi::enable;
     this->pos_log = getNameLog();
 
-
-
 }
+
+log_ui log_write(NULL);
