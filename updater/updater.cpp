@@ -34,7 +34,6 @@ updater::~updater()
 bool updater::downloadFile(const QString &url, const QString &dest)
 {
     QStringList argv;
-    const QString command = "powershell Invoke-WebRequest";
 
     /* 4 min */
     const size_t time = 4*60*1000;
@@ -46,25 +45,20 @@ bool updater::downloadFile(const QString &url, const QString &dest)
         }
     }
 
-    argv << "-uri";
-    argv << url;
-    argv << "-Method \"GET\"";
-    argv << "-Outfile";
-    argv << dest;
+    argv << QString("Invoke-WebRequest -uri %1 -Method \"GET\" -Outfile %2").arg(url).arg(dest);
 
-    QString str = command;
+    QString str;
     for(int i=0; i<argv.length(); ++i)
-        str += argv.at(i);
+        str += " " + argv.at(i);
     qDebug() << str;
     //return !system(str.toUtf8().constData());
-    return this->exe(command, argv, time);
+    return this->exe(argv, time);
 }
 
 bool updater::extractFile(const QString &path, const QString &dest)
 {
     if(!updater::createDirectory(dest)) return false;
-    const QString programm = "cd " + dest + " tar";
-    QStringList list;
+    QStringList list = QStringList(QString("cd %1 -and tar").arg(dest));
     const size_t timeout = /* second */ 10 * 1000;
 
     if(!updater::removeDirectory(dest)){
@@ -76,23 +70,29 @@ bool updater::extractFile(const QString &path, const QString &dest)
     list << "-xf";
     list << path;
 
-    return this->exe(programm, list, timeout);
+    return this->exe(list, timeout);
 }
 
-static bool check;
-void updater::finish_exe(int exitCode, QProcess::ExitStatus exitStatus){
-    check = (exitCode) ? true : false;
-}
-bool updater::exe(const QString &command, const QStringList &argv, const size_t time)
+static int check;
+bool updater::exe(const QStringList &argv, const size_t time)
 {
     QProcess process;
-    check = false;
-    QObject::connect(&process, &QProcess::finished, [=](int exitCode){check = (exitCode) ? true : false;});
-    //QObject::connect(&process, SIGNAL(finish), this, SLOT(finish_exe));
+    QStringList list_argv;
 
-    process.start(command, argv);
+    check = 1;
+    connect(&process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+              [=](int exitCode, QProcess::ExitStatus){
+        check = exitCode;
+        qDebug() << "Exit Code "  << check << exitCode;
+    });
+
+    list_argv = QStringList("-Command") + argv;
+
+    process.start("powershell", argv);
+    process.waitForStarted(time);
     process.waitForFinished(time);
-    return check;
+    qDebug() << check;
+    return !check;
 }
 
 bool updater::createDirectory(const QString &path)
@@ -114,24 +114,20 @@ bool updater::removeDirectory(const QString &path)
 bool updater::cleanDirectory(const QString &path)
 {
     QStringList argv;
-    const QString command = "cd " + path + " -and " + " rm";
-    argv << path + "\\*";
+    argv << QString("cd %1 -and rm ").arg(path) << path + "\\*";
 
-    return this->exe(command, argv, 10*1000);
+    return this->exe(argv, 10*1000);
 }
 
 bool updater::moveWithA(const QString &from, const QString to)
 {
-    const QString command = "mv";
     QStringList argv;
 
     if(!updater::removeDirectory(to))
         return false;
+    argv << QString("mv %1 %2").arg(from).arg(to);
 
-    argv << from;
-    argv << to;
-
-    return this->exe(command, argv, 30*1000);
+    return this->exe(argv, 30*1000);
 }
 
 bool updater::removeFile(const QString &path)
