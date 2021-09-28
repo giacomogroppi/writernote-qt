@@ -58,23 +58,20 @@ bool updater::downloadFile(const QString &url, const QString &dest)
 bool updater::extractFile(const QString &path, const QString &dest)
 {
     if(!updater::createDirectory(dest)) return false;
-    QStringList list = QStringList(QString("cd %1 -and tar").arg(dest));
+    QStringList list = QStringList(QString("cd %1; tar -xf %2").arg(dest).arg(path));
     const size_t timeout = /* second */ 10 * 1000;
 
-    if(!updater::removeDirectory(dest)){
+    if(!updater::cleanDirectory(path)){
         user_message("I can't update writernote becouse I can't remove this folder: " + dest);
         return false;
     }
 
-
-    list << "-xf";
-    list << path;
-
-    return this->exe(list, timeout);
+    int res = this->exe(list, timeout);
+    return res;
 }
 
 static int check;
-bool updater::exe(const QStringList &argv, const size_t time)
+bool updater::exe(const QStringList &argv, const int time)
 {
     QProcess process;
     QStringList list_argv;
@@ -114,18 +111,22 @@ bool updater::removeDirectory(const QString &path)
 bool updater::cleanDirectory(const QString &path)
 {
     QStringList argv;
-    argv << QString("cd %1 -and rm ").arg(path) << path + "\\*";
+    this->exe(QStringList(QString("mkdir %1").arg(path)), -1);
+    argv << QString("cd %1; rm %2\\*").arg(path).arg(path);
 
-    return this->exe(argv, 10*1000);
+    this->exe(argv, 10*1000);
+    return true;
 }
 
 bool updater::moveWithA(const QString &from, const QString to)
 {
     QStringList argv;
 
-    if(!updater::removeDirectory(to))
+    if(!updater::cleanDirectory(to))
         return false;
     argv << QString("mv %1 %2").arg(from).arg(to);
+
+    qDebug() << argv;
 
     return this->exe(argv, 30*1000);
 }

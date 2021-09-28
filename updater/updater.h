@@ -26,7 +26,7 @@ public:
     bool extractFile(const QString &path, const QString &dest);
 
     bool exe(const QStringList &argv,
-            const size_t time);
+            const int time);
 
     bool createDirectory(const QString &path);
     bool removeDirectory(const QString &path);
