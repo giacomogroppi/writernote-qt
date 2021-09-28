@@ -5,6 +5,9 @@
 #include <QCloseEvent>
 #include <QString>
 
+#define NAME_LOG_EXT log_write
+
+
 namespace Ui {
 class log_ui;
 }
@@ -61,5 +64,8 @@ private slots:
     void on_Button_open_log_clicked();
     void on_button_change_position_clicked();
 };
+
+extern log_ui NAME_LOG_EXT;
+#define LOG(message, mode) NAME_LOG_EXT::write(message, mode)
 
 #endif // LOG_UI_H

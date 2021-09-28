@@ -59,7 +59,7 @@ bool updater::downloadFile(QString url, const QString dest)
 
 bool updater::extractFile(const QString &path, const QString &dest)
 {
-    const QString programm = "powershell";
+    const QString programm = "cd " + dest + " tar";
     QProcess process;
     QStringList list;
     const size_t timeout = /* second */ 10 * 1000;
@@ -69,9 +69,9 @@ bool updater::extractFile(const QString &path, const QString &dest)
         return false;
     }
 
-    list.append("Expand-Archive");
-    list.append("-Path");
-    list.append(path);
+
+    list << "-xf";
+    list << path;
     list.append("-destinationPath");
     list.append(dest);
 
