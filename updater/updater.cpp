@@ -124,7 +124,7 @@ bool updater::moveWithA(const QString &from, const QString to)
 
     if(!updater::cleanDirectory(to))
         return false;
-    argv << QString("mv %1 %2").arg(from).arg(to);
+    argv << QString("mv '%1' '%2'").arg(from).arg(to);
 
     qDebug() << argv;
 
