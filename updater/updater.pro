@@ -12,6 +12,7 @@ DESTDIR = build
 
 SOURCES += \
     ../src/utils/dialog_critic/dialog_critic.cpp \
+    ../src/utils/get_file_dir/get_file_dir.cpp \
     ../src/utils/path/get_path.cpp \
     main.cpp \
     updater.cpp
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     ../src/utils/areyousure/areyousure.h \
     ../src/utils/dialog_critic/dialog_critic.h \
+    ../src/utils/get_file_dir/get_file_dir.h \
     ../src/utils/path/get_path.h \
     updater.h
 

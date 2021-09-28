@@ -21,13 +21,15 @@ public:
     updater(QWidget *parent = nullptr);
     ~updater();
 
-    bool downloadFile(QString url, const QString dest);
+    bool downloadFile(const QString &url, const QString &dest);
     bool extractFile(const QString &path, const QString &dest);
 
+    static bool createDirectory(const QString &path);
     static bool removeDirectory(const QString &path);
+    static bool cleanDirectory(const QString &path);
 
-    bool moveWithA(QString l, const QString to);
-    bool removeFile(QString l);
+    bool moveWithA(const QString &from, const QString to);
+    bool removeFile(const QString &path);
 
 private slots:
     void downloadUpdate();

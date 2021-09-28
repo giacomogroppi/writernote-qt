@@ -3,7 +3,7 @@
 #include "../src/utils/dialog_critic/dialog_critic.h"
 #include "../src/utils/path/get_path.h"
 #include "../src/utils/areyousure/areyousure.h"
-
+#include "../src/utils/get_file_dir/get_file_dir.h"
 #include <QFile>
 #include <QDir>
 #include <QDebug>
@@ -31,15 +31,14 @@ updater::~updater()
     delete ui;
 }
 
-bool updater::downloadFile(QString url, const QString dest)
+bool updater::downloadFile(const QString &url, const QString &dest)
 {
-    int res;
-    res = system("powershell echo hello");
+    QProcess process;
+    QStringList argv;
+    const QString command = "powershell Invoke-WebRequest";
 
-    if(res){
-        dialog_critic("It seams that you don't have installed powershell");
-        return false;
-    }
+    /* 4 min */
+    const size_t time = 4*60*1000;
 
     if(QFile::exists(dest)){
         if(!QFile::remove(dest)){
@@ -48,17 +47,22 @@ bool updater::downloadFile(QString url, const QString dest)
         }
     }
 
-    url = "Invoke-WebRequest -uri " + url + " -Method \"GET\"  -Outfile " + dest;
-    url = "powershell " + url;
+    argv << "-uri";
+    argv << url;
+    argv << "-Method \"GET\"";
+    argv << "-Outfile";
+    argv << dest;
 
-    res = system(url.toUtf8().constData());
 
-    return !res;
+    process.start(command, argv);
+
+    return process.waitForFinished(time);
 
 }
 
 bool updater::extractFile(const QString &path, const QString &dest)
 {
+    if(!updater::createDirectory(dest)) return false;
     const QString programm = "cd " + dest + " tar";
     QProcess process;
     QStringList list;
@@ -72,12 +76,18 @@ bool updater::extractFile(const QString &path, const QString &dest)
 
     list << "-xf";
     list << path;
-    list.append("-destinationPath");
-    list.append(dest);
 
     process.start(programm, list);
 
     return process.waitForFinished(timeout);
+}
+
+bool updater::createDirectory(const QString &path)
+{
+    QDir dir(path);
+    if(dir.exists())
+        return true;
+    return dir.mkpath(path);
 }
 
 bool updater::removeDirectory(const QString &path)
@@ -88,41 +98,55 @@ bool updater::removeDirectory(const QString &path)
     return directory.removeRecursively();
 }
 
-bool updater::moveWithA(QString l, const QString to)
+bool updater::cleanDirectory(const QString &path)
 {
-    int res;
-
-    l = "powershell Start-Process powershell -Verb runAs Move-Item -Path " + l + " -Destination " + to;
-
-    res = system(l.toUtf8().constData());
-
-    return !res;
+    QProcess process;
+    QStringList argv;
+    const QString command = "cd " + path + " -and " + " rm";
+    argv << path + "\\*";
+    process.start(command, argv);
+    return process.waitForFinished();
 }
 
-bool updater::removeFile(QString l)
+bool updater::moveWithA(const QString &from, const QString to)
 {
-    int res;
+    QProcess process;
+    const QString command = "mv";
+    QStringList argv;
 
-    l = "powershell " + l;
+    if(!updater::removeDirectory(to))
+        return false;
 
-    res = system(l.toUtf8().constData());
+    argv << from;
+    argv << to;
 
-    return !res;
+    process.start(command, argv);
 
+    return process.waitForFinished();
+}
+
+bool updater::removeFile(const QString &path)
+{
+    return QFile::remove(path);
 }
 
 #define pos_installation POS + "\\writernote.exe"
 void updater::downloadUpdate()
 {
     QDir __dir(POS);
-    QString testo, dest, ver;
-    QJsonDocument doc;
 
     if(reply->error()){
         dialog_critic("We had this problem " + reply->errorString());
         delete manager;
         return;
     }
+
+    const QByteArray &text = reply->readAll();
+    const QJsonDocument doc = QJsonDocument::fromJson(text);
+    const QString &dest_download = "C:" + (QString)get_path(path::home) + "\\Downloads\\writernote_setup.zip";
+    const QString &ver = doc[0]["name"].toString();
+    const QString &url = "https://github.com/giacomogroppi/writernote-qt/releases/download/" + ver + "/writernote_win_setup_" + ver +".zip";
+    const QString &dest_extraction = dest_download.mid(0, dest_download.indexOf(".zip"));
 
     if(!QFile::exists(POS)){
         if(!__dir.exists()){
@@ -131,17 +155,8 @@ void updater::downloadUpdate()
         }
     }
 
-    testo = reply->readAll();
 
-    doc = QJsonDocument::fromJson(testo.toUtf8());
-
-    dest = "C:" + (QString)get_path(path::home);
-    dest += "\\Downloads\\writernote_setup.zip";
-
-    ver = doc[0]["name"].toString();
-    testo = "https://github.com/giacomogroppi/writernote-qt/releases/download/" + ver + "/writernote_setup_" + ver + ".zip";
-
-    if(!downloadFile(testo, dest)){
+    if(!downloadFile(url, dest_download)){
         dialog_critic("I had a problem downloading the file");
         goto close;
     }
@@ -152,16 +167,12 @@ void updater::downloadUpdate()
         we need this for move object into c:\programs
     */
 
-    testo = dest.mid(0, dest.indexOf(".zip"));
-
-    if(!extractFile(dest, testo)){
-        dialog_critic("We had a problem extracting the zip");
+    if(!extractFile(dest_download, dest_extraction)){
+        dialog_critic("We had a problem extracting the zip into " + dest_extraction);
         goto close;
     }
 
-    testo += "\\*";
-
-    if(!moveWithA(testo, POS)){
+    if(!moveWithA(dest_extraction, POS)){
         dialog_critic("We had a problem move writernote.exe to " + POS);
         goto close;
     }
@@ -170,8 +181,8 @@ void updater::downloadUpdate()
         goto close;
     }
 
-    removeFile(testo);
-    removeFile(dest);
+    removeFile(dest_download);
+    removeDirectory(dest_extraction);
 
     user_message("Writernote was updated successfully to version " + ver);
 
