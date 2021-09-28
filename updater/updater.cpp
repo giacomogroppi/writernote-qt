@@ -87,8 +87,8 @@ bool updater::exe(const QString &command, const QStringList &argv, const size_t 
 {
     QProcess process;
     check = false;
-    //QObject::connect(&process, &QProcess::finished, [=](int exitCode){check = (exitCode) ? true : false;});
-    QObject::connect(&process, SIGNAL(finish), this, SLOT(finish_exe));
+    QObject::connect(&process, &QProcess::finished, [=](int exitCode){check = (exitCode) ? true : false;});
+    //QObject::connect(&process, SIGNAL(finish), this, SLOT(finish_exe));
 
     process.start(command, argv);
     process.waitForFinished(time);
