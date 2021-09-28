@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QProcess>
-
+#include <QDebug>
 #define POS (QString)"C:\\Program Files (x86)\\writernote\\"
 
 updater::updater(QWidget *parent)
@@ -33,7 +33,6 @@ updater::~updater()
 
 bool updater::downloadFile(const QString &url, const QString &dest)
 {
-    QProcess process;
     QStringList argv;
     const QString command = "powershell Invoke-WebRequest";
 
@@ -53,18 +52,18 @@ bool updater::downloadFile(const QString &url, const QString &dest)
     argv << "-Outfile";
     argv << dest;
 
-
-    process.start(command, argv);
-
-    return process.waitForFinished(time);
-
+    QString str = command;
+    for(int i=0; i<argv.length(); ++i)
+        str += argv.at(i);
+    qDebug() << str;
+    //return !system(str.toUtf8().constData());
+    return this->exe(command, argv, time);
 }
 
 bool updater::extractFile(const QString &path, const QString &dest)
 {
     if(!updater::createDirectory(dest)) return false;
     const QString programm = "cd " + dest + " tar";
-    QProcess process;
     QStringList list;
     const size_t timeout = /* second */ 10 * 1000;
 
@@ -77,9 +76,23 @@ bool updater::extractFile(const QString &path, const QString &dest)
     list << "-xf";
     list << path;
 
-    process.start(programm, list);
+    return this->exe(programm, list, timeout);
+}
 
-    return process.waitForFinished(timeout);
+static bool check;
+void updater::finish_exe(int exitCode, QProcess::ExitStatus exitStatus){
+    check = (exitCode) ? true : false;
+}
+bool updater::exe(const QString &command, const QStringList &argv, const size_t time)
+{
+    QProcess process;
+    check = false;
+    //QObject::connect(&process, &QProcess::finished, [=](int exitCode){check = (exitCode) ? true : false;});
+    QObject::connect(&process, SIGNAL(finish), this, SLOT(finish_exe));
+
+    process.start(command, argv);
+    process.waitForFinished(time);
+    return check;
 }
 
 bool updater::createDirectory(const QString &path)
@@ -100,17 +113,15 @@ bool updater::removeDirectory(const QString &path)
 
 bool updater::cleanDirectory(const QString &path)
 {
-    QProcess process;
     QStringList argv;
     const QString command = "cd " + path + " -and " + " rm";
     argv << path + "\\*";
-    process.start(command, argv);
-    return process.waitForFinished();
+
+    return this->exe(command, argv, 10*1000);
 }
 
 bool updater::moveWithA(const QString &from, const QString to)
 {
-    QProcess process;
     const QString command = "mv";
     QStringList argv;
 
@@ -120,9 +131,7 @@ bool updater::moveWithA(const QString &from, const QString to)
     argv << from;
     argv << to;
 
-    process.start(command, argv);
-
-    return process.waitForFinished();
+    return this->exe(command, argv, 30*1000);
 }
 
 bool updater::removeFile(const QString &path)
@@ -143,7 +152,7 @@ void updater::downloadUpdate()
 
     const QByteArray &text = reply->readAll();
     const QJsonDocument doc = QJsonDocument::fromJson(text);
-    const QString &dest_download = "C:" + (QString)get_path(path::home) + "\\Downloads\\writernote_setup.zip";
+    const QString &dest_download = (QString)get_path(path::home) + "\\Downloads\\writernote_setup.zip";
     const QString &ver = doc[0]["name"].toString();
     const QString &url = "https://github.com/giacomogroppi/writernote-qt/releases/download/" + ver + "/writernote_win_setup_" + ver +".zip";
     const QString &dest_extraction = dest_download.mid(0, dest_download.indexOf(".zip"));

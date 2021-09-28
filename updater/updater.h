@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QList>
 #include <QSslError>
+#include <QProcess>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class updater; }
@@ -24,16 +25,20 @@ public:
     bool downloadFile(const QString &url, const QString &dest);
     bool extractFile(const QString &path, const QString &dest);
 
-    static bool createDirectory(const QString &path);
-    static bool removeDirectory(const QString &path);
-    static bool cleanDirectory(const QString &path);
+    bool exe(const QString &command,
+            const QStringList &argv,
+            const size_t time);
+
+    bool createDirectory(const QString &path);
+    bool removeDirectory(const QString &path);
+    bool cleanDirectory(const QString &path);
 
     bool moveWithA(const QString &from, const QString to);
     bool removeFile(const QString &path);
 
 private slots:
     void downloadUpdate();
-
+    void finish_exe(int exitcode, QProcess::ExitStatus exitStatus);
 private:
 
     void sslErrors(QNetworkReply *, const QList<QSslError> &errors);
