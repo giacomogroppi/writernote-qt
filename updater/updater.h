@@ -24,6 +24,8 @@ public:
     bool downloadFile(QString url, const QString dest);
     bool extractFile(const QString &path, const QString &dest);
 
+    static bool removeDirectory(const QString &path);
+
     bool moveWithA(QString l, const QString to);
     bool removeFile(QString l);
 

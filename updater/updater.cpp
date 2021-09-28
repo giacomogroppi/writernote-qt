@@ -59,17 +59,14 @@ bool updater::downloadFile(QString url, const QString dest)
 
 bool updater::extractFile(const QString &path, const QString &dest)
 {
-    QDir __dir(dest);
     const QString programm = "powershell";
     QProcess process;
     QStringList list;
     const size_t timeout = /* second */ 10 * 1000;
 
-    if(__dir.exists()){
-        if(!__dir.removeRecursively()){
-            user_message("I can't update writernote becouse I can't remove this folder: " + dest);
-            return false;
-        }
+    if(!updater::removeDirectory(dest)){
+        user_message("I can't update writernote becouse I can't remove this folder: " + dest);
+        return false;
     }
 
     list.append("Expand-Archive");
@@ -81,6 +78,14 @@ bool updater::extractFile(const QString &path, const QString &dest)
     process.start(programm, list);
 
     return process.waitForFinished(timeout);
+}
+
+bool updater::removeDirectory(const QString &path)
+{
+    QDir directory(path);
+    if(!directory.exists())
+        return true;
+    return directory.removeRecursively();
 }
 
 bool updater::moveWithA(QString l, const QString to)
