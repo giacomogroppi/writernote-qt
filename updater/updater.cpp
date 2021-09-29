@@ -47,11 +47,6 @@ bool updater::downloadFile(const QString &url, const QString &dest)
 
     argv << QString("Invoke-WebRequest -uri %1 -Method \"GET\" -Outfile %2").arg(url).arg(dest);
 
-    QString str;
-    for(int i=0; i<argv.length(); ++i)
-        str += " " + argv.at(i);
-    qDebug() << str;
-    //return !system(str.toUtf8().constData());
     return this->exe(argv, time);
 }
 
