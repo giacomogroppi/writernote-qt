@@ -18,7 +18,7 @@ void MainWindow::showRiascolto(){
     int somma = p_index + current_p_index;
 
     int lenght = m_currenttitle->testinohtml.at(somma).length();
-    QString testoGrassetto = "<!DOCTYPE html><html><body><b>" + m_currenttitle->testinohtml.at(somma) + "</b>";
+    QString testoGrassetto = QString("<!DOCTYPE html><html><body><b>%1</b>").arg(m_currenttitle->testinohtml.at(somma));
     testoGrassetto += m_currenttitle->testinohtml.last().mid(lenght, -1) + "</body></html>";
 
     this->ui->textEdit->setHtml(testoGrassetto);
