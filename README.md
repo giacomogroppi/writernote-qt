@@ -89,11 +89,6 @@
 - IOS
 - Windows x86 [installer, zip]
 
-export NAME_UP_ARMEABI=writernote-$VERSION-armeabi-v7a.apk
-          export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.apk
-          export NAME_UP_X86=writernote-$VERSION-x86.apk
-          export NAME_UP_X86_64=writernote-$VERSION-x86_64.apk
-
 ## Installing
   - Linux: 
     
