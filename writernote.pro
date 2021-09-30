@@ -443,7 +443,7 @@ else:android{
         INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/x86/../../install/x86/include/
     }
     equals(ANDROID_ABIS, "x86_64"){
-        message(Enable x86 android build for libzip)
+        message(Enable x86_64 android build for libzip)
 
         LIBS += $$PWD/3rdparty/libzip/android/build/x86_64/../../install/x86_64/lib/libzip.a
         INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/x86_64/../../install/x86_64/include/

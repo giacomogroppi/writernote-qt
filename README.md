@@ -78,6 +78,21 @@
   - In pen mode, moving an image is not supported
   - In keyboard mode it is possible to add images, and move them, but when the file is closed the images will be deleted, as with linux systems [snapcraft], a temporary position of the file is created, which will be deleted when closed, in windows systems instead the image will be automatically added if and only if it is not moved to disk, as the html link inside the file remains
 
+## Supported platforms:
+- GNU/Linux x86 [snap]
+- GNU/Linux arm64 [snap]
+- GNU/Linux armhf [snap]
+- Android armeabi [apk]
+- Android arm64 [apk]
+- Android x86 [apk]
+- Android x86_64 [apk]
+- IOS
+- Windows x86 [installer, zip]
+
+export NAME_UP_ARMEABI=writernote-$VERSION-armeabi-v7a.apk
+          export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.apk
+          export NAME_UP_X86=writernote-$VERSION-x86.apk
+          export NAME_UP_X86_64=writernote-$VERSION-x86_64.apk
 
 ## Installing
   - Linux: 
