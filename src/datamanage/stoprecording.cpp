@@ -1,31 +1,21 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <QString>
-
 #include "../utils/dialog_critic/dialog_critic.h"
-
 #include "../audioplay/aggiornotastiriascolto.h"
-
 #include "../setting_ui.h"
-#include "spacchettamento.h"
-
 #include "../utils/progress_bar/progress_bar_ui.h"
 #include <QThread>
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
-
 #include "../datawrite/savefile.h"
 #include <QMessageBox>
 #include "../utils/path/get_path.h"
 #include "../utils/retry/retry_ui.h"
-
 #include "retry_save_audio.h"
 #include "../utils/areyousure/areyousure.h"
-
 #include <QSettings>
 #include "../utils/setting_define.h"
-
 #include "../utils/permission/permission.h"
 #include "../utils/make_default/make_default_ui.h"
 
@@ -48,24 +38,6 @@ void MainWindow::on_stop_rec_triggered()
         return;
 
     this->m_audioRecorder->stop();
-
-    /* if we are in keyboard mode */
-    if(!m_currenttitle->m_touch){
-        progress_bar_ui * m_bar = new progress_bar_ui;
-        spacchettamento * m_spac = new spacchettamento(this);
-
-        QObject::connect(m_spac, &spacchettamento::progress, m_bar, &progress_bar_ui::progress_);
-        QObject::connect(m_spac, &spacchettamento::finished, m_bar, &progress_bar_ui::finished_);
-        QObject::connect(m_bar, &progress_bar_ui::closeForce, m_spac, &spacchettamento::exit);
-
-        QFuture<void> future1 = QtConcurrent::run( m_spac, &spacchettamento::esecuzione );
-
-        m_bar->exec();
-
-        delete m_spac;
-        delete m_bar;
-
-    }
 
     if(m_currenttitle->se_registato == Document::record_zip){
         saveAudio(m_currenttitle, m_path);

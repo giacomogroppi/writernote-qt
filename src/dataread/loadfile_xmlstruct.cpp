@@ -243,26 +243,19 @@ int xmlstruct::load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const b
 
     SOURCE_READ_RETURN(f, &doc->se_tradotto, sizeof(doc->se_tradotto));
 
-    LOAD_STRINGA_RETURN(f, doc->testi);
-
     LOAD_STRINGA_RETURN(f, doc->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &doc->m_touch, sizeof(doc->m_touch));
     SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
     SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
 
-    if(doc->m_touch){
-        tmp = loadbinario_1(filezip);
-        if(tmp == ERROR){
-            return tmp;
-        }
-        else if(tmp == ERROR_CONTROLL){
-            /* we want to continue to load the file, but we need to return we had a problem */
-            controllo_parita = 1;
-        }
+    tmp = loadbinario_1(filezip);
+    if(tmp == ERROR){
+        return tmp;
     }
-
-    LOAD_MULTIPLESTRING_RETURN(f, currenttitle->testinohtml, currenttitle->posizione_iniz);
+    else if(tmp == ERROR_CONTROLL){
+        /* we want to continue to load the file, but we need to return we had a problem */
+        controllo_parita = 1;
+    }
 
     if(LoadImg){
         res_img = doc->m_img->load(filezip, f);

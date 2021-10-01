@@ -24,9 +24,6 @@ void MainWindow::on_actionSave_File_triggered()
         m_path = new_path;
     }
 
-    if(m_currenttitle->m_touch)
-        this->m_currenttitle->testi = this->ui->textEdit->toHtml();
-
     check = (savefile_i.savefile_check_file()==OK);
 
     if(!check && c)

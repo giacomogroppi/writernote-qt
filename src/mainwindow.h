@@ -98,8 +98,6 @@ public:
     void update_touch_or_pen();
     void loadPenOrMouse();
 
-    QTimer *m_timer;
-
     /* data to manage all */
     int m_currentTime = 0;
     QString m_path;
@@ -158,15 +156,7 @@ private slots:
     void on_actionNew_File_triggered();
     void closeEvent (QCloseEvent *event) override;
 
-
-    /* richiamata quando viene modificato qualcosa del testo */
-    void on_textEdit_textChanged();
-
     void on_actionOpen_triggered();
-
-
-
-    void on_textEdit_selectionChanged();
 
     /* funzione che gestisce l'aggiornamento della status bar */
     void updateProgress(qint64 duration);
@@ -179,14 +169,6 @@ private slots:
     void riascoltoaudioprogressivo(qint64 position);
     void on_actionListen_current_audio_triggered();
 
-    void on_boldbotton_clicked();
-
-    void on_inserttablebotton_clicked();
-
-    void on_insertimagebotton_clicked();
-
-    void on_listbotton_clicked();
-
     /* funzione che gestisce la fine del riascolto dell'audio */
     void cambiostatoplayer(QMediaPlayer::State);
 
@@ -197,10 +179,6 @@ private slots:
 
     void on_volumeSlider_actionTriggered(int action);
 
-    void on_spinBox_fontsize_valueChanged(const QString &arg1);
-
-    void on_fontComboBox_fonttipo_currentFontChanged(const QFont &f);
-
     void on_actionPrint_triggered();
 
 
@@ -209,14 +187,6 @@ private slots:
     void on_volumeSlider_valueChanged(int value);
 
     void on_actionRedo_triggered();
-
-    void on_actionCut_triggered();
-
-    void on_actionSelect_all_triggered();
-
-    void on_actionPaste_triggered();
-
-    void on_actionCopy_triggered();
 
     void on_actionpen_triggered();
 
@@ -270,8 +240,6 @@ private slots:
     void on_actionExtract_audio_triggered();
 
     void on_actionlastStyle_triggered();
-
-    void showRiascolto();
 
     void on_actionrestore_button_triggered();
 

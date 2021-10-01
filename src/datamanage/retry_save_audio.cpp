@@ -31,7 +31,6 @@ void retry_save_audio::close(){
 
     /* reset audio */
     this->m_current->se_registato = Document::not_record;
-    this->m_current->testinohtml.clear();
-    this->m_current->posizione_iniz.clear();
+    this->m_current->cleanAudio();
 
 }

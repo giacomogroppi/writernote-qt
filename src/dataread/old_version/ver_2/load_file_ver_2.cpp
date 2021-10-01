@@ -11,8 +11,9 @@
  * furthermore we are obliged to read the audio_potion_path string
 */
 int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip){
-    QString tmp_str;
+    QString tmp_str, tmp_testi;
     bool temp;
+    bool tmp_touch;
 
     LOAD_STRINGA_RETURN(f, tmp_str);
     SOURCE_READ_RETURN(f, &temp, sizeof(bool));
@@ -23,18 +24,16 @@ int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
-    LOAD_STRINGA_RETURN(f, currenttitle->testi)
+    LOAD_STRINGA_RETURN(f, tmp_testi)
 
     LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
+    SOURCE_READ_RETURN(f, &tmp_touch, sizeof(bool));
 
-    if(currenttitle->m_touch){
-        if(loadbinario_0(filezip) == ERROR)
-            return ERROR;
-    }
+    CONTROLL_KEY(tmp_touch);
 
-    LOAD_MULTIPLESTRING_RETURN(f, currenttitle->testinohtml, currenttitle->posizione_iniz)
+    if(loadbinario_0(filezip) == ERROR)
+        return ERROR;
 
     return OK;
 }

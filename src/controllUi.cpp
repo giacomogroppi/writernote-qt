@@ -7,7 +7,7 @@ void MainWindow::contrUi(){
     const bool is_rec =         m_audioRecorder->state() == QAudioRecorder::RecordingState;
     const bool is_pause_rec =       m_audioRecorder->state() == QAudioRecorder::PausedState;
 
-    const bool is_touch =       m_currenttitle->m_touch;
+    const bool is_touch =       true;
 
     const bool is_play =        player->state() == QMediaPlayer::PlayingState;
 
@@ -19,14 +19,6 @@ void MainWindow::contrUi(){
     ui->toolSheet->setHidden(!is_touch);
     ui->toolBarcolore->setHidden(!is_touch);
     ui->toolbarmatita->setHidden(!is_touch);
-
-    ui->textEdit->setHidden(is_touch);
-    ui->boldbotton->setHidden(is_touch);
-    ui->inserttablebotton->setHidden(is_touch);
-    ui->fontComboBox_fonttipo->setHidden(is_touch);
-    ui->insertimagebotton->setHidden(is_touch);
-    ui->spinBox_fontsize->setHidden(is_touch);
-    ui->listbotton->setHidden(is_touch);
 
     ui->start_play->setHidden(!is_play);
     ui->stop_play->setHidden(!is_play);

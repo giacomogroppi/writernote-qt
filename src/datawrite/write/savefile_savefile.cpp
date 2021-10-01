@@ -17,7 +17,6 @@ static void setCurrentVersion(Document *data);
 
 int savefile::savefile_check_file(){
     setCurrentVersion(currenttitle);
-
     int error, temp, len, i, check;
     zip_error_t errore;
 
@@ -55,30 +54,12 @@ int savefile::savefile_check_file(){
 
     SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(currenttitle->se_tradotto));
 
-    SAVE_STRINGA(file, currenttitle->testi.toUtf8().constData());
-
     SAVE_STRINGA(file, currenttitle->audio_position_path.toUtf8().constData())
 
-    SOURCE_WRITE(file, &currenttitle->m_touch, sizeof(currenttitle->m_touch))
     SOURCE_WRITE(file, &currenttitle->count_pdf, sizeof(currenttitle->count_pdf));
     SOURCE_WRITE(file, &currenttitle->count_img, sizeof(currenttitle->count_img));
 
-    if(currenttitle->m_touch)
-        SAVE_BINARY(filezip);
-
-    /* testinohtml */
-    len = currenttitle->testinohtml.length();
-    SOURCE_WRITE(file, &len, sizeof(int));
-
-    for(i=0; i<len; i++)
-        SAVE_STRINGA(file, currenttitle->testinohtml.at(i).toUtf8().constData())
-
-
-    /* posizione_iniz */
-    for(i=0; i<len; i++){
-        temp = currenttitle->posizione_iniz.at(i);
-        SOURCE_WRITE(file, &temp, sizeof(int))
-    }
+    SAVE_BINARY(filezip);
 
     res_img = currenttitle->m_img->save_metadata(file);
     if(res_img != fromimage::load_res::ok)

@@ -6,7 +6,9 @@
 
 int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip){
     int temp;
+    bool tmp_touch;
     uchar controllo_parita = 0;
+    QString tmp_testi;
     QString tmp_str;
     LOAD_STRINGA_RETURN(f, tmp_str);
 
@@ -15,24 +17,22 @@ int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
-    LOAD_STRINGA_RETURN(f, currenttitle->testi);
+    LOAD_STRINGA_RETURN(f, tmp_testi);
 
     LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
+    SOURCE_READ_RETURN(f, &tmp_touch, sizeof(bool));
 
-    if(currenttitle->m_touch){
-        temp = loadbinario_1(filezip);
-        if(temp == ERROR){
-            return temp;
-        }
-        else if(temp == ERROR_CONTROLL){
-            /* we want to continue to load the file, but we need to return we had a problem */
-            controllo_parita = 1;
-        }
+    CONTROLL_KEY(tmp_touch);
+
+    temp = loadbinario_1(filezip);
+    if(temp == ERROR){
+        return temp;
     }
-
-    LOAD_MULTIPLESTRING_RETURN(f, currenttitle->testinohtml, currenttitle->posizione_iniz);
+    else if(temp == ERROR_CONTROLL){
+        /* we want to continue to load the file, but we need to return we had a problem */
+        controllo_parita = 1;
+    }
 
     if(controllo_parita)
         return ERROR_CONTROLL;

@@ -17,13 +17,11 @@ class frompdf;
 
 #include <QByteArray>
 
-#define DEF_METHOD true
-
 class Document{
 public:
     size_t createSingleControll() const;
 
-    bool isEmpty() const;
+    bool isEmpty() const { return datatouch->isempty(); };
 
     frompdf *m_pdf;
     fromimage *m_img;
@@ -31,18 +29,14 @@ public:
     int versione = CURRENT_VERSION_CURRENT_TITLE;
     bool se_tradotto = false;
     QString audio_position_path = "";
-    QString testi = "";
-    QStringList testinohtml = {};
-    QList<int> posizione_iniz = {};
 
     bool isOkVersion() const{
         return this->versione >= MIN_VERSION_CURRENT_TITLE;
     }
 
-    bool m_touch = DEF_METHOD;
     datastruct *datatouch;
     void reset();
-
+    void cleanAudio();
     uint count_pdf = 0;
     uint count_img = 0;
 

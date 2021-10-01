@@ -1,8 +1,5 @@
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
-
-#ifndef IOS_WRITERNOTE
-
 #include <QPrintDialog>
 #include <QDialog>
 #include <QPrinter>
@@ -14,10 +11,31 @@ void MainWindow::on_actionPrint_triggered()
 #else
     QPrinter printer;
     QPrintDialog dialogprint(&printer);
+    bool isloading = true;
+    QColor color;
+    QPen pen;
+    QBrush m_brush;
+    TabletCanvas::Point point;
 
-    if (dialogprint.exec() == QDialog::Accepted)
-        this->ui->textEdit->print(&printer);
+
+    const double size_orizzontale = m_currenttitle->datatouch->biggerx();
+    const double size_verticale = printer.height();
+    const double delta = (double)printer.width() / (double)size_orizzontale;
+
+    if( dialogprint.exec() != QDialog::Accepted )
+        return;
+
+    QPainter painter;
+    if (! painter.begin(&printer)) { // failed to open file
+        user_message("Writernote had an internal problem");
+    }
+
+    this->m_canvas->load(painter, this->m_currenttitle, isloading, color,
+                         pen, m_brush, point, 0, nullptr, true, delta, size_orizzontale,
+                         size_verticale/delta, nullptr, nullptr);
+
+    painter.drawText(10, 10, "Test 2");
+    painter.end();
+    /* TODO -> export a pdf in  */
 #endif
 }
-
-#endif

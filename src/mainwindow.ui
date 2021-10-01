@@ -20,75 +20,13 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2_stile">
-      <item>
-       <widget class="QSpinBox" name="spinBox_fontsize">
-        <property name="minimum">
-         <number>12</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFontComboBox" name="fontComboBox_fonttipo"/>
-      </item>
-      <item>
-       <widget class="QToolButton" name="boldbotton">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/bold.png</normaloff>:/image/images/bold.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="inserttablebotton">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/table.png</normaloff>:/image/images/table.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="listbotton">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/bullet.png</normaloff>:/image/images/bullet.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="insertimagebotton">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../writernote.qrc">
-          <normaloff>:/image/images/image.png</normaloff>:/image/images/image.png</iconset>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <layout class="QHBoxLayout" name="layouteditor">
-            <item>
-             <widget class="QTextEdit" name="textEdit"/>
-            </item>
-           </layout>
+           <layout class="QHBoxLayout" name="layouteditor"/>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">

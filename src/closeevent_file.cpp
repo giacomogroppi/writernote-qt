@@ -45,7 +45,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     n_need_save __res;
 
-    QString filep, __message;
+    QString __message;
 
     QMessageBox::StandardButton resBtn;
     bool check;
@@ -73,11 +73,6 @@ void MainWindow::closeEvent (QCloseEvent *event)
         return event->ignore();
     }
 
-
-    if(!m_currenttitle->m_touch){
-        filep = m_currenttitle->testi;
-        m_currenttitle->testi = this->ui->textEdit->toHtml();
-    }
 
     if(__res == n_need_save::not_
             || __res == n_need_save::only_writernote){

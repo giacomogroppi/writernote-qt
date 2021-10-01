@@ -14,7 +14,6 @@ enum MainWindow::n_need_save
         MainWindow::needToSave(
             xmlstruct *xml,
             Document * tmp_read) const{
-    QString filep;
     int check1;
 
     if(xml->getPath() == ""){
@@ -31,26 +30,15 @@ enum MainWindow::n_need_save
         }
     }
 
-    /*
-     * if we are in keyboard mode
-    */
-    if(!m_currenttitle->m_touch){
-        filep = m_currenttitle->testi;
-        m_currenttitle->testi = this->ui->textEdit->toHtml();
-    }
-
     check1 = checksimilecopybook(tmp_read, m_currenttitle, true) == OK_CHECK;
-
-    m_currenttitle->testi = filep;
 
     if(check1)
         return n_need_save::not_;
 
-    if(m_currenttitle->m_touch){
-        if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read->datatouch)){
-            return n_need_save::only_writernote;
-        }
+    if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read->datatouch)){
+        return n_need_save::only_writernote;
     }
+
 
     if(this->m_currenttitle->isEmpty() || m_currenttitle->datatouch->userWrittenSomething(nullptr)){
         return n_need_save::not_;

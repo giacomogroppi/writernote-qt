@@ -127,9 +127,6 @@ MainWindow::MainWindow(QWidget *parent,
 
     updateTouch();
 
-    m_timer = new QTimer(this);
-    QObject::connect(m_timer, &QTimer::timeout, this, &MainWindow::showRiascolto);
-
     QObject::connect(m_sheet, &fast_sheet_ui::changeButton, [=](bool res){
         ui->actionnewPage->setVisible(!res);
     });
@@ -145,11 +142,9 @@ MainWindow::MainWindow(QWidget *parent,
 
     loadPenOrMouse();
 
-    if(m_currenttitle->m_touch){
-        this->m_canvas->settingdata(m_currenttitle, m_path);
-        this->m_canvas->loadpixel();
-        this->m_canvas->time = 0;
-    }
+    this->m_canvas->settingdata(m_currenttitle, m_path);
+    this->m_canvas->loadpixel();
+    this->m_canvas->time = 0;
 
     if(path)
         openFile(path);
@@ -206,37 +201,6 @@ void MainWindow::on_actionNew_File_triggered()
     m_path = "";
 }
 
-/* funzione che gestisce il controllo del riascolto dell'audio */
-void MainWindow::on_textEdit_selectionChanged(){
-    if(this->player->state() != QMediaPlayer::PlayingState)
-            return;
-
-    QString text = ui->textEdit->textCursor().selectedText();
-    int position = ui->textEdit->textCursor().selectionStart();
-
-    int i = 1;
-    qint64 audio;
-    while (true){
-        if ((position >= m_currenttitle->testinohtml[i-1].length()) && (position <= m_currenttitle->testinohtml[i+1].length())){
-            audio = m_currenttitle->posizione_iniz[i];
-            this->player->setPosition(audio);
-
-            this->player->setPosition(audio*1000);
-            break;
-        }
-        else if ((i + 1) == m_currenttitle->posizione_iniz.length()){
-            audio = m_currenttitle->posizione_iniz.last();
-
-            this->player->setPosition(audio);
-
-            //self.player.setPosition(audio*1000)
-            break;
-        }
-        i ++;
-    }
-}
-
-
 void MainWindow::togglePause()
 {
     if (m_audioRecorder->state() != QMediaRecorder::PausedState)
@@ -263,59 +227,10 @@ void MainWindow::on_pause_rec_triggered()
         this->m_audioRecorder->record();
 }
 
-
-/* editor di testo -> quando cambia il testo scritto */
-void MainWindow::on_textEdit_textChanged()
-{
-    if(this->m_audioRecorder->state() != QMediaRecorder::RecordingState)
-        return;
-
-    this->m_currenttitle->testi = this->ui->textEdit->toHtml();
-
-    m_currenttitle->testinohtml.append(ui->textEdit->toPlainText());
-
-    m_currenttitle->posizione_iniz.append(this->m_audioRecorder->duration()/1000);
-}
-
-
-void MainWindow::on_spinBox_fontsize_valueChanged(const QString &arg1)
-{
-    this->ui->textEdit->setCurrentFont(arg1);
-}
-
-void MainWindow::on_fontComboBox_fonttipo_currentFontChanged(const QFont &f)
-{
-    this->ui->textEdit->setCurrentFont(f);
-}
-
 void MainWindow::on_actionRedo_triggered()
 {
-    if(this->m_currenttitle->m_touch){
-        this->m_canvas->m_redoundo->redo(&this->m_currenttitle);
-        emit RedoT();
-        return;
-    }
-    this->ui->textEdit->redo();
-}
-
-void MainWindow::on_actionCut_triggered()
-{
-    this->ui->textEdit->cut();
-}
-
-void MainWindow::on_actionSelect_all_triggered()
-{
-    this->ui->textEdit->selectAll();
-}
-
-void MainWindow::on_actionPaste_triggered()
-{
-    this->ui->textEdit->paste();
-}
-
-void MainWindow::on_actionCopy_triggered()
-{
-    this->ui->textEdit->copy();
+    this->m_canvas->m_redoundo->redo(&this->m_currenttitle);
+    emit RedoT();
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -329,13 +244,8 @@ void MainWindow::on_actionVersion_triggered()
 
 void MainWindow::on_actionUndu_triggered()
 {
-    if(m_currenttitle->m_touch){
-        this->m_canvas->m_redoundo->undo(&this->m_currenttitle);
-        emit UndoT();
-        return;
-    }
-
-    ui->textEdit->undo();
+    this->m_canvas->m_redoundo->undo(&this->m_currenttitle);
+    emit UndoT();
 }
 
 /* restore file to the original position (0, 0) */

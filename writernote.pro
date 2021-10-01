@@ -74,6 +74,7 @@ SOURCES += \
     src/currenttitle/option/main_exe.cpp \
     src/currenttitle/option/option_copybook.cpp \
     src/datamanage/retry_save_audio.cpp \
+    src/datamanage/stoprecording.cpp \
     src/dataread/load_from_file.cpp \
     src/dataread/old_version/ver_2/load_file_ver_2.cpp \
     src/dataread/old_version/ver_3/load_file_ver_3.cpp \
@@ -153,11 +154,6 @@ SOURCES += \
     src/currenttitle/deleteaudio.cpp \
     src/currenttitle/newcopybook.cpp \
     src/currenttitle/renamefile.cpp \
-    src/datamanage/check1.cpp \
-    src/datamanage/checkinserimento.cpp \
-    src/datamanage/eliminazioneNFrasi.cpp \
-    src/datamanage/spacchettamento.cpp \
-    src/datamanage/stoprecording.cpp \
     src/dataread/loadfile_xmlstruct.cpp \
     src/dataread/loadindice_xmlstruct.cpp \
     src/dataread/loadbinario.cpp \
@@ -189,12 +185,7 @@ SOURCES += \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
-    src/style/bulletfile.cpp \
-    src/style/insertimage.cpp \
-    src/style/inserttable_class.cpp \
-    src/style/inserttable_mainwindow.cpp \
     src/audioplay/stopriascolto.cpp \
-    src/style/bold.cpp \
     src/style/print_action.cpp \
     src/touch/datastruct/datastruct.cpp \
     src/touch/datastruct/loadpixel.cpp \
@@ -259,13 +250,13 @@ SOURCES += \
 
 HEADERS += \
     src/button/button_size.h \
+    src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
     src/currenttitle/default_type/default_type.h \
     src/currenttitle/document.h \
     src/currenttitle/option/modality_data.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/currenttitle/option/option_copybook.h \
-    src/datamanage/retry_save_audio.h \
     src/dataread/load_from_file.h \
     src/dataread/readlistarray.h \
     src/filelost.h \
@@ -304,9 +295,6 @@ HEADERS += \
     src/currenttitle/checksimilecopybook.h \
     src/currenttitle/deleteaudio.h \
     src/currenttitle/renamefile.h \
-    src/datamanage/check1.h \
-    src/datamanage/checkinserimento.h \
-    src/datamanage/spacchettamento.h \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/source_read_ext.h \
     src/utils/bug_repo/bug_repo_ui.h \
@@ -337,7 +325,6 @@ HEADERS += \
     src/mainwindow.h \
     src/savecopybook.h \
     src/dataread/xmlstruct.h \
-    src/style/inserttable_class.h \
     src/utils/color/color_chooser.h \
     src/utils/extract_audio/extract_audio.h \
     src/utils/extract_audio/extract_audio_ui.h \
@@ -381,7 +368,6 @@ FORMS += \
     src/restore_file/ui_restore/restore.ui \
     src/sheet/dialog_sheet.ui \
     src/sheet/fast-sheet/fast_sheet_ui.ui \
-    src/style/inserttable_class.ui \
     src/touch/copy/copy_widgets.ui \
     src/touch/highlighter/highlighter.ui \
     src/touch/pen/pen_ui.ui \

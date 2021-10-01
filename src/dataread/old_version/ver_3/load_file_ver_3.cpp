@@ -7,6 +7,7 @@
 int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip)
 {
     int temp;
+    bool tmp_touch;
     QString tmp_str;
 
     LOAD_STRINGA_RETURN(f, tmp_str);
@@ -15,18 +16,16 @@ int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
     SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
 
-    LOAD_STRINGA_RETURN(f, currenttitle->testi);
+    LOAD_STRINGA_RETURN(f, tmp_str);
 
     LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &currenttitle->m_touch, sizeof(bool));
+    SOURCE_READ_RETURN(f, &tmp_touch, sizeof(bool));
 
-    if(currenttitle->m_touch){
+    CONTROLL_KEY(tmp_touch);
+
         if(loadbinario_0(filezip) == ERROR)
             return ERROR;
-    }
-
-    LOAD_MULTIPLESTRING_RETURN(f, currenttitle->testinohtml, currenttitle->posizione_iniz);
 
     return OK;
 

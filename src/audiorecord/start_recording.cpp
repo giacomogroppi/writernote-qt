@@ -59,9 +59,6 @@ void MainWindow::on_start_rec_triggered()
         //this->m_currenttitle->audio_data.reserve(32*1024*1024);
 
         this->m_audioRecorder->record();
-
-        this->m_currenttitle->testinohtml.clear();
-        this->m_currenttitle->posizione_iniz.clear();
     }
 
     this->ui->start_rec->setEnabled(false);

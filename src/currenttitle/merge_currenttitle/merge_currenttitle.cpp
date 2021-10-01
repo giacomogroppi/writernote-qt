@@ -8,9 +8,6 @@ merge_currenttitle::n_merge merge_currenttitle::controll(
     if(first->se_registato != Document::not_record && second->se_registato != Document::not_record)
         return audio_same;
 
-    if(first->m_touch + second->m_touch == 1)
-        return n_merge::not_compatible;
-
     return n_merge::ok;
 }
 
@@ -29,13 +26,6 @@ merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document 
     int i, len;
 
     double last = first->datatouch->biggery();
-
-    if(first->m_touch){
-
-
-    }else{
-
-    }
 
 
     return n_merge::ok;

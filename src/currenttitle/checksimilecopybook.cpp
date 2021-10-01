@@ -11,25 +11,6 @@
 static int checkPositionAudio(const Document *first,
                               const Document *second);
 
-static int checkIndiceSlow(const Document *primo,
-                           const Document *secondo){
-    if(primo->testi != secondo->testi)
-        return TESTI;
-
-    if(primo->testinohtml.length() != secondo->testinohtml.length())
-        return TESTINOHTML;
-
-    int i, len = primo->testinohtml.length();
-    for(i=0; i < len; i++ )
-        if(primo->testinohtml.at(i) != secondo->testinohtml.at(i))
-            return TESTINOHTML;
-
-    if(primo->audio_position_path != secondo->audio_position_path)
-        return AUDIOPOSITION;
-
-    return OK_CHECK;
-}
-
 static int checkSpeed(const Document *first,
                       const Document *second){
     uint i, len;
@@ -92,15 +73,11 @@ int checksimilecopybook(const Document *primo,
                         const Document *secondo,
                         const bool speed)
 {
+    int res;
     if(primo->count_img != secondo->count_img)
         return LEN;
     if(primo->count_pdf != secondo->count_pdf)
         return LEN;
-
-    if(!primo->m_touch)
-        return checkIndiceSlow(primo, secondo);
-
-    int res;
 
     primo->datatouch->scala_all();
     secondo->datatouch->scala_all();

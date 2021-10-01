@@ -358,5 +358,3 @@ bool datastruct::needtochangeid(const unsigned int i){
             && temp_id == m_point.at(i+1).idtratto);
 
 }
-
-

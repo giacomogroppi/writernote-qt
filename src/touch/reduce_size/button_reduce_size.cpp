@@ -9,9 +9,6 @@ void MainWindow::on_actionReduce_size_file_triggered()
     if(this->m_path == "")
         return;
 
-    if(!m_currenttitle->m_touch)
-        return user_message("You can decrease the size of files created with the pen only");
-
     size_t __c, __e;
 
     __c = reduce_size::current_size(m_currenttitle->datatouch);

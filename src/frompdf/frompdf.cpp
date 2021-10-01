@@ -253,8 +253,6 @@ void frompdf::addPdf(QString &pos,
         return dialog_critic("Before add a pdf you need to save this file");
     if(m_data->count_pdf)
         return user_message("It's not possible to add more than one pdf");
-    if(!m_data->m_touch)
-        return user_message("It's not possible to pdf in keyboard mode");
 
     m_data->datatouch->scala_all();
     if(insert_pdf(pos, point) != OK){
