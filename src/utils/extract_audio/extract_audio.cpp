@@ -11,6 +11,7 @@ extract::n_extract extract_audio(const QString &path,
     Document doc;
     size_t size_audio;
     xmlstruct m_data(path, doc);
+    FILE *fp;
 
     if(m_data.loadfile(false, false) != OK){
         return extract::load_file;
@@ -24,7 +25,7 @@ extract::n_extract extract_audio(const QString &path,
         return extract::load_audio;
     }
 
-    FILE *fp = fopen(path_to.toUtf8().constData(), "w");
+    fp = fopen(path_to.toUtf8().constData(), "w");
     if(!fp){
         return extract::open_to;
     }

@@ -4,9 +4,10 @@ imageWidget::imageWidget(QWidget *parent, QPixmap *pixmap) : QWidget(parent)
 {
     gridLayout = new QGridLayout();
     imgDisplayLabel = new QLabel("");
+    scrollArea = new QScrollArea();
+
     imgDisplayLabel->setPixmap(*pixmap);
     imgDisplayLabel->adjustSize();
-    scrollArea = new QScrollArea();
     scrollArea->setWidget(imgDisplayLabel);
     scrollArea->setMinimumSize(256,256);
     scrollArea->setMaximumSize(512,512);

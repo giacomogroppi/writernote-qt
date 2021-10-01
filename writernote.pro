@@ -155,7 +155,6 @@ SOURCES += \
     src/currenttitle/newcopybook.cpp \
     src/currenttitle/renamefile.cpp \
     src/dataread/loadfile_xmlstruct.cpp \
-    src/dataread/loadindice_xmlstruct.cpp \
     src/dataread/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
     src/datawrite/renamefile_f_zip.cpp \
@@ -304,6 +303,7 @@ HEADERS += \
     src/utils/color_define_rgb.h \
     src/utils/common_def.h \
     src/utils/common_error_definition.h \
+    src/utils/common_script.h \
     src/utils/copy_text.h \
     src/utils/default_location/audio_default_location.h \
     src/utils/default_option/default_option_ui.h \

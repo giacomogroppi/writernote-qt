@@ -21,6 +21,7 @@
 #include "touch/scrollKinetic/ui_scroll/scroll.h"
 #include "utils/common_def.h"
 #include "currenttitle/option/option_copybook.h"
+#include "log/log_ui/log_ui.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -38,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->m_canvas = canvas;
     this->m_canvas->parent = this;
-
     this->m_user = user;
 
     ui->setupUi(this);
@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_text_w = new text_widgets(this);
     this->m_sheet = new fast_sheet_ui(this);
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_path);
+    NAME_LOG_EXT = new log_ui(this);
 
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);

@@ -24,11 +24,12 @@ enum MainWindow::n_need_save
 
     check1 = xml->loadfile(false, false);
 
-    if(check1 != ERROR_VERSION_NEW){
-        if(check1 != OK){
-            return n_need_save::unable_load;
-        }
+    if(check1 != ERROR_VERSION_NEW &&
+            check1 != OK &&
+            check1 != ERROR_CONTROLL){
+        return n_need_save::unable_load;
     }
+
 
     check1 = checksimilecopybook(tmp_read, m_currenttitle, true) == OK_CHECK;
 

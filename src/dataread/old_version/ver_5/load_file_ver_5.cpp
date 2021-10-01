@@ -27,6 +27,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
     LOAD_STRINGA_RETURN(f, doc->audio_position_path)
 
     SOURCE_READ_RETURN(f, &tmp_touch, sizeof(tmp_touch));
+    CONTROLL_KEY(tmp_touch);
     SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
     SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
 

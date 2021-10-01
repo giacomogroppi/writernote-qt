@@ -3,6 +3,7 @@
 #include "../datawrite/source_read_ext.h"
 #include "../utils/common_error_definition.h"
 #include "../frompdf/frompdf.h"
+#include "../utils/areyousure/areyousure.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa){
     int temp;
@@ -60,6 +61,38 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
     if(closeZip)
         zip_close(fileZip);
     return ERROR;
+}
+
+bool xmlstruct::manageMessage(const int res)
+{
+    switch (res) {
+        case OK: return true;
+        case ERROR: {
+            dialog_critic("We had an internal problem loading the file");
+            return false;
+        }
+        case ERROR_VERSION:{
+            dialog_critic("This file is too old to be read");
+            return false;
+        }
+        case ERROR_VERSION_NEW:{
+            dialog_critic("This file was created with a later version of writernote, and I cannot read the file.");
+            return false;
+        }
+        case ERROR_CONTROLL:{
+            return areyousure("Corrupt file", "The file is corrupt, do you want to open it anyway?");
+        }
+        case ERROR_MULTIPLE_COPYBOOK:{
+            user_message("Writernote has decided to completely change the file format, now it will no longer be possible to have more than one copybook in a file. \nTo use files created with writernote versions lower than or equal to 1.5.2h you must:\nOpen the file with a compressed archive manager, extract all the files that have the same prefix, i.e. the copybook name, and move them into a new writernote file, changing all the names of the same copybook with the prefix data.");
+            return false;
+        }
+        case ERROR_VERSION_KEY:{
+            user_message("This file was written with the pen, and it is not possible to light it.");
+            return false;
+        }
+    }
+    assert(0);
+    return false;
 }
 
 int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data){
@@ -134,28 +167,35 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
 
     if(tmp_ver <= 2){
 #ifdef ALL_VERSION
-        if(load_file_2(currenttitle, f, filezip) != OK)
+        err = load_file_2(currenttitle, f, filezip);
+        if(err != OK)
             goto free_;
     }else if(tmp_ver == 3){
-        if(load_file_3(currenttitle, f, filezip) != OK)
+        err = load_file_3(currenttitle, f, filezip);
+        if(err != OK)
             goto free_;
 
     }else if(tmp_ver == 4){
-        if(load_file_4(currenttitle, f, filezip) != OK)
+        err = load_file_4(currenttitle, f, filezip);
+        if(err != OK)
             goto free_;
     }else if(tmp_ver == 5){
-        if(load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg) != OK)
-            goto free_;
-    }else if(tmp_ver == 6){
-        if(load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg) != OK)
+        err = load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg);
+        if(err != OK)
             goto free_;
     }
 #else
-        goto ERROR_VERSION;
+        goto error_version;
+    }
 #endif
     else if(tmp_ver > 6)
         goto error_new_version;
 
+    if(tmp_ver == 6){
+        err = load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg);
+        if(err != OK)
+            goto free_;
+    }
 
     /*
      * after we load all the file we
@@ -171,7 +211,7 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
 
     free_:
     CLOSE_ZIP(f, filezip);
-    return ERROR;
+    return err;
 
     /*
      * in case we can not operate with the file because it's too old

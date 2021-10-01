@@ -19,8 +19,9 @@ restore_file_critic::n_err restore_file_critic::restore_file_direct(const QStrin
 
     xmlstruct xml(path_load, cur);
     savefile save(path_save, cur);
+    const int res = xml.loadfile(false, false);
 
-    if(xml.loadfile(false, false) != OK){
+    if(!xmlstruct::manageMessage(res)){
         return restore_file_critic::n_err::error_load_file;
     }
 

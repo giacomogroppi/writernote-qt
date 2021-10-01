@@ -64,9 +64,8 @@ public:
         return *path_;
     };
 
-    /*
-    bool loadindice();
-    */
+    /* return true if we can read this file */
+    static bool manageMessage(const int res);
 
     int loadfile(const bool LoadPdf, const bool LoadImg);
 

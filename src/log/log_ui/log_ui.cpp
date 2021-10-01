@@ -219,4 +219,4 @@ void log_ui::on_button_change_position_clicked()
 
 }
 
-log_ui log_write(NULL);
+log_ui * NAME_LOG_EXT;

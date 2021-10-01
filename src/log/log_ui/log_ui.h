@@ -65,7 +65,7 @@ private slots:
     void on_button_change_position_clicked();
 };
 
-extern log_ui NAME_LOG_EXT;
-#define LOG(message, mode) NAME_LOG_EXT::write(message, mode)
+extern log_ui *NAME_LOG_EXT;
+#define LOG(message, mode) NAME_LOG_EXT->write(message, mode)
 
 #endif // LOG_UI_H

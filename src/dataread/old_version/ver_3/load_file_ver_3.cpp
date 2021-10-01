@@ -24,8 +24,8 @@ int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip
 
     CONTROLL_KEY(tmp_touch);
 
-        if(loadbinario_0(filezip) == ERROR)
-            return ERROR;
+    if(loadbinario_0(filezip) == ERROR)
+        return ERROR;
 
     return OK;
 

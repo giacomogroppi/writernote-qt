@@ -13,7 +13,7 @@
 #define ERROR_VERSION_NEW 3
 #define ERROR_CONTROLL 4 /* return when the data is corrupted */
 #define ERROR_MULTIPLE_COPYBOOK 5
-#define ERROR_VERSION_KEY 6
+#define ERROR_VERSION_KEY 6 /* return when the file is written with keayboard */
 
 /* controll keyboard */
 #define CONTROLL_KEY(x) if(!x) \

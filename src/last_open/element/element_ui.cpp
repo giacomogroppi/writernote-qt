@@ -41,7 +41,7 @@ element_ui::~element_ui()
 
 void element_ui::set_main()
 {
-    const int height = 400, width = 400;
+    const int height = 450, width = 450;
     QPixmap img(width, height);
 
     ui->label_path->setFont(QFont("Helvetica", 11));
@@ -70,6 +70,7 @@ void element_ui::set_main()
     if(!preview::get(img, false, m_data->posizione, width, height)){
         img = QPixmap(":image/images/not_define.png");
     }
+
     img_widget = new imageWidget(nullptr, &img);
     this->ui->verticalLayout->addWidget(img_widget, 0);
 }
