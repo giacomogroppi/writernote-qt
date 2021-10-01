@@ -22,6 +22,7 @@
 #include "utils/common_def.h"
 #include "currenttitle/option/option_copybook.h"
 #include "log/log_ui/log_ui.h"
+#include "ui/controlluibutton.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -88,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_sheet = new fast_sheet_ui(this);
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_path);
     NAME_LOG_EXT = new log_ui(this);
+    this->m_controllUi = new ControllUiButton(this);
 
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
@@ -113,18 +115,18 @@ MainWindow::MainWindow(QWidget *parent,
     ui->actioncloud->setVisible(false);
 #endif
 
-    CHECKABLE(ui->actionpen);
-    CHECKABLE(ui->actionrubber);
-    CHECKABLE(ui->actionselezionetext);
-    CHECKABLE(ui->actioninsertText);
-    CHECKABLE(ui->actionhighlighter);
+    ui->actionpen->setCheckable(true);
+    ui->actionrubber->setCheckable(true);
+    ui->actionselezionetext->setCheckable(true);
+    ui->actioninsertText->setCheckable(true);
+    ui->actionhighlighter->setCheckable(true);
 
-    CHECKABLE(ui->actionwhite);
-    CHECKABLE(ui->actionblack);
-    CHECKABLE(ui->actionred);
-    CHECKABLE(ui->actionyellow);
-    CHECKABLE(ui->actionbrown_color);
-    CHECKABLE(ui->actionpurple);
+    ui->actionwhite->setCheckable(true);
+    ui->actionblack->setCheckable(true);
+    ui->actionred->setCheckable(true);
+    ui->actionyellow->setCheckable(true);
+    ui->actionbrown_color->setCheckable(true);
+    ui->actionpurple->setCheckable(true);
 
     updateTouch();
 

@@ -128,6 +128,7 @@ SOURCES += \
     src/touch/square/draw_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
+    src/ui/controlluibutton.cpp \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
@@ -278,6 +279,7 @@ HEADERS += \
     src/touch/scrollKinetic/ui_scroll/scroll.h \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
+    src/ui/controlluibutton.h \
     src/utils/aboutQt/aboutqt.h \
     src/utils/abs.h \
     src/utils/areyousure/areyousure.h \

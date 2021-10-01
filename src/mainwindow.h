@@ -14,18 +14,11 @@
 #include <iostream>
 #include <QComboBox>
 #include <QMediaPlayer>
-
-#define NAME_UNSAVE (QString)"Unsaved copybook"
-
-/* for drag file into writernote */
+#include "touch/tabletcanvas.h"
+#include "cloud/cloud_controll.h"
 #include <QDropEvent>
-#define CHECKABLE(x) x->setCheckable(true)
 #include <QBuffer>
-
 #include "windows/updatecheck.h"
-
-#define REDO_UNDO_DISABLE "Disable redo undo"
-#define REDO_UNDO_ENABLE "Enable redo undo"
 #include "currenttitle/document.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/highlighter/highlighter.h"
@@ -34,13 +27,17 @@
 class frompdf;
 class TabletApplication;
 class option_copybook;
+class ControllUiButton;
+class xmlstruct;
+class ui_scroll;
+class setting_restore_ui;
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s) STRINGIZE2(s)
 #define VERSION_STRING STRINGIZE(VERSION_SNAPCRAFT)
-
-#include "touch/tabletcanvas.h"
-#include "cloud/cloud_controll.h"
+#define REDO_UNDO_DISABLE "Disable redo undo"
+#define REDO_UNDO_ENABLE "Enable redo undo"
+#define NAME_UNSAVE (QString)"Unsaved copybook"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -54,9 +51,6 @@ class QAudioBuffer;
 
 QT_END_NAMESPACE
 
-class xmlstruct;
-class ui_scroll;
-class setting_restore_ui;
 
 class MainWindow : public QMainWindow
 {
@@ -141,6 +135,9 @@ public:
     setting_restore_ui *m_setting;
 
     void openFile(const char *pos);
+
+    friend class ControllUiButton;
+    ControllUiButton *m_controllUi;
 
 public slots:
     void on_actioncompress_video_triggered();
