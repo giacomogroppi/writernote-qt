@@ -32,14 +32,17 @@ log_ui::~log_ui()
 void log_ui::showAll()
 {
     FILE *fp;
+    QString err;
+
     fp = fopen(this->pos_log.toUtf8().constData(), "r");
 
     if(!fp){
-        QString temp = ("Error open file" + pos_log).toUtf8().constData();
-        this->ui->text_error_show->setText(temp);
+        err = QString("Error open file %1").arg(pos_log);
+        this->ui->text_error_show->setText(err);
         return;
     }
 
+    fclose(fp);
 }
 
 void log_ui::write(const QString &stringa, log_ui::type_write var)
@@ -49,6 +52,8 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
 
     FILE *fp;
     QString tmp;
+    uchar wr;
+    int i, len;
 
     if(var == log_ui::info)
         tmp = "info: " + stringa;
@@ -67,7 +72,12 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
 
     log_ui::addTime(tmp);
 
-    fprintf(fp, "\n%s", tmp.toUtf8().constData());
+    fprintf(fp, "\n");
+    len = stringa.length();
+    for(i=0; i<len; ++i){
+        wr = stringa.at(i).cell();
+        fprintf(fp, "%c", wr);
+    }
 
     fclose(fp);
 }
