@@ -63,8 +63,6 @@ private:
     QPalette pal;
     QPen penna;
 
-    void initPixmap();
-
     void draw();
 
     QGraphicsScene *m_graphicsScene;

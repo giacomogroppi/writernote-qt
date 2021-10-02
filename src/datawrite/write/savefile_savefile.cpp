@@ -17,7 +17,7 @@ static void setCurrentVersion(Document *data);
 
 int savefile::savefile_check_file(){
     setCurrentVersion(currenttitle);
-    int error, temp, len, i, check;
+    int error, check;
     zip_error_t errore;
 
     fromimage::load_res res_img;

@@ -128,4 +128,8 @@
 /* size button */
 #define GROUPNAME_SIZE_BUTTON "groupname-size-button"
 #define KEY_SIZE_BUTTON "key-size-button"
+
+#define GROUPNAME_MODALITY "groupname-modality"
+#define KEY_MODALITY "key-modality" /* uchar */
+
 #endif // SETTING_DEFINE_H
