@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QCloseEvent>
 #include <QString>
+#include <QDialog>
 
 #define NAME_LOG_EXT log_write
 
@@ -12,7 +13,7 @@ namespace Ui {
 class log_ui;
 }
 
-class log_ui : public QWidget
+class log_ui : public QDialog
 {
     Q_OBJECT
 

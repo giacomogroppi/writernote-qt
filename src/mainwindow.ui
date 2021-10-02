@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>967</width>
-    <height>651</height>
+    <width>1066</width>
+    <height>671</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -151,8 +151,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>967</width>
-     <height>22</height>
+     <width>1066</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">

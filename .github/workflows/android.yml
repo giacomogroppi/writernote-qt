@@ -324,8 +324,8 @@ jobs:
 
           mv $armeabi_v7a_pos $NAME_UP_ARMEABI
           mv $arm64_v8a_pos $NAME_UP_ARM64
-          mv $armeabi_v7a_pos $NAME_UP_X86
-          mv $arm64_v8a_pos $NAME_UP_X86_64
+          mv $x86_pos $NAME_UP_X86
+          mv $x86_64_pos $NAME_UP_X86_64
 
           gh release upload "$VERSION" $NAME_UP_ARMEABI --clobber
           gh release upload "$VERSION" $NAME_UP_ARM64 --clobber

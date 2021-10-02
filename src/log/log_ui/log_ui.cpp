@@ -13,13 +13,13 @@
 #include <QFileDialog>
 
 log_ui::log_ui(QWidget *parent) :
-    QWidget(parent),
+    QDialog(parent),
     ui(new Ui::log_ui)
 {
     ui->setupUi(this);
 
     this->loadData();
-
+    this->hide();
 }
 
 log_ui::~log_ui()
