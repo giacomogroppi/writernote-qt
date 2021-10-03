@@ -25,8 +25,9 @@ fast_sheet_ui::fast_sheet_ui(QWidget *parent) :
     ui->shared_sheet->setCheckable(true);
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-
+    qDebug() << "fast_sheet_ui: 1";
     this->load();
+    qDebug() << "fast_sheet_ui: 2";
 }
 
 fast_sheet_ui::~fast_sheet_ui()
@@ -51,30 +52,32 @@ void fast_sheet_ui::needToReload()
 
 void fast_sheet_ui::load(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_AUTO_CREATE_SHEET);
-
     QAction * action;
     uint i, len;
+    const style_struct *tmp;
 
+    setting.beginGroup(GROUPNAME_AUTO_CREATE_SHEET);
+    qDebug() << "fast_sheet_ui::load() 1";
     this->auto_create = setting.value(KEY_AUTO_CREATE_SHEET, true).toBool();
 
     this->ui->autocreate_sheet->setChecked(this->auto_create);
     emit changeButton(!this->auto_create);
-
+    qDebug() << "fast_sheet_ui::load() 2";
     /* load style */
-    const style_struct * temp = load_last_style();
+    tmp = load_last_style();
 
-    if(temp){
+    if(tmp){
         this->m_style = new style_struct;
-        memcpy(this->m_style, temp, sizeof(*this->m_style));
-
+        memcpy(this->m_style, tmp, sizeof(*this->m_style));
+        qDebug() << "fast_sheet_ui::load() 3";
     }else{
+        qDebug() << "fast_sheet_ui::load() 4";
         this->m_style = nullptr;
         ui->list_sheet->reset();
         this->on_autocreate_sheet_clicked();
         goto cont_;
     }
-
+    qDebug() << "fast_sheet_ui::load() 5";
     len = ui->list_sheet->count();
 
     /*
@@ -89,26 +92,26 @@ void fast_sheet_ui::load(){
         action = new QAction(this);
         ui->list_sheet->addAction(action);
     }
-
+    qDebug() << "fast_sheet_ui::load() 6";
     for(i=len; i > (uint)m_style->quanti; --i){
         ui->list_sheet->item(i)->setHidden(true);
     }
-
+    qDebug() << "fast_sheet_ui::load() 7";
     for(i=0; i<QUANTESTRUCT && i < (uint)m_style->quanti; i++){
         ui->list_sheet->item(i)->setText(m_style->style[i].nome);
     }
-
+    qDebug() << "fast_sheet_ui::load() 8";
     cont_:
 
     this->m_how = static_cast<n_style>(setting.value(KEY_AUTO_CREATE_STYLE_FAST, n_style::empty).toInt());
     if(m_how == n_style::empty){
         m_how = n_style::square;
     }
-
+    qDebug() << "fast_sheet_ui::load() 9";
     updateCheck();
 
     this->on_autocreate_sheet_clicked();
-
+    qDebug() << "fast_sheet_ui::load() 10";
     setting.endGroup();
 }
 
