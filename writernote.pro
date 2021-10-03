@@ -132,6 +132,7 @@ SOURCES += \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/ui/controlluibutton.cpp \
+    src/ui/updateList.cpp \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audioplay/audiovolume.cpp \
