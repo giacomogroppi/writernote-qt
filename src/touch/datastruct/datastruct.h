@@ -350,8 +350,8 @@ public:
     }
 
 
-    inline double currentWidth();
-    inline double currentHeight();
+    inline double currentWidth() const;
+    inline double currentHeight() const;
 
     inline QRectF pos_first_page(){
         const point_s &ref = m_point.first();
@@ -368,13 +368,13 @@ inline bool point_s::isIdUser() const
     return datastruct::isIdUser(this);
 }
 
-inline double datastruct::currentHeight(){
+inline double datastruct::currentHeight() const{
     if(isempty())
         return double(NUMEROPIXELORIZZONALI);
     return (biggery()-m_point.first().m_y)/double(posizionefoglio.length());
 }
 
-inline double datastruct::currentWidth(){
+inline double datastruct::currentWidth() const{
     if(isempty())
         return double(NUMEROPIXELVERTICALI);
     return (biggerx() - m_point.first().m_x);

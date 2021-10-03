@@ -12,20 +12,18 @@
 
 static double widthToPressure(double);
 
-static double width_(datastruct *);
-
 static void addPointZero(Document *);
-static void drawLineOrizzontal(datastruct *data,
+static void drawLineOrizzontal(datastruct &data,
                          point_s *point,
-                         style_struct_S *style,
+                         style_struct_S &style,
                          const double &last,
                          double &deltax,
                          const double &width_p,
                          const double &ct_del);
 
-static void drawLineVertical(datastruct *data,
+static void drawLineVertical(datastruct &data,
                          point_s *point,
-                         style_struct_S *style,
+                         style_struct_S &style,
                          const double &last,
                          double &deltay,
                          const double &height_p);
@@ -39,26 +37,24 @@ static void drawLineVertical(datastruct *data,
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
-static style_struct_S * setStylePrivate(bool *, fast_sheet_ui::n_style);
+static void setStylePrivate(bool &, fast_sheet_ui::n_style, style_struct_S &);
 
 void TabletCanvas::disegnafoglio(){
-    if(!disegnofoglio_bool)
-        return;
-
     bool fast = false, need_scale = false;
-
     struct point_s temp_point;
-    struct style_struct_S *style = nullptr;
+    struct style_struct_S style;
     fast_sheet_ui::n_style res;
 
     double deltax, deltay, ct_del, last, height_p, width_p;
+
+    if(!disegnofoglio_bool)
+        return;
 
     if(!data->datatouch->isempty()){
         need_scale = true;
         data->datatouch->scala_all();
     }
-
-    width_p = width_(data->datatouch);
+    width_p = data->datatouch->currentWidth();
 
     height_p = int((double)width_p * double(4.0/3.0));
 
@@ -67,127 +63,72 @@ void TabletCanvas::disegnafoglio(){
 
     data->datatouch->posizionefoglio.append(last);
 
-    res = this->m_sheet->WhatIsSelected();
+    res = m_sheet->WhatIsSelected();
     /* set style value */
-    style = setStylePrivate(&fast, res);
+    setStylePrivate(fast, res, style);
 
-    if(!style){
-        goto error_;
-    }
     if(fast){
-        setcolor_struct(&style->colore, TEMP_COLOR);
-        style->thickness =  widthToPressure(TEMP_TICK);
+        setcolor_struct(&style.colore, TEMP_COLOR);
+        style.thickness =  widthToPressure(TEMP_TICK);
     }
 
     /* insert a point (0, 0) */
     addPointZero(data);
-    memcpy(&temp_point.m_color, &style->colore, sizeof(style->colore));
+    memcpy(&temp_point.m_color, &style.colore, sizeof(style.colore));
 
+    style.nx = (style.nx <= 0) ? 1 : style.nx;
+    style.ny = (style.ny <= 0) ? 1 : style.ny;
 
-    if(style->nx <= 0)
-        style->nx = 1;
-
-    if(style->ny <= 0)
-        style->ny = 1;
-    deltax = height_p / (double)style->nx;
-    deltay = width_p / (double)style->ny;
+    deltax = height_p / (double)style.nx;
+    deltay = width_p / (double)style.ny;
     ct_del = deltax;
 
-    temp_point.m_pressure = widthToPressure(style->thickness);
+    temp_point.m_pressure = widthToPressure(style.thickness);
 
     /* draw the orizzontal line */
-    drawLineOrizzontal(data->datatouch, &temp_point, style, last, deltax, width_p, ct_del);
+    drawLineOrizzontal(*data->datatouch, &temp_point, style, last, deltax, width_p, ct_del);
     /* draw vertical line */
-    drawLineVertical(data->datatouch, &temp_point, style, last, deltay, height_p);
+    drawLineVertical(*data->datatouch, &temp_point, style, last, deltay, height_p);
 
     this->disegnofoglio_bool = false;
     this->isloading = true;
-    free(style);
 
     if(need_scale)
         data->datatouch->restoreLastTranslation();
 
     if(data->datatouch->posizionefoglio.length() == 1)
         this->resizeEvent(nullptr);
-
-    return;
-
-    error_:
-    dialog_critic("We had an internal problem, restarting writernote might fix the problem");
-    disegnofoglio_bool = false;
-
 }
 
-static style_struct_S * setStylePrivate(bool *fast, fast_sheet_ui::n_style res){
-
-    style_struct_S * mall_style;
-
-    mall_style = (style_struct_S *)malloc(sizeof(style_struct_S));
-
-    if(!mall_style)
-        return NULL;
-
+static void setStylePrivate(bool &fast, fast_sheet_ui::n_style res, style_struct_S &style){
     if(res == fast_sheet_ui::empty){
         res = fast_sheet_ui::square;
     }
 
     if(res == fast_sheet_ui::line){
-        *fast = true;
+        fast = true;
 
-        mall_style->nx = TEMP_N_X;
-        mall_style->ny = 0;
-    }
-    else if(res == fast_sheet_ui::square){
-        *fast = true;
-
-        mall_style->nx = TEMP_SQUARE;
-        mall_style->ny = TEMP_SQUARE;
+        style.nx = TEMP_N_X;
+        style.ny = 0;
     }
     else if(res == fast_sheet_ui::white){
         /* we set the color manually */
-        setcolor_struct(&mall_style->colore, Qt::black);
+        setcolor_struct(&style.colore, Qt::black);
 
-        mall_style->nx = 1;
-        mall_style->ny = 1;
+        style.nx = 1;
+        style.ny = 1;
     }else{
-        free(mall_style);
-        dialog_critic("You have to change style. This is\nnot already supported in writernote");
+        fast = true;
 
-        return NULL;
+        style.nx = TEMP_SQUARE;
+        style.ny = TEMP_SQUARE;
     }
-
-    return mall_style;
 }
 
 
 static inline double widthToPressure(double v){
     return v/10.0;
 }
-
-/*
- * to maintain compatibility with all devices it is not so important to draw the new sheet in a fixed size.
- * however, it is important to draw the sheet with the same shape as the one drawn previously.
- * not to break the smoothness and all the features
-*/
-
-static double width_(datastruct *data){
-    if(data->posizionefoglio.isEmpty())
-        return NUMEROPIXELVERTICALI;
-
-    uint i, len;
-
-    len = data->length();
-
-    for(i=0; i<len-1; i++){
-        if(data->at(i)->idtratto == IDORIZZONALE){
-            return (data->at(i+1)->m_x - data->at(i)->m_x);
-        }
-    }
-
-    return data->biggerx();
-}
-
-
 
 static void addPointZero(Document *data){
     if(data->datatouch->isempty()){
@@ -200,34 +141,32 @@ static void addPointZero(Document *data){
     }
 }
 
-static void drawLineOrizzontal(datastruct *data,
+static void drawLineOrizzontal(datastruct &data,
                             point_s *point,
-                            style_struct_S *style,
+                            style_struct_S &style,
                             const double &last,
                             double &deltax,
                             const double &width_p,
                             const double &ct_del){
-    //qDebug() << deltax;
-
     uint i;
     point->idtratto = IDORIZZONALE;
 
-    for(i=0; i< (uint)style->nx; ++i){
+    for(i=0; i< (uint)style.nx; ++i){
         point->m_x = 0;
         point->m_y = last + deltax;
 
-        data->append(point);
+        data.append(point);
 
         point->m_x = width_p;
-        data->append(point);
+        data.append(point);
 
         deltax += ct_del;
     }
 }
 
-static void drawLineVertical(datastruct *data,
+static void drawLineVertical(datastruct &data,
                             point_s *point,
-                            style_struct_S *style,
+                            style_struct_S &style,
                             const double &last,
                             double &deltay,
                             const double &height_p){
@@ -237,16 +176,14 @@ static void drawLineVertical(datastruct *data,
     point->idtratto = IDVERTICALE;
     ct_del = deltay;
 
-    //qDebug() << "drawLineVerical" << deltay <<  ct_del;
-
-    for(i=0; i< (uint)style->ny; i++){
+    for(i=0; i< (uint)style.ny; i++){
         point->m_x = deltay;
         point->m_y = last; /* corrisponde to 0 */
 
-        data->append(point);
+        data.append(point);
 
         point->m_y = height_p + last;
-        data->append(point);
+        data.append(point);
 
         deltay += ct_del;
 
