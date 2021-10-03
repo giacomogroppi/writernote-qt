@@ -13,19 +13,6 @@ static bool Message(const QString &m_path){
     return true;
 }
 
-/* touch */
-void MainWindow::on_insertimagebotton_triggered(QAction *){
-    QString pos;
-
-    if(!Message(this->m_path)){
-        return;
-    }
-
-    pos = "";
-    m_currenttitle->m_img->addImage(pos, nullptr, this->m_path);
-    this->m_canvas->update();
-}
-
 void MainWindow::on_actioninsertImage_triggered(){
     QString pos;
 
@@ -35,5 +22,5 @@ void MainWindow::on_actioninsertImage_triggered(){
 
     pos = "";
     m_currenttitle->m_img->addImage(pos, nullptr, this->m_path);
-
+    this->m_canvas->update();
 }
