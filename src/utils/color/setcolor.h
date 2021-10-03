@@ -22,6 +22,11 @@ inline QColor setcolor(const struct colore_s *colore,
     return temp;
 }
 
+inline QColor setcolor(const struct colore_s &colore,
+                       const double division = 1){
+    return setcolor(&colore, division);
+}
+
 inline void setcolor_struct(colore_s *color, QColor color_){
     int val[NCOLOR];
 
@@ -34,5 +39,9 @@ inline void setcolor_struct(colore_s *color, QColor color_){
         color->colore[i] = val[i];
     }
 
+}
+
+inline void setcolor_struct(colore_s &color, QColor color_){
+    return setcolor_struct(&color, color_);
 }
 #endif // SETCOLOR_H

@@ -245,7 +245,7 @@ SOURCES += \
     src/windows/showmessageupdate.cpp \
     src/windows/sourcecode_mainwindow.cpp \
     src/windows/updatecheck.cpp \
-    src/sheet/load_last_style.cpp \
+    src/sheet/style_struct.cpp \
     src/cloud/button_mainwindow.cpp \
     updater/launch_updater/launch_updater.cpp \
     src/last_open/element/imageWidget/imageWidget.cpp
@@ -275,6 +275,7 @@ HEADERS += \
     src/restore_file/ui/setting_restore_ui.h \
     src/restore_file/ui_restore/restore.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
+    src/sheet/style_struct.h \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
     src/touch/highlighter/highlighter.h \
@@ -357,7 +358,6 @@ HEADERS += \
     src/windows/mostra_finestra_i.h \
     src/windows/showmessageupdate.h \
     src/windows/updatecheck.h \
-    src/sheet/load_last_style.h \
     updater/launch_updater/launch_updater.h
 
 FORMS += \

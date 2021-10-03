@@ -76,31 +76,17 @@ MainWindow::MainWindow(QWidget *parent,
     checkupdate = new updatecheck(ui->actionUpdate_writernote);
 
     setting_load(this);
-    qDebug() << "MainWindow:: 1";
     this->m_rubber = new rubber_ui(this);
     this->m_pen = new pen_ui(this);
     this->m_text = new text_ui(this);
     this->m_highlighter = new highlighter(this, &m_pen->same_data, m_pen);
-
     m_pen->m_highlighter = m_highlighter;
-    qDebug() << "MainWindow:: 1.5";
-
     this->m_option_copybook = new option_copybook(this);
-
-    qDebug() << "MainWindow:: 1.51";
     this->m_text_w = new text_widgets(this);
-
-    qDebug() << "MainWindow:: 1.52";
     this->m_sheet = new fast_sheet_ui(this);
-
-    qDebug() << "MainWindow:: 1.53";
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_path);
-    qDebug() << "MainWindow:: 1.6";
     NAME_LOG_EXT = new log_ui(this);
-    qDebug() << "MainWindow:: 1.7";
     this->m_controllUi = new ControllUiButton(this);
-
-    qDebug() << "MainWindow:: 2";
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
     this->m_text->setHidden(true);
@@ -117,7 +103,6 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_canvas->m_text_w = m_text_w;
     this->m_canvas->data = this->m_currenttitle;
 
-    qDebug() << "MainWindow:: 3";
     /* redo and undo */
     connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);
     connect(this, &MainWindow::UndoT, m_canvas, &TabletCanvas::Undo);
@@ -139,7 +124,6 @@ MainWindow::MainWindow(QWidget *parent,
     ui->actionbrown_color->setCheckable(true);
     ui->actionpurple->setCheckable(true);
 
-    qDebug() << "MainWindow:: 4";
     updateTouch();
 
     QObject::connect(m_sheet, &fast_sheet_ui::changeButton, [=](bool res){
@@ -150,8 +134,6 @@ MainWindow::MainWindow(QWidget *parent,
 
     setAcceptDrops(true);
     updatePageCount(-1);
-
-    qDebug() << "MainWindow:: 5";
 
     /* by default */
     ui->actionUpdate_writernote->setVisible(false);
@@ -166,10 +148,7 @@ MainWindow::MainWindow(QWidget *parent,
         openFile(path);
     resFileTmpInTmpFolder();
 
-    qDebug() << "MainWindow:: 6";
     this->setSizeButton();
-
-    qDebug() << "MainWindow:: 7";
 }
 
 MainWindow::~MainWindow()

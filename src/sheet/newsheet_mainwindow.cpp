@@ -4,6 +4,6 @@
 
 void MainWindow::on_actionnew_sheet_triggered()
 {
-    dialog_sheet dialog(nullptr);
+    dialog_sheet dialog(nullptr, this->m_canvas->m_sheet);
     dialog.exec();
 }

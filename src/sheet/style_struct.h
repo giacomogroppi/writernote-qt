@@ -2,12 +2,7 @@
 #define STYLE_STRUCT_H
 
 #define QUANTESTRUCT 5
-
 #define STRNOME 40
-
-#include <QMetaType>
-#include <QDataStream>
-
 #include "../touch/datastruct/datastruct.h"
 
 
@@ -24,14 +19,54 @@ struct style_struct_S{
     int thickness;
 };
 
-struct style_struct{
-    int quanti;
-    struct style_struct_S style[QUANTESTRUCT];
+class style_struct{
+private:
+    QList<style_struct_S> style;
+    int default_val = 0;
+
+    void loadFromByte(const QByteArray &arr);
+    void setDefault(style_struct_S &ref);
+    void saveInArray(QByteArray & arr);
+public:
+    inline uint length() const {return style.length();}
+    style_struct();
+
+    void save();
+
+    style_struct_S load_default(){
+        return style.at(default_val);
+    }
+
+    const style_struct_S *at(const int i) const{ return &style.at(i);}
+    style_struct_S *at_mod(const int i){return &style.operator[](i);}
+    void saveDefault(const int index);
+    void createNew(const QString &name);
 };
 
+inline bool operator==(const style_struct& lhs, const style_struct& rhs)
+{
+    uint i, len;
+    len = lhs.length();
 
-Q_DECLARE_METATYPE(style_struct_S);
+    uchar check = len == rhs.length();
 
-Q_DECLARE_METATYPE(style_struct);
+    if(!check) return false;
+
+    for(i=0; i<len; i++){
+        if(memcmp(&lhs.at(i)->colore, &rhs.at(i)->colore, sizeof(colore_s)) != 0)
+            return false;
+
+        if(lhs.at(i)->nx != rhs.at(i)->nx)
+            return false;
+
+        if(lhs.at(i)->ny != rhs.at(i)->ny)
+            return false;
+
+        if(lhs.at(i)->thickness != rhs.at(i)->thickness)
+            return false;
+    }
+
+    return true;
+}
 
 #endif // STYLE_STRUCT_H

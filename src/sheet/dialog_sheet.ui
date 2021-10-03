@@ -75,6 +75,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="label_init">
+         <property name="text">
+          <string>Create new style to start draw</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGraphicsView" name="graphicsView"/>
        </item>
        <item>

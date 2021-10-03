@@ -2,7 +2,7 @@
 #define FAST_SHEET_UI_H
 
 #include <QWidget>
-#include "../load_last_style.h"
+#include "../style_struct.h"
 #include <QEvent>
 #include <QListWidgetItem>
 
@@ -40,7 +40,7 @@ private:
     void load();
     void save();
 
-    style_struct *m_style = nullptr;
+    style_struct m_style;
     n_style m_how = n_style::empty;
 
     Ui::fast_sheet_ui *ui;

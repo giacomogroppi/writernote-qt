@@ -1,42 +1,23 @@
 #include "dialog_sheet.h"
 #include "ui_dialog_sheet.h"
-
-#include "load_last_style.h"
 #include <QPainter>
-
 #include "../utils/color/color_chooser.h"
-
 #include <QMessageBox>
-
 #include <QInputDialog>
-
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../utils/color/setcolor.h"
 #include "string.h"
+#include "style_struct.h"
+#include "fast-sheet/fast_sheet_ui.h"
 
-dialog_sheet::dialog_sheet(QWidget *parent) :
+dialog_sheet::dialog_sheet(QWidget *parent, fast_sheet_ui *fast) :
     QDialog(parent),
     ui(new Ui::dialog_sheet)
 {
+    this->fast = fast;
     ui->setupUi(this);
 
-    style_struct *style_last_save = load_last_style();
-
-    int i;
-    style_element.quanti = style_last_save->quanti;
-
-    for(i=0; i<QUANTESTRUCT; i++){
-        style_element.style[i] = style_last_save->style[i];
-    }
-
-
     ui->pushButton_color->setAutoFillBackground(true);
-    pal = ui->pushButton_color->palette();
-
-    pal.setColor(
-                QPalette::Window, setcolor(&style_element.style[0].colore));
-
-    ui->pushButton_color->setPalette(pal);
 
     this->current = 0;
 
@@ -45,7 +26,7 @@ dialog_sheet::dialog_sheet(QWidget *parent) :
 
     this->updateList();
 
-    if(style_element.quanti == 0){
+    if(style_element.length() == 0){
         this->hide(true);
         return;
     }
@@ -74,45 +55,21 @@ dialog_sheet::~dialog_sheet()
 
 void dialog_sheet::on_t_valueChanged(int arg1)
 {
-    style_element.style[current].thickness = arg1;
+    style_element.at_mod(current)->thickness = arg1;
     draw();
 }
 
 
 void dialog_sheet::on_x_valueChanged(int arg1)
 {
-    style_element.style[current].nx = arg1;
+    style_element.at_mod(current)->nx = arg1;
     draw();
 }
 
 void dialog_sheet::on_y_valueChanged(int arg1)
 {
-    style_element.style[current].ny = arg1;
+    style_element.at_mod(current)->ny = arg1;
     draw();
-}
-
-inline bool operator==(const style_struct& lhs, const style_struct& rhs)
-{
-    bool check = lhs.quanti == rhs.quanti;
-
-    if(!check) return false;
-
-    int i;
-    for(i=0; i<QUANTESTRUCT; i++){
-        if(memcmp(&lhs.style[i].colore, &rhs.style[i].colore, sizeof(colore_s)) != 0)
-            return false;
-
-        if(lhs.style[i].nx != rhs.style[i].nx)
-            return false;
-
-        if(lhs.style[i].ny != rhs.style[i].ny)
-            return false;
-
-        if(lhs.style[i].thickness != rhs.style[i].thickness)
-            return false;
-    }
-
-    return true;
 }
 
 void dialog_sheet::closeEvent (QCloseEvent *event){
@@ -120,9 +77,9 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
     /* save function */
     this->on_pushButton_3_clicked();
 
-    style_struct *last = load_last_style();
+    style_struct last;
 
-    if(*last == style_element)
+    if(last == style_element)
         return;
 
 
@@ -136,18 +93,15 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
     int ret = msgBox.exec();
 
     if(ret == QMessageBox::Cancel){
-        delete last;
         return event->ignore();
     }
     else if(ret == QMessageBox::Discard){
-        delete last;
         return event->accept();
     }
 
 
-    save_last_style(&style_element);
-
-    delete last;
+    this->style_element.save();
+    this->fast->needToReload();
 
     return event->accept();
 }
@@ -158,25 +112,25 @@ void dialog_sheet::on_pushButton_color_clicked()
     if(!color.isValid())
         return;
 
-    setcolor_struct(&style_element.style[current].colore, color);
+    setcolor_struct(style_element.at_mod(current)->colore, color);
 
     draw();
 }
 
 void dialog_sheet::updateList(){
-    int i;
+    uint i;
 
     ui->listWidget->clear();
 
-    for(i=0; i<style_element.quanti; i++){
-        ui->listWidget->addItem((QString)style_element.style[i].nome);
+    for(i=0; i<style_element.length(); i++){
+        ui->listWidget->addItem((QString)style_element.at(i)->nome);
     }
 }
 
 void dialog_sheet::setValue(){
-    ui->t->setValue(style_element.style[current].thickness);
-    ui->y->setValue(style_element.style[current].ny);
-    ui->x->setValue(style_element.style[current].nx);
+    ui->t->setValue(style_element.at(current)->thickness);
+    ui->y->setValue(style_element.at(current)->ny);
+    ui->x->setValue(style_element.at(current)->nx);
 }
 
 /* need to change item and reset the value */
@@ -210,7 +164,7 @@ void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
     if(newName.length() > STRNOME)
         return dialog_critic("The maximum number of letters for the word is " + QString::number(STRNOME));
 
-    strcpy(style_element.style[current].nome, newName.toUtf8().constData());
+    strcpy(style_element.at_mod(current)->nome, newName.toUtf8().constData());
 
     this->updateList();
 }
@@ -218,24 +172,20 @@ void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
 /* default style */
 void dialog_sheet::on_pushButton_clicked()
 {
-    save_default_drawing(&current);
+    this->style_element.saveDefault(current);
+    fast->needToReload();
 }
 
 /* save */
 void dialog_sheet::on_pushButton_3_clicked()
 {
-    /*for(i=0, style.quanti = 0; i<QUANTESTRUCT; i++)
-        style.quanti += strcmp(style.style[i].nome, DEFAULTNOME) != 0;*/
-
-
-    save_last_style(&style_element);
-
+    this->style_element.save();
 }
 
 /* create new style */
 void dialog_sheet::on_pushButton_2_clicked()
 {
-    if(style_element.quanti > QUANTESTRUCT)
+    if(style_element.length() >= QUANTESTRUCT)
         return dialog_critic("You cannot create more than " + QString::number(QUANTESTRUCT));
 
     bool ok;
@@ -246,9 +196,7 @@ void dialog_sheet::on_pushButton_2_clicked()
         return;
     }
 
-
-    load_default(&style_element, newName.toUtf8().constData(), style_element.quanti);
-    style_element.quanti ++;
+    this->style_element.createNew(newName);
 
     this->updateList();
 }

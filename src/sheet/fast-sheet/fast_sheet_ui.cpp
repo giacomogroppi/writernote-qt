@@ -5,7 +5,6 @@
 #include <QSettings>
 #include <QAction>
 #include "../../utils/dialog_critic/dialog_critic.h"
-#include "../load_last_style.h"
 
 static void uncheck(QListWidget *list, fast_sheet_ui::n_style temp){
     if(temp != fast_sheet_ui::empty)
@@ -25,93 +24,67 @@ fast_sheet_ui::fast_sheet_ui(QWidget *parent) :
     ui->shared_sheet->setCheckable(true);
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    qDebug() << "fast_sheet_ui: 1";
+
     this->load();
-    qDebug() << "fast_sheet_ui: 2";
+
 }
 
 fast_sheet_ui::~fast_sheet_ui()
 {
-    if(this->m_style)
-        delete m_style;
+    int i;
+    QList<QListWidgetItem *> item;
 
     this->save();
+
+    for(i=0; i<ui->list_sheet->count(); ++i)
+        item.append(ui->list_sheet->item(i));
+    for(i=0; i<item.length(); ++i)
+        delete item.at(i);
 
     delete ui;
 }
 
 void fast_sheet_ui::needToReload()
 {
-    if(this->m_style)
-        delete this->m_style;
-
-    this->m_style = nullptr;
-
     this->load();
 }
 
 void fast_sheet_ui::load(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    QAction * action;
+    QListWidgetItem * action;
     uint i, len;
-    const style_struct *tmp;
 
     setting.beginGroup(GROUPNAME_AUTO_CREATE_SHEET);
-    qDebug() << "fast_sheet_ui::load() 1";
+
     this->auto_create = setting.value(KEY_AUTO_CREATE_SHEET, true).toBool();
 
     this->ui->autocreate_sheet->setChecked(this->auto_create);
     emit changeButton(!this->auto_create);
-    qDebug() << "fast_sheet_ui::load() 2";
-    /* load style */
-    tmp = load_last_style();
 
-    if(tmp){
-        this->m_style = new style_struct;
-        memcpy(this->m_style, tmp, sizeof(*this->m_style));
-        qDebug() << "fast_sheet_ui::load() 3";
-    }else{
-        qDebug() << "fast_sheet_ui::load() 4";
-        this->m_style = nullptr;
-        ui->list_sheet->reset();
-        this->on_autocreate_sheet_clicked();
-        goto cont_;
-    }
-    qDebug() << "fast_sheet_ui::load() 5";
+
     len = ui->list_sheet->count();
 
-    /*
-     * we want to add the item first, and in the new step edit
-     * when this works is executed the first time, the number
-     * of objects in the list is zero, but since we want to be
-     *  able to execute it later, and we don't want to delete
-     *  the list every time and create new objects,
-     *  we dynamically add and hidden objects from the list
-    */
-    for(i=len; i < (uint)m_style->quanti && i<QUANTESTRUCT; ++i){
-        action = new QAction(this);
-        ui->list_sheet->addAction(action);
+    for(i=len; i < m_style.length(); ++i){
+        action = new QListWidgetItem;
+        ui->list_sheet->addItem(action);
     }
-    qDebug() << "fast_sheet_ui::load() 6";
-    for(i=len; i > (uint)m_style->quanti; --i){
+
+    for(i=len; i > m_style.length(); --i){
         ui->list_sheet->item(i)->setHidden(true);
     }
-    qDebug() << "fast_sheet_ui::load() 7";
-    for(i=0; i<QUANTESTRUCT && i < (uint)m_style->quanti; i++){
-        ui->list_sheet->item(i)->setText(m_style->style[i].nome);
+
+    for(i=0; i < m_style.length(); i++){
+        const QString &ref = m_style.at(i)->nome;
+        ui->list_sheet->item(i)->setText(ref);
     }
-    qDebug() << "fast_sheet_ui::load() 8";
-    cont_:
 
     this->m_how = static_cast<n_style>(setting.value(KEY_AUTO_CREATE_STYLE_FAST, n_style::empty).toInt());
     if(m_how == n_style::empty){
         m_how = n_style::square;
     }
-    qDebug() << "fast_sheet_ui::load() 9";
     updateCheck();
 
     this->on_autocreate_sheet_clicked();
-    qDebug() << "fast_sheet_ui::load() 10";
     setting.endGroup();
 }
 
@@ -151,19 +124,19 @@ void fast_sheet_ui::on_list_sheet_itemClicked(QListWidgetItem *item)
 
     updateCheck();
 
-    QString temp = item->text();
-    int in = 0;
+    const QString &tmp = item->text();
+    uint in;
     bool find = false;
 
-    for(in=0; in < m_style->quanti; in++){
-        if(m_style->style[in].nome == temp){
+    for(in=0; in < m_style.length(); in++){
+        if((QString)m_style.at(in)->nome == tmp){
             find = true;
             break;
         }
     }
 
     if(find)
-        save_default_drawing(&in);
+        this->m_style.saveDefault(in);
     else
         dialog_critic("We had a big problem figuring out what style you clicked");
 }

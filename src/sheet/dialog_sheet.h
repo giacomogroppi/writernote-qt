@@ -2,15 +2,13 @@
 #define DIALOG_SHEET_H
 
 #include <QDialog>
-
 #include <QCloseEvent>
 #include <QGraphicsScene>
-
 #include <QListWidgetItem>
-
 #include "style_struct.h"
 
 QColor settaggiocolore(int *);
+class fast_sheet_ui;
 
 namespace Ui {
 class dialog_sheet;
@@ -21,7 +19,7 @@ class dialog_sheet : public QDialog
     Q_OBJECT
 
 public:
-    explicit dialog_sheet(QWidget *parent = nullptr);
+    explicit dialog_sheet(QWidget *parent = nullptr, fast_sheet_ui *fast = nullptr);
     ~dialog_sheet();
 
     void value_change();
@@ -49,7 +47,7 @@ private slots:
     void on_pushButton_2_clicked();
 
 private:
-
+    fast_sheet_ui *fast;
     void hide(bool);
 
     Ui::dialog_sheet *ui;
