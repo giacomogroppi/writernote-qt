@@ -24,7 +24,9 @@ void Document::copy(const Document &src,
 {
     dest.audio_position_path = src.audio_position_path;
     datastruct::copy(*src.datatouch, *dest.datatouch);
+#ifdef PDFSUPPORT
     frompdf::copy(*src.m_pdf, *dest.m_pdf);
+#endif //PDFSUPPORT
     fromimage::copy(*src.m_img, *dest.m_img);
     dest.se_registato = src.se_registato;
     dest.versione = src.versione;
