@@ -27,6 +27,14 @@ redoundo::~redoundo()
     }
 }
 
+void redoundo::clear(){
+    uint i;
+    const uint len = m_list.length();
+    for(i=0; i<len; ++i){
+        this->m_list.operator[](i)->reset();
+    }
+}
+
 void redoundo::redo(){
     if(indice == this->max - 1){
         return;
@@ -36,15 +44,6 @@ void redoundo::redo(){
 
     indice ++;
 }
-
-void redoundo::clear(){
-    uint i;
-    const uint len = m_list.length();
-    for(i=0; i<len; ++i){
-        this->m_list.operator[](i)->reset();
-    }
-}
-
 
 /* go back to the last Document */
 void redoundo::undo(){

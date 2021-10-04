@@ -129,6 +129,7 @@ SOURCES += \
     src/touch/square/draw_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
+    src/ui/buttonTablet.cpp \
     src/ui/controlluibutton.cpp \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \

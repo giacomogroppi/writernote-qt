@@ -71,5 +71,28 @@ void ControllUiButton::update()
     parent->ui->toolSheet->setVisible(!tablet);
 
     parent->ui->pushButton_back->setHidden(!tablet);
+    parent->ui->buttonStartRecording->setHidden(!tablet);
+    parent->ui->buttonStopRecording->setHidden(!tablet);
+    parent->ui->buttonPauseRecording->setHidden(!tablet);
+    parent->ui->buttonUndu->setHidden(!tablet);
+    parent->ui->buttonRedo->setHidden(!tablet);
+    parent->ui->buttonListen_current_audio->setHidden(!tablet);
+    parent->ui->buttonPen->setHidden(!tablet);
+    parent->ui->buttonRubber->setHidden(!tablet);
+    parent->ui->buttonselezionetext->setHidden(!tablet);
+    parent->ui->buttonInsertText->setHidden(!tablet);
+    parent->ui->buttonHighlighter->setHidden(!tablet);
+    parent->ui->buttonBlack->setHidden(!tablet);
+    parent->ui->buttonYellow->setHidden(!tablet);
+    parent->ui->buttonWhite->setHidden(!tablet);
+    parent->ui->buttonBrown->setHidden(!tablet);
+    parent->ui->buttonPurple->setHidden(!tablet);
+    parent->ui->buttonChooseColor->setHidden(!tablet);
+    parent->ui->buttonInsertImage->setHidden(!tablet);
+    parent->ui->buttonSheet->setHidden(!tablet);
+    parent->ui->buttonNewPage->setHidden(!tablet);
+    parent->ui->buttonRestore->setHidden(!tablet);
+    parent->ui->buttonPenOrMouse->setHidden(!tablet);
+    parent->ui->buttonRecentFile->setHidden(!tablet);
 }
 
