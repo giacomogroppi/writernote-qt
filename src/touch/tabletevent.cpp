@@ -117,7 +117,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 m_deviceDown = false;
                 if(medotodiinserimento == e_method::selection){
                     sel = false;
-                    m_square.adjustPoint();
 
                     if(!m_square.check){
                         m_square.find(data);

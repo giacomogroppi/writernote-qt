@@ -49,23 +49,22 @@ void square::move(const QPointF &punto, Document *data){
 */
 void square::adjustPoint()
 {
-    if(!pointinit.set || !pointinit.set){
+    double tmp;
+    QPointF &topLeft = pointinit.point;
+    QPointF &bottomRight = pointfine.point;
+    if(!pointinit.set || !pointinit.set)
         return;
+
+    if(topLeft.x() > bottomRight.x()){
+        tmp = bottomRight.x();
+        bottomRight.setX(topLeft.x());
+        topLeft.setX(tmp);
     }
 
-    double __tmp;
-
-    if(pointinit.point.x() > pointfine.point.x()){
-        __tmp = pointfine.point.x();
-        pointfine.point.setX(pointinit.point.x());
-        pointinit.point.setX(__tmp);
+    if(topLeft.y() > bottomRight.y()){
+        tmp = bottomRight.y();
+        bottomRight.setY(topLeft.y());
+        topLeft.setY(tmp);
     }
-
-    if(pointinit.point.y() > pointfine.point.y()){
-        __tmp = pointfine.point.y();
-        pointfine.point.setY(pointinit.point.x());
-        pointinit.point.setY(__tmp);
-    }
-
 }
 

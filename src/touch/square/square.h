@@ -13,7 +13,7 @@ private:
      * il rettangono
     */
     bool __need_reload = false;
-    void findObjectToDraw(Document *, QPointF &t_l, QPointF &b_r);
+    void findObjectToDraw(Document *);
 
     PointSettable pointinit;
     PointSettable pointfine;

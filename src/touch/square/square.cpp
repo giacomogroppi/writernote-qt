@@ -23,12 +23,10 @@ void square::updatePoint(QPointF __point)
         /* we don't need yet to draw somethings */
         __need_reload = false;
         check = false;
-
         return;
     }
 
     pointfine.point = __point;
-
     __need_reload = true;
 
 }
@@ -45,7 +43,9 @@ bool square::find(Document *data){
     len = data->datatouch->length();
     this->check = false;
 
+    qDebug() << "square::find " << pointinit.point << pointfine.point;
     this->adjustPoint();
+    qDebug() << "square::find " << pointinit.point << pointfine.point;
 
     /* point selected by user */
     for(i=0;i<len; ++i){
@@ -63,16 +63,19 @@ bool square::find(Document *data){
     len = data->m_img->m_img.length();
     for(i=0; i<len; ++i){
         tmp_find = false;
-        if(datastruct::isinside(pointinit.point, pointfine.point, data->m_img->m_img.at(i).i))
+        const auto &ref = data->m_img->m_img.at(i);
+        if(datastruct::isinside(pointinit.point, pointfine.point, ref.i))
             tmp_find = true;
-        if(tmp_find && datastruct::isinside(pointinit.point, pointfine.point, data->m_img->m_img.at(i).f))
+        if(datastruct::isinside(pointinit.point, pointfine.point, ref.f))
             tmp_find = true;
+        qDebug() << "square::find " << ref.i << ref.f << pointinit.point << pointfine.point;
+
         if(!tmp_find)
             continue;
         this->m_index_img.append(i);
     }
 
-    findObjectToDraw(data, pointinit.point, pointfine.point);
+    findObjectToDraw(data);
 
     if(!check){
         reset();
