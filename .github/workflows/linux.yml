@@ -53,3 +53,15 @@ jobs:
           qmake DEFINES+="NO_ALL_VERSION"
           make -j $(nproc)
           
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: go, javascript
+
+      # Here is where you build your code
+      - run: |
+          make bootstrap
+          make release
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
