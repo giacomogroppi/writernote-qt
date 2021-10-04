@@ -34,11 +34,12 @@ class TabletCanvas;
 class Pdf{
 public:
     /* indice la parte in alto a sinistra della prima immagine */
-    QPointF topLeft;
+    //QPointF topLeft;
 
     /* indica la parte in basso a destra della prima immagine */
-    QPointF bottomRigth;
-    QList<immagine_s> img;
+    //QPointF bottomRigth;
+    QList<QImage> img;
+    QPointF topLeft;
 };
 
 class frompdf
@@ -128,7 +129,7 @@ public:
         for(i=0; i<this->m_image.length(); ++i){
             const Pdf &pdf = this->m_image.at(i);
             for(k=0; k<pdf.img.length(); ++k){
-                fromimage::draw(painter, size, pdf.img.at(i).immagini);
+                fromimage::draw(painter, size, pdf.img.at(i));
 
                 size = QRectF(size.topLeft().x(),
                               size.topLeft().y() + y,
@@ -154,7 +155,7 @@ private:
     void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);
 
-    uint resolution = 1000;//72
+    uint resolution = 1500;//72
 
     /*
      * this function only append a pdf to

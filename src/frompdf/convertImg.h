@@ -11,8 +11,8 @@
 class convertImg: public QThread{
 Q_OBJECT
 public:
-    convertImg(const Poppler::Page *page, QImage *img, const uint precision);
-    ~convertImg();
+    convertImg(const uint precision);
+    inline void setData(const Poppler::Page *page, QImage *img);
 protected:
     void run();
 private:
@@ -21,16 +21,16 @@ private:
     uint precision;
 };
 
-inline convertImg::convertImg(const Poppler::Page *page, QImage *img, const uint precision)
+inline convertImg::convertImg(const uint precision)
 {
-    this->img = img;
-    this->page = page;
+
     this->precision = precision;
 }
 
-inline convertImg::~convertImg()
+inline void convertImg::setData(const Poppler::Page *page, QImage *img)
 {
-    delete page;
+    this->img = img;
+    this->page = page;
 }
 #endif
 #endif // CONVERTIMG_H

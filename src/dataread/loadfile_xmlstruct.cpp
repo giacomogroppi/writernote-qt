@@ -277,11 +277,8 @@ int xmlstruct::load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const b
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
 
-
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
-
-    SOURCE_READ_RETURN(f, &doc->se_tradotto, sizeof(doc->se_tradotto));
 
     LOAD_STRINGA_RETURN(f, doc->audio_position_path)
 

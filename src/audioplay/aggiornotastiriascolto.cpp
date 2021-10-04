@@ -69,7 +69,4 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->actionListen_current_audio->setEnabled(false);
     }
 
-    if(parent->m_currenttitle->se_tradotto){
-
-    }
 }

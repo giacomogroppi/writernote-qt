@@ -12,7 +12,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
     QString tmp_str, tmp_testi;
-    bool tmp_touch;
+    bool tmp_touch, translate;
 
     LOAD_STRINGA_RETURN(f, tmp_str);
 
@@ -20,7 +20,7 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
 
-    SOURCE_READ_RETURN(f, &doc->se_tradotto, sizeof(doc->se_tradotto));
+    SOURCE_READ_RETURN(f, &translate, sizeof(translate));
 
     LOAD_STRINGA_RETURN(f, tmp_testi);
 

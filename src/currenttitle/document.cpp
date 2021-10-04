@@ -28,8 +28,6 @@ void Document::copy(const Document *src,
 
     dest->se_registato = src->se_registato;
 
-    dest->se_tradotto = src->se_tradotto;
-
     dest->versione = src->versione;
 
 }
@@ -53,7 +51,6 @@ size_t Document::createSingleControll() const
 void Document::reset(){
     this->versione = 1;
     this->se_registato = Document::not_record;
-    this->se_tradotto = false;
     this->audio_position_path = "";
 
     this->audio_data.clear();

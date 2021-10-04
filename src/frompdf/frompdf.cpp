@@ -15,6 +15,7 @@
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 #include "../touch/tabletcanvas.h"
+#include "../utils/threadcount.h"
 
 void frompdf::translation(const QPointF &point)
 {
@@ -24,9 +25,7 @@ void frompdf::translation(const QPointF &point)
 
     for(i=0; i<this->m_image.length(); ++i){
         this->m_image.operator[](i).topLeft += point;
-        this->m_image.operator[](i).bottomRigth += point;
     }
-
 }
 
 frompdf::frompdf(Document *data)
@@ -131,9 +130,11 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     */
 
     uint i, len;
-    struct immagine_s imgAppend;
+    QImage imgAppend;
     QList<Poppler::Page *> page;
     QList<convertImg *> conv;
+    uint pdfCount;
+    const uint countThread = threadCount::count();
 
     if(clear)
         this->reset();
@@ -155,34 +156,33 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     len = doc->numPages();
     this->resizing(canvas, len);
 
-    for(i=0; i<len; ++i){
+    for(i=0; i<len && i<countThread; ++i){
         page.append(doc->page(QString::number(i+1)));
         this->m_image.operator[](IndexPdf).img.append(imgAppend);
-        conv.append(new convertImg(page.at(i), &m_image.operator[](IndexPdf).img.operator[](i).immagini, resolution));
+        conv.append(new convertImg(resolution));
     }
 
-    for(i=0; i<len; ++i){
-        conv.at(i)->start();
+    for(pdfCount = 0; pdfCount < len; ){
+        for(i=0; i < countThread && i < len; ++i){
+            const auto pdfPage = page.at(pdfCount);
+            QImage *image = &m_image.operator[](IndexPdf).img.operator[](pdfCount);
+            conv.operator[](i)->setData(pdfPage, image);
+            conv.at(i)->start();
+        }
 
-        /*img = page.at(i)->renderToImage(resolution, resolution);
+        for(i=0; i < countThread && i < len; ++i){
+            conv.at(i)->wait();
+        }
 
-        if(img.isNull())
-            return load_res::not_valid_page;
-
-        imgAppend.immagini = img;
-
-        this->m_image.operator[](IndexPdf).img.operator[](i).immagini = imgAppend.immagini;
-        //this->m_image.operator[](IndexPdf).img.append(imgAppend);*/
+        pdfCount = (pdfCount+1) * len;
     }
-
-    for(i=0; i<(uint)conv.length(); ++i){
-        conv.at(i)->wait();
-    }
-    for(i=0; i<(uint)conv.length(); ++i){
+    for(i=0; i<(uint)page.length(); ++i)
+        delete page.at(i);
+    for(i=0; i<(uint)conv.length(); ++i)
         delete conv.at(i);
-    }
 
-    for(i=0; i<this->m_image.at(IndexPdf).img.at(i).immagini.isNull(); ++i){
+
+    for(i=0; i<this->m_image.at(IndexPdf).img.at(i).isNull(); ++i){
         dialog_critic("We had a problem processing an image");
         return load_res::not_valid_pdf;
     }
@@ -285,11 +285,7 @@ void frompdf::addPdf(QString &pos,
 
 void frompdf::adjast(const uchar indexPdf)
 {
-    QPointF size = m_data->datatouch->get_size_page();
-
     m_image.operator[](indexPdf).topLeft = QPointF(0, 0);
-    m_image.operator[](indexPdf).bottomRigth = size;
-
 }
 
 uchar frompdf::insert_pdf(QString &pos,
@@ -297,7 +293,6 @@ uchar frompdf::insert_pdf(QString &pos,
 {
     assert(this->m_image.length() == 0);
     Pdf pdf;
-    const QPointF size = this->m_data->datatouch->get_size_page();
 
     if(pos == ""){
         pos = QFileDialog::getOpenFileName(nullptr,
@@ -310,11 +305,9 @@ uchar frompdf::insert_pdf(QString &pos,
 
     if(point){
         pdf.topLeft = point->point;
-        pdf.bottomRigth = point->point + size;
     }
     else{
         pdf.topLeft = QPointF(0.0, 0.0);
-        pdf.bottomRigth = size;
     }
 
     this->m_image.append(pdf);

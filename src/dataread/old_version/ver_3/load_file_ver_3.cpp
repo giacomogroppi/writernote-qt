@@ -7,14 +7,14 @@
 int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip)
 {
     int temp;
-    bool tmp_touch;
+    bool tmp_touch, translate;
     QString tmp_str;
 
     LOAD_STRINGA_RETURN(f, tmp_str);
     SOURCE_READ_RETURN(f, &temp, sizeof(int));
     currenttitle->se_registato = static_cast<Document::n_audio_record>(temp);
 
-    SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
+    SOURCE_READ_RETURN(f, &translate, sizeof(bool));
 
     LOAD_STRINGA_RETURN(f, tmp_str);
 

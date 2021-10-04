@@ -45,14 +45,12 @@ int savefile::savefile_check_file(){
 
     zip_source_begin_write(file);
 
-    SOURCE_WRITE(file, &currenttitle->versione, sizeof(int))
+    SOURCE_WRITE(file, &currenttitle->versione, sizeof(currenttitle->versione))
 
     {
         int temp = static_cast<int>(currenttitle->se_registato);
         SOURCE_WRITE(file, &temp, sizeof(int))
     }
-
-    SOURCE_WRITE(file, &currenttitle->se_tradotto, sizeof(currenttitle->se_tradotto));
 
     SAVE_STRINGA(file, currenttitle->audio_position_path.toUtf8().constData())
 

@@ -12,7 +12,7 @@
 */
 int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip){
     QString tmp_str, tmp_testi;
-    bool temp;
+    bool temp, translate;
     bool tmp_touch;
 
     LOAD_STRINGA_RETURN(f, tmp_str);
@@ -22,7 +22,7 @@ int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip
     else
         this->currenttitle->se_registato = Document::not_record;
 
-    SOURCE_READ_RETURN(f, &currenttitle->se_tradotto, sizeof(bool));
+    SOURCE_READ_RETURN(f, &translate, sizeof(translate));
 
     LOAD_STRINGA_RETURN(f, tmp_testi)
 

@@ -27,7 +27,6 @@ public:
     fromimage *m_img;
 
     int versione = CURRENT_VERSION_CURRENT_TITLE;
-    bool se_tradotto = false;
     QString audio_position_path = "";
 
     bool isOkVersion() const{
