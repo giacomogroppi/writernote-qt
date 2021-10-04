@@ -287,11 +287,11 @@ public:
     /*
      * this function don't provent buffer overload
     */
-    inline const point_s * firstPoint(){
+    inline const point_s * firstPoint() const {
         return at(0);
     }
 
-    inline const point_s * lastPoint(){
+    inline const point_s * lastPoint() const {
         return at(length()-1);
     }
 

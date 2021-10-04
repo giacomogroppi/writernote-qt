@@ -111,7 +111,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             * TODO -> change this call to a timer
             */
             if(m_redoundo)
-                this->m_redoundo->copy(this->data);
+                this->m_redoundo->copy();
 
             if (m_deviceDown && event->buttons() == Qt::NoButton){
                 m_deviceDown = false;

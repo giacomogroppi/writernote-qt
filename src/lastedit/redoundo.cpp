@@ -1,32 +1,35 @@
 #include "redoundo.h"
 
-#include "../currenttitle/checksimilecopybook.h"
-
 redoundo::redoundo(Document **data)
 {
+    uint i;
+    Document doc;
     this->m_current = data;
 
+    for(i=0; i<max; i++){
+        m_list.append(doc);
+    }
 }
 
-void redoundo::redo(Document **data){
+void redoundo::redo(){
     return;
     if(indice == 10){
         return;
     }
 
-    *data = m_list.m_list[indice+1];
+    *this->m_current = &this->m_list.operator[](indice+1);
 
     indice ++;
 }
 
 
 /* reset the currenttitle */
-void redoundo::undo(Document **data){
+void redoundo::undo(){
     return;
     if(indice == 0)
         return;
 
-    *data = m_list.m_list[indice-1];
+    *this->m_current = &this->m_list.operator[](indice-1);
 
     indice --;
 }

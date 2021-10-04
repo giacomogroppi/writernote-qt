@@ -227,7 +227,7 @@ void MainWindow::on_pause_rec_triggered()
 
 void MainWindow::on_actionRedo_triggered()
 {
-    this->m_canvas->m_redoundo->redo(&this->m_currenttitle);
+    this->m_canvas->m_redoundo->redo();
     emit RedoT();
 }
 
@@ -242,7 +242,7 @@ void MainWindow::on_actionVersion_triggered()
 
 void MainWindow::on_actionUndu_triggered()
 {
-    this->m_canvas->m_redoundo->undo(&this->m_currenttitle);
+    this->m_canvas->m_redoundo->undo();
     emit UndoT();
 }
 

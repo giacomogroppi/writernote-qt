@@ -93,7 +93,6 @@ SOURCES += \
     src/last_open/recentFileMainWindow.cpp \
     src/last_open/widget_parent/widget_parent.cpp \
     src/lastedit/copy_lastedit.cpp \
-    src/lastedit/lista_copybook.cpp \
     src/log/log_ui/log_ui.cpp \
     src/needToSave.cpp \
     src/openFirstCopybook.cpp \
@@ -267,7 +266,6 @@ HEADERS += \
     src/images/fromimage.h \
     src/last_open/option/option_last_open_ui.h \
     src/last_open/widget_parent/widget_parent.h \
-    src/lastedit/lista_copybook.h \
     src/log/log_ui/log_ui.h \
     src/preview/preview.h \
     src/restore_file/get_name_tmp.h \

@@ -1,18 +1,22 @@
 #ifndef REDOUNDO_H
 #define REDOUNDO_H
-
-#include "lista_copybook.h"
+#include <QList>
+#include "../currenttitle/document.h"
 
 class redoundo
 {
 private:
-    lista_copybook m_list;
 
     /* 0 <= indice <= 10 */
-    unsigned short int indice = 0;
-
+    uchar indice = 0;
+    QList<Document> m_list;
     Document **m_current;
+    const uint max = 10;
 
+    inline void append(const Document &doc){
+        this->m_list.append(doc);
+        assert(m_list.length() == 10);
+    }
 public:
     redoundo(Document **);
 
@@ -20,18 +24,25 @@ public:
         m_list.clear();
     };
 
-    void copy(Document *);
+    void copy();
 
-    void undo(Document **);
-    void redo(Document **);
-
-    void copy_b(Document *, const Document *);
+    void undo();
+    void redo();
 
     void setting_data(Document **data){
         m_current = data;
 
         indice = 0;
     }
+
+    inline void clear(){
+        uint i;
+        for(i=0; i<max; i++){
+            m_list.operator[](i).reset();
+        }
+    }
+
+
 
 };
 
