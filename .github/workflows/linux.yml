@@ -41,7 +41,15 @@ jobs:
         with:
           version: 5.15.2 # optional, default is 5.15.2
           modules: multimedia # optional
-          
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: cpp
+
+      - run: qmake; make -j$(nproc)
+        working-directory: .
+
       - name: Compile ALL_VERSION
         run: |
           qmake
@@ -53,15 +61,9 @@ jobs:
           qmake DEFINES+="NO_ALL_VERSION"
           make -j $(nproc)
           
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: go, javascript
+    
 
-      # Here is where you build your code
-      - run: |
-          make bootstrap
-          make release
+    
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
