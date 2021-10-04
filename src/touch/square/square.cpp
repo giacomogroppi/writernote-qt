@@ -43,9 +43,7 @@ bool square::find(Document *data){
     len = data->datatouch->length();
     this->check = false;
 
-    qDebug() << "square::find " << pointinit.point << pointfine.point;
     this->adjustPoint();
-    qDebug() << "square::find " << pointinit.point << pointfine.point;
 
     /* point selected by user */
     for(i=0;i<len; ++i){
@@ -68,11 +66,11 @@ bool square::find(Document *data){
             tmp_find = true;
         if(datastruct::isinside(pointinit.point, pointfine.point, ref.f))
             tmp_find = true;
-        qDebug() << "square::find " << ref.i << ref.f << pointinit.point << pointfine.point;
 
         if(!tmp_find)
             continue;
         this->m_index_img.append(i);
+        this->check = true;
     }
 
     findObjectToDraw(data);

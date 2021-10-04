@@ -81,6 +81,17 @@ public:
         }
     }
 
+    inline void moveImage(const QList<int> &index, const QPointF &translation){
+        uint i, lenght;
+
+        lenght = index.length();
+        for(i=0; i<lenght; ++i){
+            const int currentIndex = index.at(i);
+            this->m_img.operator[](currentIndex).i += translation;
+            this->m_img.operator[](currentIndex).f += translation;
+        }
+    }
+
     static inline void draw(QPainter &painter,
                             const QRectF &rect,
                             const QImage &img){
@@ -96,23 +107,15 @@ public:
                             const immagine_s &img){
         Q_UNUSED(pwidth);
         uchar check;
-        //QRectF from, rect;
-
-        //from = img.immagini.rect();
 
         check = (img.f.y() < (double)0) +
                 (img.f.x() < (double)0) +
                 (img.i.y() > (double)rend_width) +
                 (img.i.x() > (double)rend_heigth);
-
         if(check)
             return;
 
         fromimage::draw(painter, QRectF(img.i, img.f), img.immagini);
-
-        //rect = QRectF(img.i, img.f);
-        //painter.drawImage(rect, img.immagini, from);
-
     }
 
     static inline void draw(QPainter &painter,

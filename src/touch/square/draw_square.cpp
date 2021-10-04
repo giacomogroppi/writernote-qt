@@ -63,16 +63,14 @@ void square::findObjectToDraw(Document *data)
         const int index = this->m_index_img.at(i);
         const auto &ref = data->m_img->m_img.at(index);
 
-        if(ref.i.y() < pointinit.point.y())
-            pointinit.point.setY(ref.i.y());
-
         if(ref.i.x() < pointinit.point.x())
             pointinit.point.setX(ref.i.x());
-
-        if(ref.f.y() > pointfine.point.y())
-            pointfine.point.setY(ref.f.y());
-
-        if(ref.f.x() > pointfine.point.x())
+        else if(ref.f.x() > pointfine.point.x())
             pointfine.point.setX(ref.f.x());
+
+        if(ref.i.y() < pointinit.point.y())
+            pointinit.point.setY(ref.i.y());
+        else if(ref.f.y() > pointfine.point.y())
+            pointfine.point.setY(ref.f.y());
     }
 }

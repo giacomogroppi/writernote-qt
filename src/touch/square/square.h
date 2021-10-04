@@ -35,6 +35,7 @@ public:
         check = false;
         __need_reload = false;
         m_id.clear();
+        m_index_img.clear();
     }
 
     void updatePoint(QPointF puntofine);

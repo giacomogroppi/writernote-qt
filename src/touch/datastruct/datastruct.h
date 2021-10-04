@@ -150,7 +150,7 @@ public:
     void removePointId(QList<int> &list);
     void removePointId(int id, uint *len = nullptr);
 
-    void MovePoint(QList<int> &id, QPointF &__t);
+    void MovePoint(const QList<int> &id, const QPointF &__t);
     bool MovePoint(QRectF &, QPointF);
 
     bool userWrittenSomething(datastruct *s_data);

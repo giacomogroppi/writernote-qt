@@ -9,7 +9,7 @@
  * that he had traslated
  * so we need to update all
 */
-void datastruct::MovePoint(QList<int> &id, QPointF &__t){
+void datastruct::MovePoint(const QList<int> &id, const QPointF &__t){
     uint len, i;
     int __last_id, __pos;
     point_s *__point;
@@ -29,8 +29,6 @@ void datastruct::MovePoint(QList<int> &id, QPointF &__t){
                 __point->m_y += __t.y();
             }
             --i;
-
-            //id.removeAt(__pos);
 
         }
     }

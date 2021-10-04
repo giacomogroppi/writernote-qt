@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QDebug>
 #include "../datastruct/datastruct.h"
+#include "../../images/fromimage.h"
 
 /*
  * the function is call when check is set to true
@@ -30,6 +31,7 @@ void square::move(const QPointF &punto, Document *data){
     datastruct::inverso(__point);
 
     data->datatouch->MovePoint(m_id, __point);
+    data->m_img->moveImage(m_index_img, __point);
 
     lastpoint.point = punto;
 
@@ -40,7 +42,6 @@ void square::move(const QPointF &punto, Document *data){
     pointfine.point.setY(pointfine.point.y() + __point.y());
 
     __need_reload = true;
-
 }
 
 /*

@@ -1,4 +1,5 @@
 #include "datastruct.h"
+#include <QDebug>
 
 bool datastruct::isinside(QPointF &topleft, QPointF &bottonright, unsigned int index)
 {
