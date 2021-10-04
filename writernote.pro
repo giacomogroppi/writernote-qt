@@ -92,7 +92,6 @@ SOURCES += \
     src/last_open/option/option_last_open_ui.cpp \
     src/last_open/recentFileMainWindow.cpp \
     src/last_open/widget_parent/widget_parent.cpp \
-    src/lastedit/copy_lastedit.cpp \
     src/log/log_ui/log_ui.cpp \
     src/needToSave.cpp \
     src/openFirstCopybook.cpp \

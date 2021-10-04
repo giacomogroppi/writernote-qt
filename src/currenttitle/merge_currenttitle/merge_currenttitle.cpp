@@ -16,8 +16,8 @@ merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document 
     Document current_first;
     Document current_second;
 
-    Document::copy(&current_first, first);
-    Document::copy(&current_second, second);
+    Document::copy(current_first, *first);
+    Document::copy(current_second, *second);
 
 
     if(controll(first, second) != n_merge::ok)

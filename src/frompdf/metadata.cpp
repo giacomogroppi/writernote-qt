@@ -1,7 +1,7 @@
 #include "frompdf.h"
 #include "../currenttitle/document.h"
 
-static inline void copy(const QPointF &point, double *data);
+static inline void copy_double(const QPointF &point, double *data);
 
 frompdf::load_res frompdf::save_metadata(zip_source_t *file)
 {
@@ -11,7 +11,7 @@ frompdf::load_res frompdf::save_metadata(zip_source_t *file)
     for(i=0; i<m_data->count_pdf; ++i){
         const Pdf &pdf = this->m_image.at(i);
 
-        copy(pdf.topLeft, pos);
+        copy_double(pdf.topLeft, pos);
 
         if(zip_source_write(file, pos, sizeof(double)*2) == -1){
             return load_res::no_metadata;
@@ -43,7 +43,7 @@ void frompdf::init_FirstLoad()
     this->m_image.append(pdf);
 }
 
-static inline void copy(const QPointF &point, double *data){
+static inline void copy_double(const QPointF &point, double *data){
     data[0] = point.x();
     data[1] = point.y();
 }

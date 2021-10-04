@@ -51,8 +51,7 @@ public:
     Document();
     ~Document();
 
-    static void copy(const Document *src, Document *dest);
-
+    static void copy(const Document &src, Document &dest);
 };
 
 #endif

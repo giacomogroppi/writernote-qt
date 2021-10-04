@@ -37,6 +37,7 @@ private:
 
 
 public:
+    static void copy(const fromimage &src, fromimage &dest);
     friend class square;
 
     enum load_res: uchar{
@@ -152,5 +153,10 @@ private:
                          struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);
 };
+
+inline void fromimage::copy(const fromimage &src, fromimage &dest)
+{
+    dest.m_img = src.m_img;
+}
 
 #endif // FROMIMAGE_H

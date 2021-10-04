@@ -19,17 +19,15 @@ Document::~Document()
     delete m_img;
 }
 
-void Document::copy(const Document *src,
-                              Document *dest)
+void Document::copy(const Document &src,
+                              Document &dest)
 {
-    dest->audio_position_path = src->audio_position_path;
-
-    dest->datatouch->operator=(*src->datatouch);
-
-    dest->se_registato = src->se_registato;
-
-    dest->versione = src->versione;
-
+    dest.audio_position_path = src.audio_position_path;
+    datastruct::copy(*src.datatouch, *dest.datatouch);
+    frompdf::copy(*src.m_pdf, *dest.m_pdf);
+    fromimage::copy(*src.m_img, *dest.m_img);
+    dest.se_registato = src.se_registato;
+    dest.versione = src.versione;
 }
 
 size_t Document::createSingleControll() const

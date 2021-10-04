@@ -57,7 +57,7 @@ private:
     /*
      * make this item private for a new datastruct
     */
-    QList<struct point_s> m_point;
+    QList<struct point_s> m_point = {};
 
     bool userWrittenSomething(uint i);
 
@@ -276,7 +276,7 @@ public:
     double miny();
     double minx();
 
-    QList<double> posizionefoglio;
+    QList<double> posizionefoglio = {};
 
     long double zoom = 1.00;
 
@@ -310,26 +310,12 @@ public:
         return sizeof(point_s);
     }
 
-    /*
-     * quando si va a usare = come operatore
-     * tra due qlist, non viene triggerata immediatamente
-     * la copia, in quanto qt usa memoria
-     * condivisa, quando la seconda lista viene
-     * modificata allora si genera la copia automatica
-    */
-    datastruct& operator=(const datastruct& other)
-    {
-        if (this == &other)
-            return *this;
+    static void copy(const datastruct &src, datastruct &dest){
+        dest.m_point = src.m_point;
+        dest.zoom = src.zoom;
+        dest.posizionefoglio = src.posizionefoglio;
 
-        this->m_point = other.m_point;
-        this->zoom = other.zoom;
-        this->posizionefoglio = other.posizionefoglio;
-
-        this->__last_translation = other.__last_translation;
-
-
-        return *this;
+        dest.__last_translation = src.__last_translation;
     }
 
     QList<struct point_s> * get_list(){

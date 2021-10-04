@@ -54,7 +54,12 @@ private:
         return SUFFIX_PDF + QString::number(uint(i));
     }
 
-public:    
+public:
+    static void copy(const frompdf &src, frompdf &dest){
+        dest.m_image = src.m_image;
+        dest.doc = nullptr;
+    }
+
     static bool isvalid(QString &pos);
 
     void translation(const QPointF &point);
@@ -163,5 +168,6 @@ private:
     */
     void init_FirstLoad();
 };
+
 #endif // PDFSUPPORT
 #endif // FROMPDF_H

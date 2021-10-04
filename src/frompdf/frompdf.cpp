@@ -180,7 +180,8 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
         delete page.at(i);
     for(i=0; i<(uint)conv.length(); ++i)
         delete conv.at(i);
-
+    delete this->doc;
+    doc = nullptr;
 
     for(i=0; i<this->m_image.at(IndexPdf).img.at(i).isNull(); ++i){
         dialog_critic("We had a problem processing an image");

@@ -1,37 +1,68 @@
 #include "redoundo.h"
 
+void redoundo::append(Document *doc){
+    this->m_list.append(doc);
+    assert(m_list.length() == 10);
+}
+
 redoundo::redoundo(Document **data)
 {
     uint i;
-    Document doc;
+    Document *doc;
+
     this->m_current = data;
 
     for(i=0; i<max; i++){
+        doc = new Document;
         m_list.append(doc);
     }
 }
 
+redoundo::~redoundo()
+{
+    uint i;
+    const uint len = m_list.length();
+    for(i=0; i<len; ++i){
+        delete this->m_list.operator[](i);
+    }
+}
+
 void redoundo::redo(){
-    return;
-    if(indice == 10){
+    if(indice == this->max - 1){
         return;
     }
 
-    *this->m_current = &this->m_list.operator[](indice+1);
+    Document::copy(*this->m_list.operator[](indice+1), **this->m_current);
 
     indice ++;
 }
 
+void redoundo::clear(){
+    uint i;
+    const uint len = m_list.length();
+    for(i=0; i<len; ++i){
+        this->m_list.operator[](i)->reset();
+    }
+}
 
-/* reset the currenttitle */
+
+/* go back to the last Document */
 void redoundo::undo(){
-    return;
     if(indice == 0)
         return;
 
-    *this->m_current = &this->m_list.operator[](indice-1);
+    Document::copy(*this->m_list.operator[](indice-1), **this->m_current);
 
     indice --;
 }
 
-
+void redoundo::copy(){
+    if(indice < max){
+        Document::copy(**this->m_current, *m_list.operator[](indice));
+        this->indice ++;
+        return;
+    }
+    Document *point = this->m_list.takeFirst();
+    append(point);
+    Document::copy(**this->m_current, *m_list.operator[](indice-1));
+}
