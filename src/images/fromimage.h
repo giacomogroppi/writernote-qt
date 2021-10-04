@@ -37,6 +37,8 @@ private:
 
 
 public:
+    friend class square;
+
     enum load_res: uchar{
         ok,
         error,

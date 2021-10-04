@@ -1,17 +1,14 @@
 #include "square.h"
 #include <QPainter>
-
 #include <QDebug>
 #include "../datastruct/datastruct.h"
-
-struct delta{
-    double x, y;
-};
 
 /*
  * the function is call when check is set to true
 */
-void square::move(QPointF punto, datastruct *data){
+void square::move(const QPointF &punto, Document *data){
+    QPointF __point;
+
     if(!check){
         return this->reset();
     }
@@ -26,15 +23,13 @@ void square::move(QPointF punto, datastruct *data){
         return this->reset();
     }
 
-    QPointF __point;
-
     __point.setX(lastpoint.point.x() - punto.x());
     __point.setY(lastpoint.point.y() - punto.y());
 
 
     datastruct::inverso(__point);
 
-    data->MovePoint(m_id, __point);
+    data->datatouch->MovePoint(m_id, __point);
 
     lastpoint.point = punto;
 

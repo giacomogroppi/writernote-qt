@@ -173,8 +173,8 @@ public:
 
     bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);
     bool isinside(double x1, double y1, double x2, double y2, unsigned int index);
-    static bool isinside(QPointF &topleft, QPointF &bottonright, const point_s *__point);
-    static bool isinside(QPointF &topleft, QPointF &bottonright, QPointF &point);
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s *__point);
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 
 
     bool adjustAll(const uint width,

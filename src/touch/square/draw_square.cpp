@@ -17,15 +17,15 @@ void square::needReload(QPainter &painter){
  *  uguale, e si sposta tutto il tratto
 */
 
-void square::findObjectToDraw(datastruct *data, QPointF &t_l, QPointF &b_r)
+void square::findObjectToDraw(Document *data, QPointF &t_l, QPointF &b_r)
 {
     uint i, len;
     const point_s * __point;
 
-    len = data->length();
+    len = data->datatouch->length();
 
     for(i=0; i<len; ++i){
-        __point = data->at(i);
+        __point = data->datatouch->at(i);
         if(m_id.indexOf(__point->idtratto) != -1){
             t_l.setX(__point->m_x);
             t_l.setY(__point->m_y);
@@ -38,7 +38,7 @@ void square::findObjectToDraw(datastruct *data, QPointF &t_l, QPointF &b_r)
     }
 
     for(; i<len; i++){
-        __point = data->at(i);
+        __point = data->datatouch->at(i);
 
         if(this->m_id.indexOf(__point->idtratto) != -1){
             if(__point->m_x < t_l.x())

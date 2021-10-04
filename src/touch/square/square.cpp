@@ -1,8 +1,9 @@
 #include "square.h"
 #include <QPen>
 #include <QPainter>
-#include "../datastruct/datastruct.h"
+#include "../../currenttitle/document.h"
 #include <QDebug>
+#include "../../images/fromimage.h"
 
 square::square()
 {
@@ -36,24 +37,39 @@ void square::updatePoint(QPointF __point)
  * in caso salva l'id del tratto e setta la variabile this->check = true, in caso contrario
  * la setta = false e fa il return
 */
-bool square::find(datastruct *data){
+bool square::find(Document *data){
     uint i, len;
     const point_s * __point;
+    bool tmp_find;
 
-    len = data->length();
+    len = data->datatouch->length();
     this->check = false;
 
     this->adjustPoint();
 
+    /* point selected by user */
     for(i=0;i<len; ++i){
-        __point = data->at(i);
-        if(data->isinside(pointinit.point, pointfine.point, __point)){
+        __point = data->datatouch->at(i);
+        if(data->datatouch->isinside(pointinit.point, pointfine.point, __point)){
 
             if(m_id.indexOf(__point->idtratto) == -1)
                 m_id.append(__point->idtratto);
 
             this->check = true;
         }
+    }
+
+    /* image selected by user */
+    len = data->m_img->m_img.length();
+    for(i=0; i<len; ++i){
+        tmp_find = false;
+        if(datastruct::isinside(pointinit.point, pointfine.point, data->m_img->m_img.at(i).i))
+            tmp_find = true;
+        if(tmp_find && datastruct::isinside(pointinit.point, pointfine.point, data->m_img->m_img.at(i).f))
+            tmp_find = true;
+        if(!tmp_find)
+            continue;
+        this->m_index_img.append(i);
     }
 
     findObjectToDraw(data, pointinit.point, pointfine.point);
@@ -70,7 +86,7 @@ bool square::find(datastruct *data){
 /* la funzione resistuisce
  * vero se è intero il punto è interno
 */
-bool square::isinside(QPointF point){
+bool square::isinside(const QPointF &point){
     if(!this->check)
         return false;
 

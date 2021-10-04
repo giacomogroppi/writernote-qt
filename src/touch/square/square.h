@@ -3,7 +3,7 @@
 #include <QPainter>
 #include <QPointF>
 
-#include "../datastruct/datastruct.h"
+#include "../../currenttitle/document.h"
 
 class square
 {
@@ -13,12 +13,13 @@ private:
      * il rettangono
     */
     bool __need_reload = false;
-    void findObjectToDraw(datastruct *, QPointF &t_l, QPointF &b_r);
+    void findObjectToDraw(Document *, QPointF &t_l, QPointF &b_r);
 
     PointSettable pointinit;
     PointSettable pointfine;
 
-    QList<int> m_id;
+    QList<int> m_id; /* point */
+    QList<int> m_index_img; /* image */
 
     QPen penna;
 
@@ -37,10 +38,10 @@ public:
     }
 
     void updatePoint(QPointF puntofine);
-    bool find(datastruct *data);
+    bool find(Document *data);
 
-    bool isinside(QPointF);
-    void move(QPointF, datastruct *data);
+    bool isinside(const QPointF &);
+    void move(const QPointF &, Document *data);
 
     /* if true: it means that the user has not previously selected comething */
     bool check;
