@@ -12,8 +12,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
 
-    /*if(!isWriting)
-        isloading = true;*/
     isWriting = false;
 
     if (m_pixmap.isNull())
@@ -33,7 +31,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     this->disegnafoglio();
 
-    //if(this->isloading)
     load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
          m_pos_ris, &m_pixmap, true, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
 
