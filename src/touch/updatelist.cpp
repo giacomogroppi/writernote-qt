@@ -102,7 +102,6 @@ void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
     Q_UNUSED(painter);
     Q_UNUSED(event);
 
-    isloading = true;
     update();
     return;
 

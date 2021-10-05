@@ -91,7 +91,6 @@ void TabletCanvas::disegnafoglio(){
     drawLineVertical(*data->datatouch, &temp_point, style, last, deltay, height_p);
 
     this->disegnofoglio_bool = false;
-    this->isloading = true;
 
     if(need_scale)
         data->datatouch->restoreLastTranslation();

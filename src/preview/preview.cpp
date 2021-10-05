@@ -10,7 +10,6 @@
 void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const int height, const int width)
 {
     QPainter painter;
-    bool isloading = true;
     QColor m_color;
     QPen m_pen;
     QBrush m_brush;
@@ -23,7 +22,7 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
     ref.fill(Qt::white);
 
     painter.begin(&ref);
-    TabletCanvas::load(painter, &doc, isloading, m_color, m_pen, m_brush, lastPoint, -1, &ref, withPdf, delta, width, height/delta, nullptr, nullptr);
+    TabletCanvas::load(painter, &doc, m_color, m_pen, m_brush, lastPoint, -1, &ref, withPdf, delta, width, height/delta, nullptr, nullptr);
     painter.end();
 
 }

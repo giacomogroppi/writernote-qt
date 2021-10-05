@@ -67,12 +67,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                         || highlighter){
                     updatelist(event);
                 }
-                else if(medotodiinserimento == e_method::rubber){
-
-                    if(m_rubber->actionRubber(data->datatouch, event->posF(), painter))
-                        isloading = true;
-
-                }
+                else if(medotodiinserimento == e_method::rubber)
+                    m_rubber->actionRubber(data->datatouch, event->posF(), painter);
                 else if(medotodiinserimento == e_method::selection){
                     if(!m_square.check){ /* it means that the user not select anything */
                         m_square.updatePoint(event->posF());
@@ -87,7 +83,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                             m_square.move(event->posF(), data);
                         }
                     }
-                    isloading = true;
                     sel = false;
                 }else if(medotodiinserimento == e_method::text){
                     if(m_text_w->isIn(event->posF())){
@@ -118,12 +113,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 if(medotodiinserimento == e_method::selection){
                     sel = false;
 
-                    if(!m_square.check){
+                    if(!m_square.check)
                         m_square.find(data);
-
-                        isloading = true;
-
-                    }
                 }
 
                 else if(m_rubber->m_type_gomma == rubber_ui::total){
@@ -132,7 +123,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
                 m_highlighter->moveAll(data->datatouch);
 
-                isloading = true;
             }
             break;
         default:
@@ -143,8 +133,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         m_square.reset();
     }
 
-    if(isloading)
-        update();
+    update();
 
     event->accept();
 }

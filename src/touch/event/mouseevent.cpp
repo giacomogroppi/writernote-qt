@@ -21,7 +21,6 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 
     event->accept();
 
-    this->isloading = true;
     update();
 }
 

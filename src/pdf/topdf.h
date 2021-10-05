@@ -18,7 +18,6 @@ private:
     MainWindow *parent;
 
     void draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, double *y_last, const bool withPdf){
-        bool isloading = true;
         QColor color = Qt::black;
         QPen m_pen;
         QBrush m_brush;
@@ -26,7 +25,6 @@ private:
 
         m_canvas->load(painter,
                        this->data,
-                       isloading,
                        color,
                        m_pen,
                        m_brush,

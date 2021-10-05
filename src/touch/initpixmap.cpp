@@ -53,8 +53,6 @@ void TabletCanvas::initPixmap(bool paint)
     painter.end();
     m_pixmap = newPixmap;
 
-    this->isloading = true;
-
     if(paint)
         update();
 }

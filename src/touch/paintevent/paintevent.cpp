@@ -12,8 +12,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
 
-    if(!isWriting)
-        isloading = true;
+    /*if(!isWriting)
+        isloading = true;*/
     isWriting = false;
 
     if (m_pixmap.isNull())
@@ -33,9 +33,9 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     this->disegnafoglio();
 
-    if(this->isloading)
-        load(painter, this->data, isloading, m_color, m_pen, m_brush, lastPoint,
-             m_pos_ris, &m_pixmap, true, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
+    //if(this->isloading)
+    load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
+         m_pos_ris, &m_pixmap, true, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
 
 
     /*
@@ -61,7 +61,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 */
 void TabletCanvas::load(QPainter &painter,
                         const Document *data,
-                        bool &isloading,
                         QColor &m_color,
                         QPen &m_pen,
                         QBrush &m_brush,
@@ -205,8 +204,6 @@ void TabletCanvas::load(QPainter &painter,
     }
 
     m_pen.setColor(current_color);
-
-    isloading = false;
 }
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */

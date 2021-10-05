@@ -26,7 +26,6 @@ void TabletCanvas::restoreO()
     }
 
     if(this->data->datatouch->repositioning()){
-        this->isloading = true;
         update();
     }
 

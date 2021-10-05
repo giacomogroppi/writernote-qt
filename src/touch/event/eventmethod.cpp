@@ -83,7 +83,6 @@ bool TabletCanvas::event(QEvent *event){
 
                             RIDEFINE(lastpointzoom);
 
-                            isloading = true;
                         }
                         else{
                             if(this->lastpointzoom.posd == QPointF(-1, -1)){
@@ -109,8 +108,7 @@ bool TabletCanvas::event(QEvent *event){
             if(needToResize)
                 this->resizeEvent(NULL);
 
-            if(isloading)
-                update();
+            update();
             break;
         }
         default:

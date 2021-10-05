@@ -62,7 +62,6 @@ public:
 
     void restoreO();
     inline void needUpdate(){
-        this->isloading = true;
         update();
     };
 
@@ -113,12 +112,9 @@ public:
 
     QColor m_color = Qt::black;
 
-    bool isloading = false;
-
 #define DEFAULT_PASS_ARGUMENT_LOAD -1
     static void load(QPainter &,
                      const Document *data,
-                     bool &isloading,
                      QColor &m_color,
                      QPen &pen,
                      QBrush &m_brush,
@@ -233,13 +229,11 @@ private:
 
 public slots:
 
-#define PRIVATE_UPDATE this->isloading = true; this->update()
-
     void RedoM(){
-        PRIVATE_UPDATE;
+        this->update();
     }
     void Undo(){
-        PRIVATE_UPDATE;
+        this->update();
     }
 
 };

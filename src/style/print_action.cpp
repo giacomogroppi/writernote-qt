@@ -11,7 +11,6 @@ void MainWindow::on_actionPrint_triggered()
 #else
     QPrinter printer;
     QPrintDialog dialogprint(&printer);
-    bool isloading = true;
     QColor color;
     QPen pen;
     QBrush m_brush;
@@ -30,7 +29,7 @@ void MainWindow::on_actionPrint_triggered()
         user_message("Writernote had an internal problem");
     }
 
-    this->m_canvas->load(painter, this->m_currenttitle, isloading, color,
+    this->m_canvas->load(painter, this->m_currenttitle, color,
                          pen, m_brush, point, 0, nullptr, true, delta, size_orizzontale,
                          size_verticale/delta, nullptr, nullptr);
 

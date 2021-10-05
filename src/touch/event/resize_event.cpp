@@ -9,7 +9,6 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
 
 
     initPixmap(true);
-    this->isloading = true;
 
     if(!data->datatouch->isempty())
         data->datatouch->adjustHeight(m_pixmap.height(), false);
