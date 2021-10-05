@@ -3,6 +3,6 @@
 
 #include <QString>
 
-void mostra_explorer(QString );
+void mostra_explorer(const QString & );
 
 #endif // MOSTRA_EXPLORER_H

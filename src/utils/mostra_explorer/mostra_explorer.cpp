@@ -9,12 +9,12 @@
 #include "../slash/slash.h"
 #include <QDesktopServices>
 
-#if defined(WIN32) || defined(WIN64) || defined(__OS2__)
+#if defined(WIN32) || defined(WIN64) || defined(__OS2__) || defined(SNAP)
 static int mostra(const char *comando);
 #endif // WIN
 
 #if defined(unix) && !defined(MACOS)
-#define APPLICATION_NAME (QString)"nautilus "
+#define APPLICATION_NAME (QString)"xdg-open "
 #elif defined(WIN32) || defined(WIN64) || defined(__OS2__)
 #define APPLICATION_NAME (QString)"explorer.exe "
 static void replace(char *data);
@@ -26,11 +26,8 @@ static void replace(char *data);
 
 static QString remove_file(const QString &path);
 
-void mostra_explorer(QString posizione)
+void mostra_explorer(const QString &posizione)
 {
-    /*
-     * in windows we don't need to run it in an other thread
-    */
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
     const char *comando;
     comando = (APPLICATION_NAME + posizione).toUtf8().constData();
@@ -38,15 +35,18 @@ void mostra_explorer(QString posizione)
         dialog_critic("We had a problem opening " + APPLICATION_NAME);
     }
 
-#elif unix || MACOS
-    posizione = remove_file(posizione.toUtf8().constData());
-    mostra_finestra_i(posizione);
-    //QFuture<void> future1 = QtConcurrent::run(&mostra, comando);
-#endif
-
+#elif (defined(unix) || defined(MACOS)) && !defined(SNAP)
+    QString tmp;
+    tmp = remove_file(posizione);
+    mostra_finestra_i(tmp);
+#elif defined(SNAP)
+    const QString path = remove_file(posizione);
+    const QString tmp = QString("%1 %2").arg(APPLICATION_NAME).arg(path);
+    mostra(tmp.toUtf8().constData());
+#endif //SNAP
 }
 
-#if defined(WIN32) || defined(WIN64) || defined(__OS2__)
+#if defined(WIN32) || defined(WIN64) || defined(__OS2__) || defined(SNAP)
 static int mostra(const char *comando){
     return system(comando);
 }
