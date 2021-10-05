@@ -68,7 +68,6 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/button/button_size.cpp \
-    src/changeCopybook.cpp \
     src/controllUi.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \

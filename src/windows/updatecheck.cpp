@@ -1,26 +1,19 @@
 #include "updatecheck.h"
-
 #include "stdlib.h"
 #include "string.h"
 #include "stdio.h"
-
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
-
 #include "mostra_finestra_i.h"
 #include <QFile>
 #include <QTextStream>
-
 #include <QMessageBox>
 #include "../utils/areyousure/areyousure.h"
-
 #include <QJsonArray>
 #include <QJsonDocument>
-
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../mainwindow.h"
-
 #include "showmessageupdate.h"
 
 static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver);
@@ -65,7 +58,8 @@ void updatecheck::managerFinished(){
 
     testo = doc[0][POSNAME].toString();
 
-    if(VERSION_STRING != testo && testo.toUpper() != "TESTING"){
+    if(VERSION_STRING != testo && testo.toUpper() != "TESTING"
+            && QString(VERSION_STRING).toUpper() != "TESTING"){
         auto res = priority(doc, testo, VERSION_STRING);
 
         if(res == n_priority::critical){
