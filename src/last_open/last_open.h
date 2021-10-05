@@ -39,6 +39,7 @@ public:
     struct struct_user *m_user;
 
 private:
+    void loadGeometry();
     Method m_currentMethod;
     widget_parent *m_parent = nullptr;
     /* open file */

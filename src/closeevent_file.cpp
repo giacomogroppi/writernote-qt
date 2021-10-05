@@ -18,7 +18,7 @@
 #include "restore_file/ui/setting_restore_ui.h"
 #include "last_open/struct_last_file.h"
 
-static void setting_geometry(QRect );
+static void setting_geometry(const QRect &);
 
 static void setting_autosave(bool check){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -127,7 +127,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     event->accept();
 }
 
-static void setting_geometry(QRect rect){
+static void setting_geometry(const QRect &rect){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
 

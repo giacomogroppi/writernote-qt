@@ -132,4 +132,8 @@
 #define GROUPNAME_MODALITY "groupname-modality"
 #define KEY_MODALITY "key-modality" /* uchar */
 
+/* geometry last open file */
+#define GROUPNAME_GEOMETRY_LAST_OPEN_FILE "geometry-last-open-file"
+#define KEY_GEOMETRY_LAST_OPEN_FILE "geometry_key-last-open-file"
+
 #endif // SETTING_DEFINE_H

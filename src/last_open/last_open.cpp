@@ -40,10 +40,16 @@ last_open::last_open(QWidget *parent,
         this->ui->close_all->hide();
     }
 
+    this->loadGeometry();
 }
 
 last_open::~last_open()
 {
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_GEOMETRY_LAST_OPEN_FILE);
+    setting.setValue(KEY_GEOMETRY_LAST_OPEN_FILE, this->geometry());
+    setting.endGroup();
+
     if(m_parent)
         delete m_parent;
     delete ui;
@@ -114,6 +120,16 @@ int last_open::load_data_()
     this->updateList();
 
     return m_last.length();
+}
+
+void last_open::loadGeometry()
+{
+    QRect geo;
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_GEOMETRY_LAST_OPEN_FILE);
+    geo = setting.value(KEY_GEOMETRY_LAST_OPEN_FILE, this->geometry()).toRect();
+    this->setGeometry(geo);
+    setting.endGroup();
 }
 
 void last_open::deleteIn(int index){
