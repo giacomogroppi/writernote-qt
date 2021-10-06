@@ -8,6 +8,7 @@ pacman --noconfirm -S mingw-w64-x86_64-toolchain \
           make \
           cmake
 
+pacman --noconfirm -S mingw-w64-x86_64-nsis
 
 pacman --noconfirm -S mingw-w64-x86_64-qt5 \
           mingw-w64-x86_64-libzip \
