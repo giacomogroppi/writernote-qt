@@ -24,14 +24,15 @@ static int mostra(const QString &comando);
 
 void mostra_explorer(const QString &posizione)
 {
-    QString tmp = pathFile::remove_file(posizione);
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
+    QString tmp = pathFile::remove_file(posizione);
     tmp = APPLICATION_NAME + tmp;
     if(mostra(tmp)){
         dialog_critic("We had a problem opening " + APPLICATION_NAME);
     }
 
 #elif (defined(unix) || defined(MACOS)) && !defined(SNAP)
+    QString tmp = pathFile::remove_file(posizione);
     tmp = pathFile::remove_file(posizione);
     mostra_finestra_i(tmp);
 #elif defined(SNAP)
