@@ -32,10 +32,10 @@ void mostra_explorer(const QString &posizione)
     }
 
 #elif (defined(unix) || defined(MACOS)) && !defined(SNAP)
-    tmp = remove_file(posizione);
+    tmp = pathFile::remove_file(posizione);
     mostra_finestra_i(tmp);
 #elif defined(SNAP)
-    const QString path = remove_file(posizione);
+    const QString path = pathFile::remove_file(posizione);
     const QString tmp = QString("%1 %2").arg(APPLICATION_NAME).arg(path);
     mostra(tmp);
 #endif //SNAP

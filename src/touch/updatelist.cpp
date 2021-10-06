@@ -7,7 +7,7 @@
 #include "../utils/color/setcolor.h"
 
 static bool need_to_change_color(datastruct *data, int id){
-    int i, len, how;
+    static int i, len, how;
 
     len = data->length();
 
@@ -22,14 +22,17 @@ static bool need_to_change_color(datastruct *data, int id){
     return (how % MAXPOINT) ? 0 : 1;
 }
 
-static point_s tmp_point;
+
 
 void TabletCanvas::updatelist(QTabletEvent *event){
-    double size;
-    uchar alfa;
+    static double size;
+    static uchar alfa;
+    static point_s tmp_point;
 
     size = event->pressure();
     alfa = (medotodiinserimento == e_method::highlighter) ? m_highlighter->getAlfa() : 255;
+
+    qDebug() << "TabletCanvas::updatelist" << !m_deviceDown;
 
     if(!this->m_deviceDown){
         tmp_point.idtratto = (data->datatouch->length()) ? data->datatouch->maxId() + 1 : 0;
@@ -61,25 +64,9 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     tmp_point.m_x = event->posF().x();
     tmp_point.m_y = event->posF().y();
-
-    if(medotodiinserimento == e_method::highlighter){
-        size = m_highlighter->getSize(size);
-    }else{
-        size = m_pen_ui->getSize(size);
-    }
-
+    size = (medotodiinserimento == e_method::highlighter) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
     tmp_point.m_pressure = size;
-
-    /*if(!size){
-        temp_point.m_pressure = event->pressure();
-        temp_point.m_pressure = (medotodiinserimento == e_method::highlighter) ? temp_point.m_pressure*100 : temp_point.m_pressure;
-    }
-    else
-        temp_point.m_pressure = m_pen_ui->m_spessore_pen;*/
-
-
     tmp_point.rotation = event->rotation();
-
     tmp_point.m_posizioneaudio = time/1000;
 
     setcolor_struct(&tmp_point.m_color, m_color);

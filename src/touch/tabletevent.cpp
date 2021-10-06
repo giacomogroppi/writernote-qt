@@ -5,17 +5,18 @@
 bool need_save_auto = false;
 bool need_save_tmp = false;
 
+
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
     need_save_auto = true;
     need_save_tmp = true;
 
-    bool sel = true;
-    bool highlighter = medotodiinserimento == e_method::highlighter;
+    static bool sel = true;
+    static const bool highlighter = medotodiinserimento == e_method::highlighter;
 
-    auto eventType = event->type();
+    QEvent::Type eventType = event->type();
 
-    //qDebug() << eventType;
+    //qDebug() << "QEvent::Type" << eventType;
 
     switch (eventType) {
         case QEvent::TabletPress: /* when the user release the tablet */
