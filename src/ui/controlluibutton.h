@@ -25,6 +25,11 @@ public:
         Computer
     };
 
+    void change(){
+        this->mode = (this->mode == Mode::Tablet) ? Mode::Computer : Mode::Tablet;
+        this->update();
+    }
+
 private :
     enum Mode mode;
     void loadSettings();

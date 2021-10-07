@@ -284,6 +284,10 @@ private slots:
 
     void on_buttonRecentFile_clicked();
 
+    void on_actionChange_visual_triggered();
+
+    void on_buttonChangeVisual_clicked();
+
 protected:
     void dropEvent(QDropEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;

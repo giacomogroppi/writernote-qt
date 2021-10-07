@@ -65,5 +65,6 @@
         <file>images/not_define.png</file>
         <file>images/recent-file-icon.png</file>
         <file>images/back.png</file>
+        <file>images/tablet.png</file>
     </qresource>
 </RCC>
