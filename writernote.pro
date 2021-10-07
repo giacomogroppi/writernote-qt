@@ -405,8 +405,27 @@ ios{
     message(Enable ios build)
     INCLUDEPATH += 3rdparty/libzip/include/include
     LIBS += 3rdparty/libzip/lib/libzip.a
+
+    OBJECTIVE_SOURCES += ios/src/iosshareutils.mm \
+        ios/src/docviewcontroller.mm
+
+    HEADERS += ios/cpp/ios/iosshareutils.hpp \
+        ios/cpp/ios/docviewcontroller.h
+
+    # Note for devices: 1=iPhone, 2=iPad, 1,2=Universal.
+    QMAKE_APPLE_TARGETED_DEVICE_FAMILY = 1,2
 }
 else:android{
+    OTHER_FILES += android/src/org/writernote/utils/QShareUtils.java \
+        android/src/org/writernote/examples/sharex/QShareActivity.java \
+        android/src/org/writernote/utils/QSharePathResolver.java
+
+    SOURCES += android/cpp/android/androidshareutils.cpp
+    SOURCES += android/cpp/android/shareutils.cpp
+
+    HEADERS += android/cpp/android/androidshareutils.h
+    HEADERS += android/cpp/android/shareutils.h
+
     include(3rdparty/android_openssl/openssl.pri)
     message(Enable android build)
     QT += androidextras
