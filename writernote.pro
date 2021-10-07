@@ -199,9 +199,7 @@ SOURCES += \
     src/touch/initpixmap.cpp \
     src/touch/paintevent/disegnofoglio.cpp \
     src/touch/paintevent/paintevent.cpp \
-    src/touch/pen/load_settings_pen_ui.cpp \
     src/touch/pen/pen_ui.cpp \
-    src/touch/pen/save_settings_pen_ui.cpp \
     src/touch/riascolto/riascolto.cpp \
     src/touch/rubber/load_setting_rubber_ui.cpp \
     src/touch/rubber/rubber_ui.cpp \

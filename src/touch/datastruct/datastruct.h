@@ -142,6 +142,28 @@ public:
         m_point.append(*point);
     }
 
+    void appendToTop(const QList<point_s> &point){
+        int i, k;
+        const int len = point.length();
+        const int point_len = length();
+
+        /*
+            const int index = 1;
+            for(i=len-1; i>0; i--){
+            this->m_point.insert(index, point.at(i));
+        }*/
+
+        for(k=0; k<point_len; ++k){
+            if(datastruct::isIdUser(at(k)))
+                break;
+        }
+
+        for(i=0; i<len; ++i){
+            this->m_point.insert(k, point.at(i));
+            k++;
+        }
+    }
+
     uint move_to_positive(uint len);
 
     void restoreLastTranslation();
@@ -206,7 +228,28 @@ public:
     void changeId(uint i, uint len, int base = -1);
 
     bool isAvailable(int id);
-    int maxId();
+
+    inline int maxId() const{
+        int maxId = 0;
+        if(m_point.isEmpty())
+            return maxId;
+
+        int i, len;
+        len = m_point.length();
+
+        const point_s *__point;
+
+        for(i=0; i<len; ++i){
+            __point = & m_point.at(i);
+            if(__point->idtratto > maxId){
+                maxId = __point->idtratto;
+            }
+        }
+        const int res = (maxId > 0) ? maxId : 0;
+        qDebug() << "Max id" << res;
+        return res;
+
+    }
 
     inline bool isempty() const{
         return this->m_point.isEmpty();
@@ -292,7 +335,11 @@ public:
     }
 
     inline const point_s * lastPoint() const {
-        return at(length()-1);
+        return &this->m_point.last();
+    }
+
+    inline int lastId() const{
+        return this->m_point.last().idtratto;
     }
 
     inline const point_s * at(uint i) const {

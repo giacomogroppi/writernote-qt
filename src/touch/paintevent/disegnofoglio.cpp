@@ -13,16 +13,16 @@
 static double widthToPressure(double);
 
 static void addPointZero(Document *);
-static void drawLineOrizzontal(datastruct &data,
-                         point_s *point,
-                         style_struct_S &style,
-                         const double &last,
-                         double &deltax,
-                         const double &width_p,
-                         const double &ct_del);
+static void drawLineOrizzontal(QList<point_s> &list,
+                               point_s &point,
+                               style_struct_S &style,
+                               const double &last,
+                               double &deltax,
+                               const double &width_p,
+                               const double &ct_del);
 
-static void drawLineVertical(datastruct &data,
-                         point_s *point,
+static void drawLineVertical(QList<point_s> &data,
+                         point_s &point,
                          style_struct_S &style,
                          const double &last,
                          double &deltay,
@@ -43,9 +43,11 @@ void TabletCanvas::disegnafoglio(){
     bool fast = false, need_scale = false;
     struct point_s temp_point;
     struct style_struct_S style;
-    fast_sheet_ui::n_style res;
+    static fast_sheet_ui::n_style res;
+    static QList<point_s> point;
+    static double deltax, deltay, ct_del, last, height_p, width_p;
 
-    double deltax, deltay, ct_del, last, height_p, width_p;
+    point.clear();
 
     if(!disegnofoglio_bool)
         return;
@@ -86,9 +88,11 @@ void TabletCanvas::disegnafoglio(){
     temp_point.m_pressure = widthToPressure(style.thickness);
 
     /* draw the orizzontal line */
-    drawLineOrizzontal(*data->datatouch, &temp_point, style, last, deltax, width_p, ct_del);
+    drawLineOrizzontal(point, temp_point, style, last, deltax, width_p, ct_del);
     /* draw vertical line */
-    drawLineVertical(*data->datatouch, &temp_point, style, last, deltay, height_p);
+    drawLineVertical(point, temp_point, style, last, deltay, height_p);
+
+    this->data->datatouch->appendToTop(point);
 
     this->disegnofoglio_bool = false;
 
@@ -140,31 +144,31 @@ static void addPointZero(Document *data){
     }
 }
 
-static void drawLineOrizzontal(datastruct &data,
-                            point_s *point,
+static void drawLineOrizzontal(QList<point_s> &list,
+                            point_s &point,
                             style_struct_S &style,
                             const double &last,
                             double &deltax,
                             const double &width_p,
                             const double &ct_del){
     uint i;
-    point->idtratto = IDORIZZONALE;
+    point.idtratto = IDORIZZONALE;
 
     for(i=0; i< (uint)style.nx; ++i){
-        point->m_x = 0;
-        point->m_y = last + deltax;
+        point.m_x = 0;
+        point.m_y = last + deltax;
 
-        data.append(point);
+        list.append(point);
 
-        point->m_x = width_p;
-        data.append(point);
+        point.m_x = width_p;
+        list.append(point);
 
         deltax += ct_del;
     }
 }
 
-static void drawLineVertical(datastruct &data,
-                            point_s *point,
+static void drawLineVertical(QList<point_s> &list,
+                            point_s &point,
                             style_struct_S &style,
                             const double &last,
                             double &deltay,
@@ -172,17 +176,17 @@ static void drawLineVertical(datastruct &data,
     double ct_del;
     uint i;
 
-    point->idtratto = IDVERTICALE;
+    point.idtratto = IDVERTICALE;
     ct_del = deltay;
 
     for(i=0; i< (uint)style.ny; i++){
-        point->m_x = deltay;
-        point->m_y = last; /* corrisponde to 0 */
+        point.m_x = deltay;
+        point.m_y = last; /* corrisponde to 0 */
 
-        data.append(point);
+        list.append(point);
 
-        point->m_y = height_p + last;
-        data.append(point);
+        point.m_y = height_p + last;
+        list.append(point);
 
         deltay += ct_del;
 

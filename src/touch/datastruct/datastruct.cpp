@@ -172,31 +172,6 @@ bool datastruct::isAvailable(int id)
     return 1;
 }
 
-/*
- * the function returns the maximum value of the id
-*/
-int datastruct::maxId()
-{
-    int maxId = 0;
-    if(m_point.isEmpty())
-        return maxId;
-
-    int i, len;
-    len = m_point.length();
-
-    const point_s *__point;
-
-    for(i=0; i<len; ++i){
-        __point = & m_point.at(i);
-        if(__point->idtratto > maxId){
-            maxId = __point->idtratto;
-        }
-    }
-
-    return (maxId > 0) ? maxId : 0;
-
-}
-
 void datastruct::reset(){
     m_point.clear();
 
