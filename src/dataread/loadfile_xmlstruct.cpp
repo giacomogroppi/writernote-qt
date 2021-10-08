@@ -286,13 +286,11 @@ int xmlstruct::load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const b
     SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
 
     tmp = loadbinario_1(filezip);
-    if(tmp == ERROR){
+    if(tmp == ERROR)
         return tmp;
-    }
-    else if(tmp == ERROR_CONTROLL){
+    else if(tmp == ERROR_CONTROLL)
         /* we want to continue to load the file, but we need to return we had a problem */
         controllo_parita = 1;
-    }
 
     if(LoadImg){
         res_img = doc->m_img->load(filezip, f);

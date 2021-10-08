@@ -20,6 +20,7 @@ frompdf::load_res frompdf::save_metadata(zip_source_t *file)
     return load_res::ok;
 }
 
+/* the function append to the list a Pdf */
 frompdf::load_res frompdf::load_metadata(zip_file_t *file)
 {
     uint i;

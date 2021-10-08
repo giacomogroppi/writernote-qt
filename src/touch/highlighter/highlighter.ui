@@ -96,7 +96,7 @@ the highlighter</string>
    <item>
     <widget class="QCheckBox" name="same_data">
      <property name="text">
-      <string>Same data for highlighter</string>
+      <string>Same data for highlighter and pen</string>
      </property>
     </widget>
    </item>

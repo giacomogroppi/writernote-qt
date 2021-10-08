@@ -84,6 +84,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip,
     QList<QByteArray> arr;
     QStringList __name;
     uint i;
+    m_image.clear();
 
     __name = get_name_pdf();
 
