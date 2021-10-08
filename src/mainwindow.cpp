@@ -88,7 +88,11 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_path);
     NAME_LOG_EXT = new log_ui(this);
     this->m_controllUi = new ControllUiButton(this);
+
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);
+#endif // mobile device
+
 
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);

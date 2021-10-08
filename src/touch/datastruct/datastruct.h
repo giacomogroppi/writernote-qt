@@ -388,7 +388,7 @@ public:
 
     inline QRectF pos_first_page(){
         const point_s &ref = m_point.first();
-        return QRectF(ref.m_x, ref.m_y, biggerx(), biggery()/double(posizionefoglio.length()));
+        return QRectF(ref.m_x, ref.m_y, biggerx(), (biggery()-ref.m_y)/double(posizionefoglio.length()));
     }
 };
 

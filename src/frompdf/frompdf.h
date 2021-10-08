@@ -33,12 +33,9 @@ class TabletCanvas;
 
 class Pdf{
 public:
-    /* indice la parte in alto a sinistra della prima immagine */
-    //QPointF topLeft;
-
-    /* indica la parte in basso a destra della prima immagine */
-    //QPointF bottomRigth;
     QList<QImage> img;
+    
+    /* top left */
     QPointF topLeft;
 };
 
@@ -112,37 +109,44 @@ public:
                      const bool IsExportingPdf){
         Q_UNUSED(pwidth);
 
-        int i, k;
-        double y, x = 0;
-        QRectF size = this->m_data->datatouch->pos_first_page();
+        static uint i, k, len_img;
+        static double x = 0;
+        static QRectF size;
+        static const uint len = this->m_image.length();
+
+        static const double y = (IsExportingPdf) ? rend_heigth * delta : m_data->datatouch->currentHeight()*delta;
+
+        if(this->m_image.isEmpty())
+            return;
 
         if(IsExportingPdf){
             size = QRectF(0,
                           0,
                           double(rend_width)*delta,
                           double(rend_heigth)*delta);
-            y = rend_heigth*delta;
             x = rend_width*delta;
         }else{
+            size = this->m_data->datatouch->pos_first_page();
+
             size = QRectF(size.topLeft().x()*delta,
                           size.topLeft().y()*delta,
-                          size.bottomRight().x()*delta,
-                          size.bottomRight().y()*delta);
-            y = this->m_data->datatouch->currentHeight()*delta;
+                          size.width()*delta,
+                          size.height()*delta);
+
         }
 
-        for(i=0; i<this->m_image.length(); ++i){
+        assert(y > 0);
+
+        for(i=0; i < len; ++i){
             const Pdf &pdf = this->m_image.at(i);
-            for(k=0; k<pdf.img.length(); ++k){
+            len_img = pdf.img.length();
+            for(k=0; k < len_img; ++k){
+
                 fromimage::draw(painter, size, pdf.img.at(i));
 
-                size = QRectF(size.topLeft().x(),
-                              size.topLeft().y() + y,
-                              size.bottomRight().x() + x,
-                              size.bottomRight().y() + y);
-
-                //size.adjust(0, y, 0, 0);
+                size.setY(size.y() + y);
                 size.setHeight(y);
+
                 if(IsExportingPdf)
                     size.setWidth(x);
             }
