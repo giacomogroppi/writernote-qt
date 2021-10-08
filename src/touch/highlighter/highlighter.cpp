@@ -108,10 +108,10 @@ void highlighter::on_slider_alfa_actionTriggered(int action)
 
 double highlighter::getSize(const double pressure){
     if(*same_data){
-        return m_pen->getSize(pressure)*ADD*ADD;
+        return m_pen->getSize(pressure)*40;
     }
-    qDebug() << "high size: " << m_data.size*ADD;
-    return (m_data.pressure) ? pressure*ADD : m_data.size*ADD;
+
+    return (m_data.pressure) ? pressure*20 : m_data.size*ADD;
 }
 
 void highlighter::moveAll(datastruct *data)
