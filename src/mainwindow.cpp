@@ -23,6 +23,7 @@
 #include "currenttitle/option/option_copybook.h"
 #include "log/log_ui/log_ui.h"
 #include "ui/controlluibutton.h"
+#include "../android/cpp/android/shareutils.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -87,12 +88,15 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_path);
     NAME_LOG_EXT = new log_ui(this);
     this->m_controllUi = new ControllUiButton(this);
+    this->m_share_file = new ShareUtils(this);
+
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
     this->m_text->setHidden(true);
     this->m_pen->setHidden(true);
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
+
 
     this->m_canvas->m_rubber = m_rubber;
     this->m_canvas->m_pen_ui = m_pen;

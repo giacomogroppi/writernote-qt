@@ -31,6 +31,9 @@ class ControllUiButton;
 class xmlstruct;
 class ui_scroll;
 class setting_restore_ui;
+#ifdef ANDROID_WRITERNOTE
+class ShareUtils;
+#endif
 
 #define STRINGIZE2(s) #s
 #define STRINGIZE(s) STRINGIZE2(s)
@@ -118,18 +121,15 @@ public:
     pen_ui *m_pen;
     text_ui *m_text;
     highlighter *m_highlighter;
-
     text_widgets *m_text_w;
     option_copybook *m_option_copybook;
-
     struct struct_user *m_user;
-
     cloud_controll *m_cloud;
-
-    /* manage audio player */
     QBuffer *m_buffer = nullptr;
-
     fast_sheet_ui *m_sheet = nullptr;
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
+    ShareUtils *m_share_file;
+#endif
 
     void updatePageCount(int);
     setting_restore_ui *m_setting;
