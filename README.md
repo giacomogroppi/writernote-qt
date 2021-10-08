@@ -216,3 +216,4 @@ In the code there are some references to TODOs
 * zlib 1.2.11 ([zlib License](http://www.zlib.net/zlib_license.html))
 * CMake ([New BSD License](https://github.com/Kitware/CMake/blob/master/Copyright.txt))
 * libzip ([BSD License](https://libzip.org/license/))
+* Poppler ([GPL 2.0](https://github.com/freedesktop/poppler/blob/master/COPYING))
