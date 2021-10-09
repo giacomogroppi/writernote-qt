@@ -147,6 +147,7 @@ void log_ui::updateAll()
     FILE *fp;
     QString _text_log;
     char c;
+    char error = 0;
 
     if(m_permi == permi::enable)
         ui->button_enable_log->setText("Disable");
@@ -158,20 +159,24 @@ void log_ui::updateAll()
     if(!fp){
         ui->textBrowser->setText("No log available");
     }else{
-        fscanf(fp, "%c", &c);
+        if(!fscanf(fp, "%c", &c)) 
+            error = 1;
         while(!feof(fp)){
             _text_log.append(c);
 
-            fscanf(fp, "%c", &c);
+            if(!fscanf(fp, "%c", &c))
+                error = 1;
         }
-        fclose(fp);
+
+        if(error)
+            _text_log += "Error reading log file in some byte";
 
         ui->textBrowser->setText(_text_log);
     }
 
+    fclose(fp);
+
     updateError();
-
-
 }
 
 void log_ui::updateError()

@@ -5,6 +5,7 @@
 #include "../../utils/slash/slash.h"
 #include "../../utils/common_def.h"
 #include "../../utils/get_only_name/get_only_name.h"
+#include "../../utils/mostra_explorer/mostra_explorer.h"
 
 element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index) :
     QWidget(parent),
@@ -97,8 +98,6 @@ void element_ui::on_button_download_clicked()
 {
     emit downloadIn(this->m_index);
 }
-
-#include "../../utils/mostra_explorer/mostra_explorer.h"
 
 void element_ui::on_open_exe_clicked()
 {

@@ -17,8 +17,9 @@ class widget_parent : public QWidget
     Q_OBJECT
 
 public:
-    explicit widget_parent(QWidget *parent = nullptr, last_file *ref = nullptr,
-                           const bool showOnlyName = false, last_open *parent_sec = nullptr);
+    explicit widget_parent(QWidget *parent, last_file *ref,
+                           const bool showOnlyName, last_open *parent_sec,
+                           const uchar __num);
     ~widget_parent();
     void updateList();
     void decrease(const int index);
@@ -28,7 +29,7 @@ private:
     last_open *parent;
     QList<element_ui *> m_element;
     last_file *m_last_file;
-
+    uchar __num;
 
     void clean();
 protected:

@@ -12,6 +12,7 @@ int savefile::saveArrayIntoFile(const QString &from,
     int check = 0, error;
     uchar __data;
     FILE *fp;
+    uchar ErrorRead = 0;
 
 #if defined(unix) || defined(MACOS)
     if(!(fp = fopen(from.toUtf8().constData(), "r")))
@@ -19,6 +20,9 @@ int savefile::saveArrayIntoFile(const QString &from,
 #elif defined(WIN32) || defined (WIN64)
     if(!(fp = fopen(from.toUtf8().constData(), "rb")))
         return ERROR;
+#else
+    dialog_critic("This function not work in your platform");
+    return ERROR;
 #endif
 
     if(!filezip){
@@ -41,7 +45,10 @@ int savefile::saveArrayIntoFile(const QString &from,
     zip_source_begin_write(file);
 
     while(1){
-        fread(&__data, sizeof(uchar), 1, fp);
+        if(!fread(&__data, sizeof(uchar), 1, fp)){
+            ErrorRead = 1;
+            goto delete_;
+        }
 
         if(feof(fp)){
             break;
@@ -70,7 +77,9 @@ int savefile::saveArrayIntoFile(const QString &from,
 
     if(closeZip)
         zip_close(filezip);
-    return ERROR;
+
+    /* TODO --> update the functions that call this function, and add an error case. */
+    return (ErrorRead) ? ERROR : ERROR;
 
 }
 

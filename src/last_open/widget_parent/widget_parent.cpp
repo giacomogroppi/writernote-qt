@@ -4,13 +4,16 @@
 #include <QDebug>
 #include "../last_open.h"
 
-widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName, last_open *parent_sec) :
+widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName,
+                             last_open *parent_sec, const uchar __num) :
     QWidget(parent),
     ui(new Ui::widget_parent)
 {
     element_ui *el;
     uint i;
+
     this->m_last_file = ref;
+    this->__num = __num;
 
     assert(ref);
     assert(parent_sec != nullptr);
@@ -18,7 +21,7 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnl
     this->parent = parent_sec;
     ui->setupUi(this);
 
-    for(i=0; i<m_last_file->length(); ++i){
+    for(i=0; i<m_last_file->length() && i < __num; ++i){
         el = new element_ui(nullptr, &m_last_file->at(i), showOnlyName, i);
         this->m_element.append(el);
 
@@ -51,11 +54,11 @@ void widget_parent::updateList()
         return;
 
     uint count = 0;
-    const int width_all = this->width();
-    const int width_single = this->m_element.first()->width();
-    const int space = ui->gridLayout->spacing(); // space for item
-    const uint len = width_all / (width_single+space*4);
-    const uint len_list = m_last_file->length();
+    static const int width_all = this->width();
+    static const int width_single = this->m_element.first()->width();
+    static const int space = ui->gridLayout->spacing(); // space for item
+    static const uint len = width_all / (width_single+space*4);
+    static const uint len_list = (m_last_file->length() >= __num) ? __num : m_last_file->length();
 
     if(last_width == width_all)
         return;
