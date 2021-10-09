@@ -78,7 +78,7 @@ int last_open::load_data_()
     if(data.val == option_last_open_ui::disable)
         return 0;
     if(data.val == option_last_open_ui::enable){
-        if(data.val <= 0)
+        if(data.pos <= 0)
             __val = 255;
         else
             __val = data.pos;
