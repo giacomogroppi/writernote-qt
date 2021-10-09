@@ -295,6 +295,7 @@ jobs:
       - name: Compile x86
         run: |
           export ANDROID_NDK_ROOT=$NDK_PATH
+          make clean
 
           qmake ANDROID_ABIS=x86
           make -j$(nproc) apk
