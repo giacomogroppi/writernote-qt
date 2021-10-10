@@ -53,8 +53,10 @@ void ControllUiButton::saveSettings()
 void ControllUiButton::initList()
 {
     Ui::MainWindow *ui = parent->ui;
+    int i;
+
     this->m_button.clear();
-    this->m_button.append(ui->pushButton_back);
+
     m_button.append(ui->pushButton_back);
     m_button.append(ui->buttonStartRecording);
     m_button.append(ui->buttonStopRecording);
@@ -81,7 +83,12 @@ void ControllUiButton::initList()
     m_button.append(ui->buttonRecentFile);
     m_button.append(ui->buttonChangeVisual);
 
-    for(int i=0; i<m_button.length(); ++i){
+    m_spacer.append(ui->horizontalSpacer_button);
+    m_spacer.append(ui->horizontalSpacer_button1);
+    m_spacer.append(ui->horizontalSpacer_button2);
+    m_spacer.append(ui->horizontalSpacer_button3);
+
+    for(i=0; i<m_button.length(); ++i){
         m_button.at(i)->setCheckable(true);
     }
 }
@@ -89,14 +96,22 @@ void ControllUiButton::initList()
 void ControllUiButton::update()
 {
     int i;
+    const int len_button = this->m_button.length();
+    const int len_spacer = this->m_spacer.length();
+
     const bool tablet = this->mode == Mode::Tablet;
     //const bool tablet = true;
 
-    const int len = this->m_button.length();
-
-    for(i=0; i<len; ++i){
-        this->m_button.at(i)->setHidden(!tablet);
+    for(i=0; i<len_button; ++i){
+        this->m_button.at(i)->setVisible(tablet);
         this->m_button.at(i)->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+    }
+
+    for(i=0; i<len_spacer; ++i){
+        if(tablet)
+            m_spacer.at(i)->changeSize(0, 0, QSizePolicy::MinimumExpanding);
+        else
+            m_spacer.at(i)->changeSize(0, 0);
     }
 
     parent->ui->mainbar->setHidden(tablet);

@@ -6,12 +6,14 @@ class MainWindow;
 #include <QPushButton>
 #include <QColor>
 #include <QImage>
+#include <QSpacerItem>
 
 class ControllUiButton
 {
 private:
     MainWindow *parent;
     QList<QPushButton *> m_button;
+    QList<QSpacerItem *> m_spacer;
 
 public:
     ControllUiButton(MainWindow *parent);
