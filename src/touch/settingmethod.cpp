@@ -103,6 +103,12 @@ void MainWindow::updateTouch(){
     ui->actioninsertText->setChecked(       m_canvas->medotodiinserimento == TabletCanvas::text);
     ui->actionhighlighter->setChecked(      m_canvas->medotodiinserimento == TabletCanvas::highlighter);
 
+    ui->buttonPen->setChecked(              m_canvas->medotodiinserimento == TabletCanvas::pen);
+    ui->buttonRubber->setChecked(           m_canvas->medotodiinserimento == TabletCanvas::rubber);
+    ui->buttonselezionetext->setChecked(    m_canvas->medotodiinserimento == TabletCanvas::selection);
+    ui->buttonInsertText->setChecked(       m_canvas->medotodiinserimento == TabletCanvas::text);
+    ui->buttonHighlighter->setChecked(      m_canvas->medotodiinserimento == TabletCanvas::highlighter);
+
     ui->actionblack->setChecked(m_canvas->m_color == Qt::black);
     ui->actionwhite->setChecked(m_canvas->m_color == Qt::white);
     ui->actionyellow->setChecked(m_canvas->m_color == Qt::yellow);

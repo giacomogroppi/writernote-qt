@@ -13,8 +13,6 @@ private:
     MainWindow *parent;
     QList<QPushButton *> m_button;
 
-
-
 public:
     ControllUiButton(MainWindow *parent);
     ~ControllUiButton();

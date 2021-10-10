@@ -288,6 +288,8 @@ private slots:
 
     void on_buttonChangeVisual_clicked();
 
+    void on_buttonPen_clicked();
+
 protected:
     void dropEvent(QDropEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;

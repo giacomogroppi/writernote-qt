@@ -16,3 +16,8 @@ void MainWindow::on_buttonChangeVisual_clicked()
 {
     this->m_controllUi->change();
 }
+
+void MainWindow::on_buttonPen_clicked()
+{
+    this->on_actionpen_triggered();
+}

@@ -8,6 +8,7 @@
 ControllUiButton::ControllUiButton(MainWindow *parent)
 {
     this->parent = parent;
+
     this->loadSettings();
     this->initList();
     this->update();
@@ -54,12 +55,49 @@ void ControllUiButton::initList()
     Ui::MainWindow *ui = parent->ui;
     this->m_button.clear();
     this->m_button.append(ui->pushButton_back);
+    m_button.append(ui->pushButton_back);
+    m_button.append(ui->buttonStartRecording);
+    m_button.append(ui->buttonStopRecording);
+    m_button.append(ui->buttonPauseRecording);
+    m_button.append(ui->buttonUndu);
+    m_button.append(ui->buttonRedo);
+    m_button.append(ui->buttonListen_current_audio);
+    m_button.append(ui->buttonPen);
+    m_button.append(ui->buttonRubber);
+    m_button.append(ui->buttonselezionetext);
+    m_button.append(ui->buttonInsertText);
+    m_button.append(ui->buttonHighlighter);
+    m_button.append(ui->buttonBlack);
+    m_button.append(ui->buttonYellow);
+    m_button.append(ui->buttonWhite);
+    m_button.append(ui->buttonBrown);
+    m_button.append(ui->buttonPurple);
+    m_button.append(ui->buttonChooseColor);
+    m_button.append(ui->buttonInsertImage);
+    m_button.append(ui->buttonSheet);
+    m_button.append(ui->buttonNewPage);
+    m_button.append(ui->buttonRestore);
+    m_button.append(ui->buttonPenOrMouse);
+    m_button.append(ui->buttonRecentFile);
+    m_button.append(ui->buttonChangeVisual);
+
+    for(int i=0; i<m_button.length(); ++i){
+        m_button.at(i)->setCheckable(true);
+    }
 }
 
 void ControllUiButton::update()
 {
-    const bool tablet = this->mode == Mode::Tablet;
-    //const bool tablet = true;
+    int i;
+    //const bool tablet = this->mode == Mode::Tablet;
+    const bool tablet = true;
+
+    const int len = this->m_button.length();
+
+    for(i=0; i<len; ++i){
+        this->m_button.at(i)->setHidden(!tablet);
+        this->m_button.at(i)->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+    }
 
     parent->ui->mainbar->setHidden(tablet);
     parent->ui->simpleactionbar->setHidden(tablet);
@@ -67,31 +105,5 @@ void ControllUiButton::update()
     parent->ui->toolbarmatita->setHidden(tablet);
     parent->ui->toolBarcolore->setHidden(tablet);
     parent->ui->toolSheet->setHidden(tablet);
-
-    parent->ui->pushButton_back->setHidden(!tablet);
-    parent->ui->buttonStartRecording->setHidden(!tablet);
-    parent->ui->buttonStopRecording->setHidden(!tablet);
-    parent->ui->buttonPauseRecording->setHidden(!tablet);
-    parent->ui->buttonUndu->setHidden(!tablet);
-    parent->ui->buttonRedo->setHidden(!tablet);
-    parent->ui->buttonListen_current_audio->setHidden(!tablet);
-    parent->ui->buttonPen->setHidden(!tablet);
-    parent->ui->buttonRubber->setHidden(!tablet);
-    parent->ui->buttonselezionetext->setHidden(!tablet);
-    parent->ui->buttonInsertText->setHidden(!tablet);
-    parent->ui->buttonHighlighter->setHidden(!tablet);
-    parent->ui->buttonBlack->setHidden(!tablet);
-    parent->ui->buttonYellow->setHidden(!tablet);
-    parent->ui->buttonWhite->setHidden(!tablet);
-    parent->ui->buttonBrown->setHidden(!tablet);
-    parent->ui->buttonPurple->setHidden(!tablet);
-    parent->ui->buttonChooseColor->setHidden(!tablet);
-    parent->ui->buttonInsertImage->setHidden(!tablet);
-    parent->ui->buttonSheet->setHidden(!tablet);
-    parent->ui->buttonNewPage->setHidden(!tablet);
-    parent->ui->buttonRestore->setHidden(!tablet);
-    parent->ui->buttonPenOrMouse->setHidden(!tablet);
-    parent->ui->buttonRecentFile->setHidden(!tablet);
-    parent->ui->buttonChangeVisual->setHidden(!tablet);
 }
 
