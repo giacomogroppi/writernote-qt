@@ -89,8 +89,8 @@ void ControllUiButton::initList()
 void ControllUiButton::update()
 {
     int i;
-    //const bool tablet = this->mode == Mode::Tablet;
-    const bool tablet = true;
+    const bool tablet = this->mode == Mode::Tablet;
+    //const bool tablet = true;
 
     const int len = this->m_button.length();
 
