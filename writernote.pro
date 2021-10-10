@@ -12,6 +12,13 @@ ios: DEFINES += "IOS_WRITERNOTE"
 #Use for testing
 #DEFINES += "ANDROID"
 
+CONFIG(release, debug|release){
+    message("Optimization to O3")
+    QMAKE_CXXFLAGS_RELEASE -= -O1
+    QMAKE_CXXFLAGS_RELEASE -= -O2
+    QMAKE_CXXFLAGS_RELEASE *= -O3
+}
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = build

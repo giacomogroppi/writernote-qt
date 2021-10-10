@@ -49,21 +49,12 @@ jobs:
 
       - run: qmake; make -j$(nproc)
         working-directory: .
-
-      - name: Compile ALL_VERSION
-        run: |
-          qmake
-          make -j $(nproc)
           
       - name: Compile NO_ALL_VERSION
         run: |
           make clean
           qmake DEFINES+="NO_ALL_VERSION"
-          make -j $(nproc)
-          
-    
-
-    
+          make -j $(nproc)    
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
