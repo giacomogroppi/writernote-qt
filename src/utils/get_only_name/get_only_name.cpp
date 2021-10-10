@@ -13,7 +13,7 @@ QString get_only_name::exe(const QString &path)
     const int index_slash = path.indexOf(slash);
     if(index_slash == -1)
         tmp = pathFile::changeSlash(path);
-    const QStringList list = path.split('\\');
+    const QStringList list = tmp.split('\\');
 #else
     const QStringList list = path.split(slash);
 #endif

@@ -4,10 +4,15 @@
 QString pathFile::remove_file(const QString &path)
 {
     const char slash = slash::__slash();
-    const int indexLast = path.lastIndexOf(slash);
+    int indexLast = path.lastIndexOf(slash);
 
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
-    return changeSlash(path.mid(0, path.lastIndexOf('/')));
+    if(indexLast != -1)
+        return path.mid(0, indexLast);
+
+    const QString &ref = pathFile::changeSlash(path);
+    indexLast = ref.lastIndexOf(slash);
+    return ref.mid(0, indexLast);
 #else
     return path.mid(0, indexLast);
 #endif

@@ -16,7 +16,7 @@ element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool show
     this->m_index = m_index;
 
     assert(data);
-    assert(m_index != -1);
+    assert(m_index >= 0);
 
     m_data = data;
     set_main();
@@ -27,7 +27,7 @@ void element_ui::showOnlyname(const bool showOnlyName){
     if(!showOnlyName)
         return;
 
-    const QString res = get_only_name::exe(m_data->posizione);
+    const QString &res = get_only_name::exe(m_data->posizione);
     if(res == "")
         return;
 

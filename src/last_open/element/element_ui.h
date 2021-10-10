@@ -15,7 +15,7 @@ class element_ui : public QWidget
     Q_OBJECT
 
 public:
-    explicit element_ui(QWidget *parent = nullptr, const last_file_s *data = nullptr, const bool showOnlyName = false, int m_index = -1);
+    explicit element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index);
     ~element_ui();
 
     void decrease();
