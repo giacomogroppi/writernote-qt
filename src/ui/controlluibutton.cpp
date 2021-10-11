@@ -104,7 +104,18 @@ void ControllUiButton::update()
 
     for(i=0; i<len_button; ++i){
         this->m_button.at(i)->setVisible(tablet);
-        this->m_button.at(i)->setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+        this->m_button.at(i)->setStyleSheet("QPushButton { \
+                                                background-color: rgb(255, 255, 0, 0); \
+                                                border-style: outset; \
+                                                border-width: 2px; \
+                                                border-radius: 10px; \
+                                                border-color: rgb(0, 0, 0, 0); \
+                                                padding: 6px; \
+                                            }\
+                                            QPushButton:checked {\
+                                                background-color: rgb(80, 80, 80);\
+                                                border: none; \
+                                            }");
     }
 
     for(i=0; i<len_spacer; ++i){
