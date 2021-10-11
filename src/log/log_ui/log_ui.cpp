@@ -153,8 +153,11 @@ void log_ui::updateAll()
         ui->button_enable_log->setText("Disable");
     else
         ui->button_enable_log->setText("Enable");
-
+#if defined(unix) || defined(MACOS)
     fp = fopen(pos_log.toUtf8().constData(), "r");
+#elif defined(WIN32) || defined (WIN64)
+    fp = fopen(pos_log.toUtf8().constData(), "rb");
+#endif
 
     if(!fp){
         ui->textBrowser->setText("No log available");

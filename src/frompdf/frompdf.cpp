@@ -107,7 +107,6 @@ frompdf::load_res frompdf::load(zip_t *fileZip,
     }
 
     return frompdf::load_res::ok;
-
 }
 
 void frompdf::resizing(TabletCanvas *canvas, const uint lenPdf){

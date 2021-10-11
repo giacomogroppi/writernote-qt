@@ -12,7 +12,11 @@ bool load_from_file::exe(QByteArray &arr, const QString &path, const bool clear)
         arr.clear();
     }
 
+#if defined(WIN32) || defined(WIN64)
+    fp = fopen(path.toUtf8().constData(), "rb");
+#else
     fp = fopen(path.toUtf8().constData(), "r");
+#endif
 
     if(!fp){
         return false;

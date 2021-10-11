@@ -46,10 +46,6 @@ int savefile::saveArrayIntoFile(const QString &from,
 
     while(1){
         ErrorRead = fread(&__data, sizeof(uchar), 1, fp);
-        /*if(!fread(&__data, sizeof(uchar), 1, fp)){
-            ErrorRead = 1;
-            goto delete_;
-        }*/
 
         if(feof(fp)){
             break;
