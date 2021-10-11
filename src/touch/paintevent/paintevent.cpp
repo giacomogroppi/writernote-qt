@@ -73,16 +73,12 @@ void TabletCanvas::load(QPainter &painter,
     static const point_s * __point;
     static QColor current_color;
     static double xtemp[2], ytemp[2];
-    static QPainterPath path;
 
     const bool is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
     const uint len = data->datatouch->length();
 
     if(!len)
         return;
-
-    path.clear();
-    path.moveTo(QPointF(0, 0));
 
     if(m_pixmap)
         m_pixmap->fill(Qt::white);
