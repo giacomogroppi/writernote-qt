@@ -8,20 +8,20 @@
 
 #define P(x) x->datatouch
 
-static int checkPositionAudio(const Document *first,
-                              const Document *second);
+static int checkPositionAudio(const Document &first,
+                              const Document &second);
 
-static int checkSpeed(const Document *first,
-                      const Document *second){
+static int checkSpeed(const Document &first,
+                      const Document &second){
     uint i, len;
 
-    len = first->datatouch->length();
-    if(len != second->datatouch->length())
+    len = first.datatouch->length();
+    if(len != second.datatouch->length())
         return IDTRATTO;
 
     for(i=0; i<len; i++){
-        if(memcmp(first->datatouch->at(i),
-                  second->datatouch->at(i),
+        if(memcmp(first.datatouch->at(i),
+                  second.datatouch->at(i),
                   datastruct::getSizeOne()) != 0)
             return IDTRATTO;
     }
@@ -69,47 +69,47 @@ static int checkSlow(const Document *first,
  * what the difference is
  */
 
-int checksimilecopybook(const Document *primo,
-                        const Document *secondo,
+int checksimilecopybook(const Document &primo,
+                        const Document &secondo,
                         const bool speed)
 {
     int res;
-    if(primo->count_img != secondo->count_img)
+    if(primo.count_img != secondo.count_img)
         return LEN;
-    if(primo->count_pdf != secondo->count_pdf)
+    if(primo.count_pdf != secondo.count_pdf)
         return LEN;
 
-    primo->datatouch->scala_all();
-    secondo->datatouch->scala_all();
+    primo.datatouch->scala_all();
+    secondo.datatouch->scala_all();
 
     if(speed){
         res = checkSpeed(primo, secondo);
 
-        primo->datatouch->restoreLastTranslation();
-        secondo->datatouch->restoreLastTranslation();
+        primo.datatouch->restoreLastTranslation();
+        secondo.datatouch->restoreLastTranslation();
 
         return res;
     }
 
-    res = checkSlow(primo, secondo);
+    res = checkSlow(&primo, &secondo);
 
 
-    primo->datatouch->restoreLastTranslation();
+    primo.datatouch->restoreLastTranslation();
 
-    secondo->datatouch->restoreLastTranslation();
+    secondo.datatouch->restoreLastTranslation();
 
     return res;
 }
 
-static int checkPositionAudio(const Document *first,
-                              const Document *second){
-    int len = first->datatouch->posizionefoglio.length(), i;
+static int checkPositionAudio(const Document &first,
+                              const Document &second){
+    int len = first.datatouch->posizionefoglio.length(), i;
 
-    if(second->datatouch->posizionefoglio.length() != len)
+    if(second.datatouch->posizionefoglio.length() != len)
         return LEN_POSIZIONEFOGLIO;
 
     for(i=0; i<len; i++){
-        if(first->datatouch->posizionefoglio.at(i) != second->datatouch->posizionefoglio.at(i))
+        if(first.datatouch->posizionefoglio.at(i) != second.datatouch->posizionefoglio.at(i))
             return POSIZIONE_FOGLIO;
     }
 

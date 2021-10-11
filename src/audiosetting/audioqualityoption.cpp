@@ -67,9 +67,6 @@ void audioqualityoption::on_cancelbutton_clicked()
     this->close();
 }
 
-
-
-
 void MainWindow::on_actionQuality_setting_triggered()
 {
     audioqualityoption insert(nullptr, this);

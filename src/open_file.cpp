@@ -72,7 +72,7 @@ void MainWindow::openFile(const char *pos){
 #endif // PDFSUPPORT
     }
     else {
-        res_save = this->needToSave(&xml, &curr);
+        res_save = this->needToSave(xml, curr);
 
         /*
          * in case there is already open a file, we need to controll if the

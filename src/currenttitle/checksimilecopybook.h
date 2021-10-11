@@ -24,8 +24,8 @@
 #include "document.h"
 #include "../indice_class.h"
 
-int checksimilecopybook(const Document *,
-                        const Document *,
-                        const bool );
+int checksimilecopybook(const Document &,
+                        const Document &,
+                        const bool speed);
 
 #endif // CHECKSIMILECOPYBOOK_H

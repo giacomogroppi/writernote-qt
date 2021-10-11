@@ -51,8 +51,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
     bool check;
     savefile save_(&m_path, m_currenttitle);
 
-    __res = needToSave(&temp_lettura,
-                       &tempcopybook);
+    __res = needToSave(temp_lettura,
+                       tempcopybook);
 
     if(__res == n_need_save::unable_load){
         QMessageBox msgBox;

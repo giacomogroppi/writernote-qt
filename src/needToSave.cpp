@@ -12,17 +12,17 @@
 
 enum MainWindow::n_need_save
         MainWindow::needToSave(
-            xmlstruct *xml,
-            Document * tmp_read) const{
+            xmlstruct & xml,
+            Document & tmp_read) const{
     int check1;
 
-    if(xml->getPath() == ""){
+    if(xml.getPath() == ""){
         if(!m_currenttitle->datatouch->userWrittenSomething(nullptr))
             return n_need_save::only_writernote;
         return n_need_save::no_path;
     }
 
-    check1 = xml->loadfile(false, false);
+    check1 = xml.loadfile(false, false);
 
     if(check1 != ERROR_VERSION_NEW &&
             check1 != OK &&
@@ -30,16 +30,14 @@ enum MainWindow::n_need_save
         return n_need_save::unable_load;
     }
 
-
-    check1 = checksimilecopybook(tmp_read, m_currenttitle, true) == OK_CHECK;
-
-    if(check1)
-        return n_need_save::not_;
-
-    if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read->datatouch)){
+    if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read.datatouch)){
         return n_need_save::only_writernote;
     }
 
+    check1 = checksimilecopybook(tmp_read, *m_currenttitle, true) == OK_CHECK;
+
+    if(check1)
+        return n_need_save::not_;
 
     if(this->m_currenttitle->isEmpty() || m_currenttitle->datatouch->userWrittenSomething(nullptr)){
         return n_need_save::not_;

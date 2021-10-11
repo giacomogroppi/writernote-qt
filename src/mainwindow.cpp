@@ -183,7 +183,7 @@ void MainWindow::on_actionNew_File_triggered()
     Document __curr;
     n_need_save __res;
 
-    __res = needToSave(&xml, &__curr);
+    __res = needToSave(xml, __curr);
 
     if(__res == n_need_save::not_
             || __res == n_need_save::only_writernote)
