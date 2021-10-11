@@ -29,7 +29,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     eventType = event->type();
 
     //qDebug() << "QEvent::Type" << eventType;
-    qDebug() << highlighter << pen << selection << rubber << text;
 
     switch (eventType) {
         case QEvent::TabletPress: /* when the user release the tablet */

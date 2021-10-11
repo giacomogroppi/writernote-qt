@@ -9,7 +9,7 @@ namespace Ui {
 class highlighter;
 }
 
-#define ADD 100
+#define ADD 100.0
 
 class pen_ui;
 class datastruct;
@@ -47,13 +47,13 @@ private slots:
 
     void on_button_pressure_clicked();
 
-    void on_slider_size_actionTriggered(int action);
-
     void on_same_data_stateChanged(int arg1);
 
     void on_checkbox_up_stateChanged(int arg1);
 
-    void on_slider_alfa_actionTriggered(int action);
+    void on_slider_alfa_valueChanged(int value);
+
+    void on_slider_size_valueChanged(int value);
 
 private:
 

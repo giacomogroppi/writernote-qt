@@ -32,8 +32,6 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     const bool hightlighter = (medotodiinserimento == e_method::highlighter);
     const bool pen = (medotodiinserimento == e_method::pen);
 
-    qDebug() << "Update list";
-
     size = event->pressure();
     alfa = hightlighter ? m_highlighter->getAlfa() : 255;
 

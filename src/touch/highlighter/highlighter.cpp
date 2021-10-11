@@ -8,7 +8,7 @@
 
 #include <QDebug>
 
-#define MAX_ALFA 32
+#define MAX_ALFA 40
 #define MIN_ALFA 1
 
 highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
@@ -44,10 +44,14 @@ highlighter::~highlighter()
 void highlighter::loadSettings()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    bool ok;
     setting.beginGroup(GROUPNAME_HIGHLIGHTER);
 
     m_data.alfa = setting.value(KEY_HIGHLIGHTER_ALFA, MAX_ALFA).toInt();
-    m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 7).toInt();
+
+    m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 0.05).toReal(&ok);
+    if(!ok) m_data.size = 0.05;
+
     m_data.pressure = setting.value(KEY_HIGHLIGHTER_SPESS, true).toBool();
     m_data.tratto_sotto = setting.value(KEY_HIGHLIGHTER_SOTTO, true).toBool();
 
@@ -88,7 +92,6 @@ void highlighter::updateList()
     ui->slider_alfa->setValue(m_data.alfa);
 
     if(*same_data){
-        ui->slider_size->setValue(m_pen->get_size_private());
         pressure = m_pen->IsPressure();
     }else{
         pressure = m_data.pressure;
@@ -100,18 +103,15 @@ void highlighter::updateList()
     ui->slider_size->setEnabled(!pressure);
 }
 
-
-void highlighter::on_slider_alfa_actionTriggered(int action)
-{
-    m_data.alfa = action;
-}
-
 double highlighter::getSize(const double pressure){
+    const double size = (m_data.pressure) ? pressure*20 : m_data.size;
     if(*same_data){
         return m_pen->getSize(pressure)*40;
     }
 
-    return (m_data.pressure) ? pressure*20 : m_data.size*ADD;
+    qDebug() << "highlighter::getSize " << size << m_data.size;
+
+    return size;
 }
 
 void highlighter::moveAll(datastruct *data)
@@ -166,19 +166,8 @@ void highlighter::on_button_pressure_clicked()
     updateList();
 }
 
-
-void highlighter::on_slider_size_actionTriggered(int action)
-{
-    if(*same_data){
-        m_pen->setWidthTratto(double(action)/100);
-    }else{
-        m_data.size = double(action)/100;
-    }
-}
-
 void highlighter::on_same_data_stateChanged(int arg1)
 {
-    qDebug() << arg1 << "highlighter::on_same_data_stateChanged";
     *same_data = arg1;
 
     updateList();
@@ -190,4 +179,18 @@ void highlighter::on_checkbox_up_stateChanged(int arg1)
     m_data.tratto_sotto = arg1;
 
     updateList();
+}
+
+void highlighter::on_slider_alfa_valueChanged(int value)
+{
+    m_data.alfa = value;
+}
+
+void highlighter::on_slider_size_valueChanged(int value)
+{
+    if(*same_data){
+        m_pen->setWidthTratto(double(value)/100);
+    }else{
+        m_data.size = double(value)/14.0;
+    }
 }
