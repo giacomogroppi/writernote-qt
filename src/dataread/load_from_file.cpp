@@ -5,6 +5,8 @@ bool load_from_file::exe(QByteArray &arr, const QString &path, const bool clear)
 {
     FILE *fp;
     uchar __read;
+    uchar size;
+    bool error = true;
 
     if(clear){
         arr.clear();
@@ -16,13 +18,22 @@ bool load_from_file::exe(QByteArray &arr, const QString &path, const bool clear)
         return false;
     }
 
-    do {
-        fread(&__read, 1, 1, fp);
+    while(1){
+        size = fread(&__read, 1, 1, fp);
+
+        if(feof(fp))
+            break;
+
+        if(!size){
+            error = false;
+            goto free;
+        }
+
         arr.append(__read);
     }
-    while(!feof(fp));
 
+
+    free:
     fclose(fp);
-
-    return true;
+    return error;
 }

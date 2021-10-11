@@ -16,7 +16,6 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
 }
 
-
 rubber_ui::~rubber_ui()
 {
     delete ui;

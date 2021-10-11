@@ -12,7 +12,7 @@ int savefile::saveArrayIntoFile(const QString &from,
     int check = 0, error;
     uchar __data;
     FILE *fp;
-    uchar ErrorRead = 0;
+    size_t ErrorRead = 0;
 
 #if defined(unix) || defined(MACOS)
     if(!(fp = fopen(from.toUtf8().constData(), "r")))
@@ -45,14 +45,21 @@ int savefile::saveArrayIntoFile(const QString &from,
     zip_source_begin_write(file);
 
     while(1){
-        if(!fread(&__data, sizeof(uchar), 1, fp)){
+        ErrorRead = fread(&__data, sizeof(uchar), 1, fp);
+        /*if(!fread(&__data, sizeof(uchar), 1, fp)){
             ErrorRead = 1;
             goto delete_;
-        }
+        }*/
 
         if(feof(fp)){
             break;
         }
+
+        if(!ErrorRead){
+            ErrorRead = 1;
+            goto delete_;
+        }
+
         SOURCE_WRITE(file, &__data, sizeof(__data));
     };
 
