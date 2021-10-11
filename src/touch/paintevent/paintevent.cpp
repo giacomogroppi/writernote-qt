@@ -2,6 +2,8 @@
 #include <QPainter>
 #include "../../mainwindow.h"
 #include "../../utils/color/setcolor.h"
+#include <QPolygonF>
+#include <QPainterPath>
 
 #ifdef PDFSUPPORT
 #include "../../frompdf/frompdf.h"
@@ -34,11 +36,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
          m_pos_ris, &m_pixmap, true, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
 
-
-    /*
-     * la funzione disegna il rect per spostare l'oggetto
-     * in caso non ci sia niente da disegnare non disegna niente
-    */
     m_square.needReload(painter);
 
     painter.end();
@@ -71,17 +68,21 @@ void TabletCanvas::load(QPainter &painter,
                         double *y_last,
                         const MainWindow *parent){
 
-    if(data->isEmpty())
+    static uint i, k;
+    static int _lastid;
+    static const point_s * __point;
+    static QColor current_color;
+    static double xtemp[2], ytemp[2];
+    static QPainterPath path;
+
+    const bool is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
+    const uint len = data->datatouch->length();
+
+    if(!len)
         return;
 
-    bool is_play;
-    uint i, len, k;
-    int _lastid;
-    const point_s * __point;
-    QColor current_color;
-    double xtemp[2], ytemp[2];
-
-    is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
+    path.clear();
+    path.moveTo(QPointF(0, 0));
 
     if(m_pixmap)
         m_pixmap->fill(Qt::white);
@@ -97,7 +98,6 @@ void TabletCanvas::load(QPainter &painter,
     current_color = m_color;
     m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    len = data->datatouch->length();
     for(i=1; i<len-1; ++i){
         if(i>=len)
             break;
@@ -141,7 +141,7 @@ void TabletCanvas::load(QPainter &painter,
 
     _lastid = C(data)->firstPoint()->idtratto; /* it should be IDFIRSTPOINT */
 
-    for(i = 1, len = C(data)->length(); i < len-1; ++i){
+    for(i = 1; i < len-1; ++i){
         if(_lastid != C(data)->at(i)->idtratto){
             data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
         }
@@ -204,8 +204,8 @@ void TabletCanvas::load(QPainter &painter,
 }
 
 /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-void TabletCanvas::updateBrush_load(double pressure, QColor color,
-                                    Valuator m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
+void TabletCanvas::updateBrush_load(const double pressure, const QColor &color,
+                                    const Valuator m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
     /* temporary */
     int vValue = 127;
     int hValue = 127;

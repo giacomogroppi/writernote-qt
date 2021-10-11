@@ -69,24 +69,19 @@ private:
     fromimage *m_img;
 
 public:
-    static inline bool point_mid_square(const point_s *f,
+    /*static inline bool point_mid_square(const point_s *f,
                                         const point_s *s,
                                         const QPointF pp,
                                         const double size){
         return datastruct::point_mid(f, s, pp, -size) ||
                 datastruct::point_mid(f, s, pp, size);
-    }
+    }*/
 
     inline uint num_page() const{
         return this->posizionefoglio.length();
     }
 
-    /*
-     * la funzione ritorna vero se e solo se la retta che congiunge
-     * i due punti passa per il quadrato tra pp come topleft
-     * e pp+size come bottomright
-    */
-    static inline bool point_mid(const point_s *f,
+    /*static inline bool point_mid(const point_s *f,
                                     const point_s *s,
                                     const QPointF pp,
                                     const double size){
@@ -127,7 +122,7 @@ public:
 
 
         return false;
-    }
+    }*/
 
     void moveIfNegative(uint &p, const uint len, const uint height, const uint width);
 
@@ -191,6 +186,10 @@ public:
     }
     static inline bool isIdUser(const point_s * __point){
         return isIdUser(__point->idtratto);
+    }
+
+    inline bool isIdUser(const uint index) const{
+        return datastruct::isIdUser(at(index));
     }
 
     bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);

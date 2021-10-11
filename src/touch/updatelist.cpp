@@ -29,15 +29,19 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     static uchar alfa;
     static point_s tmp_point;
 
+    const bool hightlighter = (medotodiinserimento == e_method::highlighter);
+    const bool pen = (medotodiinserimento == e_method::pen);
+
+    qDebug() << "Update list";
+
     size = event->pressure();
-    alfa = (medotodiinserimento == e_method::highlighter) ? m_highlighter->getAlfa() : 255;
+    alfa = hightlighter ? m_highlighter->getAlfa() : 255;
 
     if(!this->m_deviceDown){
         tmp_point.idtratto = (!data->datatouch->isempty()) ? data->datatouch->maxId() + 1 : 0;
     }
     else{
-        if(medotodiinserimento == e_method::pen
-                && m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
+        if(pen && m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
             if(need_to_change_color(data->datatouch, data->datatouch->lastPoint()->idtratto)){
                 if(m_pen_ui->m_last_color.ok == false){
                     /* save the current color */
@@ -61,7 +65,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     tmp_point.m_x = event->posF().x();
     tmp_point.m_y = event->posF().y();
-    tmp_point.m_pressure = (medotodiinserimento == e_method::highlighter) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
+    tmp_point.m_pressure = hightlighter ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
     tmp_point.rotation = event->rotation();
     tmp_point.m_posizioneaudio = time/1000;
 

@@ -116,20 +116,30 @@ double highlighter::getSize(const double pressure){
 
 void highlighter::moveAll(datastruct *data)
 {
-    uint i, len;
-    QList<point_s > * __p = data->get_list();
+    uint i, k;
+    QList<point_s > * list = data->get_list();
+    const uint len = data->length();
+
+    if(id == -1)
+        return;
 
     if(!m_data.tratto_sotto)
         goto clear;
 
-    len = __data.length();
+    for(k=0; k<len; ++k)
+        if(data->isIdUser(k))
+            break;
 
-    for(i=1; i<=len; ++i){
-        __p->move(__data.at(i-1), i);
+    for(i=k; i<len; ++i)
+        if(data->at(i)->idtratto == this->id)
+            break;
+
+    for(; i<len; ++i, ++k){
+        list->move(i, k);
     }
 
     clear:
-    __data.clear();
+    id = -1;
 }
 
 void highlighter::on_button_size_clicked()

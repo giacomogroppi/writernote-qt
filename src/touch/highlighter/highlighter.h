@@ -19,7 +19,7 @@ class highlighter : public QDialog
     Q_OBJECT
 
 public:
-    explicit highlighter(QWidget *parent = nullptr, bool *same = nullptr, pen_ui * par = nullptr);
+    explicit highlighter(QWidget *parent, bool *same, pen_ui * par);
     ~highlighter();
 
     uchar getAlfa(){
@@ -32,10 +32,10 @@ public:
 
     void moveAll(datastruct *);
 
-    void append(int i){
+    void setId(int i){
         if(!m_data.tratto_sotto)
             return;
-        __data.append(i);
+        id = i;
     }
 
     void updateList();
@@ -57,7 +57,7 @@ private slots:
 
 private:
 
-    QList<int> __data;
+    int id = -1;
 
     struct data{
         uchar alfa;
