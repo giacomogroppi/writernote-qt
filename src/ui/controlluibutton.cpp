@@ -100,12 +100,10 @@ void ControllUiButton::update()
     const int len_spacer = this->m_spacer.length();
 
     const bool tablet = this->mode == Mode::Tablet;
-    //const bool tablet = true;
 
     for(i=0; i<len_button; ++i){
         this->m_button.at(i)->setVisible(tablet);
         this->m_button.at(i)->setStyleSheet("QPushButton { \
-                                                background-color: rgb(255, 255, 0, 0); \
                                                 border-style: outset; \
                                                 border-width: 2px; \
                                                 border-radius: 10px; \
@@ -113,7 +111,7 @@ void ControllUiButton::update()
                                                 padding: 6px; \
                                             }\
                                             QPushButton:checked {\
-                                                background-color: rgb(80, 80, 80);\
+                                                background-color: rgb(192, 192, 192);\
                                                 border: none; \
                                             }");
     }
