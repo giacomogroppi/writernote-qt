@@ -107,7 +107,6 @@ void ControllUiButton::update()
                                                 border-style: outset; \
                                                 border-width: 2px; \
                                                 border-radius: 10px; \
-                                                border-color: rgb(0, 0, 0, 0); \
                                                 padding: 6px; \
                                             }\
                                             QPushButton:checked {\

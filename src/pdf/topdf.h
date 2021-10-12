@@ -17,13 +17,16 @@ private:
 
     MainWindow *parent;
 
-    void draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, double *y_last, const bool withPdf){
+    void draw(QPainter &painter, double m,
+              int size_orizzontale, int size_verticale,
+              double *y_last, const bool withPdf){
+
         QColor color = Qt::black;
         QPen m_pen;
         QBrush m_brush;
         struct TabletCanvas::Point lastPoint;
 
-        m_canvas->load(painter,
+        TabletCanvas::load(painter,
                        this->data,
                        color,
                        m_pen,
@@ -57,9 +60,8 @@ public:
     bool createpdf(const bool withPdf);
 
     inline void copy(Document *datastruct_){
-            this->data = new Document;
-
-            *this->data->datatouch = *datastruct_->datatouch;
+        this->data = new Document;
+        Document::copy(*datastruct_, *data);
     }
 };
 

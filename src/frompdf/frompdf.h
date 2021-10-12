@@ -106,17 +106,19 @@ public:
                      const int rend_width,
                      const int rend_heigth,
                      double delta,
-                     const bool IsExportingPdf){
+                     const bool IsExportingPdf) const{
         Q_UNUSED(pwidth);
 
         static uint i, k, len_img;
-        static double x = 0;
+        static double x;
         static QRectF size;
-        static const uint len = this->m_image.length();
+        static const Pdf *pdf;
+        const uint len = this->m_image.length();
 
-        static const double y = (IsExportingPdf) ? rend_heigth * delta : m_data->datatouch->currentHeight()*delta;
+        const double y = (IsExportingPdf) ? rend_heigth * delta : m_data->datatouch->currentHeight()*delta;
+        x = 0;
 
-        if(this->m_image.isEmpty())
+        if(!len)
             return;
 
         if(IsExportingPdf){
@@ -138,11 +140,11 @@ public:
         assert(y > 0);
 
         for(i=0; i < len; ++i){
-            const Pdf &pdf = this->m_image.at(i);
-            len_img = pdf.img.length();
+            pdf = &this->m_image.at(i);
+            len_img = pdf->img.length();
             for(k=0; k < len_img; ++k){
 
-                fromimage::draw(painter, size, pdf.img.at(i));
+                fromimage::draw(painter, size, pdf->img.at(i));
 
                 size.setY(size.y() + y);
                 size.setHeight(y);

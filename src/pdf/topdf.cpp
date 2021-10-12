@@ -12,32 +12,26 @@ topdf::topdf(QString *path, TabletCanvas *canvas)
     m_canvas = canvas;
 }
 
-static void newpage(datastruct *datastruct, const double tmp){
-    int i, len;
-    len = datastruct->length();
-
-    for(i=0; i<len; i++){
-        //datastruct->at_mod(i)->m_y += tmp;
-        datastruct->scala_all(QPointF(0, tmp));
-    }
-
+static void newpage(Document *data, const double tmp){
+    data->datatouch->scala_all(QPointF(0, tmp));
 }
 
 bool topdf::createpdf(const bool withPdf){
     this->translate();
 
     QPdfWriter pdfWriter(*this->path);
+    pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+
     const int height_pdf = pdfWriter.height();
     const int width_pdf = pdfWriter.width();
-    uint i;
+
     const uint lenpage = data->datatouch->posizionefoglio.length();
-    double tmp_ret;
     const double size_orizzontale = data->datatouch->biggerx();
     const double size_verticale = height_pdf;
     const double delta = (double)width_pdf / (double)size_orizzontale;
     QPainter painter(&pdfWriter);
-
-    pdfWriter.setPageSize(QPageSize(QPageSize::A4));    
+    double tmp_ret;
+    uint i;
 
     for (i=0; i<lenpage; ++i) {
         this->draw(painter,
@@ -47,7 +41,7 @@ bool topdf::createpdf(const bool withPdf){
                    &tmp_ret, withPdf);
 
         if(i+1<lenpage){
-            newpage(data->datatouch, tmp_ret);
+            newpage(data, tmp_ret);
 
             pdfWriter.newPage();
         }

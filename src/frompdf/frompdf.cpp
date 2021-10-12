@@ -20,10 +20,11 @@
 void frompdf::translation(const QPointF &point)
 {
     int i;
+    const int len = this->m_image.length();
     if(!m_data->count_pdf)
         return;
 
-    for(i=0; i<this->m_image.length(); ++i){
+    for(i=0; i<len; ++i){
         this->m_image.operator[](i).topLeft += point;
     }
 }
