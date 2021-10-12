@@ -120,11 +120,11 @@ void last_file::save_data_setting(){
 }
 
 static void setString(char * data, const QString &pos){
-    const char *str = pos.toUtf8().constData();
     int i;
+    const int len = pos.length();
 
-    for(i=0; str[i] != '\0'; ++i){
-        data[i] = str[i];
+    for(i=0; i<len; ++i){
+        data[i] = pos.at(i).toLatin1();
     }
     data[i] = '\0';
 }

@@ -5,7 +5,7 @@
 
 #include <QMetaType>
 #define MAXSTR 200
-#define MAXMOD 10
+#define MAXMOD 12
 
 /* the file is in your computer or in cloud */
 #define TYPE_COMPUTER 0
