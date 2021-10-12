@@ -193,9 +193,7 @@ uchar fromimage::insert_image(QString &pos,
                               struct immagine_s &img)
 {
     if(pos == ""){
-        pos = QFileDialog::getOpenFileName(nullptr,
-                                                     "Open images",
-                                                     "JPEG (*.jpg, *.jpeg);;PNG (*.png);;All Files (*)");
+        pos = QFileDialog::getOpenFileName(nullptr, "Open images", "", "Images (*.png *.xpm *.jpg *.jpeg);;All Files (*)");
 
         if(pos == "")
             return ERROR;
