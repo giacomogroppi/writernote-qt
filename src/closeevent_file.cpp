@@ -32,21 +32,11 @@ static void setting_autosave(bool check){
 
 void MainWindow::closeEvent (QCloseEvent *event)
 {
-    /*
-     * TODO: after enable cloud support,
-     * pass the right value
-    */
     last_file::save_data(m_path, TYPE_COMPUTER, TYPE_OWNER_YOU, NULL);
-
-    /* apre il file in file e lo carica nell'oggetto, e lo confronta */
     Document tempcopybook;
-
     xmlstruct temp_lettura(&m_path, &tempcopybook);
-
     n_need_save __res;
-
     QString __message;
-
     QMessageBox::StandardButton resBtn;
     bool check;
     savefile save_(&m_path, m_currenttitle);
