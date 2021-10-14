@@ -27,11 +27,11 @@ bool topdf::createpdf(const bool withPdf){
     const int height_pdf = pdfWriter.height();
     const int width_pdf = pdfWriter.width();
 
-    
     const double size_orizzontale = data->datatouch->biggerx();
     const double delta = (double)width_pdf / (double)size_orizzontale;
     const double size_verticale = height_pdf/delta;
-    
+    const auto size = this->data->datatouch->currentHeight();
+
     QPainter painter(&pdfWriter);
     
     for (i=0; i<lenpage; ++i) {
@@ -42,10 +42,12 @@ bool topdf::createpdf(const bool withPdf){
                    &tmp_ret, withPdf);
 
         if(i+1<lenpage){
-            newpage(data, tmp_ret);
+            newpage(data, size);
 
-            pdfWriter.newPage();
+            if(!pdfWriter.newPage())
+                return false;
         }
+        qDebug() << "topdf::createpdf " << tmp_ret;
     }
 
     return true;

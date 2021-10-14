@@ -85,6 +85,7 @@ SOURCES += \
     src/datamanage/retry_save_audio.cpp \
     src/datamanage/stoprecording.cpp \
     src/dataread/load_from_file.cpp \
+    src/dataread/old_version/decode.cpp \
     src/dataread/old_version/ver_2/load_file_ver_2.cpp \
     src/dataread/old_version/ver_3/load_file_ver_3.cpp \
     src/dataread/old_version/ver_4/load_file_ver_4.cpp \

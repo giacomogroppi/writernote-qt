@@ -25,7 +25,7 @@ bool last_file::load_data()
 
     const uint len = array.size() / size;
 
-    if((size_t)len*sizeof(size) != (size_t)array.size()){
+    if((uint)array.size() != (uint)len*size){
         remove_key(GROUPNAME_LAST_FILE, KEY_LAST_BASE_FILE);
         return false;
     }

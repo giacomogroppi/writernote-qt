@@ -11,10 +11,10 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnl
 {
     element_ui *el;
     uint i;
-    uint len = m_last_file->length();
-
     this->m_last_file = ref;
     this->__num = __num;
+
+    uint len = m_last_file->length();
 
     assert(ref);
     assert(parent_sec != nullptr);

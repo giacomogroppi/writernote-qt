@@ -50,6 +50,8 @@ private:
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);
+
+    static void decode(datastruct *doc);
 public:
     static size_t sizeFile(zip_t *filezip, const QString &namefile){
         return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
