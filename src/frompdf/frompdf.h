@@ -113,8 +113,8 @@ public:
         static double x;
         static QRectF size;
         static const Pdf *pdf;
-        const uint len = this->m_image.length();
 
+        const uint len = this->m_image.length();
         const double y = (IsExportingPdf) ? rend_heigth * delta : m_data->datatouch->currentHeight()*delta;
         x = 0;
 
@@ -137,14 +137,12 @@ public:
 
         }
 
-        assert(y > 0);
-
         for(i=0; i < len; ++i){
             pdf = &this->m_image.at(i);
             len_img = pdf->img.length();
             for(k=0; k < len_img; ++k){
 
-                fromimage::draw(painter, size, pdf->img.at(i));
+                fromimage::draw(painter, size, pdf->img.at(k));
 
                 size.setY(size.y() + y);
                 size.setHeight(y);

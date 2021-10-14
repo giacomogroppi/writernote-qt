@@ -159,6 +159,7 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     len = doc->numPages();
     this->resizing(canvas, len);
 
+    /* creation of thread and append QImage to the current PDF page */
     for(i=0; i<len && i<countThread; ++i){
         page.append(doc->page(QString::number(i+1)));
         this->m_image.operator[](IndexPdf).img.append(imgAppend);
@@ -167,18 +168,20 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
 
     for(pdfCount = 0; pdfCount < len; ){
         for(i=0; i < countThread && i < len; ++i){
-            const auto pdfPage = page.at(pdfCount);
-            QImage *image = &m_image.operator[](IndexPdf).img.operator[](pdfCount);
+            const Poppler::Page *pdfPage = page.at(pdfCount+i);
+            QImage *image = &m_image.operator[](IndexPdf).img.operator[](pdfCount+i);
+
             conv.operator[](i)->setData(pdfPage, image);
             conv.at(i)->start();
         }
 
-        for(i=0; i < countThread && i < len; ++i){
+        for(i=0; i < countThread && i < len && i < (uint)conv.length(); ++i){
             conv.at(i)->wait();
         }
 
         pdfCount = (pdfCount+1) * len;
     }
+
     for(i=0; i<(uint)page.length(); ++i)
         delete page.at(i);
     for(i=0; i<(uint)conv.length(); ++i)
@@ -187,9 +190,11 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     delete this->doc;
     doc = nullptr;
 
-    for(i=0; i<this->m_image.at(IndexPdf).img.at(i).isNull(); ++i){
-        dialog_critic("We had a problem processing an image");
-        return load_res::not_valid_pdf;
+    for(i=0; i<(uint)m_image.length(); ++i){
+        if(this->m_image.at(IndexPdf).img.at(i).isNull()){
+            dialog_critic("We had a problem processing an image");
+            return load_res::not_valid_pdf;
+        }
     }
 
     if(FirstLoad)
