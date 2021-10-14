@@ -15,17 +15,20 @@ class element_ui : public QWidget
     Q_OBJECT
 
 public:
-    explicit element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index);
+    explicit element_ui(QWidget *parent, const last_file_s *data,
+                        const bool showOnlyName, int m_index, const uchar __showFileOnlyIfExist);
     ~element_ui();
 
     void decrease();
     void showOnlyname(const bool showOnlyName);
+    int needToDelete;
 private:
     void set_main();
     Ui::element_ui *ui;
     const last_file_s *m_data = NULL;
     imageWidget *img_widget;
     int m_index;
+    uchar __showFileOnlyIfExist;
 signals:
     void on_pressed(int);
     void deleteIn(int);

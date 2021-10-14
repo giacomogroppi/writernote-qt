@@ -85,6 +85,8 @@ frompdf::load_res frompdf::load(zip_t *fileZip,
     QList<QByteArray> arr;
     QStringList __name;
     uint i;
+    frompdf::load_res res;
+
     m_image.clear();
 
     __name = get_name_pdf();
@@ -98,7 +100,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip,
     }
 
     for (i=0; i<m_data->count_pdf; ++i){
-        auto res = load_from_row(arr.at(i),
+        res = load_from_row(arr.at(i),
                                  false,
                                  file == nullptr,
                                  i,
@@ -147,7 +149,7 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
     doc = Poppler::Document::loadFromData(pos);
 
     if(!doc){
-        if(areyousure("Pdf error loading", "it seems the pdf file is correct, do you want to remove it?")){
+        if(areyousure("Pdf error loading", "It seems the pdf file is correct, do you want to remove it?")){
             this->m_data->count_pdf = 0;
             return load_res::ok;
         }

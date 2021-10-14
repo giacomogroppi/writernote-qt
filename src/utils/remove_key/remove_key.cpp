@@ -1,5 +1,4 @@
 #include "remove_key.h"
-
 #include <QSettings>
 #include "../setting_define.h"
 

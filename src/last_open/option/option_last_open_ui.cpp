@@ -19,6 +19,7 @@ option_last_open_ui::option_last_open_ui(QWidget *parent) :
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ui->showOnlyName->setHidden(true);
+    ui->checkBox->setHidden(true);
 #endif
 
     loadData();
@@ -63,6 +64,7 @@ void option_last_open_ui::loadData()
 
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     data.showOnlyName = setting.value(KEY_LAST_FILE_SHOW_ONLY_NAME, false).toBool();
+    data.showFileIfExist = setting.value(KEY_LAST_FILE_SHOW_FILE_IF_EXIST, false).toBool();
 #endif
     setting.endGroup();
 
@@ -136,6 +138,16 @@ void option_last_open_ui::on_showOnlyName_stateChanged(int arg1)
     Q_UNUSED(arg1);
 #else
     this->data.showOnlyName = arg1;
+#endif
+}
+
+
+void option_last_open_ui::on_checkBox_stateChanged(int arg1)
+{
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
+    Q_UNUSED(arg1);
+#else
+    this->data.showFileIfExist = arg1;
 #endif
 }
 

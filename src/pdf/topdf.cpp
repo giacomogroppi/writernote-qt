@@ -32,7 +32,7 @@ bool topdf::createpdf(const bool withPdf){
     QPainter painter(&pdfWriter);
     double tmp_ret;
     uint i;
-
+    
     for (i=0; i<lenpage; ++i) {
         this->draw(painter,
                    delta,
@@ -46,6 +46,7 @@ bool topdf::createpdf(const bool withPdf){
             pdfWriter.newPage();
         }
     }
+    
     return true;
 }
 

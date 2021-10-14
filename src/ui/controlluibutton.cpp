@@ -87,10 +87,6 @@ void ControllUiButton::initList()
     m_spacer.append(ui->horizontalSpacer_button1);
     m_spacer.append(ui->horizontalSpacer_button2);
     m_spacer.append(ui->horizontalSpacer_button3);
-
-    for(i=0; i<m_button.length(); ++i){
-        m_button.at(i)->setCheckable(true);
-    }
 }
 
 void ControllUiButton::update()
@@ -107,6 +103,7 @@ void ControllUiButton::update()
                                                 border-style: outset; \
                                                 border-width: 2px; \
                                                 border-radius: 10px; \
+                                                border-color: rgba(0, 0, 0, 0)\
                                                 padding: 6px; \
                                             }\
                                             QPushButton:checked {\

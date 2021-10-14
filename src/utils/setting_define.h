@@ -50,6 +50,7 @@
 #define KEY_LAST_FILE_NUMBER "key-last-file-numbero"
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
 #define KEY_LAST_FILE_SHOW_ONLY_NAME "key-last-file-show-only-name"
+#define KEY_LAST_FILE_SHOW_FILE_IF_EXIST "key-last-file-if-exist"
 #endif // ANDROID
 
 #define FILE_NAME_USER_CLOUD "writernote-user"

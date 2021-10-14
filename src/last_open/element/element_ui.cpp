@@ -7,13 +7,14 @@
 #include "../../utils/get_only_name/get_only_name.h"
 #include "../../utils/mostra_explorer/mostra_explorer.h"
 
-element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index) :
+element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index, const uchar __showFileOnlyIfExist) :
     QWidget(parent),
     ui(new Ui::element_ui)
 {
     ui->setupUi(this);
 
     this->m_index = m_index;
+    this->__showFileOnlyIfExist = __showFileOnlyIfExist;
 
     assert(data);
     assert(m_index >= 0);
@@ -69,11 +70,17 @@ void element_ui::set_main()
 #endif
 
     if(!preview::get(img, false, m_data->posizione, width, height)){
+        if(this->__showFileOnlyIfExist){
+            needToDelete = 1;
+            return;
+        }
         img = QPixmap(":image/images/not_define.png");
     }
 
     img_widget = new imageWidget(nullptr, &img);
     this->ui->verticalLayout->addWidget(img_widget, 0);
+
+    needToDelete = 0;
 }
 
 bool element_ui::event(QEvent *event)

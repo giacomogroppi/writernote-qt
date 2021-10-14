@@ -35,8 +35,9 @@ bool zoom_control::zoom(QPointF &point_translate,
                         const uint height,
                         const uint maxHeight,
                         datastruct *data){
+    uint i, len;
     Q_UNUSED(maxHeight);
-
+    
     /* TODO */
     if(delta < (long double)1){
         if(data->zoom - (1.0-delta) < (long double)0){
@@ -51,7 +52,7 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     trasla(point_translate, data);
 
-    uint i, len;
+    
 
     len = data->length();
 

@@ -85,6 +85,13 @@ always open the last file you closed.</string>
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>Don't show file id they dont'exist</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QSpinBox" name="spinBox"/>
      </item>
     </layout>

@@ -73,8 +73,8 @@ int last_open::load_data_()
     uint i;
     option_last_open_ui option(nullptr);
     bool ok;
+    const struct option_last_open_ui::__r data = option.getData();
 
-    struct option_last_open_ui::__r data = option.getData();
     if(data.val == option_last_open_ui::disable)
         return 0;
     if(data.val == option_last_open_ui::enable){
@@ -83,6 +83,12 @@ int last_open::load_data_()
         else
             __val = data.pos;
 
+    }else if(data.val == option_last_open_ui::open_last){
+        on_click_ex(m_last.at(0).posizione);
+        return 0;
+    }else{
+        qWarning() << "last_open::load_data_ unrecognized parameter " << data.val;
+        __val = 255;
     }
 
     if(m_currentMethod == Method::OpenRecent){
@@ -115,7 +121,7 @@ int last_open::load_data_()
 
     this->m_last.tidyup();
 
-    this->m_parent = new widget_parent(nullptr, &m_last, data.showOnlyName, this, __val);
+    this->m_parent = new widget_parent(nullptr, &m_last, data.showOnlyName, this, __val, data.showFileIfExist);
     this->ui->scrollArea->setWidget(m_parent);
     this->updateList();
 

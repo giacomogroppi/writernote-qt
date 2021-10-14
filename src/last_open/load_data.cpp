@@ -8,15 +8,7 @@
 #include "../utils/lastModification/lastmodification.h"
 #include "../utils/removenotwriternote.h"
 #include "../utils/common_def.h"
-/*
- * data return from array.data() is released
- * after the function end
- *
- * the function return a pointer to an last_file
- * in size of [quanti] allocate with malloc
- *
- * the memory is release when it's close last_open instance
-*/
+#include "../utils/remove_key/remove_key.h"
 
 bool last_file::load_data()
 {
@@ -33,9 +25,13 @@ bool last_file::load_data()
 
     const uint len = array.size() / size;
 
+    if((size_t)len*sizeof(size) != (size_t)array.size()){
+        remove_key(GROUPNAME_LAST_FILE, KEY_LAST_BASE_FILE);
+        return false;
+    }
+
     for(i=0; i<len; ++i){
-        const char *data = array.mid(i*size, size*(i+1)).constData();
-        memcpy(&file, data, size);
+        memcpy(&file, array.mid(i*size, size*(i+1)).constData(), size);
         m_data.append(file);
     }
 

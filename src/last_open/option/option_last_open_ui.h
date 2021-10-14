@@ -28,8 +28,10 @@ public:
         int pos = option_last_open_ui_def_num; /* number of lastopen file to show */
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
         const bool showOnlyName = true;
+        const bool showFileIfExist = true; /* only if it exist */
 #else
         bool showOnlyName = false;
+        bool showFileIfExist = false;
 #endif
 
     };
@@ -66,6 +68,7 @@ private slots:
 
     void on_spinBox_valueChanged(int arg1);
     void on_showOnlyName_stateChanged(int arg1);
+    void on_checkBox_stateChanged(int arg1);
 };
 
 #endif // OPTION_LAST_OPEN_UI_H

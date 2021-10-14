@@ -5,12 +5,13 @@
 #include "../last_open.h"
 
 widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName,
-                             last_open *parent_sec, const uchar __num) :
+                             last_open *parent_sec, const uchar __num, const uchar __showFileOnlyIfExist) :
     QWidget(parent),
     ui(new Ui::widget_parent)
 {
     element_ui *el;
     uint i;
+    uint len = m_last_file->length();
 
     this->m_last_file = ref;
     this->__num = __num;
@@ -21,8 +22,15 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnl
     this->parent = parent_sec;
     ui->setupUi(this);
 
-    for(i=0; i<m_last_file->length() && i < __num; ++i){
-        el = new element_ui(nullptr, &m_last_file->at(i), showOnlyName, i);
+    for(i=0; i < len && i < __num; ++i){
+        el = new element_ui(nullptr, &m_last_file->at(i), showOnlyName, i, __showFileOnlyIfExist);
+        if(el->needToDelete){
+            m_last_file->removeAt(i);
+            --i;
+            --len;
+            delete el;
+            continue;
+        }
         this->m_element.append(el);
 
         connect(el, &element_ui::on_pressed, parent_sec, &last_open::on_clicked);
@@ -33,6 +41,9 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnl
 #endif
 
     }
+
+    if(__showFileOnlyIfExist)
+        m_last_file->save_data_setting();
 
     this->updateList();
 }

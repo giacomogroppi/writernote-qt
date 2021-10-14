@@ -4,7 +4,7 @@
 
 void topdf::translate(){
     data->datatouch->scala_all();
-
+    return;
     /*
      * TODO -> adjust the zoom increase
      *         and fix this piece of code
