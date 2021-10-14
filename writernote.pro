@@ -56,7 +56,7 @@ contains(DEFINES, CLOUD){
 # if you want to build without pass to qmake NO_ALL_VERSION in DEFINES
 DEFINES += "ALL_VERSION"
 contains(DEFINES, NO_ALL_VERSION){
-DEFINES -= "ALL_VERSION"
+    DEFINES -= "ALL_VERSION"
 }
 ## for support A4 pdf create
 DEFINES += "NUMEROPIXELVERTICALI=1400"

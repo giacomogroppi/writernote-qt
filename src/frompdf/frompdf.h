@@ -102,26 +102,21 @@ public:
     load_res save_metadata(zip_source_t *file);
 
     inline void draw(QPainter &painter,
-                     const uint pwidth,
-                     const int rend_width,
-                     const int rend_heigth,
-                     double delta,
+                     const double delta,
                      const bool IsExportingPdf) const{
-        Q_UNUSED(pwidth);
 
         static uint i, k, len_img;
-        static double x;
         static QRectF size;
         static const Pdf *pdf;
 
         const uint len = this->m_image.length();
-        const double y = (IsExportingPdf) ? rend_heigth * delta : m_data->datatouch->currentHeight()*delta;
-        x = 0;
+        const double y = /*(IsExportingPdf) ? rend_heigth * delta : */m_data->datatouch->currentHeight()*delta;
+        const double x = /*(IsExportingPdf) ? rend_width * delta : */m_data->datatouch->currentWidth()*delta;
 
         if(!len)
             return;
 
-        if(IsExportingPdf){
+        /*if(IsExportingPdf){
             size = QRectF(0,
                           0,
                           double(rend_width)*delta,
@@ -135,17 +130,19 @@ public:
                           size.topLeft().y()*delta,
                           size.width()*delta,
                           size.height()*delta);
-        }
+        }*/
 
         for(i=0; i < len; ++i){
             pdf = &this->m_image.at(i);
             len_img = pdf->img.length();
+            size = QRectF(pdf->topLeft*delta, QSizeF(x*delta, y*delta));
+
             for(k=0; k < len_img; ++k){
                 qDebug() << "void draw " << size.topLeft() << pdf->topLeft;
                 fromimage::draw(painter, size, pdf->img.at(k));
 
                 if(IsExportingPdf)
-                    size.setY(size.y() + y + pdf->topLeft.y()*delta);
+                    size.setY(size.y() + y);
                 else
                     size.setY(size.y() + y);
 

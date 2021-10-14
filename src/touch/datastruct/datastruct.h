@@ -285,13 +285,14 @@ public:
     bool needtochangeid(const unsigned int);
 
     double biggery() const{
+        static uint i, len;
+        static double y_;
+        static const point_s * __point;
+
         if(isempty())
             return (double)0;
 
-        uint i, len;
-        double y_;
-
-        const point_s * __point = at(0);
+        __point = at(0);
 
         y_ = __point->m_y;
         len = length();
@@ -385,7 +386,7 @@ public:
     inline double currentWidth() const;
     inline double currentHeight() const;
 
-    inline QRectF pos_first_page(){
+    Q_DECL_DEPRECATED inline QRectF pos_first_page(){
         const point_s &ref = m_point.first();
         return QRectF(ref.m_x, ref.m_y, biggerx(), (biggery()-ref.m_y)/double(posizionefoglio.length()));
     }
@@ -402,13 +403,13 @@ inline bool point_s::isIdUser() const
 
 inline double datastruct::currentHeight() const{
     if(isempty())
-        return double(NUMEROPIXELORIZZONALI);
+        return double(NUMEROPIXELVERTICALI);
     return (biggery()-m_point.first().m_y)/double(posizionefoglio.length());
 }
 
 inline double datastruct::currentWidth() const{
     if(isempty())
-        return double(NUMEROPIXELVERTICALI);
+        return double(NUMEROPIXELORIZZONALI);
     return (biggerx() - m_point.first().m_x);
 }
 

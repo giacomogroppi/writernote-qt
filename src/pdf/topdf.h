@@ -6,6 +6,7 @@
 class topdf
 {
 private:
+    static void adjastTranslation(Document *doc, const int width_pdf, const int height_pdf);
     Document *data = nullptr;
     const QString *path;
 
@@ -14,8 +15,7 @@ private:
     MainWindow *parent;
 
     void draw(QPainter &painter, double m,
-              int size_orizzontale, int size_verticale,
-              double *y_last, const bool withPdf){
+              int size_orizzontale, int size_verticale, const bool withPdf){
 
         QColor color = Qt::black;
         QPen m_pen;
@@ -23,18 +23,19 @@ private:
         struct TabletCanvas::Point lastPoint;
 
         TabletCanvas::load(painter,
-                       this->data,
-                       color,
-                       m_pen,
-                       m_brush,
-                       lastPoint,
-                       -1,
-                       nullptr,
-                       withPdf,
-                       m,
-                       size_orizzontale,
-                       size_verticale,
-                       y_last);
+                           this->data,
+                           color,
+                           m_pen,
+                           m_brush,
+                           lastPoint,
+                           -1,
+                           nullptr,
+                           withPdf,
+                           m,
+                           size_orizzontale,
+                           size_verticale,
+                           nullptr,
+                           false);
     }
 
     void updateBrush_load(float , QColor );

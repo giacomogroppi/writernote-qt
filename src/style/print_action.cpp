@@ -31,7 +31,7 @@ void MainWindow::on_actionPrint_triggered()
 
     this->m_canvas->load(painter, this->m_currenttitle, color,
                          pen, m_brush, point, 0, nullptr, true, delta, size_orizzontale,
-                         size_verticale/delta, nullptr, nullptr);
+                         size_verticale/delta, nullptr, false);
 
     painter.drawText(10, 10, "Test 2");
     painter.end();

@@ -34,7 +34,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     this->disegnafoglio();
 
     load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
-         m_pos_ris, &m_pixmap, true, 1, DEFAULT_PASS_ARGUMENT_LOAD, DEFAULT_PASS_ARGUMENT_LOAD, nullptr, this->parent);
+         m_pos_ris, &m_pixmap, true, 1, this->m_pixmap.width(), this->m_pixmap.width(), this->parent, false);
 
     m_square.needReload(painter);
 
@@ -62,11 +62,11 @@ void TabletCanvas::load(QPainter &painter,
                         int m_pos_ris,
                         QPixmap *m_pixmap,
                         const bool withPdf,
-                        double m,
-                        int size_orizzontale,
-                        int size_verticale,
-                        double *y_last,
-                        const MainWindow *parent){
+                        const double m,
+                        const int size_orizzontale,
+                        const int size_verticale,
+                        const MainWindow *parent,
+                        const bool IsExportingPdf){
 
     static uint i, k;
     static int _lastid;
@@ -82,14 +82,6 @@ void TabletCanvas::load(QPainter &painter,
 
     if(m_pixmap)
         m_pixmap->fill(Qt::white);
-
-    if(size_orizzontale == DEFAULT_PASS_ARGUMENT_LOAD){
-        assert(parent);
-        assert(m_pixmap);
-
-        size_orizzontale = parent->m_canvas->width();
-        size_verticale = m_pixmap->height();
-    }
 
     current_color = m_color;
     m_pen.setStyle(Qt::PenStyle::SolidLine);
@@ -127,8 +119,7 @@ void TabletCanvas::load(QPainter &painter,
 
 #ifdef PDFSUPPORT
     if(withPdf)
-        data->m_pdf->draw(painter, data->datatouch->biggerx(), size_orizzontale,
-                          size_verticale, m, y_last != NULL);
+        data->m_pdf->draw(painter, m, IsExportingPdf);
 #endif
 
     data->m_img->draw(painter, data->datatouch->biggerx(),
@@ -167,13 +158,6 @@ void TabletCanvas::load(QPainter &painter,
 
         lastPoint.pos.setX(__point->m_x);
         lastPoint.pos.setY(__point->m_y);
-
-        /*
-        * for pdf as export
-        */
-        if(y_last)
-            *y_last = __point->m_y;
-
 
         _lastid = __point->idtratto;
 

@@ -1,6 +1,18 @@
 #include "topdf.h"
 
-#define ERRORE 0.01
+void topdf::adjastTranslation(Document *doc, const int width_pdf,
+                              const int height_pdf)
+{
+    uint i;
+    const int width_doc = doc->datatouch->currentWidth();
+    const int height_doc = doc->datatouch->currentHeight();
+    const double delta = double(width_doc * height_pdf) / double(height_doc*width_pdf);
+
+    const uint len = doc->datatouch->length();
+    for(i=0; i<len; ++i){
+        doc->datatouch->at_mod(i)->m_y *= delta;
+    }
+}
 
 void topdf::translate(){
     data->datatouch->scala_all();

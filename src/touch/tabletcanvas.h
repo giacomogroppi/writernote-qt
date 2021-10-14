@@ -112,7 +112,6 @@ public:
 
     QColor m_color = Qt::black;
 
-#define DEFAULT_PASS_ARGUMENT_LOAD -1
     static void load(QPainter &,
                      const Document *data,
                      QColor &m_color,
@@ -122,11 +121,11 @@ public:
                      int m_pos_ris,
                      QPixmap *m_pixmap,
                      const bool withPdf,
-                     double m = (double)1,
-                     int size_orizzontale = DEFAULT_PASS_ARGUMENT_LOAD,
-                     int size_verticale = DEFAULT_PASS_ARGUMENT_LOAD,
-                     double *y_last = NULL,
-                     const MainWindow *parent = NULL);
+                     const double m,
+                     const int size_orizzontale,
+                     const int size_verticale,
+                     const MainWindow *parent,
+                     const bool IsExportingPdf);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(const double pressure, const QColor &color,
