@@ -122,8 +122,8 @@ public:
             return;
 
         if(IsExportingPdf){
-            size = QRectF(-m_image.first().topLeft.x()*delta,
-                          -m_image.first().topLeft.y()*delta,
+            size = QRectF(0,
+                          0,
                           double(rend_width)*delta,
                           double(rend_heigth)*delta);
 
