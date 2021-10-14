@@ -68,7 +68,6 @@ void datastruct::scala_all(const QPointF &point)
         return;
 
     this->scala_x(point.x());
-
     this->scala_y(point.y());
     this->scala_posizionefoglio(point.y());
 

@@ -38,7 +38,7 @@ public:
         m_index_img.clear();
     }
 
-    void updatePoint(QPointF puntofine);
+    void updatePoint(const QPointF &puntofine);
     bool find(Document *data);
 
     bool isinside(const QPointF &);

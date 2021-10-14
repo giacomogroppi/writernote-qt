@@ -150,24 +150,7 @@ void TabletCanvas::load(QPainter &painter,
         m_pen.setColor(setcolor(&__point->m_color));
 
         if(!datastruct::isIdUser(__point)){
-            /*
-            UPDATE_LOAD(__point, data->datatouch->zoom, 1);
 
-            SET_PEN(m_pen);
-
-            for(k=0; k<2; k++){
-                xtemp[k] = C(data)->at(i+k)->m_x;
-                ytemp[k] = C(data)->at(i+k)->m_y;
-
-            }
-
-            painter.drawLine(
-                xtemp[0]*m, ytemp[0]*m,
-                xtemp[1]*m, ytemp[1]*m);
-
-                __point = data->datatouch->at(i);
-                ++i
-                */
         }
         else if(__point->idtratto == _lastid){
             if(is_play && __point->m_posizioneaudio > m_pos_ris){
@@ -186,7 +169,7 @@ void TabletCanvas::load(QPainter &painter,
         lastPoint.pos.setY(__point->m_y);
 
         /*
-        * for pdf export
+        * for pdf as export
         */
         if(y_last)
             *y_last = __point->m_y;

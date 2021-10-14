@@ -13,8 +13,7 @@ square::square()
     this->reset();
 }
 
-
-void square::updatePoint(QPointF __point)
+void square::updatePoint(const QPointF &__point)
 {
     if(!pointinit.set){
         pointinit.point = __point;

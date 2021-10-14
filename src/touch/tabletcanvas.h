@@ -223,7 +223,9 @@ private:
     QPixmap m_pixmap;
     QBrush m_brush;
     QPen m_pen;
+
     bool m_deviceDown = false;
+    inline void ManageFinish(bool &sel, const bool &selection, const bool &highlighter, QTabletEvent *event);
 
     void updatePageCount();
 
