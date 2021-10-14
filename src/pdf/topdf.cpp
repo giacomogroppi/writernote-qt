@@ -5,6 +5,7 @@
 #include <QPdfWriter>
 #include <QPageSize>
 #include "../log/log_ui/log_ui.h"
+#include "../frompdf/frompdf.h"
 
 topdf::topdf(const QString &path)
 {
@@ -24,6 +25,8 @@ bool topdf::createpdf(const bool withPdf){
 
     QPdfWriter pdfWriter(*this->path);
     pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+    pdfWriter.setResolution(data->m_pdf->resolution);
+
     const int height_pdf = pdfWriter.height();
     const int width_pdf = pdfWriter.width();
 
@@ -31,6 +34,7 @@ bool topdf::createpdf(const bool withPdf){
     const double delta = (double)width_pdf / (double)size_orizzontale;
     const double size_verticale = height_pdf/delta;
     const auto size = this->data->datatouch->currentHeight();
+
 
     QPainter painter(&pdfWriter);
     
@@ -43,11 +47,10 @@ bool topdf::createpdf(const bool withPdf){
 
         if(i+1<lenpage){
             newpage(data, size);
-
+            qDebug() << "New page " << i;
             if(!pdfWriter.newPage())
                 return false;
         }
-        qDebug() << "topdf::createpdf " << tmp_ret;
     }
 
     return true;

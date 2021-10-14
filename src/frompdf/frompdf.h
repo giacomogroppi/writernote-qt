@@ -122,10 +122,11 @@ public:
             return;
 
         if(IsExportingPdf){
-            size = QRectF(0,
-                          0,
+            size = QRectF(-m_image.first().topLeft.x()*delta,
+                          -m_image.first().topLeft.y()*delta,
                           double(rend_width)*delta,
                           double(rend_heigth)*delta);
+
             x = rend_width*delta;
         }else{
             size = this->m_data->datatouch->pos_first_page();
@@ -134,21 +135,26 @@ public:
                           size.topLeft().y()*delta,
                           size.width()*delta,
                           size.height()*delta);
-
         }
 
         for(i=0; i < len; ++i){
             pdf = &this->m_image.at(i);
             len_img = pdf->img.length();
             for(k=0; k < len_img; ++k){
-
+                qDebug() << "void draw " << size.topLeft() << pdf->topLeft;
                 fromimage::draw(painter, size, pdf->img.at(k));
 
-                size.setY(size.y() + y);
+                if(IsExportingPdf)
+                    size.setY(size.y() + y + pdf->topLeft.y()*delta);
+                else
+                    size.setY(size.y() + y);
+
                 size.setHeight(y);
 
                 if(IsExportingPdf)
                     size.setWidth(x);
+
+
             }
         }
     }
@@ -160,11 +166,11 @@ public:
                 const PointSettable *point,
                 const QString &path_writernote,
                 TabletCanvas *canvas);
+
+    uint resolution = 500;//72
 private:
     void adjast(const uchar indexPdf);
     load_res load_metadata(zip_file_t *file);
-
-    uint resolution = 1500;//72
 
     /*
      * this function only append a pdf to

@@ -30,6 +30,8 @@ void Document::copy(const Document &src,
     fromimage::copy(*src.m_img, *dest.m_img);
     dest.se_registato = src.se_registato;
     dest.versione = src.versione;
+    dest.count_img = src.count_img;
+    dest.count_pdf = src.count_pdf;
 }
 
 size_t Document::createSingleControll() const
