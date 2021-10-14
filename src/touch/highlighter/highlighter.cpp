@@ -109,8 +109,6 @@ double highlighter::getSize(const double pressure){
         return m_pen->getSize(pressure)*40;
     }
 
-    qDebug() << "highlighter::getSize " << size << m_data.size;
-
     return size;
 }
 

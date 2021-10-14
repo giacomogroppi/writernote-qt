@@ -244,9 +244,7 @@ public:
                 maxId = __point->idtratto;
             }
         }
-        const int res = (maxId > 0) ? maxId : 0;
-        qDebug() << "Max id" << res;
-        return res;
+        return (maxId > 0) ? maxId : 0;
 
     }
 

@@ -113,6 +113,8 @@ public:
         const double y = /*(IsExportingPdf) ? rend_heigth * delta : */m_data->datatouch->currentHeight()*delta;
         const double x = /*(IsExportingPdf) ? rend_width * delta : */m_data->datatouch->currentWidth()*delta;
 
+        qDebug() << y << x;
+
         if(!len)
             return;
 
@@ -135,7 +137,7 @@ public:
         for(i=0; i < len; ++i){
             pdf = &this->m_image.at(i);
             len_img = pdf->img.length();
-            size = QRectF(pdf->topLeft*delta, QSizeF(x*delta, y*delta));
+            size = QRectF(pdf->topLeft*delta, QSizeF(x, y));
 
             for(k=0; k < len_img; ++k){
                 qDebug() << "void draw " << size.topLeft() << pdf->topLeft;
