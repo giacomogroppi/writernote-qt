@@ -32,7 +32,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
     eventType = event->type();
 
-    //qDebug() << "QEvent::Type" << eventType;
+    qDebug() << "QEvent::Type" << event->deviceType();
 
     if(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight){
         /* the user is writing in a part where the sheet is not present. You don't have to save the point. And save the end of the current treatment */

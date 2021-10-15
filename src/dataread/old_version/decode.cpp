@@ -1,7 +1,7 @@
 #include "../xmlstruct.h"
 
-void xmlstruct::decode(datastruct *doc){
-    uint i;
+void xmlstruct::decode(Document *data){
+    datastruct *doc = data->datatouch;
     const uint len = doc->length();
     
     if(!len)
