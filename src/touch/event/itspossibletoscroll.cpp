@@ -39,7 +39,6 @@ bool scroll::itspossibletoscrolly(datastruct *data,
         }
 
         if(pos < altezza){
-            //qDebug() << pos << altezza << __pos_delta;
             goto c_not_move;
         }
 

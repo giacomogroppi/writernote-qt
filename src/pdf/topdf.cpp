@@ -52,7 +52,7 @@ bool topdf::createpdf(const bool withPdf){
 
         if(i+1<lenpage){
             newpage(data, size_verticale);
-            qDebug() << "New page " << i;
+
             if(!pdfWriter.newPage())
                 return false;
         }

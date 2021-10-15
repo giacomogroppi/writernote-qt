@@ -197,7 +197,7 @@ void setting_restore_ui::secondTimer()
     }
     path = (tmp_path == "") ? path : tmp_path;
 
-    qDebug() << "Save tmp file in: " << path;
+    //qDebug() << "Save tmp file in: " << path;
 
     res = ff.savefile_check_file() == OK;
 
