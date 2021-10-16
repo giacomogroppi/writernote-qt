@@ -7,7 +7,6 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
 
     data->datatouch->controllForRepositioning();
 
-
     initPixmap(true);
 
     if(!data->datatouch->isempty())

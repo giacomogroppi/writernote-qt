@@ -24,11 +24,6 @@
 class highlighter;
 class MainWindow;
 
-typedef struct lastpoint_struct{
-    QPointF posd = QPointF(-1, -1);
-    QPointF poss = QPointF(-1, -1);
-}lastpoint_t;
-
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
 class QString;
@@ -141,7 +136,7 @@ public:
     int m_pos_ris = -1;
 
     /* touch e zoom */
-    lastpoint_t lastpointzoom;
+    PointSettable lastpointzoom[2];
 
     QPointF posizionezoom_puntof;
     int deltax;
@@ -175,19 +170,13 @@ public:
     class pen_ui *m_pen_ui;
     class text_ui *m_text;
     class highlighter *m_highlighter;
-
     text_widgets *m_text_w;
-
     fast_sheet_ui *m_sheet;
-
     zoom_control *zoom = NULL;
-
-    /* autosave */
     autosave_ *m_autosave = NULL;
     void setAutoSave(bool v, QString &path);
-
-    /* redoundo */
     redoundo *m_redoundo = NULL;
+    QPixmap m_pixmap;
 
 protected:
     void tabletEvent(QTabletEvent *event) override;
@@ -219,12 +208,13 @@ private:
     Valuator m_colorSaturationValuator = NoValuator;
     Valuator m_lineWidthValuator = PressureValuator;
 
-    QPixmap m_pixmap;
+
     QBrush m_brush;
     QPen m_pen;
 
     bool m_deviceDown = false;
-    inline void ManageFinish(bool &sel, const bool &selection, const bool &highlighter, QTabletEvent *event);
+    inline void ManageFinish(QTabletEvent *event);
+    inline void ManageStart(QTabletEvent *event, const QPointF &point);
 
     void updatePageCount();
 

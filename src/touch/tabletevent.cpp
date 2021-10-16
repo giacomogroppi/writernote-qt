@@ -5,17 +5,21 @@
 bool need_save_auto = false;
 bool need_save_tmp = false;
 
+static double DocHeight, DocWidth;
+static bool highlighter_type;
+
+static bool sel;
+static bool highlighter_method;
+static bool pen_method;
+static bool selection_method;
+static bool rubber_method;
+static bool text_method;
+
+static QEvent::Type eventType;
+
 void TabletCanvas::tabletEvent(QTabletEvent *event){
-    static bool sel;
-    static bool highlighter;
-    static bool pen;
-    static bool selection;
-    static bool rubber;
-    static bool text;
-    static QEvent::Type eventType;
     const QPointF& pointTouch = event->posF();
-    static double DocHeight, DocWidth;
-    static bool highlighter_type;
+    
 
     DocHeight = data->datatouch->biggery();
     DocWidth = data->datatouch->biggerx();
@@ -29,44 +33,23 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     eventType = event->type();
 
     if(event->pointerType() != QTabletEvent::PointerType::Eraser){
-        highlighter = (highlighter_type) ? true : (medotodiinserimento == e_method::highlighter);
+        highlighter_method = (highlighter_type) ? true : (medotodiinserimento == e_method::highlighter);
 
-        pen = (medotodiinserimento == e_method::pen && !highlighter_type);
-        selection = (medotodiinserimento == e_method::selection && !highlighter_type);
-        rubber = (medotodiinserimento == e_method::rubber && !highlighter_type);
-        text = (medotodiinserimento == e_method::text && !highlighter_type);
+        pen_method = (medotodiinserimento == e_method::pen && !highlighter_type);
+        selection_method = (medotodiinserimento == e_method::selection && !highlighter_type);
+        rubber_method = (medotodiinserimento == e_method::rubber && !highlighter_type);
+        text_method = (medotodiinserimento == e_method::text && !highlighter_type);
     }
 
     if(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight){
         /* the user is writing in a part where the sheet is not present. You don't have to save the point. And save the end of the current treatment */
-        ManageFinish(sel, selection, highlighter, event);
+        ManageFinish(event);
         goto end;
     }
 
     switch (eventType) {
         case QEvent::TabletPress: /* when the user release the tablet */
-            if (!m_deviceDown) {
-                if(pen || highlighter){
-                    updatelist(event);
-                }
-                else if(selection){
-                    if(m_square.check){
-                        m_square.move(pointTouch, data);
-                    }
-                    else{
-                        m_square.updatePoint(pointTouch);
-                    }
-                    sel = false;
-                }
-                m_deviceDown = true;
-                lastPoint.pos = event->pos();
-                lastPoint.pressure = event->pressure();
-                lastPoint.rotation = event->rotation();
-
-                if(highlighter)
-                    this->m_highlighter->setId(this->data->datatouch->lastId());
-
-            }
+            ManageStart(event, pointTouch);
             break;
         case QEvent::TabletMove: /* user move the pen */
             if (event->device() == QTabletEvent::RotationStylus)
@@ -77,7 +60,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 #endif
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
-                if(pen || highlighter){
+                if(pen || highlighter_method){
                     updateBrush(event);
 
                     paintPixmap(painter, event);
@@ -87,12 +70,12 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 lastPoint.pressure = event->pressure();
                 lastPoint.rotation = event->rotation();
 
-                if(pen || highlighter){
+                if(pen_method || highlighter_method){
                     updatelist(event);
                 }
-                else if(rubber)
+                else if(rubber_method)
                     m_rubber->actionRubber(data->datatouch, pointTouch, painter);
-                else if(selection){
+                else if(selection_method){
                     if(!m_square.check){ /* it means that the user not select anything */
                         m_square.updatePoint(pointTouch);
                     }
@@ -107,7 +90,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                         }
                     }
                     sel = false;
-                }else if(text){
+                }else if(text_method){
                     if(m_text_w->isIn(pointTouch)){
 
                     }
@@ -120,7 +103,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             }
             break;
         case QEvent::TabletRelease: /* pen leaves the tablet */
-            this->ManageFinish(sel, selection, highlighter, event);
+            this->ManageFinish(event);
             break;
         default:
             break;
@@ -138,7 +121,7 @@ end:
 }
 
 
-inline void TabletCanvas::ManageFinish(bool &sel, const bool &selection, const bool &highlighter, QTabletEvent *event){
+inline void TabletCanvas::ManageFinish(QTabletEvent *event){
 #if defined(WIN32) || defined(WIN64)
             this->isdrawing = false;
 #endif
@@ -147,7 +130,7 @@ inline void TabletCanvas::ManageFinish(bool &sel, const bool &selection, const b
 
     if (m_deviceDown && event->buttons() == Qt::NoButton){
         m_deviceDown = false;
-        if(selection){
+        if(selection_method){
             sel = false;
 
         if(!m_square.check)
@@ -158,7 +141,32 @@ inline void TabletCanvas::ManageFinish(bool &sel, const bool &selection, const b
         m_rubber->clearList(data->datatouch);
     }
 
-    if(highlighter)
+    if(highlighter_method)
         m_highlighter->moveAll(data->datatouch);
     }
+}
+
+inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointTouch){
+    if(m_deviceDown)
+        return;
+    if(pen_method || highlighter_method){
+        updatelist(event);
+    }
+    else if(selection_method){
+        if(m_square.check){
+            m_square.move(pointTouch, data);
+        }
+        else{
+            m_square.updatePoint(pointTouch);
+        }
+        sel = false;
+    }
+    m_deviceDown = true;
+    lastPoint.pos = event->pos();
+    lastPoint.pressure = event->pressure();
+    lastPoint.rotation = event->rotation();
+
+    if(highlighter_method)
+        this->m_highlighter->setId(this->data->datatouch->lastId());
+
 }
