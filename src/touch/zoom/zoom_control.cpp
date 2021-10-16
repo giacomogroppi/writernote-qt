@@ -3,11 +3,6 @@
 #include "../event/itspossibletoscroll.h"
 #include "../datastruct/datastruct.h"
 
-zoom_control::zoom_control()
-{
-
-}
-
 void zoom_control::trasla(QPointF point_translate,
                           datastruct *data,
                           long double delta){
@@ -22,14 +17,12 @@ void zoom_control::trasla(QPointF point_translate,
 
 }
 
-#define D 2
-
 /*
  * if delta > 1 we are zoom in
 */
 
 bool zoom_control::zoom(QPointF &point_translate,
-                        long double delta,
+                        double delta,
                         const uint width,
                         const uint maxWidth,
                         const uint height,
@@ -63,7 +56,7 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     trasla(point_translate, data, delta);
 
-    delta = (delta >= (long double)1) ? (delta-1) : (-((long double)1)/delta+1);
+    delta = (delta >= (double)1) ? (delta-1) : (-((double)1)/delta+1);
 
     data->zoom += delta;
 

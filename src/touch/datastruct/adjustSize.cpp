@@ -15,26 +15,26 @@ bool datastruct::adjustHeight(const uint height,
     if(controllRepo)
         controllForRepositioning();
 
-    QPointF __point(0.0, 0.0);
-    const point_s * __first = &m_point.first();
-
+    double y;
+    const point_s * first = this->firstPoint();
     double __traslation;
 
-    __point.setY(biggery());
+    y = biggery();
 
-    if(__point.y() < height){
-        __traslation = double(height) - __point.y();
+    if(y < height){
+        __traslation = double(height) - y;
 
-        if(__first->m_y + __traslation > 0)
+        if(first->m_y + __traslation > 0)
             return false;
 
-        __point.setY(__traslation);
-        scala_all(__point);
+        y = __traslation;
+        scala_all(QPointF(0, y));
 
-        __point.setY(biggery());
-        if(__point.y() < height)
+        y = biggery();
+        if(y < height)
             return false;
     }
+
     return true;
 }
 

@@ -19,10 +19,8 @@ private:
                 datastruct *data,
                 long double delta = 0);
 public:
-    zoom_control();
-
     bool zoom(QPointF &,
-              long double,
+              double,
               const uint widthP,
               const uint maxWidth,
               const uint height,
