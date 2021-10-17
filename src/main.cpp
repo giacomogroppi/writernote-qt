@@ -108,6 +108,7 @@ int main(int argc, char *argv[]){
         delete user;
 #endif
 
+    delete canvas;
     return exit_code;
 }
 

@@ -47,24 +47,19 @@ void rubber_ui::on_partial_button_clicked()
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &painter){
+bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     if(data->isempty())
         return false;
 
     int id;
     bool need_reload = false;
-    unsigned int i, len;
+    uint i, len;
     const point_s *__point;
-    QPen pennatemp;
-
-    pennatemp.setColor(Qt::white);
-    pennatemp.setWidth(1);
-
     len = data->length();
 
     this->penna.setStyle(Qt::SolidLine);
 
-    drawAreaRubber(painter, lastPoint);
+    //drawAreaRubber(painter, lastPoint);
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(i=0; i<len; i++){
@@ -88,8 +83,6 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
         }
     }
     else if(this->m_type_gomma == e_type_rubber::partial){
-        painter.setPen(penna);
-
         for(i=0; i<len; i++){
             __point = data->at(i);
 
@@ -98,7 +91,6 @@ bool rubber_ui::actionRubber(datastruct *data, QPointF lastPoint, QPainter &pain
                     data)){
                 need_reload = true;
 
-                painter.drawPoint(data->at(i)->m_x, data->at(i)->m_y);
 
                 if(data->needtochangeid(i)){
                     data->changeId(i, len);
@@ -127,8 +119,9 @@ bool rubber_ui::clearList(datastruct *data)
     return true;
 }
 
-void rubber_ui::drawAreaRubber(QPainter &painter, QPointF &point)
+void rubber_ui::drawAreaRubber(QPainter &painter, const QPointF &point)
 {
+    return;
     QPen m_penna;
     m_penna.setColor(Qt::white);
     m_penna.setWidth(this->m_size_gomma);
@@ -140,8 +133,8 @@ void rubber_ui::drawAreaRubber(QPainter &painter, QPointF &point)
 
 
 bool rubber_ui::isin(const point_s * __point,
-                 QPointF & point_t,
-                 datastruct *data){
+                 const QPointF & point_t,
+                 const datastruct *data){
     return (point_t.x() - m_size_gomma) < __point->m_x
             && (point_t.x() + m_size_gomma) > __point->m_x
             && (point_t.y() - m_size_gomma) < __point->m_y

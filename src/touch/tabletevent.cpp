@@ -74,7 +74,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     updatelist(event);
                 }
                 else if(rubber_method)
-                    m_rubber->actionRubber(data->datatouch, pointTouch, painter);
+                    m_rubber->actionRubber(data->datatouch, pointTouch);
                 else if(selection_method){
                     if(!m_square.check){ /* it means that the user not select anything */
                         m_square.updatePoint(pointTouch);

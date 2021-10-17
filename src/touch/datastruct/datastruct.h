@@ -308,9 +308,9 @@ public:
     /* the function return the index of the id*/
     uint positionId(int id);
 
-    uint decreaseAlfa(int id,
-                          uchar decrese,
-                          uint len);
+    uint decreaseAlfa(const int id,
+                          const uchar decrese,
+                          const uint len);
 
     uchar removePage(uint page);
 

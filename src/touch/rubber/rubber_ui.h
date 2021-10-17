@@ -34,15 +34,15 @@ public:
     int m_size_gomma = DEFAULT_GOMMA_SIZE;
     e_type_rubber m_type_gomma = e_type_rubber::total;
 
-    bool actionRubber(datastruct *, QPointF, QPainter &);
+    bool actionRubber(datastruct *, const QPointF &);
     bool clearList(datastruct *);
 
 private:
-    void drawAreaRubber(QPainter &, QPointF &point);
+    void drawAreaRubber(QPainter &, const QPointF &point);
 
     bool isin(const point_s * __point,
-              QPointF &point_t,
-              datastruct *data);
+              const QPointF &point_t,
+              const datastruct *data);
 
     QPen penna;
 

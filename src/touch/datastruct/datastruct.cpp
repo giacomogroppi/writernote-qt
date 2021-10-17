@@ -192,9 +192,9 @@ uint datastruct::positionId(int id)
     return 0;
 }
 
-uint datastruct::decreaseAlfa(int id,
-                                  uchar decrease,
-                                  uint len)
+uint datastruct::decreaseAlfa(const int id,
+                              const uchar decrease,
+                              const uint len)
 {
     uint i;
     point_s *__point;

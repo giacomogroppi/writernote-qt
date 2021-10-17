@@ -42,11 +42,14 @@ bool TabletCanvas::event(QEvent *event){
     if(!data)
         return QWidget::event(event);
 
+    if(type != QEvent::TouchEnd)
+        goto stop;
     /*switch (type) {
         case QEvent::TouchBegin:
         case QEvent::TouchUpdate:
         case QEvent::TouchEnd:
         {*/
+    {//remove
             const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
             for (const QTouchEvent::TouchPoint &touchPoint : touchPoints) {
                 /*switch (touchPoint.state()) {
@@ -112,19 +115,21 @@ bool TabletCanvas::event(QEvent *event){
                         }
 
                     /*}
-                    break;
-                }
-            }*/
-            if(needToResize)
-                this->resizeEvent(NULL);
+                    break;*/
+                //}
+            }
 
-            update();/*
-            break;
-        }
-        default:*/
+            /*update();
+            break;*/
+        /*}
+        default:
             if(data != NULL)
                 return QWidget::event(event);
-    }
+    }*/
+    }//remove
+    if(needToResize)
+        this->resizeEvent(NULL);
+    stop:
     if(data != NULL)
         return QWidget::event(event);
 
