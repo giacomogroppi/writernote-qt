@@ -86,7 +86,7 @@ void TabletCanvas::load(QPainter &painter,
     current_color = m_color;
     m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    for(i=1; i<len-1; ++i){
+    for(i=0; i<len-1; ++i){
         if(i>=len)
             break;
         __point = data->datatouch->at_draw(i);

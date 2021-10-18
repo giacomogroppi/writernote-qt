@@ -80,8 +80,6 @@ public:
     }*/
 
     void setPointFirstPage(const QPointF &point){
-        if(pointFirstPage == QPointF(0, 0))
-            std::abort();
         this->pointFirstPage = point;
     }
 
