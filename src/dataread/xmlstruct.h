@@ -43,9 +43,12 @@ private:
     int load_file_4(Document *, zip_file_t *f, zip_t *filezip);
     int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
                     const bool LoadPdf, const bool LoadImg);
-#endif
     int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip,
                     const bool LoadPdf, const bool LoadImg);
+    #endif
+    int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
+                    const bool LoadPdf, const bool LoadImg);
+
     int loadbinario_1(struct zip *);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);

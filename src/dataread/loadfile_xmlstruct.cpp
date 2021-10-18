@@ -183,16 +183,20 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
         err = load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg);
         if(err != OK)
             goto free_;
+    }else if(tmp_ver == 6){
+        err = load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg);
+        if(err != OK)
+            goto free_;
     }
 #else
         goto error_version;
     }
 #endif
-    else if(tmp_ver > 6)
+    else if(tmp_ver > 7)
         goto error_new_version;
 
-    if(tmp_ver == 6){
-        err = load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg);
+    if(tmp_ver == 7){
+        err = load_file_7(currenttitle, f, filezip, LoadPdf, LoadImg);
         if(err != OK)
             goto free_;
     }
@@ -272,42 +276,6 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile){
     return st.size;
 }
 
-int xmlstruct::load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg){
-    int tmp;
-    uchar controllo_parita = 0;
-    fromimage::load_res res_img;
+int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg){
 
-    SOURCE_READ_RETURN(f, &tmp, sizeof(int));
-    doc->se_registato = static_cast<Document::n_audio_record>(tmp);
-
-    LOAD_STRINGA_RETURN(f, doc->audio_position_path)
-
-    SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
-
-    tmp = loadbinario_1(filezip);
-    if(tmp == ERROR)
-        return tmp;
-    else if(tmp == ERROR_CONTROLL)
-        /* we want to continue to load the file, but we need to return we had a problem */
-        controllo_parita = 1;
-
-    if(LoadImg){
-        res_img = doc->m_img->load(filezip, f);
-        if(res_img != fromimage::load_res::ok){
-            return ERROR;
-        }
-    }
-
-#ifdef PDFSUPPORT
-    if(LoadPdf){
-        auto res = doc->m_pdf->load(filezip, f, nullptr);
-        if(res != frompdf::ok)
-            return ERROR;
-    }
-#endif
-    if(controllo_parita)
-        return ERROR_CONTROLL;
-
-    return OK;
 }

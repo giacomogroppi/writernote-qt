@@ -11,9 +11,8 @@ void xmlstruct::decode(Document *data){
     const double deltay = first->m_y;
     const double deltax = first->m_x;
 
-    Q_UNUSED(deltax);
-    Q_UNUSED(deltay);
+    doc->scala_all(QPointF(-deltax, -deltay));
 
-    doc->scala_all(QPointF(deltax, deltay));
+    doc->setPointFirstPage(QPointF(deltax, deltay));
 
 }

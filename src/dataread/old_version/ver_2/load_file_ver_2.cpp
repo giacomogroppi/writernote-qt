@@ -35,6 +35,8 @@ int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip
     if(loadbinario_0(filezip) == ERROR)
         return ERROR;
 
+    xmlstruct::decode(currenttitle);
+
     return OK;
 }
 

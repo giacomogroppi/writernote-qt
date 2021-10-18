@@ -67,7 +67,7 @@ private:
 
     frompdf *m_pdf;
     fromimage *m_img;
-
+    QPointF pointFirstPage = QPointF(0, 0);
 public:
     /*static inline bool point_mid_square(const point_s *f,
                                         const point_s *s,
@@ -76,6 +76,12 @@ public:
         return datastruct::point_mid(f, s, pp, -size) ||
                 datastruct::point_mid(f, s, pp, size);
     }*/
+
+    void setPointFirstPage(const QPointF &point){
+        if(pointFirstPage == QPointF(0, 0))
+            std::abort();
+        this->pointFirstPage = point;
+    }
 
     inline uint num_page() const{
         return this->posizionefoglio.length();
