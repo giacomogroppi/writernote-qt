@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "currenttitle/checksimilecopybook.h"
+#include "utils/common_error_definition.h"
 
 /*
  * tmp_read and tmp_ind

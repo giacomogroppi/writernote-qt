@@ -91,8 +91,10 @@ static void save(){
 }
 #endif //snap
 
-
-#define DELETE_MENU(x) if(x)delete x
+static void deleteMenu(void *data){
+    if(data)
+        delete data;
+}
 
 /*
  * TODO make an android version of the function
@@ -120,7 +122,7 @@ bool MainWindow::setOutputLocation()
     if(audio_default_location::load_default() != audio_default_location::not_define)
         goto procede;
 
-    menu = new QMenu(this);
+    menu = new QMenu;
     menu->setTitle("Chose output location file");
 
     internal = new QAction(menu); // Assumes actions is not empty
@@ -177,10 +179,10 @@ bool MainWindow::setOutputLocation()
 
     free_:
     m_currenttitle->se_registato = Document::not_record;
-    DELETE_MENU(menu);
+    deleteMenu(menu);
     return false;
 
     ok:
-    DELETE_MENU(menu);
+    deleteMenu(menu);
     return true;
 }

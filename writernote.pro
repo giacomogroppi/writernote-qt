@@ -153,7 +153,6 @@ SOURCES += \
     src/audiorecord/displayErrorMessage.cpp \
     src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
-    src/autosave/autosave_.cpp \
     src/last_open/element/element_ui.cpp \
     src/last_open/last_open.cpp \
     src/last_open/load_data.cpp \
@@ -163,8 +162,6 @@ SOURCES += \
     src/closeevent_file.cpp \
     src/currenttitle/checksimilecopybook.cpp \
     src/currenttitle/deleteaudio.cpp \
-    src/currenttitle/newcopybook.cpp \
-    src/currenttitle/renamefile.cpp \
     src/dataread/loadfile_xmlstruct.cpp \
     src/dataread/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
@@ -297,14 +294,12 @@ HEADERS += \
     src/audiosetting/audioqualityoption.h \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
-    src/autosave/autosave_.h \
     src/last_open/element/element_ui.h \
     src/last_open/last_open.h \
     src/last_open/struct_last_file.h \
     src/lastedit/redoundo.h \
     src/currenttitle/checksimilecopybook.h \
     src/currenttitle/deleteaudio.h \
-    src/currenttitle/renamefile.h \
     src/datawrite/renamefile_f_zip.h \
     src/datawrite/source_read_ext.h \
     src/utils/bug_repo/bug_repo_ui.h \

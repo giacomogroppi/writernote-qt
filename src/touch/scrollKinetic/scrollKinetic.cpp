@@ -40,7 +40,8 @@ static inline long current_time(){
 static inline void dec_speed(double &var, double scrolling_speed);
 
 void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
-    int delta_x, delta_y;
+    static int delta_x, delta_y;
+
     if(!timer){
         timer = new QTimer(this);
         QObject::connect(timer, &QTimer::timeout, [=]{
@@ -57,7 +58,7 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
 
                 __delta = (double) speed_x;
                 if(cont_scoll(__delta, def_val)
-                        && scroll::itspossibletoscrollx(data->datatouch, m_pixmap.width(), & __delta)){
+                        && scroll::itspossibletoscrollx(data->datatouch, m_pixmap.width(), __delta)){
                     ismoving.set = 1;
                 }
 
@@ -65,7 +66,7 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
 
                 __delta = (double) speed_y;
                 if(cont_scoll(__delta, def_val)
-                        && scroll::itspossibletoscrolly(data->datatouch, m_pixmap.height(), &__delta)){
+                        && scroll::itspossibletoscrolly(data->datatouch, m_pixmap.height(), __delta)){
                     ismoving.set = 1;
                 }
 

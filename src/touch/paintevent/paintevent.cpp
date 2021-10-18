@@ -89,7 +89,7 @@ void TabletCanvas::load(QPainter &painter,
     for(i=1; i<len-1; ++i){
         if(i>=len)
             break;
-        __point = data->datatouch->at(i);
+        __point = data->datatouch->at_draw(i);
         m_pen.setColor(setcolor(&__point->m_color));
 
         if(datastruct::isIdUser(__point))
@@ -105,8 +105,8 @@ void TabletCanvas::load(QPainter &painter,
                 and those that are too high such as the margins of the pixmap
             */
 
-            xtemp[k] = C(data)->at(i+k)->m_x;
-            ytemp[k] = C(data)->at(i+k)->m_y;
+            xtemp[k] = C(data)->at_draw(i+k)->m_x;
+            ytemp[k] = C(data)->at_draw(i+k)->m_y;
 
         }
 
@@ -126,17 +126,17 @@ void TabletCanvas::load(QPainter &painter,
                       size_orizzontale, size_verticale);
 
 
-    _lastid = C(data)->firstPoint()->idtratto; /* it should be IDFIRSTPOINT */
+    _lastid = IDUNKNOWN;
 
-    for(i = 1; i < len-1; ++i){
-        if(_lastid != C(data)->at(i)->idtratto){
+    for(i = 0; i < len-1; ++i){
+        if(_lastid != C(data)->at_draw(i)->idtratto){
             data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
         }
 
         if(i >= len)
             break;
 
-        __point = data->datatouch->at(i);
+        __point = data->datatouch->at_draw(i);
 
         m_pen.setColor(setcolor(&__point->m_color));
 

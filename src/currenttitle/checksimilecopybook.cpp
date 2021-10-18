@@ -13,9 +13,9 @@ static int checkPositionAudio(const Document &first,
 
 static int checkSpeed(const Document &first,
                       const Document &second){
-    uint i, len;
+    uint i;
+    const uint len = first.datatouch->length();
 
-    len = first.datatouch->length();
     if(len != second.datatouch->length())
         return IDTRATTO;
 
@@ -31,9 +31,9 @@ static int checkSpeed(const Document &first,
 
 static int checkSlow(const Document *first,
                      const Document *second){
-    uint i, len;
+    uint i;
+    const uint len = P(first)->length();
 
-    len = P(first)->length();
     if(len != P(second)->length())
         return LEN;
 

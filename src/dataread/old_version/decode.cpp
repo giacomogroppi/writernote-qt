@@ -7,12 +7,12 @@ void xmlstruct::decode(Document *data){
     if(!len)
         return;
     
-    const struct point_s * const first = doc->firstPoint();
+    const struct point_s * const first = doc->at(0);
     const double deltay = first->m_y;
     const double deltax = first->m_x;
 
     doc->scala_all(QPointF(-deltax, -deltay));
 
     doc->setPointFirstPage(QPointF(deltax, deltay));
-
+    doc->removeAt(0);
 }

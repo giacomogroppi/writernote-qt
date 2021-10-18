@@ -1,10 +1,9 @@
 #include "aggiornotastiriascolto.h"
-
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
 #include <QString>
-
+#include "../utils/common_error_definition.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../setting_ui.h"
 #include "../dataread/xmlstruct.h"

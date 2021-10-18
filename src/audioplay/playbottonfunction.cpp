@@ -1,6 +1,3 @@
-#ifndef AUDIOPLAY_PLAY_BOTTON_FUNCTION_CPP
-#define AUDIOPLAY_PLAY_BOTTON_FUNCTION_CPP
-
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
 #include "cambioiconariascolto.h"
@@ -27,5 +24,3 @@ void MainWindow::on_start_play_clicked()
         this->player->play();
 
 }
-
-#endif //AUDIOPLAY_PLAY_BOTTON_FUNCTION_CPP

@@ -9,19 +9,13 @@ void datastruct::controllForRepositioning(){
         return;
 
 
-    QPointF __translation(0, 0);
-    const point_s * __point = firstPoint();
+    QPointF point = this->pointFirstPage, translation;
 
-    if(__point->m_x > 0){
-        __translation.setX(__point->m_x);
-    }
+    translation.setX((point.x() > 0) ? point.x() : 0.0);
+    translation.setY((point.y() > 0) ? point.y() : 0.0);
 
-    if(__point->m_y > 0){
-        __translation.setY(__point->m_y);
-    }
+    datastruct::inverso(translation);
 
-    datastruct::inverso(__translation);
-
-    this->scala_all(__translation);
+    this->scala_all(translation);
 
 }

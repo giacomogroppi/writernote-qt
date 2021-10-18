@@ -148,7 +148,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     loadPenOrMouse();
 
-    this->m_canvas->settingdata(m_currenttitle, m_path);
+    this->m_canvas->settingdata(m_currenttitle);
     this->m_canvas->loadpixel();
     this->m_canvas->time = 0;
 

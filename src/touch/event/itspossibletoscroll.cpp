@@ -13,7 +13,7 @@
 
 bool scroll::itspossibletoscrolly(datastruct *data,
                                   const short int altezza,
-                                  double * __pos_delta)
+                                  double & __pos_delta)
 {
     /* finger action:
      * delta < 0
@@ -26,15 +26,15 @@ bool scroll::itspossibletoscrolly(datastruct *data,
      *
     */
 
-    double pos;
-    const point_s * __point;
+    static double pos;
+    static QPointF point;
 
     ifEmpty(data)
 
-    if (*__pos_delta < 0.0){
+    if (__pos_delta < 0.0){
         pos = data->biggery();
 
-        if((pos + *__pos_delta) > altezza){
+        if((pos + __pos_delta) > altezza){
             return true;
         }
 
@@ -42,24 +42,24 @@ bool scroll::itspossibletoscrolly(datastruct *data,
             goto c_not_move;
         }
 
-        *__pos_delta = double(altezza - pos);
+        __pos_delta = double(altezza - pos);
         return true;
     }
 
-    __point = data->firstPoint();
+    point = data->getPointFirstPage();
 
-    if((__point->m_y + *__pos_delta) < 0){
+    if((point.y() + __pos_delta) < 0){
         return true;
     }
 
-    if(__point->m_y < (double)0){
-        * __pos_delta = - __point->m_y;
+    if(point.y() < (double)0){
+        __pos_delta = - point.y();
         return true;
     }
 
     c_not_move:
 
-    *__pos_delta = 0.0;
+    __pos_delta = 0.0;
     return false;
 
 }
@@ -69,27 +69,27 @@ bool scroll::itspossibletoscrolly(datastruct *data,
 */
 bool scroll::itspossibletoscrollx(datastruct *data,
                                   const short int width,
-                                  double *__pos_delta){
+                                  double &__pos_delta){
     /* finger action:
         delta < 0 <------
         delta > 0 ------>
     */
 
-    qDebug() << *__pos_delta;
+    //qDebug() << __pos_delta;
 
-    const point_s * __point;
-    double res;
+    static QPointF point;
+    static double res;
 
     ifEmpty(data);
 
-    if(*__pos_delta > 0.0){
-        __point = data->firstPoint();
+    if(__pos_delta > 0.0){
+        point = data->getPointFirstPage();
 
-        if((__point->m_x + *__pos_delta) < 0.0)
+        if((point.x() + __pos_delta) < 0.0)
             return true;
 
-        if(__point->m_x < 0.0){
-            *__pos_delta = - __point->m_x;
+        if(point.x() < 0.0){
+            __pos_delta = - point.x();
             return true;
         }
 
@@ -102,16 +102,16 @@ bool scroll::itspossibletoscrollx(datastruct *data,
         goto c_not_move;
     }
 
-    if ((res + *__pos_delta) > (double)width)
+    if ((res + __pos_delta) > (double)width)
         return true;
 
     if(res > (double)width){
-        *__pos_delta = - double(res - (double)width);
+        __pos_delta = - double(res - (double)width);
         return true;
     }
 
     c_not_move:
-    *__pos_delta = 0.0;
+    __pos_delta = 0.0;
     return false;
 
 }

@@ -36,9 +36,9 @@ struct point_s{
     bool isIdUser() const;
 };
 
-#define IDTRATTOZERO -5
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
+#define IDUNKNOWN -6
 
 #define WRIT_CHANG(arr, tmp) \
     if(arr[0] < arr[1]){ \
@@ -61,8 +61,6 @@ private:
 
     bool userWrittenSomething(uint i);
 
-    void scala_x(const double scala);
-    void scala_y(const double scala);
     void scala_posizionefoglio(const double scala);
 
     frompdf *m_pdf;
@@ -263,7 +261,7 @@ public:
     };
 
     static void inverso(QPointF &point);
-    bool repositioning();
+    void repositioning();
 
     void scala_all(const QPointF &);
     void scala_all();
@@ -294,28 +292,23 @@ public:
 
     double biggery() const{
         static uint i, len;
-        static double y_;
+        static double y;
         static const point_s * __point;
 
-        if(isempty())
-            return (double)0;
-
-        __point = at(0);
-
-        y_ = __point->m_y;
+        y = 0;
         len = length();
 
         for(i=0; i<len; i++){
             __point = at(i);
 
-            if(__point->m_y > y_)
-                y_ = __point->m_y;
+            if(__point->m_y > y)
+                y = __point->m_y;
         }
 
-        return y_;
+        return y;
     }
 
-    /* the function return the index of the id*/
+    /* the function return the index of the id */
     uint positionId(int id);
 
     uint decreaseAlfa(const int id,
@@ -335,13 +328,6 @@ public:
         return m_point.length();
     }
 
-    /*
-     * this function don't provent buffer overload
-    */
-    inline const point_s * firstPoint() const {
-        return at(0);
-    }
-
     inline const point_s * lastPoint() const {
         return &this->m_point.last();
     }
@@ -350,9 +336,12 @@ public:
         return this->m_point.last().idtratto;
     }
 
-    inline const point_s * at(uint i) const {
+    inline const point_s * at (const uint i) const {
         return & m_point.at(i);
     }
+
+    /* this function automaticaly translate */
+    inline const point_s *at_draw(const uint i) const;
 
     /*
      * lower, but return a modify pointer
@@ -412,13 +401,22 @@ inline bool point_s::isIdUser() const
 inline double datastruct::currentHeight() const{
     if(isempty())
         return double(NUMEROPIXELVERTICALI);
-    return (biggery()-m_point.first().m_y)/double(posizionefoglio.length());
+    return (biggery())/double(posizionefoglio.length());
+}
+
+inline const point_s *datastruct::at_draw(const uint i) const
+{
+    static point_s point;
+    point = m_point.at(i);
+    point.m_x += this->pointFirstPage.x();
+    point.m_y += this->pointFirstPage.y();
+    return &point;
 }
 
 inline double datastruct::currentWidth() const{
     if(isempty())
         return double(NUMEROPIXELORIZZONALI);
-    return (biggerx() - m_point.first().m_x);
+    return (biggerx());
 }
 
 #endif // DATASTRUCT_H

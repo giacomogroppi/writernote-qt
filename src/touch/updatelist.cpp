@@ -22,16 +22,16 @@ static bool need_to_change_color(datastruct *data, int id){
     return (how % MAXPOINT) ? 0 : 1;
 }
 
-
-
 void TabletCanvas::updatelist(QTabletEvent *event){
     static double size;
     static uchar alfa;
     static point_s tmp_point;
+    static QPointF PointFirstPage;
 
     const bool hightlighter = (medotodiinserimento == e_method::highlighter);
     const bool pen = (medotodiinserimento == e_method::pen);
 
+    PointFirstPage = this->data->datatouch->getPointFirstPage();
     size = event->pressure();
     alfa = hightlighter ? m_highlighter->getAlfa() : 255;
 
@@ -61,8 +61,8 @@ void TabletCanvas::updatelist(QTabletEvent *event){
         tmp_point.idtratto = data->datatouch->lastId();
     }
 
-    tmp_point.m_x = event->posF().x();
-    tmp_point.m_y = event->posF().y();
+    tmp_point.m_x = event->posF().x() + PointFirstPage.x();
+    tmp_point.m_y = event->posF().y() + PointFirstPage.y();
     tmp_point.m_pressure = hightlighter ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
     tmp_point.rotation = event->rotation();
     tmp_point.m_posizioneaudio = time/1000;

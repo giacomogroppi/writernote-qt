@@ -3,6 +3,7 @@
 #include <QPrintDialog>
 #include <QDialog>
 #include <QPrinter>
+#include "../utils/dialog_critic/dialog_critic.h"
 
 void MainWindow::on_actionPrint_triggered()
 {

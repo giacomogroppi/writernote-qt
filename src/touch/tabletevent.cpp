@@ -20,7 +20,6 @@ static QEvent::Type eventType;
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     const QPointF& pointTouch = event->posF();
     
-
     DocHeight = data->datatouch->biggery();
     DocWidth = data->datatouch->biggerx();
 

@@ -12,7 +12,6 @@
 
 static double widthToPressure(double);
 
-static void addPointZero(Document *);
 static void drawLineOrizzontal(QList<point_s> &list,
                                point_s &point,
                                style_struct_S &style,
@@ -58,7 +57,7 @@ void TabletCanvas::disegnafoglio(){
     }
     width_p = data->datatouch->currentWidth();
 
-    height_p = int((double)width_p * double(4.0/3.0));
+    height_p = int((double)width_p * double(2339.0/1654.0));
 
     /* he get the last point draw */
     last = data->datatouch->biggery();
@@ -74,8 +73,6 @@ void TabletCanvas::disegnafoglio(){
         style.thickness =  widthToPressure(TEMP_TICK);
     }
 
-    /* insert a point (0, 0) */
-    addPointZero(data);
     memcpy(&temp_point.m_color, &style.colore, sizeof(style.colore));
 
     style.nx = (style.nx <= 0) ? 1 : style.nx;
@@ -131,17 +128,6 @@ static void setStylePrivate(bool &fast, fast_sheet_ui::n_style res, style_struct
 
 static inline double widthToPressure(double v){
     return v/10.0;
-}
-
-static void addPointZero(Document *data){
-    if(data->datatouch->isempty()){
-        struct point_s temp;
-        temp.idtratto = IDTRATTOZERO;
-        temp.m_x = 0;
-        temp.m_y = 0;
-
-        data->datatouch->append(temp);
-    }
 }
 
 static void drawLineOrizzontal(QList<point_s> &list,

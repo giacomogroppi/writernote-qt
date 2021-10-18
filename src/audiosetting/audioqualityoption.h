@@ -2,8 +2,6 @@
 #define AUDIOQUALITYOPTION_H
 
 #include "../mainwindow.h"
-
-
 #include <QDialog>
 
 namespace Ui {

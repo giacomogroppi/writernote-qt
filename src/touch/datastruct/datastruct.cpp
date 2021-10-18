@@ -13,7 +13,7 @@ int datastruct::minId()
     */
     int _minId = 0;
     uint i, len;
-    const point_s * __point = firstPoint();
+    const point_s * __point = at(0);
 
     len = length();
     _minId = __point->idtratto;

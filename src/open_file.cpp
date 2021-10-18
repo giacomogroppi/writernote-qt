@@ -10,6 +10,7 @@
 #include "restore_file/restore_file_critic.h"
 #include "frompdf/frompdf.h"
 #include "last_open/last_open.h"
+#include "datawrite/savefile.h"
 #include <QFile>
 
 void MainWindow::openFile(const char *pos){

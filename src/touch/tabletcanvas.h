@@ -8,14 +8,12 @@
 #include <QPoint>
 #include <QTabletEvent>
 #include <QWidget>
-
 #include "../currenttitle/document.h"
 #include "zoom/zoom_control.h"
 #include "square/square.h"
 #include "rubber/rubber_ui.h"
 #include "pen/pen_ui.h"
 #include "../lastedit/redoundo.h"
-#include "../autosave/autosave_.h"
 #include "text/text_ui/text_ui.h"
 #include "text/text_widgets/text_widgets.h"
 #include "../sheet/fast-sheet/fast_sheet_ui.h"
@@ -158,7 +156,7 @@ public:
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
 
-    void settingdata(Document *data, QString &path);
+    void settingdata(Document *data);
 
     /* square per la selezione */
     square m_square;
@@ -173,8 +171,6 @@ public:
     text_widgets *m_text_w;
     fast_sheet_ui *m_sheet;
     zoom_control *zoom = NULL;
-    autosave_ *m_autosave = NULL;
-    void setAutoSave(bool v, QString &path);
     redoundo *m_redoundo = NULL;
     QPixmap m_pixmap;
 

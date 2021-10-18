@@ -1,9 +1,9 @@
 #include "datastruct.h"
 
-static size_t data;
-static int i;
-
 size_t point_s::createControll() const{
+    static size_t data;
+    static int i;
+    
     data = 0;
     data += m_x;
     data += m_y;

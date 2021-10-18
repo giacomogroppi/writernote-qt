@@ -9,10 +9,10 @@ class scroll{
 public:
     static bool itspossibletoscrolly(datastruct *data,
                                      const short int height,
-                                     double *__pos_delta);
+                                     double &__pos_delta);
     static bool itspossibletoscrollx(datastruct *data,
                                      const short int width,
-                                     double *__pos_delta);
+                                     double &__pos_delta);
 
 
 };

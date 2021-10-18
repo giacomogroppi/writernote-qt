@@ -25,13 +25,12 @@ void TabletCanvas::restoreO()
         return;
     }
 
-    if(this->data->datatouch->repositioning()){
-        update();
-    }
+    this->data->datatouch->repositioning();
+    update();
 
     lastpointtouch.set = false;
 
-    if(data->datatouch->biggerx() - data->datatouch->firstPoint()->m_x > m_pixmap.width())
+    if(data->datatouch->biggerx() - data->datatouch->getPointFirstPage().x() > m_pixmap.width())
         this->resizeEvent(nullptr);
 
 }
@@ -180,29 +179,9 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 }
 
 
-void TabletCanvas::settingdata(Document *data, QString &path){
+void TabletCanvas::settingdata(Document *data){
     this->data = data;
-
-    if(this->m_autosave)
-        m_autosave->setting_data(&data, path);
 }
-
-void TabletCanvas::setAutoSave(bool v, QString &path){
-    /* v == true -> set autosave true */
-    if(v){
-        if(!m_autosave)
-            m_autosave = new autosave_;
-        m_autosave->setting_data(&data, path);
-    }
-    else{
-        if(m_autosave){
-            delete m_autosave;
-            m_autosave = NULL;
-        }
-
-    }
-};
-
 
 static void saveLastMethod(TabletCanvas::e_method val){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);

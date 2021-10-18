@@ -11,25 +11,17 @@ void datastruct::inverso(QPointF &point){
  * return true if the first point is different
  * from (0.0, 0.0)
 */
-bool datastruct::repositioning()
+void datastruct::repositioning()
 {
     if(isempty())
-        return false;
+        return;
 
-    const point_s * __point = &m_point.first();
-
-    if(__point->m_x == 0.0
-            && __point->m_y == 0.0)
-        return false;
-
-    QPointF point_temp(__point->m_x, __point->m_y);
+    QPointF point = this->pointFirstPage;
 
 
-    datastruct::inverso(point_temp);
+    datastruct::inverso(point);
 
-    scala_all(point_temp);
-
-    return true;
+    scala_all(point);
 }
 
 void datastruct::restoreLastTranslation(){
@@ -67,9 +59,7 @@ void datastruct::scala_all(const QPointF &point)
     if(point == QPointF(0, 0))
         return;
 
-    this->scala_x(point.x());
-    this->scala_y(point.y());
-    this->scala_posizionefoglio(point.y());
+    this->pointFirstPage += point;
 
 #ifdef PDFSUPPORT
     if(m_pdf)
@@ -77,29 +67,4 @@ void datastruct::scala_all(const QPointF &point)
 #endif
 
     m_img->move(point);
-}
-
-void datastruct::scala_x(const double scala)
-{
-    uint i, len;
-    len = this->m_point.length();
-    for(i=0; i<len; i++){
-        m_point.operator[](i).m_x += scala;
-    }
-}
-
-void datastruct::scala_posizionefoglio(const double scala){
-    unsigned int i, len;
-    for(i=0, len = posizionefoglio.length(); i<len; ++i){
-        posizionefoglio.operator[](i) += scala;
-    }
-}
-
-void datastruct::scala_y(const double scala)
-{
-    uint i, len;
-    len = this->m_point.length();
-    for(i=0; i<len; i++){
-        m_point.operator[](i).m_y += scala;
-    }
 }
