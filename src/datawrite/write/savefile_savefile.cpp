@@ -16,25 +16,24 @@ static void setCurrentVersion(Document *data);
 */
 
 int savefile::savefile_check_file(){
-    setCurrentVersion(currenttitle);
     int error, check;
     zip_error_t errore;
-
+    zip_t *filezip;
+    zip_source_t *file;
     fromimage::load_res res_img;
 
 #ifdef PDFSUPPORT
     frompdf::load_res res_pdf;
 #endif // PDFSUPPORT
 
-    zip_t *filezip;
-    zip_source_t *file;
+    setCurrentVersion(currenttitle);
 
     filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
 
     if(!filezip)
         return ERROR;
 
-    /* remove old file formact */
+    /* remove old file formact: Version 2, 3, 4, 5 */
     savefile::removeFile(filezip, "indice.xml");
 
     file = zip_source_buffer_create(0, 0, 0, &errore);

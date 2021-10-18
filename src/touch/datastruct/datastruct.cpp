@@ -174,7 +174,7 @@ bool datastruct::isAvailable(int id)
 
 void datastruct::reset(){
     m_point.clear();
-
+    pointFirstPage = QPointF(0, 0);
     zoom = 1.00;
     posizionefoglio.clear();
 }

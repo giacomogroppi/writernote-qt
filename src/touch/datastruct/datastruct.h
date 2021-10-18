@@ -69,6 +69,10 @@ private:
     fromimage *m_img;
     QPointF pointFirstPage = QPointF(0, 0);
 public:
+    inline QPointF getPointFirstPage() const{
+        return pointFirstPage;
+    }
+
     /*static inline bool point_mid_square(const point_s *f,
                                         const point_s *s,
                                         const QPointF pp,

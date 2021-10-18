@@ -1,5 +1,4 @@
 #include "../savefile.h"
-
 #include "stdlib.h"
 #include <QMessageBox>
 #include <QString>
@@ -18,6 +17,8 @@ int savefile::salvabinario(zip_t *filezip){
     size_t controll;
     zip_source_t *file;
     zip_error_t errore;
+    const auto &point = this->currenttitle->datatouch->getPointFirstPage();
+    const double init[2] = {point.x(), point.y()};
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
 
@@ -26,8 +27,10 @@ int savefile::salvabinario(zip_t *filezip){
     lunghezza = currenttitle->datatouch->length();
     WRITE_ON_SIZE(file, &lunghezza, sizeof(int));
 
+    WRITE_ON_SIZE(file, init, sizeof(double)*2);
+
     for(i = 0; i<lunghezza; i++){
-        WRITE_ON_SIZE(file, currenttitle->datatouch->at_mod(i), sizeof(struct point_s));
+        WRITE_ON_SIZE(file, currenttitle->datatouch->at(i), sizeof(struct point_s));
     }
 
 
@@ -35,7 +38,7 @@ int savefile::salvabinario(zip_t *filezip){
     WRITE_ON_SIZE(file, &lunghezza, sizeof(int));
 
     for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio.operator[](i), sizeof(double));
+        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio.at(i), sizeof(double));
 
     WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(long double));
 

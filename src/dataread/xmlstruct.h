@@ -39,17 +39,20 @@ private:
 #ifdef ALL_VERSION
     int load_file_2(Document *, zip_file_t *f, zip_t *filezip);
     int load_file_3(Document *, zip_file_t *f, zip_t *filezip);
-    int loadbinario_0(struct zip *);
     int load_file_4(Document *, zip_file_t *f, zip_t *filezip);
     int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
                     const bool LoadPdf, const bool LoadImg);
     int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip,
                     const bool LoadPdf, const bool LoadImg);
+
+    int loadbinario_0(struct zip *);
+    int loadbinario_1(struct zip *);
+
     #endif
     int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
                     const bool LoadPdf, const bool LoadImg);
 
-    int loadbinario_1(struct zip *);
+    int loadbinario_2(struct zip *);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);

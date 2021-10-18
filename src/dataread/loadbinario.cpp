@@ -1,12 +1,8 @@
 #include "xmlstruct.h"
-
 #include "../currenttitle/document.h"
 #include "../images/fromimage.h"
 #include <zip.h>
-
 #include "../datawrite/source_read_ext.h"
-
-
 #include "../utils/posizione_binario.h"
 
 #ifdef ALL_VERSION
@@ -80,30 +76,81 @@ int xmlstruct::loadbinario_0(zip_t *z){
     return ERROR;
 }
 
-#endif
-
 int xmlstruct::loadbinario_1(struct zip *z){
     struct zip_stat st;
     size_t controll;
+    int i, len;
+    zip_file_t *f;
+    struct point_s temp_point;
+    double valoretemp;
 
     zip_stat_init(&st);
     zip_stat(z, NAME_BIN, 0, &st);
 
-    zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
+     f = zip_fopen(z, NAME_BIN, 0);
 
     if(f == nullptr)
         return false;
 
-    int i, len;
+
     SOURCE_READ_GOTO(f, &len, sizeof(int));
 
-    struct point_s temp_point;
     for(i=0; i<len; i++){
         SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
         currenttitle->datatouch->append(temp_point);
     }
 
+    SOURCE_READ_GOTO(f, &len, sizeof(int));
+    for(i=0; i < len; i++){
+        SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
+        currenttitle->datatouch->posizionefoglio.append(valoretemp);
+    }
+
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
+
+    SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
+
+    zip_fclose(f);
+
+    if(controll != currenttitle->createSingleControll())
+        return ERROR_CONTROLL;
+
+    return OK;
+
+    free_:
+    zip_fclose(f);
+    return ERROR;
+}
+
+#endif //ALL_VERSION
+
+int xmlstruct::loadbinario_2(struct zip *z){
+    struct zip_stat st;
+    size_t controll;
+    int i, len;
+    zip_file_t *f;
+    struct point_s temp_point;
     double valoretemp;
+    double init[2];
+
+    zip_stat_init(&st);
+    zip_stat(z, NAME_BIN, 0, &st);
+
+     f = zip_fopen(z, NAME_BIN, 0);
+
+    if(f == nullptr)
+        return false;
+
+
+    SOURCE_READ_GOTO(f, &len, sizeof(int));
+
+    SOURCE_READ_GOTO(f, &init, sizeof(double)*2);
+    this->currenttitle->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
+
+    for(i=0; i<len; i++){
+        SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
+        currenttitle->datatouch->append(temp_point);
+    }
 
     SOURCE_READ_GOTO(f, &len, sizeof(int));
     for(i=0; i < len; i++){
