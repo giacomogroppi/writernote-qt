@@ -122,6 +122,7 @@ SOURCES += \
     src/touch/datastruct/isinside.cpp \
     src/touch/datastruct/moveAll.cpp \
     src/touch/datastruct/movePoint.cpp \
+    src/touch/datastruct/page.cpp \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/datastruct/removePage.cpp \
     src/touch/datastruct/reorganize.cpp \
@@ -280,6 +281,8 @@ HEADERS += \
     src/sheet/style_struct.h \
     src/touch/copy/copy_selection.h \
     src/touch/copy/copy_widgets.h \
+    src/touch/datastruct/page.h \
+    src/touch/datastruct/point.h \
     src/touch/highlighter/highlighter.h \
     src/touch/reduce_size/reduce_size.h \
     src/touch/scrollKinetic/ui_scroll/scroll.h \

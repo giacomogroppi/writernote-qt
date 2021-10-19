@@ -5,19 +5,16 @@
 #include <QColor>
 #include <QDebug>
 #include <QImage>
+#include "point.h"
+#include "page.h"
 
 /*
     IDVERTICALE -> linee verticali
     IDORIZZONALE -> linee orizzonali
 */
 
-#define NCOLOR 4
 class frompdf;
 class fromimage;
-
-struct colore_s{
-    uchar colore[NCOLOR];
-};
 
 /* canvas */
 struct PointSettable {
@@ -25,16 +22,7 @@ struct PointSettable {
     bool set = false;
 };
 
-struct point_s{
-    double m_x, m_y, rotation;
-    float m_pressure;
-    int m_posizioneaudio;
-    struct colore_s m_color;
-    int idtratto;
 
-    size_t createControll() const;
-    bool isIdUser() const;
-};
 
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
@@ -57,7 +45,8 @@ private:
     /*
      * make this item private for a new datastruct
     */
-    QList<struct point_s> m_point = {};
+    //QList<struct point_s> m_point = {};
+    QList<page> m_page;
 
     bool userWrittenSomething(uint i);
 
@@ -66,18 +55,11 @@ private:
     frompdf *m_pdf;
     fromimage *m_img;
     QPointF pointFirstPage = QPointF(0, 0);
+    void getRealIndex(const uint search, uint &index, uint &page) const;
 public:
     inline QPointF getPointFirstPage() const{
         return pointFirstPage;
     }
-
-    /*static inline bool point_mid_square(const point_s *f,
-                                        const point_s *s,
-                                        const QPointF pp,
-                                        const double size){
-        return datastruct::point_mid(f, s, pp, -size) ||
-                datastruct::point_mid(f, s, pp, size);
-    }*/
 
     void setPointFirstPage(const QPointF &point){
         this->pointFirstPage = point;
@@ -87,54 +69,9 @@ public:
         return this->posizionefoglio.length();
     }
 
-    /*static inline bool point_mid(const point_s *f,
-                                    const point_s *s,
-                                    const QPointF pp,
-                                    const double size){
-        double x, y, m, q;
-        double pos_y[2], pos_x[2];
-
-        pos_y[0] = pp.y();
-        pos_y[1] = pp.y() + size;
-
-        pos_x[0] = pp.x();
-        pos_x[1] = pp.x() + size;
-
-        WRIT_CHANG(pos_y, x);
-        WRIT_CHANG(pos_x, x);
-
-        m = (f->m_y - s->m_y)/(f->m_x - f->m_x);
-        q = f->m_y - f->m_x*m;
-
-        m = std::abs(m);
-
-        if(m > 1){
-            x = (pos_y[0]-q)/m;
-            if(x <= pos_x[0] && x >= pos_x[1]){
-                return true;
-            }
-
-            x = (pos_y[1]-q)/m;
-            if(x <= pos_x[0] && x >= pos_x[1]){
-                return true;
-            }
-        }else{
-            y = pos_x[0]*m + q;
-            Q_UNUSED(y);
-
-
-        }
-
-
-
-        return false;
-    }*/
-
     void moveIfNegative(uint &p, const uint len, const uint height, const uint width) const;
 
-    void removeAt(const uint i){
-        m_point.removeAt(i);
-    }
+    void removeAt(const uint i);
 
     void append(const point_s &point){
         m_point.append(point);
@@ -240,7 +177,7 @@ public:
     inline int maxId() const;
 
     inline bool isempty() const{
-        return this->m_point.isEmpty();
+        return this->m_page.isEmpty();
     };
 
     static void inverso(QPointF &point);
@@ -253,21 +190,7 @@ public:
     void reset();
 
     double biggerynoid() const;
-    double biggerx() const{
-        int i, len;
-        double max;
-
-        len = m_point.length();
-        max = m_point.first().m_x;
-
-        for(i=0; i<len; i++){
-            if(max < m_point.at(i).m_x){
-                max = m_point.at(i).m_x;
-            }
-        }
-
-        return max;
-    }
+    double biggerx() const;
     void removeat(int i);
 
     bool needtocreatenew();
@@ -308,15 +231,19 @@ public:
     long double zoom = 1.00;
 
     inline uint length() const {
-        return m_point.length();
+        uint i, len2 = 0;
+        const uint len = this->m_page.length();
+        for(i=0; i<len; ++i)
+            len2 += this->m_page.at(i).length();
+        return len2;
     }
 
     inline const point_s * lastPoint() const {
-        return &this->m_point.last();
+        return this->m_page.last().last();
     }
 
     inline int lastId() const{
-        return this->m_point.last().idtratto;
+        return this->lastPoint()->idtratto;
     }
 
     inline const point_s * at (const uint i) const {
@@ -329,37 +256,62 @@ public:
     /*
      * lower, but return a modify pointer
     */
-    inline point_s * at_mod(uint i){
-        return &m_point.operator[](i);
+    inline point_s * at_mod(uint index){
+        uint i;
+        const uint len = this->m_page.length();
+        uint k;
+        for(i=0, k=0; i<len; i++){
+            k += this->m_page.at(i).length();
+            if(k>index)
+                break;
+        }
+        return m_page.operator[](i).at_mod(m_page.at(i).length() - k + index);
     }
 
     static inline size_t getSizeOne(){
         return sizeof(point_s);
     }
 
+    inline int lengthPage() const{return this->m_page.length();}
+
     static void copy(const datastruct &src, datastruct &dest){
-        dest.m_point = src.m_point;
+        uint i;
+        const uint len = dest.lengthPage();
+        uint diff = len - dest.lengthPage();
+
+        if(diff > 0){
+            for(i=0; i<diff; ++i){
+                page page(len+i);
+                dest.m_page.append(page);
+            }
+        }
+        else if(diff < 0){
+            diff = -diff;
+            for(i=diff; i>0; i--)
+                dest.removePage(i);
+        }
+
+        for(i=0; i<len; ++i){
+            page::copy(src.m_page.at(i), dest.m_page.operator[](i));
+        }
+
         dest.zoom = src.zoom;
         dest.posizionefoglio = src.posizionefoglio;
 
         dest.__last_translation = src.__last_translation;
     }
 
-    QList<struct point_s> * get_list(){
-        return &m_point;
-    }
-
     inline QPointF get_size_page() const{
         if(!this->posizionefoglio.length())
             return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
-        const point_s &ref = m_point.first();
-        return QPointF( biggerx() - ref.m_x, biggery()/double(posizionefoglio.length()) - ref.m_y);
+        const point_s *ref = at(0);
+        return QPointF( biggerx() - ref->m_x, biggery()/double(posizionefoglio.length()) - ref->m_y);
     }
     inline QPointF get_size_first_page(){
         if(!this->posizionefoglio.length())
             return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
 
-        return QPointF(this->m_point.first().m_x, biggery()/double(posizionefoglio.length()));
+        return QPointF(at(0)->m_x, biggery()/double(posizionefoglio.length()));
     }
 
 
@@ -386,27 +338,48 @@ inline double datastruct::currentHeight() const{
 inline int datastruct::maxId() const
 {
     int maxId = 0;
+    int tmp_id;
     uint i;
-    const uint len = this->length();
-    const point_s *__point;
+    const uint len = this->lengthPage();
 
-    if(m_point.isEmpty())
+    if(isempty())
         return maxId;
 
-
     for(i=0; i<len; ++i){
-        __point = & m_point.at(i);
-        if(__point->idtratto > maxId){
-            maxId = __point->idtratto;
-        }
+        tmp_id = this->m_page.at(i).maxId();
+        if(maxId < tmp_id)
+            maxId = tmp_id;
     }
     return (maxId > 0) ? maxId : 0;
+}
+
+inline double datastruct::biggerx() const
+{
+    uint i, k, secLen;
+    double max;
+    const point_s *point;
+    const uint len = lengthPage();
+
+    max = m_page.first().at(0)->m_x;
+
+    for(i=0; i<len; i++){
+        const auto &page = this->m_page.at(i);
+        secLen = page.length();
+        for(k=0; k<secLen; k++){
+            point = page.at(k);
+
+            if(max < point->m_x)
+                max = point->m_x;
+        }
+    }
+
+    return max;
 }
 
 static point_s point;
 inline const point_s &datastruct::at_draw(const uint i) const
 {
-    point = m_point.at(i);
+    point = *at(i);
     point.m_x += this->pointFirstPage.x();
     point.m_y += this->pointFirstPage.y();
     return point;
@@ -416,6 +389,25 @@ inline double datastruct::currentWidth() const{
     if(isempty())
         return double(NUMEROPIXELORIZZONALI);
     return (biggerx());
+}
+
+inline void datastruct::getRealIndex(const uint search, uint &index, uint &page) const
+{
+    uint  k = 0;
+    const uint len = this->m_page.length();
+
+    for(page=0; page<len; page++){
+        if(k + m_page.at(page).length() > search)
+            break;
+        k += this->m_page.at(page).length();
+    }
+    index = search - k;
+}
+
+void datastruct::removeAt(const uint index){
+    uint page, realIndex;
+    this->getRealIndex(index, realIndex, page);
+    this->m_page.operator[](page).removeAt(realIndex);
 }
 
 #endif // DATASTRUCT_H
