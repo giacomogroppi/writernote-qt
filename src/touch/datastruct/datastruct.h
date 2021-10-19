@@ -193,6 +193,9 @@ public:
     static inline bool isIdUser(const point_s * __point){
         return isIdUser(__point->idtratto);
     }
+    static inline bool isIdUser(const point_s &__point){
+        return isIdUser(__point.idtratto);
+    }
 
     inline bool isIdUser(const uint index) const{
         return datastruct::isIdUser(at(index));
@@ -339,7 +342,7 @@ public:
     }
 
     /* this function automaticaly translate */
-    inline const point_s *at_draw(const uint i) const;
+    inline const point_s &at_draw(const uint i) const;
 
     /*
      * lower, but return a modify pointer
@@ -402,13 +405,13 @@ inline double datastruct::currentHeight() const{
     return (biggery())/double(posizionefoglio.length());
 }
 
-inline const point_s *datastruct::at_draw(const uint i) const
+inline const point_s &datastruct::at_draw(const uint i) const
 {
     static point_s point;
     point = m_point.at(i);
     point.m_x += this->pointFirstPage.x();
     point.m_y += this->pointFirstPage.y();
-    return &point;
+    return point;
 }
 
 inline double datastruct::currentWidth() const{

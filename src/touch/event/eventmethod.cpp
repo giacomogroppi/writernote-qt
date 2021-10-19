@@ -37,7 +37,7 @@ bool TabletCanvas::event(QEvent *event){
     const int widthPixmap = this->m_pixmap.width();
 
     const auto type = event->type();
-    qDebug() << type;
+    //qDebug() << type;
 
     if(!data)
         return QWidget::event(event);

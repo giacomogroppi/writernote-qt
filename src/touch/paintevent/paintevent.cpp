@@ -44,10 +44,10 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 #define C(x) x->datatouch
 #define UPDATE_LOAD(x, zoom, div, m_lineWidthValuator, m_pen, m_brush ) \
     if(parent){ \
-        updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div), m_lineWidthValuator, m_pen, m_brush); \
+        updateBrush_load(x.m_pressure/zoom, setcolor(&x.m_color, div), m_lineWidthValuator, m_pen, m_brush); \
     } \
     else{ \
-        updateBrush_load(x->m_pressure/zoom, setcolor(&x->m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush); \
+        updateBrush_load(x.m_pressure/zoom, setcolor(&x.m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush); \
     }
 
 /*
@@ -70,7 +70,6 @@ void TabletCanvas::load(QPainter &painter,
 
     static uint i, k;
     static int _lastid;
-    static const point_s * __point;
     static QColor current_color;
     static double xtemp[2], ytemp[2];
 
@@ -89,8 +88,8 @@ void TabletCanvas::load(QPainter &painter,
     for(i=0; i<len-1; ++i){
         if(i>=len)
             break;
-        __point = data->datatouch->at_draw(i);
-        m_pen.setColor(setcolor(&__point->m_color));
+        const auto &__point = data->datatouch->at_draw(i);
+        m_pen.setColor(setcolor(&__point.m_color));
 
         if(datastruct::isIdUser(__point))
             continue;
@@ -105,8 +104,8 @@ void TabletCanvas::load(QPainter &painter,
                 and those that are too high such as the margins of the pixmap
             */
 
-            xtemp[k] = C(data)->at_draw(i+k)->m_x;
-            ytemp[k] = C(data)->at_draw(i+k)->m_y;
+            xtemp[k] = C(data)->at_draw(i+k).m_x;
+            ytemp[k] = C(data)->at_draw(i+k).m_y;
 
         }
 
@@ -129,22 +128,23 @@ void TabletCanvas::load(QPainter &painter,
     _lastid = IDUNKNOWN;
 
     for(i = 0; i < len-1; ++i){
-        if(_lastid != C(data)->at_draw(i)->idtratto){
+        const auto &__point = data->datatouch->at_draw(i);
+        if(_lastid != C(data)->at_draw(i).idtratto){
             data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
         }
 
         if(i >= len)
             break;
 
-        __point = data->datatouch->at_draw(i);
 
-        m_pen.setColor(setcolor(&__point->m_color));
+
+        m_pen.setColor(setcolor(&__point.m_color));
 
         if(!datastruct::isIdUser(__point)){
 
         }
-        else if(__point->idtratto == _lastid){
-            if(is_play && __point->m_posizioneaudio > m_pos_ris){
+        else if(__point.idtratto == _lastid){
+            if(is_play && __point.m_posizioneaudio > m_pos_ris){
                 UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
             }else{
                 UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
@@ -152,14 +152,14 @@ void TabletCanvas::load(QPainter &painter,
             painter.setPen(m_pen);
 
             painter.drawLine(lastPoint.pos*m,
-                QPointF(__point->m_x*m, __point->m_y*m));
+                QPointF(__point.m_x*m, __point.m_y*m));
 
         }
 
-        lastPoint.pos.setX(__point->m_x);
-        lastPoint.pos.setY(__point->m_y);
+        lastPoint.pos.setX(__point.m_x);
+        lastPoint.pos.setY(__point.m_y);
 
-        _lastid = __point->idtratto;
+        _lastid = __point.idtratto;
 
     }
 
