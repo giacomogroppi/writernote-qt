@@ -39,7 +39,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     text_method = (medotodiinserimento == e_method::text && !highlighter_type);
 
 
-    //qDebug() << highlighter_method << pen_method << selection_method << rubber_method << text_method << highlighter_type;
+    //qDebug() << highlighter_method << pen_method << selection_method << rubber_method << text_method << highlighter_type << event->pointerType();
 
     if(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight){
         /* the user is writing in a part where the sheet is not present. You don't have to save the point. And save the end of the current treatment */

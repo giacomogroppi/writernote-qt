@@ -63,7 +63,7 @@ bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(i=0; i<len; i++){
-            __point = data->at(i);
+            __point = &data->at_draw(i);
 
             if(isin(__point,
                     lastPoint,
@@ -84,7 +84,7 @@ bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     }
     else if(this->m_type_gomma == e_type_rubber::partial){
         for(i=0; i<len; i++){
-            __point = data->at(i);
+            __point = &data->at_draw(i);
 
             if(isin(__point,
                     lastPoint,

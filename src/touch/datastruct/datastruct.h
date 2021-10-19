@@ -130,7 +130,7 @@ public:
         return false;
     }*/
 
-    void moveIfNegative(uint &p, const uint len, const uint height, const uint width);
+    void moveIfNegative(uint &p, const uint len, const uint height, const uint width) const;
 
     void removeAt(const uint i){
         m_point.removeAt(i);
@@ -237,25 +237,7 @@ public:
 
     bool isAvailable(int id);
 
-    inline int maxId() const{
-        int maxId = 0;
-        if(m_point.isEmpty())
-            return maxId;
-
-        int i, len;
-        len = m_point.length();
-
-        const point_s *__point;
-
-        for(i=0; i<len; ++i){
-            __point = & m_point.at(i);
-            if(__point->idtratto > maxId){
-                maxId = __point->idtratto;
-            }
-        }
-        return (maxId > 0) ? maxId : 0;
-
-    }
+    inline int maxId() const;
 
     inline bool isempty() const{
         return this->m_point.isEmpty();
@@ -383,11 +365,6 @@ public:
 
     inline double currentWidth() const;
     inline double currentHeight() const;
-
-    Q_DECL_DEPRECATED inline QRectF pos_first_page(){
-        const point_s &ref = m_point.first();
-        return QRectF(ref.m_x, ref.m_y, biggerx(), (biggery()-ref.m_y)/double(posizionefoglio.length()));
-    }
 };
 
 /*
@@ -405,9 +382,30 @@ inline double datastruct::currentHeight() const{
     return (biggery())/double(posizionefoglio.length());
 }
 
+
+inline int datastruct::maxId() const
+{
+    int maxId = 0;
+    uint i;
+    const uint len = this->length();
+    const point_s *__point;
+
+    if(m_point.isEmpty())
+        return maxId;
+
+
+    for(i=0; i<len; ++i){
+        __point = & m_point.at(i);
+        if(__point->idtratto > maxId){
+            maxId = __point->idtratto;
+        }
+    }
+    return (maxId > 0) ? maxId : 0;
+}
+
+static point_s point;
 inline const point_s &datastruct::at_draw(const uint i) const
 {
-    static point_s point;
     point = m_point.at(i);
     point.m_x += this->pointFirstPage.x();
     point.m_y += this->pointFirstPage.y();

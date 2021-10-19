@@ -129,7 +129,7 @@ void TabletCanvas::load(QPainter &painter,
 
     for(i = 0; i < len-1; ++i){
         const auto &__point = data->datatouch->at_draw(i);
-        if(_lastid != C(data)->at_draw(i).idtratto){
+        if(_lastid != __point.idtratto){
             data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
         }
 
@@ -137,11 +137,10 @@ void TabletCanvas::load(QPainter &painter,
             break;
 
 
-
         m_pen.setColor(setcolor(&__point.m_color));
 
         if(!datastruct::isIdUser(__point)){
-
+            continue;
         }
         else if(__point.idtratto == _lastid){
             if(is_play && __point.m_posizioneaudio > m_pos_ris){

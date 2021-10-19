@@ -30,9 +30,9 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     const bool hightlighter = (medotodiinserimento == e_method::highlighter);
     const bool pen = (medotodiinserimento == e_method::pen);
+    const QPointF &pointTouch = event->posF();
 
     PointFirstPage = this->data->datatouch->getPointFirstPage();
-    qDebug() << PointFirstPage;
 
     size = event->pressure();
     alfa = hightlighter ? m_highlighter->getAlfa() : 255;
@@ -63,8 +63,8 @@ void TabletCanvas::updatelist(QTabletEvent *event){
         tmp_point.idtratto = data->datatouch->lastId();
     }
 
-    tmp_point.m_x = event->posF().x() - PointFirstPage.x();
-    tmp_point.m_y = event->posF().y() - PointFirstPage.y();
+    tmp_point.m_x = pointTouch.x() - PointFirstPage.x();
+    tmp_point.m_y = pointTouch.y() - PointFirstPage.y();
     tmp_point.m_pressure = hightlighter ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
     tmp_point.rotation = event->rotation();
     tmp_point.m_posizioneaudio = time/1000;
@@ -77,7 +77,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     tmp_point.m_color.colore[3] = alfa;
 
-    qDebug() << tmp_point.idtratto;
+    //qDebug() << tmp_point.m_x << tmp_point.m_y << PointFirstPage << pointTouch;
 
     data->datatouch->append(tmp_point);
 }

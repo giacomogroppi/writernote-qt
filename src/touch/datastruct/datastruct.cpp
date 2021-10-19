@@ -34,16 +34,16 @@ int datastruct::minId()
 
 void datastruct::moveIfNegative(uint &p, const uint len,
                                 const uint height,
-                                const uint width){
-    uint r;
-    const point_s *f, *s;
+                                const uint width) const{
+    static uint r;
+    static const point_s *f, *s;
 
     r = p;
 
     for(; p<len-1; ++p){
 
-        f = at(p);
-        s = at(p+1);
+        f = &at_draw(p);
+        s = &at_draw(p+1);
 
         if(!datastruct::isIdUser(f))
             return;

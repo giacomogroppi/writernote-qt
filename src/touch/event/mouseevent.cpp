@@ -48,7 +48,7 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
             __type = QEvent::TabletMove;
         }
 
-        tab_event = new QTabletEvent(__type, p, event->globalPos(), 0, QTabletEvent::Airbrush, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
+        tab_event = new QTabletEvent(__type, p, event->globalPos(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
         tabletEvent(tab_event);
         delete tab_event;
         return;
