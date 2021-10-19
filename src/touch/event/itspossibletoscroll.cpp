@@ -29,10 +29,12 @@ bool scroll::itspossibletoscrolly(datastruct *data,
     static double pos;
     static QPointF point;
 
-    ifEmpty(data)
+    ifEmpty(data);
+
+    point = data->getPointFirstPage();
 
     if (__pos_delta < 0.0){
-        pos = data->biggery();
+        pos = data->biggery() + point.y();
 
         if((pos + __pos_delta) > altezza){
             return true;
@@ -45,8 +47,6 @@ bool scroll::itspossibletoscrolly(datastruct *data,
         __pos_delta = double(altezza - pos);
         return true;
     }
-
-    point = data->getPointFirstPage();
 
     if((point.y() + __pos_delta) < 0){
         return true;
