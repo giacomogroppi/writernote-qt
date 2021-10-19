@@ -14,6 +14,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
 
+    if(!this->data) return;
+
     isWriting = false;
 
     if (m_pixmap.isNull())

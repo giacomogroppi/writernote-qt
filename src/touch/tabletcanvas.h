@@ -86,7 +86,7 @@ public:
     void updatelist(QTabletEvent *event);
 
 
-    Document *data;
+    Document *data = nullptr;
 
     /* al passaggio a mainwindow il puntatore verrà cambiato con il valore del tempo della registrazione se e solo se sta registrando
     in caso contrario rimarrà sempre zero*/

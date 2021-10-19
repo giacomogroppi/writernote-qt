@@ -74,6 +74,7 @@ int last_open::load_data_()
     option_last_open_ui option(nullptr);
     bool ok;
     const struct option_last_open_ui::__r data = option.getData();
+    m_last.load_data();
 
     if(data.val == option_last_open_ui::disable)
         return 0;
@@ -84,7 +85,8 @@ int last_open::load_data_()
             __val = data.pos;
 
     }else if(data.val == option_last_open_ui::open_last){
-        on_click_ex(m_last.at(0).posizione);
+        if(m_last.length() != 0)
+            on_click_ex(m_last.at(0).posizione);
         return 0;
     }else{
         qWarning() << "last_open::load_data_ unrecognized parameter " << data.val;

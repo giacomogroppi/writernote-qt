@@ -10,7 +10,7 @@ void TabletCanvas::initPixmap(bool paint)
     int sizex;
     double _res;
 
-    if(!data->datatouch->isempty()){
+    if(data && !data->datatouch->isempty()){
 
         if(!data->datatouch->maxXIdOrizzonal(&_res)){
             goto not_find;
