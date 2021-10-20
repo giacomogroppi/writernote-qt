@@ -16,6 +16,7 @@ private:
 public:
     page(int count);
     static int getHeight();
+    static int getWidth();
     void updateFlag(const QPointF &FirstPoint);
     const point_s * at(const uint i) const;
     point_s * at_mod(const uint i);
@@ -26,10 +27,31 @@ public:
     int maxId() const;
     const point_s * last() const;
     double biggerynoid() const;
+
+    void append(const point_s &point);
+    void append(const point_s *point);
+
+    int currentHeight() const;
+    int currentWidth() const;
 };
+
+int page::currentHeight() const
+{
+    return count*page::getHeight();
+}
+
+int page::currentWidth() const
+{
+    return page::getWidth();
+}
 
 int page::getHeight(){
     return NUMEROPIXELORIZZONALI;
+}
+
+inline int page::getWidth()
+{
+    return NUMEROPIXELVERTICALI;
 }
 
 void page::updateFlag(const QPointF &FirstPoint){

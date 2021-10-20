@@ -63,42 +63,13 @@ public:
         this->pointFirstPage = point;
     }
 
-    inline uint num_page() const{
-        return this->posizionefoglio.length();
-    }
-
     void moveIfNegative(uint &p, uint &page, const uint lenPage, const uint height, const uint width) const;
 
     void removeAt(const uint i);
 
-    void append(const point_s &point){
-        m_point.append(point);
-    }
-    void append(const point_s *point){
-        m_point.append(*point);
-    }
-
-    void appendToTop(const QList<point_s> &point){
-        int i, k;
-        const int len = point.length();
-        const int point_len = length();
-
-        /*
-            const int index = 1;
-            for(i=len-1; i>0; i--){
-            this->m_point.insert(index, point.at(i));
-        }*/
-
-        for(k=0; k<point_len; ++k){
-            if(datastruct::isIdUser(at(k)))
-                break;
-        }
-
-        for(i=0; i<len; ++i){
-            this->m_point.insert(k, point.at(i));
-            k++;
-        }
-    }
+    void append(const point_s &point);
+    void append(const point_s *point);
+    void append(const point_s *point, const uint page);
 
     uint move_to_positive(uint len);
 
@@ -130,10 +101,6 @@ public:
     }
     static inline bool isIdUser(const point_s &__point){
         return isIdUser(__point.idtratto);
-    }
-
-    inline bool isIdUser(const uint index) const{
-        return datastruct::isIdUser(at(index));
     }
 
     bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);
@@ -190,23 +157,7 @@ public:
     bool needtocreatenew();
     bool needtochangeid(const uint index, const uint page);
 
-    double biggery() const{
-        static uint i, len;
-        static double y;
-        static const point_s * __point;
-
-        y = 0;
-        len = length();
-
-        for(i=0; i<len; i++){
-            __point = at(i);
-
-            if(__point->m_y > y)
-                y = __point->m_y;
-        }
-
-        return y;
-    }
+    double biggery() const;
 
     /* the function return the index of the id */
     uint positionId(int id);
@@ -217,11 +168,9 @@ public:
 
     uchar removePage(uint page);
 
-    QList<double> posizionefoglio = {};
-
     long double zoom = 1.00;
 
-    inline uint length() const {
+    inline uint lengthPoint() const {
         uint i, len2 = 0;
         const uint len = this->m_page.length();
         for(i=0; i<len; ++i)
@@ -231,12 +180,13 @@ public:
 
     inline int lastId() const;
 
-    inline const point_s * at_old (const uint i) const;
-    inline const point_s * at(const uint i, const uint page) const;
-    inline const page * at(const uint page) const;
-    inline point_s * at_mod(const uint index, const uint page);
-    inline point_s * at_mod_old(uint index);
-    inline point_s &at_draw(const uint index, const uint page) const;
+    inline const point_s *  at_old (const uint i) const;
+    inline const point_s *  at(const uint i, const uint page) const;
+    inline const page *     at(const uint page) const;
+    inline page *           at_mod(const uint page);
+    inline point_s *        at_mod(const uint index, const uint page);
+    inline point_s *        at_mod_old(uint index);
+    inline point_s &        at_draw(const uint index, const uint page) const;
 
     static inline size_t getSizeOne(){
         return sizeof(point_s);
@@ -247,18 +197,11 @@ public:
     static void copy(const datastruct &src, datastruct &dest);
 
     inline QPointF get_size_page() const{
-        if(!this->posizionefoglio.length())
-            return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
-        const point_s *ref = at(0);
-        return QPointF( biggerx() - ref->m_x, biggery()/double(posizionefoglio.length()) - ref->m_y);
+        if(!this->lengthPage())
+            return QPointF(page::getWidth(), page::getHeight());
+        const auto &page = this->at(lengthPage());
+        return QPointF(page->currentWidth(), currentHeight());
     }
-    inline QPointF get_size_first_page(){
-        if(!this->posizionefoglio.length())
-            return QPointF(NUMEROPIXELORIZZONALI, NUMEROPIXELVERTICALI);
-
-        return QPointF(at(0)->m_x, biggery()/double(posizionefoglio.length()));
-    }
-
 
     inline double currentWidth() const;
     inline double currentHeight() const;
@@ -274,11 +217,8 @@ inline bool point_s::isIdUser() const
 }
 
 inline double datastruct::currentHeight() const{
-    if(isempty())
-        return double(NUMEROPIXELVERTICALI);
-    return (biggery())/double(posizionefoglio.length());
+    return double(NUMEROPIXELVERTICALI);
 }
-
 
 inline int datastruct::maxId() const
 {
@@ -332,6 +272,11 @@ inline double datastruct::biggerx() const
     return max;
 }
 
+inline double datastruct::biggery() const
+{
+    return at(lengthPage())->currentHeight();
+}
+
 inline int datastruct::lastId() const
 {
     return this->maxId();
@@ -347,6 +292,11 @@ inline const point_s *datastruct::at_old(const uint i) const
 inline const point_s *datastruct::at(const uint i, const uint page) const
 {
     return this->m_page.at(page).at(i);
+}
+
+inline page *datastruct::at_mod(const uint page)
+{
+    return &this->m_page.operator[](page);
 }
 
 inline point_s *datastruct::at_mod_old(uint index)
@@ -396,7 +346,6 @@ inline void datastruct::copy(const datastruct &src, datastruct &dest)
     }
 
     dest.zoom = src.zoom;
-    dest.posizionefoglio = src.posizionefoglio;
 
     dest.__last_translation = src.__last_translation;
 }
@@ -424,6 +373,23 @@ void datastruct::removeAt(const uint index){
     uint page, realIndex;
     this->getRealIndex(index, realIndex, page);
     this->m_page.operator[](page).removeAt(realIndex);
+}
+
+inline void datastruct::append(const point_s *point)
+{
+    uint i;
+    const uint len = lengthPage();
+    for(i=0; i<len; i++){
+        if(at(i)->currentHeight() < point->m_y){
+            at_mod(i)->append(point);
+            return;
+        }
+    }
+}
+
+inline void datastruct::append(const point_s *point, const uint page)
+{
+    this->at_mod(page)->append(point);
 }
 
 #endif // DATASTRUCT_H
