@@ -16,7 +16,8 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
 
     this->m_data->reset();
 
-    uint i, len;
+    uint i, len, k;
+    const uint lenPage = data->lengthPage();
     /*double x1, x2, y1, y2;
 
     x1 = topleft.x();
@@ -26,72 +27,23 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
     y2 = bottonright.y();*/
 
     const point_s *__point;
-    len = data->length();
+    const page *page;
 
-    for(i=0; i<len; i++){
-        __point = data->at(i);
+    for(k=0; k<lenPage; ++k){
+        page = data->at(k);
+        len = page->length();
+        for(i=0; i<len; i++){
+            __point = page->at(i);
 
+            if(data->isinside(topleft, bottonright, __point)){
+                m_data->append(__point);
+            }
 
-        if(data->isinside(topleft, bottonright, __point)){
-            m_data->append(__point);
         }
-
     }
-
-    adjastTranslation();
-
-}
-
-/*
- * the function past the last copy of datastruct
-*/
-void copy::past_selection(datastruct *data_past, QPointF &point_past)
-{
-    unsigned int i, len;
-
-    len = this->m_data->length();
-
-    const point_s * __point;
-    point_s __append;
-
-    for(i=0; i<len; i++){
-        __point = m_data->at(i);
-
-        if(!data_past->isAvailable(__point->idtratto)){
-            m_data->changeId(i, data_past->maxId()+1);
-        }
-
-        memcpy(&__append, __point, sizeof(__append));
-
-        /* we move the point from (0, 0) to point_past */
-        __append.m_y += point_past.y();
-        __append.m_x += point_past.x();
-
-        data_past->append(&__append);
-
-    }
-
 }
 
 bool copy::isSomeThingCopy()
 {
     return !this->m_data->isempty();
-}
-
-void copy::adjastTranslation()
-{
-    if(this->m_data->isempty())
-        return;
-
-    QPointF min;
-    min.setX(this->m_data->minx());
-    min.setY(this->m_data->miny());
-
-
-    datastruct::inverso(min);
-
-    /* we suppose that all point have x and y > 0 */
-
-    m_data->scala_all(min);
-
 }

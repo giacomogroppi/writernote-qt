@@ -10,33 +10,36 @@
  * so we need to update all
 */
 void datastruct::MovePoint(const QList<int> &id, const QPointF &__t){
-    uint len, i;
+    uint len, i, k;
     int __last_id, __pos;
     point_s *__point;
 
-    len = length();
+    const uint lenPage = this->lengthPage();
 
-    for(i=0; i<len; ++i){
-        __pos = id.indexOf(at(i)->idtratto);
+    for(k=0; k<lenPage; ++k){
+        len = at(k)->length();
+        for(i=0; i<len; ++i){
+            __pos = id.indexOf(at(k)->at(i)->idtratto);
 
-        if(__pos != -1){
-            __last_id = at(i)->idtratto;
+                if(__pos != -1){
+                __last_id = at(k)->at(i)->idtratto;
 
-            for(; i<len && at(i)->idtratto == __last_id; i++){
-                __point = at_mod(i);
+                for(; i<len && at(k)->at(i)->idtratto == __last_id; i++){
+                    __point = at_mod(k)->at_mod(i);
 
-                __point->m_x += __t.x();
-                __point->m_y += __t.y();
+                    __point->m_x += __t.x();
+                    __point->m_y += __t.y();
+                }
+                --i;
+
             }
-            --i;
-
         }
     }
 }
 
 bool datastruct::MovePoint(QRectF &rect, QPointF __touch){
     uint i, len;
-
+    const uint lenPage = this->lengthPage();
     const point_s * __point;
     QList<int> __id;
 
@@ -45,13 +48,15 @@ bool datastruct::MovePoint(QRectF &rect, QPointF __touch){
 
     bottonright = rect.bottomRight();
 
-    len = length();
 
-    for(i=0; i<len; i++){
-        __point = at(i);
-        if(this->isinside(topleft, bottonright, __point)){
-            if(__id.indexOf(__point->idtratto) == -1)
-                __id.append(__point->idtratto);
+    for(uint k=0; k<lenPage; k++){
+        len = at(k)->length();
+        for(i=0; i<len; i++){
+            __point = at(k)->at(i);
+            if(this->isinside(topleft, bottonright, __point)){
+                    if(__id.indexOf(__point->idtratto) == -1)
+                    __id.append(__point->idtratto);
+            }
         }
     }
 

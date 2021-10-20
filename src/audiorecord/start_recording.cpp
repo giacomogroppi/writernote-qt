@@ -91,7 +91,7 @@ static void save(){
 }
 #endif //snap
 
-static void deleteMenu(void *data){
+static void deleteMenu(QMenu *data){
     if(data)
         delete data;
 }

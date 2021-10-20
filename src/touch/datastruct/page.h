@@ -8,8 +8,8 @@
 class page
 {
 private:
-    const uint height = NUMEROPIXELVERTICALI;
-    const uint width = NUMEROPIXELORIZZONALI;
+    static const uint height = NUMEROPIXELVERTICALI;
+    static const uint width = NUMEROPIXELORIZZONALI;
     bool IsVisible = true;
     int count;
     QList<point_s> m_point;
@@ -33,6 +33,8 @@ public:
 
     int currentHeight() const;
     int currentWidth() const;
+
+    void changeId(const uint i, const int newId);
 };
 
 int page::currentHeight() const

@@ -1,8 +1,9 @@
 #include "../xmlstruct.h"
 
 void xmlstruct::decode(Document *data){
+    /*
     datastruct *doc = data->datatouch;
-    const uint len = doc->length();
+    const uint len = doc->lengthPoint();
     
     if(!len)
         return;
@@ -14,5 +15,5 @@ void xmlstruct::decode(Document *data){
     doc->scala_all(QPointF(-deltax, -deltay));
 
     doc->setPointFirstPage(QPointF(deltax, deltay));
-    doc->removeAt(0);
+    doc->removeAt(0);*/
 }

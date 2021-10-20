@@ -8,6 +8,15 @@
 #include "point.h"
 #include "page.h"
 
+#define ITERATE_CONST(datastruct, countPage, countElement, page) \
+    const uint lenPoint = datastruct->lengthPoint(); \
+    for(countPage=0; countPage<lenPoint; countPage++){ \
+        page = datastruct->at(countPage); \
+        const uint len = page->length(); \
+        for(countElement=0; countElement<len; countElement++){
+
+#define ITERATE_END }}
+
 /*
     IDVERTICALE -> linee verticali
     IDORIZZONALE -> linee orizzonali
@@ -103,8 +112,8 @@ public:
         return isIdUser(__point.idtratto);
     }
 
-    bool isinside(QPointF &topleft, QPointF &bottonright, unsigned int index);
-    bool isinside(double x1, double y1, double x2, double y2, unsigned int index);
+    bool isinside(QPointF &topleft, QPointF &bottonright, const uint index, const uint page);
+    bool isinside(double x1, double y1, double x2, double y2, const uint index, const uint page);
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s *__point);
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 
@@ -132,7 +141,7 @@ public:
 
     void reorganize();
 
-    void changeId(uint i, uint len, int base = -1);
+    void changeId(uint index, uint indexPage, uint lenPage, int base = -1);
 
     bool isAvailable(int id);
 
@@ -166,7 +175,7 @@ public:
                           const uchar decrese,
                           const uint len);
 
-    uchar removePage(uint page);
+    void removePage(const uint page);
 
     long double zoom = 1.00;
 
@@ -294,6 +303,11 @@ inline const point_s *datastruct::at(const uint i, const uint page) const
     return this->m_page.at(page).at(i);
 }
 
+inline const page *datastruct::at(const uint page) const
+{
+    return &this->m_page.at(page);
+}
+
 inline page *datastruct::at_mod(const uint page)
 {
     return &this->m_page.operator[](page);
@@ -335,7 +349,7 @@ inline void datastruct::copy(const datastruct &src, datastruct &dest)
             dest.m_page.append(page);
         }
     }
-    else if(diff < 0){
+    else if(diff != 0){
         diff = -diff;
         for(i=diff; i>0; i--)
             dest.removePage(i);

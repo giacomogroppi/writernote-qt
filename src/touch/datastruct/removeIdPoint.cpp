@@ -1,7 +1,7 @@
 #include "datastruct.h"
 
 void datastruct::removePointId(QList<int> &list){
-    unsigned int i, len, len_list;
+    uint i, len, len_list;
 
     len_list = m_point.length();
     len = list.length();

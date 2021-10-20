@@ -43,17 +43,3 @@ bool preview::get(QPixmap &ref, const bool withPdf,
 
     return !ref.isNull();
 }
-
-void preview::get_all(QList<QPixmap> &ref, Document &doc, const bool withPdf)
-{
-    uint i, len;
-    Q_UNUSED(ref);
-    Q_UNUSED(withPdf);
-    len = doc.datatouch->length();
-
-    for(i=0; i<len; ++i){
-        doc.datatouch->scala_all();
-
-        doc.datatouch->restoreLastTranslation();
-    }
-}

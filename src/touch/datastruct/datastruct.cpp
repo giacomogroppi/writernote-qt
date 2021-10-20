@@ -2,7 +2,6 @@
 #include <QList>
 #include <QDebug>
 
-
 #define mov_if_neg(p, x) \
     p = x; \
     return;

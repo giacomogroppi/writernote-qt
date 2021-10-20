@@ -1,20 +1,20 @@
 #include "datastruct.h"
 #include <QDebug>
 
-bool datastruct::isinside(QPointF &topleft, QPointF &bottonright, unsigned int index)
+bool datastruct::isinside(QPointF &topleft, QPointF &bottonright, const uint index, const uint page)
 {
     return isinside(topleft.x(),
                     topleft.y(),
                     bottonright.x(),
                     bottonright.y(),
-                    index);
+                    index, page);
 }
 
-bool datastruct::isinside(double x1, double y1, double x2, double y2, unsigned int index)
+bool datastruct::isinside(double x1, double y1, double x2, double y2, const uint index, const uint page)
 {
     QPointF __topleft(x1, y1), bottonright(x2, y2);
 
-    return datastruct::isinside(__topleft, bottonright, at(index));
+    return datastruct::isinside(__topleft, bottonright, at(index, page));
 }
 
 bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const point_s *__point){

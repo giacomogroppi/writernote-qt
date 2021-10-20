@@ -20,7 +20,6 @@ public:
 signals:
 
 private:
-    void adjastTranslation();
 
     datastruct *m_data;
 
