@@ -17,12 +17,12 @@ void datastruct::MovePoint(const QList<int> &id, const QPointF &__t){
     len = length();
 
     for(i=0; i<len; ++i){
-        __pos = id.indexOf(m_point.at(i).idtratto);
+        __pos = id.indexOf(at(i)->idtratto);
 
         if(__pos != -1){
-            __last_id = m_point.at(i).idtratto;
+            __last_id = at(i)->idtratto;
 
-            for(; i<len && m_point.at(i).idtratto == __last_id; i++){
+            for(; i<len && at(i)->idtratto == __last_id; i++){
                 __point = at_mod(i);
 
                 __point->m_x += __t.x();
@@ -45,10 +45,10 @@ bool datastruct::MovePoint(QRectF &rect, QPointF __touch){
 
     bottonright = rect.bottomRight();
 
-    len = m_point.length();
+    len = length();
 
     for(i=0; i<len; i++){
-        __point = & m_point.at(i);
+        __point = at(i);
         if(this->isinside(topleft, bottonright, __point)){
             if(__id.indexOf(__point->idtratto) == -1)
                 __id.append(__point->idtratto);

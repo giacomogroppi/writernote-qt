@@ -38,8 +38,6 @@ struct PointSettable {
 class datastruct
 {
 private:
-    int minId();
-
     QPointF __last_translation;
 
     /*
@@ -69,7 +67,7 @@ public:
         return this->posizionefoglio.length();
     }
 
-    void moveIfNegative(uint &p, const uint len, const uint height, const uint width) const;
+    void moveIfNegative(uint &p, uint &page, const uint lenPage, const uint height, const uint width) const;
 
     void removeAt(const uint i);
 
@@ -161,14 +159,11 @@ public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
     //~datastruct();
 
-    void moveNextPoint(uint *pos,
+    void moveNextPoint(uint &pos,
                        uint len = 0,
                        int id = -6);
 
     void reorganize();
-
-    bool maxXIdOrizzonal(double *val);
-    bool minXIdOrizzonal(double *val);
 
     void changeId(uint i, uint len, int base = -1);
 
@@ -186,15 +181,14 @@ public:
     void scala_all(const QPointF &);
     void scala_all();
 
-    double biggerxNoId();
     void reset();
-
+    void triggerVisibility();
     double biggerynoid() const;
     double biggerx() const;
-    void removeat(int i);
+    void removeat(const uint index, const uint page);
 
     bool needtocreatenew();
-    bool needtochangeid(const unsigned int);
+    bool needtochangeid(const uint index, const uint page);
 
     double biggery() const{
         static uint i, len;
@@ -223,9 +217,6 @@ public:
 
     uchar removePage(uint page);
 
-    double miny();
-    double minx();
-
     QList<double> posizionefoglio = {};
 
     long double zoom = 1.00;
@@ -238,35 +229,14 @@ public:
         return len2;
     }
 
-    inline const point_s * lastPoint() const {
-        return this->m_page.last().last();
-    }
+    inline int lastId() const;
 
-    inline int lastId() const{
-        return this->lastPoint()->idtratto;
-    }
-
-    inline const point_s * at (const uint i) const {
-        return & m_point.at(i);
-    }
-
-    /* this function automaticaly translate */
-    inline const point_s &at_draw(const uint i) const;
-
-    /*
-     * lower, but return a modify pointer
-    */
-    inline point_s * at_mod(uint index){
-        uint i;
-        const uint len = this->m_page.length();
-        uint k;
-        for(i=0, k=0; i<len; i++){
-            k += this->m_page.at(i).length();
-            if(k>index)
-                break;
-        }
-        return m_page.operator[](i).at_mod(m_page.at(i).length() - k + index);
-    }
+    inline const point_s * at_old (const uint i) const;
+    inline const point_s * at(const uint i, const uint page) const;
+    inline const page * at(const uint page) const;
+    inline point_s * at_mod(const uint index, const uint page);
+    inline point_s * at_mod_old(uint index);
+    inline point_s &at_draw(const uint index, const uint page) const;
 
     static inline size_t getSizeOne(){
         return sizeof(point_s);
@@ -274,32 +244,7 @@ public:
 
     inline int lengthPage() const{return this->m_page.length();}
 
-    static void copy(const datastruct &src, datastruct &dest){
-        uint i;
-        const uint len = dest.lengthPage();
-        uint diff = len - dest.lengthPage();
-
-        if(diff > 0){
-            for(i=0; i<diff; ++i){
-                page page(len+i);
-                dest.m_page.append(page);
-            }
-        }
-        else if(diff < 0){
-            diff = -diff;
-            for(i=diff; i>0; i--)
-                dest.removePage(i);
-        }
-
-        for(i=0; i<len; ++i){
-            page::copy(src.m_page.at(i), dest.m_page.operator[](i));
-        }
-
-        dest.zoom = src.zoom;
-        dest.posizionefoglio = src.posizionefoglio;
-
-        dest.__last_translation = src.__last_translation;
-    }
+    static void copy(const datastruct &src, datastruct &dest);
 
     inline QPointF get_size_page() const{
         if(!this->posizionefoglio.length())
@@ -353,6 +298,17 @@ inline int datastruct::maxId() const
     return (maxId > 0) ? maxId : 0;
 }
 
+inline void datastruct::triggerVisibility()
+{
+    uint i;
+    const uint len = this->m_page.length();
+
+    for(i=0; i<len; i++){
+        this->m_page.operator[](i).updateFlag(this->getPointFirstPage());
+    }
+
+}
+
 inline double datastruct::biggerx() const
 {
     uint i, k, secLen;
@@ -376,13 +332,73 @@ inline double datastruct::biggerx() const
     return max;
 }
 
-static point_s point;
-inline const point_s &datastruct::at_draw(const uint i) const
+inline int datastruct::lastId() const
 {
-    point = *at(i);
+    return this->maxId();
+}
+
+inline const point_s *datastruct::at_old(const uint i) const
+{
+    uint page, index;
+    this->getRealIndex(i, index, page);
+    return this->m_page.at(page).at(index);
+}
+
+inline const point_s *datastruct::at(const uint i, const uint page) const
+{
+    return this->m_page.at(page).at(i);
+}
+
+inline point_s *datastruct::at_mod_old(uint index)
+{
+    {
+            uint i;
+            const uint len = this->m_page.length();
+            uint k;
+            for(i=0, k=0; i<len; i++){
+                k += this->m_page.at(i).length();
+                if(k>index)
+                    break;
+            }
+            return m_page.operator[](i).at_mod(m_page.at(i).length() - k + index);
+    }
+}
+
+inline point_s &datastruct::at_draw(const uint index, const uint page) const
+{
+    static point_s point;
+    point = *at(page)->at(index);
     point.m_x += this->pointFirstPage.x();
     point.m_y += this->pointFirstPage.y();
     return point;
+}
+
+inline void datastruct::copy(const datastruct &src, datastruct &dest)
+{
+    uint i;
+    const uint len = dest.lengthPage();
+    uint diff = len - dest.lengthPage();
+
+    if(diff > 0){
+        for(i=0; i<diff; ++i){
+            page page(len+i);
+            dest.m_page.append(page);
+        }
+    }
+    else if(diff < 0){
+        diff = -diff;
+        for(i=diff; i>0; i--)
+            dest.removePage(i);
+    }
+
+    for(i=0; i<len; ++i){
+        page::copy(src.m_page.at(i), dest.m_page.operator[](i));
+    }
+
+    dest.zoom = src.zoom;
+    dest.posizionefoglio = src.posizionefoglio;
+
+    dest.__last_translation = src.__last_translation;
 }
 
 inline double datastruct::currentWidth() const{

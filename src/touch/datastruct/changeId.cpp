@@ -6,6 +6,7 @@
 */
 void datastruct::changeId(uint i, uint len, int base)
 {
+    int tmp;
     if(base == -1)
         base = maxId() + 1;
 
@@ -15,9 +16,9 @@ void datastruct::changeId(uint i, uint len, int base)
             return;
     }
 
-    int temp = at(i)->idtratto;
+    tmp = at(i)->idtratto;
 
-    for(; i<len && m_point.at(i).idtratto == temp;
+    for(; i<len && at(i)->idtratto == tmp;
         i++)
         at_mod(i)->idtratto = base;
 }

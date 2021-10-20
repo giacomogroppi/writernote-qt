@@ -42,9 +42,7 @@ void datastruct::scala_all()
         return;
     }
 
-    const point_s * __point = & m_point.first();
-
-    __last_translation = QPointF(__point->m_x, __point->m_y);
+    __last_translation = this->getPointFirstPage();
 
     datastruct::inverso(__last_translation);
 
@@ -67,4 +65,5 @@ void datastruct::scala_all(const QPointF &point)
 #endif
 
     m_img->move(point);
+    this->triggerVisibility();
 }

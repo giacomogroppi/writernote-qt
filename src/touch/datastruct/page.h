@@ -25,6 +25,7 @@ public:
     void removeAt(const uint i);
     int maxId() const;
     const point_s * last() const;
+    double biggerynoid() const;
 };
 
 int page::getHeight(){
@@ -64,5 +65,18 @@ inline void page::removeAt(const uint i)
 {
     this->m_point.removeAt(i);
 }
+
+/*inline double page::biggerynoid() const
+{
+    uint i;
+    const uint len = this->m_point.length();
+    double max = 0.0;
+
+    for(i=0; i<len; i++){
+        if(this->m_point.at(i).m_y > max)
+            max = this->m_point.at(i).m_y;
+    }
+    return max;
+}*/
 
 #endif // PAGE_H
