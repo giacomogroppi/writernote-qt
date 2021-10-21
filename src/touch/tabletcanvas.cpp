@@ -21,7 +21,7 @@ static void loadLastMethod(TabletCanvas *);
 void TabletCanvas::restoreO()
 {
     if(data->datatouch->isempty()){
-        disegnafoglio();
+        this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
         return;
     }
 

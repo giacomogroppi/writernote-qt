@@ -369,7 +369,7 @@ inline void datastruct::getRealIndex(const uint search, uint &index, uint &page)
     index = search - k;
 }
 
-void datastruct::removeAt(const uint index){
+inline void datastruct::removeAt(const uint index){
     uint page, realIndex;
     this->getRealIndex(index, realIndex, page);
     this->m_page.operator[](page).removeAt(realIndex);

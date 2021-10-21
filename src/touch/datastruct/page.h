@@ -44,17 +44,17 @@ public:
     void move(const uint from, const uint to);
 };
 
-int page::currentHeight() const
+inline int page::currentHeight() const
 {
     return count*page::getHeight();
 }
 
-int page::currentWidth() const
+inline int page::currentWidth() const
 {
     return page::getWidth();
 }
 
-int page::getHeight(){
+inline int page::getHeight(){
     return height;
 }
 
@@ -63,7 +63,7 @@ inline int page::getWidth()
     return width;
 }
 
-void page::updateFlag(const QPointF &FirstPoint){
+inline void page::updateFlag(const QPointF &FirstPoint){
     IsVisible = true;
 
     if((-FirstPoint.y()) > count*height)
@@ -72,23 +72,23 @@ void page::updateFlag(const QPointF &FirstPoint){
         IsVisible = false;
 }
 
-const point_s *page::at(uint i) const{
+inline const point_s *page::at(uint i) const{
     return &this->m_point.at(i);
 }
 
-point_s *page::at_mod(uint i){
+inline point_s *page::at_mod(uint i){
     return &this->m_point.operator[](i);
 }
 
-uint page::length() const{
+inline uint page::length() const{
     return m_point.length();
 }
 
-bool page::isVisible() const{
+inline bool page::isVisible() const{
     return this->IsVisible;
 }
 
-void page::copy(const page &src, page &dest){
+inline void page::copy(const page &src, page &dest){
     dest.m_point = src.m_point;
 }
 

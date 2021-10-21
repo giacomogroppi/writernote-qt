@@ -33,8 +33,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     if(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty()))
         this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
 
-    this->disegnafoglio();
-
     load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
          m_pos_ris, &m_pixmap, true, 1, this->m_pixmap.width(), this->m_pixmap.width(), this->parent, false);
 

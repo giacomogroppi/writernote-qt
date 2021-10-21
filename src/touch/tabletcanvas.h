@@ -147,8 +147,6 @@ public:
     struct PointSettable ismoving;
     void ismoving_f();
 
-    void disegnafoglio();
-
     /* struttura per ricordare il last point per il touch */
     struct PointSettable lastpointtouch;
 
