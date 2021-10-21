@@ -1,38 +1,25 @@
 #include "datastruct.h"
 
 void datastruct::removePointId(QList<int> &list){
-    uint i, len, len_list;
-
-    len_list = m_point.length();
-    len = list.length();
-    for(i=0; i<len; i++)
-    {
-        removePointId(list.at(i), &len_list);
+    uint i ;
+    const uint len_list = list.length();
+    for(i=0; i<len_list; i++){
+        removePointId(list.at(i));
     }
 }
 
-void datastruct::removePointId(int id,
-                               uint *len){
-    unsigned int i;
-    bool need_delete = false;
-    if(!len){
-        need_delete = true;
-        len = (unsigned int *)malloc(sizeof (unsigned int));
-    }
+void datastruct::removePointId(int id){
+    uint i;
 
-    if(need_delete)
-        *len = m_point.length();
-
-    for(i=0; i<*len;){
-        if(m_point.at(i).idtratto == id){
-            m_point.removeAt(i);
-            --(*len);
+    for(page &page : this->m_page){
+        uint lenPoint = page.length();
+        for(i=0; i<lenPoint;){
+            if(page.at(i)->idtratto == id){
+                page.removeAt(i);
+                --lenPoint;
+                }
+            else
+                ++i;
         }
-        else
-            ++i;
     }
-
-    if(need_delete)
-        free(len);
-
 }

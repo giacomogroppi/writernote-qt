@@ -55,7 +55,7 @@ private:
     //QList<struct point_s> m_point = {};
     QList<page> m_page;
 
-    bool userWrittenSomething(uint i);
+    bool userWrittenSomething(uint frompage);
 
     void scala_posizionefoglio(const double scala);
 
@@ -86,7 +86,7 @@ public:
     void controllForRepositioning();
 
     void removePointId(QList<int> &list);
-    void removePointId(int id, uint *len = nullptr);
+    void removePointId(int id);
 
     void MovePoint(const QList<int> &id, const QPointF &__t);
     bool MovePoint(QRectF &, QPointF);

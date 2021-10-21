@@ -114,9 +114,8 @@ double highlighter::getSize(const double pressure){
 
 void highlighter::moveAll(datastruct *data)
 {
-    uint i, k;
-    QList<point_s > * list = data->get_list();
-    const uint len = data->length();
+    uint i, k, counterPage;
+    const uint lenPage = data->lengthPage();
 
     if(id == -1)
         return;
@@ -124,9 +123,12 @@ void highlighter::moveAll(datastruct *data)
     if(!m_data.tratto_sotto)
         goto clear;
 
-    for(k=0; k<len; ++k)
-        if(data->isIdUser(k))
-            break;
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        const uint len = data->at(counterPage)->length();
+        for(k=0; k<len; ++k)
+            if(data->isIdUser(k))
+                break;
+    }
 
     for(i=k; i<len; ++i)
         if(data->at(i)->idtratto == this->id)

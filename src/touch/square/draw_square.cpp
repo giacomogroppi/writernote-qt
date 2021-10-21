@@ -18,50 +18,57 @@ void square::needReload(QPainter &painter){
  *  uguale, e si sposta tutto il tratto
 */
 
-void square::findObjectToDraw(Document *data)
+void square::findObjectToDraw(Document *doc)
 {
-    uint i;
+    uint i, counterPage, lenPoint;
     const point_s * __point;
-
-    const uint len_point = data->datatouch->length();
+    const datastruct *data = doc->datatouch;
+    const uint lenPage = data->lengthPage();
 
     if (this->m_id.length() == 0)
         goto img;
-    /* trova il primo punto da disegnare */
-    for(i=0; i<len_point; ++i){
-        __point = data->datatouch->at(i);
-        if(m_id.indexOf(__point->idtratto) != -1){
-            pointinit.point.setX(__point->m_x);
-            pointinit.point.setY(__point->m_y);
 
-            pointfine.point.setX(__point->m_x);
-            pointfine.point.setY(__point->m_y);
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        lenPoint = data->at(counterPage)->length();
 
-            break;
+        /* trova il primo punto da disegnare */
+        for(i=0; i<lenPoint; ++i){
+            __point = &data->at_draw(i, counterPage);
+            if(m_id.indexOf(__point->idtratto) != -1){
+                pointinit.point.setX(__point->m_x);
+                pointinit.point.setY(__point->m_y);
+
+                pointfine.point.setX(__point->m_x);
+                pointfine.point.setY(__point->m_y);
+
+                break;
+            }
         }
     }
+    for(; counterPage < lenPage; counterPage ++){
+        lenPoint = data->at(counterPage)->length();
+        for(; i<lenPoint; i++){
+            __point = data->at(i, counterPage);
 
-    for(; i<len_point; i++){
-        __point = data->datatouch->at(i);
+            if(this->m_id.indexOf(__point->idtratto) != -1){
+                if(__point->m_x < pointinit.point.x())
+                    pointinit.point.setX(__point->m_x);
 
-        if(this->m_id.indexOf(__point->idtratto) != -1){
-            if(__point->m_x < pointinit.point.x())
-                pointinit.point.setX(__point->m_x);
+                else if(__point->m_x > pointfine.point.x())
+                    pointfine.point.setX(__point->m_x);
 
-            else if(__point->m_x > pointfine.point.x())
-                pointfine.point.setX(__point->m_x);
-
-            if(__point->m_y < pointinit.point.y())
-                pointinit.point.setY(__point->m_y);
-            else if(__point->m_y > pointfine.point.y())
-                pointfine.point.setY(__point->m_y);
+                if(__point->m_y < pointinit.point.y())
+                        pointinit.point.setY(__point->m_y);
+                else if(__point->m_y > pointfine.point.y())
+                    pointfine.point.setY(__point->m_y);
+            }
         }
     }
 
     img:
     for(i=0; i < (uint)m_index_img.length(); ++i){
         const int index = this->m_index_img.at(i);
-        const auto &ref = data->m_img->m_img.at(index);
+        const auto &ref = doc->m_img->m_img.at(index);
 
         if(ref.i.x() < pointinit.point.x())
             pointinit.point.setX(ref.i.x());

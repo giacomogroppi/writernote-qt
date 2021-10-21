@@ -1,7 +1,8 @@
 #include "reduce_size.h"
 #include "../datastruct/datastruct.h"
+#include "../datastruct/page.h"
 
-static unsigned int howMuchPoint(datastruct *data);
+static uint howMuchPoint(datastruct *data);
 
 /*
  * every time the user wants to decrease
@@ -23,9 +24,9 @@ size_t reduce_size::current_size(datastruct *data){
     if(data->isempty())
         return 0;
 
-    size = data->getSizeOne() * data->length();
+    size = data->getSizeOne() * data->lengthPoint();
 
-    size += sizeof(data->posizionefoglio.first()) * data->posizionefoglio.length();
+    size += sizeof(double)*2; /* first point --> x and y */
 
     size += sizeof(data->zoom);
 
@@ -33,54 +34,57 @@ size_t reduce_size::current_size(datastruct *data){
 }
 
 void reduce_size::decrese(datastruct *data){
-    unsigned int i, len;
-    len = data->length();
-
+    uint i, pageCounter, len;
+    const uint lenPage = data->lengthPage();
+    page *page;
     const point_s *__point;
     bool __cont = false;
 
-    if(!len){
+    if(!lenPage){
         return;
     }
+    for(pageCounter=0; pageCounter<lenPage; pageCounter++){
+        page = data->at_mod(pageCounter);
 
-    for(i=0; i<len; ++i){
-        __point = data->at(i);
+        len = page->length();
+        for(i=0; i<len; ++i){
+            __point = page->at(i);
 
-        if(!datastruct::isIdUser(__point)){
-            /* we CAN'T remove the point we draw */
+            if(!datastruct::isIdUser(__point)){
+                /* we CAN'T remove the point we draw */
 
-            ++i;
-            continue;
+                ++i;
+                continue;
+            }
+
+            if(!page->needtochangeid(i)){
+                /* we CAN'T remove the first point or the last one */
+                continue;
+            }
+
+            if(__cont){
+                page->removeAt(i);
+                --len;
+            }
+
+            __cont = (__cont) ? 0 : 1;
+
         }
-
-        if(!data->needtochangeid(i)){
-            /* we CAN'T remove the first point or the last one */
-            continue;
-        }
-
-        if(__cont){
-            data->removeAt(i);
-            --len;
-        }
-
-        __cont = (__cont) ? 0 : 1;
-
     }
 
 
 }
 
-static unsigned int __howReduce(datastruct *data,
-                      unsigned int *i,
-                      unsigned int len){
+static uint __howReduce(uint &i,
+                        const page *page, const uint lenPoint){
 
-    unsigned int count;
-    int idtratto = data->at(*i)->idtratto;
+    uint count;
+    const int idtratto = page->at(i)->idtratto;
 
     const point_s * __point;
 
-    for(count = 0; *i<len; ++(*i)){
-        __point = data->at(*i);
+    for(count = 0; i<lenPoint; ++i){
+        __point = page->at(i);
         if(__point->idtratto != idtratto
                 || !__point->isIdUser())
             break;
@@ -89,12 +93,11 @@ static unsigned int __howReduce(datastruct *data,
     return count;
 }
 
-static unsigned int howReduce(datastruct *data,
-                                unsigned int *i,
-                                unsigned int len){
-
-    unsigned int __m;
-    __m = __howReduce(data, i, len);
+static uint howReduce(uint &i,
+                      const page *page,
+                      const uint lenPoint){
+    uint __m;
+    __m = __howReduce(i, page, lenPoint);
 
 
     /*
@@ -109,13 +112,17 @@ static unsigned int howReduce(datastruct *data,
  * the function return the number of point we can
  * remove
 */
-static unsigned int howMuchPoint(datastruct *data){
-    unsigned int i, len, totalPointToRemove = 0;
-    len = data->length();
+static uint howMuchPoint(datastruct *data){
+    uint i, pageCount, totalPointToRemove = 0;
+    const uint lenPage = data->lengthPage();
+    const page *page;
 
-
-    for(i=0; i<len; ++i){
-        totalPointToRemove += howReduce(data, &i, len);
+    for(pageCount = 0; pageCount < lenPage; pageCount ++){
+        page = data->at(pageCount);
+        const uint lenPoint = page->length();
+        for(i = 0; i < lenPoint; ++i){
+            totalPointToRemove += howReduce(i, page, lenPoint);
+        }
     }
 
     return totalPointToRemove;
