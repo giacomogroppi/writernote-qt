@@ -8,9 +8,6 @@
 
 #define P(x) x->datatouch
 
-static int checkPositionAudio(const Document &first,
-                              const Document &second);
-
 static int checkSpeed(const Document &first,
                       const Document &second){
     uint i;
@@ -26,38 +23,47 @@ static int checkSpeed(const Document &first,
             return IDTRATTO;
     }
 
-    return checkPositionAudio(first, second);
+    return OK_CHECK;
 }
 
 static int checkSlow(const Document *first,
                      const Document *second){
-    uint i;
-    const uint len = P(first)->length();
+    uint i, counterPage;
+    const uint lenPage = first->datatouch->lengthPage();
 
-    if(len != P(second)->length())
+    if(lenPage != P(second)->lengthPage())
         return LEN;
 
-    for(i=0; i<len; i++){
-        if(P(first)->at(i)->idtratto != P(second)->at(i)->idtratto)
-            return IDTRATTO;
-        if(P(first)->at(i)->m_x != P(second)->at(i)->m_x)
-            return XCHECK;
-        if(P(first)->at(i)->m_y != P(second)->at(i)->m_y)
-            return YCHECK;
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        const uint len = first->datatouch->at(counterPage)->length();
+        if(len != second->datatouch->at(counterPage)->length())
+            return LEN;
 
-        if(memcmp(&first->datatouch->at(i)->m_color,
-                  &second->datatouch->at(i)->m_color,
-                  sizeof(struct colore_s)) != 0)
-            return COLORE;
+        for(i=0; i<len; i++){
+            const point_s *point1 = first->datatouch->at(i, counterPage);
+            const point_s *point2 = second->datatouch->at(i, counterPage);
 
-        if(P(first)->at(i)->m_posizioneaudio != P(second)->at(i)->m_posizioneaudio)
-            return AUDIOPOSITION;
+            if(point1->idtratto != point2->idtratto)
+                return IDTRATTO;
+            if(point1->m_x != point2->m_x)
+                return XCHECK;
+            if(point1->m_y != point2->m_y)
+                return YCHECK;
 
-        if(P(first)->at(i)->m_pressure != P(second)->at(i)->m_pressure)
-            return PRESSURE;
+            if(memcmp(&point1->m_color,
+                      &point2->m_color,
+                      sizeof(point1->m_color)) != 0)
+                return COLORE;
 
-        if(P(first)->at(i)->rotation != P(second)->at(i)->rotation)
-            return ROTATION;
+            if(point1->m_posizioneaudio != point2->m_posizioneaudio)
+                return AUDIOPOSITION;
+
+            if(point1->m_pressure != point2->m_pressure)
+                return PRESSURE;
+
+            if(point1->rotation != point2->rotation)
+                return ROTATION;
+        }
     }
     return OK_CHECK;
 }
@@ -99,19 +105,4 @@ int checksimilecopybook(const Document &primo,
     secondo.datatouch->restoreLastTranslation();
 
     return res;
-}
-
-static int checkPositionAudio(const Document &first,
-                              const Document &second){
-    int len = first.datatouch->posizionefoglio.length(), i;
-
-    if(second.datatouch->posizionefoglio.length() != len)
-        return LEN_POSIZIONEFOGLIO;
-
-    for(i=0; i<len; i++){
-        if(first.datatouch->posizionefoglio.at(i) != second.datatouch->posizionefoglio.at(i))
-            return POSIZIONE_FOGLIO;
-    }
-
-    return OK_CHECK;
 }

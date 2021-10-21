@@ -117,26 +117,27 @@ void highlighter::moveAll(datastruct *data)
     uint i, k, counterPage;
     const uint lenPage = data->lengthPage();
 
-    if(id == -1)
-        return;
-
-    if(!m_data.tratto_sotto)
+    if(id == -1 || !m_data.tratto_sotto)
         goto clear;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        const uint len = data->at(counterPage)->length();
-        for(k=0; k<len; ++k)
-            if(data->isIdUser(k))
+        page *page = data->at_mod(counterPage);
+        const uint lenPoint = data->at(counterPage)->length();
+
+        /* find the first point written by user */
+        for(k=0; k<lenPoint; ++k)
+            if(page->at(k)->isIdUser())
                 break;
+
+        for(i=k; i<lenPoint; ++i)
+            if(page->at(i)->idtratto == this->id)
+                break;
+
+        for(; i<lenPage; ++i, ++k){
+            page->move(i, k);
+        }
     }
 
-    for(i=k; i<len; ++i)
-        if(data->at(i)->idtratto == this->id)
-            break;
-
-    for(; i<len; ++i, ++k){
-        list->move(i, k);
-    }
 
     clear:
     id = -1;

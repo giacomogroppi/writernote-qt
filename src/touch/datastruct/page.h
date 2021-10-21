@@ -37,6 +37,7 @@ public:
     void changeId(const uint i, const int newId);
     bool needtochangeid(const uint index) const;
     bool userWrittenSomething() const;
+    void move(const uint from, const uint to);
 };
 
 int page::currentHeight() const

@@ -100,10 +100,6 @@ public:
     */
     static inline bool isIdUser(const int id){
         return id >= 0;
-
-        /*return id != IDTRATTOZERO
-                && id != IDVERTICALE
-                && id != IDORIZZONALE;*/
     }
     static inline bool isIdUser(const point_s * __point){
         return isIdUser(__point->idtratto);
@@ -201,7 +197,7 @@ public:
         return sizeof(point_s);
     }
 
-    inline int lengthPage() const{return this->m_page.length();}
+    inline uint lengthPage() const{return this->m_page.length();}
 
     static void copy(const datastruct &src, datastruct &dest);
 
@@ -222,7 +218,7 @@ public:
 */
 inline bool point_s::isIdUser() const
 {
-    return datastruct::isIdUser(this);
+    return datastruct::isIdUser(this->idtratto);
 }
 
 inline double datastruct::currentHeight() const{
