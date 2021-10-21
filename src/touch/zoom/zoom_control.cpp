@@ -28,17 +28,24 @@ bool zoom_control::zoom(QPointF &point_translate,
                         const uint height,
                         const uint maxHeight,
                         datastruct *data){
-    uint i;
+    std::abort();
+    Q_UNUSED(point_translate);
+    Q_UNUSED(delta);
+    Q_UNUSED(width);
+    Q_UNUSED(maxHeight);
+    Q_UNUSED(maxWidth);
+    Q_UNUSED(height);
+    Q_UNUSED(data);
+    /*uint i;
     const uint len = data->length();
     Q_UNUSED(maxHeight);
     
-    /* TODO */
     if(delta < 1.00){
         if(data->zoom - (1.0-delta) < (long double)0){
             return false;
         }
     }
-    else{ /* data >= 1 */
+    else{
         if(data->zoom + (delta-1.00) > 2.00){
             return false;
         }
@@ -64,5 +71,5 @@ bool zoom_control::zoom(QPointF &point_translate,
     if(width == maxWidth)
         return false;
 
-    return data->adjustAll(height, width);
+    return data->adjustAll(height, width);*/
 }

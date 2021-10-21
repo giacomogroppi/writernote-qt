@@ -116,10 +116,9 @@ void frompdf::resizing(TabletCanvas *canvas, const uint lenPdf){
     if(!canvas)
         return;
 
-    uint i = m_data->datatouch->num_page();
+    uint i = m_data->datatouch->lengthPage();
     for(; i<lenPdf; ++i){
-        canvas->disegnofoglio_bool = true;
-        canvas->disegnafoglio();
+        m_data->datatouch->newPage();
     }
 }
 

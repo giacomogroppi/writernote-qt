@@ -98,7 +98,7 @@ bool scroll::itspossibletoscrollx(datastruct *data,
 
     /* __pos_delta < 0.0 */
 
-    if(!data->maxXIdOrizzonal(&res)){
+    if(!data->getCurrentWidth(res)){
         goto c_not_move;
     }
 
@@ -113,5 +113,4 @@ bool scroll::itspossibletoscrollx(datastruct *data,
     c_not_move:
     __pos_delta = 0.0;
     return false;
-
 }

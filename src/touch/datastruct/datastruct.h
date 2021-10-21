@@ -192,11 +192,11 @@ public:
     inline point_s *        at_mod(const uint index, const uint page);
     inline point_s *        at_mod_old(uint index);
     inline point_s &        at_draw(const uint index, const uint page) const;
-
+    inline const point_s *  lastPoint() const;
     static inline size_t getSizeOne(){
         return sizeof(point_s);
     }
-
+    inline bool getCurrentWidth(double &val) const;
     inline uint lengthPage() const{return this->m_page.length();}
 
     void newPage();
@@ -334,6 +334,15 @@ inline point_s &datastruct::at_draw(const uint index, const uint page) const
     point.m_x += this->pointFirstPage.x();
     point.m_y += this->pointFirstPage.y();
     return point;
+}
+
+inline bool datastruct::getCurrentWidth(double &val) const
+{
+    if(isempty())
+        return false;
+    val = this->m_page.first().currentWidth() + this->getPointFirstPage().x();
+
+    return true;
 }
 
 inline void datastruct::newPage()

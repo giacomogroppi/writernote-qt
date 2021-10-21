@@ -35,24 +35,28 @@ void square::updatePoint(const QPointF &__point)
  * la setta = false e fa il return
 */
 bool square::find(Document *data){
-    uint i, len;
+    uint i, len, pageCounter;
     const point_s * __point;
     bool tmp_find;
 
-    len = data->datatouch->length();
+    len = data->datatouch->lengthPage();
     this->check = false;
 
     this->adjustPoint();
 
     /* point selected by user */
-    for(i=0;i<len; ++i){
-        __point = data->datatouch->at(i);
-        if(data->datatouch->isinside(pointinit.point, pointfine.point, __point)){
+    for(pageCounter=0;pageCounter<len; ++pageCounter){
+        len = data->datatouch->at(pageCounter)->length();
 
-            if(m_id.indexOf(__point->idtratto) == -1)
-                m_id.append(__point->idtratto);
+        for(i=0; i<len; i++){
+            __point = data->datatouch->at(i, pageCounter);
+            if(data->datatouch->isinside(pointinit.point, pointfine.point, __point)){
 
-            this->check = true;
+                if(m_id.indexOf(__point->idtratto) == -1)
+                    m_id.append(__point->idtratto);
+
+                this->check = true;
+            }
         }
     }
 

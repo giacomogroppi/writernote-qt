@@ -6,7 +6,6 @@
 class topdf
 {
 private:
-    static void adjastTranslation(Document *doc, const int width_pdf, const int height_pdf);
     Document *data = nullptr;
     const QString *path;
 

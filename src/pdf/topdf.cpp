@@ -17,7 +17,7 @@ static inline void newpage(Document *data, const double tmp){
 }
 
 bool topdf::createpdf(const bool withPdf){
-    const uint lenpage = data->datatouch->posizionefoglio.length();
+    const uint lenpage = data->datatouch->lengthPage();
     uint i;
 
     this->translate();
@@ -31,10 +31,10 @@ bool topdf::createpdf(const bool withPdf){
     pdfWriter.setResolution(100);
 #endif
 
-    const int height_pdf = pdfWriter.height();
+    //const int height_pdf = pdfWriter.height();
     const int width_pdf = pdfWriter.width();
 
-    topdf::adjastTranslation(data, width_pdf, height_pdf);
+    data->datatouch->scala_all();
 
     const double size_orizzontale = data->datatouch->currentWidth();
     const double size_verticale = data->datatouch->currentHeight();

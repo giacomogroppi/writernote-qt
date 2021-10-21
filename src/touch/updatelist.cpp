@@ -7,13 +7,16 @@
 #include "../utils/color/setcolor.h"
 
 static bool need_to_change_color(datastruct *data, int id){
-    static int i, len, how;
+    static uint i, len, how, counterPage;
+    static uint lenPage;
+    lenPage = data->lengthPage();
 
-    len = data->length();
-
-    for(i=0, how = 0; i<len; i++){
-        if(data->at(i)->idtratto == id)
-            how ++;
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        len = data->at(counterPage)->length();
+        for(i=0, how = 0; i<len; i++){
+            if(data->at(i, counterPage)->idtratto == id)
+                how ++;
+        }
     }
 
     if(!how)

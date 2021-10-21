@@ -6,16 +6,21 @@
 
 bool datastruct::needtocreatenew(){
 
-    uint len = posizionefoglio.length();
+    const uint lenPage = lengthPage();
+    uint i, counterPage;
+    const page *page;
+    uint len;
 
-    if(isempty()
-            || posizionefoglio.isEmpty()
-            || len == 1)
+    if(lenPage < 2)
         return true;
 
-    double maxy;
-
-    maxy = this->biggerynoid();
-
-    return maxy > posizionefoglio.at(len-2);
+    for(counterPage = (lenPage - 2); counterPage < lenPage; counterPage ++){
+        page = at(counterPage);
+        len = page->length();
+        for(i=0; i<len; i++){
+            if(page->at(i)->isIdUser())
+                return true;
+        }
+    }
+    return false;
 }

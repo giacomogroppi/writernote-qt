@@ -53,52 +53,56 @@ bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
     int id;
     bool need_reload = false;
-    uint i, len;
+    uint i, len, counterPage;
+    const uint lenPage = data->lengthPage();
     const point_s *__point;
-    len = data->length();
 
     this->penna.setStyle(Qt::SolidLine);
 
-    //drawAreaRubber(painter, lastPoint);
-
     if(this->m_type_gomma == e_type_rubber::total){
-        for(i=0; i<len; i++){
-            __point = &data->at_draw(i);
+        for(counterPage = 0; counterPage < lenPage; counterPage ++){
+            len = data->at(counterPage)->length();
+            for(i=0; i<len; i++){
+                __point = &data->at_draw(i, counterPage);
 
-            if(isin(__point,
-                    lastPoint,
-                    data) &&
-                    gomma_delete_id.indexOf(id) == -1){
+                if(isin(__point,
+                            lastPoint,
+                        data) &&
+                        gomma_delete_id.indexOf(id) == -1){
 
-                id = __point->idtratto;
+                    id = __point->idtratto;
 
-                need_reload = true;
+                    need_reload = true;
 
-                gomma_delete_id.append(id);
+                    gomma_delete_id.append(id);
 
-                i = data->decreaseAlfa(id, DECREASE, len);
+                        i = data->decreaseAlfa(id, DECREASE, len);
 
-                --i;
+                    --i;
+                }
             }
         }
     }
     else if(this->m_type_gomma == e_type_rubber::partial){
-        for(i=0; i<len; i++){
-            __point = &data->at_draw(i);
+        for(counterPage = 0; counterPage < lenPage; counterPage ++){
+            len = data->at(counterPage)->length();
+            for(i=0; i<len; i++){
+                __point = &data->at_draw(i, counterPage);
 
-            if(isin(__point,
-                    lastPoint,
-                    data)){
-                need_reload = true;
+                if(isin(__point,
+                        lastPoint,
+                        data)){
+                    need_reload = true;
 
 
-                if(data->needtochangeid(i)){
-                    data->changeId(i, len);
+                    if(data->needtochangeid(i, counterPage)){
+                        data->changeId(i, counterPage, lenPage);
+                    }
+
+                    data->removeat(i, counterPage);
+                    --len;
+                    --i;
                 }
-
-                data->removeat(i);
-                --len;
-                --i;
             }
         }
 

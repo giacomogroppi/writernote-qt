@@ -27,7 +27,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
                                     event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
-    disegnofoglio_bool = disegnofoglio_bool || data->datatouch->posizionefoglio.isEmpty();
+    disegnofoglio_bool = disegnofoglio_bool || !data->datatouch->isempty();
 
     if(this->m_sheet->auto_create && !disegnofoglio_bool){
         this->disegnofoglio_bool = data->datatouch->needtocreatenew();
@@ -70,17 +70,16 @@ void TabletCanvas::load(QPainter &painter,
                         const MainWindow *parent,
                         const bool IsExportingPdf){
 
-    static uint i, k;
+    static uint i, k, len, counterPage;
     static int _lastid;
     static QColor current_color;
     static double xtemp[2], ytemp[2];
-
     const bool is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
-    const uint len = data->datatouch->length();
+    const uint lenPage = data->datatouch->lengthPage();
 
     painter.setRenderHint(QPainter::Antialiasing);
 
-    if(!len)
+    if(!lenPage)
         return;
 
     if(m_pixmap)
@@ -89,35 +88,39 @@ void TabletCanvas::load(QPainter &painter,
     current_color = m_color;
     m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    for(i=0; i<len-1; ++i){
-        if(i>=len)
-            break;
-        const auto &__point = data->datatouch->at_draw(i);
-        m_pen.setColor(setcolor(&__point.m_color));
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        len = data->datatouch->at(counterPage)->length();
+        for(i=0; i<len-1; ++i){
+            if(i>=len)
+                break;
 
-        if(datastruct::isIdUser(__point))
-            continue;
+            const auto &__point = data->datatouch->at_draw(i, counterPage);
+            m_pen.setColor(setcolor(&__point.m_color));
 
-        UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
+            if(datastruct::isIdUser(__point))
+                    continue;
 
-        painter.setPen(m_pen);
+            UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
 
-        for(k=0; k<2; k++){
-            /*  we can draw objects which are outside the pixmap
-                qt automatically understands that you have to set negative points,
-                and those that are too high such as the margins of the pixmap
-            */
+            painter.setPen(m_pen);
 
-            xtemp[k] = C(data)->at_draw(i+k).m_x;
-            ytemp[k] = C(data)->at_draw(i+k).m_y;
+            for(k=0; k<2; k++){
+                /*  we can draw objects which are outside the pixmap
+                    qt automatically understands that you have to set negative points,
+                    and those that are too high such as the margins of the pixmap
+                */
 
+                xtemp[k] = C(data)->at_draw(i+k, counterPage).m_x;
+                ytemp[k] = C(data)->at_draw(i+k, counterPage).m_y;
+
+            }
+
+            painter.drawLine(
+                    xtemp[0]*m, ytemp[0]*m,
+                xtemp[1]*m, ytemp[1]*m);
+
+            ++i;
         }
-
-        painter.drawLine(
-            xtemp[0]*m, ytemp[0]*m,
-            xtemp[1]*m, ytemp[1]*m);
-
-        ++i;
     }
 
 #ifdef PDFSUPPORT
@@ -131,39 +134,43 @@ void TabletCanvas::load(QPainter &painter,
 
     _lastid = IDUNKNOWN;
 
-    for(i = 0; i < len-1; ++i){
-        const auto &__point = data->datatouch->at_draw(i);
-        if(_lastid != __point.idtratto){
-            data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
-        }
-
-        if(i >= len)
-            break;
-
-
-        m_pen.setColor(setcolor(&__point.m_color));
-
-        if(!datastruct::isIdUser(__point)){
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        len = data->datatouch->at(counterPage)->length();
+        if(!data->datatouch->at(counterPage)->isVisible())
             continue;
-        }
-        else if(__point.idtratto == _lastid){
-            if(is_play && __point.m_posizioneaudio > m_pos_ris){
-                UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
-            }else{
-                UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
+        for(i = 0; i < len-1; ++i){
+            const auto &__point = data->datatouch->at_draw(i, counterPage);
+            /*if(_lastid != __point.idtratto){
+                data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
+            }*/
+
+            /*if(i >= len)
+                    break;*/
+
+            m_pen.setColor(setcolor(&__point.m_color));
+
+            if(!datastruct::isIdUser(__point)){
+                continue;
             }
-            painter.setPen(m_pen);
+            else if(__point.idtratto == _lastid){
+                if(is_play && __point.m_posizioneaudio > m_pos_ris){
+                    UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
+                    }else{
+                    UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
+                }
+                painter.setPen(m_pen);
 
-            painter.drawLine(lastPoint.pos*m,
-                QPointF(__point.m_x*m, __point.m_y*m));
+                painter.drawLine(lastPoint.pos*m,
+                    QPointF(__point.m_x*m, __point.m_y*m));
+
+            }
+
+            lastPoint.pos.setX(__point.m_x);
+            lastPoint.pos.setY(__point.m_y);
+
+            _lastid = __point.idtratto;
 
         }
-
-        lastPoint.pos.setX(__point.m_x);
-        lastPoint.pos.setY(__point.m_y);
-
-        _lastid = __point.idtratto;
-
     }
 
     m_pen.setColor(current_color);
