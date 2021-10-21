@@ -4,7 +4,7 @@
  * the function return true if we need to create a new sheet
  */
 
-bool datastruct::needtocreatenew(){
+bool datastruct::needToCreateNewSheet(){
 
     const uint lenPage = lengthPage();
     uint i, counterPage;

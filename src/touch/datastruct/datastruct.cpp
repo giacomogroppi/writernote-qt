@@ -1,6 +1,7 @@
 #include "datastruct.h"
 #include <QList>
 #include <QDebug>
+#include "../../sheet/fast-sheet/fast_sheet_ui.h"
 
 #define mov_if_neg(p, x) \
     p = x; \
@@ -113,6 +114,32 @@ uint datastruct::decreaseAlfa(const int id,
     }
 
     return i;
+}
+
+void datastruct::copy(const datastruct &src, datastruct &dest)
+{
+    uint i;
+    const uint len = dest.lengthPage();
+    uint diff = len - dest.lengthPage();
+
+    if(diff > 0){
+        for(i=0; i<diff; ++i){
+            dest.newPage(n_style::white);
+        }
+    }
+    else if(diff != 0){
+        diff = -diff;
+        for(i=diff; i>0; i--)
+            dest.removePage(i);
+    }
+
+    for(i=0; i<len; ++i){
+        page::copy(src.m_page.at(i), dest.m_page.operator[](i));
+    }
+
+    dest.zoom = src.zoom;
+
+    dest.__last_translation = src.__last_translation;
 }
 
 double datastruct::biggerynoid() const{

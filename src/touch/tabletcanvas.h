@@ -148,7 +148,6 @@ public:
     void ismoving_f();
 
     void disegnafoglio();
-    bool disegnofoglio_bool = false;
 
     /* struttura per ricordare il last point per il touch */
     struct PointSettable lastpointtouch;
@@ -159,7 +158,7 @@ public:
     void settingdata(Document *data);
 
     /* square per la selezione */
-    square m_square;
+    class square m_square;
 
     bool enableredoundu = true;
 

@@ -5,16 +5,20 @@
 #include <QPointF>
 #include "point.h"
 
+enum n_style: int;
+
 class page
 {
 private:
     static const uint height = NUMEROPIXELVERTICALI;
-    static const uint width = NUMEROPIXELORIZZONALI;
+    static const uint width = height*1.4141; // correct proportions for A4 paper size
     bool IsVisible = true;
     int count;
     QList<point_s> m_point;
+    void drawNewPage(n_style __style);
+
 public:
-    page(int count);
+    page(const int count, const n_style style);
     static int getHeight();
     static int getWidth();
     void updateFlag(const QPointF &FirstPoint);
@@ -51,12 +55,12 @@ int page::currentWidth() const
 }
 
 int page::getHeight(){
-    return NUMEROPIXELORIZZONALI;
+    return height;
 }
 
 inline int page::getWidth()
 {
-    return NUMEROPIXELVERTICALI;
+    return width;
 }
 
 void page::updateFlag(const QPointF &FirstPoint){

@@ -52,7 +52,6 @@ private:
     /*
      * make this item private for a new datastruct
     */
-    //QList<struct point_s> m_point = {};
     QList<page> m_page;
 
     bool userWrittenSomething(uint frompage);
@@ -159,7 +158,7 @@ public:
     double biggerx() const;
     void removeat(const uint index, const uint page);
 
-    bool needtocreatenew();
+    bool needToCreateNewSheet();
     bool needtochangeid(const uint index, const uint page);
 
     double biggery() const;
@@ -199,7 +198,7 @@ public:
     inline bool getCurrentWidth(double &val) const;
     inline uint lengthPage() const{return this->m_page.length();}
 
-    void newPage();
+    void newPage(const n_style style);
     static void copy(const datastruct &src, datastruct &dest);
 
     inline QPointF get_size_page() const{
@@ -345,36 +344,10 @@ inline bool datastruct::getCurrentWidth(double &val) const
     return true;
 }
 
-inline void datastruct::newPage()
+inline void datastruct::newPage(const n_style style)
 {
-    page page(this->lengthPage()+1);
+    page page(this->lengthPage()+1, style);
     this->m_page.append(page);
-}
-
-inline void datastruct::copy(const datastruct &src, datastruct &dest)
-{
-    uint i;
-    const uint len = dest.lengthPage();
-    uint diff = len - dest.lengthPage();
-
-    if(diff > 0){
-        for(i=0; i<diff; ++i){
-            dest.newPage();
-        }
-    }
-    else if(diff != 0){
-        diff = -diff;
-        for(i=diff; i>0; i--)
-            dest.removePage(i);
-    }
-
-    for(i=0; i<len; ++i){
-        page::copy(src.m_page.at(i), dest.m_page.operator[](i));
-    }
-
-    dest.zoom = src.zoom;
-
-    dest.__last_translation = src.__last_translation;
 }
 
 inline double datastruct::currentWidth() const{

@@ -1,7 +1,6 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include <stdio.h>
 #include <QtGlobal>
 #define NCOLOR 4
 

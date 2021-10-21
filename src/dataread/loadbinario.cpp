@@ -4,6 +4,7 @@
 #include <zip.h>
 #include "../datawrite/source_read_ext.h"
 #include "../utils/posizione_binario.h"
+#include "../sheet/fast-sheet/fast_sheet_ui.h"
 
 #ifdef ALL_VERSION
 
@@ -158,7 +159,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
     SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         SOURCE_READ_GOTO(f, &len, sizeof(len));
-        currenttitle->datatouch->newPage();
+        currenttitle->datatouch->newPage(n_style::white);
         page = currenttitle->datatouch->at_mod(counterPage);
 
         for(i=0; i<len; i++){

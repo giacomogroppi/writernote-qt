@@ -1,4 +1,5 @@
 #include "../xmlstruct.h"
+#include "../../sheet/fast-sheet/fast_sheet_ui.h"
 
 static void scaleAll(QList<point_s> &point, const QPointF &translation);
 
@@ -15,7 +16,7 @@ void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> pos_
     data->datatouch->setPointFirstPage(translation);
 
     for(counterPage = 0; counterPage < lenPage ; counterPage ++){
-        data->datatouch->newPage();
+        data->datatouch->newPage(n_style::white);
         for(i=0; i<lenList; i++){
             const auto &ref = point.at(i);
             if(ref.m_y > counterPage*height  &&  ref.m_y <= (counterPage+1)*height)

@@ -6,8 +6,8 @@
 #include <QAction>
 #include "../../utils/dialog_critic/dialog_critic.h"
 
-static void uncheck(QListWidget *list, fast_sheet_ui::n_style temp){
-    if(temp != fast_sheet_ui::empty)
+static void uncheck(QListWidget *list, n_style temp){
+    if(temp != n_style::empty)
         list->unsetCursor();
 
     //list->currentItem()->setCheckState(Qt::CheckState::Unchecked);
@@ -98,7 +98,7 @@ bool fast_sheet_ui::event(QEvent *event)
 
 void fast_sheet_ui::on_white_sheet_clicked()
 {
-    m_how = fast_sheet_ui::white;
+    m_how = n_style::white;
 
     updateCheck();
 }
@@ -106,21 +106,21 @@ void fast_sheet_ui::on_white_sheet_clicked()
 
 void fast_sheet_ui::on_lines_sheet_clicked()
 {
-    m_how = fast_sheet_ui::line;
+    m_how = n_style::line;
 
     updateCheck();
 }
 
 void fast_sheet_ui::on_shared_sheet_clicked()
 {
-    m_how = fast_sheet_ui::square;
+    m_how = n_style::square;
 
     updateCheck();
 }
 
 void fast_sheet_ui::on_list_sheet_itemClicked(QListWidgetItem *item)
 {
-    m_how = fast_sheet_ui::empty;
+    m_how = n_style::empty;
 
     updateCheck();
 

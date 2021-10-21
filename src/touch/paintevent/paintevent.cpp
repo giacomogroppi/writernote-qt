@@ -13,6 +13,8 @@
 void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
+    static bool needDrawSheet;
+    needDrawSheet = false;
 
     if(!this->data) return;
 
@@ -27,11 +29,9 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
                                     event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
-    disegnofoglio_bool = disegnofoglio_bool || !data->datatouch->isempty();
-
-    if(this->m_sheet->auto_create && !disegnofoglio_bool){
-        this->disegnofoglio_bool = data->datatouch->needtocreatenew();
-    }
+    needDrawSheet = !data->datatouch->needToCreateNewSheet();
+    if(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty()))
+        this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
 
     this->disegnafoglio();
 

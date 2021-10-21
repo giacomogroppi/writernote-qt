@@ -263,7 +263,7 @@ void MainWindow::on_actionrestore_button_triggered()
 /* new page */
 void MainWindow::on_actionnewPage_triggered()
 {
-    m_canvas->disegnofoglio_bool = true;
+    this->m_canvas->data->datatouch->newPage(m_canvas->m_sheet->WhatIsSelected());
     m_canvas->needUpdate();
 }
 

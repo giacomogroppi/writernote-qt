@@ -10,21 +10,21 @@ namespace Ui {
 class fast_sheet_ui;
 }
 
+enum n_style: int{
+    line, /* draw only line */
+    white, /*
+            * in this case sheet drawing draws a single
+            * line, at the end of the sheet, of the
+            * same color as the sheet */
+    empty, /* draw from default style in last style */
+    square /* draw square */
+};
+
 class fast_sheet_ui : public QWidget
 {
     Q_OBJECT
 
 public:
-    enum n_style: int{
-        line, /* draw only line */
-        white, /*
-                * in this case sheet drawing draws a single
-                * line, at the end of the sheet, of the
-                * same color as the sheet */
-        empty, /* draw from default style in last style */
-        square /* draw square */
-    };
-
     explicit fast_sheet_ui(QWidget *parent = nullptr);
     ~fast_sheet_ui();
 
