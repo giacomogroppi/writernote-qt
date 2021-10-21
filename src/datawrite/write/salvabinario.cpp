@@ -13,32 +13,33 @@ static int freezip(zip_source_t *files){
 }
 
 int savefile::salvabinario(zip_t *filezip){
-    int i, lunghezza;
+    int i, lunghezza, counterPage;
     size_t controll;
     zip_source_t *file;
     zip_error_t errore;
-    const auto &point = this->currenttitle->datatouch->getPointFirstPage();
+    const auto &point = currenttitle->datatouch->getPointFirstPage();
     const double init[2] = {point.x(), point.y()};
+    const int lenPage = currenttitle->datatouch->lengthPage();
+    const page *page;
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
 
     zip_source_begin_write(file);
 
-    lunghezza = currenttitle->datatouch->length();
-    WRITE_ON_SIZE(file, &lunghezza, sizeof(int));
+    // page len
+    WRITE_ON_SIZE(file, &lenPage, sizeof(lenPage));
 
     WRITE_ON_SIZE(file, init, sizeof(double)*2);
 
-    for(i = 0; i<lunghezza; i++){
-        WRITE_ON_SIZE(file, currenttitle->datatouch->at(i), sizeof(struct point_s));
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        page = currenttitle->datatouch->at(counterPage);
+        lunghezza = page->length();
+        WRITE_ON_SIZE(file, &lunghezza, sizeof(lunghezza));
+
+        for(i = 0; i<lunghezza; i++){
+            WRITE_ON_SIZE(file, page->at(i), sizeof(struct point_s));
+        }
     }
-
-
-    lunghezza = currenttitle->datatouch->posizionefoglio.length();
-    WRITE_ON_SIZE(file, &lunghezza, sizeof(int));
-
-    for(i=0; i < lunghezza; i++)
-        WRITE_ON_SIZE(file, &currenttitle->datatouch->posizionefoglio.at(i), sizeof(double));
 
     WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(long double));
 

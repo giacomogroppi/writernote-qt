@@ -34,8 +34,6 @@ int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip
         controllo_parita = 1;
     }
 
-    xmlstruct::decode(currenttitle);
-
     if(controllo_parita)
         return ERROR_CONTROLL;
 

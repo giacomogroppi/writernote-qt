@@ -75,7 +75,6 @@ void datastruct::reset(){
     this->m_page.clear();
     pointFirstPage = QPointF(0, 0);
     zoom = 1.00;
-    posizionefoglio.clear();
 }
 
 uint datastruct::positionId(int id)
@@ -134,17 +133,17 @@ void datastruct::removeat(const uint index, const uint page){
  *
  * return false if it's the first point or the lastone
  */
-bool datastruct::needtochangeid(const uint index, const uint page){
-    uint len;
-    len = length();
+bool datastruct::needtochangeid(const uint index, const uint indexPage){
+    const page *page;
+    const uint lenPointForPage = at(indexPage)->length();
 
-    if(!index || (index+1) >= len)
+    if(!index || (index+1) >= lenPointForPage)
         return false;
 
-    const auto &ref = this->m_page.at(page);
-    int temp_id = ref.at(index)->idtratto;
+    page = at(indexPage);
+    int temp_id = page->at(index)->idtratto;
 
-    return (temp_id == ref.at(index-1)->idtratto
-            && temp_id == ref.at(index+1)->idtratto);
+    return (temp_id == page->at(index-1)->idtratto
+            && temp_id == page->at(index+1)->idtratto);
 
 }

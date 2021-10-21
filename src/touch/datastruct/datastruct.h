@@ -168,8 +168,8 @@ public:
     uint positionId(int id);
 
     uint decreaseAlfa(const int id,
-                          const uchar decrese,
-                          const uint len);
+                      const uchar decrese,
+                      const uint len);
 
     void removePage(const uint page);
 
@@ -199,6 +199,7 @@ public:
 
     inline uint lengthPage() const{return this->m_page.length();}
 
+    void newPage();
     static void copy(const datastruct &src, datastruct &dest);
 
     inline QPointF get_size_page() const{
@@ -210,6 +211,8 @@ public:
 
     inline double currentWidth() const;
     inline double currentHeight() const;
+
+    friend class xmlstruct;
 };
 
 /*
@@ -333,6 +336,12 @@ inline point_s &datastruct::at_draw(const uint index, const uint page) const
     return point;
 }
 
+inline void datastruct::newPage()
+{
+    page page(this->lengthPage()+1);
+    this->m_page.append(page);
+}
+
 inline void datastruct::copy(const datastruct &src, datastruct &dest)
 {
     uint i;
@@ -341,8 +350,7 @@ inline void datastruct::copy(const datastruct &src, datastruct &dest)
 
     if(diff > 0){
         for(i=0; i<diff; ++i){
-            page page(len+i);
-            dest.m_page.append(page);
+            dest.newPage();
         }
     }
     else if(diff != 0){

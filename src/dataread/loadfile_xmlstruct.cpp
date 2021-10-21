@@ -311,7 +311,6 @@ int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
             return ERROR;
     }
 #endif
-    xmlstruct::decode(doc);
 
     if(controllo_parita)
         return ERROR_CONTROLL;

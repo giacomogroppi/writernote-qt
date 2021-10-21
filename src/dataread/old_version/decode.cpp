@@ -1,19 +1,36 @@
 #include "../xmlstruct.h"
 
-void xmlstruct::decode(Document *data){
-    /*
-    datastruct *doc = data->datatouch;
-    const uint len = doc->lengthPoint();
-    
-    if(!len)
-        return;
-    
-    const struct point_s * const first = doc->at(0);
-    const double deltay = first->m_y;
-    const double deltax = first->m_x;
+static void scaleAll(QList<point_s> &point, const QPointF &translation);
 
-    doc->scala_all(QPointF(-deltax, -deltay));
+void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> pos_foglio){
+    const uint lenList = point.length();
+    const uint lenPage = pos_foglio.length();
+    const auto firstPoint = point.takeFirst();
+    uint i, counterPage;
 
-    doc->setPointFirstPage(QPointF(deltax, deltay));
-    doc->removeAt(0);*/
+    const QPointF translation(firstPoint.m_x, firstPoint.m_y);
+    const uint height = page::getHeight();
+
+    scaleAll(point, translation);
+    data->datatouch->setPointFirstPage(translation);
+
+    for(counterPage = 0; counterPage < lenPage ; counterPage ++){
+        data->datatouch->newPage();
+        for(i=0; i<lenList; i++){
+            const auto &ref = point.at(i);
+            if(ref.m_y > counterPage*height  &&  ref.m_y <= (counterPage+1)*height)
+                data->datatouch->at_mod(counterPage)->append(ref);
+        }
+    }
+
+}
+
+static void scaleAll(QList<point_s> &point, const QPointF &translation){
+    uint i;
+    const uint len = point.length();
+    for(i=0; i<len; i++){
+        point_s *ref = &point.operator[](i);
+        ref->m_x -= translation.x();
+        ref->m_y -= translation.y();
+    }
 }

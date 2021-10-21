@@ -23,7 +23,8 @@ int xmlstruct::loadbinario_0(zip_t *z){
         size_t createControll() const;
         bool isIdUser() const;
     };
-
+    QList<double> pos_foglio;
+    QList<point_s> point;
     struct zip_stat st;
     zip_stat_init(&st);
     zip_stat(z, NAME_BIN, 0, &st);
@@ -31,7 +32,7 @@ int xmlstruct::loadbinario_0(zip_t *z){
     zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
 
     if(f == nullptr)
-        return false;
+        return ERROR;
 
     int i, len;
     uint k;
@@ -54,20 +55,22 @@ int xmlstruct::loadbinario_0(zip_t *z){
         temp_point.m_pressure = point_lettura.m_pressure;
         temp_point.rotation = point_lettura.rotation;
 
-        currenttitle->datatouch->append(temp_point);
+        point.append(temp_point);
     }
 
     double valoretemp;
-    
+
     SOURCE_READ_GOTO(f, &len, sizeof(int));
     for(i=0; i < len; i++){
         SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
-        currenttitle->datatouch->posizionefoglio.append(valoretemp);
+        pos_foglio.append(valoretemp);
     }
     
     SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
 
     zip_fclose(f);
+
+    xmlstruct::decode(currenttitle, point, pos_foglio);
 
     return OK;
 
@@ -84,6 +87,9 @@ int xmlstruct::loadbinario_1(struct zip *z){
     struct point_s temp_point;
     double valoretemp;
 
+    QList<point_s> point;
+    QList<double> pos_foglio;
+
     zip_stat_init(&st);
     zip_stat(z, NAME_BIN, 0, &st);
 
@@ -97,20 +103,22 @@ int xmlstruct::loadbinario_1(struct zip *z){
 
     for(i=0; i<len; i++){
         SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
-        currenttitle->datatouch->append(temp_point);
+        point.append(temp_point);
     }
 
     SOURCE_READ_GOTO(f, &len, sizeof(int));
     for(i=0; i < len; i++){
         SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
-        currenttitle->datatouch->posizionefoglio.append(valoretemp);
+        pos_foglio.append(valoretemp);
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(this->currenttitle->datatouch->zoom));
 
     SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
 
     zip_fclose(f);
+
+    xmlstruct::decode(currenttitle, point, pos_foglio);
 
     if(controll != currenttitle->createSingleControll())
         return ERROR_CONTROLL;
@@ -127,10 +135,10 @@ int xmlstruct::loadbinario_1(struct zip *z){
 int xmlstruct::loadbinario_2(struct zip *z){
     struct zip_stat st;
     size_t controll;
-    int i, len;
+    int i, len, lenPage, counterPage;
     zip_file_t *f;
+    page *page;
     struct point_s temp_point;
-    double valoretemp;
     double init[2];
 
     zip_stat_init(&st);
@@ -141,21 +149,22 @@ int xmlstruct::loadbinario_2(struct zip *z){
     if(f == nullptr)
         return false;
 
-
     SOURCE_READ_GOTO(f, &len, sizeof(int));
 
+    /* point first page */
     SOURCE_READ_GOTO(f, &init, sizeof(double)*2);
     this->currenttitle->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
 
-    for(i=0; i<len; i++){
-        SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
-        currenttitle->datatouch->append(temp_point);
-    }
+    SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        SOURCE_READ_GOTO(f, &len, sizeof(len));
+        currenttitle->datatouch->newPage();
+        page = currenttitle->datatouch->at_mod(counterPage);
 
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
-    for(i=0; i < len; i++){
-        SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
-        currenttitle->datatouch->posizionefoglio.append(valoretemp);
+        for(i=0; i<len; i++){
+            SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
+            page->append(temp_point);
+        }
     }
 
     SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));

@@ -78,6 +78,8 @@ void TabletCanvas::load(QPainter &painter,
     const bool is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
     const uint len = data->datatouch->length();
 
+    painter.setRenderHint(QPainter::Antialiasing);
+
     if(!len)
         return;
 

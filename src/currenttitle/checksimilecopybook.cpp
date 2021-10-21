@@ -10,17 +10,24 @@
 
 static int checkSpeed(const Document &first,
                       const Document &second){
-    uint i;
-    const uint len = first.datatouch->length();
+    uint i, counterPage;
+    const uint lenPage = first.datatouch->lengthPage();
+    uint len;
 
-    if(len != second.datatouch->length())
-        return IDTRATTO;
+    if(lenPage != second.datatouch->lengthPage())
+        return LEN;
 
-    for(i=0; i<len; i++){
-        if(memcmp(first.datatouch->at(i),
-                  second.datatouch->at(i),
-                  datastruct::getSizeOne()) != 0)
-            return IDTRATTO;
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        len = first.datatouch->at(counterPage)->length();
+        if(len != second.datatouch->at(counterPage)->length())
+            return LEN;
+
+        for(i=0; i<len; i++){
+            if(memcmp(first.datatouch->at(i),
+                      second.datatouch->at(i),
+                      datastruct::getSizeOne()) != 0)
+                return IDTRATTO;
+        }
     }
 
     return OK_CHECK;
