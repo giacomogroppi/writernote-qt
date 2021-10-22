@@ -30,7 +30,6 @@ public:
     void removeAt(const uint i);
     int maxId() const;
     const point_s * last() const;
-    double biggerynoid() const;
 
     void append(const point_s &point);
     void append(const point_s *point);
@@ -54,6 +53,11 @@ inline int page::currentWidth() const
     return page::getWidth();
 }
 
+inline void page::move(const uint from, const uint to)
+{
+    this->m_point.move(from, to);
+}
+
 inline int page::getHeight(){
     return height;
 }
@@ -63,7 +67,8 @@ inline int page::getWidth()
     return width;
 }
 
-inline void page::updateFlag(const QPointF &FirstPoint){
+inline void page::updateFlag(const QPointF &FirstPoint)
+{
     IsVisible = true;
 
     if((-FirstPoint.y()) > count*height)
@@ -72,19 +77,23 @@ inline void page::updateFlag(const QPointF &FirstPoint){
         IsVisible = false;
 }
 
-inline const point_s *page::at(uint i) const{
+inline const point_s *page::at(uint i) const
+{
     return &this->m_point.at(i);
 }
 
-inline point_s *page::at_mod(uint i){
+inline point_s *page::at_mod(uint i)
+{
     return &this->m_point.operator[](i);
 }
 
-inline uint page::length() const{
+inline uint page::length() const
+{
     return m_point.length();
 }
 
-inline bool page::isVisible() const{
+inline bool page::isVisible() const
+{
     return this->IsVisible;
 }
 
@@ -95,6 +104,35 @@ inline void page::copy(const page &src, page &dest){
 inline void page::removeAt(const uint i)
 {
     this->m_point.removeAt(i);
+}
+
+inline int page::maxId() const
+{
+    uint i;
+    const uint len = length();
+    int id = 0;
+    const point_s *point;
+    for(i=0; i<len; i++){
+        point = at(i);
+        if(point->idtratto > id)
+            id = point->idtratto;
+    }
+    return id;
+}
+
+inline const point_s *page::last() const
+{
+    return &this->m_point.last();
+}
+
+inline void page::append(const point_s &point)
+{
+    this->m_point.append(point);
+}
+
+inline void page::append(const point_s *point)
+{
+    this->append(*point);
 }
 
 /*inline double page::biggerynoid() const

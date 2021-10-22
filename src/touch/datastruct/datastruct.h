@@ -62,6 +62,7 @@ private:
     fromimage *m_img;
     QPointF pointFirstPage = QPointF(0, 0);
     void getRealIndex(const uint search, uint &index, uint &page) const;
+    int lastPageAppend = -1; /* index of the last page when we append data */
 public:
     inline QPointF getPointFirstPage() const{
         return pointFirstPage;
@@ -140,7 +141,9 @@ public:
 
     bool isAvailable(int id);
 
-    inline int maxId() const;
+    inline void setLastPageModify(const int index);
+    inline int getLastPageModify() const;
+    inline int maxId();
 
     inline bool isempty() const{
         return this->m_page.isEmpty();
@@ -154,7 +157,6 @@ public:
 
     void reset();
     void triggerVisibility();
-    double biggerynoid() const;
     double biggerx() const;
     void removeat(const uint index, const uint page);
 
@@ -182,7 +184,7 @@ public:
         return len2;
     }
 
-    inline int lastId() const;
+    inline int lastId();
 
     inline const point_s *  at_old (const uint i) const;
     inline const point_s *  at(const uint i, const uint page) const;
@@ -227,22 +229,34 @@ inline double datastruct::currentHeight() const{
     return double(NUMEROPIXELVERTICALI);
 }
 
-inline int datastruct::maxId() const
+inline int datastruct::getLastPageModify() const
+{
+    return this->lastPageAppend;
+}
+
+inline int datastruct::maxId()
 {
     int maxId = 0;
     int tmp_id;
-    uint i;
+    uint i, lastMod = 0;
     const uint len = this->lengthPage();
 
     if(isempty())
         return maxId;
 
-    for(i=0; i<len; ++i){
-        tmp_id = this->m_page.at(i).maxId();
-        if(maxId < tmp_id)
-            maxId = tmp_id;
+    if(getLastPageModify() != -1){
+        for(i=0; i<len; ++i){
+            tmp_id = this->m_page.at(i).maxId();
+            if(maxId < tmp_id){
+                lastMod = i;
+                maxId = tmp_id;
+            }
+        }
+        this->setLastPageModify(lastMod);
+    }else{
+        return at(getLastPageModify())->last()->idtratto;
     }
-    return (maxId > 0) ? maxId : 0;
+    return maxId;
 }
 
 inline void datastruct::triggerVisibility()
@@ -284,7 +298,7 @@ inline double datastruct::biggery() const
     return at(lengthPage())->currentHeight();
 }
 
-inline int datastruct::lastId() const
+inline int datastruct::lastId()
 {
     return this->maxId();
 }
@@ -311,6 +325,11 @@ inline page *datastruct::at_mod(const uint page)
     return &this->m_page.operator[](page);
 }
 
+inline point_s *datastruct::at_mod(const uint index, const uint page)
+{
+    return at_mod(page)->at_mod(index);
+}
+
 inline point_s *datastruct::at_mod_old(uint index)
 {
     {
@@ -333,6 +352,11 @@ inline point_s &datastruct::at_draw(const uint index, const uint page) const
     point.m_x += this->pointFirstPage.x();
     point.m_y += this->pointFirstPage.y();
     return point;
+}
+
+inline const point_s *datastruct::lastPoint() const
+{
+    return this->at(lastPageAppend)->last();
 }
 
 inline bool datastruct::getCurrentWidth(double &val) const
@@ -375,13 +399,18 @@ inline void datastruct::removeAt(const uint index){
     this->m_page.operator[](page).removeAt(realIndex);
 }
 
+inline void datastruct::append(const point_s &point)
+{
+    return append(&point);
+}
+
 inline void datastruct::append(const point_s *point)
 {
     uint i;
     const uint len = lengthPage();
     for(i=0; i<len; i++){
         if(at(i)->currentHeight() < point->m_y){
-            at_mod(i)->append(point);
+            this->append(point, i);
             return;
         }
     }
@@ -389,7 +418,13 @@ inline void datastruct::append(const point_s *point)
 
 inline void datastruct::append(const point_s *point, const uint page)
 {
+    lastPageAppend = page;
     this->at_mod(page)->append(point);
+}
+
+inline void datastruct::setLastPageModify(const int index)
+{
+    this->lastPageAppend = index;
 }
 
 #endif // DATASTRUCT_H

@@ -142,14 +142,6 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
     dest.__last_translation = src.__last_translation;
 }
 
-double datastruct::biggerynoid() const{
-    if(isempty())
-        return (double)0;
-
-    return m_page.last().biggerynoid();
-
-}
-
 void datastruct::removeat(const uint index, const uint page){
     this->m_page.operator[](page).removeAt(index);
 }

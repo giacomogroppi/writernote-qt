@@ -21,9 +21,24 @@ page::page(const int count, const n_style style)
     drawNewPage(style);
 }
 
+bool page::needtochangeid(const uint index) const
+{
+    const uint len = length();
+    const point_s *point;
+
+    if(index == (len-1) || !index)
+        return true;
+
+    point = at(index);
+    if(point->idtratto == at(index+1)->idtratto || point->idtratto == at(index-1)->idtratto)
+        return false;
+    return true;
+
+}
+
 void page::drawNewPage(n_style __style)
 {
-    bool fast;
+    bool fast = false;
     double deltax, deltay, ct_del;
     struct style_struct_S style;
     struct point_s tmp_point;
@@ -131,4 +146,13 @@ static void drawLineVertical(QList<point_s> &list,
         deltay += ct_del;
 
     }
+}
+
+bool page::userWrittenSomething() const
+{
+    uint i;
+    const uint len = length();
+    for(i=0; i<len && !at(i)->isIdUser(); i++);
+
+    return !(i==len);
 }
