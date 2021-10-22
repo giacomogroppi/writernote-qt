@@ -406,11 +406,14 @@ inline void datastruct::append(const point_s &point)
 
 inline void datastruct::append(const point_s *point)
 {
-    uint i;
+    static uint counterPage;
+    static const page *page;
     const uint len = lengthPage();
-    for(i=0; i<len; i++){
-        if(at(i)->currentHeight() < point->m_y){
-            this->append(point, i);
+    for(counterPage=0; counterPage<len; counterPage++){
+        page = at(counterPage);
+        qDebug() << counterPage << page->currentHeight() << page->minHeight();
+        if(page->currentHeight() >= point->m_y && page->minHeight() <= point->m_y){
+            this->append(point, counterPage);
             return;
         }
     }

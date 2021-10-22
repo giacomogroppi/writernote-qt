@@ -34,8 +34,9 @@ public:
     void append(const point_s &point);
     void append(const point_s *point);
 
-    int currentHeight() const;
-    int currentWidth() const;
+    double minHeight() const;
+    double currentHeight() const;
+    double currentWidth() const;
 
     void changeId(const uint i, const int newId);
     bool needtochangeid(const uint index) const;
@@ -43,12 +44,12 @@ public:
     void move(const uint from, const uint to);
 };
 
-inline int page::currentHeight() const
+inline double page::currentHeight() const
 {
     return count*page::getHeight();
 }
 
-inline int page::currentWidth() const
+inline double page::currentWidth() const
 {
     return page::getWidth();
 }
@@ -69,12 +70,7 @@ inline int page::getWidth()
 
 inline void page::updateFlag(const QPointF &FirstPoint)
 {
-    IsVisible = true;
-
-    if((-FirstPoint.y()) > count*height)
-        IsVisible = false;
-    if((-FirstPoint.y() + height < height*count))
-        IsVisible = false;
+    IsVisible = !((-FirstPoint.y() + height < height*count) && ((-FirstPoint.y()) > count*height));
 }
 
 inline const point_s *page::at(uint i) const
@@ -133,6 +129,11 @@ inline void page::append(const point_s &point)
 inline void page::append(const point_s *point)
 {
     this->append(*point);
+}
+
+inline double page::minHeight() const
+{
+    return (this->count-1)*this->height;
 }
 
 /*inline double page::biggerynoid() const

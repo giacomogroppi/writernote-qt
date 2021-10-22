@@ -134,8 +134,11 @@ void TabletCanvas::load(QPainter &painter,
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         len = data->datatouch->at(counterPage)->length();
-        if(!data->datatouch->at(counterPage)->isVisible())
+        if(!data->datatouch->at(counterPage)->isVisible()){
+            qDebug() << "It's visible";
             continue;
+        }
+        qDebug() << "It's not visible";
         for(i = 0; i < len-1; ++i){
             const auto &__point = data->datatouch->at_draw(i, counterPage);
             /*if(_lastid != __point.idtratto){

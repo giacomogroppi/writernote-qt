@@ -18,6 +18,7 @@ static void drawLineVertical(QList<point_s> &list, point_s &point, style_struct_
 page::page(const int count, const n_style style)
 {
     this->count = count;
+    this->IsVisible = true;
     drawNewPage(style);
 }
 
