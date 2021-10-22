@@ -4,9 +4,9 @@
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
-static void drawLineOrizzontal(QList<point_s> &list, point_s &point, style_struct_S &style, const double &last,
+static void drawLineOrizzontal(QList<point_s> &list, point_s &point, const style_struct_S &style, const double &last,
                             double &deltax, const double &width_p, const double &ct_del);
-static void drawLineVertical(QList<point_s> &list, point_s &point, style_struct_S &style,
+static void drawLineVertical(QList<point_s> &list, point_s &point, const style_struct_S &style,
                             const double &last, double &deltay, const double &height_p);
 
 
@@ -43,8 +43,8 @@ void page::drawNewPage(n_style __style)
     double deltax, deltay, ct_del;
     struct style_struct_S style;
     struct point_s tmp_point;
-    const double width_p    = this->currentWidth();
-    const double height_p   = this->currentHeight();
+    const double width_p    = this->getWidth();
+    const double height_p   = this->getHeight();
     const double last = this->currentHeight();
 
     setStylePrivate(fast, __style, style);
@@ -64,6 +64,8 @@ void page::drawNewPage(n_style __style)
     ct_del = deltax;
 
     tmp_point.m_pressure = widthToPressure(style.thickness);
+
+    qDebug() << "page::drawNewPage " << width_p << height_p << style.ny << style.nx << deltay;
 
     /* draw the orizzontal line */
     drawLineOrizzontal(this->m_point, tmp_point, style, last, deltax, width_p, ct_del);
@@ -102,7 +104,7 @@ static inline double widthToPressure(double v){
 
 static void drawLineOrizzontal(QList<point_s> &list,
                             point_s &point,
-                            style_struct_S &style,
+                            const style_struct_S &style,
                             const double &last,
                             double &deltax,
                             const double &width_p,
@@ -125,7 +127,7 @@ static void drawLineOrizzontal(QList<point_s> &list,
 
 static void drawLineVertical(QList<point_s> &list,
                             point_s &point,
-                            style_struct_S &style,
+                            const style_struct_S &style,
                             const double &last,
                             double &deltay,
                             const double &height_p){

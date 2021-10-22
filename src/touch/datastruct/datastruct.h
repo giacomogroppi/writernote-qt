@@ -421,6 +421,7 @@ inline void datastruct::append(const point_s *point)
 
 inline void datastruct::append(const point_s *point, const uint page)
 {
+    qDebug() << "datastruct::append append in page --> " << page << at(page)->length();
     lastPageAppend = page;
     this->at_mod(page)->append(point);
 }
