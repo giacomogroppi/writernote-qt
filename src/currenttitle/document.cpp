@@ -39,7 +39,7 @@ size_t Document::createSingleControll() const
     size_t data = 0;
     uint i, len, k;
     const page *page;
-    const uint lenPage = datatouch->lengthPoint();
+    const uint lenPage = datatouch->lengthPage();
     if(!lenPage)
         return data;
 

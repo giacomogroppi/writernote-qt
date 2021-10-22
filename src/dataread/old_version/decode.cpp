@@ -17,7 +17,7 @@ void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> pos_
 
     for(counterPage = 0; counterPage < lenPage ; counterPage ++){
         data->datatouch->newPage(n_style::white);
-        for(i=0; i<lenList; i++){
+        for(i=0; i<point.length(); ++i){
             const auto &ref = point.at(i);
             if(ref.m_y > counterPage*height  &&  ref.m_y <= (counterPage+1)*height)
                 data->datatouch->at_mod(counterPage)->append(ref);

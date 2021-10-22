@@ -244,7 +244,7 @@ inline int datastruct::maxId()
     if(isempty())
         return maxId;
 
-    if(getLastPageModify() != -1){
+    if(getLastPageModify() == -1){
         for(i=0; i<len; ++i){
             tmp_id = this->m_page.at(i).maxId();
             if(maxId < tmp_id){
@@ -295,7 +295,7 @@ inline double datastruct::biggerx() const
 
 inline double datastruct::biggery() const
 {
-    return at(lengthPage())->currentHeight();
+    return at(lengthPage()-1)->currentHeight();
 }
 
 inline int datastruct::lastId()
