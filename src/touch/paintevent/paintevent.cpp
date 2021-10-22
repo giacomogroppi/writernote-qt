@@ -132,25 +132,16 @@ void TabletCanvas::load(QPainter &painter,
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         len = data->datatouch->at(counterPage)->length();
         if(!data->datatouch->at(counterPage)->isVisible()){
-            qDebug() << "It's not visible";
             continue;
         }
-        qDebug() << "It's visible";
+        
         for(i = 0; i < len-1; ++i){
             const auto &__point = data->datatouch->at_draw(i, counterPage);
-            /*if(_lastid != __point.idtratto){
-                data->datatouch->moveIfNegative(i, len, size_verticale, size_orizzontale);
-            }*/
-
-            /*if(i >= len)
-                    break;*/
 
             m_pen.setColor(setcolor(&__point.m_color));
 
-            if(!datastruct::isIdUser(__point)){
-                continue;
-            }
-            else if(__point.idtratto == _lastid){
+
+            if(__point.idtratto == _lastid){
                 if(is_play && __point.m_posizioneaudio > m_pos_ris){
                     UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
                     }else{
