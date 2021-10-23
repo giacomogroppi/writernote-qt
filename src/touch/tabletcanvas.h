@@ -134,7 +134,7 @@ public:
     int m_pos_ris = -1;
 
     /* touch e zoom */
-    PointSettable lastpointzoom[2];
+    PointSettable lastpointzoom[2] = {{QPointF(0, 0), false}, {QPointF(0, 0), false}};
 
     QPointF posizionezoom_puntof;
     int deltax;

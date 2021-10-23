@@ -37,13 +37,7 @@ bool TabletCanvas::event(QEvent *event){
     const int widthPixmap = this->m_pixmap.width();
 
     const auto type = event->type();
-    //qDebug() << type;
 
-    if(!data)
-        return QWidget::event(event);
-
-    if(type != QEvent::TouchEnd)
-        goto stop;
     switch (type) {
         case QEvent::TouchBegin:
         case QEvent::TouchUpdate:
@@ -99,17 +93,21 @@ bool TabletCanvas::event(QEvent *event){
                         else{
                             if(!this->lastpointzoom[1].set){
                                 this->lastpointzoom[1].point = touchPoint.pos();
+                                this->lastpointzoom[1].set = true;
                             }
                             else{
                                 if(touchPoint.pos().x() > this->lastpointzoom[1].point.x()){
                                     /* deve fare lo scambio */
                                     tmp = this->lastpointzoom[1].point;
                                     this->lastpointzoom[1].point = touchPoint.pos();
+
                                     this->lastpointzoom[0].point = tmp;
+                                    this->lastpointzoom[0].set = true;
                                 }
-                                else
+                                else{
                                     /* altrimenti vuol dire che il punto a destra è già quello a destra */
-                                    this->lastpointzoom[0].point= touchPoint.pos();
+                                    this->lastpointzoom[0].point = touchPoint.pos();
+                                }
                             }
                         }
 

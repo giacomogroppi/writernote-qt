@@ -37,6 +37,7 @@ bool zoom_control::zoom(QPointF &point_translate,
     Q_UNUSED(data);*/
     //uint i;
     //const uint lenPage = data->lengthPage();
+    qDebug() << "zoom call";
     Q_UNUSED(maxHeight)
     const QPointF pointRestore = point_translate * delta;
     const QPointF pointRiTranslate = pointRestore - point_translate;
