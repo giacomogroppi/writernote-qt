@@ -110,7 +110,7 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
     lastpointtouch.set = false;
 
     if(parent->touch_or_pen){
-        tab_event = new QTabletEvent(QTabletEvent::TabletRelease, event->pos(), event->globalPos(), 0, QTabletEvent::Airbrush, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
+        tab_event = new QTabletEvent(QTabletEvent::TabletRelease, event->pos(), event->globalPos(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
         tabletEvent(tab_event);
         delete tab_event;
     }

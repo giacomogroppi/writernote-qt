@@ -122,7 +122,6 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
         }
     if (event->pointerType() == QTabletEvent::Eraser) {
             m_brush.setColor(Qt::white);
-            m_pen.setColor(Qt::white);
             m_pen.setWidthF(event->pressure()/2 * 10 + 1);
         } else {
             m_brush.setColor(m_color);

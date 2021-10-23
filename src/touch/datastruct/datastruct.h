@@ -411,17 +411,18 @@ inline void datastruct::append(const point_s *point)
     const uint len = lengthPage();
     for(counterPage=0; counterPage<len; counterPage++){
         page = at(counterPage);
-        qDebug() << counterPage << page->currentHeight() << page->minHeight();
+        //qDebug() << "append call " << page->currentHeight() << point->m_y << page->minHeight();
         if(page->currentHeight() >= point->m_y && page->minHeight() <= point->m_y){
             this->append(point, counterPage);
             return;
         }
     }
+    //std::abort();
 }
 
 inline void datastruct::append(const point_s *point, const uint page)
 {
-    qDebug() << "datastruct::append append in page --> " << page << at(page)->length();
+    //qDebug() << "datastruct::append append in page --> " << page << "page length " << at(page)->length() << "length list " << m_page.length();;
     lastPageAppend = page;
     this->at_mod(page)->append(point);
 }

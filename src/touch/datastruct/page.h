@@ -10,8 +10,9 @@ enum n_style: int;
 class page
 {
 private:
-    static const uint height = NUMEROPIXELVERTICALI;
-    static const uint width = height*1.4141; // correct proportions for A4 paper size
+    static const uint width = NUMEROPIXELORIZZONALI;
+    static const uint height = width*1.4141; // correct proportions for A4 paper size
+
     bool IsVisible = true;
     int count;
     QList<point_s> m_point;

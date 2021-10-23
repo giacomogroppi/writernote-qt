@@ -110,11 +110,10 @@ void TabletCanvas::load(QPainter &painter,
 
             }
 
-            painter.drawLine(
-                    xtemp[0]*m, ytemp[0]*m,
-                xtemp[1]*m, ytemp[1]*m);
+            painter.drawLine(xtemp[0]*m, ytemp[0]*m,
+                             xtemp[1]*m, ytemp[1]*m);
 
-            ++i;
+            i = i + 1;
         }
     }
 
@@ -135,16 +134,26 @@ void TabletCanvas::load(QPainter &painter,
             continue;
         }
         
-        for(i = 0; i < len-1; ++i){
-            const auto &__point = data->datatouch->at_draw(i, counterPage);
+        for(i=0; i<len-1; ++i){
+            if(data->datatouch->at(i, counterPage)->isIdUser())
+                break;
+        }
 
+        for(; i < len-1; ++i){
+            const auto &__point = data->datatouch->at_draw(i, counterPage);
             m_pen.setColor(setcolor(&__point.m_color));
+
+            if(!datastruct::isIdUser(__point))
+                continue;
 
 
             if(__point.idtratto == _lastid){
-                if(is_play && __point.m_posizioneaudio > m_pos_ris){
+                if(is_play && __point.m_posizioneaudio > m_pos_ris)
+                {
                     UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
-                    }else{
+                }
+                else
+                {
                     UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
                 }
                 painter.setPen(m_pen);

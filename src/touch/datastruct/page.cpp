@@ -45,7 +45,7 @@ void page::drawNewPage(n_style __style)
     struct point_s tmp_point;
     const double width_p    = this->getWidth();
     const double height_p   = this->getHeight();
-    const double last = this->currentHeight();
+    const double last = (count-1)*page::getHeight();
 
     setStylePrivate(fast, __style, style);
 
@@ -65,7 +65,7 @@ void page::drawNewPage(n_style __style)
 
     tmp_point.m_pressure = widthToPressure(style.thickness);
 
-    qDebug() << "page::drawNewPage " << width_p << height_p << style.ny << style.nx << deltay;
+    //qDebug() << "page::drawNewPage " << last << width_p << height_p << style.ny << style.nx << deltay << (__style==n_style::square);
 
     /* draw the orizzontal line */
     drawLineOrizzontal(this->m_point, tmp_point, style, last, deltax, width_p, ct_del);
