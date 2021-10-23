@@ -28,18 +28,19 @@ bool zoom_control::zoom(QPointF &point_translate,
                         const uint height,
                         const uint maxHeight,
                         datastruct *data){
-    std::abort();
-    Q_UNUSED(point_translate);
+    /*Q_UNUSED(point_translate);
     Q_UNUSED(delta);
     Q_UNUSED(width);
     Q_UNUSED(maxHeight);
     Q_UNUSED(maxWidth);
     Q_UNUSED(height);
-    Q_UNUSED(data);
-    /*uint i;
-    const uint len = data->length();
-    Q_UNUSED(maxHeight);
-    
+    Q_UNUSED(data);*/
+    //uint i;
+    //const uint lenPage = data->lengthPage();
+    Q_UNUSED(maxHeight)
+    const QPointF pointRestore = point_translate * delta;
+    const QPointF pointRiTranslate = pointRestore - point_translate;
+
     if(delta < 1.00){
         if(data->zoom - (1.0-delta) < (long double)0){
             return false;
@@ -51,25 +52,28 @@ bool zoom_control::zoom(QPointF &point_translate,
         }
     }
 
-    trasla(point_translate, data);
+    /*trasla(point_translate, data);*/
+
+//    data->zoom += delta;
 
 
-
-    for(i=0; i<len; ++i){
+    /*for(i=0; i<len; ++i){
         data->at_mod(i)->m_x *= delta;
         data->at_mod(i)->m_y *= delta;
-    }
+    }*/
 
-    trasla(point_translate, data, delta);
+    /*trasla(point_translate, data, delta);*/
+
 
     delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
-
     data->zoom += delta;
+
+    data->setPointFirstPage(pointRiTranslate);
 
     data->adjustHeight(height, true);
 
     if(width == maxWidth)
         return false;
 
-    return data->adjustAll(height, width);*/
+    return data->adjustAll(height, width);
 }

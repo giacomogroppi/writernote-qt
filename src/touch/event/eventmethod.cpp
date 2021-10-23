@@ -11,7 +11,7 @@ static inline QPointF puntoameta(QPointF &, QPointF &);
 #define ISDEFINE_RIGHT(x) x[1].set
 #define ISDEFINE_LEFT(x) x[0].set
 
-#define ISDEFINE(x) x[1].set&&x[0].set
+#define ISDEFINE(x) (x[1].set)&&(x[0].set)
 
 #define RIDEFINE(x) x[0].set = x[1].set = false;
 
@@ -44,20 +44,19 @@ bool TabletCanvas::event(QEvent *event){
 
     if(type != QEvent::TouchEnd)
         goto stop;
-    /*switch (type) {
+    switch (type) {
         case QEvent::TouchBegin:
         case QEvent::TouchUpdate:
         case QEvent::TouchEnd:
-        {*/
-    {//remove
+        {
             const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
             for (const QTouchEvent::TouchPoint &touchPoint : touchPoints) {
-                /*switch (touchPoint.state()) {
+                switch (touchPoint.state()) {
                 case Qt::TouchPointStationary:
                 case Qt::TouchPointReleased:
                     continue;
                 default:
-                    {*/
+                    {
                         if(ISDEFINE(lastpointzoom)){
                             punto = touchPoint.pos();
                             check = (calcolodistanza(this->lastpointzoom[1].point, punto) > calcolodistanza(this->lastpointzoom[0].point, punto));
@@ -114,19 +113,18 @@ bool TabletCanvas::event(QEvent *event){
                             }
                         }
 
-                    /*}
-                    break;*/
-                //}
+                    }
+                    break;
+                }
             }
 
-            /*update();
-            break;*/
-        /*}
+            update();
+            break;
+        }
         default:
             if(data != NULL)
                 return QWidget::event(event);
-    }*/
-    }//remove
+    }
     if(needToResize)
         this->resizeEvent(NULL);
     stop:
