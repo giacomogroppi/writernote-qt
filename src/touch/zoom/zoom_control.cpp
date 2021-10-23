@@ -67,6 +67,7 @@ bool zoom_control::zoom(QPointF &point_translate,
 
 
     delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
+    qDebug() << "zoom --> delta " << delta;
     data->zoom += delta;
 
     data->setPointFirstPage(pointRiTranslate);

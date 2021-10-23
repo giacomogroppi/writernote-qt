@@ -113,8 +113,6 @@ public:
         const double y = /*(IsExportingPdf) ? rend_heigth * delta : */m_data->datatouch->currentHeight()*delta;
         const double x = /*(IsExportingPdf) ? rend_width * delta : */m_data->datatouch->currentWidth()*delta;
 
-        qDebug() << y << x;
-
         if(!len)
             return;
 

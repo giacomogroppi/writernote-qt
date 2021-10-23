@@ -9,7 +9,7 @@ void datastruct::controllForRepositioning(){
         return;
 
 
-    QPointF point = this->pointFirstPage, translation;
+    QPointF point = this->getPointFirstPage(), translation;
 
     translation.setX((point.x() > 0) ? point.x() : 0.0);
     translation.setY((point.y() > 0) ? point.y() : 0.0);

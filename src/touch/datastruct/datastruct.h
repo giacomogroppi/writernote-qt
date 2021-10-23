@@ -140,7 +140,7 @@ public:
 
     void changeId(uint index, uint indexPage, uint lenPage, int base = -1);
 
-    bool isAvailable(int id);
+    bool isAvailable(int id) const;
 
     inline void setLastPageModify(const int index);
     inline int getLastPageModify() const;

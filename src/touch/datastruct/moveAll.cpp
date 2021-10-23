@@ -16,7 +16,7 @@ void datastruct::repositioning()
     if(isempty())
         return;
 
-    QPointF point = this->pointFirstPage;
+    QPointF point = this->getPointFirstPage();
 
 
     datastruct::inverso(point);

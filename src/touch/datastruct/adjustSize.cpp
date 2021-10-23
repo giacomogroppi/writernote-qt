@@ -16,7 +16,7 @@ bool datastruct::adjustHeight(const uint height,
         controllForRepositioning();
 
     double y;
-    const QPointF first = this->pointFirstPage;
+    const QPointF first = getPointFirstPage();
     double traslation;
 
     y = biggery();
@@ -51,7 +51,7 @@ bool datastruct::adjustWidth(const uint width,
     if(controllRepo)
         controllForRepositioning();
 
-    const QPointF point = this->pointFirstPage;
+    const QPointF point = this->getPointFirstPage();
     QPointF __t(0.0, 0.0);
 
     scala_all();
