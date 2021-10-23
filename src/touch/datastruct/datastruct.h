@@ -198,7 +198,7 @@ public:
         return sizeof(point_s);
     }
     inline bool getCurrentWidth(double &val) const;
-    inline uint lengthPage() const{return this->m_page.length();}
+    inline uint lengthPage() const{ return this->m_page.length();}
 
     void newPage(const n_style style);
     static void copy(const datastruct &src, datastruct &dest);
