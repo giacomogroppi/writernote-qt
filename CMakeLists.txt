@@ -39,8 +39,10 @@ set(PROJECT_SOURCES
     src/mainwindow.cpp
     src/dataread/old_version/ver_3/load_file_ver_3.cpp
     src/dataread/old_version/ver_4/load_file_ver_4.cpp
+    src/dataread/old_version/decode.cpp
     src/dataread/old_version/ver_2/load_file_ver_2.cpp
     src/dataread/old_version/ver_5/load_file_ver_5.cpp
+    src/dataread/old_version/ver_6/load_file_ver_6.cpp
     src/dataread/xmlstruct.cpp
     src/dataread/loadbinario.cpp
     src/dataread/loadfile_xmlstruct.cpp
@@ -81,6 +83,7 @@ set(PROJECT_SOURCES
     src/touch/text/text_ui/text_ui.cpp
     src/touch/zoom/zoom_control.cpp
     src/touch/highlighter/highlighter.cpp
+    src/touch/datastruct/page.cpp
     src/touch/datastruct/writtenSomething.cpp
     src/touch/datastruct/moveAll.cpp
     src/touch/datastruct/createControllPoint.cpp
@@ -116,7 +119,6 @@ set(PROJECT_SOURCES
     src/touch/reduce_size/reduce_size.cpp
     src/touch/reduce_size/button_reduce_size.cpp
     src/touch/settingmethod.cpp
-    src/autosave/autosave_.cpp
     src/audiorecord/displayErrorMessage.cpp
     src/audiorecord/start_recording.cpp
     src/frompdf/convertimg.cpp
@@ -130,11 +132,9 @@ set(PROJECT_SOURCES
     src/windows/sourcecode_mainwindow.cpp
     src/windows/mostra_finestra_i.cpp
     src/windows/main_updater.cpp
-    src/currenttitle/newcopybook.cpp
     src/currenttitle/checksimilecopybook.cpp
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp
     src/currenttitle/deleteaudio.cpp
-    src/currenttitle/renamefile.cpp
     src/currenttitle/option/main_exe.cpp
     src/currenttitle/option/option_copybook.cpp
     src/currenttitle/document.cpp
@@ -198,7 +198,6 @@ set(PROJECT_SOURCES
     src/utils/dialog_critic/dialog_critic.cpp
     src/utils/mostra_explorer/mostra_explorer.cpp
     src/audiosetting/savequalita.cpp
-    src/cloud/button_mainwindow.cpp
     src/audiosetting/audioqualityoption.cpp
     src/audiosetting/loadqualita.cpp
     src/indice_class.cpp
@@ -217,7 +216,6 @@ set(PROJECT_SOURCES
     src/audioplay/aggiornotastiriascolto.cpp
     src/audioplay/enableriascolto.cpp
     src/audioplay/slidertimechange.cpp
-    updater/launch_updater/launch_updater.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
