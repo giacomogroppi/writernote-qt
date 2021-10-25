@@ -91,11 +91,11 @@ inline void page::at_draw(const uint i, const QPointF &translation, point_s &poi
 {
     memcpy(&point, at(i), sizeof(point_s));
 
-    point.m_x += translation.x();
-    point.m_y += translation.y();
-
     point.m_x *= zoom;
     point.m_y *= zoom;
+
+    point.m_x += translation.x();
+    point.m_y += translation.y();
 }
 
 inline uint page::length() const

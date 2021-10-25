@@ -1,17 +1,13 @@
 #include "tabletcanvas.h"
 #include "../mainwindow.h"
-
 #include <QCoreApplication>
 #include <QPainter>
 #include <QtMath>
 #include <cstdlib>
-
 #include <QTabletEvent>
 #include <QEvent>
-
 #include "datastruct/datastruct.h"
 #include "../utils/setting_define.h"
-
 #include "../utils/dialog_critic/dialog_critic.h"
 #include <QSettings>
 
@@ -30,9 +26,7 @@ void TabletCanvas::restoreO()
 
     lastpointtouch.set = false;
 
-    if(data->datatouch->biggerx() - data->datatouch->getPointFirstPage().x() > m_pixmap.width())
-        this->resizeEvent(nullptr);
-
+    this->resizeEvent(nullptr);
 }
 
 TabletCanvas::TabletCanvas()

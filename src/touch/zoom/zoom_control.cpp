@@ -53,29 +53,17 @@ bool zoom_control::zoom(QPointF &point_translate,
         }
     }
 
-    /*trasla(point_translate, data);*/
-
-//    data->zoom += delta;
-
-
-    /*for(i=0; i<len; ++i){
-        data->at_mod(i)->m_x *= delta;
-        data->at_mod(i)->m_y *= delta;
-    }*/
-
-    /*trasla(point_translate, data, delta);*/
-
-
     delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
     qDebug() << "zoom --> delta " << delta;
     data->zoom += delta;
 
     data->setPointFirstPage(pointRiTranslate);
 
-    data->adjustHeight(height, true);
+    data->adjustHeight(height);
 
     if(width == maxWidth)
         return false;
 
-    return data->adjustAll(height, width);
+    data->adjustAll(height, width);
+    return true;
 }

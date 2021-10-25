@@ -65,7 +65,7 @@ private:
     int lastPageAppend = -1; /* index of the last page when we append data */
 public:
     inline QPointF getPointFirstPage() const{
-        return this->zoom*pointFirstPage;
+        return this->zoom * pointFirstPage;
     }
 
     void setPointFirstPage(const QPointF &point){
@@ -115,12 +115,10 @@ public:
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 
 
-    bool adjustAll(const uint width,
+    void adjustAll(const uint width,
                    const uint height);
-    bool adjustWidth(const uint width,
-                     bool controllRepo);
-    bool adjustHeight(const uint height,
-                      const bool controllRepo);
+    void adjustWidth(const uint width);
+    void adjustHeight(const uint height);
 
     /*
      * this function return the index of the first
@@ -200,7 +198,7 @@ public:
     static inline size_t getSizeOne(){
         return sizeof(point_s);
     }
-    inline bool getCurrentWidth(double &val) const;
+
     inline uint lengthPage() const{ return this->m_page.length();}
 
     void newPage(const n_style style);
@@ -278,30 +276,12 @@ inline void datastruct::triggerVisibility()
 
 inline double datastruct::biggerx() const
 {
-    uint i, k, secLen;
-    double max;
-    const point_s *point;
-    const uint len = lengthPage();
-
-    max = m_page.first().at(0)->m_x;
-
-    for(i=0; i<len; i++){
-        const auto &page = this->m_page.at(i);
-        secLen = page.length();
-        for(k=0; k<secLen; k++){
-            point = page.at(k);
-
-            if(max < point->m_x)
-                max = point->m_x;
-        }
-    }
-
-    return max;
+    return (page::getWidth() + this->getPointFirstPage().x())*zoom;
 }
 
 inline double datastruct::biggery() const
 {
-    return at(lengthPage()-1)->currentHeight();
+    return (at(lengthPage()-1)->currentHeight() + this->getPointFirstPage().y())*zoom;
 }
 
 inline int datastruct::lastId()
@@ -355,7 +335,7 @@ inline point_s &datastruct::at_draw(const uint index, const uint page) const
 {
     static point_s point;
 
-    at(page)->at_draw(index, this->getPointFirstPage(), point, this->zoom);
+    at(page)->at_draw(index, this->getPointFirstPage(), point, zoom);
 
     return point;
 }
@@ -368,15 +348,6 @@ inline const point_s *datastruct::lastPoint() const
 inline const page *datastruct::lastPage() const
 {
     return &this->m_page.last();
-}
-
-inline bool datastruct::getCurrentWidth(double &val) const
-{
-    if(isempty())
-        return false;
-    val = this->m_page.first().currentWidth() + this->getPointFirstPage().x();
-
-    return true;
 }
 
 inline void datastruct::newPage(const n_style style)

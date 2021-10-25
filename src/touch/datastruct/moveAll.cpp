@@ -18,6 +18,7 @@ void datastruct::repositioning()
 
     QPointF point = this->getPointFirstPage();
 
+    this->zoom = 1.0;
 
     datastruct::inverso(point);
 
@@ -56,7 +57,6 @@ void datastruct::scala_all(const QPointF &point)
 {
     if(point == QPointF(0, 0))
         return;
-
     this->pointFirstPage += point;
 
 #ifdef PDFSUPPORT

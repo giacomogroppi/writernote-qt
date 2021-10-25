@@ -9,33 +9,21 @@
  * riusciti a coprire la parte di pixmap fuori dal
  * foglio
 */
-bool datastruct::adjustHeight(const uint height,
-                              const bool controllRepo)
+void datastruct::adjustHeight(const uint height)
 {
-    if(controllRepo)
-        controllForRepositioning();
+    const QPointF point = this->getPointFirstPage();
+    QPointF t(0.0, 0.0);
 
-    double y;
-    const QPointF first = getPointFirstPage();
-    double traslation;
-
-    y = biggery();
+    double y = biggery();
 
     if(y < height){
-        traslation = double(height) - y;
-
-        if(first.y() + traslation > 0)
-            return false;
-
-        y = traslation;
-        scala_all(QPointF(0, y));
-
-        y = biggery();
-        if(y < height)
-            return false;
+        t.setX(height-y);
+    }else{ //(x >= width)
+        if(point.y() > 0.0)
+            t.setX(-point.y());
     }
 
-    return true;
+    scala_all(t);
 }
 
 /*
@@ -46,44 +34,26 @@ bool datastruct::adjustHeight(const uint height,
  * controllo che siano fuori, in caso contrario si fa il return di false e
  * bisogna rifare il pixmap
 */
-bool datastruct::adjustWidth(const uint width,
-                             const bool controllRepo){
-    if(controllRepo)
-        controllForRepositioning();
+void datastruct::adjustWidth(const uint width)
+{
+    QPointF point = this->getPointFirstPage();
+    QPointF t(0.0, 0.0);
+    double biggerX = biggerx();
 
-    const QPointF point = this->getPointFirstPage();
-    QPointF __t(0.0, 0.0);
-
-    scala_all();
-
-    double __translation = biggerx();
-
-    if(__translation < width){
-        __translation = width - __translation;
-        if(point.x() + __translation > 0)
-            goto make;
-
-        __t.setX(__translation);
-        this->scala_all(__t);
-
-        if(biggerx() < width)
-            goto make;
-
+    if(point.x() < 0.0 && biggerX <= width){
+        t.setX(width - biggerX);
+    }else{ //(x >= width)
+        if(point.x() > 0.0)
+            t.setX(-point.x());
     }
 
-    goto not_make;
+    scala_all(t*zoom);
 
-
-    make:
-    /* we need to make the pixmap */
-    restoreLastTranslation();
-    return false;
-
-
-    not_make:
-    /* we don't need to make a new pixmap */
-    restoreLastTranslation();
-    return true;
+    point = this->getPointFirstPage();
+    if(point.x() > 0.0){
+        t.setX(-point.x());
+        scala_all(t);
+    }
 }
 
 /*
@@ -91,7 +61,8 @@ bool datastruct::adjustWidth(const uint width,
  * the function consider the fact that the
  * height of one sheet is bigger than the width
 */
-bool datastruct::adjustAll(const uint width,
+void datastruct::adjustAll(const uint width,
                            const uint height){
-    return adjustWidth(width, false) || adjustHeight(height, true);
+    adjustWidth(width);
+    adjustHeight(height);
 }

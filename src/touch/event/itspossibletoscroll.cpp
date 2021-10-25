@@ -34,7 +34,7 @@ bool scroll::itspossibletoscrolly(datastruct *data,
     point = data->getPointFirstPage();
 
     if (__pos_delta < 0.0){
-        pos = data->biggery() + point.y();
+        pos = data->biggery();
 
         if((pos + __pos_delta) > altezza){
             return true;
@@ -98,9 +98,7 @@ bool scroll::itspossibletoscrollx(datastruct *data,
 
     /* __pos_delta < 0.0 */
 
-    if(!data->getCurrentWidth(res)){
-        goto c_not_move;
-    }
+    res = data->biggerx();
 
     if ((res + __pos_delta) > (double)width)
         return true;

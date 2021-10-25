@@ -11,13 +11,11 @@ void TabletCanvas::initPixmap(bool paint)
     double _res;
 
     if(!data)
-        return;
+        goto not_found;
 
-    if(data && !data->datatouch->isempty()){
+    if(!data->datatouch->isempty()){
 
-        if(!data->datatouch->getCurrentWidth(_res)){
-            goto not_find;
-        }
+        _res = data->datatouch->biggerx();
 
         if(width() < _res)
             sizex = width();
@@ -33,7 +31,7 @@ void TabletCanvas::initPixmap(bool paint)
      * he go here
     */
 
-    not_find:
+    not_found:
 
     if(width() < page::getWidth()){
         sizex = width();
@@ -46,7 +44,6 @@ void TabletCanvas::initPixmap(bool paint)
     find:
 
     QPixmap newPixmap = QPixmap(qRound(sizex * dpr), qRound(height() * dpr));
-
 
     newPixmap.setDevicePixelRatio(dpr);
     newPixmap.fill(Qt::white);
