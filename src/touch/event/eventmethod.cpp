@@ -123,8 +123,9 @@ bool TabletCanvas::event(QEvent *event){
             if(data != NULL)
                 return QWidget::event(event);
     }
+
     if(needToResize)
-        this->resizeEvent(NULL);
+        this->zoomChange();
 
     if(data != NULL)
         return QWidget::event(event);
