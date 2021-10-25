@@ -198,7 +198,6 @@ SOURCES += \
     src/audioplay/stopriascolto.cpp \
     src/style/print_action.cpp \
     src/touch/datastruct/datastruct.cpp \
-    src/touch/datastruct/loadpixel.cpp \
     src/touch/datastruct/needtocreatenew.cpp \
     src/touch/event/eventmethod.cpp \
     src/touch/event/itspossibletoscroll.cpp \

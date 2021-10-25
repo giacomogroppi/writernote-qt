@@ -139,3 +139,8 @@ void TabletCanvas::load(QPainter &painter,
 
     m_pen.setColor(current_color);
 }
+
+void TabletCanvas::loadpixel(){
+    this->resizeEvent(nullptr);
+
+}
