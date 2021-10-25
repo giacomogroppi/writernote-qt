@@ -182,6 +182,11 @@ void TabletCanvas::settingdata(Document *data){
     this->data = data;
 }
 
+void TabletCanvas::zoomChange()
+{
+    this->resizeEvent(nullptr);
+}
+
 static void saveLastMethod(TabletCanvas::e_method val){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_METHOD_TOUCH);

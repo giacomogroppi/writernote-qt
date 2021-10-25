@@ -247,6 +247,7 @@ private slots:
     void on_buttonListen_current_audio_clicked();
     void on_buttonUndu_clicked();
     void on_buttonRedo_clicked();
+    void on_sliderZoom_sliderMoved(int position);
 
 protected:
     void dropEvent(QDropEvent *event) override;

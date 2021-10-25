@@ -160,6 +160,8 @@ public:
 
     bool enableredoundu = true;
 
+    void zoomChange();
+
     /* class for menu */
     class rubber_ui *m_rubber;
     class pen_ui *m_pen_ui;

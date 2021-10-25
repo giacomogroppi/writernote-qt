@@ -132,6 +132,8 @@ MainWindow::MainWindow(QWidget *parent,
     ui->actionbrown_color->setCheckable(true);
     ui->actionpurple->setCheckable(true);
 
+    ui->sliderZoom->setValue(100);
+
     updateTouch();
 
     QObject::connect(m_sheet, &fast_sheet_ui::changeButton, [=](bool res){

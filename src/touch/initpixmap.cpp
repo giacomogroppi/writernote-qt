@@ -10,6 +10,9 @@ void TabletCanvas::initPixmap(bool paint)
     int sizex;
     double _res;
 
+    if(!data)
+        return;
+
     if(data && !data->datatouch->isempty()){
 
         if(!data->datatouch->getCurrentWidth(_res)){
@@ -32,11 +35,11 @@ void TabletCanvas::initPixmap(bool paint)
 
     not_find:
 
-    if(width() < NUMEROPIXELORIZZONALI){
+    if(width() < page::getWidth()){
         sizex = width();
     }
     else{
-        sizex = NUMEROPIXELORIZZONALI;
+        sizex = page::getWidth();
     }
 
 
