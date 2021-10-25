@@ -17,31 +17,34 @@ int savefile::salvabinario(zip_t *filezip){
     size_t controll;
     zip_source_t *file;
     zip_error_t errore;
-    const auto &point = currenttitle->datatouch->getPointFirstPage();
-    const double init[2] = {point.x(), point.y()};
+    const auto &pointInit = currenttitle->datatouch->getPointFirstPage();
+    const double init[2] = {pointInit.x(), pointInit.y()};
     const int lenPage = currenttitle->datatouch->lengthPage();
     const page *page;
+    const point_s *point;
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
 
     zip_source_begin_write(file);
 
-    // page len
-    WRITE_ON_SIZE(file, &lenPage, sizeof(lenPage));
-
+    /* first point */
     WRITE_ON_SIZE(file, init, sizeof(double)*2);
 
+    /* page len */
+    WRITE_ON_SIZE(file, &lenPage, sizeof(lenPage));
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         page = currenttitle->datatouch->at(counterPage);
+
         lunghezza = page->length();
         WRITE_ON_SIZE(file, &lunghezza, sizeof(lunghezza));
 
         for(i = 0; i<lunghezza; i++){
-            WRITE_ON_SIZE(file, page->at(i), sizeof(struct point_s));
+            point = currenttitle->datatouch->at(i, counterPage);
+            WRITE_ON_SIZE(file, point, sizeof(struct point_s));
         }
     }
 
-    WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(long double));
+    WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(currenttitle->datatouch->zoom));
 
     controll = currenttitle->createSingleControll();
     WRITE_ON_SIZE(file, &controll, sizeof(size_t));

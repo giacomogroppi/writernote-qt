@@ -226,8 +226,11 @@ inline bool point_s::isIdUser() const
     return datastruct::isIdUser(this->idtratto);
 }
 
+/* this function does not consider the zoom */
 inline double datastruct::currentHeight() const{
-    return double(NUMEROPIXELVERTICALI);
+    if(isempty())
+        return double(NUMEROPIXELVERTICALI);
+    return page::getHeight();
 }
 
 inline int datastruct::getLastPageModify() const
@@ -349,12 +352,8 @@ inline point_s *datastruct::at_mod_old(uint index)
 inline point_s &datastruct::at_draw(const uint index, const uint page) const
 {
     static point_s point;
-    point = *at(page)->at(index);
-    point.m_x += this->pointFirstPage.x();
-    point.m_y += this->pointFirstPage.y();
 
-    point.m_x *= this->zoom;
-    point.m_y *= this->zoom;
+    at(page)->at_draw(index, this->getPointFirstPage(), point, this->zoom);
 
     return point;
 }
@@ -379,6 +378,7 @@ inline void datastruct::newPage(const n_style style)
     this->m_page.append(page);
 }
 
+/* this function does not consider the zoom */
 inline double datastruct::currentWidth() const{
     if(isempty())
         return double(NUMEROPIXELORIZZONALI);

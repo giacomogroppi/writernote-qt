@@ -150,12 +150,11 @@ int xmlstruct::loadbinario_2(struct zip *z){
     if(f == nullptr)
         return false;
 
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
-
     /* point first page */
-    SOURCE_READ_GOTO(f, &init, sizeof(double)*2);
+    SOURCE_READ_GOTO(f, init, sizeof(double)*2);
     this->currenttitle->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
 
+    /* page len */
     SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         SOURCE_READ_GOTO(f, &len, sizeof(len));
@@ -168,7 +167,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
         }
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(this->currenttitle->datatouch->zoom));
 
     SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
 

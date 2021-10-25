@@ -43,14 +43,13 @@ size_t Document::createSingleControll() const
     if(!lenPage)
         return data;
 
-    for(i=0; i<lenPage; ++i){
+    for(i = 0; i < lenPage; i++){
         page = this->datatouch->at(i);
         len = page->length();
         for(k=0; k<len; ++k){
             data += page->at(k)->createControll();
         }
     }
-
 
     return data;
 }

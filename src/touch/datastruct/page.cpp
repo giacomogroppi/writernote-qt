@@ -56,12 +56,16 @@ void page::drawNewPage(n_style __style)
 
     memcpy(&tmp_point.m_color, &style.colore, sizeof(style.colore));
 
-    style.nx = (style.nx <= 0) ? 1 : style.nx;
-    style.ny = (style.ny <= 0) ? 1 : style.ny;
+    /*style.nx = (style.nx <= 0) ? 1 : style.nx;
+    style.ny = (style.ny <= 0) ? 1 : style.ny;*/
 
-    deltax = height_p / (double)style.nx;
-    deltay = width_p / (double)style.ny;
-    ct_del = deltax;
+    if(style.nx){
+        deltax = height_p / (double)style.nx;
+        ct_del = deltax;
+    }
+    if(style.ny)
+        deltay = width_p / (double)style.ny;
+
 
     tmp_point.m_pressure = widthToPressure(style.thickness);
 
@@ -88,8 +92,8 @@ static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
         /* we set the color manually */
         setcolor_struct(&style.colore, Qt::black);
 
-        style.nx = 1;
-        style.ny = 1;
+        style.nx = 0;
+        style.ny = 0;
     }else{
         fast = true;
 
@@ -131,11 +135,10 @@ static void drawLineVertical(QList<point_s> &list,
                             const double &last,
                             double &deltay,
                             const double &height_p){
-    double ct_del;
+    const double ct_del = deltay;
     uint i;
 
     point.idtratto = IDVERTICALE;
-    ct_del = deltay;
 
     for(i=0; i< (uint)style.ny; i++){
         point.m_x = deltay;

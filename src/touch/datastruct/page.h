@@ -23,8 +23,11 @@ public:
     static int getHeight();
     static int getWidth();
     void updateFlag(const QPointF &FirstPoint);
-    const point_s * at(const uint i) const;
-    point_s * at_mod(const uint i);
+
+    const point_s       * at(const uint i) const;
+    point_s             * at_mod(const uint i);
+    void at_draw(const uint i, const QPointF &translation, point_s &point, const double zoom) const;
+
     uint length() const;
     bool isVisible() const;
     static void copy(const page &src, page &dest);
@@ -82,6 +85,17 @@ inline const point_s *page::at(uint i) const
 inline point_s *page::at_mod(uint i)
 {
     return &this->m_point.operator[](i);
+}
+
+inline void page::at_draw(const uint i, const QPointF &translation, point_s &point, const double zoom) const
+{
+    memcpy(&point, at(i), sizeof(point_s));
+
+    point.m_x += translation.x();
+    point.m_y += translation.y();
+
+    point.m_x *= zoom;
+    point.m_y *= zoom;
 }
 
 inline uint page::length() const

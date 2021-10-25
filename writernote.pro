@@ -129,6 +129,7 @@ SOURCES += \
     src/touch/datastruct/writtenSomething.cpp \
     src/touch/highlighter/highlighter.cpp \
     src/touch/pageCount.cpp \
+    src/touch/paintevent/loadPixel.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
     src/touch/scrollKinetic/loadScrollSettings.cpp \
@@ -204,7 +205,6 @@ SOURCES += \
     src/touch/event/moving_f.cpp \
     src/touch/event/resize_event.cpp \
     src/touch/initpixmap.cpp \
-    src/touch/paintevent/disegnofoglio.cpp \
     src/touch/paintevent/paintevent.cpp \
     src/touch/pen/pen_ui.cpp \
     src/touch/riascolto/riascolto.cpp \

@@ -68,7 +68,8 @@ frompdf::load_res frompdf::load(const QString &path, const bool clear, TabletCan
     return load_from_row(arr, clear, true, 0, canvas);
 }
 
-QStringList frompdf::get_name_pdf(){
+QStringList frompdf::get_name_pdf()
+{
     uint i;
     QStringList __l;
     for(i=0; i<m_data->count_pdf; ++i){
