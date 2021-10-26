@@ -10,7 +10,6 @@
 #include <QWidget>
 #include "../currenttitle/document.h"
 #include "zoom/zoom_control.h"
-#include "square/square.h"
 #include "rubber/rubber_ui.h"
 #include "pen/pen_ui.h"
 #include "../lastedit/redoundo.h"
@@ -21,6 +20,7 @@
 
 class highlighter;
 class MainWindow;
+class square;
 
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
@@ -156,21 +156,23 @@ public:
     void settingdata(Document *data);
 
     /* square per la selezione */
-    class square m_square;
+    class square *m_square = nullptr;
 
     bool enableredoundu = true;
 
     void zoomChange();
 
     /* class for menu */
-    class rubber_ui *m_rubber;
-    class pen_ui *m_pen_ui;
-    class text_ui *m_text;
-    class highlighter *m_highlighter;
-    text_widgets *m_text_w;
-    fast_sheet_ui *m_sheet;
-    zoom_control *zoom = NULL;
-    redoundo *m_redoundo = NULL;
+    class rubber_ui *m_rubber = NULL;
+    class pen_ui *m_pen_ui = NULL;
+    class text_ui *m_text = NULL;
+    class highlighter *m_highlighter = NULL;
+    class text_widgets *m_text_w = NULL;
+    class fast_sheet_ui *m_sheet = NULL;
+    class zoom_control *zoom = NULL;
+    class redoundo *m_redoundo = NULL;
+    class property_control *m_property = NULL;
+
     QPixmap m_pixmap;
 
 protected:

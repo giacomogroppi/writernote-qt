@@ -10,6 +10,8 @@
 #include "../utils/setting_define.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 #include <QSettings>
+#include "square/square.h"
+#include "property/property_control.h"
 
 static void saveLastMethod(TabletCanvas::e_method);
 static void loadLastMethod(TabletCanvas *);
@@ -40,20 +42,22 @@ TabletCanvas::TabletCanvas()
 
     this->data = nullptr;
 
-    if(!zoom){
-        zoom = new zoom_control;
-    }
-
-    m_redoundo = new redoundo(&data);
+    zoom = new class zoom_control;
+    m_redoundo = new class redoundo(&data);
+    m_property = new class property_control(this);
+    m_square = new class square(m_property);
 
     loadScrollinSetting();
 
     loadLastMethod(this);
 }
 
+#define DELETE_IF_EXIST(pointer) if(pointer) delete pointer;
 TabletCanvas::~TabletCanvas(){
-    if(zoom)
-        delete zoom;
+    DELETE_IF_EXIST(zoom);
+    DELETE_IF_EXIST(m_redoundo);
+
+    delete m_square;
 
     saveLastMethod(this->medotodiinserimento);
     saveScrollingSetting();

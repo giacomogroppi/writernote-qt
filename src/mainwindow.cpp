@@ -24,6 +24,7 @@
 #include "log/log_ui/log_ui.h"
 #include "ui/controlluibutton.h"
 #include "../android/cpp/android/shareutils.h"
+#include "touch/property/property_control.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -37,11 +38,17 @@ MainWindow::MainWindow(QWidget *parent,
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+#ifdef CLOUD
     this->m_cloud = cloud;
+    this->m_user = user;
+#else
+    Q_UNUSED(user);
+    Q_UNUSED(cloud);
+#endif
 
     this->m_canvas = canvas;
     this->m_canvas->parent = this;
-    this->m_user = user;
+
 
     ui->setupUi(this);
 
@@ -74,25 +81,24 @@ MainWindow::MainWindow(QWidget *parent,
 
     contrUi();
 
-    checkupdate = new updatecheck(ui->actionUpdate_writernote);
+    checkupdate = new class updatecheck(ui->actionUpdate_writernote);
 
     setting_load(this);
-    this->m_rubber = new rubber_ui(this);
-    this->m_pen = new pen_ui(this);
-    this->m_text = new text_ui(this);
-    this->m_highlighter = new highlighter(this, &m_pen->same_data, m_pen);
-    m_pen->m_highlighter = m_highlighter;
-    this->m_option_copybook = new option_copybook(this);
-    this->m_text_w = new text_widgets(this);
-    this->m_sheet = new fast_sheet_ui(this);
-    this->m_setting = new setting_restore_ui(this, &m_currenttitle, &m_path);
-    NAME_LOG_EXT = new log_ui(this);
-    this->m_controllUi = new ControllUiButton(this);
+    this->m_rubber = new class rubber_ui(this);
+    this->m_pen = new class pen_ui(this);
+    this->m_text = new class text_ui(this);
+    this->m_highlighter = new class highlighter(this, &m_pen->same_data, m_pen);
+    this->m_pen->m_highlighter = m_highlighter;
+    this->m_option_copybook = new class option_copybook(this);
+    this->m_text_w = new class text_widgets(this);
+    this->m_sheet = new class fast_sheet_ui(this);
+    this->m_setting = new class setting_restore_ui(this, &m_currenttitle, &m_path);
+    NAME_LOG_EXT = new class log_ui(this);
+    this->m_controllUi = new class ControllUiButton(this);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);
 #endif // mobile device
-
 
     this->m_sheet->setHidden(true);
     this->m_text_w->setHidden(true);
@@ -101,15 +107,13 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
 
-
-    this->m_canvas->m_rubber = m_rubber;
-    this->m_canvas->m_pen_ui = m_pen;
-    this->m_canvas->m_text = m_text;
-    this->m_canvas->m_sheet = m_sheet;
-    this->m_canvas->m_highlighter = m_highlighter;
-
-    this->m_canvas->m_text_w = m_text_w;
-    this->m_canvas->data = this->m_currenttitle;
+    m_canvas->m_rubber = m_rubber;
+    m_canvas->m_pen_ui = m_pen;
+    m_canvas->m_text = m_text;
+    m_canvas->m_sheet = m_sheet;
+    m_canvas->m_highlighter = m_highlighter;
+    m_canvas->m_text_w = m_text_w;
+    m_canvas->data = m_currenttitle;
 
     /* redo and undo */
     connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);

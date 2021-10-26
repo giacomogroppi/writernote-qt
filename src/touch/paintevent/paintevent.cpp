@@ -4,6 +4,7 @@
 #include "../../utils/color/setcolor.h"
 #include <QPolygonF>
 #include <QPainterPath>
+#include "../square/square.h"
 
 #ifdef PDFSUPPORT
 #include "../../frompdf/frompdf.h"
@@ -36,12 +37,11 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
          m_pos_ris, &m_pixmap, true, 1, this->m_pixmap.width(), this->m_pixmap.width(), this->parent, false);
 
-    m_square.needReload(painter);
+    m_square->needReload(painter);
 
     painter.end();
 }
 
-/* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
 void TabletCanvas::updateBrush_load(const double pressure, const QColor &color,
                                     const Valuator m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
     /* temporary */

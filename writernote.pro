@@ -129,7 +129,7 @@ SOURCES += \
     src/touch/highlighter/highlighter.cpp \
     src/touch/pageCount.cpp \
     src/touch/paintevent/loadPixel.cpp \
-    src/touch/property/property.cpp \
+    src/touch/property/property_control.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
     src/touch/scrollKinetic/loadScrollSettings.cpp \
@@ -283,7 +283,7 @@ HEADERS += \
     src/touch/datastruct/page.h \
     src/touch/datastruct/point.h \
     src/touch/highlighter/highlighter.h \
-    src/touch/property/property.h \
+    src/touch/property/property_control.h \
     src/touch/reduce_size/reduce_size.h \
     src/touch/scrollKinetic/ui_scroll/scroll.h \
     src/touch/text/text_ui/text_ui.h \
@@ -379,7 +379,7 @@ FORMS += \
     src/sheet/fast-sheet/fast_sheet_ui.ui \
     src/touch/highlighter/highlighter.ui \
     src/touch/pen/pen_ui.ui \
-    src/touch/property/property.ui \
+    src/touch/property/property_control.ui \
     src/touch/rubber/rubber_ui.ui \
     src/touch/scrollKinetic/ui_scroll/scroll.ui \
     src/touch/text/text_ui/text_ui.ui \

@@ -5,8 +5,10 @@
 #include <QDebug>
 #include "../../images/fromimage.h"
 
-square::square()
+square::square(property_control *property)
 {
+    this->m_property = property;
+
     penna.setStyle(Qt::DotLine);
     penna.setWidth(2);
     penna.setColor(QColor::fromRgb(30, 90, 255));

@@ -5,6 +5,7 @@
 
 #include "../../currenttitle/document.h"
 
+
 class square
 {
 private:
@@ -22,13 +23,13 @@ private:
     QList<int> m_index_img; /* image */
 
     QPen penna;
-
+    class property_control *m_property;
 public:
     void needReload(QPainter &);
 
     void adjustPoint();
 
-    square();
+    square(class property_control *property);
 
     inline void reset(){
         pointinit.set = lastpoint.set = pointfine.set = false;

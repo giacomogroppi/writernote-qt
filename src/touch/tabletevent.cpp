@@ -1,6 +1,7 @@
 #include "tabletcanvas.h"
 #include <QDebug>
 #include "../utils/dialog_critic/dialog_critic.h"
+#include "square/square.h"
 
 bool need_save_auto = false;
 bool need_save_tmp = false;
@@ -73,17 +74,17 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(rubber_method)
                     m_rubber->actionRubber(data->datatouch, pointTouch);
                 else if(selection_method){
-                    if(!m_square.check){ /* it means that the user not select anything */
-                        m_square.updatePoint(pointTouch);
+                    if(!m_square->check){ /* it means that the user not select anything */
+                        m_square->updatePoint(pointTouch);
                     }
                     else{
-                        if(!m_square.isinside(pointTouch)){
+                        if(!m_square->isinside(pointTouch)){
                             /* se il tocco non è stato interno */
-                            m_square.reset();
+                            m_square->reset();
                         }
                         else{
                             /* a questo punto può muovere di un delta x e y */
-                            m_square.move(pointTouch, data);
+                            m_square->move(pointTouch, data);
                         }
                     }
                     sel = false;
@@ -109,7 +110,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 end:
 
     if(sel){
-        m_square.reset();
+        m_square->reset();
     }
 
     update();
@@ -130,8 +131,8 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
         if(selection_method){
             sel = false;
 
-        if(!m_square.check)
-            m_square.find(data);
+        if(!m_square->check)
+            m_square->find(data);
         }
 
     else if(m_rubber->m_type_gomma == rubber_ui::total){
@@ -150,11 +151,11 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
         updatelist(event);
     }
     else if(selection_method){
-        if(m_square.check){
-            m_square.move(pointTouch, data);
+        if(m_square->check){
+            m_square->move(pointTouch, data);
         }
         else{
-            m_square.updatePoint(pointTouch);
+            m_square->updatePoint(pointTouch);
         }
         sel = false;
     }

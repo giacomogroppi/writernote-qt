@@ -31,6 +31,7 @@ class ControllUiButton;
 class xmlstruct;
 class ui_scroll;
 class setting_restore_ui;
+
 #ifdef ANDROID_WRITERNOTE
 class ShareUtils;
 #endif
@@ -116,17 +117,19 @@ public:
     /* false -> not enable */
     bool enableredoundo = true;
 
-
-    rubber_ui *m_rubber;
-    pen_ui *m_pen;
-    text_ui *m_text;
-    highlighter *m_highlighter;
-    text_widgets *m_text_w;
-    option_copybook *m_option_copybook;
+#ifdef CLOUD
     struct struct_user *m_user;
-    cloud_controll *m_cloud;
-    QBuffer *m_buffer = nullptr;
-    fast_sheet_ui *m_sheet = nullptr;
+    class cloud_controll *m_cloud;
+#endif
+
+    class rubber_ui *m_rubber;
+    class pen_ui *m_pen;
+    class text_ui *m_text;
+    class highlighter *m_highlighter;
+    class text_widgets *m_text_w;
+    class option_copybook *m_option_copybook;
+    class ControllUiButton *m_controllUi;
+    class fast_sheet_ui *m_sheet = nullptr;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ShareUtils *m_share_file;
 #endif
@@ -137,8 +140,8 @@ public:
     void openFile(const char *pos);
 
     friend class ControllUiButton;
-    ControllUiButton *m_controllUi;
 
+    QBuffer *m_buffer = nullptr;
 public slots:
     void on_actioncompress_video_triggered();
 
