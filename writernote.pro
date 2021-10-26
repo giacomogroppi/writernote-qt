@@ -114,7 +114,6 @@ SOURCES += \
     src/sheet/fast_sheet.cpp \
     src/sizeButton.cpp \
     src/touch/copy/copy_selection.cpp \
-    src/touch/copy/copy_widgets.cpp \
     src/touch/datastruct/adjustSize.cpp \
     src/touch/datastruct/changeId.cpp \
     src/touch/datastruct/controllForRepositioning.cpp \
@@ -130,6 +129,7 @@ SOURCES += \
     src/touch/highlighter/highlighter.cpp \
     src/touch/pageCount.cpp \
     src/touch/paintevent/loadPixel.cpp \
+    src/touch/property/property.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
     src/touch/scrollKinetic/loadScrollSettings.cpp \
@@ -280,10 +280,10 @@ HEADERS += \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/sheet/style_struct.h \
     src/touch/copy/copy_selection.h \
-    src/touch/copy/copy_widgets.h \
     src/touch/datastruct/page.h \
     src/touch/datastruct/point.h \
     src/touch/highlighter/highlighter.h \
+    src/touch/property/property.h \
     src/touch/reduce_size/reduce_size.h \
     src/touch/scrollKinetic/ui_scroll/scroll.h \
     src/touch/text/text_ui/text_ui.h \
@@ -377,9 +377,9 @@ FORMS += \
     src/restore_file/ui_restore/restore.ui \
     src/sheet/dialog_sheet.ui \
     src/sheet/fast-sheet/fast_sheet_ui.ui \
-    src/touch/copy/copy_widgets.ui \
     src/touch/highlighter/highlighter.ui \
     src/touch/pen/pen_ui.ui \
+    src/touch/property/property.ui \
     src/touch/rubber/rubber_ui.ui \
     src/touch/scrollKinetic/ui_scroll/scroll.ui \
     src/touch/text/text_ui/text_ui.ui \
