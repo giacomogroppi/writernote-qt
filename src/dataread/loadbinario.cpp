@@ -8,6 +8,18 @@
 
 #ifdef ALL_VERSION
 
+static size_t createControllOldVersion(const QList<point_s> &point)
+{
+    uint i;
+    const uint len = point.length();
+    size_t controll = 0;
+    for(i = 0; i < len; i++){
+        controll += point.at(i).createControll();
+    }
+
+    return controll;
+}
+
 /* la funzione gestisce la lettura del file binario */
 int xmlstruct::loadbinario_0(zip_t *z){
     struct colore_last{
@@ -119,11 +131,10 @@ int xmlstruct::loadbinario_1(struct zip *z){
 
     zip_fclose(f);
 
-    xmlstruct::decode(currenttitle, point, pos_foglio);
-
-    if(controll != currenttitle->createSingleControll())
+    if(controll != createControllOldVersion(point))
         return ERROR_CONTROLL;
 
+    xmlstruct::decode(currenttitle, point, pos_foglio);
     return OK;
 
     free_:

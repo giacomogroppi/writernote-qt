@@ -30,8 +30,8 @@ bool TabletCanvas::event(QEvent *event){
     static double tmp_distance;
     static double tmp_distance_right_left;
 
-    const int height = this->height();
-    const int width = this->width();
+    const int maxHeight = this->height();
+    const int maxWidth = this->width();
 
     const int heightPixmap = this->m_pixmap.height();
     const int widthPixmap = this->m_pixmap.width();
@@ -70,9 +70,9 @@ bool TabletCanvas::event(QEvent *event){
                                 needToResize = needToResize || this->zoom->zoom(pointMiddle,
                                             tmp_distance,
                                             widthPixmap,
-                                            width,
+                                            maxWidth,
+                                            maxHeight,
                                             heightPixmap,
-                                            height,
                                             data->datatouch);
 
                             }
@@ -81,9 +81,9 @@ bool TabletCanvas::event(QEvent *event){
                                 needToResize = needToResize || this->zoom->zoom(pointMiddle,
                                             tmp_distance,
                                             widthPixmap,
-                                            width,
+                                            maxWidth,
                                             heightPixmap,
-                                            height,
+                                            maxHeight,
                                             data->datatouch);
                             }
 

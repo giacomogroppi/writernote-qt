@@ -16,6 +16,6 @@ void datastruct::controllForRepositioning(){
 
     datastruct::inverso(translation);
 
-    this->scala_all(translation);
+    this->scala_all(translation, INT_MAX);
 
 }

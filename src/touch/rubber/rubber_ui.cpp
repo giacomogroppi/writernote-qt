@@ -76,7 +76,7 @@ bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
                     gomma_delete_id.append(id);
 
-                        i = data->decreaseAlfa(id, DECREASE, len);
+                        i = data->decreaseAlfa(id, DECREASE, lenPage);
 
                     --i;
                 }

@@ -22,38 +22,21 @@ void datastruct::repositioning()
 
     datastruct::inverso(point);
 
-    scala_all(point);
+    scala_all(point, INT_MAX);
 }
 
-void datastruct::restoreLastTranslation(){
+void datastruct::restoreLastTranslation(const int heightView){
     if(__last_translation == QPointF(0, 0))
         return;
 
     datastruct::inverso(__last_translation);
 
-    scala_all(__last_translation);
+    scala_all(__last_translation, heightView);
 
     __last_translation = QPointF(0, 0);
 }
 
-void datastruct::scala_all()
-{
-    if(isempty()){
-        this->__last_translation = QPointF(0, 0);
-        return;
-    }
-
-    __last_translation = this->getPointFirstPage();
-
-    datastruct::inverso(__last_translation);
-
-    scala_all(__last_translation);
-}
-
-/*
- * pass m_pdf only if you want to translate also the pdf
- */
-void datastruct::scala_all(const QPointF &point)
+void datastruct::scala_all(const QPointF &point, const int heightView)
 {
     if(point == QPointF(0, 0))
         return;
@@ -65,5 +48,7 @@ void datastruct::scala_all(const QPointF &point)
 #endif
 
     m_img->move(point);
-    this->triggerVisibility();
+
+    if(heightView != -1)
+        this->triggerVisibility(heightView);
 }

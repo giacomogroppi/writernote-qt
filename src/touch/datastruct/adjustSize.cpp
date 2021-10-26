@@ -23,7 +23,7 @@ void datastruct::adjustHeight(const uint height)
             t.setX(-point.y());
     }
 
-    scala_all(t);
+    scala_all(t, height);
 }
 
 /*

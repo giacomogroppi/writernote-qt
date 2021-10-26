@@ -24,8 +24,11 @@ merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document 
         return n_merge::internal_error;
 
     int i, len;
-
     double last = first->datatouch->biggery();
+    Q_UNUSED(audio);
+    Q_UNUSED(last);
+    Q_UNUSED(i);
+    Q_UNUSED(len);
 
 
     return n_merge::ok;

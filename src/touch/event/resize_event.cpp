@@ -14,8 +14,7 @@ void TabletCanvas::resizeEvent(QResizeEvent *)
     data->datatouch->controllForRepositioning();
 
     if(!data->datatouch->isempty()){
-        data->datatouch->adjustHeight(maxHeigth);
-        data->datatouch->adjustWidth(maxWidth);
+        data->datatouch->adjustAll(maxWidth, maxHeigth);
     }
 
     initPixmap(true);

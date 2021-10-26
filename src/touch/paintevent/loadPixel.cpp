@@ -96,9 +96,13 @@ void TabletCanvas::load(QPainter &painter,
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         len = data->datatouch->at(counterPage)->length();
+        qDebug() << len;
         if(!data->datatouch->at(counterPage)->isVisible()){
+            qDebug() << "it's not visible";
             continue;
         }
+        qDebug() << "It's visible";
+
 
         for(i=0; i<len-1; ++i){
             if(data->datatouch->at(i, counterPage)->isIdUser())
@@ -112,7 +116,6 @@ void TabletCanvas::load(QPainter &painter,
             if(!datastruct::isIdUser(__point))
                 continue;
 
-
             if(__point.idtratto == _lastid){
                 if(is_play && __point.m_posizioneaudio > m_pos_ris)
                 {
@@ -122,6 +125,7 @@ void TabletCanvas::load(QPainter &painter,
                 {
                     UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
                 }
+
                 painter.setPen(m_pen);
 
                 painter.drawLine(lastPoint.pos*m,

@@ -92,24 +92,13 @@ int checksimilecopybook(const Document &primo,
     if(primo.count_pdf != secondo.count_pdf)
         return LEN;
 
-    primo.datatouch->scala_all();
-    secondo.datatouch->scala_all();
-
     if(speed){
         res = checkSpeed(primo, secondo);
-
-        primo.datatouch->restoreLastTranslation();
-        secondo.datatouch->restoreLastTranslation();
 
         return res;
     }
 
     res = checkSlow(&primo, &secondo);
-
-
-    primo.datatouch->restoreLastTranslation();
-
-    secondo.datatouch->restoreLastTranslation();
 
     return res;
 }

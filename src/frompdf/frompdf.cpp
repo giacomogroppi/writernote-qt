@@ -264,7 +264,6 @@ void frompdf::addPdf(QString &pos,
     if(m_data->count_pdf)
         return user_message("It's not possible to add more than one pdf");
 
-    m_data->datatouch->scala_all();
     if(insert_pdf(pos, point) != OK){
         res = load_res::not_valid_pdf;
         goto err;
@@ -289,7 +288,7 @@ void frompdf::addPdf(QString &pos,
     else if(res != load_res::ok)
         dialog_critic("We had some error");
 
-    m_data->datatouch->restoreLastTranslation();
+
     zip_close(fileZip);
 }
 

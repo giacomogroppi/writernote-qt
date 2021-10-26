@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QPointF>
+#include <QDebug>
 #include "point.h"
 
 enum n_style: int;
@@ -22,7 +23,9 @@ public:
     page(const int count, const n_style style);
     static int getHeight();
     static int getWidth();
-    void updateFlag(const QPointF &FirstPoint);
+
+    void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
+    void setVisible(const bool vis){this->IsVisible = vis;}
 
     const point_s       * at(const uint i) const;
     point_s             * at_mod(const uint i);
@@ -72,9 +75,16 @@ inline int page::getWidth()
     return width;
 }
 
-inline void page::updateFlag(const QPointF &FirstPoint)
+inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView)
 {
-    IsVisible = !((-FirstPoint.y() + height < height*count) && ((-FirstPoint.y()) > count*height));
+    static double heightSec;
+    static double translation;
+
+    heightSec = double(height)*zoom;
+    translation = -FirstPoint.y();
+
+    IsVisible =  ((heightSec*count) >= translation) && ((heightSec*(count-1)) <= translation);
+    IsVisible = (IsVisible) ? IsVisible : (count-1)*heightSec <= heightView && (count-1)*heightSec >= translation;
 }
 
 inline const point_s *page::at(uint i) const

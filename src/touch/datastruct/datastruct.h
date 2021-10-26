@@ -63,6 +63,10 @@ private:
     QPointF pointFirstPage = QPointF(0, 0);
     void getRealIndex(const uint search, uint &index, uint &page) const;
     int lastPageAppend = -1; /* index of the last page when we append data */
+
+    void adjustWidth(const uint width);
+    void adjustHeight(const uint height);
+
 public:
     inline QPointF getPointFirstPage() const{
         return this->zoom * pointFirstPage;
@@ -83,7 +87,7 @@ public:
 
     uint move_to_positive(uint len);
 
-    void restoreLastTranslation();
+    void restoreLastTranslation(const int heightView);
     void controllForRepositioning();
 
     void removePointId(QList<int> &list);
@@ -117,8 +121,6 @@ public:
 
     void adjustAll(const uint width,
                    const uint height);
-    void adjustWidth(const uint width);
-    void adjustHeight(const uint height);
 
     /*
      * this function return the index of the first
@@ -151,11 +153,10 @@ public:
     static void inverso(QPointF &point);
     void repositioning();
 
-    void scala_all(const QPointF &);
-    void scala_all();
+    void scala_all(const QPointF &point, const int heightView = -1);
 
     void reset();
-    void triggerVisibility();
+    void triggerVisibility(const double &viewSize);
     double biggerx() const;
     void removeat(const uint index, const uint page);
 
@@ -263,15 +264,20 @@ inline int datastruct::maxId()
     return maxId;
 }
 
-inline void datastruct::triggerVisibility()
+inline void datastruct::triggerVisibility(const double &viewSize)
 {
-    uint i;
-    const uint len = this->m_page.length();
+    static uint i;
+    static uint len;
+
+    len = this->m_page.length();
 
     for(i=0; i<len; i++){
-        this->m_page.operator[](i).updateFlag(this->getPointFirstPage());
+        this->m_page.operator[](i).updateFlag(this->getPointFirstPage(), zoom, viewSize);
+        if(this->m_page.at(i).isVisible() && i && i<len-1){
+            this->at_mod(i-1)->setVisible(true);
+            this->at_mod(i+1)->setVisible(true);
+        }
     }
-
 }
 
 inline double datastruct::biggerx() const

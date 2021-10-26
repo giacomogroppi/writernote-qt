@@ -13,13 +13,14 @@ topdf::topdf(const QString &path)
 }
 
 static inline void newpage(Document *data, const double tmp){
-    data->datatouch->scala_all(QPointF(0, -tmp));
+    data->datatouch->scala_all(QPointF(0, -tmp), INT_MAX);
 }
 
 bool topdf::createpdf(const bool withPdf){
     const uint lenpage = data->datatouch->lengthPage();
     uint i;
-
+    const QPointF pointData = data->datatouch->getPointFirstPage();
+    uchar ret = 1;
     this->translate();
 
 
@@ -33,8 +34,6 @@ bool topdf::createpdf(const bool withPdf){
 
     //const int height_pdf = pdfWriter.height();
     const int width_pdf = pdfWriter.width();
-
-    data->datatouch->scala_all();
 
     const double size_orizzontale = data->datatouch->currentWidth();
     const double size_verticale = data->datatouch->currentHeight();
@@ -53,12 +52,16 @@ bool topdf::createpdf(const bool withPdf){
         if(i+1<lenpage){
             newpage(data, size_verticale);
 
-            if(!pdfWriter.newPage())
-                return false;
+            if(!pdfWriter.newPage()){
+                ret = 0;
+                goto release;
+            }
         }
     }
 
-    return true;
+    release:
+    data->datatouch->scala_all(pointData, INT_MAX);
+    return ret;
 }
 
 void MainWindow::on_actiontopdf_triggered()

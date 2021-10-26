@@ -4,8 +4,8 @@
 #include "savefile.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 
-static inline const char *move_file(const QString &nomevecchio, const QString &nomenuovo){
-    return ("cp " + nomevecchio + " " + nomenuovo).toUtf8().constData();
+static inline const QString move_file(const QString &nomevecchio, const QString &nomenuovo){
+    return ("cp " + nomevecchio + " " + nomenuovo);
 }
 
 static bool c = true;
@@ -43,7 +43,7 @@ void MainWindow::on_actionSave_As_triggered()
     if(posizione != ""){
         int command;
 #if defined(unix) || defined(MACOS)
-        command = system(move_file(posizione, m_path));
+        command = system(move_file(posizione, m_path).toUtf8().constData());
 #endif
         if(command){
             dialog_critic("We had a problem saving a copy of " + posizione + " to " + m_path);

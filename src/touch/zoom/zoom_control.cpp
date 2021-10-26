@@ -3,20 +3,6 @@
 #include "../event/itspossibletoscroll.h"
 #include "../datastruct/datastruct.h"
 
-void zoom_control::trasla(QPointF point_translate,
-                          datastruct *data,
-                          long double delta){
-    if(point_translate == QPointF(0.0, 0.0))
-        return;
-
-    if(!delta){
-        datastruct::inverso(point_translate);
-    }
-
-    data->scala_all(point_translate);
-
-}
-
 /*
  * if delta > 1 we are zoom in
 */
@@ -25,8 +11,8 @@ bool zoom_control::zoom(QPointF &point_translate,
                         double delta,
                         const uint width,
                         const uint maxWidth,
-                        const uint height,
                         const uint maxHeight,
+                        const uint height,
                         datastruct *data){
     /*Q_UNUSED(point_translate);
     Q_UNUSED(delta);
@@ -59,7 +45,7 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     data->setPointFirstPage(pointRiTranslate);
 
-    data->adjustHeight(height);
+    data->adjustAll(width, height);
 
     if(width == maxWidth)
         return false;
