@@ -129,6 +129,8 @@ SOURCES += \
     src/touch/highlighter/highlighter.cpp \
     src/touch/pageCount.cpp \
     src/touch/paintevent/loadPixel.cpp \
+    src/touch/paintevent/paintengine.cpp \
+    src/touch/paintevent/paintengineprivate.cpp \
     src/touch/property/property_control.cpp \
     src/touch/reduce_size/button_reduce_size.cpp \
     src/touch/reduce_size/reduce_size.cpp \
@@ -283,6 +285,8 @@ HEADERS += \
     src/touch/datastruct/page.h \
     src/touch/datastruct/point.h \
     src/touch/highlighter/highlighter.h \
+    src/touch/paintevent/paintengine.h \
+    src/touch/paintevent/paintengineprivate.h \
     src/touch/property/property_control.h \
     src/touch/reduce_size/reduce_size.h \
     src/touch/scrollKinetic/ui_scroll/scroll.h \
