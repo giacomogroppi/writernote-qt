@@ -2,6 +2,13 @@
 #include <QDebug>
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "square/square.h"
+#include "../utils/color/setcolor.h"
+#include "../mainwindow.h"
+
+#define MAXPOINT 20
+
+QList<point_s> __tmp;
+static void AppendAll(Document &doc, const TabletCanvas *canvas);
 
 bool need_save_auto = false;
 bool need_save_tmp = false;
@@ -126,6 +133,9 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
     if(m_redoundo)
         m_redoundo->copy();
 
+    if(pen_method)
+        AppendAll(*this->data, this);
+
     if (m_deviceDown && event->buttons() == Qt::NoButton){
         m_deviceDown = false;
         if(selection_method){
@@ -167,4 +177,98 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
     if(highlighter_method)
         this->m_highlighter->setId(this->data->datatouch->lastId());
 
+}
+
+static bool need_to_change_color(datastruct *data, int id){
+    static uint i, len, how, counterPage;
+    static uint lenPage;
+    lenPage = data->lengthPage();
+
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        len = data->at(counterPage)->length();
+        for(i=0, how = 0; i<len; i++){
+            if(data->at(i, counterPage)->idtratto == id)
+                how ++;
+        }
+    }
+
+    if(!how)
+        return false;
+
+    return (how % MAXPOINT) ? 0 : 1;
+}
+
+void TabletCanvas::updatelist(QTabletEvent *event){
+    static double size;
+    static uchar alfa;
+    static point_s tmp_point;
+    //static QPointF PointFirstPage;
+
+    const QPointF &pointTouch = event->posF();
+
+    //PointFirstPage = this->data->datatouch->getPointFirstPage();
+
+    size = event->pressure();
+    alfa = highlighter_method ? m_highlighter->getAlfa() : 255;
+
+    if(!this->m_deviceDown){
+        tmp_point.idtratto = data->datatouch->maxId() + 1;
+    }
+    else{
+        if(pen_method && m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
+            if(need_to_change_color(data->datatouch, __tmp.last().idtratto)){
+                if(m_pen_ui->m_last_color.ok == false){
+                    /* save the current color */
+
+                    m_pen_ui->m_last_color.ok = true;
+                    m_pen_ui->m_last_color.color = m_color;
+
+                    this->m_color = Qt::white;
+
+                }
+                else{
+                    /* restore the last color */
+                    m_pen_ui->m_last_color.ok = false;
+                    this->m_color = m_pen_ui->m_last_color.color;
+
+                }
+            }
+        }
+        tmp_point.idtratto = __tmp.first().idtratto;
+        //tmp_point.idtratto = data->datatouch->lastId();
+    }
+
+    tmp_point.m_x = pointTouch.x();
+    tmp_point.m_y = pointTouch.y();
+    tmp_point.m_pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
+    tmp_point.rotation = event->rotation();
+    tmp_point.m_posizioneaudio = time/1000;
+
+    setcolor_struct(&tmp_point.m_color, m_color);
+
+    /*if(alfa != 255){
+        qDebug() << "alfa: " << alfa;
+    }*/
+
+    tmp_point.m_color.colore[3] = alfa;
+
+    __tmp.append(tmp_point);
+}
+
+void AppendAll(Document &doc, const TabletCanvas *canvas){
+    uint i;
+    const uint lenPoint = __tmp.length();
+    point_s *point;
+    const auto &PointFirstPage = doc.datatouch->getPointFirstPage();
+
+    for(i = 0; i < lenPoint; i++){
+        point = &__tmp.operator[](i);
+        point->m_x -= PointFirstPage.x();
+        point->m_y -= PointFirstPage.y();
+
+        doc.datatouch->append(point);
+    }
+
+    __tmp.clear();
+    doc.datatouch->triggerNewView(canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
 }

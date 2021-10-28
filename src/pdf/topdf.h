@@ -2,6 +2,7 @@
 #define TOPDF_H
 #include "../touch/datastruct/datastruct.h"
 #include "../mainwindow.h"
+#include "../touch/tabletcanvas.h"
 
 class topdf
 {
@@ -19,7 +20,7 @@ private:
         QColor color = Qt::black;
         QPen m_pen;
         QBrush m_brush;
-        struct TabletCanvas::Point lastPoint;
+        Point lastPoint;
 
         TabletCanvas::load(painter,
                            this->data,
@@ -39,12 +40,6 @@ private:
 
     void updateBrush_load(float , QColor );
 
-    /* variable to draw */
-    struct Point {
-        QPointF pos;
-        qreal pressure = 0;
-        qreal rotation = 0;
-    } lastPoint;
     QPen penna;
 
 public:

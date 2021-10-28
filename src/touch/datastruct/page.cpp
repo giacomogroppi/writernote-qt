@@ -1,6 +1,11 @@
 #include "page.h"
 #include "../../utils/color/setcolor.h"
 #include "../../sheet/fast-sheet/fast_sheet_ui.h"
+#include "../tabletcanvas.h"
+#include <QPainter>
+
+#define UPDATE_LOAD(x, div, m_pen, m_brush ) \
+        TabletCanvas::updateBrush_load(x.m_pressure, setcolor(&x.m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush);
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
@@ -77,6 +82,52 @@ void page::drawNewPage(n_style __style)
     drawLineVertical(this->m_point, tmp_point, style, last, deltay, height_p);
 }
 
+inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_play)
+{
+    int i;
+    const int len = length();
+    QPen m_pen;
+    QBrush m_brush;
+    int _lastid = IDUNKNOWN;
+    struct Point lastPoint;
+
+    for(i=0; i<len-1; ++i){
+        if(at(i)->isIdUser())
+            break;
+    }
+
+    for(; i < len-1; ++i){
+        const auto &point = *at(i);
+        //at_draw(i, QPointF(0, 0), point, zoom);
+        m_pen.setColor(setcolor(point.m_color));
+
+        if(!point.isIdUser())
+                continue;
+
+            if(point.idtratto == _lastid){
+                if(is_play && point.m_posizioneaudio > m_pos_ris)
+                {
+                    UPDATE_LOAD(point, 4, m_pen, m_brush);
+                }
+                else
+                {
+                    UPDATE_LOAD(point, 1, m_pen, m_brush);
+                }
+
+                painter.setPen(m_pen);
+
+                painter.drawLine(lastPoint.pos,
+                    QPointF(point.m_x, point.m_y));
+
+            }
+
+            lastPoint.pos.setX(point.m_x);
+            lastPoint.pos.setY(point.m_y);
+
+            _lastid = point.idtratto;
+        }
+}
+
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
     if(res == n_style::empty){
         res = n_style::square;
@@ -106,13 +157,8 @@ static inline double widthToPressure(double v){
     return v/10.0;
 }
 
-static void drawLineOrizzontal(QList<point_s> &list,
-                            point_s &point,
-                            const style_struct_S &style,
-                            const double &last,
-                            double &deltax,
-                            const double &width_p,
-                            const double &ct_del){
+static void drawLineOrizzontal(QList<point_s> &list, point_s &point, const style_struct_S &style,
+                            const double &last, double &deltax, const double &width_p, const double &ct_del){
     uint i;
     point.idtratto = IDORIZZONALE;
 
@@ -129,12 +175,11 @@ static void drawLineOrizzontal(QList<point_s> &list,
     }
 }
 
-static void drawLineVertical(QList<point_s> &list,
-                            point_s &point,
-                            const style_struct_S &style,
-                            const double &last,
-                            double &deltay,
-                            const double &height_p){
+static void drawLineVertical(QList<point_s> &list, point_s &point, const style_struct_S &style,
+                            const double &last, double &deltay, const double &height_p){
+    if(!style.ny)
+        return;
+
     const double ct_del = deltay;
     uint i;
 
@@ -161,4 +206,16 @@ bool page::userWrittenSomething() const
     for(i=0; i<len && !at(i)->isIdUser(); i++);
 
     return !(i==len);
+}
+
+void page::triggerRenderImage(int m_pos_ris, const bool is_play)
+{
+    /* we need Format_RGB888 for 255-255-255 color */
+    this->imgDraw = QImage(page::getWidth(), page::getHeight(), QImage::Format_RGB888);
+    QPainter painter;
+    painter.begin(&imgDraw);
+
+    this->draw(painter, m_pos_ris, is_play);
+
+    painter.end();
 }

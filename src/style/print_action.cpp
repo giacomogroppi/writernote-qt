@@ -7,6 +7,7 @@
 
 void MainWindow::on_actionPrint_triggered()
 {
+    /* TODO -> export a pdf and after share for mobile*/
 #ifdef ANDROID_WRITERNOTE
 #elif IOS_WRITERNOTE
 #else
@@ -15,8 +16,7 @@ void MainWindow::on_actionPrint_triggered()
     QColor color;
     QPen pen;
     QBrush m_brush;
-    TabletCanvas::Point point;
-
+    Point point;
 
     const double size_orizzontale = m_currenttitle->datatouch->biggerx();
     const double size_verticale = printer.height();
@@ -36,6 +36,5 @@ void MainWindow::on_actionPrint_triggered()
 
     painter.drawText(10, 10, "Test 2");
     painter.end();
-    /* TODO -> export a pdf in  */
 #endif
 }

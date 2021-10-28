@@ -4,6 +4,7 @@
 #include <QList>
 #include <QPointF>
 #include <QDebug>
+#include <QImage>
 #include "point.h"
 
 enum n_style: int;
@@ -19,7 +20,13 @@ private:
     QList<point_s> m_point;
     void drawNewPage(n_style __style);
 
+    QImage imgDraw;
+
+    void draw(QPainter &painter, const int m_pos_ris, const bool is_play);
+
 public:
+    const QImage &getImg() const;
+
     page(const int count, const n_style style);
     static int getHeight();
     static int getWidth();
@@ -49,6 +56,8 @@ public:
     bool needtochangeid(const uint index) const;
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
+
+    void triggerRenderImage(int m_pos_ris, const bool is_play);
 };
 
 inline double page::currentHeight() const
@@ -64,6 +73,11 @@ inline double page::currentWidth() const
 inline void page::move(const uint from, const uint to)
 {
     this->m_point.move(from, to);
+}
+
+inline const QImage &page::getImg() const
+{
+    return this->imgDraw;
 }
 
 inline int page::getHeight(){
@@ -85,6 +99,7 @@ inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const
 
     IsVisible =  ((heightSec*count) >= translation) && ((heightSec*(count-1)) <= translation);
     IsVisible = (IsVisible) ? IsVisible : (count-1)*heightSec <= heightView && (count-1)*heightSec >= translation;
+    IsVisible = true;
 }
 
 inline const point_s *page::at(uint i) const
@@ -129,15 +144,21 @@ inline void page::removeAt(const uint i)
 
 inline int page::maxId() const
 {
-    uint i;
-    const uint len = length();
-    int id = 0;
-    const point_s *point;
-    for(i=0; i<len; i++){
+    static uint i;
+    static uint len;
+    static int id;
+    static const point_s *point;
+
+    len = length();
+    id = 0;
+
+    for(i = 0; i < len; i++){
         point = at(i);
+
         if(point->idtratto > id)
             id = point->idtratto;
     }
+
     return id;
 }
 

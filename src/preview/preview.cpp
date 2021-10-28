@@ -13,7 +13,7 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
     QColor m_color;
     QPen m_pen;
     QBrush m_brush;
-    struct TabletCanvas::Point lastPoint;
+    struct Point lastPoint;
     if(doc.isEmpty())
         return;
     const double size_orizzontale = doc.datatouch->biggerx();

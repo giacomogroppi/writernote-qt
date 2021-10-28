@@ -10,6 +10,9 @@
 #endif
 #include "../../images/fromimage.h"
 
+/* tmp list */
+extern QList<point_s> __tmp;
+
 #define C(x) x->datatouch
 #define UPDATE_LOAD(x, zoom, div, m_lineWidthValuator, m_pen, m_brush ) \
     if(parent){ \
@@ -43,6 +46,7 @@ void TabletCanvas::load(QPainter &painter,
     static double xtemp[2], ytemp[2];
     const bool is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
     const int lenPage = data->datatouch->lengthPage();
+    const auto &PointFirstPage = data->datatouch->getPointFirstPage();
 
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -95,6 +99,7 @@ void TabletCanvas::load(QPainter &painter,
     _lastid = IDUNKNOWN;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        const page *page = data->datatouch->at(counterPage);
         len = data->datatouch->at(counterPage)->length();
         qDebug() << len;
         if(!data->datatouch->at(counterPage)->isVisible()){
@@ -103,8 +108,12 @@ void TabletCanvas::load(QPainter &painter,
         }
         qDebug() << "It's visible";
 
+        const QRectF rect(QPointF(PointFirstPage.x(), PointFirstPage.y()), QSizeF(page::getWidth()*data->datatouch->zoom, size_verticale));
+        const QRectF source(QPointF(0,0), QPointF(page::getWidth(), page::getHeight()));
 
-        for(i=0; i<len-1; ++i){
+        painter.drawImage(rect, page->getImg(), source);
+
+        /*for(i=0; i<len-1; ++i){
             if(data->datatouch->at(i, counterPage)->isIdUser())
                 break;
         }
@@ -119,7 +128,7 @@ void TabletCanvas::load(QPainter &painter,
             if(__point.idtratto == _lastid){
                 if(is_play && __point.m_posizioneaudio > m_pos_ris)
                 {
-                    UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
+                    UPDATE_LOAD(__point, data->datatouch->zoom, 4, TabletCanvas::PressureValuator, m_pen, m_brush);
                 }
                 else
                 {
@@ -137,8 +146,36 @@ void TabletCanvas::load(QPainter &painter,
             lastPoint.pos.setY(__point.m_y);
 
             _lastid = __point.idtratto;
+        }*/
+    }
+
+    len = __tmp.length();
+    //qDebug() << "len " << len;
+    for(i = 0; i < len; i++){
+        const auto &__point = __tmp.at(i);
+        m_pen.setColor(setcolor(&__point.m_color));
+
+        if(__point.idtratto == _lastid){
+            if(is_play && __point.m_posizioneaudio > m_pos_ris)
+            {
+                UPDATE_LOAD(__point, data->datatouch->zoom, 4, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
+            }
+            else
+            {
+                UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
+            }
+
+            painter.setPen(m_pen);
+
+            painter.drawLine(lastPoint.pos*m,
+                QPointF(__point.m_x*m, __point.m_y*m));
 
         }
+
+        lastPoint.pos.setX(__point.m_x);
+        lastPoint.pos.setY(__point.m_y);
+
+        _lastid = __point.idtratto;
     }
 
     m_pen.setColor(current_color);
