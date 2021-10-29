@@ -28,8 +28,13 @@ public:
     const QImage &getImg() const;
 
     page(const int count, const n_style style);
+
     static int getHeight();
     static int getWidth();
+
+    static int getResolutionWidth();
+    static int getResolutionHeigth();
+
 
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(const bool vis){this->IsVisible = vis;}
@@ -87,6 +92,16 @@ inline int page::getHeight(){
 inline int page::getWidth()
 {
     return width;
+}
+
+inline int page::getResolutionWidth()
+{
+    return getWidth()*5;
+}
+
+inline int page::getResolutionHeigth()
+{
+    return getHeight()*5;
 }
 
 inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView)

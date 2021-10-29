@@ -16,10 +16,10 @@ extern QList<point_s> __tmp;
 #define C(x) x->datatouch
 #define UPDATE_LOAD(x, zoom, div, m_lineWidthValuator, m_pen, m_brush ) \
     if(parent){ \
-        updateBrush_load(x.m_pressure/zoom, setcolor(&x.m_color, div), m_lineWidthValuator, m_pen, m_brush); \
+        updateBrush_load(x.m_pressure*zoom, setcolor(&x.m_color, div), m_lineWidthValuator, m_pen, m_brush); \
     } \
     else{ \
-        updateBrush_load(x.m_pressure/zoom, setcolor(&x.m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush); \
+        updateBrush_load(x.m_pressure*zoom, setcolor(&x.m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush); \
     }
 
 /*
@@ -38,8 +38,8 @@ void TabletCanvas::load(QPainter &painter,
                         const int size_orizzontale,
                         const int size_verticale,
                         const MainWindow *parent,
-                        const bool IsExportingPdf){
-
+                        const bool IsExportingPdf)
+{
     static int i, k, len, counterPage;
     static int _lastid;
     static QColor current_color;
@@ -47,6 +47,7 @@ void TabletCanvas::load(QPainter &painter,
     const bool is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
     const int lenPage = data->datatouch->lengthPage();
     const auto &PointFirstPage = data->datatouch->getPointFirstPage();
+    const double &zoom = data->datatouch->zoom;
 
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -56,7 +57,7 @@ void TabletCanvas::load(QPainter &painter,
     current_color = m_color;
     m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+    /*for(counterPage = 0; counterPage < lenPage; counterPage ++){
         len = data->datatouch->at(counterPage)->length();
         for(i=0; i<len-1; ++i){
             const auto &__point = data->datatouch->at_draw(i, counterPage);
@@ -70,10 +71,7 @@ void TabletCanvas::load(QPainter &painter,
             painter.setPen(m_pen);
 
             for(k=0; k<2; k++){
-                /*  we can draw objects which are outside the pixmap
-                    qt automatically understands that you have to set negative points,
-                    and those that are too high such as the margins of the pixmap
-                */
+
 
                 xtemp[k] = C(data)->at_draw(i+k, counterPage).m_x;
                 ytemp[k] = C(data)->at_draw(i+k, counterPage).m_y;
@@ -85,7 +83,7 @@ void TabletCanvas::load(QPainter &painter,
 
             i = i + 1;
         }
-    }
+    }*/
 
 #ifdef PDFSUPPORT
     if(withPdf)
@@ -108,45 +106,10 @@ void TabletCanvas::load(QPainter &painter,
         }
         qDebug() << "It's visible";
 
-        const QRectF rect(QPointF(PointFirstPage.x(), PointFirstPage.y()), QSizeF(page::getWidth()*data->datatouch->zoom, size_verticale));
-        const QRectF source(QPointF(0,0), QPointF(page::getWidth(), page::getHeight()));
+        const QRectF rect(QPointF(PointFirstPage.x(), PointFirstPage.y()), QSizeF(page::getResolutionWidth()*zoom, page::getResolutionHeigth()*zoom));
+        const QRectF source(QPointF(0,0), QPointF(page::getResolutionWidth(), page::getResolutionHeigth()));
 
         painter.drawImage(rect, page->getImg(), source);
-
-        /*for(i=0; i<len-1; ++i){
-            if(data->datatouch->at(i, counterPage)->isIdUser())
-                break;
-        }
-
-        for(; i < len-1; ++i){
-            const auto &__point = data->datatouch->at_draw(i, counterPage);
-            m_pen.setColor(setcolor(&__point.m_color));
-
-            if(!datastruct::isIdUser(__point))
-                continue;
-
-            if(__point.idtratto == _lastid){
-                if(is_play && __point.m_posizioneaudio > m_pos_ris)
-                {
-                    UPDATE_LOAD(__point, data->datatouch->zoom, 4, TabletCanvas::PressureValuator, m_pen, m_brush);
-                }
-                else
-                {
-                    UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
-                }
-
-                painter.setPen(m_pen);
-
-                painter.drawLine(lastPoint.pos*m,
-                    QPointF(__point.m_x*m, __point.m_y*m));
-
-            }
-
-            lastPoint.pos.setX(__point.m_x);
-            lastPoint.pos.setY(__point.m_y);
-
-            _lastid = __point.idtratto;
-        }*/
     }
 
     len = __tmp.length();

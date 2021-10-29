@@ -90,7 +90,42 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
     int _lastid = IDUNKNOWN;
     struct Point lastPoint;
 
-    for(i=0; i<len-1; ++i){
+    /* sheet */
+    static uchar k;
+    static double xtemp[2], ytemp[2];
+
+    painter.setRenderHint(QPainter::Antialiasing);
+    m_pen.setStyle(Qt::PenStyle::SolidLine);
+
+    for(i = 0; i < len-1; ++i){
+        const auto &__point = *at(i);
+        m_pen.setColor(setcolor(&__point.m_color));
+
+        if(__point.isIdUser())
+            break;
+
+        UPDATE_LOAD(__point, 1, m_pen, m_brush);
+
+        painter.setPen(m_pen);
+
+        for(k=0; k<2; k++){
+            /*  we can draw objects which are outside the pixmap
+                qt automatically understands that you have to set negative points,
+                and those that are too high such as the margins of the pixmap
+            */
+
+            xtemp[k] = at(i+k)->m_x;
+            ytemp[k] = at(i+k)->m_y;
+
+        }
+
+        painter.drawLine(xtemp[0], ytemp[0],
+                xtemp[1], ytemp[1]);
+
+            i = i + 1;
+    }
+
+    for(i = 0; i < len-1; i++){
         if(at(i)->isIdUser())
             break;
     }
@@ -103,28 +138,25 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
         if(!point.isIdUser())
                 continue;
 
-            if(point.idtratto == _lastid){
-                if(is_play && point.m_posizioneaudio > m_pos_ris)
-                {
-                    UPDATE_LOAD(point, 4, m_pen, m_brush);
-                }
-                else
-                {
-                    UPDATE_LOAD(point, 1, m_pen, m_brush);
-                }
-
-                painter.setPen(m_pen);
-
-                painter.drawLine(lastPoint.pos,
-                    QPointF(point.m_x, point.m_y));
-
+        if(point.idtratto == _lastid){
+            if(is_play && point.m_posizioneaudio > m_pos_ris){
+                UPDATE_LOAD(point, 4, m_pen, m_brush);
+            }
+            else{
+                UPDATE_LOAD(point, 1, m_pen, m_brush);
             }
 
-            lastPoint.pos.setX(point.m_x);
-            lastPoint.pos.setY(point.m_y);
+            painter.setPen(m_pen);
 
-            _lastid = point.idtratto;
+            painter.drawLine(lastPoint.pos, QPointF(point.m_x, point.m_y));
+
         }
+
+        lastPoint.pos.setX(point.m_x);
+        lastPoint.pos.setY(point.m_y);
+
+        _lastid = point.idtratto;
+    }
 }
 
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
@@ -210,7 +242,7 @@ bool page::userWrittenSomething() const
 void page::triggerRenderImage(int m_pos_ris, const bool is_play)
 {
     /* we need Format_RGB888 for 255-255-255 color */
-    this->imgDraw = QImage(page::getWidth(), page::getHeight(), QImage::Format_ARGB32);//QImage(page::getWidth(), page::getHeight(), QImage::Format_RGB32);
+    this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
     QPainter painter;
     painter.begin(&imgDraw);
 
