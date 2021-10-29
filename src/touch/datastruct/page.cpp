@@ -1,11 +1,12 @@
-#include "page.h"
+﻿#include "page.h"
 #include "../../utils/color/setcolor.h"
 #include "../../sheet/fast-sheet/fast_sheet_ui.h"
 #include "../tabletcanvas.h"
 #include <QPainter>
+#include "../../utils/time/current_time.h"
 
-#define UPDATE_LOAD(x, div, m_pen, m_brush ) \
-        TabletCanvas::updateBrush_load(x.m_pressure, setcolor(&x.m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush);
+#define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
+        TabletCanvas::updateBrush_load(x.m_pressure*5, setcolor(&x.m_color, divColor), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush);
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
@@ -16,7 +17,7 @@ static void drawLineVertical(QList<point_s> &list, point_s &point, const style_s
 
 
 #define TEMP_COLOR Qt::black
-#define TEMP_TICK 1
+#define TEMP_TICK 20
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
@@ -72,6 +73,7 @@ void page::drawNewPage(n_style __style)
         deltay = width_p / (double)style.ny;
 
     tmp_point.m_pressure = widthToPressure(style.thickness);
+    qDebug() << "Pressure point " << tmp_point.m_pressure;
 
     //qDebug() << "page::drawNewPage " << last << width_p << height_p << style.ny << style.nx << deltay << (__style==n_style::square);
 
@@ -94,36 +96,41 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
     static uchar k;
     static double xtemp[2], ytemp[2];
 
-    painter.setRenderHint(QPainter::Antialiasing);
     m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    for(i = 0; i < len-1; ++i){
-        const auto &__point = *at(i);
-        m_pen.setColor(setcolor(&__point.m_color));
+    if(!len)
+        return;
 
+    UPDATE_LOAD((*at(0)), 1, m_pen, m_brush);
+    m_pen.setColor(setcolor(&at(0)->m_color));
+    painter.setPen(m_pen);
+    for(i = 0; i < len-1; ++i){
+        const auto &__point = *at_translation(i);
         if(__point.isIdUser())
             break;
 
-        UPDATE_LOAD(__point, 1, m_pen, m_brush);
-
+        qDebug() << "Warning " << __point.m_pressure;
+        m_pen.setWidthF(__point.m_pressure*25);
         painter.setPen(m_pen);
 
         for(k=0; k<2; k++){
-            /*  we can draw objects which are outside the pixmap
-                qt automatically understands that you have to set negative points,
-                and those that are too high such as the margins of the pixmap
+            /*
+             *  we can draw objects which are outside the pixmap
+             *  qt automatically understands that you have to set negative points,
+             *  and those that are too high such as the margins of the pixmap
             */
 
-            xtemp[k] = at(i+k)->m_x;
-            ytemp[k] = at(i+k)->m_y;
+            xtemp[k] = at_translation(i+k)->m_x*5;
+            ytemp[k] = at_translation(i+k)->m_y*5;
 
         }
 
-        painter.drawLine(xtemp[0], ytemp[0],
-                xtemp[1], ytemp[1]);
+        painter.drawLine(xtemp[0], ytemp[0], xtemp[1], ytemp[1]);
 
-            i = i + 1;
+        i = i + 1;
     }
+
+    painter.setRenderHint(QPainter::Antialiasing);
 
     for(i = 0; i < len-1; i++){
         if(at(i)->isIdUser())
@@ -131,8 +138,8 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
     }
 
     for(; i < len-1; ++i){
-        const auto &point = *at(i);
-        //at_draw(i, QPointF(0, 0), point, zoom);
+        const auto &point = *at_translation(i);
+
         m_pen.setColor(setcolor(point.m_color));
 
         if(!point.isIdUser())
@@ -148,12 +155,12 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
 
             painter.setPen(m_pen);
 
-            painter.drawLine(lastPoint.pos, QPointF(point.m_x, point.m_y));
+            painter.drawLine(lastPoint.pos, QPointF(point.m_x*5, point.m_y*5));
 
         }
 
-        lastPoint.pos.setX(point.m_x);
-        lastPoint.pos.setY(point.m_y);
+        lastPoint.pos.setX(point.m_x*5);
+        lastPoint.pos.setY(point.m_y*5);
 
         _lastid = point.idtratto;
     }
@@ -243,11 +250,13 @@ void page::triggerRenderImage(int m_pos_ris, const bool is_play)
 {
     /* we need Format_RGB888 for 255-255-255 color */
     this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+    imgDraw.fill(Qt::white);
     QPainter painter;
     painter.begin(&imgDraw);
 
     this->draw(painter, m_pos_ris, is_play);
 
-    //painter.drawLine(20,20,50,50);
     painter.end();
+    //if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 20))
+    //    std::abort();
 }

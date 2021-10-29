@@ -48,7 +48,7 @@ void TabletCanvas::load(QPainter &painter,
     const int lenPage = data->datatouch->lengthPage();
     const auto &PointFirstPage = data->datatouch->getPointFirstPage();
     const double &zoom = data->datatouch->zoom;
-
+    qDebug() << "TabletCanvas::load call " << lenPage;
     painter.setRenderHint(QPainter::Antialiasing);
 
     if(m_pixmap)
@@ -56,34 +56,6 @@ void TabletCanvas::load(QPainter &painter,
 
     current_color = m_color;
     m_pen.setStyle(Qt::PenStyle::SolidLine);
-
-    /*for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        len = data->datatouch->at(counterPage)->length();
-        for(i=0; i<len-1; ++i){
-            const auto &__point = data->datatouch->at_draw(i, counterPage);
-            m_pen.setColor(setcolor(&__point.m_color));
-
-            if(__point.isIdUser())
-                break;
-
-            UPDATE_LOAD(__point, data->datatouch->zoom, 1, parent->m_canvas->m_lineWidthValuator, m_pen, m_brush);
-
-            painter.setPen(m_pen);
-
-            for(k=0; k<2; k++){
-
-
-                xtemp[k] = C(data)->at_draw(i+k, counterPage).m_x;
-                ytemp[k] = C(data)->at_draw(i+k, counterPage).m_y;
-
-            }
-
-            painter.drawLine(xtemp[0]*m, ytemp[0]*m,
-                             xtemp[1]*m, ytemp[1]*m);
-
-            i = i + 1;
-        }
-    }*/
 
 #ifdef PDFSUPPORT
     if(withPdf)
@@ -96,22 +68,31 @@ void TabletCanvas::load(QPainter &painter,
 
     _lastid = IDUNKNOWN;
 
+
+    const QRectF source(QPointF(0, 0), QPointF(page::getResolutionWidth(), page::getResolutionHeigth()));
+
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const page *page = data->datatouch->at(counterPage);
-        len = data->datatouch->at(counterPage)->length();
-        qDebug() << len;
-        if(!data->datatouch->at(counterPage)->isVisible()){
-            qDebug() << "it's not visible";
+
+        if(!data->datatouch->at(counterPage)->isVisible())
             continue;
-        }
-        qDebug() << "It's visible";
 
-        const QRectF rect(QPointF(PointFirstPage.x(), PointFirstPage.y()), QSizeF(page::getResolutionWidth()*zoom, page::getResolutionHeigth()*zoom));
-        const QRectF source(QPointF(0,0), QPointF(page::getResolutionWidth(), page::getResolutionHeigth()));
+        //QRectF targetRect( QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*counterPage ),
+        //                         QSizeF(page::getWidth() * zoom, page::getHeight() * zoom));
+        QRectF targetRect(QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*counterPage), QSize(data->datatouch->biggerx(), data->datatouch->currentHeight()));
 
-        painter.drawImage(rect, page->getImg(), source);
+        qDebug() << targetRect << zoom << counterPage << page->getImg().size();
+        painter.drawImage(targetRect, page->getImg());
+
+        break;
+        //fromimage::draw(painter, targetRect, page->getImg());
+
+        //targetRect.setY(targetRect.y() + page::getHeight()*zoom);
+
+        //targetRect.setHeight(page::getHeight()*zoom);
+        //targetRect.setWidth(page::getWidth()*zoom);
     }
-
+    qDebug() << "\n";
     len = __tmp.length();
     //qDebug() << "len " << len;
     for(i = 0; i < len; i++){

@@ -24,16 +24,18 @@ private:
 
     void draw(QPainter &painter, const int m_pos_ris, const bool is_play);
 
+    const point_s *at_translation(uint index);
+
 public:
     const QImage &getImg() const;
 
     page(const int count, const n_style style);
 
-    static int getHeight();
-    static int getWidth();
+    static double getHeight();
+    static double getWidth();
 
-    static int getResolutionWidth();
-    static int getResolutionHeigth();
+    static double getResolutionWidth();
+    static double getResolutionHeigth();
 
 
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
@@ -80,26 +82,38 @@ inline void page::move(const uint from, const uint to)
     this->m_point.move(from, to);
 }
 
+inline const point_s *page::at_translation(uint index)
+{
+    static point_s tmp;
+    const double xtranslation = (this->count-1)*page::getWidth();
+    const double ytranslation = (this->count-1)*page::getHeight();
+
+    memcpy(&tmp, at(index), sizeof(point_s));
+    tmp.m_x -= xtranslation;
+    tmp.m_y -= ytranslation;
+    return &tmp;
+}
+
 inline const QImage &page::getImg() const
 {
     return this->imgDraw;
 }
 
-inline int page::getHeight(){
+inline double page::getHeight(){
     return height;
 }
 
-inline int page::getWidth()
+inline double page::getWidth()
 {
     return width;
 }
 
-inline int page::getResolutionWidth()
+inline double page::getResolutionWidth()
 {
     return getWidth()*5;
 }
 
-inline int page::getResolutionHeigth()
+inline double page::getResolutionHeigth()
 {
     return getHeight()*5;
 }

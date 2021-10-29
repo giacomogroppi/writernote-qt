@@ -38,7 +38,7 @@ private:
                            false);
     }
 
-    void updateBrush_load(float , QColor );
+    void updateBrush_load(const double , QColor );
 
     QPen penna;
 
