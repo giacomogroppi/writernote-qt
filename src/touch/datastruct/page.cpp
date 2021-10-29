@@ -71,7 +71,6 @@ void page::drawNewPage(n_style __style)
     if(style.ny)
         deltay = width_p / (double)style.ny;
 
-
     tmp_point.m_pressure = widthToPressure(style.thickness);
 
     //qDebug() << "page::drawNewPage " << last << width_p << height_p << style.ny << style.nx << deltay << (__style==n_style::square);
@@ -211,11 +210,12 @@ bool page::userWrittenSomething() const
 void page::triggerRenderImage(int m_pos_ris, const bool is_play)
 {
     /* we need Format_RGB888 for 255-255-255 color */
-    this->imgDraw = QImage(page::getWidth(), page::getHeight(), QImage::Format_RGB888);
+    this->imgDraw = QImage(page::getWidth(), page::getHeight(), QImage::Format_ARGB32);//QImage(page::getWidth(), page::getHeight(), QImage::Format_RGB32);
     QPainter painter;
     painter.begin(&imgDraw);
 
     this->draw(painter, m_pos_ris, is_play);
 
+    //painter.drawLine(20,20,50,50);
     painter.end();
 }
