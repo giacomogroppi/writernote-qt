@@ -157,13 +157,13 @@ public:
 
     void reset();
     void triggerVisibility(const double &viewSize);
-    double biggerx() const;
+    double biggerx() const noexcept;
     void removeat(const uint index, const uint page);
 
     bool needToCreateNewSheet();
     bool needtochangeid(const uint index, const uint page);
 
-    double biggery() const;
+    double biggery() const noexcept;
 
     /* the function return the index of the id */
     uint positionId(int id);
@@ -275,12 +275,12 @@ inline void datastruct::triggerVisibility(const double &viewSize)
     }
 }
 
-inline double datastruct::biggerx() const
+inline double datastruct::biggerx() const noexcept
 {
     return (page::getWidth() + this->getPointFirstPage().x())*zoom;
 }
 
-inline double datastruct::biggery() const
+inline double datastruct::biggery() const noexcept
 {
     return (at(lengthPage()-1)->currentHeight() + this->getPointFirstPage().y())*zoom;
 }
