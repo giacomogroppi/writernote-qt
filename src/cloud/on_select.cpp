@@ -73,7 +73,7 @@ void cloud_ui::refresh(){
             ui->balance->setHidden(true);
 
         }else if(res == n_error_cloud::error_no_internet){
-            messaggio_utente("It seems you don't have internet");
+            user_message("It seems you don't have internet");
         }
 
     }

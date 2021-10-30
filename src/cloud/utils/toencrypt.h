@@ -1,7 +1,11 @@
 #ifndef TOENCRYPT_H
 #define TOENCRYPT_H
 
+#include <QByteArray>
 
-const char * toencrypt(const char *);
+class toencrypy{
+public:
+    static void getEcrypt(const QByteArray &arr, QByteArray &res);
+};
 
 #endif // TOENCRYPT_H

@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
     if(argc == 1){
 
 #ifdef CLOUD
-        last_open a(nullptr, user, &m_cloud, &close_all);
+        last_open a(nullptr, user, &m_cloud, &close_all, last_open::Method::OpenRecent);
 #else
         last_open a(nullptr, nullptr, nullptr, &close_all, last_open::Method::OpenRecent);
 #endif
@@ -85,9 +85,8 @@ int main(int argc, char *argv[]){
     char *f = (m_last_open) ? m_last_open : argv[1];
 
 #ifdef CLOUD
-    MainWindow w(nullptr, &canvas, user, &m_cloud, f);
+    MainWindow w(nullptr, canvas, user, &m_cloud, f);
 #else
-
     MainWindow w(nullptr, canvas, nullptr, nullptr, f);
 #endif
 
