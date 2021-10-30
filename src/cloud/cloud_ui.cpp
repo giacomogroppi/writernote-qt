@@ -39,7 +39,7 @@ void cloud_ui::readyRead(QByteArray data, n_request::e_request last_command){
 
     if(last_command == n_request::login_user){
         if(return_command == n_error_cloud::password_wrong){
-            messaggio_utente("Password wrong");
+            user_message("Password wrong");
         }else if(return_command == n_error_cloud::ok){
             save_recent_user(m_controll->m_user);
         }
@@ -48,15 +48,15 @@ void cloud_ui::readyRead(QByteArray data, n_request::e_request last_command){
             return serverDown();
 
         if(return_command == n_error_cloud::ok){
-            messaggio_utente("Successful registration");
+            user_message("Successful registration");
         }else{
-            messaggio_utente("Something went wrong");
+            user_message("Something went wrong");
         }
     }
 }
 
 void cloud_ui::serverDown(){
-    messaggio_utente("Unfortunately the server is not reachable, please try again in some time");
+    user_message("Unfortunately the server is not reachable, please try again in some time");
 }
 
 void cloud_ui::on_button_info_clicked()
@@ -113,16 +113,16 @@ void cloud_ui::on_button_ok_clicked()
             int pass = checkpassword(ui->edit_pass->toPlainText().toUtf8().constData(), ui->edit_repeat->toPlainText().toUtf8().constData());
 
             if(pass == PASS_LEN){
-                messaggio_utente(MESSAGE_PASSWORD_NOT_LENGTH + (QString)MINSTRLEN);
+                user_message(MESSAGE_PASSWORD_NOT_LENGTH + (QString)MINSTRLEN);
 
             }else if (pass == PASS_NOT_S) {
-                return messaggio_utente("Passwords do not match");
+                return user_message("Passwords do not match");
 
             } else if(pass == PASS_N){
-                return messaggio_utente(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMN + " uppercase");
+                return user_message(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMN + " uppercase");
 
             } else if(pass == PASS_M){
-                return messaggio_utente(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMM + " number");
+                return user_message(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMM + " number");
 
             }
 
@@ -135,9 +135,9 @@ void cloud_ui::on_button_ok_clicked()
             auto res = this->m_controll->action(n_request::login_user, temp_user);
 
             if(res == n_error_cloud::error_no_internet)
-                return messaggio_utente(MESSAGE_NOT_INTERNET);
+                return user_message(MESSAGE_NOT_INTERNET);
             else if(res == n_error_cloud::server_down)
-                return messaggio_utente(MESSAGE_SERVER_DOWN);
+                return user_message(MESSAGE_SERVER_DOWN);
 
 
         }else if(ui->button_log->text() == TEXT_LOG_ON){

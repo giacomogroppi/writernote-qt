@@ -27,17 +27,19 @@ class QPaintEvent;
 class QString;
 QT_END_NAMESPACE
 
+struct Point {
+    QPointF pos;
+    qreal pressure = 0;
+    qreal rotation = 0;
+};
+
 //! [0]
 class TabletCanvas : public QWidget
 {
     Q_OBJECT
 
 public:
-    struct Point {
-        QPointF pos;
-        qreal pressure = 0;
-        qreal rotation = 0;
-    } lastPoint;
+    struct Point lastPoint;
 
     MainWindow *parent;
 

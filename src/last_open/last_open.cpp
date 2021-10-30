@@ -201,11 +201,10 @@ void last_open::deleteInElement(int index){
 void last_open::downloadIn(int index){
 #ifdef CLOUD
     QString m_to;
-    qfilechoose temp(NULL);
-    if(!temp.filechoose(&m_to))
+    if(!qfilechoose::filechoose(m_to))
         return;
 
-    dowloadfile(m_user, m_last->posizione, m_to);
+    dowloadfile(m_user, m_last.at(index).posizione, m_to);
 
 #else
     Q_UNUSED(index);

@@ -1,6 +1,12 @@
-#include "page.h"
+﻿#include "page.h"
 #include "../../utils/color/setcolor.h"
 #include "../../sheet/fast-sheet/fast_sheet_ui.h"
+#include "../tabletcanvas.h"
+#include <QPainter>
+#include "../../utils/time/current_time.h"
+
+#define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
+        TabletCanvas::updateBrush_load(x.m_pressure*5, setcolor(&x.m_color, divColor), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush);
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
@@ -11,7 +17,7 @@ static void drawLineVertical(QList<point_s> &list, point_s &point, const style_s
 
 
 #define TEMP_COLOR Qt::black
-#define TEMP_TICK 1
+#define TEMP_TICK 10
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
@@ -66,8 +72,8 @@ void page::drawNewPage(n_style __style)
     if(style.ny)
         deltay = width_p / (double)style.ny;
 
-
     tmp_point.m_pressure = widthToPressure(style.thickness);
+    qDebug() << "Pressure point " << tmp_point.m_pressure;
 
     //qDebug() << "page::drawNewPage " << last << width_p << height_p << style.ny << style.nx << deltay << (__style==n_style::square);
 
@@ -75,6 +81,58 @@ void page::drawNewPage(n_style __style)
     drawLineOrizzontal(this->m_point, tmp_point, style, last, deltax, width_p, ct_del);
     /* draw vertical line */
     drawLineVertical(this->m_point, tmp_point, style, last, deltay, height_p);
+}
+
+inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_play)
+{
+    int i;
+    const int len = length();
+    QPen m_pen;
+    QBrush m_brush;
+    int _lastid = IDUNKNOWN;
+    struct Point lastPoint;
+    const point_s *point;
+    const double delta = 5.0;
+
+    m_pen.setStyle(Qt::PenStyle::SolidLine);
+
+    if(!len)
+        return;
+
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    for(i = 0; i < len-1; i++){
+        if(at(i)->isIdUser())
+            break;
+    }
+
+    for(; i < len-1; ++i){
+        point = at_translation(i);
+
+        m_pen.setColor(setcolor(point->m_color));
+
+        if(!point->isIdUser())
+                continue;
+
+        if(point->idtratto == _lastid){
+            if(is_play && point->m_posizioneaudio > m_pos_ris){
+                UPDATE_LOAD((*point), 4, m_pen, m_brush);
+            }
+            else{
+                UPDATE_LOAD((*point), 1, m_pen, m_brush);
+            }
+
+            painter.setPen(m_pen);
+
+            painter.drawLine(lastPoint.pos, QPointF(point->m_x*delta, point->m_y*delta));
+
+        }
+
+        lastPoint.pos.setX(point->m_x*delta);
+        lastPoint.pos.setY(point->m_y*delta);
+
+        _lastid = point->idtratto;
+    }
 }
 
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
@@ -106,13 +164,8 @@ static inline double widthToPressure(double v){
     return v/10.0;
 }
 
-static void drawLineOrizzontal(QList<point_s> &list,
-                            point_s &point,
-                            const style_struct_S &style,
-                            const double &last,
-                            double &deltax,
-                            const double &width_p,
-                            const double &ct_del){
+static void drawLineOrizzontal(QList<point_s> &list, point_s &point, const style_struct_S &style,
+                            const double &last, double &deltax, const double &width_p, const double &ct_del){
     uint i;
     point.idtratto = IDORIZZONALE;
 
@@ -129,12 +182,11 @@ static void drawLineOrizzontal(QList<point_s> &list,
     }
 }
 
-static void drawLineVertical(QList<point_s> &list,
-                            point_s &point,
-                            const style_struct_S &style,
-                            const double &last,
-                            double &deltay,
-                            const double &height_p){
+static void drawLineVertical(QList<point_s> &list, point_s &point, const style_struct_S &style,
+                            const double &last, double &deltay, const double &height_p){
+    if(!style.ny)
+        return;
+
     const double ct_del = deltay;
     uint i;
 
@@ -161,4 +213,19 @@ bool page::userWrittenSomething() const
     for(i=0; i<len && !at(i)->isIdUser(); i++);
 
     return !(i==len);
+}
+
+void page::triggerRenderImage(int m_pos_ris, const bool is_play)
+{
+    /* we need Format_RGB888 for 255-255-255 color */
+    this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+    //imgDraw.fill(Qt::white);
+    QPainter painter;
+    painter.begin(&imgDraw);
+
+    this->draw(painter, m_pos_ris, is_play);
+
+    painter.end();
+    //if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 20))
+    //    std::abort();
 }

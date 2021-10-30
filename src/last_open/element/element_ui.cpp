@@ -60,10 +60,14 @@ void element_ui::set_main()
     }
 
 #ifdef CLOUD
-    if(m_data->owner.type_user == TYPE_OWNER_YOU)
-        text += "             You";
-    else
-        text += "Not you";
+    if(m_data->owner.type_user == TYPE_OWNER_YOU){
+        ui->owner_type->setText("Local");
+        ui->owner->setText("You");
+    }
+    else{
+        ui->owner_type->setText("Cloud");
+        ui->owner->setText(m_data->owner.name);
+    }
 #else
     ui->owner_type->setHidden(true);
     ui->owner->setHidden(true);

@@ -530,13 +530,6 @@ else:android{
         FORMS += \
             src/cloud/cloud_ui.ui
 
-        message( "Adding lib for crypto" )
-        unix{
-            LIBS += -lcryptopp
-        }
-        else{
-            LIBS += crypto++
-        }
     }
     else{
         message("cloud disable for compilation")

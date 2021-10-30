@@ -1,4 +1,4 @@
-#ifndef DATASTRUCT_H
+﻿#ifndef DATASTRUCT_H
 #define DATASTRUCT_H
 
 #include <QList>
@@ -62,12 +62,14 @@ private:
     fromimage *m_img;
     QPointF pointFirstPage = QPointF(0, 0);
     void getRealIndex(const uint search, uint &index, uint &page) const;
-    int lastPageAppend = -1; /* index of the last page when we append data */
 
     void adjustWidth(const uint width);
     void adjustHeight(const uint height);
 
 public:
+
+    void triggerNewView(int m_pos_ris, const bool is_play);
+
     inline QPointF getPointFirstPage() const{
         return this->zoom * pointFirstPage;
     }
@@ -142,8 +144,6 @@ public:
 
     bool isAvailable(int id) const;
 
-    inline void setLastPageModify(const int index);
-    inline int getLastPageModify() const;
     inline int maxId();
 
     inline bool isempty() const{
@@ -157,13 +157,13 @@ public:
 
     void reset();
     void triggerVisibility(const double &viewSize);
-    double biggerx() const;
+    double biggerx() const noexcept;
     void removeat(const uint index, const uint page);
 
     bool needToCreateNewSheet();
     bool needtochangeid(const uint index, const uint page);
 
-    double biggery() const;
+    double biggery() const noexcept;
 
     /* the function return the index of the id */
     uint positionId(int id);
@@ -234,34 +234,29 @@ inline double datastruct::currentHeight() const{
     return page::getHeight();
 }
 
-inline int datastruct::getLastPageModify() const
-{
-    return this->lastPageAppend;
-}
-
 inline int datastruct::maxId()
 {
-    int maxId = 0;
-    int tmp_id;
-    uint i, lastMod = 0;
+    static int biggerID;
+    static int tmp_id;
+    static uint i;
+
     const uint len = this->lengthPage();
 
-    if(isempty())
-        return maxId;
+    biggerID = 0;
 
-    if(getLastPageModify() == -1){
-        for(i=0; i<len; ++i){
-            tmp_id = this->m_page.at(i).maxId();
-            if(maxId < tmp_id){
-                lastMod = i;
-                maxId = tmp_id;
-            }
+    if(isempty())
+        return biggerID;
+
+    for(i = 0; i < len; ++i){
+        tmp_id = this->m_page.at(i).maxId();
+
+        if(tmp_id > biggerID){
+            biggerID = tmp_id;
         }
-        this->setLastPageModify(lastMod);
-    }else{
-        return at(getLastPageModify())->last()->idtratto;
     }
-    return maxId;
+
+    qDebug() << "MAXID " << biggerID;
+    return biggerID;
 }
 
 inline void datastruct::triggerVisibility(const double &viewSize)
@@ -280,12 +275,12 @@ inline void datastruct::triggerVisibility(const double &viewSize)
     }
 }
 
-inline double datastruct::biggerx() const
+inline double datastruct::biggerx() const noexcept
 {
     return (page::getWidth() + this->getPointFirstPage().x())*zoom;
 }
 
-inline double datastruct::biggery() const
+inline double datastruct::biggery() const noexcept
 {
     return (at(lengthPage()-1)->currentHeight() + this->getPointFirstPage().y())*zoom;
 }
@@ -346,11 +341,6 @@ inline point_s &datastruct::at_draw(const uint index, const uint page) const
     return point;
 }
 
-inline const point_s *datastruct::lastPoint() const
-{
-    return this->at(lastPageAppend)->last();
-}
-
 inline const page *datastruct::lastPage() const
 {
     return &this->m_page.last();
@@ -382,6 +372,14 @@ inline void datastruct::getRealIndex(const uint search, uint &index, uint &page)
     index = search - k;
 }
 
+inline void datastruct::triggerNewView(int m_pos_ris, const bool is_play)
+{
+    uint i, len;
+    len = lengthPage();
+    for(i = 0; i < len; i++)
+        at_mod(i)->triggerRenderImage(m_pos_ris, is_play);
+}
+
 inline void datastruct::removeAt(const uint index){
     uint page, realIndex;
     this->getRealIndex(index, realIndex, page);
@@ -398,39 +396,33 @@ inline void datastruct::append(const point_s *point)
     static uint counterPage;
     static const page *page;
     static point_s Point;
-    Point = *point;
+    memcpy(&Point, point, sizeof(point_s));
 
     Point.m_x /= this->zoom;
     Point.m_y /= this->zoom;
 
     const uint len = lengthPage();
 
-    for(counterPage=0; counterPage<len; counterPage++){
+    for(counterPage = 0; counterPage < len; counterPage++){
         page = at(counterPage);
-        //qDebug() << "append call " << page->currentHeight() << point->m_y << page->minHeight();
+        //qDebug() << "append call " << page->currentHeight() << point->m_y << page->minHeight() << counterPage;
         if(page->currentHeight() >= point->m_y && page->minHeight() <= point->m_y){
+            //qDebug() << "Append" << point->m_y << point->m_x;
             this->append(Point, counterPage);
             return;
         }
     }
-    //std::abort();
+    std::abort();
 }
 
 inline void datastruct::append(const point_s *point, const uint page)
 {
-    //qDebug() << "datastruct::append append in page --> " << page << "page length " << at(page)->length() << "length list " << m_page.length();;
-    lastPageAppend = page;
     this->at_mod(page)->append(point);
 }
 
 inline void datastruct::append(const point_s &point, const uint page)
 {
     this->at_mod(page)->append(point);
-}
-
-inline void datastruct::setLastPageModify(const int index)
-{
-    this->lastPageAppend = index;
 }
 
 #endif // DATASTRUCT_H

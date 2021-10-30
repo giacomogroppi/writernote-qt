@@ -143,10 +143,7 @@ inline void frompdf::draw(QPainter &painter, const double delta, const bool IsEx
             qDebug() << "void draw " << size.topLeft() << pdf->topLeft;
             fromimage::draw(painter, size, pdf->img.at(k));
 
-            if(IsExportingPdf)
-                size.setY(size.y() + y);
-            else
-                size.setY(size.y() + y);
+            size.setY(size.y() + y);
 
             size.setHeight(y);
 
