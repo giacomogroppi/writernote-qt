@@ -73,7 +73,6 @@ void page::drawNewPage(n_style __style)
         deltay = width_p / (double)style.ny;
 
     tmp_point.m_pressure = widthToPressure(style.thickness);
-    qDebug() << "Pressure point " << tmp_point.m_pressure;
 
     //qDebug() << "page::drawNewPage " << last << width_p << height_p << style.ny << style.nx << deltay << (__style==n_style::square);
 
@@ -91,7 +90,7 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
     QBrush m_brush;
     int _lastid = IDUNKNOWN;
     struct Point lastPoint;
-    const point_s *point;
+    point_s *point;
     const double delta = 5.0;
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
@@ -99,7 +98,9 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
     if(!len)
         return;
 
-    painter.setRenderHint(QPainter::Antialiasing);
+    qDebug() << "Draw page " << this->count;
+
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     for(i = 0; i < len-1; i++){
         if(at(i)->isIdUser())
@@ -115,6 +116,7 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
                 continue;
 
         if(point->idtratto == _lastid){
+            point->m_pressure *= 1.37;
             if(is_play && point->m_posizioneaudio > m_pos_ris){
                 UPDATE_LOAD((*point), 4, m_pen, m_brush);
             }
@@ -226,6 +228,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool is_play)
     this->draw(painter, m_pos_ris, is_play);
 
     painter.end();
-    //if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 20))
-    //    std::abort();
+    return;
+    if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 20))
+        std::abort();
 }

@@ -24,7 +24,7 @@ private:
 
     void draw(QPainter &painter, const int m_pos_ris, const bool is_play);
 
-    const point_s *at_translation(uint index);
+    point_s *at_translation(uint index);
 
 public:
     const QImage &getImg() const;
@@ -82,14 +82,14 @@ inline void page::move(const uint from, const uint to)
     this->m_point.move(from, to);
 }
 
-inline const point_s *page::at_translation(uint index)
+inline point_s *page::at_translation(uint index)
 {
     static point_s tmp;
-    const double xtranslation = (this->count-1)*page::getWidth();
+    //const double xtranslation = (this->count-1)*page::getWidth();
     const double ytranslation = (this->count-1)*page::getHeight();
 
     memcpy(&tmp, at(index), sizeof(point_s));
-    tmp.m_x -= xtranslation;
+    //tmp.m_x -= xtranslation;
     tmp.m_y -= ytranslation;
     return &tmp;
 }

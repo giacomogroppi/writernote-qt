@@ -265,10 +265,9 @@ void AppendAll(Document &doc, const TabletCanvas *canvas){
         point = &__tmp.operator[](i);
         point->m_x -= PointFirstPage.x();
         point->m_y -= PointFirstPage.y();
-
-        doc.datatouch->append(point);
     }
 
+    doc.datatouch->append(__tmp, canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
+
     __tmp.clear();
-    doc.datatouch->triggerNewView(canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
 }

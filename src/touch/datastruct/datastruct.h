@@ -66,6 +66,9 @@ private:
     void adjustWidth(const uint width);
     void adjustHeight(const uint height);
 
+    void triggerNewView(uint page, int m_pos_ris, const bool is_play);
+    void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play);
+
 public:
 
     void triggerNewView(int m_pos_ris, const bool is_play);
@@ -82,8 +85,9 @@ public:
 
     void removeAt(const uint i);
 
-    void append(const point_s &point);
-    void append(const point_s *point);
+    void append(const QList<point_s> & point, int m_pos_ris, const bool is_play);
+    int append(const point_s &point);
+    int append(const point_s *point);
     void append(const point_s *point, const uint page);
     void append(const point_s &point, const uint page);
 
@@ -372,12 +376,43 @@ inline void datastruct::getRealIndex(const uint search, uint &index, uint &page)
     index = search - k;
 }
 
+inline void datastruct::triggerNewView(uint page, int m_pos_ris, const bool is_play)
+{
+    at_mod(page)->triggerRenderImage(m_pos_ris, is_play);
+}
+
+inline void datastruct::triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play)
+{
+    int i;
+    for(i = 0; i < Page.length(); i++){
+        this->triggerNewView(Page.at(i), m_pos_ris, is_play);
+    }
+}
+
 inline void datastruct::triggerNewView(int m_pos_ris, const bool is_play)
 {
     uint i, len;
     len = lengthPage();
     for(i = 0; i < len; i++)
-        at_mod(i)->triggerRenderImage(m_pos_ris, is_play);
+        this->triggerNewView(i, m_pos_ris, is_play);
+}
+
+/* the function automatically launches the drawing for the pages
+ * to which data has been added*/
+inline void datastruct::append(const QList<point_s> &point, int m_pos_ris, const bool is_play)
+{
+    QList<int> trigger;
+    uint i;
+    int Page;
+    const uint len = point.length();
+
+    for(i = 0; i < len; i++){
+        Page = this->append(point.at(i));
+        if(trigger.indexOf(Page) == -1)
+            trigger.append(Page);
+    }
+
+    this->triggerNewView(trigger, m_pos_ris, is_play);
 }
 
 inline void datastruct::removeAt(const uint index){
@@ -386,12 +421,12 @@ inline void datastruct::removeAt(const uint index){
     this->m_page.operator[](page).removeAt(realIndex);
 }
 
-inline void datastruct::append(const point_s &point)
+inline int datastruct::append(const point_s &point)
 {
     return append(&point);
 }
 
-inline void datastruct::append(const point_s *point)
+inline int datastruct::append(const point_s *point)
 {
     static uint counterPage;
     static const page *page;
@@ -409,10 +444,12 @@ inline void datastruct::append(const point_s *point)
         if(page->currentHeight() >= point->m_y && page->minHeight() <= point->m_y){
             //qDebug() << "Append" << point->m_y << point->m_x;
             this->append(Point, counterPage);
-            return;
+            return counterPage;
         }
     }
-    std::abort();
+
+    Q_ASSERT(0);
+    return -1;
 }
 
 inline void datastruct::append(const point_s *point, const uint page)

@@ -44,7 +44,7 @@ void TabletCanvas::load(QPainter &painter,
     const QPointF &PointFirstPage = data->datatouch->getPointFirstPage();
     const double &zoom = data->datatouch->zoom;
     qDebug() << "TabletCanvas::load call " << lenPage;
-    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     if(m_pixmap)
         m_pixmap->fill(Qt::white);
@@ -62,18 +62,17 @@ void TabletCanvas::load(QPainter &painter,
     data->m_img->draw(painter, data->datatouch->biggerx(),
                       size_orizzontale, size_verticale);
 
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    //const QRectF source(QPointF(0, 0), QPointF(page::getResolutionWidth(), page::getResolutionHeigth()));
-
+    const QSize sizeRect = QSize(page::getWidth()*zoom, data->datatouch->currentHeight()*zoom);
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const page *page = data->datatouch->at(counterPage);
 
         if(!data->datatouch->at(counterPage)->isVisible())
             continue;
 
-        //QRectF targetRect( QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*counterPage ),
-        //                         QSizeF(page::getWidth() * zoom, page::getHeight() * zoom));
-        QRectF targetRect(QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*double(counterPage)), QSize(/*data->datatouch->biggerx()*/page::getWidth()*zoom, data->datatouch->currentHeight()*zoom));
+        QRectF targetRect(QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*double(counterPage)),
+                          sizeRect);
 
         qDebug() << targetRect << zoom << counterPage;
         painter.drawImage(targetRect, page->getImg());
@@ -83,7 +82,7 @@ void TabletCanvas::load(QPainter &painter,
     qDebug() << "\n";
     len = __tmp.length();
     _lastid = IDUNKNOWN;
-
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
     for(i = 0; i < len; i++){
         const auto &__point = __tmp.at(i);
         m_pen.setColor(setcolor(&__point.m_color));
