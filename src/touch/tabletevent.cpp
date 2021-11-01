@@ -26,7 +26,7 @@ static QEvent::Type eventType;
 
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     const QPointF& pointTouch = event->posF();
-    
+
     DocHeight = data->datatouch->biggery();
     DocWidth = data->datatouch->biggerx();
 
@@ -78,8 +78,12 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 if(pen_method || highlighter_method){
                     updatelist(event);
                 }
-                else if(rubber_method)
-                    m_rubber->actionRubber(data->datatouch, pointTouch);
+                else if(rubber_method){
+                    QList<int> *ref = m_rubber->actionRubber(data->datatouch, pointTouch);
+                    if(ref->length()){
+                        this->triggerNewView(*ref);
+                    }
+                }
                 else if(selection_method){
                     if(!m_square->check){ /* it means that the user not select anything */
                         m_square->updatePoint(pointTouch);
@@ -118,6 +122,9 @@ end:
 
     if(sel){
         m_square->reset();
+    }
+    if(!sel && selection_method){
+        data->datatouch->triggerViewIfVisible(m_pos_ris, parent->player->state() == QMediaPlayer::PlayingState);
     }
 
     update();

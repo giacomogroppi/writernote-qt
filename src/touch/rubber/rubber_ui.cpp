@@ -47,17 +47,17 @@ void rubber_ui::on_partial_button_clicked()
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
-    if(data->isempty())
-        return false;
-
+QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     int id;
-    bool need_reload = false;
+    static QList<int> Page;
     uint i, len, counterPage;
     const uint lenPage = data->lengthPage();
     const point_s *__point;
 
-    this->penna.setStyle(Qt::SolidLine);
+    Page.clear();
+
+    if(data->isempty())
+        return &Page;
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(counterPage = 0; counterPage < lenPage; counterPage ++){
@@ -72,7 +72,8 @@ bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
                     id = __point->idtratto;
 
-                    need_reload = true;
+                    if(Page.indexOf(counterPage) == -1)
+                        Page.append(counterPage);
 
                     gomma_delete_id.append(id);
 
@@ -92,8 +93,9 @@ bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
                 if(isin(__point,
                         lastPoint,
                         data)){
-                    need_reload = true;
 
+                    if(Page.indexOf(counterPage) == -1)
+                        Page.append(counterPage);
 
                     if(data->needtochangeid(i, counterPage)){
                         data->changeId(i, counterPage, lenPage);
@@ -108,7 +110,7 @@ bool rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
     }
 
-    return need_reload;
+    return &Page;
 }
 
 bool rubber_ui::clearList(datastruct *data)

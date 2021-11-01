@@ -193,6 +193,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
+    void triggerNewView(const QList<int> Page);
+    void triggerNewView();
     bool isWriting = false;
 
     void updateCursor(const QTabletEvent *event);
@@ -227,6 +229,5 @@ public slots:
     }
 
 };
-//! [0]
 
 #endif

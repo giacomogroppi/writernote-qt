@@ -204,3 +204,10 @@ static void loadLastMethod(TabletCanvas *p){
 
 }
 
+void TabletCanvas::triggerNewView(){
+    this->data->datatouch->triggerNewView(m_pos_ris, parent->player->state() == QMediaPlayer::PlayingState);
+}
+
+void TabletCanvas::triggerNewView(const QList<int> Page){
+    this->data->datatouch->triggerNewView(Page, m_pos_ris, parent->player->state() == QMediaPlayer::PlayingState);
+}

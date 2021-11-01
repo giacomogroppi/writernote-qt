@@ -67,11 +67,12 @@ private:
     void adjustHeight(const uint height);
 
     void triggerNewView(uint page, int m_pos_ris, const bool is_play);
-    void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play);
+
 
 public:
-
+    void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play);
     void triggerNewView(int m_pos_ris, const bool is_play);
+    void triggerViewIfVisible(int m_pos_ris, const bool is_play);
 
     inline QPointF getPointFirstPage() const{
         return this->zoom * pointFirstPage;
@@ -395,6 +396,15 @@ inline void datastruct::triggerNewView(int m_pos_ris, const bool is_play)
     len = lengthPage();
     for(i = 0; i < len; i++)
         this->triggerNewView(i, m_pos_ris, is_play);
+}
+
+inline void datastruct::triggerViewIfVisible(int m_pos_ris, const bool is_play)
+{
+    uint i, len;
+    len = lengthPage();
+    for( i = 0; i < len; i++)
+        if(at(i)->isVisible())
+            at_mod(i)->triggerRenderImage(m_pos_ris, is_play);
 }
 
 /* the function automatically launches the drawing for the pages

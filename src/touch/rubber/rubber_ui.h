@@ -34,7 +34,7 @@ public:
     int m_size_gomma = DEFAULT_GOMMA_SIZE;
     e_type_rubber m_type_gomma = e_type_rubber::total;
 
-    bool actionRubber(datastruct *, const QPointF &);
+    QList<int> *actionRubber(datastruct *, const QPointF &);
     bool clearList(datastruct *);
 
 private:
@@ -43,8 +43,6 @@ private:
     bool isin(const point_s * __point,
               const QPointF &point_t,
               const datastruct *data);
-
-    QPen penna;
 
     QList<int> gomma_delete_id;
 
