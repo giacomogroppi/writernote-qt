@@ -58,12 +58,15 @@ public:
     const point_s * last() const;
 
     /*
-     * these two functions do not automatically launch
+     *  these 3 functions do not automatically launch
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
     void append(const point_s &point);
     void append(const point_s *point);
+
+    void appendToTheTop(const QList<point_s> &point);
+    void appendToTheTop(const point_s *point);
 
     double minHeight() const;
     double currentHeight() const;
@@ -75,6 +78,8 @@ public:
     void move(const uint from, const uint to);
 
     void triggerRenderImage(int m_pos_ris, const bool is_play, const bool all);
+
+    void moveToUserPoint(uint &i) const;
 };
 
 inline double page::currentHeight() const
@@ -90,6 +95,16 @@ inline double page::currentWidth() const
 inline void page::move(const uint from, const uint to)
 {
     this->m_point.move(from, to);
+}
+
+inline void page::moveToUserPoint(uint &i) const
+{
+    uint len;
+    len = this->length();
+    for(i = 0; i < len; i++)
+        if(at(i)->isIdUser())
+            break;
+    i--;
 }
 
 inline point_s *page::at_translation(const QList<point_s> &point, uint index)
@@ -215,6 +230,27 @@ inline void page::append(const point_s &point)
 inline void page::append(const point_s *point)
 {
     this->append(*point);
+}
+
+inline void page::appendToTheTop(const QList<point_s> &point)
+{
+    uint i, len, start;
+
+    this->moveToUserPoint(start);
+    len = point.length();
+
+    for(i = 0; i < len; i++)
+        m_point.insert(start, point.at(i));
+
+}
+
+inline void page::appendToTheTop(const point_s *point)
+{
+    uint start;
+
+    this->moveToUserPoint(start);
+    m_point.insert(start, *point);
+
 }
 
 inline double page::minHeight() const

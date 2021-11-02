@@ -68,6 +68,8 @@ private:
 
     void triggerNewView(uint page, int m_pos_ris, const bool is_play, const bool all);
 
+    int whichPage(const point_s &point) const;
+    int adjustPoint(point_s *point) const;
 public:
     void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play, const bool all);
     void triggerNewView(int m_pos_ris, const bool is_play, const bool all);
@@ -85,11 +87,18 @@ public:
 
     void removeAt(const uint i);
 
+
     void append(const QList<point_s> & point, int m_pos_ris, const bool is_play);
+    void appendToTheTop(const QList<point_s> & point, int m_pos_ris, const bool is_play);
+
     int append(const point_s &point);
     int append(const point_s *point);
+
     void append(const point_s *point, const uint page);
     void append(const point_s &point, const uint page);
+
+    void appendToTheTop(const point_s *point, const uint page);
+    void appendToTheTop(const point_s &point, const uint page){return this->append(&point, page);};
 
     uint move_to_positive(uint len);
 
@@ -188,12 +197,10 @@ public:
 
     inline int lastId();
 
-    inline const point_s *  at_old (const uint i) const;
     inline const point_s *  at(const uint i, const uint page) const;
     inline const page *     at(const uint page) const;
     inline page *           at_mod(const uint page);
     inline point_s *        at_mod(const uint index, const uint page);
-    inline point_s *        at_mod_old(uint index);
     inline point_s &        at_draw(const uint index, const uint page) const;
     inline const point_s *  lastPoint() const;
     inline const page *     lastPage() const;
@@ -257,7 +264,6 @@ inline int datastruct::maxId()
         }
     }
 
-    qDebug() << "MAXID " << biggerID;
     return biggerID;
 }
 
@@ -292,13 +298,6 @@ inline int datastruct::lastId()
     return this->maxId();
 }
 
-inline const point_s *datastruct::at_old(const uint i) const
-{
-    uint page, index;
-    this->getRealIndex(i, index, page);
-    return this->m_page.at(page).at(index);
-}
-
 inline const point_s *datastruct::at(const uint i, const uint page) const
 {
     return this->m_page.at(page).at(i);
@@ -317,21 +316,6 @@ inline page *datastruct::at_mod(const uint page)
 inline point_s *datastruct::at_mod(const uint index, const uint page)
 {
     return at_mod(page)->at_mod(index);
-}
-
-inline point_s *datastruct::at_mod_old(uint index)
-{
-    {
-            uint i;
-            const uint len = this->m_page.length();
-            uint k;
-            for(i=0, k=0; i<len; i++){
-                k += this->m_page.at(i).length();
-                if(k>index)
-                    break;
-            }
-            return m_page.operator[](i).at_mod(m_page.at(i).length() - k + index);
-    }
 }
 
 inline point_s &datastruct::at_draw(const uint index, const uint page) const
@@ -379,6 +363,33 @@ inline void datastruct::triggerNewView(uint page, int m_pos_ris, const bool is_p
     at_mod(page)->triggerRenderImage(m_pos_ris, is_play, all);
 }
 
+inline int datastruct::whichPage(const point_s &point) const
+{
+    const page *page;
+    uint counterPage, len;
+    len = this->lengthPage();
+
+    for(counterPage = 0; counterPage < len; counterPage++){
+        page = at(counterPage);
+        if(page->currentHeight() >= point.m_y && page->minHeight() <= point.m_y){
+            return counterPage;
+        }
+    }
+    Q_ASSERT(false);
+    return -1;
+}
+
+inline int datastruct::adjustPoint(point_s *point) const
+{
+    static int which;
+    point->m_x /= this->zoom;
+    point->m_y /= this->zoom;
+
+    which = this->whichPage(*point);
+    point->page = which;
+    return which;
+}
+
 inline void datastruct::triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play, const bool all)
 {
     for(const int page: Page){
@@ -421,6 +432,20 @@ inline void datastruct::append(const QList<point_s> &point, int m_pos_ris, const
     this->triggerNewView(trigger, m_pos_ris, is_play, false);
 }
 
+inline void datastruct::appendToTheTop(const QList<point_s> &point, int m_pos_ris, const bool is_play)
+{
+    uint i;
+    const uint len = point.length();
+    int page;
+
+    for(i = 0; i < len; i++){
+        page = this->whichPage(point.at(i));
+        this->appendToTheTop(&point.at(i), page);
+    }
+
+    this->triggerNewView(m_pos_ris, is_play, true);
+}
+
 inline void datastruct::removeAt(const uint index){
     uint page, realIndex;
     this->getRealIndex(index, realIndex, page);
@@ -434,31 +459,15 @@ inline int datastruct::append(const point_s &point)
 
 inline int datastruct::append(const point_s *point)
 {
-    static uint counterPage;
-    static const page *page;
     static point_s Point;
+    static int page;
     memcpy(&Point, point, sizeof(point_s));
 
-    Point.m_x /= this->zoom;
-    Point.m_y /= this->zoom;
+    page = this->adjustPoint(&Point);
 
-    const uint len = lengthPage();
+    this->append(Point, page);
 
-    for(counterPage = 0; counterPage < len; counterPage++){
-        page = at(counterPage);
-        //qDebug() << "append call " << page->currentHeight() << point->m_y << page->minHeight() << counterPage;
-
-        if(page->currentHeight() >= point->m_y && page->minHeight() <= point->m_y){
-            //qDebug() << "Append" << point->m_y << point->m_x;
-
-            Point.page = counterPage;
-            this->append(Point, counterPage);
-            return counterPage;
-        }
-    }
-
-    Q_ASSERT(0);
-    return -1;
+    return page;
 }
 
 inline void datastruct::append(const point_s *point, const uint page)
@@ -469,6 +478,11 @@ inline void datastruct::append(const point_s *point, const uint page)
 inline void datastruct::append(const point_s &point, const uint page)
 {
     this->at_mod(page)->append(point);
+}
+
+inline void datastruct::appendToTheTop(const point_s *point, const uint page)
+{
+    this->at_mod(page)->appendToTheTop(point);
 }
 
 #endif // DATASTRUCT_H

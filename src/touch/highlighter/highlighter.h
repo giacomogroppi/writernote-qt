@@ -11,6 +11,7 @@ class highlighter;
 
 #define ADD 100.0
 
+struct point_s;
 class pen_ui;
 class datastruct;
 
@@ -30,15 +31,11 @@ public:
     bool *same_data = nullptr;
     pen_ui *m_pen = nullptr;
 
-    void moveAll(datastruct *);
-
-    void setId(int i){
-        if(!m_data.tratto_sotto)
-            return;
-        id = i;
-    }
+    void moveAll(datastruct *, QList<point_s> &point);
 
     void updateList();
+
+    bool moveToTop() const;
 
 private slots:
     //void on_slider_actionTriggered(int action);
@@ -56,9 +53,6 @@ private slots:
     void on_slider_size_valueChanged(int value);
 
 private:
-
-    int id = -1;
-
     struct data{
         uchar alfa;
         double size;
@@ -76,5 +70,10 @@ private:
 protected:
     bool event(QEvent *) override;
 };
+
+inline bool highlighter::moveToTop() const
+{
+    return this->m_data.tratto_sotto;
+}
 
 #endif // HIGHLIGHTER_H

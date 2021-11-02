@@ -112,37 +112,6 @@ double highlighter::getSize(const double pressure){
     return size;
 }
 
-void highlighter::moveAll(datastruct *data)
-{
-    uint i, k, counterPage;
-    const uint lenPage = data->lengthPage();
-
-    if(id == -1 || !m_data.tratto_sotto)
-        goto clear;
-
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        page *page = data->at_mod(counterPage);
-        const uint lenPoint = data->at(counterPage)->length();
-
-        /* find the first point written by user */
-        for(k=0; k<lenPoint; ++k)
-            if(page->at(k)->isIdUser())
-                break;
-
-        for(i=k; i<lenPoint; ++i)
-            if(page->at(i)->idtratto == this->id)
-                break;
-
-        for(; i<lenPage; ++i, ++k){
-            page->move(i, k);
-        }
-    }
-
-
-    clear:
-    id = -1;
-}
-
 void highlighter::on_button_size_clicked()
 {
     if(*same_data){

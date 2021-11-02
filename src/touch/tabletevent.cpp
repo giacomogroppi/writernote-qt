@@ -8,7 +8,7 @@
 #define MAXPOINT 20
 
 QList<point_s> __tmp;
-static void AppendAll(Document &doc, const TabletCanvas *canvas);
+static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop);
 
 bool need_save_auto = false;
 bool need_save_tmp = false;
@@ -140,8 +140,8 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
     if(m_redoundo)
         m_redoundo->copy();
 
-    if(pen_method)
-        AppendAll(*this->data, this);
+    if(pen_method || highlighter_method)
+        AppendAll(*this->data, this, (highlighter_method) ? m_highlighter->moveToTop() : false);
 
     if (m_deviceDown && event->buttons() == Qt::NoButton){
         m_deviceDown = false;
@@ -155,9 +155,6 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
         if(rubber_method && m_rubber->m_type_gomma == rubber_ui::total){
             m_rubber->clearList(data->datatouch);
         }
-
-        if(highlighter_method)
-            m_highlighter->moveAll(data->datatouch);
     }
 }
 
@@ -180,10 +177,6 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
     lastPoint.pos = event->pos();
     lastPoint.pressure = event->pressure();
     lastPoint.rotation = event->rotation();
-
-    if(highlighter_method)
-        this->m_highlighter->setId(this->data->datatouch->lastId());
-
 }
 
 static bool need_to_change_color(datastruct *data, int id){
@@ -262,7 +255,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     __tmp.append(tmp_point);
 }
 
-void AppendAll(Document &doc, const TabletCanvas *canvas){
+void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     uint i;
     const uint lenPoint = __tmp.length();
     point_s *point;
@@ -274,7 +267,10 @@ void AppendAll(Document &doc, const TabletCanvas *canvas){
         point->m_y -= PointFirstPage.y();
     }
 
-    doc.datatouch->append(__tmp, canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
+    if(toTheTop)
+        doc.datatouch->appendToTheTop(__tmp, canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
+    else
+        doc.datatouch->append(__tmp, canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
 
     __tmp.clear();
 }
