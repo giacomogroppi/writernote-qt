@@ -98,25 +98,36 @@ uint datastruct::positionId(int id)
     return 0;
 }
 
-uint datastruct::decreaseAlfa(const int id,
+//{page; indexInPage}
+std::tuple<uint, uint> datastruct::decreaseAlfa(const int id,
                               const uchar decrease,
                               const uint lenPage)
 {
-    uint i, k, len;
+    uint i, counterPage, len;
     point_s *__point;
 
-    for(k=0; k<lenPage; k++){
-        len = this->m_page.at(k).length();
-        for(i=0; i<len; ++i){
-            __point = at_mod(i, k);
+    uint lastI, lastCounter;
+
+    for(counterPage = 0; counterPage < lenPage; counterPage++){
+        len = this->m_page.at(counterPage).length();
+
+        for(i = 0; i < len; i++)
+            if(at(i, counterPage)->isIdUser())
+                break;
+
+        for(; i < len; ++i){
+            __point = at_mod(i, counterPage);
 
             if(__point->idtratto == id){
                 __point->m_color.colore[3] /= decrease;
+
+                lastI = i;
+                lastCounter = counterPage;
             }
         }
     }
 
-    return i;
+    return {lastCounter, lastI};
 }
 
 void datastruct::copy(const datastruct &src, datastruct &dest)

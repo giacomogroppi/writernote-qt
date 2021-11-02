@@ -61,14 +61,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 updateCursor(event);
 
 #if defined(WIN32) || defined(WIN64)
-        this->isdrawing = true;
+            this->isdrawing = true;
 #endif
             if (m_deviceDown) {
                 QPainter painter(&m_pixmap);
                 if(pen || highlighter_method){
                     updateBrush(event);
 
-                    paintPixmap(painter, event);
+                    //paintPixmap(painter, event);
                 }
 
                 lastPoint.pos = event->pos();
@@ -81,7 +81,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else if(rubber_method){
                     QList<int> *ref = m_rubber->actionRubber(data->datatouch, pointTouch);
                     if(ref->length()){
-                        this->triggerNewView(*ref);
+                        this->triggerNewView(*ref, true);
                     }
                 }
                 else if(selection_method){
@@ -135,7 +135,7 @@ end:
 
 inline void TabletCanvas::ManageFinish(QTabletEvent *event){
 #if defined(WIN32) || defined(WIN64)
-            this->isdrawing = false;
+    this->isdrawing = false;
 #endif
     if(m_redoundo)
         m_redoundo->copy();
@@ -148,16 +148,16 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
         if(selection_method){
             sel = false;
 
-        if(!m_square->check)
-            m_square->find(data);
+            if(!m_square->check)
+                m_square->find(data);
         }
 
-    else if(m_rubber->m_type_gomma == rubber_ui::total){
-        m_rubber->clearList(data->datatouch);
-    }
+        if(rubber_method && m_rubber->m_type_gomma == rubber_ui::total){
+            m_rubber->clearList(data->datatouch);
+        }
 
-    if(highlighter_method)
-        m_highlighter->moveAll(data->datatouch);
+        if(highlighter_method)
+            m_highlighter->moveAll(data->datatouch);
     }
 }
 

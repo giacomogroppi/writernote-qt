@@ -6,7 +6,7 @@
 #include "../../utils/time/current_time.h"
 
 #define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
-        TabletCanvas::updateBrush_load(x.m_pressure*5, setcolor(&x.m_color, divColor), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush);
+
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
@@ -82,48 +82,34 @@ void page::drawNewPage(n_style __style)
     drawLineVertical(this->m_point, tmp_point, style, last, deltay, height_p);
 }
 
-inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_play)
+void page::drawEngine(QPainter &painter, QList<point_s> &List,
+                      const int len, int i, const bool is_play,
+                      const int m_pos_ris)
 {
-    int i;
-    const int len = length();
-    QPen m_pen;
-    QBrush m_brush;
     int _lastid = IDUNKNOWN;
+    const int page = this->count-1;
     struct Point lastPoint;
     point_s *point;
     const double delta = 5.0;
+    QPen m_pen;
+    QBrush m_brush;
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
 
-    if(!len)
-        return;
-
-    qDebug() << "Draw page " << this->count;
-
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
-
-    for(i = 0; i < len-1; i++){
-        if(at(i)->isIdUser())
-            break;
-    }
-
     for(; i < len-1; ++i){
-        point = at_translation(i);
+        point = at_translation(List, i);
 
         m_pen.setColor(setcolor(point->m_color));
 
-        if(!point->isIdUser())
-                continue;
+        if(!point->isIdUser()) continue;
 
-        if(point->idtratto == _lastid){
+        if(point->idtratto == _lastid && point->page == page){
             point->m_pressure *= 1.37;
-            if(is_play && point->m_posizioneaudio > m_pos_ris){
-                UPDATE_LOAD((*point), 4, m_pen, m_brush);
-            }
-            else{
-                UPDATE_LOAD((*point), 1, m_pen, m_brush);
-            }
 
+            TabletCanvas::updateBrush_load(point->m_pressure*5,
+                                           setcolor(&point->m_color, (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1),
+                                           TabletCanvas::Valuator::PressureValuator,
+                                           m_pen, m_brush);
             painter.setPen(m_pen);
 
             painter.drawLine(lastPoint.pos, QPointF(point->m_x*delta, point->m_y*delta));
@@ -135,6 +121,40 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
 
         _lastid = point->idtratto;
     }
+}
+
+inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_play, const bool all)
+{
+    int i;
+    int len = length();
+
+    if(!len)
+        return;
+
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+
+    for(i = 0; i < len-1; i++){
+        if(at(i)->isIdUser())
+            break;
+    }
+
+    if(all)
+        this->drawEngine(painter, this->m_point, len, i, is_play, m_pos_ris);
+
+    i=0;
+    len = this->tmp.length();
+    this->drawEngine(painter, this->tmp, len, i, is_play, m_pos_ris);
+
+    this->mergeList();
+}
+
+void page::mergeList(){
+    int i, len;
+    len = this->tmp.length();
+    for(i = 0; i < len; i++){
+        this->m_point.append(tmp.at(i));
+    }
+    tmp.clear();
 }
 
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
@@ -217,18 +237,22 @@ bool page::userWrittenSomething() const
     return !(i==len);
 }
 
-void page::triggerRenderImage(int m_pos_ris, const bool is_play)
+/*
+ * all --> indicates if all the points must be drawn from scratch, if false it is drawn over the old image
+*/
+void page::triggerRenderImage(int m_pos_ris, const bool is_play, const bool all)
 {
-    /* we need Format_RGB888 for 255-255-255 color */
-    this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
-    //imgDraw.fill(Qt::white);
+    if(all || this->imgDraw.isNull())
+        this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+
     QPainter painter;
     painter.begin(&imgDraw);
 
-    this->draw(painter, m_pos_ris, is_play);
+    this->draw(painter, m_pos_ris, is_play, all);
 
     painter.end();
-    return;
+
+    /*return;
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 20))
-        std::abort();
+        std::abort();*/
 }

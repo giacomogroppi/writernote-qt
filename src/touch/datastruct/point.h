@@ -13,7 +13,9 @@ struct point_s{
     float m_pressure;
     int m_posizioneaudio;
     struct colore_s m_color;
+
     int idtratto;
+    int page; /* indicates which page the point is on */
 
     size_t createControll() const;
     bool isIdUser() const;

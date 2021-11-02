@@ -3,30 +3,28 @@
 
 static void scaleAll(QList<point_s> &point, const QPointF &translation);
 static void adjastZoom(QList<point_s> &point, QList<double> &pos_foglio);
-static QPointF biggerx(const QList<point_s> &point);
+static QPointF bigger(const QList<point_s> &point);
 static void adjastPDF(QList<point_s> &point, QList<double> &pos_foglio);
 
 void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> &pos_foglio)
 {
     const point_s firstPoint = point.takeFirst();
-    const uint lenPage = pos_foglio.length();
-    const point_s *pointAppend;
+    const int lenPage = pos_foglio.length();
     const QPointF translation(firstPoint.m_x, firstPoint.m_y);
-    const uint height = page::getHeight();
+    //const uint height = page::getHeight();
+    point_s pp;
 
-    uint i=0, counterPage;
+    int i = 0, counterPage;
 
     scaleAll(point, translation);
     adjastZoom(point, pos_foglio);
     data->datatouch->setPointFirstPage(translation);
-
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+    data->datatouch->zoom = 1.0;
+    for(counterPage = 0; counterPage <= lenPage; counterPage ++){
         data->datatouch->newPage(n_style::white);
     }
 
-    for(counterPage = 0; counterPage < lenPage ; counterPage ++){
-
-
+    /*for(counterPage = 0; counterPage < lenPage ; counterPage ++){
         uint lenList = point.length();
         for(i=0; i<lenList; ++i){
 
@@ -36,6 +34,11 @@ void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> &pos
                 data->datatouch->append(pointAppend);
             }
         }
+    }*/
+    for(i = 0; i < point.length(); i++){
+        pp = point.at(i);
+        pp.m_pressure *= 0.2;
+        data->datatouch->append(pp);
     }
 }
 
@@ -53,9 +56,9 @@ static void scaleAll(QList<point_s> &point, const QPointF &translation)
 
 static void adjastZoom(QList<point_s > &point, QList<double> &pos_foglio)
 {
-    const QPointF bigger = biggerx(point);
+    const QPointF big = bigger(point);
     const double Width = page::getWidth();
-    const double delta = Width / bigger.x();
+    const double delta = Width / big.x();
 
     point_s *ref;
 
@@ -72,13 +75,15 @@ static void adjastZoom(QList<point_s > &point, QList<double> &pos_foglio)
     for(i=0; i<len; i++){
         pos_foglio.operator[](i) *= delta;
     }
+    const auto &newTranslation = bigger(point);
 
     adjastPDF(point, pos_foglio);
+    const auto &tmp = bigger(point);
 }
 
 static void adjastPDF(QList<point_s> &point, QList<double> &pos_foglio){
     uint i, len;
-    const QPointF currentSize = biggerx(point);
+    const QPointF currentSize = bigger(point);
     const double CorrectProportions = double(page::getHeight())/double(page::getWidth());
     const uint lenPage = pos_foglio.length();
 
@@ -96,12 +101,13 @@ static void adjastPDF(QList<point_s> &point, QList<double> &pos_foglio){
     }
 }
 
-static QPointF biggerx(const QList<point_s> &point)
+static QPointF bigger(const QList<point_s> &point)
 {
-    QPointF max(0, 0);
-    const uint len = point.length();
+    QPointF max(0.0, 0.0);
     uint i;
     const point_s *ref;
+
+    const uint len = point.length();
 
     for(i = 0; i < len; i++ ){
         ref = &point.at(i);

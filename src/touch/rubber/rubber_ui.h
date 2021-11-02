@@ -38,6 +38,7 @@ public:
     bool clearList(datastruct *);
 
 private:
+    QList<int> Page;
     void drawAreaRubber(QPainter &, const QPointF &point);
 
     bool isin(const point_s * __point,

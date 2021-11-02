@@ -17,14 +17,19 @@ private:
 
     bool IsVisible = true;
     int count;
+
     QList<point_s> m_point;
+    QList<point_s> tmp;
+
     void drawNewPage(n_style __style);
 
     QImage imgDraw;
+    void mergeList();
+    void drawEngine(QPainter &painter, QList<point_s> &List,
+                    const int len, int i, const bool is_play, const int m_pos_ris);
+    void draw(QPainter &painter, const int m_pos_ris, const bool is_play, const bool all);
 
-    void draw(QPainter &painter, const int m_pos_ris, const bool is_play);
-
-    point_s *at_translation(uint index);
+    point_s *at_translation(const QList<point_s> &point, uint index);
 
 public:
     const QImage &getImg() const;
@@ -52,6 +57,11 @@ public:
     int maxId() const;
     const point_s * last() const;
 
+    /*
+     * these two functions do not automatically launch
+     *  the drawing of the whole sheet, they wait for
+     *  the triggerRenderImage to be executed.
+    */
     void append(const point_s &point);
     void append(const point_s *point);
 
@@ -64,7 +74,7 @@ public:
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
 
-    void triggerRenderImage(int m_pos_ris, const bool is_play);
+    void triggerRenderImage(int m_pos_ris, const bool is_play, const bool all);
 };
 
 inline double page::currentHeight() const
@@ -82,13 +92,13 @@ inline void page::move(const uint from, const uint to)
     this->m_point.move(from, to);
 }
 
-inline point_s *page::at_translation(uint index)
+inline point_s *page::at_translation(const QList<point_s> &point, uint index)
 {
     static point_s tmp;
     //const double xtranslation = (this->count-1)*page::getWidth();
     const double ytranslation = (this->count-1)*page::getHeight();
 
-    memcpy(&tmp, at(index), sizeof(point_s));
+    memcpy(&tmp, &point.at(index), sizeof(point_s));
     //tmp.m_x -= xtranslation;
     tmp.m_y -= ytranslation;
     return &tmp;
@@ -198,7 +208,8 @@ inline const point_s *page::last() const
 
 inline void page::append(const point_s &point)
 {
-    this->m_point.append(point);
+    this->tmp.append(point);
+    //this->m_point.append(point);
 }
 
 inline void page::append(const point_s *point)
@@ -210,18 +221,5 @@ inline double page::minHeight() const
 {
     return (this->count-1)*this->height;
 }
-
-/*inline double page::biggerynoid() const
-{
-    uint i;
-    const uint len = this->m_point.length();
-    double max = 0.0;
-
-    for(i=0; i<len; i++){
-        if(this->m_point.at(i).m_y > max)
-            max = this->m_point.at(i).m_y;
-    }
-    return max;
-}*/
 
 #endif // PAGE_H

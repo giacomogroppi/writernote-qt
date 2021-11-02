@@ -79,7 +79,7 @@ public:
     QColor color() const
         { return m_color; }
 
-    void paintPixmap(QPainter &painter, QTabletEvent *event);
+    //void paintPixmap(QPainter &painter, QTabletEvent *event);
 
     /* funzione che setta il cambio dell'inserimento -> penna, gomma... */
     void sceltacolorepenna(const QColor);
@@ -193,8 +193,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
-    void triggerNewView(const QList<int> Page);
-    void triggerNewView();
+    void triggerNewView(const QList<int> Page, const bool all);
+    void triggerNewView(const bool all);
     bool isWriting = false;
 
     void updateCursor(const QTabletEvent *event);

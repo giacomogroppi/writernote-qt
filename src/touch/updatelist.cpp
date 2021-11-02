@@ -12,14 +12,14 @@
  * the function is called from TabletCanvas::tabletEvent
  * and print the data in the painter
 */
-void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
+/*void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
     Q_UNUSED(painter);
     Q_UNUSED(event);
 
     update();
     return;
 
-    /*
+
     static qreal maxPenradius = pressureToWidth(1.0);
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -29,8 +29,8 @@ void TabletCanvas::paintPixmap(QPainter &painter, QTabletEvent *event){
     qreal press = event->pressure();
 
     update(QRect(lastPoint.pos.toPoint(), event->pos()).normalized()
-           .adjusted(-maxPenradius, -maxPenradius, maxPenradius, maxPenradius));*/
+           .adjusted(-maxPenradius, -maxPenradius, maxPenradius, maxPenradius));
 
 
 
-}
+}*/

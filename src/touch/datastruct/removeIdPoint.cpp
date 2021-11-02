@@ -1,6 +1,6 @@
 #include "datastruct.h"
 
-void datastruct::removePointId(QList<int> &list){
+void datastruct::removePointId(const QList<int> &list){
     uint i ;
     const uint len_list = list.length();
     for(i=0; i<len_list; i++){
@@ -13,13 +13,16 @@ void datastruct::removePointId(int id){
 
     for(page &page : this->m_page){
         uint lenPoint = page.length();
-        for(i=0; i<lenPoint;){
+
+        for(i = 0; i < lenPoint;){
             if(page.at(i)->idtratto == id){
                 page.removeAt(i);
+
                 --lenPoint;
-                }
-            else
+            }
+            else{
                 ++i;
+            }
         }
     }
 }

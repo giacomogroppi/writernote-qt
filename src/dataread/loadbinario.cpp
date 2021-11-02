@@ -8,18 +8,6 @@
 
 #ifdef ALL_VERSION
 
-static size_t createControllOldVersion(const QList<point_s> &point)
-{
-    uint i;
-    const uint len = point.length();
-    size_t controll = 0;
-    for(i = 0; i < len; i++){
-        controll += point.at(i).createControll();
-    }
-
-    return controll;
-}
-
 /* la funzione gestisce la lettura del file binario */
 int xmlstruct::loadbinario_0(zip_t *z){
     struct colore_last{
@@ -36,6 +24,7 @@ int xmlstruct::loadbinario_0(zip_t *z){
         size_t createControll() const;
         bool isIdUser() const;
     };
+
     QList<double> pos_foglio;
     QList<point_s> point;
     struct zip_stat st;
@@ -92,15 +81,42 @@ int xmlstruct::loadbinario_0(zip_t *z){
     return ERROR;
 }
 
+struct point_last{
+    double m_x, m_y, rotation;
+    float m_pressure;
+    int m_posizioneaudio;
+    struct colore_s m_color;
+    int idtratto;
+
+    size_t createControll() const;
+    bool isIdUser() const;
+};
+
+static size_t createControllOldVersion(const QList<point_last> &point)
+{
+    uint i;
+    const uint len = point.length();
+    size_t controll = 0;
+    for(i = 0; i < len; i++){
+        controll += point.at(i).createControll();
+    }
+
+    return controll;
+}
+
 int xmlstruct::loadbinario_1(struct zip *z){
+
     struct zip_stat st;
     size_t controll;
     int i, len;
     zip_file_t *f;
-    struct point_s temp_point;
+    struct point_last temp_point;
     double valoretemp;
 
-    QList<point_s> point;
+    QList<point_s> __tmp;
+    point_s __point;
+
+    QList<point_last> point;
     QList<double> pos_foglio;
 
     zip_stat_init(&st);
@@ -115,7 +131,7 @@ int xmlstruct::loadbinario_1(struct zip *z){
     SOURCE_READ_GOTO(f, &len, sizeof(int));
 
     for(i=0; i<len; i++){
-        SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
+        SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_last));
         point.append(temp_point);
     }
 
@@ -134,7 +150,19 @@ int xmlstruct::loadbinario_1(struct zip *z){
     if(controll != createControllOldVersion(point))
         return ERROR_CONTROLL;
 
-    xmlstruct::decode(currenttitle, point, pos_foglio);
+    for(const auto & ref : qAsConst(point)){
+        memcpy(&__point.m_color, &ref.m_color, sizeof(colore_s));
+        __point.idtratto = ref.idtratto;
+        __point.m_posizioneaudio = ref.m_posizioneaudio;
+        __point.m_pressure = ref.m_pressure;
+        __point.m_x = ref.m_x;
+        __point.m_y = ref.m_y;
+        __point.rotation = ref.rotation;
+
+        __tmp.append(__point);
+    }
+
+    xmlstruct::decode(currenttitle, __tmp, pos_foglio);
     return OK;
 
     free_:
@@ -192,4 +220,24 @@ int xmlstruct::loadbinario_2(struct zip *z){
     free_:
     zip_fclose(f);
     return ERROR;
+}
+
+size_t point_last::createControll() const{
+    static size_t data;
+    static int i;
+
+    data = 0;
+    data += m_x;
+    data += m_y;
+    data += m_pressure;
+    data += idtratto;
+
+    for(i=0; i<NCOLOR; ++i){
+        data += m_color.colore[i];
+    }
+
+    data += this->rotation;
+    data += this->m_posizioneaudio;
+
+    return data;
 }

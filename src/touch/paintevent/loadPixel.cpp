@@ -43,7 +43,7 @@ void TabletCanvas::load(QPainter &painter,
     const int lenPage = data->datatouch->lengthPage();
     const QPointF &PointFirstPage = data->datatouch->getPointFirstPage();
     const double &zoom = data->datatouch->zoom;
-    qDebug() << "TabletCanvas::load call " << lenPage;
+
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     if(m_pixmap)
@@ -74,12 +74,9 @@ void TabletCanvas::load(QPainter &painter,
         QRectF targetRect(QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*double(counterPage)),
                           sizeRect);
 
-        qDebug() << targetRect << zoom << counterPage;
         painter.drawImage(targetRect, page->getImg());
     }
 
-
-    qDebug() << "\n";
     len = __tmp.length();
     _lastid = IDUNKNOWN;
     painter.setRenderHint(QPainter::HighQualityAntialiasing);

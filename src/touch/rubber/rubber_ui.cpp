@@ -49,12 +49,9 @@ void rubber_ui::on_partial_button_clicked()
 */
 QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     int id;
-    static QList<int> Page;
     uint i, len, counterPage;
     const uint lenPage = data->lengthPage();
     const point_s *__point;
-
-    Page.clear();
 
     if(data->isempty())
         return &Page;
@@ -64,22 +61,20 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
             len = data->at(counterPage)->length();
             for(i=0; i<len; i++){
                 __point = &data->at_draw(i, counterPage);
+                id = __point->idtratto;
 
-                if(isin(__point,
-                            lastPoint,
-                        data) &&
+                if(isin(__point, lastPoint, data) &&
                         gomma_delete_id.indexOf(id) == -1){
-
-                    id = __point->idtratto;
 
                     if(Page.indexOf(counterPage) == -1)
                         Page.append(counterPage);
 
                     gomma_delete_id.append(id);
 
-                        i = data->decreaseAlfa(id, DECREASE, lenPage);
+                    const auto [page, index] = data->decreaseAlfa(id, DECREASE, lenPage);
 
-                    --i;
+                    counterPage = page;
+                    i = index - 1;
                 }
             }
         }
@@ -109,7 +104,7 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
         }
 
     }
-
+    qDebug() << "Rubber::rubberaction " << gomma_delete_id;
     return &Page;
 }
 
@@ -121,7 +116,7 @@ bool rubber_ui::clearList(datastruct *data)
     data->removePointId(gomma_delete_id);
 
     gomma_delete_id.clear();
-
+    data->triggerNewView(Page, -1, false, true);
     return true;
 }
 

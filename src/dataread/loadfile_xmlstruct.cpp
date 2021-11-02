@@ -168,25 +168,14 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
     if(tmp_ver <= 2){
 #ifdef ALL_VERSION
         err = load_file_2(currenttitle, f, filezip);
-        if(err != OK)
-            goto free_;
     }else if(tmp_ver == 3){
         err = load_file_3(currenttitle, f, filezip);
-        if(err != OK)
-            goto free_;
-
     }else if(tmp_ver == 4){
         err = load_file_4(currenttitle, f, filezip);
-        if(err != OK)
-            goto free_;
     }else if(tmp_ver == 5){
         err = load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg);
-        if(err != OK)
-            goto free_;
     }else if(tmp_ver == 6){
         err = load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg);
-        if(err != OK)
-            goto free_;
     }
 #else
         goto error_version;
@@ -197,9 +186,10 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
 
     if(tmp_ver == 7){
         err = load_file_7(currenttitle, f, filezip, LoadPdf, LoadImg);
-        if(err != OK)
-            goto free_;
     }
+
+    if(err != OK)
+        goto free_;
 
     /*
      * after we load all the file we
@@ -210,6 +200,7 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
     */
     currenttitle->versione = CURRENT_VERSION_CURRENT_TITLE;
 
+    this->currenttitle->datatouch->triggerNewView(-1, false, true);
     CLOSE_ZIP(f, filezip);
     return OK;
 
