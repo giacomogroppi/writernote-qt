@@ -42,23 +42,9 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-void TabletCanvas::updateBrush_load(const double pressure, const QColor &color,
-                                    const Valuator m_lineWidthValuator, QPen &m_pen, QBrush &m_brush){
-    /* temporary */
-    int vValue = 127;
-    int hValue = 127;
+void TabletCanvas::updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush){
+    m_pen.setWidthF(pressureToWidth(pressure/2.00));
 
-    switch (m_lineWidthValuator) {
-            case PressureValuator:
-                m_pen.setWidthF(pressureToWidth(pressure/2.00));
-                break;
-            case TiltValuator:
-                m_pen.setWidthF(std::max(std::abs(vValue - 127),
-                                         std::abs(hValue - 127)) / 12);
-                break;
-            default:
-                m_pen.setWidthF(1);
-        }
     m_brush.setColor(color);
     m_pen.setColor(color);
 

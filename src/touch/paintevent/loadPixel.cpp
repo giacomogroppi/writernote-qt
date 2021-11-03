@@ -16,7 +16,7 @@ static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainte
 
 #define C(x) x->datatouch
 #define UPDATE_LOAD(x, zoom, div, m_pen, m_brush ) \
-        TabletCanvas::updateBrush_load(x.m_pressure*zoom, setcolor(&x.m_color, div), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush);
+        TabletCanvas::updateBrush_load(x.m_pressure*zoom, setcolor(&x.m_color, div), m_pen, m_brush);
 
 /*
  * TODO -> implement this function to play audio
@@ -131,7 +131,7 @@ static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainte
 
         const point_s *point = data->at(0, counterPage);
 
-        TabletCanvas::updateBrush_load(point->m_pressure * data->zoom, setcolor(point->m_color, 1), TabletCanvas::Valuator::PressureValuator, m_pen, m_brush);
+        TabletCanvas::updateBrush_load(point->m_pressure * data->zoom, setcolor(point->m_color, 1), m_pen, m_brush);
 
         painter.setPen(m_pen);
 

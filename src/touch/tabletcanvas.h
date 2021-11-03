@@ -123,8 +123,7 @@ public:
                      const bool IsExportingPdf);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-    static void updateBrush_load(const double pressure, const QColor &color,
-                                 const TabletCanvas::Valuator m_lineWidthValuator, QPen &m_pen, QBrush &m_brush);
+    static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush);
     void loadpixel();
 
     /* funzioni responsabili del riascolto */

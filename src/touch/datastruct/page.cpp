@@ -95,7 +95,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List,
     QBrush m_brush;
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
-    painter.setRenderHint(QPainter::Antialiasing);
+
     for(; i < len-1; ++i){
         point = at_translation(List, i);
 
@@ -106,9 +106,8 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List,
         if(point->idtratto == _lastid && point->page == page){
             point->m_pressure *= 1.32;
 
-            TabletCanvas::updateBrush_load(point->m_pressure*5,
+            TabletCanvas::updateBrush_load(point->m_pressure*delta,
                                            setcolor(&point->m_color, (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1),
-                                           TabletCanvas::Valuator::PressureValuator,
                                            m_pen, m_brush);
             painter.setPen(m_pen);
 
@@ -131,7 +130,8 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
     if(!len)
         return;
 
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::TextAntialiasing, false);
 
     for(i = 0; i < len-1; i++){
         if(at(i)->isIdUser())
@@ -252,7 +252,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool is_play, const bool all)
 
     painter.end();
 
-    return;
+    //return;
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 1))
         std::abort();
 }
