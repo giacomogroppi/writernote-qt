@@ -43,6 +43,7 @@ void TabletCanvas::load(QPainter &painter,
     const int lenPage = data->datatouch->lengthPage();
     const QPointF &PointFirstPage = data->datatouch->getPointFirstPage();
     const double &zoom = data->datatouch->zoom;
+    const QSize sizeRect = QSize(page::getWidth()*zoom, data->datatouch->currentHeight()*zoom);
 
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
@@ -62,24 +63,11 @@ void TabletCanvas::load(QPainter &painter,
     data->m_img->draw(painter, data->datatouch->biggerx(),
                       size_orizzontale, size_verticale);
 
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
-
-    const QSize sizeRect = QSize(page::getWidth()*zoom, data->datatouch->currentHeight()*zoom);
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        const page *page = data->datatouch->at(counterPage);
-
-        if(!data->datatouch->at(counterPage)->isVisible())
-            continue;
-
-        QRectF targetRect(QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*double(counterPage)),
-                          sizeRect);
-
-        painter.drawImage(targetRect, page->getImg());
-    }
+    painter.setRenderHint(QPainter::Antialiasing);
 
     len = __tmp.length();
     _lastid = IDUNKNOWN;
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::Antialiasing);
     for(i = 0; i < len; i++){
         const auto &__point = __tmp.at(i);
         m_pen.setColor(setcolor(&__point.m_color));
@@ -105,6 +93,19 @@ void TabletCanvas::load(QPainter &painter,
         lastPoint.pos.setY(__point.m_y);
 
         _lastid = __point.idtratto;
+    }
+
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        const page *page = data->datatouch->at(counterPage);
+
+        if(!data->datatouch->at(counterPage)->isVisible())
+            continue;
+
+        QRectF targetRect(QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*double(counterPage)),
+                          sizeRect);
+
+        painter.drawImage(targetRect, page->getImg());
     }
 
     m_pen.setColor(current_color);
