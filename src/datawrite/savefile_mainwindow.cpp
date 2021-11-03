@@ -42,9 +42,9 @@ void MainWindow::on_actionSave_As_triggered()
 
     if(posizione != ""){
         int command;
-#if defined(unix) || defined(MACOS)
+
         command = system(move_file(posizione, m_path).toUtf8().constData());
-#endif
+
         if(command){
             dialog_critic("We had a problem saving a copy of " + posizione + " to " + m_path);
             m_path = posizione;

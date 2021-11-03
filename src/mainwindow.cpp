@@ -286,3 +286,15 @@ void MainWindow::on_actionRemove_current_PDF_triggered()
     this->m_currenttitle->m_pdf->reset();
 #endif // PDFSUPPORT
 }
+
+void MainWindow::on_buttonFullScreen_clicked()
+{
+    this->setFullScreen();
+}
+
+
+void MainWindow::on_actionFull_Screen_triggered()
+{
+    this->setFullScreen();
+}
+

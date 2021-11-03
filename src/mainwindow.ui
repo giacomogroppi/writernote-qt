@@ -407,6 +407,23 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="buttonFullScreen">
+        <property name="maximumSize">
+         <size>
+          <width>27</width>
+          <height>27</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/full-screen.png</normaloff>:/image/images/full-screen.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_button2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -732,7 +749,7 @@
      <x>0</x>
      <y>0</y>
      <width>1099</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWriternote">
@@ -872,6 +889,7 @@
    <addaction name="actionListen_current_audio"/>
    <addaction name="actionDelete_audio"/>
    <addaction name="actionChange_visual"/>
+   <addaction name="actionFull_Screen"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolbarmatita">
@@ -1445,6 +1463,15 @@
    </property>
    <property name="text">
     <string>Change visual</string>
+   </property>
+  </action>
+  <action name="actionFull_Screen">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/full-screen.png</normaloff>:/image/images/full-screen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Full Screen</string>
    </property>
   </action>
  </widget>

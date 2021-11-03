@@ -33,14 +33,27 @@ jobs:
 
       - name: Run a one-line script
         run: |
-          sudo apt install libpoppler-qt5-dev
+          #sudo apt install libpoppler-qt5-dev
           sudo apt -y install libzip-dev
+          sudo apt -y install libfreetype-dev libfontconfig1-dev libtiff-dev libnss3-dev libcairo2-dev libboost-all-dev
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.13.2
         with:
           version: 5.15.2 # optional, default is 5.15.2
           modules: multimedia # optional
+
+      - name: Build poppler
+        run: |
+          wget https://github.com/freedesktop/poppler/archive/refs/tags/poppler-21.10.0.zip
+          unzip poppler-21.10.0.zip
+          rm poppler-21.10.0.zip
+          cd poppler-poppler-21.10.0
+
+          mkdir build
+          cmake ..
+          make -j($nproc)
+          make install
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1

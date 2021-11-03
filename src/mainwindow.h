@@ -62,6 +62,8 @@ class MainWindow : public QMainWindow
 
 public:
 
+    void setFullScreen();
+
     /* -1 load from QSettings, -2 for show a slider */
     void setSizeButton(int size = -1);
     void resFileTmpInTmpFolder();
@@ -251,6 +253,9 @@ private slots:
     void on_buttonUndu_clicked();
     void on_buttonRedo_clicked();
     void on_sliderZoom_sliderMoved(int position);
+    void on_buttonFullScreen_clicked();
+
+    void on_actionFull_Screen_triggered();
 
 protected:
     void dropEvent(QDropEvent *event) override;
@@ -261,4 +266,12 @@ signals:
     void RedoT();
 
 };
+
+inline void MainWindow::setFullScreen()
+{
+    if(this->isFullScreen())
+        this->showFullScreen();
+    else
+        this->showNormal();
+}
 #endif // MAINWINDOW_H
