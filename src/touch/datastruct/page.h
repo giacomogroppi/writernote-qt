@@ -99,12 +99,19 @@ inline void page::move(const uint from, const uint to)
 
 inline void page::moveToUserPoint(uint &i) const
 {
+    static int which = -1;
+    if(which != -1){
+        i = which;
+        return;
+    }
+
     uint len;
     len = this->length();
     for(i = 0; i < len; i++)
         if(at(i)->isIdUser())
             break;
-    i--;
+
+    which = i;
 }
 
 inline point_s *page::at_translation(const QList<point_s> &point, uint index)

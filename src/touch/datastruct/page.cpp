@@ -252,7 +252,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool is_play, const bool all)
 
     painter.end();
 
-    /*return;
+    return;
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 20))
-        std::abort();*/
+        std::abort();
 }
