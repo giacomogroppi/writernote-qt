@@ -4,7 +4,7 @@
 #include "../tabletcanvas.h"
 #include <QPainter>
 #include "../../utils/time/current_time.h"
-
+#include <QPainterPath>
 #define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
 
 
@@ -62,9 +62,6 @@ void page::drawNewPage(n_style __style)
 
     memcpy(&tmp_point.m_color, &style.colore, sizeof(style.colore));
 
-    /*style.nx = (style.nx <= 0) ? 1 : style.nx;
-    style.ny = (style.ny <= 0) ? 1 : style.ny;*/
-
     if(style.nx){
         deltax = height_p / (double)style.nx;
         ct_del = deltax;
@@ -74,51 +71,53 @@ void page::drawNewPage(n_style __style)
 
     tmp_point.m_pressure = widthToPressure(style.thickness);
 
-    //qDebug() << "page::drawNewPage " << last << width_p << height_p << style.ny << style.nx << deltay << (__style==n_style::square);
-
-    /* draw the orizzontal line */
     drawLineOrizzontal(this->m_point, tmp_point, style, last, deltax, width_p, ct_del);
-    /* draw vertical line */
     drawLineVertical(this->m_point, tmp_point, style, last, deltay, height_p);
 }
 
-void page::drawEngine(QPainter &painter, QList<point_s> &List,
-                      const int len, int i, const bool is_play,
+void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool is_play,
                       const int m_pos_ris)
 {
     int _lastid = IDUNKNOWN;
     const int page = this->count-1;
+    const int len = List.length();
     struct Point lastPoint;
     point_s *point;
-    const double delta = 5.0;
-    QPen m_pen;
+    static const double delta = getResolutionWidth() / getWidth();
+
+    QPainterPath path;
     QBrush m_brush;
+    QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
+    static double x, y;
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
-
-    for(; i < len-1; ++i){
+    qDebug() << painter.renderHints();
+    for(; i < len-3; ++i){
         point = at_translation(List, i);
 
-        m_pen.setColor(setcolor(point->m_color));
-
-        if(!point->isIdUser()) continue;
+        x = point->m_x * delta;
+        y = point->m_y * delta;
 
         if(point->idtratto == _lastid && point->page == page){
+            const int decrease = (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1;
             point->m_pressure *= 1.32;
 
+            m_pen.setColor(setcolor(point->m_color));
             TabletCanvas::updateBrush_load(point->m_pressure*delta,
-                                           setcolor(&point->m_color, (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1),
+                                           setcolor(&point->m_color, decrease),
                                            m_pen, m_brush);
+            m_pen.setWidthF(20);
             painter.setPen(m_pen);
 
-            painter.drawLine(lastPoint.pos, QPointF(point->m_x*delta, point->m_y*delta));
-
+            painter.drawLine(lastPoint.pos, QPointF(x, y));
         }
 
-        lastPoint.pos.setX(point->m_x*delta);
-        lastPoint.pos.setY(point->m_y*delta);
+        lastPoint.pos = QPointF(x, y);
 
         _lastid = point->idtratto;
+
+        i += 2;
     }
 }
 
@@ -133,17 +132,13 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::TextAntialiasing, false);
 
-    for(i = 0; i < len-1; i++){
-        if(at(i)->isIdUser())
-            break;
-    }
+    this->moveToUserPoint(i);
 
     if(all)
-        this->drawEngine(painter, this->m_point, len, i, is_play, m_pos_ris);
+        this->drawEngine(painter, this->m_point, i, is_play, m_pos_ris);
 
     i=0;
-    len = this->tmp.length();
-    this->drawEngine(painter, this->tmp, len, i, is_play, m_pos_ris);
+    this->drawEngine(painter, this->tmp, i, is_play, m_pos_ris);
 
     this->mergeList();
 }

@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include <QtGlobal>
+#include <QPointF>
 #define NCOLOR 4
 
 struct colore_s{
@@ -19,6 +20,12 @@ struct point_s{
 
     size_t createControll() const;
     bool isIdUser() const;
+    QPointF toQPointF(const double delta) const;
 };
+
+inline QPointF point_s::toQPointF(const double delta) const
+{
+    return QPointF(m_x*delta, m_y*delta);
+}
 
 #endif // POINT_H

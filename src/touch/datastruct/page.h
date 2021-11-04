@@ -25,8 +25,7 @@ private:
 
     QImage imgDraw;
     void mergeList();
-    void drawEngine(QPainter &painter, QList<point_s> &List,
-                    const int len, int i, const bool is_play, const int m_pos_ris);
+    void drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool is_play, const int m_pos_ris);
     void draw(QPainter &painter, const int m_pos_ris, const bool is_play, const bool all);
 
     point_s *at_translation(const QList<point_s> &point, uint index);
@@ -79,7 +78,7 @@ public:
 
     void triggerRenderImage(int m_pos_ris, const bool is_play, const bool all);
 
-    void moveToUserPoint(uint &i) const;
+    void moveToUserPoint(int &i) const;
 };
 
 inline double page::currentHeight() const
@@ -97,7 +96,7 @@ inline void page::move(const uint from, const uint to)
     this->m_point.move(from, to);
 }
 
-inline void page::moveToUserPoint(uint &i) const
+inline void page::moveToUserPoint(int &i) const
 {
     static int which = -1;
     if(which != -1){
@@ -105,7 +104,7 @@ inline void page::moveToUserPoint(uint &i) const
         return;
     }
 
-    uint len;
+    int len;
     len = this->length();
     for(i = 0; i < len; i++)
         if(at(i)->isIdUser())
@@ -118,10 +117,9 @@ inline point_s *page::at_translation(const QList<point_s> &point, uint index)
 {
     static point_s tmp;
     //const double xtranslation = (this->count-1)*page::getWidth();
-    const double ytranslation = (this->count-1)*page::getHeight();
+    const double ytranslation = double(this->count-1)*page::getHeight();
 
     memcpy(&tmp, &point.at(index), sizeof(point_s));
-    //tmp.m_x -= xtranslation;
     tmp.m_y -= ytranslation;
     return &tmp;
 }
@@ -142,12 +140,12 @@ inline double page::getWidth()
 
 inline double page::getResolutionWidth()
 {
-    return getWidth()*5;
+    return getWidth()*5.0;
 }
 
 inline double page::getResolutionHeigth()
 {
-    return getHeight()*5;
+    return getHeight()*5.0;
 }
 
 inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView)
@@ -241,7 +239,7 @@ inline void page::append(const point_s *point)
 
 inline void page::appendToTheTop(const QList<point_s> &point)
 {
-    uint i, len, start;
+    int i, len, start;
 
     this->moveToUserPoint(start);
     len = point.length();
@@ -253,7 +251,7 @@ inline void page::appendToTheTop(const QList<point_s> &point)
 
 inline void page::appendToTheTop(const point_s *point)
 {
-    uint start;
+    int start;
 
     this->moveToUserPoint(start);
     m_point.insert(start, *point);

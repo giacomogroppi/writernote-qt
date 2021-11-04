@@ -45,14 +45,12 @@ void TabletCanvas::load(QPainter &painter,
     const double &zoom = data->datatouch->zoom;
     const QSize sizeRect = QSize(page::getWidth()*zoom, data->datatouch->currentHeight()*zoom);
 
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
-
     if(m_pixmap)
         m_pixmap->fill(Qt::white);
 
     current_color = m_color;
     m_pen.setStyle(Qt::PenStyle::SolidLine);
-
+    painter.setRenderHint(QPainter::Antialiasing);
     loadSheet(*data, m_pen, m_brush, painter);
 
 #ifdef PDFSUPPORT
@@ -63,24 +61,17 @@ void TabletCanvas::load(QPainter &painter,
     data->m_img->draw(painter, data->datatouch->biggerx(),
                       size_orizzontale, size_verticale);
 
-    painter.setRenderHint(QPainter::Antialiasing);
-
     len = __tmp.length();
     _lastid = IDUNKNOWN;
-    painter.setRenderHint(QPainter::Antialiasing);
+
+    /* draw points that the user has not finished yet */
     for(i = 0; i < len; i++){
         const auto &__point = __tmp.at(i);
         m_pen.setColor(setcolor(&__point.m_color));
 
         if(__point.idtratto == _lastid){
-            if(is_play && __point.m_posizioneaudio > m_pos_ris)
-            {
-                UPDATE_LOAD(__point, data->datatouch->zoom, 4, m_pen, m_brush);
-            }
-            else
-            {
-                UPDATE_LOAD(__point, data->datatouch->zoom, 1, m_pen, m_brush);
-            }
+            const int needToReduce = (is_play && __point.m_posizioneaudio > m_pos_ris) ? 4.0 : 1.0;
+            TabletCanvas::updateBrush_load(__point.m_pressure*zoom, setcolor(&__point.m_color, needToReduce), m_pen, m_brush);
 
             painter.setPen(m_pen);
 
@@ -95,7 +86,8 @@ void TabletCanvas::load(QPainter &painter,
         _lastid = __point.idtratto;
     }
 
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    painter.setRenderHints(QPainter::Antialiasing);
+    qDebug() << "Loadpixel " << painter.renderHints();
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const page *page = data->datatouch->at(counterPage);
 
