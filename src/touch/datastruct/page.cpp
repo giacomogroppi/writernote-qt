@@ -130,6 +130,8 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
             _lastid = at(i)->idtratto;
     }*/
 
+    painter.setRenderHint(QPainter::Antialiasing);
+
     for(; i < len; ++i){
         point = at_translation(List, i);
 
@@ -138,13 +140,13 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
 
         if(point->idtratto == _lastid && point->page == page){
             const int decrease = (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1;
-            point->m_pressure *= 1.32;
+            point->m_pressure *= 1.4;
 
             m_pen.setColor(setcolor(point->m_color));
             TabletCanvas::updateBrush_load(point->m_pressure*delta,
                 setcolor(&point->m_color, decrease),
                 m_pen, m_brush);
-            m_pen.setWidthF(20);
+
             painter.setPen(m_pen);
 
             painter.drawLine(lastPoint.pos, QPointF(x, y));
