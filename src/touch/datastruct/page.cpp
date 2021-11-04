@@ -93,7 +93,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
     qDebug() << painter.renderHints();
-    for(; i < len-3; ++i){
+    for(; i < len; ++i){
         point = at_translation(List, i);
 
         x = point->m_x * delta;
