@@ -78,7 +78,9 @@ void page::drawNewPage(n_style __style)
 void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool is_play,
                       const int m_pos_ris)
 {
-    int _lastid = List.at(i).idtratto;
+    //int _lastid = List.at(i).idtratto;
+    int _lastid = IDUNKNOWN;
+
     const int page = this->count-1;
     const int len = List.length();
     struct Point lastPoint;
@@ -89,9 +91,13 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
     QBrush m_brush;
     QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
+    static double x, y;
+
     m_pen.setStyle(Qt::PenStyle::SolidLine);
     qDebug() << painter.renderHints();
-    for(; i < len-3; ++i){
+
+
+    /*for(; i < len-3; ++i){
         path.moveTo(List.at(i).toQPointF(delta));
 
         while(i<len-3 && List.at(i+2).idtratto == _lastid){
@@ -113,19 +119,42 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
             painter.setPen(m_pen);
 
             path.cubicTo(point->toQPointF(delta), point1->toQPointF(delta), point2->toQPointF(delta));
-            //painter.drawLine(lastPoint.pos, QPointF(x, y));
+
             i += 2;
         }
 
         painter.strokePath(path, m_pen);
 
-        //lastPoint.pos = QPointF(x, y);
-
         nextPoint(i, List);
         if(i < len-3)
             _lastid = at(i)->idtratto;
-        //_lastid = at(i)->idtratto;
+    }*/
+
+    for(; i < len; ++i){
+        point = at_translation(List, i);
+
+        x = point->m_x * delta;
+        y = point->m_y * delta;
+
+        if(point->idtratto == _lastid && point->page == page){
+            const int decrease = (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1;
+            point->m_pressure *= 1.32;
+
+            m_pen.setColor(setcolor(point->m_color));
+            TabletCanvas::updateBrush_load(point->m_pressure*delta,
+                setcolor(&point->m_color, decrease),
+                m_pen, m_brush);
+            m_pen.setWidthF(20);
+            painter.setPen(m_pen);
+
+            painter.drawLine(lastPoint.pos, QPointF(x, y));
+        }
+
+        lastPoint.pos = QPointF(x, y);
+
+        _lastid = point->idtratto;
     }
+
 }
 
 inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_play, const bool all)
