@@ -30,6 +30,8 @@ private:
 
     point_s *at_translation(const QList<point_s> &point, uint index);
 
+    static void nextPoint(int &index, QList<point_s> &list);
+
 public:
     const QImage &getImg() const;
 
@@ -122,6 +124,16 @@ inline point_s *page::at_translation(const QList<point_s> &point, uint index)
     memcpy(&tmp, &point.at(index), sizeof(point_s));
     tmp.m_y -= ytranslation;
     return &tmp;
+}
+
+inline void page::nextPoint(int &index, QList<point_s> &list)
+{
+    const int currentId = list.at(index).idtratto;
+    int len = list.length();
+    for(; index < len; index++){
+        if(list.at(index).idtratto != currentId)
+            return;
+    }
 }
 
 inline const QImage &page::getImg() const

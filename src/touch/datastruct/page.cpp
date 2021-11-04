@@ -78,46 +78,53 @@ void page::drawNewPage(n_style __style)
 void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool is_play,
                       const int m_pos_ris)
 {
-    int _lastid = IDUNKNOWN;
+    int _lastid = List.at(i).idtratto;
     const int page = this->count-1;
     const int len = List.length();
     struct Point lastPoint;
-    point_s *point;
+    point_s *point, *point1, *point2;
     static const double delta = getResolutionWidth() / getWidth();
 
     QPainterPath path;
     QBrush m_brush;
     QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
-    static double x, y;
-
     m_pen.setStyle(Qt::PenStyle::SolidLine);
     qDebug() << painter.renderHints();
-    for(; i < len; ++i){
-        point = at_translation(List, i);
+    for(; i < len-3; ++i){
+        path.moveTo(List.at(i).toQPointF(delta));
 
-        x = point->m_x * delta;
-        y = point->m_y * delta;
+        while(i<len-3 && List.at(i+2).idtratto == _lastid){
+            point = at_translation(List, i);
+            point1 = at_translation(List, i+1);
+            point2 = at_translation(List, i+2);
 
-        if(point->idtratto == _lastid && point->page == page){
+            if(point->page != page || point1->page != page || point2->page != page)
+                break;
+
             const int decrease = (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1;
-            point->m_pressure *= 1.32;
+            point->m_pressure *= 1.4;
 
             m_pen.setColor(setcolor(point->m_color));
             TabletCanvas::updateBrush_load(point->m_pressure*delta,
-                                           setcolor(&point->m_color, decrease),
-                                           m_pen, m_brush);
-            m_pen.setWidthF(20);
+                                               setcolor(&point->m_color, decrease),
+                                               m_pen, m_brush);
+            m_pen.setWidthF(point->m_pressure*10*delta);
             painter.setPen(m_pen);
 
-            painter.drawLine(lastPoint.pos, QPointF(x, y));
+            path.cubicTo(point->toQPointF(delta), point1->toQPointF(delta), point2->toQPointF(delta));
+            //painter.drawLine(lastPoint.pos, QPointF(x, y));
+            i += 2;
         }
 
-        lastPoint.pos = QPointF(x, y);
+        painter.strokePath(path, m_pen);
 
-        _lastid = point->idtratto;
+        //lastPoint.pos = QPointF(x, y);
 
-        i += 2;
+        nextPoint(i, List);
+        if(i < len-3)
+            _lastid = at(i)->idtratto;
+        //_lastid = at(i)->idtratto;
     }
 }
 
@@ -247,7 +254,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool is_play, const bool all)
 
     painter.end();
 
-    //return;
+    return;
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 1))
         std::abort();
 }
