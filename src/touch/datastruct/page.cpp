@@ -89,7 +89,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
 
     QPainterPath path;
     QBrush m_brush;
-    QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
 
     static double x, y;
 
