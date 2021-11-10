@@ -23,27 +23,29 @@ bool zoom_control::zoom(QPointF &point_translate,
     Q_UNUSED(data);*/
     //uint i;
     //const uint lenPage = data->lengthPage();
-    qDebug() << "zoom call";
+    //qDebug() << "zoom call";
     Q_UNUSED(maxHeight)
     const QPointF pointRestore = point_translate * delta;
     const QPointF pointRiTranslate = pointRestore - point_translate;
 
     const double zoom = data->getZoom();
-
+    qDebug() << "Current zoom " << zoom << " delta " << delta;
     if(delta < 1.00){
         if(zoom - (1.0-delta) < (long double)0){
+            qDebug() << "Troppo piccolo";
             return false;
         }
     }
     else{
         if(zoom + (delta-1.00) > 2.00){
+            qDebug() << "Troppo grosso";
             return false;
         }
     }
 
     delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
 
-    qDebug() << "zoom --> delta " << delta;
+    qDebug() << "zoom delta " << delta;
 
     data->increaseZoom(delta, QSize(width, height));
 

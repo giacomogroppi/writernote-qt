@@ -20,6 +20,8 @@ void datastruct::increaseZoom(const long double delta, const QSize &size)
     this->zoom += delta;
     this->adjustAll(size);
 
+    qDebug() << double(delta);
+
     Q_ASSERT(this->zoom >= 0.0 && this->zoom <= 2.0);
 }
 

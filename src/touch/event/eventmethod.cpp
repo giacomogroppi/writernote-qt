@@ -25,7 +25,7 @@ static bool needToResize;
 bool TabletCanvas::event(QEvent *event){
     needToResize = false;
 
-    static bool check;
+    static bool SelectPointSecond;
     static QPointF punto, tmp;
     static double tmp_distance;
     static double tmp_distance_right_left;
@@ -53,7 +53,7 @@ bool TabletCanvas::event(QEvent *event){
                     {
                         if(ISDEFINE(lastpointzoom)){
                             punto = touchPoint.pos();
-                            check = (calcolodistanza(this->lastpointzoom[1].point, punto) > calcolodistanza(this->lastpointzoom[0].point, punto));
+                            SelectPointSecond = (calcolodistanza(this->lastpointzoom[1].point, punto) > calcolodistanza(this->lastpointzoom[0].point, punto));
 
                             scambio(lastpointzoom[0].point, lastpointzoom[1].point);
 
@@ -65,27 +65,15 @@ bool TabletCanvas::event(QEvent *event){
 
                             tmp_distance_right_left = calcolodistanza(lastpointzoom[0].point, lastpointzoom[1].point);
 
-                            if(check){
-                                tmp_distance = calcolodistanza(lastpointzoom[1].point, punto)/tmp_distance_right_left;
-                                needToResize = needToResize || this->zoom->zoom(pointMiddle,
-                                            tmp_distance,
-                                            widthPixmap,
-                                            maxWidth,
-                                            maxHeight,
-                                            heightPixmap,
-                                            data->datatouch);
-
-                            }
-                            else{
-                                tmp_distance = calcolodistanza(lastpointzoom[0].point, punto)/tmp_distance_right_left;
-                                needToResize = needToResize || this->zoom->zoom(pointMiddle,
-                                            tmp_distance,
-                                            widthPixmap,
-                                            maxWidth,
-                                            heightPixmap,
-                                            maxHeight,
-                                            data->datatouch);
-                            }
+                            const QPointF &Point = (SelectPointSecond) ? lastpointzoom[1].point : lastpointzoom[0].point;
+                            tmp_distance = calcolodistanza(Point, punto)/tmp_distance_right_left;
+                            needToResize = needToResize || this->zoom->zoom(pointMiddle,
+                                        tmp_distance,
+                                        widthPixmap,
+                                        maxWidth,
+                                        maxHeight,
+                                        heightPixmap,
+                                        data->datatouch);
 
                             RIDEFINE(lastpointzoom);
 
