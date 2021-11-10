@@ -4,10 +4,7 @@
 void MainWindow::on_sliderZoom_sliderMoved(int position)
 {
     double newZoom = double(position)/100.0;
-    //if(newZoom < 1.0)
-    //    newZoom = newZoom * 2;
 
-    this->m_currenttitle->datatouch->zoom = newZoom;
-    this->m_canvas->zoomChange();
+    m_currenttitle->datatouch->changeZoom(newZoom, this->m_canvas);
     this->ui->labelZoom->setText(QString("Zoom %1%").arg(position));
 }

@@ -44,7 +44,7 @@ public:
     MainWindow *parent;
 
     struct PointSettable pointload;
-
+    void callResizeEvent();
 
 #define default_speed_value 5
     int m_scrolling_speed = default_speed_value;
@@ -107,20 +107,13 @@ public:
 
     QColor m_color = Qt::black;
 
-    static void load(QPainter &,
-                     const Document *data,
-                     QColor &m_color,
-                     QPen &pen,
-                     QBrush &m_brush,
-                     Point &lastPoint,
-                     int m_pos_ris,
-                     QPixmap *m_pixmap,
-                     const bool withPdf,
-                     const double m,
-                     const int size_orizzontale,
-                     const int size_verticale,
-                     const MainWindow *parent,
-                     const bool IsExportingPdf);
+    static void load(QPainter &painter, const Document *data,
+                     QColor &m_color, QPen &pen,
+                     QBrush &m_brush, Point &lastPoint,
+                     int m_pos_ris, QPixmap *m_pixmap,
+                     const bool withPdf, const double m,
+                     const int size_orizzontale, const int size_verticale,
+                     const MainWindow *parent, const bool IsExportingPdf);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush);
@@ -160,8 +153,6 @@ public:
     class square *m_square = nullptr;
 
     bool enableredoundu = true;
-
-    void zoomChange();
 
     /* class for menu */
     class rubber_ui *m_rubber = NULL;
@@ -228,5 +219,10 @@ public slots:
     }
 
 };
+
+inline void TabletCanvas::callResizeEvent()
+{
+    return this->resizeEvent(nullptr);
+}
 
 #endif

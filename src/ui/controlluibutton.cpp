@@ -53,7 +53,6 @@ void ControllUiButton::saveSettings()
 void ControllUiButton::initList()
 {
     Ui::MainWindow *ui = parent->ui;
-    int i;
 
     this->m_button.clear();
 

@@ -70,14 +70,23 @@ private:
 
     int whichPage(const point_s &point) const;
     int adjustPoint(point_s *point) const;
+
+    long double zoom = 1.00;
+
 public:
     void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play, const bool all);
     void triggerNewView(int m_pos_ris, const bool is_play, const bool all);
     void triggerViewIfVisible(int m_pos_ris, const bool is_play);
 
+    long double getZoom() const;
+    void changeZoom(const long double zoom, class TabletCanvas *canvas);
+    void increaseZoom(const long double delta, const QSize &size);
+
     inline QPointF getPointFirstPage() const{
         return this->zoom * pointFirstPage;
     }
+
+    static long double getSizeZoom();
 
     void setPointFirstPage(const QPointF &point){
         this->pointFirstPage = point;
@@ -134,8 +143,8 @@ public:
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 
 
-    void adjustAll(const uint width,
-                   const uint height);
+    void adjustAll(const uint width, const uint height);
+    void adjustAll(const QSize &size);
 
     /*
      * this function return the index of the first
@@ -185,8 +194,6 @@ public:
 
     void removePage(const uint page);
 
-    long double zoom = 1.00;
-
     inline uint lengthPoint() const {
         uint i, len2 = 0;
         const uint len = this->m_page.length();
@@ -205,9 +212,7 @@ public:
     inline const point_s *  lastPoint() const;
     inline const page *     lastPage() const;
 
-    static inline size_t getSizeOne(){
-        return sizeof(point_s);
-    }
+    static size_t getSizeOne();
 
     inline uint lengthPage() const{ return this->m_page.length();}
 
@@ -332,6 +337,11 @@ inline const page *datastruct::lastPage() const
     return &this->m_page.last();
 }
 
+inline size_t datastruct::getSizeOne()
+{
+    return sizeof(struct point_s);
+}
+
 inline void datastruct::newPage(const n_style style)
 {
     page page(this->lengthPage()+1, style);
@@ -412,6 +422,16 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris, const bool is_play)
     for( i = 0; i < len; i++)
         if(at(i)->isVisible())
             at_mod(i)->triggerRenderImage(m_pos_ris, is_play, true);
+}
+
+inline long double datastruct::getZoom() const
+{
+    return this->zoom;
+}
+
+inline long double datastruct::getSizeZoom()
+{
+    return sizeof(datastruct::zoom);
 }
 
 /* the function automatically launches the drawing for the pages

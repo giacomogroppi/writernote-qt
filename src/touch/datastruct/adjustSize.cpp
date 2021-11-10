@@ -66,3 +66,8 @@ void datastruct::adjustAll(const uint width,
     adjustWidth(width);
     adjustHeight(height);
 }
+
+void datastruct::adjustAll(const QSize &size)
+{
+    this->adjustAll(size.width(), size.height());
+}

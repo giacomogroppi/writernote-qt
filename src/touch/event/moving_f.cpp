@@ -5,10 +5,10 @@
 /* wheel of mouse */
 void TabletCanvas::ismoving_f(){
     static QPointF translation;
+    const double refZoom = data->datatouch->getZoom();
 
     translation = ismoving.point;
-    translation.setX(translation.x()/data->datatouch->zoom);
-    translation.setY(translation.y()/data->datatouch->zoom);
+    translation /= refZoom;
 
     data->datatouch->scala_all(translation, this->height());
 

@@ -17,7 +17,7 @@ static void drawLineVertical(QList<point_s> &list, point_s &point, const style_s
 
 
 #define TEMP_COLOR Qt::black
-#define TEMP_TICK 10
+#define TEMP_TICK 1
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 

@@ -26,9 +26,7 @@ size_t reduce_size::current_size(datastruct *data){
 
     size = data->getSizeOne() * data->lengthPoint();
 
-    size += sizeof(double)*2; /* first point --> x and y */
-
-    size += sizeof(data->zoom);
+    size += data->getSizeZoom();
 
     return size;
 }

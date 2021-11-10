@@ -42,7 +42,7 @@ void TabletCanvas::load(QPainter &painter,
     const bool is_play = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
     const int lenPage = data->datatouch->lengthPage();
     const QPointF &PointFirstPage = data->datatouch->getPointFirstPage();
-    const double &zoom = data->datatouch->zoom;
+    const double zoom = data->datatouch->getZoom();
     const QSize sizeRect = QSize(page::getWidth()*zoom, data->datatouch->currentHeight()*zoom);
 
     if(m_pixmap)
@@ -114,6 +114,9 @@ static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainte
     const uint lenPage = doc.datatouch->lengthPage();
     static double xtemp[2], ytemp[2];
     static uchar k;
+
+    const double zoom = doc.datatouch->getZoom();
+
     datastruct *data = doc.datatouch;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
@@ -123,7 +126,7 @@ static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainte
 
         const point_s *point = data->at(0, counterPage);
 
-        TabletCanvas::updateBrush_load(point->m_pressure * data->zoom, setcolor(point->m_color, 1), m_pen, m_brush);
+        TabletCanvas::updateBrush_load(point->m_pressure * zoom, setcolor(point->m_color, 1), m_pen, m_brush);
 
         painter.setPen(m_pen);
 

@@ -13,7 +13,7 @@ static int freezip(zip_source_t *files){
 }
 
 int savefile::salvabinario(zip_t *filezip){
-    int i, lunghezza, counterPage;
+    int i, len, counterPage;
     size_t controll;
     zip_source_t *file;
     zip_error_t errore;
@@ -22,6 +22,8 @@ int savefile::salvabinario(zip_t *filezip){
     const int lenPage = currenttitle->datatouch->lengthPage();
     const page *page;
     const point_s *point;
+
+    const double zoom = currenttitle->datatouch->getZoom();
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
 
@@ -35,16 +37,16 @@ int savefile::salvabinario(zip_t *filezip){
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         page = currenttitle->datatouch->at(counterPage);
 
-        lunghezza = page->length();
-        WRITE_ON_SIZE(file, &lunghezza, sizeof(lunghezza));
+        len = page->length();
+        WRITE_ON_SIZE(file, &len, sizeof(len));
 
-        for(i = 0; i<lunghezza; i++){
+        for(i = 0; i < len; i++){
             point = currenttitle->datatouch->at(i, counterPage);
-            WRITE_ON_SIZE(file, point, sizeof(struct point_s));
+            WRITE_ON_SIZE(file, point, sizeof(*point));
         }
     }
 
-    WRITE_ON_SIZE(file, &currenttitle->datatouch->zoom, sizeof(currenttitle->datatouch->zoom));
+    WRITE_ON_SIZE(file, &zoom, datastruct::getSizeZoom());
 
     controll = currenttitle->createSingleControll();
     WRITE_ON_SIZE(file, &controll, sizeof(size_t));

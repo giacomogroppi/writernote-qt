@@ -28,28 +28,26 @@ bool zoom_control::zoom(QPointF &point_translate,
     const QPointF pointRestore = point_translate * delta;
     const QPointF pointRiTranslate = pointRestore - point_translate;
 
+    const double zoom = data->getZoom();
+
     if(delta < 1.00){
-        if(data->zoom - (1.0-delta) < (long double)0){
+        if(zoom - (1.0-delta) < (long double)0){
             return false;
         }
     }
     else{
-        if(data->zoom + (delta-1.00) > 2.00){
+        if(zoom + (delta-1.00) > 2.00){
             return false;
         }
     }
 
     delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
+
     qDebug() << "zoom --> delta " << delta;
-    data->zoom += delta;
+
+    data->increaseZoom(delta, QSize(width, height));
 
     data->setPointFirstPage(pointRiTranslate);
 
-    data->adjustAll(width, height);
-
-    if(width == maxWidth)
-        return false;
-
-    data->adjustAll(height, width);
-    return true;
+    return !(width == maxWidth);
 }

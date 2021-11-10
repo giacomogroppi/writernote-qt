@@ -35,8 +35,7 @@ TabletCanvas::TabletCanvas()
     : QWidget(nullptr), m_brush(m_color)
     , m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
 {
-
-    resize(500, 500);
+    this->resize(500, 500);
     setAutoFillBackground(true);
     setAttribute(Qt::WA_TabletTracking);
 
@@ -178,11 +177,6 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
 
 void TabletCanvas::settingdata(Document *data){
     this->data = data;
-}
-
-void TabletCanvas::zoomChange()
-{
-    this->resizeEvent(nullptr);
 }
 
 static void saveLastMethod(TabletCanvas::e_method val){

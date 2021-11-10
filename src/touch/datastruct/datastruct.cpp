@@ -2,14 +2,31 @@
 #include <QList>
 #include <QDebug>
 #include "../../sheet/fast-sheet/fast_sheet_ui.h"
+#include "../tabletcanvas.h"
 
 #define mov_if_neg(p, x) \
     p = x; \
     return;
 
+void datastruct::changeZoom(const long double zoom, TabletCanvas *canvas)
+{
+    this->zoom = zoom;
+    if(canvas)
+        canvas->callResizeEvent();
+}
+
+void datastruct::increaseZoom(const long double delta, const QSize &size)
+{
+    this->zoom += delta;
+    this->adjustAll(size);
+
+    Q_ASSERT(this->zoom >= 0.0 && this->zoom <= 2.0);
+}
+
 void datastruct::moveIfNegative(uint &p, uint &page, const uint lenPage,
                                 const uint height,
-                                const uint width) const{
+                                const uint width) const
+{
     static uint r, lenPoint;
     static const point_s *f, *s;
 
