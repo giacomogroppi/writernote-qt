@@ -30,22 +30,18 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     const double zoom = data->getZoom();
     qDebug() << "Current zoom " << zoom << " delta " << delta;
-    if(delta < 1.00){
-        if(zoom - (1.0-delta) < (long double)0){
-            qDebug() << "Troppo piccolo";
+
+    {
+        const double newPossibleZoom = zoom + delta - double(1.0);
+        if(!datastruct::isOkZoom(newPossibleZoom))
             return false;
-        }
-    }
-    else{
-        if(zoom + (delta-1.00) > 2.00){
-            qDebug() << "Troppo grosso";
-            return false;
-        }
     }
 
-    delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
+    //delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
 
-    qDebug() << "zoom delta " << delta;
+    delta = delta - double(1.0);
+
+    qDebug() << "New delta" << delta;
 
     data->increaseZoom(delta, QSize(width, height));
 
