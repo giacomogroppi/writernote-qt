@@ -21,6 +21,10 @@ class fromimage;
 struct PointSettable {
     QPointF point;
     bool set = false;
+    bool isNotDefine() const
+    {
+        return !this->set;
+    }
 };
 
 
@@ -69,6 +73,8 @@ public:
     void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool is_play, const bool all);
     void triggerNewView(int m_pos_ris, const bool is_play, const bool all);
     void triggerViewIfVisible(int m_pos_ris, const bool is_play);
+
+    static bool isOkZoom(const double newPossibleZoom);
 
     long double getZoom() const;
     void changeZoom(const long double zoom, class TabletCanvas *canvas);
@@ -418,6 +424,11 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris, const bool is_play)
     for( i = 0; i < len; i++)
         if(at(i)->isVisible())
             at_mod(i)->triggerRenderImage(m_pos_ris, is_play, true);
+}
+
+inline bool datastruct::isOkZoom(const double newPossibleZoom)
+{
+    return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.2);
 }
 
 inline long double datastruct::getZoom() const

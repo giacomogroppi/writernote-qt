@@ -87,7 +87,7 @@ void TabletCanvas::load(QPainter &painter,
     }
 
     painter.setRenderHints(QPainter::Antialiasing);
-    qDebug() << "Loadpixel " << painter.renderHints();
+    //qDebug() << "Loadpixel " << painter.renderHints();
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const page *page = data->datatouch->at(counterPage);
 

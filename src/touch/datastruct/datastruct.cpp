@@ -20,7 +20,9 @@ void datastruct::increaseZoom(const long double delta, const QSize &size)
     this->zoom += delta;
     this->adjustAll(size);
 
-    Q_ASSERT(this->zoom >= 0.0 && this->zoom <= 2.0);
+    qDebug() << double(delta);
+
+    //Q_ASSERT(this->zoom >= 0.0 && this->zoom <= 2.0);
 }
 
 void datastruct::moveIfNegative(uint &p, uint &page, const uint lenPage,

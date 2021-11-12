@@ -30,6 +30,7 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 
 static struct PointSettable __last_point_move;
 static bool first_touch = true;
+bool isZooming = false;
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     double deltay, deltax;
@@ -39,6 +40,9 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     QTabletEvent *tab_event;
     QEvent::Type __type;
     QPointF p = event->pos();
+
+    if(isZooming)
+        return;
 
     if(parent->touch_or_pen){
         if(first_touch){
