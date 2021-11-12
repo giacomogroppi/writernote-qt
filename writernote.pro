@@ -33,6 +33,10 @@ CONFIG += c++17
 
 TRANSLATIONS +=  language/it.ts
 
+CONFIG(debug, debug|release){
+    DEFINES += "DEBUGINFO"
+}
+
 ## Snapcraft support
 contains(DEFINES, SNAP){
     message("Snapcraft enable")

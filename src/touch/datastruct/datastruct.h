@@ -4,18 +4,10 @@
 #include <QList>
 #include <QColor>
 #include <QDebug>
+#include <QPixmap>
 #include <QImage>
 #include "point.h"
 #include "page.h"
-
-#define ITERATE_CONST(datastruct, countPage, countElement, page) \
-    const uint lenPoint = datastruct->lengthPoint(); \
-    for(countPage=0; countPage<lenPoint; countPage++){ \
-        page = datastruct->at(countPage); \
-        const uint len = page->length(); \
-        for(countElement=0; countElement<len; countElement++){
-
-#define ITERATE_END }}
 
 /*
     IDVERTICALE -> linee verticali
@@ -230,6 +222,10 @@ public:
     inline double currentHeight() const;
 
     friend class xmlstruct;
+
+    // for debug
+    void checkPositionData(const QPixmap &pixmap, const QSize &maxSize);
+
 };
 
 /*
@@ -504,5 +500,14 @@ inline void datastruct::appendToTheTop(const point_s *point, const uint page)
 {
     this->at_mod(page)->appendToTheTop(point);
 }
+
+#ifdef DEBUGINFO
+inline void datastruct::checkPositionData(const QPixmap &pixmap, const QSize &maxSize)
+{
+    pixmap.height();
+}
+#else
+inline void datastruct::checkPositionData(const QPixmap &pixmap, const QSize &maxSize) {}
+#endif
 
 #endif // DATASTRUCT_H

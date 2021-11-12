@@ -33,6 +33,30 @@ struct Point {
     qreal rotation = 0;
 };
 
+struct DataPaint{
+    QColor m_color;
+    QPen pen;
+    QBrush m_brush;
+    struct Point lastPoint;
+    int m_pos_ris;
+    QPixmap *m_pixmap;
+
+    bool withPdf;
+    bool IsExportingPdf;
+
+    double m;
+    QSize size;
+    MainWindow *parent;
+
+    void reset()
+    {
+        this->parent = NULL;
+        this->m = 1.0;
+        this->withPdf = true;
+    }
+
+};
+
 //! [0]
 class TabletCanvas : public QWidget
 {
