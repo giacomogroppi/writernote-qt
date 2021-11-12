@@ -515,10 +515,11 @@ inline void datastruct::appendToTheTop(const point_s *point, const uint page)
 #ifdef DEBUGINFO
 inline void datastruct::checkPositionData(const QPixmap &pixmap, const QSize &maxSize)
 {
+    Q_UNUSED(maxSize);
     pixmap.height();
 }
 #else
-inline void datastruct::checkPositionData(const QPixmap &pixmap, const QSize &maxSize) {}
+inline void datastruct::checkPositionData(const QPixmap &, const QSize &) {}
 #endif
 
 #endif // DATASTRUCT_H
