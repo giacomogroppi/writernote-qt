@@ -2,10 +2,26 @@
 #include <QDebug>
 #include "../event/itspossibletoscroll.h"
 #include "../datastruct/datastruct.h"
+#include "../event/itspossibletoscroll.h"
 
 /*
  * if delta > 1 we are zoom in
 */
+
+void zoom_control::checkRespositioning(const QPointF &f, const bool max)
+{
+    QPointF translation(f);
+    if(!max){
+        translation = QPointF(0.0, 0.0);
+        /*if(translation.x() >= 0.0)
+            translation.setX(0.0);
+        if(translation.y() >= 0.0)
+            translation.setY(0.0);*/
+    }
+
+    qDebug() << "translation" << translation << "max" << max;
+    data->setPointFirstPage(translation);
+}
 
 bool zoom_control::zoom(QPointF &point_translate,
                         double delta,
@@ -14,22 +30,14 @@ bool zoom_control::zoom(QPointF &point_translate,
                         const uint maxHeight,
                         const uint height,
                         datastruct *data){
-    /*Q_UNUSED(point_translate);
-    Q_UNUSED(delta);
-    Q_UNUSED(width);
-    Q_UNUSED(maxHeight);
-    Q_UNUSED(maxWidth);
-    Q_UNUSED(height);
-    Q_UNUSED(data);*/
-    //uint i;
-    //const uint lenPage = data->lengthPage();
-    //qDebug() << "zoom call";
-    Q_UNUSED(maxHeight)
+
+    this->data = data;
     const QPointF pointRestore = point_translate * delta;
     const QPointF pointRiTranslate = pointRestore - point_translate;
+    const bool max = width >= maxWidth;
 
     const double zoom = data->getZoom();
-    qDebug() << "Current zoom " << zoom << " delta " << delta;
+    //qDebug() << "Current zoom " << zoom << " delta " << delta;
 
     {
         const double newPossibleZoom = zoom + delta - double(1.0);
@@ -41,11 +49,12 @@ bool zoom_control::zoom(QPointF &point_translate,
 
     delta = delta - double(1.0);
 
-    qDebug() << "New delta" << delta;
+    //qDebug() << "New delta" << delta;
 
     data->increaseZoom(delta, QSize(width, height));
 
-    data->setPointFirstPage(pointRiTranslate);
+    this->checkRespositioning(pointRiTranslate, max);
+    //data->setPointFirstPage(pointRiTranslate);
 
-    return !(width == maxWidth);
+    return !max || data->biggery() <= width;
 }

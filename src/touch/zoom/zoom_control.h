@@ -4,10 +4,13 @@
 class frompdf;
 class datastruct;
 #include <QPointF>
+#include <QSize>
 
 class zoom_control
 {
 private:
+    void checkRespositioning(const QPointF &point, const bool max);
+    datastruct *data;
 public:
     bool zoom(QPointF &,
               double,

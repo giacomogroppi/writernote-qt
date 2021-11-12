@@ -11,7 +11,7 @@
  * and __pos_delta is set to the maximus delta we can have
 */
 
-bool scroll::itspossibletoscrolly(datastruct *data,
+bool scroll::itspossibletoscrolly(const datastruct *data,
                                   const short int altezza,
                                   double & __pos_delta)
 {
@@ -37,7 +37,7 @@ bool scroll::itspossibletoscrolly(datastruct *data,
         pos = data->biggery();
 
         if((pos + __pos_delta) > altezza){
-            return true;
+            return 1;
         }
 
         if(pos < altezza){
@@ -45,29 +45,29 @@ bool scroll::itspossibletoscrolly(datastruct *data,
         }
 
         __pos_delta = double(altezza - pos);
-        return true;
+        return 1;
     }
 
     if((point.y() + __pos_delta) < 0){
-        return true;
+        return 1;
     }
 
     if(point.y() < (double)0){
         __pos_delta = - point.y();
-        return true;
+        return 1;
     }
 
     c_not_move:
 
     __pos_delta = 0.0;
-    return false;
+    return 0;
 
 }
 
 /*
  * return true if we can move
 */
-bool scroll::itspossibletoscrollx(datastruct *data,
+bool scroll::itspossibletoscrollx(const datastruct *data,
                                   const short int width,
                                   double &__pos_delta){
     /* finger action:
@@ -86,11 +86,11 @@ bool scroll::itspossibletoscrollx(datastruct *data,
         point = data->getPointFirstPage();
 
         if((point.x() + __pos_delta) < 0.0)
-            return true;
+            return 1;
 
         if(point.x() < 0.0){
             __pos_delta = - point.x();
-            return true;
+            return 1;
         }
 
         goto c_not_move;
@@ -101,14 +101,29 @@ bool scroll::itspossibletoscrollx(datastruct *data,
     res = data->biggerx();
 
     if ((res + __pos_delta) > (double)width)
-        return true;
+        return 1;
 
     if(res > (double)width){
         __pos_delta = - double(res - (double)width);
-        return true;
+        return 1;
     }
 
     c_not_move:
     __pos_delta = 0.0;
-    return false;
+    return 0;
+}
+
+bool scroll::itspossibletoscroll(const datastruct &data, const QSize &size, QPointF &__pos_delta)
+{
+    double x, y;
+    uchar check;
+
+    x = __pos_delta.x();
+    y = __pos_delta.y();
+
+    check =     scroll::itspossibletoscrollx(&data, size.width(), x);
+    check +=    scroll::itspossibletoscrolly(&data, size.height(), y);
+
+    __pos_delta = QPointF(x, y);
+    return check;
 }

@@ -54,8 +54,6 @@ bool TabletCanvas::event(QEvent *event){
         {
             const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
 
-            const size_t tmpNum = rand() % 90 + 10;
-
             for( const auto &touchPoint : touchPoints){
             //qDebug() << tmpNum << touchPoint.pos() << this->lastpointzoom[0].point << this->lastpointzoom[1].point << lastpointzoom[0].set << lastpointzoom[1].set;
 

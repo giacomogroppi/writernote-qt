@@ -103,7 +103,7 @@ parts:
       #printf "%s\n" "$(SNAPCRAFT_PROJECT_VERSION)"
       #make clean
 
-      qmake DEFINES+="SNAP" DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION #DEFINES+=QT_NO_DEBUG_OUTPUT
+      qmake DEFINES+="SNAP" DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION DEFINES+=QT_NO_DEBUG_OUTPUT
 
       snapcraftctl build
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
@@ -113,9 +113,6 @@ parts:
 
     build-packages:
       - libpoppler-qt5-dev
-      - libcrypto++-dev 
-      - libcrypto++-doc 
-      - libcrypto++-utils
       - qtmultimedia5-dev
       - libqt5multimediawidgets5
       - libqt5multimedia5-plugins 

@@ -432,7 +432,7 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris, const bool is_play)
 
 inline bool datastruct::isOkZoom(const double newPossibleZoom)
 {
-    return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.0);
+    return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.2);
 }
 
 inline long double datastruct::getZoom() const
