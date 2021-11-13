@@ -15,32 +15,7 @@ private:
     MainWindow *parent;
 
     void draw(QPainter &painter, double m,
-              int size_orizzontale, int size_verticale, const bool withPdf){
-
-        QColor color = Qt::black;
-        QPen m_pen;
-        QBrush m_brush;
-        Point lastPoint;
-
-        TabletCanvas::load(painter,
-                           this->data,
-                           color,
-                           m_pen,
-                           m_brush,
-                           lastPoint,
-                           -1,
-                           nullptr,
-                           withPdf,
-                           m,
-                           size_orizzontale,
-                           size_verticale,
-                           nullptr,
-                           false);
-    }
-
-    void updateBrush_load(const double , QColor );
-
-    QPen penna;
+              int size_orizzontale, int size_verticale, const bool withPdf);
 
 public:
     ~topdf(){
@@ -55,5 +30,20 @@ public:
         Document::copy(*datastruct_, *data);
     }
 };
+
+inline void topdf::draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, const bool withPdf)
+{
+    DataPaint dataPaint = {
+        .withPdf = withPdf,
+        .IsExportingPdf = false,
+        .m = m,
+        .size = QSize(size_orizzontale, size_verticale),
+        .parent = nullptr,
+        .m_pos_ris = -1,
+        .m_pixmap = nullptr,
+        DATAPAINT_DEFINEREST
+    };
+    TabletCanvas::load(painter, this->data, dataPaint);
+}
 
 #endif // TOPDF_H

@@ -27,13 +27,9 @@ private:
     QStringList get_name_img();
     static QStringList get_name_img(const Document &doc);
 
-    static inline QString getName(const uint i){
-        return SUFFIX_IMG + QString::number(uint(i));
-    }
+    static inline QString getName(const uint i){ return SUFFIX_IMG + QString::number(uint(i)); }
 
-    uchar insert_image(QString &__pos,
-                      const PointSettable *point,
-                      struct immagine_s &img);
+    uchar insert_image(QString &__pos, const PointSettable *point, struct immagine_s &img);
 
 
 public:
@@ -51,9 +47,7 @@ public:
                   const PointSettable *point,
                   const QString &writernote_file);
 
-    inline fromimage(Document *doc){
-        this->doc = doc;
-    }
+    fromimage(Document *doc){ this->doc = doc; }
 
     fromimage::load_res load(zip_t *filezip, zip_file_t *file);
 
@@ -61,89 +55,16 @@ public:
     fromimage::load_res save(zip_t *file, const QString &path, const QString &path_writernote_file) const;
     fromimage::load_res save_metadata(zip_source_t *file);
 
-    inline void move(const QPointF &translation){
-        uint i, len;
-        struct immagine_s *img;
-        double x, y;
+    void move(const QPointF &translation);
 
-        x = translation.x();
-        y = translation.y();
+    void moveImage(const QList<int> &index, const QPointF &translation);
 
-        len = this->m_img.length();
+    static  void draw(QPainter &painter, const QRectF &rect, const QImage &img);
+    static  void draw(QPainter &painter, const QSize &size, const immagine_s &img);
+    static  void draw(QPainter &painter, const QSize &size, const QList<immagine_s> &list);
+            void draw(QPainter &painter, const QSize &size) const;
 
-        for(i=0; i<len; ++i){
-            img = (immagine_s *)&m_img.operator[](i);
-
-            img->f.setX(img->f.x() + x);
-            img->f.setY(img->f.y() + y);
-
-            img->i.setX(img->i.x() + x);
-            img->i.setY(img->i.y() + y);
-        }
-    }
-
-    inline void moveImage(const QList<int> &index, const QPointF &translation){
-        uint i, lenght;
-
-        lenght = index.length();
-        for(i=0; i<lenght; ++i){
-            const int currentIndex = index.at(i);
-            this->m_img.operator[](currentIndex).i += translation;
-            this->m_img.operator[](currentIndex).f += translation;
-        }
-    }
-
-    static inline void draw(QPainter &painter,
-                            const QRectF &rect,
-                            const QImage &img){
-        const QRectF draw = img.rect();
-
-        painter.drawImage(rect, img, draw);
-    }
-
-    static inline void draw(QPainter &painter,
-                            const uint pwidth,
-                            const int rend_width,
-                            const int rend_heigth,
-                            const immagine_s &img){
-        Q_UNUSED(pwidth);
-        uchar check;
-
-        check = (img.f.y() < (double)0) +
-                (img.f.x() < (double)0) +
-                (img.i.y() > (double)rend_width) +
-                (img.i.x() > (double)rend_heigth);
-        if(check)
-            return;
-
-        fromimage::draw(painter, QRectF(img.i, img.f), img.immagini);
-    }
-
-    static inline void draw(QPainter &painter,
-                            const uint pwidth,
-                            const int rend_width,
-                            const int rend_heigth,
-                            const QList<immagine_s> &list){
-        Q_UNUSED(pwidth);
-        uint i;
-
-        for(i=0; i<(uint)list.length(); ++i){
-            const struct immagine_s &img = list.at(i);
-
-            fromimage::draw(painter, pwidth, rend_width, rend_heigth, img);
-        }
-    }
-
-    inline void draw(QPainter &painter,
-                     const uint pwidth,
-                     const int rend_width,
-                     const int rend_heigth) const{
-        return fromimage::draw(painter, pwidth, rend_width, rend_heigth, this->m_img);
-    }
-
-    void reset(){
-        m_img.clear();
-    }
+    void reset(){ m_img.clear(); }
 
 private:
     load_res get_img_bytearray(QByteArray &arr, const QString &path) const;
@@ -157,6 +78,79 @@ private:
 inline void fromimage::copy(const fromimage &src, fromimage &dest)
 {
     dest.m_img = src.m_img;
+}
+
+inline void fromimage::move(const QPointF &translation)
+{
+    uint i, len;
+    struct immagine_s *img;
+    double x, y;
+
+    x = translation.x();
+    y = translation.y();
+
+    len = this->m_img.length();
+
+    for(i=0; i<len; ++i){
+        img = (immagine_s *)&m_img.operator[](i);
+
+        img->f.setX(img->f.x() + x);
+        img->f.setY(img->f.y() + y);
+
+        img->i.setX(img->i.x() + x);
+        img->i.setY(img->i.y() + y);
+    }
+
+}
+
+inline void fromimage::moveImage(const QList<int> &index, const QPointF &translation)
+{
+    uint i, lenght;
+
+    lenght = index.length();
+    for(i=0; i<lenght; ++i){
+        const int currentIndex = index.at(i);
+        this->m_img.operator[](currentIndex).i += translation;
+        this->m_img.operator[](currentIndex).f += translation;
+    }
+}
+
+inline void fromimage::draw(QPainter &painter, const QRectF &rect, const QImage &img)
+{
+    const QRectF draw = img.rect();
+
+    painter.drawImage(rect, img, draw);
+}
+
+inline void fromimage::draw(QPainter &painter, const QSize &size, const immagine_s &img)
+{
+    uchar check;
+
+    check = (img.f.y() < (double)0) +
+        (img.f.x() < (double)0) +
+        (img.i.y() > (double)size.width()) +
+        (img.i.x() > (double)size.height());
+    if(check)
+        return;
+
+    fromimage::draw(painter, QRectF(img.i, img.f), img.immagini);
+
+}
+
+inline void fromimage::draw(QPainter &painter, const QSize &size, const QList<immagine_s> &list)
+{
+    uint i;
+
+    for(i=0; i<(uint)list.length(); ++i){
+        const struct immagine_s &img = list.at(i);
+
+        fromimage::draw(painter, size, img);
+    }
+}
+
+inline void fromimage::draw(QPainter &painter, const QSize &size) const
+{
+    return fromimage::draw(painter, size, this->m_img);
 }
 
 #endif // FROMIMAGE_H

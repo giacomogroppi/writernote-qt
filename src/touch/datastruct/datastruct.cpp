@@ -19,10 +19,6 @@ void datastruct::increaseZoom(const long double delta, const QSize &size)
 {
     this->zoom += delta;
     this->adjustAll(size);
-
-    qDebug() << double(delta);
-
-    //Q_ASSERT(this->zoom >= 0.0 && this->zoom <= 2.0);
 }
 
 void datastruct::moveIfNegative(uint &p, uint &page, const uint lenPage,
@@ -71,8 +67,7 @@ datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
 {
     this->m_pdf = m_pdf;
     this->m_img = m_img;
-    __last_translation.setX(0);
-    __last_translation.setY(0);
+    __last_translation = QPointF(0, 0);
 }
 
 /* the function returns true if the id is available */

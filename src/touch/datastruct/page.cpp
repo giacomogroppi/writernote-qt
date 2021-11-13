@@ -210,7 +210,7 @@ static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
     }else{
         fast = true;
 
-        style.nx = TEMP_SQUARE;
+        style.nx = TEMP_SQUARE*(page::getHeight() / page::getWidth());
         style.ny = TEMP_SQUARE;
     }
 }

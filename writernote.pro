@@ -63,8 +63,8 @@ contains(DEFINES, NO_ALL_VERSION){
     DEFINES -= "ALL_VERSION"
 }
 ## for support A4 pdf create
-DEFINES += "NUMEROPIXELVERTICALI=1400"
-DEFINES += "NUMEROPIXELORIZZONALI=980"
+#DEFINES += "NUMEROPIXELVERTICALI=1400"
+#DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 !contains(DEFINES, VERSION_SNAPCRAFT){
     #DEFINES += "VERSION_SNAPCRAFT=1.3.15"
@@ -193,7 +193,6 @@ SOURCES += \
     src/mainwindow.cpp \
     src/pdf/topdf.cpp \
     src/pdf/translate.cpp \
-    src/pdf/updatebrush_topdf.cpp \
     src/savecopybook.cpp \
     src/setting_ui.cpp \
     src/sheet/dialog_sheet.cpp \

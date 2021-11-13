@@ -10,10 +10,18 @@
 void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const int height, const int width)
 {
     QPainter painter;
-    QColor m_color;
-    QPen m_pen;
-    QBrush m_brush;
-    struct Point lastPoint;
+
+    DataPaint dataPaint = {
+        .withPdf = false,
+        .IsExportingPdf = false,
+        .m = 1,
+        .size = QSize(width, height),
+        .parent = nullptr,
+        .m_pos_ris = -1,
+        .m_pixmap = nullptr,
+        DATAPAINT_DEFINEREST
+    };
+
     if(doc.isEmpty())
         return;
     const double size_orizzontale = doc.datatouch->biggerx();
@@ -22,7 +30,11 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
     ref.fill(Qt::white);
 
     painter.begin(&ref);
-    TabletCanvas::load(painter, &doc, m_color, m_pen, m_brush, lastPoint, -1, &ref, withPdf, delta, width, height/delta, nullptr, false);
+
+    dataPaint.IsExportingPdf = false;
+
+    TabletCanvas::load(painter, &doc, dataPaint);
+    //TabletCanvas::load(painter, &doc, m_color, m_pen, m_brush, lastPoint, -1, &ref, withPdf, delta, nullptr, false);
     painter.end();
 
 }

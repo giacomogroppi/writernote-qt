@@ -244,9 +244,8 @@ inline bool point_s::isIdUser() const
 }
 
 /* this function does not consider the zoom */
-inline double datastruct::currentHeight() const{
-    if(isempty())
-        return double(NUMEROPIXELVERTICALI);
+inline double datastruct::currentHeight() const
+{
     return page::getHeight();
 }
 
@@ -351,10 +350,9 @@ inline void datastruct::newPage(const n_style style)
 }
 
 /* this function does not consider the zoom */
-inline double datastruct::currentWidth() const{
-    if(isempty())
-        return double(NUMEROPIXELORIZZONALI);
-    return (biggerx());
+inline double datastruct::currentWidth() const
+{
+    return biggerx();
 }
 
 inline void datastruct::getRealIndex(const uint search, uint &index, uint &page) const

@@ -13,14 +13,20 @@ void MainWindow::on_actionPrint_triggered()
 #else
     QPrinter printer;
     QPrintDialog dialogprint(&printer);
-    QColor color;
-    QPen pen;
-    QBrush m_brush;
-    Point point;
 
     const double size_orizzontale = m_currenttitle->datatouch->biggerx();
-    const double size_verticale = printer.height();
     const double delta = (double)printer.width() / (double)size_orizzontale;
+
+    DataPaint dataPaint = {
+        .withPdf = true,
+        .IsExportingPdf = true,
+        .m = delta,
+        .size = QSize(printer.width(), printer.height()),
+        .parent = nullptr,
+        .m_pos_ris = -1,
+        .m_pixmap = nullptr,
+        DATAPAINT_DEFINEREST
+    };
 
     if( dialogprint.exec() != QDialog::Accepted )
         return;
@@ -29,10 +35,7 @@ void MainWindow::on_actionPrint_triggered()
     if (! painter.begin(&printer)) { // failed to open file
         user_message("Writernote had an internal problem");
     }
-
-    this->m_canvas->load(painter, this->m_currenttitle, color,
-                         pen, m_brush, point, 0, nullptr, true, delta, size_orizzontale,
-                         size_verticale/delta, nullptr, false);
+    TabletCanvas::load(painter, m_currenttitle, dataPaint);
 
     painter.drawText(10, 10, "Test 2");
     painter.end();

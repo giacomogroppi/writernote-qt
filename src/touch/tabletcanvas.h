@@ -28,25 +28,38 @@ class QString;
 QT_END_NAMESPACE
 
 struct Point {
+    Point() {};
     QPointF pos;
     qreal pressure = 0;
     qreal rotation = 0;
 };
 
+/*
+    DataPaint dataPaint = {
+        .withPdf = false,
+        .IsExportingPdf = false,
+        .m = 1,
+        .size = QSize(width, height),
+        .parent = nullptr,
+        .m_pos_ris = -1,
+        .m_pixmap = nullptr,
+        DATAPAINT_DEFINEREST
+    };
+*/
+
 struct DataPaint{
+    bool withPdf;
+    bool IsExportingPdf;
+    double m;
+    QSize size;
+    MainWindow *parent;
+    int m_pos_ris;
+    QPixmap *m_pixmap;
+
     QColor m_color;
     QPen pen;
     QBrush m_brush;
     struct Point lastPoint;
-    int m_pos_ris;
-    QPixmap *m_pixmap;
-
-    bool withPdf;
-    bool IsExportingPdf;
-
-    double m;
-    QSize size;
-    MainWindow *parent;
 
     void reset()
     {
@@ -54,7 +67,11 @@ struct DataPaint{
         this->m = 1.0;
         this->withPdf = true;
     }
-
+#define DATAPAINT_DEFINEREST \
+    .m_color = QColor(), \
+    .pen = QPen(), \
+    .m_brush = QBrush(), \
+    .lastPoint = Point()
 };
 
 //! [0]
@@ -132,12 +149,14 @@ public:
     QColor m_color = Qt::black;
 
     static void load(QPainter &painter, const Document *data,
+                     DataPaint &dataPoint);
+    /*static void load(QPainter &painter, const Document *data,
                      QColor &m_color, QPen &pen,
                      QBrush &m_brush, Point &lastPoint,
                      int m_pos_ris, QPixmap *m_pixmap,
                      const bool withPdf, const double m,
                      const int size_orizzontale, const int size_verticale,
-                     const MainWindow *parent, const bool IsExportingPdf);
+                     const MainWindow *parent, const bool IsExportingPdf);*/
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush);

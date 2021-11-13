@@ -15,9 +15,29 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
     static bool needDrawSheet;
-    needDrawSheet = false;
 
-    if(!this->data) return;
+    if(!this->data || !this->parent) return;
+
+    static DataPaint dataPaint = {
+        .withPdf = true,
+        .IsExportingPdf = false,
+        .m = 1,
+        .size = QSize(m_pixmap.size()),
+        .parent = parent,
+        .m_pos_ris = -1,
+        .m_pixmap = &this->m_pixmap,
+        DATAPAINT_DEFINEREST
+    };
+
+    dataPaint.size = QSize(m_pixmap.size());
+    dataPaint.m_pos_ris = m_pos_ris;
+
+    dataPaint.pen       = this->m_pen;
+    dataPaint.m_brush   = this->m_brush;
+    dataPaint.m_color   = this->m_color;
+
+
+    needDrawSheet = false;
 
     isWriting = false;
 
@@ -34,8 +54,10 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     if(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty()))
         this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
 
-    load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
-         m_pos_ris, &m_pixmap, true, 1, this->m_pixmap.width(), this->m_pixmap.width(), this->parent, false);
+    TabletCanvas::load(painter, this->data, dataPaint);
+
+    /*load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
+         m_pos_ris, &m_pixmap, true, 1, this->m_pixmap.width(), this->m_pixmap.width(), this->parent, false);*/
 
     m_square->needReload(painter);
 
