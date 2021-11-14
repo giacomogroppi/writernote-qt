@@ -29,7 +29,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: "Clone"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
       # Runs a single command using the runners shell
       - name: Run a one-line script

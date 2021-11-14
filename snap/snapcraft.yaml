@@ -119,7 +119,7 @@ parts:
       - libqt5multimedia5
       - qtbase5-dev
       - qt5-qmake
-      #- libzip-dev
+      - libzip-dev
       - libxcb-xinerama0-dev
       - qt5-default
       - libx11-xcb-dev 
@@ -183,7 +183,7 @@ parts:
       - libqt5multimedia5-plugins 
       - libqt5multimedia5
 
-      #- libzip5 #-dev
+      - libzip5 #-dev
       - libxcb-xinerama0-dev
       - qt5-default
       - libx11-xcb-dev 
