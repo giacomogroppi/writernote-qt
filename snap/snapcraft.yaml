@@ -146,9 +146,7 @@ parts:
       - libxcb-screensaver0-dev
       - zlib1g-dev
 
-    stage-packages:
-      #- libglib2.0-0
-      
+    stage-packages:      
       # pdf
       - libpoppler-qt5-1 #dev
 
@@ -159,14 +157,14 @@ parts:
       - libgles2-mesa #-dev
 
       ## cripto library
-      - libcrypto++6 #-dev 
-      - libcrypto++-doc 
-      - libcrypto++-utils
+      #- libcrypto++6 #-dev 
+      #- libcrypto++-doc 
+      #- libcrypto++-utils
       
       # dipendenza run time
       - libqt5widgets5
       - libqt5core5a
-      - ffmpeg
+      #- ffmpeg
 
       - libxcb-screensaver0 #-dev
       - libxcb1 #-dev
@@ -180,7 +178,7 @@ parts:
       - execstack
 
 
-      - qtmultimedia5-dev
+      #- qtmultimedia5-dev
       - libqt5multimediawidgets5
       - libqt5multimedia5-plugins 
       - libqt5multimedia5
@@ -209,7 +207,7 @@ parts:
       - gstreamer1.0-plugins-bad 
       - gstreamer1.0-plugins-ugly 
       - gstreamer1.0-libav 
-      - gstreamer1.0-doc 
+      #- gstreamer1.0-doc 
       - gstreamer1.0-tools 
       - gstreamer1.0-x 
       - gstreamer1.0-alsa 
