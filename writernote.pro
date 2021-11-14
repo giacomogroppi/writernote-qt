@@ -497,7 +497,16 @@ else:android{
         LIBS += $$PWD/3rdparty/libzip/lib/libzip.a
         
     }else{
-        PKGCONFIG += libzip
+        if(contains(DEFINES, SNAP)){
+        # static lib for snapcraft package
+            message(libzip static build)
+            INCLUDEPATH += /root/parts/libzip-build/build/3rdparty/libzip/distrib/include
+            LIBS += /root/parts/libzip-build/build/3rdparty/libzip/distrib/lib/libzip.a
+            LIBS += /root/parts/zlib-build/build/3rdparty/zlib/lib/libz.a
+        }else{
+            message(libzip from libzip-dev)
+            PKGCONFIG += libzip
+        }
     }
 
 
