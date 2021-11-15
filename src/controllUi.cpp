@@ -1,15 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "audioplay/audioplay.h"
 
 void MainWindow::contrUi(){
     const bool already_rec =    m_currenttitle->se_registato != Document::not_record;
-
     const bool is_rec =         m_audioRecorder->state() == QAudioRecorder::RecordingState;
-    const bool is_pause_rec =       m_audioRecorder->state() == QAudioRecorder::PausedState;
-
+    const bool is_pause_rec =   m_audioRecorder->state() == QAudioRecorder::PausedState;
     const bool is_touch =       true;
-
-    const bool is_play =        player->state() == QMediaPlayer::PlayingState;
+    const bool is_play =        this->m_audioplayer->isPlay();
 
     ui->pause_rec->setEnabled(is_rec);
     ui->start_rec->setEnabled(!already_rec && !is_pause_rec && !is_rec);

@@ -2,6 +2,7 @@
 #include "../tabletcanvas.h"
 #include "../../mainwindow.h"
 #include "../../utils/color/setcolor.h"
+#include "../../audioplay/audioplay.h"
 #include <QPolygonF>
 #include <QPainterPath>
 
@@ -24,14 +25,15 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
     const double m              = dataPoint.m;
     const MainWindow *parent    = dataPoint.parent;
     const bool IsExportingPdf   = dataPoint.IsExportingPdf;
-    const int m_pos_ris         = dataPoint.m_pos_ris;
 
     QPixmap *pixmap     = dataPoint.m_pixmap;
     QColor &color       = dataPoint.m_color;
     QPen &pen           = dataPoint.pen;
     QBrush &brush       = dataPoint.m_brush;
 
-    const bool is_play              = (parent) ? (parent->player->state() == QMediaPlayer::PlayingState) : false;
+    const bool is_play              = (parent) ? (parent->m_audioplayer->isPlay()) : false;
+    const int m_pos_ris             = (is_play) ? (parent->m_audioplayer->getPositionSecond()) : -1;
+
     const int lenPage               = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
     const double zoom               = data->datatouch->getZoom();

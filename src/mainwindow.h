@@ -98,8 +98,6 @@ public:
     void update_touch_or_pen();
     void loadPenOrMouse();
 
-    /* data to manage all */
-    int m_currentTime = 0;
     QString m_path;
 
     Document *m_currenttitle;
@@ -108,9 +106,6 @@ public:
     QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);
     //QAudioProbe *m_probe = nullptr;
     bool m_outputLocationSet = false;
-
-    /* gestione della riproduzione dell'audio */
-    QMediaPlayer *player = nullptr;
 
     TabletCanvas *m_canvas;
 
@@ -132,6 +127,7 @@ public:
     class option_copybook *m_option_copybook;
     class ControllUiButton *m_controllUi;
     class fast_sheet_ui *m_sheet = nullptr;
+    class audioplay *m_audioplayer;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ShareUtils *m_share_file;
 #endif
@@ -164,13 +160,8 @@ private slots:
     /* funzione che gestisce la visualizzazione di un errore per la registrazione del video */
     void displayErrorMessage();
 
-    /* riascolto audio */
-    /* funzione che gestisce l'inserimento del testo formattato correttamente */
-    void riascoltoaudioprogressivo(qint64 position);
     void on_actionListen_current_audio_triggered();
 
-    /* funzione che gestisce la fine del riascolto dell'audio */
-    void cambiostatoplayer(QMediaPlayer::State);
     void on_actionQuality_setting_triggered();
     void on_actionDelete_audio_triggered();
     void on_volumeSlider_actionTriggered(int action);
@@ -254,7 +245,6 @@ private slots:
     void on_buttonRedo_clicked();
     void on_sliderZoom_sliderMoved(int position);
     void on_buttonFullScreen_clicked();
-
     void on_actionFull_Screen_triggered();
 
 protected:

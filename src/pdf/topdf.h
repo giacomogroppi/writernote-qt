@@ -39,7 +39,6 @@ inline void topdf::draw(QPainter &painter, double m, int size_orizzontale, int s
         .m = m,
         .size = QSize(size_orizzontale, size_verticale),
         .parent = nullptr,
-        .m_pos_ris = -1,
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST
     };

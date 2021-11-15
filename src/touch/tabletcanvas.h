@@ -53,7 +53,6 @@ struct DataPaint{
     double m;
     QSize size;
     MainWindow *parent;
-    int m_pos_ris;
     QPixmap *m_pixmap;
 
     QColor m_color;
@@ -131,8 +130,6 @@ public:
 
     Document *data = nullptr;
 
-    /* al passaggio a mainwindow il puntatore verrà cambiato con il valore del tempo della registrazione se e solo se sta registrando
-    in caso contrario rimarrà sempre zero*/
     int time = 0;
 
     enum e_method: int{
@@ -161,14 +158,6 @@ public:
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush);
     void loadpixel();
-
-    /* funzioni responsabili del riascolto */
-    void riascolto(int);
-
-    /*
-     * indice la posizione del replay
-    */
-    int m_pos_ris = -1;
 
     /* touch e zoom */
     PointSettable lastpointzoom[2] = {{QPointF(0, 0), false}, {QPointF(0, 0), false}}; // [0] point left [1] point right
@@ -226,6 +215,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
+
     void triggerNewView(const QList<int> Page, const bool all);
     void triggerNewView(const bool all);
     bool isWriting = false;

@@ -12,6 +12,7 @@
 #include <QSettings>
 #include "square/square.h"
 #include "property/property_control.h"
+#include "../audioplay/audioplay.h"
 
 static void saveLastMethod(TabletCanvas::e_method);
 static void loadLastMethod(TabletCanvas *);
@@ -174,7 +175,6 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
     return pressure * 10 + 1;
 }
 
-
 void TabletCanvas::settingdata(Document *data){
     this->data = data;
 }
@@ -192,16 +192,19 @@ static void loadLastMethod(TabletCanvas *p){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_METHOD_TOUCH);
 
-    p->medotodiinserimento = static_cast<TabletCanvas::e_method>(setting.value(KEY_METHOD_TOUCH, TabletCanvas::pen).toInt());
+    p->medotodiinserimento = static_cast<TabletCanvas::e_method>(
+                setting.value(KEY_METHOD_TOUCH, TabletCanvas::pen)
+                .toInt());
 
     setting.endGroup();
 
 }
 
 void TabletCanvas::triggerNewView(const bool all){
-    this->data->datatouch->triggerNewView(m_pos_ris, parent->player->state() == QMediaPlayer::PlayingState, all);
+    this->data->datatouch->triggerNewView(parent->m_audioplayer->getPositionSecond(), parent->m_audioplayer->isPlay(), all);
 }
 
 void TabletCanvas::triggerNewView(const QList<int> Page, const bool all){
-    this->data->datatouch->triggerNewView(Page, m_pos_ris, parent->player->state() == QMediaPlayer::PlayingState, all);
+    this->data->datatouch->triggerNewView(Page, parent->m_audioplayer->getPositionSecond(),
+                                          parent->m_audioplayer->isPlay(), all);
 }

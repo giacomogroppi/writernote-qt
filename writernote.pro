@@ -77,6 +77,10 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/audioplay/audioplay.cpp \
+    src/audioplay/ctrlAudioPlay.cpp \
+    src/audiorecord/audiorecord.cpp \
+    src/audiorecord/ctrlAudioRecord.cpp \
     src/audiorecord/start_recording.cpp \
     src/button/button_size.cpp \
     src/controllUi.cpp \
@@ -148,14 +152,6 @@ SOURCES += \
     src/ui/controlluibutton.cpp \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
-    src/audioplay/audiovolume.cpp \
-    src/audioplay/cambiostatoplayer.cpp \
-    src/audioplay/enableriascolto.cpp \
-    src/audioplay/playbottonfunction.cpp \
-    src/audioplay/riascoltoaudioprogressivo.cpp \
-    src/audioplay/slidertimechange.cpp \
-    src/audioplay/updatestatusbar_riascolto.cpp \
-    src/audioplay/valuechangeslidervolume.cpp \
     src/audiosetting/audioqualityoption.cpp \
     src/audiorecord/displayErrorMessage.cpp \
     src/audiosetting/loadqualita.cpp \
@@ -198,7 +194,6 @@ SOURCES += \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
-    src/audioplay/stopriascolto.cpp \
     src/style/print_action.cpp \
     src/touch/datastruct/datastruct.cpp \
     src/touch/datastruct/needtocreatenew.cpp \
@@ -210,7 +205,6 @@ SOURCES += \
     src/touch/initpixmap.cpp \
     src/touch/paintevent/paintevent.cpp \
     src/touch/pen/pen_ui.cpp \
-    src/touch/riascolto/riascolto.cpp \
     src/touch/rubber/load_setting_rubber_ui.cpp \
     src/touch/rubber/rubber_ui.cpp \
     src/touch/rubber/save_setting_rubber_ui.cpp \
@@ -259,6 +253,8 @@ SOURCES += \
 
 
 HEADERS += \
+    src/audioplay/audioplay.h \
+    src/audiorecord/audiorecord.h \
     src/button/button_size.h \
     src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
@@ -296,7 +292,6 @@ HEADERS += \
     src/utils/abs.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
-    src/audioplay/cambioiconariascolto.h \
     src/audiosetting/audioqualityoption.h \
     src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \

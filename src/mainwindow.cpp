@@ -25,6 +25,7 @@
 #include "ui/controlluibutton.h"
 #include "../android/cpp/android/shareutils.h"
 #include "touch/property/property_control.h"
+#include "audioplay/audioplay.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -60,19 +61,6 @@ MainWindow::MainWindow(QWidget *parent,
     connect(m_audioRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
             &MainWindow::displayErrorMessage);
 
-    player = new QMediaPlayer(this);
-    connect(player, &QMediaPlayer::positionChanged, this, &MainWindow::riascoltoaudioprogressivo);
-    connect(player, &QMediaPlayer::stateChanged, this, &MainWindow::cambiostatoplayer);
-    connect(player, &QMediaPlayer::durationChanged, [=](qint64 duration){
-        qDebug() << "Duration change " << duration;
-    });
-
-    connect(player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
-        [=](QMediaPlayer::Error error){
-        Q_UNUSED(error)
-        user_message("We had an internal error with this error code: " + player->errorString());
-    });
-
     this->m_buffer = new QBuffer(this);
 
     setting_ui_start(this);
@@ -95,6 +83,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_setting = new class setting_restore_ui(this, &m_currenttitle, &m_path);
     NAME_LOG_EXT = new class log_ui(this);
     this->m_controllUi = new class ControllUiButton(this);
+    this->m_audioplayer = new class audioplay(this);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);

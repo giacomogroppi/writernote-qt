@@ -17,7 +17,6 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
         .m = 1,
         .size = QSize(width, height),
         .parent = nullptr,
-        .m_pos_ris = -1,
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST
     };

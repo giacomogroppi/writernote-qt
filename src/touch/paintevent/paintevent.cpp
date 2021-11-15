@@ -24,13 +24,11 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
         .m = 1,
         .size = QSize(m_pixmap.size()),
         .parent = parent,
-        .m_pos_ris = -1,
         .m_pixmap = &this->m_pixmap,
         DATAPAINT_DEFINEREST
     };
 
     dataPaint.size = QSize(m_pixmap.size());
-    dataPaint.m_pos_ris = m_pos_ris;
 
     dataPaint.pen       = this->m_pen;
     dataPaint.m_brush   = this->m_brush;

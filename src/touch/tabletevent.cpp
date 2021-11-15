@@ -4,6 +4,7 @@
 #include "square/square.h"
 #include "../utils/color/setcolor.h"
 #include "../mainwindow.h"
+#include "../audioplay/audioplay.h"
 
 #define MAXPOINT 20
 
@@ -124,7 +125,7 @@ end:
         m_square->reset();
     }
     if(!sel && selection_method){
-        data->datatouch->triggerViewIfVisible(m_pos_ris, parent->player->state() == QMediaPlayer::PlayingState);
+        data->datatouch->triggerViewIfVisible(parent->m_audioplayer->getPositionSecond(), parent->m_audioplayer->isPlay());
     }
 
     update();
@@ -268,9 +269,9 @@ void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     }
 
     if(toTheTop)
-        doc.datatouch->appendToTheTop(__tmp, canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
+        doc.datatouch->appendToTheTop(__tmp, canvas->parent->m_audioplayer->getPositionSecond(), canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
     else
-        doc.datatouch->append(__tmp, canvas->m_pos_ris, canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
+        doc.datatouch->append(__tmp, canvas->parent->m_audioplayer->getPositionSecond(), canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
 
     __tmp.clear();
 }

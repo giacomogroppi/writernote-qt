@@ -23,7 +23,6 @@ void MainWindow::on_actionPrint_triggered()
         .m = delta,
         .size = QSize(printer.width(), printer.height()),
         .parent = nullptr,
-        .m_pos_ris = -1,
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST
     };

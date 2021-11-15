@@ -7,8 +7,8 @@
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../setting_ui.h"
 #include "../dataread/xmlstruct.h"
+#include "audioplay.h"
 #define ERROR_AUDIO "We had an internal problem with audio, please \nclose the application and open it again"
-
 
 void aggiornotestiriascolto(MainWindow *parent){
     if(parent->m_currenttitle->se_registato != Document::not_record){
@@ -42,12 +42,12 @@ void aggiornotestiriascolto(MainWindow *parent){
             if(!parent->m_buffer->open(QIODevice::ReadOnly))
                 return dialog_critic(ERROR_AUDIO);
 
-            parent->player->setMedia(QMediaContent(), parent->m_buffer);
+            parent->m_audioplayer->setMedia(parent->m_buffer);
 
         }
         else{
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
-            parent->player->setMedia(QUrl::fromLocalFile(parent->m_currenttitle->audio_position_path));
+            parent->m_audioplayer->setMedia(parent->m_currenttitle->audio_position_path);
 #else
             user_message("The copybook you are opening has an audio external to the writernote file, it is not possible to load the file because you are on android");
 #endif
