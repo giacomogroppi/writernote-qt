@@ -50,6 +50,7 @@ void audioplay::positionChange(qint64 position)
     parent->ui->audioSlider->setValue((position*100)/duration);
 
     parent->ui->audioSlider->blockSignals(false);
+    this->parent->m_currenttitle->datatouch->triggerNewView(this->durationSecond(), true, false);
 }
 
 void audioplay::updateStatus(QMediaPlayer::State newState)
