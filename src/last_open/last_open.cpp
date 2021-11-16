@@ -174,7 +174,7 @@ void last_open::on_clicked(int index)
 void last_open::on_open_button_clicked()
 {
     QString path;
-    if(!qfilechoose::filechoose(path, TYPEFILEWRITER))
+    if(!qfilechoose::getFileForLoad(path, TYPEFILEWRITER))
         return;
 
     QFile file(path);
@@ -185,7 +185,7 @@ void last_open::on_open_button_clicked()
 
     *m_style_return = new char[path.length()+1];
 
-    strcpy(*m_style_return, path.toUtf8().constData());
+    strncpy(*m_style_return, path.toUtf8().constData(), path.length() + 1);
 
     this->close();
 

@@ -18,6 +18,7 @@
 #include "../utils/setting_define.h"
 #include "../utils/permission/permission.h"
 #include "../utils/make_default/make_default_ui.h"
+#include "../audiorecord/audiorecord.h"
 
 static void saveAudio(Document * , QString &path);
 
@@ -34,10 +35,10 @@ namespace removeAudio {
 
 void MainWindow::on_stop_rec_triggered()
 {
-    if(this->m_audioRecorder->state() == QMediaRecorder::StoppedState)
+    if(m_audio_recorder->isStopped())
         return;
 
-    this->m_audioRecorder->stop();
+    m_audio_recorder->stopRecording();
 
     if(m_currenttitle->se_registato == Document::record_zip){
         saveAudio(m_currenttitle, m_path);
@@ -48,7 +49,6 @@ void MainWindow::on_stop_rec_triggered()
     aggiornotestiriascolto(this);
 
     this->ui->statusBar->clearMessage();
-    this->m_canvas->time = 0;
 }
 
 static bool needRemove;
@@ -117,7 +117,6 @@ static void saveAudio(Document *m_currenttitle, QString &m_path){
     }
 
 }
-
 
 /*
  * this function return true if the user want

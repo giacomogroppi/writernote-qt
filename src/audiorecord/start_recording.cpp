@@ -3,7 +3,6 @@
 #include <QMessageBox>
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../windows/mostra_finestra_i.h"
-#include "../audiosetting/loadqualita.h"
 #include "../utils/setting_define.h"
 #include "../datawrite/qfilechoose.h"
 #include "../utils/default_location/audio_default_location.h"
@@ -50,12 +49,13 @@ void MainWindow::on_start_rec_triggered()
         return;
     }
 
-
     if (m_audio_recorder->isStopped()) {
-        loadqualita(this);
+        this->m_audio_recorder->loadSettings();
 
         /*
-         * we reserve 32 MB for the buffer of the audio
+         * remove the comment for
+         * reserve 32 MB for the
+         * buffer of the audio
         */
         //this->m_currenttitle->audio_data.reserve(32*1024*1024);
 
@@ -149,7 +149,7 @@ bool MainWindow::setOutputLocation()
     procede:
     if(this->m_currenttitle->se_registato == Document::record_file){
         QString fileName;
-        if(!qfilechoose::filechoose(fileName, TYPEAUDIO)){
+        if(!qfilechoose::getFileForSave(fileName, TYPEAUDIO)){
             return false;
         }
 

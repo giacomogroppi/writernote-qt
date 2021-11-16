@@ -80,7 +80,6 @@ SOURCES += \
     src/audioplay/audioplay.cpp \
     src/audioplay/ctrlAudioPlay.cpp \
     src/audiorecord/audiorecord.cpp \
-    src/audiorecord/ctrlAudioRecord.cpp \
     src/audiorecord/start_recording.cpp \
     src/button/button_size.cpp \
     src/controllUi.cpp \
@@ -153,7 +152,6 @@ SOURCES += \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audiosetting/audioqualityoption.cpp \
-    src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
     src/last_open/element/element_ui.cpp \
     src/last_open/last_open.cpp \
@@ -292,7 +290,6 @@ HEADERS += \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
     src/audiosetting/audioqualityoption.h \
-    src/audiosetting/loadqualita.h \
     src/audiosetting/savequalita.h \
     src/last_open/element/element_ui.h \
     src/last_open/last_open.h \

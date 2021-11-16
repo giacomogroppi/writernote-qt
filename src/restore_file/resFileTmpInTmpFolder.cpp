@@ -73,7 +73,7 @@ void MainWindow::resFileTmpInTmpFolder(){
         }
 
         if(resBtn == QMessageBox::Yes){
-            if(!qfilechoose::filechoose(__path, TYPEFILEWRITER)){
+            if(!qfilechoose::getFileForSave(__path, TYPEFILEWRITER)){
                 --i;
             }
 

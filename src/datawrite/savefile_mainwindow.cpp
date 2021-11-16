@@ -18,7 +18,7 @@ void MainWindow::on_actionSave_File_triggered()
     bool check;
 
     if(m_path == ""){
-        if(!qfilechoose::filechoose(new_path, TYPEFILEWRITER)){
+        if(!qfilechoose::getFileForSave(new_path, TYPEFILEWRITER)){
             return;
         }
         m_path = new_path;
@@ -36,7 +36,7 @@ void MainWindow::on_actionSave_As_triggered()
 {
     QString posizione = this->m_path;
 
-    if(!qfilechoose::filechoose(m_path))
+    if(!qfilechoose::getFileForSave(m_path))
         /* se l'utente non ha selezionato nessun file */
        return;
 

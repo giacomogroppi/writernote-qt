@@ -11,8 +11,8 @@
 class qfilechoose
 {
 public:
-    static bool filechoose(QString &, short int type_ = TYPEFILEWRITER);
-
+    static bool getFileForSave(QString &, uint16_t type_ = TYPEFILEWRITER);
+    static bool getFileForLoad(QString &, uint16_t type_ = TYPEFILEWRITER);
 };
 
 #endif // QFILECHOOSE_H

@@ -11,7 +11,9 @@
 #include "frompdf/frompdf.h"
 #include "last_open/last_open.h"
 #include "datawrite/savefile.h"
+#include "datawrite/qfilechoose.h"
 #include <QFile>
+#include <QFileDialog>
 
 void MainWindow::openFile(const char *pos){
     QString fileName;
@@ -21,7 +23,10 @@ void MainWindow::openFile(const char *pos){
     n_need_save res_save;
 
     if(!pos){
-        fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; Pdf (*.pdf);; All file (* *.*)");
+        if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER)){
+            return;
+        }
+        //fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; Pdf (*.pdf);; All file (* *.*)");
     }else{
         fileName = pos;
     }

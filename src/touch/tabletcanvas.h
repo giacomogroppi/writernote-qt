@@ -130,8 +130,6 @@ public:
 
     Document *data = nullptr;
 
-    int time = 0;
-
     enum e_method: int{
         rubber,
         pen,

@@ -17,10 +17,14 @@ public:
 
     void startRecord();
     void pauseRecord();
+    void stopRecording();
 
     QMediaRecorder::Error errors() const;
 
     void setOutputLocation(const QString &path);
+
+    void loadSettings();
+    qint64 getCurrentTime();
 
 signals:
 private slots:
@@ -58,6 +62,11 @@ inline void AudioRecord::pauseRecord()
     this->recorder->pause();
 }
 
+inline void AudioRecord::stopRecording()
+{
+    recorder->stop();
+}
+
 inline QMediaRecorder::Error AudioRecord::errors() const
 {
     return this->recorder->error();
@@ -66,6 +75,14 @@ inline QMediaRecorder::Error AudioRecord::errors() const
 inline void AudioRecord::setOutputLocation(const QString &path)
 {
     this->recorder->setOutputLocation(QUrl::fromLocalFile(path));
+}
+
+/* return time in second */
+inline qint64 AudioRecord::getCurrentTime()
+{
+    if(!isRecording())
+        return 0;
+    return this->recorder->duration() / 1000;
 }
 
 #endif // AUDIORECORD_H

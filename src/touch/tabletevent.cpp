@@ -244,7 +244,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     tmp_point.m_y = pointTouch.y();
     tmp_point.m_pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
     tmp_point.rotation = event->rotation();
-    tmp_point.m_posizioneaudio = time/1000;
+    tmp_point.m_posizioneaudio = parent->m_audio_recorder->getCurrentTime();
 
     setcolor_struct(&tmp_point.m_color, m_color);
 

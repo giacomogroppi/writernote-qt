@@ -76,7 +76,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
         __message = "Do you wanto to save in " + m_path + "?";
 
 
-    resBtn = QMessageBox::question( this, "writernote",
+    resBtn = QMessageBox::question( this, "Writernote",
                                     __message,
                                     QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
                                     QMessageBox::Yes);
@@ -84,7 +84,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     if (resBtn == QMessageBox::Yes) {
 
         if(m_path == ""){
-            if(!qfilechoose::filechoose(m_path))
+            if(!qfilechoose::getFileForSave(m_path, TYPEFILEWRITER))
                 return;
         }
         check = save_.savefile_check_file() == OK;

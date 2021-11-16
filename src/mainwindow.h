@@ -146,12 +146,6 @@ private slots:
     void closeEvent (QCloseEvent *event) override;
     void on_actionOpen_triggered();
 
-    /* funzione che gestisce l'aggiornamento della status bar */
-    void updateProgress(qint64 duration);
-
-    /* funzione che gestisce la visualizzazione di un errore per la registrazione del video */
-    void displayErrorMessage();
-
     void on_actionListen_current_audio_triggered();
 
     void on_actionQuality_setting_triggered();

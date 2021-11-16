@@ -70,7 +70,7 @@ void MainWindow::on_actiontopdf_triggered()
     if(m_currenttitle->datatouch->isempty())
         return user_message("There is nothing to convert to pdf");
 
-    if(!qfilechoose::filechoose(path_pdf, TYPEFILEPDF))
+    if(!qfilechoose::getFileForSave(path_pdf, TYPEFILEPDF))
         return;
 
     topdf filepdf(path_pdf);

@@ -117,7 +117,7 @@ void extract_audio_ui::on_edit_path_textChanged()
 void extract_audio_ui::on_open_to_clicked()
 {
     QString temp_path;
-    if(!qfilechoose::filechoose(temp_path, TYPEAUDIO))
+    if(!qfilechoose::getFileForLoad(temp_path, TYPEAUDIO))
         return;
 
     ui->to_exit->setPlainText(temp_path);
@@ -128,7 +128,7 @@ void extract_audio_ui::on_open_from_clicked()
 {
     QString fileName;
 
-    if(!qfilechoose::filechoose(fileName, TYPEFILEWRITER))
+    if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER))
         return;
 
     ui->edit_path->setPlainText(fileName);

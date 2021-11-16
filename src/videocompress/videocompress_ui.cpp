@@ -1,11 +1,10 @@
 #include "videocompress_ui.h"
 #include "ui_videocompress_ui.h"
-
 #include "../mainwindow.h"
-
 #include "enable_videocompress.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "compressivideo.h"
+#include <QFileDialog>
 
 videocompress_ui::videocompress_ui(QWidget *parent, MainWindow *padre) :
     QDialog(parent),

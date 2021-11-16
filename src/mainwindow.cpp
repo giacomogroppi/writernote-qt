@@ -147,7 +147,6 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->m_canvas->settingdata(m_currenttitle);
     this->m_canvas->loadpixel();
-    this->m_canvas->time = 0;
 
     if(path)
         openFile(path);
