@@ -67,7 +67,7 @@ jobs:
       - name: Compile NO_ALL_VERSION
         run: |
           make clean
-          qmake DEFINES+="NO_ALL_VERSION"
+          qmake DEFINES+="NO_ALL_VERSION" INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=Installing: /usr/local/lib/libpoppler-qt5.so.1
           make -j $(nproc)    
 
       - name: Perform CodeQL Analysis
