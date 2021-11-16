@@ -2,13 +2,12 @@
 #include <QApplication>
 #include "touch/tabletapplication.h"
 #include "touch/tabletcanvas.h"
-
 #include "last_open/last_open.h"
 #include "string.h"
-
 #include "dataread/xmlstruct.h"
 #include "utils/extract_audio/extract_audio.h"
 #include "utils/changeLanguage.h"
+#include "log/log_ui/log_ui.h"
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file\nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
 #define COMMAND_EXTRACT "--extract"
@@ -18,6 +17,7 @@
 #include "cloud/cloud_controll.h"
 #endif
 
+static void printLog();
 static int extract_(const char *path, const char *path_to);
 
 int main(int argc, char *argv[]){
@@ -107,6 +107,8 @@ int main(int argc, char *argv[]){
         delete user;
 #endif
 
+    printLog();
+
     delete canvas;
     return exit_code;
 }
@@ -136,4 +138,20 @@ static int extract_(const char *path, const char *path_to){
     }
     printf("Unknown error\n");
     return -1;
+}
+
+static void printLog()
+{
+    QByteArray arr;
+    if(!NAME_LOG_EXT){
+        printf("No log available\n");
+        return;
+    }
+    if(!NAME_LOG_EXT->getData(arr)){
+        printf("Error open file log in %s\n", NAME_LOG_EXT->getCurrentPosition().toUtf8().constData());
+        return;
+    }
+
+    printf("Log:\n");
+    NAME_LOG_EXT->print(stdin, arr);
 }

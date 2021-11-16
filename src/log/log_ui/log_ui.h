@@ -25,7 +25,8 @@ public:
     enum type_write: int{
         critic_error,
         info,
-        error_internal
+        error_internal,
+        possible_bug
 #ifdef DEBUGINFO
         ,
         __caller
@@ -35,6 +36,9 @@ public:
     void write(const QString &message,
                enum type_write type);
 
+    void print(FILE *fp, const QByteArray &str);
+    bool getData(QByteArray & str);
+    const QString &getCurrentPosition() const;
 private:
     static void addTime(QString &message);
     Ui::log_ui *ui;
@@ -69,7 +73,13 @@ private slots:
     void on_button_change_position_clicked();
 };
 
+inline const QString &log_ui::getCurrentPosition() const
+{
+    return this->pos_log;
+}
+
 extern log_ui *NAME_LOG_EXT;
+//log_ui::type_write::
 #define LOG(message, mode) NAME_LOG_EXT->write(message, mode)
 
 // debug info

@@ -1,4 +1,5 @@
 #include "datastruct.h"
+#include "../../log/log_ui/log_ui.h"
 
 /*
  * this function change the id of all point
@@ -8,21 +9,22 @@ void datastruct::changeId(uint index, uint indexPage, uint lenPage, int base)
 {
     int tmp;
     page *page;
-    uint len;
+    uint len, counterPage;
     if(base == -1)
         base = maxId() + 1;
 
     if(lenPage == 0){
-        lenPage = lengthPoint();
-        if(!lenPage)
-            return;
+        lenPage = this->lengthPage();
+        if(!lenPage){
+            LOG("datastruct::changeId lenPage = 0", log_ui::type_write::possible_bug);
+        }
     }
 
     tmp = at(index, indexPage)->idtratto;
 
-    for(uint k = 0; k<lenPage; k++){
-        len = at(k)->length();
-        page = at_mod(k);
+    for(counterPage = 0; counterPage < lenPage; counterPage++){
+        len = at(counterPage)->length();
+        page = at_mod(counterPage);
         for(; index<len && page->at(index)->idtratto == tmp;
             index++)
             page->at_mod(index)->idtratto = base;

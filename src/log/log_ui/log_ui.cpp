@@ -8,6 +8,7 @@
 #include "../../utils/dialog_critic/dialog_critic.h"
 #include "../../utils/slash/slash.h"
 #include "../../utils/time/current_time.h"
+#include "../../dataread/load_from_file.h"
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
@@ -24,36 +25,36 @@ log_ui::log_ui(QWidget *parent) :
 
 log_ui::~log_ui()
 {
-    delete ui;
-
     this->saveData();
+    delete ui;
+}
+
+bool log_ui::getData(QByteArray &data)
+{
+    return load_from_file::exe(data, pos_log, false);
 }
 
 void log_ui::showAll()
 {
-    FILE *fp;
     QString err;
-
-    fp = fopen(this->pos_log.toUtf8().constData(), "r");
-
-    if(!fp){
+    QByteArray data;
+    if(!getData(data)){
         err = QString("Error open file %1").arg(pos_log);
         this->ui->text_error_show->setText(err);
-        return;
     }
 
-    fclose(fp);
+    this->ui->textBrowser->setText(data);
 }
 
 void log_ui::write(const QString &stringa, log_ui::type_write var)
 {
-    if(m_permi != permi::enable)
-        return;
-
     FILE *fp;
     QString tmp;
     uchar wr;
     int i, len;
+
+    if(m_permi != permi::enable)
+        return;
 
     if(var == log_ui::info)
         tmp = "info: " + stringa;
@@ -80,6 +81,13 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
     }
 
     fclose(fp);
+}
+
+void log_ui::print(FILE *fp, const QByteArray &str)
+{
+    for (const char data : str){
+        fprintf(fp, "%c", data);
+    }
 }
 
 void log_ui::addTime(QString &message)
