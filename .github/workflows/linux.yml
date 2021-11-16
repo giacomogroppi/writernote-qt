@@ -35,7 +35,7 @@ jobs:
         run: |
           #sudo apt install libpoppler-qt5-dev
           sudo apt -y install libzip-dev
-          sudo apt -y install libfreetype-dev libfontconfig1-dev libtiff-dev libnss3-dev libcairo2-dev libboost-all-dev
+          sudo apt -y install libfreetype-dev libfontconfig1-dev libtiff-dev libnss3-dev libcairo2-dev libboost-all-dev libopenjp2-7-dev
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.13.2
