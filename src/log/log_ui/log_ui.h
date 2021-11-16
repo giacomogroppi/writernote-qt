@@ -28,7 +28,7 @@ public:
         error_internal
 #ifdef DEBUGINFO
         ,
-        caller
+        __caller
 #endif
     };
 
@@ -74,23 +74,34 @@ extern log_ui *NAME_LOG_EXT;
 
 // debug info
 #ifdef DEBUGINFO
+
 #define DEBUG_INFO_CALLER_SINGLE(caller) const char *caller
 #define DEBUG_INFO_CALLER_MULTIPLE(caller) ,DEBUG_INFO_CALLER_SINGLE(caller)
 
 /* mode is "start" or "stop" */
-#define DEBUG_INFO_CALL_CALLER_PRIVATE(caller, mode) LOG(QString(caller)+ " "+ mode, log_ui::type_write::caller)
-#define DEBUG_INFO_CALL_CALLER(caller) DEBUG_INFO_CALL_CALLER_PRIVATE(caller, "start")
-#define DEBUG_INFO_END_CALLER(caller) DEBUG_INFO_CALL_CALLER_PRIVATE(caller, "stop")
+#define DEBUG_INFO_CALL_CALLER_PRIVATE(caller, mode, thisFunction) LOG(QString(caller)+ " call " + QString(thisFunction) + " " + mode, log_ui::type_write::__caller)
+#define DEBUG_INFO_CALL_CALLER(caller, thisFunction) DEBUG_INFO_CALL_CALLER_PRIVATE(caller, "start", thisFunction)
+#define DEBUG_INFO_END_CALLER(caller, thisFunction) DEBUG_INFO_CALL_CALLER_PRIVATE(caller, "stop",thisFunction)
+
+#define CALLER_MULTIPLE(caller) ,caller
+#define CALLER_SINGLE(caller) caller
+
 #else
 #define DEBUG_INFO_CALLER_SINGLE(caller)
 #define DEBUG_INFO_CALLER_MULTIPLE(caller)
-#define DEBUG_INFO_CALL_CALLER(caller)
+
+#define DEBUG_INFO_CALL_CALLER(caller, thisFunction) ;
+#define DEBUG_INFO_END_CALLER(caller, thisFunction) ;
+
+#define CALLER_MULTIPLE(caller) ;
+#define CALLER_SINGLE(caller) ;
+
 #endif
 
 // example
-/*void foo(int arg1, int arg2, char **argv DEBUG_INFO_CALLER(caller)){
-    DEBUG_INFO_CALL_CALLER(caller);
-    DEBUG_INFO_END_CALLER(caller);
+/*void foo(int arg1, int arg2, char **argv DEBUG_INFO_CALLER_MULTIPLE(caller)){
+    DEBUG_INFO_CALL_CALLER(caller, "name this function");
+    DEBUG_INFO_END_CALLER(caller, "name this function");
 }
 
 void main(void){

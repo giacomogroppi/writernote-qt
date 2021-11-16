@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QImage>
 #include "point.h"
+#include "../../log/log_ui/log_ui.h"
 
 enum n_style: int;
 

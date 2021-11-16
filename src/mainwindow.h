@@ -130,7 +130,7 @@ public:
     void openFile(const char *pos);
 
     friend class ControllUiButton;
-
+    bool setOutputLocation(const QPoint &hostRect);
     QBuffer *m_buffer = nullptr;
 public slots:
     void on_actioncompress_video_triggered();
@@ -140,7 +140,7 @@ public slots:
 
 private slots:
     /* registrazione dell'audio */
-    bool setOutputLocation();
+
     void togglePause();
     void on_actionNew_File_triggered();
     void closeEvent (QCloseEvent *event) override;

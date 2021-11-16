@@ -18,6 +18,7 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_start_rec_triggered()
 {
+    const QPoint & pointAction = cursor().pos();
     if(this->m_currenttitle->se_registato != Document::not_record)
         return user_message("You had already record and audio");
     /*
@@ -44,7 +45,7 @@ void MainWindow::on_start_rec_triggered()
     }
 #endif //snap
 
-    if(!this->setOutputLocation()){
+    if(!this->setOutputLocation(pointAction)){
         m_currenttitle->se_registato = Document::not_record;
         return;
     }
@@ -100,7 +101,7 @@ static void deleteMenu(QMenu *data){
 /*
  * TODO make an android version of the function
 */
-bool MainWindow::setOutputLocation()
+bool MainWindow::setOutputLocation(const QPoint &hostRect)
 {
 #if defined (Q_OS_WINRT) || defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     // UWP does not allow to store outside the sandbox
@@ -117,8 +118,6 @@ bool MainWindow::setOutputLocation()
 
     QMenu *menu = nullptr;
     QAction *internal = nullptr, *ext = nullptr;
-
-    QPoint hostRect;
 
     if(audio_default_location::load_default() != audio_default_location::not_define)
         goto procede;
@@ -139,7 +138,6 @@ bool MainWindow::setOutputLocation()
     connect(internal, &QAction::triggered, this, &MainWindow::setInZipAudio);
     connect(ext, &QAction::triggered, this, &MainWindow::setExtAudio);
 
-    hostRect = this->cursor().pos();
     menu->move(hostRect);
 
     if(!menu->exec())
