@@ -35,7 +35,7 @@ jobs:
         run: |
           #sudo apt install libpoppler-qt5-dev
           sudo apt -y install libzip-dev
-          sudo apt -y install libfreetype-dev libfontconfig1-dev libtiff-dev libnss3-dev libcairo2-dev libboost-all-dev
+          sudo apt -y install libfreetype-dev libfontconfig1-dev libtiff-dev libnss3-dev libcairo2-dev libboost-all-dev libopenjp2-7-dev
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.13.2
@@ -53,8 +53,8 @@ jobs:
           mkdir build
           cd build
           cmake ..
-          make -j($nproc)
-          make install
+          make -j$(nproc)
+          sudo make install
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
@@ -67,7 +67,7 @@ jobs:
       - name: Compile NO_ALL_VERSION
         run: |
           make clean
-          qmake DEFINES+="NO_ALL_VERSION"
+          qmake DEFINES+="NO_ALL_VERSION" INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=Installing: /usr/local/lib/libpoppler-qt5.so.1
           make -j $(nproc)    
 
       - name: Perform CodeQL Analysis
