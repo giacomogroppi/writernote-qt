@@ -3,7 +3,6 @@
 #include <QString>
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "../audioplay/aggiornotastiriascolto.h"
-#include "../setting_ui.h"
 #include "../utils/progress_bar/progress_bar_ui.h"
 #include <QThread>
 #include <QFuture>

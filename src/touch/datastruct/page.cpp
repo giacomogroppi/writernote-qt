@@ -267,6 +267,7 @@ bool page::userWrittenSomething() const
     const uint len = length();
     for(i=0; i<len && !at(i)->isIdUser(); i++);
 
+    qDebug() << QString("Page %1 %2").arg(this->count-1).arg(!i || !(i==len));
     return !(i==len);
 }
 

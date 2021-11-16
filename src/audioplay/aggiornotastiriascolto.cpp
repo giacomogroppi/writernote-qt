@@ -5,7 +5,6 @@
 #include <QString>
 #include "../utils/common_error_definition.h"
 #include "../utils/dialog_critic/dialog_critic.h"
-#include "../setting_ui.h"
 #include "../dataread/xmlstruct.h"
 #include "audioplay.h"
 #define ERROR_AUDIO "We had an internal problem with audio, please \nclose the application and open it again"

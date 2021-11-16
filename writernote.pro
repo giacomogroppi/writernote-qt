@@ -187,7 +187,6 @@ SOURCES += \
     src/pdf/topdf.cpp \
     src/pdf/translate.cpp \
     src/savecopybook.cpp \
-    src/setting_ui.cpp \
     src/sheet/dialog_sheet.cpp \
     src/sheet/draw_dialog.cpp \
     src/sheet/newsheet_mainwindow.cpp \
@@ -312,7 +311,6 @@ HEADERS += \
     src/utils/default_option/default_option_ui.h \
     src/utils/dialog_critic/dialog_critic.h \
     src/pdf/topdf.h \
-    src/setting_ui.h \
     src/sheet/dialog_sheet.h \
     src/touch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \

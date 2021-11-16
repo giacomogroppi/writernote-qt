@@ -15,7 +15,6 @@ AudioRecord::AudioRecord(QObject *parent) : QObject(parent)
     connect(recorder, &QAudioRecorder::durationChanged, this, &AudioRecord::updateProgress);
     connect(recorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
             &AudioRecord::displayErrorMessage);
-
 }
 
 void AudioRecord::loadSettings()

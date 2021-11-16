@@ -13,7 +13,7 @@ enum n_style: int;
 class page
 {
 private:
-    static const uint width = 980*2;
+    static const uint width = 980*1.7;
     static const uint height = width*1.4141; // correct proportions for A4 paper size
 
     bool IsVisible = true;

@@ -8,6 +8,7 @@ audioplay::audioplay(QObject *parent) : QObject(parent)
 {
     this->player = new QMediaPlayer(this);
     this->parent = (MainWindow *)parent;
+    Q_ASSERT(this->parent->objectName() == "MainWindow");
 
     player = new QMediaPlayer(this);
     connect(player, &QMediaPlayer::positionChanged, this, &audioplay::positionChange);
@@ -22,16 +23,14 @@ audioplay::audioplay(QObject *parent) : QObject(parent)
         Q_UNUSED(error)
         user_message("We had an internal error with this error code: " + player->errorString());
     });
-
 }
 
 void audioplay::changeIcon()
 {
     QIcon icon;
-    if(isPlay() || isEndMedia())
-        icon.addFile(QString::fromUtf8(":image/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
-    else
-        icon.addFile(QString::fromUtf8(":image/images/pause-recording.png"), QSize(), QIcon::Normal, QIcon::Off);
+    const QString path = (isPlay() || isEndMedia()) ? ":image/images/play.png" : ":image/images/pause-recording.png";
+
+    icon.addFile(path, QSize(), QIcon::Normal, QIcon::Off);
 
     parent->ui->start_play->setIcon(icon);
 }

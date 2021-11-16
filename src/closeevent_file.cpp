@@ -64,8 +64,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    if(__res == n_need_save::not_
-            || __res == n_need_save::only_writernote){
+    if(__res == n_need_save::not_ || __res == n_need_save::only_writernote){
         goto accept_event;
     }
 

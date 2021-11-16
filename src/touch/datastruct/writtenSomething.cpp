@@ -2,10 +2,9 @@
 
 bool datastruct::userWrittenSomething(uint frompage)
 {
-    const uint len = lengthPoint();
-
-    for(; frompage<len; ++frompage){
-        if(datastruct::isIdUser(at(frompage)->userWrittenSomething()))
+    const uint len = lengthPage();
+    for(; frompage<len; frompage++){
+        if(at(frompage)->userWrittenSomething())
             return true;
     }
 

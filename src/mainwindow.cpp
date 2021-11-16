@@ -6,7 +6,6 @@
 #include "dataread/xmlstruct.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "savecopybook.h"
-#include "setting_ui.h"
 #include "datawrite/savefile.h"
 #include "currenttitle/checksimilecopybook.h"
 #include "windows/updatecheck.h"
@@ -64,11 +63,9 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->m_buffer = new QBuffer(this);
 
-    setting_ui_start(this);
-
     this->ui->layouteditor->insertWidget(1, this->m_canvas);
 
-    contrUi();
+
 
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
 
@@ -153,6 +150,7 @@ MainWindow::MainWindow(QWidget *parent,
     resFileTmpInTmpFolder();
 
     this->setSizeButton();
+    contrUi();
 }
 
 MainWindow::~MainWindow()
@@ -199,7 +197,6 @@ void MainWindow::on_actionNew_File_triggered()
     m_currenttitle->reset();
     m_canvas->clear();
     contrUi();
-    setting_ui_start(this);
     m_path = "";
 }
 

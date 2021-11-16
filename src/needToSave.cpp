@@ -18,9 +18,9 @@ enum MainWindow::n_need_save
     int check1;
 
     if(xml.getPath() == ""){
-        if(!m_currenttitle->datatouch->userWrittenSomething(nullptr))
-            return n_need_save::only_writernote;
-        return n_need_save::no_path;
+        if(m_currenttitle->datatouch->userWrittenSomething(nullptr))
+            return n_need_save::need_save;
+        return n_need_save::only_writernote;
     }
 
     check1 = xml.loadfile(false, false);
