@@ -26,6 +26,7 @@
 #include "../android/cpp/android/shareutils.h"
 #include "touch/property/property_control.h"
 #include "audioplay/audioplay.h"
+#include "audiorecord/audiorecord.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -55,11 +56,11 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->m_currenttitle = new Document;
 
-    m_audioRecorder = new QAudioRecorder(this);
+    /*m_audioRecorder = new QAudioRecorder(this);
 
     connect(m_audioRecorder, &QAudioRecorder::durationChanged, this, &MainWindow::updateProgress);
     connect(m_audioRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
-            &MainWindow::displayErrorMessage);
+            &MainWindow::displayErrorMessage);*/
 
     this->m_buffer = new QBuffer(this);
 
@@ -84,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent,
     NAME_LOG_EXT = new class log_ui(this);
     this->m_controllUi = new class ControllUiButton(this);
     this->m_audioplayer = new class audioplay(this);
+    this->m_audio_recorder = new class AudioRecord(this);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);
@@ -204,10 +206,10 @@ void MainWindow::on_actionNew_File_triggered()
 
 void MainWindow::togglePause()
 {
-    if (m_audioRecorder->state() != QMediaRecorder::PausedState)
-        m_audioRecorder->pause();
+    if (m_audio_recorder->isPauseRecording())
+        m_audio_recorder->pauseRecord();
     else
-        m_audioRecorder->record();
+        m_audio_recorder->startRecord();
 }
 
 void MainWindow::setInZipAudio(){
@@ -222,10 +224,10 @@ void MainWindow::setExtAudio(){
 /* funzionche che viene invocata quando la registrazione dell'audio viene messa in pausa */
 void MainWindow::on_pause_rec_triggered()
 {
-    if (this->m_audioRecorder->state() != QMediaRecorder::PausedState)
-        this->m_audioRecorder->pause();
+    if (!m_audio_recorder->isPauseRecording())
+        m_audio_recorder->pauseRecord();
     else
-        this->m_audioRecorder->record();
+        m_audio_recorder->startRecord();
 }
 
 void MainWindow::on_actionRedo_triggered()

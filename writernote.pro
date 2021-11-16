@@ -153,7 +153,6 @@ SOURCES += \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audiosetting/audioqualityoption.cpp \
-    src/audiorecord/displayErrorMessage.cpp \
     src/audiosetting/loadqualita.cpp \
     src/audiosetting/savequalita.cpp \
     src/last_open/element/element_ui.cpp \

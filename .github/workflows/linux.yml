@@ -51,6 +51,7 @@ jobs:
           cd poppler-poppler-21.10.0
 
           mkdir build
+          cd build
           cmake ..
           make -j($nproc)
           make install

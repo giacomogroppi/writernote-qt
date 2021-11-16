@@ -8,6 +8,7 @@
 #include "../datawrite/qfilechoose.h"
 #include "../utils/default_location/audio_default_location.h"
 #include "../utils/path/get_path.h"
+#include "audiorecord.h"
 #include <QSettings>
 
 #ifdef SNAP
@@ -50,7 +51,7 @@ void MainWindow::on_start_rec_triggered()
     }
 
 
-    if (this->m_audioRecorder->state() == QMediaRecorder::StoppedState) {
+    if (m_audio_recorder->isStopped()) {
         loadqualita(this);
 
         /*
@@ -58,7 +59,7 @@ void MainWindow::on_start_rec_triggered()
         */
         //this->m_currenttitle->audio_data.reserve(32*1024*1024);
 
-        this->m_audioRecorder->record();
+        m_audio_recorder->startRecord();
     }
 
     this->ui->start_rec->setEnabled(false);
@@ -153,7 +154,7 @@ bool MainWindow::setOutputLocation()
         }
 
         m_currenttitle->audio_position_path = fileName;
-        this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
+        m_audio_recorder->setOutputLocation(fileName);
         this->m_outputLocationSet = true;
         goto ok;
 
@@ -173,7 +174,7 @@ bool MainWindow::setOutputLocation()
         temp_p += NAME_AUDIO;
 
         /* testing */
-        this->m_audioRecorder->setOutputLocation(QUrl::fromLocalFile(temp_p));
+        this->m_audio_recorder->setOutputLocation(temp_p);
         goto ok;
     }
 

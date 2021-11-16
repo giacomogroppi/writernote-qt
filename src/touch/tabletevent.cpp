@@ -5,6 +5,7 @@
 #include "../utils/color/setcolor.h"
 #include "../mainwindow.h"
 #include "../audioplay/audioplay.h"
+#include "../audiorecord/audiorecord.h"
 
 #define MAXPOINT 20
 
@@ -269,9 +270,11 @@ void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     }
 
     if(toTheTop)
-        doc.datatouch->appendToTheTop(__tmp, canvas->parent->m_audioplayer->getPositionSecond(), canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
+        doc.datatouch->appendToTheTop(__tmp, canvas->parent->m_audioplayer->getPositionSecond(),
+                                      canvas->parent->m_audio_recorder->isRecording());
     else
-        doc.datatouch->append(__tmp, canvas->parent->m_audioplayer->getPositionSecond(), canvas->parent->m_audioRecorder->state() == QAudioRecorder::State::RecordingState);
+        doc.datatouch->append(__tmp, canvas->parent->m_audioplayer->getPositionSecond(),
+                              canvas->parent->m_audio_recorder->isRecording());
 
     __tmp.clear();
 }

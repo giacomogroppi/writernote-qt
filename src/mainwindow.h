@@ -2,16 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QListWidgetItem>
-#include <QUrl>
 #include <QDebug>
-#include <QAudioProbe>
-#include <QAudioRecorder>
-#include <QDir>
-#include <QFileDialog>
-#include <QMediaRecorder>
 #include <QStandardPaths>
-#include <iostream>
 #include <QComboBox>
 #include <QMediaPlayer>
 #include "touch/tabletcanvas.h"
@@ -102,8 +94,8 @@ public:
 
     Document *m_currenttitle;
     Ui::MainWindow *ui;
-
-    QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);
+    class AudioRecord *m_audio_recorder;
+    //QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);
     //QAudioProbe *m_probe = nullptr;
     bool m_outputLocationSet = false;
 

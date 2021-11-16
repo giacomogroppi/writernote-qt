@@ -1,7 +1,7 @@
 #include "audioqualityoption.h"
 #include "ui_audioqualityoption.h"
 #include "../mainwindow.h"
-
+#include "../audiorecord/audiorecord.h"
 #include "savequalita.h"
 #include "../utils/dialog_critic/dialog_critic.h"
 
@@ -11,28 +11,29 @@ audioqualityoption::audioqualityoption(QWidget *parent, MainWindow *padre) :
 {
     ui->setupUi(this);
     this->padre = padre;
+    QAudioRecorder *recorder = padre->m_audio_recorder->recorder;
 
     //audio devices
     ui->audioDeviceBox->addItem(tr("Default"), QVariant(QString()));
-    for (auto &device: this->padre->m_audioRecorder->audioInputs()) {
+    for (auto &device: recorder->audioInputs()) {
         ui->audioDeviceBox->addItem(device, QVariant(device));
     }
 
     //audio codecs
     ui->audioCodecBox->addItem(tr("Default"), QVariant(QString()));
-    for (auto &codecName: this->padre->m_audioRecorder->supportedAudioCodecs()) {
+    for (auto &codecName: recorder->supportedAudioCodecs()) {
         ui->audioCodecBox->addItem(codecName, QVariant(codecName));
     }
 
     //containers
     ui->containerBox->addItem(tr("Default"), QVariant(QString()));
-    for (auto &containerName: this->padre->m_audioRecorder->supportedContainers()) {
+    for (auto &containerName: recorder->supportedContainers()) {
         ui->containerBox->addItem(containerName, QVariant(containerName));
     }
 
     //sample rate
     ui->sampleRateBox->addItem(tr("Default"), QVariant(0));
-    for (int sampleRate: this->padre->m_audioRecorder->supportedAudioSampleRates()) {
+    for (int sampleRate: recorder->supportedAudioSampleRates()) {
         ui->sampleRateBox->addItem(QString::number(sampleRate), QVariant(
                 sampleRate));
     }
