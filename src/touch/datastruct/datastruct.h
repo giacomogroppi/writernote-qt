@@ -137,7 +137,10 @@ public:
 
     bool isinside(QPointF &topleft, QPointF &bottonright, const uint index, const uint page);
     bool isinside(double x1, double y1, double x2, double y2, const uint index, const uint page);
+
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s *__point);
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s &__point){ return datastruct::isinside(topleft, bottonright, &__point); }
+
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 
 

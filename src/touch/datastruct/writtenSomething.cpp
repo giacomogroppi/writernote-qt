@@ -31,7 +31,6 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
         goto single;
     }
 
-
     for(counterPage = 0; counterPage < l_first_page && counterPage < l_sec_page; counterPage++){
 
         page1 = this->at(counterPage);
