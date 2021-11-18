@@ -53,7 +53,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-
+    void zoomChange();
     void setFullScreen();
 
     /* -1 load from QSettings, -2 for show a slider */
