@@ -229,6 +229,7 @@ public:
 
     inline double currentWidth() const;
     inline double currentHeight() const;
+    inline double proportion() const;
 
     friend class xmlstruct;
 
@@ -250,6 +251,11 @@ inline bool point_s::isIdUser() const
 inline double datastruct::currentHeight() const
 {
     return page::getHeight();
+}
+
+inline double datastruct::proportion() const
+{
+    return page::getProportion();
 }
 
 inline int datastruct::maxId()

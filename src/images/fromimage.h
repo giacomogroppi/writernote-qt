@@ -60,9 +60,9 @@ public:
     void moveImage(const QList<int> &index, const QPointF &translation);
 
     static  void draw(QPainter &painter, const QRectF &rect, const QImage &img);
-    static  void draw(QPainter &painter, const QSize &size, const immagine_s &img);
-    static  void draw(QPainter &painter, const QSize &size, const QList<immagine_s> &list);
-            void draw(QPainter &painter, const QSize &size) const;
+    static  void draw(QPainter &painter, const immagine_s &img);
+    static  void draw(QPainter &painter, const QList<immagine_s> &list);
+            void draw(QPainter &painter) const;
 
     void reset(){ m_img.clear(); }
 
@@ -122,14 +122,13 @@ inline void fromimage::draw(QPainter &painter, const QRectF &rect, const QImage 
     painter.drawImage(rect, img, draw);
 }
 
-inline void fromimage::draw(QPainter &painter, const QSize &size, const immagine_s &img)
+inline void fromimage::draw(QPainter &painter, const immagine_s &img)
 {
     uchar check;
 
-    check = (img.f.y() < (double)0) +
-        (img.f.x() < (double)0) +
-        (img.i.y() > (double)size.width()) +
-        (img.i.x() > (double)size.height());
+    check = (img.f.y() < double(0)) +
+            (img.f.x() < double(0));
+
     if(check)
         return;
 
@@ -137,20 +136,20 @@ inline void fromimage::draw(QPainter &painter, const QSize &size, const immagine
 
 }
 
-inline void fromimage::draw(QPainter &painter, const QSize &size, const QList<immagine_s> &list)
+inline void fromimage::draw(QPainter &painter, const QList<immagine_s> &list)
 {
     uint i;
 
     for(i=0; i<(uint)list.length(); ++i){
         const struct immagine_s &img = list.at(i);
 
-        fromimage::draw(painter, size, img);
+        fromimage::draw(painter, img);
     }
 }
 
-inline void fromimage::draw(QPainter &painter, const QSize &size) const
+inline void fromimage::draw(QPainter &painter) const
 {
-    return fromimage::draw(painter, size, this->m_img);
+    return fromimage::draw(painter, this->m_img);
 }
 
 #endif // FROMIMAGE_H

@@ -21,7 +21,6 @@ void MainWindow::on_actionPrint_triggered()
         .withPdf = true,
         .IsExportingPdf = true,
         .m = delta,
-        .size = QSize(printer.width(), printer.height()),
         .parent = nullptr,
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST

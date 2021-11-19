@@ -7,9 +7,12 @@
 #include "../log/log_ui/log_ui.h"
 #include "../frompdf/frompdf.h"
 
-topdf::topdf(const QString &path)
+topdf::topdf(const QString &path, const Document &doc)
 {
     this->path = &path;
+    this->data = new Document(doc);
+
+    Q_ASSERT(doc.datatouch->lengthPage() == data->datatouch->lengthPage());
 }
 
 static inline void newpage(Document *data, const double tmp){
@@ -36,17 +39,15 @@ bool topdf::createpdf(const bool withPdf){
     const int width_pdf = pdfWriter.width();
 
     const double size_orizzontale = data->datatouch->currentWidth();
-    const double size_verticale = data->datatouch->currentHeight();
+    const double size_verticale = page::getProportion() * size_orizzontale;
 
-    const double delta = (double)width_pdf / (double)size_orizzontale;
+    const double delta = double(width_pdf) / double(size_orizzontale);
 
     QPainter painter(&pdfWriter);
     
     for (i=0; i<lenpage; ++i) {
         this->draw(painter,
                    delta,
-                   size_orizzontale,
-                   size_verticale,
                    withPdf);
 
         if(i+1<lenpage){
@@ -73,9 +74,7 @@ void MainWindow::on_actiontopdf_triggered()
     if(!qfilechoose::getFileForSave(path_pdf, TYPEFILEPDF))
         return;
 
-    topdf filepdf(path_pdf);
-
-    filepdf.copy(m_currenttitle);
+    topdf filepdf(path_pdf, *m_currenttitle);
 
     if(!filepdf.createpdf(true)){
         dialog_critic("We had a problem saving the file to " + path_pdf);

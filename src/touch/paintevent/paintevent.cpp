@@ -22,13 +22,13 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
         .withPdf = true,
         .IsExportingPdf = false,
         .m = 1,
-        .size = QSize(m_pixmap.size()),
+        //.size = QSize(m_pixmap.size()),
         .parent = parent,
         .m_pixmap = &this->m_pixmap,
         DATAPAINT_DEFINEREST
     };
 
-    dataPaint.size = QSize(m_pixmap.size());
+    //dataPaint.size = QSize(m_pixmap.size());
 
     dataPaint.pen       = this->m_pen;
     dataPaint.m_brush   = this->m_brush;

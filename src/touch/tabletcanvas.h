@@ -51,7 +51,6 @@ struct DataPaint{
     bool withPdf;
     bool IsExportingPdf;
     double m;
-    QSize size;
     MainWindow *parent;
     QPixmap *m_pixmap;
 

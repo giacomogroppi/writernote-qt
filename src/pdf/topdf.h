@@ -12,32 +12,25 @@ private:
 
     void translate();
 
-    MainWindow *parent;
-
     void draw(QPainter &painter, double m,
-              int size_orizzontale, int size_verticale, const bool withPdf);
+              const bool withPdf);
 
 public:
     ~topdf(){
         delete data;
     };
 
-    topdf(const QString &path);
+    topdf(const QString &path, const Document &doc);
     bool createpdf(const bool withPdf);
 
-    inline void copy(Document *datastruct_){
-        this->data = new Document;
-        Document::copy(*datastruct_, *data);
-    }
 };
 
-inline void topdf::draw(QPainter &painter, double m, int size_orizzontale, int size_verticale, const bool withPdf)
+inline void topdf::draw(QPainter &painter, double m, const bool withPdf)
 {
     DataPaint dataPaint = {
         .withPdf = withPdf,
-        .IsExportingPdf = false,
+        .IsExportingPdf = true,
         .m = m,
-        .size = QSize(size_orizzontale, size_verticale),
         .parent = nullptr,
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST

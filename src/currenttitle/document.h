@@ -18,6 +18,8 @@ class frompdf;
 #include <QByteArray>
 
 class Document{
+private:
+    void init();
 public:
     size_t createSingleControll() const;
 
@@ -49,6 +51,8 @@ public:
     QByteArray audio_data;
 
     Document();
+    Document(const Document &);
+
     ~Document();
 
     static void copy(const Document &src, Document &dest);

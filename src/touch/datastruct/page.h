@@ -13,8 +13,9 @@ enum n_style: int;
 class page
 {
 private:
-    static const uint width = 980*1.7;
-    static const uint height = width*1.4141; // correct proportions for A4 paper size
+    static constexpr uint width = 1666;
+    static constexpr double proportion = 1.4141;
+    static constexpr uint height = width*proportion; // correct proportions for A4 paper size
 
     bool IsVisible = true;
     int count;
@@ -38,6 +39,7 @@ public:
 
     page(const int count, const n_style style);
 
+    static double getProportion();
     static double getHeight();
     static double getWidth();
 
@@ -140,6 +142,11 @@ inline void page::nextPoint(int &index, QList<point_s> &list)
 inline const QImage &page::getImg() const
 {
     return this->imgDraw;
+}
+
+inline double page::getProportion()
+{
+    return proportion;
 }
 
 inline double page::getHeight(){

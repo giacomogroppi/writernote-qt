@@ -6,10 +6,21 @@
 #include "../frompdf/frompdf.h"
 #include "../images/fromimage.h"
 
-Document::Document(){
+void Document::init()
+{
     this->m_img = new fromimage(this);
     this->m_pdf = new frompdf(this);
     this->datatouch = new datastruct(m_pdf, m_img);
+}
+
+Document::Document(){
+    init();
+}
+
+Document::Document(const Document &src)
+{
+    init();
+    Document::copy(src, *this);
 }
 
 Document::~Document()

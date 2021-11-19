@@ -1247,7 +1247,7 @@
      <normaloff>:/image/images/pdf-icon.png</normaloff>:/image/images/pdf-icon.png</iconset>
    </property>
    <property name="text">
-    <string>toppf</string>
+    <string>Export To Pdf</string>
    </property>
   </action>
   <action name="actionCheck_update">

@@ -13,7 +13,7 @@
 
 /* tmp list */
 extern QList<point_s> __tmp;
-static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainter &painter);
+static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainter &painter, const double delta);
 
 #define C(x) x->datatouch
 #define UPDATE_LOAD(x, zoom, div, m_pen, m_brush ) \
@@ -25,23 +25,21 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
     const double m              = dataPoint.m;
     const MainWindow *parent    = dataPoint.parent;
     const bool IsExportingPdf   = dataPoint.IsExportingPdf;
-
-    QPixmap *pixmap     = dataPoint.m_pixmap;
-    QColor &color       = dataPoint.m_color;
-    QPen &pen           = dataPoint.pen;
-    QBrush &brush       = dataPoint.m_brush;
-
-    const bool is_play              = (parent) ? (parent->m_audioplayer->isPlay()) : false;
-    const int m_pos_ris             = (is_play) ? (parent->m_audioplayer->getPositionSecond()) : -1;
+    const bool is_play          = (parent) ? (parent->m_audioplayer->isPlay()) : false;
+    const int m_pos_ris         = (is_play) ? (parent->m_audioplayer->getPositionSecond()) : -1;
 
     const int lenPage               = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
     const double zoom               = data->datatouch->getZoom();
-    const QSize sizeRect            = QSize(page::getWidth()*zoom, data->datatouch->currentHeight()*zoom);
+    const QSize sizeRect            = QSize(page::getWidth(), page::getHeight()) * zoom * m;
 
     static int i, len, counterPage;
     static int _lastid;
     static QColor current_color;
+    QPixmap *pixmap             = dataPoint.m_pixmap;
+    QColor &color               = dataPoint.m_color;
+    QPen &pen                   = dataPoint.pen;
+    QBrush &brush               = dataPoint.m_brush;
 
     if(pixmap)
         pixmap->fill(Qt::white);
@@ -49,14 +47,14 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
     current_color = color;
     pen.setStyle(Qt::PenStyle::SolidLine);
     painter.setRenderHint(QPainter::Antialiasing);
-    loadSheet(*data, pen, brush, painter);
+    loadSheet(*data, pen, brush, painter, m);
 
 #ifdef PDFSUPPORT
     if(withPdf)
         data->m_pdf->draw(painter, m, IsExportingPdf);
 #endif
 
-    data->m_img->draw(painter, dataPoint.size);
+    data->m_img->draw(painter);
 
     len = __tmp.length();
     _lastid = IDUNKNOWN;
@@ -68,12 +66,12 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
 
         if(__point.idtratto == _lastid){
             const int needToReduce = (is_play && __point.m_posizioneaudio > m_pos_ris) ? 4.0 : 1.0;
-            TabletCanvas::updateBrush_load(__point.m_pressure*zoom, setcolor(&__point.m_color, needToReduce), pen, brush);
+            TabletCanvas::updateBrush_load(__point.m_pressure * zoom * m, setcolor(&__point.m_color, needToReduce), pen, brush);
 
             painter.setPen(pen);
 
-            painter.drawLine(dataPoint.lastPoint.pos*m,
-                QPointF(__point.m_x*m, __point.m_y*m));
+            painter.drawLine(dataPoint.lastPoint.pos * m,
+                QPointF(__point.m_x * m, __point.m_y * m));
 
         }
 
@@ -91,7 +89,7 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
         if(!data->datatouch->at(counterPage)->isVisible())
             continue;
 
-        QRectF targetRect(QPointF(PointFirstPage.x(), PointFirstPage.y() + page::getHeight()*zoom*double(counterPage)),
+        QRectF targetRect(QPointF(PointFirstPage.x() * m, (PointFirstPage.y() + page::getHeight()*zoom*double(counterPage))) * m,
                           sizeRect);
 
         painter.drawImage(targetRect, page->getImg());
@@ -190,7 +188,7 @@ void TabletCanvas::loadpixel(){
 
 }
 
-static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainter &painter){
+static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainter &painter, const double delta){
     static uint counterPage;
     static int i, len;
     const uint lenPage = doc.datatouch->lengthPage();
@@ -208,7 +206,7 @@ static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainte
 
         const point_s *point = data->at(0, counterPage);
 
-        TabletCanvas::updateBrush_load(point->m_pressure * zoom, setcolor(point->m_color, 1), m_pen, m_brush);
+        TabletCanvas::updateBrush_load(point->m_pressure * zoom * delta, setcolor(point->m_color, 1), m_pen, m_brush);
 
         painter.setPen(m_pen);
 
@@ -223,8 +221,8 @@ static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainte
                  *  and those that are too high such as the margins of the pixmap
                 */
 
-                xtemp[k] = doc.datatouch->at_draw(i+k, counterPage).m_x;
-                ytemp[k] = doc.datatouch->at_draw(i+k, counterPage).m_y;
+                xtemp[k] = doc.datatouch->at_draw(i+k, counterPage).m_x * delta;
+                ytemp[k] = doc.datatouch->at_draw(i+k, counterPage).m_y * delta;
 
             }
 

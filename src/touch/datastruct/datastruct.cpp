@@ -147,17 +147,17 @@ std::tuple<uint, uint> datastruct::decreaseAlfa(const int id,
 void datastruct::copy(const datastruct &src, datastruct &dest)
 {
     uint i;
-    const uint len = dest.lengthPage();
+    const uint len = src.lengthPage();
     uint diff = len - dest.lengthPage();
 
     if(diff > 0){
-        for(i=0; i<diff; ++i){
+        for(i = 0; i < diff; i++){
             dest.newPage(n_style::white);
         }
     }
     else if(diff != 0){
         diff = -diff;
-        for(i=diff; i>0; i--)
+        for(i = 0; i < diff; i++)
             dest.removePage(i);
     }
 
