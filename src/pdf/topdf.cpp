@@ -11,7 +11,7 @@ topdf::topdf(const QString &path, const Document &doc)
 {
     this->path = &path;
     this->data = new Document(doc);
-
+    this->data->datatouch->triggerNewView(-1, false, true);
     Q_ASSERT(doc.datatouch->lengthPage() == data->datatouch->lengthPage());
 }
 

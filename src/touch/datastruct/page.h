@@ -214,6 +214,9 @@ inline bool page::isVisible() const
 
 inline void page::copy(const page &src, page &dest){
     dest.m_point = src.m_point;
+    dest.imgDraw = src.imgDraw;
+    dest.IsVisible = src.IsVisible;
+    dest.count = src.count;
 }
 
 inline void page::removeAt(const uint i)

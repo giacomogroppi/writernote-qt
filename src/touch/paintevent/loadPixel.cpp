@@ -59,6 +59,7 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
     len = __tmp.length();
     _lastid = IDUNKNOWN;
 
+    if(IsExportingPdf) qDebug() << "New call";
     /* draw points that the user has not finished yet */
     for(i = 0; i < len; i++){
         const auto &__point = __tmp.at(i);
@@ -86,11 +87,14 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const page *page = data->datatouch->at(counterPage);
 
-        if(!data->datatouch->at(counterPage)->isVisible())
+        if(!data->datatouch->at(counterPage)->isVisible() && !IsExportingPdf)
             continue;
 
         QRectF targetRect(QPointF(PointFirstPage.x() * m, (PointFirstPage.y() + page::getHeight()*zoom*double(counterPage))) * m,
                           sizeRect);
+
+        if(IsExportingPdf)
+            qDebug() << targetRect << zoom << m;
 
         painter.drawImage(targetRect, page->getImg());
     }
