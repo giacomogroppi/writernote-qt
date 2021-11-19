@@ -7,8 +7,10 @@
 #include "../datawrite/qfilechoose.h"
 #include "../utils/default_location/audio_default_location.h"
 #include "../utils/path/get_path.h"
+#include "../utils/get_path_application.h"
 #include "audiorecord.h"
 #include <QSettings>
+#include <QDir>
 
 #ifdef SNAP
 static void save();
@@ -93,56 +95,56 @@ static void save(){
 }
 #endif //snap
 
-static void deleteMenu(QMenu *data){
-    if(data)
-        delete data;
-}
-
 /*
  * TODO make an android version of the function
 */
 bool MainWindow::setOutputLocation(const QPoint &hostRect)
 {
+    QString tmp_internal;
 #if defined (Q_OS_WINRT) || defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
+    Q_UNUSED(hostRect);
+    const QString &writableDir = get_path_application::exe();
     // UWP does not allow to store outside the sandbox
-    const QString cacheDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-    if (!QDir().mkpath(cacheDir)) {
+
+    if (!QDir().mkpath(writableDir)) {
         qWarning() << "Failed to create cache directory";
         return false;
     }
-    QString fileName = cacheDir + QLatin1String( "/output.wav");
+
+    tmp_internal = writableDir + QLatin1String( "/output.wav");
+    this->m_currenttitle->se_registato = Document::n_audio_record::record_zip;
 #else
-    //QString fileName = QFileDialog::getSaveFileName();
-
-#endif
-
-    QMenu *menu = nullptr;
+    /* On android and ios the only way to record audio is in a zip file. */
     QAction *internal = nullptr, *ext = nullptr;
+    QMenu menu;
 
     if(audio_default_location::load_default() != audio_default_location::not_define)
         goto procede;
 
-    menu = new QMenu;
-    menu->setTitle("Chose output location file");
 
-    internal = new QAction(menu); // Assumes actions is not empty
+    menu.setTitle("Chose output location file");
+
+    internal = new QAction(&menu); // Assumes actions is not empty
     internal->setStatusTip(tr("Into writernote file [Beta]"));
     internal->setText("Internal file[Beta]");
-    menu->addAction(internal);
+    menu.addAction(internal);
 
-    ext = new QAction(menu);
+    ext = new QAction(&menu);
     ext->setStatusTip("External file");
     ext->setText("External file");
-    menu->addAction(ext);
+    menu.addAction(ext);
 
-    connect(internal, &QAction::triggered, this, &MainWindow::setInZipAudio);
-    connect(ext, &QAction::triggered, this, &MainWindow::setExtAudio);
+    QObject::connect(internal, &QAction::triggered, this, [&]{
+         this->m_currenttitle->se_registato = Document::n_audio_record::record_zip;
+    });
+    QObject::connect(ext, &QAction::triggered, this, [&]{
+        this->m_currenttitle->se_registato = Document::n_audio_record::record_file;
+    });
 
-    menu->move(hostRect);
+    menu.move(hostRect);
 
-    if(!menu->exec())
+    if(!menu.exec())
         goto free_;
-
 
     procede:
     if(this->m_currenttitle->se_registato == Document::record_file){
@@ -154,10 +156,13 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
         m_currenttitle->audio_position_path = fileName;
         m_audio_recorder->setOutputLocation(fileName);
         this->m_outputLocationSet = true;
-        goto ok;
+        return true;
 
     }
-    else if(this->m_currenttitle->se_registato == Document::record_zip){
+#endif
+
+    if(this->m_currenttitle->se_registato == Document::record_zip){
+#if !(defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
         const QString path = get_path(path::audio_pos);
         if(path == ""){
             dialog_critic("I had an internal problem with the audio");
@@ -168,20 +173,16 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
          * what it does is go to create a temporary file to save the audio.
          * we can't save it in a qbytearray
         */
-        QString temp_p = path;
-        temp_p += NAME_AUDIO;
+        tmp_internal = path;
+        tmp_internal += NAME_AUDIO;
+#endif
 
         /* testing */
-        this->m_audio_recorder->setOutputLocation(temp_p);
-        goto ok;
+        this->m_audio_recorder->setOutputLocation(tmp_internal);
+        return true;
     }
 
     free_:
     m_currenttitle->se_registato = Document::not_record;
-    deleteMenu(menu);
     return false;
-
-    ok:
-    deleteMenu(menu);
-    return true;
 }

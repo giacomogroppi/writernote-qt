@@ -16,7 +16,8 @@ void aggiornotestiriascolto(MainWindow *parent){
             if(QFile::exists(parent->m_currenttitle->audio_position_path))
                 return dialog_critic("Audio " + parent->m_currenttitle->audio_position_path + " didn't exist");
 #else
-            user_message("It's not possibile to play this audio");
+            user_message("This audio cannot be played back because it was recorded with a desktop computer.");
+            return;
 #endif
         }
 
@@ -63,7 +64,6 @@ void aggiornotestiriascolto(MainWindow *parent){
 
         parent->ui->actionDelete_audio->setEnabled(false);
 
-        //parent->ui->actionListen_current_audio->setChecked(false);
         parent->ui->actionListen_current_audio->setEnabled(false);
     }
 

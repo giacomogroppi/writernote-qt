@@ -93,7 +93,7 @@ bool qfilechoose::getFileForLoad(QString &nome, uint16_t type_)
                                                         QFileDialog::ShowDirsOnly
                                                         | QFileDialog::DontResolveSymlinks);
 #else
-
+        std::abort();
 #endif
         if(dir == "")
             return false;

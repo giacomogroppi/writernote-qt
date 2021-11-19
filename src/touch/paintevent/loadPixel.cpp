@@ -59,7 +59,6 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
     len = __tmp.length();
     _lastid = IDUNKNOWN;
 
-    if(IsExportingPdf) qDebug() << "New call";
     /* draw points that the user has not finished yet */
     for(i = 0; i < len; i++){
         const auto &__point = __tmp.at(i);

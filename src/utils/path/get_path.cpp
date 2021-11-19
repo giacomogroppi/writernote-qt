@@ -12,7 +12,7 @@
 #define NAME_USER "USERNAME" /* saim form linux and windows */
 #include <QDir>
 
-static bool createTempFolder(QString &path);
+static bool createTempFolder(const QString &path);
 
 /*
  * warning:
@@ -57,7 +57,7 @@ QString get_path(path::e_path var)
     return "";
 }
 
-static bool createTempFolder(QString &path){
+static bool createTempFolder(const QString &path){
     if(!QDir(path).exists()){
         return QDir().mkdir(path);
     }

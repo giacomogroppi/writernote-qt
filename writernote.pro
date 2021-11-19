@@ -211,7 +211,6 @@ SOURCES += \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \
     src/touch/tabletevent.cpp \
-    src/touch/updatelist.cpp \
     src/touch/zoom/zoom_control.cpp \
     src/utils/color/color_chooser.cpp \
     src/utils/extract_audio/extractAudioMain.cpp \

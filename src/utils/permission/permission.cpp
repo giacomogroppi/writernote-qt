@@ -27,7 +27,6 @@ bool permission::open(const char *file, e_permission request)
     }
 
     return false;
-
 }
 
 bool permission::folderExist(const char *file){

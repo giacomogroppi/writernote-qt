@@ -10,7 +10,12 @@ public:
     /*
      * this function return a writable position for writernote
     */
-    static QString exe()
-    { return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);}
+    static QString exe();
 };
+
+inline QString get_path_application::exe()
+{
+     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+}
+
 #endif // GET_PATH_APPLICATION_H

@@ -208,15 +208,6 @@ void MainWindow::togglePause()
         m_audio_recorder->startRecord();
 }
 
-void MainWindow::setInZipAudio(){
-    this->m_currenttitle->se_registato = Document::record_zip;
-}
-
-void MainWindow::setExtAudio(){
-    this->m_currenttitle->se_registato = Document::record_file;
-
-}
-
 /* funzionche che viene invocata quando la registrazione dell'audio viene messa in pausa */
 void MainWindow::on_pause_rec_triggered()
 {

@@ -403,6 +403,7 @@ inline int datastruct::adjustPoint(point_s *point) const
     static int which;
     point->m_x /= this->zoom;
     point->m_y /= this->zoom;
+    point->m_pressure /= this->zoom;
 
     which = this->whichPage(*point);
     point->page = which;
@@ -458,7 +459,10 @@ inline void datastruct::append(const QList<point_s> &point, int m_pos_ris, const
     const uint len = point.length();
 
     for(i = 0; i < len; i++){
+        // get the page of the point
         Page = this->append(point.at(i));
+
+        // it the page is not in the list we append
         if(trigger.indexOf(Page) == -1)
             trigger.append(Page);
     }

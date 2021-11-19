@@ -9,7 +9,5 @@ QStringList get_file_dir::get(const QString &dir)
         __l.append(iterator.next());
     }
 
-    qDebug() << __l;
-
     return __l;
 }

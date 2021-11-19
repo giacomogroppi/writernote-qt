@@ -174,8 +174,6 @@ private slots:
     void on_actiontopdf_triggered();
     void on_actionAbout_Qt_triggered();
     void on_actioninsertText_triggered();
-    void setInZipAudio();
-    void setExtAudio();
     void on_actionDefault_save_location_triggered();
     void on_actionUndu_triggered();
     void on_actionExtract_audio_triggered();
