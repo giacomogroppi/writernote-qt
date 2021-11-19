@@ -9,9 +9,22 @@
 
 topdf::topdf(const QString &path, const Document &doc)
 {
+    uint i;
+    const uint len = doc.datatouch->lengthPage();
+
+    QList<int> page;
+
     this->path = &path;
     this->data = new Document(doc);
     this->data->datatouch->triggerNewView(-1, false, true);
+
+    for(i = 0; i < len; i++){
+        if(data->datatouch->at(i)->getImg().isNull())
+            page.append((int)i);
+    }
+
+    data->datatouch->triggerNewView(page, -1, false, true);
+
     Q_ASSERT(doc.datatouch->lengthPage() == data->datatouch->lengthPage());
 }
 
