@@ -276,17 +276,18 @@ bool page::userWrittenSomething() const
 */
 void page::triggerRenderImage(int m_pos_ris, const bool is_play, const bool all)
 {
-    if(all || this->imgDraw.isNull())
+    const bool isNull = imgDraw.isNull();
+    if(all || isNull)
         this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
 
     QPainter painter;
     painter.begin(&imgDraw);
 
-    this->draw(painter, m_pos_ris, is_play, all);
+    this->draw(painter, m_pos_ris, is_play, (all || isNull));
 
     painter.end();
 
-    return;
+    /*return;
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 1))
-        std::abort();
+        std::abort();*/
 }
