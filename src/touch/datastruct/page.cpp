@@ -161,16 +161,15 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
 
 inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_play, const bool all)
 {
-    int i;
+    int i = 0;
     int len = length();
 
-    if(!len)
-        return;
 
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::TextAntialiasing, false);
 
-    this->moveToUserPoint(i);
+    if(len)
+        this->moveToUserPoint(i);
 
     if(all)
         this->drawEngine(painter, this->m_point, i, is_play, m_pos_ris);

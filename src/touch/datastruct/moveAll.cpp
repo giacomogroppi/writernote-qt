@@ -17,7 +17,7 @@ void datastruct::repositioning()
         return;
 
     QPointF point = this->getPointFirstPage();
-
+    qDebug() << "datastruct::repositioning" << point;
     this->zoom = 1.0;
 
     datastruct::inverso(point);
