@@ -27,8 +27,8 @@ private:
 
     QImage imgDraw;
     void mergeList();
-    void drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool is_play, const int m_pos_ris);
-    void draw(QPainter &painter, const int m_pos_ris, const bool is_play, const bool all);
+    void drawEngine(QPainter &painter, QList<point_s> &List, int i, const int m_pos_ris);
+    void draw(QPainter &painter, const int m_pos_ris, const bool all);
 
     point_s *at_translation(const QList<point_s> &point, uint index);
 
@@ -81,7 +81,7 @@ public:
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
 
-    void triggerRenderImage(int m_pos_ris, const bool is_play, const bool all);
+    void triggerRenderImage(int m_pos_ris, const bool all);
 
     void moveToUserPoint(int &i) const;
 };

@@ -75,7 +75,7 @@ void page::drawNewPage(n_style __style)
     drawLineVertical(this->m_point, tmp_point, style, last, deltay, height_p);
 }
 
-void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool is_play,
+void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
                       const int m_pos_ris)
 {
     //int _lastid = List.at(i).idtratto;
@@ -139,7 +139,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
         y = point->m_y * delta;
 
         if(point->idtratto == _lastid && point->page == page){
-            const int decrease = (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1;
+            const int decrease = (point->m_posizioneaudio > m_pos_ris) ? 1 : 4;
             point->m_pressure *= 1.4;
 
             m_pen.setColor(setcolor(point->m_color));
@@ -159,7 +159,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i, const bool
 
 }
 
-inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_play, const bool all)
+inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
 {
     int i = 0;
     int len = length();
@@ -172,10 +172,10 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool is_pla
         this->moveToUserPoint(i);
 
     if(all)
-        this->drawEngine(painter, this->m_point, i, is_play, m_pos_ris);
+        this->drawEngine(painter, this->m_point, i, m_pos_ris);
 
     i=0;
-    this->drawEngine(painter, this->tmp, i, is_play, m_pos_ris);
+    this->drawEngine(painter, this->tmp, i, m_pos_ris);
 
     this->mergeList();
 }
@@ -273,7 +273,7 @@ bool page::userWrittenSomething() const
 /*
  * all --> indicates if all the points must be drawn from scratch, if false it is drawn over the old image
 */
-void page::triggerRenderImage(int m_pos_ris, const bool is_play, const bool all)
+void page::triggerRenderImage(int m_pos_ris, const bool all)
 {
     const bool isNull = imgDraw.isNull();
     if(all || isNull)
@@ -282,7 +282,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool is_play, const bool all)
     QPainter painter;
     painter.begin(&imgDraw);
 
-    this->draw(painter, m_pos_ris, is_play, (all || isNull));
+    this->draw(painter, m_pos_ris, (all || isNull));
 
     painter.end();
 

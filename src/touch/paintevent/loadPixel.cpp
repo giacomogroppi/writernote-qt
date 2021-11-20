@@ -188,7 +188,6 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
 
 void TabletCanvas::loadpixel(){
     this->resizeEvent(nullptr);
-
 }
 
 static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainter &painter, const double delta){

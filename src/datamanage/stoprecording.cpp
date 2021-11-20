@@ -53,7 +53,7 @@ void MainWindow::on_stop_rec_triggered()
 static bool needRemove;
 
 static void saveAudio(Document *m_currenttitle, const QString &m_path, const AudioRecord *recorder){
-    QString path = recorder->getPath();
+    const QString &path = recorder->getPath();
 
     if(!QFile::exists(path)){
         bool save = false;

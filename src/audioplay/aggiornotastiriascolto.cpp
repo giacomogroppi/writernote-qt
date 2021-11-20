@@ -59,12 +59,7 @@ void aggiornotestiriascolto(MainWindow *parent){
         parent->ui->pause_rec->setEnabled(false);
     }
     else{
-        /* abilita i tasti per la registrazione */
         parent->contrUi();
-
-        parent->ui->actionDelete_audio->setEnabled(false);
-
-        parent->ui->actionListen_current_audio->setEnabled(false);
     }
 
 }

@@ -213,7 +213,7 @@ protected:
 
 private:
 
-    void triggerNewView(const QList<int> Page, const bool all);
+    void triggerNewView(const QList<int> &Page, const bool all);
     void triggerNewView(const bool all);
     bool isWriting = false;
 

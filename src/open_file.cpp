@@ -12,12 +12,12 @@
 #include "last_open/last_open.h"
 #include "datawrite/savefile.h"
 #include "datawrite/qfilechoose.h"
+#include "audioplay/aggiornotastiriascolto.h"
 #include <QFile>
 #include <QFileDialog>
 
 void MainWindow::openFile(const char *pos){
-    QString fileName;
-    QString path, tmp;
+    QString fileName, tmp;
     Document curr;
     xmlstruct xml(&fileName, m_currenttitle);
     n_need_save res_save;
@@ -101,12 +101,19 @@ void MainWindow::openFile(const char *pos){
 
         m_path = fileName;
         const auto res = xml.loadfile(true, true);
-        if(xmlstruct::manageMessage(res))
-            return;
+
+        if(xmlstruct::manageMessage(res)){
+            aggiornotestiriascolto(this);
+            m_canvas->loadpixel();
+            return contrUi();
+        }
+
         this->m_path = "";
         this->m_currenttitle->reset();
 
     }
+    aggiornotestiriascolto(this);
+    this->contrUi();
 }
 
 void MainWindow::on_actionOpen_triggered()

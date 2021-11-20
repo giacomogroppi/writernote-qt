@@ -201,10 +201,9 @@ static void loadLastMethod(TabletCanvas *p){
 }
 
 void TabletCanvas::triggerNewView(const bool all){
-    this->data->datatouch->triggerNewView(parent->m_audioplayer->getPositionSecond(), parent->m_audioplayer->isPlay(), all);
+    data->datatouch->triggerNewView(parent->m_audioplayer->getPositionSecond(), all);
 }
 
-void TabletCanvas::triggerNewView(const QList<int> Page, const bool all){
-    this->data->datatouch->triggerNewView(Page, parent->m_audioplayer->getPositionSecond(),
-                                          parent->m_audioplayer->isPlay(), all);
+void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all){
+    this->data->datatouch->triggerNewView(Page, parent->m_audioplayer->getPositionSecond(), all);
 }

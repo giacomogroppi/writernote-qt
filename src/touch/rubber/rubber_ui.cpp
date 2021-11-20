@@ -116,7 +116,7 @@ bool rubber_ui::clearList(datastruct *data)
     data->removePointId(gomma_delete_id);
 
     gomma_delete_id.clear();
-    data->triggerNewView(Page, -1, false, true);
+    data->triggerNewView(Page, -1, true);
     return true;
 }
 

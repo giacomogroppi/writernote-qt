@@ -26,8 +26,6 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
     if(doc.isEmpty())
         return;
 
-
-
     ref.fill(Qt::white);
 
     painter.begin(&ref);

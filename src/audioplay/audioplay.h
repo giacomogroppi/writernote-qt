@@ -100,7 +100,7 @@ inline qint64 audioplay::getPositionMicro() const
 {
     if(isPlay())
         return this->player->position();
-    return -1;
+    return -1*1000;
 }
 
 inline void audioplay::play()

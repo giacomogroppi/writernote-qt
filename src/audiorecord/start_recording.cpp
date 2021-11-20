@@ -9,6 +9,7 @@
 #include "../utils/path/get_path.h"
 #include "../utils/get_path_application.h"
 #include "audiorecord.h"
+#include "../utils/slash/slash.h"
 #include <QSettings>
 #include <QDir>
 
@@ -173,7 +174,7 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
          * what it does is go to create a temporary file to save the audio.
          * we can't save it in a qbytearray
         */
-        tmp_internal = path;
+        tmp_internal = path + slash::__slash();
         tmp_internal += NAME_AUDIO;
 #endif
 

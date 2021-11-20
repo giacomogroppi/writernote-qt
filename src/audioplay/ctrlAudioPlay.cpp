@@ -36,13 +36,14 @@ void MainWindow::on_actionListen_current_audio_triggered()
 {
     if(this->m_audioplayer->isPlay() || this->m_audioplayer->isEndMedia()){
         m_audioplayer->stop();
-
         this->ui->statusBar->clearMessage();
-    }else{
         this->m_audioplayer->changeIcon();
 
-        this->ui->actionListen_current_audio->setEnabled(true);
+    }else{
+        // we need to load audio data
 
+
+        this->m_audioplayer->changeIcon();
         m_audioplayer->play();
     }
     this->contrUi();

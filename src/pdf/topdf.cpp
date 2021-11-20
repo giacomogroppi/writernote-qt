@@ -16,14 +16,14 @@ topdf::topdf(const QString &path, const Document &doc)
 
     this->path = &path;
     this->data = new Document(doc);
-    this->data->datatouch->triggerNewView(-1, false, true);
+    this->data->datatouch->triggerNewView(-1, true);
 
     for(i = 0; i < len; i++){
         if(data->datatouch->at(i)->getImg().isNull())
             page.append((int)i);
     }
 
-    data->datatouch->triggerNewView(page, -1, false, true);
+    data->datatouch->triggerNewView(page, -1, true);
 
     Q_ASSERT(doc.datatouch->lengthPage() == data->datatouch->lengthPage());
 }

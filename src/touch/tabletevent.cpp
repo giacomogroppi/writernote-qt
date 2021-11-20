@@ -126,7 +126,7 @@ end:
         m_square->reset();
     }
     if(!sel && selection_method){
-        data->datatouch->triggerViewIfVisible(parent->m_audioplayer->getPositionSecond(), parent->m_audioplayer->isPlay());
+        data->datatouch->triggerViewIfVisible(parent->m_audioplayer->getPositionSecond());
     }
 
     update();
@@ -248,10 +248,6 @@ void TabletCanvas::updatelist(QTabletEvent *event){
 
     setcolor_struct(&tmp_point.m_color, m_color);
 
-    /*if(alfa != 255){
-        qDebug() << "alfa: " << alfa;
-    }*/
-
     tmp_point.m_color.colore[3] = alfa;
 
     __tmp.append(tmp_point);
@@ -270,11 +266,9 @@ void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     }
 
     if(toTheTop)
-        doc.datatouch->appendToTheTop(__tmp, canvas->parent->m_audioplayer->getPositionSecond(),
-                                      canvas->parent->m_audio_recorder->isRecording());
+        doc.datatouch->appendToTheTop(__tmp, canvas->parent->m_audioplayer->getPositionSecond());
     else
-        doc.datatouch->append(__tmp, canvas->parent->m_audioplayer->getPositionSecond(),
-                              canvas->parent->m_audio_recorder->isRecording());
+        doc.datatouch->append(__tmp, canvas->parent->m_audioplayer->getPositionSecond());
 
     __tmp.clear();
 }

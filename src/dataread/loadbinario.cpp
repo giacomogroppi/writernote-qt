@@ -211,7 +211,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
 
     zip_fclose(f);
 
-    currenttitle->datatouch->triggerNewView(-1, false, true);
+    currenttitle->datatouch->triggerNewView(-1, true);
     newControll = currenttitle->createSingleControll();
 
     if(controll != newControll)
