@@ -19,6 +19,8 @@ CONFIG(release, debug|release){
     QMAKE_CXXFLAGS_RELEASE *= -O3
 }
 
+QMAKE_CXXFLAGS_RELEASE += -fanalyzer
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 DESTDIR = build
@@ -92,6 +94,7 @@ SOURCES += \
     src/datamanage/retry_save_audio.cpp \
     src/datamanage/stoprecording.cpp \
     src/dataread/load_from_file.cpp \
+    src/dataread/loadfile.cpp \
     src/dataread/old_version/decode.cpp \
     src/dataread/old_version/ver_2/load_file_ver_2.cpp \
     src/dataread/old_version/ver_3/load_file_ver_3.cpp \
@@ -162,7 +165,6 @@ SOURCES += \
     src/closeevent_file.cpp \
     src/currenttitle/checksimilecopybook.cpp \
     src/currenttitle/deleteaudio.cpp \
-    src/dataread/loadfile_xmlstruct.cpp \
     src/dataread/loadbinario.cpp \
     src/datawrite/qfilechoose.cpp \
     src/datawrite/renamefile_f_zip.cpp \
