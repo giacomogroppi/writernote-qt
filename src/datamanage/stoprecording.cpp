@@ -19,7 +19,7 @@
 #include "../utils/make_default/make_default_ui.h"
 #include "../audiorecord/audiorecord.h"
 
-static void saveAudio(Document * , QString &path);
+static void saveAudio(Document * , const QString &path, const AudioRecord *recorder);
 
 namespace removeAudio {
     enum n_removeAudio: int{
@@ -40,7 +40,7 @@ void MainWindow::on_stop_rec_triggered()
     m_audio_recorder->stopRecording();
 
     if(m_currenttitle->se_registato == Document::record_zip){
-        saveAudio(m_currenttitle, m_path);
+        saveAudio(m_currenttitle, m_path, m_audio_recorder);
     }
 
     contrUi();
@@ -52,24 +52,21 @@ void MainWindow::on_stop_rec_triggered()
 
 static bool needRemove;
 
-static void saveAudio(Document *m_currenttitle, QString &m_path){
-    QString path = get_path_no_controll() + NAME_AUDIO;
+static void saveAudio(Document *m_currenttitle, const QString &m_path, const AudioRecord *recorder){
+    QString path = recorder->getPath();
 
     if(!QFile::exists(path)){
         bool save = false;
 
-        retry_save_audio * m_reciver = new retry_save_audio(m_currenttitle, &save);
-        retry_ui * m_r = new retry_ui(nullptr, "Audio missing", "For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name", "The file does not exist");
+        retry_save_audio m_reciver(m_currenttitle, &save);
+        retry_ui m_r(nullptr, "Audio missing", "For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name", "The file does not exist");
 
 
-        QObject::connect(m_reciver, &retry_save_audio::resultRetry, m_r, &retry_ui::resultRetry_reciver);
-        QObject::connect(m_r, &retry_ui::ui_close, m_reciver, &retry_save_audio::close);
-        QObject::connect(m_r, &retry_ui::ui_retry, m_reciver, &retry_save_audio::retry);
+        QObject::connect(&m_reciver, &retry_save_audio::resultRetry, &m_r, &retry_ui::resultRetry_reciver);
+        QObject::connect(&m_r, &retry_ui::ui_close, &m_reciver, &retry_save_audio::close);
+        QObject::connect(&m_r, &retry_ui::ui_retry, &m_reciver, &retry_save_audio::retry);
 
-        m_r->exec();
-
-        delete m_reciver;
-        delete m_r;
+        m_r.exec();
 
         if(!save)
             return;
@@ -89,7 +86,7 @@ static void saveAudio(Document *m_currenttitle, QString &m_path){
         needRemove = false;
 
         /* remove audio */
-        make_default_ui temp_ui(nullptr, "Remove temp audio", "With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove or keep it? the location of the file is " + path);
+        make_default_ui temp_ui(nullptr, "Remove temp audio", "With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove? the location of the file is " + path);
 
         QObject::connect(&temp_ui, &make_default_ui::no, [=](bool var){
             if(var)
