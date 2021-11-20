@@ -48,7 +48,7 @@ void Document::copy(const Document &src,
 size_t Document::createSingleControll() const
 {
     size_t data = 0;
-    uint i, len, k;
+    uint i, len, counterPage;
     const page *page;
     const uint lenPage = datatouch->lengthPage();
     if(!lenPage)
@@ -57,8 +57,8 @@ size_t Document::createSingleControll() const
     for(i = 0; i < lenPage; i++){
         page = this->datatouch->at(i);
         len = page->length();
-        for(k=0; k<len; ++k){
-            data += page->at(k)->createControll();
+        for(counterPage = 0; counterPage < len; counterPage++){
+            data += page->at(counterPage)->createControll();
         }
     }
 
