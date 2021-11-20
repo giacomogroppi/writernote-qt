@@ -174,7 +174,7 @@ int xmlstruct::loadbinario_1(struct zip *z){
 
 int xmlstruct::loadbinario_2(struct zip *z){
     struct zip_stat st;
-    size_t controll;
+    size_t controll, newControll;
     int i, len, lenPage, counterPage;
     zip_file_t *f;
     page *page;
@@ -186,8 +186,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
 
      f = zip_fopen(z, NAME_BIN, 0);
 
-    if(f == nullptr)
-        return false;
+    if(f == nullptr) return ERROR;
 
     /* point first page */
     SOURCE_READ_GOTO(f, init, sizeof(double)*2);
@@ -212,7 +211,10 @@ int xmlstruct::loadbinario_2(struct zip *z){
 
     zip_fclose(f);
 
-    if(controll != currenttitle->createSingleControll())
+    currenttitle->datatouch->triggerNewView(-1, false, true);
+    newControll = currenttitle->createSingleControll();
+
+    if(controll != newControll)
         return ERROR_CONTROLL;
 
     return OK;
