@@ -26,11 +26,14 @@ public:
     void loadSettings();
     qint64 getCurrentTime();
 
+    const QString & getPath() const;
+
 signals:
 private slots:
     void updateProgress(qint64 duration);
     void displayErrorMessage();
 private:
+    QString pathAudio;
     QAudioRecorder *recorder;
     class MainWindow *parent;
 
@@ -74,6 +77,7 @@ inline QMediaRecorder::Error AudioRecord::errors() const
 
 inline void AudioRecord::setOutputLocation(const QString &path)
 {
+    pathAudio = path;
     this->recorder->setOutputLocation(QUrl::fromLocalFile(path));
 }
 
@@ -83,6 +87,11 @@ inline qint64 AudioRecord::getCurrentTime()
     if(!isRecording())
         return 0;
     return this->recorder->duration() / 1000;
+}
+
+inline const QString &AudioRecord::getPath() const
+{
+    return pathAudio;
 }
 
 #endif // AUDIORECORD_H
