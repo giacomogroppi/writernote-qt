@@ -19,7 +19,7 @@ CONFIG(release, debug|release){
     QMAKE_CXXFLAGS_RELEASE *= -O3
 }
 
-QMAKE_CXXFLAGS_RELEASE += -fanalyzer
+#QMAKE_CXXFLAGS_RELEASE += -fanalyzer
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
