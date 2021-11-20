@@ -91,7 +91,7 @@ parts:
       - libasound2-plugins
 
   writernote:
-    after: [desktop-qt5, alsa-mixin, libzip-build]
+    after: [desktop-qt5, alsa-mixin]
     
     plugin: make
     source: .
@@ -233,85 +233,7 @@ parts:
     stage-packages:
       - ibus
 
-  zlib-build:
-    plugin: make
-    source: .
-
-    build-packages:
-      - cmake
-      - make
-      - wget
-      - unzip
-
-    override-build: |
-      cd 3rdparty
-      #git submodule update zlib-ng
-
-      export PATH_LIB=$PWD
-      
-      wget http://www.zlib.net/zlib1211.zip
-      unzip zlib1211.zip
-      mv zlib-1.2.11 zlib
-      cd zlib
-
-      ls
-      ./configure --static --prefix=$PATH_LIB/zlib/
-      make install
-
-      #cmake . -B$PATH_LIB/zlib/ \
-      #  -DCMAKE_INSTALL_PREFIX=$PATH_LIB/zlib/distrib \
-      #  -DBIN_INSTALL_DIR=$PATH_LIB/zlib/distrib/bin \
-      #  -DLIB_INSTALL_DIR=$PATH_LIB/zlib/distrib/lib \
-      #  -DINC_INSTALL_DIR=$PATH_LIB/zlib/distrib/include \
-      #  -DPKGCONFIG_INSTALL_DIR=$PATH_LIB/zlib/distrib/lib/pkgconfig \
-      #  -DMAN_INSTALL_DIR=$PATH_LIB/zlib/distrib/share/man \
-      #  -DCMAKE_BUILD_TYPE=Release \
-      #  -DBUILD_SHARED_LIBS=OFF \
-      #  -DZLIB_COMPAT=ON \
-      #  -DZLIB_ENABLE_TESTS=OFF
-
-      #cmake --build $PATH_LIB/zlib/ --config Release --target install
-      
-  libzip-build:
-    after: [zlib-build]
-    plugin: make
-
-    source: .
-    build-packages:
-      - cmake
-      - make
-
-    override-build: |
-      cd 3rdparty
-
-      git submodule update libzip
-
-      export PATH_LIB=$PWD
-
-      cd libzip
-      mkdir build
-      cd build
-      cmake .. -B$PATH_LIB/libzip \
-        -DCMAKE_INSTALL_PREFIX=$PATH_LIB/libzip/distrib \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DENABLE_BZIP2=OFF \
-        -DENABLE_LZMA=OFF \
-        -DENABLE_COMMONCRYPTO=OFF \
-        -DENABLE_GNUTLS=OFF \
-        -DENABLE_MBEDTLS=OFF \
-        -DENABLE_OPENSSL=OFF \
-        -DENABLE_WINDOWS_CRYPTO=OFF \
-        -DBUILD_DOC=OFF \
-        -DBUILD_EXAMPLES=OFF \
-        -DBUILD_REGRESS=OFF \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DBUILD_TOOLS=OFF \
-        -DZLIB_INCLUDE_DIR=/root/parts/zlib-build/build/3rdparty/zlib/include \
-        -DZLIB_LIBRARY_DEBUG=/root/parts/zlib-build/build/3rdparty/zlib/lib/libz.a \
-        -DZLIB_LIBRARY_RELEASE=/root/parts/zlib-build/build/3rdparty/zlib/lib/libz.a
-
-      cmake --build $PATH_LIB/libzip/ --config Release --target install
-
+  
   desktop-qt5:
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
     source-subdir: qt
