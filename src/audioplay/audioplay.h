@@ -23,8 +23,8 @@ public:
     void setPositionSecond(const qint64 pos);
     void setPositionMicro(const qint64 pos);
 
-    qint64 durationSecond() const;
-    qint64 durationMicro() const;
+    qint64 currentDurationSecond() const;
+    qint64 currentDurationMicro() const;
 
     qint64 getPositionSecond() const;
     qint64 getPositionMicro() const;
@@ -81,14 +81,14 @@ inline void audioplay::setPositionMicro(const qint64 pos)
     player->setPosition(pos);
 }
 
-inline qint64 audioplay::durationMicro() const
+inline qint64 audioplay::currentDurationMicro() const
 {
     return this->player->duration();
 }
 
-inline qint64 audioplay::durationSecond() const
+inline qint64 audioplay::currentDurationSecond() const
 {
-    return durationMicro() / 1000;
+    return currentDurationMicro() / 1000;
 }
 
 inline qint64 audioplay::getPositionSecond() const

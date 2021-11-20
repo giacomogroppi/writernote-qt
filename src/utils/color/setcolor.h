@@ -10,9 +10,9 @@
 inline QColor setcolor(const struct colore_s *colore,
                        const double division = 1){
     QColor temp;
-    if(division == 4.0){
+    /*if(division == 4.0){
         qDebug() << "setcolor : alfa : " << colore->colore[3] << (double)colore->colore[3]/division << division;
-    }
+    }*/
 
     temp.setRgb(colore->colore[0],
             colore->colore[1],

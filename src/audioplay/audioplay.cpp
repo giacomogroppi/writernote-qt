@@ -37,20 +37,22 @@ void audioplay::changeIcon()
 
 void audioplay::positionChange(qint64 position)
 {
+    qDebug() << "audioplay::positionChange call";
     if(!isPlay()) return;
 
     parent->ui->statusBar->showMessage(tr("%1 second").arg(position/1000));
 
     parent->ui->audioSlider->blockSignals(true);
 
-    int duration = durationMicro();
+    int duration = currentDurationMicro();
     if(!duration)
         return user_message("The audio seems blank");
 
     parent->ui->audioSlider->setValue((position*100)/duration);
 
     parent->ui->audioSlider->blockSignals(false);
-    this->parent->m_currenttitle->datatouch->triggerNewView(this->durationSecond(), false);
+    qDebug() << "audioplay::positionChange" << this->getPositionSecond() << position;
+    this->parent->m_currenttitle->datatouch->triggerNewView(getPositionSecond(), true);
 }
 
 void audioplay::updateStatus(QMediaPlayer::State newState)
@@ -68,4 +70,5 @@ void audioplay::updateStatus(QMediaPlayer::State newState)
 
     parent->ui->start_rec->setEnabled(false);
     parent->contrUi();
+    this->parent->m_currenttitle->datatouch->triggerNewView(-1, true);
 }
