@@ -17,14 +17,12 @@ int savefile::salvabinario(zip_t *filezip){
     size_t controll;
     zip_source_t *file;
     zip_error_t errore;
-    const auto &pointInit = currenttitle->datatouch->getPointFirstPage();
-    const double init[2] = {pointInit.x(), pointInit.y()};
+    const auto &pointInit = currenttitle->datatouch->getPointFirstPageNoZoom();
+    const double init[2] = {pointInit.x() , pointInit.y() };
     const int lenPage = currenttitle->datatouch->lengthPage();
     const page *page;
     const point_s *point;
-
     const double zoom = currenttitle->datatouch->getZoom();
-
     file = zip_source_buffer_create(0, 0, 0, &errore);
 
     zip_source_begin_write(file);
@@ -46,7 +44,7 @@ int savefile::salvabinario(zip_t *filezip){
         }
     }
 
-    WRITE_ON_SIZE(file, &zoom, datastruct::getSizeZoom());
+    WRITE_ON_SIZE(file, &zoom, sizeof(double));
 
     controll = currenttitle->createSingleControll();
     WRITE_ON_SIZE(file, &controll, sizeof(size_t));
