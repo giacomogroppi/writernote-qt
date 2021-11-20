@@ -146,7 +146,6 @@ SOURCES += \
     src/touch/scrollKinetic/scrollKinetic.cpp \
     src/touch/scrollKinetic/scroll_mainwindow.cpp \
     src/touch/scrollKinetic/ui_scroll/scroll.cpp \
-    src/touch/square/draw_square.cpp \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/touch/zoom/ctrlZoom.cpp \
@@ -208,7 +207,6 @@ SOURCES += \
     src/touch/rubber/save_setting_rubber_ui.cpp \
     src/touch/rubber/update_data.cpp \
     src/touch/settingmethod.cpp \
-    src/touch/square/move.cpp \
     src/touch/square/square.cpp \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \

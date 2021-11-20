@@ -30,10 +30,9 @@ private:
     void drawEngine(QPainter &painter, QList<point_s> &List, int i, const int m_pos_ris);
     void draw(QPainter &painter, const int m_pos_ris, const bool all);
 
-    point_s *at_translation(const QList<point_s> &point, uint index);
-
     static void nextPoint(int &index, QList<point_s> &list);
 
+    point_s *at_translation(const QList<point_s> &point, uint index);
 public:
     const QImage &getImg() const;
 
@@ -50,8 +49,6 @@ public:
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(const bool vis){this->IsVisible = vis;}
 
-    const point_s       * at(const uint i) const;
-    point_s             * at_mod(const uint i);
     void at_draw(const uint i, const QPointF &translation, point_s &point, const double zoom) const;
 
     uint length() const;
@@ -71,6 +68,9 @@ public:
 
     void appendToTheTop(const QList<point_s> &point);
     void appendToTheTop(const point_s *point);
+
+    const point_s       * at(const uint i) const;
+    point_s             * at_mod(const uint i);
 
     double minHeight() const;
     double currentHeight() const;
@@ -121,7 +121,6 @@ inline void page::moveToUserPoint(int &i) const
 inline point_s *page::at_translation(const QList<point_s> &point, uint index)
 {
     static point_s tmp;
-    //const double xtranslation = (this->count-1)*page::getWidth();
     const double ytranslation = double(this->count-1)*page::getHeight();
 
     memcpy(&tmp, &point.at(index), sizeof(point_s));
@@ -200,6 +199,8 @@ inline void page::at_draw(const uint i, const QPointF &translation, point_s &poi
 
     point.m_x += translation.x();
     point.m_y += translation.y();
+
+    point.m_pressure *= zoom;
 }
 
 inline uint page::length() const

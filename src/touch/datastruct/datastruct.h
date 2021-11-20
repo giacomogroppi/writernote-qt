@@ -134,8 +134,7 @@ public:
     bool isinside(QPointF &topleft, QPointF &bottonright, const uint index, const uint page);
     bool isinside(double x1, double y1, double x2, double y2, const uint index, const uint page);
 
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s *__point);
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s &__point){ return datastruct::isinside(topleft, bottonright, &__point); }
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s &__point);
 
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 
@@ -201,13 +200,14 @@ public:
 
     inline int lastId();
 
-    inline const point_s *  at(const uint i, const uint page) const;
-    inline const page *     at(const uint page) const;
-    inline page *           at_mod(const uint page);
-    inline point_s *        at_mod(const uint index, const uint page);
-    inline point_s &        at_draw(const uint index, const uint page) const;
-    inline const point_s *  lastPoint() const;
-    inline const page *     lastPage() const;
+    const point_s * at(const uint i, const uint page) const;
+    const page *    at(const uint page) const;
+    page *          at_mod(const uint page);
+    point_s *       at_mod(const uint index, const uint page);
+    point_s &       at_draw(const uint index, const uint page) const;
+    const point_s * lastPoint() const;
+    const page *    lastPage() const;
+    //point_s &at_translation(const uint index, const uint page) const;
 
     static size_t getSizeOne();
 
@@ -342,6 +342,21 @@ inline const page *datastruct::lastPage() const
 {
     return &this->m_page.last();
 }
+
+/*inline point_s &datastruct::at_translation(const uint index, const uint page) const
+{
+    static point_s point;
+    memcpy(&point, at(page)->at(index), sizeof(point_s));
+
+    point.m_x += this->pointFirstPage.x();
+    point.m_y += this->pointFirstPage.y() + page * page::getHeight();
+
+    point.m_x *= this->zoom;
+    point.m_y *= this->zoom;
+    point.m_pressure *= this->zoom;
+
+    return point;
+}*/
 
 inline size_t datastruct::getSizeOne()
 {

@@ -140,7 +140,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
 
         if(point->idtratto == _lastid && point->page == page){
             const int decrease = (point->m_posizioneaudio > m_pos_ris) ? 1 : 4;
-            point->m_pressure *= 1.4;
+            //point->m_pressure *= 1.4;
 
             m_pen.setColor(setcolor(point->m_color));
             TabletCanvas::updateBrush_load(point->m_pressure*delta,

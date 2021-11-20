@@ -35,7 +35,7 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
         for(i=0; i<len; i++){
             __point = page->at(i);
 
-            if(data->isinside(topleft, bottonright, __point)){
+            if(data->isinside(topleft, bottonright, *__point)){
                 m_data->append(__point);
             }
 

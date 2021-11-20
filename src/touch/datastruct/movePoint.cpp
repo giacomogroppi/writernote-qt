@@ -53,7 +53,7 @@ bool datastruct::MovePoint(QRectF &rect, QPointF __touch){
         len = at(k)->length();
         for(i=0; i<len; i++){
             __point = at(k)->at(i);
-            if(this->isinside(topleft, bottonright, __point)){
+            if(this->isinside(topleft, bottonright, *__point)){
                     if(__id.indexOf(__point->idtratto) == -1)
                     __id.append(__point->idtratto);
             }
