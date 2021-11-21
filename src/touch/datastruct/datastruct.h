@@ -412,7 +412,7 @@ inline int datastruct::adjustPoint(point_s *point) const
     static int which;
     point->m_x /= this->zoom;
     point->m_y /= this->zoom;
-    //point->m_pressure /= this->zoom;
+    point->m_pressure /= this->zoom;
 
     which = this->whichPage(*point);
     point->page = which;
