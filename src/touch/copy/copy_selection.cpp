@@ -26,16 +26,15 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
     y1 = topleft.y();
     y2 = bottonright.y();*/
 
-    const point_s *__point;
     const page *page;
 
     for(k=0; k<lenPage; ++k){
         page = data->at(k);
         len = page->length();
         for(i=0; i<len; i++){
-            __point = page->at(i);
+            const point_s &__point = *page->at(i);
 
-            if(data->isinside(topleft, bottonright, *__point)){
+            if(data->isinside(topleft, bottonright, __point)){
                 m_data->append(__point);
             }
 

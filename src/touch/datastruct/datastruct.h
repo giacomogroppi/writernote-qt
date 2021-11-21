@@ -95,13 +95,11 @@ public:
     void appendToTheTop(const QList<point_s> & point, int m_pos_ris);
 
     int append(const point_s &point);
-    int append(const point_s *point);
 
     void append(const point_s *point, const uint page);
     void append(const point_s &point, const uint page);
 
-    void appendToTheTop(const point_s *point, const uint page);
-    void appendToTheTop(const point_s &point, const uint page){return this->append(&point, page);};
+    void appendToTheTop(const point_s &point, const uint page);
 
     uint move_to_positive(uint len);
 
@@ -414,7 +412,7 @@ inline int datastruct::adjustPoint(point_s *point) const
     static int which;
     point->m_x /= this->zoom;
     point->m_y /= this->zoom;
-    point->m_pressure /= this->zoom;
+    //point->m_pressure /= this->zoom;
 
     which = this->whichPage(*point);
     point->page = which;
@@ -461,16 +459,16 @@ inline void datastruct::append(const QList<point_s> &point, int m_pos_ris)
 {
     QList<int> trigger;
     uint i;
-    int Page;
+    int WhichPage;
     const uint len = point.length();
 
     for(i = 0; i < len; i++){
         // get the page of the point
-        Page = this->append(point.at(i));
+        WhichPage = this->append(point.at(i));
 
         // it the page is not in the list we append
-        if(trigger.indexOf(Page) == -1)
-            trigger.append(Page);
+        if(trigger.indexOf(WhichPage) == -1)
+            trigger.append(WhichPage);
     }
 
     this->triggerNewView(trigger, m_pos_ris, false);
@@ -484,7 +482,7 @@ inline void datastruct::appendToTheTop(const QList<point_s> &point, int m_pos_ri
 
     for(i = 0; i < len; i++){
         page = this->whichPage(point.at(i));
-        this->appendToTheTop(&point.at(i), page);
+        this->appendToTheTop(point.at(i), page);
     }
 
     this->triggerNewView(m_pos_ris, true);
@@ -498,14 +496,9 @@ inline void datastruct::removeAt(const uint index){
 
 inline int datastruct::append(const point_s &point)
 {
-    return append(&point);
-}
-
-inline int datastruct::append(const point_s *point)
-{
     static point_s Point;
     static int page;
-    memcpy(&Point, point, sizeof(point_s));
+    memcpy(&Point, &point, sizeof(point_s));
 
     page = this->adjustPoint(&Point);
 
@@ -524,7 +517,7 @@ inline void datastruct::append(const point_s &point, const uint page)
     this->at_mod(page)->append(point);
 }
 
-inline void datastruct::appendToTheTop(const point_s *point, const uint page)
+inline void datastruct::appendToTheTop(const point_s &point, const uint page)
 {
     this->at_mod(page)->appendToTheTop(point);
 }

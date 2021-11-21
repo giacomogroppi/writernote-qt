@@ -85,13 +85,14 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
     const int len = List.length();
     struct Point lastPoint;
     point_s *point, *point1, *point2;
-    static const double delta = getResolutionWidth() / getWidth();
+    static const double delta = PROP_RESOLUTION;
 
     QPainterPath path;
     QBrush m_brush;
     QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
 
-    static double x, y;
+    //static double x, y;
+    static QPointF pointDraw;
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
     qDebug() << painter.renderHints();
@@ -130,29 +131,28 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
             _lastid = at(i)->idtratto;
     }*/
 
-    painter.setRenderHint(QPainter::Antialiasing);
-
     for(; i < len; ++i){
         point = at_translation(List, i);
 
-        x = point->m_x * delta;
-        y = point->m_y * delta;
+        pointDraw = QPointF(point->m_x, point->m_y) * PROP_RESOLUTION;
 
         if(point->idtratto == _lastid && point->page == page){
             const int decrease = (point->m_posizioneaudio > m_pos_ris) ? 1 : 4;
             //point->m_pressure *= 1.4;
 
             m_pen.setColor(setcolor(point->m_color));
-            TabletCanvas::updateBrush_load(point->m_pressure*delta,
+            TabletCanvas::updateBrush_load(point->m_pressure,
                 setcolor(&point->m_color, decrease),
                 m_pen, m_brush);
 
+            m_pen.setWidthF(m_pen.widthF() * PROP_RESOLUTION);
+
             painter.setPen(m_pen);
 
-            painter.drawLine(lastPoint.pos, QPointF(x, y));
+            painter.drawLine(lastPoint.pos, pointDraw);
         }
 
-        lastPoint.pos = QPointF(x, y);
+        lastPoint.pos = pointDraw;
 
         _lastid = point->idtratto;
     }
@@ -164,8 +164,6 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
     int i = 0;
     int len = length();
 
-
-    painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::TextAntialiasing, false);
 
     if(len)
@@ -276,17 +274,20 @@ bool page::userWrittenSomething() const
 void page::triggerRenderImage(int m_pos_ris, const bool all)
 {
     const bool isNull = imgDraw.isNull();
+
     if(all || isNull)
         this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
 
     QPainter painter;
     painter.begin(&imgDraw);
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
     this->draw(painter, m_pos_ris, (all || isNull));
 
     painter.end();
 
-    /*return;
-    if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 1))
-        std::abort();*/
+    return;
+    if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
+        std::abort();
+
 }

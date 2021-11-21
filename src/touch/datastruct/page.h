@@ -45,7 +45,6 @@ public:
     static double getResolutionWidth();
     static double getResolutionHeigth();
 
-
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(const bool vis){this->IsVisible = vis;}
 
@@ -67,7 +66,7 @@ public:
     void append(const point_s *point);
 
     void appendToTheTop(const QList<point_s> &point);
-    void appendToTheTop(const point_s *point);
+    void appendToTheTop(const point_s &point);
 
     const point_s       * at(const uint i) const;
     point_s             * at_mod(const uint i);
@@ -157,14 +156,15 @@ inline double page::getWidth()
     return width;
 }
 
+#define PROP_RESOLUTION double(5)
 inline double page::getResolutionWidth()
 {
-    return getWidth()*5.0;
+    return getWidth() * PROP_RESOLUTION;
 }
 
 inline double page::getResolutionHeigth()
 {
-    return getHeight()*5.0;
+    return getHeight() * PROP_RESOLUTION;
 }
 
 inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView)
@@ -273,12 +273,12 @@ inline void page::appendToTheTop(const QList<point_s> &point)
 
 }
 
-inline void page::appendToTheTop(const point_s *point)
+inline void page::appendToTheTop(const point_s &point)
 {
     int start;
 
     this->moveToUserPoint(start);
-    m_point.insert(start, *point);
+    m_point.insert(start, point);
 
 }
 

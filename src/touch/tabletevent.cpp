@@ -175,6 +175,7 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
         }
         sel = false;
     }
+
     m_deviceDown = true;
     lastPoint.pos = event->pos();
     lastPoint.pressure = event->pressure();
