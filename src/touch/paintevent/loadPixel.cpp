@@ -81,7 +81,7 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
         _lastid = __point.idtratto;
     }
 
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::LosslessImageRendering | QPainter::NonCosmeticDefaultPen |
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::NonCosmeticDefaultPen |
                            QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing, false);
 
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
