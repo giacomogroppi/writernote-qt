@@ -18,8 +18,8 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
 rubber_ui::~rubber_ui()
 {
-    delete ui;
     this->save_settings();
+    delete ui;
 }
 
 bool rubber_ui::event(QEvent *event){
@@ -52,6 +52,8 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     uint i, len, counterPage;
     const uint lenPage = data->lengthPage();
     const point_s *__point;
+
+    Page.clear();
 
     if(data->isempty())
         return &Page;
@@ -104,14 +106,39 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
         }
 
     }
-    qDebug() << "Rubber::rubberaction " << gomma_delete_id;
+
     return &Page;
 }
 
 bool rubber_ui::clearList(datastruct *data)
 {
+    int counterPage, i, lenPage, len;
+    const page *page;
+    const point_s *point;
+
+    Page.clear();
+
     if(gomma_delete_id.isEmpty())
         return false;
+
+    for(counterPage = 0, lenPage = data->lengthPage(); counterPage < lenPage; counterPage  ++){
+        page = data->at(counterPage);
+        len = page->length();
+
+        i = 0;
+        page->moveToUserPoint(i);
+
+        for(; i < len; i++){
+            point = page->at(i);
+            if(gomma_delete_id.indexOf(point->idtratto) != -1){
+                if(Page.indexOf(point->page) == -1){
+                    if(point->page != counterPage)
+                        LOG("rubber_ui::clearList point->page != counterPage", log_ui::possible_bug);
+                    Page.append(point->page);
+                }
+            }
+        }
+    }
 
     data->removePointId(gomma_delete_id);
 
@@ -131,7 +158,6 @@ void rubber_ui::drawAreaRubber(QPainter &painter, const QPointF &point)
 
     painter.drawPoint(point);
 }
-
 
 bool rubber_ui::isin(const point_s * __point,
                  const QPointF & point_t,

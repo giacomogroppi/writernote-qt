@@ -7,6 +7,7 @@
 #include <QImage>
 #include "point.h"
 #include "../../log/log_ui/log_ui.h"
+#include "../../utils/common_def.h"
 
 enum n_style: int;
 
@@ -48,7 +49,7 @@ public:
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(const bool vis){this->IsVisible = vis;}
 
-    void at_draw(const uint i, const QPointF &translation, point_s &point, const double zoom) const;
+    __slow void at_draw(const uint i, const QPointF &translation, point_s &point, const double zoom) const;
 
     uint length() const;
     bool isVisible() const;
@@ -62,14 +63,14 @@ public:
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    void append(const point_s &point);
-    void append(const point_s *point);
+    __fast void append(const point_s &point);
+    __fast void append(const point_s *point);
 
-    void appendToTheTop(const QList<point_s> &point);
-    void appendToTheTop(const point_s &point);
+    __slow void appendToTheTop(const QList<point_s> &point);
+    __slow void appendToTheTop(const point_s &point);
 
-    const point_s       * at(const uint i) const;
-    point_s             * at_mod(const uint i);
+    __fast const point_s       * at(const uint i) const;
+    __fast point_s             * at_mod(const uint i);
 
     double minHeight() const;
     double currentHeight() const;

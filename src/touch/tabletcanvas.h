@@ -157,7 +157,8 @@ public:
     void loadpixel();
 
     /* touch e zoom */
-    PointSettable lastpointzoom[2] = {{QPointF(0, 0), false}, {QPointF(0, 0), false}}; // [0] point left [1] point right
+    // [0] point left [1] point right
+    PointSettable lastpointzoom[2];
 
     QPointF posizionezoom_puntof;
     int deltax;

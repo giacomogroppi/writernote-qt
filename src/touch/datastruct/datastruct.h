@@ -19,15 +19,13 @@ class fromimage;
 
 /* canvas */
 struct PointSettable {
-    QPointF point;
+    QPointF point = QPointF(0, 0);
     bool set = false;
     bool isNotDefine() const
     {
         return !this->set;
     }
 };
-
-
 
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
@@ -184,7 +182,7 @@ public:
     /* the function return the index of the id */
     uint positionId(int id);
 
-    std::tuple<uint, uint> decreaseAlfa(const int id, const uchar decrese, const uint len);
+    std::tuple<uint, uint> decreaseAlfa(const int id, const uchar decrese, const int len);
 
     void removePage(const uint page);
 
@@ -198,13 +196,13 @@ public:
 
     inline int lastId();
 
-    const point_s * at(const uint i, const uint page) const;
-    const page *    at(const uint page) const;
-    page *          at_mod(const uint page);
-    point_s *       at_mod(const uint index, const uint page);
-    point_s &       at_draw(const uint index, const uint page) const;
-    const point_s * lastPoint() const;
-    const page *    lastPage() const;
+    //__fast const point_s * at(const uint i, const uint page) const;
+    __fast const page *    at(const uint page) const;
+    __fast page *          at_mod(const uint page);
+    //__fast point_s *       at_mod(const uint index, const uint page);
+    __slow point_s &       at_draw(const uint index, const uint page) const;
+    __slow const point_s * lastPoint() const;
+    __fast const page *    lastPage() const;
     //point_s &at_translation(const uint index, const uint page) const;
 
     static size_t getSizeOne();
@@ -307,27 +305,17 @@ inline int datastruct::lastId()
     return this->maxId();
 }
 
-inline const point_s *datastruct::at(const uint i, const uint page) const
-{
-    return this->m_page.at(page).at(i);
-}
-
-inline const page *datastruct::at(const uint page) const
+inline const __slow page *datastruct::at(const uint page) const
 {
     return &this->m_page.at(page);
 }
 
-inline page *datastruct::at_mod(const uint page)
+inline page __slow *datastruct::at_mod(const uint page)
 {
     return &this->m_page.operator[](page);
 }
 
-inline point_s *datastruct::at_mod(const uint index, const uint page)
-{
-    return at_mod(page)->at_mod(index);
-}
-
-inline point_s &datastruct::at_draw(const uint index, const uint page) const
+inline __slow point_s &datastruct::at_draw(const uint index, const uint page) const
 {
     static point_s point;
 
@@ -336,7 +324,7 @@ inline point_s &datastruct::at_draw(const uint index, const uint page) const
     return point;
 }
 
-inline const page *datastruct::lastPage() const
+inline const __slow page *datastruct::lastPage() const
 {
     return &this->m_page.last();
 }

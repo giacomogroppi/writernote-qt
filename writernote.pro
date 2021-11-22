@@ -69,7 +69,6 @@ contains(DEFINES, NO_ALL_VERSION){
 #DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 !contains(DEFINES, VERSION_SNAPCRAFT){
-    #DEFINES += "VERSION_SNAPCRAFT=1.3.15"
     message("Enable testing for version $$VERSION_SNAPCRAFT")
 }
 

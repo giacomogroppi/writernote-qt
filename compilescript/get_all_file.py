@@ -27,13 +27,20 @@ def ricorsione(lista: list, ramo: str) -> list[str]:
     return lista_sec
 
 
-def main(stringa: str) -> None:
+def main(stringa: str, before: str) -> None:
+    originalPath = stringa
     os.path.join(stringa)
     lista = os.listdir(stringa)
 
     tmp = ricorsione(lista, stringa)
     for x in tmp:
-        print(x)
+        print("{}{}".format(before, x[len(originalPath):]))
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if len(sys.argv) < 1:
+        print("You need to pass the path")
+        exit(-1)
+    
+    main(sys.argv[1], "src")
+    
+    exit(0)

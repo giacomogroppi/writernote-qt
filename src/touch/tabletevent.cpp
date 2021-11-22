@@ -185,13 +185,16 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
 static bool need_to_change_color(datastruct *data, int id){
     static uint i, len, how, counterPage;
     static uint lenPage;
+    const page *page;
     lenPage = data->lengthPage();
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        len = data->at(counterPage)->length();
+        page = data->at(counterPage);
+        len = page->length();
         for(i=0, how = 0; i<len; i++){
-            if(data->at(i, counterPage)->idtratto == id)
+            if(page->at(i)->idtratto == id){
                 how ++;
+            }
         }
     }
 

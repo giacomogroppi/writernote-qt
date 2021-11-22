@@ -107,11 +107,12 @@ void TabletCanvas::loadpixel(){
 }
 
 static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainter &painter, const double delta){
-    static uint counterPage;
-    static int i, len;
+    uint counterPage;
+    const page *page;
+    int i, len;
     const uint lenPage = doc.datatouch->lengthPage();
-    static double xtemp[2], ytemp[2];
-    static uchar k;
+    double xtemp[2], ytemp[2];
+    uchar k;
 
     const double zoom = doc.datatouch->getZoom();
 
@@ -122,14 +123,14 @@ static void loadSheet(const Document &doc, QPen &m_pen, QBrush &m_brush, QPainte
         if(!len)
             continue;
 
-        const point_s *point = data->at(0, counterPage);
+        page = data->at(counterPage);
 
-        TabletCanvas::updateBrush_load(point->m_pressure * zoom * delta, setcolor(point->m_color, 1), m_pen, m_brush);
+        TabletCanvas::updateBrush_load(page->at(0)->m_pressure * zoom * delta, setcolor(page->at(0)->m_color, 1), m_pen, m_brush);
 
         painter.setPen(m_pen);
 
         for(i = 0; i < len-1; ++i){
-            if(data->at(i, counterPage)->isIdUser())
+            if(page->at(i)->isIdUser())
                 break;
 
             for(k=0; k<2; k++){

@@ -34,6 +34,7 @@ SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
+
 set(PROJECT_SOURCES
     src/savecopybook.cpp
     src/mainwindow.cpp
@@ -43,16 +44,15 @@ set(PROJECT_SOURCES
     src/dataread/old_version/ver_2/load_file_ver_2.cpp
     src/dataread/old_version/ver_5/load_file_ver_5.cpp
     src/dataread/old_version/ver_6/load_file_ver_6.cpp
+    src/dataread/loadfile.cpp
     src/dataread/xmlstruct.cpp
     src/dataread/loadbinario.cpp
-    src/dataread/loadfile_xmlstruct.cpp
     src/dataread/load_from_file.cpp
     src/dataread/readlistarray.cpp
     src/sizeButton.cpp
     src/open_file.cpp
     src/controllUi.cpp
     src/pdf/topdf.cpp
-    src/pdf/updatebrush_topdf.cpp
     src/pdf/translate.cpp
     src/openFirstCopybook.cpp
     src/needToSave.cpp
@@ -66,10 +66,9 @@ set(PROJECT_SOURCES
     src/datawrite/write/saveArray.cpp
     src/datawrite/write/saveindice_savefile.cpp
     src/datawrite/qfilechoose.cpp
-    src/setting_ui.cpp
     src/main.cpp
     src/log/log_ui/log_ui.cpp
-    src/touch/paintevent/disegnofoglio.cpp
+    src/touch/paintevent/loadPixel.cpp
     src/touch/paintevent/paintevent.cpp
     src/touch/rubber/save_setting_rubber_ui.cpp
     src/touch/rubber/update_data.cpp
@@ -82,13 +81,13 @@ set(PROJECT_SOURCES
     src/touch/text/text_widgets/text_widgets.cpp
     src/touch/text/text_ui/text_ui.cpp
     src/touch/zoom/zoom_control.cpp
+    src/touch/zoom/ctrlZoom.cpp
     src/touch/highlighter/highlighter.cpp
     src/touch/datastruct/page.cpp
     src/touch/datastruct/writtenSomething.cpp
     src/touch/datastruct/moveAll.cpp
     src/touch/datastruct/createControllPoint.cpp
     src/touch/datastruct/movePoint.cpp
-    src/touch/datastruct/loadpixel.cpp
     src/touch/datastruct/changeId.cpp
     src/touch/datastruct/needtocreatenew.cpp
     src/touch/datastruct/datastruct.cpp
@@ -99,13 +98,10 @@ set(PROJECT_SOURCES
     src/touch/datastruct/adjustSize.cpp
     src/touch/datastruct/removeIdPoint.cpp
     src/touch/pen/pen_ui.cpp
-    src/touch/square/draw_square.cpp
-    src/touch/square/move.cpp
     src/touch/square/square.cpp
     src/touch/tabletapplication.cpp
     src/touch/tabletcanvas.cpp
     src/touch/copy/copy_selection.cpp
-    src/touch/copy/copy_widgets.cpp
     src/touch/pageCount.cpp
     src/touch/tabletevent.cpp
     src/touch/event/mouseevent.cpp
@@ -113,13 +109,12 @@ set(PROJECT_SOURCES
     src/touch/event/eventmethod.cpp
     src/touch/event/moving_f.cpp
     src/touch/event/resize_event.cpp
-    src/touch/updatelist.cpp
-    src/touch/riascolto/riascolto.cpp
     src/touch/initpixmap.cpp
     src/touch/reduce_size/reduce_size.cpp
     src/touch/reduce_size/button_reduce_size.cpp
+    src/touch/property/property_control.cpp
     src/touch/settingmethod.cpp
-    src/audiorecord/displayErrorMessage.cpp
+    src/audiorecord/audiorecord.cpp
     src/audiorecord/start_recording.cpp
     src/frompdf/convertimg.cpp
     src/frompdf/frompdf.cpp
@@ -131,7 +126,6 @@ set(PROJECT_SOURCES
     src/windows/check_update_mainwindow.cpp
     src/windows/sourcecode_mainwindow.cpp
     src/windows/mostra_finestra_i.cpp
-    src/windows/main_updater.cpp
     src/currenttitle/checksimilecopybook.cpp
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp
     src/currenttitle/deleteaudio.cpp
@@ -199,23 +193,18 @@ set(PROJECT_SOURCES
     src/utils/mostra_explorer/mostra_explorer.cpp
     src/audiosetting/savequalita.cpp
     src/audiosetting/audioqualityoption.cpp
-    src/audiosetting/loadqualita.cpp
     src/indice_class.cpp
     src/restore_file/resFileTmpInTmpFolder.cpp
     src/restore_file/restore_file.cpp
     src/restore_file/ui/setting_restore_ui.cpp
     src/restore_file/restore_file_critic.cpp
     src/restore_file/ui_restore/restore.cpp
-    src/audioplay/updatestatusbar_riascolto.cpp
-    src/audioplay/valuechangeslidervolume.cpp
-    src/audioplay/playbottonfunction.cpp
-    src/audioplay/riascoltoaudioprogressivo.cpp
-    src/audioplay/cambiostatoplayer.cpp
-    src/audioplay/audiovolume.cpp
-    src/audioplay/stopriascolto.cpp
+    src/audioplay/ctrlAudioPlay.cpp
+    src/audioplay/audioplay.cpp
     src/audioplay/aggiornotastiriascolto.cpp
-    src/audioplay/enableriascolto.cpp
-    src/audioplay/slidertimechange.cpp
+
+    src/cloud/button_mainwindow.cpp
+    src/windows/main_updater.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
@@ -228,7 +217,6 @@ set(PROJECT_SOURCES
     src/restore_file/ui_restore/restore.ui 
     src/sheet/dialog_sheet.ui 
     src/sheet/fast-sheet/fast_sheet_ui.ui 
-    src/touch/copy/copy_widgets.ui 
     src/touch/highlighter/highlighter.ui 
     src/touch/pen/pen_ui.ui 
     src/touch/rubber/rubber_ui.ui 
@@ -283,6 +271,11 @@ add_definitions(-DPDFSUPPORT)
 target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::PrintSupport)
+
+#set_property(TARGET writernote PROPERTY CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
+SET (CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -O3")
+
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
