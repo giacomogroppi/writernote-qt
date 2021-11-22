@@ -87,7 +87,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     }
                 }
                 else if(selection_method){
-                    if(!m_square->check){ /* it means that the user not select anything */
+                    if(!m_square->somethingInBox()){ /* it means that the user not select anything */
                         m_square->updatePoint(pointTouch);
                     }
                     else{
@@ -150,7 +150,7 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
         if(selection_method){
             sel = false;
 
-            if(!m_square->check)
+            if(!m_square->somethingInBox())
                 m_square->find(data);
         }
 
@@ -167,7 +167,7 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
         updatelist(event);
     }
     else if(selection_method){
-        if(m_square->check){
+        if(m_square->somethingInBox()){
             m_square->move(pointTouch, data);
         }
         else{

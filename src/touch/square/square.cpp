@@ -4,6 +4,7 @@
 #include "../../currenttitle/document.h"
 #include <QDebug>
 #include "../../images/fromimage.h"
+#include "../property/property_control.h"
 
 square::square(property_control *property)
 {
@@ -23,7 +24,7 @@ void square::updatePoint(const QPointF &__point)
 
         /* we don't need yet to draw somethings */
         __need_reload = false;
-        check = false;
+        in_box = false;
         return;
     }
 
@@ -41,7 +42,7 @@ bool square::find(Document *data){
     bool tmp_find;
 
     const uint lenPage = data->datatouch->lengthPage();
-    this->check = false;
+    this->in_box = false;
 
     this->adjustPoint();
 
@@ -58,7 +59,7 @@ bool square::find(Document *data){
                     m_id.append(point.idtratto);
                 }
 
-                this->check = true;
+                this->in_box = true;
             }
         }
     }
@@ -76,34 +77,44 @@ bool square::find(Document *data){
         if(!tmp_find)
             continue;
         this->m_index_img.append(i);
-        this->check = true;
+        this->in_box = true;
     }
 
     findObjectToDraw(data);
 
-    if(!check){
+    if(!in_box){
         reset();
     }else{
         __need_reload = true;
     }
 
-    return check;
+    return in_box;
 }
 
 /* la funzione resistuisce
  * vero se è intero il punto è interno
 */
 bool square::isinside(const QPointF &point){
-    if(!this->check)
+    if(!this->in_box)
         return false;
 
     return datastruct::isinside(pointinit.point, pointfine.point, point);
-
 }
 
-void square::needReload(QPainter &painter){
-    if(!this->__need_reload)
-        return;
+void square::needReload(QPainter &painter, const QWidget *pixmap){
+    QPoint middle;
+    const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
+    //qDebug() << "square::needReload in_box:" << in_box;
+    if(!in_box) this->m_property->hide();
+
+    if(!this->__need_reload) return;
+
+    if(in_box){
+        middle = QPoint(translation.x() + this->pointinit.point.x(),
+                        pointinit.point.y() + translation.y() - m_property->height());
+        //qDebug() << "show";
+        this->m_property->Show(middle);
+    }
 
     painter.setPen(this->penna);
 
@@ -188,7 +199,7 @@ void square::findObjectToDraw(Document *doc)
 void square::move(const QPointF &punto, Document *data){
     QPointF __point;
 
-    if(!check){
+    if(!in_box){
         return this->reset();
     }
 

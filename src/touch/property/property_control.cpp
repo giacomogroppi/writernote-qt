@@ -7,7 +7,13 @@ property_control::property_control(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setStyleSheet("background:transparent;");
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground);
+
+    this->ui->button_copy->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+    this->ui->button_cut->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+    this->ui->button_delete->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
 }
 
 property_control::~property_control()
@@ -15,7 +21,7 @@ property_control::~property_control()
     delete ui;
 }
 
-QRect property_control::getPos(const QPoint &topLeft, const QPoint &bottomRight)
+/*QRect property_control::getPos(const QPoint &topLeft, const QPoint &bottomRight)
 {
     QRect rect;
     const QPoint size(this->width(), this->height());
@@ -31,15 +37,5 @@ QRect property_control::getPos(const QPoint &topLeft, const QPoint &bottomRight)
                      ));
 
     return rect;
-}
+}*/
 
-void property_control::Show(const QRect &rect)
-{
-    this->show();
-    this->setGeometry(rect);
-}
-
-void property_control::Hide()
-{
-    this->hide();
-}

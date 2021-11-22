@@ -95,7 +95,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
     static QPointF pointDraw;
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
-    qDebug() << painter.renderHints();
+    //qDebug() << painter.renderHints();
 
 
     /*for(; i < len-3; ++i){
