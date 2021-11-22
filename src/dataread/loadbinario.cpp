@@ -28,20 +28,20 @@ int xmlstruct::loadbinario_0(zip_t *z){
     QList<double> pos_foglio;
     QList<point_s> point;
     struct zip_stat st;
+    int i, len;
+    uint k;
+
+    struct point_last point_lettura;
+    struct point_s temp_point;
+
     zip_stat_init(&st);
     zip_stat(z, NAME_BIN, 0, &st);
 
     zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
 
-    if(f == nullptr)
-        return ERROR;
+    if(f == nullptr) return ERROR;
 
-    int i, len;
-    uint k;
     SOURCE_READ_GOTO(f, &len, sizeof(int));
-
-    struct point_last point_lettura;
-    struct point_s temp_point;
 
     for(i=0; i<len; i++){
         SOURCE_READ_GOTO(f, &point_lettura, sizeof(struct point_last));
@@ -56,6 +56,7 @@ int xmlstruct::loadbinario_0(zip_t *z){
         temp_point.m_y = point_lettura.m_y;
         temp_point.m_pressure = point_lettura.m_pressure;
         temp_point.rotation = point_lettura.rotation;
+        temp_point.page = -1;
 
         point.append(temp_point);
     }
@@ -124,9 +125,7 @@ int xmlstruct::loadbinario_1(struct zip *z){
 
      f = zip_fopen(z, NAME_BIN, 0);
 
-    if(f == nullptr)
-        return false;
-
+    if(f == nullptr) return false;
 
     SOURCE_READ_GOTO(f, &len, sizeof(int));
 
@@ -141,15 +140,17 @@ int xmlstruct::loadbinario_1(struct zip *z){
         pos_foglio.append(valoretemp);
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(this->currenttitle->datatouch->zoom));
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
 
     SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
 
     zip_fclose(f);
-
-    if(controll != createControllOldVersion(point))
-        return ERROR_CONTROLL;
-
+    {
+        const size_t newControll = createControllOldVersion(point);
+        if(controll != newControll){
+            return ERROR_CONTROLL;
+        }
+    }
     for(const auto & ref : qAsConst(point)){
         memcpy(&__point.m_color, &ref.m_color, sizeof(colore_s));
         __point.idtratto = ref.idtratto;
@@ -167,6 +168,7 @@ int xmlstruct::loadbinario_1(struct zip *z){
 
     free_:
     zip_fclose(f);
+
     return ERROR;
 }
 
