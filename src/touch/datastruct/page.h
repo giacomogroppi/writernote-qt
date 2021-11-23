@@ -5,7 +5,7 @@
 #include <QPointF>
 #include <QDebug>
 #include <QImage>
-#include "point.h"
+#include "stroke.h"
 #include "../../log/log_ui/log_ui.h"
 #include "../../utils/common_def.h"
 
@@ -21,8 +21,7 @@ private:
     bool IsVisible = true;
     int count;
 
-    QList<point_s> m_point;
-    QList<point_s> tmp;
+    QList<stroke> m_stroke;
 
     void drawNewPage(n_style __style);
 
@@ -31,9 +30,8 @@ private:
     void drawEngine(QPainter &painter, QList<point_s> &List, int i, const int m_pos_ris);
     void draw(QPainter &painter, const int m_pos_ris, const bool all);
 
-    static void nextPoint(int &index, QList<point_s> &list);
+    static point_s *at_translation(const point_s &point, const int page);
 
-    point_s *at_translation(const QList<point_s> &point, uint index);
 public:
     const QImage &getImg() const;
 
@@ -49,41 +47,44 @@ public:
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(const bool vis){this->IsVisible = vis;}
 
-    __slow void at_draw(const uint i, const QPointF &translation, point_s &point, const double zoom) const;
+    __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
-    uint length() const;
+    uint lengthStroke() const;
     bool isVisible() const;
     static void copy(const page &src, page &dest);
     void removeAt(const uint i);
     int maxId() const;
-    const point_s * last() const;
+    const stroke & last() const;
 
     /*
      *  these 3 functions do not automatically launch
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    __fast void append(const point_s &point);
-    __fast void append(const point_s *point);
+    __fast void append(const stroke &point);
 
-    __slow void appendToTheTop(const QList<point_s> &point);
-    __slow void appendToTheTop(const point_s &point);
+    __slow void appendToTheTop(const stroke &point);
 
-    __fast const point_s       * at(const uint i) const;
-    __fast point_s             * at_mod(const uint i);
+    __fast const stroke       & atStroke(const uint i) const;
+    __fast stroke             & atStrokeMod(const uint i);
 
     double minHeight() const;
     double currentHeight() const;
     double currentWidth() const;
 
     void changeId(const uint i, const int newId);
-    bool needtochangeid(const uint index) const;
+    bool needtochangeid(const int IndexStroke, const int indexInStroke) const;
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
 
     void triggerRenderImage(int m_pos_ris, const bool all);
 
     void moveToUserPoint(int &i) const;
+
+    void reset();
+    void allocateStroke(int numAllocation);
+
+    friend class stroke;
 };
 
 inline double page::currentHeight() const
@@ -98,7 +99,7 @@ inline double page::currentWidth() const
 
 inline void page::move(const uint from, const uint to)
 {
-    this->m_point.move(from, to);
+    this->m_stroke.move(from, to);
 }
 
 inline void page::moveToUserPoint(int &i) const
@@ -110,32 +111,27 @@ inline void page::moveToUserPoint(int &i) const
     }
 
     int len;
-    len = this->length();
+    len = this->lengthStroke();
     for(i = 0; i < len; i++)
-        if(at(i)->isIdUser())
+        if(atStroke(i).isIdUser())
             break;
 
     which = i;
 }
 
-inline point_s *page::at_translation(const QList<point_s> &point, uint index)
+inline void page::reset()
 {
-    static point_s tmp;
-    const double ytranslation = double(this->count-1)*page::getHeight();
-
-    memcpy(&tmp, &point.at(index), sizeof(point_s));
-    tmp.m_y -= ytranslation;
-    return &tmp;
+    this->m_stroke.clear();
 }
 
-inline void page::nextPoint(int &index, QList<point_s> &list)
+inline point_s *page::at_translation(const point_s &point, const int page)
 {
-    const int currentId = list.at(index).idtratto;
-    int len = list.length();
-    for(; index < len; index++){
-        if(list.at(index).idtratto != currentId)
-            return;
-    }
+    static point_s tmp;
+    const double ytranslation = double(page)*page::getHeight();
+
+    memcpy(&tmp, &point, sizeof(point_s));
+    tmp.m_y -= ytranslation;
+    return &tmp;
 }
 
 inline const QImage &page::getImg() const
@@ -181,32 +177,33 @@ inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const
     IsVisible = true;
 }
 
-inline const point_s *page::at(uint i) const
+inline const stroke &page::atStroke(uint i) const
 {
-    return &this->m_point.at(i);
+    return this->m_stroke.at(i);
 }
 
-inline point_s *page::at_mod(uint i)
+inline stroke &page::atStrokeMod(const uint i)
 {
-    return &this->m_point.operator[](i);
+    return this->m_stroke.operator[](i);
 }
 
-inline void page::at_draw(const uint i, const QPointF &translation, point_s &point, const double zoom) const
+inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
+                          point_s &point, const double zoom) const
 {
-    memcpy(&point, at(i), sizeof(point_s));
+    const stroke &stroke = atStroke(IndexStroke);
+
+    memcpy(&point, &stroke.at(IndexPoint), sizeof(point_s));
 
     point.m_x *= zoom;
     point.m_y *= zoom;
 
     point.m_x += translation.x();
     point.m_y += translation.y();
-
-    point.m_pressure *= zoom;
 }
 
-inline uint page::length() const
+inline uint page::lengthStroke() const
 {
-    return m_point.length();
+    return m_stroke.length();
 }
 
 inline bool page::isVisible() const
@@ -215,7 +212,16 @@ inline bool page::isVisible() const
 }
 
 inline void page::copy(const page &src, page &dest){
-    dest.m_point = src.m_point;
+    int counterStroke, lenStroke;
+    lenStroke = src.lengthStroke();
+    dest.reset();
+
+    dest.allocateStroke(src.lengthStroke());
+
+    for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
+        stroke::copy(src.atStroke(counterStroke), dest.atStrokeMod(counterStroke));
+    }
+
     dest.imgDraw = src.imgDraw;
     dest.IsVisible = src.IsVisible;
     dest.count = src.count;
@@ -223,63 +229,44 @@ inline void page::copy(const page &src, page &dest){
 
 inline void page::removeAt(const uint i)
 {
-    this->m_point.removeAt(i);
+    this->m_stroke.removeAt(i);
 }
 
 inline int page::maxId() const
 {
-    static uint i;
-    static uint len;
-    static int id;
-    static const point_s *point;
+    uint i;
+    uint len;
+    int id;
 
-    len = length();
+    len = lengthStroke();
     id = 0;
 
     for(i = 0; i < len; i++){
-        point = at(i);
+        const stroke &stroke = atStroke(i);
 
-        if(point->idtratto > id)
-            id = point->idtratto;
+        if(stroke.getId() > id)
+            id = stroke.getId();
     }
 
     return id;
 }
 
-inline const point_s *page::last() const
+inline const stroke &page::last() const
 {
-    return &this->m_point.last();
+    return this->m_stroke.last();
 }
 
-inline void page::append(const point_s &point)
+inline void page::append(const stroke &stroke)
 {
-    this->tmp.append(point);
-    //this->m_point.append(point);
+    this->m_stroke.append(stroke);
 }
 
-inline void page::append(const point_s *point)
-{
-    this->append(*point);
-}
-
-inline void page::appendToTheTop(const QList<point_s> &point)
-{
-    int i, len, start;
-
-    this->moveToUserPoint(start);
-    len = point.length();
-
-    for(i = 0; i < len; i++)
-        m_point.insert(start, point.at(i));
-
-}
-
-inline void page::appendToTheTop(const point_s &point)
+inline void page::appendToTheTop(const stroke &stroke)
 {
     int start;
 
     this->moveToUserPoint(start);
-    m_point.insert(start, point);
+    m_stroke.insert(start, stroke);
 
 }
 

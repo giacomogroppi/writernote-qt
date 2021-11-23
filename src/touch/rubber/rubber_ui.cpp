@@ -52,15 +52,23 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     uint i, len, counterPage;
     const uint lenPage = data->lengthPage();
     const point_s *__point;
+    const page *page;
 
     Page.clear();
 
     if(data->isempty())
         return &Page;
 
+    for(counterPage = 0; counterPage < lenPage && !data->at(counterPage)->isVisible(); counterPage ++);
+
+
     if(this->m_type_gomma == e_type_rubber::total){
-        for(counterPage = 0; counterPage < lenPage; counterPage ++){
-            len = data->at(counterPage)->length();
+        for(; counterPage < lenPage; counterPage ++){
+            page = data->at(counterPage);
+            if(!page->isVisible()) break;
+
+            len = page->length();
+
             for(i=0; i<len; i++){
                 __point = &data->at_draw(i, counterPage);
                 id = __point->idtratto;
@@ -82,7 +90,7 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
         }
     }
     else if(this->m_type_gomma == e_type_rubber::partial){
-        for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        for(; counterPage < lenPage  && data->at(counterPage)->isVisible(); counterPage ++){
             len = data->at(counterPage)->length();
             for(i=0; i<len; i++){
                 __point = &data->at_draw(i, counterPage);

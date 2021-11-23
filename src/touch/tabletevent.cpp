@@ -82,6 +82,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else if(rubber_method){
                     QList<int> *ref = m_rubber->actionRubber(data->datatouch, pointTouch);
+                    qDebug() << "TabletCanvas::tabletEvent" << ref->length() << data->datatouch->at(0)->length();
                     if(ref->length()){
                         this->triggerNewView(*ref, true);
                     }

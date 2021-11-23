@@ -63,7 +63,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 void TabletCanvas::updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush){
     m_pen.setWidthF(pressureToWidth(pressure/2.00));
 
-    m_brush.setColor(color);
+    //m_brush.setColor(color);
     m_pen.setColor(color);
 
 }

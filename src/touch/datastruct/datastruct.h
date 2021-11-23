@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QImage>
-#include "point.h"
 #include "page.h"
 
 /*
@@ -117,15 +116,8 @@ public:
      *
      * all the point writernote draw have id < 0
     */
-    static inline bool isIdUser(const int id){
-        return id >= 0;
-    }
-    static inline bool isIdUser(const point_s * __point){
-        return isIdUser(__point->idtratto);
-    }
-    static inline bool isIdUser(const point_s &__point){
-        return isIdUser(__point.idtratto);
-    }
+    static inline bool isIdUser(const int id){ return id >= 0; }
+    static inline bool isIdUser(const stroke &__point){ return isIdUser(__point.getId()); }
 
     bool isinside(QPointF &topleft, QPointF &bottonright, const uint index, const uint page);
     bool isinside(double x1, double y1, double x2, double y2, const uint index, const uint page);
@@ -148,9 +140,7 @@ public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
     //~datastruct();
 
-    void moveNextPoint(uint &pos,
-                       uint len = 0,
-                       int id = -6);
+    void moveNextPoint(uint &pos, uint len = 0, int id = -6);
 
     void reorganize();
 
@@ -186,21 +176,13 @@ public:
 
     void removePage(const uint page);
 
-    inline uint lengthPoint() const {
-        uint i, len2 = 0;
-        const uint len = this->m_page.length();
-        for(i=0; i<len; ++i)
-            len2 += this->m_page.at(i).length();
-        return len2;
-    }
-
     inline int lastId();
 
     //__fast const point_s * at(const uint i, const uint page) const;
     __fast const page *    at(const uint page) const;
     __fast page *          at_mod(const uint page);
     //__fast point_s *       at_mod(const uint index, const uint page);
-    __slow point_s &       at_draw(const uint index, const uint page) const;
+    __slow point_s &       at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
     __slow const point_s * lastPoint() const;
     __fast const page *    lastPage() const;
     //point_s &at_translation(const uint index, const uint page) const;
@@ -229,15 +211,6 @@ public:
     void checkPositionData(const QPixmap &pixmap, const QSize &maxSize);
 
 };
-
-/*
- * return true if the user
- * has written this point
-*/
-inline bool point_s::isIdUser() const
-{
-    return datastruct::isIdUser(this->idtratto);
-}
 
 /* this function does not consider the zoom */
 inline double datastruct::currentHeight() const
@@ -315,11 +288,11 @@ inline page __slow *datastruct::at_mod(const uint page)
     return &this->m_page.operator[](page);
 }
 
-inline __slow point_s &datastruct::at_draw(const uint index, const uint page) const
+inline __slow point_s &datastruct::at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const
 {
     static point_s point;
 
-    at(page)->at_draw(index, this->getPointFirstPage(), point, zoom);
+    at(indexPage)->at_draw(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
 
     return point;
 }
