@@ -46,10 +46,13 @@ public:
     void                setMetadata(const int page, const int idtratto,
                                     const int posizione_audio, const struct colore_s color);
 
+    size_t createControll() const;
+
     int getId() const;
     int getPage() const;
     int getPosizioneAudio() const;
 
+    void clearAudio();
 
     int length() const;
 
@@ -96,6 +99,11 @@ inline int stroke::getPage() const
 inline int stroke::getPosizioneAudio() const
 {
     return this->metadata.posizione_audio;
+}
+
+inline void stroke::clearAudio()
+{
+    this->metadata.posizione_audio = -1;
 }
 
 inline int stroke::length() const

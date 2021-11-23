@@ -72,6 +72,7 @@ public:
     double currentHeight() const;
     double currentWidth() const;
 
+    void changeCounter(const int newPage);
     void changeId(const uint i, const int newId);
     bool needtochangeid(const int IndexStroke, const int indexInStroke) const;
     bool userWrittenSomething() const;

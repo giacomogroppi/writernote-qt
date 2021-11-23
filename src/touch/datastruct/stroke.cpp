@@ -24,7 +24,7 @@ void stroke::createQPainterPath()
 
     len = this->length();
 
-    for(; i < len-3; ++i){
+    for(i=0; i < len-3; ++i){
         path.moveTo(at(i).toQPointF(delta));
 
         while(i<len-3){
