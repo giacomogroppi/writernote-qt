@@ -8,11 +8,9 @@ static void adjastPDF(QList<point_s> &point, QList<double> &pos_foglio);
 
 void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> &pos_foglio)
 {
-    const point_s firstPoint = point.takeFirst();
+    /*const point_s firstPoint = point.takeFirst();
     const int lenPage = pos_foglio.length();
-    //int len;
     const QPointF translation(firstPoint.m_x, firstPoint.m_y);
-    //const uint height = page::getHeight();
     point_s pp;
 
     int i = 0, counterPage;
@@ -29,7 +27,7 @@ void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> &pos
         pp = point.at(i);
         pp.m_pressure *= 0.2;
         data->datatouch->append(pp);
-    }
+    }*/
 
     /*for(counterPage = 0; counterPage < lenPage; counterPage++){
         page *page;

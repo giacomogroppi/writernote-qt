@@ -193,10 +193,7 @@ public:
     static void copy(const datastruct &src, datastruct &dest);
 
     inline QPointF get_size_page() const{
-        if(!this->lengthPage())
-            return QPointF(page::getWidth(), page::getHeight());
-        const auto &page = this->at(lengthPage());
-        return QPointF(page->currentWidth(), currentHeight());
+        return QPointF(page::getWidth(), page::getHeight());
     }
 
     inline double currentWidth() const;
@@ -268,7 +265,7 @@ inline double datastruct::biggerx() const noexcept
 
 inline double datastruct::biggery() const noexcept
 {
-    return (at(lengthPage()-1)->currentHeight() + this->getPointFirstPage().y())*zoom;
+    return (at(lengthPage()-1).currentHeight() + this->getPointFirstPage().y())*zoom;
 }
 
 inline int datastruct::lastId()
@@ -278,7 +275,7 @@ inline int datastruct::lastId()
 
 inline const __fast page &datastruct::at(const uint page) const
 {
-    return &this->m_page.at(page);
+    return this->m_page.at(page);
 }
 
 inline page __slow *datastruct::at_mod(const uint page)
@@ -290,7 +287,7 @@ inline __slow point_s &datastruct::at_draw(const uint indexPoint, const uint ind
 {
     static point_s point;
 
-    at(indexPage)->at_draw(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
+    at(indexPage).at_draw(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
 
     return point;
 }
@@ -339,13 +336,12 @@ inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
 
 inline int datastruct::whichPage(const stroke &stroke) const
 {
-    const page *page;
     uint counterPage, len;
     len = this->lengthPage();
 
     for(counterPage = 0; counterPage < len; counterPage++){
-        page = at(counterPage);
-        if(page->currentHeight() >= stroke.at(0).m_y && page->minHeight() <= stroke.at(0).m_y){
+        const page &page = at(counterPage);
+        if(page.currentHeight() >= stroke.at(0).m_y && page.minHeight() <= stroke.at(0).m_y){
             return counterPage;
         }
     }
@@ -373,7 +369,7 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris)
     uint i, len;
     len = lengthPage();
     for( i = 0; i < len; i++)
-        if(at(i)->isVisible())
+        if(at(i).isVisible())
             at_mod(i)->triggerRenderImage(m_pos_ris, true);
 }
 
