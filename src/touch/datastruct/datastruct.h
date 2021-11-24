@@ -16,16 +16,6 @@
 class frompdf;
 class fromimage;
 
-/* canvas */
-struct PointSettable {
-    QPointF point = QPointF(0, 0);
-    bool set = false;
-    bool isNotDefine() const
-    {
-        return !this->set;
-    }
-};
-
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
 #define IDUNKNOWN -6
@@ -120,7 +110,7 @@ public:
     bool isinside(QPointF &topleft, QPointF &bottonright, const uint index, const uint page);
     bool isinside(double x1, double y1, double x2, double y2, const uint index, const uint page);
 
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const point_s &__point);
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &__point);
 
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 

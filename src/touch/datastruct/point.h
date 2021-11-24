@@ -5,6 +5,16 @@
 #include <QPointF>
 #define NCOLOR 4
 
+/* canvas */
+struct PointSettable {
+    QPointF point = QPointF(0, 0);
+    bool set = false;
+    bool isNotDefine() const
+    {
+        return !this->set;
+    }
+};
+
 struct colore_s{
     uchar colore[NCOLOR];
 };

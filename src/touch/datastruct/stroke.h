@@ -28,6 +28,8 @@ private:
 
     QPainterPath path;
 
+    PointSettable biggerData;
+
 public:
     stroke();
 
@@ -51,6 +53,8 @@ public:
     int getId() const;
     int getPage() const;
     int getPosizioneAudio() const;
+
+    QPointF biggerPointInStroke();
 
     void clearAudio();
 
@@ -99,6 +103,26 @@ inline int stroke::getPage() const
 inline int stroke::getPosizioneAudio() const
 {
     return this->metadata.posizione_audio;
+}
+
+/* after append data we need to call this funcion to update */
+inline QPointF stroke::biggerPointInStroke()
+{
+    if(this->biggerData.set)
+        return this->biggerData.point;
+    int i, len = this->length();
+    QPointF conf = QPointF(this->at(0).m_x, this->at(0).m_y);
+
+    for (i = 0; i < len; i++){
+        const point_s &point = at(i);
+        if(point.m_x >= conf.x())
+            conf.setX(point.m_x);
+        if(point.m_y >= conf.y())
+            conf.setY(point.m_y);
+    }
+    biggerData.set = true;
+    biggerData.point = conf;
+    return biggerPointInStroke();
 }
 
 inline void stroke::clearAudio()
