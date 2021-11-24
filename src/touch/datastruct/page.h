@@ -156,7 +156,7 @@ inline double page::getWidth()
     return width;
 }
 
-#define PROP_RESOLUTION double(5)
+#define PROP_RESOLUTION double(2)
 inline double page::getResolutionWidth()
 {
     return getWidth() * PROP_RESOLUTION;
