@@ -20,7 +20,7 @@ void datastruct::changeId(uint index, uint indexPage, uint lenPage, int base)
         }
     }
 
-    tmp = at(index, indexPage)->idtratto;
+    tmp = at(indexPage)->at(index)->idtratto;
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         len = at(counterPage)->length();

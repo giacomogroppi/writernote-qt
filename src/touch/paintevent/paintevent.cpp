@@ -28,8 +28,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
         DATAPAINT_DEFINEREST
     };
 
-    //dataPaint.size = QSize(m_pixmap.size());
-
     dataPaint.pen       = this->m_pen;
     dataPaint.m_brush   = this->m_brush;
     dataPaint.m_color   = this->m_color;
@@ -57,7 +55,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     /*load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
          m_pos_ris, &m_pixmap, true, 1, this->m_pixmap.width(), this->m_pixmap.width(), this->parent, false);*/
 
-    m_square->needReload(painter);
+    m_square->needReload(painter, this);
 
     painter.end();
 }
@@ -65,7 +63,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 void TabletCanvas::updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush){
     m_pen.setWidthF(pressureToWidth(pressure/2.00));
 
-    m_brush.setColor(color);
+    //m_brush.setColor(color);
     m_pen.setColor(color);
 
 }

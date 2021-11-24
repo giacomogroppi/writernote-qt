@@ -54,5 +54,7 @@ void ShowMessageUpdate::on_pushButton_brow_clicked()
 
 void ShowMessageUpdate::on_pushButton_update_now_clicked()
 {
+#if defined(WIN32) || defined(WIN64)
     launch_updater::launch();
+#endif
 }

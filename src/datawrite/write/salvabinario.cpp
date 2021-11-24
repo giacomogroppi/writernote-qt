@@ -39,7 +39,7 @@ int savefile::salvabinario(zip_t *filezip){
         WRITE_ON_SIZE(file, &len, sizeof(len));
 
         for(i = 0; i < len; i++){
-            point = currenttitle->datatouch->at(i, counterPage);
+            point = page->at(i);
             WRITE_ON_SIZE(file, point, sizeof(*point));
         }
     }

@@ -82,12 +82,13 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else if(rubber_method){
                     QList<int> *ref = m_rubber->actionRubber(data->datatouch, pointTouch);
+                    qDebug() << "TabletCanvas::tabletEvent" << ref->length() << data->datatouch->at(0)->length();
                     if(ref->length()){
                         this->triggerNewView(*ref, true);
                     }
                 }
                 else if(selection_method){
-                    if(!m_square->check){ /* it means that the user not select anything */
+                    if(!m_square->somethingInBox()){ /* it means that the user not select anything */
                         m_square->updatePoint(pointTouch);
                     }
                     else{
@@ -150,7 +151,7 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
         if(selection_method){
             sel = false;
 
-            if(!m_square->check)
+            if(!m_square->somethingInBox())
                 m_square->find(data);
         }
 
@@ -167,7 +168,7 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
         updatelist(event);
     }
     else if(selection_method){
-        if(m_square->check){
+        if(m_square->somethingInBox()){
             m_square->move(pointTouch, data);
         }
         else{
@@ -185,13 +186,16 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
 static bool need_to_change_color(datastruct *data, int id){
     static uint i, len, how, counterPage;
     static uint lenPage;
+    const page *page;
     lenPage = data->lengthPage();
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        len = data->at(counterPage)->length();
+        page = data->at(counterPage);
+        len = page->length();
         for(i=0, how = 0; i<len; i++){
-            if(data->at(i, counterPage)->idtratto == id)
+            if(page->at(i)->idtratto == id){
                 how ++;
+            }
         }
     }
 

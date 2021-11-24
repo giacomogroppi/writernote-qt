@@ -28,19 +28,13 @@ page::page(const int count, const n_style style)
     drawNewPage(style);
 }
 
-bool page::needtochangeid(const uint index) const
+bool page::needtochangeid(const int IndexStroke, const int indexInStroke) const
 {
-    const uint len = length();
-    const point_s *point;
+    const stroke *stroke = atStroke(IndexStroke);
 
-    if(index == (len-1) || !index)
-        return true;
+    const int lenPointStroke = stroke->length() - 1;
 
-    point = at(index);
-    if(point->idtratto == at(index+1)->idtratto || point->idtratto == at(index-1)->idtratto)
-        return false;
-    return true;
-
+    return indexInStroke == (lenPointStroke - 1) || (lenPointStroke + 1);
 }
 
 void page::drawNewPage(n_style __style)
@@ -49,6 +43,7 @@ void page::drawNewPage(n_style __style)
     double deltax, deltay, ct_del;
     struct style_struct_S style;
     struct point_s tmp_point;
+    stroke newStroke;
     const double width_p    = this->getWidth();
     const double height_p   = this->getHeight();
     const double last = (count-1)*page::getHeight();
@@ -60,6 +55,7 @@ void page::drawNewPage(n_style __style)
         style.thickness =  widthToPressure(TEMP_TICK);
     }
 
+    newStroke.setMetadata()
     memcpy(&tmp_point.m_color, &style.colore, sizeof(style.colore));
 
     if(style.nx){
@@ -95,10 +91,10 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
     static QPointF pointDraw;
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
-    qDebug() << painter.renderHints();
+    //qDebug() << painter.renderHints();
 
 
-    /*for(; i < len-3; ++i){
+    for(; i < len-3; ++i){
         path.moveTo(List.at(i).toQPointF(delta));
 
         while(i<len-3 && List.at(i+2).idtratto == _lastid){
@@ -109,8 +105,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
             if(point->page != page || point1->page != page || point2->page != page)
                 break;
 
-            const int decrease = (is_play && point->m_posizioneaudio > m_pos_ris) ? 4 : 1;
-            point->m_pressure *= 1.4;
+            const int decrease = (point->m_posizioneaudio > m_pos_ris) ? 1 : 4;
 
             m_pen.setColor(setcolor(point->m_color));
             TabletCanvas::updateBrush_load(point->m_pressure*delta,
@@ -129,9 +124,9 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
         nextPoint(i, List);
         if(i < len-3)
             _lastid = at(i)->idtratto;
-    }*/
+    }
 
-    for(; i < len; ++i){
+    /*for(; i < len; ++i){
         point = at_translation(List, i);
 
         pointDraw = QPointF(point->m_x, point->m_y) * PROP_RESOLUTION;
@@ -140,7 +135,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
             const int decrease = (point->m_posizioneaudio > m_pos_ris) ? 1 : 4;
             //point->m_pressure *= 1.4;
 
-            m_pen.setColor(setcolor(point->m_color));
+            //m_pen.setColor(setcolor(point->m_color, decrease));
             TabletCanvas::updateBrush_load(point->m_pressure,
                 setcolor(&point->m_color, decrease),
                 m_pen, m_brush);
@@ -155,7 +150,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
         lastPoint.pos = pointDraw;
 
         _lastid = point->idtratto;
-    }
+    }*/
 
 }
 
@@ -290,4 +285,12 @@ void page::triggerRenderImage(int m_pos_ris, const bool all)
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
         std::abort();
 
+}
+
+void page::allocateStroke(int numAllocation)
+{
+    for(int i = 0; i < numAllocation; i++){
+        stroke stroke;
+        this->append(stroke);
+    }
 }

@@ -14,7 +14,7 @@ bool datastruct::isinside(double x1, double y1, double x2, double y2, const uint
 {
     QPointF __topleft(x1, y1), bottonright(x2, y2);
 
-    return datastruct::isinside(__topleft, bottonright, *at(index, page));
+    return datastruct::isinside(__topleft, bottonright, *at(page)->at(index));
 }
 
 bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const point_s &__point){

@@ -69,7 +69,6 @@ contains(DEFINES, NO_ALL_VERSION){
 #DEFINES += "NUMEROPIXELORIZZONALI=980"
 
 !contains(DEFINES, VERSION_SNAPCRAFT){
-    #DEFINES += "VERSION_SNAPCRAFT=1.3.15"
     message("Enable testing for version $$VERSION_SNAPCRAFT")
 }
 
@@ -135,6 +134,7 @@ SOURCES += \
     src/touch/datastruct/removeIdPoint.cpp \
     src/touch/datastruct/removePage.cpp \
     src/touch/datastruct/reorganize.cpp \
+    src/touch/datastruct/stroke.cpp \
     src/touch/datastruct/writtenSomething.cpp \
     src/touch/highlighter/highlighter.cpp \
     src/touch/pageCount.cpp \
@@ -276,6 +276,7 @@ HEADERS += \
     src/touch/copy/copy_selection.h \
     src/touch/datastruct/page.h \
     src/touch/datastruct/point.h \
+    src/touch/datastruct/stroke.h \
     src/touch/highlighter/highlighter.h \
     src/touch/property/property_control.h \
     src/touch/reduce_size/reduce_size.h \

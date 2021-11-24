@@ -27,10 +27,6 @@ public:
         info,
         error_internal,
         possible_bug
-#ifdef DEBUGINFO
-        ,
-        __caller
-#endif
     };
 
     void write(const QString &message,

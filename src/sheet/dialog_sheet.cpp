@@ -164,7 +164,7 @@ void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
     if(newName.length() > STRNOME)
         return dialog_critic("The maximum number of letters for the word is " + QString::number(STRNOME));
 
-    strcpy(style_element.at_mod(current)->nome, newName.toUtf8().constData());
+    strncpy(style_element.at_mod(current)->nome, newName.toUtf8().constData(), STRNOME);
 
     this->updateList();
 }

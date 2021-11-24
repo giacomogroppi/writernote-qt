@@ -10,6 +10,7 @@ void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> &pos
 {
     const point_s firstPoint = point.takeFirst();
     const int lenPage = pos_foglio.length();
+    //int len;
     const QPointF translation(firstPoint.m_x, firstPoint.m_y);
     //const uint height = page::getHeight();
     point_s pp;
@@ -24,22 +25,25 @@ void xmlstruct::decode(Document *data, QList<point_s> &point, QList<double> &pos
         data->datatouch->newPage(n_style::white);
     }
 
-    /*for(counterPage = 0; counterPage < lenPage ; counterPage ++){
-        uint lenList = point.length();
-        for(i=0; i<lenList; ++i){
-
-            pointAppend = &point.at(i);
-
-            if(pointAppend->m_y > counterPage*height && pointAppend->m_y <= (counterPage+1)*height){
-                data->datatouch->append(pointAppend);
-            }
-        }
-    }*/
     for(i = 0; i < point.length(); i++){
         pp = point.at(i);
         pp.m_pressure *= 0.2;
         data->datatouch->append(pp);
     }
+
+    /*for(counterPage = 0; counterPage < lenPage; counterPage++){
+        page *page;
+        page = data->datatouch->at_mod(counterPage);
+        for(i = 0, len = page->length(); i < len; i++){
+            const int which = data->datatouch->whichPage(*page->at(i));
+            if(which != page->at(i)->page){
+                point_s point = *page->at(i);
+                point.page = which;
+                page->removeAt(i);
+                data->datatouch->append(&point, which);
+            }
+        }
+    }*/
 }
 
 static void scaleAll(QList<point_s> &point, const QPointF &translation)
@@ -75,10 +79,8 @@ static void adjastZoom(QList<point_s > &point, QList<double> &pos_foglio)
     for(i=0; i<len; i++){
         pos_foglio.operator[](i) *= delta;
     }
-    const auto &newTranslation = bigger(point);
 
     adjastPDF(point, pos_foglio);
-    const auto &tmp = bigger(point);
 }
 
 static void adjastPDF(QList<point_s> &point, QList<double> &pos_foglio){

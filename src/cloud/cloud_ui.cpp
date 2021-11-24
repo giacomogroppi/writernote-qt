@@ -129,8 +129,8 @@ void cloud_ui::on_button_ok_clicked()
 
             struct_user *temp_user = new struct struct_user;
 
-            strcpy(temp_user->m_mail.m_mail, ui->edit_mail->toPlainText().toUtf8().constData());
-            strcpy(temp_user->password, ui->edit_pass->toPlainText().toUtf8().constData());
+            strncpy(temp_user->m_mail.m_mail, ui->edit_mail->toPlainText().toUtf8().constData(), STRLEN_MAIL);
+            strncpy(temp_user->password, ui->edit_pass->toPlainText().toUtf8().constData(), STRPASS);
 
             auto res = this->m_controll->action(n_request::login_user, temp_user);
 

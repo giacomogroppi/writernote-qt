@@ -24,8 +24,14 @@ private:
 
     QPen penna;
     class property_control *m_property;
+
+    /* if true: it means that the user has not previously selected comething */
+    bool in_box;
+
 public:
-    void needReload(QPainter &);
+    bool somethingInBox() const;
+
+    void needReload(QPainter &painter, const QWidget *pixmap);
 
     void adjustPoint();
 
@@ -33,7 +39,7 @@ public:
 
     inline void reset(){
         pointinit.set = lastpoint.set = pointfine.set = false;
-        check = false;
+        in_box = false;
         __need_reload = false;
         m_id.clear();
         m_index_img.clear();
@@ -45,12 +51,14 @@ public:
     bool isinside(const QPointF &);
     void move(const QPointF &, Document *data);
 
-    /* if true: it means that the user has not previously selected comething */
-    bool check;
-
     /* definizione per i punti di spostamento */
     PointSettable lastpoint;
 
 };
+
+inline bool square::somethingInBox() const
+{
+    return this->in_box;
+}
 
 #endif // SQUARE_H

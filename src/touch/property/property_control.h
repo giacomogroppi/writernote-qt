@@ -23,9 +23,9 @@ public:
 
     };
 
-    QRect getPos(const QPoint &topLeft, const QPoint &bottomRight);
+    //QRect getPos(const QPoint &topLeft, const QPoint &bottomRight);
 
-    void Show(const QRect &rect);
+    void Show(const QPoint &rect);
     void Hide();
 
 private:
@@ -35,5 +35,16 @@ signals:
     void ActionSelection(property_control::Action action);
 };
 
+inline void property_control::Show(const QPoint &point)
+{
+    //qDebug() << "property_control::Show" << point;
+    this->show();
+    this->move(point);
+}
+
+inline void property_control::Hide()
+{
+    this->hide();
+}
 
 #endif // PROPERTY_CONTROL_H

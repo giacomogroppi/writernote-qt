@@ -48,17 +48,20 @@ void Document::copy(const Document &src,
 size_t Document::createSingleControll() const
 {
     size_t data = 0;
-    uint i, len, counterPage;
-    const page *page;
+    uint counterPage, counterStroke;
     const uint lenPage = datatouch->lengthPage();
+
+    uint lenStroke;
+
     if(!lenPage)
         return data;
 
-    for(i = 0; i < lenPage; i++){
-        page = this->datatouch->at(i);
-        len = page->length();
-        for(counterPage = 0; counterPage < len; counterPage++){
-            data += page->at(counterPage)->createControll();
+    for(counterPage = 0; counterPage < lenPage; counterPage++){
+        const page &page = datatouch->at(counterPage);
+        lenStroke = page.lengthStroke();
+
+        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
+            data += page.atStroke(counterStroke).createControll();
         }
     }
 
@@ -85,16 +88,16 @@ void Document::reset(){
 void Document::cleanAudio()
 {
     uint i, len, k;
-    point_s *point;
     page *page;
     const uint lenPage = datatouch->lengthPage();
 
-    for(i=0; i<lenPage; ++i){
+    for(i = 0; i < lenPage; i++){
         page = this->datatouch->at_mod(i);
-        len = page->length();
-        for(k=0; k<len; ++k){
-            point = page->at_mod(k);
-            point->m_posizioneaudio = -1;
+        len = page->lengthStroke();
+
+        for(k = 0; k < len; k++){
+            stroke &stroke = page->atStrokeMod(k);
+            stroke.clearAudio();
         }
     }
 }

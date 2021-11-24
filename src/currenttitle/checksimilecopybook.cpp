@@ -36,6 +36,7 @@ static int checkSpeed(const Document &first,
 static int checkSlow(const Document *first,
                      const Document *second){
     uint i, counterPage;
+    const page *page1, *page2;
     const uint lenPage = first->datatouch->lengthPage();
 
     if(lenPage != P(second)->lengthPage())
@@ -46,9 +47,12 @@ static int checkSlow(const Document *first,
         if(len != second->datatouch->at(counterPage)->length())
             return LEN;
 
+        page1 = first->datatouch->at(counterPage);
+        page2 = second->datatouch->at(counterPage);
+
         for(i=0; i<len; i++){
-            const point_s *point1 = first->datatouch->at(i, counterPage);
-            const point_s *point2 = second->datatouch->at(i, counterPage);
+            const point_s *point1 = page1->at(i);
+            const point_s *point2 = page2->at(i);
 
             if(point1->idtratto != point2->idtratto)
                 return IDTRATTO;
