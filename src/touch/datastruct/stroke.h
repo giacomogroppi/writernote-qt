@@ -23,15 +23,19 @@ private:
     QList<point_s> m_point;
 
     metadata_stroke metadata;
-    int metadataSet = 0;
+    bool metadataSet: 1;
     int versione = VER_STROKE;
 
     QPainterPath path;
 
-    PointSettable biggerData;
+    QRectF biggerData;
+    bool biggerDataSet: 1;
 
 public:
     stroke();
+
+    /* this function is used to set the pressure equal for all points. */
+    void __setPressureForAllPoint(const double pressure);
 
     bool isIdUser() const;
 
@@ -54,16 +58,25 @@ public:
     int getPage() const;
     int getPosizioneAudio() const;
 
-    QPointF biggerPointInStroke();
+    QRectF getBiggerPointInStroke();
+    bool isInside(const QRectF &rect) const;
 
     void clearAudio();
 
     int length() const;
-
+    void changeId(const int newId);
     void commitChange();
+
+    size_t getSize() const;
+    void decreasePrecision() const;
+
+    /* this function physically adds the x and y value of the point to all of its points. */
+    void movePoint(const QPointF &translation);
 
     void getQPainterPath() const;
     void createQPainterPath();
+
+    void reset();
 
     static void copy(const stroke &src, stroke &dest);
 };
@@ -90,6 +103,7 @@ inline void stroke::setMetadata(const metadata_stroke &metadata)
     metadataSet = 1;
 }
 
+// return the "old" idtratto
 inline int stroke::getId() const
 {
     return metadata.idtratto;
@@ -106,12 +120,15 @@ inline int stroke::getPosizioneAudio() const
 }
 
 /* after append data we need to call this funcion to update */
-inline QPointF stroke::biggerPointInStroke()
+inline QRectF stroke::getBiggerPointInStroke()
 {
-    if(this->biggerData.set)
-        return this->biggerData.point;
+    if(this->biggerDataSet)
+        return this->biggerData;
+
     int i, len = this->length();
-    QPointF conf = QPointF(this->at(0).m_x, this->at(0).m_y);
+    QRectF conf;
+    conf.setTopLeft(QPointF(this->at(0).m_x, this->at(0).m_y));
+    conf.setBottomRight(conf.topLeft());
 
     for (i = 0; i < len; i++){
         const point_s &point = at(i);
@@ -120,9 +137,10 @@ inline QPointF stroke::biggerPointInStroke()
         if(point.m_y >= conf.y())
             conf.setY(point.m_y);
     }
-    biggerData.set = true;
-    biggerData.point = conf;
-    return biggerPointInStroke();
+
+    biggerDataSet = true;
+    biggerData = conf;
+    return biggerData;
 }
 
 inline void stroke::clearAudio()
@@ -133,6 +151,11 @@ inline void stroke::clearAudio()
 inline int stroke::length() const
 {
     return this->m_point.length();
+}
+
+inline void stroke::changeId(const int newId)
+{
+    this->metadata.idtratto = newId;
 }
 
 #endif // STROKE_H

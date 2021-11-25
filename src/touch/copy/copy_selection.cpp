@@ -16,7 +16,7 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
 
     this->m_data->reset();
 
-    uint i, len, k;
+    uint i, len, counterPage;
     const uint lenPage = data->lengthPage();
     /*double x1, x2, y1, y2;
 
@@ -26,16 +26,15 @@ void copy::copy_selection(datastruct *data, QPointF &topleft, QPointF &bottonrig
     y1 = topleft.y();
     y2 = bottonright.y();*/
 
-    const page *page;
 
-    for(k=0; k<lenPage; ++k){
-        page = data->at(k);
-        len = page->length();
-        for(i=0; i<len; i++){
-            const point_s &__point = *page->at(i);
+    for(counterPage = 0; counterPage < lenPage; counterPage++){
+        const page &page = data->at(counterPage);
+        len = page.lengthStroke();
+        for(i = 0; i < len; i++){
+            const stroke & stroke = page.atStroke(i);
 
-            if(data->isinside(topleft, bottonright, __point)){
-                m_data->append(__point);
+            if(data->isinside(topleft, bottonright, stroke)){
+                m_data->appendStroke(stroke);
             }
 
         }

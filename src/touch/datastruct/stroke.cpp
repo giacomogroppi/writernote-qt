@@ -4,7 +4,17 @@
 
 stroke::stroke()
 {
+    reset();
+}
 
+void stroke::__setPressureForAllPoint(const double pressure)
+{
+    uint i, lenPoint;
+    lenPoint = length();
+
+    for(i = 0; i < lenPoint; i++){
+        this->at_mod(i).pressure = pressure;
+    }
 }
 
 void stroke::setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s color)
@@ -13,6 +23,19 @@ void stroke::setMetadata(const int page, const int idtratto, const int posizione
     this->metadata.idtratto = idtratto;
     this->metadata.posizione_audio = posizione_audio;
     memcpy(&this->metadata.color, &color, sizeof(color));
+}
+
+void stroke::movePoint(const QPointF &translation)
+{
+    uint i;
+    const uint len = this->length();
+
+    for(i = 0; i < len; i++){
+        point_s &point = at_mod(i);
+        point.m_x += translation.x();
+        point.m_y += translation.y();
+    }
+
 }
 
 void stroke::createQPainterPath()
@@ -38,4 +61,13 @@ void stroke::createQPainterPath()
         }
 
     }
+}
+
+void stroke::reset()
+{
+    this->biggerDataSet = false;
+    this->metadataSet = false;
+
+    this->m_point.clear();
+    this->path.clear();
 }

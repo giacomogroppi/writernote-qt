@@ -12,10 +12,10 @@ void datastruct::removePointId(int id){
     uint i;
 
     for(page &page : this->m_page){
-        uint lenPoint = page.length();
+        uint lenPoint = page.lengthStroke();
 
         for(i = 0; i < lenPoint;){
-            if(page.at(i)->idtratto == id){
+            if(page.atStroke(i).getId() == id){
                 page.removeAt(i);
 
                 --lenPoint;

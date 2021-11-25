@@ -4,7 +4,7 @@ bool datastruct::userWrittenSomething(uint frompage)
 {
     const uint len = lengthPage();
     for(; frompage<len; frompage++){
-        if(at(frompage)->userWrittenSomething())
+        if(at(frompage).userWrittenSomething())
             return true;
     }
 
@@ -16,11 +16,8 @@ bool datastruct::userWrittenSomething(uint frompage)
 */
 bool datastruct::userWrittenSomething(datastruct *s_data)
 {
-    uint l_first_page, l_sec_page, counterPage, counterPoint;
-    const point_s * __f_p, *__s_p;
+    uint l_first_page, l_sec_page, counterPage, counterStroke;
     bool check = false;
-    const page *page1;
-    const page *page2;
 
     l_first_page = lengthPage();
     if(s_data)
@@ -33,22 +30,31 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
 
     for(counterPage = 0; counterPage < l_first_page && counterPage < l_sec_page; counterPage++){
 
-        page1 = this->at(counterPage);
-        page2 = s_data->at(counterPage);
+        const page &page1 = this->at(counterPage);
+        const page &page2 = s_data->at(counterPage);
 
-        const uint lenPoint1 = page1->length();
-        const uint lenPoint2 = page2->length();
+        for(counterStroke = 0; counterStroke < page1.lengthStroke() && counterStroke < page2.lengthStroke(); counterStroke ++){
+            const stroke &firstStroke  = page2.atStroke(counterStroke);
+            const stroke &secondStroke = page1.atStroke(counterStroke);
 
-        for(counterPoint = 0; counterPoint < lenPoint1 && counterPoint < lenPoint2; counterPoint ++){
-            __s_p = page2->at(counterPoint);
-            __f_p = page1->at(counterPoint);
+            for(int i = 0; i < firstStroke.length() && i < secondStroke.length(); i++){
+                const point_s &firstPoint = firstStroke.at(i);
+                const point_s &secondPoint = secondStroke.at(i);
 
-            if(memcmp(__s_p, __f_p, sizeof(*__f_p)) != 0){
-                check = true;
+                if(memcmp(&firstPoint, &secondPoint, sizeof(firstPoint)) != 0){
+                    check = false;
+                    goto ret;
+                }
+            }
+
+            if(firstStroke.length() < secondStroke.length()){
+                check = false;
                 goto ret;
             }
+
         }
-        if(lenPoint1 < lenPoint2){
+
+        if(page1.lengthStroke() < page2.lengthStroke()){
             check = false;
             goto ret;
         }

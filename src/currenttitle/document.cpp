@@ -88,16 +88,14 @@ void Document::reset(){
 void Document::cleanAudio()
 {
     uint i, len, k;
-    page *page;
     const uint lenPage = datatouch->lengthPage();
 
     for(i = 0; i < lenPage; i++){
-        page = this->datatouch->at_mod(i);
-        len = page->lengthStroke();
+        page &page = this->datatouch->at_mod(i);
+        len = page.lengthStroke();
 
         for(k = 0; k < len; k++){
-            stroke &stroke = page->atStrokeMod(k);
-            stroke.clearAudio();
+            page.atStrokeMod(k).clearAudio();
         }
     }
 }

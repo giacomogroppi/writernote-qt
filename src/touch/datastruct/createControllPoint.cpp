@@ -1,6 +1,6 @@
 #include "datastruct.h"
 
-size_t point_s::createControll() const{
+/*size_t point_s::createControll() const{
     static size_t data;
     static int i;
     
@@ -18,4 +18,4 @@ size_t point_s::createControll() const{
     data += this->m_posizioneaudio;
 
     return data;
-}
+}*/

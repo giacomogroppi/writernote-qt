@@ -26,7 +26,6 @@ private:
     void drawNewPage(n_style __style);
 
     QImage imgDraw;
-    void mergeList();
     void drawEngine(QPainter &painter, QList<point_s> &List, int i, const int m_pos_ris);
     void draw(QPainter &painter, const int m_pos_ris, const bool all);
 

@@ -20,11 +20,18 @@ size_t reduce_size::calculate_min_size(datastruct *data){
 
 size_t reduce_size::current_size(datastruct *data){
     size_t size;
+    uint counterPage;
 
     if(data->isempty())
         return 0;
 
-    size = data->getSizeOne() * data->lengthPoint();
+    size = 0;
+    for(counterPage = 0; counterPage < data->lengthPage(); counterPage ++){
+        const page &page = data->at(counterPage);
+        for(uint counterStroke = 0; counterStroke < page.lengthStroke(); counterStroke ++){
+            size += page.atStroke(counterStroke).getSize();
+        }
+    }
 
     size += sizeof(double);
 
@@ -34,38 +41,23 @@ size_t reduce_size::current_size(datastruct *data){
 void reduce_size::decrese(datastruct *data){
     uint i, pageCounter, len;
     const uint lenPage = data->lengthPage();
-    page *page;
-    const point_s *__point;
-    bool __cont = false;
 
     if(!lenPage){
         return;
     }
     for(pageCounter=0; pageCounter<lenPage; pageCounter++){
-        page = data->at_mod(pageCounter);
+        page &page = data->at_mod(pageCounter);
 
-        len = page->length();
+        len = page.lengthStroke();
         for(i=0; i<len; ++i){
-            __point = page->at(i);
+            const stroke &stroke = page.atStroke(i);
 
-            if(!datastruct::isIdUser(__point)){
-                /* we CAN'T remove the point we draw */
-
-                ++i;
+            if(!stroke.isIdUser()){
+                /* WE CAN'T REMOVE WRITERNOTE POINT */
                 continue;
             }
 
-            if(!page->needtochangeid(i)){
-                /* we CAN'T remove the first point or the last one */
-                continue;
-            }
-
-            if(__cont){
-                page->removeAt(i);
-                --len;
-            }
-
-            __cont = (__cont) ? 0 : 1;
+            page.atStrokeMod(i).decreasePrecision();
 
         }
     }

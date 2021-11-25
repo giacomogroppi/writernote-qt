@@ -94,8 +94,9 @@ public:
     void removePointId(const QList<int> &list);
     void removePointId(int id);
 
-    void MovePoint(const QList<int> &id, const QPointF &__t);
-    bool MovePoint(QRectF &, QPointF);
+    /* return the index of the point move */
+    QList<int> *MovePoint(const QRectF &rect, const QPointF &__t);
+    void MovePoint(const QList<int> &id, const QPointF &translation);
 
     bool userWrittenSomething(datastruct *s_data);
 
@@ -107,11 +108,8 @@ public:
     static inline bool isIdUser(const int id){ return id >= 0; }
     static inline bool isIdUser(const stroke &__point){ return isIdUser(__point.getId()); }
 
-    bool isinside(QPointF &topleft, QPointF &bottonright, const uint index, const uint page);
-    bool isinside(double x1, double y1, double x2, double y2, const uint index, const uint page);
-
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &__point);
-
+    bool isinside(const QPointF &topleft, const QPointF &bottomright, const uint IndexPage, const uint IndexStroke) const;
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
 
 
@@ -132,7 +130,7 @@ public:
 
     void reorganize();
 
-    void changeId(uint index, uint indexPage, uint lenPage, int base = -1);
+    void changeId(uint indexStroke, uint indexPage, uint lenPage, int base = -1);
 
     bool isAvailable(int id) const;
 
@@ -168,7 +166,7 @@ public:
 
     //__fast const point_s * at(const uint i, const uint page) const;
     __fast const page &     at(const uint page) const;
-    __fast page *           at_mod(const uint page);
+    __fast page &           at_mod(const uint page);
     //__fast point_s *       at_mod(const uint index, const uint page);
     __slow point_s &        at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
     __fast const point_s *  lastPoint() const;
@@ -242,8 +240,8 @@ inline void datastruct::triggerVisibility(const double &viewSize)
     for(i=0; i<len; i++){
         this->m_page.operator[](i).updateFlag(this->getPointFirstPage(), zoom, viewSize);
         if(this->m_page.at(i).isVisible() && i && i<len-1){
-            this->at_mod(i-1)->setVisible(true);
-            this->at_mod(i+1)->setVisible(true);
+            this->at_mod(i-1).setVisible(true);
+            this->at_mod(i+1).setVisible(true);
         }
     }
 }
@@ -268,9 +266,9 @@ inline const __fast page &datastruct::at(const uint page) const
     return this->m_page.at(page);
 }
 
-inline page __slow *datastruct::at_mod(const uint page)
+inline page &datastruct::at_mod(const uint page)
 {
-    return &this->m_page.operator[](page);
+    return this->m_page.operator[](page);
 }
 
 inline __slow point_s &datastruct::at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const
@@ -321,7 +319,7 @@ inline double datastruct::currentWidth() const
 
 inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
 {
-    at_mod(page)->triggerRenderImage(m_pos_ris, all);
+    at_mod(page).triggerRenderImage(m_pos_ris, all);
 }
 
 inline int datastruct::whichPage(const stroke &stroke) const
@@ -360,7 +358,7 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris)
     len = lengthPage();
     for( i = 0; i < len; i++)
         if(at(i).isVisible())
-            at_mod(i)->triggerRenderImage(m_pos_ris, true);
+            at_mod(i).triggerRenderImage(m_pos_ris, true);
 }
 
 inline bool datastruct::isOkZoom(const double newPossibleZoom)
@@ -415,7 +413,7 @@ inline void datastruct::removeAt(const uint indexPage){
     len = lengthPage();
 
     for(; index < len; index ++){
-        at_mod(index)->changeCounter(index+1);
+        at_mod(index).changeCounter(index+1);
     }
 
 }
@@ -435,12 +433,12 @@ inline int datastruct::appendStroke(const stroke &stroke)
 
 inline void datastruct::appendStroke(const stroke &stroke, const int page)
 {
-    this->at_mod(page)->append(stroke);
+    this->at_mod(page).append(stroke);
 }
 
 inline void datastruct::appendToTheTop(const stroke &point, const int page)
 {
-    this->at_mod(page)->appendToTheTop(point);
+    this->at_mod(page).appendToTheTop(point);
 }
 
 #ifdef DEBUGINFO

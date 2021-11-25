@@ -10,9 +10,9 @@
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
-static void drawLineOrizzontal(QList<point_s> &list, point_s &point, const style_struct_S &style, const double &last,
+static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struct_S &style, const double &last,
                             double &deltax, const double &width_p, const double &ct_del);
-static void drawLineVertical(QList<point_s> &list, point_s &point, const style_struct_S &style,
+static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_S &style,
                             const double &last, double &deltay, const double &height_p);
 
 
@@ -30,9 +30,9 @@ page::page(const int count, const n_style style)
 
 bool page::needtochangeid(const int IndexStroke, const int indexInStroke) const
 {
-    const stroke *stroke = atStroke(IndexStroke);
+    const stroke &stroke = atStroke(IndexStroke);
 
-    const int lenPointStroke = stroke->length() - 1;
+    const int lenPointStroke = stroke.length() - 1;
 
     return indexInStroke == (lenPointStroke - 1) || (lenPointStroke + 1);
 }
@@ -43,7 +43,7 @@ void page::drawNewPage(n_style __style)
     double deltax, deltay, ct_del;
     struct style_struct_S style;
     struct point_s tmp_point;
-    stroke newStroke;
+    stroke newStrokeVertical, newStrokeOrizzontal;
     const double width_p    = this->getWidth();
     const double height_p   = this->getHeight();
     const double last = (count-1)*page::getHeight();
@@ -55,8 +55,7 @@ void page::drawNewPage(n_style __style)
         style.thickness =  widthToPressure(TEMP_TICK);
     }
 
-    newStroke.setMetadata()
-    memcpy(&tmp_point.m_color, &style.colore, sizeof(style.colore));
+    newStrokeVertical.setMetadata(this->count, IDVERTICALE, -1, style.colore);
 
     if(style.nx){
         deltax = height_p / (double)style.nx;
@@ -65,10 +64,17 @@ void page::drawNewPage(n_style __style)
     if(style.ny)
         deltay = width_p / (double)style.ny;
 
-    tmp_point.m_pressure = widthToPressure(style.thickness);
+    drawLineOrizzontal(newStrokeOrizzontal, tmp_point, style, last, deltax, width_p, ct_del);
+    drawLineVertical(newStrokeVertical, tmp_point, style, last, deltay, height_p);
 
-    drawLineOrizzontal(this->m_point, tmp_point, style, last, deltax, width_p, ct_del);
-    drawLineVertical(this->m_point, tmp_point, style, last, deltay, height_p);
+    newStrokeOrizzontal.__setPressureForAllPoint(widthToPressure(style.thickness));
+    newStrokeVertical.__setPressureForAllPoint(widthToPressure(style.thickness));
+
+    if(newStrokeOrizzontal.length())
+        this->append(newStrokeOrizzontal);
+    if(newStrokeVertical.length())
+        this->append(newStrokeVertical);
+
 }
 
 void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
@@ -173,15 +179,6 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
     this->mergeList();
 }
 
-void page::mergeList(){
-    int i, len;
-    len = this->tmp.length();
-    for(i = 0; i < len; i++){
-        this->m_point.append(tmp.at(i));
-    }
-    tmp.clear();
-}
-
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
     if(res == n_style::empty){
         res = n_style::square;
@@ -211,25 +208,24 @@ static inline double widthToPressure(double v){
     return v/10.0;
 }
 
-static void drawLineOrizzontal(QList<point_s> &list, point_s &point, const style_struct_S &style,
+static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struct_S &style,
                             const double &last, double &deltax, const double &width_p, const double &ct_del){
     uint i;
-    point.idtratto = IDORIZZONALE;
 
     for(i=0; i< (uint)style.nx; ++i){
         point.m_x = 0;
         point.m_y = last + deltax;
 
-        list.append(point);
+        stroke.append(point);
 
         point.m_x = width_p;
-        list.append(point);
+        stroke.append(point);
 
         deltax += ct_del;
     }
 }
 
-static void drawLineVertical(QList<point_s> &list, point_s &point, const style_struct_S &style,
+static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_S &style,
                             const double &last, double &deltay, const double &height_p){
     if(!style.ny)
         return;
@@ -237,16 +233,14 @@ static void drawLineVertical(QList<point_s> &list, point_s &point, const style_s
     const double ct_del = deltay;
     uint i;
 
-    point.idtratto = IDVERTICALE;
-
     for(i=0; i< (uint)style.ny; i++){
         point.m_x = deltay;
         point.m_y = last; /* corrisponde to 0 */
 
-        list.append(point);
+        stroke.append(point);
 
         point.m_y = height_p + last;
-        list.append(point);
+        stroke.append(point);
 
         deltay += ct_del;
 
@@ -256,8 +250,8 @@ static void drawLineVertical(QList<point_s> &list, point_s &point, const style_s
 bool page::userWrittenSomething() const
 {
     uint i;
-    const uint len = length();
-    for(i=0; i<len && !at(i)->isIdUser(); i++);
+    const uint len = lengthStroke();
+    for(i=0; i<len && !atStroke(i).isIdUser(); i++);
 
     //qDebug() << QString("Page %1 %2").arg(this->count-1).arg(!i || !(i==len));
     return !(i==len);
