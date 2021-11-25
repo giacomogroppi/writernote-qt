@@ -9,9 +9,8 @@
     p = x; \
     return;
 
-void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ void *parent)
+void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *canvas)
 {
-    TabletCanvas *canvas = (TabletCanvas *)parent;
     this->zoom = zoom;
     if(canvas){
         canvas->callResizeEvent();
