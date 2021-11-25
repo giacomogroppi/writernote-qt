@@ -77,17 +77,17 @@ void page::drawNewPage(n_style __style)
 
 }
 
-void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
+void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
                       const int m_pos_ris)
 {
     //int _lastid = List.at(i).idtratto;
-    int _lastid = IDUNKNOWN;
+    //int _lastid = IDUNKNOWN;
 
-    const int page = this->count-1;
-    const int len = List.length();
+    //const int page = this->count-1;
+    //const int len = List.length();
     struct Point lastPoint;
-    point_s *point, *point1, *point2;
-    static const double delta = PROP_RESOLUTION;
+    //point_s *point, *point1, *point2;
+    //static const double delta = PROP_RESOLUTION;
 
     QPainterPath path;
     QBrush m_brush;
@@ -99,8 +99,36 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
     m_pen.setStyle(Qt::PenStyle::SolidLine);
     //qDebug() << painter.renderHints();
 
+    int lenStroke = lengthStroke();
 
-    for(; i < len-3; ++i){
+    for(i = 0; i < lenStroke; i++){
+        const stroke &stroke = List.at(i);
+        const int decrease = (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4;
+        m_pen.setColor(stroke.getColor(decrease));
+
+        if(!stroke.isIdUser())
+            continue;
+        if(!stroke.constantPressure()){
+            int counterPoint, lenPoint;
+
+            lastPoint.pos = QPointF(stroke.at(0).m_x, stroke.at(0).m_y);
+
+            for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
+                const point_s &point = stroke.at(counterPoint);
+                m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure/2.00) * PROP_RESOLUTION);
+
+                painter.setPen(m_pen);
+
+                painter.drawLine(lastPoint.pos, pointDraw);
+            }
+        }else{
+            const QPainterPath &path = stroke.getQPainterPath();
+
+            painter.strokePath(path, m_pen);
+        }
+    }
+
+    /*for(; i < len-3; ++i){
         path.moveTo(List.at(i).toQPointF(delta));
 
         while(i<len-3 && List.at(i+2).idtratto == _lastid){
@@ -130,7 +158,7 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
         nextPoint(i, List);
         if(i < len-3)
             _lastid = at(i)->idtratto;
-    }
+    }*/
 
     /*for(; i < len; ++i){
         point = at_translation(List, i);
@@ -163,7 +191,8 @@ void page::drawEngine(QPainter &painter, QList<point_s> &List, int i,
 inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
 {
     int i = 0;
-    int len = length();
+    int len = lengthStroke();
+
 
     painter.setRenderHint(QPainter::TextAntialiasing, false);
 
@@ -171,12 +200,25 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
         this->moveToUserPoint(i);
 
     if(all)
-        this->drawEngine(painter, this->m_point, i, m_pos_ris);
+        this->drawEngine(painter, this->m_stroke, i, m_pos_ris);
 
     i=0;
-    this->drawEngine(painter, this->tmp, i, m_pos_ris);
+    this->drawEngine(painter, this->strokeTmp, i, m_pos_ris);
 
     this->mergeList();
+}
+
+inline void page::mergeList()
+{
+    const int len = this->strokeTmp.length();
+    LOG_CONDITION(len > 1, "void page::mergeList", log_ui::type_write::possible_bug);
+
+#ifdef DEBUGINFO
+    if(len > 1)
+        std::abort();
+#endif
+    m_stroke.append(this->strokeTmp.at(0));
+    strokeTmp.clear();
 }
 
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){

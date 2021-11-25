@@ -67,6 +67,7 @@ void stroke::reset()
 {
     this->biggerDataSet = false;
     this->metadataSet = false;
+    this->constantPressureVal = false;
 
     this->m_point.clear();
     this->path.clear();

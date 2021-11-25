@@ -78,6 +78,7 @@ class TabletCanvas : public QWidget
     Q_OBJECT
 
 public:
+    static qreal pressureToWidth(qreal pressure);
     struct Point lastPoint;
 
     MainWindow *parent;
@@ -224,7 +225,6 @@ private:
     /* if paint == true launch update() */
     void initPixmap(bool paint);
     Qt::BrushStyle brushPattern(qreal value);
-    static qreal pressureToWidth(qreal pressure);
 
     Valuator m_alphaChannelValuator = TangentialPressureValuator;
     Valuator m_colorSaturationValuator = NoValuator;

@@ -1,7 +1,9 @@
 #ifndef SETCOLOR_H
 #define SETCOLOR_H
-#include "../../currenttitle/document.h"
+
 #include <QDebug>
+#include <QColor>
+#include "../../touch/datastruct/point.h"
 
 /*
  * if division == 1 the color don't change

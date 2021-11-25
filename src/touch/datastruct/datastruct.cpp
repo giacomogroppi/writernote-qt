@@ -3,64 +3,26 @@
 #include <QDebug>
 #include "../../sheet/fast-sheet/fast_sheet_ui.h"
 #include "../tabletcanvas.h"
+#include "../../mainwindow.h"
 
 #define mov_if_neg(p, x) \
     p = x; \
     return;
 
-void datastruct::changeZoom(const long double zoom, TabletCanvas *canvas)
+void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ void *parent)
 {
+    TabletCanvas *canvas = (TabletCanvas *)parent;
     this->zoom = zoom;
-    if(canvas)
+    if(canvas){
         canvas->callResizeEvent();
+        canvas->parent->zoomChange();
+    }
 }
 
-void datastruct::increaseZoom(const long double delta, const QSize &size)
+void datastruct::increaseZoom(const double delta, const QSize &size)
 {
     this->zoom += delta;
     this->adjustAll(size);
-}
-
-void datastruct::moveIfNegative(uint &p, uint &page, const uint lenPage,
-                                const uint height,
-                                const uint width) const
-{
-    static uint r, lenPoint;
-    static const point_s *f, *s;
-
-    r = p;
-    for(; page<lenPage; page++){
-        lenPoint = at(page)->length();
-        if(!at(page)->isVisible())
-            continue;
-
-        for(; p<lenPoint-1; ++p){
-
-            f = &at_draw(p, page);
-            s = &at_draw(p+1, page);
-
-            if(!datastruct::isIdUser(f))
-                return;
-
-            if((f->m_y >= 0.0 && f->m_x >= 0.0) &&
-                    (f->m_y <= height && f->m_x <= width)){
-                mov_if_neg(p, r);
-                p = r;
-                return;
-            }
-
-            if(s->idtratto == f->idtratto
-                    && std::abs((f->m_y + s->m_y)/2) < height
-                    && std::abs((f->m_x + s->m_x)/2) < width){
-                p = r;
-                return;
-            }
-
-            if(f->idtratto != s->idtratto){
-                r = p;
-            }
-        }
-    }
 }
 
 datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
@@ -78,10 +40,10 @@ bool datastruct::isAvailable(int id) const
     const uint lenPage = this->lengthPage();
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        page = this->at(counterPage);
-        len = page->length();
+        page = &this->at(counterPage);
+        len = page->lengthStroke();
         for(i=0; i<len; i++){
-            if(page->at(i)->idtratto == id)
+            if(page->atStroke(i).getId() == id)
                 return 0;
         }
     }

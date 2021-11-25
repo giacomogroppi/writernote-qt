@@ -77,6 +77,7 @@ inline const QString &log_ui::getCurrentPosition() const
 extern log_ui *NAME_LOG_EXT;
 //log_ui::type_write::
 #define LOG(message, mode) NAME_LOG_EXT->write(message, mode)
+#define LOG_CONDITION(condition, message, mode) if((condition)) NAME_LOG_EXT->write(message, mode)
 
 // debug info
 #ifdef DEBUGINFO

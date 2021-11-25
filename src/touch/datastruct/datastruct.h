@@ -63,15 +63,13 @@ public:
     static bool isOkZoom(const double newPossibleZoom);
 
     double getZoom() const;
-    void changeZoom(const long double zoom, class TabletCanvas *canvas);
-    void increaseZoom(const long double delta, const QSize &size);
+    void changeZoom(const double zoom, /*TabletCanvas*/ void *canvas);
+    void increaseZoom(const double delta, const QSize &size);
 
     inline QPointF getPointFirstPage() const{ return this->zoom * pointFirstPage; }
     inline QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }
 
     void setPointFirstPage(const QPointF &point){ this->pointFirstPage = point; }
-
-    void moveIfNegative(uint &p, uint &page, const uint lenPage, const uint height, const uint width) const;
 
     void removeAt(const uint indexPage);
 

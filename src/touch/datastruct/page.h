@@ -23,11 +23,20 @@ private:
 
     QList<stroke> m_stroke;
 
+    /* after adding data to the list, call triggernewview,
+     *  and pass as all false, in this way what is
+     * to be drawn will be drawn above the current image, and
+     * then strokeTmp will be added to the stroke list
+    */
+    QList<stroke> strokeTmp;
+
     void drawNewPage(n_style __style);
 
     QImage imgDraw;
-    void drawEngine(QPainter &painter, QList<point_s> &List, int i, const int m_pos_ris);
+    void drawEngine(QPainter &painter, QList<stroke> &List, int i, const int m_pos_ris);
     void draw(QPainter &painter, const int m_pos_ris, const bool all);
+
+    void mergeList();
 
     static point_s *at_translation(const point_s &point, const int page);
 
@@ -258,7 +267,8 @@ inline const stroke &page::last() const
 
 inline void page::append(const stroke &stroke)
 {
-    this->m_stroke.append(stroke);
+    this->strokeTmp.append(stroke);
+    //this->m_stroke.append(stroke);
 }
 
 inline void page::appendToTheTop(const stroke &stroke)
