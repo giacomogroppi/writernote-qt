@@ -146,7 +146,6 @@ public:
     void reset();
     void triggerVisibility(const double &viewSize);
     double biggerx() const noexcept;
-    void removeat(const uint index, const uint page);
 
     bool needToCreateNewSheet();
     bool needtochangeid(const uint IndexPoint, const uint IndexStroke, const uint IndexPage);

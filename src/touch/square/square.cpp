@@ -38,8 +38,10 @@ void square::updatePoint(const QPointF &__point)
  * la setta = false e fa il return
 */
 bool square::find(Document *data){
-    uint i, pageCounter, len;
+    uint counterStroke, pageCounter, lenStroke;
     bool tmp_find;
+
+    uint counterPoint;
 
     const uint lenPage = data->datatouch->lengthPage();
     this->in_box = false;
@@ -48,27 +50,30 @@ bool square::find(Document *data){
 
     /* point selected by user */
     for(pageCounter = 0; pageCounter < lenPage; pageCounter++){
-        len = data->datatouch->at(pageCounter)->length();
+        lenStroke = data->datatouch->at(pageCounter).lengthStroke();
 
-        for(i = 0; i < len; i++){
-            const point_s &point = data->datatouch->at_draw(i, pageCounter);
+        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
+            const stroke &stroke = data->datatouch->at(pageCounter).atStroke(counterStroke);
+                    //data->datatouch->at_draw(counterStroke, pageCounter);
 
-            if(datastruct::isinside(pointinit.point, pointfine.point, point)){
+            if(!stroke.isIdUser()) continue;
 
-                if(m_id.indexOf(point.idtratto) == -1) {
-                    m_id.append(point.idtratto);
+            if(datastruct::isinside(pointinit.point, pointfine.point, stroke)){
+                if(m_id.indexOf(stroke.getId()) == -1) {
+                    m_id.append(stroke.getId());
                 }
 
                 this->in_box = true;
             }
+
         }
     }
 
     /* image selected by user */
-    len = data->m_img->m_img.length();
-    for(i=0; i<len; ++i){
+    const int lenImg = data->m_img->m_img.length();
+    for(int counterImg = 0; counterImg < lenImg; counterImg++){
         tmp_find = false;
-        const auto &ref = data->m_img->m_img.at(i);
+        const auto &ref = data->m_img->m_img.at(counterImg);
         if(datastruct::isinside(pointinit.point, pointfine.point, ref.i))
             tmp_find = true;
         if(datastruct::isinside(pointinit.point, pointfine.point, ref.f))
@@ -76,7 +81,8 @@ bool square::find(Document *data){
 
         if(!tmp_find)
             continue;
-        this->m_index_img.append(i);
+
+        this->m_index_img.append(counterImg);
         this->in_box = true;
     }
 
@@ -130,7 +136,7 @@ void square::needReload(QPainter &painter, const QWidget *pixmap){
 
 void square::findObjectToDraw(Document *doc)
 {
-    uint i, counterPage, lenPoint;
+    uint counterStroke, counterPage, lenPoint, lenStroke, counterPoint;
     const datastruct *data = doc->datatouch;
     const uint lenPage = data->lengthPage();
 
@@ -139,12 +145,13 @@ void square::findObjectToDraw(Document *doc)
 
     // find the first point
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        lenPoint = data->at(counterPage)->length();
+        lenStroke = data->at(counterPage).lengthStroke();
 
-        for(i=0; i<lenPoint; ++i){
-            const point_s &__point = data->at_draw(i, counterPage);
+        for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
+            const int id = data->at(counterPage).atStroke(counterStroke).getId();
+            const point_s &__point = data->at_draw(0, counterPage, counterStroke);
 
-            if(m_id.indexOf(__point.idtratto) != -1){
+            if(m_id.indexOf(id) != -1){
                 pointinit.point.setX(__point.m_x);
                 pointinit.point.setY(__point.m_y);
 
@@ -157,28 +164,34 @@ void square::findObjectToDraw(Document *doc)
     }
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        lenPoint = data->at(counterPage)->length();
-        for(; i<lenPoint; i++){
-            const point_s &__point = data->at_draw(i, counterPage);
+        lenPoint = data->at(counterPage).lengthStroke();
+        for(; counterStroke < lenPoint; counterStroke++){
 
-            if(this->m_id.indexOf(__point.idtratto) != -1){
-                if(__point.m_x < pointinit.point.x())
-                    pointinit.point.setX(__point.m_x);
+            const uint lenPoint = data->at(counterPage).atStroke(counterStroke).length();
+            const int id = data->at(counterPage).atStroke(counterStroke).getId();
+            for(counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
+                const point_s &__point = data->at_draw(counterPoint, counterPage, counterStroke);
 
-                if(__point.m_x > pointfine.point.x())
-                    pointfine.point.setX(__point.m_x);
+                if(this->m_id.indexOf(id) != -1){
+                    if(__point.m_x < pointinit.point.x())
+                        pointinit.point.setX(__point.m_x);
 
-                if(__point.m_y < pointinit.point.y())
-                        pointinit.point.setY(__point.m_y);
-                if(__point.m_y > pointfine.point.y())
-                    pointfine.point.setY(__point.m_y);
+                    if(__point.m_x > pointfine.point.x())
+                        pointfine.point.setX(__point.m_x);
+
+                    if(__point.m_y < pointinit.point.y())
+                            pointinit.point.setY(__point.m_y);
+                    if(__point.m_y > pointfine.point.y())
+                        pointfine.point.setY(__point.m_y);
+                }
             }
+
         }
     }
 
     img:
-    for(i=0; i < (uint)m_index_img.length(); ++i){
-        const int index = this->m_index_img.at(i);
+    for(int counterImg = 0; counterImg < m_index_img.length(); counterImg ++){
+        const int index = this->m_index_img.at(counterImg);
         const auto &ref = doc->m_img->m_img.at(index);
 
         if(ref.i.x() < pointinit.point.x())

@@ -73,7 +73,7 @@ void style_struct::saveDefault(const int index)
 void style_struct::createNew(const QString &name)
 {
     struct style_struct_S tmp;
-    strcpy(tmp.nome, name.toUtf8().constData(), STRNOME);
+    strncpy(tmp.nome, name.toUtf8().constData(), STRNOME);
     this->setDefault(tmp);
     this->style.append(tmp);
 }

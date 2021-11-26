@@ -75,7 +75,7 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
                 for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
                     const point_s &point = data->at_draw(counterPoint, counterPage, counterStroke);
-                    if(isin(&point, lastPoint, data) && gomma_delete_id.indexOf(id) == -1){
+                    if(isin(&point, lastPoint) && gomma_delete_id.indexOf(id) == -1){
 
                         if(Page.indexOf(counterPage) == -1)
                             Page.append(counterPage);
@@ -97,11 +97,11 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
             for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
                 const stroke &stroke = data->at(counterPage).atStroke(counterStroke);
                 int counterPoint = 0;
-                const int lenPoint = stroke.length();
+                int lenPoint = stroke.length();
 
-                for(; counterPoint < lenPoint; counterPoint ++){
+                for(; counterPoint < lenPoint && stroke.isIdUser(); counterPoint ++){
                     const point_s &point = data->at_draw(counterPoint, counterPage, counterStroke);
-                    if(isin(&point, lastPoint, data)){
+                    if(isin(&point, lastPoint)){
 
                         if(Page.indexOf(counterPage) == -1)
                             Page.append(counterPage);
@@ -110,14 +110,12 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
                             data->changeId(counterStroke, counterPage, lenPage);
                         }
 
-                        data->removeat(i, counterPage);
-                        --len;
-                        --i;
+                        data->at_mod(counterPage).atStrokeMod(counterStroke).removeAt(counterPoint);
+
+                        --lenPoint;
+                        --counterPoint;
                     }
                 }
-
-                __point = &data->at_draw(i, counterPage);
-
 
             }
         }
@@ -129,9 +127,8 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
 bool rubber_ui::clearList(datastruct *data)
 {
-    int counterPage, i, lenPage, len;
+    int counterPage, counterStroke, lenPage, lenStroke;
     const page *page;
-    const point_s *point;
 
     Page.clear();
 
@@ -139,19 +136,21 @@ bool rubber_ui::clearList(datastruct *data)
         return false;
 
     for(counterPage = 0, lenPage = data->lengthPage(); counterPage < lenPage; counterPage  ++){
-        page = data->at(counterPage);
-        len = page->length();
+        page = &data->at(counterPage);
+        lenStroke = page->lengthStroke();
 
-        i = 0;
-        page->moveToUserPoint(i);
+        counterStroke = 0;
+        page->moveToUserPoint(counterStroke);
 
-        for(; i < len; i++){
-            point = page->at(i);
-            if(gomma_delete_id.indexOf(point->idtratto) != -1){
-                if(Page.indexOf(point->page) == -1){
-                    if(point->page != counterPage)
+        for(; counterStroke < lenStroke; counterStroke++){
+            const stroke &stroke = page->atStroke(counterStroke);
+            if(gomma_delete_id.indexOf(stroke.getId()) != -1){
+                if(Page.indexOf(stroke.getPage()) == -1){
+
+                    if(stroke.getPage() != counterPage)
                         LOG("rubber_ui::clearList point->page != counterPage", log_ui::possible_bug);
-                    Page.append(point->page);
+
+                    Page.append(stroke.getPage());
                 }
             }
         }
@@ -177,11 +176,9 @@ void rubber_ui::drawAreaRubber(QPainter &painter, const QPointF &point)
 }
 
 bool rubber_ui::isin(const point_s * __point,
-                 const QPointF & point_t,
-                 const datastruct *data){
+                 const QPointF & point_t){
     return (point_t.x() - m_size_gomma) < __point->m_x
             && (point_t.x() + m_size_gomma) > __point->m_x
             && (point_t.y() - m_size_gomma) < __point->m_y
-            && (point_t.y() + m_size_gomma) > __point->m_y
-            && data->isIdUser(__point);
+            && (point_t.y() + m_size_gomma) > __point->m_y;
 }

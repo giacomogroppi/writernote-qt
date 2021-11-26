@@ -59,6 +59,8 @@ public:
     void setId(const int id);
     size_t createControll() const;
 
+    void removeAt(int index);
+
     int getId() const;
     int getPage() const;
     int getPosizioneAudio() const;
@@ -155,6 +157,11 @@ inline void stroke::setPositioneAudio(const int m_pos_ris)
 inline void stroke::setId(const int id)
 {
     this->metadata.idtratto = id;
+}
+
+inline void stroke::removeAt(int index)
+{
+    this->m_point.removeAt(index);
 }
 
 // return the "old" idtratto
