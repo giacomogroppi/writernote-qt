@@ -17,12 +17,59 @@ void stroke::__setPressureForAllPoint(const double pressure)
     }
 }
 
+int stroke::save(zip_source_t *file) const
+{
+
+}
+
+int stroke::load(zip_file_t *file)
+{
+
+}
+
 void stroke::setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s color)
 {
     this->metadata.page = page;
     this->metadata.idtratto = idtratto;
     this->metadata.posizione_audio = posizione_audio;
     memcpy(&this->metadata.color, &color, sizeof(color));
+}
+
+size_t stroke::createControll() const
+{
+    size_t controll = 0;
+    int i;
+    for(i = 0; i < NCOLOR; i++){
+        controll += this->metadata.color.colore[i];
+    }
+
+    controll += this->metadata.idtratto;
+
+    for(i = 0; i < length(); i++){
+        const point_s &point = m_point.at(i);
+        controll += point.m_x;
+        controll += point.m_y;
+        controll += point.pressure;
+    }
+
+    return controll;
+}
+
+size_t stroke::getSizeInMemory() const
+{
+    return sizeof(point_s) * length();
+}
+
+void stroke::decreasePrecision()
+{
+    int i, len;
+    len = length();
+
+    for(i = 1; i < len - 1; i++){
+        if(i % 2 == 0){
+            this->removeAt(i);
+        }
+    }
 }
 
 void stroke::movePoint(const QPointF &translation)

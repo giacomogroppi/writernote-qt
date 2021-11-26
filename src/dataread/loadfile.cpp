@@ -269,8 +269,8 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile){
     return st.size;
 }
 
-int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
-                           const bool LoadPdf, const bool LoadImg){
+int xmlstruct::load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg)
+{
     int tmp;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
@@ -283,7 +283,7 @@ int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
     SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
     SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
 
-    tmp = loadbinario_2(filezip);
+    tmp = loadbinario_3(filezip);
     if(tmp == ERROR)
         return tmp;
     else if(tmp == ERROR_CONTROLL)

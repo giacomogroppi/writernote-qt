@@ -101,6 +101,7 @@ SOURCES += \
     src/dataread/old_version/ver_4/load_file_ver_4.cpp \
     src/dataread/old_version/ver_5/load_file_ver_5.cpp \
     src/dataread/old_version/ver_6/load_file_ver_6.cpp \
+    src/dataread/old_version/ver_7/load_file_ver_7.cpp \
     src/dataread/readlistarray.cpp \
     src/datawrite/write/saveArray.cpp \
     src/dropEvent/dropEvent.cpp \

@@ -76,7 +76,7 @@ public:
     bool constantPressure() const;
 
     size_t getSizeInMemory() const;
-    void decreasePrecision() const;
+    void decreasePrecision();
 
     void setAlfaColor(const uchar alfa);
 
