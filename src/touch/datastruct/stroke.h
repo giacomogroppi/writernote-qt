@@ -71,7 +71,6 @@ public:
     void clearAudio();
 
     int length() const;
-    void commitChange();
 
     bool constantPressure() const;
 
@@ -140,6 +139,7 @@ inline void stroke::append(const point_s &point)
 {
     this->m_point.append(point);
     this->updateFlag();
+    this->createQPainterPath();
 }
 
 inline void stroke::setMetadata(const metadata_stroke &metadata)

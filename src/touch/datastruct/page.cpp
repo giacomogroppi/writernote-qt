@@ -217,6 +217,7 @@ inline void page::mergeList()
     if(len > 1)
         std::abort();
 #endif
+    if(!len) return;
     m_stroke.append(this->strokeTmp.at(0));
     strokeTmp.clear();
 }

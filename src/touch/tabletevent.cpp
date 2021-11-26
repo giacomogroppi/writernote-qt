@@ -226,9 +226,9 @@ void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     }
 
     if(toTheTop)
-        doc.datatouch->appendToTheTop(__tmp, canvas->parent->m_audioplayer->getPositionSecond());
+        doc.datatouch->appendToTheTop(__tmp);
     else
-        doc.datatouch->appendStroke(__tmp, canvas->parent->m_audioplayer->getPositionSecond());
+        doc.datatouch->appendStroke(__tmp);
 
     __tmp.reset();
 }

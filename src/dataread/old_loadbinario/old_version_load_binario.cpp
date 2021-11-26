@@ -313,7 +313,7 @@ void xmlstruct::decode0(Document *data, QList<point_old> &point, QList<double> &
     }
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
-        for(i = 0, len = pointForAppend.length(); i < len; i++){
+        for(i = 0, len = pointForAppend.at(counterPage).length(); i < len; i++){
 
             const int which = old_which_sheet(pointForAppend.at(counterPage).at(i), data->datatouch->m_page);
 
@@ -330,7 +330,6 @@ void xmlstruct::decode0(Document *data, QList<point_old> &point, QList<double> &
 
     xmlstruct::decode(data, pointForAppend);
 }
-
 
 void xmlstruct::decode(Document *doc, QList<QList<point_old>> &page)
 {

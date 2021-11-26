@@ -77,12 +77,10 @@ public:
     void append(const QList<stroke> & point, int m_pos_ris);
 
     /* the draw function triggers the drawing of the points automatically */
-    void appendToTheTop(const QList<stroke> &point, int m_pos_ris);
+    int appendToTheTop(const stroke &point);
 
     int  appendStroke(const stroke &stroke); /* return value: the page of the point */
     void appendStroke(const stroke &stroke, const int page);
-
-    void appendToTheTop(const stroke &point, const int page);
 
     uint move_to_positive(uint len);
 
@@ -392,20 +390,6 @@ inline void datastruct::append(const QList<stroke> &stroke, int m_pos_ris)
     this->triggerNewView(trigger, m_pos_ris, false);
 }
 
-inline void datastruct::appendToTheTop(const QList<stroke> &point, int m_pos_ris)
-{
-    uint i;
-    const uint len = point.length();
-    int page;
-
-    for(i = 0; i < len; i++){
-        page = this->whichPage(point.at(i));
-        this->appendToTheTop(point.at(i), page);
-    }
-
-    this->triggerNewView(m_pos_ris, true);
-}
-
 inline void datastruct::removeAt(const uint indexPage){
     int index = indexPage, len;
     this->m_page.removeAt(indexPage);
@@ -436,9 +420,11 @@ inline void datastruct::appendStroke(const stroke &stroke, const int page)
     this->at_mod(page).append(stroke);
 }
 
-inline void datastruct::appendToTheTop(const stroke &point, const int page)
+inline int datastruct::appendToTheTop(const stroke &stroke)
 {
-    this->at_mod(page).appendToTheTop(point);
+    int page = whichPage(stroke);
+    this->at_mod(page).appendToTheTop(stroke);
+    return page;
 }
 
 #ifdef DEBUGINFO
