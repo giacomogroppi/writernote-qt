@@ -33,7 +33,7 @@ void TabletCanvas::updatePageCount(){
     }
 
     for(i=0; i<lenPage; ++i){
-        if(data->datatouch->at(i)->isVisible()){
+        if(data->datatouch->at(i).isVisible()){
             break;
         }
     }

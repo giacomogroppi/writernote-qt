@@ -15,10 +15,10 @@ bool datastruct::needToCreateNewSheet(){
         return true;
 
     for(counterPage = (lenPage - 2); counterPage < lenPage; counterPage ++){
-        page = at(counterPage);
-        len = page->length();
+        page = &at(counterPage);
+        len = page->lengthStroke();
         for(i=0; i<len; i++){
-            if(page->at(i)->isIdUser())
+            if(page->atStroke(i).isIdUser())
                 return true;
         }
     }

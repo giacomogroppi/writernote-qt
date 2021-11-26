@@ -153,8 +153,6 @@ public:
 
     double biggery() const noexcept;
 
-    /* the function return the index of the id */
-    uint positionId(int id);
 
     std::tuple<uint, uint> decreaseAlfa(const int id, const uchar decrese, const int len);
 
@@ -173,7 +171,7 @@ public:
 
     static size_t getSizeOne();
 
-    inline uint lengthPage() const{ return this->m_page.length();}
+    inline int lengthPage() const{ return this->m_page.length();}
 
     void newPage(const n_style style);
     static void copy(const datastruct &src, datastruct &dest);

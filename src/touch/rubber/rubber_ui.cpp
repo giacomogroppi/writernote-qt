@@ -59,12 +59,12 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     if(data->isempty())
         return &Page;
 
-    for(counterPage = 0; counterPage < lenPage && !data->at(counterPage)->isVisible(); counterPage ++);
+    for(counterPage = 0; counterPage < lenPage && !data->at(counterPage).isVisible(); counterPage ++);
 
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(; counterPage < lenPage; counterPage ++){
-            page = data->at(counterPage);
+            page = &data->at(counterPage);
             if(!page->isVisible()) break;
 
             len = page->length();

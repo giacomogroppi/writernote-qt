@@ -42,7 +42,7 @@ public:
 
     bool isIdUser() const;
 
-    int save(zip_source_t *file);
+    int save(zip_source_t *file) const;
     int load(zip_file_t *file);
 
     QColor getColor(const double division) const;
@@ -75,6 +75,9 @@ public:
     size_t getSizeInMemory() const;
     void decreasePrecision() const;
 
+    void setAlfaColor(const uchar alfa);
+    void setColor(const colore_s &color);
+
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
 
@@ -83,6 +86,8 @@ public:
 
     void reset();
 
+    /* return true if equals */
+    static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
 };
 
@@ -111,7 +116,7 @@ inline bool stroke::isIdUser() const
     return metadata.idtratto >= 0;
 }
 
-inline QColor stroke::getColor(const double division) const
+inline QColor stroke::getColor(const double division = 1.0) const
 {
     return setcolor(this->metadata.color, division);
 }
@@ -197,6 +202,16 @@ inline void stroke::changeId(const int newId)
 inline bool stroke::constantPressure() const
 {
     return this->constantPressureVal;
+}
+
+inline void stroke::setAlfaColor(const uchar alfa)
+{
+    this->metadata.color.colore[3] = alfa;
+}
+
+inline void stroke::setColor(const colore_s &color)
+{
+    memcpy(&this->metadata.color, &color, sizeof(metadata.color));
 }
 
 inline QPainterPath stroke::getQPainterPath() const

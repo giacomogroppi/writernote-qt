@@ -1,12 +1,9 @@
 #include "checksimilecopybook.h"
-
 #include "document.h"
 #include "../indice_class.h"
-
 #include <stdio.h>
 #include <string.h>
 
-#define P(x) x->datatouch
 
 static int checkSpeed(const Document &first,
                       const Document &second){
@@ -18,14 +15,15 @@ static int checkSpeed(const Document &first,
         return LEN;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        len = first.datatouch->at(counterPage)->length();
-        if(len != second.datatouch->at(counterPage)->length())
+        const page &page1 = first.datatouch->at(i);
+        const page &page2 = second.datatouch->at(i);
+
+        len = page1.lengthStroke();
+        if(len != page2.lengthStroke())
             return LEN;
 
         for(i=0; i<len; i++){
-            if(memcmp(first.datatouch->at(i),
-                      second.datatouch->at(i),
-                      datastruct::getSizeOne()) != 0)
+            if(!stroke::cmp(page1.atStroke(i), page2.atStroke(i)))
                 return IDTRATTO;
         }
     }
@@ -33,29 +31,30 @@ static int checkSpeed(const Document &first,
     return OK_CHECK;
 }
 
-static int checkSlow(const Document *first,
-                     const Document *second){
+/*static int checkSlow(const Document &first,
+                     const Document &second){
     uint i, counterPage;
     const page *page1, *page2;
-    const uint lenPage = first->datatouch->lengthPage();
+    const uint lenPage = first.datatouch->lengthPage();
 
-    if(lenPage != P(second)->lengthPage())
+    if(lenPage != second.datatouch->lengthPage())
         return LEN;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        const uint len = first->datatouch->at(counterPage)->length();
-        if(len != second->datatouch->at(counterPage)->length())
+        page1 = &first.datatouch->at(counterPage);
+        page2 = &second.datatouch->at(counterPage);
+
+        const uint len = page1->lengthStroke();
+        if(len != page2->lengthStroke())
             return LEN;
 
-        page1 = first->datatouch->at(counterPage);
-        page2 = second->datatouch->at(counterPage);
-
         for(i=0; i<len; i++){
-            const point_s *point1 = page1->at(i);
-            const point_s *point2 = page2->at(i);
+            const stroke &stroke1 = page1->atStroke(i);
+            const stroke &stroke2 = page2->atStroke(i);
 
-            if(point1->idtratto != point2->idtratto)
+            if(stroke1.getId() != stroke2.getId())
                 return IDTRATTO;
+
             if(point1->m_x != point2->m_x)
                 return XCHECK;
             if(point1->m_y != point2->m_y)
@@ -77,7 +76,7 @@ static int checkSlow(const Document *first,
         }
     }
     return OK_CHECK;
-}
+}*/
 
 
 /*
@@ -87,8 +86,7 @@ static int checkSlow(const Document *first,
  */
 
 int checksimilecopybook(const Document &primo,
-                        const Document &secondo,
-                        const bool speed)
+                        const Document &secondo)
 {
     int res;
     if(primo.count_img != secondo.count_img)
@@ -96,13 +94,8 @@ int checksimilecopybook(const Document &primo,
     if(primo.count_pdf != secondo.count_pdf)
         return LEN;
 
-    if(speed){
-        res = checkSpeed(primo, secondo);
-
-        return res;
-    }
-
-    res = checkSlow(&primo, &secondo);
+    res = checkSpeed(primo, secondo);
 
     return res;
+
 }

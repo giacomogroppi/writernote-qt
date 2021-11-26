@@ -72,3 +72,20 @@ void stroke::reset()
     this->m_point.clear();
     this->path.clear();
 }
+
+bool stroke::cmp(const stroke &stroke1, const stroke &stroke2)
+{
+    int i;
+    const int len = stroke1.length();
+    if(len != stroke2.length())
+        return false;
+    for (i = 0; i < len; i ++){
+        const point_s &point1 = stroke1.at(i);
+        const point_s &point2 = stroke2.at(i);
+        if(memcmp(&point1, &point2, sizeof(point1)) != 0){
+            return false;
+        }
+    }
+
+    return true;
+}

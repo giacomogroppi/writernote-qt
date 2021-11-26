@@ -22,10 +22,7 @@
 #define LEN 10
 
 #include "document.h"
-#include "../indice_class.h"
 
-int checksimilecopybook(const Document &,
-                        const Document &,
-                        const bool speed);
+int checksimilecopybook(const Document &first, const Document &second);
 
 #endif // CHECKSIMILECOPYBOOK_H

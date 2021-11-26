@@ -29,10 +29,11 @@ size_t reduce_size::current_size(datastruct *data){
     for(counterPage = 0; counterPage < data->lengthPage(); counterPage ++){
         const page &page = data->at(counterPage);
         for(uint counterStroke = 0; counterStroke < page.lengthStroke(); counterStroke ++){
-            size += page.atStroke(counterStroke).getSize();
+            size += page.atStroke(counterStroke).getSizeInMemory();
         }
     }
 
+    /* zoom */
     size += sizeof(double);
 
     return size;
@@ -65,29 +66,16 @@ void reduce_size::decrese(datastruct *data){
 
 }
 
-static uint __howReduce(uint &i,
-                        const page *page, const uint lenPoint){
-
-    uint count;
-    const int idtratto = page->at(i)->idtratto;
-
-    const point_s * __point;
-
-    for(count = 0; i<lenPoint; ++i){
-        __point = page->at(i);
-        if(__point->idtratto != idtratto
-                || !__point->isIdUser())
-            break;
-        count ++;
-    }
-    return count;
+/* the function calculates the points for each section */
+static uint __howReduce(uint &i, const page *page){
+    const stroke &stroke = page->atStroke(i);
+    return stroke.length();
 }
 
 static uint howReduce(uint &i,
-                      const page *page,
-                      const uint lenPoint){
+                      const page *page){
     uint __m;
-    __m = __howReduce(i, page, lenPoint);
+    __m = __howReduce(i, page);
 
 
     /*
@@ -108,10 +96,11 @@ static uint howMuchPoint(datastruct *data){
     const page *page;
 
     for(pageCount = 0; pageCount < lenPage; pageCount ++){
-        page = data->at(pageCount);
-        const uint lenPoint = page->length();
+        page = &data->at(pageCount);
+
+        const uint lenPoint = page->lengthStroke();
         for(i = 0; i < lenPoint; ++i){
-            totalPointToRemove += howReduce(i, page, lenPoint);
+            totalPointToRemove += howReduce(i, page);
         }
     }
 

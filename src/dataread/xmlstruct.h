@@ -57,7 +57,8 @@ private:
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);
 
-    static void decode(Document *doc, QList<point_s> &point, QList<double> &pos_foglio);
+    static void decode0(Document *doc, QList<struct point_old> & point, QList<double> &pos_foglio);
+    static void decode(Document *doc, QList<QList<struct point_old>> &page);
 public:
     static size_t sizeFile(zip_t *filezip, const QString &namefile){
         return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
@@ -68,9 +69,7 @@ public:
                         const bool clear, const QString &name,
                         const bool closeZip);
 
-    QString getPath(){
-        return *path_;
-    };
+    const QString &getPath() const;
 
     /* return true if we can read this file */
     static bool manageMessage(const int res);
@@ -83,5 +82,10 @@ public:
     void setData(const QString *path_U, Document *currenttitle_U);
 
 };
+
+inline const QString &xmlstruct::getPath() const
+{
+    return *path_;
+}
 
 #endif

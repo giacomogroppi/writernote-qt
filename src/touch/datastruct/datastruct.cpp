@@ -56,50 +56,31 @@ void datastruct::reset(){
     zoom = 1.00;
 }
 
-uint datastruct::positionId(int id)
-{
-    uint i, k, len;
-    const uint lenPage = this->lengthPage();
-    const page *page;
-
-    for(k = 0; k < lenPage; k++){
-        page = at(k);
-        len = page->length();
-
-        for(i = 0; i < len; i++){
-            if(page->at(i)->idtratto == id)
-                return i;
-        }
-    }
-
-    return 0;
-}
-
 //{page; indexInPage}
 std::tuple<uint, uint> datastruct::decreaseAlfa(const int id,
                               const uchar decrease,
                               const int lenPage)
 {
     int i, counterPage, len;
-    point_s *point;
     page *page_mod;
     const page *page_read;
     uint lastI, lastCounter;
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
-        page_read = at(counterPage);
-        len = page_read->length();
+        page_read = &at(counterPage);
+        len = page_read->lengthStroke();
 
         page_read->moveToUserPoint(i);
 
         if(i < len)
-            page_mod = at_mod(counterPage);
+            page_mod = &at_mod(counterPage);
 
         for(; i < len; ++i){
-            point = page_mod->at_mod(i);
+            stroke &stroke = page_mod->atStrokeMod(i);
 
-            if(point->idtratto == id){
-                point->m_color.colore[3] /= decrease;
+            if(stroke.getId() == id){
+                const uchar newAlfa = stroke.getColor().alpha() / decrease;
+                stroke.setAlfaColor(newAlfa);
 
                 lastI = i;
                 lastCounter = counterPage;

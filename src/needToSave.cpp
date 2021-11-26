@@ -35,7 +35,7 @@ enum MainWindow::n_need_save
         return n_need_save::only_writernote;
     }
 
-    check1 = checksimilecopybook(tmp_read, *m_currenttitle, true) == OK_CHECK;
+    check1 = checksimilecopybook(tmp_read, *m_currenttitle) == OK_CHECK;
 
     if(check1)
         return n_need_save::not_;
