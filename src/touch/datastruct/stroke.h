@@ -204,6 +204,27 @@ inline QRectF stroke::getBiggerPointInStroke()
     return biggerData;
 }
 
+/* you have to pass a rectangle already
+ * translated with respect to the translation
+ * point in datastruct, and already
+ * multiplied by the zoom. */
+inline bool stroke::isInside(const QRectF &rect) const
+{
+    int i;
+    const int len = this->length();
+    const QPointF &topLeft = rect.topLeft();
+    const QPointF &bottomRight = rect.bottomRight();
+
+    for(i = 0; i < len; i++){
+        const point_s &point = at(i);
+        if(point.m_x >= topLeft.x() && point.m_y >= topLeft.y() &&
+                point.m_x <= bottomRight.x() && point.m_y <= bottomRight.y())
+            return true;
+    }
+
+    return false;
+}
+
 inline void stroke::clearAudio()
 {
     this->metadata.posizione_audio = -1;
@@ -237,6 +258,20 @@ inline void stroke::setColor(const colore_s &color)
 inline QPainterPath stroke::getQPainterPath() const
 {
     return this->path;
+}
+
+inline void stroke::copy(const stroke &src, stroke &dest)
+{
+    dest.m_point = src.m_point;
+    dest.biggerData = src.biggerData;
+    dest.biggerDataSet = src.biggerDataSet;
+    dest.constantPressureVal = src.constantPressureVal;
+    memcpy(&dest.metadata, &src.metadata, sizeof(src.metadata));
+    dest.metadataSet = src.metadataSet;
+
+    dest.path = src.path;
+
+    dest.versione = src.versione;
 }
 
 #endif // STROKE_H
