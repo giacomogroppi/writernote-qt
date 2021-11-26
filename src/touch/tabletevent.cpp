@@ -9,7 +9,7 @@
 
 #define MAXPOINT 20
 
-QList<point_s> __tmp;
+stroke __tmp;
 static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop);
 
 bool need_save_auto = false;
@@ -82,7 +82,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else if(rubber_method){
                     QList<int> *ref = m_rubber->actionRubber(data->datatouch, pointTouch);
-                    qDebug() << "TabletCanvas::tabletEvent" << ref->length() << data->datatouch->at(0)->length();
+
                     if(ref->length()){
                         this->triggerNewView(*ref, true);
                     }
@@ -183,28 +183,6 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
     lastPoint.rotation = event->rotation();
 }
 
-static bool need_to_change_color(datastruct *data, int id){
-    static uint i, len, how, counterPage;
-    static uint lenPage;
-    const page *page;
-    lenPage = data->lengthPage();
-
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        page = data->at(counterPage);
-        len = page->length();
-        for(i=0, how = 0; i<len; i++){
-            if(page->at(i)->idtratto == id){
-                how ++;
-            }
-        }
-    }
-
-    if(!how)
-        return false;
-
-    return (how % MAXPOINT) ? 0 : 1;
-}
-
 void TabletCanvas::updatelist(QTabletEvent *event){
     static double size;
     static uchar alfa;
@@ -219,41 +197,18 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     alfa = highlighter_method ? m_highlighter->getAlfa() : 255;
 
     if(!this->m_deviceDown){
-        tmp_point.idtratto = data->datatouch->maxId() + 1;
+        __tmp.setId(data->datatouch->maxId() + 1);
+        __tmp.setPositioneAudio(parent->m_audio_recorder->getCurrentTime());
+        __tmp.setColor(m_color);
+        __tmp.setAlfaColor(alfa);
     }
     else{
-        if(pen_method && m_pen_ui->m_type_tratto == pen_ui::n_tratto::tratti){
-            if(need_to_change_color(data->datatouch, __tmp.last().idtratto)){
-                if(m_pen_ui->m_last_color.ok == false){
-                    /* save the current color */
-
-                    m_pen_ui->m_last_color.ok = true;
-                    m_pen_ui->m_last_color.color = m_color;
-
-                    this->m_color = Qt::white;
-
-                }
-                else{
-                    /* restore the last color */
-                    m_pen_ui->m_last_color.ok = false;
-                    this->m_color = m_pen_ui->m_last_color.color;
-
-                }
-            }
-        }
-        tmp_point.idtratto = __tmp.first().idtratto;
-        //tmp_point.idtratto = data->datatouch->lastId();
+        /* it's already set */
     }
 
     tmp_point.m_x = pointTouch.x();
     tmp_point.m_y = pointTouch.y();
-    tmp_point.m_pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
-    tmp_point.rotation = event->rotation();
-    tmp_point.m_posizioneaudio = parent->m_audio_recorder->getCurrentTime();
-
-    setcolor_struct(&tmp_point.m_color, m_color);
-
-    tmp_point.m_color.colore[3] = alfa;
+    tmp_point.pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
     __tmp.append(tmp_point);
 }
@@ -265,7 +220,7 @@ void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     const auto &PointFirstPage = doc.datatouch->getPointFirstPage();
 
     for(i = 0; i < lenPoint; i++){
-        point = &__tmp.operator[](i);
+        point = &__tmp.at_mod(i);
         point->m_x -= PointFirstPage.x();
         point->m_y -= PointFirstPage.y();
     }
@@ -273,7 +228,7 @@ void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     if(toTheTop)
         doc.datatouch->appendToTheTop(__tmp, canvas->parent->m_audioplayer->getPositionSecond());
     else
-        doc.datatouch->append(__tmp, canvas->parent->m_audioplayer->getPositionSecond());
+        doc.datatouch->appendStroke(__tmp, canvas->parent->m_audioplayer->getPositionSecond());
 
-    __tmp.clear();
+    __tmp.reset();
 }

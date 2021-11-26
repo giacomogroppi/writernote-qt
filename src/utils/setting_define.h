@@ -35,7 +35,6 @@
 #define GROUP_PEN "group_pen"
 #define KEY_PEN_SIZE "pen_key_size"
 #define KEY_PEN_TYPE "type_of_pen_key"
-#define KEY_PEN_TIPO_TRATTO "key_tipo_tratto"
 #define KEY_PEN_SAME_DATA "key-same-data-pen"
 
 /* last file open*/

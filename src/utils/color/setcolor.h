@@ -29,7 +29,7 @@ inline QColor setcolor(const struct colore_s &colore,
     return setcolor(&colore, division);
 }
 
-inline void setcolor_struct(colore_s *color, QColor color_){
+inline void setcolor_struct(colore_s *color, const QColor &color_){
     int val[NCOLOR];
 
     color_.getRgb(&val[0],
@@ -43,7 +43,7 @@ inline void setcolor_struct(colore_s *color, QColor color_){
 
 }
 
-inline void setcolor_struct(colore_s &color, QColor color_){
+inline void setcolor_struct(colore_s &color, const QColor &color_){
     return setcolor_struct(&color, color_);
 }
 #endif // SETCOLOR_H

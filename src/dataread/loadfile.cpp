@@ -176,16 +176,18 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
         err = load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg);
     }else if(tmp_ver == 6){
         err = load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg);
+    }else if(tmp_ver == 7){
+        err = load_file_7(currenttitle, f, filezip, LoadPdf, LoadImg);
     }
 #else
         goto error_version;
     }
 #endif
-    else if(tmp_ver > 7)
+    else if(tmp_ver > 8)
         goto error_new_version;
 
-    if(tmp_ver == 7){
-        err = load_file_7(currenttitle, f, filezip, LoadPdf, LoadImg);
+    if(tmp_ver == 8){
+        err = load_file_8(currenttitle, f, filezip, LoadPdf, LoadImg);
     }
 
     if(err != OK)

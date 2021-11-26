@@ -49,10 +49,8 @@ void rubber_ui::on_partial_button_clicked()
 */
 QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
     int id;
-    uint i, len, counterPage;
-    const uint lenPage = data->lengthPage();
-    const point_s *__point;
-    const page *page;
+    int counterStroke, lenStroke, counterPage;
+    const int lenPage = data->lengthPage();
 
     Page.clear();
 
@@ -64,52 +62,63 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
     if(this->m_type_gomma == e_type_rubber::total){
         for(; counterPage < lenPage; counterPage ++){
-            page = &data->at(counterPage);
-            if(!page->isVisible()) break;
+            const page &page = data->at(counterPage);
 
-            len = page->length();
+            if(!page.isVisible()) break;
 
-            for(i=0; i<len; i++){
-                __point = &data->at_draw(i, counterPage);
-                id = __point->idtratto;
+            lenStroke = page.lengthStroke();
 
-                if(isin(__point, lastPoint, data) &&
-                        gomma_delete_id.indexOf(id) == -1){
+            for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
+                const stroke &stroke = page.atStroke(counterStroke);
+                const int lenPoint = stroke.length();
+                const int id = stroke.getId();
 
-                    if(Page.indexOf(counterPage) == -1)
-                        Page.append(counterPage);
+                for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
+                    const point_s &point = data->at_draw(counterPoint, counterPage, counterStroke);
+                    if(isin(&point, lastPoint, data) && gomma_delete_id.indexOf(id) == -1){
 
-                    gomma_delete_id.append(id);
+                        if(Page.indexOf(counterPage) == -1)
+                            Page.append(counterPage);
 
-                    const auto [page, index] = data->decreaseAlfa(id, DECREASE, lenPage);
+                        gomma_delete_id.append(id);
 
-                    counterPage = page;
-                    i = index - 1;
+                        data->decreaseAlfa(id, DECREASE, lenPage);
+
+                        break;
+                    }
                 }
             }
         }
     }
     else if(this->m_type_gomma == e_type_rubber::partial){
-        for(; counterPage < lenPage  && data->at(counterPage)->isVisible(); counterPage ++){
-            len = data->at(counterPage)->length();
-            for(i=0; i<len; i++){
+        for(; counterPage < lenPage  && data->at(counterPage).isVisible(); counterPage ++){
+            const int lenStroke = data->at(counterPage).lengthStroke();
+
+            for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
+                const stroke &stroke = data->at(counterPage).atStroke(counterStroke);
+                int counterPoint = 0;
+                const int lenPoint = stroke.length();
+
+                for(; counterPoint < lenPoint; counterPoint ++){
+                    const point_s &point = data->at_draw(counterPoint, counterPage, counterStroke);
+                    if(isin(&point, lastPoint, data)){
+
+                        if(Page.indexOf(counterPage) == -1)
+                            Page.append(counterPage);
+
+                        if(data->needtochangeid(counterPoint, counterStroke, counterPage)){
+                            data->changeId(counterStroke, counterPage, lenPage);
+                        }
+
+                        data->removeat(i, counterPage);
+                        --len;
+                        --i;
+                    }
+                }
+
                 __point = &data->at_draw(i, counterPage);
 
-                if(isin(__point,
-                        lastPoint,
-                        data)){
 
-                    if(Page.indexOf(counterPage) == -1)
-                        Page.append(counterPage);
-
-                    if(data->needtochangeid(i, counterPage)){
-                        data->changeId(i, counterPage, lenPage);
-                    }
-
-                    data->removeat(i, counterPage);
-                    --len;
-                    --i;
-                }
             }
         }
 

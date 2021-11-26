@@ -15,10 +15,8 @@ pen_ui::pen_ui(QWidget *parent) :
     ui->slider_size->setMinimum(1);
     ui->slider_size->setMaximum(200);
 
-    ui->button_continua->setCheckable(true);
     ui->button_pressure->setCheckable(true);
     ui->button_size->setCheckable(true);
-    ui->button_tratti->setCheckable(true);
 
     load_settings();
 
@@ -41,9 +39,6 @@ void pen_ui::list_update(){
 
     ui->slider_size->setValue(m_spessore_pen);
 
-    ui->button_continua->setChecked(m_type_tratto == n_tratto::continua);
-    ui->button_tratti->setChecked(m_type_tratto == n_tratto::tratti);
-
     ui->button_pressure->setChecked(m_type_pen == n_pressione::pressione);
 
     ui->button_size->setChecked(spessore);
@@ -59,20 +54,6 @@ void pen_ui::list_update(){
 void pen_ui::on_slider_size_valueChanged(int value)
 {
     m_spessore_pen = double(value)/DELTA;
-}
-
-void pen_ui::on_button_continua_clicked()
-{
-    m_type_tratto = n_tratto::continua;
-
-    this->list_update();
-}
-
-void pen_ui::on_button_tratti_clicked()
-{
-    m_type_tratto = n_tratto::tratti;
-
-    this->list_update();
 }
 
 void pen_ui::on_button_pressure_clicked()
@@ -110,7 +91,6 @@ void pen_ui::load_settings(){
 
     m_spessore_pen = setting.value(KEY_PEN_SIZE, DefaultS).toDouble(&ok);
     m_type_pen = static_cast<n_pressione>(setting.value(KEY_PEN_TYPE, n_pressione::pressione).toInt());
-    m_type_tratto = static_cast<n_tratto>(setting.value(KEY_PEN_TIPO_TRATTO, n_tratto::continua).toInt());
 
     if(!ok){
         m_spessore_pen = DefaultS;
@@ -129,7 +109,6 @@ void pen_ui::save_settings(){
 
     setting.setValue(KEY_PEN_SIZE, m_spessore_pen);
     setting.setValue(KEY_PEN_TYPE, m_type_pen);
-    setting.setValue(KEY_PEN_TIPO_TRATTO, m_type_tratto);
     setting.setValue(KEY_PEN_SAME_DATA, same_data);
 
     setting.endGroup();

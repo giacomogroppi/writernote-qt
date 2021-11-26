@@ -18,6 +18,9 @@
 #define LOAD_STRINGA(x, y) if(xmlstruct::load_stringa(x,y) == ERROR) goto free_;
 #define LOAD_STRINGA_RETURN(x, y) if(xmlstruct::load_stringa(x, y) == ERROR)return ERROR;
 
+#define __new
+#define __old
+
 /*
  * call then we are starting an audio
 */
@@ -37,22 +40,21 @@ private:
     Document *currenttitle = nullptr;
 
 #ifdef ALL_VERSION
-    int load_file_2(Document *, zip_file_t *f, zip_t *filezip);
-    int load_file_3(Document *, zip_file_t *f, zip_t *filezip);
-    int load_file_4(Document *, zip_file_t *f, zip_t *filezip);
-    int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
-                    const bool LoadPdf, const bool LoadImg);
-    int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip,
-                    const bool LoadPdf, const bool LoadImg);
+    __old int load_file_2(Document *, zip_file_t *f, zip_t *filezip);
+    __old int load_file_3(Document *, zip_file_t *f, zip_t *filezip);
+    __old int load_file_4(Document *, zip_file_t *f, zip_t *filezip);
+    __old int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
 
-    int loadbinario_0(struct zip *);
-    int loadbinario_1(struct zip *);
+    __old int loadbinario_0(struct zip *);
+    __old int loadbinario_1(struct zip *);
+    __old int loadbinario_2(struct zip *);
 
     #endif
-    int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
-                    const bool LoadPdf, const bool LoadImg);
 
-    int loadbinario_2(struct zip *);
+    __new int loadbinario_3(struct zip *);
+    __new int load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);

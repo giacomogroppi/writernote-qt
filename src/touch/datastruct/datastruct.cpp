@@ -57,38 +57,37 @@ void datastruct::reset(){
 }
 
 //{page; indexInPage}
-std::tuple<uint, uint> datastruct::decreaseAlfa(const int id,
+void datastruct::decreaseAlfa(const int id,
                               const uchar decrease,
                               const int lenPage)
 {
-    int i, counterPage, len;
+    int counterStroke, counterPage, len;
     page *page_mod;
     const page *page_read;
-    uint lastI, lastCounter;
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         page_read = &at(counterPage);
         len = page_read->lengthStroke();
 
-        page_read->moveToUserPoint(i);
+        page_read->moveToUserPoint(counterStroke);
 
-        if(i < len)
+        if(counterStroke < len)
             page_mod = &at_mod(counterPage);
 
-        for(; i < len; ++i){
-            stroke &stroke = page_mod->atStrokeMod(i);
+        for(; counterStroke < len; counterStroke++){
+            stroke &stroke = page_mod->atStrokeMod(counterStroke);
 
             if(stroke.getId() == id){
                 const uchar newAlfa = stroke.getColor().alpha() / decrease;
                 stroke.setAlfaColor(newAlfa);
 
-                lastI = i;
-                lastCounter = counterPage;
+                /* since there cannot be another trait that has the same
+                 * index, we can directly return to the caller */
+                return;
             }
         }
     }
 
-    return {lastCounter, lastI};
 }
 
 void datastruct::copy(const datastruct &src, datastruct &dest)
@@ -119,25 +118,4 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
 
 void datastruct::removeat(const uint index, const uint page){
     this->m_page.operator[](page).removeAt(index);
-}
-
-/*
- * the function return true if the point in position i
- * is in the middle of a stretch
- *
- * return false if it's the first point or the lastone
- */
-bool datastruct::needtochangeid(const uint index, const uint indexPage){
-    const page *page;
-    const uint lenPointForPage = at(indexPage)->length();
-
-    if(!index || (index+1) >= lenPointForPage)
-        return false;
-
-    page = at(indexPage);
-    int temp_id = page->at(index)->idtratto;
-
-    return (temp_id == page->at(index-1)->idtratto
-            && temp_id == page->at(index+1)->idtratto);
-
 }

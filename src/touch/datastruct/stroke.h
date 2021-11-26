@@ -55,6 +55,8 @@ public:
     void                setMetadata(const int page, const int idtratto,
                                     const int posizione_audio, const struct colore_s color);
 
+    void setPositioneAudio(const int m_pos_ris);
+    void setId(const int id);
     size_t createControll() const;
 
     int getId() const;
@@ -67,7 +69,6 @@ public:
     void clearAudio();
 
     int length() const;
-    void changeId(const int newId);
     void commitChange();
 
     bool constantPressure() const;
@@ -76,6 +77,8 @@ public:
     void decreasePrecision() const;
 
     void setAlfaColor(const uchar alfa);
+
+    void setColor(const QColor &color);
     void setColor(const colore_s &color);
 
     /* this function physically adds the x and y value of the point to all of its points. */
@@ -144,6 +147,16 @@ inline void stroke::setMetadata(const metadata_stroke &metadata)
     metadataSet = 1;
 }
 
+inline void stroke::setPositioneAudio(const int m_pos_ris)
+{
+    this->metadata.posizione_audio = m_pos_ris;
+}
+
+inline void stroke::setId(const int id)
+{
+    this->metadata.idtratto = id;
+}
+
 // return the "old" idtratto
 inline int stroke::getId() const
 {
@@ -194,11 +207,6 @@ inline int stroke::length() const
     return this->m_point.length();
 }
 
-inline void stroke::changeId(const int newId)
-{
-    this->metadata.idtratto = newId;
-}
-
 inline bool stroke::constantPressure() const
 {
     return this->constantPressureVal;
@@ -207,6 +215,11 @@ inline bool stroke::constantPressure() const
 inline void stroke::setAlfaColor(const uchar alfa)
 {
     this->metadata.color.colore[3] = alfa;
+}
+
+inline void stroke::setColor(const QColor &color)
+{
+    setcolor_struct(metadata.color, color);
 }
 
 inline void stroke::setColor(const colore_s &color)

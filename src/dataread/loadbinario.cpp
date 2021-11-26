@@ -6,13 +6,12 @@
 #include "../utils/posizione_binario.h"
 #include "../sheet/fast-sheet/fast_sheet_ui.h"
 
-int xmlstruct::loadbinario_2(struct zip *z){
+__new int xmlstruct::loadbinario_3(struct zip *z)
+{
     struct zip_stat st;
     size_t controll, newControll;
     int i, len, lenPage, counterPage;
     zip_file_t *f;
-    page *page;
-    struct point_s temp_point;
     double init[2];
 
     zip_stat_init(&st);
@@ -30,12 +29,14 @@ int xmlstruct::loadbinario_2(struct zip *z){
     SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         SOURCE_READ_GOTO(f, &len, sizeof(len));
+
+        /* we add a new page */
         currenttitle->datatouch->newPage(n_style::white);
-        page = currenttitle->datatouch->at_mod(counterPage);
 
         for(i=0; i<len; i++){
-            SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_s));
-            page->append(temp_point);
+            stroke tmpStroke;
+            tmpStroke.load(f);
+            currenttitle->datatouch->appendStroke(tmpStroke, counterPage);
         }
     }
 
@@ -56,24 +57,4 @@ int xmlstruct::loadbinario_2(struct zip *z){
     free_:
     zip_fclose(f);
     return ERROR;
-}
-
-size_t point_last::createControll() const{
-    static size_t data;
-    static int i;
-
-    data = 0;
-    data += m_x;
-    data += m_y;
-    data += m_pressure;
-    data += idtratto;
-
-    for(i=0; i<NCOLOR; ++i){
-        data += m_color.colore[i];
-    }
-
-    data += this->rotation;
-    data += this->m_posizioneaudio;
-
-    return data;
 }

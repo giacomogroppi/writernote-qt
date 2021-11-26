@@ -149,12 +149,12 @@ public:
     void removeat(const uint index, const uint page);
 
     bool needToCreateNewSheet();
-    bool needtochangeid(const uint index, const uint page);
+    bool needtochangeid(const uint IndexPoint, const uint IndexStroke, const uint IndexPage);
 
     double biggery() const noexcept;
 
 
-    std::tuple<uint, uint> decreaseAlfa(const int id, const uchar decrese, const int len);
+    void decreaseAlfa(const int id, const uchar decrese, const int len);
 
     void removePage(const uint page);
 
@@ -245,6 +245,11 @@ inline void datastruct::triggerVisibility(const double &viewSize)
 inline double datastruct::biggerx() const noexcept
 {
     return (page::getWidth() + this->getPointFirstPage().x())*zoom;
+}
+
+inline bool datastruct::needtochangeid(const uint IndexPoint, const uint IndexStroke, const uint IndexPage)
+{
+    return this->at(IndexPage).needtochangeid(IndexStroke, IndexPoint);
 }
 
 inline double datastruct::biggery() const noexcept

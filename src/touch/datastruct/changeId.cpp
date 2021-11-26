@@ -7,7 +7,6 @@
 */
 void datastruct::changeId(uint indexStroke, uint indexPage, uint lenPage, int base)
 {
-    uint len;
     if(base == -1)
         base = maxId() + 1;
 
@@ -18,7 +17,6 @@ void datastruct::changeId(uint indexStroke, uint indexPage, uint lenPage, int ba
     }
 
     page &page = at_mod(indexPage);
-    len = page.lengthStroke();
 
-    page.atStrokeMod(indexStroke).changeId(base);
+    page.atStrokeMod(indexStroke).setId(base);
 }

@@ -19,7 +19,7 @@ topdf::topdf(const QString &path, const Document &doc)
     this->data->datatouch->triggerNewView(-1, true);
 
     for(i = 0; i < len; i++){
-        if(data->datatouch->at(i)->getImg().isNull())
+        if(data->datatouch->at(i).getImg().isNull())
             page.append((int)i);
     }
 
