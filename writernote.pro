@@ -60,7 +60,7 @@ contains(DEFINES, CLOUD){
 
 # this macro is used to enable all compatibility with the file
 # if you want to build without pass to qmake NO_ALL_VERSION in DEFINES
-DEFINES += "ALL_VERSION"
+#DEFINES += "ALL_VERSION"
 contains(DEFINES, NO_ALL_VERSION){
     DEFINES -= "ALL_VERSION"
 }
@@ -95,7 +95,6 @@ SOURCES += \
     src/dataread/load_from_file.cpp \
     src/dataread/loadfile.cpp \
     src/dataread/old_loadbinario/old_version_load_binario.cpp \
-    src/dataread/old_version/decode.cpp \
     src/dataread/old_version/ver_2/load_file_ver_2.cpp \
     src/dataread/old_version/ver_3/load_file_ver_3.cpp \
     src/dataread/old_version/ver_4/load_file_ver_4.cpp \
