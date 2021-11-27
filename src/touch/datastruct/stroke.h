@@ -92,7 +92,7 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
 
-    QPainterPath getQPainterPath() const;
+    QPainterPath getQPainterPath();
     void createQPainterPath();
 
     void reset();
@@ -153,6 +153,7 @@ inline void stroke::append(const point_s &point)
 {
     this->m_point.append(point);
     this->updateFlagPressure();
+    this->needToCreatePanterPath = true;
 }
 
 inline void stroke::setMetadata(const metadata_stroke &metadata)
@@ -180,6 +181,7 @@ inline void stroke::setId(const int id)
 inline void stroke::removeAt(int index)
 {
     this->m_point.removeAt(index);
+    this->needToCreatePanterPath = true;
 }
 
 // return the "old" idtratto
@@ -284,8 +286,10 @@ inline void stroke::setColor(const colore_s &color)
     memcpy(&this->metadata.color, &color, sizeof(metadata.color));
 }
 
-inline QPainterPath stroke::getQPainterPath() const
+inline QPainterPath stroke::getQPainterPath()
 {
+    if(this->needToCreatePanterPath)
+        this->createQPainterPath();
     return this->path;
 }
 

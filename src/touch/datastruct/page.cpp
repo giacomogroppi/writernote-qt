@@ -89,7 +89,7 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
     const int lenStroke = List.length();
 
     for(i = 0; i < lenStroke; i++){
-        const stroke &stroke = List.at(i);
+        stroke &stroke = List.operator[](i);
         const int decrease = (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4;
         const float pressure = TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION;
         m_pen.setColor(stroke.getColor(decrease));

@@ -77,6 +77,8 @@ void stroke::decreasePrecision()
             this->removeAt(i);
         }
     }
+
+    this->needToCreatePanterPath = true;
 }
 
 void stroke::movePoint(const QPointF &translation)
@@ -90,6 +92,7 @@ void stroke::movePoint(const QPointF &translation)
         point.m_y += translation.y();
     }
 
+    this->needToCreatePanterPath = true;
 }
 
 void stroke::createQPainterPath()
