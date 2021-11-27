@@ -47,6 +47,7 @@ public:
     int save(zip_source_t *file) const;
     int load(zip_file_t *file);
 
+    float getPressure() const;
     QColor getColor(const double division) const;
 
     const point_s   &at(const int index) const;
@@ -124,6 +125,12 @@ inline void stroke::updateFlagPressure()
 inline bool stroke::isIdUser() const
 {
     return metadata.idtratto >= 0;
+}
+
+/* call this function only when constantPressureVal is 1 */
+inline float stroke::getPressure() const
+{
+    return at(0).pressure;
 }
 
 inline QColor stroke::getColor(const double division = 1.0) const

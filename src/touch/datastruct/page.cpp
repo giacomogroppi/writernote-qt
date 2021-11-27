@@ -97,6 +97,7 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
 
         if(!stroke.isIdUser())
             continue;
+
         if(!stroke.constantPressure()){
             int counterPoint;
             const int lenPoint = stroke.length();
@@ -115,7 +116,7 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
             const QPainterPath &path = stroke.getQPainterPath();
 
             qDebug() << "page::drawEngine" << path;
-
+            m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.0) * PROP_RESOLUTION);
             painter.strokePath(path, m_pen);
         }
     }
@@ -245,6 +246,9 @@ void page::triggerRenderImage(int m_pos_ris, const bool all)
 
     if(all || isNull)
         this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+
+    /* testing */
+    imgDraw.fill(Qt::white);
 
     QPainter painter;
     painter.begin(&imgDraw);
