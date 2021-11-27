@@ -88,11 +88,10 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
     static QPointF pointDraw;
     const int lenStroke = List.length();
 
-    m_pen.setStyle(Qt::PenStyle::SolidLine);
-
     for(i = 0; i < lenStroke; i++){
         const stroke &stroke = List.at(i);
         const int decrease = (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4;
+        const float pressure = TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION;
         m_pen.setColor(stroke.getColor(decrease));
 
         if(!stroke.isIdUser())
@@ -106,7 +105,7 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
 
             for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
                 const point_s &point = stroke.at(counterPoint);
-                m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure/2.00) * PROP_RESOLUTION);
+                m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
 
                 painter.setPen(m_pen);
 
@@ -115,8 +114,9 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
         }else{
             const QPainterPath &path = stroke.getQPainterPath();
 
-            qDebug() << "page::drawEngine" << path;
-            m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.0) * PROP_RESOLUTION);
+            qDebug() << "page::drawEngine" << path << "pressure: " << pressure;
+            m_pen.setWidthF(pressure);
+            m_pen.setWidthF(100);
             painter.strokePath(path, m_pen);
         }
     }
@@ -196,10 +196,10 @@ static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struc
         point.m_x = 0;
         point.m_y = last + deltax;
 
-        stroke.append(point, false);
+        stroke.append(point);
 
         point.m_x = width_p;
-        stroke.append(point, false);
+        stroke.append(point);
 
         deltax += ct_del;
     }
@@ -217,10 +217,10 @@ static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_
         point.m_x = deltay;
         point.m_y = last; /* corrisponde to 0 */
 
-        stroke.append(point, false);
+        stroke.append(point);
 
         point.m_y = height_p + last;
-        stroke.append(point, false);
+        stroke.append(point);
 
         deltay += ct_del;
 
@@ -248,7 +248,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool all)
         this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
 
     /* testing */
-    imgDraw.fill(Qt::white);
+    //imgDraw.fill(Qt::white);
 
     QPainter painter;
     painter.begin(&imgDraw);

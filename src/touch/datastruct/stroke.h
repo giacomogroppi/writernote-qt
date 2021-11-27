@@ -32,6 +32,7 @@ private:
     QRectF biggerData;
     bool biggerDataSet: 1;
     bool constantPressureVal: 1;
+    bool needToCreatePanterPath: 1;
 
     void updateFlagPressure();
 
@@ -53,7 +54,7 @@ public:
     const point_s   &at(const int index) const;
     point_s         &at_mod(const int index);
 
-    void                append(const point_s &point, const bool needToCreatePainterPath);
+    void                append(const point_s &point);
     void                setMetadata(const metadata_stroke & metadata);
     void                setMetadata(const int page, const int idtratto,
                                     const int posizione_audio, const struct colore_s color);
@@ -148,13 +149,10 @@ inline point_s &stroke::at_mod(const int index)
     return this->m_point.operator[](index);
 }
 
-inline void stroke::append(const point_s &point, const bool needToCreatePainterPath)
+inline void stroke::append(const point_s &point)
 {
     this->m_point.append(point);
     this->updateFlagPressure();
-
-    if(needToCreatePainterPath)
-        this->createQPainterPath();
 }
 
 inline void stroke::setMetadata(const metadata_stroke &metadata)
@@ -299,6 +297,8 @@ inline void stroke::copy(const stroke &src, stroke &dest)
     dest.constantPressureVal = src.constantPressureVal;
     memcpy(&dest.metadata, &src.metadata, sizeof(src.metadata));
     dest.metadataSet = src.metadataSet;
+
+    dest.needToCreatePanterPath = src.needToCreatePanterPath;
 
     dest.path = src.path;
 

@@ -362,7 +362,7 @@ void xmlstruct::decode(Document *doc, QList<QList<point_old>> &page)
                 TmpAppend.m_x = tmpRef.m_x;
                 TmpAppend.m_y = tmpRef.m_y;
                 TmpAppend.pressure = tmpRef.m_pressure;
-                stroke.append(TmpAppend, true);
+                stroke.append(TmpAppend);
             }
 
             doc->datatouch->appendStroke(stroke);

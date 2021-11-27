@@ -61,7 +61,7 @@ jobs:
         with:
           languages: cpp
 
-      - run: qmake; make -j$(nproc) INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1
+      - run: qmake INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1; make -j$(nproc)
         working-directory: .
           
       - name: Compile NO_ALL_VERSION

@@ -210,7 +210,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     tmp_point.m_y = pointTouch.y();
     tmp_point.pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
-    __tmp.append(tmp_point, false);
+    __tmp.append(tmp_point);
 }
 
 static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
