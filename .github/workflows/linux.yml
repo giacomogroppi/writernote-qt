@@ -61,6 +61,3 @@ jobs:
           echo $(ls /usr/local/include/poppler/qt5)
           qmake DEFINES+="NO_ALL_VERSION" INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1
           make -j $(nproc)    
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
