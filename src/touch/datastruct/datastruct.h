@@ -66,7 +66,7 @@ public:
     void changeZoom(const double zoom, class TabletCanvas *canvas);
     void increaseZoom(const double delta, const QSize &size);
 
-    inline QPointF getPointFirstPage() const{ return this->zoom * pointFirstPage; }
+    inline QPointF getPointFirstPage() const { return this->zoom * pointFirstPage; }
     inline QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }
 
     void setPointFirstPage(const QPointF &point){ this->pointFirstPage = point; }

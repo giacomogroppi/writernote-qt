@@ -33,7 +33,7 @@ private:
     bool biggerDataSet: 1;
     bool constantPressureVal: 1;
 
-    void updateFlag();
+    void updateFlagPressure();
 
 public:
     stroke();
@@ -52,7 +52,7 @@ public:
     const point_s   &at(const int index) const;
     point_s         &at_mod(const int index);
 
-    void                append(const point_s &point);
+    void                append(const point_s &point, const bool needToCreatePainterPath);
     void                setMetadata(const metadata_stroke & metadata);
     void                setMetadata(const int page, const int idtratto,
                                     const int posizione_audio, const struct colore_s color);
@@ -101,7 +101,7 @@ public:
     stroke &operator=(const stroke &other);
 };
 
-inline void stroke::updateFlag()
+inline void stroke::updateFlagPressure()
 {
     int i, len;
     const point_s *point, *point2;
@@ -141,11 +141,13 @@ inline point_s &stroke::at_mod(const int index)
     return this->m_point.operator[](index);
 }
 
-inline void stroke::append(const point_s &point)
+inline void stroke::append(const point_s &point, const bool needToCreatePainterPath)
 {
     this->m_point.append(point);
-    this->updateFlag();
-    this->createQPainterPath();
+    this->updateFlagPressure();
+
+    if(needToCreatePainterPath)
+        this->createQPainterPath();
 }
 
 inline void stroke::setMetadata(const metadata_stroke &metadata)
@@ -279,7 +281,6 @@ inline void stroke::setColor(const colore_s &color)
 
 inline QPainterPath stroke::getQPainterPath() const
 {
-    qDebug() << "QPainterPath stroke::getQPainterPath" << length() << path.isEmpty();
     return this->path;
 }
 

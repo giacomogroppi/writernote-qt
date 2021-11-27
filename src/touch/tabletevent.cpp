@@ -210,31 +210,34 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     tmp_point.m_y = pointTouch.y();
     tmp_point.pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
-    __tmp.append(tmp_point);
+    __tmp.append(tmp_point, false);
 }
 
 static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     uint i;
-    const uint lenPoint = __tmp.length();
+
+    /* for debug */
+    stroke & strokeToAppend = __tmp;
+    const uint lenPoint = strokeToAppend.length();
     point_s *point;
-    const auto &PointFirstPage = doc.datatouch->getPointFirstPage();
+    const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
 
     if(!lenPoint) return;
 
     int time = canvas->parent->m_audioplayer->getPositionSecond();
 
     for(i = 0; i < lenPoint; i++){
-        point = &__tmp.at_mod(i);
+        point = &strokeToAppend.at_mod(i);
         point->m_x -= PointFirstPage.x();
         point->m_y -= PointFirstPage.y();
     }
 
     if(toTheTop){
-        doc.datatouch->appendToTheTop(__tmp);
+        doc.datatouch->appendToTheTop(strokeToAppend);
     }else{
-        doc.datatouch->appendStroke(__tmp);
+        doc.datatouch->appendStroke(strokeToAppend);
     }
 
-    doc.datatouch->at_mod(__tmp.getPage()).triggerRenderImage(time, toTheTop);
-    __tmp.reset();
+    doc.datatouch->at_mod(strokeToAppend.getPage()).triggerRenderImage(time, toTheTop);
+    strokeToAppend.reset();
 }

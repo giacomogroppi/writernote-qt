@@ -148,11 +148,6 @@ inline void page::mergeList()
     int index;
     //LOG_CONDITION(len > 1, "void page::mergeList", log_ui::type_write::possible_bug);
 
-#ifdef DEBUGINFO
-    //if(len > 1)
-    //    std::abort();
-#endif
-
     index = m_stroke.length();
 
     for(i = 0; i < len; i++){
@@ -200,10 +195,10 @@ static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struc
         point.m_x = 0;
         point.m_y = last + deltax;
 
-        stroke.append(point);
+        stroke.append(point, false);
 
         point.m_x = width_p;
-        stroke.append(point);
+        stroke.append(point, false);
 
         deltax += ct_del;
     }
@@ -221,10 +216,10 @@ static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_
         point.m_x = deltay;
         point.m_y = last; /* corrisponde to 0 */
 
-        stroke.append(point);
+        stroke.append(point, false);
 
         point.m_y = height_p + last;
-        stroke.append(point);
+        stroke.append(point, false);
 
         deltay += ct_del;
 
