@@ -114,7 +114,7 @@ void stroke::createQPainterPath()
 
             path.cubicTo(point->toQPointF(delta), point1->toQPointF(delta), point2->toQPointF(delta));
 
-            i += 2;
+            i += 1;
         }
 
     }
