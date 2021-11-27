@@ -60,7 +60,7 @@ contains(DEFINES, CLOUD){
 
 # this macro is used to enable all compatibility with the file
 # if you want to build without pass to qmake NO_ALL_VERSION in DEFINES
-#DEFINES += "ALL_VERSION"
+DEFINES += "ALL_VERSION"
 contains(DEFINES, NO_ALL_VERSION){
     DEFINES -= "ALL_VERSION"
 }
