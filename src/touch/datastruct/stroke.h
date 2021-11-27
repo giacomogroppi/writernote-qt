@@ -7,6 +7,7 @@
 #include "point.h"
 #include "zip.h"
 #include "../../utils/color/setcolor.h"
+#include "../../utils/common_def.h"
 
 #define VER_STROKE 0
 
@@ -36,6 +37,7 @@ private:
 
 public:
     stroke();
+    stroke(const stroke &data);
 
     /* this function is used to set the pressure equal for all points. */
     void __setPressureForAllPoint(const double pressure);
@@ -55,6 +57,7 @@ public:
     void                setMetadata(const int page, const int idtratto,
                                     const int posizione_audio, const struct colore_s color);
 
+    void setPage(int page);
     void setPositioneAudio(const int m_pos_ris);
     void setId(const int id);
     size_t createControll() const;
@@ -79,6 +82,8 @@ public:
 
     void setAlfaColor(const uchar alfa);
 
+    __slow void at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const;
+
     void setColor(const QColor &color);
     void setColor(const colore_s &color);
 
@@ -93,6 +98,7 @@ public:
     /* return true if equals */
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
+    stroke &operator=(const stroke &other);
 };
 
 inline void stroke::updateFlag()
@@ -147,6 +153,11 @@ inline void stroke::setMetadata(const metadata_stroke &metadata)
     Q_ASSERT(this->metadataSet == 0);
     memcpy(&this->metadata, &metadata, sizeof(this->metadata));
     metadataSet = 1;
+}
+
+inline void stroke::setPage(int page)
+{
+    this->metadata.page = page;
 }
 
 inline void stroke::setPositioneAudio(const int m_pos_ris)
@@ -245,6 +256,17 @@ inline void stroke::setAlfaColor(const uchar alfa)
     this->metadata.color.colore[3] = alfa;
 }
 
+inline void stroke::at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const
+{
+    memcpy(&point, &at(indexPoint), sizeof(point_s));
+
+    point.m_x *= zoom;
+    point.m_y *= zoom;
+
+    point.m_x += translation.x();
+    point.m_y += translation.y();
+}
+
 inline void stroke::setColor(const QColor &color)
 {
     setcolor_struct(metadata.color, color);
@@ -257,6 +279,7 @@ inline void stroke::setColor(const colore_s &color)
 
 inline QPainterPath stroke::getQPainterPath() const
 {
+    qDebug() << "QPainterPath stroke::getQPainterPath" << length() << path.isEmpty();
     return this->path;
 }
 
@@ -272,6 +295,16 @@ inline void stroke::copy(const stroke &src, stroke &dest)
     dest.path = src.path;
 
     dest.versione = src.versione;
+}
+
+inline stroke &stroke::operator=(const stroke &other)
+{
+    if(this == &other){
+        return *this;
+    }
+
+    stroke::copy(other, *this);
+    return *this;
 }
 
 #endif // STROKE_H

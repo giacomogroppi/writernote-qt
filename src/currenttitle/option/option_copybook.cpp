@@ -6,6 +6,7 @@ option_copybook::option_copybook(QWidget *parent,
     QDialog(parent),
     ui(new Ui::option_copybook)
 {
+    Q_UNUSED(list);
     ui->setupUi(this);
 }
 

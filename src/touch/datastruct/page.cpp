@@ -26,6 +26,7 @@ page::page(const int count, const n_style style)
     this->count = count;
     this->IsVisible = true;
     drawNewPage(style);
+    this->mergeList();
 }
 
 bool page::needtochangeid(const int IndexStroke, const int indexInStroke) const
@@ -56,6 +57,7 @@ void page::drawNewPage(n_style __style)
     }
 
     newStrokeVertical.setMetadata(this->count, IDVERTICALE, -1, style.colore);
+    newStrokeOrizzontal.setMetadata(this->count, IDORIZZONALE, -1, style.colore);
 
     if(style.nx){
         deltax = height_p / (double)style.nx;
@@ -80,26 +82,13 @@ void page::drawNewPage(n_style __style)
 void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
                       const int m_pos_ris)
 {
-    //int _lastid = List.at(i).idtratto;
-    //int _lastid = IDUNKNOWN;
-
-    //const int page = this->count-1;
-    //const int len = List.length();
     struct Point lastPoint;
-    //point_s *point, *point1, *point2;
-    //static const double delta = PROP_RESOLUTION;
-
-    QPainterPath path;
     QBrush m_brush;
     QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-
-    //static double x, y;
     static QPointF pointDraw;
+    const int lenStroke = List.length();
 
     m_pen.setStyle(Qt::PenStyle::SolidLine);
-    //qDebug() << painter.renderHints();
-
-    int lenStroke = lengthStroke();
 
     for(i = 0; i < lenStroke; i++){
         const stroke &stroke = List.at(i);
@@ -109,7 +98,8 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
         if(!stroke.isIdUser())
             continue;
         if(!stroke.constantPressure()){
-            int counterPoint, lenPoint;
+            int counterPoint;
+            const int lenPoint = stroke.length();
 
             lastPoint.pos = QPointF(stroke.at(0).m_x, stroke.at(0).m_y);
 
@@ -124,67 +114,11 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
         }else{
             const QPainterPath &path = stroke.getQPainterPath();
 
+            qDebug() << "page::drawEngine" << path;
+
             painter.strokePath(path, m_pen);
         }
     }
-
-    /*for(; i < len-3; ++i){
-        path.moveTo(List.at(i).toQPointF(delta));
-
-        while(i<len-3 && List.at(i+2).idtratto == _lastid){
-            point = at_translation(List, i);
-            point1 = at_translation(List, i+1);
-            point2 = at_translation(List, i+2);
-
-            if(point->page != page || point1->page != page || point2->page != page)
-                break;
-
-            const int decrease = (point->m_posizioneaudio > m_pos_ris) ? 1 : 4;
-
-            m_pen.setColor(setcolor(point->m_color));
-            TabletCanvas::updateBrush_load(point->m_pressure*delta,
-                                               setcolor(&point->m_color, decrease),
-                                               m_pen, m_brush);
-            m_pen.setWidthF(point->m_pressure*10*delta);
-            painter.setPen(m_pen);
-
-            path.cubicTo(point->toQPointF(delta), point1->toQPointF(delta), point2->toQPointF(delta));
-
-            i += 2;
-        }
-
-        painter.strokePath(path, m_pen);
-
-        nextPoint(i, List);
-        if(i < len-3)
-            _lastid = at(i)->idtratto;
-    }*/
-
-    /*for(; i < len; ++i){
-        point = at_translation(List, i);
-
-        pointDraw = QPointF(point->m_x, point->m_y) * PROP_RESOLUTION;
-
-        if(point->idtratto == _lastid && point->page == page){
-            const int decrease = (point->m_posizioneaudio > m_pos_ris) ? 1 : 4;
-            //point->m_pressure *= 1.4;
-
-            //m_pen.setColor(setcolor(point->m_color, decrease));
-            TabletCanvas::updateBrush_load(point->m_pressure,
-                setcolor(&point->m_color, decrease),
-                m_pen, m_brush);
-
-            m_pen.setWidthF(m_pen.widthF() * PROP_RESOLUTION);
-
-            painter.setPen(m_pen);
-
-            painter.drawLine(lastPoint.pos, pointDraw);
-        }
-
-        lastPoint.pos = pointDraw;
-
-        _lastid = point->idtratto;
-    }*/
 
 }
 
@@ -192,7 +126,6 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
 {
     int i = 0;
     int len = lengthStroke();
-
 
     painter.setRenderHint(QPainter::TextAntialiasing, false);
 
@@ -210,15 +143,23 @@ inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
 
 inline void page::mergeList()
 {
+    int i;
     const int len = this->strokeTmp.length();
-    LOG_CONDITION(len > 1, "void page::mergeList", log_ui::type_write::possible_bug);
+    int index;
+    //LOG_CONDITION(len > 1, "void page::mergeList", log_ui::type_write::possible_bug);
 
 #ifdef DEBUGINFO
-    if(len > 1)
-        std::abort();
+    //if(len > 1)
+    //    std::abort();
 #endif
-    if(!len) return;
-    m_stroke.append(this->strokeTmp.at(0));
+
+    index = m_stroke.length();
+
+    for(i = 0; i < len; i++){
+        m_stroke.append(stroke());
+        m_stroke.operator[]( index ) = strokeTmp.at(i);
+        index ++;
+    }
     strokeTmp.clear();
 }
 
@@ -276,7 +217,7 @@ static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_
     const double ct_del = deltay;
     uint i;
 
-    for(i=0; i< (uint)style.ny; i++){
+    for(i = 0; i< (uint)style.ny; i++){
         point.m_x = deltay;
         point.m_y = last; /* corrisponde to 0 */
 
@@ -318,7 +259,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool all)
 
     painter.end();
 
-    return;
+    //return;
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
         std::abort();
 
@@ -327,7 +268,6 @@ void page::triggerRenderImage(int m_pos_ris, const bool all)
 void page::allocateStroke(int numAllocation)
 {
     for(int i = 0; i < numAllocation; i++){
-        stroke stroke;
-        this->append(stroke);
+        this->m_stroke.append(stroke());
     }
 }

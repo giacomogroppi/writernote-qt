@@ -228,7 +228,7 @@ inline void page::copy(const page &src, page &dest){
     dest.allocateStroke(src.lengthStroke());
 
     for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
-        stroke::copy(src.atStroke(counterStroke), dest.atStrokeMod(counterStroke));
+        dest.atStrokeMod(counterStroke) = src.atStroke(counterStroke);
     }
 
     dest.imgDraw = src.imgDraw;
@@ -265,9 +265,11 @@ inline const stroke &page::last() const
     return this->m_stroke.last();
 }
 
-inline void page::append(const stroke &stroke)
+inline void page::append(const stroke &strokeAppend)
 {
-    this->strokeTmp.append(stroke);
+    int lastNewIndex = strokeTmp.length();
+    this->strokeTmp.append(stroke());
+    this->strokeTmp.operator[](lastNewIndex) = strokeAppend;
     //this->m_stroke.append(stroke);
 }
 

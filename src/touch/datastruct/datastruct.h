@@ -112,6 +112,9 @@ public:
     void adjustAll(const uint width, const uint height);
     void adjustAll(const QSize &size);
 
+    /* return the page of the stroke */
+    int adjustStroke(stroke &stroke);
+
     /*
      * this function return the index of the first
      * point with idtratto == IDORIZZONALE
@@ -402,15 +405,14 @@ inline void datastruct::removeAt(const uint indexPage){
 
 }
 
-inline int datastruct::appendStroke(const stroke &stroke)
+inline int datastruct::appendStroke(const stroke &__stroke)
 {
-    static point_s Point;
-    static int page;
-    memcpy(&Point, &stroke, sizeof(point_s));
+    stroke tmpStroke(__stroke);
+    int page;
 
-    page = this->whichPage(stroke);
+    page = this->adjustStroke(tmpStroke);
 
-    this->appendStroke(stroke, page);
+    this->appendStroke(tmpStroke, page);
 
     return page;
 }
@@ -418,6 +420,23 @@ inline int datastruct::appendStroke(const stroke &stroke)
 inline void datastruct::appendStroke(const stroke &stroke, const int page)
 {
     this->at_mod(page).append(stroke);
+}
+
+inline int datastruct::adjustStroke(stroke &stroke)
+{
+    int i, page;
+    const int len = stroke.length();
+
+    for(i = 0; i < len; i++){
+        point_s &point = stroke.at_mod(i);
+        point.m_x /= this->zoom;
+        point.m_y /= this->zoom;
+        point.pressure /= this->zoom;
+    }
+
+    page = this->whichPage(stroke);
+    stroke.setId(page);
+    return page;
 }
 
 inline int datastruct::appendToTheTop(const stroke &stroke)

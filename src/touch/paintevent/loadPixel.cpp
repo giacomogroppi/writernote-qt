@@ -58,6 +58,8 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
     /* draw points that the user has not finished yet */
     pen.setColor(__tmp.getColor());
 
+
+    /* point not already add to page */
     if(len){
         dataPoint.lastPoint.pos = QPointF(__tmp.at(0).m_x, __tmp.at(0).m_y);
     }
@@ -100,7 +102,7 @@ void TabletCanvas::loadpixel(){
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta){
     uint counterPage;
     const page *page;
-    int i, len;
+    int counterStroke, counterPoint, lenStroke, lenPoint;
     const uint lenPage = doc.datatouch->lengthPage();
     double xtemp[2], ytemp[2];
     uchar k;
@@ -110,37 +112,40 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
     datastruct *data = doc.datatouch;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        len = doc.datatouch->at(counterPage).lengthStroke();
-        if(!len)
-            continue;
-
         page = &data->at(counterPage);
+        lenStroke = page->lengthStroke();
 
-        TabletCanvas::pressureToWidth(page->atStroke(0).at(0).pressure * zoom * delta / 2.0);
+        if(!lenStroke) continue;
+
+        m_pen.setWidthF(TabletCanvas::pressureToWidth(page->atStroke(0).at(0).pressure * zoom * delta / 2.0));
         m_pen.setColor(page->atStroke(0).getColor());
 
         painter.setPen(m_pen);
 
-        for(i = 0; i < len-1; ++i){
-            if(page->atStroke(i).isIdUser())
-                break;
 
-            for(k=0; k<2; k++){
-                /*
-                 *  we can draw objects which are outside the pixmap
+        for(counterStroke = 0; counterStroke < lenStroke - 1; counterStroke++){
+            const stroke &stroke = page->atStroke(counterStroke);
+            lenPoint = stroke.length();
+
+            if(stroke.isIdUser()) break;
+
+            for(counterPoint = 0; counterPoint < lenPoint-1; counterPoint += 2){
+                for(k=0; k<2; k++){
+                    /*
+                     *  we can draw objects which are outside the pixmap
                      *  qt automatically understands that you have to set negative points,
-                 *  and those that are too high such as the margins of the pixmap
-                */
+                     *  and those that are too high such as the margins of the pixmap
+                    */
 
-                const auto &ref = doc.datatouch->at_draw(i+k, counterPage, i+k);
-                xtemp[k] = ref.m_x * delta;
-                ytemp[k] = ref.m_y * delta;
+                    const auto &ref = doc.datatouch->at_draw(counterPoint + k, counterPage, counterStroke);
+                    xtemp[k] = ref.m_x * delta;
+                    ytemp[k] = ref.m_y * delta;
+
+                }
+
+                painter.drawLine(xtemp[0], ytemp[0], xtemp[1], ytemp[1]);
 
             }
-
-            painter.drawLine(xtemp[0], ytemp[0], xtemp[1], ytemp[1]);
-
-            i = i + 1;
         }
     }
 }

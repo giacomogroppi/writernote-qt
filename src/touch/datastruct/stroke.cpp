@@ -1,10 +1,17 @@
 #include "stroke.h"
 #include "page.h"
 #include "../../utils/color/setcolor.h"
+#include <QDebug>
 
 stroke::stroke()
 {
     reset();
+}
+
+stroke::stroke(const stroke &data)
+{
+    reset();
+    *this = data;
 }
 
 void stroke::__setPressureForAllPoint(const double pressure)
@@ -117,7 +124,7 @@ void stroke::reset()
     this->constantPressureVal = false;
 
     this->m_point.clear();
-    this->path.clear();
+    this->path = QPainterPath();
 }
 
 bool stroke::cmp(const stroke &stroke1, const stroke &stroke2)

@@ -213,11 +213,15 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     __tmp.append(tmp_point);
 }
 
-void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
+static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
     uint i;
     const uint lenPoint = __tmp.length();
     point_s *point;
     const auto &PointFirstPage = doc.datatouch->getPointFirstPage();
+
+    if(!lenPoint) return;
+
+    int time = canvas->parent->m_audioplayer->getPositionSecond();
 
     for(i = 0; i < lenPoint; i++){
         point = &__tmp.at_mod(i);
@@ -225,10 +229,12 @@ void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
         point->m_y -= PointFirstPage.y();
     }
 
-    if(toTheTop)
+    if(toTheTop){
         doc.datatouch->appendToTheTop(__tmp);
-    else
+    }else{
         doc.datatouch->appendStroke(__tmp);
+    }
 
+    doc.datatouch->at_mod(__tmp.getPage()).triggerRenderImage(time, toTheTop);
     __tmp.reset();
 }
