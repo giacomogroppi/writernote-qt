@@ -118,6 +118,8 @@ void stroke::createQPainterPath()
         }
 
     }
+
+    this->needToCreatePanterPath = false;
 }
 
 void stroke::reset()

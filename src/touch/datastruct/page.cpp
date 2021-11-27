@@ -114,9 +114,8 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
         }else{
             const QPainterPath &path = stroke.getQPainterPath();
 
-            qDebug() << "page::drawEngine" << path << "pressure: " << pressure;
             m_pen.setWidthF(pressure);
-            m_pen.setWidthF(100);
+
             painter.strokePath(path, m_pen);
         }
     }
@@ -258,7 +257,7 @@ void page::triggerRenderImage(int m_pos_ris, const bool all)
 
     painter.end();
 
-    //return;
+    return;
     if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
         std::abort();
 
