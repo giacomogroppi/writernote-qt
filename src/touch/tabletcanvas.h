@@ -128,7 +128,7 @@ public:
     void updatelist(QTabletEvent *event);
 
 
-    Document *data = nullptr;
+    Document *data;
 
     enum e_method: int{
         rubber,
@@ -177,8 +177,6 @@ public:
 
     void setTabletDevice(QTabletEvent *event)
      { updateCursor(event); }
-
-    void settingdata(Document *data);
 
     /* square per la selezione */
     class square *m_square = nullptr;

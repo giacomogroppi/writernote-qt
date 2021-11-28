@@ -21,12 +21,11 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_start_rec_triggered()
 {
+    Document *doc = m_canvas->data;
     const QPoint & pointAction = cursor().pos();
-    if(this->m_currenttitle->se_registato != Document::not_record)
+
+    if(doc->se_registato != Document::not_record)
         return user_message("You had already record and audio");
-    /*
-    if(this->m_currenttitle.audio_position_path != "")
-        return dialog_critic("You had already record an audio");*/
 
 /* only on snap package we have this problem */
 #ifdef SNAP
@@ -49,7 +48,7 @@ void MainWindow::on_start_rec_triggered()
 #endif //snap
 
     if(!this->setOutputLocation(pointAction)){
-        m_currenttitle->se_registato = Document::not_record;
+        doc->se_registato = Document::not_record;
         return;
     }
 
@@ -102,6 +101,8 @@ static void save(){
 bool MainWindow::setOutputLocation(const QPoint &hostRect)
 {
     QString tmp_internal;
+    Document *doc = m_canvas->data;
+
 #if defined (Q_OS_WINRT) || defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     Q_UNUSED(hostRect);
     const QString &writableDir = get_path_application::exe();
@@ -113,7 +114,7 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
     }
 
     tmp_internal = writableDir + QLatin1String( "/output.wav");
-    this->m_currenttitle->se_registato = Document::n_audio_record::record_zip;
+    doc->se_registato = Document::n_audio_record::record_zip;
 #else
     /* On android and ios the only way to record audio is in a zip file. */
     QAction *internal = nullptr, *ext = nullptr;
@@ -136,10 +137,10 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
     menu.addAction(ext);
 
     QObject::connect(internal, &QAction::triggered, this, [&]{
-         this->m_currenttitle->se_registato = Document::n_audio_record::record_zip;
+         doc->se_registato = Document::n_audio_record::record_zip;
     });
     QObject::connect(ext, &QAction::triggered, this, [&]{
-        this->m_currenttitle->se_registato = Document::n_audio_record::record_file;
+        doc->se_registato = Document::n_audio_record::record_file;
     });
 
     menu.move(hostRect);
@@ -148,13 +149,13 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
         goto free_;
 
     procede:
-    if(this->m_currenttitle->se_registato == Document::record_file){
+    if(doc->se_registato == Document::record_file){
         QString fileName;
         if(!qfilechoose::getFileForSave(fileName, TYPEAUDIO)){
             return false;
         }
 
-        m_currenttitle->audio_position_path = fileName;
+        doc->audio_position_path = fileName;
         m_audio_recorder->setOutputLocation(fileName);
         this->m_outputLocationSet = true;
         return true;
@@ -162,7 +163,7 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
     }
 #endif
 
-    if(this->m_currenttitle->se_registato == Document::record_zip){
+    if(doc->se_registato == Document::record_zip){
 #if !(defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
         const QString path = get_path(path::audio_pos);
         if(path == ""){
@@ -184,6 +185,6 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
     }
 
     free_:
-    m_currenttitle->se_registato = Document::not_record;
+    doc->se_registato = Document::not_record;
     return false;
 }

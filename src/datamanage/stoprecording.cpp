@@ -34,13 +34,15 @@ namespace removeAudio {
 
 void MainWindow::on_stop_rec_triggered()
 {
+    Document *doc = m_canvas->data;
+
     if(m_audio_recorder->isStopped())
         return;
 
     m_audio_recorder->stopRecording();
 
-    if(m_currenttitle->se_registato == Document::record_zip){
-        saveAudio(m_currenttitle, m_path, m_audio_recorder);
+    if(doc->se_registato == Document::record_zip){
+        saveAudio(doc, m_path, m_audio_recorder);
     }
 
     contrUi();

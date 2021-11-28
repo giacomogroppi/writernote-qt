@@ -11,7 +11,6 @@
 #include <QDropEvent>
 #include <QBuffer>
 #include "windows/updatecheck.h"
-#include "currenttitle/document.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/highlighter/highlighter.h"
 #include "cloud/struct_user.h"
@@ -91,7 +90,6 @@ public:
 
     QString m_path;
 
-    Document *m_currenttitle;
     Ui::MainWindow *ui;
     class AudioRecord *m_audio_recorder;
     //QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);

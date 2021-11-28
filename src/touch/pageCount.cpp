@@ -5,7 +5,7 @@
 void MainWindow::updatePageCount(int pageCount)
 {
     QString text;
-    const uint lenPage = this->m_currenttitle->datatouch->lengthPage();
+    const uint lenPage = this->m_canvas->data->datatouch->lengthPage();
 
     ui->page->setHidden(pageCount == -1);
 

@@ -16,9 +16,10 @@ enum MainWindow::n_need_save
             xmlstruct & xml,
             Document & tmp_read) const{
     int check1;
+    Document *doc = m_canvas->data;
 
     if(xml.getPath() == ""){
-        if(m_currenttitle->datatouch->userWrittenSomething(nullptr))
+        if(doc->datatouch->userWrittenSomething(nullptr))
             return n_need_save::need_save;
         return n_need_save::only_writernote;
     }
@@ -31,16 +32,16 @@ enum MainWindow::n_need_save
         return n_need_save::unable_load;
     }
 
-    if(!m_currenttitle->datatouch->userWrittenSomething(tmp_read.datatouch)){
+    if(!doc->datatouch->userWrittenSomething(tmp_read.datatouch)){
         return n_need_save::only_writernote;
     }
 
-    check1 = checksimilecopybook(tmp_read, *m_currenttitle) == OK_CHECK;
+    check1 = checksimilecopybook(tmp_read, *doc) == OK_CHECK;
 
     if(check1)
         return n_need_save::not_;
 
-    if(this->m_currenttitle->isEmpty() || m_currenttitle->datatouch->userWrittenSomething(nullptr)){
+    if(doc->isEmpty() || doc->datatouch->userWrittenSomething(nullptr)){
         return n_need_save::not_;
     }
 

@@ -41,7 +41,7 @@ void MainWindow::dropEvent(QDropEvent *event){
     }else if(find == IMAGE){
         point.point = event->posF();
 
-        this->m_currenttitle->m_img->addImage(__path_to_load, &point, this->m_path);
+        this->m_canvas->data->m_img->addImage(__path_to_load, &point, this->m_path);
 
     }
     else{

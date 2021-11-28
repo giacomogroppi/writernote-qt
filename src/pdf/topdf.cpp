@@ -81,13 +81,15 @@ bool topdf::createpdf(const bool withPdf){
 void MainWindow::on_actiontopdf_triggered()
 {
     QString path_pdf;
-    if(m_currenttitle->datatouch->isempty())
+    const Document *doc = m_canvas->data;
+
+    if(doc->datatouch->isempty())
         return user_message("There is nothing to convert to pdf");
 
     if(!qfilechoose::getFileForSave(path_pdf, TYPEFILEPDF))
         return;
 
-    topdf filepdf(path_pdf, *m_currenttitle);
+    topdf filepdf(path_pdf, *doc);
 
     if(!filepdf.createpdf(true)){
         dialog_critic("We had a problem saving the file to " + path_pdf);

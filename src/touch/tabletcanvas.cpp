@@ -40,7 +40,7 @@ TabletCanvas::TabletCanvas()
     setAutoFillBackground(true);
     setAttribute(Qt::WA_TabletTracking);
 
-    this->data = nullptr;
+    this->data = new Document;
 
     zoom = new class zoom_control;
     m_redoundo = new class redoundo(&data);
@@ -171,10 +171,6 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
 qreal TabletCanvas::pressureToWidth(qreal pressure)
 {
     return pressure * 10 + 1;
-}
-
-void TabletCanvas::settingdata(Document *data){
-    this->data = data;
 }
 
 static void saveLastMethod(TabletCanvas::e_method val){

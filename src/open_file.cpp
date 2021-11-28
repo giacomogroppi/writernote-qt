@@ -19,7 +19,7 @@
 void MainWindow::openFile(const char *pos){
     QString fileName, tmp;
     Document curr;
-    xmlstruct xml(&fileName, m_currenttitle);
+    xmlstruct xml(&fileName, m_canvas->data);
     n_need_save res_save;
 
     if(!pos){
@@ -72,7 +72,7 @@ void MainWindow::openFile(const char *pos){
     const bool pdf = fileName.indexOf(".pdf") != -1;
     if(pdf){
 #ifdef PDFSUPPORT
-        m_currenttitle->m_pdf->addPdf(fileName, nullptr, this->m_path, this->m_canvas);
+        m_canvas->data->m_pdf->addPdf(fileName, nullptr, this->m_path, this->m_canvas);
 #else
         user_message("Pdf support is not enable in this version");
 #endif // PDFSUPPORT
@@ -86,7 +86,7 @@ void MainWindow::openFile(const char *pos){
         */
         if(res_save == n_need_save::need_save){
             if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
-                savefile save(&m_path, m_currenttitle);
+                savefile save(&m_path, m_canvas->data);
                 if(save.savefile_check_file() != OK){
                     if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
                         return;
@@ -109,7 +109,7 @@ void MainWindow::openFile(const char *pos){
         }
 
         this->m_path = "";
-        this->m_currenttitle->reset();
+        this->m_canvas->data->reset();
 
     }
     aggiornotestiriascolto(this);

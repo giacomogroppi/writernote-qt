@@ -50,22 +50,11 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_canvas = canvas;
     this->m_canvas->parent = this;
 
-
     ui->setupUi(this);
-
-    this->m_currenttitle = new Document;
-
-    /*m_audioRecorder = new QAudioRecorder(this);
-
-    connect(m_audioRecorder, &QAudioRecorder::durationChanged, this, &MainWindow::updateProgress);
-    connect(m_audioRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
-            &MainWindow::displayErrorMessage);*/
 
     this->m_buffer = new QBuffer(this);
 
     this->ui->layouteditor->insertWidget(1, this->m_canvas);
-
-
 
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
 
@@ -78,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_option_copybook = new class option_copybook(this);
     this->m_text_w = new class text_widgets(this);
     this->m_sheet = new class fast_sheet_ui(this);
-    this->m_setting = new class setting_restore_ui(this, &m_currenttitle, &m_path);
+    this->m_setting = new class setting_restore_ui(this, &m_canvas->data, &m_path);
     NAME_LOG_EXT = new class log_ui(this);
     this->m_controllUi = new class ControllUiButton(this);
     this->m_audioplayer = new class audioplay(this);
@@ -101,7 +90,6 @@ MainWindow::MainWindow(QWidget *parent,
     m_canvas->m_sheet = m_sheet;
     m_canvas->m_highlighter = m_highlighter;
     m_canvas->m_text_w = m_text_w;
-    m_canvas->data = m_currenttitle;
 
     /* redo and undo */
     connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);
@@ -142,7 +130,6 @@ MainWindow::MainWindow(QWidget *parent,
 
     loadPenOrMouse();
 
-    this->m_canvas->settingdata(m_currenttitle);
     this->m_canvas->loadpixel();
 
     if(path)
@@ -173,7 +160,7 @@ void MainWindow::on_actionNew_File_triggered()
 {
     bool check;
     savecopybook checksave(this);
-    xmlstruct xml(&m_path, m_currenttitle);
+    xmlstruct xml(&m_path, m_canvas->data);
     Document __curr;
     n_need_save __res;
 
@@ -194,7 +181,8 @@ void MainWindow::on_actionNew_File_triggered()
 
     setWindowTitle("Writernote");
     updatePageCount(-1);
-    m_currenttitle->reset();
+    m_canvas->data->reset();
+
     m_canvas->clear();
     contrUi();
     m_path = "";
@@ -257,11 +245,10 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
     update_touch_or_pen();
 }
 
-
 void MainWindow::on_actionRemove_current_PDF_triggered()
 {
 #ifdef PDFSUPPORT
-    this->m_currenttitle->m_pdf->reset();
+    m_canvas->data->m_pdf->reset();
 #endif // PDFSUPPORT
 }
 
@@ -269,7 +256,6 @@ void MainWindow::on_buttonFullScreen_clicked()
 {
     this->setFullScreen();
 }
-
 
 void MainWindow::on_actionFull_Screen_triggered()
 {

@@ -6,7 +6,7 @@
 #include "../utils/dialog_critic/dialog_critic.h"
 
 void MainWindow::on_actionPrint_triggered()
-{
+{    
     /* TODO -> export a pdf and after share for mobile*/
 #ifdef ANDROID_WRITERNOTE
 #elif IOS_WRITERNOTE
@@ -14,7 +14,9 @@ void MainWindow::on_actionPrint_triggered()
     QPrinter printer;
     QPrintDialog dialogprint(&printer);
 
-    const double size_orizzontale = m_currenttitle->datatouch->biggerx();
+    const Document *doc = m_canvas->data;
+
+    const double size_orizzontale = doc->datatouch->biggerx();
     const double delta = (double)printer.width() / (double)size_orizzontale;
 
     DataPaint dataPaint = {
@@ -33,7 +35,7 @@ void MainWindow::on_actionPrint_triggered()
     if (! painter.begin(&printer)) { // failed to open file
         user_message("Writernote had an internal problem");
     }
-    TabletCanvas::load(painter, m_currenttitle, dataPaint);
+    TabletCanvas::load(painter, doc, dataPaint);
 
     painter.drawText(10, 10, "Test 2");
     painter.end();

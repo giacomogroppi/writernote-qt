@@ -13,7 +13,7 @@ static bool c = true;
 /* funzione che viene richiamata quando viene salvato */
 void MainWindow::on_actionSave_File_triggered()
 {
-    savefile savefile_i(&m_path, m_currenttitle);
+    savefile savefile_i(&m_path, m_canvas->data);
     QString new_path;
     bool check;
 

@@ -37,7 +37,7 @@ bool savecopybook::check_permission(){
         if(!qfilechoose::getFileForSave(parent->m_path, TYPEFILEWRITER))
             return false;
     }
-    savefile save_class(&this->parent->m_path, this->parent->m_currenttitle);
+    savefile save_class(&this->parent->m_path, this->parent->m_canvas->data);
 
     const bool check = save_class.savefile_check_file() == OK;
     if(!check)
