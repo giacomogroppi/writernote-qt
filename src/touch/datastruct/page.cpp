@@ -73,9 +73,9 @@ void page::drawNewPage(n_style __style)
     newStrokeVertical.__setPressureForAllPoint(widthToPressure(style.thickness));
 
     if(newStrokeOrizzontal.length())
-        this->append(newStrokeOrizzontal);
+        this->m_stroke_writernote.append(newStrokeOrizzontal);
     if(newStrokeVertical.length())
-        this->append(newStrokeVertical);
+        this->m_stroke_writernote.append(newStrokeVertical);
 
 }
 
@@ -93,9 +93,6 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
         const int decrease = (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4;
         const float pressure = TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION;
         m_pen.setColor(stroke.getColor(decrease));
-
-        if(!stroke.isIdUser())
-            continue;
 
         if(!stroke.constantPressure()){
             int counterPoint;
@@ -228,12 +225,7 @@ static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_
 
 bool page::userWrittenSomething() const
 {
-    uint i;
-    const uint len = lengthStroke();
-    for(i=0; i<len && !atStroke(i).isIdUser(); i++);
-
-    //qDebug() << QString("Page %1 %2").arg(this->count-1).arg(!i || !(i==len));
-    return !(i==len);
+    return this->m_stroke.length();
 }
 
 /*

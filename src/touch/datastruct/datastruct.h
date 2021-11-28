@@ -277,7 +277,6 @@ inline __slow point_s &datastruct::at_draw(const uint indexPoint, const uint ind
     static point_s point;
 
     at(indexPage).at_draw(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
-
     return point;
 }
 

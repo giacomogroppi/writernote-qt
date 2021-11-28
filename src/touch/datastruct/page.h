@@ -22,6 +22,7 @@ private:
     int count;
 
     QList<stroke> m_stroke;
+    QList<stroke> m_stroke_writernote;
 
     /* after adding data to the list, call triggernewview,
      *  and pass as all false, in this way what is
@@ -53,11 +54,16 @@ public:
     static double getResolutionHeigth();
 
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
-    void setVisible(const bool vis){this->IsVisible = vis;}
+    void setVisible(const bool vis);
 
     __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
-    uint lengthStroke() const;
+    /* you can access point written by writernote with this funcion */
+    __slow void at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
+
+    __fast uint lengthStroke() const;
+    __fast uint lengthStrokePage() const; // len point written by writernote
+
     bool isVisible() const;
     static void copy(const page &src, page &dest);
     void removeAt(const uint i);
@@ -75,6 +81,8 @@ public:
 
     __fast const stroke       & atStroke(const uint i) const;
     __fast stroke             & atStrokeMod(const uint i);
+
+    __fast const stroke       & atStrokePage(const uint i) const; //return the point written by writernote
 
     double minHeight() const;
     double currentHeight() const;
@@ -186,6 +194,11 @@ inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const
     IsVisible = true;
 }
 
+inline void page::setVisible(const bool vis)
+{
+    this->IsVisible = vis;
+}
+
 inline const stroke &page::atStroke(uint i) const
 {
     return this->m_stroke.at(i);
@@ -196,23 +209,47 @@ inline stroke &page::atStrokeMod(const uint i)
     return this->m_stroke.operator[](i);
 }
 
+inline const stroke &page::atStrokePage(const uint i) const
+{
+    return this->m_stroke_writernote.at(i);
+}
+
+static inline void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
+{
+    memcpy(&to, &from, sizeof(point_s));
+
+    to.m_x *= zoom;
+    to.m_y *= zoom;
+
+    to.m_x += translation.x();
+    to.m_y += translation.y();
+}
+
 inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
                           point_s &point, const double zoom) const
 {
     const stroke &stroke = atStroke(IndexStroke);
+    const point_s &__point = stroke.at(IndexPoint);
 
-    memcpy(&point, &stroke.at(IndexPoint), sizeof(point_s));
+    __at_draw_private(__point, point, zoom, translation);
+}
 
-    point.m_x *= zoom;
-    point.m_y *= zoom;
+inline void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const
+{
+    const stroke &stroke = this->m_stroke_writernote.at(IndexStroke);
+    const point_s &__point = stroke.at(IndexPoint);
 
-    point.m_x += translation.x();
-    point.m_y += translation.y();
+    __at_draw_private(__point, point, zoom, translation);
 }
 
 inline uint page::lengthStroke() const
 {
     return m_stroke.length();
+}
+
+inline uint page::lengthStrokePage() const
+{
+    return this->m_stroke_writernote.length();
 }
 
 inline bool page::isVisible() const

@@ -113,21 +113,18 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         page = &data->at(counterPage);
-        lenStroke = page->lengthStroke();
+        lenStroke = page->lengthStrokePage();
 
         if(!lenStroke) continue;
 
-        m_pen.setWidthF(TabletCanvas::pressureToWidth(page->atStroke(0).at(0).pressure * zoom * delta / 2.0));
-        m_pen.setColor(page->atStroke(0).getColor());
+        m_pen.setWidthF(TabletCanvas::pressureToWidth(page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
+        m_pen.setColor(page->atStrokePage(0).getColor());
 
         painter.setPen(m_pen);
 
-
         for(counterStroke = 0; counterStroke < lenStroke - 1; counterStroke++){
-            const stroke &stroke = page->atStroke(counterStroke);
+            const stroke &stroke = page->atStrokePage(counterStroke);
             lenPoint = stroke.length();
-
-            if(stroke.isIdUser()) break;
 
             for(counterPoint = 0; counterPoint < lenPoint-1; counterPoint += 2){
                 for(k=0; k<2; k++){

@@ -46,8 +46,6 @@ public:
     /* this function is used to set the pressure equal for all points. */
     void __setPressureForAllPoint(const double pressure);
 
-    bool isIdUser() const;
-
     int save(zip_source_t *file) const;
     int load(zip_file_t *file);
 
@@ -131,11 +129,6 @@ inline void stroke::modify()
 {
     this->needToCreateBiggerData = true;
     this->needToCreatePanterPath = true;
-}
-
-inline bool stroke::isIdUser() const
-{
-    return metadata.idtratto >= 0;
 }
 
 /* call this function only when constantPressureVal is 1 */
