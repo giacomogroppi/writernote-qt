@@ -1,6 +1,7 @@
 #include "stroke.h"
 #include "page.h"
 #include "../../utils/color/setcolor.h"
+#include "../../utils/common_error_definition.h"
 #include <QDebug>
 
 stroke::stroke()
@@ -26,7 +27,7 @@ void stroke::__setPressureForAllPoint(const double pressure)
 
 int stroke::save(zip_source_t *file) const
 {
-
+    return OK;
 }
 
 int stroke::load(zip_file_t *file)
