@@ -39,3 +39,18 @@ property_control::~property_control()
     return rect;
 }*/
 
+void property_control::on_button_copy_clicked()
+{
+    emit ActionSelection(ActionProperty::__copy);
+}
+
+void property_control::on_button_cut_clicked()
+{
+    emit ActionSelection(ActionProperty::__cut);
+}
+
+void property_control::on_button_delete_clicked()
+{
+    emit ActionSelection(ActionProperty::__delete);
+}
+

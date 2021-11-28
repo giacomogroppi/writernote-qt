@@ -45,7 +45,7 @@ TabletCanvas::TabletCanvas()
     zoom = new class zoom_control;
     m_redoundo = new class redoundo(&data);
     m_property = new class property_control(this);
-    m_square = new class square(m_property);
+    m_square = new class square(this, m_property);
 
     loadScrollinSetting();
 
@@ -56,8 +56,6 @@ TabletCanvas::TabletCanvas()
 TabletCanvas::~TabletCanvas(){
     DELETE_IF_EXIST(zoom);
     DELETE_IF_EXIST(m_redoundo);
-
-    delete m_square;
 
     saveLastMethod(this->medotodiinserimento);
     saveScrollingSetting();

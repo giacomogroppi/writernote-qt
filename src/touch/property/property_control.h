@@ -2,7 +2,6 @@
 #define PROPERTY_CONTROL_H
 
 #include <QWidget>
-#include "../copy/copy_selection.h"
 #include <QRect>
 
 class Document;
@@ -19,8 +18,10 @@ public:
     explicit property_control(QWidget *parent);
     ~property_control();
 
-    enum Action: uchar{
-
+    enum ActionProperty: uchar{
+        __copy,
+        __cut,
+        __delete
     };
 
     //QRect getPos(const QPoint &topLeft, const QPoint &bottomRight);
@@ -32,7 +33,11 @@ private:
     Ui::property_control *ui;
 
 signals:
-    void ActionSelection(property_control::Action action);
+    void ActionSelection(property_control::ActionProperty action);
+private slots:
+    void on_button_copy_clicked();
+    void on_button_cut_clicked();
+    void on_button_delete_clicked();
 };
 
 inline void property_control::Show(const QPoint &point)

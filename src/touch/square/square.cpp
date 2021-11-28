@@ -6,14 +6,22 @@
 #include "../../images/fromimage.h"
 #include "../property/property_control.h"
 
-square::square(property_control *property)
+square::square(QObject *parent, property_control *property):
+    QObject(parent)
 {
     this->m_property = property;
+
+    QObject::connect(m_property, &property_control::ActionSelection, this, &square::actionProperty);
 
     penna.setStyle(Qt::DotLine);
     penna.setWidth(2);
     penna.setColor(QColor::fromRgb(30, 90, 255));
     this->reset();
+}
+
+square::~square()
+{
+
 }
 
 void square::updatePoint(const QPointF &__point)
@@ -40,8 +48,6 @@ void square::updatePoint(const QPointF &__point)
 bool square::find(Document *data){
     uint counterStroke, pageCounter, lenStroke;
     bool tmp_find;
-
-    uint counterPoint;
 
     const uint lenPage = data->datatouch->lengthPage();
     this->in_box = false;
@@ -244,6 +250,11 @@ void square::move(const QPointF &punto, Document *data){
     pointfine.point.setY(pointfine.point.y() + __point.y());
 
     __need_reload = true;
+}
+
+void square::actionProperty(property_control::ActionProperty action)
+{
+
 }
 
 /*
