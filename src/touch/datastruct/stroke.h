@@ -30,11 +30,14 @@ private:
     QPainterPath path;
 
     QRectF biggerData;
-    bool biggerDataSet: 1;
     bool constantPressureVal: 1;
+
     bool needToCreatePanterPath: 1;
+    bool needToCreateBiggerData: 1;
 
     void updateFlagPressure();
+
+    void modify();
 
 public:
     stroke();
@@ -123,6 +126,13 @@ inline void stroke::updateFlagPressure()
     this->constantPressureVal = true;
 }
 
+/* call this function when modify the stroke */
+inline void stroke::modify()
+{
+    this->needToCreateBiggerData = true;
+    this->needToCreatePanterPath = true;
+}
+
 inline bool stroke::isIdUser() const
 {
     return metadata.idtratto >= 0;
@@ -153,7 +163,7 @@ inline void stroke::append(const point_s &point)
 {
     this->m_point.append(point);
     this->updateFlagPressure();
-    this->needToCreatePanterPath = true;
+    this->modify();
 }
 
 inline void stroke::setMetadata(const metadata_stroke &metadata)
@@ -181,7 +191,7 @@ inline void stroke::setId(const int id)
 inline void stroke::removeAt(int index)
 {
     this->m_point.removeAt(index);
-    this->needToCreatePanterPath = true;
+    this->modify();
 }
 
 // return the "old" idtratto
@@ -203,8 +213,9 @@ inline int stroke::getPosizioneAudio() const
 /* after append data we need to call this funcion to update */
 inline QRectF stroke::getBiggerPointInStroke()
 {
-    if(this->biggerDataSet)
+    if(!this->needToCreateBiggerData){
         return this->biggerData;
+    }
 
     int i, len = this->length();
     QRectF conf;
@@ -219,7 +230,8 @@ inline QRectF stroke::getBiggerPointInStroke()
             conf.setY(point.m_y);
     }
 
-    biggerDataSet = true;
+    this->needToCreateBiggerData = false;
+
     biggerData = conf;
     return biggerData;
 }
@@ -297,7 +309,10 @@ inline void stroke::copy(const stroke &src, stroke &dest)
 {
     dest.m_point = src.m_point;
     dest.biggerData = src.biggerData;
-    dest.biggerDataSet = src.biggerDataSet;
+
+    dest.needToCreateBiggerData = src.needToCreateBiggerData;
+    dest.needToCreatePanterPath = src.needToCreatePanterPath;
+
     dest.constantPressureVal = src.constantPressureVal;
     memcpy(&dest.metadata, &src.metadata, sizeof(src.metadata));
     dest.metadataSet = src.metadataSet;

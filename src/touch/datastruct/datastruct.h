@@ -107,7 +107,7 @@ public:
     bool isinside(const QPointF &topleft, const QPointF &bottomright, const uint IndexPage, const uint IndexStroke) const;
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
-
+    static bool isinside(const QRectF &rect, const QPointF &point); // true if the point is inside the rect
 
     void adjustAll(const uint width, const uint height);
     void adjustAll(const QSize &size);
@@ -420,6 +420,11 @@ inline int datastruct::appendStroke(const stroke &__stroke)
 inline void datastruct::appendStroke(const stroke &stroke, const int page)
 {
     this->at_mod(page).append(stroke);
+}
+
+inline bool datastruct::isinside(const QRectF &rect, const QPointF &point)
+{
+    return datastruct::isinside(rect.topLeft(), rect.bottomRight(), point);
 }
 
 inline int datastruct::adjustStroke(stroke &stroke)

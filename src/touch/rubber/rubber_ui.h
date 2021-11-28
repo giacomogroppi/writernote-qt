@@ -41,8 +41,8 @@ private:
     QList<int> Page;
     void drawAreaRubber(QPainter &, const QPointF &point);
 
-    bool isin(const point_s * __point,
-              const QPointF &point_t);
+    bool isin(const QPointF &point, const QPointF &point_t);
+    bool isin(const point_s * __point, const QPointF &point_t);
 
     QList<int> gomma_delete_id;
 

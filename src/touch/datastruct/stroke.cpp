@@ -125,10 +125,11 @@ void stroke::createQPainterPath()
 
 void stroke::reset()
 {
-    this->biggerDataSet = false;
+    this->needToCreateBiggerData = true;
+    this->needToCreatePanterPath = true;
+
     this->metadataSet = false;
     this->constantPressureVal = false;
-    this->needToCreatePanterPath = false;
 
     this->m_point.clear();
     this->path = QPainterPath();

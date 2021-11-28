@@ -48,7 +48,6 @@ void rubber_ui::on_partial_button_clicked()
  * it returns true if it actually deleted something, otherwise it returns false
 */
 QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
-    int id;
     int counterStroke, lenStroke, counterPage;
     const int lenPage = data->lengthPage();
 
@@ -59,19 +58,26 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
 
     for(counterPage = 0; counterPage < lenPage && !data->at(counterPage).isVisible(); counterPage ++);
 
-
     if(this->m_type_gomma == e_type_rubber::total){
         for(; counterPage < lenPage; counterPage ++){
-            const page &page = data->at(counterPage);
+            page &page = data->at_mod(counterPage);
 
             if(!page.isVisible()) break;
 
             lenStroke = page.lengthStroke();
 
             for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-                const stroke &stroke = page.atStroke(counterStroke);
+                stroke &stroke = page.atStrokeMod(counterStroke);
                 const int lenPoint = stroke.length();
                 const int id = stroke.getId();
+
+                const QRectF &pos = stroke.getBiggerPointInStroke();
+
+                /* if the touch point is not within the meaning of the rectangle formed
+                 * by the top left point and the bottom right point,
+                 *  we can directly continue with the next stroke. */
+                if(!datastruct::isinside(pos, lastPoint))
+                    continue;
 
                 for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
                     const point_s &point = data->at_draw(counterPoint, counterPage, counterStroke);
@@ -181,4 +187,12 @@ bool rubber_ui::isin(const point_s * __point,
             && (point_t.x() + m_size_gomma) > __point->m_x
             && (point_t.y() - m_size_gomma) < __point->m_y
             && (point_t.y() + m_size_gomma) > __point->m_y;
+}
+
+bool rubber_ui::isin(const QPointF &point, const QPointF &point_t)
+{
+    return (point_t.x() - m_size_gomma) < point.x()
+            && (point_t.x() + m_size_gomma) > point.x()
+            && (point_t.y() - m_size_gomma) < point.y()
+            && (point_t.y() + m_size_gomma) > point.y();
 }
