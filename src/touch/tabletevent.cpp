@@ -45,7 +45,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     rubber_method = (medotodiinserimento == e_method::rubber && !highlighter_method);
     text_method = (medotodiinserimento == e_method::text && !highlighter_method);
 
-
     //qDebug() << highlighter_method << pen_method << selection_method << rubber_method << text_method << event->pointerType();
 
     if(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight){
@@ -54,71 +53,68 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         goto end;
     }
 
-    switch (eventType) {
-        case QEvent::TabletPress: /* when the user release the tablet */
-            ManageStart(event, pointTouch);
-            break;
-        case QEvent::TabletMove: /* user move the pen */
-            if (event->device() == QTabletEvent::RotationStylus)
-                updateCursor(event);
+    if(eventType == QEvent::TabletPress){ /* first point */
+        ManageStart(event, pointTouch);
+    }
+    else if(eventType == QEvent::TabletMove){ /* user move the pen */
+        if (event->device() == QTabletEvent::RotationStylus){
+            updateCursor(event);
+        }
 
-#if defined(WIN32) || defined(WIN64)
-            this->isdrawing = true;
-#endif
-            if (m_deviceDown) {
-                QPainter painter(&m_pixmap);
-                if(pen || highlighter_method){
-                    updateBrush(event);
+        #if defined(WIN32) || defined(WIN64)
+        this->isdrawing = true;
+        #endif
 
-                    //paintPixmap(painter, event);
-                }
-
-                lastPoint.pos = event->pos();
-                lastPoint.pressure = event->pressure();
-                lastPoint.rotation = event->rotation();
-
-                if(pen_method || highlighter_method){
-                    updatelist(event);
-                }
-                else if(rubber_method){
-                    const QList<int> &ref = m_rubber->actionRubber(data->datatouch, pointTouch);
-
-                    if(ref.length()){
-                        this->triggerNewView(ref, true);
-                    }
-                }
-                else if(selection_method){
-                    if(!m_square->somethingInBox()){ /* it means that the user not select anything */
-                        m_square->updatePoint(pointTouch);
-                    }
-                    else{
-                        if(!m_square->isinside(pointTouch)){
-                            /* se il tocco non è stato interno */
-                            m_square->reset();
-                        }
-                        else{
-                            /* a questo punto può muovere di un delta x e y */
-                            m_square->move(pointTouch, data);
-                        }
-                    }
-                    sel = false;
-                }else if(text_method){
-                    if(m_text_w->isIn(pointTouch)){
-
-                    }
-                    else{
-                        m_text_w->createNew(pointTouch);
-                    }
-                }
-            }else{
-                sel = false;
+        if (m_deviceDown) {
+            QPainter painter(&m_pixmap);
+            if(pen_method || highlighter_method){
+                updateBrush(event);
             }
-            break;
-        case QEvent::TabletRelease: /* pen leaves the tablet */
-            this->ManageFinish(event);
-            break;
-        default:
-            break;
+
+            lastPoint.pos = event->pos();
+            lastPoint.pressure = event->pressure();
+            lastPoint.rotation = event->rotation();
+
+            if(pen_method || highlighter_method){
+                updatelist(event);
+            }
+            else if(rubber_method){
+                const QList<int> &ref = m_rubber->actionRubber(data->datatouch, pointTouch);
+
+                if(ref.length()){
+                    this->triggerNewView(ref, true);
+                }
+            }
+            else if(selection_method){
+                if(!m_square->somethingInBox()){ /* it means that the user not select anything */
+                    m_square->updatePoint(pointTouch);
+                }
+                else{
+                    if(!m_square->isinside(pointTouch)){
+                        /* se il tocco non è stato interno */
+                        m_square->reset();
+                    }
+                    else{
+                        /* a questo punto può muovere di un delta x e y */
+                        m_square->move(pointTouch, data);
+                    }
+                }
+                sel = false;
+            }else if(text_method){
+                if(m_text_w->isIn(pointTouch)){
+
+                }
+                else{
+                    m_text_w->createNew(pointTouch);
+                }
+            }
+        }else{
+            sel = false;
+        }
+    }
+
+    else if(eventType == QEvent::TabletRelease){ /* pen leaves the tablet */
+        this->ManageFinish(event);
     }
 
 end:
@@ -164,6 +160,7 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
 inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointTouch){
     if(m_deviceDown)
         return;
+
     if(pen_method || highlighter_method){
         updatelist(event);
     }
@@ -184,23 +181,22 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
 }
 
 void TabletCanvas::updatelist(QTabletEvent *event){
-    static double size;
-    static uchar alfa;
-    static point_s tmp_point;
-    //static QPointF PointFirstPage;
+    double size;
+    uchar alfa;
+    point_s tmp_point;
+    stroke &strokeTmp = __tmp;
 
     const QPointF &pointTouch = event->posF();
-
-    //PointFirstPage = this->data->datatouch->getPointFirstPage();
 
     size = event->pressure();
     alfa = highlighter_method ? m_highlighter->getAlfa() : 255;
 
     if(!this->m_deviceDown){
-        __tmp.setId(data->datatouch->maxId() + 1);
-        __tmp.setPositioneAudio(parent->m_audio_recorder->getCurrentTime());
-        __tmp.setColor(m_color);
-        __tmp.setAlfaColor(alfa);
+        strokeTmp.setId(data->datatouch->maxId() + 1);
+
+        strokeTmp.setPositioneAudio(parent->m_audio_recorder->getCurrentTime());
+        strokeTmp.setColor(m_color);
+        strokeTmp.setAlfaColor(alfa);
     }
     else{
         /* it's already set */
@@ -210,7 +206,7 @@ void TabletCanvas::updatelist(QTabletEvent *event){
     tmp_point.m_y = pointTouch.y();
     tmp_point.pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
-    __tmp.append(tmp_point);
+    strokeTmp.append(tmp_point);
 }
 
 static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
@@ -218,6 +214,7 @@ static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTh
 
     /* for debug */
     stroke & strokeToAppend = __tmp;
+    int pageMod;
     const uint lenPoint = strokeToAppend.length();
     point_s *point;
     const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
@@ -233,11 +230,12 @@ static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTh
     }
 
     if(toTheTop){
-        doc.datatouch->appendToTheTop(strokeToAppend);
+        pageMod = doc.datatouch->appendToTheTop(strokeToAppend);
     }else{
-        doc.datatouch->appendStroke(strokeToAppend);
+        pageMod = doc.datatouch->appendStroke(strokeToAppend);
     }
 
-    doc.datatouch->at_mod(strokeToAppend.getPage()).triggerRenderImage(time, toTheTop);
+    doc.datatouch->at_mod(pageMod).triggerRenderImage(time, toTheTop);
+
     strokeToAppend.reset();
 }

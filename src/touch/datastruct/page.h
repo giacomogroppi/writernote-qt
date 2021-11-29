@@ -262,10 +262,9 @@ inline void page::removeAt(const uint i)
 inline int page::maxId() const
 {
     uint i;
-    uint len;
+    const uint len = lengthStroke();
     int id;
 
-    len = lengthStroke();
     id = 0;
 
     for(i = 0; i < len; i++){
@@ -286,9 +285,13 @@ inline const stroke &page::last() const
 inline void page::append(const stroke &strokeAppend)
 {
     int lastNewIndex = strokeTmp.length();
-    this->strokeTmp.append(stroke());
+    this->strokeTmp.append(strokeAppend);
     this->strokeTmp.operator[](lastNewIndex) = strokeAppend;
-    //this->m_stroke.append(stroke);
+
+    /* they will be automatically removed when
+     * the project is compiled in release mode */
+    Q_ASSERT(strokeTmp.at(lastNewIndex).length() == strokeAppend.length());
+    Q_ASSERT(strokeTmp.at(lastNewIndex).getId()  == strokeAppend.getId());
 }
 
 inline void page::appendToTheTop(const stroke &stroke)

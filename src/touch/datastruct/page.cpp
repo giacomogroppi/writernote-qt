@@ -136,16 +136,21 @@ inline void page::mergeList()
 {
     int i;
     const int len = this->strokeTmp.length();
-    int index;
+    int index = m_stroke.length();
     //LOG_CONDITION(len > 1, "void page::mergeList", log_ui::type_write::possible_bug);
 
-    index = m_stroke.length();
-
     for(i = 0; i < len; i++){
-        m_stroke.append(stroke());
-        m_stroke.operator[]( index ) = strokeTmp.at(i);
+        const stroke &stroke = strokeTmp.at(i);
+
+        m_stroke.append(stroke);
+
+        Q_ASSERT(m_stroke.at(index).length() == strokeTmp.at(i).length());
+        Q_ASSERT(m_stroke.at(index).getId() == strokeTmp.at(i).getId());
+
         index ++;
     }
+
+    //qDebug() << this << "page::mergeList" << this->maxId() << "count" << this->count << "StrokeTmpLen" << strokeTmp.length();
     strokeTmp.clear();
 }
 

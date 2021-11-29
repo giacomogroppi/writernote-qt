@@ -13,7 +13,7 @@
 
 struct metadata_stroke{
     int page;
-    int idtratto;
+    int idtratto = -1;
     int posizione_audio;
     struct colore_s color;
 };
@@ -55,9 +55,7 @@ public:
     point_s         &at_mod(const int index);
 
     void                append(const point_s &point);
-    void                setMetadata(const metadata_stroke & metadata);
-    void                setMetadata(const int page, const int idtratto,
-                                    const int posizione_audio, const struct colore_s color);
+    void                setMetadata(const int page, const int idtratto, const int posizione_audio, const struct colore_s color);
 
     void setPage(int page);
     void setPositioneAudio(const int m_pos_ris);
@@ -101,6 +99,9 @@ public:
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
     stroke &operator=(const stroke &other);
+
+    /* debug */
+    QString toString() const;
 };
 
 inline void stroke::updateFlagPressure()
@@ -158,11 +159,6 @@ inline void stroke::append(const point_s &point)
     this->modify();
 }
 
-inline void stroke::setMetadata(const metadata_stroke &metadata)
-{
-    memcpy(&this->metadata, &metadata, sizeof(this->metadata));
-}
-
 inline void stroke::setPage(int page)
 {
     this->metadata.page = page;
@@ -184,7 +180,6 @@ inline void stroke::removeAt(int index)
     this->modify();
 }
 
-// return the "old" idtratto
 inline int stroke::getId() const
 {
     return metadata.idtratto;
@@ -227,6 +222,18 @@ inline QRectF stroke::getBiggerPointInStroke()
             topLeft.setY(point.m_y);
         if(bottomRight.y() < point.m_y)
             bottomRight.setY(point.m_y);
+    }
+
+    if(bottomRight.x() < topLeft.x()){
+        const double x = topLeft.x();
+        topLeft.setX(bottomRight.x());
+        bottomRight.setX(x);
+    }
+
+    if(topLeft.x() > bottomRight.y()){
+        const double y = topLeft.y();
+        topLeft.setY(bottomRight.y());
+        bottomRight.setY(y);
     }
 
     this->needToCreateBiggerData = false;
@@ -332,5 +339,15 @@ inline stroke &stroke::operator=(const stroke &other)
     stroke::copy(other, *this);
     return *this;
 }
+
+inline QString stroke::toString() const
+{
+    QString message;
+    message += QString::number((size_t) this) + " length" + QString::number(length());
+    message += " id" + QString::number(this->metadata.idtratto);
+
+    return message;
+}
+
 
 #endif // STROKE_H

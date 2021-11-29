@@ -206,16 +206,12 @@ inline double datastruct::proportion() const
 
 inline int datastruct::maxId()
 {
-    static int biggerID;
-    static int tmp_id;
-    static uint i;
-
+    int biggerID;
+    int tmp_id;
+    uint i;
     const uint len = this->lengthPage();
 
     biggerID = 0;
-
-    if(isempty())
-        return biggerID;
 
     for(i = 0; i < len; ++i){
         tmp_id = this->m_page.at(i).maxId();
@@ -460,7 +456,7 @@ inline int datastruct::adjustStroke(stroke &stroke)
     }
 
     page = this->whichPage(stroke);
-    stroke.setId(page);
+    stroke.setPage(page);
     return page;
 }
 
