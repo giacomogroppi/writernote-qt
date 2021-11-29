@@ -87,8 +87,11 @@ public:
     void restoreLastTranslation(const int heightView);
     void controllForRepositioning();
 
-    void removePointId(const QList<int> &list);
-    void removePointId(int id);
+    /* the function save in QList<int> *page the page modify [can accept NULL]*/
+    void removePointId(const QList<int> &list, QList<int> * page);
+
+    /* return the point of the current point remove */
+    int removePointId(const int id);
 
     /* return the index of the point move */
     QList<int> *MovePoint(const QRectF &rect, const QPointF &__t);

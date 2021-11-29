@@ -80,13 +80,13 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                     const QPointF &topLeft = pos.topLeft() + translation - QPointF(m_size_gomma, m_size_gomma);
                     const QPointF &bottomRigth = pos.bottomRight() + translation + QPointF(m_size_gomma, m_size_gomma);
 
-                    //qDebug() << "pos" << pos << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
+                    qDebug() << "pos" << pos << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
 
                     /* if the touch point is not within the meaning of the rectangle formed
                      * by the top left point and the bottom right point,
                      *  we can directly continue with the next stroke. */
                     if(!datastruct::isinside(topLeft, bottomRigth, lastPoint)){
-                        //qDebug() << "rubber_ui::actionRubber continue";
+                        qDebug() << "rubber_ui::actionRubber continue";
                         continue;
                     }
                 }
@@ -101,7 +101,7 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
                         gomma_delete_id.append(id);
 
-                        //qDebug() << "rubber_ui::actionRubber color" << stroke.getColor().alpha();
+                        qDebug() << "rubber_ui::actionRubber color" << stroke.getColor().alpha();
 
                         stroke.setAlfaColor(stroke.getColor().alpha() / DECREASE);
 
@@ -143,40 +143,17 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
     }
 
-    //qDebug() << "QList<int> *rubber_ui::actionRubber" << Page << this->gomma_delete_id;
+    qDebug() << "QList<int> *rubber_ui::actionRubber" << Page << this->gomma_delete_id;
 
     return Page;
 }
 
 bool rubber_ui::clearList(datastruct *data)
 {
-    int counterPage, counterStroke, lenPage, lenStroke;
-    const page *page;
-
-    Page.clear();
-
     if(gomma_delete_id.isEmpty())
         return false;
 
-    for(counterPage = 0, lenPage = data->lengthPage(); counterPage < lenPage; counterPage  ++){
-        page = &data->at(counterPage);
-        lenStroke = page->lengthStroke();
-
-        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            const stroke &stroke = page->atStroke(counterStroke);
-            if(gomma_delete_id.indexOf(stroke.getId()) != -1){
-                if(Page.indexOf(stroke.getPage()) == -1){
-
-                    if(stroke.getPage() != counterPage)
-                        LOG("rubber_ui::clearList point->page != counterPage", log_ui::possible_bug);
-
-                    Page.append(stroke.getPage());
-                }
-            }
-        }
-    }
-
-    data->removePointId(gomma_delete_id);
+    data->removePointId(gomma_delete_id, &Page);
 
     gomma_delete_id.clear();
     data->triggerNewView(Page, -1, true);
