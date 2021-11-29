@@ -134,7 +134,7 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
                      *  and those that are too high such as the margins of the pixmap
                     */
 
-                    const auto &ref = doc.datatouch->at_draw(counterPoint + k, counterPage, counterStroke);
+                    const auto &ref = doc.datatouch->at_draw_page(counterPoint + k, counterPage, counterStroke);
                     xtemp[k] = ref.m_x * delta;
                     ytemp[k] = ref.m_y * delta;
 
