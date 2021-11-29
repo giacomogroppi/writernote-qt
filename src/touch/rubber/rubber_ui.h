@@ -34,15 +34,14 @@ public:
     int m_size_gomma = DEFAULT_GOMMA_SIZE;
     e_type_rubber m_type_gomma = e_type_rubber::total;
 
-    QList<int> *actionRubber(datastruct *, const QPointF &);
+    const QList<int> &actionRubber(datastruct *, const QPointF &);
     bool clearList(datastruct *);
 
 private:
     QList<int> Page;
-    void drawAreaRubber(QPainter &, const QPointF &point);
 
     bool isin(const QPointF &point, const QPointF &point_t);
-    bool isin(const point_s * __point, const QPointF &point_t);
+    bool isin(const point_s &__point, const QPointF &point_t);
 
     QList<int> gomma_delete_id;
 

@@ -128,7 +128,6 @@ void stroke::reset()
     this->needToCreateBiggerData = true;
     this->needToCreatePanterPath = true;
 
-    this->metadataSet = false;
     this->constantPressureVal = false;
 
     this->m_point.clear();

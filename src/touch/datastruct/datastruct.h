@@ -188,10 +188,6 @@ public:
     inline double proportion() const;
 
     friend class xmlstruct;
-
-    // for debug
-    void checkPositionData(const QPixmap &pixmap, const QSize &maxSize);
-
 };
 
 /* this function does not consider the zoom */
@@ -437,6 +433,12 @@ inline void datastruct::appendStroke(const stroke &stroke, const int page)
     this->at_mod(page).append(stroke);
 }
 
+inline bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point)
+{
+    return      topleft.x() <= point.x()        &&  topleft.y() <= point.y()
+            &&  bottonright.x() >= point.x()    &&  bottonright.y() >= point.y();
+}
+
 inline bool datastruct::isinside(const QRectF &rect, const QPointF &point)
 {
     return datastruct::isinside(rect.topLeft(), rect.bottomRight(), point);
@@ -465,15 +467,5 @@ inline int datastruct::appendToTheTop(const stroke &stroke)
     this->at_mod(page).appendToTheTop(stroke);
     return page;
 }
-
-#ifdef DEBUGINFO
-inline void datastruct::checkPositionData(const QPixmap &pixmap, const QSize &maxSize)
-{
-    Q_UNUSED(maxSize);
-    pixmap.height();
-}
-#else
-inline void datastruct::checkPositionData(const QPixmap &, const QSize &) {}
-#endif
 
 #endif // DATASTRUCT_H

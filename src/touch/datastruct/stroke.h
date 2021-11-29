@@ -24,7 +24,6 @@ private:
     QList<point_s> m_point;
 
     struct metadata_stroke metadata;
-    bool metadataSet: 1;
     int versione = VER_STROKE;
 
     QPainterPath path;
@@ -161,9 +160,7 @@ inline void stroke::append(const point_s &point)
 
 inline void stroke::setMetadata(const metadata_stroke &metadata)
 {
-    Q_ASSERT(this->metadataSet == 0);
     memcpy(&this->metadata, &metadata, sizeof(this->metadata));
-    metadataSet = 1;
 }
 
 inline void stroke::setPage(int page)
@@ -210,22 +207,31 @@ inline QRectF stroke::getBiggerPointInStroke()
         return this->biggerData;
     }
 
+    //qDebug() << "stroke::getBiggerPointInStroke call";
+
     int i, len = this->length();
-    QRectF conf;
-    conf.setTopLeft(QPointF(this->at(0).m_x, this->at(0).m_y));
-    conf.setBottomRight(conf.topLeft());
+    const point_s &first = at(0);
+    QPointF topLeft(first.m_x, first.m_y);
+    QPointF bottomRight(topLeft);
 
     for (i = 0; i < len; i++){
         const point_s &point = at(i);
-        if(point.m_x >= conf.x())
-            conf.setX(point.m_x);
-        if(point.m_y >= conf.y())
-            conf.setY(point.m_y);
+
+        if(topLeft.x() > point.m_x)
+            topLeft.setX(point.m_x);
+        if(bottomRight.x() < point.m_x)
+            bottomRight.setX(point.m_y);
+
+
+        if(topLeft.y() > point.m_y)
+            topLeft.setY(point.m_y);
+        if(bottomRight.y() < point.m_y)
+            bottomRight.setY(point.m_y);
     }
 
     this->needToCreateBiggerData = false;
 
-    biggerData = conf;
+    biggerData = QRectF(topLeft, bottomRight);
     return biggerData;
 }
 
@@ -268,6 +274,7 @@ inline bool stroke::constantPressure() const
 inline void stroke::setAlfaColor(const uchar alfa)
 {
     this->metadata.color.colore[3] = alfa;
+    this->needToCreatePanterPath = true;
 }
 
 inline void stroke::at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const
@@ -308,7 +315,6 @@ inline void stroke::copy(const stroke &src, stroke &dest)
 
     dest.constantPressureVal = src.constantPressureVal;
     memcpy(&dest.metadata, &src.metadata, sizeof(src.metadata));
-    dest.metadataSet = src.metadataSet;
 
     dest.needToCreatePanterPath = src.needToCreatePanterPath;
 
