@@ -18,8 +18,8 @@ bool datastruct::needToCreateNewSheet(){
         page = &at(counterPage);
         len = page->lengthStroke();
         for(i=0; i<len; i++){
-            if(page->atStroke(i).isIdUser())
-                return true;
+            if(page->atStroke(i).length())
+                    return true;
         }
     }
     return false;

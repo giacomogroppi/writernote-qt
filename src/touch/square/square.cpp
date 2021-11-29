@@ -48,10 +48,10 @@ void square::updatePoint(const QPointF &__point)
 bool square::find(Document *data){
     uint counterStroke, pageCounter, lenStroke;
     bool tmp_find;
-
+    const QPointF &translation = data->datatouch->getPointFirstPage();
     const uint lenPage = data->datatouch->lengthPage();
-    this->in_box = false;
 
+    this->in_box = false;
     this->adjustPoint();
 
     /* point selected by user */
@@ -60,11 +60,8 @@ bool square::find(Document *data){
 
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
             const stroke &stroke = data->datatouch->at(pageCounter).atStroke(counterStroke);
-                    //data->datatouch->at_draw(counterStroke, pageCounter);
 
-            if(!stroke.isIdUser()) continue;
-
-            if(datastruct::isinside(pointinit.point, pointfine.point, stroke)){
+            if(datastruct::isinside(pointinit.point + translation , pointfine.point + translation, stroke)){
                 if(m_id.indexOf(stroke.getId()) == -1) {
                     m_id.append(stroke.getId());
                 }

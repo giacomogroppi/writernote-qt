@@ -79,10 +79,11 @@ void page::drawNewPage(n_style __style)
 
 }
 
-void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
+void page::drawEngine(QPainter &painter, QList<stroke> &List,
                       const int m_pos_ris)
 {
     struct Point lastPoint;
+    int i;
     QBrush m_brush;
     QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
     static QPointF pointDraw;
@@ -121,19 +122,12 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List, int i,
 
 inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
 {
-    int i = 0;
-    int len = lengthStroke();
-
     painter.setRenderHint(QPainter::TextAntialiasing, false);
 
-    if(len)
-        this->moveToUserPoint(i);
-
     if(all)
-        this->drawEngine(painter, this->m_stroke, i, m_pos_ris);
+        this->drawEngine(painter, this->m_stroke, m_pos_ris);
 
-    i=0;
-    this->drawEngine(painter, this->strokeTmp, i, m_pos_ris);
+    this->drawEngine(painter, this->strokeTmp, m_pos_ris);
 
     this->mergeList();
 }

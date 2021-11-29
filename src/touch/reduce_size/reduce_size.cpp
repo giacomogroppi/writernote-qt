@@ -51,13 +51,6 @@ void reduce_size::decrese(datastruct *data){
 
         len = page.lengthStroke();
         for(i=0; i<len; ++i){
-            const stroke &stroke = page.atStroke(i);
-
-            if(!stroke.isIdUser()){
-                /* WE CAN'T REMOVE WRITERNOTE POINT */
-                continue;
-            }
-
             page.atStrokeMod(i).decreasePrecision();
 
         }

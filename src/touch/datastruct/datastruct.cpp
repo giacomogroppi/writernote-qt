@@ -69,12 +69,11 @@ void datastruct::decreaseAlfa(const int id,
         page_read = &at(counterPage);
         len = page_read->lengthStroke();
 
-        page_read->moveToUserPoint(counterStroke);
+        if(!len) continue;
 
-        if(counterStroke < len)
-            page_mod = &at_mod(counterPage);
+        page_mod = &at_mod(counterPage);
 
-        for(; counterStroke < len; counterStroke++){
+        for(counterStroke = 0; counterStroke < len; counterStroke++){
             stroke &stroke = page_mod->atStrokeMod(counterStroke);
 
             if(stroke.getId() == id){

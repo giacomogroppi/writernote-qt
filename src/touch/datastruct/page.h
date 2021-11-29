@@ -34,7 +34,7 @@ private:
     void drawNewPage(n_style __style);
 
     QImage imgDraw;
-    void drawEngine(QPainter &painter, QList<stroke> &List, int i, const int m_pos_ris);
+    void drawEngine(QPainter &painter, QList<stroke> &List, const int m_pos_ris);
     void draw(QPainter &painter, const int m_pos_ris, const bool all);
 
     void mergeList();
@@ -96,8 +96,6 @@ public:
 
     void triggerRenderImage(int m_pos_ris, const bool all);
 
-    void moveToUserPoint(int &i) const;
-
     void reset();
     void allocateStroke(int numAllocation);
 
@@ -117,23 +115,6 @@ inline double page::currentWidth() const
 inline void page::move(const uint from, const uint to)
 {
     this->m_stroke.move(from, to);
-}
-
-inline void page::moveToUserPoint(int &i) const
-{
-    static int which = -1;
-    if(which != -1){
-        i = which;
-        return;
-    }
-
-    int len;
-    len = this->lengthStroke();
-    for(i = 0; i < len; i++)
-        if(atStroke(i).isIdUser())
-            break;
-
-    which = i;
 }
 
 inline void page::reset()
@@ -312,11 +293,7 @@ inline void page::append(const stroke &strokeAppend)
 
 inline void page::appendToTheTop(const stroke &stroke)
 {
-    int start;
-
-    this->moveToUserPoint(start);
-    m_stroke.insert(start, stroke);
-
+    m_stroke.insert(0, stroke);
 }
 
 inline double page::minHeight() const

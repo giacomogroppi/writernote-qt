@@ -105,7 +105,7 @@ QList<int> *rubber_ui::actionRubber(datastruct *data, const QPointF &lastPoint){
                 int counterPoint = 0;
                 int lenPoint = stroke.length();
 
-                for(; counterPoint < lenPoint && stroke.isIdUser(); counterPoint ++){
+                for(; counterPoint < lenPoint; counterPoint ++){
                     const point_s &point = data->at_draw(counterPoint, counterPage, counterStroke);
                     if(isin(&point, lastPoint)){
 
@@ -145,10 +145,7 @@ bool rubber_ui::clearList(datastruct *data)
         page = &data->at(counterPage);
         lenStroke = page->lengthStroke();
 
-        counterStroke = 0;
-        page->moveToUserPoint(counterStroke);
-
-        for(; counterStroke < lenStroke; counterStroke++){
+        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
             const stroke &stroke = page->atStroke(counterStroke);
             if(gomma_delete_id.indexOf(stroke.getId()) != -1){
                 if(Page.indexOf(stroke.getPage()) == -1){

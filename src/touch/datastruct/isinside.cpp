@@ -3,7 +3,7 @@
 
 bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke)
 {
-    return stroke.isInside(QRectF(topleft, bottonright)) && stroke.isIdUser();
+    return stroke.isInside(QRectF(topleft, bottonright));
 }
 
 bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point)
