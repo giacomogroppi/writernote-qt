@@ -87,10 +87,17 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
     QBrush m_brush;
     QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
     static QPointF pointDraw;
-    const int lenStroke = List.length();
+    int lenStroke = List.length();
 
     for(i = 0; i < lenStroke; i++){
         stroke &stroke = List.operator[](i);
+        if(stroke.isEmpty()){
+            List.removeAt(i);
+            i --;
+            lenStroke --;
+            continue;
+        }
+
         const int decrease = (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4;
         const float pressure = TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION;
         m_pen.setColor(stroke.getColor(decrease));

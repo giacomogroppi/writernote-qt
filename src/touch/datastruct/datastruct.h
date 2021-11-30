@@ -138,9 +138,9 @@ public:
 
     inline int maxId();
 
-    inline bool isempty() const{
-        return this->m_page.isEmpty();
-    };
+    QPointF adjustPoint(const QPointF &pointRealTouch);
+
+    bool isempty() const;
 
     static void inverso(QPointF &point);
     void repositioning();
@@ -465,6 +465,17 @@ inline int datastruct::appendToTheTop(const stroke &stroke)
     int page = whichPage(stroke);
     this->at_mod(page).appendToTheTop(stroke);
     return page;
+}
+
+inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser)
+{
+    const double zoom = this->getZoom();
+    return (pointTouchUser / zoom - this->getPointFirstPage());
+}
+
+inline bool datastruct::isempty() const
+{
+    return m_page.isEmpty();
 }
 
 #endif // DATASTRUCT_H

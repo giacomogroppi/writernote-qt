@@ -45,23 +45,27 @@ void square::updatePoint(const QPointF &__point)
  * in caso salva l'id del tratto e setta la variabile this->check = true, in caso contrario
  * la setta = false e fa il return
 */
-bool square::find(Document *data){
+bool square::find(Document *doc){
+    datastruct *data = doc->datatouch;
     uint counterStroke, pageCounter, lenStroke;
     bool tmp_find;
-    const QPointF &translation = data->datatouch->getPointFirstPage();
-    const uint lenPage = data->datatouch->lengthPage();
+    const QPointF &translation = data->getPointFirstPage();
+    const uint lenPage = data->lengthPage();
+
+    const QPointF &topLeft = data->adjustPoint(pointinit.point);
+    const QPointF &bottomRight = data->adjustPoint(pointfine.point);
 
     this->in_box = false;
     this->adjustPoint();
 
     /* point selected by user */
     for(pageCounter = 0; pageCounter < lenPage; pageCounter++){
-        lenStroke = data->datatouch->at(pageCounter).lengthStroke();
+        lenStroke = data->at(pageCounter).lengthStroke();
 
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            const stroke &stroke = data->datatouch->at(pageCounter).atStroke(counterStroke);
+            const stroke &stroke = data->at(pageCounter).atStroke(counterStroke);
 
-            if(datastruct::isinside(pointinit.point + translation , pointfine.point + translation, stroke)){
+            if(datastruct::isinside(topLeft + translation , bottomRight + translation, stroke)){
                 if(m_id.indexOf(stroke.getId()) == -1) {
                     m_id.append(stroke.getId());
                 }
@@ -73,13 +77,15 @@ bool square::find(Document *data){
     }
 
     /* image selected by user */
-    const int lenImg = data->m_img->m_img.length();
+    const int lenImg = doc->m_img->m_img.length();
     for(int counterImg = 0; counterImg < lenImg; counterImg++){
         tmp_find = false;
-        const auto &ref = data->m_img->m_img.at(counterImg);
-        if(datastruct::isinside(pointinit.point, pointfine.point, ref.i))
+        const auto &ref = doc->m_img->m_img.at(counterImg);
+
+        if(datastruct::isinside(topLeft, bottomRight, ref.i))
             tmp_find = true;
-        if(datastruct::isinside(pointinit.point, pointfine.point, ref.f))
+
+        if(datastruct::isinside(topLeft, bottomRight, ref.f))
             tmp_find = true;
 
         if(!tmp_find)
@@ -89,7 +95,7 @@ bool square::find(Document *data){
         this->in_box = true;
     }
 
-    findObjectToDraw(data);
+    findObjectToDraw(doc);
 
     if(!in_box){
         reset();

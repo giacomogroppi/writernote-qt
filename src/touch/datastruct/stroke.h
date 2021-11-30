@@ -34,6 +34,8 @@ private:
     bool needToCreatePanterPath: 1;
     bool needToCreateBiggerData: 1;
 
+    bool needToUpdatePressure: 1;
+
     void updateFlagPressure();
 
     void modify();
@@ -77,7 +79,7 @@ public:
 
     int length() const;
     const struct metadata_stroke &getMetadata() const;
-    bool constantPressure() const;
+    bool constantPressure();
 
     size_t getSizeInMemory() const;
     void decreasePrecision();
@@ -93,6 +95,7 @@ public:
     void movePoint(const QPointF &translation);
 
     QPainterPath getQPainterPath();
+
     void createQPainterPath();
 
     void reset();
@@ -101,6 +104,8 @@ public:
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
     stroke &operator=(const stroke &other);
+
+    bool isEmpty() const;
 
     /* debug */
     QString toString() const;
@@ -114,21 +119,29 @@ inline void stroke::updateFlagPressure()
     len = this->length();
 
     point = &at(0);
+
     for (i = 0; i < len-1; i++){
         point2 = &at(i+1);
+
         if(at(i).pressure != point->pressure){
             this->constantPressureVal = false;
-            return;
+            goto leave;
         }
+
         point = point2;
     }
 
     this->constantPressureVal = true;
+
+leave:
+    //qDebug() << "stroke::updateFlagPressure constantPressureVal" << this->constantPressureVal;
+    this->needToUpdatePressure = false;
 }
 
 /* call this function when modify the stroke */
 inline void stroke::modify()
 {
+    this->needToUpdatePressure = true;
     this->needToCreateBiggerData = true;
     this->needToCreatePanterPath = true;
 }
@@ -150,14 +163,14 @@ inline const point_s &stroke::at(const int index) const
 }
 
 inline point_s &stroke::at_mod(const int index)
-{
+{    
     return this->m_point.operator[](index);
 }
 
 inline void stroke::append(const point_s &point)
 {
     this->m_point.append(point);
-    this->updateFlagPressure();
+
     this->modify();
 }
 
@@ -250,6 +263,8 @@ inline bool stroke::isInside(const QRectF &rect) const
 
     for(i = 0; i < len; i++){
         const point_s &point = at(i);
+
+        /* TODO --> use the function in datastruct */
         if(point.m_x >= topLeft.x() && point.m_y >= topLeft.y() &&
                 point.m_x <= bottomRight.x() && point.m_y <= bottomRight.y())
             return true;
@@ -273,15 +288,16 @@ inline const metadata_stroke &stroke::getMetadata() const
     return this->metadata;
 }
 
-inline bool stroke::constantPressure() const
+inline bool stroke::constantPressure()
 {
+    if(this->needToUpdatePressure)
+        this->updateFlagPressure();
     return this->constantPressureVal;
 }
 
 inline void stroke::setAlfaColor(const uchar alfa)
 {
     this->metadata.color.colore[3] = alfa;
-    this->needToCreatePanterPath = true;
 }
 
 inline void stroke::at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const
@@ -320,6 +336,8 @@ inline void stroke::copy(const stroke &src, stroke &dest)
     dest.needToCreateBiggerData = src.needToCreateBiggerData;
     dest.needToCreatePanterPath = src.needToCreatePanterPath;
 
+    dest.needToUpdatePressure = src.needToUpdatePressure;
+
     dest.constantPressureVal = src.constantPressureVal;
     memcpy(&dest.metadata, &src.metadata, sizeof(src.metadata));
 
@@ -338,6 +356,11 @@ inline stroke &stroke::operator=(const stroke &other)
 
     stroke::copy(other, *this);
     return *this;
+}
+
+inline bool stroke::isEmpty() const
+{
+    return m_point.isEmpty();
 }
 
 inline QString stroke::toString() const

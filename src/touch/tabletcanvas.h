@@ -54,9 +54,7 @@ struct DataPaint{
     MainWindow *parent;
     QPixmap *m_pixmap;
 
-    QColor m_color;
     QPen pen;
-    QBrush m_brush;
     struct Point lastPoint;
 
     void reset()
@@ -66,9 +64,7 @@ struct DataPaint{
         this->withPdf = true;
     }
 #define DATAPAINT_DEFINEREST \
-    .m_color = QColor(), \
     .pen = QPen(), \
-    .m_brush = QBrush(), \
     .lastPoint = Point()
 };
 
@@ -154,7 +150,7 @@ public:
                      const MainWindow *parent, const bool IsExportingPdf);*/
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-    static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush);
+    static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen);
     void loadpixel();
 
     /* touch e zoom */
@@ -228,8 +224,6 @@ private:
     Valuator m_colorSaturationValuator = NoValuator;
     Valuator m_lineWidthValuator = PressureValuator;
 
-
-    QBrush m_brush;
     QPen m_pen;
 
     bool m_deviceDown = false;

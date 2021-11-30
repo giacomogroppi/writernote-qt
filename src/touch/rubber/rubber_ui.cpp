@@ -50,9 +50,9 @@ void rubber_ui::on_partial_button_clicked()
 const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     int counterStroke, lenStroke, counterPage;
     const int lenPage = data->lengthPage();
-    const QPointF &translation = data->getPointFirstPage();
+    // const QPointF &translation = data->getPointFirstPage();
     char mod;
-    const QPointF &lastPoint = __lastPoint / data->getZoom() - data->getPointFirstPage();
+    const QPointF &lastPoint = data->adjustPoint(__lastPoint);
 
     Page.clear();
 
@@ -74,8 +74,8 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
             {
                 const QRectF &pos = stroke.getBiggerPointInStroke();
-                const QPointF &topLeft = pos.topLeft() + translation - QPointF(m_size_gomma, m_size_gomma);
-                const QPointF &bottomRigth = pos.bottomRight() + translation + QPointF(m_size_gomma, m_size_gomma);
+                const QPointF &topLeft = pos.topLeft() - QPointF(m_size_gomma, m_size_gomma);
+                const QPointF &bottomRigth = pos.bottomRight() + QPointF(m_size_gomma, m_size_gomma);
 
                 Q_ASSERT(m_size_gomma >= 0.0);
 

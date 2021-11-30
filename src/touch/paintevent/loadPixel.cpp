@@ -22,55 +22,50 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
 void TabletCanvas::load(QPainter &painter, const Document *data,
                         DataPaint &dataPoint){
     const bool withPdf          = dataPoint.withPdf;
-    const double m              = dataPoint.m;
-    const MainWindow *parent    = dataPoint.parent;
-    const bool IsExportingPdf   = dataPoint.IsExportingPdf;
-    const bool is_play          = (parent) ? (parent->m_audioplayer->isPlay()) : false;
-    const int m_pos_ris         = (is_play) ? (parent->m_audioplayer->getPositionSecond()) : -1;
+    const bool is_play          = (dataPoint.parent) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
+    const int m_pos_ris         = (is_play) ? (dataPoint.parent->m_audioplayer->getPositionSecond()) : -1;
 
     const int lenPage               = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
     const double zoom               = data->datatouch->getZoom();
-    const QSize sizeRect            = QSize(page::getWidth(), page::getHeight()) * zoom * m;
+    const QSize sizeRect            = QSize(page::getWidth(), page::getHeight()) * zoom * dataPoint.m;
+
+    stroke &storkeToDraw = __tmp;
 
     int i, len, counterPage;
     QPixmap *pixmap             = dataPoint.m_pixmap;
-    QColor &color               = dataPoint.m_color;
     QPen &pen                   = dataPoint.pen;
-    QBrush &brush               = dataPoint.m_brush;
 
     if(pixmap)
         pixmap->fill(Qt::white);
 
     pen.setStyle(Qt::PenStyle::SolidLine);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    loadSheet(*data, pen, painter, m);
+    loadSheet(*data, pen, painter, dataPoint.m);
 
 #ifdef PDFSUPPORT
     if(withPdf)
-        data->m_pdf->draw(painter, m, IsExportingPdf);
+        data->m_pdf->draw(painter, dataPoint.m, dataPoint.IsExportingPdf);
 #endif
 
     data->m_img->draw(painter);
 
-    len = __tmp.length();
-
     /* draw points that the user has not finished yet */
-    pen.setColor(__tmp.getColor());
+    pen.setColor(storkeToDraw.getColor());
 
-
+    len = storkeToDraw.length();
     /* point not already add to page */
     if(len){
-        dataPoint.lastPoint.pos = QPointF(__tmp.at(0).m_x, __tmp.at(0).m_y);
+        dataPoint.lastPoint.pos = QPointF(storkeToDraw.at(0).m_x, storkeToDraw.at(0).m_y);
     }
 
-    for(i = 1; i < len; i++){
-        const auto &__point = __tmp.at(i);
+    for(i = 0; i < len; i++){
+        const auto &__point = storkeToDraw.at(i);
 
-        pen.setWidthF(pressureToWidth(__point.pressure * zoom * m / 2.00));
+        pen.setWidthF(pressureToWidth(__point.pressure * zoom * dataPoint.m / 2.00));
         painter.setPen(pen);
 
-        painter.drawLine(dataPoint.lastPoint.pos * m, QPointF(__point.m_x * m, __point.m_y * m));
+        painter.drawLine(dataPoint.lastPoint.pos * dataPoint.m, QPointF(__point.m_x * dataPoint.m, __point.m_y * dataPoint.m));
 
         dataPoint.lastPoint.pos.setX(__point.m_x);
         dataPoint.lastPoint.pos.setY(__point.m_y);
@@ -80,15 +75,14 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
                            QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing, false);
 
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
-    //qDebug() << "Loadpixel renderHints" << painter.renderHints();
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const page &page = data->datatouch->at(counterPage);
 
-        if(!data->datatouch->at(counterPage).isVisible() && !IsExportingPdf)
+        if(!data->datatouch->at(counterPage).isVisible() && !dataPoint.IsExportingPdf)
             continue;
 
-        QRectF targetRect(QPointF(PointFirstPage.x() * m, (PointFirstPage.y() + page::getHeight()*zoom*double(counterPage))) * m,
+        QRectF targetRect(QPointF(PointFirstPage.x() * dataPoint.m, (PointFirstPage.y() + page::getHeight()*zoom*double(counterPage))) * dataPoint.m,
                           sizeRect);
 
         painter.drawImage(targetRect, page.getImg());
@@ -146,3 +140,4 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
         }
     }
 }
+

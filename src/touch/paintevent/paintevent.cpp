@@ -29,9 +29,6 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     };
 
     dataPaint.pen       = this->m_pen;
-    dataPaint.m_brush   = this->m_brush;
-    dataPaint.m_color   = this->m_color;
-
 
     needDrawSheet = false;
 
@@ -60,10 +57,9 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.end();
 }
 
-void TabletCanvas::updateBrush_load(const double pressure, const QColor &color, QPen &m_pen, QBrush &m_brush){
+void TabletCanvas::updateBrush_load(const double pressure, const QColor &color, QPen &m_pen){
     m_pen.setWidthF(pressureToWidth(pressure/2.00));
 
-    //m_brush.setColor(color);
     m_pen.setColor(color);
 
 }

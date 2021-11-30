@@ -33,8 +33,8 @@ void TabletCanvas::restoreO()
 }
 
 TabletCanvas::TabletCanvas()
-    : QWidget(nullptr), m_brush(m_color)
-    , m_pen(m_brush, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
+    : QWidget(nullptr)
+    , m_pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
 {
     this->resize(500, 500);
     setAutoFillBackground(true);
@@ -117,10 +117,8 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
                 m_pen.setWidthF(1);
         }
     if (event->pointerType() == QTabletEvent::Eraser) {
-            m_brush.setColor(Qt::white);
             m_pen.setWidthF(event->pressure()/2 * 10 + 1);
         } else {
-            m_brush.setColor(m_color);
             m_pen.setColor(m_color);
         }
 }

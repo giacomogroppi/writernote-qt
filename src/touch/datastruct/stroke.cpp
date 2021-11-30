@@ -100,7 +100,6 @@ void stroke::createQPainterPath()
 {
     int i, len;
     const double delta = PROP_RESOLUTION;
-    //const int decrease = (this->metadata.posizione_audio > m_pos_ris) ? 1 : 4;
     const point_s *point, *point1, *point2;
 
     len = this->length();
@@ -119,7 +118,6 @@ void stroke::createQPainterPath()
         }
 
     }
-
     this->needToCreatePanterPath = false;
 }
 
@@ -129,6 +127,7 @@ void stroke::reset()
     this->needToCreatePanterPath = true;
 
     this->constantPressureVal = false;
+    this->needToUpdatePressure = true;
 
     this->m_point.clear();
     this->path = QPainterPath();
