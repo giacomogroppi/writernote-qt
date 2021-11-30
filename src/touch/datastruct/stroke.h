@@ -55,7 +55,9 @@ public:
     point_s         &at_mod(const int index);
 
     void                append(const point_s &point);
+
     void                setMetadata(const int page, const int idtratto, const int posizione_audio, const struct colore_s color);
+    void                setMetadata(const metadata_stroke &metadata);
 
     void setPage(int page);
     void setPositioneAudio(const int m_pos_ris);
@@ -74,7 +76,7 @@ public:
     void clearAudio();
 
     int length() const;
-
+    const struct metadata_stroke &getMetadata() const;
     bool constantPressure() const;
 
     size_t getSizeInMemory() const;
@@ -159,6 +161,11 @@ inline void stroke::append(const point_s &point)
     this->modify();
 }
 
+inline void stroke::setMetadata(const metadata_stroke &metadata)
+{
+    memcpy(&this->metadata, &metadata, sizeof(this->metadata));
+}
+
 inline void stroke::setPage(int page)
 {
     this->metadata.page = page;
@@ -202,8 +209,6 @@ inline QRectF stroke::getBiggerPointInStroke()
         return this->biggerData;
     }
 
-    //qDebug() << "stroke::getBiggerPointInStroke call";
-
     int i, len = this->length();
     const point_s &first = at(0);
     QPointF topLeft(first.m_x, first.m_y);
@@ -214,31 +219,21 @@ inline QRectF stroke::getBiggerPointInStroke()
 
         if(topLeft.x() > point.m_x)
             topLeft.setX(point.m_x);
-        if(bottomRight.x() < point.m_x)
-            bottomRight.setX(point.m_y);
 
+        if(bottomRight.x() < point.m_x)
+            bottomRight.setX(point.m_x);
 
         if(topLeft.y() > point.m_y)
             topLeft.setY(point.m_y);
+
         if(bottomRight.y() < point.m_y)
             bottomRight.setY(point.m_y);
-    }
-
-    if(bottomRight.x() < topLeft.x()){
-        const double x = topLeft.x();
-        topLeft.setX(bottomRight.x());
-        bottomRight.setX(x);
-    }
-
-    if(topLeft.x() > bottomRight.y()){
-        const double y = topLeft.y();
-        topLeft.setY(bottomRight.y());
-        bottomRight.setY(y);
     }
 
     this->needToCreateBiggerData = false;
 
     biggerData = QRectF(topLeft, bottomRight);
+
     return biggerData;
 }
 
@@ -271,6 +266,11 @@ inline void stroke::clearAudio()
 inline int stroke::length() const
 {
     return this->m_point.length();
+}
+
+inline const metadata_stroke &stroke::getMetadata() const
+{
+    return this->metadata;
 }
 
 inline bool stroke::constantPressure() const

@@ -51,99 +51,77 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
     int counterStroke, lenStroke, counterPage;
     const int lenPage = data->lengthPage();
     const QPointF &translation = data->getPointFirstPage();
-
+    char mod;
     const QPointF &lastPoint = __lastPoint / data->getZoom() - data->getPointFirstPage();
 
     Page.clear();
-
-    if(data->isempty()) return Page;
 
     for(counterPage = 0; counterPage < lenPage && !data->at(counterPage).isVisible(); counterPage ++);
 
     //qDebug() << lastPoint << __lastPoint;
 
-    if(this->m_type_gomma == e_type_rubber::total){
-        for(; counterPage < lenPage; counterPage ++){
-            page &page = data->at_mod(counterPage);
+    for(mod = 0; counterPage < lenPage; counterPage ++){
+        page &page = data->at_mod(counterPage);
 
-            if(!page.isVisible()) break;
+        if(!page.isVisible()) break;
 
-            lenStroke = page.lengthStroke();
+        lenStroke = page.lengthStroke();
 
-            for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-                stroke &stroke = page.atStrokeMod(counterStroke);
-                const int lenPoint = stroke.length();
-                const int id = stroke.getId();
+        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
+            stroke &stroke = page.atStrokeMod(counterStroke);
+            int lenPoint = stroke.length();
+            const int id = stroke.getId();
 
-                {
-                    const QRectF &pos = stroke.getBiggerPointInStroke();
-                    const QPointF &topLeft = pos.topLeft() + translation - QPointF(m_size_gomma, m_size_gomma);
-                    const QPointF &bottomRigth = pos.bottomRight() + translation + QPointF(m_size_gomma, m_size_gomma);
+            {
+                const QRectF &pos = stroke.getBiggerPointInStroke();
+                const QPointF &topLeft = pos.topLeft() + translation - QPointF(m_size_gomma, m_size_gomma);
+                const QPointF &bottomRigth = pos.bottomRight() + translation + QPointF(m_size_gomma, m_size_gomma);
 
-                    qDebug() << "pos" << pos << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
+                Q_ASSERT(m_size_gomma >= 0.0);
 
-                    /* if the touch point is not within the meaning of the rectangle formed
-                     * by the top left point and the bottom right point,
-                     *  we can directly continue with the next stroke. */
-                    if(!datastruct::isinside(topLeft, bottomRigth, lastPoint)){
-                        qDebug() << "rubber_ui::actionRubber continue";
-                        continue;
-                    }
+                //qDebug() << "rubber_ui::actionRubber" << "touch" << lastPoint << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
+
+                /* if the touch point is not within the meaning of the rectangle formed
+                 * by the top left point and the bottom right point,
+                 *  we can directly continue with the next stroke. */
+                if(!datastruct::isinside(topLeft, bottomRigth, lastPoint)){
+                    //qDebug() << "rubber_ui::actionRubber" << "continue";
+                    continue;
                 }
+            }
 
-                for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-                    const point_s &point = stroke.at(counterPoint);
+            for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
+                const point_s &point = stroke.at(counterPoint);
 
-                    if(isin(point, lastPoint) && gomma_delete_id.indexOf(id) == -1){
-
-                        if(Page.indexOf(counterPage) == -1)
-                            Page.append(counterPage);
+                if(isin(point, lastPoint)){
+                    if(this->m_type_gomma == e_type_rubber::total && gomma_delete_id.indexOf(id) == -1){
+                        mod = 1;
 
                         gomma_delete_id.append(id);
-
-                        qDebug() << "rubber_ui::actionRubber color" << stroke.getColor().alpha();
 
                         stroke.setAlfaColor(stroke.getColor().alpha() / DECREASE);
 
                         break;
                     }
-                }
-            }
-        }
-    }
-    else if(this->m_type_gomma == e_type_rubber::partial){
-        for(; counterPage < lenPage  && data->at(counterPage).isVisible(); counterPage ++){
-            const int lenStroke = data->at(counterPage).lengthStroke();
-
-            for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-                const stroke &stroke = data->at(counterPage).atStroke(counterStroke);
-                int counterPoint = 0;
-                int lenPoint = stroke.length();
-
-                for(; counterPoint < lenPoint; counterPoint ++){
-                    const point_s &point = data->at_draw(counterPoint, counterPage, counterStroke);
-                    if(isin(point, lastPoint)){
-
-                        if(Page.indexOf(counterPage) == -1)
-                            Page.append(counterPage);
-
+                    else if(this->m_type_gomma == e_type_rubber::partial){
                         if(data->needtochangeid(counterPoint, counterStroke, counterPage)){
-                            data->changeId(counterStroke, counterPage, lenPage);
+                            data->changeId(counterPoint, counterStroke, counterPage);
                         }
-
+                        mod = 1;
                         data->at_mod(counterPage).atStrokeMod(counterStroke).removeAt(counterPoint);
 
                         --lenPoint;
                         --counterPoint;
                     }
                 }
-
+            }
+            if(mod){
+                if(Page.indexOf(counterPage) == -1)
+                    Page.append(counterPage);
+                mod = 0;
             }
         }
-
     }
-
-    qDebug() << "QList<int> *rubber_ui::actionRubber" << Page << this->gomma_delete_id;
 
     return Page;
 }
@@ -160,12 +138,17 @@ bool rubber_ui::clearList(datastruct *data)
     return true;
 }
 
-bool rubber_ui::isin(const point_s & __point,
-                 const QPointF & point_t){
-    return (point_t.x() - m_size_gomma) < __point.m_x
-            && (point_t.x() + m_size_gomma) > __point.m_x
-            && (point_t.y() - m_size_gomma) < __point.m_y
-            && (point_t.y() + m_size_gomma) > __point.m_y;
+inline bool rubber_ui::isin(const point_s & __point,
+                 const QPointF & touch){
+    Q_ASSERT(m_size_gomma >= 0.0);
+    bool isin;
+
+    isin =     (touch.x() - m_size_gomma) < __point.m_x &&  (touch.x() + m_size_gomma) > __point.m_x
+           &&  (touch.y() - m_size_gomma) < __point.m_y &&  (touch.y() + m_size_gomma) > __point.m_y;
+
+    //qDebug() << "rubber_ui::isin" << isin;
+
+    return isin;
 }
 
 bool rubber_ui::isin(const QPointF &point, const QPointF &point_t)

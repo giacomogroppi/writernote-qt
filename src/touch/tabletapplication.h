@@ -6,8 +6,6 @@
 #include "tabletcanvas.h"
 #include <QEvent>
 
-
-//! [0]
 class TabletApplication : public QApplication
 {
     Q_OBJECT
@@ -22,6 +20,5 @@ public:
 private:
     TabletCanvas *m_canvas = nullptr;
 };
-//! [0]
 
 #endif

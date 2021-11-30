@@ -88,7 +88,7 @@ public:
     void controllForRepositioning();
 
     /* the function save in QList<int> *page the page modify [can accept NULL]*/
-    void removePointId(const QList<int> &list, QList<int> * page);
+    void removePointId(const QList<int> &listIndex, QList<int> * page);
 
     /* return the point of the current point remove */
     int removePointId(const int id);
@@ -132,7 +132,7 @@ public:
 
     void reorganize();
 
-    void changeId(uint indexStroke, uint indexPage, uint lenPage, int base = -1);
+    void changeId(int indexPoint, int indexStroke, int indexPage, int newId = -1);
 
     bool isAvailable(int id) const;
 

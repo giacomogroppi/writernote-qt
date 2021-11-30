@@ -1,19 +1,19 @@
 #include "datastruct.h"
 
-void datastruct::removePointId(const QList<int> &list, QList<int> *page){
+void datastruct::removePointId(const QList<int> &listIndex, QList<int> *page){
     uint i;
-    const uint len_list = list.length();
+    const uint len_list = listIndex.length();
     int __page = -1;
 
     if(page)
         page->clear();
 
     for(i=0; i<len_list; i++){
-        __page = removePointId(list.at(i));
+        __page = removePointId(listIndex.at(i));
 
         if(page && page->indexOf(__page) == -1){
             if(__page < 0){
-                qWarning() << "No stroke in list with index" << list.at(i);
+                qWarning() << "No stroke in list with index" << listIndex.at(i);
                 continue;
             }
 
@@ -31,9 +31,10 @@ int datastruct::removePointId(const int id){
         page = &at(counterPage);
 
         const uint lenStroke = page->lengthStroke();
+
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
             if(page->atStroke(counterStroke).getId() == id){
-                at_mod(counterStroke).removeAt(counterStroke);
+                at_mod(counterPage).removeAt(counterStroke);
                 return counterPage;
             }
         }

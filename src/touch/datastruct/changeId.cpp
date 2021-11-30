@@ -5,18 +5,29 @@
  * this function change the id of all point
  * with the same id of m_point[i]
 */
-void datastruct::changeId(uint indexStroke, uint indexPage, uint lenPage, int base)
+void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int newId)
 {
-    if(base == -1)
-        base = maxId() + 1;
+    stroke strokeToAppend;
+    page &page = at_mod(indexPage);
+    const stroke &stroke = at(indexPage).atStroke(indexStroke);
+    int lenPointInStroke = stroke.length();
 
-    if(lenPage == 0){
-        lenPage = this->lengthPage();
-        if(!lenPage)
-            LOG("datastruct::changeId lenPage = 0", log_ui::type_write::possible_bug);
+    if(newId == -1)
+        newId = maxId() + 1;
+
+    for(; IndexPoint < lenPointInStroke; IndexPoint ++){
+        strokeToAppend.append(stroke.at(IndexPoint));
     }
 
-    page &page = at_mod(indexPage);
+    strokeToAppend.setMetadata(stroke.getMetadata());
 
-    page.atStrokeMod(indexStroke).setId(base);
+    strokeToAppend.setId(newId);
+
+    if(stroke.getColor().alpha() != 255){
+        /* we need to append to the top */
+        page.appendToTheTop(strokeToAppend);
+
+    }else{
+        page.append(strokeToAppend);
+    }
 }
