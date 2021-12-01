@@ -19,6 +19,10 @@ void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int ne
         strokeToAppend.append(stroke.at(IndexPoint));
     }
 
+    for(; lenPointInStroke >= IndexPoint; lenPointInStroke --){
+        page.atStrokeMod(indexStroke).removeAt(lenPointInStroke);
+    }
+
     strokeToAppend.setMetadata(stroke.getMetadata());
 
     strokeToAppend.setId(newId);

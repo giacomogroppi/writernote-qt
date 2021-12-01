@@ -79,13 +79,13 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
                 Q_ASSERT(m_size_gomma >= 0.0);
 
-                //qDebug() << "rubber_ui::actionRubber" << "touch" << lastPoint << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
+                qDebug() << "rubber_ui::actionRubber" << "touch" << lastPoint << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
 
                 /* if the touch point is not within the meaning of the rectangle formed
                  * by the top left point and the bottom right point,
                  *  we can directly continue with the next stroke. */
                 if(!datastruct::isinside(topLeft, bottomRigth, lastPoint)){
-                    //qDebug() << "rubber_ui::actionRubber" << "continue";
+                    qDebug() << "rubber_ui::actionRubber" << "continue";
                     continue;
                 }
             }
