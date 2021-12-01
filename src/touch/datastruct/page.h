@@ -41,6 +41,8 @@ private:
 
     static point_s *at_translation(const point_s &point, const int page);
 
+    void AppendDirectly(const stroke &stroke);
+
 public:
     const QImage &getImg() const;
 
@@ -90,7 +92,6 @@ public:
 
     void changeCounter(const int newPage);
     void changeId(const uint i, const int newId);
-    bool needtochangeid(const int IndexStroke, const int indexPoint) const;
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
 
@@ -100,6 +101,7 @@ public:
     void allocateStroke(int numAllocation);
 
     friend class stroke;
+    friend class datastruct;
 };
 
 inline double page::currentHeight() const
@@ -130,6 +132,11 @@ inline point_s *page::at_translation(const point_s &point, const int page)
     memcpy(&tmp, &point, sizeof(point_s));
     tmp.m_y -= ytranslation;
     return &tmp;
+}
+
+inline void page::AppendDirectly(const stroke &stroke)
+{
+    this->m_stroke.append(stroke);
 }
 
 inline const QImage &page::getImg() const
@@ -286,7 +293,7 @@ inline void page::append(const stroke &strokeAppend)
 {
     int lastNewIndex = strokeTmp.length();
     this->strokeTmp.append(strokeAppend);
-    this->strokeTmp.operator[](lastNewIndex) = strokeAppend;
+    //this->strokeTmp.operator[](lastNewIndex) = strokeAppend;
 
     /* they will be automatically removed when
      * the project is compiled in release mode */

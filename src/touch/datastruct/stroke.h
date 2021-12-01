@@ -66,7 +66,7 @@ public:
     void setId(const int id);
     size_t createControll() const;
 
-    void removeAt(int index);
+    int removeAt(int index);
 
     int getId() const;
     int getPage() const;
@@ -204,10 +204,15 @@ inline void stroke::setId(const int id)
     this->metadata.idtratto = id;
 }
 
-inline void stroke::removeAt(int index)
+/* return 1 if the point need to be delete */
+inline int stroke::removeAt(int index)
 {
+    int len = length();
+    Q_ASSERT(index < len);
     this->m_point.removeAt(index);
     this->modify();
+
+    return len < 2;
 }
 
 inline int stroke::getId() const

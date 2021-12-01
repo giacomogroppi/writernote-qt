@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QImage>
 #include "page.h"
+#include <csignal>
 
 /*
     IDVERTICALE -> linee verticali
@@ -152,7 +153,7 @@ public:
     double biggerx() const noexcept;
 
     bool needToCreateNewSheet();
-    bool needtochangeid(const uint IndexPoint, const uint IndexStroke, const uint IndexPage);
+    static bool needtochangeid(const int IndexPoint, const stroke &stroke);
 
     double biggery() const noexcept;
 
@@ -245,9 +246,12 @@ inline double datastruct::biggerx() const noexcept
     return (page::getWidth() + this->getPointFirstPage().x())*zoom;
 }
 
-inline bool datastruct::needtochangeid(const uint IndexPoint, const uint IndexStroke, const uint IndexPage)
+inline bool datastruct::needtochangeid(const int IndexPoint, const stroke &stroke)
 {
-    return this->at(IndexPage).needtochangeid(IndexStroke, IndexPoint);
+    int len = stroke.length();
+    Q_ASSERT(len > 0);
+
+    return IndexPoint > 0 && IndexPoint < (len - 1);
 }
 
 inline double datastruct::biggery() const noexcept

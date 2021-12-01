@@ -75,7 +75,7 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
     for(counterPage = 0; counterPage < lenPage && !data->at(counterPage).isVisible(); counterPage ++);
 
-    //qDebug() << lastPoint << __lastPoint;
+    qDebug() << "rubber_ui::actionRubber start" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
 
     for(mod = 0; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
@@ -107,7 +107,13 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                         qDebug() << "Remove point";
 
                         bool needToBreak = false;
-                        if(data->needtochangeid(counterPoint, counterStroke, counterPage)){
+                        if(stroke.removeAt(counterPoint)){
+                            page.removeAt(counterStroke);
+                            lenStroke --;
+                            continue;
+                        }
+
+                        if(data->needtochangeid(counterPoint, stroke)){
                             data->changeId(counterPoint, counterStroke, counterPage);
 
                             /* The function is will add a stroke to the current
@@ -118,10 +124,9 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                             needToBreak = true;
                         }
 
-                        stroke.removeAt(counterPoint);
-
-                        if(needToBreak)
+                        if(needToBreak){
                             break;
+                        }
                         else{
                             qDebug() << "Don't need to change stroke";
                             counterPoint --;
@@ -137,6 +142,14 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
             }
         }
     }
+
+    /*if(Page.length()){
+        const stroke &firstStroke = data->at(0).atStroke(0);
+        const stroke &secondStroke = data->at(0).atStroke(1);
+        std::abort();
+    }*/
+
+    qDebug() << "rubber_ui::actionRubber end" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
 
     return Page;
 }

@@ -4,6 +4,9 @@
 /*
  * the point at the IndexPoint
  * position is not included
+ *
+ * after this function you have to draw the image of
+ * the page. Passing as a parameter all true
 */
 void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int newId)
 {
@@ -24,14 +27,25 @@ void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int ne
     }
 
     strokeToAppend.setMetadata(stroke.getMetadata());
-
     strokeToAppend.setId(newId);
+
+    qDebug() << "datastruct::changeId" << IndexPoint;
+
+    /* if the point has less than two points
+     * it makes no sense to add it to the list,
+     *  as it is not possible to draw a
+     *  single point.
+    */
+    if(stroke.length() < 2)
+        page.removeAt(indexStroke);
+
+    if(strokeToAppend.length() < 2) return;
 
     if(stroke.getColor().alpha() != 255){
         /* we need to append to the top */
         page.appendToTheTop(strokeToAppend);
 
     }else{
-        page.append(strokeToAppend);
+        page.AppendDirectly(strokeToAppend);
     }
 }
