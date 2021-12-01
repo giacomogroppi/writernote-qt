@@ -118,6 +118,16 @@ inline void stroke::updateFlagPressure()
 
     len = this->length();
 
+    if(len < 3){
+        /* if we have less than 3 points we
+         * cannot create a qpainterpath, so
+         * we have to draw the stroke point
+         * by point.
+        */
+        this->constantPressureVal = false;
+        goto leave;
+    }
+
     point = &at(0);
 
     for (i = 0; i < len-1; i++){

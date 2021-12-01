@@ -29,13 +29,12 @@ page::page(const int count, const n_style style)
     this->mergeList();
 }
 
-bool page::needtochangeid(const int IndexStroke, const int indexInStroke) const
+bool page::needtochangeid(const int IndexStroke, const int indexPoint) const
 {
     const stroke &stroke = atStroke(IndexStroke);
-
     const int lenPointStroke = stroke.length() - 1;
 
-    return indexInStroke == (lenPointStroke - 1) || (lenPointStroke + 1);
+    return !(!indexPoint || indexPoint == lenPointStroke);
 }
 
 void page::drawNewPage(n_style __style)

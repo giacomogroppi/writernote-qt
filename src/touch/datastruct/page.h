@@ -90,7 +90,7 @@ public:
 
     void changeCounter(const int newPage);
     void changeId(const uint i, const int newId);
-    bool needtochangeid(const int IndexStroke, const int indexInStroke) const;
+    bool needtochangeid(const int IndexStroke, const int indexPoint) const;
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
 

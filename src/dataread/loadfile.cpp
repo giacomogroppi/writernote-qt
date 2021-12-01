@@ -6,21 +6,21 @@
 #include "../utils/areyousure/areyousure.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa){
-    int temp;
+    int tmp;
+    char *str;
 
-    SOURCE_READ_RETURN(f, &temp, sizeof(int));
+    SOURCE_READ_RETURN(f, &tmp, sizeof(int));
 
-    if(temp){
-        char *vartempp = new char[temp + 1];
+    if(tmp){
+        str = (char *)malloc(sizeof(char) * (tmp + 1));
 
-        SOURCE_READ_RETURN(f, vartempp, sizeof(char)*temp);
+        SOURCE_READ_RETURN(f, str, sizeof(char)*tmp);
 
-        vartempp[temp] = '\0';
+        str[tmp] = '\0';
 
-        stringa = vartempp;
+        stringa = str;
 
-        delete [] vartempp;
-
+        free(str);
     }
 
     return OK;

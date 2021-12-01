@@ -2,25 +2,25 @@
 #include "../../log/log_ui/log_ui.h"
 
 /*
- * this function change the id of all point
- * with the same id of m_point[i]
+ * the point at the IndexPoint
+ * position is not included
 */
 void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int newId)
 {
     stroke strokeToAppend;
     page &page = at_mod(indexPage);
-    const stroke &stroke = at(indexPage).atStroke(indexStroke);
+    stroke &stroke = page.atStrokeMod(indexStroke);
     int lenPointInStroke = stroke.length();
 
-    if(newId == -1)
+    if(newId < 0)
         newId = maxId() + 1;
 
-    for(; IndexPoint < lenPointInStroke; IndexPoint ++){
+    for(; IndexPoint < lenPointInStroke;){
         strokeToAppend.append(stroke.at(IndexPoint));
-    }
 
-    for(; lenPointInStroke >= IndexPoint; lenPointInStroke --){
-        page.atStrokeMod(indexStroke).removeAt(lenPointInStroke);
+        stroke.removeAt(IndexPoint);
+
+        lenPointInStroke --;
     }
 
     strokeToAppend.setMetadata(stroke.getMetadata());

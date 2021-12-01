@@ -1,5 +1,6 @@
 #include "rubber_ui.h"
 #include "ui_rubber_ui.h"
+#include "../../utils/utils.h"
 
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
@@ -43,6 +44,22 @@ void rubber_ui::on_partial_button_clicked()
     this->update_data();
 }
 
+static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF &pointTouch)
+{
+    const QRectF &pos = stroke.getBiggerPointInStroke();
+    const QPointF &topLeft = pos.topLeft() - QPointF(m_size_gomma, m_size_gomma);
+    const QPointF &bottomRigth = pos.bottomRight() + QPointF(m_size_gomma, m_size_gomma);
+
+    Q_ASSERT(m_size_gomma >= 0.0);
+
+    //qDebug() << "rubber_ui::actionRubber" << "touch" << lastPoint << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
+
+    /* if the touch point is not within the meaning of the rectangle formed
+     * by the top left point and the bottom right point,
+     *  we can directly continue with the next stroke. */
+    return !datastruct::isinside(topLeft, bottomRigth, pointTouch);
+}
+
 /*
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
@@ -72,31 +89,14 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
             int lenPoint = stroke.length();
             const int id = stroke.getId();
 
-            {
-                const QRectF &pos = stroke.getBiggerPointInStroke();
-                const QPointF &topLeft = pos.topLeft() - QPointF(m_size_gomma, m_size_gomma);
-                const QPointF &bottomRigth = pos.bottomRight() + QPointF(m_size_gomma, m_size_gomma);
-
-                Q_ASSERT(m_size_gomma >= 0.0);
-
-                qDebug() << "rubber_ui::actionRubber" << "touch" << lastPoint << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
-
-                /* if the touch point is not within the meaning of the rectangle formed
-                 * by the top left point and the bottom right point,
-                 *  we can directly continue with the next stroke. */
-                if(!datastruct::isinside(topLeft, bottomRigth, lastPoint)){
-                    qDebug() << "rubber_ui::actionRubber" << "continue";
-                    continue;
-                }
-            }
+            if(ifNotInside(stroke, m_size_gomma, lastPoint)) continue;
 
             for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
                 const point_s &point = stroke.at(counterPoint);
 
                 if(isin(point, lastPoint)){
-                    if(this->m_type_gomma == e_type_rubber::total && gomma_delete_id.indexOf(id) == -1){
-                        mod = 1;
-
+                    mod = 1;
+                    if(this->m_type_gomma == e_type_rubber::total && IS_PRESENT_IN_LIST(gomma_delete_id, id)){
                         gomma_delete_id.append(id);
 
                         stroke.setAlfaColor(stroke.getColor().alpha() / DECREASE);
@@ -104,20 +104,35 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                         break;
                     }
                     else if(this->m_type_gomma == e_type_rubber::partial){
+                        qDebug() << "Remove point";
+
+                        bool needToBreak = false;
                         if(data->needtochangeid(counterPoint, counterStroke, counterPage)){
                             data->changeId(counterPoint, counterStroke, counterPage);
-                        }
-                        mod = 1;
-                        data->at_mod(counterPage).atStrokeMod(counterStroke).removeAt(counterPoint);
 
-                        --lenPoint;
-                        --counterPoint;
+                            /* The function is will add a stroke to the current
+                             * page. And it will also remove the stitches
+                             * from the current stroke. */
+
+                            lenStroke = page.lengthStroke();
+                            needToBreak = true;
+                        }
+
+                        stroke.removeAt(counterPoint);
+
+                        if(needToBreak)
+                            break;
+                        else{
+                            qDebug() << "Don't need to change stroke";
+                            counterPoint --;
+                            lenPoint --;
+                        }
                     }
                 }
             }
+
             if(mod){
-                if(Page.indexOf(counterPage) == -1)
-                    Page.append(counterPage);
+                IF_NOT_PRESENT_APPEND(Page, counterPage);
                 mod = 0;
             }
         }
