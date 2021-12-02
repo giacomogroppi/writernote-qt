@@ -68,6 +68,11 @@ public:
 
     int removeAt(int index);
 
+    /* if you pass from = 0, to = 2 
+     * will eliminate points with index 0, 1, 2
+    */
+    int removeAt(int from, int to); 
+
     int getId() const;
     int getPage() const;
     int getPosizioneAudio() const;
@@ -106,6 +111,8 @@ public:
     stroke &operator=(const stroke &other);
 
     bool isEmpty() const;
+
+    const point_s &last() const;
 
     /* debug */
     QString toString() const;
@@ -154,6 +161,7 @@ inline void stroke::modify()
     this->needToUpdatePressure = true;
     this->needToCreateBiggerData = true;
     this->needToCreatePanterPath = true;
+    this->path = QPainterPath();
 }
 
 /* call this function only when constantPressureVal is 1 */
@@ -204,7 +212,7 @@ inline void stroke::setId(const int id)
     this->metadata.idtratto = id;
 }
 
-/* return 1 if the point need to be delete */
+/* return 1 if the stroke need to be delete */
 inline int stroke::removeAt(int index)
 {
     int len = length();
@@ -213,6 +221,19 @@ inline int stroke::removeAt(int index)
     this->modify();
 
     return len < 2;
+}
+
+inline int stroke::removeAt(int from, int to){
+    Q_ASSERT(to < length());
+    Q_ASSERT(from >= 0);
+
+    qDebug() << "stroke::removeAt from to" << from << to;
+
+    for(; from <= to; to --){
+        removeAt(from);
+    }
+    
+    return 0;
 }
 
 inline int stroke::getId() const
@@ -338,8 +359,17 @@ inline void stroke::setColor(const colore_s &color)
 
 inline QPainterPath stroke::getQPainterPath()
 {
-    if(this->needToCreatePanterPath)
+    //qDebug() << this->getBiggerPointInStroke().topLeft() << this->getBiggerPointInStroke().bottomRight();
+
+    if(this->needToCreatePanterPath){
+        qDebug() << "stroke::getQPainterPath need to create QPainterPath" << this->metadata.idtratto;
         this->createQPainterPath();
+    }else{
+        qDebug() << "stroke::getQPainterPath don't need to create QPainterPath" << this->metadata.idtratto;
+    }
+
+    this->needToCreatePanterPath = false;
+
     return this->path;
 }
 

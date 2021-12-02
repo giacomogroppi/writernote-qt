@@ -125,9 +125,9 @@ void stroke::reset()
 {
     this->needToCreateBiggerData = true;
     this->needToCreatePanterPath = true;
+    this->needToUpdatePressure = true;
 
     this->constantPressureVal = false;
-    this->needToUpdatePressure = true;
 
     this->m_point.clear();
     this->path = QPainterPath();
@@ -148,4 +148,9 @@ bool stroke::cmp(const stroke &stroke1, const stroke &stroke2)
     }
 
     return true;
+}
+
+const point_s &stroke::last() const
+{
+    return m_point.last();
 }

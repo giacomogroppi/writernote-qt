@@ -12,40 +12,32 @@ void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int ne
 {
     stroke strokeToAppend;
     page &page = at_mod(indexPage);
-    stroke &stroke = page.atStrokeMod(indexStroke);
-    int lenPointInStroke = stroke.length();
+    stroke *stroke = &page.atStrokeMod(indexStroke);
+    int lenPointInStroke = stroke->length();
+
+    strokeToAppend.reset();
+
+    qDebug() << "datastruct::changeId start" << IndexPoint << stroke->length() << stroke->last().m_x << stroke->last().m_y;
 
     if(newId < 0)
         newId = maxId() + 1;
 
-    for(; IndexPoint < lenPointInStroke;){
-        strokeToAppend.append(stroke.at(IndexPoint));
-
-        stroke.removeAt(IndexPoint);
-
-        lenPointInStroke --;
+    for(int secIndex = IndexPoint; secIndex < lenPointInStroke; secIndex ++){
+        strokeToAppend.append(stroke->at(secIndex));
     }
 
-    strokeToAppend.setMetadata(stroke.getMetadata());
+    stroke->removeAt(IndexPoint, stroke->length() - 1);
+
+    strokeToAppend.setMetadata(stroke->getMetadata());
     strokeToAppend.setId(newId);
 
-    qDebug() << "datastruct::changeId" << IndexPoint;
-
-    /* if the point has less than two points
-     * it makes no sense to add it to the list,
-     *  as it is not possible to draw a
-     *  single point.
-    */
-    if(stroke.length() < 2)
-        page.removeAt(indexStroke);
-
-    if(strokeToAppend.length() < 2) return;
-
-    if(stroke.getColor().alpha() != 255){
+    if(stroke->getColor().alpha() != 255){
         /* we need to append to the top */
         page.appendToTheTop(strokeToAppend);
-
     }else{
         page.AppendDirectly(strokeToAppend);
     }
+
+    qDebug() << "datastruct::changeId end" << IndexPoint << stroke->length() << stroke->last().m_x << stroke->last().m_y;
+
 }

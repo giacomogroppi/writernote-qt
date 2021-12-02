@@ -2,6 +2,13 @@
 #include "ui_rubber_ui.h"
 #include "../../utils/utils.h"
 
+#define CTRL_LEN_STROKE(stroke, pageStroke, indexStroke, lenStroke) \
+    if(stroke.length() < 3){ \
+        pageStroke.removeAt(counterStroke); \
+        lenStroke = page.lengthStroke(); \
+        break; \
+    }
+
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::rubber_ui)
@@ -75,7 +82,7 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
     for(counterPage = 0; counterPage < lenPage && !data->at(counterPage).isVisible(); counterPage ++);
 
-    qDebug() << "rubber_ui::actionRubber start" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
+    //qDebug() << "rubber_ui::actionRubber start" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
 
     for(mod = 0; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
@@ -104,34 +111,35 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                         break;
                     }
                     else if(this->m_type_gomma == e_type_rubber::partial){
-                        qDebug() << "Remove point";
+                        if(counterPoint < 3){
+                            //qDebug() << "Primo";
 
-                        bool needToBreak = false;
-                        if(stroke.removeAt(counterPoint)){
-                            page.removeAt(counterStroke);
-                            lenStroke --;
+                            stroke.removeAt(0, counterPoint);
+                            lenPoint = stroke.length();
+
+                            CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
+
                             continue;
                         }
 
-                        if(data->needtochangeid(counterPoint, stroke)){
-                            data->changeId(counterPoint, counterStroke, counterPage);
+                        if(counterPoint + 3 > lenPoint){
+                            //qDebug() << "Secondo";
+                            stroke.removeAt(counterPoint, lenPoint - 1);
 
-                            /* The function is will add a stroke to the current
-                             * page. And it will also remove the stitches
-                             * from the current stroke. */
+                            CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
 
-                            lenStroke = page.lengthStroke();
-                            needToBreak = true;
-                        }
-
-                        if(needToBreak){
                             break;
                         }
-                        else{
-                            qDebug() << "Don't need to change stroke";
-                            counterPoint --;
-                            lenPoint --;
-                        }
+
+                        //qDebug() << "Terzo" << counterPoint;
+
+                        Q_ASSERT(lenPoint > 6);
+                        stroke.removeAt(counterPoint);
+                        data->changeId(counterPoint, counterStroke, counterPage);
+
+                        lenStroke = page.lengthStroke();
+
+                        break;
                     }
                 }
             }
@@ -149,7 +157,7 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
         std::abort();
     }*/
 
-    qDebug() << "rubber_ui::actionRubber end" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
+    //qDebug() << "rubber_ui::actionRubber end" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
 
     return Page;
 }

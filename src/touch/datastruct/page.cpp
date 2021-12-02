@@ -135,7 +135,10 @@ inline void page::mergeList()
     int i;
     const int len = this->strokeTmp.length();
     int index = m_stroke.length();
-    //LOG_CONDITION(len > 1, "void page::mergeList", log_ui::type_write::possible_bug);
+
+    if(len)
+       qDebug() << "page::mergeList" << len;
+
 
     for(i = 0; i < len; i++){
         const stroke &stroke = strokeTmp.at(i);
@@ -148,7 +151,6 @@ inline void page::mergeList()
         index ++;
     }
 
-    //qDebug() << this << "page::mergeList" << this->maxId() << "count" << this->count << "StrokeTmpLen" << strokeTmp.length();
     strokeTmp.clear();
 }
 
