@@ -47,10 +47,10 @@ void TabletCanvas::initPixmap(bool paint)
 
     newPixmap.setDevicePixelRatio(dpr);
     newPixmap.fill(Qt::white);
-    QPainter painter(&newPixmap);
-    if (!m_pixmap.isNull())
-        painter.drawPixmap(0, 0, m_pixmap);
-    painter.end();
+    //QPainter painter(&newPixmap);
+    //if (!m_pixmap.isNull())
+    //    painter.drawPixmap(0, 0, m_pixmap);
+    //painter.end();
     m_pixmap = newPixmap;
 
     if(paint)

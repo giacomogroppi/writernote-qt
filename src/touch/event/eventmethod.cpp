@@ -3,7 +3,7 @@
 #include "math.h"
 #include <QWheelEvent>
 #include <QDebug>
-#include <cstdlib>
+#include "../../mainwindow.h"
 
 static inline double Distance(const QPointF &point1, const QPointF &point2);
 static inline void scambio(QPointF &, QPointF &);
@@ -32,7 +32,7 @@ bool TabletCanvas::event(QEvent *event){
     const QSize maxSize = this->size();
     const QSize size = this->m_pixmap.size();
 
-    static bool zoomChange;
+    bool zoomChange = false;
 
     const auto type = event->type();
 
@@ -131,6 +131,9 @@ bool TabletCanvas::event(QEvent *event){
     //qDebug() << "After" << this->lastpointzoom[0].point << this->lastpointzoom[1].point << lastpointzoom[0].set << lastpointzoom[1].set << "\n";
     if(needToResize)
         this->callResizeEvent();
+
+    if(zoomChange)
+        this->parent->zoomChange();
 
     if(data != NULL)
         return QWidget::event(event);

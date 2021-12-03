@@ -35,11 +35,9 @@ bool zoom_control::zoom(QPointF &pointMiddle, double delta, bool &zoomChange,
             return false;
     }
 
-    //delta = (delta >= 1.00) ? (delta-1.0) : (-(1.00)/delta+1.00);
-
     delta = delta - double(1.0);
 
-    //qDebug() << "New delta" << delta;
+    zoomChange = true;
 
     this->checkRespositioning(pointRiTranslate, max);
 
