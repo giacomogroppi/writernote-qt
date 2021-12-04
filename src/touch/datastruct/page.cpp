@@ -77,7 +77,7 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
     int i;
     QBrush m_brush;
     QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-    static QPointF pointDraw;
+    QPointF pointDraw;
     int lenStroke = List.length();
 
     for(i = 0; i < lenStroke; i++){
@@ -97,15 +97,22 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
             int counterPoint;
             const int lenPoint = stroke.length();
 
-            lastPoint.pos = QPointF(stroke.at(0).m_x, stroke.at(0).m_y);
+            {
+                const point_s &point_tmp = *at_translation(stroke.at(0), this->count - 1);
+                lastPoint.pos = QPointF(point_tmp.m_x, point_tmp.m_y) * PROP_RESOLUTION;
+            }
 
             for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-                const point_s &point = stroke.at(counterPoint);
+                const point_s &point = *at_translation(stroke.at(counterPoint), this->count - 1);
+                pointDraw = point.toQPointF(PROP_RESOLUTION);
+
                 m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
 
                 painter.setPen(m_pen);
 
                 painter.drawLine(lastPoint.pos, pointDraw);
+
+                lastPoint.pos = pointDraw;
             }
         }else{
             const QPainterPath &path = stroke.getQPainterPath();

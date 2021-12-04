@@ -121,7 +121,7 @@ public:
 inline void stroke::updateFlagPressure()
 {
     int i, len;
-    const point_s *point, *point2;
+    const point_s *current, *next;
 
     len = this->length();
 
@@ -135,17 +135,17 @@ inline void stroke::updateFlagPressure()
         goto leave;
     }
 
-    point = &at(0);
+    current = &at(0);
 
     for (i = 0; i < len-1; i++){
-        point2 = &at(i+1);
+        next = &at(i+1);
 
-        if(at(i).pressure != point->pressure){
+        if(next->pressure != current->pressure){
             this->constantPressureVal = false;
             goto leave;
         }
 
-        point = point2;
+        current = next;
     }
 
     this->constantPressureVal = true;

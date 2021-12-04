@@ -42,7 +42,7 @@ struct point_s{
 
 inline QPointF point_s::toQPointF(const double delta) const
 {
-    return QPointF(m_x * delta, m_y * delta);
+    return QPointF(m_x, m_y) * delta;
 }
 
 /*inline QPointF point_s::toQPointF(const double delta) const

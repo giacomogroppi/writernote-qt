@@ -1,11 +1,9 @@
 #include "highlighter.h"
 #include "ui_highlighter.h"
-
 #include <QSettings>
 #include "../../utils/setting_define.h"
 #include "../pen/pen_ui.h"
 #include "../datastruct/datastruct.h"
-
 #include <QDebug>
 
 #define MAX_ALFA 40
@@ -28,10 +26,10 @@ highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
-    ui->slider_size->setMinimum(1);
-    ui->slider_size->setMaximum(100);
-
     loadSettings();
+
+    ui->slider_size->setMinimum(50);
+    ui->slider_size->setMaximum(100);
 }
 
 highlighter::~highlighter()

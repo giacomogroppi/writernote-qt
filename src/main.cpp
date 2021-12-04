@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
         return 0;
     }
 
-    if(argc != 2 && argc != 1){
+    if(argc > 2){
         printf("Error");
 
         printf(HELP_COMMAND);

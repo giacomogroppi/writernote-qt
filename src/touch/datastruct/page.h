@@ -39,7 +39,7 @@ private:
 
     void mergeList();
 
-    static point_s *at_translation(const point_s &point, const int page);
+    static point_s *at_translation(const point_s &point, int page);
 
     void AppendDirectly(const stroke &stroke);
 
@@ -124,7 +124,7 @@ inline void page::reset()
     this->m_stroke.clear();
 }
 
-inline point_s *page::at_translation(const point_s &point, const int page)
+inline point_s *page::at_translation(const point_s &point, int page)
 {
     static point_s tmp;
     const double ytranslation = double(page)*page::getHeight();

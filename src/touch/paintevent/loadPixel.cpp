@@ -71,9 +71,7 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
         dataPoint.lastPoint.pos.setY(__point.m_y);
     }
 
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::NonCosmeticDefaultPen |
-                           QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing, false);
-
+    painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
@@ -116,7 +114,7 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
 
         painter.setPen(m_pen);
 
-        for(counterStroke = 0; counterStroke < lenStroke - 1; counterStroke++){
+        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
             const stroke &stroke = page->atStrokePage(counterStroke);
             lenPoint = stroke.length();
 
