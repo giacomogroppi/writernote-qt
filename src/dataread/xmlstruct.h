@@ -47,13 +47,13 @@ private:
     __old int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
     __old int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
 
-    __old int loadbinario_0(struct zip *);
-    __old int loadbinario_1(struct zip *);
-    __old int loadbinario_2(struct zip *);
+    __old int loadbinario_0(struct zip *file);
+    __old int loadbinario_1(struct zip *file);
+    __old int loadbinario_2(struct zip *file);
 
     #endif
 
-    __new int loadbinario_3(struct zip *);
+    __new int loadbinario_3(struct zip *file, int ver_stroke);
     __new int load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);

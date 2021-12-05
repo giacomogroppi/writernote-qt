@@ -9,8 +9,6 @@
 #include "../../utils/color/setcolor.h"
 #include "../../utils/common_def.h"
 
-#define VER_STROKE 0
-
 struct metadata_stroke{
     int page;
     int idtratto = -1;
@@ -24,7 +22,6 @@ private:
     QList<point_s> m_point;
 
     struct metadata_stroke metadata;
-    int versione = VER_STROKE;
 
     QPainterPath path;
 
@@ -48,7 +45,7 @@ public:
     void __setPressureForAllPoint(const double pressure);
 
     int save(zip_source_t *file) const;
-    int load(zip_file_t *file);
+    int load(zip_file_t *file, int version);
 
     float getPressure() const;
     QColor getColor(const double division) const;
@@ -58,7 +55,7 @@ public:
 
     void                append(const point_s &point);
 
-    void                setMetadata(const int page, const int idtratto, const int posizione_audio, const struct colore_s color);
+    void                setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s &color);
     void                setMetadata(const metadata_stroke &metadata);
 
     void setPage(int page);
@@ -389,8 +386,6 @@ inline void stroke::copy(const stroke &src, stroke &dest)
     dest.needToCreatePanterPath = src.needToCreatePanterPath;
 
     dest.path = src.path;
-
-    dest.versione = src.versione;
 }
 
 inline stroke &stroke::operator=(const stroke &other)

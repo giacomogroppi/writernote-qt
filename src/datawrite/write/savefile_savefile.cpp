@@ -16,7 +16,7 @@ static void setCurrentVersion(Document *data);
 */
 
 int savefile::savefile_check_file(){
-    int error, check;
+    int error, check, ver_stroke;
     zip_error_t errore;
     zip_t *filezip;
     zip_source_t *file;
@@ -27,6 +27,7 @@ int savefile::savefile_check_file(){
 #endif // PDFSUPPORT
 
     setCurrentVersion(currenttitle);
+    ver_stroke = CURRENT_VERSION_STROKE;
 
     filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
 
@@ -45,6 +46,7 @@ int savefile::savefile_check_file(){
     zip_source_begin_write(file);
 
     SOURCE_WRITE(file, &currenttitle->versione, sizeof(currenttitle->versione))
+    SOURCE_WRITE(file, &ver_stroke, sizeof(ver_stroke));
 
     {
         int temp = static_cast<int>(currenttitle->se_registato);

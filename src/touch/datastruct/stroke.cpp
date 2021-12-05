@@ -2,6 +2,9 @@
 #include "page.h"
 #include "../../utils/color/setcolor.h"
 #include "../../utils/common_error_definition.h"
+#include "../../dataread/xmlstruct.h"
+#include "../../datawrite/source_read_ext.h"
+#include "../../currenttitle/document.h"
 #include <QDebug>
 
 stroke::stroke()
@@ -27,15 +30,41 @@ void stroke::__setPressureForAllPoint(const double pressure)
 
 int stroke::save(zip_source_t *file) const
 {
+    int i;
+    cint len_point = this->length();
+
+    SOURCE_WRITE_RETURN(file, &len_point, sizeof(len_point));
+    SOURCE_WRITE_RETURN(file, &this->metadata, sizeof(metadata));
+
+    for(i = 0; i < len_point; i ++){
+        SOURCE_WRITE_RETURN(file, &at(i), sizeof(point_s));
+    }
+
     return OK;
 }
 
-int stroke::load(zip_file_t *file)
+int stroke::load(zip_file_t *file, int version)
 {
+    int i, len_point;
+    point_s point_append;
 
+    this->reset();
+
+    if(version > CURRENT_VERSION_STROKE)
+        return ERROR_VERSION_NEW;
+
+    SOURCE_READ_RETURN(file, &len_point, sizeof(len_point));
+    SOURCE_READ_RETURN(file, &this->metadata, sizeof(metadata));
+
+    for(i = 0; i < len_point; i++){
+        SOURCE_READ_RETURN(file, &point_append, sizeof(point_append));
+        this->append(point_append);
+    }
+
+    return OK;
 }
 
-void stroke::setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s color)
+void stroke::setMetadata(cint page, cint idtratto, cint posizione_audio, const colore_s &color)
 {
     this->metadata.page = page;
     this->metadata.idtratto = idtratto;

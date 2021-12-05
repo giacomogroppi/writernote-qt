@@ -3,7 +3,7 @@
 
 #include <QStringList>
 #include <QList>
-
+#include <QByteArray>
 #include "../touch/datastruct/datastruct.h"
 
 class fromimage;
@@ -12,10 +12,10 @@ class frompdf;
 #define NAME_BIN "data_bin.xml"
 #define NAME_AUDIO "data_audio.mp4"
 
+#define CURRENT_VERSION_STROKE 0
 #define CURRENT_VERSION_CURRENT_TITLE 8
 #define MIN_VERSION_CURRENT_TITLE 2
 
-#include <QByteArray>
 
 class Document{
 private:

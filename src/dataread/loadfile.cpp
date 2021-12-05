@@ -271,9 +271,11 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile){
 
 int xmlstruct::load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg)
 {
-    int tmp;
+    int tmp, ver_stroke;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
+
+    SOURCE_READ_RETURN(f, &ver_stroke, sizeof(ver_stroke));
 
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
@@ -283,7 +285,7 @@ int xmlstruct::load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const b
     SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
     SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
 
-    tmp = loadbinario_3(filezip);
+    tmp = loadbinario_3(filezip, ver_stroke);
     if(tmp == ERROR)
         return tmp;
     else if(tmp == ERROR_CONTROLL)

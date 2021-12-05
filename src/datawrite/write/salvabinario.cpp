@@ -71,13 +71,13 @@ int savefile::salvabinario(zip_t *filezip)
 
 int savefile::salvabinario(zip_t *filezip)
 {
-    int i, len, counterPage;
+    int i, len, counterPage, err = ERROR;
     size_t controll;
     zip_source_t *file;
     zip_error_t errore;
     const auto &pointInit = currenttitle->datatouch->getPointFirstPageNoZoom();
     const double init[2] = {pointInit.x() , pointInit.y() };
-    const int lenPage = currenttitle->datatouch->lengthPage();
+    cint lenPage = currenttitle->datatouch->lengthPage();
     const page *page;
     const double zoom = currenttitle->datatouch->getZoom();
     file = zip_source_buffer_create(0, 0, 0, &errore);
@@ -97,7 +97,8 @@ int savefile::salvabinario(zip_t *filezip)
 
         for(i = 0; i < len; i++){
             const stroke &stroke = page->atStroke(i);
-            if(stroke.save(file) != OK)
+            err = stroke.save(file);
+            if(err != OK)
                 goto error;
         }
     }
@@ -120,7 +121,7 @@ int savefile::salvabinario(zip_t *filezip)
 
     error:
     zip_source_free(file);
-    return ERROR;
+    return err;
 }
 
 void savefile::removeFile(zip_t *file, const QString &name)

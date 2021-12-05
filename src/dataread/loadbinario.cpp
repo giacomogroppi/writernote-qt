@@ -6,7 +6,7 @@
 #include "../utils/posizione_binario.h"
 #include "../sheet/fast-sheet/fast_sheet_ui.h"
 
-__new int xmlstruct::loadbinario_3(struct zip *z)
+__new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
 {
     struct zip_stat st;
     size_t controll, newControll;
@@ -35,7 +35,7 @@ __new int xmlstruct::loadbinario_3(struct zip *z)
 
         for(i=0; i<len; i++){
             stroke tmpStroke;
-            tmpStroke.load(f);
+            tmpStroke.load(f, ver_stroke);
             currenttitle->datatouch->appendStroke(tmpStroke, counterPage);
         }
     }
