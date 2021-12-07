@@ -152,7 +152,7 @@ public:
     void triggerVisibility(const double &viewSize);
     double biggerx() const noexcept;
 
-    bool needToCreateNewSheet();
+    bool needToCreateNewSheet() const;
     static bool needtochangeid(const int IndexPoint, const stroke &stroke);
 
     double biggery() const noexcept;
