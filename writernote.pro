@@ -123,7 +123,7 @@ SOURCES += \
     src/sheet/fast-sheet/fast_sheet_ui.cpp \
     src/sheet/fast_sheet.cpp \
     src/sizeButton.cpp \
-    src/touch/copy/copy_selection.cpp \
+    src/touch/copy_cut/copy_cut_selection.cpp \
     src/touch/datastruct/adjustSize.cpp \
     src/touch/datastruct/changeId.cpp \
     src/touch/datastruct/controllForRepositioning.cpp \
@@ -274,7 +274,7 @@ HEADERS += \
     src/restore_file/ui_restore/restore.h \
     src/sheet/fast-sheet/fast_sheet_ui.h \
     src/sheet/style_struct.h \
-    src/touch/copy/copy_selection.h \
+    src/touch/copy_cut/copy_cut_selection.h \
     src/touch/datastruct/page.h \
     src/touch/datastruct/point.h \
     src/touch/datastruct/stroke.h \

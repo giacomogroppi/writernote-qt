@@ -257,7 +257,11 @@ void square::move(const QPointF &punto, Document *data){
 
 void square::actionProperty(property_control::ActionProperty action)
 {
+    switch (action) {
+        case property_control::ActionProperty::__copy:{
 
+        }
+    }
 }
 
 /*

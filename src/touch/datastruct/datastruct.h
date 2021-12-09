@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QImage>
 #include "page.h"
+#include "../../utils/common_script.h"
 #include <csignal>
 
 /*
@@ -187,6 +188,8 @@ public:
         return QPointF(page::getWidth(), page::getHeight());
     }
 
+    QPointF smaller_data(const QList<int> & id) const;
+
     inline double currentWidth() const;
     inline double currentHeight() const;
     inline double proportion() const;
@@ -324,6 +327,22 @@ inline void datastruct::newPage(const n_style style)
 {
     page page(this->lengthPage()+1, style);
     this->m_page.append(page);
+}
+
+inline QPointF datastruct::smaller_data(const QList<int> &id) const
+{
+    QList<page>::const_iterator iterPage = this->m_page.begin();
+    QList<stroke>::const_iterator iterStroke;
+    QPointF point;
+
+    for(; iterPage != m_page.end(); iterPage++){
+        for(iterStroke = iterPage->get_begin(); iterStroke != iterPage->get_end(); iterStroke ++){
+            if(IS_PRESENT_IN_LIST(id, iterStroke.getId())){
+
+            }
+        }
+    }
+
 }
 
 /* this function does not consider the zoom */

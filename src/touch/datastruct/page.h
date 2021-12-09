@@ -103,6 +103,9 @@ public:
     int save(zip_source_t *file) const;
     int load(zip_file_t *file, int ver_stroke, int len_stroke);
 
+    QList<stroke>::const_iterator get_begin() const noexcept;
+    QList<stroke>::const_iterator get_end() const noexcept;
+
     friend class stroke;
     friend class datastruct;
 };
@@ -125,6 +128,16 @@ inline void page::move(const uint from, const uint to)
 inline void page::reset()
 {
     this->m_stroke.clear();
+}
+
+inline QList<stroke>::const_iterator page::get_begin() const noexcept
+{
+    return m_stroke.begin();
+}
+
+inline QList<stroke>::const_iterator page::get_end() const noexcept
+{
+    return m_stroke.end();
 }
 
 inline point_s *page::at_translation(const point_s &point, int page)
