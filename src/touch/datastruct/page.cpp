@@ -5,6 +5,8 @@
 #include <QPainter>
 #include "../../utils/time/current_time.h"
 #include <QPainterPath>
+#include "../../utils/common_error_definition.h"
+#include "../../datawrite/source_read_ext.h"
 #define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
 
 
@@ -267,3 +269,48 @@ void page::allocateStroke(int numAllocation)
         this->m_stroke.append(stroke());
     }
 }
+
+#define DO_CTRL(function) \
+    err = function; \
+    if(err != OK) \
+        return err;
+
+int page::save(zip_source_t *file) const
+{
+    int i, err = OK;
+    int len = lengthStroke();
+
+    for(i = 0; i < len; i++){
+        DO_CTRL(atStroke(i).save(file));
+    }
+
+    len = this->m_stroke_writernote.length();
+    SOURCE_WRITE_RETURN(file, &len, sizeof(len));
+
+    for(i = 0; i < len; i++){
+        DO_CTRL(m_stroke_writernote.at(i).save(file));
+    }
+
+    return OK;
+}
+
+#define DO_LOAD(list) \
+    for(i = 0; i < len_stroke; i++){ \
+        stroke tmp; \
+        DO_CTRL(tmp.load(file, ver_stroke)); \
+        this->list.append(tmp); \
+    }
+
+int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
+{
+    int i, err;
+
+    DO_LOAD(m_stroke);
+
+    SOURCE_READ_RETURN(file, &len_stroke, sizeof(int));
+
+    DO_LOAD(m_stroke_writernote);
+
+    return OK;
+}
+

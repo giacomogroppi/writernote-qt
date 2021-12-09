@@ -100,6 +100,9 @@ public:
     void reset();
     void allocateStroke(int numAllocation);
 
+    int save(zip_source_t *file) const;
+    int load(zip_file_t *file, int ver_stroke, int len_stroke);
+
     friend class stroke;
     friend class datastruct;
 };

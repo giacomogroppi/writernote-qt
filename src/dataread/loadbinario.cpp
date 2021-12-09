@@ -10,7 +10,8 @@ __new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
 {
     struct zip_stat st;
     size_t controll, newControll;
-    int i, len, lenPage, counterPage;
+    int len, lenPage, counterPage;
+    datastruct *data = currenttitle->datatouch;
     zip_file_t *f;
     double init[2];
 
@@ -31,13 +32,10 @@ __new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
         SOURCE_READ_GOTO(f, &len, sizeof(len));
 
         /* we add a new page */
-        currenttitle->datatouch->newPage(n_style::white);
+        data->newPage(n_style::white);
 
-        for(i=0; i<len; i++){
-            stroke tmpStroke;
-            tmpStroke.load(f, ver_stroke);
-            currenttitle->datatouch->appendStroke(tmpStroke, counterPage);
-        }
+        if(data->at_mod(counterPage).load(f, ver_stroke, len) != OK)
+            goto free_;
     }
 
     SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(this->currenttitle->datatouch->zoom));

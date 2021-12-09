@@ -229,6 +229,7 @@ void MainWindow::on_actionUndu_triggered()
 /* restore file to the original position (0, 0) */
 void MainWindow::on_actionrestore_button_triggered()
 {
+    this->m_canvas->data->datatouch->triggerNewView(-1, true);
     this->m_canvas->restoreO();
 }
 

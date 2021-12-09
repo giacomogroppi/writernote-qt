@@ -37,15 +37,15 @@ private:
 
     void modify();
 
+    int save(zip_source_t *file) const;
+    int load(zip_file_t *file, int version);
+
 public:
     stroke();
     stroke(const stroke &data);
 
     /* this function is used to set the pressure equal for all points. */
     void __setPressureForAllPoint(const double pressure);
-
-    int save(zip_source_t *file) const;
-    int load(zip_file_t *file, int version);
 
     float getPressure() const;
     QColor getColor(const double division) const;
@@ -113,6 +113,8 @@ public:
 
     /* debug */
     QString toString() const;
+
+    friend class page;
 };
 
 inline void stroke::updateFlagPressure()

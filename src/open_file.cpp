@@ -13,6 +13,7 @@
 #include "datawrite/savefile.h"
 #include "datawrite/qfilechoose.h"
 #include "audioplay/aggiornotastiriascolto.h"
+#include "utils/common_script.h"
 #include <QFile>
 #include <QFileDialog>
 
@@ -69,8 +70,7 @@ void MainWindow::openFile(const char *pos){
 
 
     // check if is pdf or we need to save the current document
-    const bool pdf = fileName.indexOf(".pdf") != -1;
-    if(pdf){
+    if(IS_PRESENT_IN_LIST(fileName, ".pdf")){
 #ifdef PDFSUPPORT
         m_canvas->data->m_pdf->addPdf(fileName, nullptr, this->m_path, this->m_canvas);
 #else
@@ -103,6 +103,7 @@ void MainWindow::openFile(const char *pos){
         const auto res = xml.loadfile(true, true);
 
         if(xmlstruct::manageMessage(res)){
+            this->m_canvas->data->datatouch->triggerNewView(-1, true);
             aggiornotestiriascolto(this);
             m_canvas->loadpixel();
             return contrUi();

@@ -78,11 +78,12 @@ jobs:
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
           cd qt_$QT
-          perl init-repository --module-subset=qtbase,qtimageformats,qtmultimedia
+          perl init-repository --module-subset=qtbase,qtimageformats,qtmultimedia,qtwebsockets
           git checkout v5.15.2
           git submodule update qtbase
           git submodule update qtimageformats
           git submodule update qtmultimedia
+          git submodule update qtwebsockets
           cd qtbase
           #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
           cd ..

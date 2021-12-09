@@ -95,12 +95,9 @@ int savefile::salvabinario(zip_t *filezip)
         len = page->lengthStroke();
         WRITE_ON_SIZE(file, &len, sizeof(len));
 
-        for(i = 0; i < len; i++){
-            const stroke &stroke = page->atStroke(i);
-            err = stroke.save(file);
-            if(err != OK)
-                goto error;
-        }
+        err = page->save(file);
+        if(err != OK)
+            goto error;
     }
 
     WRITE_ON_SIZE(file, &zoom, sizeof(double));

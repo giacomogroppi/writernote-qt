@@ -57,7 +57,7 @@ int stroke::load(zip_file_t *file, int version)
     SOURCE_READ_RETURN(file, &this->metadata, sizeof(metadata));
 
     for(i = 0; i < len_point; i++){
-        SOURCE_READ_RETURN(file, &point_append, sizeof(point_append));
+        SOURCE_READ_RETURN(file, &point_append, sizeof(point_s));
         this->append(point_append);
     }
 
