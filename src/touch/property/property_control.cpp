@@ -21,6 +21,16 @@ property_control::~property_control()
     delete ui;
 }
 
+void property_control::Show(const QPoint &point, int flags)
+{
+    ui->button_copy->setEnabled(    (flags & PROPERTY_SHOW_COPY));
+    ui->button_cut->setHidden(      (flags & PROPERTY_SHOW_CUT));
+    ui->button_delete->setHidden(   (flags & PROPERTY_SHOW_DELETE));
+
+    this->show();
+    this->move(point);
+}
+
 /*QRect property_control::getPos(const QPoint &topLeft, const QPoint &bottomRight)
 {
     QRect rect;

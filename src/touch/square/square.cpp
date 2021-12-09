@@ -5,11 +5,17 @@
 #include <QDebug>
 #include "../../images/fromimage.h"
 #include "../property/property_control.h"
+#include "../tabletcanvas.h"
 
 square::square(QObject *parent, property_control *property):
     QObject(parent)
 {
+    Q_ASSERT(parent);
+    Q_ASSERT(property);
+
     this->m_property = property;
+    this->m_copy = new copy(nullptr);
+    this->canvas = (TabletCanvas *) parent;
 
     QObject::connect(m_property, &property_control::ActionSelection, this, &square::actionProperty);
 
@@ -21,7 +27,7 @@ square::square(QObject *parent, property_control *property):
 
 square::~square()
 {
-
+    delete this->m_copy;
 }
 
 void square::updatePoint(const QPointF &__point)
@@ -118,6 +124,7 @@ bool square::isinside(const QPointF &point){
 
 void square::needReload(QPainter &painter, const QWidget *pixmap){
     QPoint middle;
+    int flags = 0;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
     //qDebug() << "square::needReload in_box:" << in_box;
     if(!in_box) this->m_property->hide();
@@ -143,10 +150,10 @@ void square::needReload(QPainter &painter, const QWidget *pixmap){
  *  uguale, e si sposta tutto il tratto
 */
 
-void square::findObjectToDraw(Document *doc)
+void square::findObjectToDraw()
 {
     uint counterStroke, counterPage, lenPoint, lenStroke, counterPoint;
-    const datastruct *data = doc->datatouch;
+    const datastruct *data = canvas->data->datatouch;
     const uint lenPage = data->lengthPage();
 
     if (this->m_id.length() == 0)
@@ -201,7 +208,7 @@ void square::findObjectToDraw(Document *doc)
     img:
     for(int counterImg = 0; counterImg < m_index_img.length(); counterImg ++){
         const int index = this->m_index_img.at(counterImg);
-        const auto &ref = doc->m_img->m_img.at(index);
+        const auto &ref = canvas->data->m_img->m_img.at(index);
 
         if(ref.i.x() < pointinit.point.x())
             pointinit.point.setX(ref.i.x());
@@ -218,8 +225,9 @@ void square::findObjectToDraw(Document *doc)
 /*
  * the function is call when check is set to true
 */
-void square::move(const QPointF &punto, Document *data){
+void square::move(const QPointF &punto){
     QPointF __point;
+    Document *data = canvas->data;
 
     if(!in_box){
         return this->reset();
@@ -259,7 +267,7 @@ void square::actionProperty(property_control::ActionProperty action)
 {
     switch (action) {
         case property_control::ActionProperty::__copy:{
-
+            this->m_copy->selection(*canvas->data->datatouch, this->m_id, SELECTION_FLAGS_COPY);
         }
     }
 }

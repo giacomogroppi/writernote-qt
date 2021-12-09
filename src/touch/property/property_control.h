@@ -26,7 +26,10 @@ public:
 
     //QRect getPos(const QPoint &topLeft, const QPoint &bottomRight);
 
-    void Show(const QPoint &rect);
+#define PROPERTY_SHOW_COPY 0x1
+#define PROPERTY_SHOW_CUT 0x2
+#define PROPERTY_SHOW_DELETE 0x4
+    void Show(const QPoint &rect, int whatShow);
     void Hide();
 
 private:
@@ -39,13 +42,6 @@ private slots:
     void on_button_cut_clicked();
     void on_button_delete_clicked();
 };
-
-inline void property_control::Show(const QPoint &point)
-{
-    //qDebug() << "property_control::Show" << point;
-    this->show();
-    this->move(point);
-}
 
 inline void property_control::Hide()
 {

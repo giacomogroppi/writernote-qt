@@ -188,7 +188,7 @@ public:
         return QPointF(page::getWidth(), page::getHeight());
     }
 
-    QPointF smaller_data(const QList<int> & id) const;
+    QRectF get_size_area(const QList<int> & id);
 
     inline double currentWidth() const;
     inline double currentHeight() const;
@@ -329,20 +329,45 @@ inline void datastruct::newPage(const n_style style)
     this->m_page.append(page);
 }
 
-inline QPointF datastruct::smaller_data(const QList<int> &id) const
+inline QRectF datastruct::get_size_area(const QList<int> &id)
 {
-    QList<page>::const_iterator iterPage = this->m_page.begin();
-    QList<stroke>::const_iterator iterStroke;
-    QPointF point;
+    int counterPage = this->lengthPage() - 1, counterStroke;
+    QPointF topLeft(page::getWidth(), this->m_page.last().currentHeight());
+    QPointF bottomRigth(0.0, 0.0);
 
-    for(; iterPage != m_page.end(); iterPage++){
-        for(iterStroke = iterPage->get_begin(); iterStroke != iterPage->get_end(); iterStroke ++){
-            if(IS_PRESENT_IN_LIST(id, iterStroke.getId())){
+    const page *page;
+    const stroke *stroke;
 
-            }
+    for(; counterPage >= 0; counterPage --){
+        page = &at(counterPage);
+        counterStroke = page->lengthStroke() - 1;
+        for(; counterStroke >= 0; counterStroke --){
+            stroke = &page->atStroke(counterStroke);
+            if(IS_NOT_PRESENT_IN_LIST(id, stroke->getId()))
+                continue;
+            const QRectF &rect = at_mod(counterStroke).atStrokeMod(counterStroke).getBiggerPointInStroke();
+            const QPointF &topLeftStroke = rect.topLeft();
+            const QPointF &bottomRightStroke = rect.bottomRight();
+
+            if(topLeftStroke.x() < topLeft.x())
+                topLeft.setX(topLeftStroke.x());
+
+            if(bottomRightStroke.x() > bottomRigth.x())
+                bottomRigth.setX(bottomRightStroke.x());
+
+            if(topLeftStroke.y() < topLeft.y())
+                topLeft.setY(topLeftStroke.y());
+
+            if(bottomRightStroke.y() > bottomRigth.y())
+                bottomRigth.setY(bottomRightStroke.y());
+
         }
     }
 
+    Q_ASSERT_X(topLeft.x() <= bottomRigth.x(), "datastruct::get_size_area", "topLeft.x > bottomRigth.x");
+    Q_ASSERT_X(topLeft.y() <= bottomRigth.y(), "datastruct::get_size_area", "topLeft.y > bottomRigth.y");
+
+    return QRectF(topLeft, bottomRigth);
 }
 
 /* this function does not consider the zoom */

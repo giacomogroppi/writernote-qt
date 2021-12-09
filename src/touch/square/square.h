@@ -5,6 +5,7 @@
 
 #include "../../currenttitle/document.h"
 #include "../property/property_control.h"
+#include "../copy_cut/copy_cut_selection.h"
 
 class square: public QObject
 {
@@ -31,7 +32,7 @@ public:
     bool find(Document *data);
 
     bool isinside(const QPointF &);
-    void move(const QPointF &, Document *data);
+    void move(const QPointF &);
 
     /* definizione per i punti di spostamento */
     PointSettable lastpoint;
@@ -42,7 +43,7 @@ private:
      * il rettangono
     */
     bool __need_reload = false;
-    void findObjectToDraw(Document *);
+    void findObjectToDraw();
 
     PointSettable pointinit;
     PointSettable pointfine;
@@ -55,6 +56,9 @@ private:
 
     /* if true: it means that the user has not previously selected comething */
     bool in_box;
+    copy *m_copy;
+
+    class TabletCanvas *canvas;
 
 private slots:
     void actionProperty(property_control::ActionProperty action);
