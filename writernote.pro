@@ -17,6 +17,9 @@ CONFIG(release, debug|release){
     QMAKE_CXXFLAGS_RELEASE -= -O1
     QMAKE_CXXFLAGS_RELEASE -= -O2
     QMAKE_CXXFLAGS_RELEASE *= -O3
+
+    QMAKE_CXXFLAGS_RELEASE *= -fno-exceptions
+    QMAKE_CXXFLAGS_DEBUG *= -fno-exceptions
 }
 
 #QMAKE_CXXFLAGS_RELEASE += -fanalyzer
