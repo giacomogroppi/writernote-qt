@@ -184,9 +184,7 @@ public:
     void newPage(const n_style style);
     static void copy(const datastruct &src, datastruct &dest);
 
-    inline QPointF get_size_page() const{
-        return QPointF(page::getWidth(), page::getHeight());
-    }
+    inline QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
 
     QRectF get_size_area(const QList<int> & id);
 
