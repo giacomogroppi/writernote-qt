@@ -349,7 +349,6 @@ HEADERS += \
     src/utils/slash/slash.h \
     src/utils/threadcount.h \
     src/utils/time/current_time.h \
-    src/utils/utils.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \

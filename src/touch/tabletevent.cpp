@@ -96,7 +96,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     }
                     else{
                         /* a questo punto può muovere di un delta x e y */
-                        m_square->move(pointTouch, data);
+                        m_square->move(pointTouch);
                     }
                 }
                 sel = false;
@@ -166,7 +166,7 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
     }
     else if(selection_method){
         if(m_square->somethingInBox()){
-            m_square->move(pointTouch, data);
+            m_square->move(pointTouch);
         }
         else{
             m_square->updatePoint(pointTouch);

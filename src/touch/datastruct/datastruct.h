@@ -349,17 +349,13 @@ inline QRectF datastruct::get_size_area(const QList<int> &id)
             const QPointF &topLeftStroke = rect.topLeft();
             const QPointF &bottomRightStroke = rect.bottomRight();
 
-            if(topLeftStroke.x() < topLeft.x())
-                topLeft.setX(topLeftStroke.x());
+            if(topLeftStroke.x() < topLeft.x()) topLeft.setX(topLeftStroke.x());
 
-            if(bottomRightStroke.x() > bottomRigth.x())
-                bottomRigth.setX(bottomRightStroke.x());
+            if(bottomRightStroke.x() > bottomRigth.x()) bottomRigth.setX(bottomRightStroke.x());
 
-            if(topLeftStroke.y() < topLeft.y())
-                topLeft.setY(topLeftStroke.y());
+            if(topLeftStroke.y() < topLeft.y()) topLeft.setY(topLeftStroke.y());
 
-            if(bottomRightStroke.y() > bottomRigth.y())
-                bottomRigth.setY(bottomRightStroke.y());
+            if(bottomRightStroke.y() > bottomRigth.y()) bottomRigth.setY(bottomRightStroke.y());
 
         }
     }

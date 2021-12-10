@@ -14,7 +14,7 @@ square::square(QObject *parent, property_control *property):
     Q_ASSERT(property);
 
     this->m_property = property;
-    this->m_copy = new copy(nullptr);
+    this->m_copy = new copy();
     this->canvas = (TabletCanvas *) parent;
 
     QObject::connect(m_property, &property_control::ActionSelection, this, &square::actionProperty);
@@ -101,7 +101,7 @@ bool square::find(Document *doc){
         this->in_box = true;
     }
 
-    findObjectToDraw(doc);
+    findObjectToDraw();
 
     if(!in_box){
         reset();
@@ -124,9 +124,10 @@ bool square::isinside(const QPointF &point){
 
 void square::needReload(QPainter &painter, const QWidget *pixmap){
     QPoint middle;
-    int flags = 0;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
+
     //qDebug() << "square::needReload in_box:" << in_box;
+
     if(!in_box) this->m_property->hide();
 
     if(!this->__need_reload) return;
@@ -135,7 +136,7 @@ void square::needReload(QPainter &painter, const QWidget *pixmap){
         middle = QPoint(translation.x() + this->pointinit.point.x(),
                         pointinit.point.y() + translation.y() - m_property->height());
         //qDebug() << "show";
-        this->m_property->Show(middle);
+        this->m_property->Show(middle, this->calculate_flags());
     }
 
     painter.setPen(this->penna);
@@ -265,11 +266,37 @@ void square::move(const QPointF &punto){
 
 void square::actionProperty(property_control::ActionProperty action)
 {
+    int flags = 0, dontcall_copy = 0;
+    QList<int> page;
+    datastruct &data = *canvas->data->datatouch;
+
     switch (action) {
         case property_control::ActionProperty::__copy:{
-            this->m_copy->selection(*canvas->data->datatouch, this->m_id, SELECTION_FLAGS_COPY);
+            flags = SELECTION_FLAGS_COPY;
+            break;
         }
+        case property_control::ActionProperty::__cut:{
+            flags = SELECTION_FLAGS_CUT;
+            break;
+        }
+        case property_control::ActionProperty::__delete:{
+            data.removePointId(m_id, &page);
+            dontcall_copy = 1;
+            break;
+        }
+       default:
+           std::abort();
     }
+
+    if(!dontcall_copy)
+        this->m_copy->selection(data, this->m_id, flags, page);
+    else
+        this->reset();
+
+    data.triggerNewView(page, -1, true);
+
+    if(!page.isEmpty())
+        canvas->call_update();
 }
 
 /*

@@ -1,25 +1,28 @@
 #ifndef COPY_SELECTION_H
 #define COPY_SELECTION_H
 
-#include <QObject>
 #include <QPointF>
+#include <QRectF>
+#include <QList>
 
 class stroke;
 class datastruct;
 
-class copy : public QObject
+class copy
 {
-    Q_OBJECT
 public:
-    explicit copy(QObject *parent);
+    copy();
     ~copy();
 
 #define SELECTION_FLAGS_COPY 0
 #define SELECTION_FLAGS_CUT 1
-    void selection(datastruct &data, const QList<int> &id, int __flags);
+    void selection(datastruct &data, const QList<int> &id, int __flags, QList<int> &page_mod);
     void past_selection(datastruct &data, QPointF &point_past);
 
-    bool isSomeThingCopy();
+    bool isEmpty() const;
+
+    bool isSomeThingCopy() const;
+    bool isSomeThingCut() const;
 
     void reset();
 
@@ -34,5 +37,20 @@ private:
     QList<stroke> m_stroke;
 
 };
+
+inline bool copy::isSomeThingCopy() const
+{
+    return !(this->flags & FLAG_CUT);
+}
+
+inline bool copy::isSomeThingCut() const
+{
+    return this->flags & FLAG_CUT;
+}
+
+inline bool copy::isEmpty() const
+{
+    return this->flags & FLAG_COPY_SOME_THING_COPY;
+}
 
 #endif // COPY_SELECTION_H

@@ -152,6 +152,7 @@ public:
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen);
     void loadpixel();
+    void call_update();
 
     /* touch e zoom */
     // [0] point left [1] point right
@@ -246,6 +247,11 @@ public slots:
 inline void TabletCanvas::callResizeEvent()
 {
     return this->resizeEvent(nullptr);
+}
+
+inline void TabletCanvas::call_update()
+{
+    update();
 }
 
 #endif

@@ -20,4 +20,8 @@
 #define IS_PRESENT_IN_LIST(list, element) (list.indexOf(element) != -1)
 #define IS_NOT_PRESENT_IN_LIST(list, element) (!IS_PRESENT_IN_LIST(list, element))
 
+#define IF_NOT_PRESENT_APPEND(list, element) \
+    if(list.indexOf(element) == -1) list.append(element);
+
+
 #endif // COMMON_SCRIPT_H

@@ -28,6 +28,8 @@ public:
         m_index_img.clear();
     }
 
+    int calculate_flags() const;
+
     void updatePoint(const QPointF &puntofine);
     bool find(Document *data);
 
@@ -67,6 +69,24 @@ private slots:
 inline bool square::somethingInBox() const
 {
     return this->in_box;
+}
+
+inline int square::calculate_flags() const
+{
+    int flag = 0;
+    if(this->somethingInBox()){
+        /* se c'è qualcosa selezionato dall'utente con lo square */
+        flag = PROPERTY_SHOW_DELETE | PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT;
+    }else{
+        if(m_copy->isEmpty())
+            /* se non c'è niente in lista e niente selezione dall'utente */
+            flag = ~(PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT | PROPERTY_SHOW_DELETE);
+        else
+            /* se c'è qualcosa copiato ma niente selezione dall'utente */
+            flag = (PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT);
+    }
+
+    return flag;
 }
 
 #endif // SQUARE_H

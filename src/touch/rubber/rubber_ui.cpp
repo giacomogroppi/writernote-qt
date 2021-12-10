@@ -1,6 +1,6 @@
 #include "rubber_ui.h"
 #include "ui_rubber_ui.h"
-#include "../../utils/utils.h"
+#include "../../utils/common_script.h"
 
 #define CTRL_LEN_STROKE(stroke, pageStroke, indexStroke, lenStroke) \
     if(stroke.length() < 3){ \

@@ -2,7 +2,7 @@
 #include "../datastruct/datastruct.h"
 #include "../../utils/common_script.h"
 
-copy::copy(QObject *parent) : QObject(parent)
+copy::copy()
 {
 
 }
@@ -27,14 +27,17 @@ void copy::reset()
  * In such a way that the user can save by
  * copying or cutting, multiple strokes.
 */
-void copy::selection(datastruct &data, const QList<int> &id, int __flags)
+void copy::selection(datastruct &data, const QList<int> &id, int __flags, QList<int> &page_mod)
 {
     const page *page;
     const QRectF sizeData = data.get_size_area(id);
+    int mod;
+
     this->flags = 0;
 
     for(int counterPage = data.lengthPage() - 1; counterPage >= 0; counterPage --){
         page = &data.at(counterPage);
+        mod = 0;
         for(int counterStroke = page->lengthStroke() - 1; counterStroke >= 0; counterStroke --){
             const stroke &currentStroke = page->atStroke(counterStroke);
 
@@ -48,7 +51,7 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags)
                 }
                 case SELECTION_FLAGS_CUT:{
                     data.at_mod(counterPage).removeAt(counterStroke);
-                    counterStroke ++;
+                    mod = 1;
                     break;
                 }
                 default:
@@ -56,6 +59,8 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags)
                 }
             }
         }
+        if(mod)
+            page_mod.append(counterPage);
     }
 
     adjustData(sizeData);
@@ -66,11 +71,6 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags)
         else
             flags &= FLAG_CUT;
     }
-}
-
-bool copy::isSomeThingCopy()
-{
-    return this->flags & FLAG_COPY_SOME_THING_COPY;
 }
 
 void copy::adjustData(const QRectF &areaData)

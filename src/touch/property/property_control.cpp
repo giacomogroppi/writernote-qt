@@ -24,8 +24,8 @@ property_control::~property_control()
 void property_control::Show(const QPoint &point, int flags)
 {
     ui->button_copy->setEnabled(    (flags & PROPERTY_SHOW_COPY));
-    ui->button_cut->setHidden(      (flags & PROPERTY_SHOW_CUT));
-    ui->button_delete->setHidden(   (flags & PROPERTY_SHOW_DELETE));
+    ui->button_cut->setEnabled(      (flags & PROPERTY_SHOW_CUT));
+    ui->button_delete->setEnabled(   (flags & PROPERTY_SHOW_DELETE));
 
     this->show();
     this->move(point);
