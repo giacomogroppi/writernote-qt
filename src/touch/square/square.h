@@ -86,6 +86,11 @@ inline int square::calculate_flags() const
             flag = (PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT);
     }
 
+    if(!this->m_copy->isEmpty())
+        flag |= PROPERTY_SHOW_PASTE;
+    else
+        flag &= ~(PROPERTY_SHOW_PASTE);
+
     return flag;
 }
 

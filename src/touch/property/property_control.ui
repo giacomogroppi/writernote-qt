@@ -40,6 +40,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="button_paste">
+       <property name="text">
+        <string>Paste</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="button_delete">
        <property name="text">
         <string>Delete</string>

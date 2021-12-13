@@ -54,6 +54,10 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags, QList<
                     mod = 1;
                     break;
                 }
+                case SELECTION_FLAGS_PASTE:{
+                    data.append(this->m_stroke, -1);
+                    break;
+                }
                 default:
                     Q_ASSERT_X(false, "copy::selection", "Flag missing");
                 }
@@ -65,7 +69,7 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags, QList<
 
     adjustData(sizeData);
 
-    if(flags & FLAG_COPY_SOME_THING_COPY){
+    if(!this->isEmpty()){
         if(__flags == SELECTION_FLAGS_COPY)
             flags &= ~(FLAG_CUT);
         else

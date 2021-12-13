@@ -1,6 +1,8 @@
 #include "property_control.h"
 #include "ui_property_control.h"
 
+#define SET_PRIVATE_STYLE(button) button->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+
 property_control::property_control(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::property_control)
@@ -11,9 +13,10 @@ property_control::property_control(QWidget *parent) :
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground);
 
-    this->ui->button_copy->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
-    this->ui->button_cut->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
-    this->ui->button_delete->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+    SET_PRIVATE_STYLE(ui->button_copy);
+    SET_PRIVATE_STYLE(ui->button_cut);
+    SET_PRIVATE_STYLE(ui->button_delete);
+    SET_PRIVATE_STYLE(ui->button_paste);
 }
 
 property_control::~property_control()
@@ -23,9 +26,10 @@ property_control::~property_control()
 
 void property_control::Show(const QPoint &point, int flags)
 {
-    ui->button_copy->setEnabled(    (flags & PROPERTY_SHOW_COPY));
+    ui->button_copy->setEnabled(     (flags & PROPERTY_SHOW_COPY));
     ui->button_cut->setEnabled(      (flags & PROPERTY_SHOW_CUT));
     ui->button_delete->setEnabled(   (flags & PROPERTY_SHOW_DELETE));
+    ui->button_paste->setEnabled(    (flags & PROPERTY_SHOW_PASTE));
 
     this->show();
     this->move(point);
@@ -62,5 +66,11 @@ void property_control::on_button_cut_clicked()
 void property_control::on_button_delete_clicked()
 {
     emit ActionSelection(ActionProperty::__delete);
+}
+
+
+void property_control::on_button_paste_clicked()
+{
+    emit ActionSelection(ActionProperty::__paste);
 }
 

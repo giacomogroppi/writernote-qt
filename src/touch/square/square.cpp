@@ -153,14 +153,16 @@ void square::needReload(QPainter &painter, const QWidget *pixmap){
 
 void square::findObjectToDraw()
 {
-    uint counterStroke, counterPage, lenPoint, lenStroke, counterPoint;
+    //uint counterStroke, counterPage, lenPoint, lenStroke, counterPoint;
     datastruct *data = canvas->data->datatouch;
-    const uint lenPage = data->lengthPage();
+    //const uint lenPage = data->lengthPage();
 
-    const QRectF sizeData = data->get_size_area(m_id);
+    QRectF sizeData;
 
     if (this->m_id.length() == 0)
         goto img;
+
+    sizeData = data->get_size_area(m_id);
 
     // find the first point
 
@@ -283,6 +285,10 @@ void square::actionProperty(property_control::ActionProperty action)
         }
         case property_control::ActionProperty::__cut:{
             flags = SELECTION_FLAGS_CUT;
+            break;
+        }
+        case property_control::ActionProperty::__paste:{
+            flags = SELECTION_FLAGS_PASTE;
             break;
         }
         case property_control::ActionProperty::__delete:{

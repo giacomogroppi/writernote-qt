@@ -21,14 +21,16 @@ public:
     enum ActionProperty: uchar{
         __copy,
         __cut,
+        __paste,
         __delete
     };
 
     //QRect getPos(const QPoint &topLeft, const QPoint &bottomRight);
 
-#define PROPERTY_SHOW_COPY 0x1
-#define PROPERTY_SHOW_CUT 0x2
-#define PROPERTY_SHOW_DELETE 0x4
+#define PROPERTY_SHOW_COPY (1 << 0)
+#define PROPERTY_SHOW_CUT (1 << 1)
+#define PROPERTY_SHOW_DELETE (1 << 2)
+#define PROPERTY_SHOW_PASTE (1 << 3)
     void Show(const QPoint &rect, int whatShow);
     void Hide();
 
@@ -41,6 +43,7 @@ private slots:
     void on_button_copy_clicked();
     void on_button_cut_clicked();
     void on_button_delete_clicked();
+    void on_button_paste_clicked();
 };
 
 inline void property_control::Hide()
