@@ -6,6 +6,7 @@
 #include "../../images/fromimage.h"
 #include "../property/property_control.h"
 #include "../tabletcanvas.h"
+#include "../../utils/common_script.h"
 
 square::square(QObject *parent, property_control *property):
     QObject(parent)
@@ -54,10 +55,9 @@ void square::updatePoint(const QPointF &__point)
 */
 bool square::find(Document *doc){
     datastruct *data = doc->datatouch;
-    uint counterStroke, pageCounter, lenStroke;
     bool tmp_find;
     const QPointF &translation = data->getPointFirstPage();
-    const uint lenPage = data->lengthPage();
+    int PageCounter = data->lengthPage() - 1, strokeCounter;
 
     const QPointF &topLeft = data->adjustPoint(pointinit.point);
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
@@ -67,35 +67,31 @@ bool square::find(Document *doc){
 
     this->adjustPoint();
 
-    /* point selected by user */
-    for(pageCounter = 0; pageCounter < lenPage; pageCounter++){
-        lenStroke = data->at(pageCounter).lengthStroke();
+    Q_ASSERT(pointinit.x() <= pointfine.x());
+    Q_ASSERT(pointinit.y() <= pointfine.y());
 
-        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            const stroke &stroke = data->at(pageCounter).atStroke(counterStroke);
+    /* point selected by user */
+    for(; PageCounter >= 0; PageCounter --){
+        const page &page = data->at(PageCounter);
+        strokeCounter = page.lengthStroke() - 1;
+
+        for(; strokeCounter >= 0; strokeCounter --){
+            const stroke &stroke = page.atStroke(strokeCounter);
 
             if(datastruct::isinside(topLeft + translation , bottomRight + translation, stroke)){
-                if(m_id.indexOf(stroke.getId()) == -1) {
-                    m_id.append(stroke.getId());
-                }
-
+                const int id = stroke.getId();
+                IF_NOT_PRESENT_APPEND(m_id, id);
                 this->in_box = true;
             }
-
         }
     }
 
     /* image selected by user */
     const int lenImg = doc->m_img->m_img.length();
     for(int counterImg = 0; counterImg < lenImg; counterImg++){
-        tmp_find = false;
         const auto &ref = doc->m_img->m_img.at(counterImg);
 
-        if(datastruct::isinside(topLeft, bottomRight, ref.i))
-            tmp_find = true;
-
-        if(datastruct::isinside(topLeft, bottomRight, ref.f))
-            tmp_find = true;
+        tmp_find = datastruct::isinside(topLeft, bottomRight, ref.i) || datastruct::isinside(topLeft, bottomRight, ref.f);
 
         if(!tmp_find)
             continue;
@@ -211,10 +207,8 @@ void square::endMoving(const QWidget *pixmap)
     int flag;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
 
-    const double y = pointinit.y() + translation.y() - m_property->height();
-    const double x = pointinit.x() + translation.x();
-
-    middle = QPoint(x, y);
+    middle = QPoint(pointinit.x() + translation.x(),
+                    pointinit.y() + translation.y() - m_property->height());
 
     flag = this->calculate_flags();
 
@@ -282,9 +276,6 @@ Q_ALWAYS_INLINE void square::adjustPoint()
     double tmp;
     QPointF &topLeft = pointinit.point;
     QPointF &bottomRight = pointfine.point;
-
-    if(!pointinit.set || !pointinit.set)
-        return;
 
     MAKE_CHANGE(topLeft, bottomRight, x, setX);
     MAKE_CHANGE(topLeft, bottomRight, y, setY);
