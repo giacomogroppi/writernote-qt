@@ -47,7 +47,8 @@ void square::updatePoint(const QPointF &__point)
 
 }
 
-/* la funzione capisce se all'interno del quadrato della selezione c'è qualcosa
+/* 
+ * la funzione capisce se all'interno del quadrato della selezione c'è qualcosa
  * in caso salva l'id del tratto e setta la variabile this->check = true, in caso contrario
  * la setta = false e fa il return
 */
@@ -210,8 +211,10 @@ void square::endMoving(const QWidget *pixmap)
     int flag;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
 
-    middle = QPoint(translation.x() + this->pointinit.point.x(),
-                    pointinit.point.y() + translation.y() - m_property->height());
+    const double y = pointinit.y() + translation.y() - m_property->height();
+    const double x = pointinit.x() + translation.x();
+
+    middle = QPoint(x, y);
 
     flag = this->calculate_flags();
 
@@ -222,7 +225,7 @@ void square::endMoving(const QWidget *pixmap)
 
 void square::actionProperty(property_control::ActionProperty action)
 {
-    int flags = 0, dontcall_copy = 0;
+    int flags = 0, dontcall_copy = 1;
     QList<int> page;
     datastruct &data = *canvas->data->datatouch;
 
@@ -241,14 +244,15 @@ void square::actionProperty(property_control::ActionProperty action)
         }
         case property_control::ActionProperty::__delete:{
             data.removePointId(m_id, &page);
-            dontcall_copy = 1;
+            dontcall_copy = 0;
+            m_property->Hide();
             break;
         }
        default:
            std::abort();
     }
 
-    if(!dontcall_copy)
+    if(dontcall_copy)
         this->m_copy->selection(data, this->m_id, flags, page, pointinit.point);
     else
         this->reset();
@@ -261,27 +265,27 @@ void square::actionProperty(property_control::ActionProperty action)
     this->canvas->call_update();
 }
 
+#define MAKE_CHANGE(point1, point2, function, secFunction) \
+    if(point1.function() > point2.function()) \
+    { \
+        tmp = point2.function(); \
+        point2.secFunction(point1.function()); \
+        point1.secFunction(tmp); \
+    }
+
 /*
  * la funcione cambia i punti, in caso l'utente non abbia tracciato il
  * rettangolo da in alto a sinistra a in alto a destra
 */
-void square::adjustPoint()
+Q_ALWAYS_INLINE void square::adjustPoint()
 {
     double tmp;
     QPointF &topLeft = pointinit.point;
     QPointF &bottomRight = pointfine.point;
+
     if(!pointinit.set || !pointinit.set)
         return;
 
-    if(topLeft.x() > bottomRight.x()){
-        tmp = bottomRight.x();
-        bottomRight.setX(topLeft.x());
-        topLeft.setX(tmp);
-    }
-
-    if(topLeft.y() > bottomRight.y()){
-        tmp = bottomRight.y();
-        bottomRight.setY(topLeft.y());
-        topLeft.setY(tmp);
-    }
+    MAKE_CHANGE(topLeft, bottomRight, x, setX);
+    MAKE_CHANGE(topLeft, bottomRight, y, setY);
 }

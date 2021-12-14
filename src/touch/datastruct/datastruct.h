@@ -64,12 +64,12 @@ public:
 
     static bool isOkZoom(const double newPossibleZoom);
 
-    double getZoom() const;
+    constexpr double getZoom() const;
     void changeZoom(const double zoom, class TabletCanvas *canvas);
     void increaseZoom(const double delta, const QSize &size);
 
-    inline QPointF getPointFirstPage() const { return this->zoom * pointFirstPage; }
-    inline QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }
+    constexpr inline QPointF getPointFirstPage() const { return this->zoom * pointFirstPage; }
+    constexpr inline QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }
 
     void setPointFirstPage(const QPointF &point){ this->pointFirstPage = point; }
 
@@ -140,7 +140,7 @@ public:
 
     inline int maxId();
 
-    QPointF adjustPoint(const QPointF &pointRealTouch);
+    constexpr QPointF adjustPoint(const QPointF &pointRealTouch);
 
     bool isempty() const;
 
@@ -449,7 +449,7 @@ inline bool datastruct::isOkZoom(const double newPossibleZoom)
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.2);
 }
 
-inline double datastruct::getZoom() const
+constexpr inline double datastruct::getZoom() const
 {
     return this->zoom;
 }
@@ -539,7 +539,7 @@ inline int datastruct::appendToTheTop(const stroke &stroke)
     return page;
 }
 
-inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser)
+constexpr inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser)
 {
     const double zoom = this->getZoom();
     return (pointTouchUser / zoom - this->getPointFirstPage());

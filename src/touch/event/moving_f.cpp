@@ -1,5 +1,5 @@
 #include "../tabletcanvas.h"
-
+#include "../square/square.h"
 #include <QPainter>
 
 /* wheel of mouse */
@@ -11,6 +11,8 @@ void TabletCanvas::ismoving_f(){
     translation /= refZoom;
 
     data->datatouch->scala_all(translation, this->height());
+
+    m_square->translate(translation, this);
 
     updatePageCount();
     update();

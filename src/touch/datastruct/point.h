@@ -3,6 +3,7 @@
 
 #include <QtGlobal>
 #include <QPointF>
+#include "math.h"
 #define NCOLOR 4
 
 /* canvas */
@@ -11,11 +12,30 @@ struct PointSettable {
     PointSettable();
     QPointF point;
     bool set;
-    bool isNotDefine() const
+
+    constexpr bool isNotDefine() const
     {
         return !this->set;
     }
+
+    constexpr double x() const
+    {
+        return this->point.x();
+    }
+
+    constexpr double y() const
+    {
+        return this->point.y();
+    }
+
+    constexpr PointSettable &operator+=(const QPointF &p);
 };
+
+constexpr Q_ALWAYS_INLINE PointSettable &PointSettable::operator+=(const QPointF &p)
+{
+    this->point += p;
+    return *this;
+}
 
 inline PointSettable::PointSettable()
 {

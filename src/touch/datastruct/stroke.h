@@ -53,10 +53,10 @@ public:
     const point_s   &at(const int index) const;
     point_s         &at_mod(const int index);
 
-    void                append(const point_s &point);
+    void        append(const point_s &point);
 
-    void                setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s &color);
-    void                setMetadata(const metadata_stroke &metadata);
+    void        setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s &color);
+    void        setMetadata(const metadata_stroke &metadata);
 
     void setPage(int page);
     void setPositioneAudio(const int m_pos_ris);
@@ -86,7 +86,7 @@ public:
     size_t getSizeInMemory() const;
     void decreasePrecision();
 
-    void setAlfaColor(const uchar alfa);
+    constexpr void setAlfaColor(const uchar alfa);
 
     __slow void at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const;
 
@@ -344,7 +344,7 @@ inline bool stroke::constantPressure()
     return this->constantPressureVal;
 }
 
-inline void stroke::setAlfaColor(const uchar alfa)
+constexpr inline void stroke::setAlfaColor(const uchar alfa)
 {
     this->metadata.color.colore[3] = alfa;
 }

@@ -73,10 +73,12 @@ void copy::selection(
 {
     const page *page;
     QRectF sizeData;
+    QPointF tmpPoint;
     int mod;
 
     if(__flags == SELECTION_FLAGS_PASTE){
-        this->managePaste(data, pointTouch);
+        tmpPoint = data.adjustPoint(pointTouch);
+        this->managePaste(data, tmpPoint);
 
         if(this->isSomeThingCut()){
             flags = 0;

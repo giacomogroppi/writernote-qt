@@ -46,10 +46,10 @@ public:
         this->m_property->Hide();
     };
 
-    /* these functions are used only to show or not the menu with the options. */
-    void isMoving() { __isMoving = true; this->m_property->Hide(); };
+    void isMoving() { m_property->Hide(); };
     void endMoving(const QWidget *pixmap);
-    bool __isMoving = false;
+
+    void translate(const QPointF &offset);
 
 private:
     void findObjectToDraw();
@@ -99,6 +99,14 @@ inline int square::calculate_flags() const
     Q_ASSERT(flag >= 0);
 
     return flag;
+}
+
+inline void square::translate(const QPointF &offset)
+{
+    this->pointinit += offset;
+    this->pointfine += offset;
+
+    this->m_property->Hide();
 }
 
 #endif // SQUARE_H

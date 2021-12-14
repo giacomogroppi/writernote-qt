@@ -37,7 +37,7 @@ void property_control::Show(const QPoint &point, int flags)
     }
     else{
         this->hide();
-    }
+    }    
 
     this->move(point);
 
