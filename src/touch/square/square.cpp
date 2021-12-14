@@ -49,9 +49,10 @@ void square::updatePoint(const QPointF &__point)
 }
 
 /* 
- * la funzione capisce se all'interno del quadrato della selezione c'è qualcosa
- * in caso salva l'id del tratto e setta la variabile this->check = true, in caso contrario
- * la setta = false e fa il return
+ * la funzione capisce se all'interno del quadrato
+ * della selezione c'è qualcosa in caso salva l'id
+ * del tratto e setta la variabile this->check =
+ * true, in caso contrario la setta = false e fa il return
 */
 bool square::find(Document *doc){
     datastruct *data = doc->datatouch;

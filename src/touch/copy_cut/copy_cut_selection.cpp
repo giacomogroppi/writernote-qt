@@ -88,6 +88,7 @@ void copy::selection(
         return;
     }
 
+    m_stroke.clear();
     sizeData = data.get_size_area(id);
     this->flags = 0;
 

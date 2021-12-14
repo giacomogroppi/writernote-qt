@@ -38,9 +38,9 @@ CONFIG += c++17
 
 TRANSLATIONS +=  language/it.ts
 
-#CONFIG(debug, debug|release){
-#    DEFINES += "DEBUGINFO"
-#}
+CONFIG(debug, debug|release){
+    DEFINES += "DEBUGINFO"
+}
 
 ## Snapcraft support
 contains(DEFINES, SNAP){
@@ -66,6 +66,7 @@ contains(DEFINES, CLOUD){
 DEFINES += "ALL_VERSION"
 contains(DEFINES, NO_ALL_VERSION){
     DEFINES -= "ALL_VERSION"
+    message(Disable all version)
 }
 ## for support A4 pdf create
 #DEFINES += "NUMEROPIXELVERTICALI=1400"
