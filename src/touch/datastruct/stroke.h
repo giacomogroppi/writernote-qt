@@ -28,7 +28,7 @@ private:
     QRectF biggerData;
     bool constantPressureVal: 1;
 
-    bool needToCreatePanterPath: 1;
+    bool needToCreatePanterPath;
     bool needToCreateBiggerData;
 
     bool needToUpdatePressure: 1;
@@ -96,9 +96,9 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
 
-    QPainterPath getQPainterPath();
+    const QPainterPath &getQPainterPath() const;
 
-    void createQPainterPath();
+    void createQPainterPath() const;
 
     void reset();
 
@@ -180,7 +180,8 @@ inline const point_s &stroke::at(const int index) const
 }
 
 inline point_s &stroke::at_mod(const int index)
-{    
+{
+    this->modify();
     return this->m_point.operator[](index);
 }
 
@@ -369,18 +370,15 @@ inline void stroke::setColor(const colore_s &color)
     memcpy(&this->metadata.color, &color, sizeof(metadata.color));
 }
 
-inline QPainterPath stroke::getQPainterPath()
+inline const QPainterPath &stroke::getQPainterPath() const
 {
-    //qDebug() << this->getBiggerPointInStroke().topLeft() << this->getBiggerPointInStroke().bottomRight();
+    bool &__needToCreatePanterPath = (bool &)this->needToCreatePanterPath;
 
     if(this->needToCreatePanterPath){
-        //qDebug() << "stroke::getQPainterPath need to create QPainterPath" << this->metadata.idtratto;
         this->createQPainterPath();
-    }else{
-        //qDebug() << "stroke::getQPainterPath don't need to create QPainterPath" << this->metadata.idtratto;
     }
 
-    this->needToCreatePanterPath = false;
+    __needToCreatePanterPath = false;
 
     return this->path;
 }

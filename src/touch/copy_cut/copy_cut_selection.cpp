@@ -24,11 +24,11 @@ void copy::managePaste(
 {
     QPointF tmp = pointTouch;
     int i;
-    int tmpId;
+    int tmpId = -1;
 
     qDebug() << data.at(0).lengthStroke();
 
-    tmpId = data.maxId() + 1;
+
     i = this->m_stroke.length() - 1;
     datastruct::inverso(tmp);
     this->adjustData(tmp);
@@ -40,11 +40,18 @@ void copy::managePaste(
         if(data.isAvailable(stroke.getId()))
             continue;
 
+        if(tmpId < 0)
+            tmpId = data.maxId() + 1;
+
         stroke.setId(tmpId);
         tmpId += 1;
     }
 
     data.append(this->m_stroke, -1);
+    if(this->isSomeThingCopy()){
+        datastruct::inverso(tmp);
+        this->adjustData(tmp);
+    }
     qDebug() << data.at_mod(0).lastMod().getBiggerPointInStroke();
 }
 
@@ -71,8 +78,10 @@ void copy::selection(
     if(__flags == SELECTION_FLAGS_PASTE){
         this->managePaste(data, pointTouch);
 
-        if(this->isSomeThingCut())
+        if(this->isSomeThingCut()){
             flags = 0;
+            this->m_stroke.clear();
+        }
 
         return;
     }
@@ -87,7 +96,7 @@ void copy::selection(
             const stroke &currentStroke = page->atStroke(counterStroke);
 
             if(IS_PRESENT_IN_LIST(id, currentStroke.getId())){
-                stroke tmp = currentStroke;
+                stroke tmp(currentStroke);
                 this->m_stroke.append(tmp);
 
                 switch (__flags) {

@@ -118,14 +118,14 @@ bool square::find(Document *doc){
  * vero se è intero il punto è interno
 */
 bool square::isinside(const QPointF &point){
-    if(!this->in_box)
+    if(!somethingInBox())
         return false;
 
     return datastruct::isinside(pointinit.point, pointfine.point, point);
 }
 
 void square::needReload(QPainter &painter){
-    if(!this->__need_reload) return;
+    if(!__need_reload) return;
 
     painter.setPen(this->penna);
 
@@ -141,10 +141,7 @@ void square::needReload(QPainter &painter){
 
 void square::findObjectToDraw()
 {
-    //uint counterStroke, counterPage, lenPoint, lenStroke, counterPoint;
     datastruct *data = canvas->data->datatouch;
-    //const uint lenPage = data->lengthPage();
-
     QRectF sizeData;
 
     if (this->m_id.isEmpty())
@@ -173,9 +170,6 @@ void square::findObjectToDraw()
     }
 }
 
-/*
- * the function is call when check is set to true
-*/
 void square::move(const QPointF &punto){
     QPointF __point;
     Document *data = canvas->data;
@@ -263,6 +257,8 @@ void square::actionProperty(property_control::ActionProperty action)
 
     if(!page.isEmpty())
         canvas->call_update();
+
+    this->canvas->call_update();
 }
 
 /*

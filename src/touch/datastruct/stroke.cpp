@@ -130,29 +130,34 @@ void stroke::movePoint(const QPointF &translation)
     }
 }
 
-void stroke::createQPainterPath()
+void stroke::createQPainterPath() const
 {
     int i, len;
+
+    QPainterPath &__path = (QPainterPath &) this->path;
+    bool &__needToCreatePanterPath = (bool &)needToCreatePanterPath;
+
     const double delta = PROP_RESOLUTION;
     const point_s *point, *point1, *point2;
 
+    __path.clear();
     len = this->length();
 
     for(i=0; i < len-3; ++i){
-        path.moveTo(at(i).toQPointF(delta));
+        __path.moveTo(at(i).toQPointF(delta));
 
         while(i<len-3){
-            point =     page::at_translation(at(i), this->metadata.page);
-            point1 =    page::at_translation(at(i+1), this->metadata.page);
-            point2 =    page::at_translation(at(i+2), this->metadata.page);
+            point =     page::at_translation(at(i),     this->metadata.page);
+            point1 =    page::at_translation(at(i+1),   this->metadata.page);
+            point2 =    page::at_translation(at(i+2),   this->metadata.page);
 
-            path.cubicTo(point->toQPointF(delta), point1->toQPointF(delta), point2->toQPointF(delta));
+            __path.cubicTo(point->toQPointF(delta), point1->toQPointF(delta), point2->toQPointF(delta));
 
             i += 1;
         }
-
     }
-    this->needToCreatePanterPath = false;
+
+    __needToCreatePanterPath = false;
 }
 
 void stroke::reset()
