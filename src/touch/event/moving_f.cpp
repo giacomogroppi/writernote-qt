@@ -12,7 +12,7 @@ void TabletCanvas::ismoving_f(){
 
     data->datatouch->scala_all(translation, this->height());
 
-    m_square->translate(translation, this);
+    m_square->translate(translation);
 
     updatePageCount();
     update();
