@@ -31,13 +31,16 @@ void property_control::Show(const QPoint &point, int flags)
     ui->button_delete->setEnabled(   (flags & PROPERTY_SHOW_DELETE));
     ui->button_paste->setEnabled(    (flags & PROPERTY_SHOW_PASTE));
 
-    if(flags)
+    if(flags){
         this->show();
-    else
+        this->raise();
+    }
+    else{
         this->hide();
+    }
 
     this->move(point);
-    this->raise();
+
 }
 
 void property_control::on_button_copy_clicked()

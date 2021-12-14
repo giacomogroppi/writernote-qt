@@ -17,7 +17,7 @@ public:
 #define SELECTION_FLAGS_COPY 0
 #define SELECTION_FLAGS_CUT 1
 #define SELECTION_FLAGS_PASTE 2
-    void selection(datastruct &data, const QList<int> &id, int __flags, QList<int> &page_mod);
+    void selection(datastruct &data, const QList<int> &id, int __flags, QList<int> &page_mod, const QPointF &offsetTouch);
     void past_selection(datastruct &data, QPointF &point_past);
 
     bool isEmpty() const;
@@ -28,7 +28,8 @@ public:
     void reset();
 
 private:
-    void adjustData(const QRectF &areaData);
+    void managePaste(datastruct &data, const QPointF &pointTouch);
+    void adjustData(const QPointF &offset);
 
 #define FLAG_CUT 0x2 /* if the point is from a cut operation */
     int flags = 0;

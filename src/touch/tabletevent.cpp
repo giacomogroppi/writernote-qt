@@ -86,6 +86,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
             }
             else if(selection_method){
+                m_square->isMoving();
+
                 if(!m_square->somethingInBox()){ /* it means that the user not select anything */
                     m_square->updatePoint(pointTouch);
                 }
@@ -149,6 +151,7 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
 
             if(!m_square->somethingInBox())
                 m_square->find(data);
+            m_square->endMoving(this);
         }
 
         if(rubber_method && m_rubber->m_type_gomma == rubber_ui::total){

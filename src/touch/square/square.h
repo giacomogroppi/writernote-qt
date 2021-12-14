@@ -13,7 +13,7 @@ class square: public QObject
 public:
     bool somethingInBox() const;
 
-    void needReload(QPainter &painter, const QWidget *pixmap);
+    void needReload(QPainter &painter);
 
     void adjustPoint();
 
@@ -24,9 +24,6 @@ public:
         pointinit.set = lastpoint.set = pointfine.set = false;
 
         in_box = false;
-        point_touch = false;
-
-        m_property->Hide();
 
         __need_reload = false;
         m_id.clear();
@@ -44,13 +41,25 @@ public:
     /* definizione per i punti di spostamento */
     PointSettable lastpoint;
 
+    void changeInstrument(){
+        this->reset();
+        this->m_property->Hide();
+    };
+
+    /* these functions are used only to show or not the menu with the options. */
+    void isMoving() { __isMoving = true; this->m_property->Hide(); };
+    void endMoving(const QWidget *pixmap);
+    bool __isMoving = false;
+
+private:
+    void findObjectToDraw();
+
 private:
     /*
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
      * il rettangono
     */
     bool __need_reload = false;
-    void findObjectToDraw();
 
     PointSettable pointinit;
     PointSettable pointfine;
@@ -61,9 +70,7 @@ private:
     QPen penna;
     class property_control *m_property;
 
-    /* if true: it means that the user has not previously selected comething */
     bool in_box: 1;
-    bool point_touch: 1;
     copy *m_copy;
 
     class TabletCanvas *canvas;
@@ -80,22 +87,16 @@ inline bool square::somethingInBox() const
 inline int square::calculate_flags() const
 {
     int flag = 0;
+
     if(this->somethingInBox()){
-        /* se c'è qualcosa selezionato dall'utente con lo square */
         flag = PROPERTY_SHOW_DELETE | PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT;
     }else{
-        if(m_copy->isEmpty())
-            /* se non c'è niente in lista e niente selezione dall'utente */
-            flag = ~(PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT | PROPERTY_SHOW_DELETE);
-        else
-            /* se c'è qualcosa copiato ma niente selezione dall'utente */
-            flag = (PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT);
+        if(!m_copy->isEmpty())
+            flag = PROPERTY_SHOW_PASTE;
+
     }
 
-    if(this->m_copy->isEmpty())
-        flag &= ~(PROPERTY_SHOW_PASTE);
-    else
-        flag |= PROPERTY_SHOW_PASTE;
+    Q_ASSERT(flag >= 0);
 
     return flag;
 }

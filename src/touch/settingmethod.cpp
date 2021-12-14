@@ -5,6 +5,7 @@
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "rubber/rubber_ui.h"
 #include "../utils/color_define_rgb.h"
+#include "square/square.h"
 
 #define SET_CHECK(x) x->setChecked(true)
 #define SET_NOT_CHECK(x) x->setChecked(false)
@@ -113,6 +114,10 @@ void MainWindow::updateTouch(){
     ui->actionred->setChecked(m_canvas->m_color == Qt::red);
     ui->actionbrown_color->setChecked(m_canvas->m_color == COLOR_BROWN);
     ui->actionpurple->setChecked(m_canvas->m_color == COLOR_PURPLE);
+
+    if(m_canvas->medotodiinserimento != TabletCanvas::selection){
+        m_canvas->m_square->changeInstrument();
+    }
 }
 
 void MainWindow::on_actionblack_triggered()

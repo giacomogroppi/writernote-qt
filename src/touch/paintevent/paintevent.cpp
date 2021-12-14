@@ -49,10 +49,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     TabletCanvas::load(painter, this->data, dataPaint);
 
-    /*load(painter, this->data, m_color, m_pen, m_brush, lastPoint,
-         m_pos_ris, &m_pixmap, true, 1, this->m_pixmap.width(), this->m_pixmap.width(), this->parent, false);*/
-
-    m_square->needReload(painter, this);
+    m_square->needReload(painter);
 
     painter.end();
 }

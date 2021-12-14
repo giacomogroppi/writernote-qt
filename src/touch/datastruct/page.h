@@ -70,7 +70,9 @@ public:
     static void copy(const page &src, page &dest);
     void removeAt(const uint i);
     int maxId() const;
+
     const stroke & last() const;
+    stroke &lastMod();
 
     /*
      *  these 3 functions do not automatically launch
@@ -303,6 +305,11 @@ inline int page::maxId() const
 inline const stroke &page::last() const
 {
     return this->m_stroke.last();
+}
+
+inline stroke &page::lastMod()
+{
+    return this->m_stroke.operator[](this->lengthStroke() - 1);
 }
 
 inline void page::append(const stroke &strokeAppend)

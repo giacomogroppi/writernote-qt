@@ -18,6 +18,34 @@ void copy::reset()
     this->m_stroke.clear();
 }
 
+void copy::managePaste(
+        datastruct      &data,
+        const QPointF   &pointTouch)
+{
+    QPointF tmp = pointTouch;
+    int i;
+    int tmpId;
+
+    qDebug() << data.at(0).lengthStroke();
+
+    tmpId = data.maxId() + 1;
+    i = this->m_stroke.length() - 1;
+    datastruct::inverso(tmp);
+    this->adjustData(tmp);
+
+    for(; i >= 0; i --){
+        stroke &stroke = m_stroke.operator[](i);
+        if(data.isAvailable(stroke.getId()))
+            continue;
+
+        stroke.setId(tmpId);
+        tmpId += 1;
+    }
+
+    data.append(this->m_stroke, -1);
+    qDebug() << data.at_mod(0).lastMod().getBiggerPointInStroke();
+}
+
 /*
  * when this function is called the list of
  * previously saved points will be lost.
@@ -27,12 +55,27 @@ void copy::reset()
  * In such a way that the user can save by
  * copying or cutting, multiple strokes.
 */
-void copy::selection(datastruct &data, const QList<int> &id, int __flags, QList<int> &page_mod)
+void copy::selection(
+        datastruct          &data,
+        const QList<int>    &id,
+        int                 __flags,
+        QList<int>          &page_mod,
+        const QPointF       &pointTouch)
 {
     const page *page;
-    const QRectF sizeData = data.get_size_area(id);
+    QRectF sizeData;
     int mod;
 
+    if(__flags == SELECTION_FLAGS_PASTE){
+        this->managePaste(data, pointTouch);
+
+        if(this->isSomeThingCut())
+            flags = 0;
+
+        return;
+    }
+
+    sizeData = data.get_size_area(id);
     this->flags = 0;
 
     for(int counterPage = data.lengthPage() - 1; counterPage >= 0; counterPage --){
@@ -55,7 +98,6 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags, QList<
                     break;
                 }
                 case SELECTION_FLAGS_PASTE:{
-                    data.append(this->m_stroke, -1);
                     break;
                 }
                 default:
@@ -67,7 +109,7 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags, QList<
             page_mod.append(counterPage);
     }
 
-    adjustData(sizeData);
+    adjustData(sizeData.topLeft());
 
     if(!this->isEmpty()){
         if(__flags == SELECTION_FLAGS_COPY)
@@ -77,15 +119,21 @@ void copy::selection(datastruct &data, const QList<int> &id, int __flags, QList<
     }
 }
 
-void copy::adjustData(const QRectF &areaData)
+void copy::adjustData(const QPointF &offset)
 {
     point_s *point;
-    int i = this->m_stroke.length() - 1;
-    for(; i >= 0; i--){
-       point = &m_stroke[i].at_mod(i);
+    int counterStroke = this->m_stroke.length() - 1;
+    for(; counterStroke >= 0; counterStroke --){
+        stroke &stroke = m_stroke.operator[](counterStroke);
+        int counterPoint = stroke.length() - 1;
 
-       point->m_x -= areaData.x();
-       point->m_y -= areaData.y();
+        for(; counterPoint >= 0; counterPoint --){
+            point = &stroke.at_mod(counterPoint);
+
+            point->m_x -= offset.x();
+            point->m_y -= offset.y();
+        }
+
 
     }
 }

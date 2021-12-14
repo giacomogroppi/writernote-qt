@@ -61,8 +61,8 @@ bool square::find(Document *doc){
     const QPointF &topLeft = data->adjustPoint(pointinit.point);
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
 
-    this->in_box = false;
-    this->point_touch = true;
+    in_box = false;
+    __need_reload = false;
 
     this->adjustPoint();
 
@@ -105,7 +105,7 @@ bool square::find(Document *doc){
 
     findObjectToDraw();
 
-    if(!in_box){
+    if(!somethingInBox()){
         reset();
     }else{
         __need_reload = true;
@@ -124,27 +124,8 @@ bool square::isinside(const QPointF &point){
     return datastruct::isinside(pointinit.point, pointfine.point, point);
 }
 
-void square::needReload(QPainter &painter, const QWidget *pixmap){
-    QPoint middle;
-    int flag;
-    const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
-
-    //qDebug() << "square::needReload in_box:" << in_box;
-
+void square::needReload(QPainter &painter){
     if(!this->__need_reload) return;
-
-    //qDebug() << point_touch;
-
-    if(this->point_touch){
-        middle = QPoint(translation.x() + this->pointinit.point.x(),
-                        pointinit.point.y() + translation.y() - m_property->height());
-        flag = this->calculate_flags();
-
-        //qDebug() << "square::needReload show" << flag << middle;
-
-        this->m_property->Show(middle, flag);
-
-    }
 
     painter.setPen(this->penna);
 
@@ -166,60 +147,14 @@ void square::findObjectToDraw()
 
     QRectF sizeData;
 
-    if (this->m_id.length() == 0)
+    if (this->m_id.isEmpty())
         goto img;
 
     sizeData = data->get_size_area(m_id);
 
     // find the first point
-
     this->pointinit.point = sizeData.topLeft();
     this->pointfine.point = sizeData.bottomRight();
-
-    /*for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        lenStroke = data->at(counterPage).lengthStroke();
-
-        for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
-            const int id = data->at(counterPage).atStroke(counterStroke).getId();
-            const point_s &__point = data->at_draw(0, counterPage, counterStroke);
-
-            if(m_id.indexOf(id) != -1){
-                pointinit.point.setX(__point.m_x);
-                pointinit.point.setY(__point.m_y);
-
-                pointfine.point.setX(__point.m_x);
-                pointfine.point.setY(__point.m_y);
-
-                break;
-            }
-        }
-    }
-
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        lenPoint = data->at(counterPage).lengthStroke();
-        for(; counterStroke < lenPoint; counterStroke++){
-
-            const uint lenPoint = data->at(counterPage).atStroke(counterStroke).length();
-            const int id = data->at(counterPage).atStroke(counterStroke).getId();
-            for(counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-                const point_s &__point = data->at_draw(counterPoint, counterPage, counterStroke);
-
-                if(this->m_id.indexOf(id) != -1){
-                    if(__point.m_x < pointinit.point.x())
-                        pointinit.point.setX(__point.m_x);
-
-                    if(__point.m_x > pointfine.point.x())
-                        pointfine.point.setX(__point.m_x);
-
-                    if(__point.m_y < pointinit.point.y())
-                            pointinit.point.setY(__point.m_y);
-                    if(__point.m_y > pointfine.point.y())
-                        pointfine.point.setY(__point.m_y);
-                }
-            }
-
-        }
-    }*/
 
     img:
     for(int counterImg = 0; counterImg < m_index_img.length(); counterImg ++){
@@ -247,12 +182,11 @@ void square::move(const QPointF &punto){
     QList<int> PageModify;
 
     if(!in_box){
-        return this->reset();
+        return this->changeInstrument();
     }
 
     if(!lastpoint.set){
-        lastpoint.point = punto;
-        lastpoint.set = true;
+        lastpoint = PointSettable(punto, true);
         return;
     }
 
@@ -274,6 +208,22 @@ void square::move(const QPointF &punto){
 
     __need_reload = true;
     data->datatouch->triggerNewView(PageModify, -1, true);
+}
+
+void square::endMoving(const QWidget *pixmap)
+{
+    QPoint middle;
+    int flag;
+    const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
+
+    middle = QPoint(translation.x() + this->pointinit.point.x(),
+                    pointinit.point.y() + translation.y() - m_property->height());
+
+    flag = this->calculate_flags();
+
+    qDebug() << "square::needReload show" << flag << middle;
+
+    this->m_property->Show(middle, flag);
 }
 
 void square::actionProperty(property_control::ActionProperty action)
@@ -305,7 +255,7 @@ void square::actionProperty(property_control::ActionProperty action)
     }
 
     if(!dontcall_copy)
-        this->m_copy->selection(data, this->m_id, flags, page);
+        this->m_copy->selection(data, this->m_id, flags, page, pointinit.point);
     else
         this->reset();
 

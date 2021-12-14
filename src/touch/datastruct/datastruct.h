@@ -336,6 +336,9 @@ inline QRectF datastruct::get_size_area(const QList<int> &id)
     const page *page;
     const stroke *stroke;
 
+    if(id.isEmpty())
+        return QRectF();
+
     for(; counterPage >= 0; counterPage --){
         page = &at(counterPage);
         counterStroke = page->lengthStroke() - 1;

@@ -7,13 +7,26 @@
 
 /* canvas */
 struct PointSettable {
-    QPointF point = QPointF(0, 0);
-    bool set = false;
+    PointSettable(const QPointF &point, bool set);
+    PointSettable();
+    QPointF point;
+    bool set;
     bool isNotDefine() const
     {
         return !this->set;
     }
 };
+
+inline PointSettable::PointSettable()
+{
+    set = false;
+}
+
+inline PointSettable::PointSettable(const QPointF &point, bool set)
+{
+    this->point = point;
+    this->set = set;
+}
 
 struct colore_s{
     uchar colore[NCOLOR];
