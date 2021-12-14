@@ -132,23 +132,10 @@ void copy::selection(
 
 void copy::adjustData(const QPointF &offset)
 {
-    //point_s *point;
     int counterStroke = this->m_stroke.length() - 1;
     const QPointF &inverso = datastruct::inverso(offset);
 
     for(; counterStroke >= 0; counterStroke --){
-        stroke &stroke = m_stroke.operator[](counterStroke);
-        //int counterPoint = stroke.length() - 1;
-
-        stroke.scale(inverso);
-
-        /*for(; counterPoint >= 0; counterPoint --){
-            point = &stroke.at_mod(counterPoint);
-
-            point->m_x -= offset.x();
-            point->m_y -= offset.y();
-        }*/
-
-
+        m_stroke.operator[](counterStroke).scale(inverso);
     }
 }
