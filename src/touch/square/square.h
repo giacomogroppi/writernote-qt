@@ -22,7 +22,12 @@ public:
 
     inline void reset(){
         pointinit.set = lastpoint.set = pointfine.set = false;
+
         in_box = false;
+        point_touch = false;
+
+        m_property->Hide();
+
         __need_reload = false;
         m_id.clear();
         m_index_img.clear();
@@ -57,7 +62,8 @@ private:
     class property_control *m_property;
 
     /* if true: it means that the user has not previously selected comething */
-    bool in_box;
+    bool in_box: 1;
+    bool point_touch: 1;
     copy *m_copy;
 
     class TabletCanvas *canvas;
@@ -86,10 +92,10 @@ inline int square::calculate_flags() const
             flag = (PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT);
     }
 
-    if(!this->m_copy->isEmpty())
-        flag |= PROPERTY_SHOW_PASTE;
-    else
+    if(this->m_copy->isEmpty())
         flag &= ~(PROPERTY_SHOW_PASTE);
+    else
+        flag |= PROPERTY_SHOW_PASTE;
 
     return flag;
 }

@@ -96,8 +96,8 @@ public:
     int removePointId(const int id);
 
     /* return the index of the point move */
-    QList<int> *MovePoint(const QRectF &rect, const QPointF &__t);
-    void MovePoint(const QList<int> &id, const QPointF &translation);
+    //QList<int> *MovePoint(const QRectF &rect, const QPointF &__t);
+    void MovePoint(const QList<int> &id, const QPointF &translation, QList<int> *PageModify);
 
     bool userWrittenSomething(datastruct *s_data);
 

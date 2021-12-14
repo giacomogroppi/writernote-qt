@@ -16,7 +16,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     QRect pixmapPortion;
     static bool needDrawSheet;
 
-    if(!this->data || !this->parent) return;
+    if(!this->parent) return;
 
     static DataPaint dataPaint = {
         .withPdf = true,

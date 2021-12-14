@@ -361,10 +361,10 @@ inline QPainterPath stroke::getQPainterPath()
     //qDebug() << this->getBiggerPointInStroke().topLeft() << this->getBiggerPointInStroke().bottomRight();
 
     if(this->needToCreatePanterPath){
-        qDebug() << "stroke::getQPainterPath need to create QPainterPath" << this->metadata.idtratto;
+        //qDebug() << "stroke::getQPainterPath need to create QPainterPath" << this->metadata.idtratto;
         this->createQPainterPath();
     }else{
-        qDebug() << "stroke::getQPainterPath don't need to create QPainterPath" << this->metadata.idtratto;
+        //qDebug() << "stroke::getQPainterPath don't need to create QPainterPath" << this->metadata.idtratto;
     }
 
     this->needToCreatePanterPath = false;

@@ -31,27 +31,14 @@ void property_control::Show(const QPoint &point, int flags)
     ui->button_delete->setEnabled(   (flags & PROPERTY_SHOW_DELETE));
     ui->button_paste->setEnabled(    (flags & PROPERTY_SHOW_PASTE));
 
-    this->show();
+    if(flags)
+        this->show();
+    else
+        this->hide();
+
     this->move(point);
+    this->raise();
 }
-
-/*QRect property_control::getPos(const QPoint &topLeft, const QPoint &bottomRight)
-{
-    QRect rect;
-    const QPoint size(this->width(), this->height());
-    const QPoint pointMiddle((topLeft.x()+bottomRight.x())/2.0, (topLeft.y() + bottomRight.y())/2.0);
-    const QPoint halfSize = size/2;
-
-    rect = QRect(QPoint(
-                     (pointMiddle.x() + halfSize.x()),
-                     (pointMiddle.y() + halfSize.y())),
-                 QPoint(
-                     (pointMiddle.x() - halfSize.x()),
-                     (pointMiddle.y() - halfSize.y())
-                     ));
-
-    return rect;
-}*/
 
 void property_control::on_button_copy_clicked()
 {

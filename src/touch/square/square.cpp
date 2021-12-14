@@ -62,6 +62,8 @@ bool square::find(Document *doc){
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
 
     this->in_box = false;
+    this->point_touch = true;
+
     this->adjustPoint();
 
     /* point selected by user */
@@ -124,19 +126,24 @@ bool square::isinside(const QPointF &point){
 
 void square::needReload(QPainter &painter, const QWidget *pixmap){
     QPoint middle;
+    int flag;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
 
     //qDebug() << "square::needReload in_box:" << in_box;
 
-    if(!in_box) this->m_property->hide();
-
     if(!this->__need_reload) return;
 
-    if(in_box){
+    //qDebug() << point_touch;
+
+    if(this->point_touch){
         middle = QPoint(translation.x() + this->pointinit.point.x(),
                         pointinit.point.y() + translation.y() - m_property->height());
-        //qDebug() << "show";
-        this->m_property->Show(middle, this->calculate_flags());
+        flag = this->calculate_flags();
+
+        //qDebug() << "square::needReload show" << flag << middle;
+
+        this->m_property->Show(middle, flag);
+
     }
 
     painter.setPen(this->penna);
@@ -237,6 +244,7 @@ void square::findObjectToDraw()
 void square::move(const QPointF &punto){
     QPointF __point;
     Document *data = canvas->data;
+    QList<int> PageModify;
 
     if(!in_box){
         return this->reset();
@@ -252,24 +260,20 @@ void square::move(const QPointF &punto){
         return this->reset();
     }
 
-    __point.setX(lastpoint.point.x() - punto.x());
-    __point.setY(lastpoint.point.y() - punto.y());
-
+    __point = lastpoint.point - punto;
 
     datastruct::inverso(__point);
 
-    data->datatouch->MovePoint(m_id, __point);
+    data->datatouch->MovePoint(m_id, __point, &PageModify);
     data->m_img->moveImage(m_index_img, __point);
 
     lastpoint.point = punto;
 
-    pointinit.point.setX(pointinit.point.x() + __point.x());
-    pointinit.point.setY(pointinit.point.y() + __point.y());
-
-    pointfine.point.setX(pointfine.point.x() + __point.x());
-    pointfine.point.setY(pointfine.point.y() + __point.y());
+    pointinit.point = pointinit.point + __point;
+    pointfine.point = pointfine.point + __point;
 
     __need_reload = true;
+    data->datatouch->triggerNewView(PageModify, -1, true);
 }
 
 void square::actionProperty(property_control::ActionProperty action)

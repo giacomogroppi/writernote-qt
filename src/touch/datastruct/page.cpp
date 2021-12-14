@@ -145,8 +145,8 @@ inline void page::mergeList()
     const int len = this->strokeTmp.length();
     int index = m_stroke.length();
 
-    if(len)
-       qDebug() << "page::mergeList" << len;
+    //if(len)
+    //   qDebug() << "page::mergeList" << len;
 
 
     for(i = 0; i < len; i++){

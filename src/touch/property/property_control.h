@@ -25,8 +25,6 @@ public:
         __delete
     };
 
-    //QRect getPos(const QPoint &topLeft, const QPoint &bottomRight);
-
 #define PROPERTY_SHOW_COPY (1 << 0)
 #define PROPERTY_SHOW_CUT (1 << 1)
 #define PROPERTY_SHOW_DELETE (1 << 2)

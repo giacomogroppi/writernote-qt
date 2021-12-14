@@ -39,10 +39,10 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
     eventType = event->type();
 
-    highlighter_method = event->pointerType() == QTabletEvent::PointerType::Eraser || (medotodiinserimento == e_method::highlighter);
+    highlighter_method = (medotodiinserimento == e_method::highlighter);
     pen_method = (medotodiinserimento == e_method::pen && !highlighter_method);
     selection_method = (medotodiinserimento == e_method::selection && !highlighter_method);
-    rubber_method = (medotodiinserimento == e_method::rubber && !highlighter_method);
+    rubber_method = (medotodiinserimento == e_method::rubber && !highlighter_method) || event->pointerType() == QTabletEvent::PointerType::Eraser;
     text_method = (medotodiinserimento == e_method::text && !highlighter_method);
 
     //qDebug() << highlighter_method << pen_method << selection_method << rubber_method << text_method << event->pointerType();
