@@ -114,6 +114,8 @@ public:
     /* debug */
     QString toString() const;
 
+    void scale(const QPointF &offset);
+
     friend class page;
 };
 
@@ -423,6 +425,19 @@ inline QString stroke::toString() const
     message += " id" + QString::number(this->metadata.idtratto);
 
     return message;
+}
+
+inline void stroke::scale(const QPointF &offset)
+{
+    int i = this->length() - 1;
+    for(; i >= 0; i--){
+        point_s &point = at_mod(i);
+
+        point.m_x += offset.x();
+        point.m_y += offset.y();
+    }
+    if(!this->needToCreatePanterPath)
+        path.translate(offset);
 }
 
 

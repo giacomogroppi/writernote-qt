@@ -145,6 +145,7 @@ public:
     bool isempty() const;
 
     static void inverso(QPointF &point);
+    static QPointF inverso(const QPointF &point) { return (-1) * point; };
     void repositioning();
 
     void scala_all(const QPointF &point, const int heightView = -1);

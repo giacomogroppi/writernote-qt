@@ -26,8 +26,6 @@ void copy::managePaste(
     int i;
     int tmpId = -1;
 
-    qDebug() << data.at(0).lengthStroke();
-
 
     i = this->m_stroke.length() - 1;
     datastruct::inverso(tmp);
@@ -52,7 +50,6 @@ void copy::managePaste(
         datastruct::inverso(tmp);
         this->adjustData(tmp);
     }
-    qDebug() << data.at_mod(0).lastMod().getBiggerPointInStroke();
 }
 
 /*
@@ -135,18 +132,22 @@ void copy::selection(
 
 void copy::adjustData(const QPointF &offset)
 {
-    point_s *point;
+    //point_s *point;
     int counterStroke = this->m_stroke.length() - 1;
+    const QPointF &inverso = datastruct::inverso(offset);
+
     for(; counterStroke >= 0; counterStroke --){
         stroke &stroke = m_stroke.operator[](counterStroke);
-        int counterPoint = stroke.length() - 1;
+        //int counterPoint = stroke.length() - 1;
 
-        for(; counterPoint >= 0; counterPoint --){
+        stroke.scale(inverso);
+
+        /*for(; counterPoint >= 0; counterPoint --){
             point = &stroke.at_mod(counterPoint);
 
             point->m_x -= offset.x();
             point->m_y -= offset.y();
-        }
+        }*/
 
 
     }
