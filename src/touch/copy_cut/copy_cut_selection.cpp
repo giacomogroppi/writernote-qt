@@ -35,6 +35,8 @@ void copy::managePaste(
 
     for(; i >= 0; i --){
         stroke &stroke = m_stroke.operator[](i);
+
+        /* in case we cut */
         if(data.isAvailable(stroke.getId()))
             continue;
 

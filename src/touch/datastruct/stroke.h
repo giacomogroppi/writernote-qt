@@ -29,7 +29,7 @@ private:
     bool constantPressureVal: 1;
 
     bool needToCreatePanterPath: 1;
-    bool needToCreateBiggerData: 1;
+    bool needToCreateBiggerData;
 
     bool needToUpdatePressure: 1;
 
@@ -74,7 +74,7 @@ public:
     int getPage() const;
     int getPosizioneAudio() const;
 
-    QRectF getBiggerPointInStroke();
+    QRectF getBiggerPointInStroke() const;
     bool isInside(const QRectF &rect) const;
 
     void clearAudio();
@@ -250,8 +250,18 @@ inline int stroke::getPosizioneAudio() const
     return this->metadata.posizione_audio;
 }
 
-/* after append data we need to call this funcion to update */
-inline QRectF stroke::getBiggerPointInStroke()
+/* after append data we need to call this funcion to update
+ *
+ * the function is defined as const because the only elements
+ * we change are stroke metadata. If we removed the constant
+ * assignment every time we call this function, it would
+ * throw the copy of all the strokes of the page for the
+ * redoundo class.
+ * We would increase the space occupied, the processing time,
+ * as we would need to recalculate the data for each list that
+ * has this stroke.
+*/
+inline QRectF stroke::getBiggerPointInStroke() const
 {
     if(!this->needToCreateBiggerData){
         return this->biggerData;
@@ -261,6 +271,9 @@ inline QRectF stroke::getBiggerPointInStroke()
     const point_s &first = at(0);
     QPointF topLeft(first.m_x, first.m_y);
     QPointF bottomRight(topLeft);
+
+    bool &__needToCreateBiggerData = (bool &) this->needToCreateBiggerData;
+    QRectF &__biggerData = (QRectF &) this->biggerData;
 
     for (i = 0; i < len; i++){
         const point_s &point = at(i);
@@ -278,11 +291,11 @@ inline QRectF stroke::getBiggerPointInStroke()
             bottomRight.setY(point.m_y);
     }
 
-    this->needToCreateBiggerData = false;
+    __needToCreateBiggerData = false;
 
-    biggerData = QRectF(topLeft, bottomRight);
+    __biggerData = QRectF(topLeft, bottomRight);
 
-    return biggerData;
+    return __biggerData;
 }
 
 /* you have to pass a rectangle already

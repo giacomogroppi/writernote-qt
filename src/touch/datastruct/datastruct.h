@@ -186,7 +186,9 @@ public:
 
     inline QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
 
-    QRectF get_size_area(const QList<int> & id);
+    const stroke &get_stroke(int id) const;
+
+    QRectF get_size_area(const QList<int> & id) const;
 
     inline double currentWidth() const;
     inline double currentHeight() const;
@@ -327,26 +329,51 @@ inline void datastruct::newPage(const n_style style)
     this->m_page.append(page);
 }
 
-inline QRectF datastruct::get_size_area(const QList<int> &id)
+inline const stroke &datastruct::get_stroke(int id) const
+{
+    int counterPage = this->lengthPage() - 1;
+    for(; counterPage >= 0; counterPage --){
+        const page &page = this->at(counterPage);
+        int counterStroke = page.lengthStroke() - 1;
+
+        for(; counterStroke >= 0; counterStroke --){
+            const stroke &stroke = page.atStroke(counterStroke);
+            if(stroke.getId() == id)
+                return stroke;
+        }
+    }
+
+    std::abort();
+}
+
+inline QRectF datastruct::get_size_area(const QList<int> &id) const
 {
     int counterPage = this->lengthPage() - 1, counterStroke;
-    QPointF topLeft(page::getWidth(), this->m_page.last().currentHeight());
-    QPointF bottomRigth(0.0, 0.0);
+    QPointF topLeft;
+    QPointF bottomRigth;
 
     const page *page;
-    const stroke *stroke;
+    const stroke *__stroke;
 
     if(id.isEmpty())
         return QRectF();
+
+    {
+        const stroke &Stroke = this->get_stroke(id.first());
+        topLeft = Stroke.getBiggerPointInStroke().topLeft();
+        bottomRigth = Stroke.getBiggerPointInStroke().bottomRight();
+    }
 
     for(; counterPage >= 0; counterPage --){
         page = &at(counterPage);
         counterStroke = page->lengthStroke() - 1;
         for(; counterStroke >= 0; counterStroke --){
-            stroke = &page->atStroke(counterStroke);
-            if(IS_NOT_PRESENT_IN_LIST(id, stroke->getId()))
+            __stroke = &page->atStroke(counterStroke);
+
+            if(IS_NOT_PRESENT_IN_LIST(id, __stroke->getId()))
                 continue;
-            const QRectF &rect = at_mod(counterStroke).atStrokeMod(counterStroke).getBiggerPointInStroke();
+
+            const QRectF &rect = __stroke->getBiggerPointInStroke();
             const QPointF &topLeftStroke = rect.topLeft();
             const QPointF &bottomRightStroke = rect.bottomRight();
 

@@ -34,15 +34,15 @@ datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
 /* the function returns true if the id is available */
 bool datastruct::isAvailable(int id) const
 {
-    uint i, len, counterPage;
+    uint len;
     const page *page;
-    const uint lenPage = this->lengthPage();
+    uint lenPage = this->lengthPage() - 1;
 
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        page = &this->at(counterPage);
-        len = page->lengthStroke();
-        for(i=0; i<len; i++){
-            if(page->atStroke(i).getId() == id)
+    for(; lenPage >= 0; lenPage --){
+        page = &at(lenPage);
+        len = page->lengthStroke() - 1;
+        for(; len >= 0; len --){
+            if(page->atStroke(len).getId() == id)
                 return 0;
         }
     }
