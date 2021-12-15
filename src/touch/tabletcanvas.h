@@ -92,9 +92,6 @@ public:
     void updateTimeScroll();
 
     void restoreO();
-    inline void needUpdate(){
-        update();
-    };
 
     enum Valuator { PressureValuator, TangentialPressureValuator,
                         TiltValuator, VTiltValuator, HTiltValuator, NoValuator };
@@ -168,6 +165,7 @@ public:
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
     struct PointSettable ismoving;
     void ismoving_f();
+    void updatePageCount();
 
     /* struttura per ricordare il last point per il touch */
     struct PointSettable lastpointtouch;
@@ -230,8 +228,6 @@ private:
     bool m_deviceDown = false;
     inline void ManageFinish(QTabletEvent *event);
     inline void ManageStart(QTabletEvent *event, const QPointF &point);
-
-    void updatePageCount();
 
 public slots:
 

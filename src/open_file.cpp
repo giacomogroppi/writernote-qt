@@ -106,6 +106,7 @@ void MainWindow::openFile(const char *pos){
             this->m_canvas->data->datatouch->triggerNewView(-1, true);
             aggiornotestiriascolto(this);
             m_canvas->loadpixel();
+            m_canvas->updatePageCount();
             return contrUi();
         }
 

@@ -237,7 +237,8 @@ void MainWindow::on_actionrestore_button_triggered()
 void MainWindow::on_actionnewPage_triggered()
 {
     this->m_canvas->data->datatouch->newPage(m_canvas->m_sheet->WhatIsSelected());
-    m_canvas->needUpdate();
+    m_canvas->call_update();
+    m_canvas->updatePageCount();
 }
 
 void MainWindow::on_actionPen_or_Mouse_triggered()
