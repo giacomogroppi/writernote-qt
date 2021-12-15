@@ -25,6 +25,14 @@ static bool text_method;
 
 static QEvent::Type eventType;
 
+static Q_ALWAYS_INLINE void setFalse()
+{
+    highlighter_method = false;
+    pen_method = false;
+    selection_method = false;
+    text_method = false;
+}
+
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     const QPointF& pointTouch = event->posF();
 
@@ -38,13 +46,16 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
     eventType = event->type();
 
-    highlighter_method = (medotodiinserimento == e_method::highlighter);
-    pen_method = (medotodiinserimento == e_method::pen && !highlighter_method);
-    selection_method = (medotodiinserimento == e_method::selection && !highlighter_method);
-    rubber_method = (medotodiinserimento == e_method::rubber && !highlighter_method) || event->pointerType() == QTabletEvent::PointerType::Eraser;
-    text_method = (medotodiinserimento == e_method::text && !highlighter_method);
-
-    //qDebug() << highlighter_method << pen_method << selection_method << rubber_method << text_method << event->pointerType();
+    rubber_method = medotodiinserimento == e_method::rubber || event->pointerType() == QTabletEvent::PointerType::Eraser;
+    if(rubber_method){
+        setFalse();
+    }
+    else{
+        highlighter_method = medotodiinserimento == e_method::highlighter;
+        pen_method = medotodiinserimento == e_method::pen;
+        selection_method = medotodiinserimento == e_method::selection;
+        text_method = medotodiinserimento == e_method::text;
+    }
 
     if(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight){
         /* the user is writing in a part where the sheet is not present. You don't have to save the point. And save the end of the current treatment */
