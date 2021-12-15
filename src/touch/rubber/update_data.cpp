@@ -9,6 +9,6 @@ void rubber_ui::update_data(){
     ui->totale_button->setChecked(m_type);
     ui->partial_button->setChecked(!m_type);
 
-    ui->size_slider->setEnabled(!m_type);
+    ui->size_slider->setEnabled(true);
 
 }

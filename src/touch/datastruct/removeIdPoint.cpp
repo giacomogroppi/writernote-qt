@@ -1,4 +1,5 @@
 #include "datastruct.h"
+#include "../../utils/common_script.h"
 
 void datastruct::removePointId(const QList<int> &listIndex, QList<int> *page){
     uint i;
@@ -8,10 +9,10 @@ void datastruct::removePointId(const QList<int> &listIndex, QList<int> *page){
     if(page)
         page->clear();
 
-    for(i=0; i<len_list; i++){
+    for(i = 0; i < len_list; i++){
         __page = removePointId(listIndex.at(i));
 
-        if(page && page->indexOf(__page) == -1){
+        if(page && IS_NOT_PRESENT_IN_LIST((*page), __page)){
             if(__page < 0){
                 qWarning() << "No stroke in list with index" << listIndex.at(i);
                 continue;
@@ -23,16 +24,16 @@ void datastruct::removePointId(const QList<int> &listIndex, QList<int> *page){
 }
 
 int datastruct::removePointId(const int id){
-    uint counterPage, counterStroke;
+    int counterPage, counterStroke;
     const page *page;
-    const uint lenPage = this->lengthPage();
+    counterPage = this->lengthPage() - 1;
 
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+    for(; counterPage >= 0; counterPage --){
         page = &at(counterPage);
 
-        const uint lenStroke = page->lengthStroke();
+        counterStroke = page->lengthStroke() - 1;
 
-        for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
+        for(; counterStroke >= 0; counterStroke --){
             if(page->atStroke(counterStroke).getId() == id){
                 at_mod(counterPage).removeAt(counterStroke);
                 return counterPage;

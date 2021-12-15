@@ -103,7 +103,7 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
                 if(isin(point, lastPoint)){
                     mod = 1;
-                    if(this->m_type_gomma == e_type_rubber::total && IS_PRESENT_IN_LIST(gomma_delete_id, id)){
+                    if(this->m_type_gomma == e_type_rubber::total && IS_NOT_PRESENT_IN_LIST(gomma_delete_id, id)){
                         gomma_delete_id.append(id);
 
                         stroke.setAlfaColor(stroke.getColor().alpha() / DECREASE);
@@ -112,8 +112,6 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                     }
                     else if(this->m_type_gomma == e_type_rubber::partial){
                         if(counterPoint < 3){
-                            //qDebug() << "Primo";
-
                             stroke.removeAt(0, counterPoint);
                             lenPoint = stroke.length();
 
@@ -123,15 +121,12 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                         }
 
                         if(counterPoint + 3 > lenPoint){
-                            //qDebug() << "Secondo";
                             stroke.removeAt(counterPoint, lenPoint - 1);
 
                             CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
 
                             break;
                         }
-
-                        //qDebug() << "Terzo" << counterPoint;
 
                         Q_ASSERT(lenPoint > 6);
                         stroke.removeAt(counterPoint);
@@ -151,31 +146,22 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
         }
     }
 
-    /*if(Page.length()){
-        const stroke &firstStroke = data->at(0).atStroke(0);
-        const stroke &secondStroke = data->at(0).atStroke(1);
-        std::abort();
-    }*/
-
-    //qDebug() << "rubber_ui::actionRubber end" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
-
     return Page;
 }
 
 bool rubber_ui::clearList(datastruct *data)
 {
-    if(gomma_delete_id.isEmpty())
-        return false;
-
     data->removePointId(gomma_delete_id, &Page);
 
     gomma_delete_id.clear();
     data->triggerNewView(Page, -1, true);
-    return true;
+    return Page.length();
 }
 
-inline bool rubber_ui::isin(const point_s & __point,
-                 const QPointF & touch){
+inline bool rubber_ui::isin(
+                    const point_s   &__point,
+                    const QPointF   &touch)
+{
     Q_ASSERT(m_size_gomma >= 0.0);
     bool isin;
 
@@ -187,7 +173,9 @@ inline bool rubber_ui::isin(const point_s & __point,
     return isin;
 }
 
-bool rubber_ui::isin(const QPointF &point, const QPointF &point_t)
+bool rubber_ui::isin(
+        const QPointF &point,
+        const QPointF &point_t)
 {
     return (point_t.x() - m_size_gomma) < point.x()
             && (point_t.x() + m_size_gomma) > point.x()

@@ -1,7 +1,9 @@
 #include "tabletcanvas.h"
 #include "../mainwindow.h"
 #include "ui_mainwindow.h"
+#include "../log/log_ui/log_ui.h"
 
+static int __page = -2;
 void MainWindow::updatePageCount(int pageCount)
 {
     QString text;
@@ -11,40 +13,24 @@ void MainWindow::updatePageCount(int pageCount)
 
     text = "Page: " + QString::number(pageCount) + " of " + QString::number(lenPage);
 
+    if(__page == pageCount) return;
+
+    __page = pageCount;
+
     this->ui->page->setText(text);
 }
 
-static uint lastPage = 0;
-
 void TabletCanvas::updatePageCount(){
-    uint i;
-    const uint lenPage = data->datatouch->lengthPage();
+    datastruct *__data = data->datatouch;
+    const int lenPage = __data->lengthPage();
+    const double deltay = __data->getPointFirstPage().y();
 
-    if(!lenPage){
-        parent->updatePageCount(-1);
-        return;
+    for(int i = 0; i < lenPage; i++){
+        const double currentHeight = __data->at(i).currentHeight();
+        if(currentHeight + deltay > 0.0)
+            return parent->updatePageCount(i + 1);
     }
+    parent->updatePageCount(-1);
 
-    if(lenPage == 1 && lastPage == 0){
-        lastPage = 1;
-        parent->updatePageCount(lastPage);
-
-        return;
-    }
-
-    for(i=0; i<lenPage; ++i){
-        if(data->datatouch->at(i).isVisible()){
-            break;
-        }
-    }
-
-    if(i < lenPage)
-        ++i;
-
-    if(lastPage != i){
-        lastPage = i;
-
-        parent->updatePageCount(lastPage);
-    }
-
+    NAME_LOG_EXT->write("Missing page", log_ui::possible_bug);
 }
