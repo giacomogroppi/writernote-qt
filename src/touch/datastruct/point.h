@@ -81,10 +81,10 @@ Q_ALWAYS_INLINE void colore_s::fromColor(const QColor &color)
 struct point_s{
     double m_x, m_y;
     float pressure;
-    QPointF toQPointF(const double delta) const;
+    Q_COMPILER_CONSTEXPR QPointF toQPointF(const double delta) const;
 };
 
-inline QPointF point_s::toQPointF(const double delta) const
+Q_COMPILER_CONSTEXPR Q_ALWAYS_INLINE QPointF point_s::toQPointF(const double delta) const
 {
     return QPointF(m_x, m_y) * delta;
 }
