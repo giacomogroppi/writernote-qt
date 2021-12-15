@@ -9,7 +9,6 @@
 int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
                            const bool LoadPdf, const bool LoadImg){
     int tmp;
-    uchar controllo_parita = 0;
     fromimage::load_res res_img;
 
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
@@ -23,9 +22,6 @@ int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
     tmp = loadbinario_2(filezip);
     if(tmp == ERROR)
         return tmp;
-    else if(tmp == ERROR_CONTROLL)
-        /* we want to continue to load the file, but we need to return we had a problem */
-        controllo_parita = 1;
 
     if(LoadImg){
         res_img = doc->m_img->load(filezip, f);
@@ -41,9 +37,6 @@ int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
             return ERROR;
     }
 #endif
-
-    if(controllo_parita)
-        return ERROR_CONTROLL;
 
     return OK;
 }

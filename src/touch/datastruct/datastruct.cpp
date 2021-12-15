@@ -9,6 +9,14 @@
     p = x; \
     return;
 
+void datastruct::newPage(int num)
+{
+    while (num > 0){
+        this->newPage(n_style::white);
+        num --;
+    }
+}
+
 void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *canvas)
 {
     this->zoom = zoom;

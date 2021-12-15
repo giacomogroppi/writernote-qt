@@ -59,8 +59,8 @@ private:
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);
 
-    static void decode0(Document *doc, QList<struct point_old> & point, QList<double> &pos_foglio);
-    static void decode(Document *doc, QList<QList<struct point_old>> &page);
+    static void decode0(Document *doc, QList<struct point_last> &point, QList<double> &pos_foglio);
+    static void decode1(Document *doc, QList<QList<struct point_old_ver_7>> &page);
 public:
     static size_t sizeFile(zip_t *filezip, const QString &namefile){
         return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());

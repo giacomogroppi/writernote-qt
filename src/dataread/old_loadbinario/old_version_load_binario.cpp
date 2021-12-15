@@ -7,7 +7,7 @@
 #ifdef ALL_VERSION
 
 /* this is the data struct used for converting to the new format */
-struct point_old{
+struct point_old_ver_7{
     double m_x, m_y, rotation;
     float m_pressure;
     int m_posizioneaudio;
@@ -21,80 +21,6 @@ struct point_old{
     QPointF toQPointF(const double delta) const;
 };
 
-int xmlstruct::loadbinario_0(zip_t *z){
-    struct colore_last{
-        int colore[NCOLOR];
-    };
-
-    /* this is the data structure we expect to read from the file */
-    struct point_last{
-        double m_x, m_y, rotation;
-        float m_pressure;
-        int m_posizioneaudio;
-        struct colore_last m_color;
-        int idtratto;
-
-        size_t createControll() const;
-        bool isIdUser() const;
-    };
-
-    QList<double> pos_foglio;
-    QList<point_old> point;
-    struct zip_stat st;
-    int i, len;
-    uint k;
-
-    struct point_last point_lettura;
-    struct point_old temp_point;
-
-    zip_stat_init(&st);
-    zip_stat(z, NAME_BIN, 0, &st);
-
-    zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
-
-    if(f == nullptr) return ERROR;
-
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
-
-    for(i=0; i<len; i++){
-        SOURCE_READ_GOTO(f, &point_lettura, sizeof(struct point_last));
-
-        temp_point.idtratto = point_lettura.idtratto;
-        for(k=0; k<NCOLOR; ++k){
-            temp_point.m_color.colore[k] = point_lettura.m_color.colore[k];
-        }
-
-        temp_point.m_posizioneaudio = point_lettura.m_posizioneaudio;
-        temp_point.m_x = point_lettura.m_x;
-        temp_point.m_y = point_lettura.m_y;
-        temp_point.m_pressure = point_lettura.m_pressure;
-        temp_point.rotation = point_lettura.rotation;
-        temp_point.page = -1;
-
-        point.append(temp_point);
-    }
-
-    double valoretemp;
-
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
-    for(i=0; i < len; i++){
-        SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
-        pos_foglio.append(valoretemp);
-    }
-
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
-
-    zip_fclose(f);
-
-    xmlstruct::decode0(currenttitle, point, pos_foglio);
-
-    return OK;
-
-    free_:
-    zip_fclose(f);
-    return ERROR;
-}
-
 struct point_last{
     double m_x, m_y, rotation;
     float m_pressure;
@@ -106,6 +32,86 @@ struct point_last{
     bool isIdUser() const;
 };
 
+/*
+ * version 2 and 3
+*/
+int xmlstruct::loadbinario_0(zip_t *z){
+    struct colore_last{
+        int colore[NCOLOR];
+    };
+
+    /* this is the data structure we expect to read from the file */
+    struct point_last_ver_2_3{
+        double m_x, m_y, rotation;
+        float m_pressure;
+        int m_posizioneaudio;
+        struct colore_last m_color;
+        int idtratto;
+
+        size_t createControll() const;
+        bool isIdUser() const;
+    };
+
+    QList<double> pos_foglio;
+    QList<point_last> point;
+    struct zip_stat st;
+    int i, len;
+    uint k;
+
+    point_last_ver_2_3 point_lettura;
+    point_last point_append;
+
+    zip_stat_init(&st);
+    zip_stat(z, NAME_BIN, 0, &st);
+
+    zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
+
+    if(f == nullptr) return ERROR;
+
+    SOURCE_READ_GOTO(f, &len, sizeof(int));
+
+    for(i=0; i<len; i++){
+        SOURCE_READ_GOTO(f, &point_lettura, sizeof(point_lettura));
+
+        point_append.idtratto = point_lettura.idtratto;
+        for(k=0; k<NCOLOR; ++k){
+            point_append.m_color.colore[k] = point_lettura.m_color.colore[k];
+        }
+
+        point_append.m_posizioneaudio = point_lettura.m_posizioneaudio;
+        point_append.m_x = point_lettura.m_x;
+        point_append.m_y = point_lettura.m_y;
+        point_append.m_pressure = point_lettura.m_pressure;
+        point_append.rotation = point_lettura.rotation;
+
+        point.append(point_append);
+    }
+
+    double valoretemp;
+
+    SOURCE_READ_GOTO(f, &len, sizeof(int));
+    for(i=0; i < len; i++){
+        SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
+        pos_foglio.append(valoretemp);
+    }
+
+    {
+        long double zoom;
+        SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
+        currenttitle->datatouch->zoom = zoom;
+    }
+    zip_fclose(f);
+
+    xmlstruct::decode0(currenttitle, point, pos_foglio);
+
+    return OK;
+
+    free_:
+    zip_fclose(f);
+    return ERROR;
+}
+
+/* version 4 5 6 */
 int xmlstruct::loadbinario_1(struct zip *z){
 
     struct zip_stat st;
@@ -114,47 +120,37 @@ int xmlstruct::loadbinario_1(struct zip *z){
     struct point_last temp_point;
     double valoretemp;
 
-    QList<point_old> __tmp;
-    point_old __point;
+    QList<point_last> __tmp;
 
-    QList<point_last> point;
     QList<double> pos_foglio;
 
     zip_stat_init(&st);
     zip_stat(z, NAME_BIN, 0, &st);
 
-     f = zip_fopen(z, NAME_BIN, 0);
+    f = zip_fopen(z, NAME_BIN, 0);
 
     if(f == nullptr) return false;
 
     SOURCE_READ_GOTO(f, &len, sizeof(int));
 
     for(i=0; i<len; i++){
-        SOURCE_READ_GOTO(f, &temp_point, sizeof(struct point_last));
-        point.append(temp_point);
+        SOURCE_READ_GOTO(f, &temp_point, sizeof(temp_point));
+        __tmp.append(temp_point);
     }
 
     SOURCE_READ_GOTO(f, &len, sizeof(int));
     for(i=0; i < len; i++){
-        SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
+        SOURCE_READ_GOTO(f, &valoretemp, sizeof(valoretemp));
         pos_foglio.append(valoretemp);
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
+    {
+        long double zoom;
+        SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
+        currenttitle->datatouch->zoom = (double)zoom;
+    }
 
     zip_fclose(f);
-
-    for(const auto & ref : qAsConst(point)){
-        memcpy(&__point.m_color, &ref.m_color, sizeof(colore_s));
-        __point.idtratto = ref.idtratto;
-        __point.m_posizioneaudio = ref.m_posizioneaudio;
-        __point.m_pressure = ref.m_pressure;
-        __point.m_x = ref.m_x;
-        __point.m_y = ref.m_y;
-        __point.rotation = ref.rotation;
-
-        __tmp.append(__point);
-    }
 
     xmlstruct::decode0(currenttitle, __tmp, pos_foglio);
     return OK;
@@ -166,11 +162,11 @@ int xmlstruct::loadbinario_1(struct zip *z){
 }
 
 
-static void scaleAll(QList<point_old> &point, const QPointF &translation)
+static void scaleAll(QList<point_last> &point, const QPointF &translation)
 {
     uint i;
     const uint len = point.length();
-    point_old *ref;
+    point_last *ref;
     for(i=0; i<len; i++){
         ref = &point.operator[](i);
         ref->m_x -= translation.x();
@@ -178,11 +174,11 @@ static void scaleAll(QList<point_old> &point, const QPointF &translation)
     }
 }
 
-static QPointF bigger(const QList<point_old> &point)
+static QPointF bigger(const QList<point_last> &point)
 {
     QPointF max(0.0, 0.0);
     uint i;
-    const point_old *ref;
+    const point_last *ref;
 
     const uint len = point.length();
 
@@ -197,7 +193,7 @@ static QPointF bigger(const QList<point_old> &point)
     return max;
 }
 
-static void adjastPDF(QList<point_old> &point, QList<double> &pos_foglio){
+static void adjastPDF(QList<point_last> &point, QList<double> &pos_foglio){
     uint i, len;
     const QPointF currentSize = bigger(point);
     const double CorrectProportions = double(page::getHeight())/double(page::getWidth());
@@ -217,13 +213,13 @@ static void adjastPDF(QList<point_old> &point, QList<double> &pos_foglio){
     }
 }
 
-static void adjastZoom(QList<point_old> &point, QList<double> &pos_foglio)
+static void adjastZoom(QList<point_last> &point, QList<double> &pos_foglio)
 {
     const QPointF big = bigger(point);
     const double Width = page::getWidth();
     const double delta = Width / big.x();
 
-    point_old *ref;
+    point_last *ref;
 
     uint i;
     uint len = point.length();
@@ -242,7 +238,7 @@ static void adjastZoom(QList<point_old> &point, QList<double> &pos_foglio)
     adjastPDF(point, pos_foglio);
 }
 
-int old_which_sheet(const point_old &point, QList<page> &ListPage)
+static int old_which_sheet(const point_last &point, QList<page> &ListPage)
 {
     const page *page;
     uint counterPage, len;
@@ -259,19 +255,30 @@ int old_which_sheet(const point_old &point, QList<page> &ListPage)
     return -1;
 }
 
+static void toVersion7(point_old_ver_7 &to, point_last &from)
+{
+    to.idtratto = from.idtratto;
+    memcpy(&to.m_color, &from.m_color, sizeof(to.m_color));
+    to.m_posizioneaudio = from.m_posizioneaudio;
+    to.m_pressure = from.m_pressure;
+    to.m_x = from.m_x;
+    to.m_y = from.m_y;
+    to.rotation = from.rotation;
+}
+
 /*
  * the function translates data written
  * with version 0 of binary old
 */
-void xmlstruct::decode0(Document *data, QList<point_old> &point, QList<double> &pos_foglio)
+void xmlstruct::decode0(Document *data, QList<struct point_last> &point, QList<double> &pos_foglio)
 {
-    const point_old firstPoint = point.takeFirst();
+    const point_last firstPoint = point.takeFirst();
     const int lenPage = pos_foglio.length();
     const QPointF translation(firstPoint.m_x, firstPoint.m_y);
-    point_old pp;
-    QList<QList<point_old>> pointForAppend;
 
-    int i = 0, counterPage, len;
+    QList<QList<point_old_ver_7>> pointForAppend;
+
+    int i = 0, counterPage;
 
     scaleAll(point, translation);
     adjastZoom(point, pos_foglio);
@@ -281,62 +288,48 @@ void xmlstruct::decode0(Document *data, QList<point_old> &point, QList<double> &
     /* create the sheet */
     for(counterPage = 0; counterPage <= lenPage; counterPage ++){
         data->datatouch->newPage(n_style::white);
-        pointForAppend.append(QList<point_old> ());
+        pointForAppend.append(QList<point_old_ver_7> ());
     }
 
     Q_ASSERT(pointForAppend.length() == data->datatouch->lengthPage());
 
     for(i = 0; i < point.length(); i++){
-        pp = point.at(i);
+        auto pp = point.at(i);
         pp.m_pressure *= 0.2;
         const int which = old_which_sheet(pp, data->datatouch->m_page);
-        pointForAppend.operator[](which).append(pp);
-    }
 
-    for(counterPage = 0; counterPage < lenPage; counterPage++){
-        for(i = 0, len = pointForAppend.at(counterPage).length(); i < len; i++){
+        {
+            point_old_ver_7 __append;
+            toVersion7(__append, pp);
+            __append.page = which;
 
-            const int which = old_which_sheet(pointForAppend.at(counterPage).at(i), data->datatouch->m_page);
-
-            if(which != pointForAppend.at(counterPage).at(i).page){
-                point_old point = pointForAppend.at(counterPage).at(i);
-                point.page = which;
-
-                pointForAppend.operator[](counterPage).removeAt(i);
-
-                pointForAppend.operator[](which).append(point);
-            }
+            pointForAppend.operator[](which).append(__append);
         }
+
     }
 
-    xmlstruct::decode(data, pointForAppend);
+    xmlstruct::decode1(data, pointForAppend);
 }
 
-void xmlstruct::decode(Document *doc, QList<QList<point_old>> &page)
+void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &page)
 {
     int counterPage, lenPage;
     lenPage = page.length();
 
-    {
-        int currentLen = doc->datatouch->lengthPage();
-        if(currentLen != page.length()){
-            while(currentLen > 0){
-                doc->datatouch->newPage(n_style::white);
-                currentLen --;
-            }
-        }
+    if(doc->datatouch->lengthPage() != page.length()){
+        doc->datatouch->newPage(doc->datatouch->lengthPage());
     }
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         for(int counterPoint = 0; counterPage < page.at(counterPage).length(); counterPage ++){
-            const point_old &tmp = page.at(counterPage).at(counterPoint);
+            const point_old_ver_7 &tmp = page.at(counterPage).at(counterPoint);
             const int id = tmp.idtratto;
             stroke stroke;
 
             stroke.setMetadata(tmp.page, id, tmp.m_posizioneaudio, tmp.m_color);
 
             for(; counterPoint < page.at(counterPage).length() && page.at(counterPage).at(counterPoint).idtratto == id; counterPoint ++){
-                const point_old &tmpRef = page.operator[](counterPage).takeAt(counterPoint);
+                const point_old_ver_7 &tmpRef = page.operator[](counterPage).takeAt(counterPoint);
 
                 point_s TmpAppend;
                 TmpAppend.m_x = tmpRef.m_x;
@@ -372,14 +365,14 @@ size_t point_last::createControll() const{
     return data;
 }
 
-
+/* versione 7 */
 int xmlstruct::loadbinario_2(struct zip *z){
     struct zip_stat st;
     size_t controll, newControll;
     int i, len, lenPage, counterPage;
     zip_file_t *f;
-    struct point_old temp_point;
-    QList<QList<point_old>> pointAppend;
+    struct point_old_ver_7 temp_point;
+    QList<QList<point_old_ver_7>> pointAppend;
     double init[2];
 
     zip_stat_init(&st);
@@ -399,7 +392,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
         SOURCE_READ_GOTO(f, &len, sizeof(len));
 
         /* we add a new page */
-        pointAppend.append(QList<point_old> ());
+        pointAppend.append(QList<point_old_ver_7> ());
 
         for(i=0; i<len; i++){
             SOURCE_READ_GOTO(f, &temp_point, sizeof(temp_point));
@@ -419,7 +412,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
     if(controll != newControll)
         return ERROR_CONTROLL;
 
-    xmlstruct::decode(currenttitle, pointAppend);
+    xmlstruct::decode1(currenttitle, pointAppend);
 
     return OK;
 

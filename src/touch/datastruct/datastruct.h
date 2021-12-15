@@ -56,7 +56,7 @@ private:
     int whichPage(const stroke &stroke) const;
 
     double zoom = 1.00;
-
+    void newPage(int num);
 public:
     void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool all);
     void triggerNewView(int m_pos_ris, const bool all);
