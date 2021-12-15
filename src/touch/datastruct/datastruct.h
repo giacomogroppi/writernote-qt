@@ -502,6 +502,13 @@ inline int datastruct::appendStroke(const stroke &__stroke)
 
 inline void datastruct::appendStroke(const stroke &stroke, const int page)
 {
+#ifdef ALL_VERSION
+    if(stroke.getId() < 0){
+        at_mod(page).m_stroke_writernote.append(stroke);
+        return;
+    }
+#endif
+
     this->at_mod(page).append(stroke);
 }
 
@@ -518,11 +525,11 @@ inline bool datastruct::isinside(const QRectF &rect, const QPointF &point)
 
 inline int datastruct::adjustStroke(stroke &stroke)
 {
-    int i, page;
-    const int len = stroke.length();
+    int page;
+    int counter = stroke.length() - 1;
 
-    for(i = 0; i < len; i++){
-        point_s &point = stroke.at_mod(i);
+    for(; counter >= 0; counter --){
+        point_s &point = stroke.at_mod(counter);
         point.m_x /= this->zoom;
         point.m_y /= this->zoom;
         point.pressure /= this->zoom;

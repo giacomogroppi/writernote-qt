@@ -44,7 +44,6 @@ __new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
 
     zip_fclose(f);
 
-    currenttitle->datatouch->triggerNewView(-1, true);
     newControll = currenttitle->createSingleControll();
 
     if(controll != newControll)
