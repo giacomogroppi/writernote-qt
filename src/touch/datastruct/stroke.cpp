@@ -164,6 +164,8 @@ void stroke::createQPainterPath() const
         point2 = point3; draw2 = draw3;
     }
 
+    //__path = __path.simplified();
+
     __needToCreatePanterPath = false;
 }
 

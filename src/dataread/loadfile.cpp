@@ -202,7 +202,7 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg){
     */
     currenttitle->versione = CURRENT_VERSION_CURRENT_TITLE;
 
-    this->currenttitle->datatouch->triggerNewView(false, true);
+    this->currenttitle->datatouch->triggerNewView(-1, true);
     CLOSE_ZIP(f, filezip);
     return OK;
 

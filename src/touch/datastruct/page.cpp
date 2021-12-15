@@ -6,6 +6,7 @@
 #include <QPainterPath>
 #include "../../utils/common_error_definition.h"
 #include "../../datawrite/source_read_ext.h"
+#include "time.h"
 #define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
 
 
@@ -81,6 +82,8 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
     QPointF pointDraw;
     int lenStroke = List.length();
 
+    //auto __clock = clock();
+
     for(i = 0; i < lenStroke; i++){
         const stroke &stroke = List.at(i);
         if(stroke.isEmpty()){
@@ -122,7 +125,7 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
             }
         }
     }
-
+    //qDebug() << "Clock end" << double(clock() - __clock) / CLOCKS_PER_SEC;
 }
 
 inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
