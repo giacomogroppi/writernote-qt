@@ -131,30 +131,36 @@ void stroke::movePoint(const QPointF &translation)
 
 void stroke::createQPainterPath() const
 {
-    int i, len;
+    QPainterPath &__path = (QPainterPath &)     this->path;
+    bool &__needToCreatePanterPath = (bool &)   needToCreatePanterPath;
 
-    QPainterPath &__path = (QPainterPath &) this->path;
-    bool &__needToCreatePanterPath = (bool &)needToCreatePanterPath;
+    int i = 0, len;
 
     const double delta = PROP_RESOLUTION;
-    const point_s *point, *point1, *point2;
+    point_s point, point1, point2;
 
     __path = QPainterPath();
     len = this->length();
 
-    for(i=0; i < len-3; ++i){
-        __path.moveTo(at(i).toQPointF(delta));
+    Q_ASSERT(len > 2);
 
-        while(i<len-3){
-            point =     page::at_translation(at(i),     this->metadata.page);
-            point1 =    page::at_translation(at(i+1),   this->metadata.page);
-            point2 =    page::at_translation(at(i+2),   this->metadata.page);
+    __path.moveTo(at(i).toQPointF(delta));
 
-            __path.cubicTo(point->toQPointF(delta), point1->toQPointF(delta), point2->toQPointF(delta));
+    point = page::at_translation(at(i),     this->metadata.page);
+    point1 = page::at_translation(at(i+1),  this->metadata.page);
 
-            i += 1;
-        }
+    i = 2;
+
+    while(i < len - 3){
+        point2 =    page::at_translation(at(i),   this->metadata.page);
+
+        __path.cubicTo(point.toQPointF(delta), point1.toQPointF(delta), point2.toQPointF(delta));
+
+        i += 1;
+        point = point1;
+        point1 = point2;
     }
+
 
     __needToCreatePanterPath = false;
 }

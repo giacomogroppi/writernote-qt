@@ -82,7 +82,7 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
     int lenStroke = List.length();
 
     for(i = 0; i < lenStroke; i++){
-        stroke &stroke = List.operator[](i);
+        const stroke &stroke = List.at(i);
         if(stroke.isEmpty()){
             List.removeAt(i);
             i --;
@@ -94,17 +94,22 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
         const float pressure = TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION;
         m_pen.setColor(stroke.getColor(decrease));
 
-        if(!stroke.constantPressure()){
+        if(stroke.constantPressure()){
+            const QPainterPath &path = stroke.getQPainterPath();
+
+            m_pen.setWidthF(pressure);
+
+            painter.strokePath(path, m_pen);
+
+        }else{
             int counterPoint;
             const int lenPoint = stroke.length();
+            const int refCounter = this->count - 1;
 
-            {
-                const point_s &point_tmp = *at_translation(stroke.at(0), this->count - 1);
-                lastPoint.pos = QPointF(point_tmp.m_x, point_tmp.m_y) * PROP_RESOLUTION;
-            }
+            lastPoint.pos = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
 
             for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-                const point_s &point = *at_translation(stroke.at(counterPoint), this->count - 1);
+                const point_s point = at_translation(stroke.at(counterPoint), refCounter);
                 pointDraw = point.toQPointF(PROP_RESOLUTION);
 
                 m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
@@ -115,12 +120,6 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
 
                 lastPoint.pos = pointDraw;
             }
-        }else{
-            const QPainterPath &path = stroke.getQPainterPath();
-
-            m_pen.setWidthF(pressure);
-
-            painter.strokePath(path, m_pen);
         }
     }
 

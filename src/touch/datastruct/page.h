@@ -39,7 +39,7 @@ private:
 
     void mergeList();
 
-    static point_s *at_translation(const point_s &point, int page);
+    static point_s at_translation(const point_s &point, int page);
 
     void AppendDirectly(const stroke &stroke);
 
@@ -48,12 +48,12 @@ public:
 
     page(const int count, const n_style style);
 
-    static double getProportion();
-    static double getHeight();
-    static double getWidth();
+    Q_CONSTEXPR static double getProportion();
+    Q_CONSTEXPR static double getHeight();
+    Q_CONSTEXPR static double getWidth();
 
-    static double getResolutionWidth();
-    static double getResolutionHeigth();
+    Q_CONSTEXPR static double getResolutionWidth();
+    Q_CONSTEXPR static double getResolutionHeigth();
 
     void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(const bool vis);
@@ -142,47 +142,47 @@ inline QList<stroke>::const_iterator page::get_end() const noexcept
     return m_stroke.end();
 }
 
-inline point_s *page::at_translation(const point_s &point, int page)
+inline point_s page::at_translation(const point_s &point, int page)
 {
-    static point_s tmp;
-    const double ytranslation = double(page)*page::getHeight();
+    point_s tmp;
+    const double ytranslation = double(page) * page::getHeight();
 
-    memcpy(&tmp, &point, sizeof(point_s));
+    memcpy(&tmp, &point, sizeof(tmp));
     tmp.m_y -= ytranslation;
-    return &tmp;
+    return tmp;
 }
 
-inline void page::AppendDirectly(const stroke &stroke)
+Q_ALWAYS_INLINE void page::AppendDirectly(const stroke &stroke)
 {
     this->m_stroke.append(stroke);
 }
 
-inline const QImage &page::getImg() const
+Q_ALWAYS_INLINE const QImage &page::getImg() const
 {
     return this->imgDraw;
 }
 
-inline double page::getProportion()
+Q_CONSTEXPR Q_ALWAYS_INLINE double page::getProportion()
 {
     return proportion;
 }
 
-inline double page::getHeight(){
+Q_CONSTEXPR Q_ALWAYS_INLINE double page::getHeight(){
     return height;
 }
 
-inline double page::getWidth()
+Q_CONSTEXPR Q_ALWAYS_INLINE double page::getWidth()
 {
     return width;
 }
 
 #define PROP_RESOLUTION (double(2))
-inline double page::getResolutionWidth()
+Q_CONSTEXPR Q_ALWAYS_INLINE double page::getResolutionWidth()
 {
     return getWidth() * PROP_RESOLUTION;
 }
 
-inline double page::getResolutionHeigth()
+Q_CONSTEXPR Q_ALWAYS_INLINE double page::getResolutionHeigth()
 {
     return getHeight() * PROP_RESOLUTION;
 }

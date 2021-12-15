@@ -26,14 +26,14 @@ private:
     QPainterPath path;
 
     QRectF biggerData;
-    bool constantPressureVal: 1;
+    bool constantPressureVal;
 
     bool needToCreatePanterPath;
     bool needToCreateBiggerData;
 
-    bool needToUpdatePressure: 1;
+    bool needToUpdatePressure;
 
-    void updateFlagPressure();
+    void updateFlagPressure() const;
 
     void modify();
 
@@ -81,7 +81,7 @@ public:
 
     int length() const;
     const struct metadata_stroke &getMetadata() const;
-    bool constantPressure();
+    bool constantPressure() const;
 
     size_t getSizeInMemory() const;
     void decreasePrecision();
@@ -119,11 +119,15 @@ public:
     friend class page;
 };
 
-inline void stroke::updateFlagPressure()
+inline void stroke::updateFlagPressure() const
 {
+    bool &__constPressureVal =      (bool &) this->constantPressureVal;
+    bool &__needToUpdatePressure =  (bool &) this->needToUpdatePressure;
+
     int i, len;
     const point_s *current, *next;
 
+    __needToUpdatePressure = false;
     len = this->length();
 
     if(len < 3){
@@ -132,7 +136,7 @@ inline void stroke::updateFlagPressure()
          * we have to draw the stroke point
          * by point.
         */
-        this->constantPressureVal = false;
+        __constPressureVal = false;
         goto leave;
     }
 
@@ -142,18 +146,18 @@ inline void stroke::updateFlagPressure()
         next = &at(i+1);
 
         if(next->pressure != current->pressure){
-            this->constantPressureVal = false;
             goto leave;
         }
 
         current = next;
     }
 
-    this->constantPressureVal = true;
+    __constPressureVal = true;
+    return;
 
 leave:
-    //qDebug() << "stroke::updateFlagPressure constantPressureVal" << this->constantPressureVal;
-    this->needToUpdatePressure = false;
+
+    __constPressureVal = false;
 }
 
 /* call this function when modify the stroke */
@@ -339,7 +343,7 @@ inline const metadata_stroke &stroke::getMetadata() const
     return this->metadata;
 }
 
-inline bool stroke::constantPressure()
+inline bool stroke::constantPressure() const
 {
     if(this->needToUpdatePressure)
         this->updateFlagPressure();
@@ -436,7 +440,8 @@ inline void stroke::scale(const QPointF &offset)
         point.m_x += offset.x();
         point.m_y += offset.y();
     }
-    if(!this->needToCreatePanterPath)
+
+    if(!this->needToCreatePanterPath && this->constantPressure())
         path.translate(offset);
 }
 
