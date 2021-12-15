@@ -139,7 +139,7 @@ void stroke::createQPainterPath() const
     const double delta = PROP_RESOLUTION;
     const point_s *point, *point1, *point2;
 
-    __path.clear();
+    __path = QPainterPath();
     len = this->length();
 
     for(i=0; i < len-3; ++i){

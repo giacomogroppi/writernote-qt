@@ -6,8 +6,8 @@
 #include <QPainterPath>
 
 #ifdef PDFSUPPORT
-#include "../../frompdf/frompdf.h"
-#endif
+ #include "../../frompdf/frompdf.h"
+#endif //PDFSUPPORT
 #include "../../images/fromimage.h"
 
 /* tmp list */
@@ -18,7 +18,8 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
 #define UPDATE_LOAD(x, zoom, div, m_pen, m_brush ) \
         TabletCanvas::updateBrush_load(x.m_pressure*zoom, setcolor(&x.m_color, div), m_pen, m_brush);
 
-void TabletCanvas::load(QPainter &painter, const Document *data,
+void TabletCanvas::load(QPainter &painter,
+                        const Document *data,
                         DataPaint &dataPoint){
     const bool withPdf          = dataPoint.withPdf;
     const bool is_play          = (dataPoint.parent) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
@@ -72,6 +73,10 @@ void TabletCanvas::load(QPainter &painter, const Document *data,
 
     painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
+
+    if(is_play){
+        data->datatouch->triggerViewIfVisible(m_pos_ris);
+    }
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const page &page = data->datatouch->at(counterPage);
