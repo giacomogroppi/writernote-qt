@@ -6,7 +6,6 @@
 #include <QSettings>
 #include "../../../utils/setting_define.h"
 #include "../../../utils/remove_key/remove_key.h"
-#include "../../../utils/color/setcolor.h"
 
 text_ui::text_ui(QWidget *parent) :
     QWidget(parent),
@@ -32,7 +31,7 @@ void text_ui::loadData()
     QByteArray array;
     colore_s temp;
 
-    setcolor_struct(&temp, QColor(Qt::black));
+    temp.fromColor(Qt::black);
 
     array.append((const char *)&temp);
 
@@ -103,16 +102,14 @@ void text_ui::on_button_color_clicked()
     if(!colorTemp.isValid())
         return;
 
-
-    setcolor_struct(&this->m_currentDcolor, colorTemp);
-
+    m_currentDcolor.fromColor(colorTemp);
 }
 
 void text_ui::drawButton(){
     ui->button_color->setAutoFillBackground(true);
     QPalette pal = ui->button_color->palette();
 
-    pal.setColor(QPalette::Button, setcolor(&this->m_currentDcolor));
+    pal.setColor(QPalette::Button, this->m_currentDcolor.toQColor());
     ui->button_color->setPalette(pal);
 
     ui->button_color->update();

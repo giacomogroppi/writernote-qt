@@ -1,5 +1,4 @@
 ﻿#include "page.h"
-#include "../../utils/color/setcolor.h"
 #include "../../sheet/fast-sheet/fast_sheet_ui.h"
 #include "../tabletcanvas.h"
 #include <QPainter>
@@ -45,7 +44,7 @@ void page::drawNewPage(n_style __style)
     setStylePrivate(fast, __style, style);
 
     if(fast){
-        setcolor_struct(&style.colore, TEMP_COLOR);
+        style.colore.fromColor(TEMP_COLOR);
         style.thickness =  widthToPressure(TEMP_TICK);
     }
 
@@ -176,7 +175,7 @@ static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
     }
     else if(res == n_style::white){
         /* we set the color manually */
-        setcolor_struct(&style.colore, Qt::black);
+        style.colore.fromColor(Qt::black);
 
         style.nx = 0;
         style.ny = 0;

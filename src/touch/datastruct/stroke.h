@@ -3,10 +3,10 @@
 
 #include <QList>
 #include <QImage>
+#include <QDebug>
 #include <QPainterPath>
 #include "point.h"
 #include "zip.h"
-#include "../../utils/color/setcolor.h"
 #include "../../utils/common_def.h"
 
 struct metadata_stroke{
@@ -173,7 +173,7 @@ inline float stroke::getPressure() const
 
 inline QColor stroke::getColor(const double division = 1.0) const
 {
-    return setcolor(this->metadata.color, division);
+    return this->metadata.color.toQColor(division);
 }
 
 inline const point_s &stroke::at(const int index) const
@@ -364,7 +364,7 @@ inline void stroke::at_translation(const double zoom, point_s &point, const int 
 
 inline void stroke::setColor(const QColor &color)
 {
-    setcolor_struct(metadata.color, color);
+    this->metadata.color.fromColor(color);
 }
 
 inline void stroke::setColor(const colore_s &color)

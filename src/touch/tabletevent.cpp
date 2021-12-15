@@ -2,7 +2,6 @@
 #include <QDebug>
 #include "../utils/dialog_critic/dialog_critic.h"
 #include "square/square.h"
-#include "../utils/color/setcolor.h"
 #include "../mainwindow.h"
 #include "../audioplay/audioplay.h"
 #include "../audiorecord/audiorecord.h"

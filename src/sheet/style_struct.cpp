@@ -1,7 +1,6 @@
 #include "style_struct.h"
 #include "../utils/setting_define.h"
 #include <QSettings>
-#include "../utils/color/setcolor.h"
 
 #define DEFAULTN 40
 #define DEFAULTTHICKNESS 1
@@ -22,7 +21,7 @@ void style_struct::loadFromByte(const QByteArray &arr)
 
 void style_struct::setDefault(style_struct_S &ref)
 {
-    setcolor_struct(ref.colore, QColor(Qt::black));
+    ref.colore.fromColor(Qt::black);
     ref.nx = ref.ny = DEFAULTN;
     ref.thickness = DEFAULTTHICKNESS;
 }

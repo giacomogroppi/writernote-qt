@@ -2,7 +2,6 @@
 
 #include "ui_dialog_sheet.h"
 #include <QPainter>
-#include "../utils/color/setcolor.h"
 
 void dialog_sheet::draw(){
     short int height, width, spessore_x, spessore_y;
@@ -28,7 +27,7 @@ void dialog_sheet::draw(){
     ui->pushButton_color->setAutoFillBackground(true);
     pal = ui->pushButton_color->palette();
 
-    pal.setColor(QPalette::Button, setcolor(style_element.at(current)->colore));
+    pal.setColor(QPalette::Button, style_element.at(current)->colore.toQColor());
 
     ui->pushButton_color->setPalette(pal);
 
@@ -38,7 +37,7 @@ void dialog_sheet::draw(){
     m_graphicsScene->clear();
 
     /* draw the line */
-    penna.setColor(setcolor(style_element.at(current)->colore));
+    penna.setColor(style_element.at(current)->colore.toQColor());
     penna.setWidthF(style_element.at(current)->thickness);
 
     penna.setStyle(Qt::PenStyle::SolidLine);

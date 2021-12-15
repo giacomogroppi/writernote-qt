@@ -26,7 +26,6 @@ int xmlstruct::loadbinario_0(zip_t *z){
         int colore[NCOLOR];
     };
 
-
     /* this is the data structure we expect to read from the file */
     struct point_last{
         double m_x, m_y, rotation;
@@ -38,8 +37,6 @@ int xmlstruct::loadbinario_0(zip_t *z){
         size_t createControll() const;
         bool isIdUser() const;
     };
-
-
 
     QList<double> pos_foglio;
     QList<point_old> point;
@@ -109,22 +106,9 @@ struct point_last{
     bool isIdUser() const;
 };
 
-static size_t createControllOldVersion(const QList<point_last> &point)
-{
-    uint i;
-    const uint len = point.length();
-    size_t controll = 0;
-    for(i = 0; i < len; i++){
-        controll += point.at(i).createControll();
-    }
-
-    return controll;
-}
-
 int xmlstruct::loadbinario_1(struct zip *z){
 
     struct zip_stat st;
-    size_t controll;
     int i, len;
     zip_file_t *f;
     struct point_last temp_point;
@@ -158,15 +142,8 @@ int xmlstruct::loadbinario_1(struct zip *z){
 
     SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(long double));
 
-    SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
-
     zip_fclose(f);
-    {
-        const size_t newControll = createControllOldVersion(point);
-        if(controll != newControll){
-            return ERROR_CONTROLL;
-        }
-    }
+
     for(const auto & ref : qAsConst(point)){
         memcpy(&__point.m_color, &ref.m_color, sizeof(colore_s));
         __point.idtratto = ref.idtratto;
@@ -282,6 +259,10 @@ int old_which_sheet(const point_old &point, QList<page> &ListPage)
     return -1;
 }
 
+/*
+ * the function translates data written
+ * with version 0 of binary old
+*/
 void xmlstruct::decode0(Document *data, QList<point_old> &point, QList<double> &pos_foglio)
 {
     const point_old firstPoint = point.takeFirst();
@@ -348,10 +329,9 @@ void xmlstruct::decode(Document *doc, QList<QList<point_old>> &page)
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         for(int counterPoint = 0; counterPage < page.at(counterPage).length(); counterPage ++){
-            stroke stroke;
             const point_old &tmp = page.at(counterPage).at(counterPoint);
-
             const int id = tmp.idtratto;
+            stroke stroke;
 
             stroke.setMetadata(tmp.page, id, tmp.m_posizioneaudio, tmp.m_color);
 
@@ -362,6 +342,7 @@ void xmlstruct::decode(Document *doc, QList<QList<point_old>> &page)
                 TmpAppend.m_x = tmpRef.m_x;
                 TmpAppend.m_y = tmpRef.m_y;
                 TmpAppend.pressure = tmpRef.m_pressure;
+
                 stroke.append(TmpAppend);
             }
 

@@ -306,7 +306,6 @@ HEADERS += \
     src/utils/bug_repo/bug_repo_ui.h \
     src/utils/changeLanguage.h \
     src/utils/checkpassword/checkpassword.h \
-    src/utils/color/setcolor.h \
     src/utils/color_define_rgb.h \
     src/utils/common_def.h \
     src/utils/common_error_definition.h \

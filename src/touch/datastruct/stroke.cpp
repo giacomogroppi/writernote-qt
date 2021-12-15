@@ -1,6 +1,5 @@
 #include "stroke.h"
 #include "page.h"
-#include "../../utils/color/setcolor.h"
 #include "../../utils/common_error_definition.h"
 #include "../../dataread/xmlstruct.h"
 #include "../../datawrite/source_read_ext.h"

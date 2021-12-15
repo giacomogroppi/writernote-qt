@@ -5,7 +5,6 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include "../utils/dialog_critic/dialog_critic.h"
-#include "../utils/color/setcolor.h"
 #include "string.h"
 #include "style_struct.h"
 #include "fast-sheet/fast_sheet_ui.h"
@@ -112,7 +111,7 @@ void dialog_sheet::on_pushButton_color_clicked()
     if(!color.isValid())
         return;
 
-    setcolor_struct(style_element.at_mod(current)->colore, color);
+    style_element.at_mod(current)->colore.fromColor(color);
 
     draw();
 }

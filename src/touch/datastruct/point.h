@@ -2,8 +2,9 @@
 #define POINT_H
 
 #include <QtGlobal>
+#include <QColor>
 #include <QPointF>
-#include "math.h"
+
 #define NCOLOR 4
 
 /* canvas */
@@ -37,12 +38,12 @@ constexpr Q_ALWAYS_INLINE PointSettable &PointSettable::operator+=(const QPointF
     return *this;
 }
 
-inline PointSettable::PointSettable()
+Q_ALWAYS_INLINE PointSettable::PointSettable()
 {
     set = false;
 }
 
-inline PointSettable::PointSettable(const QPointF &point, bool set)
+Q_ALWAYS_INLINE PointSettable::PointSettable(const QPointF &point, bool set)
 {
     this->point = point;
     this->set = set;
@@ -50,21 +51,31 @@ inline PointSettable::PointSettable(const QPointF &point, bool set)
 
 struct colore_s{
     uchar colore[NCOLOR];
+    QColor toQColor(const double division) const;
+    void fromColor(const QColor &color);
 };
 
-//struct point_s{
-//    double m_x, m_y, rotation;
-//    float m_pressure;
-//    int m_posizioneaudio;
-//    struct colore_s m_color;
+/*
+ * if division == 1 the color don't change
+ * if division > 0 the color the alfa is change
+*/
+Q_ALWAYS_INLINE QColor colore_s::toQColor(const double division = 1.0) const
+{
+    return QColor::fromRgb( colore[0], colore[1],
+                            colore[2], colore[3]/division);
+}
 
-//    int idtratto;
-//    int page; /* indicates which page the point is on */
+Q_ALWAYS_INLINE void colore_s::fromColor(const QColor &color)
+{
+    int val[NCOLOR];
+    uchar i;
 
-//    size_t createControll() const;
-//    bool isIdUser() const;
-//    QPointF toQPointF(const double delta) const;
-//};
+    color.getRgb(&val[0], &val[1], &val[2], &val[3]);
+
+    for(i = 0; i < NCOLOR; i ++){
+        colore[i] = val[i];
+    }
+}
 
 /* this struct contains neither the color, nor the thickness, nor the page to which it belongs, nor the rotation, nor the id */
 struct point_s{

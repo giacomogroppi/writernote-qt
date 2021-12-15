@@ -1,7 +1,6 @@
 #include "../tabletcanvas.h"
 #include <QPainter>
 #include "../../mainwindow.h"
-#include "../../utils/color/setcolor.h"
 #include <QPolygonF>
 #include <QPainterPath>
 #include "../square/square.h"

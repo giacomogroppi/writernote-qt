@@ -1,7 +1,6 @@
 #include "../tabletapplication.h"
 #include "../tabletcanvas.h"
 #include "../../mainwindow.h"
-#include "../../utils/color/setcolor.h"
 #include "../../audioplay/audioplay.h"
 #include <QPolygonF>
 #include <QPainterPath>
