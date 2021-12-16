@@ -10,7 +10,7 @@ property_control::property_control(QWidget *parent) :
     ui->setupUi(this);
 
     setStyleSheet("background:transparent;");
-    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground);
 
     SET_PRIVATE_STYLE(ui->button_copy);
