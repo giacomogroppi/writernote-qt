@@ -26,11 +26,6 @@ void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *ca
     }
 }
 
-/*
- * la funzione disegna i punti con colore bianco e valuta
- * se nell'area in cui erano c'era un altro tratto che
- * potrebbe esser stato
-*/
 void datastruct::removeAndTrigger(const QList<int> &id)
 {
     const QRectF areaToRemove = this->get_size_area(id);
