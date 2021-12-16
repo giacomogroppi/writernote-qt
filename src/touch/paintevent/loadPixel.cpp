@@ -95,7 +95,11 @@ void TabletCanvas::loadpixel(){
     this->resizeEvent(nullptr);
 }
 
-static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta){
+static void loadSheet(
+        const Document  &doc,
+        QPen            &m_pen,
+        QPainter        &painter,
+        const double    delta){
     uint counterPage;
     const page *page;
     int counterStroke, counterPoint, lenStroke, lenPoint;

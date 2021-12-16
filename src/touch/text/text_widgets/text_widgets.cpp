@@ -33,7 +33,7 @@ bool text_widgets::isIn(QPointF point)
     x = point.x();
     y = point.y();
 
-    for(i=0; i<len; i++)
+    for(i = 0; i < len; i++)
         if(m_lista.at(i).x < x && m_lista.at(i).y > y
                 && m_lista.at(i).xf > x && m_lista.at(i).yf > y)
             return true;

@@ -89,11 +89,11 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 updatelist(event);
             }
             else if(rubber_method){
-                const QList<int> &ref = m_rubber->actionRubber(data->datatouch, pointTouch);
+                /*const QList<int> &ref = */m_rubber->actionRubber(data->datatouch, pointTouch);
 
-                if(ref.length()){
-                    this->triggerNewView(ref, true);
-                }
+                //if(ref.length()){
+                //    this->triggerNewView(ref, true);
+                //}
             }
             else if(selection_method){
                 m_square->isMoving();

@@ -106,7 +106,7 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
                     if(this->m_type_gomma == e_type_rubber::total && IS_NOT_PRESENT_IN_LIST(gomma_delete_id, id)){
                         gomma_delete_id.append(id);
 
-                        stroke.setAlfaColor(stroke.getColor().alpha() / DECREASE);
+                        data->decreaseAlfa(stroke, page, DECREASE);
 
                         break;
                     }
@@ -151,10 +151,11 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
 bool rubber_ui::clearList(datastruct *data)
 {
-    data->removePointId(gomma_delete_id, &Page);
+    data->removeAndTrigger(gomma_delete_id);
+    //data->removePointId(gomma_delete_id, &Page);
 
     gomma_delete_id.clear();
-    data->triggerNewView(Page, -1, true);
+    //data->triggerNewView(Page, -1, true);
     return Page.length();
 }
 

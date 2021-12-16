@@ -26,7 +26,6 @@ void copy::managePaste(
     int i;
     int tmpId = -1;
 
-
     i = this->m_stroke.length() - 1;
     datastruct::inverso(tmp);
     this->adjustData(tmp);

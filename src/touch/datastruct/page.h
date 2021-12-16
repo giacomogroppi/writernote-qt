@@ -9,6 +9,8 @@
 #include "../../log/log_ui/log_ui.h"
 #include "../../utils/common_def.h"
 
+#define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
+
 enum n_style: int;
 
 class page
@@ -34,14 +36,16 @@ private:
     void drawNewPage(n_style __style);
 
     QImage imgDraw;
-    void drawEngine(QPainter &painter, QList<stroke> &List, const int m_pos_ris);
-    void draw(QPainter &painter, const int m_pos_ris, const bool all);
+    void drawEngine(QPainter &painter, QList<stroke> &List, int m_pos_ris);
+    void draw(QPainter &painter, int m_pos_ris, bool all);
+    void drawStroke(QPainter &painter, const stroke &stroke, QPen &pen, const QColor &color);
 
     void mergeList();
 
     static point_s at_translation(const point_s &point, int page);
 
     void AppendDirectly(const stroke &stroke);
+    bool initImg(bool flag);
 
 public:
     const QImage &getImg() const;
@@ -97,7 +101,7 @@ public:
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
 
-    void triggerRenderImage(int m_pos_ris, const bool all);
+    void triggerRenderImage(int m_pos_ris, bool all);
 
     void reset();
     void allocateStroke(int numAllocation);
@@ -107,6 +111,11 @@ public:
 
     QList<stroke>::const_iterator get_begin() const noexcept;
     QList<stroke>::const_iterator get_end() const noexcept;
+
+    void drawStroke(const stroke &stroke, int m_pos_ris);
+    void drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color);
+    void drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color);
+    int removeAndDraw(int m_pos_ris, const QList<int> &id, const QRectF &area);
 
     friend class stroke;
     friend class datastruct;

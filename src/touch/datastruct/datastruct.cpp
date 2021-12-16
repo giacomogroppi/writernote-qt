@@ -26,6 +26,20 @@ void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *ca
     }
 }
 
+/*
+ * la funzione disegna i punti con colore bianco e valuta
+ * se nell'area in cui erano c'era un altro tratto che
+ * potrebbe esser stato
+*/
+void datastruct::removeAndTrigger(const QList<int> &id)
+{
+    const QRectF areaToRemove = this->get_size_area(id);
+    for(page &page : m_page){
+        if(page.removeAndDraw(-1, id, areaToRemove))
+            return;
+    }
+}
+
 void datastruct::increaseZoom(const double delta, const QSize &size)
 {
     this->zoom += delta;
@@ -64,29 +78,45 @@ void datastruct::reset(){
     zoom = 1.00;
 }
 
-//{page; indexInPage}
-void datastruct::decreaseAlfa(const int id,
-                              const uchar decrease,
-                              const int lenPage)
+void datastruct::decreaseAlfa(stroke &stroke, page &page, cint decrease)
 {
-    int counterStroke, counterPage, len;
+    const uchar newAlfa = stroke.getColor().alpha() / decrease;
+    stroke.setAlfaColor(newAlfa);
+
+    /*
+    * before drawing the new stroke with
+    * the new color we need to set all
+    * the area it previously occupied to white
+    */
+
+    page.drawForceColorStroke(stroke, -1, COLOR_NULL);
+    page.drawStroke(stroke, -1);
+}
+
+//{page; indexInPage}
+void datastruct::decreaseAlfa(cint id,
+                              cuchar decrease)
+{
+    int counterPage, strokeCounter;
     page *page_mod;
+    stroke *stroke;
     const page *page_read;
 
-    for(counterPage = 0; counterPage < lenPage; counterPage++){
-        page_read = &at(counterPage);
-        len = page_read->lengthStroke();
+    counterPage = this->lengthPage() - 1;
 
-        if(!len) continue;
+    for(; counterPage >= 0; counterPage--){
+        page_read = &at(counterPage);
+
+        strokeCounter = page_read->lengthStroke() - 1;
+        if(!strokeCounter) continue;
 
         page_mod = &at_mod(counterPage);
 
-        for(counterStroke = 0; counterStroke < len; counterStroke++){
-            stroke &stroke = page_mod->atStrokeMod(counterStroke);
+        for(strokeCounter = 0; strokeCounter >= 0; strokeCounter--){
+            stroke = &page_mod->atStrokeMod(strokeCounter);
 
-            if(stroke.getId() == id){
-                const uchar newAlfa = stroke.getColor().alpha() / decrease;
-                stroke.setAlfaColor(newAlfa);
+            if(stroke->getId() == id){
+                this->decreaseAlfa(*stroke, *page_mod, decrease);
 
                 /* since there cannot be another trait that has the same
                  * index, we can directly return to the caller */
@@ -94,7 +124,6 @@ void datastruct::decreaseAlfa(const int id,
             }
         }
     }
-
 }
 
 void datastruct::copy(const datastruct &src, datastruct &dest)

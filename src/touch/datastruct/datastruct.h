@@ -32,37 +32,32 @@ class fromimage;
 class datastruct
 {
 private:
-    QPointF __last_translation;
-
-    /*
-     * make this item private for a new datastruct
-    */
-    QList<page> m_page;
-
-    bool userWrittenSomething(uint frompage);
-
-    void scala_posizionefoglio(const double scala);
-
     frompdf *m_pdf;
     fromimage *m_img;
+
+    double zoom = 1.00;
+    QPointF __last_translation;
+    QList<page> m_page;
     QPointF pointFirstPage = QPointF(0, 0);
+
+    bool userWrittenSomething(uint frompage);
+    void scala_posizionefoglio(const double scala);
 
     void adjustWidth(const uint width);
     void adjustHeight(const uint height);
-
 
     void triggerNewView(int page, int m_pos_ris, const bool all);
 
     int whichPage(const stroke &stroke) const;
 
-    double zoom = 1.00;
     void newPage(int num);
 public:
+    datastruct(frompdf *m_pdf, fromimage *m_img);
+    ~datastruct() = default;
+
     void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool all);
     void triggerNewView(int m_pos_ris, const bool all);
     void triggerViewIfVisible(int m_pos_ris);
-
-    static bool isOkZoom(const double newPossibleZoom);
 
     constexpr double getZoom() const;
     void changeZoom(const double zoom, class TabletCanvas *canvas);
@@ -96,56 +91,28 @@ public:
     int removePointId(const int id);
 
     /* return the index of the point move */
-    //QList<int> *MovePoint(const QRectF &rect, const QPointF &__t);
     void MovePoint(const QList<int> &id, const QPointF &translation, QList<int> *PageModify);
 
-    bool userWrittenSomething(datastruct *s_data);
-
-    /*
-     * return true if the user has written this point
-     *
-     * all the point writernote draw have id < 0
-    */
-    static inline bool isIdUser(const int id){ return id >= 0; }
-    static inline bool isIdUser(const stroke &__point){ return isIdUser(__point.getId()); }
+    bool userWrittenSomething(datastruct *s_data);    
 
     bool isinside(const QPointF &topleft, const QPointF &bottomright, const uint IndexPage, const uint IndexStroke) const;
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
-    static bool isinside(const QRectF &rect, const QPointF &point); // true if the point is inside the rect
 
     void adjustAll(const uint width, const uint height);
     void adjustAll(const QSize &size);
 
-    /* return the page of the stroke */
     int adjustStroke(stroke &stroke);
 
-    /*
-     * this function return the index of the first
-     * point with idtratto == IDORIZZONALE
-    */
-    uint posIdOrizzonal();
-
-
-    datastruct(frompdf *m_pdf, fromimage *m_img);
-    //~datastruct();
-
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
-
     void reorganize();
-
     void changeId(int indexPoint, int indexStroke, int indexPage, int newId = -1);
-
     bool isAvailable(int id) const;
-
-    inline int maxId();
+    int maxId();
 
     constexpr QPointF adjustPoint(const QPointF &pointRealTouch);
 
     bool isempty() const;
 
-    static void inverso(QPointF &point);
-    static QPointF inverso(const QPointF &point) { return (-1) * point; };
+
     void repositioning();
 
     void scala_all(const QPointF &point, const int heightView = -1);
@@ -155,16 +122,12 @@ public:
     double biggerx() const noexcept;
 
     bool needToCreateNewSheet() const;
-    static bool needtochangeid(const int IndexPoint, const stroke &stroke);
 
     double biggery() const noexcept;
 
-
-    void decreaseAlfa(const int id, const uchar decrese, const int len);
-
+    void decreaseAlfa(stroke &stroke, page &page, cint decrease);
+    void decreaseAlfa(const int id, const uchar decrese);
     void removePage(const uint page);
-
-    inline int lastId();
 
     //__fast const point_s * at(const uint i, const uint page) const;
     __fast const page &     at(const uint page) const;
@@ -176,24 +139,32 @@ public:
 
     __fast const point_s *  lastPoint() const;
     __fast const page *     lastPage() const;
-    //point_s &at_translation(const uint index, const uint page) const;
 
-    static size_t getSizeOne();
 
-    inline int lengthPage() const{ return this->m_page.length();}
-
+    int lengthPage() const{ return this->m_page.length();}
     void newPage(const n_style style);
-    static void copy(const datastruct &src, datastruct &dest);
 
-    inline QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
-
+    QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
     const stroke &get_stroke(int id) const;
-
     QRectF get_size_area(const QList<int> & id) const;
+    void removeAndTrigger(const QList<int> &id);
 
-    inline double currentWidth() const;
-    inline double currentHeight() const;
-    inline double proportion() const;
+    double currentWidth() const;
+    double currentHeight() const;
+    double proportion() const;
+
+    static bool isOkZoom(const double newPossibleZoom);
+    static void copy(const datastruct &src, datastruct &dest);
+    static size_t getSizeOne();
+    static bool needtochangeid(const int IndexPoint, const stroke &stroke);
+    static void inverso(QPointF &point);
+    static QPointF inverso(const QPointF &point) { return (-1) * point; };
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
+    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
+    static bool isinside(const QRectF &rect, const QPointF &point); // true if the point is inside the rect
+    static bool isIdUser(const int id){ return id >= 0; }
+    static bool isIdUser(const stroke &__point){ return isIdUser(__point.getId()); }
+    static QRectF get_bigger_rect(const QRectF &first, const QRectF &second);
 
     friend class xmlstruct;
 };
@@ -231,16 +202,17 @@ inline int datastruct::maxId()
 
 inline void datastruct::triggerVisibility(const double &viewSize)
 {
-    static uint i;
-    static uint len;
+    uint i;
+    const uint len = this->m_page.length();
+    page *page;
 
-    len = this->m_page.length();
+    for(i = 0; i < len; i++){
+        page = &at_mod(i);
+        page->updateFlag(this->getPointFirstPage(), zoom, viewSize);
 
-    for(i=0; i<len; i++){
-        this->m_page.operator[](i).updateFlag(this->getPointFirstPage(), zoom, viewSize);
-        if(this->m_page.at(i).isVisible() && i && i<len-1){
-            this->at_mod(i-1).setVisible(true);
-            this->at_mod(i+1).setVisible(true);
+        if(page->isVisible() && i && i < len - 1){
+            this->at_mod(i - 1).setVisible(true);
+            this->at_mod(i + 1).setVisible(true);
         }
     }
 }
@@ -261,11 +233,6 @@ inline bool datastruct::needtochangeid(const int IndexPoint, const stroke &strok
 inline double datastruct::biggery() const noexcept
 {
     return (at(lengthPage()-1).currentHeight() + this->getPointFirstPage().y())*zoom;
-}
-
-inline int datastruct::lastId()
-{
-    return this->maxId();
 }
 
 inline const __fast page &datastruct::at(const uint page) const
@@ -304,21 +271,6 @@ inline const __slow page *datastruct::lastPage() const
     return &this->m_page.last();
 }
 
-/*inline point_s &datastruct::at_translation(const uint index, const uint page) const
-{
-    static point_s point;
-    memcpy(&point, at(page)->at(index), sizeof(point_s));
-
-    point.m_x += this->pointFirstPage.x();
-    point.m_y += this->pointFirstPage.y() + page * page::getHeight();
-
-    point.m_x *= this->zoom;
-    point.m_y *= this->zoom;
-    point.m_pressure *= this->zoom;
-
-    return point;
-}*/
-
 inline size_t datastruct::getSizeOne()
 {
     return sizeof(struct point_s);
@@ -350,8 +302,7 @@ inline const stroke &datastruct::get_stroke(int id) const
 inline QRectF datastruct::get_size_area(const QList<int> &id) const
 {
     int counterPage = this->lengthPage() - 1, counterStroke;
-    QPointF topLeft;
-    QPointF bottomRigth;
+    QRectF result;
 
     const page *page;
     const stroke *__stroke;
@@ -359,11 +310,7 @@ inline QRectF datastruct::get_size_area(const QList<int> &id) const
     if(id.isEmpty())
         return QRectF();
 
-    {
-        const stroke &Stroke = this->get_stroke(id.first());
-        topLeft = Stroke.getBiggerPointInStroke().topLeft();
-        bottomRigth = Stroke.getBiggerPointInStroke().bottomRight();
-    }
+    result = this->get_stroke(id.first()).getBiggerPointInStroke();
 
     for(; counterPage >= 0; counterPage --){
         page = &at(counterPage);
@@ -375,24 +322,12 @@ inline QRectF datastruct::get_size_area(const QList<int> &id) const
                 continue;
 
             const QRectF &rect = __stroke->getBiggerPointInStroke();
-            const QPointF &topLeftStroke = rect.topLeft();
-            const QPointF &bottomRightStroke = rect.bottomRight();
 
-            if(topLeftStroke.x() < topLeft.x()) topLeft.setX(topLeftStroke.x());
-
-            if(bottomRightStroke.x() > bottomRigth.x()) bottomRigth.setX(bottomRightStroke.x());
-
-            if(topLeftStroke.y() < topLeft.y()) topLeft.setY(topLeftStroke.y());
-
-            if(bottomRightStroke.y() > bottomRigth.y()) bottomRigth.setY(bottomRightStroke.y());
-
+            result = datastruct::get_bigger_rect(result, rect);
         }
     }
 
-    Q_ASSERT_X(topLeft.x() <= bottomRigth.x(), "datastruct::get_size_area", "topLeft.x > bottomRigth.x");
-    Q_ASSERT_X(topLeft.y() <= bottomRigth.y(), "datastruct::get_size_area", "topLeft.y > bottomRigth.y");
-
-    return QRectF(topLeft, bottomRigth);
+    return result;
 }
 
 /* this function does not consider the zoom */
@@ -521,6 +456,29 @@ inline bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonri
 inline bool datastruct::isinside(const QRectF &rect, const QPointF &point)
 {
     return datastruct::isinside(rect.topLeft(), rect.bottomRight(), point);
+}
+
+Q_ALWAYS_INLINE QRectF datastruct::get_bigger_rect(const QRectF &first, const QRectF &second)
+{
+    QPointF resultTopLeft(first.topLeft());
+    QPointF resultBottomRight(first.bottomRight());
+
+    const QPointF SecTopLeft(second.topLeft());
+    const QPointF SecBottomRight(second.bottomRight());
+
+    if(resultTopLeft.x() > SecTopLeft.x())
+        resultTopLeft.setX(SecTopLeft.x());
+
+    if(resultTopLeft.y() > SecTopLeft.y())
+        resultTopLeft.setY(SecTopLeft.y());
+
+    if(resultBottomRight.x() < SecBottomRight.x())
+        resultBottomRight.setX(SecBottomRight.x());
+
+    if(resultBottomRight.y() < SecBottomRight.y())
+        resultBottomRight.setY(SecBottomRight.y());
+
+    return QRectF(resultTopLeft, resultBottomRight);
 }
 
 inline int datastruct::adjustStroke(stroke &stroke)

@@ -7,8 +7,9 @@
 #include "../../utils/common_error_definition.h"
 #include "../../datawrite/source_read_ext.h"
 #include "time.h"
-#define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
+#include "../../utils/common_script.h"
 
+#define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
@@ -16,6 +17,8 @@ static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struc
                             double &deltax, const double &width_p, const double &ct_del);
 static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_S &style,
                             const double &last, double &deltay, const double &height_p);
+
+#define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
 
 
 #define TEMP_COLOR Qt::black
@@ -72,14 +75,65 @@ void page::drawNewPage(n_style __style)
 
 }
 
-void page::drawEngine(QPainter &painter, QList<stroke> &List,
-                      const int m_pos_ris)
+void page::drawStroke(
+        QPainter        &painter,
+        const stroke    &stroke,
+        QPen            &m_pen,
+        const QColor    &color)
 {
-    struct Point lastPoint;
+    QPointF lastPoint, pointDraw;
+
+    m_pen.setColor(color);
+    m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
+
+    /*if(color == COLOR_NULL){
+        for(const point_s &point : stroke.m_point){
+            const point_s __point = at_translation(point, this->count - 1);
+            const QPoint pointToDraw = __point.toQPointF(PROP_RESOLUTION).toPoint();
+            imgDraw.setPixelColor(pointToDraw.x(), pointToDraw.y(), COLOR_NULL);
+        }
+
+        return;
+    }*/
+
+    if(color == COLOR_NULL){
+        m_pen.setWidthF(m_pen.widthF() * 1.5);
+        painter.setCompositionMode(QPainter::CompositionMode_Clear);
+    }
+    if(stroke.constantPressure()){
+        const QPainterPath &path = stroke.getQPainterPath();
+
+        painter.strokePath(path, m_pen);
+
+    }else{
+        int counterPoint;
+        const int lenPoint = stroke.length();
+        const int refCounter = this->count - 1;
+
+        lastPoint = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
+
+        for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
+            const point_s point = at_translation(stroke.at(counterPoint), refCounter);
+            pointDraw = point.toQPointF(PROP_RESOLUTION);
+
+            m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
+
+            painter.setPen(m_pen);
+
+            painter.drawLine(lastPoint, pointDraw);
+
+            lastPoint = pointDraw;
+        }
+    }
+}
+
+void page::drawEngine(
+        QPainter        &painter,
+        QList<stroke>   &List,
+        int       m_pos_ris)
+{
     int i;
-    QBrush m_brush;
-    QPen m_pen(m_brush, 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-    QPointF pointDraw;
+    QPen m_pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
     int lenStroke = List.length();
 
     //auto __clock = clock();
@@ -92,45 +146,16 @@ void page::drawEngine(QPainter &painter, QList<stroke> &List,
             lenStroke --;
             continue;
         }
-
         const int decrease = (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4;
-        const float pressure = TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION;
-        m_pen.setColor(stroke.getColor(decrease));
+        const QColor color = stroke.getColor(decrease);
 
-        if(stroke.constantPressure()){
-            const QPainterPath &path = stroke.getQPainterPath();
-
-            m_pen.setWidthF(pressure);
-
-            painter.strokePath(path, m_pen);
-
-        }else{
-            int counterPoint;
-            const int lenPoint = stroke.length();
-            const int refCounter = this->count - 1;
-
-            lastPoint.pos = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
-
-            for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-                const point_s point = at_translation(stroke.at(counterPoint), refCounter);
-                pointDraw = point.toQPointF(PROP_RESOLUTION);
-
-                m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
-
-                painter.setPen(m_pen);
-
-                painter.drawLine(lastPoint.pos, pointDraw);
-
-                lastPoint.pos = pointDraw;
-            }
-        }
+        this->drawStroke(painter, stroke, m_pen, color);
     }
-    //qDebug() << "Clock end" << double(clock() - __clock) / CLOCKS_PER_SEC;
+
 }
 
-inline void page::draw(QPainter &painter, const int m_pos_ris, const bool all)
+inline void page::draw(QPainter &painter, int m_pos_ris, bool all)
 {
-    painter.setRenderHint(QPainter::TextAntialiasing, false);
 
     if(all)
         this->drawEngine(painter, this->m_stroke, m_pos_ris);
@@ -237,15 +262,20 @@ bool page::userWrittenSomething() const
     return this->m_stroke.length();
 }
 
+bool page::initImg(bool flag)
+{
+    bool null = imgDraw.isNull() || flag;
+    if(null)
+        imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+    return null;
+}
+
 /*
  * all --> indicates if all the points must be drawn from scratch, if false it is drawn over the old image
 */
-void page::triggerRenderImage(int m_pos_ris, const bool all)
+void page::triggerRenderImage(int m_pos_ris, bool all)
 {
-    const bool isNull = imgDraw.isNull();
-
-    if(all || isNull)
-        this->imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+    all = initImg(all);
 
     /* testing */
     //imgDraw.fill(Qt::white);
@@ -254,14 +284,114 @@ void page::triggerRenderImage(int m_pos_ris, const bool all)
     painter.begin(&imgDraw);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    this->draw(painter, m_pos_ris, (all || isNull));
+    this->draw(painter, m_pos_ris, all);
 
     painter.end();
 
     return;
-    if(!imgDraw.save("/home/giacomo/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
+    if(!imgDraw.save("~/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
         std::abort();
 
+}
+
+#define MakeCTRL(point) \
+    if(datastruct::isinside(topLeft1, bottomRight1, point)) \
+        return true;
+
+static Q_ALWAYS_INLINE int __is_inside_suare(
+        const QRectF    &rect1,
+        const QRectF    &rect2)
+{
+    const QPointF &topLeft1     = rect1.topLeft();
+    const QPointF &bottomRight1 = rect1.bottomRight();
+
+    MakeCTRL(rect2.bottomRight());
+    MakeCTRL(rect2.bottomLeft());
+
+    MakeCTRL(rect2.topRight());
+    MakeCTRL(rect2.topLeft());
+
+    return false;
+}
+
+static Q_ALWAYS_INLINE int is_inside_squade(
+        const QRectF    &rect1,
+        const QRectF    &rect2)
+{
+    return __is_inside_suare(rect1, rect2) || __is_inside_suare(rect2, rect1);
+}
+
+// la funzione identifica i punti con id QList<int> &id
+// disegna lo stroke con colore bianco, e identifica
+// automaticamente gli stroke che vanno ridisegnati
+// perchè potrebbero esser stati compromessi nell'immagine
+// della classe page
+// Ritorna 1 se abbiamo ridisegnato
+//
+// Si suppone che l'area da ridisegnare sia solo in questa pagina
+int page::removeAndDraw(
+        int                 m_pos_ris,
+        const QList<int>    &id,
+        const QRectF        &area)
+{
+    int index = lengthStroke() - 1;
+    int mod = 0;
+
+    for(; index >= 0; index --){
+        const stroke &stroke = atStroke(index);
+        if(IS_PRESENT_IN_LIST(id, stroke.getId())){
+            this->drawForceColorStroke(stroke, m_pos_ris, COLOR_NULL);
+            mod = 1;
+            removeAt(index);
+        }
+    }
+
+    index = this->lengthStroke() - 1;
+    for(; index >= 0; index --){
+        const stroke &stroke = this->atStroke(index);
+        if(is_inside_squade(stroke.getBiggerPointInStroke(), area)){
+            this->drawStroke(stroke, m_pos_ris);
+        }
+    }
+
+    return mod;
+}
+
+void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color)
+{
+    QPainter painter;
+    Define_PEN(pen);
+
+    if(initImg(false))
+        return this->triggerRenderImage(m_pos_ris, true);
+
+    painter.begin(&this->imgDraw);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    this->drawStroke(painter, stroke, pen, color);
+
+    painter.end();
+}
+
+// the function is use for rubber and square
+void page::drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color)
+{
+    QPainter painter;
+    Define_PEN(pen);
+
+    if(initImg(false))
+        return this->triggerRenderImage(m_pos_ris, true);
+
+    painter.begin(&this->imgDraw);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    for(const stroke &stroke: qAsConst(m_stroke)){
+        if(IS_PRESENT_IN_LIST(id, stroke.getId())){
+            this->drawStroke(painter, stroke, pen, color);
+        }
+    }
+
+    painter.end();
 }
 
 void page::allocateStroke(int numAllocation)
@@ -313,5 +443,10 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
     DO_LOAD(m_stroke_writernote);
 
     return OK;
+}
+
+void page::drawStroke(const stroke &stroke, int m_pos_ris)
+{
+    drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0));
 }
 
