@@ -17,7 +17,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
     this->load_settings();
 
-    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
 
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);

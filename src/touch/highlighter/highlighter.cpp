@@ -24,7 +24,7 @@ highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     ui->slider_alfa->setMinimum(MIN_ALFA);
     ui->slider_alfa->setMaximum(MAX_ALFA);
 
-    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
 
     loadSettings();
 
