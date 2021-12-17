@@ -29,7 +29,7 @@
 template <typename T>
 Q_ALWAYS_INLINE void __swap(T &t1, T &t2)
 {
-    T tmp = t1;
+    const T tmp = t1;
     t1 = t2;
     t2 = t1;
 }
@@ -50,9 +50,10 @@ Q_ALWAYS_INLINE int is_order(QList<T> &list)
 template <typename T>
 Q_ALWAYS_INLINE int order(QList<T> &list)
 {
-    /* we use bubble-sort */
     int i, j, mod;
     int n = list.length();
+
+    std::sort(list.begin(), list.end());
 
     for (i = 0, mod = 0; i < n - 1; i++){
         for (j = 0; j < n - i - 1; j++){
