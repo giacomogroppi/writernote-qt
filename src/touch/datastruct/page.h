@@ -6,8 +6,9 @@
 #include <QDebug>
 #include <QImage>
 #include "stroke.h"
-#include "../../log/log_ui/log_ui.h"
-#include "../../utils/common_def.h"
+#include "src/log/log_ui/log_ui.h"
+#include "src/utils/common_def.h"
+#include "src/utils/common_script.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 
@@ -20,7 +21,7 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width*proportion; // correct proportions for A4 paper size
 
-#define FLAG_PAGE_ORGANIZE (1 << 0) // if indicates whether the list of strokes is sort by index
+#define FLAG_PAGE_ORDERED (1 << 0) // if indicates whether the list of strokes is sort by index
     int flag = 0;
 
     bool IsVisible = true;
@@ -49,6 +50,13 @@ private:
 
     void AppendDirectly(const stroke &stroke);
     bool initImg(bool flag);
+
+#ifdef DEBUGINFO
+    void ctrlOrdered() const;
+#endif
+    bool isOrdered() const;
+    void setOrdered();
+    void setNotOrdered();
 
 public:
     const QImage &getImg() const;
@@ -168,6 +176,26 @@ inline point_s page::at_translation(const point_s &point, int page)
 Q_ALWAYS_INLINE void page::AppendDirectly(const stroke &stroke)
 {
     this->m_stroke.append(stroke);
+}
+
+#if defined(DEBUGINFO)
+inline void page::ctrlOrdered() const
+{
+    const auto func = IS_ORDER_WITH_FUNCTION(m_stroke, getId);
+
+    if(isOrdered() && !func.operator()(m_stroke))
+        std::abort();
+}
+#endif
+
+inline void page::setOrdered()
+{
+    this->flag |= FLAG_PAGE_ORDERED;
+}
+
+inline void page::setNotOrdered()
+{
+    this->flag &= ~(FLAG_PAGE_ORDERED);
 }
 
 Q_ALWAYS_INLINE const QImage &page::getImg() const

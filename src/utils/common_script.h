@@ -34,26 +34,41 @@ Q_ALWAYS_INLINE void __swap(T &t1, T &t2)
     t2 = t1;
 }
 
+#define IS_ORDER_WITH_FUNCTION(list, function) \
+    [&](const QList<stroke> &list) -> int{ \
+        int i, len = list.length(); \
+        for(i = 0; i < len; i++) { \
+            if(list.at(i).function() < list.at(i+1).function()) \
+                return 0; \
+        } \
+        return 1; \
+    }
+
+
 template <typename T>
-Q_ALWAYS_INLINE int is_order(QList<T> &list)
+Q_ALWAYS_INLINE int is_order(const QList<T> &list)
 {
     int i, len;
     len = list.length();
     for(i = 0; i < len - 1; i++){
         if(list.at(i) > list.at(i+1))
             return 0;
+        //if(list.at(i) > list.at(i+1))
+        //    return 0;
     }
 
     return 1;
 }
 
+/*
+ * very fast when the list is almost sorted,
+ * otherwise use std :: sort
+*/
 template <typename T>
 Q_ALWAYS_INLINE int order(QList<T> &list)
 {
     int i, j, mod;
     int n = list.length();
-
-    std::sort(list.begin(), list.end());
 
     for (i = 0, mod = 0; i < n - 1; i++){
         for (j = 0; j < n - i - 1; j++){
