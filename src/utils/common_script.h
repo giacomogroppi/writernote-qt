@@ -65,4 +65,22 @@ Q_ALWAYS_INLINE int order(QList<T> &list)
     return mod;
 }
 
+template <typename T>
+Q_ALWAYS_INLINE int is_present_in_list(const QList<T> &list, const T& element)
+{
+    //the list must be sorted
+    Q_ASSERT(is_order(list));
+
+    int i, len = list.length();
+    for(i = 0; i < len; i++){
+        const T& tmp = list.at(i);
+        if(tmp == element)
+            return 1;
+
+        if(tmp > element)
+            return 0;
+    }
+
+    return 0;
+}
 #endif // COMMON_SCRIPT_H

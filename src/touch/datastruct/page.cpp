@@ -20,7 +20,6 @@ static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_
 
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
 
-
 #define TEMP_COLOR Qt::black
 #define TEMP_TICK 1
 #define TEMP_N_X 40
@@ -85,16 +84,6 @@ void page::drawStroke(
 
     m_pen.setColor(color);
     m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
-
-    /*if(color == COLOR_NULL){
-        for(const point_s &point : stroke.m_point){
-            const point_s __point = at_translation(point, this->count - 1);
-            const QPoint pointToDraw = __point.toQPointF(PROP_RESOLUTION).toPoint();
-            imgDraw.setPixelColor(pointToDraw.x(), pointToDraw.y(), COLOR_NULL);
-        }
-
-        return;
-    }*/
 
     if(color == COLOR_NULL){
         m_pen.setWidthF(m_pen.widthF() * 1.5);

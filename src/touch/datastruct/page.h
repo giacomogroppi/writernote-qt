@@ -20,6 +20,9 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width*proportion; // correct proportions for A4 paper size
 
+#define FLAG_PAGE_ORGANIZE (1 << 0) // if indicates whether the list of strokes is sort by index
+    int flag = 0;
+
     bool IsVisible = true;
     int count;
 
