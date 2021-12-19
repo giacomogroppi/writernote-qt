@@ -213,10 +213,11 @@ void MainWindow::on_actionRedo_triggered()
 
 void MainWindow::on_actionVersion_triggered()
 {
+    const QString bit = "\n" + ((sizeof(void *) < 8 ) ? QString("32 bit") : QString("64 bit"));
 #ifdef VERSION_SNAPCRAFT
-    user_message("Current version is " + (QString)VERSION_STRING + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__);
+    user_message("Current version is " + (QString)VERSION_STRING + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__ + bit);
 #else
-    user_message("Current version is " + (QString)NO_VER_DEF + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__);
+    user_message("Current version is " + (QString)NO_VER_DEF + "\nBuild in: " + __DATE__ + "\nAt " + __TIME__ + bit);
 #endif
 }
 

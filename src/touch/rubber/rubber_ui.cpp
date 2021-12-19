@@ -74,15 +74,13 @@ static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF
 const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     int counterStroke, lenStroke, counterPage;
     const int lenPage = data->lengthPage();
-    // const QPointF &translation = data->getPointFirstPage();
+    const bool isTotal = this->m_type_gomma == e_type_rubber::total;
     char mod;
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
 
     Page.clear();
 
     for(counterPage = 0; counterPage < lenPage && !data->at(counterPage).isVisible(); counterPage ++);
-
-    //qDebug() << "rubber_ui::actionRubber start" << data->at(0).lengthStroke() << data->at(0).atStroke(0).length();
 
     for(mod = 0; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
@@ -103,14 +101,17 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
                 if(isin(point, lastPoint)){
                     mod = 1;
-                    if(this->m_type_gomma == e_type_rubber::total && IS_NOT_PRESENT_IN_LIST(gomma_delete_id, id)){
+                    
+                    if(isTotal){
+                        if(IS_PRESENT_IN_LIST(gomma_delete_id, id)) continue;
+
                         gomma_delete_id.append(id);
 
                         data->decreaseAlfa(stroke, page, DECREASE);
 
                         break;
                     }
-                    else if(this->m_type_gomma == e_type_rubber::partial){
+                    else{
                         if(counterPoint < 3){
                             stroke.removeAt(0, counterPoint);
                             lenPoint = stroke.length();
@@ -140,7 +141,8 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
             }
 
             if(mod){
-                IF_NOT_PRESENT_APPEND(Page, counterPage);
+                append_if_not_present_order(Page, counterPage);
+                //IF_NOT_PRESENT_APPEND(Page, counterPage);
                 mod = 0;
             }
         }
@@ -169,7 +171,6 @@ inline bool rubber_ui::isin(
     isin =     (touch.x() - m_size_gomma) < __point.m_x &&  (touch.x() + m_size_gomma) > __point.m_x
            &&  (touch.y() - m_size_gomma) < __point.m_y &&  (touch.y() + m_size_gomma) > __point.m_y;
 
-    //qDebug() << "rubber_ui::isin" << isin;
 
     return isin;
 }

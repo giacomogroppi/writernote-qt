@@ -82,21 +82,44 @@ Q_ALWAYS_INLINE int order(QList<T> &list)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int is_present_in_list(const QList<T> &list, const T& element)
+Q_ALWAYS_INLINE int is_present_in_list_order(const QList<T> &list, const T& element)
 {
+#if defined(DEBUGINFO)
     //the list must be sorted
     Q_ASSERT(is_order(list));
+#endif
 
     int i, len = list.length();
     for(i = 0; i < len; i++){
         const T& tmp = list.at(i);
         if(tmp == element)
-            return 1;
+            return i;
 
         if(tmp > element)
-            return 0;
+            return -1;
     }
 
-    return 0;
+    return -1;
 }
+
+template <typename T>
+Q_ALWAYS_INLINE void append_if_not_present(QList<T> &list, const T& value)
+{
+    if(list.indexOf(value) == -1)
+        list.append(value);
+}
+
+template<typename T>
+Q_ALWAYS_INLINE void append_if_not_present_order(QList<T> &list, const T& value)
+{
+#if defined(DEBUGINFO)
+    Q_ASSERT(is_order(list));
+#endif
+
+    if(is_present_in_list_order(list, value) == -1){
+        // we can append
+        list.append(value);
+    }
+}
+
 #endif // COMMON_SCRIPT_H
