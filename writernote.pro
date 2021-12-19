@@ -36,6 +36,8 @@ CONFIG += c++17
     INCLUDEPATH += /usr/include/glib-2.0/ /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 }
 
+INCLUDEPATH += src/
+
 TRANSLATIONS +=  language/it.ts
 
 CONFIG(debug, debug|release){
@@ -290,7 +292,6 @@ HEADERS += \
     src/touch/text/text_widgets/text_widgets.h \
     src/ui/controlluibutton.h \
     src/utils/aboutQt/aboutqt.h \
-    src/utils/abs.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
     src/audiosetting/audioqualityoption.h \
