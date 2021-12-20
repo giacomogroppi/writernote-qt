@@ -6,7 +6,7 @@
 #include "touch/square/square.h"
 
 #ifdef PDFSUPPORT
-#include ".frompdf/frompdf.h"
+#include "frompdf/frompdf.h"
 #endif
 #include "images/fromimage.h"
 

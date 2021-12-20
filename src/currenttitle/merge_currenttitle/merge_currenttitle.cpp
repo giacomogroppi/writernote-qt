@@ -1,5 +1,5 @@
 #include "merge_currenttitle.h"
-
+#include "currenttitle/document.h"
 
 merge_currenttitle::n_merge merge_currenttitle::controll(
         Document *first,
