@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QListWidgetItem>
-#include "../struct_last_file.h"
+#include "last_open/struct_last_file.h"
 #include "imageWidget/imageWidget.h"
 
 namespace Ui {

@@ -2,7 +2,7 @@
 #include "ui_audio_default_location.h"
 
 #include <QSettings>
-#include "../setting_define.h"
+#include "utils/setting_define.h"
 
 #define SET_CHECK(x) ui->button_into->setChecked((x)); \
     ui->button_ext->setChecked(!(x));

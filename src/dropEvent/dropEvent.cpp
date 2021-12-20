@@ -1,8 +1,8 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include <QMimeData>
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../utils/common_def.h"
-#include "../images/fromimage.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "utils/common_def.h"
+#include "images/fromimage.h"
 #define WRITERNOTE 1
 #define IMAGE 2
 

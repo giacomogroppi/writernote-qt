@@ -1,11 +1,11 @@
 #include "aggiornotastiriascolto.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
 #include <QString>
-#include "../utils/common_error_definition.h"
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../dataread/xmlstruct.h"
+#include "utils/common_error_definition.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "dataread/xmlstruct.h"
 #include "audioplay.h"
 
 #define ERROR_AUDIO "We had an internal problem with audio, please \nclose the application and open it again"

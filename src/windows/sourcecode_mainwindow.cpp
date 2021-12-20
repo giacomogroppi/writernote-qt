@@ -1,4 +1,4 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "mostra_finestra_i.h"
 
 void MainWindow::on_actionSource_code_triggered()

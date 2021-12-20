@@ -2,13 +2,13 @@
 #include <QString>
 #include <QFileDialog>
 
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../utils/common_def.h"
-#include "../utils/get_path_application.h"
-#include "../utils/get_file_dir/get_file_dir.h"
-#include "../utils/common_def.h"
-#include "../utils/removenotwriternote.h"
+#include "utils/common_def.h"
+#include "utils/get_path_application.h"
+#include "utils/get_file_dir/get_file_dir.h"
+#include "utils/common_def.h"
+#include "utils/removenotwriternote.h"
 /*
  * this function is use for
  * save [not for loading]

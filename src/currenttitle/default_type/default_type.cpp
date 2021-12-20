@@ -1,6 +1,6 @@
 #include "default_type.h"
 #include <QSettings>
-#include "../../utils/setting_define.h"
+#include "utils/setting_define.h"
 
 default_type::e_type_copybook default_type::load_preference_copybook()
 {

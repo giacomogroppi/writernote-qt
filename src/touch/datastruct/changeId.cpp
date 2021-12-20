@@ -1,5 +1,5 @@
 #include "datastruct.h"
-#include "../../log/log_ui/log_ui.h"
+#include "log/log_ui/log_ui.h"
 
 /*
  * the point at the IndexPoint

@@ -1,9 +1,9 @@
 #include "controlluibutton.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QPixmap>
 #include <QSettings>
-#include "../utils/setting_define.h"
+#include "utils/setting_define.h"
 
 ControllUiButton::ControllUiButton(MainWindow *parent)
 {

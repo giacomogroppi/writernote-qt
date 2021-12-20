@@ -2,7 +2,7 @@
 #define DOWNLOADFILE_H
 
 #include <QString>
-#include "../struct_user.h"
+#include "cloud/struct_user.h"
 
 #include "shared_definition.h"
 

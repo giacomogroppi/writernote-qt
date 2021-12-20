@@ -1,7 +1,6 @@
 #ifndef AUDIOQUALITYOPTION_H
 #define AUDIOQUALITYOPTION_H
 
-#include "../mainwindow.h"
 #include <QDialog>
 
 namespace Ui {
@@ -14,11 +13,11 @@ class audioqualityoption : public QDialog
 
 public:
     Ui::audioqualityoption *ui;
-    MainWindow *padre;
+    class MainWindow *padre;
 
     bool m_outputLocationSet = false;
 
-    explicit audioqualityoption(QWidget *parent = nullptr, MainWindow *padre = nullptr);
+    explicit audioqualityoption(QWidget *parent = nullptr, class MainWindow *padre = nullptr);
     ~audioqualityoption();
 
 private slots:

@@ -1,4 +1,4 @@
-#include "../../utils/setting_define.h"
+#include "utils/setting_define.h"
 #include "rubber_ui.h"
 
 #include <QSettings>

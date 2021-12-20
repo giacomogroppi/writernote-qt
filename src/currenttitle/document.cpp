@@ -2,9 +2,9 @@
 #include <QString>
 #include <QStringList>
 
-#include "../touch/datastruct/datastruct.h"
-#include "../frompdf/frompdf.h"
-#include "../images/fromimage.h"
+#include "touch/datastruct/datastruct.h"
+#include "frompdf/frompdf.h"
+#include "images/fromimage.h"
 
 void Document::init()
 {

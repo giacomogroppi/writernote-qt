@@ -1,5 +1,5 @@
 #include "tabletcanvas.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include <QCoreApplication>
 #include <QPainter>
 #include <QtMath>
@@ -7,12 +7,12 @@
 #include <QTabletEvent>
 #include <QEvent>
 #include "datastruct/datastruct.h"
-#include "../utils/setting_define.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/setting_define.h"
+#include "utils/dialog_critic/dialog_critic.h"
 #include <QSettings>
 #include "square/square.h"
 #include "property/property_control.h"
-#include "../audioplay/audioplay.h"
+#include "audioplay/audioplay.h"
 
 static void saveLastMethod(TabletCanvas::e_method);
 static void loadLastMethod(TabletCanvas *);

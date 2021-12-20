@@ -1,11 +1,11 @@
 #include "topdf.h"
-#include "../mainwindow.h"
-#include "../datawrite/qfilechoose.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "mainwindow.h"
+#include "datawrite/qfilechoose.h"
+#include "utils/dialog_critic/dialog_critic.h"
 #include <QPdfWriter>
 #include <QPageSize>
-#include "../log/log_ui/log_ui.h"
-#include "../frompdf/frompdf.h"
+#include "log/log_ui/log_ui.h"
+#include "frompdf/frompdf.h"
 
 topdf::topdf(const QString &path, const Document &doc)
 {

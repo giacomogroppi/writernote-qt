@@ -1,10 +1,10 @@
 #include "renamefile_f_zip.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "zip.h"
 #include "iostream"
-#include "../dataread/xmlstruct.h"
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../utils/posizione_binario.h"
+#include "dataread/xmlstruct.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "utils/posizione_binario.h"
 
 bool renamefile_f_zip(const QString &namezip,
                       const QString &from,

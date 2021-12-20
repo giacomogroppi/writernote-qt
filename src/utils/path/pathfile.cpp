@@ -1,5 +1,5 @@
 #include "pathfile.h"
-#include "../slash/slash.h"
+#include "utils/slash/slash.h"
 
 QString pathFile::remove_file(const QString &path)
 {

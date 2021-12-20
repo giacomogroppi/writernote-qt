@@ -1,4 +1,4 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "last_open.h"
 
 static last_open *__last = nullptr;

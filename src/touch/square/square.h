@@ -3,9 +3,9 @@
 #include <QPainter>
 #include <QPointF>
 
-#include "../../currenttitle/document.h"
-#include "../property/property_control.h"
-#include "../copy_cut/copy_cut_selection.h"
+#include "currenttitle/document.h"
+#include "touch/property/property_control.h"
+#include "touch/copy_cut/copy_cut_selection.h"
 
 class square: public QObject
 {

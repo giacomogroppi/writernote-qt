@@ -1,8 +1,8 @@
 #ifndef TOPDF_H
 #define TOPDF_H
-#include "../touch/datastruct/datastruct.h"
-#include "../mainwindow.h"
-#include "../touch/tabletcanvas.h"
+#include "touch/datastruct/datastruct.h"
+#include "mainwindow.h"
+#include "touch/tabletcanvas.h"
 
 class topdf
 {

@@ -178,7 +178,6 @@ SOURCES += \
     src/datawrite/savefile_mainwindow.cpp \
     src/datawrite/source_read_ext.cpp \
     src/datawrite/write/savefile_savefile.cpp \
-    src/datawrite/write/saveindice_savefile.cpp \
     src/utils/bug_repo/bug_repo_ui.cpp \
     src/utils/changeLanguage.cpp \
     src/utils/checkpassword/checkpassword.cpp \

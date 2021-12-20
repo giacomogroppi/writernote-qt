@@ -1,7 +1,7 @@
 #include "tabletcanvas.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../log/log_ui/log_ui.h"
+#include "log/log_ui/log_ui.h"
 
 static int __page = -2;
 void MainWindow::updatePageCount(int pageCount)

@@ -1,5 +1,5 @@
 #include "ui_mainwindow.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "controlluibutton.h"
 
 void MainWindow::on_buttonRecentFile_clicked()

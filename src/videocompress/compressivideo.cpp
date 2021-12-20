@@ -1,5 +1,5 @@
 #include "compressivideo.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 #include <stdlib.h>
 

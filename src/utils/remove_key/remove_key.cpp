@@ -1,6 +1,6 @@
 #include "remove_key.h"
 #include <QSettings>
-#include "../setting_define.h"
+#include "utils/setting_define.h"
 
 void remove_key(const char *key, const char *group)
 {

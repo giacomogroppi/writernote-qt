@@ -1,4 +1,4 @@
-#include "../tabletcanvas.h"
+#include "touch/tabletcanvas.h"
 
 void TabletCanvas::resizeEvent(QResizeEvent *)
 {

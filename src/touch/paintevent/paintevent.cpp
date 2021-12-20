@@ -1,14 +1,14 @@
-#include "../tabletcanvas.h"
+#include "touch/tabletcanvas.h"
 #include <QPainter>
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 #include <QPolygonF>
 #include <QPainterPath>
-#include "../square/square.h"
+#include "touch/square/square.h"
 
 #ifdef PDFSUPPORT
-#include "../../frompdf/frompdf.h"
+#include ".frompdf/frompdf.h"
 #endif
-#include "../../images/fromimage.h"
+#include "images/fromimage.h"
 
 void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;

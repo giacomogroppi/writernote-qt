@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <QStringList>
-#include "../utils/slash/slash.h"
+#include "utils/slash/slash.h"
 
 class get_name_tmp
 {

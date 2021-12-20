@@ -1,6 +1,6 @@
 #include "get_only_name.h"
-#include "../common_def.h"
-#include "../slash/slash.h"
+#include "utils/common_def.h"
+#include "utils/slash/slash.h"
 #include <QStringList>
 
 #include "../path/pathfile.h"

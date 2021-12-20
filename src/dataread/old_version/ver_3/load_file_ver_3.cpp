@@ -1,6 +1,6 @@
-#include "../../xmlstruct.h"
-#include "../../../datawrite/source_read_ext.h"
-#include "../../../utils/common_error_definition.h"
+#include "dataread/xmlstruct.h"
+#include "datawrite/source_read_ext.h"
+#include "utils/common_error_definition.h"
 
 #ifdef ALL_VERSION
 

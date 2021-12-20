@@ -2,7 +2,7 @@
 #define FAST_SHEET_UI_H
 
 #include <QWidget>
-#include "../style_struct.h"
+#include "sheet/style_struct.h"
 #include <QEvent>
 #include <QListWidgetItem>
 

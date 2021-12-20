@@ -1,7 +1,7 @@
 #include "aboutqt.h"
 #include <QMessageBox>
 
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 
 void aboutQt()
 {

@@ -1,6 +1,6 @@
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 #include "option_last_open_ui.h"
-#include "../last_open.h"
+#include "last_open.h"
 
 #define mac_ex(parent) \
     option_last_open_ui opt(parent); \

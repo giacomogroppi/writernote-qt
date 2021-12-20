@@ -1,8 +1,8 @@
 #include "widget_parent.h"
 #include "ui_widget_parent.h"
-#include "../element/element_ui.h"
+#include "last_open/element/element_ui.h"
 #include <QDebug>
-#include "../last_open.h"
+#include "last_open/last_open.h"
 
 widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName,
                              last_open *parent_sec, const uchar __num, const uchar __showFileOnlyIfExist) :

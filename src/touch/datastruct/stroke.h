@@ -7,7 +7,7 @@
 #include <QPainterPath>
 #include "point.h"
 #include "zip.h"
-#include "../../utils/common_def.h"
+#include "utils/common_def.h"
 
 struct metadata_stroke{
     int page;

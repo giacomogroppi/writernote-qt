@@ -2,8 +2,7 @@
 #define EXTRACT_AUDIO_UI_H
 
 #include <QDialog>
-#include "../../indice_class.h"
-#include "../../currenttitle/document.h"
+#include "currenttitle/document.h"
 
 namespace Ui {
 class extract_audio_ui;

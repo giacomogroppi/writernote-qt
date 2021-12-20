@@ -1,6 +1,6 @@
 #include "copy_cut_selection.h"
-#include "../datastruct/datastruct.h"
-#include "../../utils/common_script.h"
+#include "touch/datastruct/datastruct.h"
+#include "utils/common_script.h"
 
 copy::copy()
 {

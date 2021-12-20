@@ -3,8 +3,8 @@
 
 #include "zip.h"
 #include <QList>
-#include "../utils/common_error_definition.h"
-#include "../touch/datastruct/datastruct.h"
+#include "utils/common_error_definition.h"
+#include "touch/datastruct/datastruct.h"
 #include <QPointF>
 #include <QImage>
 #include <QPainter>

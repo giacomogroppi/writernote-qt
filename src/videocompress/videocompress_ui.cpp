@@ -1,8 +1,8 @@
 #include "videocompress_ui.h"
 #include "ui_videocompress_ui.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "enable_videocompress.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 #include "compressivideo.h"
 #include <QFileDialog>
 

@@ -1,6 +1,6 @@
 #include "get_path.h"
-#include "../slash/slash.h"
-#include "../get_path_application.h"
+#include "utils/slash/slash.h"
+#include "utils/get_path_application.h"
 
 #if defined(unix) || defined(MACOS) || defined(IOS_WRITERNOTE)
 #define POS_HOME "HOME"

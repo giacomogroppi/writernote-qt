@@ -1,9 +1,9 @@
-#include "../../xmlstruct.h"
-#include "../../../images/fromimage.h"
-#include "../../../datawrite/source_read_ext.h"
-#include "../../../utils/common_error_definition.h"
-#include "../../../frompdf/frompdf.h"
-#include "../../../utils/areyousure/areyousure.h"
+#include "dataread/xmlstruct.h"
+#include "images/fromimage.h"
+#include "datawrite/source_read_ext.h"
+#include "utils/common_error_definition.h"
+#include "frompdf/frompdf.h"
+#include "utils/areyousure/areyousure.h"
 
 #ifdef ALL_VERSION
 int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,

@@ -1,7 +1,7 @@
 #ifndef REDOUNDO_H
 #define REDOUNDO_H
 #include <QList>
-#include "../currenttitle/document.h"
+#include "currenttitle/document.h"
 
 class redoundo
 {

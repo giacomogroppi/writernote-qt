@@ -1,14 +1,14 @@
-#include "../tabletapplication.h"
-#include "../tabletcanvas.h"
-#include "../../mainwindow.h"
-#include "../../audioplay/audioplay.h"
+#include "touch/tabletapplication.h"
+#include "touch/tabletcanvas.h"
+#include "mainwindow.h"
+#include "audioplay/audioplay.h"
 #include <QPolygonF>
 #include <QPainterPath>
 
 #ifdef PDFSUPPORT
- #include "../../frompdf/frompdf.h"
+ #include "frompdf/frompdf.h"
 #endif //PDFSUPPORT
-#include "../../images/fromimage.h"
+#include "images/fromimage.h"
 
 /* tmp list */
 extern stroke __tmp;

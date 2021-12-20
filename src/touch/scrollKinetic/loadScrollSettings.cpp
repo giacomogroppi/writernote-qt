@@ -1,6 +1,6 @@
-#include "../tabletcanvas.h"
+#include "touch/tabletcanvas.h"
 #include <QSettings>
-#include "../../utils/setting_define.h"
+#include "utils/setting_define.h"
 
 void TabletCanvas::saveScrollingSetting(){
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);

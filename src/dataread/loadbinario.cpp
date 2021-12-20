@@ -1,10 +1,10 @@
 #include "xmlstruct.h"
-#include "../currenttitle/document.h"
-#include "../images/fromimage.h"
+#include "currenttitle/document.h"
+#include "images/fromimage.h"
 #include <zip.h>
-#include "../datawrite/source_read_ext.h"
-#include "../utils/posizione_binario.h"
-#include "../sheet/fast-sheet/fast_sheet_ui.h"
+#include "datawrite/source_read_ext.h"
+#include "utils/posizione_binario.h"
+#include "sheet/fast-sheet/fast_sheet_ui.h"
 
 __new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
 {

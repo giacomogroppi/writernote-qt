@@ -1,12 +1,12 @@
 #include "extract_audio_ui.h"
 #include "ui_extract_audio_ui.h"
-#include "../../datawrite/qfilechoose.h"
+#include "datawrite/qfilechoose.h"
 #include "extract_audio.h"
 #include "QFile"
 #include "../dialog_critic/dialog_critic.h"
 #include <QFileDialog>
 #include <QDebug>
-#include "../../datawrite/qfilechoose.h"
+#include "datawrite/qfilechoose.h"
 
 extract_audio_ui::extract_audio_ui(QWidget *parent, const QString *path) :
     QDialog(parent),

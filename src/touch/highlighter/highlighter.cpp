@@ -1,9 +1,9 @@
 #include "highlighter.h"
 #include "ui_highlighter.h"
 #include <QSettings>
-#include "../../utils/setting_define.h"
-#include "../pen/pen_ui.h"
-#include "../datastruct/datastruct.h"
+#include "utils/setting_define.h"
+#include "touch/pen/pen_ui.h"
+#include "touch/datastruct/datastruct.h"
 #include <QDebug>
 
 #define MAX_ALFA 40

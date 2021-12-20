@@ -9,11 +9,11 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
-#include "../utils/areyousure/areyousure.h"
+#include "utils/areyousure/areyousure.h"
 #include <QJsonArray>
 #include <QJsonDocument>
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../mainwindow.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "mainwindow.h"
 #include "showmessageupdate.h"
 
 static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver);

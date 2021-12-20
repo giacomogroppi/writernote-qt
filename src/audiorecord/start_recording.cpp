@@ -1,15 +1,15 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../windows/mostra_finestra_i.h"
-#include "../utils/setting_define.h"
-#include "../datawrite/qfilechoose.h"
-#include "../utils/default_location/audio_default_location.h"
-#include "../utils/path/get_path.h"
-#include "../utils/get_path_application.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "windows/mostra_finestra_i.h"
+#include "utils/setting_define.h"
+#include "datawrite/qfilechoose.h"
+#include "utils/default_location/audio_default_location.h"
+#include "utils/path/get_path.h"
+#include "utils/get_path_application.h"
 #include "audiorecord.h"
-#include "../utils/slash/slash.h"
+#include "utils/slash/slash.h"
 #include <QSettings>
 #include <QDir>
 

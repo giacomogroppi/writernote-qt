@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "../mainwindow.h"
+#include "mainwindow.h"
 
 namespace Ui {
 class videocompress_ui;

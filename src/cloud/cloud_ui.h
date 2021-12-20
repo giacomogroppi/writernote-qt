@@ -2,7 +2,7 @@
 #define CLOUD_UI_H
 
 #include <QDialog>
-#include "../cloud/cloud_controll.h"
+#include "cloud/cloud_controll.h"
 
 #define TEXT_LOG_IN "Log in"
 #define TEXT_LOG_ON "Log on"

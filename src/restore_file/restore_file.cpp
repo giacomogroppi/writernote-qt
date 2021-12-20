@@ -1,4 +1,4 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "restore_file_critic.h"
 #include "ui/setting_restore_ui.h"
 #include "ui_restore/restore.h"

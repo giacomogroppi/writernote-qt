@@ -1,10 +1,10 @@
 #include "showmessageupdate.h"
 #include "ui_showmessageupdate.h"
-#include "../utils/copy_text.h"
+#include "utils/copy_text.h"
 #include "mostra_finestra_i.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #define URL_PROG "https://github.com/giacomogroppi/writernote-qt/releases"
-#include "../../updater/launch_updater/launch_updater.h"
+#include "updater/launch_updater/launch_updater.h"
 
 ShowMessageUpdate::ShowMessageUpdate(QWidget *parent,
                                      QString body,

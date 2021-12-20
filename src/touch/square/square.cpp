@@ -1,12 +1,12 @@
 #include "square.h"
 #include <QPen>
 #include <QPainter>
-#include "../../currenttitle/document.h"
+#include "currenttitle/document.h"
 #include <QDebug>
-#include "../../images/fromimage.h"
-#include "../property/property_control.h"
-#include "../tabletcanvas.h"
-#include "../../utils/common_script.h"
+#include "images/fromimage.h"
+#include "touch/property/property_control.h"
+#include "touch/tabletcanvas.h"
+#include "utils/common_script.h"
 
 square::square(QObject *parent, property_control *property):
     QObject(parent)

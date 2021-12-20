@@ -1,10 +1,10 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include <QTranslator>
 #include <QStringList>
 #include <QInputDialog>
 
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../touch/tabletapplication.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "touch/tabletapplication.h"
 
 #include "changeLanguage.h"
 #include "setting_define.h"

@@ -1,6 +1,6 @@
 #include "retry_save_audio.h"
-#include "../currenttitle/document.h"
-#include "../utils/path/get_path.h"
+#include "currenttitle/document.h"
+#include "utils/path/get_path.h"
 #include <QFile>
 
 retry_save_audio::retry_save_audio(Document *m_data, bool *exist_)

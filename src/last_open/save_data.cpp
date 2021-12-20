@@ -1,9 +1,9 @@
 #include "struct_last_file.h"
 #include <QSettings>
-#include "../utils/setting_define.h"
-#include "../utils/time/current_time.h"
-#include "../utils/setting_define.h"
-#include "../utils/remove_key/remove_key.h"
+#include "utils/setting_define.h"
+#include "utils/time/current_time.h"
+#include "utils/setting_define.h"
+#include "utils/remove_key/remove_key.h"
 #include <QDebug>
 #include <QFile>
 

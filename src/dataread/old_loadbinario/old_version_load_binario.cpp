@@ -1,8 +1,8 @@
-#include "../xmlstruct.h"
-#include "../../datawrite/source_read_ext.h"
-#include "../../utils/posizione_binario.h"
-#include "../../utils/common_error_definition.h"
-#include "../../sheet/fast-sheet/fast_sheet_ui.h"
+#include "dataread/xmlstruct.h"
+#include "datawrite/source_read_ext.h"
+#include "utils/posizione_binario.h"
+#include "utils/common_error_definition.h"
+#include "sheet/fast-sheet/fast_sheet_ui.h"
 
 #ifdef ALL_VERSION
 

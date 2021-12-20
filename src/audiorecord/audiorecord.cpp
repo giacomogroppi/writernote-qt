@@ -1,10 +1,10 @@
 #include "audiorecord.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileInfo>
 #include <QSettings>
 #include <QAudioEncoderSettings>
-#include "../utils/setting_define.h"
+#include "utils/setting_define.h"
 
 AudioRecord::AudioRecord(QObject *parent) : QObject(parent)
 {

@@ -1,5 +1,5 @@
-#include "../savefile.h"
-#include "../source_read_ext.h"
+#include "datawrite/savefile.h"
+#include "datawrite/source_read_ext.h"
 
 int savefile::saveArrayIntoFile(const QString &from,
                                 const QString &path,

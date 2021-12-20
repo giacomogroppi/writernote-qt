@@ -1,9 +1,9 @@
 #include "datastruct.h"
 #include <QList>
 #include <QDebug>
-#include "../../sheet/fast-sheet/fast_sheet_ui.h"
-#include "../tabletcanvas.h"
-#include "../../mainwindow.h"
+#include "sheet/fast-sheet/fast_sheet_ui.h"
+#include "touch/tabletcanvas.h"
+#include "mainwindow.h"
 
 #define mov_if_neg(p, x) \
     p = x; \

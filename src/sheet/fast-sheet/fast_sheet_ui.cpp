@@ -1,10 +1,10 @@
 #include "fast_sheet_ui.h"
 #include "ui_fast_sheet_ui.h"
 
-#include "../../utils/setting_define.h"
+#include "utils/setting_define.h"
 #include <QSettings>
 #include <QAction>
-#include "../../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 static void uncheck(QListWidget *list, n_style temp){
     if(temp != n_style::empty)

@@ -1,10 +1,10 @@
 #include "tabletcanvas.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../utils/color/color_chooser.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/color/color_chooser.h"
+#include "utils/dialog_critic/dialog_critic.h"
 #include "rubber/rubber_ui.h"
-#include "../utils/color_define_rgb.h"
+#include "utils/color_define_rgb.h"
 #include "square/square.h"
 
 #define SET_CHECK(x) x->setChecked(true)

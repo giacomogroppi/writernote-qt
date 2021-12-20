@@ -4,7 +4,7 @@
 #include <QStringList>
 #include <QList>
 #include <QByteArray>
-#include "../touch/datastruct/datastruct.h"
+#include "touch/datastruct/datastruct.h"
 
 class fromimage;
 class frompdf;

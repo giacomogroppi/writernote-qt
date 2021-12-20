@@ -7,8 +7,8 @@
 #include <QListWidgetItem>
 #include "element/element_ui.h"
 #include "struct_last_file.h"
-#include "../cloud/struct_user.h"
-#include "../cloud/cloud_controll.h"
+#include "cloud/struct_user.h"
+#include "cloud/cloud_controll.h"
 #include "widget_parent/widget_parent.h"
 
 namespace Ui {

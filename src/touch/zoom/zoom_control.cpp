@@ -1,8 +1,8 @@
 #include "zoom_control.h"
 #include <QDebug>
-#include "../event/itspossibletoscroll.h"
-#include "../datastruct/datastruct.h"
-#include "../event/itspossibletoscroll.h"
+#include "touch/event/itspossibletoscroll.h"
+#include "touch/datastruct/datastruct.h"
+#include "touch/event/itspossibletoscroll.h"
 
 /*
  * if delta > 1 we are zoom in

@@ -1,8 +1,6 @@
 #ifndef MERGE_CURRENTTITLE_H
 #define MERGE_CURRENTTITLE_H
 
-#include "../document.h"
-
 class merge_currenttitle
 {
 public:
@@ -23,7 +21,7 @@ public:
         copy_second
     };
 
-    static n_merge controll(Document *, Document *);
+    static n_merge controll(class Document *, Document *);
 
     static n_merge merge(Document *first, Document *second, n_audio);
 

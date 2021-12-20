@@ -1,8 +1,8 @@
-#include "../tabletcanvas.h"
+#include "touch/tabletcanvas.h"
 #include <QWheelEvent>
 
 #include "itspossibletoscroll.h"
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 #include <QDebug>
 
 

@@ -8,9 +8,9 @@
 #include <streambuf>
 #include <QList>
 #include <QStringList>
-#include "../currenttitle/document.h"
-#include "../indice_class.h"
-#include "../touch/datastruct/datastruct.h"
+#include "currenttitle/document.h"
+#include "indice_class.h"
+#include "touch/datastruct/datastruct.h"
 #include <zip.h>
 
 #define LOAD_MULTIPLESTRING(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) goto free_;

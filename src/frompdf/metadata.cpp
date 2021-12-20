@@ -1,5 +1,5 @@
 #include "frompdf.h"
-#include "../currenttitle/document.h"
+#include "currenttitle/document.h"
 
 static inline void copy_double(const QPointF &point, double *data);
 

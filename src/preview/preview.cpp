@@ -1,11 +1,11 @@
 #include "preview.h"
 #include <QPainter>
-#include "../currenttitle/document.h"
-#include "../frompdf/frompdf.h"
-#include "../images/fromimage.h"
-#include "../touch/tabletcanvas.h"
-#include "../currenttitle/document.h"
-#include "../dataread/xmlstruct.h"
+#include "currenttitle/document.h"
+#include "frompdf/frompdf.h"
+#include "images/fromimage.h"
+#include "touch/tabletcanvas.h"
+#include "currenttitle/document.h"
+#include "dataread/xmlstruct.h"
 
 void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const int width)
 {

@@ -1,7 +1,7 @@
 #ifndef MODALITY_DATA_H
 #define MODALITY_DATA_H
 
-#include "../../restore_file/ui/setting_restore_ui.h"
+#include "restore_file/ui/setting_restore_ui.h"
 
 #include "QtGlobal"
 

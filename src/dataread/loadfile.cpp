@@ -1,9 +1,9 @@
 #include "xmlstruct.h"
-#include "../images/fromimage.h"
-#include "../datawrite/source_read_ext.h"
-#include "../utils/common_error_definition.h"
-#include "../frompdf/frompdf.h"
-#include "../utils/areyousure/areyousure.h"
+#include "images/fromimage.h"
+#include "datawrite/source_read_ext.h"
+#include "utils/common_error_definition.h"
+#include "frompdf/frompdf.h"
+#include "utils/areyousure/areyousure.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa){
     int tmp;

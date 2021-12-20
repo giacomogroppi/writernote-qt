@@ -1,5 +1,5 @@
-#include "../tabletcanvas.h"
-#include "../square/square.h"
+#include "touch/tabletcanvas.h"
+#include "touch/square/square.h"
 #include <QPainter>
 
 /* wheel of mouse */

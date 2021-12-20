@@ -1,7 +1,7 @@
 #include "datastruct.h"
 #include <QPointF>
-#include "../../frompdf/frompdf.h"
-#include "../../images/fromimage.h"
+#include "frompdf/frompdf.h"
+#include "images/fromimage.h"
 
 void datastruct::inverso(QPointF &point){
     point *= -1.0;

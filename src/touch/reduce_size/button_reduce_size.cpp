@@ -1,7 +1,7 @@
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 #include "reduce_size.h"
-#include "../../utils/areyousure/areyousure.h"
-#include "../../utils/dialog_critic/dialog_critic.h"
+#include "utils/areyousure/areyousure.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 
 void MainWindow::on_actionReduce_size_file_triggered()

@@ -1,7 +1,7 @@
 #include "extract_audio.h"
-#include "../../dataread/xmlstruct.h"
-#include "../../currenttitle/document.h"
-#include "../common_error_definition.h"
+#include "dataread/xmlstruct.h"
+#include "currenttitle/document.h"
+#include "utils/common_error_definition.h"
 
 /*
  * the function extract an audio from a copybook, into path_to

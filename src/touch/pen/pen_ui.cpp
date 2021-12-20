@@ -1,10 +1,12 @@
 #include "pen_ui.h"
 #include "ui_pen_ui.h"
+#include "touch/highlighter/highlighter.h"
+#include "utils/setting_define.h"
+
 #include <QSettings>
 #include <QDebug>
+
 #define DELTA 200.0
-#include "../highlighter/highlighter.h"
-#include "../../utils/setting_define.h"
 
 pen_ui::pen_ui(QWidget *parent) :
     QWidget(parent),

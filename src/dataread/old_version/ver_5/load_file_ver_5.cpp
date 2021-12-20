@@ -1,8 +1,8 @@
-#include "../../xmlstruct.h"
-#include "../../../datawrite/source_read_ext.h"
-#include "../../../utils/common_error_definition.h"
-#include "../../../images/fromimage.h"
-#include "../../../frompdf/frompdf.h"
+#include "dataread/xmlstruct.h"
+#include "datawrite/source_read_ext.h"
+#include "utils/common_error_definition.h"
+#include "images/fromimage.h"
+#include "frompdf/frompdf.h"
 
 #ifdef ALL_VERSION
 int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,

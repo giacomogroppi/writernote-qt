@@ -1,13 +1,13 @@
 #include "ui_restore.h"
 #include "restore.h"
-#include "../../utils/get_file_dir/get_file_dir.h"
-#include "../../utils/common_def.h"
+#include "utils/get_file_dir/get_file_dir.h"
+#include "utils/common_def.h"
 #include <QDir>
 #include <QFileDialog>
-#include "../../utils/slash/slash.h"
-#include "../restore_file_critic.h"
-#include "../get_name_tmp.h"
-#include "../../utils/dialog_critic/dialog_critic.h"
+#include "utils/slash/slash.h"
+#include "restore_file/restore_file_critic.h"
+#include "restore_file/get_name_tmp.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 restore::restore(QWidget *parent, QString path) :
     QDialog(parent),

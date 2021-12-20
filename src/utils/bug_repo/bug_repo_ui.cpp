@@ -1,9 +1,9 @@
 #include "bug_repo_ui.h"
 #include "ui_bug_repo_ui.h"
 
-#include "../../mainwindow.h"
-#include "../../windows/mostra_finestra_i.h"
-#include "../copy_text.h"
+#include "mainwindow.h"
+#include "windows/mostra_finestra_i.h"
+#include "utils/copy_text.h"
 
 bug_repo_ui::bug_repo_ui(QWidget *parent) :
     QDialog(parent),

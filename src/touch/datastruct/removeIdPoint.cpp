@@ -1,5 +1,5 @@
 #include "datastruct.h"
-#include "../../utils/common_script.h"
+#include "utils/common_script.h"
 
 void datastruct::removePointId(const QList<int> &listIndex, QList<int> *page){
     uint i;

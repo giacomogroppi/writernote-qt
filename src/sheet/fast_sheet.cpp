@@ -1,5 +1,4 @@
-#include "../mainwindow.h"
-
+#include "mainwindow.h"
 
 void MainWindow::on_actionlastStyle_triggered()
 {

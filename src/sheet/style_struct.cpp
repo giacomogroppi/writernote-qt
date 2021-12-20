@@ -1,5 +1,5 @@
 #include "style_struct.h"
-#include "../utils/setting_define.h"
+#include "utils/setting_define.h"
 #include <QSettings>
 
 #define DEFAULTN 40

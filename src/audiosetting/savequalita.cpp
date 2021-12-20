@@ -1,7 +1,7 @@
 #include "savequalita.h"
 #include "audioqualityoption.h"
 #include "ui_audioqualityoption.h"
-#include "../utils/setting_define.h"
+#include "utils/setting_define.h"
 #include <QSettings>
 
 static QVariant boxValue(const QComboBox *box)

@@ -8,14 +8,14 @@
 #include <QPoint>
 #include <QTabletEvent>
 #include <QWidget>
-#include "../currenttitle/document.h"
+#include "currenttitle/document.h"
 #include "zoom/zoom_control.h"
 #include "rubber/rubber_ui.h"
 #include "pen/pen_ui.h"
-#include "../lastedit/redoundo.h"
+#include "lastedit/redoundo.h"
 #include "text/text_ui/text_ui.h"
 #include "text/text_widgets/text_widgets.h"
-#include "../sheet/fast-sheet/fast_sheet_ui.h"
+#include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "highlighter/highlighter.h"
 
 class highlighter;

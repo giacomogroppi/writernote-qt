@@ -1,13 +1,13 @@
 ﻿#include "page.h"
-#include "../../sheet/fast-sheet/fast_sheet_ui.h"
+#include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "../tabletcanvas.h"
 #include <QPainter>
-#include "../../utils/time/current_time.h"
+#include "utils/time/current_time.h"
 #include <QPainterPath>
-#include "../../utils/common_error_definition.h"
-#include "../../datawrite/source_read_ext.h"
+#include "utils/common_error_definition.h"
+#include "datawrite/source_read_ext.h"
 #include "time.h"
-#include "../../utils/common_script.h"
+#include "utils/common_script.h"
 
 #define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
 

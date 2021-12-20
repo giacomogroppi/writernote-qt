@@ -1,19 +1,19 @@
 #include "last_open.h"
 #include "ui_last_open.h"
 #include <QSettings>
-#include "../utils/setting_define.h"
+#include "utils/setting_define.h"
 #include <QAction>
 #include <QFile>
 #include <QFileInfo>
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../datawrite/qfilechoose.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "datawrite/qfilechoose.h"
 #include "string.h"
-#include "../cloud/utils/downloadfile.h"
-#include "../utils/remove_key/remove_key.h"
-#include "../datawrite/qfilechoose.h"
+#include "cloud/utils/downloadfile.h"
+#include "utils/remove_key/remove_key.h"
+#include "datawrite/qfilechoose.h"
 #include "option/option_last_open_ui.h"
 #include "widget_parent/widget_parent.h"
-#include "../utils/get_path_application.h"
+#include "utils/get_path_application.h"
 
 last_open::last_open(QWidget *parent,
                      struct struct_user *user,

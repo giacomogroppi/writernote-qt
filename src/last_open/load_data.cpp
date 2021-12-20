@@ -1,14 +1,14 @@
 #include "struct_last_file.h"
-#include "../utils/setting_define.h"
-#include "../utils/get_file_dir/get_file_dir.h"
+#include "utils/setting_define.h"
+#include "utils/get_file_dir/get_file_dir.h"
 #include <QBitArray>
 #include <QFile>
 #include <QFileInfo>
 #include <QDateTime>
-#include "../utils/lastModification/lastmodification.h"
-#include "../utils/removenotwriternote.h"
-#include "../utils/common_def.h"
-#include "../utils/remove_key/remove_key.h"
+#include "utils/lastModification/lastmodification.h"
+#include "utils/removenotwriternote.h"
+#include "utils/common_def.h"
+#include "utils/remove_key/remove_key.h"
 
 bool last_file::load_data()
 {

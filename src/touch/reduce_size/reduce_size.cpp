@@ -1,6 +1,6 @@
 #include "reduce_size.h"
-#include "../datastruct/datastruct.h"
-#include "../datastruct/page.h"
+#include "touch/datastruct/datastruct.h"
+#include "touch/datastruct/page.h"
 
 static uint howMuchPoint(datastruct *data);
 

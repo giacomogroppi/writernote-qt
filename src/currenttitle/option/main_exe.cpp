@@ -1,4 +1,4 @@
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 #include "option_copybook.h"
 
 void MainWindow::on_actionCopybook_triggered()

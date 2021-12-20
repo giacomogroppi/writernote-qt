@@ -1,8 +1,8 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "qfilechoose.h"
 #include "ui_mainwindow.h"
 #include "savefile.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 static inline const QString move_file(const QString &nomevecchio, const QString &nomenuovo){
     return ("cp " + nomevecchio + " " + nomenuovo);

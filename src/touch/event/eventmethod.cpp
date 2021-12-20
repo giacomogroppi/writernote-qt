@@ -1,9 +1,9 @@
-#include "../tabletcanvas.h"
+#include "touch/tabletcanvas.h"
 #include <QEvent>
 #include "math.h"
 #include <QWheelEvent>
 #include <QDebug>
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 
 static inline double Distance(const QPointF &point1, const QPointF &point2);
 static inline void scambio(QPointF &, QPointF &);

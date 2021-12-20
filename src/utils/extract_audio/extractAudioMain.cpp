@@ -1,4 +1,4 @@
-#include "../../mainwindow.h"
+#include "mainwindow.h"
 #include "extract_audio_ui.h"
 
 void MainWindow::on_actionExtract_audio_triggered()

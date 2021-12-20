@@ -1,6 +1,6 @@
 #include "cloud_controll.h"
-#include "../utils/remove_key/remove_key.h"
-#include "../utils/setting_define.h"
+#include "utils/remove_key/remove_key.h"
+#include "utils/setting_define.h"
 
 cloud_controll::cloud_controll(struct struct_user *user)
 {

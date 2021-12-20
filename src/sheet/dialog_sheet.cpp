@@ -1,10 +1,10 @@
 #include "dialog_sheet.h"
 #include "ui_dialog_sheet.h"
 #include <QPainter>
-#include "../utils/color/color_chooser.h"
+#include "utils/color/color_chooser.h"
 #include <QMessageBox>
 #include <QInputDialog>
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 #include "string.h"
 #include "style_struct.h"
 #include "fast-sheet/fast_sheet_ui.h"

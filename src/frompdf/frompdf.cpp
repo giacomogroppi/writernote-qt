@@ -1,21 +1,21 @@
 #include "frompdf.h"
 
 #ifdef PDFSUPPORT
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../currenttitle/document.h"
-#include "../utils/permission/permission.h"
-#include "../dataread/xmlstruct.h"
-#include "../dataread/load_from_file.h"
-#include "../dataread/readlistarray.h"
-#include "../datawrite/savefile.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "currenttitle/document.h"
+#include "utils/permission/permission.h"
+#include "dataread/xmlstruct.h"
+#include "dataread/load_from_file.h"
+#include "dataread/readlistarray.h"
+#include "datawrite/savefile.h"
 #include <QFileDialog>
-#include "../dataread/load_from_file.h"
-#include "../utils/areyousure/areyousure.h"
+#include "dataread/load_from_file.h"
+#include "utils/areyousure/areyousure.h"
 #include "convertImg.h"
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
-#include "../touch/tabletcanvas.h"
-#include "../utils/threadcount.h"
+#include "touch/tabletcanvas.h"
+#include "utils/threadcount.h"
 
 void frompdf::translation(const QPointF &point)
 {

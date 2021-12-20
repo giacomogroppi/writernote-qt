@@ -1,6 +1,5 @@
 #include "checksimilecopybook.h"
 #include "document.h"
-#include "../indice_class.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -8,8 +7,8 @@
 static int checkSpeed(const Document &first,
                       const Document &second){
     uint i, counterPage;
-    const uint lenPage = first.datatouch->lengthPage();
-    uint len;
+    const int lenPage = first.datatouch->lengthPage();
+    int len;
 
     if(lenPage != second.datatouch->lengthPage())
         return LEN;

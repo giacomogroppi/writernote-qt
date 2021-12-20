@@ -1,8 +1,8 @@
 #include "setting_load.h"
 
 #include <QSettings>
-#include "../setting_define.h"
-#include "../../mainwindow.h"
+#include "utils/setting_define.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 static void setting_load_redoundo(MainWindow *parent){

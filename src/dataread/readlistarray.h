@@ -5,7 +5,7 @@
 #include <QByteArray>
 #include <QList>
 #include <QStringList>
-#include "../utils/common_error_definition.h"
+#include "utils/common_error_definition.h"
 
 class readListArray
 {

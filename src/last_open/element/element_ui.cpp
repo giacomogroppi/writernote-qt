@@ -1,11 +1,11 @@
 #include "element_ui.h"
-#include "../../preview/preview.h"
-#include "../../utils/mostra_explorer/mostra_explorer.h"
+#include "preview/preview.h"
+#include "utils/mostra_explorer/mostra_explorer.h"
 #include "ui_element_ui.h"
-#include "../../utils/slash/slash.h"
-#include "../../utils/common_def.h"
-#include "../../utils/get_only_name/get_only_name.h"
-#include "../../utils/mostra_explorer/mostra_explorer.h"
+#include "utils/slash/slash.h"
+#include "utils/common_def.h"
+#include "utils/get_only_name/get_only_name.h"
+#include "utils/mostra_explorer/mostra_explorer.h"
 
 element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index, const uchar __showFileOnlyIfExist) :
     QWidget(parent),

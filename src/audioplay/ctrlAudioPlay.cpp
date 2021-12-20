@@ -1,8 +1,8 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "audioplay.h"
 #include <QDebug>
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 void MainWindow::on_volumeSlider_actionTriggered(int action)
 {

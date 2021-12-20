@@ -1,10 +1,9 @@
-#include "../savefile.h"
-#include "../source_read_ext.h"
-#include "../../utils/common_error_definition.h"
-#include "../../images/fromimage.h"
-#include "../../frompdf/frompdf.h"
-#include "../../currenttitle/document.h"
-#include "../../indice_class.h"
+#include "datawrite/savefile.h"
+#include "datawrite/source_read_ext.h"
+#include "utils/common_error_definition.h"
+#include "images/fromimage.h"
+#include "frompdf/frompdf.h"
+#include "currenttitle/document.h"
 #include <QFile>
 
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;

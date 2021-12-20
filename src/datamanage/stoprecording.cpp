@@ -1,23 +1,24 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "audioplay/aggiornotastiriascolto.h"
+#include "utils/progress_bar/progress_bar_ui.h"
+#include "datawrite/savefile.h"
+#include "utils/path/get_path.h"
+#include "utils/retry/retry_ui.h"
+#include "retry_save_audio.h"
+#include "utils/areyousure/areyousure.h"
+#include "utils/setting_define.h"
+#include "utils/permission/permission.h"
+#include "utils/make_default/make_default_ui.h"
+#include "audiorecord/audiorecord.h"
+
 #include <QString>
-#include "../utils/dialog_critic/dialog_critic.h"
-#include "../audioplay/aggiornotastiriascolto.h"
-#include "../utils/progress_bar/progress_bar_ui.h"
+#include <QSettings>
+#include <QMessageBox>
 #include <QThread>
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
-#include "../datawrite/savefile.h"
-#include <QMessageBox>
-#include "../utils/path/get_path.h"
-#include "../utils/retry/retry_ui.h"
-#include "retry_save_audio.h"
-#include "../utils/areyousure/areyousure.h"
-#include <QSettings>
-#include "../utils/setting_define.h"
-#include "../utils/permission/permission.h"
-#include "../utils/make_default/make_default_ui.h"
-#include "../audiorecord/audiorecord.h"
 
 static void saveAudio(Document * , const QString &path, const AudioRecord *recorder);
 

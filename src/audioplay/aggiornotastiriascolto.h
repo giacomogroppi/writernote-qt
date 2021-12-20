@@ -1,8 +1,6 @@
 #ifndef AGGIORNOTASTIRIASCOLTO_H
 #define AGGIORNOTASTIRIASCOLTO_H
 
-#include "../mainwindow.h"
-
-void aggiornotestiriascolto(MainWindow *);
+void aggiornotestiriascolto(class MainWindow *);
 
 #endif // AGGIORNOTASTIRIASCOLTO_H

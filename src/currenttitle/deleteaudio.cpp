@@ -1,6 +1,6 @@
 #include "deleteaudio.h"
-#include "../mainwindow.h"
-#include "../utils/areyousure/areyousure.h"
+#include "mainwindow.h"
+#include "utils/areyousure/areyousure.h"
 #include "ui_mainwindow.h"
 
 #include "../audioplay/aggiornotastiriascolto.h"

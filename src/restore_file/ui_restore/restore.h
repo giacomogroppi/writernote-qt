@@ -4,9 +4,9 @@
 #include <QDialog>
 #include <QString>
 #include <QStringList>
-#include "../../datawrite/savefile.h"
-#include "../../dataread/xmlstruct.h"
-#include "../../currenttitle/document.h"
+#include "datawrite/savefile.h"
+#include "dataread/xmlstruct.h"
+#include "currenttitle/document.h"
 
 namespace Ui {
 class restore;

@@ -7,7 +7,7 @@
 #include <QPixmap>
 #include <QImage>
 #include "page.h"
-#include "../../utils/common_script.h"
+#include "utils/common_script.h"
 #include <csignal>
 
 /*

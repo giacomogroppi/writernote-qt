@@ -1,9 +1,9 @@
 #include "audioqualityoption.h"
 #include "ui_audioqualityoption.h"
-#include "../mainwindow.h"
-#include "../audiorecord/audiorecord.h"
+#include "mainwindow.h"
+#include "audiorecord/audiorecord.h"
 #include "savequalita.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 audioqualityoption::audioqualityoption(QWidget *parent, MainWindow *padre) :
     QDialog(parent),

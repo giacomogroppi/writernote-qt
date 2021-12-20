@@ -1,7 +1,7 @@
 #include "audioplay.h"
-#include "../utils/dialog_critic/dialog_critic.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 audioplay::audioplay(QObject *parent) : QObject(parent)

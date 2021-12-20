@@ -1,4 +1,4 @@
-#include "../mainwindow.h"
+#include "mainwindow.h"
 
 #ifdef CLOUD
 #include "cloud_ui.h"
