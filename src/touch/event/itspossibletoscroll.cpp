@@ -11,9 +11,10 @@
  * and __pos_delta is set to the maximus delta we can have
 */
 
-bool scroll::itspossibletoscrolly(const datastruct *data,
-                                  const short int altezza,
-                                  double & __pos_delta)
+bool scroll::y(
+        const datastruct    *data,
+        cint                 altezza,
+        double              &__pos_delta)
 {
     /* finger action:
      * delta < 0
@@ -26,8 +27,8 @@ bool scroll::itspossibletoscrolly(const datastruct *data,
      *
     */
 
-    static double pos;
-    static QPointF point;
+    double pos;
+    QPointF point;
 
     ifEmpty(data);
 
@@ -67,9 +68,10 @@ bool scroll::itspossibletoscrolly(const datastruct *data,
 /*
  * return true if we can move
 */
-bool scroll::itspossibletoscrollx(const datastruct *data,
-                                  const short int width,
-                                  double &__pos_delta){
+bool scroll::x(
+        const datastruct *data,
+        cint width,
+        double &__pos_delta){
     /* finger action:
         delta < 0 <------
         delta > 0 ------>
@@ -77,8 +79,8 @@ bool scroll::itspossibletoscrollx(const datastruct *data,
 
     //qDebug() << __pos_delta;
 
-    static QPointF point;
-    static double res;
+    QPointF point;
+    double res;
 
     ifEmpty(data);
 
@@ -121,8 +123,8 @@ bool scroll::itspossibletoscroll(const datastruct &data, const QSize &size, QPoi
     x = __pos_delta.x();
     y = __pos_delta.y();
 
-    check =     scroll::itspossibletoscrollx(&data, size.width(), x);
-    check +=    scroll::itspossibletoscrolly(&data, size.height(), y);
+    check =     scroll::x(&data, size.width(), x);
+    check +=    scroll::y(&data, size.height(), y);
 
     __pos_delta = QPointF(x, y);
     return check;

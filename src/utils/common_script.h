@@ -122,4 +122,11 @@ Q_ALWAYS_INLINE void append_if_not_present_order(QList<T> &list, const T& value)
     }
 }
 
+template <typename T>
+Q_ALWAYS_INLINE bool included(const T min, const T max, const T value)
+{
+    Q_ASSERT(min <= max);
+    return min <= value && value <= max;
+}
+
 #endif // COMMON_SCRIPT_H

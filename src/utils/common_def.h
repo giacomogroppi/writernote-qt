@@ -10,5 +10,7 @@
 #define cchar const char
 #define cuchar const uchar
 #define cuint const uint
+#define cdouble const double
+#define cbool const bool
 
 #endif // COMMON_DEF_H

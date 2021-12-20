@@ -208,11 +208,11 @@ inline void datastruct::triggerVisibility(const double &viewSize)
 
     for(i = 0; i < len; i++){
         page = &at_mod(i);
-        page->updateFlag(this->getPointFirstPage(), zoom, viewSize);
 
-        if(page->isVisible() && i && i < len - 1){
-            this->at_mod(i - 1).setVisible(true);
-            this->at_mod(i + 1).setVisible(true);
+        if(page->updateFlag(this->getPointFirstPage(), zoom, viewSize)
+                && i && i < len - 1){
+            //this->at_mod(i - 1).setVisible(true);
+            //this->at_mod(i + 1).setVisible(true);
         }
     }
 }

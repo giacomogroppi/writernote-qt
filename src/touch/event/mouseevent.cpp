@@ -10,7 +10,7 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 {
     double move = event->delta();
 
-    if(!scroll::itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), move)){
+    if(!scroll::y(data->datatouch, this->m_pixmap.height(), move)){
         return;
     }
 
@@ -66,13 +66,13 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         deltay = - lastpointtouch.point.y() + event->screenPos().y();
         deltax = - lastpointtouch.point.x() + event->screenPos().x();
 
-        if(!scroll::itspossibletoscrolly(data->datatouch, this->m_pixmap.height(), deltay))
+        if(!scroll::y(data->datatouch, this->m_pixmap.height(), deltay))
             ismoving.point.setY(0);
         else
             ismoving.point.setY(deltay);
 
 
-        if(!scroll::itspossibletoscrollx(data->datatouch, m_pixmap.width(), deltax))
+        if(!scroll::x(data->datatouch, m_pixmap.width(), deltax))
             this->ismoving.point.setX(0);
         else
             this->ismoving.point.setX(deltax);

@@ -3,22 +3,14 @@
 
 #include <QSize>
 #include <QPointF>
+#include "src/utils/common_def.h"
+
 class datastruct;
 
-class scroll{
-
-public:
-    static bool itspossibletoscrolly(const datastruct *data,
-                                     const short int height,
-                                     double &__pos_delta);
-    static bool itspossibletoscrollx(const datastruct *data,
-                                     const short int width,
-                                     double &__pos_delta);
-
-    static bool itspossibletoscroll(const datastruct &data,
-                                     const QSize &size,
-                                     QPointF &__pos_delta);
-
+namespace scroll {
+    bool y(const datastruct *data, cint height, double &__pos_delta);
+    bool x(const datastruct *data, cint width, double &__pos_delta);
+    bool itspossibletoscroll(const datastruct &data, const QSize &size, QPointF &__pos_delta);
 };
 
 #endif // ITSPOSSIBLETOSCROLL_H

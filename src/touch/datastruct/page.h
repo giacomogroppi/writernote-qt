@@ -70,8 +70,8 @@ public:
     Q_CONSTEXPR static double getResolutionWidth();
     Q_CONSTEXPR static double getResolutionHeigth();
 
-    void updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
-    void setVisible(const bool vis);
+    bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
+    void setVisible(cbool vis);
 
     __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
@@ -83,7 +83,7 @@ public:
 
     bool isVisible() const;
     static void copy(const page &src, page &dest);
-    void removeAt(const uint i);
+    void removeAt(cuint i);
     int maxId() const;
 
     const stroke & last() const;
@@ -228,40 +228,62 @@ Q_CONSTEXPR Q_ALWAYS_INLINE double page::getResolutionHeigth()
     return getHeight() * PROP_RESOLUTION;
 }
 
-inline void page::updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView)
+Q_ALWAYS_INLINE bool page::updateFlag(
+        const QPointF   &FirstPoint,
+        cdouble         zoom,
+        cdouble         heightView)
 {
-    static double heightSec;
-    static double translation;
+    double heightSec;
 
-    heightSec = double(height)*zoom;
-    translation = -FirstPoint.y();
+    heightSec = double(page::getHeight()) * zoom;
 
-    IsVisible =  ((heightSec*count) >= translation) && ((heightSec*(count-1)) <= translation);
-    IsVisible = (IsVisible) ? IsVisible : (count-1)*heightSec <= heightView && (count-1)*heightSec >= translation;
-    IsVisible = true;
+    cdouble minH = heightSec * double(count - 1) / zoom + FirstPoint.y();
+    cdouble maxH = heightSec * double(count)     / zoom + FirstPoint.y();
+
+    if(heightView < page::getHeight() * zoom){
+        // if the page is not fully visible in a window
+
+        IsVisible = (maxH)
+                *   (minH) <= 0.0;
+
+        if(IsVisible)
+            goto ret;
+    }
+
+    IsVisible = included(0.0, heightView, minH) || included(0.0, heightView, maxH);
+
+ret:
+    qDebug() << "count" << count
+             << "minH"<< minH
+             << "heightView" << heightView
+             << "maxH" << maxH
+             << "zoom" << zoom
+             << IsVisible;
+
+    return IsVisible;
 }
 
-inline void page::setVisible(const bool vis)
+Q_ALWAYS_INLINE void page::setVisible(cbool vis)
 {
     this->IsVisible = vis;
 }
 
-inline const stroke &page::atStroke(uint i) const
+Q_ALWAYS_INLINE const stroke &page::atStroke(uint i) const
 {
     return this->m_stroke.at(i);
 }
 
-inline stroke &page::atStrokeMod(const uint i)
+Q_ALWAYS_INLINE stroke &page::atStrokeMod(const uint i)
 {
     return this->m_stroke.operator[](i);
 }
 
-inline const stroke &page::atStrokePage(const uint i) const
+Q_ALWAYS_INLINE const stroke &page::atStrokePage(const uint i) const
 {
     return this->m_stroke_writernote.at(i);
 }
 
-static inline void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
+static Q_ALWAYS_INLINE void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
 {
     memcpy(&to, &from, sizeof(point_s));
 
@@ -272,7 +294,7 @@ static inline void __at_draw_private(const point_s &from, point_s &to, const dou
     to.m_y += translation.y();
 }
 
-inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
+Q_ALWAYS_INLINE void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
                           point_s &point, const double zoom) const
 {
     const stroke &stroke = atStroke(IndexStroke);
@@ -281,7 +303,7 @@ inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const Q
     __at_draw_private(__point, point, zoom, translation);
 }
 
-inline void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const
+Q_ALWAYS_INLINE void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const
 {
     const stroke &stroke = this->m_stroke_writernote.at(IndexStroke);
     const point_s &__point = stroke.at(IndexPoint);
@@ -289,22 +311,22 @@ inline void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, co
     __at_draw_private(__point, point, zoom, translation);
 }
 
-inline uint page::lengthStroke() const
+Q_ALWAYS_INLINE uint page::lengthStroke() const
 {
     return m_stroke.length();
 }
 
-inline uint page::lengthStrokePage() const
+Q_ALWAYS_INLINE uint page::lengthStrokePage() const
 {
     return this->m_stroke_writernote.length();
 }
 
-inline bool page::isVisible() const
+Q_ALWAYS_INLINE bool page::isVisible() const
 {
     return this->IsVisible;
 }
 
-inline void page::copy(const page &src, page &dest){
+Q_ALWAYS_INLINE void page::copy(const page &src, page &dest){
     int counterStroke, lenStroke;
     lenStroke = src.lengthStroke();
     dest.reset();
@@ -320,12 +342,12 @@ inline void page::copy(const page &src, page &dest){
     dest.count = src.count;
 }
 
-inline void page::removeAt(const uint i)
+Q_ALWAYS_INLINE void page::removeAt(const uint i)
 {
     this->m_stroke.removeAt(i);
 }
 
-inline int page::maxId() const
+Q_ALWAYS_INLINE int page::maxId() const
 {
     uint i;
     const uint len = lengthStroke();
@@ -343,17 +365,17 @@ inline int page::maxId() const
     return id;
 }
 
-inline const stroke &page::last() const
+Q_ALWAYS_INLINE const stroke &page::last() const
 {
     return this->m_stroke.last();
 }
 
-inline stroke &page::lastMod()
+Q_ALWAYS_INLINE stroke &page::lastMod()
 {
     return this->m_stroke.operator[](this->lengthStroke() - 1);
 }
 
-inline void page::append(const stroke &strokeAppend)
+Q_ALWAYS_INLINE void page::append(const stroke &strokeAppend)
 {
     int lastNewIndex = strokeTmp.length();
     this->strokeTmp.append(strokeAppend);
@@ -365,12 +387,12 @@ inline void page::append(const stroke &strokeAppend)
     Q_ASSERT(strokeTmp.at(lastNewIndex).getId()  == strokeAppend.getId());
 }
 
-inline void page::appendToTheTop(const stroke &stroke)
+Q_ALWAYS_INLINE void page::appendToTheTop(const stroke &stroke)
 {
     m_stroke.insert(0, stroke);
 }
 
-inline double page::minHeight() const
+Q_ALWAYS_INLINE double page::minHeight() const
 {
     return (this->count-1)*this->height;
 }
