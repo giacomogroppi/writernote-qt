@@ -1,19 +1,19 @@
 #include "text_widgets.h"
 #include "ui_text_widgets.h"
-#include "../../../utils/common_error_definition.h"
-/*
- * this widgets is show when the user want to insert new text
- * or want to modify an element
-*/
-
+#include "src/utils/common_error_definition.h"
+#include "src/touch/tabletcanvas.h"
+#include "src/touch/datastruct/datastruct.h"
 #include <QDebug>
 
-text_widgets::text_widgets(QWidget *parent, datastruct *data) :
+text_widgets::text_widgets(QWidget *parent, TabletCanvas *data) :
     QWidget(parent),
     ui(new Ui::text_widgets)
 {
     ui->setupUi(this);
-    this->m_data = data;
+
+    this->setAttribute(Qt::WA_TranslucentBackground);
+
+    this->parent = data;
 }
 
 text_widgets::~text_widgets()
@@ -24,18 +24,17 @@ text_widgets::~text_widgets()
 /*
  * return true if there are some point
 */
-bool text_widgets::isIn(QPointF point)
+bool text_widgets::isIn(const QPointF &point)
 {
     int i, len;
-    len = this->m_lista.length();
+    len = this->m_list.length();
 
     double x, y;
     x = point.x();
     y = point.y();
 
     for(i = 0; i < len; i++)
-        if(m_lista.at(i).x < x && m_lista.at(i).y > y
-                && m_lista.at(i).xf > x && m_lista.at(i).yf > y)
+        if(m_list.at(i).x < x && m_list.at(i).y > y)
             return true;
 
 
@@ -44,13 +43,13 @@ bool text_widgets::isIn(QPointF point)
 
 int text_widgets::saveData(zip_source_t *file)
 {
-    int i, len = m_lista.length();
+    int i, len = m_list.length();
 
     if(zip_source_write(file, &len, sizeof(len)) == -1)
         return ERROR;
 
     for(i=0; i<len; i++)
-        if(zip_source_write(file, &m_lista[i], sizeof(pointText)) == -1)
+        if(zip_source_write(file, &m_list[i], sizeof(pointText)) == -1)
             return ERROR;
 
 
@@ -60,33 +59,33 @@ int text_widgets::saveData(zip_source_t *file)
 
 int text_widgets::loadData(zip_file_t *file)
 {
-    m_lista.clear();
-
+    pointText temp;
     int i, len;
+
+    m_list.clear();
 
     if(zip_fread(file, &len, sizeof(len)) == -1)
         goto error_;
 
-    pointText temp;
-
     for(i=0; i<len; i++){
         if(zip_fread(file, &temp, sizeof(temp)) == -1)
             goto error_;
-        m_lista.append(temp);
+        m_list.append(temp);
     }
 
     return OK;
 
     error_:
-    m_lista.clear();
+    m_list.clear();
     return ERROR;
 
 }
 
-void text_widgets::createNew(QPointF point){
+void text_widgets::createNew(const QPointF &point){
     pointText temp;
-
     double x, y;
+    auto hostRect = this->cursor().pos();
+
     x = point.x();
     y = point.y();
 
@@ -97,19 +96,33 @@ void text_widgets::createNew(QPointF point){
     temp.x = D_X + x;
     temp.y = D_Y + y;
 
-    temp.xf = D_XF + x;
-    temp.yf = D_YF + y;
-
-    temp.m_text[0] = '\0';
-
     if(this->isHidden())
         this->show();
 
     /* he move himself */
-    auto hostRect = this->cursor().pos();
+
     this->move(hostRect);
 
-    m_lista.append(temp);
+    m_list.append(temp);
+
+}
+
+void text_widgets::needToDraw(QPainter &painter)
+{
+    const QPointF &translation = parent->data->datatouch->getPointFirstPage();
+    const double zoom = parent->data->datatouch->getZoom();
+    QPen pen;
+
+    painter.setRenderHint(QPainter::TextAntialiasing);
+
+    for(const auto &tmp: this->m_list){
+        pen.setWidthF(tmp.size);
+        pen.setColor(tmp.color.toQColor());
+
+        painter.setPen(pen);
+
+        painter.drawText(tmp.toPoint(), tmp.text);
+    }
 
 }
 

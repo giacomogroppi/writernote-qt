@@ -2,16 +2,15 @@
 #define TEXT_WIDGETS_H
 
 #include <QWidget>
+#include <QByteArray>
 #include "zip.h"
 
-#include "../../datastruct/datastruct.h"
+#include "src/touch/datastruct/point.h"
 
 #define D_X 0.0
 #define D_Y 0.0
 #define D_XF 60.0
 #define D_YF 20.0
-
-#define MAXSTR_W 500
 
 /*
  * this point contain all information for the text
@@ -19,15 +18,20 @@
 */
 struct pointText{
     double x, y; /* top left of the rect */
-    double xf, yf; /* button right of the rect */
 
     int size; /* size of the text */
     int alfa;
     struct colore_s color; /* color of the text */
 
     /* for saving reason is better to have memory serialize */
-    char m_text[MAXSTR_W + 1 ];
+    QByteArray text;
+    Q_ALWAYS_INLINE QPointF toPoint() const;
 };
+
+Q_ALWAYS_INLINE QPointF pointText::toPoint() const
+{
+    return QPointF(x, y);
+}
 
 namespace Ui {
 class text_widgets;
@@ -38,20 +42,22 @@ class text_widgets : public QWidget
     Q_OBJECT
 
 public:
-    explicit text_widgets(QWidget *parent = nullptr, datastruct *data = nullptr);
+    explicit text_widgets(QWidget *parent, class TabletCanvas *canvas);
     ~text_widgets();
 
-    bool isIn(QPointF);
+    bool isIn(const QPointF &point);
 
-    datastruct *m_data;
+    TabletCanvas *parent;
 
     int saveData(zip_source_t *);
     int loadData(zip_file_t *);
 
-    void createNew(QPointF ); /* create new point with text */
+    void createNew(const QPointF &point); /* create new point with text */
+
+    void needToDraw(QPainter &painter);
 
 private:
-    QList<pointText> m_lista;
+    QList<pointText> m_list;
 
     Ui::text_widgets *ui;
 protected:

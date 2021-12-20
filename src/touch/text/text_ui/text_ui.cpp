@@ -13,7 +13,6 @@ text_ui::text_ui(QWidget *parent) :
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
-    this->setAttribute(Qt::WA_TranslucentBackground);
 
     this->loadData();
 }
@@ -90,7 +89,6 @@ bool text_ui::event(QEvent *event)
 {
     if(event->type() == QEvent::WindowDeactivate)
         this->hide();
-
 
     return QWidget::event(event);
 }
