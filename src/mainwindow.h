@@ -240,9 +240,10 @@ signals:
 
 inline void MainWindow::setFullScreen()
 {
-    if(this->isFullScreen())
-        this->showFullScreen();
-    else
-        this->showNormal();
+    if(this->windowState() & Qt::WindowFullScreen){
+        this->setWindowState(Qt::WindowNoState);
+    }else{
+        this->setWindowState(Qt::WindowFullScreen);
+    }
 }
 #endif // MAINWINDOW_H

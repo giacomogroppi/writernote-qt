@@ -30,7 +30,7 @@ private:
     QList<stroke> m_stroke;
     QList<stroke> m_stroke_writernote;
 
-    /* after adding data to the list, call triggernewview,
+    /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list

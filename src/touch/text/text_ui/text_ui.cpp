@@ -1,11 +1,10 @@
 #include "text_ui.h"
 #include "ui_text_ui.h"
-
 #include <QDebug>
-#include "../../../utils/color/color_chooser.h"
+#include "src/utils/color/color_chooser.h"
 #include <QSettings>
-#include "../../../utils/setting_define.h"
-#include "../../../utils/remove_key/remove_key.h"
+#include "src/utils/setting_define.h"
+#include "src/utils/remove_key/remove_key.h"
 
 text_ui::text_ui(QWidget *parent) :
     QWidget(parent),
@@ -14,6 +13,7 @@ text_ui::text_ui(QWidget *parent) :
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_TranslucentBackground);
 
     this->loadData();
 }
