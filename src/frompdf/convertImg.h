@@ -9,7 +9,7 @@
 #include <QImage>
 
 class convertImg: public QThread{
-    Q_OBJECT
+    //Q_OBJECT
 public:
     convertImg(const uint precision);
     ~convertImg();
