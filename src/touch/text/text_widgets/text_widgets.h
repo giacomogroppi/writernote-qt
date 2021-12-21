@@ -5,7 +5,7 @@
 #include <QByteArray>
 #include "zip.h"
 
-#include "src/touch/datastruct/point.h"
+#include "touch/datastruct/point.h"
 
 #define D_X 0.0
 #define D_Y 0.0
@@ -20,7 +20,7 @@ struct pointText{
     double x, y; /* top left of the rect */
 
     int size; /* size of the text */
-    int alfa;
+    
     struct colore_s color; /* color of the text */
 
     /* for saving reason is better to have memory serialize */

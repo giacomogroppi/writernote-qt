@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.
@@ -34,13 +34,12 @@ SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
-
-set(PROJECT_SOURCES
+ADD_EXECUTABLE(writernote 
     src/savecopybook.cpp
     src/mainwindow.cpp
     src/dataread/old_version/ver_3/load_file_ver_3.cpp
     src/dataread/old_version/ver_4/load_file_ver_4.cpp
-    src/dataread/old_version/decode.cpp
+    src/dataread/old_version/ver_7/load_file_ver_7.cpp
     src/dataread/old_version/ver_2/load_file_ver_2.cpp
     src/dataread/old_version/ver_5/load_file_ver_5.cpp
     src/dataread/old_version/ver_6/load_file_ver_6.cpp
@@ -49,6 +48,10 @@ set(PROJECT_SOURCES
     src/dataread/loadbinario.cpp
     src/dataread/load_from_file.cpp
     src/dataread/readlistarray.cpp
+    src/dataread/old_loadbinario/old_version_load_binario.cpp
+
+    src/cloud/button_mainwindow.cpp
+
     src/sizeButton.cpp
     src/open_file.cpp
     src/controllUi.cpp
@@ -64,7 +67,6 @@ set(PROJECT_SOURCES
     src/datawrite/write/savefile_savefile.cpp
     src/datawrite/write/salvabinario.cpp
     src/datawrite/write/saveArray.cpp
-    src/datawrite/write/saveindice_savefile.cpp
     src/datawrite/qfilechoose.cpp
     src/main.cpp
     src/log/log_ui/log_ui.cpp
@@ -91,17 +93,18 @@ set(PROJECT_SOURCES
     src/touch/datastruct/changeId.cpp
     src/touch/datastruct/needtocreatenew.cpp
     src/touch/datastruct/datastruct.cpp
+    src/touch/datastruct/stroke.cpp
     src/touch/datastruct/removePage.cpp
     src/touch/datastruct/controllForRepositioning.cpp
     src/touch/datastruct/isinside.cpp
     src/touch/datastruct/reorganize.cpp
     src/touch/datastruct/adjustSize.cpp
     src/touch/datastruct/removeIdPoint.cpp
+    src/touch/copy_cut/copy_cut_selection.cpp
     src/touch/pen/pen_ui.cpp
     src/touch/square/square.cpp
     src/touch/tabletapplication.cpp
     src/touch/tabletcanvas.cpp
-    src/touch/copy/copy_selection.cpp
     src/touch/pageCount.cpp
     src/touch/tabletevent.cpp
     src/touch/event/mouseevent.cpp
@@ -126,6 +129,7 @@ set(PROJECT_SOURCES
     src/windows/check_update_mainwindow.cpp
     src/windows/sourcecode_mainwindow.cpp
     src/windows/mostra_finestra_i.cpp
+    src/windows/main_updater.cpp
     src/currenttitle/checksimilecopybook.cpp
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp
     src/currenttitle/deleteaudio.cpp
@@ -203,9 +207,6 @@ set(PROJECT_SOURCES
     src/audioplay/audioplay.cpp
     src/audioplay/aggiornotastiriascolto.cpp
 
-    src/cloud/button_mainwindow.cpp
-    src/windows/main_updater.cpp
-
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
     src/last_open/element/element_ui.ui 
@@ -237,20 +238,19 @@ set(PROJECT_SOURCES
     language.qrc
 )
 
+set(PROJECT_SOURCES
+
+    
+)
+
+
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(writernote
         ${PROJECT_SOURCES}
     )
 else()
-    if(ANDROID)
-        add_library(writernote SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_executable(writernote
-            ${PROJECT_SOURCES}
-        )
-    endif()
+    
 endif()
 
 set_target_properties(
@@ -269,6 +269,9 @@ add_definitions(-DNUMEROPIXELVERTICALI=1400)
 add_definitions(-DPDFSUPPORT)
 
 target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
+
+include_directories(.)
+include_directories(src/)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::PrintSupport)
 

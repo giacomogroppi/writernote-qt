@@ -39,7 +39,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.begin(this);
 
     pixmapPortion = QRect(event->rect().topLeft() * devicePixelRatio(),
-                                    event->rect().size() * devicePixelRatio());
+                          event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
     needDrawSheet = data->datatouch->needToCreateNewSheet();

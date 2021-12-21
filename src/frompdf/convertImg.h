@@ -9,31 +9,27 @@
 #include <QImage>
 
 class convertImg: public QThread{
-Q_OBJECT
+    Q_OBJECT
 public:
     convertImg(const uint precision);
     ~convertImg();
 
-    inline void setData(const Poppler::Page *page, QImage *img);
+    void setData(const Poppler::Page *page, QImage *img);
+
 protected:
     void run();
+
 private:
     const Poppler::Page *page;
     QImage *img;
     uint precision;
 };
 
-inline convertImg::convertImg(const uint precision)
-{
-    this->precision = precision;
-}
 inline void convertImg::setData(const Poppler::Page *page, QImage *img)
 {
     this->img = img;
     this->page = page;
 }
-
-inline convertImg::~convertImg() {}
 
 #endif
 #endif // CONVERTIMG_H

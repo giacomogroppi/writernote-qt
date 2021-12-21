@@ -1,8 +1,10 @@
 #include "text_widgets.h"
 #include "ui_text_widgets.h"
-#include "src/utils/common_error_definition.h"
-#include "src/touch/tabletcanvas.h"
-#include "src/touch/datastruct/datastruct.h"
+#include "utils/common_error_definition.h"
+#include "touch/tabletcanvas.h"
+#include "touch/datastruct/datastruct.h"
+#include "dataread/xmlstruct.h"
+#include "datawrite/savefile.h"
 #include <QDebug>
 
 text_widgets::text_widgets(QWidget *parent, TabletCanvas *data) :
@@ -41,44 +43,51 @@ bool text_widgets::isIn(const QPointF &point)
     return false;
 }
 
+#define TEXT_WIDGETS_VER 0
 int text_widgets::saveData(zip_source_t *file)
 {
-    int i, len = m_list.length();
+    int len = m_list.length();
+    int flag = 0;
+    int ver;
+
+    if(zip_source_write(file, &ver, sizeof(ver)) == -1)
+        return ERROR;
 
     if(zip_source_write(file, &len, sizeof(len)) == -1)
         return ERROR;
 
-    for(i=0; i<len; i++)
-        if(zip_source_write(file, &m_list[i], sizeof(pointText)) == -1)
-            return ERROR;
+    for(const auto &tmp :  m_list){
+        flag += zip_source_write(file, &tmp.color, sizeof(tmp.color)) == -1;
+        flag += zip_source_write(file, &tmp.size, sizeof(tmp.size)) == -1;
+        flag += zip_source_write(file, &tmp.x, sizeof(tmp.x)) == -1;
+        flag += zip_source_write(file, &tmp.y, sizeof(tmp.y)) == -1;
 
+        flag += savefile::save_string(file, tmp.text.constData()) == ERROR;
+    }
 
-    return OK;
-
+    return (flag > 0) ? ERROR : OK;
 }
 
 int text_widgets::loadData(zip_file_t *file)
 {
-    pointText temp;
-    int i, len;
+    pointText tmp;
+    int ver, len;
+    int flag;
 
-    m_list.clear();
-
-    if(zip_fread(file, &len, sizeof(len)) == -1)
-        goto error_;
-
-    for(i=0; i<len; i++){
-        if(zip_fread(file, &temp, sizeof(temp)) == -1)
-            goto error_;
-        m_list.append(temp);
+    flag = zip_fread(file, &ver, sizeof(ver)) == -1;
+    
+    if(ver == 0){
+        flag += zip_fread(file, &len, sizeof(len)) == -1;
+        for(; len > 0; len --){
+            flag += zip_fread(file, &tmp.color, sizeof(tmp.color)) == -1;
+            flag += zip_fread(file, &tmp.size, sizeof(tmp.size)) == -1;
+            flag += zip_fread(file, &tmp.x, sizeof(tmp.x)) == -1;
+            flag += zip_fread(file, &tmp.y, sizeof(tmp.y)) == -1;
+            flag += xmlstruct::load_stringa(file, tmp.text) == -1;
+        }
     }
 
-    return OK;
-
-    error_:
-    m_list.clear();
-    return ERROR;
-
+    return (flag > 0) ? ERROR : OK;
 }
 
 void text_widgets::createNew(const QPointF &point){

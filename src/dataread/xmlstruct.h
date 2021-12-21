@@ -40,9 +40,9 @@ private:
     Document *currenttitle = nullptr;
 
 #ifdef ALL_VERSION
-    __old int load_file_2(Document *, zip_file_t *f, zip_t *filezip);
-    __old int load_file_3(Document *, zip_file_t *f, zip_t *filezip);
-    __old int load_file_4(Document *, zip_file_t *f, zip_t *filezip);
+    __old int load_file_2(Document *doc, zip_file_t *f, zip_t *filezip);
+    __old int load_file_3(Document *doc, zip_file_t *f, zip_t *filezip);
+    __old int load_file_4(Document *doc, zip_file_t *f, zip_t *filezip);
     __old int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
     __old int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
     __old int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
@@ -51,7 +51,7 @@ private:
     __old int loadbinario_1(struct zip *file);
     __old int loadbinario_2(struct zip *file);
 
-    #endif
+#endif // ALL_VERSION
 
     __new int loadbinario_3(struct zip *file, int ver_stroke);
     __new int load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
@@ -66,7 +66,10 @@ public:
         return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
     }
     static size_t sizeFile(zip_t *filezip, const char *namefile);
+
     static int load_stringa(zip_file_t *f, QString &stringa);
+    static int load_stringa(zip_file_t *f, QByteArray &str);
+
     static int readFile(zip_t *fileZip, QByteArray &arr,
                         const bool clear, const QString &name,
                         const bool closeZip);

@@ -26,16 +26,28 @@ int xmlstruct::load_stringa(zip_file_t *f, QString &stringa){
     return OK;
 }
 
+int xmlstruct::load_stringa(zip_file_t *f, QByteArray &str)
+{
+    QString tmp;
+    int flag;
+
+    flag = xmlstruct::load_stringa(f, tmp);
+    
+    str = tmp.toUtf8();
+
+    return flag;
+}
+
 int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
                         const bool clear, const QString &path,
                         const bool closeZip)
 {
-    if(clear)
-        arr.clear();
-
     size_t size;
     zip_file_t *file;
     uchar __r;
+
+    if(clear)
+        arr.clear();
 
     size = xmlstruct::sizeFile(fileZip, path);
 
