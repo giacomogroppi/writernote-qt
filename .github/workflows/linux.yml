@@ -38,6 +38,8 @@ jobs:
           sudo apt -y install libfreetype-dev libfontconfig1-dev 
           sudo apt -y install libtiff-dev libnss3-dev libcairo2-dev
           sudo apt -y install libboost-all-dev libopenjp2-7-dev
+          sudo apt install libpoppler-qt5-dev
+          sudo snap install cmake --classic
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.13.2
@@ -46,6 +48,7 @@ jobs:
           modules: multimedia # optional
 
       - name: Build poppler
+        if: false
         run: |
           wget https://github.com/freedesktop/poppler/archive/refs/tags/poppler-21.10.0.zip
           unzip poppler-21.10.0.zip
@@ -57,9 +60,20 @@ jobs:
           cmake ..
           make -j$(nproc)
           sudo make install
-          
+      
       - name: Compile NO_ALL_VERSION
         run: |
           echo $(ls /usr/local/include/poppler/qt5)
-          qmake DEFINES+="NO_ALL_VERSION" INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1
+          qmake DEFINES+="NO_ALL_VERSION" # INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1
           make -j $(nproc)    
+
+      - name: Compile ALL_VERSION
+        run: |
+          make clean
+          qmake DEFINES+="NO_ALL_VERSION" # INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1
+          make -j $(nproc)
+
+      - name: CMake compile
+        run: |
+          cmake .
+          make -j $(nproc)
