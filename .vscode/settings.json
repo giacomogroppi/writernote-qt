@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "*.tcc": "cpp",
+        "ostream": "cpp",
+        "typeinfo": "cpp",
+        "qdebug": "cpp",
+        "functional": "cpp",
+        "qpoint": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "string_view": "cpp",
+        "ranges": "cpp",
+        "ratio": "cpp",
+        "streambuf": "cpp",
+        "qstringlist": "cpp"
+    }
+}
