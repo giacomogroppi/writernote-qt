@@ -4,6 +4,8 @@
 #include <QList>
 #include <QtGlobal>
 
+#define BIT(bit) (1 << (bit-1))
+
 /*
  * this function controll an enum load from setting
  * When you load a value from QSetting, and apply an implicit cast to it, it is saved correctly

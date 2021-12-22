@@ -1,18 +1,19 @@
 #ifndef QFILECHOOSE_H
 #define QFILECHOOSE_H
 
-#define TYPEFILEWRITER 0
-#define TYPEFILEPDF 1
-#define TYPEAUDIO 2
-#define TYPELOG 3
-
+#include "utils/common_script.h"
 #include <QString>
 
-class qfilechoose
+#define TYPEFILEWRITER BIT(1)
+#define TYPEFILEPDF BIT(2)
+#define TYPEAUDIO BIT(3)
+#define TYPELOG BIT(4)
+#define TYPEALL BIT(5)
+
+namespace qfilechoose
 {
-public:
-    static bool getFileForSave(QString &, uint16_t type_ = TYPEFILEWRITER);
-    static bool getFileForLoad(QString &, uint16_t type_ = TYPEFILEWRITER);
+    bool getFileForSave(QString &path, uint16_t type_ = TYPEFILEWRITER);
+    bool getFileForLoad(QString &path, uint16_t type_ = TYPEFILEWRITER);
 };
 
 #endif // QFILECHOOSE_H

@@ -69,24 +69,27 @@ bool qfilechoose::getFileForSave(QString &nome, uint16_t type_){
 bool qfilechoose::getFileForLoad(QString &nome, uint16_t type_)
 {
     QString extention;
-    QString type;
+    QString type = "";
     QString dir, nameFile;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     QStringList list;
 #endif // ANDROID IOS
 
-    if(type_ == TYPEFILEWRITER){
-        type = "File Writer (*." + APP_EXT + ")";
+    if(type_ & TYPEFILEWRITER){
+        type += QString("File Writer (*.%1);;").arg(APP_EXT);
+        //type += "File Writer (*." + APP_EXT + ");;";
         extention = ".writer";
     }
-    else if(type_ == TYPEFILEPDF){
-        type = "PDF (*.pdf)";
-        extention = ".pdf";
+    if(type_ & TYPEFILEPDF){
+        type += QString("PDF (*.pdf);;");
+        //type += "PDF (*.pdf)";
+        extention += ".pdf";
     }
-    else if(type_ == TYPEAUDIO){
-        type = "Audio (*.wav)";
+    if(type_ & TYPEAUDIO){
+        type += "Audio (*.wav);;";
         extention = ".wav";
-    } else if(type_ == TYPELOG){
+    }
+    if(type_ & TYPELOG){
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
         dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory",
                                                         "",
@@ -102,9 +105,14 @@ bool qfilechoose::getFileForLoad(QString &nome, uint16_t type_)
         return true;
     }
 
+    if(type_ & TYPEALL){
+        type += "All file (* *.*)";
+        extention += "";
+    }
+
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
-    nameFile= QFileDialog::getOpenFileName(nullptr,
-        "Save", extention, type);
+    nameFile = QFileDialog::getOpenFileName(nullptr,
+        "Open", extention, type);
 #else
     dir = get_path_application::exe();
     list = get_file_dir::get(dir);

@@ -24,7 +24,7 @@ void MainWindow::openFile(const char *pos){
     n_need_save res_save;
 
     if(!pos){
-        if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER)){
+        if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER | TYPEFILEPDF | TYPEALL)){
             return;
         }
         //fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; Pdf (*.pdf);; All file (* *.*)");
