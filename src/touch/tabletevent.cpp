@@ -170,7 +170,10 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
     }
 }
 
-inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointTouch){
+Q_ALWAYS_INLINE void TabletCanvas::ManageStart(
+        QTabletEvent    *event,
+        const QPointF   &pointTouch)
+{
     if(m_deviceDown)
         return;
 
@@ -193,7 +196,8 @@ inline void TabletCanvas::ManageStart(QTabletEvent *event, const QPointF &pointT
     lastPoint.rotation = event->rotation();
 }
 
-void TabletCanvas::updatelist(QTabletEvent *event){
+void TabletCanvas::updatelist(QTabletEvent *event)
+{
     double size;
     uchar alfa;
     point_s tmp_point;

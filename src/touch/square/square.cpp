@@ -151,7 +151,7 @@ void square::move(const QPointF &punto){
         return this->changeInstrument();
     }
 
-    if(!lastpoint.set){
+    if(lastpoint.isNotSet()){
         lastpoint = PointSettable(punto, true);
         return;
     }

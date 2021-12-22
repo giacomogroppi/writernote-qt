@@ -41,10 +41,7 @@ public:
     /* definizione per i punti di spostamento */
     PointSettable lastpoint;
 
-    void changeInstrument(){
-        this->reset();
-        this->m_property->Hide();
-    };
+    void changeInstrument();
 
     void isMoving() { /*m_property->Hide();*/ };
     void endMoving(const QWidget *pixmap);
@@ -114,7 +111,14 @@ Q_ALWAYS_INLINE void square::updatePoint(const QPointF &puntofine)
         /* we don't need yet to draw somethings */
         __need_reload = false;
         in_box = false;
+        this->m_property->Hide();
     }
+}
+
+Q_ALWAYS_INLINE void square::changeInstrument()
+{
+    this->reset();
+    this->m_property->Hide();
 }
 
 inline void square::translate(const QPointF &offset)
