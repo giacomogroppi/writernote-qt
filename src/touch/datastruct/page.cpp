@@ -9,8 +9,6 @@
 #include "time.h"
 #include "utils/common_script.h"
 
-#define UPDATE_LOAD(x, divColor, m_pen, m_brush ) \
-
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
 static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struct_S &style, const double &last,
@@ -207,38 +205,48 @@ static inline double widthToPressure(double v){
     return v/10.0;
 }
 
-static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struct_S &style,
-                            const double &last, double &deltax, const double &width_p, const double &ct_del){
+static Q_ALWAYS_INLINE void drawLineOrizzontal(
+    stroke                  &stroke, 
+    point_s                 &point, 
+    const style_struct_S    &style,
+    const double            &last, 
+    double                  &deltax, 
+    const double            &width_p, 
+    const double            &ct_del)
+{
     uint i;
 
-    for(i=0; i< (uint)style.nx; ++i){
-        point.m_x = 0;
-        point.m_y = last + deltax;
+    for(i = 0; i < (uint)style.nx; i++){
+        point.m_x = 20;
+        point.m_y = last + deltax - 20;
 
         stroke.append(point);
 
-        point.m_x = width_p;
+        point.m_x = width_p - 20;
         stroke.append(point);
 
         deltax += ct_del;
     }
 }
 
-static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_S &style,
-                            const double &last, double &deltay, const double &height_p){
-    if(!style.ny)
-        return;
-
+static Q_ALWAYS_INLINE void drawLineVertical(
+    stroke                  &stroke, 
+    point_s                 &point, 
+    const style_struct_S    &style, 
+    const double            &last, 
+    double                  &deltay, 
+    const double            &height_p)
+{    
     const double ct_del = deltay;
     uint i;
 
-    for(i = 0; i< (uint)style.ny; i++){
-        point.m_x = deltay;
-        point.m_y = last; /* corrisponde to 0 */
+    for(i = 0; i < (uint)style.ny; i++){
+        point.m_x = deltay  - 20;
+        point.m_y = last    + 20; /* corrisponde to 0 */
 
         stroke.append(point);
 
-        point.m_y = height_p + last;
+        point.m_y = height_p + last - 20;
         stroke.append(point);
 
         deltay += ct_del;
@@ -253,10 +261,10 @@ bool page::userWrittenSomething() const
 
 bool page::initImg(bool flag)
 {
-    bool null = imgDraw.isNull() || flag;
-    if(null)
+    flag = imgDraw.isNull() || flag;
+    if(flag)
         imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
-    return null;
+    return flag;
 }
 
 /*
