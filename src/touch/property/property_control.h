@@ -32,6 +32,8 @@ public:
     void Show(const QPoint &rect, int whatShow);
     void Hide();
 
+    bool is_visible() const;
+
 private:
     Ui::property_control *ui;
 
@@ -47,6 +49,11 @@ private slots:
 inline void property_control::Hide()
 {
     this->hide();
+}
+
+Q_ALWAYS_INLINE bool property_control::is_visible() const
+{
+    return this->isVisible();
 }
 
 #endif // PROPERTY_CONTROL_H

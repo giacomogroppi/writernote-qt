@@ -46,7 +46,7 @@ public:
         this->m_property->Hide();
     };
 
-    void isMoving() { m_property->Hide(); };
+    void isMoving() { /*m_property->Hide();*/ };
     void endMoving(const QWidget *pixmap);
 
     void translate(const QPointF &offset);
@@ -101,12 +101,36 @@ inline int square::calculate_flags() const
     return flag;
 }
 
+Q_ALWAYS_INLINE void square::updatePoint(const QPointF &puntofine)
+{
+    if(pointinit.set){
+        pointfine.point = puntofine;
+        __need_reload = true;
+    }
+    else{
+        pointinit.point = puntofine;
+        pointinit.set = true;
+
+        /* we don't need yet to draw somethings */
+        __need_reload = false;
+        in_box = false;
+    }
+}
+
 inline void square::translate(const QPointF &offset)
 {
     this->pointinit += offset;
     this->pointfine += offset;
 
     this->m_property->Hide();
+}
+
+Q_ALWAYS_INLINE void square::needReload(QPainter &painter)
+{
+    if(__need_reload){
+        painter.setPen(this->penna);
+        painter.drawRect(QRectF(pointinit.point, pointfine.point));
+    }
 }
 
 #endif // SQUARE_H

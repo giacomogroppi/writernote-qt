@@ -31,23 +31,6 @@ square::~square()
     delete this->m_copy;
 }
 
-void square::updatePoint(const QPointF &__point)
-{
-    if(!pointinit.set){
-        pointinit.point = __point;
-        pointinit.set = true;
-
-        /* we don't need yet to draw somethings */
-        __need_reload = false;
-        in_box = false;
-        return;
-    }
-
-    pointfine.point = __point;
-    __need_reload = true;
-
-}
-
 /* 
  * la funzione capisce se all'interno del quadrato
  * della selezione c'è qualcosa in caso salva l'id
@@ -122,21 +105,12 @@ bool square::isinside(const QPointF &point){
     return datastruct::isinside(pointinit.point, pointfine.point, point);
 }
 
-void square::needReload(QPainter &painter){
-    if(!__need_reload) return;
-
-    painter.setPen(this->penna);
-
-    painter.drawRect(QRectF(pointinit.point, pointfine.point));
-}
-
 /*
  * la funzione viene richiamata quando dobbiamo
  * spostare un po' di oggetti nella lista m_id
  * in questo caso si analizza quando c'è un id
  *  uguale, e si sposta tutto il tratto
 */
-
 void square::findObjectToDraw()
 {
     datastruct *data = canvas->data->datatouch;
@@ -173,7 +147,7 @@ void square::move(const QPointF &punto){
     Document *data = canvas->data;
     QList<int> PageModify;
 
-    if(!in_box){
+    if(!somethingInBox()){
         return this->changeInstrument();
     }
 
