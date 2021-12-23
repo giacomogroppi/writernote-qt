@@ -6,7 +6,9 @@
 <tr>
 <td>
 
-<img src="readme/linux-example.png" width=100% title="writernote Screenshot on Linux"/>
+<img src="readme/1.gif" width=100% title="writernote pen on Linux"/>
+<img src="readme/2_kinetic_scrolling_pdf_annotation.gif" width=100% title="Kinetic scrolling & pdf annotation"/>
+
 </td>
 </tr>
 </table>
