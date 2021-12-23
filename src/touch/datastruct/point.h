@@ -14,17 +14,17 @@ struct PointSettable {
     QPointF point;
     bool set;
 
-    constexpr bool isNotDefine() const
+    constexpr Q_ALWAYS_INLINE bool isNotSet() const
     {
         return !this->set;
     }
 
-    constexpr double x() const
+    constexpr Q_ALWAYS_INLINE double x() const
     {
         return this->point.x();
     }
 
-    constexpr double y() const
+    constexpr Q_ALWAYS_INLINE double y() const
     {
         return this->point.y();
     }

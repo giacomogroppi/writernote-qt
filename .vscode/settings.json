@@ -1,4 +1,5 @@
 {
+    "cmake.cmakePath": "/snap/bin/cmake",
     "files.associations": {
         "*.tcc": "cpp",
         "ostream": "cpp",

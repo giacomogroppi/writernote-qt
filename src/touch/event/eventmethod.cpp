@@ -90,7 +90,7 @@ bool TabletCanvas::event(QEvent *event){
                     //qDebug() << tmpNum << "Index for update data" << int(FirstMoreDistance);
                 }
                 else{
-                    const uchar index = !lastpointzoom[0].isNotDefine();
+                    const uchar index = !lastpointzoom[0].isNotSet();
                     lastpointzoom[index].set = true;
                     lastpointzoom[index].point = pointTouch;
                     qDebug() << "Index: " << index;
