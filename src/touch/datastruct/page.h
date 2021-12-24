@@ -137,6 +137,7 @@ public:
     friend class stroke;
     friend class datastruct;
     friend class xmlstruct;
+    friend class rubber_ui;
 };
 
 inline double page::currentHeight() const

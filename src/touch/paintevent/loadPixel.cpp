@@ -23,7 +23,9 @@ void TabletCanvas::load(QPainter &painter,
                         DataPaint &dataPoint){
     const bool withPdf          = dataPoint.withPdf;
     const bool is_play          = (dataPoint.parent) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
+
     const int m_pos_ris         = (is_play) ? (dataPoint.parent->m_audioplayer->getPositionSecond()) : -1;
+    static int last_m_pos_ris   = -1;
 
     const int lenPage               = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
@@ -75,13 +77,18 @@ void TabletCanvas::load(QPainter &painter,
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
 
     if(is_play){
-        data->datatouch->triggerViewIfVisible(m_pos_ris);
+        if(last_m_pos_ris != m_pos_ris){
+            data->datatouch->newViewAudio(last_m_pos_ris, m_pos_ris);
+        }
+        //data->datatouch->triggerViewIfVisible(m_pos_ris);
     }
 
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+    counterPage = (!dataPoint.IsExportingPdf) ? (data->datatouch->getFirstPageVisible()) : 0;
+
+    for(; counterPage < lenPage; counterPage ++){
         const page &page = data->datatouch->at(counterPage);
 
-        if(!data->datatouch->at(counterPage).isVisible() && !dataPoint.IsExportingPdf)
+        if(!page.isVisible() && !dataPoint.IsExportingPdf)
             continue;
 
         QRectF targetRect(QPointF(PointFirstPage.x() * dataPoint.m, (PointFirstPage.y() + page::getHeight()*zoom*double(counterPage))) * dataPoint.m,

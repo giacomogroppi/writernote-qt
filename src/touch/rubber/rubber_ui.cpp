@@ -3,6 +3,8 @@
 #include "utils/common_script.h"
 #include "pthread.h"
 
+void * actionRubberSingle (void *);
+
 #define RUBB_TH 20
 struct RuDataPrivate{
     int from, to;
@@ -89,19 +91,38 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
     pthread_t thread[RUBB_TH];
     RuDataPrivate threadData[RUBB_TH];
 
-
     Page.clear();
 
     counterPage = data->getFirstPageVisible();
 
     for(mod = 0; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
+        int tmp = 0;
+        int done, div;
 
         if(!page.isVisible()) break;
 
         lenStroke = page.lengthStroke();
+        done = 0;
 
+        div = div_ecc(RUBB_TH, lenStroke);
 
+        for(tmp = 0; tmp < RUBB_TH; tmp ++){
+            threadData[tmp].__data = &page.m_stroke;
+            threadData[tmp].from = done;
+            threadData[tmp].to = done + div;
+            threadData[tmp].touch = &lastPoint;
+            done += div;
+        }
+
+        threadData[RUBB_TH - 1].to = lenStroke;
+
+        for(tmp = 0; tmp < RUBB_TH; tmp ++){
+            pthread_create(&thread[tmp], NULL, actionRubberSingle, &threadData[tmp]);
+        }
+        for(tmp = 0; tmp < RUBB_TH; tmp ++){
+            pthread_join(thread[tmp], NULL);
+        }
 
     }
 

@@ -41,7 +41,6 @@ private:
     QPointF pointFirstPage = QPointF(0, 0);
 
     bool userWrittenSomething(uint frompage);
-    void scala_posizionefoglio(const double scala);
 
     void adjustWidth(const uint width);
     void adjustHeight(const uint height);
@@ -133,10 +132,8 @@ public:
     void decreaseAlfa(const int id, const uchar decrese);
     void removePage(const uint page);
 
-    //__fast const point_s * at(const uint i, const uint page) const;
     __fast const page &     at(const uint page) const;
     __fast page &           at_mod(const uint page);
-    //__fast point_s *       at_mod(const uint index, const uint page);
 
     __slow point_s &        at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
     __slow point_s &        at_draw_page(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
@@ -145,7 +142,7 @@ public:
     __fast const page *     lastPage() const;
 
 
-    int lengthPage() const{ return this->m_page.length();}
+    int lengthPage() const{ return this->m_page.length(); }
     void newPage(const n_style style);
 
     QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
@@ -159,6 +156,8 @@ public:
     double currentHeight() const;
     double proportion() const;
 
+    void newViewAudio(int lastTime, int newTime);
+
     static bool isOkZoom(const double newPossibleZoom);
     static void copy(const datastruct &src, datastruct &dest);
     static size_t getSizeOne();
@@ -168,8 +167,6 @@ public:
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
     static bool isinside(const QRectF &rect, const QPointF &point); // true if the point is inside the rect
-    static bool isIdUser(const int id){ return id >= 0; }
-    static bool isIdUser(const stroke &__point){ return isIdUser(__point.getId()); }
     static QRectF get_bigger_rect(const QRectF &first, const QRectF &second);
 
     friend class xmlstruct;

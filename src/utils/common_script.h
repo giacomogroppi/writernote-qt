@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QtGlobal>
+#include "utils/common_def.h"
 
 #define BIT(bit) (1 << (bit-1))
 
@@ -129,6 +130,36 @@ Q_ALWAYS_INLINE bool included(const T min, const T max, const T value)
 {
     Q_ASSERT(min <= max);
     return min <= value && value <= max;
+}
+
+Q_ALWAYS_INLINE double diff(cdouble num)
+{
+    if(double(int(num)) > num){
+        // bisogna troncare
+        return double(int(num) - 1);
+    }
+    return double(int(num));
+}
+
+Q_ALWAYS_INLINE double ecc(cdouble num)
+{
+    if(double(int(num)) > num){
+        return double(int(num));
+    }
+
+    return double(int(num) + 1);
+}
+
+template <typename T>
+Q_ALWAYS_INLINE double div_ecc(T num, T den)
+{
+    return ecc(double(num) / double(den));
+}
+
+template <typename T>
+Q_ALWAYS_INLINE double div_diff(T num, T den)
+{
+    return diff(double(num) / double(den));
 }
 
 #endif // COMMON_SCRIPT_H

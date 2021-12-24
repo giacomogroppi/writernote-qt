@@ -35,6 +35,11 @@ void datastruct::removeAndTrigger(const QList<int> &id)
     }
 }
 
+void datastruct::newViewAudio(int lastTime, int newTime)
+{
+
+}
+
 void datastruct::increaseZoom(const double delta, const QSize &size)
 {
     this->zoom += delta;
