@@ -1,6 +1,14 @@
 #include "rubber_ui.h"
 #include "ui_rubber_ui.h"
 #include "utils/common_script.h"
+#include "pthread.h"
+
+#define RUBB_TH 20
+struct RuDataPrivate{
+    int from, to;
+    QList<stroke> *__data;
+    const QPointF *touch;
+};
 
 #define CTRL_LEN_STROKE(stroke, pageStroke, indexStroke, lenStroke) \
     if(stroke.length() < 3){ \
@@ -78,9 +86,24 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
     char mod;
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
 
+    pthread_t thread[RUBB_TH];
+    RuDataPrivate threadData[RUBB_TH];
+
+
     Page.clear();
 
-    for(counterPage = 0; counterPage < lenPage && !data->at(counterPage).isVisible(); counterPage ++);
+    counterPage = data->getFirstPageVisible();
+
+    for(mod = 0; counterPage < lenPage; counterPage ++){
+        page &page = data->at_mod(counterPage);
+
+        if(!page.isVisible()) break;
+
+        lenStroke = page.lengthStroke();
+
+
+
+    }
 
     for(mod = 0; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
@@ -183,4 +206,9 @@ bool rubber_ui::isin(
             && (point_t.x() + m_size_gomma) > point.x()
             && (point_t.y() - m_size_gomma) < point.y()
             && (point_t.y() + m_size_gomma) > point.y();
+}
+
+void *actionRubberSingle(void *data)
+{
+
 }

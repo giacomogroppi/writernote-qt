@@ -51,6 +51,9 @@ private:
     int whichPage(const stroke &stroke) const;
 
     void newPage(int num);
+
+    int pageVisible;
+
 public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
     ~datastruct() = default;
@@ -59,12 +62,13 @@ public:
     void triggerNewView(int m_pos_ris, const bool all);
     void triggerViewIfVisible(int m_pos_ris);
 
-    constexpr double getZoom() const;
+
     void changeZoom(const double zoom, class TabletCanvas *canvas);
     void increaseZoom(const double delta, const QSize &size);
 
-    constexpr inline QPointF getPointFirstPage() const { return this->zoom * pointFirstPage; }
-    constexpr inline QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }
+    constexpr double getZoom() const;
+    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPage() const { return this->zoom * pointFirstPage; }
+    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }
 
     void setPointFirstPage(const QPointF &point){ this->pointFirstPage = point; }
 
@@ -148,6 +152,8 @@ public:
     const stroke &get_stroke(int id) const;
     QRectF get_size_area(const QList<int> & id) const;
     void removeAndTrigger(const QList<int> &id);
+
+    int getFirstPageVisible() const;
 
     double currentWidth() const;
     double currentHeight() const;
@@ -328,6 +334,28 @@ inline QRectF datastruct::get_size_area(const QList<int> &id) const
     }
 
     return result;
+}
+
+inline int datastruct::getFirstPageVisible() const
+{
+    /* the reason this function
+     * is constant is because
+     *  we don't want QList to copy all pages
+     *  when they are shared. */
+    int __pageVisible = (int &) pageVisible;
+    QList<page> &__page = (QList<page> &)this->m_page;
+    int i, len = this->lengthPage();
+
+    if(this->pageVisible < 0){
+        for(i = 0; i < len; i++){
+            if(__page.at(i).isVisible()){
+                __pageVisible = i;
+                break;
+            }
+        }
+    }
+
+    return __pageVisible;
 }
 
 /* this function does not consider the zoom */
