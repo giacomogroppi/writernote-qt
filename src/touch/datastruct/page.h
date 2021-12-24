@@ -1,6 +1,7 @@
 #ifndef PAGE_H
 #define PAGE_H
 
+#include <QVector>
 #include <QList>
 #include <QPointF>
 #include <QDebug>
@@ -36,17 +37,16 @@ private:
      * then strokeTmp will be added to the stroke list
     */
     QList<stroke> strokeTmp;
+    QImage imgDraw;
 
     void drawNewPage(n_style __style);
 
-    QImage imgDraw;
+    
     void drawEngine(QPainter &painter, QList<stroke> &List, int m_pos_ris);
     void draw(QPainter &painter, int m_pos_ris, bool all);
-    void drawStroke(QPainter &painter, const stroke &stroke, QPen &pen, const QColor &color);
+    void drawStroke(QPainter &painter, const stroke &stroke, QPen &pen, const QColor &color) const;
 
-    void mergeList();
-
-    static point_s at_translation(const point_s &point, int page);
+    void mergeList();    
 
     void AppendDirectly(const stroke &stroke);
     bool initImg(bool flag);
@@ -58,17 +58,12 @@ private:
     void setOrdered();
     void setNotOrdered();
 
+    static point_s at_translation(const point_s &point, int page);
+
 public:
     const QImage &getImg() const;
 
     page(const int count, const n_style style);
-
-    Q_CONSTEXPR static double getProportion();
-    Q_CONSTEXPR static double getHeight();
-    Q_CONSTEXPR static double getWidth();
-
-    Q_CONSTEXPR static double getResolutionWidth();
-    Q_CONSTEXPR static double getResolutionHeigth();
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(cbool vis);
@@ -82,7 +77,7 @@ public:
     __fast uint lengthStrokePage() const; // len point written by writernote
 
     bool isVisible() const;
-    static void copy(const page &src, page &dest);
+
     void removeAt(cuint i);
     int maxId() const;
 
@@ -120,13 +115,24 @@ public:
     int save(zip_source_t *file) const;
     int load(zip_file_t *file, int ver_stroke, int len_stroke);
 
-    QList<stroke>::const_iterator get_begin() const noexcept;
-    QList<stroke>::const_iterator get_end() const noexcept;
-
     void drawStroke(const stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color);
     void drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color);
     int removeAndDraw(int m_pos_ris, const QList<int> &id, const QRectF &area);
+
+    QList<stroke>::const_iterator get_begin() const noexcept;
+    QList<stroke>::const_iterator get_end() const noexcept;
+
+    static void copy(const page &src, page &dest);
+    Q_CONSTEXPR static double getProportion();
+    Q_CONSTEXPR static double getHeight();
+    Q_CONSTEXPR static double getWidth();
+
+    Q_CONSTEXPR static double getResolutionWidth();
+    Q_CONSTEXPR static double getResolutionHeigth();
+
+#define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
+    void drawToImage(const QVector<int> &index, QImage &img, cint flag) const;
 
     friend class stroke;
     friend class datastruct;

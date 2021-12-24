@@ -113,7 +113,7 @@ public:
 
     /* debug */
     QString toString() const;
-
+    
     void scale(const QPointF &offset);
 
     friend class page;

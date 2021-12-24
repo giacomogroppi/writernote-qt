@@ -76,7 +76,7 @@ void page::drawStroke(
         QPainter        &painter,
         const stroke    &stroke,
         QPen            &m_pen,
-        const QColor    &color)
+        const QColor    &color) const
 {
     QPointF lastPoint, pointDraw;
 
@@ -87,6 +87,7 @@ void page::drawStroke(
         m_pen.setWidthF(m_pen.widthF() * 1.5);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }
+
     if(stroke.constantPressure()){
         const QPainterPath &path = stroke.getQPainterPath();
 
@@ -120,7 +121,7 @@ void page::drawEngine(
         int       m_pos_ris)
 {
     int i;
-    QPen m_pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
+    Define_PEN(m_pen);
     int lenStroke = List.length();
 
     //auto __clock = clock();
@@ -131,10 +132,13 @@ void page::drawEngine(
             List.removeAt(i);
             i --;
             lenStroke --;
+            log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
             continue;
         }
-        const int decrease = (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4;
-        const QColor color = stroke.getColor(decrease);
+
+        const QColor color = stroke.getColor(
+            (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4
+        );
 
         this->drawStroke(painter, stroke, m_pen, color);
     }
@@ -152,15 +156,11 @@ inline void page::draw(QPainter &painter, int m_pos_ris, bool all)
     this->mergeList();
 }
 
-inline void page::mergeList()
+void page::mergeList()
 {
     int i;
     const int len = this->strokeTmp.length();
     int index = m_stroke.length();
-
-    //if(len)
-    //   qDebug() << "page::mergeList" << len;
-
 
     for(i = 0; i < len; i++){
         const stroke &stroke = strokeTmp.at(i);
@@ -176,7 +176,11 @@ inline void page::mergeList()
     strokeTmp.clear();
 }
 
-static void setStylePrivate(bool &fast, n_style res, style_struct_S &style){
+static void setStylePrivate(
+    bool            &fast, 
+    n_style         res, 
+    style_struct_S  &style)
+{
     if(res == n_style::empty){
         res = n_style::square;
     }
@@ -254,6 +258,33 @@ static Q_ALWAYS_INLINE void drawLineVertical(
     }
 }
 
+static Q_ALWAYS_INLINE void __initImg(QImage &img)
+{
+    img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+}
+
+void page::drawToImage(
+    const QVector<int>  &index, 
+    QImage              &img,
+    cint                flag) const
+{
+    QPainter painter;
+    Define_PEN(pen);
+
+    if(flag & DR_IMG_INIT_IMG){
+        __initImg(img);
+    }
+    
+    painter.begin(&img);
+
+    for (const auto &__index : index){
+        const stroke &stroke = atStroke(__index);
+        this->drawStroke(painter, stroke, pen, stroke.getColor());
+    }
+
+    painter.end();
+}
+
 bool page::userWrittenSomething() const
 {
     return this->m_stroke.length();
@@ -263,7 +294,8 @@ bool page::initImg(bool flag)
 {
     flag = imgDraw.isNull() || flag;
     if(flag)
-        imgDraw = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+        __initImg(imgDraw);
+
     return flag;
 }
 
@@ -446,4 +478,3 @@ void page::drawStroke(const stroke &stroke, int m_pos_ris)
 {
     drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0));
 }
-

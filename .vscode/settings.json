@@ -1,5 +1,4 @@
 {
-    "cmake.cmakePath": "/snap/bin/cmake",
     "files.associations": {
         "*.tcc": "cpp",
         "ostream": "cpp",
@@ -13,6 +12,8 @@
         "ranges": "cpp",
         "ratio": "cpp",
         "streambuf": "cpp",
-        "qstringlist": "cpp"
+        "qstringlist": "cpp",
+        "qvector": "cpp",
+        "array": "cpp"
     }
 }
