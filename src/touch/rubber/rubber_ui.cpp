@@ -2,14 +2,20 @@
 #include "ui_rubber_ui.h"
 #include "utils/common_script.h"
 #include "pthread.h"
+#include "core/listthreadsave.h"
 
 void * actionRubberSingle (void *);
 
 #define RUBB_TH 20
+// we store the index of stroke to remove
+static ListThreadSave<int>  *__res_index;
+static QList<stroke>        *__data;
+static const QPointF        *__touch;
+static int                  __m_size_gomma;
+static bool                 __isTotal;
+
 struct RuDataPrivate{
     int from, to;
-    QList<stroke> *__data;
-    const QPointF *touch;
 };
 
 #define CTRL_LEN_STROKE(stroke, pageStroke, indexStroke, lenStroke) \
@@ -32,11 +38,17 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
+    __res_index =   new ListThreadSave<int>;
+    __data =        new QList<stroke>;
 }
 
 rubber_ui::~rubber_ui()
 {
     this->save_settings();
+
+    delete __res_index;
+    delete __data;
+
     delete ui;
 }
 
@@ -95,6 +107,10 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
     counterPage = data->getFirstPageVisible();
 
+    __res_index->from(gomma_delete_id);
+    __m_size_gomma = this->m_size_gomma;
+    __isTotal = isTotal;
+
     for(mod = 0; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
         int tmp = 0;
@@ -107,21 +123,30 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
         div = div_ecc(RUBB_TH, lenStroke);
 
-        for(tmp = 0; tmp < RUBB_TH; tmp ++){
-            threadData[tmp].__data = &page.m_stroke;
+        __data =  &page.m_stroke;
+        __touch = &lastPoint;
+
+        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
             threadData[tmp].from = done;
             threadData[tmp].to = done + div;
-            threadData[tmp].touch = &lastPoint;
             done += div;
         }
 
         threadData[RUBB_TH - 1].to = lenStroke;
 
-        for(tmp = 0; tmp < RUBB_TH; tmp ++){
+        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
             pthread_create(&thread[tmp], NULL, actionRubberSingle, &threadData[tmp]);
         }
-        for(tmp = 0; tmp < RUBB_TH; tmp ++){
+
+        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
             pthread_join(thread[tmp], NULL);
+        }
+
+        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
+            if(threadData[tmp].to == -1){
+                Page.append(counterPage);
+                break;
+            }
         }
 
     }
@@ -205,31 +230,98 @@ bool rubber_ui::clearList(datastruct *data)
     return Page.length();
 }
 
-inline bool rubber_ui::isin(
+static inline bool isin(
+                    int size_rubber,
                     const point_s   &__point,
                     const QPointF   &touch)
 {
-    Q_ASSERT(m_size_gomma >= 0.0);
+    Q_ASSERT(size_rubber >= 0.0);
     bool isin;
 
-    isin =     (touch.x() - m_size_gomma) < __point.m_x &&  (touch.x() + m_size_gomma) > __point.m_x
-           &&  (touch.y() - m_size_gomma) < __point.m_y &&  (touch.y() + m_size_gomma) > __point.m_y;
+    isin =     (touch.x() - size_rubber) < __point.m_x &&  (touch.x() + size_rubber) > __point.m_x
+           &&  (touch.y() - size_rubber) < __point.m_y &&  (touch.y() + size_rubber) > __point.m_y;
 
 
     return isin;
 }
 
-bool rubber_ui::isin(
+static inline bool isin(
+        int size_rubber,
         const QPointF &point,
         const QPointF &point_t)
 {
-    return (point_t.x() - m_size_gomma) < point.x()
-            && (point_t.x() + m_size_gomma) > point.x()
-            && (point_t.y() - m_size_gomma) < point.y()
-            && (point_t.y() + m_size_gomma) > point.y();
+    return (point_t.x() - size_rubber) < point.x()
+            && (point_t.x() + size_rubber) > point.x()
+            && (point_t.y() - size_rubber) < point.y()
+            && (point_t.y() + size_rubber) > point.y();
 }
 
-void *actionRubberSingle(void *data)
+void *actionRubberSingle(void *_data)
 {
+    RuDataPrivate *data = (RuDataPrivate *) _data;
+    char mod;
 
+    Q_ASSERT(data->to < data->from);
+
+    for(; data->to < data->from; data->to++){
+        stroke &stroke = __data->operator[](data->to);
+        int lenPoint = stroke.length();
+        const int id = stroke.getId();
+        mod = 0;
+
+        if(ifNotInside(stroke, __m_size_gomma, *__touch)) continue;
+
+        for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
+            const point_s &point = stroke.at(counterPoint);
+
+            if(isin(__m_size_gomma, point, *__touch)){
+                mod = 1;
+
+                if(__isTotal){
+                    __res_index->forceLock();
+                    if(IS_PRESENT_IN_LIST(*__res_index, id)) continue;
+
+                    __res_index->append(id);
+
+                    __res_index->unlock();
+
+                    data->decreaseAlfa(stroke, page, DECREASE);
+
+                    break;
+                }
+                else{
+                    if(counterPoint < 3){
+                        stroke.removeAt(0, counterPoint);
+                        lenPoint = stroke.length();
+
+                        CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
+
+                        continue;
+                    }
+
+                    if(counterPoint + 3 > lenPoint){
+                        stroke.removeAt(counterPoint, lenPoint - 1);
+
+                        CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
+
+                        break;
+                    }
+
+                    Q_ASSERT(lenPoint > 6);
+                    stroke.removeAt(counterPoint);
+                    data->changeId(counterPoint, counterStroke, counterPage);
+
+                    lenStroke = page.lengthStroke();
+
+                    break;
+                }
+            }
+        }
+
+        if(mod){
+            append_if_not_present_order(Page, counterPage);
+            //IF_NOT_PRESENT_APPEND(Page, counterPage);
+            mod = 0;
+        }
+    }
 }

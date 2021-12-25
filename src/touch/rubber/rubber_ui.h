@@ -40,9 +40,6 @@ public:
 private:
     QList<int> Page;
 
-    bool isin(const QPointF &point, const QPointF &point_t);
-    bool isin(const point_s &__point, const QPointF &point_t);
-
     QList<int> gomma_delete_id;
 
     void update_data();

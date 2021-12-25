@@ -52,6 +52,8 @@ ADD_EXECUTABLE(writernote
     src/dataread/readlistarray.cpp
     src/dataread/old_loadbinario/old_version_load_binario.cpp
 
+    src/core/listthreadsave.cpp
+
     src/cloud/button_mainwindow.cpp
 
     src/sizeButton.cpp

@@ -90,6 +90,7 @@ SOURCES += \
     src/audiorecord/start_recording.cpp \
     src/button/button_size.cpp \
     src/controllUi.cpp \
+    src/core/listthreadsave.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/document.cpp \
@@ -257,6 +258,7 @@ HEADERS += \
     src/audioplay/audioplay.h \
     src/audiorecord/audiorecord.h \
     src/button/button_size.h \
+    src/core/listthreadsave.h \
     src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
     src/currenttitle/default_type/default_type.h \
