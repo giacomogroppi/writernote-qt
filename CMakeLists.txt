@@ -281,6 +281,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::PrintSupport)
 set (CMAKE_CXX_STANDARD 17)
 SET (CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -O3")
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
