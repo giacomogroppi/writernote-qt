@@ -132,7 +132,7 @@ Q_ALWAYS_INLINE bool included(const T min, const T max, const T value)
     return min <= value && value <= max;
 }
 
-Q_ALWAYS_INLINE double diff(cdouble num)
+Q_ALWAYS_INLINE int diff(cdouble num)
 {
     if(double(int(num)) > num){
         // bisogna troncare
@@ -141,7 +141,7 @@ Q_ALWAYS_INLINE double diff(cdouble num)
     return double(int(num));
 }
 
-Q_ALWAYS_INLINE double ecc(cdouble num)
+Q_ALWAYS_INLINE int ecc(cdouble num)
 {
     if(double(int(num)) > num){
         return double(int(num));
@@ -151,13 +151,13 @@ Q_ALWAYS_INLINE double ecc(cdouble num)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE double div_ecc(T num, T den)
+Q_ALWAYS_INLINE int div_ecc(T num, T den)
 {
     return ecc(double(num) / double(den));
 }
 
 template <typename T>
-Q_ALWAYS_INLINE double div_diff(T num, T den)
+Q_ALWAYS_INLINE int div_diff(T num, T den)
 {
     return diff(double(num) / double(den));
 }

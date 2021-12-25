@@ -13,6 +13,7 @@ static QList<stroke>        *__data;
 static const QPointF        *__touch;
 static int                  __m_size_gomma;
 static bool                 __isTotal;
+static datastruct           __datastruct;
 
 struct RuDataPrivate{
     int from, to;
@@ -108,8 +109,9 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
     counterPage = data->getFirstPageVisible();
 
     __res_index->from(gomma_delete_id);
-    __m_size_gomma = this->m_size_gomma;
-    __isTotal = isTotal;
+    __m_size_gomma =    this->m_size_gomma;
+    __isTotal =         isTotal;
+    __datastruct =      data;
 
     for(mod = 0; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
@@ -279,9 +281,9 @@ void *actionRubberSingle(void *_data)
 
                 if(__isTotal){
                     __res_index->forceLock();
-                    if(IS_PRESENT_IN_LIST(*__res_index, id)) continue;
+                    if(IS_PRESENT_IN_LIST(__res_index->m_list, id)) continue;
 
-                    __res_index->append(id);
+                    __res_index->m_list.append(id);
 
                     __res_index->unlock();
 
