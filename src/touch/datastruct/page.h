@@ -91,8 +91,6 @@ public:
     */
     __fast void append(const stroke &point);
 
-    __slow void appendToTheTop(const stroke &point);
-
     __fast const stroke       & atStroke(const uint i) const;
     __fast stroke             & atStrokeMod(const uint i);
 
@@ -148,6 +146,11 @@ inline double page::currentHeight() const
 inline double page::currentWidth() const
 {
     return page::getWidth();
+}
+
+Q_ALWAYS_INLINE void page::changeCounter(const int newPage)
+{
+    this->count = newPage;
 }
 
 inline void page::move(const uint from, const uint to)
@@ -392,11 +395,6 @@ Q_ALWAYS_INLINE void page::append(const stroke &strokeAppend)
      * the project is compiled in release mode */
     Q_ASSERT(strokeTmp.at(lastNewIndex).length() == strokeAppend.length());
     Q_ASSERT(strokeTmp.at(lastNewIndex).getId()  == strokeAppend.getId());
-}
-
-Q_ALWAYS_INLINE void page::appendToTheTop(const stroke &stroke)
-{
-    m_stroke.insert(0, stroke);
 }
 
 Q_ALWAYS_INLINE double page::minHeight() const

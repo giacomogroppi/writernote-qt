@@ -76,9 +76,6 @@ public:
     /* the draw function triggers the drawing of the points automatically */
     void append(const QList<stroke> & point, int m_pos_ris);
 
-    /* the draw function triggers the drawing of the points automatically */
-    int appendToTheTop(const stroke &point);
-
     int  appendStroke(const stroke &stroke); /* return value: the page of the point */
     void appendStroke(const stroke &stroke, const int page);
 
@@ -108,6 +105,7 @@ public:
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
     void reorganize();
     void changeId(int indexPoint, int indexStroke, int indexPage, int newId = -1);
+    void changeId(int indexPoint, stroke& stroke, page &page, int newId = -1);
     bool isAvailable(int id) const;
     int maxId();
 
@@ -472,13 +470,18 @@ inline void datastruct::appendStroke(const stroke &stroke, const int page)
     this->at_mod(page).append(stroke);
 }
 
-inline bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point)
+inline bool datastruct::isinside(
+        const QPointF &topleft,
+        const QPointF &bottonright,
+        const QPointF &point)
 {
     return      topleft.x() <= point.x()        &&  topleft.y() <= point.y()
             &&  bottonright.x() >= point.x()    &&  bottonright.y() >= point.y();
 }
 
-inline bool datastruct::isinside(const QRectF &rect, const QPointF &point)
+inline bool datastruct::isinside(
+        const QRectF &rect,
+        const QPointF &point)
 {
     return datastruct::isinside(rect.topLeft(), rect.bottomRight(), point);
 }
@@ -523,12 +526,12 @@ inline int datastruct::adjustStroke(stroke &stroke)
     return page;
 }
 
-inline int datastruct::appendToTheTop(const stroke &stroke)
+/*inline int datastruct::appendToTheTop(const stroke &stroke)
 {
     int page = whichPage(stroke);
     this->at_mod(page).appendToTheTop(stroke);
     return page;
-}
+}*/
 
 constexpr inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser)
 {

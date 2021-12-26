@@ -165,7 +165,11 @@ void page::mergeList()
     for(i = 0; i < len; i++){
         const stroke &stroke = strokeTmp.at(i);
 
-        m_stroke.append(stroke);
+        if(stroke.getColor(1).alpha() == 255){
+            m_stroke.append(stroke);
+        }else{
+            m_stroke.insert(0, stroke);
+        }
 
         Q_ASSERT(m_stroke.at(index).length() == strokeTmp.at(i).length());
         Q_ASSERT(m_stroke.at(index).getId() == strokeTmp.at(i).getId());

@@ -163,10 +163,6 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
                 m_square->find(data);
             m_square->endMoving(this);
         }
-
-        if(rubber_method && m_rubber->m_type_gomma == rubber_ui::total){
-            m_rubber->clearList(data->datatouch);
-        }
     }
 }
 
@@ -246,11 +242,7 @@ static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTh
         point->m_y -= PointFirstPage.y();
     }
 
-    if(toTheTop){
-        pageMod = doc.datatouch->appendToTheTop(strokeToAppend);
-    }else{
-        pageMod = doc.datatouch->appendStroke(strokeToAppend);
-    }
+    pageMod = doc.datatouch->appendStroke(strokeToAppend);
 
     doc.datatouch->at_mod(pageMod).triggerRenderImage(time, toTheTop);
 

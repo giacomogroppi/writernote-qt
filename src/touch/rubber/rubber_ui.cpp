@@ -2,29 +2,31 @@
 #include "ui_rubber_ui.h"
 #include "utils/common_script.h"
 #include "pthread.h"
-#include "core/listthreadsave.h"
 
 void * actionRubberSingle (void *);
 
 #define RUBB_TH 20
 // we store the index of stroke to remove
-static ListThreadSave<int>  *__res_index;
-static QList<stroke>        *__data;
-static const QPointF        *__touch;
-static int                  __m_size_gomma;
-static bool                 __isTotal;
-static datastruct           __datastruct;
+static int              *__res_index;
+static int              *__len;
+
+static page             *__page;
+static const QPointF    *__touch;
+static int              __m_size_gomma;
+static bool             __isTotal;
+static datastruct       *__datastruct;
+
+static pthread_mutex_t mutex_write;
 
 struct RuDataPrivate{
     int from, to;
 };
 
-#define CTRL_LEN_STROKE(stroke, pageStroke, indexStroke, lenStroke) \
-    if(stroke.length() < 3){ \
-        pageStroke.removeAt(counterStroke); \
-        lenStroke = page.lengthStroke(); \
-        break; \
-    }
+#define CTRL_LEN_STROKE \
+    pthread_mutex_lock(&mutex_write);   \
+    __res_index[*__len] = counterPoint; \
+    (*__len) ++;                        \
+    pthread_mutex_unlock(&mutex_write); \
 
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
@@ -39,16 +41,17 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    __res_index =   new ListThreadSave<int>;
-    __data =        new QList<stroke>;
+    gomma_delete_id = (int *) malloc( sizeof(int) * RU_INDEX_LEN);
+    len_index = 0;
+
+    pthread_mutex_init(&mutex_write, NULL);
 }
 
 rubber_ui::~rubber_ui()
 {
     this->save_settings();
 
-    delete __res_index;
-    delete __data;
+    free(gomma_delete_id);
 
     delete ui;
 }
@@ -94,11 +97,10 @@ static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
-    int counterStroke, lenStroke, counterPage;
+void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
+    int lenStroke, counterPage;
     const int lenPage = data->lengthPage();
-    const bool isTotal = this->m_type_gomma == e_type_rubber::total;
-    char mod;
+    const bool isTotal = (this->m_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
 
     pthread_t thread[RUBB_TH];
@@ -108,12 +110,16 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
     counterPage = data->getFirstPageVisible();
 
-    __res_index->from(gomma_delete_id);
+    __len =     &this->len_index;
+
+    __res_index = this->gomma_delete_id;
+
     __m_size_gomma =    this->m_size_gomma;
     __isTotal =         isTotal;
     __datastruct =      data;
+    __touch =           &lastPoint;
 
-    for(mod = 0; counterPage < lenPage; counterPage ++){
+    for(; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
         int tmp = 0;
         int done, div;
@@ -125,8 +131,8 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
 
         div = div_ecc(RUBB_TH, lenStroke);
 
-        __data =  &page.m_stroke;
-        __touch = &lastPoint;
+        len_index = 0;
+        __page =  &page;
 
         for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
             threadData[tmp].from = done;
@@ -144,92 +150,13 @@ const QList<int> &rubber_ui::actionRubber(datastruct *data, const QPointF &__las
             pthread_join(thread[tmp], NULL);
         }
 
-        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
-            if(threadData[tmp].to == -1){
-                Page.append(counterPage);
-                break;
-            }
+
+        for(int i = 0; i < this->len_index; i++){
+            data->removeAt(this->gomma_delete_id[i]);
         }
 
+        page.mergeList();
     }
-
-    for(mod = 0; counterPage < lenPage; counterPage ++){
-        page &page = data->at_mod(counterPage);
-
-        if(!page.isVisible()) break;
-
-        lenStroke = page.lengthStroke();
-
-        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            stroke &stroke = page.atStrokeMod(counterStroke);
-            int lenPoint = stroke.length();
-            const int id = stroke.getId();
-
-            if(ifNotInside(stroke, m_size_gomma, lastPoint)) continue;
-
-            for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-                const point_s &point = stroke.at(counterPoint);
-
-                if(isin(point, lastPoint)){
-                    mod = 1;
-                    
-                    if(isTotal){
-                        if(IS_PRESENT_IN_LIST(gomma_delete_id, id)) continue;
-
-                        gomma_delete_id.append(id);
-
-                        data->decreaseAlfa(stroke, page, DECREASE);
-
-                        break;
-                    }
-                    else{
-                        if(counterPoint < 3){
-                            stroke.removeAt(0, counterPoint);
-                            lenPoint = stroke.length();
-
-                            CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
-
-                            continue;
-                        }
-
-                        if(counterPoint + 3 > lenPoint){
-                            stroke.removeAt(counterPoint, lenPoint - 1);
-
-                            CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
-
-                            break;
-                        }
-
-                        Q_ASSERT(lenPoint > 6);
-                        stroke.removeAt(counterPoint);
-                        data->changeId(counterPoint, counterStroke, counterPage);
-
-                        lenStroke = page.lengthStroke();
-
-                        break;
-                    }
-                }
-            }
-
-            if(mod){
-                append_if_not_present_order(Page, counterPage);
-                //IF_NOT_PRESENT_APPEND(Page, counterPage);
-                mod = 0;
-            }
-        }
-    }
-
-    return Page;
-}
-
-bool rubber_ui::clearList(datastruct *data)
-{
-    data->removeAndTrigger(gomma_delete_id);
-    //data->removePointId(gomma_delete_id, &Page);
-
-    gomma_delete_id.clear();
-    //data->triggerNewView(Page, -1, true);
-    return Page.length();
 }
 
 static inline bool isin(
@@ -247,7 +174,7 @@ static inline bool isin(
     return isin;
 }
 
-static inline bool isin(
+/*static inline bool isin(
         int size_rubber,
         const QPointF &point,
         const QPointF &point_t)
@@ -256,20 +183,17 @@ static inline bool isin(
             && (point_t.x() + size_rubber) > point.x()
             && (point_t.y() - size_rubber) < point.y()
             && (point_t.y() + size_rubber) > point.y();
-}
+}*/
 
 void *actionRubberSingle(void *_data)
 {
     RuDataPrivate *data = (RuDataPrivate *) _data;
-    char mod;
 
     Q_ASSERT(data->to < data->from);
 
     for(; data->to < data->from; data->to++){
-        stroke &stroke = __data->operator[](data->to);
+        stroke &stroke = __page->atStrokeMod(data->to);
         int lenPoint = stroke.length();
-        const int id = stroke.getId();
-        mod = 0;
 
         if(ifNotInside(stroke, __m_size_gomma, *__touch)) continue;
 
@@ -277,17 +201,19 @@ void *actionRubberSingle(void *_data)
             const point_s &point = stroke.at(counterPoint);
 
             if(isin(__m_size_gomma, point, *__touch)){
-                mod = 1;
-
                 if(__isTotal){
-                    __res_index->forceLock();
-                    if(IS_PRESENT_IN_LIST(__res_index->m_list, id)) continue;
+                    // possiamo non controllare se lo stroke
+                    // è presente in lista, in quanto viene eliminato tutte le volte
+                    // che si cerca un punto specifico
 
-                    __res_index->m_list.append(id);
+                    pthread_mutex_lock(&mutex_write);
 
-                    __res_index->unlock();
+                    __res_index[*__len] = data->to;
+                    (*__len) ++;
 
-                    data->decreaseAlfa(stroke, page, DECREASE);
+                    __datastruct->decreaseAlfa(stroke, *__page, DECREASE);
+
+                    pthread_mutex_unlock(&mutex_write);
 
                     break;
                 }
@@ -296,7 +222,7 @@ void *actionRubberSingle(void *_data)
                         stroke.removeAt(0, counterPoint);
                         lenPoint = stroke.length();
 
-                        CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
+                        CTRL_LEN_STROKE;
 
                         continue;
                     }
@@ -304,26 +230,27 @@ void *actionRubberSingle(void *_data)
                     if(counterPoint + 3 > lenPoint){
                         stroke.removeAt(counterPoint, lenPoint - 1);
 
-                        CTRL_LEN_STROKE(stroke, page, counterStroke, lenStroke);
+                        CTRL_LEN_STROKE;
 
                         break;
                     }
 
                     Q_ASSERT(lenPoint > 6);
-                    stroke.removeAt(counterPoint);
-                    data->changeId(counterPoint, counterStroke, counterPage);
 
-                    lenStroke = page.lengthStroke();
+                    stroke.removeAt(counterPoint);
+                    pthread_mutex_lock(&mutex_write);
+                    __datastruct->changeId(counterPoint, stroke, *__page);
+
+                    __res_index[*__len] = data->to;
+                    (*__len) ++;
+
+                    pthread_mutex_unlock(&mutex_write);
 
                     break;
                 }
             }
         }
-
-        if(mod){
-            append_if_not_present_order(Page, counterPage);
-            //IF_NOT_PRESENT_APPEND(Page, counterPage);
-            mod = 0;
-        }
     }
+
+    return NULL;
 }

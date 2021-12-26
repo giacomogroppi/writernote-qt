@@ -10,34 +10,32 @@
 */
 void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int newId)
 {
-    stroke strokeToAppend;
     page &page = at_mod(indexPage);
-    stroke *stroke = &page.atStrokeMod(indexStroke);
-    int lenPointInStroke = stroke->length();
+    stroke &stroke = page.atStrokeMod(indexStroke);
+    changeId(IndexPoint, stroke, at_mod(indexPage), newId);
+}
+
+void datastruct::changeId(int IndexPoint, stroke &__stroke, page &page, int newId)
+{
+    stroke strokeToAppend;
+    int lenPointInStroke = __stroke.length();
 
     strokeToAppend.reset();
 
-    qDebug() << "datastruct::changeId start" << IndexPoint << stroke->length() << stroke->last().m_x << stroke->last().m_y;
+    qDebug() << "datastruct::changeId start" << IndexPoint << __stroke.length()
+             << __stroke.last().m_x << __stroke.last().m_y;
 
     if(newId < 0)
         newId = maxId() + 1;
 
     for(int secIndex = IndexPoint; secIndex < lenPointInStroke; secIndex ++){
-        strokeToAppend.append(stroke->at(secIndex));
+        strokeToAppend.append(__stroke.at(secIndex));
     }
 
-    stroke->removeAt(IndexPoint, stroke->length() - 1);
+    __stroke.removeAt(IndexPoint, __stroke.length() - 1);
 
-    strokeToAppend.setMetadata(stroke->getMetadata());
+    strokeToAppend.setMetadata(__stroke.getMetadata());
     strokeToAppend.setId(newId);
 
-    if(stroke->getColor().alpha() != 255){
-        /* we need to append to the top */
-        page.appendToTheTop(strokeToAppend);
-    }else{
-        page.AppendDirectly(strokeToAppend);
-    }
-
-    qDebug() << "datastruct::changeId end" << IndexPoint << stroke->length() << stroke->last().m_x << stroke->last().m_y;
-
+    page.append(strokeToAppend);
 }

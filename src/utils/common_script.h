@@ -162,4 +162,15 @@ Q_ALWAYS_INLINE int div_diff(T num, T den)
     return diff(double(num) / double(den));
 }
 
+template <typename T>
+inline int is_present_in_list(const T *list, size_t len, T val)
+{
+    for(;len > 0; list ++, len --){
+        if(*list == val)
+            return 1;
+    }
+
+    return 0;
+}
+
 #endif // COMMON_SCRIPT_H

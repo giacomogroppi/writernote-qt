@@ -34,13 +34,14 @@ public:
     int m_size_gomma = DEFAULT_GOMMA_SIZE;
     e_type_rubber m_type_gomma = e_type_rubber::total;
 
-    const QList<int> &actionRubber(datastruct *, const QPointF &);
-    bool clearList(datastruct *);
+    void actionRubber(datastruct *, const QPointF &);
 
 private:
     QList<int> Page;
 
-    QList<int> gomma_delete_id;
+#define RU_INDEX_LEN 128
+    int* gomma_delete_id;
+    int len_index;
 
     void update_data();
 
