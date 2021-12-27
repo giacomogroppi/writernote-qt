@@ -12,6 +12,9 @@ void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage, int ne
 {
     page &page = at_mod(indexPage);
     stroke &stroke = page.atStrokeMod(indexStroke);
+
+    Q_ASSERT(newId >= 0);
+
     changeId(IndexPoint, stroke, at_mod(indexPage), newId);
 }
 
@@ -25,8 +28,7 @@ void datastruct::changeId(int IndexPoint, stroke &__stroke, page &page, int newI
     qDebug() << "datastruct::changeId start" << IndexPoint << __stroke.length()
              << __stroke.last().m_x << __stroke.last().m_y;
 
-    if(newId < 0)
-        newId = maxId() + 1;
+    Q_ASSERT(newId >= 0);
 
     for(int secIndex = IndexPoint; secIndex < lenPointInStroke; secIndex ++){
         strokeToAppend.append(__stroke.at(secIndex));

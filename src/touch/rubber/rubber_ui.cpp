@@ -16,17 +16,20 @@ static int              __m_size_gomma;
 static bool             __isTotal;
 static datastruct       *__datastruct;
 
+static int new_id = 0;
+
 static pthread_mutex_t mutex_write;
 
 struct RuDataPrivate{
     int from, to;
 };
 
-#define CTRL_LEN_STROKE \
-    pthread_mutex_lock(&mutex_write);   \
-    __res_index[*__len] = counterPoint; \
-    (*__len) ++;                        \
-    pthread_mutex_unlock(&mutex_write); \
+#define REMOVE_STROKE_THREAD_SAVE(counterStroke) \
+    pthread_mutex_lock(&mutex_write);       \
+    __res_index[*__len] = counterStroke;    \
+    (*__len) ++;                            \
+    pthread_mutex_unlock(&mutex_write);
+
 
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
@@ -118,6 +121,8 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     __isTotal =         isTotal;
     __datastruct =      data;
     __touch =           &lastPoint;
+
+    new_id = data->maxId() + 1;
 
     for(; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
@@ -222,7 +227,9 @@ void *actionRubberSingle(void *_data)
                         stroke.removeAt(0, counterPoint);
                         lenPoint = stroke.length();
 
-                        CTRL_LEN_STROKE;
+                        if(stroke.length() < 3){
+                            REMOVE_STROKE_THREAD_SAVE(data->to);
+                        }
 
                         continue;
                     }
@@ -230,7 +237,7 @@ void *actionRubberSingle(void *_data)
                     if(counterPoint + 3 > lenPoint){
                         stroke.removeAt(counterPoint, lenPoint - 1);
 
-                        CTRL_LEN_STROKE;
+                        REMOVE_STROKE_THREAD_SAVE(data->to);
 
                         break;
                     }
@@ -238,8 +245,11 @@ void *actionRubberSingle(void *_data)
                     Q_ASSERT(lenPoint > 6);
 
                     stroke.removeAt(counterPoint);
+
                     pthread_mutex_lock(&mutex_write);
-                    __datastruct->changeId(counterPoint, stroke, *__page);
+                    __datastruct->changeId(counterPoint, stroke, *__page, new_id);
+
+                    new_id ++;
 
                     __res_index[*__len] = data->to;
                     (*__len) ++;
