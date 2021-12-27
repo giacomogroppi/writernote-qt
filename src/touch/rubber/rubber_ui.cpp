@@ -227,9 +227,8 @@ void *actionRubberSingle(void *_data)
                         stroke.removeAt(0, counterPoint);
                         lenPoint = stroke.length();
 
-                        if(stroke.length() < 3){
+                        if(stroke.length() < 3)
                             REMOVE_STROKE_THREAD_SAVE(data->to);
-                        }
 
                         continue;
                     }
@@ -237,7 +236,8 @@ void *actionRubberSingle(void *_data)
                     if(counterPoint + 3 > lenPoint){
                         stroke.removeAt(counterPoint, lenPoint - 1);
 
-                        REMOVE_STROKE_THREAD_SAVE(data->to);
+                        if(stroke.length() <  3)
+                            REMOVE_STROKE_THREAD_SAVE(data->to);
 
                         break;
                     }
