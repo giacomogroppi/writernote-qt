@@ -5,10 +5,11 @@
 
 void * actionRubberSingle (void *);
 
-#define RUBB_TH 20
+#define RUBB_TH 8
 // we store the index of stroke to remove
 static int              *__res_index;
 static int              *__len;
+static int              *__per;
 
 static page             *__page;
 static const QPointF    *__touch;
@@ -48,6 +49,10 @@ rubber_ui::rubber_ui(QWidget *parent) :
     len_index = 0;
 
     pthread_mutex_init(&mutex_write, NULL);
+
+    __per =     &this->per;
+    __len =     &this->len_index;
+    __res_index = this->gomma_delete_id;
 }
 
 rubber_ui::~rubber_ui()
@@ -113,10 +118,6 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
     counterPage = data->getFirstPageVisible();
 
-    __len =     &this->len_index;
-
-    __res_index = this->gomma_delete_id;
-
     __m_size_gomma =    this->m_size_gomma;
     __isTotal =         isTotal;
     __datastruct =      data;
@@ -157,7 +158,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
 
         for(int i = 0; i < this->len_index; i++){
-            data->removeAt(this->gomma_delete_id[i]);
+            page.removeAt(this->gomma_delete_id[i]);
         }
 
         page.mergeList();
@@ -194,10 +195,10 @@ void *actionRubberSingle(void *_data)
 {
     RuDataPrivate *data = (RuDataPrivate *) _data;
 
-    Q_ASSERT(data->to < data->from);
+    Q_ASSERT(data->from < data->to);
 
-    for(; data->to < data->from; data->to++){
-        stroke &stroke = __page->atStrokeMod(data->to);
+    for(; data->from < data->to; data->from++){
+        stroke &stroke = __page->atStrokeMod(data->from);
         int lenPoint = stroke.length();
 
         if(ifNotInside(stroke, __m_size_gomma, *__touch)) continue;
@@ -207,14 +208,16 @@ void *actionRubberSingle(void *_data)
 
             if(isin(__m_size_gomma, point, *__touch)){
                 if(__isTotal){
-                    // possiamo non controllare se lo stroke
-                    // è presente in lista, in quanto viene eliminato tutte le volte
-                    // che si cerca un punto specifico
-
                     pthread_mutex_lock(&mutex_write);
 
-                    __res_index[*__len] = data->to;
+                    __res_index[*__len] = data->from;
                     (*__len) ++;
+                    if(*__len > RU_INDEX_LEN * (*__per)){
+                        (*__per) ++;
+                        __res_index = (int *)realloc(__res_index, sizeof(int) * (*__per));
+
+                        qDebug() << "Need to realloc";
+                    }
 
                     __datastruct->decreaseAlfa(stroke, *__page, DECREASE);
 
@@ -228,7 +231,7 @@ void *actionRubberSingle(void *_data)
                         lenPoint = stroke.length();
 
                         if(stroke.length() < 3)
-                            REMOVE_STROKE_THREAD_SAVE(data->to);
+                            REMOVE_STROKE_THREAD_SAVE(data->from);
 
                         continue;
                     }
@@ -237,7 +240,7 @@ void *actionRubberSingle(void *_data)
                         stroke.removeAt(counterPoint, lenPoint - 1);
 
                         if(stroke.length() <  3)
-                            REMOVE_STROKE_THREAD_SAVE(data->to);
+                            REMOVE_STROKE_THREAD_SAVE(data->from);
 
                         break;
                     }
@@ -251,7 +254,7 @@ void *actionRubberSingle(void *_data)
 
                     new_id ++;
 
-                    __res_index[*__len] = data->to;
+                    __res_index[*__len] = data->from;
                     (*__len) ++;
 
                     pthread_mutex_unlock(&mutex_write);

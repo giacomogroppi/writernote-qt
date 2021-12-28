@@ -41,6 +41,7 @@ private:
 
 #define RU_INDEX_LEN 128
     int* gomma_delete_id;
+    int per = 1;
     int len_index;
 
     void update_data();

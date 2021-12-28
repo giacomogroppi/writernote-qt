@@ -78,6 +78,7 @@ void datastruct::reset(){
     zoom = 1.00;
 }
 
+// this function is not thread safe
 void datastruct::decreaseAlfa(stroke &stroke, page &page, cint decrease)
 {
     const uchar newAlfa = stroke.getColor().alpha() / decrease;

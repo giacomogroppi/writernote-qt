@@ -438,6 +438,8 @@ inline void datastruct::removeAt(const uint indexPage){
     int index = indexPage, len;
     this->m_page.removeAt(indexPage);
 
+    Q_ASSERT(indexPage < (uint)this->lengthPage());
+
     len = lengthPage();
 
     for(; index < len; index ++){
