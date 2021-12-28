@@ -10,6 +10,7 @@ void * actionRubberSingle (void *);
 static int              *__res_index;
 static int              *__len;
 static int              *__per;
+static int              __index;
 
 static page             *__page;
 static const QPointF    *__touch;
@@ -85,6 +86,13 @@ void rubber_ui::on_partial_button_clicked()
     this->update_data();
 }
 
+void rubber_ui::endRubber()
+{
+    if(m_type_gomma == e_type_rubber::total){
+
+    }
+}
+
 static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF &pointTouch)
 {
     const QRectF &pos = stroke.getBiggerPointInStroke();
@@ -156,12 +164,12 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
             pthread_join(thread[tmp], NULL);
         }
 
-
-        for(int i = 0; i < this->len_index; i++){
-            page.removeAt(this->gomma_delete_id[i]);
+        if(!isTotal){
+            for(int i = 0; i < this->len_index; i++){
+                page.removeAt(this->gomma_delete_id[i]);
+            }
+            page.mergeList();
         }
-
-        page.mergeList();
     }
 }
 
@@ -212,12 +220,6 @@ void *actionRubberSingle(void *_data)
 
                     __res_index[*__len] = data->from;
                     (*__len) ++;
-                    if(*__len > RU_INDEX_LEN * (*__per)){
-                        (*__per) ++;
-                        __res_index = (int *)realloc(__res_index, sizeof(int) * (*__per));
-
-                        qDebug() << "Need to realloc";
-                    }
 
                     __datastruct->decreaseAlfa(stroke, *__page, DECREASE);
 

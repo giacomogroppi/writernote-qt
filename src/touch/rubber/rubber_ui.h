@@ -36,12 +36,13 @@ public:
 
     void actionRubber(datastruct *, const QPointF &);
 
+    void endRubber();
+
 private:
     QList<int> Page;
 
-#define RU_INDEX_LEN 128
-    int* gomma_delete_id;
-    int per = 1;
+#define RU_INDEX_LEN 128 * 2
+    int** gomma_delete_id;
     int len_index;
 
     void update_data();
