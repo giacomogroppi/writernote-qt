@@ -91,6 +91,7 @@ SOURCES += \
     src/button/button_size.cpp \
     src/controllUi.cpp \
     src/core/listthreadsave.cpp \
+    src/core/multiarray.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/document.cpp \
@@ -259,6 +260,7 @@ HEADERS += \
     src/audiorecord/audiorecord.h \
     src/button/button_size.h \
     src/core/listthreadsave.h \
+    src/core/multiarray.h \
     src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
     src/currenttitle/default_type/default_type.h \

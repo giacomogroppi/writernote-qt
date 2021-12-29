@@ -11,6 +11,9 @@ void * actionRubberSingle (void *);
 static int              *__res_index;
 static int              *__len;
 
+static int              __already_find_len;
+static cint             *__already_find;
+
 static page             *__page;
 static const QPointF    *__touch;
 static int              __m_size_gomma;
@@ -106,7 +109,7 @@ void rubber_ui::endRubber(datastruct *data)
             page.removeAndDraw(-1, (int *)arr.constData(), size, rect);
         }
 
-
+        data_to_remove.clear();
     }
 }
 
@@ -131,7 +134,7 @@ static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF
  * it returns true if it actually deleted something, otherwise it returns false
 */
 void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
-    int lenStroke, counterPage;
+    int lenStroke, counterPage, count;
     const int lenPage = data->lengthPage();
     const bool isTotal = (this->m_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
@@ -148,39 +151,58 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
     new_id = data->maxId() + 1;
 
+    count = 0;
+
     for(counterPage = base; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
         int tmp = 0;
-        int done, div;
+        int done, div, create;
 
         if(!page.isVisible()) break;
 
         lenStroke = page.lengthStroke();
         done = 0;
 
-        div = div_ecc(RUBB_TH, lenStroke);
+        div = div_diff(lenStroke, RUBB_TH);
 
         len_index = 0;
         __page =  &page;
 
-        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
-            threadData[tmp].from = done;
-            threadData[tmp].to = done + div;
-            done += div;
+        if(data_to_remove.length() - 1 < count)
+            data_to_remove.append(QByteArray());
+
+        __already_find = (cint *)data_to_remove.at(count).constData();
+        __already_find_len = data_to_remove.at(count).length();
+
+        if(lenStroke > RUBB_TH){
+            create = RUBB_TH;
+
+            for(tmp = 0; tmp < RUBB_TH; tmp ++){
+                threadData[tmp].from = done;
+                threadData[tmp].to = done + div;
+                done += div;
+            }
+
+            threadData[RUBB_TH-1].to = lenStroke;
+
+        }else{
+            create = 1;
+            threadData[0].from = 0;
+            threadData[0].to = lenStroke;
         }
 
         threadData[RUBB_TH - 1].to = lenStroke;
 
-        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
+        for(tmp = 0; tmp < create; tmp ++){
             pthread_create(&thread[tmp], NULL, actionRubberSingle, &threadData[tmp]);
         }
 
-        for(tmp = 0; tmp < RUBB_TH && tmp < lenStroke; tmp ++){
+        for(tmp = 0; tmp < create; tmp ++){
             pthread_join(thread[tmp], NULL);
         }
 
         if(isTotal){
-            data_to_remove.append(
+            data_to_remove.append(data_to_remove.at(count) +
                         QByteArray(
                             (cchar *)__res_index, sizeof(*__res_index) * (*__len)
                             )
@@ -192,6 +214,8 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
             }
             page.mergeList();
         }
+
+        count ++;
     }
 }
 
@@ -210,17 +234,6 @@ static inline bool isin(
     return isin;
 }
 
-/*static inline bool isin(
-        int size_rubber,
-        const QPointF &point,
-        const QPointF &point_t)
-{
-    return (point_t.x() - size_rubber) < point.x()
-            && (point_t.x() + size_rubber) > point.x()
-            && (point_t.y() - size_rubber) < point.y()
-            && (point_t.y() + size_rubber) > point.y();
-}*/
-
 void *actionRubberSingle(void *_data)
 {
     RuDataPrivate *data = (RuDataPrivate *) _data;
@@ -238,6 +251,12 @@ void *actionRubberSingle(void *_data)
 
             if(isin(__m_size_gomma, point, *__touch)){
                 if(__isTotal){
+                    // possiamo anche non bloccare gli altri thread nell'appendere
+                    // tanto di sicuro non staranno cercando il nostro stroke
+
+                    if(is_present_in_list(__already_find, __already_find_len, data->from))
+                        continue;
+
                     pthread_mutex_lock(&mutex_write);
 
                     __res_index[*__len] = data->from;
