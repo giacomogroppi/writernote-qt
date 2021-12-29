@@ -400,6 +400,16 @@ int page::removeAndDraw(
     return 1;
 }
 
+int page::removeAndDraw(int m_pos_ris, const QVector<int> pos, const QRectF &area)
+{
+    for(const auto &ref : pos){
+        drawForceColorStroke(atStroke(ref), m_pos_ris, COLOR_NULL);
+        removeAt(ref);
+    }
+    drawIfInside(m_pos_ris, area);
+    return !!pos.length();
+}
+
 void page::drawIfInside(int m_pos_ris, const QRectF &area)
 {
     int index = lengthStroke() - 1;

@@ -7,18 +7,13 @@ void * actionRubberSingle (void *);
 
 #define RUBB_TH 8
 #define RUBB_STROKE_MAX 128
-// we store the index of stroke to remove
-static int              *__res_index;
-static int              *__len;
+static QVector<int>         *__data_find;
 
-static int              __already_find_len;
-static cint             *__already_find;
-
-static page             *__page;
-static const QPointF    *__touch;
-static int              __m_size_gomma;
-static bool             __isTotal;
-static datastruct       *__datastruct;
+static page                 *__page;
+static const QPointF        *__touch;
+static int                  __m_size_gomma;
+static bool                 __isTotal;
+static datastruct           *__datastruct;
 
 static int new_id = 0;
 
@@ -31,8 +26,7 @@ struct RuDataPrivate{
 #define REMOVE_STROKE_THREAD_SAVE(counterStroke) \
     do{                                         \
         pthread_mutex_lock(&mutex_write);       \
-        __res_index[*__len] = counterStroke;    \
-        (*__len) ++;                            \
+        __data_find->append(counterStroke);      \
         pthread_mutex_unlock(&mutex_write);     \
     }while(0);
 
@@ -50,20 +44,12 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    gomma_delete_id = (int *) malloc( sizeof(int) * RUBB_STROKE_MAX);
-    len_index = 0;
-
     pthread_mutex_init(&mutex_write, NULL);
-
-    __len =     &this->len_index;
-    __res_index = this->gomma_delete_id;
 }
 
 rubber_ui::~rubber_ui()
 {
     this->save_settings();
-
-    free(gomma_delete_id);
 
     delete ui;
 }
@@ -98,15 +84,13 @@ void rubber_ui::endRubber(datastruct *data)
     if(m_type_gomma == e_type_rubber::total){
 
         for(i = 0; i < lenPage; i ++){
-            const QByteArray &arr = this->data_to_remove.at(i);
+            QVector<int> &arr = this->data_to_remove.operator[](i);
             page &page = data->at_mod(i + base);
-            int size = arr.length() / sizeof(int);
-            const auto rect = data->get_size_area(
-                        (int *)arr.constData(),
-                        size,
-                        i);
 
-            page.removeAndDraw(-1, (int *)arr.constData(), size, rect);
+            order(arr);
+
+            const auto rect = data->get_size_area(arr, i);
+            page.removeAndDraw(-1, (int *)arr.constData(), arr.length(), rect);
         }
 
         data_to_remove.clear();
@@ -165,14 +149,12 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
         div = div_diff(lenStroke, RUBB_TH);
 
-        len_index = 0;
         __page =  &page;
 
         if(data_to_remove.length() - 1 < count)
-            data_to_remove.append(QByteArray());
+            data_to_remove.append(QVector<int>());
 
-        __already_find = (cint *)data_to_remove.at(count).constData();
-        __already_find_len = data_to_remove.at(count).length();
+        __data_find = (QVector<int> *)&data_to_remove.at(count);
 
         if(lenStroke > RUBB_TH){
             create = RUBB_TH;
@@ -202,15 +184,11 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
         }
 
         if(isTotal){
-            data_to_remove.append(data_to_remove.at(count) +
-                        QByteArray(
-                            (cchar *)__res_index, sizeof(*__res_index) * (*__len)
-                            )
-                        );
+
         }
         else{
-            for(int tmp = len_index - 1; tmp >= 0; tmp --){
-                page.removeAt(this->gomma_delete_id[tmp]);
+            for(int tmp = __data_find->length() - 1; tmp >= 0; tmp --){
+                page.removeAt(__data_find->at(tmp));
             }
             page.mergeList();
         }
@@ -254,13 +232,12 @@ void *actionRubberSingle(void *_data)
                     // possiamo anche non bloccare gli altri thread nell'appendere
                     // tanto di sicuro non staranno cercando il nostro stroke
 
-                    if(is_present_in_list(__already_find, __already_find_len, data->from))
+                    if(is_present_in_list(__data_find->constData(), __data_find->length(), data->from))
                         continue;
 
                     pthread_mutex_lock(&mutex_write);
 
-                    __res_index[*__len] = data->from;
-                    (*__len) ++;
+                    __data_find->append(data->from);
 
                     __datastruct->decreaseAlfa(stroke, *__page, DECREASE);
 
@@ -297,8 +274,7 @@ void *actionRubberSingle(void *_data)
 
                     new_id ++;
 
-                    __res_index[*__len] = data->from;
-                    (*__len) ++;
+                    __data_find->append(data->from);
 
                     pthread_mutex_unlock(&mutex_write);
 

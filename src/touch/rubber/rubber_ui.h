@@ -39,10 +39,8 @@ public:
     void endRubber(datastruct *data);
 
 private:
-    int *gomma_delete_id;
-    int len_index;
     int base;
-    QList<QByteArray> data_to_remove;
+    QList<QVector<int>> data_to_remove;
 
     void update_data();
 

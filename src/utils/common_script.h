@@ -68,7 +68,7 @@ Q_ALWAYS_INLINE int is_order(const QList<T> &list)
  * otherwise use std :: sort
 */
 template <typename T>
-Q_ALWAYS_INLINE int order(QList<T> &list)
+inline int order(T &list)
 {
     int i, j, mod;
     int n = list.length();

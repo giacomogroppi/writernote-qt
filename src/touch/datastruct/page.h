@@ -118,6 +118,7 @@ public:
     void drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color);
     int removeAndDraw(int m_pos_ris, const QList<int> &id, const QRectF &area);
     int removeAndDraw(int m_pos_ris, const int *pos, int len, const QRectF &area);
+    int removeAndDraw(int m_pos_ris, const QVector<int> pos, const QRectF &area);
     void drawIfInside(int m_pos_ris, const QRectF &area);
 
     QList<stroke>::const_iterator get_begin() const noexcept;
