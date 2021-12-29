@@ -6,11 +6,10 @@
 void * actionRubberSingle (void *);
 
 #define RUBB_TH 8
+#define RUBB_STROKE_MAX 128
 // we store the index of stroke to remove
 static int              *__res_index;
 static int              *__len;
-static int              *__per;
-static int              __index;
 
 static page             *__page;
 static const QPointF    *__touch;
@@ -27,10 +26,12 @@ struct RuDataPrivate{
 };
 
 #define REMOVE_STROKE_THREAD_SAVE(counterStroke) \
-    pthread_mutex_lock(&mutex_write);       \
-    __res_index[*__len] = counterStroke;    \
-    (*__len) ++;                            \
-    pthread_mutex_unlock(&mutex_write);
+    do{                                         \
+        pthread_mutex_lock(&mutex_write);       \
+        __res_index[*__len] = counterStroke;    \
+        (*__len) ++;                            \
+        pthread_mutex_unlock(&mutex_write);     \
+    }while(0);
 
 
 rubber_ui::rubber_ui(QWidget *parent) :
@@ -46,12 +47,11 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    gomma_delete_id = (int *) malloc( sizeof(int) * RU_INDEX_LEN);
+    gomma_delete_id = (int *) malloc( sizeof(int) * RUBB_STROKE_MAX);
     len_index = 0;
 
     pthread_mutex_init(&mutex_write, NULL);
 
-    __per =     &this->per;
     __len =     &this->len_index;
     __res_index = this->gomma_delete_id;
 }
@@ -86,9 +86,26 @@ void rubber_ui::on_partial_button_clicked()
     this->update_data();
 }
 
-void rubber_ui::endRubber()
+void rubber_ui::endRubber(datastruct *data)
 {
+    int i, lenPage = data->lengthPage();
+
+    Q_ASSERT(data);
+
     if(m_type_gomma == e_type_rubber::total){
+
+        for(i = 0; i < lenPage; i ++){
+            const QByteArray &arr = this->data_to_remove.at(i);
+            page &page = data->at_mod(i + base);
+            int size = arr.length() / sizeof(int);
+            const auto rect = data->get_size_area(
+                        (int *)arr.constData(),
+                        size,
+                        i);
+
+            page.removeAndDraw(-1, (int *)arr.constData(), size, rect);
+        }
+
 
     }
 }
@@ -122,9 +139,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     pthread_t thread[RUBB_TH];
     RuDataPrivate threadData[RUBB_TH];
 
-    Page.clear();
-
-    counterPage = data->getFirstPageVisible();
+    this->base = data->getFirstPageVisible();
 
     __m_size_gomma =    this->m_size_gomma;
     __isTotal =         isTotal;
@@ -133,7 +148,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
     new_id = data->maxId() + 1;
 
-    for(; counterPage < lenPage; counterPage ++){
+    for(counterPage = base; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
         int tmp = 0;
         int done, div;
@@ -164,9 +179,16 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
             pthread_join(thread[tmp], NULL);
         }
 
-        if(!isTotal){
-            for(int i = 0; i < this->len_index; i++){
-                page.removeAt(this->gomma_delete_id[i]);
+        if(isTotal){
+            data_to_remove.append(
+                        QByteArray(
+                            (cchar *)__res_index, sizeof(*__res_index) * (*__len)
+                            )
+                        );
+        }
+        else{
+            for(int tmp = len_index - 1; tmp >= 0; tmp --){
+                page.removeAt(this->gomma_delete_id[tmp]);
             }
             page.mergeList();
         }

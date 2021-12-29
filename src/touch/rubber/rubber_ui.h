@@ -36,14 +36,13 @@ public:
 
     void actionRubber(datastruct *, const QPointF &);
 
-    void endRubber();
+    void endRubber(datastruct *data);
 
 private:
-    QList<int> Page;
-
-#define RU_INDEX_LEN 128 * 2
-    int** gomma_delete_id;
+    int *gomma_delete_id;
     int len_index;
+    int base;
+    QList<QByteArray> data_to_remove;
 
     void update_data();
 
