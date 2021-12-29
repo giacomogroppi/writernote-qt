@@ -379,15 +379,36 @@ int page::removeAndDraw(
         }
     }
 
-    index = this->lengthStroke() - 1;
+    drawIfInside(m_pos_ris, area);
+
+    return mod;
+}
+
+int page::removeAndDraw(
+        int m_pos_ris,
+        const int *pos,
+        int i,
+        const QRectF &area)
+{
+    for(i --; i >= 0; i --){
+        drawForceColorStroke(atStroke(pos[i]), m_pos_ris, COLOR_NULL);
+        removeAt(pos[i]);
+    }
+
+    drawIfInside(m_pos_ris, area);
+
+    return 1;
+}
+
+void page::drawIfInside(int m_pos_ris, const QRectF &area)
+{
+    int index = lengthStroke() - 1;
     for(; index >= 0; index --){
         const stroke &stroke = this->atStroke(index);
         if(is_inside_squade(stroke.getBiggerPointInStroke(), area)){
             this->drawStroke(stroke, m_pos_ris);
         }
     }
-
-    return mod;
 }
 
 void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color)

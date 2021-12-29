@@ -145,7 +145,8 @@ public:
 
     QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
     const stroke &get_stroke(int id) const;
-    QRectF get_size_area(const QList<int> & id) const;
+    __fast QRectF get_size_area(const int *pos, int len, int page) const;
+    __slow QRectF get_size_area(const QList<int> & id) const;
     void removeAndTrigger(const QList<int> &id);
 
     int getFirstPageVisible() const;
@@ -298,6 +299,29 @@ inline const stroke &datastruct::get_stroke(int id) const
     }
 
     std::abort();
+}
+
+inline QRectF datastruct::get_size_area(const int *pos, int len, int counterPage) const
+{
+    const page &page = at(counterPage);
+    QRectF result;
+
+    Q_ASSERT(pos);
+    Q_ASSERT(counterPage < this->lengthPage());
+
+    if(!len){
+        return QRectF();
+    }
+
+    len --;
+    result = page.atStroke(pos[0]).getBiggerPointInStroke();
+
+    for(; len >= 0; len --){
+        const QRectF tmp = page.atStroke(pos[len]).getBiggerPointInStroke();
+        result = datastruct::get_bigger_rect(result, tmp);
+    }
+
+    return result;
 }
 
 inline QRectF datastruct::get_size_area(const QList<int> &id) const
