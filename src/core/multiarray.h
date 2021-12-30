@@ -3,7 +3,6 @@
 
 #include "utils/common_def.h"
 #include "stdlib.h"
-#include "malloc.h"
 
 template <typename T>
 class multiarray
