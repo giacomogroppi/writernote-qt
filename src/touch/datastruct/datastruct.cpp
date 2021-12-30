@@ -149,6 +149,8 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
     }
 
     dest.zoom = src.zoom;
+    dest.pageVisible = src.pageVisible;
+    dest.pointFirstPage = src.pointFirstPage;
 
     dest.__last_translation = src.__last_translation;
 }

@@ -369,7 +369,7 @@ inline int datastruct::getFirstPageVisible() const
      * is constant is because
      *  we don't want QList to copy all pages
      *  when they are shared. */
-    int __pageVisible = (int &) pageVisible;
+    int &__pageVisible = (int &) pageVisible;
     QList<page> &__page = (QList<page> &)this->m_page;
     int i, len = this->lengthPage();
 
@@ -407,7 +407,6 @@ inline int datastruct::whichPage(const stroke &stroke) const
             return counterPage;
         }
     }
-    Q_ASSERT(false);
     return -1;
 }
 
