@@ -77,13 +77,13 @@ void rubber_ui::on_partial_button_clicked()
 
 void rubber_ui::endRubber(datastruct *data)
 {
-    int i, lenPage = data->lengthPage();
+    int i, len = data_to_remove->lengthPage();
 
     Q_ASSERT(data);
 
     if(m_type_gomma == e_type_rubber::total){
 
-        for(i = 0; i < lenPage; i ++){
+        for(i = 0; i < len; i ++){
             QVector<int> &arr = this->data_to_remove.operator[](i);
             page &page = data->at_mod(i + base);
 
