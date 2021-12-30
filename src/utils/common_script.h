@@ -75,12 +75,12 @@ inline void order(T &list)
 
     for (i = 0; i < n - 1; i++){
         for (j = 0; j < n - i - 1; j++){
-            const T *val1 = (T *)&list.at(j);
-            const T *val2 = (T *)&list.at(j+1);
+            auto &val1 = list.operator[](j);
+            auto &val2 = list.operator[](j+1);
 
-            if (*val1 > *val2){
+            if (val1 > val2){
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-                __swap(*val1, *val2);
+                __swap(val1, val2);
 #else
                 list.swapItemsAt(j, j + 1);
 #endif
