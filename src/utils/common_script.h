@@ -68,20 +68,25 @@ Q_ALWAYS_INLINE int is_order(const QList<T> &list)
  * otherwise use std :: sort
 */
 template <typename T>
-inline int order(T &list)
+inline void order(T &list)
 {
-    int i, j, mod;
+    int i, j;
     int n = list.length();
 
-    for (i = 0, mod = 0; i < n - 1; i++){
+    for (i = 0; i < n - 1; i++){
         for (j = 0; j < n - i - 1; j++){
-            if (list[j] > list[j+1]){
+            const T *val1 = (T *)&list.at(j);
+            const T *val2 = (T *)&list.at(j+1);
+
+            if (*val1 > *val2){
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+                __swap(*val1, *val2);
+#else
                 list.swapItemsAt(j, j + 1);
-                mod = 1;
+#endif
             }
         }
     }
-    return mod;
 }
 
 template <typename T>
