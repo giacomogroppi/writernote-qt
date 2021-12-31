@@ -77,7 +77,7 @@ void rubber_ui::on_partial_button_clicked()
 
 void rubber_ui::endRubber(datastruct *data)
 {
-    int i, len = data_to_remove->length();
+    int i, len = data_to_remove.length();
 
     Q_ASSERT(data);
 
