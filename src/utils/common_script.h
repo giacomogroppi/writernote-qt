@@ -34,7 +34,7 @@ Q_ALWAYS_INLINE void __swap(T &t1, T &t2)
 {
     const T tmp = t1;
     t1 = t2;
-    t2 = t1;
+    t2 = tmp;
 }
 
 #define IS_ORDER_WITH_FUNCTION(list, function) \
