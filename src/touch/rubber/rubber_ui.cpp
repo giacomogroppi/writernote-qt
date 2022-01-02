@@ -2,6 +2,7 @@
 #include "ui_rubber_ui.h"
 #include "utils/common_script.h"
 #include "pthread.h"
+#include "touch/multi_thread_data.h"
 
 void * actionRubberSingle (void *);
 
@@ -18,10 +19,6 @@ static datastruct           *__datastruct;
 static int new_id = 0;
 
 static pthread_mutex_t mutex_write;
-
-struct RuDataPrivate{
-    int from, to;
-};
 
 #define REMOVE_STROKE_THREAD_SAVE(counterStroke) \
     do{                                         \
@@ -124,7 +121,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
 
     pthread_t thread[RUBB_TH];
-    RuDataPrivate threadData[RUBB_TH];
+    DataPrivateMuThread threadData[RUBB_TH];
 
     this->base = data->getFirstPageVisible();
 
@@ -214,7 +211,7 @@ static inline bool isin(
 
 void *actionRubberSingle(void *_data)
 {
-    RuDataPrivate *data = (RuDataPrivate *) _data;
+    DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
 
     Q_ASSERT(data->from <= data->to);
 
