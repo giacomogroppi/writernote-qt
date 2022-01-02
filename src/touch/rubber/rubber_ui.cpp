@@ -216,7 +216,11 @@ void *actionRubberSingle(void *_data)
 {
     RuDataPrivate *data = (RuDataPrivate *) _data;
 
-    Q_ASSERT(data->from < data->to);
+    Q_ASSERT(data->from <= data->to);
+
+#ifdef DEBUGINFO
+    qDebug() << data->from << data->to;
+#endif
 
     for(; data->from < data->to; data->from++){
         stroke &stroke = __page->atStrokeMod(data->from);

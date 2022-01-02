@@ -2,18 +2,22 @@
 #include "touch/square/square.h"
 #include <QPainter>
 
+extern bool block_scrolling;
+
 /* wheel of mouse */
 void TabletCanvas::ismoving_f(){
-    static QPointF translation;
+    QPointF translation;
     const double refZoom = data->datatouch->getZoom();
 
-    translation = ismoving.point;
-    translation /= refZoom;
+    if(!block_scrolling){
+        translation = ismoving.point;
+        translation /= refZoom;
 
-    data->datatouch->scala_all(translation, this->height());
+        data->datatouch->scala_all(translation, this->height());
 
-    m_square->translate(translation);
+        m_square->translate(translation);
 
-    updatePageCount();
-    update();
+        updatePageCount();
+        update();
+    }
 }

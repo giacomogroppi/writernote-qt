@@ -9,6 +9,7 @@
 #define MAXPOINT 20
 
 stroke __tmp;
+extern bool block_scrolling;
 static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop);
 
 bool need_save_auto = false;
@@ -43,6 +44,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     need_save_auto = true;
     need_save_tmp = true;
     sel = true;
+    block_scrolling = true;
 
     eventType = event->type();
 
@@ -166,6 +168,7 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
             m_rubber->endRubber(data->datatouch);
         }
     }
+    block_scrolling = false;
 }
 
 Q_ALWAYS_INLINE void TabletCanvas::ManageStart(

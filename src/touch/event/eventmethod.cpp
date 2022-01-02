@@ -23,6 +23,8 @@ extern bool isZooming;
 static QPointF pointMiddle;
 static bool needToResize;
 
+bool block_scrolling = false;
+
 bool TabletCanvas::event(QEvent *event){
     needToResize = false;
     static QPointF tmp;
@@ -62,6 +64,7 @@ bool TabletCanvas::event(QEvent *event){
                 continue;
             default:
             {
+                block_scrolling = true;
                 const QPointF &pointTouch = touchPoint.pos();
                 //qDebug() << "TabletCanvas::event default";
                 if(ISDEFINE(lastpointzoom)){
@@ -141,7 +144,7 @@ bool TabletCanvas::event(QEvent *event){
     return true;
 }
 
-static inline QPointF puntoameta(const QPointF &first, const QPointF &sec){
+static Q_ALWAYS_INLINE QPointF puntoameta(const QPointF &first, const QPointF &sec){
     static double x, y;
     x = (first.x() + sec.x()) / 2.0;
     y = (first.y() + sec.y()) / 2.0;
@@ -154,13 +157,4 @@ static inline double Distance(const QPointF &point1, const QPointF &point2){
     x = pow(point1.x() - point2.x(), 2);
     y = pow(point1.y() - point2.y(), 2);
     return sqrt(x + y);
-}
-
-static inline void scambio(QPointF &left, QPointF &right){
-    double tmpval = left.x();
-    if(left.x() > right.x()){
-        left.setX(right.x());
-        right.setX(tmpval);
-    }
-
 }

@@ -171,8 +171,8 @@ void page::mergeList()
             m_stroke.insert(0, stroke);
         }
 
-        Q_ASSERT(m_stroke.at(index).length() == strokeTmp.at(i).length());
-        Q_ASSERT(m_stroke.at(index).getId() == strokeTmp.at(i).getId());
+        //Q_ASSERT(m_stroke.at(index).length() == strokeTmp.at(i).length());
+        //Q_ASSERT(m_stroke.at(index).getId() == strokeTmp.at(i).getId());
 
         index ++;
     }

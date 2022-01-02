@@ -17,6 +17,7 @@ static double speed_x, speed_y;
 static long delta_time;
 
 static int how_time = 0;
+extern bool block_scrolling;
 
 static inline long current_time(){
     return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -35,7 +36,7 @@ static inline long current_time(){
 static inline void dec_speed(double &var, double scrolling_speed);
 
 void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
-    static int delta_x, delta_y;
+    int delta_x, delta_y;
 
     if(!timer){
         timer = new QTimer(this);
