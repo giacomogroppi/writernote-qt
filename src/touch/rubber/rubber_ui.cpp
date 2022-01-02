@@ -198,7 +198,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 }
 
 static inline bool isin(
-                    int size_rubber,
+                    int             size_rubber,
                     const point_s   &__point,
                     const QPointF   &touch)
 {
