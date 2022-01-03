@@ -5,6 +5,6 @@ struct DataPrivateMuThread{
     int from, to;
 };
 
-void init(DataPrivateMuThread *data, int len);
+int DataPrivateMuThreadInit(DataPrivateMuThread *data, int len, int to);
 
 #endif // MULTI_THREAD_DATA_H

@@ -137,14 +137,11 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     for(counterPage = base; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
         int tmp = 0;
-        int done, div, create;
+        int create;
 
         if(!page.isVisible()) break;
 
         lenStroke = page.lengthStroke();
-        done = 0;
-
-        div = div_diff(lenStroke, RUBB_TH);
 
         __page =  &page;
 
@@ -153,24 +150,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
         __data_find = (QVector<int> *)&data_to_remove.at(count);
 
-        if(lenStroke > RUBB_TH){
-            create = RUBB_TH;
-
-            for(tmp = 0; tmp < RUBB_TH; tmp ++){
-                threadData[tmp].from = done;
-                threadData[tmp].to = done + div;
-                done += div;
-            }
-
-            threadData[RUBB_TH-1].to = lenStroke;
-
-        }else{
-            create = 1;
-            threadData[0].from = 0;
-            threadData[0].to = lenStroke;
-        }
-
-        threadData[RUBB_TH - 1].to = lenStroke;
+        create = DataPrivateMuThreadInit(threadData, RUBB_TH, lenStroke);
 
         for(tmp = 0; tmp < create; tmp ++){
             pthread_create(&thread[tmp], NULL, actionRubberSingle, &threadData[tmp]);
