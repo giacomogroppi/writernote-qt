@@ -7,6 +7,11 @@
 #include "touch/property/property_control.h"
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
+#include "touch/multi_thread_data.h"
+#include "pthread.h"
+
+#define SQ_THREAD 8
+void * __square_search(void *__data);
 
 square::square(QObject *parent, property_control *property):
     QObject(parent)
@@ -45,6 +50,9 @@ bool square::find(Document *doc){
 
     const QPointF &topLeft = data->adjustPoint(pointinit.point);
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
+
+    pthread_t thread[SQ_THREAD];
+    DataPrivateMuThread dataThread[SQ_THREAD];
 
     in_box = false;
     __need_reload = false;
@@ -235,12 +243,14 @@ void square::actionProperty(property_control::ActionProperty action)
 }
 
 #define MAKE_CHANGE(point1, point2, function, secFunction) \
-    if(point1.function() > point2.function()) \
-    { \
-        tmp = point2.function(); \
-        point2.secFunction(point1.function()); \
-        point1.secFunction(tmp); \
-    }
+    do{                                             \
+        if(point1.function() > point2.function())   \
+        {                                           \
+            tmp = point2.function();                \
+            point2.secFunction(point1.function());  \
+            point1.secFunction(tmp);                \
+        }                                           \
+    }while(0)
 
 /*
  * la funcione cambia i punti, in caso l'utente non abbia tracciato il
@@ -254,4 +264,9 @@ Q_ALWAYS_INLINE void square::adjustPoint()
 
     MAKE_CHANGE(topLeft, bottomRight, x, setX);
     MAKE_CHANGE(topLeft, bottomRight, y, setY);
+}
+
+void * __square_search(void *__data)
+{
+
 }

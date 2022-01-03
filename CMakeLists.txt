@@ -210,6 +210,7 @@ ADD_EXECUTABLE(writernote
     src/audioplay/ctrlAudioPlay.cpp
     src/audioplay/audioplay.cpp
     src/audioplay/aggiornotastiriascolto.cpp
+    src/touch/multi_thread_data.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
