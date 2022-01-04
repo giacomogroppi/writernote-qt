@@ -18,18 +18,21 @@
 class frompdf;
 class fromimage;
 
-#define for_each_page(__page, data)                                        \
-    int ___counterPage, ___lenPage;                                        \
-    for(___counterPage = 0, ___lenPage = data.lengthPage(),                \
-        __page = &data.at(___counterPage); ___counterPage < ___lenPage;    \
-        ___counterPage ++, __page = &data.at(___counterPage))
+#define for_from_to_node(__node, __from, __to, __function, __data, __name)          \
+    typeof(__to) ___counter##__name;                                                \
+    for(___counter##__name = __from,                                                \
+        __node = likely(__to) ? &__data.__function(___counter##__name) : 0;         \
+        ___counter##__name < __to;                                                  \
+        ___counter##__name ++, __node = &__data.__function(___counter##__name))
 
-#define for_each_stroke(__stroke, page)                                         \
-        int ___counterStroke, ___lenStroke;                                     \
-        for(___counterStroke = 0, ___lenStroke = page.lengthStroke(),           \
-                __stroke = &page.atStroke(___counterStroke);                    \ 
-                ___counterStroke < ___lenStroke;                                \
-            ___counterStroke++, __stroke = &page.atStroke(___counterStroke))
+#define for_each_page(__page, data)                         \
+        int __lenPage = data.lengthPage();                  \
+        for_from_to_node(__page, (int)0, __lenPage, at, data, Page)
+
+#define for_each_stroke(__stroke, __page)         \
+        int __lenStroke = __page.lengthStroke();  \
+        for_from_to_node(__stroke, (int)0, __lenStroke, atStroke, __page, Stroke)
+
 
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
@@ -340,6 +343,7 @@ inline QRectF datastruct::get_size_area(const QList<int> &id) const
 
     if(unlikely(id.isEmpty()))
         return QRectF();
+
 
     {
         int tmp_idtratto = id.at(0);
