@@ -15,5 +15,6 @@
         "qstringlist": "cpp",
         "qvector": "cpp",
         "array": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

@@ -81,12 +81,26 @@ bool square::find(Document *doc){
     Q_ASSERT(pointinit.x() <= pointfine.x());
     Q_ASSERT(pointinit.y() <= pointfine.y());
 
+    /*
+     * Il problema di cercare nella lista è
+     * il tempo sia di scorrerla, sia di creare
+     * l'area degli stroke. Siccome ogni stroke
+     * è (thread save) l'uno rispetto all'altro lo
+     * possiamo fare in parallelo.
+     * Ci salviamo la posizione degli stroke
+     * in lista e settiamo le pagine interessate
+     * per non poter modificare la lista.
+     */
+
     /* point selected by user */
     for(count = 0; PageCounter < lenPage; PageCounter ++, count ++){
         __page = &data->at(PageCounter);
         create = DataPrivateMuThreadInit(dataThread, SQ_THREAD, __page->lengthStroke());
 
-        if(count > m_index.length())
+        if(unlikely(!__page->isVisible()))
+            break;
+
+        if(unlikely(count > m_index.length()))
             m_index.append(QVector<int>());
 
         __index = (QVector<int> *)&m_index.at(count);

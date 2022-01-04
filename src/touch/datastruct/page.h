@@ -7,9 +7,11 @@
 #include <QDebug>
 #include <QImage>
 #include "stroke.h"
-#include "src/log/log_ui/log_ui.h"
-#include "src/utils/common_def.h"
-#include "src/utils/common_script.h"
+#include "log/log_ui/log_ui.h"
+#include "utils/common_def.h"
+#include "utils/common_script.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "gdb/jit-reader.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 
@@ -22,7 +24,8 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width*proportion; // correct proportions for A4 paper size
 
-#define FLAG_PAGE_ORDERED (1 << 0) // if indicates whether the list of strokes is sort by index
+#define FLAG_PAGE_ORDERED   BIT(1) // if indicates whether the list of strokes is sort by index
+#define FLAG_PAGE_BLOCK     BIT(2) // if we can't append stroke
     int flag = 0;
 
     bool IsVisible = true;
@@ -121,6 +124,10 @@ public:
     int removeAndDraw(int m_pos_ris, const QVector<int> pos, const QRectF &area);
     void drawIfInside(int m_pos_ris, const QRectF &area);
 
+    // block for appending
+    void setBlock() const;
+    void removeBlock() const;
+
     QList<stroke>::const_iterator get_begin() const noexcept;
     QList<stroke>::const_iterator get_end() const noexcept;
 
@@ -140,6 +147,18 @@ public:
     friend class xmlstruct;
     friend class rubber_ui;
 };
+
+Q_ALWAYS_INLINE void page::removeBlock() const
+{
+    int & tmp = (int &)flag;
+    tmp &= ~FLAG_PAGE_BLOCK;
+}
+
+Q_ALWAYS_INLINE void page::setBlock() const
+{
+    int & tmp = (int &) flag;
+    tmp |= FLAG_PAGE_BLOCK;
+}
 
 inline double page::currentHeight() const
 {
@@ -188,6 +207,15 @@ inline point_s page::at_translation(const point_s &point, int page)
 
 Q_ALWAYS_INLINE void page::AppendDirectly(const stroke &stroke)
 {
+    if(unlikely(this->flag & FLAG_PAGE_BLOCK)){
+        const QString message = QString("Possible bug, appending when flag is %1").arg(QString::number(flag));
+        NAME_LOG_EXT->write(message, log_ui::possible_bug);
+        qDebug() << message;
+
+#ifdef DEBUGINFO
+        dialog_critic(message);
+#endif
+    }
     this->m_stroke.append(stroke);
 }
 
