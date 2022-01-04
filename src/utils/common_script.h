@@ -7,6 +7,9 @@
 
 #define BIT(bit) (1 << (bit-1))
 
+#define unlikely(exp) Q_UNLIKELY(exp)
+#define likely(exp) Q_LIKELY(exp)
+
 /*
  * this function controll an enum load from setting
  * When you load a value from QSetting, and apply an implicit cast to it, it is saved correctly

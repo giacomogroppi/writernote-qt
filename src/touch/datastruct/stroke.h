@@ -8,6 +8,7 @@
 #include "point.h"
 #include "zip.h"
 #include "utils/common_def.h"
+#include "utils/common_script.h"
 
 struct metadata_stroke{
     int page;
@@ -137,7 +138,7 @@ inline void stroke::updateFlagPressure() const
          * by point.
         */
         __constPressureVal = false;
-        goto leave;
+        return;
     }
 
     current = &at(0);
@@ -146,18 +147,14 @@ inline void stroke::updateFlagPressure() const
         next = &at(i+1);
 
         if(next->pressure != current->pressure){
-            goto leave;
+            __constPressureVal = false;
+            return;
         }
 
         current = next;
     }
 
     __constPressureVal = true;
-    return;
-
-leave:
-
-    __constPressureVal = false;
 }
 
 /* call this function when modify the stroke */
@@ -345,7 +342,7 @@ inline const metadata_stroke &stroke::getMetadata() const
 
 inline bool stroke::constantPressure() const
 {
-    if(this->needToUpdatePressure)
+    if(unlikely(this->needToUpdatePressure))
         this->updateFlagPressure();
     return this->constantPressureVal;
 }
@@ -380,11 +377,10 @@ inline const QPainterPath &stroke::getQPainterPath() const
 {
     bool &__needToCreatePanterPath = (bool &)this->needToCreatePanterPath;
 
-    if(this->needToCreatePanterPath){
+    if(unlikely(this->needToCreatePanterPath)){
         this->createQPainterPath();
+        __needToCreatePanterPath = false;
     }
-
-    __needToCreatePanterPath = false;
 
     return this->path;
 }

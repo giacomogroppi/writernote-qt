@@ -253,7 +253,7 @@ Q_ALWAYS_INLINE bool page::updateFlag(
     cdouble minH = heightSec * double(count - 1) / zoom + FirstPoint.y();
     cdouble maxH = heightSec * double(count)     / zoom + FirstPoint.y();
 
-    if(heightView < page::getHeight() * zoom){
+    if(likely( heightView < page::getHeight() * zoom)){
         // if the page is not fully visible in a window
 
         IsVisible = (maxH)
@@ -339,7 +339,10 @@ Q_ALWAYS_INLINE bool page::isVisible() const
     return this->IsVisible;
 }
 
-Q_ALWAYS_INLINE void page::copy(const page &src, page &dest){
+Q_ALWAYS_INLINE void page::copy(
+    const page  &src,
+    page        &dest)
+{
     int counterStroke, lenStroke;
     lenStroke = src.lengthStroke();
     dest.reset();
@@ -371,7 +374,7 @@ Q_ALWAYS_INLINE int page::maxId() const
     for(i = 0; i < len; i++){
         const stroke &stroke = atStroke(i);
 
-        if(stroke.getId() > id)
+        if(likely(stroke.getId() > id))
             id = stroke.getId();
     }
 

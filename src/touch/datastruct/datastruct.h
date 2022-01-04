@@ -18,15 +18,28 @@
 class frompdf;
 class fromimage;
 
+#define for_each_page(__page, data)                                        \
+    int ___counterPage, ___lenPage;                                        \
+    for(___counterPage = 0, ___lenPage = data.lengthPage(),                \
+        __page = &data.at(___counterPage); ___counterPage < ___lenPage;    \
+        ___counterPage ++, __page = &data.at(___counterPage))
+
+#define for_each_stroke(__stroke, page)                                         \
+        int ___counterStroke, ___lenStroke;                                     \
+        for(___counterStroke = 0, ___lenStroke = page.lengthStroke(),           \
+                __stroke = &page.atStroke(___counterStroke);                    \ 
+                ___counterStroke < ___lenStroke;                                \
+            ___counterStroke++, __stroke = &page.atStroke(___counterStroke))
+
 #define IDVERTICALE -2
 #define IDORIZZONALE -1
 #define IDUNKNOWN -6
 
-#define WRIT_CHANG(arr, tmp) \
-    if(arr[0] < arr[1]){ \
-        tmp = arr[0]; \
-        arr[0] = arr[1]; \
-        arr[1] = tmp; \
+#define WRIT_CHANG(arr, tmp)    \
+    if(arr[0] < arr[1]){        \
+        tmp = arr[0];           \
+        arr[0] = arr[1];        \
+        arr[1] = tmp;           \
     }
 
 class datastruct
@@ -144,7 +157,7 @@ public:
     void newPage(const n_style style);
 
     QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
-    const stroke &get_stroke(int id) const;
+
     __fast QRectF get_size_area(const int *pos, int len, int page) const;
     __fast QRectF get_size_area(const QVector<int> &pos, int page) const;
     __slow QRectF get_size_area(const QList<int> & id) const;
@@ -195,7 +208,7 @@ inline int datastruct::maxId()
     for(i = 0; i < len; ++i){
         tmp_id = this->m_page.at(i).maxId();
 
-        if(tmp_id > biggerID){
+        if(likely(tmp_id > biggerID)){
             biggerID = tmp_id;
         }
     }
@@ -285,24 +298,10 @@ inline void datastruct::newPage(const n_style style)
     this->m_page.append(page);
 }
 
-inline const stroke &datastruct::get_stroke(int id) const
-{
-    int counterPage = this->lengthPage() - 1;
-    for(; counterPage >= 0; counterPage --){
-        const page &page = this->at(counterPage);
-        int counterStroke = page.lengthStroke() - 1;
-
-        for(; counterStroke >= 0; counterStroke --){
-            const stroke &stroke = page.atStroke(counterStroke);
-            if(stroke.getId() == id)
-                return stroke;
-        }
-    }
-
-    std::abort();
-}
-
-inline QRectF datastruct::get_size_area(const int *pos, int len, int counterPage) const
+inline QRectF datastruct::get_size_area(
+    const int   *pos,
+    int         len,
+    int         counterPage) const
 {
     const page &page = at(counterPage);
     QRectF result;
@@ -334,23 +333,29 @@ inline QRectF datastruct::get_size_area(
 
 inline QRectF datastruct::get_size_area(const QList<int> &id) const
 {
-    int counterPage = this->lengthPage() - 1, counterStroke;
     QRectF result;
 
-    const page *page;
-    const stroke *__stroke;
+    const stroke    *__stroke;
+    const page      *__page;
 
-    if(id.isEmpty())
+    if(unlikely(id.isEmpty()))
         return QRectF();
 
-    result = this->get_stroke(id.first()).getBiggerPointInStroke();
+    {
+        int tmp_idtratto = id.at(0);
+        for_each_page(__page, (*this)){
+            for_each_stroke(__stroke, (*__page)){
+                if(unlikely(__stroke->getId() == tmp_idtratto)){
+                    result = __stroke->getBiggerPointInStroke();
+                    break;
+                }
+            }
 
-    for(; counterPage >= 0; counterPage --){
-        page = &at(counterPage);
-        counterStroke = page->lengthStroke() - 1;
-        for(; counterStroke >= 0; counterStroke --){
-            __stroke = &page->atStroke(counterStroke);
+        }
+    }
 
+    for_each_page(__page, (*this)){
+        for_each_stroke(__stroke, (*__page)){
             if(IS_NOT_PRESENT_IN_LIST(id, __stroke->getId()))
                 continue;
 
@@ -373,7 +378,7 @@ inline int datastruct::getFirstPageVisible() const
     QList<page> &__page = (QList<page> &)this->m_page;
     int i, len = this->lengthPage();
 
-    if(this->pageVisible < 0){
+    if(unlikely(pageVisible < 0)){
         for(i = 0; i < len; i++){
             if(__page.at(i).isVisible()){
                 __pageVisible = i;

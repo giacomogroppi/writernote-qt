@@ -10,3 +10,4 @@ Makefile
 *.user
 ui*.h
 writernote_autogen/*
+/build/

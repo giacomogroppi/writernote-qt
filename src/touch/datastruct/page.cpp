@@ -128,7 +128,7 @@ void page::drawEngine(
 
     for(i = 0; i < lenStroke; i++){
         const stroke &stroke = List.at(i);
-        if(stroke.isEmpty()){
+        if(unlikely(stroke.isEmpty())){
             List.removeAt(i);
             i --;
             lenStroke --;
@@ -137,7 +137,7 @@ void page::drawEngine(
         }
 
         const QColor color = stroke.getColor(
-            (stroke.getPosizioneAudio() > m_pos_ris) ? 1 : 4
+            (likely(stroke.getPosizioneAudio()) > m_pos_ris) ? 1 : 4
         );
 
         this->drawStroke(painter, stroke, m_pen, color);
@@ -145,9 +145,11 @@ void page::drawEngine(
 
 }
 
-inline void page::draw(QPainter &painter, int m_pos_ris, bool all)
+inline void page::draw(
+    QPainter    &painter,
+    int         m_pos_ris,
+    bool        all)
 {
-
     if(all)
         this->drawEngine(painter, this->m_stroke, m_pos_ris);
 
@@ -165,7 +167,7 @@ void page::mergeList()
     for(i = 0; i < len; i++){
         const stroke &stroke = strokeTmp.at(i);
 
-        if(stroke.getColor(1).alpha() == 255){
+        if(likely(stroke.getColor(1).alpha() == 255)){
             m_stroke.append(stroke);
         }else{
             m_stroke.insert(0, stroke);
@@ -213,7 +215,7 @@ static inline double widthToPressure(double v){
     return v/10.0;
 }
 
-static Q_ALWAYS_INLINE void drawLineOrizzontal(
+static inline void drawLineOrizzontal(
     stroke                  &stroke, 
     point_s                 &point, 
     const style_struct_S    &style,
@@ -237,7 +239,7 @@ static Q_ALWAYS_INLINE void drawLineOrizzontal(
     }
 }
 
-static Q_ALWAYS_INLINE void drawLineVertical(
+static inline void drawLineVertical(
     stroke                  &stroke, 
     point_s                 &point, 
     const style_struct_S    &style, 
@@ -407,6 +409,7 @@ int page::removeAndDraw(int m_pos_ris, const QVector<int> pos, const QRectF &are
         removeAt(ref);
     }
     drawIfInside(m_pos_ris, area);
+
     return !!pos.length();
 }
 
@@ -415,7 +418,7 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
     int index = lengthStroke() - 1;
     for(; index >= 0; index --){
         const stroke &stroke = this->atStroke(index);
-        if(is_inside_squade(stroke.getBiggerPointInStroke(), area)){
+        if(unlikely(is_inside_squade(stroke.getBiggerPointInStroke(), area))){
             this->drawStroke(stroke, m_pos_ris);
         }
     }
@@ -438,7 +441,10 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
 }
 
 // the function is use for rubber and square
-void page::drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color)
+void page::drawForceColor(
+    int                 m_pos_ris,
+    const QList<int>    &id,
+    const QColor        &color)
 {
     QPainter painter;
     Define_PEN(pen);
@@ -490,10 +496,10 @@ int page::save(zip_source_t *file) const
 }
 
 #define DO_LOAD(list) \
-    for(i = 0; i < len_stroke; i++){ \
-        stroke tmp; \
-        DO_CTRL(tmp.load(file, ver_stroke)); \
-        this->list.append(tmp); \
+    for(i = 0; i < len_stroke; i++){            \
+        stroke tmp;                             \
+        DO_CTRL(tmp.load(file, ver_stroke));    \
+        this->list.append(tmp);                 \
     }
 
 int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
