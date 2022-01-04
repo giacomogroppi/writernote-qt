@@ -61,13 +61,14 @@ private:
     PointSettable pointinit;
     PointSettable pointfine;
 
+    QImage img;
     QList<int> m_id; /* point */
     QList<int> m_index_img; /* image */
 
     QPen penna;
     class property_control *m_property;
 
-    bool in_box: 1;
+    bool in_box;
     copy *m_copy;
 
     class TabletCanvas *canvas;

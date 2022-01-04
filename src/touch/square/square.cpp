@@ -12,6 +12,12 @@
 
 #define SQ_THREAD 8
 void * __square_search(void *__data);
+static pthread_mutex_t      __mutex_sq;
+static const page           *__page;
+static QPointF              __f;
+static QPointF              __s;
+static QVector<int>         *__index;
+static bool                 *__in_box;
 
 square::square(QObject *parent, property_control *property):
     QObject(parent)
@@ -29,6 +35,10 @@ square::square(QObject *parent, property_control *property):
     penna.setWidth(2);
     penna.setColor(QColor::fromRgb(30, 90, 255));
     this->reset();
+
+    __in_box = &in_box;
+
+    pthread_mutex_init(&__mutex_sq, NULL);
 }
 
 square::~square()
@@ -42,20 +52,29 @@ square::~square()
  * del tratto e setta la variabile this->check =
  * true, in caso contrario la setta = false e fa il return
 */
+
 bool square::find(Document *doc){
     datastruct *data = doc->datatouch;
     bool tmp_find;
+    int i, create, lenPage, count;
     const QPointF &translation = data->getPointFirstPage();
-    int PageCounter = data->lengthPage() - 1, strokeCounter;
+    int PageCounter;
 
     const QPointF &topLeft = data->adjustPoint(pointinit.point);
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
 
     pthread_t thread[SQ_THREAD];
     DataPrivateMuThread dataThread[SQ_THREAD];
+    QList<QVector<int>> m_index;
 
+    const int base = data->getFirstPageVisible();
+    lenPage = data->lengthPage();
     in_box = false;
     __need_reload = false;
+    PageCounter = base;
+
+    __f     = topLeft + translation;
+    __s     = bottomRight + translation;
 
     this->adjustPoint();
 
@@ -63,18 +82,19 @@ bool square::find(Document *doc){
     Q_ASSERT(pointinit.y() <= pointfine.y());
 
     /* point selected by user */
-    for(; PageCounter >= 0; PageCounter --){
-        const page &page = data->at(PageCounter);
-        strokeCounter = page.lengthStroke() - 1;
+    for(count = 0; PageCounter < lenPage; PageCounter ++, count ++){
+        __page = &data->at(PageCounter);
+        create = DataPrivateMuThreadInit(dataThread, SQ_THREAD, __page->lengthStroke());
 
-        for(; strokeCounter >= 0; strokeCounter --){
-            const stroke &stroke = page.atStroke(strokeCounter);
+        if(count > m_index.length())
+            m_index.append(QVector<int>());
 
-            if(datastruct::isinside(topLeft + translation , bottomRight + translation, stroke)){
-                const int id = stroke.getId();
-                IF_NOT_PRESENT_APPEND(m_id, id);
-                this->in_box = true;
-            }
+        __index = (QVector<int> *)&m_index.at(count);
+
+        for(i = 0; i < create; i++)
+            pthread_create(&thread[i], NULL, __square_search, (void *)&dataThread[i]);
+        for(i = 0; i < create; i++){
+            pthread_join(thread[i], NULL);
         }
     }
 
@@ -268,5 +288,23 @@ Q_ALWAYS_INLINE void square::adjustPoint()
 
 void * __square_search(void *__data)
 {
+    DataPrivateMuThread *data = (DataPrivateMuThread *)__data;
+    bool in_box = false;
 
+    for(; data->from < data->to;  data->from ++){
+        const stroke &stroke = __page->atStroke(data->from);
+        if(datastruct::isinside(__f, __s, stroke)){
+            pthread_mutex_lock(&__mutex_sq);
+
+            __index->append(data->from);
+
+            pthread_mutex_unlock(&__mutex_sq);
+            in_box = true;
+        }
+    }
+
+    if(in_box)
+        *__in_box = true;
+
+    return NULL;
 }
