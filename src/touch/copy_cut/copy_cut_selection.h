@@ -17,7 +17,8 @@ public:
 #define SELECTION_FLAGS_COPY 0
 #define SELECTION_FLAGS_CUT 1
 #define SELECTION_FLAGS_PASTE 2
-    void selection(datastruct &data, const QList<int> &id, int __flags, QList<int> &page_mod, const QPointF &offsetTouch);
+    void selection(datastruct &data, const QList<QVector<int>> &id, int page_base,
+                   int __flags, QList<int> &page_mod, const QPointF &offsetTouch);
     void past_selection(datastruct &data, QPointF &point_past);
 
     bool isEmpty() const;

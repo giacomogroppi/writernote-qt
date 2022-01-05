@@ -121,7 +121,7 @@ void stroke::movePoint(const QPointF &translation)
         point.m_y += translation.y();
     }
 
-    if(!needToCreatePanterPath){
+    if(likely(!needToCreatePanterPath)){
         this->path.translate(translation * PROP_RESOLUTION);
     }
     else{

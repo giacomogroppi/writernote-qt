@@ -254,17 +254,25 @@ void square::actionProperty(property_control::ActionProperty action)
             break;
         }
         case property_control::ActionProperty::__delete:{
-            data.removePointId(m_id, &page);
+
+            __order(index);
+
+            data.removePointIndex(index, base, true);
             dontcall_copy = 0;
             m_property->Hide();
             break;
         }
-       default:
-           std::abort();
+        default:{
+            NAME_LOG_EXT->write(
+                        QString("It was not possibile to determinate %1").arg(QString::number((int)action)),
+                        log_ui::error_internal);
+            std::abort();
+        }
     }
 
     if(dontcall_copy)
-        this->m_copy->selection(data, this->m_id, flags, page, pointinit.point);
+        this->m_copy->selection(data, this->index, base,
+                                flags, page, pointinit.point);
     else
         this->reset();
 
@@ -276,14 +284,14 @@ void square::actionProperty(property_control::ActionProperty action)
     this->canvas->call_update();
 }
 
-#define MAKE_CHANGE(point1, point2, function, secFunction) \
-    do{                                             \
-        if(point1.function() > point2.function())   \
-        {                                           \
-            tmp = point2.function();                \
-            point2.secFunction(point1.function());  \
-            point1.secFunction(tmp);                \
-        }                                           \
+#define MAKE_CHANGE(point1, point2, function, secFunction)  \
+    do{                                                     \
+        if(point1.function() > point2.function())           \
+        {                                                   \
+            tmp = point2.function();                        \
+            point2.secFunction(point1.function());          \
+            point1.secFunction(tmp);                        \
+        }                                                   \
     }while(0)
 
 /*

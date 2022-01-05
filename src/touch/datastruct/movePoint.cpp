@@ -37,35 +37,29 @@ void datastruct::MovePoint(
     }
 }
 
-/*QList<int> *datastruct::MovePoint(const QRectF &rect, const QPointF &__touch){
-    uint i, len;
-    const uint lenPage = this->lengthPage();
-    QPointF topleft, bottonright;
+void datastruct::MovePoint(
+        const QList<QVector<int> >  &pos,
+        cint                        base,
+        const QPointF               &translation)
+{
+    int i, len = pos.length();
 
-    static QList<int> __id;
+    for(i = 0; i < len; i++){
+        const QVector<int> & ref = pos.at(i);
 
-    __id.clear();
-
-    topleft = rect.topLeft();
-
-    bottonright = rect.bottomRight();
-
-
-    for(uint k=0; k<lenPage; k++){
-        len = at(k).lengthStroke();
-
-        for(i=0; i<len; i++){
-            const stroke &stroke = at(k).atStroke(i);
-
-            if(this->isinside(topleft, bottonright, stroke)){
-                if(__id.indexOf(stroke.getId()) == -1){
-                    __id.append(stroke.getId());
-                }
-            }
-        }
+        MovePoint(ref, base + i, translation);
     }
+}
 
-    this->MovePoint(__id, __touch);
-
-    return &__id;
-}*/
+/* the list can be not order */
+void datastruct::MovePoint(
+        const QVector<int>  &pos,
+        cint                __page,
+        const QPointF       &translation)
+{
+    page &page = at_mod(__page);
+    for(const auto &index : qAsConst(pos)){
+        stroke & stroke = page.atStrokeMod(index);
+        stroke.movePoint(translation);
+    }
+}

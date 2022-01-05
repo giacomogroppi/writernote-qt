@@ -102,6 +102,8 @@ public:
 
     /* the function save in QList<int> *page the page modify [can accept NULL]*/
     void removePointId(const QList<int> &listIndex, QList<int> * page);
+    void removePointIndex(QList<QVector<int> > &pos, cint base, cbool __isOrder);
+    void removePointIndex(QVector<int> &pos, cint page, cbool isOrder);
 
     /* return the point of the current point remove */
     int removePointId(const int id);

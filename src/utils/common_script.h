@@ -52,7 +52,7 @@ Q_ALWAYS_INLINE void __swap(T &t1, T &t2)
 
 
 template <typename T>
-Q_ALWAYS_INLINE int is_order(const QList<T> &list)
+Q_ALWAYS_INLINE int is_order(const T &list)
 {
     int i, len;
     len = list.length();
@@ -179,6 +179,23 @@ inline int is_present_in_list(const T *list, size_t len, T val)
     }
 
     return 0;
+}
+
+Q_ALWAYS_INLINE void abortIfDebug(){
+#ifdef DEBUGINFO
+    std::abort();
+#else
+    ;
+#endif
+}
+
+template <typename T>
+inline void __order(QList<QVector<T>> & list){
+    int i, len = list.length();
+
+    for(i = 0; i < len; i++){
+        order(list.operator[](i));
+    }
 }
 
 #endif // COMMON_SCRIPT_H
