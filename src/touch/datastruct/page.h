@@ -11,7 +11,6 @@
 #include "utils/common_def.h"
 #include "utils/common_script.h"
 #include "utils/dialog_critic/dialog_critic.h"
-#include "gdb/jit-reader.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 

@@ -108,6 +108,8 @@ public:
 
     /* return the index of the point move */
     void MovePoint(const QList<int> &id, const QPointF &translation, QList<int> *PageModify);
+    void MovePoint(const QList<QVector<int>> & pos, cint base, const QPointF &translation);
+    void MovePoint(const QVector<int> & pos, cint page, const QPointF &translation);
 
     bool userWrittenSomething(datastruct *s_data);    
 
@@ -163,6 +165,7 @@ public:
 
     __fast QRectF get_size_area(const int *pos, int len, int page) const;
     __fast QRectF get_size_area(const QVector<int> &pos, int page) const;
+    __fast QRectF get_size_area(const QList<QVector<int>> &pos, int base) const;
     __slow QRectF get_size_area(const QList<int> & id) const;
     void removeAndTrigger(const QList<int> &id);
 
@@ -327,6 +330,32 @@ inline QRectF datastruct::get_size_area(
     return result;
 }
 
+inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int base) const
+{
+    QRectF result;
+    int i;
+
+    /*
+     * most of the time this function
+     * will have pos with only one element
+     */
+
+    if(unlikely(pos.isEmpty()))
+        return result;
+
+
+    result = get_size_area(pos.first(), base);
+
+    for(i = 1; i < pos.length(); i ++){
+        const auto &vec = pos.at(i);
+        const auto tmp = this->get_size_area(vec, base + i);
+        result = datastruct::get_bigger_rect(result, tmp);
+    }
+
+    return result;
+}
+
+
 inline QRectF datastruct::get_size_area(
         const QVector<int> &pos,
         int __page) const
@@ -448,7 +477,7 @@ inline bool datastruct::isOkZoom(const double newPossibleZoom)
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.2);
 }
 
-constexpr inline double datastruct::getZoom() const
+constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
 {
     return this->zoom;
 }
@@ -577,8 +606,7 @@ inline int datastruct::adjustStroke(stroke &stroke)
 
 constexpr inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser)
 {
-    const double zoom = this->getZoom();
-    return (pointTouchUser / zoom - this->getPointFirstPage());
+    return (pointTouchUser / getZoom() - this->getPointFirstPage());
 }
 
 inline bool datastruct::isempty() const

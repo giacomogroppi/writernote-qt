@@ -65,9 +65,8 @@ bool square::find(Document *doc){
 
     pthread_t thread[SQ_THREAD];
     DataPrivateMuThread dataThread[SQ_THREAD];
-    QList<QVector<int>> m_index;
 
-    const int base = data->getFirstPageVisible();
+    base = data->getFirstPageVisible();
     lenPage = data->lengthPage();
     in_box = false;
     __need_reload = false;
@@ -100,10 +99,10 @@ bool square::find(Document *doc){
         if(unlikely(!__page->isVisible()))
             break;
 
-        if(unlikely(count > m_index.length()))
-            m_index.append(QVector<int>());
+        if(unlikely(count > this->index.length()))
+            index.append(QVector<int>());
 
-        __index = (QVector<int> *)&m_index.at(count);
+        __index = (QVector<int> *)&index.at(count);
 
         for(i = 0; i < create; i++)
             pthread_create(&thread[i], NULL, __square_search, (void *)&dataThread[i]);
@@ -158,10 +157,10 @@ void square::findObjectToDraw()
     datastruct *data = canvas->data->datatouch;
     QRectF sizeData;
 
-    if (this->m_id.isEmpty())
+    if(unlikely(this->index.isEmpty()))
         goto img;
 
-    sizeData = data->get_size_area(m_id);
+    sizeData = data->get_size_area(index, this->base);
 
     // find the first point
     this->pointinit.point = sizeData.topLeft();
@@ -206,7 +205,8 @@ void square::move(const QPointF &punto){
 
     datastruct::inverso(__point);
 
-    data->datatouch->MovePoint(m_id, __point, &PageModify);
+    //data->datatouch->MovePoint(m_id, __point, &PageModify);
+    data->datatouch->MovePoint(index, base, __point);
     data->m_img->moveImage(m_index_img, __point);
 
     lastpoint.point = punto;

@@ -1,7 +1,7 @@
 #include "multi_thread_data.h"
 #include "utils/common_script.h"
 
-int DataPrivateMuThreadInit(DataPrivateMuThread *data, int len, int to)
+int DataPrivateMuThreadInit(DataPrivateMuThread *data, cint len, cint to)
 {
     int i, done, div, count;
 

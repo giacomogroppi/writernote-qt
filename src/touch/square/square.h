@@ -1,7 +1,10 @@
 #ifndef SQUARE_H
 #define SQUARE_H
+
 #include <QPainter>
 #include <QPointF>
+#include <QVector>
+#include <QList>
 
 #include "currenttitle/document.h"
 #include "touch/property/property_control.h"
@@ -20,15 +23,7 @@ public:
     explicit square(QObject *parent, class property_control *property);
     ~square();
 
-    inline void reset(){
-        pointinit.set = lastpoint.set = pointfine.set = false;
-
-        in_box = false;
-
-        __need_reload = false;
-        m_id.clear();
-        m_index_img.clear();
-    }
+    void reset();
 
     int calculate_flags() const;
 
@@ -61,8 +56,8 @@ private:
     PointSettable pointinit;
     PointSettable pointfine;
 
-    QImage img;
-    QList<int> m_id; /* point */
+    int base;
+    QList<QVector<int>> index;
     QList<int> m_index_img; /* image */
 
     QPen penna;
@@ -135,6 +130,21 @@ Q_ALWAYS_INLINE void square::needReload(QPainter &painter)
     if(__need_reload){
         painter.setPen(this->penna);
         painter.drawRect(QRectF(pointinit.point, pointfine.point));
+    }
+}
+
+inline void square::reset()
+{
+    int i;
+    pointinit.set = lastpoint.set = pointfine.set = false;
+
+    in_box = false;
+
+    __need_reload = false;
+    m_index_img.clear();
+
+    for(i = 0; i < index.length(); i++){
+        this->index.operator[](i).clear();
     }
 }
 
