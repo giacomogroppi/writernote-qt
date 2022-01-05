@@ -266,7 +266,7 @@ void square::actionProperty(property_control::ActionProperty action)
             NAME_LOG_EXT->write(
                         QString("It was not possibile to determinate %1").arg(QString::number((int)action)),
                         log_ui::error_internal);
-            std::abort();
+            abortIfDebug();
         }
     }
 

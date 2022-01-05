@@ -30,7 +30,7 @@ void datastruct::removePointIndex(
         cbool           __isOrder)
 {
     page *page = &at_mod(__page);
-    int i = pos.length();
+    int i = pos.length() - 1;
 
     if(likely(__isOrder)){
 #ifdef DEBUGINFO
@@ -50,14 +50,14 @@ void datastruct::removePointIndex(
     }
 
     for(; i >= 0; i --){
-        page->removeAt(i);
+        page->removeAt(pos.at(i));
     }
 }
 
 void datastruct::removePointIndex(
-        QList<QVector<int> >  &pos,
-        cint                        base,
-        cbool                       __isOrder)
+        QList<QVector<int> >    &pos,
+        cint                    base,
+        cbool                   __isOrder)
 {
     int i, lenList;
     lenList = pos.length();

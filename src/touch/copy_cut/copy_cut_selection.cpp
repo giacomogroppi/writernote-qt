@@ -51,7 +51,11 @@ void copy::managePaste(
     }
 }
 
-static void __single(const QVector<int> &pos, page &data, QList<stroke> & append_data, int __flags){
+static void __single(
+        const QVector<int>  &pos,
+        page                &data,
+        QList<stroke>       &append_data,
+        int                 __flags){
     for(int i = 0; i < pos.length(); i++){
         const stroke &currentStroke = data.atStroke(pos.at(i));
 
