@@ -2,9 +2,7 @@
 #include "mainwindow.h"
 #include "touch/tabletcanvas.h"
 
-#define DEBUG_THREAD
-#ifdef DEBUG_THREAD
-
+#if defined(DEBUG_THREAD) || defined(DEBUGINFO)
 TestingCore::TestingCore(MainWindow *parent)
 {
 
