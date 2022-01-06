@@ -3,6 +3,8 @@
 
 #include <QList>
 #include <QtGlobal>
+#include <QDebug>
+#include "time.h"
 #include "utils/common_def.h"
 
 #define BIT(bit) (1 << (bit-1))
@@ -197,5 +199,22 @@ inline void __order(QList<QVector<T>> & list){
         order(list.operator[](i));
     }
 }
+
+#define EXEC_TIME(message, function)    \
+    do{                                 \
+        const auto time = clock();      \
+        function;                       \
+        qDebug() << message << clock() - time;     \
+    }                                   \
+    while(0);
+
+#ifdef DEBUGINFO
+# define EXEC_TIME_IF_DEBUG(message, function) EXEC_TIME(message, function)
+#else
+# define EXEC_TIME_IF_DEBUG(message, function) function
+#endif
+
+
+
 
 #endif // COMMON_SCRIPT_H

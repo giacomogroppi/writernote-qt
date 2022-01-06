@@ -89,9 +89,14 @@ void page::drawStroke(
     }
 
     if(stroke.constantPressure()){
-        const QPainterPath &path = stroke.getQPainterPath();
+        EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()",
+            const QPainterPath &path = stroke.getQPainterPath();
+        )
 
-        painter.strokePath(path, m_pen);
+        EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath",
+            painter.strokePath(path, m_pen);
+
+        )
 
     }else{
         int counterPoint;
@@ -101,14 +106,19 @@ void page::drawStroke(
         lastPoint = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
 
         for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-            const point_s point = at_translation(stroke.at(counterPoint), refCounter);
-            pointDraw = point.toQPointF(PROP_RESOLUTION);
+            EXEC_TIME_IF_DEBUG("page::drawStroke() take point",
+                const point_s point = at_translation(stroke.at(counterPoint), refCounter);
+                pointDraw = point.toQPointF(PROP_RESOLUTION);
 
-            m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
+                m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
 
-            painter.setPen(m_pen);
+            )
 
-            painter.drawLine(lastPoint, pointDraw);
+            EXEC_TIME_IF_DEBUG("page::drawStroke() draw",
+                painter.setPen(m_pen);
+
+                painter.drawLine(lastPoint, pointDraw);
+            )
 
             lastPoint = pointDraw;
         }
