@@ -19,7 +19,7 @@ def start(command: str) -> int:
 
 def build(thread: int) -> bool:
     os.system("{} clean".format(make))
-    command = "{} DEFINES+={} ; {} -j$(nproc)".format(qmake, force_thread, make)
+    command = "{} DEFINES+={}={} ; {} -j$(nproc)".format(qmake, force_thread, thread, make)
 
     return os.system(command)
 
@@ -45,7 +45,7 @@ def main() -> None:
         if build(threadCount):
             print("Build error")
             exit()
-            
+
         res.append(for_each_file())
 
     for threadSingle, x in zip(thread, res):

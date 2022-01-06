@@ -7,7 +7,11 @@
 void * actionRubberSingle (void *);
 
 #define RUBB_TH 8
-#define RUBB_STROKE_MAX 128
+#ifdef DEBUG_THREAD
+# undef RUBB_TH
+# define RUBB_TH DEBUG_THREAD
+#endif
+
 static QVector<int>         *__data_find;
 
 static page                 *__page;
@@ -21,10 +25,10 @@ static int new_id = 0;
 static pthread_mutex_t mutex_write;
 
 #define REMOVE_STROKE_THREAD_SAVE(counterStroke) \
-    do{                                         \
-        pthread_mutex_lock(&mutex_write);       \
+    do{                                          \
+        pthread_mutex_lock(&mutex_write);        \
         __data_find->append(counterStroke);      \
-        pthread_mutex_unlock(&mutex_write);     \
+        pthread_mutex_unlock(&mutex_write);      \
     }while(0);
 
 

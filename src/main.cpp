@@ -8,6 +8,7 @@
 #include "utils/extract_audio/extract_audio.h"
 #include "utils/changeLanguage.h"
 #include "log/log_ui/log_ui.h"
+#include "testing/testingcore.h"
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file\nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
 #define COMMAND_EXTRACT "--extract"
@@ -19,6 +20,16 @@
 
 static void printLog();
 static int extract_(const char *path, const char *path_to);
+
+#ifdef DEBUG_THREAD
+static void manageDebug(MainWindow *parent)
+{
+    TestingCore core(parent);
+    exit(core.startTesting());
+}
+#else
+#define manageDebug(x) ;
+#endif
 
 int main(int argc, char *argv[]){
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
@@ -98,6 +109,8 @@ int main(int argc, char *argv[]){
     //if(argc != 1){
     //    w.setFile(argv[1]);
     //}
+
+    manageDebug(&w);
 
     w.show();
     int exit_code = app->exec();
