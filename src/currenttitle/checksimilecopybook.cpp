@@ -6,7 +6,7 @@
 
 static int checkSpeed(const Document &first,
                       const Document &second){
-    uint i, counterPage;
+    int i, counterPage;
     const int lenPage = first.datatouch->lengthPage();
     int len;
 
@@ -14,14 +14,14 @@ static int checkSpeed(const Document &first,
         return LEN;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        const page &page1 = first.datatouch->at(i);
-        const page &page2 = second.datatouch->at(i);
+        const page &page1 = first.datatouch->at(counterPage);
+        const page &page2 = second.datatouch->at(counterPage);
 
         len = page1.lengthStroke();
         if(len != page2.lengthStroke())
             return LEN;
 
-        for(i=0; i<len; i++){
+        for(i = 0; i < len; i++){
             if(!stroke::cmp(page1.atStroke(i), page2.atStroke(i)))
                 return IDTRATTO;
         }

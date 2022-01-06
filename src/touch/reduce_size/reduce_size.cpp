@@ -20,7 +20,7 @@ size_t reduce_size::calculate_min_size(datastruct *data){
 
 size_t reduce_size::current_size(datastruct *data){
     size_t size;
-    uint counterPage;
+    int counterPage;
 
     if(data->isempty())
         return 0;
@@ -28,7 +28,7 @@ size_t reduce_size::current_size(datastruct *data){
     size = 0;
     for(counterPage = 0; counterPage < data->lengthPage(); counterPage ++){
         const page &page = data->at(counterPage);
-        for(uint counterStroke = 0; counterStroke < page.lengthStroke(); counterStroke ++){
+        for(int counterStroke = 0; counterStroke < page.lengthStroke(); counterStroke ++){
             size += page.atStroke(counterStroke).getSizeInMemory();
         }
     }
@@ -40,8 +40,8 @@ size_t reduce_size::current_size(datastruct *data){
 }
 
 void reduce_size::decrese(datastruct *data){
-    uint i, pageCounter, len;
-    const uint lenPage = data->lengthPage();
+    int i, pageCounter, len;
+    const int lenPage = data->lengthPage();
 
     if(!lenPage){
         return;

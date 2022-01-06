@@ -75,8 +75,8 @@ public:
     /* you can access point written by writernote with this funcion */
     __slow void at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
-    __fast uint lengthStroke() const;
-    __fast uint lengthStrokePage() const; // len point written by writernote
+    __fast int lengthStroke() const;
+    __fast int lengthStrokePage() const; // len point written by writernote
 
     bool isVisible() const;
 
@@ -351,12 +351,12 @@ Q_ALWAYS_INLINE void page::at_draw_page(const uint IndexStroke, const uint Index
     __at_draw_private(__point, point, zoom, translation);
 }
 
-Q_ALWAYS_INLINE uint page::lengthStroke() const
+Q_ALWAYS_INLINE int page::lengthStroke() const
 {
     return m_stroke.length();
 }
 
-Q_ALWAYS_INLINE uint page::lengthStrokePage() const
+Q_ALWAYS_INLINE int page::lengthStrokePage() const
 {
     return this->m_stroke_writernote.length();
 }

@@ -9,6 +9,7 @@
 #include "utils/changeLanguage.h"
 #include "log/log_ui/log_ui.h"
 #include "testing/testingcore.h"
+#include "utils/common_error_definition.h"
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file\nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
 #define COMMAND_EXTRACT "--extract"
@@ -20,6 +21,7 @@
 
 static void printLog();
 static int extract_(const char *path, const char *path_to);
+static void createFileAndExit(const QString &path, MainWindow *parent);
 
 #ifdef DEBUG_THREAD
 static void manageDebug(MainWindow *parent)
@@ -112,6 +114,8 @@ int main(int argc, char *argv[]){
 
     manageDebug(&w);
 
+    //createFileAndExit("/home/giacomo/writernote-qt/test/file_test.writer", &w);
+
     w.show();
     int exit_code = app->exec();
 
@@ -167,4 +171,15 @@ static void printLog()
 
     printf("Log:\n");
     NAME_LOG_EXT->print(stdin, arr);
+}
+
+__attribute__((unused)) static void createFileAndExit(const QString &path, MainWindow *parent)
+{
+    TestingCore core(parent);
+    int err = core.createAndSave(path, NULL);
+    if(err != OK){
+        qDebug() << "Error save" << err;
+    }
+
+    exit(0);
 }

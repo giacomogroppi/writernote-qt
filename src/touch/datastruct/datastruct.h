@@ -191,6 +191,7 @@ public:
     static QRectF get_bigger_rect(const QRectF &first, const QRectF &second);
 
     friend class xmlstruct;
+    friend class TestingCore;
 };
 
 /* this function does not consider the zoom */

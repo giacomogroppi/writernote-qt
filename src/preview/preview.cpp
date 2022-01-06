@@ -42,7 +42,7 @@ bool preview::get(QPixmap &ref, const bool withPdf,
                   const QString &path, const int height, const int width)
 {
     Document doc;
-    int ok;
+    int ok;    
     xmlstruct xml(path, doc);
 
     ok = xml.loadfile(false, false);
