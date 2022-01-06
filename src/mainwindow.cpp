@@ -26,6 +26,7 @@
 #include "touch/property/property_control.h"
 #include "audioplay/audioplay.h"
 #include "audiorecord/audiorecord.h"
+#include "touch/multi_thread_data.h"
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -49,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->m_canvas = canvas;
     this->m_canvas->parent = this;
+    DataPrivateInit();
 
     ui->setupUi(this);
 
