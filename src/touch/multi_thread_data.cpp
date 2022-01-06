@@ -49,7 +49,7 @@ int DataPrivateMuThreadInit(DataPrivateMuThread *data, cint len, cint to)
 static int threadLast = 240;
 
 
-int DataPrivateCountThreaad(int newThread)
+int DataPrivateCountThread(int newThread)
 {
     int ret;
 
@@ -72,4 +72,13 @@ int DataPrivateCountThreaad(int newThread)
 
     pthread_mutex_unlock(&mutex_thread_write);
     return ret;
+}
+
+void DataPrivateCountThreadRelease(int releaseThread)
+{
+    pthread_mutex_lock(&mutex_thread_write);
+
+    threadLast -= releaseThread;
+
+    pthread_mutex_unlock(&mutex_thread_write);
 }

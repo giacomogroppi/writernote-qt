@@ -10,6 +10,8 @@ struct DataPrivateMuThread{
 void DataPrivateInit(void);
 
 int DataPrivateMuThreadInit(DataPrivateMuThread *data, cint len, cint to);
-int DataPrivateCountThreaad(int numNewThread);
+
+int DataPrivateCountThread(int numNewThread);
+void DataPrivateCountThreadRelease(int numReleaseThread);
 
 #endif // MULTI_THREAD_DATA_H
