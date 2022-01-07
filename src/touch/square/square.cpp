@@ -146,11 +146,35 @@ bool square::find(Document *doc){
     return in_box;
 }
 
+void square::initImg()
+{
+    const auto formact = QImage::Format_ARGB32;
+    img = QImage(page::getResolutionWidth(),
+                 page::getResolutionHeigth() * canvas->data->datatouch->lengthPage(),
+                 formact);
+}
+
+void square::mergeImg(
+        const QImage    &from,
+        QImage          &to,
+        int             page)
+{
+    QPainter painter;
+    QRect __to = from.rect();
+
+    __to.translate(0, page * page::getResolutionHeigth());
+
+    painter.begin(&to);
+    painter.drawImage(__to, from, from.rect());
+    painter.end();
+}
+
 void square::moveObjectIntoPrivate(QList<QVector<int>> index)
 {
     int count;
     page * page;
     datastruct & data = *canvas->data->datatouch;
+    QImage tmp;
 
     this->m_stroke.clear();
 
@@ -158,11 +182,17 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> index)
         order(index);
     }
 
+    this->initImg();
+
     for(count = 0; count < index.length(); count ++){
         const QVector<int> & ref = index.at(count);
 
         page = &data.at_mod(count + base);
         m_stroke.append(QList<stroke>());
+
+        page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
+
+        this->mergeImg(tmp, img, count + base);
 
         page->swap(m_stroke.operator[](count), ref);
     }
@@ -233,6 +263,7 @@ void square::reset(bool paste)
         }
     }
 
+    this->img = QImage();
     this->m_stroke.clear();
 }
 

@@ -46,7 +46,7 @@ public:
 
 private:
     void findObjectToDraw(QList<QVector<int>> index);
-
+    void initImg();
     /*
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
      * il rettangono
@@ -55,9 +55,10 @@ private:
 
     PointSettable pointinit;
     PointSettable pointfine;
-
+    void mergeImg(const QImage &from, QImage &to, int page);
     void moveObjectIntoPrivate(QList<QVector<int>> index);
 
+    QImage img;
     QList<QList<stroke>> m_stroke;
 
     int base;
