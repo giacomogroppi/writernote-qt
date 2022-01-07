@@ -169,7 +169,7 @@ void square::mergeImg(
     painter.end();
 }
 
-void square::moveObjectIntoPrivate(QList<QVector<int>> index)
+void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 {
     int count;
     page * page;
@@ -273,7 +273,7 @@ void square::move(const QPointF &punto){
     QList<int> PageModify;
 
     if(unlikely(!somethingInBox())){
-        return this->changeInstrument(NULL);
+        return this->changeInstrument(false);
     }
 
     if(lastpoint.isNotSet()){

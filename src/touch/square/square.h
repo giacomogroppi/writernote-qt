@@ -56,7 +56,7 @@ private:
     PointSettable pointinit;
     PointSettable pointfine;
     void mergeImg(const QImage &from, QImage &to, int page);
-    void moveObjectIntoPrivate(QList<QVector<int>> index);
+    void moveObjectIntoPrivate(QList<QVector<int> > &index);
 
     QImage img;
     QList<QList<stroke>> m_stroke;
