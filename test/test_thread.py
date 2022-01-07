@@ -6,16 +6,14 @@ make = "make"
 qmake = "qmake"
 force_thread = "DEBUG_THREAD"
 writernote = "./build/writernote"
+build_path = "build"
 
 min = 8
 max = 20
 
-def start(command: str) -> int:
-    __time = time.clock_gettime_ns()
-
+def start(command: str) -> None:
     os.system(command)
 
-    return time.clock_gettime_ns() - __time
 
 def build(thread: int) -> bool:
     os.system("{} clean".format(make))
@@ -29,12 +27,26 @@ def start_test(name_file: str) -> int:
 
     return start(command)
 
-def for_each_file() -> list[int]:
+def decode_test() -> int:
+    pos_file = "{}/time.txt".format(build_path)
+    
     res = []
-    for x in range(1, 6):
-        name_file = "file{}.writer".format(str(x))
+    
+    try:
+        with open(pos_file, "r") as file:
+            res.append(int(file.readline()))
 
-        res.append(start_test(name_file))
+    except FileNotFoundError:
+        print("File {} not found".format(pos_file))
+
+    return res
+
+def for_each_file() -> int:
+    name_file = "file.writer"
+    
+    start_test(name_file)
+
+    res = decode_test()
 
     return res
 
@@ -48,11 +60,12 @@ def main() -> None:
 
         res.append(for_each_file())
 
-    for threadSingle, x in zip(thread, res):
-        for time in x:
-            print("threadSingle: {} time: {}".format(x, time))
+    for threadSingle, time in zip(thread, res):
+        print("threadSingle: {} time: {}".format(threadSingle, time))
 
 if __name__ == "__main__":
+    os.system("{} clean".format(make))
+
     if sys.platform != "linux":
         print("This script only work on linux")
         exit()
