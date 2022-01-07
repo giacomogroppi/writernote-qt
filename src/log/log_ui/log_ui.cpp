@@ -9,9 +9,14 @@
 #include "utils/slash/slash.h"
 #include "utils/time/current_time.h"
 #include "dataread/load_from_file.h"
+#include "utils/common_script.h"
+
+#include <pthread.h>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
+
+static pthread_mutex_t mutex;
 
 log_ui::log_ui(QWidget *parent) :
     QDialog(parent),
@@ -21,6 +26,7 @@ log_ui::log_ui(QWidget *parent) :
 
     this->loadData();
     this->hide();
+    pthread_mutex_init(&mutex, NULL);
 }
 
 log_ui::~log_ui()
@@ -43,15 +49,13 @@ void log_ui::showAll()
         this->ui->text_error_show->setText(err);
     }
 
-    this->ui->textBrowser->setText(data);
+    ui->textBrowser->setText(data);
 }
 
 void log_ui::write(const QString &stringa, log_ui::type_write var)
 {
     FILE *fp;
     QString tmp;
-    uchar wr;
-    int i, len;
 
     if(m_permi != permi::enable)
         return;
@@ -63,31 +67,31 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
     else
         tmp = "CRITIC ERROR: " + stringa;
 
+    pthread_mutex_lock(&mutex);
+
     fp = fopen(this->pos_log.toUtf8().constData(), "a");
 
-    if(!fp){
-        this->ui->text_error_show->setText("Unable to save data");
-        this->m_permi = permi::error;
+    if(unlikely(!fp)){
+        ui->text_error_show->setText("Unable to save data");
+        m_permi = permi::error;
+        pthread_mutex_unlock(&mutex);
         return;
     }
 
     log_ui::addTime(tmp);
 
     fprintf(fp, "\n");
-    len = stringa.length();
-    for(i=0; i<len; ++i){
-        wr = stringa.at(i).cell();
-        fprintf(fp, "%c", wr);
-    }
+
+    print(fp, stringa.toUtf8());
 
     fclose(fp);
+
+    pthread_mutex_unlock(&mutex);
 }
 
 void log_ui::print(FILE *fp, const QByteArray &str)
 {
-    for (const char data : str){
-        fprintf(fp, "%c", data);
-    }
+    fprintf(fp, "%s", str.constData());
 }
 
 void log_ui::addTime(QString &message)

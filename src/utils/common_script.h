@@ -7,6 +7,8 @@
 #include "time.h"
 #include "utils/common_def.h"
 
+#define __init __attribute((constructor))
+
 #define BIT(bit) (1 << (bit-1))
 
 #define unlikely(exp) Q_UNLIKELY(exp)

@@ -17,7 +17,6 @@
 # define SQ_THREAD DEBUG_THREAD
 #endif
 
-
 void * __square_search(void *__data);
 static pthread_mutex_t      __mutex_sq;
 static const page           *__page;
