@@ -40,7 +40,7 @@ square::square(QObject *parent, property_control *property):
     penna.setStyle(Qt::DotLine);
     penna.setWidth(2);
     penna.setColor(QColor::fromRgb(30, 90, 255));
-    this->reset();
+    this->reset(false);
 
     __in_box = &in_box;
 
@@ -65,6 +65,8 @@ bool square::find(Document *doc){
     int i, create, lenPage, count;
     const QPointF &translation = data->getPointFirstPage();
     int PageCounter;
+
+    QList<QVector<int>> index;
 
     const QPointF &topLeft = data->adjustPoint(pointinit.point);
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
@@ -105,7 +107,7 @@ bool square::find(Document *doc){
         if(unlikely(!__page->isVisible()))
             break;
 
-        if(unlikely(count > this->index.length()))
+        if(unlikely(count > index.length() - 1))
             index.append(QVector<int>());
 
         __index = (QVector<int> *)&index.at(count);
@@ -131,15 +133,39 @@ bool square::find(Document *doc){
         this->in_box = true;
     }
 
-    findObjectToDraw();
+    findObjectToDraw(index);
+
+    moveObjectIntoPrivate(index);
 
     if(!somethingInBox()){
-        reset();
+        reset(false);
     }else{
         __need_reload = true;
     }
 
     return in_box;
+}
+
+void square::moveObjectIntoPrivate(QList<QVector<int>> index)
+{
+    int count;
+    page * page;
+    datastruct & data = *canvas->data->datatouch;
+
+    this->m_stroke.clear();
+
+    if(likely(!is_order(index))){
+        order(index);
+    }
+
+    for(count = 0; count < index.length(); count ++){
+        const QVector<int> & ref = index.at(count);
+
+        page = &data.at_mod(count + base);
+        m_stroke.append(QList<stroke>());
+
+        page->swap(m_stroke.operator[](count), ref);
+    }
 }
 
 /* la funzione resistuisce
@@ -158,12 +184,12 @@ bool square::isinside(const QPointF &point){
  * in questo caso si analizza quando c'è un id
  *  uguale, e si sposta tutto il tratto
 */
-void square::findObjectToDraw()
+void square::findObjectToDraw(QList<QVector<int>> index)
 {
     datastruct *data = canvas->data->datatouch;
     QRectF sizeData;
 
-    if(unlikely(this->index.isEmpty()))
+    if(unlikely(index.isEmpty()))
         goto img;
 
     sizeData = data->get_size_area(index, this->base);
@@ -189,13 +215,34 @@ void square::findObjectToDraw()
     }
 }
 
+void square::reset(bool paste)
+{
+    pointinit.set = lastpoint.set = pointfine.set = false;
+
+    in_box = false;
+
+    __need_reload = false;
+    m_index_img.clear();
+
+    if(likely(paste)){
+        int i;
+        for(i = 0; i < m_stroke.length(); i++){
+            page * page = &canvas->data->datatouch->at_mod(i + base);
+            page->append(m_stroke.at(i));
+            page->triggerRenderImage(-1, false);
+        }
+    }
+
+    this->m_stroke.clear();
+}
+
 void square::move(const QPointF &punto){
     QPointF __point;
     Document *data = canvas->data;
     QList<int> PageModify;
 
-    if(!somethingInBox()){
-        return this->changeInstrument();
+    if(unlikely(!somethingInBox())){
+        return this->changeInstrument(NULL);
     }
 
     if(lastpoint.isNotSet()){
@@ -204,7 +251,7 @@ void square::move(const QPointF &punto){
     }
 
     if(!datastruct::isinside(pointinit.point, pointfine.point, punto)){
-        return this->reset();
+        return this->reset(true);
     }
 
     __point = lastpoint.point - punto;
@@ -212,7 +259,12 @@ void square::move(const QPointF &punto){
     datastruct::inverso(__point);
 
     //data->datatouch->MovePoint(m_id, __point, &PageModify);
-    data->datatouch->MovePoint(index, base, __point);
+    //data->datatouch->MovePoint(index, base, __point);
+
+    for(QList<stroke> & tmp : m_stroke){
+        datastruct::MovePoint(tmp, __point, 0);
+    }
+
     data->m_img->moveImage(m_index_img, __point);
 
     lastpoint.point = punto;
@@ -260,10 +312,9 @@ void square::actionProperty(property_control::ActionProperty action)
             break;
         }
         case property_control::ActionProperty::__delete:{
+            this->m_stroke.clear();
 
-            __order(index);
-
-            data.removePointIndex(index, base, true);
+            //data.removePointIndex(index, base, true);
             dontcall_copy = 0;
             m_property->Hide();
             break;
@@ -277,10 +328,10 @@ void square::actionProperty(property_control::ActionProperty action)
     }
 
     if(dontcall_copy)
-        this->m_copy->selection(data, this->index, base,
-                                flags, page, pointinit.point);
+        std::abort();//this->m_copy->selection(data, this->index, base,
+         //                       flags, page, pointinit.point);
     else
-        this->reset();
+        this->reset(false);
 
     data.triggerNewView(page, -1, true);
 

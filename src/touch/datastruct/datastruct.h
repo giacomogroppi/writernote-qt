@@ -113,6 +113,9 @@ public:
     void MovePoint(const QList<QVector<int>> & pos, cint base, const QPointF &translation);
     void MovePoint(const QVector<int> & pos, cint page, const QPointF &translation);
 
+#define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
+    static void MovePoint(QList<stroke> &stroke, const QPointF &translation, int flag);
+
     bool userWrittenSomething(datastruct *s_data);    
 
     bool isinside(const QPointF &topleft, const QPointF &bottomright, const uint IndexPage, const uint IndexStroke) const;

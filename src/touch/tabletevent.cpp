@@ -106,7 +106,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 else{
                     if(!m_square->isinside(pointTouch)){
                         /* se il tocco non è stato interno */
-                        m_square->reset();
+                        m_square->reset(true);
                     }
                     else{
                         /* a questo punto può muovere di un delta x e y */
@@ -134,7 +134,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 end:
 
     if(sel){
-        m_square->reset();
+        m_square->reset(true);
     }
     if(!sel && selection_method){
         data->datatouch->triggerViewIfVisible(parent->m_audioplayer->getPositionSecond());

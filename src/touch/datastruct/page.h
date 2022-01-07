@@ -67,6 +67,9 @@ public:
 
     page(const int count, const n_style style);
 
+    void swap(QList<stroke> & stroke, const QVector<int> & pos);
+    void swap(QList<stroke> & stroke, int from, int to);
+
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(cbool vis);
 
@@ -91,7 +94,8 @@ public:
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    __fast void append(const stroke &point);
+    __fast void append(const stroke &stroke);
+    __fast void append(const QList<stroke> & stroke);
 
     __fast const stroke       & atStroke(const uint i) const;
     __fast stroke             & atStrokeMod(const uint i);

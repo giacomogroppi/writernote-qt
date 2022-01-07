@@ -23,7 +23,7 @@ public:
     explicit square(QObject *parent, class property_control *property);
     ~square();
 
-    void reset();
+    void reset(bool paste);
 
     int calculate_flags() const;
 
@@ -36,17 +36,17 @@ public:
     /* definizione per i punti di spostamento */
     PointSettable lastpoint;
 
-    void changeInstrument();
+    void changeInstrument(cbool paste);
 
     void isMoving() { /*m_property->Hide();*/ };
     void endMoving(const QWidget *pixmap);
 
     void translate(const QPointF &offset);
 
-private:
-    void findObjectToDraw();
 
 private:
+    void findObjectToDraw(QList<QVector<int>> index);
+
     /*
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
      * il rettangono
@@ -56,8 +56,11 @@ private:
     PointSettable pointinit;
     PointSettable pointfine;
 
+    void moveObjectIntoPrivate(QList<QVector<int>> index);
+
+    QList<QList<stroke>> m_stroke;
+
     int base;
-    QList<QVector<int>> index;
     QList<int> m_index_img; /* image */
 
     QPen penna;
@@ -111,9 +114,9 @@ Q_ALWAYS_INLINE void square::updatePoint(const QPointF &puntofine)
     }
 }
 
-Q_ALWAYS_INLINE void square::changeInstrument()
+Q_ALWAYS_INLINE void square::changeInstrument(cbool paste)
 {
-    this->reset();
+    this->reset(paste);
     this->m_property->Hide();
 }
 
@@ -130,21 +133,6 @@ Q_ALWAYS_INLINE void square::needReload(QPainter &painter)
     if(__need_reload){
         painter.setPen(this->penna);
         painter.drawRect(QRectF(pointinit.point, pointfine.point));
-    }
-}
-
-inline void square::reset()
-{
-    int i;
-    pointinit.set = lastpoint.set = pointfine.set = false;
-
-    in_box = false;
-
-    __need_reload = false;
-    m_index_img.clear();
-
-    for(i = 0; i < index.length(); i++){
-        this->index.operator[](i).clear();
     }
 }
 

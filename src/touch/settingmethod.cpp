@@ -96,6 +96,8 @@ void TabletCanvas::sceltacolorepenna(const QColor color){
 }
 
 void MainWindow::updateTouch(){
+    static TabletCanvas::e_method last = TabletCanvas::pen;
+
     ui->actionpen->setChecked(              m_canvas->medotodiinserimento == TabletCanvas::pen);
     ui->actionrubber->setChecked(           m_canvas->medotodiinserimento == TabletCanvas::rubber);
     ui->actionselezionetext->setChecked(    m_canvas->medotodiinserimento == TabletCanvas::selection);
@@ -115,8 +117,9 @@ void MainWindow::updateTouch(){
     ui->actionbrown_color->setChecked(m_canvas->m_color == COLOR_BROWN);
     ui->actionpurple->setChecked(m_canvas->m_color == COLOR_PURPLE);
 
-    if(m_canvas->medotodiinserimento != TabletCanvas::selection){
-        m_canvas->m_square->changeInstrument();
+    if(unlikely(m_canvas->medotodiinserimento != TabletCanvas::selection
+            && last == TabletCanvas::selection)){
+        m_canvas->m_square->changeInstrument(m_canvas->data->datatouch);
     }
 }
 

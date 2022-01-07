@@ -115,7 +115,8 @@ public:
     /* debug */
     QString toString() const;
     
-    void scale(const QPointF &offset);
+#define STROKE_MUST_TRASLATE_PATH BIT(1)
+    void scale(const QPointF &offset, int flag);
 
     friend class page;
 };
@@ -427,7 +428,7 @@ inline QString stroke::toString() const
     return message;
 }
 
-inline void stroke::scale(const QPointF &offset)
+inline void stroke::scale(const QPointF &offset, int flag)
 {
     int i = this->length() - 1;
     for(; i >= 0; i--){
@@ -437,8 +438,10 @@ inline void stroke::scale(const QPointF &offset)
         point.m_y += offset.y();
     }
 
-    if(!this->needToCreatePanterPath && this->constantPressure())
+    if(flag & STROKE_MUST_TRASLATE_PATH && !this->needToCreatePanterPath && this->constantPressure())
         path.translate(offset);
+    else
+        path = QPainterPath();
 }
 
 

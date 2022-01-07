@@ -63,3 +63,16 @@ void datastruct::MovePoint(
         stroke.movePoint(translation);
     }
 }
+
+void datastruct::MovePoint(QList<stroke> &stroke, const QPointF &translation, int flag)
+{
+    int i = stroke.length() - 1;
+    if(flag & DATASTRUCT_MUST_TRASLATE_PATH){
+        flag = STROKE_MUST_TRASLATE_PATH;
+    }
+
+    for(; i >= 0; i --){
+        stroke.operator[](i).scale(translation, flag);
+    }
+
+}

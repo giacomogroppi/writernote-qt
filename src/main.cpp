@@ -30,7 +30,7 @@ static void manageDebug(MainWindow *parent)
     exit(core.startTesting());
 }
 #else
-#define manageDebug(x) ;
+# define manageDebug(x) ;
 #endif
 
 int main(int argc, char *argv[]){

@@ -72,6 +72,41 @@ void page::drawNewPage(n_style __style)
 
 }
 
+void page::swap(QList<stroke> & list, const QVector<int> & pos)
+{
+    int i;
+#ifdef DEBUGINFO
+    if(unlikely(!is_order(pos))){
+        qDebug() << "List not order" << __FILE__ << __FUNCTION__;
+    }
+#endif
+    i = pos.length() - 1;
+    for(; i >= 0; i--){
+        this->swap(list, i, i+1);
+    }
+}
+
+/*
+ * this function mantain the item already in list
+*/
+void page::swap(QList<stroke> & list, int from, int to)
+{
+    Q_ASSERT(from >= to);
+    to --;
+
+    for(; from >= to; to --){
+        list.append(m_stroke.takeAt(to));
+    }
+
+}
+
+void page::append(const QList<stroke> &stroke)
+{
+    for(const auto & __tmp : qAsConst(stroke)){
+        this->append(__tmp);
+    }
+}
+
 void page::drawStroke(
         QPainter        &painter,
         const stroke    &stroke,
@@ -79,6 +114,7 @@ void page::drawStroke(
         const QColor    &color) const
 {
     QPointF lastPoint, pointDraw;
+    const QPainterPath *path;
 
     m_pen.setColor(color);
     m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
@@ -90,11 +126,11 @@ void page::drawStroke(
 
     if(stroke.constantPressure()){
         EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()",
-            const QPainterPath &path = stroke.getQPainterPath();
+            path = &stroke.getQPainterPath();
         )
 
         EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath",
-            painter.strokePath(path, m_pen);
+            painter.strokePath(*path, m_pen);
 
         )
 

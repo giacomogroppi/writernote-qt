@@ -151,6 +151,6 @@ void copy::adjustData(const QPointF &offset)
     const QPointF &inverso = datastruct::inverso(offset);
 
     for(; counterStroke >= 0; counterStroke --){
-        m_stroke.operator[](counterStroke).scale(inverso);
+        m_stroke.operator[](counterStroke).scale(inverso, 0);
     }
 }
