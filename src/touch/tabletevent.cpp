@@ -162,12 +162,13 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event){
             sel = false;
 
             if(!m_square->somethingInBox())
-                m_square->find(data);
+                m_square->find();
             m_square->endMoving(this);
         }else if(rubber_method){
             m_rubber->endRubber(data->datatouch);
         }
     }
+
     block_scrolling = false;
 }
 

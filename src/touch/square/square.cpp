@@ -59,7 +59,8 @@ square::~square()
  * true, in caso contrario la setta = false e fa il return
 */
 
-bool square::find(Document *doc){
+bool square::find(){
+    Document *doc = canvas->data;
     datastruct *data = doc->datatouch;
     bool tmp_find;
     int i, create, lenPage, count;
@@ -124,7 +125,8 @@ bool square::find(Document *doc){
     for(int counterImg = 0; counterImg < lenImg; counterImg++){
         const auto &ref = doc->m_img->m_img.at(counterImg);
 
-        tmp_find = datastruct::isinside(topLeft, bottomRight, ref.i) || datastruct::isinside(topLeft, bottomRight, ref.f);
+        tmp_find = datastruct::isinside(topLeft, bottomRight, ref.i) ||
+                   datastruct::isinside(topLeft, bottomRight, ref.f);
 
         if(!tmp_find)
             continue;
@@ -228,7 +230,7 @@ void square::findObjectToDraw(QList<QVector<int>> index)
     this->pointinit.point = sizeData.topLeft();
     this->pointfine.point = sizeData.bottomRight();
 
-    img:
+img:
     for(int counterImg = 0; counterImg < m_index_img.length(); counterImg ++){
         const int index = this->m_index_img.at(counterImg);
         const auto &ref = canvas->data->m_img->m_img.at(index);

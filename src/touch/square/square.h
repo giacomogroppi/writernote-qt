@@ -28,7 +28,7 @@ public:
     int calculate_flags() const;
 
     void updatePoint(const QPointF &puntofine);
-    bool find(Document *data);
+    bool find();
 
     bool isinside(const QPointF &);
     void move(const QPointF &);

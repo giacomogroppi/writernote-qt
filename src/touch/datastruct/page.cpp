@@ -75,11 +75,13 @@ void page::drawNewPage(n_style __style)
 void page::swap(QList<stroke> & list, const QVector<int> & pos)
 {
     int i;
+
 #ifdef DEBUGINFO
     if(unlikely(!is_order(pos))){
         qDebug() << "List not order" << __FILE__ << __FUNCTION__;
     }
 #endif
+
     i = pos.length() - 1;
     for(; i >= 0; i--){
         this->swap(list, i, i+1);
@@ -89,13 +91,13 @@ void page::swap(QList<stroke> & list, const QVector<int> & pos)
 /*
  * this function mantain the item already in list
 */
-void page::swap(QList<stroke> & list, int from, int to)
+void page::swap(QList<stroke> & list,
+                int             from,
+                int             to)
 {
     W_ASSERT(from >= to, "from < to");
 
-    to --;
-
-    for(; from >= to; to --){
+    for(to --; from <= to; to --){
         list.append(m_stroke.takeAt(to));
     }
 
