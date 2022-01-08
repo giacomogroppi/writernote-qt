@@ -42,6 +42,10 @@ void page::drawNewPage(n_style __style)
     const double height_p   = this->getHeight();
     const double last = (count-1)*page::getHeight();
 
+    deltax = 0;
+    deltay = 0;
+    ct_del = 0;
+
     setStylePrivate(fast, __style, style);
 
     if(fast){
@@ -95,12 +99,22 @@ void page::swap(QList<stroke> & list,
                 int             from,
                 int             to)
 {
+#ifdef DEBUGINFO
     W_ASSERT(from >= to, "from < to");
+    int drop = 0;
+    QList<int> itemDrop;
+#endif
 
     for(to --; from <= to; to --){
         list.append(m_stroke.takeAt(to));
+
+        DO_IF_DEBUG(drop ++);
+        DO_IF_DEBUG(itemDrop.append(to));
     }
 
+    DO_IF_DEBUG(
+        qDebug() << "Page" << this->count - 1 << drop << "Item drop, list" << itemDrop;
+    )
 }
 
 void page::append(const QList<stroke> &stroke)
@@ -359,12 +373,9 @@ bool page::initImg(bool flag)
 */
 void page::triggerRenderImage(int m_pos_ris, bool all)
 {
+    QPainter painter;
     all = initImg(all);
 
-    /* testing */
-    //imgDraw.fill(Qt::white);
-
-    QPainter painter;
     painter.begin(&imgDraw);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -372,10 +383,9 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
 
     painter.end();
 
-    return;
+    /*return;
     if(!imgDraw.save("~/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
-        std::abort();
-
+        std::abort();*/
 }
 
 #define MakeCTRL(point) \

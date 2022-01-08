@@ -7,7 +7,7 @@
 class frompdf{
 public:
     uchar var;
-    frompdf(void *null){Q_UNUSED(null)};
+    frompdf(void *){};
 };
 #endif
 

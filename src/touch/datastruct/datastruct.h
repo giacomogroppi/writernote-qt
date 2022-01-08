@@ -171,8 +171,7 @@ public:
     __fast QRectF get_size_area(const int *pos, int len, int page) const;
     __fast QRectF get_size_area(const QVector<int> &pos, int page) const;
     __fast QRectF get_size_area(const QList<QVector<int>> &pos, int base) const;
-    __slow QRectF get_size_area(const QList<int> & id) const;
-    void removeAndTrigger(const QList<int> &id);
+    //__slow QRectF get_size_area(const QList<int> & id) const;
 
     int getFirstPageVisible() const;
 
@@ -369,7 +368,7 @@ inline QRectF datastruct::get_size_area(
     return get_size_area(pos.constData(), pos.length(), __page);
 }
 
-inline QRectF datastruct::get_size_area(const QList<int> &id) const
+/*inline QRectF datastruct::get_size_area(const QList<int> &id) const
 {
     QRectF result;
 
@@ -405,7 +404,7 @@ inline QRectF datastruct::get_size_area(const QList<int> &id) const
     }
 
     return result;
-}
+}*/
 
 inline int datastruct::getFirstPageVisible() const
 {

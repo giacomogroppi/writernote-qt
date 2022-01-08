@@ -2,27 +2,26 @@
 #include "touch/tabletcanvas.h"
 #include "mainwindow.h"
 #include "audioplay/audioplay.h"
+#include "touch/paintevent/paint.h"
 #include <QPolygonF>
 #include <QPainterPath>
 
 #ifdef PDFSUPPORT
- #include "frompdf/frompdf.h"
+# include "frompdf/frompdf.h"
 #endif //PDFSUPPORT
+
 #include "images/fromimage.h"
 
 /* tmp list */
 extern stroke __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta);
 
-#define C(x) x->datatouch
-#define UPDATE_LOAD(x, zoom, div, m_pen, m_brush ) \
-        TabletCanvas::updateBrush_load(x.m_pressure*zoom, setcolor(&x.m_color, div), m_pen, m_brush);
-
 void TabletCanvas::load(QPainter &painter,
                         const Document *data,
-                        DataPaint &dataPoint){
+                        DataPaint &dataPoint)
+{
     const bool withPdf          = dataPoint.withPdf;
-    const bool is_play          = (dataPoint.parent) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
+    const bool is_play          = likely((dataPoint.parent)) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
 
     const int m_pos_ris         = (is_play) ? (dataPoint.parent->m_audioplayer->getPositionSecond()) : -1;
     static int last_m_pos_ris   = -1;
@@ -30,15 +29,15 @@ void TabletCanvas::load(QPainter &painter,
     const int lenPage               = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
     const double zoom               = data->datatouch->getZoom();
-    const QSize sizeRect            = QSize(page::getWidth(), page::getHeight()) * zoom * dataPoint.m;
+    const QSize sizeRect            = createSizeRect(data->datatouch, dataPoint.m);
 
-    stroke &storkeToDraw = __tmp;
+    stroke &strokeToDraw = __tmp;
 
     int i, len, counterPage;
     QPixmap *pixmap             = dataPoint.m_pixmap;
     QPen &pen                   = dataPoint.pen;
 
-    if(pixmap)
+    if(likely(pixmap))
         pixmap->fill(Qt::white);
 
     pen.setStyle(Qt::PenStyle::SolidLine);
@@ -53,21 +52,22 @@ void TabletCanvas::load(QPainter &painter,
     data->m_img->draw(painter);
 
     /* draw points that the user has not finished yet */
-    pen.setColor(storkeToDraw.getColor());
+    pen.setColor(strokeToDraw.getColor());
 
-    len = storkeToDraw.length();
+    len = strokeToDraw.length();
     /* point not already add to page */
-    if(len){
-        dataPoint.lastPoint.pos = QPointF(storkeToDraw.at(0).m_x, storkeToDraw.at(0).m_y);
+    if(likely(len)){
+        dataPoint.lastPoint.pos = QPointF(strokeToDraw.at(0).m_x, strokeToDraw.at(0).m_y);
     }
 
     for(i = 0; i < len; i++){
-        const auto &__point = storkeToDraw.at(i);
+        const auto &__point = strokeToDraw.at(i);
 
         pen.setWidthF(pressureToWidth(__point.pressure * zoom * dataPoint.m / 2.00));
         painter.setPen(pen);
 
-        painter.drawLine(dataPoint.lastPoint.pos * dataPoint.m, QPointF(__point.m_x * dataPoint.m, __point.m_y * dataPoint.m));
+        painter.drawLine(dataPoint.lastPoint.pos * dataPoint.m,
+                         QPointF(__point.m_x * dataPoint.m, __point.m_y * dataPoint.m));
 
         dataPoint.lastPoint.pos.setX(__point.m_x);
         dataPoint.lastPoint.pos.setY(__point.m_y);
@@ -76,14 +76,20 @@ void TabletCanvas::load(QPainter &painter,
     painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
 
-    if(is_play){
-        if(last_m_pos_ris != m_pos_ris){
+    if(unlikely(is_play)){
+        if(likely(last_m_pos_ris != m_pos_ris)){
             data->datatouch->newViewAudio(last_m_pos_ris, m_pos_ris);
+            last_m_pos_ris = m_pos_ris;
         }
         //data->datatouch->triggerViewIfVisible(m_pos_ris);
     }
 
-    counterPage = (!dataPoint.IsExportingPdf) ? (data->datatouch->getFirstPageVisible()) : 0;
+    if(likely(!dataPoint.IsExportingPdf)){
+        counterPage = data->datatouch->getFirstPageVisible();
+    }
+    else{
+        counterPage = 0;
+    }
 
     for(; counterPage < lenPage; counterPage ++){
         const page &page = data->datatouch->at(counterPage);
@@ -91,11 +97,29 @@ void TabletCanvas::load(QPainter &painter,
         if(!page.isVisible() && !dataPoint.IsExportingPdf)
             continue;
 
-        QRectF targetRect(QPointF(PointFirstPage.x() * dataPoint.m, (PointFirstPage.y() + page::getHeight()*zoom*double(counterPage))) * dataPoint.m,
+        singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, dataPoint.m);
+
+        /*continue;
+        QRectF targetRect(QPointF(PointFirstPage.x() * dataPoint.m, (PointFirstPage.y() + page::getHeight() * double(counterPage))) * dataPoint.m,
                           sizeRect);
 
-        painter.drawImage(targetRect, page.getImg());
+        painter.drawImage(targetRect, page.getImg());*/
     }
+}
+
+void singleLoad(
+        QPainter        &painter,
+        const QImage    &img,
+        const QSize     &sizeRect,
+        const QPointF   &PointFirstPage,
+        const int       counterPage,
+        const double    m)
+{
+    QRectF targetRect(QPointF( PointFirstPage.x(),
+                             ( PointFirstPage.y() + page::getHeight() * double(counterPage))) * m,
+                      sizeRect);
+
+    painter.drawImage(targetRect, img);
 }
 
 void TabletCanvas::loadpixel(){
@@ -106,7 +130,8 @@ static void loadSheet(
         const Document  &doc,
         QPen            &m_pen,
         QPainter        &painter,
-        const double    delta){
+        const double    delta)
+{
     uint counterPage;
     const page *page;
     int counterStroke, counterPoint, lenStroke, lenPoint;

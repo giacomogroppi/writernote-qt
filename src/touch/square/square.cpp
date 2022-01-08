@@ -8,6 +8,7 @@
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
+#include "touch/paintevent/paint.h"
 #include "pthread.h"
 
 #define SQ_THREAD 8
@@ -173,7 +174,7 @@ void square::mergeImg(
 
 void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 {
-    int count;
+    int count, len = index.length();
     page * page;
     datastruct & data = *canvas->data->datatouch;
     QImage tmp;
@@ -186,10 +187,11 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 
     this->initImg();
 
-    for(count = 0; count < index.length(); count ++){
+    for(count = 0; count < len; count ++){
         const QVector<int> & ref = index.at(count);
 
         page = &data.at_mod(count + base);
+
         m_stroke.append(QList<stroke>());
 
         page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
@@ -218,15 +220,15 @@ bool square::isinside(const QPointF &point){
 */
 void square::findObjectToDraw(QList<QVector<int>> index)
 {
-    datastruct *data = canvas->data->datatouch;
+    const datastruct *data = canvas->data->datatouch;
     QRectF sizeData;
 
     if(unlikely(index.isEmpty()))
         goto img;
 
+    // find the first point
     sizeData = data->get_size_area(index, this->base);
 
-    // find the first point
     this->pointinit.point = sizeData.topLeft();
     this->pointfine.point = sizeData.bottomRight();
 
@@ -419,4 +421,20 @@ void * __square_search(void *__data)
         *__in_box = true;
 
     return NULL;
+}
+
+void square::needReload(QPainter &painter)
+{
+    QPointF point;
+    datastruct *data;
+
+    if(__need_reload){
+        data = canvas->data->datatouch;
+        point = data->getPointFirstPage();
+
+        singleLoad(painter, this->img, createSizeRect(data), point, 0);
+
+        painter.setPen(this->penna);
+        painter.drawRect(QRectF(pointinit.point, pointfine.point));
+    }
 }

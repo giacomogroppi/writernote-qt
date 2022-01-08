@@ -26,15 +26,6 @@ void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *ca
     }
 }
 
-void datastruct::removeAndTrigger(const QList<int> &id)
-{
-    const QRectF areaToRemove = this->get_size_area(id);
-    for(page &page : m_page){
-        if(page.removeAndDraw(-1, id, areaToRemove))
-            return;
-    }
-}
-
 void datastruct::newViewAudio(int lastTime, int newTime)
 {
 

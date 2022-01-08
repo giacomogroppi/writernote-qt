@@ -292,6 +292,7 @@ HEADERS += \
     src/touch/datastruct/stroke.h \
     src/touch/highlighter/highlighter.h \
     src/touch/multi_thread_data.h \
+    src/touch/paintevent/paint.h \
     src/touch/property/property_control.h \
     src/touch/reduce_size/reduce_size.h \
     src/touch/scrollKinetic/ui_scroll/scroll.h \

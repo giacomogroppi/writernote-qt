@@ -129,12 +129,4 @@ inline void square::translate(const QPointF &offset)
     this->m_property->Hide();
 }
 
-Q_ALWAYS_INLINE void square::needReload(QPainter &painter)
-{
-    if(__need_reload){
-        painter.setPen(this->penna);
-        painter.drawRect(QRectF(pointinit.point, pointfine.point));
-    }
-}
-
 #endif // SQUARE_H
