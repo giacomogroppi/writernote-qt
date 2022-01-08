@@ -216,7 +216,16 @@ inline void __order(QList<QVector<T>> & list){
 # define EXEC_TIME_IF_DEBUG(message, function) function
 #endif
 
-
+#ifdef DEBUGINFO
+# define W_ASSERT(condition, message) \
+    do{                                     \
+        if(unlikely(!(condition))){            \
+            qDebug() << __FUNCTION__ << __FILE__ << message ;            \
+        }                                   \
+    }while(0);
+#else
+# define W_ASSERT(condition, message) ;
+#endif // DEBUGINFO
 
 
 #endif // COMMON_SCRIPT_H

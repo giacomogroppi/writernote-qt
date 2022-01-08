@@ -91,7 +91,8 @@ void page::swap(QList<stroke> & list, const QVector<int> & pos)
 */
 void page::swap(QList<stroke> & list, int from, int to)
 {
-    Q_ASSERT(from >= to);
+    W_ASSERT(from >= to, "from < to");
+
     to --;
 
     for(; from >= to; to --){
