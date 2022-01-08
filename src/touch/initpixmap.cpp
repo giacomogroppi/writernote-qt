@@ -10,10 +10,10 @@ void TabletCanvas::initPixmap(bool paint)
     int sizex;
     double _res;
 
-    if(!data)
+    if(unlikey(!data))
         goto not_found;
 
-    if(!data->datatouch->isempty()){
+    if(unlikely(!data->datatouch->isempty())){
 
         _res = data->datatouch->biggerx();
 
