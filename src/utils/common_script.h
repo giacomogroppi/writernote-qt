@@ -7,7 +7,7 @@
 #include "time.h"
 #include "utils/common_def.h"
 
-#define __init __attribute((constructor))
+#define __init__ __attribute((constructor))
 
 #define BIT(bit) (1 << (bit-1))
 
