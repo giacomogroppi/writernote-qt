@@ -227,7 +227,7 @@ bool square::isinside(const QPointF &point){
  * in questo caso si analizza quando c'è un id
  *  uguale, e si sposta tutto il tratto
 */
-void square::findObjectToDraw(const QList<QVector<int>> index)
+void square::findObjectToDraw(const QList<QVector<int>> &index)
 {
     const datastruct *data = canvas->data->datatouch;
     QRectF sizeData;
@@ -305,6 +305,8 @@ void square::move(const QPointF &punto){
     for(QList<stroke> & tmp : m_stroke){
         datastruct::MovePoint(tmp, __point, 0);
     }
+
+    this->img.scaled(__point.x(), __point.y());
 
     data->m_img->moveImage(m_index_img, __point);
 

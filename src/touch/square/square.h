@@ -27,6 +27,7 @@ public:
 
     int calculate_flags() const;
 
+    void initPoint(const QPointF &point);
     void updatePoint(const QPointF &puntofine);
     bool find();
 
@@ -45,7 +46,7 @@ public:
 
 
 private:
-    void findObjectToDraw(const QList<QVector<int> > index);
+    void findObjectToDraw(const QList<QVector<int> > &index);
     void initImg();
     /*
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
@@ -76,7 +77,7 @@ private slots:
     void actionProperty(property_control::ActionProperty action);
 };
 
-inline bool square::somethingInBox() const
+Q_ALWAYS_INLINE bool square::somethingInBox() const
 {
     return this->in_box;
 }
@@ -98,21 +99,23 @@ inline int square::calculate_flags() const
     return flag;
 }
 
-Q_ALWAYS_INLINE void square::updatePoint(const QPointF &puntofine)
+inline void square::initPoint(const QPointF &point)
 {
-    if(pointinit.set){
-        pointfine.point = puntofine;
-        __need_reload = true;
-    }
-    else{
-        pointinit.point = puntofine;
-        pointinit.set = true;
+    pointinit.point = point;
+    pointinit.set = true;
 
-        /* we don't need yet to draw somethings */
-        __need_reload = false;
-        in_box = false;
-        this->m_property->Hide();
-    }
+    /* we don't need yet to draw somethings */
+    __need_reload = false;
+    in_box = false;
+
+    this->m_property->Hide();
+}
+
+inline void square::updatePoint(const QPointF &puntofine)
+{
+    pointfine.point = puntofine;
+    __need_reload = true;
+
 }
 
 Q_ALWAYS_INLINE void square::changeInstrument(cbool paste)
@@ -125,6 +128,8 @@ inline void square::translate(const QPointF &offset)
 {
     this->pointinit += offset;
     this->pointfine += offset;
+
+    this->img.scaled(offset.x(), offset.y());
 
     this->m_property->Hide();
 }

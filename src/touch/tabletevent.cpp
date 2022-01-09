@@ -187,7 +187,7 @@ Q_ALWAYS_INLINE void TabletCanvas::ManageStart(
             m_square->move(pointTouch);
         }
         else{
-            m_square->updatePoint(pointTouch);
+            m_square->initPoint(pointTouch);
         }
         sel = false;
     }
