@@ -263,18 +263,19 @@ inline void __order(QList<QVector<T>> & list){
     }
 }
 
-#define EXEC_TIME(message, function)    \
-    do{                                 \
-        const auto time = clock();      \
-        function;                       \
-        qDebug() << message << clock() - time;     \
-    }                                   \
+#define EXEC_TIME(message, function)                \
+    do{                                             \
+        const auto time = clock();                  \
+        function;                                   \
+        qDebug() << message << clock() - time;      \
+    }                                               \
     while(0);
 
 #ifdef DEBUGINFO
-# define EXEC_TIME_IF_DEBUG(message, function) EXEC_TIME(message, function)
+# define EXEC_TIME_IF_DEBUG(message, enable, function) \
+    if(enable) {EXEC_TIME(message, function)} else {function};
 #else
-# define EXEC_TIME_IF_DEBUG(message, function) function
+# define EXEC_TIME_IF_DEBUG(message, enable, function) function
 #endif
 
 #ifdef DEBUGINFO

@@ -436,11 +436,13 @@ void square::needReload(QPainter &painter)
     QPointF point;
     datastruct *data;
 
-    if(__need_reload){
+    if(likely(__need_reload)){
         data = canvas->data->datatouch;
-        point = data->getPointFirstPage();
 
-        singleLoad(painter, this->img, createSizeRect(data), point, 0);
+        if(in_box){
+            point = data->getPointFirstPage();
+            singleLoad(painter, this->img, createSizeRect(data), point, 0);
+        }
 
         painter.setPen(this->penna);
         painter.drawRect(QRectF(pointinit.point, pointfine.point));

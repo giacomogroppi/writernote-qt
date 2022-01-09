@@ -142,13 +142,12 @@ void page::drawStroke(
     }
 
     if(stroke.constantPressure()){
-        EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()",
+        EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()", false,
             path = &stroke.getQPainterPath();
         )
 
-        EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath",
+        EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath", false,
             painter.strokePath(*path, m_pen);
-
         )
 
     }else{
@@ -159,7 +158,7 @@ void page::drawStroke(
         lastPoint = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
 
         for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-            EXEC_TIME_IF_DEBUG("page::drawStroke() take point",
+            EXEC_TIME_IF_DEBUG("page::drawStroke() take point", false,
                 const point_s point = at_translation(stroke.at(counterPoint), refCounter);
                 pointDraw = point.toQPointF(PROP_RESOLUTION);
 
@@ -167,7 +166,7 @@ void page::drawStroke(
 
             )
 
-            EXEC_TIME_IF_DEBUG("page::drawStroke() draw",
+            EXEC_TIME_IF_DEBUG("page::drawStroke() draw", false,
                 painter.setPen(m_pen);
 
                 painter.drawLine(lastPoint, pointDraw);
