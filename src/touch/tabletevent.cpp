@@ -104,7 +104,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     m_square->updatePoint(pointTouch);
                 }
                 else{
-                    if(!m_square->isinside(pointTouch)){
+                    if(unlikely(!m_square->isinside(pointTouch))){
                         /* se il tocco non è stato interno */
                         m_square->reset(true);
                     }
@@ -146,7 +146,8 @@ end:
 }
 
 
-inline void TabletCanvas::ManageFinish(QTabletEvent *event){
+inline void TabletCanvas::ManageFinish(QTabletEvent *event)
+{
 #if defined(WIN32) || defined(WIN64)
     this->isdrawing = false;
 #endif
@@ -228,7 +229,11 @@ void TabletCanvas::updatelist(QTabletEvent *event)
     strokeTmp.append(tmp_point);
 }
 
-static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop){
+static void AppendAll(
+        Document             &doc, 
+        const TabletCanvas   *canvas, 
+        const bool           toTheTop)
+{
     uint i;
 
     /* for debug */
