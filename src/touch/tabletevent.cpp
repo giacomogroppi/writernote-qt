@@ -49,7 +49,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     eventType = event->type();
 
     rubber_method = medotodiinserimento == e_method::rubber || event->pointerType() == QTabletEvent::PointerType::Eraser;
-    if(rubber_method){
+    if(unlikely(rubber_method)){
         setFalse();
     }
     else{
