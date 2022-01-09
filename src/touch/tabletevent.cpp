@@ -59,16 +59,16 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         text_method = medotodiinserimento == e_method::text;
     }
 
-    if(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight){
+    if(unlikely(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight)){
         /* the user is writing in a part where the sheet is not present. You don't have to save the point. And save the end of the current treatment */
         ManageFinish(event);
         goto end;
     }
 
-    if(eventType == QEvent::TabletPress){ /* first point */
+    if(unlikely(eventType == QEvent::TabletPress)){ /* first point */
         ManageStart(event, pointTouch);
     }
-    else if(eventType == QEvent::TabletMove){ /* user move the pen */
+    else if(likely(eventType == QEvent::TabletMove)){ /* user move the pen */
         if (event->device() == QTabletEvent::RotationStylus){
             updateCursor(event);
         }
