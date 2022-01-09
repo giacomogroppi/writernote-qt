@@ -109,13 +109,14 @@ bool square::find(){
         if(unlikely(!__page->isVisible()))
             break;
 
-        if(unlikely(count > index.length() - 1))
+        if(likely(count > index.length() - 1))
             index.append(QVector<int>());
 
-        __index = (QVector<int> *)&index.at(count);
+        __index = &index.operator[](count);
 
-        for(i = 0; i < create; i++)
+        for(i = 0; i < create; i++){
             pthread_create(&thread[i], NULL, __square_search, (void *)&dataThread[i]);
+        }
         for(i = 0; i < create; i++){
             pthread_join(thread[i], NULL);
         }
@@ -172,6 +173,14 @@ void square::mergeImg(
     painter.end();
 }
 
+static void preappend(QList<QList<stroke>> & list, int num)
+{
+    while(num > 0){
+        num --;
+        list.append(QList<stroke>());
+    }
+}
+
 void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 {
     int count, len = index.length();
@@ -187,12 +196,12 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 
     this->initImg();
 
+    preappend(m_stroke, len);
+
     for(count = 0; count < len; count ++){
         const QVector<int> & ref = index.at(count);
-
+        qDebug() << ref;
         page = &data.at_mod(count + base);
-
-        m_stroke.append(QList<stroke>());
 
         page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
 
@@ -218,7 +227,7 @@ bool square::isinside(const QPointF &point){
  * in questo caso si analizza quando c'è un id
  *  uguale, e si sposta tutto il tratto
 */
-void square::findObjectToDraw(QList<QVector<int>> index)
+void square::findObjectToDraw(const QList<QVector<int>> index)
 {
     const datastruct *data = canvas->data->datatouch;
     QRectF sizeData;
@@ -292,9 +301,6 @@ void square::move(const QPointF &punto){
     __point = lastpoint.point - punto;
 
     datastruct::inverso(__point);
-
-    //data->datatouch->MovePoint(m_id, __point, &PageModify);
-    //data->datatouch->MovePoint(index, base, __point);
 
     for(QList<stroke> & tmp : m_stroke){
         datastruct::MovePoint(tmp, __point, 0);
@@ -408,11 +414,11 @@ void * __square_search(void *__data)
     for(; data->from < data->to;  data->from ++){
         const stroke &stroke = __page->atStroke(data->from);
         if(datastruct::isinside(__f, __s, stroke)){
+
             pthread_mutex_lock(&__mutex_sq);
-
             __index->append(data->from);
-
             pthread_mutex_unlock(&__mutex_sq);
+
             in_box = true;
         }
     }

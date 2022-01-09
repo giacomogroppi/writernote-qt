@@ -413,12 +413,11 @@ inline int datastruct::getFirstPageVisible() const
      *  we don't want QList to copy all pages
      *  when they are shared. */
     int &__pageVisible = (int &) pageVisible;
-    QList<page> &__page = (QList<page> &)this->m_page;
     int i, len = this->lengthPage();
 
     if(unlikely(pageVisible < 0)){
         for(i = 0; i < len; i++){
-            if(__page.at(i).isVisible()){
+            if(at(i).isVisible()){
                 __pageVisible = i;
                 break;
             }

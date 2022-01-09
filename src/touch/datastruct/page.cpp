@@ -346,7 +346,7 @@ void page::drawToImage(
     
     painter.begin(&img);
 
-    for (const auto &__index : index){
+    for (const int __index : index){
         const stroke &stroke = atStroke(__index);
         this->drawStroke(painter, stroke, pen, stroke.getColor());
     }

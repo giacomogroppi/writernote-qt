@@ -56,7 +56,7 @@ Q_ALWAYS_INLINE void __swap(T &t1, T &t2)
 
 
 template <typename T>
-Q_ALWAYS_INLINE int is_order(const T &list)
+Q_ALWAYS_INLINE int is_order(const QList<T> &list)
 {
     int i, len;
     len = list.length();
@@ -70,12 +70,40 @@ Q_ALWAYS_INLINE int is_order(const T &list)
     return 1;
 }
 
+template <typename T>
+Q_ALWAYS_INLINE int is_order(const QVector<T> &list)
+{
+    int i, len;
+    len = list.length();
+    for(i = 0; i < len - 1; i++){
+        if(list.at(i) > list.at(i+1))
+            return 0;
+        //if(list.at(i) > list.at(i+1))
+        //    return 0;
+    }
+
+    return 1;
+}
+
+template <typename T>
+Q_ALWAYS_INLINE int is_order(const QList<QVector<T>> &list)
+{
+    int i, len;
+    len = list.length();
+    for(i = 0; i < len; i++){
+        if(!is_order(list.at(i)))
+            return 0;
+    }
+
+    return 1;
+}
+
 /*
  * very fast when the list is almost sorted,
  * otherwise use std :: sort
 */
 template <typename T>
-inline void order(T &list)
+inline void order(QList<T> &list)
 {
     int i, j;
     int n = list.length();
@@ -93,6 +121,39 @@ inline void order(T &list)
 #endif
             }
         }
+    }
+}
+
+template <typename T>
+inline void order(QVector<T> &list)
+{
+    int i, j;
+    int n = list.length();
+
+    for (i = 0; i < n - 1; i++){
+        for (j = 0; j < n - i - 1; j++){
+            auto &val1 = list.operator[](j);
+            auto &val2 = list.operator[](j+1);
+
+            if (val1 > val2){
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+                __swap(val1, val2);
+#else
+                list.swapItemsAt(j, j + 1);
+#endif
+            }
+        }
+    }
+}
+
+template <typename T>
+inline void order(QList<QVector<T>> &list)
+{
+    int i, len = list.length();
+
+    for(i = 0; i < len; i++){
+        auto & __list = list.operator[](i);
+        order(__list);
     }
 }
 

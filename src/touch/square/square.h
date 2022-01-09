@@ -45,7 +45,7 @@ public:
 
 
 private:
-    void findObjectToDraw(QList<QVector<int>> index);
+    void findObjectToDraw(const QList<QVector<int> > index);
     void initImg();
     /*
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
