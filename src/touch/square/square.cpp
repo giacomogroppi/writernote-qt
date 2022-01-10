@@ -249,11 +249,6 @@ void square::findObjectToDraw(const QList<QVector<int>> &index)
     if(unlikely(index.isEmpty()))
         goto img;
 
-    for(int tmp = 0; tmp < index.length(); tmp ++){
-        const auto &ref = index.at(tmp);
-        qDebug() << "sqare::findObjectToDraw" << tmp <<ref;
-    }
-
     // find the first point
     sizeData = data->get_size_area(index, this->base);
 

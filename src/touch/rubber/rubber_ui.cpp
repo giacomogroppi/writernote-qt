@@ -104,7 +104,7 @@ static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF
     const QPointF &topLeft = pos.topLeft() - QPointF(m_size_gomma, m_size_gomma);
     const QPointF &bottomRigth = pos.bottomRight() + QPointF(m_size_gomma, m_size_gomma);
 
-    Q_ASSERT(m_size_gomma >= 0.0);
+    W_ASSERT(m_size_gomma >= 0.0);
 
     //qDebug() << "rubber_ui::actionRubber" << "touch" << lastPoint << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
 
