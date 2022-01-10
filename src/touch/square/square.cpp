@@ -282,28 +282,40 @@ void square::reset(bool paste)
     m_index_img.clear();
 
     if(likely(paste)){
-        int i;
-        for(i = 0; i < m_stroke.length(); i++){
-            page * page = &canvas->data->datatouch->at_mod(i + base);
-            page->append(m_stroke.at(i));
+        for(int i = 0; i < m_stroke.length(); i++){
+            QList<stroke> ll    = m_stroke.operator[](i);
+            page * page         = &canvas->data->datatouch->at_mod(i + base);
+
+            for(auto &ref : ll){
+                ref.scale(this->trans_img, STROKE_MUST_TRASLATE_PATH);
+            }
+
+            page->append(ll);
             page->triggerRenderImage(-1, false);
         }
     }
 
     this->img = QImage();
     this->m_stroke.clear();
+    this->trans_img = QPointF(0.0, 0.0);
 }
 
 void square::move(const QPointF &punto){
-    QPointF __point;
+    QPointF delta;
     Document *data = canvas->data;
     QList<int> PageModify;
 
-    if(unlikely(!somethingInBox())){
-        return this->changeInstrument(false);
+#ifdef DEBUGINFO
+    W_ASSERT(somethingInBox());
+#else
+    if(unlikely(somethingInBox())){
+        NAME_LOG_EXT->write("somethingInBox", log_ui::possible_bug);
+        this->changeInstrument(false);
+        return;
     }
+#endif
 
-    if(lastpoint.isNotSet()){
+    if(unlikely(lastpoint.isNotSet())){
         lastpoint = PointSettable(punto, true);
         return;
     }
@@ -312,22 +324,23 @@ void square::move(const QPointF &punto){
         return this->reset(true);
     }
 
-    __point = lastpoint.point - punto;
+    delta = lastpoint.point - punto;
 
-    datastruct::inverso(__point);
+    datastruct::inverso(delta);
 
     for(QList<stroke> & tmp : m_stroke){
-        datastruct::MovePoint(tmp, __point, 0);
+        datastruct::MovePoint(tmp, delta, 0);
     }
 
-    this->img.scaled(__point.x(), __point.y());
+    this->trans_img += delta;
+    this->img.scaled(delta.x(), delta.y());
 
-    data->m_img->moveImage(m_index_img, __point);
+    data->m_img->moveImage(m_index_img, delta);
 
     lastpoint.point = punto;
 
-    pointinit.point = pointinit.point + __point;
-    pointfine.point = pointfine.point + __point;
+    pointinit.point += delta;
+    pointfine.point += delta;
 
     __need_reload = true;
     data->datatouch->triggerNewView(PageModify, -1, true);
@@ -458,7 +471,7 @@ void square::needReload(QPainter &painter)
             len = data->lengthPage();
 
             singleLoad(painter, this->img, createSizeRect(data, len, DRAW_CREATE_SIZE_RECT_DEF_PRO),
-                       point, 0, DRAW_SINGLE_LOAD_DEF);
+                       point + this->trans_img, 0, DRAW_SINGLE_LOAD_DEF);
         }
 
         painter.setPen(this->penna);

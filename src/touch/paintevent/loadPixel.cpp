@@ -101,13 +101,13 @@ void TabletCanvas::load(QPainter &painter,
     }
 }
 
-void singleLoad(
+inline void singleLoad(
         QPainter        &painter,
         const QImage    &img,
         const QSize     &sizeRect,
         const QPointF   &PointFirstPage,
-        const int       counterPage,
-        const double    m)
+        cint            counterPage,
+        cdouble         m)
 {
     QRectF targetRect(QPointF( PointFirstPage.x(),
                              ( PointFirstPage.y() + page::getHeight() * double(counterPage))) * m,

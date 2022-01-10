@@ -13,7 +13,7 @@
 void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
-    static bool needDrawSheet;
+    bool needDrawSheet;
 
     if(!this->parent) return;
 
@@ -28,12 +28,9 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     };
 
     dataPaint.pen       = this->m_pen;
+    isWriting           = false;
 
-    needDrawSheet = false;
-
-    isWriting = false;
-
-    if (m_pixmap.isNull())
+    if (unlikely(m_pixmap.isNull()))
         initPixmap(false);
 
     painter.begin(this);
@@ -43,7 +40,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
     needDrawSheet = data->datatouch->needToCreateNewSheet();
-    if(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty()))
+    if(unlikely(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty())))
         this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
 
     TabletCanvas::load(painter, this->data, dataPaint);

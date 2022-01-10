@@ -424,14 +424,16 @@ Q_ALWAYS_INLINE stroke &page::lastMod()
 
 Q_ALWAYS_INLINE void page::append(const stroke &strokeAppend)
 {
+    DO_IF_DEBUG(
     int lastNewIndex = strokeTmp.length();
+    );
+
     this->strokeTmp.append(strokeAppend);
-    //this->strokeTmp.operator[](lastNewIndex) = strokeAppend;
 
     /* they will be automatically removed when
      * the project is compiled in release mode */
-    Q_ASSERT(strokeTmp.at(lastNewIndex).length() == strokeAppend.length());
-    Q_ASSERT(strokeTmp.at(lastNewIndex).getId()  == strokeAppend.getId());
+    W_ASSERT(strokeTmp.at(lastNewIndex).length() == strokeAppend.length());
+    W_ASSERT(strokeTmp.at(lastNewIndex).getId()  == strokeAppend.getId());
 }
 
 Q_ALWAYS_INLINE double page::minHeight() const

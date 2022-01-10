@@ -441,15 +441,15 @@ inline QString stroke::toString() const
 
 inline void stroke::scale(const QPointF &offset, int flag)
 {
-    int i = this->length() - 1;
-    for(; i >= 0; i--){
+    int i = this->length();
+    for(i--; i >= 0; i--){
         point_s &point = at_mod(i);
 
         point.m_x += offset.x();
         point.m_y += offset.y();
     }
 
-    if(flag & STROKE_MUST_TRASLATE_PATH && !this->needToCreatePanterPath && this->constantPressure())
+    if((flag & STROKE_MUST_TRASLATE_PATH) && likely(!this->needToCreatePanterPath) && this->constantPressure())
         path.translate(offset);
     else
         path = QPainterPath();

@@ -59,6 +59,7 @@ private:
     void mergeImg(const QImage &from, QImage &to, int page);
     void moveObjectIntoPrivate(QList<QVector<int> > &index);
 
+    QPointF trans_img;
     QImage img;
     QList<QList<stroke>> m_stroke;
 

@@ -22,8 +22,8 @@ void singleLoad(
         const QImage    &img,
         const QSize     &sizeRect,
         const QPointF   &PointFirstPage,
-        const int       counterPage,
-        const double    m);
+        cint            counterPage,
+        cdouble         m);
 
 /*
  * @countHeigth is use when we what to
