@@ -104,7 +104,7 @@ bool square::find(){
     /* point selected by user */
     for(count = 0; PageCounter < lenPage; PageCounter ++, count ++){
         __page = &data->at(PageCounter);
-        create = DataPrivateMuThreadInit(dataThread, SQ_THREAD, __page->lengthStroke());
+        create = DataPrivateMuThreadInit(dataThread, NULL, SQ_THREAD, __page->lengthStroke());
 
         if(unlikely(!__page->isVisible()))
             break;

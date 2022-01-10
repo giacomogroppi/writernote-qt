@@ -20,27 +20,33 @@ void DataPrivateInit(void)
     pthread_mutex_init(&mutex_thread_write, NULL);
 }
 
-int DataPrivateMuThreadInit(DataPrivateMuThread *data, cint len, cint to)
+int DataPrivateMuThreadInit(
+        DataPrivateMuThread     *data,
+        void                    *extraData,
+        cint                    maxThread,
+        cint                    to)
 {
     int i, done, div, count;
 
     done = 0;
-    div = div_diff(to, len);
+    div = div_diff(to, maxThread);
 
-    if(to > len){
-        count = len;
+    if(to > maxThread){
+        count = maxThread;
 
-        for(i = 0; i < len; i++){
+        for(i = 0; i < maxThread; i++){
             data[i].from = done;
             data[i].to = done + div;
+            data[i].extra = extraData;
             done += div;
         }
 
-        data[len - 1].to = to;
+        data[maxThread - 1].to = to;
     }else{
         count = 1;
         data[0].from = 0;
         data[0].to = to;
+        data[0].extra = extraData;
     }
 
     return count;

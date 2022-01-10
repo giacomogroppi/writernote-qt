@@ -5,11 +5,12 @@
 
 struct DataPrivateMuThread{
     int from, to;
+    void *extra;
 };
 
 void DataPrivateInit(void);
 
-int DataPrivateMuThreadInit(DataPrivateMuThread *data, cint len, cint to);
+int DataPrivateMuThreadInit(DataPrivateMuThread *data, void *extraData, cint maxThread, cint to);
 
 int DataPrivateCountThread(int numNewThread);
 void DataPrivateCountThreadRelease(int numReleaseThread);

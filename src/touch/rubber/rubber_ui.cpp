@@ -154,7 +154,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
         __data_find = (QVector<int> *)&data_to_remove.at(count);
 
-        create = DataPrivateMuThreadInit(threadData, RUBB_TH, lenStroke);
+        create = DataPrivateMuThreadInit(threadData, NULL, RUBB_TH, lenStroke);
 
         for(tmp = 0; tmp < create; tmp ++){
             pthread_create(&thread[tmp], NULL, actionRubberSingle, &threadData[tmp]);

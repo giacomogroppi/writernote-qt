@@ -149,6 +149,7 @@ public:
     friend class datastruct;
     friend class xmlstruct;
     friend class rubber_ui;
+    friend void * __page_load(void *);
 };
 
 Q_ALWAYS_INLINE void page::removeBlock() const

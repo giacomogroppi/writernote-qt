@@ -8,6 +8,9 @@
 #include "datawrite/source_read_ext.h"
 #include "time.h"
 #include "utils/common_script.h"
+#include "touch/multi_thread_data.h"
+
+#define PAGE_THREAD_MAX 16
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
@@ -15,6 +18,11 @@ static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struc
                             double &deltax, const double &width_p, const double &ct_del);
 static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_S &style,
                             const double &last, double &deltay, const double &height_p);
+
+static Q_ALWAYS_INLINE void __initImg(QImage &img)
+{
+    img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+}
 
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
 
@@ -100,11 +108,11 @@ void page::swap(QList<stroke> & list,
                 int             from,
                 int             to)
 {
-#ifdef DEBUGINFO
+    DO_IF_DEBUG(
     W_ASSERT(from >= to);
     int drop = 0;
     QList<int> itemDrop;
-#endif
+    );
 
     for(to --; from <= to; to --){
         list.append(m_stroke.takeAt(to));
@@ -178,32 +186,107 @@ void page::drawStroke(
     }
 }
 
-void page::drawEngine(
-        QPainter        &painter,
-        QList<stroke>   &List,
-        int       m_pos_ris)
+struct page_thread_data{
+    QVector<int>      * to_remove;
+    pthread_mutex_t   * append;
+    QPainter          * painter;
+    QList<stroke>     * m_stroke;
+    int                 m_pos_ris;
+    const page        * parent;
+};
+
+/*The only way to draw in thread safe on a qpainter is to draw an image,
+ *  as it is very fast compared to drawing the stroke, first we draw
+ *  all the strokes on the images, residing in the thread stack stacks,
+ *  and then we draw them on top the original painter
+*/
+void * __page_load(void *__data)
 {
-    int i;
+    struct DataPrivateMuThread * _data = (struct DataPrivateMuThread *)__data;
+    struct page_thread_data *extra = (struct page_thread_data *)_data->extra;
+    QImage img;
     Define_PEN(m_pen);
-    int lenStroke = List.length();
+    pthread_mutex_t *__append_mutex = extra->append;
+    int m_pos_ris = extra->m_pos_ris;
+    QPainter painter;
+    const page *page = extra->parent;
 
-    //auto __clock = clock();
+    painter.begin(&img);
+    __initImg(img);
 
-    for(i = 0; i < lenStroke; i++){
-        const stroke &stroke = List.at(i);
-        if(unlikely(stroke.isEmpty())){
-            List.removeAt(i);
-            i --;
-            lenStroke --;
-            log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
+    for(; _data->from < _data->to; _data->from ++){
+        const auto &ref = extra->m_stroke->at(_data->from);
+        if(unlikely(ref.isEmpty())){
+
+            pthread_mutex_lock(__append_mutex);
+            extra->to_remove->append(_data->from);
+            pthread_mutex_unlock(__append_mutex);
+
             continue;
         }
 
-        const QColor color = stroke.getColor(
-            (likely(stroke.getPosizioneAudio()) > m_pos_ris) ? 1 : 4
+        const QColor color = ref.getColor(
+            (likely(ref.getPosizioneAudio()) > m_pos_ris) ? 1 : 4
         );
 
-        this->drawStroke(painter, stroke, m_pen, color);
+        page->drawStroke(painter, ref, m_pen, color);
+    }
+
+    // the source image has the same size as img
+    extra->painter->drawImage(img.rect(), img, img.rect());
+
+    return NULL;
+}
+
+void page::drawEngine(
+        QPainter        &painter,
+        QList<stroke>   &List,
+        int             m_pos_ris)
+{
+    int i, threadCount;
+
+    QVector<int> to_remove;
+    pthread_mutex_t append;
+
+    pthread_t thread[PAGE_THREAD_MAX];
+    struct DataPrivateMuThread threadData[PAGE_THREAD_MAX];
+    struct page_thread_data extraData;
+
+    pthread_mutex_init(&append, NULL);
+
+    extraData.append =      &append;
+    extraData.painter =     &painter;
+    extraData.to_remove =   &to_remove;
+    extraData.m_stroke    =   &List;
+    extraData.m_pos_ris =   m_pos_ris;
+    extraData.parent =      this;
+
+    //for(i = 0; i < lenStroke; i++){
+
+        //const QColor color = stroke.getColor(
+        //    (likely(stroke.getPosizioneAudio()) > m_pos_ris) ? 1 : 4
+        //);
+
+        //this->drawStroke(painter, stroke, m_pen, color);
+    //}
+
+    threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length());
+
+    for(i = 0; i < threadCount; i++){
+        pthread_create(&thread[i], NULL, __page_load, &threadData[i]);
+    }
+    for(i = 0; i < threadCount; i++){
+        pthread_join(thread[i], NULL);
+    }
+
+    i = to_remove.length();
+
+    if(unlikely(i)){
+        log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
+    }
+
+    for(i --; i >= 0; i--){
+        this->removeAt(i);
     }
 
 }
@@ -325,11 +408,6 @@ static inline void drawLineVertical(
         deltay += ct_del;
 
     }
-}
-
-static Q_ALWAYS_INLINE void __initImg(QImage &img)
-{
-    img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
 }
 
 void page::drawToImage(
