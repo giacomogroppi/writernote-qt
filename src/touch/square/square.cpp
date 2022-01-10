@@ -60,7 +60,8 @@ square::~square()
  * true, in caso contrario la setta = false e fa il return
 */
 
-bool square::find(){
+bool square::find()
+{
     Document *doc = canvas->data;
     datastruct *data = doc->datatouch;
     bool tmp_find;
@@ -231,7 +232,8 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 /* la funzione resistuisce
  * vero se è intero il punto è interno
 */
-bool square::isinside(const QPointF &point){
+bool square::isinside(const QPointF &point)
+{
     return datastruct::isinside(pointinit.point, pointfine.point, point);
 }
 
@@ -300,7 +302,8 @@ void square::reset(bool paste)
     this->trans_img = QPointF(0.0, 0.0);
 }
 
-void square::move(const QPointF &punto){
+void square::move(const QPointF &punto)
+{
     QPointF delta;
     Document *data = canvas->data;
     QList<int> PageModify;

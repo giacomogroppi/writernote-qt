@@ -267,11 +267,15 @@ void page::drawEngine(
 
     threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length());
 
-    for(i = 0; i < threadCount; i++){
-        pthread_create(&thread[i], NULL, __page_load, &threadData[i]);
-    }
-    for(i = 0; i < threadCount; i++){
-        pthread_join(thread[i], NULL);
+    if(unlikely(threadCount <= 2)){
+        for(i = 0; i < threadCount; i++){
+            pthread_create(&thread[i], NULL, __page_load, &threadData[i]);
+        }
+        for(i = 0; i < threadCount; i++){
+            pthread_join(thread[i], NULL);
+        }
+    }else{
+        __page_load(&threadData[0]);
     }
 
     i = to_remove.length();
