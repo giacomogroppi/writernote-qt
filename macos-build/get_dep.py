@@ -28,7 +28,7 @@ def remove_double(list_dep: list[str]) -> list[str]:
     return newlist
 
 def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
-    os.system("rm " + dest_list)
+    os.system("rm {}".format(dest_list))
     os.system(COMMAND + pos_binary + " >> " + dest_list)
     list = []
 
@@ -75,14 +75,15 @@ def get_name_lib(lib: str) -> str:
 
 def copy_dep(app_path: str, list_dep: list[str]) -> bool:
     try:
-        os.mkdir(app_path + "/" + SUFF_LIB)
+        tmp = "{}/{}".format(app_path, SUFF_LIB)
+        os.mkdir(tmp)
     except:
         print("Directory already exist")
 
     for dep in list_dep:
         name = get_name_lib(dep)
         ref = app_path + "/" + SUFF_LIB + name
-        if os.system(COPY + dep + " " + ref ) != 0:
+        if os.system("{}{} {}".format(COPY, dep,ref )) != 0:
             return False
 
     return True
@@ -111,7 +112,7 @@ def change_dep(pos_bin: str, list_dep: list[str]) -> bool:
     
     for real_dep in list_dep:
         for dep_exe in list_file:
-            command = COMMAND_TOOL + COMMAND_SUFF + " " + real_dep + COMMAND_BEFORE + "/" + get_name_lib(real_dep) + " " + pos_lib + dep_exe
+            command = "{}{} {}{}/{} {}{}".format(COMMAND_TOOL, COMMAND_SUFF, real_dep, COMMAND_BEFORE, get_name_lib(real_dep), pos_lib, dep_exe)
             print("First command: ", command)
             os.system(command)
     
@@ -122,7 +123,7 @@ def change_id(pos_bin: str) -> bool:
     list_file = file_in_folder(pos_lib)
 
     for dep_exe in list_file:
-        command = COMMAND_TOOL + COMMAND_ID + " " + COMMAND_ID_SUFF + "/" + " " + pos_lib + dep_exe
+        command = "{}{} {}/ {}{}".format(COMMAND_TOOL, COMMAND_ID, COMMAND_ID_SUFF,pos_lib, dep_exe)
         print("Second command: ", command)
 
         os.system(command)
