@@ -206,21 +206,21 @@ void * __page_load(void *__data)
     struct page_thread_data *extra = (struct page_thread_data *)_data->extra;
     QImage img;
     Define_PEN(m_pen);
-    pthread_mutex_t *__append_mutex = extra->append;
+    pthread_mutex_t *mutex = extra->append;
     int m_pos_ris = extra->m_pos_ris;
     QPainter painter;
     const page *page = extra->parent;
 
-    painter.begin(&img);
     __initImg(img);
+    painter.begin(&img);
 
     for(; _data->from < _data->to; _data->from ++){
         const auto &ref = extra->m_stroke->at(_data->from);
         if(unlikely(ref.isEmpty())){
 
-            pthread_mutex_lock(__append_mutex);
+            pthread_mutex_lock(mutex);
             extra->to_remove->append(_data->from);
-            pthread_mutex_unlock(__append_mutex);
+            pthread_mutex_unlock(mutex);
 
             continue;
         }
@@ -232,8 +232,12 @@ void * __page_load(void *__data)
         page->drawStroke(painter, ref, m_pen, color);
     }
 
+    painter.end();
+
     // the source image has the same size as img
+    pthread_mutex_lock(mutex);
     extra->painter->drawImage(img.rect(), img, img.rect());
+    pthread_mutex_unlock(mutex);
 
     return NULL;
 }
@@ -260,15 +264,6 @@ void page::drawEngine(
     extraData.m_stroke    =   &List;
     extraData.m_pos_ris =   m_pos_ris;
     extraData.parent =      this;
-
-    //for(i = 0; i < lenStroke; i++){
-
-        //const QColor color = stroke.getColor(
-        //    (likely(stroke.getPosizioneAudio()) > m_pos_ris) ? 1 : 4
-        //);
-
-        //this->drawStroke(painter, stroke, m_pen, color);
-    //}
 
     threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length());
 
