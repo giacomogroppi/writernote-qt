@@ -87,8 +87,8 @@ bool square::find(){
 
     this->adjustPoint();
 
-    Q_ASSERT(pointinit.x() <= pointfine.x());
-    Q_ASSERT(pointinit.y() <= pointfine.y());
+    W_ASSERT(pointinit.x() <= pointfine.x());
+    W_ASSERT(pointinit.y() <= pointfine.y());
 
     /*
      * Il problema di cercare nella lista è
@@ -183,16 +183,33 @@ static void preappend(QList<QList<stroke>> & list, int num)
 
 void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 {
-    int count, len = index.length();
+    int count;
+    cint len = index.length();
     page * page;
     datastruct & data = *canvas->data->datatouch;
     QImage tmp;
 
+    DO_IF_DEBUG(const auto m_index_tmp = index);
+
     this->m_stroke.clear();
 
-    if(likely(!is_order(index))){
-        order(index);
+    order_multiple(index);
+
+    DO_IF_DEBUG_ENABLE(true,
+    int i;
+    for(i = 0; i < m_index_tmp.length(); i++){
+        const auto &ref = index.at(i);
+        const auto &tmp = m_index_tmp.at(i);
+
+        if(ref.length() != tmp.length())
+            std::abort();
+
+        for(int c = 0; c < ref.length(); c++){
+            if(ref.indexOf(tmp.at(i)) == -1)
+                std::abort();
+        }
     }
+    );
 
     this->initImg();
 
@@ -231,6 +248,11 @@ void square::findObjectToDraw(const QList<QVector<int>> &index)
 
     if(unlikely(index.isEmpty()))
         goto img;
+
+    for(int tmp = 0; tmp < index.length(); tmp ++){
+        const auto &ref = index.at(tmp);
+        qDebug() << "sqare::findObjectToDraw" << tmp <<ref;
+    }
 
     // find the first point
     sizeData = data->get_size_area(index, this->base);
@@ -432,13 +454,16 @@ void square::needReload(QPainter &painter)
 {
     QPointF point;
     datastruct *data;
+    int len;
 
     if(likely(__need_reload)){
-        data = canvas->data->datatouch;
-
         if(in_box){
+            data = canvas->data->datatouch;
             point = data->getPointFirstPage();
-            singleLoad(painter, this->img, createSizeRect(data), point, 0);
+            len = data->lengthPage();
+
+            singleLoad(painter, this->img, createSizeRect(data, len, DRAW_CREATE_SIZE_RECT_DEF_PRO),
+                       point, 0, DRAW_SINGLE_LOAD_DEF);
         }
 
         painter.setPen(this->penna);

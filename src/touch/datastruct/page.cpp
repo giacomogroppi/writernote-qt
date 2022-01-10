@@ -78,7 +78,7 @@ void page::drawNewPage(n_style __style)
 
 void page::swap(QList<stroke> & list, const QVector<int> & pos)
 {
-    int i;
+    int i, index;
 
 #ifdef DEBUGINFO
     if(unlikely(!is_order(pos))){
@@ -86,9 +86,10 @@ void page::swap(QList<stroke> & list, const QVector<int> & pos)
     }
 #endif
 
-    i = pos.length() - 1;
-    for(; i >= 0; i--){
-        this->swap(list, i, i+1);
+    i = pos.length();
+    for(i--; i >= 0; i--){
+        index = pos.at(i);
+        this->swap(list, index, index);
     }
 }
 
@@ -100,7 +101,7 @@ void page::swap(QList<stroke> & list,
                 int             to)
 {
 #ifdef DEBUGINFO
-    W_ASSERT(from >= to, "from < to");
+    W_ASSERT(from >= to);
     int drop = 0;
     QList<int> itemDrop;
 #endif
@@ -113,7 +114,7 @@ void page::swap(QList<stroke> & list,
     }
 
     DO_IF_DEBUG(
-        qDebug() << "Page" << this->count - 1 << drop << "Item drop, list" << itemDrop;
+        qDebug() << "Page::swap" << this->count - 1 << drop << "Item drop, list" << itemDrop;
     )
 }
 

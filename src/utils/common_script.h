@@ -86,7 +86,7 @@ Q_ALWAYS_INLINE int is_order(const QVector<T> &list)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int is_order(const QList<QVector<T>> &list)
+Q_ALWAYS_INLINE int is_order_multiple(const QList<QVector<T>> &list)
 {
     int i, len;
     len = list.length();
@@ -147,13 +147,17 @@ inline void order(QVector<T> &list)
 }
 
 template <typename T>
-inline void order(QList<QVector<T>> &list)
+inline void order_multiple(QList<QVector<T>> &list)
 {
     int i, len = list.length();
 
     for(i = 0; i < len; i++){
         auto & __list = list.operator[](i);
         order(__list);
+    }
+
+    if(!is_order_multiple(list)){
+        std::abort();
     }
 }
 
@@ -279,20 +283,22 @@ inline void __order(QList<QVector<T>> & list){
 #endif
 
 #ifdef DEBUGINFO
-# define W_ASSERT(condition, message)                           \
+# define W_ASSERT(condition)                                    \
     do{                                                         \
         if(unlikely(!(condition))){                             \
-            qDebug() << __FUNCTION__ << __FILE__ << message ;   \
+            qDebug() << __FUNCTION__ << __FILE__ ;              \
         }                                                       \
     }while(0);
 #else
-# define W_ASSERT(condition, message) ;
+# define W_ASSERT(condition) ;
 #endif // DEBUGINFO
 
 #ifdef DEBUGINFO
 # define DO_IF_DEBUG(istr) istr;
+# define DO_IF_DEBUG_ENABLE(enable, istr) if(enable) {istr}
 #else
 # define DO_IF_DEBUG(istr) ;
+# define DO_IF_DEBUG_ENABLE(enable, istr) ;
 #endif
 
 #endif // COMMON_SCRIPT_H

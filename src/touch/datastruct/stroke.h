@@ -268,33 +268,44 @@ inline int stroke::getPosizioneAudio() const
 */
 inline QRectF stroke::getBiggerPointInStroke() const
 {
-    if(!this->needToCreateBiggerData){
+    bool &__needToCreateBiggerData = (bool &) this->needToCreateBiggerData;
+    QRectF &__biggerData = (QRectF &) this->biggerData;
+    int count;
+
+    if(likely(!this->needToCreateBiggerData)){
         return this->biggerData;
     }
 
-    int i, len = this->length();
-    const point_s &first = at(0);
-    QPointF topLeft(first.m_x, first.m_y);
-    QPointF bottomRight(topLeft);
+    count = this->length();
 
-    bool &__needToCreateBiggerData = (bool &) this->needToCreateBiggerData;
-    QRectF &__biggerData = (QRectF &) this->biggerData;
+    if(unlikely(count == 0)){
+        qDebug() << "Warning: Stroke empty";
+        return QRectF(0, 0, 0, 0);
+    }
 
-    for (i = 0; i < len; i++){
-        const point_s &point = at(i);
+    count --;
+
+    QPointF topLeft(        at(0).m_x,      at(0).m_y);
+    QPointF bottomRight(    at(count).m_x,  at(count).m_y);
+
+    for (; count >= 0; count --){
+        const point_s &point = at(count);
 
         if(topLeft.x() > point.m_x)
             topLeft.setX(point.m_x);
 
-        if(bottomRight.x() < point.m_x)
-            bottomRight.setX(point.m_x);
-
         if(topLeft.y() > point.m_y)
             topLeft.setY(point.m_y);
+
+        if(bottomRight.x() < point.m_x)
+            bottomRight.setX(point.m_x);
 
         if(bottomRight.y() < point.m_y)
             bottomRight.setY(point.m_y);
     }
+
+    W_ASSERT(topLeft.x() <= bottomRight.x());
+    W_ASSERT(topLeft.y() <= bottomRight.y());
 
     __needToCreateBiggerData = false;
 

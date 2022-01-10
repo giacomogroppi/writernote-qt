@@ -310,17 +310,17 @@ inline void datastruct::newPage(const n_style style)
 }
 
 inline QRectF datastruct::get_size_area(
-    const int   *pos,
-    int         len,
-    int         counterPage) const
+        cint    *pos,
+        int     len,
+        int     counterPage) const
 {
     const page &page = at(counterPage);
     QRectF result;
 
-    Q_ASSERT(pos);
-    Q_ASSERT(counterPage < this->lengthPage());
+    W_ASSERT(pos);
+    W_ASSERT(counterPage < this->lengthPage());
 
-    if(!len){
+    if(unlikely(!len)){
         return QRectF();
     }
 
@@ -338,20 +338,15 @@ inline QRectF datastruct::get_size_area(
 inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int base) const
 {
     QRectF result;
-    int i;
-
-    /*
-     * most of the time this function
-     * will have pos with only one element
-     */
+    int i, len;
 
     if(unlikely(pos.isEmpty()))
         return result;
 
-
+    len = pos.length();
     result = get_size_area(pos.first(), base);
 
-    for(i = 1; i < pos.length(); i ++){
+    for(i = 1; i < len; i ++){
         const auto &vec = pos.at(i);
         const auto tmp = this->get_size_area(vec, base + i);
         result = datastruct::get_bigger_rect(result, tmp);
@@ -360,51 +355,12 @@ inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int bas
     return result;
 }
 
-
 inline QRectF datastruct::get_size_area(
         const QVector<int> &pos,
         int __page) const
 {
     return get_size_area(pos.constData(), pos.length(), __page);
 }
-
-/*inline QRectF datastruct::get_size_area(const QList<int> &id) const
-{
-    QRectF result;
-
-    const stroke    *__stroke;
-    const page      *__page;
-
-    if(unlikely(id.isEmpty()))
-        return QRectF();
-
-
-    {
-        int tmp_idtratto = id.at(0);
-        for_each_page(__page, (*this)){
-            for_each_stroke(__stroke, (*__page)){
-                if(unlikely(__stroke->getId() == tmp_idtratto)){
-                    result = __stroke->getBiggerPointInStroke();
-                    break;
-                }
-            }
-
-        }
-    }
-
-    for_each_page(__page, (*this)){
-        for_each_stroke(__stroke, (*__page)){
-            if(IS_NOT_PRESENT_IN_LIST(id, __stroke->getId()))
-                continue;
-
-            const QRectF &rect = __stroke->getBiggerPointInStroke();
-
-            result = datastruct::get_bigger_rect(result, rect);
-        }
-    }
-
-    return result;
-}*/
 
 inline int datastruct::getFirstPageVisible() const
 {
@@ -561,7 +517,9 @@ inline bool datastruct::isinside(
     return datastruct::isinside(rect.topLeft(), rect.bottomRight(), point);
 }
 
-Q_ALWAYS_INLINE QRectF datastruct::get_bigger_rect(const QRectF &first, const QRectF &second)
+inline QRectF datastruct::get_bigger_rect(
+        const QRectF    &first,
+        const QRectF    &second)
 {
     QPointF resultTopLeft(first.topLeft());
     QPointF resultBottomRight(first.bottomRight());

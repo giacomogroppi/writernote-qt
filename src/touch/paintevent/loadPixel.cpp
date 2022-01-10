@@ -29,7 +29,7 @@ void TabletCanvas::load(QPainter &painter,
     const int lenPage               = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
     const double zoom               = data->datatouch->getZoom();
-    const QSize sizeRect            = createSizeRect(data->datatouch, dataPoint.m);
+    const QSize sizeRect            = createSizeRect(data->datatouch, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
     stroke &strokeToDraw = __tmp;
 
@@ -98,12 +98,6 @@ void TabletCanvas::load(QPainter &painter,
             continue;
 
         singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, dataPoint.m);
-
-        /*continue;
-        QRectF targetRect(QPointF(PointFirstPage.x() * dataPoint.m, (PointFirstPage.y() + page::getHeight() * double(counterPage))) * dataPoint.m,
-                          sizeRect);
-
-        painter.drawImage(targetRect, page.getImg());*/
     }
 }
 
