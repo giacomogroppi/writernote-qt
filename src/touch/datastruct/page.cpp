@@ -267,7 +267,7 @@ void page::drawEngine(
 
     threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length());
 
-    if(unlikely(threadCount <= 2)){
+    if(likely(threadCount <= 2)){
         for(i = 0; i < threadCount; i++){
             pthread_create(&thread[i], NULL, __page_load, &threadData[i]);
         }
