@@ -545,7 +545,7 @@ inline void datastruct::appendStroke(const stroke &stroke, const int page)
     this->at_mod(page).append(stroke);
 }
 
-inline bool datastruct::isinside(
+Q_ALWAYS_INLINE bool datastruct::isinside(
         const QPointF &topleft,
         const QPointF &bottonright,
         const QPointF &point)

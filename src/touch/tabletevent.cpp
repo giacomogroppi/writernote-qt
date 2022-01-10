@@ -7,6 +7,7 @@
 #include "audiorecord/audiorecord.h"
 
 #define MAXPOINT 20
+#define CTRL_METHOD(var, type) var = medotodiinserimento == e_method::type
 
 stroke __tmp;
 extern bool block_scrolling;
@@ -14,8 +15,6 @@ static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTh
 
 bool need_save_auto = false;
 bool need_save_tmp = false;
-
-static double DocHeight, DocWidth;
 
 static bool sel;
 static bool highlighter_method;
@@ -37,9 +36,6 @@ static Q_ALWAYS_INLINE void setFalse()
 void TabletCanvas::tabletEvent(QTabletEvent *event){
     const QPointF& pointTouch = event->posF();
 
-    DocHeight = data->datatouch->biggery();
-    DocWidth = data->datatouch->biggerx();
-
     isWriting = true;
     need_save_auto = true;
     need_save_tmp = true;
@@ -48,19 +44,26 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
     eventType = event->type();
 
-    rubber_method = medotodiinserimento == e_method::rubber || event->pointerType() == QTabletEvent::PointerType::Eraser;
+    CTRL_METHOD(rubber_method, rubber);
+    rubber_method |= (event->pointerType() == QTabletEvent::PointerType::Eraser);
+
     if(unlikely(rubber_method)){
         setFalse();
     }
     else{
-        highlighter_method = medotodiinserimento == e_method::highlighter;
-        pen_method = medotodiinserimento == e_method::pen;
-        selection_method = medotodiinserimento == e_method::selection;
-        text_method = medotodiinserimento == e_method::text;
+        CTRL_METHOD(highlighter_method, highlighter);
+        CTRL_METHOD(pen_method, pen);
+        CTRL_METHOD(selection_method, selection);
+        CTRL_METHOD(text_method, text);
     }
 
-    if(unlikely(pointTouch.x() > DocWidth || pointTouch.y() > DocHeight)){
-        /* the user is writing in a part where the sheet is not present. You don't have to save the point. And save the end of the current treatment */
+    if(unlikely(    pointTouch.x() > data->datatouch->biggerx()
+                ||  pointTouch.y() > data->datatouch->biggery())){
+        /* the user is writing in a part where
+         *  the sheet is not present.
+         * You don't have to save the point. And
+         * save the end of the current treatment
+         */
         ManageFinish(event);
         goto end;
     }
@@ -77,7 +80,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         this->isdrawing = true;
         #endif
 
-        if (m_deviceDown) {
+        if (likely(m_deviceDown)) {
             QPainter painter(&m_pixmap);
             if(pen_method || highlighter_method){
                 updateBrush(event);
@@ -100,17 +103,21 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             else if(selection_method){
                 m_square->isMoving();
 
-                if(!m_square->somethingInBox()){ /* it means that the user not select anything */
+                if(!m_square->somethingInBox()){
+                    /*
+                     * it means that the user not select anything
+                     * in the past
+                    */
                     m_square->updatePoint(pointTouch);
                 }
                 else{
-                    if(unlikely(!m_square->isinside(pointTouch))){
-                        /* se il tocco non è stato interno */
-                        m_square->reset(true);
-                    }
-                    else{
+                    if(likely(m_square->isinside(pointTouch))){
                         /* a questo punto può muovere di un delta x e y */
                         m_square->move(pointTouch);
+                    }
+                    else{
+                        /* se il tocco non è stato interno */
+                        m_square->reset(true);
                     }
                 }
                 sel = false;

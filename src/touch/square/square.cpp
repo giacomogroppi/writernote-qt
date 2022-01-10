@@ -215,9 +215,6 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
  * vero se è intero il punto è interno
 */
 bool square::isinside(const QPointF &point){
-    if(!somethingInBox())
-        return false;
-
     return datastruct::isinside(pointinit.point, pointfine.point, point);
 }
 

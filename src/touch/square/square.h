@@ -39,7 +39,7 @@ public:
 
     void changeInstrument(cbool paste);
 
-    void isMoving() { /*m_property->Hide();*/ };
+    void isMoving();
     void endMoving(const QWidget *pixmap);
 
     void translate(const QPointF &offset);
@@ -132,6 +132,11 @@ inline void square::translate(const QPointF &offset)
     this->img.scaled(offset.x(), offset.y());
 
     this->m_property->Hide();
+}
+
+Q_ALWAYS_INLINE void square::isMoving()
+{
+
 }
 
 #endif // SQUARE_H

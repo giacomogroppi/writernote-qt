@@ -60,7 +60,7 @@ void TabletCanvas::load(QPainter &painter,
         dataPoint.lastPoint.pos = QPointF(strokeToDraw.at(0).m_x, strokeToDraw.at(0).m_y);
     }
 
-    for(i = 0; i < len; i++){
+    for(i = 1; i < len; i++){
         const auto &__point = strokeToDraw.at(i);
 
         pen.setWidthF(pressureToWidth(__point.pressure * zoom * dataPoint.m / 2.00));
@@ -147,7 +147,8 @@ static void loadSheet(
         page = &data->at(counterPage);
         lenStroke = page->lengthStrokePage();
 
-        if(!lenStroke) continue;
+        if(unlikely(!lenStroke))
+            continue;
 
         m_pen.setWidthF(TabletCanvas::pressureToWidth(page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
         m_pen.setColor(page->atStrokePage(0).getColor());
