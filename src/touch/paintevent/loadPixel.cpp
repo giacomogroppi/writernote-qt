@@ -101,7 +101,7 @@ void TabletCanvas::load(QPainter &painter,
     }
 }
 
-inline void singleLoad(
+void singleLoad(
         QPainter        &painter,
         const QImage    &img,
         const QSize     &sizeRect,
