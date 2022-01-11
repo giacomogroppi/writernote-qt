@@ -164,10 +164,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
             pthread_join(thread[tmp], NULL);
         }
 
-        if(isTotal){
-
-        }
-        else{
+        if(!isTotal){
             for(int tmp = __data_find->length() - 1; tmp >= 0; tmp --){
                 page.removeAt(__data_find->at(tmp));
             }

@@ -314,25 +314,8 @@ inline QRectF datastruct::get_size_area(
         int     len,
         int     counterPage) const
 {
-    const page &page = at(counterPage);
-    QRectF result;
-
-    W_ASSERT(pos);
-    W_ASSERT(counterPage < this->lengthPage());
-
-    if(unlikely(!len)){
-        return QRectF();
-    }
-
-    len --;
-    result = page.atStroke(pos[0]).getBiggerPointInStroke();
-
-    for(; len >= 0; len --){
-        const QRectF tmp = page.atStroke(pos[len]).getBiggerPointInStroke();
-        result = datastruct::get_bigger_rect(result, tmp);
-    }
-
-    return result;
+    const page &page = this->at(counterPage);
+    return page.get_size_area(pos, len);
 }
 
 inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int base) const
@@ -348,6 +331,10 @@ inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int bas
 
     for(i = 1; i < len; i ++){
         const auto &vec = pos.at(i);
+
+        if(unlikely(vec.isEmpty()))
+            continue;
+
         const auto tmp = this->get_size_area(vec, base + i);
         result = datastruct::get_bigger_rect(result, tmp);
     }
@@ -356,8 +343,8 @@ inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int bas
 }
 
 inline QRectF datastruct::get_size_area(
-        const QVector<int> &pos,
-        int __page) const
+        const QVector<int>  &pos,
+        int                 __page) const
 {
     return get_size_area(pos.constData(), pos.length(), __page);
 }

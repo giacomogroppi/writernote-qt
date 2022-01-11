@@ -67,7 +67,8 @@ public:
 
     page(const int count, const n_style style);
 
-    void swap(QList<stroke> & stroke, const QVector<int> & pos);
+#define PAGE_SWAP_TRIGGER_VIEW BIT(1)
+    void swap(QList<stroke> & stroke, const QVector<int> & pos, int flag);
     void swap(QList<stroke> & stroke, int from, int to);
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
@@ -123,9 +124,11 @@ public:
     void drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color);
     void drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color);
     int removeAndDraw(int m_pos_ris, const QList<int> &id, const QRectF &area);
-    int removeAndDraw(int m_pos_ris, const int *pos, int len, const QRectF &area);
-    int removeAndDraw(int m_pos_ris, const QVector<int> pos, const QRectF &area);
+    void removeAndDraw(int m_pos_ris, const int *pos, int len, const QRectF &area);
+    void removeAndDraw(int m_pos_ris, const QVector<int> &pos, const QRectF &area);
     void drawIfInside(int m_pos_ris, const QRectF &area);
+
+    QRectF get_size_area(cint * pos, int len) const;
 
     // block for appending
     void setBlock() const;

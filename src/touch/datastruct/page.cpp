@@ -84,9 +84,13 @@ void page::drawNewPage(n_style __style)
 
 }
 
-void page::swap(QList<stroke> & list, const QVector<int> & pos)
+void page::swap(
+        QList<stroke>       &list,
+        const QVector<int>  &pos,
+        int                 flag)
 {
     int i, index;
+    QRectF area;
 
 #ifdef DEBUGINFO
     if(unlikely(!is_order(pos))){
@@ -94,11 +98,23 @@ void page::swap(QList<stroke> & list, const QVector<int> & pos)
     }
 #endif
 
-    i = pos.length();
-    for(i--; i >= 0; i--){
-        index = pos.at(i);
-        this->swap(list, index, index);
+    if(!(flag & PAGE_SWAP_TRIGGER_VIEW)){
+        i = pos.length();
+        for(i--; i >= 0; i--){
+            index = pos.at(i);
+            this->swap(list, index, index+1);
+        }
+        return;
     }
+
+    for(cint ref : pos){
+        const stroke & stroke = atStroke(ref);
+        list.append(stroke);
+    }
+
+    area = this->get_size_area(pos.constData(), pos.length());
+
+    this->removeAndDraw(-1, pos, area);
 }
 
 /*
@@ -469,7 +485,7 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
     if(datastruct::isinside(topLeft1, bottomRight1, point)) \
         return true;
 
-static Q_ALWAYS_INLINE int __is_inside_suare(
+static Q_ALWAYS_INLINE int __is_inside_square(
         const QRectF    &rect1,
         const QRectF    &rect2)
 {
@@ -489,7 +505,7 @@ static Q_ALWAYS_INLINE int is_inside_squade(
         const QRectF    &rect1,
         const QRectF    &rect2)
 {
-    return __is_inside_suare(rect1, rect2) || __is_inside_suare(rect2, rect1);
+    return __is_inside_square(rect1, rect2) || __is_inside_square(rect2, rect1);
 }
 
 // la funzione identifica i punti con id QList<int> &id
@@ -522,11 +538,11 @@ int page::removeAndDraw(
     return mod;
 }
 
-int page::removeAndDraw(
-        int m_pos_ris,
-        const int *pos,
-        int i,
-        const QRectF &area)
+void page::removeAndDraw(
+        int             m_pos_ris,
+        cint            *pos,
+        int             i,
+        const QRectF    &area)
 {
     for(i --; i >= 0; i --){
         drawForceColorStroke(atStroke(pos[i]), m_pos_ris, COLOR_NULL);
@@ -534,19 +550,14 @@ int page::removeAndDraw(
     }
 
     drawIfInside(m_pos_ris, area);
-
-    return 1;
 }
 
-int page::removeAndDraw(int m_pos_ris, const QVector<int> pos, const QRectF &area)
+void page::removeAndDraw(
+        int                 m_pos_ris,
+        const QVector<int>  &pos,
+        const QRectF        &area)
 {
-    for(const auto &ref : pos){
-        drawForceColorStroke(atStroke(ref), m_pos_ris, COLOR_NULL);
-        removeAt(ref);
-    }
-    drawIfInside(m_pos_ris, area);
-
-    return !!pos.length();
+    return this->removeAndDraw(m_pos_ris, pos.constData(), pos.length(), area);
 }
 
 void page::drawIfInside(int m_pos_ris, const QRectF &area)
@@ -558,6 +569,28 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
             this->drawStroke(stroke, m_pos_ris);
         }
     }
+}
+
+QRectF page::get_size_area(cint *pos, int len) const
+{
+    QRectF result;
+
+    W_ASSERT(pos);
+    W_ASSERT(len);
+
+    if(unlikely(!len)){
+        return QRectF();
+    }
+
+    len --;
+    result = atStroke(pos[0]).getBiggerPointInStroke();
+
+    for(; len >= 0; len --){
+        const QRectF tmp = atStroke(pos[len]).getBiggerPointInStroke();
+        result = datastruct::get_bigger_rect(result, tmp);
+    }
+
+    return result;
 }
 
 void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color)

@@ -221,11 +221,14 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
         qDebug() << ref;
         page = &data.at_mod(count + base);
 
+        if(unlikely(ref.isEmpty()))
+            continue;
+
         page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
 
         this->mergeImg(tmp, img, count + base);
 
-        page->swap(m_stroke.operator[](count), ref);
+        page->swap(m_stroke.operator[](count), ref, PAGE_SWAP_TRIGGER_VIEW);
     }
 }
 
