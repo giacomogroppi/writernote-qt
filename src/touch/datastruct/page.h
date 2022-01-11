@@ -31,20 +31,20 @@ private:
     int count;
 
     QList<stroke> m_stroke;
-    QList<stroke> m_stroke_writernote;
+    QVector<stroke> m_stroke_writernote;
 
     /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    QList<stroke> strokeTmp;
+    QVector<stroke> strokeTmp;
     QImage imgDraw;
 
     void drawNewPage(n_style __style);
 
     
-    void drawEngine(QPainter &painter, QList<stroke> &List, int m_pos_ris);
+    void drawEngine(QPainter &painter, QList<stroke> &List, int m_pos_ris, bool *changeSomething);
     void draw(QPainter &painter, int m_pos_ris, bool all);
     void drawStroke(QPainter &painter, const stroke &stroke, QPen &pen, const QColor &color) const;
 
@@ -53,19 +53,13 @@ private:
     void AppendDirectly(const stroke &stroke);
     bool initImg(bool flag);
 
-#ifdef DEBUGINFO
-    void ctrlOrdered() const;
-#endif
-    bool isOrdered() const;
-    void setOrdered();
-    void setNotOrdered();
-
     static point_s at_translation(const point_s &point, int page);
 
 public:
     const QImage &getImg() const;
 
     page(const int count, const n_style style);
+    ~page() = default;
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
     void swap(QList<stroke> & stroke, const QVector<int> & pos, int flag);
@@ -134,9 +128,6 @@ public:
     void setBlock() const;
     void removeBlock() const;
 
-    QList<stroke>::const_iterator get_begin() const noexcept;
-    QList<stroke>::const_iterator get_end() const noexcept;
-
     static void copy(const page &src, page &dest);
     Q_CONSTEXPR static double getProportion();
     Q_CONSTEXPR static double getHeight();
@@ -192,16 +183,6 @@ inline void page::reset()
     this->m_stroke.clear();
 }
 
-inline QList<stroke>::const_iterator page::get_begin() const noexcept
-{
-    return m_stroke.begin();
-}
-
-inline QList<stroke>::const_iterator page::get_end() const noexcept
-{
-    return m_stroke.end();
-}
-
 inline point_s page::at_translation(const point_s &point, int page)
 {
     point_s tmp;
@@ -224,26 +205,6 @@ Q_ALWAYS_INLINE void page::AppendDirectly(const stroke &stroke)
 #endif
     }
     this->m_stroke.append(stroke);
-}
-
-#if defined(DEBUGINFO)
-inline void page::ctrlOrdered() const
-{
-    const auto func = IS_ORDER_WITH_FUNCTION(m_stroke, getId);
-
-    if(isOrdered() && !func.operator()(m_stroke))
-        std::abort();
-}
-#endif
-
-inline void page::setOrdered()
-{
-    this->flag |= FLAG_PAGE_ORDERED;
-}
-
-inline void page::setNotOrdered()
-{
-    this->flag &= ~(FLAG_PAGE_ORDERED);
 }
 
 Q_ALWAYS_INLINE const QImage &page::getImg() const

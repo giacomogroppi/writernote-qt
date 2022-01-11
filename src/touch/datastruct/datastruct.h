@@ -53,7 +53,7 @@ private:
 
     double zoom = 1.00;
     QPointF __last_translation;
-    QList<page> m_page;
+    QVector<page> m_page;
     QPointF pointFirstPage = QPointF(0, 0);
 
     bool userWrittenSomething(uint frompage);

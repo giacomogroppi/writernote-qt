@@ -145,6 +145,7 @@ SOURCES += \
     src/touch/datastruct/removePage.cpp \
     src/touch/datastruct/reorganize.cpp \
     src/touch/datastruct/stroke.cpp \
+    src/touch/datastruct/triggerNewView.cpp \
     src/touch/datastruct/writtenSomething.cpp \
     src/touch/highlighter/highlighter.cpp \
     src/touch/multi_thread_data.cpp \

@@ -236,7 +236,7 @@ static void adjastZoom(QList<point_last> &point, QList<double> &pos_foglio)
 
 static int old_which_sheet(
         const point_last    &point,
-        QList<page>         &ListPage)
+        QVector<page>         &ListPage)
 {
     const page *page;
     uint counterPage, len;

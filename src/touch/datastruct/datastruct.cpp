@@ -26,11 +26,6 @@ void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *ca
     }
 }
 
-void datastruct::newViewAudio(int lastTime, int newTime)
-{
-
-}
-
 void datastruct::increaseZoom(const double delta, const QSize &size)
 {
     this->zoom += delta;

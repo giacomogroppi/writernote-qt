@@ -261,7 +261,8 @@ void * __page_load(void *__data)
 void page::drawEngine(
         QPainter        &painter,
         QList<stroke>   &List,
-        int             m_pos_ris)
+        int             m_pos_ris,
+        bool            *changeSomething)
 {
     int i, threadCount;
 
@@ -297,6 +298,8 @@ void page::drawEngine(
     i = to_remove.length();
 
     if(unlikely(i)){
+        if(likely(changeSomething))
+            *changeSomething = true;
         log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
     }
 
@@ -311,10 +314,18 @@ inline void page::draw(
     int         m_pos_ris,
     bool        all)
 {
-    if(all)
-        this->drawEngine(painter, this->m_stroke, m_pos_ris);
+    auto list = strokeTmp.toList();
+    bool changeSomething = true;
 
-    this->drawEngine(painter, this->strokeTmp, m_pos_ris);
+    if(all){
+        this->drawEngine(painter, this->m_stroke, m_pos_ris, NULL);
+    }
+
+    this->drawEngine(painter, list, m_pos_ris, &changeSomething);
+
+    if(unlikely(changeSomething)){
+        this->strokeTmp.fromList(list);
+    }
 
     this->mergeList();
 }

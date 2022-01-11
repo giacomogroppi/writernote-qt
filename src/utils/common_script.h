@@ -5,6 +5,8 @@
 #include <QtGlobal>
 #include <QDebug>
 #include "time.h"
+#include "stdio.h"
+#include "stdlib.h"
 #include "utils/common_def.h"
 
 #define __init__ __attribute((constructor))
@@ -304,5 +306,14 @@ inline void __order(QList<QVector<T>> & list){
 
 #define WDebug(enable, message) if(enable) qDebug() << message
 
+template <typename T>
+force_inline void set_zero(T &value)
+{
+#ifdef DEBUGINFO
+    memset(&value, 0, sizeof(T));
+#else
+    Q_UNUSED(value);
+#endif
+}
 
 #endif // COMMON_SCRIPT_H

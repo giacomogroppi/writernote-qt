@@ -37,6 +37,7 @@ SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
 ADD_EXECUTABLE(writernote 
+    src/touch/datastruct/triggerNewView.cpp
     src/savecopybook.cpp
     src/mainwindow.cpp
     src/dataread/old_version/ver_3/load_file_ver_3.cpp
