@@ -13,6 +13,7 @@
 
 #define unlikely(exp) Q_UNLIKELY(exp)
 #define likely(exp) Q_LIKELY(exp)
+#define force_inline Q_ALWAYS_INLINE
 
 /*
  * this function controll an enum load from setting
@@ -300,5 +301,8 @@ inline void __order(QList<QVector<T>> & list){
 # define DO_IF_DEBUG(istr) ;
 # define DO_IF_DEBUG_ENABLE(enable, istr) ;
 #endif
+
+#define WDebug(enable, message) if(enable) qDebug() << message
+
 
 #endif // COMMON_SCRIPT_H
