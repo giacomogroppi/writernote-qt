@@ -9,6 +9,9 @@
 #include "currenttitle/document.h"
 #include "touch/property/property_control.h"
 #include "touch/copy_cut/copy_cut_selection.h"
+#include "utils/common_script.h"
+
+constexpr bool debugSquare = false;
 
 class square: public QObject
 {
@@ -23,7 +26,7 @@ public:
     explicit square(QObject *parent, class property_control *property);
     ~square();
 
-    void reset(bool paste);
+    void reset();
 
     int calculate_flags() const;
 
@@ -32,18 +35,23 @@ public:
     bool find();
 
     bool isinside(const QPointF &);
-    void move(const QPointF &);
+
+    void move(const QPointF & point);
+    void initPointMove(const QPointF & point);
 
     /* definizione per i punti di spostamento */
     PointSettable lastpoint;
 
-    void changeInstrument(cbool paste);
+    void changeInstrument();
 
     void isMoving();
     void endMoving(const QWidget *pixmap);
 
     void translate(const QPointF &offset);
 
+#ifdef DEBUGINFO
+    PointSettable & get_first_point() {return pointinit;};
+#endif
 
 private:
     void findObjectToDraw(const QList<QVector<int> > &index);
@@ -78,7 +86,7 @@ private slots:
     void actionProperty(property_control::ActionProperty action);
 };
 
-Q_ALWAYS_INLINE bool square::somethingInBox() const
+force_inline bool square::somethingInBox() const
 {
     return this->in_box;
 }
@@ -102,6 +110,7 @@ inline int square::calculate_flags() const
 
 inline void square::initPoint(const QPointF &point)
 {
+    WDebug(debugSquare, "square::initPoint");
     pointinit.point = point;
     pointinit.set = true;
 
@@ -112,30 +121,35 @@ inline void square::initPoint(const QPointF &point)
     this->m_property->Hide();
 }
 
-inline void square::updatePoint(const QPointF &puntofine)
+force_inline void square::updatePoint(const QPointF &puntofine)
 {
+    WDebug(debugSquare, "square::updatePoint");
     pointfine.point = puntofine;
     __need_reload = true;
-
 }
 
-Q_ALWAYS_INLINE void square::changeInstrument(cbool paste)
+force_inline void square::changeInstrument()
 {
-    this->reset(paste);
+    WDebug(debugSquare, "square::changeInstrument");
+    this->reset();
     this->m_property->Hide();
 }
 
 inline void square::translate(const QPointF &offset)
 {
+    WDebug(debugSquare, "square::translate");
+    if(likely(!somethingInBox()))
+        return;
+
     this->pointinit += offset;
     this->pointfine += offset;
 
-    this->img.scaled(offset.x(), offset.y());
+    this->trans_img += offset;
 
     this->m_property->Hide();
 }
 
-Q_ALWAYS_INLINE void square::isMoving()
+force_inline void square::isMoving()
 {
 
 }

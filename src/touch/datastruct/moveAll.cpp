@@ -3,10 +3,6 @@
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
-void datastruct::inverso(QPointF &point){
-    point *= -1.0;
-}
-
 /*
  * return true if the first point is different
  * from (0.0, 0.0)

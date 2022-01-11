@@ -16,12 +16,13 @@ static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTh
 bool need_save_auto = false;
 bool need_save_tmp = false;
 
-static bool sel;
 static bool highlighter_method;
 static bool pen_method;
 static bool selection_method;
 static bool rubber_method;
 static bool text_method;
+
+static TabletCanvas::e_method lastMethod = TabletCanvas::e_method::pen;
 
 static QEvent::Type eventType;
 
@@ -39,7 +40,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
     need_save_auto = true;
     need_save_tmp = true;
-    sel = true;
     block_scrolling = true;
 
     eventType = event->type();
@@ -76,9 +76,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
             updateCursor(event);
         }
 
-        #if defined(WIN32) || defined(WIN64)
+#if defined(WIN32) || defined(WIN64)
         this->isdrawing = true;
-        #endif
+#endif
 
         if (likely(m_deviceDown)) {
             QPainter painter(&m_pixmap);
@@ -112,15 +112,15 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                 }
                 else{
                     if(likely(m_square->isinside(pointTouch))){
+                        DO_IF_DEBUG(if(m_square->get_first_point().isNotSet()) std::abort(););
                         /* a questo punto può muovere di un delta x e y */
                         m_square->move(pointTouch);
                     }
                     else{
                         /* se il tocco non è stato interno */
-                        m_square->reset(true);
+                        m_square->reset();
                     }
                 }
-                sel = false;
             }else if(text_method){
                 if(m_text_w->isIn(pointTouch)){
 
@@ -129,8 +129,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
                     m_text_w->createNew(pointTouch);
                 }
             }
-        }else{
-            sel = false;
         }
     }
 
@@ -140,38 +138,48 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
 end:
 
-    if(sel){
-        m_square->reset(true);
-    }
-    if(!sel && selection_method){
-        data->datatouch->triggerViewIfVisible(parent->m_audioplayer->getPositionSecond());
+    if(!selection_method){
+        if(lastMethod == e_method::selection){
+            m_square->reset();
+        }
     }
 
     update();
 
     event->accept();
+    lastMethod = this->medotodiinserimento;
 }
 
 
 inline void TabletCanvas::ManageFinish(QTabletEvent *event)
 {
+    bool done = m_square->somethingInBox();
 #if defined(WIN32) || defined(WIN64)
     this->isdrawing = false;
 #endif
-    if(m_redoundo)
+    if(likely(m_redoundo)){
         m_redoundo->copy();
+    }
 
     if(pen_method || highlighter_method)
         AppendAll(*this->data, this, (highlighter_method) ? m_highlighter->moveToTop() : false);
 
+    if(unlikely(!m_deviceDown)){
+        if(selection_method && done){
+            m_square->reset();
+        }
+    }
+
     if (m_deviceDown && event->buttons() == Qt::NoButton){
         m_deviceDown = false;
-        if(selection_method){
-            sel = false;
 
-            if(!m_square->somethingInBox())
+        if(selection_method){
+            if(!done){
                 m_square->find();
+            }
+
             m_square->endMoving(this);
+
         }else if(rubber_method){
             m_rubber->endRubber(data->datatouch);
         }
@@ -184,7 +192,7 @@ Q_ALWAYS_INLINE void TabletCanvas::ManageStart(
         QTabletEvent    *event,
         const QPointF   &pointTouch)
 {
-    if(m_deviceDown)
+    if(unlikely(m_deviceDown))
         return;
 
     if(pen_method || highlighter_method){
@@ -192,12 +200,11 @@ Q_ALWAYS_INLINE void TabletCanvas::ManageStart(
     }
     else if(selection_method){
         if(m_square->somethingInBox()){
-            m_square->move(pointTouch);
+            m_square->initPointMove(pointTouch);
         }
         else{
             m_square->initPoint(pointTouch);
         }
-        sel = false;
     }
 
     m_deviceDown = true;

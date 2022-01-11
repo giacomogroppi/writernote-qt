@@ -185,7 +185,7 @@ public:
     static void copy(const datastruct &src, datastruct &dest);
     static size_t getSizeOne();
     static bool needtochangeid(const int IndexPoint, const stroke &stroke);
-    static void inverso(QPointF &point);
+    static void inverso(QPointF &point) {point *= -1.0;};
     static QPointF inverso(const QPointF &point) { return (-1) * point; };
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);

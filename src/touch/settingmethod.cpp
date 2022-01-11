@@ -119,7 +119,7 @@ void MainWindow::updateTouch(){
 
     if(unlikely(m_canvas->medotodiinserimento != TabletCanvas::selection
             && last == TabletCanvas::selection)){
-        m_canvas->m_square->changeInstrument(m_canvas->data->datatouch);
+        m_canvas->m_square->changeInstrument();
     }
 }
 

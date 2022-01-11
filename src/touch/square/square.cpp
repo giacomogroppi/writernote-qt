@@ -41,7 +41,7 @@ square::square(QObject *parent, property_control *property):
     penna.setStyle(Qt::DotLine);
     penna.setWidth(2);
     penna.setColor(QColor::fromRgb(30, 90, 255));
-    this->reset(false);
+    this->reset();
 
     __in_box = &in_box;
 
@@ -76,6 +76,8 @@ bool square::find()
 
     pthread_t thread[SQ_THREAD];
     DataPrivateMuThread dataThread[SQ_THREAD];
+
+    WDebug(debugSquare, "square::find");
 
     base = data->getFirstPageVisible();
     lenPage = data->lengthPage();
@@ -143,7 +145,7 @@ bool square::find()
     moveObjectIntoPrivate(index);
 
     if(!somethingInBox()){
-        reset(false);
+        reset();
     }else{
         __need_reload = true;
     }
@@ -192,6 +194,8 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 
     DO_IF_DEBUG(const auto m_index_tmp = index);
 
+    WDebug(debugSquare, "square::moveObjectIntoPrivate");
+
     this->m_stroke.clear();
 
     order_multiple(index);
@@ -218,7 +222,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 
     for(count = 0; count < len; count ++){
         const QVector<int> & ref = index.at(count);
-        qDebug() << ref;
+        WDebug(debugSquare, ref);
         page = &data.at_mod(count + base);
 
         if(unlikely(ref.isEmpty()))
@@ -237,6 +241,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 */
 bool square::isinside(const QPointF &point)
 {
+    WDebug(debugSquare, "square::isinside");
     return datastruct::isinside(pointinit.point, pointfine.point, point);
 }
 
@@ -250,6 +255,8 @@ void square::findObjectToDraw(const QList<QVector<int>> &index)
 {
     const datastruct *data = canvas->data->datatouch;
     QRectF sizeData;
+
+    WDebug(debugSquare, "square::findObjectToDraw");
 
     if(unlikely(index.isEmpty()))
         goto img;
@@ -277,8 +284,10 @@ img:
     }
 }
 
-void square::reset(bool paste)
+void square::reset()
 {
+    int i, len;
+    WDebug(debugSquare, "square::reset");
     pointinit.set = lastpoint.set = pointfine.set = false;
 
     in_box = false;
@@ -286,23 +295,39 @@ void square::reset(bool paste)
     __need_reload = false;
     m_index_img.clear();
 
-    if(likely(paste)){
-        for(int i = 0; i < m_stroke.length(); i++){
-            QList<stroke> ll    = m_stroke.operator[](i);
-            page * page         = &canvas->data->datatouch->at_mod(i + base);
+    WDebug(debugSquare, "square::reset paste = 1");
+    len = m_stroke.length();
+    if(likely(len == 0))
+        goto out;
 
-            for(auto &ref : ll){
-                ref.scale(this->trans_img, STROKE_MUST_TRASLATE_PATH);
-            }
+    for(i = 0; i < len; i++){
+        QList<stroke> ll    = m_stroke.operator[](i);
+        page * page         = &canvas->data->datatouch->at_mod(i + base);
 
-            page->append(ll);
-            page->triggerRenderImage(-1, false);
+        for(auto &ref : ll){
+            ref.scale(this->trans_img, STROKE_MUST_TRASLATE_PATH);
         }
+
+        page->append(ll);
+        page->triggerRenderImage(-1, false);
     }
 
+    m_stroke.clear();
+
+out:
     this->img = QImage();
     this->m_stroke.clear();
     this->trans_img = QPointF(0.0, 0.0);
+}
+
+void square::initPointMove(const QPointF &point)
+{
+    WDebug(debugSquare, "square::initPointMove");
+    lastpoint = PointSettable(point, true);
+
+    if(!datastruct::isinside(pointinit.point, pointfine.point, point)){
+        this->reset();
+    }
 }
 
 void square::move(const QPointF &punto)
@@ -311,35 +336,31 @@ void square::move(const QPointF &punto)
     Document *data = canvas->data;
     QList<int> PageModify;
 
+    WDebug(debugSquare, "square::move");
+
 #ifdef DEBUGINFO
     W_ASSERT(somethingInBox());
 #else
-    if(unlikely(somethingInBox())){
+    if(unlikely(!somethingInBox())){
         NAME_LOG_EXT->write("somethingInBox", log_ui::possible_bug);
-        this->changeInstrument(false);
+        this->changeInstrument();
         return;
     }
 #endif
 
-    if(unlikely(lastpoint.isNotSet())){
-        lastpoint = PointSettable(punto, true);
-        return;
-    }
-
-    if(!datastruct::isinside(pointinit.point, pointfine.point, punto)){
-        return this->reset(true);
-    }
+    //if(unlikely(!datastruct::isinside(pointinit.point, pointfine.point, punto))){
+    //    return this->reset(true);
+    //}
 
     delta = lastpoint.point - punto;
 
     datastruct::inverso(delta);
 
-    for(QList<stroke> & tmp : m_stroke){
-        datastruct::MovePoint(tmp, delta, 0);
-    }
+    //for(QList<stroke> & tmp : m_stroke){
+    //    datastruct::MovePoint(tmp, delta, 0);
+    //}
 
     this->trans_img += delta;
-    this->img.scaled(delta.x(), delta.y());
 
     data->m_img->moveImage(m_index_img, delta);
 
@@ -357,6 +378,8 @@ void square::endMoving(const QWidget *pixmap)
     QPoint middle;
     int flag;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
+
+    WDebug(debugSquare, "square::endMoving");
 
     middle = QPoint(pointinit.x() + translation.x(),
                     pointinit.y() + translation.y() - m_property->height());
@@ -407,7 +430,7 @@ void square::actionProperty(property_control::ActionProperty action)
         std::abort();//this->m_copy->selection(data, this->index, base,
          //                       flags, page, pointinit.point);
     else
-        this->reset(false);
+        this->reset();
 
     data.triggerNewView(page, -1, true);
 
@@ -471,7 +494,9 @@ void square::needReload(QPainter &painter)
     int len;
 
     if(likely(__need_reload)){
-        if(in_box){
+        WDebug(debugSquare, "square::needReload __need_reload");
+        if(somethingInBox()){
+            WDebug(debugSquare, "square::needReload in_box");
             data = canvas->data->datatouch;
             point = data->getPointFirstPage();
             len = data->lengthPage();
