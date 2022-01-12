@@ -58,6 +58,7 @@ private:
 public:
     const QImage &getImg() const;
 
+    page(const page &page);
     page(const int count, const n_style style);
     ~page() = default;
 
@@ -138,6 +139,9 @@ public:
 
 #define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
     void drawToImage(const QVector<int> &index, QImage &img, cint flag) const;
+
+    page &operator=(const page &other);
+
 
     friend class stroke;
     friend class datastruct;
@@ -387,7 +391,7 @@ Q_ALWAYS_INLINE stroke &page::lastMod()
     return this->m_stroke.operator[](this->lengthStroke() - 1);
 }
 
-Q_ALWAYS_INLINE void page::append(const stroke &strokeAppend)
+force_inline void page::append(const stroke &strokeAppend)
 {
     DO_IF_DEBUG(
     int lastNewIndex = strokeTmp.length();
@@ -401,9 +405,24 @@ Q_ALWAYS_INLINE void page::append(const stroke &strokeAppend)
     W_ASSERT(strokeTmp.at(lastNewIndex).getId()  == strokeAppend.getId());
 }
 
-Q_ALWAYS_INLINE double page::minHeight() const
+force_inline double page::minHeight() const
 {
     return (this->count-1)*this->height;
+}
+
+force_inline page::page(const page &from)
+{
+    page::copy(from, *this);
+}
+
+inline page &page::operator=(const page &other)
+{
+    if(this == &other){
+        return *this;
+    }
+
+    page::copy(other, *this);
+    return *this;
 }
 
 #endif // PAGE_H
