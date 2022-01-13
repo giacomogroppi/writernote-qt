@@ -237,7 +237,7 @@ parts:
 
     override-build: |
       set -eux
-      qmake -set prefix $SNAPCRAFT_PART_INSTALL
+      /root/parts/qt/build/qtbase/qmake/qmake -set prefix $SNAPCRAFT_PART_INSTALL
 
       #printf "%s\n" "$(SNAPCRAFT_PROJECT_VERSION)"
       #make clean
@@ -342,7 +342,7 @@ parts:
       - gstreamer1.0-alsa 
       - gstreamer1.0-gl 
       - gstreamer1.0-gtk3 
-      - gstreamer1.0-qt5 
+      #- gstreamer1.0-qt5 
       - gstreamer1.0-pulseaudio
 
     stage:
@@ -361,9 +361,23 @@ parts:
     make-parameters: ["FLAVOR=qt5"]
     build-packages:
       - build-essential
-      - qtbase5-dev
+      #- qtbase5-dev
       - dpkg-dev
     stage-packages:
+      #- libxkbcommon0
+      #- ttf-ubuntu-font-family
+      #- dmz-cursor-theme
+      #- light-themes
+      #- adwaita-icon-theme
+      #- gnome-themes-standard
+      #- shared-mime-info
+      #- libqt5gui5
+      #- libgdk-pixbuf2.0-0
+      #- libqt5svg5 # for loading icon themes which are svg
+      #- try: [appmenu-qt5] # not available on core18
+      #- locales-all
+      #- xdg-user-dirs
+      #- fcitx-frontend-qt5
       - libxkbcommon0
       - ttf-ubuntu-font-family
       - dmz-cursor-theme
@@ -371,13 +385,9 @@ parts:
       - adwaita-icon-theme
       - gnome-themes-standard
       - shared-mime-info
-      - libqt5gui5
       - libgdk-pixbuf2.0-0
-      - libqt5svg5 # for loading icon themes which are svg
-      - try: [appmenu-qt5] # not available on core18
       - locales-all
       - xdg-user-dirs
-      - fcitx-frontend-qt5
     stage:
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libjpeg.so.8.2.2
     after:
