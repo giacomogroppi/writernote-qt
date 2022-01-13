@@ -274,8 +274,14 @@ parts:
         -DQt5Widgets_DIR=/src/lib/cmake/Qt5Widgets \
         -DQt5Test_DIR=/src/lib/cmake/Qt5Test
 
+      echo $SNAPCRAFT_PART_INSTALL
+
       make -j$(nproc)
-      make INSTALL_ROOT="$SNAPCRAFT_PART_INSTALL" install
+      make install
+
+      cp /usr/local/lib/libpoppler* $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
+      cd $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
+      ls
 
     prime:
       - -./usr/include/poppler
@@ -306,16 +312,18 @@ parts:
 
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
 
-      qmake -set prefix $SNAPCRAFT_PART_INSTALL/bin \
-        DEFINES+="SNAP" \
+      ls $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
+
+      qmake DEFINES+="SNAP" \
         DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION \
         DEFINES+=QT_NO_DEBUG_OUTPUT \
         INCLUDEPATH+=/usr/local/include/poppler/qt5 \
-        LIBS+=/usr/local/lib/libpoppler-qt5.so.1 \
-        LIBS+=/usr/local/lib/libpoppler.so.117
+        LIBS+=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1 \
+        LIBS+=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler.so.117
 
       snapcraftctl build
       
+      cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
       cd $SNAPCRAFT_PART_INSTALL/bin
       ldd writernote
 
