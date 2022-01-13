@@ -241,6 +241,7 @@ parts:
       - libnss3-dev
       - libboost-dev
       - libopenjp2-7-dev
+      - wget
     stage-packages:
       - libnss3
       - libopenjp2-7
@@ -260,6 +261,11 @@ parts:
 
       make -j$(nproc)
       sudo make install
+
+    prime:
+      - -./usr/include
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/cmake
+      
 
   writernote:
     after: [desktop-qt5, alsa-mixin, qt, poppler]
