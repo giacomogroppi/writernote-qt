@@ -1,5 +1,6 @@
 name: writernote
-version: 2.0.6h
+adopt-info: writernote
+#version: 2.0.6h
 
 summary: Writernote
 
@@ -178,8 +179,19 @@ parts:
     
     override-build: |
       ./configure \
-        -prefix /src \
-        -static-runtime \
+        -prefix /usr \
+        -bindir /usr/lib/qt5/bin \
+        -libdir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET \
+        -docdir /usr/share/qt5/doc \
+        -headerdir /usr/include/$SNAPCRAFT_ARCH_TRIPLET/qt5 \
+        -datadir /usr/share/qt5 \
+        -archdatadir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5 \
+        -plugindir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/plugins \
+        -importdir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/imports \
+        -translationdir /usr/share/qt5/translations \
+        -hostdatadir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5 \
+        -sysconfdir /etc/xdg \
+        -examplesdir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/examples \
         -release \
         -opensource \
         -confirm-license \
@@ -194,10 +206,12 @@ parts:
         -nomake tools \
         -nomake examples \
         -nomake tests \
-        -skip qtwebengine
+        -skip qtwebengine \
+        -I $SNAPCRAFT_STAGE/usr/include \
+        -L $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
 
       make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
-      sudo make install
+      make INSTALL_ROOT="$SNAPCRAFT_PART_INSTALL" install
     stage:
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libjpeg.so.8.2.2
     prime:
@@ -207,6 +221,7 @@ parts:
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/bin
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/mkspecs
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/examples
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/plugins/platformthemes/libqxdgdesktopportal.so
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.a
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.la
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.prl
@@ -260,7 +275,7 @@ parts:
         -DQt5Test_DIR=/src/lib/cmake/Qt5Test
 
       make -j$(nproc)
-      sudo make install
+      make INSTALL_ROOT="$SNAPCRAFT_PART_INSTALL" install
 
     prime:
       - -./usr/include/poppler
@@ -269,6 +284,11 @@ parts:
       - -./usr/bin
       - -./usr/include
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+      - -./usr/local/lib/libpoppler*.so
+ 
+    stage:
+      - -./usr/local/lib/libpoppler*.so
+      - -./usr/include/poppler
 
   writernote:
     after: [desktop-qt5, alsa-mixin, qt, poppler]
@@ -278,19 +298,26 @@ parts:
 
     override-build: |
       set -eux
-      export PATH=$PATH:/src/bin/
+      
+      export PATH=$PATH:/root/stage/usr/lib/qt5/bin
+      export VERSION=$(git describe --tags --abbrev=0)
 
-      qmake -set prefix $SNAPCRAFT_PART_INSTALL
+      snapcraftctl set-version "$VERSION"
 
-      #printf "%s\n" "$(SNAPCRAFT_PROJECT_VERSION)"
-      #make clean
+      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
 
-      qmake DEFINES+="SNAP" DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION DEFINES+=QT_NO_DEBUG_OUTPUT INCLUDEPATH+=/usr/local/include/poppler/qt5
+      qmake -set prefix $SNAPCRAFT_PART_INSTALL/bin \
+        DEFINES+="SNAP" \
+        DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION \
+        DEFINES+=QT_NO_DEBUG_OUTPUT \
+        INCLUDEPATH+=/usr/local/include/poppler/qt5 \
+        LIBS+=/usr/local/lib/libpoppler-qt5.so.1 \
+        LIBS+=/usr/local/lib/libpoppler.so.117
 
       snapcraftctl build
-      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
-      ldd build/writernote
-      cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
+      
+      cd $SNAPCRAFT_PART_INSTALL/bin
+      ldd writernote
 
 
     build-packages:
