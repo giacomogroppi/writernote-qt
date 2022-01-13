@@ -262,7 +262,8 @@ void page::drawEngine(
         QPainter        &painter,
         QList<stroke>   &List,
         int             m_pos_ris,
-        bool            *changeSomething)
+        bool            *changeSomething,
+        cbool           use_multi_thread)
 {
     int i, threadCount;
 
@@ -275,16 +276,16 @@ void page::drawEngine(
 
     pthread_mutex_init(&append, NULL);
 
-    extraData.append =      &append;
-    extraData.painter =     &painter;
-    extraData.to_remove =   &to_remove;
-    extraData.m_stroke    =   &List;
-    extraData.m_pos_ris =   m_pos_ris;
-    extraData.parent =      this;
+    extraData.append        = &append;
+    extraData.painter       = &painter;
+    extraData.to_remove     = &to_remove;
+    extraData.m_stroke      = &List;
+    extraData.m_pos_ris     = m_pos_ris;
+    extraData.parent        = this;
 
-    threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length());
+    if(use_multi_thread){
+        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length());
 
-    if(unlikely(threadCount > 2)){
         for(i = 0; i < threadCount; i++){
             pthread_create(&thread[i], NULL, __page_load, &threadData[i]);
         }
@@ -292,6 +293,10 @@ void page::drawEngine(
             pthread_join(thread[i], NULL);
         }
     }else{
+        threadData->extra   = &extraData;
+        threadData->from    = 0;
+        threadData->to      = lengthStroke();
+
         __page_load(&threadData[0]);
     }
 
@@ -301,12 +306,11 @@ void page::drawEngine(
         if(likely(changeSomething))
             *changeSomething = true;
         log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
-    }
 
-    for(i --; i >= 0; i--){
-        this->removeAt(i);
+        for(i --; i >= 0; i--){
+            this->removeAt(i);
+        }
     }
-
 }
 
 inline void page::draw(
@@ -318,10 +322,10 @@ inline void page::draw(
     bool changeSomething = true;
 
     if(all){
-        this->drawEngine(painter, this->m_stroke, m_pos_ris, NULL);
+        this->drawEngine(painter, this->m_stroke, m_pos_ris, NULL, true);
     }
 
-    this->drawEngine(painter, list, m_pos_ris, &changeSomething);
+    this->drawEngine(painter, list, m_pos_ris, &changeSomething, false);
 
     if(unlikely(changeSomething)){
         this->strokeTmp.fromList(list);

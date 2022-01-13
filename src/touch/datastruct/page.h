@@ -44,7 +44,7 @@ private:
     void drawNewPage(n_style __style);
 
     
-    void drawEngine(QPainter &painter, QList<stroke> &List, int m_pos_ris, bool *changeSomething);
+    void drawEngine(QPainter &painter, QList<stroke> &List, int m_pos_ris, bool *changeSomething, const bool use_multi_thread);
     void draw(QPainter &painter, int m_pos_ris, bool all);
     void drawStroke(QPainter &painter, const stroke &stroke, QPen &pen, const QColor &color) const;
 
