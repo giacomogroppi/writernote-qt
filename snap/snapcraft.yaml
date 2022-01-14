@@ -64,6 +64,8 @@ layout:
   /etc/pulse:
     bind: $SNAP/etc/pulse
 
+  $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/fonts:
+    bind: $SNAP/etc/fonts
 
 plugs:
   gsettings:
@@ -275,14 +277,12 @@ parts:
         -DQt5Widgets_DIR=/src/lib/cmake/Qt5Widgets \
         -DQt5Test_DIR=/src/lib/cmake/Qt5Test
 
-      echo $SNAPCRAFT_PART_INSTALL
-
       make -j$(nproc)
       make install
 
-      mkdir $SNAPCRAFT_PRIME/usr/
-      mkdir $SNAPCRAFT_PRIME/usr/lib
-      mkdir $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET 
+      mkdir -p $SNAPCRAFT_PRIME/usr/
+      mkdir -p $SNAPCRAFT_PRIME/usr/lib
+      mkdir -p $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET 
 
       cp /usr/local/lib/libpoppler* $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
       cd $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
@@ -321,7 +321,7 @@ parts:
 
       snapcraftctl set-version "$VERSION"
 
-      [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
 
       ls $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
 
@@ -363,6 +363,8 @@ parts:
       - zlib1g-dev
       - libglibmm-2.4-dev
     stage-packages:
+      - libglu1-mesa
+      - libnss3 
       - libzip5
       - libglibmm-2.4-1v5
       - libdbus-1-3
