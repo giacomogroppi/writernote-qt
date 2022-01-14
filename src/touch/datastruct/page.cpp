@@ -305,6 +305,7 @@ void page::drawEngine(
     if(unlikely(i)){
         if(likely(changeSomething))
             *changeSomething = true;
+
         log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
 
         for(i --; i >= 0; i--){
@@ -321,14 +322,14 @@ inline void page::draw(
     auto list = strokeTmp.toList();
     bool changeSomething = true;
 
-    if(all){
+    if(unlikely(all)){
         this->drawEngine(painter, this->m_stroke, m_pos_ris, NULL, true);
     }
 
     this->drawEngine(painter, list, m_pos_ris, &changeSomething, false);
 
     if(unlikely(changeSomething)){
-        this->strokeTmp.fromList(list);
+        this->strokeTmp = QVector<stroke>::fromList(list);
     }
 
     this->mergeList();
