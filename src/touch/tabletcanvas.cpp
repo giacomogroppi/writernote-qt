@@ -43,7 +43,7 @@ TabletCanvas::TabletCanvas()
     this->data = new Document;
 
     zoom = new class zoom_control;
-    m_redoundo = new class redoundo(&data);
+    m_redoundo = new class redoundo(this);
     m_property = new class property_control(this);
     m_square = new class square(this, m_property);
 

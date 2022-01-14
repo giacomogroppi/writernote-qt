@@ -40,8 +40,10 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
     needDrawSheet = data->datatouch->needToCreateNewSheet();
-    if(unlikely(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty())))
+    if(unlikely(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty()))){
         this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
+        this->updatePageCount();
+    }
 
     TabletCanvas::load(painter, this->data, dataPaint);
 

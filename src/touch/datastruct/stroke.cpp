@@ -17,6 +17,13 @@ stroke::stroke(const stroke &data)
     *this = data;
 }
 
+void stroke::__setPressureFirstPoint(cdouble pres)
+{
+    if(this->length()){
+        at_mod(0).pressure = pres;
+    }
+}
+
 void stroke::__setPressureForAllPoint(const double pressure)
 {
     uint i, lenPoint;

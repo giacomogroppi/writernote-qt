@@ -46,7 +46,8 @@ public:
     stroke(const stroke &data);
 
     /* this function is used to set the pressure equal for all points. */
-    void __setPressureForAllPoint(const double pressure);
+    void __setPressureForAllPoint(cdouble pressure);
+    void __setPressureFirstPoint(cdouble pressuer);
 
     float getPressure() const;
     QColor getColor(const double division) const;

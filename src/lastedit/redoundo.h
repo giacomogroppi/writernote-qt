@@ -1,6 +1,8 @@
 #ifndef REDOUNDO_H
 #define REDOUNDO_H
+
 #include <QList>
+#include <QVector>
 #include "currenttitle/document.h"
 
 class redoundo
@@ -9,13 +11,13 @@ private:
 
     /* 0 <= indice <= 10 */
     uchar indice = 0;
-    QList<Document *> m_list;
-    Document **m_current;
-    const uint max = 10;
+    QVector<Document *> m_list;
+    class TabletCanvas *canvas;
+    static constexpr int max = 10;
 
     void append(Document *doc);
 public:
-    redoundo(Document **);
+    redoundo(TabletCanvas *m_canvas);
     ~redoundo();
 
     void copy();

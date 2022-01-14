@@ -1,18 +1,20 @@
 #include "redoundo.h"
+#include "touch/tabletcanvas.h"
 
 void redoundo::append(Document *doc){
     this->m_list.append(doc);
-    assert(m_list.length() == 10);
+    W_ASSERT(m_list.length() == max);
 }
 
-redoundo::redoundo(Document **data)
+redoundo::redoundo(TabletCanvas *__canvas)
 {
+    W_ASSERT(__canvas);
     uint i;
     Document *doc;
 
-    this->m_current = data;
+    this->canvas = __canvas;
 
-    for(i=0; i<max; i++){
+    for(i = 0; i < max; i++){
         doc = new Document;
         m_list.append(doc);
     }
@@ -40,7 +42,7 @@ void redoundo::redo(){
         return;
     }
 
-    Document::copy(*this->m_list.operator[](indice+1), **this->m_current);
+    Document::copy(*this->m_list.operator[](indice+1), *canvas->data);
 
     indice ++;
 }
@@ -50,18 +52,19 @@ void redoundo::undo(){
     if(indice == 0)
         return;
 
-    Document::copy(*this->m_list.operator[](indice-1), **this->m_current);
+    Document::copy(*this->m_list.operator[](indice-1), *canvas->data);
 
     indice --;
 }
 
 void redoundo::copy(){
     if(indice < max){
-        Document::copy(**this->m_current, *m_list.operator[](indice));
+        Document::copy(*canvas->data, *m_list.operator[](indice));
         this->indice ++;
         return;
     }
+
     Document *point = this->m_list.takeFirst();
     append(point);
-    Document::copy(**this->m_current, *m_list.operator[](indice-1));
+    Document::copy(*canvas->data, *m_list.operator[](indice-1));
 }

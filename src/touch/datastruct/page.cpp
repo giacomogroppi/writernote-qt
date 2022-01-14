@@ -56,7 +56,7 @@ void page::drawNewPage(n_style __style)
 
     setStylePrivate(fast, __style, style);
 
-    if(fast){
+    if(likely(fast)){
         style.colore.fromColor(TEMP_COLOR);
         style.thickness =  widthToPressure(TEMP_TICK);
     }
@@ -73,10 +73,10 @@ void page::drawNewPage(n_style __style)
     }
 
     drawLineOrizzontal(newStrokeOrizzontal, tmp_point, style, last, deltax, width_p, ct_del);
-    drawLineVertical(newStrokeVertical, tmp_point, style, last, deltay, height_p);
+    drawLineVertical(newStrokeVertical,     tmp_point, style, last, deltay, height_p);
 
-    newStrokeOrizzontal.__setPressureForAllPoint(widthToPressure(style.thickness));
-    newStrokeVertical.__setPressureForAllPoint(widthToPressure(style.thickness));
+    newStrokeOrizzontal.__setPressureFirstPoint(    widthToPressure(style.thickness));
+    newStrokeVertical.__setPressureFirstPoint(      widthToPressure(style.thickness));
 
     this->m_stroke_writernote.append(newStrokeOrizzontal);
     this->m_stroke_writernote.append(newStrokeVertical);

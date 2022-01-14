@@ -189,18 +189,20 @@ static void loadSheet(
             lenStroke = adjustStrokePage((page &)__page);
         }
 
-        if(unlikely(!lenStroke))
+        if(unlikely(lenStroke != 2))
             continue;
 
         m_pen.setWidthF(TabletCanvas::pressureToWidth(__page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
         m_pen.setColor(__page->atStrokePage(0).getColor());
 
+        m_pen.setWidthF(20);
+
         painter.setPen(m_pen);
 
-        for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            lenPoint = __page->atStrokePage(counterStroke).length();
+        for(counterStroke = 0; counterStroke < 2; counterStroke++){
+            lenPoint = __page->atStrokePage(counterStroke).length() - 1;
 
-            for(counterPoint = 0; counterPoint < lenPoint-1; counterPoint += 2){
+            for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
                 const auto &ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage, counterStroke);
                 const auto &ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage, counterStroke);
 
