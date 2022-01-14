@@ -64,8 +64,8 @@ layout:
   /etc/pulse:
     bind: $SNAP/etc/pulse
 
-  $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/fonts:
-    bind: $SNAP/etc/fonts
+  #$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/fonts:
+  #  bind: $SNAP/etc/fonts
 
 plugs:
   gsettings:
@@ -201,7 +201,6 @@ parts:
         -qt-pcre \
         -qt-libpng \
         -qt-libjpeg \
-        -qt-freetype \
         -opengl desktop \
         -sql-sqlite \
         -make libs \
