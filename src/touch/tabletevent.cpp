@@ -154,9 +154,12 @@ end:
 inline void TabletCanvas::ManageFinish(QTabletEvent *event)
 {
     bool done = m_square->somethingInBox();
+    block_scrolling = false;
+
 #if defined(WIN32) || defined(WIN64)
     this->isdrawing = false;
 #endif
+
     if(likely(m_redoundo)){
         m_redoundo->copy();
     }
@@ -184,8 +187,6 @@ inline void TabletCanvas::ManageFinish(QTabletEvent *event)
             m_rubber->endRubber(data->datatouch);
         }
     }
-
-    block_scrolling = false;
 }
 
 Q_ALWAYS_INLINE void TabletCanvas::ManageStart(

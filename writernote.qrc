@@ -1,12 +1,8 @@
 <RCC>
     <qresource prefix="/image">
-        <file>images/bold.png</file>
         <file>images/arrow-curve.png</file>
-        <file>images/audio_import.jpeg</file>
-        <file>images/table.png</file>
         <file>images/image.png</file>
         <file>images/blue-folder-open-document.png</file>
-        <file>images/bullet.png</file>
         <file>images/deleteAudio.png</file>
         <file>images/font-color.png</file>
         <file>images/newFile.png</file>
@@ -26,7 +22,6 @@
         <file>images/clipboard-paste-document-text.png</file>
         <file>images/manoIcon.png</file>
         <file>images/deleteCopyBook.png</file>
-        <file>images/text-speech.png</file>
         <file>images/compress-video.png</file>
         <file>images/pen-icon.png</file>
         <file>images/rubber.png</file>
@@ -64,7 +59,6 @@
         <file>images/purple.png</file>
         <file>images/not_define.png</file>
         <file>images/recent-file-icon.png</file>
-        <file>images/back.png</file>
         <file>images/tablet.png</file>
         <file>images/full-screen.png</file>
     </qresource>
