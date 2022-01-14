@@ -280,6 +280,10 @@ parts:
       make -j$(nproc)
       make install
 
+      mkdir $SNAPCRAFT_PRIME/usr/
+      mkdir $SNAPCRAFT_PRIME/usr/lib
+      mkdir $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET 
+
       cp /usr/local/lib/libpoppler* $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
       cd $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
       ls
