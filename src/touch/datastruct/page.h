@@ -16,6 +16,8 @@
 
 enum n_style: int;
 
+constexpr bool debugPage = false;
+
 class page
 {
 private:
@@ -344,15 +346,19 @@ inline void page::copy(
     const page  &src,
     page        &dest)
 {
-    int counterStroke, lenStroke;
-    lenStroke = src.lengthStroke();
+    //int counterStroke, lenStroke;
+    //lenStroke = src.lengthStroke();
     dest.reset();
 
-    dest.allocateStroke(src.lengthStroke());
+    //dest.allocateStroke(src.lengthStroke());
 
-    for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
-        dest.atStrokeMod(counterStroke) = src.atStroke(counterStroke);
-    }
+    dest.m_stroke               = src.m_stroke;
+    dest.m_stroke_writernote    = src.m_stroke_writernote;
+    dest.strokeTmp              = src.strokeTmp;
+
+    //for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
+    //    dest.atStrokeMod(counterStroke) = src.atStroke(counterStroke);
+    //}
 
     dest.imgDraw = src.imgDraw;
     dest.IsVisible = src.IsVisible;

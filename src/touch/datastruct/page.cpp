@@ -46,9 +46,9 @@ void page::drawNewPage(n_style __style)
     struct style_struct_S style;
     struct point_s tmp_point;
     stroke newStrokeVertical, newStrokeOrizzontal;
-    const double width_p    = this->getWidth();
-    const double height_p   = this->getHeight();
-    const double last = (count-1)*page::getHeight();
+    cdouble width_p    = this->getWidth();
+    cdouble height_p   = this->getHeight();
+    cdouble last = (count-1)*page::getHeight();
 
     deltax = 0;
     deltay = 0;
@@ -68,8 +68,9 @@ void page::drawNewPage(n_style __style)
         deltax = height_p / (double)style.nx;
         ct_del = deltax;
     }
-    if(style.ny)
+    if(style.ny){
         deltay = width_p / (double)style.ny;
+    }
 
     drawLineOrizzontal(newStrokeOrizzontal, tmp_point, style, last, deltax, width_p, ct_del);
     drawLineVertical(newStrokeVertical, tmp_point, style, last, deltay, height_p);
@@ -77,11 +78,8 @@ void page::drawNewPage(n_style __style)
     newStrokeOrizzontal.__setPressureForAllPoint(widthToPressure(style.thickness));
     newStrokeVertical.__setPressureForAllPoint(widthToPressure(style.thickness));
 
-    if(newStrokeOrizzontal.length())
-        this->m_stroke_writernote.append(newStrokeOrizzontal);
-    if(newStrokeVertical.length())
-        this->m_stroke_writernote.append(newStrokeVertical);
-
+    this->m_stroke_writernote.append(newStrokeOrizzontal);
+    this->m_stroke_writernote.append(newStrokeVertical);
 }
 
 void page::swap(
@@ -124,8 +122,8 @@ void page::swap(QList<stroke> & list,
                 int             from,
                 int             to)
 {
-    DO_IF_DEBUG(
     W_ASSERT(from >= to);
+    DO_IF_DEBUG(
     int drop = 0;
     QList<int> itemDrop;
     );
@@ -133,11 +131,11 @@ void page::swap(QList<stroke> & list,
     for(to --; from <= to; to --){
         list.append(m_stroke.takeAt(to));
 
-        DO_IF_DEBUG(drop ++);
-        DO_IF_DEBUG(itemDrop.append(to));
+        DO_IF_DEBUG_ENABLE(debugPage, drop ++);
+        DO_IF_DEBUG_ENABLE(debugPage, itemDrop.append(to));
     }
 
-    DO_IF_DEBUG(
+    DO_IF_DEBUG_ENABLE(debugPage,
         qDebug() << "Page::swap" << this->count - 1 << drop << "Item drop, list" << itemDrop;
     )
 }
@@ -157,6 +155,7 @@ void page::drawStroke(
 {
     QPointF lastPoint, pointDraw;
     const QPainterPath *path;
+    constexpr bool measureTime = false;
 
     m_pen.setColor(color);
     m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
@@ -167,11 +166,11 @@ void page::drawStroke(
     }
 
     if(stroke.constantPressure()){
-        EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()", false,
+        EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()", measureTime,
             path = &stroke.getQPainterPath();
         )
 
-        EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath", false,
+        EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath", measureTime,
             painter.strokePath(*path, m_pen);
         )
 
@@ -183,7 +182,7 @@ void page::drawStroke(
         lastPoint = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
 
         for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-            EXEC_TIME_IF_DEBUG("page::drawStroke() take point", false,
+            EXEC_TIME_IF_DEBUG("page::drawStroke() take point", measureTime,
                 const point_s point = at_translation(stroke.at(counterPoint), refCounter);
                 pointDraw = point.toQPointF(PROP_RESOLUTION);
 
@@ -191,7 +190,7 @@ void page::drawStroke(
 
             )
 
-            EXEC_TIME_IF_DEBUG("page::drawStroke() draw", false,
+            EXEC_TIME_IF_DEBUG("page::drawStroke() draw", measureTime,
                 painter.setPen(m_pen);
 
                 painter.drawLine(lastPoint, pointDraw);

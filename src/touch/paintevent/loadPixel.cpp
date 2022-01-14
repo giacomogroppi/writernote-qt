@@ -174,13 +174,11 @@ static void loadSheet(
         QPainter        &painter,
         const double    delta)
 {
-    uint counterPage;
+    int counterPage;
     const page *__page;
     int counterStroke, counterPoint, lenStroke, lenPoint;
-    const uint lenPage = doc.datatouch->lengthPage();
-
+    const int lenPage = doc.datatouch->lengthPage();
     const double zoom = doc.datatouch->getZoom();
-
     datastruct *data = doc.datatouch;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
