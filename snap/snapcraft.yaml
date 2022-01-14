@@ -260,13 +260,14 @@ parts:
     stage-packages:
       - libnss3
       - libopenjp2-7
-
-    override-build: |
+    override-pull: |
       wget https://poppler.freedesktop.org/poppler-22.01.0.tar.xz
       tar -xf poppler-22.01.0.tar.xz
+      
+    override-build: |
       cd poppler-22.01.0
-      mkdir build
-      cd build
+      mkdir build; cd build
+
       cmake .. \
         -DQt5Core_DIR=/src/lib/cmake/Qt5Core \
         -DQt5Xml_DIR=/src/lib/cmake/Qt5Xml \
@@ -279,21 +280,26 @@ parts:
       make -j$(nproc)
       make install
 
-      cp /usr/local/lib/libpoppler* $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
-      cd $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
+      cp /usr/local/lib/libpoppler* $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
+      cd $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
       ls
-
     prime:
       - -./usr/include/poppler
       - -./usr/include/poppler/qt5
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/cmake
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.a
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.la
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.prl
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.so
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler*
       - -./usr/bin
       - -./usr/include
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
-      - -./usr/local/lib/libpoppler*.so
- 
+      - -./usr/local/lib/*.so
+      - -./usr/shar
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1
     stage:
-      - -./usr/local/lib/libpoppler*.so
+      - -./usr/local/$SNAPCRAFT_ARCH_TRIPLET/libpoppler*
       - -./usr/include/poppler
 
   writernote:
@@ -301,7 +307,8 @@ parts:
     
     plugin: make
     source: .
-
+    build-environment:
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH
     override-build: |
       set -eux
       
@@ -312,14 +319,14 @@ parts:
 
       [ ! -d "$SNAPCRAFT_PART_INSTALL/bin" ] && mkdir $SNAPCRAFT_PART_INSTALL/bin/
 
-      ls $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
+      ls $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
 
       qmake DEFINES+="SNAP" \
-        DEFINES+=VERSION_SNAPCRAFT=$SNAPCRAFT_PROJECT_VERSION \
+        DEFINES+=VERSION_SNAPCRAFT=$VERSION \
         DEFINES+=QT_NO_DEBUG_OUTPUT \
         INCLUDEPATH+=/usr/local/include/poppler/qt5 \
-        LIBS+=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1 \
-        LIBS+=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler.so.117
+        LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1 \
+        LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler.so.117
 
       snapcraftctl build
       
