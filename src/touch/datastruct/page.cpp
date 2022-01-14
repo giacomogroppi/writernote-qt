@@ -62,7 +62,7 @@ void page::drawNewPage(n_style __style)
     }
 
     newStrokeVertical.setMetadata(this->count, IDVERTICALE, -1, style.colore);
-    newStrokeOrizzontal.setMetadata(this->count, IDORIZZONALE, -1, style.colore);
+    newStrokeOrizzontal.setMetadata(this->count, IDORIZZONTALE, -1, style.colore);
 
     if(style.nx){
         deltax = height_p / (double)style.nx;
@@ -295,7 +295,7 @@ void page::drawEngine(
     }else{
         threadData->extra   = &extraData;
         threadData->from    = 0;
-        threadData->to      = lengthStroke();
+        threadData->to      = List.length();
 
         __page_load(&threadData[0]);
     }

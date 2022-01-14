@@ -56,8 +56,8 @@ public:
 
     void        append(const point_s &point);
 
-    void        setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s &color);
-    void        setMetadata(const metadata_stroke &metadata);
+    void    setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s &color);
+    void    setMetadata(const metadata_stroke &metadata);
 
     void setPage(int page);
     void setPositioneAudio(const int m_pos_ris);

@@ -4,6 +4,7 @@
 #include <QtGlobal>
 #include <QColor>
 #include <QPointF>
+#include "utils/common_script.h"
 
 #define NCOLOR 4
 
@@ -53,6 +54,8 @@ struct colore_s{
     uchar colore[NCOLOR];
     QColor toQColor(const double division) const;
     void fromColor(const QColor &color);
+
+    static colore_s from_color(const QColor &color);
 };
 
 /*
@@ -77,12 +80,31 @@ Q_ALWAYS_INLINE void colore_s::fromColor(const QColor &color)
     }
 }
 
+inline colore_s colore_s::from_color(const QColor &color)
+{
+    colore_s tmp;
+    tmp.fromColor(color);
+    return tmp;
+}
+
 /* this struct contains neither the color, nor the thickness, nor the page to which it belongs, nor the rotation, nor the id */
 struct point_s{
     double m_x, m_y;
     float pressure;
     Q_COMPILER_CONSTEXPR QPointF toQPointF(const double delta) const;
+    Q_COMPILER_CONSTEXPR double x();
+    Q_COMPILER_CONSTEXPR double y();
 };
+
+Q_COMPILER_CONSTEXPR force_inline double point_s::x()
+{
+    return m_x;
+}
+
+Q_COMPILER_CONSTEXPR force_inline double point_s::y()
+{
+    return m_y;
+}
 
 Q_COMPILER_CONSTEXPR Q_ALWAYS_INLINE QPointF point_s::toQPointF(const double delta) const
 {

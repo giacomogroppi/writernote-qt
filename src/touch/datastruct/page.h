@@ -148,6 +148,7 @@ public:
     friend class xmlstruct;
     friend class rubber_ui;
     friend void * __page_load(void *);
+    friend int adjustStrokePage(page &page);
 };
 
 Q_ALWAYS_INLINE void page::removeBlock() const
@@ -291,14 +292,14 @@ Q_ALWAYS_INLINE stroke &page::atStrokeMod(const uint i)
     return this->m_stroke.operator[](i);
 }
 
-Q_ALWAYS_INLINE const stroke &page::atStrokePage(const uint i) const
+force_inline const stroke &page::atStrokePage(const uint i) const
 {
     return this->m_stroke_writernote.at(i);
 }
 
-static Q_ALWAYS_INLINE void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
+static force_inline void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
 {
-    memcpy(&to, &from, sizeof(point_s));
+    memcpy(&to, &from, sizeof(from));
 
     to.m_x *= zoom;
     to.m_y *= zoom;
@@ -307,7 +308,7 @@ static Q_ALWAYS_INLINE void __at_draw_private(const point_s &from, point_s &to, 
     to.m_y += translation.y();
 }
 
-Q_ALWAYS_INLINE void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
+inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
                           point_s &point, const double zoom) const
 {
     const stroke &stroke = atStroke(IndexStroke);
@@ -316,7 +317,7 @@ Q_ALWAYS_INLINE void page::at_draw(const uint IndexStroke, const uint IndexPoint
     __at_draw_private(__point, point, zoom, translation);
 }
 
-Q_ALWAYS_INLINE void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const
+inline void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const
 {
     const stroke &stroke = this->m_stroke_writernote.at(IndexStroke);
     const point_s &__point = stroke.at(IndexPoint);
@@ -324,22 +325,22 @@ Q_ALWAYS_INLINE void page::at_draw_page(const uint IndexStroke, const uint Index
     __at_draw_private(__point, point, zoom, translation);
 }
 
-Q_ALWAYS_INLINE int page::lengthStroke() const
+force_inline int page::lengthStroke() const
 {
     return m_stroke.length();
 }
 
-Q_ALWAYS_INLINE int page::lengthStrokePage() const
+force_inline int page::lengthStrokePage() const
 {
     return this->m_stroke_writernote.length();
 }
 
-Q_ALWAYS_INLINE bool page::isVisible() const
+force_inline bool page::isVisible() const
 {
     return this->IsVisible;
 }
 
-Q_ALWAYS_INLINE void page::copy(
+inline void page::copy(
     const page  &src,
     page        &dest)
 {
@@ -358,12 +359,12 @@ Q_ALWAYS_INLINE void page::copy(
     dest.count = src.count;
 }
 
-Q_ALWAYS_INLINE void page::removeAt(const uint i)
+force_inline void page::removeAt(const uint i)
 {
     this->m_stroke.removeAt(i);
 }
 
-Q_ALWAYS_INLINE int page::maxId() const
+inline int page::maxId() const
 {
     uint i;
     const uint len = lengthStroke();
@@ -381,12 +382,12 @@ Q_ALWAYS_INLINE int page::maxId() const
     return id;
 }
 
-Q_ALWAYS_INLINE const stroke &page::last() const
+force_inline const stroke &page::last() const
 {
     return this->m_stroke.last();
 }
 
-Q_ALWAYS_INLINE stroke &page::lastMod()
+inline stroke &page::lastMod()
 {
     return this->m_stroke.operator[](this->lengthStroke() - 1);
 }

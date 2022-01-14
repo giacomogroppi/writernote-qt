@@ -133,14 +133,13 @@ inline void fromimage::draw(QPainter &painter, const immagine_s &img)
         return;
 
     fromimage::draw(painter, QRectF(img.i, img.f), img.immagini);
-
 }
 
 inline void fromimage::draw(QPainter &painter, const QList<immagine_s> &list)
 {
-    uint i;
+    int i = list.length() - 1;
 
-    for(i=0; i<(uint)list.length(); ++i){
+    for(i--; i >= 0; i--){
         const struct immagine_s &img = list.at(i);
 
         fromimage::draw(painter, img);

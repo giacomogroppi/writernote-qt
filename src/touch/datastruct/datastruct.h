@@ -35,7 +35,7 @@ class fromimage;
 
 
 #define IDVERTICALE -2
-#define IDORIZZONALE -1
+#define IDORIZZONTALE -1
 #define IDUNKNOWN -6
 
 #define WRIT_CHANG(arr, tmp)    \
@@ -272,16 +272,20 @@ inline page &datastruct::at_mod(const uint page)
     return this->m_page.operator[](page);
 }
 
-inline point_s &__at_draw_private()
+force_inline point_s &__at_draw_private()
 {
     static point_s point;
     return point;
 }
 
+// this function is not threadSave
 inline __slow point_s &datastruct::at_draw_page(const uint indexPoint, const uint indexPage, const uint indexStroke) const
 {
     point_s &point = __at_draw_private();
-    at(indexPage).at_draw_page(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
+    const page &page = at(indexPage);
+
+    page.at_draw_page(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
+
     return point;
 }
 

@@ -47,6 +47,8 @@ void TabletCanvas::load(QPainter &painter,
 #ifdef PDFSUPPORT
     if(withPdf)
         data->m_pdf->draw(painter, dataPoint.m, dataPoint.IsExportingPdf);
+#else
+    Q_UNUSED(withPdf);
 #endif
 
     data->m_img->draw(painter);
@@ -123,6 +125,49 @@ void TabletCanvas::loadpixel(){
     this->resizeEvent(nullptr);
 }
 
+#ifdef ALL_VERSION
+static void append_data(stroke &to, const stroke &from)
+{
+    int i = from.length();
+    for(i --; i >= 0; i--){
+        const point_s &point = from.at(i);
+        to.append(point);
+    }
+}
+
+int adjustStrokePage(page &page)
+{
+    int i = page.lengthStroke();
+    stroke vertical;
+    stroke orizzontal;
+    const stroke *tmp = NULL;
+
+    W_ASSERT(i);
+
+    for(i --; i >= 0; i--){
+        tmp = &page.atStroke(i);
+        if(tmp->getId() == IDVERTICALE){
+            append_data(vertical, *tmp);
+        }else if(tmp->getId() == IDORIZZONTALE){
+            append_data(orizzontal, *tmp);
+        }
+    }
+
+    W_ASSERT(tmp);
+
+    vertical.setMetadata(   page.count, IDVERTICALE, -1,      tmp->getMetadata().color);
+    orizzontal.setMetadata( page.count, IDORIZZONTALE, -1,    tmp->getMetadata().color);
+
+    page.m_stroke_writernote.clear();
+    page.m_stroke_writernote.append(vertical);
+    page.m_stroke_writernote.append(orizzontal);
+
+    return 2;
+}
+#else
+int adjustStrokePage(page &){ return 0; }
+#endif
+
 static void loadSheet(
         const Document  &doc,
         QPen            &m_pen,
@@ -130,47 +175,38 @@ static void loadSheet(
         const double    delta)
 {
     uint counterPage;
-    const page *page;
+    const page *__page;
     int counterStroke, counterPoint, lenStroke, lenPoint;
     const uint lenPage = doc.datatouch->lengthPage();
-    double xtemp[2], ytemp[2];
-    uchar k;
 
     const double zoom = doc.datatouch->getZoom();
 
     datastruct *data = doc.datatouch;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        page = &data->at(counterPage);
-        lenStroke = page->lengthStrokePage();
+        __page = &data->at(counterPage);
+        lenStroke = __page->lengthStrokePage();
+
+        if(unlikely(lenStroke > 2)){
+            lenStroke = adjustStrokePage((page &)__page);
+        }
 
         if(unlikely(!lenStroke))
             continue;
 
-        m_pen.setWidthF(TabletCanvas::pressureToWidth(page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
-        m_pen.setColor(page->atStrokePage(0).getColor());
+        m_pen.setWidthF(TabletCanvas::pressureToWidth(__page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
+        m_pen.setColor(__page->atStrokePage(0).getColor());
 
         painter.setPen(m_pen);
 
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            const stroke &stroke = page->atStrokePage(counterStroke);
-            lenPoint = stroke.length();
+            lenPoint = __page->atStrokePage(counterStroke).length();
 
             for(counterPoint = 0; counterPoint < lenPoint-1; counterPoint += 2){
-                for(k=0; k<2; k++){
-                    /*
-                     *  we can draw objects which are outside the pixmap
-                     *  qt automatically understands that you have to set negative points,
-                     *  and those that are too high such as the margins of the pixmap
-                    */
+                const auto &ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage, counterStroke);
+                const auto &ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage, counterStroke);
 
-                    const auto &ref = doc.datatouch->at_draw_page(counterPoint + k, counterPage, counterStroke);
-                    xtemp[k] = ref.m_x * delta;
-                    ytemp[k] = ref.m_y * delta;
-
-                }
-
-                painter.drawLine(xtemp[0], ytemp[0], xtemp[1], ytemp[1]);
+                painter.drawLine(ref1.m_x, ref1.m_y, ref2.m_x, ref2.m_y);
 
             }
         }
