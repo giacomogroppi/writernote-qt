@@ -44,7 +44,7 @@ void TabletCanvas::load(QPainter &painter,
     painter.setRenderHint(QPainter::Antialiasing, true);
     loadSheet(*data, pen, painter, dataPoint.m);
 
-    return;
+
 #ifdef PDFSUPPORT
     if(likely(withPdf))
         data->m_pdf->draw(painter, dataPoint.m, dataPoint.IsExportingPdf);
