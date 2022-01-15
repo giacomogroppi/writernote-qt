@@ -205,11 +205,6 @@ static void loadSheet(
                 const auto ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage, counterStroke);
                 const auto ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage, counterStroke);
 
-                //if(ref1.x() == ref2.x() && ref1.y() == ref2.y())
-                    ;//qDebug() << "UGUALI     x e y";
-                //else
-                //    qDebug() << "DIVERSI    x e y" << ref1.x() << ref1.y() << ref2.x() << ref2.y();
-
                 painter.drawLine(ref1.m_x, ref1.m_y, ref2.m_x, ref2.m_y);
             }
         }
