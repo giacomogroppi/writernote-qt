@@ -126,49 +126,6 @@ void TabletCanvas::loadpixel(){
     this->resizeEvent(nullptr);
 }
 
-#ifdef ALL_VERSION
-static void append_data(stroke &to, const stroke &from)
-{
-    int i = from.length();
-    for(i --; i >= 0; i--){
-        const point_s &point = from.at(i);
-        to.append(point);
-    }
-}
-
-int adjustStrokePage(page &page)
-{
-    int i = page.lengthStroke();
-    stroke vertical;
-    stroke orizzontal;
-    const stroke *tmp = NULL;
-
-    W_ASSERT(i);
-
-    for(i --; i >= 0; i--){
-        tmp = &page.atStroke(i);
-        if(tmp->getId() == IDVERTICALE){
-            append_data(vertical, *tmp);
-        }else if(tmp->getId() == IDORIZZONTALE){
-            append_data(orizzontal, *tmp);
-        }
-    }
-
-    W_ASSERT(tmp);
-
-    vertical.setMetadata(   page.count, IDVERTICALE, -1,      tmp->getMetadata().color);
-    orizzontal.setMetadata( page.count, IDORIZZONTALE, -1,    tmp->getMetadata().color);
-
-    page.m_stroke_writernote.clear();
-    page.m_stroke_writernote.append(vertical);
-    page.m_stroke_writernote.append(orizzontal);
-
-    return 2;
-}
-#else
-int adjustStrokePage(page &){ return 0; }
-#endif
-
 static void loadSheet(
         const Document  &doc,
         QPen            &m_pen,
@@ -186,12 +143,10 @@ static void loadSheet(
         __page = &data->at(counterPage);
         lenStroke = __page->lengthStrokePage();
 
-        if(unlikely(lenStroke > 2)){
-            lenStroke = adjustStrokePage((page &)__page);
-        }
-
-        if(unlikely(lenStroke != 2))
+        if(unlikely(lenStroke != 2)){
+            qDebug() << "Wronge len";
             continue;
+        }
 
         m_pen.setWidthF(TabletCanvas::pressureToWidth(__page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
         m_pen.setColor(__page->atStrokePage(0).getColor());

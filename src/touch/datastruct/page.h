@@ -33,7 +33,7 @@ private:
     int count;
 
     QList<stroke> m_stroke;
-    QVector<stroke> m_stroke_writernote;
+    stroke m_stroke_writernote[2];
 
     /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is
@@ -150,7 +150,7 @@ public:
     friend class xmlstruct;
     friend class rubber_ui;
     friend void * __page_load(void *);
-    friend int adjustStrokePage(page &page);
+    friend void adjustStrokePage(QList<stroke> &List, int count, stroke *m_stroke);
 };
 
 Q_ALWAYS_INLINE void page::removeBlock() const

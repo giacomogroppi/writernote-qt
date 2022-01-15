@@ -11,6 +11,11 @@
 #include "touch/multi_thread_data.h"
 
 #define PAGE_THREAD_MAX 16
+#define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
+#define TEMP_COLOR Qt::black
+#define TEMP_TICK 1
+#define TEMP_N_X 40
+#define TEMP_SQUARE 40
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
@@ -19,17 +24,10 @@ static void drawLineOrizzontal(stroke &stroke, const style_struct_S &style, cons
 static void drawLineVertical(stroke &stroke, const style_struct_S &style,
                             const double &last, double &deltay, const double height_p);
 
-static Q_ALWAYS_INLINE void __initImg(QImage &img)
+static force_inline void __initImg(QImage &img)
 {
     img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
 }
-
-#define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-
-#define TEMP_COLOR Qt::black
-#define TEMP_TICK 1
-#define TEMP_N_X 40
-#define TEMP_SQUARE 40
 
 page::page(const int count, const n_style style)
 {
@@ -44,10 +42,12 @@ void page::drawNewPage(n_style __style)
     bool fast = false;
     double deltax, deltay, ct_del;
     struct style_struct_S style;
-    stroke newStrokeVertical, newStrokeOrizzontal;
     cdouble width_p    = this->getWidth();
     cdouble height_p   = this->getHeight();
     cdouble last = (count-1)*page::getHeight();
+
+    stroke &stroke1 = this->m_stroke_writernote[0];
+    stroke &stroke2 = this->m_stroke_writernote[1];
 
     setStylePrivate(fast, __style, style);
 
@@ -56,8 +56,8 @@ void page::drawNewPage(n_style __style)
         style.thickness =  widthToPressure(TEMP_TICK);
     }
 
-    newStrokeVertical.setMetadata(this->count, IDVERTICALE, -1, style.colore);
-    newStrokeOrizzontal.setMetadata(this->count, IDORIZZONTALE, -1, style.colore);
+    stroke1.setMetadata(this->count, IDVERTICALE, -1, style.colore);
+    stroke2.setMetadata(this->count, IDORIZZONTALE, -1, style.colore);
 
     if(style.nx <= 0)
         style.nx = 1;
@@ -70,14 +70,11 @@ void page::drawNewPage(n_style __style)
 
     ct_del = deltax;
 
-    drawLineOrizzontal(newStrokeOrizzontal, style, last, deltax, width_p, ct_del);
-    drawLineVertical(newStrokeVertical,     style, last, deltay, height_p);
+    drawLineOrizzontal( stroke1, style, last, deltax, width_p, ct_del);
+    drawLineVertical(   stroke2,     style, last, deltay, height_p);
 
-    newStrokeOrizzontal.__setPressureFirstPoint(    widthToPressure(style.thickness));
-    newStrokeVertical.__setPressureFirstPoint(      widthToPressure(style.thickness));
-
-    this->m_stroke_writernote.append(newStrokeOrizzontal);
-    this->m_stroke_writernote.append(newStrokeVertical);
+    stroke1.__setPressureFirstPoint(    widthToPressure(style.thickness));
+    stroke2.__setPressureFirstPoint(      widthToPressure(style.thickness));
 }
 
 void page::swap(
@@ -671,21 +668,58 @@ int page::save(zip_source_t *file) const
         DO_CTRL(atStroke(i).save(file));
     }
 
-    len = this->m_stroke_writernote.length();
-    SOURCE_WRITE_RETURN(file, &len, sizeof(len));
-
-    for(i = 0; i < len; i++){
-        DO_CTRL(m_stroke_writernote.at(i).save(file));
+    for(i = 0; i < 2; i++){
+        DO_CTRL(m_stroke_writernote[i].save(file));
     }
 
     return OK;
 }
 
-#define DO_LOAD(list) \
-    for(i = 0; i < len_stroke; i++){            \
-        stroke tmp;                             \
-        DO_CTRL(tmp.load(file, ver_stroke));    \
-        this->list.append(tmp);                 \
+static void append_data(stroke &to, const stroke &from)
+{
+    int i = from.length();
+    for(i --; i >= 0; i--){
+        const point_s &point = from.at(i);
+        to.append(point);
+    }
+}
+
+void adjustStrokePage(QList<stroke> & List, int count, stroke *m_stroke)
+{
+    int i = List.length();
+    stroke &vertical =      m_stroke[0];
+    stroke &orizzontal =    m_stroke[1];
+    const stroke *tmp, *ref = NULL;
+
+    W_ASSERT(i);
+
+    for(i --; i >= 0; i--){
+        tmp = &List.at(i);
+
+        if(likely(tmp->getId() >= 0))
+            continue;
+
+        ref = tmp;
+
+        if(tmp->getId() == IDVERTICALE){
+            append_data(vertical, *tmp);
+        }else if(tmp->getId() == IDORIZZONTALE){
+            append_data(orizzontal, *tmp);
+        }
+    }
+
+    if(unlikely(!ref))
+        return;
+
+    vertical.setMetadata(   count, IDVERTICALE, -1,      ref->getMetadata().color);
+    orizzontal.setMetadata( count, IDORIZZONTALE, -1,    ref->getMetadata().color);
+}
+
+#define DO_LOAD(list)                               \
+    for(i = 0; i < len_stroke; i++){                \
+        stroke __tmp;                               \
+        DO_CTRL(__tmp.load(file, ver_stroke));      \
+        list.append(__tmp);                         \
     }
 
 int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
@@ -694,9 +728,22 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 
     DO_LOAD(m_stroke);
 
-    SOURCE_READ_RETURN(file, &len_stroke, sizeof(int));
+    if(ver_stroke == 0){
+#ifdef ALL_VERSION
+        QList<stroke> tmp;
+        SOURCE_READ_RETURN(file, &len_stroke, sizeof(int));
 
-    DO_LOAD(m_stroke_writernote);
+        DO_LOAD(tmp);
+        adjustStrokePage(m_stroke, this->count, this->m_stroke_writernote);
+        adjustStrokePage(tmp, this->count, this->m_stroke_writernote);
+#else
+        return ERROR;
+#endif
+    }
+    if(ver_stroke == 1){
+        m_stroke_writernote[0].load(file, ver_stroke);
+        m_stroke_writernote[1].load(file, ver_stroke);
+    }
 
     return OK;
 }

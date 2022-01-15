@@ -12,7 +12,7 @@ class frompdf;
 #define NAME_BIN "data_bin.xml"
 #define NAME_AUDIO "data_audio.mp4"
 
-#define CURRENT_VERSION_STROKE 0
+#define CURRENT_VERSION_STROKE 1
 #define CURRENT_VERSION_CURRENT_TITLE 8
 #define MIN_VERSION_CURRENT_TITLE 2
 
