@@ -57,12 +57,15 @@ static bool needRemove;
 
 static void saveAudio(Document *m_currenttitle, const QString &m_path, const AudioRecord *recorder){
     const QString &path = recorder->getPath();
+    removeAudio::n_removeAudio temp;
 
-    if(!QFile::exists(path)){
+    if(unlikely(!QFile::exists(path))){
         bool save = false;
 
         retry_save_audio m_reciver(m_currenttitle, &save);
-        retry_ui m_r(nullptr, "Audio missing", "For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name", "The file does not exist");
+        retry_ui m_r(nullptr, "Audio missing",
+                     "For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name",
+                     "The file does not exist");
 
 
         QObject::connect(&m_reciver, &retry_save_audio::resultRetry, &m_r, &retry_ui::resultRetry_reciver);
@@ -73,9 +76,7 @@ static void saveAudio(Document *m_currenttitle, const QString &m_path, const Aud
 
         if(!save)
             return;
-
     }
-
 
     if(save_audio_file(path.toUtf8().constData(), m_path) != OK)
         dialog_critic("We had a problem saving the audio into " + m_path);
@@ -83,23 +84,27 @@ static void saveAudio(Document *m_currenttitle, const QString &m_path, const Aud
     if(savefile(&m_path, m_currenttitle).savefile_check_file() != OK)
         dialog_critic("We had a problem saving the current copybook");
 
-    removeAudio::n_removeAudio temp = removeAudio::removeAudioSettingsLoad();
+    temp = removeAudio::removeAudioSettingsLoad();
 
     if(temp == removeAudio::ask){
         needRemove = false;
 
         /* remove audio */
-        make_default_ui temp_ui(nullptr, "Remove temp audio", "With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove? the location of the file is " + path);
+        make_default_ui temp_ui(nullptr,
+                                "Remove temp audio",
+                                "With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove? the location of the file is " + path);
 
         QObject::connect(&temp_ui, &make_default_ui::no, [=](bool var){
-            if(var)
+            if(var){
                 removeAudio::removeAudioSettingsSave(removeAudio::not_remove_ok);
+            }
             needRemove = false;
         });
 
         QObject::connect(&temp_ui, &make_default_ui::yes, [=](bool var){
-            if(var)
+            if(var){
                 removeAudio::removeAudioSettingsSave(removeAudio::remove_ok);
+            }
             needRemove = true;
         });
 

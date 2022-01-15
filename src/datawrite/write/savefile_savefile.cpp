@@ -14,7 +14,8 @@ static void setCurrentVersion(Document *data);
  * if save_audio == true -> save also the audio
 */
 
-int savefile::savefile_check_file(){
+int savefile::savefile_check_file()
+{
     int error, check, ver_stroke;
     zip_error_t errore;
     zip_t *filezip;
@@ -123,7 +124,8 @@ uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)
     return OK;
 }
 
-uchar savefile::save_string(zip_source_t *file, const char *stringa){
+uchar savefile::save_string(zip_source_t *file, const char *stringa)
+{
     int size = strlen(stringa);
     SOURCE_WRITE_RETURN(file, &size, sizeof(size));
 
@@ -133,11 +135,12 @@ uchar savefile::save_string(zip_source_t *file, const char *stringa){
 }
 
 int save_audio_file(const char *posAudio,
-                    const QString &path){
+                    const QString &path)
+{
     return savefile::saveArrayIntoFile((const QString)posAudio, path, nullptr, NAME_AUDIO, true);
-
 }
 
-static void setCurrentVersion(Document *data){
+static void setCurrentVersion(Document *data)
+{
     data->versione = CURRENT_VERSION_CURRENT_TITLE;
 }

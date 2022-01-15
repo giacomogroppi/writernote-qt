@@ -13,6 +13,8 @@
 
 #define BIT(bit) (1 << (bit-1))
 
+#define ATOMIC(istr) do{istr}while(0);
+
 #define unlikely(exp) Q_UNLIKELY(exp)
 #define likely(exp) Q_LIKELY(exp)
 #define force_inline Q_ALWAYS_INLINE

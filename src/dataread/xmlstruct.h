@@ -26,10 +26,12 @@
 */
 int load_audio(QByteArray &array, const QString &path);
 
-inline zip_file_t *zip_fopen(zip_t *zip, const QString &path, zip_flags_t flag){
+force_inline zip_file_t *zip_fopen(zip_t *zip, const QString &path, zip_flags_t flag)
+{
     return zip_fopen(zip, path.toUtf8().constData(), flag);
 };
-inline zip_t *zip_open(const QString &path, int check, int *ok){
+force_inline zip_t *zip_open(const QString &path, int check, int *ok)
+{
     return zip_open(path.toUtf8().constData(), check, ok);
 }
 
@@ -88,13 +90,21 @@ public:
         readOnly = BIT(1),
         write = BIT(2)
     };
+
+    static zip_t *openZip(const QString &path, xmlstruct::openMode mode);
     static zip_t *openZip(const QByteArray &path, xmlstruct::openMode mode);
     static zip_file_t *openFile(zip_t *zip, const QByteArray &path);
+    static size_t get_size_file(const QByteArray &path);
 };
 
 inline const QString &xmlstruct::getPath() const
 {
     return *path_;
+}
+
+inline zip_t *xmlstruct::openZip(const QString &path, openMode mode)
+{
+    return xmlstruct::openZip(path.toUtf8(), mode);
 }
 
 force_inline size_t xmlstruct::sizeFile(zip_t *filezip, const QString &namefile)
