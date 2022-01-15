@@ -62,9 +62,7 @@ private:
     static void decode0(Document *doc, QList<struct point_last> &point, QList<double> &pos_foglio);
     static void decode1(Document *doc, QList<QList<struct point_old_ver_7>> &page);
 public:
-    static size_t sizeFile(zip_t *filezip, const QString &namefile){
-        return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
-    }
+    static size_t sizeFile(zip_t *filezip, const QString &namefile);
     static size_t sizeFile(zip_t *filezip, const char *namefile);
 
     static int load_stringa(zip_file_t *f, QString &stringa);
@@ -86,11 +84,22 @@ public:
 
     void setData(const QString *path_U, Document *currenttitle_U);
 
+    enum openMode{
+        readOnly = BIT(1),
+        write = BIT(2)
+    };
+    static zip_t *openZip(const QByteArray &path, xmlstruct::openMode mode);
+    static zip_file_t *openFile(zip_t *zip, const QByteArray &path);
 };
 
 inline const QString &xmlstruct::getPath() const
 {
     return *path_;
+}
+
+force_inline size_t xmlstruct::sizeFile(zip_t *filezip, const QString &namefile)
+{
+    return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
 }
 
 #endif

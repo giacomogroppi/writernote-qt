@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QPointF>
+#include <QByteArray>
 #include "currenttitle/document.h"
 
 class TestingCore
@@ -17,6 +18,8 @@ public:
     int startTesting();
     void createDocument(Document *doc);
     int createAndSave(const QString &pos, Document *doc);
+    int createFile(const QByteArray &folder);
+    int startTest();
 };
 
 #endif // TESTINGCORE_H

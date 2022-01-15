@@ -3,11 +3,21 @@
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
 #include "datawrite/savefile.h"
+#include "dataread/xmlstruct.h"
+#include "dataread/readlistarray.h"
+#include <time.h>
+#include <stdlib.h>
 
 #if defined(DEBUG_THREAD) || defined(DEBUGINFO)
 TestingCore::TestingCore(MainWindow *__parent)
 {
+    srand(time(NULL));
     parent = __parent;
+}
+
+static int num(int from, int to)
+{
+    return rand() % to + from;
 }
 
 int TestingCore::startTesting()
@@ -100,6 +110,34 @@ int TestingCore::createAndSave(
 
     savefile __tmp(pos, doc);
     return __tmp.savefile_check_file();
+}
+
+int TestingCore::createFile(const QByteArray &folder)
+{
+    QFile file(folder + "_tmp_write_test.txt");
+    constexpr int len = (1024) * 4 * 128;
+    int i, res;
+
+    if(unlikely(!file.open(QIODevice::WriteOnly))){
+        qDebug() << "Impossibile start testing, file not open";
+        return 1;
+    }
+    for(i = 0; i < len; i += sizeof(res)){
+        res = num(0, len);
+        file.write((const char *)&res, sizeof(res));
+    }
+    file.close();
+
+    return 0;
+}
+
+int TestingCore::startTest()
+{
+    QByteArray path_test = "";
+    if(createFile(path_test)){
+        return 1;
+    }
+
 }
 
 #endif

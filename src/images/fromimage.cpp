@@ -120,7 +120,8 @@ fromimage::load_res fromimage::load_metadata(zip_file_t *file)
 }
 
 fromimage::load_res fromimage::load(zip_t *filezip,
-                                    zip_file_t *file){
+                                    zip_file_t *file)
+{
     QList<QByteArray> arr;
     QStringList name_list;
     uchar res;
