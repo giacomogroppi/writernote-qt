@@ -77,7 +77,6 @@ public:
     __slow void at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     __fast int lengthStroke() const;
-    __fast int lengthStrokePage() const; // len point written by writernote
 
     bool isVisible() const;
 
@@ -296,7 +295,8 @@ Q_ALWAYS_INLINE stroke &page::atStrokeMod(const uint i)
 
 force_inline const stroke &page::atStrokePage(const uint i) const
 {
-    return this->m_stroke_writernote.at(i);
+    W_ASSERT(i > 1);
+    return this->m_stroke_writernote[i];
 }
 
 static force_inline void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
@@ -321,7 +321,8 @@ inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const Q
 
 inline void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const
 {
-    const stroke &stroke = this->m_stroke_writernote.at(IndexStroke);
+    W_ASSERT(IndexStroke > 1);
+    const stroke &stroke = atStrokePage(IndexStroke);
     const point_s &__point = stroke.at(IndexPoint);
 
     __at_draw_private(__point, point, zoom, translation);
@@ -330,11 +331,6 @@ inline void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, co
 force_inline int page::lengthStroke() const
 {
     return m_stroke.length();
-}
-
-force_inline int page::lengthStrokePage() const
-{
-    return this->m_stroke_writernote.length();
 }
 
 force_inline bool page::isVisible() const
@@ -353,7 +349,10 @@ inline void page::copy(
     //dest.allocateStroke(src.lengthStroke());
 
     dest.m_stroke               = src.m_stroke;
-    dest.m_stroke_writernote    = src.m_stroke_writernote;
+
+    dest.m_stroke_writernote[0] = src.m_stroke_writernote[0];
+    dest.m_stroke_writernote[1] = src.m_stroke_writernote[1];
+
     dest.strokeTmp              = src.strokeTmp;
 
     //for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){

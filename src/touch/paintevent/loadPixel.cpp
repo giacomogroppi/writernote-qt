@@ -134,19 +134,13 @@ static void loadSheet(
 {
     int counterPage;
     const page *__page;
-    int counterStroke, counterPoint, lenStroke, lenPoint;
+    int counterStroke, counterPoint, lenPoint;
     const int lenPage = doc.datatouch->lengthPage();
     const double zoom = doc.datatouch->getZoom();
     datastruct *data = doc.datatouch;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         __page = &data->at(counterPage);
-        lenStroke = __page->lengthStrokePage();
-
-        if(unlikely(lenStroke != 2)){
-            qDebug() << "Wronge len";
-            continue;
-        }
 
         m_pen.setWidthF(TabletCanvas::pressureToWidth(__page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
         m_pen.setColor(__page->atStrokePage(0).getColor());
