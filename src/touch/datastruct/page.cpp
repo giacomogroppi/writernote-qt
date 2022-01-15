@@ -14,10 +14,10 @@
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
-static void drawLineOrizzontal(stroke &stroke, point_s &point, const style_struct_S &style, const double &last,
+static void drawLineOrizzontal(stroke &stroke, const style_struct_S &style, const double &last,
                             double &deltax, const double &width_p, const double &ct_del);
-static void drawLineVertical(stroke &stroke, point_s &point, const style_struct_S &style,
-                            const double &last, double &deltay, const double &height_p);
+static void drawLineVertical(stroke &stroke, const style_struct_S &style,
+                            const double &last, double &deltay, const double height_p);
 
 static Q_ALWAYS_INLINE void __initImg(QImage &img)
 {
@@ -44,15 +44,10 @@ void page::drawNewPage(n_style __style)
     bool fast = false;
     double deltax, deltay, ct_del;
     struct style_struct_S style;
-    struct point_s tmp_point;
     stroke newStrokeVertical, newStrokeOrizzontal;
     cdouble width_p    = this->getWidth();
     cdouble height_p   = this->getHeight();
     cdouble last = (count-1)*page::getHeight();
-
-    deltax = 0;
-    deltay = 0;
-    ct_del = 0;
 
     setStylePrivate(fast, __style, style);
 
@@ -64,16 +59,19 @@ void page::drawNewPage(n_style __style)
     newStrokeVertical.setMetadata(this->count, IDVERTICALE, -1, style.colore);
     newStrokeOrizzontal.setMetadata(this->count, IDORIZZONTALE, -1, style.colore);
 
-    if(style.nx){
-        deltax = height_p / (double)style.nx;
-        ct_del = deltax;
-    }
-    if(style.ny){
-        deltay = width_p / (double)style.ny;
-    }
+    if(style.nx <= 0)
+        style.nx = 1;
 
-    drawLineOrizzontal(newStrokeOrizzontal, tmp_point, style, last, deltax, width_p, ct_del);
-    drawLineVertical(newStrokeVertical,     tmp_point, style, last, deltay, height_p);
+    if(style.ny <= 0)
+        style.ny = 1;
+
+    deltax = height_p / (double)style.nx;
+    deltay = width_p / (double)style.ny;
+
+    ct_del = deltax;
+
+    drawLineOrizzontal(newStrokeOrizzontal, style, last, deltax, width_p, ct_del);
+    drawLineVertical(newStrokeVertical,     style, last, deltay, height_p);
 
     newStrokeOrizzontal.__setPressureFirstPoint(    widthToPressure(style.thickness));
     newStrokeVertical.__setPressureFirstPoint(      widthToPressure(style.thickness));
@@ -392,17 +390,19 @@ static inline double widthToPressure(double v){
 }
 
 static inline void drawLineOrizzontal(
-    stroke                  &stroke, 
-    point_s                 &point, 
+    stroke                  &stroke,
     const style_struct_S    &style,
     const double            &last, 
     double                  &deltax, 
     const double            &width_p, 
     const double            &ct_del)
 {
-    uint i;
+    int i;
+    point_s point;
 
-    for(i = 0; i < (uint)style.nx; i++){
+    W_ASSERT(ct_del > 0);
+
+    for(i = 0; i < style.nx; i++){
         point.m_x = 20;
         point.m_y = last + deltax - 20;
 
@@ -416,17 +416,20 @@ static inline void drawLineOrizzontal(
 }
 
 static inline void drawLineVertical(
-    stroke                  &stroke, 
-    point_s                 &point, 
+    stroke                  &stroke,
     const style_struct_S    &style, 
     const double            &last, 
     double                  &deltay, 
-    const double            &height_p)
+    const double            height_p)
 {    
     const double ct_del = deltay;
-    uint i;
+    int i;
+    point_s point;
 
-    for(i = 0; i < (uint)style.ny; i++){
+    W_ASSERT(height_p);
+    W_ASSERT(ct_del);
+
+    for(i = 0; i < style.ny; i++){
         point.m_x = deltay  - 20;
         point.m_y = last    + 20; /* corrisponde to 0 */
 
@@ -436,7 +439,6 @@ static inline void drawLineVertical(
         stroke.append(point);
 
         deltay += ct_del;
-
     }
 }
 

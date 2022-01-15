@@ -44,8 +44,9 @@ void TabletCanvas::load(QPainter &painter,
     painter.setRenderHint(QPainter::Antialiasing, true);
     loadSheet(*data, pen, painter, dataPoint.m);
 
+    return;
 #ifdef PDFSUPPORT
-    if(withPdf)
+    if(likely(withPdf))
         data->m_pdf->draw(painter, dataPoint.m, dataPoint.IsExportingPdf);
 #else
     Q_UNUSED(withPdf);
@@ -60,19 +61,19 @@ void TabletCanvas::load(QPainter &painter,
     /* point not already add to page */
     if(likely(len)){
         dataPoint.lastPoint.pos = QPointF(strokeToDraw.at(0).m_x, strokeToDraw.at(0).m_y);
-    }
 
-    for(i = 1; i < len; i++){
-        const auto &__point = strokeToDraw.at(i);
+        for(i = 1; i < len; i++){
+            const auto &__point = strokeToDraw.at(i);
 
-        pen.setWidthF(pressureToWidth(__point.pressure * zoom * dataPoint.m / 2.00));
-        painter.setPen(pen);
+            pen.setWidthF(pressureToWidth(__point.pressure * zoom * dataPoint.m / 2.00));
+            painter.setPen(pen);
 
-        painter.drawLine(dataPoint.lastPoint.pos * dataPoint.m,
-                         QPointF(__point.m_x * dataPoint.m, __point.m_y * dataPoint.m));
+            painter.drawLine(dataPoint.lastPoint.pos * dataPoint.m,
+                             QPointF(__point.m_x * dataPoint.m, __point.m_y * dataPoint.m));
 
-        dataPoint.lastPoint.pos.setX(__point.m_x);
-        dataPoint.lastPoint.pos.setY(__point.m_y);
+            dataPoint.lastPoint.pos.setX(__point.m_x);
+            dataPoint.lastPoint.pos.setY(__point.m_y);
+        }
     }
 
     painter.setRenderHints(QPainter::TextAntialiasing, false);
@@ -99,7 +100,7 @@ void TabletCanvas::load(QPainter &painter,
     for(; counterPage < lenPage; counterPage ++){
         const page &page = data->datatouch->at(counterPage);
 
-        if(!page.isVisible() && !dataPoint.IsExportingPdf)
+        if(!page.isVisible() && likely(!dataPoint.IsExportingPdf))
             continue;
 
         singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, dataPoint.m);
@@ -195,19 +196,21 @@ static void loadSheet(
         m_pen.setWidthF(TabletCanvas::pressureToWidth(__page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
         m_pen.setColor(__page->atStrokePage(0).getColor());
 
-        m_pen.setWidthF(20);
-
         painter.setPen(m_pen);
 
         for(counterStroke = 0; counterStroke < 2; counterStroke++){
             lenPoint = __page->atStrokePage(counterStroke).length() - 1;
 
             for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
-                const auto &ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage, counterStroke);
-                const auto &ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage, counterStroke);
+                const auto ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage, counterStroke);
+                const auto ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage, counterStroke);
+
+                //if(ref1.x() == ref2.x() && ref1.y() == ref2.y())
+                    ;//qDebug() << "UGUALI     x e y";
+                //else
+                //    qDebug() << "DIVERSI    x e y" << ref1.x() << ref1.y() << ref2.x() << ref2.y();
 
                 painter.drawLine(ref1.m_x, ref1.m_y, ref2.m_x, ref2.m_y);
-
             }
         }
     }

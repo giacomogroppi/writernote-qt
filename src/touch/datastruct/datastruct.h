@@ -156,8 +156,8 @@ public:
     __fast const page &     at(const uint page) const;
     __fast page &           at_mod(const uint page);
 
-    __slow point_s &        at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
-    __slow point_s &        at_draw_page(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
+    __slow point_s at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
+    __slow point_s at_draw_page(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
 
     __fast const point_s *  lastPoint() const;
     __fast const page *     lastPage() const;
@@ -272,16 +272,13 @@ inline page &datastruct::at_mod(const uint page)
     return this->m_page.operator[](page);
 }
 
-force_inline point_s &__at_draw_private()
-{
-    static point_s point;
-    return point;
-}
-
 // this function is not threadSave
-inline __slow point_s &datastruct::at_draw_page(const uint indexPoint, const uint indexPage, const uint indexStroke) const
+inline __slow point_s datastruct::at_draw_page(
+        const uint indexPoint,
+        const uint indexPage,
+        const uint indexStroke) const
 {
-    point_s &point = __at_draw_private();
+    point_s point;
     const page &page = at(indexPage);
 
     page.at_draw_page(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
@@ -289,9 +286,12 @@ inline __slow point_s &datastruct::at_draw_page(const uint indexPoint, const uin
     return point;
 }
 
-inline __slow point_s &datastruct::at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const
+inline __slow point_s datastruct::at_draw(
+        const uint indexPoint,
+        const uint indexPage,
+        const uint indexStroke) const
 {
-    point_s &point = __at_draw_private();
+    point_s point;
 
     at(indexPage).at_draw(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
     return point;

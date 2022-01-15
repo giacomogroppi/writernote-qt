@@ -92,16 +92,16 @@ struct point_s{
     double m_x, m_y;
     float pressure;
     Q_COMPILER_CONSTEXPR QPointF toQPointF(const double delta) const;
-    Q_COMPILER_CONSTEXPR double x();
-    Q_COMPILER_CONSTEXPR double y();
+    Q_COMPILER_CONSTEXPR double x() const;
+    Q_COMPILER_CONSTEXPR double y() const;
 };
 
-Q_COMPILER_CONSTEXPR force_inline double point_s::x()
+Q_COMPILER_CONSTEXPR force_inline double point_s::x() const
 {
     return m_x;
 }
 
-Q_COMPILER_CONSTEXPR force_inline double point_s::y()
+Q_COMPILER_CONSTEXPR force_inline double point_s::y() const
 {
     return m_y;
 }
