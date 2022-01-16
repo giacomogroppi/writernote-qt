@@ -47,7 +47,6 @@ apps:
     slots:
       - mpris
 
-
 layout:
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
@@ -197,12 +196,6 @@ parts:
         -release \
         -opensource \
         -confirm-license \
-        -qt-zlib \
-        -qt-pcre \
-        -qt-libpng \
-        -qt-libjpeg \
-        -opengl desktop \
-        -sql-sqlite \
         -make libs \
         -nomake tools \
         -nomake examples \
