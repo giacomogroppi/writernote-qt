@@ -34,9 +34,6 @@ bool isZooming = false;
 
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     double deltay, deltax;
-
-    //qDebug() << "mouse Move Event";
-
     QTabletEvent *tab_event;
     QEvent::Type __type;
     QPointF p = event->pos();
@@ -44,8 +41,8 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
     if(isZooming)
         return;
 
-    if(parent->touch_or_pen){
-        if(first_touch){
+    if(unlikely(parent->touch_or_pen)){
+        if(unlikely(first_touch)){
             first_touch = false;
             __type = QEvent::TabletPress;
         }else{
@@ -57,12 +54,13 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
         delete tab_event;
         return;
     }
+
 #if defined(WIN32) || defined(WIN64)
     if(this->isdrawing && m_deviceDown)
         return;
 #endif
 
-    if(lastpointtouch.set){
+    if(likely(lastpointtouch.set)){
         deltay = - lastpointtouch.point.y() + event->screenPos().y();
         deltax = - lastpointtouch.point.x() + event->screenPos().x();
 
@@ -113,11 +111,11 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
     __last_point_move.set = false;
     lastpointtouch.set = false;
 
-    if(parent->touch_or_pen){
+    if(unlikely(parent->touch_or_pen)){
         tab_event = new QTabletEvent(QTabletEvent::TabletRelease, event->pos(), event->globalPos(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
         tabletEvent(tab_event);
         delete tab_event;
     }
-    first_touch = true;
 
+    first_touch = true;
 }

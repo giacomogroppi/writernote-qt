@@ -35,7 +35,8 @@ static inline long current_time(){
 
 static inline void dec_speed(double &var, double scrolling_speed);
 
-void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
+void TabletCanvas::scrollKinetic(QPointF first, QPointF second)
+{
     int delta_x, delta_y;
 
     if(!timer){
@@ -45,7 +46,7 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
             ismoving.set = 0;
             ismoving.point = QPointF(0, 0);
 
-            if(how_time){
+            if(likely(how_time)){
                 delta_time /= this->m_scrolling_speed;
                 timer->start(10);
 
@@ -68,12 +69,11 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
 
                 ismoving.point.setY(__delta);
 
-                if(!ismoving.set){
+                if(unlikely(!ismoving.set)){
                     //qDebug() << "timer stop";
                     timer->stop();
                     return;
                 }
-
 
                 ismoving.point.setY(__delta);
 
@@ -109,15 +109,17 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second){
     timer->start(1);
 }
 
-void TabletCanvas::updateTimeScroll(){
-    if(timer)
+void TabletCanvas::updateTimeScroll()
+{
+    if(likely(timer))
         timer->stop();
 
     __last_time = last_time;
     last_time = current_time();
 }
 
-static inline void dec_speed(double &var, double scrolling_speed){
+static inline void dec_speed(double &var, double scrolling_speed)
+{
     uchar cont = 1;
     scrolling_speed /= 5.0;
     if(var > (double)scrolling_speed){

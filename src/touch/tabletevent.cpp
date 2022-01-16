@@ -70,15 +70,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
     if(unlikely(eventType == QEvent::TabletPress)){ /* first point */
         ManageStart(event, pointTouch);
-    }
-    else if(likely(eventType == QEvent::TabletMove)){ /* user move the pen */
-        if (event->device() == QTabletEvent::RotationStylus){
-            updateCursor(event);
-        }
-
 #if defined(WIN32) || defined(WIN64)
         this->isdrawing = true;
 #endif
+    }
+    else if(likely(eventType == QEvent::TabletMove)){ /* user move the pen */
+        if (event->deviceType() == QTabletEvent::RotationStylus){
+            updateCursor(event);
+        }
 
         if (likely(m_deviceDown)) {
             QPainter painter(&m_pixmap);
