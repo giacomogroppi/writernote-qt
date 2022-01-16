@@ -6,12 +6,6 @@
 
 void * actionRubberSingle (void *);
 
-#define RUBB_TH 8
-#ifdef DEBUG_THREAD
-# undef RUBB_TH
-# define RUBB_TH DEBUG_THREAD
-#endif
-
 static QVector<int>         *__data_find;
 
 static page                 *__page;
@@ -46,6 +40,11 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->partial_button->setCheckable(true);
 
     pthread_mutex_init(&mutex_write, NULL);
+
+    this->thread = get_thread_max();
+    this->threadData = get_data_max();
+
+    this->countThread = get_thread_used();
 }
 
 rubber_ui::~rubber_ui()
@@ -124,8 +123,8 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     const bool isTotal = (this->m_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
 
-    pthread_t thread[RUBB_TH];
-    DataPrivateMuThread threadData[RUBB_TH];
+    //pthread_t thread[RUBB_TH];
+    //DataPrivateMuThread threadData[RUBB_TH];
 
     this->base = data->getFirstPageVisible();
 
@@ -154,7 +153,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
         __data_find = (QVector<int> *)&data_to_remove.at(count);
 
-        create = DataPrivateMuThreadInit(threadData, NULL, RUBB_TH, lenStroke);
+        create = DataPrivateMuThreadInit(threadData, NULL, countThread, lenStroke);
 
         for(tmp = 0; tmp < create; tmp ++){
             pthread_create(&thread[tmp], NULL, actionRubberSingle, &threadData[tmp]);
@@ -212,7 +211,7 @@ void *actionRubberSingle(void *_data)
             if(isin(__m_size_gomma, point, *__touch)){
                 if(__isTotal){
                     // possiamo anche non bloccare gli altri thread nell'appendere
-                    // tanto di sicuro non staranno cercando il nostro stroke
+                    // tanto di sicuro non staranno cercando il nostro stroke in lista
 
                     if(is_present_in_list(__data_find->constData(), __data_find->length(), data->from))
                         continue;

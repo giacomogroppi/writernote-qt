@@ -1,6 +1,7 @@
 #include "multi_thread_data.h"
 #include "utils/common_script.h"
 #include "log/log_ui/log_ui.h"
+#include "utils/threadcount.h"
 #include <pthread.h>
 
 static pthread_mutex_t mutex_thread_write;
@@ -87,4 +88,33 @@ void DataPrivateCountThreadRelease(int releaseThread)
     threadLast -= releaseThread;
 
     pthread_mutex_unlock(&mutex_thread_write);
+}
+
+pthread_t *get_thread_max()
+{
+    int thread = threadCount::count();
+    pthread_t * data = (pthread_t *)malloc(sizeof(pthread_t) * thread);
+    return data;
+}
+
+DataPrivateMuThread *get_data_max()
+{
+    int thread = threadCount::count();
+    DataPrivateMuThread * data = (DataPrivateMuThread *)malloc(sizeof(DataPrivateMuThread) * thread);
+    return data;
+}
+
+
+void free_thread_data(pthread_t *thread, DataPrivateMuThread *data)
+{
+    W_ASSERT(thread);
+    W_ASSERT(data);
+
+    free(thread);
+    free(data);
+}
+
+int get_thread_used()
+{
+    return threadCount::count();
 }

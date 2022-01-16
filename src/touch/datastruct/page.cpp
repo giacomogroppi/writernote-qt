@@ -297,6 +297,7 @@ void page::drawEngine(
     i = to_remove.length();
 
     if(unlikely(i)){
+        order(to_remove);
         if(likely(changeSomething))
             *changeSomething = true;
 

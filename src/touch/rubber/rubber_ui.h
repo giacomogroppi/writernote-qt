@@ -5,6 +5,7 @@
 #include "currenttitle/document.h"
 #include <QPainter>
 #include <QPen>
+#include <pthread.h>
 
 #define DEFAULT_GOMMA_SIZE 5
 
@@ -45,6 +46,10 @@ private:
     void update_data();
 
     Ui::rubber_ui *ui;
+
+    pthread_t *thread = NULL;
+    struct DataPrivateMuThread *threadData = NULL;
+    int countThread;
 
 protected:
     bool event(QEvent *) override;

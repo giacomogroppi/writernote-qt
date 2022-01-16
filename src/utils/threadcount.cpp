@@ -3,5 +3,6 @@
 
 uint threadCount::count()
 {
-    return std::thread::hardware_concurrency();
+    static int thread = std::thread::hardware_concurrency();
+    return thread;
 }
