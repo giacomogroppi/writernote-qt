@@ -10,6 +10,7 @@
 #include "log/log_ui/log_ui.h"
 #include "testing/testingcore.h"
 #include "utils/common_error_definition.h"
+#include <QStyleFactory>
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file\nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
 #define COMMAND_EXTRACT "--extract"
@@ -60,6 +61,11 @@ int main(int argc, char *argv[]){
 #endif
 
     bool close_all = false;
+
+#if defined(WIN32) || defined(WIN64)
+    QApplication::setStyle("fusion");
+#endif
+
     TabletApplication *app = new TabletApplication(argc, argv);
 
     language_manager::setLanguage(app);
