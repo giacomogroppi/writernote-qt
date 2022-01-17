@@ -25,7 +25,7 @@ apps:
       ALSA_CONFIG_PATH: /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/alsa/alsa.conf
       PULSA_CONFIG_PATH: $SNAP/etc/pulse/client.conf.d/01-enable-autospawn.conf
       DISABLE_WAYLAND: 1
-
+    
     plugs:
       - desktop
       - desktop-legacy
@@ -174,10 +174,7 @@ parts:
 
       git checkout v5.15.2
 
-      git submodule update qtbase
-      git submodule update qtimageformats 
-      git submodule update qtmultimedia   
-      git submodule update qtwayland  
+      git submodule update qtbase qtimageformats qtmultimedia 
     
     override-build: |
       ./configure \
