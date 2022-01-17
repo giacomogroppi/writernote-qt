@@ -71,6 +71,8 @@ bool square::find()
 
     QList<QVector<int>> index;
 
+    this->adjustPoint();
+
     const QPointF &topLeft = data->adjustPoint(pointinit.point);
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
 
@@ -87,8 +89,6 @@ bool square::find()
 
     __f     = topLeft + translation;
     __s     = bottomRight + translation;
-
-    this->adjustPoint();
 
     W_ASSERT(pointinit.x() <= pointfine.x());
     W_ASSERT(pointinit.y() <= pointfine.y());
