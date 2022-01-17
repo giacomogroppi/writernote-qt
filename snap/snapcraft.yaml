@@ -170,13 +170,14 @@ parts:
       QT=5_15_2
       git clone git://code.qt.io/qt/qt5.git .
 
-      perl init-repository --module-subset=qtbase,qtimageformats,qtmultimedia
+      perl init-repository --module-subset=qtbase,qtimageformats,qtmultimedia,qtwayland
 
       git checkout v5.15.2
 
       git submodule update qtbase
       git submodule update qtimageformats 
-      git submodule update qtmultimedia     
+      git submodule update qtmultimedia   
+      git submodule update qtwayland  
     
     override-build: |
       ./configure \
@@ -335,6 +336,7 @@ parts:
       - libzip-dev
       - libxcb-xinerama0-dev
       - libx11-xcb-dev 
+      - libwayland-dev
       - libglu1-mesa-dev 
       - libxrender-dev 
       - libxi-dev 

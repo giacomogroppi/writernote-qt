@@ -35,11 +35,6 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: |
-          sudo apt -y install libzip-dev
-
       - name: First set up.
         run: |
           sudo apt-get purge --autoremove lxd
