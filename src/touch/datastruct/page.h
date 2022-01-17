@@ -15,6 +15,8 @@
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 
 enum n_style: int;
+void * __page_load(void *);
+void adjustStrokePage(QList<stroke> &List, int count, stroke *m_stroke);
 
 constexpr bool debugPage = false;
 
@@ -80,6 +82,7 @@ public:
 
     bool isVisible() const;
 
+    void removeAt(const QVector<int> & pos);
     void removeAt(cuint i);
     int maxId() const;
 

@@ -162,7 +162,7 @@ void stroke::createQPainterPath() const
     i = 2;
 
     for(; i < len - 3; i++){
-        point3 =    page::at_translation(at(i),   this->metadata.page);
+        point3 =    page::at_translation(at(i), this->metadata.page);
         draw3  =    point3.toQPointF(delta);
 
         __path.cubicTo(draw1, draw2, draw3);

@@ -80,7 +80,6 @@ void element_ui::set_main()
             needToDelete = 1;
             return;
         }
-        img = QPixmap(":image/images/not_define.png");
         null = 1;
     }
 

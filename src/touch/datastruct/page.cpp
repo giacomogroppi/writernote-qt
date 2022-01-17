@@ -132,7 +132,22 @@ void page::swap(QList<stroke> & list,
 
     DO_IF_DEBUG_ENABLE(debugPage,
         qDebug() << "Page::swap" << this->count - 1 << drop << "Item drop, list" << itemDrop;
-    )
+            )
+}
+
+/* the list should be order */
+void page::removeAt(const QVector<int> &pos)
+{
+    int i;
+    if(unlikely(!is_order(pos))){
+        DO_IF_DEBUG(std::abort());
+        order((QVector<int> &)(pos));
+    }
+
+    i = pos.length();
+    for(i--; i >= 0; i--){
+        this->removeAt(i);
+    }
 }
 
 void page::append(const QList<stroke> &stroke)
@@ -294,18 +309,15 @@ void page::drawEngine(
         __page_load(&threadData[0]);
     }
 
-    i = to_remove.length();
-
-    if(unlikely(i)){
+    if(unlikely(to_remove.length())){
         order(to_remove);
+
         if(likely(changeSomething))
             *changeSomething = true;
 
         log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
 
-        for(i --; i >= 0; i--){
-            this->removeAt(i);
-        }
+        this->removeAt(to_remove);
     }
 }
 

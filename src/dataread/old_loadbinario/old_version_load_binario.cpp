@@ -3,6 +3,7 @@
 #include "utils/posizione_binario.h"
 #include "utils/common_error_definition.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
+#include "touch/datastruct/page.h"
 
 #ifdef ALL_VERSION
 
@@ -349,6 +350,10 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &pag
             doc->datatouch->appendStroke(stroke);
 
         }
+    }
+
+    for(auto &page : doc->datatouch->m_page){
+        adjustStrokePage(page.m_stroke, page.count, page.m_stroke_writernote);
     }
 }
 

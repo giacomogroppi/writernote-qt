@@ -56,5 +56,6 @@
         <file>images/recent-file-icon.png</file>
         <file>images/tablet.png</file>
         <file>images/full-screen.png</file>
+        <file>images/compress-video.png</file>
     </qresource>
 </RCC>
