@@ -317,14 +317,18 @@ void xmlstruct::decode0(
 
 void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &page)
 {
-    int counterPage, lenPage;
-    lenPage = page.length();
+    int counterPage;
+    QList<QList<stroke>> pageStroke;
+    int i;
+
+    cint lenPage = page.length();
 
     if(doc->datatouch->lengthPage() != page.length()){
         doc->datatouch->newPage(doc->datatouch->lengthPage());
     }
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
+        pageStroke.append(QList<stroke>());
         for(int counterPoint = 0; counterPoint < page.at(counterPage).length(); counterPoint ++){
             QList<point_old_ver_7> &ListPrivate = page.operator[](counterPage);
             stroke stroke;
@@ -347,13 +351,17 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &pag
                 stroke.append(TmpAppend);
             }
 
-            doc->datatouch->appendStroke(stroke);
-
+            if(stroke.getId() < 0){
+                pageStroke.operator[](counterPage).append(stroke);
+            }else{
+                doc->datatouch->appendStroke(stroke);
+            }
         }
     }
 
-    for(auto &page : doc->datatouch->m_page){
-        adjustStrokePage(page.m_stroke, page.count, page.m_stroke_writernote);
+    for(i = 0; i < lenPage; i++){
+        auto &page = doc->datatouch->m_page.operator[](i);
+        adjustStrokePage(pageStroke.at(i), page.count, page.m_stroke_writernote);
     }
 }
 

@@ -16,7 +16,7 @@
 
 enum n_style: int;
 void * __page_load(void *);
-void adjustStrokePage(QList<stroke> &List, int count, stroke *m_stroke);
+void adjustStrokePage(const QList<stroke> &List, int count, stroke *m_stroke);
 
 constexpr bool debugPage = false;
 
@@ -298,7 +298,7 @@ Q_ALWAYS_INLINE stroke &page::atStrokeMod(const uint i)
 
 force_inline const stroke &page::atStrokePage(const uint i) const
 {
-    W_ASSERT(i > 1);
+    W_ASSERT(i == 0 || i == 1);
     return this->m_stroke_writernote[i];
 }
 
@@ -322,9 +322,13 @@ inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const Q
     __at_draw_private(__point, point, zoom, translation);
 }
 
-inline void page::at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const
+inline void page::at_draw_page(
+        const uint      IndexStroke,
+        const uint      IndexPoint,
+        const QPointF   &translation,
+        point_s         &point,
+        const double    zoom) const
 {
-    W_ASSERT(IndexStroke > 1);
     const stroke &stroke = atStrokePage(IndexStroke);
     const point_s &__point = stroke.at(IndexPoint);
 

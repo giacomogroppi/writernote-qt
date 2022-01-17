@@ -42,7 +42,7 @@
     if(list.indexOf(element) == -1) list.append(element);
 
 template <typename T>
-Q_ALWAYS_INLINE void __swap(T &t1, T &t2)
+force_inline void __swap(T &t1, T &t2)
 {
     const T tmp = t1;
     t1 = t2;
@@ -291,6 +291,7 @@ inline void __order(QList<QVector<T>> & list){
 # define W_ASSERT(condition)                                    \
     do{                                                         \
         if(unlikely(!(condition))){                             \
+            std::abort();                                       \
             qDebug() << __FUNCTION__ << __FILE__ ;              \
         }                                                       \
     }while(0);

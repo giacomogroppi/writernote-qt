@@ -29,8 +29,8 @@ static bool                 *__in_box;
 square::square(QObject *parent, property_control *property):
     QObject(parent)
 {
-    Q_ASSERT(parent);
-    Q_ASSERT(property);
+    W_ASSERT(parent);
+    W_ASSERT(property);
 
     this->m_property = property;
     this->m_copy = new copy();
@@ -236,15 +236,6 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     }
 }
 
-/* la funzione resistuisce
- * vero se è intero il punto è interno
-*/
-bool square::isinside(const QPointF &point)
-{
-    WDebug(debugSquare, "square::isinside");
-    return datastruct::isinside(pointinit.point, pointfine.point, point);
-}
-
 /*
  * la funzione viene richiamata quando dobbiamo
  * spostare un po' di oggetti nella lista m_id
@@ -348,17 +339,9 @@ void square::move(const QPointF &punto)
     }
 #endif
 
-    //if(unlikely(!datastruct::isinside(pointinit.point, pointfine.point, punto))){
-    //    return this->reset(true);
-    //}
-
     delta = lastpoint.point - punto;
 
     datastruct::inverso(delta);
-
-    //for(QList<stroke> & tmp : m_stroke){
-    //    datastruct::MovePoint(tmp, delta, 0);
-    //}
 
     this->trans_img += delta;
 
@@ -440,34 +423,36 @@ void square::actionProperty(property_control::ActionProperty action)
     this->canvas->call_update();
 }
 
-#define MAKE_CHANGE(point1, point2, function, secFunction)  \
-    do{                                                     \
-        if(point1.function() > point2.function())           \
-        {                                                   \
-            tmp = point2.function();                        \
-            point2.secFunction(point1.function());          \
-            point1.secFunction(tmp);                        \
-        }                                                   \
-    }while(0)
-
 /*
  * la funcione cambia i punti, in caso l'utente non abbia tracciato il
  * rettangolo da in alto a sinistra a in alto a destra
 */
-Q_ALWAYS_INLINE void square::adjustPoint()
+force_inline void square::adjustPoint()
 {
-    double tmp;
     QPointF &topLeft = pointinit.point;
     QPointF &bottomRight = pointfine.point;
 
-    MAKE_CHANGE(topLeft, bottomRight, x, setX);
-    MAKE_CHANGE(topLeft, bottomRight, y, setY);
+    WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
+
+    if(topLeft.x() > bottomRight.x())
+        __swap(topLeft.rx(), bottomRight.rx());
+
+    if(topLeft.y() > bottomRight.y())
+        __swap(topLeft.ry(), bottomRight.ry());
+
+    WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
+
+    W_ASSERT(topLeft.x() <= bottomRight.x());
+    W_ASSERT(topLeft.y() <= bottomRight.y());
 }
 
 void * __square_search(void *__data)
 {
+    W_ASSERT(__data);
     DataPrivateMuThread *data = (DataPrivateMuThread *)__data;
     bool in_box = false;
+
+    assert(data->from <= data->to);
 
     for(; data->from < data->to;  data->from ++){
         const stroke &stroke = __page->atStroke(data->from);

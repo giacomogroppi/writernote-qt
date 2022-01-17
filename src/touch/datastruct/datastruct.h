@@ -483,7 +483,7 @@ inline int datastruct::appendStroke(const stroke &__stroke)
 inline void datastruct::appendStroke(const stroke &stroke, const int page)
 {
 #ifdef ALL_VERSION
-    W_ASSERT(stroke.getId() > 0);
+    W_ASSERT(stroke.getId() >= 0);
 #endif
 
     this->at_mod(page).append(stroke);

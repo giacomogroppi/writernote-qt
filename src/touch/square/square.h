@@ -11,7 +11,7 @@
 #include "touch/copy_cut/copy_cut_selection.h"
 #include "utils/common_script.h"
 
-constexpr bool debugSquare = false;
+constexpr bool debugSquare = true;
 
 class square: public QObject
 {
@@ -152,6 +152,15 @@ inline void square::translate(const QPointF &offset)
 force_inline void square::isMoving()
 {
 
+}
+
+/* la funzione resistuisce
+ * vero se è intero il punto è interno
+*/
+force_inline bool square::isinside(const QPointF &point)
+{
+    WDebug(debugSquare, "square::isinside");
+    return datastruct::isinside(pointinit.point, pointfine.point, point);
 }
 
 #endif // SQUARE_H

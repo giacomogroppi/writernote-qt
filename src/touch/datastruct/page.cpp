@@ -603,7 +603,6 @@ QRectF page::get_size_area(cint *pos, int len) const
     QRectF result;
 
     W_ASSERT(pos);
-    W_ASSERT(len);
 
     if(unlikely(!len)){
         return QRectF();
@@ -697,14 +696,12 @@ static void append_data(stroke &to, const stroke &from)
     }
 }
 
-void adjustStrokePage(QList<stroke> & List, int count, stroke *m_stroke)
+void adjustStrokePage(const QList<stroke> & List, int count, stroke *m_stroke)
 {
     int i = List.length();
     stroke &vertical =      m_stroke[0];
     stroke &orizzontal =    m_stroke[1];
     const stroke *tmp, *ref = NULL;
-
-    W_ASSERT(i);
 
     for(i --; i >= 0; i--){
         tmp = &List.at(i);
