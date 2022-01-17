@@ -6,6 +6,7 @@
 #include "utils/common_def.h"
 #include "utils/get_only_name/get_only_name.h"
 #include "utils/mostra_explorer/mostra_explorer.h"
+#include "utils/common_script.h"
 
 element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index, const uchar __showFileOnlyIfExist) :
     QWidget(parent),
@@ -43,6 +44,7 @@ element_ui::~element_ui()
 
 void element_ui::set_main()
 {
+    char null = 0;
     const int height = 450, width = 450;
     QPixmap img(width, height);
 
@@ -79,9 +81,10 @@ void element_ui::set_main()
             return;
         }
         img = QPixmap(":image/images/not_define.png");
+        null = 1;
     }
 
-    img_widget = new imageWidget(nullptr, &img);
+    img_widget = new imageWidget(nullptr, null ? NULL : &img);
     this->ui->verticalLayout->addWidget(img_widget, 0);
 
     needToDelete = 0;

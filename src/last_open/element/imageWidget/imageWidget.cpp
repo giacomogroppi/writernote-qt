@@ -1,10 +1,16 @@
 #include "imageWidget.h"
+#include "utils/common_script.h"
 
 imageWidget::imageWidget(QWidget *parent, QPixmap *pixmap) : QWidget(parent)
 {
     gridLayout = new QGridLayout();
     imgDisplayLabel = new QLabel("");
     scrollArea = new QScrollArea();
+
+    if(unlikely(!pixmap)){
+        this->hide();
+        return;
+    }
 
     imgDisplayLabel->setPixmap(*pixmap);
     imgDisplayLabel->adjustSize();
