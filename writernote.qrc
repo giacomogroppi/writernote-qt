@@ -22,7 +22,6 @@
         <file>images/clipboard-paste-document-text.png</file>
         <file>images/manoIcon.png</file>
         <file>images/deleteCopyBook.png</file>
-        <file>images/compress-video.png</file>
         <file>images/pen-icon.png</file>
         <file>images/rubber.png</file>
         <file>images/yellow-icon.png</file>
@@ -49,14 +48,11 @@
         <file>images/newPage.png</file>
         <file>images/restore-icon.png</file>
         <file>images/update-icon.png</file>
-        <file>images/pen_option.webp</file>
-        <file>images/icon-writernote.ico</file>
         <file>images/icon-writernote.png</file>
         <file>images/highlighter.png</file>
         <file>images/pen_option.png</file>
         <file>images/brown-icon.png</file>
         <file>images/purple.png</file>
-        <file>images/not_define.png</file>
         <file>images/recent-file-icon.png</file>
         <file>images/tablet.png</file>
         <file>images/full-screen.png</file>
