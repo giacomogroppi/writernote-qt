@@ -226,8 +226,9 @@ private:
     QPen m_pen;
 
     bool m_deviceDown = false;
-    inline void ManageFinish(QTabletEvent *event);
-    inline void ManageStart(QTabletEvent *event, const QPointF &point);
+    void ManageFinish(QTabletEvent *event);
+    void ManageStart(QTabletEvent *event, const QPointF &point);
+    void ManageMove(QTabletEvent *event, const QPointF &point);
 
 public slots:
 

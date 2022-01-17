@@ -40,7 +40,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     isWriting = true;
     need_save_auto = true;
     need_save_tmp = true;
-    block_scrolling = true;
 
     eventType = event->type();
 
@@ -69,66 +68,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     }
 
     if(unlikely(eventType == QEvent::TabletPress)){ /* first point */
+        block_scrolling = true;
         ManageStart(event, pointTouch);
 #if defined(WIN32) || defined(WIN64)
         this->isdrawing = true;
 #endif
     }
     else if(likely(eventType == QEvent::TabletMove)){ /* user move the pen */
-        if (event->deviceType() == QTabletEvent::RotationStylus){
-            updateCursor(event);
-        }
-
-        if (likely(m_deviceDown)) {
-            QPainter painter(&m_pixmap);
-            if(pen_method || highlighter_method){
-                updateBrush(event);
-            }
-
-            lastPoint.pos = event->pos();
-            lastPoint.pressure = event->pressure();
-            lastPoint.rotation = event->rotation();
-
-            if(pen_method || highlighter_method){
-                updatelist(event);
-            }
-            else if(rubber_method){
-                /*const QList<int> &ref = */m_rubber->actionRubber(data->datatouch, pointTouch);
-
-                //if(ref.length()){
-                //    this->triggerNewView(ref, true);
-                //}
-            }
-            else if(selection_method){
-                m_square->isMoving();
-
-                if(!m_square->somethingInBox()){
-                    /*
-                     * it means that the user not select anything
-                     * in the past
-                    */
-                    m_square->updatePoint(pointTouch);
-                }
-                else{
-                    if(likely(m_square->isinside(pointTouch))){
-                        DO_IF_DEBUG(if(m_square->get_first_point().isNotSet()) std::abort(););
-                        /* a questo punto può muovere di un delta x e y */
-                        m_square->move(pointTouch);
-                    }
-                    else{
-                        /* se il tocco non è stato interno */
-                        m_square->reset();
-                    }
-                }
-            }else if(text_method){
-                if(m_text_w->isIn(pointTouch)){
-
-                }
-                else{
-                    m_text_w->createNew(pointTouch);
-                }
-            }
-        }
+        ManageMove(event, pointTouch);
     }
 
     else if(eventType == QEvent::TabletRelease){ /* pen leaves the tablet */
@@ -149,8 +96,62 @@ end:
     lastMethod = this->medotodiinserimento;
 }
 
+void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
+{
+    if (event->deviceType() == QTabletEvent::RotationStylus){
+        updateCursor(event);
+    }
 
-inline void TabletCanvas::ManageFinish(QTabletEvent *event)
+    if(unlikely(!m_deviceDown))
+        return;
+
+    QPainter painter(&m_pixmap);
+    if(pen_method || highlighter_method){
+        updateBrush(event);
+    }
+
+    lastPoint.pos = event->pos();
+    lastPoint.pressure = event->pressure();
+    lastPoint.rotation = event->rotation();
+
+    if(pen_method || highlighter_method){
+        updatelist(event);
+    }
+    else if(rubber_method){
+        m_rubber->actionRubber(data->datatouch, point);
+    }
+    else if(selection_method){
+        m_square->isMoving();
+
+        if(!m_square->somethingInBox()){
+            /*
+            * it means that the user not select anything
+            * in the past
+            */
+            m_square->updatePoint(point);
+        }
+        else{
+            if(likely(m_square->isinside(point))){
+                DO_IF_DEBUG(if(m_square->get_first_point().isNotSet()) std::abort(););
+                /* a questo punto può muovere di un delta x e y */
+                m_square->move(point);
+            }
+            else{
+                /* se il tocco non è stato interno */
+                m_square->reset();
+            }
+        }
+    }else if(text_method){
+        if(m_text_w->isIn(point)){
+            
+        }
+        else{
+            m_text_w->createNew(point);
+        }
+    }
+}
+
+void TabletCanvas::ManageFinish(QTabletEvent *event)
 {
     bool done = m_square->somethingInBox();
     block_scrolling = false;
