@@ -9,6 +9,7 @@
 #include "page.h"
 #include "utils/common_script.h"
 #include <csignal>
+#include "pthread.h"
 
 /*
     IDVERTICALE -> linee verticali
@@ -69,6 +70,9 @@ private:
 
     int pageVisible;
 
+    // todo --> move this mutex to page
+    pthread_mutex_t changeIdMutex;
+    void __changeId(int indexPoint, stroke &stroke, page &page, int newId, cbool useThreadSafe);
 public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
     ~datastruct() = default;
@@ -127,8 +131,11 @@ public:
 
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
     void reorganize();
+
     void changeId(int indexPoint, int indexStroke, int indexPage, int newId);
     void changeId(int indexPoint, stroke& stroke, page &page, int newId);
+    void changeIdThreadSave(int indexPoint, stroke &stroke, page &page, int newId);
+
     bool isAvailable(int id) const;
     int maxId();
 

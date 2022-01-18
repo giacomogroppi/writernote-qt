@@ -153,6 +153,7 @@ public:
     friend class rubber_ui;
     friend void * __page_load(void *);
     friend void adjustStrokePage(QList<stroke> &List, int count, stroke *m_stroke);
+    friend void *actionRubberSingle(void *_data);
 };
 
 Q_ALWAYS_INLINE void page::removeBlock() const

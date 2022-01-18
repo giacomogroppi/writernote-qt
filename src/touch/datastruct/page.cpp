@@ -293,7 +293,7 @@ void page::drawEngine(
     extraData.parent        = this;
 
     if(use_multi_thread){
-        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length());
+        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length(), ~DATA_PRIVATE_FLAG_SEM);
 
         for(i = 0; i < threadCount; i++){
             pthread_create(&thread[i], NULL, __page_load, &threadData[i]);

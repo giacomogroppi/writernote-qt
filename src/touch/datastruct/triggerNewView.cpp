@@ -30,7 +30,7 @@ void datastruct::newViewAudio(int lastTime, int newTime)
 
         extra.m_page = (QList<page> *)&at(index);
 
-        create = DataPrivateMuThreadInit(dataThread, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->length());
+        create = DataPrivateMuThreadInit(dataThread, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->length(), 0);
         if(unlikely(create == 1)){
             __search_new_view(&dataThread[0]);
             continue;

@@ -39,6 +39,7 @@ jobs:
         run: |
           sudo apt-get purge --autoremove lxd
           sudo snap install --classic snapcraft
+          sudo apt install python3
           sudo snap install lxd
           
           sudo chown root:root /

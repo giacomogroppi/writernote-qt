@@ -2,21 +2,21 @@
 #include "ui_rubber_ui.h"
 #include "utils/common_script.h"
 #include "pthread.h"
+#include "semaphore.h"
 #include "touch/multi_thread_data.h"
-
-void * actionRubberSingle (void *);
+#include "core/wmultiplemutex.h"
 
 static QVector<int>         *__data_find;
 
 static page                 *__page;
 static const QPointF        *__touch;
 static int                  __m_size_gomma;
-static bool                 __isTotal;
 static datastruct           *__datastruct;
 
+static pthread_mutex_t single_mutex;
 static int new_id = 0;
 
-static pthread_mutex_t mutex_write;
+static WMultipleMutex *multi_mutex;
 
 #define REMOVE_STROKE_THREAD_SAVE(counterStroke) \
     do{                                          \
@@ -39,12 +39,13 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    pthread_mutex_init(&mutex_write, NULL);
-
     this->thread = get_thread_max();
     this->threadData = get_data_max();
 
     this->countThread = get_thread_used();
+
+    multi_mutex = new WMultipleMutex(countThread, 0);
+    pthread_mutex_init(&single_mutex, NULL);
 }
 
 rubber_ui::~rubber_ui()
@@ -52,9 +53,26 @@ rubber_ui::~rubber_ui()
     this->save_settings();
 
     delete ui;
+    delete multi_mutex;
 }
 
-bool rubber_ui::event(QEvent *event){
+static inline bool isin(
+                    int             size_rubber,
+                    const point_s   &__point,
+                    const QPointF   &touch)
+{
+    Q_ASSERT(size_rubber >= 0.0);
+    bool isin;
+
+    isin =     (touch.x() - size_rubber) < __point.m_x &&  (touch.x() + size_rubber) > __point.m_x
+           &&  (touch.y() - size_rubber) < __point.m_y &&  (touch.y() + size_rubber) > __point.m_y;
+
+
+    return isin;
+}
+
+bool rubber_ui::event(QEvent *event)
+{
     if(event->type() == QEvent::WindowDeactivate)
         this->hide();
 
@@ -113,6 +131,162 @@ static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF
     return !datastruct::isinside(topLeft, bottomRigth, pointTouch);
 }
 
+void *actionRubberSinglePartial(void *_data)
+{
+    DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
+
+    QVector<int> point_remove;
+    QVector<int> point_mod;
+
+    int from, to;
+    int new_id_priv;
+    int lenPoint, counterPoint;
+
+    from = data->from;
+    to = data->to;
+
+    point_remove.reserve(32);
+
+    W_ASSERT(from <= to);
+
+    for(; from < to; from ++){
+        stroke & stroke = __page->atStrokeMod(from);
+
+        if(ifNotInside(stroke, __m_size_gomma, *__touch))
+            continue;
+
+        lenPoint = stroke.length();
+        for(counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
+            const point_s &point = stroke.at(counterPoint);
+
+            if(likely(!isin(__m_size_gomma, point, *__touch)))
+                continue;
+
+            if(unlikely(counterPoint < 3)){
+                stroke.removeAt(0, counterPoint);
+                lenPoint = stroke.length();
+
+                if(stroke.length() < 3)
+                    point_remove.append(data->from);
+
+                continue;
+            }
+
+            if(unlikely(counterPoint + 3 > lenPoint)){
+                stroke.removeAt(counterPoint, lenPoint - 1);
+
+                if(stroke.length() < 3)
+                    point_remove.append(data->from);
+
+                break;
+            }
+
+            W_ASSERT(lenPoint > 6);
+
+            stroke.removeAt(counterPoint);
+
+            point_mod.append(from);
+
+            __datastruct->changeId(counterPoint, stroke, *__page, new_id);
+
+            new_id ++;
+
+            __data_find->append(data->from);
+
+            break;
+
+        }
+    }
+
+    from = point_mod.length();
+
+    // we don't need to do this operation
+    // in order to the list
+    pthread_mutex_lock(&single_mutex);
+
+    new_id_priv = new_id;
+    new_id += from;
+
+    pthread_mutex_unlock(&single_mutex);
+
+    for(from --; from >= 0; from --){
+        __datastruct->changeIdThreadSave(from, __page->atStrokeMod(from), *__page, new_id_priv);
+        new_id_priv ++;
+    }
+
+    multi_mutex->lock(data->id);
+
+    const auto area = __page->get_size_area(point_remove.constData(), point_remove.length());
+    __page->removeAndDraw(-1, point_remove, area);
+
+    multi_mutex->unlock(data->id);
+    multi_mutex->unlock(data->id - 1);
+
+    return NULL;
+}
+
+void *actionRubberSingleTotal(void *_data)
+{
+    DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
+    QVector<int> index_selected;
+    int i, index;
+
+    index_selected.reserve(16 * 2);
+
+    Q_ASSERT(data->from <= data->to);
+
+#ifdef DEBUGINFO
+    qDebug() << data->from << data->to;
+#endif
+
+    for(; data->from < data->to; data->from++){
+        stroke &stroke = __page->atStrokeMod(data->from);
+        int lenPoint = stroke.length();
+
+        if(ifNotInside(stroke, __m_size_gomma, *__touch)) continue;
+
+        for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
+            const point_s &point = stroke.at(counterPoint);
+
+            if(isin(__m_size_gomma, point, *__touch)){
+                // possiamo anche non bloccare gli altri thread nell'appendere
+                // tanto di sicuro non staranno cercando il nostro stroke in lista
+
+                if(is_present_in_list(__data_find->constData(), __data_find->length(), data->from))
+                    continue;
+
+                index_selected.append(data->from);
+
+                break;
+
+            }
+        }
+    }
+
+    i = index_selected.length();
+
+    if(!i){
+        goto release;
+    }
+
+    multi_mutex->lock(data->id);
+
+    for(i --; i >= 0; i--){
+        index = index_selected.at(i);
+
+        __datastruct->decreaseAlfa(__page->atStrokeMod(index), *__page, DECREASE);
+    }
+
+    //__page->mergeList();
+
+release:
+    __data_find->append(index_selected);
+
+    multi_mutex->unlock(data->id);
+    multi_mutex->unlock(data->id + 1);
+    return NULL;
+}
+
 /*
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
@@ -122,6 +296,16 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     const int lenPage = data->lengthPage();
     const bool isTotal = (this->m_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
+    void *(*functionToCall)(void *);
+    int flag;
+
+    if(isTotal){
+        functionToCall = actionRubberSingleTotal;
+        flag = ~DATA_PRIVATE_FLAG_SEM;
+    }else{
+        functionToCall = actionRubberSinglePartial;
+        flag = DATA_PRIVATE_FLAG_SEM;
+    }
 
     //pthread_t thread[RUBB_TH];
     //DataPrivateMuThread threadData[RUBB_TH];
@@ -129,7 +313,6 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     this->base = data->getFirstPageVisible();
 
     __m_size_gomma =    this->m_size_gomma;
-    __isTotal =         isTotal;
     __datastruct =      data;
     __touch =           &lastPoint;
 
@@ -153,20 +336,28 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
         __data_find = (QVector<int> *)&data_to_remove.at(count);
 
-        create = DataPrivateMuThreadInit(threadData, NULL, countThread, lenStroke);
+        create = DataPrivateMuThreadInit(threadData, NULL, countThread, lenStroke, flag);
+
+        multi_mutex->blockAll();
+        multi_mutex->unlock(0);
 
         for(tmp = 0; tmp < create; tmp ++){
-            pthread_create(&thread[tmp], NULL, actionRubberSingle, &threadData[tmp]);
+            pthread_create(&thread[tmp], NULL, functionToCall, &threadData[tmp]);
         }
 
         for(tmp = 0; tmp < create; tmp ++){
             pthread_join(thread[tmp], NULL);
         }
 
+        DO_IF_DEBUG(
+            W_ASSERT(is_order(*__data_find));
+        )
+
         if(!isTotal){
-            for(int tmp = __data_find->length() - 1; tmp >= 0; tmp --){
-                page.removeAt(__data_find->at(tmp));
-            }
+            //int tmp = __data_find->length();
+            //for(tmp --; tmp >= 0; tmp --){
+            //    page.removeAt(__data_find->at(tmp));
+            //}
             page.mergeList();
         }
 
@@ -174,96 +365,4 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     }
 }
 
-static inline bool isin(
-                    int             size_rubber,
-                    const point_s   &__point,
-                    const QPointF   &touch)
-{
-    Q_ASSERT(size_rubber >= 0.0);
-    bool isin;
 
-    isin =     (touch.x() - size_rubber) < __point.m_x &&  (touch.x() + size_rubber) > __point.m_x
-           &&  (touch.y() - size_rubber) < __point.m_y &&  (touch.y() + size_rubber) > __point.m_y;
-
-
-    return isin;
-}
-
-void *actionRubberSingle(void *_data)
-{
-    DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
-
-    Q_ASSERT(data->from <= data->to);
-
-#ifdef DEBUGINFO
-    qDebug() << data->from << data->to;
-#endif
-
-    for(; data->from < data->to; data->from++){
-        stroke &stroke = __page->atStrokeMod(data->from);
-        int lenPoint = stroke.length();
-
-        if(ifNotInside(stroke, __m_size_gomma, *__touch)) continue;
-
-        for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-            const point_s &point = stroke.at(counterPoint);
-
-            if(isin(__m_size_gomma, point, *__touch)){
-                if(__isTotal){
-                    // possiamo anche non bloccare gli altri thread nell'appendere
-                    // tanto di sicuro non staranno cercando il nostro stroke in lista
-
-                    if(is_present_in_list(__data_find->constData(), __data_find->length(), data->from))
-                        continue;
-
-                    pthread_mutex_lock(&mutex_write);
-
-                    __data_find->append(data->from);
-
-                    __datastruct->decreaseAlfa(stroke, *__page, DECREASE);
-
-                    pthread_mutex_unlock(&mutex_write);
-
-                    break;
-                }
-                else{
-                    if(counterPoint < 3){
-                        stroke.removeAt(0, counterPoint);
-                        lenPoint = stroke.length();
-
-                        if(stroke.length() < 3)
-                            REMOVE_STROKE_THREAD_SAVE(data->from);
-
-                        continue;
-                    }
-
-                    if(counterPoint + 3 > lenPoint){
-                        stroke.removeAt(counterPoint, lenPoint - 1);
-
-                        if(stroke.length() <  3)
-                            REMOVE_STROKE_THREAD_SAVE(data->from);
-
-                        break;
-                    }
-
-                    Q_ASSERT(lenPoint > 6);
-
-                    stroke.removeAt(counterPoint);
-
-                    pthread_mutex_lock(&mutex_write);
-                    __datastruct->changeId(counterPoint, stroke, *__page, new_id);
-
-                    new_id ++;
-
-                    __data_find->append(data->from);
-
-                    pthread_mutex_unlock(&mutex_write);
-
-                    break;
-                }
-            }
-        }
-    }
-
-    return NULL;
-}

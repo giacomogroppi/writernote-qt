@@ -5,12 +5,16 @@
 
 struct DataPrivateMuThread{
     int from, to;
+
+    // indicate the identifier for the thread
+    int id;
     void *extra;
 };
 
 void DataPrivateInit(void);
 
-int DataPrivateMuThreadInit(DataPrivateMuThread *data, void *extraData, cint maxThread, cint to);
+#define DATA_PRIVATE_FLAG_SEM BIT(1)
+int DataPrivateMuThreadInit(DataPrivateMuThread *data, void *extraData, cint maxThread, cint to, int flag);
 
 int DataPrivateCountThread(int numNewThread);
 void DataPrivateCountThreadRelease(int numReleaseThread);

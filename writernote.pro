@@ -92,6 +92,7 @@ SOURCES += \
     src/controllUi.cpp \
     src/core/listthreadsave.cpp \
     src/core/multiarray.cpp \
+    src/core/wmultiplemutex.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/document.cpp \
@@ -264,6 +265,7 @@ HEADERS += \
     src/button/button_size.h \
     src/core/listthreadsave.h \
     src/core/multiarray.h \
+    src/core/wmultiplemutex.h \
     src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
     src/currenttitle/default_type/default_type.h \

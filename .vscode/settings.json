@@ -14,7 +14,11 @@
         "streambuf": "cpp",
         "qstringlist": "cpp",
         "qvector": "cpp",
-        "array": "cpp"
+        "array": "cpp",
+        "future": "cpp",
+        "stop_token": "cpp",
+        "semaphore": "cpp",
+        "condition_variable": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

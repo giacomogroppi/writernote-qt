@@ -25,7 +25,8 @@ int DataPrivateMuThreadInit(
         DataPrivateMuThread     *data,
         void                    *extraData,
         cint                    maxThread,
-        cint                    to)
+        cint                    to,
+        int                     flag)
 {
     int i, done, div, count;
 
@@ -39,6 +40,11 @@ int DataPrivateMuThreadInit(
             data[i].from = done;
             data[i].to = done + div;
             data[i].extra = extraData;
+            
+            if(flag & DATA_PRIVATE_FLAG_SEM){
+                data[i].id = i;
+            }
+            
             done += div;
         }
 
@@ -48,14 +54,13 @@ int DataPrivateMuThreadInit(
         data[0].from = 0;
         data[0].to = to;
         data[0].extra = extraData;
+        data[0].id = 0;
     }
 
     return count;
 }
 
 static int threadLast = 240;
-
-
 int DataPrivateCountThread(int newThread)
 {
     int ret;
