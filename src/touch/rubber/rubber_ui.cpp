@@ -73,7 +73,7 @@ static inline bool isin(
 
 bool rubber_ui::event(QEvent *event)
 {
-    if(event->type() == QEvent::WindowDeactivate)
+    if(unlikely(event->type() == QEvent::WindowDeactivate))
         this->hide();
 
     return QWidget::event(event);
