@@ -135,8 +135,10 @@ void *actionRubberSinglePartial(void *_data)
 {
     DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
 
+    QVector<int> stroke_to_remove;
+
+    QVector<int> stroke_mod;
     QVector<int> point_remove;
-    QVector<int> point_mod;
 
     int from, to;
     int new_id_priv;
@@ -145,6 +147,8 @@ void *actionRubberSinglePartial(void *_data)
     from = data->from;
     to = data->to;
 
+    stroke_to_remove.reserve(12);
+    stroke_mod.reserve(32);
     point_remove.reserve(32);
 
     W_ASSERT(from <= to);
@@ -167,7 +171,7 @@ void *actionRubberSinglePartial(void *_data)
                 lenPoint = stroke.length();
 
                 if(stroke.length() < 3)
-                    point_remove.append(data->from);
+                    stroke_to_remove.append(data->from);
 
                 continue;
             }
@@ -176,29 +180,24 @@ void *actionRubberSinglePartial(void *_data)
                 stroke.removeAt(counterPoint, lenPoint - 1);
 
                 if(stroke.length() < 3)
-                    point_remove.append(data->from);
+                    stroke_to_remove.append(data->from);
 
                 break;
             }
 
             W_ASSERT(lenPoint > 6);
 
-            stroke.removeAt(counterPoint);
-
-            point_mod.append(from);
-
-            __datastruct->changeId(counterPoint, stroke, *__page, new_id);
-
-            new_id ++;
-
-            __data_find->append(data->from);
+            point_remove.removeAt(counterPoint);
+            stroke_mod.append(from);
 
             break;
 
         }
     }
 
-    from = point_mod.length();
+    W_ASSERT(point_remove.length() == stroke_mod.length());
+
+    from = stroke_mod.length();
 
     // we don't need to do this operation
     // in order to the list
@@ -210,7 +209,9 @@ void *actionRubberSinglePartial(void *_data)
     pthread_mutex_unlock(&single_mutex);
 
     for(from --; from >= 0; from --){
-        __datastruct->changeIdThreadSave(from, __page->atStrokeMod(from), *__page, new_id_priv);
+        cint indexStroke    = stroke_mod.at(from);
+        cint indexPoint     = point_remove.at(from);
+        __datastruct->changeIdThreadSave(indexPoint, __page->atStrokeMod(indexStroke), *__page, new_id_priv);
         new_id_priv ++;
     }
 
