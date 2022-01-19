@@ -645,10 +645,10 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
     cbool needDelete = (bool) (!painter);
 
     if(!painter){
-        painter = new QPainter;
-
         if(unlikely(initImg(false)))
             return this->triggerRenderImage(m_pos_ris, true);
+
+        painter = new QPainter;
 
         painter->begin(&this->imgDraw);
         painter->setRenderHint(QPainter::Antialiasing, true);

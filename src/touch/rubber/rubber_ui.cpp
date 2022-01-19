@@ -44,7 +44,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
     this->countThread = get_thread_used();
 
-    multi_mutex = new WMultipleMutex(countThread, 0);
+    multi_mutex = new WMultipleMutex(countThread - 1, 0);
     pthread_mutex_init(&single_mutex, NULL);
 }
 
@@ -230,7 +230,7 @@ void *actionRubberSingleTotal(void *_data)
 {
     DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
     QVector<int> index_selected;
-    int i, index;
+    int i;
     cint *data_already_find = __data_find->constData();
     cint data_already_len   = __data_find->length();
 
@@ -251,9 +251,10 @@ void *actionRubberSingleTotal(void *_data)
         for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
             const point_s &point = stroke.at(counterPoint);
 
-            if(isin(__m_size_gomma, point, *__touch)){
+            if(unlikely(isin(__m_size_gomma, point, *__touch))){
                 // possiamo anche non bloccare gli altri thread nell'appendere
                 // tanto di sicuro non staranno cercando il nostro stroke in lista
+                // e non lo aggiungeranno
 
                 if(is_present_in_list(data_already_find, data_already_len, data->from))
                     continue;
@@ -274,11 +275,7 @@ void *actionRubberSingleTotal(void *_data)
 
     pthread_mutex_lock(&single_mutex);
 
-    for(i --; i >= 0; i--){
-        index = index_selected.at(i);
-
-        __datastruct->decreaseAlfa(__page->atStrokeMod(index), *__page, DECREASE);
-    }
+    __datastruct->decreaseAlfa(index_selected, __page->count - 1);
 
     __data_find->append(index_selected);
 
@@ -339,8 +336,10 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
         create = DataPrivateMuThreadInit(threadData, NULL, countThread, lenStroke, flag);
 
-        multi_mutex->blockAll();
-        multi_mutex->unlock(0);
+        if(!isTotal){
+            multi_mutex->blockAll();
+            multi_mutex->unlock(create - 1);
+        }
 
         for(tmp = 0; tmp < create; tmp ++){
             pthread_create(&thread[tmp], NULL, functionToCall, &threadData[tmp]);
@@ -350,15 +349,8 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
             pthread_join(thread[tmp], NULL);
         }
 
-        DO_IF_DEBUG(
-            W_ASSERT(is_order(*__data_find));
-        )
-
         if(!isTotal){
-            //int tmp = __data_find->length();
-            //for(tmp --; tmp >= 0; tmp --){
-            //    page.removeAt(__data_find->at(tmp));
-            //}
+
             page.mergeList();
         }
 

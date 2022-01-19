@@ -8,13 +8,14 @@ WMultipleMutex::WMultipleMutex(int maxVal, int initVal)
     W_ASSERT(initVal < maxVal);
 
     this->maxVal = maxVal;
-    this->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * maxVal);
+    this->mutex = (pthread_mutex_t *)malloc(sizeof(*mutex) * (maxVal + 1));
 
     for(i = 0; i < maxVal; i ++){
         pthread_mutex_init(&mutex[i], NULL);
     }
 
-    for(i = maxVal; i > initVal; i--){
+    for(i = maxVal; i >= initVal; i--){
+        qDebug() << i;
         pthread_mutex_lock(&mutex[i]);
     }
 }
