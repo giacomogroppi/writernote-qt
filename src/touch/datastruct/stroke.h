@@ -88,7 +88,7 @@ public:
     size_t getSizeInMemory() const;
     void decreasePrecision();
 
-    constexpr void setAlfaColor(const uchar alfa);
+    void setAlfaColor(const uchar alfa);
 
     __slow void at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const;
 
@@ -360,7 +360,7 @@ inline bool stroke::constantPressure() const
     return this->constantPressureVal;
 }
 
-constexpr inline void stroke::setAlfaColor(const uchar alfa)
+inline void stroke::setAlfaColor(const uchar alfa)
 {
     this->metadata.color.colore[3] = alfa;
 }

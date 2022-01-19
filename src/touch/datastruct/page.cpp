@@ -488,6 +488,20 @@ bool page::initImg(bool flag)
     return flag;
 }
 
+void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
+{
+    int i = pos.length();
+    Define_PEN(m_pen)
+    for(i --; i >= 0; i--){
+        stroke &stroke = atStrokeMod(pos.at(i));
+        stroke.setAlfaColor(stroke.getMetadata().color.colore[3] / decrese);
+
+        if(painter){
+            this->drawStroke(*painter, stroke, m_pen, stroke.getColor());
+        }
+    }
+}
+
 /*
  * all --> indicates if all the points must be drawn from scratch, if false it is drawn over the old image
 */
@@ -554,7 +568,7 @@ int page::removeAndDraw(
     for(; index >= 0; index --){
         const stroke &stroke = atStroke(index);
         if(IS_PRESENT_IN_LIST(id, stroke.getId())){
-            this->drawForceColorStroke(stroke, m_pos_ris, COLOR_NULL);
+            this->drawForceColorStroke(stroke, m_pos_ris, COLOR_NULL, NULL);
             mod = 1;
             removeAt(index);
         }
@@ -566,25 +580,18 @@ int page::removeAndDraw(
 }
 
 void page::removeAndDraw(
-        int             m_pos_ris,
-        cint            *pos,
-        int             i,
-        const QRectF    &area)
-{
-    for(i --; i >= 0; i --){
-        drawForceColorStroke(atStroke(pos[i]), m_pos_ris, COLOR_NULL);
-        removeAt(pos[i]);
-    }
-
-    drawIfInside(m_pos_ris, area);
-}
-
-void page::removeAndDraw(
         int                 m_pos_ris,
         const QVector<int>  &pos,
         const QRectF        &area)
 {
-    return this->removeAndDraw(m_pos_ris, pos.constData(), pos.length(), area);
+    int i = pos.length();
+    this->drawForceColorStroke(pos, m_pos_ris, COLOR_NULL);
+
+    for(i --; i >= 0; i --){
+        removeAt(pos[i]);
+    }
+
+    drawIfInside(m_pos_ris, area);
 }
 
 void page::drawIfInside(int m_pos_ris, const QRectF &area)
@@ -596,6 +603,19 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
             this->drawStroke(stroke, m_pos_ris);
         }
     }
+}
+
+void page::decreseAlfa(const QVector<int> &pos, int decrese)
+{
+    QPainter painter;
+    bool needInit = initImg(false);
+
+    if(likely(needInit)){
+        painter.begin(&this->imgDraw);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+    }
+
+    return this->decreseAlfa(pos, (needInit) ? &painter : 0, decrese);
 }
 
 QRectF page::get_size_area(cint *pos, int len) const
@@ -619,10 +639,33 @@ QRectF page::get_size_area(cint *pos, int len) const
     return result;
 }
 
-void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color)
+void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color, QPainter *painter)
+{
+    Define_PEN(pen);
+    cbool needDelete = (bool) (!painter);
+
+    if(!painter){
+        painter = new QPainter;
+
+        if(unlikely(initImg(false)))
+            return this->triggerRenderImage(m_pos_ris, true);
+
+        painter->begin(&this->imgDraw);
+        painter->setRenderHint(QPainter::Antialiasing, true);
+    }
+
+    this->drawStroke(*painter, stroke, pen, color);
+
+    painter->end();
+
+    if(needDelete){
+        delete painter;
+    }
+}
+
+void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)
 {
     QPainter painter;
-    Define_PEN(pen);
 
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);
@@ -630,9 +673,10 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
     painter.begin(&this->imgDraw);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    this->drawStroke(painter, stroke, pen, color);
-
-    painter.end();
+    for(const auto &index : pos){
+        const stroke &stroke = atStroke(index);
+        this->drawForceColorStroke(stroke, m_pos_ris, color, &painter);
+    }
 }
 
 // the function is use for rubber and square
@@ -760,5 +804,5 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 
 void page::drawStroke(const stroke &stroke, int m_pos_ris)
 {
-    drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0));
+    drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), NULL);
 }

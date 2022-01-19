@@ -57,6 +57,8 @@ private:
     void AppendDirectly(const stroke &stroke);
     bool initImg(bool flag);
 
+    void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
+
     static point_s at_translation(const point_s &point, int page);
 
 public:
@@ -120,12 +122,15 @@ public:
     int load(zip_file_t *file, int ver_stroke, int len_stroke);
 
     void drawStroke(const stroke &stroke, int m_pos_ris);
-    void drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color);
+    void drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color, QPainter *painter);
+    void drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color);
     void drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color);
+
     int removeAndDraw(int m_pos_ris, const QList<int> &id, const QRectF &area);
-    void removeAndDraw(int m_pos_ris, const int *pos, int len, const QRectF &area);
     void removeAndDraw(int m_pos_ris, const QVector<int> &pos, const QRectF &area);
     void drawIfInside(int m_pos_ris, const QRectF &area);
+
+    void decreseAlfa(const QVector<int> &pos, int decrese);
 
     QRectF get_size_area(cint * pos, int len) const;
 

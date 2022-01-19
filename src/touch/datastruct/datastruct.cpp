@@ -65,6 +65,12 @@ void datastruct::reset(){
     zoom = 1.00;
 }
 
+void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
+{
+    page &__page = at_mod(index);
+    __page.decreseAlfa(pos, 4);
+}
+
 // this function is not thread safe
 void datastruct::decreaseAlfa(stroke &stroke, page &page, cint decrease)
 {
@@ -77,7 +83,7 @@ void datastruct::decreaseAlfa(stroke &stroke, page &page, cint decrease)
     * the area it previously occupied to white
     */
 
-    page.drawForceColorStroke(stroke, -1, COLOR_NULL);
+    page.drawForceColorStroke(stroke, -1, COLOR_NULL, NULL);
     page.drawStroke(stroke, -1);
 }
 

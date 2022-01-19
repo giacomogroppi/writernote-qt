@@ -108,7 +108,7 @@ void rubber_ui::endRubber(datastruct *data)
             order(arr);
 
             const auto rect = data->get_size_area(arr, i);
-            page.removeAndDraw(-1, (int *)arr.constData(), arr.length(), rect);
+            page.removeAndDraw(-1, arr, rect);
         }
 
         data_to_remove.clear();
@@ -231,6 +231,8 @@ void *actionRubberSingleTotal(void *_data)
     DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
     QVector<int> index_selected;
     int i, index;
+    cint *data_already_find = __data_find->constData();
+    cint data_already_len   = __data_find->length();
 
     index_selected.reserve(16 * 2);
 
@@ -253,7 +255,7 @@ void *actionRubberSingleTotal(void *_data)
                 // possiamo anche non bloccare gli altri thread nell'appendere
                 // tanto di sicuro non staranno cercando il nostro stroke in lista
 
-                if(is_present_in_list(__data_find->constData(), __data_find->length(), data->from))
+                if(is_present_in_list(data_already_find, data_already_len, data->from))
                     continue;
 
                 index_selected.append(data->from);
@@ -270,7 +272,7 @@ void *actionRubberSingleTotal(void *_data)
         goto release;
     }
 
-    multi_mutex->lock(data->id);
+    pthread_mutex_lock(&single_mutex);
 
     for(i --; i >= 0; i--){
         index = index_selected.at(i);
@@ -278,13 +280,11 @@ void *actionRubberSingleTotal(void *_data)
         __datastruct->decreaseAlfa(__page->atStrokeMod(index), *__page, DECREASE);
     }
 
-    //__page->mergeList();
-
-release:
     __data_find->append(index_selected);
 
-    multi_mutex->unlock(data->id);
-    multi_mutex->unlock(data->id + 1);
+    pthread_mutex_unlock(&single_mutex);
+
+release:
     return NULL;
 }
 
