@@ -56,19 +56,18 @@ rubber_ui::~rubber_ui()
     delete multi_mutex;
 }
 
-static inline bool isin(
+static force_inline bool isin(
                     int             size_rubber,
                     const point_s   &__point,
                     const QPointF   &touch)
 {
-    Q_ASSERT(size_rubber >= 0.0);
-    bool isin;
+    W_ASSERT(size_rubber >= 0.0);
 
-    isin =     (touch.x() - size_rubber) < __point.m_x &&  (touch.x() + size_rubber) > __point.m_x
-           &&  (touch.y() - size_rubber) < __point.m_y &&  (touch.y() + size_rubber) > __point.m_y;
+    if(unlikely((touch.x() - size_rubber) < __point.m_x &&  (touch.x() + size_rubber) > __point.m_x
+            &&   (touch.y() - size_rubber) < __point.m_y &&  (touch.y() + size_rubber) > __point.m_y))
+        return true;
 
-
-    return isin;
+    return false;
 }
 
 bool rubber_ui::event(QEvent *event)
@@ -305,9 +304,6 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
         flag = DATA_PRIVATE_FLAG_SEM;
     }
 
-    //pthread_t thread[RUBB_TH];
-    //DataPrivateMuThread threadData[RUBB_TH];
-
     this->base = data->getFirstPageVisible();
 
     __m_size_gomma =    this->m_size_gomma;
@@ -350,12 +346,9 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
         }
 
         if(!isTotal){
-
             page.mergeList();
         }
 
         count ++;
     }
 }
-
-

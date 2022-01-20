@@ -171,7 +171,7 @@ void page::drawStroke(
     m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
 
     if(color == COLOR_NULL){
-        m_pen.setWidthF(m_pen.widthF() * 1.5);
+        m_pen.setWidthF(m_pen.widthF() * 2);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }
 
@@ -491,12 +491,17 @@ bool page::initImg(bool flag)
 void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 {
     int i = pos.length();
-    Define_PEN(m_pen)
+    uint color;
+    Define_PEN(m_pen);
+
     for(i --; i >= 0; i--){
         stroke &stroke = atStrokeMod(pos.at(i));
-        stroke.setAlfaColor(stroke.getMetadata().color.colore[3] / decrese);
+        color = stroke.getMetadata().color.colore[3];
+
+        stroke.setAlfaColor(color / decrese);
 
         if(painter){
+            this->drawStroke(*painter, stroke, m_pen, COLOR_NULL);
             this->drawStroke(*painter, stroke, m_pen, stroke.getColor());
         }
     }
@@ -610,12 +615,14 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     QPainter painter;
     bool needInit = initImg(false);
 
-    if(likely(needInit)){
-        painter.begin(&this->imgDraw);
-        painter.setRenderHint(QPainter::Antialiasing, true);
+    if(unlikely(needInit)){
+        return this->triggerRenderImage(-1, true);
     }
 
-    return this->decreseAlfa(pos, (needInit) ? &painter : 0, decrese);
+    painter.begin(&this->imgDraw);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    return this->decreseAlfa(pos, &painter, decrese);
 }
 
 QRectF page::get_size_area(cint *pos, int len) const

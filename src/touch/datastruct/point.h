@@ -64,8 +64,7 @@ struct colore_s{
 */
 Q_ALWAYS_INLINE QColor colore_s::toQColor(const double division = 1.0) const
 {
-    return QColor::fromRgb( colore[0], colore[1],
-                            colore[2], colore[3]/division);
+    return QColor::fromRgb( colore[0], colore[1], colore[2], double(colore[3])/division);
 }
 
 Q_ALWAYS_INLINE void colore_s::fromColor(const QColor &color)
