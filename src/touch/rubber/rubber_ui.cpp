@@ -72,7 +72,7 @@ static force_inline bool isin(
 
 bool rubber_ui::event(QEvent *event)
 {
-    if(event->type() == QEvent::WindowDeactivate)
+    if(unlikely(event->type() == QEvent::WindowDeactivate))
         this->hide();
 
     return QWidget::event(event);
@@ -325,7 +325,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
         __page =  &page;
 
-        if(data_to_remove.length() - 1 < count)
+        if(unlikely(data_to_remove.length() - 1 < count))
             data_to_remove.append(QVector<int>());
 
         __data_find = (QVector<int> *)&data_to_remove.at(count);
