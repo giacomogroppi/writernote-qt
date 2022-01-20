@@ -274,13 +274,23 @@ void *actionRubberSingleTotal(void *_data)
 
     pthread_mutex_lock(&single_mutex);
 
-    __datastruct->decreaseAlfa(index_selected, __page->count - 1);
-
     __data_find->append(index_selected);
 
     pthread_mutex_unlock(&single_mutex);
 
 release:
+    return NULL;
+}
+
+static QList<QVector<int>> *__data_to_remove;
+static int __base;
+
+void *decrease_alfa(void *__data)
+{
+    int index = (long) __data;
+    page &page = __datastruct->at_mod(index + __base);
+    page.decreseAlfa(__data_to_remove->at(index), 2);
+
     return NULL;
 }
 
@@ -295,6 +305,8 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     void *(*functionToCall)(void *);
     int flag;
+    int tmp = 0;
+    int create;
 
     if(isTotal){
         functionToCall = actionRubberSingleTotal;
@@ -316,8 +328,6 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
 
     for(counterPage = base; counterPage < lenPage; counterPage ++){
         page &page = data->at_mod(counterPage);
-        int tmp = 0;
-        int create;
 
         if(!page.isVisible()) break;
 
@@ -350,5 +360,15 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
         }
 
         count ++;
+    }
+
+    if(!isTotal)
+        return;
+
+    __data_to_remove    = &data_to_remove;
+    __base              = base;
+
+    for(tmp = 0; tmp < this->countThread && tmp < __datastruct->lengthPage(); tmp ++){
+        pthread_create(&thread[tmp], NULL, decrease_alfa, (void *)(long)tmp);
     }
 }
