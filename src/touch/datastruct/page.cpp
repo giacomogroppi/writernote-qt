@@ -165,21 +165,34 @@ void page::drawStroke(
 {
     QPointF lastPoint, pointDraw;
     const QPainterPath *path;
+
     constexpr bool measureTime = false;
+    constexpr bool debColor = true;
+
+    Q_UNUSED(measureTime);
+    Q_UNUSED(debColor);
 
     m_pen.setColor(color);
     m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
 
     if(unlikely(!painter.isActive())){
+#ifdef DEBUGINFO
         qDebug() << "page::drawStroke" << "painter not active";
+
+#else
+        log_write->write("Painter not active", log_ui::possible_bug);
+#endif
         return;
     }
 
+#ifdef DEBUGINFO
+
     if(color != COLOR_NULL){
-        WDebug(true, "Draw stroke with alfa" << stroke.get_alfa() << &stroke);
+        WDebug(debColor, "Draw stroke with alfa" << stroke.get_alfa() << &stroke);
     }else{
-        WDebug(true, "Draw stroke with alfa 'color_null'" << &stroke);
+        WDebug(debColor, "Draw stroke with alfa 'color_null'" << color.alpha() << &stroke);
     }
+#endif
 
     if(unlikely(color == COLOR_NULL)){
         m_pen.setWidthF(m_pen.widthF() * 2);
@@ -628,6 +641,7 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     bool needInit = initImg(false);
 
     if(unlikely(needInit)){
+        WDebug(true, "Warning: page not draw");
         return this->triggerRenderImage(-1, true);
     }
 
