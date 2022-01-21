@@ -319,4 +319,20 @@ force_inline void set_zero(T &value)
 #endif
 }
 
+template <typename T>
+force_inline T __MIN(T first, T second)
+{
+    if(first < second)
+        return first;
+    return second;
+}
+
+template <typename T>
+force_inline T __MAX(T first, T second)
+{
+    if(first < second)
+        return first;
+    return second;
+}
+
 #endif // COMMON_SCRIPT_H

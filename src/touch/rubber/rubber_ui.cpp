@@ -96,7 +96,7 @@ void rubber_ui::endRubber(datastruct *data)
 {
     int i, len = data_to_remove.length();
 
-    Q_ASSERT(data);
+    W_ASSERT(data);
 
     if(m_type_gomma == e_type_rubber::total){
 
@@ -229,8 +229,7 @@ void *actionRubberSingleTotal(void *_data)
 {
     DataPrivateMuThread *data = (DataPrivateMuThread *) _data;
     QVector<int> index_selected;
-    int i;
-    cint *data_already_find = __data_find->constData();
+    cint *data_already_find;
     cint data_already_len   = __data_find->length();
 
     index_selected.reserve(16 * 2);
@@ -249,6 +248,7 @@ void *actionRubberSingleTotal(void *_data)
 
         for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
             const point_s &point = stroke.at(counterPoint);
+            data_already_find = __data_find->constData();
 
             if(unlikely(isin(__m_size_gomma, point, *__touch))){
                 // possiamo anche non bloccare gli altri thread nell'appendere
@@ -266,15 +266,14 @@ void *actionRubberSingleTotal(void *_data)
         }
     }
 
-    i = index_selected.length();
-
-    if(!i){
+    if(index_selected.isEmpty()){
         goto release;
     }
 
     pthread_mutex_lock(&single_mutex);
 
     __data_find->append(index_selected);
+    __datastruct->decreaseAlfa(index_selected, __page->count - 1);
 
     pthread_mutex_unlock(&single_mutex);
 
@@ -282,31 +281,18 @@ release:
     return NULL;
 }
 
-static QList<QVector<int>> *__data_to_remove;
-static int __base;
-
-void *decrease_alfa(void *__data)
-{
-    int index = (long) __data;
-    page &page = __datastruct->at_mod(index + __base);
-    page.decreseAlfa(__data_to_remove->at(index), 2);
-
-    return NULL;
-}
-
 /*
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
+void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
+{
     int lenStroke, counterPage, count;
     const int lenPage = data->lengthPage();
     const bool isTotal = (this->m_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     void *(*functionToCall)(void *);
-    int flag;
-    int tmp = 0;
-    int create;
+    int flag, tmp = 0, create;
 
     if(isTotal){
         functionToCall = actionRubberSingleTotal;
@@ -360,15 +346,5 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint){
         }
 
         count ++;
-    }
-
-    if(!isTotal)
-        return;
-
-    __data_to_remove    = &data_to_remove;
-    __base              = base;
-
-    for(tmp = 0; tmp < this->countThread && tmp < __datastruct->lengthPage(); tmp ++){
-        pthread_create(&thread[tmp], NULL, decrease_alfa, (void *)(long)tmp);
     }
 }

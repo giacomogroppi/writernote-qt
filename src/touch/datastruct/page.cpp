@@ -170,7 +170,18 @@ void page::drawStroke(
     m_pen.setColor(color);
     m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
 
-    if(color == COLOR_NULL){
+    if(unlikely(!painter.isActive())){
+        qDebug() << "page::drawStroke" << "painter not active";
+        return;
+    }
+
+    if(color != COLOR_NULL){
+        WDebug(true, "Draw stroke with alfa" << stroke.get_alfa() << &stroke);
+    }else{
+        WDebug(true, "Draw stroke with alfa 'color_null'" << &stroke);
+    }
+
+    if(unlikely(color == COLOR_NULL)){
         m_pen.setWidthF(m_pen.widthF() * 2);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }
@@ -496,11 +507,12 @@ void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 
     for(i --; i >= 0; i--){
         stroke &stroke = atStrokeMod(pos.at(i));
-        color = stroke.getMetadata().color.colore[3];
+        color = stroke.get_alfa();
 
         stroke.setAlfaColor(color / decrese);
 
         if(painter){
+            WDebug(true, "new color: " << stroke.get_alfa());
             this->drawStroke(*painter, stroke, m_pen, COLOR_NULL);
             this->drawStroke(*painter, stroke, m_pen, stroke.getColor());
         }
@@ -622,7 +634,8 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     painter.begin(&this->imgDraw);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    return this->decreseAlfa(pos, &painter, decrese);
+    this->decreseAlfa(pos, &painter, decrese);
+    painter.end();
 }
 
 QRectF page::get_size_area(cint *pos, int len) const
@@ -651,7 +664,7 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
     Define_PEN(pen);
     cbool needDelete = (bool) (!painter);
 
-    if(!painter){
+    if(needDelete){
         if(unlikely(initImg(false)))
             return this->triggerRenderImage(m_pos_ris, true);
 
@@ -663,9 +676,8 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
 
     this->drawStroke(*painter, stroke, pen, color);
 
-    painter->end();
-
     if(needDelete){
+        painter->end();
         delete painter;
     }
 }
@@ -684,6 +696,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
         const stroke &stroke = atStroke(index);
         this->drawForceColorStroke(stroke, m_pos_ris, color, &painter);
     }
+    painter.end();
 }
 
 // the function is use for rubber and square

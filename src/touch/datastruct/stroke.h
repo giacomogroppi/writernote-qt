@@ -85,6 +85,8 @@ public:
     const struct metadata_stroke &getMetadata() const;
     bool constantPressure() const;
 
+    uchar get_alfa() const;
+
     size_t getSizeInMemory() const;
     void decreasePrecision();
 
@@ -358,6 +360,11 @@ inline bool stroke::constantPressure() const
     if(unlikely(this->needToUpdatePressure))
         this->updateFlagPressure();
     return this->constantPressureVal;
+}
+
+force_inline uchar stroke::get_alfa() const
+{
+    return this->metadata.color.colore[3];
 }
 
 inline void stroke::setAlfaColor(const uchar alfa)
