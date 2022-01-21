@@ -54,13 +54,12 @@ void copy::managePaste(
 QRect copy::get_size_area(const QList<QList<stroke>> &data)
 {
     QRect size_area(0, 0, 0, 0);
-    int __tmp = 0;
+
     for(const auto &__list : data){
 
         const auto tmp = page::get_size_area(__list, 0, __list.length());
 
         size_area = datastruct::get_bigger_rect(tmp, size_area);
-        __tmp ++;
     }
 
     return size_area;
@@ -68,8 +67,8 @@ QRect copy::get_size_area(const QList<QList<stroke>> &data)
 
 void copy::__single(const QList<stroke> &from, QList<stroke> &append_data)
 {
-    int len = from.length();
-    for(int i = 0; i < len; i++){
+    int len = from.length(), i;
+    for(i = 0; i < len; i++){
         const stroke &currentStroke = from.at(i);
 
         stroke tmp(currentStroke);
@@ -97,7 +96,7 @@ int copy::selection(
 {
     QRectF sizeData;
     QPointF tmpPoint;
-    int lenList;
+    int lenList, i;
 
     lenList = stroke.length();
 
@@ -118,7 +117,7 @@ int copy::selection(
 
     this->flags = 0;
 
-    for(int i = 0; i < lenList; i ++){
+    for(i = 0; i < lenList; i ++){
         __single(stroke.at(i), m_stroke);
     }
 

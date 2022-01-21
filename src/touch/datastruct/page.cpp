@@ -667,8 +667,7 @@ QRect page::get_size_area(const QVector<int> &pos) const
 {
     QRect result;
     int len = pos.length();
-
-    qDebug() << "1 page::get_size_area After" << pos << this->count << this->lengthStroke();
+    QRect tmp;
 
     if(unlikely(!len)){
         return QRect();
@@ -676,9 +675,9 @@ QRect page::get_size_area(const QVector<int> &pos) const
 
     len --;
     result = atStroke(pos.first()).getBiggerPointInStroke();
-    qDebug() << "2 page::get_size_area After" << pos << this->count << this->lengthStroke();
+
     for(; len >= 0; len --){
-        const QRect tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
+        tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
         result = datastruct::get_bigger_rect(result, tmp);
     }
 
