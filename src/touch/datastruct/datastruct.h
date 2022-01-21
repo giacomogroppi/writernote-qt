@@ -176,7 +176,6 @@ public:
 
     QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
 
-    __fast QRectF get_size_area(const int *pos, int len, int page) const;
     __fast QRectF get_size_area(const QVector<int> &pos, int page) const;
     __fast QRectF get_size_area(const QList<QVector<int>> &pos, int base) const;
     //__slow QRectF get_size_area(const QList<int> & id) const;
@@ -199,6 +198,7 @@ public:
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
     static bool isinside(const QRectF &rect, const QPointF &point); // true if the point is inside the rect
     static QRectF get_bigger_rect(const QRectF &first, const QRectF &second);
+    static QRect get_bigger_rect(const QRect &first, const QRect &second);
 
     friend class xmlstruct;
     friend class TestingCore;
@@ -321,15 +321,6 @@ inline void datastruct::newPage(const n_style style)
     this->m_page.append(page);
 }
 
-inline QRectF datastruct::get_size_area(
-        cint    *pos,
-        int     len,
-        int     counterPage) const
-{
-    const page &page = this->at(counterPage);
-    return page.get_size_area(pos, len);
-}
-
 inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int base) const
 {
     QRectF result;
@@ -358,7 +349,8 @@ inline QRectF datastruct::get_size_area(
         const QVector<int>  &pos,
         int                 __page) const
 {
-    return get_size_area(pos.constData(), pos.length(), __page);
+    const page & page = at(__page);
+    return page.get_size_area(pos);
 }
 
 inline int datastruct::getFirstPageVisible() const
@@ -536,6 +528,13 @@ inline QRectF datastruct::get_bigger_rect(
         resultBottomRight.setY(SecBottomRight.y());
 
     return QRectF(resultTopLeft, resultBottomRight);
+}
+
+inline QRect datastruct::get_bigger_rect(const QRect &first, const QRect &second)
+{
+    QRectF __first(first);
+    QRectF __second(second);
+    return datastruct::get_bigger_rect(__first, __second).toRect();
 }
 
 inline int datastruct::adjustStroke(stroke &stroke)

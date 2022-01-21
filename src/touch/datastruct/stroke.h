@@ -4,6 +4,7 @@
 #include <QList>
 #include <QImage>
 #include <QDebug>
+#include <QRect>
 #include <QPainterPath>
 #include "point.h"
 #include "zip.h"
@@ -26,7 +27,7 @@ private:
 
     QPainterPath path;
 
-    QRectF biggerData;
+    QRect biggerData;
     bool constantPressureVal;
 
     bool needToCreatePanterPath;
@@ -76,7 +77,7 @@ public:
     int getPage() const;
     int getPosizioneAudio() const;
 
-    QRectF getBiggerPointInStroke() const;
+    QRect getBiggerPointInStroke() const;
     bool isInside(const QRectF &rect) const;
 
     void clearAudio();
@@ -269,10 +270,10 @@ inline int stroke::getPosizioneAudio() const
  * as we would need to recalculate the data for each list that
  * has this stroke.
 */
-inline QRectF stroke::getBiggerPointInStroke() const
+inline QRect stroke::getBiggerPointInStroke() const
 {
     bool &__needToCreateBiggerData = (bool &) this->needToCreateBiggerData;
-    QRectF &__biggerData = (QRectF &) this->biggerData;
+    QRect &__biggerData = (QRect &) this->biggerData;
     int count;
 
     if(likely(!this->needToCreateBiggerData)){
@@ -283,13 +284,13 @@ inline QRectF stroke::getBiggerPointInStroke() const
 
     if(unlikely(count == 0)){
         qDebug() << "Warning: Stroke empty";
-        return QRectF(0, 0, 0, 0);
+        return QRect(0, 0, 0, 0);
     }
 
     count --;
 
-    QPointF topLeft(        at(0).m_x,      at(0).m_y);
-    QPointF bottomRight(    at(count).m_x,  at(count).m_y);
+    QPoint topLeft(at(0).toQPointF(1.0).toPoint());
+    QPoint bottomRight(at(count).toQPointF(1.0).toPoint());
 
     for (; count >= 0; count --){
         const point_s &point = at(count);
@@ -312,7 +313,7 @@ inline QRectF stroke::getBiggerPointInStroke() const
 
     __needToCreateBiggerData = false;
 
-    __biggerData = QRectF(topLeft, bottomRight);
+    __biggerData = QRect(topLeft, bottomRight);
 
     return __biggerData;
 }

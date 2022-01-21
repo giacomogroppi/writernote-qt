@@ -68,7 +68,6 @@ bool square::find()
     int i, create, lenPage, count;
     const QPointF &translation = data->getPointFirstPage();
     int PageCounter;
-
     QList<QVector<int>> index;
 
     this->adjustPoint();
@@ -278,7 +277,7 @@ img:
 void square::reset()
 {
     int i, len;
-    WDebug(debugSquare, "square::reset");
+    //WDebug(debugSquare, "square::reset");
     pointinit.set = lastpoint.set = pointfine.set = false;
 
     in_box = false;
@@ -286,9 +285,9 @@ void square::reset()
     __need_reload = false;
     m_index_img.clear();
 
-    WDebug(debugSquare, "square::reset paste = 1");
+    //WDebug(debugSquare, "square::reset paste = 1");
     len = m_stroke.length();
-    if(likely(len == 0))
+    if(len == 0)
         goto out;
 
     for(i = 0; i < len; i++){
@@ -377,7 +376,6 @@ void square::endMoving(const QWidget *pixmap)
 void square::actionProperty(property_control::ActionProperty action)
 {
     int flags = 0, dontcall_copy = 1;
-    QList<int> page;
     datastruct &data = *canvas->data->datatouch;
 
     switch (action) {
@@ -399,6 +397,8 @@ void square::actionProperty(property_control::ActionProperty action)
             //data.removePointIndex(index, base, true);
             dontcall_copy = 0;
             m_property->Hide();
+            m_stroke.clear();
+            this->reset();
             break;
         }
         default:{
@@ -409,16 +409,16 @@ void square::actionProperty(property_control::ActionProperty action)
         }
     }
 
-    if(dontcall_copy)
-        std::abort();//this->m_copy->selection(data, this->index, base,
-         //                       flags, page, pointinit.point);
-    else
+    if(dontcall_copy){
+        if(m_copy->selection(data, m_stroke, flags, pointinit.point)){
+            m_stroke.clear();
+            m_property->Hide();
+            this->reset();
+        }
+    }
+    else{
         this->reset();
-
-    data.triggerNewView(page, -1, true);
-
-    if(!page.isEmpty())
-        canvas->call_update();
+    }
 
     this->canvas->call_update();
 }

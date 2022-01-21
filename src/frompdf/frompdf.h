@@ -131,15 +131,15 @@ inline void frompdf::draw(QPainter &painter, const double delta, const bool IsEx
     static const Pdf *pdf;
 
     const uint len = this->m_image.length();
-    const double y = /*(IsExportingPdf) ? rend_heigth * delta : */m_data->datatouch->currentHeight()*delta;
-    const double x = /*(IsExportingPdf) ? rend_width * delta : */m_data->datatouch->currentWidth()*delta;
+    const double y = m_data->datatouch->currentHeight()*delta;
+    const double x = m_data->datatouch->currentWidth()*delta;
 
     for(i=0; i < len; ++i){
         pdf = &this->m_image.at(i);
         len_img = pdf->img.length();
         size = QRectF(pdf->topLeft*delta, QSizeF(x, y));
 
-        for(k=0; k < len_img; ++k){
+        for(k = 0; k < len_img; k++){
             qDebug() << "void draw " << size.topLeft() << pdf->topLeft;
             fromimage::draw(painter, size, pdf->img.at(k));
 
@@ -147,7 +147,7 @@ inline void frompdf::draw(QPainter &painter, const double delta, const bool IsEx
 
             size.setHeight(y);
 
-            if(IsExportingPdf)
+            if(unlikely(IsExportingPdf))
                 size.setWidth(x);
 
 

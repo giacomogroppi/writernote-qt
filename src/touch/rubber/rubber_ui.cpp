@@ -216,7 +216,7 @@ void *actionRubberSinglePartial(void *__data)
 
     multi_mutex->lock(data->id);
 
-    const auto area = _page->get_size_area(point_remove.constData(), point_remove.length());
+    const auto area = _page->get_size_area(point_remove);
     _page->removeAndDraw(-1, point_remove, area);
 
     multi_mutex->unlock(data->id);

@@ -11,7 +11,7 @@
 #include "touch/copy_cut/copy_cut_selection.h"
 #include "utils/common_script.h"
 
-constexpr bool debugSquare = true;
+constexpr bool debugSquare = false;
 
 class square: public QObject
 {

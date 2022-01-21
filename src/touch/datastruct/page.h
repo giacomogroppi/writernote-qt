@@ -15,7 +15,7 @@
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 
 enum n_style: int;
-void * __page_load(void *);
+
 void adjustStrokePage(const QList<stroke> &List, int count, stroke *m_stroke);
 
 constexpr bool debugPage = false;
@@ -60,6 +60,7 @@ private:
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
 
     static point_s at_translation(const point_s &point, int page);
+    static QRect get_size_area(const QList<stroke> & item, int from, int to);
 
 public:
     const QImage &getImg() const;
@@ -132,7 +133,7 @@ public:
 
     void decreseAlfa(const QVector<int> &pos, int decrese);
 
-    QRectF get_size_area(cint * pos, int len) const;
+    QRect get_size_area(const QVector<int> &pos) const;
 
     // block for appending
     void setBlock() const;
@@ -158,7 +159,7 @@ public:
     friend class rubber_ui;
     friend void * __page_load(void *);
     friend void adjustStrokePage(QList<stroke> &List, int count, stroke *m_stroke);
-
+    friend class copy;
     friend void *actionRubberSingleTotal(void *_data);
 };
 
@@ -243,17 +244,17 @@ Q_CONSTEXPR Q_ALWAYS_INLINE double page::getWidth()
 }
 
 #define PROP_RESOLUTION (double(2))
-Q_CONSTEXPR Q_ALWAYS_INLINE double page::getResolutionWidth()
+Q_CONSTEXPR force_inline double page::getResolutionWidth()
 {
     return getWidth() * PROP_RESOLUTION;
 }
 
-Q_CONSTEXPR Q_ALWAYS_INLINE double page::getResolutionHeigth()
+Q_CONSTEXPR force_inline double page::getResolutionHeigth()
 {
     return getHeight() * PROP_RESOLUTION;
 }
 
-Q_ALWAYS_INLINE bool page::updateFlag(
+force_inline bool page::updateFlag(
         const QPointF   &FirstPoint,
         cdouble         zoom,
         cdouble         heightView)
@@ -278,12 +279,12 @@ Q_ALWAYS_INLINE bool page::updateFlag(
     IsVisible = included(0.0, heightView, minH) || included(0.0, heightView, maxH);
 
 ret:
-    qDebug() << "count" << count
+    WDebug(debugPage, "count" << count
              << "minH"<< minH
              << "heightView" << heightView
              << "maxH" << maxH
              << "zoom" << zoom
-             << IsVisible;
+             << IsVisible);
 
     return IsVisible;
 }

@@ -105,7 +105,7 @@ void page::swap(
         list.append(stroke);
     }
 
-    area = this->get_size_area(pos.constData(), pos.length());
+    area = this->get_size_area(pos);
 
     this->removeAndDraw(-1, pos, area);
 }
@@ -634,7 +634,7 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     bool needInit = initImg(false);
 
     if(unlikely(needInit)){
-        WDebug(true, "Warning: page not draw");
+        WDebug(debugPage, "Warning: page not draw");
         return this->triggerRenderImage(-1, true);
     }
 
@@ -645,21 +645,40 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     painter.end();
 }
 
-QRectF page::get_size_area(cint *pos, int len) const
+QRect page::get_size_area(const QList<stroke> &item, int from, int to)
 {
-    QRectF result;
+    QRect result;
 
-    W_ASSERT(pos);
+    if(unlikely(from >= to)){
+        return QRect();
+    }
+
+    result = item.at(from).getBiggerPointInStroke();
+
+    for(; from < to; from ++){
+        const QRect tmp = item.at(from).getBiggerPointInStroke();
+        result = datastruct::get_bigger_rect(result, tmp);
+    }
+
+    return result;
+}
+
+QRect page::get_size_area(const QVector<int> &pos) const
+{
+    QRect result;
+    int len = pos.length();
+
+    qDebug() << "1 page::get_size_area After" << pos << this->count << this->lengthStroke();
 
     if(unlikely(!len)){
-        return QRectF();
+        return QRect();
     }
 
     len --;
-    result = atStroke(pos[0]).getBiggerPointInStroke();
-
+    result = atStroke(pos.first()).getBiggerPointInStroke();
+    qDebug() << "2 page::get_size_area After" << pos << this->count << this->lengthStroke();
     for(; len >= 0; len --){
-        const QRectF tmp = atStroke(pos[len]).getBiggerPointInStroke();
+        const QRect tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
         result = datastruct::get_bigger_rect(result, tmp);
     }
 

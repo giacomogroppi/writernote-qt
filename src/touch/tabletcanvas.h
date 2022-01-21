@@ -138,13 +138,6 @@ public:
 
     static void load(QPainter &painter, const Document *data,
                      DataPaint &dataPoint);
-    /*static void load(QPainter &painter, const Document *data,
-                     QColor &m_color, QPen &pen,
-                     QBrush &m_brush, Point &lastPoint,
-                     int m_pos_ris, QPixmap *m_pixmap,
-                     const bool withPdf, const double m,
-                     const int size_orizzontale, const int size_verticale,
-                     const MainWindow *parent, const bool IsExportingPdf);*/
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen);
@@ -241,12 +234,12 @@ public slots:
 
 };
 
-inline void TabletCanvas::callResizeEvent()
+force_inline void TabletCanvas::callResizeEvent()
 {
     return this->resizeEvent(nullptr);
 }
 
-inline void TabletCanvas::call_update()
+force_inline void TabletCanvas::call_update()
 {
     update();
 }

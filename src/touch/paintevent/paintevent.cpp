@@ -5,18 +5,12 @@
 #include <QPainterPath>
 #include "touch/square/square.h"
 
-#ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
-#endif
 #include "images/fromimage.h"
 
 void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
-    bool needDrawSheet;
-
-    if(unlikely(!this->parent))
-        return;
 
     static DataPaint dataPaint = {
         .withPdf = true,
@@ -40,8 +34,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
                           event->rect().size() * devicePixelRatio());
     painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
 
-    needDrawSheet = data->datatouch->needToCreateNewSheet();
-    if(unlikely(needDrawSheet && (m_sheet->auto_create || data->datatouch->isempty()))){
+    if(unlikely(    data->datatouch->needToCreateNewSheet() &&
+                (   m_sheet->auto_create || data->datatouch->isempty()))){
         this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
         this->updatePageCount();
     }

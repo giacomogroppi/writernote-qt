@@ -51,31 +51,29 @@ void copy::managePaste(
     }
 }
 
-static void __single(
-        const QVector<int>  &pos,
-        page                &data,
-        QList<stroke>       &append_data,
-        int                 __flags){
-    for(int i = 0; i < pos.length(); i++){
-        const stroke &currentStroke = data.atStroke(pos.at(i));
+QRect copy::get_size_area(const QList<QList<stroke>> &data)
+{
+    QRect size_area(0, 0, 0, 0);
+    int __tmp = 0;
+    for(const auto &__list : data){
+
+        const auto tmp = page::get_size_area(__list, 0, __list.length());
+
+        size_area = datastruct::get_bigger_rect(tmp, size_area);
+        __tmp ++;
+    }
+
+    return size_area;
+}
+
+void copy::__single(const QList<stroke> &from, QList<stroke> &append_data)
+{
+    int len = from.length();
+    for(int i = 0; i < len; i++){
+        const stroke &currentStroke = from.at(i);
 
         stroke tmp(currentStroke);
         append_data.append(tmp);
-
-        switch (__flags) {
-        case SELECTION_FLAGS_COPY:{
-            break;
-        }
-        case SELECTION_FLAGS_CUT:{
-            data.removeAt(pos.at(i));
-            break;
-        }
-        case SELECTION_FLAGS_PASTE:{
-            break;
-        }
-        default:
-            Q_ASSERT_X(false, "copy::selection", "Flag missing");
-        }
     }
 }
 
@@ -87,21 +85,21 @@ static void __single(
  * TODO: implement a 'history' of copies and points.
  * In such a way that the user can save by
  * copying or cutting, multiple strokes.
+ *
+ * Return 1 if we need to remove the stroke
+ * pass from the list (if we are in copy mode)
 */
-void copy::selection(
+int copy::selection(
         datastruct                  &data,
-        const QList<QVector<int> >  &id,
-        int                         page_base,
+        const QList<QList<stroke>>  &stroke,
         int                         __flags,
-        QList<int>                  &page_mod,
         const QPointF               &pointTouch)
 {
-    page *page;
     QRectF sizeData;
     QPointF tmpPoint;
     int lenList;
 
-    lenList = id.length();
+    lenList = stroke.length();
 
     if(__flags == SELECTION_FLAGS_PASTE){
         tmpPoint = data.adjustPoint(pointTouch);
@@ -112,27 +110,16 @@ void copy::selection(
             this->m_stroke.clear();
         }
 
-        return;
+        return 0;
     }
 
     m_stroke.clear();
-    sizeData = data.get_size_area(id, page_base);
+    sizeData = get_size_area(stroke);
+
     this->flags = 0;
 
-    if(flags & SELECTION_FLAGS_CUT){
-        int i;
-
-        for(i = 0; i < lenList; i++){
-            if(likely(!id.at(i).isEmpty())){
-                page_mod.append(page_base + i);
-            }
-        }
-    }
-
     for(int i = 0; i < lenList; i ++){
-        page = &data.at_mod(page_base + i);
-        const QVector<int> &mid_list = id.at(i);
-        __single(mid_list, *page, m_stroke, __flags);
+        __single(stroke.at(i), m_stroke);
     }
 
     adjustData(sizeData.topLeft());
@@ -141,8 +128,10 @@ void copy::selection(
         if(__flags == SELECTION_FLAGS_COPY)
             flags &= ~(FLAG_CUT);
         else
-            flags &= FLAG_CUT;
+            flags |= FLAG_CUT;
     }
+
+    return (int)this->isSomeThingCut();
 }
 
 void copy::adjustData(const QPointF &offset)
