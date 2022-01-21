@@ -67,7 +67,7 @@ void datastruct::reset(){
 
 void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
 {
-    at_mod(index).decreseAlfa(pos, 2);
+    at_mod(index).decreseAlfa(pos, 4);
 }
 
 // this function is not thread safe

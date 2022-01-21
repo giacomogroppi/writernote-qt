@@ -6,11 +6,12 @@
 #define __slow /* slow function */
 #define __fast /* fast function */
 
-#define cint const int
-#define cchar const char
-#define cuchar const uchar
-#define cuint const uint
+#define cint    const int
+#define cchar   const char
+#define cuchar  const uchar
+#define cuint   const uint
 #define cdouble const double
-#define cbool const bool
+#define cbool   const bool
+#define cvoid   const void
 
 #endif // COMMON_DEF_H

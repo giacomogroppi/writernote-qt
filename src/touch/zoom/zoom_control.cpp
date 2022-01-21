@@ -15,7 +15,7 @@ void zoom_control::checkRespositioning(const QPointF &f, const bool max)
         translation = QPointF(0.0, 0.0);
     }
 
-    qDebug() << "translation" << translation << "max" << max;
+    WDebug(false, "translation" << translation << "max" << max);
     data->setPointFirstPage(translation);
 }
 

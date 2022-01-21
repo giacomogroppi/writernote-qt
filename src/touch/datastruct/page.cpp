@@ -12,7 +12,7 @@
 
 #define PAGE_THREAD_MAX 16
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-#define TEMP_COLOR Qt::black
+#define TEMP_COLOR QColor::fromRgb(105, 105, 105, 255)
 #define TEMP_TICK 1
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
@@ -178,24 +178,14 @@ void page::drawStroke(
     if(unlikely(!painter.isActive())){
 #ifdef DEBUGINFO
         qDebug() << "page::drawStroke" << "painter not active";
-
 #else
         log_write->write("Painter not active", log_ui::possible_bug);
 #endif
         return;
     }
 
-#ifdef DEBUGINFO
-
-    if(color != COLOR_NULL){
-        WDebug(debColor, "Draw stroke with alfa" << stroke.get_alfa() << &stroke);
-    }else{
-        WDebug(debColor, "Draw stroke with alfa 'color_null'" << color.alpha() << &stroke);
-    }
-#endif
-
     if(unlikely(color == COLOR_NULL)){
-        m_pen.setWidthF(m_pen.widthF() * 2);
+        m_pen.setWidthF(m_pen.widthF() * 1.5);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }
 
@@ -232,6 +222,10 @@ void page::drawStroke(
 
             lastPoint = pointDraw;
         }
+    }
+
+    if(color == COLOR_NULL){
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
 }
 
@@ -525,7 +519,6 @@ void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
         stroke.setAlfaColor(color / decrese);
 
         if(painter){
-            WDebug(true, "new color: " << stroke.get_alfa());
             this->drawStroke(*painter, stroke, m_pen, COLOR_NULL);
             this->drawStroke(*painter, stroke, m_pen, stroke.getColor());
         }

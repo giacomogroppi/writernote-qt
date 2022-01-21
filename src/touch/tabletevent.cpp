@@ -84,10 +84,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
 
 end:
 
-    if(!selection_method){
-        if(lastMethod == e_method::selection){
-            m_square->reset();
-        }
+    if(unlikely(!selection_method && lastMethod == e_method::selection)){
+        m_square->reset();
     }
 
     update();

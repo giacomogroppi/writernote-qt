@@ -34,7 +34,7 @@ static void manageDebug(MainWindow *parent)
 # define manageDebug(x) ;
 #endif
 
-int main(int argc, char *argv[]){
+int main(int argc, char **argv){
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
         return extract_(argv[2], argv[3]);
     }
