@@ -55,6 +55,8 @@ int stroke::load(zip_file_t *file, int version)
     point_s point_append;
 
 #ifdef ALL_VERSION
+    bool __delete = false;
+
     struct old_metadata_0{
         int page;
         int idtratto = -1;
@@ -75,6 +77,11 @@ int stroke::load(zip_file_t *file, int version)
         SOURCE_READ_RETURN(file, &meta, sizeof(meta));
         memcpy(&meta.color, &this->metadata.color, sizeof(metadata.color));
         memcpy(&meta.posizione_audio, &this->metadata.posizione_audio, sizeof(metadata.posizione_audio));
+
+        // we don't load sheet from differente version
+        if(meta.idtratto < 0){
+            __delete = 1;
+        }
 #else
         return ERROR;
 #endif
@@ -87,13 +94,17 @@ int stroke::load(zip_file_t *file, int version)
         this->append(point_append);
     }
 
+#ifdef ALL_VERSION
+    if(unlikely(__delete)){
+        this->m_point.clear();
+    }
+#endif
+
     return OK;
 }
 
-void stroke::setMetadata(cint page, cint idtratto, cint posizione_audio, const colore_s &color)
+void stroke::setMetadata(cint posizione_audio, const colore_s &color)
 {
-    this->metadata.page = page;
-    this->metadata.idtratto = idtratto;
     this->metadata.posizione_audio = posizione_audio;
     memcpy(&this->metadata.color, &color, sizeof(color));
 }
@@ -105,8 +116,6 @@ size_t stroke::createControll() const
     for(i = 0; i < NCOLOR; i++){
         controll += this->metadata.color.colore[i];
     }
-
-    controll += this->metadata.idtratto;
 
     for(i = 0; i < length(); i++){
         const point_s &point = m_point.at(i);
@@ -156,7 +165,7 @@ void stroke::movePoint(const QPointF &translation)
     }
 }
 
-void stroke::createQPainterPath() const
+void stroke::createQPainterPath(int page) const
 {
     QPainterPath &__path = (QPainterPath &)     this->path;
     bool &__needToCreatePanterPath = (bool &)   needToCreatePanterPath;
@@ -172,8 +181,8 @@ void stroke::createQPainterPath() const
 
     Q_ASSERT(len > 2);
 
-    point1 = page::at_translation(at(i),     this->metadata.page);
-    point2 = page::at_translation(at(i+1),  this->metadata.page);
+    point1 = page::at_translation(at(i),    page);
+    point2 = page::at_translation(at(i+1),  page);
 
     draw1 = point1.toQPointF(delta);
     draw2 = point1.toQPointF(delta);
@@ -182,7 +191,7 @@ void stroke::createQPainterPath() const
     i = 2;
 
     for(; i < len - 3; i++){
-        point3 =    page::at_translation(at(i), this->metadata.page);
+        point3 =    page::at_translation(at(i), page);
         draw3  =    point3.toQPointF(delta);
 
         __path.cubicTo(draw1, draw2, draw3);

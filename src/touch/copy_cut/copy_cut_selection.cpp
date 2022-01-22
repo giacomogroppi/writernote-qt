@@ -23,25 +23,9 @@ void copy::managePaste(
         const QPointF   &pointTouch)
 {
     QPointF tmp = pointTouch;
-    int i;
-    int tmpId;
 
-    i = this->m_stroke.length() - 1;
     datastruct::inverso(tmp);
     this->adjustData(tmp);
-
-    tmpId = data.maxId() + 1;
-
-    for(; i >= 0; i --){
-        stroke &stroke = m_stroke.operator[](i);
-
-        /* in case we cut */
-        if(data.isAvailable(stroke.getId()))
-            continue;
-
-        stroke.setId(tmpId);
-        tmpId += 1;
-    }
 
     data.append(this->m_stroke, -1);
 

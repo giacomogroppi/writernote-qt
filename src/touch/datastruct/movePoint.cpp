@@ -1,42 +1,5 @@
 #include "datastruct.h"
 
-/*
- * la funzione trasla tutti i punti che sono nel QRectF
- * al punto QPointF &.
- * che sarebbe il punto di tocco dell'utente sullo schermo
- *
- * the function return true if there are same point
- * that he had traslated
- * so we need to update all
-*/
-
-void datastruct::MovePoint(
-        const QList<int>    &id,
-        const QPointF       &translation,
-        QList<int>          *PageModify)
-{
-    uint counterPage, lenPage;
-    uint counterStroke, lenStroke;
-    int mod;
-
-    lenPage = this->lengthPage();
-
-    for (counterPage = 0; counterPage < lenPage; counterPage ++){
-        page &page = at_mod(counterPage);
-        mod = 0;
-        lenStroke = page.lengthStroke();
-
-        for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
-            if(id.indexOf(page.atStroke(counterPage).getId()) != -1){
-                mod = 1;
-                page.atStrokeMod(counterStroke).movePoint(translation);
-            }
-        }
-        if(mod && PageModify)
-            PageModify->append(counterPage);
-    }
-}
-
 void datastruct::MovePoint(
         const QList<QVector<int> >  &pos,
         cint                        base,

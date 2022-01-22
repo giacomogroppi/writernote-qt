@@ -72,7 +72,7 @@ private:
 
     // todo --> move this mutex to page
     pthread_mutex_t changeIdMutex;
-    void __changeId(int indexPoint, stroke &stroke, page &page, int newId, cbool useThreadSafe);
+    void __changeId(int indexPoint, stroke &stroke, page &page, cbool useThreadSafe);
 public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
     ~datastruct() = default;
@@ -106,16 +106,10 @@ public:
     void restoreLastTranslation(const int heightView);
     void controllForRepositioning();
 
-    /* the function save in QList<int> *page the page modify [can accept NULL]*/
-    void removePointId(const QList<int> &listIndex, QList<int> * page);
     void removePointIndex(QList<QVector<int> > &pos, cint base, cbool __isOrder);
     void removePointIndex(QVector<int> &pos, cint page, cbool isOrder);
 
-    /* return the point of the current point remove */
-    int removePointId(const int id);
 
-    /* return the index of the point move */
-    void MovePoint(const QList<int> &id, const QPointF &translation, QList<int> *PageModify);
     void MovePoint(const QList<QVector<int>> & pos, cint base, const QPointF &translation);
     void MovePoint(const QVector<int> & pos, cint page, const QPointF &translation);
 
@@ -134,12 +128,11 @@ public:
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
     void reorganize();
 
-    void changeId(int indexPoint, int indexStroke, int indexPage, int newId);
-    void changeId(int indexPoint, stroke& stroke, page &page, int newId);
-    void changeIdThreadSave(int indexPoint, stroke &stroke, page &page, int newId);
+    void changeId(int indexPoint, int indexStroke, int indexPage);
+    void changeId(int indexPoint, stroke& stroke, page &page);
+    void changeIdThreadSave(int indexPoint, stroke &stroke, page &page);
 
     bool isAvailable(int id) const;
-    int maxId();
 
     constexpr QPointF adjustPoint(const QPointF &pointRealTouch);
 
@@ -215,26 +208,6 @@ inline double datastruct::currentHeight() const
 inline double datastruct::proportion() const
 {
     return page::getProportion();
-}
-
-inline int datastruct::maxId()
-{
-    int biggerID;
-    int tmp_id;
-    uint i;
-    const uint len = this->lengthPage();
-
-    biggerID = 0;
-
-    for(i = 0; i < len; ++i){
-        tmp_id = this->m_page.at(i).maxId();
-
-        if(likely(tmp_id > biggerID)){
-            biggerID = tmp_id;
-        }
-    }
-
-    return biggerID;
 }
 
 inline void datastruct::triggerVisibility(const double &viewSize)
@@ -484,10 +457,6 @@ inline int datastruct::appendStroke(const stroke &__stroke)
 
 inline void datastruct::appendStroke(const stroke &stroke, const int page)
 {
-#ifdef ALL_VERSION
-    W_ASSERT(stroke.getId() >= 0);
-#endif
-
     this->at_mod(page).append(stroke);
 }
 
@@ -552,7 +521,7 @@ inline int datastruct::adjustStroke(stroke &stroke)
     }
 
     page = this->whichPage(stroke);
-    stroke.setPage(page);
+
     return page;
 }
 

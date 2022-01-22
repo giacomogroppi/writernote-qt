@@ -337,7 +337,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &pag
             {
                 const point_old_ver_7 &tmp = ListPrivate.at(counterPoint);
                 id = tmp.idtratto;
-                stroke.setMetadata(tmp.page, id, tmp.m_posizioneaudio, tmp.m_color);
+                stroke.setMetadata(tmp.m_posizioneaudio, tmp.m_color);
             }
 
             for(; counterPoint < ListPrivate.length() && ListPrivate.at(counterPoint).idtratto == id; counterPoint ++){
@@ -351,7 +351,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &pag
                 stroke.append(TmpAppend);
             }
 
-            if(stroke.getId() < 0){
+            if(id){
                 pageStroke.operator[](counterPage).append(stroke);
             }else{
                 doc->datatouch->appendStroke(stroke);

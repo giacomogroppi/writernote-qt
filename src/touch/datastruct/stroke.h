@@ -12,8 +12,6 @@
 #include "utils/common_script.h"
 
 struct metadata_stroke{
-    int page;
-    int idtratto = -1;
     int posizione_audio;
     struct colore_s color;
 };
@@ -58,12 +56,11 @@ public:
 
     void        append(const point_s &point);
 
-    void    setMetadata(const int page, const int idtratto, const int posizione_audio, const colore_s &color);
+    void    setMetadata(const int posizione_audio, const colore_s &color);
     void    setMetadata(const metadata_stroke &metadata);
 
-    void setPage(int page);
     void setPositioneAudio(const int m_pos_ris);
-    void setId(const int id);
+
     size_t createControll() const;
 
     int removeAt(int index);
@@ -73,8 +70,6 @@ public:
     */
     int removeAt(int from, int to); 
 
-    int getId() const;
-    int getPage() const;
     int getPosizioneAudio() const;
 
     QRect getBiggerPointInStroke() const;
@@ -101,9 +96,9 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
 
-    const QPainterPath &getQPainterPath() const;
+    const QPainterPath &getQPainterPath(int page) const;
 
-    void createQPainterPath() const;
+    void createQPainterPath(int page) const;
 
     void reset();
 
@@ -115,9 +110,6 @@ public:
     bool isEmpty() const;
 
     const point_s &last() const;
-
-    /* debug */
-    QString toString() const;
     
 #define STROKE_MUST_TRASLATE_PATH BIT(1)
     void scale(const QPointF &offset, int flag);
@@ -205,19 +197,9 @@ inline void stroke::setMetadata(const metadata_stroke &metadata)
     memcpy(&this->metadata, &metadata, sizeof(this->metadata));
 }
 
-inline void stroke::setPage(int page)
-{
-    this->metadata.page = page;
-}
-
 inline void stroke::setPositioneAudio(const int m_pos_ris)
 {
     this->metadata.posizione_audio = m_pos_ris;
-}
-
-inline void stroke::setId(const int id)
-{
-    this->metadata.idtratto = id;
 }
 
 /* return 1 if the stroke need to be delete */
@@ -242,16 +224,6 @@ inline int stroke::removeAt(int from, int to){
     }
     
     return 0;
-}
-
-inline int stroke::getId() const
-{
-    return metadata.idtratto;
-}
-
-inline int stroke::getPage() const
-{
-    return this->metadata.page;
 }
 
 inline int stroke::getPosizioneAudio() const
@@ -394,12 +366,12 @@ inline void stroke::setColor(const colore_s &color)
     memcpy(&this->metadata.color, &color, sizeof(metadata.color));
 }
 
-inline const QPainterPath &stroke::getQPainterPath() const
+inline const QPainterPath &stroke::getQPainterPath(int page) const
 {
     bool &__needToCreatePanterPath = (bool &)this->needToCreatePanterPath;
 
     if(unlikely(this->needToCreatePanterPath)){
-        this->createQPainterPath();
+        this->createQPainterPath(page);
         __needToCreatePanterPath = false;
     }
 
@@ -437,15 +409,6 @@ inline stroke &stroke::operator=(const stroke &other)
 inline bool stroke::isEmpty() const
 {
     return m_point.isEmpty();
-}
-
-inline QString stroke::toString() const
-{
-    QString message;
-    message += QString::number((size_t) this) + " length" + QString::number(length());
-    message += " id" + QString::number(this->metadata.idtratto);
-
-    return message;
 }
 
 inline void stroke::scale(const QPointF &offset, int flag)

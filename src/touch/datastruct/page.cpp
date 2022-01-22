@@ -56,8 +56,8 @@ void page::drawNewPage(n_style __style)
         style.thickness =  widthToPressure(TEMP_TICK);
     }
 
-    stroke1.setMetadata(this->count, IDVERTICALE, -1, style.colore);
-    stroke2.setMetadata(this->count, IDORIZZONTALE, -1, style.colore);
+    stroke1.setMetadata(-1, style.colore);
+    stroke2.setMetadata(-1, style.colore);
 
     if(style.nx <= 0)
         style.nx = 1;
@@ -169,6 +169,8 @@ void page::drawStroke(
     constexpr bool measureTime = false;
     constexpr bool debColor = true;
 
+    cint page = this->count - 1;
+
     Q_UNUSED(measureTime);
     Q_UNUSED(debColor);
 
@@ -191,7 +193,7 @@ void page::drawStroke(
 
     if(stroke.constantPressure()){
         EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()", measureTime,
-            path = &stroke.getQPainterPath();
+            path = &stroke.getQPainterPath(page);
         )
 
         EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath", measureTime,
@@ -572,36 +574,6 @@ static Q_ALWAYS_INLINE int is_inside_squade(
     return __is_inside_square(rect1, rect2) || __is_inside_square(rect2, rect1);
 }
 
-// la funzione identifica i punti con id QList<int> &id
-// disegna lo stroke con colore bianco, e identifica
-// automaticamente gli stroke che vanno ridisegnati
-// perchè potrebbero esser stati compromessi nell'immagine
-// della classe page
-// Ritorna 1 se abbiamo ridisegnato
-//
-// Si suppone che l'area da ridisegnare sia solo in questa pagina
-int page::removeAndDraw(
-        int                 m_pos_ris,
-        const QList<int>    &id,
-        const QRectF        &area)
-{
-    int index = lengthStroke() - 1;
-    int mod = 0;
-
-    for(; index >= 0; index --){
-        const stroke &stroke = atStroke(index);
-        if(IS_PRESENT_IN_LIST(id, stroke.getId())){
-            this->drawForceColorStroke(stroke, m_pos_ris, COLOR_NULL, NULL);
-            mod = 1;
-            removeAt(index);
-        }
-    }
-
-    drawIfInside(m_pos_ris, area);
-
-    return mod;
-}
-
 void page::removeAndDraw(
         int                 m_pos_ris,
         const QVector<int>  &pos,
@@ -724,30 +696,6 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
     painter.end();
 }
 
-// the function is use for rubber and square
-void page::drawForceColor(
-    int                 m_pos_ris,
-    const QList<int>    &id,
-    const QColor        &color)
-{
-    QPainter painter;
-    Define_PEN(pen);
-
-    if(initImg(false))
-        return this->triggerRenderImage(m_pos_ris, true);
-
-    painter.begin(&this->imgDraw);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
-    for(const stroke &stroke: qAsConst(m_stroke)){
-        if(IS_PRESENT_IN_LIST(id, stroke.getId())){
-            this->drawStroke(painter, stroke, pen, color);
-        }
-    }
-
-    painter.end();
-}
-
 void page::allocateStroke(int numAllocation)
 {
     for(int i = 0; i < numAllocation; i++){
@@ -776,44 +724,6 @@ int page::save(zip_source_t *file) const
     return OK;
 }
 
-static void append_data(stroke &to, const stroke &from)
-{
-    int i = from.length();
-    for(i --; i >= 0; i--){
-        const point_s &point = from.at(i);
-        to.append(point);
-    }
-}
-
-void adjustStrokePage(const QList<stroke> & List, int count, stroke *m_stroke)
-{
-    int i = List.length();
-    stroke &vertical =      m_stroke[0];
-    stroke &orizzontal =    m_stroke[1];
-    const stroke *tmp, *ref = NULL;
-
-    for(i --; i >= 0; i--){
-        tmp = &List.at(i);
-
-        if(likely(tmp->getId() >= 0))
-            continue;
-
-        ref = tmp;
-
-        if(tmp->getId() == IDVERTICALE){
-            append_data(vertical, *tmp);
-        }else if(tmp->getId() == IDORIZZONTALE){
-            append_data(orizzontal, *tmp);
-        }
-    }
-
-    if(unlikely(!ref))
-        return;
-
-    vertical.setMetadata(   count, IDVERTICALE, -1,      ref->getMetadata().color);
-    orizzontal.setMetadata( count, IDORIZZONTALE, -1,    ref->getMetadata().color);
-}
-
 #define DO_LOAD(list)                               \
     for(i = 0; i < len_stroke; i++){                \
         stroke __tmp;                               \
@@ -833,8 +743,11 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
         SOURCE_READ_RETURN(file, &len_stroke, sizeof(int));
 
         DO_LOAD(tmp);
-        adjustStrokePage(m_stroke, this->count, this->m_stroke_writernote);
-        adjustStrokePage(tmp, this->count, this->m_stroke_writernote);
+        for(int i = lengthStroke() - 1; i >= 0; i--){
+            if(atStroke(i).length() == 0){
+                this->m_stroke.removeAt(i);
+            }
+        }
 #else
         return ERROR;
 #endif

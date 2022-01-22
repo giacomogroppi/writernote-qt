@@ -87,7 +87,6 @@ public:
 
     void removeAt(const QVector<int> & pos);
     void removeAt(cuint i);
-    int maxId() const;
 
     const stroke & last() const;
     stroke &lastMod();
@@ -125,9 +124,8 @@ public:
     void drawStroke(const stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color, QPainter *painter);
     void drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color);
-    void drawForceColor(int m_pos_ris, const QList<int> &id, const QColor &color);
 
-    int removeAndDraw(int m_pos_ris, const QList<int> &id, const QRectF &area);
+
     void removeAndDraw(int m_pos_ris, const QVector<int> &pos, const QRectF &area);
     void drawIfInside(int m_pos_ris, const QRectF &area);
 
@@ -384,24 +382,6 @@ force_inline void page::removeAt(const uint i)
     this->m_stroke.removeAt(i);
 }
 
-inline int page::maxId() const
-{
-    uint i;
-    const uint len = lengthStroke();
-    int id;
-
-    id = 0;
-
-    for(i = 0; i < len; i++){
-        const stroke &stroke = atStroke(i);
-
-        if(likely(stroke.getId() > id))
-            id = stroke.getId();
-    }
-
-    return id;
-}
-
 force_inline const stroke &page::last() const
 {
     return this->m_stroke.last();
@@ -423,7 +403,6 @@ force_inline void page::append(const stroke &strokeAppend)
     /* they will be automatically removed when
      * the project is compiled in release mode */
     W_ASSERT(strokeTmp.at(lastNewIndex).length() == strokeAppend.length());
-    W_ASSERT(strokeTmp.at(lastNewIndex).getId()  == strokeAppend.getId());
 }
 
 force_inline double page::minHeight() const

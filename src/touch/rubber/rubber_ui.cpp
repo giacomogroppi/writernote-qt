@@ -11,7 +11,6 @@ struct RubberPrivateData{
     page *__page;
     const QPointF *touch;
     datastruct *data;
-    int new_id;
 };
 
 static int                  __m_size_gomma;
@@ -133,7 +132,6 @@ void *actionRubberSinglePartial(void *__data)
     QVector<int> point_remove;
 
     int from, to;
-    int new_id_priv;
     int lenPoint, counterPoint;
 
     page *_page             = private_data->__page;
@@ -199,19 +197,12 @@ void *actionRubberSinglePartial(void *__data)
 
     // we don't need to do this operation
     // in order to the list
-    pthread_mutex_lock(&single_mutex);
-
-    new_id_priv = private_data->new_id;
-    private_data->new_id += from;
-
-    pthread_mutex_unlock(&single_mutex);
 
     for(from --; from >= 0; from --){
         cint indexStroke    = stroke_mod.at(from);
         cint indexPoint     = point_remove.at(from);
 
-        _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page, new_id_priv);
-        new_id_priv ++;
+        _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page);
     }
 
     multi_mutex->lock(data->id);

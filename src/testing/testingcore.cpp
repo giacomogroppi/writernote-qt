@@ -70,7 +70,6 @@ int TestingCore::createPage(
         }
 
         __tmp.setColor(Qt::black);
-        __tmp.setId(last_id ++);
 
         data->at_mod(page).append(__tmp);
     }
