@@ -7,15 +7,16 @@
 #include "core/wmultiplemutex.h"
 
 struct RubberPrivateData{
-    QVector<int> *data_find;
-    page *__page;
-    const QPointF *touch;
-    datastruct *data;
+    QVector<int>    *data_find;
+    page            *__page;
+    const QPointF   *touch;
+    datastruct      *data;
+    QVector<int>    *data_to_remove;
+    QVector<int>    *stroke_mod;
 };
 
-static int                  __m_size_gomma;
+static int             __m_size_gomma;
 static pthread_mutex_t single_mutex;
-static WMultipleMutex *multi_mutex;
 
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
@@ -35,7 +36,6 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
     this->countThread = get_thread_used();
 
-    multi_mutex = new WMultipleMutex(countThread - 1, 0);
     pthread_mutex_init(&single_mutex, NULL);
 }
 
@@ -44,7 +44,6 @@ rubber_ui::~rubber_ui()
     this->save_settings();
 
     delete ui;
-    delete multi_mutex;
 }
 
 static force_inline bool isin(
@@ -127,7 +126,6 @@ void *actionRubberSinglePartial(void *__data)
     RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
 
     QVector<int> stroke_to_remove;
-
     QVector<int> stroke_mod;
     QVector<int> point_remove;
 
@@ -136,9 +134,9 @@ void *actionRubberSinglePartial(void *__data)
 
     page *_page             = private_data->__page;
     const QPointF *_touch   = private_data->touch;
-    QVector<int> *_al_find  = private_data->data_find;
-
     datastruct *_datastruct = private_data->data;
+
+    QVector<int> *_data_to_remove = private_data->data_to_remove;
 
     from = data->from;
     to = data->to;
@@ -181,19 +179,20 @@ void *actionRubberSinglePartial(void *__data)
                 break;
             }
 
-            W_ASSERT(lenPoint > 6);
+            W_ASSERT(lenPoint >= 6);
 
-            point_remove.removeAt(counterPoint);
-            stroke_mod.append(from);
+            point_remove.append (counterPoint);
+            stroke_mod.append   (from);
 
             break;
 
         }
     }
 
-    W_ASSERT(point_remove.length() == stroke_mod.length());
-
     from = stroke_mod.length();
+
+    if(!stroke_to_remove.length() && !from)
+        goto free;
 
     // we don't need to do this operation
     // in order to the list
@@ -205,14 +204,13 @@ void *actionRubberSinglePartial(void *__data)
         _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page);
     }
 
-    multi_mutex->lock(data->id);
+    qDebug() << stroke_mod;
+    pthread_mutex_lock(&single_mutex);
+    _data_to_remove->append(stroke_to_remove);
+    private_data->stroke_mod->append(stroke_mod);
+    pthread_mutex_unlock(&single_mutex);
 
-    const auto area = _page->get_size_area(point_remove);
-    _page->removeAndDraw(-1, point_remove, area);
-
-    multi_mutex->unlock(data->id);
-    multi_mutex->unlock(data->id - 1);
-
+free:
     return NULL;
 }
 
@@ -292,6 +290,9 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     int flag, tmp = 0, create;
     RubberPrivateData dataPrivate;
 
+    QVector<int> stroke_mod;
+    stroke_mod.reserve(32);
+
     if(isTotal){
         functionToCall = actionRubberSingleTotal;
         flag = ~DATA_PRIVATE_FLAG_SEM;
@@ -304,6 +305,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
     dataPrivate.data    = data;
     dataPrivate.touch   = &lastPoint;
+    dataPrivate.stroke_mod      = &stroke_mod;
 
     __m_size_gomma =    this->m_size_gomma;
 
@@ -319,14 +321,10 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
         if(unlikely(data_to_remove.length() - 1 < count))
             data_to_remove.append(QVector<int>());
 
-        dataPrivate.data_find = (QVector<int> *)&data_to_remove.at(count);
+        dataPrivate.data_find       = (QVector<int> *)&data_to_remove.at(count);
+        dataPrivate.data_to_remove  = dataPrivate.data_find;
 
         create = DataPrivateMuThreadInit(threadData, &dataPrivate, countThread, lenStroke, flag);
-
-        if(!isTotal){
-            multi_mutex->blockAll();
-            multi_mutex->unlock(create - 1);
-        }
 
         for(tmp = 0; tmp < create; tmp ++){
             pthread_create(&thread[tmp], NULL, functionToCall, &threadData[tmp]);
@@ -337,9 +335,26 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
         }
 
         if(!isTotal){
+            page & p = *dataPrivate.__page;
+            QRect area;
+
+            p.removeAt(*dataPrivate.data_to_remove);
+
+            if(stroke_mod.isEmpty())
+                continue;
+
+            area = p.get_size_area(*dataPrivate.stroke_mod);
+
+            p.drawSquare(area);
+            p.drawIfInside(-1, area);
+
             dataPrivate.__page->mergeList();
+            stroke_mod.clear();
+
         }
 
         count ++;
     }
+
+    data_to_remove.clear();
 }

@@ -17,6 +17,10 @@
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
+#define Define_PAINTER(painter) QPainter painter(&imgDraw); \
+    painter.begin(&imgDraw); \
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
 static void drawLineOrizzontal(stroke &stroke, const style_struct_S &style, const double &last,
@@ -589,12 +593,45 @@ void page::removeAndDraw(
 void page::drawIfInside(int m_pos_ris, const QRectF &area)
 {
     int index = lengthStroke() - 1;
+    Define_PAINTER(painter);
+
     for(; index >= 0; index --){
         const stroke &stroke = this->atStroke(index);
+
         if(unlikely(is_inside_squade(stroke.getBiggerPointInStroke(), area))){
-            this->drawStroke(stroke, m_pos_ris);
+            drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), &painter);
         }
     }
+}
+
+#define PAGE_DRAW_SQUARE_ADJUST(point, function) \
+    point.m_x = rect.function().x(); \
+    point.m_y = rect.function().y(); \
+    at_translation(point, this->count - 1);
+
+void page::drawSquare(const QRect &rect)
+{
+    QRect tmp;
+    QBrush brush(COLOR_NULL);
+    Define_PEN(pen);
+    Define_PAINTER(painter);
+
+    // we need to adjust the rect to our img
+    {
+        point_s point1, point2;
+        PAGE_DRAW_SQUARE_ADJUST(point1, topLeft);
+        PAGE_DRAW_SQUARE_ADJUST(point2, bottomRight);
+
+        tmp = QRect(point1.toQPointF(1.0).toPoint(),
+                    point2.toQPointF(1.0).toPoint());
+    }
+
+    pen.setColor(COLOR_NULL);
+
+    painter.setPen(pen);
+    painter.setCompositionMode(QPainter::CompositionMode_Clear);
+    painter.fillRect(tmp, brush);
+    painter.end();
 }
 
 void page::decreseAlfa(const QVector<int> &pos, int decrese)

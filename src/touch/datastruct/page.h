@@ -128,7 +128,7 @@ public:
 
     void removeAndDraw(int m_pos_ris, const QVector<int> &pos, const QRectF &area);
     void drawIfInside(int m_pos_ris, const QRectF &area);
-
+    void drawSquare(const QRect &rect);
     void decreseAlfa(const QVector<int> &pos, int decrese);
 
     QRect get_size_area(const QVector<int> &pos) const;
