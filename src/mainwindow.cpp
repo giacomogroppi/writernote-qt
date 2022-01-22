@@ -140,6 +140,8 @@ MainWindow::MainWindow(QWidget *parent,
 
     this->setSizeButton();
     contrUi();
+
+    m_canvas->data->datatouch->triggerVisibility(page::getHeight() * m_canvas->data->datatouch->lengthPage());
 }
 
 MainWindow::~MainWindow()

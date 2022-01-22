@@ -46,8 +46,7 @@ void page::drawNewPage(n_style __style)
     cdouble height_p   = this->getHeight();
     cdouble last = (count-1)*page::getHeight();
 
-    stroke &stroke1 = this->m_stroke_writernote[0];
-    stroke &stroke2 = this->m_stroke_writernote[1];
+    stroke &stroke = this->m_stroke_writernote;
 
     setStylePrivate(fast, __style, style);
 
@@ -56,13 +55,12 @@ void page::drawNewPage(n_style __style)
         style.thickness =  widthToPressure(TEMP_TICK);
     }
 
-    stroke1.setMetadata(-1, style.colore);
-    stroke2.setMetadata(-1, style.colore);
+    stroke.setMetadata(-1, style.colore);
 
-    if(style.nx <= 0)
+    if(unlikely(style.nx <= 0))
         style.nx = 1;
 
-    if(style.ny <= 0)
+    if(unlikely(style.ny <= 0))
         style.ny = 1;
 
     deltax = height_p / (double)style.nx;
@@ -70,11 +68,10 @@ void page::drawNewPage(n_style __style)
 
     ct_del = deltax;
 
-    drawLineOrizzontal( stroke1, style, last, deltax, width_p, ct_del);
-    drawLineVertical(   stroke2,     style, last, deltay, height_p);
+    drawLineOrizzontal( stroke, style, last, deltax, width_p, ct_del);
+    drawLineVertical(   stroke,     style, last, deltay, height_p);
 
-    stroke1.__setPressureFirstPoint(    widthToPressure(style.thickness));
-    stroke2.__setPressureFirstPoint(      widthToPressure(style.thickness));
+    stroke.__setPressureFirstPoint(    widthToPressure(style.thickness));
 }
 
 void page::swap(
@@ -717,9 +714,7 @@ int page::save(zip_source_t *file) const
         DO_CTRL(atStroke(i).save(file));
     }
 
-    for(i = 0; i < 2; i++){
-        DO_CTRL(m_stroke_writernote[i].save(file));
-    }
+    DO_CTRL(m_stroke_writernote.save(file));
 
     return OK;
 }
@@ -733,7 +728,7 @@ int page::save(zip_source_t *file) const
 
 int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 {
-    int i, err;
+    int i, k, err;
 
     DO_LOAD(m_stroke);
 
@@ -741,6 +736,20 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 #ifdef ALL_VERSION
         QList<stroke> tmp;
         SOURCE_READ_RETURN(file, &len_stroke, sizeof(int));
+
+        for(i = 0; i < len_stroke; i++){
+            stroke __tmp;
+            cint res = __tmp.load(file, ver_stroke);
+            if(unlikely(res == ERROR))
+                return res;
+
+            if(unlikely(res == PAGE_POINT)){
+                cint len = __tmp.length();
+                for(k = 0; k < len; k ++){
+                    m_stroke_writernote.append(__tmp.at(k));
+                }
+            }
+        }
 
         DO_LOAD(tmp);
         for(int i = lengthStroke() - 1; i >= 0; i--){
@@ -753,8 +762,7 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 #endif
     }
     if(ver_stroke == 1){
-        m_stroke_writernote[0].load(file, ver_stroke);
-        m_stroke_writernote[1].load(file, ver_stroke);
+        m_stroke_writernote.load(file, ver_stroke);
     }
 
     return OK;

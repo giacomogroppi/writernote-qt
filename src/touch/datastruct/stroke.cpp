@@ -55,7 +55,7 @@ int stroke::load(zip_file_t *file, int version)
     point_s point_append;
 
 #ifdef ALL_VERSION
-    bool __delete = false;
+    bool page_point = false;
 
     struct old_metadata_0{
         int page;
@@ -79,8 +79,8 @@ int stroke::load(zip_file_t *file, int version)
         memcpy(&meta.posizione_audio, &this->metadata.posizione_audio, sizeof(metadata.posizione_audio));
 
         // we don't load sheet from differente version
-        if(meta.idtratto < 0){
-            __delete = 1;
+        if(unlikely(meta.idtratto < 0)){
+            page_point = 1;
         }
 #else
         return ERROR;
@@ -95,8 +95,8 @@ int stroke::load(zip_file_t *file, int version)
     }
 
 #ifdef ALL_VERSION
-    if(unlikely(__delete)){
-        this->m_point.clear();
+    if(unlikely(page_point)){
+        return PAGE_POINT;
     }
 #endif
 

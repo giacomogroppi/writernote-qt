@@ -215,6 +215,8 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
 
     this->currenttitle->datatouch->triggerNewView(-1, true);
     CLOSE_ZIP(f, filezip);
+
+    currenttitle->datatouch->triggerVisibility(page::getHeight() * currenttitle->datatouch->lengthPage());
     return OK;
 
     free_:

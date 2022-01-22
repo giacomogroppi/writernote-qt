@@ -134,28 +134,28 @@ static void loadSheet(
 {
     int counterPage;
     const page *__page;
-    int counterStroke, counterPoint, lenPoint;
+    int counterPoint, lenPoint;
     const int lenPage = doc.datatouch->lengthPage();
     const double zoom = doc.datatouch->getZoom();
     datastruct *data = doc.datatouch;
+    const stroke *stroke;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         __page = &data->at(counterPage);
+        stroke = &__page->get_stroke_page();
 
-        m_pen.setWidthF(TabletCanvas::pressureToWidth(__page->atStrokePage(0).at(0).pressure * zoom * delta / 2.0));
-        m_pen.setColor(__page->atStrokePage(0).getColor());
+        m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke->at(0).pressure * zoom * delta / 2.0));
+        m_pen.setColor(stroke->getColor());
 
         painter.setPen(m_pen);
 
-        for(counterStroke = 0; counterStroke < 2; counterStroke++){
-            lenPoint = __page->atStrokePage(counterStroke).length() - 1;
+        lenPoint = __page->get_stroke_page().length() - 1;
 
-            for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
-                const auto ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage, counterStroke);
-                const auto ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage, counterStroke);
+        for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
+            const auto ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage);
+            const auto ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage);
 
-                painter.drawLine(ref1.m_x, ref1.m_y, ref2.m_x, ref2.m_y);
-            }
+            painter.drawLine(ref1.m_x, ref1.m_y, ref2.m_x, ref2.m_y);
         }
     }
 }

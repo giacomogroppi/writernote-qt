@@ -35,7 +35,7 @@ private:
     int count;
 
     QList<stroke> m_stroke;
-    stroke m_stroke_writernote[2];
+    stroke m_stroke_writernote;
 
     /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is
@@ -79,7 +79,7 @@ public:
     __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     /* you can access point written by writernote with this funcion */
-    __slow void at_draw_page(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
+    __slow void at_draw_page(const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     __fast int lengthStroke() const;
 
@@ -102,7 +102,7 @@ public:
     __fast const stroke       & atStroke(const uint i) const;
     __fast stroke             & atStrokeMod(const uint i);
 
-    __fast const stroke       & atStrokePage(const uint i) const; //return the point written by writernote
+    __fast const stroke       & get_stroke_page() const; //return the point written by writernote
 
     double minHeight() const;
     double currentHeight() const;
@@ -196,6 +196,7 @@ inline void page::move(const uint from, const uint to)
 inline void page::reset()
 {
     this->m_stroke.clear();
+    this->m_stroke_writernote.reset();
 }
 
 inline point_s page::at_translation(const point_s &point, int page)
@@ -302,10 +303,9 @@ Q_ALWAYS_INLINE stroke &page::atStrokeMod(const uint i)
     return this->m_stroke.operator[](i);
 }
 
-force_inline const stroke &page::atStrokePage(const uint i) const
+force_inline const stroke &page::get_stroke_page() const
 {
-    W_ASSERT(i == 0 || i == 1);
-    return this->m_stroke_writernote[i];
+    return this->m_stroke_writernote;
 }
 
 static force_inline void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
@@ -329,13 +329,12 @@ inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const Q
 }
 
 inline void page::at_draw_page(
-        const uint      IndexStroke,
         const uint      IndexPoint,
         const QPointF   &translation,
         point_s         &point,
         const double    zoom) const
 {
-    const stroke &stroke = atStrokePage(IndexStroke);
+    const stroke &stroke = get_stroke_page();
     const point_s &__point = stroke.at(IndexPoint);
 
     __at_draw_private(__point, point, zoom, translation);
@@ -363,8 +362,7 @@ inline void page::copy(
 
     dest.m_stroke               = src.m_stroke;
 
-    dest.m_stroke_writernote[0] = src.m_stroke_writernote[0];
-    dest.m_stroke_writernote[1] = src.m_stroke_writernote[1];
+    dest.m_stroke_writernote = src.m_stroke_writernote;
 
     dest.strokeTmp              = src.strokeTmp;
 

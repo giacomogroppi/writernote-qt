@@ -161,10 +161,11 @@ int xmlstruct::loadbinario_1(struct zip *z)
 
 static void scaleAll(QList<point_last> &point, const QPointF &translation)
 {
-    uint i;
-    const uint len = point.length();
+    int i;
+    cint len = point.length();
     point_last *ref;
-    for(i=0; i<len; i++){
+
+    for(i = 0; i< len; i++){
         ref = &point.operator[](i);
         ref->m_x -= translation.x();
         ref->m_y -= translation.y();
@@ -176,7 +177,6 @@ static QPointF bigger(const QList<point_last> &point)
     QPointF max(0.0, 0.0);
     uint i;
     const point_last *ref;
-
     const uint len = point.length();
 
     for(i = 0; i < len; i++ ){
@@ -228,7 +228,7 @@ static void adjastZoom(QList<point_last> &point, QList<double> &pos_foglio)
     }
 
     len = pos_foglio.length();
-    for(i=0; i<len; i++){
+    for(i = 0; i < len; i++){
         pos_foglio.operator[](i) *= delta;
     }
 
@@ -293,7 +293,7 @@ void xmlstruct::decode0(
         pointForAppend.append(QList<point_old_ver_7> ());
     }
 
-    Q_ASSERT(pointForAppend.length() == data->datatouch->lengthPage());
+    W_ASSERT(pointForAppend.length() == data->datatouch->lengthPage());
 
     for(i = 0; i < point.length(); i++){
         point_last pp = point.at(i);
@@ -315,22 +315,18 @@ void xmlstruct::decode0(
     xmlstruct::decode1(data, pointForAppend);
 }
 
-void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &page)
+void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__page)
 {
     int counterPage;
-    QList<QList<stroke>> pageStroke;
-    int i;
+    cint lenPage = __page.length();
 
-    cint lenPage = page.length();
-
-    if(doc->datatouch->lengthPage() != page.length()){
+    if(doc->datatouch->lengthPage() != __page.length()){
         doc->datatouch->newPage(doc->datatouch->lengthPage());
     }
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
-        pageStroke.append(QList<stroke>());
-        for(int counterPoint = 0; counterPoint < page.at(counterPage).length(); counterPoint ++){
-            QList<point_old_ver_7> &ListPrivate = page.operator[](counterPage);
+        for(int counterPoint = 0; counterPoint < __page.at(counterPage).length(); counterPoint ++){
+            QList<point_old_ver_7> &ListPrivate = __page.operator[](counterPage);
             stroke stroke;
             int id;
 
@@ -344,24 +340,22 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &pag
                 const point_old_ver_7 &tmpRef = ListPrivate.at(counterPoint);
 
                 point_s TmpAppend;
-                TmpAppend.m_x = tmpRef.m_x;
-                TmpAppend.m_y = tmpRef.m_y;
-                TmpAppend.pressure = tmpRef.m_pressure;
+                TmpAppend.m_x       = tmpRef.m_x;
+                TmpAppend.m_y       = tmpRef.m_y;
+                TmpAppend.pressure  = tmpRef.m_pressure;
 
-                stroke.append(TmpAppend);
+                if(unlikely(id < 0)){
+                    continue;
+                    doc->datatouch->m_page.operator[](counterPage).m_stroke_writernote.append(TmpAppend);
+                }else{
+                    stroke.append(TmpAppend);
+                }
             }
 
-            if(id){
-                pageStroke.operator[](counterPage).append(stroke);
-            }else{
+            if(likely(id >= 0)){
                 doc->datatouch->appendStroke(stroke);
             }
         }
-    }
-
-    for(i = 0; i < lenPage; i++){
-        auto &page = doc->datatouch->m_page.operator[](i);
-        adjustStrokePage(pageStroke.at(i), page.count, page.m_stroke_writernote);
     }
 }
 

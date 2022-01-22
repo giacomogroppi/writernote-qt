@@ -157,7 +157,7 @@ public:
     __fast page &           at_mod(const uint page);
 
     __slow point_s at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
-    __slow point_s at_draw_page(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
+    __slow point_s at_draw_page(const uint indexPoint, const uint indexPage) const;
 
     __fast const point_s *  lastPoint() const;
     __fast const page *     lastPage() const;
@@ -255,13 +255,12 @@ inline page &datastruct::at_mod(const uint page)
 // this function is not threadSave
 inline __slow point_s datastruct::at_draw_page(
         const uint indexPoint,
-        const uint indexPage,
-        const uint indexStroke) const
+        const uint indexPage) const
 {
     point_s point;
     const page &page = at(indexPage);
 
-    page.at_draw_page(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
+    page.at_draw_page(indexPoint, getPointFirstPage(), point, zoom);
 
     return point;
 }
@@ -291,6 +290,7 @@ inline void datastruct::newPage(const n_style style)
 {
     page page(this->lengthPage()+1, style);
     this->m_page.append(page);
+    this->triggerVisibility(page::getHeight() * lengthPage());
 }
 
 inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int base) const
