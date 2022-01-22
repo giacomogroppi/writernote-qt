@@ -225,8 +225,6 @@ void TabletCanvas::updatelist(QTabletEvent *event)
     alfa = highlighter_method ? m_highlighter->getAlfa() : 255;
 
     if(!this->m_deviceDown){
-        strokeTmp.setId(data->datatouch->maxId() + 1);
-
         strokeTmp.setPositioneAudio(parent->m_audio_recorder->getCurrentTime());
         strokeTmp.setColor(m_color);
         strokeTmp.setAlfaColor(alfa);

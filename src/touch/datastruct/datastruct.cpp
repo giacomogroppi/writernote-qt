@@ -54,25 +54,6 @@ datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
     pthread_mutex_init(&changeIdMutex, NULL);
 }
 
-/* the function returns true if the id is available */
-bool datastruct::isAvailable(int id) const
-{
-    int len;
-    const page *page;
-    int lenPage = this->lengthPage() - 1;
-
-    for(; lenPage >= 0; lenPage --){
-        page = &at(lenPage);
-        len = page->lengthStroke() - 1;
-        for(; len >= 0; len --){
-            if(page->atStroke(len).getId() == id)
-                return 0;
-        }
-    }
-
-    return 1;
-}
-
 void datastruct::reset(){
     this->m_page.clear();
     pointFirstPage = QPointF(0, 0);
@@ -98,39 +79,6 @@ void datastruct::decreaseAlfa(stroke &stroke, page &page, cint decrease)
 
     page.drawForceColorStroke(stroke, -1, COLOR_NULL, NULL);
     page.drawStroke(stroke, -1);
-}
-
-//{page; indexInPage}
-void datastruct::decreaseAlfa(cint id,
-                              cuchar decrease)
-{
-    int counterPage, strokeCounter;
-    page *page_mod;
-    stroke *stroke;
-    const page *page_read;
-
-    counterPage = this->lengthPage() - 1;
-
-    for(; counterPage >= 0; counterPage--){
-        page_read = &at(counterPage);
-
-        strokeCounter = page_read->lengthStroke() - 1;
-        if(!strokeCounter) continue;
-
-        page_mod = &at_mod(counterPage);
-
-        for(strokeCounter = 0; strokeCounter >= 0; strokeCounter--){
-            stroke = &page_mod->atStrokeMod(strokeCounter);
-
-            if(stroke->getId() == id){
-                this->decreaseAlfa(*stroke, *page_mod, decrease);
-
-                /* since there cannot be another trait that has the same
-                 * index, we can directly return to the caller */
-                return;
-            }
-        }
-    }
 }
 
 void datastruct::copy(const datastruct &src, datastruct &dest)

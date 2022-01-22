@@ -305,10 +305,6 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     dataPrivate.data    = data;
     dataPrivate.touch   = &lastPoint;
 
-    /* if the rubber is not total we can not waste time looking for the new id */
-    if(!isTotal)
-        dataPrivate.new_id = data->maxId() + 1;
-
     __m_size_gomma =    this->m_size_gomma;
 
     count = 0;

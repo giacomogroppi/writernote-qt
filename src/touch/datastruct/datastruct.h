@@ -132,8 +132,6 @@ public:
     void changeId(int indexPoint, stroke& stroke, page &page);
     void changeIdThreadSave(int indexPoint, stroke &stroke, page &page);
 
-    bool isAvailable(int id) const;
-
     constexpr QPointF adjustPoint(const QPointF &pointRealTouch);
 
     bool isempty() const;
@@ -153,7 +151,6 @@ public:
 
     void decreaseAlfa(const QVector<int> &pos, int page);
     void decreaseAlfa(stroke &stroke, page &page, cint decrease);
-    void decreaseAlfa(const int id, const uchar decrese);
     void removePage(const uint page);
 
     __fast const page &     at(const uint page) const;
