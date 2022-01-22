@@ -85,6 +85,8 @@ public:
     void changeZoom(const double zoom, class TabletCanvas *canvas);
     void increaseZoom(const double delta, const QSize &size);
 
+    void drawIfInside(const QRect &area);
+
     constexpr double getZoom() const;
     constexpr Q_ALWAYS_INLINE QPointF getPointFirstPage() const { return this->zoom * pointFirstPage; }
     constexpr Q_ALWAYS_INLINE QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }

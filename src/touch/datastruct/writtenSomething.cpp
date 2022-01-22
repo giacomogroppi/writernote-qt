@@ -16,7 +16,7 @@ bool datastruct::userWrittenSomething(uint frompage)
 */
 bool datastruct::userWrittenSomething(datastruct *s_data)
 {
-    uint l_first_page, l_sec_page, counterPage, counterStroke;
+    int l_first_page, l_sec_page, counterPage, counterStroke;
     bool check = false;
 
     l_first_page = lengthPage();

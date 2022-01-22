@@ -15,6 +15,8 @@ struct PointSettable {
     QPointF point;
     bool set;
 
+    void deset();
+
     constexpr Q_ALWAYS_INLINE bool isNotSet() const
     {
         return !this->set;
@@ -32,6 +34,11 @@ struct PointSettable {
 
     constexpr PointSettable &operator+=(const QPointF &p);
 };
+
+force_inline void PointSettable::deset()
+{
+    this->set = false;
+}
 
 constexpr Q_ALWAYS_INLINE PointSettable &PointSettable::operator+=(const QPointF &p)
 {

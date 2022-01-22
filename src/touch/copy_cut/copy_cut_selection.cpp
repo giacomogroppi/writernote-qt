@@ -24,11 +24,13 @@ void copy::managePaste(
 {
     QPointF tmp = pointTouch;
     int i;
-    int tmpId = -1;
+    int tmpId;
 
     i = this->m_stroke.length() - 1;
     datastruct::inverso(tmp);
     this->adjustData(tmp);
+
+    tmpId = data.maxId() + 1;
 
     for(; i >= 0; i --){
         stroke &stroke = m_stroke.operator[](i);
@@ -37,14 +39,12 @@ void copy::managePaste(
         if(data.isAvailable(stroke.getId()))
             continue;
 
-        if(tmpId < 0)
-            tmpId = data.maxId() + 1;
-
         stroke.setId(tmpId);
         tmpId += 1;
     }
 
     data.append(this->m_stroke, -1);
+
     if(this->isSomeThingCopy()){
         datastruct::inverso(tmp);
         this->adjustData(tmp);
@@ -94,7 +94,7 @@ int copy::selection(
         int                         __flags,
         const QPointF               &pointTouch)
 {
-    QRectF sizeData;
+    QRect sizeData;
     QPointF tmpPoint;
     int lenList, i;
 
@@ -113,6 +113,7 @@ int copy::selection(
     }
 
     m_stroke.clear();
+
     sizeData = get_size_area(stroke);
 
     this->flags = 0;
@@ -121,13 +122,20 @@ int copy::selection(
         __single(stroke.at(i), m_stroke);
     }
 
-    adjustData(sizeData.topLeft());
+    adjustData(pointTouch);
 
-    if(!this->isEmpty()){
-        if(__flags == SELECTION_FLAGS_COPY)
-            flags &= ~(FLAG_CUT);
-        else
-            flags |= FLAG_CUT;
+    if(unlikely(this->isEmpty())){
+        return 0;
+    }
+
+    if(__flags == SELECTION_FLAGS_COPY)
+        flags &= ~(FLAG_CUT);
+    else{
+        flags |= FLAG_CUT;
+
+        // we have modify the data so we need
+        // to update the image
+        data.drawIfInside(sizeData);
     }
 
     return (int)this->isSomeThingCut();

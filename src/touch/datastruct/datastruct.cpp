@@ -32,6 +32,20 @@ void datastruct::increaseZoom(const double delta, const QSize &size)
     this->adjustAll(size);
 }
 
+void datastruct::drawIfInside(const QRect &area)
+{
+    int i = this->getFirstPageVisible();
+
+    for(; i >= 0; i--){
+        page *page = &at_mod(i);
+
+        if(!page->isVisible())
+            break;
+
+        page->drawIfInside(-1, area);
+    }
+}
+
 datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
 {
     this->m_pdf = m_pdf;

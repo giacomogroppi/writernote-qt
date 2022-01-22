@@ -18,7 +18,6 @@
 # define SQ_THREAD DEBUG_THREAD
 #endif
 
-void * __square_search(void *__data);
 static pthread_mutex_t      __mutex_sq;
 static const page           *__page;
 static QPointF              __f;
@@ -51,6 +50,32 @@ square::square(QObject *parent, property_control *property):
 square::~square()
 {
     delete this->m_copy;
+}
+
+void * __square_search(void *__data)
+{
+    W_ASSERT(__data);
+    DataPrivateMuThread *data = (DataPrivateMuThread *)__data;
+    bool in_box = false;
+
+    assert(data->from <= data->to);
+
+    for(; data->from < data->to;  data->from ++){
+        const stroke &stroke = __page->atStroke(data->from);
+        if(datastruct::isinside(__f, __s, stroke)){
+
+            pthread_mutex_lock(&__mutex_sq);
+            __index->append(data->from);
+            pthread_mutex_unlock(&__mutex_sq);
+
+            in_box = true;
+        }
+    }
+
+    if(in_box)
+        *__in_box = true;
+
+    return NULL;
 }
 
 /* 
@@ -144,6 +169,13 @@ bool square::find()
     moveObjectIntoPrivate(index);
 
     if(!somethingInBox()){
+        if(!m_copy->isEmpty()){
+            pointinit.point = __f;
+
+            pointinit.deset();
+            pointfine.deset();
+        }
+
         reset();
     }else{
         __need_reload = true;
@@ -152,7 +184,7 @@ bool square::find()
     return in_box;
 }
 
-void square::initImg()
+force_inline void square::initImg()
 {
     const auto formact = QImage::Format_ARGB32;
     img = QImage(page::getResolutionWidth(),
@@ -175,7 +207,8 @@ void square::mergeImg(
     painter.end();
 }
 
-static void preappend(QList<QList<stroke>> & list, int num)
+static force_inline void
+preappend(QList<QList<stroke>> & list, int num)
 {
     while(num > 0){
         num --;
@@ -191,29 +224,11 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     datastruct & data = *canvas->data->datatouch;
     QImage tmp;
 
-    DO_IF_DEBUG(const auto m_index_tmp = index);
-
     WDebug(debugSquare, "square::moveObjectIntoPrivate");
 
     this->m_stroke.clear();
 
     order_multiple(index);
-
-    DO_IF_DEBUG_ENABLE(true,
-    int i;
-    for(i = 0; i < m_index_tmp.length(); i++){
-        const auto &ref = index.at(i);
-        const auto &tmp = m_index_tmp.at(i);
-
-        if(ref.length() != tmp.length())
-            std::abort();
-
-        for(int c = 0; c < ref.length(); c++){
-            if(ref.indexOf(tmp.at(i)) == -1)
-                std::abort();
-        }
-    }
-    );
 
     this->initImg();
 
@@ -277,7 +292,7 @@ img:
 void square::reset()
 {
     int i, len;
-    //WDebug(debugSquare, "square::reset");
+    WDebug(debugSquare, "square::reset");
     pointinit.set = lastpoint.set = pointfine.set = false;
 
     in_box = false;
@@ -285,7 +300,7 @@ void square::reset()
     __need_reload = false;
     m_index_img.clear();
 
-    //WDebug(debugSquare, "square::reset paste = 1");
+    WDebug(debugSquare, "square::reset paste = 1");
     len = m_stroke.length();
     if(len == 0)
         goto out;
@@ -378,6 +393,10 @@ void square::actionProperty(property_control::ActionProperty action)
     int flags = 0, dontcall_copy = 1;
     datastruct &data = *canvas->data->datatouch;
 
+#ifdef DEBUGINFO
+    this->m_property->Hide();
+#endif
+
     switch (action) {
         case property_control::ActionProperty::__copy:{
             flags = SELECTION_FLAGS_COPY;
@@ -446,41 +465,16 @@ force_inline void square::adjustPoint()
     W_ASSERT(topLeft.y() <= bottomRight.y());
 }
 
-void * __square_search(void *__data)
-{
-    W_ASSERT(__data);
-    DataPrivateMuThread *data = (DataPrivateMuThread *)__data;
-    bool in_box = false;
-
-    assert(data->from <= data->to);
-
-    for(; data->from < data->to;  data->from ++){
-        const stroke &stroke = __page->atStroke(data->from);
-        if(datastruct::isinside(__f, __s, stroke)){
-
-            pthread_mutex_lock(&__mutex_sq);
-            __index->append(data->from);
-            pthread_mutex_unlock(&__mutex_sq);
-
-            in_box = true;
-        }
-    }
-
-    if(in_box)
-        *__in_box = true;
-
-    return NULL;
-}
-
 void square::needReload(QPainter &painter)
 {
     QPointF point;
     datastruct *data;
     int len;
 
-    if(likely(__need_reload)){
+    if(__need_reload){
         WDebug(debugSquare, "square::needReload __need_reload");
-        if(somethingInBox()){
+
+        if(likely(somethingInBox())){
             WDebug(debugSquare, "square::needReload in_box");
             data = canvas->data->datatouch;
             point = data->getPointFirstPage();

@@ -98,12 +98,12 @@ inline int square::calculate_flags() const
     if(this->somethingInBox()){
         flag = PROPERTY_SHOW_DELETE | PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT;
     }else{
-        if(!m_copy->isEmpty())
+        if(!m_copy->isEmpty()){
             flag = PROPERTY_SHOW_PASTE;
-
+        }
     }
 
-    Q_ASSERT(flag >= 0);
+    W_ASSERT(flag >= 0);
 
     return flag;
 }
