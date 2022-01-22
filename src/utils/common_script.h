@@ -245,10 +245,12 @@ Q_ALWAYS_INLINE int div_diff(T num, T den)
 }
 
 template <typename T>
-inline int is_present_in_list(const T *list, size_t len, T val)
+inline int is_present_in_list(const T *list, size_t len, const T val)
 {
-    for(;len > 0; list ++, len --){
-        if(*list == val)
+    size_t i;
+
+    for(i = 0; i < len; i ++){
+        if(list[i] == val)
             return 1;
     }
 

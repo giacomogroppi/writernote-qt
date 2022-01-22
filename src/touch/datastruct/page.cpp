@@ -193,13 +193,9 @@ void page::drawStroke(
     }
 
     if(stroke.constantPressure()){
-        EXEC_TIME_IF_DEBUG("page::drawStroke() getQPainterPath()", measureTime,
-            path = &stroke.getQPainterPath(page);
-        )
+        path = &stroke.getQPainterPath(page);
 
-        EXEC_TIME_IF_DEBUG("page::drawStroke(), strokePath", measureTime,
-            painter.strokePath(*path, m_pen);
-        )
+        painter.strokePath(*path, m_pen);
 
     }else{
         int counterPoint;
@@ -209,25 +205,21 @@ void page::drawStroke(
         lastPoint = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
 
         for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-            EXEC_TIME_IF_DEBUG("page::drawStroke() take point", measureTime,
-                const point_s point = at_translation(stroke.at(counterPoint), refCounter);
-                pointDraw = point.toQPointF(PROP_RESOLUTION);
+            const point_s point = at_translation(stroke.at(counterPoint), refCounter);
+            pointDraw = point.toQPointF(PROP_RESOLUTION);
 
-                m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
+            m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
 
-            )
+            painter.setPen(m_pen);
 
-            EXEC_TIME_IF_DEBUG("page::drawStroke() draw", measureTime,
-                painter.setPen(m_pen);
+            painter.drawLine(lastPoint, pointDraw);
 
-                painter.drawLine(lastPoint, pointDraw);
-            )
 
             lastPoint = pointDraw;
         }
     }
 
-    if(color == COLOR_NULL){
+    if(unlikely(color == COLOR_NULL)){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
 }
@@ -612,7 +604,7 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
 void page::drawSquare(const QRect &rect)
 {
     QRect tmp;
-    QBrush brush(COLOR_NULL);
+    QBrush brush(COLOR_NULL, Qt::SolidPattern);
     Define_PEN(pen);
     Define_PAINTER(painter);
 
@@ -627,6 +619,7 @@ void page::drawSquare(const QRect &rect)
     }
 
     pen.setColor(COLOR_NULL);
+    pen.setBrush(brush);
 
     painter.setPen(pen);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);

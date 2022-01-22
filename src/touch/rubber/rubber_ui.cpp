@@ -53,7 +53,7 @@ static force_inline bool isin(
 {
     W_ASSERT(size_rubber >= 0.0);
 
-    if(unlikely((touch.x() - size_rubber) < __point.m_x &&  (touch.x() + size_rubber) > __point.m_x
+    if(unlikely( (touch.x() - size_rubber) < __point.m_x &&  (touch.x() + size_rubber) > __point.m_x
             &&   (touch.y() - size_rubber) < __point.m_y &&  (touch.y() + size_rubber) > __point.m_y))
         return true;
 
@@ -220,38 +220,36 @@ void *actionRubberSingleTotal(void *__data)
     RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
 
     QVector<int> index_selected;
-    cint *data_already_find;
     cint data_already_len   = private_data->data_find->length();
 
     page *_page             = private_data->__page;
     const QPointF *_touch   = private_data->touch;
     QVector<int> *_al_find  = private_data->data_find;
 
-    index_selected.reserve(16 * 2);
+    index_selected.reserve(32);
 
     Q_ASSERT(data->from <= data->to);
 
 #ifdef DEBUGINFO
-    qDebug() << data->from << data->to;
+    //qDebug() << data->from << data->to;
 #endif
 
     for(; data->from < data->to; data->from++){
         stroke &stroke = _page->atStrokeMod(data->from);
         int lenPoint = stroke.length();
 
+        if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
+            break;
+
         if(ifNotInside(stroke, __m_size_gomma, *_touch)) continue;
 
         for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
             const point_s &point = stroke.at(counterPoint);
-            data_already_find = _al_find->constData();
 
             if(unlikely(isin(__m_size_gomma, point, *_touch))){
                 // possiamo anche non bloccare gli altri thread nell'appendere
                 // tanto di sicuro non staranno cercando il nostro stroke in lista
                 // e non lo aggiungeranno
-
-                if(is_present_in_list(data_already_find, data_already_len, data->from))
-                    continue;
 
                 index_selected.append(data->from);
 
@@ -318,7 +316,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
         lenStroke = dataPrivate.__page->lengthStroke();
 
-        if(unlikely(data_to_remove.length() - 1 < count))
+        if(unlikely(data_to_remove.length() <= count))
             data_to_remove.append(QVector<int>());
 
         dataPrivate.data_find       = (QVector<int> *)&data_to_remove.at(count);
