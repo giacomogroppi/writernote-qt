@@ -54,13 +54,33 @@ int stroke::load(zip_file_t *file, int version)
     int i, len_point;
     point_s point_append;
 
+#ifdef ALL_VERSION
+    struct old_metadata_0{
+        int page;
+        int idtratto = -1;
+        int posizione_audio;
+        struct colore_s color;
+    }   meta;
+#endif
+
     this->reset();
 
     if(version > CURRENT_VERSION_STROKE)
         return ERROR_VERSION_NEW;
 
     SOURCE_READ_RETURN(file, &len_point, sizeof(len_point));
-    SOURCE_READ_RETURN(file, &this->metadata, sizeof(metadata));
+
+    if(version == 0){
+#ifdef ALL_VERSION
+        SOURCE_READ_RETURN(file, &meta, sizeof(meta));
+        memcpy(&meta.color, &this->metadata.color, sizeof(metadata.color));
+        memcpy(&meta.posizione_audio, &this->metadata.posizione_audio, sizeof(metadata.posizione_audio));
+#else
+        return ERROR;
+#endif
+    }else{
+        SOURCE_READ_RETURN(file, &this->metadata, sizeof(metadata));
+    }
 
     for(i = 0; i < len_point; i++){
         SOURCE_READ_RETURN(file, &point_append, sizeof(point_s));
