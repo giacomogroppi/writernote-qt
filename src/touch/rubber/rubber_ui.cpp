@@ -239,7 +239,7 @@ void *actionRubberSingleTotal(void *__data)
         int lenPoint = stroke.length();
 
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
-            break;
+            continue;
 
         if(ifNotInside(stroke, __m_size_gomma, *_touch)) continue;
 
