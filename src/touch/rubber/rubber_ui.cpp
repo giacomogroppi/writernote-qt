@@ -105,7 +105,7 @@ void rubber_ui::endRubber(datastruct *data)
     }
 }
 
-static bool ifNotInside(stroke &stroke, const double m_size_gomma, const QPointF &pointTouch)
+static bool ifNotInside(const stroke &stroke, const double m_size_gomma, const QPointF &pointTouch)
 {
     const QRectF &pos = stroke.getBiggerPointInStroke();
     const QPointF &topLeft = pos.topLeft() - QPointF(m_size_gomma, m_size_gomma);
@@ -284,7 +284,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     const bool isTotal = (this->m_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     void *(*functionToCall)(void *);
-    int flag, tmp = 0, create;
+    int flag, create;
     RubberPrivateData dataPrivate;
 
     QVector<int> stroke_mod;
@@ -315,6 +315,10 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
         lenStroke = dataPrivate.__page->lengthStroke();
 
+        // we trigger the copy if the page is shared
+        if(likely(lenStroke))
+            dataPrivate.__page->atStrokeMod(0);
+
         if(unlikely(data_to_remove.length() <= count))
             data_to_remove.append(QVector<int>());
 
@@ -324,15 +328,8 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
         create = DataPrivateMuThreadInit(threadData, &dataPrivate, countThread, lenStroke, flag);
 
         start_thread(thread, threadData, create, functionToCall);
-        /*for(tmp = 0; tmp < create; tmp ++){
-            pthread_create(&thread[tmp], NULL, functionToCall, &threadData[tmp]);
-        }*/
 
         joinThread(thread, count);
-
-        /*for(tmp = 0; tmp < create; tmp ++){
-            pthread_join(thread[tmp], NULL);
-        }*/
 
         if(!isTotal){
             page & p = *dataPrivate.__page;
