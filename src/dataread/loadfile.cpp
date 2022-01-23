@@ -5,7 +5,8 @@
 #include "frompdf/frompdf.h"
 #include "utils/areyousure/areyousure.h"
 
-int xmlstruct::load_stringa(zip_file_t *f, QString &stringa){
+int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
+{
     int tmp;
     char *str;
 
@@ -42,25 +43,37 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
                         const bool clear, const QString &path,
                         const bool closeZip)
 {
-    size_t size;
     zip_file_t *file;
-    uchar __r;
+    void *data;
+
+    const size_t size = xmlstruct::sizeFile(fileZip, path);
 
     if(clear)
         arr.clear();
 
-    size = xmlstruct::sizeFile(fileZip, path);
+    if(unlikely(!size)){
+        const auto prio = (path.indexOf("audio") != -1) ? log_ui::possible_bug : log_ui::info;
+        log_write->write(QString("File %1 has 0 byte").arg(path), prio);
+        return OK;
+    }
 
     file = zip_fopen(fileZip, path.toUtf8().constData(), 0);
     if(file == NULL)
         return ERROR;
 
-    while(size){
+    data = malloc(size);
+    SOURCE_READ_GOTO(file, data, size);
+
+    /*while(size){
         SOURCE_READ_GOTO(file, &__r, sizeof(uchar));
 
         arr.append(__r);
         size --;
-    }
+    }*/
+
+    arr.append((cchar *)data, size);
+
+    free(data);
 
     zip_fclose(file);
     if(closeZip)
@@ -107,7 +120,8 @@ bool xmlstruct::manageMessage(const int res)
     return false;
 }
 
-int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data){
+int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data)
+{
     int i, lunghezza, temp;
 
     SOURCE_READ_RETURN(f, &lunghezza, sizeof(int));
@@ -249,7 +263,8 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
 #define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
     zip_close(y);
 
-int load_audio(QByteArray &array, const QString &path){
+int load_audio(QByteArray &array, const QString &path)
+{
     int error;
     zip_t *file_zip;
 
@@ -257,7 +272,7 @@ int load_audio(QByteArray &array, const QString &path){
 
     file_zip = zip_open(path.toUtf8().constData(), 0, &error);
 
-    if(!file_zip)
+    if(unlikely(!file_zip))
         return ERROR;
 
     error = xmlstruct::readFile(file_zip, array, true, NAME_AUDIO, false);
@@ -267,7 +282,8 @@ int load_audio(QByteArray &array, const QString &path){
 
 }
 
-size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile){
+size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
+{
     struct zip_stat st;
     zip_stat_init(&st);
 

@@ -10,7 +10,7 @@ short int source_write_ext(zip_source_t *, const void *, int);
 /* read */
 #define SOURCE_READ_EXT(x, y, z) check+=zip_fread(x, y, z) == -1
 
-#define ARGUMENT(x, y, z) if(zip_fread(x, y,z)==-1)
+#define ARGUMENT(x, y, z) if(unlikely(zip_fread(x, y,z)==-1))
 
 #define SOURCE_READ_GOTO(x, y, z) ARGUMENT(x,y,z)goto free_;
 #define SOURCE_READ_RETURN(x, y, z) ARGUMENT(x, y, z)return ERROR;

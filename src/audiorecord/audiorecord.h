@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QAudioRecorder>
 #include <QUrl>
+#include <QFile>
 
 class AudioRecord : public QObject
 {
@@ -77,6 +78,7 @@ inline QMediaRecorder::Error AudioRecord::errors() const
 
 inline void AudioRecord::setOutputLocation(const QString &path)
 {
+    QFile::remove(path);
     pathAudio = path;
     this->recorder->setOutputLocation(QUrl::fromLocalFile(path));
 }

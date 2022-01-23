@@ -1,6 +1,7 @@
 #include "datawrite/savefile.h"
 #include "datawrite/source_read_ext.h"
 #include "dataread/xmlstruct.h"
+#include <QFile>
 
 int savefile::saveArrayIntoFile(const QString   &from,
                                 const QString   &path,
@@ -11,28 +12,26 @@ int savefile::saveArrayIntoFile(const QString   &from,
     zip_source_t *file;
     zip_error_t errore;
     int check = 0;
-    FILE *fp;
-    void *data;
     size_t sizeFile = xmlstruct::get_size_file(from.toUtf8());
 
-#if defined(unix) || defined(MACOS)
-    if(!(fp = fopen(from.toUtf8().constData(), "r"))){
+    QFile file_from(from);
+
+    if(unlikely(!file_from.open(QIODevice::ReadOnly))){
         return ERROR;
     }
-#elif defined(WIN32) || defined (WIN64)
-    if(!(fp = fopen(from.toUtf8().constData(), "rb"))){
+
+    QByteArray tmp = file_from.readAll();
+
+    file_from.close();
+
+    if(tmp.size() != (int)sizeFile){
         return ERROR;
     }
-#else
-    dialog_critic("This function not work in your platform");
-    return ERROR;
-#endif
 
     if(!filezip){
         filezip = xmlstruct::openZip(path, xmlstruct::openMode::write);
 
-        if(!filezip){
-            fclose(fp);
+        if(unlikely(!filezip)){
             return ERROR;
         }
     }
@@ -41,18 +40,14 @@ int savefile::saveArrayIntoFile(const QString   &from,
     if(!file){
         if(closeZip)
             zip_close(filezip);
-        fclose(fp);
+
         return ERROR;
     }
 
     zip_source_begin_write(file);
 
-    data = malloc(sizeFile);
 
-    if(unlikely(fread(data, 1, sizeFile, fp) != sizeFile))
-        goto delete_;
-
-    SOURCE_WRITE(file, data, sizeFile);
+    SOURCE_WRITE(file, tmp.constData(), sizeFile);
 
     check += zip_source_commit_write(file)==ERROR_PRIVATE;
 
@@ -66,15 +61,11 @@ int savefile::saveArrayIntoFile(const QString   &from,
 
     if(closeZip)
         zip_close(filezip);
-    fclose(fp);
 
-    free(data);
 
     return OK;
 
     delete_:
-    free(data);
-    fclose(fp);
     zip_source_free(file);
 
     if(closeZip)
@@ -82,7 +73,6 @@ int savefile::saveArrayIntoFile(const QString   &from,
 
     /* TODO --> update the functions that call this function, and add an error case. */
     return ERROR;
-
 }
 
 int savefile::saveArrayIntoFile(const QByteArray &arr,

@@ -1,5 +1,6 @@
 #include "xmlstruct.h"
 #include <QString>
+#include "utils/common_script.h"
 
 xmlstruct::xmlstruct(const QString *path_U, Document *currenttitle_U)
 {
@@ -37,20 +38,20 @@ size_t xmlstruct::get_size_file(const QByteArray &path)
     FILE *fp;
     size_t size;
 
-#if defined(WIN32) || defined(WIN64)
-    fp = fopen(path.constData(), "rb");
-#else
-    fp = fopen(path.constData(), "r");
-#endif
+    fp = __fopen(path, "r");
+
     if(!fp)
         return 0;
+
     fseek(fp, 0, SEEK_END);
     size = ftell(fp); // get current file pointer
+
     fclose(fp);
 
     return size;
 }
 
-xmlstruct::xmlstruct(const QString &path_U, Document &currenttitle_U){
+xmlstruct::xmlstruct(const QString &path_U, Document &currenttitle_U)
+{
     setData(&path_U, &currenttitle_U);
 }

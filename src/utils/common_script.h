@@ -19,6 +19,22 @@
 #define likely(exp) Q_LIKELY(exp)
 #define force_inline Q_ALWAYS_INLINE
 
+force_inline FILE *__fopen(const QString &path, const char *flag)
+{
+#if defined(WIN32) || defined(WIN64)
+    FILE *fp;
+    if(*flag == 'r'){
+        fp = fopen(path.toUtf8().constData(), "rb");
+    }else{
+        fp = fopen(path.toUtf8().constData(), "wb");
+    }
+
+    return fp;
+#endif
+
+    return fopen(path.toUtf8().constData(), flag);
+}
+
 /*
  * this function controll an enum load from setting
  * When you load a value from QSetting, and apply an implicit cast to it, it is saved correctly

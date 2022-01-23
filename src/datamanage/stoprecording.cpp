@@ -37,8 +37,10 @@ void MainWindow::on_stop_rec_triggered()
 {
     Document *doc = m_canvas->data;
 
-    if(m_audio_recorder->isStopped())
+    if(unlikely(m_audio_recorder->isStopped())){
+        log_write->write("The audio is not recording", log_ui::possible_bug);
         return;
+    }
 
     m_audio_recorder->stopRecording();
 
