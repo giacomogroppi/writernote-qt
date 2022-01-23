@@ -87,6 +87,7 @@ void rubber_ui::endRubber(datastruct *data)
     int i, len = data_to_remove.length();
 
     W_ASSERT(data);
+    qDebug() << "rubber_ui::endRubber";
 
     if(m_type_gomma == e_type_rubber::total){
 
@@ -230,16 +231,14 @@ void *actionRubberSingleTotal(void *__data)
 
     Q_ASSERT(data->from <= data->to);
 
-#ifdef DEBUGINFO
-    //qDebug() << data->from << data->to;
-#endif
+    qDebug() << data->from << data->to << *_al_find;
 
     for(; data->from < data->to; data->from++){
         stroke &stroke = _page->atStrokeMod(data->from);
         int lenPoint = stroke.length();
 
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
-            break;
+            continue;
 
         if(ifNotInside(stroke, __m_size_gomma, *_touch)) continue;
 
@@ -354,5 +353,6 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
         count ++;
     }
 
-    data_to_remove.clear();
+    if(!isTotal)
+        data_to_remove.clear();
 }

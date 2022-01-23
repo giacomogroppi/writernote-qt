@@ -21,6 +21,27 @@ void DataPrivateInit(void)
     pthread_mutex_init(&mutex_thread_write, NULL);
 }
 
+static void ctrlThread(DataPrivateMuThread *data, int create)
+{
+#ifdef DEBUGINFO
+    int i;
+    QVector<int> tmp;
+
+    for(i = 0; i < create - 1; i++){
+        if(data[i].to != data[i+1].from)
+            std::abort();
+
+        if(tmp.indexOf(data[i].from) != -1)
+            std::abort();
+
+        tmp.append(data[i].from);
+    }
+#else
+    Q_UNUSED(data);
+    Q_UNUSED(create);
+#endif
+}
+
 int DataPrivateMuThreadInit(
         DataPrivateMuThread     *data,
         void                    *extraData,
@@ -56,6 +77,8 @@ int DataPrivateMuThreadInit(
         data[0].extra = extraData;
         data[0].id = 0;
     }
+
+    ctrlThread(data, count);
 
     return count;
 }

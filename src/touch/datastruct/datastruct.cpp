@@ -62,7 +62,6 @@ void datastruct::reset(){
 
 void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
 {
-    qDebug() << pos;
     at_mod(index).decreseAlfa(pos, 4);
 }
 
