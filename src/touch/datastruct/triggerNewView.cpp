@@ -16,9 +16,11 @@ struct DatastructNewView{
 
     int last_time;
     int new_time;
+
+    pthread_mutex_t *mutex;
 };
 
-void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> save, page *page)
+void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> &save, page *page)
 {
     W_ASSERT(data);
     W_ASSERT(page);
@@ -43,37 +45,50 @@ void *__search_new_view(void *__data)
     DataPrivateMuThread *_data = (DataPrivateMuThread *)__data;
     DatastructNewView *_private_data = (DatastructNewView *)_data->extra;
     page *_page = _private_data->m_page;
-    QVector<int> pos;
+    constexpr int nullable_audio = -1;
+    QVector<int> pos = index_last;
 
     if(unlikely(_private_data->is_mod == true)){
+        pos.clear();
+
         __search_for_stroke(_data, _private_data->last_time, pos, _page);
-        drawStroke(_page, pos, _private_data->last_time);
-    }else{
-        drawStroke(_page, index_last, _private_data->last_time);
     }
 
+    __search_for_stroke(_data, _private_data->new_time, index_last, _page);
 
+    // block other thread
+    pthread_mutex_lock(_private_data->mutex);
+
+    // draw the old stroke with their color
+    drawStroke(_page, pos, nullable_audio);
+
+    // draw the new stroke
+    _page->drawForceColorStroke(index_last, nullable_audio, COLOR_NULL);
+    drawStroke(_page, index_last, _private_data->new_time);
+
+    // release other thread
+    pthread_mutex_unlock(_private_data->mutex);
 
     return NULL;
 }
 
 void datastruct::newViewAudio(int lastTime, int newTime)
 {
-    int index = this->getFirstPageVisible();
-    int len = this->lengthPage();
-    QList<QVector<int>> position;
+    int index, create, len;
+
+    index = this->getFirstPageVisible();
+    len = this->lengthPage();
 
     DataPrivateMuThread dataThread[DATASTRUCT_THREAD_MAX];
     pthread_t thread[DATASTRUCT_THREAD_MAX];
 
     DatastructNewView extra;
 
+    extra.mutex = &changeAudioMutex;
     extra.new_time = newTime;
     extra.last_time = lastTime;
 
     for(; index < len; index ++){
-        int create, i;
-
         extra.m_page = (page *)&at(index);
 
         create = DataPrivateMuThreadInit(dataThread, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->lengthStroke(), 0);
@@ -81,12 +96,8 @@ void datastruct::newViewAudio(int lastTime, int newTime)
             __search_new_view(&dataThread[0]);
             continue;
         }
-        for(i = 0; i < create; i ++){
-            pthread_create(&thread[i], NULL, __search_new_view, &dataThread[i]);
-        }
-        for(i = 0; i < create; i++){
-            pthread_join(thread[i], NULL);
-        }
-        std::abort();
+
+        start_thread(thread, dataThread, create, __search_new_view);
+        joinThread(thread, create);
     }
 }

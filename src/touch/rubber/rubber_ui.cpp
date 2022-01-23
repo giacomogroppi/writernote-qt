@@ -323,13 +323,16 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
         create = DataPrivateMuThreadInit(threadData, &dataPrivate, countThread, lenStroke, flag);
 
-        for(tmp = 0; tmp < create; tmp ++){
+        start_thread(thread, threadData, create, functionToCall);
+        /*for(tmp = 0; tmp < create; tmp ++){
             pthread_create(&thread[tmp], NULL, functionToCall, &threadData[tmp]);
-        }
+        }*/
 
-        for(tmp = 0; tmp < create; tmp ++){
+        joinThread(thread, count);
+
+        /*for(tmp = 0; tmp < create; tmp ++){
             pthread_join(thread[tmp], NULL);
-        }
+        }*/
 
         if(!isTotal){
             page & p = *dataPrivate.__page;

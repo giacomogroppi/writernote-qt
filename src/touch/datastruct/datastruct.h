@@ -72,10 +72,11 @@ private:
 
     // todo --> move this mutex to page
     pthread_mutex_t changeIdMutex;
+    pthread_mutex_t changeAudioMutex;
     void __changeId(int indexPoint, stroke &stroke, page &page, cbool useThreadSafe);
 public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
-    ~datastruct() = default;
+    ~datastruct();
 
     void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool all);
     void triggerNewView(int m_pos_ris, const bool all);

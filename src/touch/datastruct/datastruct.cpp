@@ -51,7 +51,15 @@ datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
     this->m_pdf = m_pdf;
     this->m_img = m_img;
     __last_translation = QPointF(0, 0);
+
     pthread_mutex_init(&changeIdMutex, NULL);
+    pthread_mutex_init(&changeAudioMutex, NULL);
+}
+
+datastruct::~datastruct()
+{
+    pthread_mutex_destroy(&changeIdMutex);
+    pthread_mutex_destroy(&changeAudioMutex);
 }
 
 void datastruct::reset(){

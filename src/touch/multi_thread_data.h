@@ -26,4 +26,20 @@ void free_thread_data(pthread_t *thread, DataPrivateMuThread *data);
 
 int get_thread_used();
 
+force_inline void start_thread(pthread_t *thread, DataPrivateMuThread *data, int count, void *(*functionToCall)(void *))
+{
+    int i;
+    for(i = 0; i < count; i++){
+        pthread_create(&thread[i], NULL, functionToCall, &data[i]);
+    }
+}
+
+force_inline void joinThread(pthread_t *thread, int count)
+{
+    int i;
+    for(i = 0; i < count; i++){
+        pthread_join(thread[i], NULL);
+    }
+}
+
 #endif // MULTI_THREAD_DATA_H
