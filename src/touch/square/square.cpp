@@ -11,8 +11,6 @@
 #include "touch/paintevent/paint.h"
 #include "pthread.h"
 
-#define SQ_THREAD 8
-
 #ifdef DEBUG_THREAD
 # undef SQ_THREAD
 # define SQ_THREAD DEBUG_THREAD
@@ -30,6 +28,10 @@ square::square(QObject *parent, property_control *property):
 {
     W_ASSERT(parent);
     W_ASSERT(property);
+
+    this->thread        = get_thread_max();
+    this->dataThread    = get_data_max();
+    this->threadCount   = get_thread_used();
 
     this->m_property = property;
     this->m_copy = new copy();
@@ -49,6 +51,7 @@ square::square(QObject *parent, property_control *property):
 
 square::~square()
 {
+    free_thread_data(thread, dataThread);
     delete this->m_copy;
 }
 
@@ -100,9 +103,6 @@ bool square::find()
     const QPointF &topLeft = data->adjustPoint(pointinit.point);
     const QPointF &bottomRight = data->adjustPoint(pointfine.point);
 
-    pthread_t thread[SQ_THREAD];
-    DataPrivateMuThread dataThread[SQ_THREAD];
-
     WDebug(debugSquare, "square::find");
 
     base = data->getFirstPageVisible();
@@ -131,7 +131,7 @@ bool square::find()
     /* point selected by user */
     for(count = 0; PageCounter < lenPage; PageCounter ++, count ++){
         __page = &data->at(PageCounter);
-        create = DataPrivateMuThreadInit(dataThread, NULL, SQ_THREAD, __page->lengthStroke(), 0);
+        create = DataPrivateMuThreadInit(dataThread, NULL, this->threadCount, __page->lengthStroke(), 0);
 
         if(unlikely(!__page->isVisible()))
             break;

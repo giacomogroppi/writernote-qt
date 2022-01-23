@@ -17,14 +17,21 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
         strokeToAppend.append(__stroke.at(secIndex));
     }
 
-    __stroke.removeAt(IndexPoint, __stroke.length() - 1);
-
-    strokeToAppend.setMetadata(__stroke.getMetadata());
 
     if(threadSafe){
         pthread_mutex_lock(&changeIdMutex);
     }
+
+    page.drawForceColorStroke(__stroke, -1, COLOR_NULL, NULL);
+
+    __stroke.removeAt(IndexPoint, __stroke.length() - 1);
+
+    page.drawForceColorStroke(__stroke, -1, __stroke.getColor(1.0), NULL);
+
+    strokeToAppend.setMetadata(__stroke.getMetadata());
+
     page.append(strokeToAppend);
+
 
     if(threadSafe){
         pthread_mutex_unlock(&changeIdMutex);

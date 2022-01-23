@@ -333,20 +333,10 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
         if(!isTotal){
             page & p = *dataPrivate.__page;
-            QRect area;
 
             p.removeAt(*dataPrivate.data_to_remove);
 
-            if(stroke_mod.isEmpty())
-                continue;
-
-            area = p.get_size_area(*dataPrivate.stroke_mod);
-
-            p.drawSquare(area);
-            p.drawIfInside(-1, area);
-
             dataPrivate.__page->mergeList();
-            stroke_mod.clear();
 
         }
 

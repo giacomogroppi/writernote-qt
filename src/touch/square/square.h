@@ -10,6 +10,7 @@
 #include "touch/property/property_control.h"
 #include "touch/copy_cut/copy_cut_selection.h"
 #include "utils/common_script.h"
+#include "touch/multi_thread_data.h"
 
 constexpr bool debugSquare = false;
 
@@ -81,6 +82,11 @@ private:
     copy *m_copy;
 
     class TabletCanvas *canvas;
+
+    pthread_t *thread;
+    DataPrivateMuThread *dataThread;
+    int threadCount;
+
 
 private slots:
     void actionProperty(property_control::ActionProperty action);
