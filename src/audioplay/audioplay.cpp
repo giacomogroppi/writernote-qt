@@ -4,6 +4,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+bool __audio_play_is_mod = true;
+
 audioplay::audioplay(QObject *parent) : QObject(parent)
 {
     this->player = new QMediaPlayer(this);

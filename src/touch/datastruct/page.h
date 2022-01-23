@@ -11,6 +11,7 @@
 #include "utils/common_def.h"
 #include "utils/common_script.h"
 #include "utils/dialog_critic/dialog_critic.h"
+#include "audioplay/audioplay.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 
@@ -377,6 +378,7 @@ inline void page::copy(
 
 force_inline void page::removeAt(const uint i)
 {
+    audio_play_set_mod(true);
     this->m_stroke.removeAt(i);
 }
 

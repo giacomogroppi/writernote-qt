@@ -5,6 +5,18 @@
 #include <QMediaPlayer>
 #include <QSlider>
 #include <QBuffer>
+#include "utils/common_script.h"
+
+extern bool __audio_play_is_mod;
+force_inline void audio_play_set_mod(bool mod)
+{
+    __audio_play_is_mod = mod;
+}
+
+force_inline bool audio_play_is_mod()
+{
+    return __audio_play_is_mod;
+}
 
 class audioplay : public QObject
 {

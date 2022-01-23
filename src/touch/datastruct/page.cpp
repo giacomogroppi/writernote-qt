@@ -367,6 +367,7 @@ void page::mergeList()
         if(likely(stroke.getColor(1).alpha() == 255)){
             m_stroke.append(stroke);
         }else{
+            audio_play_set_mod(true);
             m_stroke.insert(0, stroke);
         }
 
