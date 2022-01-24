@@ -115,7 +115,8 @@ void log_ui::closeEvent(QCloseEvent *event)
     event->ignore();
 }
 
-void log_ui::saveData(){
+void log_ui::saveData()
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_LOG_POSITION);
     setting.setValue(KEY_LOG_POSITION, this->pos_log);
@@ -125,7 +126,8 @@ void log_ui::saveData(){
     setting.endGroup();
 }
 
-int log_ui::loadData(){
+int log_ui::loadData()
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_LOG_POSITION);
 
@@ -140,12 +142,16 @@ int log_ui::loadData(){
 
     if(pos_log == ""){
         _pos = get_path(path::audio_pos);
-        if(_pos == "")
+        if(_pos == ""){
+            setting.endGroup();
             return 1;
+        }
 
         pos_log = _pos;
         pos_log += slash::__slash();
-        pos_log += "writernote-log-" + current_day_string() + current_time_string() + ".txt";
+        pos_log += QString("writernote-log-%1-%2.txt").
+                arg(current_day_string()    .replace(":", "_")).
+                arg(current_time_string()   .replace(":", "_"));
     }
 
     setting.endGroup();
