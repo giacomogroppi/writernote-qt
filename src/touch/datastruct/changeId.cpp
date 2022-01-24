@@ -17,21 +17,24 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
         strokeToAppend.append(__stroke.at(secIndex));
     }
 
+    strokeToAppend.setMetadata(__stroke.getMetadata());
 
     if(threadSafe){
         pthread_mutex_lock(&changeIdMutex);
     }
 
+    // draw to old stroke with color_null
     page.drawForceColorStroke(__stroke, -1, COLOR_NULL, NULL);
 
+    // we remove the point
     __stroke.removeAt(IndexPoint, __stroke.length() - 1);
 
+    // we draw the new 2 stroke
     page.drawForceColorStroke(__stroke, -1, __stroke.getColor(1.0), NULL);
+    page.drawForceColorStroke(strokeToAppend, -1, strokeToAppend.getColor(1.0), NULL);
 
-    strokeToAppend.setMetadata(__stroke.getMetadata());
-
+    // we append the stroke
     page.append(strokeToAppend);
-
 
     if(threadSafe){
         pthread_mutex_unlock(&changeIdMutex);

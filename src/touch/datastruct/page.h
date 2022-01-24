@@ -289,17 +289,17 @@ ret:
     return IsVisible;
 }
 
-Q_ALWAYS_INLINE void page::setVisible(cbool vis)
+force_inline void page::setVisible(cbool vis)
 {
     this->IsVisible = vis;
 }
 
-Q_ALWAYS_INLINE const stroke &page::atStroke(uint i) const
+force_inline const stroke &page::atStroke(uint i) const
 {
     return this->m_stroke.at(i);
 }
 
-Q_ALWAYS_INLINE stroke &page::atStrokeMod(const uint i)
+force_inline stroke &page::atStrokeMod(const uint i)
 {
     return this->m_stroke.operator[](i);
 }

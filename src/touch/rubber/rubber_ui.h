@@ -47,8 +47,8 @@ private:
 
     Ui::rubber_ui *ui;
 
-    pthread_t *thread = NULL;
-    struct DataPrivateMuThread *threadData = NULL;
+    pthread_t *thread;
+    struct DataPrivateMuThread *threadData;
     int countThread;
 
 protected:

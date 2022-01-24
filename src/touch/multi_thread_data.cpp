@@ -133,13 +133,19 @@ DataPrivateMuThread *get_data_max()
 }
 
 
-void free_thread_data(pthread_t *thread, DataPrivateMuThread *data)
+void free_thread_data(pthread_t **thread, DataPrivateMuThread **data)
 {
     W_ASSERT(thread);
     W_ASSERT(data);
 
-    free(thread);
-    free(data);
+    W_ASSERT(*thread);
+    W_ASSERT(*data);
+
+    free(*thread);
+    free(*data);
+
+    *thread = NULL;
+    *data = NULL;
 }
 
 int get_thread_used()

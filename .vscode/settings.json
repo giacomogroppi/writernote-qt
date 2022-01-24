@@ -18,7 +18,8 @@
         "future": "cpp",
         "stop_token": "cpp",
         "semaphore": "cpp",
-        "condition_variable": "cpp"
+        "condition_variable": "cpp",
+        "thread": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

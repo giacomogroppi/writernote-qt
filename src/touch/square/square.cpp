@@ -51,7 +51,7 @@ square::square(QObject *parent, property_control *property):
 
 square::~square()
 {
-    free_thread_data(thread, dataThread);
+    free_thread_data(&thread, &dataThread);
     delete this->m_copy;
 }
 

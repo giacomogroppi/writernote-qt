@@ -9,10 +9,12 @@
 struct RubberPrivateData{
     QVector<int>    *data_find;
     page            *__page;
-    const QPointF   *touch;
+    QPointF          touch;
     datastruct      *data;
     QVector<int>    *data_to_remove;
     QVector<int>    *stroke_mod;
+
+    int             al_find;
 };
 
 static int             __m_size_gomma;
@@ -42,7 +44,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
 rubber_ui::~rubber_ui()
 {
     this->save_settings();
-
+    free_thread_data(&thread, &threadData);
     delete ui;
 }
 
@@ -134,7 +136,7 @@ void *actionRubberSinglePartial(void *__data)
     int lenPoint, counterPoint;
 
     page *_page             = private_data->__page;
-    const QPointF *_touch   = private_data->touch;
+    const QPointF _touch    = private_data->touch;
     datastruct *_datastruct = private_data->data;
 
     QVector<int> *_data_to_remove = private_data->data_to_remove;
@@ -151,14 +153,14 @@ void *actionRubberSinglePartial(void *__data)
     for(; from < to; from ++){
         stroke & stroke = _page->atStrokeMod(from);
 
-        if(ifNotInside(stroke, __m_size_gomma, *_touch))
+        if(ifNotInside(stroke, __m_size_gomma, _touch))
             continue;
 
         lenPoint = stroke.length();
         for(counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
             const point_s &point = stroke.at(counterPoint);
 
-            if(likely(!isin(__m_size_gomma, point, *_touch)))
+            if(likely(!isin(__m_size_gomma, point, _touch)))
                 continue;
 
             if(unlikely(counterPoint < 3)){
@@ -221,10 +223,10 @@ void *actionRubberSingleTotal(void *__data)
     RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
 
     QVector<int> index_selected;
-    cint data_already_len   = private_data->data_find->length();
+    cint data_already_len   = private_data->al_find;
 
     page *_page             = private_data->__page;
-    const QPointF *_touch   = private_data->touch;
+    const QPointF _touch    = private_data->touch;
     QVector<int> *_al_find  = private_data->data_find;
 
     index_selected.reserve(32);
@@ -234,18 +236,18 @@ void *actionRubberSingleTotal(void *__data)
     qDebug() << data->from << data->to << *_al_find;
 
     for(; data->from < data->to; data->from++){
-        stroke &stroke = _page->atStrokeMod(data->from);
-        int lenPoint = stroke.length();
+        stroke &__stroke = _page->atStrokeMod(data->from);
+        int lenPoint = __stroke.length();
 
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
-        if(ifNotInside(stroke, __m_size_gomma, *_touch)) continue;
+        if(ifNotInside(__stroke, __m_size_gomma, _touch)) continue;
 
         for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-            const point_s &point = stroke.at(counterPoint);
+            const point_s &point = __stroke.at(counterPoint);
 
-            if(unlikely(isin(__m_size_gomma, point, *_touch))){
+            if(unlikely(isin(__m_size_gomma, point, _touch))){
                 // possiamo anche non bloccare gli altri thread nell'appendere
                 // tanto di sicuro non staranno cercando il nostro stroke in lista
                 // e non lo aggiungeranno
@@ -272,6 +274,8 @@ void *actionRubberSingleTotal(void *__data)
 release:
     return NULL;
 }
+
+#define PrivateData(attribute) dataPrivate.attribute
 
 /*
  * this function is call by tabletEvent
@@ -300,9 +304,9 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
     this->base = data->getFirstPageVisible();
 
-    dataPrivate.data    = data;
-    dataPrivate.touch   = &lastPoint;
-    dataPrivate.stroke_mod      = &stroke_mod;
+    PrivateData(data)       = data;
+    PrivateData(touch)      = lastPoint;
+    PrivateData(stroke_mod) = &stroke_mod;
 
     __m_size_gomma =    this->m_size_gomma;
 
@@ -311,26 +315,29 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     for(counterPage = base; counterPage < lenPage; counterPage ++){
         dataPrivate.__page = &data->at_mod(counterPage);
 
-        if(!dataPrivate.__page->isVisible()) break;
+        if(unlikely(!dataPrivate.__page->isVisible())) break;
 
         lenStroke = dataPrivate.__page->lengthStroke();
 
         // we trigger the copy if the page is shared
-        if(likely(lenStroke))
-            dataPrivate.__page->atStrokeMod(0);
+        if(unlikely(!lenStroke))
+            continue;
+
+        dataPrivate.__page->atStrokeMod(0);
 
         if(unlikely(data_to_remove.length() <= count))
             data_to_remove.append(QVector<int>());
 
-        dataPrivate.data_find       = (QVector<int> *)&data_to_remove.at(count);
-        dataPrivate.data_to_remove  = dataPrivate.data_find;
+        PrivateData(data_find)      = &data_to_remove.operator[](count);
+        PrivateData(data_to_remove) = dataPrivate.data_find;
+        PrivateData(al_find)        = dataPrivate.data_find->length();
 
         create = DataPrivateMuThreadInit(threadData, &dataPrivate, countThread, lenStroke, flag);
 
-        start_thread(thread, threadData, create, functionToCall);
+        START_THREAD(thread, threadData, create, functionToCall);
 
-        joinThread(thread, count);
-
+        JOIN_THREAD(thread, create);
+        
         if(!isTotal){
             page & p = *dataPrivate.__page;
 

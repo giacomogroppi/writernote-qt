@@ -97,7 +97,7 @@ void datastruct::newViewAudio(int lastTime, int newTime)
             continue;
         }
 
-        start_thread(thread, dataThread, create, __search_new_view);
-        joinThread(thread, create);
+        START_THREAD(thread, dataThread, create, __search_new_view);
+        JOIN_THREAD(thread, create);
     }
 }

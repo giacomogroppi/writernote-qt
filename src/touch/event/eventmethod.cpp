@@ -6,7 +6,6 @@
 #include "mainwindow.h"
 
 static inline double Distance(const QPointF &point1, const QPointF &point2);
-static inline void scambio(QPointF &, QPointF &);
 static inline QPointF puntoameta(const QPointF &, const QPointF &);
 
 extern bool isZooming;

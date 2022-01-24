@@ -22,17 +22,17 @@ void DataPrivateCountThreadRelease(int numReleaseThread);
 pthread_t *get_thread_max(void);
 DataPrivateMuThread *get_data_max(void);
 
-void free_thread_data(pthread_t *thread, DataPrivateMuThread *data);
+void free_thread_data(pthread_t **thread, DataPrivateMuThread **data);
 
 int get_thread_used();
 
-force_inline void start_thread(pthread_t *thread, DataPrivateMuThread *data, int count, void *(*functionToCall)(void *))
-{
-    int i;
-    for(i = 0; i < count; i++){
-        pthread_create(&thread[i], NULL, functionToCall, &data[i]);
-    }
-}
+#define START_THREAD(thread, data, count, functionToCall) \
+    for(int __i = 0; __i < count; __i++){                                     \
+        pthread_create(&thread[__i], NULL, functionToCall, &data[__i]);     \
+    }                                                                   \
+
+
+#define JOIN_THREAD(thread, count) for(int __i = 0; __i < count; __i ++){ pthread_join(thread[__i], NULL); }
 
 force_inline void joinThread(pthread_t *thread, int count)
 {
