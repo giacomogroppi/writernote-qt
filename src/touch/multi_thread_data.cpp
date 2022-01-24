@@ -24,17 +24,19 @@ void DataPrivateInit(void)
 static void ctrlThread(DataPrivateMuThread *data, int create)
 {
 #ifdef DEBUGINFO
-    int i;
+    int i, count;
     QVector<int> tmp;
 
     for(i = 0; i < create - 1; i++){
         if(data[i].to != data[i+1].from)
             std::abort();
 
-        if(tmp.indexOf(data[i].from) != -1)
-            std::abort();
-
-        tmp.append(data[i].from);
+        count = data[i].from;
+        for(; count < data[i].to; count ++){
+            if(tmp.indexOf(data[i].count) != -1)
+                std::abort();
+            tmp.append(count);
+        }
     }
 #else
     Q_UNUSED(data);

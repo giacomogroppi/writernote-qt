@@ -24,7 +24,7 @@ void frompdf::translation(const QPointF &point)
     if(!m_data->count_pdf)
         return;
 
-    for(i=0; i<len; ++i){
+    for(i = 0; i < len; ++i){
         this->m_image.operator[](i).topLeft += point;
     }
 }
@@ -100,7 +100,7 @@ frompdf::load_res frompdf::load(zip_t *fileZip,
         return frompdf::load_res::not_valid_pdf;
     }
 
-    for (i=0; i<m_data->count_pdf; ++i){
+    for (i = 0; i < m_data->count_pdf; ++i){
         res = load_from_row(arr.at(i),
                                  false,
                                  file == nullptr,
@@ -114,30 +114,32 @@ frompdf::load_res frompdf::load(zip_t *fileZip,
 }
 
 void frompdf::resizing(TabletCanvas *canvas, const uint lenPdf){
-    if(!canvas)
+    if(unlikely(!canvas))
         return;
 
     uint i = m_data->datatouch->lengthPage();
-    for(; i<lenPdf; ++i){
+    for(; i < lenPdf; ++i){
         m_data->datatouch->newPage(n_style::white);
     }
 }
 
-frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear,
-                                         const bool FirstLoad, const uchar IndexPdf,
-                                         TabletCanvas *canvas)
+frompdf::load_res frompdf::load_from_row(
+        const QByteArray    &pos,
+        const bool          clear,
+        const bool          FirstLoad,
+        const uchar         IndexPdf,
+        TabletCanvas        *canvas)
 {
     /*
      * in the current version we cannot upload more
      * than one pdf at the same time
     */
 
-    uint i, len;
+    int i, len, pdfCount;
     QImage imgAppend;
     QList<Poppler::Page *> page;
     QList<convertImg *> conv;
-    uint pdfCount;
-    const uint countThread = threadCount::count();
+    const int countThread = threadCount::count();
 
     if(clear)
         this->reset();
@@ -175,22 +177,22 @@ frompdf::load_res frompdf::load_from_row(const QByteArray &pos, const bool clear
             conv.at(i)->start();
         }
 
-        for(i=0; i < countThread && i < len && i < (uint)conv.length(); ++i){
+        for(i=0; i < countThread && i < len && i < conv.length(); ++i){
             conv.at(i)->wait();
         }
 
         pdfCount = (pdfCount+1) * len;
     }
 
-    for(i=0; i<(uint)page.length(); ++i)
+    for(i=0; i < page.length(); ++i)
         delete page.at(i);
-    for(i=0; i<(uint)conv.length(); ++i)
+    for(i=0; i < conv.length(); ++i)
         delete conv.at(i);
 
     delete this->doc;
     doc = nullptr;
 
-    for(i=0; i<(uint)m_image.length(); ++i){
+    for(i = 0; i < m_image.length(); ++i){
         if(this->m_image.at(IndexPdf).img.at(i).isNull()){
             dialog_critic("We had a problem processing an image");
             return load_res::not_valid_pdf;
