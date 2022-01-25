@@ -16,7 +16,7 @@ static void setCurrentVersion(Document *data);
 
 int savefile::savefile_check_file()
 {
-    int error, check, ver_stroke;
+    int error, ver_stroke;
     zip_error_t errore;
     zip_t *filezip;
     zip_source_t *file;
@@ -69,28 +69,11 @@ int savefile::savefile_check_file()
     if(res_pdf != frompdf::load_res::ok)
         goto delete_;
 #endif // PDFSUPPORT
-    check = 0;
 
-    /*
-     * Upon successful completion 0 is returned. Otherwise, -1 is returned
-     * and the error information in source is set to indicate the error.
-    */
-    check += zip_source_commit_write(file)==ERROR_PRIVATE;
-
-    /*
-     * Upon successful completion, zip_file_add() returns the index of
-     * the new file in the archive, and zip_file_replace() returns 0.
-     * Otherwise, -1 is returned and the error code in archive is set
-     * to indicate the error.
-    */
-    check += zip_file_add(filezip,
-                 NAME_FILE,
-                 file,
-                 ZIP_FL_OVERWRITE)==ERROR_PRIVATE;
-
-    if(check != OK_PRIVATE)
+    if(!savefile::commitChange(file))
         goto delete_;
-
+    if(!savefile::addFile(filezip, NAME_FILE, file))
+        goto delete_;
 
     zip_close(filezip);
     return OK;
@@ -137,7 +120,7 @@ uchar savefile::save_string(zip_source_t *file, const char *stringa)
 int save_audio_file(const char *posAudio,
                     const QString &path)
 {
-    return savefile::saveArrayIntoFile((const QString)posAudio, path, nullptr, NAME_AUDIO, true);
+    return savefile::moveFileIntoZip(QString(posAudio), path, nullptr, NAME_AUDIO, true);
 }
 
 static void setCurrentVersion(Document *data)

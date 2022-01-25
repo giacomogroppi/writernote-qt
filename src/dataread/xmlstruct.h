@@ -30,6 +30,7 @@ force_inline zip_file_t *zip_fopen(zip_t *zip, const QString &path, zip_flags_t 
 {
     return zip_fopen(zip, path.toUtf8().constData(), flag);
 };
+
 force_inline zip_t *zip_open(const QString &path, int check, int *ok)
 {
     return zip_open(path.toUtf8().constData(), check, ok);

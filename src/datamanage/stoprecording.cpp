@@ -20,8 +20,6 @@
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 
-static void saveAudio(Document * , const QString &path, const AudioRecord *recorder);
-
 namespace removeAudio {
     enum n_removeAudio: int{
         remove_ok,
@@ -33,38 +31,12 @@ namespace removeAudio {
     static void removeAudioSettingsSave(n_removeAudio);
 }
 
-void MainWindow::on_stop_rec_triggered()
+static bool manageNotExist(const QString &path, Document *doc)
 {
-    Document *doc = m_canvas->data;
-
-    if(unlikely(m_audio_recorder->isStopped())){
-        log_write->write("The audio is not recording", log_ui::possible_bug);
-        return;
-    }
-
-    m_audio_recorder->stopRecording();
-
-    if(doc->se_registato == Document::record_zip){
-        saveAudio(doc, m_path, m_audio_recorder);
-    }
-
-    contrUi();
-
-    aggiornotestiriascolto(this);
-
-    this->ui->statusBar->clearMessage();
-}
-
-static bool needRemove;
-
-static void saveAudio(Document *m_currenttitle, const QString &m_path, const AudioRecord *recorder){
-    const QString &path = recorder->getPath();
-    removeAudio::n_removeAudio temp;
+    bool save = false;
 
     if(unlikely(!QFile::exists(path))){
-        bool save = false;
-
-        retry_save_audio m_reciver(m_currenttitle, &save);
+        retry_save_audio m_reciver(doc, &save);
         retry_ui m_r(nullptr, "Audio missing",
                      "For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name",
                      "The file does not exist");
@@ -77,11 +49,24 @@ static void saveAudio(Document *m_currenttitle, const QString &m_path, const Aud
         m_r.exec();
 
         if(!save)
-            return;
+            return false;
     }
 
-    if(save_audio_file(path.toUtf8().constData(), m_path) != OK)
-        dialog_critic("We had a problem saving the audio into " + m_path);
+    return true;
+}
+
+static bool needRemove;
+
+static void saveAudio(Document *m_currenttitle, const QString &m_path, const AudioRecord *recorder){
+    const QString &path = recorder->getPath();
+    removeAudio::n_removeAudio temp;
+
+    if(unlikely(!manageNotExist(path, m_currenttitle)))
+        return;
+
+    if(save_audio_file(path.toUtf8().constData(), m_path) != OK){
+        return dialog_critic("We had a problem saving the audio into " + m_path);
+    }
 
     if(savefile(&m_path, m_currenttitle).savefile_check_file() != OK)
         dialog_critic("We had a problem saving the current copybook");
@@ -122,6 +107,29 @@ static void saveAudio(Document *m_currenttitle, const QString &m_path, const Aud
         }
     }
 
+}
+
+void MainWindow::on_stop_rec_triggered()
+{
+    Document *doc = m_canvas->data;
+
+    if(unlikely(m_audio_recorder->isStopped())){
+        log_write->write("The audio is not recording", log_ui::possible_bug);
+        return;
+    }
+
+    m_audio_recorder->stopRecording();
+    qDebug() << "Audio record in: " << m_audio_recorder->getPath();
+
+    if(doc->se_registato == Document::record_zip){
+        saveAudio(doc, m_path, m_audio_recorder);
+    }
+
+    contrUi();
+
+    aggiornotestiriascolto(this);
+
+    this->ui->statusBar->clearMessage();
 }
 
 /*

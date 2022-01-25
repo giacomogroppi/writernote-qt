@@ -54,11 +54,13 @@ void log_ui::showAll()
 
 void log_ui::write(const QString &stringa, log_ui::type_write var)
 {
-    FILE *fp;
+    QFile file(pos_log.toUtf8().constData());
     QString tmp;
 
-    if(m_permi != permi::enable)
-        return;
+    if(m_permi != permi::enable){
+        qDebug() << "It's not possibile write to log because of permission";
+        qDebug() << "Message: " << stringa;
+    }
 
     if(var == log_ui::info)
         tmp = "info: " + stringa;
@@ -69,9 +71,7 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
 
     pthread_mutex_lock(&mutex);
 
-    fp = fopen(this->pos_log.toUtf8().constData(), "a");
-
-    if(unlikely(!fp)){
+    if(unlikely(!file.open(QIODevice::Append))){
         ui->text_error_show->setText("Unable to save data");
         m_permi = permi::error;
         pthread_mutex_unlock(&mutex);
@@ -80,12 +80,9 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
 
     log_ui::addTime(tmp);
 
-    fprintf(fp, "\n");
+    file.write(QString("\n%1 --- %2").arg(tmp).arg(stringa).toUtf8());
 
-    print(fp, stringa.toUtf8());
-
-    fclose(fp);
-
+    file.close();
     pthread_mutex_unlock(&mutex);
 }
 

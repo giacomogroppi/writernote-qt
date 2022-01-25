@@ -166,17 +166,21 @@ static int extract_(const char *path, const char *path_to){
 static void printLog()
 {
     QByteArray arr;
-    if(!NAME_LOG_EXT){
+    if(unlikely(!NAME_LOG_EXT)){
         printf("No log available\n");
         return;
     }
-    if(!NAME_LOG_EXT->getData(arr)){
-        printf("Error open file log in %s\n", NAME_LOG_EXT->getCurrentPosition().toUtf8().constData());
+    if(unlikely(!NAME_LOG_EXT->getData(arr))){
+        //printf("Error open file log in %s\n", NAME_LOG_EXT->getCurrentPosition().toUtf8().constData());
         return;
     }
 
     printf("Log:\n");
+#ifdef DEBUGINFO
+    dialog_critic(arr);
+#else
     NAME_LOG_EXT->print(stdin, arr);
+#endif
 }
 
 __attribute__((unused)) static void createFileAndExit(const QString &path, MainWindow *parent)

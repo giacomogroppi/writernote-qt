@@ -232,11 +232,11 @@ frompdf::load_res frompdf::save(zip_t *filezip,
                                 const QString &path,
                                 const QString &path_writernote_file)
 {
-    if(savefile::saveArrayIntoFile((const QString &)path,
-                                   path_writernote_file,
-                                   filezip,
-                                   frompdf::getName(m_data->count_pdf),
-                                   false) != OK)
+    if(savefile::moveFileIntoZip(path,
+                                 path_writernote_file,
+                                 filezip,
+                                 frompdf::getName(m_data->count_pdf),
+                                 false) != OK)
         return load_res::not_valid_pdf;
 
     return load_res::ok;

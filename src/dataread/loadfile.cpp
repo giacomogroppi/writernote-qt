@@ -48,6 +48,11 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
 
     const size_t size = xmlstruct::sizeFile(fileZip, path);
 
+    /*if(!size){
+        printf("\nSize null");
+        exit(0);
+    }*/
+
     if(clear)
         arr.clear();
 
@@ -63,13 +68,6 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
 
     data = malloc(size);
     SOURCE_READ_GOTO(file, data, size);
-
-    /*while(size){
-        SOURCE_READ_GOTO(file, &__r, sizeof(uchar));
-
-        arr.append(__r);
-        size --;
-    }*/
 
     arr.append((cchar *)data, size);
 
@@ -270,7 +268,7 @@ int load_audio(QByteArray &array, const QString &path)
 
     array.clear();
 
-    file_zip = zip_open(path.toUtf8().constData(), 0, &error);
+    file_zip = xmlstruct::openZip(path, xmlstruct::readOnly);
 
     if(unlikely(!file_zip))
         return ERROR;
@@ -278,8 +276,8 @@ int load_audio(QByteArray &array, const QString &path)
     error = xmlstruct::readFile(file_zip, array, true, NAME_AUDIO, false);
 
     zip_close(file_zip);
-    return error;
 
+    return error;
 }
 
 size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
@@ -292,7 +290,7 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
      * -1 is returned and the error information in archive
      * is set to indicate the error
     */
-    if(zip_stat(filezip, namefile, 0, &st) != 0)
+    if(zip_stat(filezip, namefile, ZIP_STAT_SIZE, &st) < 0)
         return 0;
 
     return st.size;

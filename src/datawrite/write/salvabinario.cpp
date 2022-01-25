@@ -14,7 +14,7 @@ static int freezip(zip_source_t *files){
 
 int savefile::salvabinario(zip_t *filezip)
 {
-    int i, len, counterPage, err = ERROR;
+    int len, counterPage, err = ERROR;
     size_t controll;
     zip_source_t *file;
     zip_error_t errore;
@@ -48,13 +48,9 @@ int savefile::salvabinario(zip_t *filezip)
     controll = currenttitle->createSingleControll();
     WRITE_ON_SIZE(file, &controll, sizeof(size_t));
 
-    if(zip_source_commit_write(file) == -1)
+    if(!savefile::commitChange(file))
         return freezip(file);
-
-    if(zip_file_add(filezip,
-                 NAME_BIN,
-                 file,
-                 ZIP_FL_OVERWRITE) == -1)
+    if(!savefile::addFile(filezip, NAME_BIN, file))
         return freezip(file);
 
     return OK;

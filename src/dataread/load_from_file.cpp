@@ -2,7 +2,10 @@
 #include "utils/common_script.h"
 #include <QFile>
 
-bool load_from_file::exe(QByteArray &arr, const QString &path, const bool clear)
+bool load_from_file::exe(
+        QByteArray      &arr,
+        const QString   &path,
+        const bool      clear)
 {
     QFile file(path);
 
@@ -10,7 +13,7 @@ bool load_from_file::exe(QByteArray &arr, const QString &path, const bool clear)
         arr.clear();
     }
 
-    if(unlikely(file.open(QIODevice::ReadOnly))){
+    if(unlikely(!file.open(QIODevice::ReadOnly))){
         return false;
     }
 
