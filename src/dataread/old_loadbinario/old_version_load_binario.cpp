@@ -357,6 +357,8 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
             }
         }
     }
+
+    doc->datatouch->pointFirstPage = QPointF(0.0, 0.0);
 }
 
 /* versione 7 */
