@@ -32,7 +32,7 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
 {
     zip_source_t *file;
     zip_error_t errore;
-    int check = 0, error;
+    int error;
 
     if(!filezip){
         filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
@@ -55,9 +55,6 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
     if(!savefile::commitChange(file))
         goto delete_;
     if(!savefile::addFile(filezip, name.toUtf8().constData(), file))
-        goto delete_;
-
-    if(check)
         goto delete_;
 
     if(closeZip)
