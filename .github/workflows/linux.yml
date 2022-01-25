@@ -61,16 +61,22 @@ jobs:
           make -j$(nproc)
           sudo make install
       
-      - name: Compile NO_ALL_VERSION
+      - name: Compile NO_ALL_VERSION (release)
         run: |
           echo $(ls /usr/local/include/poppler/qt5)
-          qmake DEFINES+="NO_ALL_VERSION" # INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1
+          qmake DEFINES+="NO_ALL_VERSION"
           make -j $(nproc)    
 
-      - name: Compile ALL_VERSION
+      - name: Compile ALL_VERSION (release)
         run: |
           make clean
-          qmake DEFINES+="NO_ALL_VERSION" # INCLUDEPATH+=/usr/local/include/poppler/qt5 LIBS+=/usr/local/lib/libpoppler-qt5.so.1
+          qmake
+          make -j $(nproc)
+
+      - name: Compile (debug)
+        run: |
+          make clean
+          qmake CONFIG+=debug
           make -j $(nproc)
 
       - name: CMake compile
