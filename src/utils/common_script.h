@@ -19,6 +19,18 @@
 #define likely(exp) Q_LIKELY(exp)
 #define force_inline Q_ALWAYS_INLINE
 
+#ifdef DEBUGINFO
+# define W_ASSERT(condition)                                    \
+    do{                                                         \
+        if(unlikely(!(condition))){                             \
+            qDebug() << __FUNCTION__ << __FILE__ ;              \
+            std::abort();                                       \
+        }                                                       \
+    }while(0);
+#else
+# define W_ASSERT(condition) ;
+#endif // DEBUGINFO
+
 force_inline FILE *__fopen(const QString &path, const char *flag)
 {
 #if defined(WIN32) || defined(WIN64)
@@ -306,18 +318,6 @@ inline void __order(QList<QVector<T>> & list){
 #else
 # define EXEC_TIME_IF_DEBUG(message, enable, function) function
 #endif
-
-#ifdef DEBUGINFO
-# define W_ASSERT(condition)                                    \
-    do{                                                         \
-        if(unlikely(!(condition))){                             \
-            std::abort();                                       \
-            qDebug() << __FUNCTION__ << __FILE__ ;              \
-        }                                                       \
-    }while(0);
-#else
-# define W_ASSERT(condition) ;
-#endif // DEBUGINFO
 
 #ifdef DEBUGINFO
 # define DO_IF_DEBUG(istr) istr;
