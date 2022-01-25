@@ -64,6 +64,10 @@ void MainWindow::on_actionselezionetext_triggered()
 /* insert text */
 void MainWindow::on_actioninsertText_triggered()
 {
+    user_message("This function is not implemented yet, I'm sorry");
+    updateTouch();
+    return;
+
     if(m_canvas->medotodiinserimento == TabletCanvas::e_method::text){
         if(m_text->isHidden()){
             this->m_text->show();
