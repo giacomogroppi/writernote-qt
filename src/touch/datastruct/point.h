@@ -17,17 +17,17 @@ struct PointSettable {
 
     void deset();
 
-    constexpr Q_ALWAYS_INLINE bool isNotSet() const
+    constexpr force_inline bool isNotSet() const
     {
         return !this->set;
     }
 
-    constexpr Q_ALWAYS_INLINE double x() const
+    constexpr force_inline double x() const
     {
         return this->point.x();
     }
 
-    constexpr Q_ALWAYS_INLINE double y() const
+    constexpr force_inline double y() const
     {
         return this->point.y();
     }
@@ -46,12 +46,12 @@ constexpr Q_ALWAYS_INLINE PointSettable &PointSettable::operator+=(const QPointF
     return *this;
 }
 
-Q_ALWAYS_INLINE PointSettable::PointSettable()
+force_inline PointSettable::PointSettable()
 {
     set = false;
 }
 
-Q_ALWAYS_INLINE PointSettable::PointSettable(const QPointF &point, bool set)
+force_inline PointSettable::PointSettable(const QPointF &point, bool set)
 {
     this->point = point;
     this->set = set;
@@ -69,12 +69,12 @@ struct colore_s{
  * if division == 1 the color don't change
  * if division > 0 the color the alfa is change
 */
-Q_ALWAYS_INLINE QColor colore_s::toQColor(const double division = 1.0) const
+force_inline QColor colore_s::toQColor(cdouble division = 1.0) const
 {
     return QColor::fromRgb( colore[0], colore[1], colore[2], double(colore[3])/division);
 }
 
-Q_ALWAYS_INLINE void colore_s::fromColor(const QColor &color)
+force_inline void colore_s::fromColor(const QColor &color)
 {
     int val[NCOLOR];
     uchar i;
@@ -112,7 +112,7 @@ Q_COMPILER_CONSTEXPR force_inline double point_s::y() const
     return m_y;
 }
 
-Q_COMPILER_CONSTEXPR Q_ALWAYS_INLINE QPointF point_s::toQPointF(const double delta) const
+Q_COMPILER_CONSTEXPR force_inline QPointF point_s::toQPointF(const double delta) const
 {
     return QPointF(m_x, m_y) * delta;
 }

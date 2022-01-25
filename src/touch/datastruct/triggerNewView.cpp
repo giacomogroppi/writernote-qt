@@ -5,17 +5,12 @@
 
 #define DATASTRUCT_THREAD_MAX 16
 
-static QVector<int> index_last;
-
 struct DatastructNewView{
     page     *m_page;
     QList<stroke>   *m_stroke;
-    bool            is_mod;
-
     int base;
 
-    int last_time;
-    int new_time;
+    int time;
 
     pthread_mutex_t *mutex;
 };
@@ -45,26 +40,15 @@ void *__search_new_view(void *__data)
     DataPrivateMuThread *_data = (DataPrivateMuThread *)__data;
     DatastructNewView *_private_data = (DatastructNewView *)_data->extra;
     page *_page = _private_data->m_page;
-    constexpr int nullable_audio = -1;
-    QVector<int> pos = index_last;
+    QVector<int> _index;
 
-    if(unlikely(_private_data->is_mod == true)){
-        pos.clear();
-
-        __search_for_stroke(_data, _private_data->last_time, pos, _page);
-    }
-
-    __search_for_stroke(_data, _private_data->new_time, index_last, _page);
+    __search_for_stroke(_data, _private_data->time - 1, _index, _page);
 
     // block other thread
     pthread_mutex_lock(_private_data->mutex);
 
-    // draw the old stroke with their color
-    drawStroke(_page, pos, nullable_audio);
-
     // draw the new stroke
-    _page->drawForceColorStroke(index_last, nullable_audio, COLOR_NULL);
-    drawStroke(_page, index_last, _private_data->new_time);
+    drawStroke(_page, _index, _private_data->time - 1);
 
     // release other thread
     pthread_mutex_unlock(_private_data->mutex);
@@ -72,7 +56,7 @@ void *__search_new_view(void *__data)
     return NULL;
 }
 
-void datastruct::newViewAudio(int lastTime, int newTime)
+void datastruct::newViewAudio(int newTime)
 {
     int index, create, len;
 
@@ -84,9 +68,14 @@ void datastruct::newViewAudio(int lastTime, int newTime)
 
     DatastructNewView extra;
 
+    if(unlikely(newTime == 0)){
+        for(page &_page : m_page){
+            _page.triggerRenderImage(newTime, true);
+        }
+    }
+    qDebug() << "Call with time" << newTime;
     extra.mutex = &changeAudioMutex;
-    extra.new_time = newTime;
-    extra.last_time = lastTime;
+    extra.time = newTime;
 
     for(; index < len; index ++){
         extra.m_page = (page *)&at(index);

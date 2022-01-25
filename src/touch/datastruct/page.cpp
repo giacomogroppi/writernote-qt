@@ -263,8 +263,16 @@ void * __page_load(void *__data)
             continue;
         }
 
-        const QColor color = ref.getColor(
-            (likely(ref.getPosizioneAudio()) > m_pos_ris) ? 1 : 4
+        const QColor &color = ref.getColor(
+            (unlikely(m_pos_ris != -1))
+                    ?
+                        (
+                          (ref.getPosizioneAudio() > m_pos_ris)
+                            ? 4
+                            : 1
+                        )
+                    :
+                        1
         );
 
         page->drawStroke(painter, ref, m_pen, color);
@@ -367,7 +375,6 @@ void page::mergeList()
         if(likely(stroke.getColor(1).alpha() == 255)){
             m_stroke.append(stroke);
         }else{
-            audio_play_set_mod(true);
             m_stroke.insert(0, stroke);
         }
 

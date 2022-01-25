@@ -381,7 +381,6 @@ inline void page::copy(
 
 force_inline void page::removeAt(const uint i)
 {
-    audio_play_set_mod(true);
     this->m_stroke.removeAt(i);
 }
 

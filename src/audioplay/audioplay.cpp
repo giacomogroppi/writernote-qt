@@ -4,8 +4,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-bool __audio_play_is_mod = true;
-
 audioplay::audioplay(QObject *parent) : QObject(parent)
 {
     this->player = new QMediaPlayer(this);
@@ -39,21 +37,26 @@ void audioplay::changeIcon()
 
 void audioplay::positionChange(qint64 position)
 {
-    qDebug() << "audioplay::positionChange call";
+    int duration;
+
+    WDebug(debugAudioPlay, "audioplay::positionChange call");
     if(!isPlay()) return;
 
     parent->ui->statusBar->showMessage(tr("%1 second").arg(position/1000));
 
     parent->ui->audioSlider->blockSignals(true);
 
-    int duration = currentDurationMicro();
-    if(!duration)
+    duration = currentDurationMicro();
+    if(unlikely(!duration))
         return user_message("The audio seems blank");
 
     parent->ui->audioSlider->setValue((position*100)/duration);
 
     parent->ui->audioSlider->blockSignals(false);
-    qDebug() << "audioplay::positionChange" << this->getPositionSecond() << position;
+    WDebug(debugAudioPlay, "audioplay::positionChange" << this->getPositionSecond() << position);
+
+    parent->m_canvas->call_update();
+    return;
     this->parent->m_canvas->data->datatouch->triggerNewView(getPositionSecond(), true);
 }
 

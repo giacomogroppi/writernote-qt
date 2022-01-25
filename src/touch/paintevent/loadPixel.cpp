@@ -83,7 +83,7 @@ void TabletCanvas::load(QPainter &painter,
         // the idea is to trigger this view only when
         // the second has change
         if(likely(last_m_pos_ris != m_pos_ris)){
-            data->datatouch->newViewAudio(last_m_pos_ris, m_pos_ris);
+            data->datatouch->newViewAudio(m_pos_ris);
             last_m_pos_ris = m_pos_ris;
         }
 

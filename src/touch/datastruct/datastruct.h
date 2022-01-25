@@ -179,7 +179,7 @@ public:
     double currentHeight() const;
     double proportion() const;
 
-    void newViewAudio(int lastTime, int newTime);
+    void newViewAudio(int newTime);
 
     static bool isOkZoom(const double newPossibleZoom);
     static void copy(const datastruct &src, datastruct &dest);

@@ -105,9 +105,11 @@ void MainWindow::openFile(const char *pos){
         if(xmlstruct::manageMessage(res)){
             this->m_canvas->data->datatouch->triggerNewView(-1, true);
             aggiornotestiriascolto(this);
-            m_canvas->loadpixel();
             m_canvas->updatePageCount();
-            return contrUi();
+            m_canvas->data->datatouch->triggerVisibility(m_canvas->height());
+            contrUi();
+            m_canvas->loadpixel();
+            return;
         }
 
         this->m_path = "";
