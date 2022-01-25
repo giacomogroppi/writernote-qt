@@ -166,9 +166,11 @@ void page::drawStroke(
 {
     QPointF lastPoint, pointDraw;
     const QPainterPath *path;
+    const bool isRubber = (color == COLOR_NULL);
 
     constexpr bool measureTime = false;
     constexpr bool debColor = true;
+    constexpr double deltaColorNull = 1.4;
 
     cint page = this->count - 1;
 
@@ -187,8 +189,8 @@ void page::drawStroke(
         return;
     }
 
-    if(unlikely(color == COLOR_NULL)){
-        m_pen.setWidthF(m_pen.widthF() * 1.5);
+    if(unlikely(isRubber)){
+        m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }
 
@@ -210,6 +212,9 @@ void page::drawStroke(
 
             m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
 
+            if(unlikely(isRubber)){
+                m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
+            }
             painter.setPen(m_pen);
 
             painter.drawLine(lastPoint, pointDraw);
