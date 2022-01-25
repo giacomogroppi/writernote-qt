@@ -79,7 +79,7 @@ force_inline void __swap(T &t1, T &t2)
 
 
 template <typename T>
-Q_ALWAYS_INLINE int is_order(const QList<T> &list)
+force_inline int is_order(const QList<T> &list)
 {
     int i, len;
     len = list.length();
@@ -94,7 +94,7 @@ Q_ALWAYS_INLINE int is_order(const QList<T> &list)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int is_order(const QVector<T> &list)
+force_inline int is_order(const QVector<T> &list)
 {
     int i, len;
     len = list.length();
@@ -109,7 +109,7 @@ Q_ALWAYS_INLINE int is_order(const QVector<T> &list)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int is_order_multiple(const QList<QVector<T>> &list)
+force_inline int is_order_multiple(const QList<QVector<T>> &list)
 {
     int i, len;
     len = list.length();
@@ -206,14 +206,14 @@ Q_ALWAYS_INLINE int is_present_in_list_order(const QList<T> &list, const T& elem
 }
 
 template <typename T>
-Q_ALWAYS_INLINE void append_if_not_present(QList<T> &list, const T& value)
+force_inline void append_if_not_present(QList<T> &list, const T& value)
 {
     if(list.indexOf(value) == -1)
         list.append(value);
 }
 
 template<typename T>
-Q_ALWAYS_INLINE void append_if_not_present_order(QList<T> &list, const T& value)
+force_inline void append_if_not_present_order(QList<T> &list, const T& value)
 {
 #if defined(DEBUGINFO)
     Q_ASSERT(is_order(list));
@@ -226,13 +226,13 @@ Q_ALWAYS_INLINE void append_if_not_present_order(QList<T> &list, const T& value)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE bool included(const T min, const T max, const T value)
+force_inline bool included(const T min, const T max, const T value)
 {
-    Q_ASSERT(min <= max);
+    W_ASSERT(min <= max);
     return min <= value && value <= max;
 }
 
-Q_ALWAYS_INLINE int diff(cdouble num)
+force_inline int diff(cdouble num)
 {
     if(double(int(num)) > num){
         // bisogna troncare
@@ -241,7 +241,7 @@ Q_ALWAYS_INLINE int diff(cdouble num)
     return double(int(num));
 }
 
-Q_ALWAYS_INLINE int ecc(cdouble num)
+force_inline int ecc(cdouble num)
 {
     if(double(int(num)) > num){
         return double(int(num));
@@ -251,13 +251,13 @@ Q_ALWAYS_INLINE int ecc(cdouble num)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int div_ecc(T num, T den)
+force_inline int div_ecc(T num, T den)
 {
     return ecc(double(num) / double(den));
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int div_diff(T num, T den)
+force_inline int div_diff(T num, T den)
 {
     return diff(double(num) / double(den));
 }
@@ -275,7 +275,7 @@ inline int is_present_in_list(const T *list, size_t len, const T val)
     return 0;
 }
 
-Q_ALWAYS_INLINE void abortIfDebug(){
+force_inline void abortIfDebug(){
 #ifdef DEBUGINFO
     std::abort();
 #else

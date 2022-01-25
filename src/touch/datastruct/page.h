@@ -261,16 +261,19 @@ force_inline bool page::updateFlag(
 {
     double heightSec;
 
-    heightSec = double(page::getHeight()) * zoom;
+    W_ASSERT(zoom >= 0);
+    W_ASSERT(FirstPoint.x() <= 0.0 && FirstPoint.y() <= 0.0);
+    W_ASSERT(heightView >= 0);
+
+    heightSec = page::getHeight() * zoom;
 
     cdouble minH = heightSec * double(count - 1) / zoom + FirstPoint.y();
     cdouble maxH = heightSec * double(count)     / zoom + FirstPoint.y();
 
-    if(likely( heightView < page::getHeight() * zoom)){
+    if(likely( heightView <= page::getHeight() * zoom)){
         // if the page is not fully visible in a window
 
-        IsVisible = (maxH)
-                *   (minH) <= 0.0;
+        IsVisible = discordant(maxH, minH);
 
         if(IsVisible)
             goto ret;
@@ -279,11 +282,11 @@ force_inline bool page::updateFlag(
     IsVisible = included(0.0, heightView, minH) || included(0.0, heightView, maxH);
 
 ret:
-    WDebug(debugPage, "count" << count
-             << "minH"<< minH
-             << "heightView" << heightView
-             << "maxH" << maxH
-             << "zoom" << zoom
+    WDebug(debugPage, "count"   << count
+             << "minH"          << minH
+             << "heightView"    << heightView
+             << "maxH"          << maxH
+             << "zoom"          << zoom
              << IsVisible);
 
     return IsVisible;
