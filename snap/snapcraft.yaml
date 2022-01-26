@@ -306,6 +306,8 @@ parts:
     override-build: |
       set -eux
       
+      find / -type f -name "qmake"
+      exit 1
       export PATH=$PATH:/root/stage/usr/lib/qt5/bin
       export VERSION=$(git describe --tags --abbrev=0)
 
