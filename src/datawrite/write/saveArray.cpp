@@ -32,7 +32,6 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
 {
     zip_source_t *file;
     zip_error_t errore;
-    int error;
 
     if(!filezip){
         filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
