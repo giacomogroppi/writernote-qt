@@ -96,6 +96,7 @@ public:
     static zip_t *openZip(const QByteArray &path, xmlstruct::openMode mode);
     static zip_file_t *openFile(zip_t *zip, const QByteArray &path);
     static size_t get_size_file(const QByteArray &path);
+    static bool closeZip(zip_t *fileZip);
 };
 
 inline const QString &xmlstruct::getPath() const
@@ -111,6 +112,14 @@ inline zip_t *xmlstruct::openZip(const QString &path, openMode mode)
 force_inline size_t xmlstruct::sizeFile(zip_t *filezip, const QString &namefile)
 {
     return xmlstruct::sizeFile(filezip, namefile.toUtf8().constData());
+}
+
+force_inline bool xmlstruct::closeZip(zip_t *fileZip)
+{
+    if(unlikely(zip_close(fileZip)) == -1){
+        return false;
+    }
+    return true;
 }
 
 #endif

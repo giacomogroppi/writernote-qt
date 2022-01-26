@@ -12,6 +12,7 @@
 #include "utils/permission/permission.h"
 #include "utils/make_default/make_default_ui.h"
 #include "audiorecord/audiorecord.h"
+#include "utils/time/waitTime.h"
 
 #include <QString>
 #include <QSettings>
@@ -57,14 +58,37 @@ static bool manageNotExist(const QString &path, Document *doc)
 
 static bool needRemove;
 
-static void saveAudio(Document *m_currenttitle, const QString &m_path, const AudioRecord *recorder){
+static void saveAudio(
+    Document            *m_currenttitle, 
+    const QString       &m_path, 
+    const AudioRecord   *recorder)
+{
     const QString &path = recorder->getPath();
     removeAudio::n_removeAudio temp;
+
+    constexpr int max = 10;
+    constexpr int millisecond = 500;
+    int i, res;
 
     if(unlikely(!manageNotExist(path, m_currenttitle)))
         return;
 
-    if(save_audio_file(path.toUtf8().constData(), m_path) != OK){
+    /*
+     * Since it is not possible to synchronize
+     * this thread with the thread that saves
+     * the file to disk, the only way to wait
+     * for the writing to finish is to try to
+     * save at time intervals.
+    */
+    for(i = 0; i < max; i++){
+        waitTime(millisecond);
+        res = save_audio_file(path.toUtf8().constData(), m_path);
+        if(res == OK)
+            goto out;
+    }
+
+out:
+    if(res != OK){
         return dialog_critic("We had a problem saving the audio into " + m_path);
     }
 

@@ -58,6 +58,7 @@ inline bool AudioRecord::isStopped() const
 
 inline void AudioRecord::startRecord()
 {
+    QFile::remove(this->getPath());
     this->recorder->record();
 }
 

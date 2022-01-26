@@ -28,23 +28,34 @@ int savefile::moveFileIntoZip(
 
 int savefile::saveArrayIntoFile(const QByteArray &arr,
                                 const QString &path, zip_t *filezip,
-                                const QString &name, const bool closeZip)
+                                const QString &name, bool closeZip)
 {
     zip_source_t *file;
     zip_error_t errore;
     int check = 0, error;
+    const char *error_message;
+
+    if(arr.isEmpty()){
+        log_write->write("savefile::saveArrayIntoFile", log_ui::possible_bug);
+        return ERROR;
+    }
 
     if(!filezip){
         filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
-
+        closeZip = true;
         if(!filezip)
             return ERROR;
     }
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
-    if(!file){
+
+    if(unlikely(!file)){
+        error_message = zip_error_strerror(&errore);
+        log_write->write(QString("Buffer not create: Libzip error: %1").arg(error_message), log_ui::info);
+
         if(closeZip)
             zip_close(filezip);
+
         return ERROR;
     }
 
@@ -60,14 +71,16 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
     if(check)
         goto delete_;
 
-    if(closeZip)
-        zip_close(filezip);
+    if(closeZip && !xmlstruct::closeZip(filezip))
+        goto delete_;
+
     return OK;
 
     delete_:
     zip_source_free(file);
 
-    if(closeZip)
+    if(closeZip){
         zip_close(filezip);
+    }
     return ERROR;
 }

@@ -35,18 +35,15 @@ zip_file_t *xmlstruct::openFile(zip_t *zip, const QByteArray &path)
 
 size_t xmlstruct::get_size_file(const QByteArray &path)
 {
-    FILE *fp;
     size_t size;
+    QFile file(path);
 
-    fp = __fopen(path, "r");
-
-    if(!fp)
+    if(unlikely(!file.open(QIODevice::ReadOnly)))
         return 0;
 
-    fseek(fp, 0, SEEK_END);
-    size = ftell(fp); // get current file pointer
+    size = file.size();
 
-    fclose(fp);
+    file.close();
 
     return size;
 }
