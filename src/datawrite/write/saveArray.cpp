@@ -68,9 +68,6 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
     if(!savefile::addFile(filezip, name.toUtf8().constData(), file))
         goto delete_;
 
-    if(check)
-        goto delete_;
-
     if(closeZip && !xmlstruct::closeZip(filezip))
         goto delete_;
 
