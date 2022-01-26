@@ -171,7 +171,8 @@ inline float stroke::getPressure() const
 
 inline QColor stroke::getColor(const double division = 1.0) const
 {
-    return this->metadata.color.toQColor(division);
+    QColor color(metadata.color.toQColor(division));
+    return color;
 }
 
 inline const point_s &stroke::at(const int index) const

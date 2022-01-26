@@ -334,14 +334,21 @@ inline int datastruct::getFirstPageVisible() const
      *  when they are shared. */
     int &__pageVisible = (int &) pageVisible;
     int i, len = this->lengthPage();
+    int find = 0;
 
     if(unlikely(pageVisible < 0)){
         for(i = 0; i < len; i++){
             if(at(i).isVisible()){
                 __pageVisible = i;
+                find = 1;
                 break;
             }
         }
+    }
+
+    if(unlikely(!find)){
+        log_write->write("Impossibile to find first page visible", log_ui::critic_error);
+        __pageVisible = 0;
     }
 
     return __pageVisible;

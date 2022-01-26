@@ -178,6 +178,7 @@ static void printLog()
     printf("Log:\n");
 #ifdef DEBUGINFO
     dialog_critic(arr);
+    QFile::remove(NAME_LOG_EXT->getCurrentPosition());
 #else
     NAME_LOG_EXT->print(stdin, arr);
 #endif

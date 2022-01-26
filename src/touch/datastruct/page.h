@@ -198,6 +198,10 @@ inline void page::reset()
 {
     this->m_stroke.clear();
     this->m_stroke_writernote.reset();
+    this->IsVisible = true;
+    this->count = -1;
+    this->strokeTmp.clear();
+    this->imgDraw = QImage();
 }
 
 inline point_s page::at_translation(const point_s &point, int page)
@@ -262,7 +266,7 @@ force_inline bool page::updateFlag(
     double heightSec;
 
     W_ASSERT(zoom >= 0);
-    W_ASSERT(FirstPoint.x() <= 0.0 && FirstPoint.y() <= 0.0);
+    //W_ASSERT(FirstPoint.x() <= 0.0 && FirstPoint.y() <= 0.0);
     W_ASSERT(heightView >= 0);
 
     heightSec = page::getHeight() * zoom;

@@ -42,8 +42,8 @@ void TabletCanvas::load(QPainter &painter,
 
     pen.setStyle(Qt::PenStyle::SolidLine);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    loadSheet(*data, pen, painter, dataPoint.m);
 
+    loadSheet(*data, pen, painter, dataPoint.m);
 
 #ifdef PDFSUPPORT
     if(likely(withPdf))
@@ -86,8 +86,6 @@ void TabletCanvas::load(QPainter &painter,
             data->datatouch->newViewAudio(m_pos_ris);
             last_m_pos_ris = m_pos_ris;
         }
-
-        //data->datatouch->triggerViewIfVisible(m_pos_ris);
     }
 
     if(likely(!dataPoint.IsExportingPdf)){
@@ -132,24 +130,42 @@ static void loadSheet(
         QPainter        &painter,
         const double    delta)
 {
-    int counterPage;
     const page *__page;
-    int counterPoint, lenPoint;
     const int lenPage = doc.datatouch->lengthPage();
     const double zoom = doc.datatouch->getZoom();
+    const stroke *__stroke;
+
+    int counterPage, counterPoint, lenPoint;
+
+    double pressure;
     datastruct *data = doc.datatouch;
-    const stroke *stroke;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         __page = &data->at(counterPage);
-        stroke = &__page->get_stroke_page();
+        __stroke = &__page->get_stroke_page();
 
-        m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke->at(0).pressure * zoom * delta / 2.0));
-        m_pen.setColor(stroke->getColor());
+        lenPoint = __stroke->length();
+
+        if(unlikely(!lenPoint)){
+            continue;
+        }
+
+        pressure = __stroke->at(0).pressure;
+
+        if(unlikely(pressure <= 0.0)){
+            point_s &__tmp = (point_s &)((stroke *)__stroke)->at(0);
+            __tmp.pressure = 0.1;
+            pressure = __tmp.pressure;
+        }
+
+        pressure = TabletCanvas::pressureToWidth(pressure * zoom * delta / 2.0);
+
+        qDebug() << "loadSheet: " << pressure;
+
+        m_pen.setWidthF(pressure);
+        m_pen.setColor(__stroke->getColor());
 
         painter.setPen(m_pen);
-
-        lenPoint = __page->get_stroke_page().length() - 1;
 
         for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
             const auto ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage);

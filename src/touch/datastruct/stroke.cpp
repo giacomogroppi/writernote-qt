@@ -75,8 +75,8 @@ int stroke::load(zip_file_t *file, int version)
     if(version == 0){
 #ifdef ALL_VERSION
         SOURCE_READ_RETURN(file, &meta, sizeof(meta));
-        memcpy(&meta.color, &this->metadata.color, sizeof(metadata.color));
-        memcpy(&meta.posizione_audio, &this->metadata.posizione_audio, sizeof(metadata.posizione_audio));
+        memcpy(&this->metadata.color, &meta.color, sizeof(metadata.color));
+        memcpy(&this->metadata.posizione_audio, &meta.posizione_audio, sizeof(metadata.posizione_audio));
 
         // we don't load sheet from differente version
         if(unlikely(meta.idtratto < 0)){
@@ -90,7 +90,7 @@ int stroke::load(zip_file_t *file, int version)
     }
 
     for(i = 0; i < len_point; i++){
-        SOURCE_READ_RETURN(file, &point_append, sizeof(point_s));
+        SOURCE_READ_RETURN(file, &point_append, sizeof(point_append));
         this->append(point_append);
     }
 

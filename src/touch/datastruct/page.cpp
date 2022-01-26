@@ -56,8 +56,11 @@ void page::drawNewPage(n_style __style)
 
     if(likely(fast)){
         style.colore.fromColor(TEMP_COLOR);
-        style.thickness =  widthToPressure(TEMP_TICK);
+        style.thickness =  TEMP_TICK;
     }
+
+    if(unlikely(style.thickness <= 0.0))
+        style.thickness = 1;
 
     stroke.setMetadata(-1, style.colore);
 
@@ -73,7 +76,7 @@ void page::drawNewPage(n_style __style)
     ct_del = deltax;
 
     drawLineOrizzontal( stroke, style, last, deltax, width_p, ct_del);
-    drawLineVertical(   stroke,     style, last, deltay, height_p);
+    drawLineVertical(   stroke, style, last, deltay, height_p);
 
     stroke.__setPressureFirstPoint(    widthToPressure(style.thickness));
 }
@@ -745,7 +748,7 @@ void page::allocateStroke(int numAllocation)
 
 #define DO_CTRL(function) \
     err = function; \
-    if(err != OK) \
+    if(unlikely(err != OK)) \
         return err;
 
 int page::save(zip_source_t *file) const
@@ -777,7 +780,6 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 
     if(ver_stroke == 0){
 #ifdef ALL_VERSION
-        QList<stroke> tmp;
         SOURCE_READ_RETURN(file, &len_stroke, sizeof(int));
 
         for(i = 0; i < len_stroke; i++){
@@ -794,7 +796,7 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
             }
         }
 
-        DO_LOAD(tmp);
+        // remove empty stroke
         for(int i = lengthStroke() - 1; i >= 0; i--){
             if(atStroke(i).length() == 0){
                 this->m_stroke.removeAt(i);
@@ -806,6 +808,8 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
     }
     if(ver_stroke == 1){
         m_stroke_writernote.load(file, ver_stroke);
+        if(m_stroke_writernote.length() && m_stroke_writernote.at(0).pressure > 10)
+            m_stroke_writernote.at_mod(0).pressure = 1.5;
     }
 
     return OK;
