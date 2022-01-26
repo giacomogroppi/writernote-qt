@@ -307,8 +307,8 @@ parts:
       set -eux
       
       find / -type f -name "qmake"
-      qmake
-      export PATH=$PATH:$SNAPCRAFT_PRIME/usr/lib/qt5/bin
+
+      export PATH=$PATH:$SNAPCRAFT_STAGE/usr/lib/qt5/bin
       export VERSION=$(git describe --tags --abbrev=0)
 
       snapcraftctl set-version "$VERSION"
