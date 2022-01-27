@@ -3,7 +3,7 @@
 bool datastruct::userWrittenSomething(uint frompage)
 {
     const uint len = lengthPage();
-    for(; frompage<len; frompage++){
+    for(; frompage < len; frompage++){
         if(at(frompage).userWrittenSomething())
             return true;
     }
@@ -69,11 +69,11 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
         check = s_data->userWrittenSomething(counterPage);
     }
 
-    single:
+single:
     if(counterPage < l_first_page){
         check = userWrittenSomething(counterPage);
     }
 
-    ret:
+ret:
     return check;
 }

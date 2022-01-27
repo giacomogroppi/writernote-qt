@@ -27,6 +27,7 @@
 #include "audioplay/audioplay.h"
 #include "audiorecord/audiorecord.h"
 #include "touch/multi_thread_data.h"
+#include <QString>
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -170,18 +171,22 @@ void MainWindow::on_actionNew_File_triggered()
 
     __res = needToSave(xml, __curr);
 
-    if(__res == n_need_save::not_
-            || __res == n_need_save::only_writernote)
+    if(__res == n_need_save::not_ || __res == n_need_save::only_writernote)
         goto __continue;
 
-    if(areyousure("Unable to load file", "Unable to load file located in "+m_path)){
+    if(__res == n_need_save::unable_load){
+        if(!areyousure("Unable to load", QString("Unable to load file %1, do you want to continue?").arg(m_path))){
+            return;
+        }
+    }
+    else{
         check = checksave.check_permission();
 
         if(!check)
             return;
     }
 
-    __continue:
+__continue:
 
     setWindowTitle("Writernote");
     updatePageCount(-1);
