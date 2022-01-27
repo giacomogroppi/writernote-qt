@@ -13,14 +13,16 @@
 
 enum MainWindow::n_need_save
         MainWindow::needToSave(
-            xmlstruct & xml,
-            Document & tmp_read) const{
+            xmlstruct   &xml,
+            Document    &tmp_read) const
+{
     int check1;
     Document *doc = m_canvas->data;
 
     if(xml.getPath() == ""){
-        if(doc->datatouch->userWrittenSomething(nullptr))
+        if(doc->datatouch->userWrittenSomething(nullptr)){
             return n_need_save::need_save;
+        }
         return n_need_save::only_writernote;
     }
 
