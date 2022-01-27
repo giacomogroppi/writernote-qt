@@ -315,7 +315,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
     count = 0;
 
-    for(counterPage = base; counterPage < lenPage; counterPage ++){
+    for(counterPage = base; counterPage < lenPage; counterPage ++, count ++){
         dataPrivate.__page = &data->at_mod(counterPage);
 
         if(unlikely(!dataPrivate.__page->isVisible()))
@@ -328,7 +328,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
          *  we have to add the list, otherwise we create a
          *  hole in a page
         */
-        if(unlikely(data_to_remove.length() <= count))
+        if(unlikely(count >= data_to_remove.length()))
             data_to_remove.append(QVector<int>());
 
         // we trigger the copy if the page is shared
@@ -355,8 +355,6 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
             dataPrivate.__page->mergeList();
 
         }
-
-        count ++;
     }
 
     if(!isTotal)
