@@ -2,18 +2,18 @@
 
 void TabletCanvas::resizeEvent(QResizeEvent *)
 {
-    static uint maxWidth;
-    static uint maxHeigth;
+    int maxWidth;
+    int maxHeigth;
 
     maxWidth = width();
     maxHeigth = height();
 
-    if(data == NULL)
+    if(unlikely(data == NULL))
         return;
 
     data->datatouch->controllForRepositioning();
 
-    if(!data->datatouch->isempty()){
+    if(likely(!data->datatouch->isempty())){
         data->datatouch->adjustAll(maxWidth, maxHeigth);
     }
 

@@ -50,9 +50,8 @@ void datastruct::adjustWidth(const uint width)
     scala_all(t*zoom);
 
     point = this->getPointFirstPage();
-    if(point.x() > 0.0){
-        t.setX(-point.x());
-        scala_all(t);
+    if(unlikely(point.x() > 0.0)){
+        this->setPointFirstPage(QPointF(0.0, point.y()));
     }
 }
 

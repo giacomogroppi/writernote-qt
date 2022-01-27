@@ -41,12 +41,12 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
     this->pageVisible = -1;
 
 #ifdef PDFSUPPORT
-    if(m_pdf)
-        m_pdf->translation(point);
+    m_pdf->translation(point);
 #endif
 
     m_img->move(point);
 
-    if(heightView > 0)
+    if(likely(heightView > 0)){
         this->triggerVisibility(heightView);
+    }
 }

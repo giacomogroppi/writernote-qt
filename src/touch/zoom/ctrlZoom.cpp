@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#define UPDATE_TEXT(position) this->ui->labelZoom->setText(QString("Zoom %1%").arg(position));
+#define UPDATE_TEXT(position) this->ui->labelZoom->setText(QString("Zoom %1%").arg(int(position)));
 
 void MainWindow::on_sliderZoom_sliderMoved(int position)
 {
