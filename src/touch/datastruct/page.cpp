@@ -414,8 +414,9 @@ static void setStylePrivate(
         /* we set the color manually */
         style.colore.fromColor(Qt::black);
 
-        style.nx = 0;
-        style.ny = 0;
+        style.nx = 1;
+        style.ny = 1;
+        style.thickness = 1;
     }else{
         fast = true;
 

@@ -97,9 +97,12 @@ void rubber_ui::endRubber(datastruct *data)
             QVector<int> &arr = this->data_to_remove.operator[](i);
             page &page = data->at_mod(i + base);
 
+            if(unlikely(arr.isEmpty()))
+                continue;
+
             order(arr);
 
-            const auto rect = data->get_size_area(arr, i);
+            const auto rect = data->get_size_area(arr, i + base);
             page.removeAndDraw(-1, arr, rect);
         }
 
@@ -315,18 +318,24 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     for(counterPage = base; counterPage < lenPage; counterPage ++){
         dataPrivate.__page = &data->at_mod(counterPage);
 
-        if(unlikely(!dataPrivate.__page->isVisible())) break;
+        if(unlikely(!dataPrivate.__page->isVisible()))
+            break;
 
         lenStroke = dataPrivate.__page->lengthStroke();
+
+        /*
+         *  even if there are no strokes on the page
+         *  we have to add the list, otherwise we create a
+         *  hole in a page
+        */
+        if(unlikely(data_to_remove.length() <= count))
+            data_to_remove.append(QVector<int>());
 
         // we trigger the copy if the page is shared
         if(unlikely(!lenStroke))
             continue;
 
         dataPrivate.__page->atStrokeMod(0);
-
-        if(unlikely(data_to_remove.length() <= count))
-            data_to_remove.append(QVector<int>());
 
         PrivateData(data_find)      = &data_to_remove.operator[](count);
         PrivateData(data_to_remove) = dataPrivate.data_find;
