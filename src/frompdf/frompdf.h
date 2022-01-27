@@ -126,13 +126,14 @@ private:
 
 force_inline void frompdf::draw(QPainter &painter, const double delta, const bool IsExportingPdf) const
 {
-    static uint i, k, len_img;
-    static QRectF size;
-    static const Pdf *pdf;
+    uint i, k, len_img;
+    QRectF size;
+    const Pdf *pdf;
 
     const uint len = this->m_image.length();
-    const double y = m_data->datatouch->currentHeight() * delta;
-    const double x = m_data->datatouch->currentWidth() *  delta;
+
+    const double x = m_data->datatouch->currentWidth() * delta;
+    const double y = x * page::getProportion();
 
     for(i = 0; i < len; ++i){
         pdf = &this->m_image.at(i);

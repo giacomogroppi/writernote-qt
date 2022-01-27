@@ -34,7 +34,10 @@ frompdf::frompdf(Document *data)
     m_data = data;
 }
 
-bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index, TabletCanvas *canvas)
+bool frompdf::load(
+        const QStringList       &path,
+        QMap<load_res, uchar>   &index,
+        TabletCanvas            *canvas)
 {
     uint i, len;
     load_res __r;
@@ -54,7 +57,10 @@ bool frompdf::load(const QStringList &path, QMap<load_res, uchar> &index, Tablet
     return !index.isEmpty();
 }
 
-frompdf::load_res frompdf::load(const QString &path, const bool clear, TabletCanvas *canvas)
+frompdf::load_res frompdf::load(
+        const QString   &path,
+        const bool      clear,
+        TabletCanvas    *canvas)
 {
     QByteArray arr;
 
@@ -79,9 +85,9 @@ QStringList frompdf::get_name_pdf()
     return __l;
 }
 
-frompdf::load_res frompdf::load(zip_t *fileZip,
-                                zip_file_t *file,
-                                TabletCanvas *canvas)
+frompdf::load_res frompdf::load(zip_t           *fileZip,
+                                zip_file_t      *file,
+                                TabletCanvas    *canvas)
 {
     QList<QByteArray> arr;
     QStringList __name;
@@ -177,7 +183,7 @@ frompdf::load_res frompdf::load_from_row(
             conv.at(i)->start();
         }
 
-        for(i=0; i < countThread && i < len && i < conv.length(); ++i){
+        for(i = 0; i < countThread && i < len && i < conv.length(); ++i){
             conv.at(i)->wait();
         }
 
@@ -208,9 +214,9 @@ frompdf::load_res frompdf::load_from_row(
     return load_res::ok;
 }
 
-frompdf::load_res frompdf::save(zip_t *filezip,
-                                const QStringList &path,
-                                const QString &path_writernote_file)
+frompdf::load_res frompdf::save(zip_t               *filezip,
+                                const QStringList   &path,
+                                const QString       &path_writernote_file)
 {
     frompdf::load_res res;
     uint i, len;
@@ -228,15 +234,15 @@ frompdf::load_res frompdf::save(zip_t *filezip,
     return frompdf::load_res::ok;
 }
 
-frompdf::load_res frompdf::save(zip_t *filezip,
-                                const QString &path,
-                                const QString &path_writernote_file)
+frompdf::load_res frompdf::save(zip_t           *filezip,
+                                const QString   &path,
+                                const QString   &path_writernote_file)
 {
-    if(savefile::moveFileIntoZip(path,
-                                 path_writernote_file,
-                                 filezip,
-                                 frompdf::getName(m_data->count_pdf),
-                                 false) != OK)
+    int res = savefile::moveFileIntoZip(path, path_writernote_file,
+                                 filezip, frompdf::getName(m_data->count_pdf),
+                                 false);
+
+    if(unlikely(res != OK))
         return load_res::not_valid_pdf;
 
     return load_res::ok;
@@ -245,10 +251,10 @@ frompdf::load_res frompdf::save(zip_t *filezip,
 /*
  * add image from position
 */
-void frompdf::addPdf(QString &pos,
-                     const PointSettable *point,
-                     const QString &path_writernote,
-                     TabletCanvas *canvas)
+void frompdf::addPdf(QString                &pos,
+                     const PointSettable    *point,
+                     const QString          &path_writernote,
+                     TabletCanvas           *canvas)
 {
     zip_t *fileZip;
     int ok;
@@ -299,8 +305,8 @@ void frompdf::adjast(const uchar indexPdf)
     m_image.operator[](indexPdf).topLeft = QPointF(0, 0);
 }
 
-uchar frompdf::insert_pdf(QString &pos,
-                          const PointSettable *point)
+uchar frompdf::insert_pdf(QString               &pos,
+                          const PointSettable   *point)
 {
     assert(this->m_image.length() == 0);
     Pdf pdf;

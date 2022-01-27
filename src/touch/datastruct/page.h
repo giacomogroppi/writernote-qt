@@ -26,7 +26,7 @@ class page
 private:
     static constexpr uint width = 1666;
     static constexpr double proportion = 1.4141;
-    static constexpr uint height = width*proportion; // correct proportions for A4 paper size
+    static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
 #define FLAG_PAGE_ORDERED   BIT(1) // if indicates whether the list of strokes is sort by index
 #define FLAG_PAGE_BLOCK     BIT(2) // if we can't append stroke
