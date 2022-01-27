@@ -32,16 +32,15 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
 {
     zip_source_t *file;
     zip_error_t errore;
-    int check = 0, error;
     const char *error_message;
 
-    if(arr.isEmpty()){
-        log_write->write("savefile::saveArrayIntoFile", log_ui::possible_bug);
+    if(unlikely(arr.isEmpty())){
+        LOG("savefile::saveArrayInfoFile array empty", possible_bug);
         return ERROR;
     }
 
     if(!filezip){
-        filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &error);
+        filezip = xmlstruct::openZip(path.toUtf8(), xmlstruct::openMode::write);
         closeZip = true;
         if(!filezip)
             return ERROR;
@@ -51,8 +50,9 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
 
     if(unlikely(!file)){
         error_message = zip_error_strerror(&errore);
-        log_write->write(QString("Buffer not create: Libzip error: %1").arg(error_message), log_ui::info);
-
+        
+        LOG(QString("Buffer not creatE: Libzip error: %1").arg(error_message), info);
+        
         if(closeZip)
             zip_close(filezip);
 
