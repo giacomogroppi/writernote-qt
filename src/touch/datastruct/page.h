@@ -75,7 +75,7 @@ public:
     void swap(QList<stroke> & stroke, int from, int to);
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
-    void setVisible(cbool vis);
+    void setVisible(cbool vis) const;
 
     __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
@@ -296,9 +296,10 @@ ret:
     return IsVisible;
 }
 
-force_inline void page::setVisible(cbool vis)
+force_inline void page::setVisible(cbool vis) const
 {
-    this->IsVisible = vis;
+    bool &_IsVisible = (bool &)IsVisible;
+    _IsVisible = vis;
 }
 
 force_inline const stroke &page::atStroke(uint i) const

@@ -347,8 +347,11 @@ inline int datastruct::getFirstPageVisible() const
     }
 
     if(unlikely(!find)){
-        log_write->write("Impossibile to find first page visible", log_ui::critic_error);
+        //log_write->write("Impossibile to find first page visible", log_ui::critic_error);
         __pageVisible = 0;
+        for(const auto &_page : m_page){
+            _page.setVisible(true);
+        }
     }
 
     return __pageVisible;

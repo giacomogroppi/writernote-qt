@@ -305,8 +305,6 @@ parts:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH
     override-build: |
       set -eux
-      
-      find / -type f -name "qmake"
 
       export PATH=$PATH:$SNAPCRAFT_STAGE/usr/lib/qt5/bin
       export VERSION=$(git describe --tags --abbrev=0)
