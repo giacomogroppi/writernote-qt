@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "default_type.h"
 #include "utils/default_option/default_option_ui.h"
+#include "testing/memtest.h"
 
 static default_option_ui * n_def = nullptr;
 static default_type::e_type_copybook __res;

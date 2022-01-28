@@ -1,5 +1,6 @@
 #include "redoundo.h"
 #include "touch/tabletcanvas.h"
+#include "testing/memtest.h"
 
 void redoundo::append(Document *doc){
     this->m_list.append(doc);
@@ -15,23 +16,25 @@ redoundo::redoundo(TabletCanvas *__canvas)
     this->canvas = __canvas;
 
     for(i = 0; i < max; i++){
-        doc = new Document;
+        WNew(doc, Document, ());
         m_list.append(doc);
     }
 }
 
 redoundo::~redoundo()
 {
-    uint i;
-    const uint len = m_list.length();
-    for(i=0; i<len; ++i){
-        delete this->m_list.operator[](i);
+    int i;
+    const int len = m_list.length();
+
+    for(i = 0; i < len; ++i){
+        WDelete(m_list.operator[](i));
     }
 }
 
 void redoundo::clear(){
     uint i;
     const uint len = m_list.length();
+
     for(i=0; i<len; ++i){
         this->m_list.operator[](i)->reset();
     }

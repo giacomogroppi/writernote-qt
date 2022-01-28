@@ -5,6 +5,7 @@
 #include <QSettings>
 #include <QAudioEncoderSettings>
 #include "utils/setting_define.h"
+#include "testing/memtest.h"
 
 AudioRecord::AudioRecord(QObject *parent) : QObject(parent)
 {

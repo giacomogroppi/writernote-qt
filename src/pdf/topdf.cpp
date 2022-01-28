@@ -6,6 +6,7 @@
 #include <QPageSize>
 #include "log/log_ui/log_ui.h"
 #include "frompdf/frompdf.h"
+#include "testing/memtest.h"
 
 topdf::topdf(const QString &path, const Document &doc)
 {
@@ -15,7 +16,9 @@ topdf::topdf(const QString &path, const Document &doc)
     QList<int> page;
 
     this->path = &path;
-    this->data = new Document(doc);
+
+    WNew(data, Document, (doc));
+
     this->data->datatouch->triggerNewView(-1, true);
 
     for(i = 0; i < len; i++){
@@ -26,6 +29,11 @@ topdf::topdf(const QString &path, const Document &doc)
     data->datatouch->triggerNewView(page, -1, true);
 
     Q_ASSERT(doc.datatouch->lengthPage() == data->datatouch->lengthPage());
+}
+
+topdf::~topdf()
+{
+    WDelete(data);
 }
 
 static inline void newpage(Document *data, const double tmp){

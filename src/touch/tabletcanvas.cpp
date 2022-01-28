@@ -13,6 +13,7 @@
 #include "square/square.h"
 #include "property/property_control.h"
 #include "audioplay/audioplay.h"
+#include "testing/memtest.h"
 
 static void saveLastMethod(TabletCanvas::e_method);
 static void loadLastMethod(TabletCanvas *);
@@ -40,10 +41,10 @@ TabletCanvas::TabletCanvas()
     setAutoFillBackground(true);
     setAttribute(Qt::WA_TabletTracking);
 
-    this->data = new Document;
+    WNew(data, Document, ());
 
-    zoom = new class zoom_control;
-    m_redoundo = new class redoundo(this);
+    WNew(zoom, zoom_control, ());
+    WNew(m_redoundo, redoundo, (this));
     m_property = new class property_control(this);
     m_square = new class square(this, m_property);
 

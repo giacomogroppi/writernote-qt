@@ -5,6 +5,8 @@ QT       += multimedia
 !ios:QT       += printsupport
 QT       += network
 
+#DEFINES += "DEBUG_CORE"
+
 macx: DEFINES += "MACOS"
 android: DEFINES += "ANDROID_WRITERNOTE"
 ios: DEFINES += "IOS_WRITERNOTE"

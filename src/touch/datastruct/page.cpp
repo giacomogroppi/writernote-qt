@@ -9,6 +9,7 @@
 #include "time.h"
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
+#include "testing/memtest.h"
 
 #define PAGE_THREAD_MAX 16
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
@@ -709,7 +710,7 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
         if(unlikely(initImg(false)))
             return this->triggerRenderImage(m_pos_ris, true);
 
-        painter = new QPainter;
+        WNew(painter, QPainter, ());
 
         painter->begin(&this->imgDraw);
         painter->setRenderHint(QPainter::Antialiasing, true);
@@ -719,7 +720,7 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
 
     if(needDelete){
         painter->end();
-        delete painter;
+        WDelete(painter);
     }
 }
 

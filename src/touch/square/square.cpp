@@ -10,6 +10,7 @@
 #include "touch/multi_thread_data.h"
 #include "touch/paintevent/paint.h"
 #include "pthread.h"
+#include "testing/memtest.h"
 
 #ifdef DEBUG_THREAD
 # undef SQ_THREAD
@@ -34,7 +35,7 @@ square::square(QObject *parent, property_control *property):
     this->threadCount   = get_thread_used();
 
     this->m_property = property;
-    this->m_copy = new copy();
+    WNew(m_copy, copy, ());
     this->canvas = (TabletCanvas *) parent;
 
     QObject::connect(m_property, &property_control::ActionSelection, this, &square::actionProperty);
@@ -52,7 +53,7 @@ square::square(QObject *parent, property_control *property):
 square::~square()
 {
     free_thread_data(&thread, &dataThread);
-    delete this->m_copy;
+    WDelete(m_copy);
 }
 
 void * __square_search(void *__data)

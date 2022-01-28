@@ -27,7 +27,8 @@
         "new": "cpp",
         "qfiledialog": "cpp",
         "qsettings": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "qstylefactory": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

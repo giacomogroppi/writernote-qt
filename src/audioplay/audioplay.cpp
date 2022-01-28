@@ -1,6 +1,6 @@
 #include "audioplay.h"
 #include "utils/dialog_critic/dialog_critic.h"
-
+#include "testing/memtest.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -10,7 +10,6 @@ audioplay::audioplay(QObject *parent) : QObject(parent)
     this->parent = (MainWindow *)parent;
     Q_ASSERT(this->parent->objectName() == "MainWindow");
 
-    player = new QMediaPlayer(this);
     connect(player, &QMediaPlayer::positionChanged, this, &audioplay::positionChange);
     connect(player, &QMediaPlayer::stateChanged, this, &audioplay::updateStatus);
 

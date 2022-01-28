@@ -2,15 +2,16 @@
 #include <QString>
 #include <QStringList>
 
+#include "testing/memtest.h"
 #include "touch/datastruct/datastruct.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
 void Document::init()
 {
-    this->m_img = new fromimage(this);
-    this->m_pdf = new frompdf(this);
-    this->datatouch = new datastruct(m_pdf, m_img);
+    WNew(m_img, fromimage, (this));
+    WNew(m_pdf, frompdf, (this));
+    WNew(datatouch, datastruct, (m_pdf, m_img));
 }
 
 Document::Document(){
@@ -25,9 +26,13 @@ Document::Document(const Document &src)
 
 Document::~Document()
 {
-    delete m_pdf;
-    delete datatouch;
-    delete m_img;
+    WDelete(m_pdf);
+    WDelete(datatouch);
+    WDelete(m_img);
+
+    m_pdf = NULL;
+    datatouch = NULL;
+    m_img = NULL;
 }
 
 void Document::copy(const Document &src,

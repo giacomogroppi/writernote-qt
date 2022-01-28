@@ -16,11 +16,9 @@ private:
               const bool withPdf);
 
 public:
-    ~topdf(){
-        delete data;
-    };
-
     topdf(const QString &path, const Document &doc);
+    ~topdf();
+
     bool createpdf(const bool withPdf);
 
 };

@@ -62,19 +62,19 @@ MainWindow::MainWindow(QWidget *parent,
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
 
     setting_load(this);
-    this->m_rubber = new class rubber_ui(this);
-    this->m_pen = new class pen_ui(this);
-    this->m_text = new class text_ui(this);
-    this->m_highlighter = new class highlighter(this, &m_pen->same_data, m_pen);
-    this->m_pen->m_highlighter = m_highlighter;
-    this->m_option_copybook = new class option_copybook(this);
-    this->m_text_w = new class text_widgets(this, m_canvas);
-    this->m_sheet = new class fast_sheet_ui(this);
-    this->m_setting = new class setting_restore_ui(this, &m_canvas->data, &m_path);
-    NAME_LOG_EXT = new class log_ui(this);
-    this->m_controllUi = new class ControllUiButton(this);
-    this->m_audioplayer = new class audioplay(this);
-    this->m_audio_recorder = new class AudioRecord(this);
+    this->m_rubber              = new class rubber_ui(this);
+    this->m_pen                 = new class pen_ui(this);
+    this->m_text                = new class text_ui(this);
+    this->m_highlighter         = new class highlighter(this, &m_pen->same_data, m_pen);
+    this->m_pen->m_highlighter  = m_highlighter;
+    this->m_option_copybook     = new class option_copybook(this);
+    this->m_text_w              = new class text_widgets(this, m_canvas);
+    this->m_sheet               = new class fast_sheet_ui(this);
+    this->m_setting             = new class setting_restore_ui(this, &m_canvas->data, &m_path);
+    NAME_LOG_EXT                = new class log_ui(this);
+    this->m_controllUi          = new class ControllUiButton(this);
+    this->m_audioplayer         = new class audioplay(this);
+    this->m_audio_recorder      = new class AudioRecord(this);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);

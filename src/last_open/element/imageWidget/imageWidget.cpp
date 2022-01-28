@@ -1,11 +1,12 @@
 #include "imageWidget.h"
 #include "utils/common_script.h"
+#include "testing/memtest.h"
 
 imageWidget::imageWidget(QWidget *parent, QPixmap *pixmap) : QWidget(parent)
 {
-    gridLayout = new QGridLayout();
-    imgDisplayLabel = new QLabel("");
-    scrollArea = new QScrollArea();
+    WNew(gridLayout, QGridLayout, ());
+    WNew(imgDisplayLabel, QLabel, (""));
+    WNew(scrollArea, QScrollArea, ());
 
     if(unlikely(!pixmap)){
         this->hide();
@@ -23,7 +24,11 @@ imageWidget::imageWidget(QWidget *parent, QPixmap *pixmap) : QWidget(parent)
 
 imageWidget::~imageWidget()
 {
-    delete imgDisplayLabel;
-    delete scrollArea;
-    delete gridLayout;
+    WDelete(imgDisplayLabel);
+    WDelete(scrollArea);
+    WDelete(gridLayout);
+
+    imgDisplayLabel = NULL;
+    scrollArea = NULL;
+    gridLayout = NULL;
 }

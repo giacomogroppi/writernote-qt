@@ -3,6 +3,7 @@
 #include "last_open/element/element_ui.h"
 #include <QDebug>
 #include "last_open/last_open.h"
+#include "testing/memtest.h"
 
 widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName,
                              last_open *parent_sec, const uchar __num, const uchar __showFileOnlyIfExist) :
@@ -23,12 +24,13 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnl
     ui->setupUi(this);
 
     for(i=0; i < len && i < __num; ++i){
-        el = new element_ui(nullptr, &m_last_file->at(i), showOnlyName, i, __showFileOnlyIfExist);
+        WNew(el, element_ui, (nullptr, &m_last_file->at(i), showOnlyName, i, __showFileOnlyIfExist));
+
         if(el->needToDelete){
             m_last_file->removeAt(i);
             --i;
             --len;
-            delete el;
+            WDelete(el);
             continue;
         }
         this->m_element.append(el);
@@ -50,9 +52,12 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnl
 
 widget_parent::~widget_parent()
 {
-    int i;
-    for(i=0; i<m_element.length(); ++i){
-        delete m_element.at(i);
+    int i, len;
+
+    len = m_element.length();
+
+    for(i = 0; i < len; ++i){
+        WDelete(m_element.at(i));
     }
     delete ui;
 }

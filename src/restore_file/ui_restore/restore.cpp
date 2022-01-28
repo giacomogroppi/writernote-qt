@@ -8,6 +8,7 @@
 #include "restore_file/restore_file_critic.h"
 #include "restore_file/get_name_tmp.h"
 #include "utils/dialog_critic/dialog_critic.h"
+#include "testing/memtest.h"
 
 restore::restore(QWidget *parent, QString path) :
     QDialog(parent),
@@ -17,7 +18,7 @@ restore::restore(QWidget *parent, QString path) :
 
     ui->message_label->setText("");
 
-    m_curr = new Document;
+    WNew(m_curr, Document, ());
 
     this->path = path;
 
@@ -28,7 +29,7 @@ restore::restore(QWidget *parent, QString path) :
 
 restore::~restore()
 {
-    delete m_curr;
+    WDelete(m_curr);
 
     if(m_save)
         delete m_save;

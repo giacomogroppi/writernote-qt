@@ -46,12 +46,13 @@ void WMalloc_private(const char *file, const char *function, const void *pointer
     pthread_mutex_unlock(&_mem_mutex);
 }
 
-void WFree_private(void *mem)
+void WFree_private(void *mem, const char *file, const char *function)
 {
     int i;
     const mem_info *tmp;
     QList<mem_info> &__mem = _mem;
     int res = 0;
+    QString msg;
 
     pthread_mutex_lock(&_mem_mutex);
 
@@ -66,12 +67,11 @@ void WFree_private(void *mem)
         }
     }
 
+out:
     pthread_mutex_unlock(&_mem_mutex);
 
-out:
     if(unlikely(!res)){
-        qDebug() << "mem free not record";
-        print_mem_info((const mem_info *)mem);
+        msg = QString("Mem free not record. Pointer %1 File %2 Function %3").arg(QString::number((unsigned long)mem), file, function);
     }
 }
 

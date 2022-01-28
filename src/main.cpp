@@ -10,6 +10,7 @@
 #include "log/log_ui/log_ui.h"
 #include "testing/testingcore.h"
 #include "utils/common_error_definition.h"
+#include "testing/memtest.h"
 #include <QStyleFactory>
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file\nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
@@ -24,7 +25,7 @@ static void printLog();
 static int extract_(const char *path, const char *path_to);
 static void createFileAndExit(const QString &path, MainWindow *parent);
 
-#ifdef DEBUG_THREAD
+#ifdef DEBUG_CORE
 static void manageDebug(MainWindow *parent)
 {
     TestingCore core(parent);
@@ -35,6 +36,11 @@ static void manageDebug(MainWindow *parent)
 #endif
 
 int main(int argc, char **argv){
+    TabletApplication *app;
+    TabletCanvas *canvas;
+    char * m_last_open = NULL;
+    int exit_code;
+
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
         return extract_(argv[2], argv[3]);
     }
@@ -66,14 +72,13 @@ int main(int argc, char **argv){
     QApplication::setStyle("fusion");
 #endif
 
-    TabletApplication *app = new TabletApplication(argc, argv);
+    WNew(app, TabletApplication, (argc, argv));
 
     language_manager::setLanguage(app);
 
-    TabletCanvas *canvas = new TabletCanvas;
-    app->setCanvas(canvas);
+    WNew(canvas, TabletCanvas, ());
 
-    char * m_last_open = NULL;
+    app->setCanvas(canvas);
 
     if(argc == 1){
 
@@ -120,10 +125,8 @@ int main(int argc, char **argv){
 
     manageDebug(&w);
 
-    //createFileAndExit("/home/giacomo/writernote-qt/test/file_test.writer", &w);
-
     w.show();
-    int exit_code = app->exec();
+    exit_code = app->exec();
 
 #ifdef CLOUD
     if(user)
@@ -132,7 +135,8 @@ int main(int argc, char **argv){
 
     printLog();
 
-    delete canvas;
+    WDelete(canvas);
+    WDelete(app);
     return exit_code;
 }
 
@@ -184,6 +188,8 @@ static void printLog()
 #endif
 }
 
+#ifdef DEBUGCORE
+
 __attribute__((unused)) static void createFileAndExit(const QString &path, MainWindow *parent)
 {
     TestingCore core(parent);
@@ -194,3 +200,5 @@ __attribute__((unused)) static void createFileAndExit(const QString &path, MainW
 
     exit(0);
 }
+
+#endif
