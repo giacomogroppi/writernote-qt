@@ -13,7 +13,7 @@ void MainWindow::on_actionPrint_triggered()
 #else
     QPrinter printer;
     QPrintDialog dialogprint(&printer);
-
+    QPainter painter;
     const Document *doc = m_canvas->data;
 
     const double size_orizzontale = doc->datatouch->biggerx();
@@ -31,7 +31,6 @@ void MainWindow::on_actionPrint_triggered()
     if( dialogprint.exec() != QDialog::Accepted )
         return;
 
-    QPainter painter;
     if (! painter.begin(&printer)) { // failed to open file
         user_message("Writernote had an internal problem");
     }

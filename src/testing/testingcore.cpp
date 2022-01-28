@@ -8,7 +8,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#if defined(DEBUG_THREAD) || defined(DEBUGINFO)
+#if defined(DEBUG_CORE) || defined(DEBUGINFO)
 TestingCore::TestingCore(MainWindow *__parent)
 {
     srand(time(NULL));

@@ -3,9 +3,9 @@
 
 #include "utils/common_script.h"
 
-//#define MEMTEST
+#define DEBUG_CORE
 // debug for memory
-#ifdef MEMTEST
+#ifdef DEBUG_CORE
 
 void WMalloc_private(size_t size, const char *file, const char *function);
 void WFree_private(void *mem);

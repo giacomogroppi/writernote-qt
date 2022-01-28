@@ -6,6 +6,8 @@
 #include <QByteArray>
 #include "currenttitle/document.h"
 
+#if defined(DEBUG_CORE) || defined(DEBUGINFO)
+
 class TestingCore
 {
 private:
@@ -21,5 +23,7 @@ public:
     int createFile(const QByteArray &folder);
     int startTest();
 };
+
+#endif
 
 #endif // TESTINGCORE_H

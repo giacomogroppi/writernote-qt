@@ -2,9 +2,9 @@
 #include <QList>
 #include <QVector>
 #include "string.h"
-#include <malloc.h>
+#include "pthread.h"
 
-#ifdef MEMTEST
+#ifdef DEBUG_CORE
 
 struct mem_info
 {
@@ -13,7 +13,14 @@ struct mem_info
     char file[128];
 };
 
+static pthread_mutex_t _mem_mutex;
 static QList<mem_info> _mem;
+
+void __init__ initMem(void)
+{
+    qDebug() << "Memtest enable";
+    pthread_mutex_init(&_mem_mutex, NULL);
+}
 
 static void print_mem_info(const mem_info *mem)
 {
@@ -22,6 +29,7 @@ static void print_mem_info(const mem_info *mem)
 
     message = QString("Pointer %1 File: %2 Function %3").arg( QString::number((unsigned long)mem->pointer), mem->file, mem->function);
 
+    qDebug() << message;
 }
 
 void WMalloc_private(const char *file, const char *function, const void *pointer)
@@ -33,15 +41,21 @@ void WMalloc_private(const char *file, const char *function, const void *pointer
 
     mem.pointer = pointer;
 
+    pthread_mutex_lock(&_mem_mutex);
     _mem.append(mem);
+    pthread_mutex_unlock(&_mem_mutex);
 }
 
 void WFree_private(void *mem)
 {
-    int i = _mem.length();
+    int i;
     const mem_info *tmp;
     QList<mem_info> &__mem = _mem;
     int res = 0;
+
+    pthread_mutex_lock(&_mem_mutex);
+
+    i = _mem.length();
 
     for(i --; i >= 0; i--){
         tmp = &__mem.at(i);
@@ -51,6 +65,8 @@ void WFree_private(void *mem)
             goto out;
         }
     }
+
+    pthread_mutex_unlock(&_mem_mutex);
 
 out:
     if(unlikely(!res)){
