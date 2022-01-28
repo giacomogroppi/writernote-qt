@@ -12,6 +12,7 @@ class laser : public QObject
 private:
     static constexpr int _size = 1;
     QTimer *_timer;
+    class TabletCanvas *_canvas;
 public:
     laser(QObject *parent);
     ~laser();
