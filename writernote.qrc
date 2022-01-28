@@ -57,5 +57,6 @@
         <file>images/tablet.png</file>
         <file>images/full-screen.png</file>
         <file>images/compress-video.png</file>
+        <file>images/laser.png</file>
     </qresource>
 </RCC>

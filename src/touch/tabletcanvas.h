@@ -128,8 +128,8 @@ public:
         pen,
         selection,
         text,
-        highlighter
-
+        highlighter,
+        laser
     };
 
     e_method medotodiinserimento;

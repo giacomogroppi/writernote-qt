@@ -61,6 +61,13 @@ void MainWindow::on_actionselezionetext_triggered()
     updateTouch();
 }
 
+void MainWindow::on_actionLaser_triggered()
+{
+    m_canvas->medotodiinserimento = TabletCanvas::e_method::laser;
+    m_canvas->m_color = Qt::red;
+    updateTouch();
+}
+
 /* insert text */
 void MainWindow::on_actioninsertText_triggered()
 {
@@ -107,6 +114,7 @@ void MainWindow::updateTouch(){
     ui->actionselezionetext->setChecked(    m_canvas->medotodiinserimento == TabletCanvas::selection);
     ui->actioninsertText->setChecked(       m_canvas->medotodiinserimento == TabletCanvas::text);
     ui->actionhighlighter->setChecked(      m_canvas->medotodiinserimento == TabletCanvas::highlighter);
+    ui->actionLaser->setChecked(            m_canvas->medotodiinserimento == TabletCanvas::laser);
 
     ui->buttonPen->setChecked(              m_canvas->medotodiinserimento == TabletCanvas::pen);
     ui->buttonRubber->setChecked(           m_canvas->medotodiinserimento == TabletCanvas::rubber);

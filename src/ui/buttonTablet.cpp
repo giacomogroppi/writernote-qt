@@ -42,6 +42,11 @@ void MainWindow::on_buttonHighlighter_clicked()
     this->on_actionhighlighter_triggered();
 }
 
+void MainWindow::on_buttonLaser_clicked()
+{
+    this->on_actionLaser_triggered();
+}
+
 void MainWindow::on_buttonBlack_clicked()
 {
     this->on_actionblack_triggered();

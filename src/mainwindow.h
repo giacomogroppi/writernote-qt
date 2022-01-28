@@ -227,6 +227,8 @@ private slots:
     void on_sliderZoom_sliderMoved(int position);
     void on_buttonFullScreen_clicked();
     void on_actionFull_Screen_triggered();
+    void on_actionLaser_triggered();
+    void on_buttonLaser_clicked();
 
 protected:
     void dropEvent(QDropEvent *event) override;

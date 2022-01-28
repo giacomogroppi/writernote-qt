@@ -152,6 +152,7 @@ SOURCES += \
     src/touch/datastruct/triggerNewView.cpp \
     src/touch/datastruct/writtenSomething.cpp \
     src/touch/highlighter/highlighter.cpp \
+    src/touch/laser/laser.cpp \
     src/touch/multi_thread_data.cpp \
     src/touch/pageCount.cpp \
     src/touch/paintevent/loadPixel.cpp \
@@ -298,6 +299,7 @@ HEADERS += \
     src/touch/datastruct/point.h \
     src/touch/datastruct/stroke.h \
     src/touch/highlighter/highlighter.h \
+    src/touch/laser/laser.h \
     src/touch/multi_thread_data.h \
     src/touch/paintevent/paint.h \
     src/touch/property/property_control.h \

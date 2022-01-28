@@ -35,7 +35,8 @@ static void manageDebug(MainWindow *parent)
 # define manageDebug(x) ;
 #endif
 
-int main(int argc, char **argv){
+int main(int argc, char **argv)
+{
     TabletApplication *app;
     TabletCanvas *canvas;
     char * m_last_open = NULL;

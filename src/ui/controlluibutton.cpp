@@ -68,6 +68,7 @@ void ControllUiButton::initList()
     m_button.append(ui->buttonselezionetext);
     m_button.append(ui->buttonInsertText);
     m_button.append(ui->buttonHighlighter);
+    m_button.append(ui->buttonLaser);
     m_button.append(ui->buttonBlack);
     m_button.append(ui->buttonYellow);
     m_button.append(ui->buttonWhite);
