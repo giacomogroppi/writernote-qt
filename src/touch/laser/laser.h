@@ -5,12 +5,18 @@
 #include <QTimer>
 #include <QObject>
 #include "testing/memtest.h"
+#include "touch/datastruct/datastruct.h"
+#include "touch/tabletcanvas.h"
 
 class laser : public QObject
 {
     Q_OBJECT
 private:
     static constexpr int _size = 1;
+    static constexpr int _time = 2000;
+
+    QList<stroke> _stroke;
+
     QTimer *_timer;
     class TabletCanvas *_canvas;
 public:
@@ -18,26 +24,33 @@ public:
     ~laser();
 
     void startMove();
-    void endMode();
+    void endMove();
+    void append(const stroke &stroke);
 
 private slots:
     void endTimer();
 
 };
 
+force_inline void laser::append(const stroke &stroke)
+{
+    _stroke.append(stroke);
+}
+
 force_inline void laser::endTimer()
 {
-
+    _stroke.clear();
+    _canvas->call_update();
 }
 
 force_inline void laser::startMove()
 {
-
+    _timer->stop();
 }
 
-force_inline void laser::endMode()
+force_inline void laser::endMove()
 {
-
+    _timer->start(_time);
 }
 
 #endif // LASER_H

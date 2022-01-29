@@ -14,6 +14,7 @@
 #include "property/property_control.h"
 #include "audioplay/audioplay.h"
 #include "testing/memtest.h"
+#include "touch/laser/laser.h"
 
 static void saveLastMethod(TabletCanvas::e_method);
 static void loadLastMethod(TabletCanvas *);

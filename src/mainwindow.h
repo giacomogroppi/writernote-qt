@@ -117,6 +117,7 @@ public:
     class ControllUiButton *m_controllUi;
     class fast_sheet_ui *m_sheet = nullptr;
     class audioplay *m_audioplayer;
+    class laser *m_laser;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ShareUtils *m_share_file;
 #endif

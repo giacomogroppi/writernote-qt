@@ -181,6 +181,7 @@ public:
     class zoom_control *zoom = NULL;
     class redoundo *m_redoundo = NULL;
     class property_control *m_property = NULL;
+    class laser *m_laser;
 
     QPixmap m_pixmap;
 

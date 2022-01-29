@@ -5,6 +5,7 @@
 #include "mainwindow.h"
 #include "audioplay/audioplay.h"
 #include "audiorecord/audiorecord.h"
+#include "touch/laser/laser.h"
 
 #define MAXPOINT 20
 #define CTRL_METHOD(var, type) var = medotodiinserimento == e_method::type
@@ -21,6 +22,7 @@ static bool pen_method;
 static bool selection_method;
 static bool rubber_method;
 static bool text_method;
+static bool laser_method;
 
 static TabletCanvas::e_method lastMethod = TabletCanvas::e_method::pen;
 
@@ -54,6 +56,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
         CTRL_METHOD(pen_method, pen);
         CTRL_METHOD(selection_method, selection);
         CTRL_METHOD(text_method, text);
+        CTRL_METHOD(laser_method, laser);
     }
 
     if(unlikely(    pointTouch.x() > data->datatouch->biggerx()
@@ -104,7 +107,7 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
         return;
 
     QPainter painter(&m_pixmap);
-    if(pen_method || highlighter_method){
+    if(pen_method || highlighter_method || laser_method){
         updateBrush(event);
     }
 
@@ -112,7 +115,7 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
     lastPoint.pressure = event->pressure();
     lastPoint.rotation = event->rotation();
 
-    if(pen_method || highlighter_method){
+    if(pen_method || highlighter_method || laser_method){
         updatelist(event);
     }
     else if(rubber_method){
@@ -130,7 +133,11 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
         }
         else{
             if(likely(m_square->isinside(point))){
-                DO_IF_DEBUG(if(m_square->get_first_point().isNotSet()) std::abort(););
+                DO_IF_DEBUG(
+                    if(m_square->get_first_point().isNotSet())
+                                std::abort();
+                );
+
                 /* a questo punto può muovere di un delta x e y */
                 m_square->move(point);
             }
@@ -264,9 +271,13 @@ static void AppendAll(
         point->m_y -= PointFirstPage.y();
     }
 
-    pageMod = doc.datatouch->appendStroke(strokeToAppend);
+    if(unlikely(laser_method)){
+        canvas->m_laser->append(strokeToAppend);
+        canvas->m_laser->endMove();
+    }else{
+        pageMod = doc.datatouch->appendStroke(strokeToAppend);
 
-    doc.datatouch->at_mod(pageMod).triggerRenderImage(time, toTheTop);
-
+        doc.datatouch->at_mod(pageMod).triggerRenderImage(time, toTheTop);
+    }
     strokeToAppend.reset();
 }

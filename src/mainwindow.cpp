@@ -27,6 +27,7 @@
 #include "audioplay/audioplay.h"
 #include "audiorecord/audiorecord.h"
 #include "touch/multi_thread_data.h"
+#include "touch/laser/laser.h"
 #include <QString>
 
 #ifdef PDFSUPPORT
@@ -75,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_controllUi          = new class ControllUiButton(this);
     this->m_audioplayer         = new class audioplay(this);
     this->m_audio_recorder      = new class AudioRecord(this);
+    this->m_laser               = new class laser(m_canvas);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);
@@ -87,12 +89,13 @@ MainWindow::MainWindow(QWidget *parent,
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
 
-    m_canvas->m_rubber = m_rubber;
-    m_canvas->m_pen_ui = m_pen;
-    m_canvas->m_text = m_text;
-    m_canvas->m_sheet = m_sheet;
+    m_canvas->m_rubber      = m_rubber;
+    m_canvas->m_pen_ui      = m_pen;
+    m_canvas->m_text        = m_text;
+    m_canvas->m_sheet       = m_sheet;
     m_canvas->m_highlighter = m_highlighter;
-    m_canvas->m_text_w = m_text_w;
+    m_canvas->m_text_w      = m_text_w;
+    m_canvas->m_laser       = m_laser;
 
     /* redo and undo */
     connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);
