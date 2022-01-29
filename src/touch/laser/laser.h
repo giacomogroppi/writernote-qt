@@ -26,11 +26,23 @@ public:
     void startMove();
     void endMove();
     void append(const stroke &stroke);
+    int length() const;
+    const stroke &at(int i) const;
 
 private slots:
     void endTimer();
 
 };
+
+force_inline const stroke &laser::at(int i) const
+{
+    return _stroke.at(i);
+}
+
+force_inline int laser::length() const
+{
+    return _stroke.length();
+}
 
 force_inline void laser::append(const stroke &stroke)
 {

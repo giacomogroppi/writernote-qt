@@ -5,6 +5,7 @@
 #include "touch/paintevent/paint.h"
 #include <QPolygonF>
 #include <QPainterPath>
+#include "touch/laser/laser.h"
 
 #ifdef PDFSUPPORT
 # include "frompdf/frompdf.h"
@@ -16,6 +17,36 @@
 extern stroke __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta);
 
+static void drawSingleStroke(DataPaint      &_dataPoint,
+                             const stroke   &_stroke,
+                             QPen           &_pen,
+                             QPainter       &_painter,
+                             cdouble        _zoom)
+{
+    int i, len;
+
+    len = _stroke.length();
+
+    if(unlikely(!len))
+        return;
+
+    _dataPoint.lastPoint.pos = QPointF(_stroke.at(0).m_x, _stroke.at(0).m_y);
+
+    for(i = 1; i < len; i++){
+        const auto &__point = _stroke.at(i);
+
+        _pen.setWidthF(
+                    TabletCanvas::pressureToWidth(__point.pressure * _zoom * _dataPoint.m / 2.00));
+        _painter.setPen(_pen);
+
+        _painter.drawLine(_dataPoint.lastPoint.pos * _dataPoint.m,
+                         QPointF(__point.m_x * _dataPoint.m, __point.m_y * _dataPoint.m));
+
+        _dataPoint.lastPoint.pos.setX(__point.m_x);
+        _dataPoint.lastPoint.pos.setY(__point.m_y);
+    }
+}
+
 void TabletCanvas::load(QPainter &painter,
                         const Document *data,
                         DataPaint &dataPoint)
@@ -26,16 +57,17 @@ void TabletCanvas::load(QPainter &painter,
     const int m_pos_ris         = (is_play) ? (dataPoint.parent->m_audioplayer->getPositionSecond()) : -1;
     static int last_m_pos_ris   = -1;
 
-    const int lenPage               = data->datatouch->lengthPage();
+    int lenPage                     = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
     const double zoom               = data->datatouch->getZoom();
     const QSize sizeRect            = createSizeRect(data->datatouch, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
     stroke &strokeToDraw = __tmp;
 
-    int i, len, counterPage;
+    int counterPage;
     QPixmap *pixmap             = dataPoint.m_pixmap;
     QPen &pen                   = dataPoint.pen;
+    class laser *_laser;
 
     if(likely(pixmap))
         pixmap->fill(Qt::white);
@@ -57,24 +89,9 @@ void TabletCanvas::load(QPainter &painter,
     /* draw points that the user has not finished yet */
     pen.setColor(strokeToDraw.getColor());
 
-    len = strokeToDraw.length();
-    /* point not already add to page */
-    if(likely(len)){
-        dataPoint.lastPoint.pos = QPointF(strokeToDraw.at(0).m_x, strokeToDraw.at(0).m_y);
+    /* stroke not already add to page */
+    drawSingleStroke(dataPoint, strokeToDraw, pen, painter, zoom);
 
-        for(i = 1; i < len; i++){
-            const auto &__point = strokeToDraw.at(i);
-
-            pen.setWidthF(pressureToWidth(__point.pressure * zoom * dataPoint.m / 2.00));
-            painter.setPen(pen);
-
-            painter.drawLine(dataPoint.lastPoint.pos * dataPoint.m,
-                             QPointF(__point.m_x * dataPoint.m, __point.m_y * dataPoint.m));
-
-            dataPoint.lastPoint.pos.setX(__point.m_x);
-            dataPoint.lastPoint.pos.setY(__point.m_y);
-        }
-    }
 
     painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
@@ -102,6 +119,20 @@ void TabletCanvas::load(QPainter &painter,
             continue;
 
         singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, dataPoint.m);
+    }
+
+
+    if(unlikely(!dataPoint.parent))
+        return;
+
+    _laser = dataPoint.parent->m_canvas->m_laser;
+
+    // laser item
+    lenPage = _laser->length();
+
+    for(lenPage --; lenPage >= 0; lenPage --){
+        const stroke &tmp = _laser->at(lenPage);
+        drawSingleStroke(dataPoint, tmp, pen, painter, zoom);
     }
 }
 
