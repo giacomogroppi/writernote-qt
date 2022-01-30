@@ -1,5 +1,6 @@
 #include "property_control.h"
 #include "ui_property_control.h"
+#include "touch/tabletcanvas.h"
 
 #define SET_PRIVATE_STYLE(button) button->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
 
@@ -7,6 +8,7 @@ property_control::property_control(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::property_control)
 {
+    W_ASSERT(parent->objectName() == "TabletCanvas");
     ui->setupUi(this);
 
     setStyleSheet("background:transparent;");
@@ -62,5 +64,12 @@ void property_control::on_button_delete_clicked()
 void property_control::on_button_paste_clicked()
 {
     emit ActionSelection(ActionProperty::__paste);
+}
+
+bool property_control::event(QEvent *event)
+{
+    qDebug() << event->type();
+
+    return QWidget::event(event);
 }
 

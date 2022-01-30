@@ -38,6 +38,7 @@ TabletCanvas::TabletCanvas()
     : QWidget(nullptr)
     , m_pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
 {
+    this->setObjectName("TabletCanvas");
     this->resize(500, 500);
     setAutoFillBackground(true);
     setAttribute(Qt::WA_TabletTracking);
@@ -55,7 +56,8 @@ TabletCanvas::TabletCanvas()
 }
 
 #define DELETE_IF_EXIST(pointer) if(pointer) delete pointer;
-TabletCanvas::~TabletCanvas(){
+TabletCanvas::~TabletCanvas()
+{
     DELETE_IF_EXIST(zoom);
     DELETE_IF_EXIST(m_redoundo);
 

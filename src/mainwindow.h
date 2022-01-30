@@ -74,11 +74,10 @@ public:
     enum n_need_save needToSave(xmlstruct &xml,
                                 Document & tmp_read) const;
 
-    MainWindow(QWidget *parent = nullptr,
-               TabletCanvas *canvas = nullptr,
-               struct struct_user *user = nullptr,
-               cloud_controll *cloud = nullptr,
-               const char *open = nullptr);
+    MainWindow(TabletCanvas         *canvas,
+               struct struct_user   *user,
+               cloud_controll       *cloud,
+               const char           *open);
     ~MainWindow();
 
     /* false -> use pen

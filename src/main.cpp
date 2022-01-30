@@ -39,6 +39,7 @@ int main(int argc, char **argv)
 {
     TabletApplication *app;
     TabletCanvas *canvas;
+    MainWindow *window;
     char * m_last_open = NULL;
     int exit_code;
 
@@ -112,21 +113,13 @@ int main(int argc, char **argv)
 #ifdef CLOUD
     MainWindow w(nullptr, canvas, user, &m_cloud, f);
 #else
-    MainWindow w(nullptr, canvas, nullptr, nullptr, f);
+    WNew(window, MainWindow, (canvas, nullptr, nullptr, f));
 #endif
 
-    //if(m_last_open != NULL)
-    //    w.setFile(m_last_open);
-
-    //delete m_last_open;
-
-    //if(argc != 1){
-    //    w.setFile(argv[1]);
-    //}
 
     manageDebug(&w);
 
-    w.show();
+    window->show();
     exit_code = app->exec();
 
 #ifdef CLOUD
@@ -137,6 +130,7 @@ int main(int argc, char **argv)
     printLog();
 
     WDelete(canvas);
+    WDelete(window);
     WDelete(app);
     return exit_code;
 }

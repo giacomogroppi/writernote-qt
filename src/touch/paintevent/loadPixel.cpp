@@ -191,8 +191,6 @@ static void loadSheet(
 
         pressure = TabletCanvas::pressureToWidth(pressure * zoom * delta / 2.0);
 
-        qDebug() << "loadSheet: " << pressure;
-
         m_pen.setWidthF(pressure);
         m_pen.setColor(__stroke->getColor());
 

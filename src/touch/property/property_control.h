@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QRect>
+#include <QEvent>
 
 class Document;
 
@@ -36,6 +37,7 @@ public:
 
 private:
     Ui::property_control *ui;
+    class TabletCanvas *_canvas;
 
 signals:
     void ActionSelection(property_control::ActionProperty action);
@@ -44,6 +46,10 @@ private slots:
     void on_button_cut_clicked();
     void on_button_delete_clicked();
     void on_button_paste_clicked();
+
+protected:
+    bool event(QEvent *event) override;
+
 };
 
 inline void property_control::Hide()

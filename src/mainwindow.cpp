@@ -34,14 +34,16 @@
 #include "frompdf/frompdf.h"
 #endif
 
-MainWindow::MainWindow(QWidget *parent,
-                       TabletCanvas *canvas,
+MainWindow::MainWindow(TabletCanvas *canvas,
                        struct struct_user *user,
                        cloud_controll *cloud,
                        const char *path)
-    : QMainWindow(parent)
+    : QMainWindow(NULL)
     , ui(new Ui::MainWindow)
 {
+
+    W_ASSERT(canvas);
+
 #ifdef CLOUD
     this->m_cloud = cloud;
     this->m_user = user;
@@ -64,8 +66,8 @@ MainWindow::MainWindow(QWidget *parent,
 
     setting_load(this);
     this->m_rubber              = new class rubber_ui(this);
-    this->m_pen                 = new class pen_ui(this);
     this->m_text                = new class text_ui(this);
+    this->m_pen                 = new class pen_ui(this);
     this->m_highlighter         = new class highlighter(this, &m_pen->same_data, m_pen);
     this->m_pen->m_highlighter  = m_highlighter;
     this->m_option_copybook     = new class option_copybook(this);
@@ -110,6 +112,7 @@ MainWindow::MainWindow(QWidget *parent,
     ui->actionselezionetext->setCheckable(true);
     ui->actioninsertText->setCheckable(true);
     ui->actionhighlighter->setCheckable(true);
+    ui->actionLaser->setCheckable(true);
 
     ui->actionwhite->setCheckable(true);
     ui->actionblack->setCheckable(true);
@@ -156,6 +159,7 @@ MainWindow::~MainWindow()
     setting.endGroup();
 
     delete ui;
+    ui = NULL;
 }
 
 void MainWindow::update_touch_or_pen()

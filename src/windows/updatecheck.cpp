@@ -16,9 +16,37 @@
 #include "mainwindow.h"
 #include "showmessageupdate.h"
 
-static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver);
+#define POSNAME "name"
 
-void updatecheck::start(){
+static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver)
+{
+    if(update.indexOf(updatecheck::critical) != -1)
+        return updatecheck::critical;
+
+    int i, len;
+
+    auto temp_2 = doc.toJson();
+
+    bool find = false;
+
+    for(i=0, len = temp_2.length(); i<len && doc[i][POSNAME].toString() != c_ver; i++){
+        if(doc[i][POSNAME].toString().indexOf(updatecheck::critical) != -1)
+            return updatecheck::critical;
+
+        if(doc[i][POSNAME].toString().indexOf(updatecheck::high) != -1)
+            find = true;
+
+    }
+
+    if(find)
+        return updatecheck::high;
+
+    return updatecheck::low;
+
+}
+
+void updatecheck::start()
+{
     manager = new QNetworkAccessManager();
     request.setUrl(QUrl("https://api.github.com/repos/giacomogroppi/writernote-qt/tags"));
     reply = manager->get(request);
@@ -26,15 +54,27 @@ void updatecheck::start(){
     QObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
 }
 
-updatecheck::updatecheck(QAction *a)
+updatecheck::updatecheck(QAction *a):
+    QObject(NULL)
 {
     action = a;
     this->start();
 }
 
-#define POSNAME "name"
+updatecheck::~updatecheck()
+{
+    if(manager){
+        delete manager;
+        manager = NULL;
+    }
+}
 
-void updatecheck::managerFinished(){
+void updatecheck::managerFinished()
+{
+    QString __mess;
+    QString testo;
+    QJsonDocument doc;
+
 #ifndef VERSION_SNAPCRAFT
     if(mostra)
         dialog_critic("This version of writernote was not compiled following the \ninstructions for setting the version, \nso I can't tell if there are any updates");
@@ -49,12 +89,13 @@ void updatecheck::managerFinished(){
             dialog_critic("We had a problem with internet connection " + reply->errorString() + "\nReinstall the app, or download the ssl libraries.");
 #endif
         delete manager;
+        manager = NULL;
         return;
     }
-    QString __mess;
-    QString testo = reply->readAll();
 
-    QJsonDocument doc = QJsonDocument::fromJson(testo.toUtf8());
+    testo = reply->readAll();
+
+    doc = QJsonDocument::fromJson(testo.toUtf8());
 
     testo = doc[0][POSNAME].toString();
 
@@ -85,38 +126,8 @@ void updatecheck::managerFinished(){
     }
 }
 
-void updatecheck::restart(){
+void updatecheck::restart()
+{
     this->start();
     this->mostra = true;
-}
-
-/*
- * the function find in doc if there is a tag with critical or hight update
-*/
-static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver){
-    QString temp;
-    if(update.indexOf(updatecheck::critical) != -1)
-        return updatecheck::critical;
-
-
-    int i, len;
-
-    auto temp_2 = doc.toJson();
-
-    bool find = false;
-
-    for(i=0, len = temp_2.length(); i<len && doc[i][POSNAME].toString() != c_ver; i++){
-        if(doc[i][POSNAME].toString().indexOf(updatecheck::critical) != -1)
-            return updatecheck::critical;
-
-        if(doc[i][POSNAME].toString().indexOf(updatecheck::high) != -1)
-            find = true;
-
-    }
-
-    if(find)
-        return updatecheck::high;
-
-    return updatecheck::low;
-
 }

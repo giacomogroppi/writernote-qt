@@ -20,6 +20,7 @@ class updatecheck: public QObject
     Q_OBJECT
 public:
     updatecheck(QAction *action_update);
+    ~updatecheck();
 
     void checkupdate();
 
@@ -34,7 +35,7 @@ public:
 
     bool ok = false;
     bool mostra = false;
-    ~updatecheck(){ };
+
 
     /* importance of the update */
     enum n_priority: char{

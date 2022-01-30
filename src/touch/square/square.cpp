@@ -29,6 +29,7 @@ square::square(QObject *parent, property_control *property):
 {
     W_ASSERT(parent);
     W_ASSERT(property);
+    W_ASSERT(parent->objectName() == "TabletCanvas");
 
     this->thread        = get_thread_max();
     this->dataThread    = get_data_max();
