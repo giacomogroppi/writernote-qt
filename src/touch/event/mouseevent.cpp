@@ -32,11 +32,15 @@ static struct PointSettable __last_point_move;
 static bool first_touch = true;
 bool isZooming = false;
 
-void TabletCanvas::mouseMoveEvent(QMouseEvent *event){
+void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
+{
     double deltay, deltax;
     QTabletEvent *tab_event;
     QEvent::Type __type;
+
     QPointF p = event->pos();
+
+    qDebug() << "TabletCanvas::mouseMoveEvent" << event->type() << event->button();
 
     if(isZooming)
         return;

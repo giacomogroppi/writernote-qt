@@ -185,6 +185,8 @@ public:
 
     QPixmap m_pixmap;
 
+    void send_mouse_event(QMouseEvent *event);
+
 protected:
     void tabletEvent(QTabletEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
@@ -243,6 +245,12 @@ force_inline void TabletCanvas::callResizeEvent()
 force_inline void TabletCanvas::call_update()
 {
     update();
+}
+
+force_inline void TabletCanvas::send_mouse_event(QMouseEvent *event)
+{
+    qDebug() << __FUNCTION__;
+    return this->mouseMoveEvent(event);
 }
 
 #endif

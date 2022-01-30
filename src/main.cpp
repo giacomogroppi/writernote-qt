@@ -111,7 +111,7 @@ int main(int argc, char **argv)
     char *f = (m_last_open) ? m_last_open : argv[1];
 
 #ifdef CLOUD
-    MainWindow w(nullptr, canvas, user, &m_cloud, f);
+    WNew(window, MainWindow, (nullptr, canvas, user, &m_cloud, f));
 #else
     WNew(window, MainWindow, (canvas, nullptr, nullptr, f));
 #endif
