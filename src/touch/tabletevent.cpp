@@ -44,7 +44,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event){
     need_save_tmp = true;
 
     eventType = event->type();
-
+    qDebug() << __FUNCTION__;
     CTRL_METHOD(rubber_method, rubber);
     rubber_method |= (event->pointerType() == QTabletEvent::PointerType::Eraser);
 

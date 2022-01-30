@@ -185,6 +185,7 @@ public:
 
     QPixmap m_pixmap;
 
+    void send_touch_event(QTabletEvent *event);
     void send_mouse_event(QMouseEvent *event);
 
 protected:
@@ -247,9 +248,13 @@ force_inline void TabletCanvas::call_update()
     update();
 }
 
+force_inline void TabletCanvas::send_touch_event(QTabletEvent *event)
+{
+    return this->tabletEvent(event);
+}
+
 force_inline void TabletCanvas::send_mouse_event(QMouseEvent *event)
 {
-    qDebug() << __FUNCTION__;
     return this->mouseMoveEvent(event);
 }
 

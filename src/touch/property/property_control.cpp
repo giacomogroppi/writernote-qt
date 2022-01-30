@@ -2,6 +2,7 @@
 #include "ui_property_control.h"
 #include "touch/tabletcanvas.h"
 #include <QMouseEvent>
+#include <QTabletEvent>
 
 #define SET_PRIVATE_STYLE(button) button->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
 
@@ -75,16 +76,21 @@ bool property_control::event(QEvent *event)
      * window if visible, as if there was a breakpoint while
      * that property is visible it would block all debugging.
     */
-    QMouseEvent *m;
+    QTabletEvent *m;
     QPointF pos, new_point;
-    QMouseEvent *new_event;
+    QTabletEvent *new_event;
 
 #ifdef DEBUGINFO
     bool show;
 #endif
 
-    if(likely(event->type() != QEvent::MouseButtonPress))
+    qDebug() << __FUNCTION__ << event->type();
+
+    if(!(event->type() == QEvent::TabletPress ||
+         event->type() == QEvent::TabletRelease ||
+         event->type() == QEvent::TabletMove)){
         goto leave;
+    }
 
 #ifdef DEBUGINFO
     show = false;
@@ -95,22 +101,13 @@ bool property_control::event(QEvent *event)
     }
 #endif
 
-    m = static_cast<QMouseEvent*>( event );
+    m = static_cast<QTabletEvent*>( event );
     pos = m->pos();
-
     new_point = QWidget::mapTo(_canvas, pos.toPoint());
 
-    new_event = new QMouseEvent(QEvent::MouseMove, new_point, Qt::MouseButton::NoButton, Qt::MouseButton::NoButton, Qt::NoModifier);
+    new_event = new QTabletEvent(event->type(), new_point , QPointF(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
 
-    qDebug() << "3";
-
-    _canvas->send_mouse_event(new_event);
-    //QApplication::sendEvent(_canvas, new_event);
-
-    qDebug() << "4";
-
-    delete new_event;
-
+    _canvas->send_touch_event(new_event);
 
 #ifdef DEBUGINFO
     if(show){
@@ -118,7 +115,12 @@ bool property_control::event(QEvent *event)
     }
 #endif
 
+    delete new_event;
+    event->accept();
+    return false;
+
 leave:
+
     return QWidget::event(event);
 }
 
