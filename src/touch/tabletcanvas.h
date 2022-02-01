@@ -31,7 +31,6 @@ struct Point {
     Point() {};
     QPointF pos;
     qreal pressure = 0;
-    qreal rotation = 0;
 };
 
 /*

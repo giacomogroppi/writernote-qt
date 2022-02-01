@@ -408,7 +408,8 @@ force_inline void page::append(const stroke &strokeAppend)
     this->strokeTmp.append(strokeAppend);
 
     /* they will be automatically removed when
-     * the project is compiled in release mode */
+     * the project is compiled in release mode
+    */
     W_ASSERT(strokeTmp.at(lastNewIndex).length() == strokeAppend.length());
 }
 

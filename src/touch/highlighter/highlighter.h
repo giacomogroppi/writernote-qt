@@ -35,8 +35,6 @@ public:
 
     void updateList();
 
-    bool moveToTop() const;
-
 private slots:
     //void on_slider_actionTriggered(int action);
 
@@ -45,8 +43,6 @@ private slots:
     void on_button_pressure_clicked();
 
     void on_same_data_stateChanged(int arg1);
-
-    void on_checkbox_up_stateChanged(int arg1);
 
     void on_slider_alfa_valueChanged(int value);
 
@@ -57,7 +53,6 @@ private:
         uchar alfa;
         double size;
         uchar pressure : 1; /* 1 -> pressure */
-        uchar tratto_sotto : 1; /* 1 -> after release the pen move all at first in list */
     };
 
     struct data m_data;
@@ -70,10 +65,5 @@ private:
 protected:
     bool event(QEvent *) override;
 };
-
-inline bool highlighter::moveToTop() const
-{
-    return this->m_data.tratto_sotto;
-}
 
 #endif // HIGHLIGHTER_H

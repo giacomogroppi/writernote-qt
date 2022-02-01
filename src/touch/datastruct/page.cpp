@@ -171,6 +171,8 @@ void page::drawStroke(
     QPointF lastPoint, pointDraw;
     const QPainterPath *path;
     const bool isRubber = (color == COLOR_NULL);
+    const bool isHigh = stroke.get_alfa() < 255;
+    const auto last_comp_mode = painter.compositionMode();
 
     constexpr bool measureTime = false;
     constexpr bool debColor = true;
@@ -196,6 +198,8 @@ void page::drawStroke(
     if(unlikely(isRubber)){
         m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
+    }else if(isHigh){
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
 
     if(stroke.constantPressure()){
@@ -228,8 +232,11 @@ void page::drawStroke(
         }
     }
 
-    if(unlikely(color == COLOR_NULL)){
+    if(unlikely(isRubber)){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    }
+    if(unlikely(last_comp_mode)){
+        painter.setCompositionMode(last_comp_mode);
     }
 }
 
@@ -381,11 +388,7 @@ void page::mergeList()
     for(i = 0; i < len; i++){
         const stroke &stroke = strokeTmp.at(i);
 
-        if(likely(stroke.getColor(1).alpha() == 255)){
-            m_stroke.append(stroke);
-        }else{
-            m_stroke.insert(0, stroke);
-        }
+        m_stroke.append(stroke);
 
         //Q_ASSERT(m_stroke.at(index).length() == strokeTmp.at(i).length());
         //Q_ASSERT(m_stroke.at(index).getId() == strokeTmp.at(i).getId());

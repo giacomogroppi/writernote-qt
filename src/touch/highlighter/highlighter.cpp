@@ -51,7 +51,6 @@ void highlighter::loadSettings()
     if(!ok) m_data.size = 0.05;
 
     m_data.pressure = setting.value(KEY_HIGHLIGHTER_SPESS, true).toBool();
-    m_data.tratto_sotto = setting.value(KEY_HIGHLIGHTER_SOTTO, true).toBool();
 
     setting.endGroup();
     updateList();
@@ -65,7 +64,6 @@ void highlighter::saveSettings()
     setting.setValue(KEY_HIGHLIGHTER_ALFA, m_data.alfa);
     setting.setValue(KEY_HIGHLIGHTER_SIZE, m_data.size);
     setting.setValue(KEY_HIGHLIGHTER_SPESS, m_data.pressure);
-    setting.setValue(KEY_HIGHLIGHTER_SOTTO, m_data.tratto_sotto);
 
     setting.endGroup();
 }
@@ -140,13 +138,6 @@ void highlighter::on_same_data_stateChanged(int arg1)
 
     updateList();
     m_pen->list_update();
-}
-
-void highlighter::on_checkbox_up_stateChanged(int arg1)
-{
-    m_data.tratto_sotto = arg1;
-
-    updateList();
 }
 
 void highlighter::on_slider_alfa_valueChanged(int value)

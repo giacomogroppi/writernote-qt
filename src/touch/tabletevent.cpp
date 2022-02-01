@@ -8,11 +8,11 @@
 #include "touch/laser/laser.h"
 
 #define MAXPOINT 20
+#define CTRL_METHOD_PRIVATE(var1, type, var2) var1 = var2 == e_method::type
 #define CTRL_METHOD(var, type) var = medotodiinserimento == e_method::type
 
 stroke __tmp;
 extern bool block_scrolling;
-static void AppendAll(Document &doc, const TabletCanvas *canvas, const bool toTheTop);
 
 bool need_save_auto = false;
 bool need_save_tmp = false;
@@ -28,7 +28,43 @@ static TabletCanvas::e_method lastMethod = TabletCanvas::e_method::pen;
 
 static QEvent::Type eventType;
 
-static Q_ALWAYS_INLINE void setFalse()
+static void AppendAll(
+        Document             &doc,
+        const TabletCanvas   *canvas)
+{
+    uint i;
+
+    /* for debug */
+    stroke & strokeToAppend = __tmp;
+    int pageMod;
+    const uint lenPoint = strokeToAppend.length();
+    point_s *point;
+    const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
+
+    if(!lenPoint) return;
+
+    int time = canvas->parent->m_audioplayer->getPositionSecond();
+
+    for(i = 0; i < lenPoint; i++){
+        point = &strokeToAppend.at_mod(i);
+        point->m_x -= PointFirstPage.x();
+        point->m_y -= PointFirstPage.y();
+    }
+
+    if(unlikely(laser_method)){
+        canvas->m_laser->append(strokeToAppend);
+        canvas->m_laser->endMove();
+    }else{
+        pageMod = doc.datatouch->appendStroke(strokeToAppend);
+
+        // TODO -> remove the draw of the page and draw the stroke with
+        // CompositionMode source_over
+        doc.datatouch->at_mod(pageMod).triggerRenderImage(time, false);
+    }
+    strokeToAppend.reset();
+}
+
+static force_inline void setFalse()
 {
     highlighter_method = false;
     pen_method = false;
@@ -36,7 +72,8 @@ static Q_ALWAYS_INLINE void setFalse()
     text_method = false;
 }
 
-void TabletCanvas::tabletEvent(QTabletEvent *event){
+void TabletCanvas::tabletEvent(QTabletEvent *event)
+{
     const QPointF& pointTouch = event->posF();
 
     isWriting = true;
@@ -113,7 +150,6 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 
     lastPoint.pos = event->pos();
     lastPoint.pressure = event->pressure();
-    lastPoint.rotation = event->rotation();
 
     if(pen_method || highlighter_method || laser_method){
         updatelist(event);
@@ -156,7 +192,7 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
     }
 }
 
-void TabletCanvas::ManageFinish(QTabletEvent *event)
+force_inline void TabletCanvas::ManageFinish(QTabletEvent *event)
 {
     bool done = m_square->somethingInBox();
     block_scrolling = false;
@@ -169,8 +205,8 @@ void TabletCanvas::ManageFinish(QTabletEvent *event)
         m_redoundo->copy();
     }
 
-    if(pen_method || highlighter_method)
-        AppendAll(*this->data, this, (highlighter_method) ? m_highlighter->moveToTop() : false);
+    if(pen_method || highlighter_method || laser_method)
+        AppendAll(*this->data, this);
 
     if(unlikely(!m_deviceDown)){
         if(selection_method && done){
@@ -194,14 +230,14 @@ void TabletCanvas::ManageFinish(QTabletEvent *event)
     }
 }
 
-Q_ALWAYS_INLINE void TabletCanvas::ManageStart(
+force_inline void TabletCanvas::ManageStart(
         QTabletEvent    *event,
         const QPointF   &pointTouch)
 {
     if(unlikely(m_deviceDown))
         return;
 
-    if(pen_method || highlighter_method){
+    if(pen_method || highlighter_method || laser_method){
         updatelist(event);
     }
     else if(selection_method){
@@ -216,7 +252,6 @@ Q_ALWAYS_INLINE void TabletCanvas::ManageStart(
     m_deviceDown = true;
     lastPoint.pos = event->pos();
     lastPoint.pressure = event->pressure();
-    lastPoint.rotation = event->rotation();
 }
 
 void TabletCanvas::updatelist(QTabletEvent *event)
@@ -229,7 +264,7 @@ void TabletCanvas::updatelist(QTabletEvent *event)
     const QPointF &pointTouch = event->posF();
 
     size = event->pressure();
-    alfa = highlighter_method ? m_highlighter->getAlfa() : 255;
+    alfa = unlikely(highlighter_method) ? m_highlighter->getAlfa() : 255;
 
     if(!this->m_deviceDown){
         strokeTmp.setPositioneAudio(parent->m_audio_recorder->getCurrentTime());
@@ -242,42 +277,7 @@ void TabletCanvas::updatelist(QTabletEvent *event)
 
     tmp_point.m_x = pointTouch.x();
     tmp_point.m_y = pointTouch.y();
-    tmp_point.pressure = highlighter_method ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
+    tmp_point.pressure = unlikely(highlighter_method) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point);
-}
-
-static void AppendAll(
-        Document             &doc, 
-        const TabletCanvas   *canvas, 
-        const bool           toTheTop)
-{
-    uint i;
-
-    /* for debug */
-    stroke & strokeToAppend = __tmp;
-    int pageMod;
-    const uint lenPoint = strokeToAppend.length();
-    point_s *point;
-    const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
-
-    if(!lenPoint) return;
-
-    int time = canvas->parent->m_audioplayer->getPositionSecond();
-
-    for(i = 0; i < lenPoint; i++){
-        point = &strokeToAppend.at_mod(i);
-        point->m_x -= PointFirstPage.x();
-        point->m_y -= PointFirstPage.y();
-    }
-
-    if(unlikely(laser_method)){
-        canvas->m_laser->append(strokeToAppend);
-        canvas->m_laser->endMove();
-    }else{
-        pageMod = doc.datatouch->appendStroke(strokeToAppend);
-
-        doc.datatouch->at_mod(pageMod).triggerRenderImage(time, toTheTop);
-    }
-    strokeToAppend.reset();
 }
