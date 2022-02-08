@@ -69,6 +69,7 @@ void property_control::on_button_paste_clicked()
 
 bool property_control::event(QEvent *event)
 {
+    qDebug() << "property_control" << __FUNCTION__;
     return QWidget::event(event);
 }
 

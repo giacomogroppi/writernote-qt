@@ -21,7 +21,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
         .m_pixmap = &this->m_pixmap,
         DATAPAINT_DEFINEREST
     };
-
+    qDebug() << "TabletCanvas" << __FUNCTION__;
     dataPaint.pen       = this->m_pen;
     isWriting           = false;
 

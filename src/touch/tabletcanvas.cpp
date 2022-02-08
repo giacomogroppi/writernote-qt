@@ -231,14 +231,24 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
     QPointF point_touch;
     QTabletEvent *touch;
 
-    if(ref == this->m_property){
+    if(ref == m_property){
+        cbool isVisible = m_property->isVisible();
         if(e->type() != QEvent::TabletPress && e->type() != QEvent::TabletRelease && e->type() != QEvent::TabletMove){
             goto out;
         }
 
         touch = static_cast<QTabletEvent *>(e);
-        point_touch = this->mapFrom((QWidget *)ref, touch->pos());
+        const QPointF &PT = touch->posF();
+
+        if(PT.x() <= m_property->height() && isVisible)
+            goto out;
+        if(PT.y() <= m_property->width() && isVisible)
+            goto out;
+
+        point_touch = m_property->mapFromParent(touch->pos());
         canvas_send_touch_event(this, point_touch, e->type(), touch->pointerType(), true);
+        this->update();
+        return true;
     }
 
 out:
