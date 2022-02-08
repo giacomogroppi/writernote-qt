@@ -28,7 +28,14 @@
         "qfiledialog": "cpp",
         "qsettings": "cpp",
         "system_error": "cpp",
-        "qstylefactory": "cpp"
+        "qstylefactory": "cpp",
+        "chrono": "cpp",
+        "compare": "cpp",
+        "istream": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

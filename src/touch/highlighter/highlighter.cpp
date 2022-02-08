@@ -99,7 +99,8 @@ void highlighter::updateList()
     ui->slider_size->setEnabled(!pressure);
 }
 
-double highlighter::getSize(const double pressure){
+double highlighter::getSize(const double pressure)
+{
     const double size = (m_data.pressure) ? pressure*20 : m_data.size;
     if(*same_data){
         return m_pen->getSize(pressure)*40;

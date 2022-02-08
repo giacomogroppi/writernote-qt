@@ -6,8 +6,6 @@
 
 #define SET_PRIVATE_STYLE(button)   button->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
 
-static int is_show = false;
-
 property_control::property_control(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::property_control)
@@ -45,8 +43,6 @@ void property_control::Show(const QPoint &point, int flags)
         this->hide();
     }    
 
-    is_show = (bool ) (flags != 0);
-
     this->move(point);
 
 }
@@ -73,36 +69,6 @@ void property_control::on_button_paste_clicked()
 
 bool property_control::event(QEvent *event)
 {
-    /*
-     * For debugging reasons it is always better to hide the
-     * window if visible, as if there was a breakpoint while
-     * that property is visible it would block all debugging.
-    */
-    QTabletEvent *m;
-    QPointF pos, new_point;
-    bool result = false;
-
-    //qDebug() << "property_control" << __FUNCTION__ << event->type();
-
-    if(event->type() != QEvent::TabletPress){
-        is_show = false;
-        result = true;
-        return QWidget::event(event);
-    }
-
-    DO_IF_DEBUG(Hide());
-
-    m = static_cast<QTabletEvent*>( event );
-    pos = m->pos();
-    new_point = QWidget::mapTo((QWidget *)parent(), pos.toPoint());
-
-    canvas_send_touch_event(parent(), new_point, QEvent::TabletPress, QTabletEvent::Pen);
-
-    qDebug() << "property_control" << __FUNCTION__ << "Return" << ((result) ? "true" : "false") << this->parent()->objectName();
-
-    if(result)
-        event->ignore();
-
-    return result;
+    return QWidget::event(event);
 }
 

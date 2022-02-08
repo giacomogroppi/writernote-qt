@@ -48,7 +48,6 @@ private slots:
 
 protected:
     bool event(QEvent *event) override;
-    bool eventFilter(QObject *rec, QEvent *e) override;
 };
 
 inline void property_control::Hide()

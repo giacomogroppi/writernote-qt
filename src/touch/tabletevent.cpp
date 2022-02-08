@@ -8,7 +8,6 @@
 #include "touch/laser/laser.h"
 
 #define MAXPOINT 20
-#define CTRL_METHOD_PRIVATE(var1, type, var2) var1 = var2 == e_method::type
 #define CTRL_METHOD(var, type) var = met == TabletCanvas::e_method::type
 
 stroke __tmp;

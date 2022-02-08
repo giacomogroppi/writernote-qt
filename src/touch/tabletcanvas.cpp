@@ -20,21 +20,6 @@
 static void saveLastMethod(TabletCanvas::e_method);
 static void loadLastMethod(TabletCanvas *);
 
-void TabletCanvas::restoreO()
-{
-    if(data->datatouch->isempty()){
-        this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
-        return;
-    }
-
-    this->data->datatouch->repositioning();
-    update();
-
-    lastpointtouch.set = false;
-
-    this->resizeEvent(nullptr);
-}
-
 TabletCanvas::TabletCanvas()
     : QWidget(nullptr)
     , m_pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
@@ -51,12 +36,14 @@ TabletCanvas::TabletCanvas()
     m_property = new class property_control(this);
     m_square = new class square(this, m_property);
 
+    m_property->installEventFilter(this);
+
     loadScrollinSetting();
 
     loadLastMethod(this);
 }
 
-#define DELETE_IF_EXIST(pointer) if(pointer) delete pointer;
+#define DELETE_IF_EXIST(pointer) if(pointer) WDelete(pointer);
 TabletCanvas::~TabletCanvas()
 {
     DELETE_IF_EXIST(zoom);
@@ -64,6 +51,21 @@ TabletCanvas::~TabletCanvas()
 
     saveLastMethod(this->medotodiinserimento);
     saveScrollingSetting();
+}
+
+void TabletCanvas::restoreO()
+{
+    if(data->datatouch->isempty()){
+        this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
+        return;
+    }
+
+    this->data->datatouch->repositioning();
+    update();
+
+    lastpointtouch.set = false;
+
+    this->resizeEvent(nullptr);
 }
 
 void TabletCanvas::clear()
@@ -205,14 +207,23 @@ void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all){
     this->data->datatouch->triggerNewView(Page, parent->m_audioplayer->getPositionSecond(), all);
 }
 
-void canvas_send_touch_event(QObject *_canvas, const QPointF &pos, QEvent::Type event_type, QTabletEvent::PointerType deviceType)
+void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
+                             QEvent::Type event_type, QTabletEvent::PointerType deviceType,
+                             cbool now)
 {
     QTabletEvent *e;
 
     W_ASSERT(_canvas->objectName() == "TabletCanvas");
 
+    TabletCanvas *c = static_cast<TabletCanvas *>(_canvas);
+
     e = new QTabletEvent(event_type, pos, QPointF(), 0, deviceType, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
-    QApplication::postEvent(_canvas, e);
+    if(now){
+        c->send_touch_event(e);
+        delete e;
+    }else{
+        QApplication::postEvent(_canvas, e);
+    }
 }
 
 bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
@@ -224,11 +235,12 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
         if(e->type() != QEvent::TabletPress && e->type() != QEvent::TabletRelease && e->type() != QEvent::TabletMove){
             goto out;
         }
+
         touch = static_cast<QTabletEvent *>(e);
         point_touch = this->mapFrom((QWidget *)ref, touch->pos());
-
+        canvas_send_touch_event(this, point_touch, e->type(), touch->pointerType(), true);
     }
 
 out:
-    return QObject::eventFilter(ref, e);
+    return ref->event(e);
 }
