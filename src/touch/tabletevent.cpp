@@ -218,19 +218,13 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
             m_square->updatePoint(point);
         }
         else{
-            if(likely(m_square->isinside(point))){
-                DO_IF_DEBUG(
-                    if(m_square->get_first_point().isNotSet())
-                                std::abort();
-                );
+            DO_IF_DEBUG(
+                if(m_square->get_first_point().isNotSet())
+                            std::abort();
+            );
 
-                /* a questo punto può muovere di un delta x e y */
-                m_square->move(point);
-            }
-            else{
-                /* se il tocco non è stato interno */
-                m_square->reset();
-            }
+            /* a questo punto può muovere di un delta x e y */
+            m_square->move(point);
         }
     }else if(text_method){
         if(m_text_w->isIn(point)){
