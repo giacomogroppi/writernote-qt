@@ -27,6 +27,8 @@ class QPaintEvent;
 class QString;
 QT_END_NAMESPACE
 
+void canvas_send_touch_event(QObject *_canvas, const QPointF &pos, QEvent::Type event_type, QTabletEvent::PointerType deviceType);
+
 struct Point {
     Point() {};
     QPointF pos;
@@ -201,7 +203,7 @@ protected:
     /* click rilasciato */
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-
+    bool eventFilter(QObject *ref, QEvent *e) override;
 private:
 
     void triggerNewView(const QList<int> &Page, const bool all);

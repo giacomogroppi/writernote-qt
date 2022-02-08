@@ -4,7 +4,9 @@
 #include <QMouseEvent>
 #include <QTabletEvent>
 
-#define SET_PRIVATE_STYLE(button) button->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+#define SET_PRIVATE_STYLE(button)   button->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+
+static int is_show = false;
 
 property_control::property_control(QWidget *parent) :
     QWidget(parent),
@@ -12,8 +14,6 @@ property_control::property_control(QWidget *parent) :
 {
     W_ASSERT(parent->objectName() == "TabletCanvas");
     ui->setupUi(this);
-
-    _canvas = (TabletCanvas *)parent;
 
     setStyleSheet("background:transparent;");
     this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
@@ -37,13 +37,15 @@ void property_control::Show(const QPoint &point, int flags)
     ui->button_delete->setEnabled(   (flags & PROPERTY_SHOW_DELETE));
     ui->button_paste->setEnabled(    (flags & PROPERTY_SHOW_PASTE));
 
-    if(flags){
+    if(likely(flags)){
         this->show();
         this->raise();
     }
     else{
         this->hide();
     }    
+
+    is_show = (bool ) (flags != 0);
 
     this->move(point);
 
@@ -78,49 +80,29 @@ bool property_control::event(QEvent *event)
     */
     QTabletEvent *m;
     QPointF pos, new_point;
-    QTabletEvent *new_event;
+    bool result = false;
 
-#ifdef DEBUGINFO
-    bool show;
-#endif
+    //qDebug() << "property_control" << __FUNCTION__ << event->type();
 
-    qDebug() << __FUNCTION__ << event->type();
-
-    if(!(event->type() == QEvent::TabletPress ||
-         event->type() == QEvent::TabletRelease ||
-         event->type() == QEvent::TabletMove)){
-        goto leave;
+    if(event->type() != QEvent::TabletPress){
+        is_show = false;
+        result = true;
+        return QWidget::event(event);
     }
 
-#ifdef DEBUGINFO
-    show = false;
-
-    if(likely(this->isVisible())){
-        show = true;
-        this->hide();
-    }
-#endif
+    DO_IF_DEBUG(Hide());
 
     m = static_cast<QTabletEvent*>( event );
     pos = m->pos();
-    new_point = QWidget::mapTo(_canvas, pos.toPoint());
+    new_point = QWidget::mapTo((QWidget *)parent(), pos.toPoint());
 
-    new_event = new QTabletEvent(event->type(), new_point , QPointF(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
+    canvas_send_touch_event(parent(), new_point, QEvent::TabletPress, QTabletEvent::Pen);
 
-    _canvas->send_touch_event(new_event);
+    qDebug() << "property_control" << __FUNCTION__ << "Return" << ((result) ? "true" : "false") << this->parent()->objectName();
 
-#ifdef DEBUGINFO
-    if(show){
-        this->show();
-    }
-#endif
+    if(result)
+        event->ignore();
 
-    delete new_event;
-    event->accept();
-    return false;
-
-leave:
-
-    return QWidget::event(event);
+    return result;
 }
 

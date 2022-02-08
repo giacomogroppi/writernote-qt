@@ -9,7 +9,7 @@
 
 #define MAXPOINT 20
 #define CTRL_METHOD_PRIVATE(var1, type, var2) var1 = var2 == e_method::type
-#define CTRL_METHOD(var, type) var = medotodiinserimento == e_method::type
+#define CTRL_METHOD(var, type) var = met == TabletCanvas::e_method::type
 
 stroke __tmp;
 extern bool block_scrolling;
@@ -41,7 +41,8 @@ static void AppendAll(
     point_s *point;
     const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
 
-    if(!lenPoint) return;
+    if(unlikely(!lenPoint))
+        return;
 
     int time = canvas->parent->m_audioplayer->getPositionSecond();
 
@@ -57,8 +58,6 @@ static void AppendAll(
     }else{
         pageMod = doc.datatouch->appendStroke(strokeToAppend);
 
-        // TODO -> remove the draw of the page and draw the stroke with
-        // CompositionMode source_over
         doc.datatouch->at_mod(pageMod).triggerRenderImage(time, false);
     }
     strokeToAppend.reset();
@@ -72,16 +71,8 @@ static force_inline void setFalse()
     text_method = false;
 }
 
-void TabletCanvas::tabletEvent(QTabletEvent *event)
+static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_method met)
 {
-    const QPointF& pointTouch = event->posF();
-
-    isWriting = true;
-    need_save_auto = true;
-    need_save_tmp = true;
-
-    eventType = event->type();
-    qDebug() << __FUNCTION__;
     CTRL_METHOD(rubber_method, rubber);
     rubber_method |= (event->pointerType() == QTabletEvent::PointerType::Eraser);
 
@@ -95,6 +86,20 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
         CTRL_METHOD(text_method, text);
         CTRL_METHOD(laser_method, laser);
     }
+}
+
+void TabletCanvas::tabletEvent(QTabletEvent *event)
+{
+    const QPointF& pointTouch = event->posF();
+
+    isWriting = true;
+    need_save_auto = true;
+    need_save_tmp = true;
+
+    eventType = event->type();
+    qDebug() << "TabletCanvas" << __FUNCTION__ << event->type();
+
+    set_flag(event, this->medotodiinserimento);
 
     if(unlikely(    pointTouch.x() > data->datatouch->biggerx()
                 ||  pointTouch.y() > data->datatouch->biggery())){
@@ -234,6 +239,8 @@ force_inline void TabletCanvas::ManageStart(
         QTabletEvent    *event,
         const QPointF   &pointTouch)
 {
+    constexpr const auto debugSquare = true;
+
     if(unlikely(m_deviceDown))
         return;
 
@@ -242,9 +249,16 @@ force_inline void TabletCanvas::ManageStart(
     }
     else if(selection_method){
         if(m_square->somethingInBox()){
+            if(debugSquare){
+                qDebug() << "Somethininbox";
+            }
+
             m_square->initPointMove(pointTouch);
         }
         else{
+            if(debugSquare){
+                qDebug() << "Not in box";
+            }
             m_square->initPoint(pointTouch);
         }
     }

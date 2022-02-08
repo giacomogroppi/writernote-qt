@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QtMath>
 #include <cstdlib>
+#include <QApplication>
 #include <QTabletEvent>
 #include <QEvent>
 #include "datastruct/datastruct.h"
@@ -202,4 +203,32 @@ void TabletCanvas::triggerNewView(const bool all){
 
 void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all){
     this->data->datatouch->triggerNewView(Page, parent->m_audioplayer->getPositionSecond(), all);
+}
+
+void canvas_send_touch_event(QObject *_canvas, const QPointF &pos, QEvent::Type event_type, QTabletEvent::PointerType deviceType)
+{
+    QTabletEvent *e;
+
+    W_ASSERT(_canvas->objectName() == "TabletCanvas");
+
+    e = new QTabletEvent(event_type, pos, QPointF(), 0, deviceType, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
+    QApplication::postEvent(_canvas, e);
+}
+
+bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
+{
+    QPointF point_touch;
+    QTabletEvent *touch;
+
+    if(ref == this->m_property){
+        if(e->type() != QEvent::TabletPress && e->type() != QEvent::TabletRelease && e->type() != QEvent::TabletMove){
+            goto out;
+        }
+        touch = static_cast<QTabletEvent *>(e);
+        point_touch = this->mapFrom((QWidget *)ref, touch->pos());
+
+    }
+
+out:
+    return QObject::eventFilter(ref, e);
 }

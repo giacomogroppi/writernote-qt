@@ -26,9 +26,8 @@ bool block_scrolling = false;
 
 bool TabletCanvas::event(QEvent *event){
     needToResize = false;
-    static QPointF tmp;
-    static double tmp_distance;
-    static double tmp_distance_right_left;
+    QPointF tmp;
+    double tmp_distance, tmp_distance_right_left;
 
     const QSize maxSize = this->size();
     const QSize size = this->m_pixmap.size();
@@ -41,6 +40,8 @@ bool TabletCanvas::event(QEvent *event){
         qDebug() << " TabletCanvas::event " << type;*/
 
     //return QWidget::event(event);
+
+    qDebug() << "TabletCanvas" << __FUNCTION__ << event->type();
 
     if(type == QEvent::TouchEnd){
         qDebug() << "Ridefine";
