@@ -18,6 +18,13 @@
 #define unlikely(exp) Q_UNLIKELY(exp)
 #define likely(exp) Q_LIKELY(exp)
 #define force_inline Q_ALWAYS_INLINE
+#define not_used __attribute__ ((__unused__))
+
+#if defined(DEBUGINFO)
+# define DEB_VAR(var) var
+#else
+# define DEB_VAR(var) false
+#endif
 
 #ifdef DEBUGINFO
 # define W_ASSERT(condition)                                    \
@@ -327,7 +334,12 @@ inline void __order(QList<QVector<T>> & list){
 # define DO_IF_DEBUG_ENABLE(enable, istr) ;
 #endif
 
-#define WDebug(enable, message) if(enable) qDebug() << message
+#define WDebug(enable, message) \
+    if(enable){                 \
+        do{                     \
+            qDebug() << message; \
+        } while(0);             \
+    }
 
 template <typename T>
 force_inline void set_zero(T &value)

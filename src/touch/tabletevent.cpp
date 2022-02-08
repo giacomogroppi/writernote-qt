@@ -6,6 +6,7 @@
 #include "audioplay/audioplay.h"
 #include "audiorecord/audiorecord.h"
 #include "touch/laser/laser.h"
+#include "utils/common_script.h"
 
 #define MAXPOINT 20
 #define CTRL_METHOD(var, type) var = met == TabletCanvas::e_method::type
@@ -24,7 +25,6 @@ static bool text_method;
 static bool laser_method;
 
 static TabletCanvas::e_method lastMethod = TabletCanvas::e_method::pen;
-
 static QEvent::Type eventType;
 
 static void AppendAll(
@@ -62,6 +62,42 @@ static void AppendAll(
     strokeToAppend.reset();
 }
 
+static not_used QString convert_method()
+{
+    QString method;
+    if(pen_method)
+        method += "pen ";
+    if(rubber_method)
+        method += "rubber ";
+    if(highlighter_method)
+        method += "highlighter ";
+    if(laser_method)
+        method += "laser ";
+    if(selection_method)
+        method += "square ";
+    if(text_method)
+        method += "text ";
+
+    if(method.isEmpty())
+        std::abort();
+
+    return method;
+}
+
+static not_used QString convert(const QEvent::Type eventType)
+{
+    switch(eventType){
+        case QEvent::TabletPress:
+            return "QEvent::TabletPress";
+        case QEvent::TabletMove:
+            return "QEvent::TabletMove";
+        case QEvent::TabletRelease:
+            return "QEvent::TabletRelease";
+        default:
+            std::abort();
+    }
+}
+
 static force_inline void setFalse()
 {
     highlighter_method = false;
@@ -90,15 +126,18 @@ static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_met
 void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
+    constexpr bool tabletDebug = DEB_VAR(true);
+    constexpr const char *nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;
     need_save_auto = true;
     need_save_tmp = true;
 
     eventType = event->type();
-    qDebug() << "TabletCanvas" << __FUNCTION__ << event->type();
 
     set_flag(event, this->medotodiinserimento);
+
+    WDebug(tabletDebug, nameFunction << event->type() << convert(event->type()) << convert_method());
 
     if(unlikely(    pointTouch.x() > data->datatouch->biggerx()
                 ||  pointTouch.y() > data->datatouch->biggery())){
@@ -107,6 +146,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
          * You don't have to save the point. And
          * save the end of the current treatment
          */
+        WDebug(tabletDebug, nameFunction << QString("Height: %1 Width: %2").arg(QString::number(height()), QString::number(width())) << pointTouch);
         ManageFinish(event);
         goto end;
     }
@@ -129,6 +169,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 end:
 
     if(unlikely(!selection_method && lastMethod == e_method::selection)){
+        WDebug(tabletDebug, nameFunction << "Square reset");
         m_square->reset();
     }
 
@@ -140,22 +181,27 @@ end:
 
 void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 {
-    if (event->deviceType() == QTabletEvent::RotationStylus){
+    QPainter painter;
+    constexpr bool debugMove = DEB_VAR(true);
+    cbool l = pen_method || highlighter_method || laser_method;
+
+    if(event->deviceType() == QTabletEvent::RotationStylus){
         updateCursor(event);
     }
 
     if(unlikely(!m_deviceDown))
         return;
 
-    QPainter painter(&m_pixmap);
-    if(pen_method || highlighter_method || laser_method){
+    painter.begin(&m_pixmap);
+
+    if(likely(l)){
         updateBrush(event);
     }
 
     lastPoint.pos = event->pos();
     lastPoint.pressure = event->pressure();
 
-    if(pen_method || highlighter_method || laser_method){
+    if(likely(l)){
         updatelist(event);
     }
     else if(rubber_method){
