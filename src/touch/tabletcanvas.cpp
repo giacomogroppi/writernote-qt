@@ -232,10 +232,10 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
     QPointF point_touch;
     QTabletEvent *touch;
     QEvent::Type type = e->type();
+    constexpr not_used bool eventFilterCanvasDebug = true;
 
     if(ref == m_property){
         cbool isVisible = m_property->isVisible();
-        bool needToSend = false;
 
         if(type != QEvent::TabletPress && type != QEvent::TabletRelease && type != QEvent::TabletMove){
             goto out;
@@ -244,16 +244,24 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
         touch = static_cast<QTabletEvent *>(e);
         const QPointF &PT = touch->posF();
 
-        if(PT.x() <= m_property->height() && isVisible)
-            needToSend = true;
-        if(PT.y() <= m_property->width() && isVisible)
-            needToSend = true;
+        if(unlikely(isVisible)){
+            WDebug(eventFilterCanvasDebug, name << __FUNCTION__ << "Visible" << m_property->rect() << PT);
+            if(m_property->rect().contains(PT.toPoint())){
+                WDebug(eventFilterCanvasDebug, name << __FUNCTION__ << "Inside" << e->type());
+                goto out;
+            }
+        }else{
+            WDebug(eventFilterCanvasDebug, name << __FUNCTION__ << "Not visible");
+        }
 
-        point_touch = m_property->mapFromParent(touch->pos());
+        point_touch = touch->globalPosF() - this->mapToGlobal(this->pos());
+
+        WDebug(eventFilterCanvasDebug, name << __FUNCTION__ << "Point" << point_touch << touch->pos() << m_square->get_first_point().point << m_square->get_last_point().point);
 
         canvas_send_touch_event(this, point_touch, type, touch->pointerType(), true);
 
-        if(needToSend)
+        // the point is out but it's visible
+        if(isVisible)
             goto out;
 
         return true;

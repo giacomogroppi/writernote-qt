@@ -51,7 +51,8 @@ public:
     void translate(const QPointF &offset);
 
 #ifdef DEBUGINFO
-    PointSettable & get_first_point() {return pointinit;};
+    PointSettable & get_first_point()   {return pointinit;};
+    PointSettable & get_last_point()    {return pointfine;}
 #endif
 
 private:

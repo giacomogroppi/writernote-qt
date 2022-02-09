@@ -23,7 +23,7 @@
 
 static void printLog();
 static int extract_(const char *path, const char *path_to);
-static void createFileAndExit(const QString &path, MainWindow *parent);
+static not_used void createFileAndExit(const QString &path, MainWindow *parent);
 
 #ifdef DEBUG_CORE
 static void manageDebug(MainWindow *parent)
@@ -185,7 +185,7 @@ static void printLog()
 
 #ifdef DEBUGCORE
 
-__attribute__((unused)) static void createFileAndExit(const QString &path, MainWindow *parent)
+static not_used void createFileAndExit(const QString &path, MainWindow *parent)
 {
     TestingCore core(parent);
     int err = core.createAndSave(path, NULL);

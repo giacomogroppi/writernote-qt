@@ -326,14 +326,18 @@ inline void __order(QList<QVector<T>> & list){
 #else
 # define DO_IF_DEBUG(istr) ;
 # define DO_IF_DEBUG_ENABLE(enable, istr) ;
-#endif
+#endif //DEBUGINFO
 
-#define WDebug(enable, message) \
+#ifdef DEBUGINFO
+# define WDebug(enable, message) \
     if(enable){                 \
         do{                     \
             qDebug() << message; \
         } while(0);             \
     }
+#else
+# define WDebug(enable, message) ;
+#endif //DEBUGINFO
 
 template <typename T>
 force_inline void set_zero(T &value)

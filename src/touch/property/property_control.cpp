@@ -10,7 +10,7 @@ property_control::property_control(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::property_control)
 {
-    W_ASSERT(parent->objectName() == "TabletCanvas");
+    W_ASSERT(this->parentWidget()->objectName() == "TabletCanvas");
     ui->setupUi(this);
 
     setStyleSheet("background:transparent;");
@@ -69,7 +69,7 @@ void property_control::on_button_paste_clicked()
 
 bool property_control::event(QEvent *event)
 {
-    qDebug() << "property_control" << __FUNCTION__;
+    //qDebug() << "property_control" << __FUNCTION__;
     return QWidget::event(event);
 }
 

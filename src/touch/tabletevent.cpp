@@ -132,7 +132,7 @@ static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_met
 void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
-    constexpr bool tabletDebug = true;
+    constexpr bool tabletDebug = false;
     constexpr const char *nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;
@@ -153,7 +153,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
          * save the end of the current treatment
          */
         WDebug(tabletDebug, nameFunction << QString("Height: %1 Width: %2").arg(QString::number(height()), QString::number(width())) << pointTouch);
-        ManageFinish(event);
+        ManageFinish(event, true);
         goto end;
     }
 
@@ -169,7 +169,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
     }
 
     else if(eventType == QEvent::TabletRelease){ /* pen leaves the tablet */
-        this->ManageFinish(event);
+        this->ManageFinish(event, false);
     }
 
 end:
@@ -242,7 +242,7 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
     }
 }
 
-force_inline void TabletCanvas::ManageFinish(QTabletEvent *event)
+force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 {
     bool done = m_square->somethingInBox();
     block_scrolling = false;
@@ -271,8 +271,8 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event)
             if(!done){
                 m_square->find();
             }
-
-            m_square->endMoving(this);
+            if(!isForce)
+                m_square->endMoving(this);
 
         }else if(rubber_method){
             m_rubber->endRubber(data->datatouch);
@@ -294,16 +294,11 @@ force_inline void TabletCanvas::ManageStart(
     }
     else if(selection_method){
         if(m_square->somethingInBox()){
-            if(debugSquare){
-                qDebug() << "Somethininbox";
-            }
-
+            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "Somethininbox");
             m_square->initPointMove(pointTouch);
         }
         else{
-            if(debugSquare){
-                qDebug() << "Not in box";
-            }
+            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "not in box");
             m_square->initPoint(pointTouch);
         }
     }

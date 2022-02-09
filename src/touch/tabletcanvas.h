@@ -75,6 +75,8 @@ class TabletCanvas : public QWidget
 {
     Q_OBJECT
 
+private:
+    static constexpr const char *name = "TabletCanvas";
 public:
     static qreal pressureToWidth(qreal pressure);
     struct Point lastPoint;
@@ -225,7 +227,7 @@ private:
     QPen m_pen;
 
     bool m_deviceDown = false;
-    void ManageFinish(QTabletEvent *event);
+    void ManageFinish(QTabletEvent *event, cbool isForce);
     void ManageStart(QTabletEvent *event, const QPointF &point);
     void ManageMove(QTabletEvent *event, const QPointF &point);
 

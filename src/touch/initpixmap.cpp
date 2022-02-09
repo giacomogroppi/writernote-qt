@@ -23,13 +23,6 @@ void TabletCanvas::initPixmap(bool paint)
 
     }
 
-    /*
-     * if he didn't find the point orizzonal,
-     * he go here
-    */
-
-    not_found:
-
     if(width() < page::getWidth()){
         sizex = width();
     }
@@ -38,18 +31,15 @@ void TabletCanvas::initPixmap(bool paint)
     }
 
 
-    find:
+find:
 
     QPixmap newPixmap = QPixmap(qRound(sizex * dpr), qRound(height() * dpr));
 
     newPixmap.setDevicePixelRatio(dpr);
     newPixmap.fill(Qt::white);
-    //QPainter painter(&newPixmap);
-    //if (!m_pixmap.isNull())
-    //    painter.drawPixmap(0, 0, m_pixmap);
-    //painter.end();
+
     m_pixmap = newPixmap;
 
-    if(paint)
+    if(likely(paint))
         update();
 }

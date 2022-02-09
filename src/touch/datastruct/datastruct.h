@@ -473,6 +473,8 @@ force_inline bool datastruct::isinside(
         const QPointF &bottonright,
         const QPointF &point)
 {
+    // testing
+    return QRectF(topleft, bottonright).contains(point);
     return      topleft.x() <= point.x()        &&  topleft.y() <= point.y()
             &&  bottonright.x() >= point.x()    &&  bottonright.y() >= point.y();
 }
