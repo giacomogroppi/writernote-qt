@@ -24,7 +24,10 @@ static bool needToResize;
 
 bool block_scrolling = false;
 
-bool TabletCanvas::event(QEvent *event){
+bool TabletCanvas::event(QEvent *event)
+{
+    constexpr bool TabletEventDebug = false;
+
     needToResize = false;
     QPointF tmp;
     double tmp_distance, tmp_distance_right_left;
@@ -41,7 +44,7 @@ bool TabletCanvas::event(QEvent *event){
 
     //return QWidget::event(event);
 
-    qDebug() << "TabletCanvas" << __FUNCTION__ << event->type();
+    WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
 
     if(type == QEvent::TouchEnd){
         qDebug() << "Ridefine";

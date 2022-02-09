@@ -65,6 +65,8 @@ static void AppendAll(
 static not_used QString convert_method()
 {
     QString method;
+    int index;
+
     if(pen_method)
         method += "pen ";
     if(rubber_method)
@@ -80,6 +82,10 @@ static not_used QString convert_method()
 
     if(method.isEmpty())
         std::abort();
+
+    index = method.lastIndexOf(' ');
+    method = method.left(index);
+
 
     return method;
 }
@@ -126,7 +132,7 @@ static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_met
 void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
-    constexpr bool tabletDebug = DEB_VAR(true);
+    constexpr bool tabletDebug = true;
     constexpr const char *nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;
@@ -182,7 +188,7 @@ end:
 void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 {
     QPainter painter;
-    constexpr bool debugMove = DEB_VAR(true);
+    constexpr bool debugMove = true;
     cbool l = pen_method || highlighter_method || laser_method;
 
     if(event->deviceType() == QTabletEvent::RotationStylus){

@@ -20,12 +20,6 @@
 #define force_inline Q_ALWAYS_INLINE
 #define not_used __attribute__ ((__unused__))
 
-#if defined(DEBUGINFO)
-# define DEB_VAR(var) var
-#else
-# define DEB_VAR(var) false
-#endif
-
 #ifdef DEBUGINFO
 # define W_ASSERT(condition)                                    \
     do{                                                         \

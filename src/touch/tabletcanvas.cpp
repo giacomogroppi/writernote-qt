@@ -86,7 +86,7 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
                 m_color.setAlphaF(event->pressure()/2);
                 break;
             case TangentialPressureValuator:
-                if (event->device() == QTabletEvent::Airbrush)
+                if (event->deviceType() == QTabletEvent::Airbrush)
                     m_color.setAlphaF(qMax(0.01, (event->tangentialPressure() + 1.0) / 2.0));
                 else
                     m_color.setAlpha(255);
@@ -139,7 +139,7 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
         }
         else {
             /* deviceType we can't change event->device to deviceType because in qt 5.12.* it's not support [and it't the version for pacakge qt support] */
-            switch (event->device()) {
+            switch (event->deviceType()) {
             case QTabletEvent::Stylus:
                 cursor = QCursor(QPixmap(":image/images/cursor-pencil.png"), 0, 0);
                 break;
@@ -212,10 +212,11 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
                              cbool now)
 {
     QTabletEvent *e;
+    TabletCanvas *c;
 
     W_ASSERT(_canvas->objectName() == "TabletCanvas");
 
-    TabletCanvas *c = static_cast<TabletCanvas *>(_canvas);
+    c = static_cast<TabletCanvas *>(_canvas);
 
     e = new QTabletEvent(event_type, pos, QPointF(), 0, deviceType, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
     if(now){
@@ -230,10 +231,13 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
 {
     QPointF point_touch;
     QTabletEvent *touch;
+    QEvent::Type type = e->type();
 
     if(ref == m_property){
         cbool isVisible = m_property->isVisible();
-        if(e->type() != QEvent::TabletPress && e->type() != QEvent::TabletRelease && e->type() != QEvent::TabletMove){
+        bool needToSend = false;
+
+        if(type != QEvent::TabletPress && type != QEvent::TabletRelease && type != QEvent::TabletMove){
             goto out;
         }
 
@@ -241,13 +245,17 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
         const QPointF &PT = touch->posF();
 
         if(PT.x() <= m_property->height() && isVisible)
-            goto out;
+            needToSend = true;
         if(PT.y() <= m_property->width() && isVisible)
-            goto out;
+            needToSend = true;
 
         point_touch = m_property->mapFromParent(touch->pos());
-        canvas_send_touch_event(this, point_touch, e->type(), touch->pointerType(), true);
-        this->update();
+
+        canvas_send_touch_event(this, point_touch, type, touch->pointerType(), true);
+
+        if(needToSend)
+            goto out;
+
         return true;
     }
 
