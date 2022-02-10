@@ -12,7 +12,7 @@
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
 
-constexpr bool debugSquare = false;
+constexpr bool debugSquare = true;
 
 class square: public QObject
 {
@@ -32,7 +32,7 @@ public:
     int calculate_flags() const;
 
     void initPoint(const QPointF &point);
-    void updatePoint(const QPointF &puntofine);
+    void updatePoint(const QPointF &puntofine, const double zoom);
     bool find();
 
     bool isinside(const QPointF &);
@@ -51,11 +51,12 @@ public:
     void translate(const QPointF &offset);
 
 #ifdef DEBUGINFO
-    PointSettable & get_first_point()   {return pointinit;};
-    PointSettable & get_last_point()    {return pointfine;}
+    PointSettable & get_first_point()   {return _pointinit;};
+    PointSettable & get_last_point()    {return _pointfine;}
 #endif
 
 private:
+    void findObjectToDrawImg();
     void findObjectToDraw(const QList<QVector<int> > &index);
     void initImg();
     /*
@@ -64,30 +65,30 @@ private:
     */
     bool __need_reload = false;
 
-    PointSettable pointinit;
-    PointSettable pointfine;
+    PointSettable _pointinit;
+    PointSettable _pointfine;
     void mergeImg(const QImage &from, QImage &to, int page);
     void moveObjectIntoPrivate(QList<QVector<int> > &index);
 
-    QPointF trans_img;
-    QImage img;
-    QList<QList<stroke>> m_stroke;
+    QImage _img;
+    QList<QList<stroke>> _stroke;
 
-    int base;
-    QList<int> m_index_img; /* image */
+    int _base;
+    QList<int> _index_img; /* image */
 
-    QPen penna;
-    class property_control *m_property;
+    QPen _penna;
+    class property_control *_property;
 
-    bool in_box;
-    copy *m_copy;
+    bool _in_box;
+    copy *_copy;
 
-    class TabletCanvas *canvas;
+    class TabletCanvas *_canvas;
 
-    pthread_t *thread;
-    DataPrivateMuThread *dataThread;
-    int threadCount;
+    pthread_t *_thread;
+    DataPrivateMuThread *_dataThread;
+    int _threadCount;
 
+    QPointF _trans_img;
 
 private slots:
     void actionProperty(property_control::ActionProperty action);
@@ -95,7 +96,7 @@ private slots:
 
 force_inline bool square::somethingInBox() const
 {
-    return this->in_box;
+    return this->_in_box;
 }
 
 inline int square::calculate_flags() const
@@ -105,7 +106,7 @@ inline int square::calculate_flags() const
     if(this->somethingInBox()){
         flag = PROPERTY_SHOW_DELETE | PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT;
     }else{
-        if(!m_copy->isEmpty()){
+        if(!_copy->isEmpty()){
             flag = PROPERTY_SHOW_PASTE;
         }
     }
@@ -115,23 +116,13 @@ inline int square::calculate_flags() const
     return flag;
 }
 
-inline void square::initPoint(const QPointF &point)
-{
-    WDebug(debugSquare, "square::initPoint");
-    pointinit.point = point;
-    pointinit.set = true;
-
-    /* we don't need yet to draw somethings */
-    __need_reload = false;
-    in_box = false;
-
-    this->m_property->Hide();
-}
-
-force_inline void square::updatePoint(const QPointF &puntofine)
+force_inline void square::updatePoint(const QPointF &puntofine, cdouble zoom)
 {
     WDebug(debugSquare, "square::updatePoint");
-    pointfine.point = puntofine;
+
+    _pointfine.point = puntofine / zoom;
+    _pointfine.set = true;
+
     __need_reload = true;
 }
 
@@ -139,7 +130,7 @@ force_inline void square::changeInstrument()
 {
     WDebug(debugSquare, "square::changeInstrument");
     this->reset();
-    this->m_property->Hide();
+    this->_property->Hide();
 }
 
 inline void square::translate(const QPointF &offset)
@@ -148,12 +139,10 @@ inline void square::translate(const QPointF &offset)
     if(likely(!somethingInBox()))
         return;
 
-    this->pointinit += offset;
-    this->pointfine += offset;
+    this->_pointinit += offset;
+    this->_pointfine += offset;
 
-    this->trans_img += offset;
-
-    this->m_property->Hide();
+    this->_property->Hide();
 }
 
 force_inline void square::isMoving()
@@ -167,7 +156,7 @@ force_inline void square::isMoving()
 force_inline bool square::isinside(const QPointF &point)
 {
     WDebug(debugSquare, "square::isinside");
-    return datastruct::isinside(pointinit.point, pointfine.point, point);
+    return datastruct::isinside(_pointinit.point, _pointfine.point, point);
 }
 
 #endif // SQUARE_H

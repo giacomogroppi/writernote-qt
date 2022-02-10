@@ -181,9 +181,38 @@ end:
     lastMethod = this->medotodiinserimento;
 }
 
+force_inline void TabletCanvas::ManageStart(
+        QTabletEvent    *event,
+        const QPointF   &pointTouch)
+{
+    constexpr const auto debugSquare = true;
+
+    if(unlikely(m_deviceDown))
+        return;
+
+    if(insert_method){
+        updatelist(event);
+    }
+    else if(selection_method){
+        if(m_square->somethingInBox()){
+            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "Somethininbox");
+            m_square->initPointMove(pointTouch);
+        }
+        else{
+            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "not in box");
+            m_square->initPoint(pointTouch);
+        }
+    }
+
+    m_deviceDown = true;
+    lastPoint.pos = event->pos();
+    lastPoint.pressure = event->pressure();
+}
+
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 {
     QPainter painter;
+    const auto zoom = this->data->datatouch->getZoom();
     constexpr not_used bool debugMove = true;
 
     if(event->deviceType() == QTabletEvent::RotationStylus){
@@ -216,7 +245,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &p
             * it means that the user not select anything
             * in the past
             */
-            m_square->updatePoint(point);
+            m_square->updatePoint(point, zoom);
         }
         else{
             DO_IF_DEBUG(
@@ -273,34 +302,6 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
             m_rubber->endRubber(data->datatouch);
         }
     }
-}
-
-force_inline void TabletCanvas::ManageStart(
-        QTabletEvent    *event,
-        const QPointF   &pointTouch)
-{
-    constexpr const auto debugSquare = true;
-
-    if(unlikely(m_deviceDown))
-        return;
-
-    if(insert_method){
-        updatelist(event);
-    }
-    else if(selection_method){
-        if(m_square->somethingInBox()){
-            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "Somethininbox");
-            m_square->initPointMove(pointTouch);
-        }
-        else{
-            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "not in box");
-            m_square->initPoint(pointTouch);
-        }
-    }
-
-    m_deviceDown = true;
-    lastPoint.pos = event->pos();
-    lastPoint.pressure = event->pressure();
 }
 
 void TabletCanvas::updatelist(QTabletEvent *event)

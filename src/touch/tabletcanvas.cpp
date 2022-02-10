@@ -232,7 +232,7 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
     QPointF point_touch;
     QTabletEvent *touch;
     QEvent::Type type = e->type();
-    constexpr not_used bool eventFilterCanvasDebug = true;
+    constexpr not_used bool eventFilterCanvasDebug = false;
 
     if(ref == m_property){
         cbool isVisible = m_property->isVisible();

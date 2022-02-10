@@ -20,6 +20,15 @@
 #define force_inline Q_ALWAYS_INLINE
 #define not_used __attribute__ ((__unused__))
 
+force_inline constexpr not_used int debug_enable()
+{
+#ifdef DEBUGINFO
+    return 1;
+#else
+    return 0;
+#endif
+}
+
 #ifdef DEBUGINFO
 # define W_ASSERT(condition)                                    \
     do{                                                         \

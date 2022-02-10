@@ -31,30 +31,30 @@ square::square(QObject *parent, property_control *property):
     W_ASSERT(property);
     W_ASSERT(parent->objectName() == "TabletCanvas");
 
-    this->thread        = get_thread_max();
-    this->dataThread    = get_data_max();
-    this->threadCount   = get_thread_used();
+    _thread        = get_thread_max();
+    _dataThread    = get_data_max();
+    _threadCount   = get_thread_used();
 
-    this->m_property = property;
-    WNew(m_copy, copy, ());
-    this->canvas = (TabletCanvas *) parent;
+    _property = property;
+    WNew(_copy, copy, ());
+    _canvas = (TabletCanvas *) parent;
 
-    QObject::connect(m_property, &property_control::ActionSelection, this, &square::actionProperty);
+    QObject::connect(_property, &property_control::ActionSelection, this, &square::actionProperty);
 
-    penna.setStyle(Qt::DotLine);
-    penna.setWidth(2);
-    penna.setColor(QColor::fromRgb(30, 90, 255));
+    _penna.setStyle(Qt::DotLine);
+    _penna.setWidth(2);
+    _penna.setColor(QColor::fromRgb(30, 90, 255));
     this->reset();
 
-    __in_box = &in_box;
+    __in_box = &_in_box;
 
     pthread_mutex_init(&__mutex_sq, NULL);
 }
 
 square::~square()
 {
-    free_thread_data(&thread, &dataThread);
-    WDelete(m_copy);
+    free_thread_data(&_thread, &_dataThread);
+    WDelete(_copy);
 }
 
 void * __square_search(void *__data)
@@ -92,48 +92,33 @@ void * __square_search(void *__data)
 
 bool square::find()
 {
-    Document *doc = canvas->data;
+    Document *doc = _canvas->data;
     datastruct *data = doc->datatouch;
     bool tmp_find;
     int i, create, lenPage, count;
-    const QPointF &translation = data->getPointFirstPage();
     int PageCounter;
     QList<QVector<int>> index;
 
     this->adjustPoint();
 
-    const QPointF &topLeft = data->adjustPoint(pointinit.point);
-    const QPointF &bottomRight = data->adjustPoint(pointfine.point);
+    const QPointF topLeft = _pointinit.point - data->getPointFirstPage();
+    const QPointF bottomRight = _pointfine.point - data->getPointFirstPage();
 
     WDebug(debugSquare, "square::find");
 
-    base = data->getFirstPageVisible();
+    _base = data->getFirstPageVisible();
     lenPage = data->lengthPage();
-    in_box = false;
+    _in_box = false;
     __need_reload = false;
-    PageCounter = base;
+    PageCounter = _base;
 
-    __f     = topLeft + translation;
-    __s     = bottomRight + translation;
-
-    W_ASSERT(pointinit.x() <= pointfine.x());
-    W_ASSERT(pointinit.y() <= pointfine.y());
-
-    /*
-     * Il problema di cercare nella lista è
-     * il tempo sia di scorrerla, sia di creare
-     * l'area degli stroke. Siccome ogni stroke
-     * è (thread save) l'uno rispetto all'altro lo
-     * possiamo fare in parallelo.
-     * Ci salviamo la posizione degli stroke
-     * in lista e settiamo le pagine interessate
-     * per non poter modificare la lista.
-     */
+    __f     = topLeft;
+    __s     = bottomRight;
 
     /* point selected by user */
     for(count = 0; PageCounter < lenPage; PageCounter ++, count ++){
         __page = &data->at(PageCounter);
-        create = DataPrivateMuThreadInit(dataThread, NULL, this->threadCount, __page->lengthStroke(), 0);
+        create = DataPrivateMuThreadInit(_dataThread, NULL, _threadCount, __page->lengthStroke(), 0);
 
         if(unlikely(!__page->isVisible()))
             break;
@@ -144,10 +129,10 @@ bool square::find()
         __index = &index.operator[](count);
 
         for(i = 0; i < create; i++){
-            pthread_create(&thread[i], NULL, __square_search, (void *)&dataThread[i]);
+            pthread_create(&_thread[i], NULL, __square_search, (void *)&_dataThread[i]);
         }
         for(i = 0; i < create; i++){
-            pthread_join(thread[i], NULL);
+            pthread_join(_thread[i], NULL);
         }
     }
 
@@ -162,8 +147,8 @@ bool square::find()
         if(!tmp_find)
             continue;
 
-        this->m_index_img.append(counterImg);
-        this->in_box = true;
+        _index_img.append(counterImg);
+        _in_box = true;
     }
 
     findObjectToDraw(index);
@@ -171,11 +156,11 @@ bool square::find()
     moveObjectIntoPrivate(index);
 
     if(!somethingInBox()){
-        if(!m_copy->isEmpty()){
-            pointinit.point = __f;
+        if(!_copy->isEmpty()){
+            _pointinit.point = __f;
 
-            pointinit.deset();
-            pointfine.deset();
+            _pointinit.deset();
+            _pointfine.deset();
         }
 
         reset();
@@ -183,14 +168,14 @@ bool square::find()
         __need_reload = true;
     }
 
-    return in_box;
+    return _in_box;
 }
 
 force_inline void square::initImg()
 {
     const auto formact = QImage::Format_ARGB32;
-    img = QImage(page::getResolutionWidth(),
-                 page::getResolutionHeigth() * canvas->data->datatouch->lengthPage(),
+    _img = QImage(page::getResolutionWidth(),
+                 page::getResolutionHeigth() * _canvas->data->datatouch->lengthPage(),
                  formact);
 }
 
@@ -223,32 +208,51 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     int count;
     cint len = index.length();
     page * page;
-    datastruct & data = *canvas->data->datatouch;
+    datastruct & data = *_canvas->data->datatouch;
     QImage tmp;
 
     WDebug(debugSquare, "square::moveObjectIntoPrivate");
 
-    this->m_stroke.clear();
+    _stroke.clear();
 
     order_multiple(index);
 
     this->initImg();
 
-    preappend(m_stroke, len);
+    preappend(_stroke, len);
 
     for(count = 0; count < len; count ++){
         const QVector<int> & ref = index.at(count);
         WDebug(debugSquare, ref);
-        page = &data.at_mod(count + base);
+        page = &data.at_mod(count + _base);
 
         if(unlikely(ref.isEmpty()))
             continue;
 
         page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
 
-        this->mergeImg(tmp, img, count + base);
+        this->mergeImg(tmp, _img, count + _base);
 
-        page->swap(m_stroke.operator[](count), ref, PAGE_SWAP_TRIGGER_VIEW);
+        page->swap(_stroke.operator[](count), ref, PAGE_SWAP_TRIGGER_VIEW);
+    }
+}
+
+void square::findObjectToDrawImg()
+{
+    return;
+    for(int counterImg = 0; counterImg < _index_img.length(); counterImg ++){
+        const int index = _index_img.at(counterImg);
+        const auto &ref = _canvas->data->m_img->m_img.at(index);
+
+        if(ref.i.x() < _pointinit.point.x())
+            _pointinit.point.setX(ref.i.x());
+        else if(ref.f.x() > _pointfine.point.x())
+            _pointfine.point.setX(ref.f.x());
+
+        if(ref.i.y() < _pointinit.point.y())
+            _pointinit.point.setY(ref.i.y());
+        else if(ref.f.y() > _pointfine.point.y())
+            _pointfine.point.setY(ref.f.y());
     }
 }
 
@@ -260,78 +264,65 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 */
 void square::findObjectToDraw(const QList<QVector<int>> &index)
 {
-    const datastruct *data = canvas->data->datatouch;
+    const datastruct *data = _canvas->data->datatouch;
     QRectF sizeData;
-
+    return;
     WDebug(debugSquare, "square::findObjectToDraw");
 
     if(unlikely(index.isEmpty()))
         goto img;
 
     // find the first point
-    sizeData = data->get_size_area(index, this->base);
+    sizeData = data->get_size_area(index, _base);
 
-    this->pointinit.point = sizeData.topLeft();
-    this->pointfine.point = sizeData.bottomRight();
+    _pointinit.point = data->adjustPointReverce(sizeData.topLeft());
+    _pointfine.point = data->adjustPointReverce(sizeData.bottomRight());
 
 img:
-    for(int counterImg = 0; counterImg < m_index_img.length(); counterImg ++){
-        const int index = this->m_index_img.at(counterImg);
-        const auto &ref = canvas->data->m_img->m_img.at(index);
-
-        if(ref.i.x() < pointinit.point.x())
-            pointinit.point.setX(ref.i.x());
-        else if(ref.f.x() > pointfine.point.x())
-            pointfine.point.setX(ref.f.x());
-
-        if(ref.i.y() < pointinit.point.y())
-            pointinit.point.setY(ref.i.y());
-        else if(ref.f.y() > pointfine.point.y())
-            pointfine.point.setY(ref.f.y());
-    }
+    findObjectToDrawImg();
 }
 
 void square::reset()
 {
     int i, len;
     WDebug(debugSquare, "square::reset");
-    pointinit.set = lastpoint.set = pointfine.set = false;
+    _pointinit.set = lastpoint.set = _pointfine.set = false;
 
-    in_box = false;
+    _in_box = false;
 
     __need_reload = false;
-    m_index_img.clear();
+    _index_img.clear();
 
     WDebug(debugSquare, "square::reset paste = 1");
-    len = m_stroke.length();
+    len = _stroke.length();
     if(len == 0)
         goto out;
 
     for(i = 0; i < len; i++){
-        QList<stroke> ll    = m_stroke.operator[](i);
-        page * page         = &canvas->data->datatouch->at_mod(i + base);
+        QList<stroke> ll    = _stroke.operator[](i);
+        page * page         = &_canvas->data->datatouch->at_mod(i + _base);
 
         for(auto &ref : ll){
-            ref.scale(this->trans_img, STROKE_MUST_TRASLATE_PATH);
+            ref.scale(_trans_img, STROKE_MUST_TRASLATE_PATH);
         }
 
         page->append(ll);
         page->triggerRenderImage(-1, false);
     }
 
-    m_stroke.clear();
+    _stroke.clear();
 
 out:
-    this->img = QImage();
-    this->m_stroke.clear();
-    this->trans_img = QPointF(0.0, 0.0);
+    this->_img = QImage();
+    this->_stroke.clear();
+    this->_trans_img = QPointF(0.0, 0.0);
 }
 
 void square::initPointMove(const QPointF &point)
 {
     QPointF new_point;
-    datastruct *Data = canvas->data->datatouch;
-    QRectF rect(Data->adjustPoint(pointinit.point), Data->adjustPoint(pointfine.point));
+    datastruct *Data = _canvas->data->datatouch;
+    QRectF rect(_pointinit.point, _pointfine.point);
     WDebug(debugSquare, "square::initPointMove");
 
     new_point = Data->adjustPoint(point);
@@ -347,7 +338,7 @@ void square::initPointMove(const QPointF &point)
 void square::move(const QPointF &punto)
 {
     QPointF delta;
-    Document *data = canvas->data;
+    Document *data = _canvas->data;
     QList<int> PageModify;
 
     WDebug(debugSquare, "square::move");
@@ -366,14 +357,14 @@ void square::move(const QPointF &punto)
 
     datastruct::inverso(delta);
 
-    this->trans_img += delta;
+    _trans_img += delta;
 
-    data->m_img->moveImage(m_index_img, delta);
+    data->m_img->moveImage(_index_img, delta);
 
     lastpoint.point = punto;
 
-    pointinit.point += delta;
-    pointfine.point += delta;
+    _pointinit.point += delta;
+    _pointfine.point += delta;
 
     __need_reload = true;
     data->datatouch->triggerNewView(PageModify, -1, true);
@@ -387,23 +378,23 @@ void square::endMoving(const QWidget *pixmap)
 
     WDebug(debugSquare, "square::endMoving");
 
-    middle = QPoint(pointinit.x() + translation.x(),
-                    pointinit.y() + translation.y() - m_property->height());
+    middle = QPoint(_pointinit.x() + translation.x(),
+                    _pointinit.y() + translation.y() - _property->height());
 
     flag = this->calculate_flags();
 
     qDebug() << "square::needReload show" << flag << middle;
 
-    this->m_property->Show(middle, flag);
+    this->_property->Show(middle, flag);
 }
 
 void square::actionProperty(property_control::ActionProperty action)
 {
     int flags = 0, dontcall_copy = 1;
-    datastruct &data = *canvas->data->datatouch;
+    datastruct &data = *_canvas->data->datatouch;
 
 #ifdef DEBUGINFO
-    this->m_property->Hide();
+    this->_property->Hide();
 #endif
 
     switch (action) {
@@ -420,12 +411,12 @@ void square::actionProperty(property_control::ActionProperty action)
             break;
         }
         case property_control::ActionProperty::__delete:{
-            this->m_stroke.clear();
+            _stroke.clear();
 
             //data.removePointIndex(index, base, true);
             dontcall_copy = 0;
-            m_property->Hide();
-            m_stroke.clear();
+            _property->Hide();
+            _stroke.clear();
             this->reset();
             break;
         }
@@ -438,9 +429,9 @@ void square::actionProperty(property_control::ActionProperty action)
     }
 
     if(dontcall_copy){
-        if(m_copy->selection(data, m_stroke, flags, pointinit.point)){
-            m_stroke.clear();
-            m_property->Hide();
+        if(_copy->selection(data, _stroke, flags, _pointinit.point)){
+            _stroke.clear();
+            _property->Hide();
             this->reset();
         }
     }
@@ -448,7 +439,7 @@ void square::actionProperty(property_control::ActionProperty action)
         this->reset();
     }
 
-    this->canvas->call_update();
+    _canvas->call_update();
 }
 
 /*
@@ -457,10 +448,10 @@ void square::actionProperty(property_control::ActionProperty action)
 */
 force_inline void square::adjustPoint()
 {
-    QPointF &topLeft = pointinit.point;
-    QPointF &bottomRight = pointfine.point;
+    QPointF &topLeft        = _pointinit.point;
+    QPointF &bottomRight    = _pointfine.point;
 
-    WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
+    //WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
 
     if(topLeft.x() > bottomRight.x())
         __swap(topLeft.rx(), bottomRight.rx());
@@ -468,7 +459,7 @@ force_inline void square::adjustPoint()
     if(topLeft.y() > bottomRight.y())
         __swap(topLeft.ry(), bottomRight.ry());
 
-    WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
+    //WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
 
     W_ASSERT(topLeft.x() <= bottomRight.x());
     W_ASSERT(topLeft.y() <= bottomRight.y());
@@ -476,24 +467,45 @@ force_inline void square::adjustPoint()
 
 void square::needReload(QPainter &painter)
 {
-    QPointF point;
-    datastruct *data;
-    int len;
+    if(debug_enable()){
+        if(unlikely(!painter.isActive())){
+            qDebug() << "Painter not active in square" << __FUNCTION__;
+            std::abort();
+        }
+    }
 
     if(__need_reload){
+        const auto *data = _canvas->data->datatouch;
+        const auto zoom = data->getZoom();
         WDebug(debugSquare, "square::needReload __need_reload");
 
         if(likely(somethingInBox())){
-            WDebug(debugSquare, "square::needReload in_box");
-            data = canvas->data->datatouch;
-            point = data->getPointFirstPage();
-            len = data->lengthPage();
+            const QPointF point = data->getPointFirstPage();
+            const int len = data->lengthPage();
+            const QSize size = createSizeRect(data, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
 
-            singleLoad(painter, this->img, createSizeRect(data, len, DRAW_CREATE_SIZE_RECT_DEF_PRO),
-                       point + this->trans_img, 0, DRAW_SINGLE_LOAD_DEF);
+            W_ASSERT(size.height() >= 0 && size.width() >= 0);
+            WDebug(debugSquare, "square::needReload in_box");
+
+            singleLoad(painter, _img, size, point,
+                       0, DRAW_SINGLE_LOAD_DEF);
         }
 
-        painter.setPen(this->penna);
-        painter.drawRect(QRectF(pointinit.point, pointfine.point));
+        painter.setPen(_penna);
+        painter.drawRect(QRectF(_pointinit.point * zoom, _pointfine.point * zoom));
     }
+}
+
+void square::initPoint(const QPointF &point)
+{
+    const auto zoom = _canvas->data->datatouch->getZoom();
+    WDebug(debugSquare, "square::initPoint");
+    _pointinit.point = point / zoom;
+    _pointinit.set = true;
+
+    /* we don't need yet to draw somethings */
+    __need_reload = false;
+    _in_box = false;
+
+    this->_property->Hide();
 }

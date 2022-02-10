@@ -133,7 +133,8 @@ public:
     void changeId(int indexPoint, stroke& stroke, page &page);
     void changeIdThreadSave(int indexPoint, stroke &stroke, page &page);
 
-    constexpr QPointF adjustPoint(const QPointF &pointRealTouch);
+    constexpr QPointF adjustPointReverce(const QPointF &pointDatastruct) const;
+    constexpr QPointF adjustPoint(const QPointF &pointRealTouch) const;
 
     bool isempty() const;
 
@@ -542,9 +543,14 @@ inline int datastruct::adjustStroke(stroke &stroke)
     return page;
 }*/
 
-constexpr inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser)
+constexpr force_inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser) const
 {
     return (pointTouchUser / getZoom() - this->getPointFirstPage());
+}
+
+constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &pointDatastruct) const
+{
+    return (pointDatastruct * getZoom() + this->getPointFirstPage());
 }
 
 inline bool datastruct::isempty() const
