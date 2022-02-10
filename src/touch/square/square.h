@@ -32,7 +32,7 @@ public:
     int calculate_flags() const;
 
     void initPoint(const QPointF &point);
-    void updatePoint(const QPointF &puntofine, const double zoom);
+    void updatePoint(const QPointF &puntofine);
     bool find();
 
     bool isinside(const QPointF &);
@@ -114,16 +114,6 @@ inline int square::calculate_flags() const
     W_ASSERT(flag >= 0);
 
     return flag;
-}
-
-force_inline void square::updatePoint(const QPointF &puntofine, cdouble zoom)
-{
-    WDebug(debugSquare, "square::updatePoint");
-
-    _pointfine.point = puntofine / zoom;
-    _pointfine.set = true;
-
-    __need_reload = true;
 }
 
 force_inline void square::changeInstrument()

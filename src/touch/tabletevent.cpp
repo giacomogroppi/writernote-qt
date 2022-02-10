@@ -245,7 +245,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &p
             * it means that the user not select anything
             * in the past
             */
-            m_square->updatePoint(point, zoom);
+            m_square->updatePoint(point);
         }
         else{
             DO_IF_DEBUG(

@@ -101,8 +101,8 @@ bool square::find()
 
     this->adjustPoint();
 
-    const QPointF topLeft = _pointinit.point - data->getPointFirstPage();
-    const QPointF bottomRight = _pointfine.point - data->getPointFirstPage();
+    const QPointF &topLeft = _pointinit.point;
+    const QPointF &bottomRight = _pointfine.point;
 
     WDebug(debugSquare, "square::find");
 
@@ -465,6 +465,18 @@ force_inline void square::adjustPoint()
     W_ASSERT(topLeft.y() <= bottomRight.y());
 }
 
+static void square_draw_square(
+        QPainter            &painter,
+        const datastruct    *data,
+        const QPointF       &tl,
+        const QPointF       &br)
+{
+    const QPointF TL = data->adjustPointReverce(tl);
+    const QPointF BR = data->adjustPointReverce(br);
+
+    painter.drawRect(QRectF(TL, BR));
+}
+
 void square::needReload(QPainter &painter)
 {
     if(debug_enable()){
@@ -476,7 +488,6 @@ void square::needReload(QPainter &painter)
 
     if(__need_reload){
         const auto *data = _canvas->data->datatouch;
-        const auto zoom = data->getZoom();
         WDebug(debugSquare, "square::needReload __need_reload");
 
         if(likely(somethingInBox())){
@@ -492,15 +503,24 @@ void square::needReload(QPainter &painter)
         }
 
         painter.setPen(_penna);
-        painter.drawRect(QRectF(_pointinit.point * zoom, _pointfine.point * zoom));
+        square_draw_square(painter, data, _pointinit.point, _pointfine.point);
     }
+}
+
+void square::updatePoint(const QPointF &puntofine)
+{
+    WDebug(debugSquare, "square::updatePoint");
+
+    _pointfine.point = _canvas->data->datatouch->adjustPoint(puntofine);
+    _pointfine.set = true;
+
+    __need_reload = true;
 }
 
 void square::initPoint(const QPointF &point)
 {
-    const auto zoom = _canvas->data->datatouch->getZoom();
     WDebug(debugSquare, "square::initPoint");
-    _pointinit.point = point / zoom;
+    _pointinit.point = _canvas->data->datatouch->adjustPoint(point);
     _pointinit.set = true;
 
     /* we don't need yet to draw somethings */

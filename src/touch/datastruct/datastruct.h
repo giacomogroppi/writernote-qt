@@ -536,21 +536,14 @@ inline int datastruct::adjustStroke(stroke &stroke)
     return page;
 }
 
-/*inline int datastruct::appendToTheTop(const stroke &stroke)
-{
-    int page = whichPage(stroke);
-    this->at_mod(page).appendToTheTop(stroke);
-    return page;
-}*/
-
 constexpr force_inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser) const
 {
-    return (pointTouchUser / getZoom() - this->getPointFirstPage());
+    return (pointTouchUser - this->getPointFirstPageNoZoom()) / getZoom();
 }
 
 constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &pointDatastruct) const
 {
-    return (pointDatastruct * getZoom() + this->getPointFirstPage());
+    return (pointDatastruct + this->getPointFirstPageNoZoom()) * getZoom();
 }
 
 inline bool datastruct::isempty() const
