@@ -52,7 +52,8 @@ protected:
 
 inline void property_control::Hide()
 {
-    this->hide();
+    if(!this->isVisible())
+        this->hide();
 }
 
 Q_ALWAYS_INLINE bool property_control::is_visible() const

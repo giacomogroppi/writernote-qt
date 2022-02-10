@@ -473,6 +473,9 @@ static void square_draw_square(
 {
     const QPointF TL = data->adjustPointReverce(tl);
     const QPointF BR = data->adjustPointReverce(br);
+    constexpr const auto debugDraw = true;
+
+    WDebug(debugSquare && debugDraw, __FUNCTION__ << tl << br << TL << BR);
 
     painter.drawRect(QRectF(TL, BR));
 }
