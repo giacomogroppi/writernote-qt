@@ -181,10 +181,10 @@ end:
     lastMethod = this->medotodiinserimento;
 }
 
-void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
+force_inline void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 {
     QPainter painter;
-    constexpr bool debugMove = true;
+    constexpr not_used bool debugMove = true;
 
     if(event->deviceType() == QTabletEvent::RotationStylus){
         updateCursor(event);

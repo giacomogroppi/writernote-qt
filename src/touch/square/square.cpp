@@ -329,9 +329,9 @@ out:
 
 void square::initPointMove(const QPointF &point)
 {
-    QRectF rect(pointinit.point, pointfine.point);
     QPointF new_point;
     datastruct *Data = canvas->data->datatouch;
+    QRectF rect(Data->adjustPoint(pointinit.point), Data->adjustPoint(pointfine.point));
     WDebug(debugSquare, "square::initPointMove");
 
     new_point = Data->adjustPoint(point);
