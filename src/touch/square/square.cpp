@@ -510,6 +510,7 @@ void square::needReload(QPainter &painter)
 void square::updatePoint(const QPointF &puntofine)
 {
     WDebug(debugSquare, "square::updatePoint");
+    W_ASSERT(!somethingInBox());
 
     _pointfine.point = _canvas->data->datatouch->adjustPoint(puntofine);
     _pointfine.set = true;
@@ -520,6 +521,7 @@ void square::updatePoint(const QPointF &puntofine)
 void square::initPoint(const QPointF &point)
 {
     WDebug(debugSquare, "square::initPoint");
+    W_ASSERT(!somethingInBox());
     _pointinit.point = _canvas->data->datatouch->adjustPoint(point);
     _pointinit.set = true;
 
