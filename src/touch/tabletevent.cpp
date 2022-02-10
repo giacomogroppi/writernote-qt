@@ -9,7 +9,9 @@
 #include "utils/common_script.h"
 
 #define MAXPOINT 20
+#define CHECK_FLAG(var, type) var == TabletCanvas::e_method::type
 #define CTRL_METHOD(var, type) var = met == TabletCanvas::e_method::type
+#define CTRL_METHOD_OR(var, type) var |= met == TabletCanvas::e_method::type
 
 stroke __tmp;
 extern bool block_scrolling;
@@ -17,19 +19,18 @@ extern bool block_scrolling;
 bool need_save_auto = false;
 bool need_save_tmp = false;
 
-static bool highlighter_method;
-static bool pen_method;
+static bool insert_method;
 static bool selection_method;
 static bool rubber_method;
 static bool text_method;
-static bool laser_method;
 
 static TabletCanvas::e_method lastMethod = TabletCanvas::e_method::pen;
 static QEvent::Type eventType;
 
 static void AppendAll(
-        Document             &doc,
-        const TabletCanvas   *canvas)
+        Document                        &doc,
+        const TabletCanvas              *canvas,
+        const TabletCanvas::e_method    met)
 {
     uint i;
 
@@ -51,7 +52,7 @@ static void AppendAll(
         point->m_y -= PointFirstPage.y();
     }
 
-    if(unlikely(laser_method)){
+    if(unlikely(met == TabletCanvas::e_method::laser)){
         canvas->m_laser->append(strokeToAppend);
         canvas->m_laser->endMove();
     }else{
@@ -67,14 +68,10 @@ static not_used QString convert_method()
     QString method;
     int index;
 
-    if(pen_method)
-        method += "pen ";
     if(rubber_method)
         method += "rubber ";
-    if(highlighter_method)
-        method += "highlighter ";
-    if(laser_method)
-        method += "laser ";
+    if(insert_method)
+        method += "pen highlighter laser ";
     if(selection_method)
         method += "square ";
     if(text_method)
@@ -106,8 +103,7 @@ static not_used QString convert(const QEvent::Type eventType)
 
 static force_inline void setFalse()
 {
-    highlighter_method = false;
-    pen_method = false;
+    insert_method = false;
     selection_method = false;
     text_method = false;
 }
@@ -121,11 +117,11 @@ static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_met
         setFalse();
     }
     else{
-        CTRL_METHOD(highlighter_method, highlighter);
-        CTRL_METHOD(pen_method, pen);
+        CTRL_METHOD(insert_method, highlighter);
+        CTRL_METHOD_OR(insert_method, pen);
+        CTRL_METHOD_OR(insert_method, laser);
         CTRL_METHOD(selection_method, selection);
         CTRL_METHOD(text_method, text);
-        CTRL_METHOD(laser_method, laser);
     }
 }
 
@@ -189,7 +185,6 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 {
     QPainter painter;
     constexpr bool debugMove = true;
-    cbool l = pen_method || highlighter_method || laser_method;
 
     if(event->deviceType() == QTabletEvent::RotationStylus){
         updateCursor(event);
@@ -200,14 +195,14 @@ void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 
     painter.begin(&m_pixmap);
 
-    if(likely(l)){
+    if(likely(insert_method)){
         updateBrush(event);
     }
 
     lastPoint.pos = event->pos();
     lastPoint.pressure = event->pressure();
 
-    if(likely(l)){
+    if(likely(insert_method)){
         updatelist(event);
     }
     else if(rubber_method){
@@ -255,8 +250,8 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
         m_redoundo->copy();
     }
 
-    if(pen_method || highlighter_method || laser_method)
-        AppendAll(*this->data, this);
+    if(insert_method)
+        AppendAll(*this->data, this, this->medotodiinserimento);
 
     if(unlikely(!m_deviceDown)){
         if(selection_method && done){
@@ -289,7 +284,7 @@ force_inline void TabletCanvas::ManageStart(
     if(unlikely(m_deviceDown))
         return;
 
-    if(pen_method || highlighter_method || laser_method){
+    if(insert_method){
         updatelist(event);
     }
     else if(selection_method){
@@ -314,11 +309,11 @@ void TabletCanvas::updatelist(QTabletEvent *event)
     uchar alfa;
     point_s tmp_point;
     stroke &strokeTmp = __tmp;
-
+    cbool highlighter = CHECK_FLAG(medotodiinserimento, highlighter);
     const QPointF &pointTouch = event->posF();
 
     size = event->pressure();
-    alfa = unlikely(highlighter_method) ? m_highlighter->getAlfa() : 255;
+    alfa = unlikely(highlighter) ? m_highlighter->getAlfa() : 255;
 
     if(!this->m_deviceDown){
         strokeTmp.setPositioneAudio(parent->m_audio_recorder->getCurrentTime());
@@ -331,7 +326,7 @@ void TabletCanvas::updatelist(QTabletEvent *event)
 
     tmp_point.m_x = pointTouch.x();
     tmp_point.m_y = pointTouch.y();
-    tmp_point.pressure = unlikely(highlighter_method) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
+    tmp_point.pressure = unlikely(highlighter) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point);
 }

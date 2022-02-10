@@ -329,11 +329,18 @@ out:
 
 void square::initPointMove(const QPointF &point)
 {
+    QRectF rect(pointinit.point, pointfine.point);
+    QPointF new_point;
+    datastruct *Data = canvas->data->datatouch;
     WDebug(debugSquare, "square::initPointMove");
-    lastpoint = PointSettable(point, true);
 
-    if(!datastruct::isinside(pointinit.point, pointfine.point, point)){
-        this->reset();
+    new_point = Data->adjustPoint(point);
+
+    lastpoint = PointSettable(new_point, true);
+
+    if(!rect.contains(new_point)){
+        WDebug(debugSquare, "square::initPointMove" << "Not in box");
+        return this->reset();
     }
 }
 
