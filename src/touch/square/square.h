@@ -12,7 +12,7 @@
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
 
-constexpr bool debugSquare = true;
+constexpr bool debugSquare = false;
 
 class square: public QObject
 {
@@ -41,7 +41,7 @@ public:
     void initPointMove(const QPointF & point);
 
     /* definizione per i punti di spostamento */
-    PointSettable lastpoint;
+    PointSettable _lastpoint;
 
     void changeInstrument();
 
@@ -129,10 +129,7 @@ inline void square::translate(const QPointF &offset)
     if(likely(!somethingInBox()))
         return;
 
-    this->_pointinit += offset;
-    this->_pointfine += offset;
-
-    this->_property->Hide();
+    //this->_property->Hide();
 }
 
 force_inline void square::isMoving()

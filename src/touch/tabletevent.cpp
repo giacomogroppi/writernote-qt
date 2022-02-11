@@ -209,7 +209,9 @@ force_inline void TabletCanvas::ManageStart(
     lastPoint.pressure = event->pressure();
 }
 
-force_inline void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
+force_inline void TabletCanvas::ManageMove(
+        QTabletEvent    *event,
+        const QPointF   &point)
 {
     QPainter painter;
     constexpr not_used bool debugMove = true;
