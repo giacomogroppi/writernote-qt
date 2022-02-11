@@ -241,14 +241,7 @@ force_inline void TabletCanvas::ManageMove(
     else if(selection_method){
         m_square->isMoving();
 
-        if(!m_square->somethingInBox()){
-            /*
-            * it means that the user not select anything
-            * in the past
-            */
-            m_square->updatePoint(point);
-        }
-        else{
+        if(m_square->somethingInBox()){
             DO_IF_DEBUG(
                 if(m_square->get_first_point().isNotSet())
                             std::abort();
@@ -256,6 +249,12 @@ force_inline void TabletCanvas::ManageMove(
 
             /* a questo punto può muovere di un delta x e y */
             m_square->move(point);
+        }else{
+            /*
+            * it means that the user not select anything
+            * in the past
+            */
+            m_square->updatePoint(point);
         }
     }else if(text_method){
         if(m_text_w->isIn(point)){

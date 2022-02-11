@@ -538,7 +538,7 @@ inline int datastruct::adjustStroke(stroke &stroke)
 
 constexpr force_inline QPointF datastruct::adjustPoint(const QPointF &pointTouchUser) const
 {
-    return (pointTouchUser - this->getPointFirstPageNoZoom()) / getZoom();
+    return (pointTouchUser / getZoom() - this->getPointFirstPageNoZoom());
 }
 
 constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &pointDatastruct) const

@@ -97,8 +97,8 @@ bool square::find()
 
     this->adjustPoint();
 
-    const QPointF &topLeft = _pointinit.point / zoom - data->getPointFirstPage();
-    const QPointF &bottomRight = _pointfine.point / zoom - data->getPointFirstPage();
+    const QPointF &topLeft = _pointinit.point;// * zoom;// - data->getPointFirstPage();
+    const QPointF &bottomRight = _pointfine.point; //* zoom;// - data->getPointFirstPage();
 
 #define CTRL_POINT(point) W_ASSERT(point.x() >= 0.0 && point.y() >= 0.0);
     CTRL_POINT(topLeft);
@@ -474,8 +474,8 @@ static void square_draw_square(
         const QPointF       &br)
 {
     const auto zoom = data->getZoom();
-    const QPointF TL = tl * zoom + data->getPointFirstPageNoZoom();
-    const QPointF BR = br * zoom + data->getPointFirstPageNoZoom();
+    const QPointF TL = data->adjustPointReverce(tl);
+    const QPointF BR = data->adjustPointReverce(br);
     constexpr const auto debugDraw = true;
 
     WDebug(debugSquare && debugDraw, __FUNCTION__ << tl << br << TL << BR);
@@ -521,6 +521,9 @@ void square::updatePoint(const QPointF &puntofine)
     W_ASSERT(!somethingInBox());
 
     _pointfine.point = data->adjustPoint(puntofine);
+
+    W_ASSERT(_pointfine.x() >= 0.0 && _pointinit.y() >= 0.0);
+
     _pointfine.set = true;
 
     __need_reload = true;
@@ -533,6 +536,7 @@ void square::initPoint(const QPointF &point)
     W_ASSERT(!somethingInBox());
 
     _pointinit.point = data->adjustPoint(point);
+    W_ASSERT(_pointinit.point.x() >= 0.0 && _pointinit.point.y() >= 0.0);
     _pointinit.set = true;
 
     /* we don't need yet to draw somethings */
