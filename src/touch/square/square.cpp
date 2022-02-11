@@ -12,11 +12,6 @@
 #include "pthread.h"
 #include "testing/memtest.h"
 
-#ifdef DEBUG_THREAD
-# undef SQ_THREAD
-# define SQ_THREAD DEBUG_THREAD
-#endif
-
 static pthread_mutex_t      __mutex_sq;
 static const page           *__page;
 static QPointF              __f;
@@ -275,8 +270,8 @@ void square::findObjectToDraw(const QList<QVector<int>> &index)
     // find the first point
     sizeData = data->get_size_area(index, _base);
 
-    _pointinit.point = data->adjustPointReverce(sizeData.topLeft());
-    _pointfine.point = data->adjustPointReverce(sizeData.bottomRight());
+    _pointinit.point = sizeData.topLeft();
+    _pointfine.point = sizeData.bottomRight();
 
 img:
     findObjectToDrawImg();
@@ -353,7 +348,7 @@ void square::move(const QPointF &punto)
     }
 #endif
 
-    delta = lastpoint.point - punto;
+    delta = (lastpoint.point - punto) * data->datatouch->getZoom();
 
     datastruct::inverso(delta);
 
@@ -471,8 +466,9 @@ static void square_draw_square(
         const QPointF       &tl,
         const QPointF       &br)
 {
-    const QPointF TL = data->adjustPointReverce(tl);
-    const QPointF BR = data->adjustPointReverce(br);
+    const auto zoom = data->getZoom();
+    const QPointF TL = tl * zoom;
+    const QPointF BR = br * zoom;
     constexpr const auto debugDraw = true;
 
     WDebug(debugSquare && debugDraw, __FUNCTION__ << tl << br << TL << BR);
@@ -525,7 +521,8 @@ void square::initPoint(const QPointF &point)
 {
     WDebug(debugSquare, "square::initPoint");
     W_ASSERT(!somethingInBox());
-    _pointinit.point = _canvas->data->datatouch->adjustPoint(point);
+
+    _pointinit.point = point;
     _pointinit.set = true;
 
     /* we don't need yet to draw somethings */

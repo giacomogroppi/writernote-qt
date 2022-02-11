@@ -212,7 +212,6 @@ force_inline void TabletCanvas::ManageStart(
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event, const QPointF &point)
 {
     QPainter painter;
-    const auto zoom = this->data->datatouch->getZoom();
     constexpr not_used bool debugMove = true;
 
     if(event->deviceType() == QTabletEvent::RotationStylus){
