@@ -45,6 +45,7 @@ rubber_ui::~rubber_ui()
 {
     this->save_settings();
     free_thread_data(&thread, &threadData);
+    pthread_mutex_destroy(&single_mutex);
     delete ui;
 }
 
