@@ -19,6 +19,7 @@ struct RubberPrivateData{
 
 static int             __m_size_gomma;
 static pthread_mutex_t single_mutex;
+static sem_t sem;
 
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
@@ -38,6 +39,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
     this->countThread = get_thread_used();
 
+    sem_init(&sem, 0, 0);
     pthread_mutex_init(&single_mutex, NULL);
 }
 
@@ -46,6 +48,7 @@ rubber_ui::~rubber_ui()
     this->save_settings();
     free_thread_data(&thread, &threadData);
     pthread_mutex_destroy(&single_mutex);
+    sem_destroy(&sem);
     delete ui;
 }
 
@@ -277,6 +280,16 @@ void *actionRubberSingleTotal(void *__data)
 
 release:
     return NULL;
+}
+
+static void *(*functionToCall)(void *);
+
+void *idle_rubber(void *arg)
+{
+    for(;;){
+        sem_wait(&sem);
+        functionToCall(arg);
+    }
 }
 
 #define PrivateData(attribute) dataPrivate.attribute
