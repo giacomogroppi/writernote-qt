@@ -19,7 +19,31 @@ struct RubberPrivateData{
 
 static int             __m_size_gomma;
 static pthread_mutex_t single_mutex;
-static sem_t sem;
+static sem_t sem, sem_finish, all_finish;
+static bool need_to_delete = false;
+static int thread_create;
+
+static void (*functionToCall)(DataPrivateMuThread *);
+
+void *idle_rubber(void *arg)
+{
+    auto *data = (struct DataPrivateMuThread *)arg;
+    for(;;){
+        sem_wait(&sem);
+
+        if(unlikely(need_to_delete)){
+            return NULL;
+        }
+
+        if(unlikely(data->id >= thread_create)){
+            goto wait;
+        }
+
+        functionToCall((struct DataPrivateMuThread *)arg);
+wait:
+        sem_wait(&all_finish);
+    }
+}
 
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
@@ -34,21 +58,34 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    this->thread = get_thread_max();
-    this->threadData = get_data_max();
+    _thread = get_thread_max();
+    _threadData = get_data_max();
 
-    this->countThread = get_thread_used();
+    _countThread = get_thread_used();
 
     sem_init(&sem, 0, 0);
+    sem_init(&sem_finish, 0, 0);
+    sem_init(&all_finish, 0, 0);
     pthread_mutex_init(&single_mutex, NULL);
+
+    START_THREAD(_thread, _threadData, _countThread, idle_rubber);
 }
 
 rubber_ui::~rubber_ui()
 {
+    int i;
     this->save_settings();
-    free_thread_data(&thread, &threadData);
-    pthread_mutex_destroy(&single_mutex);
+    need_to_delete = true;
+    
+    for(i = 0; i < this->_countThread; i++){
+        sem_post(&sem);
+    }
+
     sem_destroy(&sem);
+    sem_destroy(&sem_finish);
+    sem_destroy(&all_finish);
+    free_thread_data(&_thread, &_threadData);
+    pthread_mutex_destroy(&single_mutex);
     delete ui;
 }
 
@@ -76,29 +113,29 @@ bool rubber_ui::event(QEvent *event)
 
 void rubber_ui::on_totale_button_clicked()
 {
-    this->m_type_gomma = e_type_rubber::total;
+    this->_type_gomma = e_type_rubber::total;
 
     this->update_data();
 }
 
 void rubber_ui::on_partial_button_clicked()
 {
-    m_type_gomma = e_type_rubber::partial;
+    _type_gomma = e_type_rubber::partial;
 
     this->update_data();
 }
 
 void rubber_ui::endRubber(datastruct *data)
 {
-    int i, len = data_to_remove.length();
+    int i, len = _data_to_remove.length();
 
     W_ASSERT(data);
     qDebug() << "rubber_ui::endRubber";
 
-    if(m_type_gomma == e_type_rubber::total){
+    if(_type_gomma == e_type_rubber::total){
 
         for(i = 0; i < len; i ++){
-            QVector<int> &arr = this->data_to_remove.operator[](i);
+            QVector<int> &arr = _data_to_remove.operator[](i);
             page &page = data->at_mod(i + base);
 
             if(unlikely(arr.isEmpty()))
@@ -110,7 +147,7 @@ void rubber_ui::endRubber(datastruct *data)
             page.removeAndDraw(-1, arr, rect);
         }
 
-        data_to_remove.clear();
+        _data_to_remove.clear();
     }
 }
 
@@ -130,9 +167,8 @@ static bool ifNotInside(const stroke &stroke, const double m_size_gomma, const Q
     return !datastruct::isinside(topLeft, bottomRigth, pointTouch);
 }
 
-void *actionRubberSinglePartial(void *__data)
+void actionRubberSinglePartial(DataPrivateMuThread *data)
 {
-    DataPrivateMuThread *data = (DataPrivateMuThread *) __data;
     RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
 
     QVector<int> stroke_to_remove;
@@ -202,7 +238,7 @@ void *actionRubberSinglePartial(void *__data)
     from = stroke_mod.length();
 
     if(!stroke_to_remove.length() && !from)
-        goto free;
+        return;
 
     // we don't need to do this operation
     // in order to the list
@@ -220,13 +256,10 @@ void *actionRubberSinglePartial(void *__data)
     private_data->stroke_mod->append(stroke_mod);
     pthread_mutex_unlock(&single_mutex);
 
-free:
-    return NULL;
 }
 
-void *actionRubberSingleTotal(void *__data)
+void actionRubberSingleTotal(DataPrivateMuThread *data)
 {
-    DataPrivateMuThread *data = (DataPrivateMuThread *) __data;
     RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
 
     QVector<int> index_selected;
@@ -268,7 +301,7 @@ void *actionRubberSingleTotal(void *__data)
     }
 
     if(index_selected.isEmpty()){
-        goto release;
+        return;
     }
 
     pthread_mutex_lock(&single_mutex);
@@ -278,18 +311,6 @@ void *actionRubberSingleTotal(void *__data)
 
     pthread_mutex_unlock(&single_mutex);
 
-release:
-    return NULL;
-}
-
-static void *(*functionToCall)(void *);
-
-void *idle_rubber(void *arg)
-{
-    for(;;){
-        sem_wait(&sem);
-        functionToCall(arg);
-    }
 }
 
 #define PrivateData(attribute) dataPrivate.attribute
@@ -302,10 +323,9 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 {
     int lenStroke, counterPage, count;
     const int lenPage = data->lengthPage();
-    const bool isTotal = (this->m_type_gomma == e_type_rubber::total);
+    const bool isTotal = (_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
-    void *(*functionToCall)(void *);
-    int flag, create;
+    int flag;
     RubberPrivateData dataPrivate;
 
     QVector<int> stroke_mod;
@@ -313,11 +333,11 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
     if(isTotal){
         functionToCall = actionRubberSingleTotal;
-        flag = ~DATA_PRIVATE_FLAG_SEM;
     }else{
         functionToCall = actionRubberSinglePartial;
-        flag = DATA_PRIVATE_FLAG_SEM;
     }
+
+    flag = DATA_PRIVATE_FLAG_SEM;
 
     this->base = data->getFirstPageVisible();
 
@@ -325,7 +345,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     PrivateData(touch)      = lastPoint;
     PrivateData(stroke_mod) = &stroke_mod;
 
-    __m_size_gomma =    this->m_size_gomma;
+    __m_size_gomma = _size_gomma;
 
     count = 0;
 
@@ -342,8 +362,8 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
          *  we have to add the list, otherwise we create a
          *  hole in a page
         */
-        if(unlikely(count >= data_to_remove.length()))
-            data_to_remove.append(QVector<int>());
+        if(unlikely(count >= _data_to_remove.length()))
+            _data_to_remove.append(QVector<int>());
 
         // we trigger the copy if the page is shared
         if(unlikely(!lenStroke))
@@ -351,16 +371,14 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
         dataPrivate.__page->atStrokeMod(0);
 
-        PrivateData(data_find)      = &data_to_remove.operator[](count);
+        PrivateData(data_find)      = &_data_to_remove.operator[](count);
         PrivateData(data_to_remove) = dataPrivate.data_find;
         PrivateData(al_find)        = dataPrivate.data_find->length();
 
-        create = DataPrivateMuThreadInit(threadData, &dataPrivate, countThread, lenStroke, flag);
+        thread_create = DataPrivateMuThreadInit(_threadData, &dataPrivate, _countThread, lenStroke, flag);
+        JOIN_THREAD_SEM(thread_create, sem_finish);
+        TRIGGER_END(_countThread, all_finish);
 
-        START_THREAD(thread, threadData, create, functionToCall);
-
-        JOIN_THREAD(thread, create);
-        
         if(!isTotal){
             page & p = *dataPrivate.__page;
 
@@ -372,5 +390,5 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     }
 
     if(!isTotal)
-        data_to_remove.clear();
+        _data_to_remove.clear();
 }

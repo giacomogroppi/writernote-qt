@@ -159,7 +159,7 @@ public:
     friend void * __page_load(void *);
     friend void adjustStrokePage(QList<stroke> &List, int count, stroke *m_stroke);
     friend class copy;
-    friend void *actionRubberSingleTotal(void *_data);
+    friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
 
 Q_ALWAYS_INLINE void page::removeBlock() const

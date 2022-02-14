@@ -56,6 +56,12 @@ int DataPrivateMuThreadInit(
     done = 0;
     div = div_diff(to, maxThread);
 
+    for(i = 0; i < maxThread; i++){
+        if(flag & DATA_PRIVATE_FLAG_SEM){
+            data[i].id = i;
+        }
+    }
+
     if(to > maxThread){
         count = maxThread;
 
@@ -63,11 +69,7 @@ int DataPrivateMuThreadInit(
             data[i].from = done;
             data[i].to = done + div;
             data[i].extra = extraData;
-            
-            if(flag & DATA_PRIVATE_FLAG_SEM){
-                data[i].id = i;
-            }
-            
+
             done += div;
         }
 
@@ -77,7 +79,6 @@ int DataPrivateMuThreadInit(
         data[0].from = 0;
         data[0].to = to;
         data[0].extra = extraData;
-        data[0].id = 0;
     }
 
     ctrlThread(data, count);

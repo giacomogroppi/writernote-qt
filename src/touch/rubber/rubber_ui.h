@@ -32,8 +32,8 @@ public:
         partial /* delete what the user touch with the pen */
     };
 
-    int m_size_gomma = DEFAULT_GOMMA_SIZE;
-    e_type_rubber m_type_gomma = e_type_rubber::total;
+    int _size_gomma = DEFAULT_GOMMA_SIZE;
+    e_type_rubber _type_gomma = e_type_rubber::total;
 
     void actionRubber(datastruct *, const QPointF &);
 
@@ -41,15 +41,15 @@ public:
 
 private:
     int base;
-    QList<QVector<int>> data_to_remove;
+    QList<QVector<int>> _data_to_remove;
 
     void update_data();
 
     Ui::rubber_ui *ui;
 
-    pthread_t *thread;
-    struct DataPrivateMuThread *threadData;
-    int countThread;
+    pthread_t *_thread;
+    struct DataPrivateMuThread *_threadData;
+    int _countThread;
 
 protected:
     bool event(QEvent *) override;

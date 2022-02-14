@@ -42,4 +42,12 @@ force_inline void joinThread(pthread_t *thread, int count)
     }
 }
 
+// semaphore
+#define TRIGGER_END(thread_create, sem) for(int __i = 0; __i < thread_create; __i++){ sem_post(&sem); }
+#define THREAD_SEM_FINISH(sem) sem_post(&sem)
+#define JOIN_THREAD_SEM(count, sem)         \
+    for(int __i = 0; __i < count; __i++){   \
+        sem_wait(&sem);                     \
+    }                                       \
+
 #endif // MULTI_THREAD_DATA_H
