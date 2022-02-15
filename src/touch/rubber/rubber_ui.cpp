@@ -39,7 +39,7 @@ void *idle_rubber(void *arg)
             goto wait;
         }
 
-        functionToCall((struct DataPrivateMuThread *)arg);
+        functionToCall(data);
 wait:
         sem_wait(&all_finish);
     }
