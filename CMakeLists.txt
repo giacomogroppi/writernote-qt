@@ -203,7 +203,6 @@ ADD_EXECUTABLE(writernote
     src/utils/mostra_explorer/mostra_explorer.cpp
     src/audiosetting/savequalita.cpp
     src/audiosetting/audioqualityoption.cpp
-    src/indice_class.cpp
     src/restore_file/resFileTmpInTmpFolder.cpp
     src/restore_file/restore_file.cpp
     src/restore_file/ui/setting_restore_ui.cpp

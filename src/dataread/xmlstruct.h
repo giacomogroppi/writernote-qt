@@ -9,7 +9,6 @@
 #include <QList>
 #include <QStringList>
 #include "currenttitle/document.h"
-#include "indice_class.h"
 #include "touch/datastruct/datastruct.h"
 #include <zip.h>
 

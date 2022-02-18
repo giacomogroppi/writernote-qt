@@ -197,7 +197,6 @@ SOURCES += \
     src/utils/default_option/default_option_ui.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
-    src/indice_class.cpp \
     src/main.cpp \
     src/dataread/xmlstruct.cpp \
     src/mainwindow.cpp \
@@ -344,7 +343,6 @@ HEADERS += \
     src/touch/zoom/zoom_control.h \
     src/datawrite/qfilechoose.h \
     src/datawrite/savefile.h \
-    src/indice_class.h \
     src/mainwindow.h \
     src/savecopybook.h \
     src/dataread/xmlstruct.h \

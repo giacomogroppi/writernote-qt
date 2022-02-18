@@ -1,7 +1,6 @@
 #include "setting_restore_ui.h"
 #include "ui_setting_restore_ui.h"
 #include "utils/setting_define.h"
-#include "indice_class.h"
 #include "currenttitle/document.h"
 #include "datawrite/savefile.h"
 #include "utils/dialog_critic/dialog_critic.h"
@@ -54,7 +53,8 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
 
 }
 
-void setting_restore_ui::startTimerSetting(){
+void setting_restore_ui::startTimerSetting()
+{
     m_first->stop();
     m_sec->stop();
 
