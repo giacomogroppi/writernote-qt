@@ -47,10 +47,6 @@ private:
 
     Ui::rubber_ui *ui;
 
-    pthread_t *_thread;
-    struct DataPrivateMuThread *_threadData;
-    int _countThread;
-
 protected:
     bool event(QEvent *) override;
 private slots:

@@ -125,6 +125,7 @@ force_inline void square::changeInstrument()
 
 inline void square::translate(const QPointF &offset)
 {
+    Q_UNUSED(offset);
     WDebug(debugSquare, "square::translate");
     if(likely(!somethingInBox()))
         return;

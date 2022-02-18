@@ -19,29 +19,29 @@ struct RubberPrivateData{
 
 static int             __m_size_gomma;
 static pthread_mutex_t single_mutex;
-static sem_t sem, sem_finish, all_finish;
-static bool need_to_delete = false;
-static int thread_create;
+static thread_group_sem *thread_group;
 
 static void (*functionToCall)(DataPrivateMuThread *);
 
 void *idle_rubber(void *arg)
 {
-    auto *data = (struct DataPrivateMuThread *)arg;
-    for(;;){
-        sem_wait(&sem);
+    DataPrivateMuThread *data = (struct DataPrivateMuThread *)arg;
 
-        if(unlikely(need_to_delete)){
+    for(;;){
+        sem_wait(thread_group->get_pass_sem());
+
+        if(unlikely(thread_group->needToDelete())){
             return NULL;
         }
 
-        if(unlikely(data->id >= thread_create)){
+        if(unlikely(data->id >= thread_group->get_create())){
             goto wait;
         }
 
         functionToCall(data);
 wait:
-        sem_wait(&all_finish);
+        sem_post(thread_group->get_finish_sem());
+        sem_wait(thread_group->get_all_finish_sem());
     }
 }
 
@@ -58,33 +58,15 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    _thread = get_thread_max();
-    _threadData = get_data_max();
-
-    _countThread = get_thread_used();
-
-    sem_init(&sem, 0, 0);
-    sem_init(&sem_finish, 0, 0);
-    sem_init(&all_finish, 0, 0);
+    thread_group = new thread_group_sem(idle_rubber);
     pthread_mutex_init(&single_mutex, NULL);
-
-    START_THREAD(_thread, _threadData, _countThread, idle_rubber);
 }
 
 rubber_ui::~rubber_ui()
 {
-    int i;
     this->save_settings();
-    need_to_delete = true;
-    
-    for(i = 0; i < this->_countThread; i++){
-        sem_post(&sem);
-    }
+    delete thread_group;
 
-    sem_destroy(&sem);
-    sem_destroy(&sem_finish);
-    sem_destroy(&all_finish);
-    free_thread_data(&_thread, &_threadData);
     pthread_mutex_destroy(&single_mutex);
     delete ui;
 }
@@ -326,6 +308,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
     const bool isTotal = (_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     int flag;
+    auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
 
     QVector<int> stroke_mod;
@@ -375,9 +358,9 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
         PrivateData(data_to_remove) = dataPrivate.data_find;
         PrivateData(al_find)        = dataPrivate.data_find->length();
 
-        thread_create = DataPrivateMuThreadInit(_threadData, &dataPrivate, _countThread, lenStroke, flag);
-        JOIN_THREAD_SEM(thread_create, sem_finish);
-        TRIGGER_END(_countThread, all_finish);
+        const auto thread_create = DataPrivateMuThreadInit(dataThread, &dataPrivate, thread_group->get_max(), lenStroke, flag);
+
+        thread_group->postAndWait(thread_create);
 
         if(!isTotal){
             page & p = *dataPrivate.__page;
