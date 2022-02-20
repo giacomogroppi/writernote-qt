@@ -31,7 +31,7 @@ private:
 
     void stopThread();
 public:
-    thread_group_sem(void *(*function)(void *));
+    thread_group_sem();
     ~thread_group_sem();
 
     DataPrivateMuThread *get_thread_data();
@@ -42,6 +42,7 @@ public:
 
     bool needToDelete() const;
 
+    void startLoop(void *(*function)(void *));
     void postAndWait(int create);
     int get_create() const;
     int get_max() const;
@@ -70,10 +71,16 @@ force_inline sem_t *thread_group_sem::get_finish_sem()
     return &_finish;
 }
 
-force_inline thread_group_sem::thread_group_sem(void *(*function)(void *))
+force_inline void thread_group_sem::startLoop(void *(*function)(void *))
 {
     int i;
+    for(i = 0; i < _core; i++){
+        pthread_create(&_thread[i], NULL, function, &_data[i]);
+    }
+}
 
+force_inline thread_group_sem::thread_group_sem()
+{
     _flag = 0;
     _core = threadCount::count();
 
@@ -83,10 +90,6 @@ force_inline thread_group_sem::thread_group_sem(void *(*function)(void *))
     sem_init(&_finish, 0, 0);
     sem_init(&_pass, 0, 0);
     sem_init(&_all_finish, 0, 0);
-
-    for(i = 0; i < _core; i++){
-        pthread_create(&_thread[i], NULL, function, &_data[i]);
-    }
 }
 
 // when call this function data should be set

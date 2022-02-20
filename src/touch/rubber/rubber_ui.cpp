@@ -58,8 +58,9 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    thread_group = new thread_group_sem(idle_rubber);
     pthread_mutex_init(&single_mutex, NULL);
+    thread_group = new thread_group_sem;
+    thread_group->startLoop(idle_rubber);
 }
 
 rubber_ui::~rubber_ui()
@@ -118,14 +119,14 @@ void rubber_ui::endRubber(datastruct *data)
 
         for(i = 0; i < len; i ++){
             QVector<int> &arr = _data_to_remove.operator[](i);
-            page &page = data->at_mod(i + base);
+            page &page = data->at_mod(i + _base);
 
             if(unlikely(arr.isEmpty()))
                 continue;
 
             order(arr);
 
-            const auto rect = data->get_size_area(arr, i + base);
+            const auto rect = data->get_size_area(arr, i + _base);
             page.removeAndDraw(-1, arr, rect);
         }
 
@@ -322,7 +323,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
     flag = DATA_PRIVATE_FLAG_SEM;
 
-    this->base = data->getFirstPageVisible();
+    this->_base = data->getFirstPageVisible();
 
     PrivateData(data)       = data;
     PrivateData(touch)      = lastPoint;
@@ -332,7 +333,7 @@ void rubber_ui::actionRubber(datastruct *data, const QPointF &__lastPoint)
 
     count = 0;
 
-    for(counterPage = base; counterPage < lenPage; counterPage ++, count ++){
+    for(counterPage = _base; counterPage < lenPage; counterPage ++, count ++){
         dataPrivate.__page = &data->at_mod(counterPage);
 
         if(unlikely(!dataPrivate.__page->isVisible()))
