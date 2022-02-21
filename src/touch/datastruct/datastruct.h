@@ -68,8 +68,6 @@ private:
 
     void triggerNewView(int page, int m_pos_ris, const bool all);
 
-    int whichPage(const stroke &stroke) const;
-
     void newPage(int num);
 
     int pageVisible;
@@ -92,6 +90,9 @@ public:
     constexpr Q_ALWAYS_INLINE QPointF getPointFirstPage() const { return _zoom * _pointFirstPage; }
     constexpr Q_ALWAYS_INLINE QPointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
+    int whichPage(const QPointF &point) const;
+    int whichPage(const stroke &stroke) const;
+
     void setPointFirstPage(const QPointF &point){ _pointFirstPage = point; }
 
     void removeAt(const uint indexPage);
@@ -101,8 +102,6 @@ public:
 
     int  appendStroke(const stroke &stroke); /* return value: the page of the point */
     void appendStroke(const stroke &stroke, const int page);
-
-    uint move_to_positive(uint len);
 
     void restoreLastTranslation(const int heightView);
     void controllForRepositioning();
@@ -371,16 +370,13 @@ inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
 
 inline int datastruct::whichPage(const stroke &stroke) const
 {
-    uint counterPage, len;
-    len = this->lengthPage();
+    int i;
+    const auto &ref = stroke.at(0);
+    QPointF point(ref.m_x, ref.m_y);
 
-    for(counterPage = 0; counterPage < len; counterPage++){
-        const page &page = at(counterPage);
-        if(page.currentHeight() >= stroke.at(0).m_y && page.minHeight() <= stroke.at(0).m_y){
-            return counterPage;
-        }
-    }
-    return -1;
+    i = this->whichPage(point);
+
+    return i;
 }
 
 inline void datastruct::triggerNewView(const QList<int> &Page, int m_pos_ris, const bool all)
@@ -415,6 +411,22 @@ inline bool datastruct::isOkZoom(const double newPossibleZoom)
 constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
 {
     return this->_zoom;
+}
+
+inline int datastruct::whichPage(const QPointF &point) const
+{
+    int i, len;
+
+    len = this->lengthPage();
+
+    for(i = 0; i < len; i++){
+        const page &page = at(i);
+        if(page.currentHeight() >= point.y() && page.minHeight() <= point.y()){
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 /* the function automatically launches the drawing for the pages
