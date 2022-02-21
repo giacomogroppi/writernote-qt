@@ -47,7 +47,7 @@ void datastruct::adjustWidth(const uint width)
             t.setX(-point.x());
     }
 
-    scala_all(t*zoom);
+    scala_all(t * _zoom);
 
     point = this->getPointFirstPage();
     if(unlikely(point.x() > 0.0)){

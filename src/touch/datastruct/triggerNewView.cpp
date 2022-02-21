@@ -69,12 +69,12 @@ void datastruct::newViewAudio(int newTime)
     DatastructNewView extra;
 
     if(unlikely(newTime == 0)){
-        for(page &_page : m_page){
+        for(page &_page : _page){
             _page.triggerRenderImage(newTime, true);
         }
     }
     qDebug() << "Call with time" << newTime;
-    extra.mutex = &changeAudioMutex;
+    extra.mutex = &_changeAudioMutex;
     extra.time = newTime;
 
     for(; index < len; index ++){

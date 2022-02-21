@@ -17,9 +17,9 @@ void datastruct::newPage(int num)
     }
 }
 
-void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *canvas)
+void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
 {
-    this->zoom = zoom;
+    this->_zoom = zoom;
     if(canvas){
         canvas->callResizeEvent();
         canvas->parent->zoomChange();
@@ -28,7 +28,7 @@ void datastruct::changeZoom(const double zoom, /*TabletCanvas*/ TabletCanvas *ca
 
 void datastruct::increaseZoom(const double delta, const QSize &size)
 {
-    this->zoom += delta;
+    this->_zoom += delta;
     this->adjustAll(size);
 }
 
@@ -48,24 +48,24 @@ void datastruct::drawIfInside(const QRect &area)
 
 datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
 {
-    this->m_pdf = m_pdf;
-    this->m_img = m_img;
-    __last_translation = QPointF(0, 0);
+    this->_pdf = m_pdf;
+    this->_img = m_img;
+    _last_translation = QPointF(0, 0);
 
-    pthread_mutex_init(&changeIdMutex, NULL);
-    pthread_mutex_init(&changeAudioMutex, NULL);
+    pthread_mutex_init(&_changeIdMutex, NULL);
+    pthread_mutex_init(&_changeAudioMutex, NULL);
 }
 
 datastruct::~datastruct()
 {
-    pthread_mutex_destroy(&changeIdMutex);
-    pthread_mutex_destroy(&changeAudioMutex);
+    pthread_mutex_destroy(&_changeIdMutex);
+    pthread_mutex_destroy(&_changeAudioMutex);
 }
 
 void datastruct::reset(){
-    this->m_page.clear();
-    pointFirstPage = QPointF(0, 0);
-    zoom = 1.00;
+    this->_page.clear();
+    _pointFirstPage = QPointF(0, 0);
+    _zoom = 1.00;
 }
 
 void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
@@ -107,12 +107,12 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
     }
 
     for(i=0; i<len; ++i){
-        page::copy(src.m_page.at(i), dest.m_page.operator[](i));
+        page::copy(src._page.at(i), dest._page.operator[](i));
     }
 
-    dest.zoom = src.zoom;
+    dest._zoom = src._zoom;
     dest.pageVisible = src.pageVisible;
-    dest.pointFirstPage = src.pointFirstPage;
+    dest._pointFirstPage = src._pointFirstPage;
 
-    dest.__last_translation = src.__last_translation;
+    dest._last_translation = src._last_translation;
 }

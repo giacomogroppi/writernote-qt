@@ -96,7 +96,7 @@ int xmlstruct::loadbinario_0(zip_t *z){
     {
         long double zoom;
         SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
-        currenttitle->datatouch->zoom = zoom;
+        currenttitle->datatouch->_zoom = zoom;
     }
     zip_fclose(f);
 
@@ -144,7 +144,7 @@ int xmlstruct::loadbinario_1(struct zip *z)
     {
         long double zoom;
         SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
-        currenttitle->datatouch->zoom = (double)zoom;
+        currenttitle->datatouch->_zoom = (double)zoom;
     }
 
     zip_fclose(f);
@@ -285,7 +285,7 @@ void xmlstruct::decode0(
     scaleAll(point, translation);
     adjastZoom(point, pos_foglio);
     data->datatouch->setPointFirstPage(translation);
-    data->datatouch->zoom = 1.0;
+    data->datatouch->_zoom = 1.0;
 
     /* create the sheet */
     for(counterPage = 0; counterPage <= lenPage; counterPage ++){
@@ -300,7 +300,7 @@ void xmlstruct::decode0(
 
         pp.m_pressure *= 0.2;
 
-        const int which = old_which_sheet(pp, data->datatouch->m_page);
+        const int which = old_which_sheet(pp, data->datatouch->_page);
 
         {
             point_old_ver_7 __append;
@@ -346,7 +346,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
 
                 if(unlikely(id < 0)){
                     continue;
-                    doc->datatouch->m_page.operator[](counterPage).m_stroke_writernote.append(TmpAppend);
+                    doc->datatouch->_page.operator[](counterPage).m_stroke_writernote.append(TmpAppend);
                 }else{
                     stroke.append(TmpAppend);
                 }
@@ -358,7 +358,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
         }
     }
 
-    doc->datatouch->pointFirstPage = QPointF(0.0, 0.0);
+    doc->datatouch->_pointFirstPage = QPointF(0.0, 0.0);
 }
 
 /* versione 7 */
@@ -396,7 +396,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
         }
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom, sizeof(this->currenttitle->datatouch->zoom));
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->_zoom, sizeof(this->currenttitle->datatouch->_zoom));
 
     SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
 

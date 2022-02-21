@@ -49,13 +49,17 @@ class fromimage;
 class datastruct
 {
 private:
-    frompdf *m_pdf;
-    fromimage *m_img;
+    frompdf *_pdf;
+    fromimage *_img;
 
-    double zoom = 1.00;
-    QPointF __last_translation;
-    QVector<page> m_page;
-    QPointF pointFirstPage = QPointF(0, 0);
+    double _zoom = 1.00;
+    QPointF _last_translation;
+    QVector<page> _page;
+    QPointF _pointFirstPage = QPointF(0, 0);
+
+    // todo --> move this mutex to page
+    pthread_mutex_t _changeIdMutex;
+    pthread_mutex_t _changeAudioMutex;
 
     bool userWrittenSomething(uint frompage);
 
@@ -70,9 +74,6 @@ private:
 
     int pageVisible;
 
-    // todo --> move this mutex to page
-    pthread_mutex_t changeIdMutex;
-    pthread_mutex_t changeAudioMutex;
     void __changeId(int indexPoint, stroke &stroke, page &page, cbool useThreadSafe);
 public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
@@ -82,17 +83,16 @@ public:
     void triggerNewView(int m_pos_ris, const bool all);
     void triggerViewIfVisible(int m_pos_ris);
 
-
     void changeZoom(const double zoom, class TabletCanvas *canvas);
     void increaseZoom(const double delta, const QSize &size);
 
     void drawIfInside(const QRect &area);
 
     constexpr double getZoom() const;
-    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPage() const { return this->zoom * pointFirstPage; }
-    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPageNoZoom() const { return this->pointFirstPage; }
+    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPage() const { return _zoom * _pointFirstPage; }
+    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
-    void setPointFirstPage(const QPointF &point){ this->pointFirstPage = point; }
+    void setPointFirstPage(const QPointF &point){ _pointFirstPage = point; }
 
     void removeAt(const uint indexPage);
 
@@ -165,7 +165,7 @@ public:
     __fast const page *     lastPage() const;
 
 
-    int lengthPage() const{ return this->m_page.length(); }
+    int lengthPage() const{ return _page.length(); }
     void newPage(const n_style style);
 
     QPointF get_size_page() const{ return QPointF(page::getWidth(), page::getHeight()); }
@@ -212,13 +212,13 @@ inline double datastruct::proportion() const
 inline void datastruct::triggerVisibility(const double &viewSize)
 {
     uint i;
-    const uint len = this->m_page.length();
+    const uint len = lengthPage();
     page *page;
 
     for(i = 0; i < len; i++){
         page = &at_mod(i);
 
-        if(page->updateFlag(this->getPointFirstPage(), zoom, viewSize)
+        if(page->updateFlag(this->getPointFirstPage(), _zoom, viewSize)
                 && i && i < len - 1){
             //this->at_mod(i - 1).setVisible(true);
             //this->at_mod(i + 1).setVisible(true);
@@ -228,7 +228,7 @@ inline void datastruct::triggerVisibility(const double &viewSize)
 
 inline double datastruct::biggerx() const noexcept
 {
-    return (page::getWidth() + this->getPointFirstPage().x())*zoom;
+    return (page::getWidth() + this->getPointFirstPage().x()) * _zoom;
 }
 
 inline bool datastruct::needtochangeid(const int IndexPoint, const stroke &stroke)
@@ -241,17 +241,17 @@ inline bool datastruct::needtochangeid(const int IndexPoint, const stroke &strok
 
 inline double datastruct::biggery() const noexcept
 {
-    return (at(lengthPage()-1).currentHeight() + this->getPointFirstPage().y())*zoom;
+    return (at(lengthPage()-1).currentHeight() + this->getPointFirstPage().y()) * _zoom;
 }
 
 inline const __fast page &datastruct::at(const uint page) const
 {
-    return this->m_page.at(page);
+    return _page.at(page);
 }
 
 inline page &datastruct::at_mod(const uint page)
 {
-    return this->m_page.operator[](page);
+    return _page.operator[](page);
 }
 
 // this function is not threadSave
@@ -262,7 +262,7 @@ inline __slow point_s datastruct::at_draw_page(
     point_s point;
     const page &page = at(indexPage);
 
-    page.at_draw_page(indexPoint, getPointFirstPage(), point, zoom);
+    page.at_draw_page(indexPoint, getPointFirstPage(), point, _zoom);
 
     return point;
 }
@@ -274,13 +274,13 @@ inline __slow point_s datastruct::at_draw(
 {
     point_s point;
 
-    at(indexPage).at_draw(indexStroke, indexPoint, getPointFirstPage(), point, zoom);
+    at(indexPage).at_draw(indexStroke, indexPoint, getPointFirstPage(), point, _zoom);
     return point;
 }
 
-inline const __slow page *datastruct::lastPage() const
+force_inline const __slow page *datastruct::lastPage() const
 {
-    return &this->m_page.last();
+    return &this->_page.last();
 }
 
 inline size_t datastruct::getSizeOne()
@@ -291,8 +291,8 @@ inline size_t datastruct::getSizeOne()
 inline void datastruct::newPage(const n_style style)
 {
     page page(this->lengthPage()+1, style);
-    this->m_page.append(page);
-    this->triggerVisibility(page::getHeight() * lengthPage());
+    _page.append(page);
+    triggerVisibility(page::getHeight() * lengthPage());
 }
 
 inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int base) const
@@ -350,7 +350,7 @@ inline int datastruct::getFirstPageVisible() const
     if(unlikely(!find)){
         //log_write->write("Impossibile to find first page visible", log_ui::critic_error);
         __pageVisible = 0;
-        for(const auto &_page : m_page){
+        for(const auto &_page : _page){
             _page.setVisible(true);
         }
     }
@@ -414,7 +414,7 @@ inline bool datastruct::isOkZoom(const double newPossibleZoom)
 
 constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
 {
-    return this->zoom;
+    return this->_zoom;
 }
 
 /* the function automatically launches the drawing for the pages
@@ -440,7 +440,7 @@ inline void datastruct::append(const QList<stroke> &stroke, int m_pos_ris)
 
 inline void datastruct::removeAt(const uint indexPage){
     int index = indexPage, len;
-    this->m_page.removeAt(indexPage);
+    this->_page.removeAt(indexPage);
 
     Q_ASSERT(indexPage < (uint)this->lengthPage());
 
@@ -526,9 +526,9 @@ inline int datastruct::adjustStroke(stroke &stroke)
 
     for(; counter >= 0; counter --){
         point_s &point = stroke.at_mod(counter);
-        point.m_x /= this->zoom;
-        point.m_y /= this->zoom;
-        point.pressure /= this->zoom;
+        point.m_x       /= this->_zoom;
+        point.m_y       /= this->_zoom;
+        point.pressure  /= this->_zoom;
     }
 
     page = this->whichPage(stroke);
@@ -548,7 +548,7 @@ constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &poi
 
 inline bool datastruct::isempty() const
 {
-    return m_page.isEmpty();
+    return _page.isEmpty();
 }
 
 #endif // DATASTRUCT_H

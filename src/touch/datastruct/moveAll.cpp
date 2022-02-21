@@ -14,7 +14,7 @@ void datastruct::repositioning()
 
     QPointF point = this->getPointFirstPage();
     qDebug() << "datastruct::repositioning" << point;
-    this->zoom = 1.0;
+    this->_zoom = 1.0;
 
     datastruct::inverso(point);
 
@@ -22,14 +22,14 @@ void datastruct::repositioning()
 }
 
 void datastruct::restoreLastTranslation(const int heightView){
-    if(__last_translation == QPointF(0, 0))
+    if(_last_translation == QPointF(0, 0))
         return;
 
-    datastruct::inverso(__last_translation);
+    datastruct::inverso(_last_translation);
 
-    scala_all(__last_translation, heightView);
+    scala_all(_last_translation, heightView);
 
-    __last_translation = QPointF(0, 0);
+    _last_translation = QPointF(0, 0);
 }
 
 void datastruct::scala_all(const QPointF &point, const int heightView)
@@ -37,14 +37,14 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
     if(point == QPointF(0, 0))
         return;
 
-    this->pointFirstPage += point;
+    this->_pointFirstPage += point;
     this->pageVisible = -1;
 
 #ifdef PDFSUPPORT
-    m_pdf->translation(point);
+    _pdf->translation(point);
 #endif
 
-    m_img->move(point);
+    _img->move(point);
 
     if(likely(heightView > 0)){
         this->triggerVisibility(heightView);

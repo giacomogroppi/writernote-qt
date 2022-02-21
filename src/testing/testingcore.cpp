@@ -88,10 +88,10 @@ void TestingCore::createDocument(Document *doc)
 
     for(i = 0; i < T_PAGE_LEN; i++){
         page page(i+1, n_style::square);
-        doc->datatouch->m_page.append(page);
+        doc->datatouch->_page.append(page);
         id = this->createPage(*doc, i, T_STROKE_IN_PAGE, T_POINT_IN_STROKE, false, QPointF(0, 0), 0.1, 1, id);
 
-        doc->datatouch->m_page.operator[](i).triggerRenderImage(-1, true);
+        doc->datatouch->_page.operator[](i).triggerRenderImage(-1, true);
     }
 
     for(i = 0; i < T_PAGE_LEN; i++){

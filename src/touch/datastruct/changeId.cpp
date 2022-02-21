@@ -20,7 +20,7 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
     strokeToAppend.setMetadata(__stroke.getMetadata());
 
     if(threadSafe){
-        pthread_mutex_lock(&changeIdMutex);
+        pthread_mutex_lock(&_changeIdMutex);
     }
 
     // draw to old stroke with color_null
@@ -37,7 +37,7 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
     page.append(strokeToAppend);
 
     if(threadSafe){
-        pthread_mutex_unlock(&changeIdMutex);
+        pthread_mutex_unlock(&_changeIdMutex);
     }
 }
 

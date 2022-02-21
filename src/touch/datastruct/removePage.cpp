@@ -2,5 +2,5 @@
 
 void datastruct::removePage(uint page)
 {
-    this->m_page.removeAt(page);
+    this->_page.removeAt(page);
 }

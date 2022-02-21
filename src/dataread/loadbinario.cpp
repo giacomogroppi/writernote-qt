@@ -38,8 +38,8 @@ __new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
             goto free_;
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->zoom,
-                     sizeof(this->currenttitle->datatouch->zoom));
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->_zoom,
+                     sizeof(this->currenttitle->datatouch->_zoom));
 
     SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
 
