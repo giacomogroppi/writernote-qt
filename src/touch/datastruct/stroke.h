@@ -26,12 +26,30 @@ private:
     QPainterPath _path;
 
     QRect _biggerData;
-    bool _constantPressureVal;
+
+    enum flag_status : unsigned char{
+        CONST_PRESS = BIT(1),
+        UPDATE_PANTER_PATH = BIT(2),
+        UPDATE_BIGGER_DATA = BIT(3),
+        UPDATE_PRESSURE = BIT(4)
+    };
+
+    unsigned char _flag;
+
+    bool isPressureVal() const;
+    bool needToCreatePanterPath() const;
+    bool needToUpdatePressure() const;
+    bool needToUpdateBiggerData() const;
+
+    void setFlag(unsigned char type, bool value) const;
+
+    /*bool _constantPressureVal;
 
     bool _needToCreatePanterPath;
     bool _needToCreateBiggerData;
 
-    bool _needToUpdatePressure;
+    bool _needToUpdatePressure;*/
+
 
     void updateFlagPressure() const;
 
@@ -117,15 +135,44 @@ public:
     friend class page;
 };
 
+force_inline bool stroke::isPressureVal() const
+{
+    return _flag & CONST_PRESS;
+}
+
+force_inline bool stroke::needToCreatePanterPath() const
+{
+    return _flag & UPDATE_PANTER_PATH;
+}
+
+force_inline bool stroke::needToUpdatePressure() const
+{
+    return _flag & UPDATE_PRESSURE;
+}
+
+force_inline bool stroke::needToUpdateBiggerData() const
+{
+    return _flag & UPDATE_BIGGER_DATA;
+}
+
+force_inline void stroke::setFlag(unsigned char type, bool value) const
+{
+    uchar &__flag = (uchar &) _flag;
+    if(value){
+        __flag |= type;
+    }else{
+        __flag &= ~type;
+    }
+}
+
 inline void stroke::updateFlagPressure() const
 {
-    bool &__constPressureVal =      (bool &) _constantPressureVal;
-    bool &__needToUpdatePressure =  (bool &) _needToUpdatePressure;
-
+    constexpr const auto type = UPDATE_PRESSURE;
     int i, len;
     const point_s *current, *next;
 
-    __needToUpdatePressure = false;
+    setFlag(type, false);
+
     len = this->length();
 
     if(unlikely(len < 3)){
@@ -134,7 +181,7 @@ inline void stroke::updateFlagPressure() const
          * we have to draw the stroke point
          * by point.
         */
-        __constPressureVal = false;
+        setFlag(type, false);
         return;
     }
 
@@ -144,22 +191,20 @@ inline void stroke::updateFlagPressure() const
         next = &at(i+1);
 
         if(next->pressure != current->pressure){
-            __constPressureVal = false;
+            setFlag(type, false);
             return;
         }
 
         current = next;
     }
 
-    __constPressureVal = true;
+    setFlag(type, true);
 }
 
 /* call this function when modify the stroke */
 inline void stroke::modify()
 {
-    _needToUpdatePressure = true;
-    _needToCreateBiggerData = true;
-    _needToCreatePanterPath = true;
+    _flag = 0;
     _path = QPainterPath();
 }
 
@@ -245,11 +290,10 @@ inline int stroke::getPosizioneAudio() const
 */
 inline QRect stroke::getBiggerPointInStroke() const
 {
-    bool &__needToCreateBiggerData = (bool &) _needToCreateBiggerData;
     QRect &__biggerData = (QRect &) _biggerData;
     int count;
 
-    if(likely(!_needToCreateBiggerData)){
+    if(likely(!needToUpdateBiggerData())){
         return _biggerData;
     }
 
@@ -284,7 +328,7 @@ inline QRect stroke::getBiggerPointInStroke() const
     W_ASSERT(topLeft.x() <= bottomRight.x());
     W_ASSERT(topLeft.y() <= bottomRight.y());
 
-    __needToCreateBiggerData = false;
+    setFlag(UPDATE_BIGGER_DATA, false);
 
     __biggerData = QRect(topLeft, bottomRight);
 
@@ -331,10 +375,10 @@ inline const metadata_stroke &stroke::getMetadata() const
 
 force_inline bool stroke::constantPressure() const
 {
-    if(unlikely(_needToUpdatePressure))
+    if(unlikely(needToUpdatePressure()))
         this->updateFlagPressure();
 
-    return _constantPressureVal;
+    return isPressureVal();
 }
 
 force_inline uchar stroke::get_alfa() const
@@ -370,11 +414,9 @@ inline void stroke::setColor(const colore_s &color)
 
 inline const QPainterPath &stroke::getQPainterPath(int page) const
 {
-    bool &__needToCreatePanterPath = (bool &)_needToCreatePanterPath;
-
-    if(unlikely(_needToCreatePanterPath)){
+    if(unlikely(needToCreatePanterPath())){
         this->createQPainterPath(page);
-        __needToCreatePanterPath = false;
+        setFlag(UPDATE_PANTER_PATH, false);
     }
 
     return _path;
@@ -385,15 +427,9 @@ inline void stroke::copy(const stroke &src, stroke &dest)
     dest._point = src._point;
     dest._biggerData = src._biggerData;
 
-    dest._needToCreateBiggerData = src._needToCreateBiggerData;
-    dest._needToCreatePanterPath = src._needToCreatePanterPath;
+    dest._flag = src._flag;
 
-    dest._needToUpdatePressure = src._needToUpdatePressure;
-
-    dest._constantPressureVal = src._constantPressureVal;
     memcpy(&dest._metadata, &src._metadata, sizeof(src._metadata));
-
-    dest._needToCreatePanterPath = src._needToCreatePanterPath;
 
     dest._path = src._path;
 }
@@ -423,7 +459,7 @@ inline void stroke::scale(const QPointF &offset, int flag)
         point.m_y += offset.y();
     }
 
-    if((flag & STROKE_MUST_TRASLATE_PATH) && likely(!_needToCreatePanterPath) && this->constantPressure())
+    if((flag & STROKE_MUST_TRASLATE_PATH) && likely(!needToCreatePanterPath()) && this->constantPressure())
         _path.translate(offset);
     else
         _path = QPainterPath();

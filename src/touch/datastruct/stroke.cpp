@@ -143,7 +143,7 @@ void stroke::decreasePrecision()
         }
     }
 
-    _needToCreatePanterPath = true;
+    setFlag(UPDATE_PANTER_PATH, true);
 }
 
 void stroke::movePoint(const QPointF &translation)
@@ -157,18 +157,17 @@ void stroke::movePoint(const QPointF &translation)
         point.m_y += translation.y();
     }
 
-    if(likely(!_needToCreatePanterPath)){
+    if(likely(!needToCreatePanterPath())){
         _path.translate(translation * PROP_RESOLUTION);
     }
     else{
-        _needToCreatePanterPath = true;
+        setFlag(UPDATE_PANTER_PATH, true);
     }
 }
 
 void stroke::createQPainterPath(int page) const
 {
     auto &__path = (QPainterPath &)     _path;
-    bool &__needToCreatePanterPath = (bool &)   _needToCreatePanterPath;
 
     constexpr double delta = PROP_RESOLUTION;
     int i = 0, len;
@@ -202,16 +201,14 @@ void stroke::createQPainterPath(int page) const
 
     //__path = __path.simplified();
 
-    __needToCreatePanterPath = false;
+    setFlag(UPDATE_PANTER_PATH, false);
 }
 
 void stroke::reset()
 {
-    _needToCreateBiggerData = true;
-    _needToCreatePanterPath = true;
-    _needToUpdatePressure = true;
+    _flag = UPDATE_BIGGER_DATA | UPDATE_PANTER_PATH | UPDATE_PRESSURE;
 
-    _constantPressureVal = false;
+    setFlag(CONST_PRESS, false);
 
     _point.clear();
     _path = QPainterPath();
