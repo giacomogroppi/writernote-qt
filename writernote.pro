@@ -358,6 +358,7 @@ HEADERS += \
     src/utils/path/get_path.h \
     src/utils/path/pathfile.h \
     src/utils/permission/permission.h \
+    src/utils/platform.h \
     src/utils/posizione_binario.h \
     src/utils/progress_bar/progress_bar_ui.h \
     src/utils/remove_key/remove_key.h \

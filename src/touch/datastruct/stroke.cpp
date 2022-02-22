@@ -40,7 +40,7 @@ int stroke::save(zip_source_t *file) const
     cint len_point = this->length();
 
     SOURCE_WRITE_RETURN(file, &len_point, sizeof(len_point));
-    SOURCE_WRITE_RETURN(file, &this->metadata, sizeof(metadata));
+    SOURCE_WRITE_RETURN(file, &_metadata, sizeof(_metadata));
 
     for(i = 0; i < len_point; i ++){
         SOURCE_WRITE_RETURN(file, &at(i), sizeof(point_s));
@@ -75,8 +75,8 @@ int stroke::load(zip_file_t *file, int version)
     if(version == 0){
 #ifdef ALL_VERSION
         SOURCE_READ_RETURN(file, &meta, sizeof(meta));
-        memcpy(&this->metadata.color, &meta.color, sizeof(metadata.color));
-        memcpy(&this->metadata.posizione_audio, &meta.posizione_audio, sizeof(metadata.posizione_audio));
+        memcpy(&_metadata.color, &meta.color, sizeof(_metadata.color));
+        memcpy(&_metadata.posizione_audio, &meta.posizione_audio, sizeof(_metadata.posizione_audio));
 
         // we don't load sheet from differente version
         if(unlikely(meta.idtratto < 0)){
@@ -86,7 +86,7 @@ int stroke::load(zip_file_t *file, int version)
         return ERROR;
 #endif
     }else{
-        SOURCE_READ_RETURN(file, &this->metadata, sizeof(metadata));
+        SOURCE_READ_RETURN(file, &_metadata, sizeof(_metadata));
     }
 
     for(i = 0; i < len_point; i++){
@@ -105,8 +105,8 @@ int stroke::load(zip_file_t *file, int version)
 
 void stroke::setMetadata(cint posizione_audio, const colore_s &color)
 {
-    this->metadata.posizione_audio = posizione_audio;
-    memcpy(&this->metadata.color, &color, sizeof(color));
+    _metadata.posizione_audio = posizione_audio;
+    memcpy(&_metadata.color, &color, sizeof(color));
 }
 
 size_t stroke::createControll() const
@@ -114,11 +114,11 @@ size_t stroke::createControll() const
     size_t controll = 0;
     int i;
     for(i = 0; i < NCOLOR; i++){
-        controll += this->metadata.color.colore[i];
+        controll += _metadata.color.colore[i];
     }
 
     for(i = 0; i < length(); i++){
-        const point_s &point = m_point.at(i);
+        const point_s &point = _point.at(i);
         controll += point.m_x;
         controll += point.m_y;
         controll += point.pressure;
@@ -143,7 +143,7 @@ void stroke::decreasePrecision()
         }
     }
 
-    this->needToCreatePanterPath = true;
+    _needToCreatePanterPath = true;
 }
 
 void stroke::movePoint(const QPointF &translation)
@@ -157,18 +157,18 @@ void stroke::movePoint(const QPointF &translation)
         point.m_y += translation.y();
     }
 
-    if(likely(!needToCreatePanterPath)){
-        this->path.translate(translation * PROP_RESOLUTION);
+    if(likely(!_needToCreatePanterPath)){
+        _path.translate(translation * PROP_RESOLUTION);
     }
     else{
-        this->needToCreatePanterPath = true;
+        _needToCreatePanterPath = true;
     }
 }
 
 void stroke::createQPainterPath(int page) const
 {
-    QPainterPath &__path = (QPainterPath &)     this->path;
-    bool &__needToCreatePanterPath = (bool &)   needToCreatePanterPath;
+    auto &__path = (QPainterPath &)     _path;
+    bool &__needToCreatePanterPath = (bool &)   _needToCreatePanterPath;
 
     constexpr double delta = PROP_RESOLUTION;
     int i = 0, len;
@@ -207,14 +207,14 @@ void stroke::createQPainterPath(int page) const
 
 void stroke::reset()
 {
-    this->needToCreateBiggerData = true;
-    this->needToCreatePanterPath = true;
-    this->needToUpdatePressure = true;
+    _needToCreateBiggerData = true;
+    _needToCreatePanterPath = true;
+    _needToUpdatePressure = true;
 
-    this->constantPressureVal = false;
+    _constantPressureVal = false;
 
-    this->m_point.clear();
-    this->path = QPainterPath();
+    _point.clear();
+    _path = QPainterPath();
 }
 
 bool stroke::cmp(const stroke &stroke1, const stroke &stroke2)
@@ -236,5 +236,5 @@ bool stroke::cmp(const stroke &stroke1, const stroke &stroke2)
 
 const point_s &stroke::last() const
 {
-    return m_point.last();
+    return _point.last();
 }

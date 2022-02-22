@@ -19,19 +19,19 @@ struct metadata_stroke{
 class stroke
 {
 private:
-    QList<point_s> m_point;
+    QList<point_s> _point;
 
-    struct metadata_stroke metadata;
+    struct metadata_stroke _metadata;
 
-    QPainterPath path;
+    QPainterPath _path;
 
-    QRect biggerData;
-    bool constantPressureVal;
+    QRect _biggerData;
+    bool _constantPressureVal;
 
-    bool needToCreatePanterPath;
-    bool needToCreateBiggerData;
+    bool _needToCreatePanterPath;
+    bool _needToCreateBiggerData;
 
-    bool needToUpdatePressure;
+    bool _needToUpdatePressure;
 
     void updateFlagPressure() const;
 
@@ -119,8 +119,8 @@ public:
 
 inline void stroke::updateFlagPressure() const
 {
-    bool &__constPressureVal =      (bool &) this->constantPressureVal;
-    bool &__needToUpdatePressure =  (bool &) this->needToUpdatePressure;
+    bool &__constPressureVal =      (bool &) _constantPressureVal;
+    bool &__needToUpdatePressure =  (bool &) _needToUpdatePressure;
 
     int i, len;
     const point_s *current, *next;
@@ -128,7 +128,7 @@ inline void stroke::updateFlagPressure() const
     __needToUpdatePressure = false;
     len = this->length();
 
-    if(len < 3){
+    if(unlikely(len < 3)){
         /* if we have less than 3 points we
          * cannot create a qpainterpath, so
          * we have to draw the stroke point
@@ -157,10 +157,10 @@ inline void stroke::updateFlagPressure() const
 /* call this function when modify the stroke */
 inline void stroke::modify()
 {
-    this->needToUpdatePressure = true;
-    this->needToCreateBiggerData = true;
-    this->needToCreatePanterPath = true;
-    this->path = QPainterPath();
+    _needToUpdatePressure = true;
+    _needToCreateBiggerData = true;
+    _needToCreatePanterPath = true;
+    _path = QPainterPath();
 }
 
 /* call this function only when constantPressureVal is 1 */
@@ -171,36 +171,36 @@ inline float stroke::getPressure() const
 
 inline QColor stroke::getColor(const double division = 1.0) const
 {
-    QColor color(metadata.color.toQColor(division));
+    QColor color(_metadata.color.toQColor(division));
     return color;
 }
 
 inline const point_s &stroke::at(const int index) const
 {
-    return this->m_point.at(index);
+    return _point.at(index);
 }
 
 inline point_s &stroke::at_mod(const int index)
 {
     this->modify();
-    return this->m_point.operator[](index);
+    return _point.operator[](index);
 }
 
 inline void stroke::append(const point_s &point)
 {
-    this->m_point.append(point);
+    this->_point.append(point);
 
     this->modify();
 }
 
 inline void stroke::setMetadata(const metadata_stroke &metadata)
 {
-    memcpy(&this->metadata, &metadata, sizeof(this->metadata));
+    memcpy(&_metadata, &metadata, sizeof(_metadata));
 }
 
 inline void stroke::setPositioneAudio(const int m_pos_ris)
 {
-    this->metadata.posizione_audio = m_pos_ris;
+    _metadata.posizione_audio = m_pos_ris;
 }
 
 /* return 1 if the stroke need to be delete */
@@ -208,15 +208,15 @@ inline int stroke::removeAt(int index)
 {
     int len = length();
     Q_ASSERT(index < len);
-    this->m_point.removeAt(index);
+    _point.removeAt(index);
     this->modify();
 
     return len < 2;
 }
 
 inline int stroke::removeAt(int from, int to){
-    Q_ASSERT(to < length());
-    Q_ASSERT(from >= 0);
+    W_ASSERT(to < length());
+    W_ASSERT(from >= 0);
 
     qDebug() << "stroke::removeAt from to" << from << to;
 
@@ -229,7 +229,7 @@ inline int stroke::removeAt(int from, int to){
 
 inline int stroke::getPosizioneAudio() const
 {
-    return this->metadata.posizione_audio;
+    return _metadata.posizione_audio;
 }
 
 /* after append data we need to call this funcion to update
@@ -245,12 +245,12 @@ inline int stroke::getPosizioneAudio() const
 */
 inline QRect stroke::getBiggerPointInStroke() const
 {
-    bool &__needToCreateBiggerData = (bool &) this->needToCreateBiggerData;
-    QRect &__biggerData = (QRect &) this->biggerData;
+    bool &__needToCreateBiggerData = (bool &) _needToCreateBiggerData;
+    QRect &__biggerData = (QRect &) _biggerData;
     int count;
 
-    if(likely(!this->needToCreateBiggerData)){
-        return this->biggerData;
+    if(likely(!_needToCreateBiggerData)){
+        return _biggerData;
     }
 
     count = this->length();
@@ -316,34 +316,35 @@ inline bool stroke::isInside(const QRectF &rect) const
 
 inline void stroke::clearAudio()
 {
-    this->metadata.posizione_audio = -1;
+    _metadata.posizione_audio = -1;
 }
 
 inline int stroke::length() const
 {
-    return this->m_point.length();
+    return _point.length();
 }
 
 inline const metadata_stroke &stroke::getMetadata() const
 {
-    return this->metadata;
+    return _metadata;
 }
 
-inline bool stroke::constantPressure() const
+force_inline bool stroke::constantPressure() const
 {
-    if(unlikely(this->needToUpdatePressure))
+    if(unlikely(_needToUpdatePressure))
         this->updateFlagPressure();
-    return this->constantPressureVal;
+
+    return _constantPressureVal;
 }
 
 force_inline uchar stroke::get_alfa() const
 {
-    return this->metadata.color.colore[3];
+    return _metadata.color.colore[3];
 }
 
 inline void stroke::setAlfaColor(const uchar alfa)
 {
-    this->metadata.color.colore[3] = alfa;
+    _metadata.color.colore[3] = alfa;
 }
 
 inline void stroke::at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const
@@ -359,42 +360,42 @@ inline void stroke::at_translation(const double zoom, point_s &point, const int 
 
 inline void stroke::setColor(const QColor &color)
 {
-    this->metadata.color.fromColor(color);
+    _metadata.color.fromColor(color);
 }
 
 inline void stroke::setColor(const colore_s &color)
 {
-    memcpy(&this->metadata.color, &color, sizeof(metadata.color));
+    memcpy(&_metadata.color, &color, sizeof(_metadata.color));
 }
 
 inline const QPainterPath &stroke::getQPainterPath(int page) const
 {
-    bool &__needToCreatePanterPath = (bool &)this->needToCreatePanterPath;
+    bool &__needToCreatePanterPath = (bool &)_needToCreatePanterPath;
 
-    if(unlikely(this->needToCreatePanterPath)){
+    if(unlikely(_needToCreatePanterPath)){
         this->createQPainterPath(page);
         __needToCreatePanterPath = false;
     }
 
-    return this->path;
+    return _path;
 }
 
 inline void stroke::copy(const stroke &src, stroke &dest)
 {
-    dest.m_point = src.m_point;
-    dest.biggerData = src.biggerData;
+    dest._point = src._point;
+    dest._biggerData = src._biggerData;
 
-    dest.needToCreateBiggerData = src.needToCreateBiggerData;
-    dest.needToCreatePanterPath = src.needToCreatePanterPath;
+    dest._needToCreateBiggerData = src._needToCreateBiggerData;
+    dest._needToCreatePanterPath = src._needToCreatePanterPath;
 
-    dest.needToUpdatePressure = src.needToUpdatePressure;
+    dest._needToUpdatePressure = src._needToUpdatePressure;
 
-    dest.constantPressureVal = src.constantPressureVal;
-    memcpy(&dest.metadata, &src.metadata, sizeof(src.metadata));
+    dest._constantPressureVal = src._constantPressureVal;
+    memcpy(&dest._metadata, &src._metadata, sizeof(src._metadata));
 
-    dest.needToCreatePanterPath = src.needToCreatePanterPath;
+    dest._needToCreatePanterPath = src._needToCreatePanterPath;
 
-    dest.path = src.path;
+    dest._path = src._path;
 }
 
 inline stroke &stroke::operator=(const stroke &other)
@@ -409,7 +410,7 @@ inline stroke &stroke::operator=(const stroke &other)
 
 inline bool stroke::isEmpty() const
 {
-    return m_point.isEmpty();
+    return _point.isEmpty();
 }
 
 inline void stroke::scale(const QPointF &offset, int flag)
@@ -422,10 +423,10 @@ inline void stroke::scale(const QPointF &offset, int flag)
         point.m_y += offset.y();
     }
 
-    if((flag & STROKE_MUST_TRASLATE_PATH) && likely(!this->needToCreatePanterPath) && this->constantPressure())
-        path.translate(offset);
+    if((flag & STROKE_MUST_TRASLATE_PATH) && likely(!_needToCreatePanterPath) && this->constantPressure())
+        _path.translate(offset);
     else
-        path = QPainterPath();
+        _path = QPainterPath();
 }
 
 
