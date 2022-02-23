@@ -210,7 +210,7 @@ inline point_s page::at_translation(const point_s &point, int page)
     const double ytranslation = double(page) * page::getHeight();
 
     memcpy(&tmp, &point, sizeof(tmp));
-    tmp.m_y -= ytranslation;
+    tmp._y -= ytranslation;
     return tmp;
 }
 
@@ -321,11 +321,11 @@ static force_inline void __at_draw_private(const point_s &from, point_s &to, con
 {
     memcpy(&to, &from, sizeof(from));
 
-    to.m_x *= zoom;
-    to.m_y *= zoom;
+    to._x *= zoom;
+    to._y *= zoom;
 
-    to.m_x += translation.x();
-    to.m_y += translation.y();
+    to._x += translation.x();
+    to._y += translation.y();
 }
 
 inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,

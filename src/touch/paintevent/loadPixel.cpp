@@ -30,7 +30,7 @@ static void drawSingleStroke(DataPaint      &_dataPoint,
     if(unlikely(!len))
         return;
 
-    _dataPoint.lastPoint.pos = QPointF(_stroke.at(0).m_x, _stroke.at(0).m_y);
+    _dataPoint.lastPoint.pos = QPointF(_stroke.at(0)._x, _stroke.at(0)._y);
 
     for(i = 1; i < len; i++){
         const auto &__point = _stroke.at(i);
@@ -40,10 +40,10 @@ static void drawSingleStroke(DataPaint      &_dataPoint,
         _painter.setPen(_pen);
 
         _painter.drawLine(_dataPoint.lastPoint.pos * _dataPoint.m,
-                         QPointF(__point.m_x * _dataPoint.m, __point.m_y * _dataPoint.m));
+                         QPointF(__point._x * _dataPoint.m, __point._y * _dataPoint.m));
 
-        _dataPoint.lastPoint.pos.setX(__point.m_x);
-        _dataPoint.lastPoint.pos.setY(__point.m_y);
+        _dataPoint.lastPoint.pos.setX(__point._x);
+        _dataPoint.lastPoint.pos.setY(__point._y);
     }
 }
 
@@ -200,7 +200,7 @@ static void loadSheet(
             const auto ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage);
             const auto ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage);
 
-            painter.drawLine(ref1.m_x, ref1.m_y, ref2.m_x, ref2.m_y);
+            painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
         }
     }
 }

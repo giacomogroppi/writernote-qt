@@ -313,17 +313,17 @@ inline QRect stroke::getBiggerPointInStroke() const
     for (; count >= 0; count --){
         const point_s &point = at(count);
 
-        if(topLeft.x() > point.m_x)
-            topLeft.setX(point.m_x);
+        if(topLeft.x() > point._x)
+            topLeft.setX(point._x);
 
-        if(topLeft.y() > point.m_y)
-            topLeft.setY(point.m_y);
+        if(topLeft.y() > point._y)
+            topLeft.setY(point._y);
 
-        if(bottomRight.x() < point.m_x)
-            bottomRight.setX(point.m_x);
+        if(bottomRight.x() < point._x)
+            bottomRight.setX(point._x);
 
-        if(bottomRight.y() < point.m_y)
-            bottomRight.setY(point.m_y);
+        if(bottomRight.y() < point._y)
+            bottomRight.setY(point._y);
     }
 
     W_ASSERT(topLeft.x() <= bottomRight.x());
@@ -351,8 +351,8 @@ inline bool stroke::isInside(const QRectF &rect) const
         const point_s &point = at(i);
 
         /* TODO --> use the function in datastruct */
-        if(point.m_x >= topLeft.x() && point.m_y >= topLeft.y() &&
-                point.m_x <= bottomRight.x() && point.m_y <= bottomRight.y())
+        if(point._x >= topLeft.x() && point._y >= topLeft.y() &&
+                point._x <= bottomRight.x() && point._y <= bottomRight.y())
             return true;
     }
 
@@ -396,11 +396,11 @@ inline void stroke::at_translation(const double zoom, point_s &point, const int 
 {
     memcpy(&point, &at(indexPoint), sizeof(point_s));
 
-    point.m_x *= zoom;
-    point.m_y *= zoom;
+    point._x *= zoom;
+    point._y *= zoom;
 
-    point.m_x += translation.x();
-    point.m_y += translation.y();
+    point._x += translation.x();
+    point._y += translation.y();
 }
 
 inline void stroke::setColor(const QColor &color)
@@ -456,8 +456,8 @@ inline void stroke::scale(const QPointF &offset, int flag)
     for(i--; i >= 0; i--){
         point_s &point = at_mod(i);
 
-        point.m_x += offset.x();
-        point.m_y += offset.y();
+        point._x += offset.x();
+        point._y += offset.y();
     }
 
     if((flag & STROKE_MUST_TRASLATE_PATH) && likely(!needToCreatePanterPath()) && this->constantPressure())

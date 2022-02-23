@@ -48,8 +48,8 @@ static void AppendAll(
 
     for(i = 0; i < lenPoint; i++){
         point = &strokeToAppend.at_mod(i);
-        point->m_x -= PointFirstPage.x();
-        point->m_y -= PointFirstPage.y();
+        point->_x -= PointFirstPage.x();
+        point->_y -= PointFirstPage.y();
     }
 
     if(unlikely(met == TabletCanvas::e_method::laser)){
@@ -327,8 +327,8 @@ void TabletCanvas::updatelist(QTabletEvent *event)
         /* it's already set */
     }
 
-    tmp_point.m_x = pointTouch.x();
-    tmp_point.m_y = pointTouch.y();
+    tmp_point._x = pointTouch.x();
+    tmp_point._y = pointTouch.y();
     tmp_point.pressure = unlikely(highlighter) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point);

@@ -54,8 +54,8 @@ int TestingCore::createPage(
 
         for(k = 0; k < lenPerStroke; k++){
             point_s point;
-            point.m_x = x + deltaPerPoint + base_x;
-            point.m_y = y + deltaPerPoint + page::getHeight() + base_y;
+            point._x = x + deltaPerPoint + base_x;
+            point._y = y + deltaPerPoint + page::getHeight() + base_y;
 
             x += deltaPerPoint;
             y += deltaPerPoint + double(page * page::getHeight());

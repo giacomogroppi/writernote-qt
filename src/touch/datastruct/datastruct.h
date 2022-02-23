@@ -372,7 +372,7 @@ inline int datastruct::whichPage(const stroke &stroke) const
 {
     int i;
     const auto &ref = stroke.at(0);
-    QPointF point(ref.m_x, ref.m_y);
+    QPointF point(ref._x, ref._y);
 
     i = this->whichPage(point);
 
@@ -535,9 +535,9 @@ inline int datastruct::adjustStroke(stroke &stroke)
 
     for(; counter >= 0; counter --){
         point_s &point = stroke.at_mod(counter);
-        point.m_x       /= this->_zoom;
-        point.m_y       /= this->_zoom;
-        point.pressure  /= this->_zoom;
+        point._x       /= this->_zoom;
+        point._y       /= this->_zoom;
+        //point.pressure  /= this->_zoom;
     }
 
     page = this->whichPage(stroke);

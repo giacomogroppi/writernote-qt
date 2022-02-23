@@ -95,7 +95,7 @@ inline colore_s colore_s::from_color(const QColor &color)
 
 /* this struct contains neither the color, nor the thickness, nor the page to which it belongs, nor the rotation, nor the id */
 struct point_s{
-    double m_x, m_y;
+    double _x, _y;
     float pressure;
     Q_COMPILER_CONSTEXPR QPointF toQPointF(const double delta) const;
     Q_COMPILER_CONSTEXPR double x() const;
@@ -104,17 +104,17 @@ struct point_s{
 
 Q_COMPILER_CONSTEXPR force_inline double point_s::x() const
 {
-    return m_x;
+    return _x;
 }
 
 Q_COMPILER_CONSTEXPR force_inline double point_s::y() const
 {
-    return m_y;
+    return _y;
 }
 
 Q_COMPILER_CONSTEXPR force_inline QPointF point_s::toQPointF(const double delta) const
 {
-    return QPointF(m_x, m_y) * delta;
+    return QPointF(_x, _y) * delta;
 }
 
 /*inline QPointF point_s::toQPointF(const double delta) const

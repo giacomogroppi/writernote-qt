@@ -119,8 +119,8 @@ size_t stroke::createControll() const
 
     for(i = 0; i < length(); i++){
         const point_s &point = _point.at(i);
-        controll += point.m_x;
-        controll += point.m_y;
+        controll += point._x;
+        controll += point._y;
         controll += point.pressure;
     }
 
@@ -153,8 +153,8 @@ void stroke::movePoint(const QPointF &translation)
 
     for(i = 0; i < len; i++){
         point_s &point = at_mod(i);
-        point.m_x += translation.x();
-        point.m_y += translation.y();
+        point._x += translation.x();
+        point._y += translation.y();
     }
 
     if(likely(!needToCreatePanterPath())){

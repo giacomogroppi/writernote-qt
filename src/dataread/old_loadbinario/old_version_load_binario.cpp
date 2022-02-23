@@ -340,8 +340,8 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
                 const point_old_ver_7 &tmpRef = ListPrivate.at(counterPoint);
 
                 point_s TmpAppend;
-                TmpAppend.m_x       = tmpRef.m_x;
-                TmpAppend.m_y       = tmpRef.m_y;
+                TmpAppend._x       = tmpRef.m_x;
+                TmpAppend._y       = tmpRef.m_y;
                 TmpAppend.pressure  = tmpRef.m_pressure;
 
                 if(unlikely(id < 0)){
