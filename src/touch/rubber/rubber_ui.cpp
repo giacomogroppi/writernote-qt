@@ -146,19 +146,23 @@ void rubber_ui::endRubber()
     this->reset();
 }
 
-static bool ifNotInside(const stroke &stroke, const double m_size_gomma, const QPointF &pointTouch)
+static bool ifNotInside(
+        const stroke    &stroke,
+        const double    m_size_gomma,
+        const QPointF   &pointTouch)
 {
+    const QPointF size = QPointF(m_size_gomma, m_size_gomma);
     const QRectF &pos = stroke.getBiggerPointInStroke();
-    const QPointF &topLeft = pos.topLeft() - QPointF(m_size_gomma, m_size_gomma);
-    const QPointF &bottomRigth = pos.bottomRight() + QPointF(m_size_gomma, m_size_gomma);
+    const QPointF &topLeft =        pos.topLeft()       - size;
+    const QPointF &bottomRigth =    pos.bottomRight()   + size;
 
     W_ASSERT(m_size_gomma >= 0.0);
 
-    //qDebug() << "rubber_ui::actionRubber" << "touch" << lastPoint << "topLeft" << topLeft << "bottomRigth" << bottomRigth;
-
-    /* if the touch point is not within the meaning of the rectangle formed
+    /*
+     * if the touch point is not within the meaning of the rectangle formed
      * by the top left point and the bottom right point,
-     *  we can directly continue with the next stroke. */
+     *  we can directly continue with the next stroke.
+    */
     return !datastruct::isinside(topLeft, bottomRigth, pointTouch);
 }
 
@@ -279,7 +283,8 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
-        if(ifNotInside(__stroke, __m_size_gomma, _touch)) continue;
+        if(ifNotInside(__stroke, __m_size_gomma, _touch))
+            continue;
 
         for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
             const point_s &point = __stroke.at(counterPoint);

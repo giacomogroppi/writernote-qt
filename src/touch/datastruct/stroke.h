@@ -204,7 +204,8 @@ inline void stroke::updateFlagPressure() const
 /* call this function when modify the stroke */
 inline void stroke::modify()
 {
-    _flag = 0;
+    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE | UPDATE_PANTER_PATH;
+    _flag &= ~CONST_PRESS;
     _path = QPainterPath();
 }
 
@@ -436,7 +437,7 @@ inline void stroke::copy(const stroke &src, stroke &dest)
 
 inline stroke &stroke::operator=(const stroke &other)
 {
-    if(this == &other){
+    if(unlikely(this == &other)){
         return *this;
     }
 
