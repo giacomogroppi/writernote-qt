@@ -53,7 +53,7 @@ public:
 
 force_inline bool thread_group_sem::needToDelete() const
 {
-    return this->_flag & THREAD_STOP_REQUEST;
+    return _flag & THREAD_STOP_REQUEST;
 }
 
 force_inline sem_t *thread_group_sem::get_all_finish_sem()
@@ -134,6 +134,7 @@ inline void thread_group_sem::postForThread(sem_t *sem)
 force_inline thread_group_sem::~thread_group_sem()
 {
     int i;
+    stopThread();
     postForThread(&_pass);
 
     for(i = 0; i < _core; i++){
@@ -148,12 +149,12 @@ force_inline thread_group_sem::~thread_group_sem()
 
 }
 
-inline DataPrivateMuThread *thread_group_sem::get_thread_data()
+force_inline DataPrivateMuThread *thread_group_sem::get_thread_data()
 {
     return _data;
 }
 
-inline void thread_group_sem::stopThread()
+force_inline void thread_group_sem::stopThread()
 {
     _flag |= THREAD_STOP_REQUEST;
 }

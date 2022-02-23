@@ -344,6 +344,8 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
     if(unlikely(_base < 0)){
         this->_base = data->whichPage(lastPoint);
+        _data_to_remove.append(QVector<int>());
+        indexPage = _base;
     }else{
         const auto now = data->whichPage(lastPoint);
 
