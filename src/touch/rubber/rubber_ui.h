@@ -34,14 +34,17 @@ public:
 
     e_type_rubber _type_gomma = e_type_rubber::total;
 
-    void actionRubber(datastruct *, const QPointF &);
-
-    void endRubber(datastruct *data);
+    void actionRubber(const QPointF &);
+    void initRubber(const QPointF &point);
+    void endRubber();
 
 private:
+    class TabletCanvas *_canvas;
     int _base;
+    PointSettable _last;
     int _size_gomma = DEFAULT_GOMMA_SIZE;
     QList<QVector<int>> _data_to_remove;
+    void reset();
 
     void update_data();
 
@@ -53,5 +56,12 @@ private slots:
     void on_totale_button_clicked();
     void on_partial_button_clicked();
 };
+
+force_inline void rubber_ui::reset()
+{
+    _base = -1;
+    _last.set = false;
+    _data_to_remove.clear();
+}
 
 #endif // RUBBER_UI_H

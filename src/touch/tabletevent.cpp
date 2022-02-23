@@ -202,6 +202,8 @@ force_inline void TabletCanvas::ManageStart(
             WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "not in box");
             m_square->initPoint(pointTouch);
         }
+    }else if(rubber_method){
+        m_rubber->initRubber(event->posF());
     }
 
     m_deviceDown = true;
@@ -236,7 +238,7 @@ force_inline void TabletCanvas::ManageMove(
         updatelist(event);
     }
     else if(rubber_method){
-        m_rubber->actionRubber(data->datatouch, point);
+        m_rubber->actionRubber(point);
     }
     else if(selection_method){
         m_square->isMoving();
@@ -299,7 +301,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
                 m_square->endMoving(this);
 
         }else if(rubber_method){
-            m_rubber->endRubber(data->datatouch);
+            m_rubber->endRubber();
         }
     }
 }
