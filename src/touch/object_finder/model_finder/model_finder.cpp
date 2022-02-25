@@ -26,7 +26,7 @@ void __init__ init_finder(void)
 
 static void *model_finder(void *_index)
 {
-    const int index = (long)_index;
+    const long index = (long)_index;
     auto __function = function[index];
 
     finder.is[index] = __function((const stroke *)ctrl._stroke);
