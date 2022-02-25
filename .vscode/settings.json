@@ -35,7 +35,13 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "regex": "cpp",
+        "xlocale": "cpp",
+        "xstring": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

@@ -13,8 +13,8 @@ enum{
     COMPLEX_CIRCLE
 };
 
-bool model_line(const stroke *stroke);
-bool model_rect(const stroke *stroke);
-bool model_circle(const stroke *stroke);
+double model_line(const stroke *stroke);
+double model_rect(const stroke *stroke);
+double model_circle(const stroke *stroke);
 
 #endif // MODEL_H

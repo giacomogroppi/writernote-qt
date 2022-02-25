@@ -1,6 +1,8 @@
 #include "model.h"
 #include "touch/datastruct/datastruct.h"
 
+constexpr double error = 5000;
+
 static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, cint max)
 {
     W_ASSERT(max >= 0);
@@ -9,12 +11,16 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
     return QRectF(tl, br).contains(p2);
 }
 
-static bool is_near_line(cdouble m, cdouble max, cdouble q, const point_s *point)
+static void is_near_line(cdouble m, cdouble &max, cdouble q, const point_s *point)
 {
     const auto x = point->x();
     const auto y = point->y();
 
-    return (qAbs(x * m + q - y) < max);
+    const double res = qAbs(x * m + q - y);
+
+    if(res > max){
+        max = res;
+    }
 }
 
 static bool line_check_segno(cdouble segno, cdouble len)
@@ -29,19 +35,19 @@ static bool line_check_segno(cdouble segno, cdouble len)
             );
 }
 
-bool model_line(const stroke *stroke)
+double model_line(const stroke *stroke)
 {
     int segno_var_x, segno_var_y;
     int i, len;
     const point_s *one, *two;
     const auto &area = stroke->getBiggerPointInStroke();
 
-    double m, q;
+    double m, q, precision = 0;
 
     len = stroke->length();
 
     if(unlikely(!len)){
-        return false;
+        return error;
     }
 
     m = (area.topRight().y() - area.bottomRight().y()) /
@@ -65,7 +71,7 @@ bool model_line(const stroke *stroke)
     }
 
     if(line_check_segno(segno_var_x, len) || line_check_segno(segno_var_y, len))
-        return false;
+        return error;
 
     if(segno_var_y < 0){
         /*
@@ -82,20 +88,19 @@ bool model_line(const stroke *stroke)
     for(i = 0; i < len; i++){
         one = &stroke->at(i);
 
-        if(!is_near_line(m, 5, q, one)){
-            return false;
-        }
+        is_near_line(m, precision, q, one)){
+        
     }
 
-    return true;
+    return precision;
 }
 
-bool model_rect(const stroke *stroke)
+double model_rect(const stroke *stroke)
 {
-    return false;
+    return error;
 }
 
-bool model_circle(const stroke *stroke)
+double model_circle(const stroke *stroke)
 {
-    return false;
+    return error;
 }

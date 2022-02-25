@@ -1,6 +1,7 @@
 #include "object_finder.h"
 #include "mainwindow.h"
 #include "currenttitle/document.h"
+#include "touch/object_finder/model_finder/model_finder.h"
 #include "pthread.h"
 
 // è lo stesso stroke definito nel file tabletevent.cpp
@@ -27,7 +28,6 @@ void object_finder::endTimer()
 {
     stroke &stroke = __tmp;
     int i;
-    const QRectF &rect = stroke.getBiggerPointInStroke();
 
-
+    find(&stroke);
 }

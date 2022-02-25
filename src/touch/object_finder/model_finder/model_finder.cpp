@@ -5,7 +5,7 @@
 #define THREAD_FINDER 3
 
 static struct{
-    bool is[THREAD_FINDER];
+    double is[THREAD_FINDER];
 } finder;
 
 bool (*function[])(const stroke *) = {
@@ -37,6 +37,7 @@ static void *model_finder(void *_index)
 bool model::find(stroke *stroke)
 {
     long i;
+    constexpr double min_precision = 5;
 
     ctrl._stroke = stroke;
     for(i = 0; i < THREAD_FINDER; i++){
