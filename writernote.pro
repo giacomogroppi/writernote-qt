@@ -155,7 +155,7 @@ SOURCES += \
     src/touch/laser/laser.cpp \
     src/touch/multi_thread_data.cpp \
     src/touch/object_finder/model/model_object.cpp \
-    src/touch/object_finder/model_finder/model.cpp \
+    src/touch/object_finder/model_finder/model_finder.cpp \
     src/touch/object_finder/object_finder.cpp \
     src/touch/pageCount.cpp \
     src/touch/paintevent/loadPixel.cpp \
@@ -304,7 +304,7 @@ HEADERS += \
     src/touch/laser/laser.h \
     src/touch/multi_thread_data.h \
     src/touch/object_finder/model/model.h \
-    src/touch/object_finder/model_finder/model.h \
+    src/touch/object_finder/model_finder/model_finder.h \
     src/touch/object_finder/object_finder.h \
     src/touch/paintevent/paint.h \
     src/touch/property/property_control.h \

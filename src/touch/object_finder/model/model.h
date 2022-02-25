@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <QPointF>
 #include "utils/common_def.h"
 #include "utils/common_script.h"
 
