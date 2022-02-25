@@ -8,7 +8,7 @@ static struct{
     double is[THREAD_FINDER];
 } finder;
 
-bool (*function[])(const stroke *) = {
+double (*function[])(const stroke *) = {
     model_line,
     model_rect,
     model_circle

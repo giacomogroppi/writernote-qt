@@ -11,7 +11,7 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
     return QRectF(tl, br).contains(p2);
 }
 
-static void is_near_line(cdouble m, cdouble &max, cdouble q, const point_s *point)
+static void is_near_line(cdouble m, double &max, cdouble q, const point_s *point)
 {
     const auto x = point->x();
     const auto y = point->y();
@@ -88,8 +88,7 @@ double model_line(const stroke *stroke)
     for(i = 0; i < len; i++){
         one = &stroke->at(i);
 
-        is_near_line(m, precision, q, one)){
-        
+        is_near_line(m, precision, q, one);
     }
 
     return precision;
@@ -97,10 +96,12 @@ double model_line(const stroke *stroke)
 
 double model_rect(const stroke *stroke)
 {
+    Q_UNUSED(stroke);
     return error;
 }
 
 double model_circle(const stroke *stroke)
 {
+    Q_UNUSED(stroke);
     return error;
 }

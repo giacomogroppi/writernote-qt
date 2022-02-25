@@ -27,7 +27,5 @@ object_finder::~object_finder()
 void object_finder::endTimer()
 {
     stroke &stroke = __tmp;
-    int i;
-
-    find(&stroke);
+    model::find(&stroke);
 }
