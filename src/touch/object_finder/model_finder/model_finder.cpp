@@ -14,6 +14,8 @@ double (*function[])(const stroke *) = {
     model_circle
 };
 
+void *function_cache[THREAD_FINDER];
+
 static struct{
     pthread_t _thread[THREAD_FINDER];
     stroke *_stroke;
