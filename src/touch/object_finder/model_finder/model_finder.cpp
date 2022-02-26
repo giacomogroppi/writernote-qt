@@ -4,6 +4,7 @@
 #include "utils/platform.h"
 
 #define THREAD_FINDER 3
+#define debug_model 1
 
 static struct{
     double is[THREAD_FINDER];
@@ -41,6 +42,8 @@ static void *model_finder(void *_index)
     //const long index = (long)_index;
     auto __function = function[index];
 
+    //WDebug(debug_model, __FUNCTION__ << index);
+
     finder.is[index] = __function((const stroke *)ctrl._stroke);
 
     return NULL;
@@ -55,8 +58,10 @@ static int get_index_most_prob(cdouble min_precision)
     for(i = 0; i < THREAD_FINDER; i++){
         const double prec = finder.is[i];
 
-        if(prec > min_precision)
+        if(prec > min_precision){
+            WDebug(debug_model, __FUNCTION__ << prec);
             continue;
+        }
 
         if(prec < last_precision){
             index = i;
@@ -70,7 +75,7 @@ static int get_index_most_prob(cdouble min_precision)
 bool model::find(stroke *stroke)
 {
     long i;
-    constexpr double min_precision = 5;
+    constexpr double min_precision = 30;
 
     ctrl._stroke = stroke;
     for(i = 0; i < THREAD_FINDER; i++){
@@ -82,6 +87,7 @@ bool model::find(stroke *stroke)
     }
 
     i = get_index_most_prob(min_precision);
+    WDebug(debug_model, "model" << __FUNCTION__ << i);
 
     if(i < 0){
         return false;

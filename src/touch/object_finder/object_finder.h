@@ -21,7 +21,8 @@ public:
 private:
     bool isActive() const;
 
-    static constexpr auto time = 1 * 1000 * 1000;
+    static constexpr auto debug = false;
+    static constexpr auto time = 1 * 1000;
     class TabletCanvas *_canvas;
     QTimer *_timer;
 
@@ -37,6 +38,7 @@ force_inline void object_finder::endMoving()
 
 force_inline void object_finder::move()
 {
+    WDebug(debug, "object_finder" << __FUNCTION__);
     if(likely(_timer->isActive())){
         _timer->stop();
     }
@@ -46,6 +48,7 @@ force_inline void object_finder::move()
 
 force_inline void object_finder::reset()
 {
+    WDebug(debug, "object_finder" << __FUNCTION__);
     if(isActive()){
         _timer->stop();
     }

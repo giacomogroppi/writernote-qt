@@ -36,11 +36,12 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
 {
     double deltay, deltax;
     QTabletEvent *tab_event;
+    constexpr bool debug = false;
     QEvent::Type __type;
 
     QPointF p = event->pos();
 
-    qDebug() << "TabletCanvas::mouseMoveEvent" << event->type() << event->button();
+    WDebug(debug, "TabletCanvas::mouseMoveEvent" << event->type() << event->button());
 
     if(isZooming)
         return;

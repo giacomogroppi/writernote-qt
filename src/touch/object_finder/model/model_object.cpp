@@ -1,7 +1,9 @@
 #include "model.h"
 #include "touch/datastruct/datastruct.h"
+#include <QString>
 
-constexpr double error = 5000;
+constexpr double    error = 5000;
+constexpr bool      debug = true;
 
 struct{
     double m, q;
@@ -20,11 +22,18 @@ static void is_near_line(cdouble m, double &max, cdouble q, const point_s *point
 {
     const auto x = point->x();
     const auto y = point->y();
+    double res;
 
-    const double res = qAbs(x * m + q - y);
-
-    if(res > max){
-        max = res;
+    if(line_data.is_vertical){
+        res = qAbs(q - x);
+        if(res > max){
+            max = res;
+        }
+    }else{
+        res = qAbs(x * m + q - y);
+        if(res > max){
+            max = res;
+        }
     }
 }
 
@@ -34,10 +43,21 @@ static bool line_check_segno(cdouble segno, cdouble len)
      * se più del 5% dei punti presenta un "ritorno"
      * e è minore del 95 % allora non è una linea
     */
-    return  (
-                qAbs(segno) > len * .05 &&
-                qAbs(segno) < len * .95
-            );
+    const double mod = qAbs(segno);
+    const bool c1 = mod > len * .05;
+    const bool c2 = mod < len * .95;
+    return  (c1 && c2);
+}
+
+static force_inline void model_line_adjust_m(double &m)
+{
+    const double mod = qAbs(m);
+    if(mod < 0.07){
+        m = 0;
+    }
+    if(mod > 25.){
+        line_data.is_vertical = true;
+    }
 }
 
 double model_line(const stroke *stroke)
@@ -45,10 +65,12 @@ double model_line(const stroke *stroke)
     int segno_var_x, segno_var_y;
     int i, len;
     const point_s *one, *two;
-    const auto &area = stroke->getBiggerPointInStroke();
+    const auto &area = stroke->getFirstAndLast();
 
     double &m = line_data.m;
     double &q = line_data.q;
+    bool &is_vertical = line_data.is_vertical;
+
     double precision = 0;
 
     line_data.is_vertical = false;
@@ -59,16 +81,23 @@ double model_line(const stroke *stroke)
         return error;
     }
 
+    //WDebug(debug, __FUNCTION__ << area.topLeft() << area.bottomRight());
+
     {
-        const double det = area.topRight().x() - area.bottomRight().x();
+        const double det = area.topLeft().x() - area.bottomRight().x();
 
         if(unlikely(!det)){
-            line_data.is_vertical = true;
+            WDebug(debug, __FUNCTION__ << "det = 0");
+            is_vertical = true;
             goto cont;
         }
 
-        m = (area.topRight().y() - area.bottomRight().y()) / det;
+        m = (area.topLeft().y() - area.bottomRight().y()) / det;
     }
+
+    model_line_adjust_m(m);
+
+    WDebug(debug, __FUNCTION__ << qstr("m: %1 q: %2 is_vertical %3").arg(m).arg(q).arg(line_data.is_vertical));
 
 cont:
     segno_var_x = segno_var_y = 0;
@@ -88,8 +117,11 @@ cont:
         one = two;
     }
 
-    if(line_check_segno(segno_var_x, len) || line_check_segno(segno_var_y, len))
-        return error;
+    WDebug(debug, __FUNCTION__ << "segno_var" << segno_var_x << segno_var_y);
+
+    /*if( line_check_segno(segno_var_x, len) ||
+        line_check_segno(segno_var_y, len))
+        return error;*/
 
     if(segno_var_y < 0){
         /*
@@ -101,7 +133,14 @@ cont:
 
     one = &stroke->at(0);
 
-    q = one->y() - (one->x()) * m;
+    if(is_vertical){
+        q = one->x();
+    }
+    else{
+        q = one->y() - (one->x()) * m;
+    }
+
+    qDebug() << "model_line" << qstr("%1%2").arg(one->y()).arg(one->x());
 
     for(i = 0; i < len; i++){
         one = &stroke->at(i);
@@ -124,6 +163,39 @@ double model_circle(const stroke *stroke)
     return error;
 }
 
-void model_line_create(stroke *stroke){}
-void model_rect_create(stroke *stroke){}
-void model_circle_create(stroke *stroke){}
+static void model_line_vertical(stroke *stroke)
+{
+    int i;
+    cint len = stroke->length();
+    const QRect FL = stroke->getFirstAndLast();
+    const QPointF &TL = FL.topLeft();
+    const QPointF &BR = FL.bottomRight();
+
+    const double x = TL.x();
+
+    for(i = 0; i < len; i++){
+        point_s &point = stroke->at_mod(i);
+
+        if(point.y() < TL.y())
+            point._y = TL.y();
+
+        if(point.y() > BR.y())
+            point._y = BR.y();
+
+        point._x = x;
+
+    }
+
+}
+
+void model_line_create(stroke *stroke)
+{
+    bool &is_vertical = line_data.is_vertical;
+
+    if(is_vertical){
+        model_line_vertical(stroke);
+    }
+}
+
+void model_rect_create(stroke *stroke){ Q_UNUSED(stroke); }
+void model_circle_create(stroke *stroke){ Q_UNUSED(stroke); }

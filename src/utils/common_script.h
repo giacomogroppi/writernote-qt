@@ -20,6 +20,9 @@
 #define force_inline Q_ALWAYS_INLINE
 #define not_used __attribute__ ((__unused__))
 
+#define qstr QString
+#define qarr QByteArray
+
 force_inline constexpr not_used int debug_enable()
 {
 #ifdef DEBUGINFO

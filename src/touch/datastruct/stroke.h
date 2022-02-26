@@ -84,7 +84,7 @@ public:
     int removeAt(int from, int to); 
 
     int getPosizioneAudio() const;
-
+    QRect getFirstAndLast() const;
     QRect getBiggerPointInStroke() const;
     bool isInside(const QRectF &rect) const;
 
@@ -271,6 +271,14 @@ inline int stroke::removeAt(int from, int to){
 inline int stroke::getPosizioneAudio() const
 {
     return _metadata.posizione_audio;
+}
+
+force_inline QRect stroke::getFirstAndLast() const
+{
+    const auto &first = at(0);
+    const auto &last  = at(length() - 1);
+    return QRect(first.toQPointF(1. ).toPoint(),
+                   last.toQPointF(1.  ).toPoint());
 }
 
 /* after append data we need to call this funcion to update
