@@ -15,7 +15,7 @@ public:
     ~object_finder();
 
     void move();
-
+    void endMoving();
     void reset();
 
 private:
@@ -29,6 +29,11 @@ private slots:
     void endTimer();
 
 };
+
+force_inline void object_finder::endMoving()
+{
+    return this->reset();
+}
 
 force_inline void object_finder::move()
 {

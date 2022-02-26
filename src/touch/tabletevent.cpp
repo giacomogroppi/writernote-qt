@@ -7,6 +7,7 @@
 #include "audiorecord/audiorecord.h"
 #include "touch/laser/laser.h"
 #include "utils/common_script.h"
+#include "touch/object_finder/object_finder.h"
 
 #define MAXPOINT 20
 #define CHECK_FLAG(var, type) var == TabletCanvas::e_method::type
@@ -192,6 +193,7 @@ force_inline void TabletCanvas::ManageStart(
 
     if(insert_method){
         updatelist(event);
+        m_finder->move();
     }
     else if(selection_method){
         if(m_square->somethingInBox()){
@@ -236,6 +238,7 @@ force_inline void TabletCanvas::ManageMove(
 
     if(likely(insert_method)){
         updatelist(event);
+        m_finder->move();
     }
     else if(rubber_method){
         m_rubber->actionRubber(point);
@@ -281,8 +284,10 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
         m_redoundo->copy();
     }
 
-    if(insert_method)
+    if(likely(insert_method)){
         AppendAll(*this->data, this, this->medotodiinserimento);
+        m_finder->endMoving();
+    }
 
     if(unlikely(!m_deviceDown)){
         if(selection_method && done){

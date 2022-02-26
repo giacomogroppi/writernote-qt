@@ -16,6 +16,7 @@
 #include "audioplay/audioplay.h"
 #include "testing/memtest.h"
 #include "touch/laser/laser.h"
+#include "touch/object_finder/object_finder.h"
 
 static void saveLastMethod(TabletCanvas::e_method);
 static void loadLastMethod(TabletCanvas *);
@@ -35,6 +36,7 @@ TabletCanvas::TabletCanvas()
     WNew(m_redoundo, redoundo, (this));
     m_property = new class property_control(this);
     m_square = new class square(this, m_property);
+    m_finder = new class object_finder(this);
 
     m_property->installEventFilter(this);
 

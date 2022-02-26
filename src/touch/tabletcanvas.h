@@ -186,6 +186,7 @@ public:
     class redoundo *m_redoundo = NULL;
     class property_control *m_property = NULL;
     class laser *m_laser;
+    class object_finder *m_finder;
 
     QPixmap m_pixmap;
 
