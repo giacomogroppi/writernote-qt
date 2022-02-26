@@ -213,6 +213,9 @@ ADD_EXECUTABLE(writernote
     src/audioplay/aggiornotastiriascolto.cpp
     src/touch/multi_thread_data.cpp
     src/core/wmultiplemutex.cpp
+    src/touch/object_finder/object_finder.cpp
+    src/touch/object_finder/model/model_object.cpp
+    src/touch/object_finder/model_finder/model_finder.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
