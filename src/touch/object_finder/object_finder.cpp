@@ -11,9 +11,9 @@ object_finder::object_finder(QObject *parent)
     : QObject{parent}
 {
     W_ASSERT(parent);
-    W_ASSERT(parent->objectName() == "MainWindow");
+    W_ASSERT(parent->objectName() == "TabletCanvas");
 
-    _canvas = ((MainWindow *)parent)->m_canvas;
+    _canvas = (TabletCanvas *)parent;
 
     _timer = new QTimer(this);
     QObject::connect(_timer, &QTimer::timeout, this, &object_finder::endTimer);

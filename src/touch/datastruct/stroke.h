@@ -43,12 +43,7 @@ private:
 
     void setFlag(unsigned char type, bool value) const;
 
-    /*bool _constantPressureVal;
-
-    bool _needToCreatePanterPath;
-    bool _needToCreateBiggerData;
-
-    bool _needToUpdatePressure;*/
+    static_assert(sizeof(_flag) * 8 >= 4 );
 
 
     void updateFlagPressure() const;
