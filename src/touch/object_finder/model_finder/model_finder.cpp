@@ -1,6 +1,7 @@
 #include "model_finder.h"
 #include "touch/datastruct/datastruct.h"
 #include "touch/object_finder/model/model.h"
+#include "utils/platform.h"
 
 #define THREAD_FINDER 3
 
@@ -32,7 +33,11 @@ void __init__ init_finder(void)
 
 static void *model_finder(void *_index)
 {
-    const long index = reinterpret_cast<long>(_index);
+    size_t index;
+
+    static_assert(sizeof(index)  == sizeof(_index));
+
+    index = reinterpret_cast<size_t>(_index);
     //const long index = (long)_index;
     auto __function = function[index];
 
