@@ -3,6 +3,11 @@
 
 constexpr double error = 5000;
 
+struct{
+    double m, q;
+    bool is_vertical;
+}line_data;
+
 static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, cint max)
 {
     W_ASSERT(max >= 0);
@@ -42,7 +47,11 @@ double model_line(const stroke *stroke)
     const point_s *one, *two;
     const auto &area = stroke->getBiggerPointInStroke();
 
-    double m, q, precision = 0;
+    double &m = line_data.m;
+    double &q = line_data.q;
+    double precision = 0;
+
+    line_data.is_vertical = false;
 
     len = stroke->length();
 
@@ -50,9 +59,18 @@ double model_line(const stroke *stroke)
         return error;
     }
 
-    m = (area.topRight().y() - area.bottomRight().y()) /
-        (area.topRight().x() - area.bottomRight().x());
+    {
+        const double det = area.topRight().x() - area.bottomRight().x();
 
+        if(unlikely(!det)){
+            line_data.is_vertical = true;
+            goto cont;
+        }
+
+        m = (area.topRight().y() - area.bottomRight().y()) / det;
+    }
+
+cont:
     segno_var_x = segno_var_y = 0;
 
     one = &stroke->at(0);
@@ -105,3 +123,7 @@ double model_circle(const stroke *stroke)
     Q_UNUSED(stroke);
     return error;
 }
+
+void model_line_create(stroke *stroke){}
+void model_rect_create(stroke *stroke){}
+void model_circle_create(stroke *stroke){}

@@ -17,4 +17,8 @@ double model_line(const stroke *stroke);
 double model_rect(const stroke *stroke);
 double model_circle(const stroke *stroke);
 
+void model_line_create(stroke *stroke);
+void model_rect_create(stroke *stroke);
+void model_circle_create(stroke *stroke);
+
 #endif // MODEL_H

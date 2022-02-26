@@ -9,12 +9,16 @@ static struct{
 } finder;
 
 double (*function[])(const stroke *) = {
-    model_line,
-    model_rect,
-    model_circle
+    &model_line,
+    &model_rect,
+    &model_circle
 };
 
-void *function_cache[THREAD_FINDER];
+void (*function_create[])(stroke *) = {
+    &model_line_create,
+    &model_rect_create,
+    &model_circle_create
+};
 
 static struct{
     pthread_t _thread[THREAD_FINDER];
@@ -37,6 +41,27 @@ static void *model_finder(void *_index)
     return NULL;
 }
 
+static int get_index_most_prob(cdouble min_precision)
+{
+    double last_precision = min_precision * 2.;
+    int index = -1;
+    int i;
+
+    for(i = 0; i < THREAD_FINDER; i++){
+        const double prec = finder.is[i];
+
+        if(prec > min_precision)
+            continue;
+
+        if(prec < last_precision){
+            index = i;
+            last_precision = prec;
+        }
+    }
+
+    return index;
+}
+
 bool model::find(stroke *stroke)
 {
     long i;
@@ -51,5 +76,13 @@ bool model::find(stroke *stroke)
         pthread_join(ctrl._thread[i], NULL);
     }
 
-    return false;
+    i = get_index_most_prob(min_precision);
+
+    if(i < 0){
+        return false;
+    }
+
+    function_create[i](stroke);
+
+    return true;
 }
