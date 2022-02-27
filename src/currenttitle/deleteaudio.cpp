@@ -8,7 +8,7 @@ void deleteaudio(MainWindow *parent){
     if(!areyousure("", "Are you sure you want to delete the audio?"))
         return;
 
-    parent->m_canvas->data->cleanAudio();
+    parent->_canvas->data->cleanAudio();
 
     /*
      * TODO -> remove the file on the zip

@@ -89,7 +89,7 @@ bool topdf::createpdf(const bool withPdf){
 void MainWindow::on_actiontopdf_triggered()
 {
     QString path_pdf;
-    const Document *doc = m_canvas->data;
+    const Document *doc = _canvas->data;
 
     if(doc->datatouch->isempty())
         return user_message("There is nothing to convert to pdf");

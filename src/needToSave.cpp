@@ -17,7 +17,7 @@ enum MainWindow::n_need_save
             Document    &tmp_read) const
 {
     int check1;
-    Document *doc = m_canvas->data;
+    Document *doc = _canvas->data;
 
     if(xml.getPath() == ""){
         if(doc->datatouch->userWrittenSomething(nullptr)){

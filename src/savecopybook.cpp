@@ -20,7 +20,7 @@ bool savecopybook::check_permission()
 {
     QMessageBox msgBox;
     int ret;
-    savefile save_class(&this->parent->m_path, this->parent->m_canvas->data);
+    savefile save_class(&this->parent->m_path, this->parent->_canvas->data);
     QString SaveMessage;
 
     msgBox.setText("The document has been modified.");

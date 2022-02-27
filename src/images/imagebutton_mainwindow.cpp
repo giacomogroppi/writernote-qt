@@ -21,6 +21,6 @@ void MainWindow::on_actioninsertImage_triggered(){
     }
 
     pos = "";
-    m_canvas->data->m_img->addImage(pos, nullptr, this->m_path);
-    this->m_canvas->update();
+    _canvas->data->m_img->addImage(pos, nullptr, this->m_path);
+    _canvas->update();
 }

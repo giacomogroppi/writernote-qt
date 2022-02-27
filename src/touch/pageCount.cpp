@@ -2,17 +2,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "log/log_ui/log_ui.h"
+#include "utils/common_script.h"
 
 static int __page = -2;
 static int __max = 0;
 void MainWindow::updatePageCount(int pageCount)
 {
     QString text;
-    cint lenPage = this->m_canvas->data->datatouch->lengthPage();
+    cint lenPage = _canvas->data->datatouch->lengthPage();
 
     ui->page->setHidden(pageCount == -1);
 
-    text = "Page: " + QString::number(pageCount) + " of " + QString::number(lenPage);
+    text = qstr("Page: %1 of %2").arg(pageCount).arg(lenPage);
 
     if(__page == pageCount && lenPage == __max) return;
 

@@ -52,15 +52,15 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     Q_UNUSED(cloud);
 #endif
 
-    this->m_canvas = canvas;
-    this->m_canvas->parent = this;
+    _canvas = canvas;
+    _canvas->parent = this;
     DataPrivateInit();
 
     ui->setupUi(this);
 
     this->m_buffer = new QBuffer(this);
 
-    this->ui->layouteditor->insertWidget(1, this->m_canvas);
+    this->ui->layouteditor->insertWidget(1, _canvas);
 
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
 
@@ -71,14 +71,14 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_highlighter         = new class highlighter(this, &m_pen->same_data, m_pen);
     this->m_pen->m_highlighter  = m_highlighter;
     this->m_option_copybook     = new class option_copybook(this);
-    this->m_text_w              = new class text_widgets(this, m_canvas);
+    this->m_text_w              = new class text_widgets(this, _canvas);
     this->m_sheet               = new class fast_sheet_ui(this);
-    this->m_setting             = new class setting_restore_ui(this, &m_canvas->data, &m_path);
+    this->m_setting             = new class setting_restore_ui(this, &_canvas->data, &m_path);
     NAME_LOG_EXT                = new class log_ui(this);
     this->m_controllUi          = new class ControllUiButton(this);
     this->m_audioplayer         = new class audioplay(this);
     this->m_audio_recorder      = new class AudioRecord(this);
-    this->m_laser               = new class laser(m_canvas);
+    this->m_laser               = new class laser(_canvas);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);
@@ -91,17 +91,17 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
 
-    m_canvas->m_rubber      = m_rubber;
-    m_canvas->m_pen_ui      = m_pen;
-    m_canvas->m_text        = m_text;
-    m_canvas->m_sheet       = m_sheet;
-    m_canvas->m_highlighter = m_highlighter;
-    m_canvas->m_text_w      = m_text_w;
-    m_canvas->m_laser       = m_laser;
+    _canvas->m_rubber      = m_rubber;
+    _canvas->m_pen_ui      = m_pen;
+    _canvas->m_text        = m_text;
+    _canvas->m_sheet       = m_sheet;
+    _canvas->m_highlighter = m_highlighter;
+    _canvas->m_text_w      = m_text_w;
+    _canvas->m_laser       = m_laser;
 
     /* redo and undo */
-    connect(this, &MainWindow::RedoT, m_canvas, &TabletCanvas::RedoM);
-    connect(this, &MainWindow::UndoT, m_canvas, &TabletCanvas::Undo);
+    connect(this, &MainWindow::RedoT, _canvas, &TabletCanvas::RedoM);
+    connect(this, &MainWindow::UndoT, _canvas, &TabletCanvas::Undo);
 
 #ifndef CLOUD
     ui->actioncloud->setVisible(false);
@@ -139,7 +139,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     loadPenOrMouse();
 
-    this->m_canvas->loadpixel();
+    this->_canvas->loadpixel();
 
     if(path)
         openFile(path);
@@ -148,7 +148,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->setSizeButton();
     contrUi();
 
-    m_canvas->data->datatouch->triggerVisibility(page::getHeight() * m_canvas->data->datatouch->lengthPage());
+    _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
 }
 
 MainWindow::~MainWindow()
@@ -172,7 +172,7 @@ void MainWindow::on_actionNew_File_triggered()
 {
     bool check;
     savecopybook checksave(this);
-    xmlstruct xml(&m_path, m_canvas->data);
+    xmlstruct xml(&m_path, _canvas->data);
     Document __curr;
     n_need_save __res;
 
@@ -197,9 +197,9 @@ __continue:
 
     setWindowTitle("Writernote");
     updatePageCount(-1);
-    m_canvas->data->reset();
+    _canvas->data->reset();
 
-    m_canvas->clear();
+    _canvas->clear();
     contrUi();
     m_path = "";
 }
@@ -223,7 +223,7 @@ void MainWindow::on_pause_rec_triggered()
 
 void MainWindow::on_actionRedo_triggered()
 {
-    this->m_canvas->m_redoundo->redo();
+    this->_canvas->m_redoundo->redo();
     emit RedoT();
 }
 
@@ -239,26 +239,26 @@ void MainWindow::on_actionVersion_triggered()
 
 void MainWindow::on_actionUndu_triggered()
 {
-    this->m_canvas->m_redoundo->undo();
+    this->_canvas->m_redoundo->undo();
     emit UndoT();
 }
 
 /* restore file to the original position (0, 0) */
 void MainWindow::on_actionrestore_button_triggered()
 {
-    datastruct *data = m_canvas->data->datatouch;
+    datastruct *data = _canvas->data->datatouch;
     data->triggerNewView(-1, true);
-    data->triggerVisibility(m_canvas->height());
+    data->triggerVisibility(_canvas->height());
 
-    m_canvas->restoreO();
+    _canvas->restoreO();
 }
 
 /* new page */
 void MainWindow::on_actionnewPage_triggered()
 {
-    this->m_canvas->data->datatouch->newPage(m_canvas->m_sheet->WhatIsSelected());
-    m_canvas->call_update();
-    m_canvas->updatePageCount();
+    this->_canvas->data->datatouch->newPage(_canvas->m_sheet->WhatIsSelected());
+    _canvas->call_update();
+    _canvas->updatePageCount();
 }
 
 void MainWindow::on_actionPen_or_Mouse_triggered()
@@ -270,7 +270,7 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
 void MainWindow::on_actionRemove_current_PDF_triggered()
 {
 #ifdef PDFSUPPORT
-    m_canvas->data->m_pdf->reset();
+    _canvas->data->m_pdf->reset();
 #endif // PDFSUPPORT
 }
 

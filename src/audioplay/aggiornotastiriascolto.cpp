@@ -11,7 +11,7 @@
 #define ERROR_AUDIO "We had an internal problem with audio, please \nclose the application and open it again"
 
 void aggiornotestiriascolto(MainWindow *parent){
-    Document *doc = parent->m_canvas->data;
+    Document *doc = parent->_canvas->data;
 
     if(doc->se_registato != Document::not_record){
         if(doc->se_registato == Document::record_file){

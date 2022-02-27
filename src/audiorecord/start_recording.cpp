@@ -21,7 +21,7 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_start_rec_triggered()
 {
-    Document *doc = m_canvas->data;
+    Document *doc = _canvas->data;
     const QPoint & pointAction = cursor().pos();
 
     if(doc->se_registato != Document::not_record)
@@ -101,7 +101,7 @@ static void save(){
 bool MainWindow::setOutputLocation(const QPoint &hostRect)
 {
     QString tmp_internal;
-    Document *doc = m_canvas->data;
+    Document *doc = _canvas->data;
 
 #if defined (Q_OS_WINRT) || defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     Q_UNUSED(hostRect);
@@ -157,7 +157,7 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
 
         doc->audio_position_path = fileName;
         m_audio_recorder->setOutputLocation(fileName);
-        this->m_outputLocationSet = true;
+        this->_outputLocationSet = true;
         return true;
 
     }

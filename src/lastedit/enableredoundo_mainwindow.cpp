@@ -10,5 +10,5 @@ void MainWindow::on_actionEnable_redo_undo_triggered()
 
     enableredoundo = !enableredoundo;
 
-    this->m_canvas->enableredoundu = enableredoundo;
+    _canvas->enableredoundu = enableredoundo;
 }

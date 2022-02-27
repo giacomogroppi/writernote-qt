@@ -54,9 +54,7 @@ void audioplay::positionChange(qint64 position)
     parent->ui->audioSlider->blockSignals(false);
     WDebug(debugAudioPlay, "audioplay::positionChange" << this->getPositionSecond() << position);
 
-    parent->m_canvas->call_update();
-    return;
-    this->parent->m_canvas->data->datatouch->triggerNewView(getPositionSecond(), true);
+    parent->_canvas->call_update();
 }
 
 void audioplay::updateStatus(QMediaPlayer::State newState)
@@ -74,5 +72,5 @@ void audioplay::updateStatus(QMediaPlayer::State newState)
 
     parent->ui->start_rec->setEnabled(false);
     parent->contrUi();
-    this->parent->m_canvas->data->datatouch->triggerNewView(-1, true);
+    this->parent->_canvas->data->datatouch->triggerNewView(-1, true);
 }

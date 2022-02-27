@@ -7,12 +7,12 @@ void MainWindow::on_sliderZoom_sliderMoved(int position)
 {
     double newZoom = double(position)/100.0;
 
-    m_canvas->data->datatouch->changeZoom(newZoom, this->m_canvas);
+    _canvas->data->datatouch->changeZoom(newZoom, _canvas);
     UPDATE_TEXT(position);
 }
 
 void MainWindow::zoomChange()
 {
-    this->ui->sliderZoom->setSliderPosition(m_canvas->data->datatouch->getZoom() * 100);
-    UPDATE_TEXT(this->m_canvas->data->datatouch->getZoom() * 100);
+    this->ui->sliderZoom->setSliderPosition(_canvas->data->datatouch->getZoom() * 100);
+    UPDATE_TEXT(_canvas->data->datatouch->getZoom() * 100);
 }

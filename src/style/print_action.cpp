@@ -14,7 +14,7 @@ void MainWindow::on_actionPrint_triggered()
     QPrinter printer;
     QPrintDialog dialogprint(&printer);
     QPainter painter;
-    const Document *doc = m_canvas->data;
+    const Document *doc = _canvas->data;
 
     const double size_orizzontale = doc->datatouch->biggerx();
     const double delta = (double)printer.width() / (double)size_orizzontale;

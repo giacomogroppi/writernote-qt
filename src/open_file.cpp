@@ -20,7 +20,7 @@
 void MainWindow::openFile(const char *pos){
     QString fileName, tmp;
     Document curr;
-    xmlstruct xml(&fileName, m_canvas->data);
+    xmlstruct xml(&fileName, _canvas->data);
     n_need_save res_save;
 
     if(!pos){
@@ -72,7 +72,7 @@ void MainWindow::openFile(const char *pos){
     // check if is pdf or we need to save the current document
     if(IS_PRESENT_IN_LIST(fileName, ".pdf")){
 #ifdef PDFSUPPORT
-        m_canvas->data->m_pdf->addPdf(fileName, nullptr, this->m_path, this->m_canvas);
+        _canvas->data->m_pdf->addPdf(fileName, nullptr, this->m_path, this->_canvas);
 #else
         user_message("Pdf support is not enable in this version");
 #endif // PDFSUPPORT
@@ -86,7 +86,7 @@ void MainWindow::openFile(const char *pos){
         */
         if(res_save == n_need_save::need_save){
             if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
-                savefile save(&m_path, m_canvas->data);
+                savefile save(&m_path, _canvas->data);
                 if(save.savefile_check_file() != OK){
                     if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
                         return;
@@ -103,17 +103,17 @@ void MainWindow::openFile(const char *pos){
         const auto res = xml.loadfile(true, true);
 
         if(xmlstruct::manageMessage(res)){
-            this->m_canvas->data->datatouch->triggerNewView(-1, true);
+            this->_canvas->data->datatouch->triggerNewView(-1, true);
             aggiornotestiriascolto(this);
-            m_canvas->updatePageCount();
-            m_canvas->data->datatouch->triggerVisibility(m_canvas->height());
+            _canvas->updatePageCount();
+            _canvas->data->datatouch->triggerVisibility(_canvas->height());
             contrUi();
-            m_canvas->loadpixel();
+            _canvas->loadpixel();
             return;
         }
 
         this->m_path = "";
-        this->m_canvas->data->reset();
+        this->_canvas->data->reset();
 
     }
     aggiornotestiriascolto(this);

@@ -83,7 +83,7 @@ void TestingCore::createDocument(Document *doc)
 {
     int i, id = 0;
     if(!doc){
-        doc = parent->m_canvas->data;
+        doc = parent->_canvas->data;
     }
 
     for(i = 0; i < T_PAGE_LEN; i++){
@@ -104,7 +104,7 @@ int TestingCore::createAndSave(
         Document        *doc)
 {
     if(!doc)
-        doc = parent->m_canvas->data;
+        doc = parent->_canvas->data;
     createDocument(doc);
 
     savefile __tmp(pos, doc);

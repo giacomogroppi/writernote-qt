@@ -51,7 +51,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::rubber_ui)
 {
-    _canvas = ((MainWindow *)parent)->m_canvas;
+    _canvas = ((MainWindow *)parent)->_canvas;
     ui->setupUi(this);
 
     this->load_settings();

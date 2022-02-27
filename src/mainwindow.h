@@ -72,8 +72,7 @@ public:
         only_writernote /* writernote change something insede */
     };
 
-    enum n_need_save needToSave(xmlstruct &xml,
-                                Document & tmp_read) const;
+    enum n_need_save needToSave(xmlstruct &xml, Document & tmp_read) const;
 
     MainWindow(TabletCanvas         *canvas,
                struct struct_user   *user,
@@ -94,9 +93,9 @@ public:
     class AudioRecord *m_audio_recorder;
     //QAudioRecorder *m_audioRecorder = new QAudioRecorder(this);
     //QAudioProbe *m_probe = nullptr;
-    bool m_outputLocationSet = false;
+    bool _outputLocationSet = false;
 
-    TabletCanvas *m_canvas;
+    TabletCanvas *_canvas;
 
     updatecheck *checkupdate;
 

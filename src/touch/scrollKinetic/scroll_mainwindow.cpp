@@ -10,14 +10,14 @@ void MainWindow::on_actionScroll_triggered()
         __scroll = new class scroll(this);
 
         QObject::connect(__scroll, &scroll::updateData, [=](uint enable, int speed){
-            m_canvas->m_scrolling_speed_enable = enable;
-            m_canvas->m_scrolling_speed = speed;
+            _canvas->m_scrolling_speed_enable = enable;
+            _canvas->m_scrolling_speed = speed;
         });
 
     }
 
-    __scroll->reset(m_canvas->m_scrolling_speed_enable,
-                    m_canvas->m_scrolling_speed);
+    __scroll->reset(_canvas->m_scrolling_speed_enable,
+                    _canvas->m_scrolling_speed);
 
     __scroll->exec();
 
