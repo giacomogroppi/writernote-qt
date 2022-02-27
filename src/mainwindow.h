@@ -14,6 +14,7 @@
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/highlighter/highlighter.h"
 #include "cloud/struct_user.h"
+#include <QScrollArea>
 
 class frompdf;
 class TabletApplication;
@@ -120,6 +121,8 @@ public:
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ShareUtils *m_share_file;
 #endif
+
+    QScrollArea *_scroll;
 
     void updatePageCount(int);
     setting_restore_ui *m_setting;
