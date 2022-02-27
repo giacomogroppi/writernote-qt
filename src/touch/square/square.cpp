@@ -92,7 +92,6 @@ bool square::find()
     bool tmp_find;
     int i, create, lenPage, count;
     int PageCounter;
-    const auto zoom = data->getZoom();
     QList<QVector<int>> index;
 
     this->adjustPoint();
@@ -369,7 +368,6 @@ void square::move(const QPointF &punto)
 
     _lastpoint.point = punto;
     __need_reload = true;
-    //data->datatouch->triggerNewView(PageModify, -1, true);
 }
 
 void square::endMoving(const QWidget *pixmap)

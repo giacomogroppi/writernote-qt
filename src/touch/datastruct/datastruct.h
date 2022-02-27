@@ -560,4 +560,9 @@ inline bool datastruct::isempty() const
     return _page.isEmpty();
 }
 
+force_inline QRectF datastruct_rect(const QPointF &p1, const QPointF &p2)
+{
+    return QRectF(p1, p2);
+}
+
 #endif // DATASTRUCT_H

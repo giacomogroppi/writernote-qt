@@ -78,16 +78,30 @@ rubber_ui::~rubber_ui()
 }
 
 static force_inline bool isin(
-                    int             size_rubber,
-                    const point_s   &__point,
-                    const QPointF   &touch,
-                    const QPointF   &last)
+        int             s,
+        const point_s   &__point1,
+        const point_s   &__point2,
+        const QPointF   &touch,
+        const QPointF   &last)
 {
-    W_ASSERT(size_rubber >= 0.0);
+    /* s is size_rubber */
+    W_ASSERT(s >= 0.0);
 
-    QRectF rect1(last, touch);
-    QRectF rect2(__point.toQPointF(1.) - QPointF(size_rubber, size_rubber),
-                 __point.toQPointF(1.) + QPointF(size_rubber, size_rubber));
+    /*QRectF rect1(last, touch);
+    QRectF rect2(__point1.toQPointF(1.) - QPointF(size_rubber, size_rubber),
+                 __point1.toQPointF(1.) + QPointF(size_rubber, size_rubber));*/
+
+    QRectF rect1, rect2;
+    {
+        QPointF TL1, BR1;
+        const auto res = datastruct_rect(touch, last);
+        TL1 = res.topLeft() - QPointF(s, s);
+        BR1 = res.bottomRight() + QPointF(s, s);
+        rect1 = QRectF(TL1, BR1);
+    }
+
+    rect2 = QRectF(__point1.toQPointF(1.),
+                   __point2.toQPointF(1.));
 
     if(unlikely(rect1.intersects(rect2)))
         return true;
@@ -177,6 +191,8 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     int from, to;
     int lenPoint, counterPoint;
 
+    const point_s *p1, *p2;
+
     page *_page             = private_data->__page;
     const QPointF _touch    = private_data->touch;
     const QPointF _last     = private_data->last;
@@ -200,10 +216,15 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
             continue;
 
         lenPoint = stroke.length();
-        for(counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-            const point_s &point = stroke.at(counterPoint);
 
-            if(likely(!isin(__m_size_gomma, point, _touch, _last)))
+        if(unlikely(!lenPoint)) continue;
+
+        p1 = &stroke.at(0);
+
+        for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
+            p2 = &stroke.at(counterPoint);
+
+            if(likely(!isin(__m_size_gomma, *p1, *p2, _touch, _last)))
                 continue;
 
             if(unlikely(counterPoint < 3)){
@@ -231,6 +252,8 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
             stroke_mod.append   (from);
 
             break;
+
+            p1 = p2;
 
         }
     }
@@ -265,6 +288,8 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     QVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
 
+    const point_s *p1, *p2;
+
     page *_page             = private_data->__page;
     const QPointF _touch    = private_data->touch;
     const QPointF _last     = private_data->last;
@@ -280,16 +305,21 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         stroke &__stroke = _page->atStrokeMod(data->from);
         int lenPoint = __stroke.length();
 
+        if(unlikely(!lenPoint))
+            continue;
+
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
         if(ifNotInside(__stroke, __m_size_gomma, _touch))
             continue;
 
-        for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-            const point_s &point = __stroke.at(counterPoint);
+        p1 = &__stroke.at(0);
 
-            if(unlikely(isin(__m_size_gomma, point, _touch, _last))){
+        for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
+            p2 = &__stroke.at(counterPoint);
+
+            if(unlikely(isin(__m_size_gomma, *p1, *p2, _touch, _last))){
                 // possiamo anche non bloccare gli altri thread nell'appendere
                 // tanto di sicuro non staranno cercando il nostro stroke in lista
                 // e non lo aggiungeranno
@@ -299,6 +329,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
                 break;
 
             }
+            p1 = p2;
         }
     }
 
