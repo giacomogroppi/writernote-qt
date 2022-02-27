@@ -167,11 +167,33 @@ static void model_line_vertical(stroke *stroke)
 
 }
 
+static void model_line_generic(stroke *stroke)
+{
+    point_s point;
+    const auto pressure = stroke->at(0).pressure;
+    const auto one  = stroke->at(0).toQPointF(1.);
+    const auto last = stroke->last().toQPointF(1.);
+
+    stroke->reset();
+
+    point.pressure = pressure;
+    point._x = one.x();
+    point._y = one.y();
+    stroke->append(point);
+
+    point._x = last.x();
+    point._y = last.y();
+    stroke->append(point);
+}
+
 void model_line_create(stroke *stroke)
 {
+    W_ASSERT(stroke);
     bool &is_vertical = line_data.is_vertical;
 
     if(is_vertical){
         model_line_vertical(stroke);
+    }else{
+        model_line_generic(stroke);
     }
 }

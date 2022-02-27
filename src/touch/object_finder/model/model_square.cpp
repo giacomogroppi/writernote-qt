@@ -11,5 +11,8 @@ double model_rect(const stroke *stroke)
     return model_error;
 }
 
-void model_rect_create(stroke *stroke){ Q_UNUSED(stroke); }
+void model_rect_create(stroke *stroke)
+{
+    Q_UNUSED(stroke);
+}
 
