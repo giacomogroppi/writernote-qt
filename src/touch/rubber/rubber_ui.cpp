@@ -260,13 +260,9 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     QVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
 
-    const point_s *p1, *p2;
-
     page *_page             = private_data->__page;
-    const QPointF _touch    = private_data->touch;
-    const QPointF _last     = private_data->last;
     QVector<int> *_al_find  = private_data->data_find;
-
+    const auto area = rubber_get_area(private_data->touch, private_data->last);
     index_selected.reserve(32);
 
     Q_ASSERT(data->from <= data->to);
@@ -283,26 +279,14 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
-        if(ifNotInside(__stroke, __m_size_gomma, _touch))
-            continue;
+        cint index = __stroke.is_inside(area, 0);
 
-        p1 = &__stroke.at(0);
-
-        for(int counterPoint = 0; counterPoint < lenPoint; counterPoint ++){
-            p2 = &__stroke.at(counterPoint);
-
-            if(unlikely(isin(__m_size_gomma, *p1, *p2, _touch, _last))){
-                // possiamo anche non bloccare gli altri thread nell'appendere
-                // tanto di sicuro non staranno cercando il nostro stroke in lista
-                // e non lo aggiungeranno
-
-                index_selected.append(data->from);
-
-                break;
-
-            }
-            p1 = p2;
+        if(index < 0){
+                continue;
         }
+
+        index_selected.append(data->from);
+
     }
 
     if(index_selected.isEmpty()){
