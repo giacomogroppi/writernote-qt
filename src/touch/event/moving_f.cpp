@@ -9,7 +9,7 @@ void TabletCanvas::ismoving_f(){
     QPointF translation;
     const double &blockScrolling = block_scrolling;
     const double refZoom = data->datatouch->getZoom();
-    return;
+
     if(!blockScrolling){
         translation = ismoving.point;
         translation /= refZoom;

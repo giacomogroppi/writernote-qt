@@ -122,8 +122,6 @@ public:
     ShareUtils *m_share_file;
 #endif
 
-    QScrollArea *_scroll;
-
     void updatePageCount(int);
     setting_restore_ui *m_setting;
 

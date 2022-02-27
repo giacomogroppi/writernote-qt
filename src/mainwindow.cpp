@@ -60,12 +60,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     this->m_buffer = new QBuffer(this);
 
-    //this->ui->layouteditor->insertWidget(1, this->m_canvas);
-    this->_scroll = new QScrollArea(this);
-    m_canvas->setGeometry(0, 0, 10000, 10000);
-    _scroll->setWidget(m_canvas);
-    _scroll->setAlignment(Qt::AlignHCenter);
-    this->ui->layouteditor->insertWidget(1, _scroll);
+    this->ui->layouteditor->insertWidget(1, this->m_canvas);
 
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
 
