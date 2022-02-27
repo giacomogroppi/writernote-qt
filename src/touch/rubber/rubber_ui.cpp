@@ -77,38 +77,6 @@ rubber_ui::~rubber_ui()
     delete ui;
 }
 
-static force_inline bool isin(
-        int             s,
-        const point_s   &__point1,
-        const point_s   &__point2,
-        const QPointF   &touch,
-        const QPointF   &last)
-{
-    /* s is size_rubber */
-    W_ASSERT(s >= 0.0);
-
-    /*QRectF rect1(last, touch);
-    QRectF rect2(__point1.toQPointF(1.) - QPointF(size_rubber, size_rubber),
-                 __point1.toQPointF(1.) + QPointF(size_rubber, size_rubber));*/
-
-    QRectF rect1, rect2;
-    {
-        QPointF TL1, BR1;
-        const auto res = datastruct_rect(touch, last);
-        TL1 = res.topLeft() - QPointF(s, s);
-        BR1 = res.bottomRight() + QPointF(s, s);
-        rect1 = QRectF(TL1, BR1);
-    }
-
-    rect2 = QRectF(__point1.toQPointF(1.),
-                   __point2.toQPointF(1.));
-
-    if(unlikely(rect1.intersects(rect2)))
-        return true;
-
-    return false;
-}
-
 bool rubber_ui::event(QEvent *event)
 {
     if(unlikely(event->type() == QEvent::WindowDeactivate))
@@ -160,6 +128,17 @@ void rubber_ui::endRubber()
     this->reset();
 }
 
+static inline QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
+{
+    QRectF area = QRectF(p1, p2);
+    const QPointF tmp = QPointF(__m_size_gomma, __m_size_gomma);
+
+    area = QRectF(area.topLeft() - tmp,
+                  area.bottomRight() + tmp);
+
+    return area;
+}
+
 static bool ifNotInside(
         const stroke    &stroke,
         const double    m_size_gomma,
@@ -170,7 +149,7 @@ static bool ifNotInside(
     const QPointF &topLeft =        pos.topLeft()       - size;
     const QPointF &bottomRigth =    pos.bottomRight()   + size;
 
-    W_ASSERT(m_size_gomma >= 0.0);
+    W_ASSERT(m_size_gomma >= 0.);
 
     /*
      * if the touch point is not within the meaning of the rectangle formed
@@ -184,19 +163,14 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 {
     RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
 
-    QVector<int> stroke_to_remove;
-    QVector<int> stroke_mod;
-    QVector<int> point_remove;
+    QVector<int> stroke_to_remove, stroke_mod, point_remove;
 
-    int from, to;
-    int lenPoint, counterPoint;
-
-    const point_s *p1, *p2;
+    int from, to, _index, index;
+    int lenPoint;
 
     page *_page             = private_data->__page;
-    const QPointF _touch    = private_data->touch;
-    const QPointF _last     = private_data->last;
     datastruct *_datastruct = private_data->data;
+    const QRectF area = rubber_get_area(private_data->last, private_data->touch);
 
     QVector<int> *_data_to_remove = private_data->data_to_remove;
 
@@ -212,23 +186,22 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     for(; from < to; from ++){
         stroke & stroke = _page->atStrokeMod(from);
 
-        if(ifNotInside(stroke, __m_size_gomma, _touch))
-            continue;
-
         lenPoint = stroke.length();
 
-        if(unlikely(!lenPoint)) continue;
+        if(unlikely(!lenPoint)){
+            stroke_to_remove.append(from);
+            continue;
+        }
 
-        p1 = &stroke.at(0);
+        _index = 0;
+        while(true){
+            index = stroke.is_inside(area, _index);
 
-        for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-            p2 = &stroke.at(counterPoint);
+            if(index < 0)
+                break;
 
-            if(likely(!isin(__m_size_gomma, *p1, *p2, _touch, _last)))
-                continue;
-
-            if(unlikely(counterPoint < 3)){
-                stroke.removeAt(0, counterPoint);
+            if(unlikely(index < 3)){
+                stroke.removeAt(0, index);
                 lenPoint = stroke.length();
 
                 if(stroke.length() < 3)
@@ -237,8 +210,8 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
                 continue;
             }
 
-            if(unlikely(counterPoint + 3 > lenPoint)){
-                stroke.removeAt(counterPoint, lenPoint - 1);
+            if(unlikely(index + 3 > lenPoint)){
+                stroke.removeAt(index, lenPoint - 1);
 
                 if(stroke.length() < 3)
                     stroke_to_remove.append(data->from);
@@ -248,13 +221,12 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 
             W_ASSERT(lenPoint >= 6);
 
-            point_remove.append (counterPoint);
+            point_remove.append (index);
             stroke_mod.append   (from);
 
             break;
 
-            p1 = p2;
-
+            _index = index;
         }
     }
 
@@ -273,7 +245,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
         _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page);
     }
 
-    qDebug() << stroke_mod;
+    //qDebug() << stroke_mod;
     pthread_mutex_lock(&single_mutex);
     _data_to_remove->append(stroke_to_remove);
     private_data->stroke_mod->append(stroke_mod);

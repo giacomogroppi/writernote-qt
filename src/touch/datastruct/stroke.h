@@ -57,6 +57,8 @@ public:
     stroke();
     stroke(const stroke &data);
 
+    int is_inside(const QRectF &rect, int from) const;
+
     /* this function is used to set the pressure equal for all points. */
     void __setPressureForAllPoint(cdouble pressure);
     void __setPressureFirstPoint(cdouble pressuer);
@@ -115,9 +117,6 @@ public:
 
     void reset();
 
-    /* return true if equals */
-    static bool cmp(const stroke &stroke1, const stroke &stroke2);
-    static void copy(const stroke &src, stroke &dest);
     stroke &operator=(const stroke &other);
 
     bool isEmpty() const;
@@ -126,6 +125,9 @@ public:
     
 #define STROKE_MUST_TRASLATE_PATH BIT(1)
     void scale(const QPointF &offset, int flag);
+
+    static bool cmp(const stroke &stroke1, const stroke &stroke2);
+    static void copy(const stroke &src, stroke &dest);
 
     friend class page;
 };
@@ -469,5 +471,44 @@ inline void stroke::scale(const QPointF &offset, int flag)
         _path = QPainterPath();
 }
 
+
+/*
+ * return -1 if it's not contained
+*/
+inline int stroke::is_inside(const QRectF &rect, int from) const
+{
+    int len;
+    const point_s *p1, *p2;
+    QRectF tmp;
+    int &i = from;
+
+    W_ASSERT(from >= 0);
+
+    len = this->length();
+
+    if(unlikely(!len))
+        return -1;
+
+    if(i == 0){
+        const auto &ref = this->getBiggerPointInStroke();
+        if(likely(!ref.intersects(rect.toRect())))
+            return -1;
+    }
+
+    p1 = &at(i);
+    for(; i < len; i++){
+        p2 = &at(i);
+
+        tmp = QRectF(p1->toQPointF(1.),
+                     p2->toQPointF(1.));
+
+        if(unlikely(tmp.intersects(rect)))
+            return i;
+
+        p1 = p2;
+    }
+
+    return -1;
+}
 
 #endif // STROKE_H
