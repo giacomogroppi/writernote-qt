@@ -164,11 +164,12 @@ force_inline void stroke::setFlag(unsigned char type, bool value) const
 
 inline void stroke::updateFlagPressure() const
 {
-    constexpr const auto type = UPDATE_PRESSURE;
+    constexpr const auto typeUpdate = UPDATE_PRESSURE;
+    constexpr const auto typePressure = CONST_PRESS;
     int i, len;
     const point_s *current, *next;
 
-    setFlag(type, false);
+    setFlag(typeUpdate, false);
 
     len = this->length();
 
@@ -178,31 +179,39 @@ inline void stroke::updateFlagPressure() const
          * we have to draw the stroke point
          * by point.
         */
-        setFlag(type, false);
+        setFlag(typePressure, false);
         return;
     }
 
     current = &at(0);
 
-    for (i = 0; i < len-1; i++){
-        next = &at(i+1);
+    for (i = 1; i < len; i++){
+        next = &at(i);
 
         if(next->pressure != current->pressure){
-            setFlag(type, false);
+            setFlag(typePressure, false);
             return;
         }
 
         current = next;
     }
 
-    setFlag(type, true);
+    setFlag(typePressure, true);
 }
 
 /* call this function when modify the stroke */
-inline void stroke::modify()
+force_inline void stroke::modify()
 {
     _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE | UPDATE_PANTER_PATH;
     _flag &= ~CONST_PRESS;
+
+    W_ASSERT(this->needToCreatePanterPath());
+    W_ASSERT(this->needToUpdateBiggerData());
+    W_ASSERT(this->needToUpdatePressure());
+
+    W_ASSERT(!this->isPressureVal());
+
+
     _path = QPainterPath();
 }
 
@@ -471,11 +480,10 @@ inline void stroke::scale(const QPointF &offset, int flag)
         _path = QPainterPath();
 }
 
-
 /*
  * return -1 if it's not contained
 */
-inline int stroke::is_inside(const QRectF &rect, int from) const
+force_inline int stroke::is_inside(const QRectF &rect, int from) const
 {
     int len;
     const point_s *p1, *p2;
@@ -491,19 +499,23 @@ inline int stroke::is_inside(const QRectF &rect, int from) const
 
     if(i == 0){
         const auto &ref = this->getBiggerPointInStroke();
-        if(likely(!ref.intersects(rect.toRect())))
+        if(likely(!ref.intersects(rect.toRect()))){
+            qDebug() << "out" << ref.topLeft() << ref.bottomRight() << rect.topLeft() << rect.bottomRight();
             return -1;
+        }
     }
 
     p1 = &at(i);
-    for(; i < len; i++){
+    for(i++; i < len; i++){
         p2 = &at(i);
 
         tmp = QRectF(p1->toQPointF(1.),
                      p2->toQPointF(1.));
 
-        if(unlikely(tmp.intersects(rect)))
+        if(unlikely(tmp.intersects(rect))){
+            WDebug(true, "stroke::is_inside" << rect.topLeft() << rect.bottomRight() << tmp.topLeft() << tmp.bottomRight());
             return i;
+        }
 
         p1 = p2;
     }

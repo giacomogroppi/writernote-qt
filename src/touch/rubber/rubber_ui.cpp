@@ -130,33 +130,19 @@ void rubber_ui::endRubber()
 
 static inline QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
 {
-    QRectF area = QRectF(p1, p2);
-    const QPointF tmp = QPointF(__m_size_gomma, __m_size_gomma);
+    const auto &size = __m_size_gomma;
+
+    QRectF area = datastruct_rect(p1, p2);
+    const QPointF tmp = QPointF(size, size);
+
+    W_ASSERT(__m_size_gomma >= 0);
+    W_ASSERT(area.topLeft().x() >= 0.);
+    W_ASSERT(area.topLeft().y() >= 0.);
 
     area = QRectF(area.topLeft() - tmp,
                   area.bottomRight() + tmp);
 
     return area;
-}
-
-static bool ifNotInside(
-        const stroke    &stroke,
-        const double    m_size_gomma,
-        const QPointF   &pointTouch)
-{
-    const QPointF size = QPointF(m_size_gomma, m_size_gomma);
-    const QRectF &pos = stroke.getBiggerPointInStroke();
-    const QPointF &topLeft =        pos.topLeft()       - size;
-    const QPointF &bottomRigth =    pos.bottomRight()   + size;
-
-    W_ASSERT(m_size_gomma >= 0.);
-
-    /*
-     * if the touch point is not within the meaning of the rectangle formed
-     * by the top left point and the bottom right point,
-     *  we can directly continue with the next stroke.
-    */
-    return !datastruct::isinside(topLeft, bottomRigth, pointTouch);
 }
 
 void actionRubberSinglePartial(DataPrivateMuThread *data)
@@ -282,7 +268,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         cint index = __stroke.is_inside(area, 0);
 
         if(index < 0){
-                continue;
+            continue;
         }
 
         index_selected.append(data->from);
@@ -318,6 +304,9 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     RubberPrivateData dataPrivate;
 
     QVector<int> stroke_mod;
+
+    W_ASSERT(_last.set);
+
     stroke_mod.reserve(32);
 
     if(isTotal){
@@ -369,9 +358,10 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
     PrivateData(data)       = data;
     PrivateData(touch)      = lastPoint;
+    PrivateData(last)       = _last.point;
     PrivateData(stroke_mod) = &stroke_mod;
 
-    __m_size_gomma = _size_gomma;
+    __m_size_gomma = (volatile int)_size_gomma;
 
     dataPrivate.__page = &data->at_mod(indexPage);
 
