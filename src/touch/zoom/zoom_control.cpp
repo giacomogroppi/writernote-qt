@@ -28,7 +28,7 @@ bool zoom_control::zoom(QPointF &pointMiddle, double delta, bool &zoomChange,
 
     const double zoom = data->getZoom();
     //qDebug() << "Current zoom " << zoom << " delta " << delta;
-
+    return false;
     {
         const double newPossibleZoom = zoom + delta - double(1.0);
         if(!datastruct::isOkZoom(newPossibleZoom))
