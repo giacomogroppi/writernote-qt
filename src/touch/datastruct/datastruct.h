@@ -143,7 +143,7 @@ public:
     void scala_all(const QPointF &point, const int heightView = -1);
 
     void reset();
-    void triggerVisibility(const double &viewSize);
+    void triggerVisibility(const double viewSize);
     double biggerx() const noexcept;
 
     bool needToCreateNewSheet() const;
@@ -208,19 +208,41 @@ inline double datastruct::proportion() const
     return page::getProportion();
 }
 
-inline void datastruct::triggerVisibility(const double &viewSize)
+inline void datastruct::triggerVisibility(const double viewSize)
 {
-    uint i;
-    const uint len = lengthPage();
+    int from, to, i;
+    cint len = lengthPage();
     page *page;
+    QPointF _init(0, 0);
+    QPointF _end(0, viewSize);
+
+    if(unlikely(!len))
+        return;
+
+    _init = this->adjustPoint(_init);
+    _end = this->adjustPoint(_end);
+
+    from = this->whichPage(_init);
+    to = this->whichPage(_end);
+
+    if(unlikely(to < 0 || from < 0)){
+        from = 0;
+        to = len - 1;
+    }
+
+    W_ASSERT(from >= 0);
+    W_ASSERT(to >= 0);
+
+    W_ASSERT(from <= to);
+    W_ASSERT(to < len);
 
     for(i = 0; i < len; i++){
-        page = &at_mod(i);
+        page = &at_mod(from);
 
-        if(page->updateFlag(this->getPointFirstPage(), _zoom, viewSize)
-                && i && i < len - 1){
-            //this->at_mod(i - 1).setVisible(true);
-            //this->at_mod(i + 1).setVisible(true);
+        if(unlikely(i >= from && i <= to)){
+            page->setVisible(true);
+        }else{
+            page->setVisible(false);
         }
     }
 }
@@ -228,6 +250,21 @@ inline void datastruct::triggerVisibility(const double &viewSize)
 inline double datastruct::biggerx() const noexcept
 {
     return (page::getWidth() + this->getPointFirstPage().x()) * _zoom;
+}
+
+force_inline bool datastruct::needToCreateNewSheet() const
+{
+    cint len = this->lengthPage();
+
+    if(unlikely(len < 2))
+        return true;
+
+    if(at(len - 1).lengthStroke())
+        return true;
+    if(at(len - 2).lengthStroke())
+        return true;
+
+    return false;
 }
 
 inline bool datastruct::needtochangeid(const int IndexPoint, const stroke &stroke)

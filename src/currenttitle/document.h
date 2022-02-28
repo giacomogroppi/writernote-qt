@@ -23,7 +23,7 @@ private:
 public:
     size_t createSingleControll() const;
 
-    bool isEmpty() const { return datatouch->isempty(); };
+    bool isEmpty() const;
 
     frompdf *m_pdf;
     fromimage *m_img;
@@ -57,5 +57,10 @@ public:
 
     static void copy(const Document &src, Document &dest);
 };
+
+force_inline bool Document::isEmpty() const
+{
+    return datatouch->isempty();
+}
 
 #endif
