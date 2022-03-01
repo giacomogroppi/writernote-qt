@@ -18,7 +18,7 @@ public:
     WLine(const QPointF &topLeft, const QPointF &bottomRigth);
 
     bool intersect(const WLine &line, cint precision);
-    bool is_in_domain(const QPointF& point, cint precision) const;
+    bool is_in_domain(const QPointF& point, cdouble precision) const;
     QRectF toRect() const;
 
     WLine &operator=(const WLine &other);

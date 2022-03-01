@@ -28,13 +28,20 @@ bool WLine::intersect(const WLine &line, cint precision)
     x = (this->_p - line._p) / (line._m - this->_m);
     y = _m * x + _p;
 
-    return this->is_in_domain(QPointF(x, y), precision) && line.is_in_domain(QPointF(x, y), precision);
+    return      is_in_domain(QPointF(x, y), precision) &&
+           line.is_in_domain(QPointF(x, y), precision);
 }
 
-bool WLine::is_in_domain(const QPointF& point, cint precision) const
+bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
 {
-    W_ASSERT(precision >= 0);
-    cbool x = _xb + precision >= point.x() && point.x() <= _xt - precision;
-    cbool y = _yb + precision >= point.y() && point.y() <= _yt - precision;
-    return x && y;
+    W_ASSERT(precision >= 0.);
+    W_ASSERT(_xb >= _xt);
+    W_ASSERT(_yb >= _yt);
+
+    cint c1 = _xb + precision >= point.x();
+    cint c2 = _xt <= point.x() + precision;
+    cint c3 = _yb + precision >= point.y();
+    cint c4 = _yt <= point.y() + precision;
+
+    return c1 & c2 & c3 & c4;
 }
