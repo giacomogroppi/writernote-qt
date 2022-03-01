@@ -97,7 +97,6 @@ ADD_EXECUTABLE(writernote
     src/touch/datastruct/createControllPoint.cpp
     src/touch/datastruct/movePoint.cpp
     src/touch/datastruct/changeId.cpp
-    src/touch/datastruct/needtocreatenew.cpp
     src/touch/datastruct/datastruct.cpp
     src/touch/datastruct/stroke.cpp
     src/touch/datastruct/removePage.cpp
@@ -218,6 +217,7 @@ ADD_EXECUTABLE(writernote
     src/touch/object_finder/model/model_circle.cpp
     src/touch/object_finder/model/model_square.cpp
     src/touch/object_finder/model_finder/model_finder.cpp
+    src/core/wline.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
