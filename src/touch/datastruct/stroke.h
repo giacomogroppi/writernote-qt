@@ -10,6 +10,8 @@
 #include "zip.h"
 #include "utils/common_def.h"
 #include "utils/common_script.h"
+#include "touch/datastruct/utils_datastruct.h"
+#include "core/wline.h"
 
 struct metadata_stroke{
     int posizione_audio;
@@ -57,7 +59,7 @@ public:
     stroke();
     stroke(const stroke &data);
 
-    int is_inside(const QRectF &rect, int from) const;
+    int is_inside(const WLine &rect, int from, int precision) const;
 
     /* this function is used to set the pressure equal for all points. */
     void __setPressureForAllPoint(cdouble pressure);
@@ -483,11 +485,12 @@ inline void stroke::scale(const QPointF &offset, int flag)
 /*
  * return -1 if it's not contained
 */
-force_inline int stroke::is_inside(const QRectF &rect, int from) const
+force_inline int stroke::is_inside(const WLine &rect, int from, int precision) const
 {
     int len;
     const point_s *p1, *p2;
-    QRectF tmp;
+    WLine tmp;
+
     int &i = from;
 
     W_ASSERT(from >= 0);
@@ -499,21 +502,18 @@ force_inline int stroke::is_inside(const QRectF &rect, int from) const
 
     if(i == 0){
         const auto &ref = this->getBiggerPointInStroke();
-        if(likely(!ref.intersects(rect.toRect()))){
-            qDebug() << "out" << ref.topLeft() << ref.bottomRight() << rect.topLeft() << rect.bottomRight();
+        if(likely(!ref.intersects(rect.toRect().toRect())))
             return -1;
-        }
     }
+
 
     p1 = &at(i);
     for(i++; i < len; i++){
         p2 = &at(i);
 
-        tmp = QRectF(p1->toQPointF(1.),
-                     p2->toQPointF(1.));
+        tmp = WLine(p1->toQPointF(1.), p2->toQPointF(1.));
 
-        if(unlikely(tmp.intersects(rect))){
-            WDebug(true, "stroke::is_inside" << rect.topLeft() << rect.bottomRight() << tmp.topLeft() << tmp.bottomRight());
+        if(unlikely(tmp.intersect(rect, precision))){
             return i;
         }
 

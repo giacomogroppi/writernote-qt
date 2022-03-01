@@ -5,13 +5,13 @@
 #include "semaphore.h"
 #include "touch/multi_thread_data.h"
 #include "core/wmultiplemutex.h"
+#include "core/wline.h"
 #include "mainwindow.h"
 
 struct RubberPrivateData{
     QVector<int>    *data_find;
     page            *__page;
-    QPointF          touch;
-    QPointF         last;
+    WLine           line;
     datastruct      *data;
     QVector<int>    *data_to_remove;
     QVector<int>    *stroke_mod;
@@ -156,7 +156,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 
     page *_page             = private_data->__page;
     datastruct *_datastruct = private_data->data;
-    const QRectF area = rubber_get_area(private_data->last, private_data->touch);
+    const auto &area        = private_data->line;
 
     QVector<int> *_data_to_remove = private_data->data_to_remove;
 
@@ -181,7 +181,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 
         _index = 0;
         while(true){
-            index = stroke.is_inside(area, _index);
+            index = stroke.is_inside(area, _index, __m_size_gomma);
 
             if(index < 0)
                 break;
@@ -248,7 +248,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
     page *_page             = private_data->__page;
     QVector<int> *_al_find  = private_data->data_find;
-    const auto area = rubber_get_area(private_data->touch, private_data->last);
+    const auto &area        = private_data->line;
     index_selected.reserve(32);
 
     Q_ASSERT(data->from <= data->to);
@@ -265,7 +265,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
-        cint index = __stroke.is_inside(area, 0);
+        cint index = __stroke.is_inside(area, 0, __m_size_gomma);
 
         if(index < 0){
             continue;
@@ -357,8 +357,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     }
 
     PrivateData(data)       = data;
-    PrivateData(touch)      = lastPoint;
-    PrivateData(last)       = _last.point;
+    PrivateData(line)       = WLine(_last.point, lastPoint);
     PrivateData(stroke_mod) = &stroke_mod;
 
     __m_size_gomma = (volatile int)_size_gomma;

@@ -94,6 +94,7 @@ SOURCES += \
     src/controllUi.cpp \
     src/core/listthreadsave.cpp \
     src/core/multiarray.cpp \
+    src/core/wline.cpp \
     src/core/wmultiplemutex.cpp \
     src/currenttitle/default_type/default_type.cpp \
     src/currenttitle/default_type/default_type_button.cpp \
@@ -272,6 +273,7 @@ HEADERS += \
     src/button/button_size.h \
     src/core/listthreadsave.h \
     src/core/multiarray.h \
+    src/core/wline.h \
     src/core/wmultiplemutex.h \
     src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
@@ -301,6 +303,7 @@ HEADERS += \
     src/touch/datastruct/page.h \
     src/touch/datastruct/point.h \
     src/touch/datastruct/stroke.h \
+    src/touch/datastruct/utils_datastruct.h \
     src/touch/highlighter/highlighter.h \
     src/touch/laser/laser.h \
     src/touch/multi_thread_data.h \
