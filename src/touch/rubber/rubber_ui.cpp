@@ -253,8 +253,6 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
     Q_ASSERT(data->from <= data->to);
 
-    qDebug() << data->from << data->to << *_al_find;
-
     for(; data->from < data->to; data->from++){
         stroke &__stroke = _page->atStrokeMod(data->from);
         int lenPoint = __stroke.length();

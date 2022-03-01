@@ -91,9 +91,9 @@ void datastruct::decreaseAlfa(stroke &stroke, page &page, cint decrease)
 
 void datastruct::copy(const datastruct &src, datastruct &dest)
 {
-    uint i;
-    const uint len = src.lengthPage();
-    uint diff = len - dest.lengthPage();
+    int i;
+    const int len = src.lengthPage();
+    int diff = len - dest.lengthPage();
 
     if(diff > 0){
         for(i = 0; i < diff; i++){

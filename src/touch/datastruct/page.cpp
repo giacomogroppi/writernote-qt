@@ -659,6 +659,9 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     }
 
     painter.begin(&this->imgDraw);
+
+    W_ASSERT(painter.isActive());
+
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     this->decreseAlfa(pos, &painter, decrese);

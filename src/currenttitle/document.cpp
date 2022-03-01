@@ -35,8 +35,7 @@ Document::~Document()
     m_img = NULL;
 }
 
-void Document::copy(const Document &src,
-                              Document &dest)
+void Document::copy(const Document &src, Document &dest)
 {
     dest.audio_position_path = src.audio_position_path;
     datastruct::copy(*src.datatouch, *dest.datatouch);
