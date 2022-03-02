@@ -228,6 +228,7 @@ force_inline void TabletCanvas::ManageMove(
         return;
 
     painter.begin(&m_pixmap);
+    W_ASSERT(painter.isActive());
 
     if(likely(insert_method)){
         updateBrush(event);

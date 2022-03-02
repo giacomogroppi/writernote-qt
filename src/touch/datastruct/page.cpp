@@ -20,6 +20,7 @@
 
 #define Define_PAINTER(painter) QPainter painter(&imgDraw); \
     painter.begin(&imgDraw); \
+    W_ASSERT(painter.isActive()); \
     painter.setRenderHint(QPainter::Antialiasing, true);
 
 static inline double widthToPressure(double v);
@@ -267,6 +268,7 @@ void * __page_load(void *__data)
 
     __initImg(img);
     painter.begin(&img);
+    W_ASSERT(painter.isActive());
 
     for(; _data->from < _data->to; _data->from ++){
         const auto &ref = extra->m_stroke->at(_data->from);
@@ -499,6 +501,7 @@ void page::drawToImage(
     }
     
     painter.begin(&img);
+    W_ASSERT(painter.isActive());
 
     for (const int __index : index){
         const stroke &stroke = atStroke(__index);
@@ -550,6 +553,7 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
     all = initImg(all);
 
     painter.begin(&imgDraw);
+    W_ASSERT(painter.isActive());
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     this->draw(painter, m_pos_ris, all);
@@ -659,7 +663,6 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     }
 
     painter.begin(&this->imgDraw);
-
     W_ASSERT(painter.isActive());
 
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -738,6 +741,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
         return this->triggerRenderImage(m_pos_ris, true);
 
     painter.begin(&this->imgDraw);
+    W_ASSERT(painter.isActive());
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     for(const auto &index : pos){

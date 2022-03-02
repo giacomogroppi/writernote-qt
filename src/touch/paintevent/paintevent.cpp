@@ -31,6 +31,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
         initPixmap(false);
 
     painter.begin(this);
+    W_ASSERT(painter.isActive());
 
     pixmapPortion = QRect(event->rect().topLeft() * devicePixelRatio(),
                           event->rect().size() * devicePixelRatio());

@@ -29,6 +29,7 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
     ref.fill(Qt::white);
 
     painter.begin(&ref);
+    W_ASSERT(painter.isActive());
 
     dataPaint.IsExportingPdf = false;
 

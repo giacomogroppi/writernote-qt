@@ -189,6 +189,7 @@ void square::mergeImg(
     __to.translate(0, page * page::getResolutionHeigth());
 
     painter.begin(&to);
+    W_ASSERT(painter.isActive());
     painter.drawImage(__to, from, from.rect());
     painter.end();
 }
