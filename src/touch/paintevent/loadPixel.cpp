@@ -125,7 +125,7 @@ void TabletCanvas::load(QPainter &painter,
     if(unlikely(!dataPoint.parent))
         return;
 
-    _laser = dataPoint.parent->_canvas->m_laser;
+    _laser = dataPoint.parent->_canvas->_laser;
 
     // laser item
     lenPage = _laser->length();

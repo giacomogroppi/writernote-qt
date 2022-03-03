@@ -10,12 +10,12 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
 {
     double move = event->delta();
 
-    if(!scroll::y(data->datatouch, this->m_pixmap.height(), move)){
+    if(!scroll::y(data->datatouch, this->_pixmap.height(), move)){
         return;
     }
 
-    this->ismoving.point.setY(move);
-    this->ismoving.point.setX(0);
+    _ismoving.point.setY(move);
+    _ismoving.point.setX(0);
 
     this->ismoving_f();
 
@@ -46,7 +46,7 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
     if(isZooming)
         return;
 
-    if(unlikely(parent->touch_or_pen)){
+    if(unlikely(_parent->touch_or_pen)){
         if(unlikely(first_touch)){
             first_touch = false;
             __type = QEvent::TabletPress;
@@ -69,18 +69,18 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
         deltay = - lastpointtouch.point.y() + event->screenPos().y();
         deltax = - lastpointtouch.point.x() + event->screenPos().x();
 
-        if(!scroll::y(data->datatouch, this->m_pixmap.height(), deltay))
-            ismoving.point.setY(0);
+        if(!scroll::y(data->datatouch, _pixmap.height(), deltay))
+            _ismoving.point.setY(0);
         else
-            ismoving.point.setY(deltay);
+            _ismoving.point.setY(deltay);
 
 
-        if(!scroll::x(data->datatouch, m_pixmap.width(), deltax))
-            this->ismoving.point.setX(0);
+        if(!scroll::x(data->datatouch, _pixmap.width(), deltax))
+            _ismoving.point.setX(0);
         else
-            this->ismoving.point.setX(deltax);
+            _ismoving.point.setX(deltax);
 
-        if(!ismoving.point.x() || !ismoving.point.y())
+        if(!_ismoving.point.x() || !_ismoving.point.y())
             this->ismoving_f();
 
     }
@@ -116,7 +116,7 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
     __last_point_move.set = false;
     lastpointtouch.set = false;
 
-    if(unlikely(parent->touch_or_pen)){
+    if(unlikely(_parent->touch_or_pen)){
         tab_event = new QTabletEvent(QTabletEvent::TabletRelease, event->pos(), event->globalPos(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
         tabletEvent(tab_event);
         delete tab_event;

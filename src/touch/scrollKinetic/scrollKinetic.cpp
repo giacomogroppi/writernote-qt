@@ -43,8 +43,8 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second)
         timer = new QTimer(this);
         QObject::connect(timer, &QTimer::timeout, [=]{
             double __delta;
-            ismoving.set = 0;
-            ismoving.point = QPointF(0, 0);
+            _ismoving.set = 0;
+            _ismoving.point = QPointF(0, 0);
 
             if(likely(how_time)){
                 delta_time /= this->m_scrolling_speed;
@@ -55,27 +55,27 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second)
 
                 __delta = (double) speed_x;
                 if(cont_scoll(__delta, def_val)
-                        && scroll::x(data->datatouch, m_pixmap.width(), __delta)){
-                    ismoving.set = 1;
+                        && scroll::x(data->datatouch, _pixmap.width(), __delta)){
+                    _ismoving.set = 1;
                 }
 
-                ismoving.point.setX(__delta);
+                _ismoving.point.setX(__delta);
 
                 __delta = (double) speed_y;
                 if(cont_scoll(__delta, def_val)
-                        && scroll::y(data->datatouch, m_pixmap.height(), __delta)){
-                    ismoving.set = 1;
+                        && scroll::y(data->datatouch, _pixmap.height(), __delta)){
+                    _ismoving.set = 1;
                 }
 
-                ismoving.point.setY(__delta);
+                _ismoving.point.setY(__delta);
 
-                if(unlikely(!ismoving.set)){
+                if(unlikely(!_ismoving.set)){
                     //qDebug() << "timer stop";
                     timer->stop();
                     return;
                 }
 
-                ismoving.point.setY(__delta);
+                _ismoving.point.setY(__delta);
 
                 this->ismoving_f();
 

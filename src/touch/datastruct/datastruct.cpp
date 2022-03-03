@@ -22,7 +22,7 @@ void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
     this->_zoom = zoom;
     if(canvas){
         canvas->callResizeEvent();
-        canvas->parent->zoomChange();
+        canvas->_parent->zoomChange();
     }
 }
 

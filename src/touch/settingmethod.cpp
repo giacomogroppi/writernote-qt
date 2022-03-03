@@ -12,21 +12,21 @@
 
 void MainWindow::on_actionhighlighter_triggered()
 {
-    if(_canvas->medotodiinserimento == TabletCanvas::e_method::highlighter){
+    if(_canvas->_input == TabletCanvas::e_method::highlighter){
         this->m_highlighter->show();
 
         auto hostRect = cursor().pos();
         m_highlighter->move(hostRect);
     }
 
-    _canvas->medotodiinserimento = TabletCanvas::e_method::highlighter;
+    _canvas->_input = TabletCanvas::e_method::highlighter;
 
     updateTouch();
 }
 
 void MainWindow::on_actionpen_triggered()
 {
-    if(_canvas->medotodiinserimento == TabletCanvas::e_method::pen){
+    if(_canvas->_input == TabletCanvas::e_method::pen){
         this->m_pen->show();
 
         auto hostRect = cursor().pos();
@@ -34,14 +34,14 @@ void MainWindow::on_actionpen_triggered()
 
     }
 
-    _canvas->medotodiinserimento = TabletCanvas::e_method::pen;
+    _canvas->_input = TabletCanvas::e_method::pen;
 
     updateTouch();
 }
 
 void MainWindow::on_actionrubber_triggered()
 {
-    if(_canvas->medotodiinserimento == TabletCanvas::e_method::rubber){
+    if(_canvas->_input == TabletCanvas::e_method::rubber){
         this->m_rubber->show();
 
         QPoint hostRect = this->cursor().pos();
@@ -49,22 +49,22 @@ void MainWindow::on_actionrubber_triggered()
 
     }
 
-    this->_canvas->medotodiinserimento = TabletCanvas::e_method::rubber;
+    this->_canvas->_input = TabletCanvas::e_method::rubber;
 
     updateTouch();
 }
 
 void MainWindow::on_actionselezionetext_triggered()
 {
-    _canvas->medotodiinserimento = TabletCanvas::e_method::selection;
+    _canvas->_input = TabletCanvas::e_method::selection;
 
     updateTouch();
 }
 
 void MainWindow::on_actionLaser_triggered()
 {
-    _canvas->medotodiinserimento = TabletCanvas::e_method::laser;
-    _canvas->m_color = Qt::red;
+    _canvas->_input = TabletCanvas::e_method::laser;
+    _canvas->_color = Qt::red;
     updateTouch();
 }
 
@@ -75,7 +75,7 @@ void MainWindow::on_actioninsertText_triggered()
     updateTouch();
     return;
 
-    if(_canvas->medotodiinserimento == TabletCanvas::e_method::text){
+    if(_canvas->_input == TabletCanvas::e_method::text){
         if(m_text->isHidden()){
             this->m_text->show();
         }
@@ -88,7 +88,7 @@ void MainWindow::on_actioninsertText_triggered()
 
     }
 
-    _canvas->medotodiinserimento = TabletCanvas::e_method::text;
+    _canvas->_input = TabletCanvas::e_method::text;
 
     updateTouch();
 }
@@ -103,36 +103,36 @@ void MainWindow::on_actionchoose_color_triggered()
 }
 
 void TabletCanvas::sceltacolorepenna(const QColor color){
-    this->m_color = color;
-    this->m_pen.setColor(m_color);
+    this->_color = color;
+    this->m_pen.setColor(_color);
 }
 
 void MainWindow::updateTouch(){
     static TabletCanvas::e_method last = TabletCanvas::pen;
 
-    ui->actionpen->setChecked(              _canvas->medotodiinserimento == TabletCanvas::pen);
-    ui->actionrubber->setChecked(           _canvas->medotodiinserimento == TabletCanvas::rubber);
-    ui->actionselezionetext->setChecked(    _canvas->medotodiinserimento == TabletCanvas::selection);
-    ui->actioninsertText->setChecked(       _canvas->medotodiinserimento == TabletCanvas::text);
-    ui->actionhighlighter->setChecked(      _canvas->medotodiinserimento == TabletCanvas::highlighter);
-    ui->actionLaser->setChecked(            _canvas->medotodiinserimento == TabletCanvas::laser);
+    ui->actionpen->setChecked(              _canvas->_input == TabletCanvas::pen);
+    ui->actionrubber->setChecked(           _canvas->_input == TabletCanvas::rubber);
+    ui->actionselezionetext->setChecked(    _canvas->_input == TabletCanvas::selection);
+    ui->actioninsertText->setChecked(       _canvas->_input == TabletCanvas::text);
+    ui->actionhighlighter->setChecked(      _canvas->_input == TabletCanvas::highlighter);
+    ui->actionLaser->setChecked(            _canvas->_input == TabletCanvas::laser);
 
-    ui->buttonPen->setChecked(              _canvas->medotodiinserimento == TabletCanvas::pen);
-    ui->buttonRubber->setChecked(           _canvas->medotodiinserimento == TabletCanvas::rubber);
-    ui->buttonselezionetext->setChecked(    _canvas->medotodiinserimento == TabletCanvas::selection);
-    ui->buttonInsertText->setChecked(       _canvas->medotodiinserimento == TabletCanvas::text);
-    ui->buttonHighlighter->setChecked(      _canvas->medotodiinserimento == TabletCanvas::highlighter);
+    ui->buttonPen->setChecked(              _canvas->_input == TabletCanvas::pen);
+    ui->buttonRubber->setChecked(           _canvas->_input == TabletCanvas::rubber);
+    ui->buttonselezionetext->setChecked(    _canvas->_input == TabletCanvas::selection);
+    ui->buttonInsertText->setChecked(       _canvas->_input == TabletCanvas::text);
+    ui->buttonHighlighter->setChecked(      _canvas->_input == TabletCanvas::highlighter);
 
-    ui->actionblack->setChecked(_canvas->m_color == Qt::black);
-    ui->actionwhite->setChecked(_canvas->m_color == Qt::white);
-    ui->actionyellow->setChecked(_canvas->m_color == Qt::yellow);
-    ui->actionred->setChecked(_canvas->m_color == Qt::red);
-    ui->actionbrown_color->setChecked(_canvas->m_color == COLOR_BROWN);
-    ui->actionpurple->setChecked(_canvas->m_color == COLOR_PURPLE);
+    ui->actionblack->setChecked(_canvas->_color == Qt::black);
+    ui->actionwhite->setChecked(_canvas->_color == Qt::white);
+    ui->actionyellow->setChecked(_canvas->_color == Qt::yellow);
+    ui->actionred->setChecked(_canvas->_color == Qt::red);
+    ui->actionbrown_color->setChecked(_canvas->_color == COLOR_BROWN);
+    ui->actionpurple->setChecked(_canvas->_color == COLOR_PURPLE);
 
-    if(unlikely(_canvas->medotodiinserimento != TabletCanvas::selection
+    if(unlikely(_canvas->_input != TabletCanvas::selection
             && last == TabletCanvas::selection)){
-        _canvas->m_square->changeInstrument();
+        _canvas->_square->changeInstrument();
     }
 }
 

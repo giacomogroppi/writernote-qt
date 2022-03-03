@@ -38,7 +38,7 @@ find:
     newPixmap.setDevicePixelRatio(dpr);
     newPixmap.fill(Qt::white);
 
-    m_pixmap = newPixmap;
+    _pixmap = newPixmap;
 
     if(likely(paint))
         update();

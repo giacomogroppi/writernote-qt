@@ -33,7 +33,7 @@ bool TabletCanvas::event(QEvent *event)
     double tmp_distance, tmp_distance_right_left;
 
     const QSize maxSize = this->size();
-    const QSize size = this->m_pixmap.size();
+    const QSize size = this->_pixmap.size();
 
     bool zoomChange = false;
 
@@ -88,7 +88,7 @@ bool TabletCanvas::event(QEvent *event)
 
                     //qDebug() <<tmpNum<< "tmp_distance " << tmp_distance << "Distance_rigth_ledt" << tmp_distance_right_left << "Distance(PointSelected, pointTouch)" << distanceSelected;
 
-                    needToResize = needToResize || zoom->zoom(pointMiddle, tmp_distance, zoomChange, size, maxSize, data->datatouch);
+                    needToResize = needToResize || _zoom->zoom(pointMiddle, tmp_distance, zoomChange, size, maxSize, data->datatouch);
 
                     //lastpointzoom[0].set = lastpointzoom[1].set = false;
                     lastpointzoom[FirstMoreDistance].point = pointTouch;
@@ -139,7 +139,7 @@ bool TabletCanvas::event(QEvent *event)
         this->callResizeEvent();
 
     if(zoomChange)
-        this->parent->zoomChange();
+        _parent->zoomChange();
 
     if(data != NULL)
         return QWidget::event(event);

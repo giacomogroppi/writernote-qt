@@ -12,22 +12,22 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     QPainter painter;
     QRect pixmapPortion;
 
-    cbool needToCreateNewPage = data->datatouch->needToCreateNewSheet() && m_sheet->auto_create;
+    cbool needToCreateNewPage = data->datatouch->needToCreateNewSheet() && _sheet->auto_create;
 
     static DataPaint dataPaint = {
         .withPdf = true,
         .IsExportingPdf = false,
         .m = 1,
         //.size = QSize(m_pixmap.size()),
-        .parent = parent,
-        .m_pixmap = &this->m_pixmap,
+        .parent = _parent,
+        .m_pixmap = &this->_pixmap,
         DATAPAINT_DEFINEREST
     };
     WDebug(false, "TabletCanvas" << __FUNCTION__);
     dataPaint.pen       = this->m_pen;
     isWriting           = false;
 
-    if (unlikely(m_pixmap.isNull()))
+    if (unlikely(_pixmap.isNull()))
         initPixmap(false);
 
     painter.begin(this);
@@ -36,23 +36,27 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     pixmapPortion = QRect(event->rect().topLeft() * devicePixelRatio(),
                           event->rect().size() * devicePixelRatio());
 
-    painter.drawPixmap(event->rect().topLeft(), m_pixmap, pixmapPortion);
+    painter.drawPixmap(event->rect().topLeft(), _pixmap, pixmapPortion);
 
     if(unlikely( needToCreateNewPage || data->isEmpty())){
-        this->data->datatouch->newPage(this->m_sheet->WhatIsSelected());
+        this->data->datatouch->newPage(this->_sheet->WhatIsSelected());
         this->updatePageCount();
     }
 
     TabletCanvas::load(painter, this->data, dataPaint);
 
-    if(this->medotodiinserimento == e_method::selection){
-        m_square->needReload(painter);
+    if(_input == e_method::selection){
+        _square->needReload(painter);
     }
 
     painter.end();
 }
 
-void TabletCanvas::updateBrush_load(const double pressure, const QColor &color, QPen &m_pen){
+void TabletCanvas::updateBrush_load(
+        const double    pressure,
+        const QColor    &color,
+        QPen            &m_pen)
+{
     m_pen.setWidthF(pressureToWidth(pressure/2.00));
 
     m_pen.setColor(color);

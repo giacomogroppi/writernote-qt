@@ -79,11 +79,11 @@ private:
     static constexpr const char *name = "TabletCanvas";
 public:
     static qreal pressureToWidth(qreal pressure);
-    struct Point lastPoint;
+    struct Point _lastPoint;
 
-    MainWindow *parent;
+    MainWindow *_parent;
 
-    struct PointSettable pointload;
+    struct PointSettable _pointload;
     void callResizeEvent();
 
 #define default_speed_value 5
@@ -105,16 +105,11 @@ public:
     ~TabletCanvas();
 
     void clear();
-    void setAlphaChannelValuator(Valuator type)
-        { m_alphaChannelValuator = type; }
-    void setColorSaturationValuator(Valuator type)
-        { m_colorSaturationValuator = type; }
-    void setLineWidthType(Valuator type)
-        { m_lineWidthValuator = type; }
-    void setColor(const QColor &c)
-        { if (c.isValid()) m_color = c; }
-    QColor color() const
-        { return m_color; }
+    force_inline void setAlphaChannelValuator(Valuator type) { m_alphaChannelValuator = type; }
+    force_inline void setColorSaturationValuator(Valuator type) { m_colorSaturationValuator = type; }
+    force_inline void setLineWidthType(Valuator type) { m_lineWidthValuator = type; }
+    force_inline void setColor(const QColor &c) { if (c.isValid()) _color = c; }
+    force_inline QColor color() const { return _color; }
 
     //void paintPixmap(QPainter &painter, QTabletEvent *event);
 
@@ -136,9 +131,8 @@ public:
         laser
     };
 
-    e_method medotodiinserimento;
-
-    QColor m_color = Qt::black;
+    e_method _input;
+    QColor _color = Qt::black;
 
     static void load(QPainter &painter, const Document *data,
                      DataPaint &dataPoint);
@@ -160,35 +154,32 @@ public:
 #endif
 
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
-    struct PointSettable ismoving;
+    struct PointSettable _ismoving;
     void ismoving_f();
     void updatePageCount();
 
     /* struttura per ricordare il last point per il touch */
     struct PointSettable lastpointtouch;
 
-    void setTabletDevice(QTabletEvent *event)
-     { updateCursor(event); }
-
-    /* square per la selezione */
-    class square *m_square = nullptr;
+    void setTabletDevice(QTabletEvent *event) { updateCursor(event); }
 
     bool enableredoundu = true;
 
     /* class for menu */
-    class rubber_ui *m_rubber = NULL;
-    class pen_ui *m_pen_ui = NULL;
-    class text_ui *m_text = NULL;
-    class highlighter *m_highlighter = NULL;
-    class text_widgets *m_text_w = NULL;
-    class fast_sheet_ui *m_sheet = NULL;
-    class zoom_control *zoom = NULL;
-    class redoundo *m_redoundo = NULL;
-    class property_control *m_property = NULL;
-    class laser *m_laser;
-    class object_finder *m_finder;
+    class square            *_square = NULL;
+    class rubber_ui         *_rubber = NULL;
+    class pen_ui            *_pen_ui = NULL;
+    class text_ui           *_text = NULL;
+    class highlighter       *_highlighter = NULL;
+    class text_widgets      *_text_w = NULL;
+    class fast_sheet_ui     *_sheet = NULL;
+    class zoom_control      *_zoom = NULL;
+    class redoundo          *_redoundo = NULL;
+    class property_control  *_property = NULL;
+    class laser             *_laser;
+    class object_finder     *_finder;
 
-    QPixmap m_pixmap;
+    QPixmap _pixmap;
 
     void send_touch_event(QTabletEvent *event);
     void send_mouse_event(QMouseEvent *event);

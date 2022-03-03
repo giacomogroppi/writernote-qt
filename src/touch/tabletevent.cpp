@@ -45,7 +45,7 @@ static void AppendAll(
     if(unlikely(!lenPoint))
         return;
 
-    int time = canvas->parent->m_audioplayer->getPositionSecond();
+    int time = canvas->_parent->m_audioplayer->getPositionSecond();
 
     for(i = 0; i < lenPoint; i++){
         point = &strokeToAppend.at_mod(i);
@@ -54,8 +54,8 @@ static void AppendAll(
     }
 
     if(unlikely(met == TabletCanvas::e_method::laser)){
-        canvas->m_laser->append(strokeToAppend);
-        canvas->m_laser->endMove();
+        canvas->_laser->append(strokeToAppend);
+        canvas->_laser->endMove();
     }else{
         pageMod = doc.datatouch->appendStroke(strokeToAppend);
 
@@ -138,7 +138,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     eventType = event->type();
 
-    set_flag(event, this->medotodiinserimento);
+    set_flag(event, _input);
 
     WDebug(tabletDebug, nameFunction << event->type() << convert(event->type()) << convert_method());
 
@@ -173,13 +173,13 @@ end:
 
     if(unlikely(!selection_method && lastMethod == e_method::selection)){
         WDebug(tabletDebug, nameFunction << "Square reset");
-        m_square->reset();
+        _square->reset();
     }
 
     update();
 
     event->accept();
-    lastMethod = this->medotodiinserimento;
+    lastMethod = _input;
 }
 
 force_inline void TabletCanvas::ManageStart(
@@ -193,24 +193,24 @@ force_inline void TabletCanvas::ManageStart(
 
     if(insert_method){
         updatelist(event);
-        m_finder->move();
+        _finder->move();
     }
     else if(selection_method){
-        if(m_square->somethingInBox()){
+        if(_square->somethingInBox()){
             WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "Somethininbox");
-            m_square->initPointMove(pointTouch);
+            _square->initPointMove(pointTouch);
         }
         else{
             WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "not in box");
-            m_square->initPoint(pointTouch);
+            _square->initPoint(pointTouch);
         }
     }else if(rubber_method){
-        m_rubber->initRubber(event->posF());
+        _rubber->initRubber(event->posF());
     }
 
     m_deviceDown = true;
-    lastPoint.pos = event->pos();
-    lastPoint.pressure = event->pressure();
+    _lastPoint.pos = event->pos();
+    _lastPoint.pressure = event->pressure();
 }
 
 force_inline void TabletCanvas::ManageMove(
@@ -227,72 +227,72 @@ force_inline void TabletCanvas::ManageMove(
     if(unlikely(!m_deviceDown))
         return;
 
-    painter.begin(&m_pixmap);
+    painter.begin(&_pixmap);
     W_ASSERT(painter.isActive());
 
     if(likely(insert_method)){
         updateBrush(event);
     }
 
-    lastPoint.pos = event->pos();
-    lastPoint.pressure = event->pressure();
+    _lastPoint.pos = event->pos();
+    _lastPoint.pressure = event->pressure();
 
     if(likely(insert_method)){
         updatelist(event);
-        m_finder->move();
+        _finder->move();
     }
     else if(rubber_method){
-        m_rubber->actionRubber(point);
+        _rubber->actionRubber(point);
     }
     else if(selection_method){
-        m_square->isMoving();
+        _square->isMoving();
 
-        if(m_square->somethingInBox()){
+        if(_square->somethingInBox()){
             DO_IF_DEBUG(
-                if(m_square->get_first_point().isNotSet())
+                if(_square->get_first_point().isNotSet())
                             std::abort();
             );
 
             /* a questo punto può muovere di un delta x e y */
-            m_square->move(point);
+            _square->move(point);
         }else{
             /*
             * it means that the user not select anything
             * in the past
             */
-            m_square->updatePoint(point);
+            _square->updatePoint(point);
         }
     }else if(text_method){
-        if(m_text_w->isIn(point)){
+        if(_text_w->isIn(point)){
             
         }
         else{
-            m_text_w->createNew(point);
+            _text_w->createNew(point);
         }
     }
 }
 
 force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 {
-    bool done = m_square->somethingInBox();
+    bool done = _square->somethingInBox();
     block_scrolling = false;
 
 #if defined(WIN32) || defined(WIN64)
     this->isdrawing = false;
 #endif
 
-    if(likely(m_redoundo)){
-        m_redoundo->copy();
+    if(likely(_redoundo)){
+        _redoundo->copy();
     }
 
     if(likely(insert_method)){
-        AppendAll(*this->data, this, this->medotodiinserimento);
-        m_finder->endMoving();
+        AppendAll(*this->data, this, _input);
+        _finder->endMoving();
     }
 
     if(unlikely(!m_deviceDown)){
         if(selection_method && done){
-            m_square->reset();
+            _square->reset();
         }
     }
 
@@ -301,13 +301,13 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 
         if(selection_method){
             if(!done){
-                m_square->find();
+                _square->find();
             }
             if(!isForce)
-                m_square->endMoving(this);
+                _square->endMoving(this);
 
         }else if(rubber_method){
-            m_rubber->endRubber();
+            _rubber->endRubber();
         }
     }
 }
@@ -319,24 +319,21 @@ void TabletCanvas::updatelist(QTabletEvent *event)
     point_s tmp_point;
     stroke &strokeTmp = __tmp;
     pressure_t pressure;
-    cbool highlighter = CHECK_FLAG(medotodiinserimento, highlighter);
+    cbool highlighter = CHECK_FLAG(_input, highlighter);
     const QPointF &pointTouch = event->posF();
 
     size = event->pressure();
-    alfa = unlikely(highlighter) ? m_highlighter->getAlfa() : 255;
+    alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;
 
-    if(!this->m_deviceDown){
-        strokeTmp.setPositioneAudio(parent->m_audio_recorder->getCurrentTime());
-        strokeTmp.setColor(m_color);
+    if(unlikely(!this->m_deviceDown)){
+        strokeTmp.setPositioneAudio(_parent->m_audio_recorder->getCurrentTime());
+        strokeTmp.setColor(_color);
         strokeTmp.setAlfaColor(alfa);
-    }
-    else{
-        /* it's already set */
     }
 
     tmp_point._x = pointTouch.x();
     tmp_point._y = pointTouch.y();
-    pressure = unlikely(highlighter) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
+    pressure = unlikely(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point, pressure);
 }

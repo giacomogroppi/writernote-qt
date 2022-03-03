@@ -53,7 +53,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 #endif
 
     _canvas = canvas;
-    _canvas->parent = this;
+    _canvas->_parent = this;
     DataPrivateInit();
 
     ui->setupUi(this);
@@ -91,13 +91,13 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
 
-    _canvas->m_rubber      = m_rubber;
-    _canvas->m_pen_ui      = m_pen;
-    _canvas->m_text        = m_text;
-    _canvas->m_sheet       = m_sheet;
-    _canvas->m_highlighter = m_highlighter;
-    _canvas->m_text_w      = m_text_w;
-    _canvas->m_laser       = m_laser;
+    _canvas->_rubber      = m_rubber;
+    _canvas->_pen_ui      = m_pen;
+    _canvas->_text        = m_text;
+    _canvas->_sheet       = m_sheet;
+    _canvas->_highlighter = m_highlighter;
+    _canvas->_text_w      = m_text_w;
+    _canvas->_laser       = m_laser;
 
     /* redo and undo */
     connect(this, &MainWindow::RedoT, _canvas, &TabletCanvas::RedoM);
@@ -223,7 +223,7 @@ void MainWindow::on_pause_rec_triggered()
 
 void MainWindow::on_actionRedo_triggered()
 {
-    this->_canvas->m_redoundo->redo();
+    this->_canvas->_redoundo->redo();
     emit RedoT();
 }
 
@@ -239,7 +239,7 @@ void MainWindow::on_actionVersion_triggered()
 
 void MainWindow::on_actionUndu_triggered()
 {
-    this->_canvas->m_redoundo->undo();
+    this->_canvas->_redoundo->undo();
     emit UndoT();
 }
 
@@ -256,7 +256,7 @@ void MainWindow::on_actionrestore_button_triggered()
 /* new page */
 void MainWindow::on_actionnewPage_triggered()
 {
-    this->_canvas->data->datatouch->newPage(_canvas->m_sheet->WhatIsSelected());
+    this->_canvas->data->datatouch->newPage(_canvas->_sheet->WhatIsSelected());
     _canvas->call_update();
     _canvas->updatePageCount();
 }
