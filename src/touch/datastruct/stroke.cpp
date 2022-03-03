@@ -102,6 +102,7 @@ int stroke::load(zip_file_t *file, int version)
         }
     }
 
+#ifdef ALL_VERSION
     // load point
     if(version < 2){
         point_s_ver_0_ver_1 point;
@@ -113,7 +114,9 @@ int stroke::load(zip_file_t *file, int version)
 
         this->_point.append(tmp);
         this->_pressure.append(point.pressure);
-    }else{
+    }else
+#endif
+    {
         // version 2
         for(i = 0; i < len_point; i++){
             SOURCE_READ_RETURN(file, &point_append, sizeof(point_append));
