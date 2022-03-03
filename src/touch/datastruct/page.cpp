@@ -25,10 +25,6 @@
 
 static inline double widthToPressure(double v);
 static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
-static void drawLineOrizzontal(stroke &stroke, const style_struct_S &style, const double &last,
-                            double &deltax, const double &width_p, const double &ct_del);
-static void drawLineVertical(stroke &stroke, const style_struct_S &style,
-                            const double &last, double &deltay, const double height_p);
 
 static force_inline void __initImg(QImage &img)
 {
@@ -41,6 +37,59 @@ page::page(const int count, const n_style style)
     this->IsVisible = true;
     drawNewPage(style);
     this->mergeList();
+}
+
+static inline void drawLineOrizzontal(
+        stroke          &stroke,
+        style_struct_S  &style,
+        cdouble         &last,
+        double          &deltax,
+        cdouble         &width_p,
+        cdouble         &ct_del)
+{
+    int i;
+    point_s point;
+
+    W_ASSERT(ct_del > 0);
+
+    for(i = 0; i < style.nx; i++){
+        point._x = 20;
+        point._y = last + deltax - 20;
+
+        stroke.append(point, stroke_append_default);
+
+        point._x = width_p - 20;
+        stroke.append(point, stroke_append_default);
+
+        deltax += ct_del;
+    }
+}
+
+static inline void drawLineVertical(
+        stroke          &stroke,
+        style_struct_S  &style,
+        const double    &last,
+        double          &deltay,
+        const double    height_p)
+{
+    const double ct_del = deltay;
+    int i;
+    point_s point;
+
+    W_ASSERT(height_p);
+    W_ASSERT(ct_del);
+
+    for(i = 0; i < style.ny; i++){
+        point._x = deltay  - 20;
+        point._y = last    + 20; /* corrisponde to 0 */
+
+        stroke.append(point, stroke_append_default);
+
+        point._y = height_p + last - 20;
+        stroke.append(point, stroke_append_default);
+
+        deltay += ct_del;
+    }
 }
 
 void page::drawNewPage(n_style __style)
@@ -217,9 +266,11 @@ void page::drawStroke(
 
         for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
             const point_s point = at_translation(stroke.at(counterPoint), refCounter);
+            const pressure_t pressure = stroke.getPressure(counterPoint);
+
             pointDraw = point.toQPointF(PROP_RESOLUTION);
 
-            m_pen.setWidthF(TabletCanvas::pressureToWidth(point.pressure / 2.00) * PROP_RESOLUTION);
+            m_pen.setWidthF(TabletCanvas::pressureToWidth(pressure / 2.00) * PROP_RESOLUTION);
 
             if(unlikely(isRubber)){
                 m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
@@ -431,61 +482,9 @@ static void setStylePrivate(
     }
 }
 
-static inline double widthToPressure(double v){
-    return v/10.0;
-}
-
-static inline void drawLineOrizzontal(
-    stroke                  &stroke,
-    const style_struct_S    &style,
-    const double            &last, 
-    double                  &deltax, 
-    const double            &width_p, 
-    const double            &ct_del)
+static force_inline double widthToPressure(double v)
 {
-    int i;
-    point_s point;
-
-    W_ASSERT(ct_del > 0);
-
-    for(i = 0; i < style.nx; i++){
-        point._x = 20;
-        point._y = last + deltax - 20;
-
-        stroke.append(point);
-
-        point._x = width_p - 20;
-        stroke.append(point);
-
-        deltax += ct_del;
-    }
-}
-
-static inline void drawLineVertical(
-    stroke                  &stroke,
-    const style_struct_S    &style, 
-    const double            &last, 
-    double                  &deltay, 
-    const double            height_p)
-{    
-    const double ct_del = deltay;
-    int i;
-    point_s point;
-
-    W_ASSERT(height_p);
-    W_ASSERT(ct_del);
-
-    for(i = 0; i < style.ny; i++){
-        point._x = deltay  - 20;
-        point._y = last    + 20; /* corrisponde to 0 */
-
-        stroke.append(point);
-
-        point._y = height_p + last - 20;
-        stroke.append(point);
-
-        deltay += ct_del;
-    }
+    return v/10.0;
 }
 
 void page::drawToImage(
@@ -803,7 +802,7 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
             if(unlikely(res == PAGE_POINT)){
                 cint len = __tmp.length();
                 for(k = 0; k < len; k ++){
-                    m_stroke_writernote.append(__tmp.at(k));
+                    m_stroke_writernote.append(__tmp.at(k), __tmp.getPressure(k));
                 }
             }
         }
@@ -820,8 +819,9 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
     }
     if(ver_stroke == 1){
         m_stroke_writernote.load(file, ver_stroke);
-        if(m_stroke_writernote.length() && m_stroke_writernote.at(0).pressure > 10)
-            m_stroke_writernote.at_mod(0).pressure = 1.5;
+        if(m_stroke_writernote.length() && m_stroke_writernote.getPressure() > 10){
+            m_stroke_writernote.__setPressureFirstPoint(1.5);
+        }
     }
 
     return OK;

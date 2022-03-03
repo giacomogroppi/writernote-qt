@@ -180,7 +180,8 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
     return pressure * 10 + 1;
 }
 
-static void saveLastMethod(TabletCanvas::e_method val){
+static void saveLastMethod(TabletCanvas::e_method val)
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_METHOD_TOUCH);
 
@@ -189,7 +190,8 @@ static void saveLastMethod(TabletCanvas::e_method val){
 
 }
 
-static void loadLastMethod(TabletCanvas *p){
+static void loadLastMethod(TabletCanvas *p)
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_METHOD_TOUCH);
 
@@ -201,11 +203,13 @@ static void loadLastMethod(TabletCanvas *p){
 
 }
 
-void TabletCanvas::triggerNewView(const bool all){
+void TabletCanvas::triggerNewView(const bool all)
+{
     data->datatouch->triggerNewView(parent->m_audioplayer->getPositionSecond(), all);
 }
 
-void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all){
+void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all)
+{
     this->data->datatouch->triggerNewView(Page, parent->m_audioplayer->getPositionSecond(), all);
 }
 

@@ -1,26 +1,29 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <QCloseEvent>
 #include <QMessageBox>
-
 #include "datawrite/qfilechoose.h"
 #include "datawrite/savefile.h"
 #include "utils/dialog_critic/dialog_critic.h"
-
 #include "currenttitle/document.h"
-
 #include "dataread/xmlstruct.h"
 #include "currenttitle/checksimilecopybook.h"
-
 #include <QSettings>
 #include "utils/setting_define.h"
 #include "restore_file/ui/setting_restore_ui.h"
 #include "last_open/struct_last_file.h"
 
-static void setting_geometry(const QRect &);
+static void setting_geometry(const QRect &rect)
+{
+    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
+    setting.beginGroup(GROUPNAME_GEOMETRY);
 
-static void setting_autosave(bool check){
+    setting.setValue(KEY_GEOMETRY, rect);
+    setting.endGroup();
+}
+
+static void setting_autosave(bool check)
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_REDOUNDO);
 
@@ -72,7 +75,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     if(m_path.isEmpty())
         __message = "Do you want to save?";
     else
-        __message = "Do you wanto to save in " + m_path + "?";
+        __message = "Do you want to save in " + m_path + "?";
 
 
     resBtn = QMessageBox::question( this, "Writernote",
@@ -114,12 +117,4 @@ void MainWindow::closeEvent (QCloseEvent *event)
 #endif
 
     event->accept();
-}
-
-static void setting_geometry(const QRect &rect){
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_GEOMETRY);
-
-    setting.setValue(KEY_GEOMETRY, rect);
-    setting.endGroup();
 }

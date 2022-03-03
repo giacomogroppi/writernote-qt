@@ -17,30 +17,25 @@ stroke::stroke(const stroke &data)
     *this = data;
 }
 
-void stroke::__setPressureFirstPoint(cdouble pres)
+void stroke::__setPressureFirstPoint(const pressure_t pres)
 {
-    if(this->length()){
-        at_mod(0).pressure = pres;
-    }
-}
-
-void stroke::__setPressureForAllPoint(const double pressure)
-{
-    uint i, lenPoint;
-    lenPoint = length();
-
-    for(i = 0; i < lenPoint; i++){
-        this->at_mod(i).pressure = pressure;
-    }
+    _pressure.operator[](0) = pres;
 }
 
 int stroke::save(zip_source_t *file) const
 {
-    int i;
+    int i, len;
+    len = this->_pressure.length();
     cint len_point = this->length();
 
     SOURCE_WRITE_RETURN(file, &len_point, sizeof(len_point));
     SOURCE_WRITE_RETURN(file, &_metadata, sizeof(_metadata));
+
+    SOURCE_WRITE_RETURN(file, &len, sizeof(len));
+
+    for(i = 0; i < len; i++){
+        SOURCE_WRITE_RETURN(file, &_pressure.at(i), sizeof(float));
+    }
 
     for(i = 0; i < len_point; i ++){
         SOURCE_WRITE_RETURN(file, &at(i), sizeof(point_s));
@@ -56,6 +51,11 @@ int stroke::load(zip_file_t *file, int version)
 
 #ifdef ALL_VERSION
     bool page_point = false;
+
+    struct point_s_ver_0_ver_1{
+        double _x, _y;
+        float pressure;
+    };
 
     struct old_metadata_0{
         int page;
@@ -89,9 +89,36 @@ int stroke::load(zip_file_t *file, int version)
         SOURCE_READ_RETURN(file, &_metadata, sizeof(_metadata));
     }
 
-    for(i = 0; i < len_point; i++){
-        SOURCE_READ_RETURN(file, &point_append, sizeof(point_append));
-        this->append(point_append);
+
+    if(version == 2){
+        // version 2 load pressure
+        int len_pressure;
+        SOURCE_READ_RETURN(file, &len_pressure, sizeof(len_pressure));
+
+        for(i = 0; i < len_pressure; i++){
+            float tmp;
+            SOURCE_READ_RETURN(file, &tmp, sizeof(tmp));
+            _pressure.append(tmp);
+        }
+    }
+
+    // load point
+    if(version < 2){
+        point_s_ver_0_ver_1 point;
+        point_s tmp;
+        SOURCE_READ_RETURN(file, &point, sizeof(point));
+
+        tmp._x = point._x;
+        tmp._y = point._y;
+
+        this->_point.append(tmp);
+        this->_pressure.append(point.pressure);
+    }else{
+        // version 2
+        for(i = 0; i < len_point; i++){
+            SOURCE_READ_RETURN(file, &point_append, sizeof(point_append));
+            _point.append(point_append);
+        }
     }
 
 #ifdef ALL_VERSION
@@ -100,6 +127,7 @@ int stroke::load(zip_file_t *file, int version)
     }
 #endif
 
+    this->modify();
     return OK;
 }
 
@@ -121,7 +149,7 @@ size_t stroke::createControll() const
         const point_s &point = _point.at(i);
         controll += point._x;
         controll += point._y;
-        controll += point.pressure;
+        controll += getPressure(i);
     }
 
     return controll;

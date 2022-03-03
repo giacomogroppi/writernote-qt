@@ -14,7 +14,7 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
              << __stroke.last()._x << __stroke.last()._y;)
 
     for(int secIndex = IndexPoint; secIndex < lenPointInStroke; secIndex ++){
-        strokeToAppend.append(__stroke.at(secIndex));
+        strokeToAppend.append(__stroke.at(secIndex), __stroke.getPressure());
     }
 
     strokeToAppend.setMetadata(__stroke.getMetadata());

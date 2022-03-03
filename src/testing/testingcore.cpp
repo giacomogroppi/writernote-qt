@@ -26,10 +26,8 @@ int TestingCore::startTesting()
 }
 
 int TestingCore::createPage(
-        Document &doc,
-        int page,
-        int lenStroke,
-        int lenPerStroke,
+        Document &doc, int page,
+        int lenStroke, int lenPerStroke,
         bool is_same_pressure,
         const QPointF &point,
         const double deltaPerPoint,
@@ -60,13 +58,9 @@ int TestingCore::createPage(
             x += deltaPerPoint;
             y += deltaPerPoint + double(page * page::getHeight());
 
-            if(is_same_pressure){
-                point.pressure = 10;
-            }else{
-                point.pressure = x;
-            }
 
-            __tmp.append(point);
+
+            __tmp.append(point, stroke_append_default);
         }
 
         __tmp.setColor(Qt::black);

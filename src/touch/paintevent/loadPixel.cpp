@@ -36,7 +36,7 @@ static void drawSingleStroke(DataPaint      &_dataPoint,
         const auto &__point = _stroke.at(i);
 
         _pen.setWidthF(
-                    TabletCanvas::pressureToWidth(__point.pressure * _zoom * _dataPoint.m / 2.00));
+                    TabletCanvas::pressureToWidth(_stroke.getPressure(i) * _zoom * _dataPoint.m / 2.00));
         _painter.setPen(_pen);
 
         _painter.drawLine(_dataPoint.lastPoint.pos * _dataPoint.m,
@@ -168,7 +168,7 @@ static void loadSheet(
 
     int counterPage, counterPoint, lenPoint;
 
-    double pressure;
+    pressure_t pressure;
     datastruct *data = doc.datatouch;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
@@ -181,12 +181,13 @@ static void loadSheet(
             continue;
         }
 
-        pressure = __stroke->at(0).pressure;
+redo:
+        pressure = __stroke->getPressure();
 
         if(unlikely(pressure <= 0.0)){
-            point_s &__tmp = (point_s &)((stroke *)__stroke)->at(0);
-            __tmp.pressure = 0.1;
-            pressure = __tmp.pressure;
+            auto *_stroke = (stroke *)__stroke;
+            _stroke->__setPressureFirstPoint(0.1);
+            goto redo;
         }
 
         pressure = TabletCanvas::pressureToWidth(pressure * zoom * delta / 2.0);

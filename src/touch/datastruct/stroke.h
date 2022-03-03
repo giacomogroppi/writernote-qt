@@ -18,10 +18,13 @@ struct metadata_stroke{
     struct colore_s color;
 };
 
+typedef float pressure_t;
+
 class stroke
 {
 private:
     QList<point_s> _point;
+    QList<pressure_t> _pressure;
 
     struct metadata_stroke _metadata;
 
@@ -37,6 +40,9 @@ private:
     };
 
     unsigned char _flag;
+
+    int _prop;
+    static_assert(sizeof(_prop) == 4);
 
     bool isPressureVal() const;
     bool needToCreatePanterPath() const;
@@ -61,17 +67,17 @@ public:
 
     int is_inside(const WLine &rect, int from, int precision) const;
 
-    /* this function is used to set the pressure equal for all points. */
-    void __setPressureForAllPoint(cdouble pressure);
-    void __setPressureFirstPoint(cdouble pressuer);
+    void __setPressureFirstPoint(const pressure_t pressuer);
 
-    float getPressure() const;
+    pressure_t getPressure(int index) const;
+    pressure_t getPressure() const;
     QColor getColor(const double division) const;
 
     const point_s   &at(const int index) const;
     point_s         &at_mod(const int index);
 
-    void        append(const point_s &point);
+#define stroke_append_default -1.
+    void        append(const point_s &point, pressure_t pressure);
 
     void    setMetadata(const int posizione_audio, const colore_s &color);
     void    setMetadata(const metadata_stroke &metadata);
@@ -132,6 +138,7 @@ public:
     static void copy(const stroke &src, stroke &dest);
 
     friend class page;
+    friend class xmlstruct;
 };
 
 force_inline bool stroke::isPressureVal() const
@@ -168,8 +175,8 @@ inline void stroke::updateFlagPressure() const
 {
     constexpr const auto typeUpdate = UPDATE_PRESSURE;
     constexpr const auto typePressure = CONST_PRESS;
-    int i, len;
-    const point_s *current, *next;
+    int len;
+    auto &_press = (QList<pressure_t> &)_pressure;
 
     setFlag(typeUpdate, false);
 
@@ -185,20 +192,24 @@ inline void stroke::updateFlagPressure() const
         return;
     }
 
-    current = &at(0);
+    if(this->needToUpdatePressure()){
+        int i, len;
+        const auto tmp = _pressure.at(0);
 
-    for (i = 1; i < len; i++){
-        next = &at(i);
-
-        if(next->pressure != current->pressure){
-            setFlag(typePressure, false);
-            return;
+        len = _pressure.length();
+        for(i = 0; i < len; i++){
+            if(_pressure.at(i) != tmp){
+                setFlag(typePressure, false);
+                return;
+            }
         }
-
-        current = next;
     }
 
-    setFlag(typePressure, true);
+    const auto tmp = _pressure.at(0);
+    _press.clear();
+    _press << tmp;
+
+    setFlag(typePressure, !_pressure.length());
 }
 
 /* call this function when modify the stroke */
@@ -217,10 +228,21 @@ force_inline void stroke::modify()
     _path = QPainterPath();
 }
 
-/* call this function only when constantPressureVal is 1 */
-inline float stroke::getPressure() const
+inline pressure_t stroke::getPressure(int index) const
 {
-    return at(0).pressure;
+    int __index = 0;
+
+    if(_pressure.length() > 1){
+        __index = index;
+    }
+
+    return _pressure.at(__index);
+}
+
+/* call this function only when constantPressureVal is 1 */
+inline pressure_t stroke::getPressure() const
+{
+    return _pressure.at(0);
 }
 
 inline QColor stroke::getColor(const double division = 1.0) const
@@ -240,9 +262,15 @@ inline point_s &stroke::at_mod(const int index)
     return _point.operator[](index);
 }
 
-inline void stroke::append(const point_s &point)
+inline void stroke::append(const point_s &point, pressure_t pressure)
 {
+    /*
+     * Appende sempre la pressione del punto, la prima volta che viene
+     * aggiornato il flag deciderà se cancellare o meno la list delle
+     * pressioni, in caso siano tutte uguali
+    */
     this->_point.append(point);
+    _pressure.append(pressure);
 
     this->modify();
 }

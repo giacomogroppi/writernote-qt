@@ -318,6 +318,7 @@ void TabletCanvas::updatelist(QTabletEvent *event)
     uchar alfa;
     point_s tmp_point;
     stroke &strokeTmp = __tmp;
+    pressure_t pressure;
     cbool highlighter = CHECK_FLAG(medotodiinserimento, highlighter);
     const QPointF &pointTouch = event->posF();
 
@@ -335,7 +336,7 @@ void TabletCanvas::updatelist(QTabletEvent *event)
 
     tmp_point._x = pointTouch.x();
     tmp_point._y = pointTouch.y();
-    tmp_point.pressure = unlikely(highlighter) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
+    pressure = unlikely(highlighter) ? m_highlighter->getSize(size) : m_pen_ui->getSize(size);
 
-    strokeTmp.append(tmp_point);
+    strokeTmp.append(tmp_point, pressure);
 }
