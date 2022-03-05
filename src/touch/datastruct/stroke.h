@@ -33,10 +33,9 @@ private:
     QRect _biggerData;
 
     enum flag_status : unsigned char{
-        CONST_PRESS = BIT(1),
-        UPDATE_PANTER_PATH = BIT(2),
-        UPDATE_BIGGER_DATA = BIT(3),
-        UPDATE_PRESSURE = BIT(4)
+        UPDATE_PANTER_PATH = BIT(1),
+        UPDATE_BIGGER_DATA = BIT(2),
+        UPDATE_PRESSURE = BIT(3)
     };
 
     unsigned char _flag;
@@ -77,10 +76,10 @@ public:
     point_s         &at_mod(const int index);
 
 #define stroke_append_default -1.
-    void        append(const point_s &point, pressure_t pressure);
+    void append(const point_s &point, pressure_t pressure);
 
-    void    setMetadata(const int posizione_audio, const colore_s &color);
-    void    setMetadata(const metadata_stroke &metadata);
+    void setMetadata(const int posizione_audio, const colore_s &color);
+    void setMetadata(const metadata_stroke &metadata);
 
     void setPositioneAudio(const int m_pos_ris);
 
@@ -143,7 +142,7 @@ public:
 
 force_inline bool stroke::isPressureVal() const
 {
-    return _flag & CONST_PRESS;
+    return _pressure.length() == 1;
 }
 
 force_inline bool stroke::needToCreatePanterPath() const
@@ -174,13 +173,19 @@ force_inline void stroke::setFlag(unsigned char type, bool value) const
 inline void stroke::updateFlagPressure() const
 {
     constexpr const auto typeUpdate = UPDATE_PRESSURE;
-    constexpr const auto typePressure = CONST_PRESS;
-    int len;
+    int len, i;
+    pressure_t press;
     auto &_press = (QList<pressure_t> &)_pressure;
 
     setFlag(typeUpdate, false);
 
     len = this->length();
+
+    if(unlikely(len != 1 && _press.length() == 1)){
+        return;
+    }
+
+    W_ASSERT(_pressure.length() == _point.length());
 
     if(unlikely(len < 3)){
         /* if we have less than 3 points we
@@ -188,42 +193,29 @@ inline void stroke::updateFlagPressure() const
          * we have to draw the stroke point
          * by point.
         */
-        setFlag(typePressure, false);
         return;
     }
 
-    if(this->needToUpdatePressure()){
-        int i, len;
-        const auto tmp = _pressure.at(0);
+    press = _pressure.at(0);
 
-        len = _pressure.length();
-        for(i = 0; i < len; i++){
-            if(_pressure.at(i) != tmp){
-                setFlag(typePressure, false);
-                return;
-            }
+    for(i = 0; i < len; i++){
+        if(_pressure.at(i) != press){
+            return;
         }
     }
 
-    const auto tmp = _pressure.at(0);
     _press.clear();
-    _press << tmp;
-
-    setFlag(typePressure, !_pressure.length());
+    _press.append(press);
 }
 
 /* call this function when modify the stroke */
 force_inline void stroke::modify()
 {
     _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE | UPDATE_PANTER_PATH;
-    _flag &= ~CONST_PRESS;
 
     W_ASSERT(this->needToCreatePanterPath());
     W_ASSERT(this->needToUpdateBiggerData());
     W_ASSERT(this->needToUpdatePressure());
-
-    W_ASSERT(!this->isPressureVal());
-
 
     _path = QPainterPath();
 }
@@ -289,7 +281,14 @@ inline void stroke::setPositioneAudio(const int m_pos_ris)
 inline int stroke::removeAt(int index)
 {
     int len = length();
+    
     Q_ASSERT(index < len);
+
+    if(this->_pressure.length() > 1){
+        W_ASSERT(_pressure.length() == _point.length());
+        _pressure.removeAt(index);
+    }
+
     _point.removeAt(index);
     this->modify();
 
@@ -470,6 +469,9 @@ inline const QPainterPath &stroke::getQPainterPath(int page) const
 inline void stroke::copy(const stroke &src, stroke &dest)
 {
     dest._point = src._point;
+    dest._pressure = src._pressure;
+    dest._prop = src._prop;
+
     dest._biggerData = src._biggerData;
 
     dest._flag = src._flag;

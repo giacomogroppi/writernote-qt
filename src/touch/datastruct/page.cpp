@@ -225,7 +225,7 @@ void page::drawStroke(
     const auto last_comp_mode = painter.compositionMode();
 
     constexpr bool measureTime = false;
-    constexpr bool debColor = true;
+    constexpr bool debColor = false;
     constexpr double deltaColorNull = 1.4;
 
     cint page = this->count - 1;
@@ -239,6 +239,7 @@ void page::drawStroke(
     if(unlikely(!painter.isActive())){
 #ifdef DEBUGINFO
         qDebug() << "page::drawStroke" << "painter not active";
+        W_ASSERT(false);
 #else
         log_write->write("Painter not active", log_ui::possible_bug);
 #endif
@@ -259,8 +260,8 @@ void page::drawStroke(
 
     }else{
         int counterPoint;
-        const int lenPoint = stroke.length();
-        const int refCounter = this->count - 1;
+        cint lenPoint = stroke.length();
+        cint refCounter = this->count - 1;
 
         lastPoint = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
 

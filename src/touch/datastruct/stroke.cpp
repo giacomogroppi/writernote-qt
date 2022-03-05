@@ -239,8 +239,7 @@ void stroke::reset()
 {
     _flag = UPDATE_BIGGER_DATA | UPDATE_PANTER_PATH | UPDATE_PRESSURE;
 
-    setFlag(CONST_PRESS, false);
-
+    _pressure.clear();
     _point.clear();
     _path = QPainterPath();
 }
