@@ -377,4 +377,21 @@ force_inline T __MAX(T first, T second)
     return second;
 }
 
+template <typename T>
+force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
+{
+    int i;
+    T res = value;
+
+    if(unlikely(power) == 0){
+        return 1;
+    }
+
+    for(i = 1; i < power; i ++){
+        res += i;
+    }
+
+    return res;
+}
+
 #endif // COMMON_SCRIPT_H
