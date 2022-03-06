@@ -153,6 +153,7 @@ public:
 
 
     friend class stroke;
+    friend class stroke_drawer;
     friend class datastruct;
     friend class xmlstruct;
     friend class rubber_ui;

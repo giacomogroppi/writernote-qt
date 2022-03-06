@@ -261,12 +261,11 @@ void page::drawStroke(
     }else{
         int counterPoint;
         cint lenPoint = stroke.length();
-        cint refCounter = this->count - 1;
 
-        lastPoint = at_translation(stroke.at(0), refCounter).toQPointF(PROP_RESOLUTION);
+        lastPoint = at_translation(stroke.at(0), page).toQPointF(PROP_RESOLUTION);
 
         for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-            const point_s point = at_translation(stroke.at(counterPoint), refCounter);
+            const point_s point = at_translation(stroke.at(counterPoint), page);
             const pressure_t pressure = stroke.getPressure(counterPoint);
 
             pointDraw = point.toQPointF(PROP_RESOLUTION);

@@ -40,13 +40,19 @@ private:
 
     unsigned char _flag;
 
-    int _prop;
-    static_assert(sizeof(_prop) == 4);
-
     bool isPressureVal() const;
     bool needToCreatePanterPath() const;
     bool needToUpdatePressure() const;
     bool needToUpdateBiggerData() const;
+
+    int _prop = COMPLEX_NORMAL;
+    static_assert(sizeof(_prop) == 4);
+
+    enum flag_complex : typeof(_prop){
+        COMPLEX_NORMAL = 0,
+        COMPLEX_CIRCLE = 1,
+        COMPLEX_RECT = 2
+    };
 
     void setFlag(unsigned char type, bool value) const;
 
@@ -64,9 +70,10 @@ public:
     stroke();
     stroke(const stroke &data);
 
+    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen) const;
     int is_inside(const WLine &rect, int from, int precision) const;
 
-    void __setPressureFirstPoint(const pressure_t pressuer);
+    void __setPressureFirstPoint(const pressure_t pressure);
 
     pressure_t getPressure(int index) const;
     pressure_t getPressure() const;
@@ -133,12 +140,32 @@ public:
 #define STROKE_MUST_TRASLATE_PATH BIT(1)
     void scale(const QPointF &offset, int flag);
 
+    bool is_normal() const;
+    bool is_circle() const;
+    bool is_rect() const;
+
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
 
     friend class page;
     friend class xmlstruct;
+    friend class stroke_drawer;
 };
+
+force_inline bool stroke::is_circle() const
+{
+    return _prop == COMPLEX_CIRCLE;
+}
+
+force_inline bool stroke::is_rect() const
+{
+    return _prop == COMPLEX_RECT;
+}
+
+force_inline bool stroke::is_normal() const
+{
+    return _prop == COMPLEX_NORMAL;
+}
 
 force_inline bool stroke::isPressureVal() const
 {
@@ -299,7 +326,9 @@ inline int stroke::removeAt(int from, int to){
     W_ASSERT(to < length());
     W_ASSERT(from >= 0);
 
-    qDebug() << "stroke::removeAt from to" << from << to;
+    constexpr bool debug_remove_at = false;
+
+    WDebug(debug_remove_at, "stroke::removeAt from to" << from << to);
 
     for(; from <= to; to --){
         removeAt(from);

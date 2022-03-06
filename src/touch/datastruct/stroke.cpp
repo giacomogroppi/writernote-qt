@@ -4,7 +4,10 @@
 #include "dataread/xmlstruct.h"
 #include "datawrite/source_read_ext.h"
 #include "currenttitle/document.h"
+#include "touch/tabletcanvas.h"
+#include "touch/datastruct/stroke_drawer.h"
 #include <QDebug>
+#include <QPainter>
 
 stroke::stroke()
 {
@@ -239,6 +242,11 @@ void stroke::reset()
 {
     _flag = UPDATE_BIGGER_DATA | UPDATE_PANTER_PATH | UPDATE_PRESSURE;
 
+    /*
+     * as we do not know the type of stroke
+     * it will become, they week it as normal
+     */
+    _prop = COMPLEX_NORMAL;
     _pressure.clear();
     _point.clear();
     _path = QPainterPath();
@@ -266,4 +274,9 @@ bool stroke::cmp(const stroke &stroke1, const stroke &stroke2)
 const point_s &stroke::last() const
 {
     return _point.last();
+}
+
+void stroke::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen) const
+{
+    stroke_drawer::draw_stroke(painter, *this, page, pen, is_rubber);
 }

@@ -37,6 +37,7 @@ SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
 ADD_EXECUTABLE(writernote 
+    src/touch/datastruct/stroke_drawer.cpp
     src/touch/laser/laser.cpp
     src/touch/datastruct/triggerNewView.cpp
     src/savecopybook.cpp
