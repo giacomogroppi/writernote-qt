@@ -1,15 +1,17 @@
 #include "touch/object_finder/model/model.h"
 #include "touch/datastruct/stroke.h"
 #include "utils/common_script.h"
+#include "touch/datastruct/stroke_complex_data.h"
 
-static struct {
-    double _x, _y, _r;
-} circle_data;
+static stroke_complex_circle circle_data;
 
 void model_circle_create(stroke *stroke)
 {
     W_ASSERT(stroke);
-
+    stroke->reset();
+    stroke_complex_circle *data = (stroke_complex_circle *)malloc(sizeof(stroke_complex_circle));
+    memcpy(&circle_data, data, sizeof(circle_data));
+    stroke->set_complex(stroke::COMPLEX_CIRCLE, data);
 }
 
 static void model_circle_precision(const QPointF &point, double &precision)

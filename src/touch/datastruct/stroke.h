@@ -49,12 +49,6 @@ private:
     int _prop = COMPLEX_NORMAL;
     static_assert(sizeof(_prop) == 4);
 
-    enum flag_complex : typeof(_prop){
-        COMPLEX_NORMAL = 0,
-        COMPLEX_CIRCLE = 1,
-        COMPLEX_RECT = 2
-    };
-
     void *_complex;
     void setFlag(unsigned char type, bool value) const;
 
@@ -71,6 +65,12 @@ public:
     stroke();
     stroke(const stroke &data);
     ~stroke();
+
+    enum flag_complex : typeof(_prop){
+        COMPLEX_NORMAL = 0,
+        COMPLEX_CIRCLE = 1,
+        COMPLEX_RECT = 2
+    };
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen) const;
     int is_inside(const WLine &rect, int from, int precision) const;
@@ -145,7 +145,7 @@ public:
     bool is_normal() const;
     bool is_circle() const;
     bool is_rect() const;
-    void set_complex(typeof(_prop));
+    void set_complex(typeof(_prop) new_prop, void *new_data);
 
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
@@ -155,10 +155,14 @@ public:
     friend class stroke_drawer;
 };
 
-force_inline void stroke::set_complex(typeof(_prop) new_prop)
+force_inline void stroke::set_complex(typeof(_prop) new_prop, void *new_data)
 {
-    if(this->_prop)
+    if(_complex){
+        free(_complex);
+    }
+
     _prop = new_prop;
+    _complex = new_data;
 }
 
 force_inline bool stroke::is_circle() const
