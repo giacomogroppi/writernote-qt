@@ -35,9 +35,8 @@ static bool line_check_segno(cdouble segno, cdouble len)
      * e è minore del 95 % allora non è una linea
     */
     const double mod = qAbs(segno);
-    const bool c1 = mod > len * .05;
-    const bool c2 = mod < len * .95;
-    return  (c1 && c2);
+    return mod > len * .05 && 
+           mod < len * .95;
 }
 
 static force_inline void model_line_adjust_m(double &m)
