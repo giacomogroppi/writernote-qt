@@ -14,7 +14,7 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
 
 force_inline void stroke_drawer::draw_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen)
 {
-    const auto &path = stroke.getQPainterPath(page);
+    const QPainterPath &path = stroke.getQPainterPath(page);
 
     painter.strokePath(path, pen);
 }
@@ -40,10 +40,10 @@ force_inline void stroke_drawer::draw_not_const(QPainter &painter, const stroke 
         if(unlikely(is_rubber)){
             pen.setWidthF(pen.widthF() * deltaColorNull);
         }
+
         painter.setPen(pen);
 
         painter.drawLine(lastPoint, pointDraw);
-
 
         lastPoint = pointDraw;
     }

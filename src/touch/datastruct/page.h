@@ -60,7 +60,7 @@ private:
 
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
 
-    static point_s at_translation(const point_s &point, int page);
+    static point_s at_translation(const point_s &point, cint page);
     static QRect get_size_area(const QList<stroke> & item, int from, int to);
 
 public:
@@ -205,7 +205,7 @@ inline void page::reset()
     this->imgDraw = QImage();
 }
 
-inline point_s page::at_translation(const point_s &point, int page)
+inline point_s page::at_translation(const point_s &point, cint page)
 {
     point_s tmp;
     const double ytranslation = double(page) * page::getHeight();
