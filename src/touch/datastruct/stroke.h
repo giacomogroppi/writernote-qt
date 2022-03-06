@@ -58,7 +58,6 @@ private:
 
     static_assert(sizeof(_flag) * 8 >= 4 );
 
-
     void updateFlagPressure() const;
 
     void modify();
@@ -143,6 +142,7 @@ public:
     bool is_normal() const;
     bool is_circle() const;
     bool is_rect() const;
+    void set_complex(typeof(_prop));
 
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
@@ -151,6 +151,12 @@ public:
     friend class xmlstruct;
     friend class stroke_drawer;
 };
+
+force_inline void stroke::set_complex(typeof(_prop) new_prop)
+{
+    if(this->_prop)
+    _prop = new_prop;
+}
 
 force_inline bool stroke::is_circle() const
 {
