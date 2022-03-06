@@ -8,6 +8,7 @@ static struct {
 
 void model_circle_create(stroke *stroke)
 {
+    W_ASSERT(stroke);
 
 }
 
@@ -15,7 +16,15 @@ static void model_circle_precision(const QPointF &point, double &precision)
 {
     double res;
 
-    res = wPower(point.x(), 2);
+    /*
+     * X^2 + Y^2 - R = res
+     */
+
+    res = wPower(point.x(), 2) + wPower(point.y(), 2) - circle_data._r;
+
+    if(res > precision){
+        precision = res;
+    }
 }
 
 double model_circle(const stroke *stroke)
@@ -32,6 +41,10 @@ double model_circle(const stroke *stroke)
     r = (area.topLeft().y() - area.bottomRight().y()) / 2.;
     x = (area.topLeft().x() + area.bottomRight().x()) / 2.;
     y = (area.topLeft().y() + area.bottomRight().y()) / 2.;
+
+    W_ASSERT(r >= 0.);
+    W_ASSERT(x >= 0.);
+    W_ASSERT(y >= 0.);
 
     for(i = 0; i < len; i++){
         const auto &ref = stroke->at(i);
