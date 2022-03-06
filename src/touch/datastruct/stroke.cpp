@@ -246,6 +246,14 @@ void stroke::reset()
      * as we do not know the type of stroke
      * it will become, they week it as normal
      */
+
+    W_ASSERT(_prop != COMPLEX_NORMAL && !_complex);
+
+    if(_complex){
+        free(_complex);
+        _complex = NULL;
+    }
+
     _prop = COMPLEX_NORMAL;
     _pressure.clear();
     _point.clear();

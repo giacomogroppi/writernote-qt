@@ -12,6 +12,7 @@
 #include "utils/common_script.h"
 #include "touch/datastruct/utils_datastruct.h"
 #include "core/wline.h"
+#include "touch/datastruct/stroke_complex_data.h"
 
 struct metadata_stroke{
     int posizione_audio;
@@ -54,6 +55,7 @@ private:
         COMPLEX_RECT = 2
     };
 
+    void *_complex;
     void setFlag(unsigned char type, bool value) const;
 
     static_assert(sizeof(_flag) * 8 >= 4 );
@@ -69,6 +71,7 @@ private:
 public:
     stroke();
     stroke(const stroke &data);
+    ~stroke();
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen) const;
     int is_inside(const WLine &rect, int from, int precision) const;
@@ -245,6 +248,11 @@ force_inline void stroke::modify()
     W_ASSERT(this->needToUpdatePressure());
 
     _path = QPainterPath();
+}
+
+force_inline stroke::~stroke()
+{
+    this->reset();
 }
 
 inline pressure_t stroke::getPressure(int index) const
