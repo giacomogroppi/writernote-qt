@@ -58,6 +58,7 @@ static int get_index_most_prob(cdouble min_precision)
     for(i = 0; i < THREAD_FINDER; i++){
         const double prec = finder.is[i];
 
+        // is not enough
         if(prec > min_precision){
             WDebug(debug_model, __FUNCTION__ << prec);
             continue;
@@ -69,6 +70,7 @@ static int get_index_most_prob(cdouble min_precision)
         }
     }
 
+    index = 2;
     return index;
 }
 

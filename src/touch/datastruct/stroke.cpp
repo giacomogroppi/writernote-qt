@@ -22,7 +22,10 @@ stroke::stroke(const stroke &data)
 
 void stroke::__setPressureFirstPoint(const pressure_t pres)
 {
-    _pressure.operator[](0) = pres;
+    if(_pressure.length())
+        _pressure.operator[](0) = pres;
+    else
+        _pressure.append(pres);
 }
 
 int stroke::save(zip_source_t *file) const
@@ -233,8 +236,6 @@ void stroke::createQPainterPath(int page) const
         point2 = point3; draw2 = draw3;
     }
 
-    //__path = __path.simplified();
-
     setFlag(UPDATE_PANTER_PATH, false);
 }
 
@@ -247,9 +248,10 @@ void stroke::reset()
      * it will become, they week it as normal
      */
 
-    W_ASSERT(_prop != COMPLEX_NORMAL && !_complex);
-
-    if(_complex){
+    if(likely(is_normal())){
+        W_ASSERT(!_complex);
+    }else{
+        W_ASSERT(_complex);
         free(_complex);
         _complex = NULL;
     }
@@ -258,6 +260,9 @@ void stroke::reset()
     _pressure.clear();
     _point.clear();
     _path = QPainterPath();
+
+    W_ASSERT(this->is_normal());
+    W_ASSERT(!_complex);
 }
 
 bool stroke::cmp(const stroke &stroke1, const stroke &stroke2)
@@ -284,7 +289,12 @@ const point_s &stroke::last() const
     return _point.last();
 }
 
-void stroke::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen) const
+void stroke::draw(
+        QPainter    &painter,
+        cbool       is_rubber,
+        cint        page,
+        QPen        &pen,
+        cdouble     prop) const
 {
-    stroke_drawer::draw_stroke(painter, *this, page, pen, is_rubber);
+    stroke_drawer::draw_stroke(painter, *this, page, pen, is_rubber, prop);
 }

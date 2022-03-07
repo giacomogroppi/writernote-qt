@@ -47,11 +47,16 @@ static void AppendAll(
 
     int time = canvas->_parent->m_audioplayer->getPositionSecond();
 
+    if(unlikely(!strokeToAppend.is_normal()))
+        goto cont;
+
     for(i = 0; i < lenPoint; i++){
         point = &strokeToAppend.at_mod(i);
         point->_x -= PointFirstPage.x();
         point->_y -= PointFirstPage.y();
     }
+
+    cont:
 
     if(unlikely(met == TabletCanvas::e_method::laser)){
         canvas->_laser->append(strokeToAppend);

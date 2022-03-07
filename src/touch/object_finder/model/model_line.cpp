@@ -7,7 +7,7 @@ constexpr bool      debug = true;
 struct{
     double m, q;
     bool is_vertical;
-}line_data;
+} line_data;
 
 static void is_near_line(cdouble m, double &max, cdouble q, const point_s *point)
 {
@@ -141,57 +141,46 @@ cont:
     return precision;
 }
 
-static void model_line_vertical(stroke *stroke)
+static void model_line_vertical(stroke *stroke, stroke_complex_line *data)
 {
-    int i;
-    cint len = stroke->length();
+    const auto press = stroke->getPressure();
     const QRect FL = stroke->getFirstAndLast();
     const QPointF &TL = FL.topLeft();
     const QPointF &BR = FL.bottomRight();
 
     const double x = TL.x();
 
-    for(i = 0; i < len; i++){
-        point_s &point = stroke->at_mod(i);
+    stroke->reset();
 
-        if(point.y() < TL.y())
-            point._y = TL.y();
-
-        if(point.y() > BR.y())
-            point._y = BR.y();
-
-        point._x = x;
-
-    }
-
+    data->topLeft = QPointF(x, TL.y());
+    data->bottomRight = QPointF(x, BR.y());
+    stroke->__setPressureFirstPoint(press);
 }
 
-static void model_line_generic(stroke *stroke)
+static void model_line_generic(stroke *stroke, stroke_complex_line *data)
 {
-    point_s point;
     const auto pressure = stroke->getPressure(0);
     const auto one  = stroke->at(0).toQPointF(1.);
     const auto last = stroke->last().toQPointF(1.);
 
     stroke->reset();
 
-    point._x = one.x();
-    point._y = one.y();
-    stroke->append(point, pressure);
-
-    point._x = last.x();
-    point._y = last.y();
-    stroke->append(point, pressure);
+    data->topLeft = one;
+    data->bottomRight = last;
+    stroke->__setPressureFirstPoint(pressure);
 }
 
 void model_line_create(stroke *stroke)
 {
     W_ASSERT(stroke);
     bool &is_vertical = line_data.is_vertical;
+    stroke_complex_line *data = (stroke_complex_line *)malloc(sizeof(stroke_complex_line));
 
     if(is_vertical){
-        model_line_vertical(stroke);
+        model_line_vertical(stroke, data);
     }else{
-        model_line_generic(stroke);
+        model_line_generic(stroke, data);
     }
+
+    stroke->set_complex(stroke::COMPLEX_LINE, data);
 }

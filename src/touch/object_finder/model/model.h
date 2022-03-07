@@ -10,12 +10,6 @@ constexpr double model_error = 5000.;
 
 class stroke;
 
-enum{
-    COMPLEX_LINE,
-    COMPLEX_RECT,
-    COMPLEX_CIRCLE
-};
-
 double model_line(const stroke *stroke);
 double model_rect(const stroke *stroke);
 double model_circle(const stroke *stroke);
@@ -31,5 +25,9 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
     const QPointF br = QPointF(p1.x() + max, p1.y() + max);
     return QRectF(tl, br).contains(p2);
 }
+
+void *stroke_complex_allocate(int type, void *data);
+void stroke_complex_adjust(stroke *stroke, cdouble zoom);
+QRect stroke_complex_bigger_data(const stroke *stroke);
 
 #endif // MODEL_H

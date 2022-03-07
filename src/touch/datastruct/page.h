@@ -210,6 +210,10 @@ inline point_s page::at_translation(const point_s &point, cint page)
     point_s tmp;
     const double ytranslation = double(page) * page::getHeight();
 
+    if(unlikely(!page)){
+        return point;
+    }
+
     memcpy(&tmp, &point, sizeof(tmp));
     tmp._y -= ytranslation;
     return tmp;

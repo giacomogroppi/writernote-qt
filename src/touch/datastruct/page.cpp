@@ -23,8 +23,37 @@
     W_ASSERT(painter.isActive()); \
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-static inline double widthToPressure(double v);
-static void setStylePrivate(bool &fast, n_style res, style_struct_S &style);
+static force_inline double widthToPressure(double v) { return v/10.0; };
+
+static void setStylePrivate(
+    bool            &fast,
+    n_style         res,
+    style_struct_S  &style)
+{
+    if(res == n_style::empty){
+        res = n_style::square;
+    }
+
+    if(res == n_style::line){
+        fast = true;
+
+        style.nx = TEMP_N_X;
+        style.ny = 0;
+    }
+    else if(res == n_style::white){
+        /* we set the color manually */
+        style.colore.fromColor(Qt::black);
+
+        style.nx = 1;
+        style.ny = 1;
+        style.thickness = 1;
+    }else{
+        fast = true;
+
+        style.nx = TEMP_SQUARE*(page::getHeight() / page::getWidth());
+        style.ny = TEMP_SQUARE;
+    }
+}
 
 static force_inline void __initImg(QImage &img)
 {
@@ -235,6 +264,10 @@ void page::drawStroke(
 
     m_pen.setColor(color);
     m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
+
+    stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
+
+    return;
 
     if(unlikely(!painter.isActive())){
 #ifdef DEBUGINFO
@@ -450,41 +483,6 @@ void page::mergeList()
     }
 
     strokeTmp.clear();
-}
-
-static void setStylePrivate(
-    bool            &fast, 
-    n_style         res, 
-    style_struct_S  &style)
-{
-    if(res == n_style::empty){
-        res = n_style::square;
-    }
-
-    if(res == n_style::line){
-        fast = true;
-
-        style.nx = TEMP_N_X;
-        style.ny = 0;
-    }
-    else if(res == n_style::white){
-        /* we set the color manually */
-        style.colore.fromColor(Qt::black);
-
-        style.nx = 1;
-        style.ny = 1;
-        style.thickness = 1;
-    }else{
-        fast = true;
-
-        style.nx = TEMP_SQUARE*(page::getHeight() / page::getWidth());
-        style.ny = TEMP_SQUARE;
-    }
-}
-
-static force_inline double widthToPressure(double v)
-{
-    return v/10.0;
 }
 
 void page::drawToImage(

@@ -40,7 +40,7 @@ double model_circle(const stroke *stroke)
 
     len = stroke->length();
 
-    r = (area.topLeft().y() - area.bottomRight().y()) / 2.;
+    r = qAbs(area.topLeft().y() - area.bottomRight().y()) / 2.;
     x = (area.topLeft().x() + area.bottomRight().x()) / 2.;
     y = (area.topLeft().y() + area.bottomRight().y()) / 2.;
 

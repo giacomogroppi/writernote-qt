@@ -11,6 +11,7 @@
 #include <csignal>
 #include "pthread.h"
 #include "utils_datastruct.h"
+#include "touch/object_finder/model/model.h"
 
 /*
     IDVERTICALE -> linee verticali
@@ -19,21 +20,6 @@
 
 class frompdf;
 class fromimage;
-
-#define for_from_to_node(__node, __from, __to, __function, __data, __name)          \
-    typeof(__to) ___counter##__name;                                                \
-    for(___counter##__name = __from,                                                \
-        __node = likely(__to) ? &__data.__function(___counter##__name) : 0;         \
-        ___counter##__name < __to;                                                  \
-        ___counter##__name ++, __node = &__data.__function(___counter##__name))
-
-#define for_each_page(__page, data)                         \
-        int __lenPage = data.lengthPage();                  \
-        for_from_to_node(__page, (int)0, __lenPage, at, data, Page)
-
-#define for_each_stroke(__stroke, __page)         \
-        int __lenStroke = __page.lengthStroke();  \
-        for_from_to_node(__stroke, (int)0, __lenStroke, atStroke, __page, Stroke)
 
 
 #define IDVERTICALE -2
@@ -408,10 +394,9 @@ inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
 inline int datastruct::whichPage(const stroke &stroke) const
 {
     int i;
-    const auto &ref = stroke.at(0);
-    QPointF point(ref._x, ref._y);
+    const auto &ref = stroke.getBiggerPointInStroke().topLeft();
 
-    i = this->whichPage(point);
+    i = this->whichPage(ref);
 
     return i;
 }
@@ -570,11 +555,14 @@ inline int datastruct::adjustStroke(stroke &stroke)
     int page;
     int counter = stroke.length() - 1;
 
-    for(; counter >= 0; counter --){
-        point_s &point = stroke.at_mod(counter);
-        point._x       /= this->_zoom;
-        point._y       /= this->_zoom;
-        //point.pressure  /= this->_zoom;
+    if(likely(stroke.is_normal())){
+        for(; counter >= 0; counter --){
+            point_s &point = stroke.at_mod(counter);
+            point._x       /= this->_zoom;
+            point._y       /= this->_zoom;
+        }
+    }else{
+        stroke_complex_adjust(&stroke, this->_zoom);
     }
 
     page = this->whichPage(stroke);

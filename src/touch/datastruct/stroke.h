@@ -13,6 +13,7 @@
 #include "touch/datastruct/utils_datastruct.h"
 #include "core/wline.h"
 #include "touch/datastruct/stroke_complex_data.h"
+#include "touch/object_finder/model/model.h"
 
 struct metadata_stroke{
     int posizione_audio;
@@ -49,7 +50,7 @@ private:
     int _prop = COMPLEX_NORMAL;
     static_assert(sizeof(_prop) == 4);
 
-    void *_complex;
+    void *_complex = NULL;
     void setFlag(unsigned char type, bool value) const;
 
     static_assert(sizeof(_flag) * 8 >= 4 );
@@ -69,10 +70,11 @@ public:
     enum flag_complex : typeof(_prop){
         COMPLEX_NORMAL = 0,
         COMPLEX_CIRCLE = 1,
-        COMPLEX_RECT = 2
+        COMPLEX_RECT = 2,
+        COMPLEX_LINE = 3
     };
 
-    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen) const;
+    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
     int is_inside(const WLine &rect, int from, int precision) const;
 
     void __setPressureFirstPoint(const pressure_t pressure);
@@ -142,10 +144,12 @@ public:
 #define STROKE_MUST_TRASLATE_PATH BIT(1)
     void scale(const QPointF &offset, int flag);
 
-    bool is_normal() const;
-    bool is_circle() const;
-    bool is_rect() const;
+    force_inline bool is_normal() const { return _prop == COMPLEX_NORMAL; };
+    force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
+    force_inline bool is_rect() const { return _prop == COMPLEX_RECT; };
+    force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
     void set_complex(typeof(_prop) new_prop, void *new_data);
+    const void *get_complex_data() const { return _complex; };
 
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
@@ -153,6 +157,7 @@ public:
     friend class page;
     friend class xmlstruct;
     friend class stroke_drawer;
+    friend void stroke_complex_adjust(stroke *stroke, cdouble zoom);
 };
 
 force_inline void stroke::set_complex(typeof(_prop) new_prop, void *new_data)
@@ -163,21 +168,6 @@ force_inline void stroke::set_complex(typeof(_prop) new_prop, void *new_data)
 
     _prop = new_prop;
     _complex = new_data;
-}
-
-force_inline bool stroke::is_circle() const
-{
-    return _prop == COMPLEX_CIRCLE;
-}
-
-force_inline bool stroke::is_rect() const
-{
-    return _prop == COMPLEX_RECT;
-}
-
-force_inline bool stroke::is_normal() const
-{
-    return _prop == COMPLEX_NORMAL;
 }
 
 force_inline bool stroke::isPressureVal() const
@@ -389,6 +379,11 @@ inline QRect stroke::getBiggerPointInStroke() const
         return _biggerData;
     }
 
+    if(!this->is_normal()){
+        __biggerData = stroke_complex_bigger_data(this);
+        return __biggerData;
+    }
+
     count = this->length();
 
     if(unlikely(count == 0)){
@@ -516,9 +511,13 @@ inline const QPainterPath &stroke::getQPainterPath(int page) const
 
 inline void stroke::copy(const stroke &src, stroke &dest)
 {
+    dest.reset();
+
     dest._point = src._point;
     dest._pressure = src._pressure;
     dest._prop = src._prop;
+
+    dest._complex = stroke_complex_allocate(src._prop, src._complex);
 
     dest._biggerData = src._biggerData;
 
@@ -541,7 +540,7 @@ inline stroke &stroke::operator=(const stroke &other)
 
 inline bool stroke::isEmpty() const
 {
-    return _point.isEmpty();
+    return _point.isEmpty() && this->is_normal();
 }
 
 inline void stroke::scale(const QPointF &offset, int flag)

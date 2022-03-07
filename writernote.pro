@@ -150,6 +150,7 @@ SOURCES += \
     src/touch/laser/laser.cpp \
     src/touch/multi_thread_data.cpp \
     src/touch/object_finder/model/model_circle.cpp \
+    src/touch/object_finder/model/model_ctrl.cpp \
     src/touch/object_finder/model/model_line.cpp \
     src/touch/object_finder/model/model_square.cpp \
     src/touch/object_finder/model_finder/model_finder.cpp \

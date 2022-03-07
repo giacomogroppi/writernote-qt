@@ -30,6 +30,10 @@ static void drawSingleStroke(DataPaint      &_dataPoint,
     if(unlikely(!len))
         return;
 
+    _stroke.draw(_painter, false, 0, _pen, _dataPoint.parent->_canvas->data->datatouch->getZoom());
+
+    return;
+
     _dataPoint.lastPoint.pos = QPointF(_stroke.at(0)._x, _stroke.at(0)._y);
 
     for(i = 1; i < len; i++){
