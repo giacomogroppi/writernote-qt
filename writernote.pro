@@ -141,20 +141,11 @@ SOURCES += \
     src/testing/memtest.cpp \
     src/testing/testingcore.cpp \
     src/touch/copy_cut/copy_cut_selection.cpp \
-    src/touch/datastruct/adjustSize.cpp \
     src/touch/datastruct/changeId.cpp \
     src/touch/datastruct/controllForRepositioning.cpp \
-    src/touch/datastruct/createControllPoint.cpp \
-    src/touch/datastruct/isinside.cpp \
-    src/touch/datastruct/moveAll.cpp \
-    src/touch/datastruct/movePoint.cpp \
     src/touch/datastruct/page.cpp \
-    src/touch/datastruct/removeIdPoint.cpp \
-    src/touch/datastruct/removePage.cpp \
-    src/touch/datastruct/reorganize.cpp \
     src/touch/datastruct/stroke.cpp \
     src/touch/datastruct/triggerNewView.cpp \
-    src/touch/datastruct/writtenSomething.cpp \
     src/touch/highlighter/highlighter.cpp \
     src/touch/laser/laser.cpp \
     src/touch/multi_thread_data.cpp \

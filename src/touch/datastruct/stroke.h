@@ -282,19 +282,20 @@ inline pressure_t stroke::getPressure() const
     return _pressure.at(0);
 }
 
-inline QColor stroke::getColor(const double division = 1.0) const
+inline QColor stroke::getColor(const double division = 1.) const
 {
-    QColor color(_metadata.color.toQColor(division));
-    return color;
+    return _metadata.color.toQColor(division);
 }
 
 inline const point_s &stroke::at(const int index) const
 {
+    W_ASSERT(_prop == COMPLEX_NORMAL);
     return _point.at(index);
 }
 
 inline point_s &stroke::at_mod(const int index)
 {
+    W_ASSERT(_prop == COMPLEX_NORMAL);
     this->modify();
     return _point.operator[](index);
 }

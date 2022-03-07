@@ -127,7 +127,6 @@ public:
     int adjustStroke(stroke &stroke);
 
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
-    void reorganize();
 
     void changeId(int indexPoint, int indexStroke, int indexPage);
     void changeId(int indexPoint, stroke& stroke, page &page);

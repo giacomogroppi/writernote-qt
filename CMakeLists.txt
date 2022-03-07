@@ -93,19 +93,11 @@ ADD_EXECUTABLE(writernote
     src/touch/zoom/ctrlZoom.cpp
     src/touch/highlighter/highlighter.cpp
     src/touch/datastruct/page.cpp
-    src/touch/datastruct/writtenSomething.cpp
-    src/touch/datastruct/moveAll.cpp
-    src/touch/datastruct/createControllPoint.cpp
-    src/touch/datastruct/movePoint.cpp
     src/touch/datastruct/changeId.cpp
     src/touch/datastruct/datastruct.cpp
     src/touch/datastruct/stroke.cpp
     src/touch/datastruct/removePage.cpp
     src/touch/datastruct/controllForRepositioning.cpp
-    src/touch/datastruct/isinside.cpp
-    src/touch/datastruct/reorganize.cpp
-    src/touch/datastruct/adjustSize.cpp
-    src/touch/datastruct/removeIdPoint.cpp
     src/touch/copy_cut/copy_cut_selection.cpp
     src/touch/pen/pen_ui.cpp
     src/touch/square/square.cpp
