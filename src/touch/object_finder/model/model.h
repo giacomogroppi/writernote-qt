@@ -28,6 +28,7 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
 
 void *stroke_complex_allocate(int type, void *data);
 void stroke_complex_adjust(stroke *stroke, cdouble zoom);
+bool stroke_complex_cmp(const stroke *str1, const stroke *str2);
 QRect stroke_complex_bigger_data(const stroke *stroke);
 
 #endif // MODEL_H

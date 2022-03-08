@@ -3,25 +3,32 @@
 #include "touch/datastruct/stroke.h"
 #include "touch/datastruct/datastruct.h"
 
+static size_t get_size_by_type(int type)
+{
+    switch (type) {
+    case stroke::COMPLEX_CIRCLE:
+        return sizeof(stroke_complex_circle);
+    case stroke::COMPLEX_LINE:
+        return sizeof(stroke_complex_line);
+    case stroke::COMPLEX_RECT:
+        return sizeof(stroke_complex_rect);
+    default:
+        std::abort();
+    }
+}
+
 void *stroke_complex_allocate(int type, void *data)
 {
     void *new_data;
+    const size_t size = get_size_by_type(type);
 
     if(type == stroke::COMPLEX_NORMAL){
         new_data = NULL;
+        return new_data;
     }
-    else if(type == stroke::COMPLEX_LINE){
-        new_data = malloc(sizeof(stroke_complex_line));
-        memcpy(new_data, data, sizeof(stroke_complex_line));
-    }else if(type == stroke::COMPLEX_CIRCLE){
-        new_data = malloc(sizeof(stroke_complex_circle));
-        memcpy(new_data, data, sizeof(stroke_complex_circle));
-    }else if(type == stroke::COMPLEX_RECT){
-        new_data = malloc(sizeof(stroke_complex_rect));
-        memcpy(new_data, data, sizeof(stroke_complex_rect));
-    }else{
-        std::abort();
-    }
+
+    new_data = malloc(size);
+    memcpy(new_data, data, size);
 
     return new_data;
 }
@@ -65,4 +72,14 @@ QRect stroke_complex_bigger_data(const stroke *stroke)
     }else{
         std::abort();
     }
+}
+
+bool stroke_complex_cmp(const stroke *str1, const stroke *str2)
+{
+    const size_t size = get_size_by_type(str1->get_type());
+
+    if(str1->get_type() != str2->get_type())
+        return false;
+
+    return (memcmp(str1->get_complex_data(), str2->get_complex_data(), size)) == 0;
 }

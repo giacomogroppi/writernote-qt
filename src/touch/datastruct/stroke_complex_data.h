@@ -8,6 +8,7 @@
 
 struct stroke_complex_circle{
     double _x, _y, _r;
+    double _press;
     void draw(QPainter &painter);
     void is_inside(const QPointF& point, cint precision);
 };

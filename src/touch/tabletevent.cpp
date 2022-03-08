@@ -33,16 +33,13 @@ static void AppendAll(
         const TabletCanvas              *canvas,
         const TabletCanvas::e_method    met)
 {
-    uint i;
-
     /* for debug */
     stroke & strokeToAppend = __tmp;
-    int pageMod;
-    const uint lenPoint = strokeToAppend.length();
+    int i, pageMod, lenPoint;
     point_s *point;
     const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
 
-    if(unlikely(!lenPoint))
+    if(unlikely(strokeToAppend.isEmpty()))
         return;
 
     int time = canvas->_parent->m_audioplayer->getPositionSecond();
@@ -50,6 +47,7 @@ static void AppendAll(
     if(unlikely(!strokeToAppend.is_normal()))
         goto cont;
 
+    lenPoint = strokeToAppend.length();
     for(i = 0; i < lenPoint; i++){
         point = &strokeToAppend.at_mod(i);
         point->_x -= PointFirstPage.x();

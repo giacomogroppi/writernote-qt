@@ -415,7 +415,9 @@ force_inline void page::append(const stroke &strokeAppend)
     /* they will be automatically removed when
      * the project is compiled in release mode
     */
-    W_ASSERT(strokeTmp.at(lastNewIndex).length() == strokeAppend.length());
+    if(strokeAppend.is_normal()){
+        W_ASSERT(stroke::cmp(strokeAppend, strokeTmp.at(lastNewIndex)));
+    }
 }
 
 force_inline double page::minHeight() const

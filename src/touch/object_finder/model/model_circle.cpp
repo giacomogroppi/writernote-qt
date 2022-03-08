@@ -7,10 +7,14 @@ static stroke_complex_circle circle_data;
 
 void model_circle_create(stroke *stroke)
 {
+    const auto press = stroke->getPressure();
+
     W_ASSERT(stroke);
+    circle_data._press = press;
+
     stroke->reset();
     stroke_complex_circle *data = (stroke_complex_circle *)malloc(sizeof(stroke_complex_circle));
-    memcpy(&circle_data, data, sizeof(circle_data));
+    memcpy(data, &circle_data, sizeof(circle_data));
     stroke->set_complex(stroke::COMPLEX_CIRCLE, data);
 }
 

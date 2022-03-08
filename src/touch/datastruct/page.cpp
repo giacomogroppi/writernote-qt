@@ -247,8 +247,6 @@ void page::drawStroke(
         QPen            &m_pen,
         const QColor    &color) const
 {
-    QPointF lastPoint, pointDraw;
-    const QPainterPath *path;
     const bool isRubber = (color == COLOR_NULL);
     const bool isHigh = stroke.get_alfa() < 255;
     const auto last_comp_mode = painter.compositionMode();
@@ -263,11 +261,9 @@ void page::drawStroke(
     Q_UNUSED(debColor);
 
     m_pen.setColor(color);
-    m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
+    //m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
 
     stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
-
-    return;
 
     if(unlikely(!painter.isActive())){
 #ifdef DEBUGINFO
@@ -284,37 +280,6 @@ void page::drawStroke(
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }else if(isHigh){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    }
-
-    if(stroke.constantPressure()){
-        path = &stroke.getQPainterPath(page);
-
-        painter.strokePath(*path, m_pen);
-
-    }else{
-        int counterPoint;
-        cint lenPoint = stroke.length();
-
-        lastPoint = at_translation(stroke.at(0), page).toQPointF(PROP_RESOLUTION);
-
-        for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
-            const point_s point = at_translation(stroke.at(counterPoint), page);
-            const pressure_t pressure = stroke.getPressure(counterPoint);
-
-            pointDraw = point.toQPointF(PROP_RESOLUTION);
-
-            m_pen.setWidthF(TabletCanvas::pressureToWidth(pressure / 2.00) * PROP_RESOLUTION);
-
-            if(unlikely(isRubber)){
-                m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
-            }
-            painter.setPen(m_pen);
-
-            painter.drawLine(lastPoint, pointDraw);
-
-
-            lastPoint = pointDraw;
-        }
     }
 
     if(unlikely(isRubber)){

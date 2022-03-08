@@ -25,9 +25,7 @@ static void drawSingleStroke(DataPaint      &_dataPoint,
 {
     int i, len;
 
-    len = _stroke.length();
-
-    if(unlikely(!len))
+    if(unlikely(_stroke.isEmpty()))
         return;
 
     _stroke.draw(_painter, false, 0, _pen, _dataPoint.parent->_canvas->data->datatouch->getZoom());

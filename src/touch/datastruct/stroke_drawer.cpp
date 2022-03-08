@@ -2,12 +2,20 @@
 #include "touch/datastruct/stroke.h"
 #include "touch/datastruct/page.h"
 #include "touch/tabletcanvas.h"
+#include "utils/common_script.h"
 
 force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
-    painter.setPen(pen);
+    constexpr bool debCircle = true;
     stroke_complex_circle *data = (stroke_complex_circle *)stroke._complex;
+    const auto press = data->_press;
+
+    pen.setWidthF(TabletCanvas::pressureToWidth(press * prop));
+    painter.setPen(pen);
+
     painter.drawEllipse(QPointF(data->_x, data->_y) * prop, data->_r * prop, data->_r * prop);
+
+    WDebug(debCircle, __FUNCTION__ << data->_x << data->_y << data->_r);
 }
 
 force_inline void stroke_drawer::draw_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cdouble prop)

@@ -150,6 +150,7 @@ public:
     force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
     void set_complex(typeof(_prop) new_prop, void *new_data);
     const void *get_complex_data() const { return _complex; };
+    typeof(_prop) get_type() const { return _prop; };
 
     static bool cmp(const stroke &stroke1, const stroke &stroke2);
     static void copy(const stroke &src, stroke &dest);
@@ -269,6 +270,7 @@ inline pressure_t stroke::getPressure(int index) const
 /* call this function only when constantPressureVal is 1 */
 inline pressure_t stroke::getPressure() const
 {
+    W_ASSERT(this->is_normal());
     return _pressure.at(0);
 }
 
@@ -450,8 +452,9 @@ inline void stroke::clearAudio()
     _metadata.posizione_audio = -1;
 }
 
-inline int stroke::length() const
+force_inline int stroke::length() const
 {
+    W_ASSERT(this->is_normal());
     return _point.length();
 }
 

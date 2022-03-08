@@ -552,10 +552,10 @@ inline QRect datastruct::get_bigger_rect(const QRect &first, const QRect &second
 
 inline int datastruct::adjustStroke(stroke &stroke)
 {
-    int page;
-    int counter = stroke.length() - 1;
+    int page, counter;
 
     if(likely(stroke.is_normal())){
+        counter = stroke.length() - 1;
         for(; counter >= 0; counter --){
             point_s &point = stroke.at_mod(counter);
             point._x       /= this->_zoom;
