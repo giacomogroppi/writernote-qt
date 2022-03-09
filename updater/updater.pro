@@ -34,22 +34,3 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-win32 {
-    PATH_CI = C:Program Files (x86)\Windows Kits\10\bin\10.0.16299.0\x64\bin\x64\mt.exe
-    PATH = C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\mt.exe
-    if(exists( $$PATH_CI )){
-         WINSDK_DIR = $$PATH_CI
-    }else{
-        WINSDK_DIR = $$PATH
-    }
-
-    WIN_PWD = $$replace(PWD, /, \\)
-    OUT_PWD_WIN = $$replace(OUT_PWD, /, \\)
-
-    TO = "$$OUT_PWD_WIN\\build\\updater.exe"
-    FROM = '$$OUT_PWD_WIN\\$$basename(TARGET).exe.manifest'
-    message($$FROM)
-    QMAKE_POST_LINK = "'$$WINSDK_DIR' -manifest '$$FROM' -outputresource:'$$TO';1"
-}
-#RC_FILE = res_manifest.rc
