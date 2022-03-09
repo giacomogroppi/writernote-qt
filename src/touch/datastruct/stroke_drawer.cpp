@@ -4,6 +4,9 @@
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
 
+constexpr double deltaColorNull = 1.4;
+constexpr double deltaPress = 2.;
+
 force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
     constexpr bool debCircle = true;
@@ -21,27 +24,35 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
 force_inline void stroke_drawer::draw_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cdouble prop)
 {
     const QPainterPath &path = stroke.getQPainterPath(page);
+    const auto press = stroke.getPressure();
 
+    pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
     painter.strokePath(path, pen);
 }
 
 force_inline void stroke_drawer::draw_not_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
     int counterPoint;
-    constexpr double deltaColorNull = 1.4;
     QPointF lastPoint, pointDraw;
-
     cint lenPoint = stroke.length();
 
-    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop);
+    //lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop);
+    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(1.);
+
+    pen.setColor(Qt::red);
 
     for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
         const point_s point = page::at_translation(stroke.at(counterPoint), page);
         const pressure_t pressure = stroke.getPressure(counterPoint);
 
-        pointDraw = point.toQPointF(prop);
+        //pointDraw = point.toQPointF(prop);
+        pointDraw = point.toQPointF(1.);
 
-        pen.setWidthF(TabletCanvas::pressureToWidth(pressure / 2.00) * prop);
+        pen.setWidthF(
+                        TabletCanvas::pressureToWidth(
+                            pressure * prop / deltaPress
+                        )
+                    );
 
         if(unlikely(is_rubber)){
             pen.setWidthF(pen.widthF() * deltaColorNull);

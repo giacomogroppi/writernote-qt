@@ -20,12 +20,13 @@ static size_t get_size_by_type(int type)
 void *stroke_complex_allocate(int type, void *data)
 {
     void *new_data;
-    const size_t size = get_size_by_type(type);
 
     if(type == stroke::COMPLEX_NORMAL){
         new_data = NULL;
         return new_data;
     }
+
+    const size_t size = get_size_by_type(type);
 
     new_data = malloc(size);
     memcpy(new_data, data, size);

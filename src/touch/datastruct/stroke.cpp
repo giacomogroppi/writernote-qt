@@ -32,6 +32,8 @@ int stroke::save(zip_source_t *file) const
 {
     int i, len;
     len = this->_pressure.length();
+    // TODO
+    return OK;
     cint len_point = this->length();
 
     SOURCE_WRITE_RETURN(file, &len_point, sizeof(len_point));
@@ -54,6 +56,9 @@ int stroke::load(zip_file_t *file, int version)
 {
     int i, len_point;
     point_s point_append;
+
+    // TODO
+    return OK;
 
 #ifdef ALL_VERSION
     bool page_point = false;
@@ -149,12 +154,19 @@ void stroke::setMetadata(cint posizione_audio, const colore_s &color)
 size_t stroke::createControll() const
 {
     size_t controll = 0;
-    int i;
+    int i, len;
+
+    if(unlikely(!this->is_normal())){
+        return 0;
+    }
+
+    len = length();
+
     for(i = 0; i < NCOLOR; i++){
         controll += _metadata.color.colore[i];
     }
 
-    for(i = 0; i < length(); i++){
+    for(i = 0; i < len; i++){
         const point_s &point = _point.at(i);
         controll += point._x;
         controll += point._y;

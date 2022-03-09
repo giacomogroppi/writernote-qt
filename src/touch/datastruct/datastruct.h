@@ -394,9 +394,15 @@ inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
 inline int datastruct::whichPage(const stroke &stroke) const
 {
     int i;
-    const auto &ref = stroke.getBiggerPointInStroke().topLeft();
+    const auto &big = stroke.getBiggerPointInStroke();
 
-    i = this->whichPage(ref);
+    const auto &point = big.topLeft();
+    i = this->whichPage(point);
+
+    if(unlikely(i < 0)){
+        const auto &point = big.bottomRight();
+        i = this->whichPage(point);
+    }
 
     return i;
 }

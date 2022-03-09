@@ -23,29 +23,30 @@ static void drawSingleStroke(DataPaint      &_dataPoint,
                              QPainter       &_painter,
                              cdouble        _zoom)
 {
-    int i, len;
-
+    int i, len = _stroke.length();
     if(unlikely(_stroke.isEmpty()))
         return;
 
-    _stroke.draw(_painter, false, 0, _pen, _dataPoint.parent->_canvas->data->datatouch->getZoom());
+    _stroke.draw(_painter, false, 0, _pen, _zoom * _dataPoint.m);
 
-    return;
-
+    _pen.setColor(Qt::black);
     _dataPoint.lastPoint.pos = QPointF(_stroke.at(0)._x, _stroke.at(0)._y);
 
+    W_ASSERT(_dataPoint.m == 1.);
+    return;
     for(i = 1; i < len; i++){
         const auto &__point = _stroke.at(i);
 
         _pen.setWidthF(
-                    TabletCanvas::pressureToWidth(_stroke.getPressure(i) * _zoom * _dataPoint.m / 2.00));
+                        TabletCanvas::pressureToWidth(
+                            _stroke.getPressure(i) * _zoom / 2.00)
+                    );
         _painter.setPen(_pen);
 
-        _painter.drawLine(_dataPoint.lastPoint.pos * _dataPoint.m,
-                         QPointF(__point._x * _dataPoint.m, __point._y * _dataPoint.m));
+        _painter.drawLine(_dataPoint.lastPoint.pos,
+                          __point.toQPointF(1.));
 
-        _dataPoint.lastPoint.pos.setX(__point._x);
-        _dataPoint.lastPoint.pos.setY(__point._y);
+        _dataPoint.lastPoint.pos = __point.toQPointF(1.);
     }
 }
 
