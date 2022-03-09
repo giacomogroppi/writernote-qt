@@ -33,6 +33,6 @@ bool stroke_complex_cmp(const stroke *str1, const stroke *str2);
 QRect stroke_complex_bigger_data(const stroke *stroke);
 
 int stroke_complex_save(const stroke *stroke, zip_source_t *file);
-int stroke_complex_load(const stroke *stroke, int type, zip_file_t *file);
+int stroke_complex_load(stroke *stroke, int type, zip_file_t *file);
 
 #endif // MODEL_H

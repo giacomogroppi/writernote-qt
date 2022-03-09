@@ -30,14 +30,20 @@ void stroke::__setPressureFirstPoint(const pressure_t pres)
 
 int stroke::save(zip_source_t *file) const
 {
-    int i, len;
-    len = this->_pressure.length();
-    // TODO
-    return OK;
-    cint len_point = this->length();
+    int i;
+    cint len        = _pressure.length();
+    cint len_point  = _point.length();
 
     SOURCE_WRITE_RETURN(file, &len_point, sizeof(len_point));
     SOURCE_WRITE_RETURN(file, &_metadata, sizeof(_metadata));
+    SOURCE_WRITE_RETURN(file, &_prop, sizeof(_prop));
+
+    if(!this->is_normal()){
+        W_ASSERT(_pressure.isEmpty());
+        W_ASSERT(_point.isEmpty());
+
+        return stroke_complex_save(this, file);
+    }
 
     SOURCE_WRITE_RETURN(file, &len, sizeof(len));
 
@@ -56,9 +62,6 @@ int stroke::load(zip_file_t *file, int version)
 {
     int i, len_point;
     point_s point_append;
-
-    // TODO
-    return OK;
 
 #ifdef ALL_VERSION
     bool page_point = false;
@@ -100,10 +103,16 @@ int stroke::load(zip_file_t *file, int version)
         SOURCE_READ_RETURN(file, &_metadata, sizeof(_metadata));
     }
 
-
     if(version == 2){
         // version 2 load pressure
         int len_pressure;
+
+        SOURCE_READ_RETURN(file, &_prop, sizeof(_prop));
+
+        if(unlikely(!is_normal())){
+            return stroke_complex_load(this, _prop, file);
+        }
+
         SOURCE_READ_RETURN(file, &len_pressure, sizeof(len_pressure));
 
         for(i = 0; i < len_pressure; i++){

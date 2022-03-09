@@ -11,6 +11,7 @@ struct mem_info
     const void *pointer;
     char function[128];
     char file[128];
+    int line;
 };
 
 static pthread_mutex_t _mem_mutex;
@@ -27,12 +28,15 @@ static void print_mem_info(const mem_info *mem)
     assert(mem);
     QString message;
 
-    message = QString("Pointer %1 File: %2 Function %3").arg( QString::number((unsigned long)mem->pointer), mem->file, mem->function);
+    message = QString("Pointer %1 File: %2 Function %3 Line %4").arg( qstr::number((unsigned long)mem->pointer),
+                                                                      mem->file,
+                                                                      mem->function,
+                                                                      qstr::number(mem->line));
 
     qDebug() << message;
 }
 
-void *WMalloc_private(const char *file, const char *function, const size_t size)
+void *WMalloc_private(const char *function, const char *file, int line, const size_t size)
 {
     mem_info mem;
 
@@ -40,6 +44,7 @@ void *WMalloc_private(const char *file, const char *function, const size_t size)
 
     strncpy(mem.file,       file,       sizeof(mem.file));
     strncpy(mem.function,   function,   sizeof(mem.function));
+    mem.line = line;
 
     mem.pointer = pointer;
 
@@ -50,7 +55,7 @@ void *WMalloc_private(const char *file, const char *function, const size_t size)
     return pointer;
 }
 
-void WMalloc_private_new(cchar *file, cchar *function, cvoid *pointer)
+void WMalloc_private_new(cchar *function, cchar *file, cvoid *pointer)
 {
     mem_info mem;
     strncpy(mem.file,       file,       sizeof(mem.file));
@@ -98,6 +103,7 @@ void WEnd_application(void)
         qDebug() << "No mem leak";
         return;
     }
+
     qDebug() << "Mem leak";
 
     for(const auto &tmp : qAsConst(_mem)){

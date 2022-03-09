@@ -16,7 +16,6 @@ class frompdf;
 #define CURRENT_VERSION_CURRENT_TITLE 8
 #define MIN_VERSION_CURRENT_TITLE 2
 
-
 class Document{
 private:
     void init();

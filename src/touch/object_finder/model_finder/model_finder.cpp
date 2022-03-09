@@ -6,6 +6,8 @@
 #define THREAD_FINDER 3
 #define debug_model 1
 
+constexpr double min_precision = 30;
+
 static struct{
     double is[THREAD_FINDER];
 } finder;
@@ -29,7 +31,11 @@ static struct{
 
 void __init__ init_finder(void)
 {
-    memset(&finder, 0, sizeof(finder));
+    int i;
+
+    for(i = 0; i < THREAD_FINDER; i++){
+        finder.is[i] = min_precision * 2.;
+    }
 }
 
 static void *model_finder(void *_index)
@@ -70,14 +76,12 @@ static int get_index_most_prob(cdouble min_precision)
         }
     }
 
-    index = 2;
     return index;
 }
 
 bool model::find(stroke *stroke)
 {
     long i;
-    constexpr double min_precision = 30;
 
     ctrl._stroke = stroke;
     for(i = 0; i < THREAD_FINDER; i++){

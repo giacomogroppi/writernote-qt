@@ -89,12 +89,16 @@ bool stroke_complex_cmp(const stroke *str1, const stroke *str2)
     return (memcmp(str1->get_complex_data(), str2->get_complex_data(), size)) == 0;
 }
 
+typedef uchar ver_stroke_complex;
+constexpr ver_stroke_complex _current_ver = 0;
+
 int stroke_complex_save(const stroke *stroke, zip_source_t *_file)
 {
     const auto type = stroke->get_type();
     const auto size = get_size_by_type(type);
     const auto *data = stroke->get_complex_data();
 
+    SOURCE_WRITE_RETURN(_file, &_current_ver, sizeof(_current_ver));
     SOURCE_WRITE_RETURN(_file, data, size);
 
     return OK;
@@ -102,11 +106,19 @@ int stroke_complex_save(const stroke *stroke, zip_source_t *_file)
 
 int stroke_complex_load(stroke *stroke, int type, zip_file_t *filezip)
 {
+    ver_stroke_complex current_ver;
     const auto size = get_size_by_type(type);
-    void *data = WMalloc(size);
-    SOURCE_READ_RETURN(filezip, data, size);
+    void *data;
 
-    stroke->set_complex(type, data);
+    SOURCE_READ_RETURN(filezip, &current_ver, sizeof(current_ver));
+
+    if(current_ver == _current_ver){
+        data = WMalloc(size);
+        SOURCE_READ_RETURN(filezip, data, size);
+        stroke->set_complex(type, data);
+    }else{
+        return ERROR;
+    }
 
     return OK;
 }

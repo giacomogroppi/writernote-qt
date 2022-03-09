@@ -143,6 +143,7 @@ force_inline thread_group_sem::~thread_group_sem()
     }
 
     WFree(_thread);
+    WFree(_data);
 
     sem_destroy(&_finish);
     sem_destroy(&_pass);
