@@ -1,5 +1,6 @@
 #include "touch/object_finder/model/model.h"
 #include "touch/datastruct/datastruct.h"
+#include "testing/memtest.h"
 
 constexpr double    error = 5000;
 constexpr bool      debug = true;
@@ -174,7 +175,7 @@ void model_line_create(stroke *stroke)
 {
     W_ASSERT(stroke);
     bool &is_vertical = line_data.is_vertical;
-    stroke_complex_line *data = (stroke_complex_line *)malloc(sizeof(stroke_complex_line));
+    stroke_complex_line *data = (stroke_complex_line *)WMalloc(sizeof(stroke_complex_line));
 
     if(is_vertical){
         model_line_vertical(stroke, data);

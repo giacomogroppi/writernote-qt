@@ -264,7 +264,7 @@ void stroke::reset()
         W_ASSERT(!_complex);
     }else{
         W_ASSERT(_complex);
-        free(_complex);
+        WFree(_complex);
         _complex = NULL;
     }
 

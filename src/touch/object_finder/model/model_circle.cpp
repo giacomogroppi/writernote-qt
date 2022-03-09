@@ -2,6 +2,7 @@
 #include "touch/datastruct/stroke.h"
 #include "utils/common_script.h"
 #include "touch/datastruct/stroke_complex_data.h"
+#include "testing/memtest.h"
 
 static stroke_complex_circle circle_data;
 
@@ -13,7 +14,7 @@ void model_circle_create(stroke *stroke)
     circle_data._press = press;
 
     stroke->reset();
-    stroke_complex_circle *data = (stroke_complex_circle *)malloc(sizeof(stroke_complex_circle));
+    stroke_complex_circle *data = (stroke_complex_circle *)WMalloc(sizeof(stroke_complex_circle));
     memcpy(data, &circle_data, sizeof(circle_data));
     stroke->set_complex(stroke::COMPLEX_CIRCLE, data);
 }

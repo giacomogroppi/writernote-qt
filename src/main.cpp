@@ -132,6 +132,9 @@ int main(int argc, char **argv)
     WDelete(canvas);
     WDelete(window);
     WDelete(app);
+
+    WEnd_application();
+
     return exit_code;
 }
 

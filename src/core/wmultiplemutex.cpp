@@ -1,5 +1,6 @@
 #include "wmultiplemutex.h"
 #include "utils/common_script.h"
+#include "testing/memtest.h"
 
 WMultipleMutex::WMultipleMutex(int size, int initVal)
 {
@@ -8,7 +9,7 @@ WMultipleMutex::WMultipleMutex(int size, int initVal)
     W_ASSERT(initVal < size);
 
     this->size = size;
-    this->sem = (sem_t *)malloc(sizeof(*sem) * (size + 1));
+    this->sem = (sem_t *)WMalloc(sizeof(*sem) * (size + 1));
 
     // it already set all sem to 0 (lock)
     for(i = 0; i < size; i ++){
@@ -22,7 +23,7 @@ WMultipleMutex::~WMultipleMutex()
     for(i = 0; i < size; i++)
         sem_destroy(&sem[i]);
 
-    free(sem);
+    WFree(sem);
 
     sem = 0;
 }

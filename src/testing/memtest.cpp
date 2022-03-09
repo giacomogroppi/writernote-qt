@@ -4,7 +4,7 @@
 #include "string.h"
 #include "pthread.h"
 
-#ifdef DEBUG_CORE
+#ifdef DEBUG_MEM
 
 struct mem_info
 {
@@ -32,10 +32,27 @@ static void print_mem_info(const mem_info *mem)
     qDebug() << message;
 }
 
-void WMalloc_private(const char *file, const char *function, const void *pointer)
+void *WMalloc_private(const char *file, const char *function, const size_t size)
 {
     mem_info mem;
 
+    void *pointer = malloc(size);
+
+    strncpy(mem.file,       file,       sizeof(mem.file));
+    strncpy(mem.function,   function,   sizeof(mem.function));
+
+    mem.pointer = pointer;
+
+    pthread_mutex_lock(&_mem_mutex);
+    _mem.append(mem);
+    pthread_mutex_unlock(&_mem_mutex);
+
+    return pointer;
+}
+
+void WMalloc_private_new(cchar *file, cchar *function, cvoid *pointer)
+{
+    mem_info mem;
     strncpy(mem.file,       file,       sizeof(mem.file));
     strncpy(mem.function,   function,   sizeof(mem.function));
 

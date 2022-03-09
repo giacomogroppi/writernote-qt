@@ -4,6 +4,7 @@
 #include "utils/common_error_definition.h"
 #include "frompdf/frompdf.h"
 #include "utils/areyousure/areyousure.h"
+#include "testing/memtest.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
 {
@@ -13,7 +14,7 @@ int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
     SOURCE_READ_RETURN(f, &tmp, sizeof(int));
 
     if(tmp){
-        str = (char *)malloc(sizeof(char) * (tmp + 1));
+        str = (char *)WMalloc(sizeof(char) * (tmp + 1));
 
         SOURCE_READ_RETURN(f, str, sizeof(char)*tmp);
 
@@ -21,7 +22,7 @@ int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
 
         stringa = str;
 
-        free(str);
+        WFree(str);
     }
 
     return OK;
@@ -71,7 +72,7 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
 
     arr.append((cchar *)data, size);
 
-    free(data);
+    WFree(data);
 
     zip_fclose(file);
     if(closeZip)

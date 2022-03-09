@@ -3,6 +3,7 @@
 #include "log/log_ui/log_ui.h"
 #include "utils/threadcount.h"
 #include <pthread.h>
+#include "testing/memtest.h"
 
 static pthread_mutex_t mutex_thread_write;
 void DataPrivateInit(void)
@@ -124,14 +125,14 @@ void DataPrivateCountThreadRelease(int releaseThread)
 pthread_t *get_thread_max()
 {
     int thread = threadCount::count();
-    pthread_t * data = (pthread_t *)malloc(sizeof(pthread_t) * thread);
+    pthread_t * data = (pthread_t *)WMalloc(sizeof(pthread_t) * thread);
     return data;
 }
 
 DataPrivateMuThread *get_data_max()
 {
     int thread = threadCount::count();
-    DataPrivateMuThread * data = (DataPrivateMuThread *)malloc(sizeof(DataPrivateMuThread) * thread);
+    DataPrivateMuThread * data = (DataPrivateMuThread *)WMalloc(sizeof(DataPrivateMuThread) * thread);
     return data;
 }
 
@@ -144,8 +145,8 @@ void free_thread_data(pthread_t **thread, DataPrivateMuThread **data)
     W_ASSERT(*thread);
     W_ASSERT(*data);
 
-    free(*thread);
-    free(*data);
+    WFree(*thread);
+    WFree(*data);
 
     *thread = NULL;
     *data = NULL;

@@ -2,6 +2,10 @@
 #include "touch/datastruct/stroke_complex_data.h"
 #include "touch/datastruct/stroke.h"
 #include "touch/datastruct/datastruct.h"
+#include "dataread/xmlstruct.h"
+#include "datawrite/savefile.h"
+#include "datawrite/source_read_ext.h"
+#include "testing/memtest.h"
 
 static size_t get_size_by_type(int type)
 {
@@ -28,7 +32,7 @@ void *stroke_complex_allocate(int type, void *data)
 
     const size_t size = get_size_by_type(type);
 
-    new_data = malloc(size);
+    new_data = WMalloc(size);
     memcpy(new_data, data, size);
 
     return new_data;
@@ -83,4 +87,26 @@ bool stroke_complex_cmp(const stroke *str1, const stroke *str2)
         return false;
 
     return (memcmp(str1->get_complex_data(), str2->get_complex_data(), size)) == 0;
+}
+
+int stroke_complex_save(const stroke *stroke, zip_source_t *_file)
+{
+    const auto type = stroke->get_type();
+    const auto size = get_size_by_type(type);
+    const auto *data = stroke->get_complex_data();
+
+    SOURCE_WRITE_RETURN(_file, data, size);
+
+    return OK;
+}
+
+int stroke_complex_load(stroke *stroke, int type, zip_file_t *filezip)
+{
+    const auto size = get_size_by_type(type);
+    void *data = WMalloc(size);
+    SOURCE_READ_RETURN(filezip, data, size);
+
+    stroke->set_complex(type, data);
+
+    return OK;
 }

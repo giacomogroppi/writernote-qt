@@ -4,6 +4,7 @@
 #include "utils/common_script.h"
 #include "utils/threadcount.h"
 #include "semaphore.h"
+#include "testing/memtest.h"
 #include "pthread.h"
 
 struct DataPrivateMuThread{
@@ -84,8 +85,8 @@ force_inline thread_group_sem::thread_group_sem()
     _flag = 0;
     _core = threadCount::count();
 
-    _thread = (typeof(_thread)) malloc(sizeof(*_thread) * _core);
-    _data = (typeof(_data)) malloc(sizeof(*_data) * _core);
+    _thread = (typeof(_thread)) WMalloc(sizeof(*_thread) * _core);
+    _data = (typeof(_data)) WMalloc(sizeof(*_data) * _core);
 
     sem_init(&_finish, 0, 0);
     sem_init(&_pass, 0, 0);
@@ -141,7 +142,7 @@ force_inline thread_group_sem::~thread_group_sem()
         pthread_join(_thread[i], NULL);
     }
 
-    free(_thread);
+    WFree(_thread);
 
     sem_destroy(&_finish);
     sem_destroy(&_pass);

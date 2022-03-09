@@ -3,30 +3,32 @@
 
 #include "utils/common_script.h"
 
-// debug for memory
-#ifdef DEBUG_CORE
+#ifdef DEBUGINFO
+#   define DEBUG_MEM
+#endif
 
-void WMalloc_private(const char *file, const char *function, const void *pointer);
+// debug for memory
+#ifdef DEBUG_MEM
+
+void *WMalloc_private(const char *file, const char *function, const size_t size);
+void WMalloc_private_new(cchar *file, cchar *function, cvoid *pointer);
+
 void WFree_private(void *mem, const char *file, const char *function);
 
 void WEnd_application(void);
 
-# define WMalloc(pointer, size) \
-    do{ \
-        pointer = (typeof(pointer))malloc(size); \
-        WMalloc_private(__FUNCTION__, __FILE__, pointer); \
-    }while(0);
+# define WMalloc(size) WMalloc_private(__FUNCTION__, __FILE__, size);
 
 # define WFree(mem) \
     do{ \
-        free(mem) \
-        WFree_private(__FUNCTION__, __FILE__, mem); \
+        free(mem); \
+        WFree_private(mem, __FILE__, __FUNCTION__); \
     }while(0);
 
 # define WNew(pointer, type, arg) \
     do{ \
         pointer = new type arg; \
-        WMalloc_private(__FUNCTION__, __FILE__, pointer); \
+        WMalloc_private_new(__FUNCTION__, __FILE__, pointer); \
     }while(0);
 
 # define WDelete(pointer) \
@@ -35,11 +37,12 @@ void WEnd_application(void);
         delete pointer; \
     }while(0);
 
-#else
-# define WMalloc(pointer, size) do{ pointer = malloc(size); } while(0);
-# define WFree(mem) do{ free(mem); } while(0);
+#else // DEBUG_MEM
+# define WMalloc(size) malloc(size)
+# define WFree(mem) free(mem)
 # define WNew(pointer, type, arg) do{ pointer = new type arg; } while(0);
 # define WDelete(pointer) do{ delete pointer; } while(0);
-#endif
+force_inline void WEnd_application(void) {}
+#endif // DEBUG_MEM
 
 #endif // MEMTEST_H

@@ -14,6 +14,7 @@
 #include "core/wline.h"
 #include "touch/datastruct/stroke_complex_data.h"
 #include "touch/object_finder/model/model.h"
+#include "testing/memtest.h"
 
 struct metadata_stroke{
     int posizione_audio;
@@ -164,7 +165,7 @@ public:
 force_inline void stroke::set_complex(typeof(_prop) new_prop, void *new_data)
 {
     if(_complex){
-        free(_complex);
+        WFree(_complex);
     }
 
     _prop = new_prop;
