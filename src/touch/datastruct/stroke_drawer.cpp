@@ -36,17 +36,13 @@ force_inline void stroke_drawer::draw_not_const(QPainter &painter, const stroke 
     QPointF lastPoint, pointDraw;
     cint lenPoint = stroke.length();
 
-    //lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop);
-    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(1.);
-
-    pen.setColor(Qt::red);
+    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop);
 
     for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
         const point_s point = page::at_translation(stroke.at(counterPoint), page);
         const pressure_t pressure = stroke.getPressure(counterPoint);
 
-        //pointDraw = point.toQPointF(prop);
-        pointDraw = point.toQPointF(1.);
+        pointDraw = point.toQPointF(prop);
 
         pen.setWidthF(
                         TabletCanvas::pressureToWidth(

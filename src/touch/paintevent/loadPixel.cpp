@@ -20,34 +20,14 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const
 static void drawSingleStroke(DataPaint      &_dataPoint,
                              const stroke   &_stroke,
                              QPen           &_pen,
-                             QPainter       &_painter,
-                             cdouble        _zoom)
+                             QPainter       &_painter)
 {
-    int i, len = _stroke.length();
     if(unlikely(_stroke.isEmpty()))
         return;
 
-    _stroke.draw(_painter, false, 0, _pen, _zoom * _dataPoint.m);
+    _stroke.draw(_painter, false, 0, _pen, 1.);
 
-    _pen.setColor(Qt::black);
     _dataPoint.lastPoint.pos = QPointF(_stroke.at(0)._x, _stroke.at(0)._y);
-
-    W_ASSERT(_dataPoint.m == 1.);
-    return;
-    for(i = 1; i < len; i++){
-        const auto &__point = _stroke.at(i);
-
-        _pen.setWidthF(
-                        TabletCanvas::pressureToWidth(
-                            _stroke.getPressure(i) * _zoom / 2.00)
-                    );
-        _painter.setPen(_pen);
-
-        _painter.drawLine(_dataPoint.lastPoint.pos,
-                          __point.toQPointF(1.));
-
-        _dataPoint.lastPoint.pos = __point.toQPointF(1.);
-    }
 }
 
 void TabletCanvas::load(QPainter &painter,
@@ -93,7 +73,7 @@ void TabletCanvas::load(QPainter &painter,
     pen.setColor(strokeToDraw.getColor());
 
     /* stroke not already add to page */
-    drawSingleStroke(dataPoint, strokeToDraw, pen, painter, zoom);
+    drawSingleStroke(dataPoint, strokeToDraw, pen, painter);
 
 
     painter.setRenderHints(QPainter::TextAntialiasing, false);
@@ -135,7 +115,7 @@ void TabletCanvas::load(QPainter &painter,
 
     for(lenPage --; lenPage >= 0; lenPage --){
         const stroke &tmp = _laser->at(lenPage);
-        drawSingleStroke(dataPoint, tmp, pen, painter, zoom);
+        drawSingleStroke(dataPoint, tmp, pen, painter);
     }
 }
 
