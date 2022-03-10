@@ -10,8 +10,8 @@ class stroke;
 
 class stroke_drawer {
 private:
-    static void draw_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cdouble prop);
-    static void draw_not_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
+    static void draw_const(     QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
+    static void draw_not_const( QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
 
     static void draw_stroke_normal(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
 

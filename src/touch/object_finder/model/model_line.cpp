@@ -189,30 +189,11 @@ void model_line_create(stroke *stroke)
     stroke->set_complex(stroke::COMPLEX_LINE, data);
 }
 
-/*
- * Possiamo anche non fare la radice quadrata
- * ci interessa solo confrontare il più grande.
- * Non il valore
-*/
-static int distance(const QPointF& _first, const QPointF& _second)
-{
-    const QPoint first = _first.toPoint();
-    const QPoint second = _second.toPoint();
-
-    const int p = wPower(first.x() - second.x(), 2) + wPower(first.y() - second.y(), 2);
-    if(debug_enable()){
-        const auto res = std::pow(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
-        W_ASSERT(p == res);
-    }
-
-    return p;
-}
-
 void stroke_complex_line_append(stroke *stroke, const QPointF& point)
 {
     auto *data = (stroke_complex_line *) stroke->get_complex_data();
-    const auto dist1 = distance(data->topLeft, point);
-    const auto dist2 = distance(data->bottomRight, point);
+    const auto dist1 = distance_not_square(data->topLeft, point);
+    const auto dist2 = distance_not_square(data->bottomRight, point);
 
     if(dist1 > dist2){
         data->bottomRight = point;

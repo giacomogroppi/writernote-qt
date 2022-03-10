@@ -266,12 +266,13 @@ void page::drawStroke(
     stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
 
     if(unlikely(!painter.isActive())){
-#ifdef DEBUGINFO
-        qDebug() << "page::drawStroke" << "painter not active";
-        W_ASSERT(false);
-#else
-        log_write->write("Painter not active", log_ui::possible_bug);
-#endif
+        if(debug_enable()){
+            qDebug() << "page::drawStroke" << "painter not active";
+            W_ASSERT(false);
+        }
+        else{
+            log_write->write("Painter not active", log_ui::possible_bug);
+        }
         return;
     }
 
@@ -306,8 +307,8 @@ struct page_thread_data{
 */
 void * __page_load(void *__data)
 {
-    struct DataPrivateMuThread * _data = (struct DataPrivateMuThread *)__data;
-    struct page_thread_data *extra = (struct page_thread_data *)_data->extra;
+    auto *  _data = (struct DataPrivateMuThread *)__data;
+    auto *  extra = (struct page_thread_data *)_data->extra;
     QImage img;
     Define_PEN(m_pen);
     pthread_mutex_t *mutex = extra->append;

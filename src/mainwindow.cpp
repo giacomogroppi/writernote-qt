@@ -251,6 +251,8 @@ void MainWindow::on_actionrestore_button_triggered()
     data->triggerVisibility(_canvas->height());
 
     _canvas->restoreO();
+    this->updatePageCount(1);
+    this->zoomChange();
 }
 
 /* new page */

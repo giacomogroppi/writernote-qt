@@ -3,13 +3,18 @@
 #include "touch/datastruct/page.h"
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
+#include "qmath.h"
 
 constexpr double deltaColorNull = 1.4;
 constexpr double deltaPress = 2.;
 
-force_inline void set_press(QPen &pen, const pressure_t press, const double prop)
+force_inline void set_press(QPen &pen, const pressure_t press, const double prop, cbool is_rubber)
 {
     pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
+    if(unlikely(is_rubber)){
+        const auto _press = pen.widthF() * deltaColorNull;
+        pen.setWidthF(_press);
+    }
 }
 
 force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
@@ -18,7 +23,7 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
     stroke_complex_circle *data = (stroke_complex_circle *)stroke._complex;
     const auto press = data->_press;
 
-    pen.setWidthF(TabletCanvas::pressureToWidth(press * prop));
+    set_press(pen, press, prop, is_rubber);
     painter.setPen(pen);
 
     painter.drawEllipse(QPointF(data->_x, data->_y) * prop, data->_r * prop, data->_r * prop);
@@ -26,16 +31,19 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
     WDebug(debCircle, __FUNCTION__ << data->_x << data->_y << data->_r);
 }
 
-force_inline void stroke_drawer::draw_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cdouble prop)
+force_inline void stroke_drawer::draw_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
     const QPainterPath &path = stroke.getQPainterPath(page);
     const auto press = stroke.getPressure();
 
-    pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
+    set_press(pen, press, prop, is_rubber);
+    painter.setPen(pen);
     painter.strokePath(path, pen);
 }
 
-force_inline void stroke_drawer::draw_not_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
+force_inline void stroke_drawer::draw_not_const(QPainter &painter,  const stroke &stroke,
+                                                cint page,          QPen &pen,
+                                                cbool is_rubber,    cdouble prop)
 {
     int counterPoint;
     QPointF lastPoint, pointDraw;
@@ -49,11 +57,7 @@ force_inline void stroke_drawer::draw_not_const(QPainter &painter, const stroke 
 
         pointDraw = point.toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
 
-        pen.setWidthF(
-                        TabletCanvas::pressureToWidth(
-                            pressure * prop / deltaPress
-                        )
-                    );
+        set_press(pen, pressure, prop, is_rubber);
 
         if(unlikely(is_rubber)){
             pen.setWidthF(pen.widthF() * deltaColorNull);
@@ -76,7 +80,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
     W_ASSERT(painter.isActive());
 
     if(prop == PROP_RESOLUTION && stroke.constantPressure()){
-        stroke_drawer::draw_const(painter, stroke, page, pen, prop);
+        stroke_drawer::draw_const(painter, stroke, page, pen, is_rubber, prop);
     }else{
         stroke_drawer::draw_not_const(painter, stroke, page, pen, is_rubber, prop);
     }
@@ -110,12 +114,9 @@ force_inline void stroke_drawer::draw_line(
     stroke_complex_line * data = (stroke_complex_line *)stroke._complex;
     const auto press = data->press;
 
-    pen.setWidth(TabletCanvas::pressureToWidth(press * prop / deltaPress));
+    set_press(pen, press, prop, is_rubber);
 
-    if(unlikely(is_rubber)){
-        pen.setWidthF(pen.widthF() * deltaColorNull);
-    }
-
+    painter.setPen(pen);
     painter.drawLine(data->topLeft * prop, data->bottomRight * prop);
 }
 

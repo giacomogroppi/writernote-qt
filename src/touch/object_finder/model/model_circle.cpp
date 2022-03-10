@@ -63,5 +63,8 @@ double model_circle(const stroke *stroke)
 
 void stroke_complex_circle_append(stroke *stroke, const QPointF& point)
 {
+    auto *data = (stroke_complex_circle *)stroke->get_complex_data();
+    W_ASSERT(stroke->is_circle());
 
+    data->_r = distance(QPointF(data->_x, data->_y), point);
 }

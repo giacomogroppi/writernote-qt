@@ -296,7 +296,7 @@ inline void stroke::append(const point_s &point, pressure_t pressure)
         return;
     }
 
-    this->_point.append(point);
+    _point.append(point);
     _pressure.append(pressure);
 
     this->modify();

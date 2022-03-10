@@ -4,7 +4,12 @@
 #include <QList>
 #include <QtGlobal>
 #include <QDebug>
+#include <QPointF>
+#include <QPoint>
 #include "time.h"
+#include <iostream>
+#include <math.h>
+#include <qmath.h>
 #include "stdio.h"
 #include "stdlib.h"
 #include "utils/common_def.h"
@@ -390,6 +395,22 @@ force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
     }
 
     return res;
+}
+
+force_inline double distance_not_square(const QPointF& first, const QPointF& second)
+{
+    const auto p = wPower(first.x() - second.x(), 2) + wPower(first.y() - second.y(), 2);
+    if(debug_enable()){
+        const auto res = std::pow(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
+        W_ASSERT(p == res);
+    }
+
+    return p;
+}
+
+force_inline double distance(const QPointF& first, const QPointF& second)
+{
+    return std::sqrt(distance_not_square(first, second));
 }
 
 #endif // COMMON_SCRIPT_H

@@ -17,14 +17,18 @@
 extern stroke __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta);
 
-static void drawSingleStroke(DataPaint      &_dataPoint,
-                             const stroke   &_stroke,
-                             QPen           &_pen,
-                             QPainter       &_painter,
-                             cdouble        _zoom)
+static void drawSingleStroke(DataPaint &_dataPoint, const stroke   &_stroke,
+                             QPen      &_pen,       QPainter       &_painter,
+                             double   _zoom)
 {
     if(unlikely(_stroke.isEmpty()))
         return;
+
+    W_ASSERT(_dataPoint.m == 1.);
+
+    if(_zoom == PROP_RESOLUTION){
+        _zoom = PROP_RESOLUTION - 0.0000001;
+    }
 
     _stroke.draw(_painter, false, 0, _pen, _zoom);
 }
