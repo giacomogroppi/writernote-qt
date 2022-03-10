@@ -24,8 +24,8 @@ public:
 
     bool isEmpty() const;
 
-    frompdf *m_pdf;
-    fromimage *m_img;
+    frompdf *m_pdf = NULL;
+    fromimage *m_img = NULL;
 
     int versione = CURRENT_VERSION_CURRENT_TITLE;
     QString audio_position_path = "";
@@ -34,7 +34,7 @@ public:
         return this->versione >= MIN_VERSION_CURRENT_TITLE;
     }
 
-    datastruct *datatouch;
+    datastruct *datatouch = NULL;
     void reset();
     void cleanAudio();
     uint count_pdf = 0;

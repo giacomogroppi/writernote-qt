@@ -2,7 +2,8 @@
 #include "touch/tabletcanvas.h"
 #include "testing/memtest.h"
 
-void redoundo::append(Document *doc){
+void redoundo::append(Document *doc)
+{
     this->m_list.append(doc);
     W_ASSERT(m_list.length() == max);
 }
@@ -31,7 +32,8 @@ redoundo::~redoundo()
     }
 }
 
-void redoundo::clear(){
+void redoundo::clear()
+{
     uint i;
     const uint len = m_list.length();
 
@@ -40,7 +42,8 @@ void redoundo::clear(){
     }
 }
 
-void redoundo::redo(){
+void redoundo::redo()
+{
     if(indice == this->max - 1){
         return;
     }
@@ -51,7 +54,8 @@ void redoundo::redo(){
 }
 
 /* go back to the last Document */
-void redoundo::undo(){
+void redoundo::undo()
+{
     if(indice == 0)
         return;
 
@@ -60,7 +64,8 @@ void redoundo::undo(){
     indice --;
 }
 
-void redoundo::copy(){
+void redoundo::copy()
+{
     if(indice < max){
         Document::copy(*canvas->data, *m_list.operator[](indice));
         this->indice ++;

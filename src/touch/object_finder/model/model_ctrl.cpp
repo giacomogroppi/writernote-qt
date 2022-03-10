@@ -51,6 +51,7 @@ void stroke_complex_adjust(stroke *stroke, cdouble zoom)
         stroke_complex_line *data = (stroke_complex_line *) stroke->_complex;
         data->bottomRight /= zoom;
         data->topLeft /= zoom;
+        data->press /= zoom;
     }else if(stroke->is_rect()){
         stroke_complex_rect *data = (stroke_complex_rect *) stroke->_complex;
         const QPointF topLeft = data->rect.topLeft() / zoom;
@@ -121,4 +122,21 @@ int stroke_complex_load(stroke *stroke, int type, zip_file_t *filezip)
     }
 
     return OK;
+}
+
+extern void stroke_complex_line_append(stroke *stroke, const QPointF& point);
+extern void stroke_complex_circle_append(stroke *stroke, const QPointF& point);
+extern void stroke_complex_rect_append(stroke *stroke, const QPointF& point);
+
+void stroke_complex_append(stroke *stroke, const QPointF& point)
+{
+    W_ASSERT(!stroke->is_normal());
+    if(stroke->is_circle())
+        return stroke_complex_circle_append(stroke, point);
+    if(stroke->is_line())
+        return stroke_complex_line_append(stroke, point);
+    if(stroke->is_rect())
+        return stroke_complex_rect_append(stroke, point);
+
+    std::abort();
 }

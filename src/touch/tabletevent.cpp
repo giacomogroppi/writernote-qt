@@ -64,6 +64,7 @@ static void AppendAll(
 
         doc.datatouch->at_mod(pageMod).triggerRenderImage(time, false);
     }
+
     strokeToAppend.reset();
 }
 

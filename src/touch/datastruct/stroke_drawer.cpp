@@ -7,6 +7,11 @@
 constexpr double deltaColorNull = 1.4;
 constexpr double deltaPress = 2.;
 
+force_inline void set_press(QPen &pen, const pressure_t press, const double prop)
+{
+    pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
+}
+
 force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
     constexpr bool debCircle = true;
@@ -36,13 +41,13 @@ force_inline void stroke_drawer::draw_not_const(QPainter &painter, const stroke 
     QPointF lastPoint, pointDraw;
     cint lenPoint = stroke.length();
 
-    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop);
+    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
 
     for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
         const point_s point = page::at_translation(stroke.at(counterPoint), page);
         const pressure_t pressure = stroke.getPressure(counterPoint);
 
-        pointDraw = point.toQPointF(prop);
+        pointDraw = point.toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
 
         pen.setWidthF(
                         TabletCanvas::pressureToWidth(
@@ -63,12 +68,9 @@ force_inline void stroke_drawer::draw_not_const(QPainter &painter, const stroke 
 }
 
 force_inline void stroke_drawer::draw_stroke_normal(
-        QPainter        &painter,
-        const stroke    &stroke,
-        cint            page,
-        QPen            &pen,
-        cbool           is_rubber,
-        cdouble         prop)
+        QPainter        &painter,   const stroke    &stroke,
+        cint            page,       QPen            &pen,
+        cbool           is_rubber,  cdouble         prop)
 {
     W_ASSERT(page >= 0);
     W_ASSERT(painter.isActive());
@@ -106,6 +108,13 @@ force_inline void stroke_drawer::draw_line(
     pen.setColor(stroke.getColor());
     painter.setPen(pen);
     stroke_complex_line * data = (stroke_complex_line *)stroke._complex;
+    const auto press = data->press;
+
+    pen.setWidth(TabletCanvas::pressureToWidth(press * prop / deltaPress));
+
+    if(unlikely(is_rubber)){
+        pen.setWidthF(pen.widthF() * deltaColorNull);
+    }
 
     painter.drawLine(data->topLeft * prop, data->bottomRight * prop);
 }

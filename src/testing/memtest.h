@@ -10,10 +10,10 @@
 // debug for memory
 #ifdef DEBUG_MEM
 
-void *WMalloc_private(      cchar *function, cchar *file, int line, const size_t size);
-void WMalloc_private_new(   cchar *function, cchar *file, cvoid *pointer);
+void *WMalloc_private(      cchar *function, cchar *file, unsigned long int line, const size_t size);
+void WMalloc_private_new(   cchar *function, cchar *file, unsigned long int line, cvoid *pointer);
 
-void WFree_private(void *mem, const char *file, const char *function);
+void WFree_private(cvoid *mem, const char *file, const char *function);
 
 void WEnd_application(void);
 
@@ -21,14 +21,14 @@ void WEnd_application(void);
 
 # define WFree(mem) \
     do{ \
-        free(mem); \
         WFree_private(mem, __FILE__, __FUNCTION__); \
+        free(mem); \
     }while(0);
 
 # define WNew(pointer, type, arg) \
     do{ \
         pointer = new type arg; \
-        WMalloc_private_new(__FUNCTION__, __FILE__, pointer); \
+        WMalloc_private_new(__FUNCTION__, __FILE__, __LINE__, pointer); \
     }while(0);
 
 # define WDelete(pointer) \

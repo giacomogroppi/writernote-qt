@@ -21,6 +21,7 @@ struct stroke_complex_rect{
 
 struct stroke_complex_line{
     QPointF topLeft, bottomRight;
+    double press;
 
     void draw(QPainter &painter);
     bool is_inside(const class WLine &line, cint precision);

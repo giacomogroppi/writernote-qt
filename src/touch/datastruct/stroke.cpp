@@ -277,6 +277,8 @@ void stroke::reset()
         _complex = NULL;
     }
 
+    W_ASSERT(!_complex);
+
     _prop = COMPLEX_NORMAL;
     _pressure.clear();
     _point.clear();

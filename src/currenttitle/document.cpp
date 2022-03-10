@@ -9,6 +9,10 @@
 
 void Document::init()
 {
+    W_ASSERT(!m_img);
+    W_ASSERT(!m_pdf);
+    W_ASSERT(!datatouch);
+
     WNew(m_img, fromimage, (this));
     WNew(m_pdf, frompdf, (this));
     WNew(datatouch, datastruct, (m_pdf, m_img));
@@ -20,6 +24,10 @@ Document::Document(){
 
 Document::Document(const Document &src)
 {
+    if(m_img || m_pdf || datatouch){
+        this->~Document();
+    }
+
     init();
     Document::copy(src, *this);
 }

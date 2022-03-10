@@ -252,7 +252,7 @@ Q_CONSTEXPR Q_ALWAYS_INLINE double page::getWidth()
     return width;
 }
 
-#define PROP_RESOLUTION (double(2))
+#define PROP_RESOLUTION (2.1)
 Q_CONSTEXPR force_inline double page::getResolutionWidth()
 {
     return getWidth() * PROP_RESOLUTION;

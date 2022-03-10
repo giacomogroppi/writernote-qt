@@ -28,7 +28,10 @@ object_finder::~object_finder()
 void object_finder::endTimer()
 {
     stroke &stroke = __tmp;
-    WDebug(debug, "object_finder" << __FUNCTION__);
-    model::find(&stroke);
-    _canvas->call_update();
+
+    if(likely(stroke.is_normal())){
+        WDebug(debug, "object_finder" << __FUNCTION__);
+        model::find(&stroke);
+        _canvas->call_update();
+    }
 }

@@ -39,7 +39,7 @@ force_inline constexpr not_used int debug_enable()
             qDebug() << __FUNCTION__ << __FILE__ ;              \
             std::abort();                                       \
         }                                                       \
-    }while(0);
+    }while(0)
 #else
 # define W_ASSERT(condition) ;
 #endif // DEBUGINFO
@@ -386,7 +386,7 @@ force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
     }
 
     for(i = 1; i < power; i ++){
-        res *= i;
+        res *= value;
     }
 
     return res;

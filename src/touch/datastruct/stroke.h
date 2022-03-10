@@ -89,14 +89,10 @@ public:
 
 #define stroke_append_default -1.
     void append(const point_s &point, pressure_t pressure);
-
     void setMetadata(const int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);
-
     void setPositioneAudio(const int m_pos_ris);
-
     size_t createControll() const;
-
     int removeAt(int index);
 
     /* if you pass from = 0, to = 2 
@@ -116,35 +112,23 @@ public:
     bool constantPressure() const;
 
     uchar get_alfa() const;
-
     size_t getSizeInMemory() const;
     void decreasePrecision();
-
     void setAlfaColor(const uchar alfa);
-
     __slow void at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const;
-
     void setColor(const QColor &color);
     void setColor(const colore_s &color);
-
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
-
     const QPainterPath &getQPainterPath(int page) const;
-
     void createQPainterPath(int page) const;
-
     void reset();
-
     stroke &operator=(const stroke &other);
-
     bool isEmpty() const;
-
     const point_s &last() const;
-    
+
 #define STROKE_MUST_TRASLATE_PATH BIT(1)
     void scale(const QPointF &offset, int flag);
-
     force_inline bool is_normal() const { return _prop == COMPLEX_NORMAL; };
     force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
     force_inline bool is_rect() const { return _prop == COMPLEX_RECT; };
@@ -170,11 +154,14 @@ force_inline void stroke::set_complex(typeof(_prop) new_prop, void *new_data)
 
     _prop = new_prop;
     _complex = new_data;
+
+    W_ASSERT(_pressure.isEmpty());
+    W_ASSERT(_point.isEmpty());
 }
 
 force_inline bool stroke::isPressureVal() const
 {
-    return _pressure.length() == 1;
+    return _pressure.length() == 1 && _point.length() > 1;
 }
 
 force_inline bool stroke::needToCreatePanterPath() const
@@ -213,7 +200,7 @@ inline void stroke::updateFlagPressure() const
 
     len = this->length();
 
-    if(unlikely(len != 1 && _press.length() == 1)){
+    if(unlikely(len > 1 && _press.length() == 1)){
         return;
     }
 
@@ -282,13 +269,13 @@ inline QColor stroke::getColor(const double division = 1.) const
 
 inline const point_s &stroke::at(const int index) const
 {
-    W_ASSERT(_prop == COMPLEX_NORMAL);
+    W_ASSERT(is_normal());
     return _point.at(index);
 }
 
 inline point_s &stroke::at_mod(const int index)
 {
-    W_ASSERT(_prop == COMPLEX_NORMAL);
+    W_ASSERT(is_normal());
     this->modify();
     return _point.operator[](index);
 }
@@ -300,6 +287,15 @@ inline void stroke::append(const point_s &point, pressure_t pressure)
      * aggiornato il flag deciderà se cancellare o meno la list delle
      * pressioni, in caso siano tutte uguali
     */
+
+    if(unlikely(!this->is_normal())){
+        W_ASSERT(_point.isEmpty());
+        W_ASSERT(_pressure.isEmpty());
+
+        stroke_complex_append(this, point.toQPointF(1.));
+        return;
+    }
+
     this->_point.append(point);
     _pressure.append(pressure);
 

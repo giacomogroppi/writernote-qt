@@ -8,7 +8,7 @@ laser::laser(QObject *parent):
     QObject::connect(_timer, &QTimer::timeout, this, &laser::endTimer);
     _canvas = (TabletCanvas *)parent;
 
-    W_ASSERT(_canvas->objectName() == "TabletCanvas")
+    W_ASSERT(_canvas->objectName() == "TabletCanvas");
 
 }
 

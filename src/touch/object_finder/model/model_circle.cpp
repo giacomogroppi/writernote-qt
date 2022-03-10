@@ -60,3 +60,8 @@ double model_circle(const stroke *stroke)
 
     return precision;
 }
+
+void stroke_complex_circle_append(stroke *stroke, const QPointF& point)
+{
+
+}
