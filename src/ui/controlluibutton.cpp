@@ -98,7 +98,7 @@ void ControllUiButton::update()
 
     const bool tablet = this->mode == Mode::Tablet;
 
-    for(i=0; i<len_button; ++i){
+    for(i = 0; i < len_button; i++){
         this->m_button.at(i)->setVisible(tablet);
         this->m_button.at(i)->setStyleSheet("QPushButton { \
                                                 border-style: outset; \

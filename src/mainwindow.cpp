@@ -283,4 +283,3 @@ void MainWindow::on_actionFull_Screen_triggered()
 {
     this->setFullScreen();
 }
-

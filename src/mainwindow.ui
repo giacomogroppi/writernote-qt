@@ -196,6 +196,9 @@
           <height>27</height>
          </size>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chance the color of the pen to black&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -215,6 +218,9 @@
           <width>27</width>
           <height>27</height>
          </size>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chance the color of the pen to white&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string/>
@@ -236,6 +242,9 @@
           <height>27</height>
          </size>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chance the color of the pen to yellow&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -256,6 +265,9 @@
           <height>27</height>
          </size>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chance the color of the pen to brown&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -275,6 +287,9 @@
           <width>27</width>
           <height>27</height>
          </size>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chance the color of the pen to purple&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string/>
@@ -798,8 +813,6 @@
     </property>
     <addaction name="actionUndu"/>
     <addaction name="actionRedo"/>
-    <addaction name="actionCopy"/>
-    <addaction name="actionCut"/>
     <addaction name="actionPaste"/>
     <addaction name="actionSelect_all"/>
    </widget>
@@ -898,8 +911,6 @@
    </attribute>
    <addaction name="actionUndu"/>
    <addaction name="actionRedo"/>
-   <addaction name="actionCut"/>
-   <addaction name="actionCopy"/>
    <addaction name="actionPaste"/>
   </widget>
   <widget class="QToolBar" name="audiobar">
@@ -1078,30 +1089,6 @@
    </property>
    <property name="text">
     <string>Redo</string>
-   </property>
-  </action>
-  <action name="actionCopy">
-   <property name="icon">
-    <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/document-copy.png</normaloff>:/image/images/document-copy.png</iconset>
-   </property>
-   <property name="text">
-    <string>Copy</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+C</string>
-   </property>
-  </action>
-  <action name="actionCut">
-   <property name="icon">
-    <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/scissors.png</normaloff>:/image/images/scissors.png</iconset>
-   </property>
-   <property name="text">
-    <string>Cut</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+X</string>
    </property>
   </action>
   <action name="actionSelect_all">
