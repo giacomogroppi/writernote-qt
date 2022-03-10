@@ -95,28 +95,16 @@ void ControllUiButton::update()
     int i;
     const int len_button = this->m_button.length();
     const int len_spacer = this->m_spacer.length();
-    //constexpr auto color = "#e0e0e0";
+    constexpr auto colorOver = "#e0e0e0";
     const auto color = parent->ui->buttonChooseColor->palette().color(parent->backgroundRole());
-
+#define vis_private setHidden
     const bool tablet = this->mode == Mode::Tablet;
 
     for(i = 0; i < len_button; i++){
         this->m_button.at(i)->setVisible(tablet);
-        this->m_button.at(i)->setStyleSheet("QPushButton { \
-                                                border-style: outset; \
-                                                border-width: 30px; \
-                                                border-radius: 10px; \
-                                                border-color: rgba(0, 0, 0, 0)\
-                                                padding: 6px; \
-                                            }\
-                                            QPushButton:checked { \
-                                                background-color: rgb(192, 192, 192);\
-                                                border: none; \
-                                            }");
+        m_button.at(i)->setStyleSheet(qstr("QPushButton{border:5px solid %1;} QPushButton:hover{border:10px solid %2}").
+                                                    arg(color.name()).arg(colorOver));
     }
-
-    parent->ui->buttonRecentFile->setStyleSheet(qstr("QPushButton{border:5px solid %1;} QPushButton:hover{border:10px}").
-                                                arg(color.name()));
 
     for(i = 0; i < len_spacer; ++i){
         if(tablet)
@@ -125,11 +113,11 @@ void ControllUiButton::update()
             m_spacer.at(i)->changeSize(0, 0);
     }
 
-    parent->ui->mainbar->setHidden(tablet);
-    parent->ui->simpleactionbar->setHidden(tablet);
-    parent->ui->audiobar->setHidden(tablet);
-    parent->ui->toolbarmatita->setHidden(tablet);
-    parent->ui->toolBarcolore->setHidden(tablet);
-    parent->ui->toolSheet->setHidden(tablet);
+    parent->ui->mainbar->vis_private(tablet);
+    parent->ui->simpleactionbar->vis_private(tablet);
+    parent->ui->audiobar->vis_private(tablet);
+    parent->ui->toolbarmatita->vis_private(tablet);
+    parent->ui->toolBarcolore->vis_private(tablet);
+    parent->ui->toolSheet->vis_private(tablet);
 }
 
