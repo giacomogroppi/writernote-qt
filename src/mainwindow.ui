@@ -32,6 +32,9 @@
           <height>27</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -48,6 +51,9 @@
           <width>27</width>
           <height>27</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border:0px solid #ff0000;</string>
         </property>
         <property name="text">
          <string/>

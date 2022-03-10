@@ -95,6 +95,8 @@ void ControllUiButton::update()
     int i;
     const int len_button = this->m_button.length();
     const int len_spacer = this->m_spacer.length();
+    //constexpr auto color = "#e0e0e0";
+    const auto color = parent->ui->buttonChooseColor->palette().color(parent->backgroundRole());
 
     const bool tablet = this->mode == Mode::Tablet;
 
@@ -102,18 +104,21 @@ void ControllUiButton::update()
         this->m_button.at(i)->setVisible(tablet);
         this->m_button.at(i)->setStyleSheet("QPushButton { \
                                                 border-style: outset; \
-                                                border-width: 2px; \
+                                                border-width: 30px; \
                                                 border-radius: 10px; \
                                                 border-color: rgba(0, 0, 0, 0)\
                                                 padding: 6px; \
                                             }\
-                                            QPushButton:checked {\
+                                            QPushButton:checked { \
                                                 background-color: rgb(192, 192, 192);\
                                                 border: none; \
                                             }");
     }
 
-    for(i=0; i<len_spacer; ++i){
+    parent->ui->buttonRecentFile->setStyleSheet(qstr("QPushButton{border:5px solid %1;} QPushButton:hover{border:10px}").
+                                                arg(color.name()));
+
+    for(i = 0; i < len_spacer; ++i){
         if(tablet)
             m_spacer.at(i)->changeSize(0, 0, QSizePolicy::MinimumExpanding);
         else

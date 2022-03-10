@@ -1,12 +1,16 @@
 #ifndef CONTROLLUIBUTTON_H
 #define CONTROLLUIBUTTON_H
-class MainWindow;
+
 #include <QString>
 #include <QList>
 #include <QPushButton>
 #include <QColor>
 #include <QImage>
 #include <QSpacerItem>
+
+#include "utils/common_script.h"
+
+class MainWindow;
 
 class ControllUiButton
 {
@@ -37,6 +41,13 @@ private :
 
     void initList();
     void update();
+
+    static QColor get_color_background();
 };
+
+force_inline QColor ControllUiButton::get_color_background()
+{
+    return QColor(224, 224, 224);
+}
 
 #endif // CONTROLLUIBUTTON_H
