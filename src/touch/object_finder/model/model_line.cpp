@@ -5,7 +5,7 @@
 #include "utils/common_script.h"
 
 constexpr double    error = 5000;
-constexpr bool      debug = true;
+constexpr bool      debug = false;
 
 struct{
     double m, q;
@@ -133,13 +133,14 @@ cont:
         q = one->y() - (one->x()) * m;
     }
 
-    qDebug() << "model_line" << qstr("%1%2").arg(one->y()).arg(one->x());
 
     for(i = 0; i < len; i++){
         one = &stroke->at(i);
 
         is_near_line(m, precision, q, one);
     }
+
+    WDebug(debug, __FUNCTION__ << qstr("Line precision: ").arg(precision));
 
     return precision;
 }

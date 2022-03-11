@@ -233,12 +233,6 @@ force_inline void page::AppendDirectly(const stroke &stroke)
 
 Q_ALWAYS_INLINE const QImage &page::getImg() const
 {
-    if(_imgDraw.isNull()){
-        qDebug() << "page::getImg() is null" << this->_stroke.length() << this;
-    }else{
-        qDebug() << "page::getImg() is not null" << this->_stroke.length() << this;
-    }
-
     return this->_imgDraw;
 }
 

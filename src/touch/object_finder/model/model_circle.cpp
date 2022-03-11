@@ -3,8 +3,10 @@
 #include "utils/common_script.h"
 #include "touch/datastruct/stroke_complex_data.h"
 #include "testing/memtest.h"
+#include "qmath.h"
 
 static stroke_complex_circle circle_data;
+constexpr not_used bool debug = false;
 
 void model_circle_create(stroke *stroke)
 {
@@ -27,9 +29,9 @@ static void model_circle_precision(const QPointF &point, double &precision)
      * X^2 + Y^2 - R = res
      */
 
-    res = wPower(point.x(), 2) + wPower(point.y(), 2) - circle_data._r;
+    res = qSqrt(wPower(point.x(), 2) + wPower(point.y(), 2)) - circle_data._r;
 
-    if(res > precision){
+    if(qAbs(res) > precision){
         precision = res;
     }
 }
@@ -37,6 +39,7 @@ static void model_circle_precision(const QPointF &point, double &precision)
 double model_circle(const stroke *stroke)
 {
     const auto area = stroke->getBiggerPointInStroke();
+    constexpr auto coef = 50.;
     double precision = 0.;
     int i, len;
     double &x = circle_data._x;
@@ -57,6 +60,10 @@ double model_circle(const stroke *stroke)
         const auto &ref = stroke->at(i);
         model_circle_precision(ref.toQPointF(1.), precision);
     }
+
+    precision /= coef;
+
+    WDebug(debug, __FUNCTION__ << qstr("Cricle precision: ").arg(precision));
 
     return precision;
 }

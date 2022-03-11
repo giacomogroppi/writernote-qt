@@ -66,7 +66,7 @@ static int get_index_most_prob(cdouble min_precision)
 
         // is not enough
         if(prec > min_precision){
-            WDebug(debug_model, __FUNCTION__ << prec);
+            //WDebug(debug_model, __FUNCTION__ << "not enough" << prec);
             continue;
         }
 
