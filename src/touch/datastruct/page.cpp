@@ -251,8 +251,8 @@ void page::drawStroke(
     const bool isHigh = stroke.get_alfa() < 255;
     const auto last_comp_mode = painter.compositionMode();
 
-    constexpr bool measureTime = false;
-    constexpr bool debColor = false;
+    constexpr not_used bool measureTime = false;
+    constexpr not_used bool debColor = false;
     constexpr double deltaColorNull = 1.4;
 
     cint page = _count - 1;
@@ -261,9 +261,6 @@ void page::drawStroke(
     Q_UNUSED(debColor);
 
     m_pen.setColor(color);
-    //m_pen.setWidthF(TabletCanvas::pressureToWidth(stroke.getPressure() / 2.00) * PROP_RESOLUTION);
-
-    stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
 
     if(unlikely(!painter.isActive())){
         if(debug_enable()){
@@ -282,6 +279,8 @@ void page::drawStroke(
     }else if(isHigh){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
+
+    stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
 
     if(unlikely(isRubber)){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
