@@ -30,21 +30,19 @@ private:
 
 #define FLAG_PAGE_ORDERED   BIT(1) // if indicates whether the list of strokes is sort by index
 #define FLAG_PAGE_BLOCK     BIT(2) // if we can't append stroke
-    int flag = 0;
-
-    bool IsVisible = true;
-    int count;
-
-    QList<stroke> m_stroke;
-    stroke m_stroke_writernote;
+    int             _flag = 0;
+    bool            _IsVisible = true;
+    int             _count;
+    QList<stroke>   _stroke;
+    stroke          _stroke_writernote;
 
     /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    QVector<stroke> strokeTmp;
-    QImage imgDraw;
+    QVector<stroke> _strokeTmp;
+    QImage          _imgDraw;
 
     void drawNewPage(n_style __style);
 
@@ -165,44 +163,44 @@ public:
 
 Q_ALWAYS_INLINE void page::removeBlock() const
 {
-    int & tmp = (int &)flag;
+    int & tmp = (int &)_flag;
     tmp &= ~FLAG_PAGE_BLOCK;
 }
 
 Q_ALWAYS_INLINE void page::setBlock() const
 {
-    int & tmp = (int &) flag;
+    int & tmp = (int &) _flag;
     tmp |= FLAG_PAGE_BLOCK;
 }
 
-inline double page::currentHeight() const
+force_inline double page::currentHeight() const
 {
-    return count*page::getHeight();
+    return _count * page::getHeight();
 }
 
-inline double page::currentWidth() const
+force_inline double page::currentWidth() const
 {
     return page::getWidth();
 }
 
-Q_ALWAYS_INLINE void page::changeCounter(const int newPage)
+force_inline void page::changeCounter(const int newPage)
 {
-    this->count = newPage;
+    this->_count = newPage;
 }
 
-inline void page::move(const uint from, const uint to)
+force_inline void page::move(const uint from, const uint to)
 {
-    this->m_stroke.move(from, to);
+    this->_stroke.move(from, to);
 }
 
-inline void page::reset()
+force_inline void page::reset()
 {
-    this->m_stroke.clear();
-    this->m_stroke_writernote.reset();
-    this->IsVisible = true;
-    this->count = -1;
-    this->strokeTmp.clear();
-    this->imgDraw = QImage();
+    this->_stroke.clear();
+    this->_stroke_writernote.reset();
+    this->_IsVisible = true;
+    this->_count = -1;
+    this->_strokeTmp.clear();
+    this->_imgDraw = QImage();
 }
 
 inline point_s page::at_translation(const point_s &point, cint page)
@@ -219,10 +217,10 @@ inline point_s page::at_translation(const point_s &point, cint page)
     return tmp;
 }
 
-Q_ALWAYS_INLINE void page::AppendDirectly(const stroke &stroke)
+force_inline void page::AppendDirectly(const stroke &stroke)
 {
-    if(unlikely(this->flag & FLAG_PAGE_BLOCK)){
-        const QString message = QString("Possible bug, appending when flag is %1").arg(QString::number(flag));
+    if(unlikely(_flag & FLAG_PAGE_BLOCK)){
+        const QString message = QString("Possible bug, appending when flag is %1").arg(QString::number(_flag));
         NAME_LOG_EXT->write(message, log_ui::possible_bug);
         qDebug() << message;
 
@@ -230,12 +228,18 @@ Q_ALWAYS_INLINE void page::AppendDirectly(const stroke &stroke)
         dialog_critic(message);
 #endif
     }
-    this->m_stroke.append(stroke);
+    this->_stroke.append(stroke);
 }
 
 Q_ALWAYS_INLINE const QImage &page::getImg() const
 {
-    return this->imgDraw;
+    if(_imgDraw.isNull()){
+        qDebug() << "page::getImg() is null" << this->_stroke.length() << this;
+    }else{
+        qDebug() << "page::getImg() is not null" << this->_stroke.length() << this;
+    }
+
+    return this->_imgDraw;
 }
 
 Q_CONSTEXPR Q_ALWAYS_INLINE double page::getProportion()
@@ -276,50 +280,50 @@ force_inline bool page::updateFlag(
 
     heightSec = page::getHeight() * zoom;
 
-    cdouble minH = heightSec * double(count - 1) / zoom + FirstPoint.y();
-    cdouble maxH = heightSec * double(count)     / zoom + FirstPoint.y();
+    cdouble minH = heightSec * double(_count - 1) / zoom + FirstPoint.y();
+    cdouble maxH = heightSec * double(_count)     / zoom + FirstPoint.y();
 
     if(likely( heightView <= page::getHeight() * zoom)){
         // if the page is not fully visible in a window
 
-        IsVisible = discordant(maxH, minH);
+        _IsVisible = discordant(maxH, minH);
 
-        if(IsVisible)
+        if(_IsVisible)
             goto ret;
     }
 
-    IsVisible = included(0.0, heightView, minH) || included(0.0, heightView, maxH);
+    _IsVisible = included(0.0, heightView, minH) || included(0.0, heightView, maxH);
 
 ret:
-    WDebug(debugPage, "count"   << count
+    WDebug(debugPage, "count"   << _count
              << "minH"          << minH
              << "heightView"    << heightView
              << "maxH"          << maxH
              << "zoom"          << zoom
-             << IsVisible);
+             << _IsVisible);
 
-    return IsVisible;
+    return _IsVisible;
 }
 
 force_inline void page::setVisible(cbool vis) const
 {
-    bool &_IsVisible = (bool &)IsVisible;
-    _IsVisible = vis;
+    bool &__IsVisible = (bool &)_IsVisible;
+    __IsVisible = vis;
 }
 
 force_inline const stroke &page::atStroke(uint i) const
 {
-    return this->m_stroke.at(i);
+    return this->_stroke.at(i);
 }
 
 force_inline stroke &page::atStrokeMod(const uint i)
 {
-    return this->m_stroke.operator[](i);
+    return this->_stroke.operator[](i);
 }
 
 force_inline const stroke &page::get_stroke_page() const
 {
-    return this->m_stroke_writernote;
+    return this->_stroke_writernote;
 }
 
 static force_inline void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
@@ -356,12 +360,12 @@ inline void page::at_draw_page(
 
 force_inline int page::lengthStroke() const
 {
-    return m_stroke.length();
+    return _stroke.length();
 }
 
 force_inline bool page::isVisible() const
 {
-    return this->IsVisible;
+    return this->_IsVisible;
 }
 
 inline void page::copy(
@@ -374,55 +378,48 @@ inline void page::copy(
 
     //dest.allocateStroke(src.lengthStroke());
 
-    dest.m_stroke               = src.m_stroke;
-
-    dest.m_stroke_writernote = src.m_stroke_writernote;
-
-    dest.strokeTmp              = src.strokeTmp;
-
-    //for(counterStroke = 0; counterStroke < lenStroke; counterStroke ++){
-    //    dest.atStrokeMod(counterStroke) = src.atStroke(counterStroke);
-    //}
-
-    dest.imgDraw = src.imgDraw;
-    dest.IsVisible = src.IsVisible;
-    dest.count = src.count;
+    dest._stroke                    = src._stroke;
+    dest._stroke_writernote         = src._stroke_writernote;
+    dest._strokeTmp                 = src._strokeTmp;
+    dest._imgDraw                   = src._imgDraw;
+    dest._IsVisible                 = src._IsVisible;
+    dest._count                     = src._count;
 }
 
 force_inline void page::removeAt(const uint i)
 {
-    this->m_stroke.removeAt(i);
+    this->_stroke.removeAt(i);
 }
 
 force_inline const stroke &page::last() const
 {
-    return this->m_stroke.last();
+    return this->_stroke.last();
 }
 
 inline stroke &page::lastMod()
 {
-    return this->m_stroke.operator[](this->lengthStroke() - 1);
+    return this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
 force_inline void page::append(const stroke &strokeAppend)
 {
     DO_IF_DEBUG(
-    int lastNewIndex = strokeTmp.length();
+    int lastNewIndex = _strokeTmp.length();
     );
 
-    this->strokeTmp.append(strokeAppend);
+    this->_strokeTmp.append(strokeAppend);
 
     /* they will be automatically removed when
      * the project is compiled in release mode
     */
     if(strokeAppend.is_normal()){
-        W_ASSERT(stroke::cmp(strokeAppend, strokeTmp.at(lastNewIndex)));
+        W_ASSERT(stroke::cmp(strokeAppend, _strokeTmp.at(lastNewIndex)));
     }
 }
 
 force_inline double page::minHeight() const
 {
-    return (this->count-1)*this->height;
+    return (this->_count - 1)*this->height;
 }
 
 force_inline page::page(const page &from)

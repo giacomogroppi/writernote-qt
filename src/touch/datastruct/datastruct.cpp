@@ -221,7 +221,7 @@ void datastruct::restoreLastTranslation(const int heightView){
 
 void datastruct::scala_all(const QPointF &point, const int heightView)
 {
-    if(point == QPointF(0, 0))
+    if(unlikely(point == QPointF(0, 0)))
         return;
 
     this->_pointFirstPage += point;
@@ -339,7 +339,7 @@ void datastruct::removePage(uint page)
     this->_page.removeAt(page);
 
     for(i = 0; i < page; i++){
-        _page.operator[](i).count = i + 1;
+        _page.operator[](i)._count = i + 1;
     }
 }
 

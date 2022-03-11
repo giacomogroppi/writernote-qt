@@ -98,6 +98,8 @@ force_inline void stroke_drawer::draw_rect(
     painter.setPen(pen);
     stroke_complex_rect *data = (stroke_complex_rect *)stroke._complex;
 
+    set_press(pen, data->press, prop, is_rubber);
+
     painter.drawRect(QRectF(data->rect.topLeft() * prop, data->rect.bottomRight() * prop));
 }
 

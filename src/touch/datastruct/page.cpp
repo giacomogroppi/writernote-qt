@@ -18,8 +18,8 @@
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
-#define Define_PAINTER(painter) QPainter painter(&imgDraw); \
-    painter.begin(&imgDraw); \
+#define Define_PAINTER(painter) QPainter painter(&_imgDraw); \
+    painter.begin(&_imgDraw); \
     W_ASSERT(painter.isActive()); \
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -62,8 +62,8 @@ static force_inline void __initImg(QImage &img)
 
 page::page(const int count, const n_style style)
 {
-    this->count = count;
-    this->IsVisible = true;
+    this->_count = count;
+    this->_IsVisible = true;
     drawNewPage(style);
     this->mergeList();
 }
@@ -128,9 +128,9 @@ void page::drawNewPage(n_style __style)
     struct style_struct_S style;
     cdouble width_p    = this->getWidth();
     cdouble height_p   = this->getHeight();
-    cdouble last = (count-1)*page::getHeight();
+    cdouble last = (_count - 1)*page::getHeight();
 
-    stroke &stroke = this->m_stroke_writernote;
+    stroke &stroke = this->_stroke_writernote;
 
     setStylePrivate(fast, __style, style);
 
@@ -208,14 +208,14 @@ void page::swap(QList<stroke> & list,
     );
 
     for(to --; from <= to; to --){
-        list.append(m_stroke.takeAt(to));
+        list.append(_stroke.takeAt(to));
 
         DO_IF_DEBUG_ENABLE(debugPage, drop ++);
         DO_IF_DEBUG_ENABLE(debugPage, itemDrop.append(to));
     }
 
     DO_IF_DEBUG_ENABLE(debugPage,
-        qDebug() << "Page::swap" << this->count - 1 << drop << "Item drop, list" << itemDrop;
+        qDebug() << "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop;
             )
 }
 
@@ -255,7 +255,7 @@ void page::drawStroke(
     constexpr bool debColor = false;
     constexpr double deltaColorNull = 1.4;
 
-    cint page = this->count - 1;
+    cint page = _count - 1;
 
     Q_UNUSED(measureTime);
     Q_UNUSED(debColor);
@@ -415,17 +415,17 @@ inline void page::draw(
     int         m_pos_ris,
     bool        all)
 {
-    auto list = strokeTmp.toList();
+    auto list = _strokeTmp.toList();
     bool changeSomething = true;
 
     if(unlikely(all)){
-        this->drawEngine(painter, this->m_stroke, m_pos_ris, NULL, true);
+        this->drawEngine(painter, this->_stroke, m_pos_ris, NULL, true);
     }
 
     this->drawEngine(painter, list, m_pos_ris, &changeSomething, false);
 
     if(unlikely(changeSomething)){
-        this->strokeTmp = QVector<stroke>::fromList(list);
+        this->_strokeTmp = QVector<stroke>::fromList(list);
     }
 
     this->mergeList();
@@ -434,13 +434,13 @@ inline void page::draw(
 void page::mergeList()
 {
     int i;
-    const int len = this->strokeTmp.length();
-    int index = m_stroke.length();
+    const int len = this->_strokeTmp.length();
+    int index = _stroke.length();
 
     for(i = 0; i < len; i++){
-        const stroke &stroke = strokeTmp.at(i);
+        const stroke &stroke = _strokeTmp.at(i);
 
-        m_stroke.append(stroke);
+        _stroke.append(stroke);
 
         //Q_ASSERT(m_stroke.at(index).length() == strokeTmp.at(i).length());
         //Q_ASSERT(m_stroke.at(index).getId() == strokeTmp.at(i).getId());
@@ -448,7 +448,7 @@ void page::mergeList()
         index ++;
     }
 
-    strokeTmp.clear();
+    _strokeTmp.clear();
 }
 
 void page::drawToImage(
@@ -476,14 +476,14 @@ void page::drawToImage(
 
 bool page::userWrittenSomething() const
 {
-    return this->m_stroke.length();
+    return this->_stroke.length();
 }
 
 bool page::initImg(bool flag)
 {
-    flag = imgDraw.isNull() || flag;
+    flag = _imgDraw.isNull() || flag;
     if(flag)
-        __initImg(imgDraw);
+        __initImg(_imgDraw);
 
     return flag;
 }
@@ -515,7 +515,7 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
     QPainter painter;
     all = initImg(all);
 
-    painter.begin(&imgDraw);
+    painter.begin(&_imgDraw);
     W_ASSERT(painter.isActive());
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -587,7 +587,7 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
 #define PAGE_DRAW_SQUARE_ADJUST(point, function) \
     point._x = rect.function().x(); \
     point._y = rect.function().y(); \
-    at_translation(point, this->count - 1);
+    at_translation(point, this->_count - 1);
 
 void page::drawSquare(const QRect &rect)
 {
@@ -625,7 +625,7 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
         return this->triggerRenderImage(-1, true);
     }
 
-    painter.begin(&this->imgDraw);
+    painter.begin(&this->_imgDraw);
     W_ASSERT(painter.isActive());
 
     painter.setRenderHint(QPainter::Antialiasing, true);
@@ -684,7 +684,7 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
 
         WNew(painter, QPainter, ());
 
-        painter->begin(&this->imgDraw);
+        painter->begin(&this->_imgDraw);
         painter->setRenderHint(QPainter::Antialiasing, true);
     }
 
@@ -703,7 +703,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);
 
-    painter.begin(&this->imgDraw);
+    painter.begin(&this->_imgDraw);
     W_ASSERT(painter.isActive());
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -717,7 +717,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
 void page::allocateStroke(int numAllocation)
 {
     for(int i = 0; i < numAllocation; i++){
-        this->m_stroke.append(stroke());
+        this->_stroke.append(stroke());
     }
 }
 
@@ -735,7 +735,7 @@ int page::save(zip_source_t *file) const
         DO_CTRL(atStroke(i).save(file));
     }
 
-    DO_CTRL(m_stroke_writernote.save(file));
+    DO_CTRL(_stroke_writernote.save(file));
 
     return OK;
 }
@@ -751,7 +751,7 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 {
     int i, k, err;
 
-    DO_LOAD(m_stroke);
+    DO_LOAD(_stroke);
 
     if(ver_stroke == 0){
 #ifdef ALL_VERSION
@@ -766,7 +766,7 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
             if(unlikely(res == PAGE_POINT)){
                 cint len = __tmp.length();
                 for(k = 0; k < len; k ++){
-                    m_stroke_writernote.append(__tmp.at(k), __tmp.getPressure(k));
+                    _stroke_writernote.append(__tmp.at(k), __tmp.getPressure(k));
                 }
             }
         }
@@ -774,7 +774,7 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
         // remove empty stroke
         for(int i = lengthStroke() - 1; i >= 0; i--){
             if(atStroke(i).length() == 0){
-                this->m_stroke.removeAt(i);
+                this->_stroke.removeAt(i);
             }
         }
 #else
@@ -782,9 +782,9 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 #endif
     }
     if(ver_stroke == 1){
-        m_stroke_writernote.load(file, ver_stroke);
-        if(m_stroke_writernote.length() && m_stroke_writernote.getPressure() > 10){
-            m_stroke_writernote.__setPressureFirstPoint(1.5);
+        _stroke_writernote.load(file, ver_stroke);
+        if(_stroke_writernote.length() && _stroke_writernote.getPressure() > 10){
+            _stroke_writernote.__setPressureFirstPoint(1.5);
         }
     }
 

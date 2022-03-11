@@ -280,7 +280,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     pthread_mutex_lock(&single_mutex);
 
     _al_find->append(index_selected);
-    private_data->data->decreaseAlfa(index_selected, _page->count - 1);
+    private_data->data->decreaseAlfa(index_selected, _page->_count - 1);
 
     pthread_mutex_unlock(&single_mutex);
 

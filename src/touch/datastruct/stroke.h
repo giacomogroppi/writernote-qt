@@ -21,8 +21,6 @@ struct metadata_stroke{
     struct colore_s color;
 };
 
-typedef float pressure_t;
-
 class stroke
 {
 private:

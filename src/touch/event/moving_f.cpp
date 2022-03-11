@@ -5,7 +5,8 @@
 extern bool block_scrolling;
 
 /* wheel of mouse */
-void TabletCanvas::ismoving_f(){
+void TabletCanvas::ismoving_f()
+{
     QPointF translation;
     const double &blockScrolling = block_scrolling;
     const double refZoom = data->datatouch->getZoom();

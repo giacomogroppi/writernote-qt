@@ -312,8 +312,7 @@ inline size_t datastruct::getSizeOne()
 
 inline void datastruct::newPage(const n_style style)
 {
-    page page(this->lengthPage()+1, style);
-    _page.append(page);
+    _page.append(page(lengthPage() + 1, style));
     triggerVisibility(page::getHeight() * lengthPage());
 }
 

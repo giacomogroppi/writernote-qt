@@ -2,26 +2,28 @@
 #define STROKE_COMPLEX_DATA_H
 
 #include "utils/common_script.h"
+#include "touch/datastruct/utils_datastruct.h"
 #include <QPainter>
 #include <QRect>
 
 
 struct stroke_complex_circle{
     double _x, _y, _r;
-    double _press;
+    pressure_t _press;
     void draw(QPainter &painter);
     void is_inside(const QPointF& point, cint precision);
 };
 
 struct stroke_complex_rect{
     QRectF rect;
+    pressure_t press;
     void draw(QPainter &painter);
     void is_inside(const QPointF& point, cint precision);
 };
 
 struct stroke_complex_line{
     QPointF topLeft, bottomRight;
-    double press;
+    pressure_t press;
 
     void draw(QPainter &painter);
     bool is_inside(const class WLine &line, cint precision);

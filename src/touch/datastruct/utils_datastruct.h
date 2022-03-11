@@ -5,6 +5,8 @@
 #include <QRectF>
 #include <QPointF>
 
+typedef float pressure_t;
+
 force_inline QRectF datastruct_rect(const QPointF &p1, const QPointF &p2)
 {
     double xt, yt, xb, yb;
