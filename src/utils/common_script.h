@@ -415,7 +415,11 @@ force_inline double distance(const QPointF& first, const QPointF& second)
 
 force_inline double is_near(const QPointF &point1, const QPointF &point2, cdouble prec)
 {
-
+    if(qAbs(point1.x() - point2.x()) < prec)
+        return true;
+    if(qAbs(point1.y() - point2.y()) < prec)
+        return true;
+    return false;
 }
 
 #endif // COMMON_SCRIPT_H
