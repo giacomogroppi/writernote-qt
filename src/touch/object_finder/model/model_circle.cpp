@@ -24,12 +24,14 @@ void model_circle_create(stroke *stroke)
 static void model_circle_precision(const QPointF &point, double &precision)
 {
     double res;
+    const auto x = circle_data._x;
+    const auto y = circle_data._y;
 
     /*
      * X^2 + Y^2 - R = res
      */
 
-    res = qSqrt(wPower(point.x(), 2) + wPower(point.y(), 2)) - circle_data._r;
+    res = qSqrt(wPower(point.x() - x, 2) + wPower(point.y() - y, 2)) - circle_data._r;
 
     if(qAbs(res) > precision){
         precision = res;
@@ -39,7 +41,7 @@ static void model_circle_precision(const QPointF &point, double &precision)
 double model_circle(const stroke *stroke)
 {
     const auto area = stroke->getBiggerPointInStroke();
-    constexpr auto coef = 50.;
+    constexpr auto coef = 1.;
     double precision = 0.;
     int i, len;
     double &x = circle_data._x;

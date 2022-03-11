@@ -197,7 +197,7 @@ force_inline void TabletCanvas::ManageStart(
 
     if(insert_method){
         updatelist(event);
-        _finder->move();
+        _finder->move(event->posF());
     }
     else if(selection_method){
         if(_square->somethingInBox()){
@@ -243,7 +243,7 @@ force_inline void TabletCanvas::ManageMove(
 
     if(likely(insert_method)){
         updatelist(event);
-        _finder->move();
+        _finder->move(event->posF());
     }
     else if(rubber_method){
         _rubber->actionRubber(point);

@@ -413,4 +413,9 @@ force_inline double distance(const QPointF& first, const QPointF& second)
     return std::sqrt(distance_not_square(first, second));
 }
 
+force_inline double is_near(const QPointF &point1, const QPointF &point2, cdouble prec)
+{
+
+}
+
 #endif // COMMON_SCRIPT_H
