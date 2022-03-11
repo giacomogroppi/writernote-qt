@@ -223,13 +223,9 @@ inline void datastruct::triggerVisibility(const double viewSize)
     W_ASSERT(to < len);
 
     for(i = 0; i < len; i++){
-        page = &at_mod(from);
+        page = &at_mod(i);
 
-        if(unlikely(i >= from && i <= to)){
-            page->setVisible(true);
-        }else{
-            page->setVisible(false);
-        }
+        page->setVisible(i >= from && i <= to);
     }
 }
 
