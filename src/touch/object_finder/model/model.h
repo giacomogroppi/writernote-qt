@@ -36,5 +36,6 @@ int stroke_complex_save(const stroke *stroke, zip_source_t *file);
 int stroke_complex_load(stroke *stroke, int type, zip_file_t *file);
 
 void stroke_complex_append(stroke *stroke, const QPointF &point);
+bool stroke_complex_is_inside(const stroke *stroke, const class WLine &line, cdouble precision);
 
 #endif // MODEL_H

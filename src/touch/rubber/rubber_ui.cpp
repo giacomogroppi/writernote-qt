@@ -255,20 +255,28 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
     for(; data->from < data->to; data->from++){
         stroke &__stroke = _page->atStrokeMod(data->from);
-        int lenPoint = __stroke.length();
+        int lenPoint, index;
+
+        if(unlikely(!__stroke.is_normal())){
+            stroke_complex_is_inside(&__stroke, area, __m_size_gomma);
+            continue;
+        }
+
+        lenPoint = __stroke.length();
 
         if(unlikely(!lenPoint))
-            continue;
+            goto insert;
 
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
-        cint index = __stroke.is_inside(area, 0, __m_size_gomma);
+        index = __stroke.is_inside(area, 0, __m_size_gomma);
 
         if(index < 0){
             continue;
         }
 
+insert:
         index_selected.append(data->from);
 
     }

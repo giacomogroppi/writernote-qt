@@ -3,6 +3,7 @@
 #include "testing/memtest.h"
 #include <qmath.h>
 #include "utils/common_script.h"
+#include "core/wline.h"
 
 constexpr double    error = 5000;
 constexpr bool      debug = false;
@@ -201,4 +202,9 @@ void stroke_complex_line_append(stroke *stroke, const QPointF& point)
     }else{
         data->topLeft = point;
     }
+}
+
+bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdouble precision)
+{
+    return false;
 }

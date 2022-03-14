@@ -264,7 +264,6 @@ void square::findObjectToDrawImg()
 void square::findObjectToDraw(const QList<QVector<int>> &index)
 {
     const datastruct *data = _canvas->data->datatouch;
-    const auto zoom = data->getZoom();
     const auto trans = data->getPointFirstPage();
     QRectF sizeData;
     return;

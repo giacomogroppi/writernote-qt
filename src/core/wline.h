@@ -17,12 +17,25 @@ public:
     WLine(const WLine &line);
     WLine(const QPointF &topLeft, const QPointF &bottomRigth);
 
-    bool intersect(const WLine &line, cint precision);
+    bool intersect(const WLine &line, cint precision) const;
     bool is_in_domain(const QPointF& point, cdouble precision) const;
     QRectF toRect() const;
 
+    void get_point(QPointF &tl, QPointF &br) const;
+
     WLine &operator=(const WLine &other);
 };
+
+force_inline void WLine::get_point(QPointF &tl, QPointF &br) const
+{
+    W_ASSERT(_xt >= 0.);
+    W_ASSERT(_yt >= 0.);
+    W_ASSERT(_xb >= 0.);
+    W_ASSERT(_yb >= 0.);
+
+    tl = QPointF(_xt, _yt);
+    br = QPointF(_xb, _yb);
+}
 
 force_inline QRectF WLine::toRect() const
 {

@@ -21,3 +21,10 @@ void stroke_complex_rect_append(stroke *stroke, const QPointF& point)
     Q_UNUSED(point);
     std::abort();
 }
+
+bool stroke_complex_is_inside_rect(const stroke *stroke, const WLine &line, cdouble precision)
+{
+    Q_UNUSED(stroke);
+    Q_UNUSED(line);
+    std::abort();
+}

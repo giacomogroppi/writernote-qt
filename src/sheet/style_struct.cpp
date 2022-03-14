@@ -13,8 +13,7 @@ void style_struct::loadFromByte(const QByteArray &arr)
     len = arr.length() / sizeof(tmp);
 
     for(i=0; i<len; ++i){
-        const char *ret = arr.mid(i*sizeof(tmp), (i+1)*sizeof(tmp));
-        memcpy(&tmp, ret, sizeof(tmp));
+        memcpy(&tmp, arr.mid(i*sizeof(tmp), (i+1)*sizeof(tmp)), sizeof(tmp));
         this->style.append(tmp);
     }
 }

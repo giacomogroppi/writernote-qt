@@ -4,9 +4,17 @@
 #include "touch/datastruct/stroke_complex_data.h"
 #include "testing/memtest.h"
 #include "qmath.h"
+#include "core/wline.h"
 
 static stroke_complex_circle circle_data;
 constexpr not_used bool debug = false;
+
+static not_used void model_circle_print(const stroke_complex_circle *data)
+{
+    if(debug_enable()){
+        qDebug() << "circle: " << data << data->_x << data->_y << data->_r << data->_press;
+    }
+}
 
 void model_circle_create(stroke *stroke)
 {
@@ -76,4 +84,31 @@ void stroke_complex_circle_append(stroke *stroke, const QPointF& point)
     W_ASSERT(stroke->is_circle());
 
     data->_r = distance(QPointF(data->_x, data->_y), point);
+}
+
+bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cdouble precision)
+{
+    /*
+     * ci basta che un punto sia fuori dal cerchio,
+     * e uno sia dentro
+     */
+    QPointF tl, br;
+    const auto data = (const stroke_complex_circle *)stroke->get_complex_data();
+    const auto prec = data->_press;
+    constexpr not_used bool debug = true;
+
+    W_ASSERT(data->_x >= 0.);
+    W_ASSERT(data->_r >= 0.);
+    W_ASSERT(data->_y >= 0.);
+    W_ASSERT(data->_press >= 0.);
+
+    line.get_point(tl, br);
+
+    cbool fInternal = qAbs(data->_x - tl.x()) + qAbs(data->_y - tl.y()) < qSqrt(data->_r + precision);
+    cbool sInternal = qAbs(data->_x - br.x()) + qAbs(data->_y - tl.y()) < qSqrt(data->_r + precision);
+
+    model_circle_print(data);
+    WDebug(debug, __FUNCTION__ << fInternal << sInternal << tl << br);
+
+    return fInternal ^ sInternal;
 }

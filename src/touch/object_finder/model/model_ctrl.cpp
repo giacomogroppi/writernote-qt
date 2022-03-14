@@ -140,3 +140,21 @@ void stroke_complex_append(stroke *stroke, const QPointF& point)
 
     std::abort();
 }
+
+extern bool stroke_complex_is_inside_circle (const stroke *stroke, const WLine &line, cdouble precision);
+extern bool stroke_complex_is_inside_line   (const stroke *stroke, const WLine &line, cdouble precision);
+extern bool stroke_complex_is_inside_rect   (const stroke *stroke, const WLine &line, cdouble precision);
+
+bool stroke_complex_is_inside(const stroke *stroke, const WLine &line, cdouble precision)
+{
+    switch (stroke->get_type()) {
+        case stroke::COMPLEX_CIRCLE:
+            return stroke_complex_is_inside_circle(stroke, line, precision);
+        case stroke::COMPLEX_LINE:
+            return stroke_complex_is_inside_line(stroke, line, precision);
+        case stroke::COMPLEX_RECT:
+            return stroke_complex_is_inside_rect(stroke, line, precision);
+        default:
+            std::abort();
+    }
+}

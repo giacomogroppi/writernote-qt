@@ -21,9 +21,13 @@ WLine::WLine(const QPointF &topLeft, const QPointF &bottomRigth)
     _p = _yb - _xb * _m; 
 }
 
-bool WLine::intersect(const WLine &line, cint precision)
+bool WLine::intersect(const WLine &line, cint precision) const
 {
     double x, y;
+
+    if(unlikely(qAbs(line._m - _m) < 0.02)){
+        return false;
+    }
 
     x = (this->_p - line._p) / (line._m - this->_m);
     y = _m * x + _p;
@@ -38,10 +42,8 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
     W_ASSERT(_xb >= _xt);
     W_ASSERT(_yb >= _yt);
 
-    cint c1 = _xb + precision >= point.x();
-    cint c2 = _xt <= point.x() + precision;
-    cint c3 = _yb + precision >= point.y();
-    cint c4 = _yt <= point.y() + precision;
-
-    return c1 & c2 & c3 & c4;
+    return  _xb + precision >= point.x() &&
+            _xt <= point.x() + precision &&
+            _yb + precision >= point.y() &&
+            _yt <= point.y() + precision;
 }
