@@ -401,7 +401,7 @@ force_inline double distance_not_square(const QPointF& first, const QPointF& sec
 {
     const auto p = wPower(first.x() - second.x(), 2) + wPower(first.y() - second.y(), 2);
     if(debug_enable()){
-        const auto res = std::pow(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
+        const auto not_used res = std::pow(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
         W_ASSERT(p == res);
     }
 
