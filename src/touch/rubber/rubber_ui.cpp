@@ -257,7 +257,10 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         stroke &__stroke = _page->atStrokeMod(data->from);
         int lenPoint, index;
 
-        if(unlikely(!__stroke.is_normal())){
+        if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
+            continue;
+
+        if(unlikely(__stroke.is_complex())){
             if(stroke_complex_is_inside(&__stroke, area, __m_size_gomma))
                 goto insert;
             continue;
@@ -267,9 +270,6 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
         if(unlikely(!lenPoint))
             goto insert;
-
-        if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
-            continue;
 
         index = __stroke.is_inside(area, 0, __m_size_gomma);
 

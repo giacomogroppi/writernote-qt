@@ -85,7 +85,7 @@ public:
     bool isVisible() const;
 
     void removeAt(const QVector<int> & pos);
-    void removeAt(cuint i);
+    void removeAt(cint i);
 
     const stroke & last() const;
     stroke &lastMod();
@@ -380,8 +380,10 @@ inline void page::copy(
     dest._count                     = src._count;
 }
 
-force_inline void page::removeAt(const uint i)
+force_inline void page::removeAt(cint i)
 {
+    W_ASSERT(!(i < 0 || i >= _stroke.size()));
+
     this->_stroke.removeAt(i);
 }
 

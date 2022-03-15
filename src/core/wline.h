@@ -15,6 +15,7 @@ private:
     bool _is_vertical;
 
     static bool intersect_vertical(const WLine &line, const WLine &vertical, cdouble precision);
+    bool belongs(const QPointF &point, cdouble precision) const;
 
 public:
     WLine() = default;

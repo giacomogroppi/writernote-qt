@@ -274,6 +274,9 @@ force_inline void TabletCanvas::ManageMove(
             _text_w->createNew(point);
         }
     }
+
+    W_ASSERT(painter.isActive());
+    painter.end();
 }
 
 force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)

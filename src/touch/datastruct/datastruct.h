@@ -453,6 +453,7 @@ inline int datastruct::whichPage(const QPointF &point) const
                 return i;
             }
         }
+        return -1;
     };
 
     i = point.y() / heigth;

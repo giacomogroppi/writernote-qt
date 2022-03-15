@@ -10,6 +10,7 @@
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
 #include "testing/memtest.h"
+#include <QPaintDevice>
 
 #define PAGE_THREAD_MAX 16
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
@@ -18,10 +19,12 @@
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
-#define Define_PAINTER(painter) QPainter painter(&_imgDraw); \
-    painter.begin(&_imgDraw); \
+#define Define_PAINTER_p(painter, ___img) QPainter painter(&___img); \
+    if(!painter.begin(&___img)) { if(debug_enable()){ std::abort(); }  }; \
     W_ASSERT(painter.isActive()); \
     painter.setRenderHint(QPainter::Antialiasing, true);
+
+#define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
 
 static force_inline double widthToPressure(double v) { return v/10.0; };
 
@@ -288,6 +291,8 @@ void page::drawStroke(
     if(unlikely(last_comp_mode)){
         painter.setCompositionMode(last_comp_mode);
     }
+
+    W_ASSERT(painter.isActive());
 }
 
 struct page_thread_data{
@@ -312,12 +317,10 @@ void * __page_load(void *__data)
     Define_PEN(m_pen);
     pthread_mutex_t *mutex = extra->append;
     int m_pos_ris = extra->m_pos_ris;
-    QPainter painter;
     const page *page = extra->parent;
 
     __initImg(img);
-    painter.begin(&img);
-    W_ASSERT(painter.isActive());
+    Define_PAINTER_p(painter, img);
 
     for(; _data->from < _data->to; _data->from ++){
         const auto &ref = extra->m_stroke->at(_data->from);
@@ -349,6 +352,7 @@ void * __page_load(void *__data)
 
     // the source image has the same size as img
     pthread_mutex_lock(mutex);
+    W_ASSERT(extra->painter->isActive());
     extra->painter->drawImage(img.rect(), img, img.rect());
     pthread_mutex_unlock(mutex);
 
@@ -417,11 +421,15 @@ inline void page::draw(
     auto list = _strokeTmp.toList();
     bool changeSomething = true;
 
+    W_ASSERT(painter.isActive());
+
     if(unlikely(all)){
         this->drawEngine(painter, this->_stroke, m_pos_ris, NULL, true);
     }
 
     this->drawEngine(painter, list, m_pos_ris, &changeSomething, false);
+
+    W_ASSERT(painter.isActive());
 
     if(unlikely(changeSomething)){
         this->_strokeTmp = QVector<stroke>::fromList(list);
@@ -455,21 +463,20 @@ void page::drawToImage(
     QImage              &img,
     cint                flag) const
 {
-    QPainter painter;
     Define_PEN(pen);
 
     if(flag & DR_IMG_INIT_IMG){
         __initImg(img);
     }
-    
-    painter.begin(&img);
-    W_ASSERT(painter.isActive());
+
+    Define_PAINTER_p(painter, img);
 
     for (const int __index : index){
         const stroke &stroke = atStroke(__index);
         this->drawStroke(painter, stroke, pen, stroke.getColor());
     }
 
+    W_ASSERT(painter.isActive());
     painter.end();
 }
 
@@ -504,6 +511,8 @@ void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
             this->drawStroke(*painter, stroke, m_pen, stroke.getColor());
         }
     }
+
+    W_ASSERT(painter->isActive());
 }
 
 /*
@@ -511,15 +520,13 @@ void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 */
 void page::triggerRenderImage(int m_pos_ris, bool all)
 {
-    QPainter painter;
     all = initImg(all);
 
-    painter.begin(&_imgDraw);
-    W_ASSERT(painter.isActive());
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    Define_PAINTER(painter);
 
     this->draw(painter, m_pos_ris, all);
 
+    W_ASSERT(painter.isActive());
     painter.end();
 
     /*return;
@@ -572,7 +579,9 @@ void page::removeAndDraw(
 void page::drawIfInside(int m_pos_ris, const QRectF &area)
 {
     int index = lengthStroke() - 1;
+    qDebug() << "Inizio stampa";
     Define_PAINTER(painter);
+    qDebug() << "fine stampa";
 
     for(; index >= 0; index --){
         const stroke &stroke = this->atStroke(index);
@@ -581,6 +590,8 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
             drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), &painter);
         }
     }
+
+    painter.end();
 }
 
 #define PAGE_DRAW_SQUARE_ADJUST(point, function) \
@@ -616,7 +627,6 @@ void page::drawSquare(const QRect &rect)
 
 void page::decreseAlfa(const QVector<int> &pos, int decrese)
 {
-    QPainter painter;
     bool needInit = initImg(false);
 
     if(unlikely(needInit)){
@@ -624,8 +634,7 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
         return this->triggerRenderImage(-1, true);
     }
 
-    painter.begin(&this->_imgDraw);
-    W_ASSERT(painter.isActive());
+    Define_PAINTER(painter);
 
     painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -688,6 +697,7 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
     }
 
     this->drawStroke(*painter, stroke, pen, color);
+    W_ASSERT(painter->isActive());
 
     if(needDelete){
         painter->end();
@@ -697,19 +707,17 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
 
 void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)
 {
-    QPainter painter;
-
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);
 
-    painter.begin(&this->_imgDraw);
-    W_ASSERT(painter.isActive());
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    Define_PAINTER(painter);
 
     for(const auto &index : pos){
         const stroke &stroke = atStroke(index);
         this->drawForceColorStroke(stroke, m_pos_ris, color, &painter);
     }
+
+    W_ASSERT(painter.isActive());
     painter.end();
 }
 

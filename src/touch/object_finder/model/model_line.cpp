@@ -211,5 +211,5 @@ bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdou
     W_ASSERT(stroke->is_line());
 
     WLine _line(data->topLeft, data->bottomRight);
-    return false;
+    return _line.intersect(line, precision);
 }

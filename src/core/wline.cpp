@@ -18,11 +18,12 @@ WLine::WLine(const QPointF &topLeft, const QPointF &bottomRigth)
     _yt = qMin(topLeft.y(), bottomRigth.y());
     _yb = qMax(topLeft.y(), bottomRigth.y());
 
+    const auto deltax = _xt - _xb;
     const auto deltay = _yt - _yb;
-    _is_vertical = deltay == 0.;
+    _is_vertical = deltax == 0.;
 
     if(likely(!_is_vertical)){
-        _m = (_xt - _xb) / deltay;
+        _m = deltax / deltay;
     }
 
     _p = _yb - _xb * _m;
@@ -33,11 +34,22 @@ WLine::WLine(const QPointF &topLeft, const QPointF &bottomRigth)
     W_ASSERT(_yt <= _yb);
 }
 
+bool WLine::belongs(const QPointF &point, cdouble precision) const
+{
+    const auto res = is_near(this->_m * point.x(), point.y(), precision);
+    return res && is_in_domain(point, precision);
+}
+
 bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble precision)
 {
     W_ASSERT(vertical._is_vertical);
     W_ASSERT(!line._is_vertical);
-    std::abort();
+
+    W_ASSERT(vertical._xb == vertical._xt);
+
+    const auto y = vertical._xb * line._m + line._p;
+    qDebug() << __func__  << y;
+    return line.belongs(QPointF(vertical._xb, y), precision);
 }
 
 bool WLine::intersect(const WLine &line, cint precision) const
@@ -50,11 +62,11 @@ bool WLine::intersect(const WLine &line, cint precision) const
     if(is_near(line._m, _m, 0.02))
         return false;
 
-    if(likely(!_is_vertical && line._is_vertical)) {
+    if(likely(!_is_vertical && !line._is_vertical)) {
             x = (this->_p - line._p) / (line._m - this->_m);
             y = _m * x + _p;
 
-            return is_in_domain(QPointF(x, y), precision) &&
+            return      is_in_domain(QPointF(x, y), precision) &&
                    line.is_in_domain(QPointF(x, y), precision);
     }else{
         if(this->_is_vertical){
