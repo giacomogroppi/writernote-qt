@@ -206,5 +206,10 @@ void stroke_complex_line_append(stroke *stroke, const QPointF& point)
 
 bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdouble precision)
 {
+    const auto data = (const stroke_complex_line *)stroke->get_complex_data();
+
+    W_ASSERT(stroke->is_line());
+
+    WLine _line(data->topLeft, data->bottomRight);
     return false;
 }

@@ -85,7 +85,7 @@ public:
     const point_s   &at(const int index) const;
     point_s         &at_mod(const int index);
 
-#define stroke_append_default -1.
+#   define stroke_append_default -1.
     void append(const point_s &point, pressure_t pressure);
     void setMetadata(const int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);
@@ -131,6 +131,7 @@ public:
     force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
     force_inline bool is_rect() const { return _prop == COMPLEX_RECT; };
     force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
+    force_inline bool is_complex() const { return !this->is_normal(); };
     void set_complex(typeof(_prop) new_prop, void *new_data);
     const void *get_complex_data() const { return _complex; };
     typeof(_prop) get_type() const { return _prop; };
@@ -328,7 +329,8 @@ inline int stroke::removeAt(int index)
     return len < 2;
 }
 
-inline int stroke::removeAt(int from, int to){
+inline int stroke::removeAt(int from, int to)
+{
     W_ASSERT(to < length());
     W_ASSERT(from >= 0);
 

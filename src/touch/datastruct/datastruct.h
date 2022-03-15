@@ -439,17 +439,27 @@ constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
 inline int datastruct::whichPage(const QPointF &point) const
 {
     int i, len;
+    const auto heigth = page::getHeight();
+
+    if(unlikely(point.y() < 0.))
+        return -1;
 
     len = this->lengthPage();
 
-    for(i = 0; i < len; i++){
-        const page &page = at(i);
-        if(page.currentHeight() >= point.y() && page.minHeight() <= point.y()){
-            return i;
+    const auto not_used oldMethod = [&]{
+        for(i = 0; i < len; i++){
+            const page &page = at(i);
+            if(page.currentHeight() >= point.y() && page.minHeight() <= point.y()){
+                return i;
+            }
         }
-    }
+    };
 
-    return -1;
+    i = point.y() / heigth;
+
+    W_ASSERT(i == oldMethod());
+
+    return i;
 }
 
 /* the function automatically launches the drawing for the pages

@@ -12,6 +12,10 @@ private:
     double _m, _p;
     double _xt, _yt;
     double _xb, _yb;
+    bool _is_vertical;
+
+    static bool intersect_vertical(const WLine &line, const WLine &vertical, cdouble precision);
+
 public:
     WLine() = default;
     WLine(const WLine &line);

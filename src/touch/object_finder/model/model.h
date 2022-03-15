@@ -37,5 +37,6 @@ int stroke_complex_load(stroke *stroke, int type, zip_file_t *file);
 
 void stroke_complex_append(stroke *stroke, const QPointF &point);
 bool stroke_complex_is_inside(const stroke *stroke, const class WLine &line, cdouble precision);
+void stroke_complex_translate(stroke *stroke, const QPointF &offset);
 
 #endif // MODEL_H

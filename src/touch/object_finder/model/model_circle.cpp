@@ -104,11 +104,20 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
 
     line.get_point(tl, br);
 
-    cbool fInternal = qAbs(data->_x - tl.x()) + qAbs(data->_y - tl.y()) < qSqrt(data->_r + precision);
-    cbool sInternal = qAbs(data->_x - br.x()) + qAbs(data->_y - tl.y()) < qSqrt(data->_r + precision);
+    cdouble distance1 = qSqrt( wPower(data->_x - tl.x(), 2) + wPower(data->_y - tl.y(), 2));
+    cdouble distance2 = qSqrt( wPower(data->_x - br.x(), 2) + wPower(data->_y - tl.y(), 2));
 
     model_circle_print(data);
-    WDebug(debug, __FUNCTION__ << fInternal << sInternal << tl << br);
+    WDebug(debug, __FUNCTION__ << distance1 << distance2 << tl << br);
 
-    return fInternal ^ sInternal;
+    if(is_near(distance1, data->_r, precision) || is_near(distance2, data->_r, precision))
+        return true;
+
+    cbool oneLess = distance1 <= data->_r - precision;
+    cbool oneMore = distance1 <= data->_r + precision;
+
+    cbool twoLess = distance2 <= data->_r - precision;
+    cbool twoMore = distance2 <= data->_r + precision;
+
+    return !!(oneLess ^ twoMore) || !!(oneMore ^ twoLess);
 }

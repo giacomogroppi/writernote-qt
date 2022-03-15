@@ -380,11 +380,21 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
             const stroke &firstStroke  = page2.atStroke(counterStroke);
             const stroke &secondStroke = page1.atStroke(counterStroke);
 
-            for(int i = 0; i < firstStroke.length() && i < secondStroke.length(); i++){
+            if(firstStroke.is_complex()){
+                check = stroke_complex_cmp(&firstStroke, &secondStroke);
+                if(!check)
+                    goto ret;
+            }
+
+            int firstLen, secondLen;
+            firstLen = firstStroke.length();
+            secondLen = secondStroke.length();
+
+            for(int i = 0; i < firstLen && i < secondLen; i++){
                 const point_s &firstPoint = firstStroke.at(i);
                 const point_s &secondPoint = secondStroke.at(i);
 
-                if(memcmp(&firstPoint, &secondPoint, sizeof(firstPoint)) != 0){
+                if(firstPoint != secondPoint){
                     check = false;
                     goto ret;
                 }

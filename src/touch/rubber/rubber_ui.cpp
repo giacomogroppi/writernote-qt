@@ -258,7 +258,8 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         int lenPoint, index;
 
         if(unlikely(!__stroke.is_normal())){
-            stroke_complex_is_inside(&__stroke, area, __m_size_gomma);
+            if(stroke_complex_is_inside(&__stroke, area, __m_size_gomma))
+                goto insert;
             continue;
         }
 

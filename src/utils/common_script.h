@@ -413,12 +413,16 @@ force_inline double distance(const QPointF& first, const QPointF& second)
     return std::sqrt(distance_not_square(first, second));
 }
 
+force_inline double is_near(cdouble one, cdouble two, cdouble precision)
+{
+    W_ASSERT(precision >= 0.);
+    return qAbs(one - two) < precision;
+}
+
 force_inline double is_near(const QPointF &point1, const QPointF &point2, cdouble prec)
 {
-    if(qAbs(point1.x() - point2.x()) < prec &&
-       qAbs(point1.y() - point2.y()) < prec)
-        return true;
-    return false;
+    return  is_near(point1.x(), point2.x(), prec) &&
+            is_near(point1.y(), point2.y(), prec);
 }
 
 #endif // COMMON_SCRIPT_H

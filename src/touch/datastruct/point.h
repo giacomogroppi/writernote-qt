@@ -103,7 +103,13 @@ struct point_s{
     Q_COMPILER_CONSTEXPR double x() const;
     Q_COMPILER_CONSTEXPR double y() const;
     bool operator==(const point_s &other) const;
+    bool operator!=(const point_s &other) const;
 };
+
+force_inline bool point_s::operator!=(const point_s &other) const
+{
+    return !(*this == other);
+}
 
 force_inline point_s::point_s(const QPointF &point)
 {

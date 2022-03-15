@@ -6,6 +6,7 @@
 #include "currenttitle/document.h"
 #include "touch/tabletcanvas.h"
 #include "touch/datastruct/stroke_drawer.h"
+#include "touch/object_finder/model/model.h"
 #include <QDebug>
 #include <QPainter>
 
@@ -187,12 +188,19 @@ size_t stroke::createControll() const
 
 size_t stroke::getSizeInMemory() const
 {
+    if(unlikely(this->is_complex()))
+        return 0;
+
     return sizeof(point_s) * length();
 }
 
 void stroke::decreasePrecision()
 {
     int i, len;
+
+    if(unlikely(is_complex()))
+        return;
+
     len = length();
 
     for(i = 1; i < len - 1; i++){
@@ -206,8 +214,14 @@ void stroke::decreasePrecision()
 
 void stroke::movePoint(const QPointF &translation)
 {
-    uint i;
-    const uint len = this->length();
+    uint i, len;
+
+    if(unlikely(is_complex())){
+        stroke_complex_translate(this, translation);
+        return;
+    }
+
+    len = this->length();
 
     for(i = 0; i < len; i++){
         point_s &point = at_mod(i);

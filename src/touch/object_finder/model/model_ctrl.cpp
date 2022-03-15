@@ -158,3 +158,7 @@ bool stroke_complex_is_inside(const stroke *stroke, const WLine &line, cdouble p
             std::abort();
     }
 }
+
+void stroke_complex_translate(stroke *stroke, const QPointF &offset)
+{
+}
