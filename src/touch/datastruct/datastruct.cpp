@@ -384,6 +384,7 @@ bool datastruct::userWrittenSomething(datastruct *s_data)
                 check = stroke_complex_cmp(&firstStroke, &secondStroke);
                 if(!check)
                     goto ret;
+                continue;
             }
 
             int firstLen, secondLen;
