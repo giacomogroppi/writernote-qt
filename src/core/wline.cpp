@@ -36,7 +36,7 @@ WLine::WLine(const QPointF &topLeft, const QPointF &bottomRigth)
 
 bool WLine::belongs(const QPointF &point, cdouble precision) const
 {
-    const auto res = is_near(this->_m * point.x(), point.y(), precision);
+    const auto res = is_near(this->_m * point.x() + this->_p, point.y(), precision);
     return res && is_in_domain(point, precision);
 }
 
