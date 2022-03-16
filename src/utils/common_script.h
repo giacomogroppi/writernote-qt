@@ -389,8 +389,8 @@ force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
         return 1;
     }
 
-    int i;
-    for(i = 1; i < power; i ++){
+    int i = 1;
+    for(; i < power; i ++){
         res *= value;
     }
 
