@@ -19,10 +19,13 @@
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
-#define Define_PAINTER_p(painter, ___img) QPainter painter(&___img); \
-    W_ASSERT(!___img.isNull()); \
-    if(!painter.begin(&___img)) { if(debug_enable()){ std::abort(); }  }; \
-    W_ASSERT(painter.isActive()); \
+#define Define_PAINTER_p(painter, ___img) \
+    QPainter painter; \
+    if(!painter.begin(&___img)) { \
+        if(debug_enable()){ \
+            std::abort(); \
+        } \
+    }; \
     painter.setRenderHint(QPainter::Antialiasing, true);
 
 #define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
@@ -64,6 +67,7 @@ static void setStylePrivate(
 static force_inline void __initImg(QImage &img)
 {
     img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+    W_ASSERT(!img.isNull());
 }
 
 page::page(const int count, const n_style style)
@@ -525,8 +529,6 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
 {
     all = initImg(all);
 
-    const auto painter_active = this->_imgDraw.paintingActive();
-    const auto img_null = this->_imgDraw.isNull();
     Define_PAINTER(painter);
 
     this->draw(painter, m_pos_ris, all);
