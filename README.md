@@ -210,8 +210,8 @@ In the code there are some references to TODOs
 
 ## Third-party
 * Share file in Android and IOS ([LGPL](https://github.com/ekke/ekkesSHAREexample))
-* Qt 5.15.2, 5.6.2 and 5.3.2 slightly patched ([LGPL](http://doc.qt.io/qt-5/lgpl.html))
-* OpenSSL 1.1.1 and 1.0.1 ([OpenSSL License](https://www.openssl.org/source/license.html))
+* Qt 5.15.2 ([LGPL](http://doc.qt.io/qt-5/lgpl.html))
+* OpenSSL 1.1.1 ([OpenSSL License](https://www.openssl.org/source/license.html))
 * zlib 1.2.11 ([zlib License](http://www.zlib.net/zlib_license.html))
 * CMake ([New BSD License](https://github.com/Kitware/CMake/blob/master/Copyright.txt))
 * libzip ([BSD License](https://libzip.org/license/))
