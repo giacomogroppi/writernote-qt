@@ -20,11 +20,14 @@
 #define TEMP_SQUARE 40
 
 #define Define_PAINTER_p(painter, ___img) QPainter painter(&___img); \
+    W_ASSERT(!___img.isNull()); \
     if(!painter.begin(&___img)) { if(debug_enable()){ std::abort(); }  }; \
     W_ASSERT(painter.isActive()); \
     painter.setRenderHint(QPainter::Antialiasing, true);
 
 #define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
+
+#define End_painter(painter) if(!painter.end()) { if(debug_enable()){ std::abort(); }  };
 
 static force_inline double widthToPressure(double v) { return v/10.0; };
 
@@ -348,7 +351,7 @@ void * __page_load(void *__data)
         page->drawStroke(painter, ref, m_pen, color);
     }
 
-    painter.end();
+    End_painter(painter);
 
     // the source image has the same size as img
     pthread_mutex_lock(mutex);
@@ -477,7 +480,7 @@ void page::drawToImage(
     }
 
     W_ASSERT(painter.isActive());
-    painter.end();
+    End_painter(painter);
 }
 
 bool page::userWrittenSomething() const
@@ -522,12 +525,14 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
 {
     all = initImg(all);
 
+    const auto painter_active = this->_imgDraw.paintingActive();
+    const auto img_null = this->_imgDraw.isNull();
     Define_PAINTER(painter);
 
     this->draw(painter, m_pos_ris, all);
 
     W_ASSERT(painter.isActive());
-    painter.end();
+    End_painter(painter);
 
     /*return;
     if(!imgDraw.save("~/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
@@ -591,7 +596,7 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
         }
     }
 
-    painter.end();
+    End_painter(painter);
 }
 
 #define PAGE_DRAW_SQUARE_ADJUST(point, function) \
@@ -622,7 +627,7 @@ void page::drawSquare(const QRect &rect)
     painter.setPen(pen);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
     painter.fillRect(tmp, brush);
-    painter.end();
+    End_painter(painter);
 }
 
 void page::decreseAlfa(const QVector<int> &pos, int decrese)
@@ -636,10 +641,9 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
 
     Define_PAINTER(painter);
 
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
     this->decreseAlfa(pos, &painter, decrese);
-    painter.end();
+
+    End_painter(painter);
 }
 
 QRect page::get_size_area(const QList<stroke> &item, int from, int to)
@@ -718,7 +722,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
     }
 
     W_ASSERT(painter.isActive());
-    painter.end();
+    End_painter(painter);
 }
 
 void page::allocateStroke(int numAllocation)
