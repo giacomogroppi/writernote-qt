@@ -397,12 +397,18 @@ force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
     return res;
 }
 
+force_inline bool is_near(cdouble one, cdouble two, cdouble precision)
+{
+    W_ASSERT(precision >= 0.);
+    return qAbs(one - two) < precision;
+}
+
 force_inline double distance_not_square(const QPointF& first, const QPointF& second)
 {
     const auto p = wPower(first.x() - second.x(), 2) + wPower(first.y() - second.y(), 2);
     if(debug_enable()){
         const auto not_used res = std::pow(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
-        W_ASSERT(p == res);
+        W_ASSERT(is_near(res, p, 0.001));
     }
 
     return p;
@@ -411,12 +417,6 @@ force_inline double distance_not_square(const QPointF& first, const QPointF& sec
 force_inline double distance(const QPointF& first, const QPointF& second)
 {
     return std::sqrt(distance_not_square(first, second));
-}
-
-force_inline bool is_near(cdouble one, cdouble two, cdouble precision)
-{
-    W_ASSERT(precision >= 0.);
-    return qAbs(one - two) < precision;
 }
 
 force_inline double is_near(const QPointF &point1, const QPointF &point2, cdouble prec)

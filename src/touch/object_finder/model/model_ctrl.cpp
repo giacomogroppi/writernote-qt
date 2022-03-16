@@ -43,17 +43,17 @@ void stroke_complex_adjust(stroke *stroke, cdouble zoom)
     W_ASSERT(!stroke->is_normal());
 
     if(stroke->is_circle()){
-        stroke_complex_circle *data = (stroke_complex_circle *)stroke->_complex;
+        stroke_complex_circle *data = (stroke_complex_circle *)stroke->get_complex_data();
         data->_r /= zoom;
         data->_x /= zoom;
         data->_y /= zoom;
     }else if(stroke->is_line()){
-        stroke_complex_line *data = (stroke_complex_line *) stroke->_complex;
+        stroke_complex_line *data = (stroke_complex_line *) stroke->get_complex_data();
         data->bottomRight /= zoom;
         data->topLeft /= zoom;
         data->press /= zoom;
     }else if(stroke->is_rect()){
-        stroke_complex_rect *data = (stroke_complex_rect *) stroke->_complex;
+        stroke_complex_rect *data = (stroke_complex_rect *) stroke->get_complex_data();
         const QPointF topLeft = data->rect.topLeft() / zoom;
         const QPointF bottomRight = data->rect.bottomRight() / zoom;
         data->rect = QRectF(topLeft, bottomRight);

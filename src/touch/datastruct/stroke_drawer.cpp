@@ -19,14 +19,20 @@ force_inline void set_press(QPen &pen, const pressure_t press, const double prop
 
 force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
-    constexpr bool debCircle = true;
+    constexpr bool debCircle = false;
+    point_s point;
+
     stroke_complex_circle *data = (stroke_complex_circle *)stroke._complex;
+    point._y = data->_y;
+    point = page::at_translation(point, page);
+    const auto y = point.y();
+
     const auto press = data->_press;
 
     set_press(pen, press, prop, is_rubber);
     painter.setPen(pen);
 
-    painter.drawEllipse(QPointF(data->_x, data->_y) * prop, data->_r * prop, data->_r * prop);
+    painter.drawEllipse(QPointF(data->_x, y) * prop, data->_r * prop, data->_r * prop);
 
     WDebug(debCircle, __FUNCTION__ << data->_x << data->_y << data->_r);
 }
