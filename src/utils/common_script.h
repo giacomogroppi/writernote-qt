@@ -383,13 +383,13 @@ force_inline T __MAX(T first, T second)
 template <typename T>
 force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
 {
-    int i;
     T res = value;
 
     if(unlikely(power) == 0){
         return 1;
     }
 
+    int i;
     for(i = 1; i < power; i ++){
         res *= value;
     }
