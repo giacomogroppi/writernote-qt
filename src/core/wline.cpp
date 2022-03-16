@@ -45,7 +45,7 @@ bool WLine::belongs(const QPointF &point, cdouble precision) const
 
     W_ASSERT(!this->_is_vertical);
 
-    const auto res = is_near(this->_m * point.x() + this->_p, point.y(), 0.);
+    const auto res = is_near(this->_m * point.x() + this->_p, point.y(), precision);
 
     if(res && is_in_domain(point, precision)){
         qDebug() << "return true";
@@ -63,7 +63,8 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
     W_ASSERT(vertical._xb == vertical._xt);
 
     const auto y = vertical._xb * line._m + line._p;
-    return line.belongs(QPointF(vertical._xb, y), precision);
+    return  line.belongs(QPointF(vertical._xb, y), precision) &&
+            vertical.is_in_domain(QPointF(vertical._xb, y), precision);
 }
 
 bool WLine::intersect(const WLine &line, cint precision) const
@@ -96,7 +97,6 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
     W_ASSERT(precision >= 0.);
     W_ASSERT(_xb >= _xt);
     W_ASSERT(_yb >= _yt);
-    W_ASSERT(!_is_vertical);
 
     const auto x = point.x();
     const auto y = point.y();
