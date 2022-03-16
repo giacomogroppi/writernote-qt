@@ -586,9 +586,7 @@ void page::removeAndDraw(
 void page::drawIfInside(int m_pos_ris, const QRectF &area)
 {
     int index = lengthStroke() - 1;
-    qDebug() << "Inizio stampa";
     Define_PAINTER(painter);
-    qDebug() << "fine stampa";
 
     for(; index >= 0; index --){
         const stroke &stroke = this->atStroke(index);

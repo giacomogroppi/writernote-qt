@@ -105,7 +105,6 @@ void rubber_ui::endRubber()
     int i, len = _data_to_remove.length();
 
     W_ASSERT(data);
-    qDebug() << "rubber_ui::endRubber";
 
     if(_type_gomma == e_type_rubber::total){
 
@@ -384,7 +383,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     PrivateData(al_find)        = dataPrivate.data_find->length();
 
     thread_create = DataPrivateMuThreadInit(dataThread, &dataPrivate,
-                                                     thread_group->get_max(), lenStroke, DATA_PRIVATE_FLAG_SEM);
+                                            thread_group->get_max(), lenStroke, DATA_PRIVATE_FLAG_SEM);
 
     thread_group->postAndWait(thread_create);
 

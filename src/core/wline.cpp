@@ -23,7 +23,7 @@ WLine::WLine(const QPointF &topLeft, const QPointF &bottomRigth)
     _is_vertical = deltax == 0.;
 
     if(likely(!_is_vertical)){
-        _m = deltax / deltay;
+        _m = deltay / deltax ;
     }
 
     _p = _yb - _xb * _m;
@@ -32,23 +32,37 @@ WLine::WLine(const QPointF &topLeft, const QPointF &bottomRigth)
     W_ASSERT(_xt >= 0.);
     W_ASSERT(_yb >= 0.);
     W_ASSERT(_yt <= _yb);
+
+    if(!_is_vertical){
+        W_ASSERT(qAbs(_m) != HUGE_VAL);
+        W_ASSERT(qAbs(_p) != HUGE_VAL);
+    }
 }
 
 bool WLine::belongs(const QPointF &point, cdouble precision) const
 {
-    const auto res = is_near(this->_m * point.x() + this->_p, point.y(), precision);
-    return res && is_in_domain(point, precision);
+    constexpr not_used const auto debug = true;
+
+    W_ASSERT(!this->_is_vertical);
+
+    const auto res = is_near(this->_m * point.x() + this->_p, point.y(), 0.);
+
+    if(res && is_in_domain(point, precision)){
+        qDebug() << "return true";
+        return true;
+    }
+
+    qDebug() << "Return false";
+    return false;
 }
 
 bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble precision)
 {
     W_ASSERT(vertical._is_vertical);
     W_ASSERT(!line._is_vertical);
-
     W_ASSERT(vertical._xb == vertical._xt);
 
     const auto y = vertical._xb * line._m + line._p;
-    qDebug() << __func__  << y;
     return line.belongs(QPointF(vertical._xb, y), precision);
 }
 
@@ -82,9 +96,13 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
     W_ASSERT(precision >= 0.);
     W_ASSERT(_xb >= _xt);
     W_ASSERT(_yb >= _yt);
+    W_ASSERT(!_is_vertical);
 
-    return  _xb + precision >= point.x() &&
-            _xt <= point.x() + precision &&
-            _yb + precision >= point.y() &&
-            _yt <= point.y() + precision;
+    const auto x = point.x();
+    const auto y = point.y();
+
+    return  _xb + precision >= x &&
+            _xt - precision <= x &&
+            _yb + precision >= y &&
+            _yt - precision <= y;
 }
