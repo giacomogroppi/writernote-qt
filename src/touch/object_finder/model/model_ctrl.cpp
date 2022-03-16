@@ -144,7 +144,6 @@ void stroke_complex_append(stroke *stroke, const QPointF& point)
 extern bool stroke_complex_is_inside_circle (const stroke *stroke, const WLine &line, cdouble precision);
 extern bool stroke_complex_is_inside_line   (const stroke *stroke, const WLine &line, cdouble precision);
 extern bool stroke_complex_is_inside_rect   (const stroke *stroke, const WLine &line, cdouble precision);
-
 bool stroke_complex_is_inside(const stroke *stroke, const WLine &line, cdouble precision)
 {
     switch (stroke->get_type()) {
@@ -159,6 +158,19 @@ bool stroke_complex_is_inside(const stroke *stroke, const WLine &line, cdouble p
     }
 }
 
+extern void stroke_complex_translate_circle (stroke *stroke, const QPointF &offset);
+extern void stroke_complex_translate_line   (stroke *stroke, const QPointF &offset);
+extern void stroke_complex_translate_rect   (stroke *stroke, const QPointF &offset);
 void stroke_complex_translate(stroke *stroke, const QPointF &offset)
 {
+    switch (stroke->get_type()) {
+        case stroke::COMPLEX_CIRCLE:
+            return stroke_complex_translate_circle(stroke, offset);
+        case stroke::COMPLEX_LINE:
+            return stroke_complex_translate_line(stroke, offset);
+        case stroke::COMPLEX_RECT:
+            return stroke_complex_translate_rect(stroke, offset);
+        default:
+            std::abort();
+    }
 }

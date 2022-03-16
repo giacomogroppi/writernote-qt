@@ -39,7 +39,9 @@ static void model_circle_precision(const QPointF &point, double &precision)
      * X^2 + Y^2 - R = res
      */
 
-    res = qSqrt(wPower(point.x() - x, 2) + wPower(point.y() - y, 2)) - circle_data._r;
+    res = wPower(point.x() - x, 2) +
+          wPower(point.y() - y, 2)
+          - circle_data._r;
 
     if(qAbs(res) > precision){
         precision = res;
@@ -49,7 +51,8 @@ static void model_circle_precision(const QPointF &point, double &precision)
 double model_circle(const stroke *stroke)
 {
     const auto area = stroke->getBiggerPointInStroke();
-    constexpr auto coef = 1.;
+    constexpr auto coef = 200.;
+    constexpr auto _end = 10.;
     double precision = 0.;
     int i, len;
     double &x = circle_data._x;
@@ -57,6 +60,14 @@ double model_circle(const stroke *stroke)
     double &r = circle_data._r;
 
     len = stroke->length();
+
+    {
+        const auto rect = stroke->getFirstAndLast();
+        if(!is_near(rect.topLeft(), rect.bottomRight(), _end)){
+            WDebug(debug, __func__ << "first point and last are not near" << rect.topLeft() << rect.bottomRight());
+            return model_error;
+        }
+    }
 
     r = qAbs(area.topLeft().y() - area.bottomRight().y()) / 2.;
     x = (area.topLeft().x() + area.bottomRight().x()) / 2.;
@@ -73,7 +84,7 @@ double model_circle(const stroke *stroke)
 
     precision /= coef;
 
-    WDebug(debug, __FUNCTION__ << qstr("Cricle precision: ").arg(precision));
+    WDebug(debug, __FUNCTION__ << qstr("Cricle precision: %1").arg(precision));
 
     return precision;
 }
@@ -120,4 +131,11 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
     cbool twoMore = distance2 <= data->_r + precision;
 
     return !!(oneLess ^ twoMore) || !!(oneMore ^ twoLess);
+}
+
+void stroke_complex_translate_circle(stroke *stroke, const QPointF &offset)
+{
+    stroke_complex_circle *data = (stroke_complex_circle *) stroke->get_complex_data();
+    data->_x += offset.x();
+    data->_y += offset.y();
 }

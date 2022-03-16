@@ -28,3 +28,10 @@ bool stroke_complex_is_inside_rect(const stroke *stroke, const WLine &line, cdou
     Q_UNUSED(line);
     std::abort();
 }
+
+void stroke_complex_translate_rect(stroke *stroke, const QPointF &offset)
+{
+    Q_UNUSED(stroke);
+    Q_UNUSED(offset);
+    std::abort();
+}

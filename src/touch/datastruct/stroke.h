@@ -354,8 +354,8 @@ force_inline QRect stroke::getFirstAndLast() const
 {
     const auto &first = at(0);
     const auto &last  = at(length() - 1);
-    return QRect(first.toQPointF(1. ).toPoint(),
-                   last.toQPointF(1.  ).toPoint());
+    return QRect(first.toQPointF(1.).toPoint(),
+                 last.toQPointF (1.).toPoint());
 }
 
 /* after append data we need to call this funcion to update

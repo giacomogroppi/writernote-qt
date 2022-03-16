@@ -37,24 +37,24 @@ static void AppendAll(
     stroke & strokeToAppend = __tmp;
     int i, pageMod, lenPoint;
     point_s *point;
+    int time;
     const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
 
     if(unlikely(strokeToAppend.isEmpty()))
         return;
 
-    int time = canvas->_parent->m_audioplayer->getPositionSecond();
+    time = canvas->_parent->m_audioplayer->getPositionSecond();
 
-    if(unlikely(!strokeToAppend.is_normal()))
-        goto cont;
-
-    lenPoint = strokeToAppend.length();
-    for(i = 0; i < lenPoint; i++){
-        point = &strokeToAppend.at_mod(i);
-        point->_x -= PointFirstPage.x();
-        point->_y -= PointFirstPage.y();
+    if(likely(strokeToAppend.is_normal())){
+        lenPoint = strokeToAppend.length();
+        for(i = 0; i < lenPoint; i++){
+            point = &strokeToAppend.at_mod(i);
+            point->_x -= PointFirstPage.x();
+            point->_y -= PointFirstPage.y();
+        }
+    }else{
+        stroke_complex_translate(&strokeToAppend, -PointFirstPage);
     }
-
-    cont:
 
     if(unlikely(met == TabletCanvas::e_method::laser)){
         canvas->_laser->append(strokeToAppend);

@@ -141,7 +141,7 @@ cont:
         is_near_line(m, precision, q, one);
     }
 
-    WDebug(debug, __FUNCTION__ << qstr("Line precision: ").arg(precision));
+    WDebug(debug, __FUNCTION__ << qstr("Line precision: %1").arg(precision));
 
     return precision;
 }
@@ -212,4 +212,11 @@ bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdou
 
     WLine _line(data->topLeft, data->bottomRight);
     return _line.intersect(line, precision);
+}
+
+void stroke_complex_translate_line(stroke *stroke, const QPointF &offset)
+{
+    stroke_complex_line *data = (stroke_complex_line *)stroke->get_complex_data();
+    data->topLeft += offset;
+    data->bottomRight += offset;
 }
