@@ -247,6 +247,8 @@ inline pressure_t stroke::getPressure(int index) const
 {
     int __index = 0;
 
+    W_ASSERT(is_normal());
+
     if(_pressure.length() > 1){
         __index = index;
     }
@@ -334,7 +336,7 @@ inline int stroke::removeAt(int from, int to)
     W_ASSERT(to < length());
     W_ASSERT(from >= 0);
 
-    constexpr bool debug_remove_at = false;
+    constexpr not_used bool debug_remove_at = false;
 
     WDebug(debug_remove_at, "stroke::removeAt from to" << from << to);
 

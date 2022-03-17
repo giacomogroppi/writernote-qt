@@ -2,6 +2,13 @@
 #include "log/log_ui/log_ui.h"
 #include "utils/common_script.h"
 
+static force_inline void append_point(const stroke &_from, stroke &_to, int from, int to)
+{
+    for(; from < to; from ++){
+        _to.append(_from.at(from), _from.getPressure(from));
+    }
+}
+
 // this function is usable only in this .o file
 force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page &page, cbool threadSafe)
 {
@@ -14,12 +21,9 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
     strokeToAppend.reset();
 
     WDebug(false, "datastruct::changeId start" << IndexPoint << __stroke.length()
-             << __stroke.last()._x << __stroke.last()._y;)
+             << __stroke.last()._x << __stroke.last()._y);
 
-    for(int secIndex = IndexPoint; secIndex < lenPointInStroke; secIndex ++){
-        strokeToAppend.append(__stroke.at(secIndex), __stroke.getPressure());
-    }
-
+    append_point(__stroke, strokeToAppend, IndexPoint, lenPointInStroke);
     strokeToAppend.setMetadata(__stroke.getMetadata());
 
     if(threadSafe){
@@ -44,25 +48,9 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
     }
 }
 
-/*
- * the point at the IndexPoint
- * position is not included
- *
- * after this function you have to draw the image of
- * the page. Passing as a parameter all true
-*/
-void datastruct::changeId(int IndexPoint, int indexStroke, int indexPage)
-{
-    page &page = at_mod(indexPage);
-    stroke &stroke = page.atStrokeMod(indexStroke);
-
-
-    changeId(IndexPoint, stroke, at_mod(indexPage));
-}
-
 void datastruct::changeId(int indexPoint, stroke &stroke, page &page)
 {
-    return __changeId(indexPoint, stroke, page, true);
+    return __changeId(indexPoint, stroke, page, false);
 }
 
 void datastruct::changeIdThreadSave(int indexPoint, stroke &stroke, page &page)

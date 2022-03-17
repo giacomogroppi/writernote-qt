@@ -685,7 +685,7 @@ QRect page::get_size_area(const QVector<int> &pos) const
     return result;
 }
 
-void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color, QPainter *painter)
+void page::drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter)
 {
     Define_PEN(pen);
     cbool needDelete = (bool) (!painter);
@@ -696,7 +696,8 @@ void page::drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColo
 
         WNew(painter, QPainter, ());
 
-        painter->begin(&this->_imgDraw);
+        if(!painter->begin(&this->_imgDraw))
+            std::abort();
         painter->setRenderHint(QPainter::Antialiasing, true);
     }
 

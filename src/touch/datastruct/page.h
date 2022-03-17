@@ -121,7 +121,7 @@ public:
     int load(zip_file_t *file, int ver_stroke, int len_stroke);
 
     void drawStroke(const stroke &stroke, int m_pos_ris);
-    void drawForceColorStroke(const stroke &stroke, int m_pos_ris, const QColor &color, QPainter *painter);
+    void drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);
     void drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color);
 
 

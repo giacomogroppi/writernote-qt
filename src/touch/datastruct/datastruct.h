@@ -114,7 +114,6 @@ public:
 
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
 
-    void changeId(int indexPoint, int indexStroke, int indexPage);
     void changeId(int indexPoint, stroke& stroke, page &page);
     void changeIdThreadSave(int indexPoint, stroke &stroke, page &page);
 
