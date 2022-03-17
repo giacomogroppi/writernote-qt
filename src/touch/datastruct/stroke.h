@@ -579,9 +579,6 @@ force_inline int stroke::is_inside(const WLine &rect, int from, int precision, c
 
     if(unlikely(this->is_complex())){
         const int value = stroke_complex_is_inside(this, rect, precision);
-        if(value && needToDeletePoint){
-
-        }
 
         if(value){
             if(needToDeletePoint){
