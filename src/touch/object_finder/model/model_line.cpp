@@ -237,7 +237,9 @@ static inline void stroke_complex_normal_line_generic(
 
     W_ASSERT(from <= to);
 
-    m = (data->topLeft.x() - data->bottomRight.x()) / (data->topLeft.y() - data->bottomRight.y());
+    m =     (data->topLeft.y() - data->bottomRight.y()) /
+            (data->topLeft.x() - data->bottomRight.x());
+
     p = data->topLeft.y() - data->topLeft.x() * m;
 
     for(; from <= to; from ++){
@@ -275,6 +277,8 @@ void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
 
     from    = (int) data->topLeft.y();
     to      = (int) data->bottomRight.y();
+
+    W_ASSERT(from <= to);
 
     if(data->bottomRight.x() == data->topLeft.x()){
         stroke_complex_normal_line_vertical(_to, data, from, to);

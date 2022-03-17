@@ -139,7 +139,10 @@ void stroke_complex_translate_circle(stroke *stroke, const QPointF &offset)
     data->_y += offset.y();
 }
 
-static inline void append_to_stroke(stroke *stroke, const QVector<point_s> &point, const pressure_t press)
+static inline void append_to_stroke(
+        stroke                  *stroke,
+        const QVector<point_s>  &point,
+        const pressure_t        press)
 {
     for(const auto &ref : qAsConst(point)){
         stroke->append(ref, press);
@@ -154,6 +157,7 @@ void stroke_complex_make_normal_circle (const stroke *_from, stroke *_to)
     pressure_t press;
     QVector<point_s> _pointLeft, _pointRigth;
     _to->reset();
+
     W_ASSERT(_to->is_normal());
     W_ASSERT(_from->is_circle());
 
