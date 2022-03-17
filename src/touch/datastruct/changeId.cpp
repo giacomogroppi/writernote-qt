@@ -6,8 +6,11 @@
 force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page &page, cbool threadSafe)
 {
     stroke strokeToAppend;
-    int lenPointInStroke = __stroke.length();
+    int lenPointInStroke;
 
+    W_ASSERT(__stroke.is_normal());
+
+    lenPointInStroke = __stroke.length();
     strokeToAppend.reset();
 
     WDebug(false, "datastruct::changeId start" << IndexPoint << __stroke.length()

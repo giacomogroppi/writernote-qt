@@ -35,3 +35,10 @@ void stroke_complex_translate_rect(stroke *stroke, const QPointF &offset)
     Q_UNUSED(offset);
     std::abort();
 }
+
+void stroke_complex_make_normal_rect   (const stroke *_from, stroke *_to)
+{
+    Q_UNUSED(_from);
+    Q_UNUSED(_to);
+    std::abort();
+}

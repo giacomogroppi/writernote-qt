@@ -74,7 +74,7 @@ public:
     };
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
-    int is_inside(const WLine &rect, int from, int precision) const;
+    int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
 
     void __setPressureFirstPoint(const pressure_t pressure);
 
@@ -561,8 +561,13 @@ inline void stroke::scale(const QPointF &offset, int flag)
 
 /*
  * return -1 if it's not contained
+ * if the stroke is complex and needToDeletePoint is
+ * set, it is going to normalize the stroke
+ *
+ * if the rubber is set to remove the entire stroke
+ * we don't have to normalize the stroke
 */
-force_inline int stroke::is_inside(const WLine &rect, int from, int precision) const
+force_inline int stroke::is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const
 {
     int len;
     const point_s *p1, *p2;
@@ -572,6 +577,28 @@ force_inline int stroke::is_inside(const WLine &rect, int from, int precision) c
 
     W_ASSERT(from >= 0);
 
+    if(unlikely(this->is_complex())){
+        const int value = stroke_complex_is_inside(this, rect, precision);
+        if(value && needToDeletePoint){
+
+        }
+
+        if(value){
+            if(needToDeletePoint){
+                stroke tmp = *this;
+                stroke_complex_make_normal(&tmp, (stroke *)this);
+                W_ASSERT(this->is_normal());
+                goto continue_search;
+            }else{
+                return value;
+            }
+        }else{
+            // no point found
+            return -1;
+        }
+    }
+
+continue_search:
     len = this->length();
 
     if(unlikely(!len))

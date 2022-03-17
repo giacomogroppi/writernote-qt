@@ -110,7 +110,7 @@ int stroke::load(zip_file_t *file, int version)
 
         SOURCE_READ_RETURN(file, &_prop, sizeof(_prop));
 
-        if(unlikely(!is_normal())){
+        if(unlikely(is_complex())){
             return stroke_complex_load(this, _prop, file);
         }
 

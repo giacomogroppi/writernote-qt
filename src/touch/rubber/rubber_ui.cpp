@@ -19,8 +19,8 @@ struct RubberPrivateData{
     int             al_find;
 };
 
-static int             __m_size_gomma;
-static pthread_mutex_t single_mutex;
+static volatile int     __m_size_gomma;
+static pthread_mutex_t  single_mutex;
 static thread_group_sem *thread_group;
 
 static void (*functionToCall)(DataPrivateMuThread *);
@@ -151,7 +151,6 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     QVector<int> stroke_to_remove, stroke_mod, point_remove;
 
     int from, to, _index, index;
-    int lenPoint;
 
     page *_page             = private_data->__page;
     datastruct *_datastruct = private_data->data;
@@ -171,19 +170,21 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     for(; from < to; from ++){
         stroke & stroke = _page->atStrokeMod(from);
 
-        lenPoint = stroke.length();
-
-        if(unlikely(!lenPoint)){
+        if(unlikely(stroke.isEmpty())){
             stroke_to_remove.append(from);
             continue;
         }
 
         _index = 0;
         while(true){
-            index = stroke.is_inside(area, _index, __m_size_gomma);
+            int lenPoint;
+            index = stroke.is_inside(area, _index, __m_size_gomma, true);
 
             if(index < 0)
                 break;
+
+            lenPoint = stroke.length();
+            W_ASSERT(stroke.is_normal());
 
             if(unlikely(index < 3)){
                 stroke.removeAt(0, index);
@@ -254,23 +255,12 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
     for(; data->from < data->to; data->from++){
         stroke &__stroke = _page->atStrokeMod(data->from);
-        int lenPoint, index;
+        int index;
 
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
-        if(unlikely(__stroke.is_complex())){
-            if(stroke_complex_is_inside(&__stroke, area, __m_size_gomma))
-                goto insert;
-            continue;
-        }
-
-        lenPoint = __stroke.length();
-
-        if(unlikely(!lenPoint))
-            goto insert;
-
-        index = __stroke.is_inside(area, 0, __m_size_gomma);
+        index = __stroke.is_inside(area, 0, __m_size_gomma, false);
 
         if(index < 0){
             continue;
@@ -396,8 +386,10 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
     }
 out:
-    if(!isTotal)
+    if(!isTotal){
+        _base = -1;
         _data_to_remove.clear();
+    }
 
     _last.point = lastPoint;
 }

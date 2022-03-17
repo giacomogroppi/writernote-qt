@@ -27,7 +27,7 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
     return QRectF(tl, br).contains(p2);
 }
 
-void *stroke_complex_allocate(int type, void *data);
+void *stroke_complex_allocate(int type, const void *data);
 void stroke_complex_adjust(stroke *stroke, cdouble zoom);
 bool stroke_complex_cmp(const stroke *str1, const stroke *str2);
 QRect stroke_complex_bigger_data(const stroke *stroke);
@@ -38,5 +38,6 @@ int stroke_complex_load(stroke *stroke, int type, zip_file_t *file);
 void stroke_complex_append(stroke *stroke, const QPointF &point);
 bool stroke_complex_is_inside(const stroke *stroke, const class WLine &line, cdouble precision);
 void stroke_complex_translate(stroke *stroke, const QPointF &offset);
+void stroke_complex_make_normal(const stroke *from, stroke *to);
 
 #endif // MODEL_H

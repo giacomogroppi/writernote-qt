@@ -139,3 +139,30 @@ void stroke_complex_translate_circle(stroke *stroke, const QPointF &offset)
     data->_x += offset.x();
     data->_y += offset.y();
 }
+
+void stroke_complex_make_normal_circle (const stroke *_from, stroke *_to)
+{
+    int from, to;
+    point_s tmp;
+    stroke_complex_circle *data;
+    W_ASSERT(_to->is_normal());
+    W_ASSERT(_from->is_circle());
+
+    data = (stroke_complex_circle *) _from->get_complex_data();
+    from =  (int) data->_y - (int) data->_r;
+    to =    (int) data->_y + (int) data->_r;
+
+    for(; from <= to; from ++){
+        const double res1 = data->_r - (double) from;
+        W_ASSERT(res1 >= 0.);
+
+        const double res2 = qSqrt(res1);
+
+        tmp._y = (double) from;
+        tmp._x = res2 + data->_x;
+        _to->append(tmp, data->_press);
+
+        tmp._x = res2 - data->_x;
+        _to->append(tmp, data->_press);
+    }
+}

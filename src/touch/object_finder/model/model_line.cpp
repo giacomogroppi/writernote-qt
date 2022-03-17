@@ -150,8 +150,12 @@ static void model_line_vertical(stroke *stroke, stroke_complex_line *data)
 {
     const auto press = stroke->getPressure();
     const QRect FL = stroke->getFirstAndLast();
-    const QPointF &TL = FL.topLeft();
-    const QPointF &BR = FL.bottomRight();
+    QPointF TL = FL.topLeft();
+    QPointF BR = FL.bottomRight();
+
+    if(TL.y() > BR.y()){
+        __swap(TL, BR);
+    }
 
     const double x = TL.x();
 
@@ -165,14 +169,15 @@ static void model_line_vertical(stroke *stroke, stroke_complex_line *data)
 static void model_line_generic(stroke *stroke, stroke_complex_line *data)
 {
     const auto pressure = stroke->getPressure(0);
-    const auto one  = stroke->at(0).toQPointF(1.);
-    const auto last = stroke->last().toQPointF(1.);
+    data->topLeft  = stroke->at(0).toQPointF(1.);
+    data->bottomRight = stroke->last().toQPointF(1.);
 
-    stroke->reset();
+    if(data->topLeft.y() > data->bottomRight.y()){
+        __swap(data->topLeft, data->bottomRight);
+    }
 
-    data->topLeft = one;
-    data->bottomRight = last;
     data->press = pressure;
+    stroke->reset();
 }
 
 void model_line_create(stroke *stroke)
@@ -219,4 +224,63 @@ void stroke_complex_translate_line(stroke *stroke, const QPointF &offset)
     stroke_complex_line *data = (stroke_complex_line *)stroke->get_complex_data();
     data->topLeft += offset;
     data->bottomRight += offset;
+}
+
+static inline void stroke_complex_normal_line_generic(
+        stroke              *_to,
+        stroke_complex_line *data,
+        int from, int to)
+{
+    double m, p;
+    point_s point;
+    const pressure_t press = data->press;
+
+    W_ASSERT(from <= to);
+
+    m = (data->topLeft.x() - data->bottomRight.x()) / (data->topLeft.y() - data->bottomRight.y());
+    p = data->topLeft.y() - data->topLeft.x() * m;
+
+    for(; from <= to; from ++){
+        const double x = (double(data->topLeft.y()) - p) / m;
+        point._x = x;
+        point._y = (double) from;
+        _to->append(point, press);
+    }
+}
+
+static inline void stroke_complex_normal_line_vertical(
+        stroke              *_to,
+        stroke_complex_line *data,
+        int from, int to)
+{
+    point_s tmp;
+    const pressure_t press = data->press;
+    W_ASSERT(data->bottomRight.x() == data->topLeft.x());
+    W_ASSERT(from <= to);
+
+    tmp._x = data->topLeft.x();
+
+    for(; from <= to; from ++){
+        tmp._y = from;
+        _to->append(tmp, press);
+    }
+}
+
+void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
+{
+    int from, to;
+    stroke_complex_line *data = (stroke_complex_line *)_from->get_complex_data();
+    W_ASSERT(_from->is_line());
+    _to->reset();
+
+    from    = (int) data->topLeft.y();
+    to      = (int) data->bottomRight.y();
+
+    if(data->bottomRight.x() == data->topLeft.x()){
+        stroke_complex_normal_line_vertical(_to, data, from, to);
+    }else{
+        stroke_complex_normal_line_generic(_to, data, from, to);
+    }
+
+    W_ASSERT(_to->is_normal());
 }

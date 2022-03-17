@@ -21,7 +21,7 @@ static size_t get_size_by_type(int type)
     }
 }
 
-void *stroke_complex_allocate(int type, void *data)
+void *stroke_complex_allocate(int type, const void *data)
 {
     void *new_data;
 
@@ -173,4 +173,21 @@ void stroke_complex_translate(stroke *stroke, const QPointF &offset)
         default:
             std::abort();
     }
+}
+
+extern void stroke_complex_make_normal_circle (const stroke *from, stroke *to);
+extern void stroke_complex_make_normal_line   (const stroke *from, stroke *to);
+extern void stroke_complex_make_normal_rect   (const stroke *from, stroke *to);
+void stroke_complex_make_normal(const stroke *from, stroke *to)
+{
+    switch (from->get_type()) {
+        case stroke::COMPLEX_CIRCLE:
+            return stroke_complex_make_normal_circle(from, to);
+        case stroke::COMPLEX_LINE:
+            return stroke_complex_make_normal_line(from, to);
+        case stroke::COMPLEX_RECT:
+            return stroke_complex_make_normal_rect(from, to);
+        default:
+            std::abort();
+        }
 }
