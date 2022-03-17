@@ -188,7 +188,6 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 
             if(unlikely(index < 3)){
                 stroke.removeAt(0, index);
-                lenPoint = stroke.length();
 
                 if(stroke.length() < 3)
                     stroke_to_remove.append(data->from);
@@ -210,7 +209,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
             point_remove.append (index);
             stroke_mod.append   (from);
 
-            break;
+            //break;
 
             _index = index;
         }

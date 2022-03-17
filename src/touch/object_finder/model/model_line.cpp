@@ -241,7 +241,7 @@ static inline void stroke_complex_normal_line_generic(
     p = data->topLeft.y() - data->topLeft.x() * m;
 
     for(; from <= to; from ++){
-        const double x = (double(data->topLeft.y()) - p) / m;
+        const double x = (double(from) - p) / m;
         point._x = x;
         point._y = (double) from;
         _to->append(point, press);

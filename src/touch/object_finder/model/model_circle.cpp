@@ -51,7 +51,7 @@ static void model_circle_precision(const QPointF &point, double &precision)
 double model_circle(const stroke *stroke)
 {
     const auto area = stroke->getBiggerPointInStroke();
-    constexpr auto coef = 200.;
+    constexpr auto coef = 500.;
     constexpr auto _end = 10.;
     double precision = 0.;
     int i, len;
@@ -105,7 +105,6 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
      */
     QPointF tl, br;
     const auto data = (const stroke_complex_circle *)stroke->get_complex_data();
-    const auto prec = data->_press;
     constexpr not_used bool debug = true;
 
     W_ASSERT(data->_x >= 0.);
@@ -140,29 +139,53 @@ void stroke_complex_translate_circle(stroke *stroke, const QPointF &offset)
     data->_y += offset.y();
 }
 
+static inline void append_to_stroke(stroke *stroke, const QVector<point_s> &point, const pressure_t press)
+{
+    for(const auto &ref : qAsConst(point)){
+        stroke->append(ref, press);
+    }
+}
+
 void stroke_complex_make_normal_circle (const stroke *_from, stroke *_to)
 {
-    int from, to;
+    double from, to;
     point_s tmp;
     stroke_complex_circle *data;
+    pressure_t press;
+    QVector<point_s> _pointLeft, _pointRigth;
+    _to->reset();
     W_ASSERT(_to->is_normal());
     W_ASSERT(_from->is_circle());
 
     data = (stroke_complex_circle *) _from->get_complex_data();
-    from =  (int) data->_y - (int) data->_r;
-    to =    (int) data->_y + (int) data->_r;
+    press = data->_press;
+    from =  data->_y - wPower(data->_r, 1);
+    to =    data->_y + wPower(data->_r, 1);
 
-    for(; from <= to; from ++){
-        const double res1 = data->_r - (double) from;
+    _pointLeft.reserve(to - from);
+    _pointRigth.reserve(to - from);
+
+    // from is the top of the circle
+    W_ASSERT(from <= to);
+
+    for(; from <= to;){
+        const auto _res = wPower(double(from) - data->_y, 2);   // = y^2
+        const double res1 = wPower(data->_r, 2) - _res;         // = x^2
+
         W_ASSERT(res1 >= 0.);
 
-        const double res2 = qSqrt(res1);
+        const double res2 = qSqrt(res1);                        // = mod(x)
 
-        tmp._y = (double) from;
-        tmp._x = res2 + data->_x;
-        _to->append(tmp, data->_press);
+        tmp._y = from;
+        tmp._x = data->_x + res2;                               // = x + radius
+        _pointLeft.append(tmp);
 
-        tmp._x = res2 - data->_x;
-        _to->append(tmp, data->_press);
+        tmp._x = data->_x - res2;                               // = x - radius
+        _pointRigth.insert(0, tmp);
+
+        from += 1.;
     }
+
+    append_to_stroke(_to, _pointLeft, press);
+    append_to_stroke(_to, _pointRigth, press);
 }
