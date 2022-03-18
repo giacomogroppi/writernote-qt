@@ -97,6 +97,37 @@ void stroke_complex_circle_append(stroke *stroke, const QPointF& point)
     data->_r = distance(QPointF(data->_x, data->_y), point);
 }
 
+static inline double distance_from_center(
+        const stroke_complex_circle *data,
+        const QPointF& point)
+{
+    return qSqrt(
+        wPower(data->_x - point.x(), 2) +
+        wPower(data->_y - point.y(), 2)
+    );
+}
+
+static inline int is_internal(
+        cdouble distance,
+        cdouble precision,
+        const stroke_complex_circle *data)
+{
+    const auto raggio = qSqrt(data->_r);
+    const auto real_dist1 = qSqrt(distance);
+    return real_dist1 <= raggio + precision;
+}
+
+// return true if the first distance is inside the circle,
+// and the second not
+static inline bool one_inside(
+        cdouble                     _inside,
+        cdouble                     _outside,
+        const stroke_complex_circle *_data,
+        cdouble                     prec)
+{
+    return is_internal(_inside, prec, _data) && !is_internal(_outside, prec, _data);
+}
+
 bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cdouble precision)
 {
     /*
@@ -114,8 +145,8 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
 
     line.get_point(tl, br);
 
-    cdouble distance1 = qSqrt( wPower(data->_x - tl.x(), 2) + wPower(data->_y - tl.y(), 2));
-    cdouble distance2 = qSqrt( wPower(data->_x - br.x(), 2) + wPower(data->_y - tl.y(), 2));
+    cdouble distance1 = distance_from_center(data, tl);
+    cdouble distance2 = distance_from_center(data, br);
 
     model_circle_print(data);
     WDebug(debug, __FUNCTION__ << distance1 << distance2 << tl << br);
@@ -123,13 +154,10 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
     if(is_near(distance1, data->_r, precision) || is_near(distance2, data->_r, precision))
         return true;
 
-    cbool oneLess = distance1 <= data->_r - precision;
-    cbool oneMore = distance1 <= data->_r + precision;
+    cbool res = one_inside(distance1, distance2, data, precision) ||
+                one_inside(distance2, distance1, data, precision);
 
-    cbool twoLess = distance2 <= data->_r - precision;
-    cbool twoMore = distance2 <= data->_r + precision;
-
-    return !!(oneLess ^ twoMore) || !!(oneMore ^ twoLess);
+    return res;
 }
 
 void stroke_complex_translate_circle(stroke *stroke, const QPointF &offset)
@@ -194,7 +222,33 @@ void stroke_complex_make_normal_circle (const stroke *_from, stroke *_to)
     append_to_stroke(_to, _pointRigth, press);
 }
 
+/*
+ * Questa funzione viene chiamata se e solo se
+ * il biggerData dello stroke è all'interno
+ * dell'area in cui stiamo cercando.
+ */
 bool stroke_complex_is_inside_circle (const stroke *_stroke, const QRectF &area, cdouble precision)
 {
     const stroke_complex_circle *data = (stroke_complex_circle *)_stroke->get_complex_data();
+    int internal = 0;
+
+    W_ASSERT(_stroke->is_circle());
+    W_ASSERT(area.intersects(_stroke->getBiggerPointInStroke()));
+    W_ASSERT(area.topLeft().x() <= area.bottomRight().x());
+    W_ASSERT(area.topLeft().y() <= area.bottomRight().y());
+
+    if(area.contains(QPointF(data->_x, data->_y)))
+        return true;
+
+    const auto dist1 = distance_from_center(data, area.topLeft());
+    const auto dist2 = distance_from_center(data, area.bottomLeft());
+    const auto dist3 = distance_from_center(data, area.topRight());
+    const auto dist4 = distance_from_center(data, area.bottomRight());
+
+    internal += is_internal(dist1, precision, data);
+    internal += is_internal(dist2, precision, data);
+    internal += is_internal(dist3, precision, data);
+    internal += is_internal(dist4, precision, data);
+
+    return internal && internal < 4;
 }

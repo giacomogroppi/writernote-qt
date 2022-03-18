@@ -448,6 +448,12 @@ inline bool stroke::isInside(const QRectF &rect) const
     const QPointF &topLeft = rect.topLeft();
     const QPointF &bottomRight = rect.bottomRight();
 
+    {
+        const auto &area = this->getBiggerPointInStroke();
+        if(!area.intersects(rect.toRect()))
+            return false;
+    }
+
     if(unlikely(this->is_complex())){
         return stroke_complex_is_inside(this, rect, 0.);
     }
@@ -566,7 +572,13 @@ inline bool stroke::isEmpty() const
 
 inline void stroke::scale(const QPointF &offset, int flag)
 {
-    int i = this->length();
+    int i;
+
+    if(unlikely(is_complex())){
+        return stroke_complex_translate(this, offset);
+    }
+
+    i = this->length();
     for(i--; i >= 0; i--){
         point_s &point = at_mod(i);
 
