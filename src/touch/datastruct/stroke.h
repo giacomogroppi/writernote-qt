@@ -199,6 +199,20 @@ inline void stroke::updateFlagPressure() const
 
     len = this->length();
 
+    if(unlikely(len < 2 && _press.length() == 1)){
+        // lo stroke era _press const ma gli abbiamo
+        // tolto troppi punti, quindi non possiamo più disegnarlo
+        // con il QPainterPath
+        int i;
+        const auto press = _press.at(0);
+
+        for(i = 1; i < len; i++){
+            _press.append(press);
+        }
+
+        W_ASSERT(_press.length() == _point.length());
+    }
+
     if(unlikely(len > 1 && _press.length() == 1)){
         return;
     }
@@ -430,10 +444,15 @@ inline QRect stroke::getBiggerPointInStroke() const
 inline bool stroke::isInside(const QRectF &rect) const
 {
     int i;
-    const int len = this->length();
+    int len;
     const QPointF &topLeft = rect.topLeft();
     const QPointF &bottomRight = rect.bottomRight();
 
+    if(unlikely(this->is_complex())){
+        return stroke_complex_is_inside(this, rect, 0.);
+    }
+
+    len = this->length();
     for(i = 0; i < len; i++){
         const point_s &point = at(i);
 
@@ -601,6 +620,9 @@ continue_search:
     len = this->length();
 
     if(unlikely(!len))
+        return -1;
+
+    if(unlikely(i >= len))
         return -1;
 
     if(i == 0){

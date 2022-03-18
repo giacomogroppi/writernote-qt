@@ -193,3 +193,8 @@ void stroke_complex_make_normal_circle (const stroke *_from, stroke *_to)
     append_to_stroke(_to, _pointLeft, press);
     append_to_stroke(_to, _pointRigth, press);
 }
+
+bool stroke_complex_is_inside_circle (const stroke *_stroke, const QRectF &area, cdouble precision)
+{
+    const stroke_complex_circle *data = (stroke_complex_circle *)_stroke->get_complex_data();
+}

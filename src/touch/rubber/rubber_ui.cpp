@@ -14,7 +14,6 @@ struct RubberPrivateData{
     WLine           line;
     datastruct      *data;
     QVector<int>    *data_to_remove;
-    QVector<int>    *stroke_mod;
 
     int             al_find;
 };
@@ -127,7 +126,7 @@ void rubber_ui::endRubber()
     this->reset();
 }
 
-static inline QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
+static inline not_used QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
 {
     const auto &size = __m_size_gomma;
 
@@ -144,11 +143,45 @@ static inline QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
     return area;
 }
 
+static force_inline void draw_null(page *_page, const QVector<int> &point,
+                                   const QVector<int> &stroke, bool is_left)
+{
+    int i, len;
+
+    len = point.length();
+    Q_ASSERT(point.size() == stroke.size());
+
+    for(i = 0; i < len; i++){
+        cint indexPoint  = point.at(i);
+        cint indexStroke = stroke.at(i);
+
+        auto &stroke = _page->atStrokeMod(indexStroke);
+        const auto len = stroke.length();
+
+        _page->lock();
+        _page->drawForceColorStroke(stroke, -1, COLOR_NULL, NULL);
+        _page->unlock();
+
+        if(is_left){
+            stroke.removeAt(0, indexPoint);
+        }else{
+            stroke.removeAt(indexPoint, len - 1);
+        }
+
+        _page->lock();
+        _page->drawStroke(stroke, -1);
+        _page->unlock();
+    }
+}
+
 void actionRubberSinglePartial(DataPrivateMuThread *data)
 {
     RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
 
-    QVector<int> stroke_to_remove, stroke_mod, point_remove;
+    QVector<int> stroke_to_remove;
+    QVector<int> stroke_mod_point,          stroke_mod_stroke;
+    QVector<int> stroke_mod_rigth_point,    stroke_mod_rigth_stroke;
+    QVector<int> stroke_mod_left_point,     stroke_mod_left_stroke;
 
     int from, to, _index, index;
 
@@ -156,14 +189,10 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     datastruct *_datastruct = private_data->data;
     const auto &area        = private_data->line;
 
-    QVector<int> *_data_to_remove = private_data->data_to_remove;
-
     from = data->from;
     to = data->to;
 
     stroke_to_remove.reserve(12);
-    stroke_mod.reserve(32);
-    point_remove.reserve(32);
 
     W_ASSERT(from <= to);
 
@@ -186,54 +215,67 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
             lenPoint = stroke.length();
             W_ASSERT(stroke.is_normal());
 
-            if(unlikely(index < 3)){
-                stroke.removeAt(0, index);
-
-                if(stroke.length() < 3)
+            if(index < 3){
+                if(stroke.length() - index < 3){
                     stroke_to_remove.append(data->from);
 
-                continue;
+                    // we need to exit the current stroke
+                    break;
+                }
+
+                W_ASSERT(stroke.length() >= 2);
+
+                stroke_mod_left_point.append(index);
+                stroke_mod_left_stroke.append(from);
+                //stroke.removeAt(0, index);
+
+                goto out;
             }
 
-            if(unlikely(index + 3 > lenPoint)){
-                stroke.removeAt(index, lenPoint - 1);
-
+            if(index + 3 > lenPoint){
                 if(stroke.length() < 3)
                     stroke_to_remove.append(data->from);
+
+                stroke_mod_rigth_point.append(index);
+                stroke_mod_rigth_stroke.append(from);
+                //stroke.removeAt(index, lenPoint - 1);
 
                 break;
             }
 
             W_ASSERT(lenPoint >= 6);
 
-            point_remove.append (index);
-            stroke_mod.append   (from);
+            stroke_mod_point.append(index);
+            stroke_mod_stroke.append(from);
 
-            //break;
-
-            _index = index;
+out:
+            _index = index + 1;
         }
     }
 
-    from = stroke_mod.length();
-
-    if(!stroke_to_remove.length() && !from)
-        return;
-
     // we don't need to do this operation
     // in order to the list
+    {
+        int i = stroke_mod_stroke.length();
+        W_ASSERT(stroke_mod_stroke.size() == stroke_mod_point.length());
 
-    for(from --; from >= 0; from --){
-        cint indexStroke    = stroke_mod.at(from);
-        cint indexPoint     = point_remove.at(from);
+        for(i-- ; i >= 0; i --){
+            cint indexStroke    = stroke_mod_stroke.at(i);
+            cint indexPoint     = stroke_mod_point.at(i);
 
-        _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page);
+            _datastruct->changeIdThreadSave(indexPoint, _page->atStrokeMod(indexStroke), *_page);
+        }
     }
 
-    //qDebug() << stroke_mod;
+
     pthread_mutex_lock(&single_mutex);
-    _data_to_remove->append(stroke_to_remove);
-    private_data->stroke_mod->append(stroke_mod);
+
+    draw_null(_page, stroke_mod_left_point,  stroke_mod_left_stroke,   true);
+    draw_null(_page, stroke_mod_rigth_point, stroke_mod_rigth_stroke,  false);
+
+    // append to the list the index of the stroke to be remove
+    private_data->data_to_remove->append(stroke_to_remove);
+
     pthread_mutex_unlock(&single_mutex);
 
 }
@@ -298,11 +340,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
 
-    QVector<int> stroke_mod;
-
     W_ASSERT(_last.set);
-
-    stroke_mod.reserve(32);
 
     if(isTotal){
         functionToCall = actionRubberSingleTotal;
@@ -353,7 +391,6 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
     PrivateData(data)       = data;
     PrivateData(line)       = WLine(_last.point, lastPoint);
-    PrivateData(stroke_mod) = &stroke_mod;
 
     __m_size_gomma = (volatile int)_size_gomma;
 

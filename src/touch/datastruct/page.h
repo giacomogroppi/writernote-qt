@@ -12,8 +12,28 @@
 #include "utils/common_script.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "audioplay/audioplay.h"
+#include "pthread.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
+#define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
+#define TEMP_COLOR QColor::fromRgb(105, 105, 105, 255)
+#define TEMP_TICK 1
+#define TEMP_N_X 40
+#define TEMP_SQUARE 40
+
+#define Define_PAINTER_p(painter, ___img) \
+    QPainter painter; \
+    if(!painter.begin(&___img)) { \
+        if(debug_enable()){ \
+            std::abort(); \
+        } \
+    }; \
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+#define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
+
+#define End_painter(painter) if(!painter.end()) { if(debug_enable()){ std::abort(); }  };
+
 
 enum n_style: int;
 
@@ -28,9 +48,7 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
-#define FLAG_PAGE_ORDERED   BIT(1) // if indicates whether the list of strokes is sort by index
-#define FLAG_PAGE_BLOCK     BIT(2) // if we can't append stroke
-    int             _flag = 0;
+    pthread_mutex_t _img;
     bool            _IsVisible = true;
     int             _count;
     QList<stroke>   _stroke;
@@ -66,7 +84,7 @@ public:
 
     page(const page &page);
     page(const int count, const n_style style);
-    ~page() = default;
+    ~page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
     void swap(QList<stroke> & stroke, const QVector<int> & pos, int flag);
@@ -124,7 +142,6 @@ public:
     void drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);
     void drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color);
 
-
     void removeAndDraw(int m_pos_ris, const QVector<int> &pos, const QRectF &area);
     void drawIfInside(int m_pos_ris, const QRectF &area);
     void drawSquare(const QRect &rect);
@@ -133,8 +150,8 @@ public:
     QRect get_size_area(const QVector<int> &pos) const;
 
     // block for appending
-    void setBlock() const;
-    void removeBlock() const;
+    void lock() const;
+    void unlock() const;
 
     static void copy(const page &src, page &dest);
     Q_CONSTEXPR static double getProportion();
@@ -161,16 +178,14 @@ public:
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
 
-Q_ALWAYS_INLINE void page::removeBlock() const
+force_inline void page::unlock() const
 {
-    int & tmp = (int &)_flag;
-    tmp &= ~FLAG_PAGE_BLOCK;
+    pthread_mutex_unlock((pthread_mutex_t *)&_img);
 }
 
-Q_ALWAYS_INLINE void page::setBlock() const
+force_inline void page::lock() const
 {
-    int & tmp = (int &) _flag;
-    tmp |= FLAG_PAGE_BLOCK;
+    pthread_mutex_lock((pthread_mutex_t *)&_img);
 }
 
 force_inline double page::currentHeight() const
@@ -219,33 +234,25 @@ inline point_s page::at_translation(const point_s &point, cint page)
 
 force_inline void page::AppendDirectly(const stroke &stroke)
 {
-    if(unlikely(_flag & FLAG_PAGE_BLOCK)){
-        const QString message = QString("Possible bug, appending when flag is %1").arg(QString::number(_flag));
-        NAME_LOG_EXT->write(message, log_ui::possible_bug);
-        qDebug() << message;
-
-#ifdef DEBUGINFO
-        dialog_critic(message);
-#endif
-    }
     this->_stroke.append(stroke);
 }
 
-Q_ALWAYS_INLINE const QImage &page::getImg() const
+force_inline const QImage &page::getImg() const
 {
     return this->_imgDraw;
 }
 
-Q_CONSTEXPR Q_ALWAYS_INLINE double page::getProportion()
+Q_CONSTEXPR force_inline double page::getProportion()
 {
     return proportion;
 }
 
-Q_CONSTEXPR Q_ALWAYS_INLINE double page::getHeight(){
+Q_CONSTEXPR force_inline double page::getHeight()
+{
     return height;
 }
 
-Q_CONSTEXPR Q_ALWAYS_INLINE double page::getWidth()
+Q_CONSTEXPR force_inline double page::getWidth()
 {
     return width;
 }
@@ -423,6 +430,11 @@ force_inline page::page(const page &from)
     page::copy(from, *this);
 }
 
+force_inline page::~page()
+{
+    pthread_mutex_destroy(&_img);
+}
+
 inline page &page::operator=(const page &other)
 {
     if(this == &other){
@@ -431,6 +443,35 @@ inline page &page::operator=(const page &other)
 
     page::copy(other, *this);
     return *this;
+}
+
+force_inline void page::drawForceColorStroke(
+        const stroke    &stroke,
+        cint            m_pos_ris,
+        const QColor    &color,
+        QPainter        *painter)
+{
+    Define_PEN(pen);
+    cbool needDelete = (bool) (!painter);
+
+    if(needDelete){
+        if(unlikely(initImg(false)))
+            return this->triggerRenderImage(m_pos_ris, true);
+
+        WNew(painter, QPainter, ());
+
+        if(!painter->begin(&this->_imgDraw))
+            std::abort();
+        painter->setRenderHint(QPainter::Antialiasing, true);
+    }
+
+    this->drawStroke(*painter, stroke, pen, color);
+    W_ASSERT(painter->isActive());
+
+    if(needDelete){
+        painter->end();
+        WDelete(painter);
+    }
 }
 
 #endif // PAGE_H

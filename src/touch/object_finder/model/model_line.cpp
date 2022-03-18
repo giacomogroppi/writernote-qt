@@ -288,3 +288,8 @@ void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
 
     W_ASSERT(_to->is_normal());
 }
+
+bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area, cdouble precision)
+{
+
+}

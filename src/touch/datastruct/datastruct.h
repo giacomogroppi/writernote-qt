@@ -74,8 +74,8 @@ public:
     void drawIfInside(const QRect &area);
 
     constexpr double getZoom() const;
-    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPage() const { return _zoom * _pointFirstPage; }
-    constexpr Q_ALWAYS_INLINE QPointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
+    constexpr force_inline QPointF getPointFirstPage() const { return _zoom * _pointFirstPage; }
+    constexpr force_inline QPointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
     int whichPage(const QPointF &point) const;
     int whichPage(const stroke &stroke) const;
@@ -100,7 +100,7 @@ public:
     void MovePoint(const QList<QVector<int>> & pos, cint base, const QPointF &translation);
     void MovePoint(const QVector<int> & pos, cint page, const QPointF &translation);
 
-#define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
+#   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
     static void MovePoint(QList<stroke> &stroke, const QPointF &translation, int flag);
 
     bool userWrittenSomething(datastruct *s_data);    

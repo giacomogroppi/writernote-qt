@@ -189,5 +189,23 @@ void stroke_complex_make_normal(const stroke *from, stroke *to)
             return stroke_complex_make_normal_rect(from, to);
         default:
             std::abort();
-        }
+    }
 }
+
+extern bool stroke_complex_is_inside_circle (const stroke *_stroke, const QRectF &area, cdouble precision);
+extern bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area, cdouble precision);
+extern bool stroke_complex_is_inside_rect   (const stroke *_stroke, const QRectF &area, cdouble precision);
+bool stroke_complex_is_inside(const stroke *_stroke, const QRectF &area, cdouble precision)
+{
+    switch (_stroke->get_type()) {
+        case stroke::COMPLEX_CIRCLE:
+            return stroke_complex_is_inside_circle(_stroke, area, precision);
+        case stroke::COMPLEX_LINE:
+            return stroke_complex_is_inside_line(_stroke, area, precision);
+        case stroke::COMPLEX_RECT:
+            return stroke_complex_is_inside_rect(_stroke, area, precision);
+        default:
+            std::abort();
+    }
+}
+

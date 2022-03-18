@@ -42,3 +42,11 @@ void stroke_complex_make_normal_rect   (const stroke *_from, stroke *_to)
     Q_UNUSED(_to);
     std::abort();
 }
+
+bool stroke_complex_is_inside_rect   (const stroke *_stroke, const QRectF &area, cdouble precision)
+{
+    Q_UNUSED(_stroke);
+    Q_UNUSED(area);
+    Q_UNUSED(precision);
+    std::abort();
+}

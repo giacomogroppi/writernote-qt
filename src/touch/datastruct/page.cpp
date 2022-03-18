@@ -13,24 +13,6 @@
 #include <QPaintDevice>
 
 #define PAGE_THREAD_MAX 16
-#define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-#define TEMP_COLOR QColor::fromRgb(105, 105, 105, 255)
-#define TEMP_TICK 1
-#define TEMP_N_X 40
-#define TEMP_SQUARE 40
-
-#define Define_PAINTER_p(painter, ___img) \
-    QPainter painter; \
-    if(!painter.begin(&___img)) { \
-        if(debug_enable()){ \
-            std::abort(); \
-        } \
-    }; \
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
-#define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
-
-#define End_painter(painter) if(!painter.end()) { if(debug_enable()){ std::abort(); }  };
 
 static force_inline double widthToPressure(double v) { return v/10.0; };
 
@@ -76,6 +58,7 @@ page::page(const int count, const n_style style)
     this->_IsVisible = true;
     drawNewPage(style);
     this->mergeList();
+    pthread_mutex_init(&_img, NULL);
 }
 
 static inline void drawLineOrizzontal(
@@ -683,31 +666,6 @@ QRect page::get_size_area(const QVector<int> &pos) const
     }
 
     return result;
-}
-
-void page::drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter)
-{
-    Define_PEN(pen);
-    cbool needDelete = (bool) (!painter);
-
-    if(needDelete){
-        if(unlikely(initImg(false)))
-            return this->triggerRenderImage(m_pos_ris, true);
-
-        WNew(painter, QPainter, ());
-
-        if(!painter->begin(&this->_imgDraw))
-            std::abort();
-        painter->setRenderHint(QPainter::Antialiasing, true);
-    }
-
-    this->drawStroke(*painter, stroke, pen, color);
-    W_ASSERT(painter->isActive());
-
-    if(needDelete){
-        painter->end();
-        WDelete(painter);
-    }
 }
 
 void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)
