@@ -291,5 +291,15 @@ void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
 
 bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area, cdouble precision)
 {
+    const auto *data = (const stroke_complex_line *)_stroke->get_complex_data();
+    W_ASSERT(_stroke->is_line());
+    const auto rect = datastruct_rect(data->topLeft, data->bottomRight);
+    WLine line(rect.topLeft(), rect.bottomRight());
 
+    if(area.contains(data->topLeft))
+        return true;
+    if(area.contains(data->bottomRight))
+        return true;
+
+    return false;
 }

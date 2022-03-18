@@ -41,7 +41,24 @@
         "xstring": "cpp",
         "xhash": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "cctype": "cpp",
+        "cerrno": "cpp",
+        "clocale": "cpp",
+        "cmath": "cpp",
+        "concepts": "cpp",
+        "csignal": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "initializer_list": "cpp",
+        "ios": "cpp",
+        "iostream": "cpp",
+        "limits": "cpp",
+        "numbers": "cpp",
+        "stdexcept": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
