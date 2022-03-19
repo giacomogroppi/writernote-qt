@@ -400,7 +400,7 @@ force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
 force_inline bool is_near(cdouble one, cdouble two, cdouble precision)
 {
     W_ASSERT(precision >= 0.);
-    return qAbs(one - two) < precision;
+    return qAbs(one - two) <= precision;
 }
 
 force_inline double distance_not_square(const QPointF& first, const QPointF& second)

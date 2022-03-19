@@ -63,8 +63,9 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
     W_ASSERT(vertical._xb == vertical._xt);
 
     const auto y = vertical._xb * line._m + line._p;
-    return  line.belongs(QPointF(vertical._xb, y), precision) &&
-            vertical.is_in_domain(QPointF(vertical._xb, y), precision);
+    const auto one = line.belongs(QPointF(vertical._xb, y), precision);
+    const auto two = vertical.is_in_domain(QPointF(vertical._xb, y), precision);
+    return one && two;
 }
 
 bool WLine::intersect(const WLine &line, cint precision) const
@@ -74,8 +75,9 @@ bool WLine::intersect(const WLine &line, cint precision) const
     if(unlikely(line._is_vertical && this->_is_vertical))
         return false;
 
-    if(is_near(line._m, _m, 0.02))
-        return false;
+    if(!line._is_vertical && !_is_vertical)
+        if(is_near(line._m, _m, 0.02))
+            return false;
 
     if(likely(!_is_vertical && !line._is_vertical)) {
             x = (this->_p - line._p) / (line._m - this->_m);
