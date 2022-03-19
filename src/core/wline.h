@@ -21,6 +21,7 @@ public:
     WLine() = default;
     WLine(const WLine &line);
     WLine(const QPointF &topLeft, const QPointF &bottomRigth);
+    WLine(cdouble xt, cdouble yt, cdouble xb, cdouble yb);
 
     bool intersect(const WLine &line, cint precision) const;
     bool is_in_domain(const QPointF& point, cdouble precision) const;
@@ -30,6 +31,13 @@ public:
 
     WLine &operator=(const WLine &other);
 };
+
+force_inline WLine::WLine(cdouble xt, cdouble yt, cdouble xb, cdouble yb)
+{
+    W_ASSERT(xt <= xb);
+    W_ASSERT(yt <= yb);
+    *this = WLine(QPoint(xt, yt), QPointF(xb, yb));
+}
 
 force_inline void WLine::get_point(QPointF &tl, QPointF &br) const
 {

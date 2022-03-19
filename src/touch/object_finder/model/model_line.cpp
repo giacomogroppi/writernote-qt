@@ -294,12 +294,14 @@ bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area,
     const auto *data = (const stroke_complex_line *)_stroke->get_complex_data();
     W_ASSERT(_stroke->is_line());
     const auto rect = datastruct_rect(data->topLeft, data->bottomRight);
-    WLine line(rect.topLeft(), rect.bottomRight());
+    WLine lineRight (rect.topRight(), rect.bottomRight());
+    WLine lineLeft  (rect.topLeft(), rect.bottomLeft());
+    WLine _this     (data->topLeft, data->bottomRight);
 
     if(area.contains(data->topLeft))
         return true;
     if(area.contains(data->bottomRight))
         return true;
 
-    return false;
+    return _this.intersect(lineRight, precision) || _this.intersect(lineLeft, precision);
 }

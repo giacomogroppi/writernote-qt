@@ -87,6 +87,7 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/testing/TestingComponent.cpp \
     src/touch/datastruct/stroke_complex_data.cpp \
     src/touch/datastruct/stroke_drawer.cpp \
     src/audioplay/audioplay.cpp \
