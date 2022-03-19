@@ -471,7 +471,6 @@ static void square_draw_square(
         const QPointF       &tl,
         const QPointF       &br)
 {
-    const auto zoom = data->getZoom();
     const QPointF TL = data->adjustPointReverce(tl);
     const QPointF BR = data->adjustPointReverce(br);
     constexpr const auto debugDraw = true;

@@ -48,11 +48,6 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
     }
 }
 
-void datastruct::changeId(int indexPoint, stroke &stroke, page &page)
-{
-    return __changeId(indexPoint, stroke, page, false);
-}
-
 void datastruct::changeIdThreadSave(int indexPoint, stroke &stroke, page &page)
 {
     return __changeId(indexPoint, stroke, page, true);

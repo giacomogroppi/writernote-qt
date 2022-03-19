@@ -62,7 +62,11 @@ void reduce_size::decrese(datastruct *data){
 /* the function calculates the points for each section */
 static uint __howReduce(uint &i, const page *page){
     const stroke &stroke = page->atStroke(i);
-    return stroke.length();
+    if(likely(stroke.is_normal()))
+        return stroke.length();
+
+    // we cannot decrease accuracy if the stroke is complex
+    return 0;
 }
 
 static uint howReduce(uint &i,
@@ -76,7 +80,7 @@ static uint howReduce(uint &i,
      * and the end point
     */
 
-    return (__m > 2) ? (__m-2) : 0;
+    return (__m > 2) ? (__m - 2) : 0;
 }
 
 /*

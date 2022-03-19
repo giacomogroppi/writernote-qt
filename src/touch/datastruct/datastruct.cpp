@@ -75,22 +75,6 @@ void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
     at_mod(index).decreseAlfa(pos, 4);
 }
 
-// this function is not thread safe
-void datastruct::decreaseAlfa(stroke &stroke, page &page, cint decrease)
-{
-    const uchar newAlfa = stroke.getColor().alpha() / decrease;
-    stroke.setAlfaColor(newAlfa);
-
-    /*
-    * before drawing the new stroke with
-    * the new color we need to set all
-    * the area it previously occupied to white
-    */
-
-    page.drawForceColorStroke(stroke, -1, COLOR_NULL, NULL);
-    page.drawStroke(stroke, -1);
-}
-
 void datastruct::copy(const datastruct &src, datastruct &dest)
 {
     int i;
@@ -249,20 +233,6 @@ bool datastruct::isinside(const QPointF &topleft, const QPointF &bottomright, co
     return datastruct::isinside(topleft, bottomright, stroke);
 }
 
-void datastruct::MovePoint(
-        const QList<QVector<int> >  &pos,
-        cint                        base,
-        const QPointF               &translation)
-{
-    int i, len = pos.length();
-
-    for(i = 0; i < len; i++){
-        const QVector<int> & ref = pos.at(i);
-
-        MovePoint(ref, base + i, translation);
-    }
-}
-
 /* the list can be not order */
 void datastruct::MovePoint(
         const QVector<int>  &pos,
@@ -274,19 +244,6 @@ void datastruct::MovePoint(
         stroke & stroke = page.atStrokeMod(index);
         stroke.movePoint(translation);
     }
-}
-
-void datastruct::MovePoint(QList<stroke> &stroke, const QPointF &translation, int flag)
-{
-    int i = stroke.length() - 1;
-    if(flag & DATASTRUCT_MUST_TRASLATE_PATH){
-        flag = STROKE_MUST_TRASLATE_PATH;
-    }
-
-    for(; i >= 0; i --){
-        stroke.operator[](i).scale(translation, flag);
-    }
-
 }
 
 void datastruct::removePointIndex(

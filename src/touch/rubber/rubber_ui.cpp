@@ -307,7 +307,6 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
             continue;
         }
 
-insert:
         index_selected.append(data->from);
 
     }
@@ -392,7 +391,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     PrivateData(data)       = data;
     PrivateData(line)       = WLine(_last.point, lastPoint);
 
-    __m_size_gomma = (volatile int)_size_gomma;
+    __m_size_gomma = _size_gomma;
 
     dataPrivate.__page = &data->at_mod(indexPage);
 

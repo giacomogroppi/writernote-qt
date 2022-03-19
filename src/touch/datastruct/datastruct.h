@@ -114,7 +114,6 @@ public:
 
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
 
-    void changeId(int indexPoint, stroke& stroke, page &page);
     void changeIdThreadSave(int indexPoint, stroke &stroke, page &page);
 
     constexpr QPointF adjustPointReverce(const QPointF &pointDatastruct) const;
@@ -136,13 +135,11 @@ public:
     double biggery() const noexcept;
 
     void decreaseAlfa(const QVector<int> &pos, int page);
-    void decreaseAlfa(stroke &stroke, page &page, cint decrease);
     void removePage(const uint page);
 
     __fast const page &     at(const uint page) const;
     __fast page &           at_mod(const uint page);
 
-    __slow point_s at_draw(const uint indexPoint, const uint indexPage, const uint indexStroke) const;
     __slow point_s at_draw_page(const uint indexPoint, const uint indexPage) const;
 
     __fast const point_s *  lastPoint() const;
@@ -161,15 +158,11 @@ public:
     int getFirstPageVisible() const;
 
     double currentWidth() const;
-    double currentHeight() const;
-    double proportion() const;
 
     void newViewAudio(int newTime);
 
     static bool isOkZoom(const double newPossibleZoom);
     static void copy(const datastruct &src, datastruct &dest);
-    static size_t getSizeOne();
-    static bool needtochangeid(const int IndexPoint, const stroke &stroke);
     static void inverso(QPointF &point) {point *= -1.0;};
     static QPointF inverso(const QPointF &point) { return (-1) * point; };
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
@@ -181,17 +174,6 @@ public:
     friend class xmlstruct;
     friend class TestingCore;
 };
-
-/* this function does not consider the zoom */
-inline double datastruct::currentHeight() const
-{
-    return page::getHeight();
-}
-
-inline double datastruct::proportion() const
-{
-    return page::getProportion();
-}
 
 inline void datastruct::triggerVisibility(const double viewSize)
 {
@@ -248,14 +230,6 @@ force_inline bool datastruct::needToCreateNewSheet() const
     return false;
 }
 
-inline bool datastruct::needtochangeid(const int IndexPoint, const stroke &stroke)
-{
-    int len = stroke.length();
-    Q_ASSERT(len > 0);
-
-    return IndexPoint > 0 && IndexPoint < (len - 1);
-}
-
 inline double datastruct::biggery() const noexcept
 {
     return (at(lengthPage()-1).currentHeight() + this->getPointFirstPage().y()) * _zoom;
@@ -284,25 +258,9 @@ inline __slow point_s datastruct::at_draw_page(
     return point;
 }
 
-inline __slow point_s datastruct::at_draw(
-        const uint indexPoint,
-        const uint indexPage,
-        const uint indexStroke) const
-{
-    point_s point;
-
-    at(indexPage).at_draw(indexStroke, indexPoint, getPointFirstPage(), point, _zoom);
-    return point;
-}
-
 force_inline const __slow page *datastruct::lastPage() const
 {
     return &this->_page.last();
-}
-
-inline size_t datastruct::getSizeOne()
-{
-    return sizeof(struct point_s);
 }
 
 inline void datastruct::newPage(const n_style style)
