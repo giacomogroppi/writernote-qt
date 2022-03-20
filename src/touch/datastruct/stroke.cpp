@@ -248,12 +248,13 @@ void stroke::createQPainterPath(int page) const
     QPointF draw1, draw2, draw3;
 
     __path = QPainterPath();
+    __path.reserve(_point.length());
     len = this->length();
 
-    Q_ASSERT(len > 2);
+    W_ASSERT(len > 2);
 
-    point1 = page::at_translation(at(i),    page);
-    point2 = page::at_translation(at(i+1),  page);
+    point1 = page::at_translation(at(0),    page);
+    point2 = page::at_translation(at(1),  page);
 
     draw1 = point1.toQPointF(delta);
     draw2 = point1.toQPointF(delta);
@@ -261,7 +262,7 @@ void stroke::createQPainterPath(int page) const
     __path.moveTo(draw1);
     i = 2;
 
-    for(; i < len - 3; i++){
+    for(; i < len; i++){
         point3 =    page::at_translation(at(i), page);
         draw3  =    point3.toQPointF(delta);
 
