@@ -47,8 +47,11 @@ bool TabletCanvas::event(QEvent *event)
     WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
 
     if(type == QEvent::TouchEnd){
-        qDebug() << "Ridefine";
+        WDebug(TabletEventDebug, __func__ << "Ridefine");
         RIDEFINE(this->lastpointzoom);
+        block_scrolling = false;
+        isZooming = false;
+        return QWidget::event(event);
     }
 
     switch (type) {
@@ -141,10 +144,8 @@ bool TabletCanvas::event(QEvent *event)
     if(zoomChange)
         _parent->zoomChange();
 
-    if(data != NULL)
-        return QWidget::event(event);
-
-    return true;
+    
+    return QWidget::event(event);
 }
 
 static Q_ALWAYS_INLINE QPointF puntoameta(const QPointF &first, const QPointF &sec){
