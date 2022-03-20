@@ -5,8 +5,22 @@
 #include <QDebug>
 #include "mainwindow.h"
 
-static inline double Distance(const QPointF &point1, const QPointF &point2);
-static inline QPointF puntoameta(const QPointF &, const QPointF &);
+static inline double Distance(const QPointF &point1, const QPointF &point2)
+{
+    double x, y;
+    x = pow(point1.x() - point2.x(), 2);
+    y = pow(point1.y() - point2.y(), 2);
+    return x + y;
+}
+
+static force_inline QPointF PointMiddle(const QPointF &first, const QPointF &sec)
+{
+    double x, y;
+    x = (first.x() + sec.x()) / 2.0;
+    y = (first.y() + sec.y()) / 2.0;
+
+    return QPointF(x, y);
+}
 
 extern bool isZooming;
 
@@ -15,21 +29,14 @@ extern bool isZooming;
 #define ISDEFINE(x) (x[1].set)&&(x[0].set)
 #define RIDEFINE(x) x[0].set = x[1].set = false;
 
-/*
- * this function only manage zoom
-*/
-
-static QPointF pointMiddle;
-static bool needToResize;
-
 bool block_scrolling = false;
 
 bool TabletCanvas::event(QEvent *event)
 {
-    constexpr bool TabletEventDebug = false;
+    constexpr bool TabletEventDebug = true;
 
-    needToResize = false;
-    QPointF tmp;
+    bool needToResize = false;
+    QPointF tmp, _pointMiddle;
     double tmp_distance, tmp_distance_right_left;
 
     const QSize maxSize = this->size();
@@ -41,7 +48,7 @@ bool TabletCanvas::event(QEvent *event)
                                 type == QEvent::TouchBegin ||
                                 type == QEvent::TouchUpdate;
 
-    WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
+    //WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
 
     if(type == QEvent::TouchEnd){
         WDebug(TabletEventDebug, __func__ << "Ridefine");
@@ -51,34 +58,33 @@ bool TabletCanvas::event(QEvent *event)
         return QWidget::event(event);
     }
 
-    qDebug() << __func__ << type;
+    if(isTouchEvent){
+        const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
 
-        if(isTouchEvent){
-            const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+        // se l'utente sta zoomando con le dita touchPoints ha per forza lunghezza due.
+        if(unknown(touchPoints.length() != 2)){
+            goto out;
+        }
 
-            for( const auto &touchPoint : touchPoints){
-            //qDebug() << tmpNum << touchPoint.pos() << this->lastpointzoom[0].point << this->lastpointzoom[1].point << lastpointzoom[0].set << lastpointzoom[1].set;
+        //WDebug(TabletEventDebug, __func__ << touchPoints.length());
+        //return QWidget::event(event);
 
-            switch (touchPoint.state()) {
-            case Qt::TouchPointStationary:
-            case Qt::TouchPointReleased:
-                continue;
-            default:
-            {
+        for( const auto &touchPoint : touchPoints){
+            cbool _tmp =    touchPoint.state() == Qt::TouchPointPressed ||
+                            touchPoint.state() == Qt::TouchPointMoved ||
+                            touchPoint.state() == Qt::TouchPointStationary;
+            if(_tmp){
                 block_scrolling = true;
                 const QPointF &pointTouch = touchPoint.pos();
-                //qDebug() << "TabletCanvas::event default";
                 if(ISDEFINE(lastpointzoom)){
                     /* si calcola la distanza tra il punto dell'ultimo touch e il punto corrente, e si usa il più lontano */
-                    const double Dist1 = Distance(lastpointzoom[0].point, pointTouch);
-                    const double Dist2 = Distance(this->lastpointzoom[1].point, pointTouch);
-
-                    const bool FirstMoreDistance =  Dist1 > Dist2;
+                    const auto Dist1 = Distance(lastpointzoom[0].point, pointTouch);
+                    const auto Dist2 = Distance(this->lastpointzoom[1].point, pointTouch);
+                    const int FirstMoreDistance =  Dist1 > Dist2;
                     const QPointF &PointSelected = (FirstMoreDistance) ? lastpointzoom[0].point : lastpointzoom[1].point;
-
                     const double distanceSelected = Distance(PointSelected, pointTouch);
 
-                    pointMiddle = puntoameta(lastpointzoom[0].point, pointTouch);
+                    _pointMiddle = PointMiddle(lastpointzoom[0].point, pointTouch);
 
                     tmp_distance_right_left = Distance(lastpointzoom[0].point, lastpointzoom[1].point);
 
@@ -86,7 +92,7 @@ bool TabletCanvas::event(QEvent *event)
 
                     //qDebug() <<tmpNum<< "tmp_distance " << tmp_distance << "Distance_rigth_ledt" << tmp_distance_right_left << "Distance(PointSelected, pointTouch)" << distanceSelected;
 
-                    needToResize = needToResize || _zoom->zoom(pointMiddle, tmp_distance, zoomChange, size, maxSize, data->datatouch);
+                    needToResize = needToResize || _zoom->zoom(_pointMiddle, tmp_distance, zoomChange, size, maxSize, data->datatouch);
 
                     //lastpointzoom[0].set = lastpointzoom[1].set = false;
                     lastpointzoom[FirstMoreDistance].point = pointTouch;
@@ -98,7 +104,7 @@ bool TabletCanvas::event(QEvent *event)
                     lastpointzoom[index].set = true;
                     lastpointzoom[index].point = pointTouch;
                     qDebug() << "Index: " << index;
-                    continue;
+                    //continue;
 
                     if(!this->lastpointzoom[1].set){
                         this->lastpointzoom[1].point = touchPoint.pos();
@@ -121,12 +127,7 @@ bool TabletCanvas::event(QEvent *event)
                 }
 
             }
-            break;
-            } // for touchPoints
-        }
-
-        update();
-
+        } // for touchPoints
     }
     else{
         return QWidget::event(event);
@@ -139,21 +140,7 @@ bool TabletCanvas::event(QEvent *event)
     if(zoomChange)
         _parent->zoomChange();
 
-    
+out:
+    update();
     return QWidget::event(event);
-}
-
-static Q_ALWAYS_INLINE QPointF puntoameta(const QPointF &first, const QPointF &sec){
-    static double x, y;
-    x = (first.x() + sec.x()) / 2.0;
-    y = (first.y() + sec.y()) / 2.0;
-
-    return QPointF(x, y);
-}
-
-static inline double Distance(const QPointF &point1, const QPointF &point2){
-    double x, y;
-    x = pow(point1.x() - point2.x(), 2);
-    y = pow(point1.y() - point2.y(), 2);
-    return x + y;
 }

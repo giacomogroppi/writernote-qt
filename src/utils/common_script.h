@@ -22,6 +22,8 @@
 
 #define unlikely(exp) Q_UNLIKELY(exp)
 #define likely(exp) Q_LIKELY(exp)
+#define unknown(exp) exp
+
 #define force_inline Q_ALWAYS_INLINE
 #define not_used __attribute__ ((__unused__))
 
