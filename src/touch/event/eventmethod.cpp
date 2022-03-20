@@ -157,8 +157,8 @@ static Q_ALWAYS_INLINE QPointF puntoameta(const QPointF &first, const QPointF &s
 }
 
 static inline double Distance(const QPointF &point1, const QPointF &point2){
-    static double x, y;
+    double x, y;
     x = pow(point1.x() - point2.x(), 2);
     y = pow(point1.y() - point2.y(), 2);
-    return sqrt(x + y);
+    return x + y;
 }
