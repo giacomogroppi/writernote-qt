@@ -213,6 +213,7 @@ ADD_EXECUTABLE(writernote
     src/touch/object_finder/model_finder/model_finder.cpp
     src/core/wline.cpp
     src/touch/datastruct/stroke_complex_data.cpp
+    src/touch/datastruct/stroke_file.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 

@@ -135,6 +135,7 @@ public:
     friend class page;
     friend class xmlstruct;
     friend class stroke_drawer;
+    friend class stroke_file;
     friend void stroke_complex_adjust(stroke *stroke, cdouble zoom);
 };
 

@@ -146,6 +146,7 @@ SOURCES += \
     src/touch/datastruct/controllForRepositioning.cpp \
     src/touch/datastruct/page.cpp \
     src/touch/datastruct/stroke.cpp \
+    src/touch/datastruct/stroke_file.cpp \
     src/touch/datastruct/triggerNewView.cpp \
     src/touch/highlighter/highlighter.cpp \
     src/touch/laser/laser.cpp \
@@ -301,6 +302,7 @@ HEADERS += \
     src/touch/datastruct/page.h \
     src/touch/datastruct/point.h \
     src/touch/datastruct/stroke.h \
+    src/touch/datastruct/stroke_file.h \
     src/touch/datastruct/utils_datastruct.h \
     src/touch/highlighter/highlighter.h \
     src/touch/laser/laser.h \

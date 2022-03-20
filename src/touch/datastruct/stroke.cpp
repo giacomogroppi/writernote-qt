@@ -9,6 +9,7 @@
 #include "touch/object_finder/model/model.h"
 #include <QDebug>
 #include <QPainter>
+#include "touch/datastruct/stroke_file.h"
 
 stroke::stroke()
 {
@@ -63,6 +64,8 @@ int stroke::load(zip_file_t *file, int version)
 {
     int i, len_point;
     point_s point_append;
+
+    return stroke_file::load(*this, version, file);
 
 #ifdef ALL_VERSION
     bool page_point = false;
