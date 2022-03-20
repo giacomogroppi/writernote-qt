@@ -303,7 +303,7 @@ void square::reset()
         page * page         = &_canvas->data->datatouch->at_mod(i + _base);
 
         for(auto &ref : ll){
-            ref.scale(_trans_img, STROKE_MUST_TRASLATE_PATH);
+            ref.scale(_trans_img);
         }
 
         page->append(ll);

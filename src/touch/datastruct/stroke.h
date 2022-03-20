@@ -29,20 +29,16 @@ private:
 
     struct metadata_stroke _metadata;
 
-    QPainterPath _path;
-
     QRect _biggerData;
 
     enum flag_status : unsigned char{
-        UPDATE_PANTER_PATH = BIT(1),
-        UPDATE_BIGGER_DATA = BIT(2),
-        UPDATE_PRESSURE = BIT(3)
+        UPDATE_BIGGER_DATA = BIT(1),
+        UPDATE_PRESSURE = BIT(2)
     };
 
     unsigned char _flag;
 
     bool isPressureVal() const;
-    bool needToCreatePanterPath() const;
     bool needToUpdatePressure() const;
     bool needToUpdateBiggerData() const;
 
@@ -118,15 +114,12 @@ public:
     void setColor(const colore_s &color);
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
-    const QPainterPath &getQPainterPath(int page) const;
-    void createQPainterPath(int page) const;
     void reset();
     stroke &operator=(const stroke &other);
     bool isEmpty() const;
     const point_s &last() const;
 
-#define STROKE_MUST_TRASLATE_PATH BIT(1)
-    void scale(const QPointF &offset, int flag);
+    void scale(const QPointF &offset);
     force_inline bool is_normal() const { return _prop == COMPLEX_NORMAL; };
     force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
     force_inline bool is_rect() const { return _prop == COMPLEX_RECT; };
@@ -161,11 +154,6 @@ force_inline void stroke::set_complex(typeof(_prop) new_prop, void *new_data)
 force_inline bool stroke::isPressureVal() const
 {
     return _pressure.length() == 1 && _point.length() > 1;
-}
-
-force_inline bool stroke::needToCreatePanterPath() const
-{
-    return _flag & UPDATE_PANTER_PATH;
 }
 
 force_inline bool stroke::needToUpdatePressure() const
@@ -243,13 +231,10 @@ inline void stroke::updateFlagPressure() const
 /* call this function when modify the stroke */
 force_inline void stroke::modify()
 {
-    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE | UPDATE_PANTER_PATH;
+    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE;
 
-    W_ASSERT(this->needToCreatePanterPath());
     W_ASSERT(this->needToUpdateBiggerData());
     W_ASSERT(this->needToUpdatePressure());
-
-    _path = QPainterPath();
 }
 
 force_inline stroke::~stroke()
@@ -526,16 +511,6 @@ inline void stroke::setColor(const colore_s &color)
     memcpy(&_metadata.color, &color, sizeof(_metadata.color));
 }
 
-inline const QPainterPath &stroke::getQPainterPath(int page) const
-{
-    if(unlikely(needToCreatePanterPath())){
-        this->createQPainterPath(page);
-        setFlag(UPDATE_PANTER_PATH, false);
-    }
-
-    return _path;
-}
-
 inline void stroke::copy(const stroke &src, stroke &dest)
 {
     dest.reset();
@@ -551,8 +526,6 @@ inline void stroke::copy(const stroke &src, stroke &dest)
     dest._flag = src._flag;
 
     memcpy(&dest._metadata, &src._metadata, sizeof(src._metadata));
-
-    dest._path = src._path;
 }
 
 inline stroke &stroke::operator=(const stroke &other)
@@ -570,7 +543,7 @@ inline bool stroke::isEmpty() const
     return _point.isEmpty() && this->is_normal();
 }
 
-inline void stroke::scale(const QPointF &offset, int flag)
+inline void stroke::scale(const QPointF &offset)
 {
     int i;
 
@@ -585,11 +558,6 @@ inline void stroke::scale(const QPointF &offset, int flag)
         point._x += offset.x();
         point._y += offset.y();
     }
-
-    if((flag & STROKE_MUST_TRASLATE_PATH) && likely(!needToCreatePanterPath()) && this->constantPressure())
-        _path.translate(offset);
-    else
-        _path = QPainterPath();
 }
 
 /*

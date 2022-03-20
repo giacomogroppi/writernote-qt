@@ -48,11 +48,9 @@ bool WLine::belongs(const QPointF &point, cdouble precision) const
     const auto res = is_near(this->_m * point.x() + this->_p, point.y(), precision);
 
     if(res && is_in_domain(point, precision)){
-        qDebug() << "return true";
         return true;
     }
 
-    qDebug() << "Return false";
     return false;
 }
 

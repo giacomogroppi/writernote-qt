@@ -208,8 +208,6 @@ void stroke::decreasePrecision()
             this->removeAt(i);
         }
     }
-
-    setFlag(UPDATE_PANTER_PATH, true);
 }
 
 void stroke::movePoint(const QPointF &translation)
@@ -228,56 +226,11 @@ void stroke::movePoint(const QPointF &translation)
         point._x += translation.x();
         point._y += translation.y();
     }
-
-    if(likely(!needToCreatePanterPath())){
-        _path.translate(translation * PROP_RESOLUTION);
-    }
-    else{
-        setFlag(UPDATE_PANTER_PATH, true);
-    }
-}
-
-void stroke::createQPainterPath(int page) const
-{
-    auto &__path = (QPainterPath &)     _path;
-
-    constexpr double delta = PROP_RESOLUTION;
-    int i = 0, len;
-
-    point_s point1, point2, point3;
-    QPointF draw1, draw2, draw3;
-
-    __path = QPainterPath();
-    __path.reserve(_point.length());
-    len = this->length();
-
-    W_ASSERT(len > 2);
-
-    point1 = page::at_translation(at(0),    page);
-    point2 = page::at_translation(at(1),  page);
-
-    draw1 = point1.toQPointF(delta);
-    draw2 = point1.toQPointF(delta);
-
-    __path.moveTo(draw1);
-    i = 2;
-
-    for(; i < len; i++){
-        point3 =    page::at_translation(at(i), page);
-        draw3  =    point3.toQPointF(delta);
-
-        __path.cubicTo(draw1, draw2, draw3);
-
-        point1 = point2; draw1 = draw2;
-        point2 = point3; draw2 = draw3;
-    }
-
-    setFlag(UPDATE_PANTER_PATH, false);
 }
 
 void stroke::reset()
 {
-    _flag = UPDATE_BIGGER_DATA | UPDATE_PANTER_PATH | UPDATE_PRESSURE;
+    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE;
 
     /*
      * as we do not know the type of stroke
@@ -297,7 +250,6 @@ void stroke::reset()
     _prop = COMPLEX_NORMAL;
     _pressure.clear();
     _point.clear();
-    _path = QPainterPath();
 
     W_ASSERT(this->is_normal());
     W_ASSERT(!_complex);

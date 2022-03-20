@@ -37,20 +37,14 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
     WDebug(debCircle, __FUNCTION__ << data->_x << data->_y << data->_r);
 }
 
-force_inline void stroke_drawer::draw_const(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
+force_inline void stroke_drawer::draw_stroke_normal(
+        QPainter        &painter,   const stroke    &stroke,
+        cint            page,       QPen            &pen,
+        cbool           is_rubber,  cdouble         prop)
 {
-    const QPainterPath &path = stroke.getQPainterPath(page);
-    const auto press = stroke.getPressure();
+    W_ASSERT(page >= 0);
+    W_ASSERT(painter.isActive());
 
-    set_press(pen, press, prop, is_rubber);
-    painter.setPen(pen);
-    painter.strokePath(path, pen);
-}
-
-force_inline void stroke_drawer::draw_not_const(QPainter &painter,  const stroke &stroke,
-                                                cint page,          QPen &pen,
-                                                cbool is_rubber,    cdouble prop)
-{
     int counterPoint;
     QPointF lastPoint, pointDraw;
     cint lenPoint = stroke.length();
@@ -65,6 +59,13 @@ force_inline void stroke_drawer::draw_not_const(QPainter &painter,  const stroke
 
         set_press(pen, pressure, prop, is_rubber);
 
+        if(unlikely(pen.color().alpha() < 255)){
+            const auto curr = painter.compositionMode();
+            painter.setCompositionMode(QPainter::CompositionMode_Clear);
+            painter.drawPoint(lastPoint);
+            painter.setCompositionMode(curr);
+        }
+
         if(unlikely(is_rubber)){
             pen.setWidthF(pen.widthF() * deltaColorNull);
         }
@@ -74,21 +75,6 @@ force_inline void stroke_drawer::draw_not_const(QPainter &painter,  const stroke
         painter.drawLine(lastPoint, pointDraw);
 
         lastPoint = pointDraw;
-    }
-}
-
-force_inline void stroke_drawer::draw_stroke_normal(
-        QPainter        &painter,   const stroke    &stroke,
-        cint            page,       QPen            &pen,
-        cbool           is_rubber,  cdouble         prop)
-{
-    W_ASSERT(page >= 0);
-    W_ASSERT(painter.isActive());
-
-    if(prop == PROP_RESOLUTION && stroke.constantPressure()){
-        stroke_drawer::draw_const(painter, stroke, page, pen, is_rubber, prop);
-    }else{
-        stroke_drawer::draw_not_const(painter, stroke, page, pen, is_rubber, prop);
     }
 }
 
