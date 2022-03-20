@@ -8,7 +8,7 @@ extern bool block_scrolling;
 void TabletCanvas::ismoving_f()
 {
     QPointF translation;
-    const double &blockScrolling = block_scrolling;
+    const auto &blockScrolling = block_scrolling;
     const double refZoom = data->datatouch->getZoom();
 
     if(!blockScrolling){

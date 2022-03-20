@@ -36,13 +36,10 @@ bool TabletCanvas::event(QEvent *event)
     const QSize size = this->_pixmap.size();
 
     bool zoomChange = false;
-
     const auto type = event->type();
-
-    /*if(type == QEvent::TouchBegin || type == QEvent::TouchUpdate || type == QEvent::TouchEnd)
-        qDebug() << " TabletCanvas::event " << type;*/
-
-    //return QWidget::event(event);
+    const auto isTouchEvent =   type == QEvent::TouchEnd ||
+                                type == QEvent::TouchBegin ||
+                                type == QEvent::TouchUpdate;
 
     WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
 
@@ -54,11 +51,9 @@ bool TabletCanvas::event(QEvent *event)
         return QWidget::event(event);
     }
 
-    switch (type) {
-        case QEvent::TouchBegin:
-        case QEvent::TouchUpdate:
-        case QEvent::TouchEnd:
-        {
+    qDebug() << __func__ << type;
+
+        if(isTouchEvent){
             const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
 
             for( const auto &touchPoint : touchPoints){
@@ -131,12 +126,12 @@ bool TabletCanvas::event(QEvent *event)
         }
 
         update();
-        break;
-        }
-        default:
-            if(data != NULL)
-                return QWidget::event(event);
+
     }
+    else{
+        return QWidget::event(event);
+    }
+
     //qDebug() << "After" << this->lastpointzoom[0].point << this->lastpointzoom[1].point << lastpointzoom[0].set << lastpointzoom[1].set << "\n";
     if(needToResize)
         this->callResizeEvent();

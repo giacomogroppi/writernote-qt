@@ -181,7 +181,7 @@ inline void datastruct::triggerVisibility(const double viewSize)
     cint len = lengthPage();
     page *page;
     QPointF _init(0, 0);
-    QPointF _end(0, viewSize);
+    QPointF _end(0, viewSize - 0.1);
 
     if(unlikely(!len))
         return;
@@ -397,6 +397,7 @@ inline int datastruct::whichPage(const QPointF &point) const
 {
     int i, len;
     const auto heigth = page::getHeight();
+    const auto debug_which = false;
 
     if(unlikely(point.y() < 0.))
         return -1;
@@ -404,8 +405,9 @@ inline int datastruct::whichPage(const QPointF &point) const
     len = this->lengthPage();
 
     const auto not_used oldMethod = [&]{
-        for(i = 0; i < len; i++){
-            const page &page = at(i);
+        int k;
+        for(k = 0; k < len; k++){
+            const page &page = at(k);
             if(page.currentHeight() >= point.y() && page.minHeight() <= point.y()){
                 return i;
             }
@@ -413,9 +415,20 @@ inline int datastruct::whichPage(const QPointF &point) const
         return -1;
     };
 
-    i = point.y() / heigth;
+    i = diff(point.y() / heigth);
 
-    W_ASSERT(i == oldMethod());
+    if(unlikely(i >= len)){
+        WDebug(debug_which, __func__ << "set to -1");
+        i = -1;
+        WDebug(debug_which, __func__ << "set to -1" << qstr("i: %1").arg(i));
+    }
+
+    if(debug_enable()){
+        const auto res = oldMethod();
+        WDebug(debug_which, __func__ << qstr("i: %1 res: %2").arg(i).arg(res)
+                 << qstr("y %1 height %2").arg(point.y()).arg(heigth));
+        W_ASSERT(i == res);
+    }
 
     return i;
 }

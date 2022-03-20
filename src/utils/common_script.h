@@ -273,7 +273,7 @@ force_inline int diff(cdouble num)
 
 force_inline int ecc(cdouble num)
 {
-    if(double(int(num)) > num){
+    if(double(int(num)) >= num){
         return double(int(num));
     }
 
