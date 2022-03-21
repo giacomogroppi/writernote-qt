@@ -261,8 +261,8 @@ SOURCES += \
     src/sheet/style_struct.cpp \
     src/cloud/button_mainwindow.cpp \
     updater/launch_updater/launch_updater.cpp \
-    src/last_open/element/imageWidget/imageWidget.cpp
-
+    src/last_open/element/imageWidget/imageWidget.cpp \
+    src/touch/datastruct/page_index_cache.cpp
 
 HEADERS += \
     src/touch/datastruct/stroke_complex_data.h \
@@ -387,6 +387,7 @@ HEADERS += \
     src/windows/showmessageupdate.h \
     src/windows/updatecheck.h \
     updater/launch_updater/launch_updater.h
+    src/touch/datastruct/page_index_cache.h
 
 FORMS += \
     src/audiosetting/audioqualityoption.ui \
