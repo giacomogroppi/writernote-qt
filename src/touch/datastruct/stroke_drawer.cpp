@@ -38,17 +38,21 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
 }
 
 force_inline void stroke_drawer::draw_stroke_normal(
-        QPainter        &painter,   const stroke    &stroke,
+        QPainter        &_painter,   const stroke    &stroke,
         cint            page,       QPen            &pen,
         cbool           is_rubber,  cdouble         prop)
 {
     W_ASSERT(page >= 0);
-    W_ASSERT(painter.isActive());
+    W_ASSERT(_painter.isActive());
 
+    QImage img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+    Define_PAINTER_p(painter, img);
     const auto alfa = pen.color().alpha();
     int counterPoint;
     QPointF lastPoint, pointDraw;
     cint lenPoint = stroke.length();
+    const QColor col = pen.color();
+    cbool isHigh = col.alpha() < 255;
 
     lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
 
@@ -61,22 +65,24 @@ force_inline void stroke_drawer::draw_stroke_normal(
         set_press(pen, pressure, prop, is_rubber);
         painter.setPen(pen);
 
-        if(unlikely(alfa < 255.)){
-            qDebug() << alfa;
-            const auto curr = painter.compositionMode();
+        if(unlikely(is_rubber)){
+            pen.setWidthF(pen.widthF() * deltaColorNull);
+        }
+        else if(unlikely(isHigh)){
+            const QPainter::CompositionMode curr = painter.compositionMode();
             painter.setCompositionMode(QPainter::CompositionMode_Clear);
             painter.drawPoint(lastPoint);
             painter.setCompositionMode(curr);
-        }
-
-        if(unlikely(is_rubber)){
-            pen.setWidthF(pen.widthF() * deltaColorNull);
         }
 
         painter.drawLine(lastPoint, pointDraw);
 
         lastPoint = pointDraw;
     }
+
+    painter.end();
+
+    _painter.drawImage(img.rect(), img);
 }
 
 force_inline void stroke_drawer::draw_rect(

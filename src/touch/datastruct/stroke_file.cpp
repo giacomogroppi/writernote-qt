@@ -144,5 +144,30 @@ int stroke_file::load(class stroke &_stroke, int version, zip_file_t *file)
 
 int stroke_file::save(const class stroke &_stroke, zip_source_t *file)
 {
+    int i;
+    cint len        = _stroke._pressure.length();
+    cint len_point  = _stroke._point.length();
 
+    SOURCE_WRITE_RETURN(file, &len_point, sizeof(len_point));
+    SOURCE_WRITE_RETURN(file, &_stroke._metadata, sizeof(_stroke._metadata));
+    SOURCE_WRITE_RETURN(file, &_stroke._prop, sizeof(_stroke._prop));
+
+    if(_stroke._prop != stroke::COMPLEX_NORMAL){
+        W_ASSERT(_stroke._pressure.isEmpty());
+        W_ASSERT(_stroke._point.isEmpty());
+
+        return stroke_complex_save(&_stroke, file);
+    }
+
+    SOURCE_WRITE_RETURN(file, &len, sizeof(len));
+
+    for(i = 0; i < len; i++){
+        SOURCE_WRITE_RETURN(file, &_stroke._pressure.at(i), sizeof(float));
+    }
+
+    for(i = 0; i < len_point; i ++){
+        SOURCE_WRITE_RETURN(file, &_stroke.at(i), sizeof(point_s));
+    }
+
+    return OK;
 }

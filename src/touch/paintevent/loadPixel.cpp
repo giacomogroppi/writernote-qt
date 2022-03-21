@@ -30,6 +30,8 @@ static void drawSingleStroke(DataPaint &_dataPoint, const stroke   &_stroke,
         _zoom = PROP_RESOLUTION - 0.0000001;
     }
 
+    _pen.setColor(_stroke.getColor());
+
     _stroke.draw(_painter, false, 0, _pen, _zoom);
 }
 
