@@ -45,6 +45,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
     W_ASSERT(page >= 0);
     W_ASSERT(painter.isActive());
 
+    const auto alfa = pen.color().alpha();
     int counterPoint;
     QPointF lastPoint, pointDraw;
     cint lenPoint = stroke.length();
@@ -58,8 +59,10 @@ force_inline void stroke_drawer::draw_stroke_normal(
         pointDraw = point.toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
 
         set_press(pen, pressure, prop, is_rubber);
+        painter.setPen(pen);
 
-        if(unlikely(pen.color().alpha() < 255)){
+        if(unlikely(alfa < 255.)){
+            qDebug() << alfa;
             const auto curr = painter.compositionMode();
             painter.setCompositionMode(QPainter::CompositionMode_Clear);
             painter.drawPoint(lastPoint);
@@ -69,8 +72,6 @@ force_inline void stroke_drawer::draw_stroke_normal(
         if(unlikely(is_rubber)){
             pen.setWidthF(pen.widthF() * deltaColorNull);
         }
-
-        painter.setPen(pen);
 
         painter.drawLine(lastPoint, pointDraw);
 
@@ -113,7 +114,6 @@ force_inline void stroke_drawer::draw_line(
     painter.setPen(pen);
     painter.drawLine(data->topLeft * prop, data->bottomRight * prop);
 }
-
 
 void stroke_drawer::draw_stroke(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {

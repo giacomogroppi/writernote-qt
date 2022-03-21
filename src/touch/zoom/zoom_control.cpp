@@ -19,14 +19,18 @@ void zoom_control::checkRespositioning(const QPointF &f, const bool max)
     data->setPointFirstPage(translation);
 }
 
-bool zoom_control::zoom(QPointF &pointMiddle, double delta, bool &zoomChange,
-                        const QSize &sizePixmap, const QSize &maxSize, datastruct *data){
-
+bool zoom_control::zoom(QPointF     &pointMiddle,
+                        double      delta,
+                        bool        &zoomChange,
+                        const QSize &sizePixmap,
+                        const QSize &maxSize,
+                        datastruct  *data)
+{
     this->data = data;
-    const QPointF pointRiTranslate = pointMiddle * (delta - double(1.0));
-    const bool max = sizePixmap.width() >= maxSize.width();
-
+    const QPointF pointRiTranslate = pointMiddle * (delta - 1.);
+    const bool max = sizePixmap.width() >= maxSize.width(); // false if it's max
     const double zoom = data->getZoom();
+
     //qDebug() << "Current zoom " << zoom << " delta " << delta;
 
     {
@@ -35,7 +39,7 @@ bool zoom_control::zoom(QPointF &pointMiddle, double delta, bool &zoomChange,
             return false;
     }
 
-    delta = delta - double(1.0);
+    delta = delta - 1.;
 
     zoomChange = true;
 

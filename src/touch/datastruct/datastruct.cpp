@@ -140,20 +140,20 @@ void datastruct::adjustHeight(const uint height)
 void datastruct::adjustWidth(const uint width)
 {
     QPointF point = this->getPointFirstPage();
-    QPointF t(0.0, 0.0);
+    QPointF t(0., 0.);
     double biggerX = biggerx();
 
-    if(point.x() < 0.0 && biggerX <= width){
-        t.setX(width - biggerX);
+    if(point.x() < 0. && biggerX <= width){
+        t.setX((double)width - biggerX);
     }else{ //(x >= width)
-        if(point.x() > 0.0)
-            t.setX(-point.x());
+        if(point.x() > 0.)
+            t.setX(- point.x());
     }
 
     scala_all(t * _zoom);
 
     point = this->getPointFirstPage();
-    if(unlikely(point.x() > 0.0)){
+    if(unlikely(point.x() > 0.)){
         this->setPointFirstPage(QPointF(0.0, point.y()));
     }
 }
@@ -164,7 +164,8 @@ void datastruct::adjustWidth(const uint width)
  * height of one sheet is bigger than the width
 */
 void datastruct::adjustAll(const uint width,
-                           const uint height){
+                           const uint height)
+{
     adjustWidth(width);
     adjustHeight(height);
 }

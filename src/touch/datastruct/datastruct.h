@@ -383,9 +383,9 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris)
             at_mod(i).triggerRenderImage(m_pos_ris, true);
 }
 
-inline bool datastruct::isOkZoom(const double newPossibleZoom)
+force_inline bool datastruct::isOkZoom(const double newPossibleZoom)
 {
-    return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.2);
+    return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.3);
 }
 
 constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
