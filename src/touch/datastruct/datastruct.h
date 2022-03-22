@@ -158,7 +158,7 @@ public:
     int getFirstPageVisible() const;
 
     double currentWidth() const;
-
+    void moveToPage(int page);
     void newViewAudio(int newTime);
 
     static bool isOkZoom(const double newPossibleZoom);

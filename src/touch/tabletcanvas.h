@@ -166,18 +166,18 @@ public:
     bool enableredoundu = true;
 
     /* class for menu */
-    class square            *_square = NULL;
-    class rubber_ui         *_rubber = NULL;
-    class pen_ui            *_pen_ui = NULL;
-    class text_ui           *_text = NULL;
-    class highlighter       *_highlighter = NULL;
-    class text_widgets      *_text_w = NULL;
-    class fast_sheet_ui     *_sheet = NULL;
-    class zoom_control      *_zoom = NULL;
-    class redoundo          *_redoundo = NULL;
-    class property_control  *_property = NULL;
-    class laser             *_laser;
-    class object_finder     *_finder;
+    class square            *_square        = NULL;
+    class rubber_ui         *_rubber        = NULL;
+    class pen_ui            *_pen_ui        = NULL;
+    class text_ui           *_text          = NULL;
+    class highlighter       *_highlighter   = NULL;
+    class text_widgets      *_text_w        = NULL;
+    class fast_sheet_ui     *_sheet         = NULL;
+    class zoom_control      *_zoom          = NULL;
+    class redoundo          *_redoundo      = NULL;
+    class property_control  *_property      = NULL;
+    class laser             *_laser         = NULL;
+    class object_finder     *_finder        = NULL;
 
     QPixmap _pixmap;
 

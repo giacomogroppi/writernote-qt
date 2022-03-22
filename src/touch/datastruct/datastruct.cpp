@@ -301,6 +301,13 @@ void datastruct::removePage(uint page)
     }
 }
 
+void datastruct::moveToPage(int page)
+{
+    int currentPage = this->getFirstPageVisible();
+    QPointF translation = QPointF(0., page::getHeight() * (double)(page - currentPage) * _zoom);
+    this->scala_all(translation);
+}
+
 bool datastruct::userWrittenSomething(uint frompage)
 {
     const uint len = lengthPage();

@@ -194,6 +194,7 @@ SOURCES += \
     src/utils/bug_repo/bug_repo_ui.cpp \
     src/utils/changeLanguage.cpp \
     src/utils/checkpassword/checkpassword.cpp \
+    src/utils/choosepage.cpp \
     src/utils/copy_text.cpp \
     src/utils/default_location/audio_default_location.cpp \
     src/utils/default_location/location_audiorecord.cpp \
@@ -333,6 +334,7 @@ HEADERS += \
     src/utils/bug_repo/bug_repo_ui.h \
     src/utils/changeLanguage.h \
     src/utils/checkpassword/checkpassword.h \
+    src/utils/choosepage.h \
     src/utils/color_define_rgb.h \
     src/utils/common_def.h \
     src/utils/common_error_definition.h \
@@ -410,6 +412,7 @@ FORMS += \
     src/touch/text/text_ui/text_ui.ui \
     src/touch/text/text_widgets/text_widgets.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
+    src/utils/choosepage.ui \
     src/utils/default_location/audio_default_location.ui \
     src/utils/default_option/default_option_ui.ui \
     src/utils/extract_audio/extract_audio_ui.ui \

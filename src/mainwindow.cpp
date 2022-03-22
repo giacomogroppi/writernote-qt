@@ -28,7 +28,9 @@
 #include "audiorecord/audiorecord.h"
 #include "touch/multi_thread_data.h"
 #include "touch/laser/laser.h"
+#include "utils/choosepage.h"
 #include <QString>
+#include <QRect>
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -79,6 +81,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_audioplayer         = new class audioplay(this);
     this->m_audio_recorder      = new class AudioRecord(this);
     this->m_laser               = new class laser(_canvas);
+    this->_choose_page          = new class ChoosePage(this);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);
@@ -149,6 +152,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     contrUi();
 
     _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
+    ui->page->setStyleSheet("QLabel { background-color : red; color : blue; }");
 }
 
 MainWindow::~MainWindow()
@@ -160,6 +164,46 @@ MainWindow::~MainWindow()
 
     delete ui;
     ui = NULL;
+}
+
+bool MainWindow::event(QEvent *event)
+{
+    const auto type = event->type();
+    if(type == QEvent::MouseButtonPress){
+        const auto *widget = ui->page;
+        const auto sott_event = static_cast<QMouseEvent *>(event);
+        const auto pos = sott_event->pos();
+
+        const QPoint pos_object = ui->page->pos();
+        cint w = widget->width();
+        cint h = widget->height();
+
+        const auto rect = QRect(
+                    QPoint(pos_object.x(),
+                           pos_object.y() + 90),
+                    QPoint(
+                        pos_object.x() + w,
+                        pos_object.y() + h + 90
+                        )
+                    );
+
+        W_ASSERT(rect.topRight().x() - rect.topLeft().x() == w);
+        W_ASSERT(rect.bottomLeft().y() - rect.topLeft().y() == h);
+
+        W_ASSERT(w == 80);
+        W_ASSERT(h == 20);
+
+        qDebug() << __func__ << rect << pos;
+
+        if(rect.contains(pos)){
+            QSize size = this->size() / 2. - _choose_page->get_size();
+            this->_choose_page->show(*_canvas->data);
+            this->_choose_page->move(QPoint(size.width(), size.height()));
+            this->_choose_page->exec();
+        }
+    }
+
+    return QWidget::event(event);
 }
 
 void MainWindow::update_touch_or_pen()

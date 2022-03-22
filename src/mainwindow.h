@@ -117,6 +117,7 @@ public:
     class fast_sheet_ui *m_sheet = nullptr;
     class audioplay *m_audioplayer;
     class laser *m_laser;
+    class ChoosePage *_choose_page;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ShareUtils *m_share_file;
 #endif
@@ -141,6 +142,7 @@ private slots:
     void togglePause();
     void on_actionNew_File_triggered();
     void closeEvent (QCloseEvent *event) override;
+    bool event(QEvent *event) override;
     void on_actionOpen_triggered();
 
     void on_actionListen_current_audio_triggered();
