@@ -50,6 +50,7 @@ TabletCanvas::~TabletCanvas()
 {
     DELETE_IF_EXIST(_zoom);
     DELETE_IF_EXIST(_redoundo);
+    WDelete(data);
 
     saveLastMethod(_input);
     saveScrollingSetting();
