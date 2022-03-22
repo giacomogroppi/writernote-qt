@@ -424,7 +424,7 @@ inline int datastruct::whichPage(const QPointF &point) const
     }
 
     if(debug_enable()){
-        const auto res = oldMethod();
+        const not_used auto res = oldMethod();
         WDebug(debug_which, __func__ << qstr("i: %1 res: %2").arg(i).arg(res)
                  << qstr("y %1 height %2").arg(point.y()).arg(heigth));
         W_ASSERT(i == res);

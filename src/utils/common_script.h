@@ -427,4 +427,42 @@ force_inline double is_near(const QPointF &point1, const QPointF &point2, cdoubl
             is_near(point1.y(), point2.y(), prec);
 }
 
+template<typename T>
+force_inline void order_complex(const QList<T> &list, int (*cmpFunctions) (const T&, const T&))
+{
+    int i, j;
+    int n = list.length();
+
+    for (i = 0; i < n - 1; i++){
+        for (j = 0; j < n - i - 1; j++){
+            auto &val1 = list.operator[](j);
+            auto &val2 = list.operator[](j+1);
+
+            // val1 > val2
+            if (cmpFunctions(val1, val2)){
+                list.swapItemsAt(j, j + 1);
+            }
+        }
+    }
+}
+
+template<typename T>
+force_inline bool is_order_complex(const QList<T> &list, int (*cmpFunctions) (const T&, const T&))
+{
+    int i;
+    int n = list.length();
+
+    for (i = 0; i < n - 1; i++){
+        auto &val1 = list.operator[](i);
+        auto &val2 = list.operator[](i+1);
+
+        // val1 > val2
+        if (cmpFunctions(val1, val2)){
+            return true;
+        }
+    }
+
+    return false;
+}
+
 #endif // COMMON_SCRIPT_H

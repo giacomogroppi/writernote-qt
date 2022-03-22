@@ -9,18 +9,33 @@
 
 class page_index_cache {
 private:
-    static constexpr int index_max = 10;
+    struct page_index_internal{
+        qint32  _index;
+        float   _y;
+    };
 
-    class page *_page;
-    int _index[index_max];
+    static_assert(sizeof(page_index_internal) == 8);
+
+    static constexpr int null_val = -1;
+
+    int find_without_cache(cdouble y) const;
+    bool is_all_null() const;
+    const class page *_page;
+    QVector<page_index_internal> _index = {};
 public:
     page_index_cache(const class page *page);
     ~page_index_cache() = default;
 
     void reset() const;
-    int index_stroke(const class page &Page, cdouble Y) const;
+    int index_stroke(cdouble Y, int &from, int &to) const;
     page_index_cache &operator=(const page_index_cache &other);
 };
+
+force_inline page_index_cache::page_index_cache(const class page *page)
+{
+    this->reset();
+    this->_page = page;
+}
 
 force_inline page_index_cache &page_index_cache::operator=(const page_index_cache &other)
 {
@@ -28,14 +43,24 @@ force_inline page_index_cache &page_index_cache::operator=(const page_index_cach
         return *this;
     }
 
-    memcpy(this, &other, sizeof(*this));
+    this->_index    = other._index;
+    this->_page     = other._page;
 
     return *this;
 }
 
 force_inline void page_index_cache::reset() const
 {
-    memset((int *)&_index, 0, sizeof(_index));
+    int i;
+    int len = _index.length();
+    void **parent = (void **) &_page;
+
+    for(i = 0; i < len; i++){
+        auto &index = (int &) _index[i]._index;
+        index = null_val;
+    }
+
+    *parent = NULL;
 }
 
 #endif //WRITERNOTE_QT_PAGE_INDEX_CACHE_H

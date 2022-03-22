@@ -47,7 +47,6 @@ force_inline void stroke_drawer::draw_stroke_normal(
 
     QImage img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
     Define_PAINTER_p(painter, img);
-    const auto alfa = pen.color().alpha();
     int counterPoint;
     QPointF lastPoint, pointDraw;
     cint lenPoint = stroke.length();
@@ -99,7 +98,10 @@ force_inline void stroke_drawer::draw_rect(
 
     set_press(pen, data->press, prop, is_rubber);
 
-    painter.drawRect(QRectF(data->rect.topLeft() * prop, data->rect.bottomRight() * prop));
+    const auto _topLeft     = page::at_translation(point_s(data->rect.topLeft()), page).toQPointF(prop);
+    const auto _bottomRight = page::at_translation(point_s(data->rect.bottomRight()), page).toQPointF(prop);
+
+    painter.drawRect(QRectF(_topLeft, _bottomRight));
 }
 
 force_inline void stroke_drawer::draw_line(
@@ -117,8 +119,11 @@ force_inline void stroke_drawer::draw_line(
 
     set_press(pen, press, prop, is_rubber);
 
+    const auto _topLeft     = page::at_translation(point_s(data->topLeft), page).toQPointF(prop);
+    const auto _bottomRight = page::at_translation(point_s(data->bottomRight), page).toQPointF(prop);
+
     painter.setPen(pen);
-    painter.drawLine(data->topLeft * prop, data->bottomRight * prop);
+    painter.drawLine(_topLeft, _bottomRight);
 }
 
 void stroke_drawer::draw_stroke(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)

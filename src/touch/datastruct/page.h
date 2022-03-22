@@ -169,6 +169,7 @@ public:
 
     friend class stroke;
     friend class stroke_drawer;
+    friend class page_index_cache;
     friend class datastruct;
     friend class xmlstruct;
     friend class rubber_ui;
