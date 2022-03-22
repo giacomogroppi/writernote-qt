@@ -361,31 +361,49 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
         indexPage = _base;
     }else{
         const auto now = data->whichPage(lastPoint);
+        int i;
 
-        if(now < _base){
-            _base = now;
+        if(likely(now == _base))
+            goto out1;
 
-            for(int i = now; i < _base; i++){
+        /*
+         * Il punto che ha selezionato adesso l'utente
+         * si trova su una pagina precedente a quella che ha
+         * selezionato prima
+        */
+        if(now < _base)
+        {
+            for(i = now; i < _base; i++)
+            {
                 _data_to_remove.insert(0, QVector<int>());
             }
 
-            _data_to_remove.insert(0, QVector<int>());
+            _base = now;
             count = 0;
-        }else if(now > _base){
-
-            for(int i = _base; i < now; i++){
-                _data_to_remove.append(QVector<int>());
-            }
-
+        }
+        else if(now > _base)
+        {
             indexPage = now;
             count = now - _base;
+
+            if(!(count < _data_to_remove.length()))
+            {
+                for(i = _base; i < now; i++)
+                {
+                    _data_to_remove.append(QVector<int>());
+                }
+            }
         }
+
+        W_ASSERT(now >= 0);
     }
+
+    out1:
 
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1
-    if(unlikely(_base != data->whichPage(_last.point))){
-        return;
+    if(unlikely(data->whichPage(lastPoint) != data->whichPage(_last.point))){
+        goto save_point;
     }
 
     PrivateData(data)       = data;
@@ -397,10 +415,11 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
     lenStroke = dataPrivate.__page->lengthStroke();
 
-    // we trigger the copy if the page is shared
     if(unlikely(!lenStroke))
-        goto out;
+        goto out2;
 
+    // we trigger the copy if the page is shared
+    // we can't do after
     dataPrivate.__page->atStrokeMod(0);
 
     PrivateData(data_find)      = &_data_to_remove.operator[](count);
@@ -408,7 +427,8 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     PrivateData(al_find)        = dataPrivate.data_find->length();
 
     thread_create = DataPrivateMuThreadInit(dataThread, &dataPrivate,
-                                            thread_group->get_max(), lenStroke, DATA_PRIVATE_FLAG_SEM);
+                                            thread_group->get_max(),
+                                            lenStroke, DATA_PRIVATE_FLAG_SEM);
 
     thread_group->postAndWait(thread_create);
 
@@ -420,12 +440,14 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
         dataPrivate.__page->mergeList();
 
     }
-out:
+
+out2:
     if(!isTotal){
         _base = -1;
         _data_to_remove.clear();
     }
 
+save_point:
     _last.point = lastPoint;
 }
 
