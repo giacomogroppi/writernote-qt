@@ -65,7 +65,6 @@ bool TabletCanvas::event(QEvent *event)
 
     bool needToResize = false;
     QPointF _pointMiddle;
-    double tmp_distance, tmp_distance_right_left;
 
     const QSize maxSize = this->size();
     const QSize size = this->_pixmap.size();
@@ -97,10 +96,10 @@ bool TabletCanvas::event(QEvent *event)
         bool somethingCtrl = false;
         QPointF point[2];
         char which = -1;
-        // 50 only point with index 0
-        // 51 only point with index 1
-        // 3 both point
-        // 4 temporary
+
+        // 0 first point that is double
+        // 1 second point that is double
+        constexpr char split = 2; // 2 1 or 2
 
         block_scrolling = true;
 
@@ -161,11 +160,7 @@ bool TabletCanvas::event(QEvent *event)
 
             point[newIndex] = pointTouch;
 
-            if(which == 0){
-                which = 50;
-            }else{
-                which = 51;
-            }
+            which = split;
         }
 
         do_zoom:
@@ -176,14 +171,16 @@ bool TabletCanvas::event(QEvent *event)
         return QWidget::event(event);
 
         {
-            const double distanceSelected = Distance(point[0], point[1]);
+            // current distance
+            const double distanceSelected         = Distance(point[0],                point[1]);
 
-            tmp_distance_right_left = Distance(lastpointzoom[0].point, lastpointzoom[1].point);
+            // original distance
+            const double tmp_distance_right_left  = Distance(lastpointzoom[0].point,  lastpointzoom[1].point);
 
-            tmp_distance = distanceSelected / tmp_distance_right_left;
+            const double multiplier = distanceSelected / tmp_distance_right_left;
 
             _pointMiddle = PointMiddle(point[0], point[1]);
-            needToResize = needToResize || _zoom->zoom(_pointMiddle, tmp_distance, zoomChange, size, maxSize, data->datatouch);
+            needToResize = needToResize || _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
         }
 
         if(somethingCtrl){
