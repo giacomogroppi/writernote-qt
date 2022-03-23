@@ -21,6 +21,8 @@
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
+#define SetRenderPainter(painter) painter.setRenderHint(QPainter::Antialiasing, true);
+
 #define Define_PAINTER_p(painter, ___img) \
     QPainter painter; \
     if(!painter.begin(&___img)) { \
@@ -28,7 +30,7 @@
             std::abort(); \
         } \
     }; \
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    SetRenderPainter(painter);
 
 #define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
 
