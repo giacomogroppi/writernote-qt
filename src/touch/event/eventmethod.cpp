@@ -37,26 +37,6 @@ static void setPoint(const QPointF &pointTouch, TabletCanvas *canvas)
     const uchar index = last[0].set;
     last[index].set = true;
     last[index].point = pointTouch;
-    qDebug() << "Index: " << index;
-
-    if(!last[1].set){
-        last[1].point = pointTouch;
-        last[1].set = true;
-    }
-    else{
-        if(pointTouch.x() > last[1].point.x()){
-            /* deve fare lo scambio */
-            const QPointF tmp = last[1].point;
-            last[1].point = pointTouch;
-
-            last[0].point = tmp;
-            last[0].set = true;
-        }
-        else{
-            /* altrimenti vuol dire che il punto a destra è già quello a destra */
-            last[0].point = pointTouch;
-        }
-    }
 }
 
 bool TabletCanvas::event(QEvent *event)
