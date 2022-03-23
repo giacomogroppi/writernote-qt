@@ -74,6 +74,5 @@ bool zoom_control::zoom(const QPointF   &pointMiddle,
         return true;
     }
 
-    bool res = data->biggerx() <= sizePixmap.width();
-    return res;
+    return data->biggerx() <= sizePixmap.width();
 }
