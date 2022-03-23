@@ -26,6 +26,10 @@ private slots:
 
     void on_plainTextEdit_textChanged();
 
+    void on_pushButton_down_clicked();
+
+    void on_pushButton_up_clicked();
+
 private:
     int _curr = -1;
     Ui::ChoosePage *ui;

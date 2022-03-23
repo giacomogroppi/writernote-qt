@@ -66,8 +66,13 @@ datastruct::~datastruct()
 
 void datastruct::reset(){
     this->_page.clear();
+#ifdef PDFSUPPORT
+    this->_pdf->reset();
+#endif
+    this->_img->reset();
+    this->pageVisible = -1;
     _pointFirstPage = QPointF(0, 0);
-    _zoom = 1.00;
+    _zoom = 1.;
 }
 
 void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
@@ -221,6 +226,9 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
     if(likely(heightView > 0)){
         this->triggerVisibility(heightView);
     }
+
+    W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
+    W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
 }
 
 bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke)
@@ -304,8 +312,44 @@ void datastruct::removePage(uint page)
 void datastruct::moveToPage(int page)
 {
     int currentPage = this->getFirstPageVisible();
-    QPointF translation = QPointF(0., page::getHeight() * (double)(page - currentPage));
+    int i, len;
+    const auto current_y = this->getPointFirstPageNoZoom().y();
+    const auto y = at(page).minHeight();
+    const int last = this->getLastPageVisible();
+    QPointF translation = QPointF(0., (y + current_y));
+    datastruct::inverso(translation);
     this->scala_all(translation  * _zoom);
+
+    W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
+    W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
+
+    if(debug_enable()){
+        const auto not_used point = this->adjustPoint(QPointF(0., 0.));
+        const auto not_used index = this->whichPage(point);
+        W_ASSERT(index == page);
+    }
+
+    int currentPageNew  = page;
+    int lastNew         = currentPageNew + ( last - currentPage );
+    len = lengthPage();
+    for(i = 0; i < len; i++){
+        at_mod(i).setVisible(i >= currentPageNew && i <= lastNew);
+    }
+}
+
+int datastruct::getLastPageVisible() const
+{
+    int i = lengthPage();
+
+    for(i --; i >= 0; i--){
+        if(at(i).isVisible()){
+            W_ASSERT(this->getFirstPageVisible() <= i);
+            return i;
+        }
+    }
+
+    abortIfDebug(__FILE__, __LINE__);
+    return -1;
 }
 
 bool datastruct::userWrittenSomething(uint frompage)

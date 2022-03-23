@@ -57,7 +57,7 @@ private:
 
     void newPage(int num);
 
-    int pageVisible;
+    int pageVisible = -1;
 
     void __changeId(int indexPoint, stroke &stroke, page &page, cbool useThreadSafe);
 public:
@@ -127,7 +127,7 @@ public:
     void scala_all(const QPointF &point, const int heightView = -1);
 
     void reset();
-    void triggerVisibility(const double viewSize);
+    void triggerVisibility(cdouble viewSize);
     double biggerx() const noexcept;
 
     bool needToCreateNewSheet() const;
@@ -138,7 +138,7 @@ public:
     void removePage(const uint page);
 
     __fast const page &     at(const uint page) const;
-    __fast page &           at_mod(const uint page);
+    __fast page &           at_mod(cint page);
 
     __slow point_s at_draw_page(const uint indexPoint, const uint indexPage) const;
 
@@ -159,11 +159,12 @@ public:
 
     double currentWidth() const;
     void moveToPage(int page);
+    int getLastPageVisible() const;
     void newViewAudio(int newTime);
 
     static bool isOkZoom(const double newPossibleZoom);
     static void copy(const datastruct &src, datastruct &dest);
-    static void inverso(QPointF &point) {point *= -1.0;};
+    static force_inline void inverso(QPointF &point) {point *= -1.0;};
     static QPointF inverso(const QPointF &point) { return (-1) * point; };
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
     static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
@@ -175,7 +176,7 @@ public:
     friend class TestingCore;
 };
 
-inline void datastruct::triggerVisibility(const double viewSize)
+inline void datastruct::triggerVisibility(cdouble viewSize)
 {
     int from, to, i;
     cint len = lengthPage();
@@ -208,6 +209,8 @@ inline void datastruct::triggerVisibility(const double viewSize)
 
         page->setVisible(i >= from && i <= to);
     }
+
+    printf("Cai");
 }
 
 inline double datastruct::biggerx() const noexcept
@@ -240,7 +243,7 @@ inline const __fast page &datastruct::at(const uint page) const
     return _page.at(page);
 }
 
-inline page &datastruct::at_mod(const uint page)
+inline page &datastruct::at_mod(cint page)
 {
     return _page.operator[](page);
 }
@@ -308,8 +311,11 @@ inline int datastruct::getFirstPageVisible() const
      *  we don't want QList to copy all pages
      *  when they are shared. */
     int &__pageVisible = (int &) pageVisible;
-    int i, len = this->lengthPage();
-    int find = 0;
+    int i, len;
+    int find;
+
+    len = this->lengthPage();
+    find = 0;
 
     if(unlikely(pageVisible < 0)){
         for(i = 0; i < len; i++){
@@ -319,6 +325,8 @@ inline int datastruct::getFirstPageVisible() const
                 break;
             }
         }
+    }else{
+        find = 1;
     }
 
     if(unlikely(!find)){

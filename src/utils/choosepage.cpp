@@ -29,7 +29,7 @@ void ChoosePage::on_pushButton_apply_clicked()
 {
     MainWindow *main = (MainWindow *)this->parent();
     if(_curr != -1){
-        main->_canvas->data->datatouch->moveToPage(_curr);
+        main->_canvas->data->datatouch->moveToPage(_curr - 1);
         main->_canvas->call_update();
     }
 }
@@ -88,7 +88,7 @@ void ChoosePage::on_plainTextEdit_textChanged()
         return;
     }
 
-    if(pageSelect <= 0){
+    if(pageSelect < 1){
         ui->plainTextEdit->setPlainText("1");
         _curr = 0;
         return;
@@ -104,6 +104,29 @@ void ChoosePage::on_plainTextEdit_textChanged()
     if(needToClose){
         this->on_pushButton_apply_clicked();
         this->close();
+    }
+}
+
+
+void ChoosePage::on_pushButton_down_clicked()
+{
+    MainWindow *main = (MainWindow *)parent();
+    int maxPage = main->_canvas->data->datatouch->lengthPage();
+
+    if(this->_curr >= 0 && _curr + 1 <= maxPage ){
+        _curr ++;
+        ui->plainTextEdit->setPlainText(QString::number(_curr));
+        this->on_pushButton_apply_clicked();
+    }
+}
+
+
+void ChoosePage::on_pushButton_up_clicked()
+{
+    if(_curr >= 2){
+        _curr --;
+        ui->plainTextEdit->setPlainText(QString::number(_curr));
+        this->on_pushButton_apply_clicked();
     }
 }
 

@@ -189,10 +189,7 @@ bool MainWindow::event(QEvent *event)
         W_ASSERT(rect.topRight().x() - rect.topLeft().x() == w);
         W_ASSERT(rect.bottomLeft().y() - rect.topLeft().y() == h);
 
-        W_ASSERT(w == 80);
-        W_ASSERT(h == 20);
-
-        qDebug() << __func__ << rect << pos;
+        //qDebug() << __func__ << rect << pos;
 
         if(rect.contains(pos)){
             QSize size = this->size() / 2. - _choose_page->get_size();

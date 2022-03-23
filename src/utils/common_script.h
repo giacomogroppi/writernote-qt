@@ -307,8 +307,9 @@ inline int is_present_in_list(const T *list, size_t len, const T val)
     return 0;
 }
 
-force_inline void abortIfDebug(){
+force_inline void abortIfDebug(cchar *file, int line){
 #ifdef DEBUGINFO
+    qDebug() << __func__ << file << line;
     std::abort();
 #else
     ;
