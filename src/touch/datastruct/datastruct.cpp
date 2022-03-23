@@ -119,16 +119,22 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
 */
 void datastruct::adjustHeight(const uint height)
 {
-    const QPointF point = this->getPointFirstPage();
+    const QPointF point = this->getPointFirstPageNoZoom();
     QPointF t(0.0, 0.0);
-
+    bool not_used ff;
     double y = biggery();
 
     if(y < height){
-        t.setX(height-y);
+        ff = true;
+        t.setY(height - y);
+        if(!isOkTranslate(t, true)){
+            t.setY(0.);
+        }
+
     }else{ //(x >= width)
+        ff = false;
         if(point.y() > 0.0)
-            t.setX(-point.y());
+            t.setY(-point.y());
     }
 
     scala_all(t, height);
@@ -142,25 +148,29 @@ void datastruct::adjustHeight(const uint height)
  * controllo che siano fuori, in caso contrario si fa il return di false e
  * bisogna rifare il pixmap
 */
-void datastruct::adjustWidth(const uint width)
+void datastruct::adjustWidth(cdouble width)
 {
-    QPointF point = this->getPointFirstPage();
+    const QPointF point = this->getPointFirstPage();
     QPointF t(0., 0.);
     double biggerX = biggerx();
+    bool not_used __f;
+    cdouble x = point.x();
 
-    if(point.x() < 0. && biggerX <= width){
-        t.setX((double)width - biggerX);
+    if(x < 0. && biggerX <= width){
+        t.setX(width - biggerX);
+        __f = true;
+        if(!isOkTranslate(t, true)){
+            t.setX(0.);
+        }
+
     }else{ //(x >= width)
-        if(point.x() > 0.)
-            t.setX(- point.x());
+        if(point.x() > 0.){
+            __f = false;
+            t.setX(-point.x());
+        }
     }
 
-    scala_all(t * _zoom);
-
-    point = this->getPointFirstPage();
-    if(unlikely(point.x() > 0.)){
-        this->setPointFirstPage(QPointF(0.0, point.y()));
-    }
+    scala_all(t / _zoom);
 }
 
 /*
@@ -189,7 +199,7 @@ void datastruct::repositioning()
     if(isempty())
         return;
 
-    QPointF point = this->getPointFirstPage();
+    QPointF point = this->getPointFirstPageNoZoom();
     qDebug() << "datastruct::repositioning" << point;
     this->_zoom = 1.0;
 
@@ -213,6 +223,9 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
 {
     if(unlikely(point == QPointF(0, 0)))
         return;
+
+    W_ASSERT(_pointFirstPage.x() + point.x() <= 0.);
+    W_ASSERT(_pointFirstPage.y() + point.y() <= 0.);
 
     this->_pointFirstPage += point;
     this->pageVisible = -1;

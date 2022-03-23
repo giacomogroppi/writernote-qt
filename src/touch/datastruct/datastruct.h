@@ -39,7 +39,8 @@ private:
     frompdf *_pdf;
     fromimage *_img;
 
-    double _zoom = 1.00;
+    // = 2. we have max zoom
+    double _zoom = 1.;
     QPointF _last_translation;
     QVector<page> _page;
     QPointF _pointFirstPage = QPointF(0, 0);
@@ -50,7 +51,8 @@ private:
 
     bool userWrittenSomething(uint frompage);
 
-    void adjustWidth(const uint width);
+    bool isOkTranslate(const QPointF &point, cbool isZoom) const;
+    void adjustWidth(cdouble width);
     void adjustHeight(const uint height);
 
     void triggerNewView(int page, int m_pos_ris, const bool all);
@@ -80,7 +82,12 @@ public:
     int whichPage(const QPointF &point) const;
     int whichPage(const stroke &stroke) const;
 
-    void setPointFirstPage(const QPointF &point){ _pointFirstPage = point; }
+    void setPointFirstPage(const QPointF &point)
+    {
+        _pointFirstPage = point;
+        W_ASSERT(point.x() <= 0.);
+        W_ASSERT(point.y() <= 0.);
+    }
 
     void removeAt(const uint indexPage);
 
@@ -143,7 +150,7 @@ public:
     __slow point_s at_draw_page(const uint indexPoint, const uint indexPage) const;
 
     __fast const point_s *  lastPoint() const;
-    __fast const page *     lastPage() const;
+    __fast const page &     lastPage() const;
 
 
     int lengthPage() const{ return _page.length(); }
@@ -213,7 +220,7 @@ inline void datastruct::triggerVisibility(cdouble viewSize)
 
 inline double datastruct::biggerx() const noexcept
 {
-    return (page::getWidth() + this->getPointFirstPage().x()) * _zoom;
+    return (page::getWidth() + this->getPointFirstPageNoZoom().x()) * _zoom;
 }
 
 force_inline bool datastruct::needToCreateNewSheet() const
@@ -231,9 +238,10 @@ force_inline bool datastruct::needToCreateNewSheet() const
     return false;
 }
 
-inline double datastruct::biggery() const noexcept
+force_inline double datastruct::biggery() const noexcept
 {
-    return (at(lengthPage()-1).currentHeight() + this->getPointFirstPage().y()) * _zoom;
+    const auto &last = lastPage();
+    return (last.currentHeight() + this->getPointFirstPageNoZoom().y()) * _zoom;
 }
 
 inline const __fast page &datastruct::at(const uint page) const
@@ -259,9 +267,9 @@ inline __slow point_s datastruct::at_draw_page(
     return point;
 }
 
-force_inline const __slow page *datastruct::lastPage() const
+force_inline const page &datastruct::lastPage() const
 {
-    return &this->_page.last();
+    return this->_page.last();
 }
 
 inline void datastruct::newPage(const n_style style)
@@ -342,6 +350,20 @@ inline int datastruct::getFirstPageVisible() const
 inline double datastruct::currentWidth() const
 {
     return biggerx();
+}
+
+force_inline bool datastruct::isOkTranslate(const QPointF &point, cbool isZoom) const
+{
+    const auto x = _pointFirstPage.x();
+    const auto y = _pointFirstPage.y();
+
+    if(!isZoom){
+        return  x + point.x() <= 0. &&
+                y + point.y() <= 0.;
+    }
+
+    return x + point.x() / _zoom <= 0. &&
+           y + point.y() / _zoom <= 0.;
 }
 
 inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)

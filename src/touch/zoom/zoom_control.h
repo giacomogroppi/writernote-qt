@@ -12,7 +12,7 @@ private:
     void checkRespositioning(const QPointF &point, const bool max);
     datastruct *data;
 public:
-    bool zoom(QPointF &pointMiddle, double delta, bool &zoomChange,
+    bool zoom(const QPointF &pointMiddle, double delta, bool &zoomChange,
               const QSize &sizePixmap, const QSize &maxSize, datastruct *data);
 };
 
