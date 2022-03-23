@@ -103,9 +103,6 @@ bool TabletCanvas::event(QEvent *event)
 
         block_scrolling = true;
 
-        //WDebug(TabletEventDebug, __func__ << touchPoints.length());
-        //return QWidget::event(event);
-
         for(int i = 0; i < 2; i++)
         {
             const auto &touchPoint = touchPoints.at(i);
@@ -127,18 +124,7 @@ bool TabletCanvas::event(QEvent *event)
             const auto Dist1 = Distance(lastpointzoom[0].point, pointTouch);
             const auto Dist2 = Distance(lastpointzoom[1].point, pointTouch);
             const int FirstMoreDistance =  Dist1 > Dist2;
-            //const QPointF &PointSelected = (FirstMoreDistance) ? lastpointzoom[0].point : lastpointzoom[1].point;
-            //const double distanceSelected = Distance(PointSelected, pointTouch);
-
-            //tmp_distance_right_left = Distance(lastpointzoom[0].point, lastpointzoom[1].point);
-
-            //tmp_distance = distanceSelected / tmp_distance_right_left;
-
-            //_pointMiddle = PointMiddle(lastpointzoom[FirstMoreDistance].point, pointTouch);
-            //needToResize = needToResize || _zoom->zoom(_pointMiddle, tmp_distance, zoomChange, size, maxSize, data->datatouch);
-
-            //lastpointzoom[0].set = lastpointzoom[1].set = false;
-            //lastpointzoom[FirstMoreDistance].point = pointTouch;
+            
             if(!i){
                 point[FirstMoreDistance] = pointTouch;
                 which = FirstMoreDistance;
