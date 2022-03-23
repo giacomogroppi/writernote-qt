@@ -214,6 +214,7 @@ ADD_EXECUTABLE(writernote
     src/core/wline.cpp
     src/touch/datastruct/stroke_complex_data.cpp
     src/touch/datastruct/stroke_file.cpp
+    src/utils/choosepage.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
@@ -241,6 +242,8 @@ ADD_EXECUTABLE(writernote
     src/utils/retry/retry_ui.ui 
     src/videocompress/videocompress_ui.ui 
     src/windows/showmessageupdate.ui
+    src/utils/choosepage.ui
+
 
     writernote.qrc
     language.qrc

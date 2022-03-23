@@ -81,11 +81,15 @@ void ChoosePage::on_plainTextEdit_textChanged()
     const int pageSelect = str.toInt(&ok);
 
     if(!ok){
-        ui->plainTextEdit->setPlainText("");
+        // I don't know why, but if you set the text as null, when it already is, a segmentation fault is generated
+        if(ui->plainTextEdit->toPlainText() == "")
+            return;
+
+        ui->plainTextEdit->clear();
         return;
     }
 
-    if(pageSelect < 0){
+    if(pageSelect <= 0){
         ui->plainTextEdit->setPlainText("1");
         _curr = 0;
         return;

@@ -152,7 +152,6 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     contrUi();
 
     _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
-    ui->page->setStyleSheet("QLabel { background-color : red; color : blue; }");
 }
 
 MainWindow::~MainWindow()
