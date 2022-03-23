@@ -209,8 +209,6 @@ inline void datastruct::triggerVisibility(cdouble viewSize)
 
         page->setVisible(i >= from && i <= to);
     }
-
-    printf("Cai");
 }
 
 inline double datastruct::biggerx() const noexcept

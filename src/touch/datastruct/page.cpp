@@ -243,15 +243,9 @@ void page::drawStroke(
     const bool isRubber = (color == COLOR_NULL);
     const bool isHigh = stroke.get_alfa() < 255;
     const auto last_comp_mode = painter.compositionMode();
-
     constexpr not_used bool measureTime = false;
     constexpr not_used bool debColor = false;
-    constexpr double deltaColorNull = 1.4;
-
     cint page = _count - 1;
-
-    Q_UNUSED(measureTime);
-    Q_UNUSED(debColor);
 
     m_pen.setColor(color);
 
@@ -267,7 +261,7 @@ void page::drawStroke(
     }
 
     if(unlikely(isRubber)){
-        m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
+        //m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }else if(isHigh){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
@@ -278,9 +272,8 @@ void page::drawStroke(
     if(unlikely(isRubber)){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
-    if(unlikely(last_comp_mode)){
-        painter.setCompositionMode(last_comp_mode);
-    }
+
+    painter.setCompositionMode(last_comp_mode);
 
     W_ASSERT(painter.isActive());
 }

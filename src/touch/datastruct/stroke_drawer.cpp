@@ -81,7 +81,13 @@ force_inline void stroke_drawer::draw_stroke_normal(
 
     painter.end();
 
+    if(is_rubber){
+        W_ASSERT(_painter.compositionMode() == QPainter::CompositionMode_Clear);
+    }
+
     _painter.drawImage(img.rect(), img);
+    //if(is_rubber)
+        //img.save("/home/giacomo/Scrivania/foto.png", "PNG");
 }
 
 force_inline void stroke_drawer::draw_rect(

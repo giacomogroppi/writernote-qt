@@ -3,6 +3,8 @@
 #include "iostream"
 #include "stdlib.h"
 
+// this module is not included in version 3.0.2h
+
 // return 1 if element1 > element2
 int function_for_check(const stroke &element1, const stroke &element2)
 {
