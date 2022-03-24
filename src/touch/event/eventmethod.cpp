@@ -57,6 +57,9 @@ bool TabletCanvas::event(QEvent *event)
 
     //WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
 
+    if(!isTouchEvent)
+        return QWidget::event(event);
+
     if(type == QEvent::TouchEnd){
         WDebug(TabletEventDebug, __func__ << "Ridefine");
         RIDEFINE(this->lastpointzoom);
@@ -65,98 +68,92 @@ bool TabletCanvas::event(QEvent *event)
         return QWidget::event(event);
     }
 
-    if(isTouchEvent){
-        const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+    const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
 
-        // se l'utente sta zoomando con le dita touchPoints ha per forza lunghezza due.
-        if(unknown(touchPoints.length() != 2)){
-            goto out;
-        }
+    // se l'utente sta zoomando con le dita touchPoints ha per forza lunghezza due.
+    if(unknown(touchPoints.length() != 2)){
+        goto out;
+    }
 
-        bool somethingCtrl = false;
-        QPointF point[2];
-        char which = -1;
+    bool somethingCtrl = false;
+    QPointF point[2];
+    char which = -1;
 
-        // 0 first point that is double
-        // 1 second point that is double
-        constexpr char split = 2; // 2 1 or 2
+    // 0 first point that is double
+    // 1 second point that is double
+    constexpr char split = 2; // 2 1 or 2
 
-        block_scrolling = true;
+    block_scrolling = true;
 
-        for(int i = 0; i < 2; i++)
-        {
-            const auto &touchPoint = touchPoints.at(i);
-            const QPointF &pointTouch = touchPoint.pos();
-            cbool _tmp =    touchPoint.state() == Qt::TouchPointPressed ||
+    for(int i = 0; i < 2; i++)
+    {
+        const auto &touchPoint = touchPoints.at(i);
+        const QPointF &pointTouch = touchPoint.pos();
+        cbool _tmp =    touchPoint.state() == Qt::TouchPointPressed ||
                             touchPoint.state() == Qt::TouchPointMoved ||
                             touchPoint.state() == Qt::TouchPointStationary;
-            if(!_tmp)
-                continue;
+        if(!_tmp)
+            continue;
 
-            somethingCtrl = true;
+        somethingCtrl = true;
 
-            if(!ISDEFINE(lastpointzoom)){
-                setPoint(pointTouch, this);
-                continue;
-            }
+        if(!ISDEFINE(lastpointzoom)){
+            setPoint(pointTouch, this);
+            continue;
+        }
 
             /* si calcola la distanza tra il punto dell'ultimo touch e il punto corrente, e si usa il più lontano */
-            const auto Dist1 = Distance(lastpointzoom[0].point, pointTouch);
-            const auto Dist2 = Distance(lastpointzoom[1].point, pointTouch);
-            const int FirstMoreDistance =  Dist1 > Dist2;
+        const auto Dist1 = Distance(lastpointzoom[0].point, pointTouch);
+        const auto Dist2 = Distance(lastpointzoom[1].point, pointTouch);
+        const int FirstMoreDistance =  Dist1 > Dist2;
             
-            if(!i){
-                point[FirstMoreDistance] = pointTouch;
-                which = FirstMoreDistance;
-                continue;
-            }
-
-            int newIndex = (which == 0) ? 1 : 0;
-
-            // un dito è fermo (o il primo o il secondo)
-            if(FirstMoreDistance == which){
-                // bisogna settare il punto sull quelli che abbiamo salvato
-                // precedentemente
-                point[newIndex] = lastpointzoom[newIndex].point;
-
-
-                // non modifichiamo which in quanto segna ancora il primo punto
-                goto do_zoom;
-            }
-
-            point[newIndex] = pointTouch;
-
-            which = split;
+        if(!i){
+            point[FirstMoreDistance] = pointTouch;
+            which = FirstMoreDistance;
+            continue;
         }
 
-        do_zoom:
+        int newIndex = (which == 0) ? 1 : 0;
 
-        const auto mes = qstr("Which: %1")  .arg(QString::number(which));
-        qDebug() << mes << "0: " << point[0] << "1: " << point[1];
+        // un dito è fermo (o il primo o il secondo)
+        if(FirstMoreDistance == which){
+            // bisogna settare il punto sull quelli che abbiamo salvato
+            // precedentemente
+            point[newIndex] = lastpointzoom[newIndex].point;
 
-        return QWidget::event(event);
 
-        {
-            // current distance
-            const double distanceSelected         = Distance(point[0],                point[1]);
-
-            // original distance
-            const double tmp_distance_right_left  = Distance(lastpointzoom[0].point,  lastpointzoom[1].point);
-
-            const double multiplier = distanceSelected / tmp_distance_right_left;
-
-            _pointMiddle = PointMiddle(point[0], point[1]);
-            needToResize = needToResize || _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
+            // non modifichiamo which in quanto segna ancora il primo punto
+            goto do_zoom;
         }
 
-        if(somethingCtrl){
-            lastpointzoom[0].point = point[0];
-            lastpointzoom[1].point = point[1];
-        }
+        point[newIndex] = pointTouch;
 
+        which = split;
     }
-    else{
-        return QWidget::event(event);
+
+    do_zoom:
+
+    const auto mes = qstr("Which: %1")  .arg(QString::number(which));
+    qDebug() << mes << "0: " << point[0] << "1: " << point[1];
+
+    return QWidget::event(event);
+
+    {
+        // current distance
+        const double distanceSelected         = Distance(point[0],                point[1]);
+
+        // original distance
+        const double tmp_distance_right_left  = Distance(lastpointzoom[0].point,  lastpointzoom[1].point);
+
+        const double multiplier = distanceSelected / tmp_distance_right_left;
+
+        _pointMiddle = PointMiddle(point[0], point[1]);
+        needToResize = needToResize || _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
+    }
+
+    if(somethingCtrl){
+        lastpointzoom[0].point = point[0];
+        lastpointzoom[1].point = point[1];
     }
 
     //qDebug() << "After" << this->lastpointzoom[0].point << this->lastpointzoom[1].point << lastpointzoom[0].set << lastpointzoom[1].set << "\n";
