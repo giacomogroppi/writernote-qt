@@ -59,8 +59,7 @@ bool TabletCanvas::event(QEvent *event)
 
     bool zoomChange = false;
     const auto type = event->type();
-    const auto isTouchEvent =   type == QEvent::TouchEnd ||
-                                type == QEvent::TouchBegin ||
+    const auto isTouchEvent =   type == QEvent::TouchBegin ||
                                 type == QEvent::TouchUpdate;
 
     //WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
@@ -96,8 +95,9 @@ bool TabletCanvas::event(QEvent *event)
         cbool _tmp =    touchPoint.state() == Qt::TouchPointPressed ||
                             touchPoint.state() == Qt::TouchPointMoved ||
                             touchPoint.state() == Qt::TouchPointStationary;
-        if(!_tmp)
+        if(!_tmp){
             continue;
+        }
 
         if(!ISDEFINE(lastpointzoom)){
             setPoint(pointTouch, this);
@@ -111,14 +111,12 @@ bool TabletCanvas::event(QEvent *event)
             
         // First cicle
         if(!i){
-            qDebug() << "Save first index";
             point[IndexSave] = pointTouch;
             index_other[i] = IndexSave;
             continue;
         }
 
         // Second cicle
-        qDebug() << __func__ << "Save second index";
         index_other[i] = IndexSave;
 
         // se abbiamo salvato prima in 0 adesso dobbiamo salvare in 1
@@ -129,8 +127,9 @@ bool TabletCanvas::event(QEvent *event)
     if(!somethingCtrl)
         goto out;
 
-    if((index_other[0] >= 0) || (index_other[1] >= 0))
+    if((index_other[0] < 0) || (index_other[1] < 0)){
         goto out;
+    }
 
     qDebug() << "index 0: " << index_other[0] << "index 1: " << index_other[1]
              << "0: " << point[0] << "1: " << point[1];
