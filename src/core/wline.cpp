@@ -66,7 +66,7 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
     return one && two;
 }
 
-bool WLine::intersect(const WLine &line, cint precision) const
+bool WLine::intersect(const WLine &line, cint precision, QPointF *result) const
 {
     double x, y;
 

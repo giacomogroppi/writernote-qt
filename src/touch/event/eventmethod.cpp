@@ -59,13 +59,7 @@ bool TabletCanvas::event(QEvent *event)
 
     bool zoomChange = false;
     const auto type = event->type();
-    const auto isTouchEvent =   type == QEvent::TouchBegin ||
-                                type == QEvent::TouchUpdate;
-
-    //WDebug(TabletEventDebug, "TabletCanvas" << __FUNCTION__ << event->type());
-
-    if(!isTouchEvent)
-        return QWidget::event(event);
+    const auto isTouchEvent = type == QEvent::TouchBegin || type == QEvent::TouchUpdate;
 
     if(type == QEvent::TouchEnd){
         WDebug(TabletEventDebug, __func__ << "Ridefine");
@@ -74,6 +68,9 @@ bool TabletCanvas::event(QEvent *event)
         isZooming = false;
         return QWidget::event(event);
     }
+
+    if(!isTouchEvent)
+        return QWidget::event(event);
 
     const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
 
@@ -131,12 +128,11 @@ bool TabletCanvas::event(QEvent *event)
         goto out;
     }
 
-    qDebug() << index_other[0] == index_other[1];
+    if(index_other[0] == index_other[1])
+        goto out;
 
-    //qDebug() << "index 0: " << index_other[0] << "index 1: " << index_other[1]
-    //         << "0: " << point[0] << "1: " << point[1];
-
-    return QWidget::event(event);
+    //qDebug() << "index 0: " << index_other[0] << index_other[1]
+    //         << "point 0: " << point[0] << "point 1: " << point[1];
 
     {
         // current distance
@@ -148,7 +144,7 @@ bool TabletCanvas::event(QEvent *event)
         const double multiplier = distanceSelected / tmp_distance_right_left;
 
         _pointMiddle = PointMiddle(point[0], point[1]);
-        needToResize = needToResize || _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
+        needToResize = _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
     }
 
     lastpointzoom[0].point = point[0];
