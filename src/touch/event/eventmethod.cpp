@@ -72,7 +72,7 @@ bool TabletCanvas::event(QEvent *event)
 
     // se l'utente sta zoomando con le dita touchPoints ha per forza lunghezza due.
     if(unknown(touchPoints.length() != 2)){
-        goto out;
+        return QWidget::event(event);
     }
 
     bool somethingCtrl = false;
