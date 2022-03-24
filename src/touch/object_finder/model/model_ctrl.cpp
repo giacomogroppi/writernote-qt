@@ -99,8 +99,8 @@ int stroke_complex_save(const stroke *stroke, zip_source_t *_file)
     const auto size = get_size_by_type(type);
     const auto *data = stroke->get_complex_data();
 
-    SOURCE_WRITE_RETURN(_file, &_current_ver, sizeof(_current_ver));
-    SOURCE_WRITE_RETURN(_file, data, size);
+    SOURCE_WRITE_RETURN_SIZE(_file, &_current_ver, sizeof(_current_ver));
+    SOURCE_WRITE_RETURN_SIZE(_file, data, size);
 
     return OK;
 }
@@ -111,14 +111,14 @@ int stroke_complex_load(stroke *stroke, int type, zip_file_t *filezip)
     const auto size = get_size_by_type(type);
     void *data;
 
-    SOURCE_READ_RETURN(filezip, &current_ver, sizeof(current_ver));
+    SOURCE_READ_RETURN_SIZE(filezip, &current_ver, sizeof(current_ver));
 
     if(current_ver == _current_ver){
         data = WMalloc(size);
-        SOURCE_READ_RETURN(filezip, data, size);
+        SOURCE_READ_RETURN_SIZE(filezip, data, size);
         stroke->set_complex(type, data);
     }else{
-        return ERROR;
+        return ERROR_VERSION;
     }
 
     return OK;

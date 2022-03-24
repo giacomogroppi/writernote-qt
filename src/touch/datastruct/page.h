@@ -138,7 +138,7 @@ public:
     void allocateStroke(int numAllocation);
 
     int save(zip_source_t *file) const;
-    int load(zip_file_t *file, int ver_stroke, int len_stroke);
+    int load(zip_file_t *file, int ver_stroke);
 
     void drawStroke(const stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);

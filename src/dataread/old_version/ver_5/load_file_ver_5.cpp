@@ -17,19 +17,19 @@ int xmlstruct::load_file_5(Document *doc, zip_file_t *f, zip_t *filezip,
     LOAD_STRINGA_RETURN(f, tmp_str);
 
 
-    SOURCE_READ_RETURN(f, &tmp, sizeof(int));
+    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
 
-    SOURCE_READ_RETURN(f, &translate, sizeof(translate));
+    SOURCE_READ_RETURN_SIZE(f, &translate, sizeof(translate));
 
     LOAD_STRINGA_RETURN(f, tmp_testi);
 
     LOAD_STRINGA_RETURN(f, doc->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &tmp_touch, sizeof(tmp_touch));
+    SOURCE_READ_RETURN_SIZE(f, &tmp_touch, sizeof(tmp_touch));
     CONTROLL_KEY(tmp_touch);
-    SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
+    SOURCE_READ_RETURN_SIZE(f, &doc->count_pdf, sizeof(doc->count_pdf));
+    SOURCE_READ_RETURN_SIZE(f, &doc->count_img, sizeof(doc->count_img));
 
     tmp = loadbinario_1(filezip);
     if(tmp == ERROR){

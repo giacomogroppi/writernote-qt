@@ -14,8 +14,8 @@ static int freezip(zip_source_t *files){
 
 int savefile::salvabinario(zip_t *filezip)
 {
-    int len, counterPage, err = ERROR;
-    size_t controll;
+    int counterPage, err = ERROR;
+    const size_t controll = this->currenttitle->createSingleControll();
     zip_source_t *file;
     zip_error_t errore;
     const auto &pointInit = currenttitle->datatouch->getPointFirstPageNoZoom();
@@ -29,26 +29,26 @@ int savefile::salvabinario(zip_t *filezip)
     zip_source_begin_write(file);
 
     /* first point */
-    WRITE_ON_SIZE(file, init, sizeof(double)*2);
+    SOURCE_WRITE(file, init, sizeof(double) * 2);
 
     /* page len */
-    WRITE_ON_SIZE(file, &lenPage, sizeof(lenPage));
+    SOURCE_WRITE_GOTO_SIZE(file, &lenPage, sizeof(lenPage));
+
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         page = &currenttitle->datatouch->at(counterPage);
-        len = page->lengthStroke();
-
-        /* stroke len */
-        WRITE_ON_SIZE(file, &len, sizeof(len));
 
         err = page->save(file);
         if(err != OK)
-            goto error;
+            goto delete_;
     }
 
-    WRITE_ON_SIZE(file, &zoom, sizeof(zoom));
 
-    controll = currenttitle->createSingleControll();
-    WRITE_ON_SIZE(file, &controll, sizeof(size_t));
+
+    SOURCE_WRITE_GOTO_SIZE(file, &zoom, sizeof(zoom));
+
+    SOURCE_WRITE_GOTO_SIZE(file, &controll, sizeof(controll));
+
+
 
     if(!savefile::commitChange(file))
         return freezip(file);
@@ -57,7 +57,7 @@ int savefile::salvabinario(zip_t *filezip)
 
     return OK;
 
-    error:
+delete_:
     zip_source_free(file);
     return err;
 }

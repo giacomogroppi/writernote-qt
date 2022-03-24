@@ -51,7 +51,7 @@ size_t stroke::createControll() const
     size_t controll = 0;
     int i, len;
 
-    if(unlikely(!this->is_normal())){
+    if(unlikely(this->is_complex())){
         return 0;
     }
 
@@ -63,9 +63,13 @@ size_t stroke::createControll() const
 
     for(i = 0; i < len; i++){
         const point_s &point = _point.at(i);
-        controll += point._x;
-        controll += point._y;
-        controll += getPressure(i);
+        controll += diff(point._x);
+        controll += diff(point._y);
+    }
+
+    len = _pressure.length();
+    for(i = 0; i < len; i++){
+        controll += diff(_pressure.at(i));
     }
 
     return controll;

@@ -104,6 +104,9 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
     int res = 0;
     QString msg;
 
+    if(unlikely(!mem))
+        return;
+
     pthread_mutex_lock(&_mem_mutex);
 
     i = _mem->length();

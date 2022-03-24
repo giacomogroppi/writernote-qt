@@ -252,10 +252,7 @@ force_inline void TabletCanvas::ManageMove(
         _square->isMoving();
 
         if(_square->somethingInBox()){
-            DO_IF_DEBUG(
-                if(_square->get_first_point().isNotSet())
-                            std::abort();
-            );
+            W_ASSERT(!_square->get_first_point().isNotSet());
 
             /* a questo punto può muovere di un delta x e y */
             _square->move(point);

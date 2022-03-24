@@ -124,7 +124,7 @@ public:
     force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
     force_inline bool is_rect() const { return _prop == COMPLEX_RECT; };
     force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
-    force_inline bool is_complex() const { return !this->is_normal(); };
+    force_inline bool is_complex() const { return _prop != COMPLEX_NORMAL; };
     void set_complex(typeof(_prop) new_prop, void *new_data);
     const void *get_complex_data() const { return _complex; };
     typeof(_prop) get_type() const { return _prop; };

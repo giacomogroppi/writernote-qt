@@ -16,19 +16,19 @@ int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip
     bool tmp_touch;
 
     LOAD_STRINGA_RETURN(f, tmp_str);
-    SOURCE_READ_RETURN(f, &temp, sizeof(bool));
+    SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(bool));
     if(temp)
         this->currenttitle->se_registato = Document::record_file;
     else
         this->currenttitle->se_registato = Document::not_record;
 
-    SOURCE_READ_RETURN(f, &translate, sizeof(translate));
+    SOURCE_READ_RETURN_SIZE(f, &translate, sizeof(translate));
 
     LOAD_STRINGA_RETURN(f, tmp_testi)
 
     LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &tmp_touch, sizeof(bool));
+    SOURCE_READ_RETURN_SIZE(f, &tmp_touch, sizeof(bool));
 
     CONTROLL_KEY(tmp_touch);
 

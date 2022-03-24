@@ -59,25 +59,21 @@ void Document::copy(const Document &src, Document &dest)
 
 size_t Document::createSingleControll() const
 {
-    size_t data = 0;
+    size_t ctrl = 0;
     uint counterPage, counterStroke;
     const uint lenPage = datatouch->lengthPage();
-
     uint lenStroke;
-
-    if(!lenPage)
-        return data;
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         const page &page = datatouch->at(counterPage);
         lenStroke = page.lengthStroke();
 
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
-            data += page.atStroke(counterStroke).createControll();
+            ctrl += page.atStroke(counterStroke).createControll();
         }
     }
 
-    return data;
+    return ctrl;
 }
 
 void Document::reset(){

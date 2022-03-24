@@ -11,12 +11,12 @@ int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
     int tmp;
     char *str;
 
-    SOURCE_READ_RETURN(f, &tmp, sizeof(int));
+    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(tmp));
 
     if(tmp){
         str = (char *)WMalloc(sizeof(char) * (tmp + 1));
 
-        SOURCE_READ_RETURN(f, str, sizeof(char)*tmp);
+        SOURCE_READ_RETURN_SIZE(f, str, sizeof(char)*tmp);
 
         str[tmp] = '\0';
 
@@ -123,7 +123,7 @@ int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<i
 {
     int i, lunghezza, temp;
 
-    SOURCE_READ_RETURN(f, &lunghezza, sizeof(int));
+    SOURCE_READ_RETURN_SIZE(f, &lunghezza, sizeof(lunghezza));
     if(!lunghezza)
         return OK;
 
@@ -137,7 +137,7 @@ int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<i
     }
 
     for(i=0; i<lunghezza; i++){
-        SOURCE_READ_RETURN(f, &temp, sizeof(int));
+        SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(temp));
 
         data.append(temp);
     }
@@ -303,15 +303,15 @@ int xmlstruct::load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const b
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
 
-    SOURCE_READ_RETURN(f, &ver_stroke, sizeof(ver_stroke));
+    SOURCE_READ_RETURN_SIZE(f, &ver_stroke, sizeof(ver_stroke));
 
-    SOURCE_READ_RETURN(f, &tmp, sizeof(int));
+    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(tmp));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
 
     LOAD_STRINGA_RETURN(f, doc->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
+    SOURCE_READ_RETURN_SIZE(f, &doc->count_pdf, sizeof(doc->count_pdf));
+    SOURCE_READ_RETURN_SIZE(f, &doc->count_img, sizeof(doc->count_img));
 
     tmp = loadbinario_3(filezip, ver_stroke);
     if(tmp == ERROR)

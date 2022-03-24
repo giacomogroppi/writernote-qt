@@ -10,13 +10,13 @@ int xmlstruct::load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const b
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
 
-    SOURCE_READ_RETURN(f, &tmp, sizeof(int));
+    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(int));
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
 
     LOAD_STRINGA_RETURN(f, doc->audio_position_path)
 
-    SOURCE_READ_RETURN(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN(f, &doc->count_img, sizeof(doc->count_img));
+    SOURCE_READ_RETURN_SIZE(f, &doc->count_pdf, sizeof(doc->count_pdf));
+    SOURCE_READ_RETURN_SIZE(f, &doc->count_img, sizeof(doc->count_img));
 
     tmp = loadbinario_1(filezip);
     if(tmp == ERROR)

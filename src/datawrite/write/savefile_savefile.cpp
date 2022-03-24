@@ -110,9 +110,9 @@ uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)
 uchar savefile::save_string(zip_source_t *file, const char *stringa)
 {
     int size = strlen(stringa);
-    SOURCE_WRITE_RETURN(file, &size, sizeof(size));
+    SOURCE_WRITE_RETURN_SIZE(file, &size, sizeof(size));
 
-    SOURCE_WRITE_RETURN(file, stringa, sizeof(char)*size);
+    SOURCE_WRITE_RETURN_SIZE(file, stringa, sizeof(char)*size);
 
     return OK;
 }

@@ -11,6 +11,7 @@
 #include "touch/multi_thread_data.h"
 #include "testing/memtest.h"
 #include <QPaintDevice>
+#include "datawrite/source_read_ext.h"
 
 #define PAGE_THREAD_MAX 16
 
@@ -692,33 +693,55 @@ void page::allocateStroke(int numAllocation)
 int page::save(zip_source_t *file) const
 {
     int i, err = OK;
-    int len = lengthStroke();
+    int len = _stroke.length();
+
+    /* stroke len */
+    SOURCE_WRITE_GOTO_SIZE(file, &len, sizeof(len));
 
     for(i = 0; i < len; i++){
-        DO_CTRL(atStroke(i).save(file));
+        err = atStroke(i).save(file);
+        if(unlikely(err != OK))
+            return err;
     }
 
-    DO_CTRL(_stroke_writernote.save(file));
+    err = _stroke_writernote.save(file);
+    if(unlikely(err != OK))
+        return err;
 
     return OK;
+
+    // for SOURCE_WRITE_GOTO macro
+delete_:
+    return ERROR;
 }
 
-#define DO_LOAD(list)                               \
-    for(i = 0; i < len_stroke; i++){                \
-        stroke __tmp;                               \
-        DO_CTRL(__tmp.load(file, ver_stroke));      \
-        list.append(__tmp);                         \
+int page::load(zip_file_t *file, int ver_stroke)
+{
+    int i, k, err, len_stroke;
+
+    // len stroke
+    SOURCE_READ_RETURN_SIZE(file, &len_stroke, sizeof(len_stroke));
+
+    W_ASSERT(len_stroke >= 0);
+
+    for(i = 0; i < len_stroke; i++){
+        _stroke.append(stroke());
+        stroke &ref = _stroke.last();
+        err = ref.load(file, ver_stroke);
+
+        if(unlikely(err != OK))
+            return err;
     }
 
-int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
-{
-    int i, k, err;
+    if(ver_stroke == 2){
+        err = _stroke_writernote.load(file, ver_stroke);
 
-    DO_LOAD(_stroke);
-
-    if(ver_stroke == 0){
+        if(unlikely(err != OK))
+            return err;
+    }
+    else if(ver_stroke == 0){
 #ifdef ALL_VERSION
-        SOURCE_READ_RETURN(file, &len_stroke, sizeof(int));
+        SOURCE_READ_RETURN_SIZE(file, &len_stroke, sizeof(len_stroke));
 
         for(i = 0; i < len_stroke; i++){
             stroke __tmp;
@@ -745,10 +768,14 @@ int page::load(zip_file_t *file, int ver_stroke, int len_stroke)
 #endif
     }
     if(ver_stroke == 1){
+#ifdef ALL_VERSION
         _stroke_writernote.load(file, ver_stroke);
         if(_stroke_writernote.length() && _stroke_writernote.getPressure() > 10){
             _stroke_writernote.__setPressureFirstPoint(1.5);
         }
+#else
+        return ERROR;
+#endif
     }
 
     return OK;
