@@ -111,12 +111,14 @@ bool TabletCanvas::event(QEvent *event)
             
         // First cicle
         if(!i){
+            qDebug() << "Save first index";
             point[IndexSave] = pointTouch;
             index_other[i] = IndexSave;
             continue;
         }
 
         // Second cicle
+        qDebug() << __func__ << "Save second index";
         index_other[i] = IndexSave;
 
         // se abbiamo salvato prima in 0 adesso dobbiamo salvare in 1
@@ -127,8 +129,8 @@ bool TabletCanvas::event(QEvent *event)
     if(!somethingCtrl)
         goto out;
 
-    W_ASSERT(index_other[0] >= 0);
-    W_ASSERT(index_other[1] >= 0);
+    if((index_other[0] >= 0) || (index_other[1] >= 0))
+        goto out;
 
     qDebug() << "index 0: " << index_other[0] << "index 1: " << index_other[1]
              << "0: " << point[0] << "1: " << point[1];
