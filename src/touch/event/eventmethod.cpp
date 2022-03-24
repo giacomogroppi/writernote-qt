@@ -99,12 +99,12 @@ bool TabletCanvas::event(QEvent *event)
         if(!_tmp)
             continue;
 
-        somethingCtrl = true;
-
         if(!ISDEFINE(lastpointzoom)){
             setPoint(pointTouch, this);
             continue;
         }
+
+        somethingCtrl = true;
 
         /* si calcola la distanza tra il punto dell'ultimo touch e il punto corrente, e si usa il più lontano */
         cint IndexSave = get_index(this, pointTouch);
@@ -124,10 +124,11 @@ bool TabletCanvas::event(QEvent *event)
         point[tmp] = pointTouch;
     }
 
+    if(!somethingCtrl)
+        goto out;
+
     W_ASSERT(index_other[0] >= 0);
     W_ASSERT(index_other[1] >= 0);
-
-    do_zoom:
 
     qDebug() << "index 0: " << index_other[0] << "index 1: " << index_other[1]
              << "0: " << point[0] << "1: " << point[1];
@@ -147,10 +148,8 @@ bool TabletCanvas::event(QEvent *event)
         needToResize = needToResize || _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
     }
 
-    if(somethingCtrl){
-        lastpointzoom[0].point = point[0];
-        lastpointzoom[1].point = point[1];
-    }
+    lastpointzoom[0].point = point[0];
+    lastpointzoom[1].point = point[1];
 
     //qDebug() << "After" << this->lastpointzoom[0].point << this->lastpointzoom[1].point << lastpointzoom[0].set << lastpointzoom[1].set << "\n";
     if(needToResize)
