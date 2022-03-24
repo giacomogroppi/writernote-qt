@@ -102,7 +102,7 @@ void ControllUiButton::update()
 
     for(i = 0; i < len_button; i++){
         this->m_button.at(i)->setVisible(tablet);
-        m_button.at(i)->setStyleSheet(qstr("QPushButton{border:5px solid %1;} QPushButton:hover{border:10px solid %2}").
+        m_button.at(i)->setStyleSheet(qstr("QPushButton{border:5px solid %1;} QPushButton:hover{border:10px solid %2} QPushButton:checked{border:15px solid %2}").
                                                     arg(color.name()).arg(colorOver));
     }
 

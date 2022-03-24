@@ -312,7 +312,8 @@ force_inline void abortIfDebug(cchar *file, int line){
     qDebug() << __func__ << file << line;
     std::abort();
 #else
-    ;
+    Q_UNUSED(file);
+    Q_UNUSED(line);
 #endif
 }
 
