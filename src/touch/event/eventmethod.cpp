@@ -39,6 +39,14 @@ static void setPoint(const QPointF &pointTouch, TabletCanvas *canvas)
     last[index].point = pointTouch;
 }
 
+static int get_index(TabletCanvas *canvas, const QPointF &pointTouch)
+{
+    PointSettable *last = canvas->lastpointzoom;
+    const auto Dist1 = Distance(last[0].point, pointTouch);
+    const auto Dist2 = Distance(last[1].point, pointTouch);
+    return Dist1 > Dist2;
+}
+
 bool TabletCanvas::event(QEvent *event)
 {
     constexpr bool TabletEventDebug = true;
@@ -77,11 +85,7 @@ bool TabletCanvas::event(QEvent *event)
 
     bool somethingCtrl = false;
     QPointF point[2];
-    char which = -1;
-
-    // 0 first point that is double
-    // 1 second point that is double
-    constexpr char split = 2; // 2 1 or 2
+    int index_other[2] = { -1, -1};
 
     block_scrolling = true;
 
@@ -102,39 +106,31 @@ bool TabletCanvas::event(QEvent *event)
             continue;
         }
 
-            /* si calcola la distanza tra il punto dell'ultimo touch e il punto corrente, e si usa il più lontano */
-        const auto Dist1 = Distance(lastpointzoom[0].point, pointTouch);
-        const auto Dist2 = Distance(lastpointzoom[1].point, pointTouch);
-        const int FirstMoreDistance =  Dist1 > Dist2;
+        /* si calcola la distanza tra il punto dell'ultimo touch e il punto corrente, e si usa il più lontano */
+        cint IndexSave = get_index(this, pointTouch);
             
+        // First cicle
         if(!i){
-            point[FirstMoreDistance] = pointTouch;
-            which = FirstMoreDistance;
+            point[IndexSave] = pointTouch;
+            index_other[i] = IndexSave;
             continue;
         }
 
-        int newIndex = (which == 0) ? 1 : 0;
+        // Second cicle
+        index_other[i] = IndexSave;
 
-        // un dito è fermo (o il primo o il secondo)
-        if(FirstMoreDistance == which){
-            // bisogna settare il punto sull quelli che abbiamo salvato
-            // precedentemente
-            point[newIndex] = lastpointzoom[newIndex].point;
-
-
-            // non modifichiamo which in quanto segna ancora il primo punto
-            goto do_zoom;
-        }
-
-        point[newIndex] = pointTouch;
-
-        which = split;
+        // se abbiamo salvato prima in 0 adesso dobbiamo salvare in 1
+        int tmp = index_other[0] == 0 ? 1 : 0;
+        point[tmp] = pointTouch;
     }
+
+    W_ASSERT(index_other[0] >= 0);
+    W_ASSERT(index_other[1] >= 0);
 
     do_zoom:
 
-    const auto mes = qstr("Which: %1")  .arg(QString::number(which));
-    qDebug() << mes << "0: " << point[0] << "1: " << point[1];
+    qDebug() << "index 0: " << index_other[0] << "index 1: " << index_other[1]
+             << "0: " << point[0] << "1: " << point[1];
 
     return QWidget::event(event);
 
