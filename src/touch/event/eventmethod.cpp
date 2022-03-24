@@ -131,8 +131,10 @@ bool TabletCanvas::event(QEvent *event)
         goto out;
     }
 
-    qDebug() << "index 0: " << index_other[0] << "index 1: " << index_other[1]
-             << "0: " << point[0] << "1: " << point[1];
+    qDebug() << index_other[0] == index_other[1];
+
+    //qDebug() << "index 0: " << index_other[0] << "index 1: " << index_other[1]
+    //         << "0: " << point[0] << "1: " << point[1];
 
     return QWidget::event(event);
 
