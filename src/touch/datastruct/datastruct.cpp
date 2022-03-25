@@ -64,6 +64,17 @@ datastruct::~datastruct()
     pthread_mutex_destroy(&_changeAudioMutex);
 }
 
+void datastruct::triggerIfNone(int m_pos_ris)
+{
+    int i = lengthPage();
+    for(i --; i >= 0; i--){
+        page &_page = at_mod(i);
+        if(_page._imgDraw.isNull()){
+            _page.triggerRenderImage(m_pos_ris, true);
+        }
+    }
+}
+
 void datastruct::reset(){
     this->_page.clear();
 #ifdef PDFSUPPORT

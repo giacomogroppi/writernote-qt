@@ -9,6 +9,7 @@
 #include "restore_file/get_name_tmp.h"
 #include "utils/time/current_time.h"
 #include "utils/common_def.h"
+#include "touch/tabletcanvas.h"
 
 #include <QSettings>
 #include <QTimer>
@@ -22,7 +23,7 @@ extern bool need_save_auto;
 extern bool need_save_tmp;
 
 setting_restore_ui::setting_restore_ui(QWidget *parent,
-                                       Document **curr,
+                                       TabletCanvas *canvas,
                                        QString *pp) :
     QDialog(parent),
     ui(new Ui::setting_restore_ui)
@@ -32,8 +33,8 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
     m_first = new QTimer(this);
     m_sec = new QTimer(this);
 
-    QObject::connect(m_first, &QTimer::timeout, this, &setting_restore_ui::firstTimer);
-    QObject::connect(m_sec, &QTimer::timeout, this, &setting_restore_ui::secondTimer);
+    QObject::connect(m_first, &QTimer::timeout, this, &setting_restore_ui::firstTimer, Qt::ConnectionType::QueuedConnection);
+    QObject::connect(m_sec, &QTimer::timeout, this, &setting_restore_ui::secondTimer, Qt::ConnectionType::QueuedConnection);
 
     ui->spinBox_autosave->setMaximum(MAX_SAVE);
     ui->spinBox_autosave->setMinimum(MIN_SAVE);
@@ -44,7 +45,7 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
     ui->checkBox_autosave->setCheckable(true);
     ui->checkBox_temp->setCheckable(true);
 
-    this->m_curr = curr;
+    this->_canvas = canvas;
     this->m_path = pp;
 
     loadData();
@@ -153,7 +154,7 @@ void setting_restore_ui::saveData()
 // first timer -> autosave
 void setting_restore_ui::firstTimer()
 {
-    savefile ff(m_path, *m_curr);
+    savefile ff(m_path, _canvas->data);
     int res;
 
     if(!need_save_auto){
@@ -179,7 +180,7 @@ void setting_restore_ui::secondTimer()
 {
     int res;
     QString path;
-    savefile ff(&path, *m_curr);
+    savefile ff(&path, _canvas->data);
 
     if(!need_save_tmp)
         goto start_timer;

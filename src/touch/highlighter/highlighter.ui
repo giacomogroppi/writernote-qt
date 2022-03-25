@@ -31,7 +31,20 @@ the highlighter</string>
    <item>
     <widget class="QSlider" name="slider_alfa">
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">.QSlider {
+    min-height: 40px;
+    max-height: 40px;
+}
+
+
+
+.QSlider::handle:horizontal {
+    background: gray;
+    border: 5px solid gray;
+    width: 25px;
+    height: 50px;
+    margin: -12px -24px;
+}</string>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

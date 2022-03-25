@@ -31,7 +31,7 @@ class setting_restore_ui : public QDialog
 
 public:
     explicit setting_restore_ui(QWidget *parent,
-                                Document **curr,
+                                class TabletCanvas *curr,
                                 QString *pp);
     ~setting_restore_ui();
 
@@ -78,7 +78,7 @@ private:
     QTimer *m_first;
     QTimer *m_sec;
 
-    Document **m_curr;
+    class TabletCanvas *_canvas;
 
     void updateWindow();
 

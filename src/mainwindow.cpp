@@ -75,7 +75,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_option_copybook     = new class option_copybook(this);
     this->m_text_w              = new class text_widgets(this, _canvas);
     this->m_sheet               = new class fast_sheet_ui(this);
-    this->m_setting             = new class setting_restore_ui(this, &_canvas->data, &m_path);
+    this->m_setting             = new class setting_restore_ui(this, _canvas, &m_path);
     NAME_LOG_EXT                = new class log_ui(this);
     this->m_controllUi          = new class ControllUiButton(this);
     this->m_audioplayer         = new class audioplay(this);

@@ -68,6 +68,7 @@ public:
 
     void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool all);
     void triggerNewView(int m_pos_ris, const bool all);
+    void triggerIfNone(int m_pos_ris);
     void triggerViewIfVisible(int m_pos_ris);
 
     void changeZoom(const double zoom, class TabletCanvas *canvas);
@@ -366,7 +367,7 @@ force_inline bool datastruct::isOkTranslate(const QPointF &point, cbool isZoom) 
            y + point.y() / _zoom <= 0.;
 }
 
-inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
+force_inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
 {
     at_mod(page).triggerRenderImage(m_pos_ris, all);
 }

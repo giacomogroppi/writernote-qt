@@ -6,8 +6,8 @@
 #include "touch/datastruct/datastruct.h"
 #include <QDebug>
 
-#define MAX_ALFA 40
-#define MIN_ALFA 1
+#define MAX_ALFA 150
+#define MIN_ALFA 20
 
 highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     QDialog(parent),
@@ -48,7 +48,9 @@ void highlighter::loadSettings()
     m_data.alfa = setting.value(KEY_HIGHLIGHTER_ALFA, MAX_ALFA).toInt();
 
     m_data.size = setting.value(KEY_HIGHLIGHTER_SIZE, 0.05).toReal(&ok);
-    if(!ok) m_data.size = 0.05;
+
+    if(!ok)
+        m_data.size = 50;
 
     m_data.pressure = setting.value(KEY_HIGHLIGHTER_SPESS, true).toBool();
 

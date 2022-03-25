@@ -42,6 +42,8 @@ force_inline void stroke_drawer::draw_stroke_normal(
         cint            page,       QPen            &pen,
         cbool           is_rubber,  cdouble         prop)
 {
+    constexpr not_used bool debug_draw_stroke = true;
+
     W_ASSERT(page >= 0);
     W_ASSERT(_painterPublic.isActive());
 
@@ -54,13 +56,15 @@ force_inline void stroke_drawer::draw_stroke_normal(
     const QColor col = pen.color();
     cbool isHigh = col.alpha() < 255;
 
-    if(unlikely(is_rubber)){
-        painter = &_painterPublic;
-    }else{
+    cbool isPrivatePainter = isHigh;
+
+    if(isPrivatePainter){
         img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
         painter = &_painterPrivate;
+    }else{
+        painter = &_painterPublic;
     }
 
     lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
@@ -89,9 +93,14 @@ force_inline void stroke_drawer::draw_stroke_normal(
         lastPoint = pointDraw;
     }
 
-    if(unlikely(is_rubber)){
+    if(unlikely(!isPrivatePainter)){
         return;
     }
+
+    W_ASSERT(isHigh);
+    W_ASSERT(_painterPublic.compositionMode() == QPainter::CompositionMode_SourceOver);
+
+    WDebug(debug_draw_stroke, __func__ << "Paint high");
 
     painter->end();
 

@@ -1,6 +1,7 @@
 #include "page_file.h"
 #include "datawrite/source_read_ext.h"
 #include "touch/datastruct/page.h"
+#include <QImage>
 
 #ifdef ALL_VERSION
 
@@ -77,6 +78,10 @@ int page_file::load_ver_2(page &_page, zip_file_t *file)
 {
     constexpr int ver_stroke = 2;
     int err, i, len_stroke;
+    QByteArray arr;
+    size_t size;
+    void *_raw;
+
     SOURCE_READ_RETURN_SIZE(file, &len_stroke, sizeof(len_stroke));
 
     for(i = 0; i < len_stroke; i++){
@@ -92,6 +97,15 @@ int page_file::load_ver_2(page &_page, zip_file_t *file)
 
     if(unlikely(err != OK))
         return err;
+
+    SOURCE_READ_RETURN_SIZE(file, &size, sizeof(size));
+
+    _raw = WMalloc(size);
+    SOURCE_READ_RETURN_SIZE(file, _raw, size);
+    arr = QByteArray::fromRawData((cchar *)_raw, size);
+    WFree(_raw);
+
+    _page._imgDraw.loadFromData(arr, "PNG");
 
     return OK;
 }
@@ -112,23 +126,35 @@ int page_file::load(page &_page, int ver_stroke, zip_file_t *file)
     }
 }
 
-int page_file::save(const page &_page, zip_source_t *file)
+int page_file::save(const page *_page, zip_source_t *file)
 {
     int i, err = OK;
-    int len = _page._stroke.length();
+    int len = _page->_stroke.length();
+    size_t size;
+    QByteArray arr;
+    QBuffer buffer(&arr);
+
+    buffer.open(QIODevice::WriteOnly);
+    _page->_imgDraw.save(&buffer, "PNG");
+    buffer.close();
 
     /* stroke len */
     SOURCE_WRITE_GOTO_SIZE(file, &len, sizeof(len));
 
     for(i = 0; i < len; i++){
-        err = _page.atStroke(i).save(file);
+        err = _page->atStroke(i).save(file);
         if(unlikely(err != OK))
             return err;
     }
 
-    err = _page._stroke_writernote.save(file);
+    err = _page->_stroke_writernote.save(file);
     if(unlikely(err != OK))
         return err;
+
+    size = arr.size();
+
+    SOURCE_WRITE_GOTO_SIZE(file, &size, sizeof(size));
+    SOURCE_WRITE_GOTO_SIZE(file, arr.constData(), size);
 
     return OK;
 

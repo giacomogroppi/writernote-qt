@@ -60,7 +60,9 @@ page::page(const int count, const n_style style)
     this->_IsVisible = true;
     drawNewPage(style);
     this->mergeList();
+
     pthread_mutex_init(&_img, NULL);
+    pthread_mutex_init(&_append_load, NULL);
 }
 
 static inline void drawLineOrizzontal(
@@ -263,7 +265,6 @@ void page::drawStroke(
     }
 
     if(unlikely(isRubber)){
-        //m_pen.setWidthF(m_pen.widthF() * deltaColorNull);
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }else if(isHigh){
         painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
@@ -307,10 +308,13 @@ void * __page_load(void *__data)
     __initImg(img);
     Define_PAINTER_p(painter, img);
 
+    cint _rand = rand();
+    qDebug() << "Need to draw " << _rand << _data->from << _data->to;
+
     for(; _data->from < _data->to; _data->from ++){
         const auto &ref = extra->m_stroke->at(_data->from);
-        if(unlikely(ref.isEmpty())){
 
+        if(unlikely(ref.isEmpty())){
             pthread_mutex_lock(mutex);
             extra->to_remove->append(_data->from);
             pthread_mutex_unlock(mutex);
@@ -341,6 +345,8 @@ void * __page_load(void *__data)
     extra->painter->drawImage(img.rect(), img, img.rect());
     pthread_mutex_unlock(mutex);
 
+    qDebug() << "Finish to draw " << _rand;
+
     return NULL;
 }
 
@@ -354,15 +360,12 @@ void page::drawEngine(
     int i, threadCount;
 
     QVector<int> to_remove;
-    pthread_mutex_t append;
 
     pthread_t thread[PAGE_THREAD_MAX];
     struct DataPrivateMuThread threadData[PAGE_THREAD_MAX];
     struct page_thread_data extraData;
 
-    pthread_mutex_init(&append, NULL);
-
-    extraData.append        = &append;
+    extraData.append        = &_append_load;
     extraData.painter       = &painter;
     extraData.to_remove     = &to_remove;
     extraData.m_stroke      = &List;
@@ -412,7 +415,9 @@ inline void page::draw(
         this->drawEngine(painter, this->_stroke, m_pos_ris, NULL, true);
     }
 
-    this->drawEngine(painter, list, m_pos_ris, &changeSomething, false);
+    if(list.length()){
+        this->drawEngine(painter, list, m_pos_ris, &changeSomething, false);
+    }
 
     W_ASSERT(painter.isActive());
 
@@ -690,7 +695,7 @@ void page::allocateStroke(int numAllocation)
 
 int page::save(zip_source_t *file) const
 {
-    return page_file::save(*this, file);
+    return page_file::save(this, file);
 }
 
 int page::load(zip_file_t *file, int ver_stroke)

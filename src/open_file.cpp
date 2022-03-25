@@ -103,7 +103,8 @@ void MainWindow::openFile(const char *pos){
         const auto res = xml.loadfile(true, true);
 
         if(xmlstruct::manageMessage(res)){
-            this->_canvas->data->datatouch->triggerNewView(-1, true);
+            _canvas->data->datatouch->triggerIfNone(-1);
+            //this->_canvas->data->datatouch->triggerNewView(-1, true);
             aggiornotestiriascolto(this);
             _canvas->updatePageCount();
             _canvas->data->datatouch->triggerVisibility(_canvas->height());

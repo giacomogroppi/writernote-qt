@@ -50,7 +50,7 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
-    pthread_mutex_t _img;
+    pthread_mutex_t _img, _append_load;
     bool            _IsVisible = true;
     int             _count;
     QList<stroke>   _stroke;
@@ -431,12 +431,15 @@ force_inline double page::minHeight() const
 
 force_inline page::page(const page &from)
 {
+    pthread_mutex_init(&_img, NULL);
+    pthread_mutex_init(&_append_load, NULL);
     page::copy(from, *this);
 }
 
 force_inline page::~page()
 {
     pthread_mutex_destroy(&_img);
+    pthread_mutex_destroy(&_append_load);
 }
 
 inline page &page::operator=(const page &other)
