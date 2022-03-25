@@ -88,6 +88,7 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 
 SOURCES += \
     src/testing/TestingComponent.cpp \
+    src/touch/datastruct/page_file.cpp \
     src/touch/datastruct/stroke_complex_data.cpp \
     src/touch/datastruct/stroke_drawer.cpp \
     src/audioplay/audioplay.cpp \
@@ -266,6 +267,7 @@ SOURCES += \
     src/touch/datastruct/page_index_cache.cpp
 
 HEADERS += \
+    src/touch/datastruct/page_file.h \
     src/touch/datastruct/stroke_complex_data.h \
     src/touch/datastruct/stroke_drawer.h \
     src/audioplay/audioplay.h \

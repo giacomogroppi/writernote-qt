@@ -13,6 +13,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "utils/common_def.h"
+#include "utils/common_error_definition.h"
 
 #define __init__ __attribute((constructor))
 

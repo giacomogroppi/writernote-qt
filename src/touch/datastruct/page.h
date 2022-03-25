@@ -170,6 +170,7 @@ public:
 
 
     friend class stroke;
+    friend class page_file;
     friend class stroke_drawer;
     friend class page_index_cache;
     friend class datastruct;

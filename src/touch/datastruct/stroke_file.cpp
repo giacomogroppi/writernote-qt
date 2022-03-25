@@ -92,12 +92,6 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, zip_file_t *file
     static_assert(sizeof(len_press) == sizeof(len_point));
     static_assert(sizeof(len_point) == stroke_file_size_len);
 
-    if(debug_zip){
-        int i;
-        SOURCE_READ_RETURN_SIZE(file, &i, sizeof(i));
-        qDebug() << __func__ << i;
-    }
-
     SOURCE_READ_RETURN_SIZE(file, &_stroke._metadata, sizeof(_stroke._metadata));
     SOURCE_READ_RETURN_SIZE(file, &_stroke._prop, sizeof(_stroke._prop));
 
@@ -156,12 +150,6 @@ int stroke_file::save(const class stroke &_stroke, zip_source_t *file)
 
     static_assert(sizeof(len_pressure) == sizeof(len_point));
     static_assert(sizeof(len_pressure) == stroke_file_size_len);
-
-    if(debug_zip){
-        int i = 543245;
-        SOURCE_WRITE_RETURN_SIZE(file, &i, sizeof(i));
-        qDebug() << __func__ << i;
-    }
 
     SOURCE_WRITE_RETURN_SIZE(file, &_stroke._metadata, sizeof(_stroke._metadata));
     SOURCE_WRITE_RETURN_SIZE(file, &_stroke._prop, sizeof(_stroke._prop));

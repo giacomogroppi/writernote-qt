@@ -1,6 +1,6 @@
 ﻿#include "page.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
-#include "../tabletcanvas.h"
+#include "touch/tabletcanvas.h"
 #include <QPainter>
 #include "utils/time/current_time.h"
 #include <QPainterPath>
@@ -11,6 +11,7 @@
 #include "touch/multi_thread_data.h"
 #include "testing/memtest.h"
 #include <QPaintDevice>
+#include "touch/datastruct/page_file.h"
 #include "datawrite/source_read_ext.h"
 
 #define PAGE_THREAD_MAX 16
@@ -433,9 +434,6 @@ void page::mergeList()
 
         _stroke.append(stroke);
 
-        //Q_ASSERT(m_stroke.at(index).length() == strokeTmp.at(i).length());
-        //Q_ASSERT(m_stroke.at(index).getId() == strokeTmp.at(i).getId());
-
         index ++;
     }
 
@@ -692,6 +690,7 @@ void page::allocateStroke(int numAllocation)
 
 int page::save(zip_source_t *file) const
 {
+    return page_file::save(*this, file);
     int i, err = OK;
     int len = _stroke.length();
 
@@ -717,6 +716,8 @@ delete_:
 
 int page::load(zip_file_t *file, int ver_stroke)
 {
+    return page_file::load(*this, ver_stroke, file);
+
     int i, k, err, len_stroke;
 
     // len stroke
