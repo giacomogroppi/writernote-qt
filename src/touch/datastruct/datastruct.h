@@ -425,7 +425,7 @@ constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
 inline int datastruct::whichPage(const QPointF &point) const
 {
     int i, len;
-    const auto heigth = page::getHeight();
+    const double heigth = page::getHeight();
     const auto debug_which = false;
 
     if(unlikely(point.y() < 0.))
@@ -447,16 +447,20 @@ inline int datastruct::whichPage(const QPointF &point) const
     i = diff(point.y() / heigth);
 
     if(unlikely(i >= len)){
-        WDebug(debug_which, __func__ << "set to -1");
+        WDebug(true, __func__ << "set to -1");
         i = -1;
-        WDebug(debug_which, __func__ << "set to -1" << qstr("i: %1").arg(i));
+        WDebug(true, __func__ << "set to -1" << qstr("i: %1").arg(i));
     }
 
     if(debug_enable()){
         const not_used auto res = oldMethod();
-        WDebug(debug_which, __func__ << qstr("i: %1 res: %2").arg(i).arg(res)
+        WDebug(debug_which, __func__ << qstr("i: %1 ").arg(i)
                  << qstr("y %1 height %2").arg(point.y()).arg(heigth));
-        W_ASSERT(i == res);
+
+        if(i != res){
+            qDebug() << __func__ << "Differente result: " << i << res;
+            std::abort();
+        }
     }
 
     return i;

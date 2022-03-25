@@ -21,17 +21,23 @@ void datastruct::newPage(int num)
 
 void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
 {
+    const auto size = canvas->size().height();
     this->_zoom = zoom;
     if(canvas){
         canvas->callResizeEvent();
         canvas->_parent->zoomChange();
     }
+
+    this->triggerVisibility(size);
+    this->pageVisible = -1;
 }
 
 void datastruct::increaseZoom(const double delta, const QSize &size)
 {
     this->_zoom += delta;
     this->adjustAll(size);
+    this->triggerVisibility(size.height());
+    this->pageVisible = -1;
 }
 
 void datastruct::drawIfInside(const QRect &area)
@@ -232,11 +238,12 @@ void datastruct::restoreLastTranslation(const int heightView){
 
 void datastruct::scala_all(const QPointF &point, const int heightView)
 {
+    constexpr double prec = .00005;
     if(unlikely(point == QPointF(0, 0)))
         return;
 
-    W_ASSERT(_pointFirstPage.x() + point.x() <= 0.);
-    W_ASSERT(_pointFirstPage.y() + point.y() <= 0.);
+    W_ASSERT(_pointFirstPage.x() + point.x() - prec <= 0.);
+    W_ASSERT(_pointFirstPage.y() + point.y() - prec <= 0.);
 
     this->_pointFirstPage += point;
     this->pageVisible = -1;
