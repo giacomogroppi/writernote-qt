@@ -215,6 +215,7 @@ ADD_EXECUTABLE(writernote
     src/touch/datastruct/stroke_complex_data.cpp
     src/touch/datastruct/stroke_file.cpp
     src/utils/choosepage.cpp
+    src/touch/datastruct/page_file.cpp
 
     src/audiosetting/audioqualityoption.ui 
     src/currenttitle/option/option_copybook.ui 
