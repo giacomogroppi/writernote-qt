@@ -109,7 +109,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     accept_event:
     setting_geometry(this->geometry());
-    setting_autosave(enableredoundo);
+    setting_autosave((bool) _canvas->_redoundo);
 
 
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))

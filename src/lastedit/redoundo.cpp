@@ -27,7 +27,7 @@ redoundo::~redoundo()
     int i;
     const int len = m_list.length();
 
-    for(i = 0; i < len; ++i){
+    for(i = 0; i < max; ++i){
         WDelete(m_list.operator[](i));
     }
 }

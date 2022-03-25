@@ -5,7 +5,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-static void setting_load_redoundo(MainWindow *parent){
+static void setting_load_redoundo(MainWindow *parent)
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_REDOUNDO);
 
@@ -16,12 +17,15 @@ static void setting_load_redoundo(MainWindow *parent){
     else
         parent->ui->actionEnable_redo_undo->setText(REDO_UNDO_ENABLE);
 
-    parent->enableredoundo = data;
+    if(!data){
+        WDelete(parent->_canvas->_redoundo);
+    }
 
     setting.endGroup();
 }
 
-static void geometry(MainWindow *parent){
+static void geometry(MainWindow *parent)
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_GEOMETRY);
 

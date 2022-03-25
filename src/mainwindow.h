@@ -99,9 +99,6 @@ public:
 
     updatecheck *checkupdate;
 
-    /* false -> not enable */
-    bool enableredoundo = true;
-
 #ifdef CLOUD
     struct struct_user *m_user;
     class cloud_controll *m_cloud;

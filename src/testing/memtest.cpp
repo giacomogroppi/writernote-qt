@@ -122,10 +122,6 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
         }
     }
 
-    qDebug() << "---------------------- REMAIN -----------------";
-    print_all_mem();
-    qDebug() << "----------------------   END  -----------------";
-
 out:
     pthread_mutex_unlock(&_mem_mutex);
 

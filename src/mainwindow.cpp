@@ -263,8 +263,10 @@ void MainWindow::on_pause_rec_triggered()
 
 void MainWindow::on_actionRedo_triggered()
 {
-    this->_canvas->_redoundo->redo();
-    emit RedoT();
+    if(_canvas->_redoundo){
+        this->_canvas->_redoundo->redo();
+        emit RedoT();
+    }
 }
 
 void MainWindow::on_actionVersion_triggered()
@@ -279,8 +281,10 @@ void MainWindow::on_actionVersion_triggered()
 
 void MainWindow::on_actionUndu_triggered()
 {
-    this->_canvas->_redoundo->undo();
-    emit UndoT();
+    if(_canvas->_redoundo){
+        this->_canvas->_redoundo->undo();
+        emit UndoT();
+    }
 }
 
 /* restore file to the original position (0, 0) */

@@ -3,18 +3,15 @@
 
 void MainWindow::on_actionEnable_redo_undo_triggered()
 {
-    if(this->enableredoundo)
-        ui->actionEnable_redo_undo->setText(REDO_UNDO_DISABLE);
-    else
-        ui->actionEnable_redo_undo->setText(REDO_UNDO_ENABLE);
-
-    enableredoundo = !enableredoundo;
+    redoundo *_undo = _canvas->_redoundo;
 
     // it's off
-    if(!enableredoundo){
+    if(_undo){
         WDelete(_canvas->_redoundo);
         _canvas->_redoundo = NULL;
+        ui->actionEnable_redo_undo->setText(REDO_UNDO_DISABLE);
     }else{
         WNew(_canvas->_redoundo, redoundo, (_canvas));
+        ui->actionEnable_redo_undo->setText(REDO_UNDO_ENABLE);
     }
 }
