@@ -353,7 +353,7 @@ inline void __order(QList<QVector<T>> & list){
 #ifdef DEBUGINFO
 # define WDebug(enable, message) \
     if(enable){                 \
-        qDebug() << message; \
+        qDebug() << __func__ << message; \
     }
 #else
 # define WDebug(enable, message) Q_UNUSED((enable));

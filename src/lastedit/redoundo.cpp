@@ -10,9 +10,10 @@ void redoundo::append(Document *doc)
 
 redoundo::redoundo(TabletCanvas *__canvas)
 {
-    W_ASSERT(__canvas);
     uint i;
     Document *doc;
+
+    W_ASSERT(__canvas);
 
     this->canvas = __canvas;
 
@@ -25,7 +26,6 @@ redoundo::redoundo(TabletCanvas *__canvas)
 redoundo::~redoundo()
 {
     int i;
-    const int len = m_list.length();
 
     for(i = 0; i < max; ++i){
         WDelete(m_list.operator[](i));
