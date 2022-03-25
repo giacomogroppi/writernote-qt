@@ -691,95 +691,11 @@ void page::allocateStroke(int numAllocation)
 int page::save(zip_source_t *file) const
 {
     return page_file::save(*this, file);
-    int i, err = OK;
-    int len = _stroke.length();
-
-    /* stroke len */
-    SOURCE_WRITE_GOTO_SIZE(file, &len, sizeof(len));
-
-    for(i = 0; i < len; i++){
-        err = atStroke(i).save(file);
-        if(unlikely(err != OK))
-            return err;
-    }
-
-    err = _stroke_writernote.save(file);
-    if(unlikely(err != OK))
-        return err;
-
-    return OK;
-
-    // for SOURCE_WRITE_GOTO macro
-delete_:
-    return ERROR;
 }
 
 int page::load(zip_file_t *file, int ver_stroke)
 {
     return page_file::load(*this, ver_stroke, file);
-
-    int i, k, err, len_stroke;
-
-    // len stroke
-    SOURCE_READ_RETURN_SIZE(file, &len_stroke, sizeof(len_stroke));
-
-    W_ASSERT(len_stroke >= 0);
-
-    for(i = 0; i < len_stroke; i++){
-        _stroke.append(stroke());
-        stroke &ref = _stroke.last();
-        err = ref.load(file, ver_stroke);
-
-        if(unlikely(err != OK))
-            return err;
-    }
-
-    if(ver_stroke == 2){
-        err = _stroke_writernote.load(file, ver_stroke);
-
-        if(unlikely(err != OK))
-            return err;
-    }
-    else if(ver_stroke == 0){
-#ifdef ALL_VERSION
-        SOURCE_READ_RETURN_SIZE(file, &len_stroke, sizeof(len_stroke));
-
-        for(i = 0; i < len_stroke; i++){
-            stroke __tmp;
-            cint res = __tmp.load(file, ver_stroke);
-            if(unlikely(res == ERROR))
-                return res;
-
-            if(unlikely(res == PAGE_POINT)){
-                cint len = __tmp.length();
-                for(k = 0; k < len; k ++){
-                    _stroke_writernote.append(__tmp.at(k), __tmp.getPressure(k));
-                }
-            }
-        }
-
-        // remove empty stroke
-        for(int i = lengthStroke() - 1; i >= 0; i--){
-            if(atStroke(i).length() == 0){
-                this->_stroke.removeAt(i);
-            }
-        }
-#else
-        return ERROR;
-#endif
-    }
-    if(ver_stroke == 1){
-#ifdef ALL_VERSION
-        _stroke_writernote.load(file, ver_stroke);
-        if(_stroke_writernote.length() && _stroke_writernote.getPressure() > 10){
-            _stroke_writernote.__setPressureFirstPoint(1.5);
-        }
-#else
-        return ERROR;
-#endif
-    }
-
-    return OK;
 }
 
 void page::drawStroke(const stroke &stroke, int m_pos_ris)
