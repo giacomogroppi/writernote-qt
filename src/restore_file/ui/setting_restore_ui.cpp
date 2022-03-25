@@ -161,7 +161,7 @@ void setting_restore_ui::firstTimer()
         goto start_timer;
     }
 
-    res = ff.savefile_check_file() == OK;
+    res = ff.savefile_check_file(false) == OK;
 
     if(!res){
         dialog_critic("We had a problem saving the file in " + *m_path);
@@ -200,7 +200,7 @@ void setting_restore_ui::secondTimer()
 
     //qDebug() << "Save tmp file in: " << path;
 
-    res = ff.savefile_check_file() == OK;
+    res = ff.savefile_check_file(false) == OK;
 
     if(!res){
         if(try_save > 5){

@@ -92,7 +92,7 @@ out:
         return dialog_critic("We had a problem saving the audio into " + m_path);
     }
 
-    if(savefile(&m_path, m_currenttitle).savefile_check_file() != OK)
+    if(savefile(&m_path, m_currenttitle).savefile_check_file(true) != OK)
         dialog_critic("We had a problem saving the current copybook");
 
     temp = removeAudio::removeAudioSettingsLoad();

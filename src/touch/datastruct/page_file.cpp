@@ -126,17 +126,13 @@ int page_file::load(page &_page, int ver_stroke, zip_file_t *file)
     }
 }
 
-int page_file::save(const page *_page, zip_source_t *file)
+int page_file::save(const page *_page, zip_source_t *file, cbool saveImg)
 {
     int i, err = OK;
     int len = _page->_stroke.length();
     size_t size;
     QByteArray arr;
     QBuffer buffer(&arr);
-
-    buffer.open(QIODevice::WriteOnly);
-    _page->_imgDraw.save(&buffer, "PNG");
-    buffer.close();
 
     /* stroke len */
     SOURCE_WRITE_GOTO_SIZE(file, &len, sizeof(len));
@@ -150,6 +146,12 @@ int page_file::save(const page *_page, zip_source_t *file)
     err = _page->_stroke_writernote.save(file);
     if(unlikely(err != OK))
         return err;
+
+    if(unlikely(saveImg)){
+        buffer.open(QIODevice::WriteOnly);
+        _page->_imgDraw.save(&buffer, "PNG");
+        buffer.close();
+    }
 
     size = arr.size();
 

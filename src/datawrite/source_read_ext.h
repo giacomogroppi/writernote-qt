@@ -24,7 +24,7 @@ short int source_write_ext(zip_source_t *, const void *, int);
         }                                                               \
     } while(0);
 
-#define SAVE_BINARY(x) if(unlikely(salvabinario(x) == ERROR))goto delete_;
+#define SAVE_BINARY(x, img) if(unlikely(salvabinario(x, img) == ERROR))goto delete_;
 
 #define SOURCE_WRITE_RETURN_SIZE(x, y, z) \
     do{                                                             \

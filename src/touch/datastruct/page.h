@@ -137,7 +137,7 @@ public:
     void reset();
     void allocateStroke(int numAllocation);
 
-    int save(zip_source_t *file) const;
+    int save(zip_source_t *file, cbool saveImg) const;
     int load(zip_file_t *file, int ver_stroke);
 
     void drawStroke(const stroke &stroke, int m_pos_ris);

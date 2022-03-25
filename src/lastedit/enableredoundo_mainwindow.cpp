@@ -10,5 +10,11 @@ void MainWindow::on_actionEnable_redo_undo_triggered()
 
     enableredoundo = !enableredoundo;
 
-    _canvas->enableredoundu = enableredoundo;
+    // it's off
+    if(!enableredoundo){
+        WDelete(_canvas->_redoundo);
+        _canvas->_redoundo = NULL;
+    }else{
+        WNew(_canvas->_redoundo, redoundo, (_canvas));
+    }
 }

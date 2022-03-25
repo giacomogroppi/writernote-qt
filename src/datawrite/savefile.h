@@ -17,7 +17,7 @@ private:
     const QString *path;
     Document *currenttitle;
 
-    int salvabinario(zip_t *);
+    int salvabinario(zip_t *zz, cbool saveImg);
 
     int savefile_check_2(zip_source_t *file, Document *currenttitle, zip_t *filezip);
 
@@ -43,7 +43,7 @@ public:
 
     void setData(const QString *p, Document *curr);
 
-    int savefile_check_file();
+    int savefile_check_file(cbool saveImg);
 
     static uchar saveArrIntoFile(const QByteArray &arr, const QString &path);
 };

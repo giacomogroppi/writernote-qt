@@ -102,7 +102,7 @@ int TestingCore::createAndSave(
     createDocument(doc);
 
     savefile __tmp(pos, doc);
-    return __tmp.savefile_check_file();
+    return __tmp.savefile_check_file(true);
 }
 
 int TestingCore::createFile(const QByteArray &folder)

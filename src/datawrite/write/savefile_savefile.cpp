@@ -14,7 +14,7 @@ static void setCurrentVersion(Document *data);
  * if save_audio == true -> save also the audio
 */
 
-int savefile::savefile_check_file()
+int savefile::savefile_check_file(cbool saveImg)
 {
     int error, ver_stroke;
     zip_error_t errore;
@@ -58,7 +58,7 @@ int savefile::savefile_check_file()
     SOURCE_WRITE(file, &currenttitle->count_pdf, sizeof(currenttitle->count_pdf));
     SOURCE_WRITE(file, &currenttitle->count_img, sizeof(currenttitle->count_img));
 
-    SAVE_BINARY(filezip);
+    SAVE_BINARY(filezip, saveImg);
 
     res_img = currenttitle->m_img->save_metadata(file);
     if(res_img != fromimage::load_res::ok)

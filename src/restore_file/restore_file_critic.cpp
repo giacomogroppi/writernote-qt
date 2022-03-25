@@ -25,7 +25,7 @@ restore_file_critic::n_err restore_file_critic::restore_file_direct(const QStrin
         return restore_file_critic::n_err::error_load_file;
     }
 
-    if(save.savefile_check_file() != OK){
+    if(save.savefile_check_file(true) != OK){
         return restore_file_critic::n_err::error_save_file;
     }
 

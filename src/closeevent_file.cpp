@@ -89,7 +89,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
             if(!qfilechoose::getFileForSave(m_path, TYPEFILEWRITER))
                 return;
         }
-        check = save_.savefile_check_file() == OK;
+        check = save_.savefile_check_file(true) == OK;
 
 
         if(check){

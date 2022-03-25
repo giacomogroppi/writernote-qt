@@ -24,7 +24,7 @@ void MainWindow::on_actionSave_File_triggered()
         m_path = new_path;
     }
 
-    check = savefile_i.savefile_check_file() == OK;
+    check = savefile_i.savefile_check_file(true) == OK;
 
     if(!check && c)
         return dialog_critic("We had a problem while saving the file");

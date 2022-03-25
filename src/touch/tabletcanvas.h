@@ -163,8 +163,6 @@ public:
 
     void setTabletDevice(QTabletEvent *event) { updateCursor(event); }
 
-    bool enableredoundu = true;
-
     /* class for menu */
     class square            *_square        = NULL;
     class rubber_ui         *_rubber        = NULL;

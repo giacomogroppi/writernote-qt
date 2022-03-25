@@ -693,9 +693,9 @@ void page::allocateStroke(int numAllocation)
     if(unlikely(err != OK)) \
         return err;
 
-int page::save(zip_source_t *file) const
+int page::save(zip_source_t *file, cbool saveImg) const
 {
-    return page_file::save(this, file);
+    return page_file::save(this, file, saveImg);
 }
 
 int page::load(zip_file_t *file, int ver_stroke)

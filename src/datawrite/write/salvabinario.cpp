@@ -12,7 +12,7 @@ static int freezip(zip_source_t *files){
     return ERROR;
 }
 
-int savefile::salvabinario(zip_t *filezip)
+int savefile::salvabinario(zip_t *filezip, cbool saveImg)
 {
     int counterPage, err = ERROR;
     const size_t controll = this->currenttitle->createSingleControll();
@@ -37,7 +37,7 @@ int savefile::salvabinario(zip_t *filezip)
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         page = &currenttitle->datatouch->at(counterPage);
 
-        err = page->save(file);
+        err = page->save(file, saveImg);
         if(err != OK)
             goto delete_;
     }

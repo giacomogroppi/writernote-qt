@@ -87,7 +87,7 @@ void MainWindow::openFile(const char *pos){
         if(res_save == n_need_save::need_save){
             if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
                 savefile save(&m_path, _canvas->data);
-                if(save.savefile_check_file() != OK){
+                if(save.savefile_check_file(true) != OK){
                     if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
                         return;
                     }

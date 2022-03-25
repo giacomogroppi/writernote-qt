@@ -52,7 +52,7 @@ bool savecopybook::check_permission()
             return false;
     }
 
-    ret = save_class.savefile_check_file() == OK;
+    ret = save_class.savefile_check_file(true) == OK;
     if(!ret)
         dialog_critic("We had a problem saving the copybook");
 
