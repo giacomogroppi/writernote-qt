@@ -21,15 +21,22 @@ void datastruct::newPage(int num)
 
 void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
 {
-    const auto size = canvas->size().height();
+    const double size = canvas->size().height();
+
+    if(unlikely(!datastruct::isOkZoom(zoom))){
+        return;
+    }
+
     this->_zoom = zoom;
-    if(canvas){
+
+    if(likely(canvas)){
         canvas->callResizeEvent();
         canvas->_parent->zoomChange();
     }
 
     this->triggerVisibility(size);
     this->pageVisible = -1;
+    this->getFirstPageVisible();
 }
 
 void datastruct::increaseZoom(const double delta, const QSize &size)
@@ -130,28 +137,26 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
  * del pixmap fuori dal foglio, in caso scala tutto
  * di quanto basta.
  *
- * ritorna false se anche con uno spostamento non siamo
- * riusciti a coprire la parte di pixmap fuori dal
- * foglio
 */
-void datastruct::adjustHeight(const uint height)
+void datastruct::adjustHeight(cdouble height)
 {
     const QPointF point = this->getPointFirstPageNoZoom();
     QPointF t(0.0, 0.0);
-    bool not_used ff;
+    uchar not_used ff = 0;
     double y = biggery();
 
-    if(y < height){
-        ff = true;
-        t.setY(height - y);
+    if(point.y() > 0.0){
+        ff = 1;
+        t.setY( - point.y());
+        qDebug() << "Need to restore first Point" << point;
+    }
+    else if(y < height){
+        ff = 2;
+        t.setY((height - y) / _zoom);
+
         if(!isOkTranslate(t, true)){
             t.setY(0.);
         }
-
-    }else{ //(x >= width)
-        ff = false;
-        if(point.y() > 0.0)
-            t.setY(-point.y());
     }
 
     scala_all(t, height);
