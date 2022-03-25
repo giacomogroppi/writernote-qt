@@ -17,7 +17,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
     static DataPaint dataPaint = {
         .withPdf = true,
         .IsExportingPdf = false,
-        .m = 1,
+        .m = 1.,
         //.size = QSize(m_pixmap.size()),
         .parent = _parent,
         .m_pixmap = &this->_pixmap,
