@@ -190,7 +190,7 @@ force_inline void TabletCanvas::ManageStart(
         QTabletEvent    *event,
         const QPointF   &pointTouch)
 {
-    constexpr const auto debugSquare = true;
+    constexpr const auto debugSquare = false;
 
     if(unlikely(m_deviceDown))
         return;
@@ -201,11 +201,11 @@ force_inline void TabletCanvas::ManageStart(
     }
     else if(selection_method){
         if(_square->somethingInBox()){
-            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "Somethininbox");
+            WDebug(debugSquare, "TabletCanvas::ManageStart" << "Somethininbox");
             _square->initPointMove(pointTouch);
         }
         else{
-            WDebug(debugSquare, "TabletCanvas" << __FUNCTION__ << "not in box");
+            WDebug(debugSquare, "TabletCanvas::ManageStart" << "not in box");
             _square->initPoint(pointTouch);
         }
     }else if(rubber_method){

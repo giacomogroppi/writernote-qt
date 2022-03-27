@@ -19,6 +19,7 @@ static void setting_load_redoundo(MainWindow *parent)
 
     if(!data){
         WDelete(parent->_canvas->_redoundo);
+        parent->_canvas->_redoundo = NULL;
     }
 
     setting.endGroup();
@@ -35,7 +36,8 @@ static void geometry(MainWindow *parent)
     setting.endGroup();
 }
 
-void MainWindow::loadPenOrMouse(){
+void MainWindow::loadPenOrMouse()
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_INSERT_METHOD_PEN_MOUSE);
     touch_or_pen = setting.value(KEY_INSERT_METHOD_PEN_MOUSE, false).toBool();

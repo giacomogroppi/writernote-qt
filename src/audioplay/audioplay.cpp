@@ -38,8 +38,9 @@ void audioplay::positionChange(qint64 position)
 {
     int duration;
 
-    WDebug(debugAudioPlay, "audioplay::positionChange call");
-    if(!isPlay()) return;
+    WDebug(debugAudioPlay, "audioplay::positionChange" << "call");
+    if(!isPlay())
+        return;
 
     parent->ui->statusBar->showMessage(tr("%1 second").arg(position/1000));
 

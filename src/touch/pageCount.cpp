@@ -25,17 +25,6 @@ void MainWindow::updatePageCount(int pageCount)
 
 void TabletCanvas::updatePageCount()
 {
-    datastruct *__data = data->datatouch;
-    const int lenPage = __data->lengthPage();
-    const double deltay = __data->getPointFirstPage().y();
-
-    for(int i = 0; i < lenPage; i++){
-        const double currentHeight = __data->at(i).currentHeight();
-        if(currentHeight + deltay > 0.0)
-            return _parent->updatePageCount(i + 1);
-    }
-
-    _parent->updatePageCount(-1);
-
-    NAME_LOG_EXT->write("Missing page", log_ui::possible_bug);
+    const int index = data->datatouch->getFirstPageVisible() + 1;
+    _parent->updatePageCount(index);
 }

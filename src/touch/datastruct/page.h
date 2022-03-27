@@ -414,6 +414,8 @@ force_inline void page::append(const stroke &strokeAppend)
     int lastNewIndex = _strokeTmp.length();
     );
 
+    W_ASSERT(!strokeAppend.isEmpty());
+
     this->_strokeTmp.append(strokeAppend);
 
     /* they will be automatically removed when

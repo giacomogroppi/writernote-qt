@@ -84,7 +84,6 @@ void * __square_search(void *__data)
  * del tratto e setta la variabile this->check =
  * true, in caso contrario la setta = false e fa il return
 */
-
 bool square::find()
 {
     Document *doc = _canvas->data;
@@ -372,18 +371,20 @@ void square::move(const QPointF &punto)
 
 void square::endMoving(const QWidget *pixmap)
 {
+    constexpr auto class_func = "square::endMoving(const QWidget *pixmap)";
     QPoint middle;
+    const auto ref = _canvas->data->datatouch->getPointFirstPage();
     int flag;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
 
-    WDebug(debugSquare, "square::endMoving");
+    WDebug(debugSquare, class_func << "call");
 
-    middle = QPoint(_pointinit.x() + translation.x(),
-                    _pointinit.y() + translation.y() - _property->height());
+    middle = QPoint(_pointinit.x() + translation.x() + ref.x(),
+                    _pointinit.y() + translation.y() + ref.y() - _property->height());
 
     flag = this->calculate_flags();
 
-    qDebug() << "square::needReload show" << flag << middle;
+    WDebug(debugSquare, class_func << flag << middle );
 
     this->_property->Show(middle, flag);
 }

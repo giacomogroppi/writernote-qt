@@ -308,9 +308,6 @@ void * __page_load(void *__data)
     __initImg(img);
     Define_PAINTER_p(painter, img);
 
-    cint _rand = rand();
-    qDebug() << "Need to draw " << _rand << _data->from << _data->to;
-
     for(; _data->from < _data->to; _data->from ++){
         const auto &ref = extra->m_stroke->at(_data->from);
 
@@ -344,8 +341,6 @@ void * __page_load(void *__data)
     W_ASSERT(extra->painter->isActive());
     extra->painter->drawImage(img.rect(), img, img.rect());
     pthread_mutex_unlock(mutex);
-
-    qDebug() << "Finish to draw " << _rand;
 
     return NULL;
 }

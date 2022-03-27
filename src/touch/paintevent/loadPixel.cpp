@@ -17,14 +17,14 @@
 extern stroke __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta);
 
-static void drawSingleStroke(DataPaint &_dataPoint, const stroke   &_stroke,
+static void drawSingleStroke(const stroke   &_stroke,
                              QPen      &_pen,       QPainter       &_painter,
                              double   _zoom)
 {
     if(unlikely(_stroke.isEmpty()))
         return;
 
-    W_ASSERT(_dataPoint.m == 1.);
+    //W_ASSERT(_dataPoint.m == 1.);
 
     if(_zoom == PROP_RESOLUTION){
         _zoom = PROP_RESOLUTION - 0.0000001;
@@ -45,7 +45,7 @@ void TabletCanvas::load(QPainter &painter,
     static int last_m_pos_ris   = -1;
 
     int lenPage                     = data->datatouch->lengthPage();
-    const QPointF &PointFirstPage   = data->datatouch->getPointFirstPage();
+    const QPointF &PointFirstPage   = data->datatouch->getPointFirstPageNoZoom();
     const double zoom               = data->datatouch->getZoom();
     const QSize sizeRect            = createSizeRect(data->datatouch, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
@@ -77,8 +77,7 @@ void TabletCanvas::load(QPainter &painter,
     pen.setColor(strokeToDraw.getColor());
 
     /* stroke not already add to page */
-    drawSingleStroke(dataPoint, strokeToDraw, pen, painter, zoom);
-
+    drawSingleStroke(strokeToDraw, pen, painter, zoom);
 
     painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
@@ -99,15 +98,18 @@ void TabletCanvas::load(QPainter &painter,
         counterPage = 0;
     }
 
+    constexpr auto debugPageImg = false;
+    WDebug(debugPageImg, name << __func__ << "Start draw img from" << counterPage);
     for(; counterPage < lenPage; counterPage ++){
         const page &page = data->datatouch->at(counterPage);
 
-        if(!page.isVisible() && likely(!dataPoint.IsExportingPdf))
+        if(!page.isVisible() && likely(!dataPoint.IsExportingPdf)){
+            WDebug(debugPageImg, name << __func__ << "Page at index" << counterPage << "not visible: Break");
             continue;
+        }
 
-        singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, dataPoint.m);
+        singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, data->datatouch->getZoom());
     }
-
 
     if(unlikely(!dataPoint.parent))
         return;
@@ -119,7 +121,7 @@ void TabletCanvas::load(QPainter &painter,
 
     for(lenPage --; lenPage >= 0; lenPage --){
         const stroke &tmp = _laser->at(lenPage);
-        drawSingleStroke(dataPoint, tmp, pen, painter, zoom);
+        drawSingleStroke(tmp, pen, painter, zoom);
     }
 }
 
@@ -128,18 +130,17 @@ void singleLoad(
         const QImage    &img,
         const QSize     &sizeRect,
         const QPointF   &PointFirstPage,
-        cint            counterPage,
+        cdouble         counterPage,
         cdouble         m)
 {
-    QRectF targetRect(QPointF( PointFirstPage.x(),
-                             ( PointFirstPage.y() + page::getHeight() * double(counterPage))) * m,
-                      sizeRect);
+    double x = PointFirstPage.x() * m;
+    double y = PointFirstPage.y() + page::getHeight() * counterPage;
+
+    y *= m;
+
+    QRectF targetRect(QPointF(x, y), sizeRect);
 
     painter.drawImage(targetRect, img);
-}
-
-void TabletCanvas::loadpixel(){
-    this->resizeEvent(nullptr);
 }
 
 static void loadSheet(

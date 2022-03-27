@@ -53,7 +53,7 @@ private:
 
     bool isOkTranslate(const QPointF &point, cbool isZoom) const;
     void adjustWidth(cdouble width);
-    void adjustHeight(const uint height);
+    void adjustHeight(cdouble height);
 
     void triggerNewView(int page, int m_pos_ris, const bool all);
 
@@ -170,7 +170,7 @@ public:
     int getLastPageVisible() const;
     void newViewAudio(int newTime);
 
-    static bool isOkZoom(const double newPossibleZoom);
+    [[nodiscard]] static bool isOkZoom(const double newPossibleZoom);
     static void copy(const datastruct &src, datastruct &dest);
     static force_inline void inverso(QPointF &point) {point *= -1.0;};
     static QPointF inverso(const QPointF &point) { return (-1) * point; };
@@ -412,12 +412,12 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris)
             at_mod(i).triggerRenderImage(m_pos_ris, true);
 }
 
-force_inline bool datastruct::isOkZoom(const double newPossibleZoom)
+[[nodiscard]] force_inline bool datastruct::isOkZoom(const double newPossibleZoom)
 {
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.3);
 }
 
-constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
+constexpr force_inline double datastruct::getZoom() const
 {
     return this->_zoom;
 }
@@ -425,7 +425,7 @@ constexpr Q_ALWAYS_INLINE double datastruct::getZoom() const
 inline int datastruct::whichPage(const QPointF &point) const
 {
     int i, len;
-    const auto heigth = page::getHeight();
+    const double heigth = page::getHeight();
     const auto debug_which = false;
 
     if(unlikely(point.y() < 0.))
@@ -447,16 +447,20 @@ inline int datastruct::whichPage(const QPointF &point) const
     i = diff(point.y() / heigth);
 
     if(unlikely(i >= len)){
-        WDebug(debug_which, __func__ << "set to -1");
+        WDebug(true, __func__ << "set to -1");
         i = -1;
-        WDebug(debug_which, __func__ << "set to -1" << qstr("i: %1").arg(i));
+        WDebug(true, __func__ << "set to -1" << qstr("i: %1").arg(i));
     }
 
     if(debug_enable()){
         const not_used auto res = oldMethod();
-        WDebug(debug_which, __func__ << qstr("i: %1 res: %2").arg(i).arg(res)
+        WDebug(debug_which, __func__ << qstr("i: %1 ").arg(i)
                  << qstr("y %1 height %2").arg(point.y()).arg(heigth));
-        W_ASSERT(i == res);
+
+        if(i != res){
+            qDebug() << __func__ << "Differente result: " << i << res;
+            std::abort();
+        }
     }
 
     return i;
@@ -554,7 +558,7 @@ inline QRectF datastruct::get_bigger_rect(
     return QRectF(resultTopLeft, resultBottomRight);
 }
 
-inline QRect datastruct::get_bigger_rect(const QRect &first, const QRect &second)
+force_inline QRect datastruct::get_bigger_rect(const QRect &first, const QRect &second)
 {
     QRectF __first(first);
     QRectF __second(second);
@@ -591,7 +595,7 @@ constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &poi
     return (pointDatastruct + this->getPointFirstPageNoZoom()) * getZoom();
 }
 
-inline bool datastruct::isempty() const
+force_inline bool datastruct::isempty() const
 {
     return _page.isEmpty();
 }

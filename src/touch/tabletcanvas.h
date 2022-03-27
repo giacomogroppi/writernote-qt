@@ -139,7 +139,7 @@ public:
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
     static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen);
-    void loadpixel();
+    void loadpixel(){ this->resizeEvent(nullptr); };
     void call_update();
 
     /* touch e zoom */

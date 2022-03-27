@@ -17,12 +17,11 @@
  * to copy the drawing rules used in
  * TabletCanvas :: load ()
 */
-void singleLoad(
-        QPainter        &painter,
+void singleLoad(QPainter        &painter,
         const QImage    &img,
         const QSize     &sizeRect,
         const QPointF   &PointFirstPage,
-        cint            counterPage,
+        cdouble counterPage,
         cdouble         m);
 
 /*
