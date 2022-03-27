@@ -103,9 +103,10 @@ int page_file::load_ver_2(page &_page, zip_file_t *file)
     _raw = WMalloc(size);
     SOURCE_READ_RETURN_SIZE(file, _raw, size);
     arr = QByteArray::fromRawData((cchar *)_raw, size);
-    WFree(_raw);
 
     _page._imgDraw.loadFromData(arr, "PNG");
+
+    WFree(_raw);
 
     return OK;
 }
