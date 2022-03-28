@@ -5,14 +5,6 @@
 #include <QDebug>
 #include "mainwindow.h"
 
-static inline double Distance(const QPointF &point1, const QPointF &point2)
-{
-    double x, y;
-    x = pow(point1.x() - point2.x(), 2);
-    y = pow(point1.y() - point2.y(), 2);
-    return x + y;
-}
-
 static force_inline QPointF PointMiddle(const QPointF &first, const QPointF &sec)
 {
     double x, y;
@@ -42,8 +34,8 @@ static void setPoint(const QPointF &pointTouch, TabletCanvas *canvas)
 static int get_index(TabletCanvas *canvas, const QPointF &pointTouch)
 {
     PointSettable *last = canvas->lastpointzoom;
-    const auto Dist1 = Distance(last[0].point, pointTouch);
-    const auto Dist2 = Distance(last[1].point, pointTouch);
+    const double Dist1 = distance_not_square(last[0].point, pointTouch);
+    const double Dist2 = distance_not_square(last[1].point, pointTouch);
     return Dist1 > Dist2;
 }
 
@@ -62,6 +54,7 @@ bool TabletCanvas::event(QEvent *event)
     const auto isTouchEvent = type == QEvent::TouchBegin || type == QEvent::TouchUpdate;
 
     if(type == QEvent::TouchEnd){
+ridefine:
         WDebug(TabletEventDebug, __func__ << "Ridefine");
         RIDEFINE(this->lastpointzoom);
         block_scrolling = false;
@@ -90,8 +83,8 @@ bool TabletCanvas::event(QEvent *event)
         const auto &touchPoint = touchPoints.at(i);
         const QPointF &pointTouch = touchPoint.pos();
         cbool _tmp =    touchPoint.state() == Qt::TouchPointPressed ||
-                            touchPoint.state() == Qt::TouchPointMoved ||
-                            touchPoint.state() == Qt::TouchPointStationary;
+                        touchPoint.state() == Qt::TouchPointMoved ||
+                        touchPoint.state() == Qt::TouchPointStationary;
         if(!_tmp){
             continue;
         }
@@ -101,11 +94,16 @@ bool TabletCanvas::event(QEvent *event)
             continue;
         }
 
+        if(distance(lastpointzoom[0].point, lastpointzoom[1].point) < 0.)
+        {
+            goto ridefine;
+        }
+
         somethingCtrl = true;
 
         /* si calcola la distanza tra il punto dell'ultimo touch e il punto corrente, e si usa il più lontano */
         cint IndexSave = get_index(this, pointTouch);
-            
+
         // First cicle
         if(!i){
             point[IndexSave] = pointTouch;
@@ -136,10 +134,10 @@ bool TabletCanvas::event(QEvent *event)
 
     {
         // current distance
-        const double distanceSelected         = Distance(point[0],                point[1]);
+        const double distanceSelected         = distance(point[0],                point[1]);
 
         // original distance
-        const double tmp_distance_right_left  = Distance(lastpointzoom[0].point,  lastpointzoom[1].point);
+        const double tmp_distance_right_left  = distance(lastpointzoom[0].point,  lastpointzoom[1].point);
 
         const double multiplier = distanceSelected / tmp_distance_right_left;
 
