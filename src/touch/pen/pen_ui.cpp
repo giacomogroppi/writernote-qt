@@ -2,6 +2,7 @@
 #include "ui_pen_ui.h"
 #include "touch/highlighter/highlighter.h"
 #include "utils/setting_define.h"
+#include "utils/common_script.h"
 
 #include <QSettings>
 #include <QDebug>
@@ -73,7 +74,7 @@ void pen_ui::on_button_size_clicked()
 }
 
 bool pen_ui::event(QEvent *event){
-    if(event->type() == QEvent::WindowDeactivate)
+    if(unlikely(event->type() == QEvent::WindowDeactivate))
         this->hide();
 
     return QWidget::event(event);

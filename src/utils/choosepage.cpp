@@ -5,10 +5,11 @@
 #include <QEvent>
 
 ChoosePage::ChoosePage(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::ChoosePage)
 {
     ui->setupUi(this);
+    this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
 }
 
 ChoosePage::~ChoosePage()
@@ -16,13 +17,14 @@ ChoosePage::~ChoosePage()
     delete ui;
 }
 
-void ChoosePage::show(const Document &doc)
+void ChoosePage::Show(const Document &doc)
 {
     int max = doc.datatouch->lengthPage();
     int curr = doc.datatouch->getFirstPageVisible() + 1;
 
     this->ui->label_of->setText(qstr(" of %1").arg(max));
     this->ui->plainTextEdit->setPlainText(QString::number(curr));
+    this->show();
 }
 
 void ChoosePage::on_pushButton_apply_clicked()
@@ -36,7 +38,13 @@ void ChoosePage::on_pushButton_apply_clicked()
 
 bool ChoosePage::event(QEvent *event)
 {
-    if(event->type() == QEvent::Close){
+    constexpr bool eventChoose = true;
+    constexpr auto class_func = "ChoosePage::event";
+
+    WDebug(eventChoose, class_func);
+
+    if(unlikely(event->type() == QEvent::WindowDeactivate)){
+        this->hide();
         this->_curr = -1;
     }
 

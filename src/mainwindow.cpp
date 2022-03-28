@@ -192,10 +192,12 @@ bool MainWindow::event(QEvent *event)
         //qDebug() << __func__ << rect << pos;
 
         if(rect.contains(pos)){
-            QSize size = this->size() / 2. - _choose_page->get_size();
-            this->_choose_page->show(*_canvas->data);
-            this->_choose_page->move(QPoint(size.width(), size.height()));
-            this->_choose_page->exec();
+            const QPointF pos_cursor = cursor().pos();
+            const QSize size_widget = _choose_page->get_size();
+
+            QPointF new_pos_widget = pos_cursor - QPointF(size_widget.width(), size_widget.height());
+            this->_choose_page->Show(*_canvas->data);
+            this->_choose_page->move(new_pos_widget.toPoint());
         }
     }
 

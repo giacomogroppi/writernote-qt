@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ChoosePage</class>
- <widget class="QDialog" name="ChoosePage">
+ <widget class="QWidget" name="ChoosePage">
   <property name="geometry">
    <rect>
     <x>0</x>

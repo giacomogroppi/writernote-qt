@@ -3,12 +3,13 @@
 
 #include "utils/common_script.h"
 #include <QDialog>
+#include <QWidget>
 
 namespace Ui {
 class ChoosePage;
 }
 
-class ChoosePage : public QDialog
+class ChoosePage : public QWidget
 {
     Q_OBJECT
 
@@ -16,7 +17,7 @@ public:
     explicit ChoosePage(QWidget *parent);
     ~ChoosePage();
 
-    void show(const class Document &doc);
+    void Show(const class Document &doc);
     QSize get_size() const;
 
 private slots:
