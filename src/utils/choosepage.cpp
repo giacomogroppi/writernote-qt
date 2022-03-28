@@ -38,7 +38,7 @@ void ChoosePage::on_pushButton_apply_clicked()
 
 bool ChoosePage::event(QEvent *event)
 {
-    constexpr bool eventChoose = true;
+    constexpr bool eventChoose = false;
     constexpr auto class_func = "ChoosePage::event";
 
     WDebug(eventChoose, class_func);

@@ -428,7 +428,7 @@ force_inline void page::append(const stroke &strokeAppend)
 
 force_inline double page::minHeight() const
 {
-    return (this->_count - 1)*this->height;
+    return (this->_count - 1) * this->height;
 }
 
 force_inline page::page(const page &from)

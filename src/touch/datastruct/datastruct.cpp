@@ -230,7 +230,8 @@ void datastruct::repositioning()
     scala_all(point, INT_MAX);
 }
 
-void datastruct::restoreLastTranslation(const int heightView){
+void datastruct::restoreLastTranslation(const int heightView)
+{
     if(_last_translation == QPointF(0, 0))
         return;
 
@@ -261,6 +262,14 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
 
     if(likely(heightView > 0)){
         this->triggerVisibility(heightView);
+    }else{
+        cint range = this->get_range_visible();
+        int first = this->getFirstPageVisible();
+
+        if(unlikely(first) < 0)
+            first = 0;
+
+        this->setVisible(first, first + range);
     }
 
     W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
@@ -345,16 +354,11 @@ void datastruct::removePage(uint page)
     }
 }
 
-void datastruct::moveToPage(int page)
+void datastruct::moveToPage(int newPage)
 {
-    int currentPage = this->getFirstPageVisible();
-    int i, len;
-    const auto current_y = this->getPointFirstPageNoZoom().y();
-    const auto y = at(page).minHeight();
-    const int last = this->getLastPageVisible();
-    QPointF translation = QPointF(0., (y + current_y));
-    datastruct::inverso(translation);
-    this->scala_all(translation  * _zoom);
+    const int range = this->get_range_visible();
+
+    this->setPointFirstPage(QPointF(0., - at(newPage).minHeight()));
 
     W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
     W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
@@ -362,15 +366,11 @@ void datastruct::moveToPage(int page)
     if(debug_enable()){
         const auto not_used point = this->adjustPoint(QPointF(0., 0.));
         const auto not_used index = this->whichPage(point);
-        W_ASSERT(index == page);
+        qDebug() << newPage << index << this->getPointFirstPage() << get_range_visible();
+        W_ASSERT(index == newPage);
     }
 
-    int currentPageNew  = page;
-    int lastNew         = currentPageNew + ( last - currentPage );
-    len = lengthPage();
-    for(i = 0; i < len; i++){
-        at_mod(i).setVisible(i >= currentPageNew && i <= lastNew);
-    }
+    this->setVisible(newPage, newPage + range);
 }
 
 int datastruct::getLastPageVisible() const

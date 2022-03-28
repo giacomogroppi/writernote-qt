@@ -21,13 +21,13 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
 {
     constexpr bool debCircle = false;
     point_s point;
-
     stroke_complex_circle *data = (stroke_complex_circle *)stroke._complex;
+    const auto press = data->_press;
+    double y;
+
     point._y = data->_y;
     point = page::at_translation(point, page);
-    const auto y = point.y();
-
-    const auto press = data->_press;
+    y = point.y();
 
     set_press(pen, press, prop, is_rubber);
     painter.setPen(pen);

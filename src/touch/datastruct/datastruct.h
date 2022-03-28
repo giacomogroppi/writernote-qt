@@ -165,10 +165,13 @@ public:
 
     int getFirstPageVisible() const;
 
+    void setVisible(int from, int to);
     double currentWidth() const;
     void moveToPage(int page);
     int getLastPageVisible() const;
     void newViewAudio(int newTime);
+
+    int get_range_visible() const;
 
     [[nodiscard]] static bool isOkZoom(const double newPossibleZoom);
     static void copy(const datastruct &src, datastruct &dest);
@@ -186,9 +189,8 @@ public:
 
 inline void datastruct::triggerVisibility(cdouble viewSize)
 {
-    int from, to, i;
+    int from, to;
     cint len = lengthPage();
-    page *page;
     QPointF _init(0, 0);
     QPointF _end(0, viewSize - 0.1);
 
@@ -212,11 +214,7 @@ inline void datastruct::triggerVisibility(cdouble viewSize)
     W_ASSERT(from <= to);
     W_ASSERT(to < len);
 
-    for(i = 0; i < len; i++){
-        page = &at_mod(i);
-
-        page->setVisible(i >= from && i <= to);
-    }
+    this->setVisible(from, to);
 }
 
 inline double datastruct::biggerx() const noexcept
@@ -353,6 +351,28 @@ inline double datastruct::currentWidth() const
     return biggerx();
 }
 
+/*
+ * Return the number of page visible
+*/
+inline int datastruct::get_range_visible() const
+{
+    int i, len, count;
+
+    len = this->lengthPage();
+    i = this->getFirstPageVisible();
+    count = 0;
+
+    for(; i < len; i++){
+        if(unlikely(!at(i).isVisible()))
+            break;
+
+        count ++;
+    }
+
+    return count;
+
+}
+
 force_inline bool datastruct::isOkTranslate(const QPointF &point, cbool isZoom) const
 {
     const auto x = _pointFirstPage.x();
@@ -447,9 +467,9 @@ inline int datastruct::whichPage(const QPointF &point) const
     i = diff(point.y() / heigth);
 
     if(unlikely(i >= len)){
-        WDebug(true, __func__ << "set to -1");
+        WDebug(debug_which, __func__ << "set to -1");
         i = -1;
-        WDebug(true, __func__ << "set to -1" << qstr("i: %1").arg(i));
+        WDebug(debug_which, __func__ << "set to -1" << qstr("i: %1").arg(i));
     }
 
     if(debug_enable()){
@@ -598,6 +618,20 @@ constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &poi
 force_inline bool datastruct::isempty() const
 {
     return _page.isEmpty();
+}
+
+force_inline void datastruct::setVisible(int from, int to)
+{
+    int i, len;
+    len = this->lengthPage();
+
+    W_ASSERT(from <= to);
+
+    for(i = 0; i < len; i++){
+        at_mod(i).setVisible(i >= from && i <= to);
+    }
+
+    this->pageVisible = -1;
 }
 
 #endif // DATASTRUCT_H

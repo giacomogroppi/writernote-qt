@@ -36,7 +36,8 @@ topdf::~topdf()
     WDelete(data);
 }
 
-static inline void newpage(Document *data, const double tmp){
+static inline void newpage(Document *data, const double tmp)
+{
     data->datatouch->scala_all(QPointF(0, -tmp), INT_MAX);
 }
 
