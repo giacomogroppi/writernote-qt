@@ -16,8 +16,6 @@ static force_inline QPointF PointMiddle(const QPointF &first, const QPointF &sec
 
 extern bool isZooming;
 
-#define ISDEFINE_RIGHT(x) x[1].set
-#define ISDEFINE_LEFT(x) x[0].set
 #define ISDEFINE(x) ((x[1].set)&&(x[0].set))
 #define RIDEFINE(x) x[0].set = x[1].set = false;
 
@@ -94,7 +92,7 @@ ridefine:
             continue;
         }
 
-        if(distance(lastpointzoom[0].point, lastpointzoom[1].point) < 0.)
+        if(distance(lastpointzoom[0].point, lastpointzoom[1].point) < 200.)
         {
             goto ridefine;
         }
