@@ -17,22 +17,35 @@ force_inline void set_press(QPen &pen, const pressure_t press, const double prop
     }
 }
 
-force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
+force_inline void stroke_drawer::draw_circle(
+        QPainter    &painter,  const stroke    &stroke,
+        cint        page,      QPen            &pen,
+        cbool       is_rubber, cdouble         _prop)
 {
     constexpr bool debCircle = false;
+    constexpr auto func = __func__;
     point_s point;
-    stroke_complex_circle *data = (stroke_complex_circle *)stroke._complex;
+    QPointF tmp;
+    auto *data = (stroke_complex_circle *)stroke._complex;
     const auto press = data->_press;
-    double y;
+    double y, x;
+    cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
 
+    point._x = data->_x;
     point._y = data->_y;
+
     point = page::at_translation(point, page);
-    y = point.y();
+    tmp = point.toQPointF(prop);
+
+    WDebug(debCircle, func << "prop: " << prop);
+
+    y = tmp.y();
+    x = tmp.x();
 
     set_press(pen, press, prop, is_rubber);
     painter.setPen(pen);
 
-    painter.drawEllipse(QPointF(data->_x, y) * prop, data->_r * prop, data->_r * prop);
+    painter.drawEllipse(QPointF(x, y), data->_r * prop, data->_r * prop);
 
     WDebug(debCircle, __FUNCTION__ << data->_x << data->_y << data->_r);
 }
@@ -40,9 +53,9 @@ force_inline void stroke_drawer::draw_circle(QPainter &painter, const stroke &st
 force_inline void stroke_drawer::draw_stroke_normal(
         QPainter        &_painterPublic,   const stroke    &stroke,
         cint            page,       QPen            &pen,
-        cbool           is_rubber,  cdouble         prop)
+        cbool           is_rubber,  cdouble         _prop)
 {
-    constexpr not_used bool debug_draw_stroke = true;
+    constexpr not_used bool debug_draw_stroke = false;
 
     W_ASSERT(page >= 0);
     W_ASSERT(_painterPublic.isActive());
@@ -55,7 +68,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
     cint lenPoint = stroke.length();
     const QColor col = pen.color();
     cbool isHigh = col.alpha() < 255;
-
+    cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
     cbool isPrivatePainter = isHigh;
 
     if(isPrivatePainter){
@@ -67,15 +80,15 @@ force_inline void stroke_drawer::draw_stroke_normal(
         painter = &_painterPublic;
     }
 
-    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
+    lastPoint = page::at_translation(stroke.at(0), page).toQPointF(prop);
 
     for(counterPoint = 1; counterPoint < lenPoint; counterPoint ++){
         const point_s point = page::at_translation(stroke.at(counterPoint), page);
         const pressure_t pressure = stroke.getPressure(counterPoint);
 
-        pointDraw = point.toQPointF(prop == PROP_RESOLUTION ? prop : 1.);
+        pointDraw = point.toQPointF(prop);
 
-        set_press(pen, pressure, prop, is_rubber);
+        set_press(pen, pressure, _prop, is_rubber);
         painter->setPen(pen);
 
         if(unlikely(is_rubber)){
@@ -133,14 +146,15 @@ force_inline void stroke_drawer::draw_line(
         cint            page,
         QPen            &pen,
         cbool           is_rubber,
-        cdouble         prop)
+        cdouble         _prop)
 {
     pen.setColor(stroke.getColor());
     painter.setPen(pen);
     stroke_complex_line * data = (stroke_complex_line *)stroke._complex;
     const auto press = data->press;
+    cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
 
-    set_press(pen, press, prop, is_rubber);
+    set_press(pen, press, _prop, is_rubber);
 
     const auto _topLeft     = page::at_translation(point_s(data->topLeft), page).toQPointF(prop);
     const auto _bottomRight = page::at_translation(point_s(data->bottomRight), page).toQPointF(prop);
