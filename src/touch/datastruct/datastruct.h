@@ -274,7 +274,9 @@ force_inline const page &datastruct::lastPage() const
 inline void datastruct::newPage(const n_style style)
 {
     _page.append(page(lengthPage() + 1, style));
-    triggerVisibility(page::getHeight() * lengthPage());
+
+    this->lastPage().setVisible(unlikely(lengthPage() <= 2));
+    //triggerVisibility(page::getHeight() * lengthPage());
 }
 
 inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int base) const
