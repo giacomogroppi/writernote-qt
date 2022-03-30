@@ -116,12 +116,14 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
         }
     }
     else if(diff != 0){
-        diff = -diff;
-        for(i = 0; i < diff; i++)
+        i = - diff - 1;
+
+        for(; i >= 0; i--){
             dest.removePage(i);
+        }
     }
 
-    for(i=0; i<len; ++i){
+    for(i = 0; i < len; i++){
         page::copy(src._page.at(i), dest._page.operator[](i));
     }
 
@@ -344,12 +346,18 @@ void datastruct::removePointIndex(
 
 }
 
-void datastruct::removePage(uint page)
+void datastruct::removePage(const int page)
 {
-    uint i;
+    int i, len;
+    len = this->lengthPage();
+
+    W_ASSERT(page >= 0 && page < len);
+
     this->_page.removeAt(page);
 
-    for(i = 0; i < page; i++){
+    len --;
+
+    for(i = page; i < len; i++){
         _page.operator[](i)._count = i + 1;
     }
 }

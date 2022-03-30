@@ -143,7 +143,7 @@ public:
     double biggery() const noexcept;
 
     void decreaseAlfa(const QVector<int> &pos, int page);
-    void removePage(const uint page);
+    void removePage(const int page);
 
     __fast const page &     at(const uint page) const;
     __fast page &           at_mod(cint page);
