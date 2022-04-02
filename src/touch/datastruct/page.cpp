@@ -520,7 +520,7 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
     if(datastruct::isinside(topLeft1, bottomRight1, point)) \
         return true;
 
-static Q_ALWAYS_INLINE int __is_inside_square(
+static force_inline int __is_inside_square(
         const QRectF    &rect1,
         const QRectF    &rect2)
 {
@@ -536,10 +536,12 @@ static Q_ALWAYS_INLINE int __is_inside_square(
     return false;
 }
 
-static Q_ALWAYS_INLINE int is_inside_squade(
+static force_inline int is_inside_squade(
         const QRectF    &rect1,
         const QRectF    &rect2)
 {
+    // testing
+    return rect1.intersects(rect2);
     return __is_inside_square(rect1, rect2) || __is_inside_square(rect2, rect1);
 }
 
