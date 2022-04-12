@@ -11,14 +11,13 @@ class page_index_cache {
 private:
     struct page_index_internal{
         qint32  _index;
-        float   _y;
+        float   _yMin;
     };
-
-    static_assert(sizeof(page_index_internal) == 8);
 
     static constexpr int null_val = -1;
 
-    int find_without_cache(cdouble y) const;
+    void setAndAppend(qint32 _index, float _yMin) const;
+    int find_without_cache(cdouble yMin) const;
     bool is_all_null() const;
     const class page *_page;
     QVector<page_index_internal> _index = {};
@@ -27,7 +26,7 @@ public:
     ~page_index_cache() = default;
 
     void reset() const;
-    int index_stroke(cdouble Y, int &from, int &to) const;
+    int index_stroke(cdouble yMin, int &from, int &to) const;
     page_index_cache &operator=(const page_index_cache &other);
 };
 

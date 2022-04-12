@@ -468,4 +468,11 @@ force_inline bool is_order_complex(const QList<T> &list, int (*cmpFunctions) (co
     return false;
 }
 
+template<typename T>
+force_inline bool is_included(const T& val, const T& min, const T& max)
+{
+    W_ASSERT(min <= max);
+    return min <= val && max >= val;
+}
+
 #endif // COMMON_SCRIPT_H

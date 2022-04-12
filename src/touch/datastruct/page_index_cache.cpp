@@ -1,7 +1,7 @@
 #include "page_index_cache.h"
 #include "touch/datastruct/page.h"
 #include "iostream"
-#include "stdlib.h"
+#include "utils/common_script.h"
 
 // this module is not included in version 3.0.2h
 
@@ -14,20 +14,40 @@ int function_for_check(const stroke &element1, const stroke &element2)
     return (int)(rect1.topLeft().y() > rect2.topLeft().y());
 }
 
+void page_index_cache::setAndAppend(qint32 index, float yMin) const
+{
+    auto &list = (QVector<page_index_internal> &)this->_index;
+
+    const page_index_internal page = {
+            ._index = index,
+            ._yMin = (float) yMin,
+    };
+
+    list.append(page);
+}
+
 // this function assume that the list in page is order
-int page_index_cache::find_without_cache(cdouble y) const
+int page_index_cache::find_without_cache(cdouble yMin) const
 {
     int i, len;
 
     len = _page->lengthStroke();
+    i = 0;
+
+    W_ASSERT(this->_index.isEmpty());
     W_ASSERT(is_order_complex(_page->_stroke, function_for_check));
 
-    for(i = 0; i < len; i++){
+    for(; i < len;){
         const auto &stroke = _page->atStroke(i);
         const auto rect = stroke.getBiggerPointInStroke();
-        if(rect.topLeft().y() > y){
 
+        if(is_included(yMin, (double)rect.topLeft().y(), (double) rect.bottomRight().y())){
+            this->setAndAppend(i, (float)rect.bottomRight().y());
+
+            return i;
         }
+
+
     }
 
 }
