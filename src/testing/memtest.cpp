@@ -82,7 +82,7 @@ void WMalloc_private_new(cchar *function, cchar *file, unsigned long int line, c
     pthread_mutex_unlock(&_mem_mutex);
 }
 
-static void print_all_mem(void)
+static not_used void print_all_mem(void)
 {
     if(likely(_mem->isEmpty())){
         qDebug() << "No mem leak";
