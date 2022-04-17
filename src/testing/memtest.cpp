@@ -33,7 +33,7 @@ static void print_mem_info(const mem_info *mem)
         return;
     }
 
-    message = QString("Pointer %1 File: %2 Function %3 Line %4").arg(qstr::number((unsigned long)mem->pointer, 16),
+    message = QString("Pointer %1 File: %2 Function %3 Line %4").arg(qstr::number((quint64)mem->pointer, 16),
                                                                          mem->file,
                                                                          mem->function,
                                                                          qstr::number(mem->line));
@@ -126,7 +126,7 @@ out:
     pthread_mutex_unlock(&_mem_mutex);
 
     if(unlikely(!res)){
-        msg = QString("Mem free not record. Pointer %1 File %2 Function %3").arg(QString::number((unsigned long)mem), file, function);
+        msg = QString("Mem free not record. Pointer %1 File %2 Function %3").arg(QString::number((quint64)mem), file, function);
         std::abort();
     }
 }
