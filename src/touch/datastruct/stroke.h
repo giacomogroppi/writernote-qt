@@ -105,6 +105,7 @@ public:
     const struct metadata_stroke &getMetadata() const;
     bool constantPressure() const;
 
+    bool is_highlighter() const;
     uchar get_alfa() const;
     size_t getSizeInMemory() const;
     void decreasePrecision();
@@ -480,6 +481,11 @@ force_inline bool stroke::constantPressure() const
         this->updateFlagPressure();
 
     return isPressureVal();
+}
+
+force_inline bool stroke::is_highlighter() const
+{
+    return this->get_alfa() < 255;
 }
 
 force_inline uchar stroke::get_alfa() const

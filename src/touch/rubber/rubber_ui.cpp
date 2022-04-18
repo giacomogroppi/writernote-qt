@@ -7,6 +7,7 @@
 #include "core/wmultiplemutex.h"
 #include "core/wline.h"
 #include "mainwindow.h"
+#include "core/WMutex.h"
 
 struct RubberPrivateData{
     QVector<int>    *data_find;
@@ -16,10 +17,13 @@ struct RubberPrivateData{
     QVector<int>    *data_to_remove;
 
     int             al_find;
+    bool            highlighter_delete;
+    QRect           area;
 };
 
 static volatile int     __m_size_gomma;
 static pthread_mutex_t  single_mutex;
+static pthread_mutex_t  mutex_area;
 static thread_group_sem *thread_group;
 
 static void (*functionToCall)(DataPrivateMuThread *);
@@ -60,6 +64,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
+    pthread_mutex_init(&mutex_area, NULL);
     pthread_mutex_init(&single_mutex, NULL);
     thread_group = new thread_group_sem;
     thread_group->startLoop(idle_rubber);
@@ -72,6 +77,7 @@ rubber_ui::~rubber_ui()
     this->save_settings();
     delete thread_group;
 
+    pthread_mutex_destroy(&mutex_area);
     pthread_mutex_destroy(&single_mutex);
     delete ui;
 }
@@ -307,6 +313,18 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
             continue;
         }
 
+        if(unlikely(__stroke.is_highlighter())){
+            private_data->highlighter_delete = true;
+
+            const auto currentArea = __stroke.getBiggerPointInStroke();
+
+            pthread_mutex_lock(&mutex_area);
+
+            private_data->area = datastruct::get_bigger_rect(currentArea, private_data->area);
+
+            pthread_mutex_unlock(&mutex_area);
+        }
+
         index_selected.append(data->from);
 
     }
@@ -354,6 +372,8 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     */
     indexPage = _base;
     count = 0;
+    dataPrivate.highlighter_delete = false;
+    dataPrivate.area = QRect();
 
     if(unlikely(_base < 0)){
         this->_base = data->whichPage(lastPoint);
@@ -398,7 +418,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
         W_ASSERT(now >= 0);
     }
 
-    out1:
+out1:
 
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1
@@ -432,14 +452,17 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
     thread_group->postAndWait(thread_create);
 
-    if(!isTotal){
-        page & p = *dataPrivate.__page;
+    if(unlikely(dataPrivate.highlighter_delete)){
+        dataPrivate.__page->drawIfInside(-1, dataPrivate.area);
+    }
 
-        p.removeAt(*dataPrivate.data_to_remove);
+    if(!isTotal){
+        dataPrivate.__page->removeAt(*dataPrivate.data_to_remove);
 
         dataPrivate.__page->mergeList();
 
     }
+
 
 out2:
     if(!isTotal){

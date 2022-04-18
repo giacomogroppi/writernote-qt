@@ -267,6 +267,7 @@ SOURCES += \
     src/touch/datastruct/page_index_cache.cpp
 
 HEADERS += \
+    src/core/WMutex.h \
     src/touch/datastruct/page_file.h \
     src/touch/datastruct/stroke_complex_data.h \
     src/touch/datastruct/stroke_drawer.h \
