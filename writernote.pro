@@ -55,7 +55,7 @@ contains(DEFINES, SNAP){
 contains(DEFINES, VERSION_SNAPCRAFT){
     message("Version for snapcraft add. Version: $$VERSION_SNAPCRAFT")
 }
-DEFINES += VERSION_SNAPCRAFT="3.0.4h"
+
 ## for enable cloud instance [remove when compiling for release] [see https://github.com/giacomogroppi/writernote-qt/blob/master/help/compile-cloud.md]
 
 #DEFINES += "CLOUD"
