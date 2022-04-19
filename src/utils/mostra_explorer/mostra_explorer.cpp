@@ -7,6 +7,8 @@
 #include "utils/slash/slash.h"
 #include <QDesktopServices>
 #include "../path/pathfile.h"
+#include "utils/common_script.h"
+#include "utils/platform.h"
 
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__) || defined(SNAP)
 static int mostra(const QString &comando);
@@ -24,7 +26,7 @@ static int mostra(const QString &comando);
 
 void mostra_explorer(const QString &posizione)
 {
-#if defined(WIN32) || defined(WIN64) || defined(__OS2__)
+#if defined(WIN32) || defined(WIN64)
     QString tmp = pathFile::remove_file(posizione);
     tmp = APPLICATION_NAME + tmp;
     if(mostra(tmp)){
@@ -44,7 +46,13 @@ void mostra_explorer(const QString &posizione)
 
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__) || defined(SNAP)
 static int mostra(const QString &comando){
-    return system(comando.toUtf8().constData());
+    const auto res = system(comando.toUtf8().constData());
+
+    if(is_windows){
+        return res != 1;
+    }
+
+    return res;
 }
 #endif
 

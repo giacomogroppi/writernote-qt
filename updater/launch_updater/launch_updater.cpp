@@ -7,7 +7,10 @@ void launch_updater::launch()
 {
 #if defined(WIN64) || defined(WIN32)
     int res;
-    res = system("C:\\'Program Files (x86)'\\writernote\\updater.exe");
+    const char *command = "\"C:\\Program Files (x86)\\writernote\\updater.exe\"";
+    res = system(command);
+
+    //res = execl("C::\\'Program Files (x86)'\\writernote\\updater.exe", NULL);
 
     if(res){
         user_message("It was not possible to open the updater, if you want to update writernote, open the program called updater.exe");
