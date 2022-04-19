@@ -6,6 +6,11 @@
 
 audioplay::audioplay(QObject *parent) : QObject(parent)
 {
+    if(debug_enable()){
+        qDebug() << "Audio microphone set to 0 to prevent seg fault";
+        system("amixer set Capture nocap");
+    }
+
     this->player = new QMediaPlayer(this);
     this->parent = (MainWindow *)parent;
     Q_ASSERT(this->parent->objectName() == "MainWindow");
