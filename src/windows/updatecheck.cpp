@@ -15,6 +15,7 @@
 #include "utils/dialog_critic/dialog_critic.h"
 #include "mainwindow.h"
 #include "showmessageupdate.h"
+#include "utils/platform.h"
 
 #define POSNAME "name"
 
@@ -58,6 +59,7 @@ updatecheck::updatecheck(QAction *a):
     QObject(NULL)
 {
     action = a;
+
     this->start();
 }
 

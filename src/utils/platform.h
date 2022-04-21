@@ -1,6 +1,7 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
+#include "utils/common_script.h"
 
 #if defined(WIN64) || defined(WIN32)
 # define is_windows 1
@@ -26,7 +27,10 @@
 # define is_ios 0
 #endif
 
-
+force_inline bool is_mobile_static()
+{
+    return is_android || is_ios;
+}
 
 
 #endif // PLATFORM_H

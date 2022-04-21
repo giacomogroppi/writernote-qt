@@ -140,6 +140,8 @@ private slots:
     void on_actionNew_File_triggered();
     void closeEvent (QCloseEvent *event) override;
     bool event(QEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+
     void on_actionOpen_triggered();
 
     void on_actionListen_current_audio_triggered();

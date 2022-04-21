@@ -34,7 +34,7 @@ void ControllUiButton::loadSettings()
     setting.beginGroup(GROUPNAME_MODALITY);
     val = setting.value(KEY_MODALITY, (uint)Mode::Computer).toUInt();
 
-    this->mode = static_cast<Mode>(val);
+    this->_mode = static_cast<Mode>(val);
     setting.endGroup();
 
     this->initList();
@@ -42,7 +42,7 @@ void ControllUiButton::loadSettings()
 
 void ControllUiButton::saveSettings()
 {
-    int val = (uint)mode;
+    int val = (uint)_mode;
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_MODALITY);
     setting.setValue(KEY_MODALITY, val);
@@ -98,7 +98,7 @@ void ControllUiButton::update()
     constexpr auto colorOver = "#e0e0e0";
     const auto color = parent->ui->buttonChooseColor->palette().color(parent->backgroundRole());
 #define vis_private setHidden
-    const bool tablet = this->mode == Mode::Tablet;
+    const bool tablet = this->_mode == Mode::Tablet;
 
     for(i = 0; i < len_button; i++){
         this->m_button.at(i)->setVisible(tablet);

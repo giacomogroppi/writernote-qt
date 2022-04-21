@@ -1,6 +1,7 @@
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
 #include "controlluibutton.h"
+#include "core/core.h"
 
 void MainWindow::on_buttonRecentFile_clicked()
 {
@@ -9,11 +10,13 @@ void MainWindow::on_buttonRecentFile_clicked()
 
 void MainWindow::on_actionChange_visual_triggered()
 {
+    core::set_mobile_view(true);
     this->m_controllUi->change();
 }
 
 void MainWindow::on_buttonChangeVisual_clicked()
 {
+    core::set_mobile_view(false);
     this->m_controllUi->change();
 }
 

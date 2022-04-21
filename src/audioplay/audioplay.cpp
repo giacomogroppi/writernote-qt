@@ -3,10 +3,11 @@
 #include "testing/memtest.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/platform.h"
 
 audioplay::audioplay(QObject *parent) : QObject(parent)
 {
-    if(debug_enable()){
+    if(debug_enable() && is_mobile_static()){
         qDebug() << "Audio microphone set to 0 to prevent seg fault";
         system("amixer set Capture nocap");
     }

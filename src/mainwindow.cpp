@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
-#include <QListWidgetItem>
 #include "datawrite/qfilechoose.h"
 #include "dataread/xmlstruct.h"
 #include "utils/dialog_critic/dialog_critic.h"
@@ -11,11 +9,9 @@
 #include "windows/updatecheck.h"
 #include "audioplay/aggiornotastiriascolto.h"
 #include "utils/setting_define.h"
-#include <QSettings>
 #include "utils/settings/setting_load.h"
 #include "windows/mostra_finestra_i.h"
 #include "utils/areyousure/areyousure.h"
-#include <QTimer>
 #include "restore_file/ui/setting_restore_ui.h"
 #include "touch/scrollKinetic/ui_scroll/scroll.h"
 #include "utils/common_def.h"
@@ -29,6 +25,13 @@
 #include "touch/multi_thread_data.h"
 #include "touch/laser/laser.h"
 #include "utils/choosepage.h"
+#include "ui/manageMobile.h"
+#include "core/core.h"
+#include "utils/utils.h"
+#include <QMessageBox>
+#include <QListWidgetItem>
+#include <QSettings>
+#include <QTimer>
 #include <QString>
 #include <QRect>
 
@@ -151,6 +154,8 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->setSizeButton();
     contrUi();
 
+    mobile::make_ui(this);
+
     _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
 }
 
@@ -202,6 +207,28 @@ bool MainWindow::event(QEvent *event)
     }
 
     return QWidget::event(event);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    constexpr not_used bool debugResizeMainWindow = true;
+    constexpr auto minSizeX = 200;
+    QSize sizeScreen;
+
+    if(!core::is_mobile_view())
+        return;
+
+    if(is_mobile_static()){
+        sizeScreen = utils::get_size_screen();
+    }else{
+        sizeScreen = event->size();
+    }
+
+    if(sizeScreen.width() < minSizeX){
+
+    }
+
+    WDebug(debugResizeMainWindow, "MainWindow::resizeEvent size:" << sizeScreen);
 }
 
 void MainWindow::update_touch_or_pen()

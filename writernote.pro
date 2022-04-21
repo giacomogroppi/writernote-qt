@@ -87,6 +87,7 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/core/core.cpp \
     src/testing/TestingComponent.cpp \
     src/touch/datastruct/page_file.cpp \
     src/touch/datastruct/stroke_complex_data.cpp \
@@ -172,6 +173,7 @@ SOURCES += \
     src/touch/zoom/ctrlZoom.cpp \
     src/ui/buttonTablet.cpp \
     src/ui/controlluibutton.cpp \
+    src/ui/manageMobile.cpp \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audiosetting/audioqualityoption.cpp \
@@ -268,6 +270,7 @@ SOURCES += \
 
 HEADERS += \
     src/core/WMutex.h \
+    src/core/core.h \
     src/touch/datastruct/page_file.h \
     src/touch/datastruct/stroke_complex_data.h \
     src/touch/datastruct/stroke_drawer.h \
@@ -321,6 +324,7 @@ HEADERS += \
     src/touch/text/text_ui/text_ui.h \
     src/touch/text/text_widgets/text_widgets.h \
     src/ui/controlluibutton.h \
+    src/ui/manageMobile.h \
     src/utils/aboutQt/aboutqt.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \
@@ -385,6 +389,7 @@ HEADERS += \
     src/utils/threadcount.h \
     src/utils/time/current_time.h \
     src/utils/time/waitTime.h \
+    src/utils/utils.h \
     src/videocompress/compressivideo.h \
     src/videocompress/enable_videocompress.h \
     src/videocompress/videocompress_ui.h \
