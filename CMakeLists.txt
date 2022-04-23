@@ -37,6 +37,7 @@ SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
 ADD_EXECUTABLE(writernote 
+    src/core/core.cpp
     src/ui/manageMobile.cpp
     src/touch/object_finder/model/model_ctrl.cpp
     src/touch/datastruct/stroke_drawer.cpp
