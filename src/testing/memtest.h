@@ -25,6 +25,9 @@ void WEnd_application(void);
         free(mem); \
     }while(0);
 
+
+// like this: WNew(m_img, fromimage, (this));
+
 # define WNew(pointer, type, arg) \
     do{ \
         pointer = new type arg; \

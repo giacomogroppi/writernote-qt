@@ -88,6 +88,9 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 
 SOURCES += \
     src/core/core.cpp \
+    src/preview_page_widget/preview_page_container.cpp \
+    src/preview_page_widget/preview_page_item.cpp \
+    src/preview_page_widget/preview_page_widget.cpp \
     src/testing/TestingComponent.cpp \
     src/touch/datastruct/page_file.cpp \
     src/touch/datastruct/stroke_complex_data.cpp \
@@ -271,6 +274,9 @@ SOURCES += \
 HEADERS += \
     src/core/WMutex.h \
     src/core/core.h \
+    src/preview_page_widget/preview_page_container.h \
+    src/preview_page_widget/preview_page_item.h \
+    src/preview_page_widget/preview_page_widget.h \
     src/touch/datastruct/page_file.h \
     src/touch/datastruct/stroke_complex_data.h \
     src/touch/datastruct/stroke_drawer.h \
@@ -408,6 +414,9 @@ FORMS += \
     src/last_open/widget_parent/widget_parent.ui \
     src/log/log_ui/log_ui.ui \
     src/mainwindow.ui \
+    src/preview_page_widget/preview_page_container.ui \
+    src/preview_page_widget/preview_page_item.ui \
+    src/preview_page_widget/preview_page_widget.ui \
     src/restore_file/ui/setting_restore_ui.ui \
     src/restore_file/ui_restore/restore.ui \
     src/sheet/dialog_sheet.ui \
