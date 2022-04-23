@@ -8,6 +8,7 @@ class savecopybook
 {
 private:
     MainWindow *parent;
+
 public:
     savecopybook(MainWindow *);
     bool check_permission();
