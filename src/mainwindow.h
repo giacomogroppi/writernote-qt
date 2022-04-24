@@ -115,10 +115,12 @@ public:
     class audioplay *m_audioplayer;
     class laser *m_laser;
     class ChoosePage *_choose_page;
+    class preview_page_widget *_preview_widget;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ShareUtils *m_share_file;
 #endif
 
+    const Document *getCurrentDoc() const;
     void updatePageCount(int);
     setting_restore_ui *m_setting;
 
@@ -249,4 +251,10 @@ inline void MainWindow::setFullScreen()
         this->setWindowState(Qt::WindowFullScreen);
     }
 }
+
+force_inline const Document * MainWindow::getCurrentDoc() const
+{
+    return _canvas->data;
+}
+
 #endif // MAINWINDOW_H

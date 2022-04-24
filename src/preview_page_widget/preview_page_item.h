@@ -6,6 +6,8 @@
 #include "utils/platform.h"
 #include "core/core.h"
 #include "testing/memtest.h"
+#include <QPainter>
+#include <QPixmap>
 
 namespace Ui {
 class preview_page_item;
@@ -18,6 +20,8 @@ class preview_page_item : public QWidget
 public:
     explicit preview_page_item(QWidget *parent);
     ~preview_page_item();
+
+    void draw(const class page &page);
 
 private:
     Ui::preview_page_item *ui;

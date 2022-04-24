@@ -220,10 +220,26 @@ inline void order_multiple(QList<QVector<T>> &list)
 template <typename T>
 Q_ALWAYS_INLINE int is_present_in_list_order(const QList<T> &list, const T& element)
 {
-#if defined(DEBUGINFO)
     //the list must be sorted
-    Q_ASSERT(is_order(list));
-#endif
+    W_ASSERT(is_order(list));
+
+    int i, len = list.length();
+    for(i = 0; i < len; i++){
+        const T& tmp = list.at(i);
+        if(tmp == element)
+            return i;
+
+        if(tmp > element)
+            return -1;
+    }
+
+    return -1;
+}
+
+template <typename T>
+Q_ALWAYS_INLINE int is_present_in_list_order(const QVector<T> &list, const T& element)
+{
+    W_ASSERT(is_order(list));
 
     int i, len = list.length();
     for(i = 0; i < len; i++){
@@ -473,6 +489,23 @@ force_inline bool is_included(const T& val, const T& min, const T& max)
 {
     W_ASSERT(min <= max);
     return min <= val && max >= val;
+}
+
+template<typename T>
+force_inline void append_order(QVector<T> & list, const T& element)
+{
+    int i, len;
+
+    len = list.length();
+
+    for(i = 0; i < len; i++){
+        if(unlikely(list.at(i) > element)){
+            list.insert(i, element);
+            return;
+        }
+    }
+
+    list.append(element);
 }
 
 #endif // COMMON_SCRIPT_H

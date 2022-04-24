@@ -17,9 +17,14 @@ public:
     explicit preview_page_container(QWidget *parent, class MainWindow *mainWindow);
     ~preview_page_container();
 
+    void updatePage();
+    void draw(const QVector<int> & pos);
+
 private:
     QVector<preview_page_item *> _item_not_show;
     QVector<preview_page_item *> _item_show;
+    MainWindow *_main;
+
     Ui::preview_page_container *ui;
 };
 

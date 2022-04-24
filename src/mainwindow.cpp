@@ -28,6 +28,7 @@
 #include "ui/manageMobile.h"
 #include "core/core.h"
 #include "utils/utils.h"
+#include "preview_page_widget/preview_page_widget.h"
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include <QSettings>
@@ -85,6 +86,9 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_audio_recorder      = new class AudioRecord(this);
     this->m_laser               = new class laser(_canvas);
     this->_choose_page          = new class ChoosePage(this);
+
+    this->_preview_widget       = new class preview_page_widget(this, this);
+    this->ui->layouteditor->insertWidget(1, _preview_widget);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);

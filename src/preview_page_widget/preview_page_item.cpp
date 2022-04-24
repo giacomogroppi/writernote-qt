@@ -12,3 +12,8 @@ preview_page_item::~preview_page_item()
 {
     delete ui;
 }
+
+void preview_page_item::draw(const page &page)
+{
+
+}
