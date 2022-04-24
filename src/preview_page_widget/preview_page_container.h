@@ -19,8 +19,14 @@ public:
 
     void updatePage();
     void draw(const QVector<int> & pos);
+    void pageMove();
+    void newPage();
+    void changeDocument();
 
 private:
+    void appendNecessary();
+    void drawAll();
+    void draw(int index);
     QVector<preview_page_item *> _item_not_show;
     QVector<preview_page_item *> _item_show;
     MainWindow *_main;

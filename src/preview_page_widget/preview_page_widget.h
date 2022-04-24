@@ -22,7 +22,8 @@ public:
 
     void updateList();
     void pageChange();
-
+    void newPage();
+    void changeDocument();
     void mod(int page);
 
 private slots:

@@ -4,7 +4,7 @@
 #include <QPolygonF>
 #include <QPainterPath>
 #include "touch/square/square.h"
-
+#include "preview_page_widget/preview_page_widget.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
@@ -40,6 +40,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event){
 
     if(unlikely( needToCreateNewPage || data->isEmpty())){
         this->data->datatouch->newPage(this->_sheet->WhatIsSelected());
+        this->_parent->_preview_widget->newPage();
         this->updatePageCount();
     }
 

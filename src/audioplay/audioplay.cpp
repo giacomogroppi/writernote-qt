@@ -7,9 +7,9 @@
 
 audioplay::audioplay(QObject *parent) : QObject(parent)
 {
-    if(debug_enable() && !is_mobile_static()){
-        qDebug() << "Audio microphone set to 0 to prevent seg fault";
-        system("amixer set Capture nocap");
+    if(disableAudioForDebug){
+        qDebug() << "Audio disable for debug";
+        return;
     }
 
     this->player = new QMediaPlayer(this);

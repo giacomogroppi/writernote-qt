@@ -24,7 +24,11 @@ public:
     void draw(const class page &page);
 
 private:
+    const class page *_page;
     Ui::preview_page_item *ui;
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // PREVIEW_PAGE_ITEM_H

@@ -45,5 +45,15 @@ void preview_page_widget::mod(int page)
 
 void preview_page_widget::pageChange()
 {
+    this->_container->pageMove();
+}
 
+void preview_page_widget::newPage()
+{
+    this->_container->newPage();
+}
+
+void preview_page_widget::changeDocument()
+{
+    this->_container->changeDocument();
 }

@@ -7,6 +7,13 @@
 #include <QBuffer>
 #include "utils/common_script.h"
 
+constexpr bool disableAudioForDebug =
+#if defined(DEBUGINFO) && defined(is_linux)
+        true;
+#else
+        false;
+#endif
+
 constexpr bool debugAudioPlay = true;
 
 class audioplay : public QObject
@@ -51,31 +58,46 @@ private:
 
 inline bool audioplay::isPlay() const
 {
+    if constexpr(disableAudioForDebug)
+        return false;
     return this->player->state() == QMediaPlayer::PlayingState;
 }
 
 inline bool audioplay::isPause() const
 {
+    if constexpr(disableAudioForDebug)
+            return false;
+
     return this->player->state() == QMediaPlayer::PausedState;
 }
 
 inline bool audioplay::isStop() const
 {
+    if constexpr(disableAudioForDebug)
+            return true;
+
     return this->player->state() == QMediaPlayer::StoppedState;
 }
 
 inline bool audioplay::isEndMedia() const
 {
+    if constexpr(disableAudioForDebug)
+            return false;
+
     return this->player->mediaStatus() == QMediaPlayer::EndOfMedia;
 }
 
 inline void audioplay::setVolume(const int val)
 {
+    W_ASSERT(disableAudioForDebug == false);
+
     this->player->setVolume(val);
 }
 
 inline void audioplay::setPositionSecond(const qint64 pos)
 {
+    W_ASSERT(disableAudioForDebug == false);
+
     this->setPositionMicro(pos*1000);
 }
 
@@ -86,21 +108,33 @@ inline void audioplay::setPositionMicro(const qint64 pos)
 
 inline qint64 audioplay::currentDurationMicro() const
 {
+    if(disableAudioForDebug)
+        return 0;
+
     return this->player->duration();
 }
 
 inline qint64 audioplay::currentDurationSecond() const
 {
+    if(disableAudioForDebug)
+        return 0;
+
     return currentDurationMicro() / 1000;
 }
 
 inline qint64 audioplay::getPositionSecond() const
 {
+    if(disableAudioForDebug)
+        return 0;
+
     return this->getPositionMicro() / 1000;
 }
 
 inline qint64 audioplay::getPositionMicro() const
 {
+    if(disableAudioForDebug)
+        return 0;
+
     if(isPlay())
         return this->player->position();
     return -1*1000;
@@ -108,26 +142,36 @@ inline qint64 audioplay::getPositionMicro() const
 
 inline void audioplay::play()
 {
+    W_ASSERT(disableAudioForDebug == false);
+
     this->player->play();
 }
 
 inline void audioplay::pause()
 {
+    W_ASSERT(disableAudioForDebug == false);
+
     this->player->pause();
 }
 
 inline void audioplay::stop()
 {
+    W_ASSERT(disableAudioForDebug == false);
+
     this->player->stop();
 }
 
 inline void audioplay::setMedia(QBuffer *array)
 {
+    W_ASSERT(disableAudioForDebug == false);
+
     this->player->setMedia(QMediaContent(), array);
 }
 
 inline void audioplay::setMedia(const QString &path)
 {
+    W_ASSERT(disableAudioForDebug == false);
+
     this->player->setMedia(QUrl::fromLocalFile(path));
 }
 
