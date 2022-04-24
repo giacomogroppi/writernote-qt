@@ -3,7 +3,8 @@
 #include "ui_dialog_sheet.h"
 #include <QPainter>
 
-void dialog_sheet::draw(){
+void dialog_sheet::draw()
+{
     short int height, width, spessore_x, spessore_y;
     QPalette pal;
     int i;
@@ -66,6 +67,7 @@ void dialog_sheet::draw(){
 }
 
 
-void dialog_sheet::resizeEvent(QResizeEvent *){
+void dialog_sheet::resizeEvent(QResizeEvent *)
+{
     draw();
 }

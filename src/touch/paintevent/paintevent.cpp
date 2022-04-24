@@ -8,7 +8,8 @@
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
-void TabletCanvas::paintEvent(QPaintEvent *event){
+void TabletCanvas::paintEvent(QPaintEvent *event)
+{
     QPainter painter;
     QRect pixmapPortion;
 

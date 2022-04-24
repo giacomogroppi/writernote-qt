@@ -16,7 +16,7 @@ void MainWindow::updatePageCount(int pageCount)
 
     text = qstr("Page: %1 of %2").arg(pageCount).arg(lenPage);
 
-    this->_preview_widget->pageChange();
+    this->_preview_widget->pageMove();
 
     if(__page == pageCount && lenPage == __max)
         return;

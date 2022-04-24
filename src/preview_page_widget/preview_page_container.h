@@ -31,7 +31,20 @@ private:
     QVector<preview_page_item *> _item_show;
     MainWindow *_main;
 
+    preview_page_item *at_not_show(int i);
+    preview_page_item *at_show(int i);
+
     Ui::preview_page_container *ui;
 };
+
+force_inline preview_page_item * preview_page_container::at_show(int i)
+{
+    return _item_show[i];
+}
+
+force_inline preview_page_item * preview_page_container::at_not_show(int i)
+{
+    return _item_not_show[i];
+}
 
 #endif // PREVIEW_PAGE_CONTAINER_H

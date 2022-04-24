@@ -1,4 +1,5 @@
 #include "preview_page_container.h"
+#include "qlabel.h"
 #include "ui_preview_page_container.h"
 #include "mainwindow.h"
 
@@ -12,12 +13,18 @@ preview_page_container::preview_page_container(QWidget *parent, MainWindow *main
 
 preview_page_container::~preview_page_container()
 {
-    while(_item_not_show.length()){
-        WFree(_item_not_show.takeAt(0));
+    preview_page_item *item;
+
+    while(_item_not_show.length() > 0){
+        item = _item_not_show.takeAt(0);
+        WDelete(item);
     }
 
-    while(_item_show.length()){
-        WFree(_item_show.takeAt(0));
+    while(_item_show.length() > 0){
+        item = _item_show.takeAt(0);
+
+        this->layout()->removeWidget(item);
+        WDelete(item);
     }
 
     delete ui;
@@ -39,9 +46,13 @@ void preview_page_container::draw(const QVector<int> &pos)
 {
     int i = pos.length();
 
-    for(i--; i >= 0; i++){
-        this->draw( pos.at(i) );
+    for(i--; i >= 0; i--){
+        const auto index = pos.at(i);
+        this->draw(index);
+        this->at_show(index)->setVisible(true);
     }
+
+    WDebug(false, "preview_page_container::draw" << this->layout()->count() << at_show(0)->isVisible());
 }
 
 void preview_page_container::drawAll()
@@ -54,8 +65,13 @@ void preview_page_container::drawAll()
 
 void preview_page_container::pageMove()
 {
-    const auto *data = _main->getCurrentDoc()->datatouch;
-    int index = data->getFirstPageVisible();
+    const datastruct *data = _main->getCurrentDoc()->datatouch;
+    int index;
+
+    if(unlikely(data->isempty()))
+        return;
+
+    index = data->getFirstPageVisible();
     if(!this->_item_show.at(index)->isVisible()){
         // do translation
     }
@@ -64,12 +80,19 @@ void preview_page_container::pageMove()
 
 void preview_page_container::newPage()
 {
+    preview_page_item *item;
+
     if(!this->_item_not_show.isEmpty()){
-        this->_item_show.append(
-                    _item_not_show.takeAt(0)
-                    );
+        item = _item_not_show.takeAt(0);
+        this->_item_show.append( item );
+    }else{
+        WNew(item, preview_page_item, (NULL));
+
+        this->_item_show.append( item );
     }
 
+    this->layout()->addWidget(item);
+    item->setVisible(true);
     this->drawAll();
     this->pageMove();
 }

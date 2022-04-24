@@ -8,6 +8,7 @@
 #include "touch/laser/laser.h"
 #include "utils/common_script.h"
 #include "touch/object_finder/object_finder.h"
+#include "preview_page_widget/preview_page_widget.h"
 
 #define MAXPOINT 20
 #define CHECK_FLAG(var, type) var == TabletCanvas::e_method::type
@@ -62,6 +63,7 @@ static void AppendAll(
     }else{
         pageMod = doc.datatouch->appendStroke(strokeToAppend);
 
+        canvas->_parent->_preview_widget->mod(pageMod);
         doc.datatouch->at_mod(pageMod).triggerRenderImage(time, false);
     }
 

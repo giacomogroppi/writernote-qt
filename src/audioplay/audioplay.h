@@ -8,7 +8,7 @@
 #include "utils/common_script.h"
 
 constexpr bool disableAudioForDebug =
-#if defined(DEBUGINFO) && defined(is_linux)
+#if defined(DEBUGINFO) && defined(linux)
         true;
 #else
         false;

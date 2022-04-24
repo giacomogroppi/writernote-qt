@@ -21,7 +21,7 @@ public:
     void Show();
 
     void updateList();
-    void pageChange();
+    void pageMove();
     void newPage();
     void changeDocument();
     void mod(int page);
