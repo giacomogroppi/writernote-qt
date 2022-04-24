@@ -40,7 +40,6 @@ ADD_EXECUTABLE(writernote
     src/preview_page_widget/preview_page_container.cpp
     src/preview_page_widget/preview_page_widget.cpp
     src/preview_page_widget/preview_page_item.cpp
-
     src/core/core.cpp
     src/ui/manageMobile.cpp
     src/touch/object_finder/model/model_ctrl.cpp
