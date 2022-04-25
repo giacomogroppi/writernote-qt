@@ -134,6 +134,8 @@ public:
 
     void triggerRenderImage(int m_pos_ris, bool all);
 
+    int getCount() const;
+
     void reset();
     void allocateStroke(int numAllocation);
 
@@ -210,6 +212,11 @@ force_inline void page::changeCounter(const int newPage)
 force_inline void page::move(const uint from, const uint to)
 {
     this->_stroke.move(from, to);
+}
+
+force_inline int page::getCount() const
+{
+    return this->_count;
 }
 
 force_inline void page::reset()

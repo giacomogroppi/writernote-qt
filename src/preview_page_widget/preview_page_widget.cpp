@@ -34,6 +34,7 @@ preview_page_widget::~preview_page_widget()
 void preview_page_widget::endTimer()
 {
     this->_container->draw(_page_mod);
+    _page_mod.clear();
 
     this->_timer->start(TimerTime);
 }

@@ -9,6 +9,10 @@ preview_page_container::preview_page_container(QWidget *parent, MainWindow *main
 {
     ui->setupUi(this);
     _main = mainWindow;
+    this->layout()->setAlignment(Qt::AlignTop);
+    //this->layout()->setSpacing(10);
+    this->layout()->setMargin(10);
+    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
 preview_page_container::~preview_page_container()
@@ -49,6 +53,7 @@ void preview_page_container::draw(const QVector<int> &pos)
     for(i--; i >= 0; i--){
         const auto index = pos.at(i);
         this->draw(index);
+
         this->at_show(index)->setVisible(true);
     }
 
@@ -92,9 +97,15 @@ void preview_page_container::newPage()
     }
 
     this->layout()->addWidget(item);
+    item->setFixedHeight(250);
     item->setVisible(true);
     this->drawAll();
     this->pageMove();
+
+    {
+        const auto size = at_show(0)->size();
+        this->setMinimumSize(size.width(), size.height() * _item_show.length());
+    }
 }
 
 void preview_page_container::changeDocument()

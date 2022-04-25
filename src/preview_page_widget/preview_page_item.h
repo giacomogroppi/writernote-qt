@@ -2,6 +2,7 @@
 #define PREVIEW_PAGE_ITEM_H
 
 #include <QWidget>
+#include "qlabel.h"
 #include "utils/common_script.h"
 #include "utils/platform.h"
 #include "core/core.h"
@@ -23,7 +24,10 @@ public:
 
     void draw(const class page &page);
 
+    QSize get_size() const;
+
 private:
+    QLabel *_lab;
     const class page *_page;
     Ui::preview_page_item *ui;
 

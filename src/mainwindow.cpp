@@ -337,6 +337,7 @@ void MainWindow::on_actionnewPage_triggered()
 {
     this->_canvas->data->datatouch->newPage(_canvas->_sheet->WhatIsSelected());
     _canvas->call_update();
+    _preview_widget->newPage();
     _canvas->updatePageCount();
 }
 

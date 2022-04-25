@@ -1,6 +1,8 @@
 #include "preview_page_item.h"
+#include "qlabel.h"
 #include "touch/datastruct/page.h"
 #include "ui_preview_page_item.h"
+#include <QSizePolicy>
 
 constexpr not_used bool preview_item_debug = true;
 
@@ -13,6 +15,11 @@ preview_page_item::preview_page_item(QWidget *parent) :
 {
     W_ASSERT(parent == NULL);
     ui->setupUi(this);
+    _lab = new QLabel(this);
+    this->layout()->addWidget(_lab);
+
+    this->setMinimumSize(QSize(_width, _height));
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
 preview_page_item::~preview_page_item()
@@ -22,12 +29,18 @@ preview_page_item::~preview_page_item()
 
 void preview_page_item::draw(const page &page)
 {
-    WDebug(preview_item_debug, "preview_page_item::draw");
-    this->_page = &page;
-    update();
+    WDebug(preview_item_debug, "preview_page_item::draw call" << this->sizePolicy());
 
+    this->_page = &page;
+
+    this->setMinimumSize(QSize(_width, _height));
     this->setFixedHeight(_height);
-    this->setFixedWidth(_width);
+    update();
+}
+
+QSize preview_page_item::get_size() const
+{
+    return QSize(_width, _height);
 }
 
 void preview_page_item::paintEvent(QPaintEvent *)
@@ -39,10 +52,16 @@ void preview_page_item::paintEvent(QPaintEvent *)
 
     WDebug(preview_item_debug, "preview_page_item::paintEvent call" << qstr("H: %1 W: %2").arg(height()).arg(width()));
 
-    pix.fill(Qt::white);
+    if(_page->getCount() % 2 == 0){
+        pix.fill(Qt::blue);
+    }else{
+        pix.fill(Qt::red);
+    }
+
     painter.drawPixmap(target, pix);
     painter.drawImage(QRect(0, 0, _width, _height), img);
-    //ui->label->setPixmap(pix);
+
+
+
     painter.end();
-    //img.save("/home/giacomo/Scrivania/prova.png", "PNG");
 }
