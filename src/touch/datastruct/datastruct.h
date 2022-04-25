@@ -148,7 +148,8 @@ public:
     __fast const page &     at(const uint page) const;
     __fast page &           at_mod(cint page);
 
-    __slow point_s at_draw_page(const uint indexPoint, const uint indexPage) const;
+    point_s at_draw_page(cint indexPoint, const page &Page) const;
+    static point_s at_draw_page(cint indexPoint, const page &Page, const QPointF &PointFirstPageWithZoom, cdouble zoom);
 
     __fast const point_s *  lastPoint() const;
     __fast const page &     lastPage() const;
@@ -254,14 +255,21 @@ inline page &datastruct::at_mod(cint page)
 }
 
 // this function is not threadSave
-inline __slow point_s datastruct::at_draw_page(
-        const uint indexPoint,
-        const uint indexPage) const
+force_inline __slow point_s datastruct::at_draw_page(
+        cint indexPoint,
+        const page &Page) const
+{
+    return datastruct::at_draw_page(indexPoint, Page, getPointFirstPage(), _zoom);
+}
+
+force_inline point_s datastruct::at_draw_page(
+        cint indexPoint,    const page &Page,
+        const QPointF &PointFirstPageWithZoom,
+        cdouble zoom)
 {
     point_s point;
-    const page &page = at(indexPage);
 
-    page.at_draw_page(indexPoint, getPointFirstPage(), point, _zoom);
+    Page.at_draw_page(indexPoint, PointFirstPageWithZoom, point, zoom);
 
     return point;
 }

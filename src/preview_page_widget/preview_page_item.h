@@ -31,6 +31,8 @@ private:
     const class page *_page;
     Ui::preview_page_item *ui;
 
+    void paint(QPixmap &pix);
+
 protected:
     void paintEvent(QPaintEvent *event) override;
 };

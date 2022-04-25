@@ -98,7 +98,7 @@ public:
     __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     /* you can access point written by writernote with this funcion */
-    __slow void at_draw_page(const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
+    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     __fast int lengthStroke() const;
 
@@ -359,7 +359,7 @@ inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const Q
 }
 
 inline void page::at_draw_page(
-        const uint      IndexPoint,
+        cint IndexPoint,
         const QPointF   &translation,
         point_s         &point,
         const double    zoom) const

@@ -143,6 +143,41 @@ void singleLoad(
     painter.drawImage(targetRect, img);
 }
 
+void drawUtils::loadSingleSheet(
+        QPainter &painter,   const page &page,
+        cdouble zoom,        cdouble delta,
+        QPen &_pen, const QPointF& pointFirstPage)
+{
+    int counterPoint, lenPoint;
+    pressure_t pressure;
+    const stroke *__stroke = &page.get_stroke_page();
+
+redo:
+
+    pressure = __stroke->getPressure();
+
+    if(unlikely(pressure <= 0.0)){
+        auto *_stroke = (stroke *)__stroke;
+        _stroke->__setPressureFirstPoint(0.1);
+        goto redo;
+    }
+
+    lenPoint = __stroke->length();
+    pressure = TabletCanvas::pressureToWidth(pressure * zoom / 2.0) * delta;
+
+    _pen.setWidthF(pressure);
+    _pen.setColor(__stroke->getColor());
+
+    painter.setPen(_pen);
+
+    for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
+        const auto ref1 = datastruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
+        const auto ref2 = datastruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
+
+        painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
+    }
+}
+
 static void loadSheet(
         const Document  &doc,
         QPen            &m_pen,
@@ -150,13 +185,12 @@ static void loadSheet(
         const double    delta)
 {
     const page *__page;
-    const int lenPage = doc.datatouch->lengthPage();
-    const double zoom = doc.datatouch->getZoom();
+    const datastruct *data = doc.datatouch;
+    const auto pointFirstPage = data->getPointFirstPage();
+    const int lenPage = data->lengthPage();
+    const double zoom = data->getZoom();
     const stroke *__stroke;
-    int counterPage, counterPoint, lenPoint;
-
-    pressure_t pressure;
-    datastruct *data = doc.datatouch;
+    int counterPage, lenPoint;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         __page = &data->at(counterPage);
@@ -168,28 +202,7 @@ static void loadSheet(
             continue;
         }
 
-redo:
-        pressure = __stroke->getPressure();
-
-        if(unlikely(pressure <= 0.0)){
-            auto *_stroke = (stroke *)__stroke;
-            _stroke->__setPressureFirstPoint(0.1);
-            goto redo;
-        }
-
-        pressure = TabletCanvas::pressureToWidth(pressure * zoom * delta / 2.0);
-
-        m_pen.setWidthF(pressure);
-        m_pen.setColor(__stroke->getColor());
-
-        painter.setPen(m_pen);
-
-        for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
-            const auto ref1 = doc.datatouch->at_draw_page(counterPoint + 0, counterPage);
-            const auto ref2 = doc.datatouch->at_draw_page(counterPoint + 1, counterPage);
-
-            painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
-        }
+        drawUtils::loadSingleSheet(painter, *__page, zoom, delta, m_pen, pointFirstPage);
     }
 }
 

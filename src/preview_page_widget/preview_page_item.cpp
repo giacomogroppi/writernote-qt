@@ -2,7 +2,7 @@
 #include "qlabel.h"
 #include "touch/datastruct/page.h"
 #include "ui_preview_page_item.h"
-#include <QSizePolicy>
+#include "touch/tabletcanvas.h"
 
 constexpr not_used bool preview_item_debug = true;
 
@@ -43,6 +43,17 @@ QSize preview_page_item::get_size() const
     return QSize(_width, _height);
 }
 
+void preview_page_item::paint(QPixmap &pix)
+{
+    constexpr double delta = _width / page::getWidth();
+    const QPointF pointZero(0., - page::getHeight() * delta * double(_page->getCount() - 1));
+    QPainter painter(&pix);
+    Define_PEN(pen);
+
+    drawUtils::loadSingleSheet(painter, *_page, 1., delta, pen, pointZero);
+    painter.end();
+}
+
 void preview_page_item::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -58,10 +69,12 @@ void preview_page_item::paintEvent(QPaintEvent *)
         pix.fill(Qt::red);
     }
 
+    pix.fill(Qt::white);
+
+    this->paint(pix);
+
     painter.drawPixmap(target, pix);
     painter.drawImage(QRect(0, 0, _width, _height), img);
-
-
 
     painter.end();
 }

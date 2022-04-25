@@ -27,6 +27,14 @@ class QPaintEvent;
 class QString;
 QT_END_NAMESPACE
 
+namespace drawUtils{
+
+void loadSingleSheet(
+        QPainter &painter,  const page &page,
+        cdouble zoom,       cdouble delta,
+        QPen &_pen,         const QPointF& pointFirstPage);
+}
+
 void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
                              QEvent::Type event_type, QTabletEvent::PointerType deviceType, cbool now);
 
