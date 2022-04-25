@@ -20,7 +20,6 @@ public:
     void Hide();
     void Show();
 
-    void updateList();
     void pageMove();
     void newPage();
     void changeDocument();
@@ -28,18 +27,15 @@ public:
 
 private slots:
     void endTimer();
+    void changePage(int index);
 
 private:
     QVector<int> _page_mod;
 
+    MainWindow *_main;
     QTimer *_timer;
     preview_page_container * _container;
     Ui::preview_page_widget *ui;
 };
-
-force_inline void preview_page_widget::updateList()
-{
-    this->_container->updatePage();
-}
 
 #endif // PREVIEW_PAGE_WIDGET_H

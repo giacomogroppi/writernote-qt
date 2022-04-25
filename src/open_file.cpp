@@ -14,10 +14,12 @@
 #include "datawrite/qfilechoose.h"
 #include "audioplay/aggiornotastiriascolto.h"
 #include "utils/common_script.h"
+#include "preview_page_widget/preview_page_widget.h"
 #include <QFile>
 #include <QFileDialog>
 
-void MainWindow::openFile(const char *pos){
+void MainWindow::openFile(const char *pos)
+{
     QString fileName, tmp;
     Document curr;
     xmlstruct xml(&fileName, _canvas->data);
@@ -106,6 +108,7 @@ void MainWindow::openFile(const char *pos){
             _canvas->data->datatouch->triggerIfNone(-1);
             //this->_canvas->data->datatouch->triggerNewView(-1, true);
             aggiornotestiriascolto(this);
+            _preview_widget->changeDocument();
             _canvas->updatePageCount();
             _canvas->data->datatouch->triggerVisibility(_canvas->height());
             contrUi();
@@ -123,5 +126,5 @@ void MainWindow::openFile(const char *pos){
 
 void MainWindow::on_actionOpen_triggered()
 {
-    openFile(nullptr);
+    openFile(NULL);
 }

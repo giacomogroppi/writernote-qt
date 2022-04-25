@@ -32,6 +32,7 @@ void ChoosePage::on_pushButton_apply_clicked()
     MainWindow *main = (MainWindow *)this->parent();
     if(_curr != -1){
         main->_canvas->data->datatouch->moveToPage(_curr - 1);
+        main->_canvas->updatePageCount();
         main->_canvas->call_update();
     }
 }

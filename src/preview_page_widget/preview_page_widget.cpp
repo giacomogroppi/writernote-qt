@@ -9,20 +9,25 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
     QWidget(parent),
     ui(new Ui::preview_page_widget)
 {
+    const auto size = preview_page_item::get_size();
+
     ui->setupUi(this);
 
+    _main = mainWindow;
     _container = new preview_page_container(this, mainWindow);
     _timer = new QTimer(this);
 
     QObject::connect(_timer, &QTimer::timeout, this, &preview_page_widget::endTimer);
+    QObject::connect(_container, &preview_page_container::changePage, this, &preview_page_widget::changePage);
 
     this->_timer->start(TimerTime);
 
     ui->scrollArea->setWidget(_container);
     ui->scrollArea->setWidgetResizable(true);
 
-    _container->setMinimumHeight(this->height());
-    _container->setMinimumWidth(this->width());
+    this->setMinimumWidth(size.width() + 50);
+    _container->setMinimumSize(size + QSize(100, 100));
+
     ui->scrollArea->setStyleSheet("QScrollArea { border : 0px solid black;}");
 }
 
@@ -39,6 +44,11 @@ void preview_page_widget::endTimer()
     this->_timer->start(TimerTime);
 }
 
+void preview_page_widget::changePage(int index)
+{
+    Q_UNUSED(index);
+}
+
 void preview_page_widget::mod(int page)
 {
     W_ASSERT(is_order(_page_mod));
@@ -51,7 +61,9 @@ void preview_page_widget::mod(int page)
 
 void preview_page_widget::pageMove()
 {
-    this->_container->pageMove();
+    const auto size = preview_page_item::get_size();
+    const auto index = _main->getCurrentDoc()->datatouch->getFirstPageVisible();
+    this->ui->scrollArea->ensureVisible(0, size.height() * index, 20, 20);
 }
 
 void preview_page_widget::newPage()

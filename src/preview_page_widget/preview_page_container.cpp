@@ -34,16 +34,25 @@ preview_page_container::~preview_page_container()
     delete ui;
 }
 
-void preview_page_container::updatePage()
-{
-
-}
-
 void preview_page_container::draw(int index)
 {
     const datastruct *data = this->_main->getCurrentDoc()->datatouch;
     auto &ref = _item_show[index];
     ref->draw(data->at(index));
+}
+
+void preview_page_container::clickUser(void *_this)
+{
+    const auto *item = (preview_page_item *)_this;
+    int index = this->get_index(item);
+    auto *data = _main->getCurrentDoc()->datatouch;
+
+    W_ASSERT(index >= 0);
+
+    data->moveToPage(index);
+
+    _main->_canvas->call_update();
+    emit changePage(index);
 }
 
 void preview_page_container::draw(const QVector<int> &pos)
@@ -68,52 +77,43 @@ void preview_page_container::drawAll()
     }
 }
 
-void preview_page_container::pageMove()
-{
-    const datastruct *data = _main->getCurrentDoc()->datatouch;
-    int index;
-
-    if(unlikely(data->isempty()))
-        return;
-
-    index = data->getFirstPageVisible();
-    if(!this->_item_show.at(index)->isVisible()){
-        // do translation
-    }
-
-}
-
 void preview_page_container::newPage()
 {
     preview_page_item *item;
 
     if(!this->_item_not_show.isEmpty()){
         item = _item_not_show.takeAt(0);
-        this->_item_show.append( item );
+        appendToVisible( item );
     }else{
         WNew(item, preview_page_item, (NULL));
 
-        this->_item_show.append( item );
+        appendToVisible( item );
     }
 
     this->layout()->addWidget(item);
-    item->setFixedHeight(250);
     item->setVisible(true);
     this->drawAll();
-    this->pageMove();
 
     {
-        const auto size = at_show(0)->size();
+        const auto size = preview_page_item::get_size();
         this->setMinimumSize(size.width(), size.height() * _item_show.length());
     }
 }
 
 void preview_page_container::changeDocument()
 {
+    _item_not_show.append(_item_show);
+    _item_show.clear();
+
     this->appendNecessary();
 
     this->drawAll();
-    this->pageMove();
+    W_ASSERT(this->_item_show.length() == _main->getCurrentDoc()->datatouch->lengthPage());
+}
+
+int preview_page_container::get_index(const preview_page_item *item)
+{
+    return _item_show.indexOf((preview_page_item *)item);
 }
 
 void preview_page_container::appendNecessary()
@@ -128,16 +128,21 @@ void preview_page_container::appendNecessary()
 
             WNew(item, preview_page_item, (NULL));
 
-            _item_show.append(
-                            item
-                        );
+            _item_show.append( item );
         }
 
-        this->_item_show.append(_item_not_show);
+        appendToVisible(_item_not_show);
+        _item_not_show.clear();
     }else{
         for(i = 0; i < needLen; i++){
-            _item_show.append(_item_not_show.takeAt(0));
+            appendToVisible(_item_not_show.takeAt(0));
         }
+    }
+
+    for(i = _item_show.length() - 1; i >= 0; i--){
+        auto *item = at_show(i);
+        layout()->addWidget(item);
+        item->setVisible(true);
     }
 
     W_ASSERT(this->_item_show.length() == needLen);

@@ -17,13 +17,16 @@ public:
     explicit preview_page_container(QWidget *parent, class MainWindow *mainWindow);
     ~preview_page_container();
 
-    void updatePage();
     void draw(const QVector<int> & pos);
-    void pageMove();
     void newPage();
     void changeDocument();
 
 private:
+    void appendToVisible(const QVector<preview_page_item *> &l);
+    void appendToVisible(preview_page_item *p);
+
+    int get_index(const preview_page_item *item);
+
     void appendNecessary();
     void drawAll();
     void draw(int index);
@@ -35,7 +38,33 @@ private:
     preview_page_item *at_show(int i);
 
     Ui::preview_page_container *ui;
+
+private slots:
+    void clickUser(void *_this);
+
+signals:
+    void changePage(int index);
 };
+
+force_inline void preview_page_container::appendToVisible(const QVector<preview_page_item *> &l)
+{
+    int i;
+    this->_item_show.append(l);
+
+    i = _item_show.length();
+
+    for(i --; i >= 0; i--){
+        QObject::connect(at_show(i), &preview_page_item::clickUser,
+                         this, &preview_page_container::clickUser);
+    }
+}
+
+force_inline void preview_page_container::appendToVisible(preview_page_item *p)
+{
+    this->_item_show.append(p);
+    QObject::connect(_item_show.last(), &preview_page_item::clickUser,
+                     this, &preview_page_container::clickUser);
+}
 
 force_inline preview_page_item * preview_page_container::at_show(int i)
 {

@@ -24,7 +24,10 @@ public:
 
     void draw(const class page &page);
 
-    QSize get_size() const;
+    static QSize get_size();
+
+signals:
+   void clickUser(void *_this);
 
 private:
     QLabel *_lab;
@@ -35,6 +38,7 @@ private:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    bool event(QEvent *event) override;
 };
 
 #endif // PREVIEW_PAGE_ITEM_H
