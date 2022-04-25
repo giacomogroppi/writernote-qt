@@ -11,7 +11,7 @@ constexpr int _widthImg = 200;
 constexpr int _heightImg = page::getProportion() * _widthImg;
 
 constexpr int realWidth = _widthImg;
-constexpr int readHeight = _heightImg + 40;
+constexpr int realHeight = _heightImg + 40;
 
 preview_page_item::preview_page_item(QWidget *parent) :
     QWidget(parent),
@@ -22,7 +22,7 @@ preview_page_item::preview_page_item(QWidget *parent) :
     _lab = new QLabel(this);
     this->layout()->addWidget(_lab);
 
-    this->setMinimumSize(QSize(realWidth, readHeight));
+    this->setMinimumSize(QSize(realWidth, realHeight));
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
@@ -37,15 +37,15 @@ void preview_page_item::draw(const page &page)
 
     this->_page = &page;
 
-    this->setMinimumSize(QSize(realWidth, readHeight));
-    this->setFixedHeight(readHeight);
+    this->setMinimumSize(QSize(realWidth, realHeight));
+    this->setFixedHeight(realHeight);
     update();
-    W_ASSERT(this->size() == QSize(realWidth, readHeight));
+    W_ASSERT(this->size() == QSize(realWidth, realHeight));
 }
 
 QSize preview_page_item::get_size()
 {
-    return QSize(realWidth, readHeight);
+    return QSize(realWidth, realHeight);
 }
 
 void preview_page_item::paint(QPixmap &pix)
