@@ -22,7 +22,7 @@ public:
     explicit preview_page_item(QWidget *parent);
     ~preview_page_item();
 
-    void draw(const class page &page);
+    void draw(const class page &page, cbool selected);
 
     static QSize get_size();
 
@@ -32,6 +32,7 @@ signals:
 private:
     QLabel *_lab;
     const class page *_page;
+    bool _selected;
     Ui::preview_page_item *ui;
 
     void paint(QPixmap &pix);

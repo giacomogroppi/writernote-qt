@@ -7,6 +7,8 @@
 
 constexpr not_used bool preview_item_debug = true;
 
+constexpr auto pos_img = ":image/images/preview_page_item_image1.png";
+
 constexpr int _widthImg = 200;
 constexpr int _heightImg = page::getProportion() * _widthImg;
 
@@ -31,11 +33,12 @@ preview_page_item::~preview_page_item()
     delete ui;
 }
 
-void preview_page_item::draw(const page &page)
+void preview_page_item::draw(const page &page, cbool selected)
 {
     WDebug(preview_item_debug, "preview_page_item::draw call" << this->sizePolicy());
 
     this->_page = &page;
+    this->_selected = selected;
 
     this->setMinimumSize(QSize(realWidth, realHeight));
     this->setFixedHeight(realHeight);
@@ -61,33 +64,57 @@ void preview_page_item::paint(QPixmap &pix)
 
 void preview_page_item::paintEvent(QPaintEvent *)
 {
+    constexpr QRect target(0, 0, _widthImg, _heightImg);
+    constexpr int deltaImgTouchWidth = 27;
+    constexpr int deltaImgTouchHeight = 31;
+    constexpr int height = 30;
+
+    double delta;
     QPainter painter(this);
     QPixmap pix(_widthImg, _heightImg);
+    QImage touchImg(pos_img);
     Define_PEN(pen);
     const auto index = _page->getCount();
 
-    constexpr QRect target(0, 0, _widthImg, _heightImg);
     const QImage &img = _page->getImg();
+    {
+        const int secImgWidth = touchImg.width();
+        const int secImgHeight = touchImg.height();
+        delta = double(secImgWidth) / double(secImgHeight);
+    }
 
-    WDebug(preview_item_debug, "preview_page_item::paintEvent call" << qstr("H: %1 W: %2").arg(height()).arg(width()));
+    //WDebug(preview_item_debug, "preview_page_item::paintEvent call" << qstr("H: %1 W: %2").arg(height()).arg(width()));
 
-    if(_page->getCount() % 2 == 0){
+    /*if(_page->getCount() % 2 == 0){
         pix.fill(Qt::blue);
     }else{
         pix.fill(Qt::red);
-    }
+    }*/
 
     pix.fill(Qt::white);
 
     this->paint(pix);
 
+    //painter.fillRect(QRect(0, 0, realWidth, realHeight), Qt::white);
     painter.drawPixmap(target, pix);
     painter.drawImage(QRect(0, 0, _widthImg, _heightImg), img);
 
-    pen.setWidth(1);
-    pen.setColor(Qt::blue);
-    painter.setPen(pen);
-    painter.drawRect(QRect(0, 0, _widthImg - 1, _heightImg - 1));
+    if(unlikely(_selected)){
+        pen.setWidth(1);
+        pen.setColor(Qt::blue);
+        painter.setPen(pen);
+
+        painter.drawRect(QRect(0, 0, _widthImg - 1, _heightImg - 1));
+    }
+
+
+    {
+        const auto widthNew     = _widthImg -  deltaImgTouchWidth;
+        const auto heightNew    = _heightImg - deltaImgTouchHeight;
+
+        painter.drawImage(QRect(widthNew,                     heightNew,
+                                height / delta,    height), touchImg, touchImg.rect());
+    }
 
     painter.drawText(QPointF(3., _heightImg + 20.), QString::number(index));
 

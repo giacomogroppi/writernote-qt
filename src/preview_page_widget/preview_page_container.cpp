@@ -37,8 +37,16 @@ preview_page_container::~preview_page_container()
 void preview_page_container::draw(int index)
 {
     const datastruct *data = this->_main->getCurrentDoc()->datatouch;
+    static int last;
+    const int selected = data->getFirstPageVisible();
     auto &ref = _item_show[index];
-    ref->draw(data->at(index));
+
+    if(unlikely(last != selected)){
+        last = selected;
+        return this->drawAll();
+    }
+
+    ref->draw(data->at(index), selected == index);
 }
 
 void preview_page_container::clickUser(void *_this)
