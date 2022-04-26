@@ -35,7 +35,7 @@ preview_page_item::~preview_page_item()
 
 void preview_page_item::draw(const page &page, cbool selected)
 {
-    WDebug(preview_item_debug, "preview_page_item::draw call" << this->sizePolicy());
+    WDebug(preview_item_debug, "preview_page_item::draw call");
 
     this->_page = &page;
     this->_selected = selected;

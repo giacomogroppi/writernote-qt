@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "preview_page_widget/preview_page_container.h"
+#include "preview_page_widget/list_options.h"
 #include <QTimer>
 
 namespace Ui {
@@ -24,6 +25,8 @@ public:
     void newPage();
     void changeDocument();
     void mod(int page);
+
+    list_options *get_list();
 
 private slots:
     void endTimer();

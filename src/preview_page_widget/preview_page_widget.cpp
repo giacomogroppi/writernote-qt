@@ -5,6 +5,8 @@
 
 constexpr int TimerTime = .5 * 1000;
 
+static list_options *_list;
+
 preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow) :
     QWidget(parent),
     ui(new Ui::preview_page_widget)
@@ -14,6 +16,7 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
     ui->setupUi(this);
 
     _main = mainWindow;
+    _list = new list_options(this);
     _container = new preview_page_container(this, mainWindow);
     _timer = new QTimer(this);
 
@@ -74,4 +77,9 @@ void preview_page_widget::newPage()
 void preview_page_widget::changeDocument()
 {
     this->_container->changeDocument();
+}
+
+list_options * preview_page_widget::get_list()
+{
+    return _list;
 }

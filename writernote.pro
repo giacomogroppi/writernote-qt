@@ -88,6 +88,7 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 
 SOURCES += \
     src/core/core.cpp \
+    src/preview_page_widget/list_options.cpp \
     src/preview_page_widget/preview_page_container.cpp \
     src/preview_page_widget/preview_page_item.cpp \
     src/preview_page_widget/preview_page_widget.cpp \
@@ -274,6 +275,7 @@ SOURCES += \
 HEADERS += \
     src/core/WMutex.h \
     src/core/core.h \
+    src/preview_page_widget/list_options.h \
     src/preview_page_widget/preview_page_container.h \
     src/preview_page_widget/preview_page_item.h \
     src/preview_page_widget/preview_page_widget.h \
