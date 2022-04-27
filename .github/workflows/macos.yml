@@ -119,7 +119,6 @@ jobs:
            -qt-libjpeg \
            -qt-freetype \
            -opengl desktop \
-           -sql-sqlite \
            -make libs \
            -nomake tools \
            -nomake examples \
