@@ -18,6 +18,7 @@ list_options::list_options(QWidget *parent)
     this->layout()->addWidget(_del);
     this->hide();
     UiCore::makePop(this);
+    UiCore::makeZeroBorder(this);
 }
 
 list_options::~list_options()
