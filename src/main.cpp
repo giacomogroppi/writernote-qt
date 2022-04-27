@@ -60,6 +60,17 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    /*{
+        QImage img;
+        QPainter painter;
+        img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+
+        painter.begin(&img);
+        painter.end();
+        img.save("/home/giacomo/img_writernote.png", "PNG");
+        return;
+    }*/
+
 #ifdef CLOUD
     struct struct_user *user;
     user = load_recent_user();
