@@ -26,8 +26,6 @@ private slots:
 signals:
     void ClickCommand(int signal);
 
-protected:
-    bool event(QEvent *event) override;
 };
 
 #endif // LIST_OPTIONS_H

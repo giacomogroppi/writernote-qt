@@ -30,12 +30,6 @@ void list_options::del()
     this->hide();
 }
 
-bool list_options::event(QEvent *event)
-{
-    qDebug() << "list_options::event" << event->type();
-    return QWidget::event(event);
-}
-
 void list_options::Show(const QPoint &point)
 {
     const auto size = this->size();
