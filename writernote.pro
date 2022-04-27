@@ -178,6 +178,7 @@ SOURCES += \
     src/ui/buttonTablet.cpp \
     src/ui/controlluibutton.cpp \
     src/ui/manageMobile.cpp \
+    src/ui/uicore.cpp \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
     src/audiosetting/audioqualityoption.cpp \
@@ -333,6 +334,7 @@ HEADERS += \
     src/touch/text/text_widgets/text_widgets.h \
     src/ui/controlluibutton.h \
     src/ui/manageMobile.h \
+    src/ui/uicore.h \
     src/utils/aboutQt/aboutqt.h \
     src/utils/areyousure/areyousure.h \
     src/audioplay/aggiornotastiriascolto.h \

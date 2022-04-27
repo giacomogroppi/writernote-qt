@@ -8,6 +8,6 @@ qrc*
 Makefile
 .qmake.stash
 *.user
-ui*.h
+ui_*.h
 writernote_autogen/*
 /build/

@@ -1,4 +1,5 @@
 #include "preview_page_item.h"
+#include "preview_page_widget/preview_page_widget.h"
 #include "qlabel.h"
 #include "touch/datastruct/page.h"
 #include "ui_preview_page_item.h"
@@ -62,6 +63,8 @@ void preview_page_item::paint(QPixmap &pix)
     painter.end();
 }
 
+constexpr QRect target_prop(173, 251, 29, 30);
+
 void preview_page_item::paintEvent(QPaintEvent *)
 {
     constexpr QRect target(0, 0, _widthImg, _heightImg);
@@ -82,8 +85,6 @@ void preview_page_item::paintEvent(QPaintEvent *)
         const int secImgHeight = touchImg.height();
         delta = double(secImgWidth) / double(secImgHeight);
     }
-
-    //WDebug(preview_item_debug, "preview_page_item::paintEvent call" << qstr("H: %1 W: %2").arg(height()).arg(width()));
 
     /*if(_page->getCount() % 2 == 0){
         pix.fill(Qt::blue);
@@ -111,9 +112,12 @@ void preview_page_item::paintEvent(QPaintEvent *)
     {
         const auto widthNew     = _widthImg -  deltaImgTouchWidth;
         const auto heightNew    = _heightImg - deltaImgTouchHeight;
+        const auto targetProp = QRect(widthNew,       heightNew,
+                                       height / delta, height);
 
-        painter.drawImage(QRect(widthNew,                     heightNew,
-                                height / delta,    height), touchImg, touchImg.rect());
+        W_ASSERT(target_prop == targetProp);
+
+        painter.drawImage(target_prop, touchImg, touchImg.rect());
     }
 
     painter.drawText(QPointF(3., _heightImg + 20.), QString::number(index));
@@ -133,9 +137,19 @@ bool preview_page_item::event(QEvent *event)
         last = current;
     }
     else if(event->type() == QEvent::MouseButtonRelease){
-        if(last + delta >= current){
+        const auto pos = static_cast<QMouseEvent *>(event)->pos();
+
+        if(target_prop.contains(pos)){
+            WDebug(debugEvent, "preview_page_item::event show prop");
+            auto *prop = preview_page_widget::get_list();
+            const auto GlobalPos = static_cast<QMouseEvent *>(event)->globalPos();
+            prop->Show(GlobalPos);
+        }
+        else if(last + delta >= current){
             WDebug(debugEvent, "preview_page_item::event click done");
+
             emit clickUser(this);
+
         }
     }
 

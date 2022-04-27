@@ -37,6 +37,7 @@ SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
 ADD_EXECUTABLE(writernote 
+    src/ui/uicore.cpp
     src/preview_page_widget/list_options.cpp
     src/preview_page_widget/preview_page_container.cpp
     src/preview_page_widget/preview_page_widget.cpp

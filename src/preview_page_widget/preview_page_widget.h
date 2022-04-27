@@ -26,7 +26,7 @@ public:
     void changeDocument();
     void mod(int page);
 
-    list_options *get_list();
+    static list_options *get_list();
 
 private slots:
     void endTimer();

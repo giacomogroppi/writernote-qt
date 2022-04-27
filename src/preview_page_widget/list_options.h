@@ -15,6 +15,8 @@ public:
     explicit list_options(QWidget *parent = nullptr);
     ~list_options();
 
+    void Show(const QPoint &pos);
+
 private:
     QPushButton *_del;
 
@@ -23,6 +25,9 @@ private slots:
 
 signals:
     void ClickCommand(int signal);
+
+protected:
+    bool event(QEvent *event) override;
 };
 
 #endif // LIST_OPTIONS_H
