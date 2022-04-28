@@ -88,6 +88,7 @@ void preview_page_container::drawAll()
 void preview_page_container::newPage()
 {
     preview_page_item *item;
+    const datastruct *data = _main->getCurrentDoc()->datatouch;
 
     if(!this->_item_not_show.isEmpty()){
         item = _item_not_show.takeAt(0);
@@ -97,6 +98,9 @@ void preview_page_container::newPage()
 
         appendToVisible( item );
     }
+
+    if(unlikely(data->lengthPage() != this->_item_show.length()))
+        return this->changeDocument();
 
     this->layout()->addWidget(item);
     item->setVisible(true);
