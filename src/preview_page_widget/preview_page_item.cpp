@@ -63,7 +63,7 @@ void preview_page_item::paint(QPixmap &pix)
     painter.end();
 }
 
-constexpr QRect target_prop(173, 251, 29, 30);
+constexpr QRect target_prop(173, 251, 30, 30);
 
 void preview_page_item::paintEvent(QPaintEvent *)
 {

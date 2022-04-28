@@ -63,12 +63,61 @@ int main(int argc, char **argv)
     /*{
         QImage img;
         QPainter painter;
-        img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+        Define_PEN(pen);
+
+        cint minAngle = 270  * 16;
+        cint maxAngle = 90 * 16;
+        cint deltaBorder = 10;
+        cint width = 2000;
+        cint height = 2000;
+        cint startCircle = 550;
+
+        img = QImage(width * 2, height * 2, QImage::Format_ARGB32);
+
+        painter.fillRect(img.rect(), Qt::white);
 
         painter.begin(&img);
+
+        pen.setWidth(50);
+        pen.setColor(Qt::blue);
+
+        painter.setPen(pen);
+
+        painter.drawLine(deltaBorder,           deltaBorder,
+                         width + deltaBorder,   deltaBorder);
+
+        painter.drawLine(deltaBorder, deltaBorder,
+                         deltaBorder, deltaBorder + height);
+
+        painter.drawLine(deltaBorder,                       deltaBorder + height,
+                         deltaBorder + width - startCircle, deltaBorder + height);
+
+        painter.drawLine(width + deltaBorder, deltaBorder,
+                         width + deltaBorder, deltaBorder + height - startCircle);
+
+        cint del = 550;
+
+        painter.drawArc(QRect(
+                            deltaBorder + width - startCircle - del, deltaBorder + height - startCircle - del,
+                            startCircle * 2, startCircle * 2
+                            ), minAngle, maxAngle);
+
+        pen.setWidth(200);
+        painter.setPen(pen);
+
+        cint delta = 550;
+
+        painter.drawPoint(width / 2, (height / 10) * 2);
+        painter.drawPoint(width / 2, (height / 10) * 2 + delta);
+        painter.drawPoint(width / 2, (height / 10) * 2 + delta * 2);
+
+
         painter.end();
         img.save("/home/giacomo/img_writernote.png", "PNG");
-        return;
+
+        system("xdg-open /home/giacomo/img_writernote.png");
+
+        return 0;
     }*/
 
 #ifdef CLOUD
