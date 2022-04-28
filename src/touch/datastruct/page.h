@@ -157,6 +157,8 @@ public:
     void lock() const;
     void unlock() const;
 
+    void setCount(int count);
+
     static void copy(const page &src, page &dest);
     Q_CONSTEXPR static double getProportion();
     Q_CONSTEXPR static double getHeight();

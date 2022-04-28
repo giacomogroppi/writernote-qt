@@ -358,8 +358,11 @@ void datastruct::removePage(const int page)
     len --;
 
     for(i = page; i < len; i++){
-        _page.operator[](i)._count = i + 1;
+        auto &_page = at_mod(i);
+        _page.setCount(i + 1);
     }
+
+    this->pageVisible = -1;
 }
 
 void datastruct::moveToPage(int newPage)

@@ -26,12 +26,15 @@ public:
 
     static QSize get_size();
 
+    void setInvalid() { _index = -1; };
+
 signals:
    void clickUser(void *_this);
 
 private:
     QLabel *_lab;
     const class page *_page;
+    int _index;
     bool _selected;
     Ui::preview_page_item *ui;
 

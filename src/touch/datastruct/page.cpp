@@ -662,6 +662,21 @@ QRect page::get_size_area(const QVector<int> &pos) const
     return result;
 }
 
+void page::setCount(int newCount)
+{
+    int i = this->lengthStroke();
+    int delta = newCount - this->_count;
+    cdouble deltaY = page::getHeight() * delta;
+
+    for(i --; i >= 0; i--){
+        this->atStrokeMod(i).scale(QPointF(0., deltaY));
+    }
+
+    this->_stroke_writernote.scale(QPointF(0., deltaY));
+
+    this->_count = newCount;
+}
+
 void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)
 {
     if(initImg(false))

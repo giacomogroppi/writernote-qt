@@ -40,6 +40,7 @@ void preview_page_item::draw(const page &page, cbool selected)
 
     this->_page = &page;
     this->_selected = selected;
+    this->_index = page.getCount() - 1;
 
     this->setMinimumSize(QSize(realWidth, realHeight));
     this->setFixedHeight(realHeight);
@@ -77,6 +78,10 @@ void preview_page_item::paintEvent(QPaintEvent *)
     QPixmap pix(_widthImg, _heightImg);
     QImage touchImg(pos_img);
     Define_PEN(pen);
+
+    if(_index < 0)
+        return;
+
     const auto index = _page->getCount();
 
     const QImage &img = _page->getImg();
@@ -143,7 +148,7 @@ bool preview_page_item::event(QEvent *event)
             WDebug(debugEvent, "preview_page_item::event show prop");
             auto *prop = preview_page_widget::get_list();
             const auto GlobalPos = static_cast<QMouseEvent *>(event)->globalPos();
-            prop->Show(GlobalPos, _page->getCount() - 1);
+            prop->Show(GlobalPos, _index);
         }
         else if(last + delta >= current){
             WDebug(debugEvent, "preview_page_item::event click done");

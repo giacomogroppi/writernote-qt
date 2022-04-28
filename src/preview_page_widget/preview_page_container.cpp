@@ -39,7 +39,7 @@ void preview_page_container::draw(int index)
     const datastruct *data = this->_main->getCurrentDoc()->datatouch;
     static int last;
     const int selected = data->getFirstPageVisible();
-    auto &ref = _item_show[index];
+    auto *ref = at_show(index);
 
     if(unlikely(last != selected)){
         last = selected;
@@ -79,8 +79,8 @@ void preview_page_container::draw(const QVector<int> &pos)
 
 void preview_page_container::drawAll()
 {
-    int i = this->_item_show.length();
-    for(i --; i >= 0; i--){
+    int i, len = this->_item_show.length();
+    for(i = 0; i < len; i++){
         this->draw(i);
     }
 }
@@ -110,6 +110,14 @@ void preview_page_container::newPage()
 
 void preview_page_container::changeDocument()
 {
+    for(preview_page_item *item : qAsConst(_item_show)){
+        item->setInvalid();
+        item->hide();
+        this->layout()->removeWidget(item);
+    }
+
+    W_ASSERT(this->layout()->count() == 0);
+
     _item_not_show.append(_item_show);
     _item_show.clear();
 
@@ -153,5 +161,10 @@ void preview_page_container::appendNecessary()
         item->setVisible(true);
     }
 
+    for(auto *item : qAsConst(_item_show)){
+        item->setInvalid();
+    }
+
+    W_ASSERT(this->_item_show.length() == layout()->count());
     W_ASSERT(this->_item_show.length() == needLen);
 }

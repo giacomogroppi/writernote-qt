@@ -367,5 +367,8 @@ void MainWindow::on_actionFull_Screen_triggered()
 
 void MainWindow::removePage(int index)
 {
-    std::abort();
+    auto *data = this->getCurrentDoc()->datatouch;
+    data->removePage(index);
+    this->_preview_widget->changeDocument();
+    this->_canvas->updatePageCount();
 }
