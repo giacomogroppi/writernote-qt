@@ -101,11 +101,7 @@ void preview_page_container::newPage()
     this->layout()->addWidget(item);
     item->setVisible(true);
     this->drawAll();
-
-    {
-        const auto size = preview_page_item::get_size();
-        this->setMinimumSize(size.width(), size.height() * _item_show.length());
-    }
+    this->Resize();
 }
 
 void preview_page_container::changeDocument()
@@ -124,7 +120,29 @@ void preview_page_container::changeDocument()
     this->appendNecessary();
 
     this->drawAll();
+    this->Resize();
+
     W_ASSERT(this->_item_show.length() == _main->getCurrentDoc()->datatouch->lengthPage());
+    W_ASSERT(this->layout()->count() == _item_show.length());
+
+#ifdef DEBUGINFO
+    int i, len = this->_item_show.length();
+    for(i = 0; i < len; i++){
+        const auto *item = at_show(i);
+
+        W_ASSERT(layout()->itemAt(i)->widget() == item);
+
+        if(item->_page->getCount() != i + 1){
+            std::abort();
+        }
+    }
+#endif
+}
+
+void preview_page_container::Resize()
+{
+    const auto size = preview_page_item::get_size();
+    this->setMinimumSize(size.width(), size.height() * _item_show.length());
 }
 
 int preview_page_container::get_index(const preview_page_item *item)
@@ -155,7 +173,7 @@ void preview_page_container::appendNecessary()
         }
     }
 
-    for(i = _item_show.length() - 1; i >= 0; i--){
+    for(i = 0; i < _item_show.length(); i++){
         auto *item = at_show(i);
         layout()->addWidget(item);
         item->setVisible(true);

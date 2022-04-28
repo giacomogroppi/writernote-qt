@@ -21,6 +21,8 @@ public:
     void newPage();
     void changeDocument();
 
+    void Resize();
+
 private:
     void appendToVisible(const QVector<preview_page_item *> &l);
     void appendToVisible(preview_page_item *p);

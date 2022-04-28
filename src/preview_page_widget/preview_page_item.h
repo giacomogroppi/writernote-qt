@@ -28,6 +28,8 @@ public:
 
     void setInvalid() { _index = -1; };
 
+    friend class preview_page_container;
+
 signals:
    void clickUser(void *_this);
 
