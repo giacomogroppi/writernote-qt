@@ -129,6 +129,9 @@ public:
     friend class ControllUiButton;
     bool setOutputLocation(const QPoint &hostRect);
     QBuffer *m_buffer = nullptr;
+
+    void removePage(int index);
+
 public slots:
     void on_actioncompress_video_triggered();
 

@@ -161,6 +161,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     mobile::make_ui(this);
 
     _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
+    core::set_main_window(this);
 }
 
 MainWindow::~MainWindow()
@@ -362,4 +363,9 @@ void MainWindow::on_buttonFullScreen_clicked()
 void MainWindow::on_actionFull_Screen_triggered()
 {
     this->setFullScreen();
+}
+
+void MainWindow::removePage(int index)
+{
+    std::abort();
 }

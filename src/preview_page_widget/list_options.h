@@ -15,9 +15,10 @@ public:
     explicit list_options(QWidget *parent = nullptr);
     ~list_options();
 
-    void Show(const QPoint &pos);
+    void Show(const QPoint &pos, int index);
 
 private:
+    int _index;
     QPushButton *_del;
 
 private slots:
