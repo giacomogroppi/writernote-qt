@@ -312,9 +312,7 @@ void datastruct::removePointIndex(
 
     if(likely(__isOrder)){
 #ifdef DEBUGINFO
-        if(!is_order(pos)){
-            std::abort();
-        }
+        W_ASSERT(is_order(pos));
 #else
         if(unlikely(is_order(pos))){
             NAME_LOG_EXT->write("List not order", log_ui::critic_error);
@@ -397,6 +395,19 @@ int datastruct::getLastPageVisible() const
 
     abortIfDebug(__FILE__, __LINE__);
     return -1;
+}
+
+void datastruct::insertPage(const page &Page, int index)
+{
+    int len;
+
+    this->_page.insert(index, Page);
+
+    len = this->lengthPage();
+
+    for(index ++; index < len; index ++){
+        this->at_mod(index).setCount(index + 1);
+    }
 }
 
 bool datastruct::userWrittenSomething(uint frompage)

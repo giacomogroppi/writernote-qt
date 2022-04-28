@@ -2,6 +2,7 @@
 #include "testing/memtest.h"
 #include "ui_preview_page_widget.h"
 #include "mainwindow.h"
+#include "testing/memtest.h"
 
 constexpr int TimerTime = .5 * 1000;
 
@@ -15,6 +16,8 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
 
     ui->setupUi(this);
 
+    WNew(_page, page, (1, n_style::empty));
+
     _main = mainWindow;
     _list = new list_options(this);
     _container = new preview_page_container(this, mainWindow);
@@ -22,6 +25,8 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
 
     QObject::connect(_timer, &QTimer::timeout, this, &preview_page_widget::endTimer);
     QObject::connect(_container, &preview_page_container::changePage, this, &preview_page_widget::changePage);
+    QObject::connect(_list, &list_options::ClickCopy, this, &preview_page_widget::ClickCopy);
+    QObject::connect(_list, &list_options::ClickPaste, this, &preview_page_widget::ClickPaste);
 
     this->_timer->start(TimerTime);
 
@@ -36,6 +41,7 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
 
 preview_page_widget::~preview_page_widget()
 {
+    WDelete(_page);
     delete ui;
 }
 
@@ -82,4 +88,31 @@ void preview_page_widget::changeDocument()
 list_options * preview_page_widget::get_list()
 {
     return _list;
+}
+
+void preview_page_widget::ClickCopy(int index)
+{
+    const auto *data = _main->getCurrentDoc()->datatouch;
+    *_page = data->at(index);
+    _page->setCount(1);
+}
+
+void preview_page_widget::ClickPaste(int index)
+{
+    int i, len;
+    auto *data = _main->getCurrentDoc()->datatouch;
+
+    // nothing copy
+    if(this->_page->getCount() < 0)
+        return;
+
+    _page->setCount(index + 1);
+    data->insertPage(*_page, index);
+    this->_container->changeDocument();
+
+    len = data->lengthPage();
+    for(i = 0; i < len; i++){
+        W_ASSERT(data->at(i).getCount() == i + 1);
+    }
+
 }

@@ -59,8 +59,9 @@ void preview_page_container::clickUser(void *_this)
 
     data->moveToPage(index);
 
+    this->drawAll();
+    _main->_canvas->updatePageCount();
     _main->_canvas->call_update();
-    emit changePage(index);
 }
 
 void preview_page_container::draw(const QVector<int> &pos)
@@ -110,6 +111,7 @@ void preview_page_container::newPage()
 
 void preview_page_container::changeDocument()
 {
+    const datastruct *data = _main->getCurrentDoc()->datatouch;
     for(preview_page_item *item : qAsConst(_item_show)){
         item->setInvalid();
         item->hide();
@@ -135,8 +137,15 @@ void preview_page_container::changeDocument()
         const auto *item = at_show(i);
 
         W_ASSERT(layout()->itemAt(i)->widget() == item);
-
         if(item->_page->getCount() != i + 1){
+            int i, len;
+
+            len = data->lengthPage();
+            for(i = 0; i < len; i++){
+                item = at_show(i);
+                qDebug() << "preview_page_container::changeDocument assert" << item->_page->getCount() << data->at(i).getCount() << "i:" << i;
+            }
+
             std::abort();
         }
     }

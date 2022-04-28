@@ -20,12 +20,18 @@ public:
 private:
     int _index;
     QPushButton *_del;
+    QPushButton *_copy;
+    QPushButton *_paste;
 
 private slots:
     void del();
+    void paste();
+    void copy();
 
 signals:
     void ClickCommand(int signal);
+    void ClickCopy(int index);
+    void ClickPaste(int index);
 
 };
 

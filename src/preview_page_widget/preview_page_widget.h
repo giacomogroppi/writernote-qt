@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "preview_page_widget/preview_page_container.h"
 #include "preview_page_widget/list_options.h"
+#include "touch/datastruct/page.h"
 #include <QTimer>
 
 namespace Ui {
@@ -31,9 +32,13 @@ public:
 private slots:
     void endTimer();
     void changePage(int index);
+    void ClickCopy(int index);
+    void ClickPaste(int index);
 
 private:
     QVector<int> _page_mod;
+
+    page *_page;
 
     MainWindow *_main;
     QTimer *_timer;

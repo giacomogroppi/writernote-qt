@@ -127,6 +127,7 @@ out:
 
     if(unlikely(!res)){
         msg = QString("Mem free not record. Pointer %1 File %2 Function %3").arg(QString::number((quint64)mem), file, function);
+        qDebug() << msg;
         std::abort();
     }
 }

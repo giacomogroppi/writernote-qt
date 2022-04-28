@@ -313,7 +313,9 @@ void * __page_load(void *__data)
 
         if(unlikely(ref.isEmpty())){
             pthread_mutex_lock(mutex);
+
             extra->to_remove->append(_data->from);
+
             pthread_mutex_unlock(mutex);
 
             continue;
@@ -338,8 +340,10 @@ void * __page_load(void *__data)
 
     // the source image has the same size as img
     pthread_mutex_lock(mutex);
+
     W_ASSERT(extra->painter->isActive());
     extra->painter->drawImage(img.rect(), img, img.rect());
+
     pthread_mutex_unlock(mutex);
 
     return NULL;
@@ -502,6 +506,8 @@ void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 */
 void page::triggerRenderImage(int m_pos_ris, bool all)
 {
+    __is_ok_count();
+
     all = initImg(all);
 
     Define_PAINTER(painter);
@@ -641,6 +647,11 @@ QRect page::get_size_area(const QList<stroke> &item, int from, int to)
     return result;
 }
 
+page::page()
+{
+    this->_count = -1;
+}
+
 QRect page::get_size_area(const QVector<int> &pos) const
 {
     QRect result;
@@ -668,6 +679,11 @@ void page::setCount(int newCount)
     int delta = newCount - this->_count;
     cdouble deltaY = page::getHeight() * delta;
 
+    if(unlikely(this->_count < 0)){
+        _count = newCount;
+        return;
+    }
+
     for(i --; i >= 0; i--){
         this->atStrokeMod(i).scale(QPointF(0., deltaY));
     }
@@ -675,6 +691,8 @@ void page::setCount(int newCount)
     this->_stroke_writernote.scale(QPointF(0., deltaY));
 
     this->_count = newCount;
+
+    __is_ok_count();
 }
 
 void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)

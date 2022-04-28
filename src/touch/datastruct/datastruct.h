@@ -173,6 +173,7 @@ public:
     void newViewAudio(int newTime);
 
     int get_range_visible() const;
+    void insertPage(const page &Page, int index);
 
     [[nodiscard]] static bool isOkZoom(const double newPossibleZoom);
     static void copy(const datastruct &src, datastruct &dest);
@@ -526,7 +527,7 @@ inline void datastruct::removeAt(const uint indexPage){
     len = lengthPage();
 
     for(; index < len; index ++){
-        at_mod(index).changeCounter(index+1);
+        at_mod(index).setCount(index + 1);
     }
 
 }

@@ -6,7 +6,7 @@
 #include "touch/tabletcanvas.h"
 #include "utils/utils.h"
 
-constexpr not_used bool preview_item_debug = true;
+constexpr not_used bool preview_item_debug = false;
 
 constexpr auto pos_img = ":image/images/preview_page_item_image1.png";
 

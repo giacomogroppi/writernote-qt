@@ -21,6 +21,8 @@
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
+#define __is_ok_count() W_ASSERT(this->_count > 0);
+
 #define SetRenderPainter(painter) painter.setRenderHint(QPainter::Antialiasing, true);
 
 #define Define_PAINTER_p(painter, ___img) \
@@ -84,6 +86,7 @@ private:
 public:
     const QImage &getImg() const;
 
+    page();
     page(const page &page);
     page(const int count, const n_style style);
     ~page();
@@ -127,7 +130,6 @@ public:
     double currentHeight() const;
     double currentWidth() const;
 
-    void changeCounter(const int newPage);
     void changeId(const uint i, const int newId);
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
@@ -204,11 +206,6 @@ force_inline double page::currentHeight() const
 force_inline double page::currentWidth() const
 {
     return page::getWidth();
-}
-
-force_inline void page::changeCounter(const int newPage)
-{
-    this->_count = newPage;
 }
 
 force_inline void page::move(const uint from, const uint to)
@@ -327,16 +324,19 @@ force_inline void page::setVisible(cbool vis) const
 
 force_inline const stroke &page::atStroke(uint i) const
 {
+    __is_ok_count();
     return this->_stroke.at(i);
 }
 
 force_inline stroke &page::atStrokeMod(const uint i)
 {
+    __is_ok_count();
     return this->_stroke.operator[](i);
 }
 
 force_inline const stroke &page::get_stroke_page() const
 {
+    __is_ok_count();
     return this->_stroke_writernote;
 }
 
@@ -409,11 +409,13 @@ force_inline void page::removeAt(cint i)
 
 force_inline const stroke &page::last() const
 {
+    __is_ok_count();
     return this->_stroke.last();
 }
 
 inline stroke &page::lastMod()
 {
+    __is_ok_count();
     return this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
@@ -423,6 +425,7 @@ force_inline void page::append(const stroke &strokeAppend)
     int lastNewIndex = _strokeTmp.length();
     );
 
+    __is_ok_count();
     W_ASSERT(!strokeAppend.isEmpty());
 
     this->_strokeTmp.append(strokeAppend);
