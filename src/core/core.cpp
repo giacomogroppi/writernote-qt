@@ -4,3 +4,4 @@
 
 
 bool __is_mobile_view = false;
+class MainWindow *__private_mainwindow;

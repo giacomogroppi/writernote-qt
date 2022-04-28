@@ -143,7 +143,7 @@ bool preview_page_item::event(QEvent *event)
             WDebug(debugEvent, "preview_page_item::event show prop");
             auto *prop = preview_page_widget::get_list();
             const auto GlobalPos = static_cast<QMouseEvent *>(event)->globalPos();
-            prop->Show(GlobalPos);
+            prop->Show(GlobalPos, _page->getCount() - 1);
         }
         else if(last + delta >= current){
             WDebug(debugEvent, "preview_page_item::event click done");
