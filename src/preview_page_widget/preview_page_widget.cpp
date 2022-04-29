@@ -3,6 +3,7 @@
 #include "ui_preview_page_widget.h"
 #include "mainwindow.h"
 #include "testing/memtest.h"
+#include <QScroller>
 
 constexpr int TimerTime = .5 * 1000;
 
@@ -35,6 +36,8 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
 
     this->setMinimumWidth(size.width() + 50);
     _container->setMinimumSize(size + QSize(100, 100));
+
+    QScroller::grabGesture(ui->scrollArea, QScroller::LeftMouseButtonGesture);
 
     ui->scrollArea->setStyleSheet("QScrollArea { border : 0px solid black;}");
 }
