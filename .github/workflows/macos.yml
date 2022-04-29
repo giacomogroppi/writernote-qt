@@ -28,7 +28,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-10.15
 
     env:
       QT: "5_15_2"
