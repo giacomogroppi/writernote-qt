@@ -116,7 +116,7 @@ void preview_page_container::newPage()
 
 void preview_page_container::changeDocument()
 {
-    const datastruct *data = _main->getCurrentDoc()->datatouch;
+    const not_used datastruct *data = _main->getCurrentDoc()->datatouch;
     for(preview_page_item *item : qAsConst(_item_show)){
         item->setInvalid();
         item->hide();

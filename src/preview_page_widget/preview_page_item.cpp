@@ -117,8 +117,8 @@ void preview_page_item::paintEvent(QPaintEvent *)
     {
         const auto widthNew     = _widthImg -  deltaImgTouchWidth;
         const auto heightNew    = _heightImg - deltaImgTouchHeight;
-        const auto targetProp = QRect(widthNew,       heightNew,
-                                       height / delta, height);
+        const auto not_used targetProp = QRect(widthNew,       heightNew,
+                                               height / delta, height);
 
         W_ASSERT(target_prop == targetProp);
 

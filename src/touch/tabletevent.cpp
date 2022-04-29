@@ -136,7 +136,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
     constexpr bool tabletDebug = false;
-    constexpr const char *nameFunction = "TabletCanvas::tabletEvent";
+    constexpr not_used const char *nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;
     need_save_auto = true;

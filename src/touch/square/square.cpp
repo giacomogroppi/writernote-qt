@@ -371,7 +371,7 @@ void square::move(const QPointF &punto)
 
 void square::endMoving(const QWidget *pixmap)
 {
-    constexpr auto class_func = "square::endMoving(const QWidget *pixmap)";
+    constexpr auto not_used class_func = "square::endMoving(const QWidget *pixmap)";
     QPoint middle;
     const auto ref = _canvas->data->datatouch->getPointFirstPage();
     int flag;

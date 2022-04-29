@@ -22,8 +22,8 @@ force_inline void stroke_drawer::draw_circle(
         cint        page,      QPen            &pen,
         cbool       is_rubber, cdouble         _prop)
 {
-    constexpr bool debCircle = false;
-    constexpr auto func = __func__;
+    constexpr bool not_used debCircle = false;
+    constexpr auto not_used func = __func__;
     point_s point;
     QPointF tmp;
     auto *data = (stroke_complex_circle *)stroke._complex;
