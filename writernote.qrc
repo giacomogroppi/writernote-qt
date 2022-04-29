@@ -61,5 +61,6 @@
         <file>images/image-up.png</file>
         <file>images/image-down.png</file>
         <file>images/preview_page_item_image1.png</file>
+        <file>images/img_show_hide_preview.png</file>
     </qresource>
 </RCC>

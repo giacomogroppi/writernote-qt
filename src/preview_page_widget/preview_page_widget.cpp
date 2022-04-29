@@ -42,6 +42,18 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
     ui->scrollArea->setStyleSheet("QScrollArea { border : 0px solid black;}");
 }
 
+void preview_page_widget::Hide()
+{
+    _container->disableAll();
+    this->hide();
+}
+
+void preview_page_widget::Show()
+{
+    this->show();
+    this->_container->changeDocument();
+}
+
 preview_page_widget::~preview_page_widget()
 {
     WDelete(_page);
@@ -80,7 +92,8 @@ void preview_page_widget::pageMove()
 
 void preview_page_widget::newPage()
 {
-    this->_container->newPage();
+    if(this->isVisible())
+        this->_container->newPage();
 }
 
 void preview_page_widget::changeDocument()

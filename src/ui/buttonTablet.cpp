@@ -25,6 +25,11 @@ void MainWindow::on_buttonPen_clicked()
     this->on_actionpen_triggered();
 }
 
+void MainWindow::on_buttonShowPreview_clicked()
+{
+    this->on_actionHide_Show_Preview_triggered();
+}
+
 void MainWindow::on_buttonRubber_clicked()
 {
     this->on_actionrubber_triggered();

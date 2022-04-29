@@ -23,12 +23,14 @@ public:
 
     void Resize();
 
+    void disableAll();
+
 private:
     void appendToVisible(const QVector<preview_page_item *> &l);
     void appendToVisible(preview_page_item *p);
-
+    void removeAllItemFromLayout();
     int get_index(const preview_page_item *item);
-
+    void setAllDisable();
     void appendNecessary();
     void drawAll();
     void draw(int index);

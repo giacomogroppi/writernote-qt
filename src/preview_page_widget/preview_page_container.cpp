@@ -24,10 +24,12 @@ preview_page_container::~preview_page_container()
         WDelete(item);
     }
 
+    this->removeAllItemFromLayout();
+
     while(_item_show.length() > 0){
         item = _item_show.takeAt(0);
 
-        this->layout()->removeWidget(item);
+
         WDelete(item);
     }
 
@@ -163,9 +165,31 @@ void preview_page_container::Resize()
     this->setMinimumSize(size.width(), size.height() * _item_show.length());
 }
 
+void preview_page_container::disableAll()
+{
+    this->setAllDisable();
+    this->removeAllItemFromLayout();
+    this->_item_not_show.append(this->_item_show);
+    _item_show.clear();
+}
+
+void preview_page_container::removeAllItemFromLayout()
+{
+    for(auto *item : qAsConst(_item_show)){
+        this->layout()->removeWidget(item);
+    }
+}
+
 int preview_page_container::get_index(const preview_page_item *item)
 {
     return _item_show.indexOf((preview_page_item *)item);
+}
+
+void preview_page_container::setAllDisable()
+{
+    for(auto *item : qAsConst(_item_show)){
+        item->setInvalid();
+    }
 }
 
 void preview_page_container::appendNecessary()
@@ -197,9 +221,7 @@ void preview_page_container::appendNecessary()
         item->setVisible(true);
     }
 
-    for(auto *item : qAsConst(_item_show)){
-        item->setInvalid();
-    }
+    this->setAllDisable();
 
     W_ASSERT(this->_item_show.length() == layout()->count());
     W_ASSERT(this->_item_show.length() == needLen);

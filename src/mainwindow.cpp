@@ -372,3 +372,12 @@ void MainWindow::removePage(int index)
     this->_preview_widget->changeDocument();
     this->_canvas->updatePageCount();
 }
+
+void MainWindow::on_actionHide_Show_Preview_triggered()
+{
+    if(_preview_widget->isVisible())
+        this->_preview_widget->Hide();
+    else
+        this->_preview_widget->Show();
+}
+

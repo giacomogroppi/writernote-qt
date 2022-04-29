@@ -83,6 +83,7 @@ void ControllUiButton::initList()
     m_button.append(ui->buttonRecentFile);
     m_button.append(ui->buttonChangeVisual);
     m_button.append(ui->buttonFullScreen);
+    m_button.append(ui->buttonShowPreview);
 
     m_spacer.append(ui->horizontalSpacer_button);
     m_spacer.append(ui->horizontalSpacer_button1);

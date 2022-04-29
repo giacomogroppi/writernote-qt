@@ -235,6 +235,9 @@ private slots:
     void on_actionFull_Screen_triggered();
     void on_actionLaser_triggered();
     void on_buttonLaser_clicked();
+    void on_buttonShowPreview_clicked();
+
+    void on_actionHide_Show_Preview_triggered();
 
 protected:
     void dropEvent(QDropEvent *event) override;

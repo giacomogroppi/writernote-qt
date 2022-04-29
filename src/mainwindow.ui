@@ -462,6 +462,23 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="buttonShowPreview">
+        <property name="maximumSize">
+         <size>
+          <width>27</width>
+          <height>27</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../writernote.qrc">
+          <normaloff>:/image/images/img_show_hide_preview.png</normaloff>:/image/images/img_show_hide_preview.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_button2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -1003,6 +1020,7 @@
    <addaction name="actionnewPage"/>
    <addaction name="actionrestore_button"/>
    <addaction name="actionPen_or_Mouse"/>
+   <addaction name="actionHide_Show_Preview"/>
   </widget>
   <action name="actionNew_File">
    <property name="checkable">
@@ -1501,6 +1519,15 @@
    </property>
    <property name="text">
     <string>Laser</string>
+   </property>
+  </action>
+  <action name="actionHide_Show_Preview">
+   <property name="icon">
+    <iconset resource="../writernote.qrc">
+     <normaloff>:/image/images/img_show_hide_preview.png</normaloff>:/image/images/img_show_hide_preview.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hide Show Preview</string>
    </property>
   </action>
  </widget>
