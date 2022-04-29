@@ -124,9 +124,7 @@ public:
     /* funzione che setta il cambio dell'inserimento -> penna, gomma... */
     void sceltacolorepenna(const QColor);
 
-    /* aggiorna la lista dei punti */
-    void updatelist(QTabletEvent *event);
-
+    void updatelist(QTabletEvent *event) const;
 
     Document *data;
 

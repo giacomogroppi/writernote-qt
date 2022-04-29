@@ -191,7 +191,7 @@ end:
 
 force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 {
-    constexpr const auto debugSquare = false;
+    constexpr const auto not_used debugSquare = false;
     if(_square->somethingInBox()){
         WDebug(debugSquare, "TabletCanvas::ManageStart" << "Somethininbox");
         _square->initPointMove(touch);
@@ -204,8 +204,6 @@ force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 
 force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 {
-
-
     if(unlikely(m_deviceDown))
         return;
 
@@ -333,7 +331,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
     }
 }
 
-void TabletCanvas::updatelist(QTabletEvent *event)
+void TabletCanvas::updatelist(QTabletEvent *event) const
 {
     double size;
     uchar alfa;
