@@ -162,13 +162,13 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     if(unlikely(eventType == QEvent::TabletPress)){ /* first point */
         block_scrolling = true;
-        ManageStart(event, pointTouch);
+        ManageStart(event);
 #if defined(WIN32) || defined(WIN64)
         this->isdrawing = true;
 #endif
     }
     else if(likely(eventType == QEvent::TabletMove)){ /* user move the pen */
-        ManageMove(event, pointTouch);
+        ManageMove(event);
     }
 
     else if(eventType == QEvent::TabletRelease){ /* pen leaves the tablet */
@@ -188,11 +188,23 @@ end:
     lastMethod = _input;
 }
 
-force_inline void TabletCanvas::ManageStart(
-        QTabletEvent    *event,
-        const QPointF   &pointTouch)
+
+force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 {
     constexpr const auto debugSquare = false;
+    if(_square->somethingInBox()){
+        WDebug(debugSquare, "TabletCanvas::ManageStart" << "Somethininbox");
+        _square->initPointMove(touch);
+    }
+    else{
+        WDebug(debugSquare, "TabletCanvas::ManageStart" << "not in box");
+        _square->initPoint(touch);
+    }
+}
+
+force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
+{
+
 
     if(unlikely(m_deviceDown))
         return;
@@ -202,14 +214,7 @@ force_inline void TabletCanvas::ManageStart(
         _finder->move(event->posF());
     }
     else if(selection_method){
-        if(_square->somethingInBox()){
-            WDebug(debugSquare, "TabletCanvas::ManageStart" << "Somethininbox");
-            _square->initPointMove(pointTouch);
-        }
-        else{
-            WDebug(debugSquare, "TabletCanvas::ManageStart" << "not in box");
-            _square->initPoint(pointTouch);
-        }
+        ManageStartSquare(event->posF(), _square);
     }else if(rubber_method){
         _rubber->initRubber(event->posF());
     }
@@ -219,12 +224,29 @@ force_inline void TabletCanvas::ManageStart(
     _lastPoint.pressure = event->pressure();
 }
 
-force_inline void TabletCanvas::ManageMove(
-        QTabletEvent    *event,
-        const QPointF   &point)
+force_inline void ManageMoveSquare(const QPointF &point, class square *_square)
+{
+    _square->isMoving();
+
+    if(_square->somethingInBox()){
+        W_ASSERT(!_square->get_first_point().isNotSet());
+
+        /* a questo punto può muovere di un delta x e y */
+        _square->move(point);
+    }else{
+        /*
+        * it means that the user not select anything
+        * in the past
+        */
+        _square->updatePoint(point);
+    }
+}
+
+force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 {
     QPainter painter;
     constexpr not_used bool debugMove = true;
+    const auto &point = event->posF();
 
     if(event->deviceType() == QTabletEvent::RotationStylus){
         updateCursor(event);
@@ -245,26 +267,13 @@ force_inline void TabletCanvas::ManageMove(
 
     if(likely(insert_method)){
         updatelist(event);
-        _finder->move(event->posF());
+        _finder->move(point);
     }
     else if(rubber_method){
         _rubber->actionRubber(point);
     }
     else if(selection_method){
-        _square->isMoving();
-
-        if(_square->somethingInBox()){
-            W_ASSERT(!_square->get_first_point().isNotSet());
-
-            /* a questo punto può muovere di un delta x e y */
-            _square->move(point);
-        }else{
-            /*
-            * it means that the user not select anything
-            * in the past
-            */
-            _square->updatePoint(point);
-        }
+        ManageMoveSquare(point, _square);
     }else if(text_method){
         if(_text_w->isIn(point)){
             
@@ -280,16 +289,13 @@ force_inline void TabletCanvas::ManageMove(
 
 force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 {
+    int index_mod;
     bool done = _square->somethingInBox();
     block_scrolling = false;
 
 #if defined(WIN32) || defined(WIN64)
     this->isdrawing = false;
 #endif
-
-    if(likely(_redoundo)){
-        _redoundo->copy();
-    }
 
     if(likely(insert_method)){
         AppendAll(*this->data, this, _input);
@@ -313,8 +319,17 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
                 _square->endMoving(this);
 
         }else if(rubber_method){
-            _rubber->endRubber();
+            index_mod = _rubber->endRubber();
+            if(index_mod >= 0){
+                this->_parent->_preview_widget->mod(index_mod);
+            }else if(index_mod != -1){
+                this->_parent->_preview_widget->mod(-1);
+            }
         }
+    }
+
+    if(likely(_redoundo)){
+        _redoundo->copy();
     }
 }
 

@@ -226,8 +226,8 @@ private:
 
     bool m_deviceDown = false;
     void ManageFinish(QTabletEvent *event, cbool isForce);
-    void ManageStart(QTabletEvent *event, const QPointF &point);
-    void ManageMove(QTabletEvent *event, const QPointF &point);
+    void ManageStart(QTabletEvent *event);
+    void ManageMove(QTabletEvent *event);
 
 public slots:
 

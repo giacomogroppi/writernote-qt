@@ -4,10 +4,9 @@
 #include "pthread.h"
 #include "semaphore.h"
 #include "touch/multi_thread_data.h"
-#include "core/wmultiplemutex.h"
 #include "core/wline.h"
 #include "mainwindow.h"
-#include "core/WMutex.h"
+#include "ui/uicore.h"
 
 struct RubberPrivateData{
     QVector<int>    *data_find;
@@ -59,14 +58,14 @@ rubber_ui::rubber_ui(QWidget *parent) :
 
     this->load_settings();
 
-    this->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
+    UiCore::makePop(this);
 
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
     pthread_mutex_init(&mutex_area, NULL);
     pthread_mutex_init(&single_mutex, NULL);
-    thread_group = new thread_group_sem;
+    WNew(thread_group, thread_group_sem, ());
     thread_group->startLoop(idle_rubber);
 
     this->reset();
@@ -75,7 +74,7 @@ rubber_ui::rubber_ui(QWidget *parent) :
 rubber_ui::~rubber_ui()
 {
     this->save_settings();
-    delete thread_group;
+    WDelete(thread_group);
 
     pthread_mutex_destroy(&mutex_area);
     pthread_mutex_destroy(&single_mutex);
@@ -104,10 +103,16 @@ void rubber_ui::on_partial_button_clicked()
     this->update_data();
 }
 
-void rubber_ui::endRubber()
+/*
+ * return -1 if no page is mod
+ * return -2 if multiple pages have changed
+ * return the index of the page mod
+*/
+int rubber_ui::endRubber()
 {
     datastruct *data = _canvas->data->datatouch;
     int i, len = _data_to_remove.length();
+    int index_mod = -1;
 
     W_ASSERT(data);
 
@@ -120,6 +125,14 @@ void rubber_ui::endRubber()
             if(unlikely(arr.isEmpty()))
                 continue;
 
+            if(unlikely(index_mod >= 0)){
+                index_mod = -2;
+            }
+
+            if(unlikely(index_mod == -1)){
+                index_mod = i + _base;
+            }
+
             order(arr);
 
             const auto rect = data->get_size_area(arr, i + _base);
@@ -130,6 +143,7 @@ void rubber_ui::endRubber()
     }
 
     this->reset();
+    return index_mod;
 }
 
 static inline not_used QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
@@ -150,19 +164,19 @@ static inline not_used QRectF rubber_get_area(const QPointF &p1, const QPointF &
 }
 
 static force_inline void draw_null(page *_page, const QVector<int> &point,
-                                   const QVector<int> &stroke, bool is_left)
+                                   const QVector<int> &Stroke, bool is_left)
 {
     int i, len;
 
     len = point.length();
-    Q_ASSERT(point.size() == stroke.size());
+    Q_ASSERT(point.size() == Stroke.size());
 
     for(i = 0; i < len; i++){
         cint indexPoint  = point.at(i);
-        cint indexStroke = stroke.at(i);
+        cint indexStroke = Stroke.at(i);
 
         auto &stroke = _page->atStrokeMod(indexStroke);
-        const auto len = stroke.length();
+        const auto length = stroke.length();
 
         _page->lock();
         _page->drawForceColorStroke(stroke, -1, COLOR_NULL, NULL);
@@ -171,7 +185,7 @@ static force_inline void draw_null(page *_page, const QVector<int> &point,
         if(is_left){
             stroke.removeAt(0, indexPoint);
         }else{
-            stroke.removeAt(indexPoint, len - 1);
+            stroke.removeAt(indexPoint, length - 1);
         }
 
         _page->lock();
@@ -182,7 +196,7 @@ static force_inline void draw_null(page *_page, const QVector<int> &point,
 
 void actionRubberSinglePartial(DataPrivateMuThread *data)
 {
-    RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
+    auto *private_data = (RubberPrivateData *)data->extra;
 
     QVector<int> stroke_to_remove;
     QVector<int> stroke_mod_point,          stroke_mod_stroke;

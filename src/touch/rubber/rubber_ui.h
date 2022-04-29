@@ -36,7 +36,7 @@ public:
 
     void actionRubber(const QPointF &);
     void initRubber(const QPointF &point);
-    void endRubber();
+    int endRubber();
 
 private:
     class TabletCanvas *_canvas;

@@ -70,6 +70,11 @@ void preview_page_container::draw(const QVector<int> &pos)
 
     for(i--; i >= 0; i--){
         const auto index = pos.at(i);
+
+        if(index < 0){
+            return this->drawAll();
+        }
+
         this->draw(index);
 
         this->at_show(index)->setVisible(true);
