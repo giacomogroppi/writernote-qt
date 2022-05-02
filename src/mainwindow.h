@@ -116,6 +116,7 @@ public:
     class laser *m_laser;
     class ChoosePage *_choose_page;
     class preview_page_widget *_preview_widget;
+    class ToolBar *_tool_bar;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     ShareUtils *m_share_file;
 #endif
@@ -131,6 +132,8 @@ public:
     QBuffer *m_buffer = nullptr;
 
     void removePage(int index);
+
+    friend class ToolBar;
 
 public slots:
     void on_actioncompress_video_triggered();
@@ -205,38 +208,11 @@ private slots:
     void on_actionRemove_current_PDF_triggered();
     void on_actionSize_button_triggered();
     void on_actionRecent_file_triggered();
-    void on_buttonRecentFile_clicked();
     void on_actionChange_visual_triggered();
-    void on_buttonChangeVisual_clicked();
-    void on_buttonPen_clicked();
-    void on_buttonRubber_clicked();
-    void on_buttonselezionetext_clicked();
-    void on_buttonInsertText_clicked();
-    void on_buttonHighlighter_clicked();
-    void on_buttonBlack_clicked();
-    void on_buttonWhite_clicked();
-    void on_buttonYellow_clicked();
-    void on_buttonBrown_clicked();
-    void on_buttonPurple_clicked();
-    void on_buttonChooseColor_clicked();
-    void on_buttonInsertImage_clicked();
-    void on_buttonSheet_clicked();
-    void on_buttonNewPage_clicked();
-    void on_buttonRestore_clicked();
-    void on_buttonPenOrMouse_clicked();
-    void on_buttonStartRecording_clicked();
-    void on_buttonStopRecording_clicked();
-    void on_buttonPauseRecording_clicked();
-    void on_buttonListen_current_audio_clicked();
-    void on_buttonUndu_clicked();
-    void on_buttonRedo_clicked();
     void on_sliderZoom_sliderMoved(int position);
     void on_buttonFullScreen_clicked();
     void on_actionFull_Screen_triggered();
     void on_actionLaser_triggered();
-    void on_buttonLaser_clicked();
-    void on_buttonShowPreview_clicked();
-
     void on_actionHide_Show_Preview_triggered();
 
 protected:

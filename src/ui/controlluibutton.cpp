@@ -1,5 +1,6 @@
 #include "controlluibutton.h"
 #include "mainwindow.h"
+#include "ui/toolbar.h"
 #include "ui_mainwindow.h"
 #include <QPixmap>
 #include <QSettings>
@@ -52,7 +53,7 @@ void ControllUiButton::saveSettings()
 
 void ControllUiButton::initList()
 {
-    Ui::MainWindow *ui = parent->ui;
+    /*Ui::MainWindow *ui = parent->ui;
 
     this->m_button.clear();
 
@@ -88,32 +89,34 @@ void ControllUiButton::initList()
     m_spacer.append(ui->horizontalSpacer_button);
     m_spacer.append(ui->horizontalSpacer_button1);
     m_spacer.append(ui->horizontalSpacer_button2);
-    m_spacer.append(ui->horizontalSpacer_button3);
+    m_spacer.append(ui->horizontalSpacer_button3);*/
 }
 
 void ControllUiButton::update()
 {
-    int i;
-    const int len_button = this->m_button.length();
-    const int len_spacer = this->m_spacer.length();
-    constexpr auto colorOver = "#e0e0e0";
-    const auto color = parent->ui->buttonChooseColor->palette().color(parent->backgroundRole());
-#define vis_private setHidden
+    //int i;
+    //const int len_button = this->m_button.length();
+    //const int len_spacer = this->m_spacer.length();
+    //constexpr auto colorOver = "#e0e0e0";
+    //const auto color = parent->ui->buttonChooseColor->palette().color(parent->backgroundRole());
+
     const bool tablet = this->_mode == Mode::Tablet;
 
-    for(i = 0; i < len_button; i++){
+    /*for(i = 0; i < len_button; i++){
         this->m_button.at(i)->setVisible(tablet);
         m_button.at(i)->setStyleSheet(qstr("QPushButton{border:5px solid %1;} QPushButton:hover{border:10px solid %2} QPushButton:checked{border:15px solid %2}").
                                                     arg(color.name()).arg(colorOver));
+    }*/
+
+    if(tablet){
+        parent->_tool_bar->Show();
+        parent->_tool_bar->setSpacer(QSizePolicy::MinimumExpanding);
+    }else{
+        parent->_tool_bar->Hide();
+        parent->_tool_bar->setSpacer();
     }
 
-    for(i = 0; i < len_spacer; ++i){
-        if(tablet)
-            m_spacer.at(i)->changeSize(0, 0, QSizePolicy::MinimumExpanding);
-        else
-            m_spacer.at(i)->changeSize(0, 0);
-    }
-
+#define vis_private setHidden
     parent->ui->mainbar->vis_private(tablet);
     parent->ui->simpleactionbar->vis_private(tablet);
     parent->ui->audiobar->vis_private(tablet);

@@ -29,6 +29,7 @@
 #include "core/core.h"
 #include "utils/utils.h"
 #include "preview_page_widget/preview_page_widget.h"
+#include "ui/toolbar.h"
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include <QSettings>
@@ -81,11 +82,15 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_sheet               = new class fast_sheet_ui(this);
     this->m_setting             = new class setting_restore_ui(this, _canvas, &m_path);
     NAME_LOG_EXT                = new class log_ui(this);
-    this->m_controllUi          = new class ControllUiButton(this);
     this->m_audioplayer         = new class audioplay(this);
     this->m_audio_recorder      = new class AudioRecord(this);
     this->m_laser               = new class laser(_canvas);
     this->_choose_page          = new class ChoosePage(this);
+
+    this->_tool_bar             = new class ToolBar(this);
+    this->ui->layout_tool_bar->addWidget(_tool_bar);
+
+    this->m_controllUi          = new class ControllUiButton(this);
 
     this->_preview_widget       = new class preview_page_widget(this, this);
     this->ui->layouteditor->insertWidget(1, _preview_widget);
@@ -379,5 +384,11 @@ void MainWindow::on_actionHide_Show_Preview_triggered()
         this->_preview_widget->Hide();
     else
         this->_preview_widget->Show();
+}
+
+void MainWindow::on_actionChange_visual_triggered()
+{
+    core::set_mobile_view(true);
+    this->m_controllUi->change();
 }
 

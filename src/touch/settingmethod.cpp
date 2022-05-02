@@ -1,6 +1,8 @@
 #include "tabletcanvas.h"
 #include "mainwindow.h"
+#include "ui/toolbar.h"
 #include "ui_mainwindow.h"
+#include "ui_toolbar.h"
 #include "utils/color/color_chooser.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "rubber/rubber_ui.h"
@@ -117,11 +119,12 @@ void MainWindow::updateTouch(){
     ui->actionhighlighter->setChecked(      _canvas->_input == TabletCanvas::highlighter);
     ui->actionLaser->setChecked(            _canvas->_input == TabletCanvas::laser);
 
-    ui->buttonPen->setChecked(              _canvas->_input == TabletCanvas::pen);
-    ui->buttonRubber->setChecked(           _canvas->_input == TabletCanvas::rubber);
-    ui->buttonselezionetext->setChecked(    _canvas->_input == TabletCanvas::selection);
-    ui->buttonInsertText->setChecked(       _canvas->_input == TabletCanvas::text);
-    ui->buttonHighlighter->setChecked(      _canvas->_input == TabletCanvas::highlighter);
+
+    _tool_bar->ui->button_pen->setChecked(              _canvas->_input == TabletCanvas::pen);
+    _tool_bar->ui->button_rubber->setChecked(           _canvas->_input == TabletCanvas::rubber);
+    _tool_bar->ui->button_cut->setChecked(    _canvas->_input == TabletCanvas::selection);
+    _tool_bar->ui->button_text->setChecked(       _canvas->_input == TabletCanvas::text);
+    _tool_bar->ui->button_highlighter->setChecked(      _canvas->_input == TabletCanvas::highlighter);
 
     ui->actionblack->setChecked(_canvas->_color == Qt::black);
     ui->actionwhite->setChecked(_canvas->_color == Qt::white);

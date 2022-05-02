@@ -175,9 +175,9 @@ SOURCES += \
     src/touch/text/text_ui/text_ui.cpp \
     src/touch/text/text_widgets/text_widgets.cpp \
     src/touch/zoom/ctrlZoom.cpp \
-    src/ui/buttonTablet.cpp \
     src/ui/controlluibutton.cpp \
     src/ui/manageMobile.cpp \
+    src/ui/toolbar.cpp \
     src/ui/uicore.cpp \
     src/utils/aboutQt/aboutqt.cpp \
     src/audioplay/aggiornotastiriascolto.cpp \
@@ -334,6 +334,7 @@ HEADERS += \
     src/touch/text/text_widgets/text_widgets.h \
     src/ui/controlluibutton.h \
     src/ui/manageMobile.h \
+    src/ui/toolbar.h \
     src/ui/uicore.h \
     src/utils/aboutQt/aboutqt.h \
     src/utils/areyousure/areyousure.h \
@@ -432,6 +433,7 @@ FORMS += \
     src/touch/scrollKinetic/ui_scroll/scroll.ui \
     src/touch/text/text_ui/text_ui.ui \
     src/touch/text/text_widgets/text_widgets.ui \
+    src/ui/toolbar.ui \
     src/utils/bug_repo/bug_repo_ui.ui \
     src/utils/choosepage.ui \
     src/utils/default_location/audio_default_location.ui \

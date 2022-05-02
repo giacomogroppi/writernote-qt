@@ -15,8 +15,8 @@ class ControllUiButton
 {
 private:
     MainWindow *parent;
-    QList<QPushButton *> m_button;
-    QList<QSpacerItem *> m_spacer;
+    //QList<QPushButton *> m_button;
+    //QList<QSpacerItem *> m_spacer;
 
 public:
     ControllUiButton(MainWindow *parent);
