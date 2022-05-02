@@ -11,19 +11,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
-# Check https://doc.qt.io/qt/deployment-android.html for more information.
-# They need to be set before the find_package( ...) calls below.
-
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
@@ -36,7 +23,7 @@ SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
-ADD_EXECUTABLE(writernote 
+ADD_EXECUTABLE(${PROJECT_NAME} 
     src/ui/toolbar.cpp
     src/ui/uicore.cpp
     src/preview_page_widget/list_options.cpp
@@ -222,26 +209,26 @@ ADD_EXECUTABLE(writernote
     src/touch/datastruct/stroke_complex_data.cpp
     src/touch/datastruct/stroke_file.cpp
     src/utils/choosepage.cpp
-    src/touch/datastruct/page_file.cpp
+    src/touch/datastruct/page_file.cpp    
 
-    src/audiosetting/audioqualityoption.ui 
-    src/currenttitle/option/option_copybook.ui 
-    src/last_open/element/element_ui.ui 
-    src/last_open/last_open.ui 
-    src/last_open/option/option_last_open_ui.ui 
-    src/log/log_ui/log_ui.ui 
-    src/mainwindow.ui 
-    src/restore_file/ui/setting_restore_ui.ui 
-    src/restore_file/ui_restore/restore.ui 
-    src/sheet/dialog_sheet.ui 
-    src/sheet/fast-sheet/fast_sheet_ui.ui 
-    src/touch/highlighter/highlighter.ui 
-    src/touch/pen/pen_ui.ui 
-    src/touch/rubber/rubber_ui.ui 
-    src/touch/scrollKinetic/ui_scroll/scroll.ui 
-    src/touch/text/text_ui/text_ui.ui 
-    src/touch/text/text_widgets/text_widgets.ui 
-    src/utils/bug_repo/bug_repo_ui.ui 
+	src/audiosetting/audioqualityoption.ui 
+	src/currenttitle/option/option_copybook.ui 
+	src/last_open/element/element_ui.ui 
+    	src/last_open/last_open.ui 
+    	src/last_open/option/option_last_open_ui.ui 
+    	src/log/log_ui/log_ui.ui 
+    	src/mainwindow.ui 
+    	src/restore_file/ui/setting_restore_ui.ui 
+    	src/restore_file/ui_restore/restore.ui 
+    	src/sheet/dialog_sheet.ui 
+    	src/sheet/fast-sheet/fast_sheet_ui.ui 
+    	src/touch/highlighter/highlighter.ui 
+    	src/touch/pen/pen_ui.ui 
+    	src/touch/rubber/rubber_ui.ui 
+    	src/touch/scrollKinetic/ui_scroll/scroll.ui 
+    	src/touch/text/text_ui/text_ui.ui 
+    	src/touch/text/text_widgets/text_widgets.ui 
+    	src/utils/bug_repo/bug_repo_ui.ui 
     src/utils/default_location/audio_default_location.ui 
     src/utils/default_option/default_option_ui.ui 
     src/utils/extract_audio/extract_audio_ui.ui 
@@ -303,6 +290,7 @@ SET (CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -O3")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
