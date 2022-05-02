@@ -129,7 +129,6 @@ ADD_EXECUTABLE(writernote
     src/frompdf/convertimg.cpp
     src/frompdf/frompdf.cpp
     src/frompdf/metadata.cpp
-    src/ui/buttonTablet.cpp
     src/ui/controlluibutton.cpp
     src/windows/showmessageupdate.cpp
     src/windows/updatecheck.cpp
