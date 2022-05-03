@@ -51,6 +51,8 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     W_ASSERT(canvas);
 
+    core::set_main_window(this);
+
 #ifdef CLOUD
     this->m_cloud = cloud;
     this->m_user = user;
@@ -60,10 +62,10 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 #endif
 
     _canvas = canvas;
-    _canvas->_parent = this;
     DataPrivateInit();
 
     ui->setupUi(this);
+    this->layout()->setMargin(0);
 
     this->m_buffer = new QBuffer(this);
 
@@ -166,7 +168,6 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     mobile::make_ui(this);
 
     _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
-    core::set_main_window(this);
 }
 
 MainWindow::~MainWindow()

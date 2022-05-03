@@ -44,7 +44,7 @@ static void AppendAll(
     if(unlikely(strokeToAppend.isEmpty()))
         return;
 
-    time = canvas->_parent->m_audioplayer->getPositionSecond();
+    time = core::get_main_window()->m_audioplayer->getPositionSecond();
 
     if(likely(strokeToAppend.is_normal())){
         lenPoint = strokeToAppend.length();
@@ -63,7 +63,7 @@ static void AppendAll(
     }else{
         pageMod = doc.datatouch->appendStroke(strokeToAppend);
 
-        canvas->_parent->_preview_widget->mod(pageMod);
+        core::get_main_window()->_preview_widget->mod(pageMod);
         doc.datatouch->at_mod(pageMod).triggerRenderImage(time, false);
     }
 
@@ -319,9 +319,9 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
         }else if(rubber_method){
             index_mod = _rubber->endRubber();
             if(index_mod >= 0){
-                this->_parent->_preview_widget->mod(index_mod);
+                core::get_main_window()->_preview_widget->mod(index_mod);
             }else if(index_mod != -1){
-                this->_parent->_preview_widget->mod(-1);
+                core::get_main_window()->_preview_widget->mod(-1);
             }
         }
     }
@@ -345,7 +345,7 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;
 
     if(unlikely(!this->m_deviceDown)){
-        strokeTmp.setPositioneAudio(_parent->m_audio_recorder->getCurrentTime());
+        strokeTmp.setPositioneAudio(core::get_main_window()->m_audio_recorder->getCurrentTime());
         strokeTmp.setColor(_color);
         strokeTmp.setAlfaColor(alfa);
     }

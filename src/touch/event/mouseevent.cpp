@@ -1,6 +1,6 @@
 #include "touch/tabletcanvas.h"
 #include <QWheelEvent>
-
+#include "core/core.h"
 #include "itspossibletoscroll.h"
 #include "mainwindow.h"
 #include <QDebug>
@@ -46,7 +46,7 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
     if(isZooming)
         return;
 
-    if(unlikely(_parent->touch_or_pen)){
+    if(unlikely(core::get_main_window()->touch_or_pen)){
         if(unlikely(first_touch)){
             first_touch = false;
             __type = QEvent::TabletPress;
@@ -116,7 +116,7 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
     __last_point_move.set = false;
     lastpointtouch.set = false;
 
-    if(unlikely(_parent->touch_or_pen)){
+    if(unlikely(core::get_main_window()->touch_or_pen)){
         tab_event = new QTabletEvent(QTabletEvent::TabletRelease, event->pos(), event->globalPos(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
         tabletEvent(tab_event);
         delete tab_event;

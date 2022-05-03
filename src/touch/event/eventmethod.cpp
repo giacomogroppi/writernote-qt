@@ -1,3 +1,4 @@
+#include "core/core.h"
 #include "touch/tabletcanvas.h"
 #include <QEvent>
 #include "math.h"
@@ -151,7 +152,7 @@ ridefine:
         this->callResizeEvent();
 
     if(zoomChange)
-        _parent->zoomChange();
+        core::get_main_window()->zoomChange();
 
 out:
     update();

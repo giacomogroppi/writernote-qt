@@ -29,7 +29,8 @@ void MainWindow::updatePageCount(int pageCount)
 
 void TabletCanvas::updatePageCount()
 {
+    auto *main = core::get_main_window();
     const int index = data->datatouch->getFirstPageVisible() + 1;
-    _parent->_preview_widget->pageMove();
-    _parent->updatePageCount(index);
+    main->_preview_widget->pageMove();
+    main->updatePageCount(index);
 }

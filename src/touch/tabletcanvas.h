@@ -89,8 +89,6 @@ public:
     static qreal pressureToWidth(qreal pressure);
     struct Point _lastPoint;
 
-    MainWindow *_parent;
-
     struct PointSettable _pointload;
     void callResizeEvent();
 

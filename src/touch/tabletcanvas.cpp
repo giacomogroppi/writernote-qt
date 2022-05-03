@@ -1,4 +1,5 @@
 #include "tabletcanvas.h"
+#include "core/core.h"
 #include "mainwindow.h"
 #include <QCoreApplication>
 #include <QPainter>
@@ -206,12 +207,12 @@ static void loadLastMethod(TabletCanvas *p)
 
 void TabletCanvas::triggerNewView(const bool all)
 {
-    data->datatouch->triggerNewView(_parent->m_audioplayer->getPositionSecond(), all);
+    data->datatouch->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
 void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all)
 {
-    this->data->datatouch->triggerNewView(Page, _parent->m_audioplayer->getPositionSecond(), all);
+    this->data->datatouch->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
 void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,

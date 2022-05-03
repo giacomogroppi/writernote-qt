@@ -1,6 +1,7 @@
 #include "datastruct.h"
 #include <QList>
 #include <QDebug>
+#include "core/core.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/tabletcanvas.h"
 #include "mainwindow.h"
@@ -31,7 +32,7 @@ void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
 
     if(likely(canvas)){
         canvas->callResizeEvent();
-        canvas->_parent->zoomChange();
+        core::get_main_window()->zoomChange();
     }
 
     this->triggerVisibility(size);

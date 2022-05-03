@@ -20,7 +20,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
         .IsExportingPdf = false,
         .m = 1.,
         //.size = QSize(m_pixmap.size()),
-        .parent = _parent,
+        .parent = core::get_main_window(),
         .m_pixmap = &this->_pixmap,
         DATAPAINT_DEFINEREST
     };
@@ -41,7 +41,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
 
     if(unlikely( needToCreateNewPage || data->isEmpty())){
         this->data->datatouch->newPage(this->_sheet->WhatIsSelected());
-        this->_parent->_preview_widget->newPage();
+        core::get_main_window()->_preview_widget->newPage();
         this->updatePageCount();
     }
 
