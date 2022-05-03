@@ -47,6 +47,36 @@ void ToolBar::setSpacer(QSizePolicy::Policy hData)
     makeSize(ui->horizontalSpacer_4, hData);
 }
 
+QPushButton *ToolBar::get_pen_button()
+{
+    return ui->button_pen;
+}
+
+QPushButton *ToolBar::get_rubber_button()
+{
+    return ui->button_rubber;
+}
+
+QPushButton *ToolBar::get_laser_button()
+{
+    return ui->button_laser;
+}
+
+QPushButton *ToolBar::get_text_button()
+{
+    return ui->button_text;
+}
+
+QPushButton *ToolBar::get_cut_button()
+{
+    return ui->button_cut;
+}
+
+QPushButton *ToolBar::get_highlighter_button()
+{
+    return ui->button_highlighter;
+}
+
 void ToolBar::on_button_back_clicked()
 {
 

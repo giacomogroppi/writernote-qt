@@ -23,7 +23,50 @@ SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
-ADD_EXECUTABLE(${PROJECT_NAME} 
+
+
+file(GLOB PROJECT_MOC
+	writernote.qrc
+    	language.qrc
+)
+
+
+file(GLOB PROJECT_UI
+	src/audiosetting/audioqualityoption.ui 
+	src/currenttitle/option/option_copybook.ui 
+	src/last_open/element/element_ui.ui 
+    	src/last_open/last_open.ui 
+    	src/last_open/option/option_last_open_ui.ui 
+    	src/log/log_ui/log_ui.ui 
+    	src/mainwindow.ui 
+    	src/restore_file/ui/setting_restore_ui.ui 
+    	src/restore_file/ui_restore/restore.ui 
+    	src/sheet/dialog_sheet.ui 
+    	src/sheet/fast-sheet/fast_sheet_ui.ui 
+    	src/touch/highlighter/highlighter.ui 
+    	src/touch/pen/pen_ui.ui 
+    	src/touch/rubber/rubber_ui.ui 
+    	src/touch/scrollKinetic/ui_scroll/scroll.ui 
+    	src/touch/text/text_ui/text_ui.ui 
+    	src/touch/text/text_widgets/text_widgets.ui 
+    	src/utils/bug_repo/bug_repo_ui.ui 
+    	src/utils/default_location/audio_default_location.ui 
+    	src/utils/default_option/default_option_ui.ui 
+    	src/utils/extract_audio/extract_audio_ui.ui 
+    	src/utils/make_default/make_default_ui.ui 
+    	src/utils/progress_bar/progress_bar_ui.ui 
+    	src/utils/retry/retry_ui.ui 
+    	src/videocompress/videocompress_ui.ui 
+    	src/windows/showmessageupdate.ui
+    	src/utils/choosepage.ui
+    	src/preview_page_widget/preview_page_container.ui
+    	src/preview_page_widget/preview_page_widget.ui
+    	src/preview_page_widget/preview_page_item.ui
+    	src/ui/toolbar.ui
+)
+
+
+file(GLOB PROJECT_SOURCES
     src/ui/toolbar.cpp
     src/ui/uicore.cpp
     src/preview_page_widget/list_options.cpp
@@ -209,50 +252,13 @@ ADD_EXECUTABLE(${PROJECT_NAME}
     src/touch/datastruct/stroke_complex_data.cpp
     src/touch/datastruct/stroke_file.cpp
     src/utils/choosepage.cpp
-    src/touch/datastruct/page_file.cpp    
-
-	src/audiosetting/audioqualityoption.ui 
-	src/currenttitle/option/option_copybook.ui 
-	src/last_open/element/element_ui.ui 
-    	src/last_open/last_open.ui 
-    	src/last_open/option/option_last_open_ui.ui 
-    	src/log/log_ui/log_ui.ui 
-    	src/mainwindow.ui 
-    	src/restore_file/ui/setting_restore_ui.ui 
-    	src/restore_file/ui_restore/restore.ui 
-    	src/sheet/dialog_sheet.ui 
-    	src/sheet/fast-sheet/fast_sheet_ui.ui 
-    	src/touch/highlighter/highlighter.ui 
-    	src/touch/pen/pen_ui.ui 
-    	src/touch/rubber/rubber_ui.ui 
-    	src/touch/scrollKinetic/ui_scroll/scroll.ui 
-    	src/touch/text/text_ui/text_ui.ui 
-    	src/touch/text/text_widgets/text_widgets.ui 
-    	src/utils/bug_repo/bug_repo_ui.ui 
-    src/utils/default_location/audio_default_location.ui 
-    src/utils/default_option/default_option_ui.ui 
-    src/utils/extract_audio/extract_audio_ui.ui 
-    src/utils/make_default/make_default_ui.ui 
-    src/utils/progress_bar/progress_bar_ui.ui 
-    src/utils/retry/retry_ui.ui 
-    src/videocompress/videocompress_ui.ui 
-    src/windows/showmessageupdate.ui
-    src/utils/choosepage.ui
-    src/preview_page_widget/preview_page_container.ui
-    src/preview_page_widget/preview_page_widget.ui
-    src/preview_page_widget/preview_page_item.ui
-    src/ui/toolbar.ui
-
-    writernote.qrc
-    language.qrc
-)
-
-set(PROJECT_SOURCES
-
+    src/touch/datastruct/page_file.cpp   
     
 )
 
+message(${PROJECT_UI})
 
+add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(writernote
@@ -266,7 +272,7 @@ set_target_properties(
 	${PROJECT_NAME}
 	PROPERTIES
 	AUTOUIC TRUE
-	AUTOUIC_SEARCH_PATHS "${PROJECT_SOURCE_DIR};${PROJECT_SOURCE_DIR}/src"
+	AUTOUIC_SEARCH_PATHS "${PROJECT_SOURCE_DIR}/src"
 	AUTOMOC TRUE
 	AUTORCC TRUE
 	AUTOGEN_SOURCE_GROUP "Qt Files"
@@ -279,13 +285,10 @@ add_definitions(-DPDFSUPPORT)
 
 target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 
-include_directories(.)
 include_directories(src/)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::PrintSupport)
 
-#set_property(TARGET writernote PROPERTY CXX_STANDARD 11)
-set (CMAKE_CXX_STANDARD 17)
 SET (CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -O3")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

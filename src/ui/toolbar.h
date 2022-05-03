@@ -2,6 +2,7 @@
 #define TOOLBAR_H
 
 #include <QWidget>
+#include <QPushButton>
 
 namespace Ui {
 class ToolBar;
@@ -19,6 +20,13 @@ public:
     void Show();
 
     void setSpacer(QSizePolicy::Policy hData = QSizePolicy::Minimum);
+
+    QPushButton *get_pen_button();
+    QPushButton *get_rubber_button();
+    QPushButton *get_laser_button();
+    QPushButton *get_text_button();
+    QPushButton *get_cut_button();
+    QPushButton *get_highlighter_button();
 
 private slots:
     void on_button_back_clicked();
@@ -49,7 +57,7 @@ private slots:
     void on_button_undo_clicked();
     void on_button_redo_clicked();
 
-public:
+private:
     Ui::ToolBar *ui;
 };
 
