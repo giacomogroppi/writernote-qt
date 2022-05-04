@@ -39,7 +39,6 @@ bool isZooming = false;
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
 {
     double deltay, deltax;
-    QTabletEvent *tab_event;
     constexpr bool debug = false;
     QEvent::Type __type;
 
@@ -58,9 +57,13 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
             __type = QEvent::TabletMove;
         }
 
-        tab_event = new QTabletEvent(__type, p, event->globalPos(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
-        tabletEvent(tab_event);
-        delete tab_event;
+        canvas_send_touch_event(this, p, __type,
+#                        if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                            QTabletEvent::Pen
+#                        else
+                                QPointingDevice::PointerType::Pen
+#                        endif
+                                , true);
         return;
     }
 
@@ -105,9 +108,9 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
     lastpointtouch.set = true;
 }
 
-void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
+void TabletCanvas::mouseReleaseEvent(QMouseEvent *event)
+{
     //qDebug() << "Mouse Release Event";
-    QTabletEvent *tab_event;
 
     event->accept();
 
@@ -121,9 +124,13 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event){
     lastpointtouch.set = false;
 
     if(unlikely(core::get_main_window()->touch_or_pen)){
-        tab_event = new QTabletEvent(QTabletEvent::TabletRelease, event->pos(), event->globalPos(), 0, QTabletEvent::Pen, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
-        tabletEvent(tab_event);
-        delete tab_event;
+        canvas_send_touch_event(this, event->pos(), event->type(),
+#                        if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                                QTabletEvent::Pen
+#                       else
+                                QPointingDevice::PointerType::Pen
+#                       endif
+                                , true);
     }
 
     first_touch = true;

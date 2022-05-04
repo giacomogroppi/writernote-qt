@@ -118,7 +118,12 @@ static force_inline void setFalse()
 static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_method met)
 {
     CTRL_METHOD(rubber_method, rubber);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     rubber_method |= (event->pointerType() == QTabletEvent::PointerType::Eraser);
+#else
+    rubber_method |= (event->pointerType() == QPointingDevice::PointerType::Eraser);
+#endif
 
     if(unlikely(rubber_method)){
         setFalse();
@@ -246,7 +251,13 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
     constexpr not_used bool debugMove = true;
     const auto &point = event->posF();
 
-    if(event->deviceType() == QTabletEvent::RotationStylus){
+    if(event->deviceType() ==
+#       if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+            QTabletEvent::RotationStylus
+#       else
+            QInputDevice::DeviceType::Stylus
+#       endif
+            ){
         updateCursor(event);
     }
 

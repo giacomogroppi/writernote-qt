@@ -78,7 +78,9 @@ void TabletCanvas::clear()
     update();
 }
 
-void TabletCanvas::updateBrush(const QTabletEvent *event){
+void TabletCanvas::updateBrush(const QTabletEvent *event)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     int hue, saturation, value, alpha;
     this->_color.getHsv(&hue, &saturation, &value, &alpha);
 
@@ -132,10 +134,12 @@ void TabletCanvas::updateBrush(const QTabletEvent *event){
         } else {
             m_pen.setColor(_color);
         }
+#endif
 }
 
 void TabletCanvas::updateCursor(const QTabletEvent *event)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
         if (event->pointerType() == QTabletEvent::Eraser || this->_input == e_method::rubber) {
@@ -174,6 +178,7 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
         }
     }
     setCursor(cursor);
+#endif
 }
 
 
@@ -237,6 +242,7 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
 #else
     e = new QTabletEvent(event_type, pos, QPointF(), 0, deviceType, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
 #endif
+
     if(now){
         c->send_touch_event(e);
         delete e;

@@ -44,8 +44,14 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.13.2
         with:
-          version: 5.15.2 # optional, default is 5.15.2
-          modules: multimedia # optional
+          version: 5.15.2
+          modules: multimedia
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.13.2
+        with:
+          version: 6.3.0
+          modules: multimedia
 
       - name: Build poppler
         if: false
@@ -81,5 +87,7 @@ jobs:
 
       - name: CMake compile
         run: |
-          cmake .
+          make clean
+          mkdir build; cd build
+          cmake ..
           make -j $(nproc)

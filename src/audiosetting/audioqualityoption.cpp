@@ -69,12 +69,6 @@ void audioqualityoption::on_cancelbutton_clicked()
     this->close();
 }
 
-void MainWindow::on_actionQuality_setting_triggered()
-{
-    audioqualityoption insert(nullptr, this);
-    insert.exec();
-}
-
 void audioqualityoption::on_pushButton_clicked()
 {
     savequalita(this);
@@ -83,3 +77,11 @@ void audioqualityoption::on_pushButton_clicked()
 }
 
 #endif
+
+void MainWindow::on_actionQuality_setting_triggered()
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    audioqualityoption insert(nullptr, this);
+    insert.exec();
+#endif
+}
