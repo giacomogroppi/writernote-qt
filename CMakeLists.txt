@@ -69,6 +69,7 @@ file(GLOB PROJECT_UI
 
 
 file(GLOB PROJECT_SOURCES
+    src/testing/memtest.cpp
     src/ui/toolbar.cpp
     src/ui/uicore.cpp
     src/preview_page_widget/list_options.cpp
@@ -278,6 +279,7 @@ set_target_properties(
 	AUTORCC TRUE
 	AUTOGEN_SOURCE_GROUP "Qt Files"
 )
+set(CMAKE_CXX_FLAGS_DEBUG_INIT ${CMAKE_CXX_FLAGS} "-DDEBUGINFO")
 
 add_definitions(-DALL_VERSION)
 
