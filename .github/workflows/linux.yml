@@ -41,16 +41,10 @@ jobs:
           sudo apt install libpoppler-qt5-dev
           sudo snap install cmake --classic
 
-      - name: Install Qt
+      - name: Install Qt5
         uses: jurplel/install-qt-action@v2.13.2
         with:
           version: 5.15.2
-          modules: multimedia
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2.13.2
-        with:
-          version: 6.3.0
           modules: multimedia
 
       - name: Build poppler
@@ -84,6 +78,12 @@ jobs:
           make clean
           qmake CONFIG+=debug
           make -j $(nproc)
+
+      - name: Install Qt6
+        uses: jurplel/install-qt-action@v2.13.2
+        with:
+          version: 6.3.0
+          modules: multimedia
 
       - name: CMake compile
         run: |
