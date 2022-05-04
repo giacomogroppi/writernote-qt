@@ -51,7 +51,14 @@ public:
 
 private slots:
     void positionChange(qint64 position);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    void updateStatus(QMediaPlayer::State newState);
+#else
     void updateStatus(QMediaPlayer::PlaybackState newState);
+#endif
+
+
 private:
     QMediaPlayer *player;
 

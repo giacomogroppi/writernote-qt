@@ -133,7 +133,7 @@ int rubber_ui::endRubber()
                 index_mod = i + _base;
             }
 
-            order(arr);
+            order_vector(arr);
 
             const auto rect = data->get_size_area(arr, i + _base);
             page.removeAndDraw(-1, arr, rect);

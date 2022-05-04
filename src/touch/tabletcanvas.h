@@ -35,8 +35,14 @@ void loadSingleSheet(
         QPen &_pen,         const QPointF& pointFirstPage);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
+                             QEvent::Type event_type, QTabletEvent::PointerType deviceType, cbool now);
+#else
 void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
                              QEvent::Type event_type, QPointingDevice::PointerType deviceType, cbool now);
+#endif
+
 
 struct Point {
     Point() {};

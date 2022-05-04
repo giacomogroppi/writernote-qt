@@ -167,7 +167,7 @@ void page::swap(
     QRectF area;
 
 #ifdef DEBUGINFO
-    if(unlikely(!is_order(pos))){
+    if(unlikely(!is_order_vector(pos))){
         qDebug() << "List not order" << __FILE__ << __FUNCTION__;
     }
 #endif

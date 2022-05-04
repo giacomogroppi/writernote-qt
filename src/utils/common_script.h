@@ -146,7 +146,7 @@ force_inline int is_order_multiple(const QList<QVector<T>> &list)
     int i, len;
     len = list.length();
     for(i = 0; i < len; i++){
-        if(!is_order(list.at(i)))
+        if(!is_order_vector(list.at(i)))
             return 0;
     }
 
@@ -208,7 +208,7 @@ inline void order_multiple(QList<QVector<T>> &list)
 
     for(i = 0; i < len; i++){
         auto & __list = list.operator[](i);
-        order(__list);
+        order_vector(__list);
     }
 
     if(!is_order_multiple(list)){
@@ -220,7 +220,7 @@ template <typename T>
 Q_ALWAYS_INLINE int is_present_in_list_order_list(const QList<T> &list, const T& element)
 {
     //the list must be sorted
-    W_ASSERT(is_order(list));
+    W_ASSERT(is_order_list(list));
 
     int i, len = list.length();
     for(i = 0; i < len; i++){
@@ -238,7 +238,7 @@ Q_ALWAYS_INLINE int is_present_in_list_order_list(const QList<T> &list, const T&
 template <typename T>
 Q_ALWAYS_INLINE int is_present_in_list_order_vector(const QVector<T> &list, const T& element)
 {
-    W_ASSERT(is_order(list));
+    W_ASSERT(is_order_vector(list));
 
     int i, len = list.length();
     for(i = 0; i < len; i++){

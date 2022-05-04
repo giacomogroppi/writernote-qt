@@ -215,9 +215,15 @@ void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all)
     this->data->datatouch->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
+                             QEvent::Type event_type, QTabletEvent::PointerType deviceType,
+                             cbool now)
+#else
 void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
                              QEvent::Type event_type, QPointingDevice::PointerType deviceType,
                              cbool now)
+#endif
 {
     QTabletEvent *e;
     TabletCanvas *c;

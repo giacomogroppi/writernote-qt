@@ -27,7 +27,12 @@ audioplay::audioplay(QObject *parent) : QObject(parent)
     W_ASSERT(this->parent->objectName() == "MainWindow");
 
     connect(player, &QMediaPlayer::positionChanged, this, &audioplay::positionChange);
+
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
     connect(player, &QMediaPlayer::playbackStateChanged, this, &audioplay::updateStatus);
+#else
+    connect(player, &QMediaPlayer::stateChanged, this, &audioplay::updateStatus);
+#endif
 
     connect(player, &QMediaPlayer::durationChanged, [=](qint64 duration){
         qDebug() << "Duration change " << duration;
@@ -68,7 +73,13 @@ void audioplay::positionChange(qint64 position)
     parent->_canvas->call_update();
 }
 
-void audioplay::updateStatus(QMediaPlayer::PlaybackState newState)
+void audioplay::updateStatus(
+# if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QMediaPlayer::State newState
+# else
+    QMediaPlayer::PlaybackState newState
+# endif
+)
 {
     if(newState == QMediaPlayer::StoppedState){
 
