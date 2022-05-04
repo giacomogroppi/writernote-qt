@@ -220,9 +220,9 @@ void page::swap(QList<stroke> & list,
 void page::removeAt(const QVector<int> &pos)
 {
     int i;
-    if(unlikely(!is_order(pos))){
+    if(unlikely(!is_order_vector(pos))){
         DO_IF_DEBUG(std::abort());
-        order((QVector<int> &)(pos));
+        order_vector((QVector<int> &)(pos));
     }
 
     i = pos.length();
@@ -389,7 +389,7 @@ void page::drawEngine(
     }
 
     if(unlikely(to_remove.length())){
-        order(to_remove);
+        order_vector(to_remove);
 
         if(likely(changeSomething))
             *changeSomething = true;

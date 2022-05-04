@@ -4,6 +4,8 @@
 #include "utils/setting_define.h"
 #include <QSettings>
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
 static QVariant boxValue(const QComboBox *box)
 {
     int idx = box->currentIndex();
@@ -39,3 +41,5 @@ void savequalita(audioqualityoption *padredialog){
 
     setting.endGroup();
 }
+
+#endif

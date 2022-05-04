@@ -313,17 +313,17 @@ void datastruct::removePointIndex(
 
     if(likely(__isOrder)){
 #ifdef DEBUGINFO
-        W_ASSERT(is_order(pos));
+        W_ASSERT(is_order_vector(pos));
 #else
-        if(unlikely(is_order(pos))){
+        if(unlikely(is_order_vector(pos))){
             NAME_LOG_EXT->write("List not order", log_ui::critic_error);
             /* in this case we need to order */
-            order(pos);
+            order_vector(pos);
         }
 
 #endif
     }else{
-        order(pos);
+        order_vector(pos);
     }
 
     for(; i >= 0; i --){

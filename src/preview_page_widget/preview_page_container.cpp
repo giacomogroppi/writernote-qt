@@ -11,7 +11,11 @@ preview_page_container::preview_page_container(QWidget *parent, MainWindow *main
     _main = mainWindow;
     this->layout()->setAlignment(Qt::AlignTop);
     //this->layout()->setSpacing(10);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     this->layout()->setMargin(10);
+#else
+    this->layout()->setSpacing(10);
+#endif
     this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 

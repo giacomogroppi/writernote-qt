@@ -5,6 +5,11 @@
 #include "ui_mainwindow.h"
 #include "utils/platform.h"
 
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+#include <QAudioOutput>
+#include <QMediaFormat>
+#endif
+
 audioplay::audioplay(QObject *parent) : QObject(parent)
 {
     if(disableAudioForDebug){
@@ -13,20 +18,19 @@ audioplay::audioplay(QObject *parent) : QObject(parent)
     }
 
     this->player = new QMediaPlayer(this);
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+    this->audio_output = new QAudioOutput(this);
+    this->player->setAudioOutput(audio_output);
+#endif
+
     this->parent = (MainWindow *)parent;
-    Q_ASSERT(this->parent->objectName() == "MainWindow");
+    W_ASSERT(this->parent->objectName() == "MainWindow");
 
     connect(player, &QMediaPlayer::positionChanged, this, &audioplay::positionChange);
-    connect(player, &QMediaPlayer::stateChanged, this, &audioplay::updateStatus);
+    connect(player, &QMediaPlayer::playbackStateChanged, this, &audioplay::updateStatus);
 
     connect(player, &QMediaPlayer::durationChanged, [=](qint64 duration){
         qDebug() << "Duration change " << duration;
-    });
-
-    connect(player, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
-        [=](QMediaPlayer::Error error){
-        Q_UNUSED(error)
-        user_message("We had an internal error with this error code: " + player->errorString());
     });
 }
 
@@ -64,7 +68,7 @@ void audioplay::positionChange(qint64 position)
     parent->_canvas->call_update();
 }
 
-void audioplay::updateStatus(QMediaPlayer::State newState)
+void audioplay::updateStatus(QMediaPlayer::PlaybackState newState)
 {
     if(newState == QMediaPlayer::StoppedState){
 

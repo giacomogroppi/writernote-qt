@@ -1,5 +1,4 @@
-#ifndef COMMON_SCRIPT_H
-#define COMMON_SCRIPT_H
+#pragma once
 
 #include <QList>
 #include <QtGlobal>
@@ -112,7 +111,7 @@ force_inline void __swap(T &t1, T &t2)
 
 
 template <typename T>
-force_inline int is_order(const QList<T> &list)
+force_inline int is_order_list(const QList<T> &list)
 {
     int i, len;
     len = list.length();
@@ -127,7 +126,7 @@ force_inline int is_order(const QList<T> &list)
 }
 
 template <typename T>
-force_inline int is_order(const QVector<T> &list)
+force_inline int is_order_vector(const QVector<T> &list)
 {
     int i, len;
     len = list.length();
@@ -159,7 +158,7 @@ force_inline int is_order_multiple(const QList<QVector<T>> &list)
  * otherwise use std :: sort
 */
 template <typename T>
-inline void order(QList<T> &list)
+inline void order_list(QList<T> &list)
 {
     int i, j;
     int n = list.length();
@@ -181,7 +180,7 @@ inline void order(QList<T> &list)
 }
 
 template <typename T>
-inline void order(QVector<T> &list)
+inline void order_vector(QVector<T> &list)
 {
     int i, j;
     int n = list.length();
@@ -218,7 +217,7 @@ inline void order_multiple(QList<QVector<T>> &list)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int is_present_in_list_order(const QList<T> &list, const T& element)
+Q_ALWAYS_INLINE int is_present_in_list_order_list(const QList<T> &list, const T& element)
 {
     //the list must be sorted
     W_ASSERT(is_order(list));
@@ -237,7 +236,7 @@ Q_ALWAYS_INLINE int is_present_in_list_order(const QList<T> &list, const T& elem
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int is_present_in_list_order(const QVector<T> &list, const T& element)
+Q_ALWAYS_INLINE int is_present_in_list_order_vector(const QVector<T> &list, const T& element)
 {
     W_ASSERT(is_order(list));
 
@@ -508,4 +507,3 @@ force_inline void append_order(QVector<T> & list, const T& element)
     list.append(element);
 }
 
-#endif // COMMON_SCRIPT_H

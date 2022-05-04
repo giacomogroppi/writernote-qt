@@ -36,7 +36,7 @@ void loadSingleSheet(
 }
 
 void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
-                             QEvent::Type event_type, QTabletEvent::PointerType deviceType, cbool now);
+                             QEvent::Type event_type, QPointingDevice::PointerType deviceType, cbool now);
 
 struct Point {
     Point() {};

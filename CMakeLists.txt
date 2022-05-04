@@ -11,23 +11,25 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+set(QT_VERSION_MAJOR 6)
+message(Version qt: ${QT_VERSION_MAJOR})
+
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package(Qt5Multimedia REQUIRED )
-find_package(Qt5MultimediaWidgets REQUIRED )
-find_package(Qt5PrintSupport REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR}Multimedia REQUIRED )
+find_package(Qt${QT_VERSION_MAJOR}MultimediaWidgets REQUIRED )
+find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)
 
 SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
 
-
-
 file(GLOB PROJECT_MOC
 	writernote.qrc
-    	language.qrc
+    language.qrc
 )
 
 
@@ -35,34 +37,34 @@ file(GLOB PROJECT_UI
 	src/audiosetting/audioqualityoption.ui 
 	src/currenttitle/option/option_copybook.ui 
 	src/last_open/element/element_ui.ui 
-    	src/last_open/last_open.ui 
-    	src/last_open/option/option_last_open_ui.ui 
-    	src/log/log_ui/log_ui.ui 
-    	src/mainwindow.ui 
-    	src/restore_file/ui/setting_restore_ui.ui 
-    	src/restore_file/ui_restore/restore.ui 
-    	src/sheet/dialog_sheet.ui 
-    	src/sheet/fast-sheet/fast_sheet_ui.ui 
-    	src/touch/highlighter/highlighter.ui 
-    	src/touch/pen/pen_ui.ui 
-    	src/touch/rubber/rubber_ui.ui 
-    	src/touch/scrollKinetic/ui_scroll/scroll.ui 
-    	src/touch/text/text_ui/text_ui.ui 
-    	src/touch/text/text_widgets/text_widgets.ui 
-    	src/utils/bug_repo/bug_repo_ui.ui 
-    	src/utils/default_location/audio_default_location.ui 
-    	src/utils/default_option/default_option_ui.ui 
-    	src/utils/extract_audio/extract_audio_ui.ui 
-    	src/utils/make_default/make_default_ui.ui 
-    	src/utils/progress_bar/progress_bar_ui.ui 
-    	src/utils/retry/retry_ui.ui 
-    	src/videocompress/videocompress_ui.ui 
-    	src/windows/showmessageupdate.ui
-    	src/utils/choosepage.ui
-    	src/preview_page_widget/preview_page_container.ui
-    	src/preview_page_widget/preview_page_widget.ui
-    	src/preview_page_widget/preview_page_item.ui
-    	src/ui/toolbar.ui
+    src/last_open/last_open.ui 
+    src/last_open/option/option_last_open_ui.ui 
+    src/log/log_ui/log_ui.ui 
+    src/mainwindow.ui 
+    src/restore_file/ui/setting_restore_ui.ui 
+    src/restore_file/ui_restore/restore.ui 
+    src/sheet/dialog_sheet.ui 
+    src/sheet/fast-sheet/fast_sheet_ui.ui 
+    src/touch/highlighter/highlighter.ui 
+    src/touch/pen/pen_ui.ui 
+    src/touch/rubber/rubber_ui.ui 
+    src/touch/scrollKinetic/ui_scroll/scroll.ui 
+    src/touch/text/text_ui/text_ui.ui 
+    src/touch/text/text_widgets/text_widgets.ui 
+    src/utils/bug_repo/bug_repo_ui.ui 
+    src/utils/default_location/audio_default_location.ui 
+    src/utils/default_option/default_option_ui.ui 
+    src/utils/extract_audio/extract_audio_ui.ui 
+    src/utils/make_default/make_default_ui.ui 
+    src/utils/progress_bar/progress_bar_ui.ui 
+    src/utils/retry/retry_ui.ui 
+    src/videocompress/videocompress_ui.ui 
+    src/windows/showmessageupdate.ui
+    src/utils/choosepage.ui
+    src/preview_page_widget/preview_page_container.ui
+    src/preview_page_widget/preview_page_widget.ui
+    src/preview_page_widget/preview_page_item.ui
+    src/ui/toolbar.ui
 )
 
 
@@ -254,18 +256,17 @@ file(GLOB PROJECT_SOURCES
     src/utils/choosepage.cpp
     src/touch/datastruct/page_file.cpp   
     
-)
+)   
 
-message(${PROJECT_UI})
-
-add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES})
+qt_add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(writernote
-        ${PROJECT_SOURCES}
-    )
+    #set up poppler-qt6
+    message("Pdf Disable")
 else()
-    
+    message("Pdf Enable")
+    add_definitions(-DPDFSUPPORT)
+    target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 endif()
 
 set_target_properties(
@@ -279,15 +280,10 @@ set_target_properties(
 )
 
 add_definitions(-DALL_VERSION)
-add_definitions(-DNUMEROPIXELORIZZONALI=980)
-add_definitions(-DNUMEROPIXELVERTICALI=1400)
-add_definitions(-DPDFSUPPORT)
-
-target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 
 include_directories(src/)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::PrintSupport)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 SET (CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -O3")
 
@@ -298,4 +294,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
-target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libpoppler-qt5.so)
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    #set up poppler-qt6
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libpoppler-qt5.so)
+endif()

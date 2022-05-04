@@ -1,6 +1,7 @@
 #include "xmlstruct.h"
 #include <QString>
 #include "utils/common_script.h"
+#include <QFile>
 
 xmlstruct::xmlstruct(const QString *path_U, Document *currenttitle_U)
 {

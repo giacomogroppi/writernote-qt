@@ -2,7 +2,11 @@
 #define AUDIORECORD_H
 
 #include <QObject>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QAudioRecorder>
+#else
+#include <QMediaRecorder>
+#endif
 #include <QUrl>
 #include <QFile>
 
@@ -35,7 +39,13 @@ private slots:
     void displayErrorMessage();
 private:
     QString pathAudio;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QAudioRecorder *recorder;
+#else
+    QMediaRecorder *recorder;
+#endif
+
     class MainWindow *parent;
 
     friend class audioqualityoption;
@@ -43,17 +53,29 @@ private:
 
 inline bool AudioRecord::isRecording() const
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return this->recorder->state() == QMediaRecorder::RecordingState;
+#else
+    return this->recorder->recorderState() == QMediaRecorder::RecordingState;
+#endif
 }
 
 inline bool AudioRecord::isPauseRecording() const
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return this->recorder->state() == QMediaRecorder::PausedState;
+#else
+    return this->recorder->recorderState() == QMediaRecorder::PausedState;
+#endif
 }
 
 inline bool AudioRecord::isStopped() const
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return recorder->state() == QMediaRecorder::StoppedState;
+#else
+    return recorder->recorderState() == QMediaRecorder::StoppedState;
+#endif
 }
 
 inline void AudioRecord::startRecord()

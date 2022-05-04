@@ -1,11 +1,12 @@
-#ifndef AUDIOPLAY_H
-#define AUDIOPLAY_H
+#pragma once
 
 #include <QObject>
 #include <QMediaPlayer>
 #include <QSlider>
 #include <QBuffer>
+#include "qaudiooutput.h"
 #include "utils/common_script.h"
+#include "qiodevice.h"
 
 constexpr bool disableAudioForDebug =
 #if defined(DEBUGINFO) && defined(linux)
@@ -50,9 +51,14 @@ public:
 
 private slots:
     void positionChange(qint64 position);
-    void updateStatus(QMediaPlayer::State newState);
+    void updateStatus(QMediaPlayer::PlaybackState newState);
 private:
-    QMediaPlayer *player = nullptr;
+    QMediaPlayer *player;
+
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+    QAudioOutput *audio_output;
+#endif
+
     class MainWindow *parent;
 };
 
@@ -60,15 +66,22 @@ inline bool audioplay::isPlay() const
 {
     if constexpr(disableAudioForDebug)
         return false;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return this->player->state() == QMediaPlayer::PlayingState;
+#else
+    return this->player->playbackState() == QMediaPlayer::PlayingState;
+#endif
 }
 
 inline bool audioplay::isPause() const
 {
     if constexpr(disableAudioForDebug)
             return false;
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return this->player->state() == QMediaPlayer::PausedState;
+#else
+    return this->player->playbackState() == QMediaPlayer::PausedState;
+#endif
 }
 
 inline bool audioplay::isStop() const
@@ -76,7 +89,11 @@ inline bool audioplay::isStop() const
     if constexpr(disableAudioForDebug)
             return true;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return this->player->state() == QMediaPlayer::StoppedState;
+#else
+    return this->player->playbackState() == QMediaPlayer::StoppedState;
+#endif
 }
 
 inline bool audioplay::isEndMedia() const
@@ -91,7 +108,11 @@ inline void audioplay::setVolume(const int val)
 {
     W_ASSERT(disableAudioForDebug == false);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     this->player->setVolume(val);
+#else
+    this->audio_output->setVolume(val);
+#endif
 }
 
 inline void audioplay::setPositionSecond(const qint64 pos)
@@ -165,14 +186,21 @@ inline void audioplay::setMedia(QBuffer *array)
 {
     W_ASSERT(disableAudioForDebug == false);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     this->player->setMedia(QMediaContent(), array);
+#else
+    this->player->setSourceDevice(array);
+#endif
 }
 
 inline void audioplay::setMedia(const QString &path)
 {
     W_ASSERT(disableAudioForDebug == false);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     this->player->setMedia(QUrl::fromLocalFile(path));
+#else
+    this->player->setSource(QUrl::fromLocalFile(path));
+#endif
 }
 
-#endif // AUDIOPLAY_H

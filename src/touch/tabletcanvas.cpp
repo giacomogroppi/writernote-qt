@@ -216,7 +216,7 @@ void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all)
 }
 
 void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
-                             QEvent::Type event_type, QTabletEvent::PointerType deviceType,
+                             QEvent::Type event_type, QPointingDevice::PointerType deviceType,
                              cbool now)
 {
     QTabletEvent *e;
@@ -226,7 +226,11 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
 
     c = static_cast<TabletCanvas *>(_canvas);
 
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+    e = new QTabletEvent(event_type, NULL, pos, QPointF(), 0, 0, 0, 0, 0, 0, Qt::KeyboardModifier::NoModifier, Qt::MouseButton::AllButtons, Qt::MouseButton::AllButtons);
+#else
     e = new QTabletEvent(event_type, pos, QPointF(), 0, deviceType, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
+#endif
     if(now){
         c->send_touch_event(e);
         delete e;

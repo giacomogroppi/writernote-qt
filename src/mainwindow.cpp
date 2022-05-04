@@ -65,7 +65,6 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     DataPrivateInit();
 
     ui->setupUi(this);
-    this->layout()->setMargin(0);
 
     this->m_buffer = new QBuffer(this);
 

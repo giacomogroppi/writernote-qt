@@ -1,8 +1,8 @@
-#ifndef AUDIOQUALITYOPTION_H
-#define AUDIOQUALITYOPTION_H
+#pragma once
 
 #include <QDialog>
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 namespace Ui {
 class audioqualityoption;
 }
@@ -32,4 +32,4 @@ private:
 
 };
 
-#endif // AUDIOQUALITYOPTION_H
+#endif

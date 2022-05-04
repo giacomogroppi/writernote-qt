@@ -5,6 +5,7 @@
 #include "savequalita.h"
 #include "utils/dialog_critic/dialog_critic.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 audioqualityoption::audioqualityoption(QWidget *parent, MainWindow *padre) :
     QDialog(parent),
     ui(new Ui::audioqualityoption)
@@ -80,3 +81,5 @@ void audioqualityoption::on_pushButton_clicked()
 
     this->close();
 }
+
+#endif

@@ -3,23 +3,39 @@
 #include "ui_mainwindow.h"
 #include <QFileInfo>
 #include <QSettings>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QAudioEncoderSettings>
+#else
+#include <QMediaRecorder>
+#endif
+
 #include "utils/setting_define.h"
 #include "testing/memtest.h"
 
 AudioRecord::AudioRecord(QObject *parent) : QObject(parent)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     this->recorder = new QAudioRecorder(this);
+#else
+    this->recorder = new QMediaRecorder(this);
+#endif
+
     this->parent = (MainWindow *)parent;
     Q_ASSERT(this->parent->objectName() == "MainWindow");
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(recorder, &QAudioRecorder::durationChanged, this, &AudioRecord::updateProgress);
     connect(recorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error), this,
             &AudioRecord::displayErrorMessage);
+#else
+    QObject::connect(recorder, &QMediaRecorder::durationChanged, this, &AudioRecord::updateProgress);
+#endif
 }
 
 void AudioRecord::loadSettings()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     QAudioEncoderSettings setting_audio;
     QString str;
@@ -54,7 +70,7 @@ void AudioRecord::loadSettings()
     setting.endGroup();
 
     recorder->setEncodingSettings(setting_audio, QVideoEncoderSettings(), str);
-
+#endif
 }
 
 void AudioRecord::updateProgress(qint64 duration)

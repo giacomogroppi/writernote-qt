@@ -77,7 +77,7 @@ void preview_page_widget::mod(int page)
 {
     W_ASSERT(is_order(_page_mod));
 
-    if(likely(is_present_in_list_order(_page_mod, page) >= 0))
+    if(likely(is_present_in_list_order_vector(_page_mod, page) >= 0))
         return;
 
     append_order(_page_mod, page);

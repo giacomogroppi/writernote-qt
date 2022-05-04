@@ -1,6 +1,8 @@
 #include "frompdf.h"
 #include "currenttitle/document.h"
 
+#ifdef PDFSUPPORT
+
 static inline void copy_double(const QPointF &point, double *data);
 
 frompdf::load_res frompdf::save_metadata(zip_source_t *file)
@@ -48,3 +50,5 @@ static inline void copy_double(const QPointF &point, double *data){
     data[0] = point.x();
     data[1] = point.y();
 }
+
+#endif

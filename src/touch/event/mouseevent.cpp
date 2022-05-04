@@ -8,7 +8,11 @@
 
 void TabletCanvas::wheelEvent(QWheelEvent *event)
 {
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+    double move = event->angleDelta().y();
+#else
     double move = event->delta();
+#endif
 
     if(!scroll::y(data->datatouch, this->_pixmap.height(), move)){
         return;
