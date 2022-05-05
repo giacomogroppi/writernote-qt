@@ -155,7 +155,8 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     if(unlikely(    pointTouch.x() > data->datatouch->biggerx()
                 ||  pointTouch.y() > data->datatouch->biggery())){
-        /* the user is writing in a part where
+        /*
+         * the user is writing in a part where
          *  the sheet is not present.
          * You don't have to save the point. And
          * save the end of the current treatment
@@ -176,10 +177,15 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
         ManageMove(event);
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     else if(eventType == QEvent::TabletRelease){ /* pen leaves the tablet */
+#else
+    else if(eventType == QEvent::TabletRelease || eventType == QEvent::MouseButtonRelease){ /* pen leaves the tablet */
+#endif
+        qDebug() << "Tablet release";
         this->ManageFinish(event, false);
     }
-
+    //qDebug() << eventType;
 end:
 
     if(unlikely(!selection_method && lastMethod == e_method::selection)){
@@ -192,7 +198,6 @@ end:
     event->accept();
     lastMethod = _input;
 }
-
 
 force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 {
