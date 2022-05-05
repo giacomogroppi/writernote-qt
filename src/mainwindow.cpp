@@ -50,7 +50,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 {
 
     W_ASSERT(canvas);
-
+    
     core::set_main_window(this);
 
 #ifdef CLOUD
@@ -67,11 +67,11 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     ui->setupUi(this);
 
     this->m_buffer = new QBuffer(this);
-
-    this->ui->layouteditor->insertWidget(1, _canvas);
+    
+    this->ui->layouteditor->insertWidget(0, _canvas);
 
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
-
+    
     setting_load(this);
     this->m_rubber              = new class rubber_ui(this);
     this->m_text                = new class text_ui(this);
@@ -106,7 +106,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->m_pen->setHidden(true);
     this->m_rubber->setHidden(true);
     this->m_highlighter->setHidden(true);
-
+    
     _canvas->_rubber      = m_rubber;
     _canvas->_pen_ui      = m_pen;
     _canvas->_text        = m_text;
@@ -114,7 +114,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     _canvas->_highlighter = m_highlighter;
     _canvas->_text_w      = m_text_w;
     _canvas->_laser       = m_laser;
-
+    
     /* redo and undo */
     connect(this, &MainWindow::RedoT, _canvas, &TabletCanvas::RedoM);
     connect(this, &MainWindow::UndoT, _canvas, &TabletCanvas::Undo);
@@ -358,11 +358,6 @@ void MainWindow::on_actionRemove_current_PDF_triggered()
 #ifdef PDFSUPPORT
     _canvas->data->m_pdf->reset();
 #endif // PDFSUPPORT
-}
-
-void MainWindow::on_buttonFullScreen_clicked()
-{
-    this->setFullScreen();
 }
 
 void MainWindow::on_actionFull_Screen_triggered()

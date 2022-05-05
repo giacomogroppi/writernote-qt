@@ -1,5 +1,4 @@
-#ifndef TABLETAPPLICATION_H
-#define TABLETAPPLICATION_H
+#pragma once
 
 #include <QApplication>
 
@@ -20,5 +19,3 @@ public:
 private:
     TabletCanvas *m_canvas = nullptr;
 };
-
-#endif

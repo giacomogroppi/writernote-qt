@@ -178,6 +178,44 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
         }
     }
     setCursor(cursor);
+#else
+    QCursor cursor;
+    if (event->type() != QEvent::TabletLeaveProximity) {
+        if (event->pointerType() == QPointingDevice::PointerType::Eraser) {
+            cursor = QCursor(QPixmap(":/images/cursor-eraser.png"), 3, 28);
+        } else {
+            switch (event->deviceType()) {
+            case QInputDevice::DeviceType::Stylus:
+                if (event->pointingDevice()->capabilities().testFlag(QPointingDevice::Capability::Rotation)) {
+                    QImage origImg(QLatin1String(":/images/cursor-felt-marker.png"));
+                    QImage img(32, 32, QImage::Format_ARGB32);
+                    QColor solid = _color;
+                    solid.setAlpha(255);
+                    img.fill(solid);
+                    QPainter painter(&img);
+                    QTransform transform = painter.transform();
+                    transform.translate(16, 16);
+                    transform.rotate(event->rotation());
+                    painter.setTransform(transform);
+                    painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+                    painter.drawImage(-24, -24, origImg);
+                    painter.setCompositionMode(QPainter::CompositionMode_HardLight);
+                    painter.drawImage(-24, -24, origImg);
+                    painter.end();
+                    cursor = QCursor(QPixmap::fromImage(img), 16, 16);
+                } else {
+                    cursor = QCursor(QPixmap(":/images/cursor-pencil.png"), 0, 0);
+                }
+                break;
+            case QInputDevice::DeviceType::Airbrush:
+                cursor = QCursor(QPixmap(":/images/cursor-airbrush.png"), 3, 4);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+    setCursor(cursor);
 #endif
 }
 
@@ -232,13 +270,24 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
 {
     QTabletEvent *e;
     TabletCanvas *c;
+    constexpr auto not_used debugSendEvent = true;
+    constexpr auto not_used name = "canvas_send_touch_event";
 
     W_ASSERT(_canvas->objectName() == "TabletCanvas");
 
     c = static_cast<TabletCanvas *>(_canvas);
 
+    WDebug(debugSendEvent, name << event_type);
+
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-    e = new QTabletEvent(event_type, NULL, pos, QPointF(), 0, 0, 0, 0, 0, 0, Qt::KeyboardModifier::NoModifier, Qt::MouseButton::AllButtons, Qt::MouseButton::AllButtons);
+    QPointingDevice *pointing = new QPointingDevice("", 0, QInputDevice::DeviceType::Stylus, deviceType, QInputDevice::Capability::All, 1, 1);
+
+    e = new QTabletEvent(event_type, pointing, pos, QPointF(), 0, 0, 0, 0, 0, 0, Qt::KeyboardModifier::NoModifier, Qt::MouseButton::AllButtons, Qt::MouseButton::AllButtons);
+
+    W_ASSERT(e->type() == event_type);
+    W_ASSERT(e->posF() == pos);
+    W_ASSERT(e->pointerType() == deviceType);
+
 #else
     e = new QTabletEvent(event_type, pos, QPointF(), 0, deviceType, 2, 3, 3, 1, 1, 1, Qt::KeyboardModifier::NoModifier, 432243);
 #endif
@@ -246,6 +295,9 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
     if(now){
         c->send_touch_event(e);
         delete e;
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+        delete pointing;
+#endif
     }else{
         QApplication::postEvent(_canvas, e);
     }

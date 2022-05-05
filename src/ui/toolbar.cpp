@@ -175,7 +175,7 @@ void ToolBar::on_button_tablet_view_clicked()
 
 void ToolBar::on_button_full_screen_clicked()
 {
-    core::get_main_window()->on_buttonFullScreen_clicked();
+    core::get_main_window()->on_actionFull_Screen_triggered();
 }
 
 void ToolBar::on_button_hide_preview_clicked()

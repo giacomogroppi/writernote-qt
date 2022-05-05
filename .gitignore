@@ -10,4 +10,6 @@ Makefile
 *.user
 ui_*.h
 writernote_autogen/*
-/build/
+build/*
+CMakeFiles/*
+CMakeCache.txt

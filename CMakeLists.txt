@@ -34,9 +34,9 @@ file(GLOB PROJECT_MOC
 
 
 file(GLOB PROJECT_UI
-	src/audiosetting/audioqualityoption.ui 
-	src/currenttitle/option/option_copybook.ui 
-	src/last_open/element/element_ui.ui 
+    src/audiosetting/audioqualityoption.ui
+    src/currenttitle/option/option_copybook.ui
+    src/last_open/element/element_ui.ui
     src/last_open/last_open.ui 
     src/last_open/option/option_last_open_ui.ui 
     src/log/log_ui/log_ui.ui 
@@ -279,7 +279,9 @@ set_target_properties(
 	AUTORCC TRUE
 	AUTOGEN_SOURCE_GROUP "Qt Files"
 )
-set(CMAKE_CXX_FLAGS_DEBUG_INIT ${CMAKE_CXX_FLAGS} "-DDEBUGINFO")
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUGINFO")
+#set(CMAKE_CXX_FLAGS_DEBUG_INIT ${CMAKE_CXX_FLAGS} "-DDEBUGINFO")
 
 add_definitions(-DALL_VERSION)
 

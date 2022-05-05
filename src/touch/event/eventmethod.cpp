@@ -81,9 +81,15 @@ ridefine:
     {
         const auto &touchPoint = touchPoints.at(i);
         const QPointF &pointTouch = touchPoint.pos();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         cbool _tmp =    touchPoint.state() == Qt::TouchPointPressed ||
                         touchPoint.state() == Qt::TouchPointMoved ||
                         touchPoint.state() == Qt::TouchPointStationary;
+#else
+        cbool _tmp = touchPoint.state() == QEventPoint::Pressed ||
+                     touchPoint.state() == QEventPoint::Updated ||
+                     touchPoint.state() == QEventPoint::Stationary;
+#endif
         if(!_tmp){
             continue;
         }

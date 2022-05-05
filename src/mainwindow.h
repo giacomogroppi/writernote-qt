@@ -210,7 +210,6 @@ private slots:
     void on_actionRecent_file_triggered();
     void on_actionChange_visual_triggered();
     void on_sliderZoom_sliderMoved(int position);
-    void on_buttonFullScreen_clicked();
     void on_actionFull_Screen_triggered();
     void on_actionLaser_triggered();
     void on_actionHide_Show_Preview_triggered();

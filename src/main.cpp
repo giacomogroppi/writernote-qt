@@ -12,6 +12,7 @@
 #include "utils/common_error_definition.h"
 #include "testing/memtest.h"
 #include <QStyleFactory>
+#include <QFile>
 
 #define HELP_COMMAND "\nTo extract an audio digit --extract, followed by the location of the file\nand where you would like to save the audio\n\nTo open a file type the path of the file\n"
 #define COMMAND_EXTRACT "--extract"
@@ -259,4 +260,10 @@ static not_used void createFileAndExit(const QString &path, MainWindow *parent)
     exit(0);
 }
 
+#endif
+
+#ifdef DEBUGINFO
+#pragma message ("Debug build")
+#else
+#pragma message ("Release build")
 #endif

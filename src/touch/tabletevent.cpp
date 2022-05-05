@@ -356,7 +356,7 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;
 
     if(unlikely(!this->m_deviceDown)){
-        strokeTmp.setPositioneAudio(core::get_main_window()->m_audio_recorder->getCurrentTime());
+        strokeTmp.setPositioneAudio((int) core::get_main_window()->m_audio_recorder->getCurrentTime());
         strokeTmp.setColor(_color);
         strokeTmp.setAlfaColor(alfa);
     }
