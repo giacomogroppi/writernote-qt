@@ -67,8 +67,12 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     ui->setupUi(this);
 
     this->m_buffer = new QBuffer(this);
-    
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    this->ui->layouteditor->insertWidget(1, _canvas);
+#else
     this->ui->layouteditor->insertWidget(0, _canvas);
+#endif
 
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
     
