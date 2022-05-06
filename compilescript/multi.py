@@ -30,8 +30,8 @@ try:
 except IndexError:
     print_command()
 
-CPU = 8
-RAM = 8
+CPU = 12
+RAM = 10
 DISK = 100
 LOG_POSITION = "log_snapcraft.txt"
 

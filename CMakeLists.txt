@@ -11,21 +11,11 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
+#set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
 
 set(QT_VERSION_MAJOR 6)
-message(Version qt: ${QT_VERSION_MAJOR})
-
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR}Multimedia REQUIRED )
-find_package(Qt${QT_VERSION_MAJOR}MultimediaWidgets REQUIRED )
-find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)
-
-SET(QT_USE_QTMULTIMEDIA TRUE)
-SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
-set(QT_USE_PRINTSUPPORT TRUE)
+message("-Version qt: " ${QT_VERSION_MAJOR})
 
 file(GLOB PROJECT_MOC
 	writernote.qrc
@@ -259,8 +249,6 @@ file(GLOB PROJECT_SOURCES
     
 )   
 
-qt_add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES})
-
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     #set up poppler-qt6
     message("Pdf Disable")
@@ -269,6 +257,34 @@ else()
     add_definitions(-DPDFSUPPORT)
     target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 endif()
+
+OPTION(SNAP "- Snap package" OFF)
+OPTION(PDFSUPPORT "- Pdf support" ON)
+
+OPTION(POPPLER_INCLUDE_DIR "poppler include dir" "")
+OPTION(POPPLER_LIB_1, "poppler lib 1" "")
+OPTION(POPPLER_LIB_2 "poppler lib 2" "")
+OPTION(VERSION_SNAPCRAFT "Version" "")
+
+if(NOT ${VERSION_SNAPCRAFT} STREQUAL "")
+    add_definitions(-DVERSION_SNAPCRAFT=${VERSION_SNAPCRAFT})
+    message("- Add version " ${VERSION_SNAPCRAFT})
+endif()
+
+if(SNAP)
+    message("- Snap support")
+    add_definitions(-DSNAP)
+
+    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /root/stage/usr/lib/x86_64-linux-gnu/cmake/)
+    #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6")    
+endif()
+
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR}Multimedia REQUIRED )
+find_package(Qt${QT_VERSION_MAJOR}MultimediaWidgets REQUIRED )
+find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)
+
+qt_add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES})
 
 set_target_properties(
 	${PROJECT_NAME}
@@ -280,40 +296,31 @@ set_target_properties(
 	AUTOGEN_SOURCE_GROUP "Qt Files"
 )
 
-OPTION(SNAP "Snap package" OFF)
-OPTION(PDFSUPPORT "Pdf support" ON)
-
-OPTION(POPPLER_INCLUDE_DIR "poppler include dir" "")
-OPTION(POPPLER_LIB_1, "poppler lib 1" "")
-OPTION(POPPLER_LIB_2, "poppler lib 2" "")
-
 if(SNAP)
-    message("snap support")
-    add_definitions(-DSNAP)
-    add_definitions(-DPDFSUPPORT)
-
+    message("- Add pdf support")
     include_directories(${DPOPPLER_INCLUDE_DIR})
-
+    #add_definitions(-DPDFSUPPORT)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_1})
     target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_2})
 endif()
 
+SET(QT_USE_QTMULTIMEDIA TRUE)
+SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
+set(QT_USE_PRINTSUPPORT TRUE)
+
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUGINFO")
-#set(CMAKE_CXX_FLAGS_DEBUG_INIT ${CMAKE_CXX_FLAGS} "-DDEBUGINFO")
 
 add_definitions(-DALL_VERSION)
 
 include_directories(src/)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
 
 SET (CMAKE_CXX_FLAGS "-Wno-deprecated-declarations -O3")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
-
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
 

@@ -200,19 +200,18 @@ parts:
     stage:
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libjpeg.so.8.2.2
     prime:
+      - -./usr/bin
+      - -./usr/doc
       - -./usr/include
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/cmake
-      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
-      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/bin
-      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/mkspecs
-      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/examples
-      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/plugins/platformthemes/libqxdgdesktopportal.so
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/metatypes
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.a
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.la
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.prl
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.so
-      - -./usr/lib/qt5
-      - -./usr/share
+      - -./usr/libexec
+      - -./usr/mkspecs
+      - -./usr/modules
     after:
       - mozjpeg
 
@@ -254,11 +253,11 @@ parts:
       mkdir build; cd build
 
       cmake .. \
-        -DQt5Core_DIR=/src/lib/cmake/Qt5Core \
-        -DQt5Xml_DIR=/src/lib/cmake/Qt5Xml \
-        -DQt5Gui_DIR=/src/lib/cmake/Qt5Gui \
-        -DQt5Widgets_DIR=/src/lib/cmake/Qt5Widgets \
-        -DQt5Test_DIR=/src/lib/cmake/Qt5Test
+        -DQt6Core_DIR=/src/lib/cmake/Qt6Core \
+        -DQt6Xml_DIR=/src/lib/cmake/Qt6Xml \
+        -DQt6Gui_DIR=/src/lib/cmake/Qt6Gui \
+        -DQt6Widgets_DIR=/src/lib/cmake/Qt6Widgets \
+        -DQt6Test_DIR=/src/lib/cmake/Qt6Test
 
       make -j$(nproc)
       make install
@@ -272,7 +271,7 @@ parts:
       ls
     prime:
       - -./usr/include/poppler
-      - -./usr/include/poppler/qt5
+      - -./usr/include/poppler/qt6
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/cmake
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.a
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.la
@@ -283,8 +282,8 @@ parts:
       - -./usr/include
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
       - -./usr/local/lib/*.so
-      - -./usr/shar
-      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1
+      - -./usr/share
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt6.so.3
     stage:
       - -./usr/local/$SNAPCRAFT_ARCH_TRIPLET/libpoppler*
       - -./usr/include/poppler
@@ -299,22 +298,19 @@ parts:
     override-build: |
       set -eux
 
-      export PATH=$PATH:$SNAPCRAFT_STAGE/usr/lib/qt5/bin
+      #export PATH=$PATH:$SNAPCRAFT_STAGE/usr/lib/qt6/bin
       export VERSION=$(git describe --tags --abbrev=0)
 
       snapcraftctl set-version "$VERSION"
-
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
-
       ls $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
 
       cmake . \
         -DVERSION_SNAPCRAFT=$VERSION \
         -DSNAP=ON \
-        -DPOPPLER_INCLUDE_DIR=/usr/local/include/poppler/qt5 \
-        -DPOPPLER_LIB_1=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt5.so.1 \
-        -DPOPPLER_LIB_2=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.117
-
+        -DPOPPLER_INCLUDE_DIR=/usr/local/include/poppler/qt6 \
+        -DPOPPLER_LIB_1=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt6.so.3 \
+        -DPOPPLER_LIB_2=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.117 
 
       #qmake DEFINES+="SNAP" \
       #  DEFINES+=VERSION_SNAPCRAFT=$VERSION \
@@ -325,7 +321,7 @@ parts:
 
       snapcraftctl build
       
-      cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
+      cp writernote $SNAPCRAFT_PART_INSTALL/bin/
       cd $SNAPCRAFT_PART_INSTALL/bin
       ldd writernote
 
