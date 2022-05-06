@@ -280,6 +280,24 @@ set_target_properties(
 	AUTOGEN_SOURCE_GROUP "Qt Files"
 )
 
+OPTION(SNAP "Snap package" OFF)
+OPTION(PDFSUPPORT "Pdf support" ON)
+
+OPTION(POPPLER_INCLUDE_DIR "poppler include dir" "")
+OPTION(POPPLER_LIB_1, "poppler lib 1" "")
+OPTION(POPPLER_LIB_2, "poppler lib 2" "")
+
+if(SNAP)
+    message("snap support")
+    add_definitions(-DSNAP)
+    add_definitions(-DPDFSUPPORT)
+
+    include_directories(${DPOPPLER_INCLUDE_DIR})
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_1})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_2})
+endif()
+
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUGINFO")
 #set(CMAKE_CXX_FLAGS_DEBUG_INIT ${CMAKE_CXX_FLAGS} "-DDEBUGINFO")
 

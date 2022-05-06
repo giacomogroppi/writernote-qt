@@ -9,7 +9,7 @@ description: |
   translate it later into text, and listen to it in an intelligent way.
 
 confinement: strict
-
+grade: stable
 base: core20
 
 architectures:
@@ -100,12 +100,16 @@ parts:
       - libegl-dev
       - libfontconfig1-dev
       - libfreetype-dev
-      - libgl-dev
       - libglib2.0-dev
+      - libglx-dev
+      - libgtk-3-dev
       - libharfbuzz-dev
+      - libice-dev
       - libicu-dev
+      - libopengl-dev
       - libpcre2-dev
       - libpng-dev
+      - libsm-dev
       - libssl-dev
       - libwayland-dev
       - libx11-dev
@@ -123,8 +127,6 @@ parts:
       - libxcb-sync-dev
       - libxcb-util-dev
       - libxcb-xfixes0-dev
-      - libxcb-xinerama0-dev
-      - libxcb-xinput-dev
       - libxcb-xkb-dev
       - libxcursor-dev
       - libxkbcommon-dev
@@ -135,12 +137,16 @@ parts:
       - libegl1
       - libfontconfig1
       - libfreetype6
-      - libgl1
       - libglib2.0-0
+      - libglx0
+      - libgtk-3-0
       - libharfbuzz0b
+      - libice6
       - libicu66
+      - libopengl0
       - libpcre2-16-0
       - libpng16-16
+      - libsm6
       - libssl1.1
       - libwayland-client0
       - libwayland-cursor0
@@ -160,42 +166,28 @@ parts:
       - libxcb-sync1
       - libxcb-util1
       - libxcb-xfixes0
-      - libxcb-xinerama0
-      - libxcb-xinput0
       - libxcb-xkb1
       - libxcursor1
       - libxkbcommon0
       - libxkbcommon-x11-0
       - zlib1g
     override-pull: |
-      QT=5_15_2
-      git clone git://code.qt.io/qt/qt5.git .
-
-      perl init-repository --module-subset=qtbase,qtimageformats,qtmultimedia,qtwayland
-
-      git checkout v5.15.2
-
-      git submodule update qtbase qtimageformats qtmultimedia 
+      QT=6_3_0
+      git clone -b v6.3.0 --depth=1 git://code.qt.io/qt/qt5.git .
+      perl init-repository --module-subset=qtbase,qtwayland,qtimageformats,qtsvg,qt5compat,qtmultimedia,qtshadertools
     
     override-build: |
       ./configure \
         -prefix /usr \
-        -bindir /usr/lib/qt5/bin \
         -libdir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET \
-        -docdir /usr/share/qt5/doc \
-        -headerdir /usr/include/$SNAPCRAFT_ARCH_TRIPLET/qt5 \
-        -datadir /usr/share/qt5 \
-        -archdatadir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5 \
-        -plugindir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/plugins \
-        -importdir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/imports \
-        -translationdir /usr/share/qt5/translations \
-        -hostdatadir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5 \
-        -sysconfdir /etc/xdg \
-        -examplesdir /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/qt5/examples \
         -release \
         -opensource \
         -confirm-license \
-        -make libs \
+        -no-feature-getentropy \
+        -no-feature-renameat2 \
+        -no-feature-statx \
+        -no-feature-egl-extension-platform-wayland \
+        -no-feature-highdpiscaling \
         -nomake tools \
         -nomake examples \
         -nomake tests \
@@ -203,8 +195,8 @@ parts:
         -I $SNAPCRAFT_STAGE/usr/include \
         -L $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
 
-      make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
-      make INSTALL_ROOT="$SNAPCRAFT_PART_INSTALL" install
+      cmake --build . -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
+      DESTDIR="$SNAPCRAFT_PART_INSTALL" cmake --install .
     stage:
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libjpeg.so.8.2.2
     prime:
@@ -316,12 +308,20 @@ parts:
 
       ls $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
 
-      qmake DEFINES+="SNAP" \
-        DEFINES+=VERSION_SNAPCRAFT=$VERSION \
-        DEFINES+=QT_NO_DEBUG_OUTPUT \
-        INCLUDEPATH+=/usr/local/include/poppler/qt5 \
-        LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1 \
-        LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler.so.117
+      cmake . \
+        -DVERSION_SNAPCRAFT=$VERSION \
+        -DSNAP=ON \
+        -DPOPPLER_INCLUDE_DIR=/usr/local/include/poppler/qt5 \
+        -DPOPPLER_LIB_1=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt5.so.1 \
+        -DPOPPLER_LIB_2=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.117
+
+
+      #qmake DEFINES+="SNAP" \
+      #  DEFINES+=VERSION_SNAPCRAFT=$VERSION \
+      #  DEFINES+=QT_NO_DEBUG_OUTPUT \
+      #  INCLUDEPATH+=/usr/local/include/poppler/qt5 \
+      #  LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1 \
+      #  LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler.so.117
 
       snapcraftctl build
       
