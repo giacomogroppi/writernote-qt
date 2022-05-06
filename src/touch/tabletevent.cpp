@@ -141,7 +141,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
     constexpr bool tabletDebug = false;
-    constexpr not_used const char *nameFunction = "TabletCanvas::tabletEvent";
+    constexpr not_used const auto nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;
     need_save_auto = true;
@@ -185,7 +185,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
         qDebug() << "Tablet release";
         this->ManageFinish(event, false);
     }
-    //qDebug() << eventType;
+
 end:
 
     if(unlikely(!selection_method && lastMethod == e_method::selection)){
@@ -214,8 +214,13 @@ force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 
 force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 {
+    constexpr const auto not_used _debug = false;
+    constexpr const auto not_used name = "TabletCanvas::ManageStart";
+    
     if(unlikely(m_deviceDown))
         return;
+
+    W_ASSERT(event->type() == QEvent::TabletPress);
 
     if(insert_method){
         updatelist(event);
@@ -225,6 +230,8 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
         ManageStartSquare(event->posF(), _square);
     }else if(rubber_method){
         _rubber->initRubber(event->posF());
+        WDebug(true, name << "rubber is set");
+        W_ASSERT(_rubber->is_set());
     }
 
     m_deviceDown = true;

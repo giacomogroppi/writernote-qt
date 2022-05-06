@@ -38,6 +38,8 @@ public:
     void initRubber(const QPointF &point);
     int endRubber();
 
+    bool is_set() const { return this->_last.set; };
+
 private:
     class TabletCanvas *_canvas;
     int _base;

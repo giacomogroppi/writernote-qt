@@ -179,6 +179,7 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
     }
     setCursor(cursor);
 #else
+    return;
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
         if (event->pointerType() == QPointingDevice::PointerType::Eraser) {
@@ -270,7 +271,7 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
 {
     QTabletEvent *e;
     TabletCanvas *c;
-    constexpr auto not_used debugSendEvent = true;
+    constexpr auto not_used debugSendEvent = false;
     constexpr auto not_used name = "canvas_send_touch_event";
 
     W_ASSERT(_canvas->objectName() == "TabletCanvas");
@@ -282,7 +283,7 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
     QPointingDevice *pointing = new QPointingDevice("", 0, QInputDevice::DeviceType::Stylus, deviceType, QInputDevice::Capability::All, 1, 1);
 
-    e = new QTabletEvent(event_type, pointing, pos, QPointF(), 0, 0, 0, 0, 0, 0, Qt::KeyboardModifier::NoModifier, Qt::MouseButton::AllButtons, Qt::MouseButton::AllButtons);
+    e = new QTabletEvent(event_type, pointing, pos, QPointF(), 0, 0, 0, 0, 0, 0, Qt::KeyboardModifier::NoModifier, Qt::MouseButton::NoButton, Qt::MouseButton::NoButton);
 
     W_ASSERT(e->type() == event_type);
     W_ASSERT(e->posF() == pos);
