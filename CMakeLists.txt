@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
+#set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
 #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
 
 set(QT_VERSION_MAJOR 6)
@@ -275,11 +275,11 @@ if(SNAP)
     message("- Snap support")
     add_definitions(-DSNAP)
 
-    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /root/stage/usr/lib/x86_64-linux-gnu/cmake/)
+    #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /root/stage/usr/lib/x86_64-linux-gnu/cmake/)
     #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6")    
 endif()
 
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR}Multimedia REQUIRED )
 find_package(Qt${QT_VERSION_MAJOR}MultimediaWidgets REQUIRED )
 find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)

@@ -21,7 +21,8 @@
 
 static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver)
 {
-    if(update.indexOf(updatecheck::critical) != -1)
+    const auto critical = QChar::fromLatin1(updatecheck::high);
+    if(update.indexOf(critical) != -1)
         return updatecheck::critical;
 
     int i, len;
@@ -31,10 +32,10 @@ static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, con
     bool find = false;
 
     for(i=0, len = temp_2.length(); i<len && doc[i][POSNAME].toString() != c_ver; i++){
-        if(doc[i][POSNAME].toString().indexOf(updatecheck::critical) != -1)
+        if(doc[i][POSNAME].toString().indexOf(critical) != -1)
             return updatecheck::critical;
 
-        if(doc[i][POSNAME].toString().indexOf(updatecheck::high) != -1)
+        if(doc[i][POSNAME].toString().indexOf(critical) != -1)
             find = true;
 
     }

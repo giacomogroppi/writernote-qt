@@ -191,9 +191,7 @@ parts:
         -nomake tools \
         -nomake examples \
         -nomake tests \
-        -skip qtwebengine \
-        -I $SNAPCRAFT_STAGE/usr/include \
-        -L $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+        -skip qtwebengine
 
       cmake --build . -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       DESTDIR="$SNAPCRAFT_PART_INSTALL" cmake --install .
@@ -204,6 +202,7 @@ parts:
       - -./usr/doc
       - -./usr/include
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/cmake
+      - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/metatypes
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.a
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/*.la
@@ -252,12 +251,9 @@ parts:
       cd poppler-22.01.0
       mkdir build; cd build
 
-      cmake .. \
-        -DQt6Core_DIR=/src/lib/cmake/Qt6Core \
-        -DQt6Xml_DIR=/src/lib/cmake/Qt6Xml \
-        -DQt6Gui_DIR=/src/lib/cmake/Qt6Gui \
-        -DQt6Widgets_DIR=/src/lib/cmake/Qt6Widgets \
-        -DQt6Test_DIR=/src/lib/cmake/Qt6Test
+      cmake .. -DCMAKE_FIND_DEBUG_MODE=1
+
+      
 
       make -j$(nproc)
       make install
@@ -268,7 +264,7 @@ parts:
 
       cp /usr/local/lib/libpoppler* $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
       cd $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
-      ls
+      
     prime:
       - -./usr/include/poppler
       - -./usr/include/poppler/qt6
@@ -298,7 +294,8 @@ parts:
     override-build: |
       set -eux
 
-      #export PATH=$PATH:$SNAPCRAFT_STAGE/usr/lib/qt6/bin
+      export PATH=$PATH:/root/parts/qt/install/usr/bin/
+      
       export VERSION=$(git describe --tags --abbrev=0)
 
       snapcraftctl set-version "$VERSION"
@@ -310,16 +307,12 @@ parts:
         -DSNAP=ON \
         -DPOPPLER_INCLUDE_DIR=/usr/local/include/poppler/qt6 \
         -DPOPPLER_LIB_1=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt6.so.3 \
-        -DPOPPLER_LIB_2=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.117 
+        -DPOPPLER_LIB_2=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.117  \
+        -DCMAKE_FIND_DEBUG_MODE=1 \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DQt6_DIR=/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
 
-      #qmake DEFINES+="SNAP" \
-      #  DEFINES+=VERSION_SNAPCRAFT=$VERSION \
-      #  DEFINES+=QT_NO_DEBUG_OUTPUT \
-      #  INCLUDEPATH+=/usr/local/include/poppler/qt5 \
-      #  LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler-qt5.so.1 \
-      #  LIBS+=$SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpoppler.so.117
-
-      snapcraftctl build
+      make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       
       cp writernote $SNAPCRAFT_PART_INSTALL/bin/
       cd $SNAPCRAFT_PART_INSTALL/bin
