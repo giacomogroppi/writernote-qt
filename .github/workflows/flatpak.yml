@@ -1,0 +1,44 @@
+name: Linux build
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'updater/**'
+      - 'windows/**'
+      - 'macos-build/**'
+      - '!.github/workflows/flatpak.yml'
+
+  pull_request:
+    branches: [ master ]
+
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'macos-build/**'
+      - '!.github/workflows/linux.yml'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set flatpak
+        run: |
+          sudo apt install flatpak
+          sudo apt install gnome-software-plugin-flatpak
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install flathub org.kde.Sdk//6.2
+          sudo flatpak install flathub org.kde.Platform//6.2
+
+      - name: Build
+        run: |
+          flatpak-builder flatpak-build flatpak/com.writernote.json --disable-cache --force-clean

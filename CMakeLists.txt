@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(writernote LANGUAGES CXX)
-
+include(FindPkgConfig)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -265,6 +265,7 @@ OPTION(POPPLER_INCLUDE_DIR "poppler include dir" "")
 OPTION(POPPLER_LIB_1, "poppler lib 1" "")
 OPTION(POPPLER_LIB_2 "poppler lib 2" "")
 OPTION(VERSION_SNAPCRAFT "Version" "")
+OPTION(FLATPAK_BUILD "build for flatpak" OFF)
 
 if(NOT ${VERSION_SNAPCRAFT} STREQUAL "")
     add_definitions(-DVERSION_SNAPCRAFT=${VERSION_SNAPCRAFT})
@@ -304,6 +305,27 @@ if(SNAP)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_2})
 endif()
 
+if(FLATPAK_BUILD)
+    include_directories(/app/include/)
+    include_directories(/app/7app/include/)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5.4)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5)
+    
+
+    include_directories(/app/include/poppler/qt6)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121.0.0)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so)
+    
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so.3.2.0)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so.3)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so)
+
+    add_definitions(-DPDFSUPPORT)
+
+endif()
+
 SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
 set(QT_USE_PRINTSUPPORT TRUE)
@@ -322,7 +344,10 @@ find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
-target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
+
+if(NOT FLATPAK_BUILD)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
+endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     #set up poppler-qt6
