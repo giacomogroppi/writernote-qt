@@ -316,7 +316,7 @@ parts:
 
       cmake . \
         -DVERSION_SNAPCRAFT=$VERSION \
-        -DPDFSUPPORT=OFF \
+        -DPDFSUPPORT=ON \
         -DSNAP=ON \
         -DCMAKE_FIND_DEBUG_MODE=1 \
         -DCMAKE_BUILD_TYPE=Release \
