@@ -49,7 +49,6 @@ class frompdf
 private:
     Document *m_data;
 
-    Poppler::Document *doc = nullptr;
     QList<Pdf> m_image;
 
     static inline QString getName(const uint i){
@@ -57,23 +56,21 @@ private:
     }
 
 public:
-    static void copy(const frompdf &src, frompdf &dest){
+    static void copy(const frompdf &src, frompdf &dest)
+    {
         dest.m_image = src.m_image;
-        dest.doc = nullptr;
     }
 
     static bool isvalid(QString &pos);
 
     void translation(const QPointF &point);
-    inline void translation(const double x, const double y){
+    inline void translation(const double x, const double y)
+    {
         translation(QPointF(x, y));
     }
 
     frompdf(Document *doc);
-    ~frompdf(){
-        if(this->doc)
-            delete doc;
-    }
+    ~frompdf() = default;
 
     enum load_res: uchar{
         ok,
