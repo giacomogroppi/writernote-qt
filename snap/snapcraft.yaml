@@ -93,6 +93,14 @@ parts:
       - libasound2
       - libasound2-plugins
 
+  init-repo:
+    plugin: nil
+    build-packages: 
+      - git
+    override-pull: |
+      
+      #git submodule update --init --recursive
+
   qt:
     plugin: nil
     build-packages:
