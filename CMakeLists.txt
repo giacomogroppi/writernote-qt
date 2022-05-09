@@ -14,6 +14,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
 #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
 
+if(UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+endif()
+
 set(QT_VERSION_MAJOR 6)
 message("-Version qt: " ${QT_VERSION_MAJOR})
 
@@ -321,6 +325,18 @@ elseif(FLATPAK_BUILD)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so)
 
     add_definitions(-DPDFSUPPORT)
+
+elseif(LINUX)
+    message("-- Add pdf support")
+    add_definitions(-DPDFSUPPORT)
+    include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/qt6/src/)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121.0.0)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121)
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3.2.0)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)
 
 endif()
 
