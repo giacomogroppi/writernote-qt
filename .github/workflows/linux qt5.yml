@@ -1,4 +1,4 @@
-name: Linux build
+name: Linux build qt5
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
       - 'updater/**'
       - 'windows/**'
       - 'macos-build/**'
-      - '!.github/workflows/linux.yml'
+      - '!.github/workflows/linux qt5.yml'
 
   pull_request:
     branches: [ master ]
@@ -79,16 +79,3 @@ jobs:
           qmake CONFIG+=debug
           make -j $(nproc)
 
-      - name: Install Qt6
-        uses: jurplel/install-qt-action@v2.13.2
-        with:
-          version: 6.3.0
-          modules: multimedia
-
-      - name: CMake compile
-        run: |
-          make clean
-          rm -r build
-          mkdir build; cd build
-          cmake ..
-          make -j $(nproc)
