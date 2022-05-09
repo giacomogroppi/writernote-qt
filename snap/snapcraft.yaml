@@ -244,16 +244,14 @@ parts:
       - libnss3
       - libopenjp2-7
     override-pull: |
-      wget https://poppler.freedesktop.org/poppler-22.01.0.tar.xz
-      tar -xf poppler-22.01.0.tar.xz
-      
+      #wget https://poppler.freedesktop.org/poppler-22.01.0.tar.xz
+      #tar -xf poppler-22.01.0.tar.xz
+
     override-build: |
-      cd poppler-22.01.0
+      cd 3rdparty/poppler
       mkdir build; cd build
 
       cmake .. -DCMAKE_FIND_DEBUG_MODE=1
-
-      
 
       make -j$(nproc)
       make install
