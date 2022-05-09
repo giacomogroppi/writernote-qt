@@ -154,8 +154,12 @@ frompdf::load_res frompdf::load_from_row(
         this->init_FirstLoad();
     }
 
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
     std::unique_ptr<Poppler::Document> _doc = Poppler::Document::loadFromData(pos);
     const auto *doc = _doc.get();
+#else
+    const auto *doc = Poppler::Document::loadFromData(pos);
+#endif
 
     if(!doc){
         if(areyousure("Pdf error loading", "It seems the pdf file is correct, do you want to remove it?")){
@@ -170,7 +174,12 @@ frompdf::load_res frompdf::load_from_row(
 
     /* creation of thread and append QImage to the current PDF page */
     for(i=0; i<len && i<countThread; ++i){
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
         page.append(doc->page(QString::number(i+1)).get());
+#else
+        page.append(doc->page(QString::number(i+1)));
+#endif
+
         this->m_image.operator[](IndexPdf).img.append(imgAppend);
         conv.append(new convertImg(resolution));
     }
