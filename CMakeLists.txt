@@ -254,34 +254,27 @@ file(GLOB PROJECT_SOURCES
 )   
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    #set up poppler-qt6
-    message("Pdf Disable")
+    
 else()
     message("Pdf Enable")
     add_definitions(-DPDFSUPPORT)
     target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 endif()
 
-OPTION(SNAP "- Snap package" OFF)
-OPTION(PDFSUPPORT "- Pdf support" ON)
+OPTION(SNAP "Snap package" OFF)
+OPTION(PDFSUPPORT "Pdf support" ON)
 
-OPTION(POPPLER_INCLUDE_DIR "poppler include dir" "")
-OPTION(POPPLER_LIB_1, "poppler lib 1" "")
-OPTION(POPPLER_LIB_2 "poppler lib 2" "")
 OPTION(VERSION_SNAPCRAFT "Version" "")
 OPTION(FLATPAK_BUILD "build for flatpak" OFF)
 
 if(NOT ${VERSION_SNAPCRAFT} STREQUAL "")
     add_definitions(-DVERSION_SNAPCRAFT=${VERSION_SNAPCRAFT})
-    message("- Add version " ${VERSION_SNAPCRAFT})
+    message("-- Add version " ${VERSION_SNAPCRAFT})
 endif()
 
 if(SNAP)
-    message("- Snap support")
-    add_definitions(-DSNAP)
-
-    #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /root/stage/usr/lib/x86_64-linux-gnu/cmake/)
-    #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6")    
+    message("-- Snap support")
+    add_definitions(-DSNAP)  
 endif()
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets REQUIRED)
@@ -300,45 +293,44 @@ set_target_properties(
 	AUTORCC TRUE
 	AUTOGEN_SOURCE_GROUP "Qt Files"
 )
-
-if(SNAP)
-    message("- Add pdf support")
-    include_directories(${DPOPPLER_INCLUDE_DIR})
-    #add_definitions(-DPDFSUPPORT)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_1})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_2})
-
-elseif(FLATPAK_BUILD)
-    include_directories(/app/include/)
-    include_directories(/app/7app/include/)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5.4)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5)
-    
-    include_directories(/app/include/poppler/qt6)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121.0.0)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so)
-    
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so.3.2.0)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so.3)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so)
-
+if(PDFSUPPORT)
     add_definitions(-DPDFSUPPORT)
-
-elseif(LINUX)
     message("-- Add pdf support")
-    add_definitions(-DPDFSUPPORT)
-    include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/qt6/src/)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121.0.0)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121)
+    
+    if(SNAP)        
+        include_directories(/usr/local/include/poppler/qt6)
+        
+        target_link_libraries(${PROJECT_NAME} PRIVATE /root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt6.so.3)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.121.0.0)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt6.so)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt6.so.3.2.0)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.121)
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3.2.0)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)
+    elseif(FLATPAK_BUILD)        
+        include_directories(/app/include/poppler/qt6)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121.0.0)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so)
+        
+        target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so.3.2.0)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so.3)
+        target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so)
 
-endif()
+    elseif(LINUX)        
+        include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/qt6/src/)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121.0.0)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121)
+
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3.2.0)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)
+
+    endif()
+endif() #PDFSUPPORT
+
+
 
 SET(QT_USE_QTMULTIMEDIA TRUE)
 SET(QT_USE_QTMULTIMEDIAWIDGETS TRUE)
@@ -359,7 +351,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSuppor
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
 
-if(NOT FLATPAK_BUILD)
+if(FLATPAK_BUILD)
+    include_directories(/app/include/)
+    include_directories(/app/7app/include/)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5.4)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5)
+elseif(NOT FLATPAK_BUILD)
     target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
 endif()
 

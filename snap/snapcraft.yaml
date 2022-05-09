@@ -316,10 +316,8 @@ parts:
 
       cmake . \
         -DVERSION_SNAPCRAFT=$VERSION \
+        -DPDFSUPPORT=OFF \
         -DSNAP=ON \
-        -DPOPPLER_INCLUDE_DIR=/usr/local/include/poppler/qt6 \
-        -DPOPPLER_LIB_1=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler-qt6.so.3 \
-        -DPOPPLER_LIB_2=/root/prime/usr/lib/x86_64-linux-gnu/libpoppler.so.117  \
         -DCMAKE_FIND_DEBUG_MODE=1 \
         -DCMAKE_BUILD_TYPE=Release \
         -DQt6_DIR=/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
