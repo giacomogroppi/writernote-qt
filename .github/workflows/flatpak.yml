@@ -28,24 +28,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-40
+      image: bilelmoussaoui/flatpak-github-actions:kde-6.2
       options: --privileged
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
 
       - name: set flatpak
+        if: false
         run: |
-          #sudo apt install flatpak
-          #sudo apt install gnome-software-plugin-flatpak
-          #flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          #sudo flatpak install flathub org.kde.Sdk//6.2
-          #sudo flatpak install flathub org.kde.Platform//6.2
+          sudo apt install flatpak
+          sudo apt install gnome-software-plugin-flatpak
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install flathub org.kde.Sdk//6.2
+          sudo flatpak install flathub org.kde.Platform//6.2
 
       - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
         with:
           bundle: writernote-${{ steps.setup.outputs.commitHash }}.flatpak
-          manifest-path: flatpak/org.writernote.json
-          cache-key: flatpak-builder-${{ github.sha }}
+          manifest-path: flatpak/com.writernote.json
           branch: ${{ matrix.branch }}
         #run: |
         #  flatpak-builder flatpak-build flatpak/com.writernote.json --disable-cache --force-clean
