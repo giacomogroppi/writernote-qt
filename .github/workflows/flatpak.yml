@@ -27,7 +27,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:gnome-40
+      options: --privileged
     steps:
       - uses: actions/checkout@v2
 
@@ -39,6 +41,11 @@ jobs:
           sudo flatpak install flathub org.kde.Sdk//6.2
           sudo flatpak install flathub org.kde.Platform//6.2
 
-      - name: Build
-        run: |
-          flatpak-builder flatpak-build flatpak/com.writernote.json --disable-cache --force-clean
+      - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
+        with:
+          bundle: writernote-${{ steps.setup.outputs.commitHash }}.flatpak
+          manifest-path: flatpak/org.writernote.json
+          cache-key: flatpak-builder-${{ github.sha }}
+          branch: ${{ matrix.branch }}
+        #run: |
+        #  flatpak-builder flatpak-build flatpak/com.writernote.json --disable-cache --force-clean

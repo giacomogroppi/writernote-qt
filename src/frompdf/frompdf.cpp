@@ -143,7 +143,7 @@ frompdf::load_res frompdf::load_from_row(
 
     int i, len, pdfCount;
     QImage imgAppend;
-    QList<Poppler::Page *> page;
+    QList<std::unique_ptr<Poppler::Page *>> page;
     QList<convertImg *> conv;
     const int countThread = threadCount::count();
 
