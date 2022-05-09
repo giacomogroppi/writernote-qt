@@ -7,3 +7,6 @@
 [submodule "3rdparty/android_openssl"]
 	path = 3rdparty/android_openssl
 	url = https://github.com/KDAB/android_openssl
+[submodule "3rdparty/poppler"]
+	path = 3rdparty/poppler
+	url = https://github.com/freedesktop/poppler

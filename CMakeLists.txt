@@ -303,16 +303,14 @@ if(SNAP)
     #add_definitions(-DPDFSUPPORT)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_1})
     target_link_libraries(${PROJECT_NAME} PRIVATE ${POPPLER_LIB_2})
-endif()
 
-if(FLATPAK_BUILD)
+elseif(FLATPAK_BUILD)
     include_directories(/app/include/)
     include_directories(/app/7app/include/)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5.4)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5)
     
-
     include_directories(/app/include/poppler/qt6)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121.0.0)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler.so.121)
