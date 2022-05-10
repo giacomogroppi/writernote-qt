@@ -43,12 +43,51 @@ jobs:
           sudo apt -y install libtiff-dev libnss3-dev libcairo2-dev
           sudo apt -y install libboost-all-dev libopenjp2-7-dev
           sudo snap install cmake --classic
+          sudo apt -y install ninja-build
 
-      - name: Install Qt6
-        uses: jurplel/install-qt-action@v2.14.0
+      - name: Qt 6 cache.
+        if: false
+        id: cache-qt
+        uses: actions/cache@v2
         with:
-          version: 6.2.0
-          modules: multimedia
+          path: ${{ env.PREFIX_LIB }}/qt-cache
+          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-qtmulmedia-1
+
+      - name: Use cached Qt 5.15.2.
+        if: steps.cache-qt.outputs.cache-hit == 'true'
+        run: |
+          cd $PREFIX_LIB
+          mv qt-cache Qt-5.15.2
+          sudo mkdir -p $QT_PREFIX
+          sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
+
+      - name: Build Qt 6.3.0
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: |
+          git clone -b v6.3.0 https://code.qt.io/qt/qt5.git qt_6_3_0
+          cd qt_6_3_0
+          perl init-repository --module-subset=qtbase,qtimageformats,qtsvg,qt5compat,qtmultimedia,qtshadertools
+          
+          mkdir $(pwd)/../qt_install
+
+          ./configure \
+            -prefix $(pwd)/../qt_install \
+            -libdir $(pwd)/../qt_install \
+            -release \
+            -opensource \
+            -confirm-license \
+            -no-feature-getentropy \
+            -no-feature-renameat2 \
+            -no-feature-statx \
+            -no-feature-egl-extension-platform-wayland \
+            -no-feature-highdpiscaling \
+            -nomake tools \
+            -nomake examples \
+            -nomake tests \
+            -skip qtwebengine
+          
+          ninja
+          ninja install
 
       - name: Build poppler
         run: |
