@@ -79,7 +79,6 @@ jobs:
             -no-feature-getentropy \
             -no-feature-renameat2 \
             -no-feature-statx \
-            -no-feature-egl-extension-platform-wayland \
             -no-feature-highdpiscaling \
             -nomake tools \
             -nomake examples \
