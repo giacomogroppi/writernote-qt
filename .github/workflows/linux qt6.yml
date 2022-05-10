@@ -70,6 +70,6 @@ jobs:
 
       - name: CMake compile
         run: |
-          find / -name "Qt6MultimediaConfig.cmake"
+          sudo find / -name "Qt6MultimediaConfig.cmake"
           cmake .
           make -j$(nproc)
