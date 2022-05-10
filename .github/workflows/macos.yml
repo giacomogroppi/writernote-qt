@@ -100,7 +100,6 @@ jobs:
           perl init-repository --module-subset=qtbase,qtimageformats,qtsvg,qt5compat,qtmultimedia,qtshadertools
           
           ./configure -prefix "$QT_PREFIX" \
-            $CONFIGURATIONS \
             -force-debug-info \
             -opensource \
             -confirm-license \
@@ -114,7 +113,7 @@ jobs:
             -platform macx-clang -- -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
           
           ninja
-          ninja install
+          sudo ninja install
 
       - name: Build Qt 5.15.2
         if: steps.cache-qt.outputs.cache-hit != 'true' && false
