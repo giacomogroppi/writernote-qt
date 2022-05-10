@@ -57,19 +57,19 @@ jobs:
           #rm poppler-21.10.0.zip
           #cd poppler-poppler-21.10.0
 
+          echo $(pwd)
           cd 3rdparty/poppler
 
           mkdir install
           
           cmake . \
-            -DCMAKE_INSTALL_LIBDIR=install/ \
-            -DCMAKE_INSTALL_INCLUDEDIR=install/
+            -DCMAKE_INSTALL_LIBDIR=$(pwd)/install/ \
+            -DCMAKE_INSTALL_INCLUDEDIR=$(pwd)/install/
           make -j$(nproc)
           sudo make install
 
       - name: CMake compile
         run: |
-          make clean
           rm -r build
           cmake .
           make -j$(nproc)
