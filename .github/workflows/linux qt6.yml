@@ -20,7 +20,7 @@ on:
       - 'LICENSE'
       - '.github/**'
       - 'macos-build/**'
-      - '!.github/workflows/linux.yml'
+      - '!.github/workflows/linux qt6.yml'
 
   workflow_dispatch:
 
@@ -29,7 +29,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
 
       - name: Run a one-line script
         run: |
@@ -38,46 +42,7 @@ jobs:
           sudo apt -y install libfreetype-dev libfontconfig1-dev 
           sudo apt -y install libtiff-dev libnss3-dev libcairo2-dev
           sudo apt -y install libboost-all-dev libopenjp2-7-dev
-          sudo apt install libpoppler-qt5-dev
           sudo snap install cmake --classic
-
-      - name: Install Qt5
-        uses: jurplel/install-qt-action@v2.13.2
-        with:
-          version: 5.15.2
-          modules: multimedia
-
-      - name: Build poppler
-        if: false
-        run: |
-          wget https://github.com/freedesktop/poppler/archive/refs/tags/poppler-21.10.0.zip
-          unzip poppler-21.10.0.zip
-          rm poppler-21.10.0.zip
-          cd poppler-poppler-21.10.0
-
-          mkdir build
-          cd build
-          cmake ..
-          make -j$(nproc)
-          sudo make install
-      
-      - name: Compile NO_ALL_VERSION (release)
-        run: |
-          echo $(ls /usr/local/include/poppler/qt5)
-          qmake DEFINES+="NO_ALL_VERSION"
-          make -j $(nproc)    
-
-      - name: Compile ALL_VERSION (release)
-        run: |
-          make clean
-          qmake
-          make -j $(nproc)
-
-      - name: Compile (debug)
-        run: |
-          make clean
-          qmake CONFIG+=debug
-          make -j $(nproc)
 
       - name: Install Qt6
         uses: jurplel/install-qt-action@v2.13.2
@@ -85,10 +50,26 @@ jobs:
           version: 6.3.0
           modules: multimedia
 
+      - name: Build poppler
+        run: |
+          #wget https://github.com/freedesktop/poppler/archive/refs/tags/poppler-21.10.0.zip
+          #unzip poppler-21.10.0.zip
+          #rm poppler-21.10.0.zip
+          #cd poppler-poppler-21.10.0
+
+          cd 3rdparty/poppler
+
+          mkdir install
+          
+          cmake . \
+            -DCMAKE_INSTALL_LIBDIR=install/ \
+            -DCMAKE_INSTALL_INCLUDEDIR=install/
+          make -j$(nproc)
+          sudo make install
+
       - name: CMake compile
         run: |
           make clean
           rm -r build
-          mkdir build; cd build
-          cmake ..
-          make -j $(nproc)
+          cmake .
+          make -j$(nproc)
