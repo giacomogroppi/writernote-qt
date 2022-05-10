@@ -70,6 +70,5 @@ jobs:
 
       - name: CMake compile
         run: |
-          rm -r build
           cmake .
           make -j$(nproc)
