@@ -45,7 +45,7 @@ jobs:
           sudo snap install cmake --classic
 
       - name: Install Qt6
-        uses: jurplel/install-qt-action@v2.13.2
+        uses: jurplel/install-qt-action@v2.14.0
         with:
           version: 6.2.0
           modules: multimedia
