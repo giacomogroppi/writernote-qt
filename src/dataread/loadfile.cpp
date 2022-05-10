@@ -67,7 +67,7 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
     if(file == NULL)
         return ERROR;
 
-    data = malloc(size);
+    data = WMalloc(size);
     SOURCE_READ_GOTO(file, data, size);
 
     arr.append((cchar *)data, size);
