@@ -41,11 +41,11 @@ jobs:
       RESET_CACHE: 'false'
     
     steps:
-      - name: "Clone"
+      - name: Clone.
         uses: actions/checkout@v2
         with:
           submodules: recursive
-          fetch-depth: 0
+          path: ${{ env.REPO_NAME }}
 
       - name: First set up
         run: |
@@ -92,8 +92,32 @@ jobs:
           sudo mkdir -p $QT_PREFIX
           sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
 
-      - name: Build Qt 5.15.2
+      - name: Build Qt 6.3.0
         if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: |
+          git clone -b v6.3.0 https://code.qt.io/qt/qt5.git qt_6_3_0
+          cd qt_6_3_0
+          perl init-repository --module-subset=qtbase,qtimageformats,qtsvg,qt5compat,qtmultimedia,qtshadertools
+          
+          ./configure -prefix "$QT_PREFIX" \
+            $CONFIGURATIONS \
+            -force-debug-info \
+            -opensource \
+            -confirm-license \
+            -static \
+            -opengl desktop \
+            -no-openssl \
+            -securetransport \
+            -no-feature-futimens \
+            -nomake examples \
+            -nomake tests \
+            -platform macx-clang -- -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+          
+          ninja
+          ninja install
+
+      - name: Build Qt 5.15.2
+        if: steps.cache-qt.outputs.cache-hit != 'true' && false
         run: |
           mkdir build_qt
           git clone git://code.qt.io/qt/qt5.git qt_$QT
@@ -103,9 +127,7 @@ jobs:
           git submodule update qtbase
           git submodule update qtimageformats
           git submodule update qtmultimedia
-          cd qtbase
-          #find ../../patches/qtbase_$QT -type f -print0 | sort -z | xargs -0 git apply
-          cd ..
+          
           ./configure \
            -prefix "$QT_PREFIX" \
            -static \
