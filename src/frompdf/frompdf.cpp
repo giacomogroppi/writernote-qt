@@ -184,6 +184,8 @@ frompdf::load_res frompdf::load_from_row(
         conv.append(new convertImg(resolution));
     }
 
+    W_ASSERT(len == m_image.length());
+
     for(pdfCount = 0; pdfCount < len; ){
         cint create = Min(countThread, len);
 
