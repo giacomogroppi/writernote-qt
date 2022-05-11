@@ -293,6 +293,7 @@ set_target_properties(
 	AUTORCC TRUE
 	AUTOGEN_SOURCE_GROUP "Qt Files"
 )
+
 if(PDFSUPPORT)
     add_definitions(-DPDFSUPPORT)
     message("-- Add pdf support")
@@ -318,13 +319,15 @@ if(PDFSUPPORT)
         target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so)
 
     elseif(LINUX)        
+        message("project source "${PROJECT_SOURCE_DIR})
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/qt6/src/)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121.0.0)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121)
+        include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/build/qt6/src)
+        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121.0.0)
+        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so)
+        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121)
 
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3.2.0)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3)
+        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3.2.0)
+        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)
 
     endif()
