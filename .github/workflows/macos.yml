@@ -219,7 +219,11 @@ jobs:
           cmake .. \
             -G "Ninja" \
             -DMACOS_BUILD=ON \
-            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/
+            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/ \
+            -DQt6BundledPcre2_DIR=$QT_PREFIX/lib/cmake/Qt6BundledPcre2/ \
+            -DQt6BundledLibpng_DIR=$QT_PREFIX/lib/cmake/Qt6BundledLibpng \
+            -DQt6BundledHarfbuzz_DIR=$QT_PREFIX/lib/cmake/Qt6BundledHarfbuzz \
+            -DQt6BundledFreetype_DIR=$QT_PREFIX/lib/cmake/Qt6BundledFreetype
 
 
           #$QT_PREFIX/bin/qmake writernote.pro \
