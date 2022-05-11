@@ -59,20 +59,20 @@ jobs:
           path: ${{ env.PREFIX_LIB }}/qt-cache
           key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-qtmulmedia-1
 
-      - name: Use cached Qt 5.15.2.
+      - name: Use cached Qt 6.2.4.
         if: steps.cache-qt.outputs.cache-hit == 'true'
         run: |
           cd $PREFIX_LIB
-          mv qt-cache Qt-5.15.2
+          mv qt-cache Qt-6.2.4
           sudo mkdir -p $QT_PREFIX
-          sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
+          sudo mv -f Qt-6.2.4 "$(dirname "$QT_PREFIX")"/
 
       - name: Build Qt 6.3.0
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
-          git clone -b v6.3.0 https://code.qt.io/qt/qt5.git qt_6_3_0
-          cd qt_6_3_0
-          perl init-repository --module-subset=qtbase,qtimageformats,qtsvg,qtmultimedia,qtshadertools
+          git clone -b v6.2.4 https://code.qt.io/qt/qt5.git qt_6_2_4
+          cd qt_6_2_4
+          perl init-repository --module-subset=qtbase,qtsvg,qtmultimedia,qtshadertools
           
           mkdir $(pwd)/../qt_install
 
@@ -82,10 +82,6 @@ jobs:
             -release \
             -opensource \
             -confirm-license \
-            -no-feature-getentropy \
-            -no-feature-renameat2 \
-            -no-feature-statx \
-            -no-feature-highdpiscaling \
             -nomake tools \
             -nomake examples \
             -nomake tests \
