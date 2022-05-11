@@ -102,7 +102,6 @@ jobs:
 
       - name: Build poppler
         run: |
-          exit
           echo $(pwd)
           cd 3rdparty/poppler
 
@@ -121,7 +120,7 @@ jobs:
 
       - name: Writernote compile
         run: |
-          exit
+          
           cmake . \
             -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/
           
