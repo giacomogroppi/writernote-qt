@@ -175,7 +175,7 @@ frompdf::load_res frompdf::load_from_row(
     /* creation of thread and append QImage to the current PDF page */
     for(i=0; i<len && i<countThread; ++i){
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-        page.append(doc->page(QString::number(i+1)).get());
+        page.append(doc->page(i).get());
 #else
         page.append(doc->page(QString::number(i+1)));
 #endif
@@ -185,7 +185,9 @@ frompdf::load_res frompdf::load_from_row(
     }
 
     for(pdfCount = 0; pdfCount < len; ){
-        for(i=0; i < countThread && i < len; ++i){
+        cint create = Min(countThread, len);
+
+        for(i = 0; i < create; i++){
             const Poppler::Page *pdfPage = page.at(pdfCount+i);
             QImage *image = &m_image.operator[](IndexPdf).img.operator[](pdfCount+i);
 
@@ -193,11 +195,11 @@ frompdf::load_res frompdf::load_from_row(
             conv.at(i)->start();
         }
 
-        for(i = 0; i < countThread && i < len && i < conv.length(); ++i){
+        for(i = 0; i < create && i < conv.length(); i++){
             conv.at(i)->wait();
         }
 
-        pdfCount = (pdfCount+1) * len;
+        pdfCount += countThread;
     }
 
     for(i=0; i < page.length(); ++i)
