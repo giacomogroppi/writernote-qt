@@ -91,7 +91,8 @@ jobs:
           cd qt_${QT}
           perl init-repository --module-subset=qtbase,qtimageformats,qtsvg,qt5compat,qtmultimedia,qtshadertools
           
-          ./configure -prefix "$QT_PREFIX" \
+          ./configure \
+            -prefix "$QT_PREFIX" \
             -force-debug-info \
             -opensource \
             -confirm-license \
@@ -185,7 +186,6 @@ jobs:
             -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/ \
             -DENABLE_BOOST=OFF
             
-
           make -j$(nproc)
           sudo make install
 
@@ -198,6 +198,7 @@ jobs:
 
           echo $(ls $QT_PREFIX)
           echo $(ls $QT_PREFIX/..)
+          echo $(ls $QT_PREFIX/../Qt-6.3.0)
           exit
 
           mkdir build
