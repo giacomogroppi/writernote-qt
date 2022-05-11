@@ -83,7 +83,7 @@ jobs:
           mv qt-cache Qt-6.3.0
 
           [ -d $QT_PREFIX ] && sudo rm -r $QT_PREFIX 
-          mkdir /usr/local/desktop-app
+          sudo mkdir /usr/local/desktop-app
           echo "Base dir:" $(basename $QT_PREFIX)
           
           sudo mv Qt-6.3.0 $(basename $QT_PREFIX)
