@@ -67,7 +67,7 @@ jobs:
           sudo mkdir -p $QT_PREFIX
           sudo mv -f Qt-6.2.4 "$(dirname "$QT_PREFIX")"/
 
-      - name: Build Qt 6.3.0
+      - name: Build Qt 6.2.4
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
           git clone -b v6.2.4 https://code.qt.io/qt/qt5.git qt_6_2_4
@@ -76,18 +76,23 @@ jobs:
           
           mkdir $(pwd)/../qt_install
 
-          ./configure \
-            -prefix $(pwd)/../qt_install \
-            -libdir $(pwd)/../qt_install \
-            -release \
-            -opensource \
-            -confirm-license \
-            -nomake tools \
-            -nomake examples \
-            -nomake tests \
-            -skip qtwebengine
+          cmake . \
+            -DCMAKE_INSTALL_PREFIX=$(pwd)/../qt_install \
+            -GNinja
 
-          make -j$(nproc)
+          #./configure \
+          #  -prefix $(pwd)/../qt_install \
+          #  -libdir $(pwd)/../qt_install \
+          #  -release \
+          #  -opensource \
+          #  -confirm-license \
+          #  -nomake tools \
+          #  -nomake examples \
+          #  -nomake tests \
+          #  -skip qtwebengine
+
+          cmake --build .
+          cmake --install .
 
       - name: Build poppler
         run: |
