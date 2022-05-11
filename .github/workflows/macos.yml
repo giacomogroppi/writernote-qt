@@ -197,7 +197,7 @@ jobs:
           find $PREFIX_LIB -name "Qt6Config.cmake"
 
           echo $(ls $QT_PREFIX)
-
+          echo $(ls $QT_PREFIX/..)
           exit
 
           mkdir build
