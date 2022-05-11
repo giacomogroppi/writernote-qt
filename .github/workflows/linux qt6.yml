@@ -78,7 +78,8 @@ jobs:
 
           cmake . \
             -DCMAKE_INSTALL_PREFIX=$(pwd)/../qt_install \
-            -GNinja
+            -GNinja \
+            -DQt6_DIR=/home/runner/work/writernote-qt/writernote-qt/qt_install/lib/cmake/Qt6/
 
           #./configure \
           #  -prefix $(pwd)/../qt_install \
@@ -108,7 +109,9 @@ jobs:
           
           cmake . \
             -DCMAKE_INSTALL_LIBDIR=$(pwd)/install/ \
-            -DCMAKE_INSTALL_INCLUDEDIR=$(pwd)/install/
+            -DCMAKE_INSTALL_INCLUDEDIR=$(pwd)/install/ \
+            -DQt6_DIR=/home/runner/work/writernote-qt/writernote-qt/qt_install/lib/cmake/Qt6/
+            
           make -j$(nproc)
           sudo make install
 
