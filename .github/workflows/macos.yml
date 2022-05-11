@@ -191,7 +191,7 @@ jobs:
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/ \
-            -DQt6BundledPcre2_DIR=lib/cmake/Qt6BundledPcre2/ \
+            -DQt6BundledPcre2_DIR=$QT_PREFIX/lib/cmake/Qt6BundledPcre2/ \
             -DENABLE_BOOST=OFF \
             -DENABLE_QT5=OFF \
             -DENABLE_QT6=ON \
