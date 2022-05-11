@@ -28,6 +28,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      QT_PREFIX: "/home/runner/work/writernote-qt/writernote-qt/qt_install/"
+      PREFIX_LIB: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/"
+
     steps:
       - name: Clone
         uses: actions/checkout@v2
@@ -57,7 +61,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.PREFIX_LIB }}/qt-cache
-          key: ${{ runner.OS }}-qt-${{ env.CACHE_KEY }}-qtmulmedia-1
+          key: ${{ runner.OS }}-qt6-${{ env.CACHE_KEY }}-qtmulmedia-0
 
       - name: Use cached Qt 6.2.4.
         if: steps.cache-qt.outputs.cache-hit == 'true'
@@ -74,10 +78,10 @@ jobs:
           cd qt_6_2_4
           perl init-repository --module-subset=qtbase,qtsvg,qtmultimedia,qtshadertools
           
-          mkdir $(pwd)/../qt_install
+          mkdir -p $QT_PREFIX
 
           cmake . \
-            -DCMAKE_INSTALL_PREFIX=$(pwd)/../qt_install \
+            -DCMAKE_INSTALL_PREFIX=$QT_PREFIX \
             -GNinja
 
           #./configure \
@@ -94,23 +98,31 @@ jobs:
           cmake --build .
           cmake --install .
 
+          cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
+
       - name: Build poppler
         run: |
+          exit
           echo $(pwd)
           cd 3rdparty/poppler
+
+          export INSTALL_POPPLER=$PREFIX_LIB/poppler/install
+          mkdir -p $INSTALL_POPPLER
 
           mkdir install
           
           cmake . \
-            -DCMAKE_INSTALL_LIBDIR=$(pwd)/install/ \
-            -DCMAKE_INSTALL_INCLUDEDIR=$(pwd)/install/ \
-            -DQt6_DIR=/home/runner/work/writernote-qt/writernote-qt/qt_install/lib/cmake/Qt6/
+            -DCMAKE_INSTALL_LIBDIR=$INSTALL_POPPLER \
+            -DCMAKE_INSTALL_INCLUDEDIR=$INSTALL_POPPLER \
+            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/
             
           make -j$(nproc)
           sudo make install
 
       - name: Writernote compile
         run: |
+          exit
           cmake . \
-            -DQt6_DIR=/home/runner/work/writernote-qt/writernote-qt/qt_install/lib/cmake/Qt6/
+            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/
+          
           make -j$(nproc) 
