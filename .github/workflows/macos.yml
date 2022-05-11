@@ -84,6 +84,8 @@ jobs:
 
           [ -d $QT_PREFIX ] && sudo rm -r $QT_PREFIX 
           
+          echo "Base dir:" $(basename $QT_PREFIX)
+          
           sudo mv Qt-6.3.0 $(basename $QT_PREFIX)
 
       - name: Build Qt 6.3.0
@@ -188,6 +190,7 @@ jobs:
             -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/ \
             -DENABLE_BOOST=OFF \
             -DENABLE_QT5=OFF \
+            -DENABLE_QT6=ON \
             -DOpenJPEG_DIR=/Users/runner/gtk/inst/lib/openjpeg-2.3/
             
           make -j$(nproc)
