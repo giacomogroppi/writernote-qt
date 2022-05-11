@@ -87,6 +87,7 @@ jobs:
           echo "Base dir:" $(basename $QT_PREFIX)
           
           sudo mv Qt-6.3.0 $(basename $QT_PREFIX)
+          sudo find $pwd -name "Qt6Config.cmake" 
 
       - name: Build Qt 6.3.0
         if: steps.cache-qt.outputs.cache-hit != 'true'
