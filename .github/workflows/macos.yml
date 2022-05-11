@@ -182,7 +182,8 @@ jobs:
           pwd
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
-            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/
+            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/ \
+            -DENABLE_BOOST=OFF
             
 
           make -j$(nproc)
