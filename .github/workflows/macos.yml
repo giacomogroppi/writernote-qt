@@ -84,7 +84,7 @@ jobs:
 
           [ -d $QT_PREFIX ] && sudo rm -r $QT_PREFIX 
           
-          sudo mv -f Qt-6.3.0 $QT_PREFIX
+          sudo mv Qt-6.3.0 $QT_PREFIX
 
       - name: Build Qt 6.3.0
         if: steps.cache-qt.outputs.cache-hit != 'true'
