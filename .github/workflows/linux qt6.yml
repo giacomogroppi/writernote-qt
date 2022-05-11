@@ -56,7 +56,6 @@ jobs:
           sudo apt install -y libxcb-sync-dev libxcb-util-dev libxcb-xfixes0-dev libxcb-xkb-dev libxcursor-dev libxkbcommon-dev libxkbcommon-x11-dev zlib1g-dev
 
       - name: Qt 6 cache.
-        if: false
         id: cache-qt
         uses: actions/cache@v2
         with:
@@ -83,17 +82,6 @@ jobs:
           cmake . \
             -DCMAKE_INSTALL_PREFIX=$QT_PREFIX \
             -GNinja
-
-          #./configure \
-          #  -prefix $(pwd)/../qt_install \
-          #  -libdir $(pwd)/../qt_install \
-          #  -release \
-          #  -opensource \
-          #  -confirm-license \
-          #  -nomake tools \
-          #  -nomake examples \
-          #  -nomake tests \
-          #  -skip qtwebengine
 
           cmake --build .
           cmake --install .
