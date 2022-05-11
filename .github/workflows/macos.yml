@@ -193,7 +193,7 @@ jobs:
       - name: Writernote build
         run: |
           export VERSION=$(git describe --tags --abbrev=0)
-          
+          exit
 
           mkdir build
           cd build
@@ -227,6 +227,7 @@ jobs:
 
       - name: Lib runtime
         run: |
+          exit
           export LIB_PATH=Contents/Resources/lib/
           export POS_BIN=Contents/MacOS/writernote
           
