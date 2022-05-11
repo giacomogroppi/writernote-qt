@@ -193,6 +193,8 @@ jobs:
         run: |
           export VERSION=$(git describe --tags --abbrev=0)
 
+          find $QT_PREFIX -name "Qt6Config.cmake"
+
           mkdir build
           cd build
           cmake .. \
