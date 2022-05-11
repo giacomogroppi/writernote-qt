@@ -174,7 +174,6 @@ jobs:
           export PATH="$HOME/.new_local/bin:$PATH"
           cd $PREFIX_LIB
 
-          sudo find / -name "Qt6Config.cmake"
           exit
 
           cd poppler || exit
@@ -184,22 +183,24 @@ jobs:
           cd build || exit
           pwd
           cmake .. \
-            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler 
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
+            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/
+            
 
           make -j$(nproc)
           sudo make install
 
-      - name: Build
+      - name: Writernote build
         run: |
           export VERSION=$(git describe --tags --abbrev=0)
           
-          find / -name "Qt6Config.cmake"
 
           mkdir build
           cd build
           cmake .. \
             -G "Ninja" \
             -DMACOS_BUILD=ON \
+            -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/
 
 
           #$QT_PREFIX/bin/qmake writernote.pro \
