@@ -186,7 +186,9 @@ jobs:
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/ \
-            -DENABLE_BOOST=OFF
+            -DENABLE_BOOST=OFF \
+            -DENABLE_QT5=OFF \
+            -DOpenJPEG_DIR=/Users/runner/gtk/inst/lib/openjpeg-2.3/
             
           make -j$(nproc)
           sudo make install
