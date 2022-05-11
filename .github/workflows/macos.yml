@@ -80,9 +80,9 @@ jobs:
         if: steps.cache-qt.outputs.cache-hit == 'true'
         run: |
           cd $PREFIX_LIB
-          mv qt-cache $QT_PREFIX
+          mv qt-cache Qt-6.3.0
           sudo mkdir -p $QT_PREFIX
-          sudo mv -f $QT_PREFIX "$(dirname "$QT_PREFIX")"/
+          sudo mv -f Qt-6.3.0 "$(dirname "$QT_PREFIX")"/
 
       - name: Build Qt 6.3.0
         if: steps.cache-qt.outputs.cache-hit != 'true'
@@ -224,7 +224,6 @@ jobs:
 
       - name: Lib runtime
         run: |
-          exit
           export LIB_PATH=Contents/Resources/lib/
           export POS_BIN=Contents/MacOS/writernote
           
