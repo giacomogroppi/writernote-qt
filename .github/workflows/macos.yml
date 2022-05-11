@@ -194,6 +194,9 @@ jobs:
           export VERSION=$(git describe --tags --abbrev=0)
 
           find $QT_PREFIX -name "Qt6Config.cmake"
+          find $PREFIX_LIB -name "Qt6Config.cmake"
+
+          echo $(ls $QT_PREFIX)
 
           exit
 
