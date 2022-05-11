@@ -261,11 +261,13 @@ else()
     target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 endif()
 
-OPTION(SNAP "Snap package" OFF)
-OPTION(PDFSUPPORT "Pdf support" ON)
+option(SNAP "Snap package" OFF)
+option(PDFSUPPORT "Pdf support" ON)
 
-OPTION(VERSION_SNAPCRAFT "Version" "")
-OPTION(FLATPAK_BUILD "build for flatpak" OFF)
+option(MACOS_BUILD "Set to on if we are building in action" OFF)
+
+option(VERSION_SNAPCRAFT "Version" "")
+option(FLATPAK_BUILD "build for flatpak" OFF)
 
 if(NOT ${VERSION_SNAPCRAFT} STREQUAL "")
     add_definitions(-DVERSION_SNAPCRAFT=${VERSION_SNAPCRAFT})
@@ -333,6 +335,12 @@ if(PDFSUPPORT)
     endif()
 endif() #PDFSUPPORT
 
+if(APPLE)
+    if(MACOS_BUILD)
+        target_include_directories()
+    else()
+    endif()
+endif()
 
 
 SET(QT_USE_QTMULTIMEDIA TRUE)

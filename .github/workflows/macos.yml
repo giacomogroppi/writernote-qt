@@ -31,8 +31,8 @@ jobs:
     runs-on: macos-10.15
 
     env:
-      QT: "5_15_2"
-      QT_PREFIX: "/usr/local/desktop-app/Qt-5.15.2"
+      QT: "6_3_0"
+      QT_PREFIX: "/usr/local/desktop-app/qt_6_0_3"
       PREFIX: "/usr/local/macos"
       PREFIX_LIB: "/Users/runner/work/writernote-qt/writernote-qt/3rdparty"
       PROJECT_PATH: "/Users/runner/work/writernote-qt/writernote-qt/"
@@ -51,18 +51,10 @@ jobs:
         run: |
           brew install automake libtool libvorbis libvpx \
             ninja opus sdl pkg-config cmake
-          brew install libzip qt@5
-          brew install poppler-qt5
+          brew install libzip
           brew install nss
 
           sudo mdutil -a -i off
-
-      #- name: Install Qt
-      #  uses: jurplel/install-qt-action@v2.13.2
-      #  with:
-      #    version: 5.15.2 # optional, default is 5.15.2
-      #    modules: multimedia # optional
-          
 
       - name: MozJPEG.
         run: |
@@ -88,15 +80,15 @@ jobs:
         if: steps.cache-qt.outputs.cache-hit == 'true'
         run: |
           cd $PREFIX_LIB
-          mv qt-cache Qt-5.15.2
+          mv qt-cache $QT_PREFIX
           sudo mkdir -p $QT_PREFIX
-          sudo mv -f Qt-5.15.2 "$(dirname "$QT_PREFIX")"/
+          sudo mv -f $QT_PREFIX "$(dirname "$QT_PREFIX")"/
 
       - name: Build Qt 6.3.0
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
-          git clone -b v6.3.0 https://code.qt.io/qt/qt5.git qt_6_3_0
-          cd qt_6_3_0
+          git clone -b v6.3.0 https://code.qt.io/qt/qt5.git qt_${QT}
+          cd qt_${QT}
           perl init-repository --module-subset=qtbase,qtimageformats,qtsvg,qt5compat,qtmultimedia,qtshadertools
           
           ./configure -prefix "$QT_PREFIX" \
@@ -114,6 +106,8 @@ jobs:
           
           ninja
           sudo ninja install
+
+          cp -r $QT_PREFIX $PREFIX_LIB/qt-cache
 
       - name: "zlib: Configure and Build"
         run: |
@@ -176,7 +170,6 @@ jobs:
           make install
 
       - name: Build poppler-qt6
-        if: false
         run: |
           export PATH="$HOME/.new_local/bin:$PATH"
           cd $PREFIX_LIB
@@ -201,11 +194,20 @@ jobs:
         run: |
           export VERSION=$(git describe --tags --abbrev=0)
           
-          $QT_PREFIX/bin/qmake writernote.pro \
-            DEFINES+="CI_MAC" \
-            LIBS+="$PREFIX_LIB/libzip/distrib/lib/libzip.a" \
-            INCLUDEPATH+="$PREFIX_LIB/libzip/distrib/include" \
-            DEFINES+="VERSION_SNAPCRAFT=$VERSION"
+          find / -name "Qt6Config.cmake"
+
+          mkdir build
+          cd build
+          cmake .. \
+            -G "Ninja" \
+            -DMACOS_BUILD=ON \
+
+
+          #$QT_PREFIX/bin/qmake writernote.pro \
+          #  DEFINES+="CI_MAC" \
+          #  LIBS+="$PREFIX_LIB/libzip/distrib/lib/libzip.a" \
+          #  INCLUDEPATH+="$PREFIX_LIB/libzip/distrib/include" \
+          #  DEFINES+="VERSION_SNAPCRAFT=$VERSION"
 
           make -j$(nproc)
           echo $(ls)
