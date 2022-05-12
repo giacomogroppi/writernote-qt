@@ -339,6 +339,8 @@ if(APPLE)
         target_link_libraries(${PROJECT_NAME} PRIVATE {$PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler.dylib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler-qt6.dylib)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6/)
+
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/lib/libzip.a)
     else()
     endif()
 endif()
