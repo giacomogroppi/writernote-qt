@@ -68,7 +68,9 @@ jobs:
           cd $PREFIX_LIB
           mv qt-cache Qt-6.2.4
           sudo mkdir -p $QT_PREFIX
-          sudo mv -f Qt-6.2.4 "$(dirname "$QT_PREFIX")"/
+
+          sudo mv Qt-6.3.0 $(basename $QT_PREFIX)
+          sudo mv $(basename $QT_PREFIX) $QT_PREFIX
 
       - name: Build Qt 6.2.4
         if: steps.cache-qt.outputs.cache-hit != 'true'
