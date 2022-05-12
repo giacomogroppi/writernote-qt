@@ -227,6 +227,7 @@ jobs:
           cd build
           cmake .. \
             -G "Ninja" \
+            -DPDFSUPPORT=ON \
             -DMACOS_BUILD=ON \
             -DCMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake
 
