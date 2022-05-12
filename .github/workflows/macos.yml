@@ -235,7 +235,8 @@ jobs:
 
           ninja
 
-          echo $(ls build/)
+          echo $(ls)
+          echo $(ls ..)
       
       - name: Lib static
         if: false
