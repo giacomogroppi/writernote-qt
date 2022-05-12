@@ -390,4 +390,6 @@ else()
     target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libpoppler-qt5.so)
 endif()
 
+if(NOT APPLE)
 install (TARGETS writernote RUNTIME DESTINATION ${PROJECT_BINARY_BIN})
+endif()
