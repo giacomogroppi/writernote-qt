@@ -237,13 +237,6 @@ frompdf::load_res frompdf::load_from_row(
     if(canvas)
         canvas->update();
 
-    const auto *data = canvas->data->datatouch;
-    for(int i = 0; i < data->lengthPage(); i++){
-        for(int j = 0; j < data->at(i).lengthStroke(); j++){
-            W_ASSERT(data->at(i).atStroke(j).is_normal());
-        }
-    }
-
     return load_res::ok;
 }
 
