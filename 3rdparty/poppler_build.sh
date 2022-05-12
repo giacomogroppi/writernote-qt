@@ -9,7 +9,7 @@ mkdir install
 #Qt6_POS=/usr/lib/x86_64-linux-gnu/cmake/Qt6
 
 # qt from qt installer
-Qt6_POS=~/Qt/6.3.0/gcc_64/lib/cmake/Qt6/
+Qt6_POS=~/Qt/6.3.0/gcc_64/lib/cmake/
 
 cd build
 cmake .. -DCMAKE_INSTALL_LIBDIR=/home/giacomo/writernote-qt/3rdparty/poppler/install \
@@ -24,7 +24,7 @@ cmake .. -DCMAKE_INSTALL_LIBDIR=/home/giacomo/writernote-qt/3rdparty/poppler/ins
     -DENABLE_UTILS=OFF \
     -DENABLE_CMS=lcms2 \
     -DBUILD_SHARED_LIBS=ON \
-    -DQt6_DIR=~/Qt/6.3.0/gcc_64/lib/cmake/Qt6/
+    -DCMAKE_PREFIX_PATH=$Qt6_POS
 
 make -j16 
 sudo make install

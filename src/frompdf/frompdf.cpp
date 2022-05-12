@@ -173,21 +173,23 @@ frompdf::load_res frompdf::load_from_row(
     this->resizing(canvas, len);
 
     /* creation of thread and append QImage to the current PDF page */
-    for(i=0; i<len && i<countThread; ++i){
+    for(i = 0; i < len && i < countThread; i++){
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
         page.append(doc->page(i).get());
 #else
         page.append(doc->page(QString::number(i+1)));
 #endif
+    }
 
+    for(i = 0; i < len; i++){
         this->m_image.operator[](IndexPdf).img.append(imgAppend);
         conv.append(new convertImg(resolution));
     }
 
-    W_ASSERT(len == m_image.length());
+    W_ASSERT(len == m_image.at(IndexPdf).img.length());
 
     for(pdfCount = 0; pdfCount < len; ){
-        cint create = Min(countThread, len);
+        cint create = qMin(countThread, len);
 
         for(i = 0; i < create; i++){
             const Poppler::Page *pdfPage = page.at(pdfCount+i);
