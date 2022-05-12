@@ -110,7 +110,7 @@ jobs:
 
       - name: Writernote compile
         run: |
-          exit
+          
           cmake . \
             -DCMAKE_PREFIX_PATH=$QT_PREFIX/qt_install/lib/cmake
           
