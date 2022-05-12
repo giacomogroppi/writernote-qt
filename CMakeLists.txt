@@ -261,6 +261,10 @@ else()
     target_include_directories(${PROJECT_NAME} PRIVATE /usr/include/poppler/qt5) 
 endif()
 
+if(APPLE)
+add_definitions(-DMACOS)
+endif()
+
 option(SNAP "Snap package" OFF)
 option(PDFSUPPORT "Pdf support" ON)
 
