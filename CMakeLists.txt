@@ -340,7 +340,7 @@ endif() #PDFSUPPORT
 
 if(APPLE)
     if(MACOS_BUILD)
-        target_link_libraries(${PROJECT_NAME} PRIVATE {$PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler.dylib)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler.dylib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler-qt6.dylib)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6/)
 
