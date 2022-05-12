@@ -61,5 +61,6 @@
         "stdexcept": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "cmake.cmakePath": "/usr/bin/cmake"
 }

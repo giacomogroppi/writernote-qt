@@ -141,9 +141,13 @@ frompdf::load_res frompdf::load_from_row(
      * than one pdf at the same time
     */
 
-    int i, len, pdfCount;
+    int i, pdfCount;
     QImage imgAppend;
-    QList<Poppler::Page*> page;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QList<Poppler::Page *> page;
+#endif
+
     QList<convertImg *> conv;
     const int countThread = threadCount::count();
 
@@ -169,20 +173,19 @@ frompdf::load_res frompdf::load_from_row(
         return load_res::not_valid_pdf;
     }
 
-    len = doc->numPages();
+    cint len = doc->numPages();
     this->resizing(canvas, len);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     /* creation of thread and append QImage to the current PDF page */
     for(i = 0; i < len && i < countThread; i++){
-#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-        page.append(doc->page(i).get());
-#else
         page.append(doc->page(QString::number(i+1)));
-#endif
-    }
 
-    for(i = 0; i < len; i++){
-        this->m_image.operator[](IndexPdf).img.append(imgAppend);
+    }
+#endif
+
+    for(i = 0; i < len; i ++){
+        m_image.operator[](IndexPdf).img.append(imgAppend);
         conv.append(new convertImg(resolution));
     }
 
@@ -192,11 +195,17 @@ frompdf::load_res frompdf::load_from_row(
         cint create = qMin(countThread, len);
 
         for(i = 0; i < create; i++){
-            const Poppler::Page *pdfPage = page.at(pdfCount+i);
-            QImage *image = &m_image.operator[](IndexPdf).img.operator[](pdfCount+i);
+            QImage *image = &m_image.operator[](IndexPdf).img.operator[](pdfCount + i);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+            const auto &pdfPage = page.at(pdfCount+i);
+
 
             conv.operator[](i)->setData(pdfPage, image);
             conv.at(i)->start();
+#else
+            conv.operator[](i)->setData(doc, image, pdfCount + i);
+            conv.at(i)->start();
+#endif
         }
 
         for(i = 0; i < create && i < conv.length(); i++){
@@ -206,13 +215,14 @@ frompdf::load_res frompdf::load_from_row(
         pdfCount += countThread;
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     for(i=0; i < page.length(); ++i)
         delete page.at(i);
+    delete doc;
+#endif
+
     for(i=0; i < conv.length(); ++i)
         delete conv.at(i);
-
-    delete doc;
-    doc = nullptr;
 
     for(i = 0; i < m_image.length(); ++i){
         if(this->m_image.at(IndexPdf).img.at(i).isNull()){
