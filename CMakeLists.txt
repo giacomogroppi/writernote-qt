@@ -387,6 +387,7 @@ else()
 endif()
 
 if(APPLE)
+    set(MACOSX_BUNDLE ${PROJECT_SOURCE_DIR}/build/writernote.app)
     set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
     )
