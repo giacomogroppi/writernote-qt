@@ -42,6 +42,18 @@ void preview_page_item::draw(const page &page, cbool selected)
     this->_selected = selected;
     this->_index = page.getCount() - 1;
 
+
+    // draw the image and the sheet in the pixmap
+    {
+        this->_pix = QPixmap(_widthImg, _heightImg);
+        _pix.fill(Qt::white);
+        this->paint(_pix);
+
+        QPainter painter(&_pix);
+        painter.drawImage(QRect(0, 0, _widthImg, _heightImg), _page->getImg());
+        painter.end();
+    }
+
     this->setMinimumSize(QSize(realWidth, realHeight));
     this->setFixedHeight(realHeight);
     update();
@@ -75,21 +87,12 @@ void preview_page_item::paintEvent(QPaintEvent *)
 
     double delta;
     QPainter painter(this);
-    QPixmap pix(_widthImg, _heightImg);
+
     QImage touchImg(pos_img);
     Define_PEN(pen);
 
     if(_index < 0)
         return;
-
-    const auto index = _page->getCount();
-
-    const QImage &img = _page->getImg();
-    {
-        const int secImgWidth = touchImg.width();
-        const int secImgHeight = touchImg.height();
-        delta = double(secImgWidth) / double(secImgHeight);
-    }
 
     /*if(_page->getCount() % 2 == 0){
         pix.fill(Qt::blue);
@@ -97,13 +100,7 @@ void preview_page_item::paintEvent(QPaintEvent *)
         pix.fill(Qt::red);
     }*/
 
-    pix.fill(Qt::white);
-
-    this->paint(pix);
-
-    //painter.fillRect(QRect(0, 0, realWidth, realHeight), Qt::white);
-    painter.drawPixmap(target, pix);
-    painter.drawImage(QRect(0, 0, _widthImg, _heightImg), img);
+    painter.drawPixmap(target, _pix);
 
     if(unlikely(_selected)){
         pen.setWidth(1);
@@ -117,15 +114,11 @@ void preview_page_item::paintEvent(QPaintEvent *)
     {
         const auto widthNew     = _widthImg -  deltaImgTouchWidth;
         const auto heightNew    = _heightImg - deltaImgTouchHeight;
-        const auto not_used targetProp = QRect(widthNew,       heightNew,
-                                               height / delta, height);
-
-        W_ASSERT(target_prop == targetProp);
 
         painter.drawImage(target_prop, touchImg, touchImg.rect());
     }
 
-    painter.drawText(QPointF(3., _heightImg + 20.), QString::number(index));
+    painter.drawText(QPointF(3., _heightImg + 20.), QString::number(this->_index + 1));
 
     painter.end();
 }

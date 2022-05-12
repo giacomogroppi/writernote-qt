@@ -75,6 +75,7 @@ void MainWindow::openFile(const char *pos)
     if(IS_PRESENT_IN_LIST(fileName, ".pdf")){
 #ifdef PDFSUPPORT
         _canvas->data->m_pdf->addPdf(fileName, nullptr, this->m_path, this->_canvas);
+        this->_preview_widget->changeDocument();
 #else
         user_message("Pdf support is not enable in this version");
 #endif // PDFSUPPORT

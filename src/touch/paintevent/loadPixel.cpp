@@ -154,6 +154,11 @@ void drawUtils::loadSingleSheet(
 
 redo:
 
+    lenPoint = __stroke->length();
+
+    if(!lenPoint)
+        return;
+
     pressure = __stroke->getPressure();
 
     if(unlikely(pressure <= 0.0)){
@@ -162,7 +167,6 @@ redo:
         goto redo;
     }
 
-    lenPoint = __stroke->length();
     pressure = TabletCanvas::pressureToWidth(pressure * zoom / 2.0) * delta;
 
     _pen.setWidthF(pressure);

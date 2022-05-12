@@ -34,6 +34,7 @@ signals:
    void clickUser(void *_this);
 
 private:
+    QPixmap _pix;
     QLabel *_lab;
     const class page *_page;
     int _index;
