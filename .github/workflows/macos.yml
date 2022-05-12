@@ -233,7 +233,7 @@ jobs:
             -DMACOS_BUILD=ON \
             -DCMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake
 
-          cmake --build . -j$(nproc)
+          ninja
 
           echo $(ls)
       
