@@ -385,4 +385,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libpoppler-qt5.so)
 endif()
+
+if(APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE TRUE
+    )
+endif()
+
 install (TARGETS writernote RUNTIME DESTINATION ${PROJECT_BINARY_BIN})
