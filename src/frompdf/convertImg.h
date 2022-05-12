@@ -26,8 +26,8 @@ protected:
     void run();
 
 private:
-    const Poppler::Page *page;
-    QImage *img;
+    const Poppler::Page *page = NULL;
+    QImage *img = NULL;
     uint precision;
 };
 

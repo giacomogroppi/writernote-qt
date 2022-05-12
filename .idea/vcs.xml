@@ -4,6 +4,7 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/3rdparty/android_openssl" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/3rdparty/libzip" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/3rdparty/poppler" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/3rdparty/zlib-ng" vcs="Git" />
   </component>
 </project>

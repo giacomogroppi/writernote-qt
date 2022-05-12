@@ -19,7 +19,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 set(QT_VERSION_MAJOR 6)
-message("-Version qt: " ${QT_VERSION_MAJOR})
+message("-- Version qt: " ${QT_VERSION_MAJOR})
 
 file(GLOB PROJECT_MOC
 	writernote.qrc
@@ -279,6 +279,11 @@ if(SNAP)
     add_definitions(-DSNAP)  
 endif()
 
+if(LINUX AND NOT FLATPAK_BUILD AND NOT SNAP)
+    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
+    message("-- search qt in " ${CMAKE_PREFIX_PATH})
+endif()
+
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR}Multimedia REQUIRED )
 find_package(Qt${QT_VERSION_MAJOR}MultimediaWidgets REQUIRED )
@@ -324,12 +329,6 @@ if(PDFSUPPORT)
         message("project source "${PROJECT_SOURCE_DIR})
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/qt6/src/)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/build/qt6/src)
-        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121.0.0)
-        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so)
-        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler.so.121)
-
-        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3.2.0)
-        #target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so.3)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)
 
     endif()

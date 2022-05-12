@@ -23,8 +23,8 @@ cmake .. -DCMAKE_INSTALL_LIBDIR=/home/giacomo/writernote-qt/3rdparty/poppler/ins
     -DBUILD_QT5_TESTS=OFF \
     -DENABLE_UTILS=OFF \
     -DENABLE_CMS=lcms2 \
-    -DQt6_DIR=${Qt6_POS}/Qt6Config.cmake \
-    -DQt5_DIR=${Qt5_POS}/Qt5Config.cmake
+    -DBUILD_SHARED_LIBS=ON \
+    -DQt6_DIR=~/Qt/6.3.0/gcc_64/lib/cmake/Qt6/
 
 make -j16 
 sudo make install
