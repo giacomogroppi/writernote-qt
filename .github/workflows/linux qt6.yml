@@ -72,6 +72,8 @@ jobs:
           sudo mv Qt-6.2.4 $(basename $QT_PREFIX)
           sudo mv $(basename $QT_PREFIX) $QT_PREFIX
 
+          sudo find $QT_PREFIX -name "Qt6Config.cmake"
+
       - name: Build Qt 6.2.4
         if: steps.cache-qt.outputs.cache-hit != 'true'
         run: |
