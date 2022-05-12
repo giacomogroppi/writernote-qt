@@ -371,7 +371,7 @@ if(FLATPAK_BUILD)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5.4)
     target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libzip.so.5)
-elseif(NOT FLATPAK_BUILD)
+elseif(NOT FLATPAK_BUILD AND LINUX)
     target_link_libraries(${PROJECT_NAME} PRIVATE /usr/lib/x86_64-linux-gnu/libzip.so)
 endif()
 
