@@ -293,7 +293,11 @@ find_package(Qt${QT_VERSION_MAJOR}Multimedia REQUIRED )
 find_package(Qt${QT_VERSION_MAJOR}MultimediaWidgets REQUIRED )
 find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)
 
-qt_add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES})
+if(NOT APPLE)
+    qt_add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES})
+else()
+    qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_MOC} ${PROJECT_SOURCES})
+endif()
 
 set_target_properties(
 	${PROJECT_NAME}
