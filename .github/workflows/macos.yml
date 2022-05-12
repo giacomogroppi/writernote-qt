@@ -189,6 +189,8 @@ jobs:
           cd build || exit
           pwd
           
+          ls $QT_PREFIX/lib/cmake
+
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DCMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake \
