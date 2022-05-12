@@ -95,8 +95,6 @@ jobs:
 
           export INSTALL_POPPLER=$PREFIX_LIB/poppler/install
           mkdir -p $INSTALL_POPPLER
-
-          mkdir install
           
           cmake . \
             -DCMAKE_INSTALL_LIBDIR=$INSTALL_POPPLER \
