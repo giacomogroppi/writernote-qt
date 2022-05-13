@@ -1,3 +1,4 @@
+from csv import list_dialects
 import sys
 import os
 from typing import List
@@ -57,9 +58,8 @@ def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
         list_sec[i].replace("\n", "")
         list_sec[i].replace("\t", "")
 
-        try:
-            ind = list_sec[i].index('/usr/local/')
-        except:
+
+        if not "/usr/local" in list_sec[i] or not "poppler" in list_sec[i]:
             del list_sec[i]
             i -= 1
 
@@ -73,6 +73,7 @@ def get_name_lib(lib: str) -> str:
     list = lib.split('/')
     return list[-1]
 
+# copy all the dependency to SUFF_LIB
 def copy_dep(app_path: str, list_dep: list[str]) -> bool:
     try:
         tmp = "{}/{}".format(app_path, SUFF_LIB)
@@ -83,19 +84,28 @@ def copy_dep(app_path: str, list_dep: list[str]) -> bool:
     for dep in list_dep:
         name = get_name_lib(dep)
         ref = app_path + "/" + SUFF_LIB + name
-        if os.system("{}{} {}".format(COPY, dep,ref )) != 0:
+        if os.system("{}{} {}".format(COPY, dep, ref )) != 0:
             return False
 
     return True
 
+
+"""
+example:
+path = /home/user/writernote-qt/hello.txt
+
+return /home/user/writernote-qt/
+"""
 def get_pos(path: str) -> str:
     list = path.split('/')
-    lista = list[1:]
     
     string_ret = ""
     for a in list[:-1]:
         string_ret += '/' + a
 
+    if string_ret[-1] != '/':
+        string_ret += "/"
+    
     return string_ret
 
 
@@ -139,7 +149,7 @@ def main(list: list[str]) -> list[str]:
     #print("call to main")
     for dep in list:
         #print("dep: ", dep)
-        list_new_dep = get_dep(dep, pos_dest, False)
+        list_new_dep = get_dep(dep, pos_dest, binary=False)
 
         list_new_dep = main(list_new_dep)
         #print("list_new_dep ", list_new_dep)
@@ -154,7 +164,8 @@ if __name__ == "__main__":
     
     pos_exe = pos_bin + "/" + SUFF
 
-    list = get_dep(pos_exe, pos_dest, True)
+    # get dependency of writernote (binary)
+    list = get_dep(pos_exe, pos_dest, binary=True)
 
     lista = main(list)
 
@@ -167,5 +178,5 @@ if __name__ == "__main__":
 
     if not change_dep(pos_bin, list):
         print("Error change dep")
-        exit(1)
+        exit(2)
 
