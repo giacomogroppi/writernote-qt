@@ -59,6 +59,7 @@ def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
         list_sec[i].replace("\t", "")
 
         if not "/usr/local" in list_sec[i] or not "poppler" in list_sec[i]:
+            print("INFO: Delete dependency: {}".format(list_sec[i]))
             del list_sec[i]
             i -= 1
 
