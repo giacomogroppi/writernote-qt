@@ -58,16 +58,10 @@ jobs:
           sh build_poppler.sh
       
       - name: Writernote Build
+        shell: msys2 {0}
         continue-on-error: true
-        run: |
-          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          C:\msys64\usr\bin\bash -lc "./windows/compile.sh"
-        shell: cmd
-        working-directory: windows
-        env:
-          HOME: ${{ runner.workspace }}/writernote-qt
-          MSYS2_ARCH: x86_64
-          MSYSTEM: MINGW64
+        run: |          
+          sh windows/compile.sh
       
       - name: Add manifest
         run: |
