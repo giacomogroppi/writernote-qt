@@ -258,7 +258,7 @@ jobs:
           
           echo "Dep: "
           otool -L build/writernote.app/$POS_BIN
-
+          ls build/writernote.app/$LIB_PATH
           mkdir -p build/writernote.app/$LIB_PATH
 
           sudo python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
