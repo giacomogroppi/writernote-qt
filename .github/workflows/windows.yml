@@ -59,6 +59,9 @@ jobs:
         continue-on-error: true
         run: |          
           sh windows/compile.sh
+          cd build
+
+          rm -r CMakeCache.txt CMakeFiles build.ninja cmake_install.cmake writernote_autogen
       
       - name: Add manifest
         run: |

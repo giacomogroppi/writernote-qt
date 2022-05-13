@@ -260,6 +260,9 @@ jobs:
           otool -L build/writernote.app/$POS_BIN
           mkdir -p build/writernote.app/$LIB_PATH
 
+          otool -L $PREFIX_LIB/3rdparty/poppler/lib/libpoppler.121.dylib
+          otool -L $PREFIX_LIB/3rdparty/poppler/lib/libpoppler-qt6.3.dylib
+
           sudo python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
 
           install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @executable_path/../Resources/lib/libpoppler-qt5.1.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
