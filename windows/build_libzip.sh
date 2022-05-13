@@ -1,4 +1,3 @@
-cd ..
 old=$(pwd)
 
 cd 3rdparty
