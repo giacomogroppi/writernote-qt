@@ -255,13 +255,11 @@ jobs:
           #otool -L $PREFIX_LIB/poppler/lib/libpoppler.dylib
           #otool -L $PREFIX_LIB/poppler/lib/libpoppler-qt6.dylib
 
-          install_name_tool -change @rpath/libpoppler.121.dylib $PREFIX_LIB/poppler/lib/libpoppler.121.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
-          install_name_tool -change @rpath/libpoppler-qt6.3.dylib $PREFIX_LIB/poppler/lib/libpoppler-qt6.3.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
+          install_name_tool -change $PROJECT_PATH/build/writernote.app/$POS_BIN @rpath/libpoppler.121.dylib $PREFIX_LIB/poppler/lib/libpoppler.121.dylib 
+          install_name_tool -change $PROJECT_PATH/build/writernote.app/$POS_BIN @rpath/libpoppler-qt6.3.dylib $PREFIX_LIB/poppler/lib/libpoppler-qt6.3.dylib
 
           echo "Start python script"
           sudo python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
-
-          install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @executable_path/../Resources/lib/libpoppler-qt5.1.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
 
           ls build/writernote.app/Contents/Resources/lib/
           otool -L build/writernote.app/$POS_BIN
