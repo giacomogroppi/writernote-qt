@@ -1,4 +1,5 @@
 old=$(pwd)
+cd ..
 
 echo "PATH: " $(pwd)
 
