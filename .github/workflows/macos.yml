@@ -257,7 +257,7 @@ jobs:
           export POS_BIN=Contents/MacOS/writernote
           
           echo "Dep: "
-          ldd build/writernote.app/$POS_BIN
+          otool -L build/writernote.app/$POS_BIN
 
           mkdir -p build/writernote.app/$LIB_PATH
 
