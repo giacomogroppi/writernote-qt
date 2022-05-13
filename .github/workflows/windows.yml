@@ -50,7 +50,7 @@ jobs:
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
       - name: Download dependency
-      shell: msys2 {0}
+        shell: msys2 {0}
         run: |
           sh windows/dipendenze.sh
           cd windows
