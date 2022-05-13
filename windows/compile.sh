@@ -15,6 +15,8 @@ cmake .. \
     -DPDFSUPPORT=ON \
     -DVERSION_SNAPCRAFT=$version
 
+ninja
+
 echo "INFO WRITERNOTE: Add library"
 ldd ./build/writernote.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
 
