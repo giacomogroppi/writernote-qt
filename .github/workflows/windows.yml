@@ -35,14 +35,6 @@ jobs:
       - name: "Install msys2"
         uses: msys2/setup-msys2@v2
 
-      - name: Download dependency
-      shell: msys2 {0}
-        run: |
-          sh windows/dipendenze.sh
-          cd windows
-          sh build_libzip.sh
-          sh build_poppler.sh
-      
       - name: install choco
         run: |
           Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
@@ -56,8 +48,16 @@ jobs:
         with:
           python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+
+      - name: Download dependency
+      shell: msys2 {0}
+        run: |
+          sh windows/dipendenze.sh
+          cd windows
+          sh build_libzip.sh
+          sh build_poppler.sh
       
-      - name: Build
+      - name: Writernote Build
         continue-on-error: true
         run: |
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
