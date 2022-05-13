@@ -240,8 +240,8 @@ jobs:
 
       - name: Search lib
         run: |
-          find $pwd -name "libpoppler.121.dylib"
-          find $pwd -name "libpoppler-qt6.3.dylib"
+          find $(pwd) -name "libpoppler.121.dylib"
+          find $(pwd) -name "libpoppler-qt6.3.dylib"
 
       - name: Lib runtime
         run: |
@@ -268,8 +268,8 @@ jobs:
 
       - name: Search lib
         run: |
-          find $pwd -name "libpoppler.121.dylib"
-          find $pwd -name "libpoppler-qt6.3.dylib"
+          find $(pwd) -name "libpoppler.121.dylib"
+          find $(pwd) -name "libpoppler-qt6.3.dylib"
 
       - name: Package and upload
         if: github.event_name == 'release'
