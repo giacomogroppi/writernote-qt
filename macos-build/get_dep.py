@@ -71,10 +71,14 @@ def get_dep(pos_binary: str, dest_list: str, binary: bool) -> list[str]:
 
 def get_name_lib(lib: str) -> str:
     list = lib.split('/')
-    return list[-1]
+    name = list[-1]
+    print("get_name_lib: position lib: {} name: {}".format(lib, name))
+    return name
 
 # copy all the dependency to SUFF_LIB
 def copy_dep(app_path: str, list_dep: list[str]) -> bool:
+    print("copy_dep: app_path: {}".format(app_path))
+
     try:
         tmp = "{}/{}".format(app_path, SUFF_LIB)
         os.mkdir(tmp)
@@ -83,8 +87,9 @@ def copy_dep(app_path: str, list_dep: list[str]) -> bool:
 
     for dep in list_dep:
         name = get_name_lib(dep)
-        ref = app_path + "/" + SUFF_LIB + name
-        if os.system("{}{} {}".format(COPY, dep, ref )) != 0:
+        to = app_path + "/" + SUFF_LIB + name
+        if os.system("{} {} {}".format(COPY, dep, to )) != 0:
+            print("copy_dep: error copy from: {} to: {}".format(dep, to))
             return False
 
     return True
