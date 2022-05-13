@@ -256,6 +256,9 @@ jobs:
           export LIB_PATH=Contents/Resources/lib/
           export POS_BIN=Contents/MacOS/writernote
           
+          echo "Dep: "
+          ldd build/writernote.app/$POS_BIN
+
           mkdir -p build/writernote.app/$LIB_PATH
 
           sudo python3 macos-build/get_dep.py $(pwd)/build/writernote.app        
