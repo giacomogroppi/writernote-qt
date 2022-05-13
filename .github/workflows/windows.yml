@@ -64,6 +64,7 @@ jobs:
           rm -r CMakeCache.txt CMakeFiles build.ninja cmake_install.cmake writernote_autogen
       
       - name: Search libssl
+        shell: cmd
         run: |
            dir libssl.dll.a /s /p
 
