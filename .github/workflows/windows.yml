@@ -63,6 +63,10 @@ jobs:
 
           rm -r CMakeCache.txt CMakeFiles build.ninja cmake_install.cmake writernote_autogen
       
+      - name: Search libssl
+        run: |
+           dir libssl.dll.a /s /p
+
       - name: Add manifest
         run: |
           #set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin
