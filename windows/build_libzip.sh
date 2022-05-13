@@ -1,5 +1,7 @@
 old=$(pwd)
 
+echo "PATH: " $(pwd)
+
 cd 3rdparty
 PREFIX_LIB=$(pwd)
 
