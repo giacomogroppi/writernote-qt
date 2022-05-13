@@ -17,11 +17,13 @@ cmake .. \
 
 ninja
 
+cd ..
+
 echo "INFO WRITERNOTE: Add library"
 ldd ./build/writernote.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
 
 echo "INFO WRITERNOTE: exec windeployqt"
-/mingw64/bin/windeployqt.exe ./build/writernote.exe --force
+/mingw64/bin/windeployqt-qt6.exe ./build/writernote.exe --force
 
 echo "INFO WRITERNOTE: Build updater"
 cd updater
