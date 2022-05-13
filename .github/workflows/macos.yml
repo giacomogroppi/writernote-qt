@@ -267,11 +267,13 @@ jobs:
 
           install_name_tool -change /usr/local/opt/poppler-qt5/lib/libpoppler-qt5.1.dylib @executable_path/../Resources/lib/libpoppler-qt5.1.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
 
-          echo "First"
-          ls build/writernote.app/$LIB_PATH
+          ls build/writernote.app/Contents/MacOS
+
+          #echo "First"
+          #ls build/writernote.app/$LIB_PATH
           
-          echo "Second"
-          ls build/writernote.app/
+          #echo "Second"
+          #ls build/writernote.app/
 
       - name: Package and upload
         if: github.event_name == 'release'
