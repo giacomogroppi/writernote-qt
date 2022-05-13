@@ -266,7 +266,7 @@ jobs:
           ls build/writernote.app/Contents/Resources/lib/
           otool -L build/writernote.app/$POS_BIN
 
-       - name: Search lib
+      - name: Search lib
         run: |
           find $pwd -name "libpoppler.121.dylib"
           find $pwd -name "libpoppler-qt6.3.dylib"
