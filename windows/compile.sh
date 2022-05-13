@@ -27,8 +27,16 @@ echo "INFO WRITERNOTE: exec windeployqt"
 
 echo "INFO WRITERNOTE: Build updater"
 cd updater
-/mingw64/bin/qmake updater.pro
-make release -j 2
+rm -r build
+mkdir build
+
+cd build
+cmake ..
+ninja
+cd ..
+
+#/mingw64/bin/qmake updater.pro
+#make release -j 2
 ldd ./build/updater.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
 /mingw64/bin/windeployqt.exe build/updater.exe --force
 
