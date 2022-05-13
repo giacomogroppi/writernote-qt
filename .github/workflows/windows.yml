@@ -31,6 +31,8 @@ jobs:
       - name: Download dependency
         run: |
           set PATH="%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
+          C:\msys64\usr\bin\bash -lc echo $(ls)"
+          exit
           C:\msys64\usr\bin\bash -lc ./windows/dipendenze.sh"
           C:\msys64\usr\bin\bash -lc ./windows/build_libzip.sh"
           C:\msys64\usr\bin\bash -lc ./windows/build_poppler.sh"
