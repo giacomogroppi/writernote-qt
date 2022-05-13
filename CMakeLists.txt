@@ -14,8 +14,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
 #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
 
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE AND NOT MINGW)
     set(LINUX TRUE)
+endif()
+
+if(MSVC OR MSYS OR MINGW)
+    set(WIN TRUE)
 endif()
 
 set(QT_VERSION_MAJOR 6)
@@ -63,6 +67,7 @@ file(GLOB PROJECT_UI
 
 
 file(GLOB PROJECT_SOURCES
+    updater/launch_updater/launch_updater.cpp
     src/testing/memtest.cpp
     src/ui/toolbar.cpp
     src/ui/uicore.cpp
@@ -339,19 +344,23 @@ if(PDFSUPPORT)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/build/qt6/src)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)
 
-    endif()
-endif() #PDFSUPPORT
-
-if(APPLE)
-    if(MACOS_BUILD)
+    elseif(WIN)
+        include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler-qt6.dll.a)
+    
+    elseif(MACOS_BUILD)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler.dylib)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler-qt6.dylib)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6/)
-
-        include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/include/)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/lib/libzip.a)
-    else()
     endif()
+endif() #PDFSUPPORT
+
+if(MACOS_BUILD)
+    include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/include/)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/lib/libzip.a)
+elseif(WIN)
+    include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libzip/install/include/)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/install/lib/libzip.a)
 endif()
 
 
