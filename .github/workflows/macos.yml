@@ -239,6 +239,7 @@ jobs:
           echo $(ls ..)
 
       - name: Search lib
+        shell: cmd
         run: |
           find $(pwd) -name "libpoppler.121.dylib"
           find $(pwd) -name "libpoppler-qt6.3.dylib"
