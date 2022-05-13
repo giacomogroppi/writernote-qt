@@ -5,7 +5,7 @@ pacman --noconfirm -S mingw-w64-x86_64-toolchain \
           mingw-w64-x86_64-cmake \
           patch \
           mingw-w64-x86_64-cppunit \
-          make \
+          make
 
 pacman --noconfirm -S mingw-w64-x86_64-nsis
 
