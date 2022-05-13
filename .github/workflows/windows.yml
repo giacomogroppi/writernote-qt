@@ -32,12 +32,9 @@ jobs:
           submodules: recursive
           path: ${{ env.REPO_NAME }}
                   
-      - name: "Install msys2"
+      - name: Install msys2
         uses: msys2/setup-msys2@v2
 
-      - name: install choco
-        run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
       - name: install innosetup
         run: choco install innosetup
 
