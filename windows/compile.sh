@@ -35,9 +35,15 @@ cmake ..
 ninja
 cd ..
 
+cd build
+rm -r CMakeFiles
+rm .ninja_deps .ninja_log build.ninja CMakeCache.txt cmake_install.cmake
+cd ..
+
 #/mingw64/bin/qmake updater.pro
 #make release -j 2
 ldd ./build/updater.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
-/mingw64/bin/windeployqt.exe build/updater.exe --force
+ldd ./build/updater.exe | grep '\/mingw.*\.dll' -o | sort -u | xargs -I{} cp "{}" ./build
+#/mingw64/bin/windeployqt.exe build/updater.exe --force
 
 

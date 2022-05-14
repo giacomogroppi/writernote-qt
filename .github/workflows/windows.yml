@@ -64,6 +64,7 @@ jobs:
           rm -r CMakeCache.txt CMakeFiles build.ninja cmake_install.cmake writernote_autogen
       
       - name: Search libssl
+        if: false
         run: |
           Get-ChildItem -Path D:\ -Filter windeployqt.exe -Recurse -ErrorAction SilentlyContinue -Force
           # Get-ChildItem -Path C:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
