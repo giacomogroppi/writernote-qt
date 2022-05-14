@@ -64,9 +64,9 @@ jobs:
           rm -r CMakeCache.txt CMakeFiles build.ninja cmake_install.cmake writernote_autogen
       
       - name: Search libssl
-        shell: cmd
         run: |
-           dir libssl.dll.a /s /p
+          Get-ChildItem -Path C:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
+          Get-ChildItem -Path D:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
 
       - name: Add manifest
         run: |
