@@ -65,8 +65,9 @@ jobs:
       
       - name: Search libssl
         run: |
-          Get-ChildItem -Path C:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
-          Get-ChildItem -Path D:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
+          Get-ChildItem -Path C:\ -Filter windeployqt.exe -Recurse -ErrorAction SilentlyContinue -Force
+          # Get-ChildItem -Path C:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
+          # Get-ChildItem -Path D:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
 
       - name: Add manifest
         run: |

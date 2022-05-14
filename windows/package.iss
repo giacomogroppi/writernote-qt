@@ -47,7 +47,9 @@ Source: "..\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs crea
 Source: "..\updater\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\updater\build\updater.exe"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs      
 Source: "{#IconPath}"; DestDir: "{app}"
-Source: "C:\msys64\mingw64\lib\libssl.dll.a"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+; Source: "C:\msys64\mingw64\lib\libssl.dll.a"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\a\_temp\msys64\mingw64\lib\libssl.dll.a"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Registry]
 Root: HKCR; Subkey: ".writer"; ValueType: string; ValueName: ""; ValueData: "writernote"; Flags: uninsdeletevalue; Tasks: fileassoc
