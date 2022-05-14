@@ -1,6 +1,7 @@
 # Writernote
-[![Snap](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml) [![Linux build](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux.yml)
+[![Snap](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml) [![Linux build qt6](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt6.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt6.yml) [![Linux build qt5](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt5.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt5.yml)
 [![Windows package](https://github.com/giacomogroppi/writernote-qt/actions/workflows/windows.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/windows.yml) [![macos build](https://github.com/giacomogroppi/writernote-qt/actions/workflows/macos.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/macos.yml) [![Android](https://github.com/giacomogroppi/writernote-qt/actions/workflows/android.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/android.yml)
+[![Flatpak build](https://github.com/giacomogroppi/writernote-qt/actions/workflows/flatpak.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/flatpak.yml)
 ## Linux
 <table>
 <tr>
