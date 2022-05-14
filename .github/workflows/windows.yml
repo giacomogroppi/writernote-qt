@@ -65,7 +65,7 @@ jobs:
       
       - name: Search libssl
         run: |
-          Get-ChildItem -Path D:\a\_temp\msys64\mingw64 -Filter windeployqt.exe -Recurse -ErrorAction SilentlyContinue -Force
+          Get-ChildItem -Path D:\ -Filter windeployqt.exe -Recurse -ErrorAction SilentlyContinue -Force
           # Get-ChildItem -Path C:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
           # Get-ChildItem -Path D:\ -Filter libssl.dll.a -Recurse -ErrorAction SilentlyContinue -Force
 
