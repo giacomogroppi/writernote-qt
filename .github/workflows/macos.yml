@@ -62,10 +62,11 @@ jobs:
           git clone -b v4.0.1-rc2 https://github.com/mozilla/mozjpeg.git
           cd mozjpeg
           cmake -B build . \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_PREFIX=$PREFIX \
-          -DWITH_JPEG8=ON \
-          -DPNG_SUPPORTED=OFF
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX \
+            -DWITH_JPEG8=ON \
+            -DPNG_SUPPORTED=OFF
+
           cmake --build build -j$(nproc)
           sudo cmake --install build
 
@@ -165,17 +166,24 @@ jobs:
 
       - name: Build openjpg
         run: |
-          export PATH="$HOME/.new_local/bin:$PATH"
+          cd $PREFIX_LIB
+
+          mkdir openjpeg_build
 
           curl -L https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz -o openjpeg.tar.gz
           tar xf openjpeg.tar.gz
           cd openjpeg-* || exit
           mkdir build
           cd build || exit
+
           pwd
-          cmake -DCMAKE_INSTALL_PREFIX:PATH="$HOME"/gtk/inst ..
+          cmake .. \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/openjpeg_build \
+            -DBUILD_STATIC_LIBS=ON \
+            -DBUILD_SHARED_LIBS=OFF
+            
           make -j$(nproc)
-          make install
+          sudo make install
 
       - name: Build poppler-qt6
         run: |
@@ -196,8 +204,12 @@ jobs:
             -DCMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake \
             -DENABLE_BOOST=OFF \
             -DENABLE_QT5=OFF \
+            -DENABLE_ZLIB=OFF \
+            -DENABLE_LIBCURL=OFF \
+            -DENABLE_GLIB=OFF \
+            -DENABLE_CPP=OFF \
             -DENABLE_QT6=ON \
-            -DOpenJPEG_DIR=/Users/runner/gtk/inst/lib/openjpeg-2.3/
+            -DOpenJPEG_DIR=$QT_PREFIX/openjpeg_build
             
           #cmake .. \
           #  -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
