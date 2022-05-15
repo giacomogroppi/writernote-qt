@@ -5,7 +5,7 @@
 #include "utils/common_script.h"
 #include "qmath.h"
 
-constexpr double deltaColorNull = 1.08;
+constexpr double deltaColorNull = 1.1;
 constexpr double deltaPress = 2.;
 
 force_inline void set_press(QPen &pen, const pressure_t press, const double prop, cbool is_rubber)
@@ -47,7 +47,7 @@ force_inline void stroke_drawer::draw_circle(
 
     painter.drawEllipse(QPointF(x, y), data->_r * prop, data->_r * prop);
 
-    WDebug(debCircle, __FUNCTION__ << data->_x << data->_y << data->_r);
+    WDebug(debCircle, func << data->_x << data->_y << data->_r);
 }
 
 force_inline void stroke_drawer::draw_stroke_normal(

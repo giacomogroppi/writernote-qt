@@ -165,6 +165,7 @@ public:
     Q_CONSTEXPR static double getProportion();
     Q_CONSTEXPR static double getHeight();
     Q_CONSTEXPR static double getWidth();
+    Q_CONSTEXPR static QSize getResolutionSize();
 
     Q_CONSTEXPR static double getResolutionWidth();
     Q_CONSTEXPR static double getResolutionHeigth();
@@ -265,6 +266,11 @@ Q_CONSTEXPR force_inline double page::getHeight()
 Q_CONSTEXPR force_inline double page::getWidth()
 {
     return width;
+}
+
+Q_CONSTEXPR force_inline QSize page::getResolutionSize()
+{
+    return QSize(page::getResolutionWidth(), page::getResolutionHeigth());
 }
 
 #define PROP_RESOLUTION (2.)

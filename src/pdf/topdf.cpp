@@ -41,7 +41,8 @@ static inline void newpage(Document *data, const double tmp)
     data->datatouch->scala_all(QPointF(0, -tmp), INT_MAX);
 }
 
-bool topdf::createpdf(const bool withPdf){
+bool topdf::createpdf(const bool withPdf)
+{
     const uint lenpage = data->datatouch->lengthPage();
     uint i;
     const QPointF pointData = data->datatouch->getPointFirstPage();
@@ -50,27 +51,31 @@ bool topdf::createpdf(const bool withPdf){
 
 
     QPdfWriter pdfWriter(*this->path);
-    pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+    //pdfWriter.setPageSize(QPageSize(QPageSize::A4));
+    pdfWriter.setPageSize(QPageSize(page::getResolutionSize() * .25));
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)) && defined(PDFSUPPORT)
-    pdfWriter.setResolution(data->m_pdf->resolution);
+    //pdfWriter.setResolution(data->m_pdf->resolution);
 #else
     pdfWriter.setResolution(100);
 #endif
 
-    //const int height_pdf = pdfWriter.height();
     const int width_pdf = pdfWriter.width();
-
     const double size_orizzontale = data->datatouch->currentWidth();
     const double size_verticale = page::getProportion() * size_orizzontale;
-
     const double delta = double(width_pdf) / double(size_orizzontale);
 
     QPainter painter(&pdfWriter);
-    
-    for (i=0; i<lenpage; ++i) {
-        this->draw(painter,
+    //const auto targetRect = QRect(0, 0, page::getResolutionWidth(), page::getResolutionHeigth());
+
+
+    for (i = 0; i < lenpage; i++) {
+        const auto &img = data->datatouch->at(i).getImg();
+        const auto targetRect = QRect(0, 0, pdfWriter.width(), pdfWriter.height());
+
+        painter.drawImage(targetRect, img);
+        /*this->draw(painter,
                    delta,
-                   withPdf);
+                   withPdf);*/
 
         if(i+1<lenpage){
             newpage(data, size_verticale);
