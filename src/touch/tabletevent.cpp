@@ -140,7 +140,7 @@ static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_met
 void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
-    constexpr bool tabletDebug = false;
+    constexpr bool tabletDebug = true;
     constexpr not_used const auto nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;

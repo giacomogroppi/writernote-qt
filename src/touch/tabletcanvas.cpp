@@ -44,6 +44,7 @@ TabletCanvas::TabletCanvas()
     loadScrollinSetting();
 
     loadLastMethod(this);
+    this->setAttribute(Qt::WA_AcceptTouchEvents);
     qDebug() << this->testAttribute(Qt::WA_AcceptTouchEvents);
     qDebug() << this->testAttribute(Qt::WA_WState_AcceptedTouchBeginEvent);
     qDebug() << this->testAttribute(Qt::WA_TouchPadAcceptSingleTouchEvents);

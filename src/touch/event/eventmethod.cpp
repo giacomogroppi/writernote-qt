@@ -53,7 +53,7 @@ bool TabletCanvas::event(QEvent *event)
     const auto type = event->type();
     const auto isTouchEvent = type == QEvent::TouchBegin || type == QEvent::TouchUpdate;
 
-    WDebug(true, name << type << event->isInputEvent() << event->isPointerEvent() << event->isSinglePointEvent());
+    WDebug(true, name << type);
 
     /*if(type == QEvent::MouseMove)
         std::abort();*/

@@ -53,6 +53,8 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     
     core::set_main_window(this);
 
+    this->setAttribute(Qt::WA_AcceptTouchEvents);
+
 #ifdef CLOUD
     this->m_cloud = cloud;
     this->m_user = user;
@@ -186,7 +188,12 @@ MainWindow::~MainWindow()
 
 bool MainWindow::event(QEvent *event)
 {
+    const auto not_used debugEvent = true;
+    const auto name = "MainWindow::event";
     const auto type = event->type();
+
+    WDebug(debugEvent, name << event->type());
+
     if(type == QEvent::MouseButtonPress){
         const auto *widget = ui->page;
         const auto sott_event = static_cast<QMouseEvent *>(event);

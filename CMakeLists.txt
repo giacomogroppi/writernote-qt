@@ -353,7 +353,7 @@ if(PDFSUPPORT)
 
         message("-- Use " ${POPPLER_DIR} " as poppler include path")
 
-        link_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler)
+        link_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/)
         target_link_libraries(${PROJECT_NAME} PRIVATE poppler-qt6)
 
         #target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libpoppler.dylib)

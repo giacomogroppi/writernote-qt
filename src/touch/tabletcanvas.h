@@ -206,6 +206,7 @@ protected:
     /* click rilasciato */
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+
     bool eventFilter(QObject *ref, QEvent *e) override;
 private:
 
