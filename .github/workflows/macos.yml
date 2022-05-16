@@ -255,11 +255,11 @@ jobs:
           otool -L build/writernote.app/$POS_BIN
           mkdir -p build/writernote.app/$LIB_PATH
 
-          install_name_tool -delete_rpath @rpath/libpoppler.121.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
-          install_name_tool -delete_rpath @rpath/libpoppler-qt6.3.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
+          #install_name_tool -delete_rpath @rpath/libpoppler.121.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
+          #install_name_tool -delete_rpath @rpath/libpoppler-qt6.3.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
 
-          install_name_tool -add_rpath $PREFIX_LIB/poppler/lib/libpoppler.121.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
-          install_name_tool -add_rpath $PREFIX_LIB/poppler/lib/libpoppler-qt6.3.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
+          #install_name_tool -add_rpath $PREFIX_LIB/poppler/lib/libpoppler.121.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
+          #install_name_tool -add_rpath $PREFIX_LIB/poppler/lib/libpoppler-qt6.3.dylib $PROJECT_PATH/build/writernote.app/$POS_BIN
 
           echo "New dep"
           otool -L build/writernote.app/$POS_BIN 
