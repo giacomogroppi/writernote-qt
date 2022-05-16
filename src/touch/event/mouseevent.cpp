@@ -39,7 +39,7 @@ bool isZooming = false;
 void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
 {
     double deltay, deltax;
-    constexpr bool debug = true;
+    constexpr bool not_used debug = false;
     QEvent::Type __type;
 
     QPointF p = event->pos();

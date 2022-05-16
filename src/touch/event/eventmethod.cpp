@@ -55,8 +55,6 @@ bool TabletCanvas::event(QEvent *event)
 
     WDebug(true, name << type);
 
-    /*if(type == QEvent::MouseMove)
-        std::abort();*/
     if(type == QEvent::TouchEnd){
 ridefine:
         WDebug(TabletEventDebug, __func__ << "Ridefine");

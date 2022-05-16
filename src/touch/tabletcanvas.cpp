@@ -45,11 +45,11 @@ TabletCanvas::TabletCanvas()
 
     loadLastMethod(this);
     this->setAttribute(Qt::WA_AcceptTouchEvents);
-    qDebug() << this->testAttribute(Qt::WA_AcceptTouchEvents);
+    /*qDebug() << this->testAttribute(Qt::WA_AcceptTouchEvents);
     qDebug() << this->testAttribute(Qt::WA_WState_AcceptedTouchBeginEvent);
     qDebug() << this->testAttribute(Qt::WA_TouchPadAcceptSingleTouchEvents);
     qDebug() << this->testAttribute(Qt::WA_X11DoNotAcceptFocus);
-    qDebug() << this->testAttribute(Qt::WA_TabletTracking);
+    qDebug() << this->testAttribute(Qt::WA_TabletTracking);*/
 }
 
 TabletCanvas::~TabletCanvas()
