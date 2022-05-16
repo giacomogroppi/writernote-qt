@@ -352,8 +352,9 @@ if(PDFSUPPORT)
         set(POPPLER_DIR /usr/local/include/poppler/qt6/)
 
         message("-- Use " ${POPPLER_DIR} " as poppler include path")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpoppler")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpoppler-qt6")
+
+        link_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/install)
+        target_link_libraries(${PROJECT_NAME} PRIVATE poppler-qt6)
 
         #target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libpoppler.dylib)
         #target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libpoppler-qt6.dylib)
@@ -389,6 +390,10 @@ find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
+
+if(MACOS_BUILD)
+    
+endif()
 
 if(FLATPAK_BUILD)
     include_directories(/app/include/)
