@@ -349,7 +349,7 @@ if(PDFSUPPORT)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler-qt6.dll.a)
     
     elseif(MACOS_BUILD)
-        set(POPPLER_DIR /usr/local/include/poppler/qt6/)
+        set(POPPLER_DIR ${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6)
 
         message("-- Use " ${POPPLER_DIR} " as poppler include path")
 
