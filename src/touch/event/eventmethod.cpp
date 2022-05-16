@@ -38,6 +38,58 @@ static int get_index(TabletCanvas *canvas, const QPointF &pointTouch)
     return Dist1 > Dist2;
 }
 
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+static QEvent::Type adjust_event(const QEvent *event)
+{
+    QEvent::Type type;
+    static bool is_touch = false;
+    static bool is_touch_second = false;
+
+   // qDebug() << event->type();
+
+    if(likely(event->type() == QEvent::MouseMove)){
+        type = (is_touch) ? QEvent::TouchUpdate : QEvent::MouseMove;
+    }else if(event->type() == QEvent::TouchBegin){
+        is_touch = true;
+        is_touch_second = true;
+
+        type = event->type();
+    }else if(event->type() == QEvent::MouseButtonRelease){
+        type = (is_touch) ? QEvent::TouchEnd : event->type();
+        is_touch = false;
+    }else if(event->type() == QEvent::MouseButtonPress){
+        type = (is_touch_second) ? QEvent::TouchBegin : event->type();
+
+        is_touch_second = false;
+    }else{
+        type = event->type();
+    }
+
+    return type;
+}
+#endif
+
+static bool is_touch_event(const QEvent *event)
+{
+    const auto debug = false;
+    const auto type = event->type();
+
+    if(type != QEvent::Paint)
+        WDebug(debug, type);
+
+    return type == QEvent::TouchUpdate || type == QEvent::TouchBegin;
+}
+
+static auto get_points(QEvent *event)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    const QList<QTouchEvent::TouchPoint> touchPoints = ((QTouchEvent *)event)->touchPoints();
+#else
+    const auto touchPoints = ((QMouseEvent *)event)->points();
+#endif
+    return touchPoints;
+}
+
 bool TabletCanvas::event(QEvent *event)
 {
     constexpr bool not_used TabletEventDebug = true;
@@ -50,24 +102,33 @@ bool TabletCanvas::event(QEvent *event)
     const QSize size = this->_pixmap.size();
 
     bool zoomChange = false;
-    const auto type = event->type();
-    const auto isTouchEvent = type == QEvent::TouchBegin || type == QEvent::TouchUpdate;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0 ,0)
+    const QEvent::Type type = event->type();
+#else
+    const QEvent::Type type = adjust_event(event);
+#endif
 
-    WDebug(true, name << type);
+    if(     type == QEvent::TouchBegin ||
+            type == QEvent::TouchUpdate ||
+            type == QEvent::TouchEnd)
+
+        qDebug() << name << type;
+
+    //WDebug(true, name << type);
 
     if(type == QEvent::TouchEnd){
 ridefine:
-        WDebug(TabletEventDebug, __func__ << "Ridefine");
+        WDebug(TabletEventDebug, name << "Ridefine");
         RIDEFINE(this->lastpointzoom);
         block_scrolling = false;
         isZooming = false;
         return QWidget::event(event);
     }
 
-    if(!isTouchEvent)
+    if(!is_touch_event(event))
         return QWidget::event(event);
 
-    const QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+    const auto touchPoints = get_points(event);
 
     // se l'utente sta zoomando con le dita touchPoints ha per forza lunghezza due.
     if(unknown(touchPoints.length() != 2)){
