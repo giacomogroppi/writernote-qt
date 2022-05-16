@@ -188,7 +188,7 @@ MainWindow::~MainWindow()
 
 bool MainWindow::event(QEvent *event)
 {
-    const auto not_used debugEvent = true;
+    const auto not_used debugEvent = false;
     const auto name = "MainWindow::event";
     const auto type = event->type();
 
