@@ -352,9 +352,11 @@ if(PDFSUPPORT)
         set(POPPLER_DIR /usr/local/include/poppler/qt6/)
 
         message("-- Use " ${POPPLER_DIR} " as poppler include path")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpoppler")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpoppler-qt6")
 
-        target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libpoppler.dylib)
-        target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libpoppler-qt6.dylib)
+        #target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libpoppler.dylib)
+        #target_link_libraries(${PROJECT_NAME} PRIVATE /usr/local/lib/libpoppler-qt6.dylib)
         include_directories(${POPPLER_DIR})
     endif()
 endif() #PDFSUPPORT
