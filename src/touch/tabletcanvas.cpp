@@ -44,13 +44,20 @@ TabletCanvas::TabletCanvas()
     loadScrollinSetting();
 
     loadLastMethod(this);
+    qDebug() << this->testAttribute(Qt::WA_AcceptTouchEvents);
+    qDebug() << this->testAttribute(Qt::WA_WState_AcceptedTouchBeginEvent);
+    qDebug() << this->testAttribute(Qt::WA_TouchPadAcceptSingleTouchEvents);
+    qDebug() << this->testAttribute(Qt::WA_X11DoNotAcceptFocus);
+    qDebug() << this->testAttribute(Qt::WA_TabletTracking);
 }
 
-#define DELETE_IF_EXIST(pointer) if(pointer) WDelete(pointer);
 TabletCanvas::~TabletCanvas()
 {
-    DELETE_IF_EXIST(_zoom);
-    DELETE_IF_EXIST(_redoundo);
+    WDelete(_zoom);
+
+    if(_redoundo)
+        WDelete(_redoundo);
+
     WDelete(data);
 
     saveLastMethod(_input);

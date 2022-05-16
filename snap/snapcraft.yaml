@@ -236,6 +236,7 @@ parts:
     after: [qt]
     plugin: make
     build-packages:
+      - ninja-build
       - liblcms2-dev
       - libnss3-dev
       - libboost-dev
@@ -253,7 +254,9 @@ parts:
 
     override-build: |
       ls
-      mkdir build; cd build
+      if [ -d build ]; then rm -rf build; fi
+      mkdir build
+      cd build
 
       cmake .. -DCMAKE_FIND_DEBUG_MODE=1 \
         -DENABLE_GLIB=OFF \
@@ -314,7 +317,12 @@ parts:
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
       ls $SNAPCRAFT_PRIME/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
 
-      cmake . \
+      if [ -d build ]; then rm -rf build; fi
+      mkdir build
+      cd build
+
+      cmake .. \
+        -G Ninja \
         -DVERSION_SNAPCRAFT=$VERSION \
         -DPDFSUPPORT=ON \
         -DSNAP=ON \
@@ -322,14 +330,19 @@ parts:
         -DCMAKE_BUILD_TYPE=Release \
         -DQt6_DIR=/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
 
-      make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
+      ninja
+
+      #make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       
-      cp writernote $SNAPCRAFT_PART_INSTALL/bin/
+      cd ..
+
+      cp build/writernote $SNAPCRAFT_PART_INSTALL/bin/
       cd $SNAPCRAFT_PART_INSTALL/bin
       ldd writernote
 
 
     build-packages:
+      - ninja-build
       - libzip-dev
       - libxcb-xinerama0-dev
       - libx11-xcb-dev 

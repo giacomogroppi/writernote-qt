@@ -40,7 +40,8 @@ static int get_index(TabletCanvas *canvas, const QPointF &pointTouch)
 
 bool TabletCanvas::event(QEvent *event)
 {
-    constexpr bool TabletEventDebug = true;
+    constexpr bool not_used TabletEventDebug = true;
+    constexpr auto not_used name = "TabletCanvas::event";
 
     bool needToResize = false;
     QPointF _pointMiddle;
@@ -52,6 +53,10 @@ bool TabletCanvas::event(QEvent *event)
     const auto type = event->type();
     const auto isTouchEvent = type == QEvent::TouchBegin || type == QEvent::TouchUpdate;
 
+    WDebug(true, name << type << event->isInputEvent() << event->isPointerEvent() << event->isSinglePointEvent());
+
+    /*if(type == QEvent::MouseMove)
+        std::abort();*/
     if(type == QEvent::TouchEnd){
 ridefine:
         WDebug(TabletEventDebug, __func__ << "Ridefine");
@@ -90,6 +95,8 @@ ridefine:
                      touchPoint.state() == QEventPoint::Updated ||
                      touchPoint.state() == QEventPoint::Stationary;
 #endif
+        WDebug(TabletEventDebug, name << _tmp << touchPoint.state());
+
         if(!_tmp){
             continue;
         }
