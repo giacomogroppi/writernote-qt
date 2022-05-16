@@ -192,25 +192,14 @@ jobs:
           ls $QT_PREFIX/lib/cmake
 
           cmake .. \
-            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DCMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake \
             -DENABLE_BOOST=OFF \
             -DENABLE_QT5=OFF \
             -DENABLE_QT6=ON \
             -DOpenJPEG_DIR=/Users/runner/gtk/inst/lib/openjpeg-2.3/
             
-          #cmake .. \
-          #  -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
-          #  -DQt6_DIR=$QT_PREFIX/lib/cmake/Qt6/ \
-          #  -DQt6BundledPcre2_DIR=$QT_PREFIX/lib/cmake/Qt6BundledPcre2/ \
-          #  -DQt6BundledLibpng_DIR=$QT_PREFIX/lib/cmake/Qt6BundledLibpng \
-          #  -DQt6BundledHarfbuzz_DIR=$QT_PREFIX/lib/cmake/Qt6BundledHarfbuzz \
-          #  -DQt6BundledFreetype_DIR=$QT_PREFIX/lib/cmake/Qt6BundledFreetype \
-          #  -DENABLE_BOOST=OFF \
-          #  -DENABLE_QT5=OFF \
-          #  -DENABLE_QT6=ON \
-          #  -DOpenJPEG_DIR=/Users/runner/gtk/inst/lib/openjpeg-2.3/
-            
+          # -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
+
           make -j$(nproc)
           sudo make install
 
@@ -218,12 +207,8 @@ jobs:
         run: |
           export VERSION=$(git describe --tags --abbrev=0)
 
-          find $QT_PREFIX -name "Qt6Config.cmake"
-          find $PREFIX_LIB -name "Qt6Config.cmake"
-
-          echo $(ls $QT_PREFIX)
-          echo $(ls $QT_PREFIX/..)
-          echo $(ls $QT_PREFIX/../Qt-6.3.0)
+          #find $QT_PREFIX -name "Qt6Config.cmake"
+          #find $PREFIX_LIB -name "Qt6Config.cmake"
 
           mkdir build
           cd build
@@ -235,8 +220,8 @@ jobs:
 
           ninja
 
-          echo $(ls)
-          echo $(ls ..)
+          #echo $(ls)
+          #echo $(ls ..)
 
       - name: Search lib
         run: |
