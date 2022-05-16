@@ -216,6 +216,7 @@ jobs:
           sudo make install
 
       - name: Print dep
+        if: false
         run: |
           otool -L /Users/runner/work/writernote-qt/writernote-qt/3rdparty/poppler/lib/libpoppler.dylib
           otool -L /Users/runner/work/writernote-qt/writernote-qt/3rdparty/poppler/lib/libpoppler-qt6.dylib
