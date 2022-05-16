@@ -208,9 +208,8 @@ jobs:
             -DENABLE_GLIB=OFF \
             -DENABLE_CPP=OFF \
             -DENABLE_QT6=ON \
-            -DOpenJPEG_DIR=$QT_PREFIX/openjpeg_build
-            
-          # -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
+            -DOpenJPEG_DIR=$QT_PREFIX/openjpeg_build \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler
 
           make -j$(nproc)
           sudo make install
