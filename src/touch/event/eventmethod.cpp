@@ -38,57 +38,92 @@ static int get_index(TabletCanvas *canvas, const QPointF &pointTouch)
     return Dist1 > Dist2;
 }
 
+class WEvent{
+private:
+    const QEvent *_event;
+    enum WEventEnum{
+        BEGIN_TOUCH = 0,
+        STOP_TOUCH = 1,
+        UPDATE_TOUCH = 2,
+        NOT_TOUCH = 3,
+        NOT_CONSIDER = 4
+    } _e;
+
+    force_inline void setPrivateEvent()
+    {
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-static QEvent::Type adjust_event(const QEvent *event)
-{
-    QEvent::Type type;
-    static bool is_touch = false;
-    static bool is_touch_second = false;
+        QEvent::Type type;
+        static bool is_touch = false;
+        static bool is_touch_second = false;
 
-   // qDebug() << event->type();
+       // qDebug() << event->type();
 
-    if(likely(event->type() == QEvent::MouseMove)){
-        type = (is_touch) ? QEvent::TouchUpdate : QEvent::MouseMove;
-    }else if(event->type() == QEvent::TouchBegin){
-        is_touch = true;
-        is_touch_second = true;
-
-        type = event->type();
-    }else if(event->type() == QEvent::MouseButtonRelease){
-        type = (is_touch) ? QEvent::TouchEnd : event->type();
-        is_touch = false;
-    }else if(event->type() == QEvent::MouseButtonPress){
-        type = (is_touch_second) ? QEvent::TouchBegin : event->type();
-
-        is_touch_second = false;
-    }else{
-        type = event->type();
+        switch (_event->type()) {
+        case QEvent::MouseMove:
+            _e = (is_touch) ? WEvent::UPDATE_TOUCH : WEvent::NOT_TOUCH;
+            break;
+        case QEvent::TouchBegin:
+            is_touch = true;
+            is_touch_second = true;
+            _e = WEvent::BEGIN_TOUCH;
+            break;
+        case QEvent::MouseButtonPress:
+            _e = (is_touch_second) ? NOT_CONSIDER : WEvent::NOT_TOUCH;
+            is_touch_second = false;
+            break;
+        default:
+            _e = NOT_TOUCH;
+        }
+#else
+#endif
     }
 
-    return type;
-}
-#endif
+public:
+    force_inline WEvent(const QEvent *event)
+    {
+        _event = event;
+        this->setPrivateEvent();
+    }
+    
+    force_inline bool is_touch() const
+    {
+        return this->_e != NOT_TOUCH;
+    }
 
-static bool is_touch_event(const QEvent *event)
-{
-    const auto debug = false;
-    const auto type = event->type();
+    force_inline bool is_begin() const
+    {
+        W_ASSERT(this->is_touch());
+        return this->_e == BEGIN_TOUCH;
+    }
 
-    if(type != QEvent::Paint)
-        WDebug(debug, type);
+    force_inline bool is_end() const
+    {
+        W_ASSERT(this->is_touch());
+        return this->_e == STOP_TOUCH;
+    }
 
-    return type == QEvent::TouchUpdate || type == QEvent::TouchBegin;
-}
+    force_inline bool is_update() const
+    {
+        W_ASSERT(this->is_touch());
+        return this->_e == UPDATE_TOUCH;
+    }
 
-static auto get_points(QEvent *event)
-{
+    force_inline bool not_consider() const
+    {
+        W_ASSERT(this->is_touch());
+        return this->_e == NOT_CONSIDER;
+    }
+
+    auto get_points() const
+    {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const QList<QTouchEvent::TouchPoint> touchPoints = ((QTouchEvent *)event)->touchPoints();
 #else
-    const auto touchPoints = ((QMouseEvent *)event)->points();
+    const auto touchPoints = ((QMouseEvent *)_event)->points();
 #endif
     return touchPoints;
-}
+    }
+};
 
 bool TabletCanvas::event(QEvent *event)
 {
@@ -105,18 +140,19 @@ bool TabletCanvas::event(QEvent *event)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0 ,0)
     const QEvent::Type type = event->type();
 #else
-    const QEvent::Type type = adjust_event(event);
+    const auto WE = WEvent(event);
+    //const QEvent::Type type = adjust_event(event);
 #endif
-
-    if(     type == QEvent::TouchBegin ||
-            type == QEvent::TouchUpdate ||
-            type == QEvent::TouchEnd)
-
-        qDebug() << name << type;
 
     //WDebug(true, name << type);
 
-    if(type == QEvent::TouchEnd){
+    if(unlikely(WE.not_consider()) || !WE.is_touch()){
+        return QWidget::event(event);
+    }
+
+    W_ASSERT(WE.is_touch());
+
+    if(WE.is_end()){
 ridefine:
         WDebug(TabletEventDebug, name << "Ridefine");
         RIDEFINE(this->lastpointzoom);
@@ -125,10 +161,7 @@ ridefine:
         return QWidget::event(event);
     }
 
-    if(!is_touch_event(event))
-        return QWidget::event(event);
-
-    const auto touchPoints = get_points(event);
+    const auto touchPoints = WE.get_points();
 
     // se l'utente sta zoomando con le dita touchPoints ha per forza lunghezza due.
     if(unknown(touchPoints.length() != 2)){
