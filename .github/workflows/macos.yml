@@ -248,8 +248,8 @@ jobs:
 
       - name: Print dep
         run: |
-          otool -L /Users/runner/work/writernote-qt/writernote-qt/3rdparty/poppler/lib/libpoppler.dylib
-          otool -L /Users/runner/work/writernote-qt/writernote-qt/3rdparty/poppler/lib/libpoppler-qt6.dylib
+          otool -L /Users/runner/work/writernote-qt/writernote-qt/3rdparty/poppler/lib/libpoppler.a
+          otool -L /Users/runner/work/writernote-qt/writernote-qt/3rdparty/poppler/lib/libpoppler-qt6.a
 
       - name: Writernote build
         run: |
