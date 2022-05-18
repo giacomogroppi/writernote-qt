@@ -231,8 +231,9 @@ jobs:
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
             -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
-            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler
-
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
+            -DBUILD_SHARED_LIBS=OFF 
+            
           make -j$(nproc)
           sudo make install
 
