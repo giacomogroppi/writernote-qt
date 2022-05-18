@@ -188,7 +188,7 @@ jobs:
       - name: Build openpng
         run: |
           cd $PREFIX_LIB
-          git clone -b v1.6.37 https://github.com/glennrp/libpng/tags libpng
+          git clone -b v1.6.37 https://github.com/glennrp/libpng.git libpng
 
           cd libpng
           mkdir build
@@ -233,7 +233,7 @@ jobs:
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DBUILD_SHARED_LIBS=OFF 
-            
+
           make -j$(nproc)
           sudo make install
 
