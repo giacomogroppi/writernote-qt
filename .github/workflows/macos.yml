@@ -191,9 +191,11 @@ jobs:
           git clone -b v1.6.37 https://github.com/glennrp/libpng.git libpng
 
           cd libpng
-          ls
+
+          rm INSTALL
+
           mkdir build
-          mkdir -p install
+          mkdir install
 
           cd build
           cmake .. \
