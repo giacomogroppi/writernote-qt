@@ -225,7 +225,9 @@ jobs:
             -DBUILD_STATIC_LIBS=ON \
             -DBUILD_SHARED_LIBS=OFF \
             -DPNG_INCLUDE_DIR=$PREFIX_LIB/libpng/install/include/ \
-            -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a
+            -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a \
+            -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
             
           make -j$(nproc)
           sudo make install
@@ -268,6 +270,8 @@ jobs:
             -DJPEG_LIBRARY_RELEASE=$PREFIX_LIB/openjpeg-2.3.0/build/bin/libopenjp2.a \
             -DJPEG_INCLUDE_DIR=$PREFIX_LIB/openjpeg_build/include/openjpeg-2.3 \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
+            -DFreetype_INCLUDE_DIR=$PREFIX_LIB/freetype/install/include/freetype2/freetype/ \
+            -DFreetype_LIBRARY_RELEASE=$PREFIX_LIB/freetype/install/lib/libfreetype.a
             -DBUILD_SHARED_LIBS=OFF 
 
           make -j$(nproc)
