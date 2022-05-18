@@ -185,6 +185,25 @@ jobs:
           make -j$(nproc)
           sudo make install
 
+      - name: Build openpng
+        run: |
+          cd $PREFIX_LIB
+          git clone -b v1.6.37 https://github.com/glennrp/libpng/tags libpng
+
+          cd libpng
+          mkdir build
+          mkdir install
+
+          cd build
+          cmake .. \
+            -DPNG_STATIC=ON \
+            -DPNG_SHARED=OFF \
+            -DCMAKE_PREFIX_PATH=$PREFIX_LIB \
+            -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
+            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib
+
+
       - name: Build poppler-qt6
         run: |
           export PATH="$HOME/.new_local/bin:$PATH"
