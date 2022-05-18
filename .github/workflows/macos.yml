@@ -207,6 +207,8 @@ jobs:
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/libpng/install
 
+          make -j$(nproc)
+          sudo make install
 
       - name: Build poppler-qt6
         run: |
