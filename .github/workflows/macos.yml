@@ -163,27 +163,6 @@ jobs:
 
           cmake --build $PREFIX_LIB/libzip/ --config Release --target install
 
-      - name: Build openjpg
-        run: |
-          cd $PREFIX_LIB
-
-          mkdir openjpeg_build
-
-          curl -L https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz -o openjpeg.tar.gz
-          tar xf openjpeg.tar.gz
-          cd openjpeg-* || exit
-          mkdir build
-          cd build || exit
-
-          pwd
-          cmake .. \
-            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/openjpeg_build \
-            -DBUILD_STATIC_LIBS=ON \
-            -DBUILD_SHARED_LIBS=OFF
-            
-          make -j$(nproc)
-          sudo make install
-
       - name: Build openpng
         run: |
           cd $PREFIX_LIB
@@ -206,6 +185,27 @@ jobs:
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/libpng/install
 
+          make -j$(nproc)
+          sudo make install
+
+      - name: Build openjpg
+        run: |
+          cd $PREFIX_LIB
+
+          mkdir openjpeg_build
+
+          curl -L https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz -o openjpeg.tar.gz
+          tar xf openjpeg.tar.gz
+          cd openjpeg-* || exit
+          mkdir build
+          cd build || exit
+
+          pwd
+          cmake .. \
+            -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/openjpeg_build \
+            -DBUILD_STATIC_LIBS=ON \
+            -DBUILD_SHARED_LIBS=OFF
+            
           make -j$(nproc)
           sudo make install
 
