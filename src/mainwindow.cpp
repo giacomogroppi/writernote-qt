@@ -384,6 +384,11 @@ void MainWindow::removePage(int index)
     this->_canvas->updatePageCount();
 }
 
+void MainWindow::grabGestures(const QList<Qt::GestureType> &gestures)
+{
+    _canvas->grabGestures(gestures);
+}
+
 void MainWindow::on_actionHide_Show_Preview_triggered()
 {
     if(_preview_widget->isVisible())

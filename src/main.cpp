@@ -180,6 +180,13 @@ int main(int argc, char **argv)
 
     manageDebug(&w);
 
+    QList<Qt::GestureType> gestures;
+    gestures << Qt::PanGesture;
+    gestures << Qt::PinchGesture;
+    gestures << Qt::SwipeGesture;
+
+    window->grabGestures(gestures);
+
     window->show();
     exit_code = app->exec();
 

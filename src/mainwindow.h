@@ -121,6 +121,8 @@ public:
     ShareUtils *m_share_file;
 #endif
 
+    void grabGestures(const QList<Qt::GestureType> &gestures);
+
     const Document *getCurrentDoc() const;
     void updatePageCount(int);
     setting_restore_ui *m_setting;

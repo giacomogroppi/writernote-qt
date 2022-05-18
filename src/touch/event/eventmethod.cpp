@@ -56,7 +56,8 @@ private:
         static bool is_touch = false;
         static bool is_touch_second = false;
 
-       // qDebug() << event->type();
+        if(_event->type() == QEvent::Gesture)
+        qDebug() << _event->type();
 
         switch (_event->type()) {
         case QEvent::MouseMove:
@@ -140,7 +141,7 @@ public:
 
 bool TabletCanvas::event(QEvent *event)
 {
-    constexpr bool not_used TabletEventDebug = true;
+    constexpr bool not_used TabletEventDebug = false;
     constexpr auto not_used name = "TabletCanvas::event";
 
     bool needToResize = false;
@@ -151,6 +152,10 @@ bool TabletCanvas::event(QEvent *event)
 
     bool zoomChange = false;
 
+    if(event->type() == QEvent::Gesture)
+        return gestureEvent(static_cast<QGestureEvent*>(event));
+    return QWidget::event(event);
+
     const auto WE = WEvent(event);    
 
     //WDebug(true, name << type);
@@ -160,6 +165,8 @@ bool TabletCanvas::event(QEvent *event)
     }
 
     W_ASSERT(WE.is_touch());
+
+    WDebug(false, name << event->type());
 
     if(WE.is_end()){
 ridefine:
@@ -271,4 +278,54 @@ ridefine:
 out:
     update();
     return QWidget::event(event);
+}
+
+bool TabletCanvas::gestureEvent(QGestureEvent *event)
+{
+    if (QGesture *pinch = event->gesture(Qt::PinchGesture))
+            pinchTriggered(static_cast<QPinchGesture *>(pinch));
+    return true;
+}
+
+void TabletCanvas::pinchTriggered(QPinchGesture *event)
+{
+    QPinchGesture::ChangeFlags changeFlags = event->changeFlags();
+    QPointF pointMiddle;
+    static double last = 1.;
+    bool zoomChange = false, needToResize;
+    double delta;
+
+    if (!(changeFlags & QPinchGesture::ScaleFactorChanged)){
+        qDebug() << "not change";
+        return;
+    }
+
+    if(event->state() == Qt::GestureStarted){
+        last = event->totalScaleFactor();
+        delta = 1.;
+    }else{
+        delta = (event->totalScaleFactor() - last) / 3. + 1.;
+        last = event->totalScaleFactor();
+    }
+
+    if (changeFlags & QPinchGesture::ScaleFactorChanged) {
+        const auto currentStepScaleFactor = event->totalScaleFactor();
+        if(false)qDebug() << "pinchTriggered(): zoom by" <<
+            event->scaleFactor() << "->" << currentStepScaleFactor;
+    }
+
+    pointMiddle = event->centerPoint();
+
+    qDebug() << __func__ << delta << pointMiddle;
+
+    needToResize = this->_zoom->zoom(pointMiddle, delta,
+                                    zoomChange, this->_pixmap.size(), this->size(),
+                                    this->data->datatouch);
+
+    if(needToResize)
+        this->callResizeEvent();
+
+    if(zoomChange)
+        core::get_main_window()->zoomChange();
+    update();
 }

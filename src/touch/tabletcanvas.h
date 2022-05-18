@@ -17,6 +17,7 @@
 #include "text/text_widgets/text_widgets.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "highlighter/highlighter.h"
+#include <QGestureEvent>
 
 class highlighter;
 class MainWindow;
@@ -140,6 +141,17 @@ public:
         highlighter,
         laser
     };
+
+    void panTriggered(QPanGesture*) {};
+    void swipeTriggered(QSwipeGesture*) {};
+    void pinchTriggered(QPinchGesture *event);
+    bool gestureEvent(QGestureEvent *event);
+
+    void grabGestures(const QList<Qt::GestureType> &gestures)
+    {
+        for (Qt::GestureType gesture : gestures)
+            grabGesture(gesture);
+    }
 
     e_method _input;
     QColor _color = Qt::black;
