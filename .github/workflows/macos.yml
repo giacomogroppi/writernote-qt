@@ -209,6 +209,9 @@ jobs:
             -DENABLE_CPP=OFF \
             -DENABLE_QT6=ON \
             -DOpenJPEG_DIR=$QT_PREFIX/openjpeg_build/lib/openjpeg-2.3/ \
+            -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
+            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler
 
           make -j$(nproc)
