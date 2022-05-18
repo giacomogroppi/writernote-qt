@@ -236,6 +236,8 @@ jobs:
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
             -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
+            -DPNG_INCLUDE_DIR=$PREFIX_LIB/libpng/install/include/ \
+            -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DBUILD_SHARED_LIBS=OFF 
 
