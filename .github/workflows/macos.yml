@@ -214,6 +214,9 @@ jobs:
       - name: File openjpg lib
         run: |
           find $PREFIX_LIB/openjpeg_build -name "*.a"
+          find $PREFIX_LIB/openjpeg_build -name "*.d*"
+          find $PREFIX_LIB/ -name "*.a"
+
 
       - name: Build poppler-qt6
         run: |
