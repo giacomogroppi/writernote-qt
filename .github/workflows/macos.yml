@@ -211,6 +211,10 @@ jobs:
           make -j$(nproc)
           sudo make install
 
+      - name: File openjpg lib
+        run: |
+          find $QT_PREFIX/openjpeg_build -name "*.a"
+
       - name: Build poppler-qt6
         run: |
           export PATH="$HOME/.new_local/bin:$PATH"
