@@ -159,8 +159,8 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF \
             -DBUILD_TOOLS=OFF \
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
-            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
-            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib
+            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a
 
           cmake --build $PREFIX_LIB/libzip/ --config Release --target install
 
@@ -203,8 +203,8 @@ jobs:
             -DPNG_SHARED=OFF \
             -DCMAKE_PREFIX_PATH=$PREFIX_LIB \
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
-            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
-            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
+            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/libpng/install
 
           make -j$(nproc)
@@ -235,8 +235,8 @@ jobs:
             -DENABLE_QT6=ON \
             -DOpenJPEG_DIR=$QT_PREFIX/openjpeg_build/lib/openjpeg-2.3/ \
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
-            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
-            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.lib \
+            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/zlib.a \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DBUILD_SHARED_LIBS=OFF 
 
