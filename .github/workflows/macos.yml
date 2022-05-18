@@ -243,10 +243,11 @@ jobs:
             -DENABLE_QT6=ON \
             -DJPEG_DIR=$QT_PREFIX/openjpeg_build/lib/openjpeg-2.3/ \
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
-            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
             -DPNG_INCLUDE_DIR=$PREFIX_LIB/libpng/install/include/ \
             -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a \
+            -DJPEG_LIBRARY_RELEASE=$PREFIX_LIB/openjpeg-2.3.0/build/bin/libopenjp2.a \
+            -DJPEG_INCLUDE_DIR=$PREFIX_LIB/openjpeg_build/include/openjpeg-2.3 \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
             -DBUILD_SHARED_LIBS=OFF 
 
