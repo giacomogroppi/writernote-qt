@@ -51,7 +51,6 @@ jobs:
         run: |
           brew install automake libtool libvorbis libvpx \
             ninja opus sdl pkg-config cmake
-          brew install libzip
           #brew install nss
 
           sudo mdutil -a -i off
