@@ -204,7 +204,9 @@ jobs:
           cmake .. \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/openjpeg_build \
             -DBUILD_STATIC_LIBS=ON \
-            -DBUILD_SHARED_LIBS=OFF
+            -DBUILD_SHARED_LIBS=OFF \
+            -DPNG_INCLUDE_DIR=$PREFIX_LIB/libpng/install/include/ \
+            -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a
             
           make -j$(nproc)
           sudo make install
@@ -232,7 +234,7 @@ jobs:
             -DENABLE_GLIB=OFF \
             -DENABLE_CPP=OFF \
             -DENABLE_QT6=ON \
-            -DOpenJPEG_DIR=$QT_PREFIX/openjpeg_build/lib/openjpeg-2.3/ \
+            -DJPEG_DIR=$QT_PREFIX/openjpeg_build/lib/openjpeg-2.3/ \
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
             -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
