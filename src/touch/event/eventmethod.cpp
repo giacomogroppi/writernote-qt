@@ -75,6 +75,19 @@ private:
             _e = NOT_TOUCH;
         }
 #else
+        switch (_event->type()) {
+        case QEvent::TouchBegin:
+            _e = WEvent::BEGIN_TOUCH;
+            break;
+        case QEvent::TouchUpdate:
+            _e = WEvent::UPDATE_TOUCH;
+            break;
+        case QEvent::TouchEnd:
+            _e = WEvent::STOP_TOUCH;
+            break;
+        default:
+            _e = WEvent::NOT_TOUCH;
+        }
 #endif
     }
 
@@ -117,7 +130,7 @@ public:
     auto get_points() const
     {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    const QList<QTouchEvent::TouchPoint> touchPoints = ((QTouchEvent *)event)->touchPoints();
+    const QList<QTouchEvent::TouchPoint> touchPoints = ((QTouchEvent *)_event)->touchPoints();
 #else
     const auto touchPoints = ((QMouseEvent *)_event)->points();
 #endif
@@ -137,16 +150,12 @@ bool TabletCanvas::event(QEvent *event)
     const QSize size = this->_pixmap.size();
 
     bool zoomChange = false;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0 ,0)
-    const QEvent::Type type = event->type();
-#else
-    const auto WE = WEvent(event);
-    //const QEvent::Type type = adjust_event(event);
-#endif
+
+    const auto WE = WEvent(event);    
 
     //WDebug(true, name << type);
 
-    if(unlikely(WE.not_consider()) || !WE.is_touch()){
+    if(!WE.is_touch() || unlikely(WE.not_consider())){
         return QWidget::event(event);
     }
 
