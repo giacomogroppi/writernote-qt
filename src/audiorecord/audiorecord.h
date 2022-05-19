@@ -3,12 +3,17 @@
 
 #include <QObject>
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QAudioRecorder>
+# include <QAudioRecorder>
 #else
-#include <QMediaRecorder>
+# include <QMediaCaptureSession>
+# include <QMediaFormat>
+# include <QMediaRecorder>
+# include <QAudioInput>
+# include <QAudioDevice>
 #endif
 #include <QUrl>
 #include <QFile>
+#include "utils/common_script.h"
 
 class AudioRecord : public QObject
 {
@@ -31,22 +36,20 @@ public:
     void loadSettings();
     qint64 getCurrentTime();
 
-    const QString & getPath() const;
+    const QString getPath() const;
 
 signals:
 private slots:
     void updateProgress(qint64 duration);
     void displayErrorMessage();
 private:
-    QString pathAudio;
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QAudioRecorder *recorder;
 #else
+    QMediaCaptureSession m_captureSession;
     QMediaRecorder *recorder;
 #endif
-
-    class MainWindow *parent;
 
     friend class audioqualityoption;
 };
@@ -80,8 +83,35 @@ inline bool AudioRecord::isStopped() const
 
 inline void AudioRecord::startRecord()
 {
-    QFile::remove(this->getPath());
+    const auto path = this->getPath();
+
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+
+    this->m_captureSession.audioInput()->setDevice(QVariant("").value<QAudioDevice>());
+
+    QMediaFormat format;
+    {
+        format.setFileFormat(QMediaFormat::FileFormat::MPEG4);
+        format.setAudioCodec(QMediaFormat::AudioCodec::MP3);
+    }
+    recorder->setMediaFormat(format);
+    recorder->setAudioSampleRate(44100);
+    recorder->setAudioBitRate(64000);
+    recorder->setAudioChannelCount(1);
+
+    recorder->setEncodingMode(QMediaRecorder::ConstantBitRateEncoding);
+#endif
+
+    QFile::remove(path);
+    W_ASSERT(this->recorder->outputLocation().toLocalFile() == path);
     this->recorder->record();
+
+#ifdef DEBUGINFO
+    if(!isRecording()){
+         qDebug() << this->recorder->errorString();
+         std::abort();
+    }
+#endif
 }
 
 inline void AudioRecord::pauseRecord()
@@ -102,7 +132,6 @@ inline QMediaRecorder::Error AudioRecord::errors() const
 inline void AudioRecord::setOutputLocation(const QString &path)
 {
     QFile::remove(path);
-    pathAudio = path;
     this->recorder->setOutputLocation(QUrl::fromLocalFile(path));
 }
 
@@ -114,9 +143,9 @@ inline qint64 AudioRecord::getCurrentTime()
     return this->recorder->duration() / 1000;
 }
 
-inline const QString &AudioRecord::getPath() const
+inline const QString AudioRecord::getPath() const
 {
-    return pathAudio;
+    return this->recorder->outputLocation().toLocalFile();
 }
 
 #endif // AUDIORECORD_H

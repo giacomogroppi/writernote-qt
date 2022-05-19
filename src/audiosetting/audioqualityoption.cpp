@@ -12,7 +12,7 @@ audioqualityoption::audioqualityoption(QWidget *parent, MainWindow *padre) :
 {
     ui->setupUi(this);
     this->padre = padre;
-    QAudioRecorder *recorder = padre->m_audio_recorder->recorder;
+    auto *recorder = padre->m_audio_recorder->recorder;
 
     //audio devices
     ui->audioDeviceBox->addItem(tr("Default"), QVariant(QString()));

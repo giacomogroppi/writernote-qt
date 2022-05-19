@@ -123,7 +123,7 @@ public:
 
     void grabGestures(const QList<Qt::GestureType> &gestures);
 
-    const Document *getCurrentDoc() const;
+    Document *getCurrentDoc() const;
     void updatePageCount(int);
     setting_restore_ui *m_setting;
 
@@ -235,7 +235,7 @@ inline void MainWindow::setFullScreen()
     }
 }
 
-force_inline const Document * MainWindow::getCurrentDoc() const
+force_inline Document * MainWindow::getCurrentDoc() const
 {
     return _canvas->data;
 }

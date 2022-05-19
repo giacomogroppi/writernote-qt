@@ -140,7 +140,7 @@ static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_met
 void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
-    constexpr bool tabletDebug = true;
+    constexpr bool tabletDebug = false;
     constexpr not_used const auto nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;
@@ -260,7 +260,7 @@ force_inline void ManageMoveSquare(const QPointF &point, class square *_square)
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 {
     QPainter painter;
-    constexpr not_used bool debugMove = true;
+    constexpr not_used bool debugMove = false;
     const auto &point = event->posF();
 
     if(event->deviceType() ==

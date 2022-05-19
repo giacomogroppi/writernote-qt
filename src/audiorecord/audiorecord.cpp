@@ -3,6 +3,7 @@
 #include "ui_mainwindow.h"
 #include <QFileInfo>
 #include <QSettings>
+#include "core/core.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QAudioEncoderSettings>
@@ -19,10 +20,9 @@ AudioRecord::AudioRecord(QObject *parent) : QObject(parent)
     this->recorder = new QAudioRecorder(this);
 #else
     this->recorder = new QMediaRecorder(this);
+    m_captureSession.setRecorder(recorder);
+    m_captureSession.setAudioInput(new QAudioInput(this));
 #endif
-
-    this->parent = (MainWindow *)parent;
-    Q_ASSERT(this->parent->objectName() == "MainWindow");
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(recorder, &QAudioRecorder::durationChanged, this, &AudioRecord::updateProgress);
@@ -77,10 +77,11 @@ void AudioRecord::updateProgress(qint64 duration)
 {
     if (this->errors() != QMediaRecorder::NoError)
         return;
-    parent->ui->statusBar->showMessage(tr("Recorded %1 sec").arg(duration / 1000));
+
+    core::get_main_window()->ui->statusBar->showMessage(tr("Recorded %1 sec").arg(duration / 1000));
 }
 
 void AudioRecord::displayErrorMessage()
 {
-    parent->ui->statusBar->showMessage(recorder->errorString());
+    core::get_main_window()->ui->statusBar->showMessage(recorder->errorString());
 }

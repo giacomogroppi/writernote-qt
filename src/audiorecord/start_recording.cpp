@@ -55,20 +55,12 @@ void MainWindow::on_start_rec_triggered()
     if (m_audio_recorder->isStopped()) {
         this->m_audio_recorder->loadSettings();
 
-        /*
-         * remove the comment for
-         * reserve 32 MB for the
-         * buffer of the audio
-        */
-        //this->m_currenttitle->audio_data.reserve(32*1024*1024);
-
         m_audio_recorder->startRecord();
     }
 
     this->ui->start_rec->setEnabled(false);
     this->ui->stop_rec->setEnabled(true);
     this->ui->pause_rec->setEnabled(true);
-
 }
 
 #ifdef SNAP

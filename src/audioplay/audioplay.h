@@ -10,7 +10,7 @@
 
 constexpr bool disableAudioForDebug =
 #if defined(DEBUGINFO) && defined(linux)
-        true;
+        false;
 #else
         false;
 #endif
