@@ -144,6 +144,8 @@ frompdf::load_res frompdf::load_from_row(
     int i, pdfCount;
     QImage imgAppend;
 
+    W_ASSERT(IndexPdf == 0);
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QList<Poppler::Page *> page;
 #endif
@@ -184,8 +186,10 @@ frompdf::load_res frompdf::load_from_row(
     }
 #endif
 
+    W_ASSERT(0 < m_image.size());
+    auto &list = m_image[0];
     for(i = 0; i < len; i ++){
-        m_image.operator[](IndexPdf).img.append(imgAppend);
+        list.img.append(imgAppend);
         conv.append(new convertImg(resolution));
     }
 
@@ -194,8 +198,10 @@ frompdf::load_res frompdf::load_from_row(
     for(pdfCount = 0; pdfCount < len; ){
         cint create = qMin(countThread, len);
 
-        for(i = 0; i < create; i++){
-            QImage *image = &m_image.operator[](IndexPdf).img.operator[](pdfCount + i);
+        W_ASSERT(create <= countThread);
+
+        for(i = 0; i < create && (pdfCount + i) < len; i++){
+            QImage *image = &list.img[pdfCount + i];
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             const auto &pdfPage = page.at(pdfCount+i);
 

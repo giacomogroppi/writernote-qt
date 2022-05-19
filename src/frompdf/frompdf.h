@@ -38,6 +38,20 @@ class TabletCanvas;
 
 class Pdf{
 public:
+    Pdf()
+    {
+        img = QList<QImage>();
+        topLeft = QPointF();
+    }
+
+    Pdf(const Pdf &pdf)
+    {
+        this->img = pdf.img;
+        this->topLeft = pdf.topLeft;
+    }
+
+    ~Pdf() = default;
+
     QList<QImage> img;
     
     /* top left */
@@ -49,7 +63,7 @@ class frompdf
 private:
     Document *m_data;
 
-    QList<Pdf> m_image;
+    QVector<Pdf> m_image;
 
     static inline QString getName(const uint i){
         return SUFFIX_PDF + QString::number(uint(i));
@@ -128,14 +142,22 @@ private:
 
 force_inline void frompdf::draw(QPainter &painter, const double delta, const bool IsExportingPdf) const
 {
-    uint i, k, len_img;
+    int i, k, len_img;
     QRectF size;
     const Pdf *pdf;
+    const int len = this->m_image.length();
 
-    const uint len = this->m_image.length();
+    if(!len)
+        return;
+
+    double prop;
+    {
+        const auto &target = m_image.at(0).img.at(0);
+        prop = double(target.height()) / double(target.width());
+    }
 
     const double x = m_data->datatouch->currentWidth() * delta;
-    const double y = x * page::getProportion();
+    const double y = x * prop;
 
     for(i = 0; i < len; ++i){
         pdf = &this->m_image.at(i);
@@ -143,8 +165,8 @@ force_inline void frompdf::draw(QPainter &painter, const double delta, const boo
         size = QRectF(pdf->topLeft*delta, QSizeF(x, y));
 
         for(k = 0; k < len_img; k++){
-            //qDebug() << "void draw " << size.topLeft() << pdf->topLeft;
-            fromimage::draw(painter, size, pdf->img.at(k));
+            const auto &img = pdf->img.at(k);
+            fromimage::draw(painter, size, img);
 
             size.setY(size.y() + y);
 

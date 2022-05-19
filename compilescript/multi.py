@@ -42,7 +42,7 @@ if command == 'compile':
     exec = """
     snapcraft clean
     multipass launch --name snapcraft-writernote --cpus {} --mem {}G --disk {}G
-    snapcraft""".format(CPU, RAM, DISK)
+    snapcraft""".format(min(CPU, MAX_CPU - 1), min(RAM, MAX_RAM - 2), DISK)
 
 elif command == 'clean':
     exec = "snapcraft clean"
