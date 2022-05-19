@@ -312,10 +312,8 @@ parts:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH
     override-build: |
       set -eux
-
-      export PATH=$PATH:/root/parts/qt/install/usr/bin/
       
-      export VERSION=$(git describe --tags --abbrev=0)
+      VERSION=$(git describe --tags --abbrev=0)
 
       snapcraftctl set-version "$VERSION"
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
@@ -342,12 +340,10 @@ parts:
         -DPDFSUPPORT=ON \
         -DSNAP=ON \
         -DCMAKE_FIND_DEBUG_MODE=1 \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DQt6_DIR=$Qt_DIR
+        -DCMAKE_BUILD_TYPE=Release
+      #-DQt6_DIR=$Qt_DIR
 
       ninja
-
-      #make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       
       cd ..
 
