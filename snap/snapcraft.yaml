@@ -250,6 +250,8 @@ parts:
       #wget https://poppler.freedesktop.org/poppler-22.01.0.tar.xz
       #tar -xf poppler-22.01.0.tar.xz
       set
+      sudo find / -name "poppler-qt6.h"
+      sudo find / -name "writernote.pro"
       cp -r /root/project/3rdparty/poppler/* .
       ls
 
