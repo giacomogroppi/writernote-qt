@@ -294,6 +294,7 @@ void TabletCanvas::pinchTriggered(QPinchGesture *event)
     static double last = 1.;
     bool zoomChange = false, needToResize;
     double delta;
+    const auto pos_in_screen = mapToGlobal(this->pos());
 
     if (!(changeFlags & QPinchGesture::ScaleFactorChanged)){
         qDebug() << "not change";
@@ -314,7 +315,7 @@ void TabletCanvas::pinchTriggered(QPinchGesture *event)
             event->scaleFactor() << "->" << currentStepScaleFactor;
     }
 
-    pointMiddle = event->centerPoint();
+    pointMiddle = event->centerPoint() - pos_in_screen;
 
     qDebug() << __func__ << delta << pointMiddle;
 
