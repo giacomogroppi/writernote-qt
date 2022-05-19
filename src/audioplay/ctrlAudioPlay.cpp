@@ -41,11 +41,10 @@ void MainWindow::on_actionListen_current_audio_triggered()
 
     }else{
         // we need to load audio data
-
-
         this->m_audioplayer->changeIcon();
         m_audioplayer->play();
     }
+
     this->contrUi();
 }
 

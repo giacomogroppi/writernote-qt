@@ -7,6 +7,7 @@
 #include "qaudiooutput.h"
 #include "utils/common_script.h"
 #include "qiodevice.h"
+#include "utils/platform.h"
 
 constexpr bool disableAudioForDebug =
 #if defined(DEBUGINFO) && defined(linux)
@@ -51,6 +52,7 @@ public:
 
 private slots:
     void positionChange(qint64 position);
+    void mediachange(const QUrl &media);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     void updateStatus(QMediaPlayer::State newState);
@@ -58,15 +60,12 @@ private slots:
     void updateStatus(QMediaPlayer::PlaybackState newState);
 #endif
 
-
 private:
     QMediaPlayer *player;
 
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
     QAudioOutput *audio_output;
 #endif
-
-    class MainWindow *parent;
 };
 
 inline bool audioplay::isPlay() const
@@ -171,8 +170,15 @@ inline qint64 audioplay::getPositionMicro() const
 inline void audioplay::play()
 {
     W_ASSERT(disableAudioForDebug == false);
+    W_ASSERT(player->isAvailable());
 
     this->player->play();
+
+    if(debug_enable() && !isPlay()){
+        qDebug() << "Player not playing: " << qstr("Media %1").arg(player->mediaStatus())
+                 << player->errorString() << player->playbackState();
+        abort();
+    }
 }
 
 inline void audioplay::pause()
@@ -180,6 +186,8 @@ inline void audioplay::pause()
     W_ASSERT(disableAudioForDebug == false);
 
     this->player->pause();
+
+    W_ASSERT(this->isStop() || this->isPause());
 }
 
 inline void audioplay::stop()
@@ -187,17 +195,23 @@ inline void audioplay::stop()
     W_ASSERT(disableAudioForDebug == false);
 
     this->player->stop();
+
+    W_ASSERT(this->isStop());
 }
 
 inline void audioplay::setMedia(QBuffer *array)
 {
+    W_ASSERT(array);
+    W_ASSERT(array->isReadable());
+    W_ASSERT(array->size());
     W_ASSERT(disableAudioForDebug == false);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     this->player->setMedia(QMediaContent(), array);
 #else
-    this->player->setSourceDevice(array);
+    this->player->setSourceDevice(array, QUrl("foo.mp3"));
 #endif
+    qDebug() << this->player->mediaStatus();
 }
 
 inline void audioplay::setMedia(const QString &path)

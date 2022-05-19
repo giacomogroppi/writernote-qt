@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "utils/platform.h"
+#include "core/core.h"
 
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
 #include <QAudioOutput>
@@ -23,18 +24,17 @@ audioplay::audioplay(QObject *parent) : QObject(parent)
     this->player->setAudioOutput(audio_output);
 #endif
 
-    this->parent = (MainWindow *)parent;
-    W_ASSERT(this->parent->objectName() == "MainWindow");
-
-    connect(player, &QMediaPlayer::positionChanged, this, &audioplay::positionChange);
+    QObject::connect(player, &QMediaPlayer::positionChanged, this, &audioplay::positionChange);
 
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-    connect(player, &QMediaPlayer::playbackStateChanged, this, &audioplay::updateStatus);
+    QObject::connect(player, &QMediaPlayer::playbackStateChanged, this, &audioplay::updateStatus);
 #else
     connect(player, &QMediaPlayer::stateChanged, this, &audioplay::updateStatus);
 #endif
 
-    connect(player, &QMediaPlayer::durationChanged, [=](qint64 duration){
+    QObject::connect(player, &QMediaPlayer::sourceChanged, this, &audioplay::mediachange);
+
+    QObject::connect(player, &QMediaPlayer::durationChanged, [=](qint64 duration){
         qDebug() << "Duration change " << duration;
     });
 }
@@ -46,12 +46,13 @@ void audioplay::changeIcon()
 
     icon.addFile(path, QSize(), QIcon::Normal, QIcon::Off);
 
-    parent->ui->start_play->setIcon(icon);
+    core::get_main_window()->ui->start_play->setIcon(icon);
 }
 
 void audioplay::positionChange(qint64 position)
 {
     int duration;
+    MainWindow *parent = core::get_main_window();
 
     WDebug(debugAudioPlay, "audioplay::positionChange" << "call");
     if(!isPlay())
@@ -73,6 +74,11 @@ void audioplay::positionChange(qint64 position)
     parent->_canvas->call_update();
 }
 
+void audioplay::mediachange(const QUrl &media)
+{
+    qDebug() << __func__ << "source change" << media << this->player->mediaStatus();
+}
+
 void audioplay::updateStatus(
 # if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QMediaPlayer::State newState
@@ -81,6 +87,7 @@ void audioplay::updateStatus(
 # endif
 )
 {
+    MainWindow *parent = core::get_main_window();
     if(newState == QMediaPlayer::StoppedState){
 
         parent->ui->start_rec->setEnabled(false);
@@ -94,5 +101,5 @@ void audioplay::updateStatus(
 
     parent->ui->start_rec->setEnabled(false);
     parent->contrUi();
-    this->parent->_canvas->data->datatouch->triggerNewView(-1, true);
+    parent->_canvas->data->datatouch->triggerNewView(-1, true);
 }
