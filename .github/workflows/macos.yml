@@ -55,6 +55,25 @@ jobs:
 
           sudo mdutil -a -i off
 
+      - name: Build freetype
+        run: |
+          cd $PREFIX_LIB
+
+          wget https://download.savannah.gnu.org/releases/freetype/freetype-2.12.1.tar.xz
+          tar -xf freetype-2.12.1.tar.xz
+          rm freetype-2.12.1.tar.xz
+          mv freetype-2.12.1 freetype
+          cd freetype
+
+          mkdir build
+          mkdir install
+          
+          cd build
+          
+          cmake .. -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/freetype/install
+          make -j8
+          sudo make install
+
       - name: MozJPEG.
         run: |
           cd $LibrariesPath
@@ -206,7 +225,9 @@ jobs:
             -DBUILD_STATIC_LIBS=ON \
             -DBUILD_SHARED_LIBS=OFF \
             -DPNG_INCLUDE_DIR=$PREFIX_LIB/libpng/install/include/ \
-            -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a
+            -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a \
+            -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
+            -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
             
           make -j$(nproc)
           sudo make install
@@ -243,11 +264,14 @@ jobs:
             -DENABLE_QT6=ON \
             -DJPEG_DIR=$QT_PREFIX/openjpeg_build/lib/openjpeg-2.3/ \
             -DZLIB_INCLUDE_DIR=$PREFIX_LIB/zlib-ng/distrib/include \
-            -DZLIB_LIBRARY_DEBUG=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
             -DZLIB_LIBRARY_RELEASE=$PREFIX_LIB/zlib-ng/distrib/lib/libz.a \
             -DPNG_INCLUDE_DIR=$PREFIX_LIB/libpng/install/include/ \
             -DPNG_LIBRARY_RELEASE=$PREFIX_LIB/libpng/install/lib/libpng.a \
+            -DJPEG_LIBRARY_RELEASE=$PREFIX_LIB/openjpeg-2.3.0/build/bin/libopenjp2.a \
+            -DJPEG_INCLUDE_DIR=$PREFIX_LIB/openjpeg_build/include/openjpeg-2.3 \
             -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/poppler \
+            -DFreetype_INCLUDE_DIR=$PREFIX_LIB/freetype/install/include/freetype2/freetype/ \
+            -DFreetype_LIBRARY_RELEASE=$PREFIX_LIB/freetype/install/lib/libfreetype.a
             -DBUILD_SHARED_LIBS=OFF 
 
           make -j$(nproc)
