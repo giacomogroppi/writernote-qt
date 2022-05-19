@@ -195,6 +195,7 @@ parts:
 
       cmake --build . -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       DESTDIR="$SNAPCRAFT_PART_INSTALL" cmake --install .
+      sudo rm -r *
     stage:
       - -./usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libjpeg.so.8.2.2
     prime:
@@ -332,6 +333,8 @@ parts:
           Qt_DIR=/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
       fi
 
+      echo "Set Qt dir to " $Qt_DIR
+
 
       cmake .. \
         -G Ninja \
@@ -341,7 +344,7 @@ parts:
         -DCMAKE_FIND_DEBUG_MODE=1 \
         -DCMAKE_BUILD_TYPE=Release \
         -DQt6_DIR=$Qt_DIR
-        
+
       ninja
 
       #make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
