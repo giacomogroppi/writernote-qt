@@ -252,7 +252,7 @@ parts:
       set
       sudo find / -name "poppler-qt6.h"
       sudo find / -name "writernote.pro"
-      cp -r /root/project/3rdparty/poppler/* .
+      cp -r $SNAPCRAFT_PROJECT_DIR/3rdparty/poppler/* .
       ls
 
     override-build: |
