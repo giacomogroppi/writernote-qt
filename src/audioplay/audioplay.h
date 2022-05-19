@@ -175,8 +175,7 @@ inline void audioplay::play()
     this->player->play();
 
     if(debug_enable() && !isPlay()){
-        qDebug() << "Player not playing: " << qstr("Media %1").arg(player->mediaStatus())
-                 << player->errorString() << player->playbackState();
+        qDebug() << "Player not playing: ";
         abort();
     }
 }

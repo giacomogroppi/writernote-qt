@@ -28,11 +28,10 @@ audioplay::audioplay(QObject *parent) : QObject(parent)
 
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
     QObject::connect(player, &QMediaPlayer::playbackStateChanged, this, &audioplay::updateStatus);
-#else
-    connect(player, &QMediaPlayer::stateChanged, this, &audioplay::updateStatus);
-#endif
-
     QObject::connect(player, &QMediaPlayer::sourceChanged, this, &audioplay::mediachange);
+#else
+    QObject::connect(player, &QMediaPlayer::stateChanged, this, &audioplay::updateStatus);
+#endif
 
     QObject::connect(player, &QMediaPlayer::durationChanged, [=](qint64 duration){
         qDebug() << "Duration change " << duration;
