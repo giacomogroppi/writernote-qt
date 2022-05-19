@@ -324,6 +324,15 @@ parts:
       mkdir build
       cd build
 
+      FILE=/build/writernote/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake
+
+      if [ -f "$FILE" ]; then
+          Qt_DIR=$FILE
+      else 
+          Qt_DIR=/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
+      fi
+
+
       cmake .. \
         -G Ninja \
         -DVERSION_SNAPCRAFT=$VERSION \
@@ -331,8 +340,8 @@ parts:
         -DSNAP=ON \
         -DCMAKE_FIND_DEBUG_MODE=1 \
         -DCMAKE_BUILD_TYPE=Release \
-        -DQt6_DIR=/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
-
+        -DQt6_DIR=$Qt_DIR
+        
       ninja
 
       #make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
