@@ -285,8 +285,11 @@ option(VERSION_SNAPCRAFT "Version" "")
 option(FLATPAK_BUILD "build for flatpak" OFF)
 
 if(FLATPAK_BUILD)
-set(WRITERNOTE_METAINFO_DIR "" CACHE PATH "Folder to install .appdata.xml files to. If empty, the default is CMAKE_INSTALL_PREFIX/share/metainfo")
-setordefault(WRITERNOTE_METAINFO_DIR "${TRACKBALLS_METAINFO_DIR}" ${CMAKE_INSTALL_PREFIX}/share/metainfo)
+    set(WRITERNOTE_APPL_DIR "" CACHE PATH "Folder to install .desktop files to. If empty, the default is CMAKE_INSTALL_PREFIX/share/applications")
+    set(WRITERNOTE_METAINFO_DIR "" CACHE PATH "Folder to install .appdata.xml files to. If empty, the default is CMAKE_INSTALL_PREFIX/share/metainfo")
+
+    setordefault(TRACKBALLS_APPL "${WRITERNOTE_APPL_DIR}" ${CMAKE_INSTALL_PREFIX}/share/applications)
+    setordefault(WRITERNOTE_METAINFO_DIR "${WRITERNOTE_METAINFO_DIR}" ${CMAKE_INSTALL_PREFIX}/share/metainfo)
 endif()
 
 if(NOT ${VERSION_SNAPCRAFT} STREQUAL "")
