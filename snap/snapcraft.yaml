@@ -96,6 +96,7 @@ parts:
   qt:
     plugin: nil
     build-packages:
+      - make
       - libdbus-1-dev
       - libegl-dev
       - libfontconfig1-dev
@@ -334,6 +335,7 @@ parts:
       fi
 
       echo Set Qt dir to $Qt_DIR
+      ls build/writernote/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
       echo qt install in $SNAPCRAFT_PART_INSTALL
       find $SNAPCRAFT_PART_INSTALL -name "Qt6Config.cmake"
 
@@ -343,8 +345,8 @@ parts:
         -DPDFSUPPORT=ON \
         -DSNAP=ON \
         -DCMAKE_FIND_DEBUG_MODE=1 \
-        -DCMAKE_BUILD_TYPE=Release
-      #-DQt6_DIR=$Qt_DIR
+        -DCMAKE_BUILD_TYPE=Release \
+        -DQt6_DIR=$Qt_DIR
 
       ninja
       
