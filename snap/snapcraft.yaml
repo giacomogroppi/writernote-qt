@@ -323,6 +323,8 @@ parts:
       mkdir build
       cd build
 
+      set
+
       FILE=/build/writernote/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake
 
       if [ -f "$FILE" ]; then
@@ -334,6 +336,7 @@ parts:
       echo Set Qt dir to $Qt_DIR
       echo qt install in $SNAPCRAFT_PART_INSTALL
       find $SNAPCRAFT_PART_INSTALL -name "Qt6Config.cmake"
+
       cmake .. \
         -G Ninja \
         -DVERSION_SNAPCRAFT=$VERSION \
