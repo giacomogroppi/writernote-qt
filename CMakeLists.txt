@@ -270,13 +270,24 @@ if(APPLE)
 add_definitions(-DMACOS)
 endif()
 
+function(setordefault varname variable default)
+  if ("${variable} " STREQUAL " ")
+    set(${varname} ${default} PARENT_SCOPE)
+  else()
+    set(${varname} ${variable} PARENT_SCOPE)
+  endif()
+endfunction()
+
 option(SNAP "Snap package" OFF)
 option(PDFSUPPORT "Pdf support" ON)
-
 option(MACOS_BUILD "Set to on if we are building in action" OFF)
-
 option(VERSION_SNAPCRAFT "Version" "")
 option(FLATPAK_BUILD "build for flatpak" OFF)
+
+if(FLATPAK_BUILD)
+set(WRITERNOTE_METAINFO_DIR "" CACHE PATH "Folder to install .appdata.xml files to. If empty, the default is CMAKE_INSTALL_PREFIX/share/metainfo")
+setordefault(WRITERNOTE_METAINFO_DIR "${TRACKBALLS_METAINFO_DIR}" ${CMAKE_INSTALL_PREFIX}/share/metainfo)
+endif()
 
 if(NOT ${VERSION_SNAPCRAFT} STREQUAL "")
     add_definitions(-DVERSION_SNAPCRAFT=${VERSION_SNAPCRAFT})
@@ -420,4 +431,9 @@ endif()
 
 if(NOT APPLE)
 install (TARGETS writernote RUNTIME DESTINATION ${PROJECT_BINARY_BIN})
+endif()
+
+if(FLATPAK_BUILD)
+    install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.desktop DESTINATION ${WRITERNOTE_APPL})
+    install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.appdata.xml DESTINATION ${WRITERNOTE_METAINFO_DIR})
 endif()
