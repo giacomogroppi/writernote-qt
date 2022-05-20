@@ -1,6 +1,5 @@
 name: writernote
 adopt-info: writernote
-#version: 2.0.6h
 
 summary: Writernote
 
@@ -326,18 +325,14 @@ parts:
 
       set
 
-      FILE=/build/writernote/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake
+      Qt_DIR=/build/writernote/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
+      FILE=$Qt_DIR/Qt6Config.cmake
 
-      if [ -f "$FILE" ]; then
-          Qt_DIR=$FILE
-      else 
+      if [ ! -f "$FILE" ]; then
           Qt_DIR=/root/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
       fi
 
       echo Set Qt dir to $Qt_DIR
-      ls build/writernote/parts/qt/install/usr/lib/x86_64-linux-gnu/cmake/Qt6/
-      echo qt install in $SNAPCRAFT_PART_INSTALL
-      find $SNAPCRAFT_PART_INSTALL -name "Qt6Config.cmake"
 
       cmake .. \
         -G Ninja \
