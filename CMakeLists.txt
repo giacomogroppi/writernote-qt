@@ -439,8 +439,8 @@ endif()
 if(FLATPAK_BUILD)
     install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.desktop DESTINATION ${WRITERNOTE_APPL})
     install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.appdata.xml DESTINATION ${WRITERNOTE_METAINFO_DIR})
-    
-    install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.png 
-                                                    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/com.github.giacomogroppi.writernote-qt.png 
-                                                    RENAME com.github.giacomogroppi.writernote-qt)
+
+    install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.png
+                                                    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/com.github.giacomogroppi.writernote-qt.png 
+                                                    RENAME writernote.png)
 endif()
