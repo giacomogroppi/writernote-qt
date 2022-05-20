@@ -35,20 +35,25 @@ RAM = 10
 DISK = 100
 LOG_POSITION = "log_snapcraft.txt"
 
-MAX_CPU = multiprocessing.cpu_count() / 2
+MAX_CPU = multiprocessing.cpu_count() * 2 / 3
 MAX_RAM = (psutil.virtual_memory().total / (10**9)) / 2
+
+CPU_USE = int(min(CPU, MAX_CPU))
+MEM_USE = int(min(RAM, MAX_RAM))
+
+print("Cpu use: {} Mem use: {}".format(CPU_USE, MEM_USE))
 
 if command == 'compile':
     exec = """
     snapcraft clean
     multipass launch --name snapcraft-writernote --cpus {} --mem {}G --disk {}G
-    snapcraft""".format(min(CPU, MAX_CPU - 1), min(RAM, MAX_RAM - 2), DISK)
+    snapcraft""".format(CPU_USE, MEM_USE, DISK)
 
 elif command == 'clean':
     exec = "snapcraft clean"
 
 elif command == 'create':
-    exec = "multipass launch --name snapcraft-writernote --cpus {} --mem {}G --disk {}G".format(CPU, RAM, DISK)
+    exec = "multipass launch --name snapcraft-writernote --cpus {} --mem {}G --disk {}G".format(CPU_USE, MEM_USE, DISK)
 
 elif command == 'log':
     exec = "snapcraft > {}".format(LOG_POSITION)
