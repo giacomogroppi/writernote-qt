@@ -439,12 +439,13 @@ endif()
 if(FLATPAK_BUILD)
     install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.desktop DESTINATION ${WRITERNOTE_APPL})
     install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.appdata.xml DESTINATION ${WRITERNOTE_METAINFO_DIR})
+    install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps/)
 
     set(ALL_SIZE 128x128 32x32 48x48 512x512 64x64)
     foreach(size IN LISTS ALL_SIZE)
         message(STATUS "size = ${size}")
         install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt-${size}.png
-                DESTINATION ${CMAKE_INSTALL_PREFIXCMAKE_INSTALL_PREFIX}/share/icons/hicolor/${size}/apps/com.github.giacomogroppi.writernote-qt.png 
+                DESTINATION ${CMAKE_INSTALL_PREFIXCMAKE_INSTALL_PREFIX}/share/icons/hicolor/${size}/com.github.giacomogroppi.writernote-qt.png 
                 RENAME com.github.giacomogroppi.writernote-qt.png )
     endforeach()
 
