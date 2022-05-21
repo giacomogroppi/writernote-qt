@@ -28,11 +28,11 @@
     </releases>
 
     <screenshots>
-      <screenshot type="default"><image type="source">https://github.com/giacomogroppi/writernote-qt/readme/Screenshot-1.png</image></screenshot>
+      <screenshot type="default"><image type="source">https://raw.githubusercontent.com/giacomogroppi/writernote-qt/master/readme/Screenshot-1.png</image></screenshot>
     </screenshots>
 
     <metadata>
-        <value key="GnomeSoftware::popular-background">https://github.com/giacomogroppi/writernote-qt/readme/Screenshot-1.png</value>
+        <value key="GnomeSoftware::popular-background">https://raw.githubusercontent.com/giacomogroppi/writernote-qt/master/readme/Screenshot-1.png</value>
     </metadata>
 
     <url type="homepage">https://github.com/giacomogroppi/writernote-qt/</url>
