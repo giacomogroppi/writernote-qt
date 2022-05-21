@@ -2,7 +2,7 @@
 Name=Writernote
 Comment=Take notes smart
 Exec=writernote
-Icon=writernote.png
+Icon=com.github.giacomogroppi.writernote-qt
 Terminal=false
 Type=Application
 Encoding=UTF-8

@@ -441,6 +441,6 @@ if(FLATPAK_BUILD)
     install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.appdata.xml DESTINATION ${WRITERNOTE_METAINFO_DIR})
 
     install(FILES ${PROJECT_SOURCE_DIR}/flatpak/com.github.giacomogroppi.writernote-qt.png
-                                                    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/com.github.giacomogroppi.writernote-qt.png 
-                                                    RENAME writernote.png)
+                                                    DESTINATION ${CMAKE_INSTALL_PREFIXCMAKE_INSTALL_PREFIX}/share/icons/hicolor/128x128/apps/com.github.giacomogroppi.writernote-qt.png 
+                                                    RENAME com.github.giacomogroppi.writernote-qt.png )
 endif()
