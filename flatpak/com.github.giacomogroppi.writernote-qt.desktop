@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Writernote
 Comment=Take notes smart
-Exec=writernote
+Exec=writernote %f
 Icon=com.github.giacomogroppi.writernote-qt
 MimeType=application/w-writer;
 Terminal=false
