@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=MimeType
+MimeType=application/w-writer
+Icon=xopp
+Patterns=*.writer;
+ 
+Comment=Xournal note file
+

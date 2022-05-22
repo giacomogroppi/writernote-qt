@@ -2,6 +2,11 @@
 <component type="desktop-application">
     <id>com.github.giacomogroppi.writernote-qt</id>
     <launchable type="desktop-id">com.github.giacomogroppi.writernote-qt.desktop</launchable>
+    <provides>
+      <id>com.github.giacomogroppi.writernote-qt.desktop</id>
+      <binary>writernote</binary>
+      <mediatype>application/w-writer</mediatype>
+    </provides>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>MIT</project_license>
 
@@ -36,5 +41,6 @@
     </metadata>
 
     <url type="homepage">https://github.com/giacomogroppi/writernote-qt/</url>
+    <url type="bugtracker">https://github.com/giacomogroppi/writernote-qt/issues</url>
     <content_rating type="oars-1.1" />
 </component>
