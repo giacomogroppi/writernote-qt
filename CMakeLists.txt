@@ -11,9 +11,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.3.0/gcc_64/lib/cmake")
-#set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/5.15.2/gcc_64/lib/cmake")
-
 if(UNIX AND NOT APPLE AND NOT MINGW)
     set(LINUX TRUE)
 endif()
@@ -361,7 +358,7 @@ if(PDFSUPPORT)
         target_link_libraries(${PROJECT_NAME} PRIVATE /app/lib/libpoppler-qt6.so)
 
     elseif(LINUX)        
-        message("project source "${PROJECT_SOURCE_DIR})
+        message("project source " ${PROJECT_SOURCE_DIR})
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/qt6/src/)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/build/qt6/src)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)

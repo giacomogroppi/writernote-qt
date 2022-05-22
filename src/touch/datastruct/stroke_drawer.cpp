@@ -5,7 +5,11 @@
 #include "utils/common_script.h"
 #include "qmath.h"
 
-constexpr double deltaColorNull = 1.1;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+constexpr double deltaColorNull = 1.08;
+#else
+constexpr double deltaColorNull = 1.25;
+#endif
 constexpr double deltaPress = 2.;
 
 force_inline void set_press(QPen &pen, const pressure_t press, const double prop, cbool is_rubber)
