@@ -283,7 +283,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="838"/>
         <source>choose-color</source>
-        <translation>scegli-colore</translation>
+        <translation>Scegli colore</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="847"/>
