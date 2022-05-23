@@ -328,7 +328,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="903"/>
         <source>restore-button</source>
-        <translation>pulsante-ripristino</translation>
+        <translation>Pulsante ripristino</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="908"/>
