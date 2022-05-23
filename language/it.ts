@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="894"/>
         <source>newPage</source>
-        <translation>nuova pagina</translation>
+        <translation>Nuova pagina</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="903"/>
