@@ -51,7 +51,7 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
     loadData();
 
     startTimerSetting();
-
+    
 }
 
 void setting_restore_ui::startTimerSetting()

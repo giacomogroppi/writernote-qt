@@ -35,10 +35,10 @@ void language_manager::saveCurrentLanguage(QString &language){
     setting.endGroup();
 }
 
+QTranslator __t;
 void language_manager::setLanguage(QCoreApplication *app)
 {
     QString __temp = language_manager::loadLastLanguage();
-    QTranslator __t;
 
     if(__temp != IT)
         return;
