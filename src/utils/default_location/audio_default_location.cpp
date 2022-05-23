@@ -3,6 +3,9 @@
 
 #include <QSettings>
 #include "utils/setting_define.h"
+#include "utils/platform.h"
+#include "utils/utils.h"
+#include "core/core.h"
 
 #define SET_CHECK(x) ui->button_into->setChecked((x)); \
     ui->button_ext->setChecked(!(x));
@@ -29,6 +32,7 @@ audio_default_location::audio_default_location(QWidget *parent) :
 
     SET_CHECK(m_lastchoise);
 
+    core::set_max_size_as_screen(this);
 }
 
 audio_default_location::~audio_default_location()

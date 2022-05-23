@@ -2,7 +2,8 @@
 #include "ui_option_last_open_ui.h"
 #include <QSettings>
 #include "utils/setting_define.h"
-#include <QDebug>
+#include "utils/common_script.h"
+#include "core/core.h"
 
 option_last_open_ui::option_last_open_ui(QWidget *parent) :
     QDialog(parent),
@@ -23,6 +24,8 @@ option_last_open_ui::option_last_open_ui(QWidget *parent) :
 #endif
 
     loadData();
+
+    core::set_max_size_as_screen(this);
 }
 
 option_last_open_ui::~option_last_open_ui()

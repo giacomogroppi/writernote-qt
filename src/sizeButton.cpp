@@ -1,7 +1,7 @@
+#include "core/core.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "button/button_size.h"
-
 #include <QSettings>
 #include "utils/setting_define.h"
 
@@ -23,6 +23,7 @@ void MainWindow::setSizeButton(int size){
             size_res = val;
         });
 
+        core::set_max_size_as_screen(&dialog);
         dialog.exec();
     }
 

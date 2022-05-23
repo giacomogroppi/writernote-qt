@@ -1,8 +1,10 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include "qwidget.h"
 #include "utils/common_script.h"
 #include "utils/platform.h"
+#include "utils/utils.h"
 
 extern bool __is_mobile_view;
 extern class MainWindow *__private_mainwindow;
@@ -34,6 +36,15 @@ force_inline class MainWindow *get_main_window()
 {
     W_ASSERT(__private_mainwindow != NULL);
     return __private_mainwindow;
+}
+
+force_inline void set_max_size_as_screen(QWidget *widget)
+{
+    W_ASSERT(widget);
+    if(is_wayland()){
+        const auto maxSize = utils::get_size_screen();
+        widget->setMaximumSize(maxSize);
+    }
 }
 
 }

@@ -1,7 +1,9 @@
 #include "mainwindow.h"
+#include "qguiapplication.h"
 #include "restore_file_critic.h"
 #include "ui/setting_restore_ui.h"
 #include "ui_restore/restore.h"
+#include "core/core.h"
 
 static bool change;
 static bool alreadyconnect = false;
@@ -28,6 +30,8 @@ void MainWindow::on_actionOption_triggered()
 
         alreadyconnect = true;
     }
+
+    core::set_max_size_as_screen(m_setting);
 
     m_setting->exec();
 

@@ -172,8 +172,6 @@ file(GLOB PROJECT_SOURCES
     src/currenttitle/option/main_exe.cpp
     src/currenttitle/option/option_copybook.cpp
     src/currenttitle/document.cpp
-    src/currenttitle/default_type/default_type_button.cpp
-    src/currenttitle/default_type/default_type.cpp
     src/closeevent_file.cpp
     src/images/imagebutton_mainwindow.cpp
     src/images/fromimage.cpp

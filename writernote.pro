@@ -107,8 +107,6 @@ SOURCES += \
     src/core/multiarray.cpp \
     src/core/wline.cpp \
     src/core/wmultiplemutex.cpp \
-    src/currenttitle/default_type/default_type.cpp \
-    src/currenttitle/default_type/default_type_button.cpp \
     src/currenttitle/document.cpp \
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp \
     src/currenttitle/option/main_exe.cpp \
@@ -207,7 +205,6 @@ SOURCES += \
     src/utils/copy_text.cpp \
     src/utils/default_location/audio_default_location.cpp \
     src/utils/default_location/location_audiorecord.cpp \
-    src/utils/default_option/default_option_ui.cpp \
     src/utils/dialog_critic/dialog_critic.cpp \
     src/images/imagebutton_mainwindow.cpp \
     src/main.cpp \
@@ -294,7 +291,6 @@ HEADERS += \
     src/core/wmultiplemutex.h \
     src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
-    src/currenttitle/default_type/default_type.h \
     src/currenttitle/document.h \
     src/currenttitle/option/modality_data.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
@@ -361,7 +357,6 @@ HEADERS += \
     src/utils/common_script.h \
     src/utils/copy_text.h \
     src/utils/default_location/audio_default_location.h \
-    src/utils/default_option/default_option_ui.h \
     src/utils/dialog_critic/dialog_critic.h \
     src/pdf/topdf.h \
     src/sheet/dialog_sheet.h \
@@ -439,7 +434,6 @@ FORMS += \
     src/utils/bug_repo/bug_repo_ui.ui \
     src/utils/choosepage.ui \
     src/utils/default_location/audio_default_location.ui \
-    src/utils/default_option/default_option_ui.ui \
     src/utils/extract_audio/extract_audio_ui.ui \
     src/utils/make_default/make_default_ui.ui \
     src/utils/progress_bar/progress_bar_ui.ui \
