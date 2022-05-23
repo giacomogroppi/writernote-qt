@@ -13,3 +13,5 @@ writernote_autogen/*
 build/*
 CMakeFiles/*
 CMakeCache.txt
+.qtc_clangd/
+.qt/
