@@ -1,7 +1,6 @@
 # Writernote
 [![Snap](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/snapcraft.yml) [![Linux build qt6](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt6.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt6.yml) [![Linux build qt5](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt5.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/linux%20qt5.yml)
 [![Windows package](https://github.com/giacomogroppi/writernote-qt/actions/workflows/windows.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/windows.yml) [![macos build](https://github.com/giacomogroppi/writernote-qt/actions/workflows/macos.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/macos.yml) [![Android](https://github.com/giacomogroppi/writernote-qt/actions/workflows/android.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/android.yml)
-[![Flatpak build](https://github.com/giacomogroppi/writernote-qt/actions/workflows/flatpak.yml/badge.svg)](https://github.com/giacomogroppi/writernote-qt/actions/workflows/flatpak.yml)
 ## Linux
 <table>
 <tr>
@@ -66,7 +65,7 @@
 ## To do
 - Project .writer to image
 - Convert audio to text
-- Compile for IOS and mac
+- Compile for IOS
 - Load file from pdf
 - Create launcher for windows and linux to:
   - Send log information to a server
@@ -74,14 +73,12 @@
 - Create external program to update writernote, it automatically has to download a zip archive of the latest release on github, extract it, and update the files
 - Group
 
-## Known bugs:
-- Include audio file into .writer file
-
-
 ## Supported platforms:
-- GNU/Linux x86 [snap]
-- GNU/Linux arm64 [snap]
-- GNU/Linux armhf [snap]
+- GNU/Linux x86 [snap [[here](https://snapcraft.io/writernote)]]
+- GNU/Linux arm64 [snap [[here](https://snapcraft.io/writernote)]]
+- GNU/Linux armhf [snap [[here](https://snapcraft.io/writernote)]]
+- GNU/Linux x86 [flatpak [[here](https://flathub.org/apps/details/com.github.giacomogroppi.writernote-qt)]]
+- GNU/Linux arm64 [flatpak [[here](https://flathub.org/apps/details/com.github.giacomogroppi.writernote-qt)]]
 - Android armeabi [apk] [beta]
 - Android arm64 [apk] [beta]
 - Android x86 [apk] [beta]
@@ -96,6 +93,11 @@
     ```bash
     sudo snap install writernote
     sudo snap connect writernote:audio-record
+    ```
+
+    Install stable version [from flathub]
+    ```bash
+    flatpak install flathub com.github.giacomogroppi.writernote-qt
     ```
 
     Install unstable version [last]
@@ -120,13 +122,14 @@
 ## Compiling
   - Linux:
     dependence:
-      it's raccomend to download qt creator, with all the component, from the official website.
+      it's raccomend to download qt creator, with all the component, from the official website (with qt 6.3.0) and install in ~/Qt.
       in case you can install all the dependence by install all the package from build-packages and the stage-packages in snapcraft.yaml [writernote]
 
     compile:
       ```
         mkdir build
-        qmake writernote.pro
+        cd build
+        cmake ..
         make
       ```
   - Windows:
