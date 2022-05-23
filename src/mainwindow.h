@@ -189,7 +189,6 @@ private slots:
     void on_actionlastStyle_triggered();
     void on_actionrestore_button_triggered();
     void on_actionnewPage_triggered();
-    void on_actionDefault_method_write_triggered();
     void on_actionReduce_size_file_triggered();
     void on_actionChange_language_triggered();
     void on_actionScroll_triggered();

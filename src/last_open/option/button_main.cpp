@@ -9,7 +9,6 @@
 void MainWindow::on_actionLast_open_file_triggered()
 {
     mac_ex(nullptr);
-
 }
 
 void last_open::on_option_button_clicked()

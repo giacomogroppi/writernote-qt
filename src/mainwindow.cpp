@@ -402,4 +402,3 @@ void MainWindow::on_actionChange_visual_triggered()
     core::set_mobile_view(true);
     this->m_controllUi->change();
 }
-
