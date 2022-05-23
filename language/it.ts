@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="14"/>
         <source>MainWindow</source>
-        <translation></translation>
+        <translation>Finestra principale</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="267"/>
@@ -32,12 +32,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="324"/>
         <source>Help</source>
-        <translation></translation>
+        <translation>Aiuto</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="335"/>
         <source>Options</source>
-        <translation></translation>
+        <translation>Opzioni</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="351"/>
@@ -45,18 +45,18 @@
         <location filename="../src/mainwindow.ui" line="441"/>
         <location filename="../src/mainwindow.ui" line="465"/>
         <source>toolBar</source>
-        <translation></translation>
+        <translation>barra degli strumenti</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="382"/>
         <location filename="../src/mainwindow.ui" line="398"/>
         <source>toolBar_2</source>
-        <translation></translation>
+        <translation>barra degli strumenti_2</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="489"/>
         <source>New File</source>
-        <translation></translation>
+        <translation>Nuovo File</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="498"/>
@@ -102,17 +102,17 @@
     <message>
         <location filename="../src/mainwindow.ui" line="563"/>
         <source>Undo</source>
-        <translation></translation>
+        <translation>Anulla</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="572"/>
         <source>Redo</source>
-        <translation></translation>
+        <translation>Rifai</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="581"/>
         <source>Copy</source>
-        <translation></translation>
+        <translation>Copia</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="584"/>
@@ -202,7 +202,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="704"/>
         <source>pauserecording</source>
-        <translation></translation>
+        <translation>mettere in pausa la registrazione</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="709"/>
@@ -273,7 +273,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="821"/>
         <source>Auto Save</source>
-        <translation></translation>
+        <translation>Salvataggio automatico</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="829"/>
@@ -283,7 +283,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="838"/>
         <source>choose-color</source>
-        <translation></translation>
+        <translation>scegli-colore</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="847"/>
@@ -298,17 +298,17 @@
     <message>
         <location filename="../src/mainwindow.ui" line="857"/>
         <source>About Qt</source>
-        <translation></translation>
+        <translation>Informazioni su Qt</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="866"/>
         <source>insertText</source>
-        <translation></translation>
+        <translation>inserisci testo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="871"/>
         <source>Default save location</source>
-        <translation></translation>
+        <translation>Posizione di salvataggio predefinita</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="876"/>
@@ -318,17 +318,17 @@
     <message>
         <location filename="../src/mainwindow.ui" line="885"/>
         <source>lastStyle</source>
-        <translation></translation>
+        <translation>ultimo stile</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="894"/>
         <source>newPage</source>
-        <translation></translation>
+        <translation>nuova pagina</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="903"/>
         <source>restore-button</source>
-        <translation></translation>
+        <translation>pulsante-ripristino</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="908"/>
@@ -343,12 +343,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="918"/>
         <source>Change language</source>
-        <translation></translation>
+        <translation>Cambia lingua</translation>
     </message>
     <message>
         <location filename="../src/audioplay/updatestatusbar_riascolto.cpp" line="16"/>
         <source>Recorded %1 sec</source>
-        <translation></translation>
+        <translation>Registrato %1 sec</translation>
     </message>
     <message>
         <location filename="../src/audiorecord/start_recording.cpp" line="134"/>
@@ -363,7 +363,7 @@
     <message>
         <location filename="../src/currenttitle/newcopybook.cpp" line="74"/>
         <source>Get text</source>
-        <translation></translation>
+        <translation>Ottieni testo</translation>
     </message>
     <message>
         <location filename="../src/currenttitle/newcopybook.cpp" line="75"/>
@@ -373,7 +373,7 @@
     <message>
         <location filename="../src/currenttitle/rightclicklistcopybook.cpp" line="72"/>
         <source>audio -&gt; text</source>
-        <translation></translation>
+        <translation>audio -&gt; testo</translation>
     </message>
     <message>
         <location filename="../src/currenttitle/rightclicklistcopybook.cpp" line="73"/>
@@ -472,7 +472,7 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="24"/>
         <source>Sample rate:</source>
-        <translation></translation>
+        <translation>Frequenza di campionamento:</translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="34"/>
@@ -507,7 +507,7 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="120"/>
         <source>Ok</source>
-        <translation></translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="127"/>
@@ -535,7 +535,7 @@ includerli nei file writernote</translation>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="20"/>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="58"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation>Cell padding:</translation>
     </message>
     <message>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="42"/>
@@ -760,12 +760,12 @@ line</source>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="28"/>
         <source>path</source>
-        <translation></translation>
+        <translation>percorso</translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="92"/>
         <source>where</source>
-        <translation></translation>
+        <translation>dove</translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="112"/>
@@ -793,13 +793,13 @@ line</source>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="22"/>
         <source>File</source>
-        <translation></translation>
+        <translation>File</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="45"/>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="93"/>
         <source>...</source>
-        <translation></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="56"/>
@@ -865,12 +865,12 @@ line</source>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="20"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="30"/>
         <source>Rows: </source>
-        <translation></translation>
+        <translation>Righe: </translation>
     </message>
     <message>
         <location filename="../src/style/inserttable_class.ui" line="44"/>
@@ -954,12 +954,12 @@ line</source>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="20"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="26"/>
         <source>text</source>
-        <translation></translation>
+        <translation>testo</translation>
     </message>
     <message>
         <location filename="../src/utils/make_default/make_default_ui.ui" line="33"/>
@@ -1005,12 +1005,12 @@ line</source>
     <message>
         <location filename="../src/utils/progress_bar/progress_bar_ui.ui" line="14"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../src/utils/progress_bar/progress_bar_ui.ui" line="20"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation>Etichetta di testo</translation>
     </message>
     <message>
         <location filename="../src/utils/progress_bar/progress_bar_ui.ui" line="49"/>
@@ -1023,12 +1023,12 @@ line</source>
     <message>
         <location filename="../src/utils/retry/retry_ui.ui" line="14"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../src/utils/retry/retry_ui.ui" line="20"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation>Etichetta di testo</translation>
     </message>
     <message>
         <location filename="../src/utils/retry/retry_ui.ui" line="42"/>
@@ -1074,7 +1074,7 @@ line</source>
     <message>
         <location filename="../src/touch/text/text_ui/text_ui.ui" line="22"/>
         <source>Font type</source>
-        <translation></translation>
+        <translation>Tipo di font</translation>
     </message>
     <message>
         <location filename="../src/touch/text/text_ui/text_ui.ui" line="36"/>
@@ -1110,7 +1110,7 @@ line</source>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="44"/>
         <source>From</source>
-        <translation>Posizione</translation>
+        <translation>Da</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="56"/>
