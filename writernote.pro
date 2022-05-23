@@ -87,6 +87,7 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/core/wzip.h src/core/wzip.cpp \
     src/core/core.cpp \
     src/preview_page_widget/list_options.cpp \
     src/preview_page_widget/preview_page_container.cpp \
@@ -274,6 +275,7 @@ SOURCES += \
     src/touch/datastruct/page_index_cache.cpp
 
 HEADERS += \
+    src/core/wzip.h src/core/wzip.h \
     src/core/WMutex.h \
     src/core/core.h \
     src/preview_page_widget/list_options.h \

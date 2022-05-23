@@ -40,7 +40,8 @@ public:
         return m_data;
     }
 
-    void setData(const struct __data *data){
+    void setData(const struct __data *data)
+    {
         memcpy(&m_data, data, sizeof(struct __data));
         updateWindow();
     }

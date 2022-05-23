@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>setting_restore_ui</class>
  <widget class="QDialog" name="setting_restore_ui">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,8 +19,11 @@
     <height>252</height>
    </size>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::NoFocus</enum>
+  </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Restore file</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
