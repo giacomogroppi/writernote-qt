@@ -303,7 +303,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="866"/>
         <source>insertText</source>
-        <translation>inserisci testo</translation>
+        <translation>Inserisci testo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="871"/>
