@@ -318,7 +318,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="885"/>
         <source>lastStyle</source>
-        <translation>ultimo stile</translation>
+        <translation>Ultimo stile</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="894"/>
