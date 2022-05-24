@@ -11,6 +11,7 @@
 #include "testing/testingcore.h"
 #include "utils/common_error_definition.h"
 #include "testing/memtest.h"
+#include "core/core.h"
 #include <QStyleFactory>
 #include <QFile>
 
@@ -177,6 +178,7 @@ int main(int argc, char **argv)
     WNew(window, MainWindow, (canvas, nullptr, nullptr, f));
 #endif
 
+    qDebug() << "is dark mode?: " << core::is_dark_mode();
 
     manageDebug(&w);
 
