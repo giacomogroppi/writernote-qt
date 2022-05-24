@@ -178,6 +178,9 @@ int main(int argc, char **argv)
     WNew(window, MainWindow, (canvas, nullptr, nullptr, f));
 #endif
 
+    if(core::is_dark_mode() or 1){
+        core::adjustDarkMode();
+    }
     qDebug() << "is dark mode?: " << core::is_dark_mode();
 
     manageDebug(&w);
