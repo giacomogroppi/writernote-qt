@@ -5,6 +5,7 @@
 #include "last_open/last_open.h"
 #include "string.h"
 #include "dataread/xmlstruct.h"
+#include "ui/uicore.h"
 #include "utils/extract_audio/extract_audio.h"
 #include "utils/changeLanguage.h"
 #include "log/log_ui/log_ui.h"
@@ -178,8 +179,8 @@ int main(int argc, char **argv)
     WNew(window, MainWindow, (canvas, nullptr, nullptr, f));
 #endif
 
-    if(core::is_dark_mode() or 1){
-        core::adjustDarkMode();
+    if(core::is_dark_mode()){
+        UiCore::adjustDarkMode();
     }
     qDebug() << "is dark mode?: " << core::is_dark_mode();
 

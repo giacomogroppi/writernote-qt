@@ -691,7 +691,7 @@
   <action name="actionnew_sheet">
    <property name="icon">
     <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/new-sheetpng</normaloff>:/image/images/new-sheetpng</iconset>
+     <normaloff>:/image/images/new-sheet.png</normaloff>:/image/images/new-sheet.png</iconset>
    </property>
    <property name="text">
     <string>Manage sheet</string>
@@ -755,7 +755,7 @@
   <action name="actionlastStyle">
    <property name="icon">
     <iconset resource="../writernote.qrc">
-     <normaloff>:/image/images/new-sheetpng</normaloff>:/image/images/new-sheetpng</iconset>
+     <normaloff>:/image/images/new-sheet.png</normaloff>:/image/images/new-sheet.png</iconset>
    </property>
    <property name="text">
     <string>lastStyle</string>

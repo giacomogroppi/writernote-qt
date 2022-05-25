@@ -48,7 +48,6 @@ force_inline void set_max_size_as_screen(QWidget *widget)
 }
 
 bool is_dark_mode();
-void adjustDarkMode();
 
 }
 

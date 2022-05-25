@@ -1,11 +1,13 @@
 <RCC>
     <qresource prefix="/image">
+        <file>images/cisors-cut_black_theme.png</file>
         <file>images/arrow-curve.png</file>
         <file>images/image.png</file>
         <file>images/blue-folder-open-document.png</file>
         <file>images/deleteAudio.png</file>
         <file>images/font-color.png</file>
         <file>images/newFile.png</file>
+        <file>images/deleteAudio_black_theme.png</file>
         <file>images/printer.png</file>
         <file>images/pause-recording.png</file>
         <file>images/play.png</file>
@@ -21,8 +23,17 @@
         <file>images/scissors.png</file>
         <file>images/clipboard-paste-document-text.png</file>
         <file>images/manoIcon.png</file>
-        <file>images/deleteCopyBook.png</file>
         <file>images/pen-icon.png</file>
+        <file>images/image-down_black_theme.png</file>
+        <file>images/image-up_black_theme.png</file>
+        <file>images/open_icon_black_theme.png</file>
+        <file>images/pause-recording_black_theme.png</file>
+        <file>images/pen-icon_black_theme.png</file>
+        <file>images/pen_option_black_theme.png</file>
+        <file>images/play_black_theme.png</file>
+        <file>images/stopRecord__black_theme.png</file>
+        <file>images/tablet_black_theme.png</file>
+        <file></file>
         <file>images/rubber.png</file>
         <file>images/yellow-icon.png</file>
         <file>images/red-icon.png</file>
@@ -35,7 +46,7 @@
         <file>images/cisors-cut.png</file>
         <file>src/windows/versione.xml</file>
         <file>images/pdf-icon.png</file>
-        <file>images/new-sheetpng</file>
+        <file>images/new-sheet.png</file>
         <file>snap/gui/icon-writernote.png</file>
         <file>images/arrow-curve-180-left.png</file>
         <file>images/choose-color-icon.png</file>
