@@ -35,4 +35,11 @@ void UiCore::adjustDarkMode()
     adjustButtonDark(main->actionrubber, ":/image/images/rubber.png");
     adjustButtonDark(main->actioninsertText, ":/image/images/insertText.png");
     adjustButtonDark(main->actionselezionetext, ":/image/images/cisors-cut.png");
+    adjustButtonDark(main->actioninsertText, ":/image/images/insertText.png");
+    adjustButtonDark(main->actioninsertImage, ":/image/images/image.png");
+    adjustButtonDark(main->actionlastStyle, ":/image/images/new-sheet.png");
+    adjustButtonDark(main->actionPen_or_Mouse, ":/image/images/pen_option.png");
+    adjustButtonDark(main->actionHide_Show_Preview, ":/image/images/img_show_hide_preview.png");
+    adjustButtonDark(main->actionFull_Screen, ":/image/images/full-screen.png");
+    adjustButtonDark(main->actionChange_visual, ":/image/images/tablet.png");
 }
