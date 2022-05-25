@@ -822,86 +822,90 @@ compiled without the cloud support</source>
         <translation>L&apos;ultima volta che hai usato writernote, probabilmente si è chiusa l&apos;applicazione improvvisamente, vuoi recuperare il file? Continuare eliminerà il file di backup.</translation>
     </message>
     <message>
-        <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="93"/>
         <source>I had a problem removing the temp file in </source>
-        <translation type="unfinished">Ho avuto un problema rimuovendo il file temporaneo</translation>
+        <translation type="obsolete">Ho avuto un problema rimuovendo il file temporaneo</translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="93"/>
+        <source>I had a problem removing the temp file in %1</source>
+        <translation>Ho avuto un problema rimuovendo il file temporaneo in %1</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="167"/>
         <source>We had a problem saving the file in %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ho avuto un problema salvando il file in %1</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="114"/>
         <source>There is no file to restore</source>
-        <translation type="unfinished"></translation>
+        <translation>Non c&apos;è nessun file da ripristinare</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="129"/>
         <source>In %1 I can&apos;t find a restore file</source>
-        <translation type="unfinished"></translation>
+        <translation>In %1 non ho trovato nessun file da ripristinare</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="136"/>
         <source>Select a file before restore any file</source>
-        <translation type="unfinished"></translation>
+        <translation>Devi selezionare un file</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="141"/>
         <source>Select a file in the list</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona un file in lista</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="152"/>
         <source>Copybook restore</source>
-        <translation type="unfinished"></translation>
+        <translation>File ripristinato</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="154"/>
         <source>We had a problem restoring the file</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbiamo avuto un problema ripristinando il file</translation>
     </message>
     <message>
         <location filename="../src/savecopybook.cpp" line="26"/>
         <location filename="../src/sheet/dialog_sheet.cpp" line="86"/>
         <source>The document has been modified.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il documento è stato modificato.</translation>
     </message>
     <message>
         <location filename="../src/savecopybook.cpp" line="29"/>
         <location filename="../src/sheet/dialog_sheet.cpp" line="87"/>
         <source>Do you want to save your changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Vuoi salvare i cambiamenti?</translation>
     </message>
     <message>
         <location filename="../src/savecopybook.cpp" line="31"/>
         <source>Do you want to save your changes in %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>Vuoi salvare i tuoi cambiamenti al file in %1?</translation>
     </message>
     <message>
         <location filename="../src/savecopybook.cpp" line="57"/>
         <source>We had a problem saving the copybook</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbiamo avuto un problema salvando il file</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.cpp" line="164"/>
         <source>The maximum number of letters for the word is %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Il massimo numero di lettere per la parola è %1</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.cpp" line="188"/>
         <source>You cannot create more than %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Non puoi crearne più di %1</translation>
     </message>
     <message>
         <location filename="../src/sheet/fast-sheet/fast_sheet_ui.cpp" line="141"/>
         <source>We had a big problem figuring out what style you clicked</source>
-        <translation type="unfinished"></translation>
+        <translation>Sinceramente non so che stile hai cliccato</translation>
     </message>
     <message>
         <location filename="../src/style/print_action.cpp" line="35"/>
         <source>Writernote had an internal problem</source>
-        <translation type="unfinished"></translation>
+        <translation>Writernote ha avuto un problema interno</translation>
     </message>
 </context>
 <context>
