@@ -157,7 +157,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="641"/>
         <source>Listen current audio</source>
-        <translation>Ascolta il corrente file</translation>
+        <translation>Ascolta il file corrente</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="650"/>
@@ -202,7 +202,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="704"/>
         <source>pauserecording</source>
-        <translation>mettere in pausa la registrazione</translation>
+        <translation>Metti in pausa la registrazione</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="709"/>
@@ -278,7 +278,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="829"/>
         <source>Disable redo undo</source>
-        <translation></translation>
+        <translation>Disabilita &quot;annulla&quot; e &quot;ripristina&quot;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="838"/>
@@ -328,7 +328,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="903"/>
         <source>restore-button</source>
-        <translation>Pulsante ripristino</translation>
+        <translation>Ripristina cache</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="908"/>
@@ -363,7 +363,7 @@
     <message>
         <location filename="../src/currenttitle/newcopybook.cpp" line="74"/>
         <source>Get text</source>
-        <translation>Ottieni testo</translation>
+        <translation>Cell padding</translation>
     </message>
     <message>
         <location filename="../src/currenttitle/newcopybook.cpp" line="75"/>
@@ -535,7 +535,7 @@ includerli nei file writernote</translation>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="20"/>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="58"/>
         <source>TextLabel</source>
-        <translation>Cell padding:</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="42"/>
