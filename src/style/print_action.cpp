@@ -32,7 +32,7 @@ void MainWindow::on_actionPrint_triggered()
         return;
 
     if (! painter.begin(&printer)) { // failed to open file
-        user_message("Writernote had an internal problem");
+        user_message(QApplication::tr("Writernote had an internal problem"));
     }
     TabletCanvas::load(painter, doc, dataPaint);
 

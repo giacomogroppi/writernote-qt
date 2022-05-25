@@ -10,7 +10,8 @@ static void set_size(int &size);
 static void save_setting(const int size);
 static int size_res;
 
-void MainWindow::setSizeButton(int size){
+void MainWindow::setSizeButton(int size)
+{
     if(size == -1){
         set_size(size_res);
     }
@@ -31,7 +32,8 @@ void MainWindow::setSizeButton(int size){
     save_setting(size_res);
 }
 
-static void update_size(int size, MainWindow *parent){
+static void update_size(int size, MainWindow *parent)
+{
     const QSize Size = QSize(size, size);
     parent->ui->mainbar->setIconSize(Size);
     parent->ui->simpleactionbar->setIconSize(Size);
@@ -41,7 +43,8 @@ static void update_size(int size, MainWindow *parent){
     parent->ui->toolSheet->setIconSize(Size);
 }
 
-static void set_size(int &size){
+static void set_size(int &size)
+{
     bool ok;
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_SIZE_BUTTON);
@@ -58,7 +61,8 @@ void MainWindow::on_actionSize_button_triggered()
     this->setSizeButton(-2);
 }
 
-static void save_setting(const int size){
+static void save_setting(const int size)
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_SIZE_BUTTON);
     setting.setValue(KEY_SIZE_BUTTON, size);

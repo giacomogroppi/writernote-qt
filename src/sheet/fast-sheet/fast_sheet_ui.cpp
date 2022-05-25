@@ -138,7 +138,7 @@ void fast_sheet_ui::on_list_sheet_itemClicked(QListWidgetItem *item)
     if(find)
         this->m_style.saveDefault(in);
     else
-        dialog_critic("We had a big problem figuring out what style you clicked");
+        dialog_critic(QApplication::tr("We had a big problem figuring out what style you clicked"));
 }
 
 void fast_sheet_ui::on_autocreate_sheet_clicked()

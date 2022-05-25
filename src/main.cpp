@@ -183,6 +183,7 @@ int main(int argc, char **argv)
         UiCore::adjustDarkMode();
     }
     qDebug() << "is dark mode?: " << core::is_dark_mode();
+    qDebug() << "Is running on wayland?" << is_wayland();
 
     manageDebug(&w);
 

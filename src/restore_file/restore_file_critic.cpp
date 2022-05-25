@@ -12,8 +12,9 @@ restore_file_critic::n_err restore_file_critic::restore_file(const QString &path
     return restore_file_direct(pos, path);
 }
 
-restore_file_critic::n_err restore_file_critic::restore_file_direct(const QString &path_load,
-                                                                    const QString &path_save)
+restore_file_critic::n_err restore_file_critic::restore_file_direct(
+        const QString &path_load,
+        const QString &path_save)
 {
     Document cur;
 

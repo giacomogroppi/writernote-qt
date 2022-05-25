@@ -6,7 +6,7 @@
 
 void MainWindow::on_volumeSlider_actionTriggered(int action)
 {
-    qDebug() <<"MainWindow::on_volumeSlider_actionTriggered "<< action;
+    qDebug() << "MainWindow::on_volumeSlider_actionTriggered "<< action;
     this->m_audioplayer->setVolume(action);
 }
 
@@ -17,7 +17,7 @@ void MainWindow::on_audioSlider_valueChanged(int value)
 
 void MainWindow::on_volumeSlider_valueChanged(int value)
 {
-    qDebug() <<"MainWindow::on_volumeSlider_valueChanged "<< value;
+    qDebug() << "MainWindow::on_volumeSlider_valueChanged "<< value;
     this->m_audioplayer->setVolume(value);
 }
 

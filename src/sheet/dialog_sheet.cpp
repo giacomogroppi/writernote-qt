@@ -83,8 +83,8 @@ void dialog_sheet::closeEvent (QCloseEvent *event){
 
 
     QMessageBox msgBox;
-    msgBox.setText("The document has been modified.");
-    msgBox.setInformativeText("Do you want to save your changes?");
+    msgBox.setText(QApplication::tr("The document has been modified."));
+    msgBox.setInformativeText(QApplication::tr("Do you want to save your changes?"));
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     msgBox.setDefaultButton(QMessageBox::Save);
 
@@ -161,7 +161,7 @@ void dialog_sheet::on_listWidget_itemDoubleClicked(QListWidgetItem *)
         return;
 
     if(newName.length() > STRNOME)
-        return dialog_critic("The maximum number of letters for the word is " + QString::number(STRNOME));
+        return dialog_critic(QApplication::tr("The maximum number of letters for the word is %1").arg(QString::number(STRNOME)));
 
     strncpy(style_element.at_mod(current)->nome, newName.toUtf8().constData(), STRNOME);
 
@@ -185,7 +185,7 @@ void dialog_sheet::on_pushButton_3_clicked()
 void dialog_sheet::on_pushButton_2_clicked()
 {
     if(style_element.length() >= QUANTESTRUCT)
-        return dialog_critic("You cannot create more than " + QString::number(QUANTESTRUCT));
+        return dialog_critic(QApplication::tr("You cannot create more than %1").arg(qstr::number(QUANTESTRUCT)));
 
     bool ok;
     QString newName = QInputDialog::getText(this, tr("Name"),

@@ -180,7 +180,7 @@ void last_open::on_open_button_clicked()
     QFile file(path);
 
     if(!file.exists()){
-        return dialog_critic("The file didn't exist");
+        return dialog_critic(QApplication::tr("The file didn't exist"));
     }
 
     *m_style_return = new char[path.length()+1];
@@ -208,7 +208,7 @@ void last_open::downloadIn(int index){
 
 #else
     Q_UNUSED(index);
-    dialog_critic("Your version of writernote was\ncompiled without the cloud support");
+    dialog_critic(QApplication::tr("Your version of writernote was\ncompiled without the cloud support"));
 #endif
 }
 

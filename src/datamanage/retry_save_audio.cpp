@@ -14,18 +14,21 @@ retry_save_audio::~retry_save_audio()
 
 }
 
-bool retry_save_audio::exist(){
+bool retry_save_audio::exist()
+{
     QString path = get_path_no_controll();
     return QFile::exists(path + POS_TEMP_AUDIO);
 }
 
-void retry_save_audio::retry(){
+void retry_save_audio::retry()
+{
     *this->m_exist = this->exist();
 
     emit resultRetry(*this->m_exist);
 }
 
-void retry_save_audio::close(){
+void retry_save_audio::close()
+{
     if(*this->m_exist)
         return;
 

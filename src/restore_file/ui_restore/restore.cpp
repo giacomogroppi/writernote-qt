@@ -111,7 +111,7 @@ void restore::updateList()
 
     if(!len){
         if(!ui->listWidget->count()){
-            ui->message_label->setText("There is no file to restore");
+            ui->message_label->setText(QApplication::tr("There is no file to restore"));
         }
     }
 
@@ -126,19 +126,19 @@ void restore::on_ok_restore_clicked()
 
     if(path != "" && path.indexOf(APP_EXT) != -1){
         if(!QFile::exists(get_name_tmp::get(path))){
-            ui->message_label->setText("In " + path + " I can't find a restore file");
+            ui->message_label->setText(QApplication::tr("In %1 I can't find a restore file").arg(path));
             return;
         }
 
         pos_res = path;
 
     }else if(!__dir.exists()){
-        ui->message_label->setText("Select a file before restore any file");
+        ui->message_label->setText(QApplication::tr("Select a file before restore any file"));
     }else{
         index = ui->listWidget->currentRow();
         if(index == -1){
             if(ui->listWidget->count() > 0){
-                ui->message_label->setText("Select a file in the list");
+                ui->message_label->setText(QApplication::tr("Select a file in the list"));
             }
             return;
         }else{
@@ -149,8 +149,8 @@ void restore::on_ok_restore_clicked()
     __res = restore_file_critic::restore_file(pos_res);
 
     if(__res == restore_file_critic::restore_ok){
-        user_message("Copybook restore");
+        user_message(QApplication::tr("Copybook restore"));
     }else{
-        dialog_critic("We had a problem restoring the file");
+        dialog_critic(QApplication::tr("We had a problem restoring the file"));
     }
 }

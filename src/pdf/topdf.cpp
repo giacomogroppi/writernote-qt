@@ -1,6 +1,7 @@
 #include "topdf.h"
 #include "mainwindow.h"
 #include "datawrite/qfilechoose.h"
+#include "qapplication.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include <QPdfWriter>
 #include <QPageSize>
@@ -98,7 +99,7 @@ void MainWindow::on_actiontopdf_triggered()
     const Document *doc = _canvas->data;
 
     if(doc->datatouch->isempty())
-        return user_message("There is nothing to convert to pdf");
+        return user_message(QApplication::tr("There is nothing to convert to pdf"));
 
     if(!qfilechoose::getFileForSave(path_pdf, TYPEFILEPDF))
         return;

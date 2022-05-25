@@ -89,7 +89,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/utils/choosepage.ui" line="88"/>
         <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/choosepage.ui" line="101"/>
@@ -116,12 +116,12 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="14"/>
         <source>Writernote</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="149"/>
         <source>Zoom 100%</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="198"/>
@@ -246,82 +246,82 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="799"/>
         <source>Last open file</source>
-        <translation type="unfinished">Ultimi file aperti</translation>
+        <translation>Ultimi file aperti</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="804"/>
         <source>Option</source>
-        <translation type="unfinished">Opzioni</translation>
+        <translation>Opzioni</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="809"/>
         <source>Restore file</source>
-        <translation type="unfinished">Ripristina file</translation>
+        <translation>Ripristina file</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="818"/>
         <source>Update writernote</source>
-        <translation type="unfinished">Aggiorna writernote</translation>
+        <translation>Aggiorna writernote</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="830"/>
         <source>Pen or Mouse</source>
-        <translation type="unfinished">Mouse o penna</translation>
+        <translation>Mouse o penna</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="839"/>
         <source>highlighter</source>
-        <translation type="unfinished">Evidenziatore</translation>
+        <translation>Evidenziatore</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="844"/>
         <source>Copybook</source>
-        <translation type="unfinished">Quaderno</translation>
+        <translation>Quaderno</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="856"/>
         <source>brown_color</source>
-        <translation type="unfinished">Marrone</translation>
+        <translation>Marrone</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="865"/>
         <source>purple</source>
-        <translation type="unfinished">Viola</translation>
+        <translation>Viola</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="870"/>
         <source>Remove current PDF</source>
-        <translation type="unfinished">Rimuovi pdf</translation>
+        <translation>Rimuovi pdf</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="875"/>
         <source>Size button</source>
-        <translation type="unfinished">Dimensione bottoni</translation>
+        <translation>Dimensione bottoni</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="884"/>
         <source>Recent file</source>
-        <translation type="unfinished">File recenti</translation>
+        <translation>File recenti</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="893"/>
         <source>Change visual</source>
-        <translation type="unfinished">Cambia vista</translation>
+        <translation>Cambia vista</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="902"/>
         <source>Full Screen</source>
-        <translation type="unfinished">Schermo intero</translation>
+        <translation>Schermo intero</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="911"/>
         <source>Laser</source>
-        <translation type="unfinished">Puntatore</translation>
+        <translation>Puntatore</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="920"/>
         <source>Hide Show Preview</source>
-        <translation type="unfinished">Nascondi preview</translation>
+        <translation>Nascondi preview</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -396,7 +396,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="588"/>
         <source>Pause Recording</source>
-        <translation type="unfinished">Metti in pausa la registrazione</translation>
+        <translation>Metti in pausa la registrazione</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="593"/>
@@ -539,9 +539,8 @@ WorkingDir not valid</source>
         <translation type="vanished">Registrato %1 sec</translation>
     </message>
     <message>
-        <location filename="../src/audiorecord/start_recording.cpp" line="122"/>
         <source>Into writernote file [Beta]</source>
-        <translation>Includi l&apos;audio nei file writernote</translation>
+        <translation type="vanished">Includi l&apos;audio nei file writernote</translation>
     </message>
     <message>
         <source>Draw with your pen [Alpha]</source>
@@ -594,6 +593,315 @@ WorkingDir not valid</source>
     <message>
         <source>Open File</source>
         <translation type="vanished">Apri un file</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="119"/>
+        <source>Chose output location file</source>
+        <translation>Scegli la posizione di salvataggio</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="122"/>
+        <source>Into writernote file</source>
+        <translation>Dentro file di writernote</translation>
+    </message>
+</context>
+<context>
+    <name>QApplication</name>
+    <message>
+        <location filename="../src/audioplay/aggiornotastiriascolto.cpp" line="11"/>
+        <source>We had an internal problem with audio, please 
+close the application and open it again</source>
+        <translation>Abbiamo avuto un problema interno con l&apos;audio
+chiudi l&apos;applicazione e riprova</translation>
+    </message>
+    <message>
+        <location filename="../src/audioplay/aggiornotastiriascolto.cpp" line="20"/>
+        <source>Audio %1 didn&apos;t exist</source>
+        <translation>L&apos;audio %1 non esiste</translation>
+    </message>
+    <message>
+        <location filename="../src/audioplay/aggiornotastiriascolto.cpp" line="22"/>
+        <source>This audio cannot be played back because it was recorded with a desktop computer.</source>
+        <translation>Quest&apos;audio non può essere riprodotto perchè registrato con un computer desktop.</translation>
+    </message>
+    <message>
+        <location filename="../src/audioplay/aggiornotastiriascolto.cpp" line="36"/>
+        <source>We had a problem loading the audio</source>
+        <translation>Abbiamo avuto un problema caricando l&apos;audio</translation>
+    </message>
+    <message>
+        <location filename="../src/audioplay/audioplay.cpp" line="66"/>
+        <source>The audio seems blank</source>
+        <translation>L&apos;audio sembra vuoto</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="28"/>
+        <source>You had already record and audio</source>
+        <translation>Hai già registrato l&apos;audio</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="33"/>
+        <source>Warning</source>
+        <translation>Attenzione</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="34"/>
+        <source>to record audio I need permissions, type on a snap connect terminal writernote: audio-record
+otherwise I will not be able to record audio</source>
+        <translation>Per registrato l&apos;audio ho bisogno dei permetti, type sudo snap connect writernote:audio-record
+altrimenti non sarò in grado di accedere al microfono</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="123"/>
+        <source>Internal file</source>
+        <translation>File interno</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="127"/>
+        <source>External file</source>
+        <translation>File esterno</translation>
+    </message>
+    <message>
+        <location filename="../src/audiorecord/start_recording.cpp" line="162"/>
+        <source>I had an internal problem with the audio</source>
+        <translation>Ho avuto un problema interno con l&apos;audio</translation>
+    </message>
+    <message>
+        <location filename="../src/closeevent_file.cpp" line="52"/>
+        <location filename="../src/open_file.cpp" line="52"/>
+        <source>Error</source>
+        <translation>Errore</translation>
+    </message>
+    <message>
+        <location filename="../src/closeevent_file.cpp" line="53"/>
+        <source>We had an error opening the current file, do you want to close anyway?</source>
+        <translation>Abbiamo avuto un problema ad aprire il file corrente, vuoi chiudere comunque?</translation>
+    </message>
+    <message>
+        <location filename="../src/closeevent_file.cpp" line="76"/>
+        <source>Do you want to save?</source>
+        <translation>Vuoi salvare?</translation>
+    </message>
+    <message>
+        <location filename="../src/closeevent_file.cpp" line="78"/>
+        <source>Do you want to save in %1?</source>
+        <translation>Vuoi salvare in %1?</translation>
+    </message>
+    <message>
+        <location filename="../src/closeevent_file.cpp" line="99"/>
+        <source>We had a problem saving the file, please retry, or change the position of the file</source>
+        <translation>Abbiamo avuto un problema salvando il file, per favore riprova, o cambiamo la posizione del file</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="41"/>
+        <source>Audio missing</source>
+        <translation>Manca l&apos;audio</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="42"/>
+        <source>For some reason the audio file you just recorded no longer exists
+, if you moved it, reposition it where you got it, with the same name</source>
+        <translation>Per qualche motivo l&apos;audio che hai registrato non esiste più, riposizionalo dove l&apos;applicazione l&apos;ha salvato, con lo stesso nome</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="43"/>
+        <source>The file does not exist</source>
+        <translation>Il file non esiste</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="92"/>
+        <source>We had a problem saving the audio into %1</source>
+        <translation>Abbiamo avuto un problema salvando l&apos;audio in %1</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="105"/>
+        <source>Remove temp audio</source>
+        <translation>Rimuovi l&apos;audio temporaneo</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="106"/>
+        <source>With writernote, when you record an audio file, it is automatically saved 
+on your disk, so that you incur less data loss errors, do you want 
+to remove? the location of the file is %1</source>
+        <translation>Vuoi rimuovere l&apos;audio temporaneo? Il file in questione è salvato in %1</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="128"/>
+        <source>I don&apos;t have permission to remove file locate in %1</source>
+        <translation>Non ho i permessi per rimuovere il file in posizione %1</translation>
+    </message>
+    <message>
+        <location filename="../src/datamanage/stoprecording.cpp" line="130"/>
+        <source>We had a problem removing audio locate in %1</source>
+        <translation>Abbiamo avuto un problema rimuovendo l&apos;audio salvato in %1</translation>
+    </message>
+    <message>
+        <location filename="../src/last_open/last_open.cpp" line="183"/>
+        <source>The file didn&apos;t exist</source>
+        <translation>Il file non esiste</translation>
+    </message>
+    <message>
+        <location filename="../src/last_open/last_open.cpp" line="211"/>
+        <source>Your version of writernote was
+compiled without the cloud support</source>
+        <translation>La tua versione di writernote non è stata compilata con il supporto al cloud, quindi non avrai questo servizio</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="42"/>
+        <source>I can&apos;t open the file because it doesn&apos;t exist</source>
+        <translation>Non posso aprire il file siccome non esiste</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="44"/>
+        <source>I can&apos;t open this file because of the permission</source>
+        <translation>Non posso aprire questo file perchè non ho abbastanza permessi</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="52"/>
+        <source>The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?</source>
+        <translation>Il file non ha l&apos;estensione di un file writernote, ne di un pdf, vuoi aprirlo lo stesso?</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="60"/>
+        <source>Restore file</source>
+        <translation>Ripristina file</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="60"/>
+        <source>Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?</source>
+        <translation>Forse l&apos;ultima volta che hai aperto questo file si è chiuso improvvisamente, vuoi ripristinare il file?</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="63"/>
+        <source>File restore correcty</source>
+        <translation>File ripristinato correttamente</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="65"/>
+        <source>If not restore correctly</source>
+        <translation>File non ripristinato correttamente</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="91"/>
+        <source>Save need</source>
+        <translation>Salvataggio necessario</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="91"/>
+        <source>Do you want to save %1?</source>
+        <translation>Vuoi salvarlo in %1?</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="94"/>
+        <source>Save fail</source>
+        <translation>Salvataggio fallito</translation>
+    </message>
+    <message>
+        <location filename="../src/open_file.cpp" line="94"/>
+        <source>We failed to save the file, should i continue?</source>
+        <translation>Abbiamo fallito salvando il file, vuoi continuare?</translation>
+    </message>
+    <message>
+        <location filename="../src/pdf/topdf.cpp" line="102"/>
+        <source>There is nothing to convert to pdf</source>
+        <translation>Non c&apos;è niente da convertire in pdf</translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/resFileTmpInTmpFolder.cpp" line="67"/>
+        <source>File lost</source>
+        <translation>File perso</translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/resFileTmpInTmpFolder.cpp" line="68"/>
+        <source>Do you want to restore this file %1?</source>
+        <translation>Vuoi ripristinare il file in %1?</translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/resFileTmpInTmpFolder.cpp" line="72"/>
+        <source>Last time you used writernote, it probably quit unexpectedly, if you want to recover the file, click YES, otherwise Ignore to delete the temporary file.</source>
+        <translation>L&apos;ultima volta che hai usato writernote, probabilmente si è chiusa l&apos;applicazione improvvisamente, vuoi recuperare il file? Continuare eliminerà il file di backup.</translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="93"/>
+        <source>I had a problem removing the temp file in </source>
+        <translation type="unfinished">Ho avuto un problema rimuovendo il file temporaneo</translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="167"/>
+        <source>We had a problem saving the file in %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui_restore/restore.cpp" line="114"/>
+        <source>There is no file to restore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui_restore/restore.cpp" line="129"/>
+        <source>In %1 I can&apos;t find a restore file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui_restore/restore.cpp" line="136"/>
+        <source>Select a file before restore any file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui_restore/restore.cpp" line="141"/>
+        <source>Select a file in the list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui_restore/restore.cpp" line="152"/>
+        <source>Copybook restore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/restore_file/ui_restore/restore.cpp" line="154"/>
+        <source>We had a problem restoring the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/savecopybook.cpp" line="26"/>
+        <location filename="../src/sheet/dialog_sheet.cpp" line="86"/>
+        <source>The document has been modified.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/savecopybook.cpp" line="29"/>
+        <location filename="../src/sheet/dialog_sheet.cpp" line="87"/>
+        <source>Do you want to save your changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/savecopybook.cpp" line="31"/>
+        <source>Do you want to save your changes in %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/savecopybook.cpp" line="57"/>
+        <source>We had a problem saving the copybook</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/sheet/dialog_sheet.cpp" line="164"/>
+        <source>The maximum number of letters for the word is %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/sheet/dialog_sheet.cpp" line="188"/>
+        <source>You cannot create more than %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/sheet/fast-sheet/fast_sheet_ui.cpp" line="141"/>
+        <source>We had a big problem figuring out what style you clicked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/style/print_action.cpp" line="35"/>
+        <source>Writernote had an internal problem</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

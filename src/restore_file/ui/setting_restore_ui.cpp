@@ -90,7 +90,7 @@ void setting_restore_ui::deleteFile()
     }
 
     if(!QFile::remove(ff)){
-        user_message("I had a problem removing the temp file in " + ff);
+        user_message(QApplication::tr("I had a problem removing the temp file in ").arg(ff));
     }
 }
 
@@ -164,7 +164,7 @@ void setting_restore_ui::firstTimer()
     res = ff.savefile_check_file(false) == OK;
 
     if(!res){
-        dialog_critic("We had a problem saving the file in " + *m_path);
+        dialog_critic(QApplication::tr("We had a problem saving the file in %1").arg(*m_path));
     }
 
     start_timer:

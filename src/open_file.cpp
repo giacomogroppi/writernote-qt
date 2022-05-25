@@ -39,9 +39,9 @@ void MainWindow::openFile(const char *pos)
 
     QFile file(fileName);
     if (!file.exists())
-        return dialog_critic("I can't open the file because it doesn't exist");
+        return dialog_critic(QApplication::tr("I can't open the file because it doesn't exist"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return dialog_critic("I can't open this file because of the permission");
+        return dialog_critic(QApplication::tr("I can't open this file because of the permission"));
 
     file.close();
 
@@ -49,7 +49,7 @@ void MainWindow::openFile(const char *pos)
     // check if the file exist
     if(fileName.indexOf(APP_EXT) != -1
             && fileName.indexOf(".pdf") != -1){
-        if(!areyousure("Error", "The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?")){
+        if(!areyousure(QApplication::tr("Error"), QApplication::tr("The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?"))){
             return;
         }
     }
@@ -57,12 +57,12 @@ void MainWindow::openFile(const char *pos)
 
     // restore lost file
     if(fileName.indexOf(".pdf") != -1 && fileLost::exe(fileName)){
-        if(areyousure("Restore file", "Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?")){
+        if(areyousure(QApplication::tr("Restore file"), QApplication::tr("Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?"))){
 
             if(restore_file_critic::restore_file(fileName)){
-                user_message("File restore correcty");
+                user_message(QApplication::tr("File restore correcty"));
             }else{
-                return dialog_critic("If not restore correctly");
+                return dialog_critic(QApplication::tr("If not restore correctly"));
             }
         }else{
             tmp = get_name_tmp::get(fileName);
@@ -88,10 +88,10 @@ void MainWindow::openFile(const char *pos)
          * current file has beed modified
         */
         if(res_save == n_need_save::need_save){
-            if(areyousure("Save need", "Do you want to save " + this->m_path + "?")){
+            if(areyousure(QApplication::tr("Save need"), QApplication::tr("Do you want to save %1?").arg(this->m_path))){
                 savefile save(&m_path, _canvas->data);
                 if(save.savefile_check_file(true) != OK){
-                    if(!areyousure("Save fail", "We failed to save the file, should i continue?")){
+                    if(!areyousure(QApplication::tr("Save fail"), QApplication::tr("We failed to save the file, should i continue?"))){
                         return;
                     }
                 }

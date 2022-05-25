@@ -23,12 +23,12 @@ bool savecopybook::check_permission()
     savefile save_class(&this->parent->m_path, this->parent->_canvas->data);
     QString SaveMessage;
 
-    msgBox.setText("The document has been modified.");
+    msgBox.setText(QApplication::tr("The document has been modified."));
 
     if(parent->m_path.isEmpty()){
-        SaveMessage = "Do you want to save your changes?";
+        SaveMessage = QApplication::tr("Do you want to save your changes?");
     }else{
-        SaveMessage = QString("Do you want to save your changes in ?").arg(parent->m_path);
+        SaveMessage = QApplication::tr("Do you want to save your changes in %1?").arg(parent->m_path);
     }
 
     msgBox.setInformativeText(SaveMessage);
@@ -54,7 +54,7 @@ bool savecopybook::check_permission()
 
     ret = save_class.savefile_check_file(true) == OK;
     if(!ret)
-        dialog_critic("We had a problem saving the copybook");
+        dialog_critic(QApplication::tr("We had a problem saving the copybook"));
 
     return ret;
 }

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "qapplication.h"
 #include "utils/get_file_dir/get_file_dir.h"
 #include "utils/path/get_path.h"
 #include "restore_file/ui/setting_restore_ui.h"
@@ -11,7 +12,8 @@
 #include "utils/slash/slash.h"
 #include <QMessageBox>
 
-void MainWindow::resFileTmpInTmpFolder(){
+void MainWindow::resFileTmpInTmpFolder()
+{
     QStringList __l;
     QString __pos;
     QMessageBox::StandardButton resBtn;
@@ -62,12 +64,12 @@ void MainWindow::resFileTmpInTmpFolder(){
 
         const QString &res = __l.at(i);
 
-        resBtn = QMessageBox::question(nullptr, "File lost",
-                                        "Do you want to restore this file" + res + "?", QMessageBox::Ignore | QMessageBox::Yes | QMessageBox::Help,
+        resBtn = QMessageBox::question(nullptr, QApplication::tr("File lost"),
+                                        QApplication::tr("Do you want to restore this file %1?").arg(res), QMessageBox::Ignore | QMessageBox::Yes | QMessageBox::Help,
                                         QMessageBox::Yes);
 
         if(resBtn == QMessageBox::Help){
-            user_message("Last time you used writernote, it probably quit unexpectedly, if you want to recover the file, click YES, otherwise Ignore to delete the temporary file.");
+            user_message(QApplication::tr("Last time you used writernote, it probably quit unexpectedly, if you want to recover the file, click YES, otherwise Ignore to delete the temporary file."));
             --i;
             continue;
         }

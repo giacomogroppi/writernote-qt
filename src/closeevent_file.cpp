@@ -49,8 +49,8 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
     if(__res == n_need_save::unable_load){
         QMessageBox msgBox;
-        msgBox.setText("Error");
-        msgBox.setInformativeText("We had an error opening the current file, do you want to close anyway?");
+        msgBox.setText(QApplication::tr("Error"));
+        msgBox.setInformativeText(QApplication::tr("We had an error opening the current file, do you want to close anyway?"));
         msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Cancel);
 
@@ -73,9 +73,9 @@ void MainWindow::closeEvent (QCloseEvent *event)
 
 
     if(m_path.isEmpty())
-        __message = "Do you want to save?";
+        __message = QApplication::tr("Do you want to save?");
     else
-        __message = "Do you want to save in " + m_path + "?";
+        __message = QApplication::tr("Do you want to save in %1?").arg(m_path);
 
 
     resBtn = QMessageBox::question( this, "Writernote",
@@ -96,7 +96,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
             goto accept_event;
         }
         else{
-            dialog_critic("We had a problem saving the file, please retry, or change the position of the file");
+            dialog_critic(QApplication::tr("We had a problem saving the file, please retry, or change the position of the file"));
             return event->ignore();
         }
 

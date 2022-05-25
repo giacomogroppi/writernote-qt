@@ -25,13 +25,13 @@ void MainWindow::on_start_rec_triggered()
     const QPoint & pointAction = cursor().pos();
 
     if(doc->se_registato != Document::not_record)
-        return user_message("You had already record and audio");
+        return user_message(QApplication::tr("You had already record and audio"));
 
 /* only on snap package we have this problem */
 #ifdef SNAP
     if(!load()){
-        QMessageBox::StandardButton resBtn = QMessageBox::question( nullptr, "Warning",
-                                                                    "to record audio I need permissions, type on a snap connect terminal writernote: audio-record\notherwise I will not be able to record audio",
+        QMessageBox::StandardButton resBtn = QMessageBox::question( nullptr, QApplication::tr("Warning"),
+                                                                    QApplication::tr("to record audio I need permissions, type on a snap connect terminal writernote: audio-record\notherwise I will not be able to record audio"),
                                                                     QMessageBox::Ok | QMessageBox::Cancel | QMessageBox::Help,
                                                                     QMessageBox::Ok);
 
@@ -116,15 +116,15 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
         goto procede;
 
 
-    menu.setTitle("Chose output location file");
+    menu.setTitle(tr("Chose output location file"));
 
     internal = new QAction(&menu); // Assumes actions is not empty
-    internal->setStatusTip(tr("Into writernote file [Beta]"));
-    internal->setText("Internal file[Beta]");
+    internal->setStatusTip(tr("Into writernote file"));
+    internal->setText(QApplication::tr("Internal file"));
     menu.addAction(internal);
 
     ext = new QAction(&menu);
-    ext->setStatusTip("External file");
+    ext->setStatusTip(QApplication::tr("External file"));
     ext->setText("External file");
     menu.addAction(ext);
 
@@ -159,7 +159,7 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
 #if !(defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
         const QString path = get_path(path::audio_pos);
         if(path == ""){
-            dialog_critic("I had an internal problem with the audio");
+            dialog_critic(QApplication::tr("I had an internal problem with the audio"));
             return false;
         }
 

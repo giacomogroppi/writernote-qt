@@ -38,9 +38,9 @@ static bool manageNotExist(const QString &path, Document *doc)
 
     if(unlikely(!QFile::exists(path))){
         retry_save_audio m_reciver(doc, &save);
-        retry_ui m_r(nullptr, "Audio missing",
-                     "For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name",
-                     "The file does not exist");
+        retry_ui m_r(nullptr, QApplication::tr("Audio missing"),
+                     QApplication::tr("For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name"),
+                     QApplication::tr("The file does not exist"));
 
 
         QObject::connect(&m_reciver, &retry_save_audio::resultRetry, &m_r, &retry_ui::resultRetry_reciver);
@@ -89,7 +89,7 @@ static void saveAudio(
 
 out:
     if(res != OK){
-        return dialog_critic("We had a problem saving the audio into " + m_path);
+        return dialog_critic(QApplication::tr("We had a problem saving the audio into %1").arg(m_path));
     }
 
     if(savefile(&m_path, m_currenttitle).savefile_check_file(true) != OK)
@@ -102,8 +102,8 @@ out:
 
         /* remove audio */
         make_default_ui temp_ui(nullptr,
-                                "Remove temp audio",
-                                "With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove? the location of the file is " + path);
+                                QApplication::tr("Remove temp audio"),
+                                QApplication::tr("With writernote, when you record an audio file, it is automatically saved \non your disk, so that you incur less data loss errors, do you want \nto remove? the location of the file is %1").arg(path));
 
         QObject::connect(&temp_ui, &make_default_ui::no, [=](bool var){
             if(var){
@@ -125,9 +125,9 @@ out:
     if(temp == removeAudio::remove_ok || needRemove){
         if(!QFile::remove(path)){
             if(!permission::open(path.toUtf8().constData(), permission::writeOnly))
-                dialog_critic("I don't have permission to remove file locate in " + path);
+                dialog_critic(QApplication::tr("I don't have permission to remove file locate in %1").arg(path));
             else
-                dialog_critic("We had a problem removing audio locate in " + path);
+                dialog_critic(QApplication::tr("We had a problem removing audio locate in %1").arg(path));
         }
     }
 
@@ -159,7 +159,8 @@ void MainWindow::on_stop_rec_triggered()
 /*
  * this function return true if the user want
 */
-static removeAudio::n_removeAudio removeAudio::removeAudioSettingsLoad(){
+static removeAudio::n_removeAudio removeAudio::removeAudioSettingsLoad()
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_AUDIO_REMOVE_RECORD);
 
@@ -173,7 +174,8 @@ static removeAudio::n_removeAudio removeAudio::removeAudioSettingsLoad(){
 }
 
 
-static void removeAudio::removeAudioSettingsSave(removeAudio::n_removeAudio val){
+static void removeAudio::removeAudioSettingsSave(removeAudio::n_removeAudio val)
+{
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_AUDIO_REMOVE_RECORD);
 

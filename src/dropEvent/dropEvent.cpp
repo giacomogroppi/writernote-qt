@@ -7,7 +7,8 @@
 #define IMAGE 2
 
 
-void MainWindow::dropEvent(QDropEvent *event){
+void MainWindow::dropEvent(QDropEvent *event)
+{
     const QMimeData* mimeData = event->mimeData();
 
     QString __path_to_load;
