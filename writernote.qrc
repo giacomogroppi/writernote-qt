@@ -76,6 +76,7 @@
         <file>images/image-down.png</file>
         <file>images/preview_page_item_image1.png</file>
         <file>images/img_show_hide_preview.png</file>
+        <file>images/img_show_hide_preview_black_theme.png</file>
         <file>images/icon-back.png</file>
         <file>images/rubber_black_theme.png</file>
     </qresource>
