@@ -23,6 +23,8 @@
         <file>images/scissors.png</file>
         <file>images/clipboard-paste-document-text.png</file>
         <file>images/manoIcon.png</file>
+        <file>images/importVideo_black_theme.png</file>
+        <file>images/manoIcon_black_theme.png</file>
         <file>images/pen-icon.png</file>
         <file>images/image-down_black_theme.png</file>
         <file>images/image-up_black_theme.png</file>
@@ -70,6 +72,7 @@
         <file>images/recent-file-icon.png</file>
         <file>images/tablet.png</file>
         <file>images/full-screen.png</file>
+        <file>images/full-screen_black_theme.png</file>
         <file>images/compress-video.png</file>
         <file>images/laser.png</file>
         <file>images/image-up.png</file>

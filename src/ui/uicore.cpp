@@ -43,4 +43,7 @@ void UiCore::adjustDarkMode()
     adjustButtonDark(main->actionFull_Screen, ":/image/images/full-screen.png");
     adjustButtonDark(main->actionChange_visual, ":/image/images/tablet.png");
     adjustButtonDark(main->actionhighlighter, ":/image/images/highlighter.png");
+    adjustButtonDark(main->actionListen_current_audio, ":/image/images/manoIcon.png");
+    adjustButtonDark(main->actionImport_Video, ":/image/images/importVideo.png");
+    adjustButtonDark(main->actionDelete_audio, ":/image/images/deleteAudio.png");
 }
