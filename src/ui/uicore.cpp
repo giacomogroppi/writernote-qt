@@ -42,4 +42,5 @@ void UiCore::adjustDarkMode()
     adjustButtonDark(main->actionHide_Show_Preview, ":/image/images/img_show_hide_preview.png");
     adjustButtonDark(main->actionFull_Screen, ":/image/images/full-screen.png");
     adjustButtonDark(main->actionChange_visual, ":/image/images/tablet.png");
+    adjustButtonDark(main->actionhighlighter, ":/image/images/highlighter.png");
 }

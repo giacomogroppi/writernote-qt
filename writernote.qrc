@@ -46,8 +46,10 @@
         <file>src/windows/versione.xml</file>
         <file>images/insertText_black_theme.png</file>
         <file>images/image_black_theme.png</file>
+        <file>images/highlighter_black_theme.png</file>
         <file>images/pdf-icon.png</file>
         <file>images/new-sheet.png</file>
+        <file>images/new-sheet_black_theme.png</file>
         <file>snap/gui/icon-writernote.png</file>
         <file>images/arrow-curve-180-left.png</file>
         <file>images/choose-color-icon.png</file>
