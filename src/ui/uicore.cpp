@@ -46,4 +46,6 @@ void UiCore::adjustDarkMode()
     adjustButtonDark(main->actionListen_current_audio, ":/image/images/manoIcon.png");
     adjustButtonDark(main->actionImport_Video, ":/image/images/importVideo.png");
     adjustButtonDark(main->actionDelete_audio, ":/image/images/deleteAudio.png");
+    adjustButtonDark(main->stop_rec, ":/image/images/stopRecord_.png");
+    adjustButtonDark(main->pause_rec, ":/image/images/pause-recording.png");
 }
