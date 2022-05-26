@@ -7,6 +7,7 @@
 #include "rubber/rubber_ui.h"
 #include "utils/color_define_rgb.h"
 #include "square/square.h"
+#include "core/core.h"
 
 #define SET_CHECK(x) x->setChecked(true)
 #define SET_NOT_CHECK(x) x->setChecked(false)
@@ -16,7 +17,8 @@ void MainWindow::on_actionhighlighter_triggered()
     if(_canvas->_input == TabletCanvas::e_method::highlighter){
         this->m_highlighter->show();
 
-        auto hostRect = cursor().pos();
+        const auto hostRect = core::get_pos_start_mouse();
+
         m_highlighter->move(hostRect);
     }
 
@@ -27,12 +29,18 @@ void MainWindow::on_actionhighlighter_triggered()
 
 void MainWindow::on_actionpen_triggered()
 {
+    const auto name = "MainWindow::on_actionpen_triggered";
+    const auto debug = true;
+
+    WDebug(debug, name << ((_canvas->_input == TabletCanvas::e_method::pen) ? "Selected" : "Not selected"));
+
     if(_canvas->_input == TabletCanvas::e_method::pen){
         this->m_pen->show();
+        const auto pos_mouse = core::get_pos_start_mouse();
 
-        auto hostRect = cursor().pos();
-        m_pen->move(hostRect);
+        m_pen->move(pos_mouse);
 
+        W_ASSERT(m_pen->isVisible());
     }
 
     _canvas->_input = TabletCanvas::e_method::pen;
@@ -45,7 +53,7 @@ void MainWindow::on_actionrubber_triggered()
     if(_canvas->_input == TabletCanvas::e_method::rubber){
         this->m_rubber->show();
 
-        QPoint hostRect = this->cursor().pos();
+        const auto hostRect = core::get_pos_start_mouse();
         m_rubber->move(hostRect);
 
     }
@@ -103,12 +111,14 @@ void MainWindow::on_actionchoose_color_triggered()
     _canvas->sceltacolorepenna(color);
 }
 
-void TabletCanvas::sceltacolorepenna(const QColor color){
+void TabletCanvas::sceltacolorepenna(const QColor color)
+{
     this->_color = color;
     this->m_pen.setColor(_color);
 }
 
-void MainWindow::updateTouch(){
+void MainWindow::updateTouch()
+{
     static TabletCanvas::e_method last = TabletCanvas::pen;
 
     ui->actionpen->setChecked(              _canvas->_input == TabletCanvas::pen);

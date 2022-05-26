@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QWidget>
 #include <QPalette>
-
+#include <QCursor>
 
 bool __is_mobile_view = false;
 class MainWindow *__private_mainwindow;
@@ -23,3 +23,8 @@ bool core::is_dark_mode()
     return r < min and g < min and b < min;
 }
 
+
+QPoint core::get_pos_start_mouse()
+{
+    return QCursor::pos();
+}
