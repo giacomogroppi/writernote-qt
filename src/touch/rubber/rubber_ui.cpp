@@ -173,8 +173,11 @@ bool rubber_ui::is_image_not_null(const int index, const page *page,
     if(unlikely(img.isNull()))
         return false;
 
-    for(i = 0; i < delta; i++){
-        for(j = 0; j < delta; j++){
+    i = (likely(x > 0)) ? 0 : -x;
+    cint start = (likely(y > 0)) ? 0 : -y;
+
+    for(; i < delta; i++){
+        for(j = start; j < delta; j++){
             const QPointF target = QPoint(x + i, y + j) * D;
             const QRgb pix = img.pixel(target.toPoint());
 
