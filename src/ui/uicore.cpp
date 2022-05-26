@@ -25,7 +25,10 @@ void UiCore::makePop(QWidget *widget)
 
 void UiCore::makeZeroBorder(QWidget *widget)
 {
-    widget->setStyleSheet("QWidget { border : 0px solid black;}");
+    W_ASSERT(widget);
+    const auto current = widget->styleSheet();
+    const auto style = qstr("QWidget { border : 0px solid black;}");
+    widget->setStyleSheet(current + style);
 }
 
 void UiCore::adjustDarkMode()
@@ -48,4 +51,5 @@ void UiCore::adjustDarkMode()
     adjustButtonDark(main->actionDelete_audio, ":/image/images/deleteAudio.png");
     adjustButtonDark(main->stop_rec, ":/image/images/stopRecord_.png");
     adjustButtonDark(main->pause_rec, ":/image/images/pause-recording.png");
+    adjustButtonDark(main->actionnewPage, ":/image/images/newPage.png");
 }

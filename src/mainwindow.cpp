@@ -30,6 +30,7 @@
 #include "utils/utils.h"
 #include "preview_page_widget/preview_page_widget.h"
 #include "ui/toolbar.h"
+#include "ui/WStyle.h"
 #include <QMessageBox>
 #include <QListWidgetItem>
 #include <QSettings>
@@ -173,6 +174,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     mobile::make_ui(this);
 
     _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
+    this->setStyleSheet(WStyle::get_style());
 }
 
 MainWindow::~MainWindow()

@@ -30,7 +30,6 @@ highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
 
     ui->slider_size->setMinimum(50);
     ui->slider_size->setMaximum(100);
-    this->move(0, 0);
 }
 
 highlighter::~highlighter()

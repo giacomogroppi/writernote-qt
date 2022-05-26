@@ -8,6 +8,8 @@
 #include "mainwindow.h"
 #include "ui/uicore.h"
 
+constexpr auto not_used rubber_debug = false;
+
 struct RubberPrivateData{
     QVector<int>    *data_find;
     page            *__page;
@@ -144,6 +146,47 @@ int rubber_ui::endRubber()
 
     this->reset();
     return index_mod;
+}
+
+bool rubber_ui::is_image_not_null(const int index, const page *page,
+                                  const QPointF &glob_pos, int delta)
+{
+    int i, j;
+
+    W_ASSERT(index >= 0);
+    W_ASSERT(page);
+    W_ASSERT(delta > 0);
+
+    const auto not_used name = "rubber_ui::is_image_not_null";
+    const auto &img = page->getImg();
+
+    const int x = glob_pos.x() - delta;
+    const int y = glob_pos.y() - page::getHeight() * index - delta;
+    W_ASSERT(y >= 0. and y <= page::getHeight());
+
+    // size should be QSize(3332, 4710)
+    const auto imgPixY = img.size().height() / img.devicePixelRatio();
+    const double D = imgPixY / page::getHeight();
+
+    delta *= 2;
+
+    if(unlikely(img.isNull()))
+        return false;
+
+    for(i = 0; i < delta; i++){
+        for(j = 0; j < delta; j++){
+            const QPointF target = QPoint(x + i, y + j) * D;
+            const QRgb pix = img.pixel(target.toPoint());
+
+            //WDebug(rubber_debug, name << "pixel" << pix);
+
+            if(pix){
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 static inline not_used QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
@@ -370,6 +413,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
+    const auto not_used name = "rubber_ui::actionRubber";
 
     W_ASSERT(_last.set);
 
@@ -433,6 +477,13 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     }
 
 out1:
+
+    if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _size_gomma)){
+        WDebug(rubber_debug, name << "It's null");
+        goto save_point;
+    }
+    WDebug(rubber_debug, name << "It's not null");
+
 
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1

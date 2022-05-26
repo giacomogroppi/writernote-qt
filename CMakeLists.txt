@@ -204,6 +204,7 @@ file(GLOB PROJECT_SOURCES
     src/utils/default_location/audio_default_location.cpp
     src/utils/default_location/location_audiorecord.cpp
     src/utils/copy_text.cpp
+    src/ui/WStyle.cpp
     src/utils/time/current_time.cpp
     src/utils/threadcount.cpp
     src/utils/changeLanguage.cpp

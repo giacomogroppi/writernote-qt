@@ -13,6 +13,7 @@
 #include "utils/common_error_definition.h"
 #include "testing/memtest.h"
 #include "core/core.h"
+#include "ui/WStyle.h"
 #include <QStyleFactory>
 #include <QFile>
 
@@ -139,6 +140,8 @@ int main(int argc, char **argv)
 
     WNew(app, TabletApplication, (argc, argv));
 
+    app->setPalette(WStyle::get_palette());
+
     language_manager::setLanguage(app);
 
     WNew(canvas, TabletCanvas, ());
@@ -177,11 +180,12 @@ int main(int argc, char **argv)
     WNew(window, MainWindow, (nullptr, canvas, user, &m_cloud, f));
 #else
     WNew(window, MainWindow, (canvas, nullptr, nullptr, f));
-#endif
+#endif    
 
     if(core::is_dark_mode()){
         UiCore::adjustDarkMode();
     }
+
     qDebug() << "is dark mode?: " << core::is_dark_mode();
     qDebug() << "Is running on wayland?" << is_wayland();
 

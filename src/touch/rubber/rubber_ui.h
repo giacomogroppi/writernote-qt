@@ -41,6 +41,8 @@ public:
     bool is_set() const { return this->_last.set; };
 
 private:
+    bool is_image_not_null(const int index, const page *page,
+                           const QPointF &pos, int delta);
     class TabletCanvas *_canvas;
     int _base;
     PointSettable _last;
