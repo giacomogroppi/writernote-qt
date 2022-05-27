@@ -98,11 +98,11 @@ bool square::find()
     const QPointF &topLeft = _pointinit.point;// * zoom;// - data->getPointFirstPage();
     const QPointF &bottomRight = _pointfine.point; //* zoom;// - data->getPointFirstPage();
 
-#define CTRL_POINT(point) W_ASSERT(point.x() >= 0.0 && point.y() >= 0.0);
+#define CTRL_POINT(point) W_ASSERT(point.x() >= 0. && point.y() >= 0.);
     CTRL_POINT(topLeft);
     CTRL_POINT(bottomRight);
 
-    WDebug(debugSquare, "square::find");
+    WDebug(debugSquare, "square::find call");
 
     _base = data->getFirstPageVisible();
     lenPage = data->lengthPage();
@@ -393,10 +393,6 @@ void square::actionProperty(property_control::ActionProperty action)
 {
     int flags = 0, dontcall_copy = 1;
     datastruct &data = *_canvas->data->datatouch;
-
-#ifdef DEBUGINFO
-    this->_property->Hide();
-#endif
 
     switch (action) {
         case property_control::ActionProperty::__copy:{
