@@ -2,16 +2,15 @@
 #include <QTranslator>
 #include <QStringList>
 #include <QInputDialog>
-
 #include "utils/dialog_critic/dialog_critic.h"
 #include "touch/tabletapplication.h"
-
 #include "changeLanguage.h"
 #include "setting_define.h"
-
 #include <QSettings>
 
 #define IT "Italiano"
+#define FN "Français"
+#define ES "Español"
 #define EN "English"
 
 QString language_manager::loadLastLanguage(){
@@ -38,13 +37,21 @@ void language_manager::saveCurrentLanguage(QString &language){
 QTranslator __t;
 void language_manager::setLanguage(QCoreApplication *app)
 {
-    QString __temp = language_manager::loadLastLanguage();
+    QString sel = language_manager::loadLastLanguage();
+    QString path;
 
-    if(__temp != IT)
+    if(sel == IT)
+        path = ":/language/language/it.qm";
+    else if(sel == FN)
+        path = ":/language/language/fr.qm";
+    else if(sel == ES)
+        path = ":/language/language/es.qm";
+
+    if(path.isEmpty())
         return;
 
-    if(!__t.load(":/language/language/it.qm"))
-        return dialog_critic("We had a problem loading " + __temp );
+    if(!__t.load(path))
+        return dialog_critic("We had a problem loading " + sel);
 
     app->installTranslator(&__t);
 
@@ -64,7 +71,7 @@ void MainWindow::on_actionChange_language_triggered()
 
     __last = language_manager::loadLastLanguage();
 
-    __l_list << IT << EN;
+    __l_list << EN << IT << FN << ES;
 
     lan_dect = QInputDialog::getItem(NULL, "Select your language", "Language", __l_list);
 
