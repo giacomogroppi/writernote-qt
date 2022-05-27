@@ -4,7 +4,7 @@
 #include <QMouseEvent>
 #include <QTabletEvent>
 
-#define SET_PRIVATE_STYLE(button)   button->setStyleSheet("background-color: rgba(255, 255, 255, 255)");
+#define SET_PRIVATE_STYLE(button)   button->setStyleSheet("background-color: rgba(255, 255, 255, 255); color: black");
 
 property_control::property_control(QWidget *parent) :
     QWidget(parent),
