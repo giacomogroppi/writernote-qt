@@ -52,4 +52,5 @@ void UiCore::adjustDarkMode()
     adjustButtonDark(main->stop_rec, ":/image/images/stopRecord_.png");
     adjustButtonDark(main->pause_rec, ":/image/images/pause-recording.png");
     adjustButtonDark(main->actionnewPage, ":/image/images/newPage.png");
+    adjustButtonDark(main->actionNew_File, ":/image/images/newFileBig.png");
 }

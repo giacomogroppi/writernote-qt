@@ -1,12 +1,12 @@
 <RCC>
     <qresource prefix="/image">
+        <file>images/newFileBig_black_theme.png</file>
         <file>images/cisors-cut_black_theme.png</file>
         <file>images/arrow-curve.png</file>
         <file>images/image.png</file>
         <file>images/blue-folder-open-document.png</file>
         <file>images/deleteAudio.png</file>
         <file>images/font-color.png</file>
-        <file>images/newFile.png</file>
         <file>images/deleteAudio_black_theme.png</file>
         <file>images/printer.png</file>
         <file>images/pause-recording.png</file>
