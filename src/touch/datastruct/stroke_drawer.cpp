@@ -8,7 +8,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 constexpr double deltaColorNull = 1.08;
 #else
-constexpr double deltaColorNull = 1.25;
+constexpr double deltaColorNull = 1.3;
 #endif
 constexpr double deltaPress = 2.;
 
