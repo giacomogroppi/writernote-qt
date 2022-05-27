@@ -662,7 +662,9 @@ win32:contains(DEFINES, PDFSUPPORT){
     LIBS         += C:\msys64\mingw64\lib\libpoppler-qt5.dll.a
 }
 
-DISTFILES += \
-    language/it.ts
+TRANSLATIONS += \
+    language/it.ts \
+    language/fr.ts \
+    language/es.ts
 
 ANDROID_EXTRA_LIBS =

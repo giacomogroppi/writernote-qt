@@ -1,5 +1,5 @@
-To update the .ts file use  `lupdate -pro writernote.pro -ts LANGUAGE_NAME`
-example: `lupdate -pro writernote.pro -ts language/it.ts`
+To install all the dependency to create translation run `sh deb.sh`
 
-To compile a language do `lrelease LANGUAGE_NAME`
-example: `lrelease it.ts`
+To update the .ts file use  `sh update_all.sh`
+
+To compile a language do `sh release_all.sh`
