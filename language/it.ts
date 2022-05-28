@@ -62,13 +62,13 @@ WorkingDir not valid</source>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="501"/>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="529"/>
         <source>Empty URL received</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricevuto URL vuoto</translation>
     </message>
     <message>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="493"/>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="519"/>
         <source>File does not exist: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Il file non esiste: %1</translation>
     </message>
 </context>
 <context>
@@ -76,7 +76,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/audiorecord/audiorecord.cpp" line="81"/>
         <source>Recorded %1 sec</source>
-        <translation type="unfinished">Registrato %1 sec</translation>
+        <translation>Registrato %1 sec</translation>
     </message>
 </context>
 <context>
@@ -111,28 +111,28 @@ WorkingDir not valid</source>
     <name>MainWindow</name>
     <message>
         <source>MainWindow</source>
-        <translation type="vanished">Finestra principale</translation>
+        <translation>Finestra principale</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="14"/>
         <source>Writernote</source>
-        <translation></translation>
+        <translation>Writernote</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="149"/>
         <source>Zoom 100%</source>
-        <translation></translation>
+        <translation>Zoom 100%</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="198"/>
         <source>Page</source>
         <translatorcomment>L&apos;indicatore ti indica in che pagina ti trovi</translatorcomment>
-        <translation>pagina</translation>
+        <translation>Pagina</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="217"/>
         <source>File</source>
-        <translation></translation>
+        <translation>File</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="231"/>
@@ -325,11 +325,11 @@ WorkingDir not valid</source>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="vanished">Copia</translation>
+        <translation>Copia</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation type="vanished">Taglia</translation>
+        <translation>Taglia</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="519"/>
@@ -363,15 +363,15 @@ WorkingDir not valid</source>
     </message>
     <message>
         <source>Delete copybook</source>
-        <translation type="vanished">Elimina il quaderno</translation>
+        <translation>Elimina il quaderno</translation>
     </message>
     <message>
         <source>Create new copybook</source>
-        <translation type="vanished">Crea un nuovo quaderno</translation>
+        <translation>Crea un nuovo quaderno</translation>
     </message>
     <message>
         <source>Convert audio to text</source>
-        <translation type="vanished">Converti il testo in audio</translation>
+        <translation>Converti il testo in audio</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="564"/>
@@ -445,7 +445,7 @@ WorkingDir not valid</source>
     </message>
     <message>
         <source>toppf</source>
-        <translation type="vanished">Esporta in pdf</translation>
+        <translation>Esporta in pdf</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="679"/>
@@ -454,7 +454,7 @@ WorkingDir not valid</source>
     </message>
     <message>
         <source>insertImage</source>
-        <translation type="vanished">Inserisci immagini</translation>
+        <translation>Inserisci immagini</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="697"/>
@@ -463,7 +463,7 @@ WorkingDir not valid</source>
     </message>
     <message>
         <source>Auto Save</source>
-        <translation type="vanished">Salvataggio automatico</translation>
+        <translation>Salvataggio automatico</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="705"/>
@@ -536,63 +536,63 @@ WorkingDir not valid</source>
     </message>
     <message>
         <source>Recorded %1 sec</source>
-        <translation type="vanished">Registrato %1 sec</translation>
+        <translation>Registrato %1 sec</translation>
     </message>
     <message>
         <source>Into writernote file [Beta]</source>
-        <translation type="vanished">Includi l&apos;audio nei file writernote</translation>
+        <translation>Includi l&apos;audio nei file writernote</translation>
     </message>
     <message>
         <source>Draw with your pen [Alpha]</source>
-        <translation type="vanished">Disegna con la penna [Instabile]</translation>
+        <translation>Disegna con la penna [Instabile]</translation>
     </message>
     <message>
         <source>Get text</source>
-        <translation type="vanished">Cell padding</translation>
+        <translation>Prendi testo</translation>
     </message>
     <message>
         <source>Title: </source>
-        <translation type="vanished">Titolo: </translation>
+        <translation>Titolo: </translation>
     </message>
     <message>
         <source>audio -&gt; text</source>
-        <translation type="vanished">audio -&gt; testo</translation>
+        <translation>audio -&gt; testo</translation>
     </message>
     <message>
         <source>convert the audio into textclipboard</source>
-        <translation type="vanished">Converti l&apos;audio in testo</translation>
+        <translation>Converti l&apos;audio in testo</translation>
     </message>
     <message>
         <source>compress the video you imported with ffmpegclipboard</source>
-        <translation type="vanished">Comprimi il video con ffmpeg</translation>
+        <translation>Comprimi il video con ffmpeg</translation>
     </message>
     <message>
         <source>delete</source>
-        <translation type="vanished">Elimina</translation>
+        <translation>elimina</translation>
     </message>
     <message>
         <source>delete the copybookclipboard</source>
-        <translation type="vanished">Elimina il quaderno</translation>
+        <translation>elimina il quaderno</translation>
     </message>
     <message>
         <source>rename the copybook</source>
-        <translation type="vanished">Rinomina il quaderno</translation>
+        <translation>rinomina il quaderno</translation>
     </message>
     <message>
         <source>rename the copybookclipboard</source>
-        <translation type="vanished">Rinomina il quaderno</translation>
+        <translation>rinomina il quaderno</translation>
     </message>
     <message>
         <source>delete audio</source>
-        <translation type="vanished">Elimina l&apos;audio</translation>
+        <translation>elimina l&apos;audio</translation>
     </message>
     <message>
         <source>delete the audio of the copybookclipboard</source>
-        <translation type="vanished">Elimina l&apos;audio</translation>
+        <translation>elimina l&apos;audio</translation>
     </message>
     <message>
         <source>Open File</source>
-        <translation type="vanished">Apri un file</translation>
+        <translation>Apri un file</translation>
     </message>
     <message>
         <location filename="../src/audiorecord/start_recording.cpp" line="119"/>
@@ -918,23 +918,23 @@ compiled without the cloud support</source>
     <message>
         <location filename="../src/windows/showmessageupdate.ui" line="20"/>
         <source>update_message</source>
-        <translation type="unfinished"></translation>
+        <translation>messaggio di aggiornamento</translation>
     </message>
     <message>
         <location filename="../src/windows/showmessageupdate.ui" line="29"/>
-        <source>Current Version</source>
+        <source>messaggio di aggiornamento</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/windows/showmessageupdate.ui" line="49"/>
         <source>New version</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuova versione</translation>
     </message>
     <message>
         <location filename="../src/windows/showmessageupdate.ui" line="60"/>
         <location filename="../src/windows/showmessageupdate.ui" line="80"/>
         <source>xxx</source>
-        <translation type="unfinished"></translation>
+        <translation>xxx</translation>
     </message>
     <message>
         <location filename="../src/windows/showmessageupdate.ui" line="104"/>
@@ -1016,7 +1016,7 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audioplay/audioplay.cpp" line="60"/>
         <source>%1 second</source>
-        <translation type="unfinished">%1 secondi</translation>
+        <translation>%1 secondi</translation>
     </message>
 </context>
 <context>
@@ -1239,7 +1239,7 @@ password</source>
     <name>default_option_ui</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Cencella</translation>
+        <translation>Cencella</translation>
     </message>
 </context>
 <context>
@@ -1262,7 +1262,7 @@ password</source>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="80"/>
         <source>Create new style to start draw</source>
-        <translation type="unfinished"></translation>
+        <translation>Crea un nuovo stile per iniziare a disegnare</translation>
     </message>
     <message>
         <location filename="../src/sheet/dialog_sheet.ui" line="100"/>
@@ -1330,12 +1330,12 @@ line</source>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="123"/>
         <source>own</source>
-        <translation></translation>
+        <translation>proprio</translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="143"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation>Etichetta di testo</translation>
     </message>
 </context>
 <context>
@@ -1343,7 +1343,7 @@ line</source>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="14"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="22"/>
@@ -1358,7 +1358,7 @@ line</source>
     </message>
     <message>
         <source>Title copybook</source>
-        <translation type="vanished">Titolo del copybook</translation>
+        <translation>Titolo del copybook</translation>
     </message>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="59"/>
@@ -1373,11 +1373,11 @@ line</source>
     <message>
         <location filename="../src/utils/extract_audio/extract_audio_ui.ui" line="126"/>
         <source>Extract</source>
-        <translation>Estrei</translation>
+        <translation>Estrai</translation>
     </message>
     <message>
         <source>Open File</source>
-        <translation type="vanished">Apri file</translation>
+        <translation>Apri file</translation>
     </message>
 </context>
 <context>
@@ -1452,23 +1452,23 @@ the highlighter</source>
     <name>inserttable_class</name>
     <message>
         <source>Dialog</source>
-        <translation type="vanished">Dialogo</translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <source>Rows: </source>
-        <translation type="vanished">Righe: </translation>
+        <translation>Righe: </translation>
     </message>
     <message>
         <source>Columns:</source>
-        <translation type="vanished">Colonne:</translation>
+        <translation>Colonne:</translation>
     </message>
     <message>
         <source>Cell spacing: </source>
-        <translation type="vanished">Spazio tra le celle: </translation>
+        <translation>Spazio tra le celle: </translation>
     </message>
     <message>
         <source>Insert</source>
-        <translation type="vanished">Insertisci</translation>
+        <translation>Inserisci</translation>
     </message>
 </context>
 <context>
@@ -1948,7 +1948,7 @@ che se si blocca puoi ripristinarlo senza perdere il tuo lavoro.</translation>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="20"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="44"/>
@@ -1992,7 +1992,7 @@ che se si blocca puoi ripristinarlo senza perdere il tuo lavoro.</translation>
     <message>
         <location filename="../src/last_open/widget_parent/widget_parent.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished">Cloud</translation>
+        <translation></translation>
     </message>
 </context>
 </TS>
