@@ -50,10 +50,25 @@ public:
 
     void translate(const QPointF &offset);
 
+    PointSettable & get_first_point()
+    {
 #ifdef DEBUGINFO
-    PointSettable & get_first_point()   {return _pointinit;};
-    PointSettable & get_last_point()    {return _pointfine;}
+        return _pointinit;
+#else
+        qDebug() << "Call to PointSettable & square::get_first_point in release mode";
+        std::abort();
 #endif
+    };
+
+    PointSettable & get_last_point()
+    {
+#ifdef DEBUGINFO
+        return _pointfine;
+#else
+        qDebug() << "Call to PointSettable & square::get_last_point in release mode";
+        std::abort();
+#endif
+    }
 
 private:
     void findObjectToDrawImg();
