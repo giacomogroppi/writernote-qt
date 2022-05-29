@@ -15,3 +15,6 @@ CMakeFiles/*
 CMakeCache.txt
 .qtc_clangd/
 .qt/
+build-qtcreator/*
+.idea/
+.vscode/*

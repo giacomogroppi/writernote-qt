@@ -217,7 +217,7 @@ bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdou
     W_ASSERT(stroke->is_line());
 
     WLine _line(data->topLeft, data->bottomRight);
-    return _line.intersect(line, precision);
+    return WLine::intersect(_line, line, precision);
 }
 
 void stroke_complex_translate_line(stroke *stroke, const QPointF &offset)
@@ -302,10 +302,26 @@ bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area,
     WLine _this     (data->topLeft, data->bottomRight);
 
     // if the square passed to the function contains one of the two points
-    if(area.contains(data->topLeft))
+    if(area.contains(data->topLeft)){
+        WDebug(debug, "Contains first line" << data->topLeft);
         return true;
-    if(area.contains(data->bottomRight))
+    }
+    if(area.contains(data->bottomRight)){
+        WDebug(debug, "contains second line" << data->bottomRight);
         return true;
+    }
 
-    return _this.intersect(lineRight, precision) || _this.intersect(lineLeft, precision);
+    WDebug(debug, "intersect topLeft" << data->topLeft << "bottomr" << data->bottomRight << "(rect)" << rect);
+
+    if(WLine::intersect(_this, lineRight, precision)){
+        WDebug(debug, "intersect 1");
+        return true;
+    }
+
+    if(WLine::intersect(_this, lineLeft, precision)){
+        WDebug(debug, "intersect 2")
+        return true;
+    }
+
+    return false;
 }

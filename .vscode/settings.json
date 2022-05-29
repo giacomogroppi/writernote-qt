@@ -59,7 +59,8 @@
         "limits": "cpp",
         "numbers": "cpp",
         "stdexcept": "cpp",
-        "qnetworkaccessmanager": "cpp"
+        "qnetworkaccessmanager": "cpp",
+        "qline": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "cmake.configureOnOpen": true,

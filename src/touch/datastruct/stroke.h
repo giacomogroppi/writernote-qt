@@ -431,15 +431,15 @@ inline QRect stroke::getBiggerPointInStroke() const
  * multiplied by the zoom. */
 inline bool stroke::isInside(const QRectF &rect) const
 {
-    int i;
-    int len;
+    int i, len;
     const QPointF &topLeft = rect.topLeft();
     const QPointF &bottomRight = rect.bottomRight();
 
     {
         const auto &area = this->getBiggerPointInStroke();
-        if(!area.intersects(rect.toRect()))
+        if(!area.intersects(rect.toRect())){
             return false;
+        }
     }
 
     if(unlikely(this->is_complex())){
@@ -626,7 +626,7 @@ continue_search:
 
         tmp = WLine(p1->toQPointF(1.), p2->toQPointF(1.));
 
-        if(unlikely(tmp.intersect(rect, precision))){
+        if(unlikely(WLine::intersect(tmp, rect, precision))){
             return i;
         }
 

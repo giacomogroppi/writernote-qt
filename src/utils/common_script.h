@@ -441,7 +441,22 @@ force_inline double distance(const QPointF& first, const QPointF& second)
     return std::sqrt(distance_not_square(first, second));
 }
 
-force_inline double is_near(const QPointF &point1, const QPointF &point2, cdouble prec)
+// return true if left <= value <= rigth
+force_inline bool is_between(const double left, const double value, const double rigth)
+{
+    return left <= value and value <= rigth;
+}
+
+// return true if qMin(left, rigth) <= value <= qMax(rigth, left)
+force_inline bool is_between_change(const double left, const double value, const double rigth)
+{
+    const auto min = qMin(left, rigth);
+    const auto max = qMax(left, rigth);
+
+    return min <= value and value <= max;
+}
+
+force_inline bool is_near(const QPointF &point1, const QPointF &point2, cdouble prec)
 {
     return  is_near(point1.x(), point2.x(), prec) &&
             is_near(point1.y(), point2.y(), prec);

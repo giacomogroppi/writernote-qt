@@ -29,7 +29,6 @@ file(GLOB PROJECT_MOC
 
 
 file(GLOB PROJECT_UI
-    src/core/wzip.h src/core/wzip.cpp
     src/audiosetting/audioqualityoption.ui
     src/currenttitle/option/option_copybook.ui
     src/last_open/element/element_ui.ui
@@ -65,6 +64,8 @@ file(GLOB PROJECT_UI
 
 
 file(GLOB PROJECT_SOURCES
+    src/testing/TestingComponent.cpp
+    src/core/wzip.h src/core/wzip.cpp
     updater/launch_updater/launch_updater.cpp
     src/testing/memtest.cpp
     src/ui/toolbar.cpp

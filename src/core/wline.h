@@ -2,6 +2,7 @@
 #define WLINE_H
 
 #include "utils/common_script.h"
+#include "touch/datastruct/utils_datastruct.h"
 #include <QPointF>
 #include <QPoint>
 #include <QRectF>
@@ -10,12 +11,14 @@ class WLine
 {
 private:
     double _m, _p;
-    double _xt, _yt;
-    double _xb, _yb;
+    QPointF _pt1, _pt2;
     bool _is_vertical;
 
     static bool intersect_vertical(const WLine &line, const WLine &vertical, cdouble precision);
     bool belongs(const QPointF &point, cdouble precision) const;
+
+    const QPointF &pt1() const;
+    const QPointF &pt2() const;
 
 public:
     WLine() = default;
@@ -23,7 +26,7 @@ public:
     WLine(const QPointF &topLeft, const QPointF &bottomRigth);
     WLine(cdouble xt, cdouble yt, cdouble xb, cdouble yb);
 
-    bool intersect(const WLine &line, cint precision, QPointF *result = NULL) const;
+    static bool intersect(const WLine &line1, const WLine &line2, cint precision, QPointF *result = NULL);
     bool is_in_domain(const QPointF& point, cdouble precision) const;
     QRectF toRect() const;
 
@@ -32,27 +35,35 @@ public:
     WLine &operator=(const WLine &other);
 };
 
+force_inline const QPointF &WLine::pt1() const
+{
+    return this->_pt1;
+}
+
+force_inline const QPointF &WLine::pt2() const
+{
+    return this->_pt2;
+}
+
 force_inline WLine::WLine(cdouble xt, cdouble yt, cdouble xb, cdouble yb)
 {
-    W_ASSERT(xt <= xb);
-    W_ASSERT(yt <= yb);
     *this = WLine(QPoint(xt, yt), QPointF(xb, yb));
 }
 
-force_inline void WLine::get_point(QPointF &tl, QPointF &br) const
+force_inline void WLine::get_point(QPointF &pt_1, QPointF &pt_2) const
 {
-    W_ASSERT(_xt >= 0.);
-    W_ASSERT(_yt >= 0.);
-    W_ASSERT(_xb >= 0.);
-    W_ASSERT(_yb >= 0.);
+    W_ASSERT(pt1().y() >= 0.);
+    W_ASSERT(pt1().x() >= 0.);
+    W_ASSERT(pt2().y() >= 0.);
+    W_ASSERT(pt2().x() >= 0.);
 
-    tl = QPointF(_xt, _yt);
-    br = QPointF(_xb, _yb);
+    pt_1 = _pt1;
+    pt_2 = _pt2;
 }
 
 force_inline QRectF WLine::toRect() const
 {
-    return QRectF(QPointF(_xt, _yt), QPointF(_xb, _yb));
+    return datastruct_rect(_pt1, _pt2);
 }
 
 force_inline WLine &WLine::operator=(const WLine &other)

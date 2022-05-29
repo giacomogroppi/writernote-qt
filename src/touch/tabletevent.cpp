@@ -214,8 +214,7 @@ force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 
 force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 {
-    constexpr const auto not_used _debug = false;
-    constexpr const auto not_used name = "TabletCanvas::ManageStart";
+    constexpr const auto _debug = false;
     
     if(unlikely(m_deviceDown))
         return;
@@ -230,7 +229,7 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
         ManageStartSquare(event->posF(), _square);
     }else if(rubber_method){
         _rubber->initRubber(event->posF());
-        WDebug(true, name << "rubber is set");
+        WDebug(true, "rubber is set");
         W_ASSERT(_rubber->is_set());
     }
 
