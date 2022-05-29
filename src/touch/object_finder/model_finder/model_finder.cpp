@@ -93,7 +93,7 @@ bool model::find(stroke *stroke)
     }
 
     i = get_index_most_prob(min_precision);
-    WDebug(debug_model, "model" << __FUNCTION__ << i);
+    WDebug(debug_model, i);
 
     if(i < 0){
         return false;

@@ -335,12 +335,12 @@ inline int stroke::removeAt(int index)
 
 inline int stroke::removeAt(int from, int to)
 {
+    constexpr auto not_used debug_remove_at = false;
+
     W_ASSERT(to < length());
     W_ASSERT(from >= 0);
 
-    constexpr not_used bool debug_remove_at = false;
-
-    WDebug(debug_remove_at, "stroke::removeAt from to" << from << to);
+    WDebug(debug_remove_at, "from to" << from << to);
 
     for(; from <= to; to --){
         removeAt(from);
@@ -390,7 +390,7 @@ inline QRect stroke::getBiggerPointInStroke() const
     count = this->length();
 
     if(unlikely(count == 0)){
-        qDebug() << "Warning: Stroke empty";
+        WWarning("Warning: Stroke empty");
         return QRect(0, 0, 0, 0);
     }
 

@@ -24,7 +24,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
         .m_pixmap = &this->_pixmap,
         DATAPAINT_DEFINEREST
     };
-    WDebug(false, "TabletCanvas" << __FUNCTION__);
+
+    WDebug(false, __FUNCTION__ << "call");
     dataPaint.pen       = this->m_pen;
     isWriting           = false;
 

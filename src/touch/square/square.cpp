@@ -62,8 +62,9 @@ void * __square_search(void *__data)
 
     for(; data->from < data->to;  data->from ++){
         const stroke &stroke = __page->atStroke(data->from);
-        if(datastruct::isinside(__f, __s, stroke)){
 
+        if(datastruct::isinside(__f, __s, stroke))
+        {
             pthread_mutex_lock(&__mutex_sq);
             __index->append(data->from);
             pthread_mutex_unlock(&__mutex_sq);
@@ -86,6 +87,7 @@ void * __square_search(void *__data)
 */
 bool square::find()
 {
+
     Document *doc = _canvas->data;
     datastruct *data = doc->datatouch;
     bool tmp_find;
@@ -95,14 +97,14 @@ bool square::find()
 
     this->adjustPoint();
 
-    const QPointF &topLeft = _pointinit.point;// * zoom;// - data->getPointFirstPage();
-    const QPointF &bottomRight = _pointfine.point; //* zoom;// - data->getPointFirstPage();
+    const QPointF &topLeft = _pointinit.point;
+    const QPointF &bottomRight = _pointfine.point;
 
 #define CTRL_POINT(point) W_ASSERT(point.x() >= 0. && point.y() >= 0.);
     CTRL_POINT(topLeft);
     CTRL_POINT(bottomRight);
 
-    WDebug(debugSquare, "square::find call");
+    WDebug(debugSquare, "call");
 
     _base = data->getFirstPageVisible();
     lenPage = data->lengthPage();
@@ -210,7 +212,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     datastruct & data = *_canvas->data->datatouch;
     QImage tmp;
 
-    WDebug(debugSquare, "square::moveObjectIntoPrivate");
+    WDebug(debugSquare, "call");
 
     _stroke.clear();
 
@@ -266,7 +268,7 @@ void square::findObjectToDraw(const QList<QVector<int>> &index)
     const auto trans = data->getPointFirstPage();
     QRectF sizeData;
     return;
-    WDebug(debugSquare, "square::findObjectToDraw");
+    WDebug(debugSquare, "call");
 
     if(unlikely(index.isEmpty()))
         goto img;
@@ -284,7 +286,7 @@ img:
 void square::reset()
 {
     int i, len;
-    WDebug(debugSquare, "square::reset");
+    WDebug(debugSquare, "call");
     _pointinit.set = _lastpoint.set = _pointfine.set = false;
 
     _in_box = false;
@@ -292,7 +294,7 @@ void square::reset()
     __need_reload = false;
     _index_img.clear();
 
-    WDebug(debugSquare, "square::reset paste = 1");
+    WDebug(debugSquare, "paste = 1");
     len = _stroke.length();
     if(len == 0)
         goto out;
@@ -322,15 +324,16 @@ void square::initPointMove(const QPointF &point)
     QPointF new_point;
     datastruct *Data = _canvas->data->datatouch;
     QRectF rect(_pointinit.point, _pointfine.point);
-    WDebug(debugSquare, "square::initPointMove");
+    WDebug(debugSquare, "call");
 
     new_point = Data->adjustPoint(point);
 
     _lastpoint = PointSettable(point, true);
-    qDebug() << "square initPointMove" << rect.topLeft() << rect.bottomRight() << new_point;
+
+    WDebug(debugSquare, "initPointMove" << rect.topLeft() << rect.bottomRight() << new_point);
 
     if(!rect.contains(new_point)){
-        WDebug(debugSquare, "square::initPointMove" << "Not in box");
+        WDebug(debugSquare, "Not in box");
         this->reset();
         this->initPoint(point);
     }
@@ -342,7 +345,8 @@ void square::move(const QPointF &punto)
     Document *data = _canvas->data;
     const auto zoom = data->datatouch->getZoom();
 
-    WDebug(debugSquare, "square::move");
+
+    WDebug(debugSquare, "call");
 
 #ifdef DEBUGINFO
     W_ASSERT(somethingInBox());
@@ -371,20 +375,19 @@ void square::move(const QPointF &punto)
 
 void square::endMoving(const QWidget *pixmap)
 {
-    constexpr auto not_used class_func = "square::endMoving(const QWidget *pixmap)";
     QPoint middle;
     const auto ref = _canvas->data->datatouch->getPointFirstPage();
     int flag;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
 
-    WDebug(debugSquare, class_func << "call");
+    WDebug(debugSquare, "call");
 
     middle = QPoint(_pointinit.x() + translation.x() + ref.x(),
                     _pointinit.y() + translation.y() + ref.y() - _property->height());
 
     flag = this->calculate_flags();
 
-    WDebug(debugSquare, class_func << flag << middle );
+    WDebug(debugSquare, flag << middle );
 
     this->_property->Show(middle, flag);
 }
@@ -448,7 +451,7 @@ force_inline void square::adjustPoint()
     QPointF &topLeft        = _pointinit.point;
     QPointF &bottomRight    = _pointfine.point;
 
-    //WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
+    WDebug(debugSquare, topLeft << bottomRight);
 
     if(topLeft.x() > bottomRight.x())
         __swap(topLeft.rx(), bottomRight.rx());
@@ -456,7 +459,7 @@ force_inline void square::adjustPoint()
     if(topLeft.y() > bottomRight.y())
         __swap(topLeft.ry(), bottomRight.ry());
 
-    //WDebug(debugSquare, "square::adjustPoint" << topLeft << bottomRight);
+    WDebug(debugSquare, topLeft << bottomRight);
 
     W_ASSERT(topLeft.x() <= bottomRight.x());
     W_ASSERT(topLeft.y() <= bottomRight.y());
@@ -472,13 +475,14 @@ static void square_draw_square(
     const QPointF BR = data->adjustPointReverce(br);
     constexpr const auto debugDraw = true;
 
-    WDebug(debugSquare && debugDraw, __FUNCTION__ << tl << br << TL << BR);
+    WDebug(debugSquare && debugDraw, tl << br << TL << BR);
 
     painter.drawRect(QRectF(TL, BR));
 }
 
 void square::needReload(QPainter &painter)
 {
+
     if(debug_enable()){
         if(unlikely(!painter.isActive())){
             qDebug() << "Painter not active in square" << __FUNCTION__;
@@ -489,7 +493,7 @@ void square::needReload(QPainter &painter)
     if(__need_reload){
         const auto *data = _canvas->data->datatouch;
         const auto zoom = data->getZoom();
-        WDebug(debugSquare, "square::needReload __need_reload");
+        WDebug(debugSquare, "__need_reload = true");
 
         if(likely(somethingInBox())){
             const QPointF point = data->getPointFirstPage() + _trans_img * zoom;
@@ -497,7 +501,7 @@ void square::needReload(QPainter &painter)
             const QSize size = createSizeRect(data, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
 
             W_ASSERT(size.height() >= 0 && size.width() >= 0);
-            WDebug(debugSquare, "square::needReload in_box");
+            WDebug(debugSquare, "in_box");
 
             singleLoad(painter, _img, size, point,
                        0, DRAW_SINGLE_LOAD_DEF);
@@ -511,7 +515,7 @@ void square::needReload(QPainter &painter)
 void square::updatePoint(const QPointF &puntofine)
 {
     const datastruct *data = _canvas->data->datatouch;
-    WDebug(debugSquare, "square::updatePoint");
+    WDebug(debugSquare, "call");
     W_ASSERT(!somethingInBox());
 
     _pointfine.point = data->adjustPoint(puntofine);
@@ -526,7 +530,8 @@ void square::updatePoint(const QPointF &puntofine)
 void square::initPoint(const QPointF &point)
 {
     const datastruct *data = _canvas->data->datatouch;
-    WDebug(debugSquare, "square::initPoint");
+    WDebug(debugSquare, "call");
+
     W_ASSERT(!somethingInBox());
 
     _pointinit.point = data->adjustPoint(point);

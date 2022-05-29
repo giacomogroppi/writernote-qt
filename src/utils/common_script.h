@@ -366,12 +366,14 @@ inline void __order(QList<QVector<T>> & list){
 #endif //DEBUGINFO
 
 #ifdef DEBUGINFO
-# define WDebug(enable, message) \
-    if(enable){                 \
-        qDebug() << __func__ << message; \
+# define WDebug(enable, message)          \
+    if(enable){                           \
+        qDebug() << __PRETTY_FUNCTION__ << "\t" << message; \
     }
+# define WWarning(message) WDebug(true, message)
 #else
-# define WDebug(enable, message) Q_UNUSED((enable));
+# define WDebug(enable, message) {Q_UNUSED((enable)); Q_UNUSED((message)); };
+# define WWarning(message) Q_UNUSED((message))
 #endif //DEBUGINFO
 
 template <typename T>

@@ -8,14 +8,13 @@ static void adjustButtonDark(QAction *action, const QString &_path)
 {
     constexpr auto suff = "_black_theme";
     constexpr auto find = ".png";
-    constexpr auto not_used name = "adjustButtonDark";
-    constexpr auto not_used debug = true;
+    constexpr auto not_used debug = false;
 
     QString path = _path;
     path = path.insert(_path.indexOf(find), suff);
 
     action->setIcon(QIcon(path));
-    WDebug(debug, name << path);
+    WDebug(debug, path);
 }
 
 void UiCore::makePop(QWidget *widget)

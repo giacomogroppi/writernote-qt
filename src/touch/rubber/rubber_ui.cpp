@@ -416,7 +416,6 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
-    const auto not_used name = "rubber_ui::actionRubber";
 
     W_ASSERT(_last.set);
 
@@ -482,10 +481,11 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 out1:
 
     if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _size_gomma)){
-        WDebug(rubber_debug, name << "It's null");
+        WDebug(rubber_debug, "It's null");
         goto save_point;
     }
-    WDebug(rubber_debug, name << "It's not null");
+
+    WDebug(rubber_debug, "It's not null");
 
 
     // l'utente ha prima selezionato un punto su una pagina x,

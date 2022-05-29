@@ -56,6 +56,7 @@ static force_inline void model_line_adjust_m(double &m)
 
 double model_line(const stroke *stroke)
 {
+
     int segno_var_x, segno_var_y;
     int i, len;
     const point_s *one, *two;
@@ -81,7 +82,7 @@ double model_line(const stroke *stroke)
         const double det = area.topLeft().x() - area.bottomRight().x();
 
         if(unlikely(!det)){
-            WDebug(debug, __FUNCTION__ << "det = 0");
+            WDebug(debug, "det = 0");
             is_vertical = true;
             goto cont;
         }
@@ -91,7 +92,7 @@ double model_line(const stroke *stroke)
 
     model_line_adjust_m(m);
 
-    WDebug(debug, __FUNCTION__ << qstr("m: %1 q: %2 is_vertical %3").arg(m).arg(q).arg(line_data.is_vertical));
+    WDebug(debug, qstr("m: %1 q: %2 is_vertical %3").arg(m).arg(q).arg(line_data.is_vertical));
 
 cont:
     segno_var_x = segno_var_y = 0;
@@ -111,7 +112,7 @@ cont:
         one = two;
     }
 
-    WDebug(debug, __FUNCTION__ << "segno_var" << segno_var_x << segno_var_y);
+    WDebug(debug, "segno_var" << segno_var_x << segno_var_y);
 
     /*if( line_check_segno(segno_var_x, len) ||
         line_check_segno(segno_var_y, len))
@@ -141,7 +142,7 @@ cont:
         is_near_line(m, precision, q, one);
     }
 
-    WDebug(debug, __FUNCTION__ << qstr("Line precision: %1").arg(precision));
+    WDebug(debug, qstr("Line precision: %1").arg(precision));
 
     return precision;
 }
@@ -291,13 +292,16 @@ void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
 
 bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area, cdouble precision)
 {
-    const auto *data = (const stroke_complex_line *)_stroke->get_complex_data();
     W_ASSERT(_stroke->is_line());
+
+    const auto *data = (const stroke_complex_line *)_stroke->get_complex_data();
     const auto rect = datastruct_rect(data->topLeft, data->bottomRight);
+
     WLine lineRight (rect.topRight(), rect.bottomRight());
     WLine lineLeft  (rect.topLeft(), rect.bottomLeft());
     WLine _this     (data->topLeft, data->bottomRight);
 
+    // if the square passed to the function contains one of the two points
     if(area.contains(data->topLeft))
         return true;
     if(area.contains(data->bottomRight))

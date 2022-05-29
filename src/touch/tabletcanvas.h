@@ -91,7 +91,6 @@ class TabletCanvas : public QWidget
     Q_OBJECT
 
 private:
-    static constexpr const char *name = "TabletCanvas";
 public:
     static qreal pressureToWidth(qreal pressure);
     struct Point _lastPoint;

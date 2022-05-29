@@ -29,10 +29,9 @@ void MainWindow::on_actionhighlighter_triggered()
 
 void MainWindow::on_actionpen_triggered()
 {
-    const auto name = "MainWindow::on_actionpen_triggered";
     const auto debug = true;
 
-    WDebug(debug, name << ((_canvas->_input == TabletCanvas::e_method::pen) ? "Selected" : "Not selected"));
+    WDebug(debug, ((_canvas->_input == TabletCanvas::e_method::pen) ? "Selected" : "Not selected"));
 
     if(_canvas->_input == TabletCanvas::e_method::pen){
         this->m_pen->show();

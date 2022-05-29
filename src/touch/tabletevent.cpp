@@ -141,7 +141,6 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
     constexpr bool tabletDebug = false;
-    constexpr not_used const auto nameFunction = "TabletCanvas::tabletEvent";
 
     isWriting = true;
     need_save_auto = true;
@@ -151,7 +150,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     set_flag(event, _input);
 
-    WDebug(tabletDebug, nameFunction << event->type() << convert(event->type()) << convert_method());
+    WDebug(tabletDebug, event->type() << convert(event->type()) << convert_method());
 
     if(unlikely(    pointTouch.x() > data->datatouch->biggerx()
                 ||  pointTouch.y() > data->datatouch->biggery())){
@@ -161,7 +160,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
          * You don't have to save the point. And
          * save the end of the current treatment
          */
-        WDebug(tabletDebug, nameFunction << QString("Height: %1 Width: %2").arg(QString::number(height()), QString::number(width())) << pointTouch);
+        WDebug(tabletDebug, QString("Height: %1 Width: %2").arg(QString::number(height()), QString::number(width())) << pointTouch);
         ManageFinish(event, true);
         goto end;
     }
@@ -182,14 +181,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 #else
     else if(eventType == QEvent::TabletRelease || eventType == QEvent::MouseButtonRelease){ /* pen leaves the tablet */
 #endif
-        qDebug() << "Tablet release";
+        WDebug(tabletDebug, "Tablet release");
         this->ManageFinish(event, false);
     }
 
 end:
 
     if(unlikely(!selection_method && lastMethod == e_method::selection)){
-        WDebug(tabletDebug, nameFunction << "Square reset");
+        WDebug(tabletDebug, "Square reset");
         _square->reset();
     }
 
@@ -201,13 +200,14 @@ end:
 
 force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 {
-    constexpr const auto not_used debugSquare = false;
+    constexpr auto not_used debugSquare = false;
+
     if(_square->somethingInBox()){
-        WDebug(debugSquare, "TabletCanvas::ManageStart" << "Somethininbox");
+        WDebug(debugSquare, "Somethininbox");
         _square->initPointMove(touch);
     }
     else{
-        WDebug(debugSquare, "TabletCanvas::ManageStart" << "not in box");
+        WDebug(debugSquare, "not in box");
         _square->initPoint(touch);
     }
 }

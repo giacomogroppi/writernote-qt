@@ -36,7 +36,7 @@ preview_page_item::~preview_page_item()
 
 void preview_page_item::draw(const page &page, cbool selected)
 {
-    WDebug(preview_item_debug, "preview_page_item::draw call");
+    WDebug(preview_item_debug, "call");
 
     this->_page = &page;
     this->_selected = selected;
@@ -138,13 +138,13 @@ bool preview_page_item::event(QEvent *event)
         const auto pos = static_cast<QMouseEvent *>(event)->pos();
 
         if(target_prop.contains(pos)){
-            WDebug(debugEvent, "preview_page_item::event show prop");
+            WDebug(debugEvent, "show prop");
             auto *prop = preview_page_widget::get_list();
             const auto GlobalPos = static_cast<QMouseEvent *>(event)->globalPos();
             prop->Show(GlobalPos, _index);
         }
         else if(last + delta >= current){
-            WDebug(debugEvent, "preview_page_item::event click done");
+            WDebug(debugEvent, "click done");
 
             emit clickUser(this);
 

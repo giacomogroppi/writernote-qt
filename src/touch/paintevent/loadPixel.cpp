@@ -99,12 +99,12 @@ void TabletCanvas::load(QPainter &painter,
     }
 
     constexpr auto debugPageImg = false;
-    WDebug(debugPageImg, name << __func__ << "Start draw img from" << counterPage);
+    WDebug(debugPageImg, __func__ << "Start draw img from" << counterPage);
     for(; counterPage < lenPage; counterPage ++){
         const page &page = data->datatouch->at(counterPage);
 
         if(!page.isVisible() && likely(!dataPoint.IsExportingPdf)){
-            WDebug(debugPageImg, name << __func__ << "Page at index" << counterPage << "not visible: Break");
+            WDebug(debugPageImg, __func__ << "Page at index" << counterPage << "not visible: Break");
             continue;
         }
 

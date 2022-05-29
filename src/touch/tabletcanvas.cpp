@@ -331,7 +331,7 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
         cbool isVisible = _property->isVisible();
 
         if(isTabletEvent(e)){
-            WDebug(eventFilterCanvasDebug, name << __func__ << "Not Touch Event" << type);
+            WDebug(eventFilterCanvasDebug, "Not Touch Event" << type);
             goto out;
         }
 
@@ -339,18 +339,18 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
         const QPointF &PT = touch->posF();
 
         if(unlikely(isVisible)){
-            WDebug(eventFilterCanvasDebug, name << __func__ << "Visible" << _property->rect() << PT);
+            WDebug(eventFilterCanvasDebug, "Visible" << _property->rect() << PT);
             if(_property->rect().contains(PT.toPoint())){
-                WDebug(eventFilterCanvasDebug, name << __func__ << "Inside" << e->type());
+                WDebug(eventFilterCanvasDebug, "Inside" << e->type());
                 goto out;
             }
         }else{
-            WDebug(eventFilterCanvasDebug, name << __func__ << "Not visible");
+            WDebug(eventFilterCanvasDebug, "Not visible");
         }
 
         point_touch = touch->globalPosF() - this->mapToGlobal(this->pos());
 
-        WDebug(eventFilterCanvasDebug, name << __func__ << "Point" << point_touch << touch->pos() << _square->get_first_point().point << _square->get_last_point().point);
+        WDebug(eventFilterCanvasDebug, "Point" << point_touch << touch->pos() << _square->get_first_point().point << _square->get_last_point().point);
 
         canvas_send_touch_event(this, point_touch, type, touch->pointerType(), true);
 

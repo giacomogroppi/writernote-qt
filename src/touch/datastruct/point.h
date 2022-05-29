@@ -13,7 +13,7 @@ struct PointSettable {
     PointSettable(const QPointF &point, bool set);
     PointSettable();
     QPointF point;
-    bool set;
+    bool set : 1;
 
     void deset();
 

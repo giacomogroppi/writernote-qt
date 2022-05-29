@@ -142,7 +142,6 @@ public:
 bool TabletCanvas::event(QEvent *event)
 {
     constexpr bool not_used TabletEventDebug = false;
-    constexpr auto not_used name = "TabletCanvas::event";
 
     bool needToResize = false;
     QPointF _pointMiddle;
@@ -166,11 +165,11 @@ bool TabletCanvas::event(QEvent *event)
 
     W_ASSERT(WE.is_touch());
 
-    WDebug(false, name << event->type());
+    WDebug(false, event->type());
 
     if(WE.is_end()){
 ridefine:
-        WDebug(TabletEventDebug, name << "Ridefine");
+        WDebug(TabletEventDebug, "Ridefine");
         RIDEFINE(this->lastpointzoom);
         block_scrolling = false;
         isZooming = false;
@@ -203,7 +202,7 @@ ridefine:
                      touchPoint.state() == QEventPoint::Updated ||
                      touchPoint.state() == QEventPoint::Stationary;
 #endif
-        WDebug(TabletEventDebug, name << _tmp << touchPoint.state());
+        WDebug(TabletEventDebug, _tmp << touchPoint.state());
 
         if(!_tmp){
             continue;
@@ -289,6 +288,8 @@ bool TabletCanvas::gestureEvent(QGestureEvent *event)
 
 void TabletCanvas::pinchTriggered(QPinchGesture *event)
 {
+    constexpr auto not_used debug = false;
+
     QPinchGesture::ChangeFlags changeFlags = event->changeFlags();
     QPointF pointMiddle;
     static double last = 1.;
@@ -297,7 +298,7 @@ void TabletCanvas::pinchTriggered(QPinchGesture *event)
     const auto pos_in_screen = mapToGlobal(this->pos());
 
     if (!(changeFlags & QPinchGesture::ScaleFactorChanged)){
-        qDebug() << "not change";
+        WDebug(debug, "not change");
         return;
     }
 
@@ -309,15 +310,9 @@ void TabletCanvas::pinchTriggered(QPinchGesture *event)
         last = event->totalScaleFactor();
     }
 
-    if (changeFlags & QPinchGesture::ScaleFactorChanged) {
-        const auto currentStepScaleFactor = event->totalScaleFactor();
-        if(false)qDebug() << "pinchTriggered(): zoom by" <<
-            event->scaleFactor() << "->" << currentStepScaleFactor;
-    }
-
     pointMiddle = event->centerPoint() - pos_in_screen;
 
-    qDebug() << __func__ << delta << pointMiddle;
+    WDebug(debug, delta << pointMiddle);
 
     needToResize = this->_zoom->zoom(pointMiddle, delta,
                                     zoomChange, this->_pixmap.size(), this->size(),

@@ -478,18 +478,18 @@ inline int datastruct::whichPage(const QPointF &point) const
     i = diff(point.y() / heigth);
 
     if(unlikely(i >= len)){
-        WDebug(debug_which, __func__ << "set to -1");
+        WDebug(debug_which, "set to -1");
         i = -1;
-        WDebug(debug_which, __func__ << "set to -1" << qstr("i: %1").arg(i));
+        WDebug(debug_which, "set to -1" << qstr("i: %1").arg(i));
     }
 
     if(debug_enable()){
         const not_used auto res = oldMethod();
-        WDebug(debug_which, __func__ << qstr("i: %1 ").arg(i)
+        WDebug(debug_which, qstr("i: %1 ").arg(i)
                  << qstr("y %1 height %2").arg(point.y()).arg(heigth));
 
         if(i != res){
-            qDebug() << __func__ << "Differente result: " << i << res;
+            WWarning("Differente result: " << i << res);
             std::abort();
         }
     }

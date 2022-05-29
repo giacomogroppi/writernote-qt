@@ -20,7 +20,7 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
     lenPointInStroke = __stroke.length();
     strokeToAppend.reset();
 
-    WDebug(false, "datastruct::changeId start" << IndexPoint << __stroke.length()
+    WDebug(false, "start" << IndexPoint << __stroke.length()
              << __stroke.last()._x << __stroke.last()._y);
 
     append_point(__stroke, strokeToAppend, IndexPoint, lenPointInStroke);

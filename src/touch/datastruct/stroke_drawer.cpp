@@ -27,7 +27,6 @@ force_inline void stroke_drawer::draw_circle(
         cbool       is_rubber, cdouble         _prop)
 {
     constexpr bool not_used debCircle = false;
-    constexpr auto not_used func = __func__;
     point_s point;
     QPointF tmp;
     auto *data = (stroke_complex_circle *)stroke._complex;
@@ -41,7 +40,7 @@ force_inline void stroke_drawer::draw_circle(
     point = page::at_translation(point, page);
     tmp = point.toQPointF(prop);
 
-    WDebug(debCircle, func << "prop: " << prop);
+    WDebug(debCircle, "prop: " << prop);
 
     y = tmp.y();
     x = tmp.x();
@@ -51,7 +50,7 @@ force_inline void stroke_drawer::draw_circle(
 
     painter.drawEllipse(QPointF(x, y), data->_r * prop, data->_r * prop);
 
-    WDebug(debCircle, func << data->_x << data->_y << data->_r);
+    WDebug(debCircle, data->_x << data->_y << data->_r);
 }
 
 force_inline void stroke_drawer::draw_stroke_normal(
@@ -59,7 +58,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
         cint            page,       QPen            &pen,
         cbool           is_rubber,  cdouble         _prop)
 {
-    constexpr not_used bool debug_draw_stroke = false;
+    constexpr bool not_used debug_draw_stroke = false;
 
     W_ASSERT(page >= 0);
     W_ASSERT(_painterPublic.isActive());
@@ -117,7 +116,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
     W_ASSERT(isHigh);
     W_ASSERT(_painterPublic.compositionMode() == QPainter::CompositionMode_SourceOver);
 
-    WDebug(debug_draw_stroke, __func__ << "Paint high");
+    WDebug(debug_draw_stroke, "Paint high");
 
     painter->end();
 

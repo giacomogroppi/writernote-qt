@@ -53,7 +53,7 @@ void audioplay::positionChange(qint64 position)
     int duration;
     MainWindow *parent = core::get_main_window();
 
-    WDebug(debugAudioPlay, "audioplay::positionChange" << "call");
+    WDebug(debugAudioPlay, "call");
     if(!isPlay())
         return;
 
@@ -68,7 +68,7 @@ void audioplay::positionChange(qint64 position)
     parent->ui->audioSlider->setValue((position*100)/duration);
 
     parent->ui->audioSlider->blockSignals(false);
-    WDebug(debugAudioPlay, "audioplay::positionChange" << this->getPositionSecond() << position);
+    WDebug(debugAudioPlay, this->getPositionSecond() << position);
 
     parent->_canvas->call_update();
 }

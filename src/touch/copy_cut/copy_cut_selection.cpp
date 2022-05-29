@@ -71,6 +71,9 @@ void copy::__single(const QList<stroke> &from, QList<stroke> &append_data)
  *
  * Return 1 if we need to remove the stroke
  * pass from the list (if we are in copy mode)
+ *
+ * Il punto si riferisce già alla struttura dati
+ * e non al widget
 */
 int copy::selection(
         datastruct                  &data,
@@ -85,7 +88,8 @@ int copy::selection(
     lenList = stroke.length();
 
     if(__flags == SELECTION_FLAGS_PASTE){
-        tmpPoint = data.adjustPoint(pointTouch);
+        //tmpPoint = data.adjustPoint(pointTouch);
+        tmpPoint = pointTouch;
         this->managePaste(data, tmpPoint);
 
         if(this->isSomeThingCut()){

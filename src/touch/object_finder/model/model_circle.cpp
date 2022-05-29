@@ -64,7 +64,7 @@ double model_circle(const stroke *stroke)
     {
         const auto rect = stroke->getFirstAndLast();
         if(!is_near(rect.topLeft(), rect.bottomRight(), _end)){
-            WDebug(debug, __func__ << "first point and last are not near" << rect.topLeft() << rect.bottomRight());
+            WDebug(debug, "first point and last are not near" << rect.topLeft() << rect.bottomRight());
             return model_error;
         }
     }
@@ -84,7 +84,7 @@ double model_circle(const stroke *stroke)
 
     precision /= coef;
 
-    WDebug(debug, __FUNCTION__ << qstr("Cricle precision: %1").arg(precision));
+    WDebug(debug, qstr("Cricle precision: %1").arg(precision));
 
     return precision;
 }
@@ -136,7 +136,8 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
      */
     QPointF tl, br;
     const auto data = (const stroke_complex_circle *)stroke->get_complex_data();
-    constexpr not_used bool debug = true;
+
+    constexpr bool not_used debug = true;
 
     W_ASSERT(data->_x >= 0.);
     W_ASSERT(data->_r >= 0.);
@@ -149,7 +150,7 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
     cdouble distance2 = distance_from_center(data, br);
 
     model_circle_print(data);
-    WDebug(debug, __FUNCTION__ << distance1 << distance2 << tl << br);
+    WDebug(debug, distance1 << distance2 << tl << br);
 
     if(is_near(distance1, data->_r, precision) || is_near(distance2, data->_r, precision))
         return true;

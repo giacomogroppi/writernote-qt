@@ -68,28 +68,40 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
 
 bool WLine::intersect(const WLine &line, cint precision, QPointF *result) const
 {
+    constexpr auto debug = true;
     double x, y;
+    bool touch;
 
-    if(unlikely(line._is_vertical && this->_is_vertical))
+    if(unlikely(line._is_vertical && this->_is_vertical)){
+        WDebug(debug, "Both line are vertical")
         return false;
+    }
 
-    if(!line._is_vertical && !_is_vertical)
-        if(is_near(line._m, _m, 0.02))
+    if(!line._is_vertical && !_is_vertical){
+        if(is_near(line._m, _m, 0.02)){
+            WDebug(debug, qstr("No line vertical but two _m are close enough m1: %1 m2: 2%").arg(line._m).arg(this->_m));
             return false;
-
-    if(likely(!_is_vertical && !line._is_vertical)) {
-            x = (this->_p - line._p) / (line._m - this->_m);
-            y = _m * x + _p;
-
-            return      is_in_domain(QPointF(x, y), precision) &&
-                   line.is_in_domain(QPointF(x, y), precision);
-    }else{
-        if(this->_is_vertical){
-            return WLine::intersect_vertical(line, *this, precision);
-        }else{
-            return WLine::intersect_vertical(*this, line, precision);
         }
     }
+
+    if(likely(!_is_vertical && !line._is_vertical)) {
+        WDebug(debug, "No line vertical");
+        x = (this->_p - line._p) / (line._m - this->_m);
+        y = _m * x + _p;
+
+        touch = this->is_in_domain(QPointF(x, y), precision) and
+                 line.is_in_domain(QPointF(x, y), precision);
+    }else{
+        WDebug(debug, (_is_vertical ? "First list vertical" : "Second line vertical"));
+        if(this->_is_vertical){
+            touch = WLine::intersect_vertical(line, *this, precision);
+        }else{
+            touch =  WLine::intersect_vertical(*this, line, precision);
+        }
+    }
+
+    WDebug(debug, qstr("Are line intersect? %1").arg(touch));
+    return touch;
 }
 
 bool WLine::is_in_domain(const QPointF& point, cdouble precision) const

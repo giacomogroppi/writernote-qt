@@ -190,11 +190,10 @@ MainWindow::~MainWindow()
 
 bool MainWindow::event(QEvent *event)
 {
-    const auto not_used debugEvent = false;
-    const auto name = "MainWindow::event";
+    const auto debugEvent = false;
     const auto type = event->type();
 
-    WDebug(debugEvent, name << event->type());
+    WDebug(debugEvent, event->type());
 
     if(type == QEvent::MouseButtonPress){
         const auto *widget = ui->page;
@@ -251,7 +250,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
     }
 
-    WDebug(debugResizeMainWindow, "MainWindow::resizeEvent size:" << sizeScreen);
+    WDebug(debugResizeMainWindow, "size:" << sizeScreen);
 }
 
 void MainWindow::update_touch_or_pen()
