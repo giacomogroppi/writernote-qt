@@ -42,7 +42,7 @@ public:
 
 private:
     bool is_image_not_null(const int index, const page *page,
-                           const QPointF &pos, int delta);
+                           const QPointF &from, const QPointF &to, int delta);
     class TabletCanvas *_canvas;
     int _base;
     PointSettable _last;

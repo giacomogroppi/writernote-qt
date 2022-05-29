@@ -149,7 +149,7 @@ int rubber_ui::endRubber()
 }
 
 bool rubber_ui::is_image_not_null(const int index, const page *page,
-                                  const QPointF &glob_pos, int delta)
+                                  const QPointF &from, const QPointF &to, int delta)
 {
     int i, j;
 
@@ -157,38 +157,40 @@ bool rubber_ui::is_image_not_null(const int index, const page *page,
     W_ASSERT(page);
     W_ASSERT(delta > 0);
 
-    const auto not_used name = "rubber_ui::is_image_not_null";
+    int start;
     const auto &img = page->getImg();
 
-    const int x = glob_pos.x() - delta;
-    const int y = glob_pos.y() - page::getHeight() * index - delta;
-    W_ASSERT(y >= 0. and y <= page::getHeight());
+    const auto ymin = qMin(from.y(), to.y());
+    const auto ymax = qMax(from.y(), to.y());
+    const auto xmin = qMin(from.x(), to.x());
+    const auto xmax = qMax(from.x(), to.x());
 
-    // size should be QSize(3332, 4710)
-    const auto imgPixY = img.size().height() / img.devicePixelRatio();
-    const double D = imgPixY / page::getHeight();
+    const int x = xmin - delta;
+    const int y = ymin - page::getHeight() * index - delta;
+    W_ASSERT(y >= 0. and y <= page::getHeight());
 
     delta *= 2;
 
     if(unlikely(img.isNull()))
         return false;
 
-    i = (likely(x > 0)) ? 0 : -x;
-    cint start = (likely(y > 0)) ? 0 : -y;
-
-    for(; i < delta; i++){
-        for(j = start; j < delta; j++){
-            const QPointF target = QPoint(x + i, y + j) * D;
-            const QRgb pix = img.pixel(target.toPoint());
+    for(i = 0; i < delta + int(xmax - xmin); i++)
+    {
+        for(j = 0; j < delta + int(ymax - ymin); j++)
+        {
+            const QPoint target = QPoint(x + i, y + j) * PROP_RESOLUTION;
+            const QRgb pix = img.pixel(target);
 
             //WDebug(rubber_debug, name << "pixel" << pix);
 
             if(pix){
+                WDebug(rubber_debug, "yes");
                 return true;
             }
         }
     }
 
+    WDebug(rubber_debug, "No");
     return false;
 }
 
@@ -480,7 +482,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
 out1:
 
-    if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _size_gomma)){
+    if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _last.point, _size_gomma)){
         WDebug(rubber_debug, "It's null");
         goto save_point;
     }
