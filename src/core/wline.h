@@ -26,7 +26,7 @@ public:
     WLine(const QPointF &topLeft, const QPointF &bottomRigth);
     WLine(cdouble xt, cdouble yt, cdouble xb, cdouble yb);
 
-    static bool intersect(const WLine &line1, const WLine &line2, cint precision, QPointF *result = NULL);
+    static bool intersect(const WLine &line1, const WLine &line2, int precision, QPointF *result = NULL);
     bool is_in_domain(const QPointF& point, cdouble precision) const;
     QRectF toRect() const;
 
@@ -71,7 +71,12 @@ force_inline WLine &WLine::operator=(const WLine &other)
     if(unlikely(&other == this)){
         return *this;
     }
-    memcpy(this, &other, sizeof(*this));
+
+    this->_m = other._m;
+    this->_p = other._p;
+    this->_is_vertical = other._is_vertical;
+    this->_pt1 = other._pt1;
+    this->_pt2 = other._pt2;
 
     return *this;
 }

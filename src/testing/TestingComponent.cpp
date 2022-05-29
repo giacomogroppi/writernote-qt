@@ -26,4 +26,11 @@ void __init__ testingWLine(void)
     test1();
 }
 
+void __init__ testingBet(void)
+{
+    W_ASSERT(is_between(0., 5., 6.));
+    W_ASSERT(!is_between(10., 5., 6.));
+    W_ASSERT(is_between(5., 5., 6.));
+}
+
 #endif //DEBUGINFO

@@ -37,11 +37,14 @@ WLine::WLine(const QPointF &pt1, const QPointF &pt2)
     }
 }
 
+// ritorna true se il punto appartiene alla linea
 bool WLine::belongs(const QPointF &point, cdouble precision) const
 {
     W_ASSERT(!this->_is_vertical);
 
     const auto res = is_near(this->_m * point.x() + this->_p, point.y(), precision);
+
+    WDebug(debug_WLine, "Result" << res << qstr("m %1 point.x() %2 _p %3 point.y() %4 precision %5").arg(_m).arg(point.x()).arg(_p).arg(point.y()).arg(precision));
 
     if(res && is_in_domain(point, precision)){
         return true;
@@ -56,23 +59,19 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
     W_ASSERT(!line._is_vertical);
     W_ASSERT(vertical._pt1.x() == vertical._pt2.x());
 
-    /*if(!(is_between_change(line.pt1().y(), vertical.pt1().y(), line.pt2().y()) or
-        is_between_change(line.pt1().y(), vertical.pt2().y(), line.pt2().y())))
-    {
-        WDebug(debug_WLine, "Not in ")
-    }*/
+    const double y = vertical.pt1().x() * line._m + line._p;
+    const bool one = line.belongs(
+                            QPointF(vertical.pt1().x(), y),
+                            precision
+                        );
 
+    const bool two = vertical.is_in_domain(QPointF(vertical.pt1().x(), y), precision);
 
-
-    const auto y = vertical.pt1().x() * line._m + line._p;
-    const auto one = line.belongs(QPointF(vertical.pt1().x(), y), precision);
-    const auto two = vertical.is_in_domain(QPointF(vertical.pt1().x(), y), precision);
     return one && two;
 }
 
-bool WLine::intersect(const WLine &line1, const WLine &line2, cint precision, QPointF *result)
+bool WLine::intersect(const WLine &line1, const WLine &line2, int precision, QPointF *result)
 {
-
     double x, y;
     bool touch;
 
@@ -81,14 +80,6 @@ bool WLine::intersect(const WLine &line1, const WLine &line2, cint precision, QP
         return false;
     }
 
-    /*if(!line1._is_vertical && !line2._is_vertical){
-        if(is_near(line1._m, line2._m, 0.02)){
-            WDebug(debug, qstr("No line vertical but two _m are close enough m1: %1 m2: %2").arg(line1._m).arg(line2._m));
-            goto out;
-            return false;
-        }
-    }*/
-out:
     if(likely(!line2._is_vertical && !line1._is_vertical)) {
         WDebug(debug_WLine, "No line vertical");
         x = (line2._p - line1._p) / (line1._m - line2._m);
@@ -105,15 +96,18 @@ out:
         }
 
     }else{
-        WDebug(debug_WLine, (line2._is_vertical ? "First list vertical" : "Second line vertical"));
+        WDebug(debug_WLine, (line2._is_vertical ? "First line vertical" : "Second line vertical"));
         if(line2._is_vertical){
             touch = WLine::intersect_vertical(line1, line2, precision);
         }else{
             touch =  WLine::intersect_vertical(line2, line1, precision);
         }
+
+        WDebug(debug_WLine, line1.pt1() << line1.pt2() << line2.pt1() << line2.pt2());
+
     }
 
-    WDebug(debug_WLine, qstr("Are line intersect? %1").arg(touch));
+    WDebug(debug_WLine, qstr("Are line intersect? %1").arg(touch ? "Yes" : "No"));
     return touch;
 }
 
@@ -121,14 +115,28 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
 {
     W_ASSERT(precision >= 0.);
 
+    const auto real_precision = precision / 2.;
+
     const auto x = point.x();
     const auto y = point.y();
 
-    const auto xmin = qMin(_pt1.x(), _pt2.x());
-    const auto xmax = qMax(_pt1.x(), _pt2.x());
     const auto ymax = qMax(_pt1.y(), _pt2.y());
     const auto ymin = qMin(_pt1.y(), _pt2.y());
 
-    return  is_between(xmin - precision, x, xmax + precision) and 
-            is_between(ymin - precision, y, ymax + precision);
+    if(!_is_vertical){
+        const auto xmin = qMin(_pt1.x(), _pt2.x());
+        const auto xmax = qMax(_pt1.x(), _pt2.x());
+
+        return  is_between(xmin - real_precision, x, xmax + real_precision) and
+                is_between(ymin - real_precision, y, ymax + real_precision);
+    }else{
+
+        if(ymin - real_precision > y)
+            return false;
+        if(ymax + real_precision < y)
+            return false;
+        if(pt1().x() - real_precision > x)
+            return false;
+        return true;
+    }
 }

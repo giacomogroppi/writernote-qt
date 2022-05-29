@@ -18,7 +18,7 @@ struct stroke_complex_rect{
 };
 
 struct stroke_complex_line{
-    QPointF topLeft, bottomRight;
+    QPointF pt1, pt2;
     pressure_t press;
 };
 

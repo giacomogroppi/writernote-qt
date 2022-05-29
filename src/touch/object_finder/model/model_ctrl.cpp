@@ -49,8 +49,8 @@ void stroke_complex_adjust(stroke *stroke, cdouble zoom)
         data->_y /= zoom;
     }else if(stroke->is_line()){
         stroke_complex_line *data = (stroke_complex_line *) stroke->get_complex_data();
-        data->bottomRight /= zoom;
-        data->topLeft /= zoom;
+        data->pt2 /= zoom;
+        data->pt1 /= zoom;
         data->press /= zoom;
     }else if(stroke->is_rect()){
         stroke_complex_rect *data = (stroke_complex_rect *) stroke->get_complex_data();
@@ -66,7 +66,7 @@ QRect stroke_complex_bigger_data(const stroke *stroke)
 {
     if(stroke->is_line()){
         const auto *data = (const stroke_complex_line *)stroke->get_complex_data();
-        return datastruct_rect(data->topLeft, data->bottomRight).toRect();
+        return datastruct_rect(data->pt1, data->pt2).toRect();
     }else if(stroke->is_rect()){
         const auto *data = (const stroke_complex_rect *)stroke->get_complex_data();
         return data->rect.toRect();

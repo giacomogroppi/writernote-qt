@@ -159,8 +159,8 @@ force_inline void stroke_drawer::draw_line(
 
     set_press(pen, press, _prop, is_rubber);
 
-    const auto _topLeft     = page::at_translation(point_s(data->topLeft), page).toQPointF(prop);
-    const auto _bottomRight = page::at_translation(point_s(data->bottomRight), page).toQPointF(prop);
+    const auto _topLeft     = page::at_translation(point_s(data->pt1), page).toQPointF(prop);
+    const auto _bottomRight = page::at_translation(point_s(data->pt2), page).toQPointF(prop);
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);

@@ -6,7 +6,7 @@
 #include "core/wline.h"
 
 constexpr double    error = 5000;
-constexpr bool      debug = false;
+constexpr bool      debug = true;
 
 struct{
     double m, q;
@@ -162,19 +162,19 @@ static void model_line_vertical(stroke *stroke, stroke_complex_line *data)
 
     stroke->reset();
 
-    data->topLeft = QPointF(x, TL.y());
-    data->bottomRight = QPointF(x, BR.y());
+    data->pt1 = QPointF(x, TL.y());
+    data->pt2 = QPointF(x, BR.y());
     data->press = press;
 }
 
 static void model_line_generic(stroke *stroke, stroke_complex_line *data)
 {
     const auto pressure = stroke->getPressure(0);
-    data->topLeft  = stroke->at(0).toQPointF(1.);
-    data->bottomRight = stroke->last().toQPointF(1.);
+    data->pt1  = stroke->at(0).toQPointF(1.);
+    data->pt2 = stroke->last().toQPointF(1.);
 
-    if(data->topLeft.y() > data->bottomRight.y()){
-        __swap(data->topLeft, data->bottomRight);
+    if(data->pt1.y() > data->pt2.y()){
+        __swap(data->pt1, data->pt2);
     }
 
     data->press = pressure;
@@ -200,13 +200,13 @@ void model_line_create(stroke *stroke)
 void stroke_complex_line_append(stroke *stroke, const QPointF& point)
 {
     auto *data = (stroke_complex_line *) stroke->get_complex_data();
-    const auto dist1 = distance_not_square(data->topLeft, point);
-    const auto dist2 = distance_not_square(data->bottomRight, point);
+    const auto dist1 = distance_not_square(data->pt1, point);
+    const auto dist2 = distance_not_square(data->pt2, point);
 
     if(dist1 > dist2){
-        data->bottomRight = point;
+        data->pt2 = point;
     }else{
-        data->topLeft = point;
+        data->pt1 = point;
     }
 }
 
@@ -216,15 +216,15 @@ bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdou
 
     W_ASSERT(stroke->is_line());
 
-    WLine _line(data->topLeft, data->bottomRight);
+    WLine _line(data->pt1, data->pt2);
     return WLine::intersect(_line, line, precision);
 }
 
 void stroke_complex_translate_line(stroke *stroke, const QPointF &offset)
 {
     stroke_complex_line *data = (stroke_complex_line *)stroke->get_complex_data();
-    data->topLeft += offset;
-    data->bottomRight += offset;
+    data->pt1 += offset;
+    data->pt2 += offset;
 }
 
 static inline void stroke_complex_normal_line_generic(
@@ -238,10 +238,10 @@ static inline void stroke_complex_normal_line_generic(
 
     W_ASSERT(from <= to);
 
-    m =     (data->topLeft.y() - data->bottomRight.y()) /
-            (data->topLeft.x() - data->bottomRight.x());
+    m =     (data->pt1.y() - data->pt2.y()) /
+            (data->pt1.x() - data->pt2.x());
 
-    p = data->topLeft.y() - data->topLeft.x() * m;
+    p = data->pt1.y() - data->pt1.x() * m;
 
     for(; from <= to; from ++){
         const double x = (double(from) - p) / m;
@@ -258,10 +258,10 @@ static inline void stroke_complex_normal_line_vertical(
 {
     point_s tmp;
     const pressure_t press = data->press;
-    W_ASSERT(data->bottomRight.x() == data->topLeft.x());
+    W_ASSERT(data->pt2.x() == data->pt1.x());
     W_ASSERT(from <= to);
 
-    tmp._x = data->topLeft.x();
+    tmp._x = data->pt1.x();
 
     for(; from <= to; from ++){
         tmp._y = from;
@@ -276,12 +276,12 @@ void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
     W_ASSERT(_from->is_line());
     _to->reset();
 
-    from    = (int) data->topLeft.y();
-    to      = (int) data->bottomRight.y();
+    from    = (int) data->pt1.y();
+    to      = (int) data->pt2.y();
 
     W_ASSERT(from <= to);
 
-    if(data->bottomRight.x() == data->topLeft.x()){
+    if(data->pt2.x() == data->pt1.x()){
         stroke_complex_normal_line_vertical(_to, data, from, to);
     }else{
         stroke_complex_normal_line_generic(_to, data, from, to);
@@ -295,23 +295,23 @@ bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area,
     W_ASSERT(_stroke->is_line());
 
     const auto *data = (const stroke_complex_line *)_stroke->get_complex_data();
-    const auto rect = datastruct_rect(data->topLeft, data->bottomRight);
+    const auto rect = datastruct_rect(data->pt1, data->pt2);
 
     WLine lineRight (rect.topRight(), rect.bottomRight());
     WLine lineLeft  (rect.topLeft(), rect.bottomLeft());
-    WLine _this     (data->topLeft, data->bottomRight);
+    WLine _this     (data->pt1, data->pt2);
 
     // if the square passed to the function contains one of the two points
-    if(area.contains(data->topLeft)){
-        WDebug(debug, "Contains first line" << data->topLeft);
+    if(area.contains(data->pt1)){
+        WDebug(debug, "Contains first line" << data->pt1);
         return true;
     }
-    if(area.contains(data->bottomRight)){
-        WDebug(debug, "contains second line" << data->bottomRight);
+    if(area.contains(data->pt2)){
+        WDebug(debug, "contains second line" << data->pt2);
         return true;
     }
 
-    WDebug(debug, "intersect topLeft" << data->topLeft << "bottomr" << data->bottomRight << "(rect)" << rect);
+    WDebug(debug, "intersect topLeft" << data->pt1 << "bottomr" << data->pt2 << "(rect)" << rect);
 
     if(WLine::intersect(_this, lineRight, precision)){
         WDebug(debug, "intersect 1");
