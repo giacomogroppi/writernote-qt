@@ -372,8 +372,8 @@ inline void __order(QList<QVector<T>> & list){
     }
 # define WWarning(message) WDebug(true, message)
 #else
-# define WDebug(enable, message) {Q_UNUSED((enable)); Q_UNUSED((message)); };
-# define WWarning(message) Q_UNUSED((message))
+# define WDebug(enable, message) { if(enable and false) qDebug() << message;}
+# define WWarning(message) if (false) WDebug(false, message);
 #endif //DEBUGINFO
 
 template <typename T>
