@@ -115,6 +115,7 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
 {
     W_ASSERT(precision >= 0.);
 
+    bool check;
     const auto real_precision = precision / 2.;
 
     const auto x = point.x();
@@ -127,16 +128,19 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
         const auto xmin = qMin(_pt1.x(), _pt2.x());
         const auto xmax = qMax(_pt1.x(), _pt2.x());
 
-        return  is_between(xmin - real_precision, x, xmax + real_precision) and
-                is_between(ymin - real_precision, y, ymax + real_precision);
+        check = is_between(xmin - real_precision, x, xmax + real_precision);
+        check = check and is_between(ymin - real_precision, y, ymax + real_precision);
     }else{
+        check = is_near(this->pt1().x(), x, precision);
 
-        if(ymin - real_precision > y)
-            return false;
-        if(ymax + real_precision < y)
-            return false;
-        if(pt1().x() - real_precision > x)
-            return false;
-        return true;
+        WDebug(debug_WLine, (check ? "Line vertical is in domain [x]" : "Line vertical is not in domain [x]") << 
+                "x_vertical" << pt1() << "x_point" << x << "Precision" << precision);
+
+        check = check and is_between(ymin - real_precision, y, ymax + real_precision);
+        WDebug(debug_WLine, (check ? "Line vertical is in domain [y]" : "Line vertical is not in domain [y]") << 
+                "y_min_vertical" << ymin << "y_max_vertical" << ymax << "y_point" << y);
     }
+
+
+    return check;
 }

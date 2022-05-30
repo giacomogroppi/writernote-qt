@@ -30,6 +30,33 @@
 #define qstr QString
 #define qarr QByteArray
 
+#ifdef DEBUGINFO
+force_inline QString get_only_name(const char *name)
+{
+    QString res = name;
+    int len, i;
+    int from, to;
+
+    len = res.length();
+
+    for(i = 0; name[i] != '\0'; i++){
+        if(name[i] == '('){
+            to = i;
+            break;
+        }
+    }
+
+
+    for(; i >= 0; i--){
+        if(name[i] == ' '){
+            from = i;
+        }
+    }
+
+    return res.mid(from + 1, to - from - 1);
+}
+#endif
+
 force_inline constexpr not_used int debug_enable()
 {
 #ifdef DEBUGINFO
@@ -366,9 +393,9 @@ inline void __order(QList<QVector<T>> & list){
 #endif //DEBUGINFO
 
 #ifdef DEBUGINFO
-# define WDebug(enable, message)          \
-    if(enable){                           \
-        qDebug() << __PRETTY_FUNCTION__ << "\t" << message; \
+# define WDebug(enable, message)                                                                    \
+    if(enable){                                                                                     \
+        qDebug() << get_only_name(__PRETTY_FUNCTION__).toUtf8().constData() << "\t" << message;     \
     }
 # define WWarning(message) WDebug(true, message)
 #else
