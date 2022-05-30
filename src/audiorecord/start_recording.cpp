@@ -10,6 +10,7 @@
 #include "utils/get_path_application.h"
 #include "audiorecord.h"
 #include "utils/slash/slash.h"
+#include "core/core.h"
 #include <QSettings>
 #include <QDir>
 
@@ -21,8 +22,11 @@ static bool load();
 /* funzione che gestisce lo start della registrazione */
 void MainWindow::on_start_rec_triggered()
 {
-    Document *doc = _canvas->data;
+    Document *doc = this->getCurrentDoc();
     const QPoint & pointAction = cursor().pos();
+
+    if(this->m_path.isEmpty())
+        return user_message(translation("You must save the file before you can record audio"));
 
     if(doc->se_registato != Document::not_record)
         return user_message(QApplication::tr("You had already record and audio"));

@@ -29,37 +29,7 @@ file(GLOB PROJECT_MOC
 
 
 file(GLOB PROJECT_UI
-    src/audiosetting/audioqualityoption.ui
-    src/currenttitle/option/option_copybook.ui
-    src/last_open/element/element_ui.ui
-    src/last_open/last_open.ui 
-    src/last_open/option/option_last_open_ui.ui 
-    src/log/log_ui/log_ui.ui 
-    src/mainwindow.ui 
-    src/restore_file/ui/setting_restore_ui.ui 
-    src/restore_file/ui_restore/restore.ui 
-    src/sheet/dialog_sheet.ui 
-    src/sheet/fast-sheet/fast_sheet_ui.ui 
-    src/touch/highlighter/highlighter.ui 
-    src/touch/pen/pen_ui.ui 
-    src/touch/rubber/rubber_ui.ui 
-    src/touch/scrollKinetic/ui_scroll/scroll.ui 
-    src/touch/text/text_ui/text_ui.ui 
-    src/touch/text/text_widgets/text_widgets.ui 
-    src/utils/bug_repo/bug_repo_ui.ui 
-    src/utils/default_location/audio_default_location.ui 
-    src/utils/default_option/default_option_ui.ui 
-    src/utils/extract_audio/extract_audio_ui.ui 
-    src/utils/make_default/make_default_ui.ui 
-    src/utils/progress_bar/progress_bar_ui.ui 
-    src/utils/retry/retry_ui.ui 
-    src/videocompress/videocompress_ui.ui 
-    src/windows/showmessageupdate.ui
-    src/utils/choosepage.ui
-    src/preview_page_widget/preview_page_container.ui
-    src/preview_page_widget/preview_page_widget.ui
-    src/preview_page_widget/preview_page_item.ui
-    src/ui/toolbar.ui
+
 )
 
 
@@ -392,6 +362,37 @@ file(GLOB PROJECT_SOURCES
     src/utils/choosepage.cpp
     src/touch/datastruct/page_file.cpp   
     
+    src/audiosetting/audioqualityoption.ui
+    src/currenttitle/option/option_copybook.ui
+    src/last_open/element/element_ui.ui
+    src/last_open/last_open.ui
+    src/last_open/option/option_last_open_ui.ui
+    src/log/log_ui/log_ui.ui
+    src/mainwindow.ui
+    src/restore_file/ui/setting_restore_ui.ui
+    src/restore_file/ui_restore/restore.ui
+    src/sheet/dialog_sheet.ui
+    src/sheet/fast-sheet/fast_sheet_ui.ui
+    src/touch/highlighter/highlighter.ui
+    src/touch/pen/pen_ui.ui
+    src/touch/rubber/rubber_ui.ui
+    src/touch/scrollKinetic/ui_scroll/scroll.ui
+    src/touch/text/text_ui/text_ui.ui
+    src/touch/text/text_widgets/text_widgets.ui
+    src/utils/bug_repo/bug_repo_ui.ui
+    src/utils/default_location/audio_default_location.ui
+    src/utils/default_option/default_option_ui.ui
+    src/utils/extract_audio/extract_audio_ui.ui
+    src/utils/make_default/make_default_ui.ui
+    src/utils/progress_bar/progress_bar_ui.ui
+    src/utils/retry/retry_ui.ui
+    src/videocompress/videocompress_ui.ui
+    src/windows/showmessageupdate.ui
+    src/utils/choosepage.ui
+    src/preview_page_widget/preview_page_container.ui
+    src/preview_page_widget/preview_page_widget.ui
+    src/preview_page_widget/preview_page_item.ui
+    src/ui/toolbar.ui
 )   
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
