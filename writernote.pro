@@ -90,7 +90,6 @@ SOURCES += \
     src/touch/datastruct/utils_datastruct.cpp \
     src/core/wzip.cpp \
     src/ui/WStyle.cpp \
-    src/core/wzip.h src/core/wzip.cpp \
     src/core/core.cpp \
     src/preview_page_widget/list_options.cpp \
     src/preview_page_widget/preview_page_container.cpp \
