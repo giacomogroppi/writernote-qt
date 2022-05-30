@@ -432,8 +432,6 @@ inline QRect stroke::getBiggerPointInStroke() const
 inline bool stroke::isInside(const QRectF &rect) const
 {
     int i, len;
-    const QPointF &topLeft = rect.topLeft();
-    const QPointF &bottomRight = rect.bottomRight();
 
     {
         const auto &area = this->getBiggerPointInStroke();

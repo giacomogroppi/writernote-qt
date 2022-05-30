@@ -87,6 +87,7 @@ QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/touch/datastruct/utils_datastruct.cpp \
     src/core/wzip.cpp \
     src/ui/WStyle.cpp \
     src/core/wzip.h src/core/wzip.cpp \
