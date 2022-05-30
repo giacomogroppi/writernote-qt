@@ -111,9 +111,7 @@ public:
 #   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
     static void MovePoint(QList<stroke> &stroke, const QPointF &translation, int flag);
 
-    bool userWrittenSomething(datastruct *s_data);    
-
-    bool isinside(const QPointF &topleft, const QPointF &bottomright, const uint IndexPage, const uint IndexStroke) const;
+    bool userWrittenSomething(datastruct *s_data);
 
     void adjustAll(const uint width, const uint height);
     void adjustAll(const QSize &size);
@@ -179,9 +177,6 @@ public:
     static void copy(const datastruct &src, datastruct &dest);
     static force_inline void inverso(QPointF &point) {point *= -1.0;};
     static QPointF inverso(const QPointF &point) { return (-1) * point; };
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke);
-    static bool isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point);
-    static bool isinside(const QRectF &rect, const QPointF &point); // true if the point is inside the rect
     static QRectF get_bigger_rect(const QRectF &first, const QRectF &second);
     static QRect get_bigger_rect(const QRect &first, const QRect &second);
 
@@ -547,21 +542,6 @@ inline int datastruct::appendStroke(const stroke &__stroke)
 inline void datastruct::appendStroke(const stroke &stroke, const int page)
 {
     this->at_mod(page).append(stroke);
-}
-
-force_inline bool datastruct::isinside(
-        const QPointF &topleft,
-        const QPointF &bottonright,
-        const QPointF &point)
-{
-    return QRectF(topleft, bottonright).contains(point);
-}
-
-inline bool datastruct::isinside(
-        const QRectF &rect,
-        const QPointF &point)
-{
-    return datastruct::isinside(rect.topLeft(), rect.bottomRight(), point);
 }
 
 inline QRectF datastruct::get_bigger_rect(

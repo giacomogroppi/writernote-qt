@@ -450,9 +450,7 @@ inline bool stroke::isInside(const QRectF &rect) const
     for(i = 0; i < len; i++){
         const point_s &point = at(i);
 
-        /* TODO --> use the function in datastruct */
-        if(point._x >= topLeft.x() && point._y >= topLeft.y() &&
-                point._x <= bottomRight.x() && point._y <= bottomRight.y())
+        if(datastruct_isinside(rect, point.toQPointF(1.)))
             return true;
     }
 

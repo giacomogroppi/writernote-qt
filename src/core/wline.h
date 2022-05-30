@@ -20,6 +20,8 @@ private:
     const QPointF &pt1() const;
     const QPointF &pt2() const;
 
+    bool is_vertical() const;
+
 public:
     WLine() = default;
     WLine(const WLine &line);
@@ -34,6 +36,11 @@ public:
 
     WLine &operator=(const WLine &other);
 };
+
+force_inline bool WLine::is_vertical() const
+{
+    return this->_is_vertical;
+}
 
 force_inline const QPointF &WLine::pt1() const
 {

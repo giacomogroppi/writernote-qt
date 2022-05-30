@@ -523,7 +523,7 @@ void page::triggerRenderImage(int m_pos_ris, bool all)
 }
 
 #define MakeCTRL(point) \
-    if(datastruct::isinside(topLeft1, bottomRight1, point)) \
+    if(datastruct_isinside(topLeft1, bottomRight1, point)) \
         return true;
 
 static force_inline int __is_inside_square(

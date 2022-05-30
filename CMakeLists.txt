@@ -64,6 +64,7 @@ file(GLOB PROJECT_UI
 
 
 file(GLOB PROJECT_SOURCES
+    src/touch/datastruct/utils_datastruct.cpp
     src/dataread/xmlstruct.h
     src/dataread/readlistarray.h
     src/dataread/load_from_file.h

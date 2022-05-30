@@ -34,4 +34,18 @@ force_inline QRectF datastruct_rect(const QPointF &p1, const QPointF &p2)
     return QRectF(xt, yt, xb, yb);
 }
 
+bool datastruct_isinside(const QPointF &topleft, const QPointF &bottonright, const class stroke &stroke);
+
+force_inline bool datastruct_isinside(const QPointF &topleft, const QPointF &bottonright, const QPointF &point)
+{
+    W_ASSERT(topleft.x() <= bottonright.x());
+    W_ASSERT(topleft.y() <= bottonright.y());
+    return QRectF(topleft, bottonright).contains(point);
+}
+
+force_inline bool datastruct_isinside(const QRectF &rect, const QPointF &point)
+{
+    return datastruct_isinside(rect.topLeft(), rect.bottomRight(), point);
+}
+
 #endif // UTILS_DATASTRUCT_H

@@ -279,17 +279,6 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
     W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
 }
 
-bool datastruct::isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke)
-{
-    return stroke.isInside(QRectF(topleft, bottonright));
-}
-
-bool datastruct::isinside(const QPointF &topleft, const QPointF &bottomright, const uint IndexPage, const uint IndexStroke) const
-{
-    const stroke &stroke = at(IndexPage).atStroke(IndexStroke);
-    return datastruct::isinside(topleft, bottomright, stroke);
-}
-
 /* the list can be not order */
 void datastruct::MovePoint(
         const QVector<int>  &pos,

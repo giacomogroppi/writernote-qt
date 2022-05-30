@@ -63,7 +63,7 @@ void * __square_search(void *__data)
     for(; data->from < data->to;  data->from ++){
         const stroke &stroke = __page->atStroke(data->from);
 
-        if(datastruct::isinside(__f, __s, stroke))
+        if(datastruct_isinside(__f, __s, stroke))
         {
             pthread_mutex_lock(&__mutex_sq);
             __index->append(data->from);
@@ -141,8 +141,8 @@ bool square::find()
     for(int counterImg = 0; counterImg < lenImg; counterImg++){
         const auto &ref = doc->m_img->m_img.at(counterImg);
 
-        tmp_find = datastruct::isinside(topLeft, bottomRight, ref.i) ||
-                   datastruct::isinside(topLeft, bottomRight, ref.f);
+        tmp_find = datastruct_isinside(topLeft, bottomRight, ref.i) ||
+                   datastruct_isinside(topLeft, bottomRight, ref.f);
 
         if(!tmp_find)
             continue;

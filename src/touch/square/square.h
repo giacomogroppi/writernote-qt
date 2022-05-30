@@ -159,7 +159,7 @@ force_inline void square::isMoving()
 force_inline bool square::isinside(const QPointF &point)
 {
     WDebug(debugSquare, "square::isinside");
-    return datastruct::isinside(_pointinit.point, _pointfine.point, point);
+    return datastruct_isinside(_pointinit.point, _pointfine.point, point);
 }
 
 #endif // SQUARE_H

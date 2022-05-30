@@ -41,13 +41,16 @@ WLine::WLine(const QPointF &pt1, const QPointF &pt2)
 bool WLine::belongs(const QPointF &point, cdouble precision) const
 {
     W_ASSERT(!this->_is_vertical);
-
     const auto res = is_near(this->_m * point.x() + this->_p, point.y(), precision);
 
-    WDebug(debug_WLine, "Result" << res << qstr("m %1 point.x() %2 _p %3 point.y() %4 precision %5").arg(_m).arg(point.x()).arg(_p).arg(point.y()).arg(precision));
+    WDebug(debug_WLine, "\t" << "Result" << res << qstr("m %1 point.x() %2 _p %3 point.y() %4 precision %5").arg(_m).arg(point.x()).arg(_p).arg(point.y()).arg(precision));
 
-    if(res && is_in_domain(point, precision)){
-        return true;
+    if(is_in_domain(point, precision)){
+        WDebug(debug_WLine, "\t" << "It's in domain");
+        if(res)
+            return true;
+    }else{
+        WDebug(debug_WLine, "\t" << "It's not in domain");
     }
 
     return false;
@@ -59,15 +62,21 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
     W_ASSERT(!line._is_vertical);
     W_ASSERT(vertical._pt1.x() == vertical._pt2.x());
 
-    const double y = vertical.pt1().x() * line._m + line._p;
-    const bool one = line.belongs(
-                            QPointF(vertical.pt1().x(), y),
+    const double xTouch = vertical.pt1().x();
+
+    const double y = xTouch * line._m + line._p;
+    
+    const bool AreTouch = line.belongs(
+                            QPointF(xTouch, y),
                             precision
                         );
 
-    const bool two = vertical.is_in_domain(QPointF(vertical.pt1().x(), y), precision);
+    const bool IsInDomain = vertical.is_in_domain(
+                QPointF(xTouch, y), 
+                precision
+            );
 
-    return one && two;
+    return AreTouch && IsInDomain;
 }
 
 bool WLine::intersect(const WLine &line1, const WLine &line2, int precision, QPointF *result)
@@ -129,7 +138,16 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
         const auto xmax = qMax(_pt1.x(), _pt2.x());
 
         check = is_between(xmin - real_precision, x, xmax + real_precision);
-        check = check and is_between(ymin - real_precision, y, ymax + real_precision);
+        WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [x]" : "not in domain [x]"));
+
+        if(is_between(ymin - real_precision, y, ymax + real_precision)){
+            WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [y]" : "not in domain [y]"));                    
+        }else{
+            WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [y]" : "not in domain [y]"));
+            if(check)
+                check = false;
+        }
+
     }else{
         check = is_near(this->pt1().x(), x, precision);
 
@@ -140,7 +158,6 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
         WDebug(debug_WLine, (check ? "Line vertical is in domain [y]" : "Line vertical is not in domain [y]") << 
                 "y_min_vertical" << ymin << "y_max_vertical" << ymax << "y_point" << y);
     }
-
 
     return check;
 }
