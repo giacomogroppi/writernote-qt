@@ -25,6 +25,7 @@
     <developer_name>Giacomo Groppi</developer_name>
 
     <releases>
+      <release version="4.0.4h" date="2022-05-30" />
       <release version="4.0.3c" date="2022-05-28" />
       <release version="4.0.1h" date="2022-05-22" />
       <release version="4.0.0h" date="2022-05-21" />
