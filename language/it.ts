@@ -9,7 +9,7 @@
         <location filename="../android/cpp/android/androidshareutils.cpp" line="338"/>
         <source>Share: an Error occured
 FilePath not valid</source>
-        <translation type="unfinished"></translation>
+        <translation>Percorso file non valido</translation>
     </message>
     <message>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="112"/>
@@ -17,7 +17,7 @@ FilePath not valid</source>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="345"/>
         <source>Share: an Error occured
 URI not valid</source>
-        <translation type="unfinished"></translation>
+        <translation>URI non valido</translation>
     </message>
     <message>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="121"/>
@@ -33,7 +33,7 @@ URI not valid</source>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="382"/>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="449"/>
         <source>Share: an Error occured</source>
-        <translation type="unfinished"></translation>
+        <translation>Condivisione: si è verificato un errore</translation>
     </message>
     <message>
         <location filename="../android/cpp/android/androidshareutils.cpp" line="135"/>
@@ -89,7 +89,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/utils/choosepage.ui" line="88"/>
         <source>1</source>
-        <translation></translation>
+        <translation>1</translation>
     </message>
     <message>
         <location filename="../src/utils/choosepage.ui" line="101"/>
@@ -186,7 +186,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="444"/>
         <source>Ctrl+S</source>
-        <translation></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="453"/>
@@ -1078,7 +1078,7 @@ includerli nei file writernote</translation>
         <location filename="../src/audiosetting/audioqualityoption.cpp" line="36"/>
         <location filename="../src/audiosetting/audioqualityoption.cpp" line="43"/>
         <source>Default</source>
-        <translation></translation>
+        <translation>Predefinito</translation>
     </message>
 </context>
 <context>
@@ -1092,7 +1092,7 @@ includerli nei file writernote</translation>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="26"/>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="64"/>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation>Etichetta di testo</translation>
     </message>
     <message>
         <location filename="../src/utils/bug_repo/bug_repo_ui.ui" line="48"/>
@@ -1591,7 +1591,10 @@ the highlighter</source>
 should do with your files, individually deciding for each mode 
 the creation time of the temporary 
 file, to set the autosave, and other things.</source>
-        <translation></translation>
+        <translation>Con writernote puoi decidere rapidamente quale sia l'applicazione che
+dovrebbe avere a che fare con i tuoi file, decidendo individualmente per ciascuna modalità
+il tempo di creazione del file temporaneo,
+per impostare il salvataggio automatico e altre cose.</translation>
     </message>
 </context>
 <context>
