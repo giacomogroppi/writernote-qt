@@ -54,16 +54,11 @@
 - Ready pdf file and take notes
 
 ## Experimental Features:
-- Import images
-- Zoom in and Zoom on
 - Android support
-- Pen [different types of pen]
 - Insert text into pen mode 
-- Remove page
-- Insert image into file
+- Preview
 
 ## To do
-- Project .writer to image
 - Convert audio to text
 - Compile for IOS
 - Load file from pdf
