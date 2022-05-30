@@ -26,7 +26,7 @@ void MainWindow::on_start_rec_triggered()
     const QPoint & pointAction = cursor().pos();
 
     if(this->m_path.isEmpty())
-        return user_message(translation("You must save the file before you can record audio"));
+        return user_message(TRANSLATION("You must save the file before you can record audio"));
 
     if(doc->se_registato != Document::not_record)
         return user_message(QApplication::tr("You had already record and audio"));
