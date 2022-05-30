@@ -269,7 +269,7 @@ void MainWindow::on_actionNew_File_triggered()
 
     __res = needToSave(xml, __curr);
 
-    if(__res == n_need_save::not_ || __res == n_need_save::only_writernote)
+    if(__res == n_need_save::no)
         goto __continue;
 
     if(__res == n_need_save::unable_load){

@@ -67,9 +67,8 @@ public:
 
     enum n_need_save: uchar{
         unable_load, /*we had trouble loading the file*/
-        not_, /* we don't have to save the file */
-        need_save, /* we need to save */
-        only_writernote /* writernote change something insede */
+        no, /* we don't have to save the file */
+        need_save /* we need to save */
     };
 
     enum n_need_save needToSave(xmlstruct &xml, Document & tmp_read) const;
@@ -123,7 +122,7 @@ public:
 
     void grabGestures(const QList<Qt::GestureType> &gestures);
 
-    Document *getCurrentDoc() const;
+    Document *getCurrentDoc();
     void updatePageCount(int);
     setting_restore_ui *m_setting;
 
@@ -234,7 +233,7 @@ inline void MainWindow::setFullScreen()
     }
 }
 
-force_inline Document * MainWindow::getCurrentDoc() const
+force_inline Document * MainWindow::getCurrentDoc()
 {
     return _canvas->data;
 }

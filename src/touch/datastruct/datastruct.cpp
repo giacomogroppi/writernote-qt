@@ -411,80 +411,55 @@ bool datastruct::userWrittenSomething(uint frompage)
     return false;
 }
 
+bool datastruct::userWrittenSomething() const
+{
+    int i;
+    int lenPage = this->lengthPage();
+    for(i = 0; i < lenPage; i++){
+        if(at(i).lengthStroke() != 0)
+            return true;
+    }
+
+    return false;
+}
+
 /*
  * return true if the user has written something
 */
-bool datastruct::userWrittenSomething(datastruct *s_data)
+bool datastruct::userWrittenSomething(const datastruct &data1, const datastruct &data2)
 {
-    int l_first_page, l_sec_page, counterPage, counterStroke;
-    bool check = false;
+    int i;
+    cint page1 = data1.lengthPage();
 
-    l_first_page = lengthPage();
-    if(s_data)
-        l_sec_page = s_data->lengthPage();
+    if(page1 != data2.lengthPage())
+        return true;
 
-    if(!s_data){
-        counterPage = 0;
-        goto single;
-    }
+    for(i = 0; i < page1; i++){
+        int k;
+        const auto &Page1 = data1.at(i);
+        const auto &Page2 = data2.at(i);
+        cint stroke1 = Page1.lengthStroke();
 
-    for(counterPage = 0; counterPage < l_first_page && counterPage < l_sec_page; counterPage++){
+        if(stroke1 != Page2.lengthStroke()){
+            return true;
+        }
 
-        const page &page1 = this->at(counterPage);
-        const page &page2 = s_data->at(counterPage);
+        for(k = 0; k < stroke1; k++){
+            bool check;
+            const auto &Stroke1 = Page1.atStroke(k);
+            const auto &Stroke2 = Page2.atStroke(k);
 
-        for(counterStroke = 0; counterStroke < page1.lengthStroke() && counterStroke < page2.lengthStroke(); counterStroke ++){
-            const stroke &firstStroke  = page2.atStroke(counterStroke);
-            const stroke &secondStroke = page1.atStroke(counterStroke);
-
-            if(firstStroke.is_complex()){
-                check = stroke_complex_cmp(&firstStroke, &secondStroke);
+            if(Stroke1.is_complex()){
+                check = stroke_complex_cmp(&Stroke1, &Stroke2);
                 if(!check)
-                    goto ret;
+                    return true;
                 continue;
             }
-
-            int firstLen, secondLen;
-            firstLen = firstStroke.length();
-            secondLen = secondStroke.length();
-
-            for(int i = 0; i < firstLen && i < secondLen; i++){
-                const point_s &firstPoint = firstStroke.at(i);
-                const point_s &secondPoint = secondStroke.at(i);
-
-                if(firstPoint != secondPoint){
-                    check = false;
-                    goto ret;
-                }
-            }
-
-            if(firstStroke.length() < secondStroke.length()){
-                check = false;
-                goto ret;
-            }
-
-        }
-
-        if(page1.lengthStroke() < page2.lengthStroke()){
-            check = false;
-            goto ret;
+            check = stroke::cmp(Stroke1, Stroke2);
+            if(!check)
+                return true;
         }
     }
 
-    if(l_first_page == l_sec_page){
-        check = false;
-        goto ret;
-    }
-
-    if((counterPage < l_sec_page) && s_data){
-        check = s_data->userWrittenSomething(counterPage);
-    }
-
-single:
-    if(counterPage < l_first_page){
-        check = userWrittenSomething(counterPage);
-    }
-
-ret:
-    return check;
+    return false;
 }

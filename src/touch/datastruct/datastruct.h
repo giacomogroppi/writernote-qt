@@ -111,7 +111,8 @@ public:
 #   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
     static void MovePoint(QList<stroke> &stroke, const QPointF &translation, int flag);
 
-    bool userWrittenSomething(datastruct *s_data);
+    bool userWrittenSomething() const;
+    static bool userWrittenSomething(const datastruct &data1, const datastruct &data2);
 
     void adjustAll(const uint width, const uint height);
     void adjustAll(const QSize &size);

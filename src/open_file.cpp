@@ -18,6 +18,51 @@
 #include <QFile>
 #include <QFileDialog>
 
+static QString get_path(const char *pos)
+{
+    QString fileName;
+
+    if(!pos){
+        if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER | TYPEFILEPDF | TYPEALL)){
+            return "";
+        }
+    }else{
+        fileName = pos;
+    }
+
+    return fileName;
+}
+
+static bool checkExtention(const QString &fileName)
+{
+//#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
+    // check if the file exist
+    if(fileName.indexOf(APP_EXT) != -1 && fileName.indexOf(".pdf") != -1){
+        if(!areyousure(QApplication::tr("Error"), QApplication::tr("The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?"))){
+            return false;
+        }
+    }
+    return true;
+//#endif
+}
+
+static bool exist(const QString &path)
+{
+    QFile file(path);
+    if (!file.exists()){
+        dialog_critic(QApplication::tr("I can't open the file because it doesn't exist"));
+        return false;
+    }
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        dialog_critic(QApplication::tr("I can't open this file because of the permission"));
+        return false;
+    }
+
+    file.close();
+    return true;
+}
+
 void MainWindow::openFile(const char *pos)
 {
     QString fileName, tmp;
@@ -25,35 +70,16 @@ void MainWindow::openFile(const char *pos)
     xmlstruct xml(&fileName, _canvas->data);
     n_need_save res_save;
 
-    if(!pos){
-        if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER | TYPEFILEPDF | TYPEALL)){
-            return;
-        }
-        //fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/", "Writernote (*." + APP_EXT + ");; Pdf (*.pdf);; All file (* *.*)");
-    }else{
-        fileName = pos;
-    }
+    fileName = get_path(pos);
 
     if(fileName == "")
         return;
 
-    QFile file(fileName);
-    if (!file.exists())
-        return dialog_critic(QApplication::tr("I can't open the file because it doesn't exist"));
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return dialog_critic(QApplication::tr("I can't open this file because of the permission"));
+    if(!exist(fileName))
+        return;
 
-    file.close();
-
-#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
-    // check if the file exist
-    if(fileName.indexOf(APP_EXT) != -1
-            && fileName.indexOf(".pdf") != -1){
-        if(!areyousure(QApplication::tr("Error"), QApplication::tr("The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?"))){
-            return;
-        }
-    }
-#endif
+    if(!checkExtention(fileName))
+        return;
 
     // restore lost file
     if(fileName.indexOf(".pdf") != -1 && fileLost::exe(fileName)){
@@ -81,6 +107,7 @@ void MainWindow::openFile(const char *pos)
 #endif // PDFSUPPORT
     }
     else {
+        xml = xmlstruct(this->m_path, curr);
         res_save = this->needToSave(xml, curr);
 
         /*
@@ -91,7 +118,7 @@ void MainWindow::openFile(const char *pos)
             if(areyousure(QApplication::tr("Save need"), QApplication::tr("Do you want to save %1?").arg(this->m_path))){
                 savefile save(&m_path, _canvas->data);
                 if(save.savefile_check_file(true) != OK){
-                    if(!areyousure(QApplication::tr("Save fail"), QApplication::tr("We failed to save the file, should i continue?"))){
+                    if(!areyousure(QApplication::tr("Save fail"), QApplication::tr("We failed to save the file located in %1, should i continue?").arg(m_path))){
                         return;
                     }
                 }
@@ -103,9 +130,12 @@ void MainWindow::openFile(const char *pos)
 #endif
 
         m_path = fileName;
-        const auto res = xml.loadfile(true, true);
+        curr.reset();
+        const auto res = xmlstruct(m_path, curr).loadfile(true, true);
 
         if(xmlstruct::manageMessage(res)){
+            Document::copy(curr, *this->getCurrentDoc());
+
             _canvas->data->datatouch->triggerIfNone(-1);
             aggiornotestiriascolto(this);
             _canvas->updatePageCount();

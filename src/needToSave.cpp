@@ -16,36 +16,44 @@ enum MainWindow::n_need_save
             xmlstruct   &xml,
             Document    &tmp_read) const
 {
+    const auto debugNeedSave = true;
     int check1;
     Document *doc = _canvas->data;
 
     if(xml.getPath() == ""){
-        if(doc->datatouch->userWrittenSomething(nullptr)){
+        WDebug(debugNeedSave, "Path empty");
+        if(doc->datatouch->userWrittenSomething()){
+            WDebug(debugNeedSave, "Need to save [1]");
             return n_need_save::need_save;
         }
-        return n_need_save::only_writernote;
+        WDebug(debugNeedSave, "Don't need to save");
+        return n_need_save::no;
+    }else{
+        WDebug(debugNeedSave, qstr("Check file in %1").arg(xml.getPath()));
     }
 
     check1 = xml.loadfile(false, false);
 
-    if(check1 != ERROR_VERSION_NEW &&
-            check1 != OK &&
-            check1 != ERROR_CONTROLL){
+    if(check1 != ERROR_VERSION_NEW && check1 != OK && check1 != ERROR_CONTROLL){
+        WDebug(debugNeedSave, qstr("Not possibile to load file in %1").arg(xml.getPath()));
         return n_need_save::unable_load;
     }
 
-    if(!doc->datatouch->userWrittenSomething(tmp_read.datatouch)){
-        return n_need_save::only_writernote;
+    if(!datastruct::userWrittenSomething(*doc->datatouch, *tmp_read.datatouch)){
+        WDebug(debugNeedSave, "Don't need to save [2]");
+        return n_need_save::no;
     }
 
-    check1 = checksimilecopybook(tmp_read, *doc) == OK_CHECK;
+    /*check1 = checksimilecopybook(tmp_read, *doc) == OK_CHECK;
 
     if(check1)
-        return n_need_save::not_;
+        return n_need_save::no;
 
     if(doc->isEmpty() || doc->datatouch->userWrittenSomething(nullptr)){
-        return n_need_save::not_;
-    }
+        return n_need_save::no;
+    }*/
+
+    WDebug(debugNeedSave, "Need to save [2]");
 
     return n_need_save::need_save;
 

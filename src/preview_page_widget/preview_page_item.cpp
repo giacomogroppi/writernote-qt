@@ -55,6 +55,7 @@ void preview_page_item::draw(const page &page, cbool selected)
     }
 
     this->setMinimumSize(QSize(realWidth, realHeight));
+    this->setFixedSize(QSize(realWidth, realHeight));
     this->setFixedHeight(realHeight);
     update();
     W_ASSERT(this->size() == QSize(realWidth, realHeight));

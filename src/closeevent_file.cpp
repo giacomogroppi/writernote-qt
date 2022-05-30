@@ -44,8 +44,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     bool check;
     savefile save_(&m_path, _canvas->data);
 
-    __res = needToSave(temp_lettura,
-                       tempcopybook);
+    __res = needToSave(temp_lettura, tempcopybook);
 
     if(__res == n_need_save::unable_load){
         QMessageBox msgBox;
@@ -67,7 +66,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     }
 
 
-    if(__res == n_need_save::not_ || __res == n_need_save::only_writernote){
+    if(__res == n_need_save::no){
         goto accept_event;
     }
 
