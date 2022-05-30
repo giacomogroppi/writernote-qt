@@ -1,7 +1,7 @@
 #include "wline.h"
 #include <QLine>
 
-constexpr auto debug_WLine = true;
+constexpr auto debug_WLine = false;
 
 WLine::WLine(const WLine &line)
 {

@@ -29,7 +29,7 @@ void MainWindow::on_actionhighlighter_triggered()
 
 void MainWindow::on_actionpen_triggered()
 {
-    const auto debug = true;
+    const auto debug = false;
 
     WDebug(debug, ((_canvas->_input == TabletCanvas::e_method::pen) ? "Selected" : "Not selected"));
 

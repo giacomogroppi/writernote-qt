@@ -4,8 +4,8 @@
 #include "utils/platform.h"
 
 #define THREAD_FINDER 3
-#define debug_model 1
 
+constexpr bool debug_model = false;
 constexpr double min_precision = 30;
 
 static struct{

@@ -12,7 +12,7 @@
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
 
-constexpr bool debugSquare = true;
+constexpr bool debugSquare = false;
 
 class square: public QObject
 {

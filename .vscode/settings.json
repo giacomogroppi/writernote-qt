@@ -60,7 +60,9 @@
         "numbers": "cpp",
         "stdexcept": "cpp",
         "qnetworkaccessmanager": "cpp",
-        "qline": "cpp"
+        "qline": "cpp",
+        "bitset": "cpp",
+        "unordered_set": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "cmake.configureOnOpen": true,

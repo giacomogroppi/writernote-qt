@@ -229,7 +229,7 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
         ManageStartSquare(event->posF(), _square);
     }else if(rubber_method){
         _rubber->initRubber(event->posF());
-        WDebug(true, "rubber is set");
+        WDebug(_debug, "rubber is set");
         W_ASSERT(_rubber->is_set());
     }
 

@@ -6,7 +6,7 @@
 #include "core/wline.h"
 
 constexpr double    error = 5000;
-constexpr bool      debug = true;
+constexpr bool      debug = false;
 
 struct{
     double m, q;
@@ -295,11 +295,15 @@ bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area,
     W_ASSERT(_stroke->is_line());
 
     const auto *data = (const stroke_complex_line *)_stroke->get_complex_data();
-    const auto rect = datastruct_rect(data->pt1, data->pt2);
+    //const auto rect = datastruct_rect(data->pt1, data->pt2);
 
-    WLine lineRight (rect.topRight(), rect.bottomRight());
-    WLine lineLeft  (rect.topLeft(), rect.bottomLeft());
-    WLine _this     (data->pt1, data->pt2);
+    //WLine lineRight (rect.topRight(), rect.bottomRight());
+    //WLine lineLeft  (rect.topLeft(), rect.bottomLeft());
+    WLine lineOrizTop   (area.topLeft(),    area.topRight());
+    WLine lineOrizBot   (area.bottomLeft(), area.bottomRight());
+    WLine lineVertLeft  (area.topLeft(),    area.bottomLeft());
+    WLine lineVertRig   (area.topRight(),   area.bottomRight());
+    WLine _this         (data->pt1, data->pt2);
 
     // if the square passed to the function contains one of the two points
     if(area.contains(data->pt1)){
@@ -311,15 +315,25 @@ bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area,
         return true;
     }
 
-    WDebug(debug, "intersect topLeft" << data->pt1 << "bottomr" << data->pt2 << "(rect)" << rect);
+    WDebug(debug, "intersect topLeft" << data->pt1 << "bottomr" << data->pt2 << "(rect)" << area);
 
-    if(WLine::intersect(_this, lineRight, precision)){
+    if(WLine::intersect(_this, lineOrizTop, precision)){
         WDebug(debug, "intersect 1");
         return true;
     }
 
-    if(WLine::intersect(_this, lineLeft, precision)){
+    if(WLine::intersect(_this, lineOrizBot, precision)){
         WDebug(debug, "intersect 2")
+        return true;
+    }
+
+    if(WLine::intersect(_this, lineVertLeft, precision)){
+        WDebug(debug, "intersect 3");
+        return true;
+    }
+
+    if(WLine::intersect(_this, lineVertRig, precision)){
+        WDebug(debug, "intersect 4");
         return true;
     }
 
