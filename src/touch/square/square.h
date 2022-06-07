@@ -45,6 +45,8 @@ public:
 
     void changeInstrument();
 
+    void hideProperty();
+
     void isMoving();
     void endMoving(const QWidget *pixmap);
 
@@ -135,6 +137,11 @@ force_inline void square::changeInstrument()
 {
     WDebug(debugSquare, "square::changeInstrument");
     this->reset();
+    this->_property->Hide();
+}
+
+inline void square::hideProperty()
+{
     this->_property->Hide();
 }
 
