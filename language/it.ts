@@ -522,7 +522,7 @@ WorkingDir not valid</source>
     </message>
     <message>
         <source>Default method write</source>
-        <translation type="vanished">Default metodo di inserimento</translation>
+        <translation>Metodo di scrittura predefinito</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="784"/>
@@ -823,7 +823,7 @@ compiled without the cloud support</source>
     </message>
     <message>
         <source>I had a problem removing the temp file in </source>
-        <translation type="obsolete">Ho avuto un problema rimuovendo il file temporaneo</translation>
+        <translation>Ho avuto un problema a rimuovere il file temporaneo in</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="93"/>
@@ -967,7 +967,7 @@ compiled without the cloud support</source>
     <message>
         <location filename="../src/ui/toolbar.ui" line="23"/>
         <source>Form</source>
-        <translation type="unfinished">Cloud</translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1024,7 +1024,7 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="14"/>
         <source>MainWindow</source>
-        <translation></translation>
+        <translation>Finestra principale</translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="24"/>
@@ -1109,7 +1109,7 @@ includerli nei file writernote</translation>
     <name>button_size</name>
     <message>
         <source>Dialog</source>
-        <translation type="obsolete">Dialogo</translation>
+        <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../src/button/button_size.ui" line="20"/>
@@ -1977,7 +1977,7 @@ che se si blocca puoi ripristinarlo senza perdere il tuo lavoro.</translation>
         <location filename="../src/videocompress/videocompress_ui.ui" line="125"/>
         <location filename="../src/videocompress/videocompress_ui.ui" line="176"/>
         <source>...</source>
-        <translation></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="197"/>
