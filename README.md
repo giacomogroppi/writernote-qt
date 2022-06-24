@@ -54,16 +54,11 @@
 - Ready pdf file and take notes
 
 ## Experimental Features:
-- Import images
-- Zoom in and Zoom on
 - Android support
-- Pen [different types of pen]
 - Insert text into pen mode 
-- Remove page
-- Insert image into file
+- Preview
 
 ## To do
-- Project .writer to image
 - Convert audio to text
 - Compile for IOS
 - Load file from pdf
@@ -153,8 +148,6 @@
 ## File format
 
 The _.writer format is a compressed archive, in which a file `` indice.xml '' can be found, in which all the notebooks and all the audio are saved, whether they are recorded, or whether they are imported by the application.
-
-When the file is open, only the indice.xml and the file of the copybook is loaded.
 
 ## Directory structure
 - 3rdparty: all script for compile external library that we can't download directly

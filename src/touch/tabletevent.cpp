@@ -137,6 +137,12 @@ static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_met
     }
 }
 
+static force_inline bool is_out(const datastruct *data, const QPointF &point)
+{
+    return point.x() > data->biggerx() or point.y() > data->biggery() or
+            point.x() < 0. or point.y() < 0.;
+}
+
 void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
     const QPointF& pointTouch = event->posF();
@@ -150,10 +156,11 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     set_flag(event, _input);
 
+    cbool isOut = is_out(data->datatouch, pointTouch);
+
     WDebug(tabletDebug, event->type() << convert(event->type()) << convert_method());
 
-    if(unlikely(    pointTouch.x() > data->datatouch->biggerx()
-                ||  pointTouch.y() > data->datatouch->biggery())){
+    if(unlikely(isOut)){
         /*
          * the user is writing in a part where
          *  the sheet is not present.
@@ -337,6 +344,8 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
             }
             if(!isForce)
                 _square->endMoving(this);
+            else
+                _square->hideProperty();
 
         }else if(rubber_method){
             index_mod = _rubber->endRubber();
