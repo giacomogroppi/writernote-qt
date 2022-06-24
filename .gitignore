@@ -18,3 +18,4 @@ CMakeCache.txt
 build-qtcreator/*
 .idea/
 .vscode/*
+cmake_install.cmake
