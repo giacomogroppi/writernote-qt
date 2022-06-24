@@ -86,14 +86,6 @@ public:
 
     void setData(const QString *path_U, Document *currenttitle_U);
 
-    enum openMode{
-        readOnly = BIT(1),
-        write = BIT(2)
-    };
-
-    static zip_t *openZip(const QString &path, xmlstruct::openMode mode);
-    static zip_t *openZip(const QByteArray &path, xmlstruct::openMode mode);
-    static zip_file_t *openFile(zip_t *zip, const QByteArray &path);
     static size_t get_size_file(const QByteArray &path);
     static bool closeZip(zip_t *fileZip);
 };
@@ -101,11 +93,6 @@ public:
 inline const QString &xmlstruct::getPath() const
 {
     return *path_;
-}
-
-inline zip_t *xmlstruct::openZip(const QString &path, openMode mode)
-{
-    return xmlstruct::openZip(path.toUtf8(), mode);
 }
 
 force_inline size_t xmlstruct::sizeFile(zip_t *filezip, const QString &namefile)
