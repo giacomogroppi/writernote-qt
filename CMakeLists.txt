@@ -27,11 +27,9 @@ file(GLOB PROJECT_MOC
     language.qrc
 )
 
-
 file(GLOB PROJECT_UI
 
 )
-
 
 file(GLOB PROJECT_SOURCES
     src/touch/datastruct/utils_datastruct.cpp
@@ -548,10 +546,6 @@ find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::PrintSupport)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
-
-if(MACOS_BUILD)
-    
-endif()
 
 if(FLATPAK_BUILD)
     include_directories(/app/include/)
