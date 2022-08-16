@@ -1,9 +1,9 @@
 #include "wzip.h"
 #include "testing/memtest.h"
 
-WZip::WZip(const QByteArray &path)
+WZip::WZip(const QByteArray &path, bool &ok)
 {
-
+    ok = this->openZip(path);
 }
 
 WZip::~WZip()

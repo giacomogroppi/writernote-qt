@@ -33,6 +33,7 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
     zip_source_t *file;
     zip_error_t errore;
     const char *error_message;
+    int err;
 
     if(unlikely(arr.isEmpty())){
         LOG("savefile::saveArrayInfoFile array empty", possible_bug);
@@ -40,8 +41,9 @@ int savefile::saveArrayIntoFile(const QByteArray &arr,
     }
 
     if(!filezip){
-        filezip = xmlstruct::openZip(path.toUtf8(), xmlstruct::openMode::write);
+        filezip = zip_open(path.toUtf8().constData(), ZIP_CREATE, &err);
         closeZip = true;
+
         if(!filezip)
             return ERROR;
     }

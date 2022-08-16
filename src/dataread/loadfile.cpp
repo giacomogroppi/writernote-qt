@@ -5,6 +5,7 @@
 #include "frompdf/frompdf.h"
 #include "utils/areyousure/areyousure.h"
 #include "testing/memtest.h"
+#include "core/wzip.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
 {
@@ -167,41 +168,36 @@ uchar xmlstruct::controllOldVersion(zip_t *file)
 int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
 {
     int err = 0;
-    zip_t *filezip;
-    zip_file_t *f;
     int tmp_ver;
+    bool ok;
 
     currenttitle->reset();
-
-    filezip = xmlstruct::openZip(path_->toUtf8(), openMode::readOnly);
-
-    if (filezip == NULL)
+    auto zip = WZip(path_->toUtf8(), ok);
+    if(!ok)
         return ERROR;
 
-    if(xmlstruct::controllOldVersion(filezip))
+    if(xmlstruct::controllOldVersion(zip.get_zip()))
         return ERROR_MULTIPLE_COPYBOOK;
 
-    f = xmlstruct::openFile(filezip, NAME_FILE);
-    if(f == NULL){
-        zip_close(filezip);
+    if(!zip.openFileInZip(NAME_FILE)){
         return ERROR;
     }
 
-    SOURCE_READ_GOTO(f, &tmp_ver, sizeof(tmp_ver));
+    SOURCE_READ_GOTO(zip.get_file(), &tmp_ver, sizeof(tmp_ver));
 
     if(tmp_ver <= 2){
 #ifdef ALL_VERSION
-        err = load_file_2(currenttitle, f, filezip);
+        err = load_file_2(currenttitle, zip.get_file(), zip.get_zip());
     }else if(tmp_ver == 3){
-        err = load_file_3(currenttitle, f, filezip);
+        err = load_file_3(currenttitle, zip.get_file(), zip.get_zip());
     }else if(tmp_ver == 4){
-        err = load_file_4(currenttitle, f, filezip);
+        err = load_file_4(currenttitle, zip.get_file(), zip.get_zip());
     }else if(tmp_ver == 5){
-        err = load_file_5(currenttitle, f, filezip, LoadPdf, LoadImg);
+        err = load_file_5(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
     }else if(tmp_ver == 6){
-        err = load_file_6(currenttitle, f, filezip, LoadPdf, LoadImg);
+        err = load_file_6(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
     }else if(tmp_ver == 7){
-        err = load_file_7(currenttitle, f, filezip, LoadPdf, LoadImg);
+        err = load_file_7(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
     }
 #else
         goto error_version;
@@ -211,7 +207,7 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
         goto error_new_version;
 
     if(tmp_ver == 8){
-        err = load_file_8(currenttitle, f, filezip, LoadPdf, LoadImg);
+        err = load_file_8(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
     }
 
     if(err != OK)
@@ -227,13 +223,11 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
     currenttitle->versione = CURRENT_VERSION_CURRENT_TITLE;
 
     this->currenttitle->datatouch->triggerNewView(-1, true);
-    CLOSE_ZIP(f, filezip);
 
     currenttitle->datatouch->triggerVisibility(page::getHeight() * currenttitle->datatouch->lengthPage());
     return OK;
 
     free_:
-    CLOSE_ZIP(f, filezip);
     return err;
 
     /*
@@ -241,11 +235,9 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
     */
 #ifndef ALL_VERSION
     error_version:
-    CLOSE_ZIP(f, filezip);
     return ERROR_VERSION;
 #endif
     error_new_version:
-    CLOSE_ZIP(f, filezip);
     return ERROR_VERSION_NEW;
 }
 
@@ -265,18 +257,15 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
 int load_audio(QByteArray &array, const QString &path)
 {
     int error;
-    zip_t *file_zip;
+    bool ok;
+    WZip zip(path.toUtf8(), ok);
 
     array.clear();
 
-    file_zip = xmlstruct::openZip(path, xmlstruct::readOnly);
-
-    if(unlikely(!file_zip))
+    if(!ok)
         return ERROR;
 
-    error = xmlstruct::readFile(file_zip, array, true, NAME_AUDIO, false);
-
-    zip_close(file_zip);
+    error = xmlstruct::readFile(zip.get_zip(), array, true, NAME_AUDIO, false);
 
     return error;
 }

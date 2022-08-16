@@ -61,13 +61,15 @@ private:
     QString path;
     PrivateStatus _status;
 
+    bool openZip(const QByteArray &path);
+
 public:
-    WZip(const QByteArray &path);
+    WZip(const QByteArray &path, bool &ok);
     ~WZip();
 
     void close_zip();
-
-    bool openZip(const QByteArray &path);
+    zip_t *get_zip();
+    zip_file_t *get_file();
     bool openFileInZip(const QByteArray &path);
     bool alloc_and_close(const char *fileName);
 
@@ -80,7 +82,20 @@ public:
     WZip &operator=(WZip other)   = delete;
 };
 
-force_inline size_t WZip::get_size_file(zip_t *zip, const char *name){
+force_inline zip_file_t *WZip::get_file()
+{
+    W_ASSERT(this->_file);
+    return this->_file;
+}
+
+force_inline zip_t* WZip::get_zip()
+{
+    W_ASSERT(this->_zip);
+    return this->_zip;
+}
+
+force_inline size_t WZip::get_size_file(zip_t *zip, const char *name)
+{
     struct zip_stat st;
     zip_stat_init(&st);
 
