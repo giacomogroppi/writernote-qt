@@ -16,7 +16,7 @@ WZip::~WZip()
     if(this->_file)
         zip_fclose(this->_file);
     if(this->_zip)
-        zip_fclose(this->_zip);
+        zip_close(this->_zip);
 
     DO_IF_DEBUG(this->_file = NULL;)
     DO_IF_DEBUG(this->_zip  = NULL;)
