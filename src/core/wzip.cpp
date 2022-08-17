@@ -8,7 +8,18 @@ WZip::WZip(const QByteArray &path, bool &ok)
 
 WZip::~WZip()
 {
+#ifdef DEBUG_INFO
+    if(!this->_zip)
+        W_ASSERT(!this->_file);
+#endif
 
+    if(this->_file)
+        zip_fclose(this->_file);
+    if(this->_zip)
+        zip_fclose(this->_zip);
+
+    DO_IF_DEBUG(this->_file = NULL;)
+    DO_IF_DEBUG(this->_zip  = NULL;)
 }
 
 zip_t *WZip::openZipWrite(const QByteArray &path)
