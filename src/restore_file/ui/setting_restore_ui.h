@@ -3,21 +3,26 @@
 
 #include <QDialog>
 #include <QString>
+#include "assert.h"
 
 struct __data{
     /* true enable */
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     const bool autosave = true;
 #else
-    bool autosave : 1;
-    bool temp_file : 1;
-    uint t_temp_file;
+    bool autosave;
+    bool temp_file;
+    unsigned t_temp_file;
 #endif
-    uint t_autosave;
-
-    bool remove_file : 1; /* false do not remove the file after writernote close */
-
+    unsigned t_autosave;
+    bool remove_file; /* false do not remove the file after writernote close */
 };
+
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
+static_assert(sizeof(struct __data) == 16);
+#else
+static_assert(sizeof(struct __data) == 16);
+#endif
 
 namespace Ui {
 class setting_restore_ui;
