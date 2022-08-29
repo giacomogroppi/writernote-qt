@@ -1325,7 +1325,7 @@ line</source>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="30"/>
         <source>lastmod</source>
-        <translation></translation>
+        <translation>ultima modalità</translation>
     </message>
     <message>
         <location filename="../src/last_open/element/element_ui.ui" line="123"/>
