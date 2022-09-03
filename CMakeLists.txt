@@ -28,16 +28,16 @@ file(GLOB PROJECT_MOC
 )
 
 file(GLOB_RECURSE PROJECT_UI
-    ${PROJECT_SOURCE_DIR}/*.ui
+    ${PROJECT_SOURCE_DIR}/src/*.ui
 )
 
 file(GLOB_RECURSE PROJECT_SOURCES
     src/*.cpp
     src/*.h
-)   
+)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    
+
 else()
     message("Pdf Enable")
     add_definitions(-DPDFSUPPORT)
