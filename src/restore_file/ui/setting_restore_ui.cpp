@@ -115,16 +115,20 @@ void setting_restore_ui::loadData()
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_INT);
 
+#if (defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
+    m_data.t_autosave = setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt();
+    m_data.remove_file = setting.value(KEY_INT_REMOVE_FILE_ENABLE, true).toBool();
+#else
     m_data = {
-#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
         .autosave = setting.value(KEY_INT_AUTOSAVE_ENABLE, false).toBool(),
         .temp_file = setting.value(KEY_INT_TMP_ENABLE, true).toBool(),
         .t_temp_file = setting.value(KEY_INT_TMP_TIME, 5).toUInt(),
-#endif
+
 
         .t_autosave = setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt(),
         .remove_file = setting.value(KEY_INT_REMOVE_FILE_ENABLE, true).toBool()
     };
+#endif
 
     setting.endGroup();
 
