@@ -27,39 +27,8 @@ file(GLOB PROJECT_MOC
     language.qrc
 )
 
-file(GLOB PROJECT_UI
-    ${PROJECT_SOURCE_DIR}/audiosetting/audioqualityoption.ui
-    ${PROJECT_SOURCE_DIR}/currenttitle/option/option_copybook.ui
-    ${PROJECT_SOURCE_DIR}/last_open/element/element_ui.ui
-    ${PROJECT_SOURCE_DIR}/last_open/last_open.ui
-    ${PROJECT_SOURCE_DIR}/last_open/option/option_last_open_ui.ui
-    ${PROJECT_SOURCE_DIR}/log/log_ui/log_ui.ui
-    ${PROJECT_SOURCE_DIR}/mainwindow.ui
-    ${PROJECT_SOURCE_DIR}/restore_file/ui/setting_restore_ui.ui
-    ${PROJECT_SOURCE_DIR}/restore_file/ui_restore/restore.ui
-    ${PROJECT_SOURCE_DIR}/sheet/dialog_sheet.ui
-    ${PROJECT_SOURCE_DIR}/sheet/fast-sheet/fast_sheet_ui.ui
-    ${PROJECT_SOURCE_DIR}/touch/highlighter/highlighter.ui
-    ${PROJECT_SOURCE_DIR}/touch/pen/pen_ui.ui
-    ${PROJECT_SOURCE_DIR}/touch/rubber/rubber_ui.ui
-    ${PROJECT_SOURCE_DIR}/touch/scrollKinetic/ui_scroll/scroll.ui
-    ${PROJECT_SOURCE_DIR}/touch/text/text_ui/text_ui.ui
-    ${PROJECT_SOURCE_DIR}/touch/text/text_widgets/text_widgets.ui
-    ${PROJECT_SOURCE_DIR}/utils/bug_repo/bug_repo_ui.ui
-    ${PROJECT_SOURCE_DIR}/utils/default_location/audio_default_location.ui
-    ${PROJECT_SOURCE_DIR}/utils/default_option/default_option_ui.ui
-    ${PROJECT_SOURCE_DIR}/utils/extract_audio/extract_audio_ui.ui
-    ${PROJECT_SOURCE_DIR}/utils/make_default/make_default_ui.ui
-    ${PROJECT_SOURCE_DIR}/utils/progress_bar/progress_bar_ui.ui
-    ${PROJECT_SOURCE_DIR}/utils/retry/retry_ui.ui
-    ${PROJECT_SOURCE_DIR}/videocompress/videocompress_ui.ui
-    ${PROJECT_SOURCE_DIR}/windows/showmessageupdate.ui
-    ${PROJECT_SOURCE_DIR}/utils/choosepage.ui
-    ${PROJECT_SOURCE_DIR}/preview_page_widget/preview_page_container.ui
-    ${PROJECT_SOURCE_DIR}/preview_page_widget/preview_page_widget.ui
-    ${PROJECT_SOURCE_DIR}/preview_page_widget/preview_page_item.ui
-    ${PROJECT_SOURCE_DIR}/ui/toolbar.ui
-    ${PROJECT_SOURCE_DIR}/cloud/cloud_ui.ui
+file(GLOB_RECURSE PROJECT_UI
+    ${PROJECT_SOURCE_DIR}/*.ui
 )
 
 file(GLOB_RECURSE PROJECT_SOURCES

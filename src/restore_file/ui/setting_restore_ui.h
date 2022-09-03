@@ -17,12 +17,6 @@ struct __data{
     bool remove_file; /* false do not remove the file after writernote close */
 };
 
-#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
-static_assert(sizeof(struct __data) == 8);
-#else
-static_assert(sizeof(struct __data) == 16);
-#endif
-
 namespace Ui {
 class setting_restore_ui;
 }
