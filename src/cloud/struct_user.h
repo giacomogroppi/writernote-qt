@@ -1,5 +1,6 @@
-#ifndef STRUCT_USER_H
-#define STRUCT_USER_H
+#pragma once
+
+#ifdef CLOUD
 
 #define TYPE_ABBONATO 1
 #define TYPE_NONABBONATO 0
@@ -39,4 +40,4 @@ struct struct_user * load_recent_user();
 void save_recent_friend(struct struct_friend *);
 struct struct_friend * load_recent_friend();
 
-#endif // STRUCT_USER_H
+#endif // CLOUD

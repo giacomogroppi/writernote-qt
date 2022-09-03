@@ -1,5 +1,4 @@
-#ifndef WLINE_H
-#define WLINE_H
+#pragma once
 
 #include "utils/common_script.h"
 #include "touch/datastruct/utils_datastruct.h"
@@ -87,5 +86,3 @@ force_inline WLine &WLine::operator=(const WLine &other)
 
     return *this;
 }
-
-#endif // WLINE_H

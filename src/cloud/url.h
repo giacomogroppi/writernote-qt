@@ -1,5 +1,4 @@
-#ifndef URL_H
-#define URL_H
+#pragma once
 
 #ifdef CLOUD
 
@@ -13,5 +12,3 @@
 #endif //CLOUD_TESTING
 
 #endif //CLOUD
-
-#endif // URL_H

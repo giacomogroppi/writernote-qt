@@ -1,5 +1,4 @@
-#ifndef RETRY_SAVE_AUDIO_H
-#define RETRY_SAVE_AUDIO_H
+#pragma once
 
 #include <QObject>
 
@@ -27,5 +26,3 @@ signals:
 
 };
 
-
-#endif // RETRY_SAVE_AUDIO_H

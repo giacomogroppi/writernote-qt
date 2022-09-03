@@ -1,5 +1,4 @@
-#ifndef LOAD_FROM_FILE_H
-#define LOAD_FROM_FILE_H
+#pragma once
 
 #include <QByteArray>
 #include <QString>
@@ -10,4 +9,3 @@ public:
     static bool exe(QByteArray &arr, const QString &path, const bool clear);
 };
 
-#endif // LOAD_FROM_FILE_H

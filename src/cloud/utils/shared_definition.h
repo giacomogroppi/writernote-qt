@@ -1,5 +1,6 @@
-#ifndef SHARED_DEFINITION_H
-#define SHARED_DEFINITION_H
+#pragma once
+
+#ifdef CLOUD
 
 /* key to ask if the server is available
  * iin case of update to the server,
@@ -24,4 +25,4 @@
 #define DELETE_FRIEND 6
 #define BLOCK_PERSON 7
 
-#endif // SHARED_DEFINITION_H
+#endif // CLOUD

@@ -1,5 +1,4 @@
-#ifndef MODALITY_DATA_H
-#define MODALITY_DATA_H
+#pragma once
 
 #include "restore_file/ui/setting_restore_ui.h"
 
@@ -17,4 +16,3 @@ struct modality{
     uchar save_when_change = MOD_ASK_SAVE;
 };
 
-#endif // MODALITY_DATA_H

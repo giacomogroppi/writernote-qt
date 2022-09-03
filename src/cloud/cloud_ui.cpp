@@ -4,6 +4,9 @@
 #include "windows/mostra_finestra_i.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "utils/checkpassword/checkpassword.h"
+#include "utils/common_script.h"
+
+#ifdef CLOUD
 
 cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
     QDialog(parent),
@@ -113,16 +116,16 @@ void cloud_ui::on_button_ok_clicked()
             int pass = checkpassword(ui->edit_pass->toPlainText().toUtf8().constData(), ui->edit_repeat->toPlainText().toUtf8().constData());
 
             if(pass == PASS_LEN){
-                user_message(MESSAGE_PASSWORD_NOT_LENGTH + (QString)MINSTRLEN);
+                user_message(MESSAGE_PASSWORD_NOT_LENGTH + qstr::number(MINSTRLEN));
 
             }else if (pass == PASS_NOT_S) {
                 return user_message("Passwords do not match");
 
             } else if(pass == PASS_N){
-                return user_message(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMN + " uppercase");
+                return user_message(MESSAGE_PASSWORD_NOT_M + qstr::number(MIN_NUMN) + " uppercase");
 
             } else if(pass == PASS_M){
-                return user_message(MESSAGE_PASSWORD_NOT_M + (QString)MIN_NUMM + " number");
+                return user_message(MESSAGE_PASSWORD_NOT_M + qstr::number(MIN_NUMM) + " number");
 
             }
 
@@ -158,3 +161,5 @@ void cloud_ui::on_button_ok_clicked()
 
     }
 }
+
+#endif

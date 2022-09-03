@@ -1,7 +1,8 @@
 #include "cloud_ui.h"
 #include "ui_cloud_ui.h"
-
 #include "utils/dialog_critic/dialog_critic.h"
+
+#ifdef CLOUD
 
 void cloud_ui::on_tab_main_currentChanged(int index)
 {
@@ -98,3 +99,5 @@ void cloud_ui::on_button_register_clicked()
     this->ui->edit_repeat->setHidden(false);
     ui->label_repeat->setHidden(false);
 }
+
+#endif

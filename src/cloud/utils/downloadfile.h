@@ -1,10 +1,10 @@
-#ifndef DOWNLOADFILE_H
-#define DOWNLOADFILE_H
+#pragma once
 
 #include <QString>
 #include "cloud/struct_user.h"
-
 #include "shared_definition.h"
+
+#ifdef CLOUD
 
 enum downloadfile{
     not_register,
@@ -16,4 +16,4 @@ enum downloadfile{
 
 downloadfile dowloadfile(struct struct_user *, const char *namefile, QString &to);
 
-#endif // DOWNLOADFILE_H
+#endif // CLOUD

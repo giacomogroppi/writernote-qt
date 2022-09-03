@@ -1,6 +1,6 @@
-#ifndef REQUEST_TYPE_H
-#define REQUEST_TYPE_H
+#pragma once
 
+#ifdef CLOUD
 /*
  * it's set when we have not asked for any service and the server contacts us
 */
@@ -19,4 +19,4 @@ namespace n_request {
     };
 }
 
-#endif // REQUEST_TYPE_H
+#endif // CLOUD

@@ -1,8 +1,6 @@
-#ifndef DELETEAUDIO_H
-#define DELETEAUDIO_H
+#pragma once
 
 #include <QListWidgetItem>
 
 void deleteaudio(class MainWindow *, QListWidgetItem *);
 
-#endif // DELETEAUDIO_H

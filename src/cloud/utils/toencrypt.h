@@ -1,11 +1,12 @@
-#ifndef TOENCRYPT_H
-#define TOENCRYPT_H
+#pragma once
 
 #include <QByteArray>
+
+#ifdef CLOUD
 
 class toencrypy{
 public:
     static void getEcrypt(const QByteArray &arr, QByteArray &res);
 };
 
-#endif // TOENCRYPT_H
+#endif // CLOUD

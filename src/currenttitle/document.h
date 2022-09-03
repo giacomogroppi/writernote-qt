@@ -1,5 +1,4 @@
-#ifndef CURRENT_TITLE_CLASS_H
-#define CURRENT_TITLE_CLASS_H
+#pragma once
 
 #include <QStringList>
 #include <QList>
@@ -62,4 +61,3 @@ force_inline bool Document::isEmpty() const
     return datatouch->isempty();
 }
 
-#endif

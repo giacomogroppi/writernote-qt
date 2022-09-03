@@ -1,5 +1,4 @@
-#ifndef SETTING_RESTORE_UI_H
-#define SETTING_RESTORE_UI_H
+#pragma once
 
 #include <QDialog>
 #include <QString>
@@ -121,4 +120,3 @@ private slots:
     void on_checkBox_remove_stateChanged(int arg1);
 };
 
-#endif // SETTING_RESTORE_UI_H

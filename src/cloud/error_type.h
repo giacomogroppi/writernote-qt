@@ -1,5 +1,7 @@
-#ifndef ERROR_TYPE_H
-#define ERROR_TYPE_H
+#pragma once
+
+#ifdef CLOUD_UI_H
+
 
 #define PRIVATE_CLOUD_ERROR_NO_INTERNET 0
 #define PRIVATE_CLOUD_NOT_LOGIN 1
@@ -32,5 +34,5 @@ namespace n_error_cloud {
     };
 }
 
+#endif // CLOUD_UI_H
 
-#endif // ERROR_TYPE_H

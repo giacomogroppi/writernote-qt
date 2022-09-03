@@ -1,5 +1,4 @@
-#ifndef WMULTIPLEMUTEX_H
-#define WMULTIPLEMUTEX_H
+#pragma once
 
 #include "utils/common_script.h"
 #include <pthread.h>
@@ -62,4 +61,3 @@ force_inline int WMultipleMutex::unlock(int n)
     return this->unlock(n, n+1);
 }
 
-#endif // WMULTIPLEMUTEX_H

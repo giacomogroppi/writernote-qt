@@ -1,5 +1,4 @@
-#ifndef LISTTHREADSAVE_H
-#define LISTTHREADSAVE_H
+#pragma once
 
 #include <QList>
 #include <QMutex>
@@ -31,7 +30,3 @@ ListThreadSave<T>::ListThreadSave(const QList<T> &list)
 {
     this->m_list = list;
 }
-
-
-
-#endif // LISTTHREADSAVE_H

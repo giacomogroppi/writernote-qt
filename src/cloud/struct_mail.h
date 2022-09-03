@@ -1,5 +1,6 @@
-#ifndef STRUCT_MAIL_H
-#define STRUCT_MAIL_H
+#pragma once
+
+#ifdef CLOUD
 
 #define STRLEN_NAME 100
 #define STRLEN_MAIL 50
@@ -13,4 +14,4 @@ struct mail_s{
     char m_mail[STRLEN_MAIL+1];
 };
 
-#endif // STRUCT_MAIL_H
+#endif // CLOUD

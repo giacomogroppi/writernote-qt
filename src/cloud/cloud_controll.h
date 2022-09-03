@@ -1,14 +1,14 @@
-#ifndef CLOUD_CONTROLL_H
-#define CLOUD_CONTROLL_H
+#pragma once
 
 #include "struct_user.h"
 #include "request_type.h"
 #include "error_type.h"
-
 #include <QTcpSocket>
 #include <QObject>
 
 #include "url.h"
+
+#ifdef CLOUD
 
 /*
  * time waiting for responde. [int ms]
@@ -72,4 +72,7 @@ signals:
     void error_connection();
 };
 
-#endif // CLOUD_CONTROLL_H
+#else
+class cloud_controll {};
+
+#endif // CLOUD

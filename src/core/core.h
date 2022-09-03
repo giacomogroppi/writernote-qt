@@ -1,7 +1,6 @@
-#ifndef CORE_H
-#define CORE_H
+#pragma once
 
-#include "qwidget.h"
+#include <QWidget>
 #include "utils/common_script.h"
 #include "utils/platform.h"
 #include "utils/utils.h"
@@ -54,5 +53,3 @@ QPoint get_pos_start_mouse();
 
 }
 
-
-#endif // CORE_H

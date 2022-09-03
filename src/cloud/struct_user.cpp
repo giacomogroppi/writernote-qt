@@ -1,12 +1,9 @@
 #include "struct_user.h"
-
 #include "utils/setting_define.h"
 #include <QSettings>
-
 #include "stdio.h"
 #include "stdlib.h"
 #include <QDataStream>
-
 #include "utils/remove_key/remove_key.h"
 
 #ifdef CLOUD

@@ -1,5 +1,4 @@
-#ifndef OPTION_COPYBOOK_H
-#define OPTION_COPYBOOK_H
+#pragma once
 
 #include "modality_data.h"
 
@@ -22,4 +21,3 @@ private:
     Ui::option_copybook *ui;
 };
 
-#endif // OPTION_COPYBOOK_H

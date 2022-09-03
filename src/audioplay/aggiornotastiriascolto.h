@@ -1,6 +1,3 @@
-#ifndef AGGIORNOTASTIRIASCOLTO_H
-#define AGGIORNOTASTIRIASCOLTO_H
+#pragma once
 
 void aggiornotestiriascolto(class MainWindow *);
-
-#endif // AGGIORNOTASTIRIASCOLTO_H

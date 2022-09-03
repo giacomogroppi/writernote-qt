@@ -1,8 +1,9 @@
-#ifndef CLOUD_UI_H
-#define CLOUD_UI_H
+#pragma once
 
 #include <QDialog>
 #include "cloud/cloud_controll.h"
+
+#ifdef CLOUD
 
 #define TEXT_LOG_IN "Log in"
 #define TEXT_LOG_ON "Log on"
@@ -56,4 +57,4 @@ private:
 
 };
 
-#endif // CLOUD_UI_H
+#endif // CLOUD

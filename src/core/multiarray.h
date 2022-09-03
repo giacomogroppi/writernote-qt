@@ -1,5 +1,4 @@
-#ifndef MULTIARRAY_H
-#define MULTIARRAY_H
+#pragma once
 
 #include "utils/common_def.h"
 #include "stdlib.h"
@@ -31,4 +30,3 @@ inline void multiarray<T>::addLine(const T *line, const int numElement)
 }
 
 
-#endif // MULTIARRAY_H

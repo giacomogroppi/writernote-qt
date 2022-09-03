@@ -1,5 +1,4 @@
-#ifndef CHECKSIMILECOPYBOOK_H
-#define CHECKSIMILECOPYBOOK_H
+#pragma once
 
 #define OK_CHECK 0
 #define COLORE 1
@@ -25,4 +24,3 @@
 
 int checksimilecopybook(const Document &first, const Document &second);
 
-#endif // CHECKSIMILECOPYBOOK_H

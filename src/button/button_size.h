@@ -1,6 +1,4 @@
-#ifndef BUTTON_SIZE_H
-#define BUTTON_SIZE_H
-
+#pragma once
 #include <QDialog>
 
 namespace Ui {
@@ -24,4 +22,3 @@ private slots:
     void on_horizontalSlider_valueChanged(int value);
 };
 
-#endif // BUTTON_SIZE_H

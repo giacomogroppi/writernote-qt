@@ -1,5 +1,4 @@
-#ifndef WMUTEX_H
-#define WMUTEX_H
+#pragma once
 
 #include "utils/common_script.h"
 #include <pthread.h>
@@ -35,5 +34,3 @@ force_inline WMutex::WMutex()
     pthread_mutex_init(&_m, NULL);
 }
 
-
-#endif // WMUTEX_H

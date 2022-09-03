@@ -2,6 +2,8 @@
 #include "utils/remove_key/remove_key.h"
 #include "utils/setting_define.h"
 
+#ifdef CLOUD
+
 cloud_controll::cloud_controll(struct struct_user *user)
 {
     m_user = user;
@@ -12,11 +14,9 @@ cloud_controll::cloud_controll(struct struct_user *user)
     */
     m_socket = new QTcpSocket(this);
 
-    connect(m_socket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-                this, &cloud_controll::error_socket);
-
-    connect(m_socket, &QTcpSocket::readyRead, this, &cloud_controll::ready_read);
-    connect(m_socket, &QTcpSocket::disconnected, this, &cloud_controll::disconnected);
+    QObject::connect(m_socket, &QTcpSocket::errorOccurred, this, &cloud_controll::error_socket);
+    QObject::connect(m_socket, &QTcpSocket::readyRead, this, &cloud_controll::ready_read);
+    QObject::connect(m_socket, &QTcpSocket::disconnected, this, &cloud_controll::disconnected);
 
 }
 
@@ -150,7 +150,8 @@ n_error_socket::e_error_socket cloud_controll::connect_socket()
 /*
  * error in the socket
 */
-void cloud_controll::error_socket(QAbstractSocket::SocketError){
+void cloud_controll::error_socket(QAbstractSocket::SocketError)
+{
 
 }
 
@@ -163,3 +164,5 @@ void cloud_controll::ready_read(){
 void cloud_controll::disconnected(){
 
 }
+
+#endif // CLOUD

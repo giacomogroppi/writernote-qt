@@ -1,5 +1,4 @@
-#ifndef MERGE_CURRENTTITLE_H
-#define MERGE_CURRENTTITLE_H
+#pragma once
 
 class merge_currenttitle
 {
@@ -27,4 +26,3 @@ public:
 
 };
 
-#endif // MERGE_CURRENTTITLE_H

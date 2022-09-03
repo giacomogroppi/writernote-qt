@@ -1,5 +1,4 @@
-#ifndef AUDIORECORD_H
-#define AUDIORECORD_H
+#pragma once
 
 #include <QObject>
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -147,5 +146,3 @@ inline const QString AudioRecord::getPath() const
 {
     return this->recorder->outputLocation().toLocalFile();
 }
-
-#endif // AUDIORECORD_H

@@ -1,8 +1,9 @@
-#ifndef STRUCT_FILE_H
-#define STRUCT_FILE_H
+#pragma once
 
 #include <QByteArray>
 #include "struct_user.h"
+
+#ifdef CLOUD
 
 #define OWNER_YOU 0
 #define OWNER_FRIEND 1
@@ -32,4 +33,4 @@ struct struct_file{
 
 struct struct_file * bytearray_tostruct_file(QByteArray &);
 
-#endif // STRUCT_FILE_H
+#endif // CLOUD
