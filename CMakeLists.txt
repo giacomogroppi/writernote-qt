@@ -34,6 +34,7 @@ file(GLOB_RECURSE PROJECT_UI
 file(GLOB_RECURSE PROJECT_SOURCES
     src/*.cpp
     src/*.h
+    updater/launch_updater/launch_updater.*
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
