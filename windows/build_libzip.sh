@@ -8,8 +8,8 @@ PREFIX_LIB=$(pwd)
 
 cd zlib-ng
 
-rm -r build
-rm -r install
+rm -rf build
+rm -rf install
 
 mkdir build
 mkdir install

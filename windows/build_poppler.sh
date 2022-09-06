@@ -5,6 +5,10 @@ cd 3rdparty
 PREFIX_LIB=$(pwd)
 
 cd poppler
+
+rm -rf build
+rm -rf install
+
 mkdir build
 mkdir install
 
