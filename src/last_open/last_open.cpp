@@ -132,12 +132,6 @@ int last_open::load_data_()
 
 void last_open::loadGeometry()
 {
-    QRect geo;
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_GEOMETRY_LAST_OPEN_FILE);
-    geo = setting.value(KEY_GEOMETRY_LAST_OPEN_FILE, this->geometry()).toRect();
-    this->setGeometry(geo);
-    setting.endGroup();
 }
 
 void last_open::deleteIn(int index){
