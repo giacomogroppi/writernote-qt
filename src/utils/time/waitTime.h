@@ -1,5 +1,4 @@
-#ifndef WAITTIME_H
-#define WAITTIME_H
+#pragma once
 
 #include "utils/common_def.h"
 #include "utils/common_script.h"
@@ -18,4 +17,3 @@ force_inline void waitTime(int ms)
 #endif
 }
 
-#endif // WAITTIME_H

@@ -1,5 +1,5 @@
-#ifndef AUDIO_DEFAULT_LOCATION_H
-#define AUDIO_DEFAULT_LOCATION_H
+#pragma once
+
 
 #include <QDialog>
 
@@ -39,5 +39,3 @@ private:
 
     void save_data();
 };
-
-#endif // AUDIO_DEFAULT_LOCATION_H

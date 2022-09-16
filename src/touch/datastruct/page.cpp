@@ -1,18 +1,12 @@
 ﻿#include "page.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
-#include "touch/tabletcanvas.h"
 #include <QPainter>
-#include "utils/time/current_time.h"
 #include <QPainterPath>
 #include "utils/common_error_definition.h"
-#include "datawrite/source_read_ext.h"
-#include "time.h"
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
-#include "testing/memtest.h"
 #include <QPaintDevice>
 #include "touch/datastruct/page_file.h"
-#include "datawrite/source_read_ext.h"
 
 #define PAGE_THREAD_MAX 16
 
@@ -731,6 +725,12 @@ int page::save(zip_source_t *file, cbool saveImg) const
 int page::load(zip_file_t *file, int ver_stroke)
 {
     return page_file::load(*this, ver_stroke, file);
+}
+
+/* return OK on success */
+int page::load(WReadZip &readZip, int ver_stroke, int id)
+{
+    return page_file::load(*this, ver_stroke, readZip, id);
 }
 
 void page::drawStroke(const stroke &stroke, int m_pos_ris)

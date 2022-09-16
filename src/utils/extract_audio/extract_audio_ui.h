@@ -1,5 +1,5 @@
-#ifndef EXTRACT_AUDIO_UI_H
-#define EXTRACT_AUDIO_UI_H
+#pragma once
+
 
 #include <QDialog>
 #include "currenttitle/document.h"
@@ -53,4 +53,3 @@ protected:
 
 };
 
-#endif // EXTRACT_AUDIO_UI_H

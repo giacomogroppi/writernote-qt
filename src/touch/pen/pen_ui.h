@@ -1,5 +1,5 @@
-#ifndef PEN_UI_H
-#define PEN_UI_H
+#pragma once
+
 
 #include <QWidget>
 
@@ -91,4 +91,3 @@ protected:
     bool event(QEvent *) override;
 };
 
-#endif // PEN_UI_H

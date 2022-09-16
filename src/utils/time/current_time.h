@@ -1,5 +1,4 @@
-#ifndef CURRENT_TIME_H
-#define CURRENT_TIME_H
+#pragma once
 
 #include <QDateTime>
 #include <QTime>
@@ -10,5 +9,3 @@ QString current_time_string();
 
 QDate current_day();
 QString current_day_string();
-
-#endif // CURRENT_TIME_H

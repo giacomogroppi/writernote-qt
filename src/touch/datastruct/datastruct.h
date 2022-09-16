@@ -1,5 +1,4 @@
-﻿#ifndef DATASTRUCT_H
-#define DATASTRUCT_H
+﻿#pragma once
 
 #include <QList>
 #include <QColor>
@@ -626,4 +625,3 @@ force_inline void datastruct::setVisible(int from, int to)
     this->pageVisible = -1;
 }
 
-#endif // DATASTRUCT_H

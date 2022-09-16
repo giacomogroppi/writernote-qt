@@ -1,5 +1,4 @@
-#ifndef OBJECT_FINDER_H
-#define OBJECT_FINDER_H
+#pragma once
 
 #include "utils/common_script.h"
 #include "touch/datastruct/point.h"
@@ -74,4 +73,3 @@ force_inline bool object_finder::isActive() const
     return _timer->isActive();
 }
 
-#endif // OBJECT_FINDER_H

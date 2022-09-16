@@ -1,5 +1,5 @@
-#ifndef PREVIEW_H
-#define PREVIEW_H
+#pragma once
+
 #include <QImage>
 
 class Document;
@@ -12,5 +12,3 @@ public:
     static bool get(QPixmap &ref, const bool withPdf, const QString &path, const int height, const int width);
 
 };
-
-#endif // PREVIEW_H

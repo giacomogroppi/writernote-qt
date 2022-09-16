@@ -1,11 +1,11 @@
-#ifndef READLISTARRAY_H
-#define READLISTARRAY_H
+#pragma once
 
 #include "zip.h"
 #include <QByteArray>
 #include <QList>
 #include <QStringList>
 #include "utils/common_error_definition.h"
+#include "core/WZip.h"
 
 class readListArray
 {
@@ -23,6 +23,9 @@ public:
 */
     static uchar read(const QStringList &list_name, zip_t *zip_file,
                      QList<QByteArray> &arr, const bool clear);
+
+    static uchar read(const QStringList &list_name, WZip &zip,
+                      QList<QByteArray> &arr, const bool clear);
 };
 
-#endif // READLISTARRAY_H
+

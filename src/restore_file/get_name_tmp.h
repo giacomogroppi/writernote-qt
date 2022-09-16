@@ -1,5 +1,4 @@
-#ifndef GET_NAME_TMP_H
-#define GET_NAME_TMP_H
+#pragma once
 
 #include <QString>
 #include <QStringList>
@@ -27,4 +26,3 @@ public:
     }
 };
 
-#endif // GET_NAME_TMP_H

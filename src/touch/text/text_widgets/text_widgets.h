@@ -1,5 +1,5 @@
-#ifndef TEXT_WIDGETS_H
-#define TEXT_WIDGETS_H
+#pragma once
+
 
 #include <QWidget>
 #include <QByteArray>
@@ -64,4 +64,3 @@ protected:
     bool event(QEvent *event) override;
 };
 
-#endif // TEXT_WIDGETS_H

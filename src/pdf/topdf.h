@@ -1,5 +1,5 @@
-#ifndef TOPDF_H
-#define TOPDF_H
+#pragma once
+
 #include "touch/datastruct/datastruct.h"
 #include "mainwindow.h"
 #include "touch/tabletcanvas.h"
@@ -36,4 +36,3 @@ inline void topdf::draw(QPainter &painter, double m, const bool withPdf)
     TabletCanvas::load(painter, this->data, dataPaint);
 }
 
-#endif // TOPDF_H

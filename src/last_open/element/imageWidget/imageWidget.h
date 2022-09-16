@@ -1,5 +1,5 @@
-#ifndef IMAGEWIDGET_H
-#define IMAGEWIDGET_H
+#pragma once
+
 #include <QDialog>
 #include <QGridLayout>
 #include <QScrollArea>
@@ -20,5 +20,3 @@ private:
     QLabel* imgDisplayLabel;
     QScrollArea* scrollArea;
 };
-
-#endif // IMAGEWIDGET_H

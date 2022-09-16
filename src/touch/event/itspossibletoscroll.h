@@ -1,5 +1,4 @@
-#ifndef ITSPOSSIBLETOSCROLL_H
-#define ITSPOSSIBLETOSCROLL_H
+#pragma once
 
 #include <QSize>
 #include <QPointF>
@@ -13,4 +12,3 @@ namespace scroll {
     bool itspossibletoscroll(const datastruct &data, const QSize &size, QPointF &__pos_delta);
 };
 
-#endif // ITSPOSSIBLETOSCROLL_H

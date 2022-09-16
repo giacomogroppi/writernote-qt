@@ -1,5 +1,4 @@
-#ifndef PAGE_H
-#define PAGE_H
+#pragma once
 
 #include <QVector>
 #include <QList>
@@ -143,6 +142,7 @@ public:
 
     int save(zip_source_t *file, cbool saveImg) const;
     int load(zip_file_t *file, int ver_stroke);
+    int load(class WReadZip &readZip, int ver_stroke, int id);
 
     void drawStroke(const stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);
@@ -500,5 +500,3 @@ force_inline void page::drawForceColorStroke(
         WDelete(painter);
     }
 }
-
-#endif // PAGE_H

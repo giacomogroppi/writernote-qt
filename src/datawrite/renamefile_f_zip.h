@@ -1,5 +1,4 @@
-#ifndef RENAMEFILE_F_ZIP_H
-#define RENAMEFILE_F_ZIP_H
+#pragma once
 
 #include <QString>
 
@@ -8,4 +7,3 @@
  dest -> destination path */
 bool renamefile_f_zip(const QString &namezip, const QString &from, const QString &dest);
 
-#endif // RENAMEFILE_F_ZIP_H

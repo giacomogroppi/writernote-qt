@@ -1,5 +1,5 @@
-#ifndef CHECKPASSWORD_H
-#define CHECKPASSWORD_H
+#pragma once
+
 
 /*
  * return from checkpassword
@@ -20,4 +20,3 @@
 
 int checkpassword(const char *, const char *);
 
-#endif // CHECKPASSWORD_H

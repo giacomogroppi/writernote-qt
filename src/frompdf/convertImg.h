@@ -1,5 +1,4 @@
-#ifndef CONVERTIMG_H
-#define CONVERTIMG_H
+#pragma once
 
 #ifdef PDFSUPPORT
 
@@ -56,4 +55,3 @@ inline void convertImg::setData(const Poppler::Document *doc, QImage *img, int i
 #endif
 
 #endif // PDFSUPPORT
-#endif // CONVERTIMG_H

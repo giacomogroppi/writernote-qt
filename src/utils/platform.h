@@ -1,5 +1,5 @@
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#pragma once
+
 
 #include "utils/common_script.h"
 #include <QGuiApplication>
@@ -42,4 +42,3 @@ force_inline bool is_wayland()
     }
 }
 
-#endif // PLATFORM_H

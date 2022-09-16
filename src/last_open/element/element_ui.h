@@ -1,5 +1,4 @@
-#ifndef ELEMENT_UI_H
-#define ELEMENT_UI_H
+#pragma once
 
 #include <QWidget>
 #include <QListWidgetItem>
@@ -43,4 +42,3 @@ private slots:
     void on_open_exe_clicked();
 };
 
-#endif // ELEMENT_UI_H

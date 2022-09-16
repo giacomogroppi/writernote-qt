@@ -1,5 +1,4 @@
-#ifndef PAINT_H
-#define PAINT_H
+#pragma once
 
 #include <QPainter>
 #include <QImage>
@@ -42,4 +41,3 @@ inline QSize createSizeRect(
     return QSize(page::getWidth(), page::getHeight() * countHeigth) * zoom * pro;
 }
 
-#endif // PAINT_H

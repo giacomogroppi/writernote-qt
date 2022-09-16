@@ -1,5 +1,4 @@
-#ifndef LAST_OPEN_H
-#define LAST_OPEN_H
+#pragma once
 
 #include <QDialog>
 
@@ -66,5 +65,3 @@ public slots:
     void on_close_button_clicked();
     void on_option_button_clicked();
 };
-
-#endif // LAST_OPEN_H

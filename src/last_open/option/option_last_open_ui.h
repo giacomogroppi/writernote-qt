@@ -1,5 +1,4 @@
-#ifndef OPTION_LAST_OPEN_UI_H
-#define OPTION_LAST_OPEN_UI_H
+#pragma once
 
 #include <QDialog>
 
@@ -70,5 +69,3 @@ private slots:
     void on_showOnlyName_stateChanged(int arg1);
     void on_checkBox_stateChanged(int arg1);
 };
-
-#endif // OPTION_LAST_OPEN_UI_H

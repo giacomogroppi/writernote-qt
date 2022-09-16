@@ -1,11 +1,12 @@
-#include "xmlstruct.h"
+#include "frompdf/frompdf.h"
 #include "images/fromimage.h"
+#include "xmlstruct.h"
 #include "datawrite/source_read_ext.h"
 #include "utils/common_error_definition.h"
-#include "frompdf/frompdf.h"
 #include "utils/areyousure/areyousure.h"
 #include "testing/memtest.h"
-#include "core/wzip.h"
+#include "core/WZip.h"
+#include "core/WZipReaderSingle.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
 {
@@ -49,11 +50,6 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
     void *data;
 
     const size_t size = xmlstruct::sizeFile(fileZip, path);
-
-    /*if(!size){
-        printf("\nSize null");
-        exit(0);
-    }*/
 
     if(clear)
         arr.clear();
@@ -131,13 +127,13 @@ int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<i
 
     QString temp_;
 
-    for(i=0; i<lunghezza; i++){
+    for(i = 0; i < lunghezza; i++){
         LOAD_STRINGA_RETURN(f, temp_);
 
         lista.append(temp_);
     }
 
-    for(i=0; i<lunghezza; i++){
+    for(i = 0; i < lunghezza; i++){
         SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(temp));
 
         data.append(temp);
@@ -185,29 +181,41 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
 
     SOURCE_READ_GOTO(zip.get_file(), &tmp_ver, sizeof(tmp_ver));
 
-    if(tmp_ver <= 2){
-#ifdef ALL_VERSION
-        err = load_file_2(currenttitle, zip.get_file(), zip.get_zip());
-    }else if(tmp_ver == 3){
-        err = load_file_3(currenttitle, zip.get_file(), zip.get_zip());
-    }else if(tmp_ver == 4){
-        err = load_file_4(currenttitle, zip.get_file(), zip.get_zip());
-    }else if(tmp_ver == 5){
-        err = load_file_5(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
-    }else if(tmp_ver == 6){
-        err = load_file_6(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
-    }else if(tmp_ver == 7){
-        err = load_file_7(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
-    }
-#else
-        goto error_version;
-    }
-#endif
-    else if(tmp_ver > 8)
-        goto error_new_version;
+    W_ASSERT(xmlstruct::get_offset_start() == sizeof(tmp_ver));
 
-    if(tmp_ver == 8){
+    switch (tmp_ver) {
+#ifdef ALL_VERSION
+    case 0 ... 2:
+        err = load_file_2(currenttitle, zip.get_file(), zip.get_zip());
+        break;
+    case 3:
+        err = load_file_3(currenttitle, zip.get_file(), zip.get_zip());
+        break;
+    case 4:
+        err = load_file_4(currenttitle, zip.get_file(), zip.get_zip());
+        break;
+    case 5:
+        err = load_file_5(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        break;
+    case 6:
+        err = load_file_6(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        break;
+    case 7:
+        err = load_file_7(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        break;
+    case 8:
         err = load_file_8(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        break;
+#else
+    case 0 ... (CURRENT_VERSION_CURRENT_TITLE - 1):
+        goto error_version;
+#endif
+    case CURRENT_VERSION_CURRENT_TITLE:
+        err = load_file_9(currenttitle, zip, LoadPdf, LoadImg);
+        break;
+    default:
+        goto error_new_version;
+        break;
     }
 
     if(err != OK)
@@ -286,31 +294,31 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
     return st.size;
 }
 
-int xmlstruct::load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg)
+int xmlstruct::load_file_9(Document *doc, WZip &zip, const bool LoadPdf, const bool LoadImg)
 {
     int tmp, ver_stroke;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
+    WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
 
-    SOURCE_READ_RETURN_SIZE(f, &ver_stroke, sizeof(ver_stroke));
+    static_assert(  sizeof(doc->count_img) == sizeof(doc->count_pdf) &&
+                    sizeof(doc->count_img) == 4);
 
-    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(tmp));
+    if(singleReader.read_object(ver_stroke))
+        return ERROR;
+
+    if(singleReader.read_object(tmp))
+        return ERROR;
     doc->se_registato = static_cast<Document::n_audio_record>(tmp);
 
-    LOAD_STRINGA_RETURN(f, doc->audio_position_path)
+    if(singleReader.read_string(doc->audio_position_path))
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_img, sizeof(doc->count_img));
-
-    tmp = loadbinario_3(filezip, ver_stroke);
-    if(tmp == ERROR)
-        return tmp;
-    else if(tmp == ERROR_CONTROLL)
-        /* we want to continue to load the file, but we need to return we had a problem */
-        controllo_parita = 1;
+    if(singleReader.read_object(doc->count_pdf) || singleReader.read_object(doc->count_img))
+        return ERROR;
 
     if(LoadImg){
-        res_img = doc->m_img->load(filezip, f);
+        res_img = doc->m_img->load(singleReader);
         if(res_img != fromimage::load_res::ok){
             return ERROR;
         }
@@ -318,11 +326,19 @@ int xmlstruct::load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const b
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        auto res = doc->m_pdf->load(filezip, f, nullptr);
+        frompdf::load_res res = doc->m_pdf->load(singleReader, nullptr);
+
         if(res != frompdf::ok)
             return ERROR;
     }
 #endif
+
+    tmp = loadbinario_4(zip, ver_stroke);
+    if(tmp == ERROR)
+        return tmp;
+    else if(tmp == ERROR_CONTROLL)
+        /* we want to continue to load the file, but we need to return we had a problem */
+        controllo_parita = 1;
 
     if(controllo_parita)
         return ERROR_CONTROLL;

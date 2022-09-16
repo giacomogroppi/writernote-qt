@@ -1,5 +1,4 @@
-#ifndef PREVIEW_PAGE_ITEM_H
-#define PREVIEW_PAGE_ITEM_H
+#pragma once
 
 #include <QWidget>
 #include "qlabel.h"
@@ -48,4 +47,3 @@ protected:
     bool event(QEvent *event) override;
 };
 
-#endif // PREVIEW_PAGE_ITEM_H

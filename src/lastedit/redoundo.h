@@ -1,5 +1,4 @@
-#ifndef REDOUNDO_H
-#define REDOUNDO_H
+#pragma once
 
 #include <QList>
 #include <QVector>
@@ -28,4 +27,3 @@ public:
     void clear();
 };
 
-#endif // REDOUNDO_H

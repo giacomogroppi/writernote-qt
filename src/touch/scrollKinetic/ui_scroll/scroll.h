@@ -1,5 +1,5 @@
-#ifndef SCROLL_H
-#define SCROLL_H
+#pragma once
+
 
 #include <QDialog>
 
@@ -31,4 +31,3 @@ private slots:
     void on_checkBox_stateChanged(int arg1);
 };
 
-#endif // SCROLL_H

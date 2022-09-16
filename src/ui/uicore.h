@@ -1,5 +1,5 @@
-#ifndef UICORE_H
-#define UICORE_H
+#pragma once
+
 
 #include <QWidget>
 
@@ -10,4 +10,3 @@ namespace UiCore
     void makeZeroBorder(QWidget *widget);
 };
 
-#endif // UICORE_H

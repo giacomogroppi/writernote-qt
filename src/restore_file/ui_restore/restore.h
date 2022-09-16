@@ -1,5 +1,4 @@
-#ifndef RESTORE_H
-#define RESTORE_H
+#pragma once
 
 #include <QDialog>
 #include <QString>
@@ -42,5 +41,3 @@ private:
 
     Ui::restore *ui;
 };
-
-#endif // RESTORE_H

@@ -1,5 +1,5 @@
-#ifndef CHANGELANGUAGE_H
-#define CHANGELANGUAGE_H
+#pragma once
+
 
 #include <QCoreApplication>
 
@@ -13,4 +13,3 @@ public:
     static void setLanguage(QCoreApplication *app);
 };
 
-#endif // CHANGELANGUAGE_H

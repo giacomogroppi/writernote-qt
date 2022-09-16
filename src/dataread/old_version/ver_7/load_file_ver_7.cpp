@@ -7,7 +7,8 @@
 
 #ifdef ALL_VERSION
 int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
-                           const bool LoadPdf, const bool LoadImg){
+                           const bool LoadPdf, const bool LoadImg)
+{
     int tmp;
     fromimage::load_res res_img;
 

@@ -1,5 +1,4 @@
-#ifndef STROKE_H
-#define STROKE_H
+#pragma once
 
 #include <QList>
 #include <QImage>
@@ -11,7 +10,7 @@
 #include "utils/common_def.h"
 #include "utils/common_script.h"
 #include "touch/datastruct/utils_datastruct.h"
-#include "core/wline.h"
+#include "core/WLine.h"
 #include "touch/datastruct/stroke_complex_data.h"
 #include "touch/object_finder/model/model.h"
 #include "testing/memtest.h"
@@ -55,7 +54,11 @@ private:
     void modify();
 
     int save(zip_source_t *file) const;
+
+#ifdef DEBUGINFO
     int load(zip_file_t *file, int version);
+#endif
+    int load(class WReadZip &reader, int id, int version);
 
 public:
     stroke();
@@ -108,6 +111,7 @@ public:
     bool is_highlighter() const;
     uchar get_alfa() const;
     size_t getSizeInMemory() const;
+    size_t getSizeInFile() const;
     void decreasePrecision();
     void setAlfaColor(const uchar alfa);
     __slow void at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const;
@@ -631,5 +635,3 @@ continue_search:
 
     return -1;
 }
-
-#endif // STROKE_H

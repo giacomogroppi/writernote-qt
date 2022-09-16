@@ -1,5 +1,5 @@
-#ifndef CONTROLLUIBUTTON_H
-#define CONTROLLUIBUTTON_H
+#pragma once
+
 
 #include <QString>
 #include <QList>
@@ -56,4 +56,3 @@ force_inline QColor ControllUiButton::get_color_background()
     return QColor(224, 224, 224);
 }
 
-#endif // CONTROLLUIBUTTON_H

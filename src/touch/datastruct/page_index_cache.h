@@ -1,5 +1,4 @@
-#ifndef WRITERNOTE_QT_PAGE_INDEX_CACHE_H
-#define WRITERNOTE_QT_PAGE_INDEX_CACHE_H
+#pragma once
 
 #include "utils/common_script.h"
 
@@ -62,4 +61,3 @@ force_inline void page_index_cache::reset() const
     *parent = NULL;
 }
 
-#endif //WRITERNOTE_QT_PAGE_INDEX_CACHE_H

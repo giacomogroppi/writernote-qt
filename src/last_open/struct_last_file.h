@@ -1,5 +1,4 @@
-#ifndef STRUCT_LAST_FILE_H
-#define STRUCT_LAST_FILE_H
+#pragma once
 
 #include <QSettings>
 
@@ -59,4 +58,3 @@ public:
     void tidyup();
 };
 
-#endif // STRUCT_LAST_FILE_H

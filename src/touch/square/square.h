@@ -1,5 +1,4 @@
-#ifndef SQUARE_H
-#define SQUARE_H
+#pragma once
 
 #include <QPainter>
 #include <QPointF>
@@ -168,5 +167,3 @@ force_inline bool square::isinside(const QPointF &point)
     WDebug(debugSquare, "square::isinside");
     return datastruct_isinside(_pointinit.point, _pointfine.point, point);
 }
-
-#endif // SQUARE_H

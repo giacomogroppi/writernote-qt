@@ -1,5 +1,5 @@
-#ifndef TESTINGCORE_H
-#define TESTINGCORE_H
+#pragma once
+
 
 #include <QString>
 #include <QPointF>
@@ -26,4 +26,3 @@ public:
 
 #endif
 
-#endif // TESTINGCORE_H

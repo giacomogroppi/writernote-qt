@@ -1,5 +1,4 @@
-#ifndef MEMTEST_H
-#define MEMTEST_H
+#pragma once
 
 #include "utils/common_script.h"
 
@@ -48,4 +47,3 @@ void WEnd_application(void);
 force_inline void WEnd_application(void) {}
 #endif // DEBUG_MEM
 
-#endif // MEMTEST_H

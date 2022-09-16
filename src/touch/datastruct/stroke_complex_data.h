@@ -1,5 +1,4 @@
-#ifndef STROKE_COMPLEX_DATA_H
-#define STROKE_COMPLEX_DATA_H
+#pragma once
 
 #include "utils/common_script.h"
 #include "touch/datastruct/utils_datastruct.h"
@@ -21,5 +20,3 @@ struct stroke_complex_line{
     QPointF pt1, pt2;
     pressure_t press;
 };
-
-#endif // STROKE_COMPLEX_DATA_H

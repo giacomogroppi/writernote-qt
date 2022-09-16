@@ -1,5 +1,4 @@
-#ifndef POINT_H
-#define POINT_H
+#pragma once
 
 #include <QtGlobal>
 #include <QColor>
@@ -137,4 +136,3 @@ Q_COMPILER_CONSTEXPR force_inline QPointF point_s::toQPointF(const double delta)
     return QPointF(_x, _y) * delta;
 }
 
-#endif // POINT_H

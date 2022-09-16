@@ -1,5 +1,4 @@
-#ifndef MULTI_THREAD_DATA_H
-#define MULTI_THREAD_DATA_H
+#pragma once
 
 #include "utils/common_script.h"
 #include "utils/threadcount.h"
@@ -200,4 +199,3 @@ force_inline void joinThread(pthread_t *thread, int count)
         sem_wait(&sem);                     \
     }                                       \
 
-#endif // MULTI_THREAD_DATA_H

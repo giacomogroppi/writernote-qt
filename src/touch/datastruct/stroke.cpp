@@ -35,9 +35,16 @@ int stroke::save(zip_source_t *file) const
     return stroke_file::save(*this, file);
 }
 
+#ifdef ALL_VERSION
 int stroke::load(zip_file_t *file, int version)
 {
     return stroke_file::load(*this, version, file);
+}
+#endif // ALL_VERSION
+
+int stroke::load(class WReadZip &reader, int id, int version)
+{
+    return stroke_file::load(*this, version, reader, id);
 }
 
 void stroke::setMetadata(cint posizione_audio, const colore_s &color)

@@ -1,5 +1,5 @@
-#ifndef FROMPDF_H
-#define FROMPDF_H
+#pragma once
+
 
 #include <QtGlobal>
 
@@ -103,9 +103,16 @@ public:
 
     /* return true if all load correctly */
     bool load(const QStringList &path, QMap<load_res, uchar> &index, TabletCanvas *canvas);
+
     load_res load(const QString &, const bool clear, TabletCanvas *canvas);
     /* it load from a zip_t file all the pdf for the current copybook */
-    load_res load(zip_t *filezip, zip_file_t *file, TabletCanvas *);
+
+#ifdef ALL_VERSION
+    load_res load(zip_t *filezip, zip_file_t *file, TabletCanvas *canvas);
+#endif // ALL_VERSION
+    load_res load(WZipReaderSingle &reader, TabletCanvas *canvas);
+
+
     load_res load_from_row(const QByteArray &, const bool clear,
                            const bool FirstLoad, const uchar IndexPdf,
                            TabletCanvas *canvas);
@@ -131,7 +138,11 @@ public:
     uint resolution = 500;//72
 private:
     void adjast(const uchar indexPdf);
+
+#ifdef ALL_VERSION
     load_res load_metadata(zip_file_t *file);
+#endif
+    load_res load_metadata(WZipReaderSingle &reader);
 
     /*
      * this function only append a pdf to
@@ -181,4 +192,3 @@ force_inline void frompdf::draw(QPainter &painter, const double delta, const boo
 }
 
 #endif // PDFSUPPORT
-#endif // FROMPDF_H

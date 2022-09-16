@@ -1,5 +1,5 @@
-#ifndef MAKE_DEFAULT_UI_H
-#define MAKE_DEFAULT_UI_H
+#pragma once
+
 
 #include <QDialog>
 
@@ -32,4 +32,3 @@ signals:
     void yes(bool);
 };
 
-#endif // MAKE_DEFAULT_UI_H

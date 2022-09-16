@@ -1,5 +1,4 @@
-#ifndef COMMON_DEF_H
-#define COMMON_DEF_H
+#pragma once
 
 #include <QtGlobal>
 
@@ -16,4 +15,3 @@ typedef const double    cdouble;
 typedef const void      cvoid;
 typedef const bool      cbool;
 
-#endif // COMMON_DEF_H

@@ -1,5 +1,4 @@
-#ifndef WIDGET_PARENT_H
-#define WIDGET_PARENT_H
+#pragma once
 
 #include <QWidget>
 #include <QList>
@@ -36,4 +35,3 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 };
 
-#endif // WIDGET_PARENT_H

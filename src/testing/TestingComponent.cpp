@@ -1,5 +1,5 @@
 #include "utils/common_script.h"
-#include "core/wline.h"
+#include "core/WLine.h"
 
 
 #ifdef DEBUGINFO

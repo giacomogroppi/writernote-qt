@@ -1,5 +1,5 @@
-#ifndef LASTMODIFICATION_H
-#define LASTMODIFICATION_H
+#pragma once
+
 
 #include <QString>
 
@@ -10,4 +10,3 @@ public:
     static QString hour(const QString &path);
 };
 
-#endif // LASTMODIFICATION_H

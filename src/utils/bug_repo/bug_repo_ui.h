@@ -1,5 +1,5 @@
-#ifndef BUG_REPO_UI_H
-#define BUG_REPO_UI_H
+#pragma once
+
 
 #include <QDialog>
 
@@ -30,4 +30,3 @@ private:
     Ui::bug_repo_ui *ui;
 };
 
-#endif // BUG_REPO_UI_H

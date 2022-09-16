@@ -1,5 +1,4 @@
-#ifndef RESTORE_FILE_CRITIC_H
-#define RESTORE_FILE_CRITIC_H
+#pragma once
 
 #include <QString>
 #include <QStringList>
@@ -25,5 +24,3 @@ public:
                                 const QString & path_save);
 
 };
-
-#endif // RESTORE_FILE_CRITIC_H

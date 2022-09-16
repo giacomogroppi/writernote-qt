@@ -1,5 +1,4 @@
-#ifndef COMPRESSIVIDEO_H
-#define COMPRESSIVIDEO_H
+#pragma once
 
 #include <QString>
 
@@ -7,5 +6,3 @@
 fps intero
 */
 int compressvideo(QString *posizionefrom, QString *to, int fps, QString compressione);
-
-#endif // COMPRESSIVIDEO_H

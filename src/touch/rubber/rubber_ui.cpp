@@ -4,7 +4,7 @@
 #include "pthread.h"
 #include "semaphore.h"
 #include "touch/multi_thread_data.h"
-#include "core/wline.h"
+#include "core/WLine.h"
 #include "mainwindow.h"
 #include "ui/uicore.h"
 

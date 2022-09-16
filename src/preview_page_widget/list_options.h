@@ -1,5 +1,4 @@
-#ifndef LIST_OPTIONS_H
-#define LIST_OPTIONS_H
+#pragma once
 
 #include <QWidget>
 #include <QPushButton>
@@ -34,5 +33,3 @@ signals:
     void ClickPaste(int index);
 
 };
-
-#endif // LIST_OPTIONS_H

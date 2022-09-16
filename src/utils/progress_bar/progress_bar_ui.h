@@ -1,5 +1,4 @@
-#ifndef PROGRESS_BAR_UI_H
-#define PROGRESS_BAR_UI_H
+#pragma once
 
 #include <QDialog>
 
@@ -30,5 +29,3 @@ private:
 signals:
     void closeForce();
 };
-
-#endif // PROGRESS_BAR_UI_H

@@ -1,5 +1,4 @@
-#ifndef EXTRACT_AUDIO_H
-#define EXTRACT_AUDIO_H
+#pragma once
 
 #include <QString>
 
@@ -15,5 +14,3 @@ namespace extract {
 
 
 extract::n_extract extract_audio(const QString &path, const QString &path_to);
-
-#endif // EXTRACT_AUDIO_H

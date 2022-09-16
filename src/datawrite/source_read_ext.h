@@ -1,5 +1,5 @@
-#ifndef SOURCE_READ_EXT_
-#define SOURCE_READ_EXT_
+#pragma once
+
 
 #include "zip.h"
 #include "utils/common_script.h"
@@ -42,4 +42,3 @@ short int source_write_ext(zip_source_t *, const void *, int);
         }                                                           \
     } while(0);
 
-#endif // ZIP_SOURCE_READ

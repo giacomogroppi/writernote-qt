@@ -1,5 +1,4 @@
-#ifndef COPY_SELECTION_H
-#define COPY_SELECTION_H
+#pragma once
 
 #include <QPointF>
 #include <QRectF>
@@ -54,5 +53,3 @@ inline bool copy::isEmpty() const
 {
     return m_stroke.isEmpty();
 }
-
-#endif // COPY_SELECTION_H

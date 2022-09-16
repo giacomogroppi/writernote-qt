@@ -1,5 +1,4 @@
-#ifndef DIALOG_SHEET_H
-#define DIALOG_SHEET_H
+#pragma once
 
 #include <QDialog>
 #include <QCloseEvent>
@@ -71,5 +70,3 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 };
-
-#endif // DIALOG_SHEET_H

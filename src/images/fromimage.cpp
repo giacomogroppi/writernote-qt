@@ -101,13 +101,57 @@ fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString 
     return load_res::ok;
 }
 
+fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader)
+{
+    uint i;
+    double val[4];
+    struct immagine_s img;
+
+    static_assert(sizeof(val) == sizeof(double) * 4);
+
+    for(i = 0; i < this->doc->count_img; ++i){
+        if(reader.read_by_size(val, sizeof(val))){
+            return load_res::error;
+        }
+
+        img.i = QPointF(val[0], val[1]);
+        img.f = QPointF(val[2], val[3]);
+
+        m_img.append(img);
+    }
+
+    return load_res::ok;
+}
+
+fromimage::load_res fromimage::load(WZipReaderSingle &reader)
+{
+    QList<QByteArray> arr;
+    QStringList name_list;
+    uchar res;
+
+    this->m_img.clear();
+
+    name_list = this->get_name_img();
+
+    if(this->load_metadata(reader) != load_res::ok)
+        return load_res::err_meta_data;
+
+    res = readListArray::read(name_list, *(reader.get_zip()), arr, false);
+    if(res != OK){
+        return fromimage::load_res::error;
+    }
+
+    return fromimage::load_multiple(arr);
+}
+
+#ifdef ALL_VERSION
 fromimage::load_res fromimage::load_metadata(zip_file_t *file)
 {
     uint i;
     double val[4];
     struct immagine_s img;
 
-    for(i=0; i<this->doc->count_img; ++i){
+    for(i = 0; i < this->doc->count_img; ++i){
         if(zip_fread(file, val, sizeof (double)*4) == -1)
             return load_res::error;
         img.i = QPointF(val[0], val[1]);
@@ -118,6 +162,7 @@ fromimage::load_res fromimage::load_metadata(zip_file_t *file)
 
     return load_res::ok;
 }
+
 
 fromimage::load_res fromimage::load(zip_t *filezip,
                                     zip_file_t *file)
@@ -140,6 +185,8 @@ fromimage::load_res fromimage::load(zip_t *filezip,
 
     return fromimage::load_multiple(arr);
 }
+
+#endif // ALL_VERSION
 
 fromimage::load_res fromimage::load_single(const QByteArray &arr,
                                            struct immagine_s &img)

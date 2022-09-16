@@ -1,5 +1,4 @@
-#ifndef SAVEFILE_H
-#define SAVEFILE_H
+#pragma once
 
 #include <zip.h>
 #include "utils/common_error_definition.h"
@@ -82,4 +81,3 @@ force_inline bool savefile::addFile(zip_t *fileZip, const char *fileName, zip_so
     return true;
 }
 
-#endif // SAVEFILE_H

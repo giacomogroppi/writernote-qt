@@ -1,5 +1,4 @@
-#ifndef PREVIEW_PAGE_CONTAINER_H
-#define PREVIEW_PAGE_CONTAINER_H
+#pragma once
 
 #include <QWidget>
 #include <QVector>
@@ -79,5 +78,3 @@ force_inline preview_page_item * preview_page_container::at_not_show(int i)
 {
     return _item_not_show[i];
 }
-
-#endif // PREVIEW_PAGE_CONTAINER_H

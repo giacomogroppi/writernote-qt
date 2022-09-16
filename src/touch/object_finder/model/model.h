@@ -1,5 +1,4 @@
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #include <QPointF>
 #include <QRectF>
@@ -33,7 +32,12 @@ bool stroke_complex_cmp(const stroke *str1, const stroke *str2);
 QRect stroke_complex_bigger_data(const stroke *stroke);
 
 int stroke_complex_save(const stroke *stroke, zip_source_t *file);
+
+#ifdef ALL_VERSION
 int stroke_complex_load(stroke *stroke, int type, zip_file_t *file);
+#endif // ALL_VERSION
+
+int stroke_complex_load(stroke *stroke, int type, class WReadZip &reader, int id);
 
 void stroke_complex_append(stroke *stroke, const QPointF &point);
 bool stroke_complex_is_inside(const stroke *stroke, const class WLine &line, cdouble precision);
@@ -41,4 +45,3 @@ bool stroke_complex_is_inside(const stroke *stroke, const QRectF &area, cdouble 
 void stroke_complex_translate(stroke *stroke, const QPointF &offset);
 void stroke_complex_make_normal(const stroke *from, stroke *to);
 
-#endif // MODEL_H

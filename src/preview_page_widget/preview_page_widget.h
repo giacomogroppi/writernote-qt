@@ -1,5 +1,3 @@
-#ifndef PREVIEW_PAGE_WIDGET_H
-#define PREVIEW_PAGE_WIDGET_H
 
 #include <QWidget>
 #include "preview_page_widget/preview_page_container.h"
@@ -45,5 +43,3 @@ private:
     preview_page_container * _container;
     Ui::preview_page_widget *ui;
 };
-
-#endif // PREVIEW_PAGE_WIDGET_H

@@ -1,5 +1,5 @@
-#ifndef CHOOSEPAGE_H
-#define CHOOSEPAGE_H
+#pragma once
+
 
 #include "utils/common_script.h"
 #include <QDialog>
@@ -43,4 +43,3 @@ force_inline QSize ChoosePage::get_size() const
     return this->size();
 }
 
-#endif // CHOOSEPAGE_H

@@ -1,5 +1,4 @@
-#ifndef STYLE_STRUCT_H
-#define STYLE_STRUCT_H
+#pragma once
 
 #define QUANTESTRUCT 5
 #define STRNOME 40
@@ -68,5 +67,3 @@ inline bool operator==(const style_struct& lhs, const style_struct& rhs)
 
     return true;
 }
-
-#endif // STYLE_STRUCT_H

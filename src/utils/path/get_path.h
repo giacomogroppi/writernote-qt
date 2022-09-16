@@ -1,5 +1,5 @@
-#ifndef GET_PATH_H
-#define GET_PATH_H
+#pragma once
+
 
 #include <QString>
 
@@ -18,4 +18,3 @@ namespace path {
 QString get_path_no_controll();
 QString get_path(path::e_path);
 
-#endif // GET_PATH_H

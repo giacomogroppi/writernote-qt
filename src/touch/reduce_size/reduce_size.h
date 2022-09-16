@@ -1,5 +1,5 @@
-#ifndef REDUCE_SIZE_H
-#define REDUCE_SIZE_H
+#pragma once
+
 
 class datastruct;
 #include "stdio.h"
@@ -14,4 +14,3 @@ public:
 
 };
 
-#endif // REDUCE_SIZE_H

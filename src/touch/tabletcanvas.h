@@ -1,5 +1,4 @@
-#ifndef TABLETCANVAS_H
-#define TABLETCANVAS_H
+#pragma once
 
 #include <QBrush>
 #include <QColor>
@@ -274,4 +273,3 @@ force_inline void TabletCanvas::send_mouse_event(QMouseEvent *event)
     return this->mouseMoveEvent(event);
 }
 
-#endif

@@ -12,7 +12,7 @@ class frompdf;
 #define NAME_AUDIO "data_audio.mp4"
 
 #define CURRENT_VERSION_STROKE 2
-#define CURRENT_VERSION_CURRENT_TITLE 8
+#define CURRENT_VERSION_CURRENT_TITLE 9
 #define MIN_VERSION_CURRENT_TITLE 2
 
 class Document{
@@ -36,8 +36,8 @@ public:
     datastruct *datatouch = NULL;
     void reset();
     void cleanAudio();
-    uint count_pdf = 0;
-    uint count_img = 0;
+    unsigned count_pdf = 0;
+    unsigned count_img = 0;
 
     enum n_audio_record{
         not_record,

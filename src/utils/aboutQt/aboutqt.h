@@ -1,7 +1,4 @@
-#ifndef ABOUTQT_H
-#define ABOUTQT_H
-
+#pragma once
 
 void aboutQt();
 
-#endif // ABOUTQT_H

@@ -4,7 +4,7 @@
 #include "touch/datastruct/stroke_complex_data.h"
 #include "testing/memtest.h"
 #include "qmath.h"
-#include "core/wline.h"
+#include "core/WLine.h"
 
 static stroke_complex_circle circle_data;
 constexpr not_used bool debug = false;

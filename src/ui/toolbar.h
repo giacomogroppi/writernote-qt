@@ -1,5 +1,5 @@
-#ifndef TOOLBAR_H
-#define TOOLBAR_H
+#pragma once
+
 
 #include <QWidget>
 #include <QPushButton>
@@ -61,4 +61,3 @@ private:
     Ui::ToolBar *ui;
 };
 
-#endif // TOOLBAR_H

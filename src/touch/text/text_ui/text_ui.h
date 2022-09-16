@@ -1,5 +1,4 @@
-#ifndef TEXT_UI_H
-#define TEXT_UI_H
+#pragma once
 
 #include <QWidget>
 #include <QColor>
@@ -39,4 +38,3 @@ private slots:
     void on_fontComboBox_currentFontChanged(const QFont &f);
 };
 
-#endif // TEXT_UI_H

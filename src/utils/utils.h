@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#pragma once
+
 
 #include <QSize>
 #include "qapplication.h"
@@ -22,4 +22,4 @@ force_inline unsigned long int get_time_since_epoch(){
 }
 
 }
-#endif // UTILS_H
+

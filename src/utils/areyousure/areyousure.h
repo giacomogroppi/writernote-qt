@@ -1,5 +1,5 @@
-#ifndef ARE_YOU_SURE_CPP
-#define ARE_YOU_SURE_CPP
+#pragma once
+
 
 #include <QString>
 #include <QDialog>
@@ -18,4 +18,3 @@ inline bool areyousure(const QString &title, const QString &body)
     return false;
 }
 
-#endif

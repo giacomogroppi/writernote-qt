@@ -1,5 +1,4 @@
-#ifndef LAUNCH_UPDATER_H
-#define LAUNCH_UPDATER_H
+#pragma once
 
 
 class launch_updater
@@ -7,5 +6,3 @@ class launch_updater
 public:
     static void launch();
 };
-
-#endif // LAUNCH_UPDATER_H

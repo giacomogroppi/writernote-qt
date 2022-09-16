@@ -1,5 +1,5 @@
-#ifndef THREADCOUNT_H
-#define THREADCOUNT_H
+#pragma once
+
 
 #include <QtGlobal>
 
@@ -9,4 +9,3 @@ public:
     static uint count();
 };
 
-#endif // THREADCOUNT_H

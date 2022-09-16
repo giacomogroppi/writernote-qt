@@ -1,5 +1,5 @@
-#ifndef QFILECHOOSE_H
-#define QFILECHOOSE_H
+#pragma once
+
 
 #include "utils/common_script.h"
 #include <QString>
@@ -15,5 +15,3 @@ namespace qfilechoose
     bool getFileForSave(QString &path, uint16_t type_ = TYPEFILEWRITER);
     bool getFileForLoad(QString &path, uint16_t type_ = TYPEFILEWRITER);
 };
-
-#endif // QFILECHOOSE_H

@@ -1,5 +1,4 @@
-#ifndef FAST_SHEET_UI_H
-#define FAST_SHEET_UI_H
+#pragma once
 
 #include <QWidget>
 #include "sheet/style_struct.h"
@@ -62,5 +61,3 @@ signals:
     void changeButton(bool res);
 
 };
-
-#endif // FAST_SHEET_UI_H

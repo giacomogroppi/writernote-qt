@@ -6,16 +6,39 @@ uchar readListArray::read(const QStringList &list_name,
                           QList<QByteArray> &list_arr, const bool clear)
 {
     QByteArray arr;
-    uint i;
+    unsigned i;
 
     if(clear)
         list_arr.clear();
 
-    for(i=0; i<(uchar)list_name.length(); ++i){
+    for(i = 0; i < list_name.length(); i++){
         arr.clear();
         const QString &ref = list_name.at(i);
         if(xmlstruct::readFile(zip_file, arr, false, ref, false) != OK)
             return ERROR;
+        list_arr.append(arr);
+    }
+
+    return OK;
+}
+
+unsigned char readListArray::read(const QStringList &list_name, WZip &zip,
+                                  QList<QByteArray> &list_arr, const bool clear)
+{
+    QByteArray arr;
+    unsigned i;
+    auto *zipFile = zip.get_zip();
+
+    if(clear)
+        list_arr.clear();
+
+    for(i = 0; i < list_name.length(); i++){
+        arr.clear();
+        const QString &ref = list_name.at(i);
+
+        if(xmlstruct::readFile(zipFile, arr, false, ref, false) != OK)
+            return ERROR;
+
         list_arr.append(arr);
     }
 

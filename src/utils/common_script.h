@@ -152,6 +152,15 @@ force_inline int is_order_list(const QList<T> &list)
     return 1;
 }
 
+force_inline size_t WMemcpy(void *to, const void *from, size_t size)
+{
+    W_ASSERT(from);
+    W_ASSERT(to);
+    W_ASSERT(size);
+    memcpy(to, from, size);
+    return size;
+}
+
 template <typename T>
 force_inline int is_order_vector(const QVector<T> &list)
 {

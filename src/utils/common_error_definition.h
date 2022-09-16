@@ -1,5 +1,4 @@
-#ifndef COMMON_ERROR_DEFINITION_H
-#define COMMON_ERROR_DEFINITION_H
+#pragma once
 
 #include "utils/dialog_critic/dialog_critic.h"
 
@@ -22,4 +21,3 @@
 
 #define message_key_error dialog_critic("It is not possible to read this file, from now on the files written with the keyboard will no longer be readable");
 
-#endif // COMMON_ERROR_DEFINITION_H

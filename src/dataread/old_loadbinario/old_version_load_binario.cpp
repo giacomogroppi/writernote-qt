@@ -33,7 +33,8 @@ struct point_last{
 /*
  * version 2 and 3
 */
-int xmlstruct::loadbinario_0(zip_t *z){
+int xmlstruct::loadbinario_0(zip_t *z)
+{
     struct colore_last{
         int colore[NCOLOR];
     };
@@ -190,7 +191,8 @@ static QPointF bigger(const QList<point_last> &point)
     return max;
 }
 
-static void adjastPDF(QList<point_last> &point, QList<double> &pos_foglio){
+static void adjastPDF(QList<point_last> &point, QList<double> &pos_foglio)
+{
     uint i, len;
     const QPointF currentSize = bigger(point);
     const double CorrectProportions = double(page::getHeight())/double(page::getWidth());
@@ -362,7 +364,8 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
 }
 
 /* versione 7 */
-int xmlstruct::loadbinario_2(struct zip *z){
+int xmlstruct::loadbinario_2(struct zip *z)
+{
     struct zip_stat st;
     size_t controll, newControll;
     int i, len, lenPage, counterPage;
@@ -390,7 +393,7 @@ int xmlstruct::loadbinario_2(struct zip *z){
         /* we add a new page */
         pointAppend.append(QList<point_old_ver_7> ());
 
-        for(i=0; i<len; i++){
+        for(i = 0; i < len; i++){
             SOURCE_READ_GOTO(f, &temp_point, sizeof(temp_point));
             pointAppend.operator[](counterPage).append(temp_point);
         }
@@ -409,6 +412,57 @@ int xmlstruct::loadbinario_2(struct zip *z){
         return ERROR_CONTROLL;
 
     xmlstruct::decode1(currenttitle, pointAppend);
+
+    return OK;
+
+    free_:
+    zip_fclose(f);
+    return ERROR;
+}
+
+__old int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
+{
+    struct zip_stat st;
+    size_t controll, newControll;
+    int lenPage, counterPage;
+    datastruct *data = currenttitle->datatouch;
+    zip_file_t *f;
+    double init[2];
+
+    zip_stat_init(&st);
+    zip_stat(z, NAME_BIN, 0, &st);
+
+     f = zip_fopen(z, NAME_BIN, 0);
+
+    if(f == nullptr)
+        return ERROR;
+
+    /* point first page */
+    SOURCE_READ_GOTO(f, init, sizeof(double) * 2);
+    this->currenttitle->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
+
+    /* page len */
+    SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
+
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
+        /* we add a new page */
+        data->newPage(n_style::white);
+
+        if(data->at_mod(counterPage).load(f, ver_stroke) != OK)
+            goto free_;
+    }
+
+    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->_zoom,
+                     sizeof(this->currenttitle->datatouch->_zoom));
+
+    SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
+
+    zip_fclose(f);
+
+    newControll = currenttitle->createSingleControll();
+
+    if(controll != newControll)
+        return ERROR_CONTROLL;
 
     return OK;
 

@@ -1,5 +1,4 @@
-#ifndef RETRY_UI_H
-#define RETRY_UI_H
+#pragma once
 
 #include <QDialog>
 
@@ -34,5 +33,3 @@ protected:
     void closeEvent(QCloseEvent *);
 
 };
-
-#endif // RETRY_UI_H

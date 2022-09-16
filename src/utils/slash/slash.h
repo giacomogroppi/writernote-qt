@@ -1,5 +1,4 @@
-#ifndef SLASH_H
-#define SLASH_H
+#pragma once
 
 class slash
 {
@@ -13,4 +12,3 @@ public:
     };
 };
 
-#endif // SLASH_H

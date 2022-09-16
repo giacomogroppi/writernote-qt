@@ -1,5 +1,4 @@
-#ifndef SHOWMESSAGEUPDATE_H
-#define SHOWMESSAGEUPDATE_H
+#pragma once
 
 #include <QDialog>
 #include <QString>
@@ -34,4 +33,3 @@ private:
     Ui::ShowMessageUpdate *ui;
 };
 
-#endif // SHOWMESSAGEUPDATE_H

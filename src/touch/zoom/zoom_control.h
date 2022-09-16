@@ -1,5 +1,4 @@
-#ifndef ZOOM_CONTROL_H
-#define ZOOM_CONTROL_H
+#pragma once
 
 class frompdf;
 class datastruct;
@@ -16,4 +15,3 @@ public:
               const QSize &sizePixmap, const QSize &maxSize, datastruct *data);
 };
 
-#endif // ZOOM_CONTROL_H

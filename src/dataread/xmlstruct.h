@@ -1,5 +1,4 @@
-#ifndef XMLSTRUCT_H
-#define XMLSTRUCT_H
+#pragma once
 
 #include <iostream>
 #include <cstdlib>
@@ -11,6 +10,7 @@
 #include "currenttitle/document.h"
 #include "touch/datastruct/datastruct.h"
 #include <zip.h>
+#include "core/WZip.h"
 
 #define LOAD_MULTIPLESTRING(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) goto free_;
 #define LOAD_MULTIPLESTRING_RETURN(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) return ERROR;
@@ -38,7 +38,7 @@ force_inline zip_t *zip_open(const QString &path, int check, int *ok)
 class xmlstruct{
 private:
     const QString *path_;
-
+    static size_t get_offset_start() { return sizeof(int); };
     Document *currenttitle = nullptr;
 
 #ifdef ALL_VERSION
@@ -48,15 +48,17 @@ private:
     __old int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
     __old int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
     __old int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
 
     __old int loadbinario_0(struct zip *file);
     __old int loadbinario_1(struct zip *file);
     __old int loadbinario_2(struct zip *file);
+    __old int loadbinario_3(struct zip *file, int ver_stroke);
 
 #endif // ALL_VERSION
 
-    __new int loadbinario_3(struct zip *file, int ver_stroke);
-    __new int load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
+    __new int loadbinario_4(class WZip &zip, int ver_stroke);
+    __new int load_file_9(Document *doc, WZip &zip, const bool LoadPdf, const bool LoadImg);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);
@@ -108,4 +110,3 @@ force_inline bool xmlstruct::closeZip(zip_t *fileZip)
     return true;
 }
 
-#endif

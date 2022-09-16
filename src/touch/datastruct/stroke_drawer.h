@@ -1,5 +1,4 @@
-#ifndef WRITERNOTE_QT_STROKE_DRAWER_H
-#define WRITERNOTE_QT_STROKE_DRAWER_H
+#pragma once
 
 #include "utils/common_script.h"
 #include <QtGlobal>
@@ -20,5 +19,3 @@ public:
     static void draw_stroke(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
 };
 
-
-#endif //WRITERNOTE_QT_STROKE_DRAWER_H

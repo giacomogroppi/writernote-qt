@@ -1,5 +1,5 @@
-#ifndef SETTING_DEFINE_H
-#define SETTING_DEFINE_H
+#pragma once
+
 
 #define ORGANIZATIONAME "Writernote"
 #define APPLICATION_NAME "writernote"
@@ -131,4 +131,3 @@
 #define GROUPNAME_GEOMETRY_LAST_OPEN_FILE "geometry-last-open-file"
 #define KEY_GEOMETRY_LAST_OPEN_FILE "geometry_key-last-open-file"
 
-#endif // SETTING_DEFINE_H

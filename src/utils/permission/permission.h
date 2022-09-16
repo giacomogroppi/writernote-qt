@@ -1,6 +1,4 @@
-#ifndef PERMISSION_H
-#define PERMISSION_H
-
+#pragma once
 
 class permission
 {
@@ -16,4 +14,3 @@ public:
     static bool open(const char *file, e_permission);
 };
 
-#endif // PERMISSION_H

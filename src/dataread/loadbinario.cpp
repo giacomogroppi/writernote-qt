@@ -1,49 +1,118 @@
 #include "xmlstruct.h"
 #include "currenttitle/document.h"
-#include "images/fromimage.h"
 #include <zip.h>
-#include "datawrite/source_read_ext.h"
-#include "utils/posizione_binario.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
+#include "utils/common_script.h"
+#include "core/WReadZip.h"
+#include <pthread.h>
 
-__new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
+static int load_point_first_page(WZip &zip, size_t &seek_from, datastruct &doc)
 {
-    struct zip_stat st;
+    double init[2];
+    /* point first page */
+    seek_from += WMemcpy(init, zip.get_data(), sizeof(double) * 2);
+    doc.setPointFirstPage(QPointF(init[0], init[1]));
+
+    W_ASSERT(0);
+
+    return 0;
+}
+
+static int read_number_page(WZip &zip, int &len, size_t &seek_from, datastruct &doc)
+{
+    /* page len */
+    static_assert(sizeof(len) == sizeof(int));
+    seek_from += WMemcpy(&len, zip.get_data() + seek_from, sizeof(len));
+    W_ASSERT(len > 0);
+
+    return 0;
+}
+
+static int read_zoom(WZip &zip, double &zoom, size_t &seek_from)
+{
+    static_assert(sizeof(zoom) == sizeof(double));
+    seek_from += WMemcpy(&zoom, zip.get_data() + seek_from, sizeof(zoom));
+    return 0;
+}
+
+static int read_ctrl(WZip &zip, size_t &ctrl, size_t &seek_from)
+{
+    static_assert(sizeof(ctrl) == sizeof(size_t));
+    seek_from += WMemcpy(&ctrl, zip.get_data() + seek_from, sizeof(ctrl));
+    return 0;
+}
+
+struct xmlstruct_thread_data{
+    WReadZip    *_zip;
+    int         _id;
+    page        *_page;
+    int         _ver_stroke;
+};
+
+static void *xmlstruct_thread_load(void *_data)
+{
+    int i;
+    struct xmlstruct_thread_data *data = static_cast<struct xmlstruct_thread_data *>(_data);
+
+    if(data->_page->load(*data->_zip, data->_ver_stroke, data->_id) != OK)
+        return (void *)1UL;
+
+    return 0;
+}
+
+#define MANAGE_ERR()    \
+    do{                 \
+        return ERROR;   \
+    }while(0)
+
+int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
+{
     size_t controll, newControll;
     int lenPage, counterPage;
     datastruct *data = currenttitle->datatouch;
-    zip_file_t *f;
-    double init[2];
 
-    zip_stat_init(&st);
-    zip_stat(z, NAME_BIN, 0, &st);
+    size_t needToSeekFrom = 0;
 
-     f = zip_fopen(z, NAME_BIN, 0);
-
-    if(f == nullptr)
+    if(!zip.openFileInZip(NAME_BIN))
         return ERROR;
 
-    /* point first page */
-    SOURCE_READ_GOTO(f, init, sizeof(double) * 2);
-    this->currenttitle->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
+    if(load_point_first_page(zip, needToSeekFrom, *this->currenttitle->datatouch))
+        MANAGE_ERR();
 
-    /* page len */
-    SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
+    if(read_number_page(zip, lenPage, needToSeekFrom, *currenttitle->datatouch))
+        MANAGE_ERR();
+
+    if(read_zoom(zip, currenttitle->datatouch->_zoom, needToSeekFrom))
+        MANAGE_ERR();
+
+    if(read_ctrl(zip, controll, needToSeekFrom))
+        MANAGE_ERR();
+
+    size_t seek[lenPage];
+    pthread_t thread[lenPage];
+    struct xmlstruct_thread_data thread_data[lenPage];
+
+    needToSeekFrom += WMemcpy(seek, zip.get_data() + needToSeekFrom, sizeof(size_t) * lenPage);
+
+    WReadZip zipReader(&zip, lenPage, needToSeekFrom, seek);
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        /* we add a new page */
         data->newPage(n_style::white);
 
-        if(data->at_mod(counterPage).load(f, ver_stroke) != OK)
-            goto free_;
+        thread_data[counterPage] = {
+            ._zip           = &zipReader,
+            ._id            = counterPage,
+            ._page          = &currenttitle->datatouch->at_mod(counterPage),
+            ._ver_stroke    = ver_stroke
+        };
+
+        pthread_create( &thread[counterPage],
+                        NULL,
+                        xmlstruct_thread_load,
+                        &thread_data[counterPage]);
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->_zoom,
-                     sizeof(this->currenttitle->datatouch->_zoom));
-
-    SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
-
-    zip_fclose(f);
+    zip.dealloc_file();
 
     newControll = currenttitle->createSingleControll();
 
@@ -51,8 +120,4 @@ __new int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
         return ERROR_CONTROLL;
 
     return OK;
-
-    free_:
-    zip_fclose(f);
-    return ERROR;
 }

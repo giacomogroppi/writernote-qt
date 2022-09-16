@@ -1,6 +1,6 @@
-#ifndef FROMIMAGE_H
-#define FROMIMAGE_H
+#pragma once
 
+#include "core/WZipReaderSingle.h"
 #include "zip.h"
 #include <QList>
 #include "utils/common_error_definition.h"
@@ -8,6 +8,7 @@
 #include <QPointF>
 #include <QImage>
 #include <QPainter>
+#include "core/WZip.h"
 
 #define DELTA_POINT 200
 #define SUFFIX_IMG "_img_"
@@ -31,7 +32,6 @@ private:
 
     uchar insert_image(QString &__pos, const PointSettable *point, struct immagine_s &img);
 
-
 public:
     static void copy(const fromimage &src, fromimage &dest);
     friend class square;
@@ -43,13 +43,14 @@ public:
         err_image_not_valid
     };
 
-    void addImage(QString &__pos,
-                  const PointSettable *point,
-                  const QString &writernote_file);
+    void addImage(QString &pos, const PointSettable *point, const QString &writernote_file);
 
     fromimage(Document *doc){ this->doc = doc; }
 
+#ifdef ALL_VERSION
     fromimage::load_res load(zip_t *filezip, zip_file_t *file);
+#endif // ALL_VERSION
+    fromimage::load_res load(WZipReaderSingle &zip);
 
     fromimage::load_res save(zip_t *file, const QStringList &path, const QString &path_writernote_file) const;
     fromimage::load_res save(zip_t *file, const QString &path, const QString &path_writernote_file) const;
@@ -68,7 +69,10 @@ public:
 
 private:
     load_res get_img_bytearray(QByteArray &arr, const QString &path) const;
+#ifdef ALL_VERSION
     load_res load_metadata(zip_file_t *file);
+#endif
+    load_res load_metadata(WZipReaderSingle &reader);
 
     load_res load_single(const QByteArray &arr,
                          struct immagine_s &img);
@@ -150,5 +154,3 @@ inline void fromimage::draw(QPainter &painter) const
 {
     return fromimage::draw(painter, this->m_img);
 }
-
-#endif // FROMIMAGE_H

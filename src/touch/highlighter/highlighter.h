@@ -1,5 +1,4 @@
-#ifndef HIGHLIGHTER_H
-#define HIGHLIGHTER_H
+#pragma once
 
 #include <QDialog>
 
@@ -65,5 +64,3 @@ private:
 protected:
     bool event(QEvent *) override;
 };
-
-#endif // HIGHLIGHTER_H

@@ -3,7 +3,7 @@
 #include "testing/memtest.h"
 #include <qmath.h>
 #include "utils/common_script.h"
-#include "core/wline.h"
+#include "core/WLine.h"
 
 constexpr double    error = 5000;
 constexpr bool      debug = false;

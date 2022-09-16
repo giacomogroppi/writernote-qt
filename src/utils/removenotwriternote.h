@@ -1,5 +1,5 @@
-#ifndef REMOVENOTWRITERNOTE_H
-#define REMOVENOTWRITERNOTE_H
+#pragma once
+
 
 #include <QStringList>
 #include "common_def.h"
@@ -10,4 +10,3 @@ public:
     static void exe(QStringList &ref);
 };
 
-#endif // REMOVENOTWRITERNOTE_H

@@ -1,5 +1,4 @@
-#ifndef UTILS_DATASTRUCT_H
-#define UTILS_DATASTRUCT_H
+#pragma once
 
 #include "utils/common_script.h"
 #include <QRectF>
@@ -47,5 +46,3 @@ force_inline bool datastruct_isinside(const QRectF &rect, const QPointF &point)
 {
     return datastruct_isinside(rect.topLeft(), rect.bottomRight(), point);
 }
-
-#endif // UTILS_DATASTRUCT_H

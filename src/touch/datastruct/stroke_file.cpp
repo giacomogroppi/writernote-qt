@@ -1,6 +1,7 @@
 #include "stroke_file.h"
 #include "touch/datastruct/stroke.h"
 #include "currenttitle/document.h"
+#include "core/WReadZip.h"
 
 #define stroke_file_size_len 4
 
@@ -81,7 +82,6 @@ force_inline int stroke_file::load_ver_1(class stroke &_stroke, zip_file_t *file
     _stroke.modify();
     return OK;
 }
-#endif
 
 force_inline int stroke_file::load_ver_2(class stroke &_stroke, zip_file_t *file)
 {
@@ -116,6 +116,65 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, zip_file_t *file
     return OK;
 }
 
+#endif // ALL_VERSION
+
+template <class T>
+static int stroke_file_ver_2_load_object(T &object, WReadZip &reader, int id)
+{
+    const auto *data = reader.read(sizeof(object), id);
+    if(!data)
+        return 1;
+    WMemcpy(&object, data, sizeof(object));
+    return 0;
+}
+
+#define MANAGE_ERR() return ERROR;
+
+force_inline int stroke_file::load_ver_2(class stroke &_stroke, class WReadZip &reader, int id)
+{
+    int len_press, len_point;
+    pressure_t tmp;
+    point_s point_append;
+
+    static_assert(sizeof(len_press) == sizeof(len_point));
+    static_assert(sizeof(len_point) == stroke_file_size_len);
+    static_assert(sizeof(_stroke._metadata) == 8);
+    static_assert(sizeof(_stroke._prop) == 4);
+
+    if(stroke_file_ver_2_load_object(_stroke._metadata, reader, id))
+        MANAGE_ERR();
+
+    if(stroke_file_ver_2_load_object(_stroke._prop, reader, id))
+        MANAGE_ERR();
+
+    if(unlikely(_stroke._prop != stroke::COMPLEX_NORMAL)){
+        return stroke_complex_load(&_stroke, _stroke._prop, reader, id);
+    }
+
+    if(stroke_file_ver_2_load_object(len_point, reader, id))
+        MANAGE_ERR();
+    if(stroke_file_ver_2_load_object(len_press, reader, id))
+        MANAGE_ERR();
+
+    while(len_press -- > 0){
+        if(stroke_file_ver_2_load_object(tmp, reader, id))
+            MANAGE_ERR();
+
+        _stroke._pressure.append(tmp);
+    }
+
+    while(len_point -- > 0){
+        if(stroke_file_ver_2_load_object(point_append, reader, id))
+            MANAGE_ERR();
+
+        _stroke._point.append(point_append);
+    }
+
+    _stroke.modify();
+    return OK;
+}
+
+#ifdef ALL_VERSION
 int stroke_file::load(class stroke &_stroke, int version, zip_file_t *file)
 {
     if(version > CURRENT_VERSION_STROKE)
@@ -123,7 +182,6 @@ int stroke_file::load(class stroke &_stroke, int version, zip_file_t *file)
 
     _stroke.reset();
 
-#ifdef ALL_VERSION
     switch (version) {
         case 0:
             return stroke_file::load_ver_0(_stroke, file);
@@ -134,12 +192,28 @@ int stroke_file::load(class stroke &_stroke, int version, zip_file_t *file)
         default:
             return ERROR_VERSION;
     }
-#else
-    if(version != CURRENT_VERSION_STROKE){
+
+    W_ASSERT(0);
+}
+
+#endif // ALL_VERSION
+
+int stroke_file::load(stroke &_stroke, int version, WReadZip &reader, int id)
+{
+    if(unlikely(version > CURRENT_VERSION_STROKE))
+        return ERROR_VERSION_NEW;
+
+    _stroke.reset();
+
+    static_assert(CURRENT_VERSION_STROKE == 2);
+
+    switch (version) {
+    case 2:
+        return stroke_file::load_ver_2(_stroke, reader, id);
+    default:
         return ERROR_VERSION;
     }
-    return stroke_file::load_ver_2(_stroke, file);
-#endif // ALL_VERSION
+    W_ASSERT(0);
 }
 
 int stroke_file::save(const class stroke &_stroke, zip_source_t *file)

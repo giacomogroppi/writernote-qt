@@ -85,6 +85,39 @@ QStringList frompdf::get_name_pdf()
     return __l;
 }
 
+frompdf::load_res frompdf::load(WZipReaderSingle &reader,
+                                TabletCanvas *canvas)
+{
+    QList<QByteArray> arr;
+    QStringList __name;
+    uint i;
+    frompdf::load_res res;
+    WZip *zip = reader.get_zip();
+
+    m_image.clear();
+
+    __name = get_name_pdf();
+
+    if(zip->is_file_open() && this->load_metadata(reader) != load_res::ok){
+        return load_res::no_metadata;
+    }
+
+    if(readListArray::read(__name, *reader.get_zip(), arr, false) != OK)
+        return frompdf::load_res::not_valid_pdf;
+
+    for (i = 0; i < m_data->count_pdf; ++i){
+        res = load_from_row(arr.at(i),
+                                 false,
+                                 !zip->is_file_open(),
+                                 i,
+                                 canvas);
+        if(res != frompdf::load_res::ok)
+            return res;
+    }
+
+    return frompdf::load_res::ok;
+}
+
 frompdf::load_res frompdf::load(zip_t           *fileZip,
                                 zip_file_t      *file,
                                 TabletCanvas    *canvas)

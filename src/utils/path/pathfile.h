@@ -1,5 +1,4 @@
-#ifndef PATHFILE_H
-#define PATHFILE_H
+#pragma once
 
 #include <QString>
 
@@ -12,5 +11,3 @@ public:
     static QString changeSlash(const QString &path);
 #endif
 };
-
-#endif // PATHFILE_H

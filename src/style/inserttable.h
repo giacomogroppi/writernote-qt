@@ -1,9 +1,6 @@
-#ifndef INSERTTABLE_H
-#define INSERTTABLE_H
+#pragma once
 
 class insertTable{
 
 };
 
-
-#endif // INSERTTABLE_H

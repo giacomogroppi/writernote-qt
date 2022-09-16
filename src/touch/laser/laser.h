@@ -1,5 +1,4 @@
-#ifndef LASER_H
-#define LASER_H
+#pragma once
 
 #include "utils/common_script.h"
 #include <QTimer>
@@ -65,4 +64,3 @@ force_inline void laser::endMove()
     _timer->start(_time);
 }
 
-#endif // LASER_H

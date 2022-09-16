@@ -1,9 +1,9 @@
-#ifndef PROPERTY_CONTROL_H
-#define PROPERTY_CONTROL_H
+#pragma once
 
 #include <QWidget>
 #include <QRect>
 #include <QEvent>
+#include "utils/common_script.h"
 
 class Document;
 
@@ -56,9 +56,8 @@ inline void property_control::Hide()
         this->hide();
 }
 
-Q_ALWAYS_INLINE bool property_control::is_visible() const
+force_inline bool property_control::is_visible() const
 {
     return this->isVisible();
 }
 
-#endif // PROPERTY_CONTROL_H

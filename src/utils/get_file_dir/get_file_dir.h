@@ -1,5 +1,5 @@
-#ifndef GET_FILE_DIR_H
-#define GET_FILE_DIR_H
+#pragma once
+
 
 #include <QStringList>
 #include <QDir>
@@ -11,4 +11,3 @@ public:
     static QStringList get(const QString &dir);
 };
 
-#endif // GET_FILE_DIR_H

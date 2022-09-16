@@ -1,5 +1,5 @@
-#ifndef GET_ONLY_NAME_H
-#define GET_ONLY_NAME_H
+#pragma once
+
 
 #include <QString>
 
@@ -9,4 +9,3 @@ public:
     static QString exe(const QString &path);
 };
 
-#endif // GET_ONLY_NAME_H
