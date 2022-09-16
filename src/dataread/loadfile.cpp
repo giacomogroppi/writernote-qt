@@ -167,6 +167,8 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
     int tmp_ver;
     bool ok;
 
+    static_assert(sizeof(tmp_ver) == xmlstruct::get_offset_start());
+
     currenttitle->reset();
     auto zip = WZip(path_->toUtf8(), ok);
     if(!ok)
