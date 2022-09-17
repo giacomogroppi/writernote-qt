@@ -75,7 +75,7 @@ public:
 
     void drawIfInside(const QRect &area);
 
-    constexpr double getZoom() const;
+    constexpr typeof(datastruct::_zoom) getZoom() const;
     constexpr force_inline QPointF getPointFirstPage() const { return _zoom * _pointFirstPage; }
     constexpr force_inline QPointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
@@ -443,7 +443,7 @@ inline void datastruct::triggerViewIfVisible(int m_pos_ris)
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.3);
 }
 
-constexpr force_inline double datastruct::getZoom() const
+constexpr force_inline typeof(datastruct::_zoom) datastruct::getZoom() const
 {
     return this->_zoom;
 }

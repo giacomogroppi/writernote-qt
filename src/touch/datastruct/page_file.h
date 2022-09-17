@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/WZipWriterSingle.h"
 #include "utils/common_script.h"
 #include "zip.h"
 
@@ -19,6 +20,6 @@ public:
 
     static int load(class page &_page, int ver_stroke, class WReadZip &readZip, int id);
 
-    static int save(const page *_page, zip_source_t *file, cbool saveImg);
+    static int save(const page *_page, WZipWriterSingle &file, cbool saveImg);
 };
 

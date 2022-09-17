@@ -8,9 +8,18 @@
 #include "core/WZipWriterSingle.h"
 #include "currenttitle/document.h"
 
-static int savefile::save_zoom(WZipWriterSingle &writer, )
+static int savefile_save_zoom(WZipWriterSingle &writer, const double zoom)
+{
 
-int savefile::salvabinario(WZipWriter &filezip, cbool saveImg)
+}
+
+static size_t savefile_get_size_file(Document &doc)
+{
+    W_ASSERT(0);
+    return 0;
+}
+
+int savefile::salvabinario(cbool saveImg)
 {
     int counterPage, err = ERROR;
     const size_t controll = _doc->createSingleControll();
@@ -19,39 +28,34 @@ int savefile::salvabinario(WZipWriter &filezip, cbool saveImg)
     cint lenPage = _doc->datatouch->lengthPage();
     const page *page;
     const auto zoom = _doc->datatouch->getZoom();
+    WZipWriterSingle writer;
+    const auto sizeFile = savefile_get_size_file(*_doc);
 
-    file = zip_source_buffer_create(0, 0, 0, &errore);
-
-    zip_source_begin_write(file);
+    writer.init(NULL, 0, sizeFile);
 
     /* first point */
-    SOURCE_WRITE(file, init, sizeof(double) * 2);
+    static_assert(sizeof(init) == sizeof(double) * 2);
+    writer.write(init, sizeof(init));
 
     /* page len */
-    SOURCE_WRITE_GOTO_SIZE(file, &lenPage, sizeof(lenPage));
+    writer.write_object(lenPage);
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         page = &_doc->datatouch->at(counterPage);
 
-        err = page->save(file, saveImg);
+        err = page->save(writer, saveImg);
         if(err != OK)
-            goto delete_;
+            return ERROR;
     }
 
-    SOURCE_WRITE_GOTO_SIZE(file, &zoom, sizeof(zoom));
+    writer.write_object(_doc->datatouch->getZoom());
 
-    SOURCE_WRITE_GOTO_SIZE(file, &controll, sizeof(controll));
+    writer.write_object(controll);
 
-    if(!savefile::commitChange(file))
-        return freezip(file);
-    if(!savefile::addFile(filezip, NAME_BIN, file))
-        return freezip(file);
+    if(writer.commit_change(this->_path->toUtf8(), QByteArray(NAME_BIN)))
+        return ERROR;
 
     return OK;
-
-delete_:
-    zip_source_free(file);
-    return err;
 }
 
 void savefile::removeFile(zip_t *file, const QString &name)

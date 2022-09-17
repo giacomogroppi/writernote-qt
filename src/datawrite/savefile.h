@@ -17,7 +17,7 @@ private:
     const QString   *_path;
     Document        *_doc;
 
-    int salvabinario(WZipWriter &zip, cbool saveImg);
+    int salvabinario(cbool saveImg);
 
 public:
     static void removeFile(zip_t *file, const QString &name);

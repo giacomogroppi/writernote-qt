@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iostream"
+#include "testing/memtest.h"
 #include "utils/common_script.h"
 
 class WZipWriterSingle {
@@ -9,17 +9,20 @@ private:
     char *_data;
     size_t _min, _max;
     size_t _offset;
+    bool _allocated;
 
 public:
     WZipWriterSingle();
-    ~WZipWriterSingle() = default;
+    ~WZipWriterSingle();
 
     void init(char *_data, size_t min, size_t max);
 
-    int write(const void *to, size_t size_object);
+    void write(const void *to, size_t size_object);
 
     template<class T>
     int write_object(const T &data);
+
+    int commit_change(const QByteArray &zipName, const QByteArray &nameFileInZip);
 
     WZipWriterSingle &operator=(WZipWriterSingle &) = delete;
 
@@ -36,23 +39,27 @@ inline WZipWriterSingle::WZipWriterSingle()
 inline void WZipWriterSingle::init(char *data, size_t min, size_t max)
 {
     W_ASSERT(_data == nullptr and _min == 1 and _max == 0);
-    this->_data = data;
-    this->_max = max;
-    this->_min = min;
+    this->_allocated = data == NULL;
+
+    if(_allocated){
+        this->_data = (typeof(_data))WMalloc(max);
+        W_ASSERT(_max > 0 and _min == 0);
+    }else{
+        this->_max = max;
+        this->_min = min;
+    }
+
     this->_offset = min;
 }
 
-inline int WZipWriterSingle::write(const void *to, size_t size_object)
+inline void WZipWriterSingle::write(const void *to, size_t size_object)
 {
     W_ASSERT(this->_offset < this->_max);
 
-    if(this->_offset + size_object >= this->_max)
-        return -1;
+    W_ASSERT(this->_offset + size_object < this->_max);
 
     WMemcpy(this->_data + this->_offset, to, size_object);
     this->_offset += size_object;
-
-    return 0;
 }
 
 template <class T>

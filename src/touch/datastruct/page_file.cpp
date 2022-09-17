@@ -203,13 +203,15 @@ int page_file::load(page &_page, int ver_stroke, WReadZip &readZip, int id)
     }
 }
 
-int page_file::save(const page *_page, zip_source_t *file, cbool saveImg)
+int page_file::save(const page *_page, WZipWriterSingle &file, cbool saveImg)
 {
     int i, err = OK;
     int len = _page->_stroke.length();
     size_t size;
     QByteArray arr;
     QBuffer buffer(&arr);
+
+    W_ASSERT(_page);
 
     /* stroke len */
     SOURCE_WRITE_GOTO_SIZE(file, &len, sizeof(len));

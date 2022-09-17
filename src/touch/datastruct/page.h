@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QDebug>
 #include <QImage>
+#include "core/WZipWriterSingle.h"
 #include "stroke.h"
 #include "log/log_ui/log_ui.h"
 #include "utils/common_def.h"
@@ -140,7 +141,7 @@ public:
     void reset();
     void allocateStroke(int numAllocation);
 
-    int save(zip_source_t *file, cbool saveImg) const;
+    int save(WZipWriterSingle &writer, cbool saveImg) const;
     int load(zip_file_t *file, int ver_stroke);
     int load(class WReadZip &readZip, int ver_stroke, int id);
 

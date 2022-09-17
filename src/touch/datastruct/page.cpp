@@ -7,6 +7,7 @@
 #include "touch/multi_thread_data.h"
 #include <QPaintDevice>
 #include "touch/datastruct/page_file.h"
+#include "core/WZipWriterSingle.h"
 
 #define PAGE_THREAD_MAX 16
 
@@ -717,9 +718,9 @@ void page::allocateStroke(int numAllocation)
     if(unlikely(err != OK)) \
         return err;
 
-int page::save(zip_source_t *file, cbool saveImg) const
+int page::save(WZipWriterSingle &writer, cbool saveImg) const
 {
-    return page_file::save(this, file, saveImg);
+    return page_file::save(this, writer, saveImg);
 }
 
 int page::load(zip_file_t *file, int ver_stroke)
