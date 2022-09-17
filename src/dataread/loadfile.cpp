@@ -161,6 +161,15 @@ uchar xmlstruct::controllOldVersion(zip_t *file)
 #define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
 #define LOAD_BINARIO_RETURN(x, function) if(function(x) == ERROR) return ERROR;
 
+static int xmlstruct_read_ver(WZip &zip, int &ver)
+{
+    static_assert(sizeof(ver) == sizeof(int));
+    WZipReaderSingle reader(&zip, 0);
+    if(reader.read_object(ver))
+        return -1;
+    return 0;
+}
+
 int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
 {
     int err = 0;
@@ -169,8 +178,8 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
 
     static_assert(sizeof(tmp_ver) == xmlstruct::get_offset_start());
 
-    currenttitle->reset();
-    auto zip = WZip(path_->toUtf8(), ok);
+    _doc->reset();
+    auto zip = WZip(_path->toUtf8(), ok);
     if(!ok)
         return ERROR;
 
@@ -181,39 +190,39 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
         return ERROR;
     }
 
-    SOURCE_READ_GOTO(zip.get_file(), &tmp_ver, sizeof(tmp_ver));
+    if(xmlstruct_read_ver(zip, tmp_ver))
+        goto free_;
 
-    W_ASSERT(xmlstruct::get_offset_start() == sizeof(tmp_ver));
 
     switch (tmp_ver) {
 #ifdef ALL_VERSION
     case 0 ... 2:
-        err = load_file_2(currenttitle, zip.get_file(), zip.get_zip());
+        err = load_file_2(_doc, zip.get_file(), zip.get_zip());
         break;
     case 3:
-        err = load_file_3(currenttitle, zip.get_file(), zip.get_zip());
+        err = load_file_3(_doc, zip.get_file(), zip.get_zip());
         break;
     case 4:
-        err = load_file_4(currenttitle, zip.get_file(), zip.get_zip());
+        err = load_file_4(_doc, zip.get_file(), zip.get_zip());
         break;
     case 5:
-        err = load_file_5(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        err = load_file_5(_doc, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
         break;
     case 6:
-        err = load_file_6(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        err = load_file_6(_doc, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
         break;
     case 7:
-        err = load_file_7(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        err = load_file_7(_doc, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
         break;
     case 8:
-        err = load_file_8(currenttitle, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
+        err = load_file_8(_doc, zip.get_file(), zip.get_zip(), LoadPdf, LoadImg);
         break;
 #else
     case 0 ... (CURRENT_VERSION_CURRENT_TITLE - 1):
         goto error_version;
 #endif
     case CURRENT_VERSION_CURRENT_TITLE:
-        err = load_file_9(currenttitle, zip, LoadPdf, LoadImg);
+        err = load_file_9(_doc, zip, LoadPdf, LoadImg);
         break;
     default:
         goto error_new_version;
@@ -230,11 +239,11 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
      * by previous versions of writernote
      * will be updated to the new versions
     */
-    currenttitle->versione = CURRENT_VERSION_CURRENT_TITLE;
+    this->_doc->versione = CURRENT_VERSION_CURRENT_TITLE;
 
-    this->currenttitle->datatouch->triggerNewView(-1, true);
+    this->_doc->datatouch->triggerNewView(-1, true);
 
-    currenttitle->datatouch->triggerVisibility(page::getHeight() * currenttitle->datatouch->lengthPage());
+    _doc->datatouch->triggerVisibility(page::getHeight() * _doc->datatouch->lengthPage());
     return OK;
 
     free_:

@@ -97,11 +97,11 @@ int xmlstruct::loadbinario_0(zip_t *z)
     {
         long double zoom;
         SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
-        currenttitle->datatouch->_zoom = zoom;
+        _doc->datatouch->_zoom = zoom;
     }
     zip_fclose(f);
 
-    xmlstruct::decode0(currenttitle, point, pos_foglio);
+    xmlstruct::decode0(_doc, point, pos_foglio);
 
     return OK;
 
@@ -145,12 +145,12 @@ int xmlstruct::loadbinario_1(struct zip *z)
     {
         long double zoom;
         SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
-        currenttitle->datatouch->_zoom = (double)zoom;
+        _doc->datatouch->_zoom = (double)zoom;
     }
 
     zip_fclose(f);
 
-    xmlstruct::decode0(currenttitle, __tmp, pos_foglio);
+    xmlstruct::decode0(_doc, __tmp, pos_foglio);
     return OK;
 
     free_:
@@ -383,7 +383,7 @@ int xmlstruct::loadbinario_2(struct zip *z)
 
     /* point first page */
     SOURCE_READ_GOTO(f, init, sizeof(double)*2);
-    this->currenttitle->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
+    this->_doc->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
 
     /* page len */
     SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
@@ -399,19 +399,19 @@ int xmlstruct::loadbinario_2(struct zip *z)
         }
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->_zoom, sizeof(this->currenttitle->datatouch->_zoom));
+    SOURCE_READ_GOTO(f, &this->_doc->datatouch->_zoom, sizeof(this->_doc->datatouch->_zoom));
 
     SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
 
     zip_fclose(f);
 
-    currenttitle->datatouch->triggerNewView(-1, true);
-    newControll = currenttitle->createSingleControll();
+    _doc->datatouch->triggerNewView(-1, true);
+    newControll = _doc->createSingleControll();
 
     if(controll != newControll)
         return ERROR_CONTROLL;
 
-    xmlstruct::decode1(currenttitle, pointAppend);
+    xmlstruct::decode1(_doc, pointAppend);
 
     return OK;
 
@@ -425,7 +425,7 @@ __old int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
     struct zip_stat st;
     size_t controll, newControll;
     int lenPage, counterPage;
-    datastruct *data = currenttitle->datatouch;
+    datastruct *data = _doc->datatouch;
     zip_file_t *f;
     double init[2];
 
@@ -439,7 +439,7 @@ __old int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
 
     /* point first page */
     SOURCE_READ_GOTO(f, init, sizeof(double) * 2);
-    this->currenttitle->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
+    this->_doc->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
 
     /* page len */
     SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
@@ -452,14 +452,14 @@ __old int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
             goto free_;
     }
 
-    SOURCE_READ_GOTO(f, &this->currenttitle->datatouch->_zoom,
-                     sizeof(this->currenttitle->datatouch->_zoom));
+    SOURCE_READ_GOTO(f, &this->_doc->datatouch->_zoom,
+                     sizeof(this->_doc->datatouch->_zoom));
 
     SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
 
     zip_fclose(f);
 
-    newControll = currenttitle->createSingleControll();
+    newControll = _doc->createSingleControll();
 
     if(controll != newControll)
         return ERROR_CONTROLL;

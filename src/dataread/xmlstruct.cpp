@@ -10,8 +10,8 @@ xmlstruct::xmlstruct(const QString *path_U, Document *currenttitle_U)
 
 void xmlstruct::setData(const QString *path_U, Document *currenttitle_U)
 {
-    this->path_ = path_U;
-    this->currenttitle = currenttitle_U;
+    this->_path = path_U;
+    this->_doc = currenttitle_U;
 }
 
 size_t xmlstruct::get_size_file(const QByteArray &path)

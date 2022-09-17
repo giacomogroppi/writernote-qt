@@ -42,13 +42,9 @@ int savefile::salvabinario(zip_t *filezip, cbool saveImg)
             goto delete_;
     }
 
-
-
     SOURCE_WRITE_GOTO_SIZE(file, &zoom, sizeof(zoom));
 
     SOURCE_WRITE_GOTO_SIZE(file, &controll, sizeof(controll));
-
-
 
     if(!savefile::commitChange(file))
         return freezip(file);

@@ -18,9 +18,9 @@ int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip
     LOAD_STRINGA_RETURN(f, tmp_str);
     SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(bool));
     if(temp)
-        this->currenttitle->se_registato = Document::record_file;
+        this->_doc->se_registato = Document::record_file;
     else
-        this->currenttitle->se_registato = Document::not_record;
+        this->_doc->se_registato = Document::not_record;
 
     SOURCE_READ_RETURN_SIZE(f, &translate, sizeof(translate));
 

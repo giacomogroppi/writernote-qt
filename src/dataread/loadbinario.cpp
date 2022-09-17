@@ -4,41 +4,52 @@
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "utils/common_script.h"
 #include "core/WReadZip.h"
+#include "core/WZipReaderSingle.h"
 #include <pthread.h>
 
-static int load_point_first_page(WZip &zip, size_t &seek_from, datastruct &doc)
+static int load_point_first_page(WZipReaderSingle &zip, datastruct &doc)
 {
     double init[2];
     /* point first page */
-    seek_from += WMemcpy(init, zip.get_data(), sizeof(double) * 2);
-    doc.setPointFirstPage(QPointF(init[0], init[1]));
 
-    W_ASSERT(0);
+    static_assert(sizeof(init) == sizeof(double) * 2);
+
+    if(zip.read_by_size(init, sizeof(init)))
+        return 1;
+
+    doc.setPointFirstPage(QPointF(init[0], init[1]));
 
     return 0;
 }
 
-static int read_number_page(WZip &zip, int &len, size_t &seek_from, datastruct &doc)
+static int read_number_page(WZipReaderSingle &zip, int &len, datastruct &doc)
 {
     /* page len */
     static_assert(sizeof(len) == sizeof(int));
-    seek_from += WMemcpy(&len, zip.get_data() + seek_from, sizeof(len));
+
+    if(zip.read_object(len))
+        return 1;
+
     W_ASSERT(len > 0);
 
     return 0;
 }
 
-static int read_zoom(WZip &zip, double &zoom, size_t &seek_from)
+static int read_zoom(WZipReaderSingle &zip, double &zoom)
 {
     static_assert(sizeof(zoom) == sizeof(double));
-    seek_from += WMemcpy(&zoom, zip.get_data() + seek_from, sizeof(zoom));
+
+    if(zip.read_object(zoom))
+        return 1;
+
     return 0;
 }
 
-static int read_ctrl(WZip &zip, size_t &ctrl, size_t &seek_from)
+static int read_ctrl(WZipReaderSingle &zip, size_t &ctrl)
 {
     static_assert(sizeof(ctrl) == sizeof(size_t));
-    seek_from += WMemcpy(&ctrl, zip.get_data() + seek_from, sizeof(ctrl));
+    if(zip.read_object(ctrl))
+        return 1;
     return 0;
 }
 
@@ -69,32 +80,32 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
 {
     size_t controll, newControll;
     int lenPage, counterPage;
-    datastruct *data = currenttitle->datatouch;
-
-    size_t needToSeekFrom = 0;
+    datastruct *data = _doc->datatouch;
+    WZipReaderSingle reader(&zip, 0);
 
     if(!zip.openFileInZip(NAME_BIN))
         return ERROR;
 
-    if(load_point_first_page(zip, needToSeekFrom, *this->currenttitle->datatouch))
+    if(load_point_first_page(reader, *this->_doc->datatouch))
         MANAGE_ERR();
 
-    if(read_number_page(zip, lenPage, needToSeekFrom, *currenttitle->datatouch))
+    if(read_number_page(reader, lenPage, *_doc->datatouch))
         MANAGE_ERR();
 
-    if(read_zoom(zip, currenttitle->datatouch->_zoom, needToSeekFrom))
+    if(read_zoom(reader, _doc->datatouch->_zoom))
         MANAGE_ERR();
 
-    if(read_ctrl(zip, controll, needToSeekFrom))
+    if(read_ctrl(reader, controll))
         MANAGE_ERR();
 
     size_t seek[lenPage];
     pthread_t thread[lenPage];
     struct xmlstruct_thread_data thread_data[lenPage];
 
-    needToSeekFrom += WMemcpy(seek, zip.get_data() + needToSeekFrom, sizeof(size_t) * lenPage);
+    if(reader.read_by_size(seek, sizeof(size_t) * lenPage))
+        MANAGE_ERR();
 
-    WReadZip zipReader(&zip, lenPage, needToSeekFrom, seek);
+    WReadZip zipReader(&zip, lenPage, reader.get_offset(), seek);
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         data->newPage(n_style::white);
@@ -102,7 +113,7 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
         thread_data[counterPage] = {
             ._zip           = &zipReader,
             ._id            = counterPage,
-            ._page          = &currenttitle->datatouch->at_mod(counterPage),
+            ._page          = &_doc->datatouch->at_mod(counterPage),
             ._ver_stroke    = ver_stroke
         };
 
@@ -114,7 +125,7 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
 
     zip.dealloc_file();
 
-    newControll = currenttitle->createSingleControll();
+    newControll = _doc->createSingleControll();
 
     if(controll != newControll)
         return ERROR_CONTROLL;

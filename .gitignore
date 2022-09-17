@@ -1,3 +1,5 @@
+build-qtcreator/*
+cmake-build-debug/*
 .idea/*
 *.slo
 *.lo

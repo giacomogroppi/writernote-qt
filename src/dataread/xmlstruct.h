@@ -37,9 +37,9 @@ force_inline zip_t *zip_open(const QString &path, int check, int *ok)
 
 class xmlstruct{
 private:
-    const QString *path_;
+    const QString *_path;
     static constexpr size_t get_offset_start() { return sizeof(int); };
-    Document *currenttitle = nullptr;
+    Document *_doc = nullptr;
 
 #ifdef ALL_VERSION
     __old int load_file_2(Document *doc, zip_file_t *f, zip_t *filezip);
@@ -94,7 +94,7 @@ public:
 
 inline const QString &xmlstruct::getPath() const
 {
-    return *path_;
+    return *_path;
 }
 
 force_inline size_t xmlstruct::sizeFile(zip_t *filezip, const QString &namefile)
