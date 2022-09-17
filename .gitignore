@@ -1,3 +1,4 @@
+null.d
 build-qtcreator/*
 cmake-build-debug/*
 .idea/*
