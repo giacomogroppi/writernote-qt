@@ -6,18 +6,19 @@ WZipWriterMulti::WZipWriterMulti(const char *fileZip, const char *fileInZip,
 {
     int i;
 
-    this->_data         = WMalloc(sizeFileInZip);
-    this->_size_file    = sizeFileInZip;
-    this->_thread       = thread;
-    this->_zip          = new WZipWriter;
-    this->_writer       = new WZipWriterSingle[thread];
-    this->_is_err       = false;
+    this->_data             = WMalloc(sizeFileInZip);
+    this->_size_file        = sizeFileInZip;
+    this->_thread           = thread;
+    this->_zip              = new WZipWriter;
+    this->_writer           = new WZipWriterSingle[thread];
+    this->_is_err           = false;
+    this->_nameFileInZip    = fileInZip;
 
 #ifdef DEBUGINFO
     memset(_data, 0, sizeFileInZip);
 #endif
 
-    if(this->_zip->init(fileZip, fileInZip)){
+    if(this->_zip->init(fileZip)){
         this->set_err();
         return;
     }
@@ -31,4 +32,20 @@ WZipWriterMulti::WZipWriterMulti(const char *fileZip, const char *fileInZip,
 WZipWriterMulti::~WZipWriterMulti()
 {
 
+}
+
+/*
+ * the save function writes the data to file, commits and then closes the file
+*/
+int WZipWriterMulti::commit()
+{
+    this->_zip->write(
+                this->_data,
+                this->_size_file,
+                this->_nameFileInZip
+                );
+
+    WFree(this->_data);
+
+    return 0;
 }

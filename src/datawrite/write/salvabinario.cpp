@@ -5,24 +5,20 @@
 #include "zip.h"
 #include "datawrite/source_read_ext.h"
 #include "images/fromimage.h"
+#include "core/WZipWriterSingle.h"
 #include "currenttitle/document.h"
 
-static int freezip(zip_source_t *files){
-    zip_source_free(files);
-    return ERROR;
-}
+static int savefile::save_zoom(WZipWriterSingle &writer, )
 
-int savefile::salvabinario(zip_t *filezip, cbool saveImg)
+int savefile::salvabinario(WZipWriter &filezip, cbool saveImg)
 {
     int counterPage, err = ERROR;
-    const size_t controll = this->currenttitle->createSingleControll();
-    zip_source_t *file;
-    zip_error_t errore;
-    const auto &pointInit = currenttitle->datatouch->getPointFirstPageNoZoom();
+    const size_t controll = _doc->createSingleControll();
+    const auto &pointInit = _doc->datatouch->getPointFirstPageNoZoom();
     const double init[2] = {pointInit.x() , pointInit.y() };
-    cint lenPage = currenttitle->datatouch->lengthPage();
+    cint lenPage = _doc->datatouch->lengthPage();
     const page *page;
-    const auto zoom = currenttitle->datatouch->getZoom();
+    const auto zoom = _doc->datatouch->getZoom();
 
     file = zip_source_buffer_create(0, 0, 0, &errore);
 
@@ -35,7 +31,7 @@ int savefile::salvabinario(zip_t *filezip, cbool saveImg)
     SOURCE_WRITE_GOTO_SIZE(file, &lenPage, sizeof(lenPage));
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        page = &currenttitle->datatouch->at(counterPage);
+        page = &_doc->datatouch->at(counterPage);
 
         err = page->save(file, saveImg);
         if(err != OK)

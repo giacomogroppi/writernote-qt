@@ -2,6 +2,8 @@
 #include "datawrite/source_read_ext.h"
 #include "dataread/xmlstruct.h"
 #include "dataread/load_from_file.h"
+#include "core/WZipWriter.h"
+#include "core/WZipWriterMulti.h"
 #include <QFile>
 
 int savefile::moveFileIntoZip(

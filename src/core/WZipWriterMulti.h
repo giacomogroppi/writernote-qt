@@ -11,6 +11,7 @@ private:
     size_t              _size_file;
     int                 _thread;
     bool                _is_err;
+    const char          *_nameFileInZip;
 
     void set_err();
 
@@ -23,6 +24,7 @@ public:
                     int thread, size_t *seek, size_t sizeFileInZip);
     ~WZipWriterMulti();
     bool is_err() const;
+    int commit();
 };
 
 inline void WZipWriterMulti::set_err()
