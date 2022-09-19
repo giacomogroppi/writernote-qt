@@ -20,7 +20,7 @@ public:
     void write(const void *to, size_t size_object);
 
     template<class T>
-    int write_object(const T &data);
+    void write_object(const T &data);
 
     int commit_change(const QByteArray &zipName, const QByteArray &nameFileInZip);
 
@@ -63,7 +63,7 @@ inline void WZipWriterSingle::write(const void *to, size_t size_object)
 }
 
 template <class T>
-inline int WZipWriterSingle::write_object(const T &data)
+inline void WZipWriterSingle::write_object(const T &data)
 {
-    return this->write(&data, sizeof(T));
+    this->write(&data, sizeof(T));
 }
