@@ -8,6 +8,7 @@ private:
 
 #ifdef DEBUGINFO
     bool already_write;
+    bool already_init;
 #endif
     struct zip          *_zip;
 
@@ -18,6 +19,7 @@ private:
 
 public:
     WZipWriter();
+
     ~WZipWriter();
 
     int init(const char *file);

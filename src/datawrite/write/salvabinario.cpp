@@ -8,11 +8,6 @@
 #include "core/WZipWriterSingle.h"
 #include "currenttitle/document.h"
 
-static int savefile_save_zoom(WZipWriterSingle &writer, const double zoom)
-{
-
-}
-
 static size_t savefile_get_size_file(Document &doc)
 {
     W_ASSERT(0);
@@ -60,8 +55,5 @@ int savefile::salvabinario(cbool saveImg)
 
 void savefile::removeFile(zip_t *file, const QString &name)
 {
-    struct zip_stat stat;
-    zip_stat_init(&stat);
-    zip_stat(file, name.toUtf8().constData(), 0, &stat);
-    zip_delete(file, stat.index);
+
 }

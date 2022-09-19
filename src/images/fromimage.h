@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/WZipReaderSingle.h"
+#include "core/WZipWriter.h"
 #include "zip.h"
 #include <QList>
 #include "utils/common_error_definition.h"
@@ -28,7 +29,7 @@ private:
     QStringList get_name_img();
     static QStringList get_name_img(const Document &doc);
 
-    static inline QString getName(const uint i){ return SUFFIX_IMG + QString::number(uint(i)); }
+    static inline QByteArray getName(const unsigned i);
 
     uchar insert_image(QString &__pos, const PointSettable *point, struct immagine_s &img);
 
@@ -43,7 +44,7 @@ public:
         err_image_not_valid
     };
 
-    void addImage(QString &pos, const PointSettable *point, const QString &writernote_file);
+    [[nodiscard]] int addImage(QString &pos, const PointSettable *point, const QString &writernote_file);
 
     fromimage(Document *doc){ this->doc = doc; }
 
@@ -52,8 +53,8 @@ public:
 #endif // ALL_VERSION
     fromimage::load_res load(WZipReaderSingle &zip);
 
-    fromimage::load_res save(zip_t *file, const QStringList &path, const QString &path_writernote_file) const;
-    fromimage::load_res save(zip_t *file, const QString &path, const QString &path_writernote_file) const;
+    fromimage::load_res save(WZipWriter &file, const QStringList &path) const;
+    fromimage::load_res save(WZipWriter &file, const QString &path) const;
     fromimage::load_res save_metadata(zip_source_t *file);
 
     void move(const QPointF &translation);
@@ -78,6 +79,12 @@ private:
                          struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);
 };
+
+inline QByteArray fromimage::getName(const unsigned i)
+{
+    const auto tmp = SUFFIX_IMG + QString::number(uint(i));
+    return tmp.toUtf8();
+}
 
 inline void fromimage::copy(const fromimage &src, fromimage &dest)
 {

@@ -2,6 +2,8 @@
 #include "touch/datastruct/stroke.h"
 #include "currenttitle/document.h"
 #include "core/WReadZip.h"
+#include "core/WZipWriterSingle.h"
+#include "datawrite/source_read_ext.h"
 
 #define stroke_file_size_len 4
 
@@ -216,7 +218,7 @@ int stroke_file::load(stroke &_stroke, int version, WReadZip &reader, int id)
     W_ASSERT(0);
 }
 
-int stroke_file::save(const class stroke &_stroke, zip_source_t *file)
+int stroke_file::save(const class stroke &_stroke, WZipWriterSingle &writer)
 {
     int i;
     cint len_pressure = _stroke._pressure.length();
@@ -225,25 +227,25 @@ int stroke_file::save(const class stroke &_stroke, zip_source_t *file)
     static_assert(sizeof(len_pressure) == sizeof(len_point));
     static_assert(sizeof(len_pressure) == stroke_file_size_len);
 
-    SOURCE_WRITE_RETURN_SIZE(file, &_stroke._metadata, sizeof(_stroke._metadata));
-    SOURCE_WRITE_RETURN_SIZE(file, &_stroke._prop, sizeof(_stroke._prop));
+    writer.write_object(_stroke._metadata);
+    writer.write_object(_stroke._prop);
 
     if(_stroke.is_complex()){
         W_ASSERT(_stroke._pressure.isEmpty());
         W_ASSERT(_stroke._point.isEmpty());
 
-        return stroke_complex_save(&_stroke, file);
+        return stroke_complex_save(&_stroke, writer);
     }
 
-    SOURCE_WRITE_RETURN_SIZE(file, &len_point, sizeof(len_point));
-    SOURCE_WRITE_RETURN_SIZE(file, &len_pressure, sizeof(len_pressure));
+    writer.write_object(len_point);
+    writer.write_object(len_pressure);
 
     for(i = 0; i < len_pressure; i++){
-        SOURCE_WRITE_RETURN_SIZE(file, &_stroke._pressure.at(i), sizeof(pressure_t));
+        writer.write(&_stroke._pressure.at(i), sizeof(pressure_t));
     }
 
     for(i = 0; i < len_point; i ++){
-        SOURCE_WRITE_RETURN_SIZE(file, &_stroke.at(i), sizeof(point_s));
+        writer.write(&_stroke.at(i), sizeof(point_s));
     }
 
     return OK;

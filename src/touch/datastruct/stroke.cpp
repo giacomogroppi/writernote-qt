@@ -30,7 +30,7 @@ void stroke::__setPressureFirstPoint(const pressure_t pres)
         _pressure.append(pres);
 }
 
-int stroke::save(zip_source_t *file) const
+int stroke::save(WZipWriterSingle &file) const
 {
     return stroke_file::save(*this, file);
 }

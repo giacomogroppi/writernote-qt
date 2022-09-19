@@ -14,6 +14,7 @@
 #include "touch/datastruct/stroke_complex_data.h"
 #include "touch/object_finder/model/model.h"
 #include "testing/memtest.h"
+#include "core/WZipWriterSingle.h"
 
 struct metadata_stroke{
     int posizione_audio;
@@ -53,7 +54,7 @@ private:
 
     void modify();
 
-    int save(zip_source_t *file) const;
+    int save(WZipWriterSingle &file) const;
 
 #ifdef DEBUGINFO
     int load(zip_file_t *file, int version);

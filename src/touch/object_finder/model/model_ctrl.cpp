@@ -94,14 +94,16 @@ bool stroke_complex_cmp(const stroke *str1, const stroke *str2)
 typedef uchar ver_stroke_complex;
 constexpr ver_stroke_complex _current_ver = 0;
 
-int stroke_complex_save(const stroke *stroke, zip_source_t *_file)
+int stroke_complex_save(const stroke *stroke, WZipWriterSingle &writer)
 {
     const auto type = stroke->get_type();
     const auto size = get_size_by_type(type);
     const auto *data = stroke->get_complex_data();
 
-    SOURCE_WRITE_RETURN_SIZE(_file, &_current_ver, sizeof(_current_ver));
-    SOURCE_WRITE_RETURN_SIZE(_file, data, size);
+    static_assert(sizeof(_current_ver) == sizeof(unsigned char));
+
+    writer.write_object(_current_ver);
+    writer.write(data, size);
 
     return OK;
 }

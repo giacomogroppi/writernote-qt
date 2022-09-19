@@ -1,9 +1,9 @@
 #pragma once
 
+#include "core/WZipWriterSingle.h"
 #include "utils/common_script.h"
 #include "utils/common_error_definition.h"
 #include "zip.h"
-#include "datawrite/source_read_ext.h"
 
 class stroke_file
 {
@@ -20,6 +20,9 @@ public:
 #endif // ALL_VERSION
     static int load(class stroke &_stroke, int version, WReadZip &reader, int id);
 
-    static int save(const class stroke &_stroke, zip_source_t *file);
+
+
+
+    static int save(const class stroke &_stroke, WZipWriterSingle &file);
 };
 

@@ -8,49 +8,43 @@
 #include "dataread/readlistarray.h"
 #include "datawrite/source_read_ext.h"
 #include "currenttitle/document.h"
-#include "datawrite/savefile.h"
 #include "dataread/xmlstruct.h"
+#include "core/WZipWriter.h"
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
-fromimage::load_res fromimage::save(zip_t *file,
-                                    const QStringList &path,
-                                    const QString &path_writernote_file) const{
+fromimage::load_res fromimage::save(WZipWriter          &writer,
+                                    const QStringList   &pathPdf) const
+{
     fromimage::load_res res;
     uint i, len;
 
-    doc->count_img = path.length();
+    doc->count_img = pathPdf.length();
     len = doc->count_img;
 
     for(i=0; i<len; ++i){
-        res = this->save(file,
-                         path.at(i),
-                         path_writernote_file);
+        res = this->save(writer, pathPdf.at(i));
+
         if(res != fromimage::load_res::ok)
             return res;
     }
     return fromimage::load_res::ok;
 }
 
-fromimage::load_res fromimage::save(zip_t *file,
-                                    const QString &path,
-                                    const QString &path_writernote_file) const{
-
+fromimage::load_res fromimage::save(WZipWriter              &writer,
+                                    const QString           &path) const
+{
     QByteArray img_in_byte;
     QImage img;
 
-    if(this->get_img_bytearray(img_in_byte, path) != load_res::ok){
+    if(get_img_bytearray(img_in_byte, path) != load_res::ok){
         return load_res::error;
     }
 
-    img.loadFromData(img_in_byte, "PNG");
-    if(img.isNull())
+    if(!img.loadFromData(img_in_byte, "PNG"))
         return load_res::err_image_not_valid;
 
-    if(savefile::saveArrayIntoFile(img_in_byte,
-                                   path_writernote_file,
-                                   file,
-                                   fromimage::getName(doc->count_img), true) != OK)
+    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName(doc->count_img)))
         return load_res::error;
 
     return load_res::ok;
@@ -264,17 +258,26 @@ uchar fromimage::insert_image(QString &pos,
 /*
  * add image from position
 */
-void fromimage::addImage(QString &pos,
+int fromimage::addImage(QString &pos,
                          const PointSettable *point,
                          const QString &path_writernote)
 {
     struct immagine_s img;
+    WZipWriter writer;
+
+    W_ASSERT(doc->count_img >= 0);
+
+    if(writer.init(path_writernote.toUtf8().constData()))
+        return -1;
 
     if(insert_image(pos, point, img) != OK)
-        return;
+        return -2;
 
     this->m_img.append(img);
 
-    this->save(nullptr, pos, path_writernote);
+    if(this->save(writer, pos) != fromimage::ok)
+        return -3;
+
     this->doc->count_img ++;
+    W_ASSERT(doc->count_img > 0);
 }

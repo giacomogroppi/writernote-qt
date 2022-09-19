@@ -4,6 +4,7 @@
 #include "images/fromimage.h"
 #include "frompdf/frompdf.h"
 #include "currenttitle/document.h"
+#include "core/WZipCommon.h"
 #include <QFile>
 
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
@@ -18,18 +19,17 @@ int savefile::savefile_check_file(cbool saveImg)
 {
     int error, ver_stroke;
     zip_error_t errore;
-    zip_t *filezip;
-    zip_source_t *file;
     fromimage::load_res res_img;
+    WZipWriterSingle writer;
 
 #ifdef PDFSUPPORT
     frompdf::load_res res_pdf;
 #endif // PDFSUPPORT
 
-    setCurrentVersion(currenttitle);
+    setCurrentVersion(_doc);
     ver_stroke = CURRENT_VERSION_STROKE;
 
-    filezip = zip_open(path->toUtf8().constData(), ZIP_CREATE, &error);
+    filezip = zip_open(_path->toUtf8().constData(), ZIP_CREATE, &error);
 
     if(!filezip)
         return ERROR;
@@ -45,7 +45,9 @@ int savefile::savefile_check_file(cbool saveImg)
 
     zip_source_begin_write(file);
 
-    SOURCE_WRITE(file, &currenttitle->versione, sizeof(currenttitle->versione))
+
+
+    SOURCE_WRITE(file, &_doc->versione, sizeof(_doc->versione))
     SOURCE_WRITE(file, &ver_stroke, sizeof(ver_stroke));
 
     {

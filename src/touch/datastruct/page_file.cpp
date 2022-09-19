@@ -203,7 +203,7 @@ int page_file::load(page &_page, int ver_stroke, WReadZip &readZip, int id)
     }
 }
 
-int page_file::save(const page *_page, WZipWriterSingle &file, cbool saveImg)
+int page_file::save(const page *_page, WZipWriterSingle &writer, cbool saveImg)
 {
     int i, err = OK;
     int len = _page->_stroke.length();
@@ -214,15 +214,15 @@ int page_file::save(const page *_page, WZipWriterSingle &file, cbool saveImg)
     W_ASSERT(_page);
 
     /* stroke len */
-    SOURCE_WRITE_GOTO_SIZE(file, &len, sizeof(len));
+    writer.write_object(len);
 
     for(i = 0; i < len; i++){
-        err = _page->atStroke(i).save(file);
+        err = _page->atStroke(i).save(writer);
         if(unlikely(err != OK))
             return err;
     }
 
-    err = _page->_stroke_writernote.save(file);
+    err = _page->_stroke_writernote.save(writer);
     if(unlikely(err != OK))
         return err;
 
@@ -234,12 +234,7 @@ int page_file::save(const page *_page, WZipWriterSingle &file, cbool saveImg)
 
     size = arr.size();
 
-    SOURCE_WRITE_GOTO_SIZE(file, &size, sizeof(size));
-    SOURCE_WRITE_GOTO_SIZE(file, arr.constData(), size);
-
+    writer.write_object(size);
+    writer.write(arr.constData(), size);
     return OK;
-
-    // for SOURCE_WRITE_GOTO macro
-delete_:
-    return ERROR;
 }
