@@ -8,8 +8,8 @@
 #include "utils/dialog_critic/dialog_critic.h"
 #include "utils/slash/slash.h"
 #include "utils/time/current_time.h"
-#include "dataread/load_from_file.h"
 #include "utils/common_script.h"
+#include "core/WFile.h"
 
 #include <pthread.h>
 #include <QDir>
@@ -37,7 +37,9 @@ log_ui::~log_ui()
 
 bool log_ui::getData(QByteArray &data)
 {
-    return load_from_file::exe(data, pos_log, false);
+    if(WFile::readFile(data, pos_log.toUtf8().constData()))
+        return false;
+    return true;
 }
 
 void log_ui::showAll()

@@ -24,8 +24,7 @@ public:
     /*
      * if filezip is NULL it will open the file
     */
-    static int moveFileIntoZip  (const QString &from,   const QString &path, zip_t *filezip, const QString &name, const bool closeZip);
-    static int saveArrayIntoFile(const QByteArray &arr, const QString &path, zip_t *filezip, const QString &name, bool closeZip);
+    static int moveFileIntoZip  (const QByteArray &from,   const QByteArray &path, WZipWriter &writer, const QByteArray &name);
 
     static uchar save_string(zip_source_t *file, const char *str);
 

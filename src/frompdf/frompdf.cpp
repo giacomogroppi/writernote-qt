@@ -5,11 +5,9 @@
 #include "currenttitle/document.h"
 #include "utils/permission/permission.h"
 #include "dataread/xmlstruct.h"
-#include "dataread/load_from_file.h"
 #include "dataread/readlistarray.h"
 #include "datawrite/savefile.h"
 #include <QFileDialog>
-#include "dataread/load_from_file.h"
 #include "utils/areyousure/areyousure.h"
 #include "convertImg.h"
 #include <QFuture>

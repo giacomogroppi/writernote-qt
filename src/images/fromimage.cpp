@@ -10,7 +10,6 @@
 #include "currenttitle/document.h"
 #include "datawrite/savefile.h"
 #include "dataread/xmlstruct.h"
-#include "dataread/load_from_file.h"
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
