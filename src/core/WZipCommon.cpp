@@ -1,4 +1,4 @@
-#include "wzipcommon.h"
+#include "WZipCommon.h"
 #include "utils/common_script.h"
 
 int WZipCommon::removeFile(const char *fileZip, const char *nameFileInZip)

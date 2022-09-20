@@ -19,6 +19,8 @@ public:
 
     void write(const void *to, size_t size_object);
 
+    void *get_data();
+
     template<class T>
     void write_object(const T &data);
 
@@ -27,6 +29,12 @@ public:
     WZipWriterSingle &operator=(WZipWriterSingle &) = delete;
 
 };
+
+inline void *WZipWriterSingle::get_data()
+{
+    W_ASSERT(this->_data);
+    return this->_data;
+}
 
 inline WZipWriterSingle::WZipWriterSingle()
 {
