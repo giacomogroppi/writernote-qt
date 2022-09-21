@@ -14,6 +14,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include "touch/tabletcanvas.h"
 #include "utils/threadcount.h"
+#include "core/WFile.h"
 
 void frompdf::translation(const QPointF &point)
 {
@@ -62,9 +63,8 @@ frompdf::load_res frompdf::load(
 {
     QByteArray arr;
 
-    if(!load_from_file::exe(arr, path, false)){
+    if(WFile::readFile(arr, path.toUtf8().constData()) < 0)
         return load_res::not_valid_pdf;
-    }
 
     /*
      *  if we do the load with this function is always the firstLost

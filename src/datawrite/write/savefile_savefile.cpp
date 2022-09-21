@@ -75,30 +75,22 @@ int savefile::savefile_check_file(cbool saveImg)
 
     res_img = _doc->m_img->save_metadata(writer);
     if(res_img != fromimage::load_res::ok)
-        goto delete_;
+        return ERROR;
 
 #ifdef PDFSUPPORT
     res_pdf = _doc->m_pdf->save_metadata(writer);
     if(res_pdf != frompdf::load_res::ok)
-        goto delete_;
+        return ERROR;
 #endif // PDFSUPPORT
 
+    if(writer.commit_change(_path->toUtf8(), QByteArray(NAME_FILE)) < 0)
+        return ERROR;
+
     if(this->salvabinario(saveImg) != OK){
-        goto delete_;
+        return ERROR;
     }
 
-    if(!savefile::commitChange(file))
-        goto delete_;
-    if(!savefile::addFile(filezip, NAME_FILE, file))
-        goto delete_;
-
-    zip_close(filezip);
     return OK;
-
-    delete_:
-        zip_source_free(file);
-        zip_close(filezip);
-        return ERROR;
 }
 
 uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)

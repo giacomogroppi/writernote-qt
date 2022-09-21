@@ -65,7 +65,8 @@
         "unordered_set": "cpp",
         "atomic": "cpp",
         "*.def": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "optional": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "cmake.configureOnOpen": true,

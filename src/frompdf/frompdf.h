@@ -127,6 +127,8 @@ public:
                 TabletCanvas *canvas);
 
     uint resolution = 500;//72
+    size_t get_size_file() const;
+
 private:
     void adjast(const uchar indexPdf);
 
@@ -134,8 +136,6 @@ private:
     load_res load_metadata(zip_file_t *file);
 #endif
     load_res load_metadata(WZipReaderSingle &reader);
-
-    size_t get_size_file() const;
 
     /*
      * this function only append a pdf to

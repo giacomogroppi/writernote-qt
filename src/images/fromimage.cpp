@@ -71,6 +71,12 @@ fromimage::load_res fromimage::save_metadata(WZipWriterSingle &writer)
     return load_res::ok;
 }
 
+size_t fromimage::get_size_file() const
+{
+    const size_t s = sizeof(double) * 4 * doc->count_img;
+    return s;
+}
+
 fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString &path) const
 {
     QImage img(path);

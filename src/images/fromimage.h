@@ -67,6 +67,7 @@ public:
             void draw(QPainter &painter) const;
 
     void reset(){ m_img.clear(); }
+    size_t get_size_file() const;
 
 private:
     load_res get_img_bytearray(QByteArray &arr, const QString &path) const;
@@ -78,8 +79,6 @@ private:
     load_res load_single(const QByteArray &arr,
                          struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);
-
-    size_t get_size_file() const;
 };
 
 inline QByteArray fromimage::getName(const unsigned i)
