@@ -9,11 +9,27 @@
 
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
-static void setCurrentVersion(Document *data);
+static void setCurrentVersion(Document *data)
+{
+    data->versione = CURRENT_VERSION_CURRENT_TITLE;
+}
+
 /*
  * the function save the copybook and all it's data
  * if save_audio == true -> save also the audio
 */
+
+static size_t savefile_get_size_file(Document *doc)
+{
+    W_ASSERT(0);
+    return 0;
+}
+
+static void savefile_save_record_state(WZipWriterSingle &writer, Document *doc)
+{
+    int tmp = static_cast<int>(doc->se_registato);
+    writer.write_object(tmp);
+}
 
 int savefile::savefile_check_file(cbool saveImg)
 {
@@ -26,39 +42,28 @@ int savefile::savefile_check_file(cbool saveImg)
     frompdf::load_res res_pdf;
 #endif // PDFSUPPORT
 
+    static_assert(sizeof(_doc->versione) == 4);
+    static_assert(sizeof(ver_stroke) == 4);
+    static_assert(sizeof(_doc->count_img) == sizeof(_doc->count_pdf));
+    static_assert(sizeof(_doc->count_img) == 4);
+
     setCurrentVersion(_doc);
     ver_stroke = CURRENT_VERSION_STROKE;
 
-    filezip = zip_open(_path->toUtf8().constData(), ZIP_CREATE, &error);
-
-    if(!filezip)
-        return ERROR;
+    writer.init(NULL, 0, savefile_get_size_file(this->_doc));
 
     /* remove old file formact: Version 2, 3, 4, 5 */
-    savefile::removeFile(filezip, "indice.xml");
+    WZipCommon::removeFile(_path->toUtf8().constData(), "indice.xml");
 
-    file = zip_source_buffer_create(0, 0, 0, &errore);
-    if(!file){
-        zip_close(filezip);
-        return ERROR;
-    }
+    writer.write_object(_doc->versione);
+    writer.write_object(ver_stroke);
 
-    zip_source_begin_write(file);
+    savefile_save_record_state(writer, _doc);
 
+    writer.write_string(_doc->audio_position_path.toUtf8().constData(), _doc->audio_position_path.size());
 
-
-    SOURCE_WRITE(file, &_doc->versione, sizeof(_doc->versione))
-    SOURCE_WRITE(file, &ver_stroke, sizeof(ver_stroke));
-
-    {
-        int temp = static_cast<int>(currenttitle->se_registato);
-        SOURCE_WRITE(file, &temp, sizeof(int))
-    }
-
-    SAVE_STRINGA(file, currenttitle->audio_position_path.toUtf8().constData())
-
-    SOURCE_WRITE(file, &currenttitle->count_pdf, sizeof(currenttitle->count_pdf));
-    SOURCE_WRITE(file, &currenttitle->count_img, sizeof(currenttitle->count_img));
+    writer.write_object(_doc->count_pdf);
+    writer.write_object(_doc->count_img);
 
     SAVE_BINARY(filezip, saveImg);
 
@@ -123,9 +128,4 @@ int save_audio_file(const char *posAudio,
                     const QString &path)
 {
     return savefile::moveFileIntoZip(QString(posAudio), path, nullptr, NAME_AUDIO, true);
-}
-
-static void setCurrentVersion(Document *data)
-{
-    data->versione = CURRENT_VERSION_CURRENT_TITLE;
 }

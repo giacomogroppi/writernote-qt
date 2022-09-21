@@ -24,6 +24,8 @@ public:
     template<class T>
     void write_object(const T &data);
 
+    void write_string(const char *str, int size);
+
     int commit_change(const QByteArray &zipName, const QByteArray &nameFileInZip);
 
     WZipWriterSingle &operator=(WZipWriterSingle &) = delete;

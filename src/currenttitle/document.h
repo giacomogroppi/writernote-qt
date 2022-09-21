@@ -29,7 +29,8 @@ public:
     int versione = CURRENT_VERSION_CURRENT_TITLE;
     QString audio_position_path = "";
 
-    bool isOkVersion() const{
+    bool isOkVersion() const
+    {
         return this->versione >= MIN_VERSION_CURRENT_TITLE;
     }
 

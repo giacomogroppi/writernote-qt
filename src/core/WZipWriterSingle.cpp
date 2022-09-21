@@ -7,6 +7,13 @@ WZipWriterSingle::~WZipWriterSingle()
         WFree(this->_data);
 }
 
+void WZipWriterSingle::write_string(const char *str, int size)
+{
+    static_assert(sizeof(size) == 4);
+    this->write_object(size);
+    this->write(str, size);
+}
+
 int WZipWriterSingle::commit_change(const QByteArray &zipName, const QByteArray &nameFileInZip)
 {
     WZipWriter writer;
