@@ -19,9 +19,17 @@ static void setCurrentVersion(Document *data)
  * if save_audio == true -> save also the audio
 */
 
-static size_t savefile_get_size_file(Document *doc)
+static size_t savefile_get_size_file(const Document *doc)
 {
-    W_ASSERT(0);
+    size_t s = 0;
+    s += sizeof(doc->versione);
+    s += sizeof(int); // ver_stroke
+    s += sizeof(int); // audio
+    s += sizeof(int) + doc->audio_position_path.length();
+    s += sizeof(doc->count_img);
+    s += sizeof(doc->count_pdf);
+    s += doc->m_pdf->get_size_file();
+    s += doc->m_img->get_size_file();
     return 0;
 }
 
@@ -65,17 +73,19 @@ int savefile::savefile_check_file(cbool saveImg)
     writer.write_object(_doc->count_pdf);
     writer.write_object(_doc->count_img);
 
-    SAVE_BINARY(filezip, saveImg);
-
-    res_img = currenttitle->m_img->save_metadata(file);
+    res_img = _doc->m_img->save_metadata(writer);
     if(res_img != fromimage::load_res::ok)
         goto delete_;
 
 #ifdef PDFSUPPORT
-    res_pdf = currenttitle->m_pdf->save_metadata(file);
+    res_pdf = _doc->m_pdf->save_metadata(writer);
     if(res_pdf != frompdf::load_res::ok)
         goto delete_;
 #endif // PDFSUPPORT
+
+    if(this->salvabinario(saveImg) != OK){
+        goto delete_;
+    }
 
     if(!savefile::commitChange(file))
         goto delete_;

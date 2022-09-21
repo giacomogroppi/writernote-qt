@@ -50,12 +50,12 @@ fromimage::load_res fromimage::save(WZipWriter              &writer,
     return load_res::ok;
 }
 
-fromimage::load_res fromimage::save_metadata(zip_source_t *file)
+fromimage::load_res fromimage::save_metadata(WZipWriterSingle &writer)
 {
-    uint i;
+    unsigned i;
     double val[4];
 
-    for(i=0; i<doc->count_img; ++i){
+    for(i = 0; i < doc->count_img; i++){
         const struct immagine_s &img = m_img.at(i);
 
         val[0] = img.i.x();
@@ -63,8 +63,9 @@ fromimage::load_res fromimage::save_metadata(zip_source_t *file)
         val[2] = img.f.x();
         val[3] = img.f.y();
 
-        if(zip_source_write(file, val, sizeof(double)*4) == -1)
-            return load_res::err_meta_data;
+        writer.write(val, sizeof(val));
+
+        static_assert(sizeof(val) == sizeof(double) * 4);
     }
 
     return load_res::ok;

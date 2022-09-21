@@ -55,7 +55,7 @@ public:
 
     fromimage::load_res save(WZipWriter &file, const QStringList &path) const;
     fromimage::load_res save(WZipWriter &file, const QString &path) const;
-    fromimage::load_res save_metadata(zip_source_t *file);
+    fromimage::load_res save_metadata(WZipWriterSingle &writer);
 
     void move(const QPointF &translation);
 
@@ -78,6 +78,8 @@ private:
     load_res load_single(const QByteArray &arr,
                          struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);
+
+    size_t get_size_file() const;
 };
 
 inline QByteArray fromimage::getName(const unsigned i)

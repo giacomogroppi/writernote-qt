@@ -8,7 +8,7 @@
 #include "core/WZipWriterSingle.h"
 #include "currenttitle/document.h"
 
-static size_t savefile_get_size_file(Document &doc)
+static size_t savefile_get_size_binary(Document &doc)
 {
     W_ASSERT(0);
     return 0;
@@ -24,7 +24,7 @@ int savefile::salvabinario(cbool saveImg)
     const page *page;
     const auto zoom = _doc->datatouch->getZoom();
     WZipWriterSingle writer;
-    const auto sizeFile = savefile_get_size_file(*_doc);
+    const auto sizeFile = savefile_get_size_binary(*_doc);
 
     writer.init(NULL, 0, sizeFile);
 

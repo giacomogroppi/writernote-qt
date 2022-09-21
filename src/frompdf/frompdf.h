@@ -70,18 +70,12 @@ private:
     }
 
 public:
-    static void copy(const frompdf &src, frompdf &dest)
-    {
-        dest.m_image = src.m_image;
-    }
+    static void copy(const frompdf &src, frompdf &dest);
 
     static bool isvalid(QString &pos);
 
     void translation(const QPointF &point);
-    inline void translation(const double x, const double y)
-    {
-        translation(QPointF(x, y));
-    }
+    void translation(const double x, const double y);
 
     frompdf(Document *doc);
     ~frompdf() = default;
@@ -94,10 +88,7 @@ public:
         no_valid_path
     };
 
-    inline void reset(){
-        m_image.clear();
-        this->m_data->count_pdf = 0;
-    }
+    void reset();
 
     QStringList get_name_pdf();
 
@@ -122,7 +113,7 @@ public:
     load_res save(zip_t *filezip, const QStringList &path, const QString &path_writernote_file);
     load_res save(zip_t *filezip, const QString &path, const QString &path_writernote_file);
 
-    load_res save_metadata(zip_source_t *file);
+    load_res save_metadata(WZipWriterSingle &writer);
 
     inline void draw(QPainter &painter, const double delta,
                      const bool IsExportingPdf) const;
@@ -144,12 +135,30 @@ private:
 #endif
     load_res load_metadata(WZipReaderSingle &reader);
 
+    size_t get_size_file() const;
+
     /*
      * this function only append a pdf to
      * the list
     */
     void init_FirstLoad();
 };
+
+inline void frompdf::copy(const frompdf &src, frompdf &dest)
+{
+    dest.m_image = src.m_image;
+}
+
+inline void frompdf::translation(const double x, const double y)
+{
+    translation(QPointF(x, y));
+}
+
+inline void frompdf::reset()
+{
+    m_image.clear();
+    this->m_data->count_pdf = 0;
+}
 
 force_inline void frompdf::draw(QPainter &painter, const double delta, const bool IsExportingPdf) const
 {

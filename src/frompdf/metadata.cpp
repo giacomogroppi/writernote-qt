@@ -5,19 +5,19 @@
 
 static inline void copy_double(const QPointF &point, double *data);
 
-frompdf::load_res frompdf::save_metadata(zip_source_t *file)
+frompdf::load_res frompdf::save_metadata(WZipWriterSingle &writer)
 {
-    uint i;
+    unsigned i;
     double pos[2];
 
-    for(i=0; i<m_data->count_pdf; ++i){
+    for(i = 0; i < m_data->count_pdf; i++){
         const Pdf &pdf = this->m_image.at(i);
 
         copy_double(pdf.topLeft, pos);
 
-        if(zip_source_write(file, pos, sizeof(double)*2) == -1){
-            return load_res::no_metadata;
-        }
+        static_assert(sizeof(pos) == sizeof(double) * 2);
+
+        writer.write(pos, sizeof(pos));
     }
     return load_res::ok;
 }
@@ -40,6 +40,12 @@ frompdf::load_res frompdf::load_metadata(WZipReaderSingle &reader)
     }
 
     return load_res::ok;
+}
+
+size_t frompdf::get_size_file() const
+{
+    const size_t s = sizeof(double) * 2 * m_data->count_pdf;
+    return s;
 }
 
 #ifdef ALL_VERSION
