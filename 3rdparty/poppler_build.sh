@@ -4,16 +4,20 @@ cd poppler
 mkdir build
 mkdir install
 
-# qt from repository
-#Qt5_POS=/usr/lib/x86_64-linux-gnu/cmake/Qt5
-#Qt6_POS=/usr/lib/x86_64-linux-gnu/cmake/Qt6
-
 # qt from qt installer
-Qt6_POS=~/Qt/6.3.0/gcc_64/lib/cmake/
+if [ ! -z QT_VER_WRITERNOTE ]
+then
+    QT_VER_WRITERNOTE=6.3.0
+fi
+
+echo "Qt version set to: ${QT_VER_WRITERNOTE}" 
+
+
+Qt6_POS=~/Qt/${QT_VER_WRITERNOTE}/gcc_64/lib/cmake/
 
 cd build
-cmake .. -DCMAKE_INSTALL_LIBDIR=/home/giacomo/writernote-qt/3rdparty/poppler/install \
-    -DCMAKE_INSTALL_INCLUDEDIR=/home/giacomo/writernote-qt/3rdparty/poppler/install \
+cmake .. -DCMAKE_INSTALL_LIBDIR=~/writernote-qt/3rdparty/poppler/install \
+    -DCMAKE_INSTALL_INCLUDEDIR=~/writernote-qt/3rdparty/poppler/install \
     -DENABLE_GLIB=OFF \
     -DENABLE_GTK_DOC=OFF \
     -DENABLE_QT5=OFF \

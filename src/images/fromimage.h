@@ -66,7 +66,7 @@ public:
     static  void draw(QPainter &painter, const QList<immagine_s> &list);
             void draw(QPainter &painter) const;
 
-    void reset(){ m_img.clear(); }
+    void reset();
     size_t get_size_file() const;
 
 private:
@@ -161,4 +161,9 @@ inline void fromimage::draw(QPainter &painter, const QList<immagine_s> &list)
 inline void fromimage::draw(QPainter &painter) const
 {
     return fromimage::draw(painter, this->m_img);
+}
+
+inline void fromimage::reset()
+{
+    m_img.clear();
 }
