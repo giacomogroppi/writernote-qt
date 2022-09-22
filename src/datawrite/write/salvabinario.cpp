@@ -8,9 +8,23 @@
 #include "core/WZipWriterSingle.h"
 #include "currenttitle/document.h"
 
-static size_t savefile_get_size_binary(Document &doc)
+static size_t savefile_get_size_page(const page &_page, cbool saveImg)
 {
-    W_ASSERT(0);
+    return _page.get_size_in_file(saveImg);
+}
+
+static size_t savefile_get_size_binary(Document &doc, cbool saveImg)
+{
+    size_t size = 0;
+    int i, len;
+
+    len = doc.datatouch->lengthPage();
+
+    for(i = 0; i < len; i++){
+        const auto page = doc.datatouch->at(i);
+        size += savefile_get_size_page(page, saveImg);
+    }
+
     return 0;
 }
 
@@ -23,7 +37,7 @@ int savefile::salvabinario(cbool saveImg)
     cint lenPage = _doc->datatouch->lengthPage();
     const page *page;
     WZipWriterSingle writer;
-    const auto sizeFile = savefile_get_size_binary(*_doc);
+    const auto sizeFile = savefile_get_size_binary(*_doc, saveImg);
 
     writer.init(NULL, 0, sizeFile);
 

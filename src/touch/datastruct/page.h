@@ -97,6 +97,7 @@ public:
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(cbool vis) const;
+    size_t get_size_in_file(cbool saveImg) const;
 
     __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 

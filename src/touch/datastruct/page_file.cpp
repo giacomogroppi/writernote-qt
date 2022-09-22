@@ -203,6 +203,34 @@ int page_file::load(page &_page, int ver_stroke, WReadZip &readZip, int id)
     }
 }
 
+size_t page_file::size_in_file(const page &_page, cbool saveImg)
+{
+    size_t s = 0;
+
+    s += sizeof(int);       // len stroke
+    s += sizeof(size_t);    // size img
+
+    for(const auto &ref: _page._stroke){
+        s += ref.getSizeInFile();
+    }
+    s += _page._stroke_writernote.getSizeInFile();
+
+    if(likely(saveImg)){
+        s += _page._imgDraw.sizeInBytes();
+
+#ifdef DEBUGINFO
+        QByteArray arr;
+        QBuffer buffer(&arr);
+        buffer.open(QIODevice::WriteOnly);
+        _page._imgDraw.save(&buffer, "PNG");
+        buffer.close();
+        W_ASSERT(arr.size() == _page._imgDraw.sizeInBytes());
+#endif
+    }
+
+    return s;
+}
+
 int page_file::save(const page *_page, WZipWriterSingle &writer, cbool saveImg)
 {
     int i, err = OK;
@@ -212,6 +240,9 @@ int page_file::save(const page *_page, WZipWriterSingle &writer, cbool saveImg)
     QBuffer buffer(&arr);
 
     W_ASSERT(_page);
+
+    static_assert(sizeof(len) == sizeof(int));
+    static_assert(sizeof(size) == sizeof(size_t));
 
     /* stroke len */
     writer.write_object(len);
@@ -226,15 +257,18 @@ int page_file::save(const page *_page, WZipWriterSingle &writer, cbool saveImg)
     if(unlikely(err != OK))
         return err;
 
-    if(unlikely(saveImg)){
-        buffer.open(QIODevice::WriteOnly);
-        _page->_imgDraw.save(&buffer, "PNG");
-        buffer.close();
+    {
+        if(unlikely(saveImg)){
+            buffer.open(QIODevice::WriteOnly);
+            _page->_imgDraw.save(&buffer, "PNG");
+            buffer.close();
+        }
+
+        size = arr.size();
+
+        writer.write_object(size);
+        writer.write(arr.constData(), size);
     }
 
-    size = arr.size();
-
-    writer.write_object(size);
-    writer.write(arr.constData(), size);
     return OK;
 }

@@ -21,7 +21,7 @@ public:
     static int load(class stroke &_stroke, int version, WReadZip &reader, int id);
 
 
-
+    static size_t get_size_in_file(const stroke &_stroke);
 
     static int save(const class stroke &_stroke, WZipWriterSingle &file);
 };

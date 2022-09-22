@@ -108,6 +108,21 @@ int stroke_complex_save(const stroke *stroke, WZipWriterSingle &writer)
     return OK;
 }
 
+size_t stroke_complex_get_size_save(const stroke *stroke)
+{
+    size_t s = 0;
+    const auto type = stroke->get_type();
+    const auto size = get_size_by_type(type);
+    const auto *data = stroke->get_complex_data();
+
+    static_assert(sizeof(_current_ver) == sizeof(unsigned char));
+
+    s += sizeof(_current_ver);
+    s += size;
+
+    return s;
+}
+
 #ifdef ALL_VERSION
 int stroke_complex_load(stroke *stroke, int type, zip_file_t *filezip)
 {
@@ -259,4 +274,3 @@ bool stroke_complex_is_inside(const stroke *_stroke, const QRectF &area, cdouble
             std::abort();
     }
 }
-

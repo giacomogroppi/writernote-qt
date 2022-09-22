@@ -90,6 +90,11 @@ size_t stroke::getSizeInMemory() const
     return sizeof(point_s) * length();
 }
 
+size_t stroke::getSizeInFile() const
+{
+    return stroke_file::get_size_in_file(*this);
+}
+
 void stroke::decreasePrecision()
 {
     int i, len;

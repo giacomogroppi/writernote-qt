@@ -211,6 +211,11 @@ void page::swap(QList<stroke> & list,
             )
 }
 
+size_t page::get_size_in_file(cbool saveImg) const
+{
+    return page_file::size_in_file(*this, saveImg);
+}
+
 /* the list should be order */
 void page::removeAt(const QVector<int> &pos)
 {

@@ -218,6 +218,36 @@ int stroke_file::load(stroke &_stroke, int version, WReadZip &reader, int id)
     W_ASSERT(0);
 }
 
+size_t stroke_file::get_size_in_file(const stroke &_stroke)
+{
+    size_t s = 0;
+    int i;
+    cint len_pressure = _stroke._pressure.length();
+    cint len_point    = _stroke._point.length();
+
+    static_assert(sizeof(len_pressure) == sizeof(len_point));
+    static_assert(sizeof(len_pressure) == stroke_file_size_len);
+
+    s += sizeof(_stroke._metadata);
+    s += sizeof(_stroke._prop);
+
+    if(_stroke.is_complex()){
+        W_ASSERT(_stroke._pressure.isEmpty());
+        W_ASSERT(_stroke._point.isEmpty());
+
+        s += stroke_complex_get_size_save(&_stroke);
+        return s;
+    }
+
+    s += sizeof(len_point);
+    s += sizeof(len_pressure);
+
+    s += sizeof(pressure_t) * len_pressure;
+    s += sizeof(point_s) * len_point;
+
+    return s;
+}
+
 int stroke_file::save(const class stroke &_stroke, WZipWriterSingle &writer)
 {
     int i;

@@ -19,7 +19,7 @@ public:
 #endif // ALL_VERSION
 
     static int load(class page &_page, int ver_stroke, class WReadZip &readZip, int id);
-
+    static size_t size_in_file(const page &_page, cbool saveImg);
     static int save(const page *_page, WZipWriterSingle &file, cbool saveImg);
 };
 
