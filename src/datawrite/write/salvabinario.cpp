@@ -105,7 +105,8 @@ static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writ
         pthread_create(&thread[i], NULL, salvafile_thread_save, &data_thread[i]);
     }
 
-
+    if(savefile_wait_thread(thread, l) < 0)
+        return -1;
 
     return 0;
 }
