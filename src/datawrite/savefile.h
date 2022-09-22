@@ -9,13 +9,13 @@
 class Document;
 
 int save_audio_file(const char *posAudio,
-                    const QString &path);
+                    const QByteArray &path);
 
 class savefile
 {
 private:
-    const QString   *_path;
-    Document        *_doc;
+    const QByteArray    *_path;
+    Document            *_doc;
 
     int salvabinario(cbool saveImg);
 
@@ -24,7 +24,7 @@ public:
     /*
      * if filezip is NULL it will open the file
     */
-    static int moveFileIntoZip  (const QByteArray &from,   const QByteArray &path, WZipWriter &writer, const QByteArray &name);
+    static int moveFileIntoZip  (const QByteArray &pathFile, WZipWriter &writer, const QByteArray &nameInZip);
 
     static uchar save_string(zip_source_t *file, const char *str);
 
@@ -33,8 +33,6 @@ public:
     void setData(const QString *p, Document *curr);
 
     int savefile_check_file(cbool saveImg);
-
-    static uchar saveArrIntoFile(const QByteArray &arr, const QString &path);
 };
 
 force_inline void savefile::setData(const QString *p, Document *curr)

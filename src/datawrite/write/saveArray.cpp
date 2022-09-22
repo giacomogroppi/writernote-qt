@@ -5,24 +5,20 @@
 #include "core/WZipWriter.h"
 
 int savefile::moveFileIntoZip(
-        const QByteArray    &from,
-        const QByteArray    &path,
+        const QByteArray    &pathFile,
         WZipWriter          &writer,
-        const QByteArray    &name)
+        const QByteArray    &nameInZip)
 {
-    size_t sizeFile = xmlstruct::get_size_file(from);
-
     QByteArray tmp;
 
-    if(!WFile::readFile(tmp, path.constData())){
+    if(WFile::readFile(tmp, pathFile) < 0){
         return ERROR;
     }
 
-    if(tmp.size() != (int)sizeFile){
-        return ERROR;
-    }
+    W_ASSERT(tmp.size() == xmlstruct::get_size_file(pathFile));
 
-    if(writer.write(tmp.constData(), tmp.size(), name))
+    if(writer.write(tmp.constData(), tmp.size(), nameInZip))
         return ERROR;
+
     return OK;
 }

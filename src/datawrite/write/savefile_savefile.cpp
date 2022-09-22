@@ -83,36 +83,13 @@ int savefile::savefile_check_file(cbool saveImg)
         return ERROR;
 #endif // PDFSUPPORT
 
-    if(writer.commit_change(_path->toUtf8(), QByteArray(NAME_FILE)) < 0)
+    if(writer.commit_change(*_path, QByteArray(NAME_FILE)) < 0)
         return ERROR;
 
     if(this->salvabinario(saveImg) != OK){
         return ERROR;
     }
 
-    return OK;
-}
-
-uchar savefile::saveArrIntoFile(const QByteArray &arr, const QString &path)
-{
-    FILE *fp;
-    uchar byte;
-    uint i, len;
-
-    len = arr.length();
-    fp = fopen(path.toUtf8().constData(), "w");
-
-    if(!fp)
-        return ERROR;
-
-    for(i=0; i<len; ++i){
-        byte = arr.at(i);
-
-        if(fwrite(&byte, sizeof(byte), 1, fp)<1)
-            return ERROR;
-    }
-
-    fclose(fp);
     return OK;
 }
 
@@ -127,7 +104,12 @@ uchar savefile::save_string(zip_source_t *file, const char *stringa)
 }
 
 int save_audio_file(const char *posAudio,
-                    const QString &path)
+                    const QByteArray &path)
 {
-    return savefile::moveFileIntoZip(QString(posAudio), path, nullptr, NAME_AUDIO, true);
+    WZipWriter writer;
+
+    if(writer.init(path.constData()) < 0)
+        return ERROR;
+
+    return savefile::moveFileIntoZip(QByteArray(posAudio), writer, NAME_AUDIO);
 }
