@@ -71,6 +71,22 @@ static void *xmlstruct_thread_load(void *_data)
     return 0;
 }
 
+static int xmlstruct_wait_for_thread(pthread_t *thread, int num)
+{
+    int i;
+    void *ret_thread;
+    int ret = 0;
+
+    for(i = 0; i < num; i++){
+        pthread_join(thread[i], &ret_thread);
+
+        if(ret)
+            ret = true;
+    }
+
+    return ret;
+}
+
 #define MANAGE_ERR()    \
     do{                 \
         return ERROR;   \
@@ -122,6 +138,9 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
                         xmlstruct_thread_load,
                         &thread_data[counterPage]);
     }
+
+    if(xmlstruct_wait_for_thread(thread, lenPage) < 0)
+        MANAGE_ERR();
 
     zip.dealloc_file();
 

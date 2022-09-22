@@ -14,7 +14,7 @@ public:
     ~WZipWriterDataPrivate();
 
     bool is_allocated() const;
-    void *get_data();
+    char *get_data();
 };
 
 class WZipWriterMulti {
@@ -64,10 +64,10 @@ inline bool WZipWriterDataPrivate::is_allocated() const
     return this->_allocated;
 }
 
-inline void *WZipWriterDataPrivate::get_data()
+inline char *WZipWriterDataPrivate::get_data()
 {
     W_ASSERT(_data);
-    return this->_data;
+    return static_cast<char *>(this->_data);
 }
 
 inline WZipWriterDataPrivate::WZipWriterDataPrivate(void *data)
