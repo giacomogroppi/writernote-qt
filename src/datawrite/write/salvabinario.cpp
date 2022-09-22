@@ -134,7 +134,7 @@ int savefile::salvabinario(cbool saveImg)
 
     savefile_save_seek(this->_doc, writer, seek);
 
-    savefile_save_multithread_start(_doc, writer, this->_path->constData(), NAME_BIN, seek);
+    savefile_save_multithread_start(_doc, writer, seek);
 
     writer.write_object(_doc->datatouch->getZoom());
 
