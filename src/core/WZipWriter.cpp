@@ -2,7 +2,11 @@
 
 WZipWriter::WZipWriter()
 {
-
+#ifdef DEBUGINFO
+    this->already_init = false;
+    this->already_write = false;
+    this->_zip = NULL;
+#endif
 }
 
 int WZipWriter::write(const void *to, size_t size, const char *fileToCreate)

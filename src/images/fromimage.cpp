@@ -287,4 +287,5 @@ int fromimage::addImage(QString &pos,
 
     this->doc->count_img ++;
     W_ASSERT(doc->count_img > 0);
+    return 0;
 }

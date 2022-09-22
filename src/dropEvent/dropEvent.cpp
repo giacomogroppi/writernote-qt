@@ -3,6 +3,7 @@
 #include "utils/dialog_critic/dialog_critic.h"
 #include "utils/common_def.h"
 #include "images/fromimage.h"
+#include <QApplication>
 #define WRITERNOTE 1
 #define IMAGE 2
 
@@ -42,8 +43,9 @@ void MainWindow::dropEvent(QDropEvent *event)
     }else if(find == IMAGE){
         point.point = event->posF();
 
-        this->_canvas->data->m_img->addImage(__path_to_load, &point, this->m_path);
-
+        const auto res = this->_canvas->data->m_img->addImage(__path_to_load, &point, this->m_path);
+        if(res < 0)
+            dialog_critic(QApplication::tr("We got some problem importing the image"));
     }
     else{
         user_message("The file you are trying to open does not have a compatible extention");

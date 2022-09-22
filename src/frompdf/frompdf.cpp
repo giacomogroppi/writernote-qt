@@ -83,6 +83,20 @@ QStringList frompdf::get_name_pdf()
     return __l;
 }
 
+frompdf::load_res frompdf::load(const QByteArray &path_writernote_file, TabletCanvas *canvas)
+{
+    bool ok;
+    WZip zip(path_writernote_file, ok);
+
+    if(!ok){
+        return frompdf::load_res::no_valid_path;
+    }
+
+    WZipReaderSingle reader(&zip, 0);
+
+    return this->load(reader, canvas);
+}
+
 frompdf::load_res frompdf::load(WZipReaderSingle &reader,
                                 TabletCanvas *canvas)
 {
@@ -277,8 +291,7 @@ frompdf::load_res frompdf::load_from_row(
     return load_res::ok;
 }
 
-frompdf::load_res frompdf::save(zip_t               *filezip,
-                                const QStringList   &path,
+frompdf::load_res frompdf::save(const QStringList   &path,
                                 const QByteArray    &path_writernote_file)
 {
     frompdf::load_res res;
@@ -286,22 +299,31 @@ frompdf::load_res frompdf::save(zip_t               *filezip,
     this->m_data->count_pdf = path.length();
 
     for(const auto &tmp : qAsConst(path)){
-        res = this->save(filezip,
-                         tmp.toUtf8(),
+
+        res = this->save(tmp.toUtf8(),
                          path_writernote_file);
+
         if(res != frompdf::load_res::ok)
             return res;
     }
     return frompdf::load_res::ok;
 }
 
-frompdf::load_res frompdf::save(zip_t           *filezip,
-                                const QByteArray   &path,
+frompdf::load_res frompdf::save(const QByteArray   &pathFile,
                                 const QByteArray   &path_writernote_file)
 {
-    int res = savefile::moveFileIntoZip(path, path_writernote_file,
-                                 filezip, frompdf::getName(m_data->count_pdf),
-                                 false);
+    WZipWriter writer;
+
+    if(writer.init(path_writernote_file.constData()) < 0)
+        return load_res::no_valid_path;
+    return this->save(writer, pathFile, path_writernote_file);
+}
+
+frompdf::load_res frompdf::save(WZipWriter         &filezip,
+                                const QByteArray   &pathFile,
+                                const QByteArray   &path_writernote_file)
+{
+    const auto res = savefile::moveFileIntoZip(pathFile, filezip, frompdf::getName(m_data->count_pdf));
 
     if(unlikely(res != OK))
         return load_res::not_valid_pdf;
@@ -314,19 +336,11 @@ frompdf::load_res frompdf::save(zip_t           *filezip,
 */
 void frompdf::addPdf(QByteArray             &pos,
                      const PointSettable    *point,
-                     const QString          &path_writernote,
+                     const QByteArray       &path_writernote,
                      TabletCanvas           *canvas)
 {
-    zip_t *fileZip;
     int ok;
     frompdf::load_res res;
-
-    fileZip = zip_open(path_writernote, ZIP_CREATE, &ok);
-    if(!fileZip){
-        res = frompdf::load_res::no_valid_path;
-        goto err;
-    }
-
 
     if(path_writernote == "")
         return dialog_critic("Before add a pdf you need to save this file");
@@ -338,27 +352,19 @@ void frompdf::addPdf(QByteArray             &pos,
         goto err;
     }
 
-    res = this->save(fileZip, pos, path_writernote);
+    res = this->save(pos, path_writernote);
     if(res != load_res::ok)
         goto err;
 
     this->m_data->count_pdf ++;
 
-
-    /* in order to upload the pdf file we have to reopen the zip file */
-    zip_close(fileZip);
-    fileZip = zip_open(path_writernote, ZIP_CREATE, &ok);
-
-    res = this->load(fileZip, nullptr, canvas);
+    res = this->load(path_writernote, canvas);
 
     err:
     if(res == load_res::no_valid_path)
         dialog_critic("We had trouble opening " + path_writernote);
     else if(res != load_res::ok)
         dialog_critic("We had some error");
-
-
-    zip_close(fileZip);
 }
 
 void frompdf::adjast(const uchar indexPdf)
@@ -366,8 +372,8 @@ void frompdf::adjast(const uchar indexPdf)
     m_image.operator[](indexPdf).topLeft = QPointF(0, 0);
 }
 
-uchar frompdf::insert_pdf(QString               &pos,
-                          const PointSettable   *point)
+unsigned frompdf::insert_pdf(QByteArray             &pos,
+                             const PointSettable    *point)
 {
     assert(this->m_image.length() == 0);
     Pdf pdf;
@@ -375,7 +381,7 @@ uchar frompdf::insert_pdf(QString               &pos,
     if(pos == ""){
         pos = QFileDialog::getOpenFileName(nullptr,
                                                      "Open images",
-                                                     "JPEG (*.jpg, *.jpeg);;PNG (*.png);;All Files (*)");
+                                                     "JPEG (*.jpg, *.jpeg);;PNG (*.png);;All Files (*)").toUtf8();
 
         if(pos == "")
             return ERROR;

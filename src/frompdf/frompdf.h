@@ -65,8 +65,10 @@ private:
 
     QVector<Pdf> m_image;
 
-    static inline QString getName(const uint i){
-        return SUFFIX_PDF + QString::number(uint(i));
+    static QByteArray getName(const unsigned i)
+    {
+        const auto str = SUFFIX_PDF + QString::number(i);
+        return str.toUtf8();
     }
 
 public:
@@ -102,6 +104,7 @@ public:
     load_res load(zip_t *filezip, zip_file_t *file, TabletCanvas *canvas);
 #endif // ALL_VERSION
     load_res load(WZipReaderSingle &reader, TabletCanvas *canvas);
+    load_res load(const QByteArray &path_writernote_file, TabletCanvas *canvas);
 
 
     load_res load_from_row(const QByteArray &, const bool clear,
@@ -110,20 +113,19 @@ public:
 
     void resizing(TabletCanvas *canvas, const uint lenPdf);
 
-    load_res save(zip_t *filezip, const QStringList &path, const QByteArray &path_writernote_file);
-    load_res save(zip_t *filezip, const QByteArray &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res save(const QStringList &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res save(const QByteArray &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res save(WZipWriter &filezip, const QByteArray &path, const QByteArray &path_writernote_file);
 
     load_res save_metadata(WZipWriterSingle &writer);
 
-    inline void draw(QPainter &painter, const double delta,
-                     const bool IsExportingPdf) const;
+    void draw(QPainter &painter, const double delta, const bool IsExportingPdf) const;
 
-    uchar insert_pdf(QString &pos,
-                     const PointSettable *point);
+    unsigned insert_pdf(QByteArray &pos, const PointSettable *point);
 
     void addPdf(QByteArray &pos,
                 const PointSettable *point,
-                const QString &path_writernote,
+                const QByteArray &path_writernote,
                 TabletCanvas *canvas);
 
     uint resolution = 500;//72

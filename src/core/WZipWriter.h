@@ -26,10 +26,23 @@ public:
     int write(const void *to, size_t size, const char *fileToWrite);
 };
 
+inline WZipWriter::~WZipWriter()
+{
+    if(this->_zip)
+        zip_close(this->_zip);
+}
+
 inline int WZipWriter::init(const char *fileZip)
 {
+#ifdef DEBUGINFO
+    W_ASSERT(this->already_init == false);
+    this->already_init = true;
+#endif
+
     this->_zip = openZip(fileZip);
-    if(!_zip)
+    if(!_zip){
+        DO_IF_DEBUG(this->already_init = false);
         return -1;
+    }
     return 0;
 }
