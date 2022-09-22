@@ -79,8 +79,8 @@ void extract_audio_ui::on_extract_to_clicked()
     if(!file_temp.exists())
         return dialog_critic("The file didn't exist");
 
-    auto res = extract_audio(ui->edit_path->toPlainText(),
-                            ui->to_exit->toPlainText());
+    auto res = extract_audio(ui->edit_path->toPlainText().toUtf8(),
+                            ui->to_exit->toPlainText().toUtf8());
 
     switch (res) {
     case extract::ok:
@@ -116,7 +116,7 @@ void extract_audio_ui::on_edit_path_textChanged()
 */
 void extract_audio_ui::on_open_to_clicked()
 {
-    QString temp_path;
+    QByteArray temp_path;
     if(!qfilechoose::getFileForLoad(temp_path, TYPEAUDIO))
         return;
 
@@ -126,7 +126,7 @@ void extract_audio_ui::on_open_to_clicked()
 
 void extract_audio_ui::on_open_from_clicked()
 {
-    QString fileName;
+    QByteArray fileName;
 
     if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER))
         return;

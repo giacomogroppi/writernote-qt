@@ -24,7 +24,7 @@ extern bool need_save_tmp;
 
 setting_restore_ui::setting_restore_ui(QWidget *parent,
                                        TabletCanvas *canvas,
-                                       QString *pp) :
+                                       QByteArray *pp) :
     QDialog(parent),
     ui(new Ui::setting_restore_ui)
 {
@@ -182,7 +182,7 @@ static int try_save = 0;
 void setting_restore_ui::secondTimer()
 {
     int res;
-    QString path;
+    QByteArray path;
     savefile ff(&path, _canvas->data);
 
     if(!need_save_tmp)
@@ -199,7 +199,7 @@ void setting_restore_ui::secondTimer()
             tmp_path.append("." + APP_EXT);
         }
     }
-    path = (tmp_path == "") ? path : tmp_path;
+    path = (tmp_path == "") ? path : tmp_path.toUtf8();
 
     //qDebug() << "Save tmp file in: " << path;
 

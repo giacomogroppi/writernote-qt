@@ -18,7 +18,7 @@ void MainWindow::resFileTmpInTmpFolder()
     QString __pos;
     QMessageBox::StandardButton resBtn;
     const int pos_ext = QString("." + APP_EXT).length(); // posizione dell'estensione di APP_EXT da destra a sinistra
-    QString __path;
+    QByteArray __path;
     restore_file_critic::n_err __res;
     uint i, len, count;
     const char slash = slash::__slash();
@@ -79,7 +79,7 @@ void MainWindow::resFileTmpInTmpFolder()
                 --i;
             }
 
-            __res = restore_file_critic::restore_file_direct(res, __path);
+            __res = restore_file_critic::restore_file_direct(res.toUtf8(), __path);
 
             if(__res == restore_file_critic::error_load_file){
                 if(areyousure("Error", "Error loading the file " + res + "\nDelete the file?")){

@@ -6,9 +6,7 @@
 #include "savecopybook.h"
 #include "datawrite/qfilechoose.h"
 #include "utils/dialog_critic/dialog_critic.h"
-
 #include "utils/areyousure/areyousure.h"
-
 #include "dataread/xmlstruct.h"
 
 savecopybook::savecopybook(MainWindow *parent_U){

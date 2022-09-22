@@ -18,9 +18,9 @@
 #include <QFile>
 #include <QFileDialog>
 
-static QString get_path(const char *pos)
+static QByteArray get_path(const char *pos)
 {
-    QString fileName;
+    QByteArray fileName;
 
     if(!pos){
         if(!qfilechoose::getFileForLoad(fileName, TYPEFILEWRITER | TYPEFILEPDF | TYPEALL)){
@@ -65,7 +65,7 @@ static bool exist(const QString &path)
 
 void MainWindow::openFile(const char *pos)
 {
-    QString fileName, tmp;
+    QByteArray fileName, tmp;
     Document curr;
     xmlstruct xml(&fileName, _canvas->data);
     n_need_save res_save;

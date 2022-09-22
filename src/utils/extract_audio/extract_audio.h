@@ -13,4 +13,4 @@ namespace extract {
 };
 
 
-extract::n_extract extract_audio(const QString &path, const QString &path_to);
+extract::n_extract extract_audio(const QByteArray &path, const QByteArray &path_to);

@@ -110,8 +110,8 @@ public:
 
     void resizing(TabletCanvas *canvas, const uint lenPdf);
 
-    load_res save(zip_t *filezip, const QStringList &path, const QString &path_writernote_file);
-    load_res save(zip_t *filezip, const QString &path, const QString &path_writernote_file);
+    load_res save(zip_t *filezip, const QStringList &path, const QByteArray &path_writernote_file);
+    load_res save(zip_t *filezip, const QByteArray &path, const QByteArray &path_writernote_file);
 
     load_res save_metadata(WZipWriterSingle &writer);
 
@@ -121,7 +121,7 @@ public:
     uchar insert_pdf(QString &pos,
                      const PointSettable *point);
 
-    void addPdf(QString &pos,
+    void addPdf(QByteArray &pos,
                 const PointSettable *point,
                 const QString &path_writernote,
                 TabletCanvas *canvas);

@@ -6,8 +6,8 @@
 /*
  * the function extract an audio from a copybook, into path_to
 */
-extract::n_extract extract_audio(const QString &path,
-                                 const QString &path_to){
+extract::n_extract extract_audio(const QByteArray &path,
+                                 const QByteArray &path_to){
     Document doc;
     size_t size_audio;
     xmlstruct m_data(path, doc);
@@ -25,7 +25,7 @@ extract::n_extract extract_audio(const QString &path,
         return extract::load_audio;
     }
 
-    fp = fopen(path_to.toUtf8().constData(), "w");
+    fp = fopen(path_to.constData(), "w");
     if(!fp){
         return extract::open_to;
     }

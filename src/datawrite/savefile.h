@@ -28,14 +28,14 @@ public:
 
     static uchar save_string(zip_source_t *file, const char *str);
 
-    savefile(const QString *path, Document *currenttitle){ setData(path, currenttitle); }
+    savefile(const QByteArray *path, Document *currenttitle){ setData(path, currenttitle); }
 
-    void setData(const QString *p, Document *curr);
+    void setData(const QByteArray *p, Document *curr);
 
     int savefile_check_file(cbool saveImg);
 };
 
-force_inline void savefile::setData(const QString *p, Document *curr)
+force_inline void savefile::setData(const QByteArray *p, Document *curr)
 {
     if(p){
         this->_path = p;

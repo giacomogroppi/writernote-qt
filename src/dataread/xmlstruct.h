@@ -37,7 +37,7 @@ force_inline zip_t *zip_open(const QString &path, int check, int *ok)
 
 class xmlstruct{
 private:
-    const QString *_path;
+    const QByteArray *_path;
     static constexpr size_t get_offset_start() { return sizeof(int); };
     Document *_doc = nullptr;
 
@@ -76,23 +76,23 @@ public:
                         const bool clear, const QString &name,
                         const bool closeZip);
 
-    const QString &getPath() const;
+    const QByteArray &getPath() const;
 
     /* return true if we can read this file */
     static bool manageMessage(const int res);
 
     int loadfile(const bool LoadPdf, const bool LoadImg);
 
-    xmlstruct(const QString *path_U, Document *currenttitle_U);
-    xmlstruct(const QString &path_U, Document &currenttitle_U);
+    xmlstruct(const QByteArray *path_U, Document *currenttitle_U);
+    xmlstruct(const QByteArray &path_U, Document &currenttitle_U);
 
-    void setData(const QString *path_U, Document *currenttitle_U);
+    void setData(const QByteArray *path_U, Document *currenttitle_U);
 
     static size_t get_size_file(const QByteArray &path);
     static bool closeZip(zip_t *fileZip);
 };
 
-inline const QString &xmlstruct::getPath() const
+inline const QByteArray &xmlstruct::getPath() const
 {
     return *_path;
 }

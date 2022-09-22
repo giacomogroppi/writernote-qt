@@ -7,11 +7,12 @@
 class get_name_tmp
 {
 public:
-    inline static QString get(const QString &m_path){
+    static QByteArray get(const QByteArray &m_path)
+    {
         QStringList list;
-        QString path;
+        QByteArray path;
         const char sl = slash::__slash();
-        uchar last_pos=0;
+        uchar last_pos = 0;
 
         path = m_path;
 

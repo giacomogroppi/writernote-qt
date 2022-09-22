@@ -1,5 +1,4 @@
-#ifndef FILELOST_H
-#define FILELOST_H
+#pragma once
 
 #include <QString>
 
@@ -7,7 +6,6 @@ class fileLost
 {
 public:
     /* the function return true if there is a file to restore */
-    static bool exe(const QString &path);
+    static bool exe(const QByteArray &path);
 };
 
-#endif // FILELOST_H

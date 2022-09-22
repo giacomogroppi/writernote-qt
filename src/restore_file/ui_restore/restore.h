@@ -16,8 +16,8 @@ class restore : public QDialog
     Q_OBJECT
 
 public:
-    explicit restore(QWidget *parent = nullptr,
-                        QString path = "");
+    explicit restore(QWidget *parent,
+                     QByteArray path);
     ~restore();
 
 private slots:
@@ -37,7 +37,7 @@ private:
 
     QStringList __l;
 
-    QString path;
+    QByteArray path;
 
     Ui::restore *ui;
 };

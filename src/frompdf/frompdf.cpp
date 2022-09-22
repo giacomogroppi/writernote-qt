@@ -279,17 +279,15 @@ frompdf::load_res frompdf::load_from_row(
 
 frompdf::load_res frompdf::save(zip_t               *filezip,
                                 const QStringList   &path,
-                                const QString       &path_writernote_file)
+                                const QByteArray    &path_writernote_file)
 {
     frompdf::load_res res;
-    uint i, len;
 
     this->m_data->count_pdf = path.length();
-    len = this->m_data->count_pdf;
 
-    for(i=0; i<len; ++i){
+    for(const auto &tmp : qAsConst(path)){
         res = this->save(filezip,
-                         path.at(i),
+                         tmp.toUtf8(),
                          path_writernote_file);
         if(res != frompdf::load_res::ok)
             return res;
@@ -298,8 +296,8 @@ frompdf::load_res frompdf::save(zip_t               *filezip,
 }
 
 frompdf::load_res frompdf::save(zip_t           *filezip,
-                                const QString   &path,
-                                const QString   &path_writernote_file)
+                                const QByteArray   &path,
+                                const QByteArray   &path_writernote_file)
 {
     int res = savefile::moveFileIntoZip(path, path_writernote_file,
                                  filezip, frompdf::getName(m_data->count_pdf),
@@ -314,7 +312,7 @@ frompdf::load_res frompdf::save(zip_t           *filezip,
 /*
  * add image from position
 */
-void frompdf::addPdf(QString                &pos,
+void frompdf::addPdf(QByteArray             &pos,
                      const PointSettable    *point,
                      const QString          &path_writernote,
                      TabletCanvas           *canvas)

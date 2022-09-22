@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QByteArray>
 #include <QStringList>
 
 #define VAL_RES "_res"
@@ -17,10 +18,10 @@ public:
 
 
     static enum n_err
-            restore_file(const QString & path_save);
+            restore_file(const QByteArray & path_save);
 
     static enum n_err
-            restore_file_direct(const QString & path_load,
-                                const QString & path_save);
+            restore_file_direct(const QByteArray & path_load,
+                                const QByteArray& path_save);
 
 };

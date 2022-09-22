@@ -16,5 +16,5 @@ namespace path {
 #define POS_TEMP_AUDIO "tmp_audio.wav"
 
 QString get_path_no_controll();
-QString get_path(path::e_path);
+QByteArray get_path(path::e_path);
 

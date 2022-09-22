@@ -23,10 +23,10 @@ static bool createTempFolder(const QString &path);
  * folder -> return NULL
 */
 
-QString get_path(path::e_path var)
+QByteArray get_path(path::e_path var)
 {
-    QString tmp;
-    tmp = get_path_no_controll();
+    QByteArray tmp;
+    tmp = get_path_no_controll().toUtf8();
     if(var == path::audio_pos){
         if(!createTempFolder(tmp))
             return "";
@@ -48,7 +48,7 @@ QString get_path(path::e_path var)
     }
 
     if(var == path::home){
-        return (QString)getenv(POS_HOME);
+        return QByteArray(getenv(POS_HOME));
     }
     if(var == path::nameuser){
         return getenv(NAME_USER);

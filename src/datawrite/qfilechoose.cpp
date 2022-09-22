@@ -14,7 +14,8 @@
  * save [not for loading]
 */
 
-bool qfilechoose::getFileForSave(QString &nome, uint16_t type_){
+bool qfilechoose::getFileForSave(QByteArray &nome, uint16_t type_)
+{
     QString extention;
     QString type;
     QString dir, nameFile;
@@ -45,11 +46,11 @@ bool qfilechoose::getFileForSave(QString &nome, uint16_t type_){
         if(dir == "")
             return false;
 
-        nome = dir;
+        nome = dir.toUtf8();
         return true;
     }
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
-    nameFile= QFileDialog::getSaveFileName(nullptr,
+    nameFile = QFileDialog::getSaveFileName(nullptr,
         "Save", extention, type);
 #else
     dir = get_path_application::exe();
@@ -61,12 +62,12 @@ bool qfilechoose::getFileForSave(QString &nome, uint16_t type_){
     if(nameFile == "")
         return false;
 
-    nome = nameFile;
+    nome = nameFile.toUtf8();
 
     return true;
 }
 
-bool qfilechoose::getFileForLoad(QString &nome, uint16_t type_)
+bool qfilechoose::getFileForLoad(QByteArray &nome, uint16_t type_)
 {
     QString extention;
     QString type = "";
@@ -101,7 +102,7 @@ bool qfilechoose::getFileForLoad(QString &nome, uint16_t type_)
         if(dir == "")
             return false;
 
-        nome = dir;
+        nome = dir.toUtf8();
         return true;
     }
 
@@ -123,7 +124,7 @@ bool qfilechoose::getFileForLoad(QString &nome, uint16_t type_)
     if(nameFile == "")
         return false;
 
-    nome = nameFile;
+    nome = nameFile.toUtf8();
 
     return true;
 }

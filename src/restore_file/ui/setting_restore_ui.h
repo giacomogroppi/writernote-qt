@@ -30,7 +30,7 @@ class setting_restore_ui : public QDialog
 public:
     explicit setting_restore_ui(QWidget *parent,
                                 class TabletCanvas *curr,
-                                QString *pp);
+                                QByteArray *pp);
     ~setting_restore_ui();
 
     struct __data getData () const
@@ -70,7 +70,7 @@ private:
     void deleteFile();
 
     QString tmp_path;
-    QString *m_path;
+    QByteArray *m_path;
 
     void startTimerSetting();
 

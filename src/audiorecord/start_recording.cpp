@@ -146,7 +146,7 @@ bool MainWindow::setOutputLocation(const QPoint &hostRect)
 
     procede:
     if(doc->se_registato == Document::record_file){
-        QString fileName;
+        QByteArray fileName;
         if(!qfilechoose::getFileForSave(fileName, TYPEAUDIO)){
             return false;
         }

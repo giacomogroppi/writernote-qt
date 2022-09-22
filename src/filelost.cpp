@@ -3,7 +3,7 @@
 
 #include <QFile>
 
-bool fileLost::exe(const QString &path)
+bool fileLost::exe(const QByteArray &path)
 {
     QString __p;
 

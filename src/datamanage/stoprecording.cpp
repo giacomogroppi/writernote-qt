@@ -60,7 +60,7 @@ static bool needRemove;
 
 static void saveAudio(
     Document            *m_currenttitle, 
-    const QString       &m_path, 
+    const QByteArray    &m_path,
     const AudioRecord   *recorder)
 {
     const QString &path = recorder->getPath();

@@ -95,7 +95,7 @@ bool topdf::createpdf(const bool withPdf)
 
 void MainWindow::on_actiontopdf_triggered()
 {
-    QString path_pdf;
+    QByteArray path_pdf;
     const Document *doc = _canvas->data;
 
     if(doc->datatouch->isempty())

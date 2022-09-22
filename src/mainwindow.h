@@ -86,7 +86,7 @@ public:
     void update_touch_or_pen();
     void loadPenOrMouse();
 
-    QString m_path;
+    QByteArray m_path;
 
     Ui::MainWindow *ui;
     class AudioRecord *m_audio_recorder;

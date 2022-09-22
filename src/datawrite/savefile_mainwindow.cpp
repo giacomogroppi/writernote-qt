@@ -14,7 +14,7 @@ static bool c = true;
 void MainWindow::on_actionSave_File_triggered()
 {
     savefile savefile_i(&m_path, _canvas->data);
-    QString new_path;
+    QByteArray new_path;
     bool check;
 
     if(m_path == ""){
@@ -34,7 +34,7 @@ void MainWindow::on_actionSave_File_triggered()
 
 void MainWindow::on_actionSave_As_triggered()
 {
-    QString posizione = this->m_path;
+    auto posizione = this->m_path;
 
     if(!qfilechoose::getFileForSave(m_path))
         /* se l'utente non ha selezionato nessun file */

@@ -10,7 +10,7 @@
 #include "utils/dialog_critic/dialog_critic.h"
 #include "testing/memtest.h"
 
-restore::restore(QWidget *parent, QString path) :
+restore::restore(QWidget *parent, QByteArray path) :
     QDialog(parent),
     ui(new Ui::restore)
 {
@@ -46,10 +46,10 @@ void restore::on_close_button_clicked()
 
 void restore::on_pushButton_open_clicked()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+    QByteArray dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                 "",
                                                 QFileDialog::ShowDirsOnly
-                                                | QFileDialog::DontResolveSymlinks);
+                                                | QFileDialog::DontResolveSymlinks).toUtf8();
 
     if(dir == ""){
         return;
@@ -71,7 +71,7 @@ void restore::removeNotWriternote(QStringList &l)
 
     len = l.length();
 
-    for(i=0; i<len; ++i){
+    for(i = 0; i < len; i++){
         list = l.at(i).split(slash::__slash());
         QString &string = (QString &)list.last();
 
@@ -82,7 +82,7 @@ void restore::removeNotWriternote(QStringList &l)
             continue;
         }
 
-        tmp = get_name_tmp::get(l.at(i));
+        tmp = get_name_tmp::get(l.at(i).toUtf8());
 
         if(!QFile::exists(tmp)){
             l.removeAt(i);
@@ -119,12 +119,12 @@ void restore::updateList()
 
 void restore::on_ok_restore_clicked()
 {
-    QString pos_res;
+    QByteArray pos_res;
     QDir __dir(path);
     int index;
     restore_file_critic::n_err __res;
 
-    if(path != "" && path.indexOf(APP_EXT) != -1){
+    if(path != "" && QString(path).indexOf(APP_EXT) != -1){
         if(!QFile::exists(get_name_tmp::get(path))){
             ui->message_label->setText(QApplication::tr("In %1 I can't find a restore file").arg(path));
             return;
@@ -142,7 +142,7 @@ void restore::on_ok_restore_clicked()
             }
             return;
         }else{
-            pos_res = ui->listWidget->item(index)->text();
+            pos_res = ui->listWidget->item(index)->text().toUtf8();
         }
     }
 

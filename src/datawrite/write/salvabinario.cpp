@@ -22,7 +22,6 @@ int savefile::salvabinario(cbool saveImg)
     const double init[2] = {pointInit.x() , pointInit.y() };
     cint lenPage = _doc->datatouch->lengthPage();
     const page *page;
-    const auto zoom = _doc->datatouch->getZoom();
     WZipWriterSingle writer;
     const auto sizeFile = savefile_get_size_binary(*_doc);
 
@@ -47,7 +46,7 @@ int savefile::salvabinario(cbool saveImg)
 
     writer.write_object(controll);
 
-    if(writer.commit_change(this->_path->toUtf8(), QByteArray(NAME_BIN)))
+    if(writer.commit_change(*_path, QByteArray(NAME_BIN)))
         return ERROR;
 
     return OK;

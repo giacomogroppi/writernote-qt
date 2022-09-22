@@ -12,6 +12,6 @@
 
 namespace qfilechoose
 {
-    bool getFileForSave(QString &path, uint16_t type_ = TYPEFILEWRITER);
-    bool getFileForLoad(QString &path, uint16_t type_ = TYPEFILEWRITER);
+    bool getFileForSave(QByteArray &path, uint16_t type_ = TYPEFILEWRITER);
+    bool getFileForLoad(QByteArray &path, uint16_t type_ = TYPEFILEWRITER);
 };
