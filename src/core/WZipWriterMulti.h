@@ -9,11 +9,11 @@ private:
     bool  _allocated;
 
 public:
-    WZipWriterDataPrivate(void *data);
+    explicit WZipWriterDataPrivate(void *data);
     WZipWriterDataPrivate(size_t size);
     ~WZipWriterDataPrivate();
 
-    bool is_allocated() const;
+    [[nodiscard]] bool is_allocated() const;
     char *get_data();
 };
 
@@ -43,9 +43,17 @@ public:
                     int thread, size_t *seek, WZipWriterSingle &writer);
     ~WZipWriterMulti();
 
-    bool is_err() const;
+    [[nodiscard]] WZipWriterSingle *get_writer(int id);
+    [[nodiscard]] bool is_err() const;
     int commit();
 };
+
+inline WZipWriterSingle *WZipWriterMulti::get_writer(int id)
+{
+    W_ASSERT(id >= 0);
+    W_ASSERT(id < this->_thread);
+    return &_writer[id];
+}
 
 inline void WZipWriterMulti::set_err()
 {

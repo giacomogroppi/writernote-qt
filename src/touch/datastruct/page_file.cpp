@@ -2,6 +2,7 @@
 #include "core/WReadZip.h"
 #include "datawrite/source_read_ext.h"
 #include "touch/datastruct/page.h"
+#include "core/WZipWriterMulti.h"
 #include <QImage>
 
 #ifdef ALL_VERSION
