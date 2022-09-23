@@ -30,7 +30,7 @@ static size_t savefile_get_size_file(const Document *doc)
     s += sizeof(doc->count_pdf);
     s += doc->m_pdf->get_size_file();
     s += doc->m_img->get_size_file();
-    return 0;
+    return s;
 }
 
 static void savefile_save_record_state(WZipWriterSingle &writer, Document *doc)

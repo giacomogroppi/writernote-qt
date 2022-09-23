@@ -49,14 +49,14 @@ inline WZipWriterSingle::WZipWriterSingle()
 inline void WZipWriterSingle::init(char *data, size_t min, size_t max)
 {
     W_ASSERT(_data == nullptr and _min == 1 and _max == 0);
-    this->_allocated = data == NULL;
+    this->_allocated = (data == NULL);
+
+    this->_max = max;
+    this->_min = min;
 
     if(_allocated){
         this->_data = (typeof(_data))WMalloc(max);
         W_ASSERT(_max > 0 and _min == 0);
-    }else{
-        this->_max = max;
-        this->_min = min;
     }
 
     this->_offset = min;

@@ -5,7 +5,8 @@
 #include "images/fromimage.h"
 #include "utils/dialog_critic/dialog_critic.h"
 
-static inline bool Message(const QString &m_path){
+static inline bool Message(const QString &m_path)
+{
     if(m_path == ""){
         dialog_critic("It's not possible to add image without saving this file");
         return false;
@@ -13,7 +14,8 @@ static inline bool Message(const QString &m_path){
     return true;
 }
 
-void MainWindow::on_actioninsertImage_triggered(){
+void MainWindow::on_actioninsertImage_triggered()
+{
     QString pos;
 
     if(!Message(this->m_path)){
@@ -21,6 +23,11 @@ void MainWindow::on_actioninsertImage_triggered(){
     }
 
     pos = "";
-    _canvas->data->m_img->addImage(pos, nullptr, this->m_path);
+    const auto res = _canvas->data->m_img->addImage(pos, nullptr, this->m_path);
+
+    if(res < 0){
+        return dialog_critic(QApplication::tr("We had some problems importing the image"));
+    }
+
     _canvas->update();
 }
