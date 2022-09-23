@@ -33,7 +33,7 @@ static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *see
         seek[i] = size;
     }
 
-    return 0;
+    return size;
 }
 
 static int savefile_save_seek(Document *doc, WZipWriterSingle &writer, size_t *seek)

@@ -21,7 +21,7 @@ int WZipWriterSingle::commit_change(const QByteArray &zipName, const QByteArray 
 
     W_ASSERT(this->_allocated);
 
-    if(writer.init(zipName.constData()))
+    if(writer.init(zipName.constData()) < 0)
         return -1;
     if(writer.write(this->_data, this->_max, nameFileInZip.constData()))
         return -1;

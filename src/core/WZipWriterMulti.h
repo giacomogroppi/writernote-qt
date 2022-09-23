@@ -22,10 +22,10 @@ private:
     WZipWriterDataPrivate   _data;
     WZipWriterSingle        *_writer;
     WZipWriter              *_zip;
-    size_t                  _size_file;
     int                     _thread;
     bool                    _is_err;
     const char              *_nameFileInZip;
+    size_t                  _size_file;
 
     void set_err();
 
@@ -38,7 +38,7 @@ public:
      * rispetto al primo byte in cui il thread va a scrivere
      * */
     WZipWriterMulti(const char *fileZip, const char *fileInZip,
-                    int thread, size_t *seek, size_t sizeFileInZip);
+                    int thread, size_t *seek);
     WZipWriterMulti(const char *fileZip, const char *fileInZip,
                     int thread, size_t *seek, WZipWriterSingle &writer);
     ~WZipWriterMulti();

@@ -25,8 +25,10 @@ WZip::~WZip()
 
     if(this->_file)
         zip_fclose(this->_file);
-    if(this->_zip)
+    if(this->_zip){
         zip_close(this->_zip);
+        this->_zip = NULL;
+    }
 
     DO_IF_DEBUG(this->_file = NULL;)
     DO_IF_DEBUG(this->_zip  = NULL;)
@@ -70,11 +72,11 @@ bool WZip::openFileInZip(const QByteArray &path)
     return _file != nullptr;
 }
 
-#define reset_all() do {    \
-    zip_fclose(_file);      \
-    zip_close(_zip);        \
-    _file = NULL;           \
-    _zip = NULL;            \
+#define reset_all() do {        \
+        zip_fclose(_file);      \
+        zip_close(_zip);        \
+        _file = NULL;           \
+        _zip = NULL;            \
     }while(0);
 
 

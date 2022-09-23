@@ -17,6 +17,8 @@ private:
     static int commit_change(zip_source_t *file_change);
     static void destroy_file(struct zip_source *file);
 
+    void close_zip();
+
 public:
     WZipWriter();
 
@@ -26,10 +28,17 @@ public:
     int write(const void *to, size_t size, const char *fileToWrite);
 };
 
+inline void WZipWriter::close_zip()
+{
+    W_ASSERT(this->_zip);
+    zip_close(this->_zip);
+    this->_zip = NULL;
+}
+
 inline WZipWriter::~WZipWriter()
 {
     if(this->_zip)
-        zip_close(this->_zip);
+        this->close_zip();
 }
 
 inline int WZipWriter::init(const char *fileZip)

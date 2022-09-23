@@ -5,7 +5,7 @@ WZipWriter::WZipWriter()
 #ifdef DEBUGINFO
     this->already_init = false;
     this->already_write = false;
-    this->_zip = NULL;
+    this->_zip = nullptr;
 #endif
 }
 
@@ -34,7 +34,7 @@ int WZipWriter::write(const void *to, size_t size, const char *fileToCreate)
         return -1;
     }
 
-    zip_close(this->_zip);
+    this->close_zip();
 
     return 0;
 }
