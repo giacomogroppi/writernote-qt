@@ -103,10 +103,12 @@ inline int WZipReaderSingle::read_string(QString &str)
     int l;
     if(this->read_object(l))
         return 1;
+
     char tmp[l + 1];
-    if(this->read_by_size(tmp, l))
+    if(l && this->read_by_size(tmp, l))
         return 1;
     str = QString::fromUtf8(tmp);
+
     return 0;
 }
 

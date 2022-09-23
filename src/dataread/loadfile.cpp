@@ -61,7 +61,7 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
     }
 
     file = zip_fopen(fileZip, path.toUtf8().constData(), 0);
-    if(file == NULL)
+    if(file == nullptr)
         return ERROR;
 
     data = WMalloc(size);
@@ -111,6 +111,8 @@ bool xmlstruct::manageMessage(const int res)
             user_message("This file was written with the pen, and it is not possible to light it.");
             return false;
         }
+        default:
+            break;
     }
     assert(0);
     return false;
@@ -147,19 +149,13 @@ uchar xmlstruct::controllOldVersion(zip_t *file)
     zip_file_t *tt;
 
     tt = zip_fopen(file, "indice.xml", 0);
-    if(tt == NULL){
+    if(tt == nullptr){
         return 0;
     }
     zip_fclose(tt);
     zip_close(file);
     return 1;
 }
-
-#define CLOSE_ZIP(x, y) zip_fclose(x);zip_close(y);
-#define LOAD_IMAGE(x,y) if(load_image(x, y) != OK)goto free_;
-
-#define LOAD_BINARIO(x) if(loadbinario(x) == ERROR) goto free_;
-#define LOAD_BINARIO_RETURN(x, function) if(function(x) == ERROR) return ERROR;
 
 static int xmlstruct_read_ver(WZip &zip, int &ver)
 {
@@ -307,20 +303,24 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
 
 int xmlstruct::load_file_9(Document *doc, WZip &zip, const bool LoadPdf, const bool LoadImg)
 {
-    int tmp, ver_stroke;
+    int ver_stroke;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
     WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
 
-    static_assert(  sizeof(doc->count_img) == sizeof(doc->count_pdf) &&
-                    sizeof(doc->count_img) == 4);
+    static_assert(sizeof(doc->count_img) == sizeof(doc->count_pdf));
+    static_assert(sizeof(doc->count_img) == 4);
 
     if(singleReader.read_object(ver_stroke))
         return ERROR;
 
-    if(singleReader.read_object(tmp))
-        return ERROR;
-    doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    {
+        int tmp;
+        static_assert(sizeof(tmp) == sizeof(int));
+        if(singleReader.read_object(tmp))
+            return ERROR;
+        doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    }
 
     if(singleReader.read_string(doc->audio_position_path))
         return ERROR;
@@ -344,10 +344,10 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, const bool LoadPdf, const b
     }
 #endif
 
-    tmp = loadbinario_4(zip, ver_stroke);
-    if(tmp == ERROR)
-        return tmp;
-    else if(tmp == ERROR_CONTROLL)
+    const auto res = loadbinario_4(zip, ver_stroke);
+    if(res == ERROR)
+        return res;
+    else if(res == ERROR_CONTROLL)
         /* we want to continue to load the file, but we need to return we had a problem */
         controllo_parita = 1;
 
