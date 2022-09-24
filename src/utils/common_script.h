@@ -560,3 +560,10 @@ force_inline void append_order(QVector<T> & list, const T& element)
     list.append(element);
 }
 
+inline constexpr size_t WStrlen(const char *str)
+{
+    size_t s = 0;
+    for(; *str != '\0'; str ++)
+        s ++;
+    return s;
+}

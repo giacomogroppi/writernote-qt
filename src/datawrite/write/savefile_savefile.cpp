@@ -58,7 +58,7 @@ int savefile::savefile_check_file(cbool saveImg)
     setCurrentVersion(_doc);
     ver_stroke = CURRENT_VERSION_STROKE;
 
-    writer.init(NULL, 0, savefile_get_size_file(this->_doc));
+    writer.init(nullptr, 0, savefile_get_size_file(this->_doc));
 
     /* remove old file formact: Version 2, 3, 4, 5 */
     WZipCommon::removeFile(_path->constData(), "indice.xml");

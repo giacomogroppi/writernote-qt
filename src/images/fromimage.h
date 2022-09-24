@@ -7,16 +7,16 @@
 #include "utils/common_error_definition.h"
 #include "touch/datastruct/datastruct.h"
 #include <QPointF>
-#include <QImage>
 #include <QPainter>
 #include "core/WZip.h"
+#include "core/WImage.h"
 
 #define DELTA_POINT 200
 #define SUFFIX_IMG "_img_"
 
 class Document;
 struct immagine_s{
-    QImage immagini;
+    WImage immagini;
     QPointF i;
     QPointF f;
 };

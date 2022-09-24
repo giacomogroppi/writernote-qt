@@ -108,6 +108,8 @@ force_inline bool WZip::is_file_open() const
 force_inline size_t WZip::length() const
 {
     W_ASSERT(_len_file > 0);
+    W_ASSERT(this->_status.is_file_open());
+    W_ASSERT(this->_status.is_data_available());
     return this->_len_file;
 }
 

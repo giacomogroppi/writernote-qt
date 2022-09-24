@@ -12,7 +12,8 @@
 #include "utils/common_script.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "audioplay/audioplay.h"
-#include "pthread.h"
+#include <pthread.h>
+#include "core/WImage.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
@@ -64,7 +65,7 @@ private:
      * then strokeTmp will be added to the stroke list
     */
     QVector<stroke> _strokeTmp;
-    QImage          _imgDraw;
+    WImage          _imgDraw;
 
     void drawNewPage(n_style __style);
 
@@ -231,7 +232,7 @@ force_inline void page::reset()
     this->_IsVisible = true;
     this->_count = -1;
     this->_strokeTmp.clear();
-    this->_imgDraw = QImage();
+    this->_imgDraw = WImage();
 }
 
 inline point_s page::at_translation(const point_s &point, cint page)

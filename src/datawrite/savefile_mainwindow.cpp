@@ -3,12 +3,48 @@
 #include "ui_mainwindow.h"
 #include "savefile.h"
 #include "utils/dialog_critic/dialog_critic.h"
+#include "utils/common_script.h"
 
-static inline const QString move_file(const QString &nomevecchio, const QString &nomenuovo){
+static inline const QString move_file(const QString &nomevecchio, const QString &nomenuovo)
+{
     return ("cp " + nomevecchio + " " + nomenuovo);
 }
 
 static bool c = true;
+
+constexpr const char * const ext = ".writer";
+static int has_extensions(const QString &str)
+{
+    constexpr auto l = WStrlen(ext);
+    const auto len = str.length();
+    if(len < l){
+        dialog_critic(QApplication::tr("The file must have the extension .writer"));
+        return -1;
+    }
+
+    const auto s = str.mid(len - l, l);
+    if(!s.contains(qstr(ext)))
+        return -1;
+    return 0;
+}
+
+#ifdef SNAP
+static int adjust_extensions(const QByteArray &str)
+{
+    if(has_extensions(str) < 0){
+        return -1;
+    }
+    return 0;
+}
+#else
+static int adjust_extensions(QByteArray &str)
+{
+    if(has_extensions(str) < 0){
+        str.append(ext);
+    }
+    return 0;
+}
+#endif
 
 /* funzione che viene richiamata quando viene salvato */
 void MainWindow::on_actionSave_File_triggered()
@@ -24,7 +60,10 @@ void MainWindow::on_actionSave_File_triggered()
         m_path = new_path;
     }
 
-    check = savefile_i.savefile_check_file(true) == OK;
+    if(adjust_extensions(m_path) < 0)
+        return;
+
+    check = (savefile_i.savefile_check_file(true) == OK);
 
     if(!check && c)
         return dialog_critic("We had a problem while saving the file");

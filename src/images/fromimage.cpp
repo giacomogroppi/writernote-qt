@@ -247,7 +247,7 @@ uchar fromimage::insert_image(QString &pos,
             return ERROR;
     }
 
-    QImage immagine(pos);
+    WImage immagine(pos);
     img.immagini = immagine;
 
     if(point){

@@ -217,16 +217,7 @@ size_t page_file::size_in_file(const page &_page, cbool saveImg)
     s += _page._stroke_writernote.getSizeInFile();
 
     if(likely(saveImg)){
-        s += _page._imgDraw.sizeInBytes();
-
-#ifdef DEBUGINFO
-        QByteArray arr;
-        QBuffer buffer(&arr);
-        buffer.open(QIODevice::WriteOnly);
-        _page._imgDraw.save(&buffer, "PNG");
-        buffer.close();
-        W_ASSERT(arr.size() == _page._imgDraw.sizeInBytes());
-#endif
+        s += _page._imgDraw.get_size_in_file();
     }
 
     return s;
@@ -235,10 +226,9 @@ size_t page_file::size_in_file(const page &_page, cbool saveImg)
 int page_file::save(const page *_page, WZipWriterSingle &writer, cbool saveImg)
 {
     int i, err = OK;
-    int len = _page->_stroke.length();
+    const int len = _page->_stroke.length();
     size_t size;
     QByteArray arr;
-    QBuffer buffer(&arr);
 
     W_ASSERT(_page);
 
@@ -260,15 +250,14 @@ int page_file::save(const page *_page, WZipWriterSingle &writer, cbool saveImg)
 
     {
         if(unlikely(saveImg)){
-            buffer.open(QIODevice::WriteOnly);
-            _page->_imgDraw.save(&buffer, "PNG");
-            buffer.close();
+            (void)_page->_imgDraw.save_and_size(arr);
         }
 
         size = arr.size();
 
         writer.write_object(size);
-        writer.write(arr.constData(), size);
+        if(likely(size))
+            writer.write(arr.constData(), size);
     }
 
     return OK;
