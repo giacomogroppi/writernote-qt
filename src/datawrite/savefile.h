@@ -20,22 +20,23 @@ private:
     int salvabinario(cbool saveImg);
 
 public:
-    static void removeFile(zip_t *file, const QString &name);
-    /*
-     * if filezip is NULL it will open the file
-    */
-    static int moveFileIntoZip  (const QByteArray &pathFile, WZipWriter &writer, const QByteArray &nameInZip);
-
-    static uchar save_string(zip_source_t *file, const char *str);
-
-    savefile(const QByteArray *path, Document *currenttitle){ setData(path, currenttitle); }
+    savefile(const QByteArray *path, Document *currenttitle);
+    ~savefile() = default;
 
     void setData(const QByteArray *p, Document *curr);
 
     int savefile_check_file(cbool saveImg);
+
+    static void removeFile(zip_t *file, const QString &name);
+    static int moveFileIntoZip  (const QByteArray &pathFile, WZipWriter &writer, const QByteArray &nameInZip);
 };
 
-force_inline void savefile::setData(const QByteArray *p, Document *curr)
+inline savefile::savefile(const QByteArray *path, Document *currenttitle)
+{
+    setData(path, currenttitle);
+}
+
+inline void savefile::setData(const QByteArray *p, Document *curr)
 {
     if(p){
         this->_path = p;

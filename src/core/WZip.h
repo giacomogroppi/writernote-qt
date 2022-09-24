@@ -77,10 +77,23 @@ public:
 
     const char *get_data();
 
+    bool is_data_available() const;
+
     WZip &operator=(WZip &&other) = delete;
     WZip &operator=(WZip &other)  = delete;
     WZip &operator=(WZip other)   = delete;
 };
+
+inline bool WZip::is_data_available() const
+{
+#ifdef DEBUGINFO
+    if(_status.is_data_available())
+        W_ASSERT(this->_data);
+    else
+        W_ASSERT(!this->_data);
+#endif
+    return _status.is_data_available();
+}
 
 force_inline size_t WZip::length() const
 {

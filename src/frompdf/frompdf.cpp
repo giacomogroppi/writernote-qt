@@ -110,7 +110,7 @@ frompdf::load_res frompdf::load(WZipReaderSingle &reader,
 
     __name = get_name_pdf();
 
-    if(zip->is_file_open() && this->load_metadata(reader) != load_res::ok){
+    if(zip->is_data_available() && this->load_metadata(reader) != load_res::ok){
         return load_res::no_metadata;
     }
 
@@ -120,7 +120,7 @@ frompdf::load_res frompdf::load(WZipReaderSingle &reader,
     for (i = 0; i < m_data->count_pdf; ++i){
         res = load_from_row(arr.at(i),
                                  false,
-                                 !zip->is_file_open(),
+                                 !zip->is_data_available(),
                                  i,
                                  canvas);
         if(res != frompdf::load_res::ok)

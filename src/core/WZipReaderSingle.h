@@ -27,6 +27,8 @@ public:
 
     void init(WZip *zip, size_t offset);
 
+    bool is_data_available() const;
+
     void *operator new(size_t number)
     {
         const auto size = sizeof(WZipReaderSingle);
@@ -41,6 +43,12 @@ public:
         WFree(ptr);
     }
 };
+
+inline bool WZipReaderSingle::is_data_available() const
+{
+    W_ASSERT(_zip);
+    return _zip->is_data_available();
+}
 
 inline WZip *WZipReaderSingle::get_zip()
 {

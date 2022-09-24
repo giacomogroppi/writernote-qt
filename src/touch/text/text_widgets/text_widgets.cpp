@@ -50,6 +50,8 @@ int text_widgets::saveData(zip_source_t *file)
     int flag = 0;
     int ver;
 
+    W_ASSERT(0);
+
     if(zip_source_write(file, &ver, sizeof(ver)) == -1)
         return ERROR;
 
@@ -62,7 +64,7 @@ int text_widgets::saveData(zip_source_t *file)
         flag += zip_source_write(file, &tmp.x, sizeof(tmp.x)) == -1;
         flag += zip_source_write(file, &tmp.y, sizeof(tmp.y)) == -1;
 
-        flag += savefile::save_string(file, tmp.text.constData()) == ERROR;
+        //flag += savefile::save_string(file, tmp.text.constData()) == ERROR;
     }
 
     return (flag > 0) ? ERROR : OK;
