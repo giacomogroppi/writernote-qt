@@ -12,6 +12,7 @@
 #include "utils/common_script.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "audioplay/audioplay.h"
+#include "core/WZipReaderSingle.h"
 #include <pthread.h>
 #include "core/WImage.h"
 
@@ -146,7 +147,7 @@ public:
     int save(WZipWriterSingle &writer, cbool saveImg) const;
 
 #ifdef ALL_VERSION
-    int load(zip_file_t *file, int ver_stroke);
+    int load(WZipReaderSingle &reader, int ver_stroke);
 #endif // ALL_VERSION
     int load(class WReadZip &readZip, int ver_stroke, int id);
 

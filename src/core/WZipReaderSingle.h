@@ -94,7 +94,7 @@ inline int WZipReaderSingle::read_by_size(void *to, size_t size)
 {
     const auto *data = this->read(size);
     if(!data)
-        return 1;
+        return -1;
 
     WMemcpy(to, data, size);
     return 0;

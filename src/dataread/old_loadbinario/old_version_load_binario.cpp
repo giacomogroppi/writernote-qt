@@ -111,52 +111,53 @@ int xmlstruct::loadbinario_0(zip_t *z)
 }
 
 /* version 4 5 6 */
-int xmlstruct::loadbinario_1(struct zip *z)
+int xmlstruct::loadbinario_1(class WZip &zip)
 {
     struct zip_stat st;
     int i, len;
-    zip_file_t *f;
     struct point_last temp_point;
     double valoretemp;
+    WZipReaderSingle reader(&zip, 0);
 
     QList<point_last> __tmp;
     QList<double> pos_foglio;
 
-    zip_stat_init(&st);
-    zip_stat(z, NAME_BIN, 0, &st);
+    if(!zip.openFileInZip(NAME_BIN))
+        return ERROR;
 
-    f = zip_fopen(z, NAME_BIN, 0);
 
-    if(f == nullptr) return false;
-
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
+    if(reader.read_object(len) < 0)
+        return ERROR;
 
     for(i = 0; i < len; i++){
-        SOURCE_READ_GOTO(f, &temp_point, sizeof(temp_point));
+        if(reader.read_object(temp_point) < 0)
+            return ERROR;
+
         __tmp.append(temp_point);
     }
 
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
-    for(i=0; i < len; i++){
-        SOURCE_READ_GOTO(f, &valoretemp, sizeof(valoretemp));
+    if(reader.read_object(len) < 0)
+        return ERROR;
+
+    for(i = 0; i < len; i++){
+        if(reader.read_object(valoretemp) < 0)
+            return ERROR;
         pos_foglio.append(valoretemp);
     }
 
     {
         long double zoom;
-        SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
+
+        static_assert(sizeof(zoom) == sizeof(long double));
+        if(reader.read_object(zoom) < 0)
+            return ERROR;
+
         _doc->datatouch->_zoom = (double)zoom;
     }
 
-    zip_fclose(f);
 
     xmlstruct::decode0(_doc, __tmp, pos_foglio);
     return OK;
-
-    free_:
-    zip_fclose(f);
-
-    return ERROR;
 }
 
 
@@ -364,46 +365,49 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
 }
 
 /* versione 7 */
-int xmlstruct::loadbinario_2(struct zip *z)
+int xmlstruct::loadbinario_2(class WZip &zip)
 {
-    struct zip_stat st;
     size_t controll, newControll;
     int i, len, lenPage, counterPage;
-    zip_file_t *f;
     struct point_old_ver_7 temp_point;
     QList<QList<point_old_ver_7>> pointAppend;
     double init[2];
+    WZipReaderSingle reader(&zip, 0);
 
-    zip_stat_init(&st);
-    zip_stat(z, NAME_BIN, 0, &st);
+    if(!zip.openFileInZip(NAME_BIN))
+        return ERROR;
 
-     f = zip_fopen(z, NAME_BIN, 0);
-
-    if(f == nullptr) return ERROR;
-
+    static_assert(sizeof(init) == sizeof(double) * 2);
     /* point first page */
-    SOURCE_READ_GOTO(f, init, sizeof(double)*2);
+    if(reader.read_object(init) < 0)
+        return ERROR;
     this->_doc->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
 
     /* page len */
-    SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
+    if(reader.read_object(lenPage) < 0)
+        return ERROR;
+
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        SOURCE_READ_GOTO(f, &len, sizeof(len));
+        if(reader.read_object(len) < 0)
+            return ERROR;
 
         /* we add a new page */
         pointAppend.append(QList<point_old_ver_7> ());
 
         for(i = 0; i < len; i++){
-            SOURCE_READ_GOTO(f, &temp_point, sizeof(temp_point));
+            if(reader.read_object(temp_point) < 0)
+                return ERROR;
             pointAppend.operator[](counterPage).append(temp_point);
         }
     }
 
-    SOURCE_READ_GOTO(f, &this->_doc->datatouch->_zoom, sizeof(this->_doc->datatouch->_zoom));
+    static_assert(sizeof(_doc->datatouch->_zoom) == sizeof(double));
+    if(reader.read_object(_doc->datatouch->_zoom) < 0)
+        return ERROR;
 
-    SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
+    if(reader.read_object(controll) < 0)
+        return ERROR;
 
-    zip_fclose(f);
 
     _doc->datatouch->triggerNewView(-1, true);
     newControll = _doc->createSingleControll();
@@ -414,50 +418,44 @@ int xmlstruct::loadbinario_2(struct zip *z)
     xmlstruct::decode1(_doc, pointAppend);
 
     return OK;
-
-    free_:
-    zip_fclose(f);
-    return ERROR;
 }
 
-__old int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
+__old int xmlstruct::loadbinario_3(class WZip &zip, int ver_stroke)
 {
-    struct zip_stat st;
     size_t controll, newControll;
     int lenPage, counterPage;
     datastruct *data = _doc->datatouch;
-    zip_file_t *f;
     double init[2];
+    WZipReaderSingle reader(&zip, 0);
 
-    zip_stat_init(&st);
-    zip_stat(z, NAME_BIN, 0, &st);
-
-     f = zip_fopen(z, NAME_BIN, 0);
-
-    if(f == nullptr)
+    if(!zip.openFileInZip(NAME_BIN))
         return ERROR;
 
+    static_assert(sizeof(init) == sizeof(double) * 2);
+    static_assert(sizeof(_doc->datatouch->_zoom) == sizeof(double));
+
     /* point first page */
-    SOURCE_READ_GOTO(f, init, sizeof(double) * 2);
+    if(reader.read_object(init) < 0)
+        return ERROR;
     this->_doc->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
 
     /* page len */
-    SOURCE_READ_GOTO(f, &lenPage, sizeof(lenPage));
+    if(reader.read_object(lenPage) < 0)
+        return ERROR;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         /* we add a new page */
         data->newPage(n_style::white);
 
-        if(data->at_mod(counterPage).load(f, ver_stroke) != OK)
-            goto free_;
+        if(data->at_mod(counterPage).load(reader, ver_stroke) != OK)
+            return ERROR;
     }
 
-    SOURCE_READ_GOTO(f, &this->_doc->datatouch->_zoom,
-                     sizeof(this->_doc->datatouch->_zoom));
+    if(reader.read_object(_doc->datatouch->_zoom) < 0)
+        return ERROR;
 
-    SOURCE_READ_GOTO(f, &controll, sizeof(size_t));
-
-    zip_fclose(f);
+    if(reader.read_object(controll) < 0)
+        return ERROR;
 
     newControll = _doc->createSingleControll();
 
@@ -465,10 +463,6 @@ __old int xmlstruct::loadbinario_3(struct zip *z, int ver_stroke)
         return ERROR_CONTROLL;
 
     return OK;
-
-    free_:
-    zip_fclose(f);
-    return ERROR;
 }
 
 #endif //ALL_VERSION

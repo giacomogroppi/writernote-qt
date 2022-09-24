@@ -50,10 +50,10 @@ private:
     __old int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
     __old int load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
 
-    __old int loadbinario_0(struct zip *file);
-    __old int loadbinario_1(struct zip *file);
-    __old int loadbinario_2(struct zip *file);
-    __old int loadbinario_3(struct zip *file, int ver_stroke);
+    __old int loadbinario_0(class WZip &zip);
+    __old int loadbinario_1(class WZip &zip);
+    __old int loadbinario_2(class WZip &zip);
+    __old int loadbinario_3(class WZip &zip, int ver_stroke);
 
 #endif // ALL_VERSION
 
