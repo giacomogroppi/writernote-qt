@@ -81,6 +81,9 @@ public:
     /* return true if we can read this file */
     static bool manageMessage(const int res);
 
+#ifdef ALL_VERSION
+    int xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg);
+#endif
     int loadfile(const bool LoadPdf, const bool LoadImg);
 
     xmlstruct(const QByteArray *path_U, Document *currenttitle_U);

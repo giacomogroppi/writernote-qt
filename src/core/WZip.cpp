@@ -1,10 +1,15 @@
 #include "WZip.h"
 #include "testing/memtest.h"
+#include "core/WZipCommon.h"
 
 WZip::WZip(const QByteArray &path, bool &ok)
 {
     this->_data = NULL;
     ok = this->openZip(path);
+    if(ok){
+        this->_status.set_zip_open();
+        this->_status.set_data_not_available();
+    }
 }
 
 void WZip::dealloc_file()
@@ -23,33 +28,22 @@ WZip::~WZip()
         W_ASSERT(!this->_file);
 #endif
 
-    if(this->_file)
-        zip_fclose(this->_file);
     if(this->_zip){
         zip_close(this->_zip);
-        this->_zip = NULL;
+        this->_zip = nullptr;
     }
 
-    DO_IF_DEBUG(this->_file = NULL;)
-    DO_IF_DEBUG(this->_zip  = NULL;)
+    DO_IF_DEBUG(this->_zip  = nullptr;)
 }
 
-zip_t *WZip::openZipWrite(const QByteArray &path)
+bool WZip::openZip(const QByteArray &pathZip)
 {
-    const int flag = ZIP_CREATE;
-    const char *pos = path.constData();
-    return zip_open(pos, flag, nullptr);
-}
-
-bool WZip::openZip(const QByteArray &path)
-{
-    W_ASSERT(!path.isEmpty());
-    W_ASSERT(this->_zip == NULL);
-    W_ASSERT(this->_file == NULL);
+    W_ASSERT(!pathZip.isEmpty());
+    W_ASSERT(this->_zip == nullptr);
 
     int err;
     int flag = 0;
-    const char *nameFile = path.constData();
+    const char *nameFile = pathZip.constData();
 
     flag |= ZIP_RDONLY;
 
@@ -58,53 +52,43 @@ bool WZip::openZip(const QByteArray &path)
     if(_zip){
         this->_status.set_zip_open();
     }
-    return !!_zip;
+
+    return _zip != nullptr;
+}
+
+zip_file_t *WZip::open_file_in_zip(const QByteArray &nameFile)
+{
+    zip_file_t *file;
+
+    file = zip_fopen(_zip, nameFile.constData(), 0);
+
+    return file;
 }
 
 // return true on success
-bool WZip::openFileInZip(const QByteArray &path)
+bool WZip::openFileInZip(const QByteArray &nameFile)
 {
     W_ASSERT(_zip);
     W_ASSERT(this->_status.is_zip_open());
 
-    _file = zip_fopen(_zip, path.constData(), 0);
+    zip_file_t *file;
 
-    return _file != nullptr;
-}
+    this->_len_file = WZip::get_size_file(_zip, nameFile.constData());
+    this->_data = WMalloc(_len_file);
 
-#define reset_all() do {        \
-        zip_fclose(_file);      \
-        zip_close(_zip);        \
-        _file = NULL;           \
-        _zip = NULL;            \
-    }while(0);
+    file = open_file_in_zip(nameFile);
 
+    if(!file)
+        return false;
 
-bool WZip::alloc_and_close(const char *nameFile)
-{
-    W_ASSERT(nameFile);
-    W_ASSERT(this->_zip);
-    W_ASSERT(this->_file);
-    W_ASSERT(this->_status.is_file_open());
-    W_ASSERT(this->_status.is_zip_open());
-    const auto size = WZip::get_size_file(_zip, nameFile);
-    this->_data = WMalloc(size);
-
-    this->_status.set_data_available();
-    this->_status.set_file_open();
-    this->_status.set_zip_open();
-
-    if(size != zip_fread(_file, _data, size)){
+    if(zip_fread(file, _data, _len_file) != _len_file){
+        zip_fclose(file);
         WFree(_data);
-        _data = NULL;
+        _data = nullptr;
 
-        reset_all();
         return false;
     }
 
-    this->_len_file = size;
-
-    reset_all();
-
+    zip_fclose(file);
     return true;
 }
