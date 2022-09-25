@@ -33,7 +33,7 @@ struct point_last{
 /*
  * version 2 and 3
 */
-int xmlstruct::loadbinario_0(zip_t *z)
+int xmlstruct::loadbinario_0(WZip &reader)
 {
     struct colore_last{
         int colore[NCOLOR];

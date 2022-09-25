@@ -6,8 +6,7 @@
 #include "utils/areyousure/areyousure.h"
 
 #ifdef ALL_VERSION
-int xmlstruct::load_file_7(Document *doc, zip_file_t *f, zip_t *filezip,
-                           const bool LoadPdf, const bool LoadImg)
+int xmlstruct::load_file_7(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg)
 {
     int tmp;
     fromimage::load_res res_img;

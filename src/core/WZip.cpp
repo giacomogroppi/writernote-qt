@@ -4,63 +4,76 @@
 
 WZip::WZip(const QByteArray &path, bool &ok)
 {
-    this->_data = NULL;
     ok = this->openZip(path);
     if(ok){
-        this->_status.set_zip_open();
-        this->_status.set_data_not_available();
+        this->_data_private._status.set_zip_open();
+        this->_data_private._status.set_data_not_available();
     }
+
+    this->_data_private = {
+        ._data = NULL,
+        ._zip = _data_private._zip,
+        ._len_file = 0,
+        ._path = path,
+        ._status = _data_private._status,
+        ._have_to_close = true
+    };
+}
+
+WZip::WZip(WZip &zip)
+{
+    W_ASSERT(zip._data_private._zip != nullptr);
+
+    this->_data_private = {
+        ._data = nullptr,
+        ._zip = zip._data_private._zip,
+        ._len_file = 0,
+        ._path = zip._data_private._path,
+        ._status = zip._data_private._status,
+        ._have_to_close = false
+    };
 }
 
 void WZip::dealloc_file()
 {
-    W_ASSERT(this->_data);
-    W_ASSERT(this->_status.is_data_available());
-    WFree(this->_data);
-    this->_data = NULL;
-    this->_status.set_data_not_available();
+    W_ASSERT(this->_data_private._data);
+    W_ASSERT(this->_data_private._status.is_data_available());
+    WFree(this->_data_private._data);
+    this->_data_private._data = NULL;
+    this->_data_private._status.set_data_not_available();
 }
 
 WZip::~WZip()
 {
-#ifdef DEBUG_INFO
-    if(!this->_zip)
-        W_ASSERT(!this->_file);
-#endif
+    WFree(this->_data_private._data);
 
-    if(this->_zip){
-        zip_close(this->_zip);
-        this->_zip = nullptr;
+    if(_data_private._have_to_close and _data_private._zip){
+        zip_close(this->_data_private._zip);
     }
 
-    DO_IF_DEBUG(this->_zip  = nullptr;)
+    DO_IF_DEBUG(this->_data_private._zip = nullptr;)
 }
 
 bool WZip::openZip(const QByteArray &pathZip)
 {
     W_ASSERT(!pathZip.isEmpty());
-    W_ASSERT(this->_zip == nullptr);
+    W_ASSERT(this->_data_private._zip == nullptr);
+    W_ASSERT(this->_data_private._data == nullptr);
 
-    int err;
-    int flag = 0;
-    const char *nameFile = pathZip.constData();
+    this->_data_private._zip = WZipCommon::openZip(pathZip.constData(), W_ZIP_READ);
 
-    flag |= ZIP_RDONLY;
-
-    _zip = zip_open(nameFile, flag, &err);
-
-    if(_zip){
-        this->_status.set_zip_open();
+    if(_data_private._zip){
+        this->_data_private._status.set_zip_open();
     }
 
-    return _zip != nullptr;
+    return _data_private._zip != nullptr;
 }
 
 zip_file_t *WZip::open_file_in_zip(const QByteArray &nameFile)
 {
     zip_file_t *file;
 
-    file = zip_fopen(_zip, nameFile.constData(), 0);
+    file = zip_fopen(_data_private._zip, nameFile.constData(), 0);
 
     return file;
 }
@@ -68,23 +81,23 @@ zip_file_t *WZip::open_file_in_zip(const QByteArray &nameFile)
 // return true on success
 bool WZip::openFileInZip(const QByteArray &nameFile)
 {
-    W_ASSERT(_zip);
-    W_ASSERT(this->_status.is_zip_open());
+    W_ASSERT(_data_private._zip);
+    W_ASSERT(this->_data_private._status.is_zip_open());
 
     zip_file_t *file;
 
-    this->_len_file = WZip::get_size_file(_zip, nameFile.constData());
-    this->_data = WMalloc(_len_file);
+    this->_data_private._len_file = WZip::get_size_file(_data_private._zip, nameFile.constData());
+    this->_data_private._data = WMalloc(_data_private._len_file);
 
     file = open_file_in_zip(nameFile);
 
     if(!file)
         return false;
 
-    if(zip_fread(file, _data, _len_file) != _len_file){
+    if(zip_fread(file, _data_private._data, _data_private._len_file) != _data_private._len_file){
         zip_fclose(file);
-        WFree(_data);
-        _data = nullptr;
+        WFree(_data_private._data);
+        _data_private._data = nullptr;
 
         return false;
     }

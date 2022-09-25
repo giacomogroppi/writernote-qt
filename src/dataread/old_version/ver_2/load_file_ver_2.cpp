@@ -1,6 +1,7 @@
 #include "dataread/xmlstruct.h"
 #include "datawrite/source_read_ext.h"
 #include "utils/common_error_definition.h"
+#include "core/WZipReaderSingle.h"
 
 #ifdef ALL_VERSION
 /*
@@ -10,29 +11,43 @@
  * following versions.
  * furthermore we are obliged to read the audio_potion_path string
 */
-int xmlstruct::load_file_2(Document *currenttitle, zip_file_t *f, zip_t *filezip){
+int xmlstruct::load_file_2(WZipReaderSingle &reader)
+{
     QString tmp_str, tmp_testi;
     bool temp, translate;
     bool tmp_touch;
+    WZip &zip = *reader.get_zip();
 
-    LOAD_STRINGA_RETURN(f, tmp_str);
-    SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(bool));
-    if(temp)
-        this->_doc->se_registato = Document::record_file;
-    else
-        this->_doc->se_registato = Document::not_record;
+    if(reader.read_string(tmp_str) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &translate, sizeof(translate));
+    {
+        if(reader.read_object(temp) < 0)
+            return ERROR;
 
-    LOAD_STRINGA_RETURN(f, tmp_testi)
+        if(temp)
+            this->_doc->se_registato = Document::record_file;
+        else
+            this->_doc->se_registato = Document::not_record;
+    }
 
-    LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
+    if(reader.read_object(translate) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &tmp_touch, sizeof(bool));
+    if(reader.read_string(tmp_testi) < 0)
+        return ERROR;
+
+    if(reader.read_string(_doc->audio_position_path) < 0)
+        return ERROR;
+
+    if(reader.read_object(tmp_touch) < 0)
+        return ERROR;
 
     CONTROLL_KEY(tmp_touch);
 
-    if(loadbinario_0(filezip) == ERROR)
+    zip.dealloc_file();
+
+    if(this->loadbinario_0(zip) == ERROR)
         return ERROR;
 
     return OK;

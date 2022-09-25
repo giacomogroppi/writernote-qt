@@ -4,27 +4,40 @@
 
 #ifdef ALL_VERSION
 
-int xmlstruct::load_file_3(Document *currenttitle, zip_file_t *f, zip_t *filezip)
+int xmlstruct::load_file_3(WZipReaderSingle &reader)
 {
     int temp;
     bool tmp_touch, translate;
     QString tmp_str;
+    WZip &zip = *reader.get_zip();
 
-    LOAD_STRINGA_RETURN(f, tmp_str);
-    SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(int));
-    currenttitle->se_registato = static_cast<Document::n_audio_record>(temp);
+    if(reader.read_string(tmp_str) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &translate, sizeof(bool));
+    {
+        if(reader.read_object(temp) < 0)
+            return ERROR;
 
-    LOAD_STRINGA_RETURN(f, tmp_str);
+        _doc->se_registato = static_cast<Document::n_audio_record>(temp);
+    }
 
-    LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
+    if(reader.read_object(translate) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &tmp_touch, sizeof(bool));
+    if(reader.read_string(tmp_str) < 0)
+        return ERROR;
+
+    if(reader.read_string(_doc->audio_position_path) < 0)
+        return ERROR;
+
+    if(reader.read_object(tmp_touch) < 0)
+        return ERROR;
 
     CONTROLL_KEY(tmp_touch);
 
-    if(loadbinario_0(filezip) == ERROR)
+    zip.dealloc_file();
+
+    if(loadbinario_0(zip) == ERROR)
         return ERROR;
 
     return OK;

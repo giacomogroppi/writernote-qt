@@ -4,32 +4,47 @@
 
 #ifdef ALL_VERSION
 
-int xmlstruct::load_file_4(Document *currenttitle, zip_file_t *f, zip_t *filezip){
-    int temp;
+int xmlstruct::load_file_4(WZipReaderSingle &reader)
+{
     bool tmp_touch, translate;
     uchar controllo_parita = 0;
     QString tmp_testi;
     QString tmp_str;
-    LOAD_STRINGA_RETURN(f, tmp_str);
+    WZip &zip = *reader.get_zip();
 
-    SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(int));
-    currenttitle->se_registato = static_cast<Document::n_audio_record>(temp);
+    if(reader.read_string(tmp_str) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &translate, sizeof(bool));
+    {
+        int tmp_audio;
+        static_assert(sizeof(tmp_audio) == sizeof(int));
+        if(reader.read_object(tmp_audio) < 0)
+            return ERROR;
 
-    LOAD_STRINGA_RETURN(f, tmp_testi);
+        _doc->se_registato = static_cast<Document::n_audio_record>(tmp_audio);
+    }
 
-    LOAD_STRINGA_RETURN(f, currenttitle->audio_position_path)
+    if(reader.read_object(translate) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &tmp_touch, sizeof(bool));
+    if(reader.read_string(tmp_testi) < 0)
+        return ERROR;
+
+    if(reader.read_string(_doc->audio_position_path) < 0)
+        return ERROR;
+
+    if(reader.read_object(tmp_touch) < 0)
+        return ERROR;
 
     CONTROLL_KEY(tmp_touch);
 
-    temp = loadbinario_1(filezip);
-    if(temp == ERROR){
-        return temp;
+    zip.dealloc_file();
+
+    const auto res = loadbinario_1(zip);
+    if(res == ERROR){
+        return res;
     }
-    else if(temp == ERROR_CONTROLL){
+    else if(res == ERROR_CONTROLL){
         /* we want to continue to load the file, but we need to return we had a problem */
         controllo_parita = 1;
     }

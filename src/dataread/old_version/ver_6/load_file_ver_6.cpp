@@ -5,7 +5,7 @@
 #include "frompdf/frompdf.h"
 
 #ifdef ALL_VERSION
-int xmlstruct::load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg){
+int xmlstruct::load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg){
     int tmp;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;

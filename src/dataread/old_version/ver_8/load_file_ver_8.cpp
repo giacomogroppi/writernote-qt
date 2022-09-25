@@ -6,21 +6,31 @@
 
 #ifdef ALL_VERSION
 
-int xmlstruct::load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg)
+int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg)
 {
     int tmp, ver_stroke;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
+    WZip &zip = *reader.get_zip();
 
-    SOURCE_READ_RETURN_SIZE(f, &ver_stroke, sizeof(ver_stroke));
+    if(reader.read_object(ver_stroke) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(tmp));
-    doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    {
+        if(reader.read_object(tmp) < 0)
+            return ERROR;
+        _doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    }
 
-    LOAD_STRINGA_RETURN(f, doc->audio_position_path)
+    if(reader.read_string(_doc->audio_position_path) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_img, sizeof(doc->count_img));
+    if(reader.read_object(_doc->count_pdf) < 0)
+        return ERROR;
+
+    if(reader.read_object(_doc->count_img) < 0)
+        return ERROR;
+
 
     tmp = loadbinario_3(filezip, ver_stroke);
     if(tmp == ERROR)

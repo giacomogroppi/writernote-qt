@@ -44,21 +44,25 @@ public:
 
 };
 
+struct WZipPrivate{
+    void            *_data      = NULL;
+    zip_t           *_zip       = NULL;
+    size_t          _len_file   = 0;
+    QString         _path;
+    PrivateStatus   _status;
+    bool            _have_to_close;
+};
+
 class WZip
 {
 private:
-    void *_data = NULL;
-
-    zip_t           *_zip       = NULL;
-    size_t          _len_file   = 0;
-
-    QString path;
-    PrivateStatus _status;
+    struct WZipPrivate _data_private;
 
     bool openZip(const QByteArray &path);
 
 public:
     WZip(const QByteArray &path, bool &ok);
+    WZip(WZip &zip);
     ~WZip();
 
     void close_zip();
@@ -87,31 +91,31 @@ public:
 inline bool WZip::is_data_available() const
 {
 #ifdef DEBUGINFO
-    if(_status.is_data_available())
-        W_ASSERT(this->_data);
+    if(_data_private._status.is_data_available())
+        W_ASSERT(this->_data_private._data);
     else
-        W_ASSERT(!this->_data);
+        W_ASSERT(!this->_data_private._data);
 #endif
-    return _status.is_data_available();
+    return _data_private._status.is_data_available();
 }
 
 force_inline size_t WZip::length() const
 {
-    W_ASSERT(_len_file > 0);
-    W_ASSERT(this->_status.is_data_available());
-    return this->_len_file;
+    W_ASSERT(_data_private._len_file > 0);
+    W_ASSERT(this->_data_private._status.is_data_available());
+    return this->_data_private._len_file;
 }
 
 force_inline const char *WZip::get_data()
 {
-    W_ASSERT(this->_data);
-    return (const char *)this->_data;
+    W_ASSERT(this->_data_private._data);
+    return (const char *)this->_data_private._data;
 }
 
 force_inline zip_t* WZip::get_zip()
 {
-    W_ASSERT(this->_zip);
-    return this->_zip;
+    W_ASSERT(this->_data_private._zip);
+    return this->_data_private._zip;
 }
 
 force_inline size_t WZip::get_size_file(zip_t *zip, const char *name)

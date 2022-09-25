@@ -42,13 +42,13 @@ private:
     Document *_doc = nullptr;
 
 #ifdef ALL_VERSION
-    __old int load_file_2(Document *doc, zip_file_t *f, zip_t *filezip);
-    __old int load_file_3(Document *doc, zip_file_t *f, zip_t *filezip);
-    __old int load_file_4(Document *doc, zip_file_t *f, zip_t *filezip);
-    __old int load_file_5(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
-    __old int load_file_6(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
-    __old int load_file_7(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
-    __old int load_file_8(Document *doc, zip_file_t *f, zip_t *filezip, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_2(WZipReaderSingle &reader);
+    __old int load_file_3(WZipReaderSingle &reader);
+    __old int load_file_4(WZipReaderSingle &reader);
+    __old int load_file_5(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_6(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_7(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_8(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
 
     __old int loadbinario_0(class WZip &zip);
     __old int loadbinario_1(class WZip &zip);

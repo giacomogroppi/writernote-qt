@@ -173,37 +173,33 @@ int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool 
     W_ASSERT(ver >= 0);
     W_ASSERT(ver <= 8);
 
-    zip_file_t *file = zip_fopen(zip.get_zip(), NAME_FILE, 0);
-
-    W_ASSERT(file);
+    WZipReaderSingle reader(&zip, xmlstruct::get_offset_start());
 
     switch (ver) {
         case 0 ... 2:
-            err = load_file_2(_doc, file, zip.get_zip());
+            err = load_file_2(reader);
             break;
         case 3:
-            err = load_file_3(_doc, file, zip.get_zip());
+            err = load_file_3(reader);
             break;
         case 4:
-            err = load_file_4(_doc, file, zip.get_zip());
+            err = load_file_4(reader);
             break;
         case 5:
-            err = load_file_5(_doc, file, zip.get_zip(), LoadPdf, LoadImg);
+            err = load_file_5(reader, LoadPdf, LoadImg);
             break;
         case 6:
-            err = load_file_6(_doc, file, zip.get_zip(), LoadPdf, LoadImg);
+            err = load_file_6(reader, LoadPdf, LoadImg);
             break;
         case 7:
-            err = load_file_7(_doc, file, zip.get_zip(), LoadPdf, LoadImg);
+            err = load_file_7(reader, LoadPdf, LoadImg);
             break;
         case 8:
-            err = load_file_8(_doc, file, zip.get_zip(), LoadPdf, LoadImg);
+            err = load_file_8(reader, LoadPdf, LoadImg);
             break;
         default:
             std::abort();
     }
-
-    zip_fclose(file);
 
     return err;
 }
@@ -232,9 +228,11 @@ int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
     if(xmlstruct_read_ver(zip, tmp_ver))
         goto free_;
 
+    static_assert(CURRENT_VERSION_CURRENT_TITLE == 9);
+
     switch (tmp_ver) {
 #ifdef ALL_VERSION
-    case 0 ... 8:
+    case 0 ... CURRENT_VERSION_CURRENT_TITLE - 1:
         err = xmlstruct_read_file_old(tmp_ver, zip, LoadPdf, LoadImg);
         break;
 #else

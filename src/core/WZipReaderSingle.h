@@ -2,7 +2,6 @@
 
 #include "core/WZip.h"
 #include "utils/common_script.h"
-#include "testing/memtest.h"
 
 class WZipReaderSingle
 {
@@ -14,14 +13,13 @@ public:
     WZipReaderSingle(WZip *zip, size_t offset);
     ~WZipReaderSingle() = default;
 
-    const void* read(size_t size);
-
-    int read_by_size(void *to, size_t size);
+    [[nodiscard]] const void* read(size_t size);
+    [[nodiscard]] int read_string(QString &str);
+    [[nodiscard]] int read_by_size(void *to, size_t size);
 
     template <class T>
-    int read_object(T &object);
+    [[nodiscard]] int read_object(T &object);
 
-    int read_string(QString &str);
 
     size_t get_offset() const;
 
@@ -29,19 +27,7 @@ public:
 
     bool is_data_available() const;
 
-    void *operator new(size_t number)
-    {
-        const auto size = sizeof(WZipReaderSingle);
-        void *res = WMalloc(size);
-        return res;
-    }
-
     WZip *get_zip();
-
-    void operator delete(void *ptr)
-    {
-        WFree(ptr);
-    }
 };
 
 inline bool WZipReaderSingle::is_data_available() const
@@ -110,11 +96,11 @@ inline int WZipReaderSingle::read_string(QString &str)
 {
     int l;
     if(this->read_object(l))
-        return 1;
+        return -1;
 
     char tmp[l];
     if(l && this->read_by_size(tmp, l))
-        return 1;
+        return -1;
     str = QString::fromUtf8(tmp, l);
 
     return 0;
