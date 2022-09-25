@@ -9,22 +9,25 @@
 int xmlstruct::load_file_7(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg)
 {
     int tmp;
-    fromimage::load_res res_img;
+    WZip &zip = *reader.get_zip();
 
-    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(int));
-    doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    {
+        if(reader.read_object(tmp) < 0)
+            return ERROR;
 
-    LOAD_STRINGA_RETURN(f, doc->audio_position_path)
+        _doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    }
 
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_img, sizeof(doc->count_img));
+    if(reader.read_string(_doc->audio_position_path) < 0)
+        return ERROR;
 
-    tmp = loadbinario_2(filezip);
-    if(tmp == ERROR)
-        return tmp;
+    if(reader.read_object(_doc->count_pdf) < 0)
+        return ERROR;
+    if(reader.read_object(_doc->count_img) < 0)
+        return ERROR;
 
     if(LoadImg){
-        res_img = doc->m_img->load(filezip, f);
+        const auto res_img = _doc->m_img->load(reader);
         if(res_img != fromimage::load_res::ok){
             return ERROR;
         }
@@ -32,12 +35,19 @@ int xmlstruct::load_file_7(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        auto res = doc->m_pdf->load(filezip, f, nullptr);
+        const auto res = _doc->m_pdf->load(reader, nullptr);
         if(res != frompdf::ok)
             return ERROR;
     }
 #endif
 
+    zip.dealloc_file();
+
+    tmp = loadbinario_2(zip);
+    if(tmp == ERROR)
+        return tmp;
+
     return OK;
 }
+
 #endif //ALL_VERSION

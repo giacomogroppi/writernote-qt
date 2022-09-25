@@ -4,6 +4,7 @@
 #include <QListWidgetItem>
 #include "last_open/struct_last_file.h"
 #include "imageWidget/imageWidget.h"
+#include "utils/common_def.h"
 
 namespace Ui {
 class element_ui;

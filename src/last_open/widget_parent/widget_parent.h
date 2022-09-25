@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QList>
 #include "last_open/struct_last_file.h"
+#include "utils/common_def.h"
 
 class last_open;
 class element_ui;

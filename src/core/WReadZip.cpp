@@ -35,7 +35,7 @@ WReadZip::~WReadZip()
     this->_reader = nullptr;
 }
 
-const void *WReadZip::read(const size_t sizeData, int identifier)
+const void *WReadZip::read(size_t sizeData, int identifier)
 {
     W_ASSERT(identifier < this->thread_created);
     return _reader[identifier].read(sizeData);

@@ -9,38 +9,39 @@ int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 {
     int tmp;
     uchar controllo_parita = 0;
-    fromimage::load_res res_img;
     QString tmp_str, tmp_testi;
     bool tmp_touch, translate;
+    WZip &zip = *reader.get_zip();
 
-    LOAD_STRINGA_RETURN(f, tmp_str);
+    if(reader.read_string(tmp_str) < 0)
+        return ERROR;
 
+    {
+        if(reader.read_object(tmp) < 0)
+            return ERROR;
+        _doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    }
 
-    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(int));
-    doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+    if(reader.read_object(translate) < 0)
+        return ERROR;
 
-    SOURCE_READ_RETURN_SIZE(f, &translate, sizeof(translate));
+    if(reader.read_string(tmp_testi) < 0)
+        return ERROR;
 
-    LOAD_STRINGA_RETURN(f, tmp_testi);
+    if(reader.read_string(_doc->audio_position_path) < 0)
+        return ERROR;
 
-    LOAD_STRINGA_RETURN(f, doc->audio_position_path)
-
-    SOURCE_READ_RETURN_SIZE(f, &tmp_touch, sizeof(tmp_touch));
+    if(reader.read_object(tmp_touch) < 0)
+        return ERROR;
     CONTROLL_KEY(tmp_touch);
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_pdf, sizeof(doc->count_pdf));
-    SOURCE_READ_RETURN_SIZE(f, &doc->count_img, sizeof(doc->count_img));
+    if(reader.read_object(_doc->count_pdf) < 0)
+        return ERROR;
 
-    tmp = loadbinario_1(filezip);
-    if(tmp == ERROR){
-        return tmp;
-    }
-    else if(tmp == ERROR_CONTROLL){
-        /* we want to continue to load the file, but we need to return we had a problem */
-        controllo_parita = 1;
-    }
+    if(reader.read_object(_doc->count_img) < 0)
+        return ERROR;
 
     if(LoadImg){
-        res_img = doc->m_img->load(filezip, f);
+        const auto res_img = _doc->m_img->load(reader);
         if(res_img != fromimage::load_res::ok){
             return ERROR;
         }
@@ -48,11 +49,22 @@ int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        auto res = doc->m_pdf->load(filezip, f, nullptr);
+        const auto res = _doc->m_pdf->load(reader, nullptr);
         if(res != frompdf::ok)
             return ERROR;
     }
 #endif
+
+    zip.dealloc_file();
+
+    tmp = loadbinario_1(zip);
+    if(tmp == ERROR){
+        return tmp;
+    }
+    else if(tmp == ERROR_CONTROLL){
+        /* we want to continue to load the file, but we need to return we had a problem */
+        controllo_parita = 1;
+    }
 
     if(controllo_parita)
         return ERROR_CONTROLL;

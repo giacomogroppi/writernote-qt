@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QImage>
+#include "utils/common_def.h"
 
 class Document;
 class TabletCanvas;

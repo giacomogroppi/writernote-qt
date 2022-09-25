@@ -20,9 +20,17 @@ public:
     WReadZip(WZip *zip, int number_thread, const size_t readDataFrom, const size_t *base);
     ~WReadZip();
 
-    const void *read(const size_t size, int identifier);
-    size_t get_current_distance(int index_thread) const;
+    WZipReaderSingle *get_reader(int id);
+
+    const void *read(size_t size, int identifier);
+    [[nodiscard]] size_t get_current_distance(int index_thread) const;
 };
+
+force_inline WZipReaderSingle *WReadZip::get_reader(int id)
+{
+    W_ASSERT(id < this->thread_created);
+    return &_reader[id];
+}
 
 force_inline size_t WReadZip::get_current_distance(int index_thread) const
 {

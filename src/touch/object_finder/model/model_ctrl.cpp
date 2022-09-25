@@ -123,18 +123,19 @@ size_t stroke_complex_get_size_save(const stroke *stroke)
     return s;
 }
 
-#ifdef ALL_VERSION
-int stroke_complex_load(stroke *stroke, int type, zip_file_t *filezip)
+int stroke_complex_load(stroke *stroke, int type, WZipReaderSingle &reader)
 {
     ver_stroke_complex current_ver;
     const auto size = get_size_by_type(type);
     void *data;
 
-    SOURCE_READ_RETURN_SIZE(filezip, &current_ver, sizeof(current_ver));
+    if(reader.read_object(current_ver) < 0)
+        return ERROR;
 
     if(current_ver == _current_ver){
         data = WMalloc(size);
-        SOURCE_READ_RETURN_SIZE(filezip, data, size);
+        if(reader.read_by_size(data, size) < 0)
+            return ERROR;
         stroke->set_complex(type, data);
     }else{
         return ERROR_VERSION;
@@ -142,7 +143,6 @@ int stroke_complex_load(stroke *stroke, int type, zip_file_t *filezip)
 
     return OK;
 }
-#endif // ALL_VERSION
 
 static int stroke_complex_read_object_size(void *object, WReadZip &reader, int id, size_t size)
 {
@@ -153,42 +153,6 @@ static int stroke_complex_read_object_size(void *object, WReadZip &reader, int i
     WMemcpy(&object, r, size);
     return 0;
 }
-
-template <class T>
-static int stroke_complex_read_object(T &object, WReadZip &reader, int id)
-{
-    return stroke_complex_read_object_size(&object, reader, id, sizeof(T));
-}
-
-#define MANAGE_ERR() return ERROR;
-
-int stroke_complex_load(stroke *stroke, int type, class WReadZip &reader, int id)
-{
-    W_ASSERT(id >= 0);
-    W_ASSERT(stroke);
-    ver_stroke_complex current_ver;
-    const auto size = get_size_by_type(type);
-    void *data;
-
-    if(stroke_complex_read_object(current_ver, reader, id))
-        MANAGE_ERR();
-
-
-    if(current_ver == _current_ver){
-        data = WMalloc(size);
-        if(stroke_complex_read_object_size(data, reader, id, size)){
-            WFree(data);
-            MANAGE_ERR();
-        }
-
-        stroke->set_complex(type, data);
-    }else{
-        return ERROR_VERSION;
-    }
-
-    return OK;
-}
-
 
 extern void stroke_complex_line_append(stroke *stroke, const QPointF& point);
 extern void stroke_complex_circle_append(stroke *stroke, const QPointF& point);

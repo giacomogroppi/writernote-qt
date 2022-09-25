@@ -728,18 +728,12 @@ int page::save(WZipWriterSingle &writer, cbool saveImg) const
     return page_file::save(this, writer, saveImg);
 }
 
-int page::load(zip_file_t *file, int ver_stroke)
+int page::load(WZipReaderSingle &reader, int ver_stroke)
 {
-    return page_file::load(*this, ver_stroke, file);
-}
-
-/* return OK on success */
-int page::load(WReadZip &readZip, int ver_stroke, int id)
-{
-    return page_file::load(*this, ver_stroke, readZip, id);
+    return page_file::load(*this, ver_stroke, reader);
 }
 
 void page::drawStroke(const stroke &stroke, int m_pos_ris)
 {
-    drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), NULL);
+    drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), nullptr);
 }

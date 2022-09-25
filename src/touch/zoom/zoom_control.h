@@ -4,6 +4,7 @@ class frompdf;
 class datastruct;
 #include <QPointF>
 #include <QSize>
+#include "utils/common_def.h"
 
 class zoom_control
 {

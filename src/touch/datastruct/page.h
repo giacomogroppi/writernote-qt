@@ -146,10 +146,7 @@ public:
 
     int save(WZipWriterSingle &writer, cbool saveImg) const;
 
-#ifdef ALL_VERSION
     int load(WZipReaderSingle &reader, int ver_stroke);
-#endif // ALL_VERSION
-    int load(class WReadZip &readZip, int ver_stroke, int id);
 
     void drawStroke(const stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);

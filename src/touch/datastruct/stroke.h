@@ -15,6 +15,7 @@
 #include "touch/object_finder/model/model.h"
 #include "testing/memtest.h"
 #include "core/WZipWriterSingle.h"
+#include "core/WZipReaderSingle.h"
 
 struct metadata_stroke{
     int posizione_audio;
@@ -56,10 +57,7 @@ private:
 
     int save(WZipWriterSingle &file) const;
 
-#ifdef DEBUGINFO
-    int load(zip_file_t *file, int version);
-#endif
-    int load(class WReadZip &reader, int id, int version);
+    int load(WZipReaderSingle &reader, int version);
 
 public:
     stroke();

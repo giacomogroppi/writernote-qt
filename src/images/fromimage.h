@@ -46,11 +46,8 @@ public:
 
     [[nodiscard]] int addImage(QString &pos, const PointSettable *point, const QString &writernote_file);
 
-    fromimage(Document *doc){ this->doc = doc; }
+    explicit fromimage(Document *doc){ this->doc = doc; }
 
-#ifdef ALL_VERSION
-    fromimage::load_res load(zip_t *filezip, zip_file_t *file);
-#endif // ALL_VERSION
     fromimage::load_res load(WZipReaderSingle &zip);
 
     fromimage::load_res save(WZipWriter &file, const QStringList &path) const;

@@ -4,6 +4,8 @@
 #include "utils/common_error_definition.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/datastruct/page.h"
+#include "core/WZip.h"
+#include "core/WZipReaderSingle.h"
 
 #ifdef ALL_VERSION
 
@@ -33,7 +35,7 @@ struct point_last{
 /*
  * version 2 and 3
 */
-int xmlstruct::loadbinario_0(WZip &reader)
+int xmlstruct::loadbinario_0(WZip &zip)
 {
     struct colore_last{
         int colore[NCOLOR];
@@ -53,24 +55,24 @@ int xmlstruct::loadbinario_0(WZip &reader)
 
     QList<double> pos_foglio;
     QList<point_last> point;
-    struct zip_stat st;
+    WZipReaderSingle reader(&zip, 0);
     int i, len;
     uint k;
+
+    W_ASSERT(reader.is_data_available() == false);
 
     point_last_ver_2_3 point_lettura;
     point_last point_append;
 
-    zip_stat_init(&st);
-    zip_stat(z, NAME_BIN, 0, &st);
+    if(!zip.openFileInZip(NAME_BIN))
+        return ERROR;
 
-    zip_file_t *f = zip_fopen(z, NAME_BIN, 0);
-
-    if(f == nullptr) return ERROR;
-
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
+    if(reader.read_object(len) < 0)
+        return ERROR;
 
     for(i=0; i<len; i++){
-        SOURCE_READ_GOTO(f, &point_lettura, sizeof(point_lettura));
+        if(reader.read_object(point_lettura) < 0)
+            return ERROR;
 
         point_append.idtratto = point_lettura.idtratto;
         for(k = 0; k < NCOLOR; ++k){
@@ -88,26 +90,27 @@ int xmlstruct::loadbinario_0(WZip &reader)
 
     double valoretemp;
 
-    SOURCE_READ_GOTO(f, &len, sizeof(int));
+    if(reader.read_object(len) < 0)
+        return ERROR;
+
     for(i=0; i < len; i++){
-        SOURCE_READ_GOTO(f, &valoretemp, sizeof(double));
+        if(reader.read_object(valoretemp) < 0)
+            return ERROR;
+
         pos_foglio.append(valoretemp);
     }
 
     {
         long double zoom;
-        SOURCE_READ_GOTO(f, &zoom, sizeof(long double));
+        if(reader.read_object(zoom) < 0)
+            return ERROR;
+
         _doc->datatouch->_zoom = zoom;
     }
-    zip_fclose(f);
 
     xmlstruct::decode0(_doc, point, pos_foglio);
 
     return OK;
-
-    free_:
-    zip_fclose(f);
-    return ERROR;
 }
 
 /* version 4 5 6 */
@@ -124,7 +127,6 @@ int xmlstruct::loadbinario_1(class WZip &zip)
 
     if(!zip.openFileInZip(NAME_BIN))
         return ERROR;
-
 
     if(reader.read_object(len) < 0)
         return ERROR;

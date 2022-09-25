@@ -62,13 +62,14 @@ struct xmlstruct_thread_data{
 
 static void *xmlstruct_thread_load(void *_data)
 {
-    int i;
     struct xmlstruct_thread_data *data = static_cast<struct xmlstruct_thread_data *>(_data);
+    const auto id = data->_id;
+    WZipReaderSingle &reader = *data->_zip->get_reader(id);
 
-    if(data->_page->load(*data->_zip, data->_ver_stroke, data->_id) != OK)
+    if(data->_page->load(reader, data->_ver_stroke) != OK)
         return (void *)1UL;
 
-    return 0;
+    return NULL;
 }
 
 static int xmlstruct_wait_for_thread(pthread_t *thread, int num)

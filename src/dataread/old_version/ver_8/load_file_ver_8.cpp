@@ -10,7 +10,6 @@ int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 {
     int tmp, ver_stroke;
     uchar controllo_parita = 0;
-    fromimage::load_res res_img;
     WZip &zip = *reader.get_zip();
 
     if(reader.read_object(ver_stroke) < 0)
@@ -31,16 +30,10 @@ int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
     if(reader.read_object(_doc->count_img) < 0)
         return ERROR;
 
-
-    tmp = loadbinario_3(filezip, ver_stroke);
-    if(tmp == ERROR)
-        return tmp;
-    else if(tmp == ERROR_CONTROLL)
-        /* we want to continue to load the file, but we need to return we had a problem */
-        controllo_parita = 1;
+    zip.dealloc_file();
 
     if(LoadImg){
-        res_img = doc->m_img->load(filezip, f);
+        const auto res_img = _doc->m_img->load(reader);
         if(res_img != fromimage::load_res::ok){
             return ERROR;
         }
@@ -48,11 +41,18 @@ int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        auto res = doc->m_pdf->load(filezip, f, nullptr);
+        const auto res = _doc->m_pdf->load(reader, nullptr);
         if(res != frompdf::ok)
             return ERROR;
     }
 #endif
+
+    tmp = loadbinario_3(zip, ver_stroke);
+    if(tmp == ERROR)
+        return tmp;
+    else if(tmp == ERROR_CONTROLL)
+        /* we want to continue to load the file, but we need to return we had a problem */
+        controllo_parita = 1;
 
     if(controllo_parita)
         return ERROR_CONTROLL;

@@ -5,7 +5,7 @@
 #include "core/WZipWriterSingle.h"
 #include "utils/common_def.h"
 #include "utils/common_script.h"
-#include "zip.h"
+#include "core/WZipReaderSingle.h"
 
 constexpr double model_error = 5000.;
 
@@ -35,11 +35,7 @@ QRect stroke_complex_bigger_data(const stroke *stroke);
 size_t stroke_complex_get_size_save(const stroke *stroke);
 int stroke_complex_save(const stroke *stroke, WZipWriterSingle &file);
 
-#ifdef ALL_VERSION
-int stroke_complex_load(stroke *stroke, int type, zip_file_t *file);
-#endif // ALL_VERSION
-
-int stroke_complex_load(stroke *stroke, int type, class WReadZip &reader, int id);
+int stroke_complex_load(stroke *stroke, int type, WZipReaderSingle &reader);
 
 void stroke_complex_append(stroke *stroke, const QPointF &point);
 bool stroke_complex_is_inside(const stroke *stroke, const class WLine &line, cdouble precision);
