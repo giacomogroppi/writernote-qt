@@ -69,7 +69,7 @@ force_inline WZipReaderSingle::WZipReaderSingle(WZip *zip, size_t offset):
 
 inline const void *WZipReaderSingle::read(size_t size)
 {
-    if(!(size + offset < this->_zip->length())){
+    if(!(size + offset <= this->_zip->length())){
         return NULL;
     }
 
