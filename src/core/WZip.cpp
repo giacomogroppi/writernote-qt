@@ -98,10 +98,11 @@ bool WZip::openFileInZip(const QByteArray &nameFile)
         zip_fclose(file);
         WFree(_data_private._data);
         _data_private._data = nullptr;
-
+        _data_private._status.set_data_not_available();
         return false;
     }
 
     zip_fclose(file);
+    _data_private._status.set_data_available();
     return true;
 }

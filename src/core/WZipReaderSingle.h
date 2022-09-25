@@ -50,7 +50,9 @@ inline void WZipReaderSingle::init(WZip *zip, size_t offset)
     this->offset = offset;
 }
 
-inline WZipReaderSingle::WZipReaderSingle()
+inline WZipReaderSingle::WZipReaderSingle():
+    _zip(nullptr),
+    offset(0)
 {
 #ifdef DEBUGINFO
     this->_zip = NULL;
@@ -58,17 +60,23 @@ inline WZipReaderSingle::WZipReaderSingle()
 #endif
 }
 
-force_inline WZipReaderSingle::WZipReaderSingle(WZip *zip, size_t offset)
+force_inline WZipReaderSingle::WZipReaderSingle(WZip *zip, size_t offset):
+    _zip(nullptr),
+    offset(0)
 {
     this->init(zip, offset);
 }
 
 inline const void *WZipReaderSingle::read(size_t size)
 {
-    if(size + offset >= this->_zip->length()){
+    if(!(size + offset < this->_zip->length())){
         return NULL;
     }
-    return _zip->get_data() + size;
+
+    const auto *ret = _zip->get_data() + offset;
+    this->offset += size;
+
+    return ret;
 }
 
 inline size_t WZipReaderSingle::get_offset() const
@@ -78,11 +86,23 @@ inline size_t WZipReaderSingle::get_offset() const
 
 inline int WZipReaderSingle::read_by_size(void *to, size_t size)
 {
+    DO_IF_DEBUG(
+    const auto off = this->offset;
+                );
+
     const auto *data = this->read(size);
-    if(!data)
+
+    W_ASSERT(size > 0);
+
+    if(!data){
+        W_ASSERT(this->offset == off);
         return -1;
+    }
+
+    W_ASSERT(this->offset == off + size);
 
     WMemcpy(to, data, size);
+
     return 0;
 }
 

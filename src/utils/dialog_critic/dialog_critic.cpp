@@ -2,7 +2,8 @@
 
 #include <QMessageBox>
 
-void dialog_critic(const QString &str){
+void dialog_critic(const QString &str)
+{
     QMessageBox msgBox;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     msgBox.setWindowState(Qt::WindowFullScreen);
@@ -12,7 +13,8 @@ void dialog_critic(const QString &str){
     msgBox.exec();
 }
 
-void user_message(const QString &str){
+void user_message(const QString &str)
+{
     QMessageBox msgBox;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     msgBox.setWindowState(Qt::WindowFullScreen);

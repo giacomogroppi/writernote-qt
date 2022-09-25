@@ -157,15 +157,6 @@ uchar xmlstruct::controllOldVersion(zip_t *file)
     return 1;
 }
 
-static int xmlstruct_read_ver(WZip &zip, int &ver)
-{
-    static_assert(sizeof(ver) == sizeof(int));
-    WZipReaderSingle reader(&zip, 0);
-    if(reader.read_object(ver))
-        return -1;
-    return 0;
-}
-
 #ifdef ALL_VERSION
 int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg)
 {
@@ -221,12 +212,14 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     if(xmlstruct::controllOldVersion(zip.get_zip()))
         return ERROR_MULTIPLE_COPYBOOK;
 
-    if(!zip.openFileInZip(NAME_FILE)){
+    if(!zip.openFileInZip(NAME_FILE))
         return ERROR;
-    }
 
-    if(xmlstruct_read_ver(zip, tmp_ver))
-        goto free_;
+    {
+        WZipReaderSingle reader(&zip, 0);
+        if(reader.read_object(tmp_ver) < 0)
+            return ERROR;
+    }
 
     static_assert(CURRENT_VERSION_CURRENT_TITLE == 9);
 

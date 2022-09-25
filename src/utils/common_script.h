@@ -394,8 +394,12 @@ inline void __order(QList<QVector<T>> & list){
 #endif
 
 #ifdef DEBUGINFO
-# define DO_IF_DEBUG(istr) istr;
-# define DO_IF_DEBUG_ENABLE(enable, istr) if(enable) {istr;}
+# define DO_IF_DEBUG(istr) istr
+# define DO_IF_DEBUG_ENABLE(enable, istr)   \
+        if(enable)                          \
+        {                                   \
+            istr;                           \
+        }
 #else
 # define DO_IF_DEBUG(istr) ;
 # define DO_IF_DEBUG_ENABLE(enable, istr) ;

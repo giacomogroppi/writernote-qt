@@ -208,7 +208,7 @@ void page::swap(QList<stroke> & list,
 
     DO_IF_DEBUG_ENABLE(debugPage,
         qDebug() << "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop;
-            )
+            );
 }
 
 size_t page::get_size_in_file(cbool saveImg) const
