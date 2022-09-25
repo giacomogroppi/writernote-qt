@@ -358,6 +358,8 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
     }
 #endif
 
+    zip.dealloc_file();
+
     const auto res = loadbinario_4(zip, ver_stroke);
     if(res == ERROR)
         return res;

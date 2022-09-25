@@ -116,7 +116,7 @@ int savefile::salvabinario(cbool saveImg)
     int counterPage, err = ERROR;
     const size_t controll = _doc->createSingleControll();
     const auto &pointInit = _doc->datatouch->getPointFirstPageNoZoom();
-    const double init[2] = {pointInit.x() , pointInit.y() };
+    const double init[2] = { pointInit.x(), pointInit.y() };
     cint lenPage = _doc->datatouch->lengthPage();
     const page *page;
     WZipWriterSingle writer;
@@ -140,13 +140,8 @@ int savefile::salvabinario(cbool saveImg)
 
     writer.write_object(controll);
 
-    if(writer.commit_change(*_path, QByteArray(NAME_BIN)))
+    if(writer.commit_change(*_path, QByteArray(NAME_BIN)) < 0)
         return ERROR;
 
     return OK;
-}
-
-void savefile::removeFile(zip_t *file, const QString &name)
-{
-
 }

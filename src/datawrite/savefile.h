@@ -27,7 +27,6 @@ public:
 
     int savefile_check_file(cbool saveImg);
 
-    static void removeFile(zip_t *file, const QString &name);
     static int moveFileIntoZip  (const QByteArray &pathFile, WZipWriter &writer, const QByteArray &nameInZip);
 };
 

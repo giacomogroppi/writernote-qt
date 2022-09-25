@@ -83,6 +83,7 @@ bool WZip::openFileInZip(const QByteArray &nameFile)
 {
     W_ASSERT(_data_private._zip);
     W_ASSERT(this->_data_private._status.is_zip_open());
+    W_ASSERT(!this->_data_private._status.is_data_available());
 
     zip_file_t *file;
 

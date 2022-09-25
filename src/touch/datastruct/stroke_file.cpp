@@ -130,16 +130,6 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle
 
 #endif // ALL_VERSION
 
-template <class T>
-static int stroke_file_ver_2_load_object(T &object, WReadZip &reader, int id)
-{
-    const auto *data = reader.read(sizeof(object), id);
-    if(!data)
-        return 1;
-    WMemcpy(&object, data, sizeof(object));
-    return 0;
-}
-
 #define MANAGE_ERR() return ERROR;
 
 force_inline int stroke_file::load_ver_2(class stroke &_stroke, class WReadZip &readerMulti, int id)
