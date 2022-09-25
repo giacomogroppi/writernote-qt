@@ -22,10 +22,10 @@ public:
      * alla lista di QByteArray
 */
     static uchar read(const QStringList &list_name, zip_t *zip_file,
-                     QList<QByteArray> &arr, const bool clear);
+                     QList<QByteArray> &arr, cbool clear);
 
     static uchar read(const QStringList &list_name, WZip &zip,
-                      QList<QByteArray> &arr, const bool clear);
+                      QList<QByteArray> &arr, cbool clear);
 };
 
 

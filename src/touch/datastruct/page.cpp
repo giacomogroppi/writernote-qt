@@ -244,8 +244,8 @@ void page::drawStroke(
         QPen            &m_pen,
         const QColor    &color) const
 {
-    const bool isRubber = (color == COLOR_NULL);
-    const bool isHigh = stroke.get_alfa() < 255;
+    cbool isRubber = (color == COLOR_NULL);
+    cbool isHigh = stroke.get_alfa() < 255;
     const auto last_comp_mode = painter.compositionMode();
     constexpr not_used bool measureTime = false;
     constexpr not_used bool debColor = false;

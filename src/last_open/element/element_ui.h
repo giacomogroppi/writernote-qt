@@ -15,11 +15,11 @@ class element_ui : public QWidget
 
 public:
     explicit element_ui(QWidget *parent, const last_file_s *data,
-                        const bool showOnlyName, int m_index, const uchar __showFileOnlyIfExist);
+                        cbool showOnlyName, int m_index, const uchar __showFileOnlyIfExist);
     ~element_ui();
 
     void decrease();
-    void showOnlyname(const bool showOnlyName);
+    void showOnlyname(cbool showOnlyName);
     int needToDelete;
 private:
     void set_main();

@@ -17,7 +17,7 @@ class widget_parent : public QWidget
 
 public:
     explicit widget_parent(QWidget *parent, last_file *ref,
-                           const bool showOnlyName, last_open *parent_sec,
+                           cbool showOnlyName, last_open *parent_sec,
                            const uchar __num, const uchar __showFileOnlyIfExist);
     ~widget_parent();
     void updateList();

@@ -3,7 +3,7 @@
 
 uchar readListArray::read(const QStringList &list_name,
                           zip_t *zip_file,
-                          QList<QByteArray> &list_arr, const bool clear)
+                          QList<QByteArray> &list_arr, cbool clear)
 {
     QByteArray arr;
     unsigned i;
@@ -23,7 +23,7 @@ uchar readListArray::read(const QStringList &list_name,
 }
 
 unsigned char readListArray::read(const QStringList &list_name, WZip &zip,
-                                  QList<QByteArray> &list_arr, const bool clear)
+                                  QList<QByteArray> &list_arr, cbool clear)
 {
     QByteArray arr;
     unsigned i;

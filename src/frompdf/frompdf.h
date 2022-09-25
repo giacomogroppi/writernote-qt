@@ -97,7 +97,7 @@ public:
     /* return true if all load correctly */
     bool load(const QStringList &path, QMap<load_res, uchar> &index, TabletCanvas *canvas);
 
-    load_res load(const QString &, const bool clear, TabletCanvas *canvas);
+    load_res load(const QString &, cbool clear, TabletCanvas *canvas);
     /* it load from a zip_t file all the pdf for the current copybook */
 
 #ifdef ALL_VERSION
@@ -107,8 +107,8 @@ public:
     load_res load(const QByteArray &path_writernote_file, TabletCanvas *canvas);
 
 
-    load_res load_from_row(const QByteArray &, const bool clear,
-                           const bool FirstLoad, const uchar IndexPdf,
+    load_res load_from_row(const QByteArray &, cbool clear,
+                           cbool FirstLoad, const uchar IndexPdf,
                            TabletCanvas *canvas);
 
     void resizing(TabletCanvas *canvas, const uint lenPdf);
@@ -119,7 +119,7 @@ public:
 
     load_res save_metadata(WZipWriterSingle &writer);
 
-    void draw(QPainter &painter, const double delta, const bool IsExportingPdf) const;
+    void draw(QPainter &painter, const double delta, cbool IsExportingPdf) const;
 
     unsigned insert_pdf(QByteArray &pos, const PointSettable *point);
 
@@ -162,7 +162,7 @@ inline void frompdf::reset()
     this->m_data->count_pdf = 0;
 }
 
-force_inline void frompdf::draw(QPainter &painter, const double delta, const bool IsExportingPdf) const
+force_inline void frompdf::draw(QPainter &painter, const double delta, cbool IsExportingPdf) const
 {
     int i, k, len_img;
     QRectF size;

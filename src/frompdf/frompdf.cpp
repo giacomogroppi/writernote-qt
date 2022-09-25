@@ -58,7 +58,7 @@ bool frompdf::load(
 
 frompdf::load_res frompdf::load(
         const QString   &path,
-        const bool      clear,
+        cbool      clear,
         TabletCanvas    *canvas)
 {
     QByteArray arr;
@@ -176,8 +176,8 @@ void frompdf::resizing(TabletCanvas *canvas, const uint lenPdf){
 
 frompdf::load_res frompdf::load_from_row(
         const QByteArray    &pos,
-        const bool          clear,
-        const bool          FirstLoad,
+        cbool          clear,
+        cbool          FirstLoad,
         const uchar         IndexPdf,
         TabletCanvas        *canvas)
 {

@@ -37,7 +37,7 @@ pen_ui::~pen_ui()
 
 void pen_ui::list_update(){
     const double currentSize = (m_spessore_pen*DELTA);
-    const bool spessore = m_type_pen == n_pressione::spessore;
+    cbool spessore = m_type_pen == n_pressione::spessore;
     ui->checkBox->setChecked(same_data);
 
     ui->slider_size->setValue(m_spessore_pen);

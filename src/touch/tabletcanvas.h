@@ -220,8 +220,8 @@ protected:
     bool eventFilter(QObject *ref, QEvent *e) override;
 private:
 
-    void triggerNewView(const QList<int> &Page, const bool all);
-    void triggerNewView(const bool all);
+    void triggerNewView(const QList<int> &Page, cbool all);
+    void triggerNewView(cbool all);
     bool isWriting = false;
 
     void updateCursor(const QTabletEvent *event);

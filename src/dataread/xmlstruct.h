@@ -45,10 +45,10 @@ private:
     __old int load_file_2(WZipReaderSingle &reader);
     __old int load_file_3(WZipReaderSingle &reader);
     __old int load_file_4(WZipReaderSingle &reader);
-    __old int load_file_5(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
-    __old int load_file_6(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
-    __old int load_file_7(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
-    __old int load_file_8(WZipReaderSingle &reader, const bool LoadPdf, const bool LoadImg);
+    __old int load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
+    __old int load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
+    __old int load_file_7(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
+    __old int load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
 
     __old int loadbinario_0(class WZip &zip);
     __old int loadbinario_1(class WZip &zip);
@@ -58,7 +58,7 @@ private:
 #endif // ALL_VERSION
 
     __new int loadbinario_4(class WZip &zip, int ver_stroke);
-    __new int load_file_9(Document *doc, WZip &zip, const bool LoadPdf, const bool LoadImg);
+    __new int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);
@@ -73,8 +73,8 @@ public:
     static int load_stringa(zip_file_t *f, QByteArray &str);
 
     static int readFile(zip_t *fileZip, QByteArray &arr,
-                        const bool clear, const QString &name,
-                        const bool closeZip);
+                        cbool clear, const QString &name,
+                        cbool closeZip);
 
     const QByteArray &getPath() const;
 
@@ -84,7 +84,7 @@ public:
 #ifdef ALL_VERSION
     int xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg);
 #endif
-    int loadfile(const bool LoadPdf, const bool LoadImg);
+    int loadfile(cbool LoadPdf, cbool LoadImg);
 
     xmlstruct(const QByteArray *path_U, Document *currenttitle_U);
     xmlstruct(const QByteArray &path_U, Document &currenttitle_U);

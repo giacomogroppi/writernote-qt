@@ -42,7 +42,7 @@ static inline void newpage(Document *data, const double tmp)
     data->datatouch->scala_all(QPointF(0, -tmp), INT_MAX);
 }
 
-bool topdf::createpdf(const bool withPdf)
+bool topdf::createpdf(cbool withPdf)
 {
     const uint lenpage = data->datatouch->lengthPage();
     uint i;

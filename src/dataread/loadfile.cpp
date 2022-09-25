@@ -43,8 +43,8 @@ int xmlstruct::load_stringa(zip_file_t *f, QByteArray &str)
 }
 
 int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
-                        const bool clear, const QString &path,
-                        const bool closeZip)
+                        cbool clear, const QString &path,
+                        cbool closeZip)
 {
     zip_file_t *file;
     void *data;
@@ -205,7 +205,7 @@ int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool 
 }
 #endif
 
-int xmlstruct::loadfile(const bool LoadPdf, const bool LoadImg)
+int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
 {
     int err = 0;
     int tmp_ver;
@@ -322,7 +322,7 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
     return st.size;
 }
 
-int xmlstruct::load_file_9(Document *doc, WZip &zip, const bool LoadPdf, const bool LoadImg)
+int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg)
 {
     int ver_stroke;
     uchar controllo_parita = 0;

@@ -5,7 +5,7 @@
 #include "last_open/last_open.h"
 #include "testing/memtest.h"
 
-widget_parent::widget_parent(QWidget *parent, last_file *ref, const bool showOnlyName,
+widget_parent::widget_parent(QWidget *parent, last_file *ref, cbool showOnlyName,
                              last_open *parent_sec, const uchar __num, const uchar __showFileOnlyIfExist) :
     QWidget(parent),
     ui(new Ui::widget_parent)

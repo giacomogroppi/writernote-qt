@@ -39,8 +39,8 @@ void TabletCanvas::load(QPainter &painter,
                         const Document *data,
                         DataPaint &dataPoint)
 {
-    const bool withPdf          = dataPoint.withPdf;
-    const bool is_play          = likely((dataPoint.parent)) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
+    cbool withPdf          = dataPoint.withPdf;
+    cbool is_play          = likely((dataPoint.parent)) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
     const qint64 m_pos_ris      = (is_play) ? (dataPoint.parent->m_audioplayer->getPositionSecond()) : -1;
     static int last_m_pos_ris   = -1;
 

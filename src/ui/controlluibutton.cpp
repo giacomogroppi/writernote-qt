@@ -100,7 +100,7 @@ void ControllUiButton::update()
     //constexpr auto colorOver = "#e0e0e0";
     //const auto color = parent->ui->buttonChooseColor->palette().color(parent->backgroundRole());
 
-    const bool tablet = this->_mode == Mode::Tablet;
+    cbool tablet = this->_mode == Mode::Tablet;
 
     /*for(i = 0; i < len_button; i++){
         this->m_button.at(i)->setVisible(tablet);

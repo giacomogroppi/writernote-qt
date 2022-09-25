@@ -8,7 +8,7 @@ class datastruct;
 class zoom_control
 {
 private:
-    void checkRespositioning(const QPointF &point, const bool max);
+    void checkRespositioning(const QPointF &point, cbool max);
     datastruct *data;
 public:
     bool zoom(const QPointF &pointMiddle, double delta, bool &zoomChange,

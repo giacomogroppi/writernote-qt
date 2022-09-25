@@ -66,12 +66,12 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
 
     const double y = xTouch * line._m + line._p;
     
-    const bool AreTouch = line.belongs(
+    cbool AreTouch = line.belongs(
                             QPointF(xTouch, y),
                             precision
                         );
 
-    const bool IsInDomain = vertical.is_in_domain(
+    cbool IsInDomain = vertical.is_in_domain(
                 QPointF(xTouch, y), 
                 precision
             );

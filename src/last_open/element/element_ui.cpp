@@ -9,7 +9,7 @@
 #include "utils/common_script.h"
 #include "testing/memtest.h"
 
-element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool showOnlyName, int m_index, const uchar __showFileOnlyIfExist) :
+element_ui::element_ui(QWidget *parent, const last_file_s *data, cbool showOnlyName, int m_index, const uchar __showFileOnlyIfExist) :
     QWidget(parent),
     ui(new Ui::element_ui)
 {
@@ -26,7 +26,7 @@ element_ui::element_ui(QWidget *parent, const last_file_s *data, const bool show
     this->showOnlyname(showOnlyName);
 }
 
-void element_ui::showOnlyname(const bool showOnlyName){
+void element_ui::showOnlyname(cbool showOnlyName){
     if(!showOnlyName)
         return;
 

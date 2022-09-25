@@ -54,7 +54,7 @@ private:
     void adjustWidth(cdouble width);
     void adjustHeight(cdouble height);
 
-    void triggerNewView(int page, int m_pos_ris, const bool all);
+    void triggerNewView(int page, int m_pos_ris, cbool all);
 
     void newPage(int num);
 
@@ -65,8 +65,8 @@ public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
     ~datastruct();
 
-    void triggerNewView(const QList<int> &Page, int m_pos_ris, const bool all);
-    void triggerNewView(int m_pos_ris, const bool all);
+    void triggerNewView(const QList<int> &Page, int m_pos_ris, cbool all);
+    void triggerNewView(int m_pos_ris, cbool all);
     void triggerIfNone(int m_pos_ris);
     void triggerViewIfVisible(int m_pos_ris);
 
@@ -393,7 +393,7 @@ force_inline bool datastruct::isOkTranslate(const QPointF &point, cbool isZoom) 
            y + point.y() / _zoom <= 0.;
 }
 
-force_inline void datastruct::triggerNewView(int page, int m_pos_ris, const bool all)
+force_inline void datastruct::triggerNewView(int page, int m_pos_ris, cbool all)
 {
     at_mod(page).triggerRenderImage(m_pos_ris, all);
 }
@@ -414,14 +414,14 @@ inline int datastruct::whichPage(const stroke &stroke) const
     return i;
 }
 
-inline void datastruct::triggerNewView(const QList<int> &Page, int m_pos_ris, const bool all)
+inline void datastruct::triggerNewView(const QList<int> &Page, int m_pos_ris, cbool all)
 {
     for(const int page: Page){
         this->triggerNewView(page, m_pos_ris, all);
     }
 }
 
-inline void datastruct::triggerNewView(int m_pos_ris, const bool all)
+inline void datastruct::triggerNewView(int m_pos_ris, cbool all)
 {
     uint i, len;
     len = lengthPage();

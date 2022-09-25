@@ -257,12 +257,12 @@ static void loadLastMethod(TabletCanvas *p)
 
 }
 
-void TabletCanvas::triggerNewView(const bool all)
+void TabletCanvas::triggerNewView(cbool all)
 {
     data->datatouch->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
-void TabletCanvas::triggerNewView(const QList<int> &Page, const bool all)
+void TabletCanvas::triggerNewView(const QList<int> &Page, cbool all)
 {
     this->data->datatouch->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }

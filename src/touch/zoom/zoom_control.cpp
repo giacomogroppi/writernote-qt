@@ -8,7 +8,7 @@
  * if delta > 1 we are zoom in
 */
 
-void zoom_control::checkRespositioning(const QPointF &f, const bool max)
+void zoom_control::checkRespositioning(const QPointF &f, cbool max)
 {
     QPointF translation(f);
 
@@ -51,7 +51,7 @@ bool zoom_control::zoom(const QPointF   &pointMiddle,
         diff.setY( newPoint.y() - pointMiddle.y() );
     }
 
-    const bool max = sizePixmap.width() >= maxSize.width(); // false if it's max
+    cbool max = sizePixmap.width() >= maxSize.width(); // false if it's max
     const double zoom = data->getZoom();
 
     //qDebug() << "Current zoom " << zoom << " delta " << delta;

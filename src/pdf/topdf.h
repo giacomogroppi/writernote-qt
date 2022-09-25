@@ -13,17 +13,17 @@ private:
     void translate();
 
     void draw(QPainter &painter, double m,
-              const bool withPdf);
+              cbool withPdf);
 
 public:
     topdf(const QString &path, const Document &doc);
     ~topdf();
 
-    bool createpdf(const bool withPdf);
+    bool createpdf(cbool withPdf);
 
 };
 
-inline void topdf::draw(QPainter &painter, double m, const bool withPdf)
+inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
 {
     DataPaint dataPaint = {
         .withPdf = withPdf,

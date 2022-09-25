@@ -4,7 +4,7 @@
 
 QString MainWindow::getNameCopybook()
 {
-    const bool unsave = this->m_path == "";
+    cbool unsave = this->m_path == "";
 
     if(!unsave){
         return NAME_UNSAVE;

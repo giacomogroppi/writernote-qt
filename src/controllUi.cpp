@@ -4,12 +4,12 @@
 #include "audiorecord/audiorecord.h"
 
 void MainWindow::contrUi(){
-    const bool already_rec =    _canvas->data->se_registato != Document::not_record;
+    cbool already_rec =    _canvas->data->se_registato != Document::not_record;
 
-    const bool is_recording =   m_audio_recorder->isRecording();
+    cbool is_recording =   m_audio_recorder->isRecording();
 
-    const bool is_pause_rec =   m_audio_recorder->isPauseRecording();
-    const bool is_play =        this->m_audioplayer->isPlay();
+    cbool is_pause_rec =   m_audio_recorder->isPauseRecording();
+    cbool is_play =        this->m_audioplayer->isPlay();
 
     ui->pause_rec->setEnabled(is_recording);
     ui->start_rec->setEnabled(!already_rec && !is_pause_rec && !is_recording);

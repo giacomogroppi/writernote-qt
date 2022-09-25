@@ -414,7 +414,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 {
     datastruct *data = _canvas->data->datatouch;
     int lenStroke, count, indexPage, thread_create;
-    const bool isTotal = (_type_gomma == e_type_rubber::total);
+    cbool isTotal = (_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;

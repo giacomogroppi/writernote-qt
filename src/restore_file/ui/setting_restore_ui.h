@@ -7,7 +7,7 @@
 struct __data{
     /* true enable */
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
-    const bool autosave = true;
+    cbool autosave = true;
 #else
     bool autosave;
     bool temp_file;

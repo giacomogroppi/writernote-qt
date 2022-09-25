@@ -7,7 +7,7 @@
 #include "currenttitle/document.h"
 #include "dataread/xmlstruct.h"
 
-void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const int width)
+void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
     QPainter painter;
     const double size_orizzontale = doc.datatouch->biggerx();
@@ -39,7 +39,7 @@ void preview::get(QPixmap &ref, const Document &doc, const bool withPdf, const i
 
 }
 
-bool preview::get(QPixmap &ref, const bool withPdf,
+bool preview::get(QPixmap &ref, cbool withPdf,
                   const QByteArray &path, const int height, const int width)
 {
     Document doc;
