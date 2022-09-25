@@ -47,6 +47,8 @@ int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
     }
 #endif
 
+    zip.dealloc_file();
+
     tmp = loadbinario_3(zip, ver_stroke);
     if(tmp == ERROR)
         return tmp;
