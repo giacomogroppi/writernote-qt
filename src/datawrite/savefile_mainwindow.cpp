@@ -41,7 +41,6 @@ static int adjust_extensions(QByteArray &str)
 {
     if(has_extensions(str) < 0){
         str.append(ext);
-        qDebug() << "str: " << str;
         W_ASSERT(has_extensions(str));
     }
     return 0;

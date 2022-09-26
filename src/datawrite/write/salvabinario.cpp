@@ -119,18 +119,15 @@ static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writ
 
 int savefile::salvabinario(cbool saveImg)
 {
-    int counterPage, err = ERROR;
     const size_t controll = _doc->createSingleControll();
     const auto &pointInit = _doc->datatouch->getPointFirstPageNoZoom();
     const double init[2] = { pointInit.x(), pointInit.y() };
-    cint lenPage = _doc->datatouch->lengthPage();
-    const page *page;
     WZipWriterSingle writer;
     size_t seek[_doc->datatouch->lengthPage()];
     const auto sizeFile = savefile_get_size_binary(*_doc, saveImg, seek);
 
     writer.init(nullptr, 0, sizeFile);
-    //qDebug() << "size" << sizeFile;
+    qDebug() << "size" << sizeFile;
 
     /* first point */
     static_assert(sizeof(init) == sizeof(double) * 2);

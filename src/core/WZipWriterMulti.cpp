@@ -31,13 +31,12 @@ WZipWriterMulti::WZipWriterMulti(
     _data(writer.get_data()),
     _thread(thread)
 {
-    int i;
-
     this->_writer           = new WZipWriterSingle[thread];
     this->_is_err           = false;
     this->_nameFileInZip    = fileInZip;
+    this->_size_file        = writer.get_size_file();
 
-    this->_zip = fileZip ? new WZipWriter : NULL;
+    this->_zip = fileZip ? new WZipWriter : nullptr;
     if(fileZip){
         this->set_zip(fileZip);
     }
@@ -58,10 +57,16 @@ void WZipWriterMulti::set_seek(size_t *seek)
     int i;
     auto *data = static_cast<char *> (_data.get_data());
 
-    this->_writer[0].init(data, 0, seek[0]);
+    if(this->_thread != 1){
+        this->_writer[0].init(data, seek[0], seek[1]);
 
-    for(i = 1; i < this->_thread; i++){
-        this->_writer[i].init( data, seek[i - 1], seek[i] );
+        for(i = 1; i < this->_thread - 1; i++){
+            this->_writer[i].init( data, seek[i], seek[i + 1] );
+        }
+
+        this->_writer[_thread - 1].init(data, seek[_thread - 1], _size_file);
+    }else{
+        this->_writer[0].init(data, seek[0], _size_file);
     }
 }
 

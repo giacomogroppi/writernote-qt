@@ -21,6 +21,7 @@ public:
 
     void *get_data();
     size_t get_offset() const;
+    size_t get_size_file() const;
 
     template<class T>
     void write_object(const T &data);
@@ -32,6 +33,12 @@ public:
     WZipWriterSingle &operator=(WZipWriterSingle &) = delete;
 
 };
+
+inline size_t WZipWriterSingle::get_size_file() const
+{
+    W_ASSERT(this->_min == 0);
+    return this->_max;
+}
 
 inline size_t WZipWriterSingle::get_offset() const
 {
@@ -56,6 +63,8 @@ inline void WZipWriterSingle::init(char *data, size_t min, size_t max)
 {
     W_ASSERT(_data == nullptr and _min == 1 and _max == 0);
     this->_allocated = (data == nullptr);
+
+    W_ASSERT(max > min);
 
     this->_max = max;
     this->_min = min;
