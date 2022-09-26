@@ -20,9 +20,13 @@ static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *see
     size_t size = 0;
     int i, len;
 
-    len = doc.datatouch->lengthPage();
+    size += sizeof(double) * 2;         // first point
+
+    size += sizeof(doc.datatouch->getZoom());   // zoom
+    size += sizeof(size_t);                     // controll
 
     {
+        len = doc.datatouch->lengthPage();
         size += sizeof(int);            // number of page saved
         size += sizeof(size_t) * len;   // size seek array
     }
@@ -142,7 +146,6 @@ int savefile::salvabinario(cbool saveImg)
     savefile_save_seek(this->_doc, writer, seek);
 
     savefile_save_multithread_start(_doc, writer, seek);
-
 
     if(writer.commit_change(*_path, QByteArray(NAME_BIN)) < 0)
         return ERROR;

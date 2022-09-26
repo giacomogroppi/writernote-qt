@@ -20,6 +20,8 @@ int WZipWriterSingle::commit_change(const QByteArray &zipName, const QByteArray 
     WZipWriter writer;
 
     W_ASSERT(this->_allocated);
+    W_ASSERT(this->_data);
+    W_ASSERT(this->_max == this->_offset);
 
     if(writer.init(zipName.constData()) < 0)
         return -1;
