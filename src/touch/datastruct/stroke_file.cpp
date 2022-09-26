@@ -223,8 +223,8 @@ size_t stroke_file::get_size_in_file(const stroke &_stroke)
     s += sizeof(len_point);
     s += sizeof(len_pressure);
 
-    s += sizeof(pressure_t) * len_pressure;
-    s += sizeof(point_s) * len_point;
+    s += sizeof(pressure_t)     * len_pressure;
+    s += sizeof(point_s)        * len_point;
 
     return s;
 }

@@ -106,13 +106,13 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
     if(load_point_first_page(reader, *this->_doc->datatouch) < 0)
         MANAGE_ERR();
 
-    if(read_number_page(reader, lenPage, *_doc->datatouch) < 0)
-        MANAGE_ERR();
-
     if(read_zoom(reader, _doc->datatouch->_zoom) < 0)
         MANAGE_ERR();
 
     if(read_ctrl(reader, controll) < 0)
+        MANAGE_ERR();
+
+    if(read_number_page(reader, lenPage, *_doc->datatouch) < 0)
         MANAGE_ERR();
 
     size_t seek[lenPage];

@@ -5,6 +5,7 @@
 #include "core/WZipWriterMulti.h"
 #include <QImage>
 
+#ifdef ALL_VERSION
 int page_file::load_ver_0(page &_page, WZipReaderSingle &reader)
 {
     constexpr int ver_stroke = 0;
@@ -76,6 +77,8 @@ int page_file::load_ver_1(page &_page, WZipReaderSingle &reader)
     return err;
 }
 
+#endif // ALL_VERSION
+
 int page_file::load_ver_2(page &_page, WZipReaderSingle &reader)
 {
     constexpr int ver_stroke = 2;
@@ -138,13 +141,14 @@ size_t page_file::size_in_file(const page &_page, cbool saveImg)
     size_t s = 0;
 
     s += sizeof(int);       // len stroke
-    s += sizeof(size_t);    // size img
 
-    for(const auto &ref: _page._stroke){
+    for(const auto &ref: qAsConst(_page._stroke)){
         s += ref.getSizeInFile();
     }
+
     s += _page._stroke_writernote.getSizeInFile();
 
+    s += sizeof(size_t);    // size img
     if(likely(saveImg)){
         s += _page._imgDraw.get_size_in_file();
     }

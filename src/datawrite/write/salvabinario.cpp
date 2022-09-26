@@ -2,7 +2,6 @@
 #include "stdlib.h"
 #include <QMessageBox>
 #include <QString>
-#include "zip.h"
 #include "datawrite/source_read_ext.h"
 #include "images/fromimage.h"
 #include "core/WZipWriterSingle.h"
@@ -54,8 +53,8 @@ static int savefile_save_seek(Document *doc, WZipWriterSingle &writer, size_t *s
 }
 
 struct savefile_thread_data{
-    WZipWriterMulti *_writer;
-    int _id;
+    WZipWriterSingle *_writer;
+    bool _saveImg;
     const page *_page;
 };
 
@@ -64,10 +63,10 @@ static void *salvafile_thread_save(void *_data)
     W_ASSERT(_data);
     auto *data = static_cast<struct savefile_thread_data *> (_data);
     const page *_page = data->_page;
-    const auto id = data->_id;
-    WZipWriterSingle *writer = data->_writer->get_writer(id);
+    const auto saveImg = data->_saveImg;
+    WZipWriterSingle &writer = *data->_writer;
 
-    const auto res = _page->save(*writer, data->_id);
+    const auto res = _page->save(writer, saveImg);
 
     if(res != OK)
         return (void *)1UL;
@@ -91,7 +90,7 @@ static int savefile_wait_thread(pthread_t *thread, int num)
     return ret;
 }
 
-static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writer, size_t *seek)
+static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writer, size_t *seek, cbool saveImg)
 {
     int i;
     const auto l = doc->datatouch->lengthPage();
@@ -104,8 +103,8 @@ static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writ
 
     for(i = 0; i < l; i++){
         data_thread[i] = {
-            ._writer    = &multi,
-            ._id         = i,
+            ._writer    = multi.get_writer(i),
+            ._saveImg   = saveImg,
             ._page      = &doc->datatouch->at(i)
         };
 
@@ -131,13 +130,11 @@ int savefile::salvabinario(cbool saveImg)
     const auto sizeFile = savefile_get_size_binary(*_doc, saveImg, seek);
 
     writer.init(nullptr, 0, sizeFile);
+    //qDebug() << "size" << sizeFile;
 
     /* first point */
     static_assert(sizeof(init) == sizeof(double) * 2);
     writer.write(init, sizeof(init));
-
-    // page len
-    writer.write_object(lenPage);
 
     writer.write_object(_doc->datatouch->getZoom());
 
@@ -145,7 +142,9 @@ int savefile::salvabinario(cbool saveImg)
 
     savefile_save_seek(this->_doc, writer, seek);
 
-    savefile_save_multithread_start(_doc, writer, seek);
+    W_ASSERT(writer.get_offset() == seek[0]);
+
+    savefile_save_multithread_start(_doc, writer, seek, saveImg);
 
     if(writer.commit_change(*_path, QByteArray(NAME_BIN)) < 0)
         return ERROR;

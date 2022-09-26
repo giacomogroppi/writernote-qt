@@ -20,6 +20,7 @@ public:
     void write(const void *from, size_t size_object);
 
     void *get_data();
+    size_t get_offset() const;
 
     template<class T>
     void write_object(const T &data);
@@ -31,6 +32,11 @@ public:
     WZipWriterSingle &operator=(WZipWriterSingle &) = delete;
 
 };
+
+inline size_t WZipWriterSingle::get_offset() const
+{
+    return this->_offset;
+}
 
 inline void *WZipWriterSingle::get_data()
 {

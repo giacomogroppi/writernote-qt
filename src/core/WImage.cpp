@@ -19,5 +19,6 @@ size_t WImage::save_and_size(QByteArray &arr) const
 size_t WImage::get_size_in_file() const
 {
     QByteArray arr;
-    return this->save_and_size(arr);
+    const auto s = this->save_and_size(arr);
+    return s;
 }
