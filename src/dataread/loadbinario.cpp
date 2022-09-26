@@ -27,8 +27,8 @@ static int read_number_page(WZipReaderSingle &zip, int &len, datastruct &doc)
     /* page len */
     static_assert(sizeof(len) == sizeof(int));
 
-    if(zip.read_object(len))
-        return 1;
+    if(zip.read_object(len) < 0)
+        return -1;
 
     W_ASSERT(len > 0);
 
@@ -39,8 +39,8 @@ static int read_zoom(WZipReaderSingle &zip, double &zoom)
 {
     static_assert(sizeof(zoom) == sizeof(double));
 
-    if(zip.read_object(zoom))
-        return 1;
+    if(zip.read_object(zoom) < 0)
+        return -1;
 
     return 0;
 }
@@ -48,8 +48,8 @@ static int read_zoom(WZipReaderSingle &zip, double &zoom)
 static int read_ctrl(WZipReaderSingle &zip, size_t &ctrl)
 {
     static_assert(sizeof(ctrl) == sizeof(size_t));
-    if(zip.read_object(ctrl))
-        return 1;
+    if(zip.read_object(ctrl) < 0)
+        return -1;
     return 0;
 }
 
@@ -103,16 +103,16 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
     if(!zip.openFileInZip(NAME_BIN))
         return ERROR;
 
-    if(load_point_first_page(reader, *this->_doc->datatouch))
+    if(load_point_first_page(reader, *this->_doc->datatouch) < 0)
         MANAGE_ERR();
 
-    if(read_number_page(reader, lenPage, *_doc->datatouch))
+    if(read_number_page(reader, lenPage, *_doc->datatouch) < 0)
         MANAGE_ERR();
 
-    if(read_zoom(reader, _doc->datatouch->_zoom))
+    if(read_zoom(reader, _doc->datatouch->_zoom) < 0)
         MANAGE_ERR();
 
-    if(read_ctrl(reader, controll))
+    if(read_ctrl(reader, controll) < 0)
         MANAGE_ERR();
 
     size_t seek[lenPage];
