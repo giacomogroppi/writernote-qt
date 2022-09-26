@@ -64,18 +64,6 @@ inline void WZipWriterSingle::init(char *data, size_t min, size_t max)
     this->_offset = min;
 }
 
-inline void WZipWriterSingle::write(const void *from, size_t size_object)
-{
-    W_ASSERT(this->_offset < this->_max);
-    W_ASSERT(this->_offset + size_object <= this->_max);
-    W_ASSERT(size_object);
-    W_ASSERT(from);
-
-    WMemcpy(this->_data + this->_offset, from, size_object);
-    W_ASSERT(memcmp(_data + _offset, from, size_object) == 0);
-    this->_offset += size_object;
-}
-
 template <class T>
 inline void WZipWriterSingle::write_object(const T &data)
 {

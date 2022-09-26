@@ -11,7 +11,8 @@
 
 static size_t savefile_get_size_page(const page &_page, cbool saveImg)
 {
-    return _page.get_size_in_file(saveImg);
+    const auto res = _page.get_size_in_file(saveImg);
+    return res;
 }
 
 static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *seek)
@@ -28,9 +29,8 @@ static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *see
 
     for(i = 0; i < len; i++){
         const auto page = doc.datatouch->at(i);
-        size += savefile_get_size_page(page, saveImg);
-
         seek[i] = size;
+        size += savefile_get_size_page(page, saveImg);
     }
 
     return size;
@@ -41,6 +41,9 @@ static int savefile_save_seek(Document *doc, WZipWriterSingle &writer, size_t *s
     W_ASSERT(doc);
     const int lenPage = doc->datatouch->lengthPage();
     writer.write_object(lenPage);
+
+    static_assert(sizeof(*seek) == sizeof(size_t));
+
     writer.write(seek, sizeof(*seek) * lenPage);
 
     return 0;
@@ -139,6 +142,7 @@ int savefile::salvabinario(cbool saveImg)
     savefile_save_seek(this->_doc, writer, seek);
 
     savefile_save_multithread_start(_doc, writer, seek);
+
 
     if(writer.commit_change(*_path, QByteArray(NAME_BIN)) < 0)
         return ERROR;
