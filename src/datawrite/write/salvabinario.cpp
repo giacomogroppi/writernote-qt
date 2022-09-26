@@ -129,16 +129,16 @@ int savefile::salvabinario(cbool saveImg)
     static_assert(sizeof(init) == sizeof(double) * 2);
     writer.write(init, sizeof(init));
 
-    /* page len */
+    // page len
     writer.write_object(lenPage);
-
-    savefile_save_seek(this->_doc, writer, seek);
-
-    savefile_save_multithread_start(_doc, writer, seek);
 
     writer.write_object(_doc->datatouch->getZoom());
 
     writer.write_object(controll);
+
+    savefile_save_seek(this->_doc, writer, seek);
+
+    savefile_save_multithread_start(_doc, writer, seek);
 
     if(writer.commit_change(*_path, QByteArray(NAME_BIN)) < 0)
         return ERROR;
