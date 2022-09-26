@@ -15,15 +15,14 @@ static bool c = true;
 constexpr const char * const ext = ".writer";
 static int has_extensions(const QString &str)
 {
-    constexpr auto l = WStrlen(ext);
-    const auto len = str.length();
+    constexpr int l = WStrlen(ext);
+    const int len = str.length();
     if(len < l){
-        dialog_critic(QApplication::tr("The file must have the extension .writer"));
         return -1;
     }
 
     const auto s = str.mid(len - l, l);
-    if(!s.contains(qstr(ext)))
+    if( s == qstr(ext))
         return -1;
     return 0;
 }
@@ -32,6 +31,7 @@ static int has_extensions(const QString &str)
 static int adjust_extensions(const QByteArray &str)
 {
     if(has_extensions(str) < 0){
+        dialog_critic(QApplication::tr(qstr("The file must have the extension %1").arg(ext).toUtf8().constData()));
         return -1;
     }
     return 0;
@@ -41,6 +41,7 @@ static int adjust_extensions(QByteArray &str)
 {
     if(has_extensions(str) < 0){
         str.append(ext);
+        qDebug() << "str: " << str;
         W_ASSERT(has_extensions(str));
     }
     return 0;
