@@ -57,8 +57,11 @@ force_inline PointSettable::PointSettable(const QPointF &point, bool set)
 }
 
 struct colore_s{
+    colore_s() = default;
+    ~colore_s() = default;
+
     uchar colore[NCOLOR];
-    QColor toQColor(const double division) const;
+    [[nodiscard]] QColor toQColor(double division) const;
     void fromColor(const QColor &color);
 
     static colore_s from_color(const QColor &color);

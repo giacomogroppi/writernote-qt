@@ -62,7 +62,7 @@ struct xmlstruct_thread_data{
 
 static void *xmlstruct_thread_load(void *_data)
 {
-    struct xmlstruct_thread_data *data = static_cast<struct xmlstruct_thread_data *>(_data);
+    auto *data = static_cast<struct xmlstruct_thread_data *>(_data);
     const auto id = data->_id;
     WZipReaderSingle &reader = *data->_zip->get_reader(id);
 
@@ -81,7 +81,7 @@ static int xmlstruct_wait_for_thread(pthread_t *thread, int num)
     for(i = 0; i < num; i++){
         pthread_join(thread[i], &ret_thread);
 
-        if(ret)
+        if(ret_thread)
             ret = true;
     }
 
@@ -135,7 +135,7 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
         };
 
         pthread_create( &thread[counterPage],
-                        NULL,
+                        nullptr,
                         xmlstruct_thread_load,
                         &thread_data[counterPage]);
     }

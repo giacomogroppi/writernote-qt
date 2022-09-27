@@ -95,6 +95,7 @@ force_inline int stroke_file::load_ver_1(class stroke &_stroke, WZipReaderSingle
 
 force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle &reader)
 {
+    int i;
     int len_press, len_point;
     pressure_t tmp;
     point_s point_append;
@@ -116,13 +117,13 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle
     if(reader.read_object(len_press) < 0)
         MANAGE_ERR();
 
-    while(len_press -- > 0){
+    for(i = 0; i < len_press; i++){
         if(reader.read_object(tmp) < 0)
             MANAGE_ERR();
         _stroke._pressure.append(tmp);
     }
 
-    while(len_point -- > 0){
+    for(i = 0; i < len_point; i++){
         if(reader.read_object(point_append) < 0)
             MANAGE_ERR();
         _stroke._point.append(point_append);

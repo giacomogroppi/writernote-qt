@@ -144,6 +144,10 @@ void stroke::reset()
     _prop = COMPLEX_NORMAL;
     _pressure.clear();
     _point.clear();
+    _metadata = {
+            .posizione_audio = -1,
+            .color = colore_s()
+    };
 
     W_ASSERT(this->is_normal());
     W_ASSERT(!_complex);

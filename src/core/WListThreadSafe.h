@@ -24,7 +24,7 @@ public:
 };
 
 template<typename T>
-WListThreadSafe<T>::WListThreadSafe(const QList<T> &list)
+WListThreadSafe<T>::WListThreadSafe(const QList<T> &list):
+        QList<T>(list)
 {
-    this->m_list = list;
 }
