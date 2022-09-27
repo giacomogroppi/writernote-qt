@@ -114,6 +114,10 @@ static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writ
     if(savefile_wait_thread(thread, l) < 0)
         return -1;
 
+#ifdef DEBUGINFO
+    writer.set_offset(multi.get_last_offset());
+#endif // DEBUGINFO
+
     return 0;
 }
 
@@ -139,9 +143,13 @@ int savefile::salvabinario(cbool saveImg)
 
     savefile_save_seek(this->_doc, writer, seek);
 
-    W_ASSERT(writer.get_offset() == seek[0]);
+#ifdef DEBUGINFO
+    if(_doc->datatouch->lengthPage())
+        W_ASSERT(writer.get_offset() == seek[0]);
+#endif // DEBUGINFO
 
-    savefile_save_multithread_start(_doc, writer, seek, saveImg);
+    if(savefile_save_multithread_start(_doc, writer, seek, saveImg) < 0)
+        return ERROR;
 
     if(writer.commit_change(*_path, QByteArray(NAME_BIN)) < 0)
         return ERROR;

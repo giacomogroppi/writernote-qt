@@ -4,7 +4,7 @@
 #include "stdlib.h"
 #include <vector>
 
-WReadZip::WReadZip(WZip *zip, int number_thread, const size_t seek, const size_t *base)
+WReadZip::WReadZip(WZip *zip, int number_thread, const size_t *base)
 {
     W_ASSERT(number_thread > 0);
     W_ASSERT(zip);
@@ -17,7 +17,7 @@ WReadZip::WReadZip(WZip *zip, int number_thread, const size_t seek, const size_t
     this->_reader = new WZipReaderSingle[number_thread];
 
     for(i = 0; i < number_thread; i++){
-        this->_reader->init(zip, base[i] + seek);
+        this->_reader[i].init(zip, base[i]);
     }
 
 #ifdef DEBUGINFO

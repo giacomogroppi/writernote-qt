@@ -17,7 +17,7 @@ private:
 
 public:
     // pass readDataFrom != 0 if you want to seek to some position
-    WReadZip(WZip *zip, int number_thread, const size_t readDataFrom, const size_t *base);
+    WReadZip(WZip *zip, int number_thread, const size_t *base);
     ~WReadZip();
 
     WZipReaderSingle *get_reader(int id);

@@ -89,6 +89,10 @@ force_inline int stroke_file::load_ver_1(class stroke &_stroke, WZipReaderSingle
     return OK;
 }
 
+#endif // ALL_VERSION
+
+#define MANAGE_ERR() return ERROR
+
 force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle &reader)
 {
     int len_press, len_point;
@@ -99,54 +103,7 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle
     static_assert(sizeof(len_point) == stroke_file_size_len);
 
     if(reader.read_object(_stroke._metadata) < 0)
-        return ERROR;
-    if(reader.read_object(_stroke._prop) < 0)
-        return ERROR;
-
-    if(unlikely(_stroke._prop != stroke::COMPLEX_NORMAL)){
-        return stroke_complex_load(&_stroke, _stroke._prop, reader);
-    }
-
-    if(reader.read_object(len_point) < 0)
-        return ERROR;
-    if(reader.read_object(len_press) < 0)
-        return ERROR;
-
-    while(len_press -- > 0){
-        if(reader.read_object(tmp) < 0)
-            return ERROR;
-        _stroke._pressure.append(tmp);
-    }
-
-    while(len_point -- > 0){
-        if(reader.read_object(point_append) < 0)
-            return ERROR;
-        _stroke._point.append(point_append);
-    }
-
-    _stroke.modify();
-    return OK;
-}
-
-#endif // ALL_VERSION
-
-#define MANAGE_ERR() return ERROR;
-
-force_inline int stroke_file::load_ver_2(class stroke &_stroke, class WReadZip &readerMulti, int id)
-{
-    int len_press, len_point;
-    pressure_t tmp;
-    point_s point_append;
-    WZipReaderSingle &reader = *readerMulti.get_reader(id);
-
-    static_assert(sizeof(len_press) == sizeof(len_point));
-    static_assert(sizeof(len_point) == stroke_file_size_len);
-    static_assert(sizeof(_stroke._metadata) == 8);
-    static_assert(sizeof(_stroke._prop) == 4);
-
-    if(reader.read_object(_stroke._metadata) < 0)
         MANAGE_ERR();
-
     if(reader.read_object(_stroke._prop) < 0)
         MANAGE_ERR();
 
@@ -156,21 +113,18 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, class WReadZip &
 
     if(reader.read_object(len_point) < 0)
         MANAGE_ERR();
-
     if(reader.read_object(len_press) < 0)
         MANAGE_ERR();
 
     while(len_press -- > 0){
         if(reader.read_object(tmp) < 0)
             MANAGE_ERR();
-
         _stroke._pressure.append(tmp);
     }
 
     while(len_point -- > 0){
         if(reader.read_object(point_append) < 0)
             MANAGE_ERR();
-
         _stroke._point.append(point_append);
     }
 

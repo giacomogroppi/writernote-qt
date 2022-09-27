@@ -21,7 +21,7 @@ int WZipWriterSingle::commit_change(const QByteArray &zipName, const QByteArray 
 
     W_ASSERT(this->_allocated);
     W_ASSERT(this->_data);
-    //W_ASSERT(this->_max == this->_offset);
+    W_ASSERT(this->_max == this->_offset);
 
     if(writer.init(zipName.constData()) < 0)
         return -1;
@@ -48,3 +48,12 @@ void WZipWriterSingle::write(const void *from, size_t size_object)
 #endif
     this->_offset += size_object;
 }
+
+
+#ifdef DEBUGINFO
+void WZipWriterSingle::set_offset(size_t size)
+{
+    W_ASSERT(size >= _offset);
+    this->_offset = size;
+}
+#endif

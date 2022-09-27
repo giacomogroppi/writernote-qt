@@ -45,6 +45,10 @@ public:
 
     [[nodiscard]] WZipWriterSingle *get_writer(int id);
     [[nodiscard]] bool is_err() const;
+#ifdef DEBUGINFO
+    [[nodiscard]] size_t get_last_offset() const;
+#endif // DEBUGINFO
+
     int commit();
 };
 

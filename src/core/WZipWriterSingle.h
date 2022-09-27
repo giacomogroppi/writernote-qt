@@ -23,6 +23,10 @@ public:
     size_t get_offset() const;
     size_t get_size_file() const;
 
+#ifdef DEBUGINFO
+    void set_offset(size_t off);
+#endif // DEBUGINFO
+
     template<class T>
     void write_object(const T &data);
 

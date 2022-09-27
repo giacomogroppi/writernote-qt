@@ -107,12 +107,16 @@ int page_file::load_ver_2(page &_page, WZipReaderSingle &reader)
     if(reader.read_object(size) < 0)
         return ERROR;
 
-    char _raw[size];
-    if(reader.read_by_size(_raw, size) < 0)
-        return ERROR;
-    arr = QByteArray::fromRawData((cchar *)_raw, size);
+    if(size){
+        char _raw[size];
+        if(reader.read_by_size(_raw, size) < 0)
+            return ERROR;
+        arr = QByteArray::fromRawData((cchar *)_raw, size);
 
-    _page._imgDraw.loadFromData(arr, "PNG");
+        _page._imgDraw.loadFromData(arr, "PNG");
+    }else{
+        _page._imgDraw = WImage();
+    }
 
     return OK;
 }

@@ -89,3 +89,10 @@ int WZipWriterMulti::commit()
 
     return 0;
 }
+
+#ifdef DEBUGINFO
+size_t WZipWriterMulti::get_last_offset() const
+{
+    return this->_writer[this->_thread - 1].get_offset();
+}
+#endif // DEBUGINFO

@@ -122,7 +122,7 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
     if(reader.read_by_size(seek, sizeof(size_t) * lenPage))
         MANAGE_ERR();
 
-    WReadZip zipReader(&zip, lenPage, reader.get_offset(), seek);
+    WReadZip zipReader(&zip, lenPage, seek);
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         data->newPage(n_style::white);

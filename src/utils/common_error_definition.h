@@ -3,17 +3,13 @@
 #include "utils/dialog_critic/dialog_critic.h"
 #include <QApplication>
 
-/*
- * I know it's very stupid but it
- * makes the code more readable
-*/
 #define ERROR 0
 #define OK 1
 #define ERROR_VERSION 2
 #define ERROR_VERSION_NEW 3
-#define ERROR_CONTROLL 4 /* return when the data is corrupted */
+#define ERROR_CONTROLL 4            /* return when the data is corrupted */
 #define ERROR_MULTIPLE_COPYBOOK 5
-#define ERROR_VERSION_KEY 6 /* return when the file is written with keayboard */
+#define ERROR_VERSION_KEY 6         /* return when the file is written with keayboard */
 #define PAGE_POINT 7
 
 /* controll keyboard */

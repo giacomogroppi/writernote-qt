@@ -2,10 +2,6 @@
 #include "touch/object_finder/model/model.h"
 #include "touch/datastruct/stroke_complex_data.h"
 #include "touch/datastruct/stroke.h"
-#include "touch/datastruct/datastruct.h"
-#include "dataread/xmlstruct.h"
-#include "datawrite/savefile.h"
-#include "datawrite/source_read_ext.h"
 #include "testing/memtest.h"
 
 static size_t get_size_by_type(int type)
