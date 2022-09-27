@@ -102,8 +102,9 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle
 
     static_assert(sizeof(len_press) == sizeof(len_point));
     static_assert(sizeof(len_point) == stroke_file_size_len);
+    static_assert(sizeof(_stroke._metadata) == 8);
 
-    if(reader.read_object(_stroke._metadata) < 0)
+    if(reader.read_by_size(&_stroke._metadata, sizeof(_stroke._metadata)) < 0)
         MANAGE_ERR();
     if(reader.read_object(_stroke._prop) < 0)
         MANAGE_ERR();
@@ -116,6 +117,8 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle
         MANAGE_ERR();
     if(reader.read_object(len_press) < 0)
         MANAGE_ERR();
+
+    W_ASSERT(len_press <= len_point);
 
     for(i = 0; i < len_press; i++){
         if(reader.read_object(tmp) < 0)
@@ -192,8 +195,9 @@ int stroke_file::save(const class stroke &_stroke, WZipWriterSingle &writer)
 
     static_assert(sizeof(len_pressure) == sizeof(len_point));
     static_assert(sizeof(len_pressure) == stroke_file_size_len);
+    static_assert(sizeof(_stroke._metadata) == 8);
 
-    writer.write_object(_stroke._metadata);
+    writer.write(&_stroke._metadata, sizeof(_stroke._metadata));
     writer.write_object(_stroke._prop);
 
     if(_stroke.is_complex()){
@@ -205,6 +209,8 @@ int stroke_file::save(const class stroke &_stroke, WZipWriterSingle &writer)
 
     writer.write_object(len_point);
     writer.write_object(len_pressure);
+
+    W_ASSERT(len_point >= len_pressure);
 
     for(i = 0; i < len_pressure; i++){
         writer.write(&_stroke._pressure.at(i), sizeof(pressure_t));

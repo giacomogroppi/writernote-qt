@@ -6,7 +6,6 @@
 #include <QRect>
 #include <QPainterPath>
 #include "point.h"
-#include "zip.h"
 #include "utils/common_def.h"
 #include "utils/common_script.h"
 #include "touch/datastruct/utils_datastruct.h"
@@ -26,7 +25,7 @@ class stroke
 {
 private:
     QList<point_s> _point;
-    QList<pressure_t> _pressure;
+    QVector<pressure_t> _pressure;
 
     struct metadata_stroke _metadata;
 

@@ -42,24 +42,6 @@ inline WZip *WZipReaderSingle::get_zip()
     return this->_zip;
 }
 
-inline void WZipReaderSingle::init(WZip *zip, size_t offset)
-{
-    W_ASSERT(this->_zip == NULL);
-    W_ASSERT(this->offset == 0);
-    this->_zip = zip;
-    this->offset = offset;
-}
-
-inline WZipReaderSingle::WZipReaderSingle():
-    _zip(nullptr),
-    offset(0)
-{
-#ifdef DEBUGINFO
-    this->_zip = NULL;
-    this->offset = 0;
-#endif
-}
-
 force_inline WZipReaderSingle::WZipReaderSingle(WZip *zip, size_t offset):
     _zip(nullptr),
     offset(0)
