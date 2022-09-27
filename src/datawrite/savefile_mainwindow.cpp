@@ -22,7 +22,8 @@ static int has_extensions(const QString &str)
     }
 
     const auto s = str.mid(len - l, l);
-    if( s == qstr(ext))
+    const auto ext_str = qstr(ext);
+    if (s != ext_str)
         return -1;
     return 0;
 }

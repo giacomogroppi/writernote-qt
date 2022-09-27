@@ -113,7 +113,6 @@ size_t stroke_complex_get_size_save(const stroke *stroke)
     size_t s = 0;
     const auto type = stroke->get_type();
     const auto size = get_size_by_type(type);
-    const auto *data = stroke->get_complex_data();
 
     static_assert(sizeof(_current_ver) == sizeof(unsigned char));
 
