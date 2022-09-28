@@ -103,11 +103,14 @@ static void run_test_1()
 #endif
 
 #if defined(DEBUG_CORE)
-
 void __init__ testZip()
 {
-    for(int i = 0; i < 10; i++)
+    constexpr auto max = 10;
+    for(int i = 0; i < max; i++){
+        WDebug(true, qstr("test : zip : %1 of %2").arg(i).arg(max))
         run_test_1();
+    }
+
 }
 #endif
 
