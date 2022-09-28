@@ -32,8 +32,8 @@ static not_used void createFileAndExit(const QString &path, MainWindow *parent);
 #ifdef DEBUG_CORE
 static void manageDebug(MainWindow *parent)
 {
-    TestingCore core(parent);
-    exit(core.startTesting());
+    //TestingCore core(parent);
+    //exit(core.startTesting());
 }
 #else
 # define manageDebug(x) ;
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     TabletApplication *app;
     TabletCanvas *canvas;
     MainWindow *window;
-    char * m_last_open = NULL;
+    char * m_last_open = nullptr;
     int exit_code;
 
     test();
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
     qDebug() << "is dark mode?: " << core::is_dark_mode();
     qDebug() << "Is running on wayland?" << is_wayland();
 
-    manageDebug(&w);
+    manageDebug(window);
 
     QList<Qt::GestureType> gestures;
     gestures << Qt::PanGesture;
