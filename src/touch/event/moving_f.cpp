@@ -12,7 +12,7 @@ void TabletCanvas::ismoving_f()
     const double refZoom = data->datatouch->getZoom();
 
     if(!blockScrolling){
-        translation = _ismoving.point;
+        translation = _ismoving;
         translation /= refZoom;
 
         data->datatouch->scala_all(translation, this->height());

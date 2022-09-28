@@ -75,7 +75,7 @@ void TabletCanvas::restoreO()
     this->data->datatouch->repositioning();
     update();
 
-    lastpointtouch.set = false;
+    lastpointtouch = false;
 
     this->resizeEvent(nullptr);
 }
@@ -268,33 +268,29 @@ void TabletCanvas::triggerNewView(const QList<int> &Page, cbool all)
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
+void canvas_send_touch_event(const QPointF &pos,
                              QEvent::Type event_type, QTabletEvent::PointerType deviceType,
                              cbool now)
 #else
-void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
+void canvas_send_touch_event(const QPointF &pos,
                              QEvent::Type event_type, QPointingDevice::PointerType deviceType,
                              cbool now)
 #endif
 {
     QTabletEvent *e;
-    TabletCanvas *c;
     constexpr auto not_used debugSendEvent = false;
     constexpr auto not_used name = "canvas_send_touch_event";
-
-    W_ASSERT(_canvas->objectName() == "TabletCanvas");
-
-    c = static_cast<TabletCanvas *>(_canvas);
+    auto *canvas = core::get_canvas();
 
     WDebug(debugSendEvent, name << event_type);
 
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-    QPointingDevice *pointing = new QPointingDevice("", 0, QInputDevice::DeviceType::Stylus, deviceType, QInputDevice::Capability::All, 1, 1);
+    auto *pointing = new QPointingDevice("", 0, QInputDevice::DeviceType::Stylus, deviceType, QInputDevice::Capability::All, 1, 1);
 
     e = new QTabletEvent(event_type, pointing, pos, QPointF(), 0, 0, 0, 0, 0, 0, Qt::KeyboardModifier::NoModifier, Qt::MouseButton::NoButton, Qt::MouseButton::NoButton);
 
     W_ASSERT(e->type() == event_type);
-    W_ASSERT(e->posF() == pos);
+    W_ASSERT(e->position() == pos);
     W_ASSERT(e->pointerType() == deviceType);
 
 #else
@@ -302,13 +298,13 @@ void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
 #endif
 
     if(now){
-        c->send_touch_event(e);
+        canvas->send_touch_event(e);
         delete e;
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
         delete pointing;
 #endif
     }else{
-        QApplication::postEvent(_canvas, e);
+        QApplication::postEvent(canvas, e);
     }
 }
 
@@ -335,8 +331,8 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
             goto out;
         }
 
-        touch = static_cast<QTabletEvent *>(e);
-        const QPointF &PT = touch->posF();
+        touch = dynamic_cast<QTabletEvent *>(e);
+        const QPointF &PT = touch->position();
 
         if(unlikely(isVisible)){
             WDebug(eventFilterCanvasDebug, "Visible" << _property->rect() << PT);
@@ -348,11 +344,11 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
             WDebug(eventFilterCanvasDebug, "Not visible");
         }
 
-        point_touch = touch->globalPosF() - this->mapToGlobal(this->pos());
+        point_touch = touch->globalPosition() - this->mapToGlobal(this->pos());
 
-        WDebug(eventFilterCanvasDebug, "Point" << point_touch << touch->pos() << _square->get_first_point().point << _square->get_last_point().point);
+        WDebug(eventFilterCanvasDebug, "Point" << point_touch << touch->position() << _square->get_first_point() << _square->get_last_point());
 
-        canvas_send_touch_event(this, point_touch, type, touch->pointerType(), true);
+        canvas_send_touch_event(point_touch, type, touch->pointerType(), true);
 
         // the point is out but it's visible
         if(isVisible)

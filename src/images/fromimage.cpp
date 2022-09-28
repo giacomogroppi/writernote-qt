@@ -207,8 +207,8 @@ uchar fromimage::insert_image(QString &pos,
     img.immagini = immagine;
 
     if(point){
-        img.i = point->point.toPoint();
-        img.f = point->point.toPoint() + QPoint(DELTA_POINT, DELTA_POINT);
+        img.i = point->toPoint();
+        img.f = point->toPoint() + QPoint(DELTA_POINT, DELTA_POINT);
     }
     else{
         img.i = QPoint(0, 0);

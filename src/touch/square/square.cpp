@@ -97,8 +97,8 @@ bool square::find()
 
     this->adjustPoint();
 
-    const QPointF &topLeft = _pointinit.point;
-    const QPointF &bottomRight = _pointfine.point;
+    const QPointF &topLeft = _pointinit;
+    const QPointF &bottomRight = _pointfine;
 
 #define CTRL_POINT(point) W_ASSERT(point.x() >= 0. && point.y() >= 0.);
     CTRL_POINT(topLeft);
@@ -118,7 +118,7 @@ bool square::find()
     /* point selected by user */
     for(count = 0; PageCounter < lenPage; PageCounter ++, count ++){
         __page = &data->at(PageCounter);
-        create = DataPrivateMuThreadInit(_dataThread, NULL, _threadCount, __page->lengthStroke(), 0);
+        create = DataPrivateMuThreadInit(_dataThread, nullptr, _threadCount, __page->lengthStroke(), 0);
 
         if(unlikely(!__page->isVisible()))
             break;
@@ -157,10 +157,10 @@ bool square::find()
 
     if(!somethingInBox()){
         if(!_copy->isEmpty()){
-            _pointinit.point = __f;
+            _pointinit = __f;
 
-            _pointinit.deset();
-            _pointfine.deset();
+            _pointinit.setSet(false);
+            _pointfine.setSet(false);
         }
 
         reset();
@@ -173,15 +173,15 @@ bool square::find()
 
 force_inline void square::initImg()
 {
-    const auto formact = QImage::Format_ARGB32;
-    _img = QImage(page::getResolutionWidth(),
+    const auto formact = WImage::Format_ARGB32;
+    _img = WImage(page::getResolutionWidth(),
                  page::getResolutionHeigth() * _canvas->data->datatouch->lengthPage(),
                  formact);
 }
 
 void square::mergeImg(
-        const QImage    &from,
-        QImage          &to,
+        const WImage    &from,
+        WImage          &to,
         int             page)
 {
     QPainter painter;
@@ -210,7 +210,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     cint len = index.length();
     page * page;
     datastruct & data = *_canvas->data->datatouch;
-    QImage tmp;
+    WImage tmp;
 
     WDebug(debugSquare, "call");
 
@@ -240,19 +240,18 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 
 void square::findObjectToDrawImg()
 {
-    for(int counterImg = 0; counterImg < _index_img.length(); counterImg ++){
-        const int index = _index_img.at(counterImg);
+    for(int index : qAsConst(_index_img)){
         const auto &ref = _canvas->data->m_img->m_img.at(index);
 
-        if(ref.i.x() < _pointinit.point.x())
-            _pointinit.point.setX(ref.i.x());
-        else if(ref.f.x() > _pointfine.point.x())
-            _pointfine.point.setX(ref.f.x());
+        if(ref.i.x() < _pointinit.x())
+            _pointinit.setX(ref.i.x());
+        else if(ref.f.x() > _pointfine.x())
+            _pointfine.setX(ref.f.x());
 
-        if(ref.i.y() < _pointinit.point.y())
-            _pointinit.point.setY(ref.i.y());
-        else if(ref.f.y() > _pointfine.point.y())
-            _pointfine.point.setY(ref.f.y());
+        if(ref.i.y() < _pointinit.y())
+            _pointinit.setY(ref.i.y());
+        else if(ref.f.y() > _pointfine.y())
+            _pointfine.setY(ref.f.y());
     }
 }
 
@@ -276,8 +275,8 @@ void square::findObjectToDraw(const QList<QVector<int>> &index)
     // find the first point
     sizeData = data->get_size_area(index, _base);
 
-    _pointinit.point = sizeData.topLeft() + trans;
-    _pointfine.point = sizeData.bottomRight() + trans;
+    _pointinit = sizeData.topLeft() + trans;
+    _pointfine = sizeData.bottomRight() + trans;
 
 img:
     findObjectToDrawImg();
@@ -287,7 +286,9 @@ void square::reset()
 {
     int i, len;
     WDebug(debugSquare, "call");
-    _pointinit.set = _lastpoint.set = _pointfine.set = false;
+    _pointinit.setSet(false);
+    _lastpoint.setSet(false);
+    _pointfine.setSet(false);
 
     _in_box = false;
 
@@ -314,7 +315,7 @@ void square::reset()
     _stroke.clear();
 
 out:
-    this->_img = QImage();
+    this->_img = WImage();
     this->_stroke.clear();
     this->_trans_img = QPointF(0.0, 0.0);
 }
@@ -323,7 +324,7 @@ void square::initPointMove(const QPointF &point)
 {
     QPointF new_point;
     datastruct *Data = _canvas->data->datatouch;
-    QRectF rect(_pointinit.point, _pointfine.point);
+    QRectF rect(_pointinit, _pointfine);
     WDebug(debugSquare, "call");
 
     new_point = Data->adjustPoint(point);
@@ -358,7 +359,7 @@ void square::move(const QPointF &punto)
     }
 #endif
 
-    delta = (_lastpoint.point - punto) / zoom;
+    delta = (_lastpoint - punto) / zoom;
 
     datastruct::inverso(delta);
 
@@ -366,10 +367,10 @@ void square::move(const QPointF &punto)
 
     data->m_img->moveImage(_index_img, delta);
 
-    _pointinit.point += delta;
-    _pointfine.point += delta;
+    _pointinit += delta;
+    _pointfine += delta;
 
-    _lastpoint.point = punto;
+    _lastpoint = punto;
     __need_reload = true;
 }
 
@@ -429,7 +430,7 @@ void square::actionProperty(property_control::ActionProperty action)
     }
 
     if(dontcall_copy){
-        if(_copy->selection(data, _stroke, flags, _pointinit.point)){
+        if(_copy->selection(data, _stroke, flags, _pointinit)){
             _stroke.clear();
             _property->Hide();
             this->reset();
@@ -448,8 +449,8 @@ void square::actionProperty(property_control::ActionProperty action)
 */
 force_inline void square::adjustPoint()
 {
-    QPointF &topLeft        = _pointinit.point;
-    QPointF &bottomRight    = _pointfine.point;
+    QPointF &topLeft        = _pointinit;
+    QPointF &bottomRight    = _pointfine;
 
     WDebug(debugSquare, topLeft << bottomRight);
 
@@ -508,7 +509,7 @@ void square::needReload(QPainter &painter)
         }
 
         painter.setPen(_penna);
-        square_draw_square(painter, data, _pointinit.point, _pointfine.point);
+        square_draw_square(painter, data, _pointinit, _pointfine);
     }
 }
 
@@ -518,11 +519,11 @@ void square::updatePoint(const QPointF &puntofine)
     WDebug(debugSquare, "call");
     W_ASSERT(!somethingInBox());
 
-    _pointfine.point = data->adjustPoint(puntofine);
+    _pointfine = data->adjustPoint(puntofine);
 
     W_ASSERT(_pointfine.x() >= 0.0 && _pointinit.y() >= 0.0);
 
-    _pointfine.set = true;
+    _pointfine = true;
 
     __need_reload = true;
 }
@@ -534,9 +535,9 @@ void square::initPoint(const QPointF &point)
 
     W_ASSERT(!somethingInBox());
 
-    _pointinit.point = data->adjustPoint(point);
-    W_ASSERT(_pointinit.point.x() >= 0.0 && _pointinit.point.y() >= 0.0);
-    _pointinit.set = true;
+    _pointinit = data->adjustPoint(point);
+    W_ASSERT(_pointinit.x() >= 0.0 && _pointinit.y() >= 0.0);
+    _pointinit = true;
 
     /* we don't need yet to draw somethings */
     __need_reload = false;

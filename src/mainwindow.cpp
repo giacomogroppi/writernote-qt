@@ -7,10 +7,8 @@
 #include "datawrite/savefile.h"
 #include "currenttitle/checksimilecopybook.h"
 #include "windows/updatecheck.h"
-#include "audioplay/aggiornotastiriascolto.h"
 #include "utils/setting_define.h"
 #include "utils/settings/setting_load.h"
-#include "windows/mostra_finestra_i.h"
 #include "utils/areyousure/areyousure.h"
 #include "restore_file/ui/setting_restore_ui.h"
 #include "touch/scrollKinetic/ui_scroll/scroll.h"
@@ -31,12 +29,11 @@
 #include "preview_page_widget/preview_page_widget.h"
 #include "ui/toolbar.h"
 #include "ui/WStyle.h"
-#include <QMessageBox>
 #include <QListWidgetItem>
-#include <QSettings>
 #include <QTimer>
 #include <QString>
 #include <QRect>
+#include <QSettings>
 
 #ifdef PDFSUPPORT
 #include "frompdf/frompdf.h"
@@ -46,13 +43,14 @@ MainWindow::MainWindow(TabletCanvas *canvas,
                        struct struct_user *user,
                        cloud_controll *cloud,
                        const char *path)
-    : QMainWindow(NULL)
+    : QMainWindow(this)
     , ui(new Ui::MainWindow)
 {
 
     W_ASSERT(canvas);
     
     core::set_main_window(this);
+    core::set_canvas(canvas);
 
     this->setAttribute(Qt::WA_AcceptTouchEvents);
 

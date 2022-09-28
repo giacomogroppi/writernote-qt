@@ -83,10 +83,10 @@ private:
 
     PointSettable _pointinit;
     PointSettable _pointfine;
-    void mergeImg(const QImage &from, QImage &to, int page);
+    void mergeImg(const WImage &from, WImage &to, int page);
     void moveObjectIntoPrivate(QList<QVector<int> > &index);
 
-    QImage _img;
+    WImage _img;
     QList<QList<stroke>> _stroke;
 
     int _base;
@@ -165,5 +165,5 @@ force_inline void square::isMoving()
 force_inline bool square::isinside(const QPointF &point)
 {
     WDebug(debugSquare, "square::isinside");
-    return datastruct_isinside(_pointinit.point, _pointfine.point, point);
+    return datastruct_isinside(_pointinit, _pointfine, point);
 }

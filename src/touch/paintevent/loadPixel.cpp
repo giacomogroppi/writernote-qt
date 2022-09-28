@@ -127,7 +127,7 @@ void TabletCanvas::load(QPainter &painter,
 
 void singleLoad(
         QPainter        &painter,
-        const QImage    &img,
+        const WImage    &img,
         const QSize     &sizeRect,
         const QPointF   &PointFirstPage,
         cdouble         counterPage,

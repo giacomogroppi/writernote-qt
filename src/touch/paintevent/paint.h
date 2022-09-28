@@ -1,12 +1,12 @@
 #pragma once
 
 #include <QPainter>
-#include <QImage>
 #include <QSize>
 #include <QPointF>
 
 #include "touch/datastruct/datastruct.h"
 #include "touch/datastruct/page.h"
+#include "core/WImage.h"
 
 #define DRAW_SINGLE_LOAD_DEF 1.0
 /*
@@ -17,7 +17,7 @@
  * TabletCanvas :: load ()
 */
 void singleLoad(QPainter        &painter,
-        const QImage    &img,
+        const WImage    &img,
         const QSize     &sizeRect,
         const QPointF   &PointFirstPage,
         cdouble counterPage,

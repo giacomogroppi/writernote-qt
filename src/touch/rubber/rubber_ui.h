@@ -1,5 +1,4 @@
-#ifndef RUBBER_UI_H
-#define RUBBER_UI_H
+#pragma once
 
 #include <QWidget>
 #include "currenttitle/document.h"
@@ -38,10 +37,10 @@ public:
     void initRubber(const QPointF &point);
     int endRubber();
 
-    bool is_set() const { return this->_last.set; };
+    [[nodiscard]] bool is_set() const { return this->_last.isSet(); };
 
 private:
-    bool is_image_not_null(const int index, const page *page,
+    bool is_image_not_null(int index, const page *page,
                            const QPointF &from, const QPointF &to, int delta);
     class TabletCanvas *_canvas;
     int _base;
@@ -64,8 +63,7 @@ private slots:
 force_inline void rubber_ui::reset()
 {
     _base = -1;
-    _last.set = false;
+    _last.setSet(false);
     _data_to_remove.clear();
 }
 
-#endif // RUBBER_UI_H

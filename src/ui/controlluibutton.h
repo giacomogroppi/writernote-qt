@@ -5,7 +5,6 @@
 #include <QList>
 #include <QPushButton>
 #include <QColor>
-#include <QImage>
 #include <QSpacerItem>
 #include "utils/common_script.h"
 

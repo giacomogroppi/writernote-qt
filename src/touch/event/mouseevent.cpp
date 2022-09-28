@@ -18,8 +18,8 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
         return;
     }
 
-    _ismoving.point.setY(move);
-    _ismoving.point.setX(0);
+    _ismoving.setY(move);
+    _ismoving.setX(0);
 
     this->ismoving_f();
 
@@ -57,7 +57,7 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
             __type = QEvent::TabletMove;
         }
 
-        canvas_send_touch_event(this, p, __type,
+        canvas_send_touch_event(p, __type,
 #                        if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
                             QTabletEvent::Pen
 #                        else
@@ -72,22 +72,22 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
         return;
 #endif
 
-    if(likely(lastpointtouch.set)){
-        deltay = - lastpointtouch.point.y() + event->screenPos().y();
-        deltax = - lastpointtouch.point.x() + event->screenPos().x();
+    if(likely(lastpointtouch.isSet())){
+        deltay = - lastpointtouch.y() + event->globalPosition().y();
+        deltax = - lastpointtouch.x() + event->globalPosition().x();
 
         if(!scroll::y(data->datatouch, _pixmap.height(), deltay))
-            _ismoving.point.setY(0);
+            _ismoving.setY(0);
         else
-            _ismoving.point.setY(deltay);
+            _ismoving.setY(deltay);
 
 
         if(!scroll::x(data->datatouch, _pixmap.width(), deltax))
-            _ismoving.point.setX(0);
+            _ismoving.setX(0);
         else
-            _ismoving.point.setX(deltax);
+            _ismoving.setX(deltax);
 
-        if(!_ismoving.point.x() || !_ismoving.point.y())
+        if((_ismoving.x() == 0.) or (_ismoving.y() == 0.))
             this->ismoving_f();
 
     }
@@ -96,16 +96,15 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
 
     /* we need to save this point only if the user use kinetic scroll */
     if(m_scrolling_speed_enable){
-        if(lastpointtouch.set){
-            __last_point_move.point = lastpointtouch.point;
-            __last_point_move.set = true;
+        if(lastpointtouch.isSet()){
+            __last_point_move = lastpointtouch;
         }
     }
 
-    lastpointtouch.point = event->screenPos();
+    lastpointtouch = event->globalPosition();
 
     event->accept();
-    lastpointtouch.set = true;
+    lastpointtouch = true;
 }
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event)
@@ -115,16 +114,15 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event)
     event->accept();
 
     if(m_scrolling_speed_enable
-            && __last_point_move.set){
-        scrollKinetic(__last_point_move.point,
-                      lastpointtouch.point);
+            && __last_point_move.isSet()){
+        scrollKinetic(__last_point_move, lastpointtouch);
     }
 
-    __last_point_move.set = false;
-    lastpointtouch.set = false;
+    __last_point_move = false;
+    lastpointtouch = false;
 
     if(unlikely(core::get_main_window()->touch_or_pen)){
-        canvas_send_touch_event(this, event->pos(), event->type(),
+        canvas_send_touch_event(event->pos(), event->type(),
 #                        if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
                                 QTabletEvent::Pen
 #                       else

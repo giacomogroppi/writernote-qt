@@ -18,7 +18,7 @@ public:
     void reset();
 
 private:
-    bool isActive() const;
+    [[nodiscard]] bool isActive() const;
     PointSettable _point;
     static constexpr auto debug = false;
     static constexpr auto time = 1 * 500;
@@ -39,17 +39,17 @@ force_inline void object_finder::move(const QPointF& point)
 {
     WDebug(debug, "object_finder" << __FUNCTION__);
 
-    if(likely(_point.set)){
+    if(likely(_point.isSet())){
         // if the point is equal we don't have to stop the timer
-        if(unlikely(is_near(_point.point, point, 1.))){
+        if(unlikely(is_near(_point, point, 1.))){
             return;
         }
 
         // if the point is differente we neet to save it and restart the timer
-        _point.point = point;
+        _point = point;
     }else{
-        _point.set = true;
-        _point.point = point;
+        _point.setSet(true);
+        _point = point;
     }
 
     if(likely(_timer->isActive())){
@@ -61,7 +61,7 @@ force_inline void object_finder::move(const QPointF& point)
 
 force_inline void object_finder::reset()
 {
-    _point.set = false;
+    _point.setSet(false);
     WDebug(debug, "object_finder" << __FUNCTION__);
     if(isActive()){
         _timer->stop();

@@ -7,6 +7,7 @@
 class WImage: public QImage {
 public:
     explicit WImage(const QString &fileName, const char *format = nullptr);
+    WImage(int width, int height, QImage::Format format);
     WImage() = default;
 
     [[nodiscard]] size_t get_size_in_file() const;

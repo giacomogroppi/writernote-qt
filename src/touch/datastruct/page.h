@@ -4,7 +4,6 @@
 #include <QList>
 #include <QPointF>
 #include <QDebug>
-#include <QImage>
 #include "core/WZipWriterSingle.h"
 #include "stroke.h"
 #include "log/log_ui/log_ui.h"
@@ -86,7 +85,7 @@ private:
     static QRect get_size_area(const QList<stroke> & item, int from, int to);
 
 public:
-    const QImage &getImg() const;
+    const WImage &getImg() const;
 
     page();
     page(const page &page);
@@ -175,7 +174,7 @@ public:
     Q_CONSTEXPR static double getResolutionHeigth();
 
 #define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
-    void drawToImage(const QVector<int> &index, QImage &img, cint flag) const;
+    void drawToImage(const QVector<int> &index, WImage &img, cint flag) const;
 
     page &operator=(const page &other);
 
@@ -252,7 +251,7 @@ force_inline void page::AppendDirectly(const stroke &stroke)
     this->_stroke.append(stroke);
 }
 
-force_inline const QImage &page::getImg() const
+force_inline const WImage &page::getImg() const
 {
     return this->_imgDraw;
 }

@@ -38,13 +38,15 @@ static void AppendAll(
     stroke & strokeToAppend = __tmp;
     int i, pageMod, lenPoint;
     point_s *point;
-    int time;
+    qint64 time;
     const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
 
     if(unlikely(strokeToAppend.isEmpty()))
         return;
 
     time = core::get_main_window()->m_audioplayer->getPositionSecond();
+
+    W_ASSERT(time < INT_MAX);
 
     if(likely(strokeToAppend.is_normal())){
         lenPoint = strokeToAppend.length();
@@ -64,7 +66,10 @@ static void AppendAll(
         pageMod = doc.datatouch->appendStroke(strokeToAppend);
 
         core::get_main_window()->_preview_widget->mod(pageMod);
-        doc.datatouch->at_mod(pageMod).triggerRenderImage(time, false);
+        doc.datatouch->at_mod(pageMod).triggerRenderImage(
+                static_cast<int>(time),
+                false
+        );
     }
 
     strokeToAppend.reset();
@@ -145,7 +150,7 @@ static force_inline bool is_out(const datastruct *data, const QPointF &point)
 
 void TabletCanvas::tabletEvent(QTabletEvent *event)
 {
-    const QPointF& pointTouch = event->posF();
+    const QPointF& pointTouch = event->position();
     constexpr bool tabletDebug = false;
 
     isWriting = true;
@@ -207,14 +212,14 @@ end:
 
 force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
 {
-    constexpr auto not_used debugSquare = false;
+    constexpr auto not_used ManageStartdebugSquare = false;
 
     if(_square->somethingInBox()){
-        WDebug(debugSquare, "Somethininbox");
+        WDebug(ManageStartdebugSquare, "Somethininbox");
         _square->initPointMove(touch);
     }
     else{
-        WDebug(debugSquare, "not in box");
+        WDebug(ManageStartdebugSquare, "not in box");
         _square->initPoint(touch);
     }
 }
@@ -230,18 +235,18 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 
     if(insert_method){
         updatelist(event);
-        _finder->move(event->posF());
+        _finder->move(event->position());
     }
     else if(selection_method){
-        ManageStartSquare(event->posF(), _square);
+        ManageStartSquare(event->position(), _square);
     }else if(rubber_method){
-        _rubber->initRubber(event->posF());
+        _rubber->initRubber(event->position());
         WDebug(_debug, "rubber is set");
         W_ASSERT(_rubber->is_set());
     }
 
     m_deviceDown = true;
-    _lastPoint.pos = event->pos();
+    _lastPoint.pos = event->position();
     _lastPoint.pressure = event->pressure();
 }
 
@@ -250,12 +255,12 @@ force_inline void ManageMoveSquare(const QPointF &point, class square *_square)
     _square->isMoving();
 
     if(_square->somethingInBox()){
-        W_ASSERT(!_square->get_first_point().isNotSet());
+        W_ASSERT(_square->get_first_point().isSet());
 
         /* a questo punto può muovere di un delta x e y */
         _square->move(point);
     }else{
-        /*
+        /**
         * it means that the user not select anything
         * in the past
         */
@@ -267,7 +272,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 {
     QPainter painter;
     constexpr not_used bool debugMove = false;
-    const auto &point = event->posF();
+    const auto &point = event->position();
 
     if(event->deviceType() ==
 #       if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -289,7 +294,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
         updateBrush(event);
     }
 
-    _lastPoint.pos = event->pos();
+    _lastPoint.pos = event->position();
     _lastPoint.pressure = event->pressure();
 
     if(likely(insert_method)){
@@ -370,7 +375,7 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     stroke &strokeTmp = __tmp;
     pressure_t pressure;
     cbool highlighter = CHECK_FLAG(_input, highlighter);
-    const QPointF &pointTouch = event->posF();
+    const QPointF &pointTouch = event->position();
 
     size = event->pressure();
     alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;

@@ -22,3 +22,7 @@ size_t WImage::get_size_in_file() const
     const auto s = this->save_and_size(arr);
     return s;
 }
+
+WImage::WImage(int width, int height, QImage::Format format) : QImage(width, height, format)
+{
+}

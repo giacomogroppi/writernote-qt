@@ -7,53 +7,58 @@
 
 #define NCOLOR 4
 
-/* canvas */
-struct PointSettable {
+class PointSettable : public QPointF {
+private:
+    bool _set;
+public:
     PointSettable(const QPointF &point, bool set);
     PointSettable();
-    QPointF point;
-    bool set : 1;
 
-    void deset();
-
-    constexpr force_inline bool isNotSet() const
-    {
-        return !this->set;
-    }
-
-    constexpr force_inline double x() const
-    {
-        return this->point.x();
-    }
-
-    constexpr force_inline double y() const
-    {
-        return this->point.y();
-    }
-
-    constexpr PointSettable &operator+=(const QPointF &p);
+    [[nodiscard]] bool isSet() const noexcept;
+    void setSet(bool set);
+    PointSettable &operator=(const QPointF &point) noexcept;
+    PointSettable &operator=(const PointSettable &point) noexcept;
+    PointSettable &operator=(bool enable) noexcept;
 };
-
-force_inline void PointSettable::deset()
-{
-    this->set = false;
-}
-
-constexpr Q_ALWAYS_INLINE PointSettable &PointSettable::operator+=(const QPointF &p)
-{
-    this->point += p;
-    return *this;
-}
 
 force_inline PointSettable::PointSettable()
 {
-    set = false;
+    _set = false;
 }
 
-force_inline PointSettable::PointSettable(const QPointF &point, bool set)
+inline PointSettable::PointSettable(const QPointF &point, bool set):
+    QPointF(point)
 {
-    this->point = point;
-    this->set = set;
+    this->_set = set;
+}
+
+inline void PointSettable::setSet(bool set)
+{
+    _set = set;
+}
+
+inline bool PointSettable::isSet() const noexcept
+{
+    return _set;
+}
+
+inline PointSettable &PointSettable::operator=(const QPointF &point) noexcept
+{
+    QPointF::operator=(point);
+    return *this;
+}
+
+inline PointSettable &PointSettable::operator=(const PointSettable &point) noexcept
+{
+    QPointF::operator=(point);
+    this->_set = point._set;
+    return *this;
+}
+
+inline PointSettable &PointSettable::operator=(bool enable) noexcept
+{
+    this->_set = enable;
+    return *this;
 }
 
 struct colore_s{

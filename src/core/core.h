@@ -7,6 +7,7 @@
 
 extern bool __is_mobile_view;
 extern class MainWindow *__private_mainwindow;
+extern class TabletCanvas *__private_canvas;
 
 namespace core{
 
@@ -27,14 +28,26 @@ force_inline void set_mobile_view(cbool is_tablet)
 
 force_inline void set_main_window(class MainWindow *main)
 {
-    W_ASSERT(__private_mainwindow == NULL);
+    W_ASSERT(__private_mainwindow == nullptr);
     __private_mainwindow = main;
 }
 
 force_inline class MainWindow *get_main_window()
 {
-    W_ASSERT(__private_mainwindow != NULL);
+    W_ASSERT(__private_mainwindow != nullptr);
     return __private_mainwindow;
+}
+
+force_inline void set_canvas(class TabletCanvas *canvas)
+{
+    W_ASSERT(__private_canvas == nullptr);
+    __private_canvas = canvas;
+}
+
+force_inline class TabletCanvas *get_canvas()
+{
+    W_ASSERT(__private_canvas != nullptr);
+    return __private_canvas;
 }
 
 force_inline void set_max_size_as_screen(QWidget *widget)

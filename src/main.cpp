@@ -30,22 +30,16 @@ static int extract_(const char *path, const char *path_to);
 static not_used void createFileAndExit(const QString &path, MainWindow *parent);
 
 #ifdef DEBUG_CORE
+# define test() return 0;
 static void manageDebug(MainWindow *parent)
 {
     //TestingCore core(parent);
     //exit(core.startTesting());
 }
 #else
+# define test() ;
 # define manageDebug(x) ;
 #endif
-
-static void test()
-{
-#if defined(DEBUG_CORE)
-    qDebug() << "debug core set: exit";
-    exit(0);
-#endif //DEBUG_CORE
-}
 
 int main(int argc, char **argv)
 {

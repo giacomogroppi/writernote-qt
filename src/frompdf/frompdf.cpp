@@ -388,7 +388,7 @@ unsigned frompdf::insert_pdf(QByteArray             &pos,
     }
 
     if(point){
-        pdf.topLeft = point->point;
+        pdf.topLeft = *point;
     }
     else{
         pdf.topLeft = QPointF(0.0, 0.0);

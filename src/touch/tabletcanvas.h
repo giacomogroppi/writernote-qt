@@ -39,8 +39,7 @@ void loadSingleSheet(
 void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
                              QEvent::Type event_type, QTabletEvent::PointerType deviceType, cbool now);
 #else
-void canvas_send_touch_event(QObject *_canvas, const QPointF &pos,
-                             QEvent::Type event_type, QPointingDevice::PointerType deviceType, cbool now);
+void canvas_send_touch_event(const QPointF &pos, QEvent::Type event_type, QPointingDevice::PointerType deviceType, cbool now);
 #endif
 
 

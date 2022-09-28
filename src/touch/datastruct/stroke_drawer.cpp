@@ -63,7 +63,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
     W_ASSERT(page >= 0);
     W_ASSERT(_painterPublic.isActive());
 
-    QImage img;
+    WImage img;
     QPainter _painterPrivate;
     QPainter *painter;
     int counterPoint;
@@ -75,7 +75,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
     cbool isPrivatePainter = isHigh;
 
     if(isPrivatePainter){
-        img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+        img = WImage(page::getResolutionWidth(), page::getResolutionHeigth(), WImage::Format_ARGB32);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
         painter = &_painterPrivate;

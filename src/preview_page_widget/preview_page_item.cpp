@@ -136,12 +136,12 @@ bool preview_page_item::event(QEvent *event)
         last = current;
     }
     else if(event->type() == QEvent::MouseButtonRelease){
-        const auto pos = static_cast<QMouseEvent *>(event)->pos();
+        const auto pos = dynamic_cast<QMouseEvent *>(event)->pos();
 
         if(target_prop.contains(pos)){
             WDebug(debugEvent, "show prop");
             auto *prop = preview_page_widget::get_list();
-            const auto GlobalPos = static_cast<QMouseEvent *>(event)->globalPos();
+            const QPoint GlobalPos = dynamic_cast<QMouseEvent *>(event)->globalPosition().toPoint();
             prop->Show(GlobalPos, _index);
         }
         else if(last + delta >= current){

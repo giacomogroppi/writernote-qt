@@ -12,7 +12,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     const QMimeData* mimeData = event->mimeData();
 
-    QString __path_to_load;
+    QString path_to_load;
     uchar find = 0;
     uint i;
     QImage image;
@@ -26,24 +26,24 @@ void MainWindow::dropEvent(QDropEvent *event)
     urlList = mimeData->urls();
 
     for(i = 0; i < (uint)urlList.size() && i < 32 && !find; ++i){
-        const QString & __path = urlList.at(i).toLocalFile();
+        const QString & path = urlList.at(i).toLocalFile();
 
-        if(__path.indexOf("." + APP_EXT) != -1){
-            __path_to_load = __path;
+        if(path.indexOf("." + APP_EXT) != -1){
+            path_to_load = path;
             find = WRITERNOTE;
-        }else if(image.load(__path)){
+        }else if(image.load(path)){
             find = IMAGE;
         }
     }
 
     if(find == WRITERNOTE){
-        if(this->m_path != __path_to_load){
-            openFile(__path_to_load.toUtf8().constData());
+        if(this->m_path != path_to_load){
+            openFile(path_to_load.toUtf8().constData());
         }
     }else if(find == IMAGE){
-        point.point = event->posF();
+        point = event->position();
 
-        const auto res = this->_canvas->data->m_img->addImage(__path_to_load, &point, this->m_path);
+        const auto res = this->_canvas->data->m_img->addImage(path_to_load, &point, this->m_path);
         if(res < 0)
             dialog_critic(QApplication::tr("We got some problem importing the image"));
     }

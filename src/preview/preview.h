@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QImage>
+#include "core/WImage.h"
 #include "utils/common_def.h"
 
 class Document;

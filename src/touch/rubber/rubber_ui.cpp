@@ -419,7 +419,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
 
-    W_ASSERT(_last.set);
+    W_ASSERT(_last.isSet());
 
     if(isTotal){
         functionToCall = actionRubberSingleTotal;
@@ -482,7 +482,7 @@ void rubber_ui::actionRubber(const QPointF &__lastPoint)
 
 out1:
 
-    if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _last.point, _size_gomma)){
+    if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _last, _size_gomma)){
         WDebug(rubber_debug, "It's null");
         goto save_point;
     }
@@ -492,12 +492,12 @@ out1:
 
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1
-    if(unlikely(data->whichPage(lastPoint) != data->whichPage(_last.point))){
+    if(unlikely(data->whichPage(lastPoint) != data->whichPage(_last))){
         goto save_point;
     }
 
     PrivateData(data)       = data;
-    PrivateData(line)       = WLine(_last.point, lastPoint);
+    PrivateData(line)       = WLine(_last, lastPoint);
 
     __m_size_gomma = _size_gomma;
 
@@ -541,12 +541,12 @@ out2:
     }
 
 save_point:
-    _last.point = lastPoint;
+    _last = lastPoint;
 }
 
 void rubber_ui::initRubber(const QPointF &point)
 {
     datastruct *data = _canvas->data->datatouch;
-    _last.set = true;
-    _last.point = data->adjustPoint(point);
+    _last = true;
+    _last = data->adjustPoint(point);
 }

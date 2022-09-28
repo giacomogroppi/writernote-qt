@@ -43,9 +43,9 @@ static void setStylePrivate(
     }
 }
 
-static force_inline void __initImg(QImage &img)
+static force_inline void __initImg(WImage &img)
 {
-    img = QImage(page::getResolutionWidth(), page::getResolutionHeigth(), QImage::Format_ARGB32);
+    img = WImage(page::getResolutionWidth(), page::getResolutionHeigth(), WImage::Format_ARGB32);
     W_ASSERT(!img.isNull());
 }
 
@@ -299,7 +299,7 @@ void * __page_load(void *__data)
 {
     auto *  _data = (struct DataPrivateMuThread *)__data;
     auto *  extra = (struct page_thread_data *)_data->extra;
-    QImage img;
+    WImage img;
     Define_PEN(m_pen);
     pthread_mutex_t *mutex = extra->append;
     int m_pos_ris = extra->m_pos_ris;
@@ -445,19 +445,21 @@ void page::mergeList()
 }
 
 void page::drawToImage(
-    const QVector<int>  &index, 
-    QImage              &img,
+    const QVector<int>  &index,
+    WImage              &img,
     cint                flag) const
 {
     Define_PEN(pen);
 
-    if(flag & DR_IMG_INIT_IMG){
+    if(unlikely(flag & DR_IMG_INIT_IMG)){
         __initImg(img);
+    }else{
+        W_ASSERT(flag == ~DR_IMG_INIT_IMG);
     }
 
     Define_PAINTER_p(painter, img);
 
-    for (const int __index : index){
+    for (const int __index : qAsConst(index)){
         const stroke &stroke = atStroke(__index);
         this->drawStroke(painter, stroke, pen, stroke.getColor());
     }

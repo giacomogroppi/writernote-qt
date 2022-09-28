@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QList>
-#include <QImage>
 #include <QDebug>
 #include <QRect>
 #include <QPainterPath>
@@ -15,6 +14,7 @@
 #include "testing/memtest.h"
 #include "core/WZipWriterSingle.h"
 #include "core/WZipReaderSingle.h"
+#include "core/WImage.h"
 
 struct metadata_stroke{
     int posizione_audio;

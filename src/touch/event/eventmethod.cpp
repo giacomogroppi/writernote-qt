@@ -12,29 +12,34 @@ static force_inline QPointF PointMiddle(const QPointF &first, const QPointF &sec
     x = (first.x() + sec.x()) / 2.0;
     y = (first.y() + sec.y()) / 2.0;
 
-    return QPointF(x, y);
+    return {x, y};
 }
 
 extern bool isZooming;
 
-#define ISDEFINE(x) ((x[1].set)&&(x[0].set))
-#define RIDEFINE(x) x[0].set = x[1].set = false;
+#define ISDEFINE(x) ((x[1].isSet()) and (x[0].isSet()))
+
+#define RIDEFINE(x)             \
+    do{                         \
+        x[0] = false;           \
+        x[1] = false;           \
+    }while(0)
 
 bool block_scrolling = false;
 
 static void setPoint(const QPointF &pointTouch, TabletCanvas *canvas)
 {
     PointSettable *last = canvas->lastpointzoom;
-    const uchar index = last[0].set;
-    last[index].set = true;
-    last[index].point = pointTouch;
+    const uchar index = last[0].isSet();
+    last[index].setSet(true);
+    last[index] = pointTouch;
 }
 
 static int get_index(TabletCanvas *canvas, const QPointF &pointTouch)
 {
     PointSettable *last = canvas->lastpointzoom;
-    const double Dist1 = distance_not_square(last[0].point, pointTouch);
-    const double Dist2 = distance_not_square(last[1].point, pointTouch);
+    const double Dist1 = distance_not_square(last[0], pointTouch);
+    const double Dist2 = distance_not_square(last[1], pointTouch);
     return Dist1 > Dist2;
 }
 
@@ -192,7 +197,7 @@ ridefine:
     for(int i = 0; i < 2; i++)
     {
         const auto &touchPoint = touchPoints.at(i);
-        const QPointF &pointTouch = touchPoint.pos();
+        const QPointF &pointTouch = touchPoint.position();
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         cbool _tmp =    touchPoint.state() == Qt::TouchPointPressed ||
                         touchPoint.state() == Qt::TouchPointMoved ||
@@ -213,7 +218,7 @@ ridefine:
             continue;
         }
 
-        if(distance(lastpointzoom[0].point, lastpointzoom[1].point) < 200.)
+        if(distance(lastpointzoom[0], lastpointzoom[1]) < 200.)
         {
             goto ridefine;
         }
@@ -256,7 +261,7 @@ ridefine:
         const double distanceSelected         = distance(point[0],                point[1]);
 
         // original distance
-        const double tmp_distance_right_left  = distance(lastpointzoom[0].point,  lastpointzoom[1].point);
+        const double tmp_distance_right_left  = distance(lastpointzoom[0],  lastpointzoom[1]);
 
         const double multiplier = distanceSelected / tmp_distance_right_left;
 
@@ -264,8 +269,8 @@ ridefine:
         needToResize = _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
     }
 
-    lastpointzoom[0].point = point[0];
-    lastpointzoom[1].point = point[1];
+    lastpointzoom[0] = point[0];
+    lastpointzoom[1] = point[1];
 
     //qDebug() << "After" << this->lastpointzoom[0].point << this->lastpointzoom[1].point << lastpointzoom[0].set << lastpointzoom[1].set << "\n";
     if(needToResize)
