@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include <QApplication>
 #include "touch/tabletapplication.h"
 #include "touch/tabletcanvas.h"
 #include "last_open/last_open.h"
