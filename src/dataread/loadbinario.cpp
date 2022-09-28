@@ -54,22 +54,20 @@ static int read_ctrl(WZipReaderSingle &zip, size_t &ctrl)
 }
 
 struct xmlstruct_thread_data{
-    WReadZip    *_zip;
-    int         _id;
-    page        *_page;
-    int         _ver_stroke;
+    WZipReaderSingle    *_reader;
+    page                *_page;
+    int                 _ver_stroke;
 };
 
 static void *xmlstruct_thread_load(void *_data)
 {
     auto *data = static_cast<struct xmlstruct_thread_data *>(_data);
-    const auto id = data->_id;
-    WZipReaderSingle &reader = *data->_zip->get_reader(id);
-
-    if(data->_page->load(reader, data->_ver_stroke) != OK)
+    WZipReaderSingle &reader = *data->_reader;
+    const auto res = data->_page->load(reader, data->_ver_stroke);
+    if(res != OK)
         return (void *)1UL;
 
-    return NULL;
+    return nullptr;
 }
 
 static int xmlstruct_wait_for_thread(pthread_t *thread, int num)
@@ -93,11 +91,41 @@ static int xmlstruct_wait_for_thread(pthread_t *thread, int num)
         return ERROR;   \
     }while(0)
 
+static int xmlstruct_create_thread(WZip& zip, int lenPage, size_t *seek, datastruct *data, int ver_stroke)
+{
+    int i;
+    pthread_t thread[lenPage];
+    struct xmlstruct_thread_data thread_data[lenPage];
+    WReadZip zipReader(&zip, lenPage, seek);
+
+    for(i = 0; i < lenPage; i++){
+        data->newPage(n_style::white);
+    }
+
+    for(i = 0; i < lenPage; i ++){
+        thread_data[i] = {
+                ._reader        = zipReader.get_reader(i),
+                ._page          = &data->at_mod(i),
+                ._ver_stroke    = ver_stroke
+        };
+
+        pthread_create( &thread[i],
+                        nullptr,
+                        xmlstruct_thread_load,
+                        &thread_data[i]);
+    }
+
+    if(xmlstruct_wait_for_thread(thread, lenPage) < 0){
+        return -1;
+    }
+
+    return 0;
+}
+
 int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
 {
     size_t controll, newControll;
-    int lenPage, counterPage;
-    datastruct *data = _doc->datatouch;
+    int lenPage;
     WZipReaderSingle reader(&zip, 0);
 
     if(!zip.openFileInZip(NAME_BIN))
@@ -116,31 +144,11 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
         MANAGE_ERR();
 
     size_t seek[lenPage];
-    pthread_t thread[lenPage];
-    struct xmlstruct_thread_data thread_data[lenPage];
 
     if(reader.read_by_size(seek, sizeof(size_t) * lenPage))
         MANAGE_ERR();
 
-    WReadZip zipReader(&zip, lenPage, seek);
-
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        data->newPage(n_style::white);
-
-        thread_data[counterPage] = {
-            ._zip           = &zipReader,
-            ._id            = counterPage,
-            ._page          = &_doc->datatouch->at_mod(counterPage),
-            ._ver_stroke    = ver_stroke
-        };
-
-        pthread_create( &thread[counterPage],
-                        nullptr,
-                        xmlstruct_thread_load,
-                        &thread_data[counterPage]);
-    }
-
-    if(xmlstruct_wait_for_thread(thread, lenPage) < 0)
+    if(xmlstruct_create_thread(zip, lenPage, seek, _doc->datatouch, ver_stroke) < 0)
         MANAGE_ERR();
 
     zip.dealloc_file();

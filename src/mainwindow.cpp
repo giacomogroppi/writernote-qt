@@ -43,7 +43,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
                        struct struct_user *user,
                        cloud_controll *cloud,
                        const char *path)
-    : QMainWindow(this)
+    : QMainWindow(nullptr)
     , ui(new Ui::MainWindow)
 {
 
