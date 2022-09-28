@@ -113,7 +113,7 @@ jobs:
             -DDEBUG_CORE=ON
           
           make -j$(nproc)
-          ls
+          ./writernote
 
       - name: Writernote compile
         run: |
