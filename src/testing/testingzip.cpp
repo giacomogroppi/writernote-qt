@@ -89,7 +89,7 @@ static void run_test_1()
 
     WDir::createDir(to);
 
-    gen_num(data, 10000, 10000000);
+    gen_num(data, 10000, 1000000);
 
     gen_str(to, 5, 10);
 
@@ -106,7 +106,7 @@ static void run_test_1()
 
 void __init__ testZip()
 {
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < 10; i++)
         run_test_1();
 }
 #endif
