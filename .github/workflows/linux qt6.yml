@@ -115,7 +115,7 @@ jobs:
           
           make -j$(nproc)
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PREFIX_LIB/poppler/install
-          valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes writernote
+          valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./writernote
 
       - name: Writernote compile
         run: |
