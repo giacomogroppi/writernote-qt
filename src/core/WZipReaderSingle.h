@@ -20,12 +20,11 @@ public:
     template <class T>
     [[nodiscard]] int read_object(T &object);
 
-
-    size_t get_offset() const;
+    [[nodiscard]] size_t get_offset() const;
 
     void init(WZip *zip, size_t offset);
 
-    bool is_data_available() const;
+    [[nodiscard]] bool is_data_available() const;
 
     WZip *get_zip();
 };

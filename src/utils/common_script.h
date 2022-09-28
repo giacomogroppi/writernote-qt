@@ -67,12 +67,12 @@ force_inline constexpr not_used int debug_enable()
 }
 
 #ifdef DEBUGINFO
-# define W_ASSERT(condition)                                    \
-    do{                                                         \
-        if(unlikely(!!(condition) == false)){                   \
-            qDebug() << __FUNCTION__ << __FILE__ << __LINE__;   \
-            std::abort();                                       \
-        }                                                       \
+# define W_ASSERT(condition)                                                    \
+    do{                                                                         \
+        if(unlikely(!!(condition) == false)){                                   \
+            qDebug() << __FUNCTION__ << __FILE__ << __LINE__ << #condition;     \
+            std::abort();                                                       \
+        }                                                                       \
     }while(0)
 #else
 # define W_ASSERT(condition) ;

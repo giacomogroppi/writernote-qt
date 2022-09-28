@@ -39,6 +39,14 @@ static void manageDebug(MainWindow *parent)
 # define manageDebug(x) ;
 #endif
 
+static void test()
+{
+#if defined(DEBUG_CORE)
+    qDebug() << "debug core set: exit";
+    exit(0);
+#endif //DEBUG_CORE
+}
+
 int main(int argc, char **argv)
 {
     TabletApplication *app;
@@ -46,6 +54,8 @@ int main(int argc, char **argv)
     MainWindow *window;
     char * m_last_open = NULL;
     int exit_code;
+
+    test();
 
     if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
         return extract_(argv[2], argv[3]);

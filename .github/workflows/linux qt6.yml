@@ -104,6 +104,17 @@ jobs:
           make -j$(nproc)
           sudo make install
 
+      - name: Writernote compile [test]
+        run: |
+          
+          cmake . \
+            -DCMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DDEBUG_CORE=ON
+          
+          make -j$(nproc)
+          ls
+
       - name: Writernote compile
         run: |
           

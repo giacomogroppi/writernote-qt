@@ -60,6 +60,10 @@ private:
 
     bool openZip(const QByteArray &path);
 
+#ifdef ALL_VERSION
+    zip_file_t *open_file_in_zip(const QByteArray &path);
+#endif
+
 public:
     WZip(const QByteArray &path, bool &ok);
     WZip(WZip &zip);
@@ -67,11 +71,7 @@ public:
 
     void close_zip();
     void dealloc_file();
-    zip_t *get_zip();
-
-#ifdef ALL_VERSION
-    zip_file_t *open_file_in_zip(const QByteArray &path);
-#endif
+    zip_t *get_zip() const;
 
     bool openFileInZip(const QByteArray &path);
 
@@ -79,7 +79,7 @@ public:
 
     static size_t get_size_file(zip_t *zip, const char *name);
 
-    const char *get_data();
+    const char *get_data() const;
 
     bool is_data_available() const;
 
@@ -106,13 +106,13 @@ force_inline size_t WZip::length() const
     return this->_data_private._len_file;
 }
 
-force_inline const char *WZip::get_data()
+force_inline const char *WZip::get_data() const
 {
     W_ASSERT(this->_data_private._data);
     return (const char *)this->_data_private._data;
 }
 
-force_inline zip_t* WZip::get_zip()
+force_inline zip_t* WZip::get_zip() const
 {
     W_ASSERT(this->_data_private._zip);
     return this->_data_private._zip;

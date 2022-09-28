@@ -62,6 +62,7 @@ option(PDFSUPPORT "Pdf support" ON)
 option(MACOS_BUILD "Set to on if we are building in action" OFF)
 option(VERSION_SNAPCRAFT "Version" "")
 option(FLATPAK_BUILD "build for flatpak" OFF)
+option(DEBUG_CORE "Debug core class" OFF)
 
 if(FLATPAK_BUILD)
     set(WRITERNOTE_APPL_DIR "" CACHE PATH "Folder to install .desktop files to. If empty, the default is CMAKE_INSTALL_PREFIX/share/applications")
@@ -79,6 +80,10 @@ endif()
 if(SNAP)
     message("-- Snap support")
     add_definitions(-DSNAP)  
+endif()
+
+if(DEBUG_CORE)
+    SET (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-DDEBUG_CORE")
 endif()
 
 if(LINUX AND NOT FLATPAK_BUILD AND NOT SNAP)
