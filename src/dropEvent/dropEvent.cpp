@@ -36,13 +36,16 @@ static int mainwindow_import_image(const QList<QString> &Path, Document &doc,
         true
     };
 
+    if(WFile::fileExist(zip_pos) < 0)
+        return -1;
+
     for(const auto &path : qAsConst(Path)){
         const auto res = doc.m_img->addImage(path, &s, zip_pos);
-        if(unlikely(res != OK))
-            return res;
+        if(unlikely(res < 0))
+            return -1;
     }
 
-    return OK;
+    return 0;
 }
 
 static void show_error_extentions()

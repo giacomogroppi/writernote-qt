@@ -29,7 +29,7 @@ private:
     QStringList get_name_img();
     static QStringList get_name_img(const Document &doc);
 
-    static inline QByteArray getName(const unsigned i);
+    static inline QByteArray getName(unsigned i);
 
     unsigned insert_image(const QString &__pos, const PointSettable *point, struct immagine_s &img);
 
@@ -46,7 +46,7 @@ public:
 
     [[nodiscard]] int addImage(const QString &pos, const PointSettable *point, const QString &writernote_file);
 
-    explicit fromimage(Document *doc){ this->doc = doc; }
+    explicit fromimage(Document *doc);
 
     fromimage::load_res load(WZipReaderSingle &zip);
 
@@ -64,17 +64,12 @@ public:
             void draw(QPainter &painter) const;
 
     void reset();
-    size_t get_size_file() const;
+    [[nodiscard]] size_t get_size_file() const;
 
 private:
     load_res get_img_bytearray(QByteArray &arr, const QString &path) const;
-#ifdef ALL_VERSION
-    load_res load_metadata(zip_file_t *file);
-#endif
     load_res load_metadata(WZipReaderSingle &reader);
-
-    load_res load_single(const QByteArray &arr,
-                         struct immagine_s &img);
+    load_res load_single(const QByteArray &arr, struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);
 };
 
@@ -89,9 +84,15 @@ inline void fromimage::copy(const fromimage &src, fromimage &dest)
     dest.m_img = src.m_img;
 }
 
+inline fromimage::fromimage(Document *doc)
+{
+    W_ASSERT(doc != nullptr);
+    this->doc = doc;
+}
+
 inline void fromimage::move(const QPointF &translation)
 {
-    uint i, len;
+    int i, len;
     struct immagine_s *img;
     double x, y;
 
@@ -109,16 +110,11 @@ inline void fromimage::move(const QPointF &translation)
         img->i.setX(img->i.x() + x);
         img->i.setY(img->i.y() + y);
     }
-
 }
 
 inline void fromimage::moveImage(const QList<int> &index, const QPointF &translation)
 {
-    uint i, lenght;
-
-    lenght = index.length();
-    for(i=0; i<lenght; ++i){
-        const int currentIndex = index.at(i);
+    for(const auto currentIndex : qAsConst(index)){
         this->m_img.operator[](currentIndex).i += translation;
         this->m_img.operator[](currentIndex).f += translation;
     }
@@ -133,10 +129,9 @@ inline void fromimage::draw(QPainter &painter, const QRectF &rect, const QImage 
 
 inline void fromimage::draw(QPainter &painter, const immagine_s &img)
 {
-    uchar check;
+    int check;
 
-    check = (img.f.y() < double(0)) +
-            (img.f.x() < double(0));
+    check = (img.f.y() < 0.) or (img.f.x() < 0.);
 
     if(check)
         return;
@@ -146,11 +141,7 @@ inline void fromimage::draw(QPainter &painter, const immagine_s &img)
 
 inline void fromimage::draw(QPainter &painter, const QList<immagine_s> &list)
 {
-    int i = list.length() - 1;
-
-    for(i--; i >= 0; i--){
-        const struct immagine_s &img = list.at(i);
-
+    for(const auto &img : qAsConst(list)){
         fromimage::draw(painter, img);
     }
 }

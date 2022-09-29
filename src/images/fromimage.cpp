@@ -35,7 +35,7 @@ fromimage::load_res fromimage::save(WZipWriter              &writer,
                                     const QString           &path) const
 {
     QByteArray img_in_byte;
-    QImage img;
+    WImage img;
 
     if(get_img_bytearray(img_in_byte, path) != load_res::ok){
         return load_res::error;
@@ -79,24 +79,14 @@ size_t fromimage::get_size_file() const
 
 fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString &path) const
 {
-    QImage img(path);
-    QBuffer buffer(&arr);
-
-    arr.clear();
+    WImage img(path);
 
     if(img.isNull()){
         return load_res::err_image_not_valid;
     }
 
-    if(!buffer.open(QIODevice::WriteOnly)){
+    if(!img.save_and_size(arr))
         return load_res::error;
-    }
-
-    buffer.seek(0);
-
-    if(!img.save(&buffer, "PNG")){
-        return load_res::error;
-    }
 
     return load_res::ok;
 }

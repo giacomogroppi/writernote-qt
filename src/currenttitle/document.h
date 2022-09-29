@@ -29,10 +29,7 @@ public:
     int versione = CURRENT_VERSION_CURRENT_TITLE;
     QString audio_position_path = "";
 
-    bool isOkVersion() const
-    {
-        return this->versione >= MIN_VERSION_CURRENT_TITLE;
-    }
+    bool isOkVersion() const;
 
     datastruct *datatouch = NULL;
     void reset();
@@ -62,3 +59,7 @@ force_inline bool Document::isEmpty() const
     return datatouch->isempty();
 }
 
+inline bool Document::isOkVersion() const
+{
+    return this->versione >= MIN_VERSION_CURRENT_TITLE;
+}
