@@ -27,7 +27,7 @@ bool qfilechoose::getFileForSave(QByteArray &nome, uint16_t type_)
 
     if(type_ == TYPEFILEWRITER){
         type = qstr("File Writer (*.%1)").arg(APP_EXT);
-        extention = qstr(".%1").arg(APP_EXT);
+        extention = qstr("." APP_EXT);
     }
     else if(type_ == TYPEFILEPDF){
         type = "PDF (*.pdf)";
@@ -80,8 +80,7 @@ bool qfilechoose::getFileForLoad(QByteArray &nome, uint16_t type_)
 
     if(type_ & TYPEFILEWRITER){
         type += QString("File Writer (*.%1);;").arg(APP_EXT);
-        //type += "File Writer (*." + APP_EXT + ");;";
-        extention = qstr(".%1").arg(APP_EXT);
+        extention = qstr("." APP_EXT);
     }
     if(type_ & TYPEFILEPDF){
         type += QString("PDF (*.pdf);;");
