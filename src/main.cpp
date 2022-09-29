@@ -2,17 +2,15 @@
 #include "touch/tabletapplication.h"
 #include "touch/tabletcanvas.h"
 #include "last_open/last_open.h"
-#include "string.h"
-#include "dataread/xmlstruct.h"
 #include "ui/uicore.h"
 #include "utils/extract_audio/extract_audio.h"
 #include "utils/changeLanguage.h"
 #include "log/log_ui/log_ui.h"
-#include "testing/testingcore.h"
 #include "utils/common_error_definition.h"
 #include "testing/memtest.h"
 #include "core/core.h"
 #include "ui/WStyle.h"
+#include "utils/common_script.h"
 #include <QStyleFactory>
 #include <QFile>
 
@@ -228,3 +226,5 @@ static not_used void createFileAndExit(const QString &path, MainWindow *parent)
 #else
 #pragma message ("Release build")
 #endif
+
+static_assert(WStrEqual(APP_EXT, "writer") == true);

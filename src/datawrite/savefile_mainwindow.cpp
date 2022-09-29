@@ -12,17 +12,16 @@ static inline const QString move_file(const QString &nomevecchio, const QString 
 
 static bool c = true;
 
-constexpr const char * const ext = ".writer";
 static int has_extensions(const QString &str)
 {
-    constexpr int l = WStrlen(ext);
+    constexpr int l = WStrlen("." APP_EXT);
     const int len = str.length();
     if(len < l){
         return -1;
     }
 
     const auto s = str.mid(len - l, l);
-    const auto ext_str = qstr(ext);
+    const auto ext_str = qstr("." APP_EXT);
     if (s != ext_str)
         return -1;
     return 0;
@@ -41,7 +40,7 @@ static int adjust_extensions(const QByteArray &str)
 static int adjust_extensions(QByteArray &str)
 {
     if(has_extensions(str) < 0){
-        str.append(ext);
+        str.append("." APP_EXT);
         W_ASSERT(has_extensions(str));
     }
     return 0;

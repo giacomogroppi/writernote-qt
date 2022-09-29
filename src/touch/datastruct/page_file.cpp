@@ -4,6 +4,7 @@
 #include "touch/datastruct/page.h"
 #include "core/WZipWriterMulti.h"
 #include <QImage>
+#include "utils/common_error_definition.h"
 
 #ifdef ALL_VERSION
 int page_file::load_ver_0(page &_page, WZipReaderSingle &reader)

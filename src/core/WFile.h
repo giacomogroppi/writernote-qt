@@ -15,6 +15,7 @@ public:
     bool isValid() const;
     int write(const void *data, size_t size);
 
+    static int fileExist(const QByteArray &to);
     static int readFile(QByteArray &to, const char *pathFile);
     static int saveArrIntoFile(const QByteArray &arr, const QString &path);
 };

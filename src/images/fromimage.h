@@ -31,7 +31,7 @@ private:
 
     static inline QByteArray getName(const unsigned i);
 
-    uchar insert_image(QString &__pos, const PointSettable *point, struct immagine_s &img);
+    unsigned insert_image(const QString &__pos, const PointSettable *point, struct immagine_s &img);
 
 public:
     static void copy(const fromimage &src, fromimage &dest);
@@ -44,7 +44,7 @@ public:
         err_image_not_valid
     };
 
-    [[nodiscard]] int addImage(QString &pos, const PointSettable *point, const QString &writernote_file);
+    [[nodiscard]] int addImage(const QString &pos, const PointSettable *point, const QString &writernote_file);
 
     explicit fromimage(Document *doc){ this->doc = doc; }
 

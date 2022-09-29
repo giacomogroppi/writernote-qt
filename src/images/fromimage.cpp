@@ -192,18 +192,21 @@ QStringList fromimage::get_name_img(const Document &doc)
     return list;
 }
 
-uchar fromimage::insert_image(QString &pos,
-                              const PointSettable *point,
-                              struct immagine_s &img)
+unsigned fromimage::insert_image(   const QString &pos,
+                                    const PointSettable *point,
+                                    struct immagine_s &img)
 {
+    QString res;
     if(pos == ""){
-        pos = QFileDialog::getOpenFileName(nullptr, "Open images", "", "Images (*.png *.xpm *.jpg *.jpeg);;All Files (*)");
+        res = QFileDialog::getOpenFileName(nullptr, "Open images", "", "Images (*.png *.xpm *.jpg *.jpeg);;All Files (*)");
 
-        if(pos == "")
+        if(res == "")
             return ERROR;
+    }else{
+        res = pos;
     }
 
-    WImage immagine(pos);
+    WImage immagine(res);
     img.immagini = immagine;
 
     if(point){
@@ -221,7 +224,7 @@ uchar fromimage::insert_image(QString &pos,
 /*
  * add image from position
 */
-int fromimage::addImage(QString &pos,
+int fromimage::addImage(const QString &pos,
                          const PointSettable *point,
                          const QString &path_writernote)
 {

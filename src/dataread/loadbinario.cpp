@@ -6,6 +6,7 @@
 #include "core/WReadZip.h"
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>
+#include "utils/common_error_definition.h"
 
 static int load_point_first_page(WZipReaderSingle &zip, datastruct &doc)
 {

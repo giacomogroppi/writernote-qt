@@ -4,34 +4,73 @@
 #include "utils/common_def.h"
 #include "images/fromimage.h"
 #include <QApplication>
+#include "core/WFile.h"
 #define WRITERNOTE 1
 #define IMAGE 2
 
+QList<QString> drop_event_get_list(const QMimeData *event)
+{
+    W_ASSERT(event);
+    QList<QString> to;
+
+    if(!event->hasUrls())
+        return {};
+
+    const auto &url = event->urls();
+
+    for(const auto &p : qAsConst(url)){
+        const auto &path_tmp = p.toLocalFile();
+
+        W_ASSERT(WFile::fileExist(path_tmp.toUtf8()) == 0);
+        to.append(path_tmp);
+    }
+
+    return to;
+}
+
+static int mainwindow_import_image(const QList<QString> &Path, Document &doc,
+                                   const QPointF &point, const QByteArray &zip_pos)
+{
+    PointSettable s = {
+        point,
+        true
+    };
+
+    for(const auto &path : qAsConst(Path)){
+        const auto res = doc.m_img->addImage(path, &s, zip_pos);
+        if(unlikely(res != OK))
+            return res;
+    }
+
+    return OK;
+}
+
+static void show_error_extentions()
+{
+    dialog_critic(QApplication::tr("You have selected at least two object with different extentions"));
+}
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
-    const QMimeData* mimeData = event->mimeData();
-
     QString path_to_load;
-    uchar find = 0;
-    uint i;
+    int find = 0;
+    int i;
     QImage image;
     PointSettable point;
+    const auto positions = drop_event_get_list(event->mimeData());
 
-    QList<QUrl> urlList;
+    for(const auto &path : qAsConst(positions)){
+        if(path.indexOf("." APP_EXT) != -1){
+            if(find and find != WRITERNOTE)
+                return show_error_extentions();
 
-    if (!mimeData->hasUrls())
-        return;
-
-    urlList = mimeData->urls();
-
-    for(i = 0; i < (uint)urlList.size() && i < 32 && !find; ++i){
-        const QString & path = urlList.at(i).toLocalFile();
-
-        if(path.indexOf("." + APP_EXT) != -1){
             path_to_load = path;
             find = WRITERNOTE;
         }else if(image.load(path)){
+            if(find and find != IMAGE)
+                // we find some object with different extentions
+                return show_error_extentions();
+
             find = IMAGE;
         }
     }
@@ -42,8 +81,8 @@ void MainWindow::dropEvent(QDropEvent *event)
         }
     }else if(find == IMAGE){
         point = event->position();
-
-        const auto res = this->_canvas->data->m_img->addImage(path_to_load, &point, this->m_path);
+        const auto res = mainwindow_import_image(positions, *_canvas->data, event->position(), m_path);
+        //const auto res = this->_canvas->data->m_img->addImage(path_to_load, &point, this->m_path);
         if(res < 0)
             dialog_critic(QApplication::tr("We got some problem importing the image"));
     }
@@ -52,6 +91,7 @@ void MainWindow::dropEvent(QDropEvent *event)
     }
 }
 
-void MainWindow::dragEnterEvent(QDragEnterEvent *event){
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
     event->acceptProposedAction();
 }

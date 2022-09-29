@@ -3,6 +3,7 @@
 #include "touch/datastruct/stroke_complex_data.h"
 #include "touch/datastruct/stroke.h"
 #include "testing/memtest.h"
+#include "utils/common_error_definition.h"
 
 static size_t get_size_by_type(int type)
 {

@@ -21,7 +21,11 @@ public:
 
 
     void append(const T &data) noexcept;
-    T* get_first();
+
+    /**
+     * Warn: You have to dealloc the object after.
+     * */
+    [[nodiscard]] T* get_first();
 
     class Iterator{
     private:
@@ -36,8 +40,23 @@ public:
         Iterator &operator++()                              { _e = _e->next; return *this; }
     };
 
-    Iterator begin() { return Iterator(_first); };
-    Iterator end()   { return Iterator(_last);  };
+    class ConstIterator{
+    private:
+        const WListPrivate<T> *_e;
+    public:
+        explicit ConstIterator(const WListPrivate<T> *e) { _e = e; };
+
+        const T* operator->()         { return _e->data; };
+        const T &operator*() const    { return *_e->data; };
+        constexpr bool operator==(ConstIterator i) const         { return _e == i._e; }
+        constexpr bool operator!=(ConstIterator i) const         { return _e != i._e; }
+        ConstIterator &operator++()                              { _e = _e->next; return *this; }
+    };
+
+    Iterator begin() noexcept { return Iterator(_first); };
+    Iterator end()   noexcept { return Iterator(_last);  };
+    ConstIterator constBegin() const noexcept { return ConstIterator(_first); }
+    ConstIterator constEnd()   const noexcept { return ConstIterator(_last); }
 };
 
 template<class T>

@@ -5,14 +5,11 @@
 #include <QDebug>
 #include <QPointF>
 #include <QPoint>
-#include "time.h"
 #include <iostream>
 #include <math.h>
 #include <qmath.h>
-#include "stdio.h"
 #include "stdlib.h"
 #include "utils/common_def.h"
-#include "utils/common_error_definition.h"
 
 #define __init__ __attribute((constructor))
 
@@ -36,8 +33,6 @@ force_inline QString get_only_name(const char *name)
     QString res = name;
     int len, i;
     int from, to;
-
-    len = res.length();
 
     for(i = 0; name[i] != '\0'; i++){
         if(name[i] == '('){
@@ -570,4 +565,24 @@ inline constexpr size_t WStrlen(const char *str)
     for(; *str != '\0'; str ++)
         s ++;
     return s;
+}
+
+inline constexpr bool WStrEqual(const char *s1, const char *s2)
+{
+    W_ASSERT(s1 and s2);
+    while(*s1 != '\0' and *s2 != '\0'){
+        if(*s1 != *s2)
+            return false;
+
+        s1 ++;
+        s2 ++;
+    }
+
+    /* one of them is '\0' */
+    if(*s1 != *s2)
+        return false;
+
+    W_ASSERT(*s1 == '\0' and *s2 == '\0');
+
+    return true;
 }

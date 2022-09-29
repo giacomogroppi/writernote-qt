@@ -1,6 +1,5 @@
 #pragma once
 
-#include "utils/dialog_critic/dialog_critic.h"
 #include <QApplication>
 
 #define ERROR 0

@@ -9,6 +9,8 @@
 #include "utils/get_file_dir/get_file_dir.h"
 #include "utils/common_def.h"
 #include "utils/removenotwriternote.h"
+#include "utils/common_def.h"
+
 /*
  * this function is use for
  * save [not for loading]
@@ -24,8 +26,8 @@ bool qfilechoose::getFileForSave(QByteArray &nome, uint16_t type_)
 #endif // ANDROID IOS
 
     if(type_ == TYPEFILEWRITER){
-        type = "File Writer (*." + APP_EXT + ")";
-        extention = ".writer";
+        type = qstr("File Writer (*.%1)").arg(APP_EXT);
+        extention = qstr(".%1").arg(APP_EXT);
     }
     else if(type_ == TYPEFILEPDF){
         type = "PDF (*.pdf)";
@@ -79,7 +81,7 @@ bool qfilechoose::getFileForLoad(QByteArray &nome, uint16_t type_)
     if(type_ & TYPEFILEWRITER){
         type += QString("File Writer (*.%1);;").arg(APP_EXT);
         //type += "File Writer (*." + APP_EXT + ");;";
-        extention = ".writer";
+        extention = qstr(".%1").arg(APP_EXT);
     }
     if(type_ & TYPEFILEPDF){
         type += QString("PDF (*.pdf);;");

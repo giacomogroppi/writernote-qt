@@ -2,7 +2,7 @@
 
 #include <QtGlobal>
 
-#define APP_EXT (QString)"writer"
+#define APP_EXT "writer"
 
 #define __slow /* slow function */
 #define __fast /* fast function */

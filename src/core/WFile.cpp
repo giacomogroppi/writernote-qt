@@ -35,6 +35,13 @@ int WFile::write(const void *data, size_t size)
     return 0;
 }
 
+int WFile::fileExist(const QByteArray &to)
+{
+    if(QFile::exists(to))
+        return 0;
+    return -1;
+}
+
 int WFile::readFile(QByteArray &to, const char *pathFile)
 {
     QFile file;

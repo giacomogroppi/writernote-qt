@@ -17,7 +17,7 @@ void MainWindow::resFileTmpInTmpFolder()
     QStringList __l;
     QString __pos;
     QMessageBox::StandardButton resBtn;
-    const int pos_ext = QString("." + APP_EXT).length(); // posizione dell'estensione di APP_EXT da destra a sinistra
+    constexpr int pos_ext = WStrlen("." APP_EXT); // posizione dell'estensione di APP_EXT da destra a sinistra
     QByteArray __path;
     restore_file_critic::n_err __res;
     uint i, len, count;
@@ -38,7 +38,7 @@ void MainWindow::resFileTmpInTmpFolder()
             goto remove;
 
         if(ref.length() > pos_ext
-                && ref.mid(ref.length() - pos_ext) == "."+APP_EXT){
+                && ref.mid(ref.length() - pos_ext) == qstr("." APP_EXT)){
             count++;
             continue;
         }/*else{
