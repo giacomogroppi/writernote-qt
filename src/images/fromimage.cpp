@@ -53,15 +53,15 @@ fromimage::load_res fromimage::save(WZipWriter              &writer,
 fromimage::load_res fromimage::save_metadata(WZipWriterSingle &writer)
 {
     unsigned i;
-    double val[4];
 
-    for(i = 0; i < doc->count_img; i++){
-        const struct immagine_s &img = m_img.at(i);
-
-        val[0] = img.i.x();
-        val[1] = img.i.y();
-        val[2] = img.f.x();
-        val[3] = img.f.y();
+    for(const auto &img : qAsConst(m_img))
+    {
+        const double val[] = {
+                img.i.x(),
+                img.i.y(),
+                img.f.x(),
+                img.f.y()
+        };
 
         writer.write(val, sizeof(val));
 

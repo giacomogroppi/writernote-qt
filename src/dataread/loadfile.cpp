@@ -356,7 +356,7 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
         if(res != frompdf::ok)
             return ERROR;
     }
-#endif
+#endif // PDFSUPPORT
 
     zip.dealloc_file();
 
