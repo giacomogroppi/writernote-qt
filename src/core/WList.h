@@ -2,6 +2,7 @@
 
 #include "utils/common_script.h"
 #include "testing/memtest.h"
+#include <QList>
 
 template <class T>
 struct WListPrivate{
@@ -17,10 +18,13 @@ private:
     int _size;
 public:
     WList();
+    WList(const WList<T> &l);
     ~WList();
 
 
     void append(const T &data) noexcept;
+    void clear();
+    bool equal(const WList<T> &l1, const WList<T> &l2);
 
     /**
      * Warn: You have to dealloc the object after.
@@ -70,14 +74,7 @@ inline WList<T>::WList()
 template <class T>
 inline WList<T>::~WList()
 {
-    while(this->_first){
-        auto *next = this->_first->next;
-        delete _first->data;
-        delete _first;
-        _first = next;
-    }
-    _first = nullptr;
-    _last = nullptr;
+    this->clear();
 }
 
 template <class T>
@@ -99,6 +96,8 @@ inline void WList<T>::append(const T &data) noexcept
         this->_last = tmp;
         this->_last->next = NULL;
     }
+
+    _size ++;
 }
 
 template <class T>
@@ -111,5 +110,90 @@ inline T *WList<T>::get_first()
     this->_first = next;
 
     return ret;
+}
+
+template<class T>
+inline WList<T>::WList(const WList<T> &l)
+{
+    int done;
+    WListPrivate<T> *tmp, *curr;
+
+    done = 0;
+    tmp = l._first;
+    curr = _first;
+
+    while(tmp and curr){
+        W_ASSERT(tmp->data);
+        curr->data = tmp->data;
+
+        tmp = tmp->next;
+        curr = curr->next;
+    }
+
+    if((not tmp) and (not curr)){
+        W_ASSERT(this->_size == l._size);
+        goto out;
+    }
+
+    /**
+     * we need to allocate more memory
+     * */
+    if(tmp and not curr){
+        while(tmp){
+            this->append(tmp->data);
+            tmp = tmp->next;
+        }
+    }else{
+        /**
+         * We need to dealloc the extra memory
+         * */
+         while(curr){
+             auto *next = curr->next;
+             delete curr->data;
+             delete curr;
+             curr = next;
+         }
+    }
+
+out:
+    _size = l._size;
+    W_ASSERT(WList<T>::equal(*this, l));
+}
+
+template<class T>
+inline void WList<T>::clear()
+{
+    while(_first){
+        auto *next = _first->next;
+        delete _first->data;
+        delete _first;
+        _first = next;
+    }
+
+    _last = nullptr;
+    _size = 0;
+}
+
+template<class T>
+inline bool WList<T>::equal(const WList<T> &l1, const WList<T> &l2)
+{
+    WListPrivate<T> *f1, *f2;
+    if(l1._size != l2._size)
+        return false;
+
+    f1 = l1._first;
+    f2 = l2._first;
+
+    while(f1){
+        W_ASSERT(f2);
+
+        if(f2->data != f1->data)
+            return false;
+
+        f2 = f2->next;
+        f1 = f1->next;
+    }
+
+    return true;
 }
 

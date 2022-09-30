@@ -92,23 +92,17 @@ inline fromimage::fromimage(Document *doc)
 
 inline void fromimage::move(const QPointF &translation)
 {
-    int i, len;
-    struct immagine_s *img;
     double x, y;
 
     x = translation.x();
     y = translation.y();
 
-    len = this->m_img.length();
+    for(auto &img : m_img){
+        img.f.setX(img.f.x() + x);
+        img.f.setY(img.f.y() + y);
 
-    for(i=0; i<len; ++i){
-        img = (immagine_s *)&m_img.operator[](i);
-
-        img->f.setX(img->f.x() + x);
-        img->f.setY(img->f.y() + y);
-
-        img->i.setX(img->i.x() + x);
-        img->i.setY(img->i.y() + y);
+        img.i.setX(img.i.x() + x);
+        img.i.setY(img.i.y() + y);
     }
 }
 
