@@ -31,7 +31,7 @@ static int has_extensions(const QString &str)
 static int adjust_extensions(const QByteArray &str)
 {
     if(has_extensions(str) < 0){
-        dialog_critic(QApplication::tr(qstr("The file must have the extension %1").arg(ext).toUtf8().constData()));
+        dialog_critic(QApplication::tr(qstr("The file must have the extension %1").arg(APP_EXT).toUtf8().constData()));
         return -1;
     }
     return 0;
