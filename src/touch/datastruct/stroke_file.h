@@ -8,19 +8,19 @@
 class stroke_file
 {
 #ifdef ALL_VERSION
-    static int load_ver_0(class stroke &_stroke, WZipReaderSingle &reader);
-    static int load_ver_1(class stroke &_stroke, WZipReaderSingle &reader);
+    static int load_ver_0(class Stroke &_stroke, WZipReaderSingle &reader);
+    static int load_ver_1(class Stroke &_stroke, WZipReaderSingle &reader);
 #endif // ALL_VERSION
 
-    static int load_ver_2(class stroke &_stroke, WZipReaderSingle &reader);
+    static int load_ver_2(class Stroke &_stroke, WZipReaderSingle &reader);
 public:
 
 #ifdef ALL_VERSION
-    static int load(class stroke &_stroke, int version, WZipReaderSingle &reader);
+    static int load(class Stroke &_stroke, int version, WZipReaderSingle &reader);
 #endif // ALL_VERSION
 
-    static size_t get_size_in_file(const stroke &_stroke);
+    static size_t get_size_in_file(const Stroke &_stroke);
 
-    static int save(const class stroke &_stroke, WZipWriterSingle &file);
+    static int save(const class Stroke &_stroke, WZipWriterSingle &file);
 };
 

@@ -5,12 +5,9 @@
 #include <QPointF>
 #include <QDebug>
 #include "core/WZipWriterSingle.h"
-#include "stroke.h"
-#include "log/log_ui/log_ui.h"
+#include "touch/datastruct/stroke/Stroke.h"
 #include "utils/common_def.h"
 #include "utils/common_script.h"
-#include "utils/dialog_critic/dialog_critic.h"
-#include "audioplay/audioplay.h"
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>
 #include "core/WImage.h"
@@ -42,7 +39,7 @@
 
 enum n_style: int;
 
-void adjustStrokePage(const QList<stroke> &List, int count, stroke *m_stroke);
+void adjustStrokePage(const QList<Stroke> &List, int count, Stroke *m_stroke);
 
 constexpr bool debugPage = false;
 
@@ -56,33 +53,33 @@ private:
     pthread_mutex_t _img, _append_load;
     bool            _IsVisible = true;
     int             _count;
-    QList<stroke>   _stroke;
-    stroke          _stroke_writernote;
+    QList<Stroke>   _stroke;
+    Stroke          _stroke_writernote;
 
     /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    QVector<stroke> _strokeTmp;
+    QVector<Stroke> _strokeTmp;
     WImage          _imgDraw;
 
     void drawNewPage(n_style __style);
 
     
-    void drawEngine(QPainter &painter, QList<stroke> &List, int m_pos_ris, bool *changeSomething, cbool use_multi_thread);
+    void drawEngine(QPainter &painter, QList<Stroke> &List, int m_pos_ris, bool *changeSomething, cbool use_multi_thread);
     void draw(QPainter &painter, int m_pos_ris, bool all);
-    void drawStroke(QPainter &painter, const stroke &stroke, QPen &pen, const QColor &color) const;
+    void drawStroke(QPainter &painter, const Stroke &stroke, QPen &pen, const QColor &color) const;
 
     void mergeList();    
 
-    void AppendDirectly(const stroke &stroke);
+    void AppendDirectly(const Stroke &stroke);
     bool initImg(bool flag);
 
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
 
     static point_s at_translation(const point_s &point, cint page);
-    static QRect get_size_area(const QList<stroke> & item, int from, int to);
+    static QRect get_size_area(const QList<Stroke> & item, int from, int to);
 
 public:
     const WImage &getImg() const;
@@ -93,8 +90,8 @@ public:
     ~page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
-    void swap(QList<stroke> & stroke, const QVector<int> & pos, int flag);
-    void swap(QList<stroke> & stroke, int from, int to);
+    void swap(QList<Stroke> & stroke, const QVector<int> & pos, int flag);
+    void swap(QList<Stroke> & stroke, int from, int to);
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(cbool vis) const;
@@ -112,21 +109,21 @@ public:
     void removeAt(const QVector<int> & pos);
     void removeAt(cint i);
 
-    const stroke & last() const;
-    stroke &lastMod();
+    const Stroke & last() const;
+    Stroke &lastMod();
 
     /*
      *  these 3 functions do not automatically launch
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    __fast void append(const stroke &stroke);
-    __fast void append(const QList<stroke> & stroke);
+    __fast void append(const Stroke &stroke);
+    __fast void append(const QList<Stroke> & stroke);
 
-    __fast const stroke       & atStroke(const uint i) const;
-    __fast stroke             & atStrokeMod(const uint i);
+    __fast const Stroke       & atStroke(const uint i) const;
+    __fast Stroke             & atStrokeMod(const uint i);
 
-    __fast const stroke       & get_stroke_page() const; //return the point written by writernote
+    __fast const Stroke       & get_stroke_page() const; //return the point written by writernote
 
     double minHeight() const;
     double currentHeight() const;
@@ -147,8 +144,8 @@ public:
 
     int load(WZipReaderSingle &reader, int ver_stroke);
 
-    void drawStroke(const stroke &stroke, int m_pos_ris);
-    void drawForceColorStroke(const stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);
+    void drawStroke(const Stroke &stroke, int m_pos_ris);
+    void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);
     void drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color);
 
     void removeAndDraw(int m_pos_ris, const QVector<int> &pos, const QRectF &area);
@@ -179,7 +176,7 @@ public:
     page &operator=(const page &other);
 
 
-    friend class stroke;
+    friend class Stroke;
     friend class page_file;
     friend class stroke_drawer;
     friend class page_index_cache;
@@ -187,7 +184,7 @@ public:
     friend class xmlstruct;
     friend class rubber_ui;
     friend void * __page_load(void *);
-    friend void adjustStrokePage(QList<stroke> &List, int count, stroke *m_stroke);
+    friend void adjustStrokePage(QList<Stroke> &List, int count, Stroke *m_stroke);
     friend class copy;
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
@@ -246,7 +243,7 @@ inline point_s page::at_translation(const point_s &point, cint page)
     return tmp;
 }
 
-force_inline void page::AppendDirectly(const stroke &stroke)
+force_inline void page::AppendDirectly(const Stroke &stroke)
 {
     this->_stroke.append(stroke);
 }
@@ -331,19 +328,19 @@ force_inline void page::setVisible(cbool vis) const
     __IsVisible = vis;
 }
 
-force_inline const stroke &page::atStroke(uint i) const
+force_inline const Stroke &page::atStroke(uint i) const
 {
     __is_ok_count();
     return this->_stroke.at(i);
 }
 
-force_inline stroke &page::atStrokeMod(const uint i)
+force_inline Stroke &page::atStrokeMod(const uint i)
 {
     __is_ok_count();
     return this->_stroke.operator[](i);
 }
 
-force_inline const stroke &page::get_stroke_page() const
+force_inline const Stroke &page::get_stroke_page() const
 {
     __is_ok_count();
     return this->_stroke_writernote;
@@ -363,7 +360,7 @@ static force_inline void __at_draw_private(const point_s &from, point_s &to, con
 inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
                           point_s &point, const double zoom) const
 {
-    const stroke &stroke = atStroke(IndexStroke);
+    const Stroke &stroke = atStroke(IndexStroke);
     const point_s &__point = stroke.at(IndexPoint);
 
     __at_draw_private(__point, point, zoom, translation);
@@ -375,7 +372,7 @@ inline void page::at_draw_page(
         point_s         &point,
         const double    zoom) const
 {
-    const stroke &stroke = get_stroke_page();
+    const Stroke &stroke = get_stroke_page();
     const point_s &__point = stroke.at(IndexPoint);
 
     __at_draw_private(__point, point, zoom, translation);
@@ -416,19 +413,19 @@ force_inline void page::removeAt(cint i)
     this->_stroke.removeAt(i);
 }
 
-force_inline const stroke &page::last() const
+force_inline const Stroke &page::last() const
 {
     __is_ok_count();
     return this->_stroke.last();
 }
 
-inline stroke &page::lastMod()
+inline Stroke &page::lastMod()
 {
     __is_ok_count();
     return this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
-force_inline void page::append(const stroke &strokeAppend)
+force_inline void page::append(const Stroke &strokeAppend)
 {
     DO_IF_DEBUG(
     int lastNewIndex = _strokeTmp.length();
@@ -443,7 +440,7 @@ force_inline void page::append(const stroke &strokeAppend)
      * the project is compiled in release mode
     */
     if(strokeAppend.is_normal()){
-        W_ASSERT(stroke::cmp(strokeAppend, _strokeTmp.at(lastNewIndex)));
+        W_ASSERT(Stroke::cmp(strokeAppend, _strokeTmp.at(lastNewIndex)));
     }
 }
 
@@ -476,7 +473,7 @@ inline page &page::operator=(const page &other)
 }
 
 force_inline void page::drawForceColorStroke(
-        const stroke    &stroke,
+        const Stroke    &stroke,
         cint            m_pos_ris,
         const QColor    &color,
         QPainter        *painter)

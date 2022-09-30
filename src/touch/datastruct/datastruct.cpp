@@ -287,7 +287,7 @@ void datastruct::MovePoint(
 {
     page &page = at_mod(__page);
     for(const auto &index : qAsConst(pos)){
-        stroke & stroke = page.atStrokeMod(index);
+        Stroke & stroke = page.atStrokeMod(index);
         stroke.movePoint(translation);
     }
 }
@@ -455,7 +455,7 @@ bool datastruct::userWrittenSomething(const datastruct &data1, const datastruct 
                     return true;
                 continue;
             }
-            check = stroke::cmp(Stroke1, Stroke2);
+            check = Stroke::cmp(Stroke1, Stroke2);
             if(!check)
                 return true;
         }

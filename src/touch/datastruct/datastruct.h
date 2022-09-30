@@ -59,7 +59,7 @@ private:
 
     int pageVisible = -1;
 
-    void __changeId(int indexPoint, stroke &stroke, page &page, cbool useThreadSafe);
+    void __changeId(int indexPoint, Stroke &stroke, page &page, cbool useThreadSafe);
 public:
     datastruct(frompdf *m_pdf, fromimage *m_img);
     ~datastruct();
@@ -79,7 +79,7 @@ public:
     constexpr force_inline QPointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
     int whichPage(const QPointF &point) const;
-    int whichPage(const stroke &stroke) const;
+    int whichPage(const Stroke &stroke) const;
 
     void setPointFirstPage(const QPointF &point)
     {
@@ -91,10 +91,10 @@ public:
     void removeAt(const uint indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
-    void append(const QList<stroke> & point, int m_pos_ris);
+    void append(const QList<Stroke> & point, int m_pos_ris);
 
-    int  appendStroke(const stroke &stroke); /* return value: the page of the point */
-    void appendStroke(const stroke &stroke, const int page);
+    int  appendStroke(const Stroke &stroke); /* return value: the page of the point */
+    void appendStroke(const Stroke &stroke, const int page);
 
     void restoreLastTranslation(const int heightView);
     void controllForRepositioning();
@@ -107,7 +107,7 @@ public:
     void MovePoint(const QVector<int> & pos, cint page, const QPointF &translation);
 
 #   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
-    static void MovePoint(QList<stroke> &stroke, const QPointF &translation, int flag);
+    static void MovePoint(QList<Stroke> &stroke, const QPointF &translation, int flag);
 
     bool userWrittenSomething() const;
     static bool userWrittenSomething(const datastruct &data1, const datastruct &data2);
@@ -115,11 +115,11 @@ public:
     void adjustAll(const uint width, const uint height);
     void adjustAll(const QSize &size);
 
-    int adjustStroke(stroke &stroke);
+    int adjustStroke(Stroke &stroke);
 
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
 
-    void changeIdThreadSave(int indexPoint, stroke &stroke, page &page);
+    void changeIdThreadSave(int indexPoint, Stroke &stroke, page &page);
 
     constexpr QPointF adjustPointReverce(const QPointF &pointDatastruct) const;
     constexpr QPointF adjustPoint(const QPointF &pointRealTouch) const;
@@ -397,7 +397,7 @@ force_inline void datastruct::triggerNewView(int page, int m_pos_ris, cbool all)
     at_mod(page).triggerRenderImage(m_pos_ris, all);
 }
 
-inline int datastruct::whichPage(const stroke &stroke) const
+inline int datastruct::whichPage(const Stroke &stroke) const
 {
     int i;
     const auto &big = stroke.getBiggerPointInStroke();
@@ -493,7 +493,7 @@ inline int datastruct::whichPage(const QPointF &point) const
 
 /* the function automatically launches the drawing for the pages
  * to which data has been added*/
-inline void datastruct::append(const QList<stroke> &stroke, int m_pos_ris)
+inline void datastruct::append(const QList<Stroke> &stroke, int m_pos_ris)
 {
     QList<int> trigger;
     uint i;
@@ -526,9 +526,9 @@ inline void datastruct::removeAt(const uint indexPage){
 
 }
 
-inline int datastruct::appendStroke(const stroke &__stroke)
+inline int datastruct::appendStroke(const Stroke &__stroke)
 {
-    stroke tmpStroke(__stroke);
+    Stroke tmpStroke(__stroke);
     int page;
 
     page = this->adjustStroke(tmpStroke);
@@ -538,7 +538,7 @@ inline int datastruct::appendStroke(const stroke &__stroke)
     return page;
 }
 
-inline void datastruct::appendStroke(const stroke &stroke, const int page)
+inline void datastruct::appendStroke(const Stroke &stroke, const int page)
 {
     this->at_mod(page).append(stroke);
 }
@@ -575,7 +575,7 @@ force_inline QRect datastruct::get_bigger_rect(const QRect &first, const QRect &
     return datastruct::get_bigger_rect(__first, __second).toRect();
 }
 
-inline int datastruct::adjustStroke(stroke &stroke)
+inline int datastruct::adjustStroke(Stroke &stroke)
 {
     int page, counter;
 

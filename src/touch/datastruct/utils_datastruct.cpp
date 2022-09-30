@@ -1,7 +1,7 @@
 #include "utils_datastruct.h"
-#include "src/touch/datastruct/stroke.h"
+#include "touch/datastruct/stroke/Stroke.h"
 
-bool datastruct_isinside(const QPointF &topleft, const QPointF &bottonright, const stroke &stroke)
+bool datastruct_isinside(const QPointF &topleft, const QPointF &bottonright, const Stroke &stroke)
 {
     return stroke.isInside(QRectF(topleft, bottonright));
 }

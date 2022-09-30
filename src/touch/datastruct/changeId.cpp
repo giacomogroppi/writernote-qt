@@ -1,8 +1,7 @@
 #include "datastruct.h"
-#include "log/log_ui/log_ui.h"
 #include "utils/common_script.h"
 
-static force_inline void append_point(const stroke &_from, stroke &_to, int from, int to)
+static force_inline void append_point(const Stroke &_from, Stroke &_to, int from, int to)
 {
     for(; from < to; from ++){
         _to.append(_from.at(from), _from.getPressure(from));
@@ -10,9 +9,9 @@ static force_inline void append_point(const stroke &_from, stroke &_to, int from
 }
 
 // this function is usable only in this .o file
-force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page &page, cbool threadSafe)
+force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, page &page, cbool threadSafe)
 {
-    stroke strokeToAppend;
+    Stroke strokeToAppend;
     int lenPointInStroke;
 
     W_ASSERT(__stroke.is_normal());
@@ -48,7 +47,7 @@ force_inline void datastruct::__changeId(int IndexPoint, stroke &__stroke, page 
     }
 }
 
-void datastruct::changeIdThreadSave(int indexPoint, stroke &stroke, page &page)
+void datastruct::changeIdThreadSave(int indexPoint, Stroke &stroke, page &page)
 {
     return __changeId(indexPoint, stroke, page, true);
 }

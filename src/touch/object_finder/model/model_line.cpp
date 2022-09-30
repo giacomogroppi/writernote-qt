@@ -54,7 +54,7 @@ static force_inline void model_line_adjust_m(double &m)
     }
 }
 
-double model_line(const stroke *stroke)
+double model_line(const Stroke *stroke)
 {
 
     int segno_var_x, segno_var_y;
@@ -147,7 +147,7 @@ cont:
     return precision;
 }
 
-static void model_line_vertical(stroke *stroke, stroke_complex_line *data)
+static void model_line_vertical(Stroke *stroke, stroke_complex_line *data)
 {
     const auto press = stroke->getPressure();
     const QRect FL = stroke->getFirstAndLast();
@@ -167,7 +167,7 @@ static void model_line_vertical(stroke *stroke, stroke_complex_line *data)
     data->press = press;
 }
 
-static void model_line_generic(stroke *stroke, stroke_complex_line *data)
+static void model_line_generic(Stroke *stroke, stroke_complex_line *data)
 {
     const auto pressure = stroke->getPressure(0);
     data->pt1  = stroke->at(0).toQPointF(1.);
@@ -181,7 +181,7 @@ static void model_line_generic(stroke *stroke, stroke_complex_line *data)
     stroke->reset();
 }
 
-void model_line_create(stroke *stroke)
+void model_line_create(Stroke *stroke)
 {
     W_ASSERT(stroke);
     bool &is_vertical = line_data.is_vertical;
@@ -194,10 +194,10 @@ void model_line_create(stroke *stroke)
     }
 
     stroke->reset();
-    stroke->set_complex(stroke::COMPLEX_LINE, data);
+    stroke->set_complex(Stroke::COMPLEX_LINE, data);
 }
 
-void stroke_complex_line_append(stroke *stroke, const QPointF& point)
+void stroke_complex_line_append(Stroke *stroke, const QPointF& point)
 {
     auto *data = (stroke_complex_line *) stroke->get_complex_data();
     const auto dist1 = distance_not_square(data->pt1, point);
@@ -210,7 +210,7 @@ void stroke_complex_line_append(stroke *stroke, const QPointF& point)
     }
 }
 
-bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdouble precision)
+bool stroke_complex_is_inside_line(const Stroke *stroke, const WLine &line, cdouble precision)
 {
     const auto data = (const stroke_complex_line *)stroke->get_complex_data();
 
@@ -220,7 +220,7 @@ bool stroke_complex_is_inside_line(const stroke *stroke, const WLine &line, cdou
     return WLine::intersect(_line, line, precision);
 }
 
-void stroke_complex_translate_line(stroke *stroke, const QPointF &offset)
+void stroke_complex_translate_line(Stroke *stroke, const QPointF &offset)
 {
     stroke_complex_line *data = (stroke_complex_line *)stroke->get_complex_data();
     data->pt1 += offset;
@@ -228,7 +228,7 @@ void stroke_complex_translate_line(stroke *stroke, const QPointF &offset)
 }
 
 static inline void stroke_complex_normal_line_generic(
-        stroke              *_to,
+        Stroke              *_to,
         stroke_complex_line *data,
         int from, int to)
 {
@@ -252,7 +252,7 @@ static inline void stroke_complex_normal_line_generic(
 }
 
 static inline void stroke_complex_normal_line_vertical(
-        stroke              *_to,
+        Stroke              *_to,
         stroke_complex_line *data,
         int from, int to)
 {
@@ -269,7 +269,7 @@ static inline void stroke_complex_normal_line_vertical(
     }
 }
 
-void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
+void stroke_complex_make_normal_line   (const Stroke *_from, Stroke *_to)
 {
     int from, to;
     stroke_complex_line *data = (stroke_complex_line *)_from->get_complex_data();
@@ -290,7 +290,7 @@ void stroke_complex_make_normal_line   (const stroke *_from, stroke *_to)
     W_ASSERT(_to->is_normal());
 }
 
-bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area, cdouble precision)
+bool stroke_complex_is_inside_line   (const Stroke *_stroke, const QRectF &area, cdouble precision)
 {
     W_ASSERT(_stroke->is_line());
 

@@ -22,7 +22,7 @@ static int checkSpeed(const Document &first,
             return LEN;
 
         for(i = 0; i < len; i++){
-            if(!stroke::cmp(page1.atStroke(i), page2.atStroke(i)))
+            if(!Stroke::cmp(page1.atStroke(i), page2.atStroke(i)))
                 return IDTRATTO;
         }
     }
@@ -48,8 +48,8 @@ static int checkSpeed(const Document &first,
             return LEN;
 
         for(i=0; i<len; i++){
-            const stroke &stroke1 = page1->atStroke(i);
-            const stroke &stroke2 = page2->atStroke(i);
+            const Stroke &stroke1 = page1->atStroke(i);
+            const Stroke &stroke2 = page2->atStroke(i);
 
             if(stroke1.getId() != stroke2.getId())
                 return IDTRATTO;

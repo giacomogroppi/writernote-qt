@@ -1,10 +1,10 @@
 #pragma once
 
-class stroke;
+class Stroke;
 
 class model
 {
 public:
-    static bool find(stroke *stroke);
+    static bool find(Stroke *stroke);
 };
 

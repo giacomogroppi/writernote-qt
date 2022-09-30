@@ -3,6 +3,7 @@
 #include "touch/tabletcanvas.h"
 #include "last_open/last_open.h"
 #include "ui/uicore.h"
+#include "utils/dialog_critic/dialog_critic.h"
 #include "utils/extract_audio/extract_audio.h"
 #include "utils/changeLanguage.h"
 #include "log/log_ui/log_ui.h"

@@ -4,6 +4,7 @@
 #include "currenttitle/document.h"
 #include <QDebug>
 #include "images/fromimage.h"
+#include "log/log_ui/log_ui.h"
 #include "touch/property/property_control.h"
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
@@ -61,7 +62,7 @@ void * __square_search(void *__data)
     assert(data->from <= data->to);
 
     for(; data->from < data->to;  data->from ++){
-        const stroke &stroke = __page->atStroke(data->from);
+        const Stroke &stroke = __page->atStroke(data->from);
 
         if(datastruct_isinside(__f, __s, stroke))
         {
@@ -173,10 +174,8 @@ bool square::find()
 
 force_inline void square::initImg()
 {
-    const auto formact = WImage::Format_ARGB32;
-    _img = WImage(page::getResolutionWidth(),
-                 page::getResolutionHeigth() * _canvas->data->datatouch->lengthPage(),
-                 formact);
+    const auto l = _canvas->data->datatouch->lengthPage();
+    _img.initAsPage(l);
 }
 
 void square::mergeImg(
@@ -196,11 +195,11 @@ void square::mergeImg(
 }
 
 static force_inline void
-preappend(QList<QList<stroke>> & list, int num)
+preappend(QList<QList<Stroke>> & list, int num)
 {
     while(num > 0){
         num --;
-        list.append(QList<stroke>());
+        list.append(QList<Stroke>());
     }
 }
 
@@ -301,7 +300,7 @@ void square::reset()
         goto out;
 
     for(i = 0; i < len; i++){
-        QList<stroke> ll    = _stroke.operator[](i);
+        QList<Stroke> ll    = _stroke.operator[](i);
         page * page         = &_canvas->data->datatouch->at_mod(i + _base);
 
         for(auto &ref : ll){

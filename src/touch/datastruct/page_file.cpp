@@ -17,8 +17,8 @@ int page_file::load_ver_0(page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        _page._stroke.append(stroke());
-        stroke &ref = _page._stroke.last();
+        _page._stroke.append(Stroke());
+        Stroke &ref = _page._stroke.last();
         err = ref.load(reader, ver_stroke);
 
         if(unlikely(err != OK))
@@ -30,7 +30,7 @@ int page_file::load_ver_0(page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        stroke __tmp;
+        Stroke __tmp;
         const int res = __tmp.load(reader, ver_stroke);
         if(unlikely(res != OK))
             return res;
@@ -62,8 +62,8 @@ int page_file::load_ver_1(page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        _page._stroke.append(stroke());
-        stroke &ref = _page._stroke.last();
+        _page._stroke.append(Stroke());
+        Stroke &ref = _page._stroke.last();
         err = ref.load(reader, ver_stroke);
 
         if(unlikely(err != OK))
@@ -91,8 +91,8 @@ int page_file::load_ver_2(page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        _page._stroke.append(stroke());
-        stroke &ref = _page._stroke.last();
+        _page._stroke.append(Stroke());
+        Stroke &ref = _page._stroke.last();
 
         err = ref.load(reader, ver_stroke);
 

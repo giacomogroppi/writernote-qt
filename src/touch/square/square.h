@@ -87,7 +87,7 @@ private:
     void moveObjectIntoPrivate(QList<QVector<int> > &index);
 
     WImage _img;
-    QList<QList<stroke>> _stroke;
+    QList<QList<Stroke>> _stroke;
 
     int _base;
     QList<int> _index_img; /* image */

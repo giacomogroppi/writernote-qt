@@ -1,3 +1,4 @@
+#include "log/log_ui/log_ui.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "utils/dialog_critic/dialog_critic.h"

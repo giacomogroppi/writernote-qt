@@ -55,13 +55,11 @@ void reduce_size::decrese(datastruct *data){
 
         }
     }
-
-
 }
 
 /* the function calculates the points for each section */
 static uint __howReduce(uint &i, const page *page){
-    const stroke &stroke = page->atStroke(i);
+    const Stroke &stroke = page->atStroke(i);
     if(likely(stroke.is_normal()))
         return stroke.length();
 

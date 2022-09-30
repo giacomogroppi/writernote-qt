@@ -1,5 +1,5 @@
 #include "stroke_file.h"
-#include "touch/datastruct/stroke.h"
+#include "touch/datastruct/stroke/Stroke.h"
 #include "currenttitle/document.h"
 #include "core/WReadZip.h"
 #include "core/WZipWriterSingle.h"
@@ -8,7 +8,7 @@
 #define stroke_file_size_len 4
 
 #ifdef ALL_VERSION
-force_inline int stroke_file::load_ver_0(class stroke &_stroke, WZipReaderSingle &reader)
+force_inline int stroke_file::load_ver_0(class Stroke &_stroke, WZipReaderSingle &reader)
 {
     int i, len_point;
     bool page_point = false;
@@ -57,7 +57,7 @@ force_inline int stroke_file::load_ver_0(class stroke &_stroke, WZipReaderSingle
     return OK;
 }
 
-force_inline int stroke_file::load_ver_1(class stroke &_stroke, WZipReaderSingle &reader)
+force_inline int stroke_file::load_ver_1(class Stroke &_stroke, WZipReaderSingle &reader)
 {
     int i, len_point;
 
@@ -93,7 +93,7 @@ force_inline int stroke_file::load_ver_1(class stroke &_stroke, WZipReaderSingle
 
 #define MANAGE_ERR() return ERROR
 
-force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle &reader)
+force_inline int stroke_file::load_ver_2(class Stroke &_stroke, WZipReaderSingle &reader)
 {
     int i;
     int len_press, len_point;
@@ -109,7 +109,7 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle
     if(reader.read_object(_stroke._prop) < 0)
         MANAGE_ERR();
 
-    if(unlikely(_stroke._prop != stroke::COMPLEX_NORMAL)){
+    if(unlikely(_stroke._prop != Stroke::COMPLEX_NORMAL)){
         return stroke_complex_load(&_stroke, _stroke._prop, reader);
     }
 
@@ -136,7 +136,7 @@ force_inline int stroke_file::load_ver_2(class stroke &_stroke, WZipReaderSingle
     return OK;
 }
 
-int stroke_file::load(class stroke &_stroke, int version, WZipReaderSingle &reader)
+int stroke_file::load(class Stroke &_stroke, int version, WZipReaderSingle &reader)
 {
     if(version > CURRENT_VERSION_STROKE)
         return ERROR_VERSION_NEW;
@@ -157,7 +157,7 @@ int stroke_file::load(class stroke &_stroke, int version, WZipReaderSingle &read
     W_ASSERT(0);
 }
 
-size_t stroke_file::get_size_in_file(const stroke &_stroke)
+size_t stroke_file::get_size_in_file(const Stroke &_stroke)
 {
     size_t s = 0;
     int i;
@@ -187,7 +187,7 @@ size_t stroke_file::get_size_in_file(const stroke &_stroke)
     return s;
 }
 
-int stroke_file::save(const class stroke &_stroke, WZipWriterSingle &writer)
+int stroke_file::save(const class Stroke &_stroke, WZipWriterSingle &writer)
 {
     int i;
     cint len_pressure = _stroke._pressure.length();

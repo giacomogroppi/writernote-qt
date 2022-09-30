@@ -1,4 +1,5 @@
 ﻿#include "page.h"
+#include "log/log_ui/log_ui.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include <QPainter>
 #include <QPainterPath>
@@ -45,7 +46,7 @@ static void setStylePrivate(
 
 static force_inline void __initImg(WImage &img)
 {
-    img = WImage(page::getResolutionWidth(), page::getResolutionHeigth(), WImage::Format_ARGB32);
+    img.initAsPage();
     W_ASSERT(!img.isNull());
 }
 
@@ -61,7 +62,7 @@ page::page(const int count, const n_style style)
 }
 
 static inline void drawLineOrizzontal(
-        stroke          &stroke,
+        Stroke          &stroke,
         style_struct_S  &style,
         cdouble         &last,
         double          &deltax,
@@ -87,7 +88,7 @@ static inline void drawLineOrizzontal(
 }
 
 static inline void drawLineVertical(
-        stroke          &stroke,
+        Stroke          &stroke,
         style_struct_S  &style,
         const double    &last,
         double          &deltay,
@@ -122,7 +123,7 @@ void page::drawNewPage(n_style __style)
     cdouble height_p   = this->getHeight();
     cdouble last = (_count - 1)*page::getHeight();
 
-    stroke &stroke = this->_stroke_writernote;
+    Stroke &stroke = this->_stroke_writernote;
 
     setStylePrivate(fast, __style, style);
 
@@ -154,7 +155,7 @@ void page::drawNewPage(n_style __style)
 }
 
 void page::swap(
-        QList<stroke>       &list,
+        QList<Stroke>       &list,
         const QVector<int>  &pos,
         int                 flag)
 {
@@ -177,7 +178,7 @@ void page::swap(
     }
 
     for(cint ref : pos){
-        const stroke & stroke = atStroke(ref);
+        const Stroke & stroke = atStroke(ref);
         list.append(stroke);
     }
 
@@ -189,7 +190,7 @@ void page::swap(
 /*
  * this function mantain the item already in list
 */
-void page::swap(QList<stroke> & list,
+void page::swap(QList<Stroke> & list,
                 int             from,
                 int             to)
 {
@@ -231,7 +232,7 @@ void page::removeAt(const QVector<int> &pos)
     }
 }
 
-void page::append(const QList<stroke> &stroke)
+void page::append(const QList<Stroke> &stroke)
 {
     for(const auto & __tmp : qAsConst(stroke)){
         this->append(__tmp);
@@ -240,7 +241,7 @@ void page::append(const QList<stroke> &stroke)
 
 void page::drawStroke(
         QPainter        &painter,
-        const stroke    &stroke,
+        const Stroke    &stroke,
         QPen            &m_pen,
         const QColor    &color) const
 {
@@ -285,7 +286,7 @@ struct page_thread_data{
     QVector<int>      * to_remove;
     pthread_mutex_t   * append;
     QPainter          * painter;
-    QList<stroke>     * m_stroke;
+    QList<Stroke>     * m_stroke;
     int                 m_pos_ris;
     const page        * parent;
 };
@@ -351,7 +352,7 @@ void * __page_load(void *__data)
 
 void page::drawEngine(
         QPainter        &painter,
-        QList<stroke>   &List,
+        QList<Stroke>   &List,
         int             m_pos_ris,
         bool            *changeSomething,
         cbool           use_multi_thread)
@@ -421,7 +422,7 @@ inline void page::draw(
     W_ASSERT(painter.isActive());
 
     if(unlikely(changeSomething)){
-        this->_strokeTmp = QVector<stroke>::fromList(list);
+        this->_strokeTmp = QVector<Stroke>::fromList(list);
     }
 
     this->mergeList();
@@ -434,7 +435,7 @@ void page::mergeList()
     int index = _stroke.length();
 
     for(i = 0; i < len; i++){
-        const stroke &stroke = _strokeTmp.at(i);
+        const Stroke &stroke = _strokeTmp.at(i);
 
         _stroke.append(stroke);
 
@@ -460,7 +461,7 @@ void page::drawToImage(
     Define_PAINTER_p(painter, img);
 
     for (const int __index : qAsConst(index)){
-        const stroke &stroke = atStroke(__index);
+        const Stroke &stroke = atStroke(__index);
         this->drawStroke(painter, stroke, pen, stroke.getColor());
     }
 
@@ -489,7 +490,7 @@ void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
     Define_PEN(m_pen);
 
     for(i --; i >= 0; i--){
-        stroke &stroke = atStrokeMod(pos.at(i));
+        Stroke &stroke = atStrokeMod(pos.at(i));
         color = stroke.get_alfa();
 
         stroke.setAlfaColor(color / decrese);
@@ -574,7 +575,7 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
     Define_PAINTER(painter);
 
     for(; index >= 0; index --){
-        const stroke &stroke = this->atStroke(index);
+        const Stroke &stroke = this->atStroke(index);
 
         if(unlikely(is_inside_squade(stroke.getBiggerPointInStroke(), area))){
             drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), &painter);
@@ -631,7 +632,7 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     End_painter(painter);
 }
 
-QRect page::get_size_area(const QList<stroke> &item, int from, int to)
+QRect page::get_size_area(const QList<Stroke> &item, int from, int to)
 {
     QRect result;
 
@@ -705,7 +706,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
     Define_PAINTER(painter);
 
     for(const auto &index : pos){
-        const stroke &stroke = atStroke(index);
+        const Stroke &stroke = atStroke(index);
         this->drawForceColorStroke(stroke, m_pos_ris, color, &painter);
     }
 
@@ -716,7 +717,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
 void page::allocateStroke(int numAllocation)
 {
     for(int i = 0; i < numAllocation; i++){
-        this->_stroke.append(stroke());
+        this->_stroke.append(Stroke());
     }
 }
 
@@ -735,7 +736,7 @@ int page::load(WZipReaderSingle &reader, int ver_stroke)
     return page_file::load(*this, ver_stroke, reader);
 }
 
-void page::drawStroke(const stroke &stroke, int m_pos_ris)
+void page::drawStroke(const Stroke &stroke, int m_pos_ris)
 {
     drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), nullptr);
 }

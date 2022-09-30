@@ -27,12 +27,11 @@ private:
 
     QList<struct immagine_s> m_img;
     QStringList get_name_img();
-    static QStringList get_name_img(const Document &doc);
-
-    static inline QByteArray getName(unsigned i);
-
     unsigned insert_image(const QString &__pos, const PointSettable *point, struct immagine_s &img);
 
+
+    static QStringList get_name_img(const Document &doc);
+    static inline QByteArray getName(unsigned i);
 public:
     static void copy(const fromimage &src, fromimage &dest);
     friend class square;
@@ -61,13 +60,14 @@ public:
     static  void draw(QPainter &painter, const QRectF &rect, const QImage &img);
     static  void draw(QPainter &painter, const immagine_s &img);
     static  void draw(QPainter &painter, const QList<immagine_s> &list);
-            void draw(QPainter &painter) const;
+
+    void draw(QPainter &painter) const;
 
     void reset();
     [[nodiscard]] size_t get_size_file() const;
 
 private:
-    load_res get_img_bytearray(QByteArray &arr, const QString &path) const;
+    static load_res get_img_bytearray(QByteArray &arr, const QString &path) ;
     load_res load_metadata(WZipReaderSingle &reader);
     load_res load_single(const QByteArray &arr, struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);

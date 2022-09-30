@@ -35,7 +35,7 @@ void copy::managePaste(
     }
 }
 
-QRect copy::get_size_area(const QList<QList<stroke>> &data)
+QRect copy::get_size_area(const QList<QList<Stroke>> &data)
 {
     QRect size_area(0, 0, 0, 0);
 
@@ -49,13 +49,13 @@ QRect copy::get_size_area(const QList<QList<stroke>> &data)
     return size_area;
 }
 
-void copy::__single(const QList<stroke> &from, QList<stroke> &append_data)
+void copy::__single(const QList<Stroke> &from, QList<Stroke> &append_data)
 {
     int len = from.length(), i;
     for(i = 0; i < len; i++){
-        const stroke &currentStroke = from.at(i);
+        const Stroke &currentStroke = from.at(i);
 
-        stroke tmp(currentStroke);
+        Stroke tmp(currentStroke);
         append_data.append(tmp);
     }
 }
@@ -77,7 +77,7 @@ void copy::__single(const QList<stroke> &from, QList<stroke> &append_data)
 */
 int copy::selection(
         datastruct                  &data,
-        const QList<QList<stroke>>  &stroke,
+        const QList<QList<Stroke>>  &stroke,
         int                         __flags,
         const QPointF               &pointTouch)
 {

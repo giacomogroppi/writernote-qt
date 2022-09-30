@@ -1,9 +1,8 @@
 #include "stroke_drawer.h"
-#include "touch/datastruct/stroke.h"
+#include "touch/datastruct/stroke/Stroke.h"
 #include "touch/datastruct/page.h"
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
-#include "qmath.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 constexpr double deltaColorNull = 1.08;
@@ -22,7 +21,7 @@ force_inline void set_press(QPen &pen, const pressure_t press, const double prop
 }
 
 force_inline void stroke_drawer::draw_circle(
-        QPainter    &painter,  const stroke    &stroke,
+        QPainter    &painter,  const Stroke    &stroke,
         cint        page,      QPen            &pen,
         cbool       is_rubber, cdouble         _prop)
 {
@@ -54,7 +53,7 @@ force_inline void stroke_drawer::draw_circle(
 }
 
 force_inline void stroke_drawer::draw_stroke_normal(
-        QPainter        &_painterPublic,   const stroke    &stroke,
+        QPainter        &_painterPublic,   const Stroke    &stroke,
         cint            page,       QPen            &pen,
         cbool           is_rubber,  cdouble         _prop)
 {
@@ -75,7 +74,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
     cbool isPrivatePainter = isHigh;
 
     if(isPrivatePainter){
-        img = WImage(page::getResolutionWidth(), page::getResolutionHeigth(), WImage::Format_ARGB32);
+        img.initAsPage();
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
         painter = &_painterPrivate;
@@ -125,7 +124,7 @@ force_inline void stroke_drawer::draw_stroke_normal(
 
 force_inline void stroke_drawer::draw_rect(
         QPainter        &painter,
-        const stroke    &stroke,
+        const Stroke    &stroke,
         cint            page,
         QPen            &pen,
         cbool           is_rubber,
@@ -145,7 +144,7 @@ force_inline void stroke_drawer::draw_rect(
 
 force_inline void stroke_drawer::draw_line(
         QPainter        &painter,
-        const stroke    &stroke,
+        const Stroke    &stroke,
         cint            page,
         QPen            &pen,
         cbool           is_rubber,
@@ -166,7 +165,7 @@ force_inline void stroke_drawer::draw_line(
     painter.drawLine(_topLeft, _bottomRight);
 }
 
-void stroke_drawer::draw_stroke(QPainter &painter, const stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
+void stroke_drawer::draw_stroke(QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
     if(likely(stroke.is_normal())){
         stroke_drawer::draw_stroke_normal(painter, stroke, page, pen, is_rubber, prop);

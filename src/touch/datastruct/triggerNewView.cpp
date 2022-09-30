@@ -7,7 +7,7 @@
 
 struct DatastructNewView{
     page     *m_page;
-    QList<stroke>   *m_stroke;
+    QList<Stroke>   *m_stroke;
     int base;
 
     int time;
@@ -29,8 +29,8 @@ void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> 
 
 void drawStroke(page *page, QVector<int> &pos, int pos_audio)
 {
-    for(const auto &index : pos){
-        const stroke &stroke = page->atStroke(index);
+    for(const auto &index : qAsConst(pos)){
+        const Stroke &stroke = page->atStroke(index);
         page->drawStroke(stroke, pos_audio);
     }
 }

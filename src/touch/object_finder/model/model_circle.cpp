@@ -1,5 +1,5 @@
 #include "touch/object_finder/model/model.h"
-#include "touch/datastruct/stroke.h"
+#include "touch/datastruct/stroke/Stroke.h"
 #include "utils/common_script.h"
 #include "touch/datastruct/stroke_complex_data.h"
 #include "testing/memtest.h"
@@ -16,7 +16,7 @@ static not_used void model_circle_print(const stroke_complex_circle *data)
     }
 }
 
-void model_circle_create(stroke *stroke)
+void model_circle_create(Stroke *stroke)
 {
     const auto press = stroke->getPressure();
 
@@ -26,7 +26,7 @@ void model_circle_create(stroke *stroke)
     stroke->reset();
     stroke_complex_circle *data = (stroke_complex_circle *)WMalloc(sizeof(stroke_complex_circle));
     memcpy(data, &circle_data, sizeof(circle_data));
-    stroke->set_complex(stroke::COMPLEX_CIRCLE, data);
+    stroke->set_complex(Stroke::COMPLEX_CIRCLE, data);
 }
 
 static void model_circle_precision(const QPointF &point, double &precision)
@@ -48,7 +48,7 @@ static void model_circle_precision(const QPointF &point, double &precision)
     }
 }
 
-double model_circle(const stroke *stroke)
+double model_circle(const Stroke *stroke)
 {
     const auto area = stroke->getBiggerPointInStroke();
     constexpr auto coef = 500.;
@@ -89,7 +89,7 @@ double model_circle(const stroke *stroke)
     return precision;
 }
 
-void stroke_complex_circle_append(stroke *stroke, const QPointF& point)
+void stroke_complex_circle_append(Stroke *stroke, const QPointF& point)
 {
     auto *data = (stroke_complex_circle *)stroke->get_complex_data();
     W_ASSERT(stroke->is_circle());
@@ -128,7 +128,7 @@ static inline bool one_inside(
     return is_internal(_inside, prec, _data) && !is_internal(_outside, prec, _data);
 }
 
-bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cdouble precision)
+bool stroke_complex_is_inside_circle(const Stroke *stroke, const WLine &line, cdouble precision)
 {
     /*
      * ci basta che un punto sia fuori dal cerchio,
@@ -161,7 +161,7 @@ bool stroke_complex_is_inside_circle(const stroke *stroke, const WLine &line, cd
     return res;
 }
 
-void stroke_complex_translate_circle(stroke *stroke, const QPointF &offset)
+void stroke_complex_translate_circle(Stroke *stroke, const QPointF &offset)
 {
     stroke_complex_circle *data = (stroke_complex_circle *) stroke->get_complex_data();
     data->_x += offset.x();
@@ -169,7 +169,7 @@ void stroke_complex_translate_circle(stroke *stroke, const QPointF &offset)
 }
 
 static inline void append_to_stroke(
-        stroke                  *stroke,
+        Stroke                  *stroke,
         const QVector<point_s>  &point,
         const pressure_t        press)
 {
@@ -178,7 +178,7 @@ static inline void append_to_stroke(
     }
 }
 
-void stroke_complex_make_normal_circle (const stroke *_from, stroke *_to)
+void stroke_complex_make_normal_circle (const Stroke *_from, Stroke *_to)
 {
     double from, to;
     point_s tmp;
@@ -228,7 +228,7 @@ void stroke_complex_make_normal_circle (const stroke *_from, stroke *_to)
  * il biggerData dello stroke è all'interno
  * dell'area in cui stiamo cercando.
  */
-bool stroke_complex_is_inside_circle (const stroke *_stroke, const QRectF &area, cdouble precision)
+bool stroke_complex_is_inside_circle (const Stroke *_stroke, const QRectF &area, cdouble precision)
 {
     const stroke_complex_circle *data = (stroke_complex_circle *)_stroke->get_complex_data();
     int internal = 0;

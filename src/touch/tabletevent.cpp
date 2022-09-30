@@ -15,7 +15,7 @@
 #define CTRL_METHOD(var, type) var = met == TabletCanvas::e_method::type
 #define CTRL_METHOD_OR(var, type) var |= met == TabletCanvas::e_method::type
 
-stroke __tmp;
+Stroke __tmp;
 extern bool block_scrolling;
 
 bool need_save_auto = false;
@@ -35,7 +35,7 @@ static void AppendAll(
         const TabletCanvas::e_method    met)
 {
     /* for debug */
-    stroke & strokeToAppend = __tmp;
+    Stroke & strokeToAppend = __tmp;
     int i, pageMod, lenPoint;
     point_s *point;
     qint64 time;
@@ -372,7 +372,7 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     double size;
     uchar alfa;
     point_s tmp_point;
-    stroke &strokeTmp = __tmp;
+    Stroke &strokeTmp = __tmp;
     pressure_t pressure;
     cbool highlighter = CHECK_FLAG(_input, highlighter);
     const QPointF &pointTouch = event->position();

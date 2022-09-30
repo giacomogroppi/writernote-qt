@@ -77,7 +77,7 @@ size_t fromimage::get_size_file() const
     return s;
 }
 
-fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString &path) const
+fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString &path)
 {
     WImage img(path);
 

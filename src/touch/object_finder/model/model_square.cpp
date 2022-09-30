@@ -1,49 +1,48 @@
 #include "model.h"
-#include "touch/datastruct/datastruct.h"
 #include <QString>
 
 constexpr bool not_used debug = true;
 
-double model_rect(const stroke *stroke)
+double model_rect(const Stroke *stroke)
 {
     Q_UNUSED(stroke);
     return model_error;
 }
 
-void model_rect_create(stroke *stroke)
+void model_rect_create(Stroke *stroke)
 {
     Q_UNUSED(stroke);
 }
 
-void stroke_complex_rect_append(stroke *stroke, const QPointF& point)
+void stroke_complex_rect_append(Stroke *stroke, const QPointF& point)
 {
     Q_UNUSED(stroke);
     Q_UNUSED(point);
     std::abort();
 }
 
-bool stroke_complex_is_inside_rect(const stroke *stroke, const WLine &line, cdouble precision)
+bool stroke_complex_is_inside_rect(const Stroke *stroke, const WLine &line, cdouble precision)
 {
     Q_UNUSED(stroke);
     Q_UNUSED(line);
     std::abort();
 }
 
-void stroke_complex_translate_rect(stroke *stroke, const QPointF &offset)
+void stroke_complex_translate_rect(Stroke *stroke, const QPointF &offset)
 {
     Q_UNUSED(stroke);
     Q_UNUSED(offset);
     std::abort();
 }
 
-void stroke_complex_make_normal_rect   (const stroke *_from, stroke *_to)
+void stroke_complex_make_normal_rect   (const Stroke *_from, Stroke *_to)
 {
     Q_UNUSED(_from);
     Q_UNUSED(_to);
     std::abort();
 }
 
-bool stroke_complex_is_inside_rect   (const stroke *_stroke, const QRectF &area, cdouble precision)
+bool stroke_complex_is_inside_rect   (const Stroke *_stroke, const QRectF &area, cdouble precision)
 {
     Q_UNUSED(_stroke);
     Q_UNUSED(area);

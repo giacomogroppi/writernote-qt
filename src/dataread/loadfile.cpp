@@ -7,6 +7,8 @@
 #include "testing/memtest.h"
 #include "core/WZip.h"
 #include "core/WZipReaderSingle.h"
+#include "log/log_ui/log_ui.h"
+#include "utils/dialog_critic/dialog_critic.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
 {

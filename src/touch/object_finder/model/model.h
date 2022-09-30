@@ -9,15 +9,15 @@
 
 constexpr double model_error = 5000.;
 
-class stroke;
+class Stroke;
 
-double model_line(const stroke *stroke);
-double model_rect(const stroke *stroke);
-double model_circle(const stroke *stroke);
+double model_line(const Stroke *stroke);
+double model_rect(const Stroke *stroke);
+double model_circle(const Stroke *stroke);
 
-void model_line_create(stroke *stroke);
-void model_rect_create(stroke *stroke);
-void model_circle_create(stroke *stroke);
+void model_line_create(Stroke *stroke);
+void model_rect_create(Stroke *stroke);
+void model_circle_create(Stroke *stroke);
 
 static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, cint max)
 {
@@ -28,18 +28,18 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
 }
 
 void *stroke_complex_allocate(int type, const void *data);
-void stroke_complex_adjust(stroke *stroke, cdouble zoom);
-bool stroke_complex_cmp(const stroke *str1, const stroke *str2);
-QRect stroke_complex_bigger_data(const stroke *stroke);
+void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
+bool stroke_complex_cmp(const Stroke *str1, const Stroke *str2);
+QRect stroke_complex_bigger_data(const Stroke *stroke);
 
-size_t stroke_complex_get_size_save(const stroke *stroke);
-int stroke_complex_save(const stroke *stroke, WZipWriterSingle &file);
+size_t stroke_complex_get_size_save(const Stroke *stroke);
+int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &file);
 
-int stroke_complex_load(stroke *stroke, int type, WZipReaderSingle &reader);
+int stroke_complex_load(Stroke *stroke, int type, WZipReaderSingle &reader);
 
-void stroke_complex_append(stroke *stroke, const QPointF &point);
-bool stroke_complex_is_inside(const stroke *stroke, const class WLine &line, cdouble precision);
-bool stroke_complex_is_inside(const stroke *stroke, const QRectF &area, cdouble precision);
-void stroke_complex_translate(stroke *stroke, const QPointF &offset);
-void stroke_complex_make_normal(const stroke *from, stroke *to);
+void stroke_complex_append(Stroke *stroke, const QPointF &point);
+bool stroke_complex_is_inside(const Stroke *stroke, const class WLine &line, cdouble precision);
+bool stroke_complex_is_inside(const Stroke *stroke, const QRectF &area, cdouble precision);
+void stroke_complex_translate(Stroke *stroke, const QPointF &offset);
+void stroke_complex_make_normal(const Stroke *from, Stroke *to);
 

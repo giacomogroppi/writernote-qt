@@ -265,7 +265,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     W_ASSERT(from <= to);
 
     for(; from < to; from ++){
-        stroke & stroke = _page->atStrokeMod(from);
+        Stroke & stroke = _page->atStrokeMod(from);
 
         if(unlikely(stroke.isEmpty())){
             stroke_to_remove.append(from);
@@ -363,7 +363,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     Q_ASSERT(data->from <= data->to);
 
     for(; data->from < data->to; data->from++){
-        stroke &__stroke = _page->atStrokeMod(data->from);
+        Stroke &__stroke = _page->atStrokeMod(data->from);
         int index;
 
         if(is_present_in_list(_al_find->constData(), data_already_len, data->from))

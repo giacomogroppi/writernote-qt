@@ -5,7 +5,7 @@
 #include "pthread.h"
 
 // è lo stesso stroke definito nel file tabletevent.cpp
-extern stroke __tmp;
+extern Stroke __tmp;
 
 object_finder::object_finder(QObject *parent)
     : QObject{parent}
@@ -27,7 +27,7 @@ object_finder::~object_finder()
 
 void object_finder::endTimer()
 {
-    stroke &stroke = __tmp;
+    Stroke &stroke = __tmp;
 
     if(likely(stroke.is_normal())){
         WDebug(debug, "call");

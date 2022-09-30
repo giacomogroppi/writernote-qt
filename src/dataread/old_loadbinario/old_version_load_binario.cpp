@@ -332,7 +332,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         for(int counterPoint = 0; counterPoint < __page.at(counterPage).length(); counterPoint ++){
             QList<point_old_ver_7> &ListPrivate = __page.operator[](counterPage);
-            stroke stroke;
+            Stroke stroke;
             int id;
 
             {

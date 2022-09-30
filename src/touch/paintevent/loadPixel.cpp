@@ -14,10 +14,10 @@
 #include "images/fromimage.h"
 
 /* tmp list */
-extern stroke __tmp;
+extern Stroke __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta);
 
-static void drawSingleStroke(const stroke   &_stroke,
+static void drawSingleStroke(const Stroke   &_stroke,
                              QPen      &_pen,       QPainter       &_painter,
                              double   _zoom)
 {
@@ -49,7 +49,7 @@ void TabletCanvas::load(QPainter &painter,
     const double zoom               = data->datatouch->getZoom();
     const QSize sizeRect            = createSizeRect(data->datatouch, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
-    stroke &strokeToDraw = __tmp;
+    Stroke &strokeToDraw = __tmp;
 
     int counterPage;
     QPixmap *pixmap             = dataPoint.m_pixmap;
@@ -120,7 +120,7 @@ void TabletCanvas::load(QPainter &painter,
     lenPage = _laser->length();
 
     for(lenPage --; lenPage >= 0; lenPage --){
-        const stroke &tmp = _laser->at(lenPage);
+        const Stroke &tmp = _laser->at(lenPage);
         drawSingleStroke(tmp, pen, painter, zoom);
     }
 }
@@ -150,7 +150,7 @@ void drawUtils::loadSingleSheet(
 {
     int counterPoint, lenPoint;
     pressure_t pressure;
-    const stroke *__stroke = &page.get_stroke_page();
+    const Stroke *__stroke = &page.get_stroke_page();
 
 redo:
 
@@ -162,7 +162,7 @@ redo:
     pressure = __stroke->getPressure();
 
     if(unlikely(pressure <= 0.0)){
-        auto *_stroke = (stroke *)__stroke;
+        auto *_stroke = (Stroke *)__stroke;
         _stroke->__setPressureFirstPoint(0.1);
         goto redo;
     }
@@ -193,7 +193,7 @@ static void loadSheet(
     const auto pointFirstPage = data->getPointFirstPage();
     const int lenPage = data->lengthPage();
     const double zoom = data->getZoom();
-    const stroke *__stroke;
+    const Stroke *__stroke;
     int counterPage, lenPoint;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){

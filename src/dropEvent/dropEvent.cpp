@@ -92,6 +92,7 @@ void MainWindow::dropEvent(QDropEvent *event)
     else{
         user_message("The file you are trying to open does not have a compatible extention");
     }
+    _canvas->call_update();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)

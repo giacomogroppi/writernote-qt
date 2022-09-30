@@ -1,18 +1,18 @@
 #include "core/WReadZip.h"
 #include "touch/object_finder/model/model.h"
 #include "touch/datastruct/stroke_complex_data.h"
-#include "touch/datastruct/stroke.h"
+#include "touch/datastruct/stroke/Stroke.h"
 #include "testing/memtest.h"
 #include "utils/common_error_definition.h"
 
 static size_t get_size_by_type(int type)
 {
     switch (type) {
-    case stroke::COMPLEX_CIRCLE:
+    case Stroke::COMPLEX_CIRCLE:
         return sizeof(stroke_complex_circle);
-    case stroke::COMPLEX_LINE:
+    case Stroke::COMPLEX_LINE:
         return sizeof(stroke_complex_line);
-    case stroke::COMPLEX_RECT:
+    case Stroke::COMPLEX_RECT:
         return sizeof(stroke_complex_rect);
     default:
         std::abort();
@@ -23,7 +23,7 @@ void *stroke_complex_allocate(int type, const void *data)
 {
     void *new_data;
 
-    if(type == stroke::COMPLEX_NORMAL){
+    if(type == Stroke::COMPLEX_NORMAL){
         new_data = NULL;
         return new_data;
     }
@@ -36,7 +36,7 @@ void *stroke_complex_allocate(int type, const void *data)
     return new_data;
 }
 
-void stroke_complex_adjust(stroke *stroke, cdouble zoom)
+void stroke_complex_adjust(Stroke *stroke, cdouble zoom)
 {
     W_ASSERT(!stroke->is_normal());
 
@@ -60,7 +60,7 @@ void stroke_complex_adjust(stroke *stroke, cdouble zoom)
     }
 }
 
-QRect stroke_complex_bigger_data(const stroke *stroke)
+QRect stroke_complex_bigger_data(const Stroke *stroke)
 {
     if(stroke->is_line()){
         const auto *data = (const stroke_complex_line *)stroke->get_complex_data();
@@ -78,7 +78,7 @@ QRect stroke_complex_bigger_data(const stroke *stroke)
     }
 }
 
-bool stroke_complex_cmp(const stroke *str1, const stroke *str2)
+bool stroke_complex_cmp(const Stroke *str1, const Stroke *str2)
 {
     const size_t size = get_size_by_type(str1->get_type());
 
@@ -91,7 +91,7 @@ bool stroke_complex_cmp(const stroke *str1, const stroke *str2)
 typedef uchar ver_stroke_complex;
 constexpr ver_stroke_complex _current_ver = 0;
 
-int stroke_complex_save(const stroke *stroke, WZipWriterSingle &writer)
+int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &writer)
 {
     const auto type = stroke->get_type();
     const auto size = get_size_by_type(type);
@@ -105,7 +105,7 @@ int stroke_complex_save(const stroke *stroke, WZipWriterSingle &writer)
     return OK;
 }
 
-size_t stroke_complex_get_size_save(const stroke *stroke)
+size_t stroke_complex_get_size_save(const Stroke *stroke)
 {
     size_t s = 0;
     const auto type = stroke->get_type();
@@ -119,7 +119,7 @@ size_t stroke_complex_get_size_save(const stroke *stroke)
     return s;
 }
 
-int stroke_complex_load(stroke *stroke, int type, WZipReaderSingle &reader)
+int stroke_complex_load(Stroke *stroke, int type, WZipReaderSingle &reader)
 {
     ver_stroke_complex current_ver;
     const auto size = get_size_by_type(type);
@@ -150,11 +150,11 @@ static int stroke_complex_read_object_size(void *object, WReadZip &reader, int i
     return 0;
 }
 
-extern void stroke_complex_line_append(stroke *stroke, const QPointF& point);
-extern void stroke_complex_circle_append(stroke *stroke, const QPointF& point);
-extern void stroke_complex_rect_append(stroke *stroke, const QPointF& point);
+extern void stroke_complex_line_append(     Stroke *stroke, const QPointF& point);
+extern void stroke_complex_circle_append(   Stroke *stroke, const QPointF& point);
+extern void stroke_complex_rect_append(     Stroke *stroke, const QPointF& point);
 
-void stroke_complex_append(stroke *stroke, const QPointF& point)
+void stroke_complex_append(Stroke *stroke, const QPointF& point)
 {
     W_ASSERT(!stroke->is_normal());
     if(stroke->is_circle())
@@ -167,68 +167,68 @@ void stroke_complex_append(stroke *stroke, const QPointF& point)
     std::abort();
 }
 
-extern bool stroke_complex_is_inside_circle (const stroke *stroke, const WLine &line, cdouble precision);
-extern bool stroke_complex_is_inside_line   (const stroke *stroke, const WLine &line, cdouble precision);
-extern bool stroke_complex_is_inside_rect   (const stroke *stroke, const WLine &line, cdouble precision);
-bool stroke_complex_is_inside(const stroke *stroke, const WLine &line, cdouble precision)
+extern bool stroke_complex_is_inside_circle (const Stroke *stroke, const WLine &line, cdouble precision);
+extern bool stroke_complex_is_inside_line   (const Stroke *stroke, const WLine &line, cdouble precision);
+extern bool stroke_complex_is_inside_rect   (const Stroke *stroke, const WLine &line, cdouble precision);
+bool stroke_complex_is_inside(const Stroke *stroke, const WLine &line, cdouble precision)
 {
     switch (stroke->get_type()) {
-        case stroke::COMPLEX_CIRCLE:
+        case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_is_inside_circle(stroke, line, precision);
-        case stroke::COMPLEX_LINE:
+        case Stroke::COMPLEX_LINE:
             return stroke_complex_is_inside_line(stroke, line, precision);
-        case stroke::COMPLEX_RECT:
+        case Stroke::COMPLEX_RECT:
             return stroke_complex_is_inside_rect(stroke, line, precision);
         default:
             std::abort();
     }
 }
 
-extern void stroke_complex_translate_circle (stroke *stroke, const QPointF &offset);
-extern void stroke_complex_translate_line   (stroke *stroke, const QPointF &offset);
-extern void stroke_complex_translate_rect   (stroke *stroke, const QPointF &offset);
-void stroke_complex_translate(stroke *stroke, const QPointF &offset)
+extern void stroke_complex_translate_circle (Stroke *stroke, const QPointF &offset);
+extern void stroke_complex_translate_line   (Stroke *stroke, const QPointF &offset);
+extern void stroke_complex_translate_rect   (Stroke *stroke, const QPointF &offset);
+void stroke_complex_translate(Stroke *stroke, const QPointF &offset)
 {
     switch (stroke->get_type()) {
-        case stroke::COMPLEX_CIRCLE:
+        case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_translate_circle(stroke, offset);
-        case stroke::COMPLEX_LINE:
+        case Stroke::COMPLEX_LINE:
             return stroke_complex_translate_line(stroke, offset);
-        case stroke::COMPLEX_RECT:
+        case Stroke::COMPLEX_RECT:
             return stroke_complex_translate_rect(stroke, offset);
         default:
             std::abort();
     }
 }
 
-extern void stroke_complex_make_normal_circle (const stroke *from, stroke *to);
-extern void stroke_complex_make_normal_line   (const stroke *from, stroke *to);
-extern void stroke_complex_make_normal_rect   (const stroke *from, stroke *to);
-void stroke_complex_make_normal(const stroke *from, stroke *to)
+extern void stroke_complex_make_normal_circle (const Stroke *from, Stroke *to);
+extern void stroke_complex_make_normal_line   (const Stroke *from, Stroke *to);
+extern void stroke_complex_make_normal_rect   (const Stroke *from, Stroke *to);
+void stroke_complex_make_normal(const Stroke *from, Stroke *to)
 {
     switch (from->get_type()) {
-        case stroke::COMPLEX_CIRCLE:
+        case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_make_normal_circle(from, to);
-        case stroke::COMPLEX_LINE:
+        case Stroke::COMPLEX_LINE:
             return stroke_complex_make_normal_line(from, to);
-        case stroke::COMPLEX_RECT:
+        case Stroke::COMPLEX_RECT:
             return stroke_complex_make_normal_rect(from, to);
         default:
             std::abort();
     }
 }
 
-extern bool stroke_complex_is_inside_circle (const stroke *_stroke, const QRectF &area, cdouble precision);
-extern bool stroke_complex_is_inside_line   (const stroke *_stroke, const QRectF &area, cdouble precision);
-extern bool stroke_complex_is_inside_rect   (const stroke *_stroke, const QRectF &area, cdouble precision);
-bool stroke_complex_is_inside(const stroke *_stroke, const QRectF &area, cdouble precision)
+extern bool stroke_complex_is_inside_circle (const Stroke *_stroke, const QRectF &area, cdouble precision);
+extern bool stroke_complex_is_inside_line   (const Stroke *_stroke, const QRectF &area, cdouble precision);
+extern bool stroke_complex_is_inside_rect   (const Stroke *_stroke, const QRectF &area, cdouble precision);
+bool stroke_complex_is_inside(const Stroke *_stroke, const QRectF &area, cdouble precision)
 {
     switch ( _stroke->get_type() ) {
-        case stroke::COMPLEX_CIRCLE:
+        case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_is_inside_circle(_stroke, area, precision);
-        case stroke::COMPLEX_LINE:
+        case Stroke::COMPLEX_LINE:
             return stroke_complex_is_inside_line(_stroke, area, precision);
-        case stroke::COMPLEX_RECT:
+        case Stroke::COMPLEX_RECT:
             return stroke_complex_is_inside_rect(_stroke, area, precision);
         default:
             std::abort();
