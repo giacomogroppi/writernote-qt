@@ -11,9 +11,6 @@
 #include "preview_page_widget/preview_page_widget.h"
 
 #define MAXPOINT 20
-#define CHECK_FLAG(var, type) var == TabletCanvas::e_method::type
-#define CTRL_METHOD(var, type) var = met == TabletCanvas::e_method::type
-#define CTRL_METHOD_OR(var, type) var |= met == TabletCanvas::e_method::type
 
 Stroke __tmp;
 extern bool block_scrolling;
@@ -21,18 +18,13 @@ extern bool block_scrolling;
 bool need_save_auto = false;
 bool need_save_tmp = false;
 
-static bool insert_method;
-static bool selection_method;
-static bool rubber_method;
-static bool text_method;
-
-static TabletCanvas::e_method lastMethod = TabletCanvas::e_method::pen;
+static TabletPenMethod lastMethod;
 static QEvent::Type eventType;
 
 static void AppendAll(
-        Document                        &doc,
-        const TabletCanvas              *canvas,
-        const TabletCanvas::e_method    met)
+        Document              &doc,
+        const TabletCanvas    *canvas,
+        const TabletPenMethod& met)
 {
     /* for debug */
     Stroke & strokeToAppend = __tmp;
@@ -59,7 +51,7 @@ static void AppendAll(
         stroke_complex_translate(&strokeToAppend, -PointFirstPage);
     }
 
-    if(unlikely(met == TabletCanvas::e_method::laser)){
+    if(unlikely(met.isLaser())){
         canvas->_laser->append(strokeToAppend);
         canvas->_laser->endMove();
     }else{
@@ -73,30 +65,6 @@ static void AppendAll(
     }
 
     strokeToAppend.reset();
-}
-
-static not_used QString convert_method()
-{
-    QString method;
-    int index;
-
-    if(rubber_method)
-        method += "rubber ";
-    if(insert_method)
-        method += "pen highlighter laser ";
-    if(selection_method)
-        method += "square ";
-    if(text_method)
-        method += "text ";
-
-    if(method.isEmpty())
-        std::abort();
-
-    index = method.lastIndexOf(' ');
-    method = method.left(index);
-
-
-    return method;
 }
 
 static not_used QString convert(const QEvent::Type eventType)
@@ -113,17 +81,8 @@ static not_used QString convert(const QEvent::Type eventType)
     }
 }
 
-static force_inline void setFalse()
+static force_inline void set_flag(const QTabletEvent *event, TabletPenMethod met)
 {
-    insert_method = false;
-    selection_method = false;
-    text_method = false;
-}
-
-static force_inline void set_flag(const QTabletEvent *event, TabletCanvas::e_method met)
-{
-    CTRL_METHOD(rubber_method, rubber);
-
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     rubber_method |= (event->pointerType() == QTabletEvent::PointerType::Eraser);
 #else

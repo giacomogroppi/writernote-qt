@@ -19,12 +19,10 @@
 #include "touch/laser/laser.h"
 #include "touch/object_finder/object_finder.h"
 
-static void saveLastMethod(TabletCanvas::e_method);
-static void loadLastMethod(TabletCanvas *);
-
 TabletCanvas::TabletCanvas()
     : QWidget(nullptr)
     , m_pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
+    , _method(true)
 {
     this->setObjectName("TabletCanvas");
     this->resize(500, 500);
@@ -43,7 +41,6 @@ TabletCanvas::TabletCanvas()
 
     loadScrollinSetting();
 
-    loadLastMethod(this);
     this->setAttribute(Qt::WA_AcceptTouchEvents);
     /*qDebug() << this->testAttribute(Qt::WA_AcceptTouchEvents);
     qDebug() << this->testAttribute(Qt::WA_WState_AcceptedTouchBeginEvent);
@@ -61,7 +58,7 @@ TabletCanvas::~TabletCanvas()
 
     WDelete(data);
 
-    saveLastMethod(_input);
+    _method.save();
     saveScrollingSetting();
 }
 
@@ -234,26 +231,8 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
     return pressure * 10 + 1;
 }
 
-static void saveLastMethod(TabletCanvas::e_method val)
-{
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_METHOD_TOUCH);
-
-    setting.setValue(KEY_METHOD_TOUCH, val);
-    setting.endGroup();
-
-}
-
 static void loadLastMethod(TabletCanvas *p)
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_METHOD_TOUCH);
-
-    p->_input = static_cast<TabletCanvas::e_method>(
-                setting.value(KEY_METHOD_TOUCH, TabletCanvas::pen)
-                .toInt());
-
-    setting.endGroup();
 
 }
 

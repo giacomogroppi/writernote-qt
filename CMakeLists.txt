@@ -106,7 +106,7 @@ find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)
 if(NOT APPLE)
     qt_add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES} ${PROJECT_UI})
 else()
-    qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_MOC} ${PROJECT_SOURCES} ${PROJECT_UI})
+    qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_MOC} ${PROJECT_SOURCES} ${PROJECT_UI} src/touch/TabletPenMethod.cpp src/touch/TabletPenMethod.h)
 endif()
 
 set_target_properties(

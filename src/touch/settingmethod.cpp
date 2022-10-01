@@ -14,7 +14,7 @@
 
 void MainWindow::on_actionhighlighter_triggered()
 {
-    if(_canvas->_input == TabletCanvas::e_method::highlighter){
+    if(_canvas->_method.isHighlighter()){
         this->m_highlighter->show();
 
         const auto hostRect = core::get_pos_start_mouse();
@@ -22,7 +22,7 @@ void MainWindow::on_actionhighlighter_triggered()
         m_highlighter->move(hostRect);
     }
 
-    _canvas->_input = TabletCanvas::e_method::highlighter;
+    _canvas->_method.setHighlighter();
 
     updateTouch();
 }
@@ -31,9 +31,9 @@ void MainWindow::on_actionpen_triggered()
 {
     const auto debug = false;
 
-    WDebug(debug, ((_canvas->_input == TabletCanvas::e_method::pen) ? "Selected" : "Not selected"));
+    WDebug(debug, ((_canvas->_method.isPen()) ? "Selected" : "Not selected"));
 
-    if(_canvas->_input == TabletCanvas::e_method::pen){
+    if(_canvas->_method.isPen()){
         this->m_pen->show();
         const auto pos_mouse = core::get_pos_start_mouse();
 
@@ -42,14 +42,14 @@ void MainWindow::on_actionpen_triggered()
         W_ASSERT(m_pen->isVisible());
     }
 
-    _canvas->_input = TabletCanvas::e_method::pen;
+    _canvas->_method.setPen();
 
     updateTouch();
 }
 
 void MainWindow::on_actionrubber_triggered()
 {
-    if(_canvas->_input == TabletCanvas::e_method::rubber){
+    if(_canvas->_method.isRubber()){
         this->m_rubber->show();
 
         const auto hostRect = core::get_pos_start_mouse();
@@ -57,21 +57,21 @@ void MainWindow::on_actionrubber_triggered()
 
     }
 
-    this->_canvas->_input = TabletCanvas::e_method::rubber;
+    _canvas->_method.setRubber();
 
     updateTouch();
 }
 
 void MainWindow::on_actionselezionetext_triggered()
 {
-    _canvas->_input = TabletCanvas::e_method::selection;
+    _canvas->_method.setSelection();
 
     updateTouch();
 }
 
 void MainWindow::on_actionLaser_triggered()
 {
-    _canvas->_input = TabletCanvas::e_method::laser;
+    _canvas->_method.setLaser();
     _canvas->_color = Qt::red;
     updateTouch();
 }
@@ -83,7 +83,7 @@ void MainWindow::on_actioninsertText_triggered()
     updateTouch();
     return;
 
-    if(_canvas->_input == TabletCanvas::e_method::text){
+    if(_canvas->_method.isText()){
         if(m_text->isHidden()){
             this->m_text->show();
         }
@@ -96,7 +96,7 @@ void MainWindow::on_actioninsertText_triggered()
 
     }
 
-    _canvas->_input = TabletCanvas::e_method::text;
+    _canvas->_method.setText();
 
     updateTouch();
 }
@@ -118,22 +118,22 @@ void TabletCanvas::sceltacolorepenna(const QColor color)
 
 void MainWindow::updateTouch()
 {
-    static TabletCanvas::e_method last = TabletCanvas::pen;
+    static TabletPenMethod last(true);
 
-    ui->actionpen->setChecked(              _canvas->_input == TabletCanvas::pen);
-    ui->actionrubber->setChecked(           _canvas->_input == TabletCanvas::rubber);
-    ui->actionselezionetext->setChecked(    _canvas->_input == TabletCanvas::selection);
-    ui->actioninsertText->setChecked(       _canvas->_input == TabletCanvas::text);
-    ui->actionhighlighter->setChecked(      _canvas->_input == TabletCanvas::highlighter);
-    ui->actionLaser->setChecked(            _canvas->_input == TabletCanvas::laser);
+    ui->actionpen->setChecked(              _canvas->_method.isPen());
+    ui->actionrubber->setChecked(           _canvas->_method.isRubber());
+    ui->actionselezionetext->setChecked(    _canvas->_method.isSelection());
+    ui->actioninsertText->setChecked(       _canvas->_method.isText());
+    ui->actionhighlighter->setChecked(      _canvas->_method.isHighlighter());
+    ui->actionLaser->setChecked(            _canvas->_method.isLaser());
 
 
-    _tool_bar->get_pen_button()->setChecked(            _canvas->_input == TabletCanvas::pen);
-    _tool_bar->get_rubber_button()->setChecked(         _canvas->_input == TabletCanvas::rubber);
-    _tool_bar->get_cut_button()->setChecked(            _canvas->_input == TabletCanvas::selection);
-    _tool_bar->get_text_button()->setChecked(           _canvas->_input == TabletCanvas::text);
-    _tool_bar->get_highlighter_button()->setChecked(    _canvas->_input == TabletCanvas::highlighter);
-    _tool_bar->get_laser_button()->setChecked(          _canvas->_input == TabletCanvas::laser);
+    _tool_bar->get_pen_button()->setChecked(            _canvas->_method.isPen());
+    _tool_bar->get_rubber_button()->setChecked(         _canvas->_method.isRubber());
+    _tool_bar->get_cut_button()->setChecked(            _canvas->_method.isSelection());
+    _tool_bar->get_text_button()->setChecked(           _canvas->_method.isText());
+    _tool_bar->get_highlighter_button()->setChecked(    _canvas->_method.isHighlighter());
+    _tool_bar->get_laser_button()->setChecked(          _canvas->_method.isLaser());
 
     ui->actionblack->setChecked(_canvas->_color == Qt::black);
     ui->actionwhite->setChecked(_canvas->_color == Qt::white);
@@ -142,8 +142,7 @@ void MainWindow::updateTouch()
     ui->actionbrown_color->setChecked(_canvas->_color == COLOR_BROWN);
     ui->actionpurple->setChecked(_canvas->_color == COLOR_PURPLE);
 
-    if(unlikely(_canvas->_input != TabletCanvas::selection
-            && last == TabletCanvas::selection)){
+    if(unlikely(!_canvas->_method.isSelection() and last.isSelection())){
         _canvas->_square->changeInstrument();
     }
 }

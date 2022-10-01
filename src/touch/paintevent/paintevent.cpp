@@ -48,7 +48,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
 
     TabletCanvas::load(painter, this->data, dataPaint);
 
-    if(_input == e_method::selection){
+    if (_method.isSelection()) {
         _square->needReload(painter);
     }
 

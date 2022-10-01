@@ -16,6 +16,7 @@
 #include "text/text_widgets/text_widgets.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "highlighter/highlighter.h"
+#include "touch/TabletPenMethod.h"
 #include <QGestureEvent>
 
 class highlighter;
@@ -130,14 +131,7 @@ public:
 
     Document *data;
 
-    enum e_method: int{
-        rubber,
-        pen,
-        selection,
-        text,
-        highlighter,
-        laser
-    };
+    TabletPenMethod _method;
 
     void panTriggered(QPanGesture*) {};
     void swipeTriggered(QSwipeGesture*) {};
@@ -150,14 +144,13 @@ public:
             grabGesture(gesture);
     }
 
-    e_method _input;
     QColor _color = Qt::black;
 
     static void load(QPainter &painter, const Document *data,
                      DataPaint &dataPoint);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */
-    static void updateBrush_load(const double pressure, const QColor &color, QPen &m_pen);
+    static void updateBrush_load(double pressure, const QColor &color, QPen &m_pen);
     void loadpixel(){ this->resizeEvent(nullptr); };
     void call_update();
 
