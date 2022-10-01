@@ -3,7 +3,6 @@
 #include "zip.h"
 #include <QByteArray>
 #include <QList>
-#include <QStringList>
 #include "utils/common_error_definition.h"
 #include "core/WZip.h"
 
@@ -21,10 +20,10 @@ public:
      * ogni file, per ogni nome all'interno del list_name e apperderà tutto
      * alla lista di QByteArray
 */
-    static uchar read(const QStringList &list_name, zip_t *zip_file,
+    static uchar read(const QList<QString> &list_name, zip_t *zip_file,
                      QList<QByteArray> &arr, cbool clear);
 
-    static uchar read(const QStringList &list_name, WZip &zip,
+    static uchar read(const QList<QString> &list_name, WZip &zip,
                       QList<QByteArray> &arr, cbool clear);
 };
 

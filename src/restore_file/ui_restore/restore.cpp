@@ -63,10 +63,10 @@ void restore::on_pushButton_open_clicked()
 
 }
 
-void restore::removeNotWriternote(QStringList &l)
+void restore::removeNotWriternote(QList<QString> &l)
 {
     uint i, len;
-    QStringList list;
+    QList<QString> list;
     QString tmp;
 
     len = l.length();

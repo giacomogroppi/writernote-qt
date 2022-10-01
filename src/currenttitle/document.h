@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QStringList>
 #include <QList>
 #include <QByteArray>
 #include "touch/datastruct/datastruct.h"

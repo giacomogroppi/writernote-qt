@@ -1,6 +1,6 @@
 #include "removenotwriternote.h"
 
-void removeNotWriternote::exe(QStringList &ref)
+void removeNotWriternote::exe(QList<QString> &ref)
 {
     int i;
     for(i=0; i<ref.length(); ++i){

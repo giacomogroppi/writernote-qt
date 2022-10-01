@@ -92,10 +92,10 @@ public:
 
     void reset();
 
-    QStringList get_name_pdf();
+    QList<QString> get_name_pdf();
 
     /* return true if all load correctly */
-    bool load(const QStringList &path, QMap<load_res, uchar> &index, TabletCanvas *canvas);
+    bool load(const QList<QString> &path, QMap<load_res, uchar> &index, TabletCanvas *canvas);
 
     load_res load(const QString &, cbool clear, TabletCanvas *canvas);
     /* it load from a zip_t file all the pdf for the current copybook */
@@ -113,7 +113,7 @@ public:
 
     void resizing(TabletCanvas *canvas, const uint lenPdf);
 
-    [[nodiscard]] load_res save(const QStringList &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res save(const QList<QString> &path, const QByteArray &path_writernote_file);
     [[nodiscard]] load_res save(const QByteArray &path, const QByteArray &path_writernote_file);
     [[nodiscard]] load_res save(WZipWriter &filezip, const QByteArray &path, const QByteArray &path_writernote_file);
 

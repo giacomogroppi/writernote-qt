@@ -14,7 +14,7 @@
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
 fromimage::load_res fromimage::save(WZipWriter          &writer,
-                                    const QStringList   &pathPdf) const
+                                    const QList<QString>   &pathPdf) const
 {
     fromimage::load_res res;
     uint i, len;
@@ -116,7 +116,7 @@ fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader)
 fromimage::load_res fromimage::load(WZipReaderSingle &reader)
 {
     QList<QByteArray> arr;
-    QStringList name_list;
+    QList<QString> name_list;
     uchar res;
 
     this->m_img.clear();
@@ -166,15 +166,15 @@ fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr)
     return fromimage::load_res::ok;
 }
 
-QStringList fromimage::get_name_img()
+QList<QString> fromimage::get_name_img()
 {
     return fromimage::get_name_img(*this->doc);
 }
 
-QStringList fromimage::get_name_img(const Document &doc)
+QList<QString> fromimage::get_name_img(const Document &doc)
 {
     uint i;
-    QStringList list;
+    QList<QString> list;
     for(i=0; i<doc.count_img; ++i){
         list.append(fromimage::getName(i));
     }

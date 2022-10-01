@@ -33,7 +33,7 @@ updater::~updater()
 
 bool updater::downloadFile(const QString &url, const QString &dest)
 {
-    QStringList argv;
+    QList<QString> argv;
 
     /* 4 min */
     const size_t time = 4*60*1000;
@@ -53,7 +53,7 @@ bool updater::downloadFile(const QString &url, const QString &dest)
 bool updater::extractFile(const QString &path, const QString &dest)
 {
     if(!updater::createDirectory(dest)) return false;
-    QStringList list = QStringList(QString("cd %1; tar -xf %2").arg(dest).arg(path));
+    QList<QString> list = QList<QString>(QString("cd %1; tar -xf %2").arg(dest).arg(path));
     const size_t timeout = /* second */ 10 * 1000;
 
     if(!updater::cleanDirectory(path)){
@@ -66,10 +66,10 @@ bool updater::extractFile(const QString &path, const QString &dest)
 }
 
 static int check;
-bool updater::exe(const QStringList &argv, const int time)
+bool updater::exe(const QList<QString> &argv, const int time)
 {
     QProcess process;
-    QStringList list_argv;
+    QList<QString> list_argv;
 
     check = 1;
     connect(&process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
@@ -78,7 +78,7 @@ bool updater::exe(const QStringList &argv, const int time)
         qDebug() << "Exit Code "  << check << exitCode;
     });
 
-    list_argv = QStringList("-Command") + argv;
+    list_argv = QList<QString>("-Command") + argv;
 
     process.start("powershell", argv);
     process.waitForStarted(time);
@@ -105,8 +105,8 @@ bool updater::removeDirectory(const QString &path)
 
 bool updater::cleanDirectory(const QString &path)
 {
-    QStringList argv;
-    this->exe(QStringList(QString("mkdir %1").arg(path)), -1);
+    QList<QString> argv;
+    this->exe(QList<QString>(QString("mkdir %1").arg(path)), -1);
     argv << QString("cd %1; rm %2\\*").arg(path).arg(path);
 
     this->exe(argv, 10*1000);
@@ -115,7 +115,7 @@ bool updater::cleanDirectory(const QString &path)
 
 bool updater::moveWithA(const QString &from, const QString to)
 {
-    QStringList argv;
+    QList<QString> argv;
 
     if(!updater::cleanDirectory(to))
         return false;

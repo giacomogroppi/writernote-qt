@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QString>
-#include <QStringList>
 #include "utils/slash/slash.h"
 
 class get_name_tmp
@@ -9,7 +8,7 @@ class get_name_tmp
 public:
     static QByteArray get(const QByteArray &m_path)
     {
-        QStringList list;
+        QList<QString> list;
         QByteArray path;
         const char sl = slash::__slash();
         uchar last_pos = 0;

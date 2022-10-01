@@ -34,7 +34,7 @@ frompdf::frompdf(Document *data)
 }
 
 bool frompdf::load(
-        const QStringList       &path,
+        const QList<QString>       &path,
         QMap<load_res, uchar>   &index,
         TabletCanvas            *canvas)
 {
@@ -72,10 +72,10 @@ frompdf::load_res frompdf::load(
     return load_from_row(arr, clear, true, 0, canvas);
 }
 
-QStringList frompdf::get_name_pdf()
+QList<QString> frompdf::get_name_pdf()
 {
     uint i;
-    QStringList __l;
+    QList<QString> __l;
     for(i=0; i<m_data->count_pdf; ++i){
         __l.append(frompdf::getName(i));
     }
@@ -101,7 +101,7 @@ frompdf::load_res frompdf::load(WZipReaderSingle &reader,
                                 TabletCanvas *canvas)
 {
     QList<QByteArray> arr;
-    QStringList __name;
+    QList<QString> __name;
     uint i;
     frompdf::load_res res;
     WZip *zip = reader.get_zip();
@@ -135,7 +135,7 @@ frompdf::load_res frompdf::load(zip_t           *fileZip,
                                 TabletCanvas    *canvas)
 {
     QList<QByteArray> arr;
-    QStringList __name;
+    QList<QString> __name;
     uint i;
     frompdf::load_res res;
 
@@ -291,7 +291,7 @@ frompdf::load_res frompdf::load_from_row(
     return load_res::ok;
 }
 
-frompdf::load_res frompdf::save(const QStringList   &path,
+frompdf::load_res frompdf::save(const QList<QString>   &path,
                                 const QByteArray    &path_writernote_file)
 {
     frompdf::load_res res;

@@ -1,6 +1,5 @@
 #include "document.h"
 #include <QString>
-#include <QStringList>
 
 #include "testing/memtest.h"
 #include "touch/datastruct/datastruct.h"

@@ -6,7 +6,6 @@
 #include <fstream>
 #include <streambuf>
 #include <QList>
-#include <QStringList>
 #include "currenttitle/document.h"
 #include "touch/datastruct/datastruct.h"
 #include <zip.h>

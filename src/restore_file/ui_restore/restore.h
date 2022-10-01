@@ -2,7 +2,6 @@
 
 #include <QDialog>
 #include <QString>
-#include <QStringList>
 #include "datawrite/savefile.h"
 #include "dataread/xmlstruct.h"
 #include "currenttitle/document.h"
@@ -28,14 +27,14 @@ private slots:
     void on_ok_restore_clicked();
 
 private:
-    static void removeNotWriternote(QStringList &l);
+    static void removeNotWriternote(QList<QString> &l);
     void updateList();
 
     savefile *m_save = nullptr;
     xmlstruct *m_xml = nullptr;
     Document *m_curr;
 
-    QStringList __l;
+    QList<QString> __l;
 
     QByteArray path;
 

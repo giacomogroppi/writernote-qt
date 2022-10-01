@@ -2,7 +2,6 @@
 
 #include <QString>
 #include <QByteArray>
-#include <QStringList>
 
 #define VAL_RES "_res"
 #define NAME_EXT "writernote"

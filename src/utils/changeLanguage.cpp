@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include <QTranslator>
-#include <QStringList>
 #include <QInputDialog>
 #include "utils/dialog_critic/dialog_critic.h"
 #include "touch/tabletapplication.h"
@@ -64,9 +63,7 @@ void language_manager::setLanguage(QCoreApplication *app)
 
 void MainWindow::on_actionChange_language_triggered()
 {
-
-
-    QStringList __l_list;
+    QList<QString> __l_list;
     QString lan_dect, __last;
 
     __last = language_manager::loadLastLanguage();

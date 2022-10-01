@@ -40,7 +40,7 @@ bool last_file::load_data()
 
 bool last_file::load_folder(const QString &path)
 {
-    const QStringList file = get_file_dir::get(path);
+    const QList<QString> file = get_file_dir::get(path);
     const uint len = file.length();
     uint i;
     last_file_s object;

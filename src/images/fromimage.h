@@ -26,11 +26,11 @@ private:
     Document *doc;
 
     QList<struct immagine_s> m_img;
-    QStringList get_name_img();
+    QList<QString> get_name_img();
     unsigned insert_image(const QString &__pos, const PointSettable *point, struct immagine_s &img);
 
 
-    static QStringList get_name_img(const Document &doc);
+    static QList<QString> get_name_img(const Document &doc);
     static inline QByteArray getName(unsigned i);
 public:
     static void copy(const fromimage &src, fromimage &dest);
@@ -49,7 +49,7 @@ public:
 
     fromimage::load_res load(WZipReaderSingle &zip);
 
-    fromimage::load_res save(WZipWriter &file, const QStringList &path) const;
+    fromimage::load_res save(WZipWriter &file, const QList<QString> &path) const;
     fromimage::load_res save(WZipWriter &file, const QString &path) const;
     fromimage::load_res save_metadata(WZipWriterSingle &writer);
 

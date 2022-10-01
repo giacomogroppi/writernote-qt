@@ -1,7 +1,7 @@
 #include "readlistarray.h"
 #include "xmlstruct.h"
 
-uchar readListArray::read(const QStringList &list_name,
+uchar readListArray::read(const QList<QString> &list_name,
                           zip_t *zip_file,
                           QList<QByteArray> &list_arr, cbool clear)
 {
@@ -22,7 +22,7 @@ uchar readListArray::read(const QStringList &list_name,
     return OK;
 }
 
-unsigned char readListArray::read(const QStringList &list_name, WZip &zip,
+unsigned char readListArray::read(const QList<QString> &list_name, WZip &zip,
                                   QList<QByteArray> &list_arr, cbool clear)
 {
     QByteArray arr;

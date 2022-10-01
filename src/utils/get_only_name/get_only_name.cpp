@@ -1,7 +1,6 @@
 #include "get_only_name.h"
 #include "utils/common_def.h"
 #include "utils/slash/slash.h"
-#include <QStringList>
 
 #include "../path/pathfile.h"
 QString get_only_name::exe(const QString &path)
@@ -13,9 +12,9 @@ QString get_only_name::exe(const QString &path)
     const int index_slash = path.indexOf(slash);
     if(index_slash == -1)
         tmp = pathFile::changeSlash(path);
-    const QStringList list = tmp.split('\\');
+    const QList<QString> list = tmp.split('\\');
 #else
-    const QStringList list = path.split(slash);
+    const QList<QString> list = path.split(slash);
 #endif
 
     if(!list.length())

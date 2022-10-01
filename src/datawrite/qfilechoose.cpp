@@ -22,7 +22,7 @@ bool qfilechoose::getFileForSave(QByteArray &nome, uint16_t type_)
     QString type;
     QString dir, nameFile;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
-    QStringList list;
+    QList<QString> list;
 #endif // ANDROID IOS
 
     if(type_ == TYPEFILEWRITER){
@@ -75,7 +75,7 @@ bool qfilechoose::getFileForLoad(QByteArray &nome, uint16_t type_)
     QString type = "";
     QString dir, nameFile;
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
-    QStringList list;
+    QList<QString> list;
 #endif // ANDROID IOS
 
     if(type_ & TYPEFILEWRITER){

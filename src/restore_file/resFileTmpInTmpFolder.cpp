@@ -14,7 +14,7 @@
 
 void MainWindow::resFileTmpInTmpFolder()
 {
-    QStringList __l;
+    QList<QString> __l;
     QString __pos;
     QMessageBox::StandardButton resBtn;
     constexpr int pos_ext = WStrlen("." APP_EXT); // posizione dell'estensione di APP_EXT da destra a sinistra

@@ -25,7 +25,7 @@ public:
     bool downloadFile(const QString &url, const QString &dest);
     bool extractFile(const QString &path, const QString &dest);
 
-    bool exe(const QStringList &argv,
+    bool exe(const QList<QString> &argv,
             const int time);
 
     bool createDirectory(const QString &path);
