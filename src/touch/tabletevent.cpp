@@ -67,9 +67,20 @@ static void AppendAll(
     strokeToAppend.reset();
 }
 
-static not_used QString convert(const QEvent::Type eventType)
+static inline bool is_rubber(QTabletEvent *event, const TabletPenMethod &met)
 {
-    switch(eventType){
+    W_ASSERT(event);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    const auto res = (event->pointerType() == QTabletEvent::PointerType::Eraser) or met.isRubber();
+#else
+    const auto res = (event->pointerType() == QPointingDevice::PointerType::Eraser) or met.isRubber();
+#endif
+    return res;
+}
+
+static not_used QString convert(const QEvent::Type e)
+{
+    switch(e){
         case QEvent::TabletPress:
             return "QEvent::TabletPress";
         case QEvent::TabletMove:
@@ -81,30 +92,14 @@ static not_used QString convert(const QEvent::Type eventType)
     }
 }
 
-static force_inline void set_flag(const QTabletEvent *event, TabletPenMethod met)
-{
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    rubber_method |= (event->pointerType() == QTabletEvent::PointerType::Eraser);
-#else
-    rubber_method |= (event->pointerType() == QPointingDevice::PointerType::Eraser);
-#endif
-
-    if(unlikely(rubber_method)){
-        setFalse();
-    }
-    else{
-        CTRL_METHOD(insert_method, highlighter);
-        CTRL_METHOD_OR(insert_method, pen);
-        CTRL_METHOD_OR(insert_method, laser);
-        CTRL_METHOD(selection_method, selection);
-        CTRL_METHOD(text_method, text);
-    }
-}
-
 static force_inline bool is_out(const datastruct *data, const QPointF &point)
 {
-    return point.x() > data->biggerx() or point.y() > data->biggery() or
-            point.x() < 0. or point.y() < 0.;
+    const auto biggerX = data->biggerx();
+    const auto biggerY = data->biggery();
+    return  point.x() > biggerX or
+            point.y() > biggerY or
+            point.x() < 0.      or
+            point.y() < 0.;
 }
 
 void TabletCanvas::tabletEvent(QTabletEvent *event)
@@ -118,11 +113,9 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     eventType = event->type();
 
-    set_flag(event, _input);
-
     cbool isOut = is_out(data->datatouch, pointTouch);
 
-    WDebug(tabletDebug, event->type() << convert(event->type()) << convert_method());
+    WDebug(tabletDebug, event->type() << convert(event->type()));
 
     if(unlikely(isOut)){
         /*
@@ -158,7 +151,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
 end:
 
-    if(unlikely(!selection_method && lastMethod == e_method::selection)){
+    if(unlikely(!_method.isSelection() && lastMethod.isSelection())){
         WDebug(tabletDebug, "Square reset");
         _square->reset();
     }
@@ -166,7 +159,7 @@ end:
     update();
 
     event->accept();
-    lastMethod = _input;
+    lastMethod = _method;
 }
 
 force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
@@ -192,13 +185,13 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 
     W_ASSERT(event->type() == QEvent::TabletPress);
 
-    if(insert_method){
+    if(_method.isInsert()){
         updatelist(event);
         _finder->move(event->position());
     }
-    else if(selection_method){
+    else if(_method.isSelection()){
         ManageStartSquare(event->position(), _square);
-    }else if(rubber_method){
+    }else if(is_rubber(event, _method)){
         _rubber->initRubber(event->position());
         WDebug(_debug, "rubber is set");
         W_ASSERT(_rubber->is_set());
@@ -249,23 +242,23 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
     painter.begin(&_pixmap);
     W_ASSERT(painter.isActive());
 
-    if(likely(insert_method)){
+    if(likely(_method.isInsert())){
         updateBrush(event);
     }
 
     _lastPoint.pos = event->position();
     _lastPoint.pressure = event->pressure();
 
-    if(likely(insert_method)){
+    if(likely(_method.isInsert())){
         updatelist(event);
         _finder->move(point);
     }
-    else if(rubber_method){
+    else if(is_rubber(event, _method)){
         _rubber->actionRubber(point);
     }
-    else if(selection_method){
+    else if(_method.isSelection()){
         ManageMoveSquare(point, _square);
-    }else if(text_method){
+    }else if(_method.isText()){
         if(_text_w->isIn(point)){
             
         }
@@ -288,13 +281,13 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
     this->isdrawing = false;
 #endif
 
-    if(likely(insert_method)){
-        AppendAll(*this->data, this, _input);
+    if(likely(_method.isInsert())){
+        AppendAll(*this->data, this, _method);
         _finder->endMoving();
     }
 
     if(unlikely(!m_deviceDown)){
-        if(selection_method && done){
+        if(_method.isSelection() && done){
             _square->reset();
         }
     }
@@ -302,7 +295,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
     if (m_deviceDown && event->buttons() == Qt::NoButton){
         m_deviceDown = false;
 
-        if(selection_method){
+        if(_method.isSelection()){
             if(!done){
                 _square->find();
             }
@@ -311,7 +304,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
             else
                 _square->hideProperty();
 
-        }else if(rubber_method){
+        }else if(is_rubber(event, _method)){
             index_mod = _rubber->endRubber();
             if(index_mod >= 0){
                 core::get_main_window()->_preview_widget->mod(index_mod);
@@ -330,10 +323,10 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
 {
     double size;
     uchar alfa;
-    point_s tmp_point;
+    point_s tmp_point{};
     Stroke &strokeTmp = __tmp;
     pressure_t pressure;
-    cbool highlighter = CHECK_FLAG(_input, highlighter);
+    cbool highlighter = is_rubber(event, _method);
     const QPointF &pointTouch = event->position();
 
     size = event->pressure();

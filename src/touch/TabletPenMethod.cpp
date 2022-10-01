@@ -20,7 +20,6 @@ void TabletPenMethod::load()
     _method = (setting.value(KEY_METHOD_TOUCH, PrivateTabletMethod_Pen) .toInt());
 
     setting.endGroup();
-
 }
 
 TabletPenMethod::TabletPenMethod(const TabletPenMethod &t)
@@ -32,4 +31,9 @@ TabletPenMethod::TabletPenMethod(bool FirstLoad)
 {
     W_ASSERT(FirstLoad == true);
     this->load();
+}
+
+TabletPenMethod::TabletPenMethod()
+{
+    this->_method = PrivateTabletMethod_Pen;
 }

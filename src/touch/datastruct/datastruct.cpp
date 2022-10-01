@@ -37,7 +37,7 @@ void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
 
     this->triggerVisibility(size);
     this->pageVisible = -1;
-    this->getFirstPageVisible();
+    (void)this->getFirstPageVisible();
 }
 
 void datastruct::increaseZoom(const double delta, const QSize &size)

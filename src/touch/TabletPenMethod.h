@@ -20,13 +20,14 @@ public:
 
     ~TabletPenMethod() = default;
 
-    void setRubber();
-    void setPen();
-    void setSelection();
-    void setText();
-    void setHighlighter();
-    void setLaser();
+    void setRubber()        { _method = PrivateTabletMethod_Rubber; };
+    void setPen()           { _method = PrivateTabletMethod_Pen; };
+    void setSelection()     { _method = PrivateTabletMethod_Selection; };
+    void setText()          { _method = PrivateTabletMethod_Selection; };
+    void setHighlighter()   { _method = PrivateTabletMethod_Highlighter; };
+    void setLaser()         { _method = PrivateTabletMethod_Laser; };
 
+    [[nodiscard]] bool isInsert() const;
     [[nodiscard]] bool isRubber() const;
     [[nodiscard]] bool isPen() const;
     [[nodiscard]] bool isSelection() const;
@@ -63,4 +64,9 @@ inline bool TabletPenMethod::isHighlighter() const
 inline bool TabletPenMethod::isLaser() const
 {
     return _method == PrivateTabletMethod_Laser;
+}
+
+inline bool TabletPenMethod::isInsert() const
+{
+    return isPen() || isHighlighter() || isLaser();
 }

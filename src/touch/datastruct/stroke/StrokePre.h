@@ -6,7 +6,7 @@
 
 class StrokePre: public Stroke, private WImage {
 private:
-    WList<point_s> _p;
+    WList<point_s> _point;
 public:
     StrokePre();
     ~StrokePre() = default;
