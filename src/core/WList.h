@@ -21,7 +21,6 @@ public:
     WList(const WList<T> &l);
     ~WList();
 
-
     void append(const T &data) noexcept;
     void clear();
     bool equal(const WList<T> &l1, const WList<T> &l2);
@@ -124,7 +123,7 @@ inline WList<T>::WList(const WList<T> &l)
 
     while(tmp and curr){
         W_ASSERT(tmp->data);
-        curr->data = tmp->data;
+        *curr->data = *tmp->data;
 
         tmp = tmp->next;
         curr = curr->next;

@@ -6,3 +6,9 @@ StrokePre::StrokePre() :
 {
     WImage::initAsPage();
 }
+
+void StrokePre::reset()
+{
+    Stroke::reset();
+    WImage::initAsPage();
+}
