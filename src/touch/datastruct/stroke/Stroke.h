@@ -135,6 +135,9 @@ public:
     [[nodiscard]] const void *get_complex_data() const { return _complex; };
     [[nodiscard]] typeof(_prop) get_type() const { return _prop; };
 
+    auto constBegin() const { return _point.begin(); }
+    auto constEnd() const { return _point.end(); }
+
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
@@ -252,15 +255,15 @@ force_inline Stroke::~Stroke()
 
 inline pressure_t Stroke::getPressure(int index) const
 {
-    int __index = 0;
+    int real_index = 0;
 
     W_ASSERT(is_normal());
 
     if(_pressure.length() > 1){
-        __index = index;
+        real_index = index;
     }
 
-    return _pressure.at(__index);
+    return _pressure.at(real_index);
 }
 
 /* call this function only when constantPressureVal is 1 */

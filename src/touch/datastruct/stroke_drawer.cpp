@@ -1,8 +1,8 @@
 #include "stroke_drawer.h"
-#include "touch/datastruct/stroke/Stroke.h"
 #include "touch/datastruct/page.h"
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
+#include "touch/datastruct/stroke/StrokePre.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 constexpr double deltaColorNull = 1.08;
@@ -162,6 +162,22 @@ force_inline void stroke_drawer::draw_line(
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
+}
+
+void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen &pen, cdouble prop)
+{
+    if(likely(stroke.is_normal())){
+        stroke_drawer::draw_stroke_normal(painter, stroke, 0, pen, false, prop);
+    }else if(stroke.is_circle()){
+        stroke_drawer::draw_circle(painter, stroke, 0, pen, false, prop);
+    }else if(stroke.is_rect()){
+        stroke_drawer::draw_rect(painter, stroke, 0, pen, false, prop);
+    }else if(stroke.is_line()){
+        stroke_drawer::draw_line(painter, stroke, 0, pen, false, prop);
+    }else{
+        std::abort();
+    }
+    }
 }
 
 void stroke_drawer::draw_stroke(QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)

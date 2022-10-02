@@ -22,7 +22,12 @@ public:
     void setColor(const QColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const;
+
     [[nodiscard]] bool is_normal() const;
+    [[nodiscard]] bool is_circle() const;
+    [[nodiscard]] bool is_rect() const;
+    [[nodiscard]] bool is_line() const;
+
     void reset() noexcept;
     void draw(QPainter &painter, QPen &pen, cdouble prop);
     void append(const point_s &point, const pressure_t &press);

@@ -6,6 +6,7 @@
 #include <QPen>
 
 class Stroke;
+class StrokePre;
 
 class stroke_drawer {
 private:
@@ -16,6 +17,7 @@ private:
     static void draw_rect   (QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
     static void draw_line   (QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
 public:
+    static void draw_stroke(QPainter &painter, const StrokePre &stroke, QPen &pen, cdouble prop);
     static void draw_stroke(QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
 };
 
