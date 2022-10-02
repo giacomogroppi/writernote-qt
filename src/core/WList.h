@@ -206,7 +206,7 @@ inline bool WList<T>::isEmpty() const noexcept
         W_ASSERT(_first and _last);
     }
 #endif // DEBUGINFO
-    // return this->_size == 0;
+    return this->_size == 0;
 }
 
 template<class T>
