@@ -13,7 +13,7 @@ private:
 #endif // DEBUGINFO
 public:
     StrokePre() noexcept;
-    ~StrokePre();
+    ~StrokePre() = default;
 
     void adjust(const QPointF &delta);
     void setAlfaColor(int alfa);
@@ -24,9 +24,13 @@ public:
     [[nodiscard]] int length() const;
     [[nodiscard]] bool is_normal() const;
     void reset() noexcept;
+    void draw(QPainter &painter, QPen &pen, cdouble prop);
     void append(const point_s &point, const pressure_t &press);
+    [[nodiscard]] QColor getColor(double division = 1.) const;
 
     Stroke& merge();
+
+    StrokePre &operator=(const StrokePre &other);
 };
 
 inline bool StrokePre::isEmpty() const noexcept

@@ -1,11 +1,13 @@
 #pragma once
 
-#include "utils/common_script.h"
 #include <QTimer>
 #include <QObject>
 #include "testing/memtest.h"
 #include "touch/datastruct/datastruct.h"
 #include "touch/tabletcanvas.h"
+#include "core/WList.h"
+#include "utils/common_script.h"
+#include "touch/datastruct/stroke/StrokePre.h"
 
 class laser : public QObject
 {
@@ -14,28 +16,35 @@ private:
     static constexpr int _size = 1;
     static constexpr int _time = 2000;
 
-    QList<Stroke> _stroke;
+    WList<StrokePre> _stroke;
 
     QTimer *_timer;
     class TabletCanvas *_canvas;
+
 public:
-    laser(QObject *parent);
+    explicit laser(QObject *parent);
     ~laser();
 
     void startMove();
     void endMove();
-    void append(const Stroke &stroke);
-    int length() const;
-    const Stroke &at(int i) const;
+    void append(const StrokePre &stroke);
+    [[nodiscard]] int length() const;
+    [[nodiscard]] auto begin();
+    [[nodiscard]] auto end();
 
 private slots:
     void endTimer();
 
 };
 
-force_inline const Stroke &laser::at(int i) const
+inline auto laser::begin()
 {
-    return _stroke.at(i);
+    return _stroke.begin();
+}
+
+inline auto laser::end()
+{
+    return _stroke.end();
 }
 
 force_inline int laser::length() const
@@ -43,7 +52,7 @@ force_inline int laser::length() const
     return _stroke.length();
 }
 
-force_inline void laser::append(const Stroke &stroke)
+force_inline void laser::append(const StrokePre &stroke)
 {
     _stroke.append(stroke);
 }

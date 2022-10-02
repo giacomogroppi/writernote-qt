@@ -41,6 +41,7 @@ public:
         constexpr bool operator==(Iterator i) const         { return _e == i._e; }
         constexpr bool operator!=(Iterator i) const         { return _e != i._e; }
         Iterator &operator++()                              { _e = _e->next; return *this; }
+        Iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
     class ConstIterator{
@@ -54,12 +55,15 @@ public:
         constexpr bool operator==(ConstIterator i) const         { return _e == i._e; }
         constexpr bool operator!=(ConstIterator i) const         { return _e != i._e; }
         ConstIterator &operator++()                              { _e = _e->next; return *this; }
+        ConstIterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
     Iterator begin() noexcept { return Iterator(_first); };
     Iterator end()   noexcept { return Iterator(_last);  };
     ConstIterator constBegin() const noexcept { return ConstIterator(_first); }
     ConstIterator constEnd()   const noexcept { return ConstIterator(_last); }
+
+    WList<T> &operator=(const WList<T> &other);
 };
 
 template<class T>
@@ -114,49 +118,10 @@ inline T *WList<T>::get_first() noexcept
 template<class T>
 inline WList<T>::WList(const WList<T> &l) noexcept
 {
-    int done;
-    WListPrivate<T> *tmp, *curr;
-
-    done = 0;
-    tmp = l._first;
-    curr = _first;
-
-    while(tmp and curr){
-        W_ASSERT(tmp->data);
-        *curr->data = *tmp->data;
-
-        tmp = tmp->next;
-        curr = curr->next;
-    }
-
-    if((not tmp) and (not curr)){
-        W_ASSERT(this->_size == l._size);
-        goto out;
-    }
-
-    /**
-     * we need to allocate more memory
-     * */
-    if(tmp and not curr){
-        while(tmp){
-            this->append(tmp->data);
-            tmp = tmp->next;
-        }
-    }else{
-        /**
-         * We need to dealloc the extra memory
-         * */
-         while(curr){
-             auto *next = curr->next;
-             delete curr->data;
-             delete curr;
-             curr = next;
-         }
-    }
-
-out:
-    _size = l._size;
-    W_ASSERT(WList<T>::equal(*this, l));
+    _size   = 0;
+    _first  = nullptr;
+    _last   = nullptr;
+    *this = l;
 }
 
 template<class T>
@@ -214,4 +179,52 @@ template<class T>
 inline int WList<T>::length() const noexcept
 {
     return this->_size;
+}
+
+template<class T>
+WList<T> &WList<T>::operator=(const WList<T> &other)
+{
+    WListPrivate<T> *tmp, *curr;
+
+    tmp = other._first;
+    curr = _first;
+
+    while(tmp and curr){
+        W_ASSERT(tmp->data);
+        *curr->data = *tmp->data;
+
+        tmp = tmp->next;
+        curr = curr->next;
+    }
+
+    if((not tmp) and (not curr)){
+        W_ASSERT(this->_size == other._size);
+        goto out;
+    }
+
+    /**
+     * we need to allocate more memory
+     * */
+    if(tmp and not curr){
+        while(tmp){
+            this->append(*(tmp->data));
+            tmp = tmp->next;
+        }
+    }else{
+        /**
+         * We need to dealloc the extra memory
+         * */
+        while(curr){
+            auto *next = curr->next;
+            delete curr->data;
+            delete curr;
+            curr = next;
+        }
+    }
+
+    out:
+    _size = other._size;
+    W_ASSERT(WList<T>::equal(*this, other));
+
+    return *this;
 }

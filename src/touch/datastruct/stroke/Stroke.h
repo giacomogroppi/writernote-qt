@@ -71,23 +71,23 @@ public:
     };
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
-    int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
+    [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
 
-    void __setPressureFirstPoint(const pressure_t pressure);
+    void __setPressureFirstPoint(pressure_t pressure);
 
-    pressure_t getPressure(int index) const;
-    pressure_t getPressure() const;
-    QColor getColor(const double division) const;
+    [[nodiscard]] pressure_t getPressure(int index) const;
+    [[nodiscard]] pressure_t getPressure() const;
+    [[nodiscard]] QColor getColor(double division) const;
 
-    const point_s   &at(const int index) const;
-    point_s         &at_mod(const int index);
+    [[nodiscard]] const point_s   &at(int index) const;
+    point_s         &at_mod(int index);
 
 #   define stroke_append_default -1.
     void append(const point_s &point, pressure_t pressure);
-    void setMetadata(const int posizione_audio, const colore_s &color);
+    void setMetadata(int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);
-    void setPositioneAudio(const int m_pos_ris);
-    size_t createControll() const;
+    void setPositioneAudio(int m_pos_ris);
+    [[nodiscard]] size_t createControll() const;
     int removeAt(int index);
 
     /* if you pass from = 0, to = 2 
@@ -96,15 +96,15 @@ public:
     int removeAt(int from, int to); 
 
     [[nodiscard]] int getPosizioneAudio() const;
-    QRect getFirstAndLast() const;
-    QRect getBiggerPointInStroke() const;
+    [[nodiscard]] QRect getFirstAndLast() const;
+    [[nodiscard]] QRect getBiggerPointInStroke() const;
     [[nodiscard]] bool isInside(const QRectF &rect) const;
 
     void clearAudio();
 
     [[nodiscard]] int length() const;
     [[nodiscard]] const struct metadata_stroke &getMetadata() const;
-    bool constantPressure() const;
+    [[nodiscard]] bool constantPressure() const;
 
     [[nodiscard]] bool is_highlighter() const;
     [[nodiscard]] uchar get_alfa() const;

@@ -69,8 +69,8 @@ void datastruct::newViewAudio(int newTime)
     DatastructNewView extra;
 
     if(unlikely(newTime == 0)){
-        for(page &_page : _page){
-            _page.triggerRenderImage(newTime, true);
+        for(auto &ref : _page){
+            ref.triggerRenderImage(newTime, true);
         }
     }
     qDebug() << "Call with time" << newTime;

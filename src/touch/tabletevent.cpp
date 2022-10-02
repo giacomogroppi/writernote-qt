@@ -46,12 +46,14 @@ static void AppendAll(
 
     strokeToAppend.adjust(PointFirstPage);
 
-    const auto &stroke = strokeToAppend.merge();
 
     if(unlikely(met.isLaser())){
-        canvas->_laser->append(stroke);
+        canvas->_laser->append(strokeToAppend);
         canvas->_laser->endMove();
+        strokeToAppend.reset();
     }else{
+        const auto &stroke = strokeToAppend.merge();
+
         pageMod = doc.datatouch->appendStroke(stroke);
 
         core::get_main_window()->_preview_widget->mod(pageMod);

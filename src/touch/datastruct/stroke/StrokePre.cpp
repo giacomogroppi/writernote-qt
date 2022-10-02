@@ -68,4 +68,24 @@ void StrokePre::setTime(int time)
     Stroke::setPositioneAudio(time);
 }
 
-StrokePre::~StrokePre() noexcept = default;
+void StrokePre::draw(QPainter &painter, QPen &pen, cdouble prop)
+{
+    W_ASSERT(0);
+    Stroke::draw(painter, false, 0, pen, prop);
+}
+
+QColor StrokePre::getColor(double division) const
+{
+    return Stroke::getColor(division);
+}
+
+StrokePre &StrokePre::operator=(const StrokePre &other)
+{
+    Stroke::operator=(other);
+    this->_point = other._point;
+    this->_pressure = other._pressure;
+#ifdef DEBUGINFO
+    this->already_merge = other.already_merge;
+#endif // DEBUGINFO
+    return *this;
+}

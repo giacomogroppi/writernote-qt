@@ -14,7 +14,7 @@
 extern StrokePre __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, double delta);
 
-static void drawSingleStroke(const Stroke   &_stroke,
+static void drawSingleStroke(StrokePre   &_stroke,
                              QPen      &_pen,       QPainter       &_painter,
                              double   _zoom)
 {
@@ -29,7 +29,17 @@ static void drawSingleStroke(const Stroke   &_stroke,
 
     _pen.setColor(_stroke.getColor());
 
-    _stroke.draw(_painter, false, 0, _pen, _zoom);
+    _stroke.draw(_painter, _pen, _zoom);
+}
+
+static void draw_laser(QPainter &painter, laser *_laser, QPen &pen, double zoom)
+{
+    auto begin = _laser->begin();
+    const auto end = _laser->end();
+
+    for(; begin != end; begin ++){
+        drawSingleStroke(*begin, pen, painter, zoom);
+    }
 }
 
 void TabletCanvas::load(QPainter &painter,
@@ -69,9 +79,6 @@ void TabletCanvas::load(QPainter &painter,
 #endif
 
     data->m_img->draw(painter);
-
-    /* draw points that the user has not finished yet */
-    pen.setColor(strokeToDraw.getColor());
 
     /* stroke not already add to page */
     drawSingleStroke(strokeToDraw, pen, painter, zoom);
@@ -114,12 +121,7 @@ void TabletCanvas::load(QPainter &painter,
     _laser = dataPoint.parent->_canvas->_laser;
 
     // laser item
-    lenPage = _laser->length();
-
-    for(lenPage --; lenPage >= 0; lenPage --){
-        const Stroke &tmp = _laser->at(lenPage);
-        drawSingleStroke(tmp, pen, painter, zoom);
-    }
+    draw_laser(painter, _laser, pen, zoom);
 }
 
 void singleLoad(
