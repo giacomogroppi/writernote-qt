@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <QtGlobal>
 
 #ifndef PDFSUPPORT

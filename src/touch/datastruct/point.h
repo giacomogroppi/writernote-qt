@@ -101,46 +101,19 @@ inline colore_s colore_s::from_color(const QColor &color)
 }
 
 /* this struct contains neither the color, nor the thickness, nor the page to which it belongs, nor the rotation, nor the id */
-struct point_s{
+class point_s : public QPointF{
+public:
     point_s() = default;
     point_s(const QPointF &point);
-
-    double _x, _y;
-    Q_COMPILER_CONSTEXPR QPointF toQPointF(const double delta) const;
-    Q_COMPILER_CONSTEXPR double x() const;
-    Q_COMPILER_CONSTEXPR double y() const;
-    bool operator==(const point_s &other) const;
-    bool operator!=(const point_s &other) const;
+    QPointF toQPointF(double scale) const;
 };
 
-force_inline bool point_s::operator!=(const point_s &other) const
+force_inline point_s::point_s(const QPointF &point) :
+    QPointF(point)
 {
-    return !(*this == other);
 }
 
-force_inline point_s::point_s(const QPointF &point)
+inline QPointF point_s::toQPointF(double scale) const
 {
-    _x = point.x();
-    _y = point.y();
+    return (*this) * scale;
 }
-
-force_inline bool point_s::operator==(const point_s &other) const
-{
-    return memcmp(this, &other, sizeof(*this)) == 0;
-}
-
-Q_COMPILER_CONSTEXPR force_inline double point_s::x() const
-{
-    return _x;
-}
-
-Q_COMPILER_CONSTEXPR force_inline double point_s::y() const
-{
-    return _y;
-}
-
-Q_COMPILER_CONSTEXPR force_inline QPointF point_s::toQPointF(const double delta) const
-{
-    return QPointF(_x, _y) * delta;
-}
-

@@ -290,7 +290,7 @@ inline point_s &Stroke::at_mod(const int index)
 
 inline void Stroke::append(const point_s &point, pressure_t pressure)
 {
-    /*
+    /**
      * Appende sempre la pressione del punto, la prima volta che viene
      * aggiornato il flag deciderà se cancellare o meno la list delle
      * pressioni, in caso siano tutte uguali
@@ -407,17 +407,25 @@ inline QRect Stroke::getBiggerPointInStroke() const
     for (; count >= 0; count --){
         const point_s &point = at(count);
 
-        if(topLeft.x() > point._x)
-            topLeft.setX(point._x);
+        if(topLeft.x() > point.x())
+            topLeft.setX(static_cast<int>(
+                        point.x()
+                    ));
 
-        if(topLeft.y() > point._y)
-            topLeft.setY(point._y);
+        if(topLeft.y() > point.y())
+            topLeft.setY(static_cast<int>(
+                        point.y()
+                    ));
 
-        if(bottomRight.x() < point._x)
-            bottomRight.setX(point._x);
+        if(bottomRight.x() < point.x())
+            bottomRight.setX(static_cast<int>(
+                        point.x())
+                    );
 
-        if(bottomRight.y() < point._y)
-            bottomRight.setY(point._y);
+        if(bottomRight.y() < point.y())
+            bottomRight.setY(static_cast<int>(
+                        point.y())
+                    );
     }
 
     W_ASSERT(topLeft.x() <= bottomRight.x());

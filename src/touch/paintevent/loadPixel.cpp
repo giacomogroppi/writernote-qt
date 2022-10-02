@@ -6,16 +6,13 @@
 #include <QPolygonF>
 #include <QPainterPath>
 #include "touch/laser/laser.h"
-
-#ifdef PDFSUPPORT
-# include "frompdf/frompdf.h"
-#endif //PDFSUPPORT
-
+#include "touch/datastruct/stroke/StrokePre.h"
+#include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
 /* tmp list */
-extern Stroke __tmp;
-static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, const double delta);
+extern StrokePre __tmp;
+static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, double delta);
 
 static void drawSingleStroke(const Stroke   &_stroke,
                              QPen      &_pen,       QPainter       &_painter,
@@ -178,7 +175,8 @@ redo:
         const auto ref1 = datastruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
         const auto ref2 = datastruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
 
-        painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
+        painter.drawLine(ref1, ref2);
+        //painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
     }
 }
 
