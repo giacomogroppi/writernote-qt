@@ -57,8 +57,8 @@ size_t Stroke::createControll() const
 
     for(i = 0; i < len; i++){
         const point_s &point = _point.at(i);
-        controll += diff(point._x);
-        controll += diff(point._y);
+        controll += diff(point.x());
+        controll += diff(point.y());
     }
 
     len = _pressure.length();
@@ -100,7 +100,7 @@ void Stroke::decreasePrecision()
 
 void Stroke::movePoint(const QPointF &translation)
 {
-    uint i, len;
+    int i, len;
 
     if(unlikely(is_complex())){
         stroke_complex_translate(this, translation);
@@ -111,8 +111,7 @@ void Stroke::movePoint(const QPointF &translation)
 
     for(i = 0; i < len; i++){
         point_s &point = at_mod(i);
-        point._x += translation.x();
-        point._y += translation.y();
+        point += translation;
     }
 }
 

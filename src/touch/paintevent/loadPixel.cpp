@@ -46,7 +46,7 @@ void TabletCanvas::load(QPainter &painter,
     const double zoom               = data->datatouch->getZoom();
     const QSize sizeRect            = createSizeRect(data->datatouch, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
-    Stroke &strokeToDraw = __tmp;
+    StrokePre &strokeToDraw = __tmp;
 
     int counterPage;
     QPixmap *pixmap             = dataPoint.m_pixmap;

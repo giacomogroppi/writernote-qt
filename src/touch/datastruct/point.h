@@ -104,9 +104,15 @@ inline colore_s colore_s::from_color(const QColor &color)
 class point_s : public QPointF{
 public:
     point_s() = default;
+    point_s(double x, double y);
     point_s(const QPointF &point);
     QPointF toQPointF(double scale) const;
 };
+
+inline point_s::point_s(double x, double y) :
+    QPointF(x, y)
+{
+}
 
 force_inline point_s::point_s(const QPointF &point) :
     QPointF(point)

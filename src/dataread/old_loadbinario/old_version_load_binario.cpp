@@ -347,8 +347,8 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
                 const point_old_ver_7 &tmpRef = ListPrivate.at(counterPoint);
 
                 point_s TmpAppend;
-                TmpAppend._x = tmpRef.m_x;
-                TmpAppend._y = tmpRef.m_y;
+                TmpAppend.rx() = tmpRef.m_x;
+                TmpAppend.ry() = tmpRef.m_y;
 
                 if (unlikely(id < 0)) {
                     continue;

@@ -75,12 +75,11 @@ static inline void drawLineOrizzontal(
     W_ASSERT(ct_del > 0);
 
     for(i = 0; i < style.nx; i++){
-        point._x = 20;
-        point._y = last + deltax - 20;
+        point = point_s(20, last + deltax - 20);
 
         stroke.append(point, stroke_append_default);
 
-        point._x = width_p - 20;
+        point.rx() = width_p - 20;
         stroke.append(point, stroke_append_default);
 
         deltax += ct_del;
@@ -102,12 +101,12 @@ static inline void drawLineVertical(
     W_ASSERT(ct_del);
 
     for(i = 0; i < style.ny; i++){
-        point._x = deltay  - 20;
-        point._y = last    + 20; /* corrisponde to 0 */
+        point = point_s(deltay - 20,
+                        last + 20); /* corrisponde to 0 */
 
         stroke.append(point, stroke_append_default);
 
-        point._y = height_p + last - 20;
+        point.ry() = height_p + last - 20;
         stroke.append(point, stroke_append_default);
 
         deltay += ct_del;
@@ -586,8 +585,8 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
 }
 
 #define PAGE_DRAW_SQUARE_ADJUST(point, function) \
-    point._x = rect.function().x(); \
-    point._y = rect.function().y(); \
+    point.rx() = rect.function().x(); \
+    point.ry() = rect.function().y(); \
     at_translation(point, this->_count - 1);
 
 void page::drawSquare(const QRect &rect)

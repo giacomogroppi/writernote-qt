@@ -209,11 +209,10 @@ void stroke_complex_make_normal_circle (const Stroke *_from, Stroke *_to)
 
         const double res2 = qSqrt(res1);                        // = mod(x)
 
-        tmp._y = from;
-        tmp._x = data->_x + res2;                               // = x + radius
+        tmp = point_s(data->_x + res2, from);                   // = x + radius
         _pointLeft.append(tmp);
 
-        tmp._x = data->_x - res2;                               // = x - radius
+        tmp.rx() = data->_x - res2;                               // = x - radius
         _pointRigth.insert(0, tmp);
 
         from += 1.;

@@ -33,8 +33,7 @@ force_inline void stroke_drawer::draw_circle(
     double y, x;
     cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
 
-    point._x = data->_x;
-    point._y = data->_y;
+    point = point_s(data->_x, data->_y);
 
     point = page::at_translation(point, page);
     tmp = point.toQPointF(prop);

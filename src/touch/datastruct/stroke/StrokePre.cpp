@@ -49,8 +49,7 @@ void StrokePre::adjust(const QPointF &delta)
 {
     if(likely(Stroke::is_normal())){
         for(auto &point : this->_point){
-            point._x -= delta.x();
-            point._y -= delta.y();
+            point -= delta;
         }
     }else{
         stroke_complex_translate(this, -delta);

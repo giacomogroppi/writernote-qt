@@ -42,8 +42,7 @@ force_inline int stroke_file::load_ver_0(class Stroke &_stroke, WZipReaderSingle
         if(reader.read_object(point) < 0)
             return ERROR;
 
-        tmp._x = point._x;
-        tmp._y = point._y;
+        tmp = point_s(point._x, point._y);
 
         _stroke._point.append(tmp);
         _stroke._pressure.append(point.press);
@@ -78,8 +77,7 @@ force_inline int stroke_file::load_ver_1(class Stroke &_stroke, WZipReaderSingle
         if(reader.read_object(point) < 0)
             return ERROR;
 
-        tmp._x = point._x;
-        tmp._y = point._y;
+        tmp = point_s(point._x, point._y);
 
         _stroke._point.append(tmp);
         _stroke._pressure.append(point.press);

@@ -580,8 +580,7 @@ inline int datastruct::adjustStroke(Stroke &stroke)
         counter = stroke.length() - 1;
         for(; counter >= 0; counter --){
             point_s &point = stroke.at_mod(counter);
-            point._x       /= this->_zoom;
-            point._y       /= this->_zoom;
+            point /= _zoom;
         }
     }else{
         stroke_complex_adjust(&stroke, this->_zoom);

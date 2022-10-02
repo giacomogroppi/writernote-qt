@@ -245,8 +245,10 @@ static inline void stroke_complex_normal_line_generic(
 
     for(; from <= to; from ++){
         const double x = (double(from) - p) / m;
-        point._x = x;
-        point._y = (double) from;
+        point = point_s(
+                x,
+                static_cast<double>(from)
+                );
         _to->append(point, press);
     }
 }
@@ -261,10 +263,10 @@ static inline void stroke_complex_normal_line_vertical(
     W_ASSERT(data->pt2.x() == data->pt1.x());
     W_ASSERT(from <= to);
 
-    tmp._x = data->pt1.x();
+    tmp.rx() = data->pt1.x();
 
     for(; from <= to; from ++){
-        tmp._y = from;
+        tmp.ry() = from;
         _to->append(tmp, press);
     }
 }

@@ -337,8 +337,7 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
         strokeTmp.setAlfaColor(alfa);
     }
 
-    tmp_point._x = pointTouch.x();
-    tmp_point._y = pointTouch.y();
+    tmp_point = pointTouch;
     pressure = unlikely(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point, pressure);

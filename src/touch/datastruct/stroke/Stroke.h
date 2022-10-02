@@ -511,11 +511,8 @@ inline void Stroke::at_translation(const double zoom, point_s &point, const int 
 {
     memcpy(&point, &at(indexPoint), sizeof(point_s));
 
-    point._x *= zoom;
-    point._y *= zoom;
-
-    point._x += translation.x();
-    point._y += translation.y();
+    point *= zoom;
+    point += translation;
 }
 
 inline void Stroke::setColor(const QColor &color)
@@ -562,18 +559,12 @@ inline bool Stroke::isEmpty() const
 
 inline void Stroke::scale(const QPointF &offset)
 {
-    int i;
-
     if(unlikely(is_complex())){
         return stroke_complex_translate(this, offset);
     }
 
-    i = this->length();
-    for(i--; i >= 0; i--){
-        point_s &point = at_mod(i);
-
-        point._x += offset.x();
-        point._y += offset.y();
+    for(auto &point : _point){
+        point += offset;
     }
 }
 
