@@ -7,11 +7,6 @@ StrokePre::StrokePre() noexcept :
     WImage::initAsPage();
 }
 
-void StrokePre::merge(Stroke &to) const noexcept
-{
-    W_ASSERT(to.isEmpty() == true);
-}
-
 void StrokePre::reset() noexcept
 {
     Stroke::reset();
@@ -21,17 +16,31 @@ void StrokePre::reset() noexcept
 Stroke& StrokePre::merge()
 {
     W_ASSERT(this->already_merge == false);
+    W_ASSERT(_point.length() == _pressure.length());
 
-    WList<point_s>::ConstIterator it1 = _point.constBegin();
-    WList<point_s>::ConstIterator it2 = _pressure.constBegin();
+    int i;
+
+    if(!Stroke::isEmpty()){
+        W_ASSERT(Stroke::is_complex());
+        return *this;
+    }
+
+    const auto l = _point.length();
 
     Stroke &res = *this;
 
-    for(; it1 ++, it2 ++){
+    for(i = 0; i < l; i++){
+        const auto *data_point = _point.get_first();
+        const auto *data_press = _pressure.get_first();
 
+        Stroke::append(*data_point, *data_press);
+
+        delete data_point;
+        delete data_press;
     }
 
 #ifdef DEBUGINFO
     already_merge = true;
 #endif // DEBUGINFO
+    return *this;
 }

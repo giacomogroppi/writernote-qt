@@ -18,6 +18,7 @@ public:
     void setColor(const QColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const;
+    [[nodiscard]] bool is_normal() const;
     void reset() noexcept;
 
     Stroke& merge();
@@ -34,7 +35,13 @@ inline int StrokePre::length() const
     return _point.length();
 }
 
-inline void StrokePre::setColor(const QColor &color) noexcept {
+inline void StrokePre::setColor(const QColor &color) noexcept
+{
     Stroke::setColor(color);
+}
+
+inline bool StrokePre::is_normal() const
+{
+    return Stroke::is_normal();
 }
 
