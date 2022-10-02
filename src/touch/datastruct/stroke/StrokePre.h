@@ -15,11 +15,16 @@ public:
     StrokePre() noexcept;
     ~StrokePre();
 
+    void adjust(const QPointF &delta);
+    void setAlfaColor(int alfa);
+
+    void setTime(int time);
     void setColor(const QColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const;
     [[nodiscard]] bool is_normal() const;
     void reset() noexcept;
+    void append(const point_s &point, const pressure_t &press);
 
     Stroke& merge();
 };
@@ -43,5 +48,11 @@ inline void StrokePre::setColor(const QColor &color) noexcept
 inline bool StrokePre::is_normal() const
 {
     return Stroke::is_normal();
+}
+
+inline void StrokePre::append(const point_s &point, const pressure_t &press)
+{
+    _point.append(point);
+    _pressure.append(press);
 }
 

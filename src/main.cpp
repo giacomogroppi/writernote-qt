@@ -229,3 +229,7 @@ static not_used void createFileAndExit(const QString &path, MainWindow *parent)
 #endif
 
 static_assert(WStrEqual(APP_EXT, "writer") == true);
+static_assert(sizeof(int) == 4);
+static_assert(sizeof(double) == 8);
+static_assert(sizeof(pressure_t) == 4);
+static_assert(sizeof(size_t) == 8);

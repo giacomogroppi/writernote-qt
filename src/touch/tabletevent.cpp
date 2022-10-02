@@ -39,24 +39,20 @@ static void AppendAll(
 
     time = core::get_main_window()->m_audioplayer->getPositionSecond();
 
+    /**
+     * 2^31 ~ 2 Gs ~ 6.9 days. It's enough
+     * */
     W_ASSERT(time < INT_MAX);
 
-    if(likely(strokeToAppend.is_normal())){
-        lenPoint = strokeToAppend.length();
-        for(i = 0; i < lenPoint; i++){
-            point = &strokeToAppend.at_mod(i);
-            point->_x -= PointFirstPage.x();
-            point->_y -= PointFirstPage.y();
-        }
-    }else{
-        stroke_complex_translate(&strokeToAppend, -PointFirstPage);
-    }
+    strokeToAppend.adjust(PointFirstPage);
+
+    const auto &stroke = strokeToAppend.merge();
 
     if(unlikely(met.isLaser())){
-        canvas->_laser->append(strokeToAppend);
+        canvas->_laser->append(stroke);
         canvas->_laser->endMove();
     }else{
-        pageMod = doc.datatouch->appendStroke(strokeToAppend);
+        pageMod = doc.datatouch->appendStroke(stroke);
 
         core::get_main_window()->_preview_widget->mod(pageMod);
         doc.datatouch->at_mod(pageMod).triggerRenderImage(
@@ -334,7 +330,9 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;
 
     if(unlikely(!this->m_deviceDown)){
-        strokeTmp.setPositioneAudio((int) core::get_main_window()->m_audio_recorder->getCurrentTime());
+        strokeTmp.setTime(static_cast<int>(
+                                  core::get_main_window()->m_audio_recorder->getCurrentTime()
+                ));
         strokeTmp.setColor(_color);
         strokeTmp.setAlfaColor(alfa);
     }

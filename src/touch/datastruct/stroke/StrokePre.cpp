@@ -44,3 +44,29 @@ Stroke& StrokePre::merge()
 #endif // DEBUGINFO
     return *this;
 }
+
+void StrokePre::adjust(const QPointF &delta)
+{
+    if(likely(Stroke::is_normal())){
+        for(auto &point : this->_point){
+            point._x -= delta.x();
+            point._y -= delta.y();
+        }
+    }else{
+        stroke_complex_translate(this, -delta);
+    }
+}
+
+void StrokePre::setAlfaColor(int alfa)
+{
+    W_ASSERT(alfa >= 0 and alfa <= 255);
+    Stroke::setAlfaColor(alfa);
+}
+
+void StrokePre::setTime(int time)
+{
+    W_ASSERT( time == -1 or time >= 0 );
+    Stroke::setPositioneAudio(time);
+}
+
+StrokePre::~StrokePre() noexcept = default;
