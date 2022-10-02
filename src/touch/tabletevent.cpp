@@ -9,10 +9,11 @@
 #include "utils/common_script.h"
 #include "touch/object_finder/object_finder.h"
 #include "preview_page_widget/preview_page_widget.h"
+#include "touch/datastruct/stroke/StrokePre.h"
 
 #define MAXPOINT 20
 
-Stroke __tmp;
+StrokePre __tmp;
 extern bool block_scrolling;
 
 bool need_save_auto = false;
@@ -27,7 +28,7 @@ static void AppendAll(
         const TabletPenMethod& met)
 {
     /* for debug */
-    Stroke & strokeToAppend = __tmp;
+    StrokePre & strokeToAppend = __tmp;
     int i, pageMod, lenPoint;
     point_s *point;
     qint64 time;
@@ -324,7 +325,7 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     double size;
     uchar alfa;
     point_s tmp_point{};
-    Stroke &strokeTmp = __tmp;
+    StrokePre &strokeTmp = __tmp;
     pressure_t pressure;
     cbool highlighter = is_rubber(event, _method);
     const QPointF &pointTouch = event->position();

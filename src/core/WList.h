@@ -3,6 +3,7 @@
 #include "utils/common_script.h"
 #include "testing/memtest.h"
 #include <QList>
+#include <QPointF>
 
 template <class T>
 struct WListPrivate{
@@ -17,18 +18,20 @@ private:
     WListPrivate<T> *_last;
     int _size;
 public:
-    WList();
-    WList(const WList<T> &l);
-    ~WList();
+    WList() noexcept;
+    WList(const WList<T> &l) noexcept;
+    ~WList() noexcept;
 
     void append(const T &data) noexcept;
-    void clear();
-    bool equal(const WList<T> &l1, const WList<T> &l2);
+    void clear() noexcept;
+    bool equal(const WList<T> &l1, const WList<T> &l2) noexcept;
 
     /**
      * Warn: You have to dealloc the object after.
      * */
-    [[nodiscard]] T* get_first();
+    [[nodiscard]] T* get_first() noexcept;
+    [[nodiscard]] bool isEmpty() const noexcept;
+    [[nodiscard]] int length() const noexcept;
 
     class Iterator{
     private:
@@ -63,7 +66,7 @@ public:
 };
 
 template<class T>
-inline WList<T>::WList()
+inline WList<T>::WList() noexcept
 {
     _first = nullptr;
     _last = nullptr;
@@ -71,7 +74,7 @@ inline WList<T>::WList()
 }
 
 template <class T>
-inline WList<T>::~WList()
+inline WList<T>::~WList() noexcept
 {
     this->clear();
 }
@@ -100,7 +103,7 @@ inline void WList<T>::append(const T &data) noexcept
 }
 
 template <class T>
-inline T *WList<T>::get_first()
+inline T *WList<T>::get_first() noexcept
 {
     T *ret = this->_first->data;
     struct WListPrivate<T> *next = this->_first->next;
@@ -112,7 +115,7 @@ inline T *WList<T>::get_first()
 }
 
 template<class T>
-inline WList<T>::WList(const WList<T> &l)
+inline WList<T>::WList(const WList<T> &l) noexcept
 {
     int done;
     WListPrivate<T> *tmp, *curr;
@@ -160,7 +163,7 @@ out:
 }
 
 template<class T>
-inline void WList<T>::clear()
+inline void WList<T>::clear() noexcept
 {
     while(_first){
         auto *next = _first->next;
@@ -174,7 +177,7 @@ inline void WList<T>::clear()
 }
 
 template<class T>
-inline bool WList<T>::equal(const WList<T> &l1, const WList<T> &l2)
+inline bool WList<T>::equal(const WList<T> &l1, const WList<T> &l2) noexcept
 {
     WListPrivate<T> *f1, *f2;
     if(l1._size != l2._size)
@@ -196,3 +199,22 @@ inline bool WList<T>::equal(const WList<T> &l1, const WList<T> &l2)
     return true;
 }
 
+template <class T>
+inline bool WList<T>::isEmpty() const noexcept
+{
+#ifdef DEBUGINFO
+    if(!_size){
+        W_ASSERT(_first == _last);
+        W_ASSERT(_first == NULL);
+    }else{
+        W_ASSERT(_first and _last);
+    }
+#endif // DEBUGINFO
+    // return this->_size == 0;
+}
+
+template<class T>
+inline int WList<T>::length() const noexcept
+{
+    return this->_size;
+}

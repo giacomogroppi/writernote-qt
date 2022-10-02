@@ -102,25 +102,26 @@ public:
 
     void clearAudio();
 
-    int length() const;
+    [[nodiscard]] int length() const;
     const struct metadata_stroke &getMetadata() const;
     bool constantPressure() const;
 
-    bool is_highlighter() const;
-    uchar get_alfa() const;
-    size_t getSizeInMemory() const;
-    size_t getSizeInFile() const;
+    [[nodiscard]] bool is_highlighter() const;
+    [[nodiscard]] uchar get_alfa() const;
+    [[nodiscard]] size_t getSizeInMemory() const;
+    [[nodiscard]] size_t getSizeInFile() const;
     void decreasePrecision();
-    void setAlfaColor(const uchar alfa);
-    __slow void at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const;
-    void setColor(const QColor &color);
+    void setAlfaColor(uchar alfa);
+    __slow void at_translation(double zoom, point_s &point, int indexPoint, const QPointF &translation) const;
+
+    virtual void setColor(const QColor &color);
     void setColor(const colore_s &color);
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
     void reset();
     Stroke &operator=(const Stroke &other);
-    bool isEmpty() const;
-    const point_s &last() const;
+    [[nodiscard]] bool isEmpty() const;
+    [[nodiscard]] const point_s &last() const;
 
     void scale(const QPointF &offset);
     force_inline bool is_normal() const { return _prop == COMPLEX_NORMAL; };
@@ -129,8 +130,8 @@ public:
     force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
     force_inline bool is_complex() const { return _prop != COMPLEX_NORMAL; };
     void set_complex(typeof(_prop) new_prop, void *new_data);
-    const void *get_complex_data() const { return _complex; };
-    typeof(_prop) get_type() const { return _prop; };
+    [[nodiscard]] const void *get_complex_data() const { return _complex; };
+    [[nodiscard]] typeof(_prop) get_type() const { return _prop; };
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);

@@ -1,8 +1,10 @@
 #include "get_only_name.h"
 #include "utils/common_def.h"
 #include "utils/slash/slash.h"
-
 #include "../path/pathfile.h"
+#include <QString>
+#include <QList>
+
 QString get_only_name::exe(const QString &path)
 {
     const char slash = slash::__slash();

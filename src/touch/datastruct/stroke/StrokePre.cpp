@@ -1,13 +1,18 @@
 #include "StrokePre.h"
 
-StrokePre::StrokePre() :
+StrokePre::StrokePre() noexcept :
     Stroke(),
     WImage()
 {
     WImage::initAsPage();
 }
 
-void StrokePre::reset()
+void StrokePre::merge(Stroke &to) const noexcept
+{
+    W_ASSERT(to.isEmpty() == true);
+}
+
+void StrokePre::reset() noexcept
 {
     Stroke::reset();
     WImage::initAsPage();
