@@ -95,15 +95,15 @@ public:
     */
     int removeAt(int from, int to); 
 
-    int getPosizioneAudio() const;
+    [[nodiscard]] int getPosizioneAudio() const;
     QRect getFirstAndLast() const;
     QRect getBiggerPointInStroke() const;
-    bool isInside(const QRectF &rect) const;
+    [[nodiscard]] bool isInside(const QRectF &rect) const;
 
     void clearAudio();
 
     [[nodiscard]] int length() const;
-    const struct metadata_stroke &getMetadata() const;
+    [[nodiscard]] const struct metadata_stroke &getMetadata() const;
     bool constantPressure() const;
 
     [[nodiscard]] bool is_highlighter() const;
@@ -114,12 +114,14 @@ public:
     void setAlfaColor(uchar alfa);
     __slow void at_translation(double zoom, point_s &point, int indexPoint, const QPointF &translation) const;
 
-    virtual void setColor(const QColor &color);
+    void setColor(const QColor &color);
     void setColor(const colore_s &color);
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
+
     void reset();
     Stroke &operator=(const Stroke &other);
+
     [[nodiscard]] bool isEmpty() const;
     [[nodiscard]] const point_s &last() const;
 

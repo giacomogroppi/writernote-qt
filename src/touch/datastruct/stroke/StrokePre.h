@@ -8,15 +8,19 @@ class StrokePre: private Stroke, private WImage {
 private:
     WList<point_s>      _point;
     WList<pressure_t>   _pressure;
+#ifdef DEBUGINFO
+    bool already_merge = false;
+#endif // DEBUGINFO
 public:
     StrokePre() noexcept;
-    ~StrokePre() = default;
+    ~StrokePre();
 
-    void setColor(const QColor &color) noexcept override;
+    void setColor(const QColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const;
-    void merge(Stroke &to) const noexcept;
     void reset() noexcept;
+
+    Stroke& merge();
 };
 
 inline bool StrokePre::isEmpty() const noexcept
@@ -30,7 +34,7 @@ inline int StrokePre::length() const
     return _point.length();
 }
 
-inline void StrokePre::setColor(const QColor &color) noexcept
-{
+inline void StrokePre::setColor(const QColor &color) noexcept {
     Stroke::setColor(color);
 }
+

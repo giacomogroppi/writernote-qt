@@ -26,10 +26,6 @@ public:
     void clear() noexcept;
     bool equal(const WList<T> &l1, const WList<T> &l2) noexcept;
 
-    /**
-     * Warn: You have to dealloc the object after.
-     * */
-    [[nodiscard]] T* get_first() noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const noexcept;
 
