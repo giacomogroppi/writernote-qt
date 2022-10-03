@@ -3,7 +3,7 @@
 #include <QSettings>
 #include "utils/setting_define.h"
 #include "touch/pen/pen_ui.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include <QDebug>
 
 #define MAX_ALFA 150

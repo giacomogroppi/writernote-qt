@@ -1,5 +1,5 @@
 #include "model_finder.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "touch/object_finder/model/model.h"
 #include "utils/platform.h"
 

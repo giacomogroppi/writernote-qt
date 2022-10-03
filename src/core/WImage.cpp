@@ -1,6 +1,6 @@
 #include "WImage.h"
 #include "utils/common_script.h"
-#include "touch/datastruct/page.h"
+#include "touch/dataTouch/page/Page.h"
 
 WImage::WImage(const QString &path, const char *format):
     QImage(path, format)
@@ -30,5 +30,5 @@ WImage::WImage(int width, int height, QImage::Format format) : QImage(width, hei
 
 void WImage::initAsPage(int page)
 {
-    QImage(page::getResolutionWidth(), page::getResolutionHeigth() * page, WImage::Format_ARGB32);
+    QImage(Page::getResolutionWidth(), Page::getResolutionHeigth() * page, WImage::Format_ARGB32);
 }

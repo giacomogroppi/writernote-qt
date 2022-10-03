@@ -1,7 +1,7 @@
 #include "core/WReadZip.h"
 #include "touch/object_finder/model/model.h"
-#include "touch/datastruct/stroke_complex_data.h"
-#include "touch/datastruct/stroke/Stroke.h"
+#include "touch/dataTouch/stroke/stroke_complex_data.h"
+#include "touch/dataTouch/stroke/Stroke.h"
 #include "testing/memtest.h"
 #include "utils/common_error_definition.h"
 

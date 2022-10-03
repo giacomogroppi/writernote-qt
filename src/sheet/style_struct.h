@@ -2,7 +2,7 @@
 
 #define QUANTESTRUCT 5
 #define STRNOME 40
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 
 
 struct style_struct_S{

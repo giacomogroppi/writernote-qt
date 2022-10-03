@@ -8,7 +8,7 @@
 #include "currenttitle/document.h"
 #include "core/WZipWriterMulti.h"
 
-static size_t savefile_get_size_page(const page &_page, cbool saveImg)
+static size_t savefile_get_size_page(const Page &_page, cbool saveImg)
 {
     const auto res = _page.get_size_in_file(saveImg);
     return res;
@@ -55,14 +55,14 @@ static int savefile_save_seek(Document *doc, WZipWriterSingle &writer, size_t *s
 struct savefile_thread_data{
     WZipWriterSingle *_writer;
     bool _saveImg;
-    const page *_page;
+    const Page *_page;
 };
 
 static void *salvafile_thread_save(void *_data)
 {
     W_ASSERT(_data);
     auto *data = static_cast<struct savefile_thread_data *> (_data);
-    const page *_page = data->_page;
+    const Page *_page = data->_page;
     const auto saveImg = data->_saveImg;
     WZipWriterSingle &writer = *data->_writer;
 

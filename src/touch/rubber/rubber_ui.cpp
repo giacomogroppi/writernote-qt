@@ -12,7 +12,7 @@ constexpr auto not_used rubber_debug = false;
 
 struct RubberPrivateData{
     QVector<int>    *data_find;
-    page            *__page;
+    Page            *__page;
     WLine           line;
     datastruct      *data;
     QVector<int>    *data_to_remove;
@@ -122,7 +122,7 @@ int rubber_ui::endRubber()
 
         for(i = 0; i < len; i ++){
             QVector<int> &arr = _data_to_remove.operator[](i);
-            page &page = data->at_mod(i + _base);
+            Page &page = data->at_mod(i + _base);
 
             if(unlikely(arr.isEmpty()))
                 continue;
@@ -148,7 +148,7 @@ int rubber_ui::endRubber()
     return index_mod;
 }
 
-bool rubber_ui::is_image_not_null(const int index, const page *page,
+bool rubber_ui::is_image_not_null(const int index, const Page *page,
                                   const QPointF &from, const QPointF &to, int delta)
 {
     int i, j;
@@ -166,8 +166,8 @@ bool rubber_ui::is_image_not_null(const int index, const page *page,
     const auto xmax = qMax(from.x(), to.x());
 
     const int x = xmin - delta;
-    const int y = ymin - page::getHeight() * index - delta;
-    W_ASSERT(y >= 0. and y <= page::getHeight());
+    const int y = ymin - Page::getHeight() * index - delta;
+    W_ASSERT(y >= 0. and y <= Page::getHeight());
 
     delta *= 2;
 
@@ -211,7 +211,7 @@ static inline not_used QRectF rubber_get_area(const QPointF &p1, const QPointF &
     return area;
 }
 
-static force_inline void draw_null(page *_page, const QVector<int> &point,
+static force_inline void draw_null(Page *_page, const QVector<int> &point,
                                    const QVector<int> &Stroke, bool is_left)
 {
     int i, len;
@@ -253,7 +253,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 
     int from, to, _index, index;
 
-    page *_page             = private_data->__page;
+    Page *_page             = private_data->__page;
     datastruct *_datastruct = private_data->data;
     const auto &area        = private_data->line;
 
@@ -355,7 +355,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     QVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
 
-    page *_page             = private_data->__page;
+    Page *_page             = private_data->__page;
     QVector<int> *_al_find  = private_data->data_find;
     const auto &area        = private_data->line;
     index_selected.reserve(32);

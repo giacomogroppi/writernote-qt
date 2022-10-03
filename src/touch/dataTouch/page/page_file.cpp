@@ -1,13 +1,13 @@
 #include "page_file.h"
 #include "core/WReadZip.h"
 #include "datawrite/source_read_ext.h"
-#include "touch/datastruct/page.h"
+#include "Page.h"
 #include "core/WZipWriterMulti.h"
 #include <QImage>
 #include "utils/common_error_definition.h"
 
 #ifdef ALL_VERSION
-int page_file::load_ver_0(page &_page, WZipReaderSingle &reader)
+int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
 {
     constexpr int ver_stroke = 0;
     int i, k, len_stroke, err = OK;
@@ -53,7 +53,7 @@ int page_file::load_ver_0(page &_page, WZipReaderSingle &reader)
     return OK;
 }
 
-int page_file::load_ver_1(page &_page, WZipReaderSingle &reader)
+int page_file::load_ver_1(Page &_page, WZipReaderSingle &reader)
 {
     constexpr int ver_stroke = 1;
     int i, len_stroke, err = OK;
@@ -80,7 +80,7 @@ int page_file::load_ver_1(page &_page, WZipReaderSingle &reader)
 
 #endif // ALL_VERSION
 
-int page_file::load_ver_2(page &_page, WZipReaderSingle &reader)
+int page_file::load_ver_2(Page &_page, WZipReaderSingle &reader)
 {
     constexpr int ver_stroke = 2;
     int err, i, len_stroke;
@@ -122,7 +122,7 @@ int page_file::load_ver_2(page &_page, WZipReaderSingle &reader)
     return OK;
 }
 
-int page_file::load(page &_page, int ver_stroke, WZipReaderSingle &reader)
+int page_file::load(Page &_page, int ver_stroke, WZipReaderSingle &reader)
 {
     switch (ver_stroke) {
 #ifdef ALL_VERSION
@@ -141,7 +141,7 @@ int page_file::load(page &_page, int ver_stroke, WZipReaderSingle &reader)
     }
 }
 
-size_t page_file::size_in_file(const page &_page, cbool saveImg)
+size_t page_file::size_in_file(const Page &_page, cbool saveImg)
 {
     size_t s = 0;
 
@@ -161,7 +161,7 @@ size_t page_file::size_in_file(const page &_page, cbool saveImg)
     return s;
 }
 
-int page_file::save(const page *_page, WZipWriterSingle &writer, cbool saveImg)
+int page_file::save(const Page *_page, WZipWriterSingle &writer, cbool saveImg)
 {
     int i, err = OK;
     const int len = _page->_stroke.length();

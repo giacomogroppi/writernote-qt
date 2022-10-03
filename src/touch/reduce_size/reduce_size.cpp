@@ -1,6 +1,6 @@
 #include "reduce_size.h"
-#include "touch/datastruct/datastruct.h"
-#include "touch/datastruct/page.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/page/Page.h"
 
 static uint howMuchPoint(datastruct *data);
 
@@ -27,7 +27,7 @@ size_t reduce_size::current_size(datastruct *data){
 
     size = 0;
     for(counterPage = 0; counterPage < data->lengthPage(); counterPage ++){
-        const page &page = data->at(counterPage);
+        const Page &page = data->at(counterPage);
         for(int counterStroke = 0; counterStroke < page.lengthStroke(); counterStroke ++){
             size += page.atStroke(counterStroke).getSizeInMemory();
         }
@@ -47,7 +47,7 @@ void reduce_size::decrese(datastruct *data){
         return;
     }
     for(pageCounter=0; pageCounter<lenPage; pageCounter++){
-        page &page = data->at_mod(pageCounter);
+        Page &page = data->at_mod(pageCounter);
 
         len = page.lengthStroke();
         for(i=0; i<len; ++i){
@@ -58,7 +58,7 @@ void reduce_size::decrese(datastruct *data){
 }
 
 /* the function calculates the points for each section */
-static uint __howReduce(uint &i, const page *page){
+static uint __howReduce(uint &i, const Page *page){
     const Stroke &stroke = page->atStroke(i);
     if(likely(stroke.is_normal()))
         return stroke.length();
@@ -68,7 +68,7 @@ static uint __howReduce(uint &i, const page *page){
 }
 
 static uint howReduce(uint &i,
-                      const page *page){
+                      const Page *page){
     uint __m;
     __m = __howReduce(i, page);
 
@@ -88,7 +88,7 @@ static uint howReduce(uint &i,
 static uint howMuchPoint(datastruct *data){
     uint i, pageCount, totalPointToRemove = 0;
     const uint lenPage = data->lengthPage();
-    const page *page;
+    const Page *page;
 
     for(pageCount = 0; pageCount < lenPage; pageCount ++){
         page = &data->at(pageCount);

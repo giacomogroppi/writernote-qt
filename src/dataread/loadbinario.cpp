@@ -56,7 +56,7 @@ static int read_ctrl(WZipReaderSingle &zip, size_t &ctrl)
 
 struct xmlstruct_thread_data{
     WZipReaderSingle    *_reader;
-    page                *_page;
+    Page                *_page;
     int                 _ver_stroke;
 };
 

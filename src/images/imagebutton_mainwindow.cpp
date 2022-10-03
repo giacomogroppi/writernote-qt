@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "touch/tabletcanvas.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "ui_mainwindow.h"
 #include "images/fromimage.h"
 #include "utils/dialog_critic/dialog_critic.h"

@@ -40,7 +40,7 @@ public:
     [[nodiscard]] bool is_set() const { return this->_last.isSet(); };
 
 private:
-    bool is_image_not_null(int index, const page *page,
+    bool is_image_not_null(int index, const Page *page,
                            const QPointF &from, const QPointF &to, int delta);
     class TabletCanvas *_canvas;
     int _base;

@@ -8,7 +8,7 @@
 #include <QApplication>
 #include <QTabletEvent>
 #include <QEvent>
-#include "datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "utils/setting_define.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include <QSettings>

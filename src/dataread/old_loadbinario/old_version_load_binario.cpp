@@ -3,7 +3,7 @@
 #include "utils/posizione_binario.h"
 #include "utils/common_error_definition.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
-#include "touch/datastruct/page.h"
+#include "touch/dataTouch/page/Page.h"
 #include "core/WZip.h"
 #include "core/WZipReaderSingle.h"
 
@@ -198,7 +198,7 @@ static void adjastPDF(QList<point_last> &point, QList<double> &pos_foglio)
 {
     uint i, len;
     const QPointF currentSize = bigger(point);
-    const double CorrectProportions = double(page::getHeight())/double(page::getWidth());
+    const double CorrectProportions = double(Page::getHeight()) / double(Page::getWidth());
     const uint lenPage = pos_foglio.length();
 
     const double shouldBe = currentSize.x()*CorrectProportions*lenPage;
@@ -218,7 +218,7 @@ static void adjastPDF(QList<point_last> &point, QList<double> &pos_foglio)
 static void adjastZoom(QList<point_last> &point, QList<double> &pos_foglio)
 {
     const QPointF big = bigger(point);
-    const double Width = page::getWidth();
+    const double Width = Page::getWidth();
     const double delta = Width / big.x();
 
     point_last *ref;
@@ -242,9 +242,9 @@ static void adjastZoom(QList<point_last> &point, QList<double> &pos_foglio)
 
 static int old_which_sheet(
         const point_last    &point,
-        QVector<page>         &ListPage)
+        QVector<Page>         &ListPage)
 {
-    const page *page;
+    const Page *page;
     uint counterPage, len;
     len = ListPage.length();
 

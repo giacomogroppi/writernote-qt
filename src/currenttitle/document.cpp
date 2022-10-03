@@ -2,7 +2,7 @@
 #include <QString>
 
 #include "testing/memtest.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
@@ -64,7 +64,7 @@ size_t Document::createSingleControll() const
     uint lenStroke;
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
-        const page &page = datatouch->at(counterPage);
+        const Page &page = datatouch->at(counterPage);
         lenStroke = page.lengthStroke();
 
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
@@ -98,7 +98,7 @@ void Document::cleanAudio()
     const uint lenPage = datatouch->lengthPage();
 
     for(i = 0; i < lenPage; i++){
-        page &page = this->datatouch->at_mod(i);
+        Page &page = this->datatouch->at_mod(i);
         len = page.lengthStroke();
 
         for(k = 0; k < len; k++){

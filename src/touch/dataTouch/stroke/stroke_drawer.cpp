@@ -1,8 +1,8 @@
 #include "stroke_drawer.h"
-#include "touch/datastruct/page.h"
+#include "touch/dataTouch/page/Page.h"
 #include "touch/tabletcanvas.h"
 #include "utils/common_script.h"
-#include "touch/datastruct/stroke/StrokePre.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 constexpr double deltaColorNull = 1.08;
@@ -32,7 +32,7 @@ force_inline void stroke_drawer::draw_circle(const Stroke &stroke)
 
     point = point_s(data->_x, data->_y);
 
-    point = page::at_translation(point, _page);
+    point = Page::at_translation(point, _page);
     tmp = point.toQPointF(prop);
 
     WDebug(debCircle, "prop: " << prop);
@@ -74,10 +74,10 @@ void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
         painter = &_painterPublic;
     }
 
-    lastPoint = page::at_translation(*data._pointBegin, this->_page).toQPointF(prop);
+    lastPoint = Page::at_translation(*data._pointBegin, this->_page).toQPointF(prop);
 
     for(data._pointBegin ++; data._pointBegin != data._pointEnd; data._pointBegin ++){
-        const point_s point = page::at_translation(*data._pointBegin, this->_page);
+        const point_s point = Page::at_translation(*data._pointBegin, this->_page);
         const pressure_t pressure = *data._pressureBegin;
 
         if(!data._pressureNull){
@@ -126,13 +126,13 @@ force_inline void stroke_drawer::draw_rect(const Stroke &stroke)
 
     set_press(_pen, data->press, _prop, _isRubber);
 
-    const auto _topLeft     = page::at_translation(
+    const auto _topLeft     = Page::at_translation(
                 point_s(
                     data->rect.topLeft()),
                     _page
                 ).toQPointF(_prop);
 
-    const auto _bottomRight = page::at_translation(
+    const auto _bottomRight = Page::at_translation(
                 point_s(
                     data->rect.bottomRight()),
                     _page
@@ -151,8 +151,8 @@ force_inline void stroke_drawer::draw_line(const Stroke    &stroke)
     _painter.setPen(_pen);
     set_press(_pen, press, _prop, _isRubber);
 
-    const auto _topLeft     = page::at_translation(point_s(data->pt1), _page).toQPointF(prop);
-    const auto _bottomRight = page::at_translation(point_s(data->pt2), _page).toQPointF(prop);
+    const auto _topLeft     = Page::at_translation(point_s(data->pt1), _page).toQPointF(prop);
+    const auto _bottomRight = Page::at_translation(point_s(data->pt2), _page).toQPointF(prop);
 
     _painter.setPen(_pen);
     _painter.drawLine(_topLeft, _bottomRight);

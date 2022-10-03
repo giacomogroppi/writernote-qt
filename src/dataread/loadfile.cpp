@@ -255,7 +255,7 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
 
     this->_doc->datatouch->triggerNewView(-1, true);
 
-    _doc->datatouch->triggerVisibility(page::getHeight() * _doc->datatouch->lengthPage());
+    _doc->datatouch->triggerVisibility(Page::getHeight() * _doc->datatouch->lengthPage());
     return OK;
 
     free_:

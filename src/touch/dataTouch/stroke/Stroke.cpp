@@ -3,7 +3,7 @@
 #include "touch/object_finder/model/model.h"
 #include <QDebug>
 #include <QPainter>
-#include "touch/datastruct/stroke_file.h"
+#include "stroke_file.h"
 
 Stroke::Stroke()
 {

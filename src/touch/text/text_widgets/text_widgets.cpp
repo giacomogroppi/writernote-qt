@@ -2,7 +2,7 @@
 #include "ui_text_widgets.h"
 #include "utils/common_error_definition.h"
 #include "touch/tabletcanvas.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "dataread/xmlstruct.h"
 #include "datawrite/savefile.h"
 #include <QDebug>

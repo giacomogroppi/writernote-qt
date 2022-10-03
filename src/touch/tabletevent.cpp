@@ -9,7 +9,7 @@
 #include "utils/common_script.h"
 #include "touch/object_finder/object_finder.h"
 #include "preview_page_widget/preview_page_widget.h"
-#include "touch/datastruct/stroke/StrokePre.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 
 #define MAXPOINT 20
 

@@ -6,7 +6,7 @@
 #include <QPolygonF>
 #include <QPainterPath>
 #include "touch/laser/laser.h"
-#include "touch/datastruct/stroke/StrokePre.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
@@ -105,7 +105,7 @@ void TabletCanvas::load(QPainter &painter,
     constexpr auto debugPageImg = false;
     WDebug(debugPageImg, __func__ << "Start draw img from" << counterPage);
     for(; counterPage < lenPage; counterPage ++){
-        const page &page = data->datatouch->at(counterPage);
+        const Page &page = data->datatouch->at(counterPage);
 
         if(!page.isVisible() && likely(!dataPoint.IsExportingPdf)){
             WDebug(debugPageImg, __func__ << "Page at index" << counterPage << "not visible: Break");
@@ -133,7 +133,7 @@ void singleLoad(
         cdouble         m)
 {
     double x = PointFirstPage.x() * m;
-    double y = PointFirstPage.y() + page::getHeight() * counterPage;
+    double y = PointFirstPage.y() + Page::getHeight() * counterPage;
 
     y *= m;
 
@@ -143,7 +143,7 @@ void singleLoad(
 }
 
 void drawUtils::loadSingleSheet(
-        QPainter &painter,   const page &page,
+        QPainter &painter,   const Page &page,
         cdouble zoom,        cdouble delta,
         QPen &_pen, const QPointF& pointFirstPage)
 {
@@ -188,7 +188,7 @@ static void loadSheet(
         QPainter        &painter,
         const double    delta)
 {
-    const page *__page;
+    const Page *__page;
     const datastruct *data = doc.datatouch;
     const auto pointFirstPage = data->getPointFirstPage();
     const int lenPage = data->lengthPage();

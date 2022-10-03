@@ -14,7 +14,7 @@
 #include "testing/memtest.h"
 
 static pthread_mutex_t      __mutex_sq;
-static const page           *__page;
+static const Page           *__page;
 static QPointF              __f;
 static QPointF              __s;
 static QVector<int>         *__index;
@@ -186,7 +186,7 @@ void square::mergeImg(
     QPainter painter;
     QRect __to = from.rect();
 
-    __to.translate(0, page * page::getResolutionHeigth());
+    __to.translate(0, page * Page::getResolutionHeigth());
 
     painter.begin(&to);
     W_ASSERT(painter.isActive());
@@ -207,7 +207,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 {
     int count;
     cint len = index.length();
-    page * page;
+    Page * page;
     datastruct & data = *_canvas->data->datatouch;
     WImage tmp;
 
@@ -301,7 +301,7 @@ void square::reset()
 
     for(i = 0; i < len; i++){
         QList<Stroke> ll    = _stroke.operator[](i);
-        page * page         = &_canvas->data->datatouch->at_mod(i + _base);
+        Page * page         = &_canvas->data->datatouch->at_mod(i + _base);
 
         for(auto &ref : ll){
             ref.scale(_trans_img);

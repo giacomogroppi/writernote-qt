@@ -3,11 +3,11 @@
 #include <QTimer>
 #include <QObject>
 #include "testing/memtest.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "touch/tabletcanvas.h"
 #include "core/WList.h"
 #include "utils/common_script.h"
-#include "touch/datastruct/stroke/StrokePre.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 
 class laser : public QObject
 {

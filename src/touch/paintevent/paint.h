@@ -4,8 +4,8 @@
 #include <QSize>
 #include <QPointF>
 
-#include "touch/datastruct/datastruct.h"
-#include "touch/datastruct/page.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/page/Page.h"
 #include "core/WImage.h"
 
 #define DRAW_SINGLE_LOAD_DEF 1.0
@@ -38,6 +38,6 @@ inline QSize createSizeRect(
         const double        pro)
 {
     const auto zoom = data->getZoom();
-    return QSize(page::getWidth(), page::getHeight() * countHeigth) * zoom * pro;
+    return QSize(Page::getWidth(), Page::getHeight() * countHeigth) * zoom * pro;
 }
 

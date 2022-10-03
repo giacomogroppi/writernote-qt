@@ -1,4 +1,4 @@
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "touch/multi_thread_data.h"
 #include "pthread.h"
 #include "audioplay/audioplay.h"
@@ -6,7 +6,7 @@
 #define DATASTRUCT_THREAD_MAX 16
 
 struct DatastructNewView{
-    page     *m_page;
+    Page     *m_page;
     QList<Stroke>   *m_stroke;
     int base;
 
@@ -15,7 +15,7 @@ struct DatastructNewView{
     pthread_mutex_t *mutex;
 };
 
-void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> &save, page *page)
+void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> &save, Page *page)
 {
     W_ASSERT(data);
     W_ASSERT(page);
@@ -27,7 +27,7 @@ void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> 
     }
 }
 
-void drawStroke(page *page, QVector<int> &pos, int pos_audio)
+void drawStroke(Page *page, QVector<int> &pos, int pos_audio)
 {
     for(const auto &index : qAsConst(pos)){
         const Stroke &stroke = page->atStroke(index);
@@ -39,7 +39,7 @@ void *__search_new_view(void *__data)
 {
     DataPrivateMuThread *_data = (DataPrivateMuThread *)__data;
     DatastructNewView *_private_data = (DatastructNewView *)_data->extra;
-    page *_page = _private_data->m_page;
+    Page *_page = _private_data->m_page;
     QVector<int> _index;
 
     __search_for_stroke(_data, _private_data->time - 1, _index, _page);
@@ -78,7 +78,7 @@ void datastruct::newViewAudio(int newTime)
     extra.time = newTime;
 
     for(; index < len; index ++){
-        extra.m_page = (page *)&at(index);
+        extra.m_page = (Page *)&at(index);
 
         create = DataPrivateMuThreadInit(dataThread, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->lengthStroke(), 0);
         if(unlikely(create == 1)){

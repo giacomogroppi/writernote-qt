@@ -1,4 +1,4 @@
-﻿#include "page.h"
+﻿#include "Page.h"
 #include "log/log_ui/log_ui.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include <QPainter>
@@ -7,7 +7,7 @@
 #include "utils/common_script.h"
 #include "touch/multi_thread_data.h"
 #include <QPaintDevice>
-#include "touch/datastruct/page_file.h"
+#include "page_file.h"
 #include "core/WZipWriterSingle.h"
 
 #define PAGE_THREAD_MAX 16
@@ -39,7 +39,7 @@ static void setStylePrivate(
     }else{
         fast = true;
 
-        style.nx = TEMP_SQUARE*(page::getHeight() / page::getWidth());
+        style.nx = TEMP_SQUARE*(Page::getHeight() / Page::getWidth());
         style.ny = TEMP_SQUARE;
     }
 }
@@ -50,7 +50,7 @@ static force_inline void __initImg(WImage &img)
     W_ASSERT(!img.isNull());
 }
 
-page::page(const int count, const n_style style)
+Page::Page(const int count, const n_style style)
 {
     this->_count = count;
     this->_IsVisible = true;
@@ -113,14 +113,14 @@ static inline void drawLineVertical(
     }
 }
 
-void page::drawNewPage(n_style __style)
+void Page::drawNewPage(n_style __style)
 {
     bool fast = false;
     double deltax, deltay, ct_del;
     struct style_struct_S style;
     cdouble width_p    = this->getWidth();
     cdouble height_p   = this->getHeight();
-    cdouble last = (_count - 1)*page::getHeight();
+    cdouble last = (_count - 1) * Page::getHeight();
 
     Stroke &stroke = this->_stroke_writernote;
 
@@ -153,7 +153,7 @@ void page::drawNewPage(n_style __style)
     stroke.__setPressureFirstPoint(    widthToPressure(style.thickness));
 }
 
-void page::swap(
+void Page::swap(
         QList<Stroke>       &list,
         const QVector<int>  &pos,
         int                 flag)
@@ -189,7 +189,7 @@ void page::swap(
 /*
  * this function mantain the item already in list
 */
-void page::swap(QList<Stroke> & list,
+void Page::swap(QList<Stroke> & list,
                 int             from,
                 int             to)
 {
@@ -211,13 +211,13 @@ void page::swap(QList<Stroke> & list,
             );
 }
 
-size_t page::get_size_in_file(cbool saveImg) const
+size_t Page::get_size_in_file(cbool saveImg) const
 {
     return page_file::size_in_file(*this, saveImg);
 }
 
 /* the list should be order */
-void page::removeAt(const QVector<int> &pos)
+void Page::removeAt(const QVector<int> &pos)
 {
     int i;
     if(unlikely(!is_order_vector(pos))){
@@ -231,14 +231,14 @@ void page::removeAt(const QVector<int> &pos)
     }
 }
 
-void page::append(const QList<Stroke> &stroke)
+void Page::append(const QList<Stroke> &stroke)
 {
     for(const auto & __tmp : qAsConst(stroke)){
         this->append(__tmp);
     }
 }
 
-void page::drawStroke(
+void Page::drawStroke(
         QPainter        &painter,
         const Stroke    &stroke,
         QPen            &m_pen,
@@ -287,7 +287,7 @@ struct page_thread_data{
     QPainter          * painter;
     QList<Stroke>     * m_stroke;
     int                 m_pos_ris;
-    const page        * parent;
+    const Page        * parent;
 };
 
 /*The only way to draw in thread safe on a qpainter is to draw an image,
@@ -303,7 +303,7 @@ void * __page_load(void *__data)
     Define_PEN(m_pen);
     pthread_mutex_t *mutex = extra->append;
     int m_pos_ris = extra->m_pos_ris;
-    const page *page = extra->parent;
+    const Page *page = extra->parent;
 
     __initImg(img);
     Define_PAINTER_p(painter, img);
@@ -349,7 +349,7 @@ void * __page_load(void *__data)
     return NULL;
 }
 
-void page::drawEngine(
+void Page::drawEngine(
         QPainter        &painter,
         QList<Stroke>   &List,
         int             m_pos_ris,
@@ -400,7 +400,7 @@ void page::drawEngine(
     }
 }
 
-inline void page::draw(
+inline void Page::draw(
     QPainter    &painter,
     int         m_pos_ris,
     bool        all)
@@ -427,7 +427,7 @@ inline void page::draw(
     this->mergeList();
 }
 
-void page::mergeList()
+void Page::mergeList()
 {
     int i;
     const int len = this->_strokeTmp.length();
@@ -444,7 +444,7 @@ void page::mergeList()
     _strokeTmp.clear();
 }
 
-void page::drawToImage(
+void Page::drawToImage(
     const QVector<int>  &index,
     WImage              &img,
     cint                flag) const
@@ -468,12 +468,12 @@ void page::drawToImage(
     End_painter(painter);
 }
 
-bool page::userWrittenSomething() const
+bool Page::userWrittenSomething() const
 {
     return this->_stroke.length();
 }
 
-bool page::initImg(bool flag)
+bool Page::initImg(bool flag)
 {
     flag = _imgDraw.isNull() || flag;
     if(flag)
@@ -482,7 +482,7 @@ bool page::initImg(bool flag)
     return flag;
 }
 
-void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
+void Page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 {
     int i = pos.length();
     uint color;
@@ -506,7 +506,7 @@ void page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 /*
  * all --> indicates if all the points must be drawn from scratch, if false it is drawn over the old image
 */
-void page::triggerRenderImage(int m_pos_ris, bool all)
+void Page::triggerRenderImage(int m_pos_ris, bool all)
 {
     __is_ok_count();
 
@@ -553,7 +553,7 @@ static force_inline int is_inside_squade(
     return __is_inside_square(rect1, rect2) || __is_inside_square(rect2, rect1);
 }
 
-void page::removeAndDraw(
+void Page::removeAndDraw(
         int                 m_pos_ris,
         const QVector<int>  &pos,
         const QRectF        &area)
@@ -568,7 +568,7 @@ void page::removeAndDraw(
     drawIfInside(m_pos_ris, area);
 }
 
-void page::drawIfInside(int m_pos_ris, const QRectF &area)
+void Page::drawIfInside(int m_pos_ris, const QRectF &area)
 {
     int index = lengthStroke() - 1;
     Define_PAINTER(painter);
@@ -589,7 +589,7 @@ void page::drawIfInside(int m_pos_ris, const QRectF &area)
     point.ry() = rect.function().y(); \
     at_translation(point, this->_count - 1);
 
-void page::drawSquare(const QRect &rect)
+void Page::drawSquare(const QRect &rect)
 {
     QRect tmp;
     QBrush brush(COLOR_NULL, Qt::SolidPattern);
@@ -615,7 +615,7 @@ void page::drawSquare(const QRect &rect)
     End_painter(painter);
 }
 
-void page::decreseAlfa(const QVector<int> &pos, int decrese)
+void Page::decreseAlfa(const QVector<int> &pos, int decrese)
 {
     bool needInit = initImg(false);
 
@@ -631,7 +631,7 @@ void page::decreseAlfa(const QVector<int> &pos, int decrese)
     End_painter(painter);
 }
 
-QRect page::get_size_area(const QList<Stroke> &item, int from, int to)
+QRect Page::get_size_area(const QList<Stroke> &item, int from, int to)
 {
     QRect result;
 
@@ -649,12 +649,12 @@ QRect page::get_size_area(const QList<Stroke> &item, int from, int to)
     return result;
 }
 
-page::page()
+Page::Page()
 {
     this->_count = -1;
 }
 
-QRect page::get_size_area(const QVector<int> &pos) const
+QRect Page::get_size_area(const QVector<int> &pos) const
 {
     QRect result;
     int len = pos.length();
@@ -675,11 +675,11 @@ QRect page::get_size_area(const QVector<int> &pos) const
     return result;
 }
 
-void page::setCount(int newCount)
+void Page::setCount(int newCount)
 {
     int i = this->lengthStroke();
     int delta = newCount - this->_count;
-    cdouble deltaY = page::getHeight() * delta;
+    cdouble deltaY = Page::getHeight() * delta;
 
     if(unlikely(this->_count < 0)){
         _count = newCount;
@@ -697,7 +697,7 @@ void page::setCount(int newCount)
     __is_ok_count();
 }
 
-void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)
+void Page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)
 {
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);
@@ -713,7 +713,7 @@ void page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
     End_painter(painter);
 }
 
-void page::allocateStroke(int numAllocation)
+void Page::allocateStroke(int numAllocation)
 {
     for(int i = 0; i < numAllocation; i++){
         this->_stroke.append(Stroke());
@@ -725,17 +725,17 @@ void page::allocateStroke(int numAllocation)
     if(unlikely(err != OK)) \
         return err;
 
-int page::save(WZipWriterSingle &writer, cbool saveImg) const
+int Page::save(WZipWriterSingle &writer, cbool saveImg) const
 {
     return page_file::save(this, writer, saveImg);
 }
 
-int page::load(WZipReaderSingle &reader, int ver_stroke)
+int Page::load(WZipReaderSingle &reader, int ver_stroke)
 {
     return page_file::load(*this, ver_stroke, reader);
 }
 
-void page::drawStroke(const Stroke &stroke, int m_pos_ris)
+void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
 {
     drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), nullptr);
 }

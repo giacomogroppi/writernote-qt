@@ -7,6 +7,7 @@
 #include "mainwindow.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
+#include "log/log_ui/log_ui.h"
 
 #define mov_if_neg(p, x) \
     p = x; \
@@ -53,7 +54,7 @@ void datastruct::drawIfInside(const QRect &area)
     int i = this->getFirstPageVisible();
 
     for(; i >= 0; i--){
-        page *page = &at_mod(i);
+        Page *page = &at_mod(i);
 
         if(!page->isVisible())
             break;
@@ -68,8 +69,8 @@ datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
     this->_img = m_img;
     _last_translation = QPointF(0, 0);
 
-    pthread_mutex_init(&_changeIdMutex, NULL);
-    pthread_mutex_init(&_changeAudioMutex, NULL);
+    pthread_mutex_init(&_changeIdMutex, nullptr);
+    pthread_mutex_init(&_changeAudioMutex, nullptr);
 }
 
 datastruct::~datastruct()
@@ -80,12 +81,9 @@ datastruct::~datastruct()
 
 void datastruct::triggerIfNone(int m_pos_ris)
 {
-    int i = lengthPage();
-    for(i --; i >= 0; i--){
-        page &_page = at_mod(i);
-        if(_page._imgDraw.isNull()){
-            _page.triggerRenderImage(m_pos_ris, true);
-        }
+    for(auto &page : _page){
+        if(page._imgDraw.isNull())
+            page.triggerRenderImage(m_pos_ris, true);
     }
 }
 
@@ -125,7 +123,7 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
     }
 
     for(i = 0; i < len; i++){
-        page::copy(src._page.at(i), dest._page.operator[](i));
+        Page::copy(src._page.at(i), dest._page.operator[](i));
     }
 
     dest._zoom = src._zoom;
@@ -162,7 +160,7 @@ void datastruct::adjustHeight(cdouble height)
         }
     }
 
-    scala_all(t, height);
+    scala_all(t, static_cast<int>(height));
 }
 
 /*
@@ -178,19 +176,19 @@ void datastruct::adjustWidth(cdouble width)
     const QPointF point = this->getPointFirstPage();
     QPointF t(0., 0.);
     double biggerX = biggerx();
-    bool not_used __f;
+    bool not_used f;
     cdouble x = point.x();
 
     if(x < 0. && biggerX <= width){
         t.setX(width - biggerX);
-        __f = true;
+        f = true;
         if(!isOkTranslate(t, true)){
             t.setX(0.);
         }
 
     }else{ //(x >= width)
         if(point.x() > 0.){
-            __f = false;
+            f = false;
             t.setX(-point.x());
         }
     }
@@ -282,12 +280,12 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
 /* the list can be not order */
 void datastruct::MovePoint(
         const QVector<int>  &pos,
-        cint                __page,
+        cint                pageIndex,
         const QPointF       &translation)
 {
-    page &page = at_mod(__page);
+    Page &pageRef = at_mod(pageIndex);
     for(const auto &index : qAsConst(pos)){
-        Stroke & stroke = page.atStrokeMod(index);
+        Stroke & stroke = pageRef.atStrokeMod(index);
         stroke.movePoint(translation);
     }
 }
@@ -297,10 +295,11 @@ void datastruct::removePointIndex(
         cint            __page,
         cbool           __isOrder)
 {
-    page *page = &at_mod(__page);
+    Page *page = &at_mod(__page);
     int i = pos.length() - 1;
 
     if(likely(__isOrder)){
+
 #ifdef DEBUGINFO
         W_ASSERT(is_order_vector(pos));
 #else
@@ -387,7 +386,7 @@ int datastruct::getLastPageVisible() const
     return -1;
 }
 
-void datastruct::insertPage(const page &Page, int index)
+void datastruct::insertPage(const Page &Page, int index)
 {
     int len;
 

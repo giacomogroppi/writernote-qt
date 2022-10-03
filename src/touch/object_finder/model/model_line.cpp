@@ -1,5 +1,5 @@
 #include "touch/object_finder/model/model.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "testing/memtest.h"
 #include <qmath.h>
 #include "utils/common_script.h"

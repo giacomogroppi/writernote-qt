@@ -1,5 +1,5 @@
 #include "copy_cut_selection.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "utils/common_script.h"
 
 copy::copy()
@@ -41,7 +41,7 @@ QRect copy::get_size_area(const QList<QList<Stroke>> &data)
 
     for(const auto &__list : data){
 
-        const auto tmp = page::get_size_area(__list, 0, __list.length());
+        const auto tmp = Page::get_size_area(__list, 0, __list.length());
 
         size_area = datastruct::get_bigger_rect(tmp, size_area);
     }

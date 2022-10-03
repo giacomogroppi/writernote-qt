@@ -17,7 +17,7 @@ preview_page_widget::preview_page_widget(QWidget *parent, MainWindow *mainWindow
 
     ui->setupUi(this);
 
-    WNew(_page, page, (1, n_style::empty));
+    WNew(_page, Page, (1, n_style::empty));
 
     _main = mainWindow;
     _list = new list_options(this);

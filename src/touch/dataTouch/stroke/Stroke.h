@@ -4,12 +4,12 @@
 #include <QDebug>
 #include <QRect>
 #include <QPainterPath>
-#include "touch/datastruct/point.h"
+#include "touch/dataTouch/point.h"
 #include "utils/common_def.h"
 #include "utils/common_script.h"
-#include "touch/datastruct/utils_datastruct.h"
+#include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WLine.h"
-#include "touch/datastruct/stroke_complex_data.h"
+#include "stroke_complex_data.h"
 #include "touch/object_finder/model/model.h"
 #include "testing/memtest.h"
 #include "core/WZipWriterSingle.h"
@@ -141,7 +141,7 @@ public:
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
-    friend class page;
+    friend class Page;
     friend class xmlstruct;
     friend class stroke_drawer;
     friend class stroke_file;

@@ -1,7 +1,6 @@
 #include "launch_updater.h"
-#include "stdlib.h"
-#include "src/utils/dialog_critic/dialog_critic.h"
-#include "src/utils/mostra_explorer/mostra_explorer.h"
+#include "utils/dialog_critic/dialog_critic.h"
+#include "utils/mostra_explorer/mostra_explorer.h"
 
 void launch_updater::launch()
 {

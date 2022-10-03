@@ -1,7 +1,7 @@
 #include "zoom_control.h"
 #include <QDebug>
 #include "touch/event/itspossibletoscroll.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "touch/event/itspossibletoscroll.h"
 
 /*

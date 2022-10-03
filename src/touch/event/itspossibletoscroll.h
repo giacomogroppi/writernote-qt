@@ -2,7 +2,7 @@
 
 #include <QSize>
 #include <QPointF>
-#include "src/utils/common_def.h"
+#include "utils/common_def.h"
 
 class datastruct;
 

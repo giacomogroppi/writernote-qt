@@ -53,7 +53,7 @@ bool topdf::createpdf(cbool withPdf)
 
     QPdfWriter pdfWriter(*this->path);
     //pdfWriter.setPageSize(QPageSize(QPageSize::A4));
-    pdfWriter.setPageSize(QPageSize(page::getResolutionSize() * .25));
+    pdfWriter.setPageSize(QPageSize(Page::getResolutionSize() * .25));
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)) && defined(PDFSUPPORT)
     //pdfWriter.setResolution(data->m_pdf->resolution);
 #else
@@ -62,7 +62,7 @@ bool topdf::createpdf(cbool withPdf)
 
     const int width_pdf = pdfWriter.width();
     const double size_orizzontale = data->datatouch->currentWidth();
-    const double size_verticale = page::getProportion() * size_orizzontale;
+    const double size_verticale = Page::getProportion() * size_orizzontale;
     const double delta = double(width_pdf) / double(size_orizzontale);
 
     QPainter painter(&pdfWriter);

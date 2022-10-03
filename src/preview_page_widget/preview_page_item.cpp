@@ -1,7 +1,7 @@
 #include "preview_page_item.h"
 #include "preview_page_widget/preview_page_widget.h"
 #include "qlabel.h"
-#include "touch/datastruct/page.h"
+#include "touch/dataTouch/page/Page.h"
 #include "ui_preview_page_item.h"
 #include "touch/tabletcanvas.h"
 #include "utils/utils.h"
@@ -11,7 +11,7 @@ constexpr not_used bool preview_item_debug = false;
 constexpr auto pos_img = ":image/images/preview_page_item_image1.png";
 
 constexpr int _widthImg = 200;
-constexpr int _heightImg = page::getProportion() * _widthImg;
+constexpr int _heightImg = Page::getProportion() * _widthImg;
 
 constexpr int realWidth = _widthImg;
 constexpr int realHeight = _heightImg + 40;
@@ -34,7 +34,7 @@ preview_page_item::~preview_page_item()
     delete ui;
 }
 
-void preview_page_item::draw(const page &page, cbool selected)
+void preview_page_item::draw(const Page &page, cbool selected)
 {
     WDebug(preview_item_debug, "call");
 
@@ -68,8 +68,8 @@ QSize preview_page_item::get_size()
 
 void preview_page_item::paint(QPixmap &pix)
 {
-    constexpr double delta = _widthImg / page::getWidth();
-    const QPointF pointZero(0., - page::getHeight() * delta * double(_page->getCount() - 1));
+    constexpr double delta = _widthImg / Page::getWidth();
+    const QPointF pointZero(0., - Page::getHeight() * delta * double(_page->getCount() - 1));
     QPainter painter(&pix);
     Define_PEN(pen);
 

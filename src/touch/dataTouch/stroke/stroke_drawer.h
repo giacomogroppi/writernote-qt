@@ -1,9 +1,9 @@
 #pragma once
 
 #include "core/WList.h"
-#include "touch/datastruct/point.h"
+#include "touch/dataTouch/point.h"
 #include "utils/common_script.h"
-#include "touch/datastruct/utils_datastruct.h"
+#include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include <QtGlobal>
 #include <QPainter>
 #include <QPen>

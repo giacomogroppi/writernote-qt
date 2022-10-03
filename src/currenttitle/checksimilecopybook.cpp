@@ -14,8 +14,8 @@ static int checkSpeed(const Document &first,
         return LEN;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        const page &page1 = first.datatouch->at(counterPage);
-        const page &page2 = second.datatouch->at(counterPage);
+        const Page &page1 = first.datatouch->at(counterPage);
+        const Page &page2 = second.datatouch->at(counterPage);
 
         len = page1.lengthStroke();
         if(len != page2.lengthStroke())

@@ -2,7 +2,7 @@
 
 #include <QList>
 #include <QByteArray>
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 
 class fromimage;
 class frompdf;

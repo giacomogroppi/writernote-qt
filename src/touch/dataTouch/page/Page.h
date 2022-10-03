@@ -5,7 +5,7 @@
 #include <QPointF>
 #include <QDebug>
 #include "core/WZipWriterSingle.h"
-#include "touch/datastruct/stroke/Stroke.h"
+#include "touch/dataTouch/stroke/Stroke.h"
 #include "utils/common_def.h"
 #include "utils/common_script.h"
 #include "core/WZipReaderSingle.h"
@@ -43,7 +43,7 @@ void adjustStrokePage(const QList<Stroke> &List, int count, Stroke *m_stroke);
 
 constexpr bool debugPage = false;
 
-class page
+class Page
 {
 private:
     static constexpr uint width = 1666;
@@ -84,10 +84,10 @@ private:
 public:
     const WImage &getImg() const;
 
-    page();
-    page(const page &page);
-    page(const int count, const n_style style);
-    ~page();
+    Page();
+    Page(const Page &page);
+    Page(const int count, const n_style style);
+    ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
     void swap(QList<Stroke> & stroke, const QVector<int> & pos, int flag);
@@ -161,7 +161,7 @@ public:
 
     void setCount(int count);
 
-    static void copy(const page &src, page &dest);
+    static void copy(const Page &src, Page &dest);
     Q_CONSTEXPR static double getProportion();
     Q_CONSTEXPR static double getHeight();
     Q_CONSTEXPR static double getWidth();
@@ -173,7 +173,7 @@ public:
 #define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
     void drawToImage(const QVector<int> &index, WImage &img, cint flag) const;
 
-    page &operator=(const page &other);
+    Page &operator=(const Page &other);
 
 
     friend class Stroke;
@@ -189,37 +189,37 @@ public:
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
 
-force_inline void page::unlock() const
+force_inline void Page::unlock() const
 {
     pthread_mutex_unlock((pthread_mutex_t *)&_img);
 }
 
-force_inline void page::lock() const
+force_inline void Page::lock() const
 {
     pthread_mutex_lock((pthread_mutex_t *)&_img);
 }
 
-force_inline double page::currentHeight() const
+force_inline double Page::currentHeight() const
 {
-    return _count * page::getHeight();
+    return _count * Page::getHeight();
 }
 
-force_inline double page::currentWidth() const
+force_inline double Page::currentWidth() const
 {
-    return page::getWidth();
+    return Page::getWidth();
 }
 
-force_inline void page::move(const uint from, const uint to)
+force_inline void Page::move(const uint from, const uint to)
 {
     this->_stroke.move(from, to);
 }
 
-force_inline int page::getCount() const
+force_inline int Page::getCount() const
 {
     return this->_count;
 }
 
-force_inline void page::reset()
+force_inline void Page::reset()
 {
     this->_stroke.clear();
     this->_stroke_writernote.reset();
@@ -229,10 +229,10 @@ force_inline void page::reset()
     this->_imgDraw = WImage();
 }
 
-inline point_s page::at_translation(const point_s &point, cint page)
+inline point_s Page::at_translation(const point_s &point, cint page)
 {
     point_s tmp;
-    const double ytranslation = double(page) * page::getHeight();
+    const double ytranslation = double(page) * Page::getHeight();
 
     if(unlikely(!page)){
         return point;
@@ -243,48 +243,48 @@ inline point_s page::at_translation(const point_s &point, cint page)
     return tmp;
 }
 
-force_inline void page::AppendDirectly(const Stroke &stroke)
+force_inline void Page::AppendDirectly(const Stroke &stroke)
 {
     this->_stroke.append(stroke);
 }
 
-force_inline const WImage &page::getImg() const
+force_inline const WImage &Page::getImg() const
 {
     return this->_imgDraw;
 }
 
-Q_CONSTEXPR force_inline double page::getProportion()
+Q_CONSTEXPR force_inline double Page::getProportion()
 {
     return proportion;
 }
 
-Q_CONSTEXPR force_inline double page::getHeight()
+Q_CONSTEXPR force_inline double Page::getHeight()
 {
     return height;
 }
 
-Q_CONSTEXPR force_inline double page::getWidth()
+Q_CONSTEXPR force_inline double Page::getWidth()
 {
     return width;
 }
 
-Q_CONSTEXPR force_inline QSize page::getResolutionSize()
+Q_CONSTEXPR force_inline QSize Page::getResolutionSize()
 {
-    return QSize(page::getResolutionWidth(), page::getResolutionHeigth());
+    return QSize(Page::getResolutionWidth(), Page::getResolutionHeigth());
 }
 
 #define PROP_RESOLUTION (2.)
-Q_CONSTEXPR force_inline double page::getResolutionWidth()
+Q_CONSTEXPR force_inline double Page::getResolutionWidth()
 {
     return getWidth() * PROP_RESOLUTION;
 }
 
-Q_CONSTEXPR force_inline double page::getResolutionHeigth()
+Q_CONSTEXPR force_inline double Page::getResolutionHeigth()
 {
     return getHeight() * PROP_RESOLUTION;
 }
 
-force_inline bool page::updateFlag(
+force_inline bool Page::updateFlag(
         const QPointF   &FirstPoint,
         cdouble         zoom,
         cdouble         heightView)
@@ -295,12 +295,12 @@ force_inline bool page::updateFlag(
     //W_ASSERT(FirstPoint.x() <= 0.0 && FirstPoint.y() <= 0.0);
     W_ASSERT(heightView >= 0);
 
-    heightSec = page::getHeight() * zoom;
+    heightSec = Page::getHeight() * zoom;
 
     cdouble minH = heightSec * double(_count - 1) / zoom + FirstPoint.y();
     cdouble maxH = heightSec * double(_count)     / zoom + FirstPoint.y();
 
-    if(likely( heightView <= page::getHeight() * zoom)){
+    if(likely(heightView <= Page::getHeight() * zoom)){
         // if the page is not fully visible in a window
 
         _IsVisible = discordant(maxH, minH);
@@ -322,25 +322,25 @@ ret:
     return _IsVisible;
 }
 
-force_inline void page::setVisible(cbool vis) const
+force_inline void Page::setVisible(cbool vis) const
 {
     bool &__IsVisible = (bool &)_IsVisible;
     __IsVisible = vis;
 }
 
-force_inline const Stroke &page::atStroke(uint i) const
+force_inline const Stroke &Page::atStroke(uint i) const
 {
     __is_ok_count();
     return this->_stroke.at(i);
 }
 
-force_inline Stroke &page::atStrokeMod(const uint i)
+force_inline Stroke &Page::atStrokeMod(const uint i)
 {
     __is_ok_count();
     return this->_stroke.operator[](i);
 }
 
-force_inline const Stroke &page::get_stroke_page() const
+force_inline const Stroke &Page::get_stroke_page() const
 {
     __is_ok_count();
     return this->_stroke_writernote;
@@ -354,7 +354,7 @@ static force_inline void __at_draw_private(const point_s &from, point_s &to, con
     to += translation;
 }
 
-inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
+inline void Page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
                           point_s &point, const double zoom) const
 {
     const Stroke &stroke = atStroke(IndexStroke);
@@ -363,7 +363,7 @@ inline void page::at_draw(const uint IndexStroke, const uint IndexPoint, const Q
     __at_draw_private(__point, point, zoom, translation);
 }
 
-inline void page::at_draw_page(
+inline void Page::at_draw_page(
         cint IndexPoint,
         const QPointF   &translation,
         point_s         &point,
@@ -375,19 +375,19 @@ inline void page::at_draw_page(
     __at_draw_private(__point, point, zoom, translation);
 }
 
-force_inline int page::lengthStroke() const
+force_inline int Page::lengthStroke() const
 {
     return _stroke.length();
 }
 
-force_inline bool page::isVisible() const
+force_inline bool Page::isVisible() const
 {
     return this->_IsVisible;
 }
 
-inline void page::copy(
-    const page  &src,
-    page        &dest)
+inline void Page::copy(
+        const Page  &src,
+        Page        &dest)
 {
     //int counterStroke, lenStroke;
     //lenStroke = src.lengthStroke();
@@ -403,26 +403,26 @@ inline void page::copy(
     dest._count                     = src._count;
 }
 
-force_inline void page::removeAt(cint i)
+force_inline void Page::removeAt(cint i)
 {
     W_ASSERT(!(i < 0 || i >= _stroke.size()));
 
     this->_stroke.removeAt(i);
 }
 
-force_inline const Stroke &page::last() const
+force_inline const Stroke &Page::last() const
 {
     __is_ok_count();
     return this->_stroke.last();
 }
 
-inline Stroke &page::lastMod()
+inline Stroke &Page::lastMod()
 {
     __is_ok_count();
     return this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
-force_inline void page::append(const Stroke &strokeAppend)
+force_inline void Page::append(const Stroke &strokeAppend)
 {
     DO_IF_DEBUG(
     int lastNewIndex = _strokeTmp.length();
@@ -441,35 +441,35 @@ force_inline void page::append(const Stroke &strokeAppend)
     }
 }
 
-force_inline double page::minHeight() const
+force_inline double Page::minHeight() const
 {
     return (this->_count - 1) * this->height;
 }
 
-force_inline page::page(const page &from)
+force_inline Page::Page(const Page &from)
 {
     pthread_mutex_init(&_img, NULL);
     pthread_mutex_init(&_append_load, NULL);
-    page::copy(from, *this);
+    Page::copy(from, *this);
 }
 
-force_inline page::~page()
+force_inline Page::~Page()
 {
     pthread_mutex_destroy(&_img);
     pthread_mutex_destroy(&_append_load);
 }
 
-inline page &page::operator=(const page &other)
+inline Page &Page::operator=(const Page &other)
 {
     if(this == &other){
         return *this;
     }
 
-    page::copy(other, *this);
+    Page::copy(other, *this);
     return *this;
 }
 
-force_inline void page::drawForceColorStroke(
+force_inline void Page::drawForceColorStroke(
         const Stroke    &stroke,
         cint            m_pos_ris,
         const QColor    &color,

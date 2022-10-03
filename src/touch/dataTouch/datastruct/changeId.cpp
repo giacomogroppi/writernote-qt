@@ -9,7 +9,7 @@ static force_inline void append_point(const Stroke &_from, Stroke &_to, int from
 }
 
 // this function is usable only in this .o file
-force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, page &page, cbool threadSafe)
+force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, Page &page, cbool threadSafe)
 {
     Stroke strokeToAppend;
     int lenPointInStroke;
@@ -47,7 +47,7 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, page 
     }
 }
 
-void datastruct::changeIdThreadSave(int indexPoint, Stroke &stroke, page &page)
+void datastruct::changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page)
 {
     return __changeId(indexPoint, stroke, page, true);
 }

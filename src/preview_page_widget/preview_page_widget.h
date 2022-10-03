@@ -2,7 +2,7 @@
 #include <QWidget>
 #include "preview_page_widget/preview_page_container.h"
 #include "preview_page_widget/list_options.h"
-#include "touch/datastruct/page.h"
+#include "touch/dataTouch/page/Page.h"
 #include <QTimer>
 
 namespace Ui {
@@ -36,7 +36,7 @@ private slots:
 private:
     QVector<int> _page_mod;
 
-    page *_page;
+    Page *_page;
 
     MainWindow *_main;
     QTimer *_timer;

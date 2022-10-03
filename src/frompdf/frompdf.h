@@ -12,7 +12,7 @@ public:
 
 #ifdef PDFSUPPORT
 
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "currenttitle/document.h"
 #include "zip.h"
 #include <QString>

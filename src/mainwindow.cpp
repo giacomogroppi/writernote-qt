@@ -171,7 +171,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     mobile::make_ui(this);
 
-    _canvas->data->datatouch->triggerVisibility(page::getHeight() * _canvas->data->datatouch->lengthPage());
+    _canvas->data->datatouch->triggerVisibility(Page::getHeight() * _canvas->data->datatouch->lengthPage());
     this->setStyleSheet(WStyle::get_style());
 }
 

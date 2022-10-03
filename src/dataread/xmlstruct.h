@@ -7,7 +7,7 @@
 #include <streambuf>
 #include <QList>
 #include "currenttitle/document.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include <zip.h>
 #include "core/WZip.h"
 

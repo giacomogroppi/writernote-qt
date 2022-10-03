@@ -1,5 +1,5 @@
 #include "stroke_file.h"
-#include "touch/datastruct/stroke/Stroke.h"
+#include "touch/dataTouch/stroke/Stroke.h"
 #include "currenttitle/document.h"
 #include "core/WReadZip.h"
 #include "core/WZipWriterSingle.h"

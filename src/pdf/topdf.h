@@ -1,6 +1,6 @@
 #pragma once
 
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include "mainwindow.h"
 #include "touch/tabletcanvas.h"
 

@@ -5,7 +5,7 @@
 #include <QByteArray>
 #include "zip.h"
 
-#include "touch/datastruct/point.h"
+#include "touch/dataTouch/point.h"
 
 #define D_X 0.0
 #define D_Y 0.0

@@ -23,11 +23,11 @@ void TabletCanvas::initPixmap(bool paint)
 
     }
 
-    if(width() < page::getWidth()){
+    if(width() < Page::getWidth()){
         sizex = width();
     }
     else{
-        sizex = page::getWidth();
+        sizex = Page::getWidth();
     }
 
 

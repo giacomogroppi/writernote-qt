@@ -1,5 +1,5 @@
 #include "itspossibletoscroll.h"
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #include <QDebug>
 
 #define ifEmpty(data) if(data->isempty()) \

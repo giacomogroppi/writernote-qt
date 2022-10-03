@@ -4,7 +4,7 @@
 #include <QColor>
 #include <QFont>
 
-#include "touch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/datastruct.h"
 #define D_SIZE 8
 
 namespace Ui {

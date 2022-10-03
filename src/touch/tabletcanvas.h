@@ -31,7 +31,7 @@ QT_END_NAMESPACE
 namespace drawUtils{
 
 void loadSingleSheet(
-        QPainter &painter,  const page &page,
+        QPainter &painter,  const Page &page,
         cdouble zoom,       cdouble delta,
         QPen &_pen,         const QPointF& pointFirstPage);
 }

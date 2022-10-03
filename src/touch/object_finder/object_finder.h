@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/common_script.h"
-#include "touch/datastruct/point.h"
+#include "touch/dataTouch/point.h"
 #include <QObject>
 #include <QTimer>
 #include <QPointF>

@@ -1,6 +1,6 @@
-#include "src/mainwindow.h"
+#include "mainwindow.h"
 #include "updater/launch_updater/launch_updater.h"
-#include "src/log/log_ui/log_ui.h"
+#include "log/log_ui/log_ui.h"
 
 void MainWindow::on_actionUpdate_writernote_triggered()
 {
