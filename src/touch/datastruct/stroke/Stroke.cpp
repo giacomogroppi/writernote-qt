@@ -1,5 +1,5 @@
 #include "Stroke.h"
-#include "touch/datastruct/stroke_drawer.h"
+#include "stroke_drawer.h"
 #include "touch/object_finder/model/model.h"
 #include <QDebug>
 #include <QPainter>

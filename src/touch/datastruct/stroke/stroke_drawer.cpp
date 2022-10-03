@@ -149,12 +149,12 @@ force_inline void stroke_drawer::draw_line(
         cbool           is_rubber,
         cdouble         _prop)
 {
-    pen.setColor(stroke.getColor());
-    painter.setPen(pen);
-    stroke_complex_line * data = (stroke_complex_line *)stroke._complex;
+    auto * data = static_cast<stroke_complex_line *>(stroke._complex);
     const auto press = data->press;
     cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
 
+    pen.setColor(stroke.getColor());
+    painter.setPen(pen);
     set_press(pen, press, _prop, is_rubber);
 
     const auto _topLeft     = page::at_translation(point_s(data->pt1), page).toQPointF(prop);
