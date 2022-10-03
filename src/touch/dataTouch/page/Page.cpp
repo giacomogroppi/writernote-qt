@@ -46,7 +46,7 @@ static void setStylePrivate(
 
 static force_inline void __initImg(WImage &img)
 {
-    img.initAsPage();
+    img = WImage(0);
     W_ASSERT(!img.isNull());
 }
 

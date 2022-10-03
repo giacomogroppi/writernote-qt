@@ -50,7 +50,7 @@ static void AppendAll(
     if(unlikely(met.isLaser())){
         canvas->_laser->append(strokeToAppend);
         canvas->_laser->endMove();
-        strokeToAppend.reset();
+        strokeToAppend = StrokePre();
     }else{
         const auto &stroke = strokeToAppend.merge();
 
@@ -63,7 +63,7 @@ static void AppendAll(
         );
     }
 
-    strokeToAppend.reset();
+    strokeToAppend = StrokePre();
 }
 
 static inline bool is_rubber(QTabletEvent *event, const TabletPenMethod &met)

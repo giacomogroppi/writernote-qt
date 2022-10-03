@@ -175,7 +175,7 @@ bool square::find()
 force_inline void square::initImg()
 {
     const auto l = _canvas->data->datatouch->lengthPage();
-    _img.initAsPage(l);
+    _img = WImage(l);
 }
 
 void square::mergeImg(

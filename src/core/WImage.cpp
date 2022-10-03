@@ -1,6 +1,7 @@
 #include "WImage.h"
 #include "utils/common_script.h"
 #include "touch/dataTouch/page/Page.h"
+#include <QList>
 
 WImage::WImage(const QString &path, const char *format):
     QImage(path, format)
@@ -28,7 +29,7 @@ WImage::WImage(int width, int height, QImage::Format format) : QImage(width, hei
 {
 }
 
-void WImage::initAsPage(int page)
+WImage::WImage(int page) : QImage(Page::getResolutionWidth(), Page::getResolutionHeigth() * page, WImage::Format_ARGB32)
 {
-    QImage(Page::getResolutionWidth(), Page::getResolutionHeigth() * page, WImage::Format_ARGB32);
+    W_ASSERT(!QImage::isNull());
 }

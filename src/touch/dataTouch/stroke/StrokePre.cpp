@@ -1,16 +1,10 @@
 #include "StrokePre.h"
+#include "touch/dataTouch/stroke/stroke_drawer.h"
 
 StrokePre::StrokePre() noexcept :
     Stroke(),
-    WImage()
+    WImage(0)
 {
-    WImage::initAsPage();
-}
-
-void StrokePre::reset() noexcept
-{
-    Stroke::reset();
-    WImage::initAsPage();
 }
 
 Stroke& StrokePre::merge()
@@ -70,8 +64,9 @@ void StrokePre::setTime(int time)
 
 void StrokePre::draw(QPainter &painter, QPen &pen, cdouble prop)
 {
-    W_ASSERT(0);
-    Stroke::draw(painter, false, 0, pen, prop);
+    stroke_drawer::draw_stroke(painter,
+                               dynamic_cast<StrokePre &>(*this),
+                               pen, prop);
 }
 
 QColor StrokePre::getColor(double division) const

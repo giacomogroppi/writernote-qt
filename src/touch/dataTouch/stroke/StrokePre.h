@@ -30,7 +30,6 @@ public:
     [[nodiscard]] bool is_rect() const    { return Stroke::is_rect(); };
     [[nodiscard]] bool is_line() const    { return Stroke::is_line(); };
 
-    void reset() noexcept;
     void draw(QPainter &painter, QPen &pen, cdouble prop);
     void append(const point_s &point, const pressure_t &press);
     [[nodiscard]] QColor getColor(double division = 1.) const;
