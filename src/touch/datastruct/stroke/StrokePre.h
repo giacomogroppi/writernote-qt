@@ -11,6 +11,8 @@ private:
 #ifdef DEBUGINFO
     bool already_merge = false;
 #endif // DEBUGINFO
+
+    [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 public:
     StrokePre() noexcept;
     ~StrokePre() = default;
@@ -23,10 +25,10 @@ public:
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const;
 
-    [[nodiscard]] bool is_normal() const;
-    [[nodiscard]] bool is_circle() const;
-    [[nodiscard]] bool is_rect() const;
-    [[nodiscard]] bool is_line() const;
+    [[nodiscard]] bool is_normal() const  { return Stroke::is_normal(); };
+    [[nodiscard]] bool is_circle() const  { return Stroke::is_circle(); };
+    [[nodiscard]] bool is_rect() const    { return Stroke::is_rect(); };
+    [[nodiscard]] bool is_line() const    { return Stroke::is_line(); };
 
     void reset() noexcept;
     void draw(QPainter &painter, QPen &pen, cdouble prop);
@@ -36,6 +38,8 @@ public:
     Stroke& merge();
 
     StrokePre &operator=(const StrokePre &other);
+
+    friend class stroke_drawer;
 };
 
 inline bool StrokePre::isEmpty() const noexcept
@@ -54,14 +58,15 @@ inline void StrokePre::setColor(const QColor &color) noexcept
     Stroke::setColor(color);
 }
 
-inline bool StrokePre::is_normal() const
-{
-    return Stroke::is_normal();
-}
-
 inline void StrokePre::append(const point_s &point, const pressure_t &press)
 {
     _point.append(point);
     _pressure.append(press);
+}
+
+inline const Stroke &StrokePre::get_stroke_for_draw() const
+{
+    W_ASSERT(Stroke::is_complex());
+    return *this;
 }
 

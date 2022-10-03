@@ -30,38 +30,38 @@ public:
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const noexcept;
 
-    class Iterator{
+    class iterator{
     private:
         WListPrivate<T> *_e;
     public:
-        explicit Iterator(WListPrivate<T> *e) { _e = e; };
+        explicit iterator(WListPrivate<T> *e) { _e = e; };
 
         T* operator->()         { return _e->data; };
         T &operator*() const    { return *_e->data; };
-        constexpr bool operator==(Iterator i) const         { return _e == i._e; }
-        constexpr bool operator!=(Iterator i) const         { return _e != i._e; }
-        Iterator &operator++()                              { _e = _e->next; return *this; }
-        Iterator operator++(int) { auto copy = *this; ++*this; return copy; }
+        constexpr bool operator==(iterator i) const         { return _e == i._e; }
+        constexpr bool operator!=(iterator i) const         { return _e != i._e; }
+        iterator &operator++()                              { _e = _e->next; return *this; }
+        iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
-    class ConstIterator{
+    class const_iterator{
     private:
         const WListPrivate<T> *_e;
     public:
-        explicit ConstIterator(const WListPrivate<T> *e) { _e = e; };
+        explicit const_iterator(const WListPrivate<T> *e) { _e = e; };
 
         const T* operator->()         { return _e->data; };
         const T &operator*() const    { return *_e->data; };
-        constexpr bool operator==(ConstIterator i) const         { return _e == i._e; }
-        constexpr bool operator!=(ConstIterator i) const         { return _e != i._e; }
-        ConstIterator &operator++()                              { _e = _e->next; return *this; }
-        ConstIterator operator++(int) { auto copy = *this; ++*this; return copy; }
+        constexpr bool operator==(const_iterator i) const         { return _e == i._e; }
+        constexpr bool operator!=(const_iterator i) const         { return _e != i._e; }
+        const_iterator &operator++()                              { _e = _e->next; return *this; }
+        const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
-    Iterator begin() noexcept { return Iterator(_first); };
-    Iterator end()   noexcept { return Iterator(nullptr);  };
-    ConstIterator constBegin() const noexcept { return ConstIterator(_first); }
-    ConstIterator constEnd()   const noexcept { return ConstIterator(nullptr); }
+    iterator begin() noexcept { return iterator(_first); };
+    iterator end()   noexcept { return iterator(nullptr);  };
+    const_iterator constBegin() const noexcept { return const_iterator(_first); }
+    const_iterator constEnd()   const noexcept { return const_iterator(nullptr); }
 
     WList<T> &operator=(const WList<T> &other);
 };

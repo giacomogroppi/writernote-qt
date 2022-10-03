@@ -25,7 +25,7 @@ class Stroke
 {
 private:
     QList<point_s> _point;
-    QVector<pressure_t> _pressure;
+    QList<pressure_t> _pressure;
 
     struct metadata_stroke _metadata;
 

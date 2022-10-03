@@ -11,49 +11,59 @@
 class Stroke;
 class StrokePre;
 
+template <class T, class Z>
+class stroke_drawer_private{
+private:
+    typename T::const_iterator   _pointBegin;
+    typename T::const_iterator   _pointEnd;
+    typename Z::const_iterator   _pressureBegin;
+    typename Z::const_iterator   _pressureEnd;
+    bool                        _pressureNull;
+public:
+    stroke_drawer_private(typename T::const_iterator pointBegin,     typename T::const_iterator pointEnd,
+                          typename Z::const_iterator pressureBegin,  typename Z::const_iterator pressureEnd,
+                          bool pressureNull):
+            _pointBegin(pointBegin),
+            _pointEnd(pointEnd),
+            _pressureBegin(pressureBegin),
+            _pressureEnd(pressureEnd),
+            _pressureNull(pressureNull)
+    {
+    };
+
+    friend class stroke_drawer;
+};
+
 class stroke_drawer {
 private:
-    template <class T>
-    class stroke_drawer_private_iteration{
-    private:
-        typename WList<T>::ConstIterator _begin;
-        typename WList<T>::ConstIterator _end;
-    public:
-        stroke_drawer_private_iteration(typename WList<T>::ConstIterator begin, typename WList<T>::ConstIterator end) {
-            this->_begin = begin;
-            this->_end = end;
-        };
-    };
+    QPainter    &_painter;
+    QPen        &_pen;
+    int         _page;
+    double      _prop;
+    QColor      _color;
+    bool        _isRubber;
 
-    class stroke_drawer_private{
-    private:
-        WList<point_s>::ConstIterator       _pointBegin;
-        WList<point_s>::ConstIterator       _pointEnd;
-        WList<pressure_t>::ConstIterator    _pressureBegin;
-        WList<pressure_t>::ConstIterator    _pressureEnd;
-        bool                                _pressureNull;
-    public:
-        stroke_drawer_private(WList<point_s>::ConstIterator pointBegin, WList<point_s>::ConstIterator pointEnd,
-                              WList<pressure_t>::ConstIterator pressureBegin, WList<pressure_t>::ConstIterator pressureEnd,
-                              bool pressureNull):
-                _pointBegin(pointBegin),
-                _pointEnd(pointEnd),
-                _pressureBegin(pressureBegin),
-                _pressureEnd(pressureEnd),
-                _pressureNull(pressureNull)
-        {
-        };
-    };
-
-    //static void draw_stroke_normal();
-    static void draw_stroke_normal(QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
+    template <class T, class Z>
+    void draw_stroke_normal(stroke_drawer_private<T, Z> &data);
 
     // complex stroke
-    static void draw_circle (QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
-    static void draw_rect   (QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
-    static void draw_line   (QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
+    void draw_circle (const Stroke &stroke);
+    void draw_rect   (const Stroke &stroke);
+    void draw_line   (const Stroke &stroke);
+
+    stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber);
 public:
     static void draw_stroke(QPainter &painter, const StrokePre &stroke, QPen &pen, cdouble prop);
     static void draw_stroke(QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
 };
+
+inline stroke_drawer::stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber) :
+    _painter(painter),
+    _pen(pen),
+    _prop(prop),
+    _color(color),
+    _page(page),
+    _isRubber(is_rubber)
+{
+}
 
