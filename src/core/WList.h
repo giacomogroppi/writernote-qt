@@ -59,9 +59,9 @@ public:
     };
 
     Iterator begin() noexcept { return Iterator(_first); };
-    Iterator end()   noexcept { return Iterator(_last);  };
+    Iterator end()   noexcept { return Iterator(nullptr);  };
     ConstIterator constBegin() const noexcept { return ConstIterator(_first); }
-    ConstIterator constEnd()   const noexcept { return ConstIterator(_last); }
+    ConstIterator constEnd()   const noexcept { return ConstIterator(nullptr); }
 
     WList<T> &operator=(const WList<T> &other);
 };
