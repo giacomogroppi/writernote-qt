@@ -93,16 +93,19 @@ inline void WList<T>::append(const T &data) noexcept
     WNew(tmp, struct WListPrivate<T>, ());
     tmp->data = new T(data);
 
-    if(unlikely(this->_first == NULL)){
-        W_ASSERT(this->_last == this->_first);
+    if(unlikely(this->_first == nullptr)){
+        W_ASSERT(this->_last == nullptr);
+        W_ASSERT(_size == 0);
+
         this->_first = tmp;
-        this->_first->next = NULL;
+        this->_first->next = nullptr;
         this->_last = this->_first;
     }else{
         W_ASSERT(this->_last->next == NULL);
+
         this->_last->next = tmp;
         this->_last = tmp;
-        this->_last->next = NULL;
+        this->_last->next = nullptr;
     }
 
     _size ++;
@@ -117,8 +120,13 @@ inline T *WList<T>::get_first() noexcept
     T *ret = this->_first->data;
     struct WListPrivate<T> *next = this->_first->next;
 
+    if(_first->next == nullptr)
+        _last = _first->next;
+
     WDelete(this->_first);
     this->_first = next;
+
+    _size --;
 
     test();
 
@@ -139,6 +147,7 @@ inline WList<T>::WList(const WList<T> &l) noexcept
 template<class T>
 inline void WList<T>::clear() noexcept
 {
+    test();
     while(_first){
         auto *next = _first->next;
         delete _first->data;
@@ -148,6 +157,7 @@ inline void WList<T>::clear() noexcept
 
     _last = nullptr;
     _size = 0;
+    test();
 }
 
 template<class T>
