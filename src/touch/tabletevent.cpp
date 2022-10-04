@@ -22,6 +22,11 @@ bool need_save_tmp = false;
 static TabletPenMethod lastMethod;
 static QEvent::Type eventType;
 
+bool TabletCanvas::isWriting() const
+{
+    return !__tmp.isEmpty();
+}
+
 static void AppendAll(
         Document              &doc,
         const TabletCanvas    *canvas,
@@ -106,7 +111,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
     const QPointF& pointTouch = event->position();
     constexpr bool tabletDebug = false;
 
-    isWriting = true;
+    _isWriting = true;
     need_save_auto = true;
     need_save_tmp = true;
 

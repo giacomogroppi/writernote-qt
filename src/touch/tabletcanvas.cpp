@@ -21,7 +21,7 @@
 
 TabletCanvas::TabletCanvas()
     : QWidget(nullptr)
-    , m_pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
+    , _pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
     , _method(true)
 {
     this->setObjectName("TabletCanvas");

@@ -33,7 +33,7 @@ public:
                                 QByteArray *pp);
     ~setting_restore_ui();
 
-    struct __data getData () const
+    [[nodiscard]] struct __data getData () const
     {
         return m_data;
     }
@@ -58,7 +58,7 @@ public:
     }
 #endif
 
-    QString get_curr_name_tmp() const{
+    [[nodiscard]] QString get_curr_name_tmp() const{
         return tmp_path;
     }
 
@@ -66,7 +66,7 @@ private:
 
     /* when the user has not selected a location to save the file, it is automatically saved as a temporary file in the /home/user/.writernote folder */
     void decidePath();
-
+    static QString adjustString(const QString &str);
     void deleteFile();
 
     QString tmp_path;

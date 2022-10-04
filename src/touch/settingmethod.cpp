@@ -113,7 +113,7 @@ void MainWindow::on_actionchoose_color_triggered()
 void TabletCanvas::sceltacolorepenna(const QColor color)
 {
     this->_color = color;
-    this->m_pen.setColor(_color);
+    this->_pen.setColor(_color);
 }
 
 void MainWindow::updateTouch()

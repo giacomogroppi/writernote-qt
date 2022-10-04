@@ -75,7 +75,7 @@ struct DataPaint{
 
     void reset()
     {
-        this->parent = NULL;
+        this->parent = nullptr;
         this->m = 1.0;
         this->withPdf = true;
     }
@@ -93,7 +93,7 @@ private:
 public:
     static qreal pressureToWidth(qreal pressure);
     struct Point _lastPoint;
-
+    [[nodiscard]] bool isWriting() const;
     struct PointSettable _pointload;
     void callResizeEvent();
 
@@ -214,20 +214,19 @@ private:
 
     void triggerNewView(const QList<int> &Page, cbool all);
     void triggerNewView(cbool all);
-    bool isWriting = false;
+    bool _isWriting = false;
 
     void updateCursor(const QTabletEvent *event);
     void updateBrush(const QTabletEvent *event);
 
     /* if paint == true launch update() */
     void initPixmap(bool paint);
-    Qt::BrushStyle brushPattern(qreal value);
 
     Valuator m_alphaChannelValuator = TangentialPressureValuator;
     Valuator m_colorSaturationValuator = NoValuator;
     Valuator m_lineWidthValuator = PressureValuator;
 
-    QPen m_pen;
+    QPen _pen;
 
     bool m_deviceDown = false;
     void ManageFinish(QTabletEvent *event, cbool isForce);

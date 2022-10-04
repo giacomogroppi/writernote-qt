@@ -26,8 +26,8 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
     };
 
     WDebug(false, __FUNCTION__ << "call");
-    dataPaint.pen       = this->m_pen;
-    isWriting           = false;
+    dataPaint.pen       = this->_pen;
+    _isWriting          = false;
 
     if (unlikely(_pixmap.isNull()))
         initPixmap(false);

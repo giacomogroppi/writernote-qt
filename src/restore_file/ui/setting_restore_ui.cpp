@@ -1,19 +1,18 @@
 #include "setting_restore_ui.h"
 #include "ui_setting_restore_ui.h"
 #include "utils/setting_define.h"
-#include "currenttitle/document.h"
 #include "datawrite/savefile.h"
 #include "utils/dialog_critic/dialog_critic.h"
-#include "utils/slash/slash.h"
 #include "utils/path/get_path.h"
 #include "restore_file/get_name_tmp.h"
 #include "utils/time/current_time.h"
 #include "utils/common_def.h"
 #include "touch/tabletcanvas.h"
+#include "core/core.h"
+#include "mainwindow.h"
 
 #include <QSettings>
 #include <QTimer>
-#include <QDebug>
 #include <QFile>
 
 #define MAX_SAVE 3600
@@ -176,6 +175,13 @@ void setting_restore_ui::firstTimer()
 
 }
 
+QString setting_restore_ui::adjustString(const QString &str)
+{
+    auto res = str;
+    res.replace(":", "").replace(" ", "");
+    return res;
+}
+
 static int try_save = 0;
 
 // second timer -> tmp file
@@ -185,21 +191,30 @@ void setting_restore_ui::secondTimer()
     QByteArray path;
     savefile ff(&path, _canvas->data);
 
+    /**
+     * We don't want to save the file
+     * while the user is writing
+     * */
+    if(core::get_canvas()->isWriting())
+        goto restart;
+
     if(!need_save_tmp)
         goto start_timer;
 
-    if(*m_path != ""){
+    if(!m_path->isEmpty()){
         path = get_name_tmp::get(*m_path);
     }else{
-        if(tmp_path == ""){
+        if(tmp_path.isEmpty()){
+            const auto day = adjustString(current_day_string());
+            const auto time = adjustString(current_time_string());
             path = get_path(path::tmp_file_not_save);
-            tmp_path = path + "/.writernote_unsave_" + current_day_string() + current_time_string();
-            tmp_path.replace(" ", "");
-            tmp_path.replace(":", "");
-            tmp_path.append("." APP_EXT);
+
+            tmp_path = qstr("%1/.writernote_unsave_%2%3" APP_EXT).arg(path, day, time);
         }
     }
-    path = (tmp_path == "") ? path : tmp_path.toUtf8();
+
+    if(!tmp_path.isEmpty())
+        path = tmp_path.toUtf8();
 
     //qDebug() << "Save tmp file in: " << path;
 
@@ -207,16 +222,19 @@ void setting_restore_ui::secondTimer()
 
     if(!res){
         if(try_save > 5){
-            dialog_critic("We had a problem saving the temporary file in " + path + " for " + QString::number(try_save));
+            const auto m = qstr("We had a problem saving the temporary file in %1 for %2 times").arg(path).arg(try_save);
+            dialog_critic(m);
         }
+        try_save ++;
+    }else{
+        try_save = 0;
     }
 
-    try_save = 0;
-
-    start_timer:
+start_timer:
     need_save_tmp = false;
-    startTimerSetting();
 
+restart:
+    startTimerSetting();
 }
 
 void setting_restore_ui::on_pushButton_ok_clicked()

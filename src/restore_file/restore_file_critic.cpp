@@ -14,7 +14,7 @@ restore_file_critic::n_err restore_file_critic::restore_file(const QByteArray &p
 
 restore_file_critic::n_err restore_file_critic::restore_file_direct(
         const QByteArray &path_load,
-        const QByteArray&path_save)
+        const QByteArray &path_save)
 {
     Document cur;
 
