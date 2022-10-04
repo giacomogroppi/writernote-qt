@@ -1,19 +1,7 @@
 #pragma once
 
 #include <QtGlobal>
-
-#ifndef PDFSUPPORT
-class frompdf{
-public:
-    uchar var;
-    frompdf(void *){};
-};
-#endif
-
-#ifdef PDFSUPPORT
-
 #include "touch/dataTouch/datastruct/datastruct.h"
-#include "currenttitle/document.h"
 #include "zip.h"
 #include <QString>
 #include <QList>
@@ -21,13 +9,20 @@ public:
 #include <QMap>
 #include <QPainter>
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-# include "poppler-qt5.h"
+#ifndef PDFSUPPORT
+class frompdf{
+public:
+    uchar var;
+    frompdf(void *){};
+};
 #else
-# include "poppler-qt6.h"
-#endif
+# if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#  include "poppler-qt5.h"
+# else
+#  include "poppler-qt6.h"
+#endif // PDFSUPPORT
 
-#include "../images/fromimage.h"
+#include "images/fromimage.h"
 #define IMG_PDF_HEIGHT 292
 #define IMG_PDF_WIDTH 210
 
@@ -76,7 +71,7 @@ public:
     static bool isvalid(QString &pos);
 
     void translation(const QPointF &point);
-    void translation(const double x, const double y);
+    void translation(double x, double y);
 
     frompdf(Document *doc);
     ~frompdf() = default;
@@ -107,10 +102,10 @@ public:
 
 
     load_res load_from_row(const QByteArray &, cbool clear,
-                           cbool FirstLoad, const uchar IndexPdf,
+                           cbool FirstLoad, uchar IndexPdf,
                            TabletCanvas *canvas);
 
-    void resizing(TabletCanvas *canvas, const uint lenPdf);
+    void resizing(TabletCanvas *canvas, uint lenPdf);
 
     [[nodiscard]] load_res save(const QList<QString> &path, const QByteArray &path_writernote_file);
     [[nodiscard]] load_res save(const QByteArray &path, const QByteArray &path_writernote_file);
@@ -118,7 +113,7 @@ public:
 
     load_res save_metadata(WZipWriterSingle &writer);
 
-    void draw(QPainter &painter, const double delta, cbool IsExportingPdf) const;
+    void draw(QPainter &painter, double delta, cbool IsExportingPdf, double currentWidth) const;
 
     unsigned insert_pdf(QByteArray &pos, const PointSettable *point);
 
@@ -128,10 +123,10 @@ public:
                 TabletCanvas *canvas);
 
     uint resolution = 500;//72
-    size_t get_size_file() const;
+    [[nodiscard]] size_t get_size_file() const;
 
 private:
-    void adjast(const uchar indexPdf);
+    void adjast(uchar indexPdf);
 
 #ifdef ALL_VERSION
     load_res load_metadata(zip_file_t *file);
@@ -155,13 +150,7 @@ inline void frompdf::translation(const double x, const double y)
     translation(QPointF(x, y));
 }
 
-inline void frompdf::reset()
-{
-    m_image.clear();
-    this->m_data->count_pdf = 0;
-}
-
-force_inline void frompdf::draw(QPainter &painter, const double delta, cbool IsExportingPdf) const
+force_inline void frompdf::draw(QPainter &painter, const double delta, cbool IsExportingPdf, double currentWidth) const
 {
     int i, k, len_img;
     QRectF size;
@@ -177,7 +166,7 @@ force_inline void frompdf::draw(QPainter &painter, const double delta, cbool IsE
         prop = double(target.height()) / double(target.width());
     }
 
-    const double x = m_data->datatouch->currentWidth() * delta;
+    const double x = currentWidth * delta;
     const double y = x * prop;
 
     for(i = 0; i < len; ++i){

@@ -64,11 +64,8 @@ void StrokePre::setTime(int time)
 
 void StrokePre::draw(QPainter &painter)
 {
-    const QImage &img = dynamic_cast<const QImage &>(*this);
+    const auto &img = dynamic_cast<const QImage &>(*this);
     painter.drawImage(WImage::rect(), img);
-    /*stroke_drawer::draw_stroke(painter,
-                               dynamic_cast<StrokePre &>(*this),
-                               pen, prop);*/
 }
 
 QColor StrokePre::getColor(double division) const
@@ -90,7 +87,7 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop)
 {
     QPainter painter;
-    QImage &img = dynamic_cast<QImage &>(*this);
+    auto &img = dynamic_cast<QImage &>(*this);
 
     W_ASSERT(!img.isNull());
 

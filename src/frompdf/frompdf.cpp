@@ -399,4 +399,10 @@ unsigned frompdf::insert_pdf(QByteArray             &pos,
     return OK;
 }
 
+void frompdf::reset()
+{
+    m_image.clear();
+    this->m_data->count_pdf = 0;
+}
+
 #endif

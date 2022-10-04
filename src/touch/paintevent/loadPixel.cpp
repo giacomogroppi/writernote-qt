@@ -63,7 +63,7 @@ void TabletCanvas::load(QPainter &painter,
 
 #ifdef PDFSUPPORT
     if(likely(withPdf))
-        data->m_pdf->draw(painter, dataPoint.m, dataPoint.IsExportingPdf);
+        data->m_pdf->draw(painter, dataPoint.m, dataPoint.IsExportingPdf, data->datatouch->currentWidth());
 #else
     Q_UNUSED(withPdf);
 #endif

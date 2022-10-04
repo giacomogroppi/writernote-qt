@@ -3,9 +3,9 @@
 #include <QList>
 #include <QByteArray>
 #include "touch/dataTouch/datastruct/datastruct.h"
+#include "frompdf/frompdf.h"
+#include "images/fromimage.h"
 
-class fromimage;
-class frompdf;
 #define NAME_FILE "data.xml"
 #define NAME_BIN "data_bin.xml"
 #define NAME_AUDIO "data_audio.mp4"
@@ -18,19 +18,17 @@ class Document{
 private:
     void init();
 public:
-    size_t createSingleControll() const;
+    [[nodiscard]] size_t createSingleControll() const;
 
-    bool isEmpty() const;
+    [[nodiscard]] bool isEmpty() const;
 
-    frompdf *m_pdf = NULL;
-    fromimage *m_img = NULL;
+    frompdf *m_pdf;
+    fromimage *m_img;
 
     int versione = CURRENT_VERSION_CURRENT_TITLE;
     QString audio_position_path = "";
 
-    bool isOkVersion() const;
-
-    datastruct *datatouch = NULL;
+    datastruct *datatouch;
     void reset();
     void cleanAudio();
     unsigned count_pdf = 0;
@@ -56,9 +54,4 @@ public:
 force_inline bool Document::isEmpty() const
 {
     return datatouch->isempty();
-}
-
-inline bool Document::isOkVersion() const
-{
-    return this->versione >= MIN_VERSION_CURRENT_TITLE;
 }
