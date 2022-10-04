@@ -30,8 +30,8 @@ public:
     [[nodiscard]] bool is_rect() const    { return Stroke::is_rect(); };
     [[nodiscard]] bool is_line() const    { return Stroke::is_line(); };
 
-    void draw(QPainter &painter, QPen &pen, cdouble prop);
-    void append(const point_s &point, const pressure_t &press);
+    void draw(QPainter &painter);
+    void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);
     [[nodiscard]] QColor getColor(double division = 1.) const;
 
     Stroke& merge();
@@ -55,12 +55,6 @@ inline int StrokePre::length() const
 inline void StrokePre::setColor(const QColor &color) noexcept
 {
     Stroke::setColor(color);
-}
-
-inline void StrokePre::append(const point_s &point, const pressure_t &press)
-{
-    _point.append(point);
-    _pressure.append(press);
 }
 
 inline const Stroke &StrokePre::get_stroke_for_draw() const

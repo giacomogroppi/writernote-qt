@@ -4,7 +4,7 @@
 #include "audiorecord/audiorecord.h"
 
 void MainWindow::contrUi(){
-    cbool already_rec =    _canvas->data->se_registato != Document::not_record;
+    cbool already_rec =    _canvas->getDoc()->se_registato != Document::not_record;
 
     cbool is_recording =   m_audio_recorder->isRecording();
 

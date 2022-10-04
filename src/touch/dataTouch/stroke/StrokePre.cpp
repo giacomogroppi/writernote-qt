@@ -62,11 +62,13 @@ void StrokePre::setTime(int time)
     Stroke::setPositioneAudio(time);
 }
 
-void StrokePre::draw(QPainter &painter, QPen &pen, cdouble prop)
+void StrokePre::draw(QPainter &painter)
 {
-    stroke_drawer::draw_stroke(painter,
+    const QImage &img = dynamic_cast<const QImage &>(*this);
+    painter.drawImage(WImage::rect(), img);
+    /*stroke_drawer::draw_stroke(painter,
                                dynamic_cast<StrokePre &>(*this),
-                               pen, prop);
+                               pen, prop);*/
 }
 
 QColor StrokePre::getColor(double division) const
@@ -83,4 +85,20 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     this->already_merge = other.already_merge;
 #endif // DEBUGINFO
     return *this;
+}
+
+void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop)
+{
+    QPainter painter;
+    QImage &img = dynamic_cast<QImage &>(*this);
+
+    W_ASSERT(!img.isNull());
+
+    painter.begin(&img);
+    _point.append(point);
+    _pressure.append(press);
+
+    stroke_drawer::draw_stroke(painter,
+                               dynamic_cast<StrokePre &>(*this),
+                               pen, prop);
 }

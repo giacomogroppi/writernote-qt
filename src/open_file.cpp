@@ -67,7 +67,7 @@ void MainWindow::openFile(const char *pos)
 {
     QByteArray fileName, tmp;
     Document curr;
-    xmlstruct xml(&fileName, _canvas->data);
+    xmlstruct xml(&fileName, _canvas->getDoc());
     n_need_save res_save;
 
     fileName = get_path(pos);
@@ -100,7 +100,7 @@ void MainWindow::openFile(const char *pos)
     // check if is pdf or we need to save the current document
     if(IS_PRESENT_IN_LIST(fileName, ".pdf")){
 #ifdef PDFSUPPORT
-        _canvas->data->m_pdf->addPdf(fileName, nullptr, this->m_path, this->_canvas);
+        _canvas->getDoc()->m_pdf->addPdf(fileName, nullptr, this->m_path, this->_canvas);
         this->_preview_widget->changeDocument();
 #else
         user_message("Pdf support is not enable in this version");
@@ -116,7 +116,7 @@ void MainWindow::openFile(const char *pos)
         */
         if(res_save == n_need_save::need_save){
             if(areyousure(QApplication::tr("Save need"), QApplication::tr("Do you want to save %1?").arg(this->m_path))){
-                savefile save(&m_path, _canvas->data);
+                savefile save(&m_path, _canvas->getDoc());
                 if(save.savefile_check_file(true) != OK){
                     if(!areyousure(QApplication::tr("Save fail"), QApplication::tr("We failed to save the file located in %1, should i continue?").arg(m_path))){
                         return;
@@ -136,10 +136,10 @@ void MainWindow::openFile(const char *pos)
         if(xmlstruct::manageMessage(res)){
             Document::copy(curr, *this->getCurrentDoc());
 
-            _canvas->data->datatouch->triggerIfNone(-1);
+            _canvas->getDoc()->datatouch->triggerIfNone(-1);
             aggiornotestiriascolto(this);
             _canvas->updatePageCount();
-            _canvas->data->datatouch->triggerVisibility(_canvas->height());
+            _canvas->getDoc()->datatouch->triggerVisibility(_canvas->height());
             _preview_widget->changeDocument();
             contrUi();
             _canvas->loadpixel();
@@ -147,7 +147,7 @@ void MainWindow::openFile(const char *pos)
         }
 
         this->m_path = "";
-        this->_canvas->data->reset();
+        this->_canvas->getDoc()->reset();
 
     }
     aggiornotestiriascolto(this);

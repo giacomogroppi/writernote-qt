@@ -11,8 +11,8 @@ void MainWindow::on_actionReduce_size_file_triggered()
 
     size_t __c, __e;
 
-    __c = reduce_size::current_size(_canvas->data->datatouch);
-    __e = reduce_size::calculate_min_size(_canvas->data->datatouch);
+    __c = reduce_size::current_size(_canvas->getDoc()->datatouch);
+    __e = reduce_size::calculate_min_size(_canvas->getDoc()->datatouch);
 
     if(areyousure("Reduce file writernote",
                   "With writernote you can decide to decrease the size of the files, decreasing the precision of the strokes you draw\nThe current size is "
@@ -21,9 +21,9 @@ void MainWindow::on_actionReduce_size_file_triggered()
                   + QString::number(__e) + " byte"
                   + "\nDo you want to decrese the information?")){
 
-        reduce_size::decrese(_canvas->data->datatouch);
+        reduce_size::decrese(_canvas->getDoc()->datatouch);
 
-        __c = reduce_size::current_size(_canvas->data->datatouch);
+        __c = reduce_size::current_size(_canvas->getDoc()->datatouch);
         user_message("The current size is now "
                         + QString::number(__c) + " byte");
 

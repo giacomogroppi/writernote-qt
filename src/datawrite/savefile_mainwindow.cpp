@@ -50,7 +50,7 @@ static int adjust_extensions(QByteArray &str)
 /* funzione che viene richiamata quando viene salvato */
 void MainWindow::on_actionSave_File_triggered()
 {
-    savefile savefile_i(&m_path, _canvas->data);
+    savefile savefile_i(&m_path, _canvas->getDoc());
     QByteArray new_path;
     bool check;
 

@@ -171,7 +171,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     mobile::make_ui(this);
 
-    _canvas->data->datatouch->triggerVisibility(Page::getHeight() * _canvas->data->datatouch->lengthPage());
+    _canvas->getDoc()->datatouch->triggerVisibility(Page::getHeight() * _canvas->getDoc()->datatouch->lengthPage());
     this->setStyleSheet(WStyle::get_style());
 }
 
@@ -221,7 +221,7 @@ bool MainWindow::event(QEvent *event)
             const QSize size_widget = _choose_page->get_size();
 
             QPointF new_pos_widget = pos_cursor - QPointF(size_widget.width(), size_widget.height());
-            this->_choose_page->Show(*_canvas->data);
+            this->_choose_page->Show(*_canvas->getDoc());
             this->_choose_page->move(new_pos_widget.toPoint());
         }
     }
@@ -261,7 +261,7 @@ void MainWindow::on_actionNew_File_triggered()
 {
     bool check;
     savecopybook checksave(this);
-    xmlstruct xml(&m_path, _canvas->data);
+    xmlstruct xml(&m_path, _canvas->getDoc());
     Document __curr;
     n_need_save __res;
 
@@ -286,7 +286,7 @@ __continue:
 
     setWindowTitle("Writernote");
     updatePageCount(-1);
-    _canvas->data->reset();
+    _canvas->getDoc()->reset();
 
     _canvas->clear();
     contrUi();
@@ -339,7 +339,7 @@ void MainWindow::on_actionUndu_triggered()
 /* restore file to the original position (0, 0) */
 void MainWindow::on_actionrestore_button_triggered()
 {
-    datastruct *data = _canvas->data->datatouch;
+    datastruct *data = _canvas->getDoc()->datatouch;
     data->triggerNewView(-1, true);
     data->triggerVisibility(_canvas->height());
 
@@ -351,7 +351,7 @@ void MainWindow::on_actionrestore_button_triggered()
 /* new page */
 void MainWindow::on_actionnewPage_triggered()
 {
-    this->_canvas->data->datatouch->newPage(_canvas->_sheet->WhatIsSelected());
+    this->_canvas->getDoc()->datatouch->newPage(_canvas->_sheet->WhatIsSelected());
     _canvas->call_update();
     _preview_widget->newPage();
     _canvas->updatePageCount();
@@ -366,7 +366,7 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
 void MainWindow::on_actionRemove_current_PDF_triggered()
 {
 #ifdef PDFSUPPORT
-    _canvas->data->m_pdf->reset();
+    _canvas->getDoc()->m_pdf->reset();
 #endif // PDFSUPPORT
 }
 

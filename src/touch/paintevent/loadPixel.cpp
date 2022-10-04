@@ -14,22 +14,12 @@
 extern StrokePre __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, double delta);
 
-static void drawSingleStroke(StrokePre   &_stroke,
-                             QPen      &_pen,       QPainter       &_painter,
-                             double   _zoom)
+static void drawSingleStroke(StrokePre   &_stroke, QPainter &_painter)
 {
     if(unlikely(_stroke.isEmpty()))
         return;
 
-    //W_ASSERT(_dataPoint.m == 1.);
-
-    if(_zoom == PROP_RESOLUTION){
-        _zoom = PROP_RESOLUTION - 0.0000001;
-    }
-
-    _pen.setColor(_stroke.getColor());
-
-    _stroke.draw(_painter, _pen, _zoom);
+    _stroke.draw(_painter);
 }
 
 static void draw_laser(QPainter &painter, laser *_laser, QPen &pen, double zoom)
@@ -38,7 +28,7 @@ static void draw_laser(QPainter &painter, laser *_laser, QPen &pen, double zoom)
     const auto end = _laser->end();
 
     for(; begin != end; begin ++){
-        drawSingleStroke(*begin, pen, painter, zoom);
+        drawSingleStroke(*begin, painter);
     }
 }
 
@@ -53,7 +43,7 @@ void TabletCanvas::load(QPainter &painter,
 
     int lenPage                     = data->datatouch->lengthPage();
     const QPointF &PointFirstPage   = data->datatouch->getPointFirstPageNoZoom();
-    const double zoom               = data->datatouch->getZoom();
+    const auto zoom                 = data->datatouch->getZoom();
     const QSize sizeRect            = createSizeRect(data->datatouch, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
     StrokePre &strokeToDraw = __tmp;
@@ -81,7 +71,7 @@ void TabletCanvas::load(QPainter &painter,
     data->m_img->draw(painter);
 
     /* stroke not already add to page */
-    drawSingleStroke(strokeToDraw, pen, painter, zoom);
+    drawSingleStroke(strokeToDraw, painter);
 
     painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);

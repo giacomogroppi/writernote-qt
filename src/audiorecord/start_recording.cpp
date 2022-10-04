@@ -97,7 +97,7 @@ static void save(){
 bool MainWindow::setOutputLocation(const QPoint &hostRect)
 {
     QString tmp_internal;
-    Document *doc = _canvas->data;
+    Document *doc = _canvas->getDoc();
 
 #if defined (Q_OS_WINRT) || defined (ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     Q_UNUSED(hostRect);

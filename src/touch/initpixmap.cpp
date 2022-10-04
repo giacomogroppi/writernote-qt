@@ -10,9 +10,9 @@ void TabletCanvas::initPixmap(bool paint)
     int sizex;
     double _res;
 
-    if(likely(!data->datatouch->isempty())){
+    if(likely(!getDoc()->datatouch->isempty())){
 
-        _res = data->datatouch->biggerx();
+        _res = getDoc()->datatouch->biggerx();
 
         if(width() < _res)
             sizex = width();

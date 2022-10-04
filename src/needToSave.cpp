@@ -18,7 +18,7 @@ enum MainWindow::n_need_save
 {
     const auto debugNeedSave = true;
     int check1;
-    Document *doc = _canvas->data;
+    Document *doc = _canvas->getDoc();
 
     if(xml.getPath() == ""){
         WDebug(debugNeedSave, "Path empty");

@@ -84,7 +84,7 @@ void MainWindow::dropEvent(QDropEvent *event)
         }
     }else if(find == IMAGE){
         point = event->position();
-        const auto res = mainwindow_import_image(positions, *_canvas->data, event->position(), m_path);
+        const auto res = mainwindow_import_image(positions, *_canvas->getDoc(), event->position(), m_path);
         //const auto res = this->_canvas->data->m_img->addImage(path_to_load, &point, this->m_path);
         if(res < 0)
             dialog_critic(QApplication::tr("We got some problem importing the image"));

@@ -170,6 +170,8 @@ void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen
             );
 
     if(likely(stroke.is_normal())){
+        if(stroke._point.length() == 1)
+            return;
         d.draw_stroke_normal(data);
     }else{
         const auto &s = stroke.get_stroke_for_draw();

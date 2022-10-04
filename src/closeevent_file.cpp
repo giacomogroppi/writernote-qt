@@ -42,7 +42,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
     QString __message;
     QMessageBox::StandardButton resBtn;
     bool check;
-    savefile save_(&m_path, _canvas->data);
+    savefile save_(&m_path, _canvas->getDoc());
 
     __res = needToSave(temp_lettura, tempcopybook);
 

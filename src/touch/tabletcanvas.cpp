@@ -29,7 +29,7 @@ TabletCanvas::TabletCanvas()
     setAutoFillBackground(true);
     setAttribute(Qt::WA_TabletTracking);
 
-    WNew(data, Document, ());
+    WNew(_doc, Document, ());
 
     WNew(_zoom, zoom_control, ());
     WNew(_redoundo, redoundo, (this));
@@ -56,7 +56,7 @@ TabletCanvas::~TabletCanvas()
     if(_redoundo)
         WDelete(_redoundo);
 
-    WDelete(data);
+    WDelete(getDoc());
 
     _method.save();
     saveScrollingSetting();
@@ -64,12 +64,12 @@ TabletCanvas::~TabletCanvas()
 
 void TabletCanvas::restoreO()
 {
-    if(data->datatouch->isempty()){
-        this->data->datatouch->newPage(this->_sheet->WhatIsSelected());
+    if(getDoc()->datatouch->isempty()){
+        this->getDoc()->datatouch->newPage(this->_sheet->WhatIsSelected());
         return;
     }
 
-    this->data->datatouch->repositioning();
+    this->getDoc()->datatouch->repositioning();
     update();
 
     lastpointtouch = false;
@@ -238,12 +238,12 @@ static void loadLastMethod(TabletCanvas *p)
 
 void TabletCanvas::triggerNewView(cbool all)
 {
-    data->datatouch->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);
+    getDoc()->datatouch->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
 void TabletCanvas::triggerNewView(const QList<int> &Page, cbool all)
 {
-    this->data->datatouch->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
+    this->getDoc()->datatouch->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

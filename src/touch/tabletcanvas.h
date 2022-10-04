@@ -129,7 +129,8 @@ public:
 
     void updatelist(QTabletEvent *event) const;
 
-    Document *data;
+    Document *getDoc() const { return _doc; };
+    Document *_doc;
 
     TabletPenMethod _method;
 

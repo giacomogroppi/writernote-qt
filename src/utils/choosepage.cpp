@@ -31,7 +31,7 @@ void ChoosePage::on_pushButton_apply_clicked()
 {
     MainWindow *main = (MainWindow *)this->parent();
     if(_curr != -1){
-        main->_canvas->data->datatouch->moveToPage(_curr - 1);
+        main->_canvas->getDoc()->datatouch->moveToPage(_curr - 1);
         main->_canvas->updatePageCount();
         main->_canvas->call_update();
     }
@@ -79,7 +79,7 @@ void ChoosePage::on_plainTextEdit_textChanged()
     MainWindow *main = (MainWindow *)this->parent();
     bool ok, needToClose = false;
     auto str = ui->plainTextEdit->toPlainText();
-    int maxPage = main->_canvas->data->datatouch->lengthPage();
+    int maxPage = main->_canvas->getDoc()->datatouch->lengthPage();
 
     if(str.indexOf('\n') != -1){
         needToClose = true;
@@ -119,7 +119,7 @@ void ChoosePage::on_plainTextEdit_textChanged()
 void ChoosePage::on_pushButton_down_clicked()
 {
     MainWindow *main = (MainWindow *)parent();
-    int maxPage = main->_canvas->data->datatouch->lengthPage();
+    int maxPage = main->_canvas->getDoc()->datatouch->lengthPage();
 
     if(this->_curr >= 0 && _curr + 1 <= maxPage ){
         _curr ++;

@@ -89,7 +89,7 @@ void * __square_search(void *__data)
 bool square::find()
 {
 
-    Document *doc = _canvas->data;
+    Document *doc = _canvas->getDoc();
     datastruct *data = doc->datatouch;
     bool tmp_find;
     int i, create, lenPage, count;
@@ -174,7 +174,7 @@ bool square::find()
 
 force_inline void square::initImg()
 {
-    const auto l = _canvas->data->datatouch->lengthPage();
+    const auto l = _canvas->getDoc()->datatouch->lengthPage();
     _img = WImage(l);
 }
 
@@ -208,7 +208,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     int count;
     cint len = index.length();
     Page * page;
-    datastruct & data = *_canvas->data->datatouch;
+    datastruct & data = *_canvas->getDoc()->datatouch;
     WImage tmp;
 
     WDebug(debugSquare, "call");
@@ -240,7 +240,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 void square::findObjectToDrawImg()
 {
     for(int index : qAsConst(_index_img)){
-        const auto &ref = _canvas->data->m_img->m_img.at(index);
+        const auto &ref = _canvas->getDoc()->m_img->m_img.at(index);
 
         if(ref.i.x() < _pointinit.x())
             _pointinit.setX(ref.i.x());
@@ -262,7 +262,7 @@ void square::findObjectToDrawImg()
 */
 void square::findObjectToDraw(const QList<QVector<int>> &index)
 {
-    const datastruct *data = _canvas->data->datatouch;
+    const datastruct *data = _canvas->getDoc()->datatouch;
     const auto trans = data->getPointFirstPage();
     QRectF sizeData;
     return;
@@ -301,7 +301,7 @@ void square::reset()
 
     for(i = 0; i < len; i++){
         QList<Stroke> ll    = _stroke.operator[](i);
-        Page * page         = &_canvas->data->datatouch->at_mod(i + _base);
+        Page * page         = &_canvas->getDoc()->datatouch->at_mod(i + _base);
 
         for(auto &ref : ll){
             ref.scale(_trans_img);
@@ -322,7 +322,7 @@ out:
 void square::initPointMove(const QPointF &point)
 {
     QPointF new_point;
-    datastruct *Data = _canvas->data->datatouch;
+    datastruct *Data = _canvas->getDoc()->datatouch;
     QRectF rect(_pointinit, _pointfine);
     WDebug(debugSquare, "call");
 
@@ -342,7 +342,7 @@ void square::initPointMove(const QPointF &point)
 void square::move(const QPointF &punto)
 {
     QPointF delta;
-    Document *data = _canvas->data;
+    Document *data = _canvas->getDoc();
     const auto zoom = data->datatouch->getZoom();
 
 
@@ -376,7 +376,7 @@ void square::move(const QPointF &punto)
 void square::endMoving(const QWidget *pixmap)
 {
     QPoint middle;
-    const auto ref = _canvas->data->datatouch->getPointFirstPage();
+    const auto ref = _canvas->getDoc()->datatouch->getPointFirstPage();
     int flag;
     const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
 
@@ -395,7 +395,7 @@ void square::endMoving(const QWidget *pixmap)
 void square::actionProperty(property_control::ActionProperty action)
 {
     int flags = 0, dontcall_copy = 1;
-    datastruct &data = *_canvas->data->datatouch;
+    datastruct &data = *_canvas->getDoc()->datatouch;
 
     switch (action) {
         case property_control::ActionProperty::__copy:{
@@ -491,7 +491,7 @@ void square::needReload(QPainter &painter)
     }
 
     if(__need_reload){
-        const auto *data = _canvas->data->datatouch;
+        const auto *data = _canvas->getDoc()->datatouch;
         const auto zoom = data->getZoom();
         WDebug(debugSquare, "__need_reload = true");
 
@@ -514,7 +514,7 @@ void square::needReload(QPainter &painter)
 
 void square::updatePoint(const QPointF &puntofine)
 {
-    const datastruct *data = _canvas->data->datatouch;
+    const datastruct *data = _canvas->getDoc()->datatouch;
     WDebug(debugSquare, "call");
     W_ASSERT(!somethingInBox());
 
@@ -529,7 +529,7 @@ void square::updatePoint(const QPointF &puntofine)
 
 void square::initPoint(const QPointF &point)
 {
-    const datastruct *data = _canvas->data->datatouch;
+    const datastruct *data = _canvas->getDoc()->datatouch;
     WDebug(debugSquare, "call");
 
     W_ASSERT(!somethingInBox());

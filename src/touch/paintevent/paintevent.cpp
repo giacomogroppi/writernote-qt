@@ -13,7 +13,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
     QPainter painter;
     QRect pixmapPortion;
 
-    cbool needToCreateNewPage = data->datatouch->needToCreateNewSheet() && _sheet->auto_create;
+    cbool needToCreateNewPage = getDoc()->datatouch->needToCreateNewSheet() && _sheet->auto_create;
 
     static DataPaint dataPaint = {
         .withPdf = true,
@@ -40,13 +40,13 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
 
     painter.drawPixmap(event->rect().topLeft(), _pixmap, pixmapPortion);
 
-    if(unlikely( needToCreateNewPage || data->isEmpty())){
-        this->data->datatouch->newPage(this->_sheet->WhatIsSelected());
+    if(unlikely( needToCreateNewPage or getDoc()->isEmpty())){
+        this->getDoc()->datatouch->newPage(this->_sheet->WhatIsSelected());
         core::get_main_window()->_preview_widget->newPage();
         this->updatePageCount();
     }
 
-    TabletCanvas::load(painter, this->data, dataPaint);
+    TabletCanvas::load(painter, this->getDoc(), dataPaint);
 
     if (_method.isSelection()) {
         _square->needReload(painter);

@@ -10,7 +10,7 @@ static int __max = 0;
 void MainWindow::updatePageCount(int pageCount)
 {
     QString text;
-    cint lenPage = _canvas->data->datatouch->lengthPage();
+    cint lenPage = _canvas->getDoc()->datatouch->lengthPage();
 
     ui->page->setHidden(pageCount == -1);
 
@@ -30,7 +30,7 @@ void MainWindow::updatePageCount(int pageCount)
 void TabletCanvas::updatePageCount()
 {
     auto *main = core::get_main_window();
-    const int index = data->datatouch->getFirstPageVisible() + 1;
+    const int index = getDoc()->datatouch->getFirstPageVisible() + 1;
     main->_preview_widget->pageMove();
     main->updatePageCount(index);
 }

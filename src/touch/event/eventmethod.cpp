@@ -266,7 +266,7 @@ ridefine:
         const double multiplier = distanceSelected / tmp_distance_right_left;
 
         _pointMiddle = PointMiddle(point[0], point[1]);
-        needToResize = _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, data->datatouch);
+        needToResize = _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, getDoc()->datatouch);
     }
 
     lastpointzoom[0] = point[0];
@@ -321,7 +321,7 @@ void TabletCanvas::pinchTriggered(QPinchGesture *event)
 
     needToResize = this->_zoom->zoom(pointMiddle, delta,
                                     zoomChange, this->_pixmap.size(), this->size(),
-                                    this->data->datatouch);
+                                    this->getDoc()->datatouch);
 
     if(needToResize)
         this->callResizeEvent();

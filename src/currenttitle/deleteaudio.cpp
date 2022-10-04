@@ -4,11 +4,12 @@
 #include "ui_mainwindow.h"
 
 #include "../audioplay/aggiornotastiriascolto.h"
-void deleteaudio(MainWindow *parent){
+void deleteaudio(MainWindow *parent)
+{
     if(!areyousure("", "Are you sure you want to delete the audio?"))
         return;
 
-    parent->_canvas->data->cleanAudio();
+    parent->_canvas->getDoc()->cleanAudio();
 
     /*
      * TODO -> remove the file on the zip

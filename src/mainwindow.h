@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QDebug>
@@ -235,7 +234,6 @@ inline void MainWindow::setFullScreen()
 
 force_inline Document * MainWindow::getCurrentDoc()
 {
-    return _canvas->data;
+    return _canvas->getDoc();
 }
 
-#endif // MAINWINDOW_H

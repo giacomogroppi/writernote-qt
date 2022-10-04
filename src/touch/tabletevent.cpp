@@ -117,7 +117,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     eventType = event->type();
 
-    cbool isOut = is_out(data->datatouch, pointTouch);
+    cbool isOut = is_out(getDoc()->datatouch, pointTouch);
 
     WDebug(tabletDebug, event->type() << convert(event->type()));
 
@@ -286,7 +286,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 #endif
 
     if(likely(_method.isInsert())){
-        AppendAll(*this->data, this, _method);
+        AppendAll(*this->getDoc(), this, _method);
         _finder->endMoving();
     }
 
@@ -332,6 +332,10 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     pressure_t pressure;
     cbool highlighter = is_rubber(event, _method);
     const QPointF &pointTouch = event->position();
+    const auto *data = this->getDoc();
+    const auto prop = data->datatouch->getZoom() == PROP_RESOLUTION ?
+                data->datatouch->getZoom() :
+                data->datatouch->getZoom() - .0000001;
 
     size = event->pressure();
     alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;
@@ -347,5 +351,5 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     tmp_point = pointTouch;
     pressure = unlikely(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
 
-    strokeTmp.append(tmp_point, pressure);
+    strokeTmp.append(tmp_point, pressure, (QPen &)_pen, prop);
 }

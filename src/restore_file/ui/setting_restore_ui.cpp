@@ -156,7 +156,7 @@ void setting_restore_ui::saveData()
 // first timer -> autosave
 void setting_restore_ui::firstTimer()
 {
-    savefile ff(m_path, _canvas->data);
+    savefile ff(m_path, _canvas->getDoc());
     int res;
 
     if(!need_save_auto){
@@ -189,7 +189,7 @@ void setting_restore_ui::secondTimer()
 {
     int res;
     QByteArray path;
-    savefile ff(&path, _canvas->data);
+    savefile ff(&path, _canvas->getDoc());
 
     /**
      * We don't want to save the file

@@ -112,7 +112,7 @@ void rubber_ui::on_partial_button_clicked()
 */
 int rubber_ui::endRubber()
 {
-    datastruct *data = _canvas->data->datatouch;
+    datastruct *data = _canvas->getDoc()->datatouch;
     int i, len = _data_to_remove.length();
     int index_mod = -1;
 
@@ -412,7 +412,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 */
 void rubber_ui::actionRubber(const QPointF &__lastPoint)
 {
-    datastruct *data = _canvas->data->datatouch;
+    datastruct *data = _canvas->getDoc()->datatouch;
     int lenStroke, count, indexPage, thread_create;
     cbool isTotal = (_type_gomma == e_type_rubber::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
@@ -546,7 +546,7 @@ save_point:
 
 void rubber_ui::initRubber(const QPointF &point)
 {
-    datastruct *data = _canvas->data->datatouch;
+    datastruct *data = _canvas->getDoc()->datatouch;
     _last = true;
     _last = data->adjustPoint(point);
 }

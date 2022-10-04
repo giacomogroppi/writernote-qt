@@ -96,7 +96,7 @@ bool topdf::createpdf(cbool withPdf)
 void MainWindow::on_actiontopdf_triggered()
 {
     QByteArray path_pdf;
-    const Document *doc = _canvas->data;
+    const Document *doc = _canvas->getDoc();
 
     if(doc->datatouch->isempty())
         return user_message(QApplication::tr("There is nothing to convert to pdf"));
