@@ -29,7 +29,10 @@ WImage::WImage(int width, int height, QImage::Format format) : QImage(width, hei
 {
 }
 
-WImage::WImage(int page) : QImage(Page::getResolutionWidth(), Page::getResolutionHeigth() * page, WImage::Format_ARGB32)
+WImage::WImage(int page) :
+    QImage(Page::getResolutionWidth(), Page::getResolutionHeigth() * page, WImage::Format_ARGB32)
 {
-    W_ASSERT(!QImage::isNull());
+    W_ASSERT(page > 0);
+    const auto res = QImage::isNull();
+    W_ASSERT(!res);
 }

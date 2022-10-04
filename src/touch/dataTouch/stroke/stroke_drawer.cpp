@@ -66,7 +66,7 @@ void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
     cbool isPrivatePainter = isHigh;
 
     if(isPrivatePainter){
-        img = WImage(0);
+        img = WImage(1);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
         painter = &_painterPrivate;

@@ -3,7 +3,7 @@
 
 StrokePre::StrokePre() noexcept :
     Stroke(),
-    WImage(0)
+    WImage(1)
 {
 }
 
