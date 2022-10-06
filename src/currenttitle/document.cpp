@@ -48,7 +48,6 @@ void Document::copy(const Document &src, Document &dest)
 #endif //PDFSUPPORT
     fromimage::copy(*src.m_img, *dest.m_img);
     dest.se_registato = src.se_registato;
-    dest.count_img = src.count_img;
 }
 
 size_t Document::createSingleControll() const
@@ -72,8 +71,6 @@ size_t Document::createSingleControll() const
 
 void Document::reset()
 {
-    this->count_img = 0;
-
     this->se_registato = Document::not_record;
     this->audio_position_path = "";
 

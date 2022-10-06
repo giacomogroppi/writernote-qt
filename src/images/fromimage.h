@@ -29,7 +29,6 @@ private:
     QList<QString> get_name_img();
     unsigned insert_image(const QString &__pos, const PointSettable *point, struct immagine_s &img);
 
-
     static QList<QString> get_name_img(const Document &doc);
     static inline QByteArray getName(unsigned i);
 public:
@@ -47,8 +46,8 @@ public:
 
     explicit fromimage(Document *doc);
 
+    int length() const { return m_img.length(); };
     fromimage::load_res load(WZipReaderSingle &zip);
-
     fromimage::load_res save(WZipWriter &file, const QList<QString> &path) const;
     fromimage::load_res save(WZipWriter &file, const QString &path) const;
     fromimage::load_res save_metadata(WZipWriterSingle &writer);

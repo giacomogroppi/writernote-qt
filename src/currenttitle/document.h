@@ -30,7 +30,6 @@ public:
     datastruct *datatouch;
     void reset();
     void cleanAudio();
-    unsigned count_img = 0;
 
     enum n_audio_record{
         not_record,
