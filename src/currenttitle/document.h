@@ -25,13 +25,11 @@ public:
     frompdf *m_pdf;
     fromimage *m_img;
 
-    int versione = CURRENT_VERSION_CURRENT_TITLE;
     QString audio_position_path = "";
 
     datastruct *datatouch;
     void reset();
     void cleanAudio();
-    unsigned count_pdf = 0;
     unsigned count_img = 0;
 
     enum n_audio_record{

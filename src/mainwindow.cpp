@@ -366,7 +366,7 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
 void MainWindow::on_actionRemove_current_PDF_triggered()
 {
 #ifdef PDFSUPPORT
-    _canvas->getDoc()->m_pdf->reset();
+    _canvas->getDoc()->m_pdf->reset_pdf();
 #endif // PDFSUPPORT
 }
 

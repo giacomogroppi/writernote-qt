@@ -16,11 +16,11 @@
 #include "utils/threadcount.h"
 #include "core/WFile.h"
 
-void frompdf::translation(const QPointF &point)
+void frompdf::translation_pdf(const QPointF &point)
 {
     int i;
     const int len = this->m_image.length();
-    if(!m_data->count_pdf)
+    if(this->m_image.isEmpty())
         return;
 
     for(i = 0; i < len; ++i){
@@ -28,160 +28,124 @@ void frompdf::translation(const QPointF &point)
     }
 }
 
-frompdf::frompdf(Document *data)
+frompdf::frompdf()
 {
-    m_data = data;
 }
 
-bool frompdf::load(
-        const QList<QString>       &path,
-        QMap<load_res, uchar>   &index,
-        TabletCanvas            *canvas)
+bool frompdf::load_pdf(
+        const QList<QString>        &path,
+        QMap<load_res_pdf, uchar>       &index,
+        datastruct                  &data)
 {
     uint i, len;
-    load_res __r;
+    load_res_pdf res;
 
     index.clear();
-    reset();
+    reset_pdf();
 
     len = path.length();
 
     for(i=0; i<len; ++i){
-        __r = load(path.at(i), false, canvas);
-        if(__r != load_res::ok){
-            index.insert(__r, i);
+        res = load_pdf(path.at(i), false, data);
+        if(res != load_res_pdf::ok){
+            index.insert(res, i);
         }
     }
 
     return !index.isEmpty();
 }
 
-frompdf::load_res frompdf::load(
+frompdf::load_res_pdf frompdf::load_pdf(
         const QString   &path,
-        cbool      clear,
-        TabletCanvas    *canvas)
+        cbool           clear,
+        datastruct      &data)
 {
     QByteArray arr;
 
     if(WFile::readFile(arr, path.toUtf8().constData()) < 0)
-        return load_res::not_valid_pdf;
+        return load_res_pdf::not_valid_pdf;
 
-    /*
+    /**
      *  if we do the load with this function is always the firstLost
     */
-    return load_from_row(arr, clear, true, 0, canvas);
+    return load_from_row_pdf(arr, clear, true, 0, data);
 }
 
-QList<QString> frompdf::get_name_pdf()
+QList<QString> frompdf::get_name_pdf(int count)
 {
     uint i;
-    QList<QString> __l;
-    for(i=0; i<m_data->count_pdf; ++i){
-        __l.append(frompdf::getName(i));
+    QList<QString> res;
+    for(i = 0; i < count; i ++){
+        res.append(frompdf::getName_pdf(i));
     }
 
-    return __l;
+    return res;
 }
 
-frompdf::load_res frompdf::load(const QByteArray &path_writernote_file, TabletCanvas *canvas)
+frompdf::load_res_pdf frompdf::load_pdf(const QByteArray &path_writernote_file, int len, datastruct &data)
 {
     bool ok;
     WZip zip(path_writernote_file, ok);
 
     if(!ok){
-        return frompdf::load_res::no_valid_path;
+        return frompdf::load_res_pdf::no_valid_path;
     }
 
     WZipReaderSingle reader(&zip, 0);
 
-    return this->load(reader, canvas);
+    return this->load_pdf(reader, len, data);
 }
 
-frompdf::load_res frompdf::load(WZipReaderSingle &reader,
-                                TabletCanvas *canvas)
+frompdf::load_res_pdf frompdf::load_pdf(WZipReaderSingle &reader, int len, datastruct &data)
 {
     QList<QByteArray> arr;
-    QList<QString> __name;
+    QList<QString> name;
     uint i;
-    frompdf::load_res res;
+    frompdf::load_res_pdf res;
     WZip *zip = reader.get_zip();
 
     m_image.clear();
 
-    __name = get_name_pdf();
+    name = get_name_pdf(m_image.length());
 
-    if(zip->is_data_available() && this->load_metadata(reader) != load_res::ok){
-        return load_res::no_metadata;
+    if( zip->is_data_available() and
+        this->load_metadata_pdf(reader, len) != load_res_pdf::ok)
+    {
+        return load_res_pdf::no_metadata;
     }
 
-    if(readListArray::read(__name, *reader.get_zip(), arr, false) != OK)
-        return frompdf::load_res::not_valid_pdf;
+    if(readListArray::read(name, *reader.get_zip(), arr, false) != OK)
+        return frompdf::load_res_pdf::not_valid_pdf;
 
-    for (i = 0; i < m_data->count_pdf; ++i){
-        res = load_from_row(arr.at(i),
+    for (i = 0; i < len; ++i){
+        res = load_from_row_pdf(arr.at(i),
                                  false,
                                  !zip->is_data_available(),
                                  i,
-                                 canvas);
-        if(res != frompdf::load_res::ok)
+                                 data);
+        if(res != frompdf::load_res_pdf::ok)
             return res;
     }
 
-    return frompdf::load_res::ok;
+    return frompdf::load_res_pdf::ok;
 }
 
-frompdf::load_res frompdf::load(zip_t           *fileZip,
-                                zip_file_t      *file,
-                                TabletCanvas    *canvas)
+void frompdf::resizing_pdf(datastruct &data, int lenPdf)
 {
-    QList<QByteArray> arr;
-    QList<QString> __name;
-    uint i;
-    frompdf::load_res res;
-
-    m_image.clear();
-
-    __name = get_name_pdf();
-
-    if(file && this->load_metadata(file) != load_res::ok){
-        return load_res::no_metadata;
-    }
-
-    if(readListArray::read(__name, fileZip, arr, false) != OK){
-        return frompdf::load_res::not_valid_pdf;
-    }
-
-    for (i = 0; i < m_data->count_pdf; ++i){
-        res = load_from_row(arr.at(i),
-                                 false,
-                                 file == nullptr,
-                                 i,
-                                 canvas);
-        if(res != frompdf::load_res::ok)
-            return res;
-    }
-
-    return frompdf::load_res::ok;
-}
-
-void frompdf::resizing(TabletCanvas *canvas, const uint lenPdf){
-    if(unlikely(!canvas))
-        return;
-
-    uint i = m_data->datatouch->lengthPage();
+    int i = data.lengthPage();
     for(; i < lenPdf; ++i){
-        m_data->datatouch->newPage(n_style::white);
+        data.newPage(n_style::white);
     }
 }
 
-frompdf::load_res frompdf::load_from_row(
+frompdf::load_res_pdf frompdf::load_from_row_pdf(
         const QByteArray    &pos,
-        cbool          clear,
-        cbool          FirstLoad,
+        cbool               clear,
+        cbool               FirstLoad,
         const uchar         IndexPdf,
-        TabletCanvas        *canvas)
+        datastruct          &data)
 {
-    /*
+    /**
      * in the current version we cannot upload more
      * than one pdf at the same time
     */
@@ -199,10 +163,10 @@ frompdf::load_res frompdf::load_from_row(
     const int countThread = threadCount::count();
 
     if(clear)
-        this->reset();
+        this->reset_pdf();
 
     if(FirstLoad){
-        this->init_FirstLoad();
+        this->init_FirstLoad_pdf();
     }
 
 #if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
@@ -214,14 +178,13 @@ frompdf::load_res frompdf::load_from_row(
 
     if(!doc){
         if(areyousure("Pdf error loading", "It seems the pdf file is correct, do you want to remove it?")){
-            this->m_data->count_pdf = 0;
-            return load_res::ok;
+            return load_res_pdf::ok;
         }
-        return load_res::not_valid_pdf;
+        return load_res_pdf::not_valid_pdf;
     }
 
     cint len = doc->numPages();
-    this->resizing(canvas, len);
+    this->resizing_pdf(data, len);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     /* creation of thread and append QImage to the current PDF page */
@@ -278,57 +241,54 @@ frompdf::load_res frompdf::load_from_row(
     for(i = 0; i < m_image.length(); ++i){
         if(this->m_image.at(IndexPdf).img.at(i).isNull()){
             dialog_critic("We had a problem processing an image");
-            return load_res::not_valid_pdf;
+            return load_res_pdf::not_valid_pdf;
         }
     }
 
     if(FirstLoad)
-        this->adjast(IndexPdf);
+        this->adjast_pdf(IndexPdf);
 
-    if(canvas)
-        canvas->update();
-
-    return load_res::ok;
+    return load_res_pdf::ok;
 }
 
-frompdf::load_res frompdf::save(const QList<QString>   &path,
+frompdf::load_res_pdf frompdf::save_pdf(const QList<QString>   &path,
                                 const QByteArray    &path_writernote_file)
 {
-    frompdf::load_res res;
-
-    this->m_data->count_pdf = path.length();
+    frompdf::load_res_pdf res;
 
     for(const auto &tmp : qAsConst(path)){
 
-        res = this->save(tmp.toUtf8(),
+        res = this->save_pdf(tmp.toUtf8(),
                          path_writernote_file);
 
-        if(res != frompdf::load_res::ok)
+        if(res != frompdf::load_res_pdf::ok)
             return res;
     }
-    return frompdf::load_res::ok;
+    return frompdf::load_res_pdf::ok;
 }
 
-frompdf::load_res frompdf::save(const QByteArray   &pathFile,
+frompdf::load_res_pdf frompdf::save_pdf(const QByteArray   &pathFile,
                                 const QByteArray   &path_writernote_file)
 {
     WZipWriter writer;
 
     if(writer.init(path_writernote_file.constData()) < 0)
-        return load_res::no_valid_path;
-    return this->save(writer, pathFile, path_writernote_file);
+        return load_res_pdf::no_valid_path;
+    return this->save_pdf(writer, pathFile, path_writernote_file);
 }
 
-frompdf::load_res frompdf::save(WZipWriter         &filezip,
+frompdf::load_res_pdf frompdf::save_pdf(WZipWriter         &filezip,
                                 const QByteArray   &pathFile,
                                 const QByteArray   &path_writernote_file)
 {
-    const auto res = savefile::moveFileIntoZip(pathFile, filezip, frompdf::getName(m_data->count_pdf));
+    const auto res = savefile::moveFileIntoZip(pathFile,
+                                               filezip,
+                                               frompdf::getName_pdf(m_image.length()));
 
     if(unlikely(res != OK))
-        return load_res::not_valid_pdf;
+        return load_res_pdf::not_valid_pdf;
 
-    return load_res::ok;
+    return load_res_pdf::ok;
 }
 
 /*
@@ -337,37 +297,35 @@ frompdf::load_res frompdf::save(WZipWriter         &filezip,
 void frompdf::addPdf(QByteArray             &pos,
                      const PointSettable    *point,
                      const QByteArray       &path_writernote,
-                     TabletCanvas           *canvas)
+                     datastruct             &data)
 {
     int ok;
-    frompdf::load_res res;
+    frompdf::load_res_pdf res;
 
     if(path_writernote == "")
         return dialog_critic("Before add a pdf you need to save this file");
-    if(m_data->count_pdf)
+    if(m_image.length())
         return user_message("It's not possible to add more than one pdf");
 
     if(insert_pdf(pos, point) != OK){
-        res = load_res::not_valid_pdf;
+        res = load_res_pdf::not_valid_pdf;
         goto err;
     }
 
-    res = this->save(pos, path_writernote);
-    if(res != load_res::ok)
+    res = this->save_pdf(pos, path_writernote);
+    if(res != load_res_pdf::ok)
         goto err;
 
-    this->m_data->count_pdf ++;
+    res = this->load_pdf(path_writernote, 1, data);
 
-    res = this->load(path_writernote, canvas);
-
-    err:
-    if(res == load_res::no_valid_path)
-        dialog_critic("We had trouble opening " + path_writernote);
-    else if(res != load_res::ok)
+err:
+    if(res == load_res_pdf::no_valid_path)
+        return dialog_critic(qstr("We had trouble opening %1").arg(path_writernote));
+    else if(res != load_res_pdf::ok)
         dialog_critic("We had some error");
 }
 
-void frompdf::adjast(const uchar indexPdf)
+void frompdf::adjast_pdf(const uchar indexPdf)
 {
     m_image.operator[](indexPdf).topLeft = QPointF(0, 0);
 }
@@ -399,10 +357,9 @@ unsigned frompdf::insert_pdf(QByteArray             &pos,
     return OK;
 }
 
-void frompdf::reset()
+void frompdf::reset_pdf()
 {
     m_image.clear();
-    this->m_data->count_pdf = 0;
 }
 
 #endif

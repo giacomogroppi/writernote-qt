@@ -100,7 +100,7 @@ void MainWindow::openFile(const char *pos)
     // check if is pdf or we need to save the current document
     if(IS_PRESENT_IN_LIST(fileName, ".pdf")){
 #ifdef PDFSUPPORT
-        _canvas->getDoc()->m_pdf->addPdf(fileName, nullptr, this->m_path, this->_canvas);
+        _canvas->getDoc()->m_pdf->addPdf(fileName, nullptr, this->m_path, *_canvas->getDoc()->datatouch);
         this->_preview_widget->changeDocument();
 #else
         user_message("Pdf support is not enable in this version");

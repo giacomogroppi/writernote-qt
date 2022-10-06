@@ -84,16 +84,16 @@ static int checkSpeed(const Document &first,
  * what the difference is
  */
 
-int checksimilecopybook(const Document &primo,
-                        const Document &secondo)
+int checksimilecopybook(const Document &doc1,
+                        const Document &doc2)
 {
     int res;
-    if(primo.count_img != secondo.count_img)
+    if(doc1.count_img != doc2.count_img)
         return LEN;
-    if(primo.count_pdf != secondo.count_pdf)
+    if(doc1.m_pdf->length_pdf() != doc2.m_pdf->length_pdf())
         return LEN;
 
-    res = checkSpeed(primo, secondo);
+    res = checkSpeed(doc1, doc2);
 
     return res;
 

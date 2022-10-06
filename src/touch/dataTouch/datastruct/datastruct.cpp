@@ -87,10 +87,11 @@ void datastruct::triggerIfNone(int m_pos_ris)
     }
 }
 
-void datastruct::reset(){
+void datastruct::reset()
+{
     this->_page.clear();
 #ifdef PDFSUPPORT
-    this->_pdf->reset();
+    this->_pdf->reset_pdf();
 #endif
     this->_img->reset();
     this->pageVisible = -1;
@@ -256,7 +257,7 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
     this->pageVisible = -1;
 
 #ifdef PDFSUPPORT
-    _pdf->translation(point);
+    _pdf->translation_pdf(point);
 #endif
 
     _img->move(point);

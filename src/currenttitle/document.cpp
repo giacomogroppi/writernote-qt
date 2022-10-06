@@ -8,16 +8,13 @@
 
 void Document::init()
 {
-    W_ASSERT(!m_img);
-    W_ASSERT(!m_pdf);
-    W_ASSERT(!datatouch);
-
     WNew(m_img, fromimage, (this));
-    WNew(m_pdf, frompdf, (this));
+    WNew(m_pdf, frompdf, ());
     WNew(datatouch, datastruct, (m_pdf, m_img));
 }
 
-Document::Document(){
+Document::Document()
+{
     init();
 }
 
@@ -47,13 +44,11 @@ void Document::copy(const Document &src, Document &dest)
     dest.audio_position_path = src.audio_position_path;
     datastruct::copy(*src.datatouch, *dest.datatouch);
 #ifdef PDFSUPPORT
-    frompdf::copy(*src.m_pdf, *dest.m_pdf);
+    frompdf::copy_pdf(*src.m_pdf, *dest.m_pdf);
 #endif //PDFSUPPORT
     fromimage::copy(*src.m_img, *dest.m_img);
     dest.se_registato = src.se_registato;
-    dest.versione = src.versione;
     dest.count_img = src.count_img;
-    dest.count_pdf = src.count_pdf;
 }
 
 size_t Document::createSingleControll() const
@@ -75,34 +70,34 @@ size_t Document::createSingleControll() const
     return ctrl;
 }
 
-void Document::reset(){
-    this->versione = 1;
+void Document::reset()
+{
+    this->count_img = 0;
+
     this->se_registato = Document::not_record;
     this->audio_position_path = "";
 
     this->audio_data.clear();
 
     this->datatouch->reset();
-    this->count_pdf = 0;
-    this->count_img = 0;
-
 #ifdef PDFSUPPORT
-    this->m_pdf->reset();
+    this->m_pdf->reset_pdf();
 #endif // PDFSUPPORT
     this->m_img->reset();
 }
 
 void Document::cleanAudio()
 {
-    uint i, len, k;
-    const uint lenPage = datatouch->lengthPage();
+    const auto lenPage = datatouch->lengthPage();
 
-    for(i = 0; i < lenPage; i++){
+    for(auto i = 0; i < lenPage; i++){
         Page &page = this->datatouch->at_mod(i);
-        len = page.lengthStroke();
+        const auto len = page.lengthStroke();
 
-        for(k = 0; k < len; k++){
+        for(auto k = 0; k < len; k++){
             page.atStrokeMod(k).clearAudio();
         }
     }
+
+    this->se_registato = Document::n_audio_record::not_record;
 }

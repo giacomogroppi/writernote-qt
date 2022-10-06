@@ -7,6 +7,7 @@
 #ifdef ALL_VERSION
 int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg)
 {
+    unsigned len_pdf;
     int tmp;
     uchar controllo_parita = 0;
     QString tmp_str, tmp_testi;
@@ -34,7 +35,7 @@ int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
     if(reader.read_object(tmp_touch) < 0)
         return ERROR;
     CONTROLL_KEY(tmp_touch);
-    if(reader.read_object(_doc->count_pdf) < 0)
+    if(reader.read_object(len_pdf) < 0)
         return ERROR;
 
     if(reader.read_object(_doc->count_img) < 0)
@@ -49,7 +50,7 @@ int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        const auto res = _doc->m_pdf->load(reader, nullptr);
+        const auto res = _doc->m_pdf->load_pdf(reader, static_cast<int>(len_pdf), *_doc->datatouch);
         if(res != frompdf::ok)
             return ERROR;
     }

@@ -9,11 +9,6 @@
 
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
-static void setCurrentVersion(Document *data)
-{
-    data->versione = CURRENT_VERSION_CURRENT_TITLE;
-}
-
 /*
  * the function save the copybook and all it's data
  * if save_audio == true -> save also the audio
@@ -22,13 +17,13 @@ static void setCurrentVersion(Document *data)
 static size_t savefile_get_size_file(const Document *doc)
 {
     size_t s = 0;
-    s += sizeof(doc->versione);
-    s += sizeof(int); // ver_stroke
-    s += sizeof(int); // audio
+    s += sizeof(int);               // version
+    s += sizeof(int);               // ver_stroke
+    s += sizeof(int);               // audio
     s += sizeof(int) + doc->audio_position_path.length();
     s += sizeof(doc->count_img);
-    s += sizeof(doc->count_pdf);
-    s += doc->m_pdf->get_size_file();
+    s += sizeof(unsigned);          // len_pdf
+    s += doc->m_pdf->get_size_file_pdf();
     s += doc->m_img->get_size_file();
     return s;
 }
@@ -47,15 +42,12 @@ int savefile::savefile_check_file(cbool saveImg)
     WZipWriterSingle writer;
 
 #ifdef PDFSUPPORT
-    frompdf::load_res res_pdf;
+    frompdf::load_res_pdf res_pdf;
 #endif // PDFSUPPORT
 
-    static_assert(sizeof(_doc->versione) == 4);
     static_assert(sizeof(ver_stroke) == 4);
-    static_assert(sizeof(_doc->count_img) == sizeof(_doc->count_pdf));
     static_assert(sizeof(_doc->count_img) == 4);
 
-    setCurrentVersion(_doc);
     ver_stroke = CURRENT_VERSION_STROKE;
 
     writer.init(nullptr, 0, savefile_get_size_file(this->_doc));
@@ -63,14 +55,14 @@ int savefile::savefile_check_file(cbool saveImg)
     /* remove old file formact: Version 2, 3, 4, 5 */
     WZipCommon::removeFile(_path->constData(), "indice.xml");
 
-    writer.write_object(_doc->versione);
+    writer.write_object((const int &)CURRENT_VERSION_CURRENT_TITLE);
     writer.write_object(ver_stroke);
 
     savefile_save_record_state(writer, _doc);
 
     writer.write_string(_doc->audio_position_path.toUtf8().constData(), _doc->audio_position_path.size());
 
-    writer.write_object(_doc->count_pdf);
+    writer.write_object(_doc->m_pdf->length_pdf());
     writer.write_object(_doc->count_img);
 
     res_img = _doc->m_img->save_metadata(writer);
@@ -78,8 +70,8 @@ int savefile::savefile_check_file(cbool saveImg)
         return ERROR;
 
 #ifdef PDFSUPPORT
-    res_pdf = _doc->m_pdf->save_metadata(writer);
-    if(res_pdf != frompdf::load_res::ok)
+    res_pdf = _doc->m_pdf->save_metadata_pdf(writer);
+    if(res_pdf != frompdf::load_res_pdf::ok)
         return ERROR;
 #endif // PDFSUPPORT
 

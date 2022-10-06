@@ -55,28 +55,24 @@ public:
 class frompdf
 {
 private:
-    Document *m_data;
-
     QVector<Pdf> m_image;
 
-    static QByteArray getName(const unsigned i)
+    static QByteArray getName_pdf(const unsigned i)
     {
         const auto str = SUFFIX_PDF + QString::number(i);
         return str.toUtf8();
     }
 
 public:
-    static void copy(const frompdf &src, frompdf &dest);
+    static void copy_pdf(const frompdf &src, frompdf &dest);
 
-    static bool isvalid(QString &pos);
+    void translation_pdf(const QPointF &point);
+    void translation_pdf(double x, double y);
 
-    void translation(const QPointF &point);
-    void translation(double x, double y);
-
-    frompdf(Document *doc);
+    frompdf();
     ~frompdf() = default;
 
-    enum load_res: uchar{
+    enum load_res_pdf: uchar{
         ok,
         not_valid_pdf,
         not_valid_page,
@@ -84,78 +80,69 @@ public:
         no_valid_path
     };
 
-    void reset();
+    void reset_pdf();
 
-    QList<QString> get_name_pdf();
+    QList<QString> get_name_pdf(int countPdf);
 
     /* return true if all load correctly */
-    bool load(const QList<QString> &path, QMap<load_res, uchar> &index, TabletCanvas *canvas);
+    bool load_pdf(const QList<QString> &path, QMap<load_res_pdf, uchar> &index, datastruct &data);
+    load_res_pdf load_pdf(const QString &, cbool clear, datastruct &data);
+    load_res_pdf load_pdf(WZipReaderSingle &reader, int len, datastruct &data);
+    load_res_pdf load_pdf(const QByteArray &path_writernote_file, int len, datastruct &data);
+    load_res_pdf load_from_row_pdf(const QByteArray &, cbool clear, cbool FirstLoad, uchar IndexPdf, datastruct &data);
 
-    load_res load(const QString &, cbool clear, TabletCanvas *canvas);
-    /* it load from a zip_t file all the pdf for the current copybook */
+    void resizing_pdf(datastruct &d, int len);
 
-#ifdef ALL_VERSION
-    load_res load(zip_t *filezip, zip_file_t *file, TabletCanvas *canvas);
-#endif // ALL_VERSION
-    load_res load(WZipReaderSingle &reader, TabletCanvas *canvas);
-    load_res load(const QByteArray &path_writernote_file, TabletCanvas *canvas);
+    [[nodiscard]] load_res_pdf save_pdf(const QList<QString> &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res_pdf save_pdf(const QByteArray &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res_pdf save_pdf(WZipWriter &filezip, const QByteArray &path, const QByteArray &path_writernote_file);
 
+    load_res_pdf save_metadata_pdf(WZipWriterSingle &writer);
 
-    load_res load_from_row(const QByteArray &, cbool clear,
-                           cbool FirstLoad, uchar IndexPdf,
-                           TabletCanvas *canvas);
-
-    void resizing(TabletCanvas *canvas, uint lenPdf);
-
-    [[nodiscard]] load_res save(const QList<QString> &path, const QByteArray &path_writernote_file);
-    [[nodiscard]] load_res save(const QByteArray &path, const QByteArray &path_writernote_file);
-    [[nodiscard]] load_res save(WZipWriter &filezip, const QByteArray &path, const QByteArray &path_writernote_file);
-
-    load_res save_metadata(WZipWriterSingle &writer);
-
-    void draw(QPainter &painter, double delta, cbool IsExportingPdf, double currentWidth) const;
+    void draw_pdf(QPainter &painter, double delta, cbool IsExportingPdf, double currentWidth) const;
 
     unsigned insert_pdf(QByteArray &pos, const PointSettable *point);
 
-    void addPdf(QByteArray &pos,
-                const PointSettable *point,
-                const QByteArray &path_writernote,
-                TabletCanvas *canvas);
+    void addPdf(QByteArray &pos, const PointSettable *point, const QByteArray &path_writernote, datastruct &data);
+
+    [[nodiscard]] int length_pdf() const;
 
     uint resolution = 500;//72
-    [[nodiscard]] size_t get_size_file() const;
+    [[nodiscard]] size_t get_size_file_pdf() const;
 
 private:
-    void adjast(uchar indexPdf);
+    void adjast_pdf(uchar indexPdf);
 
-#ifdef ALL_VERSION
-    load_res load_metadata(zip_file_t *file);
-#endif
-    load_res load_metadata(WZipReaderSingle &reader);
+    load_res_pdf load_metadata_pdf(WZipReaderSingle &reader, int len);
 
     /*
      * this function only append a pdf to
      * the list
     */
-    void init_FirstLoad();
+    void init_FirstLoad_pdf();
 };
 
-inline void frompdf::copy(const frompdf &src, frompdf &dest)
+inline int frompdf::length_pdf() const
+{
+    return this->m_image.length();
+}
+
+inline void frompdf::copy_pdf(const frompdf &src, frompdf &dest)
 {
     dest.m_image = src.m_image;
 }
 
-inline void frompdf::translation(const double x, const double y)
+inline void frompdf::translation_pdf(const double x, const double y)
 {
-    translation(QPointF(x, y));
+    translation_pdf(QPointF(x, y));
 }
 
-force_inline void frompdf::draw(QPainter &painter, const double delta, cbool IsExportingPdf, double currentWidth) const
+force_inline void frompdf::draw_pdf(QPainter &painter, const double delta, cbool IsExportingPdf, double currentWidth) const
 {
-    int i, k, len_img;
+    int k, len_img;
     QRectF size;
     const Pdf *pdf;
-    const int len = this->m_image.length();
+    const auto len = this->m_image.length();
 
     if(!len)
         return;
@@ -169,7 +156,7 @@ force_inline void frompdf::draw(QPainter &painter, const double delta, cbool IsE
     const double x = currentWidth * delta;
     const double y = x * prop;
 
-    for(i = 0; i < len; ++i){
+    for(auto i = 0; i < len; ++i){
         pdf = &this->m_image.at(i);
         len_img = pdf->img.length();
         size = QRectF(pdf->topLeft*delta, QSizeF(x, y));

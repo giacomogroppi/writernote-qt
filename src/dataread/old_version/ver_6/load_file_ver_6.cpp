@@ -7,6 +7,7 @@
 #ifdef ALL_VERSION
 int xmlstruct::load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg)
 {
+    unsigned len_pdf;
     int tmp;
     uchar controllo_parita = 0;
     WZip &zip = *reader.get_zip();
@@ -21,7 +22,7 @@ int xmlstruct::load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
     if(reader.read_string(_doc->audio_position_path) < 0)
         return ERROR;
 
-    if(reader.read_object(_doc->count_pdf) < 0)
+    if(reader.read_object(len_pdf) < 0)
         return ERROR;
     if(reader.read_object(_doc->count_img) < 0)
         return ERROR;
@@ -35,7 +36,7 @@ int xmlstruct::load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        const auto res = _doc->m_pdf->load(reader, nullptr);
+        const auto res = _doc->m_pdf->load_pdf(reader, static_cast<int>(len_pdf), *_doc->datatouch);
         if(res != frompdf::ok)
             return ERROR;
     }

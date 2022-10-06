@@ -52,8 +52,6 @@ fromimage::load_res fromimage::save(WZipWriter              &writer,
 
 fromimage::load_res fromimage::save_metadata(WZipWriterSingle &writer)
 {
-    unsigned i;
-
     for(const auto &img : qAsConst(m_img))
     {
         const double val[] = {

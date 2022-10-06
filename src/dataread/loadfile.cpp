@@ -244,15 +244,6 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     if(err != OK)
         goto free_;
 
-    /*
-     * after we load all the file we
-     * set the version of the new
-     * in this way, even the files created
-     * by previous versions of writernote
-     * will be updated to the new versions
-    */
-    this->_doc->versione = CURRENT_VERSION_CURRENT_TITLE;
-
     this->_doc->datatouch->triggerNewView(-1, true);
 
     _doc->datatouch->triggerVisibility(Page::getHeight() * _doc->datatouch->lengthPage());
@@ -272,7 +263,7 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     return ERROR_VERSION_NEW;
 }
 
-/*
+/**
  * the function automatically opens and
  * closes the file containing the audio
  * TODO -> adjust the function so that more
@@ -319,12 +310,12 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
 
 int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg)
 {
+    unsigned len_pdf;
     int ver_stroke;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
     WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
 
-    static_assert(sizeof(doc->count_img) == sizeof(doc->count_pdf));
     static_assert(sizeof(doc->count_img) == 4);
 
     if(singleReader.read_object(ver_stroke))
@@ -341,7 +332,7 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
     if(singleReader.read_string(doc->audio_position_path))
         return ERROR;
 
-    if(singleReader.read_object(doc->count_pdf) || singleReader.read_object(doc->count_img))
+    if(singleReader.read_object(len_pdf) || singleReader.read_object(doc->count_img))
         return ERROR;
 
     if(LoadImg){
@@ -353,7 +344,7 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        frompdf::load_res res = doc->m_pdf->load(singleReader, nullptr);
+        const auto res = doc->m_pdf->load_pdf(singleReader, static_cast<int>(len_pdf), *doc->datatouch);
 
         if(res != frompdf::ok)
             return ERROR;
