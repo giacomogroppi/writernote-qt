@@ -43,7 +43,7 @@ int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
         return ERROR;
 
     if(LoadImg){
-        const auto res_img = _doc->m_img->load(reader);
+        const auto res_img = _doc->m_img->load(reader, len_img);
         if(res_img != fromimage::load_res::ok){
             return ERROR;
         }

@@ -29,7 +29,6 @@ private:
     QList<QString> get_name_img();
     unsigned insert_image(const QString &__pos, const PointSettable *point, struct immagine_s &img);
 
-    static QList<QString> get_name_img(const Document &doc);
     static inline QByteArray getName(unsigned i);
 public:
     static void copy(const fromimage &src, fromimage &dest);
@@ -46,8 +45,8 @@ public:
 
     explicit fromimage(Document *doc);
 
-    int length() const { return m_img.length(); };
-    fromimage::load_res load(WZipReaderSingle &zip);
+    [[nodiscard]] int length() const { return m_img.length(); };
+    [[nodiscard]] fromimage::load_res load(WZipReaderSingle &zip, int len);
     fromimage::load_res save(WZipWriter &file, const QList<QString> &path) const;
     fromimage::load_res save(WZipWriter &file, const QString &path) const;
     fromimage::load_res save_metadata(WZipWriterSingle &writer);
@@ -67,7 +66,7 @@ public:
 
 private:
     static load_res get_img_bytearray(QByteArray &arr, const QString &path) ;
-    load_res load_metadata(WZipReaderSingle &reader);
+    load_res load_metadata(WZipReaderSingle &reader, int len);
     load_res load_single(const QByteArray &arr, struct immagine_s &img);
     load_res load_multiple(const QList<QByteArray> &arr);
 };

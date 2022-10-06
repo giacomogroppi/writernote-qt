@@ -310,13 +310,11 @@ size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
 
 int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg)
 {
-    unsigned len_pdf;
+    unsigned len_pdf, len_img;
     int ver_stroke;
     uchar controllo_parita = 0;
     fromimage::load_res res_img;
     WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
-
-    static_assert(sizeof(doc->count_img) == 4);
 
     if(singleReader.read_object(ver_stroke))
         return ERROR;
@@ -332,11 +330,11 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
     if(singleReader.read_string(doc->audio_position_path))
         return ERROR;
 
-    if(singleReader.read_object(len_pdf) || singleReader.read_object(doc->count_img))
+    if(singleReader.read_object(len_pdf) || singleReader.read_object(len_img))
         return ERROR;
 
     if(LoadImg){
-        res_img = doc->m_img->load(singleReader);
+        res_img = doc->m_img->load(singleReader, len_img);
         if(res_img != fromimage::load_res::ok){
             return ERROR;
         }

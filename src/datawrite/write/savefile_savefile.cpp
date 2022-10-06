@@ -21,7 +21,7 @@ static size_t savefile_get_size_file(const Document *doc)
     s += sizeof(int);               // ver_stroke
     s += sizeof(int);               // audio
     s += sizeof(int) + doc->audio_position_path.length();
-    s += sizeof(doc->count_img);
+    s += sizeof(unsigned);          // len_img
     s += sizeof(unsigned);          // len_pdf
     s += doc->m_pdf->get_size_file_pdf();
     s += doc->m_img->get_size_file();
@@ -46,7 +46,6 @@ int savefile::savefile_check_file(cbool saveImg)
 #endif // PDFSUPPORT
 
     static_assert(sizeof(ver_stroke) == 4);
-    static_assert(sizeof(_doc->count_img) == 4);
 
     ver_stroke = CURRENT_VERSION_STROKE;
 
@@ -63,7 +62,7 @@ int savefile::savefile_check_file(cbool saveImg)
     writer.write_string(_doc->audio_position_path.toUtf8().constData(), _doc->audio_position_path.size());
 
     writer.write_object(_doc->m_pdf->length_pdf());
-    writer.write_object(_doc->count_img);
+    writer.write_object(_doc->m_img->length());
 
     res_img = _doc->m_img->save_metadata(writer);
     if(res_img != fromimage::load_res::ok)

@@ -17,17 +17,14 @@ fromimage::load_res fromimage::save(WZipWriter          &writer,
                                     const QList<QString>   &pathPdf) const
 {
     fromimage::load_res res;
-    uint i, len;
 
-    doc->count_img = pathPdf.length();
-    len = doc->count_img;
-
-    for(i=0; i<len; ++i){
-        res = this->save(writer, pathPdf.at(i));
+    for(const auto &str : qAsConst(pathPdf)){
+        res = this->save(writer, str);
 
         if(res != fromimage::load_res::ok)
             return res;
     }
+
     return fromimage::load_res::ok;
 }
 
@@ -44,7 +41,7 @@ fromimage::load_res fromimage::save(WZipWriter              &writer,
     if(!img.loadFromData(img_in_byte, "PNG"))
         return load_res::err_image_not_valid;
 
-    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName(doc->count_img)))
+    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName(this->length())))
         return load_res::error;
 
     return load_res::ok;
@@ -71,7 +68,7 @@ fromimage::load_res fromimage::save_metadata(WZipWriterSingle &writer)
 
 size_t fromimage::get_size_file() const
 {
-    const size_t s = sizeof(double) * 4 * doc->count_img;
+    const size_t s = sizeof(double) * 4 * this->length();
     return s;
 }
 
@@ -89,7 +86,7 @@ fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString 
     return load_res::ok;
 }
 
-fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader)
+fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader, int len)
 {
     uint i;
     double val[4];
@@ -97,7 +94,7 @@ fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader)
 
     static_assert(sizeof(val) == sizeof(double) * 4);
 
-    for(i = 0; i < this->doc->count_img; ++i){
+    for(i = 0; i < len; ++i){
         if(reader.read_by_size(val, sizeof(val))){
             return load_res::error;
         }
@@ -111,7 +108,7 @@ fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader)
     return load_res::ok;
 }
 
-fromimage::load_res fromimage::load(WZipReaderSingle &reader)
+fromimage::load_res fromimage::load(WZipReaderSingle &reader, int len)
 {
     QList<QByteArray> arr;
     QList<QString> name_list;
@@ -121,7 +118,7 @@ fromimage::load_res fromimage::load(WZipReaderSingle &reader)
 
     name_list = this->get_name_img();
 
-    if(this->load_metadata(reader) != load_res::ok)
+    if(this->load_metadata(reader, len) != load_res::ok)
         return load_res::err_meta_data;
 
     res = readListArray::read(name_list, *(reader.get_zip()), arr, false);
@@ -166,14 +163,10 @@ fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr)
 
 QList<QString> fromimage::get_name_img()
 {
-    return fromimage::get_name_img(*this->doc);
-}
-
-QList<QString> fromimage::get_name_img(const Document &doc)
-{
     uint i;
     QList<QString> list;
-    for(i=0; i<doc.count_img; ++i){
+
+    for(i = 0; i < length(); ++i){
         list.append(fromimage::getName(i));
     }
 
@@ -212,14 +205,12 @@ unsigned fromimage::insert_image(   const QString &pos,
 /*
  * add image from position
 */
-int fromimage::addImage(const QString &pos,
-                         const PointSettable *point,
-                         const QString &path_writernote)
+int fromimage::addImage(    const QString &pos,
+                            const PointSettable *point,
+                            const QString &path_writernote)
 {
     struct immagine_s img;
     WZipWriter writer;
-
-    W_ASSERT(doc->count_img >= 0);
 
     if(writer.init(path_writernote.toUtf8().constData()))
         return -1;
@@ -232,7 +223,5 @@ int fromimage::addImage(const QString &pos,
     if(this->save(writer, pos) != fromimage::ok)
         return -3;
 
-    this->doc->count_img ++;
-    W_ASSERT(doc->count_img > 0);
     return 0;
 }

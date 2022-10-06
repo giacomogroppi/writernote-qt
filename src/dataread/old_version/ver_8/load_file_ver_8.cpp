@@ -8,7 +8,7 @@
 
 int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg)
 {
-    unsigned len_pdf;
+    unsigned len_pdf, len_img;
     int tmp, ver_stroke;
     uchar controllo_parita = 0;
     WZip &zip = *reader.get_zip();
@@ -28,13 +28,13 @@ int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
     if(reader.read_object(len_pdf) < 0)
         return ERROR;
 
-    if(reader.read_object(_doc->count_img) < 0)
+    if(reader.read_object(len_img) < 0)
         return ERROR;
 
     zip.dealloc_file();
 
     if(LoadImg){
-        const auto res_img = _doc->m_img->load(reader);
+        const auto res_img = _doc->m_img->load(reader, len_img);
         if(res_img != fromimage::load_res::ok){
             return ERROR;
         }
