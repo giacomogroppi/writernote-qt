@@ -23,6 +23,23 @@ Document::~Document()
 {
 }
 
+void Document::scala_all(const QPointF &delta, int heightView)
+{
+    datastruct::scala_all(delta, heightView);
+    fromimage::move_img(delta);
+    frompdf::translation_pdf(delta);
+}
+
+void Document::repositioning()
+{
+    datastruct::setZoom(1.);
+    datastruct::setPageVisible(-1);
+
+    const QPointF point = -this->getPointFirstPageNoZoom();
+
+    Document::scala_all(point, INT_MAX);
+}
+
 void Document::copy(const Document &src, Document &dest)
 {
     dest.audio_position_path = src.audio_position_path;
@@ -82,4 +99,36 @@ void Document::cleanAudio()
     }
 
     this->se_registato = Document::n_audio_record::not_record;
+}
+
+void Document::adjustHeight(cdouble height)
+{
+    QPointF res;
+    datastruct::adjustHeight(height, res);
+
+    Document::scala_all(res, static_cast<int>(height));
+}
+
+void Document::adjustAll(unsigned w, unsigned h)
+{
+    QPointF res;
+    datastruct::adjustAll(w, h, res);
+
+    Document::scala_all(res, static_cast<int>(h));
+}
+
+void Document::increaseZoom(double delta, const QSize &size)
+{
+    QPointF res;
+
+    datastruct::increaseZoom(delta, size, res);
+
+    Document::scala_all(res, size.height());
+}
+
+void Document::controllForRepositioning()
+{
+    QPointF res;
+    datastruct::controllForRepositioning(res);
+    Document::scala_all(res, INT_MAX);
 }

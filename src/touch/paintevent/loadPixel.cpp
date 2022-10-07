@@ -32,15 +32,31 @@ static void draw_laser(QPainter &painter, laser *_laser, QPen &pen, double zoom)
     }
 }
 
+static void draw_for_audio(const Document *doc, DataPaint &dataPoint)
+{
+    static int last_m_pos_ris   = -1;
+    cbool is_play          = likely((dataPoint.parent)) ?
+                                (dataPoint.parent->m_audioplayer->isPlay()) :
+                                false;
+    const qint64 m_pos_ris      = (is_play) ?
+                                        (dataPoint.parent->m_audioplayer->getPositionSecond()) :
+                                         -1;
+    if(unlikely(is_play && !dataPoint.IsExportingPdf)){
+        // the idea is to trigger this view only when
+        // the second has change
+        if(likely(last_m_pos_ris != m_pos_ris)){
+            auto *d = (Document *)doc;
+            d->newViewAudio(m_pos_ris);
+            last_m_pos_ris = m_pos_ris;
+        }
+    }
+}
+
 void TabletCanvas::load(QPainter &painter,
                         const Document *data,
                         DataPaint &dataPoint)
 {
     cbool withPdf          = dataPoint.withPdf;
-    cbool is_play          = likely((dataPoint.parent)) ? (dataPoint.parent->m_audioplayer->isPlay()) : false;
-    const qint64 m_pos_ris      = (is_play) ? (dataPoint.parent->m_audioplayer->getPositionSecond()) : -1;
-    static int last_m_pos_ris   = -1;
-
     int lenPage                     = data->lengthPage();
     const QPointF &PointFirstPage   = data->getPointFirstPageNoZoom();
     const auto zoom      = data->getZoom();
@@ -76,14 +92,7 @@ void TabletCanvas::load(QPainter &painter,
     painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
 
-    if(unlikely(is_play && !dataPoint.IsExportingPdf)){
-        // the idea is to trigger this view only when
-        // the second has change
-        if(likely(last_m_pos_ris != m_pos_ris)){
-            data->newViewAudio(m_pos_ris);
-            last_m_pos_ris = m_pos_ris;
-        }
-    }
+    draw_for_audio(data, dataPoint);
 
     if(likely(!dataPoint.IsExportingPdf)){
         counterPage = data->getFirstPageVisible();

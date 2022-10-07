@@ -45,6 +45,13 @@ public:
 
     ~Document();
 
+    void controllForRepositioning();
+    void increaseZoom(double delta, const QSize &size);
+    void adjustAll(unsigned w, unsigned h);
+    void adjustHeight(cdouble height);
+    void scala_all(const QPointF& delta, int heightView);
+    void repositioning();
+
     static void copy(const Document &src, Document &dest);
 };
 

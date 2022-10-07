@@ -41,10 +41,10 @@ void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
     (void)this->getFirstPageVisible();
 }
 
-void datastruct::increaseZoom(const double delta, const QSize &size)
+void datastruct::increaseZoom(const double delta, const QSize &size, QPointF &res)
 {
     this->_zoom += delta;
-    this->adjustAll(size);
+    this->adjustAll(size, res);
     this->triggerVisibility(size.height());
     this->_pageVisible = -1;
 }
@@ -126,28 +126,25 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
  * di quanto basta.
  *
 */
-void datastruct::adjustHeight(cdouble height)
+void datastruct::adjustHeight(cdouble height, QPointF& translateTo)
 {
     const QPointF point = this->getPointFirstPageNoZoom();
-    QPointF t(0.0, 0.0);
     uchar not_used ff = 0;
     double y = biggery();
 
     if(point.y() > 0.0){
         ff = 1;
-        t.setY( - point.y());
+        translateTo.setY( - point.y());
         qDebug() << "Need to restore first Point" << point;
     }
     else if(y < height){
         ff = 2;
-        t.setY((height - y) / _zoom);
+        translateTo.setY((height - y) / _zoom);
 
-        if(!isOkTranslate(t, true)){
-            t.setY(0.);
+        if(!isOkTranslate(translateTo, true)){
+            translateTo.setY(0.);
         }
     }
-
-    scala_all(t, static_cast<int>(height));
 }
 
 /*
@@ -158,29 +155,28 @@ void datastruct::adjustHeight(cdouble height)
  * controllo che siano fuori, in caso contrario si fa il return di false e
  * bisogna rifare il pixmap
 */
-void datastruct::adjustWidth(cdouble width)
+void datastruct::adjustWidth(cdouble width, QPointF& translatoTo)
 {
     const QPointF point = this->getPointFirstPage();
-    QPointF t(0., 0.);
     double biggerX = biggerx();
     bool not_used f;
     cdouble x = point.x();
 
     if(x < 0. && biggerX <= width){
-        t.setX(width - biggerX);
+        translatoTo.setX(width - biggerX);
         f = true;
-        if(!isOkTranslate(t, true)){
-            t.setX(0.);
+        if(!isOkTranslate(translatoTo, true)){
+            translatoTo.setX(0.);
         }
 
     }else{ //(x >= width)
         if(point.x() > 0.){
             f = false;
-            t.setX(-point.x());
+            translatoTo.setX(-point.x());
         }
     }
 
-    scala_all(t / _zoom);
+    translatoTo / _zoom;
 }
 
 /*
@@ -188,34 +184,18 @@ void datastruct::adjustWidth(cdouble width)
  * the function consider the fact that the
  * height of one sheet is bigger than the width
 */
-void datastruct::adjustAll(const uint width,
-                           const uint height)
+void datastruct::adjustAll(uint width,
+                           uint height,
+                           QPointF& res)
 {
-    adjustWidth(width);
-    adjustHeight(height);
+    res = {0., 0.};
+    adjustWidth(width, res);
+    adjustHeight(height, res);
 }
 
-void datastruct::adjustAll(const QSize &size)
+void datastruct::adjustAll(const QSize &size, QPointF& res)
 {
-    this->adjustAll(size.width(), size.height());
-}
-
-/*
- * return true if the first point is different
- * from (0.0, 0.0)
-*/
-void datastruct::repositioning()
-{
-    if(isempty_touch())
-        return;
-
-    QPointF point = this->getPointFirstPageNoZoom();
-    qDebug() << "datastruct::repositioning" << point;
-    this->_zoom = 1.0;
-
-    datastruct::inverso(point);
-
-    scala_all(point, INT_MAX);
+    this->adjustAll(size.width(), size.height(), res);
 }
 
 void datastruct::restoreLastTranslation(const int heightView)
@@ -254,8 +234,8 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
         this->setVisible(first, first + range);
     }
 
-    W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
-    W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
+    W_ASSERT(this->getPointFirstPageNoZoom().x() - prec <= 0.);
+    W_ASSERT(this->getPointFirstPageNoZoom().y() - prec <= 0.);
 }
 
 /* the list can be not order */

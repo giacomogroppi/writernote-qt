@@ -48,8 +48,6 @@ private:
     bool userWrittenSomething(uint frompage);
 
     [[nodiscard]] bool isOkTranslate(const QPointF &point, cbool isZoom) const;
-    void adjustWidth(cdouble width);
-    void adjustHeight(cdouble height);
 
     void triggerNewView(int page, int m_pos_ris, cbool all);
 
@@ -68,7 +66,6 @@ public:
     void triggerViewIfVisible(int m_pos_ris);
 
     void changeZoom(double zoom, class TabletCanvas *canvas);
-    void increaseZoom(double delta, const QSize &size);
 
     void drawIfInside(const QRect &area);
 
@@ -95,11 +92,9 @@ public:
     void appendStroke(const Stroke &stroke, int page);
 
     void restoreLastTranslation(int heightView);
-    void controllForRepositioning();
 
     void removePointIndex(QList<QVector<int> > &pos, cint base, cbool __isOrder);
     void removePointIndex(QVector<int> &pos, cint page, cbool isOrder);
-
 
     void MovePoint(const QList<QVector<int>> & pos, cint base, const QPointF &translation);
     void MovePoint(const QVector<int> & pos, cint page, const QPointF &translation);
@@ -109,9 +104,6 @@ public:
 
     [[nodiscard]] bool userWrittenSomething() const;
     static bool userWrittenSomething(const datastruct &data1, const datastruct &data2);
-
-    void adjustAll(const uint width, const uint height);
-    void adjustAll(const QSize &size);
 
     int adjustStroke(Stroke &stroke);
 
@@ -174,7 +166,15 @@ public:
     friend class TestingCore;
 
 protected:
-    void repositioning();
+    void controllForRepositioning(QPointF &translateTo);
+    void increaseZoom(double delta, const QSize &size, QPointF& res);
+    void adjustAll(uint width, uint height, QPointF &res);
+    void adjustAll(const QSize &size, QPointF &res);
+    void adjustHeight(cdouble height, QPointF& translatoTo);
+    void adjustWidth(cdouble width, QPointF& translatoTo);
+
+    void setZoom(typeof(datastruct::_zoom) newZoom);
+    void setPageVisible(int page);
     void scala_all(const QPointF &point, int heightView = -1);
 };
 
@@ -566,6 +566,18 @@ force_inline QRect datastruct::get_bigger_rect(const QRect &first, const QRect &
     QRectF __first(first);
     QRectF __second(second);
     return datastruct::get_bigger_rect(__first, __second).toRect();
+}
+
+inline void datastruct::setZoom(typeof(datastruct::_zoom) newZoom)
+{
+    W_ASSERT(isOkZoom(newZoom));
+    _zoom = newZoom;
+}
+
+inline void datastruct::setPageVisible(int page)
+{
+    W_ASSERT(page == -1 or page >= 0 and page < this->lengthPage());
+    _pageVisible = page;
 }
 
 inline int datastruct::adjustStroke(Stroke &stroke)

@@ -1,10 +1,9 @@
 #include "zoom_control.h"
 #include <QDebug>
 #include "touch/event/itspossibletoscroll.h"
-#include "touch/dataTouch/datastruct/datastruct.h"
-#include "touch/event/itspossibletoscroll.h"
+#include "currenttitle/document.h"
 
-/*
+/**
  * if delta > 1 we are zoom in
 */
 
@@ -39,7 +38,7 @@ bool zoom_control::zoom(const QPointF   &pointMiddle,
                         bool            &zoomChange,
                         const QSize     &sizePixmap,
                         const QSize     &maxSize,
-                        datastruct      *data)
+                        Document      *data)
 {
     this->data = data;
 
