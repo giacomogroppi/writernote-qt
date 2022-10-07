@@ -44,18 +44,15 @@ int WFile::fileExist(const QByteArray &to)
 
 int WFile::readFile(QByteArray &to, const char *pathFile)
 {
-    QFile file;
-    if(!file.open(QFile::ReadOnly))
+    FILE *fp = WFile::open(pathFile, "r");
+    const auto size = WFile::size(fp);
+
+    char data[size];
+
+    if(fread(data, size, 1, fp) < 1)
         return -1;
-    W_ASSERT(to.isEmpty());
-    to = file.readAll();
 
-    const auto size = file.size();
-
-    file.close();
-
-    if(unlikely(size != to.size()))
-        return -1;
+    to = QByteArray(data, size);
 
     return 0;
 }

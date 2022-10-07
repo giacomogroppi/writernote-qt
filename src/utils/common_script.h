@@ -73,22 +73,6 @@ force_inline constexpr not_used int debug_enable()
 # define W_ASSERT(condition) ;
 #endif // DEBUGINFO
 
-force_inline FILE *__fopen(const QString &path, const char *flag)
-{
-#if defined(WIN32) || defined(WIN64)
-    FILE *fp;
-    if(*flag == 'r'){
-        fp = fopen(path.toUtf8().constData(), "rb");
-    }else{
-        fp = fopen(path.toUtf8().constData(), "wb");
-    }
-
-    return fp;
-#endif
-
-    return fopen(path.toUtf8().constData(), flag);
-}
-
 #define discordant(first, second) ((first) * (second) < 0.0)
 
 /*
