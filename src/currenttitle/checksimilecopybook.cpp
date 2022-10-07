@@ -88,7 +88,7 @@ int checksimilecopybook(const Document &doc1,
                         const Document &doc2)
 {
     int res;
-    if(doc1.m_img->length() != doc2.m_img->length())
+    if(doc1.m_img->length_img() != doc2.m_img->length_img())
         return LEN;
     if(doc1.m_pdf->length_pdf() != doc2.m_pdf->length_pdf())
         return LEN;

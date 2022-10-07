@@ -24,7 +24,7 @@ static size_t savefile_get_size_file(const Document *doc)
     s += sizeof(unsigned);          // len_img
     s += sizeof(unsigned);          // len_pdf
     s += doc->m_pdf->get_size_file_pdf();
-    s += doc->m_img->get_size_file();
+    s += doc->m_img->get_size_file_img();
     return s;
 }
 
@@ -38,7 +38,7 @@ int savefile::savefile_check_file(cbool saveImg)
 {
     int error, ver_stroke;
     zip_error_t errore;
-    fromimage::load_res res_img;
+    fromimage::load_res_img res_img;
     WZipWriterSingle writer;
 
 #ifdef PDFSUPPORT
@@ -62,10 +62,10 @@ int savefile::savefile_check_file(cbool saveImg)
     writer.write_string(_doc->audio_position_path.toUtf8().constData(), _doc->audio_position_path.size());
 
     writer.write_object(_doc->m_pdf->length_pdf());
-    writer.write_object(_doc->m_img->length());
+    writer.write_object(_doc->m_img->length_img());
 
-    res_img = _doc->m_img->save_metadata(writer);
-    if(res_img != fromimage::load_res::ok)
+    res_img = _doc->m_img->save_metadata_img(writer);
+    if(res_img != fromimage::load_res_img::ok)
         return ERROR;
 
 #ifdef PDFSUPPORT

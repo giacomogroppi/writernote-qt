@@ -34,8 +34,8 @@ int xmlstruct::load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
     zip.dealloc_file();
 
     if(LoadImg){
-        const auto res_img = _doc->m_img->load(reader, len_img);
-        if(res_img != fromimage::load_res::ok){
+        const auto res_img = _doc->m_img->load_img(reader, len_img);
+        if(res_img != fromimage::load_res_img::ok){
             return ERROR;
         }
     }

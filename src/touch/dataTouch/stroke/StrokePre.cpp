@@ -98,4 +98,5 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
     stroke_drawer::draw_stroke(painter,
                                dynamic_cast<StrokePre &>(*this),
                                pen, prop);
+    painter.end();
 }

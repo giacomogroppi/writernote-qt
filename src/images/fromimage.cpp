@@ -13,41 +13,41 @@
 
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
-fromimage::load_res fromimage::save(WZipWriter          &writer,
+fromimage::load_res_img fromimage::save_img(WZipWriter          &writer,
                                     const QList<QString>   &pathPdf) const
 {
-    fromimage::load_res res;
+    fromimage::load_res_img res;
 
     for(const auto &str : qAsConst(pathPdf)){
-        res = this->save(writer, str);
+        res = this->save_img(writer, str);
 
-        if(res != fromimage::load_res::ok)
+        if(res != fromimage::load_res_img::ok)
             return res;
     }
 
-    return fromimage::load_res::ok;
+    return fromimage::load_res_img::ok;
 }
 
-fromimage::load_res fromimage::save(WZipWriter              &writer,
+fromimage::load_res_img fromimage::save_img(WZipWriter              &writer,
                                     const QString           &path) const
 {
     QByteArray img_in_byte;
     WImage img;
 
-    if(get_img_bytearray(img_in_byte, path) != load_res::ok){
-        return load_res::error;
+    if(get_img_bytearray(img_in_byte, path) != load_res_img::ok){
+        return load_res_img::error;
     }
 
     if(!img.loadFromData(img_in_byte, "PNG"))
-        return load_res::err_image_not_valid;
+        return load_res_img::err_image_not_valid;
 
-    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName(this->length())))
-        return load_res::error;
+    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName_img(this->length_img())))
+        return load_res_img::error;
 
-    return load_res::ok;
+    return load_res_img::ok;
 }
 
-fromimage::load_res fromimage::save_metadata(WZipWriterSingle &writer)
+fromimage::load_res_img fromimage::save_metadata_img(WZipWriterSingle &writer)
 {
     for(const auto &img : qAsConst(m_img))
     {
@@ -63,30 +63,30 @@ fromimage::load_res fromimage::save_metadata(WZipWriterSingle &writer)
         static_assert(sizeof(val) == sizeof(double) * 4);
     }
 
-    return load_res::ok;
+    return load_res_img::ok;
 }
 
-size_t fromimage::get_size_file() const
+size_t fromimage::get_size_file_img() const
 {
-    const size_t s = sizeof(double) * 4 * this->length();
+    const size_t s = sizeof(double) * 4 * this->length_img();
     return s;
 }
 
-fromimage::load_res fromimage::get_img_bytearray(QByteArray &arr, const QString &path)
+fromimage::load_res_img fromimage::get_img_bytearray(QByteArray &arr, const QString &path)
 {
     WImage img(path);
 
     if(img.isNull()){
-        return load_res::err_image_not_valid;
+        return load_res_img::err_image_not_valid;
     }
 
     if(!img.save_and_size(arr))
-        return load_res::error;
+        return load_res_img::error;
 
-    return load_res::ok;
+    return load_res_img::ok;
 }
 
-fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader, int len)
+fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, int len)
 {
     uint i;
     double val[4];
@@ -96,7 +96,7 @@ fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader, int len)
 
     for(i = 0; i < len; ++i){
         if(reader.read_by_size(val, sizeof(val))){
-            return load_res::error;
+            return load_res_img::error;
         }
 
         img.i = QPointF(val[0], val[1]);
@@ -105,10 +105,10 @@ fromimage::load_res fromimage::load_metadata(WZipReaderSingle &reader, int len)
         m_img.append(img);
     }
 
-    return load_res::ok;
+    return load_res_img::ok;
 }
 
-fromimage::load_res fromimage::load(WZipReaderSingle &reader, int len)
+fromimage::load_res_img fromimage::load_img(WZipReaderSingle &reader, int len)
 {
     QList<QByteArray> arr;
     QList<QString> name_list;
@@ -118,47 +118,47 @@ fromimage::load_res fromimage::load(WZipReaderSingle &reader, int len)
 
     name_list = this->get_name_img();
 
-    if(this->load_metadata(reader, len) != load_res::ok)
-        return load_res::err_meta_data;
+    if(this->load_metadata_img(reader, len) != load_res_img::ok)
+        return load_res_img::err_meta_data;
 
     res = readListArray::read(name_list, *(reader.get_zip()), arr, false);
     if(res != OK){
-        return fromimage::load_res::error;
+        return fromimage::load_res_img::error;
     }
 
-    return fromimage::load_multiple(arr);
+    return fromimage::load_multiple_img(arr);
 }
 
-fromimage::load_res fromimage::load_single(const QByteArray &arr,
+fromimage::load_res_img fromimage::load_single_img(const QByteArray &arr,
                                            struct immagine_s &img)
 {
     if(!img.immagini.loadFromData(arr, "PNG"))
-        return load_res::error;
+        return load_res_img::error;
 
     if(img.immagini.isNull())
-        return load_res::err_image_not_valid;
+        return load_res_img::err_image_not_valid;
 
-    return load_res::ok;
+    return load_res_img::ok;
 }
 
 /*
  * in m_img sono già presenti tutte le immagini con i metadati
  * dobbiamo solo cambiare l'immagine e l'array
 */
-fromimage::load_res fromimage::load_multiple(const QList<QByteArray> &arr)
+fromimage::load_res_img fromimage::load_multiple_img(const QList<QByteArray> &arr)
 {
     uint i, len;
-    fromimage::load_res res;
+    fromimage::load_res_img res;
     struct immagine_s img;
 
     len = arr.length();
     for(i=0; i<len; ++i){
-        res = fromimage::load_single(arr.at(i), m_img.operator[](i));
-        if(res != fromimage::load_res::ok)
+        res = fromimage::load_single_img(arr.at(i), m_img.operator[](i));
+        if(res != fromimage::load_res_img::ok)
             return res;
     }
 
-    return fromimage::load_res::ok;
+    return fromimage::load_res_img::ok;
 }
 
 QList<QString> fromimage::get_name_img()
@@ -166,8 +166,8 @@ QList<QString> fromimage::get_name_img()
     uint i;
     QList<QString> list;
 
-    for(i = 0; i < length(); ++i){
-        list.append(fromimage::getName(i));
+    for(i = 0; i < length_img(); ++i){
+        list.append(fromimage::getName_img(i));
     }
 
     return list;
@@ -220,7 +220,7 @@ int fromimage::addImage(    const QString &pos,
 
     this->m_img.append(img);
 
-    if(this->save(writer, pos) != fromimage::ok)
+    if(this->save_img(writer, pos) != fromimage::ok)
         return -3;
 
     return 0;

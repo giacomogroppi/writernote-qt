@@ -23,18 +23,16 @@ struct immagine_s{
 
 class fromimage{
 private:
-    Document *doc;
-
     QList<struct immagine_s> m_img;
     QList<QString> get_name_img();
     unsigned insert_image(const QString &__pos, const PointSettable *point, struct immagine_s &img);
 
-    static inline QByteArray getName(unsigned i);
+    static inline QByteArray getName_img(unsigned i);
 public:
-    static void copy(const fromimage &src, fromimage &dest);
+    static void copy_img(const fromimage &src, fromimage &dest);
     friend class square;
 
-    enum load_res: uchar{
+    enum load_res_img: uchar{
         ok,
         error,
         err_meta_data,
@@ -43,52 +41,50 @@ public:
 
     [[nodiscard]] int addImage(const QString &pos, const PointSettable *point, const QString &writernote_file);
 
-    explicit fromimage(Document *doc);
+    explicit fromimage();
 
-    [[nodiscard]] int length() const { return m_img.length(); };
-    [[nodiscard]] fromimage::load_res load(WZipReaderSingle &zip, int len);
-    fromimage::load_res save(WZipWriter &file, const QList<QString> &path) const;
-    fromimage::load_res save(WZipWriter &file, const QString &path) const;
-    fromimage::load_res save_metadata(WZipWriterSingle &writer);
+    [[nodiscard]] int length_img() const { return m_img.length(); };
+    [[nodiscard]] fromimage::load_res_img load_img(WZipReaderSingle &zip, int len);
+    fromimage::load_res_img save_img(WZipWriter &file, const QList<QString> &path) const;
+    fromimage::load_res_img save_img(WZipWriter &file, const QString &path) const;
+    fromimage::load_res_img save_metadata_img(WZipWriterSingle &writer);
 
-    void move(const QPointF &translation);
+    void move_img(const QPointF &translation);
 
     void moveImage(const QList<int> &index, const QPointF &translation);
 
-    static  void draw(QPainter &painter, const QRectF &rect, const QImage &img);
-    static  void draw(QPainter &painter, const immagine_s &img);
-    static  void draw(QPainter &painter, const QList<immagine_s> &list);
+    static  void draw_img(QPainter &painter, const QRectF &rect, const QImage &img);
+    static  void draw_img(QPainter &painter, const immagine_s &img);
+    static  void draw_img(QPainter &painter, const QList<immagine_s> &list);
 
-    void draw(QPainter &painter) const;
+    void draw_img(QPainter &painter) const;
 
-    void reset();
-    [[nodiscard]] size_t get_size_file() const;
+    void reset_img();
+    [[nodiscard]] size_t get_size_file_img() const;
 
 private:
-    static load_res get_img_bytearray(QByteArray &arr, const QString &path) ;
-    load_res load_metadata(WZipReaderSingle &reader, int len);
-    load_res load_single(const QByteArray &arr, struct immagine_s &img);
-    load_res load_multiple(const QList<QByteArray> &arr);
+    static load_res_img get_img_bytearray(QByteArray &arr, const QString &path) ;
+    load_res_img load_metadata_img(WZipReaderSingle &reader, int len);
+    load_res_img load_single_img(const QByteArray &arr, struct immagine_s &img);
+    load_res_img load_multiple_img(const QList<QByteArray> &arr);
 };
 
-inline QByteArray fromimage::getName(const unsigned i)
+inline QByteArray fromimage::getName_img(const unsigned i)
 {
     const auto tmp = SUFFIX_IMG + QString::number(uint(i));
     return tmp.toUtf8();
 }
 
-inline void fromimage::copy(const fromimage &src, fromimage &dest)
+inline void fromimage::copy_img(const fromimage &src, fromimage &dest)
 {
     dest.m_img = src.m_img;
 }
 
-inline fromimage::fromimage(Document *doc)
+inline fromimage::fromimage()
 {
-    W_ASSERT(doc != nullptr);
-    this->doc = doc;
 }
 
-inline void fromimage::move(const QPointF &translation)
+inline void fromimage::move_img(const QPointF &translation)
 {
     double x, y;
 
@@ -112,14 +108,14 @@ inline void fromimage::moveImage(const QList<int> &index, const QPointF &transla
     }
 }
 
-inline void fromimage::draw(QPainter &painter, const QRectF &rect, const QImage &img)
+inline void fromimage::draw_img(QPainter &painter, const QRectF &rect, const QImage &img)
 {
     const QRectF draw = img.rect();
 
     painter.drawImage(rect, img, draw);
 }
 
-inline void fromimage::draw(QPainter &painter, const immagine_s &img)
+inline void fromimage::draw_img(QPainter &painter, const immagine_s &img)
 {
     int check;
 
@@ -128,22 +124,22 @@ inline void fromimage::draw(QPainter &painter, const immagine_s &img)
     if(check)
         return;
 
-    fromimage::draw(painter, QRectF(img.i, img.f), img.immagini);
+    fromimage::draw_img(painter, QRectF(img.i, img.f), img.immagini);
 }
 
-inline void fromimage::draw(QPainter &painter, const QList<immagine_s> &list)
+inline void fromimage::draw_img(QPainter &painter, const QList<immagine_s> &list)
 {
     for(const auto &img : qAsConst(list)){
-        fromimage::draw(painter, img);
+        fromimage::draw_img(painter, img);
     }
 }
 
-inline void fromimage::draw(QPainter &painter) const
+inline void fromimage::draw_img(QPainter &painter) const
 {
-    return fromimage::draw(painter, this->m_img);
+    return fromimage::draw_img(painter, this->m_img);
 }
 
-inline void fromimage::reset()
+inline void fromimage::reset_img()
 {
     m_img.clear();
 }

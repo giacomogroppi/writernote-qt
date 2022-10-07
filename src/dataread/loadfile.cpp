@@ -313,7 +313,7 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
     unsigned len_pdf, len_img;
     int ver_stroke;
     uchar controllo_parita = 0;
-    fromimage::load_res res_img;
+    fromimage::load_res_img res_img;
     WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
 
     if(singleReader.read_object(ver_stroke))
@@ -334,8 +334,8 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
         return ERROR;
 
     if(LoadImg){
-        res_img = doc->m_img->load(singleReader, len_img);
-        if(res_img != fromimage::load_res::ok){
+        res_img = doc->m_img->load_img(singleReader, len_img);
+        if(res_img != fromimage::load_res_img::ok){
             return ERROR;
         }
     }

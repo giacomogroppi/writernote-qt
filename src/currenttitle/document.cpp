@@ -8,7 +8,7 @@
 
 void Document::init()
 {
-    WNew(m_img, fromimage, (this));
+    WNew(m_img, fromimage, ());
     WNew(m_pdf, frompdf, ());
     WNew(datatouch, datastruct, (m_pdf, m_img));
 }
@@ -46,7 +46,7 @@ void Document::copy(const Document &src, Document &dest)
 #ifdef PDFSUPPORT
     frompdf::copy_pdf(*src.m_pdf, *dest.m_pdf);
 #endif //PDFSUPPORT
-    fromimage::copy(*src.m_img, *dest.m_img);
+    fromimage::copy_img(*src.m_img, *dest.m_img);
     dest.se_registato = src.se_registato;
 }
 
@@ -80,7 +80,7 @@ void Document::reset()
 #ifdef PDFSUPPORT
     this->m_pdf->reset_pdf();
 #endif // PDFSUPPORT
-    this->m_img->reset();
+    this->m_img->reset_img();
 }
 
 void Document::cleanAudio()

@@ -68,7 +68,7 @@ void TabletCanvas::load(QPainter &painter,
     Q_UNUSED(withPdf);
 #endif
 
-    data->m_img->draw(painter);
+    data->m_img->draw_img(painter);
 
     /* stroke not already add to page */
     drawSingleStroke(strokeToDraw, painter);

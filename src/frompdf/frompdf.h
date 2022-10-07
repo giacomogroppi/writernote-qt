@@ -163,7 +163,7 @@ force_inline void frompdf::draw_pdf(QPainter &painter, const double delta, cbool
 
         for(k = 0; k < len_img; k++){
             const auto &img = pdf->img.at(k);
-            fromimage::draw(painter, size, img);
+            fromimage::draw_img(painter, size, img);
 
             size.setY(size.y() + y);
 

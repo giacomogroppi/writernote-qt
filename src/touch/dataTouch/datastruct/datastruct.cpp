@@ -93,7 +93,7 @@ void datastruct::reset()
 #ifdef PDFSUPPORT
     this->_pdf->reset_pdf();
 #endif
-    this->_img->reset();
+    this->_img->reset_img();
     this->pageVisible = -1;
     _pointFirstPage = QPointF(0, 0);
     _zoom = 1.;
@@ -260,7 +260,7 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
     _pdf->translation_pdf(point);
 #endif
 
-    _img->move(point);
+    _img->move_img(point);
 
     if(likely(heightView > 0)){
         this->triggerVisibility(heightView);
