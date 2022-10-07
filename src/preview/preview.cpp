@@ -10,7 +10,7 @@
 void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
     QPainter painter;
-    const double size_orizzontale = doc.datatouch->biggerx();
+    const double size_orizzontale = doc.biggerx();
     const double delta = (double)width / (double)size_orizzontale;
 
     DataPaint dataPaint = {

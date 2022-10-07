@@ -42,7 +42,7 @@ preview_page_container::~preview_page_container()
 
 void preview_page_container::draw(int index)
 {
-    const datastruct *data = this->_main->getCurrentDoc()->datatouch;
+    const datastruct *data = this->_main->getCurrentDoc();
     static int last;
     const int selected = data->getFirstPageVisible();
     auto *ref = at_show(index);
@@ -59,7 +59,7 @@ void preview_page_container::clickUser(void *_this)
 {
     const auto *item = (preview_page_item *)_this;
     int index = this->get_index(item);
-    auto *data = _main->getCurrentDoc()->datatouch;
+    auto *data = _main->getCurrentDoc();
 
     W_ASSERT(index >= 0);
 
@@ -100,7 +100,7 @@ void preview_page_container::drawAll()
 void preview_page_container::newPage()
 {
     preview_page_item *item;
-    const datastruct *data = _main->getCurrentDoc()->datatouch;
+    const datastruct *data = _main->getCurrentDoc();
 
     if(!this->_item_not_show.isEmpty()){
         item = _item_not_show.takeAt(0);
@@ -122,7 +122,7 @@ void preview_page_container::newPage()
 
 void preview_page_container::changeDocument()
 {
-    const not_used datastruct *data = _main->getCurrentDoc()->datatouch;
+    const not_used datastruct *data = _main->getCurrentDoc();
     for(preview_page_item *item : qAsConst(_item_show)){
         item->setInvalid();
         item->hide();
@@ -139,7 +139,7 @@ void preview_page_container::changeDocument()
     this->drawAll();
     this->Resize();
 
-    W_ASSERT(this->_item_show.length() == _main->getCurrentDoc()->datatouch->lengthPage());
+    W_ASSERT(this->_item_show.length() == _main->getCurrentDoc()->lengthPage());
     W_ASSERT(this->layout()->count() == _item_show.length());
 
 #ifdef DEBUGINFO
@@ -199,7 +199,7 @@ void preview_page_container::setAllDisable()
 void preview_page_container::appendNecessary()
 {
     W_ASSERT(this->_item_show.length() == 0);
-    int needLen = _main->getCurrentDoc()->datatouch->lengthPage();
+    int needLen = _main->getCurrentDoc()->lengthPage();
     int i;
 
     if(_item_not_show.length() < needLen){

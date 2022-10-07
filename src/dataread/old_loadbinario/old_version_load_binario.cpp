@@ -105,7 +105,7 @@ int xmlstruct::loadbinario_0(WZip &zip)
         if(reader.read_object(zoom) < 0)
             return ERROR;
 
-        _doc->datatouch->_zoom = zoom;
+        _doc->_zoom = zoom;
     }
 
     xmlstruct::decode0(_doc, point, pos_foglio);
@@ -154,7 +154,7 @@ int xmlstruct::loadbinario_1(class WZip &zip)
         if(reader.read_object(zoom) < 0)
             return ERROR;
 
-        _doc->datatouch->_zoom = (double)zoom;
+        _doc->_zoom = (double)zoom;
     }
 
 
@@ -289,23 +289,23 @@ void xmlstruct::decode0(
 
     scaleAll(point, translation);
     adjastZoom(point, pos_foglio);
-    data->datatouch->setPointFirstPage(translation);
-    data->datatouch->_zoom = 1.0;
+    data->setPointFirstPage(translation);
+    data->_zoom = 1.0;
 
     /* create the sheet */
     for(counterPage = 0; counterPage <= lenPage; counterPage ++){
-        data->datatouch->newPage(n_style::white);
+        data->newPage(n_style::white);
         pointForAppend.append(QList<point_old_ver_7> ());
     }
 
-    W_ASSERT(pointForAppend.length() == data->datatouch->lengthPage());
+    W_ASSERT(pointForAppend.length() == data->lengthPage());
 
     for(i = 0; i < point.length(); i++){
         point_last pp = point.at(i);
 
         pp.m_pressure *= 0.2;
 
-        const int which = old_which_sheet(pp, data->datatouch->_page);
+        const int which = old_which_sheet(pp, data->_page);
 
         {
             point_old_ver_7 __append;
@@ -325,8 +325,8 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
     int counterPage;
     cint lenPage = __page.length();
 
-    if(doc->datatouch->lengthPage() != __page.length()){
-        doc->datatouch->newPage(doc->datatouch->lengthPage());
+    if(doc->lengthPage() != __page.length()){
+        doc->newPage(doc->lengthPage());
     }
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
@@ -358,12 +358,12 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
             }
             
             if(likely(id >= 0)){
-                doc->datatouch->appendStroke(stroke);
+                doc->appendStroke(stroke);
             }
         }
     }
 
-    doc->datatouch->_pointFirstPage = QPointF(0.0, 0.0);
+    doc->_pointFirstPage = QPointF(0.0, 0.0);
 }
 
 /* versione 7 */
@@ -383,7 +383,7 @@ int xmlstruct::loadbinario_2(class WZip &zip)
     /* point first page */
     if(reader.read_object(init) < 0)
         return ERROR;
-    this->_doc->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
+    this->_doc->setPointFirstPage(QPointF(init[0], init[1]));
 
     /* page len */
     if(reader.read_object(lenPage) < 0)
@@ -403,15 +403,15 @@ int xmlstruct::loadbinario_2(class WZip &zip)
         }
     }
 
-    static_assert(sizeof(_doc->datatouch->_zoom) == sizeof(double));
-    if(reader.read_object(_doc->datatouch->_zoom) < 0)
+    static_assert(sizeof(_doc->_zoom) == sizeof(double));
+    if(reader.read_object(_doc->_zoom) < 0)
         return ERROR;
 
     if(reader.read_object(controll) < 0)
         return ERROR;
 
 
-    _doc->datatouch->triggerNewView(-1, true);
+    _doc->triggerNewView(-1, true);
     newControll = _doc->createSingleControll();
 
     if(controll != newControll)
@@ -426,7 +426,6 @@ __old int xmlstruct::loadbinario_3(class WZip &zip, int ver_stroke)
 {
     size_t controll, newControll;
     int lenPage, counterPage;
-    datastruct *data = _doc->datatouch;
     double init[2];
     WZipReaderSingle reader(&zip, 0);
 
@@ -434,12 +433,12 @@ __old int xmlstruct::loadbinario_3(class WZip &zip, int ver_stroke)
         return ERROR;
 
     static_assert(sizeof(init) == sizeof(double) * 2);
-    static_assert(sizeof(_doc->datatouch->_zoom) == sizeof(double));
+    static_assert(sizeof(_doc->_zoom) == sizeof(double));
 
     /* point first page */
     if(reader.read_object(init) < 0)
         return ERROR;
-    this->_doc->datatouch->setPointFirstPage(QPointF(init[0], init[1]));
+    this->_doc->setPointFirstPage(QPointF(init[0], init[1]));
 
     /* page len */
     if(reader.read_object(lenPage) < 0)
@@ -447,13 +446,13 @@ __old int xmlstruct::loadbinario_3(class WZip &zip, int ver_stroke)
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
         /* we add a new page */
-        data->newPage(n_style::white);
+        _doc->newPage(n_style::white);
 
-        if(data->at_mod(counterPage).load(reader, ver_stroke) != OK)
+        if(_doc->at_mod(counterPage).load(reader, ver_stroke) != OK)
             return ERROR;
     }
 
-    if(reader.read_object(_doc->datatouch->_zoom) < 0)
+    if(reader.read_object(_doc->_zoom) < 0)
         return ERROR;
 
     if(reader.read_object(controll) < 0)

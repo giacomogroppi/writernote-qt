@@ -100,5 +100,5 @@ void audioplay::updateStatus(
 
     parent->ui->start_rec->setEnabled(false);
     parent->contrUi();
-    parent->_canvas->getDoc()->datatouch->triggerNewView(-1, true);
+    parent->_canvas->getDoc()->triggerNewView(-1, true);
 }

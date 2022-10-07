@@ -2,7 +2,7 @@
 #include "touch/dataTouch/datastruct/datastruct.h"
 #include <QDebug>
 
-#define ifEmpty(data) if(data->isempty()) \
+#define ifEmpty(data) if(data->isempty_touch()) \
     goto c_not_move;
 
 /*
@@ -38,7 +38,7 @@ bool scroll::y(
         pos = data->biggery();
 
         if((pos + __pos_delta) > altezza){
-            return 1;
+            return true;
         }
 
         if(pos < altezza){
@@ -46,23 +46,22 @@ bool scroll::y(
         }
 
         __pos_delta = double(altezza - pos);
-        return 1;
+        return true;
     }
 
     if((point.y() + __pos_delta) < 0){
-        return 1;
+        return true;
     }
 
     if(point.y() < (double)0){
         __pos_delta = - point.y();
-        return 1;
+        return true;
     }
 
     c_not_move:
 
     __pos_delta = 0.0;
-    return 0;
-
+    return false;
 }
 
 /*
@@ -88,11 +87,11 @@ bool scroll::x(
         point = data->getPointFirstPage();
 
         if((point.x() + __pos_delta) < 0.0)
-            return 1;
+            return true;
 
         if(point.x() < 0.0){
             __pos_delta = - point.x();
-            return 1;
+            return true;
         }
 
         goto c_not_move;
@@ -103,16 +102,16 @@ bool scroll::x(
     res = data->biggerx();
 
     if ((res + __pos_delta) > (double)width)
-        return 1;
+        return true;
 
     if(res > (double)width){
         __pos_delta = - double(res - (double)width);
-        return 1;
+        return true;
     }
 
     c_not_move:
     __pos_delta = 0.0;
-    return 0;
+    return false;
 }
 
 bool scroll::itspossibletoscroll(const datastruct &data, const QSize &size, QPointF &__pos_delta)

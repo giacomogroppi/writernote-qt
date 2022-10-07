@@ -120,8 +120,8 @@ void text_widgets::createNew(const QPointF &point){
 
 void text_widgets::needToDraw(QPainter &painter)
 {
-    const QPointF &translation = parent->getDoc()->datatouch->getPointFirstPage();
-    const double zoom = parent->getDoc()->datatouch->getZoom();
+    const QPointF &translation = parent->getDoc()->getPointFirstPage();
+    const double zoom = parent->getDoc()->getZoom();
     QPen pen;
 
     painter.setRenderHint(QPainter::TextAntialiasing);

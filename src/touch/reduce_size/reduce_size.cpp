@@ -18,11 +18,12 @@ size_t reduce_size::calculate_min_size(datastruct *data){
     return current_size(data) - ((__size/2) * sizeof(point_s));
 }
 
-size_t reduce_size::current_size(datastruct *data){
+size_t reduce_size::current_size(datastruct *data)
+{
     size_t size;
     int counterPage;
 
-    if(data->isempty())
+    if(data->isempty_touch())
         return 0;
 
     size = 0;

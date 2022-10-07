@@ -86,7 +86,7 @@ void preview_page_widget::mod(int page)
 void preview_page_widget::pageMove()
 {
     const auto size = preview_page_item::get_size();
-    const auto index = _main->getCurrentDoc()->datatouch->getFirstPageVisible();
+    const auto index = _main->getCurrentDoc()->getFirstPageVisible();
     this->ui->scrollArea->ensureVisible(0, size.height() * index, 20, 20);
 }
 
@@ -108,7 +108,7 @@ list_options * preview_page_widget::get_list()
 
 void preview_page_widget::ClickCopy(int index)
 {
-    const auto *data = _main->getCurrentDoc()->datatouch;
+    const auto *data = _main->getCurrentDoc();
     *_page = data->at(index);
     _page->setCount(1);
 }
@@ -116,7 +116,7 @@ void preview_page_widget::ClickCopy(int index)
 void preview_page_widget::ClickPaste(int index)
 {
     int i, len;
-    auto *data = _main->getCurrentDoc()->datatouch;
+    auto *data = _main->getCurrentDoc();
 
     // nothing copy
     if(this->_page->getCount() < 0)

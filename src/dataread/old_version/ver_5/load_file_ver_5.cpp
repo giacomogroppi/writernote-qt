@@ -43,7 +43,7 @@ int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
         return ERROR;
 
     if(LoadImg){
-        const auto res_img = _doc->m_img->load_img(reader, len_img);
+        const auto res_img = _doc->load_img(reader, len_img);
         if(res_img != fromimage::load_res_img::ok){
             return ERROR;
         }
@@ -51,7 +51,7 @@ int xmlstruct::load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        const auto res = _doc->m_pdf->load_pdf(reader, static_cast<int>(len_pdf), *_doc->datatouch);
+        const auto res = _doc->load_pdf(reader, static_cast<int>(len_pdf), *_doc);
         if(res != frompdf::ok)
             return ERROR;
     }

@@ -244,9 +244,9 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     if(err != OK)
         goto free_;
 
-    this->_doc->datatouch->triggerNewView(-1, true);
+    this->_doc->triggerNewView(-1, true);
 
-    _doc->datatouch->triggerVisibility(Page::getHeight() * _doc->datatouch->lengthPage());
+    _doc->triggerVisibility(Page::getHeight() * _doc->lengthPage());
     return OK;
 
     free_:
@@ -334,7 +334,7 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
         return ERROR;
 
     if(LoadImg){
-        res_img = doc->m_img->load_img(singleReader, len_img);
+        res_img = doc->load_img(singleReader, len_img);
         if(res_img != fromimage::load_res_img::ok){
             return ERROR;
         }
@@ -342,7 +342,7 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
 
 #ifdef PDFSUPPORT
     if(LoadPdf){
-        const auto res = doc->m_pdf->load_pdf(singleReader, static_cast<int>(len_pdf), *doc->datatouch);
+        const auto res = doc->load_pdf(singleReader, static_cast<int>(len_pdf), *doc);
 
         if(res != frompdf::ok)
             return ERROR;

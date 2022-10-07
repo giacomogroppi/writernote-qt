@@ -132,16 +132,16 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
     if(!zip.openFileInZip(NAME_BIN))
         return ERROR;
 
-    if(load_point_first_page(reader, *this->_doc->datatouch) < 0)
+    if(load_point_first_page(reader, *this->_doc) < 0)
         MANAGE_ERR();
 
-    if(read_zoom(reader, _doc->datatouch->_zoom) < 0)
+    if(read_zoom(reader, _doc->_zoom) < 0)
         MANAGE_ERR();
 
     if(read_ctrl(reader, controll) < 0)
         MANAGE_ERR();
 
-    if(read_number_page(reader, lenPage, *_doc->datatouch) < 0)
+    if(read_number_page(reader, lenPage, *_doc) < 0)
         MANAGE_ERR();
 
     size_t seek[lenPage];
@@ -149,7 +149,7 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
     if(reader.read_by_size(seek, sizeof(size_t) * lenPage))
         MANAGE_ERR();
 
-    if(xmlstruct_create_thread(zip, lenPage, seek, _doc->datatouch, ver_stroke) < 0)
+    if(xmlstruct_create_thread(zip, lenPage, seek, _doc, ver_stroke) < 0)
         MANAGE_ERR();
 
     zip.dealloc_file();

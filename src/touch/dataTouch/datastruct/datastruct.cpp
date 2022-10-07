@@ -37,7 +37,7 @@ void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
     }
 
     this->triggerVisibility(size);
-    this->pageVisible = -1;
+    this->_pageVisible = -1;
     (void)this->getFirstPageVisible();
 }
 
@@ -46,7 +46,7 @@ void datastruct::increaseZoom(const double delta, const QSize &size)
     this->_zoom += delta;
     this->adjustAll(size);
     this->triggerVisibility(size.height());
-    this->pageVisible = -1;
+    this->_pageVisible = -1;
 }
 
 void datastruct::drawIfInside(const QRect &area)
@@ -63,20 +63,10 @@ void datastruct::drawIfInside(const QRect &area)
     }
 }
 
-datastruct::datastruct(frompdf *m_pdf, fromimage *m_img)
+datastruct::datastruct()
 {
-    this->_pdf = m_pdf;
-    this->_img = m_img;
-    _last_translation = QPointF(0, 0);
-
-    pthread_mutex_init(&_changeIdMutex, nullptr);
-    pthread_mutex_init(&_changeAudioMutex, nullptr);
-}
-
-datastruct::~datastruct()
-{
-    pthread_mutex_destroy(&_changeIdMutex);
-    pthread_mutex_destroy(&_changeAudioMutex);
+    _last_translation = QPointF(0., 0.);
+    _zoom = 1.;
 }
 
 void datastruct::triggerIfNone(int m_pos_ris)
@@ -87,14 +77,10 @@ void datastruct::triggerIfNone(int m_pos_ris)
     }
 }
 
-void datastruct::reset()
+void datastruct::reset_touch()
 {
-    this->_page.clear();
-#ifdef PDFSUPPORT
-    this->_pdf->reset_pdf();
-#endif
-    this->_img->reset_img();
-    this->pageVisible = -1;
+    _page.clear();
+    _pageVisible = -1;
     _pointFirstPage = QPointF(0, 0);
     _zoom = 1.;
 }
@@ -128,7 +114,7 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
     }
 
     dest._zoom = src._zoom;
-    dest.pageVisible = src.pageVisible;
+    dest._pageVisible = src._pageVisible;
     dest._pointFirstPage = src._pointFirstPage;
 
     dest._last_translation = src._last_translation;
@@ -220,7 +206,7 @@ void datastruct::adjustAll(const QSize &size)
 */
 void datastruct::repositioning()
 {
-    if(isempty())
+    if(isempty_touch())
         return;
 
     QPointF point = this->getPointFirstPageNoZoom();
@@ -254,13 +240,7 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
     W_ASSERT(_pointFirstPage.y() + point.y() - prec <= 0.);
 
     this->_pointFirstPage += point;
-    this->pageVisible = -1;
-
-#ifdef PDFSUPPORT
-    _pdf->translation_pdf(point);
-#endif
-
-    _img->move_img(point);
+    this->_pageVisible = -1;
 
     if(likely(heightView > 0)){
         this->triggerVisibility(heightView);
@@ -334,23 +314,23 @@ void datastruct::removePointIndex(
 
 }
 
-void datastruct::removePage(const int page)
+void datastruct::removePage(const int pageIndex)
 {
     int i, len;
     len = this->lengthPage();
 
-    W_ASSERT(page >= 0 && page < len);
+    W_ASSERT(pageIndex >= 0 && pageIndex < len);
 
-    this->_page.removeAt(page);
+    this->_page.removeAt(pageIndex);
 
     len --;
 
-    for(i = page; i < len; i++){
-        auto &_page = at_mod(i);
-        _page.setCount(i + 1);
+    for(i = pageIndex; i < len; i++){
+        auto &page = at_mod(i);
+        page.setCount(i + 1);
     }
 
-    this->pageVisible = -1;
+    this->_pageVisible = -1;
 }
 
 void datastruct::moveToPage(int newPage)

@@ -37,7 +37,7 @@ static void AppendAll(
     int i, pageMod, lenPoint;
     point_s *point;
     qint64 time;
-    const QPointF &PointFirstPage = doc.datatouch->getPointFirstPage();
+    const QPointF &PointFirstPage = doc.getPointFirstPage();
 
     if(unlikely(strokeToAppend.isEmpty()))
         return;
@@ -59,10 +59,10 @@ static void AppendAll(
     }else{
         const auto &stroke = strokeToAppend.merge();
 
-        pageMod = doc.datatouch->appendStroke(stroke);
+        pageMod = doc.appendStroke(stroke);
 
         core::get_main_window()->_preview_widget->mod(pageMod);
-        doc.datatouch->at_mod(pageMod).triggerRenderImage(
+        doc.at_mod(pageMod).triggerRenderImage(
                 static_cast<int>(time),
                 false
         );
@@ -117,7 +117,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     eventType = event->type();
 
-    cbool isOut = is_out(getDoc()->datatouch, pointTouch);
+    cbool isOut = is_out(getDoc(), pointTouch);
 
     WDebug(tabletDebug, event->type() << convert(event->type()));
 
@@ -333,9 +333,9 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     cbool highlighter = is_rubber(event, _method);
     const QPointF &pointTouch = event->position();
     const auto *data = this->getDoc();
-    const auto prop = data->datatouch->getZoom() == PROP_RESOLUTION ?
-                data->datatouch->getZoom() :
-                data->datatouch->getZoom() - .0000001;
+    const auto prop = data->getZoom() == PROP_RESOLUTION ?
+                data->getZoom() :
+                data->getZoom() - .0000001;
 
     size = event->pressure();
     alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;

@@ -64,12 +64,12 @@ TabletCanvas::~TabletCanvas()
 
 void TabletCanvas::restoreO()
 {
-    if(getDoc()->datatouch->isempty()){
-        this->getDoc()->datatouch->newPage(this->_sheet->WhatIsSelected());
+    if(getDoc()->isempty_touch()){
+        this->getDoc()->newPage(this->_sheet->WhatIsSelected());
         return;
     }
 
-    this->getDoc()->datatouch->repositioning();
+    this->getDoc()->repositioning();
     update();
 
     lastpointtouch = false;
@@ -238,12 +238,12 @@ static void loadLastMethod(TabletCanvas *p)
 
 void TabletCanvas::triggerNewView(cbool all)
 {
-    getDoc()->datatouch->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);
+    getDoc()->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
 void TabletCanvas::triggerNewView(const QList<int> &Page, cbool all)
 {
-    this->getDoc()->datatouch->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
+    this->getDoc()->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

@@ -6,47 +6,32 @@
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
-void Document::init()
+Document::Document() :  datastruct(),
+#ifdef PDFSUPPORT
+                        frompdf(),
+#endif // PDFSUPPORT
+                        fromimage()
 {
-    WNew(m_img, fromimage, ());
-    WNew(m_pdf, frompdf, ());
-    WNew(datatouch, datastruct, (m_pdf, m_img));
-}
-
-Document::Document()
-{
-    init();
 }
 
 Document::Document(const Document &src)
 {
-    if(m_img || m_pdf || datatouch){
-        this->~Document();
-    }
-
-    init();
     Document::copy(src, *this);
 }
 
 Document::~Document()
 {
-    WDelete(m_pdf);
-    WDelete(datatouch);
-    WDelete(m_img);
-
-    m_pdf = NULL;
-    datatouch = NULL;
-    m_img = NULL;
 }
 
 void Document::copy(const Document &src, Document &dest)
 {
     dest.audio_position_path = src.audio_position_path;
-    datastruct::copy(*src.datatouch, *dest.datatouch);
+
+    datastruct::copy(src, dest);
 #ifdef PDFSUPPORT
-    frompdf::copy_pdf(*src.m_pdf, *dest.m_pdf);
+    frompdf::copy_pdf(src, dest);
 #endif //PDFSUPPORT
-    fromimage::copy_img(*src.m_img, *dest.m_img);
+    fromimage::copy_img(src, dest);
     dest.se_registato = src.se_registato;
 }
 
@@ -54,11 +39,11 @@ size_t Document::createSingleControll() const
 {
     size_t ctrl = 0;
     uint counterPage, counterStroke;
-    const uint lenPage = datatouch->lengthPage();
+    const uint lenPage = lengthPage();
     uint lenStroke;
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
-        const Page &page = datatouch->at(counterPage);
+        const Page &page = at(counterPage);
         lenStroke = page.lengthStroke();
 
         for(counterStroke = 0; counterStroke < lenStroke; counterStroke++){
@@ -76,19 +61,19 @@ void Document::reset()
 
     this->audio_data.clear();
 
-    this->datatouch->reset();
+    reset_touch();
 #ifdef PDFSUPPORT
-    this->m_pdf->reset_pdf();
+    reset_pdf();
 #endif // PDFSUPPORT
-    this->m_img->reset_img();
+    reset_img();
 }
 
 void Document::cleanAudio()
 {
-    const auto lenPage = datatouch->lengthPage();
+    const auto lenPage = lengthPage();
 
     for(auto i = 0; i < lenPage; i++){
-        Page &page = this->datatouch->at_mod(i);
+        Page &page = this->at_mod(i);
         const auto len = page.lengthStroke();
 
         for(auto k = 0; k < len; k++){

@@ -7,15 +7,15 @@
 static int checkSpeed(const Document &first,
                       const Document &second){
     int i, counterPage;
-    const int lenPage = first.datatouch->lengthPage();
+    const int lenPage = first.lengthPage();
     int len;
 
-    if(lenPage != second.datatouch->lengthPage())
+    if(lenPage != second.lengthPage())
         return LEN;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        const Page &page1 = first.datatouch->at(counterPage);
-        const Page &page2 = second.datatouch->at(counterPage);
+        const Page &page1 = first.at(counterPage);
+        const Page &page2 = second.at(counterPage);
 
         len = page1.lengthStroke();
         if(len != page2.lengthStroke())
@@ -88,9 +88,9 @@ int checksimilecopybook(const Document &doc1,
                         const Document &doc2)
 {
     int res;
-    if(doc1.m_img->length_img() != doc2.m_img->length_img())
+    if(doc1.length_img() != doc2.length_img())
         return LEN;
-    if(doc1.m_pdf->length_pdf() != doc2.m_pdf->length_pdf())
+    if(doc1.length_pdf() != doc2.length_pdf())
         return LEN;
 
     res = checkSpeed(doc1, doc2);

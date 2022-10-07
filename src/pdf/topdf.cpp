@@ -12,7 +12,7 @@
 topdf::topdf(const QString &path, const Document &doc)
 {
     uint i;
-    const uint len = doc.datatouch->lengthPage();
+    const uint len = doc.lengthPage();
 
     QList<int> page;
 
@@ -20,16 +20,16 @@ topdf::topdf(const QString &path, const Document &doc)
 
     WNew(data, Document, (doc));
 
-    this->data->datatouch->triggerNewView(-1, true);
+    this->data->triggerNewView(-1, true);
 
     for(i = 0; i < len; i++){
-        if(data->datatouch->at(i).getImg().isNull())
+        if(data->at(i).getImg().isNull())
             page.append((int)i);
     }
 
-    data->datatouch->triggerNewView(page, -1, true);
+    data->triggerNewView(page, -1, true);
 
-    Q_ASSERT(doc.datatouch->lengthPage() == data->datatouch->lengthPage());
+    Q_ASSERT(doc.lengthPage() == data->lengthPage());
 }
 
 topdf::~topdf()
@@ -39,14 +39,14 @@ topdf::~topdf()
 
 static inline void newpage(Document *data, const double tmp)
 {
-    data->datatouch->scala_all(QPointF(0, -tmp), INT_MAX);
+    data->scala_all(QPointF(0, -tmp), INT_MAX);
 }
 
 bool topdf::createpdf(cbool withPdf)
 {
-    const uint lenpage = data->datatouch->lengthPage();
+    const uint lenpage = data->lengthPage();
     uint i;
-    const QPointF pointData = data->datatouch->getPointFirstPage();
+    const QPointF pointData = data->getPointFirstPage();
     uchar ret = 1;
     this->translate();
 
@@ -61,7 +61,7 @@ bool topdf::createpdf(cbool withPdf)
 #endif
 
     const int width_pdf = pdfWriter.width();
-    const double size_orizzontale = data->datatouch->currentWidth();
+    const double size_orizzontale = data->currentWidth();
     const double size_verticale = Page::getProportion() * size_orizzontale;
     const double delta = double(width_pdf) / double(size_orizzontale);
 
@@ -70,7 +70,7 @@ bool topdf::createpdf(cbool withPdf)
 
 
     for (i = 0; i < lenpage; i++) {
-        const auto &img = data->datatouch->at(i).getImg();
+        const auto &img = data->at(i).getImg();
         const auto targetRect = QRect(0, 0, pdfWriter.width(), pdfWriter.height());
 
         painter.drawImage(targetRect, img);
@@ -89,7 +89,7 @@ bool topdf::createpdf(cbool withPdf)
     }
 
     release:
-    data->datatouch->scala_all(pointData, INT_MAX);
+    data->scala_all(pointData, INT_MAX);
     return ret;
 }
 
@@ -98,7 +98,7 @@ void MainWindow::on_actiontopdf_triggered()
     QByteArray path_pdf;
     const Document *doc = _canvas->getDoc();
 
-    if(doc->datatouch->isempty())
+    if(doc->isempty_touch())
         return user_message(QApplication::tr("There is nothing to convert to pdf"));
 
     if(!qfilechoose::getFileForSave(path_pdf, TYPEFILEPDF))

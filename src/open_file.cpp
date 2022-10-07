@@ -100,7 +100,7 @@ void MainWindow::openFile(const char *pos)
     // check if is pdf or we need to save the current document
     if(IS_PRESENT_IN_LIST(fileName, ".pdf")){
 #ifdef PDFSUPPORT
-        _canvas->getDoc()->m_pdf->addPdf(fileName, nullptr, this->m_path, *_canvas->getDoc()->datatouch);
+        _canvas->getDoc()->addPdf(fileName, nullptr, this->m_path, *_canvas->getDoc());
         this->_preview_widget->changeDocument();
 #else
         user_message("Pdf support is not enable in this version");
@@ -136,10 +136,10 @@ void MainWindow::openFile(const char *pos)
         if(xmlstruct::manageMessage(res)){
             Document::copy(curr, *this->getCurrentDoc());
 
-            _canvas->getDoc()->datatouch->triggerIfNone(-1);
+            _canvas->getDoc()->triggerIfNone(-1);
             aggiornotestiriascolto(this);
             _canvas->updatePageCount();
-            _canvas->getDoc()->datatouch->triggerVisibility(_canvas->height());
+            _canvas->getDoc()->triggerVisibility(_canvas->height());
             _preview_widget->changeDocument();
             contrUi();
             _canvas->loadpixel();

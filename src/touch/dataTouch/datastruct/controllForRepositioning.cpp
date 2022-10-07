@@ -1,13 +1,13 @@
 #include "datastruct.h"
 
-/*
+/**
  * this function only manage the case in which
  * the first point is positive
 */
-void datastruct::controllForRepositioning(){
-    if(isempty())
+void datastruct::controllForRepositioning()
+{
+    if (isempty_touch())
         return;
-
 
     QPointF point = this->getPointFirstPage(), translation;
 

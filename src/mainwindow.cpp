@@ -171,7 +171,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     mobile::make_ui(this);
 
-    _canvas->getDoc()->datatouch->triggerVisibility(Page::getHeight() * _canvas->getDoc()->datatouch->lengthPage());
+    _canvas->getDoc()->triggerVisibility(Page::getHeight() * _canvas->getDoc()->lengthPage());
     this->setStyleSheet(WStyle::get_style());
 }
 
@@ -183,7 +183,7 @@ MainWindow::~MainWindow()
     setting.endGroup();
 
     delete ui;
-    ui = NULL;
+    ui = nullptr;
 }
 
 bool MainWindow::event(QEvent *event)
@@ -339,7 +339,7 @@ void MainWindow::on_actionUndu_triggered()
 /* restore file to the original position (0, 0) */
 void MainWindow::on_actionrestore_button_triggered()
 {
-    datastruct *data = _canvas->getDoc()->datatouch;
+    datastruct *data = _canvas->getDoc();
     data->triggerNewView(-1, true);
     data->triggerVisibility(_canvas->height());
 
@@ -351,7 +351,7 @@ void MainWindow::on_actionrestore_button_triggered()
 /* new page */
 void MainWindow::on_actionnewPage_triggered()
 {
-    this->_canvas->getDoc()->datatouch->newPage(_canvas->_sheet->WhatIsSelected());
+    this->_canvas->getDoc()->newPage(_canvas->_sheet->WhatIsSelected());
     _canvas->call_update();
     _preview_widget->newPage();
     _canvas->updatePageCount();
@@ -366,7 +366,7 @@ void MainWindow::on_actionPen_or_Mouse_triggered()
 void MainWindow::on_actionRemove_current_PDF_triggered()
 {
 #ifdef PDFSUPPORT
-    _canvas->getDoc()->m_pdf->reset_pdf();
+    _canvas->getDoc()->reset_pdf();
 #endif // PDFSUPPORT
 }
 
@@ -377,7 +377,7 @@ void MainWindow::on_actionFull_Screen_triggered()
 
 void MainWindow::removePage(int index)
 {
-    auto *data = this->getCurrentDoc()->datatouch;
+    auto *data = this->getCurrentDoc();
     data->removePage(index);
     this->_preview_widget->changeDocument();
     this->_canvas->updatePageCount();

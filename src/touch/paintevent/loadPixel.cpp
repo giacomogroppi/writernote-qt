@@ -41,10 +41,10 @@ void TabletCanvas::load(QPainter &painter,
     const qint64 m_pos_ris      = (is_play) ? (dataPoint.parent->m_audioplayer->getPositionSecond()) : -1;
     static int last_m_pos_ris   = -1;
 
-    int lenPage                     = data->datatouch->lengthPage();
-    const QPointF &PointFirstPage   = data->datatouch->getPointFirstPageNoZoom();
-    const auto zoom                 = data->datatouch->getZoom();
-    const QSize sizeRect            = createSizeRect(data->datatouch, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
+    int lenPage                     = data->lengthPage();
+    const QPointF &PointFirstPage   = data->getPointFirstPageNoZoom();
+    const auto zoom      = data->getZoom();
+    const QSize sizeRect            = createSizeRect(data, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
     StrokePre &strokeToDraw = __tmp;
 
@@ -63,12 +63,12 @@ void TabletCanvas::load(QPainter &painter,
 
 #ifdef PDFSUPPORT
     if(likely(withPdf))
-        data->m_pdf->draw_pdf(painter, dataPoint.m, dataPoint.IsExportingPdf, data->datatouch->currentWidth());
+        data->draw_pdf(painter, dataPoint.m, dataPoint.IsExportingPdf, data->currentWidth());
 #else
     Q_UNUSED(withPdf);
 #endif
 
-    data->m_img->draw_img(painter);
+    data->draw_img(painter);
 
     /* stroke not already add to page */
     drawSingleStroke(strokeToDraw, painter);
@@ -80,13 +80,13 @@ void TabletCanvas::load(QPainter &painter,
         // the idea is to trigger this view only when
         // the second has change
         if(likely(last_m_pos_ris != m_pos_ris)){
-            data->datatouch->newViewAudio(m_pos_ris);
+            data->newViewAudio(m_pos_ris);
             last_m_pos_ris = m_pos_ris;
         }
     }
 
     if(likely(!dataPoint.IsExportingPdf)){
-        counterPage = data->datatouch->getFirstPageVisible();
+        counterPage = data->getFirstPageVisible();
     }
     else{
         counterPage = 0;
@@ -95,14 +95,14 @@ void TabletCanvas::load(QPainter &painter,
     constexpr auto debugPageImg = false;
     WDebug(debugPageImg, __func__ << "Start draw img from" << counterPage);
     for(; counterPage < lenPage; counterPage ++){
-        const Page &page = data->datatouch->at(counterPage);
+        const Page &page = data->at(counterPage);
 
         if(!page.isVisible() && likely(!dataPoint.IsExportingPdf)){
             WDebug(debugPageImg, __func__ << "Page at index" << counterPage << "not visible: Break");
             continue;
         }
 
-        singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, data->datatouch->getZoom());
+        singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, data->getZoom());
     }
 
     if(unlikely(!dataPoint.parent))
@@ -179,15 +179,14 @@ static void loadSheet(
         const double    delta)
 {
     const Page *__page;
-    const datastruct *data = doc.datatouch;
-    const auto pointFirstPage = data->getPointFirstPage();
-    const int lenPage = data->lengthPage();
-    const double zoom = data->getZoom();
+    const auto pointFirstPage = doc.getPointFirstPage();
+    const int lenPage = doc.lengthPage();
+    const double zoom = doc.getZoom();
     const Stroke *__stroke;
     int counterPage, lenPoint;
 
     for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        __page = &data->at(counterPage);
+        __page = &doc.at(counterPage);
         __stroke = &__page->get_stroke_page();
 
         lenPoint = __stroke->length();

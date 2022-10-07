@@ -1,5 +1,6 @@
 #include "topdf.h"
 
-void topdf::translate(){
-    data->datatouch->repositioning();
+void topdf::translate()
+{
+    data->repositioning();
 }

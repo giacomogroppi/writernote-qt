@@ -10,6 +10,7 @@
 #include "pthread.h"
 #include "utils_datastruct.h"
 #include "touch/object_finder/model/model.h"
+#include "core/WMutex.h"
 
 /*
     IDVERTICALE -> linee verticali
@@ -34,22 +35,19 @@ class fromimage;
 class datastruct
 {
 private:
-    frompdf *_pdf;
-    fromimage *_img;
-
     // = 2. we have max zoom
     double _zoom = 1.;
     QPointF _last_translation;
     QVector<Page> _page;
-    QPointF _pointFirstPage = QPointF(0, 0);
+    QPointF _pointFirstPage = QPointF(0., 0.);
 
     // todo --> move this mutex to page
-    pthread_mutex_t _changeIdMutex;
-    pthread_mutex_t _changeAudioMutex;
+    WMutex _changeIdMutex;
+    WMutex _changeAudioMutex;
 
     bool userWrittenSomething(uint frompage);
 
-    bool isOkTranslate(const QPointF &point, cbool isZoom) const;
+    [[nodiscard]] bool isOkTranslate(const QPointF &point, cbool isZoom) const;
     void adjustWidth(cdouble width);
     void adjustHeight(cdouble height);
 
@@ -57,12 +55,12 @@ private:
 
     void newPage(int num);
 
-    int pageVisible = -1;
+    int _pageVisible = -1;
 
     void __changeId(int indexPoint, Stroke &stroke, Page &page, cbool useThreadSafe);
 public:
-    datastruct(frompdf *m_pdf, fromimage *m_img);
-    ~datastruct();
+    datastruct();
+    ~datastruct() = default;
 
     void triggerNewView(const QList<int> &Page, int m_pos_ris, cbool all);
     void triggerNewView(int m_pos_ris, cbool all);
@@ -124,18 +122,12 @@ public:
     [[nodiscard]] constexpr QPointF adjustPointReverce(const QPointF &pointDatastruct) const;
     [[nodiscard]] constexpr QPointF adjustPoint(const QPointF &pointRealTouch) const;
 
-    [[nodiscard]] bool isempty() const;
-
-
-    void repositioning();
-
-    void scala_all(const QPointF &point, int heightView = -1);
-
-    void reset();
+    [[nodiscard]] bool isempty_touch() const;
+    void reset_touch();
     void triggerVisibility(cdouble viewSize);
     [[nodiscard]] double biggerx() const noexcept;
 
-    bool needToCreateNewSheet() const;
+    [[nodiscard]] bool needToCreateNewSheet() const;
 
     [[nodiscard]] double biggery() const noexcept;
 
@@ -148,11 +140,11 @@ public:
     [[nodiscard]] point_s at_draw_page(cint indexPoint, const Page &Page) const;
     static point_s at_draw_page(cint indexPoint, const Page &Page, const QPointF &PointFirstPageWithZoom, cdouble zoom);
 
-    __fast const Page &     lastPage() const;
+    __fast [[nodiscard]] const Page &     lastPage() const;
 
 
     [[nodiscard]] int lengthPage() const{ return _page.length(); }
-    void newPage(const n_style style);
+    void newPage(n_style style);
 
     [[nodiscard]] QPointF get_size_page() const{ return QPointF(Page::getWidth(), Page::getHeight()); }
 
@@ -180,6 +172,10 @@ public:
 
     friend class xmlstruct;
     friend class TestingCore;
+
+protected:
+    void repositioning();
+    void scala_all(const QPointF &point, int heightView = -1);
 };
 
 inline void datastruct::triggerVisibility(cdouble viewSize)
@@ -320,14 +316,14 @@ inline int datastruct::getFirstPageVisible() const
      * is constant is because
      *  we don't want QList to copy all pages
      *  when they are shared. */
-    int &__pageVisible = (int &) pageVisible;
+    int &__pageVisible = (int &) _pageVisible;
     int i, len;
     int find;
 
     len = this->lengthPage();
     find = 0;
 
-    if(unlikely(pageVisible < 0)){
+    if(unlikely(_pageVisible < 0)){
         for(i = 0; i < len; i++){
             if(at(i).isVisible()){
                 __pageVisible = i;
@@ -601,22 +597,21 @@ constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &poi
     return (pointDatastruct + this->getPointFirstPageNoZoom()) * getZoom();
 }
 
-force_inline bool datastruct::isempty() const
+force_inline bool datastruct::isempty_touch() const
 {
-    return _page.isEmpty();
+    return unlikely(_page.isEmpty());
 }
 
 force_inline void datastruct::setVisible(int from, int to)
 {
-    int i, len;
-    len = this->lengthPage();
-
     W_ASSERT(from <= to);
+    int i = 0;
 
-    for(i = 0; i < len; i++){
-        at_mod(i).setVisible(i >= from && i <= to);
+    for(auto &page : _page){
+        page.setVisible(i >= from and i <= to);
+        i++;
     }
 
-    this->pageVisible = -1;
+    this->_pageVisible = -1;
 }
 

@@ -23,8 +23,8 @@ static size_t savefile_get_size_file(const Document *doc)
     s += sizeof(int) + doc->audio_position_path.length();
     s += sizeof(unsigned);          // len_img
     s += sizeof(unsigned);          // len_pdf
-    s += doc->m_pdf->get_size_file_pdf();
-    s += doc->m_img->get_size_file_img();
+    s += doc->get_size_file_pdf();
+    s += doc->get_size_file_img();
     return s;
 }
 
@@ -61,15 +61,15 @@ int savefile::savefile_check_file(cbool saveImg)
 
     writer.write_string(_doc->audio_position_path.toUtf8().constData(), _doc->audio_position_path.size());
 
-    writer.write_object(_doc->m_pdf->length_pdf());
-    writer.write_object(_doc->m_img->length_img());
+    writer.write_object(_doc->length_pdf());
+    writer.write_object(_doc->length_img());
 
-    res_img = _doc->m_img->save_metadata_img(writer);
+    res_img = _doc->save_metadata_img(writer);
     if(res_img != fromimage::load_res_img::ok)
         return ERROR;
 
 #ifdef PDFSUPPORT
-    res_pdf = _doc->m_pdf->save_metadata_pdf(writer);
+    res_pdf = _doc->save_metadata_pdf(writer);
     if(res_pdf != frompdf::load_res_pdf::ok)
         return ERROR;
 #endif // PDFSUPPORT

@@ -21,17 +21,17 @@ static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *see
 
     size += sizeof(double) * 2;         // first point
 
-    size += sizeof(doc.datatouch->getZoom());   // zoom
+    size += sizeof(doc.getZoom());   // zoom
     size += sizeof(size_t);                     // controll
 
     {
-        len = doc.datatouch->lengthPage();
+        len = doc.lengthPage();
         size += sizeof(int);            // number of page saved
         size += sizeof(size_t) * len;   // size seek array
     }
 
     for(i = 0; i < len; i++){
-        const auto page = doc.datatouch->at(i);
+        const auto &page = doc.at(i);
         seek[i] = size;
         size += savefile_get_size_page(page, saveImg);
     }
@@ -42,7 +42,7 @@ static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *see
 static int savefile_save_seek(Document *doc, WZipWriterSingle &writer, size_t *seek)
 {
     W_ASSERT(doc);
-    const int lenPage = doc->datatouch->lengthPage();
+    const int lenPage = doc->lengthPage();
     writer.write_object(lenPage);
 
     static_assert(sizeof(*seek) == sizeof(size_t));
@@ -93,7 +93,7 @@ static int savefile_wait_thread(pthread_t *thread, int num)
 static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writer, size_t *seek, cbool saveImg)
 {
     int i;
-    const auto l = doc->datatouch->lengthPage();
+    const auto l = doc->lengthPage();
     pthread_t thread[l];
     struct savefile_thread_data data_thread[l];
     WZipWriterMulti multi(nullptr, nullptr, l, seek, writer);
@@ -105,7 +105,7 @@ static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writ
         data_thread[i] = {
             ._writer    = multi.get_writer(i),
             ._saveImg   = saveImg,
-            ._page      = &doc->datatouch->at(i)
+            ._page      = &doc->at(i)
         };
 
         pthread_create(&thread[i], nullptr, salvafile_thread_save, &data_thread[i]);
@@ -124,10 +124,10 @@ static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writ
 int savefile::salvabinario(cbool saveImg)
 {
     const size_t controll = _doc->createSingleControll();
-    const auto &pointInit = _doc->datatouch->getPointFirstPageNoZoom();
+    const auto &pointInit = _doc->getPointFirstPageNoZoom();
     const double init[2] = { pointInit.x(), pointInit.y() };
     WZipWriterSingle writer;
-    size_t seek[_doc->datatouch->lengthPage()];
+    size_t seek[_doc->lengthPage()];
     const auto sizeFile = savefile_get_size_binary(*_doc, saveImg, seek);
 
     writer.init(nullptr, 0, sizeFile);
@@ -137,14 +137,14 @@ int savefile::salvabinario(cbool saveImg)
     static_assert(sizeof(init) == sizeof(double) * 2);
     writer.write(init, sizeof(init));
 
-    writer.write_object(_doc->datatouch->getZoom());
+    writer.write_object(_doc->getZoom());
 
     writer.write_object(controll);
 
     savefile_save_seek(this->_doc, writer, seek);
 
 #ifdef DEBUGINFO
-    if(_doc->datatouch->lengthPage())
+    if(_doc->lengthPage())
         W_ASSERT(writer.get_offset() == seek[0]);
 #endif // DEBUGINFO
 

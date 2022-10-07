@@ -6,13 +6,9 @@
 #define DATASTRUCT_THREAD_MAX 16
 
 struct DatastructNewView{
-    Page     *m_page;
-    QList<Stroke>   *m_stroke;
-    int base;
-
-    int time;
-
-    pthread_mutex_t *mutex;
+    Page            *m_page;
+    int             time;
+    WMutex          &mutex;
 };
 
 void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> &save, Page *page)
@@ -37,23 +33,23 @@ void drawStroke(Page *page, QVector<int> &pos, int pos_audio)
 
 void *__search_new_view(void *__data)
 {
-    DataPrivateMuThread *_data = (DataPrivateMuThread *)__data;
-    DatastructNewView *_private_data = (DatastructNewView *)_data->extra;
+    auto *_data = static_cast<DataPrivateMuThread *>(__data);
+    auto *_private_data = static_cast<DatastructNewView *>(_data->extra);
     Page *_page = _private_data->m_page;
     QVector<int> _index;
 
     __search_for_stroke(_data, _private_data->time - 1, _index, _page);
 
     // block other thread
-    pthread_mutex_lock(_private_data->mutex);
+    _private_data->mutex.lock();
 
     // draw the new stroke
     drawStroke(_page, _index, _private_data->time - 1);
 
     // release other thread
-    pthread_mutex_unlock(_private_data->mutex);
+    _private_data->mutex.unlock();
 
-    return NULL;
+    return nullptr;
 }
 
 void datastruct::newViewAudio(int newTime)
@@ -66,7 +62,11 @@ void datastruct::newViewAudio(int newTime)
     DataPrivateMuThread dataThread[DATASTRUCT_THREAD_MAX];
     pthread_t thread[DATASTRUCT_THREAD_MAX];
 
-    DatastructNewView extra;
+    DatastructNewView extra = {
+            .m_page = nullptr,
+            .time = newTime,
+            .mutex = _changeAudioMutex
+    };
 
     if(unlikely(newTime == 0)){
         for(auto &ref : _page){
@@ -74,8 +74,6 @@ void datastruct::newViewAudio(int newTime)
         }
     }
     qDebug() << "Call with time" << newTime;
-    extra.mutex = &_changeAudioMutex;
-    extra.time = newTime;
 
     for(; index < len; index ++){
         extra.m_page = (Page *)&at(index);

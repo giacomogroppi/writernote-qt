@@ -157,7 +157,7 @@ bool TabletCanvas::event(QEvent *event)
     bool zoomChange = false;
 
     if(event->type() == QEvent::Gesture)
-        return gestureEvent(static_cast<QGestureEvent*>(event));
+        return gestureEvent(dynamic_cast<QGestureEvent*>(event));
     return QWidget::event(event);
 
     const auto WE = WEvent(event);    
@@ -266,7 +266,7 @@ ridefine:
         const double multiplier = distanceSelected / tmp_distance_right_left;
 
         _pointMiddle = PointMiddle(point[0], point[1]);
-        needToResize = _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, getDoc()->datatouch);
+        needToResize = _zoom->zoom(_pointMiddle, multiplier, zoomChange, size, maxSize, getDoc());
     }
 
     lastpointzoom[0] = point[0];
@@ -321,7 +321,7 @@ void TabletCanvas::pinchTriggered(QPinchGesture *event)
 
     needToResize = this->_zoom->zoom(pointMiddle, delta,
                                     zoomChange, this->_pixmap.size(), this->size(),
-                                    this->getDoc()->datatouch);
+                                    this->getDoc());
 
     if(needToResize)
         this->callResizeEvent();

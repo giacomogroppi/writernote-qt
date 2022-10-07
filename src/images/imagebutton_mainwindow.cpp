@@ -23,7 +23,7 @@ void MainWindow::on_actioninsertImage_triggered()
     }
 
     pos = "";
-    const auto res = _canvas->getDoc()->m_img->addImage(pos, nullptr, this->m_path);
+    const auto res = _canvas->getDoc()->addImage(pos, nullptr, this->m_path);
 
     if(res < 0){
         return dialog_critic(QApplication::tr("We had some problems importing the image"));

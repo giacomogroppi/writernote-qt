@@ -22,7 +22,7 @@ enum MainWindow::n_need_save
 
     if(xml.getPath() == ""){
         WDebug(debugNeedSave, "Path empty");
-        if(doc->datatouch->userWrittenSomething()){
+        if(doc->userWrittenSomething()){
             WDebug(debugNeedSave, "Need to save [1]");
             return n_need_save::need_save;
         }
@@ -39,7 +39,7 @@ enum MainWindow::n_need_save
         return n_need_save::unable_load;
     }
 
-    if(!datastruct::userWrittenSomething(*doc->datatouch, *tmp_read.datatouch)){
+    if(!datastruct::userWrittenSomething(*doc, tmp_read)){
         WDebug(debugNeedSave, "Don't need to save [2]");
         return n_need_save::no;
     }

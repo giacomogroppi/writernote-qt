@@ -14,20 +14,20 @@
 #define CURRENT_VERSION_CURRENT_TITLE 9
 #define MIN_VERSION_CURRENT_TITLE 2
 
-class Document{
+class Document : public datastruct,
+#ifdef PDFSUPPORT
+                 public frompdf,
+#endif // PDFSUPPORT
+                 public fromimage
+        {
 private:
-    void init();
 public:
     [[nodiscard]] size_t createSingleControll() const;
 
     [[nodiscard]] bool isEmpty() const;
 
-    frompdf *m_pdf;
-    fromimage *m_img;
-
     QString audio_position_path = "";
 
-    datastruct *datatouch;
     void reset();
     void cleanAudio();
 
@@ -50,5 +50,9 @@ public:
 
 force_inline bool Document::isEmpty() const
 {
-    return datatouch->isempty();
+    const auto res =
+            isempty_touch() and
+            frompdf::length_pdf() == 0 and
+            fromimage::length_img() == 0;
+    return res;
 }

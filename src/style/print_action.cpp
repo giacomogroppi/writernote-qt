@@ -16,7 +16,7 @@ void MainWindow::on_actionPrint_triggered()
     QPainter painter;
     const Document *doc = _canvas->getDoc();
 
-    const double size_orizzontale = doc->datatouch->biggerx();
+    const double size_orizzontale = doc->biggerx();
     const double delta = (double)printer.width() / (double)size_orizzontale;
 
     DataPaint dataPaint = {
