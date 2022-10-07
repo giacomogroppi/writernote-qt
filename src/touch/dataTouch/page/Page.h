@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QDebug>
 #include "core/WZipWriterSingle.h"
+#include "core/core.h"
 #include "touch/dataTouch/stroke/Stroke.h"
 #include "utils/common_def.h"
 #include "utils/common_script.h"
@@ -486,7 +487,7 @@ force_inline void Page::drawForceColorStroke(
 
         if(!painter->begin(&this->_imgDraw))
             std::abort();
-        painter->setRenderHint(QPainter::Antialiasing, true);
+        core::painter_set_antialiasing(*painter);
     }
 
     this->drawStroke(*painter, stroke, pen, color);

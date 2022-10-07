@@ -169,6 +169,10 @@ void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen
                 false
             );
 
+    W_ASSERT(painter.isActive());
+
+    pen.setColor(stroke.getColor());
+
     if(likely(stroke.is_normal())){
         if(stroke._point.length() == 1)
             return;

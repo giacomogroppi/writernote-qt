@@ -73,7 +73,7 @@ void TabletCanvas::load(QPainter &painter,
         pixmap->fill(Qt::white);
 
     pen.setStyle(Qt::PenStyle::SolidLine);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    core::painter_set_antialiasing(painter);
 
     loadSheet(*data, pen, painter, dataPoint.m);
 

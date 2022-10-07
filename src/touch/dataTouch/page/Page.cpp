@@ -1,4 +1,5 @@
 ﻿#include "Page.h"
+#include "core/core.h"
 #include "log/log_ui/log_ui.h"
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include <QPainter>
@@ -267,13 +268,13 @@ void Page::drawStroke(
     if(unlikely(isRubber)){
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }else if(isHigh){
-        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        core::painter_set_source_over(painter);
     }
 
     stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
 
     if(unlikely(isRubber)){
-        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        core::painter_set_source_over(painter);
     }
 
     painter.setCompositionMode(last_comp_mode);

@@ -4,6 +4,7 @@
 #include "utils/common_script.h"
 #include "utils/platform.h"
 #include "utils/utils.h"
+#include <QPainter>
 
 extern bool __is_mobile_view;
 extern class MainWindow *__private_mainwindow;
@@ -62,7 +63,19 @@ force_inline void set_max_size_as_screen(QWidget *widget)
 bool is_dark_mode();
 QPoint get_pos_start_mouse();
 
-#define TRANSLATION QApplication::tr
+#define TRANSLATION(x) QApplication::tr(x)
+
+inline void painter_set_source_over(QPainter &painter)
+{
+    W_ASSERT(painter.isActive());
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+}
+
+inline void painter_set_antialiasing(QPainter &painter)
+{
+    W_ASSERT(painter.isActive());
+    painter.setRenderHint(QPainter::RenderHint::Antialiasing);
+}
 
 }
 

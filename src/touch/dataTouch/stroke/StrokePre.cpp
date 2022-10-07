@@ -1,4 +1,5 @@
 #include "StrokePre.h"
+#include "core/core.h"
 #include "touch/dataTouch/stroke/stroke_drawer.h"
 
 StrokePre::StrokePre() noexcept :
@@ -65,7 +66,11 @@ void StrokePre::setTime(int time)
 void StrokePre::draw(QPainter &painter)
 {
     const auto &img = dynamic_cast<const QImage &>(*this);
-    painter.drawImage(WImage::rect(), img);
+    const auto target = img.rect();
+
+    W_ASSERT(img.isNull() == false);
+
+    painter.drawImage(target, img);
 }
 
 QColor StrokePre::getColor(double division) const
@@ -89,14 +94,23 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
     QPainter painter;
     auto &img = dynamic_cast<QImage &>(*this);
 
-    W_ASSERT(!img.isNull());
+    W_ASSERT(img.isNull() == false);
 
     painter.begin(&img);
     _point.append(point);
     _pressure.append(press);
 
+    core::painter_set_antialiasing(painter);
+    core::painter_set_source_over(painter);
+
     stroke_drawer::draw_stroke(painter,
                                dynamic_cast<StrokePre &>(*this),
                                pen, prop);
+
+    /*pen.setColor(Qt::black);
+    pen.setWidthF(20);
+    painter.setPen(pen);
+    painter.drawLine(0, 0, img.width(), img.height());*/
     painter.end();
+
 }
