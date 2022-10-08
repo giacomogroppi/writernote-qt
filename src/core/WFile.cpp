@@ -45,6 +45,10 @@ int WFile::fileExist(const QByteArray &to)
 int WFile::readFile(QByteArray &to, const char *pathFile)
 {
     FILE *fp = WFile::open(pathFile, "r");
+
+    if(!fp)
+        return -1;
+
     const auto size = WFile::size(fp);
 
     char data[size];

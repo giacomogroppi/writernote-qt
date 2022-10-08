@@ -8,10 +8,16 @@ class StrokePre: private Stroke, private WImage {
 private:
     WList<point_s>      _point;
     WList<pressure_t>   _pressure;
+
+    WList<point_s>      ::const_iterator   _last_draw_point;
+    WList<pressure_t>   ::const_iterator   _last_draw_press;
+
 #ifdef DEBUGINFO
     bool already_merge = false;
 #endif // DEBUGINFO
 
+    [[nodiscard]] WList<pressure_t>::const_iterator get_last_press() const;
+    [[nodiscard]] WList<point_s>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 public:
     StrokePre() noexcept;
@@ -61,5 +67,17 @@ inline const Stroke &StrokePre::get_stroke_for_draw() const
 {
     W_ASSERT(Stroke::is_complex());
     return *this;
+}
+
+inline WList<pressure_t>::const_iterator StrokePre::get_last_press() const
+{
+    W_ASSERT(_pressure.length() > 1);
+    return _last_draw_press;
+}
+
+inline WList<point_s>::const_iterator StrokePre::get_last_point() const
+{
+    W_ASSERT(this->_point.length() > 1);
+    return _last_draw_point;
 }
 

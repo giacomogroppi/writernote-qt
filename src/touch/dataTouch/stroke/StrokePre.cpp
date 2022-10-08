@@ -4,7 +4,9 @@
 
 StrokePre::StrokePre() noexcept :
     Stroke(),
-    WImage(1)
+    WImage(1),
+    _last_draw_point(nullptr),
+    _last_draw_press(nullptr)
 {
 }
 
@@ -83,9 +85,11 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     Stroke::operator=(other);
     this->_point = other._point;
     this->_pressure = other._pressure;
+
 #ifdef DEBUGINFO
     this->already_merge = other.already_merge;
 #endif // DEBUGINFO
+
     return *this;
 }
 
@@ -97,20 +101,26 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
     W_ASSERT(img.isNull() == false);
 
     painter.begin(&img);
+
     _point.append(point);
     _pressure.append(press);
 
     core::painter_set_antialiasing(painter);
     core::painter_set_source_over(painter);
 
+    if(Stroke::is_normal() and _point.length() == 1){
+        _last_draw_point = this->_point.constBegin();
+        _last_draw_press = this->_pressure.constBegin();
+        goto out;
+    }
+
     stroke_drawer::draw_stroke(painter,
                                dynamic_cast<StrokePre &>(*this),
                                pen, prop);
 
-    /*pen.setColor(Qt::black);
-    pen.setWidthF(20);
-    painter.setPen(pen);
-    painter.drawLine(0, 0, img.width(), img.height());*/
-    painter.end();
+    this->_last_draw_press ++;
+    this->_last_draw_point ++;
 
+out:
+    painter.end();
 }

@@ -66,6 +66,22 @@ public:
     const_iterator constBegin() const noexcept { test(); return const_iterator(_first); }
     const_iterator constEnd()   const noexcept { test(); return const_iterator(nullptr); }
 
+    const_iterator constBeginPenultimo() const noexcept {
+        test();
+        W_ASSERT(this->length() > 1);
+
+        auto *item = this->_first;
+
+        while(item->next->next != nullptr) {
+            item = item->next;
+        }
+
+        W_ASSERT(item->next != nullptr);
+        W_ASSERT(item->next->next == nullptr);
+
+        return const_iterator(item);
+    }
+
     WList<T> &operator=(const WList<T> &other);
 };
 

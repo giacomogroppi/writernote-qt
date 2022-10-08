@@ -37,9 +37,27 @@ log_ui::~log_ui()
 
 bool log_ui::getData(QByteArray &data)
 {
-    if(WFile::readFile(data, pos_log.toUtf8().constData()))
+    if(WFile::readFile(data, pos_log.toUtf8().constData()) < 0)
         return false;
     return true;
+}
+
+QString log_ui::adjust_path(const QString &str) const
+{
+    QString tmp = str;
+
+    tmp.replace(QChar(':'), QChar('_'));
+    tmp.replace(QChar(' '), QChar('_'));
+
+    return tmp;
+}
+
+bool log_ui::check_str(const QString &str) const
+{
+    const auto res = str.indexOf(":");
+    if(res < 0)
+        return true;
+    return false;
 }
 
 void log_ui::showAll()
@@ -101,7 +119,9 @@ void log_ui::addTime(QString &message)
 QString log_ui::getNameLog()
 {
     QString temp;
-    temp = pos_log + slash::__slash() + current_day_string() + current_time_string();
+    temp = pos_log + slash::__slash() +
+            adjust_path(current_day_string()) +
+            adjust_path(current_time_string());
 
     return temp;
 }
@@ -125,6 +145,7 @@ void log_ui::saveData()
     setting.endGroup();
 }
 
+
 int log_ui::loadData()
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -139,7 +160,11 @@ int log_ui::loadData()
 
     pos_log = setting.value(KEY_LOG_POSITION, "").toString();
 
-    if(pos_log == ""){
+    if (!check_str(pos_log)) {
+        pos_log = "";
+    }
+
+    if(pos_log.isEmpty()){
         _pos = get_path(path::audio_pos);
         if(_pos == ""){
             setting.endGroup();
@@ -149,8 +174,8 @@ int log_ui::loadData()
         pos_log = _pos;
         pos_log += slash::__slash();
         pos_log += QString("writernote-log-%1-%2.txt").
-                arg(current_day_string()    .replace(":", "_")).
-                arg(current_time_string()   .replace(":", "_"));
+                arg(adjust_path(current_day_string())).
+                arg(adjust_path(current_time_string()));
     }
 
     setting.endGroup();

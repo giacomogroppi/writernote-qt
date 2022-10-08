@@ -162,9 +162,9 @@ void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen
 {
     stroke_drawer d(painter, pen, prop, stroke.getColor(), 0, false);
     stroke_drawer_private<WList<point_s>, WList<pressure_t>> data(
-                stroke._point.constBegin(),
+                stroke.get_last_point(),
                 stroke._point.constEnd(),
-                stroke._pressure.constBegin(),
+                stroke.get_last_press(),
                 stroke._pressure.constEnd(),
                 false
             );

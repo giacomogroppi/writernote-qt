@@ -35,6 +35,8 @@ public:
     bool getData(QByteArray & str);
     const QString &getCurrentPosition() const;
 private:
+    QString adjust_path(const QString &str) const;
+    bool check_str(const QString &str) const;
     static void addTime(QString &message);
     Ui::log_ui *ui;
 
