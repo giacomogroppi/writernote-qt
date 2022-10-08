@@ -122,5 +122,5 @@ jobs:
           
           cmake . \
             -DCMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake
-          
+          make clean
           make -j$(nproc) 
