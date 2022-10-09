@@ -4,6 +4,7 @@
 #include <qmath.h>
 #include "utils/common_script.h"
 #include "core/WLine.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 
 constexpr double    error = 5000;
 constexpr bool      debug = false;
@@ -54,7 +55,7 @@ static force_inline void model_line_adjust_m(double &m)
     }
 }
 
-double model_line(const Stroke *stroke)
+double model_line(const StrokePre *stroke)
 {
 
     int segno_var_x, segno_var_y;
@@ -181,7 +182,7 @@ static void model_line_generic(Stroke *stroke, stroke_complex_line *data)
     stroke->reset();
 }
 
-void model_line_create(Stroke *stroke)
+void model_line_create(StrokePre *stroke)
 {
     W_ASSERT(stroke);
     bool &is_vertical = line_data.is_vertical;

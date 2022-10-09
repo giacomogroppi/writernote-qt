@@ -30,11 +30,15 @@ public:
     void setColor(const QColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const;
-
     [[nodiscard]] bool is_normal() const  { return Stroke::is_normal(); };
     [[nodiscard]] bool is_circle() const  { return Stroke::is_circle(); };
     [[nodiscard]] bool is_rect() const    { return Stroke::is_rect(); };
     [[nodiscard]] bool is_line() const    { return Stroke::is_line(); };
+    [[nodiscard]] QRect getBiggerPointInStroke() const;
+    [[nodiscard]] QRect getFirstAndLast() const;
+
+    [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
+    [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
 
     void draw(QPainter &painter);
     void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);

@@ -1,9 +1,10 @@
 #include "model.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 #include <QString>
 
 constexpr bool not_used debug = true;
 
-double model_rect(const Stroke *stroke)
+double model_rect(const StrokePre *stroke)
 {
     Q_UNUSED(stroke);
     return model_error;

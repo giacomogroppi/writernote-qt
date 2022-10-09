@@ -1,3 +1,4 @@
+#include "touch/dataTouch/stroke/StrokePre.h"
 #include "touch/object_finder/model/model.h"
 #include "touch/dataTouch/stroke/Stroke.h"
 #include "utils/common_script.h"
@@ -48,18 +49,15 @@ static void model_circle_precision(const QPointF &point, double &precision)
     }
 }
 
-double model_circle(const Stroke *stroke)
+double model_circle(const StrokePre *stroke)
 {
     const auto area = stroke->getBiggerPointInStroke();
     constexpr auto coef = 500.;
     constexpr auto _end = 10.;
     double precision = 0.;
-    int i, len;
     double &x = circle_data._x;
     double &y = circle_data._y;
     double &r = circle_data._r;
-
-    len = stroke->length();
 
     {
         const auto rect = stroke->getFirstAndLast();
@@ -77,9 +75,8 @@ double model_circle(const Stroke *stroke)
     W_ASSERT(x >= 0.);
     W_ASSERT(y >= 0.);
 
-    for(i = 0; i < len; i++){
-        const auto &ref = stroke->at(i);
-        model_circle_precision(ref.toQPointF(1.), precision);
+    for (auto b = stroke->constBegin(); b != stroke->constEnd(); b ++) {
+        model_circle_precision(*b, precision);
     }
 
     precision /= coef;

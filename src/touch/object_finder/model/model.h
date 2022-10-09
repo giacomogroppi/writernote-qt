@@ -10,14 +10,15 @@
 constexpr double model_error = 5000.;
 
 class Stroke;
+class StrokePre;
 
-double model_line(const Stroke *stroke);
-double model_rect(const Stroke *stroke);
-double model_circle(const Stroke *stroke);
+double model_line(const StrokePre *stroke);
+double model_rect(const StrokePre *stroke);
+double model_circle(const StrokePre *stroke);
 
-void model_line_create(Stroke *stroke);
-void model_rect_create(Stroke *stroke);
-void model_circle_create(Stroke *stroke);
+void model_line_create(StrokePre *stroke);
+void model_rect_create(StrokePre *stroke);
+void model_circle_create(StrokePre *stroke);
 
 static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, cint max)
 {

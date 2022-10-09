@@ -11,7 +11,7 @@ class object_finder : public QObject
     Q_OBJECT
 public:
     explicit object_finder(QObject *parent);
-    ~object_finder();
+    ~object_finder() = default;
 
     void move(const QPointF &point);
     void endMoving();

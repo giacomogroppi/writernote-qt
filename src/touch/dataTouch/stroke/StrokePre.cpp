@@ -65,6 +65,24 @@ void StrokePre::setTime(int time)
     Stroke::setPositioneAudio(time);
 }
 
+QRect StrokePre::getBiggerPointInStroke() const
+{
+    /** TODO --> define a cache */
+    const auto res = Stroke::getBiggerPointInStroke(this->_point.constBegin(),
+                                                    this->_point.constEnd(),
+                                                    *this);
+    return res;
+}
+
+QRect StrokePre::getFirstAndLast() const
+{
+    const auto &first = _point.constBegin();
+    const auto &last  = _point.constEnd();
+
+    return QRect(   first-> toPoint(),
+                    last->  toPoint());
+}
+
 void StrokePre::draw(QPainter &painter)
 {
     const auto &img = dynamic_cast<const QImage &>(*this);
@@ -97,18 +115,27 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
 {
     QPainter painter;
     auto &img = dynamic_cast<QImage &>(*this);
+    const auto is_normal = Stroke::is_normal();
 
     W_ASSERT(img.isNull() == false);
 
     painter.begin(&img);
 
-    _point.append(point);
-    _pressure.append(press);
+    if (unlikely(!is_normal)){
+        W_ASSERT(_point.isEmpty());
+        W_ASSERT(_pressure.isEmpty());
+        auto *s = dynamic_cast<Stroke *>(this);
+
+        stroke_complex_append(s, point.toQPointF(1.));
+    } else {
+        _point.append(point);
+        _pressure.append(press);
+    }
 
     core::painter_set_antialiasing(painter);
     core::painter_set_source_over(painter);
 
-    if(Stroke::is_normal() and _point.length() == 1){
+    if(is_normal and unlikely(_point.length() == 1)){
         _last_draw_point = this->_point.constBegin();
         _last_draw_press = this->_pressure.constBegin();
         goto out;
@@ -118,8 +145,10 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
                                dynamic_cast<StrokePre &>(*this),
                                pen, prop);
 
-    this->_last_draw_press ++;
-    this->_last_draw_point ++;
+    if(is_normal){
+        this->_last_draw_press ++;
+        this->_last_draw_point ++;
+    }
 
 out:
     painter.end();

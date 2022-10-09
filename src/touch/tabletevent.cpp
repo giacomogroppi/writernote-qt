@@ -213,7 +213,7 @@ force_inline void ManageMoveSquare(const QPointF &point, class square *_square)
     if(_square->somethingInBox()){
         W_ASSERT(_square->get_first_point().isSet());
 
-        /* a questo punto può muovere di un delta x e y */
+        /** a questo punto può muovere di un delta x e y */
         _square->move(point);
     }else{
         /**

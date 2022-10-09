@@ -12,13 +12,13 @@ static struct{
     double is[THREAD_FINDER];
 } finder;
 
-double (*function[])(const Stroke *) = {
+double (*function[])(const StrokePre *) = {
     &model_line,
     &model_rect,
     &model_circle
 };
 
-void (*function_create[])(Stroke *) = {
+void (*function_create[])(StrokePre *) = {
     &model_line_create,
     &model_rect_create,
     &model_circle_create
@@ -26,7 +26,7 @@ void (*function_create[])(Stroke *) = {
 
 static struct{
     pthread_t _thread[THREAD_FINDER];
-    Stroke *_stroke;
+    StrokePre *_stroke;
 } ctrl;
 
 void __init__ init_finder(void)
@@ -50,7 +50,7 @@ static void *model_finder(void *_index)
 
     //WDebug(debug_model, __FUNCTION__ << index);
 
-    finder.is[index] = __function((const Stroke *)ctrl._stroke);
+    finder.is[index] = __function((const StrokePre *)ctrl._stroke);
 
     return NULL;
 }
@@ -79,7 +79,7 @@ static int get_index_most_prob(cdouble min_precision)
     return index;
 }
 
-bool model::find(Stroke *stroke)
+bool model::find(StrokePre *stroke)
 {
     long i;
 

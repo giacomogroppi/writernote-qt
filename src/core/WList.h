@@ -53,7 +53,7 @@ public:
     public:
         explicit const_iterator(const WListPrivate<T> *e) { _e = e; };
 
-        const T* operator->()         { return _e->data; };
+        const T* operator->() const   { return _e->data; };
         const T &operator*() const    { return *_e->data; };
         constexpr bool operator==(const_iterator i) const         { return _e == i._e; }
         constexpr bool operator!=(const_iterator i) const         { return _e != i._e; }
@@ -65,22 +65,6 @@ public:
     iterator end()   noexcept { test(); return iterator(nullptr);  };
     const_iterator constBegin() const noexcept { test(); return const_iterator(_first); }
     const_iterator constEnd()   const noexcept { test(); return const_iterator(nullptr); }
-
-    const_iterator constBeginPenultimo() const noexcept {
-        test();
-        W_ASSERT(this->length() > 1);
-
-        auto *item = this->_first;
-
-        while(item->next->next != nullptr) {
-            item = item->next;
-        }
-
-        W_ASSERT(item->next != nullptr);
-        W_ASSERT(item->next->next == nullptr);
-
-        return const_iterator(item);
-    }
 
     WList<T> &operator=(const WList<T> &other);
 };

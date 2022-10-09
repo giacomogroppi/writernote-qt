@@ -147,6 +147,12 @@ public:
     friend class stroke_file;
     friend class page_file;
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
+
+protected:
+
+    /** T should be a QList, QVector, WList,  .... */
+    template <class T>
+    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, const Stroke &s);
 };
 
 force_inline void Stroke::set_complex(typeof(_prop) new_prop, void *new_data)
@@ -370,45 +376,28 @@ force_inline QRect Stroke::getFirstAndLast() const
                  last.toQPointF (1.).toPoint());
 }
 
-/* after append data we need to call this funcion to update
- *
- * the function is defined as const because the only elements
- * we change are stroke metadata. If we removed the constant
- * assignment every time we call this function, it would
- * throw the copy of all the strokes of the page for the
- * redoundo class.
- * We would increase the space occupied, the processing time,
- * as we would need to recalculate the data for each list that
- * has this stroke.
-*/
-inline QRect Stroke::getBiggerPointInStroke() const
+template<class T>
+inline QRect Stroke::getBiggerPointInStroke(T begin,
+                                            T end,
+                                            const Stroke &s)
 {
-    QRect &__biggerData = (QRect &) _biggerData;
-    int count;
+    QRect biggerData;
 
-    if(likely(!needToUpdateBiggerData())){
-        return _biggerData;
+    if(unlikely(s.is_complex())){
+        biggerData = stroke_complex_bigger_data(&s);
+        return biggerData;
     }
 
-    if(!this->is_normal()){
-        __biggerData = stroke_complex_bigger_data(this);
-        return __biggerData;
-    }
-
-    count = this->length();
-
-    if(unlikely(count == 0)){
+    if(unlikely(begin == end)){
         WWarning("Warning: Stroke empty");
         return QRect(0, 0, 0, 0);
     }
 
-    count --;
+    QPoint topLeft = begin->toQPointF(1.).toPoint();
+    QPoint bottomRight = end->toQPointF(1.).toPoint();
 
-    QPoint topLeft(at(0).toQPointF(1.0).toPoint());
-    QPoint bottomRight(at(count).toQPointF(1.0).toPoint());
-
-    for (; count >= 0; count --){
-        const point_s &point = at(count);
+    for(; begin != end; begin ++){
+        const point_s &point = *begin;
 
         if(topLeft.x() > point.x())
             topLeft.setX(static_cast<int>(
@@ -434,9 +423,38 @@ inline QRect Stroke::getBiggerPointInStroke() const
     W_ASSERT(topLeft.x() <= bottomRight.x());
     W_ASSERT(topLeft.y() <= bottomRight.y());
 
-    setFlag(UPDATE_BIGGER_DATA, false);
+    biggerData = QRect(topLeft, bottomRight);
 
-    __biggerData = QRect(topLeft, bottomRight);
+    return biggerData;
+}
+
+
+/**
+ * after append data we need to call this funcion to update
+ *
+ * the function is defined as const because the only elements
+ * we change are stroke metadata. If we removed the constant
+ * assignment every time we call this function, it would
+ * throw the copy of all the strokes of the page for the
+ * redoundo class.
+ * We would increase the space occupied, the processing time,
+ * as we would need to recalculate the data for each list that
+ * has this stroke.
+*/
+inline QRect Stroke::getBiggerPointInStroke() const
+{
+    QRect &__biggerData = (QRect &) _biggerData;
+    int count;
+    QList<point_s>::const_iterator b = this->_point.constBegin();
+    QList<point_s>::const_iterator e = this->_point.constEnd();
+
+    if (likely(!needToUpdateBiggerData())) {
+        return _biggerData;
+    }
+
+    __biggerData = Stroke::getBiggerPointInStroke(b, e, *this);
+
+    setFlag(UPDATE_BIGGER_DATA, false);
 
     return __biggerData;
 }
@@ -447,7 +465,7 @@ inline QRect Stroke::getBiggerPointInStroke() const
  * multiplied by the zoom. */
 inline bool Stroke::isInside(const QRectF &rect) const
 {
-    int i, len;
+    int i;
 
     {
         const auto &area = this->getBiggerPointInStroke();
@@ -456,15 +474,12 @@ inline bool Stroke::isInside(const QRectF &rect) const
         }
     }
 
-    if(unlikely(this->is_complex())){
+    if (unlikely(this->is_complex())) {
         return stroke_complex_is_inside(this, rect, 0.);
     }
 
-    len = this->length();
-    for(i = 0; i < len; i++){
-        const point_s &point = at(i);
-
-        if(datastruct_isinside(rect, point.toQPointF(1.)))
+    for(const auto &ref : qAsConst(_point)){
+        if (datastruct_isinside(rect, ref))
             return true;
     }
 
