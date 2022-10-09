@@ -59,9 +59,11 @@ double model_line(const StrokePre *stroke)
 {
 
     int segno_var_x, segno_var_y;
-    int i, len;
+    int i;
     const point_s *one, *two;
     const auto &area = stroke->getFirstAndLast();
+    auto b = stroke->constBegin();
+    const auto e = stroke->constEnd();
 
     double &m = line_data.m;
     double &q = line_data.q;
@@ -71,9 +73,8 @@ double model_line(const StrokePre *stroke)
 
     line_data.is_vertical = false;
 
-    len = stroke->length();
-
-    if(unlikely(!len)){
+    /** list empty */
+    if(unlikely(b == e)){
         return error;
     }
 
@@ -98,9 +99,9 @@ double model_line(const StrokePre *stroke)
 cont:
     segno_var_x = segno_var_y = 0;
 
-    one = &stroke->at(0);
-    for(i = 1; i < len; i++){
-        two = & stroke->at(i);
+    one = & (*b);
+    for(b ++; b != e; b ++){
+        two = & (*b);
 
         // calcolo variazione di segno
         if(two->x() - one->x() < 0){
@@ -127,7 +128,7 @@ cont:
         m = 1. / m;
     }
 
-    one = &stroke->at(0);
+    one = & (*stroke->constBegin());
 
     if(is_vertical){
         q = one->x();
@@ -137,8 +138,8 @@ cont:
     }
 
 
-    for(i = 0; i < len; i++){
-        one = &stroke->at(i);
+    for( b = stroke->constBegin(); b != e; b++ ){
+        one = & (*b);
 
         is_near_line(m, precision, q, one);
     }
@@ -148,7 +149,7 @@ cont:
     return precision;
 }
 
-static void model_line_vertical(Stroke *stroke, stroke_complex_line *data)
+static void model_line_vertical(StrokePre *stroke, stroke_complex_line *data)
 {
     const auto press = stroke->getPressure();
     const QRect FL = stroke->getFirstAndLast();
@@ -168,7 +169,7 @@ static void model_line_vertical(Stroke *stroke, stroke_complex_line *data)
     data->press = press;
 }
 
-static void model_line_generic(Stroke *stroke, stroke_complex_line *data)
+static void model_line_generic(StrokePre *stroke, stroke_complex_line *data)
 {
     const auto pressure = stroke->getPressure(0);
     data->pt1  = stroke->at(0).toQPointF(1.);
@@ -186,7 +187,10 @@ void model_line_create(StrokePre *stroke)
 {
     W_ASSERT(stroke);
     bool &is_vertical = line_data.is_vertical;
-    stroke_complex_line *data = (stroke_complex_line *)WMalloc(sizeof(stroke_complex_line));
+    auto *data = (stroke_complex_line *)
+            WMalloc(
+                        sizeof(stroke_complex_line)
+                    );
 
     if(is_vertical){
         model_line_vertical(stroke, data);

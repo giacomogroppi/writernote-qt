@@ -9,14 +9,14 @@
 // debug for memory
 #ifdef DEBUG_MEM
 
-void *WMalloc_private(      cchar *function, cchar *file, unsigned long int line, const size_t size);
+void *WMalloc_private(      cchar *function, cchar *file, unsigned long int line, size_t size);
 void WMalloc_private_new(   cchar *function, cchar *file, unsigned long int line, cvoid *pointer);
 
 void WFree_private(cvoid *mem, const char *file, const char *function);
 
-void WEnd_application(void);
+void WEnd_application();
 
-# define WMalloc(size) WMalloc_private(__FUNCTION__, __FILE__, __LINE__, size);
+# define WMalloc(size) WMalloc_private(__FUNCTION__, __FILE__, __LINE__, (size));
 
 # define WFree(mem) \
     do{ \
