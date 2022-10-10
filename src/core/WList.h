@@ -32,6 +32,7 @@ public:
     [[nodiscard]] T *get_first() noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const noexcept;
+    [[nodiscard]] const T& last() const;
 
     class iterator{
     private:
@@ -198,6 +199,14 @@ inline int WList<T>::length() const noexcept
 {
     test();
     return this->_size;
+}
+
+template<class T>
+inline const T &WList<T>::last() const
+{
+    test();
+    W_ASSERT(this->_size != 0 and _last != nullptr);
+    return *_last->data;
 }
 
 template<class T>

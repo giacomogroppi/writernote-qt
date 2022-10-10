@@ -83,6 +83,17 @@ QRect StrokePre::getFirstAndLast() const
                     last->  toPoint());
 }
 
+pressure_t StrokePre::getPressure() const
+{
+    W_ASSERT(!this->_pressure.isEmpty());
+    return *this->_pressure.constBegin();
+}
+
+void StrokePre::set_complex(flag_complex type, void *data)
+{
+    Stroke::set_complex(type, data);
+}
+
 void StrokePre::draw(QPainter &painter)
 {
     const auto &img = dynamic_cast<const QImage &>(*this);

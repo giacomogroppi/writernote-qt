@@ -63,6 +63,7 @@ option(MACOS_BUILD "Set to on if we are building in action" OFF)
 option(VERSION_SNAPCRAFT "Version" "")
 option(FLATPAK_BUILD "build for flatpak" OFF)
 option(DEBUG_CORE "Debug core class" OFF)
+option(ANDROID "Android build" OFF)
 
 if(FLATPAK_BUILD)
     set(WRITERNOTE_APPL_DIR "" CACHE PATH "Folder to install .desktop files to. If empty, the default is CMAKE_INSTALL_PREFIX/share/applications")
@@ -102,6 +103,13 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR}Multimedia REQUIRED )
 find_package(Qt${QT_VERSION_MAJOR}MultimediaWidgets REQUIRED )
 find_package(Qt${QT_VERSION_MAJOR}PrintSupport REQUIRED)
+
+if(ANDROID)
+    find_package(Qt${QT_VERSION_MAJOR} 
+        REQUIRED COMPONENTS
+        AndroidExtras
+    )
+endif()
 
 if(NOT APPLE)
     qt_add_executable(${PROJECT_NAME} ${PROJECT_MOC} ${PROJECT_SOURCES} ${PROJECT_UI})

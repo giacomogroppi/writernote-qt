@@ -36,9 +36,15 @@ public:
     [[nodiscard]] bool is_line() const    { return Stroke::is_line(); };
     [[nodiscard]] QRect getBiggerPointInStroke() const;
     [[nodiscard]] QRect getFirstAndLast() const;
+    [[nodiscard]] pressure_t getPressure() const;
+    [[nodiscard]] const point_s &last() const;
+
+    void set_complex(Stroke::flag_complex type, void *data);
 
     [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
     [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
+
+    void reset();
 
     void draw(QPainter &painter);
     void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);
@@ -60,6 +66,16 @@ inline int StrokePre::length() const
 {
     W_ASSERT(Stroke::is_normal());
     return _point.length();
+}
+
+inline const point_s &StrokePre::last() const
+{
+    return _point.last();
+}
+
+inline void StrokePre::reset()
+{
+    *this = StrokePre();
 }
 
 inline void StrokePre::setColor(const QColor &color) noexcept
