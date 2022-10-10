@@ -17,7 +17,7 @@ static not_used void model_circle_print(const stroke_complex_circle *data)
     }
 }
 
-void model_circle_create(Stroke *stroke)
+void model_circle_create(StrokePre *stroke)
 {
     const auto press = stroke->getPressure();
 
