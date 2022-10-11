@@ -10,13 +10,15 @@
 #include "utils/time/current_time.h"
 #include "utils/common_script.h"
 #include "core/WFile.h"
+#include "core/WMutex.h"
+#include "core/WMutexLocker.h"
 
 #include <pthread.h>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
 
-static pthread_mutex_t mutex;
+static WMutex mutex;
 
 log_ui::log_ui(QWidget *parent) :
     QDialog(parent),
@@ -26,7 +28,6 @@ log_ui::log_ui(QWidget *parent) :
 
     this->loadData();
     this->hide();
-    pthread_mutex_init(&mutex, NULL);
 }
 
 log_ui::~log_ui()
@@ -89,12 +90,11 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
     else
         tmp = "CRITIC ERROR: " + stringa;
 
-    pthread_mutex_lock(&mutex);
+    WMutexLocker _(mutex);
 
     if(unlikely(!file.open(QIODevice::Append))){
         ui->text_error_show->setText("Unable to save data");
         m_permi = permi::error;
-        pthread_mutex_unlock(&mutex);
         return;
     }
 
@@ -103,7 +103,6 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
     file.write(QString("\n%1 --- %2").arg(tmp).arg(stringa).toUtf8());
 
     file.close();
-    pthread_mutex_unlock(&mutex);
 }
 
 void log_ui::print(FILE *fp, const QByteArray &str)

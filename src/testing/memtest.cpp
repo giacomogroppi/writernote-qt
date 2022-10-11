@@ -3,6 +3,8 @@
 #include <QVector>
 #include "string.h"
 #include "pthread.h"
+#include "core/WMutexLocker.h"
+#include "core/WMutex.h"
 
 #ifdef DEBUG_MEM
 
@@ -14,13 +16,12 @@ struct mem_info
     unsigned long int line;
 };
 
-static pthread_mutex_t _mem_mutex;
+static WMutex _mem_mutex;
 static QList<mem_info> *_mem;
 
 void __init__ initMem(void)
 {
     qDebug() << "Memtest enable";
-    pthread_mutex_init(&_mem_mutex, NULL);
     _mem = new QList<mem_info>();
 }
 
@@ -53,9 +54,10 @@ void *WMalloc_private(const char *function, const char *file, unsigned long int 
 
     mem.pointer = pointer;
 
-    pthread_mutex_lock(&_mem_mutex);
-    _mem->append(mem);
-    pthread_mutex_unlock(&_mem_mutex);
+    {
+        WMutexLocker _(_mem_mutex);
+        _mem->append(mem);
+    }
 
     if(line > 50000 || !line){
         qDebug() << "";
@@ -77,9 +79,10 @@ void WMalloc_private_new(cchar *function, cchar *file, unsigned long int line, c
 
     mem.pointer = pointer;
 
-    pthread_mutex_lock(&_mem_mutex);
-    _mem->append(mem);
-    pthread_mutex_unlock(&_mem_mutex);
+    {
+        WMutexLocker _(_mem_mutex);
+        _mem->append(mem);
+    }
 }
 
 static not_used void print_all_mem(void)
@@ -107,7 +110,7 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
     if(unlikely(!mem))
         return;
 
-    pthread_mutex_lock(&_mem_mutex);
+    _mem_mutex.lock();
 
     i = _mem->length();
 
@@ -123,7 +126,7 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
     }
 
 out:
-    pthread_mutex_unlock(&_mem_mutex);
+    _mem_mutex.unlock();
 
     if(unlikely(!res)){
         msg = QString("Mem free not record. Pointer %1 File %2 Function %3").arg(QString::number((quint64)mem), file, function);
