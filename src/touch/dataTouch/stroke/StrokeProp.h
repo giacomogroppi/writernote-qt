@@ -14,18 +14,16 @@ private:
     static void checkType(int type) {};
 #endif
 public:
-
     explicit StrokeProp (int type);
     ~StrokeProp() = default;
+
+    static_assert_type(_prop, int);
 
     force_inline bool is_normal() const { return _prop == COMPLEX_NORMAL; };
     force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
     force_inline bool is_rect() const { return _prop == COMPLEX_RECT; };
     force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
     force_inline bool is_complex() const { return _prop != COMPLEX_NORMAL; };
-
-    void set (const StrokeProp &prop) noexcept;
-    void set (int type) noexcept;
 
     enum flag_complex : typeof(_prop){
         COMPLEX_NORMAL = 0,
@@ -34,7 +32,12 @@ public:
         COMPLEX_LINE = 3
     };
 
+    [[nodiscard]] typeof(_prop) &PropRef() { return _prop; };
     [[nodiscard]] QString toString() const noexcept;
+
+protected:
+    void setProp (const StrokeProp &prop) noexcept;
+    void setProp (int type) noexcept;
 };
 
 inline Q_CORE_EXPORT QDataStream &operator<<(QDataStream &d, const StrokeProp &str)
@@ -60,7 +63,7 @@ inline QString StrokeProp::toString() const noexcept
 }
 #endif // DEBUGINFO
 
-inline void StrokeProp::set(int type) noexcept
+inline void StrokeProp::setProp(int type) noexcept
 {
     StrokeProp::checkType(type);
     this->_prop = type;

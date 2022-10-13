@@ -104,10 +104,10 @@ force_inline int stroke_file::load_ver_2(class Stroke &_stroke, WZipReaderSingle
 
     if(reader.read_by_size(&_stroke._metadata, sizeof(_stroke._metadata)) < 0)
         MANAGE_ERR();
-    if(reader.read_object(_stroke._prop) < 0)
+    if(reader.read_object(_stroke.PropRef()) < 0)
         MANAGE_ERR();
 
-    if(unlikely(_stroke._prop != Stroke::COMPLEX_NORMAL)){
+    if(unlikely(_stroke.is_complex())){
         return stroke_complex_load(&_stroke, _stroke._prop, reader);
     }
 

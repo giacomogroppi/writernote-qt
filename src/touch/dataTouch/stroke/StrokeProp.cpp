@@ -10,7 +10,7 @@ void StrokeProp::checkType(int type)
     );
 }
 
-inline void StrokeProp::set(const StrokeProp &prop) noexcept
+void StrokeProp::setProp(const StrokeProp &prop) noexcept
 {
     _prop = prop._prop;
 }

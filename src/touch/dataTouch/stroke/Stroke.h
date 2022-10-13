@@ -142,13 +142,13 @@ protected:
     [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, const Stroke &s);
 };
 
-force_inline void Stroke::set_complex(typeof(_prop) new_prop, void *new_data)
+force_inline void Stroke::set_complex(int new_prop, void *new_data)
 {
     if(_complex){
         WFree(_complex);
     }
 
-    _prop = new_prop;
+    setProp(new_prop);
     _complex = new_data;
 
     W_ASSERT(_pressure.isEmpty());
@@ -537,9 +537,9 @@ inline void Stroke::copy(const Stroke &src, Stroke &dest)
     dest._point = src._point;
     dest._pressure = src._pressure;
 
-    StrokeProp::set(src);
+    dest.setProp(src);
 
-    dest._complex = stroke_complex_allocate(src._prop, src._complex);
+    dest._complex = stroke_complex_allocate(src, src._complex);
 
     dest._biggerData = src._biggerData;
 

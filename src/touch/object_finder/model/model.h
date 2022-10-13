@@ -28,7 +28,7 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
     return QRectF(tl, br).contains(p2);
 }
 
-void *stroke_complex_allocate(int type, const void *data);
+void *stroke_complex_allocate(class StrokeProp type, const void *data);
 void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 bool stroke_complex_cmp(const Stroke *str1, const Stroke *str2);
 QRect stroke_complex_bigger_data(const Stroke *stroke);

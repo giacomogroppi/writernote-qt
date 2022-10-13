@@ -19,12 +19,12 @@ static size_t get_size_by_type(int type)
     }
 }
 
-void *stroke_complex_allocate(int type, const void *data)
+void *stroke_complex_allocate (StrokeProp type, const void *data)
 {
     void *new_data;
 
     if(type == Stroke::COMPLEX_NORMAL){
-        new_data = NULL;
+        new_data = nullptr;
         return new_data;
     }
 
