@@ -10,36 +10,45 @@ StrokePre::StrokePre() noexcept :
 {
 }
 
-Stroke& StrokePre::merge()
+void StrokePre::merge(Stroke &res)
 {
     W_ASSERT(this->already_merge == false);
     W_ASSERT(_point.length() == _pressure.length());
+    W_ASSERT(res.isEmpty());
 
     int i;
 
     if(!Stroke::isEmpty()){
         W_ASSERT(Stroke::is_complex());
-        return *this;
+        return;
+    }
+
+    if (not Stroke::is_normal()) {
+        Stroke::copy(*this, res);
+        return;
     }
 
     const auto l = _point.length();
 
-    Stroke &res = *this;
+    Stroke::preappend(l);
 
     for(i = 0; i < l; i++){
         const auto *data_point = _point.get_first();
         const auto *data_press = _pressure.get_first();
 
-        Stroke::append(*data_point, *data_press);
+        res.append(*data_point, *data_press);
 
-        delete data_point;
-        delete data_press;
+        WDelete(data_point);
+        WDelete(data_press);
     }
+
+    res.setMetadata(
+                    Stroke::getMetadata()
+                );
 
 #ifdef DEBUGINFO
     already_merge = true;
 #endif // DEBUGINFO
-    return *this;
 }
 
 void StrokePre::adjust(const QPointF &delta)
@@ -76,11 +85,10 @@ QRect StrokePre::getBiggerPointInStroke() const
 
 QRect StrokePre::getFirstAndLast() const
 {
-    const auto &first = _point.constBegin();
-    const auto &last  = _point.constEnd();
+    const auto &first = *_point.constBegin();
+    const auto &last  = _point.last();
 
-    return QRect(   first-> toPoint(),
-                    last->  toPoint());
+    return QRect(first.toPoint(), last.toPoint());
 }
 
 pressure_t StrokePre::getPressure() const

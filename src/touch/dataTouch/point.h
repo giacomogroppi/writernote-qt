@@ -106,6 +106,7 @@ public:
     point_s() = default;
     point_s(double x, double y);
     point_s(const QPointF &point);
+
     [[nodiscard]] QPointF toQPointF(double scale) const;
 };
 

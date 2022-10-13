@@ -161,19 +161,22 @@ force_inline void stroke_drawer::draw_line(const Stroke    &stroke)
 void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen &pen, cdouble prop)
 {
     stroke_drawer d(painter, pen, prop, stroke.getColor(), 0, false);
-    stroke_drawer_private<WList<point_s>, WList<pressure_t>> data(
+
+    W_ASSERT(painter.isActive());
+
+    WDebug(true, "Print" << stroke._prop);
+
+    pen.setColor(stroke.getColor());
+
+    if(likely(stroke.is_normal())){
+        stroke_drawer_private<WList<point_s>, WList<pressure_t>> data(
                 stroke.get_last_point(),
                 stroke._point.constEnd(),
                 stroke.get_last_press(),
                 stroke._pressure.constEnd(),
                 false
-            );
+        );
 
-    W_ASSERT(painter.isActive());
-
-    pen.setColor(stroke.getColor());
-
-    if(likely(stroke.is_normal())){
         if(stroke._point.length() == 1)
             return;
         d.draw_stroke_normal(data);
@@ -194,17 +197,18 @@ void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen
 void stroke_drawer::draw_stroke(QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop)
 {
     stroke_drawer d(painter, pen, prop, stroke.getColor(), page, is_rubber);
-    stroke_drawer_private<
+
+    if(likely(stroke.is_normal())){
+        stroke_drawer_private<
                 QList<point_s>, QList<pressure_t>
-            > data(
+        > data(
                 stroke._point.constBegin(),
                 stroke._point.constEnd(),
                 stroke._pressure.constBegin(),
                 stroke._pressure.constEnd(),
                 stroke.constantPressure()
-            );
+        );
 
-    if(likely(stroke.is_normal())){
         d.draw_stroke_normal(data);
     }else if(stroke.is_circle()){
         d.draw_circle(stroke);

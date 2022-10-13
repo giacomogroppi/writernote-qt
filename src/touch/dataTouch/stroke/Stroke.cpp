@@ -5,12 +5,12 @@
 #include <QPainter>
 #include "stroke_file.h"
 
-Stroke::Stroke()
+Stroke::Stroke() : StrokeProp(COMPLEX_NORMAL)
 {
     reset();
 }
 
-Stroke::Stroke(const Stroke &data)
+Stroke::Stroke(const Stroke &data) : StrokeProp(COMPLEX_NORMAL)
 {
     reset();
     *this = data;
@@ -129,7 +129,7 @@ void Stroke::reset()
     }else{
         W_ASSERT(_complex);
         WFree(_complex);
-        _complex = NULL;
+        _complex = nullptr;
     }
 
     W_ASSERT(!_complex);
@@ -161,7 +161,8 @@ bool Stroke::cmp(const Stroke &stroke1, const Stroke &stroke2)
         for (i = 0; i < len; i ++){
             const point_s &point1 = stroke1.at(i);
             const point_s &point2 = stroke2.at(i);
-            if(memcmp(&point1, &point2, sizeof(point1)) != 0){
+
+            if(point1 != point2){
                 return false;
             }
         }
@@ -170,6 +171,12 @@ bool Stroke::cmp(const Stroke &stroke1, const Stroke &stroke2)
     }
 
     return true;
+}
+
+void Stroke::preappend(int l)
+{
+    _point.reserve(l);
+    _pressure.reserve(l);
 }
 
 const point_s &Stroke::last() const

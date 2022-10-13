@@ -50,7 +50,7 @@ public:
     void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);
     [[nodiscard]] QColor getColor(double division = 1.) const;
 
-    Stroke& merge();
+    void merge(Stroke &res);
 
     StrokePre &operator=(const StrokePre &other);
 
@@ -92,6 +92,8 @@ inline const Stroke &StrokePre::get_stroke_for_draw() const
 inline WList<pressure_t>::const_iterator StrokePre::get_last_press() const
 {
     W_ASSERT(_pressure.length() > 1);
+    W_ASSERT(Stroke::is_normal());
+
     return _last_draw_press;
 }
 

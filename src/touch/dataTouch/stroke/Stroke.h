@@ -15,13 +15,14 @@
 #include "core/WZipWriterSingle.h"
 #include "core/WZipReaderSingle.h"
 #include "core/WImage.h"
+#include "StrokeProp.h"
 
 struct metadata_stroke{
     int posizione_audio;
     struct colore_s color;
 };
 
-class Stroke
+class Stroke : public StrokeProp
 {
 private:
     QList<point_s> _point;
@@ -38,14 +39,11 @@ private:
 
     unsigned char _flag;
 
-    bool isPressureVal() const;
-    bool needToUpdatePressure() const;
-    bool needToUpdateBiggerData() const;
+    [[nodiscard]] bool isPressureVal() const;
+    [[nodiscard]] bool needToUpdatePressure() const;
+    [[nodiscard]] bool needToUpdateBiggerData() const;
 
-    int _prop = COMPLEX_NORMAL;
-    static_assert(sizeof(_prop) == 4);
-
-    void *_complex = NULL;
+    void *_complex = nullptr;
     void setFlag(unsigned char type, bool value) const;
 
     static_assert(sizeof(_flag) * 8 >= 4 );
@@ -62,13 +60,6 @@ public:
     Stroke();
     Stroke(const Stroke &data);
     ~Stroke();
-
-    enum flag_complex : typeof(_prop){
-        COMPLEX_NORMAL = 0,
-        COMPLEX_CIRCLE = 1,
-        COMPLEX_RECT = 2,
-        COMPLEX_LINE = 3
-    };
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
     [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
@@ -126,17 +117,11 @@ public:
     [[nodiscard]] const point_s &last() const;
 
     void scale(const QPointF &offset);
-    force_inline bool is_normal() const { return _prop == COMPLEX_NORMAL; };
-    force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
-    force_inline bool is_rect() const { return _prop == COMPLEX_RECT; };
-    force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
-    force_inline bool is_complex() const { return _prop != COMPLEX_NORMAL; };
-    void set_complex(typeof(_prop) new_prop, void *new_data);
+    void set_complex(int new_prop, void *new_data);
     [[nodiscard]] const void *get_complex_data() const { return _complex; };
-    [[nodiscard]] typeof(_prop) get_type() const { return _prop; };
 
-    auto constBegin() const { return _point.begin(); }
-    auto constEnd() const { return _point.end(); }
+    [[nodiscard]] auto constBegin() const { return _point.begin(); }
+    [[nodiscard]] auto constEnd() const { return _point.end(); }
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
@@ -149,6 +134,8 @@ public:
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 
 protected:
+
+    void preappend(int l);
 
     /** T should be a QList, QVector, WList,  .... */
     template <class T>
@@ -394,7 +381,7 @@ inline QRect Stroke::getBiggerPointInStroke(T begin,
     }
 
     QPoint topLeft = begin->toQPointF(1.).toPoint();
-    QPoint bottomRight = end->toQPointF(1.).toPoint();
+    QPoint bottomRight = topLeft;
 
     for(; begin != end; begin ++){
         const point_s &point = *begin;
@@ -549,7 +536,8 @@ inline void Stroke::copy(const Stroke &src, Stroke &dest)
 
     dest._point = src._point;
     dest._pressure = src._pressure;
-    dest._prop = src._prop;
+
+    StrokeProp::set(src);
 
     dest._complex = stroke_complex_allocate(src._prop, src._complex);
 

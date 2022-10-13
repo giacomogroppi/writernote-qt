@@ -6,13 +6,13 @@
 #define THREAD_FINDER 3
 
 constexpr bool debug_model = false;
-constexpr double min_precision = 30;
+constexpr double _min_precision = 30;
 
 static struct{
     double is[THREAD_FINDER];
 } finder;
 
-double (*function[])(const StrokePre *) = {
+double (*functions[])(const StrokePre *) = {
     &model_line,
     &model_rect,
     &model_circle
@@ -29,12 +29,12 @@ static struct{
     StrokePre *_stroke;
 } ctrl;
 
-void __init__ init_finder(void)
+void __init__ init_finder()
 {
     int i;
 
     for(i = 0; i < THREAD_FINDER; i++){
-        finder.is[i] = min_precision * 2.;
+        finder.is[i] = _min_precision * 2.;
     }
 }
 
@@ -46,13 +46,13 @@ static void *model_finder(void *_index)
 
     index = reinterpret_cast<size_t>(_index);
     //const long index = (long)_index;
-    auto __function = function[index];
+    auto function = functions[index];
 
     //WDebug(debug_model, __FUNCTION__ << index);
 
-    finder.is[index] = __function((const StrokePre *)ctrl._stroke);
+    finder.is[index] = function((const StrokePre *)ctrl._stroke);
 
-    return NULL;
+    return nullptr;
 }
 
 static int get_index_most_prob(cdouble min_precision)
@@ -61,7 +61,7 @@ static int get_index_most_prob(cdouble min_precision)
     int index = -1;
     int i;
 
-    for(i = 0; i < THREAD_FINDER; i++){
+    for (i = 0; i < THREAD_FINDER; i++) {
         const double prec = finder.is[i];
 
         // is not enough
@@ -79,27 +79,27 @@ static int get_index_most_prob(cdouble min_precision)
     return index;
 }
 
-bool model::find(StrokePre *stroke)
+bool model::find(StrokePre &stroke)
 {
     long i;
 
-    ctrl._stroke = stroke;
-    for(i = 0; i < THREAD_FINDER; i++){
-        pthread_create(&ctrl._thread[i], NULL, model_finder, (void *)i);
+    ctrl._stroke = &stroke;
+    for (i = 0; i < THREAD_FINDER; i++) {
+        pthread_create(&ctrl._thread[i], nullptr, model_finder, (void *)i);
     }
 
-    for(i = 0; i < THREAD_FINDER; i++){
-        pthread_join(ctrl._thread[i], NULL);
+    for (i = 0; i < THREAD_FINDER; i++) {
+        pthread_join(ctrl._thread[i], nullptr);
     }
 
-    i = get_index_most_prob(min_precision);
+    i = get_index_most_prob(_min_precision);
     WDebug(debug_model, i);
 
-    if(i < 0){
+    if (i < 0){
         return false;
     }
 
-    function_create[i](stroke);
+    function_create[i](&stroke);
 
     return true;
 }

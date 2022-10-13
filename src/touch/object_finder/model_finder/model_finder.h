@@ -5,6 +5,6 @@ class StrokePre;
 class model
 {
 public:
-    static bool find(StrokePre *stroke);
+    static bool find(StrokePre &stroke);
 };
 

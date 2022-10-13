@@ -54,8 +54,8 @@ public:
     public:
         explicit const_iterator(const WListPrivate<T> *e) { _e = e; };
 
-        const T* operator->() const   { return _e->data; };
-        const T &operator*() const    { return *_e->data; };
+        const T* operator->() const   { W_ASSERT(_e); return _e->data; };
+        const T &operator*() const    { W_ASSERT(_e); return *_e->data; };
         constexpr bool operator==(const_iterator i) const         { return _e == i._e; }
         constexpr bool operator!=(const_iterator i) const         { return _e != i._e; }
         const_iterator &operator++()                              { _e = _e->next; return *this; }
@@ -92,7 +92,7 @@ inline void WList<T>::append(const T &data) noexcept
     test();
 
     WNew(tmp, struct WListPrivate<T>, ());
-    tmp->data = new T(data);
+    WNew(tmp->data, T, (data));
 
     if(unlikely(this->_first == nullptr)){
         W_ASSERT(this->_last == nullptr);
@@ -228,6 +228,8 @@ WList<T> &WList<T>::operator=(const WList<T> &other)
         curr = curr->next;
     }
 
+    W_ASSERT((not tmp) or (not curr));
+
     if((not tmp) and (not curr)){
         W_ASSERT(this->_size == other._size);
         goto out;
@@ -236,7 +238,7 @@ WList<T> &WList<T>::operator=(const WList<T> &other)
     /**
      * we need to allocate more memory
      * */
-    if(tmp and not curr){
+    if(tmp and (not curr)){
         while(tmp){
             this->append(*(tmp->data));
             tmp = tmp->next;
@@ -245,16 +247,25 @@ WList<T> &WList<T>::operator=(const WList<T> &other)
         /**
          * We need to dealloc the extra memory
          * */
+
+        W_ASSERT(not tmp and curr);
+
         while(curr){
             auto *next = curr->next;
-            delete curr->data;
-            delete curr;
+            WDelete(curr->data);
+            WDelete(curr);
             curr = next;
         }
     }
 
     out:
     _size = other._size;
+
+    if (not _size) {
+        this->_first = nullptr;
+        this->_last = nullptr;
+    }
+
     W_ASSERT(WList<T>::equal(*this, other));
 
     test();

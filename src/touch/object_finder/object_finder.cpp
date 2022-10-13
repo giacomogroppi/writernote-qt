@@ -1,8 +1,6 @@
 #include "object_finder.h"
 #include "mainwindow.h"
-#include "currenttitle/document.h"
 #include "touch/object_finder/model_finder/model_finder.h"
-#include "pthread.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
 // è lo stesso stroke definito nel file tabletevent.cpp
@@ -24,12 +22,12 @@ object_finder::object_finder(QObject *parent)
 
 void object_finder::endTimer()
 {
-    StrokePre &stroke = __tmp;
+    auto &stroke = __tmp;
 
-    if(likely(stroke.is_normal())){
+    if (likely(stroke.is_normal())){
         WDebug(debug, "call");
 
-        model::find(&stroke);
+        model::find(stroke);
 
         _canvas->call_update();
     }

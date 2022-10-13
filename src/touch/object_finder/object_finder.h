@@ -11,7 +11,7 @@ class object_finder : public QObject
     Q_OBJECT
 public:
     explicit object_finder(QObject *parent);
-    ~object_finder() = default;
+    ~object_finder() override = default;
 
     void move(const QPointF &point);
     void endMoving();
@@ -24,6 +24,8 @@ private:
     static constexpr auto time = 1 * 500;
     class TabletCanvas *_canvas;
     QTimer *_timer;
+
+    Q_DISABLE_COPY(object_finder);
 
 private slots:
     void endTimer();
