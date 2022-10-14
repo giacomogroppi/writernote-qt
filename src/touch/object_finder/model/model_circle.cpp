@@ -28,7 +28,7 @@ void model_circle_create(StrokePre *stroke)
     auto *data = (stroke_complex_circle *)WMalloc(sizeof(stroke_complex_circle));
     memcpy(data, &circle_data, sizeof(circle_data));
     stroke->set_complex(
-                            StrokeProp(StrokeProp::COMPLEX_CIRCLE),
+                            StrokeProp::COMPLEX_CIRCLE,
                             data
                         );
 }

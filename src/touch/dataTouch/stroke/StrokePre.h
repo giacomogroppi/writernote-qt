@@ -13,6 +13,7 @@ private:
     WList<pressure_t>   ::const_iterator   _last_draw_press;
 
 #ifdef DEBUGINFO
+    constexpr auto StrokePreDebug = false;
     bool already_merge = false;
 #endif // DEBUGINFO
 
@@ -46,8 +47,9 @@ public:
     [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
 
     void reset();
+    void reset_img();
 
-    void draw(QPainter &painter);
+    void draw(QPainter &painter, QPen &pen, double prop);
     void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);
     [[nodiscard]] QColor getColor(double division = 1.) const;
 
@@ -60,7 +62,7 @@ public:
 
 inline bool StrokePre::isEmpty() const noexcept
 {
-    return this->_point.isEmpty();
+    return this->_point.isEmpty() and is_normal();
 }
 
 inline int StrokePre::length() const

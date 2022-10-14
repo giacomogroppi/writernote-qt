@@ -172,8 +172,8 @@ static void model_line_vertical(StrokePre *stroke, stroke_complex_line *data)
 static void model_line_generic(StrokePre *stroke, stroke_complex_line *data)
 {
     const auto pressure = stroke->getPressure();
-    data->pt1  = stroke->constBegin()->toQPointF(1.);
-    data->pt2 = stroke->last().toQPointF(1.);
+    data->pt1           = stroke->constBegin()->toQPointF(1.);
+    data->pt2           = stroke->last().       toQPointF(1.);
 
     if(data->pt1.y() > data->pt2.y()){
         __swap(data->pt1, data->pt2);

@@ -4,8 +4,16 @@
 #include <QString>
 
 class StrokeProp {
+public:
+    enum flag_complex : int{
+        COMPLEX_NORMAL = 0,
+        COMPLEX_CIRCLE = 1,
+        COMPLEX_RECT = 2,
+        COMPLEX_LINE = 3
+    };
+
 private:
-    int _prop;
+    flag_complex _prop;
     static_assert(sizeof(_prop) == sizeof(int));
 
 #ifdef DEBUGINFO
@@ -14,10 +22,11 @@ private:
     static void checkType(int type) {};
 #endif
 public:
-    explicit StrokeProp (int type);
+    explicit StrokeProp (flag_complex type);
     ~StrokeProp() = default;
 
-    static_assert_type(_prop, int);
+    static_assert_type(_prop, flag_complex);
+    static_assert(sizeof(_prop) == sizeof(int));
 
     force_inline bool is_normal() const { return _prop == COMPLEX_NORMAL; };
     force_inline bool is_circle() const { return _prop == COMPLEX_CIRCLE; };
@@ -25,20 +34,13 @@ public:
     force_inline bool is_line() const { return _prop == COMPLEX_LINE; };
     force_inline bool is_complex() const { return _prop != COMPLEX_NORMAL; };
 
-    enum flag_complex : typeof(_prop){
-        COMPLEX_NORMAL = 0,
-        COMPLEX_CIRCLE = 1,
-        COMPLEX_RECT = 2,
-        COMPLEX_LINE = 3
-    };
-
     [[nodiscard]] typeof(_prop) getProp() const { return _prop; };
     [[nodiscard]] typeof(_prop) &PropRef() { return _prop; };
     [[nodiscard]] QString toString() const noexcept;
 
 protected:
     void setProp (const StrokeProp &prop) noexcept;
-    void setProp (int type) noexcept;
+    void setProp (flag_complex type) noexcept;
 };
 
 Q_CORE_EXPORT QDataStream &operator<<(QDataStream &d, const StrokeProp &str);
@@ -60,13 +62,13 @@ inline QString StrokeProp::toString() const noexcept
 }
 #endif // DEBUGINFO
 
-inline void StrokeProp::setProp(int type) noexcept
+inline void StrokeProp::setProp(flag_complex type) noexcept
 {
     StrokeProp::checkType(type);
     this->_prop = type;
 }
 
-inline StrokeProp::StrokeProp(int type)
+inline StrokeProp::StrokeProp(flag_complex type)
 {
     StrokeProp::checkType(type);
     this->_prop = type;

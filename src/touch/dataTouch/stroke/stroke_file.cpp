@@ -167,8 +167,7 @@ size_t stroke_file::get_size_in_file(const Stroke &stroke)
 
     static_assert_type(len_pressure, const int);
     static_assert_type(len_point, const int);
-    static_assert_type(stroke.getProp(), int);
-
+    static_assert(sizeof(stroke.getProp()) == sizeof(int));
 
     s += sizeof(stroke._metadata);
     s += sizeof(stroke.getProp());
@@ -199,7 +198,7 @@ int stroke_file::save(const class Stroke &_stroke, WZipWriterSingle &writer)
     static_assert(sizeof(len_pressure) == sizeof(len_point));
     static_assert(sizeof(len_pressure) == stroke_file_size_len);
     static_assert(sizeof(_stroke._metadata) == 8);
-    static_assert_type(_stroke.getProp(), int);
+    static_assert(sizeof(_stroke.getProp()) == sizeof(int));
 
     writer.write(&_stroke._metadata, sizeof(_stroke._metadata));
     writer.write_object(_stroke.getProp());

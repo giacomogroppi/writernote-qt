@@ -93,11 +93,9 @@ constexpr ver_stroke_complex _current_ver = 0;
 
 int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &writer)
 {
-    const auto type = stroke->getProp();
+    const StrokeProp::flag_complex type = stroke->getProp();
     const auto size = get_size_by_type(*stroke);
     const auto *data = stroke->get_complex_data();
-
-    static_assert_type(type, const int);
 
     static_assert(sizeof(_current_ver) == sizeof(unsigned char));
 

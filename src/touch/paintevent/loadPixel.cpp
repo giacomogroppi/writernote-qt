@@ -14,12 +14,11 @@
 extern StrokePre __tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, double delta);
 
-static void drawSingleStroke(StrokePre   &_stroke, QPainter &_painter)
+static void drawSingleStroke(StrokePre &_stroke, QPainter &_painter, QPen &pen, double prop)
 {
-    if(unlikely(_stroke.isEmpty()))
-        return;
-
-    _stroke.draw(_painter);
+    if (!_stroke.isEmpty()) {
+        _stroke.draw(_painter, pen, prop);
+    }
 }
 
 static void draw_laser(QPainter &painter, laser *_laser, QPen &pen, double zoom)
@@ -28,7 +27,7 @@ static void draw_laser(QPainter &painter, laser *_laser, QPen &pen, double zoom)
     const auto end = _laser->end();
 
     for(; begin != end; begin ++){
-        drawSingleStroke(*begin, painter);
+        drawSingleStroke(*begin, painter, pen, zoom);
     }
 }
 
@@ -87,7 +86,7 @@ void TabletCanvas::load(QPainter &painter,
     data->draw_img(painter);
 
     /* stroke not already add to page */
-    drawSingleStroke(strokeToDraw, painter);
+    drawSingleStroke(strokeToDraw, painter, pen, zoom);
 
     painter.setRenderHints(QPainter::TextAntialiasing, false);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);

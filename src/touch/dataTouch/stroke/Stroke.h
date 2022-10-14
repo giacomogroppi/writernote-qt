@@ -546,6 +546,7 @@ inline void Stroke::copy(const Stroke &src, Stroke &dest)
     dest._flag = src._flag;
 
     memcpy(&dest._metadata, &src._metadata, sizeof(src._metadata));
+    W_ASSERT(Stroke::cmp(src, dest) == true);
 }
 
 inline Stroke &Stroke::operator=(const Stroke &other)
@@ -560,7 +561,11 @@ inline Stroke &Stroke::operator=(const Stroke &other)
 
 inline bool Stroke::isEmpty() const
 {
-    return _point.isEmpty() && this->is_normal();
+    if(is_normal()){
+        return _point.isEmpty();
+    }else{
+        return false;
+    }
 }
 
 inline void Stroke::scale(const QPointF &offset)

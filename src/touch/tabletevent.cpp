@@ -62,9 +62,12 @@ static void AppendAll(
 
         strokeToAppend.merge(stroke);
 
+        W_ASSERT(not stroke.isEmpty());
+
         pageMod = doc.appendStroke(stroke);
 
         core::get_main_window()->_preview_widget->mod(pageMod);
+
         doc.at_mod(pageMod).triggerRenderImage(
                 static_cast<int>(time),
                 false

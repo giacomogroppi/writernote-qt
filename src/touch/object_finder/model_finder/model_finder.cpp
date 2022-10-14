@@ -1,7 +1,6 @@
 #include "model_finder.h"
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 #include "touch/object_finder/model/model.h"
-#include "utils/platform.h"
 
 #define THREAD_FINDER 3
 
@@ -40,12 +39,7 @@ void __init__ init_finder()
 
 static void *model_finder(void *_index)
 {
-    size_t index;
-
-    static_assert(sizeof(index)  == sizeof(_index));
-
-    index = reinterpret_cast<size_t>(_index);
-    //const long index = (long)_index;
+    const auto index = (unsigned long)(_index);
     auto function = functions[index];
 
     //WDebug(debug_model, __FUNCTION__ << index);
@@ -81,7 +75,8 @@ static int get_index_most_prob(cdouble min_precision)
 
 bool model::find(StrokePre &stroke)
 {
-    long i;
+    unsigned long i;
+    const auto color = stroke.getColor();
 
     ctrl._stroke = &stroke;
     for (i = 0; i < THREAD_FINDER; i++) {
@@ -92,14 +87,20 @@ bool model::find(StrokePre &stroke)
         pthread_join(ctrl._thread[i], nullptr);
     }
 
-    i = get_index_most_prob(_min_precision);
-    WDebug(debug_model, i);
+    const auto index = get_index_most_prob(_min_precision);
+    WDebug(debug_model, index);
 
-    if (i < 0){
+    if (index < 0){
         return false;
     }
 
-    function_create[i](&stroke);
+    W_ASSERT(index < THREAD_FINDER);
+
+    function_create[index](&stroke);
+
+    stroke.setColor(color);
+
+    W_ASSERT(not stroke.is_normal());
 
     return true;
 }

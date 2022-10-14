@@ -148,23 +148,24 @@ void Stroke::reset()
 
 bool Stroke::cmp(const Stroke &stroke1, const Stroke &stroke2)
 {
-    int i, len;
+    if(stroke2.is_normal() xor stroke1.is_normal())
+        return false;
 
     if(likely(stroke1.is_normal())){
-        if(unlikely(!stroke2.is_normal()))
+        if(stroke1.length() != stroke2.length())
             return false;
 
-        len = stroke1.length();
-        if(len != stroke2.length())
-            return false;
+        auto b1 = stroke1._point.constBegin();
+        auto b2 = stroke2._point.constBegin();
 
-        for (i = 0; i < len; i ++){
-            const point_s &point1 = stroke1.at(i);
-            const point_s &point2 = stroke2.at(i);
+        const auto e1 = stroke1._point.constEnd();
 
-            if(point1 != point2){
+        for (; b1 != e1; b1 ++, b2++) {
+            const point_s &p1 = *b1;
+            const point_s &p2 = *b2;
+
+            if(p1 != p2)
                 return false;
-            }
         }
     }else{
         return stroke_complex_cmp(&stroke1, &stroke2);

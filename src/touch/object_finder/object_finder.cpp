@@ -1,7 +1,8 @@
 #include "object_finder.h"
-#include "mainwindow.h"
 #include "touch/object_finder/model_finder/model_finder.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
+#include "touch/tabletcanvas.h"
+
 
 // è lo stesso stroke definito nel file tabletevent.cpp
 extern StrokePre __tmp;
@@ -27,8 +28,9 @@ void object_finder::endTimer()
     if (likely(stroke.is_normal())){
         WDebug(debug, "call");
 
-        model::find(stroke);
-
-        _canvas->call_update();
+        if (model::find(stroke)){
+            _canvas->call_update();
+            stroke.reset_img();
+        }
     }
 }

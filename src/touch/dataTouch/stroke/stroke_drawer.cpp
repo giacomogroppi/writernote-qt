@@ -11,12 +11,19 @@ constexpr double deltaColorNull = 1.3;
 #endif
 constexpr double deltaPress = 2.;
 
-force_inline void set_press(QPen &pen, const pressure_t press, const double prop, cbool is_rubber)
+force_inline void set_press(
+                            QPen &pen,
+                            const pressure_t press,
+                            const double prop,
+                            cbool is_rubber,
+                            const QColor &color)
 {
     pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
-    if(unlikely(is_rubber)){
+    if (unlikely(is_rubber)) {
         const auto _press = pen.widthF() * deltaColorNull;
         pen.setWidthF(_press);
+    } else {
+        pen.setColor(color);
     }
 }
 
@@ -40,7 +47,7 @@ force_inline void stroke_drawer::draw_circle(const Stroke &stroke)
     y = tmp.y();
     x = tmp.x();
 
-    set_press(_pen, press, prop, _isRubber);
+    set_press(_pen, press, prop, _isRubber, this->_color);
     _painter.setPen(_pen);
 
     _painter.drawEllipse(QPointF(x, y), data->_r * prop, data->_r * prop);
@@ -86,7 +93,7 @@ void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
 
         pointDraw = point.toQPointF(prop);
 
-        set_press(this->_pen, pressure, _prop, this->_isRubber);
+        set_press(this->_pen, pressure, _prop, this->_isRubber, this->_color);
         painter->setPen(this->_pen);
 
         if(unlikely(this->_isRubber)){
@@ -120,11 +127,10 @@ void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
 
 force_inline void stroke_drawer::draw_rect(const Stroke &stroke)
 {
-    _pen.setColor(stroke.getColor());
     _painter.setPen(_pen);
     auto *data = static_cast<stroke_complex_rect *>(stroke._complex);
 
-    set_press(_pen, data->press, _prop, _isRubber);
+    set_press(_pen, data->press, _prop, _isRubber, this->_color);
 
     const auto _topLeft     = Page::at_translation(
                 point_s(
@@ -147,9 +153,8 @@ force_inline void stroke_drawer::draw_line(const Stroke    &stroke)
     const auto press = data->press;
     cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
 
-    _pen.setColor(stroke.getColor());
     _painter.setPen(_pen);
-    set_press(_pen, press, _prop, _isRubber);
+    set_press(_pen, press, _prop, _isRubber, this->_color);
 
     const auto _topLeft     = Page::at_translation(point_s(data->pt1), _page).toQPointF(prop);
     const auto _bottomRight = Page::at_translation(point_s(data->pt2), _page).toQPointF(prop);
@@ -165,8 +170,6 @@ void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen
     W_ASSERT(painter.isActive());
 
     WDebug(true, "Print" << dynamic_cast<const StrokeProp &>(stroke).toString());
-
-    pen.setColor(stroke.getColor());
 
     if(likely(stroke.is_normal())){
         stroke_drawer_private<WList<point_s>, WList<pressure_t>> data(
