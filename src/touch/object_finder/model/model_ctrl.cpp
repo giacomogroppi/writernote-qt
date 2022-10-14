@@ -173,7 +173,7 @@ extern bool stroke_complex_is_inside_line   (const Stroke *stroke, const WLine &
 extern bool stroke_complex_is_inside_rect   (const Stroke *stroke, const WLine &line, cdouble precision);
 bool stroke_complex_is_inside(const Stroke *stroke, const WLine &line, cdouble precision)
 {
-    switch (stroke->get_type()) {
+    switch (stroke->getProp()) {
         case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_is_inside_circle(stroke, line, precision);
         case Stroke::COMPLEX_LINE:
@@ -190,7 +190,7 @@ extern void stroke_complex_translate_line   (Stroke *stroke, const QPointF &offs
 extern void stroke_complex_translate_rect   (Stroke *stroke, const QPointF &offset);
 void stroke_complex_translate(Stroke *stroke, const QPointF &offset)
 {
-    switch (stroke->get_type()) {
+    switch (stroke->getProp()) {
         case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_translate_circle(stroke, offset);
         case Stroke::COMPLEX_LINE:
@@ -207,7 +207,7 @@ extern void stroke_complex_make_normal_line   (const Stroke *from, Stroke *to);
 extern void stroke_complex_make_normal_rect   (const Stroke *from, Stroke *to);
 void stroke_complex_make_normal(const Stroke *from, Stroke *to)
 {
-    switch (from->get_type()) {
+    switch (from->getProp()) {
         case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_make_normal_circle(from, to);
         case Stroke::COMPLEX_LINE:
@@ -224,7 +224,7 @@ extern bool stroke_complex_is_inside_line   (const Stroke *_stroke, const QRectF
 extern bool stroke_complex_is_inside_rect   (const Stroke *_stroke, const QRectF &area, cdouble precision);
 bool stroke_complex_is_inside(const Stroke *_stroke, const QRectF &area, cdouble precision)
 {
-    switch ( _stroke->get_type() ) {
+    switch ( _stroke->getProp() ) {
         case Stroke::COMPLEX_CIRCLE:
             return stroke_complex_is_inside_circle(_stroke, area, precision);
         case Stroke::COMPLEX_LINE:

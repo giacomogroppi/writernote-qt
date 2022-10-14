@@ -39,6 +39,7 @@ public:
     [[nodiscard]] pressure_t getPressure() const;
     [[nodiscard]] const point_s &last() const;
 
+    void set_complex(StrokeProp::flag_complex type, void *data);
     void set_complex(StrokeProp type, void *data);
 
     [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
@@ -101,5 +102,10 @@ inline WList<point_s>::const_iterator StrokePre::get_last_point() const
 {
     W_ASSERT(this->_point.length() > 1);
     return _last_draw_point;
+}
+
+inline void StrokePre::set_complex(StrokeProp::flag_complex type, void *data)
+{
+    return StrokePre::set_complex(StrokeProp(type), data);
 }
 

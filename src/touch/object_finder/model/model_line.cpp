@@ -199,7 +199,7 @@ void model_line_create(StrokePre *stroke)
     }
 
     stroke->reset();
-    stroke->set_complex(Stroke::COMPLEX_LINE, data);
+    stroke->set_complex(StrokeProp::COMPLEX_LINE, data);
 }
 
 void stroke_complex_line_append(Stroke *stroke, const QPointF& point)

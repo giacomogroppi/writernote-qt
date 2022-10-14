@@ -25,9 +25,12 @@ void model_circle_create(StrokePre *stroke)
     circle_data._press = press;
 
     stroke->reset();
-    stroke_complex_circle *data = (stroke_complex_circle *)WMalloc(sizeof(stroke_complex_circle));
+    auto *data = (stroke_complex_circle *)WMalloc(sizeof(stroke_complex_circle));
     memcpy(data, &circle_data, sizeof(circle_data));
-    stroke->set_complex(Stroke::COMPLEX_CIRCLE, data);
+    stroke->set_complex(
+                            StrokeProp(StrokeProp::COMPLEX_CIRCLE),
+                            data
+                        );
 }
 
 static void model_circle_precision(const QPointF &point, double &precision)

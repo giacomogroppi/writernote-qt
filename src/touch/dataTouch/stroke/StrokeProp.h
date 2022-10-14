@@ -41,11 +41,7 @@ protected:
     void setProp (int type) noexcept;
 };
 
-inline Q_CORE_EXPORT QDataStream &operator<<(QDataStream &d, const StrokeProp &str)
-{
-    d << str.toString();
-    return d;
-};
+Q_CORE_EXPORT QDataStream &operator<<(QDataStream &d, const StrokeProp &str);
 
 #ifdef DEBUGINFO
 inline QString StrokeProp::toString() const noexcept
