@@ -104,11 +104,11 @@ force_inline int stroke_file::load_ver_2(class Stroke &_stroke, WZipReaderSingle
 
     if(reader.read_by_size(&_stroke._metadata, sizeof(_stroke._metadata)) < 0)
         MANAGE_ERR();
-    if(reader.read_object(_stroke._prop) < 0)
+    if(reader.read_object(_stroke.PropRef()) < 0)
         MANAGE_ERR();
 
-    if(unlikely(_stroke._prop != Stroke::COMPLEX_NORMAL)){
-        return stroke_complex_load(&_stroke, _stroke._prop, reader);
+    if(unlikely(_stroke.is_complex())){
+        return stroke_complex_load(&_stroke, dynamic_cast<StrokeProp &>(_stroke), reader);
     }
 
     if(reader.read_object(len_point) < 0)
@@ -155,24 +155,29 @@ int stroke_file::load(class Stroke &_stroke, int version, WZipReaderSingle &read
     W_ASSERT(0);
 }
 
-size_t stroke_file::get_size_in_file(const Stroke &_stroke)
+size_t stroke_file::get_size_in_file(const Stroke &stroke)
 {
     size_t s = 0;
     int i;
-    cint len_pressure = _stroke._pressure.length();
-    cint len_point    = _stroke._point.length();
+    cint len_pressure = stroke._pressure.length();
+    cint len_point    = stroke._point.length();
 
     static_assert(sizeof(len_pressure) == sizeof(len_point));
     static_assert(sizeof(len_pressure) == stroke_file_size_len);
 
-    s += sizeof(_stroke._metadata);
-    s += sizeof(_stroke._prop);
+    static_assert_type(len_pressure, const int);
+    static_assert_type(len_point, const int);
+    static_assert_type(stroke.getProp(), int);
 
-    if(_stroke.is_complex()){
-        W_ASSERT(_stroke._pressure.isEmpty());
-        W_ASSERT(_stroke._point.isEmpty());
 
-        s += stroke_complex_get_size_save(&_stroke);
+    s += sizeof(stroke._metadata);
+    s += sizeof(stroke.getProp());
+
+    if (stroke.is_complex()) {
+        W_ASSERT(stroke._pressure.isEmpty());
+        W_ASSERT(stroke._point.isEmpty());
+
+        s += stroke_complex_get_size_save(&stroke);
         return s;
     }
 
@@ -194,9 +199,10 @@ int stroke_file::save(const class Stroke &_stroke, WZipWriterSingle &writer)
     static_assert(sizeof(len_pressure) == sizeof(len_point));
     static_assert(sizeof(len_pressure) == stroke_file_size_len);
     static_assert(sizeof(_stroke._metadata) == 8);
+    static_assert_type(_stroke.getProp(), int);
 
     writer.write(&_stroke._metadata, sizeof(_stroke._metadata));
-    writer.write_object(_stroke._prop);
+    writer.write_object(_stroke.getProp());
 
     if(_stroke.is_complex()){
         W_ASSERT(_stroke._pressure.isEmpty());

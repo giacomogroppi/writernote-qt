@@ -28,7 +28,7 @@ static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, 
     return QRectF(tl, br).contains(p2);
 }
 
-void *stroke_complex_allocate(int type, const void *data);
+void *stroke_complex_allocate(class StrokeProp type, const void *data);
 void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 bool stroke_complex_cmp(const Stroke *str1, const Stroke *str2);
 QRect stroke_complex_bigger_data(const Stroke *stroke);
@@ -36,7 +36,7 @@ QRect stroke_complex_bigger_data(const Stroke *stroke);
 size_t stroke_complex_get_size_save(const Stroke *stroke);
 int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &file);
 
-int stroke_complex_load(Stroke *stroke, int type, WZipReaderSingle &reader);
+int stroke_complex_load(Stroke *stroke, class StrokeProp type, WZipReaderSingle &reader);
 
 void stroke_complex_append(Stroke *stroke, const QPointF &point);
 bool stroke_complex_is_inside(const Stroke *stroke, const class WLine &line, cdouble precision);

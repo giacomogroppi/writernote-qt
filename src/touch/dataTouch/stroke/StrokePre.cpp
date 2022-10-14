@@ -97,7 +97,7 @@ pressure_t StrokePre::getPressure() const
     return *this->_pressure.constBegin();
 }
 
-void StrokePre::set_complex(flag_complex type, void *data)
+void StrokePre::set_complex(StrokeProp type, void *data)
 {
     Stroke::set_complex(type, data);
 }

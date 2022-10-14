@@ -6,10 +6,11 @@
 #include <QPointF>
 #include <QPoint>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <qmath.h>
-#include "stdlib.h"
+#include <cstdlib>
 #include "utils/common_def.h"
+#include <type_traits>
 
 #define __init__ __attribute((constructor))
 
@@ -23,6 +24,8 @@
 
 #define force_inline Q_ALWAYS_INLINE
 #define not_used __attribute__ ((__unused__))
+
+#define static_assert_type(val, should_be) static_assert(std::is_same<decltype(val), should_be>::value, #val " must be " #should_be)
 
 #define qstr QString
 #define qarr QByteArray

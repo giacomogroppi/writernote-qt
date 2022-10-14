@@ -134,7 +134,7 @@ void Stroke::reset()
 
     W_ASSERT(!_complex);
 
-    _prop = COMPLEX_NORMAL;
+    StrokeProp::setProp(COMPLEX_NORMAL);
     _pressure.clear();
     _point.clear();
     _metadata = {

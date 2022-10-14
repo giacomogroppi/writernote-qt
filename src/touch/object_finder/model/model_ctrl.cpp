@@ -5,9 +5,9 @@
 #include "testing/memtest.h"
 #include "utils/common_error_definition.h"
 
-static size_t get_size_by_type(int type)
+static size_t get_size_by_type(StrokeProp type)
 {
-    switch (type) {
+    switch (type.getProp()) {
     case Stroke::COMPLEX_CIRCLE:
         return sizeof(stroke_complex_circle);
     case Stroke::COMPLEX_LINE:
@@ -19,12 +19,12 @@ static size_t get_size_by_type(int type)
     }
 }
 
-void *stroke_complex_allocate(int type, const void *data)
+void *stroke_complex_allocate (StrokeProp type, const void *data)
 {
     void *new_data;
 
-    if(type == Stroke::COMPLEX_NORMAL){
-        new_data = NULL;
+    if(type.is_normal()){
+        new_data = nullptr;
         return new_data;
     }
 
@@ -80,9 +80,9 @@ QRect stroke_complex_bigger_data(const Stroke *stroke)
 
 bool stroke_complex_cmp(const Stroke *str1, const Stroke *str2)
 {
-    const size_t size = get_size_by_type(str1->get_type());
+    const size_t size = get_size_by_type(*str1);
 
-    if(str1->get_type() != str2->get_type())
+    if(str1->getProp() != str2->getProp())
         return false;
 
     return (memcmp(str1->get_complex_data(), str2->get_complex_data(), size)) == 0;
@@ -93,9 +93,11 @@ constexpr ver_stroke_complex _current_ver = 0;
 
 int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &writer)
 {
-    const auto type = stroke->get_type();
-    const auto size = get_size_by_type(type);
+    const auto type = stroke->getProp();
+    const auto size = get_size_by_type(*stroke);
     const auto *data = stroke->get_complex_data();
+
+    static_assert_type(type, const int);
 
     static_assert(sizeof(_current_ver) == sizeof(unsigned char));
 
@@ -108,8 +110,7 @@ int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &writer)
 size_t stroke_complex_get_size_save(const Stroke *stroke)
 {
     size_t s = 0;
-    const auto type = stroke->get_type();
-    const auto size = get_size_by_type(type);
+    const auto size = get_size_by_type(*stroke);
 
     static_assert(sizeof(_current_ver) == sizeof(unsigned char));
 
@@ -119,7 +120,7 @@ size_t stroke_complex_get_size_save(const Stroke *stroke)
     return s;
 }
 
-int stroke_complex_load(Stroke *stroke, int type, WZipReaderSingle &reader)
+int stroke_complex_load(Stroke *stroke, StrokeProp type, WZipReaderSingle &reader)
 {
     ver_stroke_complex current_ver;
     const auto size = get_size_by_type(type);
