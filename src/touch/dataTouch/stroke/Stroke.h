@@ -117,7 +117,7 @@ public:
     [[nodiscard]] const point_s &last() const;
 
     void scale(const QPointF &offset);
-    void set_complex(int new_prop, void *new_data);
+    void set_complex(StrokeProp new_prop, void *new_data);
     [[nodiscard]] const void *get_complex_data() const { return _complex; };
 
     [[nodiscard]] auto constBegin() const { return _point.begin(); }
@@ -142,9 +142,9 @@ protected:
     [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, const Stroke &s);
 };
 
-force_inline void Stroke::set_complex(int new_prop, void *new_data)
+inline void Stroke::set_complex(StrokeProp new_prop, void *new_data)
 {
-    if(_complex){
+    if (_complex) {
         WFree(_complex);
     }
 

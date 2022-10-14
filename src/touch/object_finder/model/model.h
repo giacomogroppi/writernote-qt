@@ -36,7 +36,7 @@ QRect stroke_complex_bigger_data(const Stroke *stroke);
 size_t stroke_complex_get_size_save(const Stroke *stroke);
 int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &file);
 
-int stroke_complex_load(Stroke *stroke, int type, WZipReaderSingle &reader);
+int stroke_complex_load(Stroke *stroke, class StrokeProp type, WZipReaderSingle &reader);
 
 void stroke_complex_append(Stroke *stroke, const QPointF &point);
 bool stroke_complex_is_inside(const Stroke *stroke, const class WLine &line, cdouble precision);

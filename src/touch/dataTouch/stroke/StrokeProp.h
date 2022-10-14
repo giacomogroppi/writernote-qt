@@ -32,6 +32,7 @@ public:
         COMPLEX_LINE = 3
     };
 
+    [[nodiscard]] typeof(_prop) getProp() const { return _prop; };
     [[nodiscard]] typeof(_prop) &PropRef() { return _prop; };
     [[nodiscard]] QString toString() const noexcept;
 

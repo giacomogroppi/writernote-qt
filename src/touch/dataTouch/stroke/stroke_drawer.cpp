@@ -164,7 +164,7 @@ void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen
 
     W_ASSERT(painter.isActive());
 
-    WDebug(true, "Print" << stroke._prop);
+    WDebug(true, "Print" << dynamic_cast<const StrokeProp &>(stroke));
 
     pen.setColor(stroke.getColor());
 

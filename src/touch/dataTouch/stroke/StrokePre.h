@@ -39,7 +39,7 @@ public:
     [[nodiscard]] pressure_t getPressure() const;
     [[nodiscard]] const point_s &last() const;
 
-    void set_complex(Stroke::flag_complex type, void *data);
+    void set_complex(StrokeProp type, void *data);
 
     [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
     [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
