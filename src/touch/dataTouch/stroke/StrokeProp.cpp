@@ -1,5 +1,6 @@
 #include "StrokeProp.h"
 
+#ifdef DEBUGINFO
 void StrokeProp::checkType(int type)
 {
     W_ASSERT(
@@ -9,6 +10,7 @@ void StrokeProp::checkType(int type)
             type == COMPLEX_RECT
     );
 }
+#endif
 
 inline void StrokeProp::set(const StrokeProp &prop) noexcept
 {
