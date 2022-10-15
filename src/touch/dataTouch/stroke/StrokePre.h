@@ -13,7 +13,7 @@ private:
     WList<pressure_t>   ::const_iterator   _last_draw_press;
 
 #ifdef DEBUGINFO
-    constexpr auto StrokePreDebug = false;
+    constexpr static bool StrokePreDebug = false;
     bool already_merge = false;
 #endif // DEBUGINFO
 
