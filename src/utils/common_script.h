@@ -34,7 +34,7 @@
 force_inline QString get_only_name(const char *name)
 {
     QString res = name;
-    int len, i;
+    int i;
     int from, to;
 
     for(i = 0; name[i] != '\0'; i++){

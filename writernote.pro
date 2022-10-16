@@ -159,18 +159,18 @@ SOURCES += \
     src/touch/zoom/zoom_control.cpp \
     src/touch/zoom/ctrlZoom.cpp \
     src/touch/highlighter/highlighter.cpp \
-    src/touch/datastruct/page_file.cpp \
-    src/touch/datastruct/page.cpp \
-    src/touch/datastruct/triggerNewView.cpp \
-    src/touch/datastruct/stroke_complex_data.cpp \
-    src/touch/datastruct/changeId.cpp \
-    src/touch/datastruct/datastruct.cpp \
-    src/touch/datastruct/utils_datastruct.cpp \
-    src/touch/datastruct/stroke.cpp \
-    src/touch/datastruct/removePage.cpp \
-    src/touch/datastruct/controllForRepositioning.cpp \
-    src/touch/datastruct/stroke_file.cpp \
-    src/touch/datastruct/stroke_drawer.cpp \
+    src/touch/dataTouch/page/page_file.cpp \
+    src/touch/dataTouch/page/Page.cpp \
+    src/touch/dataTouch/datastruct/triggerNewView.cpp \
+    src/touch/dataTouch/stroke/stroke_complex_data.cpp \
+    src/touch/dataTouch/datastruct/changeId.cpp \
+    src/touch/dataTouch/datastruct/datastruct.cpp \
+    src/touch/dataTouch/datastruct/utils_datastruct.cpp \
+    src/touch/dataTouch/stroke/Stroke.cpp \
+    src/touch/dataTouch/datastruct/removePage.cpp \
+    src/touch/dataTouch/datastruct/controllForRepositioning.cpp \
+    src/touch/dataTouch/stroke/stroke_file.cpp \
+    src/touch/dataTouch/stroke/stroke_drawer.cpp \
     src/touch/copy_cut/copy_cut_selection.cpp \
     src/touch/pen/pen_ui.cpp \
     src/touch/laser/laser.cpp \
@@ -299,23 +299,22 @@ HEADERS += \
     src/preview_page_widget/preview_page_container.h \
     src/preview_page_widget/preview_page_item.h \
     src/preview_page_widget/preview_page_widget.h \
-    src/touch/datastruct/page_file.h \
-    src/touch/datastruct/stroke_complex_data.h \
-    src/touch/datastruct/stroke_drawer.h \
+    src/touch/dataTouch/page/page_file.h \
+    src/touch/dataTouch/stroke/stroke_complex_data.h \
+    src/touch/dataTouch/stroke/stroke_drawer.h \
     src/audioplay/audioplay.h \
     src/audiorecord/audiorecord.h \
     src/button/button_size.h \
-    src/core/listthreadsave.h \
+    src/core/WListThreadSafe.h \
     src/core/multiarray.h \
-    src/core/wline.h \
-    src/core/wmultiplemutex.h \
+    src/core/WLine.h \
+    src/core/WMultipleMutex.h \
     src/datamanage/retry_save_audio.h \
     src/last_open/element/imageWidget/imageWidget.h \
     src/currenttitle/document.h \
     src/currenttitle/option/modality_data.h \
     src/currenttitle/merge_currenttitle/merge_currenttitle.h \
     src/currenttitle/option/option_copybook.h \
-    src/dataread/load_from_file.h \
     src/dataread/readlistarray.h \
     src/filelost.h \
     src/frompdf/convertImg.h \
@@ -333,11 +332,11 @@ HEADERS += \
     src/testing/memtest.h \
     src/testing/testingcore.h \
     src/touch/copy_cut/copy_cut_selection.h \
-    src/touch/datastruct/page.h \
-    src/touch/datastruct/point.h \
-    src/touch/datastruct/stroke.h \
-    src/touch/datastruct/stroke_file.h \
-    src/touch/datastruct/utils_datastruct.h \
+    src/touch/dataTouch/page/page.h \
+    src/touch/dataTouch/point.h \
+    src/touch/dataTouch/stroke/stroke.h \
+    src/touch/dataTouch/stroke/stroke_file.h \
+    src/touch/dataTouch/datastruct/utils_datastruct.h \
     src/touch/highlighter/highlighter.h \
     src/touch/laser/laser.h \
     src/touch/multi_thread_data.h \
@@ -380,7 +379,7 @@ HEADERS += \
     src/utils/dialog_critic/dialog_critic.h \
     src/pdf/topdf.h \
     src/sheet/dialog_sheet.h \
-    src/touch/datastruct/datastruct.h \
+    src/touch/dataTouch/datastruct/datastruct.h \
     src/touch/event/itspossibletoscroll.h \
     src/touch/pen/pen_ui.h \
     src/touch/rubber/rubber_ui.h \

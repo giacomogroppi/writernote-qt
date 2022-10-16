@@ -431,7 +431,6 @@ inline QRect Stroke::getBiggerPointInStroke(T begin,
 inline QRect Stroke::getBiggerPointInStroke() const
 {
     QRect &__biggerData = (QRect &) _biggerData;
-    int count;
     QList<point_s>::const_iterator b = this->_point.constBegin();
     QList<point_s>::const_iterator e = this->_point.constEnd();
 
@@ -452,8 +451,6 @@ inline QRect Stroke::getBiggerPointInStroke() const
  * multiplied by the zoom. */
 inline bool Stroke::isInside(const QRectF &rect) const
 {
-    int i;
-
     {
         const auto &area = this->getBiggerPointInStroke();
         if(!area.intersects(rect.toRect())){

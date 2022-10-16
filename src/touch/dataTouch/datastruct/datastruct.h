@@ -576,7 +576,7 @@ inline void datastruct::setZoom(typeof(datastruct::_zoom) newZoom)
 
 inline void datastruct::setPageVisible(int page)
 {
-    W_ASSERT(page == -1 or page >= 0 and page < this->lengthPage());
+    W_ASSERT(page == -1 or (page >= 0 and page < this->lengthPage()));
     _pageVisible = page;
 }
 
