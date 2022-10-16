@@ -19,7 +19,7 @@ private:
 #ifdef DEBUGINFO
     static void checkType(int type);
 #else
-    static void checkType(int type) {};
+    static void checkType(int type) { Q_UNUSED(type); };
 #endif
 public:
     explicit StrokeProp (flag_complex type);
