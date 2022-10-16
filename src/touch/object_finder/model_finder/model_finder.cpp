@@ -39,7 +39,7 @@ void __init__ init_finder()
 
 static void *model_finder(void *_index)
 {
-    const auto index = (unsigned long)(_index);
+    const auto index = (intptr_t)(_index);
     auto function = functions[index];
 
     //WDebug(debug_model, __FUNCTION__ << index);
