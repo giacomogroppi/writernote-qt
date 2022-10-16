@@ -12,8 +12,9 @@ private:
     WList<point_s>      ::const_iterator   _last_draw_point;
     WList<pressure_t>   ::const_iterator   _last_draw_press;
 
-#ifdef DEBUGINFO
     constexpr static bool StrokePreDebug = false;
+
+#ifdef DEBUGINFO
     bool already_merge = false;
 #endif // DEBUGINFO
 

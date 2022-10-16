@@ -36,7 +36,10 @@ public:
 
     [[nodiscard]] typeof(_prop) getProp() const { return _prop; };
     [[nodiscard]] typeof(_prop) &PropRef() { return _prop; };
+
+#ifdef DEBUFINFO
     [[nodiscard]] QString toString() const noexcept;
+#endif
 
 protected:
     void setProp (const StrokeProp &prop) noexcept;

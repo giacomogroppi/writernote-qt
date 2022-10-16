@@ -442,7 +442,7 @@ inline int datastruct::whichPage(const QPointF &point) const
 {
     int i, len;
     const double heigth = Page::getHeight();
-    const auto debug_which = false;
+    const not_used auto debug_which = false;
 
     if(unlikely(point.y() < 0.))
         return -1;
