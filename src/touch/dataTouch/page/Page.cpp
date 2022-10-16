@@ -57,9 +57,6 @@ Page::Page(const int count, const n_style style)
     this->_IsVisible = true;
     drawNewPage(style);
     this->mergeList();
-
-    pthread_mutex_init(&_img, NULL);
-    pthread_mutex_init(&_append_load, NULL);
 }
 
 static inline void drawLineOrizzontal(
@@ -284,7 +281,7 @@ void Page::drawStroke(
 
 struct page_thread_data{
     QVector<int>      * to_remove;
-    pthread_mutex_t   * append;
+    WMutex            * append;
     QPainter          * painter;
     QList<Stroke>     * m_stroke;
     int                 m_pos_ris;
@@ -302,7 +299,7 @@ void * __page_load(void *__data)
     auto *  extra = (struct page_thread_data *)_data->extra;
     WImage img;
     Define_PEN(m_pen);
-    pthread_mutex_t *mutex = extra->append;
+    auto &mutex = *extra->append;
     int m_pos_ris = extra->m_pos_ris;
     const Page *page = extra->parent;
 
@@ -313,11 +310,11 @@ void * __page_load(void *__data)
         const auto &ref = extra->m_stroke->at(_data->from);
 
         if(unlikely(ref.isEmpty())){
-            pthread_mutex_lock(mutex);
+            mutex.lock();
 
             extra->to_remove->append(_data->from);
 
-            pthread_mutex_unlock(mutex);
+            mutex.unlock();
 
             continue;
         }
@@ -340,12 +337,12 @@ void * __page_load(void *__data)
     End_painter(painter);
 
     // the source image has the same size as img
-    pthread_mutex_lock(mutex);
+    mutex.lock();
 
     W_ASSERT(extra->painter->isActive());
     extra->painter->drawImage(img.rect(), img, img.rect());
 
-    pthread_mutex_unlock(mutex);
+    mutex.unlock();
 
     return NULL;
 }

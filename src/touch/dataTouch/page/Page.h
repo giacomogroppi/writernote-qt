@@ -4,6 +4,7 @@
 #include <QList>
 #include <QPointF>
 #include <QDebug>
+#include "core/WMutex.h"
 #include "core/WZipWriterSingle.h"
 #include "core/core.h"
 #include "touch/dataTouch/stroke/Stroke.h"
@@ -51,7 +52,7 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
-    pthread_mutex_t _img, _append_load;
+    WMutex _img, _append_load;
     bool            _IsVisible = true;
     int             _count;
     QList<Stroke>   _stroke;
@@ -197,7 +198,8 @@ force_inline void Page::unlock() const
 
 force_inline void Page::lock() const
 {
-    pthread_mutex_lock((pthread_mutex_t *)&_img);
+    auto &m = (WMutex &)(_img);
+    m.lock();
 }
 
 force_inline double Page::currentHeight() const
@@ -449,15 +451,11 @@ force_inline double Page::minHeight() const
 
 force_inline Page::Page(const Page &from)
 {
-    pthread_mutex_init(&_img, NULL);
-    pthread_mutex_init(&_append_load, NULL);
     Page::copy(from, *this);
 }
 
 force_inline Page::~Page()
 {
-    pthread_mutex_destroy(&_img);
-    pthread_mutex_destroy(&_append_load);
 }
 
 inline Page &Page::operator=(const Page &other)

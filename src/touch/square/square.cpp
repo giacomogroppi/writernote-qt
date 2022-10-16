@@ -13,7 +13,7 @@
 #include "pthread.h"
 #include "testing/memtest.h"
 
-static pthread_mutex_t      __mutex_sq;
+static WMutex               __mutex_sq;
 static const Page           *__page;
 static QPointF              __f;
 static QPointF              __s;
@@ -44,7 +44,6 @@ square::square(QObject *parent, property_control *property):
 
     __in_box = &_in_box;
 
-    pthread_mutex_init(&__mutex_sq, NULL);
 }
 
 square::~square()
@@ -66,9 +65,9 @@ void * __square_search(void *__data)
 
         if(datastruct_isinside(__f, __s, stroke))
         {
-            pthread_mutex_lock(&__mutex_sq);
+            __mutex_sq.lock();
             __index->append(data->from);
-            pthread_mutex_unlock(&__mutex_sq);
+            __mutex_sq.unlock();
 
             in_box = true;
         }

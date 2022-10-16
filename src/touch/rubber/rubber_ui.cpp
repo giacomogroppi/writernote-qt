@@ -23,8 +23,8 @@ struct RubberPrivateData{
 };
 
 static volatile int     __m_size_gomma;
-static pthread_mutex_t  single_mutex;
-static pthread_mutex_t  mutex_area;
+static WMutex           single_mutex;
+static WMutex           mutex_area;
 static thread_group_sem *thread_group;
 
 static void (*functionToCall)(DataPrivateMuThread *);
@@ -65,8 +65,6 @@ rubber_ui::rubber_ui(QWidget *parent) :
     ui->totale_button->setCheckable(true);
     ui->partial_button->setCheckable(true);
 
-    pthread_mutex_init(&mutex_area, NULL);
-    pthread_mutex_init(&single_mutex, NULL);
     WNew(thread_group, thread_group_sem, ());
     thread_group->startLoop(idle_rubber);
 
@@ -78,8 +76,6 @@ rubber_ui::~rubber_ui()
     this->save_settings();
     WDelete(thread_group);
 
-    pthread_mutex_destroy(&mutex_area);
-    pthread_mutex_destroy(&single_mutex);
     delete ui;
 }
 
@@ -157,7 +153,6 @@ bool rubber_ui::is_image_not_null(const int index, const Page *page,
     W_ASSERT(page);
     W_ASSERT(delta > 0);
 
-    int start;
     const auto &img = page->getImg();
 
     const auto ymin = qMin(from.y(), to.y());
@@ -336,7 +331,7 @@ out:
     }
 
 
-    pthread_mutex_lock(&single_mutex);
+    single_mutex.lock();
 
     draw_null(_page, stroke_mod_left_point,  stroke_mod_left_stroke,   true);
     draw_null(_page, stroke_mod_rigth_point, stroke_mod_rigth_stroke,  false);
@@ -344,8 +339,7 @@ out:
     // append to the list the index of the stroke to be remove
     private_data->data_to_remove->append(stroke_to_remove);
 
-    pthread_mutex_unlock(&single_mutex);
-
+    single_mutex.unlock();
 }
 
 void actionRubberSingleTotal(DataPrivateMuThread *data)
@@ -380,11 +374,11 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
             const auto currentArea = __stroke.getBiggerPointInStroke();
 
-            pthread_mutex_lock(&mutex_area);
+            mutex_area.lock();
 
             private_data->area = datastruct::get_bigger_rect(currentArea, private_data->area);
 
-            pthread_mutex_unlock(&mutex_area);
+            mutex_area.unlock();
         }
 
         index_selected.append(data->from);
@@ -395,13 +389,12 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
         return;
     }
 
-    pthread_mutex_lock(&single_mutex);
+    single_mutex.lock();
 
     _al_find->append(index_selected);
     private_data->data->decreaseAlfa(index_selected, _page->_count - 1);
 
-    pthread_mutex_unlock(&single_mutex);
-
+    single_mutex.unlock();
 }
 
 #define PrivateData(attribute) dataPrivate.attribute

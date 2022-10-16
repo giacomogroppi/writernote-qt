@@ -4,8 +4,9 @@
 #include "utils/threadcount.h"
 #include <pthread.h>
 #include "testing/memtest.h"
+#include "core/WMutex.h"
 
-static pthread_mutex_t mutex_thread_write;
+static WMutex mutex_thread_write;
 void DataPrivateInit(void)
 {
 #ifdef DEBUGINFO
@@ -18,8 +19,6 @@ void DataPrivateInit(void)
     call = 1;
 
 #endif
-
-    pthread_mutex_init(&mutex_thread_write, NULL);
 }
 
 static void ctrlThread(DataPrivateMuThread *data, int create)
@@ -92,7 +91,7 @@ int DataPrivateCountThread(int newThread)
 {
     int ret;
 
-    pthread_mutex_lock(&mutex_thread_write);
+    mutex_thread_write.lock();
 
     if(likely(threadLast - newThread > 0)){
         ret = newThread;
@@ -109,17 +108,17 @@ int DataPrivateCountThread(int newThread)
 
     threadLast -= ret;
 
-    pthread_mutex_unlock(&mutex_thread_write);
+    mutex_thread_write.unlock();
     return ret;
 }
 
 void DataPrivateCountThreadRelease(int releaseThread)
 {
-    pthread_mutex_lock(&mutex_thread_write);
+    mutex_thread_write.lock();
 
     threadLast -= releaseThread;
 
-    pthread_mutex_unlock(&mutex_thread_write);
+    mutex_thread_write.unlock();
 }
 
 pthread_t *get_thread_max()
