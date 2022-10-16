@@ -116,7 +116,6 @@ int xmlstruct::loadbinario_0(WZip &zip)
 /* version 4 5 6 */
 int xmlstruct::loadbinario_1(class WZip &zip)
 {
-    struct zip_stat st;
     int i, len;
     struct point_last temp_point;
     double valoretemp;

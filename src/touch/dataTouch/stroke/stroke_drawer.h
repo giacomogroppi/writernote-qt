@@ -60,9 +60,9 @@ public:
 inline stroke_drawer::stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber) :
     _painter(painter),
     _pen(pen),
+    _page(page),
     _prop(prop),
     _color(color),
-    _page(page),
     _isRubber(is_rubber)
 {
 }

@@ -40,7 +40,7 @@ void WZipWriterSingle::write(const void *from, size_t size_object)
     memcpy(to, from, size_object);
     //WMemcpy(to, from, size_object);
 #ifdef DEBUGINFO
-    for(int i = 0; i < size_object; i++){
+    for(size_t i = 0; i < size_object; i++){
         const char *d1 = (const char *) to;
         const char *d2 = (const char *) from;
         W_ASSERT(d1[i] == d2[i]);

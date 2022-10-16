@@ -125,19 +125,19 @@ void TabletCanvas::updateBrush(const QTabletEvent *event)
 
     switch (m_lineWidthValuator) {
             case PressureValuator:
-                m_pen.setWidthF(pressureToWidth(event->pressure()/2));
+                _pen.setWidthF(pressureToWidth(event->pressure()/2));
                 break;
             case TiltValuator:
-                m_pen.setWidthF(std::max(std::abs(vValue - 127),
+                _pen.setWidthF(std::max(std::abs(vValue - 127),
                                          std::abs(hValue - 127)) / 12);
                 break;
             default:
-                m_pen.setWidthF(1);
+                _pen.setWidthF(1);
         }
     if (event->pointerType() == QTabletEvent::Eraser) {
-            m_pen.setWidthF(event->pressure()/2 * 10 + 1);
+            _pen.setWidthF(event->pressure()/2 * 10 + 1);
         } else {
-            m_pen.setColor(_color);
+            _pen.setColor(_color);
         }
 #endif
 }
@@ -147,7 +147,7 @@ void TabletCanvas::updateCursor(const QTabletEvent *event)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
-        if (event->pointerType() == QTabletEvent::Eraser || this->_input == e_method::rubber) {
+        if (event->pointerType() == QTabletEvent::Eraser || this->_method.isRubber()) {
             cursor = QCursor(QPixmap(":image/images/cursor-eraser.png"), 3, 28);
         }
         else {

@@ -1,5 +1,4 @@
 #include "datawrite/savefile.h"
-#include "datawrite/source_read_ext.h"
 #include "utils/common_error_definition.h"
 #include "images/fromimage.h"
 #include "frompdf/frompdf.h"
@@ -36,8 +35,7 @@ static void savefile_save_record_state(WZipWriterSingle &writer, Document *doc)
 
 int savefile::savefile_check_file(cbool saveImg)
 {
-    int error, ver_stroke;
-    zip_error_t errore;
+    int ver_stroke;
     fromimage::load_res_img res_img;
     WZipWriterSingle writer;
 

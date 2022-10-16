@@ -84,6 +84,8 @@ bool WLine::intersect(const WLine &line1, const WLine &line2, int precision, QPo
     double x, y;
     bool touch;
 
+    Q_UNUSED(result);
+
     if(unlikely(line1._is_vertical && line2._is_vertical)){
         WDebug(debug_WLine, "Both line are vertical")
         return false;

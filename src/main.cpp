@@ -25,7 +25,12 @@
 
 static void printLog();
 static int extract_(const char *path, const char *path_to);
+
+#if defined(DEBUGCORE)
 static not_used void createFileAndExit(const QString &path, MainWindow *parent);
+#else
+static not_used void createFileAndExit(const QString &, MainWindow *) { };
+#endif
 
 #ifdef DEBUG_CORE
 # define test() return 0;

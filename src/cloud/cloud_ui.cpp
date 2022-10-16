@@ -1,5 +1,4 @@
 #include "cloud_ui.h"
-#include "ui_cloud_ui.h"
 #include <QMessageBox>
 #include "windows/mostra_finestra_i.h"
 #include "utils/dialog_critic/dialog_critic.h"
@@ -7,6 +6,9 @@
 #include "utils/common_script.h"
 
 #ifdef CLOUD
+
+#include "ui_cloud_ui.h"
+
 
 cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
     QDialog(parent),

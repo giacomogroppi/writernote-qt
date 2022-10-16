@@ -4,7 +4,6 @@
 #include "utils/dialog_critic/dialog_critic.h"
 #include "currenttitle/document.h"
 #include "utils/permission/permission.h"
-#include "dataread/xmlstruct.h"
 #include "dataread/readlistarray.h"
 #include "datawrite/savefile.h"
 #include <QFileDialog>
@@ -68,7 +67,7 @@ frompdf::load_res_pdf frompdf::load_pdf(
 
 QList<QString> frompdf::get_name_pdf(int count)
 {
-    uint i;
+    int i;
     QList<QString> res;
     for(i = 0; i < count; i ++){
         res.append(frompdf::getName_pdf(i));
@@ -95,7 +94,7 @@ frompdf::load_res_pdf frompdf::load_pdf(WZipReaderSingle &reader, int len, datas
 {
     QList<QByteArray> arr;
     QList<QString> name;
-    uint i;
+    int i;
     frompdf::load_res_pdf res;
     WZip *zip = reader.get_zip();
 
@@ -269,12 +268,11 @@ frompdf::load_res_pdf frompdf::save_pdf(const QByteArray   &pathFile,
 
     if(writer.init(path_writernote_file.constData()) < 0)
         return load_res_pdf::no_valid_path;
-    return this->save_pdf(writer, pathFile, path_writernote_file);
+    return this->save_pdf(writer, pathFile);
 }
 
 frompdf::load_res_pdf frompdf::save_pdf(WZipWriter         &filezip,
-                                const QByteArray   &pathFile,
-                                const QByteArray   &path_writernote_file)
+                                const QByteArray   &pathFile)
 {
     const auto res = savefile::moveFileIntoZip(pathFile,
                                                filezip,
@@ -294,7 +292,6 @@ void frompdf::addPdf(QByteArray             &pos,
                      const QByteArray       &path_writernote,
                      datastruct             &data)
 {
-    int ok;
     frompdf::load_res_pdf res;
 
     if(path_writernote == "")

@@ -1,5 +1,4 @@
 #include "frompdf.h"
-#include "currenttitle/document.h"
 
 #ifdef PDFSUPPORT
 
@@ -24,13 +23,13 @@ frompdf::load_res_pdf frompdf::save_metadata_pdf(WZipWriterSingle &writer)
 
 frompdf::load_res_pdf frompdf::load_metadata_pdf(WZipReaderSingle &reader, int len)
 {
-    unsigned i;
+    int i;
     double pos[2];
     Pdf pdf;
 
     static_assert(sizeof(pos) == sizeof(double) * 2);
 
-    for(i = 0; i < len; ++i){
+    for(i = 0; i < len; i++){
         if(reader.read_by_size(pos, sizeof(pos)))
             return load_res_pdf::no_metadata;
 

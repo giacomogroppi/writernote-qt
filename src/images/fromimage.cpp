@@ -88,7 +88,7 @@ fromimage::load_res_img fromimage::get_img_bytearray(QByteArray &arr, const QStr
 
 fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, int len)
 {
-    uint i;
+    int i;
     double val[4];
     struct immagine_s img;
 
@@ -163,7 +163,7 @@ fromimage::load_res_img fromimage::load_multiple_img(const QList<QByteArray> &ar
 
 QList<QString> fromimage::get_name_img()
 {
-    uint i;
+    int i;
     QList<QString> list;
 
     for(i = 0; i < length_img(); ++i){

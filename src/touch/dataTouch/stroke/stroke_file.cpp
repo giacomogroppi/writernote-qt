@@ -158,7 +158,6 @@ int stroke_file::load(class Stroke &_stroke, int version, WZipReaderSingle &read
 size_t stroke_file::get_size_in_file(const Stroke &stroke)
 {
     size_t s = 0;
-    int i;
     cint len_pressure = stroke._pressure.length();
     cint len_point    = stroke._point.length();
 

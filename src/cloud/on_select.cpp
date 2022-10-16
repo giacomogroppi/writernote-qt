@@ -1,8 +1,10 @@
 #include "cloud_ui.h"
-#include "ui_cloud_ui.h"
+
 #include "utils/dialog_critic/dialog_critic.h"
 
 #ifdef CLOUD
+
+#include "ui_cloud_ui.h"
 
 void cloud_ui::on_tab_main_currentChanged(int index)
 {

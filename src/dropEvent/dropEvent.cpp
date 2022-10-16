@@ -57,7 +57,6 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     QString path_to_load;
     int find = 0;
-    int i;
     QImage image;
     PointSettable point;
     const auto positions = drop_event_get_list(event->mimeData());
@@ -83,9 +82,13 @@ void MainWindow::dropEvent(QDropEvent *event)
             openFile(path_to_load.toUtf8().constData());
         }
     }else if(find == IMAGE){
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        point = event->posF();
+#else
         point = event->position();
-        const auto res = mainwindow_import_image(positions, *_canvas->getDoc(), event->position(), m_path);
-        //const auto res = this->_canvas->data->m_img->addImage(path_to_load, &point, this->m_path);
+#endif
+        const auto res = mainwindow_import_image(positions, *_canvas->getDoc(), point, m_path);
+
         if(res < 0)
             dialog_critic(QApplication::tr("We got some problem importing the image"));
     }

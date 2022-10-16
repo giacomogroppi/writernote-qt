@@ -124,6 +124,16 @@ void preview_page_item::paintEvent(QPaintEvent *)
     painter.end();
 }
 
+static QPoint get_glob_position(QEvent *event)
+{
+    W_ASSERT(event);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    return dynamic_cast<QMouseEvent *>(event)->globalPos();
+#else
+    return dynamic_cast<QMouseEvent *>(event)->globalPosition().toPoint();
+#endif
+}
+
 bool preview_page_item::event(QEvent *event)
 {
     constexpr bool debugEvent = true;
@@ -141,7 +151,7 @@ bool preview_page_item::event(QEvent *event)
         if(target_prop.contains(pos)){
             WDebug(debugEvent, "show prop");
             auto *prop = preview_page_widget::get_list();
-            const QPoint GlobalPos = dynamic_cast<QMouseEvent *>(event)->globalPosition().toPoint();
+            const QPoint GlobalPos = get_glob_position(event);
             prop->Show(GlobalPos, _index);
         }
         else if(last + delta >= current){

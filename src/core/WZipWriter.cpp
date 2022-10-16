@@ -29,7 +29,7 @@ int WZipWriter::write(const void *to, size_t size, const char *fileToCreate)
     zip_source_begin_write(file);
 
     const auto res = zip_source_write(file, to, size);
-    if(res < 0 or res != size){
+    if(res < 0 or res != static_cast<int64_t>(size)){
         destroy_file(file);
         return -1;
     }

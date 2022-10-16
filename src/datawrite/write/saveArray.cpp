@@ -15,7 +15,7 @@ int savefile::moveFileIntoZip(
         return ERROR;
     }
 
-    W_ASSERT(tmp.size() == xmlstruct::get_size_file(pathFile));
+    W_ASSERT(static_cast<size_t>(tmp.size()) == xmlstruct::get_size_file(pathFile));
 
     if(writer.write(tmp.constData(), tmp.size(), nameInZip))
         return ERROR;

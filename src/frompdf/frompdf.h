@@ -2,7 +2,6 @@
 
 #include <QtGlobal>
 #include "touch/dataTouch/datastruct/datastruct.h"
-#include "zip.h"
 #include <QString>
 #include <QList>
 #include <QImage>
@@ -95,7 +94,7 @@ public:
 
     [[nodiscard]] load_res_pdf save_pdf(const QList<QString> &path, const QByteArray &path_writernote_file);
     [[nodiscard]] load_res_pdf save_pdf(const QByteArray &path, const QByteArray &path_writernote_file);
-    [[nodiscard]] load_res_pdf save_pdf(WZipWriter &filezip, const QByteArray &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res_pdf save_pdf(WZipWriter &filezip, const QByteArray &path);
 
     load_res_pdf save_metadata_pdf(WZipWriterSingle &writer);
 

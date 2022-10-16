@@ -1,5 +1,4 @@
 #include "testingzip.h"
-#include "core/WZipWriter.h"
 #include <QVector>
 #include "utils/random/random.h"
 #include "utils/common_script.h"
@@ -10,7 +9,7 @@
 
 #if (defined(DEBUG_CORE) || defined(DEBUGINFO))
 
-static void gen_num(QVector<int> &data, int min, int max)
+static not_used void gen_num(QVector<int> &data, int min, int max)
 {
     int i;
     const int gen = Random::random(min, max);
@@ -23,7 +22,7 @@ static void gen_num(QVector<int> &data, int min, int max)
     }
 }
 
-static void gen_str(QByteArray &arr, int min_char, int max_char)
+static not_used void gen_str(QByteArray &arr, int min_char, int max_char)
 {
     constexpr int min = static_cast<int>('a');
     constexpr int max = static_cast<int>('z');
@@ -37,7 +36,7 @@ static void gen_str(QByteArray &arr, int min_char, int max_char)
     }
 }
 
-static void test_write_zip(QVector<int> &data, const QByteArray &path)
+static not_used void test_write_zip(QVector<int> &data, const QByteArray &path)
 {
     WZipWriterSingle writer;
 
@@ -51,7 +50,7 @@ static void test_write_zip(QVector<int> &data, const QByteArray &path)
     writer.commit_change(path, "test");
 }
 
-static void test_read_from_zip(QVector<int> &res, const QByteArray &path, int len)
+static not_used void test_read_from_zip(QVector<int> &res, const QByteArray &path, int len)
 {
     int i;
     bool ok;
@@ -67,7 +66,7 @@ static void test_read_from_zip(QVector<int> &res, const QByteArray &path, int le
     }
 }
 
-static void test_check_equal(const QVector<int> &d1, const QVector<int> &d2)
+static not_used void test_check_equal(const QVector<int> &d1, const QVector<int> &d2)
 {
     int tmp1, tmp2;
     int i;
@@ -81,7 +80,7 @@ static void test_check_equal(const QVector<int> &d1, const QVector<int> &d2)
     }
 }
 
-static void run_test_1()
+static not_used void run_test_1()
 {
     QVector<int> data;
     QVector<int> res;

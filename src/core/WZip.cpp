@@ -95,7 +95,9 @@ bool WZip::openFileInZip(const QByteArray &nameFile)
     if(!file)
         return false;
 
-    if(zip_fread(file, _data_private._data, _data_private._len_file) != _data_private._len_file){
+    const int64_t res = zip_fread(file, _data_private._data, _data_private._len_file);
+
+    if(res != static_cast<int64_t>(_data_private._len_file)){
         zip_fclose(file);
         WFree(_data_private._data);
         _data_private._data = nullptr;

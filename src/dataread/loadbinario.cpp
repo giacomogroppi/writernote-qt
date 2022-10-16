@@ -23,7 +23,7 @@ static int load_point_first_page(WZipReaderSingle &zip, datastruct &doc)
     return 0;
 }
 
-static int read_number_page(WZipReaderSingle &zip, int &len, datastruct &doc)
+static int read_number_page(WZipReaderSingle &zip, int &len)
 {
     /* page len */
     static_assert(sizeof(len) == sizeof(int));
@@ -141,7 +141,7 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
     if(read_ctrl(reader, controll) < 0)
         MANAGE_ERR();
 
-    if(read_number_page(reader, lenPage, *_doc) < 0)
+    if(read_number_page(reader, lenPage) < 0)
         MANAGE_ERR();
 
     size_t seek[lenPage];

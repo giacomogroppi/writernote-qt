@@ -4,8 +4,6 @@ WZipWriterMulti::WZipWriterMulti(const char *fileZip, const char *fileInZip,
                             int thread, size_t *seek):
     _data(seek[thread - 1])
 {
-    int i;
-
     this->_size_file        = seek[thread - 1];
     this->_thread           = thread;
     this->_zip              = new WZipWriter;
