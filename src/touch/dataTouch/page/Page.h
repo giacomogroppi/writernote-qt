@@ -193,7 +193,8 @@ public:
 
 force_inline void Page::unlock() const
 {
-    pthread_mutex_unlock((pthread_mutex_t *)&_img);
+    auto &m = (WMutex &) _img;
+    m.unlock();
 }
 
 force_inline void Page::lock() const

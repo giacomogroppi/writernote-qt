@@ -139,16 +139,6 @@ int stroke_complex_load(Stroke *stroke, StrokeProp type, WZipReaderSingle &reade
     return OK;
 }
 
-static int stroke_complex_read_object_size(void *object, WReadZip &reader, int id, size_t size)
-{
-    const auto *r = reader.read(size, id);
-    if(unlikely(!r))
-        return -1;
-
-    WMemcpy(&object, r, size);
-    return 0;
-}
-
 extern void stroke_complex_line_append(     Stroke *stroke, const QPointF& point);
 extern void stroke_complex_circle_append(   Stroke *stroke, const QPointF& point);
 extern void stroke_complex_rect_append(     Stroke *stroke, const QPointF& point);
