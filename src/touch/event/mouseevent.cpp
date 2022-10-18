@@ -32,7 +32,7 @@ void TabletCanvas::wheelEvent(QWheelEvent *event)
  * the function is called when the user scrolls with his finger
 */
 
-static struct PointSettable __last_point_move;
+static PointSettable __last_point_move;
 static bool first_touch = true;
 bool isZooming = false;
 
@@ -72,9 +72,9 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
         return;
 #endif
 
-    if(likely(lastpointtouch.isSet())){
-        deltay = - lastpointtouch.y() + event->globalPosition().y();
-        deltax = - lastpointtouch.x() + event->globalPosition().x();
+    if(likely(_lastpointtouch.isSet())){
+        deltay = - _lastpointtouch.y() + event->globalPosition().y();
+        deltax = - _lastpointtouch.x() + event->globalPosition().x();
 
         if(!scroll::y(getDoc(), _pixmap.height(), deltay))
             _ismoving.setY(0);
@@ -96,15 +96,17 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
 
     /* we need to save this point only if the user use kinetic scroll */
     if(m_scrolling_speed_enable){
-        if(lastpointtouch.isSet()){
-            __last_point_move = lastpointtouch;
+        if(_lastpointtouch.isSet()){
+            __last_point_move = _lastpointtouch;
         }
     }
 
-    lastpointtouch = event->globalPosition();
+    _lastpointtouch = {
+        event->globalPosition(),
+        true
+    };
 
     event->accept();
-    lastpointtouch = true;
 }
 
 void TabletCanvas::mouseReleaseEvent(QMouseEvent *event)
@@ -115,11 +117,11 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event)
 
     if(m_scrolling_speed_enable
             && __last_point_move.isSet()){
-        scrollKinetic(__last_point_move, lastpointtouch);
+        scrollKinetic(__last_point_move, _lastpointtouch);
     }
 
     __last_point_move = false;
-    lastpointtouch = false;
+    _lastpointtouch = false;
 
     if(unlikely(core::get_main_window()->touch_or_pen)){
         canvas_send_touch_event(event->pos(), event->type(),

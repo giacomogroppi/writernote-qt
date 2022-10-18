@@ -94,7 +94,7 @@ public:
     static qreal pressureToWidth(qreal pressure);
     struct Point _lastPoint;
     [[nodiscard]] bool isWriting() const;
-    struct PointSettable _pointload;
+    PointSettable _pointload;
     void callResizeEvent();
 
 #define default_speed_value 5
@@ -167,12 +167,12 @@ public:
 #endif
 
     /* gestisce sia la parte di spostamento con il touch che con la rotella del mouse */
-    struct PointSettable _ismoving;
+    class PointSettable _ismoving;
     void ismoving_f();
     void updatePageCount();
 
     /* struttura per ricordare il last point per il touch */
-    struct PointSettable lastpointtouch;
+    class PointSettable _lastpointtouch;
 
     void setTabletDevice(QTabletEvent *event) { updateCursor(event); }
 

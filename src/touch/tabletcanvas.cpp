@@ -72,7 +72,7 @@ void TabletCanvas::restoreO()
     this->getDoc()->repositioning();
     update();
 
-    lastpointtouch = false;
+    _lastpointtouch = false;
 
     this->resizeEvent(nullptr);
 }
