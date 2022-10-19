@@ -66,6 +66,7 @@ jobs:
         run: |
           sudo apt install snapd ninja-build
           sudo snap install cmake --classic
+          sudo apt install -y python3 python3-pip
       
       - name: Download openJDK
         run: |
@@ -86,12 +87,11 @@ jobs:
           mv android-ndk-r22b $NDK_PATH
 
       - name: Download qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          host: 'linux'
-          version: 6.2.0
-          target: 'android'
-          modules: 'multimedia'
+        run: |
+          pip3 install -U pip
+          pip3 install aqtinstall
+
+          aqt install-qt linux android 6.4.0 android_arm64_v8a --autodesktop -m qtmultimedia
 
       - name: Build libzip
         run: |
