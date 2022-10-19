@@ -100,23 +100,8 @@ jobs:
           chmod +x libzip.sh
           ./libzip.sh OFF $NDK_PATH
 
-      - name: Build libpng
-        if: false
-        run: |
-          cd $PREFIX_LIB
-          curl -L https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.tar.gz -o libpng.tar.gz
-
-          tar -xf libpng.tar.gz
-          rm libpng.tar.gz
-          
-          mv libpng-1.6.35 libpng
-
-          mv $LIBPNG_MAKEFILE $LIBPNG_PATH/Makefile
-          cd $LIBPNG_PATH
-          make
-
       - name: Build openjpeg
-        if: false
+        if: true
         run: |
           cd $PREFIX_LIB
           curl -L https://github.com/uclouvain/openjpeg/archive/refs/tags/v2.4.0.tar.gz -o openjpeg.tar.gz
@@ -132,35 +117,11 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=$LIB_OPENJPEG/install \
-            -DBUILD_SHARED_LIBS:BOOL=OFF \
+            -DBUILD_SHARED_LIBS=OFF \
             -G"Unix Makefiles" \
             -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake
 
           make install -j$(nproc) 
-
-      - name: Build libjpeg-turbo
-        if: false
-        run: |
-          cd $PREFIX_LIB
-          git clone https://github.com/libjpeg-turbo/libjpeg-turbo
-
-          cd  libjpeg-turbo
-          mkdir install
-          mkdir build
-
-          cmake -G"Unix Makefiles" \
-            -DANDROID_ABI=arm64-v8a \
-            -DANDROID_ARM_MODE=arm \
-            -DANDROID_PLATFORM=android-$ANDROID_VERSION \
-            -DANDROID_TOOLCHAIN=$TOOLCHAIN \
-            -DCMAKE_ASM_FLAGS="--target=aarch64-linux-android$ANDROID_VERSION" \
-            -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-            -DCMAKE_INSTALL_PREFIX=$LIB_JPEG_TURBO/install \
-            -B$LIB_JPEG_TURBO/build \
-            -DWITH_JPEG8=1
-          
-          cd build
-          sudo make install -j$(nproc --all)
 
       - name: install lib for build poppler
         run: |
