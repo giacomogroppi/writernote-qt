@@ -136,25 +136,6 @@ jobs:
         run: |
           sudo apt-get install -y liblcms2-dev libtiff5-dev
 
-      - name: Build freetype
-        if: false
-        run: |
-          cd $PREFIX_LIB
-
-          wget https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.xz
-          tar xvfh freetype-2.10.1.tar.xz
-          
-          mv freetype-2.10.1 $PATH_FREETYPE
-          cd $PATH_FREETYPE
-
-          mkdir install
-
-          CFLAGS=-std=gnu99 STANDALONE_EXTRA="--arch arm64"
-          ./autogen.sh
-          ./configure --enable-shared=no --prefix=$PATH_FREETYPE/install --host=aarch64-linux-android 
-          make -j$(nproc) 
-          make install
-
       - name: Build libjpeg-turbo
         run: |
           cd $PREFIX_LIB
@@ -177,6 +158,18 @@ jobs:
           
           cd build
           sudo make install -j$(nproc --all)
+
+      - name: Build libpng
+        run: |
+          cd $PREFIX_LIB
+          curl -L https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.tar.gz -o libpng.tar.gz
+          tar -xf libpng.tar.gz
+          rm libpng.tar.gz
+          
+          mv libpng-1.6.35 libpng
+          mv $LIBPNG_MAKEFILE $LIBPNG_PATH/Makefile
+          cd $LIBPNG_PATH
+          make
 
       - name: Build poppler
         if: true
