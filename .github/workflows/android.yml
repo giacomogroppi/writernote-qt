@@ -159,6 +159,8 @@ jobs:
           cd build
           sudo make install -j$(nproc --all)
 
+          tree $LIB_JPEG_TURBO
+
       - name: Build libpng
         run: |
           cd $PREFIX_LIB
