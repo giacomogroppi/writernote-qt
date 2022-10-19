@@ -190,9 +190,9 @@ jobs:
           mkdir build
           mkdir install
 
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.2.0/android/lib/cmake/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.2.0/android/lib/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.2.0/android/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android/lib/cmake/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android/lib/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android/:$CMAKE_PREFIX_PATH
 
           cd build
 
@@ -206,6 +206,8 @@ jobs:
             -DANDROID_PLATFORM=$ANDROID_VERSION \
             -D_FILE_OFFSET_BITS=64 \
             -DENABLE_BOOST=OFF \
+            -DJPEG_LIBRARY=$LIB_JPEG_TURBO/install/lib/libjpeg.a \
+            -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include \
             -DBUILD_GTK_TESTS=OFF \
             -DBUILD_QT5_TESTS=OFF \
             -DBUILD_QT6_TESTS=OFF \
