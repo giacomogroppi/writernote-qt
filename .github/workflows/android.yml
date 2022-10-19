@@ -66,7 +66,7 @@ jobs:
         run: |
           sudo apt install snapd ninja-build
           sudo snap install cmake --classic
-          sudo apt install -y python3 python3-pip
+          sudo apt install -y python3 python3-pip tree
       
       - name: Download openJDK
         run: |
@@ -99,6 +99,8 @@ jobs:
           aqt install-qt linux android $QT_VER android_arm64_v8a --autodesktop -m qtmultimedia
 
           mv $QT_VER $QT_PATH/$QT_VER
+
+          tree -d $QT_PATH
 
       - name: Build libzip
         run: |
@@ -178,8 +180,6 @@ jobs:
             -DANDROID_TOOLCHAIN=clang \
             -DCMAKE_BUILD_TYPE=Release \
             -DANDROID_PLATFORM=$ANDROID_VERSION \
-            -DJPEG_LIBRARY=$LIB_JPEG_TURBO/install/lib/libjpeg.a \
-            -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include \
             -D_FILE_OFFSET_BITS=64 \
             -DENABLE_BOOST=OFF \
             -DBUILD_GTK_TESTS=OFF \
@@ -196,11 +196,11 @@ jobs:
             -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
             -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
             -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4 \
-            -DQt6Gui_DIR=$QT_PREFIX/lib/cmake/Qt5Gui \
-            -DQt6Core_DIR=$QT_PREFIX/lib/cmake/Qt5Core \
-            -DQt6Xml_DIR=$QT_PREFIX/lib/cmake/Qt5Xml \
-            -DQt6Widgets_DIR=$QT_PREFIX/lib/cmake/Qt5Widgets \
-            -DQt6Test_DIR=$QT_PREFIX/lib/cmake/Qt5Test \
+            -DQt6Gui_DIR=$QT_PREFIX/lib/cmake/Qt6Gui \
+            -DQt6Core_DIR=$QT_PREFIX/lib/cmake/Qt6Core \
+            -DQt6Xml_DIR=$QT_PREFIX/lib/cmake/Qt6Xml \
+            -DQt6Widgets_DIR=$QT_PREFIX/lib/cmake/Qt6Widgets \
+            -DQt6Test_DIR=$QT_PREFIX/lib/cmake/Qt6Test \
             -DANDROID_ABI=arm64-v8a
 
           sudo make install -j$(nproc --all)
