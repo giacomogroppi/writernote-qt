@@ -32,7 +32,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      QT: "5_15_2"
+      QT: "6_2_0"
+      QT_VER: 6.2.0
       PREFIX_LIB: "/home/runner/work/writernote-qt/writernote-qt/3rdparty"
       PROJECT_PATH: "/home/runner/work/writernote-qt/writernote-qt/"
       CACHE_KEY: cache-key-ci
@@ -43,7 +44,7 @@ jobs:
       JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
       LIB_JPEG_TURBO: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo"
       LIB_OPENJPEG: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libopenjpeg"
-      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/6.4.0/android_arm64_v8a/"
+      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/6.2.0/android_arm64_v8a/"
       POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
       LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
       LIBPNG_MAKEFILE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/makefile.libpng.clang"
@@ -88,7 +89,7 @@ jobs:
 
       - name: Download qt
         run: |
-          export QT_VER=6.4.0
+          export QT_VER=6.2.0
           export QT_PATH=/home/runner/work/writernote-qt/Qt
 
           mkdir -p $QT_PATH
@@ -190,9 +191,9 @@ jobs:
           mkdir build
           mkdir install
 
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android_arm64_v8a/lib/cmake/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android_arm64_v8a/lib/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android_arm64_v8a/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/$QT_VER/android_arm64_v8a/lib/cmake/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/$QT_VER/android_arm64_v8a/lib/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/$QT_VER/android_arm64_v8a/:$CMAKE_PREFIX_PATH
 
           cd build
 
