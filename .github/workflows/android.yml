@@ -89,7 +89,7 @@ jobs:
         uses: jurplel/install-qt-action@v2
         with:
           host: 'linux'
-          version: 5.15.2
+          version: 6.4.0
           target: 'android'
           modules: 'multimedia'
 
@@ -101,7 +101,6 @@ jobs:
           ./libzip.sh OFF $NDK_PATH
 
       - name: Build openjpeg
-        if: true
         run: |
           cd $PREFIX_LIB
           curl -L https://github.com/uclouvain/openjpeg/archive/refs/tags/v2.4.0.tar.gz -o openjpeg.tar.gz
@@ -147,19 +146,18 @@ jobs:
           make install
 
       - name: Build poppler
-        if: false
+        if: true
         run: |
           cd 3rdparty
 
-          git clone https://github.com/freedesktop/poppler.git
+          git clone https://github.com/freedesktop/poppler.git -b poppler-22.10.0
           cd poppler
           mkdir build
           mkdir install
 
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/5.15.2/android/lib/cmake/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/5.15.2/android/lib/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/5.15.2/android/:$CMAKE_PREFIX_PATH
-          
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android/lib/cmake/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android/lib/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/6.4.0/android/:$CMAKE_PREFIX_PATH
 
           cd build
 
@@ -189,11 +187,11 @@ jobs:
             -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
             -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
             -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4 \
-            -DQt5Gui_DIR=$QT_PREFIX/lib/cmake/Qt5Gui \
-            -DQt5Core_DIR=$QT_PREFIX/lib/cmake/Qt5Core \
-            -DQt5Xml_DIR=$QT_PREFIX/lib/cmake/Qt5Xml \
-            -DQt5Widgets_DIR=$QT_PREFIX/lib/cmake/Qt5Widgets \
-            -DQt5Test_DIR=$QT_PREFIX/lib/cmake/Qt5Test \
+            -DQt6Gui_DIR=$QT_PREFIX/lib/cmake/Qt5Gui \
+            -DQt6Core_DIR=$QT_PREFIX/lib/cmake/Qt5Core \
+            -DQt6Xml_DIR=$QT_PREFIX/lib/cmake/Qt5Xml \
+            -DQt6Widgets_DIR=$QT_PREFIX/lib/cmake/Qt5Widgets \
+            -DQt6Test_DIR=$QT_PREFIX/lib/cmake/Qt5Test \
             -DANDROID_ABI=arm64-v8a
 
           sudo make install -j$(nproc --all)
