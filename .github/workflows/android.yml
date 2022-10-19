@@ -88,10 +88,17 @@ jobs:
 
       - name: Download qt
         run: |
+          export QT_VER=6.4.0
+          export QT_PATH=/home/runner/work/writernote-qt/Qt
+
+          mkdir -p $QT_PATH
+
           pip3 install -U pip
           pip3 install aqtinstall
 
-          aqt install-qt linux android 6.4.0 android_arm64_v8a --autodesktop -m qtmultimedia
+          aqt install-qt linux android $QT_VER android_arm64_v8a --autodesktop -m qtmultimedia
+
+          mv $QT_VER $QT_PATH/$QT_VER
 
       - name: Build libzip
         run: |
@@ -149,6 +156,8 @@ jobs:
         if: true
         run: |
           cd 3rdparty
+
+          rm -rf poppler
 
           git clone https://github.com/freedesktop/poppler.git -b poppler-22.10.0
           cd poppler
