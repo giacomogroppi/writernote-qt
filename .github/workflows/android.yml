@@ -156,7 +156,6 @@ jobs:
           make install
 
       - name: Build libjpeg-turbo
-        if: false
         run: |
           cd $PREFIX_LIB
           git clone https://github.com/libjpeg-turbo/libjpeg-turbo -b 2.1.4
