@@ -189,8 +189,8 @@ jobs:
             -DBUILD_MANUAL_TESTS=OFF \
             -DENABLE_UTILS=OFF \
             -DENABLE_GTK_DOC=OFF \
-            -DENABLE_QT6=OFF \
-            -DENABLE_QT5=ON \
+            -DENABLE_QT6=ON \
+            -DENABLE_QT5=OFF \
             -DENABLE_CMS=none \
             -DBUILD_SHARED_LIBS=OFF \
             -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
