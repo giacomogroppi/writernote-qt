@@ -501,7 +501,7 @@ else:android{
 
     include(3rdparty/android_openssl/openssl.pri)
     message(Enable android build)
-    QT += androidextras
+    # QT += androidextras
 
     equals(ANDROID_ABIS,"arm64-v8a"){
         message(Enable arm64-v8a android build for libzip)
