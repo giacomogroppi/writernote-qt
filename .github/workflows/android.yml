@@ -263,14 +263,6 @@ jobs:
           sudo make install -j$(nproc --all)
           make clean
 
-      - name: Compile armeabi-v7a
-        run: |
-          export ANDROID_NDK_ROOT=$NDK_PATH
-
-          qmake ANDROID_ABIS=armeabi-v7a
-          make -j$(nproc) apk
-          cp /home/runner/work/writernote-qt/writernote-qt/android-build/writernote.apk $armeabi_v7a_pos
-
       - name: Compile arm64-v8a
         run: |
           export ANDROID_NDK_ROOT=$NDK_PATH
@@ -280,44 +272,16 @@ jobs:
           qmake ANDROID_ABIS=arm64-v8a
           make -j$(nproc) apk
           cp /home/runner/work/writernote-qt/writernote-qt/android-build/writernote.apk $arm64_v8a_pos
-
-      - name: Compile x86
-        run: |
-          export ANDROID_NDK_ROOT=$NDK_PATH
-          make clean
-
-          qmake ANDROID_ABIS=x86
-          make -j$(nproc) apk
-          cp /home/runner/work/writernote-qt/writernote-qt/android-build/writernote.apk $x86_pos
-
-      - name: Compile x86_64
-        run: |
-          export ANDROID_NDK_ROOT=$NDK_PATH
-
-          make clean
-
-          qmake ANDROID_ABIS=x86_64
-          make -j$(nproc) apk
-          cp /home/runner/work/writernote-qt/writernote-qt/android-build/writernote.apk $x86_64_pos
-
-
+          
       - name: Upload file
         if: github.event_name == 'release'
         env:
           GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         run: |
           export VERSION=$(git describe --tags --abbrev=0)
-          export NAME_UP_ARMEABI=writernote-$VERSION-armeabi-v7a.apk
           export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.apk
-          export NAME_UP_X86=writernote-$VERSION-x86.apk
-          export NAME_UP_X86_64=writernote-$VERSION-x86_64.apk
-
-          mv $armeabi_v7a_pos $NAME_UP_ARMEABI
+          
           mv $arm64_v8a_pos $NAME_UP_ARM64
-          mv $x86_pos $NAME_UP_X86
-          mv $x86_64_pos $NAME_UP_X86_64
 
-          gh release upload "$VERSION" $NAME_UP_ARMEABI --clobber
           gh release upload "$VERSION" $NAME_UP_ARM64 --clobber
-          gh release upload "$VERSION" $NAME_UP_X86 --clobber
-          gh release upload "$VERSION" $NAME_UP_X86_64 --clobber
+          
