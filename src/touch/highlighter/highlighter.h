@@ -10,7 +10,6 @@ class highlighter;
 
 #define ADD 100.0
 
-struct point_s;
 class pen_ui;
 class datastruct;
 

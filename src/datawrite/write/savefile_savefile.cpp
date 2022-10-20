@@ -26,7 +26,7 @@ static size_t savefile_get_size_file(const Document *doc)
 #ifdef PDFSUPPORT
     s += doc->get_size_file_pdf();
 #endif // PDFSUPPORT
-    
+
     s += doc->get_size_file_img();
     return s;
 }
@@ -63,7 +63,11 @@ int savefile::savefile_check_file(cbool saveImg)
 
     writer.write_string(_doc->audio_position_path.toUtf8().constData(), _doc->audio_position_path.size());
 
+#ifdef PDFSUPPORT
     writer.write_object(_doc->length_pdf());
+#else
+    writer.write_object(static_cast<int>(0));
+#endif // PDFSUPPORT
     writer.write_object(_doc->length_img());
 
     res_img = _doc->save_metadata_img(writer);
