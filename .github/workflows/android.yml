@@ -101,7 +101,7 @@ jobs:
 
           mv $QT_VER $QT_PATH/$QT_VER
 
-          tree -d $QT_PATH/..
+          tree -d /home/runner/work/writernote-qt/
 
       - name: Build libzip
         run: |
