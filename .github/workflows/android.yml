@@ -230,6 +230,8 @@ jobs:
         run: |
           export ANDROID_NDK_ROOT=$NDK_PATH
 
+          find $QT_PREFIX -name "qmake"
+
           $QT_PREFIX/bin/qmake ANDROID_ABIS=arm64-v8a
           make -j$(nproc) apk
           cp /home/runner/work/writernote-qt/writernote-qt/android-build/writernote.apk $arm64_v8a_pos
