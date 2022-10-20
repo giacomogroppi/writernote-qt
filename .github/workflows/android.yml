@@ -96,9 +96,10 @@ jobs:
           pip3 install -U pip
           pip3 install aqtinstall
 
-          aqt install-qt linux android $QT_VER android_arm64_v8a --autodesktop -m qtmultimedia
+          mkdir -p $QT_PATH
+          cd $QT_PATH
 
-          mv $QT_VER $QT_PATH/$QT_VER
+          aqt install-qt linux android $QT_VER android_arm64_v8a --autodesktop -m qtmultimedia
 
           tree -d /home/runner/work/writernote-qt/
 
