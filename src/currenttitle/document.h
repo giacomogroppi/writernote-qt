@@ -59,7 +59,9 @@ force_inline bool Document::isEmpty() const
 {
     const auto res =
             isempty_touch() and
+#ifdef PDFSUPPORT
             frompdf::length_pdf() == 0 and
+#endif // PDFSUPPORT
             fromimage::length_img() == 0;
     return res;
 }

@@ -175,7 +175,8 @@ protected:
 
     void setZoom(typeof(datastruct::_zoom) newZoom);
     void setPageVisible(int page);
-    void scala_all(const QPointF &point, int heightView = -1);
+
+    virtual void scala_all(const QPointF &point, int heightView = -1);
 };
 
 inline void datastruct::triggerVisibility(cdouble viewSize)
