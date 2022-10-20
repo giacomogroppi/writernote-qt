@@ -101,7 +101,7 @@ jobs:
 
           mv $QT_VER $QT_PATH/$QT_VER
 
-          tree -d $QT_PATH
+          tree -d $QT_PATH/..
 
       - name: Build libzip
         run: |
@@ -185,9 +185,9 @@ jobs:
           mkdir build
           mkdir install
 
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/$QT_VER/android_arm64_v8a/lib/cmake/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/$QT_VER/android_arm64_v8a/lib/:$CMAKE_PREFIX_PATH
-          export CMAKE_PREFIX_PATH=/home/runner/work/writernote-qt/Qt/$QT_VER/android_arm64_v8a/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=$QT_PREFIX/lib/cmake/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=$QT_PREFIX/lib/:$CMAKE_PREFIX_PATH
+          export CMAKE_PREFIX_PATH=$QT_PREFIX/:$CMAKE_PREFIX_PATH
 
           cd build
 
