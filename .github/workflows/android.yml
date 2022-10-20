@@ -32,8 +32,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      QT: "6_2_0"
-      QT_VER: 6.2.0
+      QT: "6_4_0"
+      QT_VER: 6.4.0
       PREFIX_LIB: "/home/runner/work/writernote-qt/writernote-qt/3rdparty"
       PROJECT_PATH: "/home/runner/work/writernote-qt/writernote-qt/"
       CACHE_KEY: cache-key-ci
@@ -44,7 +44,7 @@ jobs:
       JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
       LIB_JPEG_TURBO: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo"
       LIB_OPENJPEG: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libopenjpeg"
-      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/6.2.0/android_arm64_v8a/"
+      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/6.4.0/android_arm64_v8a/"
       POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
       LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
       LIBPNG_MAKEFILE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/makefile.libpng.clang"
@@ -89,7 +89,6 @@ jobs:
 
       - name: Download qt
         run: |
-          export QT_VER=6.2.0
           export QT_PATH=/home/runner/work/writernote-qt/Qt
 
           mkdir -p $QT_PATH
@@ -223,42 +222,6 @@ jobs:
             -DQt6Widgets_DIR=$QT_PREFIX/lib/cmake/Qt6Widgets \
             -DQt6Test_DIR=$QT_PREFIX/lib/cmake/Qt6Test \
             -DANDROID_ABI=arm64-v8a
-
-          sudo make install -j$(nproc --all)
-          make clean
-
-          #armeabi-v7a
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=$NDK_PATH/build/cmake/android.toolchain.cmake \
-            -DCMAKE_INSTALL_PREFIX=$POPPLER_PATH/install-armeabi-v7a \
-            -DFREETYPE_LIBRARY=/usr/lib/x86_64-linux-gnu/libfreetype.so \
-            -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 \
-            -DANDROID_TOOLCHAIN=clang \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DANDROID_PLATFORM=$ANDROID_VERSION \
-            -DJPEG_LIBRARY=$LIB_JPEG_TURBO/install/lib/libjpeg.a \
-            -DJPEG_INCLUDE_DIR=$LIB_JPEG_TURBO/install/include \
-            -D_FILE_OFFSET_BITS=64 \
-            -DENABLE_BOOST=OFF \
-            -DBUILD_GTK_TESTS=OFF \
-            -DBUILD_QT5_TESTS=OFF \
-            -DBUILD_QT6_TESTS=OFF \
-            -DBUILD_CPP_TESTS=OFF \
-            -DBUILD_MANUAL_TESTS=OFF \
-            -DENABLE_UTILS=OFF \
-            -DENABLE_GTK_DOC=OFF \
-            -DENABLE_QT6=OFF \
-            -DENABLE_QT5=ON \
-            -DENABLE_CMS=none \
-            -DBUILD_SHARED_LIBS=OFF \
-            -DPNG_LIBRARY=$LIBPNG_PATH/libpng.a \
-            -DPNG_PNG_INCLUDE_DIR=$LIBPNG_PATH/ \
-            -DOpenJPEG_DIR=$LIB_OPENJPEG/install/lib/openjpeg-2.4 \
-            -DQt5Gui_DIR=$QT_PREFIX/lib/cmake/Qt5Gui \
-            -DQt5Core_DIR=$QT_PREFIX/lib/cmake/Qt5Core \
-            -DQt5Xml_DIR=$QT_PREFIX/lib/cmake/Qt5Xml \
-            -DQt5Widgets_DIR=$QT_PREFIX/lib/cmake/Qt5Widgets \
-            -DQt5Test_DIR=$QT_PREFIX/lib/cmake/Qt5Test \
-            -DANDROID_ABI=armeabi-v7a
 
           sudo make install -j$(nproc --all)
           make clean
