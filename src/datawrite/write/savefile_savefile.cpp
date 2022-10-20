@@ -22,7 +22,11 @@ static size_t savefile_get_size_file(const Document *doc)
     s += sizeof(int) + doc->audio_position_path.length();
     s += sizeof(unsigned);          // len_img
     s += sizeof(unsigned);          // len_pdf
+
+#ifdef PDFSUPPORT
     s += doc->get_size_file_pdf();
+#endif // PDFSUPPORT
+    
     s += doc->get_size_file_img();
     return s;
 }
