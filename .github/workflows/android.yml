@@ -99,7 +99,7 @@ jobs:
           mkdir -p $QT_PATH
           cd $QT_PATH
 
-          aqt install-qt linux android $QT_VER android_arm64_v8a --autodesktop -m qtmultimedia
+          aqt install-qt linux android $QT_VER android_arm64_v8a --autodesktop -m qtmultimedia qtandroidextras
 
           tree -d /home/runner/work/writernote-qt/
 
