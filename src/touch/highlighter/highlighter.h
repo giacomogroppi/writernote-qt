@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QDialog>
-
 #include <QList>
+#include "touch/dataTouch/point.h"
 
 namespace Ui {
 class highlighter;
