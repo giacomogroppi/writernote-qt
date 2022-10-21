@@ -2,11 +2,12 @@
 // my blog about Qt for mobile: http://j.mp/qt-x
 // see also /COPYRIGHT and /LICENSE
 
-#ifndef ANDROIDSHAREUTILS_H
-#define ANDROIDSHAREUTILS_H
+#pragma once
 
-#include <QtAndroid>
-#include <QAndroidActivityResultReceiver>
+//#include <QtAndroid>
+
+#include <QJniObject>
+#include <QtCore/private/qandroidextras_p.h>
 
 #include "shareutils.h"
 
@@ -21,7 +22,7 @@ public:
     void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) override;
     void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) override;
 
-    void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject &data) override;
+    void handleActivityResult(int receiverRequestCode, int resultCode, const QJniObject &data) override;
     void onActivityResult(int requestCode, int resultCode);
 
     void checkPendingIntents(const QString workingDirPath) override;
@@ -44,5 +45,3 @@ private:
 
 };
 
-
-#endif // ANDROIDSHAREUTILS_H

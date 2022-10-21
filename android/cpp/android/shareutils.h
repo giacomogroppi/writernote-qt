@@ -17,7 +17,6 @@
 
 #include "qurl.h"
 #include <QObject>
-
 #include <QDebug>
 
 class PlatformShareUtils : public QObject

@@ -131,6 +131,7 @@ SOURCES += \
     src/datawrite/write/salvabinario.cpp \
     src/datawrite/write/saveArray.cpp \
     src/log/log_ui/log_ui.cpp \
+    src/touch/TabletPenMethod.cpp \
     src/touch/tabletapplication.cpp \
     src/touch/tabletcanvas.cpp \
     src/touch/pageCount.cpp \
@@ -171,6 +172,8 @@ SOURCES += \
     src/touch/dataTouch/datastruct/controllForRepositioning.cpp \
     src/touch/dataTouch/stroke/stroke_file.cpp \
     src/touch/dataTouch/stroke/stroke_drawer.cpp \
+    src/touch/dataTouch/stroke/StrokePre.cpp \
+    src/touch/dataTouch/stroke/StrokeProp.cpp \
     src/touch/copy_cut/copy_cut_selection.cpp \
     src/touch/pen/pen_ui.cpp \
     src/touch/laser/laser.cpp \
@@ -501,13 +504,17 @@ else:android{
 
     include(3rdparty/android_openssl/openssl.pri)
     message(Enable android build)
-    # QT += androidextras
+    #QT += androidextras
+    QT += core-private
+
+    ANDROID_ABIS=x86_64
+    message($$ANDROID_ABIS)
 
     equals(ANDROID_ABIS,"arm64-v8a"){
         message(Enable arm64-v8a android build for libzip)
 
-        LIBS += $$PWD/3rdparty/libzip/android/build/arm64-v8a/../../install/arm64-v8a/lib/libzip.a
-        INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/arm64-v8a/../../install/arm64-v8a/include/
+        LIBS += $$PWD/3rdparty/android/install/arm64-v8a/liblibzip.a
+        INCLUDEPATH += $$PWD/3rdparty/libzip/android/install/arm64-v8a/include/
     }
     equals(ANDROID_ABIS,"armeabi-v7a"){
         message(Enable armeabi-v7a android build for libzip)
@@ -525,8 +532,8 @@ else:android{
     equals(ANDROID_ABIS, "x86_64"){
         message(Enable x86_64 android build for libzip)
 
-        LIBS += $$PWD/3rdparty/libzip/android/build/x86_64/../../install/x86_64/lib/libzip.a
-        INCLUDEPATH += $$PWD/3rdparty/libzip/android/build/x86_64/../../install/x86_64/include/
+        LIBS += $$PWD/3rdparty/libzip/android/install/x86_64/lib/libzip.a
+        INCLUDEPATH += $$PWD/3rdparty/libzip/android/install/x86_64/include
     }
 
     message($$ANDROID_ABIS)
