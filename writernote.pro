@@ -513,8 +513,8 @@ else:android{
     equals(ANDROID_ABIS,"arm64-v8a"){
         message(Enable arm64-v8a android build for libzip)
 
-        LIBS += $$PWD/3rdparty/libzip/android/install/arm64-v8a/libzip.a
-        INCLUDEPATH += $$PWD/3rdparty/libzip/android/install/arm64-v8a/include/
+        LIBS +=         $$PWD/3rdparty/libzip/android/install/arm64-v8a/lib/libzip.a
+        INCLUDEPATH +=  $$PWD/3rdparty/libzip/android/install/arm64-v8a/include/
     }
     equals(ANDROID_ABIS,"armeabi-v7a"){
         message(Enable armeabi-v7a android build for libzip)
