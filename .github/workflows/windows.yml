@@ -85,18 +85,34 @@ jobs:
         env:
           curr_dir: D:\a\writernote-qt\writernote-qt
 
+      - name: Set macros
+        if: github.event_name == 'release'
+        shell: bash
+        run: |
+          $pos = "D:\a\writernote-qt\writernote-qt\windows"
+          echo "ARTIFACT_NAME=$($env:GITHUB_REF -replace "refs/tags/")" >> $GITHUB_ENV
+          echo "WRITERNOTE_ZIP="writernote_win_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" >> $GITHUB_ENV"
+          echo "WRITERNOTE_EXE="$pos\Output\writernote_win_setup_$($env:GITHUB_REF -replace "refs/tags/").exe" >> $GITHUB_ENV"
+
       - name: Update package to release
         if: github.event_name == 'release'
-        env:
-          GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
         shell: powershell
         run: |
           $pos = "D:\a\writernote-qt\writernote-qt\windows"
           $build = "D:\a\writernote-qt\writernote-qt\build"
-
+          
           # make zip to upload
           Compress-Archive -Path $build\* -DestinationPath "writernote_win_setup_$($env:GITHUB_REF -replace "refs/tags/").zip"
 
           Rename-Item $pos\Output\writernote_setup.exe "writernote_win_setup_$($env:GITHUB_REF -replace "refs/tags/").exe"
-          gh release upload "$($env:GITHUB_REF -replace "refs/tags/")" "$pos\Output\writernote_win_setup_$($env:GITHUB_REF -replace "refs/tags/").exe" "writernote_win_setup_$($env:GITHUB_REF -replace "refs/tags/").zip" --clobber
-        
+          
+          mkdir artifact
+          move ${{ env.WRITERNOTE_ZIP }} artifact\
+          move ${{ env.WRITERNOTE_EXE }} artifact\
+
+      - uses: actions/upload-artifact@master
+        name: Upload artifact.
+        if: github.event_name == 'release'
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: artifact\
