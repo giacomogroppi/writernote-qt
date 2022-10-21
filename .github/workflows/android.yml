@@ -247,7 +247,16 @@ jobs:
           export VERSION=$(git describe --tags --abbrev=0)
           export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.apk
           
-          mv $arm64_v8a_pos $NAME_UP_ARM64
+          mkdir artifact
+          mv $arm64_v8a_pos artifact/$NAME_UP_ARM64
+
+          echo "ARTIFACT_NAME=$NAME_UP_ARM64" >> $GITHUB_ENV
 
           gh release upload "$VERSION" $NAME_UP_ARM64 --clobber
-          
+
+      - uses: actions/upload-artifact@master
+        name: Upload artifact.
+        if: github.event_name == 'release'
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: artifact/
