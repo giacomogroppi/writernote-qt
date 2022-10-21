@@ -26,8 +26,8 @@ public:
         enum option val; /* type */
         int pos = option_last_open_ui_def_num; /* number of lastopen file to show */
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
-        cbool showOnlyName = true;
-        cbool showFileIfExist = true; /* only if it exist */
+        const bool showOnlyName = true;
+        const bool showFileIfExist = true; /* only if it exist */
 #else
         bool showOnlyName = false;
         bool showFileIfExist = false;

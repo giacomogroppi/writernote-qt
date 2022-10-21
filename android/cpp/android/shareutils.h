@@ -13,9 +13,9 @@
 // my blog about Qt for mobile: http://j.mp/qt-x
 // see also /COPYRIGHT and /LICENSE
 
-#ifndef SHAREUTILS_H
-#define SHAREUTILS_H
+#pragma once
 
+#include "qurl.h"
 #include <QObject>
 
 #include <QDebug>
@@ -88,4 +88,3 @@ private:
 
 };
 
-#endif //SHAREUTILS_H

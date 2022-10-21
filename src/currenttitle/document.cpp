@@ -27,7 +27,9 @@ void Document::scala_all(const QPointF &delta, int heightView)
 {
     datastruct::scala_all(delta, heightView);
     fromimage::move_img(delta);
+#ifdef PDFSUPPORT
     frompdf::translation_pdf(delta);
+#endif // PDFSUPPORT
 }
 
 void Document::repositioning()

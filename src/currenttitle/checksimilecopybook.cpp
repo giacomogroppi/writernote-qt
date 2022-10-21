@@ -90,8 +90,10 @@ int checksimilecopybook(const Document &doc1,
     int res;
     if(doc1.length_img() != doc2.length_img())
         return LEN;
+#ifdef PDFSUPPORT
     if(doc1.length_pdf() != doc2.length_pdf())
         return LEN;
+#endif // PDFSUPPORT
 
     res = checkSpeed(doc1, doc2);
 
