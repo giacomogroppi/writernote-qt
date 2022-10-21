@@ -110,6 +110,8 @@ jobs:
           chmod +x libzip.sh
           ./libzip.sh OFF $NDK_PATH
 
+          tree $pwd
+
       - name: Build openjpeg
         run: |
           cd $PREFIX_LIB
