@@ -217,7 +217,7 @@ SOURCES += \
     src/last_open/element/element_ui.cpp \
     src/last_open/element/imageWidget/imageWidget.cpp \
     src/last_open/widget_parent/widget_parent.cpp \
-    src/last_open/option/button_main.cpp \
+    src/last_open/option/button_main.cpp \src/touch/
     src/last_open/option/option_last_open_ui.cpp \
     src/style/print_action.cpp \
     src/button/button_size.cpp \
@@ -507,7 +507,7 @@ else:android{
     #QT += androidextras
     QT += core-private
 
-    ANDROID_ABIS=x86_64
+    #ANDROID_ABIS=x86_64
     message($$ANDROID_ABIS)
 
     equals(ANDROID_ABIS,"arm64-v8a"){
