@@ -20,7 +20,8 @@ void model_line_create(StrokePre *stroke);
 void model_rect_create(StrokePre *stroke);
 void model_circle_create(StrokePre *stroke);
 
-static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, cint max)
+template <class T>
+static force_inline not_used bool is_near(const QPointF& p1, const QPointF& p2, const T max)
 {
     W_ASSERT(max >= 0);
     const QPointF tl = QPointF(p1.x() - max, p1.y() - max);
