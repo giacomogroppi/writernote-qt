@@ -67,7 +67,7 @@ public:
 
     [[nodiscard]] virtual int getPosizioneAudio() const = 0;
     [[nodiscard]] QRect getBiggerPointInStroke() const;
-    [[nodiscard]] bool isInside(const QRectF &rect) const;
+    [[nodiscard]] virtual bool isInside(const QRectF &rect) const = 0;
 
     virtual void clearAudio() = 0;
 
