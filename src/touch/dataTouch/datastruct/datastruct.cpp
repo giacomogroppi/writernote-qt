@@ -264,10 +264,10 @@ void datastruct::removePointIndex(
 #ifdef DEBUGINFO
         W_ASSERT(WCommonScript::is_order_vector(pos));
 #else
-        if(unlikely(is_order_vector(pos))){
+        if(unlikely(WCommonScript::is_order_vector(pos))){
             NAME_LOG_EXT->write("List not order", log_ui::critic_error);
             /* in this case we need to order */
-            order_vector(pos);
+            WCommonScript::order_vector(pos);
         }
 
 #endif
