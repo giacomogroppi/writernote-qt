@@ -38,8 +38,8 @@ static void setPoint(const QPointF &pointTouch, TabletCanvas *canvas)
 static int get_index(TabletCanvas *canvas, const QPointF &pointTouch)
 {
     PointSettable *last = canvas->lastpointzoom;
-    const double Dist1 = distance_not_square(last[0], pointTouch);
-    const double Dist2 = distance_not_square(last[1], pointTouch);
+    const double Dist1 = WCommonScript::distance_not_square(last[0], pointTouch);
+    const double Dist2 = WCommonScript::distance_not_square(last[1], pointTouch);
     return Dist1 > Dist2;
 }
 

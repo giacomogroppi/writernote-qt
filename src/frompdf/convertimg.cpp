@@ -1,6 +1,6 @@
 #include "convertImg.h"
 #include <QDebug>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 #ifdef PDFSUPPORT
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 #ifdef DEBUGINFO
 #   define DEBUG_MEM

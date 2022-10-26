@@ -3,7 +3,7 @@
 
 #include <QSize>
 #include "qapplication.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include <QList>
 #include <QScreen>
 #include <chrono>

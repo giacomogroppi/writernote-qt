@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/common_def.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 #if defined(WIN32) || defined(WIN64)
 #include <windows.h> // for Sleep

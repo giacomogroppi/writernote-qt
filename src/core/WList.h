@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "testing/memtest.h"
 #include <QList>
 #include <QPointF>

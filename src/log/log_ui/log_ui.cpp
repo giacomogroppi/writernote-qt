@@ -8,7 +8,7 @@
 #include "utils/dialog_critic/dialog_critic.h"
 #include "utils/slash/slash.h"
 #include "utils/time/current_time.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/WFile.h"
 #include "core/WMutex.h"
 #include "core/WMutexLocker.h"

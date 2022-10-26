@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "log/log_ui/log_ui.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "preview_page_widget/preview_page_widget.h"
 
 static int __page = -2;

@@ -13,7 +13,7 @@
 #include "datawrite/savefile.h"
 #include "datawrite/qfilechoose.h"
 #include "audioplay/aggiornotastiriascolto.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "preview_page_widget/preview_page_widget.h"
 #include <QFile>
 #include <QFileDialog>

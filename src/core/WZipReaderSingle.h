@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/WZip.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 class WZipReaderSingle
 {
@@ -82,7 +82,7 @@ inline int WZipReaderSingle::read_by_size(void *to, size_t size)
 
     W_ASSERT(this->offset == off + size);
 
-    WMemcpy(to, data, size);
+    WCommonScript::WMemcpy(to, data, size);
 
     return 0;
 }

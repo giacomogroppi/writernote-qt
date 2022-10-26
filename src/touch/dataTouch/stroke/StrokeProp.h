@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include <QString>
 
 class StrokeProp {

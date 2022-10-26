@@ -7,7 +7,7 @@
 #include "utils/slash/slash.h"
 #include <QDesktopServices>
 #include "../path/pathfile.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "utils/platform.h"
 
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__) || defined(SNAP)

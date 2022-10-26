@@ -1,7 +1,7 @@
 #pragma once
 
 #include "zip.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include <QString>
 #include <QObject>
 

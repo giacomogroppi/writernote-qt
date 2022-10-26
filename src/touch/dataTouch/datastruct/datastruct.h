@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include "touch/dataTouch/page/Page.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include <csignal>
 #include "pthread.h"
 #include "utils_datastruct.h"
@@ -463,7 +463,7 @@ inline int datastruct::whichPage(const QPointF &point) const
     };
 #endif // DEBUGINFO
 
-    i = diff(point.y() / heigth);
+    i = WCommonScript::diff(point.y() / heigth);
 
     if(unlikely(i >= len)){
         WDebug(debug_which, "set to -1");

@@ -15,20 +15,13 @@
 #define __init__ __attribute((constructor))
 
 #define BIT(bit) (1 << (bit-1))
-
-#define ATOMIC(istr) do{istr}while(0);
-
 #define unlikely(exp) Q_UNLIKELY(exp)
 #define likely(exp) Q_LIKELY(exp)
 #define unknown(exp) exp
-
 #define force_inline Q_ALWAYS_INLINE
 #define not_used __attribute__ ((__unused__))
-
 #define static_assert_type(val, should_be) static_assert(std::is_same<decltype(val), should_be>::value, #val " must be " #should_be)
-
 #define qstr QString
-#define qarr QByteArray
 
 #ifdef DEBUGINFO
 force_inline QString get_only_name(const char *name)
@@ -55,6 +48,7 @@ force_inline QString get_only_name(const char *name)
 }
 #endif
 
+namespace WCommonScript{
 force_inline constexpr not_used int debug_enable()
 {
 #ifdef DEBUGINFO
@@ -572,4 +566,5 @@ inline constexpr bool WStrEqual(const char *s1, const char *s2)
     W_ASSERT(*s1 == '\0' and *s2 == '\0');
 
     return true;
+}
 }

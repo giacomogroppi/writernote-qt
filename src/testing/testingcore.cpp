@@ -1,7 +1,7 @@
 #include "testingcore.h"
 #include "mainwindow.h"
 #include "touch/tabletcanvas.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "datawrite/savefile.h"
 #include "dataread/xmlstruct.h"
 #include "dataread/readlistarray.h"

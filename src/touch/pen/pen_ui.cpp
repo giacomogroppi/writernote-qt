@@ -2,7 +2,7 @@
 #include "ui_pen_ui.h"
 #include "touch/highlighter/highlighter.h"
 #include "utils/setting_define.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 #include <QSettings>
 #include <QDebug>

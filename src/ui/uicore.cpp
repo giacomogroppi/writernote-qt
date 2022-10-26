@@ -2,7 +2,7 @@
 #include "core/core.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 static void adjustButtonDark(QAction *action, const QString &_path)
 {

@@ -8,7 +8,7 @@
 #include "currenttitle/document.h"
 #include "touch/property/property_control.h"
 #include "touch/copy_cut/copy_cut_selection.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
 
 constexpr bool debugSquare = false;

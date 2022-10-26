@@ -3,7 +3,7 @@
 #include <QWidget>
 #include <QRect>
 #include <QEvent>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 class Document;
 

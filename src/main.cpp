@@ -11,7 +11,7 @@
 #include "testing/memtest.h"
 #include "core/core.h"
 #include "ui/WStyle.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include <QStyleFactory>
 #include <QFile>
 
@@ -233,7 +233,7 @@ static not_used void createFileAndExit(const QString &path, MainWindow *parent)
 #pragma message ("Release build")
 #endif
 
-static_assert(WStrEqual(APP_EXT, "writer") == true);
+static_assert(WCommonScript::WStrEqual(APP_EXT, "writer") == true);
 static_assert(sizeof(int) == 4);
 static_assert(sizeof(double) == 8);
 static_assert(sizeof(pressure_t) == 4);

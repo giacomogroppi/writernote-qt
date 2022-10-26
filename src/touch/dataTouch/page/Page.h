@@ -9,7 +9,7 @@
 #include "core/core.h"
 #include "touch/dataTouch/stroke/Stroke.h"
 #include "utils/common_def.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>
 #include "core/WImage.h"
@@ -28,7 +28,7 @@
 #define Define_PAINTER_p(painter, ___img) \
     QPainter painter; \
     if(!painter.begin(&___img)) { \
-        if(debug_enable()){ \
+        if constexpr(WCommonScript::debug_enable()){ \
             std::abort(); \
         } \
     }; \
@@ -313,7 +313,8 @@ force_inline bool Page::updateFlag(
             goto ret;
     }
 
-    _IsVisible = included(0.0, heightView, minH) || included(0.0, heightView, maxH);
+    _IsVisible =    WCommonScript::included(0.0, heightView, minH) or
+                    WCommonScript::included(0.0, heightView, maxH);
 
 ret:
     WDebug(debugPage, "count"   << _count
@@ -328,8 +329,8 @@ ret:
 
 force_inline void Page::setVisible(cbool vis) const
 {
-    bool &__IsVisible = (bool &)_IsVisible;
-    __IsVisible = vis;
+    bool &IsVisible = (bool &)_IsVisible;
+    IsVisible = vis;
 }
 
 force_inline const Stroke &Page::atStroke(uint i) const

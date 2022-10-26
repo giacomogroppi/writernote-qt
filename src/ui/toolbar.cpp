@@ -3,7 +3,7 @@
 #include "ui/controlluibutton.h"
 #include "ui_mainwindow.h"
 #include "ui_toolbar.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/core.h"
 
 ToolBar::ToolBar(QWidget *parent) :

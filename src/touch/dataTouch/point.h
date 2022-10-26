@@ -3,7 +3,7 @@
 #include <QtGlobal>
 #include <QColor>
 #include <QPointF>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 #define NCOLOR 4
 

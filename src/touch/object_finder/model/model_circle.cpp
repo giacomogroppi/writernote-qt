@@ -1,7 +1,7 @@
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "touch/object_finder/model/model.h"
 #include "touch/dataTouch/stroke/Stroke.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/stroke_complex_data.h"
 #include "testing/memtest.h"
 #include "qmath.h"

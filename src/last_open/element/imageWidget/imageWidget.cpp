@@ -1,5 +1,5 @@
 #include "imageWidget.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "testing/memtest.h"
 
 imageWidget::imageWidget(QWidget *parent, QPixmap *pixmap) : QWidget(parent)

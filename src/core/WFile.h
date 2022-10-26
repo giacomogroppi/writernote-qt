@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QByteArray>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 class WFile
 {
@@ -34,7 +34,8 @@ inline bool WFile::isValid() const
 */
 force_inline FILE *WFile::open(const QByteArray &path, const char *flag)
 {
-    W_ASSERT(WStrEqual(flag, "r") == true or WStrEqual(flag, "w") == true);
+    W_ASSERT(   WCommonScript::WStrEqual(flag, "r") == true or
+                WCommonScript::WStrEqual(flag, "w") == true);
 
 #if defined(WIN32) || defined(WIN64)
     FILE *fp;

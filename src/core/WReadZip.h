@@ -2,7 +2,7 @@
 
 #include "WZip.h"
 #include "stdio.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/WZipReaderSingle.h"
 #include <vector>
 

@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include "utils/common_error_definition.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
 #include <QPaintDevice>
 #include "page_file.h"
@@ -160,7 +160,7 @@ void Page::swap(
     QRectF area;
 
 #ifdef DEBUGINFO
-    if(unlikely(!is_order_vector(pos))){
+    if(unlikely(!WCommonScript::is_order_vector(pos))){
         qDebug() << "List not order" << __FILE__ << __FUNCTION__;
     }
 #endif
@@ -218,9 +218,9 @@ size_t Page::get_size_in_file(cbool saveImg) const
 void Page::removeAt(const QVector<int> &pos)
 {
     int i;
-    if(unlikely(!is_order_vector(pos))){
+    if(unlikely(!WCommonScript::is_order_vector(pos))){
         DO_IF_DEBUG(std::abort());
-        order_vector((QVector<int> &)(pos));
+        WCommonScript::order_vector((QVector<int> &)(pos));
     }
 
     i = pos.length();
@@ -252,7 +252,7 @@ void Page::drawStroke(
     m_pen.setColor(color);
 
     if(unlikely(!painter.isActive())){
-        if(debug_enable()){
+        if constexpr (WCommonScript::debug_enable()){
             qDebug() << "page::drawStroke" << "painter not active";
             W_ASSERT(false);
         }

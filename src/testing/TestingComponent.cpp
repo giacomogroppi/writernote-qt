@@ -1,4 +1,4 @@
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/WLine.h"
 
 
@@ -58,9 +58,9 @@ void __init__ testingWLine(void)
 
 void __init__ testingBet(void)
 {
-    W_ASSERT(is_between(0., 5., 6.));
-    W_ASSERT(!is_between(10., 5., 6.));
-    W_ASSERT(is_between(5., 5., 6.));
+    W_ASSERT(WCommonScript::is_between(0., 5., 6.));
+    W_ASSERT(!WCommonScript::is_between(10., 5., 6.));
+    W_ASSERT(WCommonScript::is_between(5., 5., 6.));
 }
 
 #endif //DEBUGINFO

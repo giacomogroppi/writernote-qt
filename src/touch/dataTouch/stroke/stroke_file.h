@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/WZipWriterSingle.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "utils/common_error_definition.h"
 #include "core/WZipReaderSingle.h"
 

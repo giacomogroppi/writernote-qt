@@ -2,7 +2,7 @@
 
 #include "core/WList.h"
 #include "touch/dataTouch/point.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include <QtGlobal>
 #include <QPainter>

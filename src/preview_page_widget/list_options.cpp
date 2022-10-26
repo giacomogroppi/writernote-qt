@@ -2,7 +2,7 @@
 #include <QEvent>
 #include <QLayout>
 #include <QDebug>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "ui/uicore.h"
 #include "core/core.h"
 #include "mainwindow.h"

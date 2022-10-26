@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QWidget>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "utils/platform.h"
 #include "utils/utils.h"
 #include <QPainter>

@@ -2,7 +2,7 @@
 #include "touch/dataTouch/datastruct/datastruct.h"
 #include "testing/memtest.h"
 #include <qmath.h>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/WLine.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 

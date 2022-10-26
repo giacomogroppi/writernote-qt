@@ -6,7 +6,7 @@
 #include "audioplay/audioplay.h"
 #include "audiorecord/audiorecord.h"
 #include "touch/laser/laser.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/object_finder/object_finder.h"
 #include "preview_page_widget/preview_page_widget.h"
 #include "touch/dataTouch/stroke/StrokePre.h"

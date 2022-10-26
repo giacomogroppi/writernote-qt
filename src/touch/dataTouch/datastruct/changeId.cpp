@@ -1,5 +1,5 @@
 #include "datastruct.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 static force_inline void append_point(const Stroke &_from, Stroke &_to, int from, int to)
 {

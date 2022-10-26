@@ -2,7 +2,7 @@
 #include "ui_option_last_open_ui.h"
 #include <QSettings>
 #include "utils/setting_define.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/core.h"
 
 option_last_open_ui::option_last_open_ui(QWidget *parent) :

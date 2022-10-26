@@ -75,12 +75,12 @@ void preview_page_widget::changePage(int index)
 
 void preview_page_widget::mod(int page)
 {
-    W_ASSERT(is_order_vector(_page_mod));
+    W_ASSERT(WCommonScript::is_order_vector(_page_mod));
 
-    if(likely(is_present_in_list_order_vector(_page_mod, page) >= 0))
+    if(likely(WCommonScript::is_present_in_list_order_vector(_page_mod, page) >= 0))
         return;
 
-    append_order(_page_mod, page);
+    WCommonScript::append_order(_page_mod, page);
 }
 
 void preview_page_widget::pageMove()

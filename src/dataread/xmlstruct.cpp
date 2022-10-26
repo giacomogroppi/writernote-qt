@@ -1,6 +1,6 @@
 #include "xmlstruct.h"
 #include <QString>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include <QFile>
 
 xmlstruct::xmlstruct(const QByteArray *path_U, Document *currenttitle_U)

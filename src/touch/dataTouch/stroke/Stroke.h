@@ -6,7 +6,7 @@
 #include <QPainterPath>
 #include "touch/dataTouch/point.h"
 #include "utils/common_def.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WLine.h"
 #include "stroke_complex_data.h"

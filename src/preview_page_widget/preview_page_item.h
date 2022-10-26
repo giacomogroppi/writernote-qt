@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "qlabel.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "utils/platform.h"
 #include "core/core.h"
 #include "testing/memtest.h"

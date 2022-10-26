@@ -1,7 +1,7 @@
 #include "removenotwriternote.h"
 #include <QList>
 #include <QString>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 void removeNotWriternote::exe(QList<QString> &ref)
 {

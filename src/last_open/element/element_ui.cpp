@@ -6,7 +6,7 @@
 #include "utils/common_def.h"
 #include "utils/get_only_name/get_only_name.h"
 #include "utils/mostra_explorer/mostra_explorer.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "testing/memtest.h"
 
 element_ui::element_ui(QWidget *parent, const last_file_s *data, cbool showOnlyName, int m_index, const uchar __showFileOnlyIfExist) :

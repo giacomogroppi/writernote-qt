@@ -1,7 +1,7 @@
 #pragma once
 
 #include "testing/memtest.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 class WZipWriterSingle {
 private:

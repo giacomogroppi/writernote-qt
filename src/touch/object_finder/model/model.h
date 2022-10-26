@@ -4,7 +4,7 @@
 #include <QRectF>
 #include "core/WZipWriterSingle.h"
 #include "utils/common_def.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/WZipReaderSingle.h"
 
 constexpr double model_error = 5000.;

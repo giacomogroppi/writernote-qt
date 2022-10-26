@@ -5,7 +5,7 @@
 #include <QSlider>
 #include <QBuffer>
 #include "qaudiooutput.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "qiodevice.h"
 #include "utils/platform.h"
 
@@ -174,7 +174,7 @@ inline void audioplay::play()
 
     this->player->play();
 
-    if(debug_enable() && !isPlay()){
+    if (WCommonScript::debug_enable() && !isPlay()){
         qDebug() << "Player not playing: ";
         abort();
     }

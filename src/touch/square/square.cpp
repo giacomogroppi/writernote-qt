@@ -7,7 +7,7 @@
 #include "log/log_ui/log_ui.h"
 #include "touch/property/property_control.h"
 #include "touch/tabletcanvas.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
 #include "touch/paintevent/paint.h"
 #include "pthread.h"

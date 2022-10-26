@@ -57,13 +57,13 @@ size_t Stroke::createControll() const
 
     for(i = 0; i < len; i++){
         const point_s &point = _point.at(i);
-        controll += diff(point.x());
-        controll += diff(point.y());
+        controll += WCommonScript::diff(point.x());
+        controll += WCommonScript::diff(point.y());
     }
 
     len = _pressure.length();
     for(i = 0; i < len; i++){
-        controll += diff(_pressure.at(i));
+        controll += WCommonScript::diff(_pressure.at(i));
     }
 
     return controll;

@@ -1,5 +1,5 @@
 #include "multi_thread_data.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "log/log_ui/log_ui.h"
 #include "utils/threadcount.h"
 #include <pthread.h>

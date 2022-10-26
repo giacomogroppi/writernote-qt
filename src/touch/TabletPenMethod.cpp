@@ -1,5 +1,5 @@
 #include "TabletPenMethod.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "utils/setting_define.h"
 #include <QSettings>
 

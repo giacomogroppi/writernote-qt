@@ -1,7 +1,7 @@
 #include "testingzip.h"
 #include <QVector>
 #include "utils/random/random.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "utils/path/get_path.h"
 #include "core/WDir.h"
 #include "core/WZipWriterSingle.h"

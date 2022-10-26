@@ -2,7 +2,7 @@
 #include "currenttitle/document.h"
 #include <zip.h>
 #include "sheet/fast-sheet/fast_sheet_ui.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "core/WReadZip.h"
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>

@@ -6,7 +6,7 @@
 #include "touch/dataTouch/datastruct/datastruct.h"
 #include "touch/tabletcanvas.h"
 #include "core/WList.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
 class laser : public QObject

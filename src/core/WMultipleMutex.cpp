@@ -1,5 +1,5 @@
 #include "WMultipleMutex.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "testing/memtest.h"
 
 WMultipleMutex::WMultipleMutex(int size, int initVal)

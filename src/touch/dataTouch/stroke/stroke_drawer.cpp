@@ -1,7 +1,7 @@
 #include "stroke_drawer.h"
 #include "touch/dataTouch/page/Page.h"
 #include "touch/tabletcanvas.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

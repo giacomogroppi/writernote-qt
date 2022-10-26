@@ -12,7 +12,7 @@
 #endif
 #include <QUrl>
 #include <QFile>
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 class AudioRecord : public QObject
 {

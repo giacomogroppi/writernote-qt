@@ -41,7 +41,7 @@ WLine::WLine(const QPointF &pt1, const QPointF &pt2)
 bool WLine::belongs(const QPointF &point, cdouble precision) const
 {
     W_ASSERT(!this->_is_vertical);
-    const auto res = is_near(this->_m * point.x() + this->_p, point.y(), precision);
+    const auto res = WCommonScript::is_near(this->_m * point.x() + this->_p, point.y(), precision);
 
     WDebug(debug_WLine, "\t" << "Result" << res << qstr("m %1 point.x() %2 _p %3 point.y() %4 precision %5").arg(_m).arg(point.x()).arg(_p).arg(point.y()).arg(precision));
 
@@ -139,10 +139,10 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
         const auto xmin = qMin(_pt1.x(), _pt2.x());
         const auto xmax = qMax(_pt1.x(), _pt2.x());
 
-        check = is_between(xmin - real_precision, x, xmax + real_precision);
+        check = WCommonScript::is_between(xmin - real_precision, x, xmax + real_precision);
         WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [x]" : "not in domain [x]"));
 
-        if(is_between(ymin - real_precision, y, ymax + real_precision)){
+        if(WCommonScript::is_between(ymin - real_precision, y, ymax + real_precision)){
             WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [y]" : "not in domain [y]"));                    
         }else{
             WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [y]" : "not in domain [y]"));
@@ -151,12 +151,12 @@ bool WLine::is_in_domain(const QPointF& point, cdouble precision) const
         }
 
     }else{
-        check = is_near(this->pt1().x(), x, precision);
+        check = WCommonScript::is_near(this->pt1().x(), x, precision);
 
         WDebug(debug_WLine, (check ? "Line vertical is in domain [x]" : "Line vertical is not in domain [x]") << 
                 "x_vertical" << pt1() << "x_point" << x << "Precision" << precision);
 
-        check = check and is_between(ymin - real_precision, y, ymax + real_precision);
+        check = check and WCommonScript::is_between(ymin - real_precision, y, ymax + real_precision);
         WDebug(debug_WLine, (check ? "Line vertical is in domain [y]" : "Line vertical is not in domain [y]") << 
                 "y_min_vertical" << ymin << "y_max_vertical" << ymax << "y_point" << y);
     }

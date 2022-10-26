@@ -3,7 +3,7 @@
 #include "windows/mostra_finestra_i.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include "utils/checkpassword/checkpassword.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 #ifdef CLOUD
 

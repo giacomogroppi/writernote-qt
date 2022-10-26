@@ -3,7 +3,7 @@
 #include "ui_mainwindow.h"
 #include "savefile.h"
 #include "utils/dialog_critic/dialog_critic.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 
 static inline const QString move_file(const QString &nomevecchio, const QString &nomenuovo)
 {
@@ -14,7 +14,7 @@ static bool c = true;
 
 static int has_extensions(const QString &str)
 {
-    constexpr int l = WStrlen("." APP_EXT);
+    constexpr int l = WCommonScript::WStrlen("." APP_EXT);
     const int len = str.length();
     if(len < l){
         return -1;

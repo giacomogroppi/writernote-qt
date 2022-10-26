@@ -1,5 +1,5 @@
 #include "core.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "utils/platform.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"

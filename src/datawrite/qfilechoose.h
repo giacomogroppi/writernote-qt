@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include <QString>
 
 #define TYPEFILEWRITER BIT(1)

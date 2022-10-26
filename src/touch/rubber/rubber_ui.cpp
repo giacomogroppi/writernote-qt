@@ -1,6 +1,6 @@
 #include "rubber_ui.h"
 #include "ui_rubber_ui.h"
-#include "utils/common_script.h"
+#include "utils/WCommonScript.h"
 #include "pthread.h"
 #include "semaphore.h"
 #include "touch/multi_thread_data.h"
