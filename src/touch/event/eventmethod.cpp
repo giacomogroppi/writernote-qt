@@ -218,7 +218,7 @@ ridefine:
             continue;
         }
 
-        if(distance(lastpointzoom[0], lastpointzoom[1]) < 200.)
+        if(WCommonScript::distance(lastpointzoom[0], lastpointzoom[1]) < 200.)
         {
             goto ridefine;
         }
@@ -258,10 +258,10 @@ ridefine:
 
     {
         // current distance
-        const double distanceSelected         = distance(point[0],                point[1]);
+        const double distanceSelected         = WCommonScript::distance(point[0],                point[1]);
 
         // original distance
-        const double tmp_distance_right_left  = distance(lastpointzoom[0],  lastpointzoom[1]);
+        const double tmp_distance_right_left  = WCommonScript::distance(lastpointzoom[0],  lastpointzoom[1]);
 
         const double multiplier = distanceSelected / tmp_distance_right_left;
 

@@ -12,7 +12,7 @@ constexpr not_used bool debug = false;
 
 static not_used void model_circle_print(const stroke_complex_circle *data)
 {
-    if(debug_enable()){
+    if(WCommonScript::debug_enable()){
         qDebug() << "circle: " << data << data->_x << data->_y << data->_r << data->_press;
     }
 }
@@ -43,8 +43,8 @@ static void model_circle_precision(const QPointF &point, double &precision)
      * X^2 + Y^2 - R = res
      */
 
-    res = wPower(point.x() - x, 2) +
-          wPower(point.y() - y, 2)
+    res =   WCommonScript::Power(point.x() - x, 2) +
+            WCommonScript::Power(point.y() - y, 2)
           - circle_data._r;
 
     if(qAbs(res) > precision){
@@ -94,16 +94,17 @@ void stroke_complex_circle_append(Stroke *stroke, const QPointF& point)
     auto *data = (stroke_complex_circle *)stroke->get_complex_data();
     W_ASSERT(stroke->is_circle());
 
-    data->_r = distance(QPointF(data->_x, data->_y), point);
+    data->_r = WCommonScript::distance(QPointF(data->_x, data->_y), point);
 }
 
 static inline double distance_from_center(
         const stroke_complex_circle *data,
         const QPointF& point)
 {
+    using namespace WCommonScript;
     return qSqrt(
-        wPower(data->_x - point.x(), 2) +
-        wPower(data->_y - point.y(), 2)
+        Power(data->_x - point.x(), 2) +
+        Power(data->_y - point.y(), 2)
     );
 }
 
@@ -152,7 +153,8 @@ bool stroke_complex_is_inside_circle(const Stroke *stroke, const WLine &line, cd
     model_circle_print(data);
     WDebug(debug, distance1 << distance2 << tl << br);
 
-    if(is_near(distance1, data->_r, precision) || is_near(distance2, data->_r, precision))
+    if(     WCommonScript::is_near(distance1, data->_r, precision) or
+            WCommonScript::is_near(distance2, data->_r, precision))
         return true;
 
     cbool res = one_inside(distance1, distance2, data, precision) ||
@@ -192,8 +194,8 @@ void stroke_complex_make_normal_circle (const Stroke *_from, Stroke *_to)
 
     data = (stroke_complex_circle *) _from->get_complex_data();
     press = data->_press;
-    from =  data->_y - wPower(data->_r, 1);
-    to =    data->_y + wPower(data->_r, 1);
+    from =  data->_y - WCommonScript::Power(data->_r, 1);
+    to =    data->_y + WCommonScript::Power(data->_r, 1);
 
     _pointLeft.reserve(to - from);
     _pointRigth.reserve(to - from);
@@ -202,8 +204,8 @@ void stroke_complex_make_normal_circle (const Stroke *_from, Stroke *_to)
     W_ASSERT(from <= to);
 
     for(; from <= to;){
-        const auto _res = wPower(double(from) - data->_y, 2);   // = y^2
-        const double res1 = wPower(data->_r, 2) - _res;         // = x^2
+        const auto _res = WCommonScript::Power(double(from) - data->_y, 2);   // = y^2
+        const double res1 = WCommonScript::Power(data->_r, 2) - _res;         // = x^2
 
         W_ASSERT(res1 >= 0.);
 

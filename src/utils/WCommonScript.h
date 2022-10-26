@@ -95,7 +95,7 @@ force_inline constexpr not_used int debug_enable()
     if(list.indexOf(element) == -1) list.append(element);
 
 template <typename T>
-force_inline void __swap(T &t1, T &t2)
+force_inline void swap(T &t1, T &t2)
 {
     const T tmp = t1;
     t1 = t2;
@@ -419,7 +419,7 @@ force_inline T __MAX(T first, T second)
 }
 
 template <typename T>
-force_inline Q_CONSTEXPR T wPower(const T &value, cint power)
+force_inline Q_CONSTEXPR T Power(const T &value, cint power)
 {
     T res = value;
 
@@ -443,9 +443,9 @@ force_inline bool is_near(cdouble one, cdouble two, cdouble precision)
 
 force_inline double distance_not_square(const QPointF& first, const QPointF& second)
 {
-    const auto p = wPower(first.x() - second.x(), 2) + wPower(first.y() - second.y(), 2);
-    if(debug_enable()){
-        const auto not_used res = std::pow(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
+    const auto p = WCommonScript::Power(first.x() - second.x(), 2) + WCommonScript::Power(first.y() - second.y(), 2);
+    if(WCommonScript::debug_enable()){
+        const auto not_used res = WCommonScript::Power(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
         W_ASSERT(is_near(res, p, 0.001));
     }
 

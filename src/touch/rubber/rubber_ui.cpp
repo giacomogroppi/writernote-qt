@@ -131,7 +131,7 @@ int rubber_ui::endRubber()
                 index_mod = i + _base;
             }
 
-            order_vector(arr);
+            WCommonScript::order_vector(arr);
 
             const auto rect = data->get_size_area(arr, i + _base);
             page.removeAndDraw(-1, arr, rect);
@@ -357,22 +357,22 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     Q_ASSERT(data->from <= data->to);
 
     for(; data->from < data->to; data->from++){
-        Stroke &__stroke = _page->atStrokeMod(data->from);
+        auto &stroke = _page->atStrokeMod(data->from);
         int index;
 
-        if(is_present_in_list(_al_find->constData(), data_already_len, data->from))
+        if(WCommonScript::is_present_in_list(_al_find->constData(), data_already_len, data->from))
             continue;
 
-        index = __stroke.is_inside(area, 0, __m_size_gomma, false);
+        index = stroke.is_inside(area, 0, __m_size_gomma, false);
 
         if(index < 0){
             continue;
         }
 
-        if(unlikely(__stroke.is_highlighter())){
+        if(unlikely(stroke.is_highlighter())){
             private_data->highlighter_delete = true;
 
-            const auto currentArea = __stroke.getBiggerPointInStroke();
+            const auto currentArea = stroke.getBiggerPointInStroke();
 
             mutex_area.lock();
 

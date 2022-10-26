@@ -213,7 +213,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 
     _stroke.clear();
 
-    order_multiple(index);
+    WCommonScript::order_multiple(index);
 
     this->initImg();
 
@@ -422,7 +422,7 @@ void square::actionProperty(property_control::ActionProperty action)
             NAME_LOG_EXT->write(
                         QString("It was not possibile to determinate %1").arg(QString::number((int)action)),
                         log_ui::error_internal);
-            abortIfDebug(__FUNCTION__, __LINE__);
+            WCommonScript::abortIfDebug(__FUNCTION__, __LINE__);
         }
     }
 
@@ -452,10 +452,10 @@ force_inline void square::adjustPoint()
     WDebug(debugSquare, topLeft << bottomRight);
 
     if(topLeft.x() > bottomRight.x())
-        __swap(topLeft.rx(), bottomRight.rx());
+        WCommonScript::swap(topLeft.rx(), bottomRight.rx());
 
     if(topLeft.y() > bottomRight.y())
-        __swap(topLeft.ry(), bottomRight.ry());
+        WCommonScript::swap(topLeft.ry(), bottomRight.ry());
 
     WDebug(debugSquare, topLeft << bottomRight);
 
@@ -480,8 +480,7 @@ static void square_draw_square(
 
 void square::needReload(QPainter &painter)
 {
-
-    if(debug_enable()){
+    if(WCommonScript::debug_enable()){
         if(unlikely(!painter.isActive())){
             qDebug() << "Painter not active in square" << __FUNCTION__;
             std::abort();

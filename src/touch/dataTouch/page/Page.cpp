@@ -387,7 +387,7 @@ void Page::drawEngine(
     }
 
     if(unlikely(to_remove.length())){
-        order_vector(to_remove);
+        WCommonScript::order_vector(to_remove);
 
         if(likely(changeSomething))
             *changeSomething = true;

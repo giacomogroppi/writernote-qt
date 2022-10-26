@@ -36,7 +36,7 @@
 
 #define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
 
-#define End_painter(painter) if(!painter.end()) { if(debug_enable()){ std::abort(); }  };
+#define End_painter(painter) if(!painter.end()) { if(WCommonScript::debug_enable()){ std::abort(); }  };
 
 
 enum n_style: int;

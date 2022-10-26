@@ -54,7 +54,7 @@ int DataPrivateMuThreadInit(
     int i, done, div, count;
 
     done = 0;
-    div = div_diff(to, maxThread);
+    div = WCommonScript::div_diff(to, maxThread);
 
     for(i = 0; i < maxThread; i++){
         if(flag & DATA_PRIVATE_FLAG_SEM){

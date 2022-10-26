@@ -262,7 +262,7 @@ void datastruct::removePointIndex(
     if(likely(__isOrder)){
 
 #ifdef DEBUGINFO
-        W_ASSERT(is_order_vector(pos));
+        W_ASSERT(WCommonScript::is_order_vector(pos));
 #else
         if(unlikely(is_order_vector(pos))){
             NAME_LOG_EXT->write("List not order", log_ui::critic_error);
@@ -272,7 +272,7 @@ void datastruct::removePointIndex(
 
 #endif
     }else{
-        order_vector(pos);
+        WCommonScript::order_vector(pos);
     }
 
     for(; i >= 0; i --){
@@ -322,7 +322,7 @@ void datastruct::moveToPage(int newPage)
     W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
     W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
 
-    if(debug_enable()){
+    if(WCommonScript::debug_enable()){
         const auto not_used point = this->adjustPoint(QPointF(0., 0.));
         const auto not_used index = this->whichPage(point);
         qDebug() << newPage << index << this->getPointFirstPage() << get_range_visible();
@@ -343,7 +343,7 @@ int datastruct::getLastPageVisible() const
         }
     }
 
-    abortIfDebug(__FILE__, __LINE__);
+    WCommonScript::abortIfDebug(__FILE__, __LINE__);
     return -1;
 }
 

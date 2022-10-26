@@ -157,7 +157,7 @@ static void model_line_vertical(StrokePre *stroke, stroke_complex_line *data)
     QPointF BR = FL.bottomRight();
 
     if(TL.y() > BR.y()){
-        __swap(TL, BR);
+        WCommonScript::swap(TL, BR);
     }
 
     const double x = TL.x();
@@ -176,7 +176,7 @@ static void model_line_generic(StrokePre *stroke, stroke_complex_line *data)
     data->pt2           = stroke->last().       toQPointF(1.);
 
     if(data->pt1.y() > data->pt2.y()){
-        __swap(data->pt1, data->pt2);
+        WCommonScript::swap(data->pt1, data->pt2);
     }
 
     data->press = pressure;
@@ -205,8 +205,8 @@ void model_line_create(StrokePre *stroke)
 void stroke_complex_line_append(Stroke *stroke, const QPointF& point)
 {
     auto *data = (stroke_complex_line *) stroke->get_complex_data();
-    const auto dist1 = distance_not_square(data->pt1, point);
-    const auto dist2 = distance_not_square(data->pt2, point);
+    const auto dist1 = WCommonScript::distance_not_square(data->pt1, point);
+    const auto dist2 = WCommonScript::distance_not_square(data->pt2, point);
 
     if(dist1 > dist2){
         data->pt2 = point;
