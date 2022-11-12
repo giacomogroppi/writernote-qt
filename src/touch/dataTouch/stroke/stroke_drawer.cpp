@@ -69,7 +69,7 @@ void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
     QPainter _painterPrivate;
     QPainter *painter;
     QPointF lastPoint, pointDraw;
-    cbool isHigh = _color.alpha() < 255;
+    cbool isHigh = _pen.color().alpha() < 255;
     cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
     cbool isPrivatePainter = isHigh;
 
