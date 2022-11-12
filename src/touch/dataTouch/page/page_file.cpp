@@ -38,7 +38,7 @@ int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
         if(unlikely(res == PAGE_POINT)){
             cint len = __tmp.length();
             for(k = 0; k < len; k ++){
-                _page._stroke_writernote.append(__tmp.at(k), __tmp.getPressure(k));
+                _page._stroke_writernote.append(__tmp._point.at(k), __tmp.getPressure(k));
             }
         }
     }

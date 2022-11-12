@@ -43,7 +43,7 @@ public:
     Document();
     Document(const Document &);
 
-    ~Document();
+    virtual ~Document();
 
     void controllForRepositioning();
     void increaseZoom(double delta, const QSize &size);

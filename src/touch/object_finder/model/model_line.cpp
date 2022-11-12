@@ -1,10 +1,10 @@
 #include "touch/object_finder/model/model.h"
-#include "touch/dataTouch/datastruct/datastruct.h"
 #include "testing/memtest.h"
 #include <qmath.h>
 #include "utils/WCommonScript.h"
 #include "core/WLine.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
+#include "touch/dataTouch/stroke/stroke_complex_data.h"
 
 constexpr double    error = 5000;
 constexpr bool      debug = false;
@@ -35,7 +35,7 @@ static void is_near_line(cdouble m, double &max, cdouble q, const point_s *point
 
 static not_used bool line_check_segno(cdouble segno, cdouble len)
 {
-    /*
+    /**
      * se più del 5% dei punti presenta un "ritorno"
      * e è minore del 95 % allora non è una linea
     */

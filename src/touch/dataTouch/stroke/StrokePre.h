@@ -23,7 +23,7 @@ private:
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 public:
     StrokePre() noexcept;
-    ~StrokePre() = default;
+    virtual ~StrokePre() = default;
 
     void adjust(const QPointF &delta);
     void setAlfaColor(int alfa);

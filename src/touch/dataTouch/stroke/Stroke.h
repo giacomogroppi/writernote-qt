@@ -9,12 +9,10 @@
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WLine.h"
-#include "stroke_complex_data.h"
 #include "touch/object_finder/model/model.h"
 #include "testing/memtest.h"
 #include "core/WZipWriterSingle.h"
 #include "core/WZipReaderSingle.h"
-#include "core/WImage.h"
 #include "StrokeProp.h"
 
 struct metadata_stroke{
@@ -59,7 +57,7 @@ private:
 public:
     Stroke();
     Stroke(const Stroke &data);
-    ~Stroke();
+    virtual ~Stroke();
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
     [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
@@ -69,9 +67,6 @@ public:
     [[nodiscard]] pressure_t getPressure(int index) const;
     [[nodiscard]] pressure_t getPressure() const;
     [[nodiscard]] QColor getColor(double division) const;
-
-    [[nodiscard]] const point_s   &at(int index) const;
-    point_s         &at_mod(int index);
 
 #   define stroke_append_default -1.
     void append(const point_s &point, pressure_t pressure);
@@ -123,10 +118,13 @@ public:
     [[nodiscard]] auto constBegin() const { return _point.begin(); }
     [[nodiscard]] auto constEnd() const { return _point.end(); }
 
+    void adjustStroke(double zoom);
+
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
     friend class Page;
+    friend class datastruct;
     friend class xmlstruct;
     friend class stroke_drawer;
     friend class stroke_file;
@@ -271,19 +269,6 @@ inline QColor Stroke::getColor(const double division = 1.) const
     return _metadata.color.toQColor(division);
 }
 
-inline const point_s &Stroke::at(const int index) const
-{
-    W_ASSERT(is_normal());
-    return _point.at(index);
-}
-
-inline point_s &Stroke::at_mod(const int index)
-{
-    W_ASSERT(is_normal());
-    this->modify();
-    return _point.operator[](index);
-}
-
 inline void Stroke::append(const point_s &point, pressure_t pressure)
 {
     /**
@@ -357,8 +342,8 @@ inline int Stroke::getPosizioneAudio() const
 
 force_inline QRect Stroke::getFirstAndLast() const
 {
-    const auto &first = at(0);
-    const auto &last  = at(length() - 1);
+    const auto &first = _point.at(0);
+    const auto &last  = _point.at(length() - 1);
     return QRect(first.toQPointF(1.).toPoint(),
                  last.toQPointF (1.).toPoint());
 }
@@ -511,7 +496,7 @@ inline void Stroke::setAlfaColor(const uchar alfa)
 
 inline void Stroke::at_translation(const double zoom, point_s &point, const int indexPoint, const QPointF &translation) const
 {
-    memcpy(&point, &at(indexPoint), sizeof(point_s));
+    memcpy(&point, &_point.at(indexPoint), sizeof(point_s));
 
     point *= zoom;
     point += translation;
@@ -599,8 +584,8 @@ force_inline int Stroke::is_inside(const WLine &rect, int from, int precision, c
 
         if(value){
             if(needToDeletePoint){
-                Stroke tmp = *this;
-                stroke_complex_make_normal(&tmp, (Stroke *)this);
+                Stroke StrokeTmp = *this;
+                stroke_complex_make_normal(&StrokeTmp, (Stroke *)this);
                 W_ASSERT(this->is_normal());
                 goto continue_search;
             }else{
@@ -627,10 +612,9 @@ continue_search:
             return -1;
     }
 
-
-    p1 = &at(i);
+    p1 = &_point.at(i);
     for(i++; i < len; i++){
-        p2 = &at(i);
+        p2 = &_point.at(i);
 
         tmp = WLine(p1->toQPointF(1.), p2->toQPointF(1.));
 
@@ -642,4 +626,11 @@ continue_search:
     }
 
     return -1;
+}
+
+inline void Stroke::adjustStroke(double zoom)
+{
+    for (auto &p : this->_point) {
+        p /= zoom;
+    }
 }

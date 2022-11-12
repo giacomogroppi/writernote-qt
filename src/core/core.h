@@ -69,6 +69,7 @@ inline void painter_set_source_over(QPainter &painter)
 {
     W_ASSERT(painter.isActive());
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    W_ASSERT(painter.compositionMode() == QPainter::CompositionMode_SourceOver);
 }
 
 inline void painter_set_antialiasing(QPainter &painter)

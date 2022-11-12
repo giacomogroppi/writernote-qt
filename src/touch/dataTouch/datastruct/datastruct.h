@@ -105,7 +105,7 @@ public:
     [[nodiscard]] bool userWrittenSomething() const;
     static bool userWrittenSomething(const datastruct &data1, const datastruct &data2);
 
-    int adjustStroke(Stroke &stroke);
+    [[nodiscard]] int adjustStroke(Stroke &stroke) const;
 
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
 
@@ -581,16 +581,12 @@ inline void datastruct::setPageVisible(int page)
     _pageVisible = page;
 }
 
-inline int datastruct::adjustStroke(Stroke &stroke)
+inline int datastruct::adjustStroke(Stroke &stroke) const
 {
-    int page, counter;
+    int page;
 
     if(likely(stroke.is_normal())){
-        counter = stroke.length() - 1;
-        for(; counter >= 0; counter --){
-            point_s &point = stroke.at_mod(counter);
-            point /= _zoom;
-        }
+        stroke.adjustStroke(_zoom);
     }else{
         stroke_complex_adjust(&stroke, this->_zoom);
     }

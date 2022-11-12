@@ -25,13 +25,13 @@
 
 #define SetRenderPainter(painter) painter.setRenderHint(QPainter::Antialiasing, true);
 
-#define Define_PAINTER_p(painter, ___img) \
-    QPainter painter; \
-    if(!painter.begin(&___img)) { \
-        if constexpr(WCommonScript::debug_enable()){ \
-            std::abort(); \
-        } \
-    }; \
+#define Define_PAINTER_p(painter, ___img)               \
+    QPainter painter;                                   \
+    if(!painter.begin(&___img)) {                       \
+        if constexpr(WCommonScript::debug_enable()){    \
+            std::abort();                               \
+        }                                               \
+    };                                                  \
     SetRenderPainter(painter);
 
 #define Define_PAINTER(painter) Define_PAINTER_p(painter, _imgDraw)
@@ -98,8 +98,6 @@ public:
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(cbool vis) const;
     size_t get_size_in_file(cbool saveImg) const;
-
-    __slow void at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     /* you can access point written by writernote with this funcion */
     __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
@@ -181,10 +179,9 @@ public:
     friend class Stroke;
     friend class page_file;
     friend class stroke_drawer;
-    friend class page_index_cache;
     friend class datastruct;
     friend class xmlstruct;
-    friend class rubber_ui;
+    friend class RubberMethod;
     friend void * __page_load(void *);
     friend void adjustStrokePage(QList<Stroke> &List, int count, Stroke *m_stroke);
     friend class copy;
@@ -359,25 +356,16 @@ static force_inline void __at_draw_private(const point_s &from, point_s &to, con
     to += translation;
 }
 
-inline void Page::at_draw(const uint IndexStroke, const uint IndexPoint, const QPointF &translation,
-                          point_s &point, const double zoom) const
-{
-    const Stroke &stroke = atStroke(IndexStroke);
-    const point_s &__point = stroke.at(IndexPoint);
-
-    __at_draw_private(__point, point, zoom, translation);
-}
-
 inline void Page::at_draw_page(
-        cint IndexPoint,
+        cint            IndexPoint,
         const QPointF   &translation,
         point_s         &point,
         const double    zoom) const
 {
     const Stroke &stroke = get_stroke_page();
-    const point_s &__point = stroke.at(IndexPoint);
+    const point_s &p = stroke._point.at(IndexPoint);
 
-    __at_draw_private(__point, point, zoom, translation);
+    __at_draw_private(p, point, zoom, translation);
 }
 
 force_inline int Page::lengthStroke() const

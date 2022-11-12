@@ -219,7 +219,7 @@ int stroke_file::save(const class Stroke &_stroke, WZipWriterSingle &writer)
     }
 
     for(i = 0; i < len_point; i ++){
-        writer.write(&_stroke.at(i), sizeof(point_s));
+        writer.write(&_stroke._point.at(i), sizeof(point_s));
     }
 
     return OK;

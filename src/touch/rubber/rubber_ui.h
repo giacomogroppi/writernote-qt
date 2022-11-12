@@ -5,8 +5,7 @@
 #include <QPainter>
 #include <QPen>
 #include <pthread.h>
-
-#define DEFAULT_GOMMA_SIZE 5
+#include "RubberMethod.h"
 
 #define POSITION_ALFA 3
 #define DECREASE 2
@@ -23,30 +22,20 @@ public:
     explicit rubber_ui(QWidget *parent = nullptr);
     ~rubber_ui();
 
-    void save_settings();
+    void save_settings() const;
     void load_settings();
 
-    enum e_type_rubber: int{
-        total, /* delete all the point with the saim id */
-        partial /* delete what the user touch with the pen */
-    };
-
-    e_type_rubber _type_gomma = e_type_rubber::total;
+    RubberMethod::type_rubber _type_gomma = RubberMethod::total;
 
     void actionRubber(const QPointF &);
     void initRubber(const QPointF &point);
     int endRubber();
 
-    [[nodiscard]] bool is_set() const { return this->_last.isSet(); };
+    [[nodiscard]] bool is_set() const { return _executer.is_set(); };
 
 private:
-    bool is_image_not_null(int index, const Page *page,
-                           const QPointF &from, const QPointF &to, int delta);
-    class TabletCanvas *_canvas;
-    int _base;
-    PointSettable _last;
+    RubberMethod _executer;
     int _size_gomma = DEFAULT_GOMMA_SIZE;
-    QList<QVector<int>> _data_to_remove;
     void reset();
 
     void update_data();
@@ -62,8 +51,6 @@ private slots:
 
 force_inline void rubber_ui::reset()
 {
-    _base = -1;
-    _last.setSet(false);
-    _data_to_remove.clear();
+    return _executer.reset();
 }
 

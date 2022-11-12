@@ -3,6 +3,7 @@
 #include "touch/tabletcanvas.h"
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
+#include "touch/dataTouch/stroke/stroke_complex_data.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 constexpr double deltaColorNull = 1.08;
@@ -58,7 +59,7 @@ force_inline void stroke_drawer::draw_circle(const Stroke &stroke)
 template <class T, class Z>
 void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
 {
-    constexpr bool not_used debug_draw_stroke = false;
+    constexpr bool not_used debug_draw_stroke = true;
     auto &_painterPublic = this->_painter;
 
     W_ASSERT(this->_page >= 0);
@@ -111,18 +112,18 @@ void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
         lastPoint = pointDraw;
     }
 
-    if(unlikely(!isPrivatePainter)){
-        return;
+    if(likely(isPrivatePainter)){
+        W_ASSERT(isHigh);
+        W_ASSERT(_painterPublic.compositionMode() == QPainter::CompositionMode_SourceOver);
+
+        WDebug(debug_draw_stroke, "Paint high" << _painterPublic.compositionMode());
+
+        painter->end();
+
+        _painterPublic.drawImage(img.rect(), img);
+    } else {
+        WDebug(debug_draw_stroke, "Paint not high");
     }
-
-    W_ASSERT(isHigh);
-    W_ASSERT(_painterPublic.compositionMode() == QPainter::CompositionMode_SourceOver);
-
-    WDebug(debug_draw_stroke, "Paint high");
-
-    painter->end();
-
-    _painterPublic.drawImage(img.rect(), img);
 }
 
 force_inline void stroke_drawer::draw_rect(const Stroke &stroke)
@@ -169,7 +170,7 @@ void stroke_drawer::draw_stroke(QPainter &painter, const StrokePre &stroke, QPen
 
     W_ASSERT(painter.isActive());
 
-    WDebug(true, "Print" << dynamic_cast<const StrokeProp &>(stroke).toString());
+    WDebug(false, "Print" << dynamic_cast<const StrokeProp &>(stroke).toString());
 
     if(likely(stroke.is_normal())){
         stroke_drawer_private<WList<point_s>, WList<pressure_t>> data(

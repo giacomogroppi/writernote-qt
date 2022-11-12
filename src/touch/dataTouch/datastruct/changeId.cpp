@@ -1,12 +1,6 @@
 #include "datastruct.h"
 #include "utils/WCommonScript.h"
 
-static force_inline void append_point(const Stroke &_from, Stroke &_to, int from, int to)
-{
-    for(; from < to; from ++){
-        _to.append(_from.at(from), _from.getPressure(from));
-    }
-}
 
 // this function is usable only in this .o file
 force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, Page &page, cbool threadSafe)
@@ -22,7 +16,13 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, Page 
     WDebug(false, "start" << IndexPoint << __stroke.length()
              << __stroke.last());
 
-    append_point(__stroke, strokeToAppend, IndexPoint, lenPointInStroke);
+    for (   auto from = IndexPoint, to = lenPointInStroke;
+            from < to;
+            from ++) {
+        strokeToAppend.append(  __stroke._point.at(from),
+                                __stroke.getPressure(from));
+    }
+
     strokeToAppend.setMetadata(__stroke.getMetadata());
 
     if(threadSafe){

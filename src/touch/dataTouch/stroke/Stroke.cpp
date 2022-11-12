@@ -110,7 +110,7 @@ void Stroke::movePoint(const QPointF &translation)
     len = this->length();
 
     for(i = 0; i < len; i++){
-        point_s &point = at_mod(i);
+        point_s &point = _point[i];
         point += translation;
     }
 }
