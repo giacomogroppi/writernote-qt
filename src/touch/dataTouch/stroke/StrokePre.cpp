@@ -116,12 +116,11 @@ void StrokePre::draw(QPainter &painter, QPen &pen, double prop)
 {
     WDebug(StrokePreDebug, "Pointer" << this);
     if (is_normal()) {
-        const auto &img = dynamic_cast<const QImage &>(*this);
-        const auto target = img.rect();
+        const auto target = _img.rect();
 
-        W_ASSERT(img.isNull() == false);
+        W_ASSERT(_img.isNull() == false);
 
-        painter.drawImage(target, img);
+        painter.drawImage(target, _img);
     }else {
         W_ASSERT(not _stroke.isEmpty());
         _stroke.draw(painter, false, 0, pen, prop);
@@ -155,11 +154,10 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
 
     if (normal) {
         QPainter painter;
-        auto &img = dynamic_cast<QImage &>(*this);
 
-        painter.begin(&img);
+        painter.begin(&this->_img);
 
-        W_ASSERT(img.isNull() == false);
+        W_ASSERT(this->_img.isNull() == false);
         _point.append(point);
         _pressure.append(press);
 
@@ -173,7 +171,7 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
         }
 
         stroke_drawer::draw_stroke(painter,
-                                   dynamic_cast<StrokePre &>(*this),
+                                   *this,
                                    pen, prop);
 
 

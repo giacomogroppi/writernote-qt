@@ -138,7 +138,7 @@ protected:
 
     /** T should be a QList, QVector, WList,  .... */
     template <class T>
-    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, Stroke s);
+    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, const Stroke &s);
 };
 
 inline void Stroke::set_complex(StrokeProp new_prop, void *new_data)
@@ -352,7 +352,7 @@ force_inline QRect Stroke::getFirstAndLast() const
 template<class T>
 inline QRect Stroke::getBiggerPointInStroke(T begin,
                                             T end,
-                                            Stroke s)
+                                            const Stroke &s)
 {
     QRect biggerData;
 
