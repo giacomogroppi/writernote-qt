@@ -4,8 +4,11 @@
 #include "core/WList.h"
 #include "core/WImage.h"
 
-class StrokePre: private Stroke, private WImage {
+class StrokePre{
 private:
+    WImage _img;
+    Stroke _stroke;
+
     WList<point_s>      _point;
     WList<pressure_t>   _pressure;
 
@@ -32,10 +35,10 @@ public:
     void setColor(const QColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] int length() const;
-    [[nodiscard]] bool is_normal() const  { return Stroke::is_normal(); };
-    [[nodiscard]] bool is_circle() const  { return Stroke::is_circle(); };
-    [[nodiscard]] bool is_rect() const    { return Stroke::is_rect(); };
-    [[nodiscard]] bool is_line() const    { return Stroke::is_line(); };
+    [[nodiscard]] bool is_normal() const  { return _stroke.is_normal(); };
+    [[nodiscard]] bool is_circle() const  { return _stroke.is_circle(); };
+    [[nodiscard]] bool is_rect() const    { return _stroke.is_rect(); };
+    [[nodiscard]] bool is_line() const    { return _stroke.is_line(); };
     [[nodiscard]] QRect getBiggerPointInStroke() const;
     [[nodiscard]] QRect getFirstAndLast() const;
     [[nodiscard]] pressure_t getPressure() const;
@@ -68,7 +71,7 @@ inline bool StrokePre::isEmpty() const noexcept
 
 inline int StrokePre::length() const
 {
-    W_ASSERT(Stroke::is_normal());
+    W_ASSERT(_stroke.is_normal());
     return _point.length();
 }
 
@@ -84,19 +87,19 @@ inline void StrokePre::reset()
 
 inline void StrokePre::setColor(const QColor &color) noexcept
 {
-    Stroke::setColor(color);
+    _stroke.setColor(color);
 }
 
 inline const Stroke &StrokePre::get_stroke_for_draw() const
 {
-    W_ASSERT(Stroke::is_complex());
-    return *this;
+    W_ASSERT(_stroke.is_complex());
+    return _stroke;
 }
 
 inline WList<pressure_t>::const_iterator StrokePre::get_last_press() const
 {
     W_ASSERT(_pressure.length() > 1);
-    W_ASSERT(Stroke::is_normal());
+    W_ASSERT(_stroke.is_normal());
 
     return _last_draw_press;
 }

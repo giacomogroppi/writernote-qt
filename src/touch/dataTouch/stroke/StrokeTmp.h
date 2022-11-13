@@ -110,5 +110,5 @@ protected:
 
     /** T should be a QList, QVector, WList,  .... */
     template <class T>
-    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, const Stroke &s);
+    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, StrokePre s);
 };

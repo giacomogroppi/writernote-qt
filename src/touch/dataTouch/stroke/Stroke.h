@@ -133,11 +133,12 @@ public:
 
 protected:
 
+    friend class StrokePre;
     void preappend(int l);
 
     /** T should be a QList, QVector, WList,  .... */
     template <class T>
-    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, const Stroke &s);
+    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, Stroke s);
 };
 
 inline void Stroke::set_complex(StrokeProp new_prop, void *new_data)
@@ -351,11 +352,11 @@ force_inline QRect Stroke::getFirstAndLast() const
 template<class T>
 inline QRect Stroke::getBiggerPointInStroke(T begin,
                                             T end,
-                                            const Stroke &s)
+                                            Stroke s)
 {
     QRect biggerData;
 
-    if(unlikely(s.is_complex())){
+    if(unlikely(not s.is_normal())){
         biggerData = stroke_complex_bigger_data(&s);
         return biggerData;
     }

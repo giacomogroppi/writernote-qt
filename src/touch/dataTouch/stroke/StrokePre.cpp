@@ -3,14 +3,14 @@
 #include "touch/dataTouch/stroke/stroke_drawer.h"
 
 StrokePre::StrokePre() noexcept :
-    Stroke(),
-    WImage(1),
+    _img(1),
+    _stroke(),
     _last_draw_point(nullptr),
     _last_draw_press(nullptr)
 {
     W_ASSERT(is_normal());
-    W_ASSERT(Stroke::isEmpty());
-    W_ASSERT(not WImage::isNull());
+    W_ASSERT(_stroke.isEmpty());
+    W_ASSERT(not _img.isNull());
 }
 
 void StrokePre::merge(Stroke &res)
@@ -21,7 +21,7 @@ void StrokePre::merge(Stroke &res)
 
     int i;
 
-    if (not Stroke::is_normal()) {
+    if (not _stroke.is_normal()) {
         const auto &s = dynamic_cast<const Stroke &>(*this);
         Stroke::copy(s, res);
         return;
@@ -29,7 +29,7 @@ void StrokePre::merge(Stroke &res)
 
     const auto l = _point.length();
 
-    Stroke::preappend(l);
+    _stroke.preappend(l);
 
     for (i = 0; i < l; i++) {
         const auto *data_point = _point.get_first();
@@ -42,7 +42,7 @@ void StrokePre::merge(Stroke &res)
     }
 
     res.setMetadata(
-                    Stroke::getMetadata()
+                    _stroke.getMetadata()
                 );
 
 #ifdef DEBUGINFO
@@ -52,25 +52,25 @@ void StrokePre::merge(Stroke &res)
 
 void StrokePre::adjust(const QPointF &delta)
 {
-    if(likely(Stroke::is_normal())){
+    if(likely(_stroke.is_normal())){
         for(auto &point : this->_point){
             point -= delta;
         }
     }else{
-        stroke_complex_translate(this, -delta);
+        stroke_complex_translate(&_stroke, -delta);
     }
 }
 
 void StrokePre::setAlfaColor(int alfa)
 {
     W_ASSERT(alfa >= 0 and alfa <= 255);
-    Stroke::setAlfaColor(alfa);
+    _stroke.setAlfaColor(alfa);
 }
 
 void StrokePre::setTime(int time)
 {
     W_ASSERT( time == -1 or time >= 0 );
-    Stroke::setPositioneAudio(time);
+    _stroke.setPositioneAudio(time);
 }
 
 QRect StrokePre::getBiggerPointInStroke() const
@@ -78,7 +78,7 @@ QRect StrokePre::getBiggerPointInStroke() const
     /** TODO --> define a cache */
     const auto res = Stroke::getBiggerPointInStroke(this->_point.constBegin(),
                                                     this->_point.constEnd(),
-                                                    *this);
+                                                    this->_stroke);
     return res;
 }
 
@@ -87,7 +87,10 @@ QRect StrokePre::getFirstAndLast() const
     const auto &first = *_point.constBegin();
     const auto &last  = _point.last();
 
-    return QRect(first.toPoint(), last.toPoint());
+    return {
+            first.toPoint(),
+            last.toPoint()
+    };
 }
 
 pressure_t StrokePre::getPressure() const
@@ -98,8 +101,8 @@ pressure_t StrokePre::getPressure() const
 
 void StrokePre::set_complex(StrokeProp type, void *data)
 {
-    Stroke::set_complex(type, data);
-    W_ASSERT(Stroke::is_complex());
+    _stroke.set_complex(type, data);
+    W_ASSERT(_stroke.is_complex());
     WDebug(StrokePreDebug, "Pointer" << this);
 }
 
@@ -120,20 +123,20 @@ void StrokePre::draw(QPainter &painter, QPen &pen, double prop)
 
         painter.drawImage(target, img);
     }else {
-        W_ASSERT(not Stroke::isEmpty());
-        Stroke::draw(painter, false, 0, pen, prop);
+        W_ASSERT(not _stroke.isEmpty());
+        _stroke.draw(painter, false, 0, pen, prop);
     }
 }
 
 QColor StrokePre::getColor(double division) const
 {
-    return Stroke::getColor(division);
+    return _stroke.getColor(division);
 }
 
 StrokePre &StrokePre::operator=(const StrokePre &other)
 {
-    Stroke::operator=(other);
-    WImage::operator=(other);
+    _stroke.operator=(other._stroke);
+    _img.operator=(other._img);
     this->_point = other._point;
     this->_pressure = other._pressure;
 
@@ -141,7 +144,7 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     this->already_merge = other.already_merge;
 #endif // DEBUGINFO
 
-    W_ASSERT(Stroke::cmp(*this, other) == true);
+    W_ASSERT(Stroke::cmp(this->_stroke, other._stroke) == true);
 
     return *this;
 }
