@@ -22,7 +22,7 @@ struct metadata_stroke{
     struct colore_s color;
 };
 
-class Stroke : public StrokeProp
+class Stroke
 {
 private:
     struct metadata_stroke _metadata;
@@ -38,7 +38,6 @@ private:
 
     [[nodiscard]] bool isPressureVal() const;
     [[nodiscard]] bool needToUpdatePressure() const;
-    [[nodiscard]] bool needToUpdateBiggerData() const;
 
     void setFlag(unsigned char type, bool value) const;
 
@@ -47,7 +46,7 @@ private:
     void updateFlagPressure() const;
 
     virtual int save(WZipWriterSingle &file) const = 0;
-    virtual Stroke& load(WZipReaderSingle &reader, int version);
+    Stroke* load(WZipReaderSingle &reader, int version);
 
 public:
     ~Stroke();
@@ -62,7 +61,7 @@ public:
     void setMetadata(int posizione_audio, const colore_s &color);
     virtual void setMetadata(const metadata_stroke &metadata) final;
     void setPositioneAudio(int m_pos_ris);
-    [[nodiscard]] virtual size_t createControll() const = 0;
+    [[nodiscard]] virtual size_t createControll() const;
 
     [[nodiscard]] virtual int getPosizioneAudio() const = 0;
     [[nodiscard]] QRect getBiggerPointInStroke() const;
@@ -104,7 +103,8 @@ protected:
     Stroke();
     Stroke(const metadata_stroke& met);
     void modify();
-
+    void setBiggerData(const QRect &newRect) const;
+    [[nodiscard]] bool needToUpdateBiggerData() const;
     /* all stroke derivated class needs to implements this method to recognize yourself */
     virtual int type() = 0;
     virtual void preappend(int l) = 0;
@@ -113,3 +113,10 @@ protected:
     template <class T>
     [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, StrokePre s);
 };
+
+inline void Stroke::setBiggerData(const QRect &newRect) const
+{
+    auto &r = (QRect &) this->_biggerData;
+    r = newRect;
+    setFlag(UPDATE_BIGGER_DATA, false);
+}

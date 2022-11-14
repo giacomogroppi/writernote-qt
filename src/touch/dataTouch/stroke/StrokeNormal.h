@@ -1,48 +1,47 @@
 #pragma once
 
 #include "StrokeTmp.h"
+#include <QList>
 
 class StrokeNormal: public Stroke{
+private:
     int save(WZipWriterSingle &file) const final;
-    int load(WZipReaderSingle &reader, int version) final;
+    int load(WZipReaderSingle &reader, int version);
 
+    QList<point_s> _point;
+    QList<pressure_t> _pressure;
+
+    [[nodiscard]] auto length () const { return _point.length(); }
 public:
     StrokeNormal();
     ~StrokeNormal();
 
-    virtual void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const = 0;
-    [[nodiscard]] virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
+    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const final;
+    [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const final;
 
 #   define stroke_append_default (-1.)
-    virtual void append(const point_s &point, pressure_t pressure) = 0;
-    void setMetadata(int posizione_audio, const colore_s &color);
-    void setPositioneAudio(int m_pos_ris);
-    [[nodiscard]] virtual size_t createControll() const = 0;
+    void append(const point_s &point, pressure_t pressure) final;
+    [[nodiscard]] size_t createControll() const final;
 
-    [[nodiscard]] virtual int getPosizioneAudio() const = 0;
-    [[nodiscard]] QRect getBiggerPointInStroke() const;
+    [[nodiscard]] virtual QRect getBiggerPointInStroke() const final;
     [[nodiscard]] virtual bool isInside(const QRectF &rect) const = 0;
-
-    virtual void clearAudio() = 0;
 
     [[nodiscard]] const struct metadata_stroke &getMetadata() const;
 
-    [[nodiscard]] virtual bool is_highlighter() const = 0;
-    [[nodiscard]] virtual uchar get_alfa() const final;
-    [[nodiscard]] virtual size_t getSizeInMemory() const = 0;
-    [[nodiscard]] virtual size_t getSizeInFile() const = 0;
-    virtual void decreasePrecision() = 0;
-    void setAlfaColor(uchar alfa);
+    [[nodiscard]] bool is_highlighter() const final;
+    [[nodiscard]] size_t getSizeInMemory() const final;
+    [[nodiscard]] size_t getSizeInFile() const final;
+    void decreasePrecision() final;
 
     /* this function physically adds the x and y value of the point to all of its points. */
-    virtual void movePoint(const QPointF &translation) = 0;
+    void movePoint(const QPointF &translation) final;
 
-    virtual void reset() = 0;
+    void reset() final;
     Stroke &operator=(const Stroke &other);
 
-    [[nodiscard]] virtual bool isEmpty() const = 0;
+    [[nodiscard]] bool isEmpty() const final;
 
-    virtual void scale(const QPointF &offset) = 0;
+    void scale(const QPointF &offset) final;
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
