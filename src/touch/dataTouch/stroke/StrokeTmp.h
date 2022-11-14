@@ -36,9 +36,9 @@ private:
 
     unsigned char _flag;
 
-    [[nodiscard]] virtual bool isPressureVal() const = 0;
-    [[nodiscard]] virtual bool needToUpdatePressure() const final;
-    [[nodiscard]] virtual bool needToUpdateBiggerData() const final;
+    [[nodiscard]] bool isPressureVal() const;
+    [[nodiscard]] bool needToUpdatePressure() const;
+    [[nodiscard]] bool needToUpdateBiggerData() const;
 
     void setFlag(unsigned char type, bool value) const;
 
@@ -47,8 +47,7 @@ private:
     void updateFlagPressure() const;
 
     virtual int save(WZipWriterSingle &file) const = 0;
-
-    virtual int load(WZipReaderSingle &reader, int version) = 0;
+    virtual Stroke& load(WZipReaderSingle &reader, int version);
 
 public:
     ~Stroke();
@@ -74,7 +73,7 @@ public:
     [[nodiscard]] const struct metadata_stroke &getMetadata() const;
 
     [[nodiscard]] virtual bool is_highlighter() const = 0;
-    [[nodiscard]] virtual uchar get_alfa() const final;
+    [[nodiscard]] uchar get_alfa() const;
     [[nodiscard]] virtual size_t getSizeInMemory() const = 0;
     [[nodiscard]] virtual size_t getSizeInFile() const = 0;
     virtual void decreasePrecision() = 0;
@@ -106,6 +105,8 @@ protected:
     Stroke(const metadata_stroke& met);
     void modify();
 
+    /* all stroke derivated class needs to implements this method to recognize yourself */
+    virtual int type() = 0;
     virtual void preappend(int l) = 0;
 
     /** T should be a QList, QVector, WList,  .... */
