@@ -10,8 +10,9 @@ private:
 
     QList<point_s> _point;
     QList<pressure_t> _pressure;
-    [[nodiscard]] static QRect getBiggerPointInStroke(QList<point_s>::const_iterator begin, QList<point_s>::const_iterator end, StrokePre s);
+    [[nodiscard]] static QRect getBiggerPointInStroke(QList<point_s>::const_iterator begin, QList<point_s>::const_iterator end);
     [[nodiscard]] auto length () const { return _point.length(); }
+    bool isInsideBiggerData(const QRect &rect) const;
 public:
     StrokeNormal();
     ~StrokeNormal();
@@ -24,9 +25,7 @@ public:
     [[nodiscard]] size_t createControll() const final;
 
     [[nodiscard]] QRect getBiggerPointInStroke() const final;
-    [[nodiscard]] bool isInside(const QRectF &rect) const;
-
-    [[nodiscard]] const struct metadata_stroke &getMetadata() const;
+    [[nodiscard]] bool isInside(const QRectF &rect) const final;
 
     [[nodiscard]] bool is_highlighter() const final;
     [[nodiscard]] size_t getSizeInMemory() const final;

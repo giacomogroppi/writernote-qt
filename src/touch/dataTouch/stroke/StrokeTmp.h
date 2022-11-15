@@ -64,7 +64,7 @@ public:
     [[nodiscard]] virtual size_t createControll() const;
 
     [[nodiscard]] virtual int getPosizioneAudio() const = 0;
-    [[nodiscard]] QRect getBiggerPointInStroke() const;
+    [[nodiscard]] virtual QRect getBiggerPointInStroke() const = 0;
     [[nodiscard]] virtual bool isInside(const QRectF &rect) const = 0;
 
     virtual void clearAudio() = 0;
@@ -116,9 +116,4 @@ inline void Stroke::setBiggerData(const QRect &newRect) const
     auto &r = (QRect &) this->_biggerData;
     r = newRect;
     setFlag(UPDATE_BIGGER_DATA, false);
-}
-
-inline QRect Stroke::getBiggerPointInStroke(QList<)
-{
-
 }

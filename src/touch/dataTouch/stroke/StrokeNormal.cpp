@@ -89,9 +89,8 @@ QRect StrokeNormal::getBiggerPointInStroke() const
         return Stroke::getBiggerPointInStroke();
     }
 
-    const auto b = Stroke::getBiggerPointInStroke(this->_point.constBegin(),
-                                                  this->_point.constEnd(),
-                                                  *this);
+    const auto b = StrokeNormal::getBiggerPointInStroke(this->_point.constBegin(),
+                                                        this->_point.constEnd());
 
     this->setBiggerData(b);
 
@@ -99,19 +98,13 @@ QRect StrokeNormal::getBiggerPointInStroke() const
 }
 
 QRect StrokeNormal::getBiggerPointInStroke(QList<point_s>::const_iterator begin,
-                                           QList<point_s>::const_iterator end,
-                                           StrokePre s)
+                                           QList<point_s>::const_iterator end)
 {
     QRect biggerData;
 
-    if(unlikely(not s.is_normal())){
-        biggerData = stroke_complex_bigger_data(&s);
-        return biggerData;
-    }
-
     if(unlikely(begin == end)){
         WWarning("Warning: Stroke empty");
-        return QRect(0, 0, 0, 0);
+        return {0, 0, 0, 0};
     }
 
     QPoint topLeft = begin->toQPointF(1.).toPoint();
@@ -147,4 +140,27 @@ QRect StrokeNormal::getBiggerPointInStroke(QList<point_s>::const_iterator begin,
     biggerData = QRect(topLeft, bottomRight);
 
     return biggerData;
+}
+
+bool StrokeNormal::isInsideBiggerData(const QRect &rect) const
+{
+    const auto &area = this->getBiggerPointInStroke();
+    return area.intersects(rect);
+}
+
+bool StrokeNormal::isInside(const QRectF &rect) const
+{
+    if(!this->isInsideBiggerData(rect.toRect()))
+        return false;
+
+    std::any_of(_point.constBegin(), _point.constEnd(), [=](const point_s &p) {
+        return datastruct_isinside(rect, p);
+    });
+
+    /*for(const auto &ref : qAsConst(_point)){
+        if (datastruct_isinside(rect, ref))
+            return true;
+    }*/
+
+    return false;
 }
