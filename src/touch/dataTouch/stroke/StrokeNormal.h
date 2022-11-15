@@ -10,7 +10,7 @@ private:
 
     QList<point_s> _point;
     QList<pressure_t> _pressure;
-
+    [[nodiscard]] static QRect getBiggerPointInStroke(QList<point_s>::const_iterator begin, QList<point_s>::const_iterator end, StrokePre s);
     [[nodiscard]] auto length () const { return _point.length(); }
 public:
     StrokeNormal();
@@ -23,8 +23,8 @@ public:
     void append(const point_s &point, pressure_t pressure) final;
     [[nodiscard]] size_t createControll() const final;
 
-    [[nodiscard]] virtual QRect getBiggerPointInStroke() const final;
-    [[nodiscard]] virtual bool isInside(const QRectF &rect) const = 0;
+    [[nodiscard]] QRect getBiggerPointInStroke() const final;
+    [[nodiscard]] bool isInside(const QRectF &rect) const;
 
     [[nodiscard]] const struct metadata_stroke &getMetadata() const;
 
@@ -53,4 +53,5 @@ public:
     friend class page_file;
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 };
+
 

@@ -97,3 +97,54 @@ QRect StrokeNormal::getBiggerPointInStroke() const
 
     return b;
 }
+
+QRect StrokeNormal::getBiggerPointInStroke(QList<point_s>::const_iterator begin,
+                                           QList<point_s>::const_iterator end,
+                                           StrokePre s)
+{
+    QRect biggerData;
+
+    if(unlikely(not s.is_normal())){
+        biggerData = stroke_complex_bigger_data(&s);
+        return biggerData;
+    }
+
+    if(unlikely(begin == end)){
+        WWarning("Warning: Stroke empty");
+        return QRect(0, 0, 0, 0);
+    }
+
+    QPoint topLeft = begin->toQPointF(1.).toPoint();
+    QPoint bottomRight = topLeft;
+
+    for(; begin != end; begin ++){
+        const point_s &point = *begin;
+
+        if(topLeft.x() > point.x())
+            topLeft.setX(static_cast<int>(
+                                 point.x()
+                         ));
+
+        if(topLeft.y() > point.y())
+            topLeft.setY(static_cast<int>(
+                                 point.y()
+                         ));
+
+        if(bottomRight.x() < point.x())
+            bottomRight.setX(static_cast<int>(
+                                     point.x())
+            );
+
+        if(bottomRight.y() < point.y())
+            bottomRight.setY(static_cast<int>(
+                                     point.y())
+            );
+    }
+
+    W_ASSERT(topLeft.x() <= bottomRight.x());
+    W_ASSERT(topLeft.y() <= bottomRight.y());
+
+    biggerData = QRect(topLeft, bottomRight);
+
+    return biggerData;
+}

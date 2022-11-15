@@ -109,9 +109,6 @@ protected:
     virtual int type() = 0;
     virtual void preappend(int l) = 0;
 
-    /** T should be a QList, QVector, WList,  .... */
-    template <class T>
-    [[nodiscard]] static QRect getBiggerPointInStroke(T begin, T end, StrokePre s);
 };
 
 inline void Stroke::setBiggerData(const QRect &newRect) const
@@ -119,4 +116,9 @@ inline void Stroke::setBiggerData(const QRect &newRect) const
     auto &r = (QRect &) this->_biggerData;
     r = newRect;
     setFlag(UPDATE_BIGGER_DATA, false);
+}
+
+inline QRect Stroke::getBiggerPointInStroke(QList<)
+{
+
 }
