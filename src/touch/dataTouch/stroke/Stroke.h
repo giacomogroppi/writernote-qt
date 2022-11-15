@@ -39,6 +39,7 @@ private:
 
     [[nodiscard]] bool isPressureVal() const;
     [[nodiscard]] bool needToUpdatePressure() const;
+    [[nodiscard]] bool needToUpdateBiggerData() const;
 
     void *_complex = nullptr;
     void setFlag(unsigned char type, bool value) const;

@@ -1,0 +1,40 @@
+name: Windows
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - '!.github/workflows/windows.yml'
+      - 'macos-build/**'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - '!.github/workflows/windows.yml'
+      - 'macos-build/**'
+
+  release:
+    types:
+      - published
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Clone.
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          path: ${{ env.REPO_NAME }}
+                  
+      - name: run-vcpkg
+        uses: lukka/run-vcpkg@v10.6
+
+      - name: Install lib
+        run: |
+          vcpkg install qt:x64-windows
