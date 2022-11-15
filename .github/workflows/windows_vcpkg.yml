@@ -32,8 +32,8 @@ jobs:
           submodules: recursive
           path: ${{ env.REPO_NAME }}
                   
-      - name: run-vcpkg
-        uses: lukka/run-vcpkg@v10.6
+      - uses: friendlyanon/setup-vcpkg@v1
+        with: { committish: 6e4fbee0d1e6daffaab50f4c055cd3ccfd3d929a }
 
       - name: Install lib
         run: |
