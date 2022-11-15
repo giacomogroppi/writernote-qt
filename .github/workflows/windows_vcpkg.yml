@@ -6,14 +6,14 @@ on:
       - '**.md'
       - 'LICENSE'
       - '.github/**'
-      - '!.github/workflows/windows.yml'
+      - '!.github/workflows/windows_vcpkg.yml'
       - 'macos-build/**'
   pull_request:
     paths-ignore:
       - '**.md'
       - 'LICENSE'
       - '.github/**'
-      - '!.github/workflows/windows.yml'
+      - '!.github/workflows/windows_vcpkg.yml'
       - 'macos-build/**'
 
   release:
