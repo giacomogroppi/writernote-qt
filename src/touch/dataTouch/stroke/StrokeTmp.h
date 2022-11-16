@@ -71,10 +71,11 @@ public:
 
     [[nodiscard]] const struct metadata_stroke &getMetadata() const;
 
-    [[nodiscard]] virtual bool is_highlighter() const = 0;
+    [[nodiscard]] bool is_highlighter() const;
     [[nodiscard]] uchar get_alfa() const;
     [[nodiscard]] virtual size_t getSizeInMemory() const = 0;
-    [[nodiscard]] virtual size_t getSizeInFile() const = 0;
+
+    [[nodiscard]] virtual size_t getSizeInFile() const;
     virtual void decreasePrecision() = 0;
     void setAlfaColor(uchar alfa);
 
@@ -82,7 +83,7 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     virtual void movePoint(const QPointF &translation) = 0;
 
-    virtual void reset() = 0;
+    virtual void reset();
     Stroke &operator=(const Stroke &other);
 
     [[nodiscard]] virtual bool isEmpty() const = 0;
@@ -106,7 +107,7 @@ protected:
     void setBiggerData(const QRect &newRect) const;
     [[nodiscard]] bool needToUpdateBiggerData() const;
     /* all stroke derivated class needs to implements this method to recognize yourself */
-    virtual int type() = 0;
+    virtual int type() const = 0;
     virtual void preappend(int l) = 0;
 
 };
@@ -116,4 +117,17 @@ inline void Stroke::setBiggerData(const QRect &newRect) const
     auto &r = (QRect &) this->_biggerData;
     r = newRect;
     setFlag(UPDATE_BIGGER_DATA, false);
+}
+
+inline void Stroke::modify()
+{
+    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE;
+
+    W_ASSERT(this->needToUpdateBiggerData());
+    W_ASSERT(this->needToUpdatePressure());
+}
+
+inline bool Stroke::needToUpdateBiggerData() const
+{
+    return _flag & UPDATE_BIGGER_DATA;
 }

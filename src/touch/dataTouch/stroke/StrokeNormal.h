@@ -13,6 +13,7 @@ private:
     [[nodiscard]] static QRect getBiggerPointInStroke(QList<point_s>::const_iterator begin, QList<point_s>::const_iterator end);
     [[nodiscard]] auto length () const { return _point.length(); }
     bool isInsideBiggerData(const QRect &rect) const;
+    int removeAt(int i);
 public:
     StrokeNormal();
     ~StrokeNormal();
@@ -27,7 +28,6 @@ public:
     [[nodiscard]] QRect getBiggerPointInStroke() const final;
     [[nodiscard]] bool isInside(const QRectF &rect) const final;
 
-    [[nodiscard]] bool is_highlighter() const final;
     [[nodiscard]] size_t getSizeInMemory() const final;
     [[nodiscard]] size_t getSizeInFile() const final;
     void decreasePrecision() final;
@@ -36,7 +36,7 @@ public:
     void movePoint(const QPointF &translation) final;
 
     void reset() final;
-    Stroke &operator=(const Stroke &other);
+    StrokeNormal &operator=(const StrokeNormal &other);
 
     [[nodiscard]] bool isEmpty() const final;
 
@@ -45,8 +45,9 @@ public:
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
+    friend class StrokeNormalFileSave;
+    friend class StrokeNormalFileLoad;
     friend class Page;
-    friend class xmlstruct;
     friend class stroke_drawer;
     friend class stroke_file;
     friend class page_file;

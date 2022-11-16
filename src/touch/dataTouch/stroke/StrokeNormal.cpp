@@ -1,4 +1,5 @@
 #include "StrokeNormal.h"
+#include "StrokeNormalFile.h"
 
 StrokeNormal::StrokeNormal()
 {}
@@ -163,4 +164,71 @@ bool StrokeNormal::isInside(const QRectF &rect) const
     }*/
 
     return false;
+}
+
+size_t StrokeNormal::getSizeInMemory() const
+{
+    return sizeof(point_s) * this->length();
+}
+
+size_t StrokeNormal::getSizeInFile() const
+{
+    StrokeNormalFileSave d(*this);
+    return d.getSizeInFile() + Stroke::getSizeInFile();
+}
+
+void StrokeNormal::decreasePrecision()
+{
+    const auto len = length();
+
+    for(auto i = 1; i < len - 1; i++){
+        if(i % 2 == 0){
+            this->removeAt(i);
+        }
+    }
+}
+
+int StrokeNormal::removeAt(int i)
+{
+    auto len = length();
+
+    W_ASSERT(i < len);
+
+    if(this->_pressure.length() > 1){
+        W_ASSERT(_pressure.length() == _point.length());
+        _pressure.removeAt(i);
+    }
+
+    _point.removeAt(i);
+    this->modify();
+
+    return len < 2;
+}
+
+void StrokeNormal::movePoint(const QPointF &translation)
+{
+    for(auto &p : _point) {
+        p += translation;
+    }
+}
+
+void StrokeNormal::reset()
+{
+    Stroke::reset();
+
+    _pressure.clear();
+    _point.clear();
+}
+
+bool StrokeNormal::isEmpty() const
+{
+    const auto e = Stroke::isEmpty();
+    return e and this->_point.isEmpty();
+}
+
+void StrokeNormal::scale(const QPointF &offset)
+{
+    for(auto &point : _point){
+        point += offset;
+    }
 }
