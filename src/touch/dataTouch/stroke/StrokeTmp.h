@@ -131,3 +131,18 @@ inline bool Stroke::needToUpdateBiggerData() const
 {
     return _flag & UPDATE_BIGGER_DATA;
 }
+
+inline bool Stroke::needToUpdatePressure() const
+{
+    return _flag & UPDATE_PRESSURE;
+}
+
+inline void Stroke::setFlag(unsigned char type, bool value) const
+{
+    auto &f = (uchar &) _flag;
+    if(value){
+        f |= type;
+    }else{
+        f &= ~type;
+    }
+}
