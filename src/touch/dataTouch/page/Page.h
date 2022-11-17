@@ -175,7 +175,7 @@ public:
 
     Page &operator=(const Page &other);
 
-
+    friend class StrokeLine;
     friend class Stroke;
     friend class page_file;
     friend class stroke_drawer;

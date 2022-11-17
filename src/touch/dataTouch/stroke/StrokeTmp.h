@@ -56,7 +56,7 @@ private:
     Stroke* load(WZipReaderSingle &reader, int version);
 
 public:
-    ~Stroke();
+    ~Stroke() = default;
 
     virtual void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const = 0;
     [[nodiscard]] virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
@@ -121,6 +121,13 @@ protected:
     virtual void preappend(int l) = 0;
 
 };
+
+void set_press(
+                            QPen &pen,
+                            const pressure_t press,
+                            const double prop,
+                            cbool is_rubber,
+                            const QColor &color);
 
 inline Stroke &Stroke::operator=(const Stroke &other)
 {

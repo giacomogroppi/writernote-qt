@@ -1,4 +1,5 @@
 #include "StrokeTmp.h"
+#include "touch/tabletcanvas.h"
 
 Stroke* Stroke::load(WZipReaderSingle &reader, int version)
 {
@@ -24,4 +25,20 @@ void Stroke::reset()
             .posizione_audio = -1,
             .color = colore_s()
     };
+}
+
+void set_press(
+                            QPen &pen,
+                            const pressure_t press,
+                            const double prop,
+                            cbool is_rubber,
+                            const QColor &color)
+{
+    pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
+    if (unlikely(is_rubber)) {
+        const auto _press = pen.widthF() * deltaColorNull;
+        pen.setWidthF(_press);
+    } else {
+        pen.setColor(color);
+    }
 }

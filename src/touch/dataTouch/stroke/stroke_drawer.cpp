@@ -148,7 +148,7 @@ force_inline void stroke_drawer::draw_rect(const Stroke &stroke)
     _painter.drawRect(QRectF(_topLeft, _bottomRight));
 }
 
-force_inline void stroke_drawer::draw_line(const Stroke    &stroke)
+force_inline void stroke_drawer::draw_line(const Stroke &stroke)
 {
     auto * data = static_cast<stroke_complex_line *>(stroke._complex);
     const auto press = data->press;
