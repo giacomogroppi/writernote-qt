@@ -20,6 +20,13 @@
 struct metadata_stroke{
     int posizione_audio;
     struct colore_s color;
+
+    metadata_stroke &operator=(const metadata_stroke &other)
+    {
+        this->color = other.color;
+        this->posizione_audio = other.posizione_audio;
+        return *this;
+    }
 };
 
 class Stroke
@@ -59,15 +66,15 @@ public:
 #   define stroke_append_default (-1.)
     virtual void append(const point_s &point, pressure_t pressure) = 0;
     void setMetadata(int posizione_audio, const colore_s &color);
-    virtual void setMetadata(const metadata_stroke &metadata) final;
+    void setMetadata(const metadata_stroke &metadata);
     void setPositioneAudio(int m_pos_ris);
     [[nodiscard]] virtual size_t createControll() const;
 
-    [[nodiscard]] virtual int getPosizioneAudio() const = 0;
+    [[nodiscard]] int getPosizioneAudio() const;
     [[nodiscard]] virtual QRect getBiggerPointInStroke() const = 0;
     [[nodiscard]] virtual bool isInside(const QRectF &rect) const = 0;
 
-    virtual void clearAudio() = 0;
+    void clearAudio();
 
     [[nodiscard]] const struct metadata_stroke &getMetadata() const;
 
@@ -79,12 +86,13 @@ public:
     virtual void decreasePrecision() = 0;
     void setAlfaColor(uchar alfa);
 
-    virtual void setColor(const colore_s &color) final;
+    void setColor(const colore_s &color);
     /* this function physically adds the x and y value of the point to all of its points. */
     virtual void movePoint(const QPointF &translation) = 0;
 
     virtual void reset();
-    Stroke &operator=(const Stroke &other);
+
+    virtual Stroke *clone() const;
 
     [[nodiscard]] virtual bool isEmpty() const = 0;
 
@@ -101,6 +109,8 @@ public:
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 
 protected:
+    Stroke &operator=(const Stroke &other);
+
     Stroke();
     Stroke(const metadata_stroke& met);
     void modify();
@@ -111,6 +121,18 @@ protected:
     virtual void preappend(int l) = 0;
 
 };
+
+inline Stroke &Stroke::operator=(const Stroke &other)
+{
+    if(unlikely(this == &other)){
+        return *this;
+    }
+
+    this->_biggerData = other._biggerData;
+    this->_metadata = other._metadata;
+    this->_flag = other._flag;
+    return *this;
+}
 
 inline void Stroke::setBiggerData(const QRect &newRect) const
 {

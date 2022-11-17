@@ -205,6 +205,19 @@ int StrokeNormal::removeAt(int i)
     return len < 2;
 }
 
+int StrokeNormal::type() const
+{
+    W_ASSERT(0);
+    return 0;
+}
+
+StrokeNormal::StrokeNormal(const StrokeNormal &ref)
+    : Stroke(ref)
+{
+    this->_point = ref._point;
+    this->_pressure = ref._pressure;
+}
+
 void StrokeNormal::movePoint(const QPointF &translation)
 {
     for(auto &p : _point) {
@@ -218,6 +231,18 @@ void StrokeNormal::reset()
 
     _pressure.clear();
     _point.clear();
+}
+
+Stroke *StrokeNormal::clone() const
+{
+    StrokeNormal *tmp = new StrokeNormal(*this);
+    return tmp;
+}
+
+void StrokeNormal::preappend(int i)
+{
+    _point.reserve(i);
+    _pressure.reserve(i);
 }
 
 bool StrokeNormal::isEmpty() const

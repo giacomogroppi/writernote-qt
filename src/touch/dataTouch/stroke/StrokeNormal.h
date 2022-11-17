@@ -14,9 +14,11 @@ private:
     [[nodiscard]] auto length () const { return _point.length(); }
     bool isInsideBiggerData(const QRect &rect) const;
     int removeAt(int i);
+    int type() const final;
 public:
+    StrokeNormal(const StrokeNormal &ref);
     StrokeNormal();
-    ~StrokeNormal();
+    virtual ~StrokeNormal();
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const final;
     [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const final;
@@ -36,7 +38,9 @@ public:
     void movePoint(const QPointF &translation) final;
 
     void reset() final;
-    StrokeNormal &operator=(const StrokeNormal &other);
+    Stroke *clone() const final;
+
+    void preappend(int i) final;
 
     [[nodiscard]] bool isEmpty() const final;
 
