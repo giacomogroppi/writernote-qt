@@ -13,6 +13,7 @@
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>
 #include "core/WImage.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
@@ -53,18 +54,18 @@ private:
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
     WMutex _img, _append_load;
-    bool            _IsVisible = true;
-    int             _count;
-    QList<Stroke>   _stroke;
-    Stroke          _stroke_writernote;
+    bool                _IsVisible = true;
+    int                 _count;
+    QList<Stroke *>     _stroke;
+    StrokeNormal        _stroke_writernote;
 
     /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    QVector<Stroke> _strokeTmp;
-    WImage          _imgDraw;
+    QVector<Stroke *>   _strokeTmp;
+    WImage              _imgDraw;
 
     void drawNewPage(n_style __style);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StrokeTmp.h"
+#include "Stroke.h"
 
 class StrokeLine : Stroke
 {
