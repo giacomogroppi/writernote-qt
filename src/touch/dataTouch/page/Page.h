@@ -76,7 +76,7 @@ private:
 
     void mergeList();    
 
-    void AppendDirectly(const Stroke &stroke);
+    void AppendDirectly(Stroke *stroke);
     bool initImg(bool flag);
 
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
@@ -100,9 +100,6 @@ public:
     void setVisible(cbool vis) const;
     size_t get_size_in_file(cbool saveImg) const;
 
-    /* you can access point written by writernote with this funcion */
-    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
-
     __fast int lengthStroke() const;
 
     bool isVisible() const;
@@ -118,8 +115,8 @@ public:
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    __fast void append(const Stroke &stroke);
-    __fast void append(const QList<Stroke> & stroke);
+    __fast void append(Stroke *stroke);
+    __fast void append(const QList<Stroke *> & stroke);
 
     __fast const Stroke       & atStroke(const uint i) const;
     __fast Stroke             & atStrokeMod(const uint i);
@@ -245,7 +242,7 @@ inline point_s Page::at_translation(const point_s &point, cint page)
     return tmp;
 }
 
-force_inline void Page::AppendDirectly(const Stroke &stroke)
+force_inline void Page::AppendDirectly(Stroke *stroke)
 {
     this->_stroke.append(stroke);
 }
@@ -334,13 +331,17 @@ force_inline void Page::setVisible(cbool vis) const
 force_inline const Stroke &Page::atStroke(uint i) const
 {
     __is_ok_count();
-    return this->_stroke.at(i);
+    auto *res = this->_stroke.at(i);
+    W_ASSERT(res);
+    return *res;
 }
 
 force_inline Stroke &Page::atStrokeMod(const uint i)
 {
     __is_ok_count();
-    return this->_stroke.operator[](i);
+    auto *res = this->_stroke.operator[](i);
+    W_ASSERT(res);
+    return *res;
 }
 
 force_inline const Stroke &Page::get_stroke_page() const
@@ -355,18 +356,6 @@ static force_inline void __at_draw_private(const point_s &from, point_s &to, con
 
     to *= zoom;
     to += translation;
-}
-
-inline void Page::at_draw_page(
-        cint            IndexPoint,
-        const QPointF   &translation,
-        point_s         &point,
-        const double    zoom) const
-{
-    const Stroke &stroke = get_stroke_page();
-    const point_s &p = stroke._point.at(IndexPoint);
-
-    __at_draw_private(p, point, zoom, translation);
 }
 
 force_inline int Page::lengthStroke() const
@@ -407,37 +396,32 @@ force_inline void Page::removeAt(cint i)
 force_inline const Stroke &Page::last() const
 {
     __is_ok_count();
-    return this->_stroke.last();
+    return *this->_stroke.last();
 }
 
 inline Stroke &Page::lastMod()
 {
     __is_ok_count();
-    return this->_stroke.operator[](this->lengthStroke() - 1);
+    return *this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
-force_inline void Page::append(const Stroke &strokeAppend)
+force_inline void Page::append(Stroke *strokeAppend)
 {
     DO_IF_DEBUG(
     int lastNewIndex = _strokeTmp.length();
     );
 
+    W_ASSERT(strokeAppend);
+
     __is_ok_count();
-    W_ASSERT(!strokeAppend.isEmpty());
+    W_ASSERT(!strokeAppend->isEmpty());
 
     this->_strokeTmp.append(strokeAppend);
-
-    /* they will be automatically removed when
-     * the project is compiled in release mode
-    */
-    if(strokeAppend.is_normal()){
-        W_ASSERT(Stroke::cmp(strokeAppend, _strokeTmp.at(lastNewIndex)));
-    }
 }
 
 force_inline double Page::minHeight() const
 {
-    return (this->_count - 1) * this->height;
+    return (this->_count - 1) * Page::height;
 }
 
 force_inline Page::Page(const Page &from)
