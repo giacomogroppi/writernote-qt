@@ -61,7 +61,7 @@ public:
 
 inline bool StrokePre::isEmpty() const noexcept
 {
-    return this->_point.isEmpty() and _point.isEmpty();
+    return this->_point.isEmpty() and _stroke->isEmpty();
 }
 
 inline const point_s &StrokePre::last() const
