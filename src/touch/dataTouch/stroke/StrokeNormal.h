@@ -45,10 +45,10 @@ public:
     void adjust(double zoom) final;
     void scale(const QPointF &offset) final;
 
-    static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
+    static bool cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
-    StrokeNormal operator=(const StrokeNormal &other);
+    StrokeNormal& operator=(const StrokeNormal &other);
 
 protected:
     auto length () const { return _point.length(); }

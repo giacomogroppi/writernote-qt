@@ -567,4 +567,38 @@ inline constexpr bool WStrEqual(const char *s1, const char *s2)
 
     return true;
 }
+
+/**
+ * //OVERVIEW:  objectEqual(a1, a2) have to return true if a1 == a2
+ *              function will return true if the two list are equal
+ * @requires !\exists( W a1, a2; a1 != a2; objectEqual(a1, a2) == true)
+ * @ensure (l1.length() != l2.length()) ? \result == false :
+ *                                      \exists(int i; 0 <= i && i < l1.length();
+ *                                                  objectEqual(l1[i], l2[i]) == false
+ *                                              ) ? \result == false : \result == true;
+ * */
+template <class T, typename Z>
+inline bool cmp_list(const T &l1, const T &l2, Z objectEqual)
+{
+    auto b1 = l1.constBegin();
+    auto b2 = l2.constBegin();
+
+    const auto e1 = l1.constEnd();
+    const auto e2 = l2.constEnd();
+
+    while (b1 != e1 and b2 != e2) {
+        if (!objectEqual(*b1, *b2)) {
+            return false;
+        }
+        b1 ++;
+        b2 ++;
+    }
+
+    if(b1 == e1 and b2 == e2) {
+        return true;
+    }
+
+    return false;
+}
+
 }

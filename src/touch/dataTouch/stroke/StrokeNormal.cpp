@@ -1,5 +1,6 @@
 #include "StrokeNormal.h"
 #include "StrokeNormalFile.h"
+#include "utils/WCommonScript.h"
 
 StrokeNormal::StrokeNormal()
 {}
@@ -9,12 +10,12 @@ StrokeNormal::~StrokeNormal()
 
 int StrokeNormal::save(WZipWriterSingle &file) const
 {
-
+    W_ASSERT(0);
 }
 
 int StrokeNormal::load(WZipReaderSingle &reader, int version)
 {
-
+    W_ASSERT(0);
 }
 
 void StrokeNormal::append(const point_s &point, pressure_t pressure)
@@ -233,7 +234,7 @@ void StrokeNormal::reset()
 
 Stroke *StrokeNormal::clone() const
 {
-    StrokeNormal *tmp = new StrokeNormal(*this);
+    auto *tmp = new StrokeNormal(*this);
     return tmp;
 }
 
@@ -263,10 +264,41 @@ void StrokeNormal::scale(const QPointF &offset)
     }
 }
 
-StrokeNormal StrokeNormal::operator=(const StrokeNormal &other)
+StrokeNormal &StrokeNormal::operator=(const StrokeNormal &other)
 {
     Stroke::operator=(other);
     this->_point = other._point;
     this->_pressure = other._pressure;
+
+    W_ASSERT(StrokeNormal::cmp(*this, other));
+
     return *this;
+}
+
+bool StrokeNormal::cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2)
+{
+    if (!Stroke::cmp(stroke1, stroke2)) {
+        return false;
+    }
+
+    if (!WCommonScript::cmp_list(
+            stroke1._point,
+            stroke2._point,
+            [](auto &p1, auto &p2){
+                return p1 == p2;
+        })) {
+        return false;
+    }
+
+    if (!WCommonScript::cmp_list(
+            stroke1._pressure,
+            stroke2._pressure,
+            [](auto p1, auto p2) {
+                return p1 == p2;
+            }
+            )){
+        return false;
+    }
+
+    return true;
 }
