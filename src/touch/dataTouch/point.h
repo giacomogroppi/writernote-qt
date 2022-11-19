@@ -64,9 +64,12 @@ inline PointSettable &PointSettable::operator=(bool enable) noexcept
 struct colore_s{
     colore_s() = default;
     ~colore_s() = default;
+    colore_s(const QColor &color);
+    colore_s(uchar u1, uchar u2, uchar u3, uchar u4);
+
 
     uchar colore[NCOLOR];
-    [[nodiscard]] QColor toQColor(double division) const;
+    QColor toQColor(double division) const;
     void fromColor(const QColor &color);
 
     static colore_s from_color(const QColor &color);
@@ -123,4 +126,17 @@ force_inline point_s::point_s(const QPointF &point) :
 inline QPointF point_s::toQPointF(double scale) const
 {
     return (*this) * scale;
+}
+
+inline colore_s::colore_s(const QColor &color)
+{
+    *this = colore_s::from_color(color);
+}
+
+inline colore_s::colore_s(uchar u1, uchar u2, uchar u3, uchar u4)
+{
+    colore[0] = u1;
+    colore[1] = u2;
+    colore[2] = u3;
+    colore[3] = u4;
 }

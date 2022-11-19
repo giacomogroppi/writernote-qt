@@ -43,11 +43,13 @@ public:
     void preappend(int i) final;
 
     [[nodiscard]] bool isEmpty() const final;
-
+    void adjust(double zoom);
     void scale(const QPointF &offset) final;
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
+
+    StrokeNormal operator=(const StrokeNormal &other);
 
     friend class StrokeNormalFileSave;
     friend class StrokeNormalFileLoad;

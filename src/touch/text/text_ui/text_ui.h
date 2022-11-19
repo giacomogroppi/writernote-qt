@@ -19,7 +19,7 @@ public:
     explicit text_ui(QWidget *parent = nullptr);
     ~text_ui();
 
-    colore_s m_currentDcolor = {0, 0, 255, 255};
+    colore_s m_currentDcolor = colore_s(0, 0, 255, 255);
     int m_currentSize = D_SIZE;
     QFont m_font;
 

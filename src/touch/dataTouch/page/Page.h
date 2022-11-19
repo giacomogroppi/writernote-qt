@@ -68,7 +68,6 @@ private:
     WImage              _imgDraw;
 
     void drawNewPage(n_style __style);
-
     
     void drawEngine(QPainter &painter, QList<Stroke> &List, int m_pos_ris, bool *changeSomething, cbool use_multi_thread);
     void draw(QPainter &painter, int m_pos_ris, bool all);
@@ -121,7 +120,8 @@ public:
     __fast const Stroke       & atStroke(const uint i) const;
     __fast Stroke             & atStrokeMod(const uint i);
 
-    __fast const Stroke       & get_stroke_page() const; //return the point written by writernote
+    __fast const StrokeNormal &get_stroke_page() const; //return the point written by writernote
+    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     double minHeight() const;
     double currentHeight() const;
@@ -344,7 +344,7 @@ force_inline Stroke &Page::atStrokeMod(const uint i)
     return *res;
 }
 
-force_inline const Stroke &Page::get_stroke_page() const
+force_inline const StrokeNormal &Page::get_stroke_page() const
 {
     __is_ok_count();
     return this->_stroke_writernote;
@@ -356,6 +356,18 @@ static force_inline void __at_draw_private(const point_s &from, point_s &to, con
 
     to *= zoom;
     to += translation;
+}
+
+inline void Page::at_draw_page(
+        cint            IndexPoint,
+        const QPointF   &translation,
+        point_s         &point,
+        const double    zoom) const
+{
+    const auto &stroke = get_stroke_page();
+    const point_s &p = stroke._point.at(IndexPoint);
+
+    __at_draw_private(p, point, zoom, translation);
 }
 
 force_inline int Page::lengthStroke() const
@@ -408,7 +420,7 @@ inline Stroke &Page::lastMod()
 force_inline void Page::append(Stroke *strokeAppend)
 {
     DO_IF_DEBUG(
-    int lastNewIndex = _strokeTmp.length();
+    int not_used lastNewIndex = _strokeTmp.length();
     );
 
     W_ASSERT(strokeAppend);

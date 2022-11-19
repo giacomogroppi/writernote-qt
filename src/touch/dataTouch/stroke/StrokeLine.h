@@ -43,7 +43,7 @@ public:
     virtual void movePoint(const QPointF &translation) = 0;
 
     virtual void reset();
-
+    void adjust(double zoom);
     virtual Stroke *clone() const;
 
     [[nodiscard]] virtual bool isEmpty() const = 0;

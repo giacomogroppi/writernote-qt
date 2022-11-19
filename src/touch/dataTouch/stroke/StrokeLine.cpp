@@ -23,3 +23,10 @@ void StrokeLine::draw(QPainter &painter,
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
 }
+
+void StrokeLine::adjust(double zoom)
+{
+    this->_pt1 /= zoom;
+    this->_pt2 /= zoom;
+    this->_press /= zoom;
+}

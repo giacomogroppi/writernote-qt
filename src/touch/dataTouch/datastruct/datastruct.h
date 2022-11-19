@@ -89,7 +89,7 @@ public:
     void append(const QList<Stroke> & stroke, int m_pos_ris);
 
     int  appendStroke(const Stroke &stroke); /* return value: the page of the point */
-    void appendStroke(const Stroke &stroke, int page);
+    void appendStroke(Stroke *stroke, int page);
 
     void restoreLastTranslation(int heightView);
 
@@ -522,17 +522,17 @@ inline void datastruct::removeAt(const uint indexPage){
 
 inline int datastruct::appendStroke(const Stroke &__stroke)
 {
-    Stroke tmpStroke(__stroke);
     int page;
+    Stroke *n = __stroke.clone();
 
-    page = this->adjustStroke(tmpStroke);
+    page = this->adjustStroke(*n);
 
-    this->appendStroke(tmpStroke, page);
+    this->appendStroke(n, page);
 
     return page;
 }
 
-inline void datastruct::appendStroke(const Stroke &stroke, const int page)
+inline void datastruct::appendStroke(Stroke *stroke, const int page)
 {
     this->at_mod(page).append(stroke);
 }
@@ -585,11 +585,7 @@ inline int datastruct::adjustStroke(Stroke &stroke) const
 {
     int page;
 
-    if(likely(stroke.is_normal())){
-        stroke.adjustStroke(_zoom);
-    }else{
-        stroke_complex_adjust(&stroke, this->_zoom);
-    }
+    stroke.adjust(_zoom);
 
     page = this->whichPage(stroke);
 

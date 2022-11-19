@@ -7,7 +7,7 @@
 class StrokePre{
 private:
     WImage _img;
-    Stroke _stroke;
+    Stroke *_stroke;
 
     WList<point_s>      _point;
     WList<pressure_t>   _pressure;
@@ -34,11 +34,6 @@ public:
     void setTime(int time);
     void setColor(const QColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
-    [[nodiscard]] int length() const;
-    [[nodiscard]] bool is_normal() const  { return _stroke.is_normal(); };
-    [[nodiscard]] bool is_circle() const  { return _stroke.is_circle(); };
-    [[nodiscard]] bool is_rect() const    { return _stroke.is_rect(); };
-    [[nodiscard]] bool is_line() const    { return _stroke.is_line(); };
     [[nodiscard]] QRect getBiggerPointInStroke() const;
     [[nodiscard]] QRect getFirstAndLast() const;
     [[nodiscard]] pressure_t getPressure() const;
@@ -66,13 +61,7 @@ public:
 
 inline bool StrokePre::isEmpty() const noexcept
 {
-    return this->_point.isEmpty() and is_normal();
-}
-
-inline int StrokePre::length() const
-{
-    W_ASSERT(_stroke.is_normal());
-    return _point.length();
+    return this->_point.isEmpty() and _point.isEmpty();
 }
 
 inline const point_s &StrokePre::last() const
@@ -87,20 +76,16 @@ inline void StrokePre::reset()
 
 inline void StrokePre::setColor(const QColor &color) noexcept
 {
-    _stroke.setColor(color);
+    _stroke->setColor(colore_s(color));
 }
 
 inline const Stroke &StrokePre::get_stroke_for_draw() const
 {
-    W_ASSERT(_stroke.is_complex());
-    return _stroke;
+    return *_stroke;
 }
 
 inline WList<pressure_t>::const_iterator StrokePre::get_last_press() const
 {
-    W_ASSERT(_pressure.length() > 1);
-    W_ASSERT(_stroke.is_normal());
-
     return _last_draw_press;
 }
 

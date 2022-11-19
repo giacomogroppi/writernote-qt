@@ -98,6 +98,8 @@ public:
 
     virtual void scale(const QPointF &offset) = 0;
 
+    virtual void adjust(double zoom) = 0;
+
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 

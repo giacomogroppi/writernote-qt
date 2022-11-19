@@ -212,10 +212,8 @@ int StrokeNormal::type() const
 }
 
 StrokeNormal::StrokeNormal(const StrokeNormal &ref)
-    : Stroke(ref)
 {
-    this->_point = ref._point;
-    this->_pressure = ref._pressure;
+    *this = ref;
 }
 
 void StrokeNormal::movePoint(const QPointF &translation)
@@ -251,9 +249,24 @@ bool StrokeNormal::isEmpty() const
     return e and this->_point.isEmpty();
 }
 
+void StrokeNormal::adjust(double zoom)
+{
+    for(auto &p : _point) {
+        p /= zoom;
+    }
+}
+
 void StrokeNormal::scale(const QPointF &offset)
 {
     for(auto &point : _point){
         point += offset;
     }
+}
+
+StrokeNormal StrokeNormal::operator=(const StrokeNormal &other)
+{
+    Stroke::operator=(other);
+    this->_point = other._point;
+    this->_pressure = other._pressure;
+    return *this;
 }
