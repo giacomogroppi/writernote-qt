@@ -11,7 +11,6 @@ private:
     QList<point_s> _point;
     QList<pressure_t> _pressure;
     [[nodiscard]] static QRect getBiggerPointInStroke(QList<point_s>::const_iterator begin, QList<point_s>::const_iterator end);
-    [[nodiscard]] auto length () const { return _point.length(); }
     bool isInsideBiggerData(const QRect &rect) const;
     int removeAt(int i);
     int type() const final;
@@ -20,7 +19,7 @@ public:
     StrokeNormal();
     virtual ~StrokeNormal();
 
-    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const final;
+    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const override;
     [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const final;
 
 #   define stroke_append_default (-1.)
@@ -43,13 +42,21 @@ public:
     void preappend(int i) final;
 
     [[nodiscard]] bool isEmpty() const final;
-    void adjust(double zoom);
+    void adjust(double zoom) final;
     void scale(const QPointF &offset) final;
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
     StrokeNormal operator=(const StrokeNormal &other);
+
+protected:
+    auto length () const { return _point.length(); }
+    auto getPressure() const{
+        W_ASSERT(this->_pressure.length());
+        W_ASSERT(this->_pressure.at(0) >= 0.);
+        return this->_pressure.at(0);
+    }
 
     friend class StrokeNormalFileSave;
     friend class StrokeNormalFileLoad;
