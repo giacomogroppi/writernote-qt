@@ -1,4 +1,4 @@
-#include "StrokeTmp.h"
+#include "Stroke.h"
 #include "touch/tabletcanvas.h"
 
 Stroke* Stroke::load(WZipReaderSingle &reader, int version)

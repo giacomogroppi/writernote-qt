@@ -49,18 +49,14 @@ QRect copy::get_size_area(const QList<QList<Stroke>> &data)
     return size_area;
 }
 
-void copy::__single(const QList<Stroke> &from, QList<Stroke> &append_data)
+void copy::__single(const QList<Stroke *> &from, QList<Stroke *> &append_data)
 {
-    int len = from.length(), i;
-    for(i = 0; i < len; i++){
-        const Stroke &currentStroke = from.at(i);
-
-        Stroke tmp(currentStroke);
-        append_data.append(tmp);
+    for (const auto *currentStroke : qAsConst(from)) {
+        append_data.append(currentStroke->clone());
     }
 }
 
-/*
+/**
  * when this function is called the list of
  * previously saved points will be lost.
  *
@@ -77,7 +73,7 @@ void copy::__single(const QList<Stroke> &from, QList<Stroke> &append_data)
 */
 int copy::selection(
         datastruct                  &data,
-        const QList<QList<Stroke>>  &stroke,
+        const QList<QList<Stroke*>>  &stroke,
         int                         __flags,
         const QPointF               &pointTouch)
 {

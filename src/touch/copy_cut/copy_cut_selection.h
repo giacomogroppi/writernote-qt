@@ -16,7 +16,7 @@ public:
 #define SELECTION_FLAGS_COPY 0
 #define SELECTION_FLAGS_CUT 1
 #define SELECTION_FLAGS_PASTE 2
-    int selection(datastruct &data, const QList<QList<Stroke> > &stroke,
+    int selection(datastruct &data, const QList<QList<Stroke *>> &stroke,
                    int __flags, const QPointF &offsetTouch);
     void past_selection(datastruct &data, QPointF &point_past);
 
@@ -35,7 +35,7 @@ private:
     int flags = 0;
 
     QList<Stroke> m_stroke;
-    void __single(const QList<Stroke> &from, QList<Stroke> &append_data);
+    void __single(const QList<Stroke *> &from, QList<Stroke *> &append_data);
     QRect get_size_area(const QList<QList<Stroke>> & stroke);
 };
 

@@ -6,6 +6,7 @@
 #include "touch/dataTouch/page/Page.h"
 #include "core/WZip.h"
 #include "core/WZipReaderSingle.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 #ifdef ALL_VERSION
 
@@ -32,7 +33,7 @@ struct point_last{
     int idtratto;
 };
 
-/*
+/**
  * version 2 and 3
 */
 int xmlstruct::loadbinario_0(WZip &zip)
@@ -331,7 +332,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         for(int counterPoint = 0; counterPoint < __page.at(counterPage).length(); counterPoint ++){
             QList<point_old_ver_7> &ListPrivate = __page.operator[](counterPage);
-            Stroke stroke;
+            StrokeNormal stroke;
             int id;
 
             {
@@ -365,7 +366,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
     doc->_pointFirstPage = QPointF(0.0, 0.0);
 }
 
-/* versione 7 */
+/** versione 7 */
 int xmlstruct::loadbinario_2(class WZip &zip)
 {
     size_t controll, newControll;
