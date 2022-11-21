@@ -86,9 +86,9 @@ public:
     void removeAt(unsigned indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
-    void append(const QList<Stroke> & stroke, int m_pos_ris);
+    void append(const QList<Stroke *>& stroke, int m_pos_ris);
 
-    int  appendStroke(const Stroke &stroke); /* return value: the page of the point */
+    int  appendStroke(const Stroke *stroke); /* return value: the page of the point */
     void appendStroke(Stroke *stroke, int page);
 
     void restoreLastTranslation(int heightView);
@@ -487,7 +487,7 @@ inline int datastruct::whichPage(const QPointF &point) const
 
 /* the function automatically launches the drawing for the pages
  * to which data has been added*/
-inline void datastruct::append(const QList<Stroke> &stroke, int m_pos_ris)
+inline void datastruct::append(const QList<Stroke *> &stroke, int m_pos_ris)
 {
     QList<int> trigger;
     uint i;
@@ -520,10 +520,10 @@ inline void datastruct::removeAt(const uint indexPage){
 
 }
 
-inline int datastruct::appendStroke(const Stroke &__stroke)
+inline int datastruct::appendStroke(const Stroke *stroke)
 {
     int page;
-    Stroke *n = __stroke.clone();
+    Stroke *n = stroke->clone();
 
     page = this->adjustStroke(*n);
 

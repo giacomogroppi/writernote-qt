@@ -120,7 +120,7 @@ void Page::drawNewPage(n_style __style)
     cdouble height_p   = this->getHeight();
     cdouble last = (_count - 1) * Page::getHeight();
 
-    Stroke &stroke = this->_stroke_writernote;
+    auto &stroke = this->_stroke_writernote;
 
     setStylePrivate(fast, __style, style);
 

@@ -5,14 +5,22 @@
 #include <QPainter>
 #include <QPen>
 #include "core/WList.h"
+#include "StrokeNormal.h"
 
-class StrokeForPage {
+class StrokeForPage: private StrokeNormal {
 private:
     WList<point_s> _point;
     pressure_t _press;
+    colore_s _color;
+
 public:
     StrokeForPage();
     ~StrokeForPage() = default;
-    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
+    void setMetadata(int pos, const colore_s &colore);
 };
+
+inline void StrokeForPage::setMetadata(int pos, const colore_s &colore)
+{
+    StrokeNormal::setMetadata(pos, colore);
+}
 

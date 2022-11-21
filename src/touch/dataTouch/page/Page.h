@@ -13,7 +13,8 @@
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>
 #include "core/WImage.h"
-#include "touch/dataTouch/stroke/StrokeNormal.h"
+#include "touch/dataTouch/stroke/StrokeForPage.h"
+
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
@@ -57,7 +58,7 @@ private:
     bool                _IsVisible = true;
     int                 _count;
     QList<Stroke *>     _stroke;
-    StrokeNormal        _stroke_writernote;
+    StrokeForPage       _stroke_writernote;
 
     /* after adding data to the list, call triggernewimage,
      *  and pass as all false, in this way what is

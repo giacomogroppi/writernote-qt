@@ -358,7 +358,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
             }
             
             if(likely(id >= 0)){
-                doc->appendStroke(stroke);
+                doc->appendStroke(&stroke);
             }
         }
     }
