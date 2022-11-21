@@ -26,7 +26,7 @@ private:
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 public:
     StrokePre() noexcept;
-    virtual ~StrokePre() = default;
+    ~StrokePre();
 
     void adjust(const QPointF &delta);
     void setAlfaColor(int alfa);
@@ -39,9 +39,6 @@ public:
     [[nodiscard]] pressure_t getPressure() const;
     [[nodiscard]] const point_s &last() const;
 
-    void set_complex(StrokeProp::flag_complex type, void *data);
-    void set_complex(StrokeProp type, void *data);
-
     [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
     [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
 
@@ -52,7 +49,7 @@ public:
     void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);
     [[nodiscard]] QColor getColor(double division = 1.) const;
 
-    void merge(Stroke &res);
+    [[nodiscard]] Stroke *merge();
 
     StrokePre &operator=(const StrokePre &other);
 

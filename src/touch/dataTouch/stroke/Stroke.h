@@ -1,12 +1,12 @@
 #pragma once
 
+#include "utils/WCommonScript.h"
 #include <QList>
 #include <QDebug>
 #include <QRect>
 #include <QPainterPath>
 #include "touch/dataTouch/point.h"
 #include "utils/common_def.h"
-#include "utils/WCommonScript.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WLine.h"
 #include "stroke_complex_data.h"
@@ -15,7 +15,6 @@
 #include "core/WZipWriterSingle.h"
 #include "core/WZipReaderSingle.h"
 #include "core/WImage.h"
-#include "StrokeProp.h"
 
 struct metadata_stroke{
     int posizione_audio;
@@ -56,7 +55,7 @@ private:
     Stroke* load(WZipReaderSingle &reader, int version);
 
 public:
-    ~Stroke() = default;
+    virtual ~Stroke() = default;
 
     virtual void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const = 0;
     [[nodiscard]] virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
@@ -122,6 +121,14 @@ protected:
     virtual int type() const = 0;
     virtual void preappend(int l) = 0;
 
+    enum type_stroke_private: int{
+            COMPLEX_NORMAL = 0,
+            COMPLEX_CIRCLE = 1,
+            COMPLEX_RECT = 2,
+            COMPLEX_LINE = 3
+    };
+
+    friend class StrokePre;
 };
 
 void set_press(

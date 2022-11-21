@@ -1,6 +1,7 @@
 #include "StrokePre.h"
 #include "core/core.h"
 #include "touch/dataTouch/stroke/stroke_drawer.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 StrokePre::StrokePre() noexcept :
     _img(1),
@@ -8,18 +9,35 @@ StrokePre::StrokePre() noexcept :
     _last_draw_point(nullptr),
     _last_draw_press(nullptr)
 {
-    W_ASSERT(is_normal());
-    W_ASSERT(_stroke.isEmpty());
+    _stroke = new StrokeNormal();
+
+    W_ASSERT(_stroke->isEmpty());
     W_ASSERT(not _img.isNull());
 }
 
-void StrokePre::merge(Stroke &res)
+StrokePre::~StrokePre()
+{
+    if(this->_stroke)
+        delete this->_stroke;
+}
+
+Stroke *StrokePre::merge()
 {
     W_ASSERT(this->already_merge == false);
     W_ASSERT(_point.length() == _pressure.length());
-    W_ASSERT(res.isEmpty());
+    W_ASSERT(this->_stroke != nullptr);
 
     int i;
+
+    if (this->_stroke->type() != Stroke::COMPLEX_NORMAL) {
+        W_ASSERT(this->_point.)
+    }
+
+    for (const auto &p : qAsConst(this->_point)) {
+        _stroke->append(p, )
+    }
+
+    return this->_stroke;
 
     if (not _stroke.is_normal()) {
         const auto &s = dynamic_cast<const Stroke &>(*this);

@@ -5,7 +5,7 @@
 // this function is usable only in this .o file
 force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, Page &page, cbool threadSafe)
 {
-    Stroke strokeToAppend;
+    Stroke *strokeToAppend;
     int lenPointInStroke;
 
     W_ASSERT(__stroke.is_normal());
