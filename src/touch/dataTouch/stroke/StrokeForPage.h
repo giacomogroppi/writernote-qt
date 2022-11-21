@@ -15,6 +15,7 @@ public:
     void setMetadata(const colore_s &colore);
 
     void reset() final;
+    friend class Page;
 };
 
 inline void StrokeForPage::reset()

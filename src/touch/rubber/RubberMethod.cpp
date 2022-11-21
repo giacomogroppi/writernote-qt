@@ -117,7 +117,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     QVector<int> stroke_mod_rigth_point,    stroke_mod_rigth_stroke;
     QVector<int> stroke_mod_left_point,     stroke_mod_left_stroke;
 
-    int from, to, _index, index;
+    int from, to, _index;
 
     Page *_page             = private_data->__page;
     datastruct *_datastruct = private_data->data;
@@ -141,7 +141,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
         _index = 0;
         while(true){
             int lenPoint;
-            index = stroke.is_inside(area, _index, __m_size_gomma, true);
+            const int index = stroke.is_inside(area, _index, __m_size_gomma, true);
 
             if(index < 0)
                 break;
