@@ -36,8 +36,8 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation) final;
 
-    void reset() final;
-    Stroke *clone() const final;
+    void reset() override;
+    [[nodiscard]] Stroke *clone() const final;
 
     void preappend(int i) final;
 

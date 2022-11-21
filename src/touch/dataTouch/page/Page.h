@@ -121,7 +121,7 @@ public:
     __fast const Stroke       & atStroke(const uint i) const;
     __fast Stroke             & atStrokeMod(const uint i);
 
-    __fast const StrokeNormal &get_stroke_page() const; //return the point written by writernote
+    __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
     __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
 
     double minHeight() const;
@@ -345,7 +345,7 @@ force_inline Stroke &Page::atStrokeMod(const uint i)
     return *res;
 }
 
-force_inline const StrokeNormal &Page::get_stroke_page() const
+force_inline const StrokeForPage &Page::get_stroke_page() const
 {
     __is_ok_count();
     return this->_stroke_writernote;

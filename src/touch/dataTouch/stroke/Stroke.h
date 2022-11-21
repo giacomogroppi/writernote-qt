@@ -78,6 +78,7 @@ public:
 
 #   define stroke_append_default (-1.)
     virtual void append(const point_s &point, pressure_t pressure) = 0;
+
     void setMetadata(int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);
     void setPositioneAudio(int m_pos_ris);

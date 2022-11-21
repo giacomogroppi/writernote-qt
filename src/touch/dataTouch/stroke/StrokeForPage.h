@@ -9,18 +9,21 @@
 
 class StrokeForPage: private StrokeNormal {
 private:
-    WList<point_s> _point;
-    pressure_t _press;
-    colore_s _color;
-
 public:
     StrokeForPage();
-    ~StrokeForPage() = default;
-    void setMetadata(int pos, const colore_s &colore);
+    ~StrokeForPage() override = default;
+    void setMetadata(const colore_s &colore);
+
+    void reset() final;
 };
 
-inline void StrokeForPage::setMetadata(int pos, const colore_s &colore)
+inline void StrokeForPage::reset()
 {
-    StrokeNormal::setMetadata(pos, colore);
+    StrokeNormal::reset();
+}
+
+inline void StrokeForPage::setMetadata(const colore_s &colore)
+{
+    StrokeNormal::setMetadata(-1, colore);
 }
 

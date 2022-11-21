@@ -60,7 +60,7 @@ Page::Page(const int count, const n_style style)
 }
 
 static inline void drawLineOrizzontal(
-        Stroke          &stroke,
+        StrokeForPage   &stroke,
         style_struct_S  &style,
         cdouble         &last,
         double          &deltax,
@@ -85,7 +85,7 @@ static inline void drawLineOrizzontal(
 }
 
 static inline void drawLineVertical(
-        Stroke          &stroke,
+        StrokeForPage   &stroke,
         style_struct_S  &style,
         const double    &last,
         double          &deltay,
