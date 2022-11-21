@@ -92,8 +92,4 @@ inline WList<point_s>::const_iterator StrokePre::get_last_point() const
     return _last_draw_point;
 }
 
-inline void StrokePre::set_complex(StrokeProp::flag_complex type, void *data)
-{
-    return StrokePre::set_complex(StrokeProp(type), data);
-}
 

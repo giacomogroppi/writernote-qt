@@ -20,6 +20,9 @@ struct metadata_stroke{
     int posizione_audio;
     struct colore_s color;
 
+    bool operator!=(const metadata_stroke &other);
+    bool operator==(const metadata_stroke &other);
+
     metadata_stroke &operator=(const metadata_stroke &other)
     {
         this->color = other.color;
@@ -27,6 +30,17 @@ struct metadata_stroke{
         return *this;
     }
 };
+
+inline bool metadata_stroke::operator!=(const metadata_stroke &other)
+{
+    return !(*this == other);
+}
+
+inline bool metadata_stroke::operator==(const metadata_stroke &other)
+{
+    return  this->posizione_audio == other.posizione_audio and
+            this->color == other.color;
+}
 
 class Stroke
 {
@@ -109,6 +123,9 @@ public:
     friend class page_file;
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 
+    bool operator==(const Stroke &other);
+    bool operator!=(const Stroke &other) { return !(*this == other); };
+
 protected:
     Stroke &operator=(const Stroke &other);
 
@@ -131,12 +148,8 @@ protected:
     friend class StrokePre;
 };
 
-void set_press(
-                            QPen &pen,
-                            const pressure_t press,
-                            const double prop,
-                            cbool is_rubber,
-                            const QColor &color);
+void set_press( QPen &pen, pressure_t press, double prop,
+                cbool is_rubber, const QColor &color);
 
 inline Stroke &Stroke::operator=(const Stroke &other)
 {
@@ -184,3 +197,25 @@ inline void Stroke::setFlag(unsigned char type, bool value) const
         f &= ~type;
     }
 }
+
+void Stroke::setAlfaColor(uchar alfa)
+{
+    _metadata.color.set_alfa(alfa);
+}
+
+QColor Stroke::getColor(double division) const
+{
+    return this->_metadata.color.toQColor(division);
+}
+
+Stroke::Stroke()
+{
+    Stroke::reset();
+}
+
+Stroke::Stroke(const metadata_stroke &met)
+{
+    Stroke::reset();
+    this->_metadata = met;
+}
+

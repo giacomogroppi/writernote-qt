@@ -409,15 +409,19 @@ bool datastruct::userWrittenSomething(const datastruct &data1, const datastruct 
             const auto &Stroke1 = Page1.atStroke(k);
             const auto &Stroke2 = Page2.atStroke(k);
 
+            if (Stroke1 != Stroke2) {
+                return false;
+            }
+
             if(Stroke1.is_complex()){
                 check = stroke_complex_cmp(&Stroke1, &Stroke2);
                 if(!check)
                     return true;
-                continue;
+            }else{
+                check = Stroke::cmp(Stroke1, Stroke2);
+                if(!check)
+                    return true;
             }
-            check = Stroke::cmp(Stroke1, Stroke2);
-            if(!check)
-                return true;
         }
     }
 

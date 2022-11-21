@@ -27,6 +27,13 @@ void Stroke::reset()
     };
 }
 
+bool Stroke::operator==(const Stroke &other)
+{
+    if(this->_metadata != other._metadata)
+        return false;
+    return true;
+}
+
 void set_press(
                             QPen &pen,
                             const pressure_t press,

@@ -34,9 +34,9 @@ private:
 #define FLAG_CUT 0x2 /* if the point is from a cut operation */
     int flags = 0;
 
-    QList<Stroke> m_stroke;
+    QList<Stroke *> m_stroke;
     void __single(const QList<Stroke *> &from, QList<Stroke *> &append_data);
-    QRect get_size_area(const QList<QList<Stroke>> & stroke);
+    QRect get_size_area(const QList<QList<Stroke *>> & stroke);
 };
 
 inline bool copy::isSomeThingCopy() const

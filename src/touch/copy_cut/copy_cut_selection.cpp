@@ -35,13 +35,13 @@ void copy::managePaste(
     }
 }
 
-QRect copy::get_size_area(const QList<QList<Stroke>> &data)
+QRect copy::get_size_area(const QList<QList<Stroke*>> &data)
 {
     QRect size_area(0, 0, 0, 0);
 
-    for(const auto &__list : data){
+    for(const auto &sub : data){
 
-        const auto tmp = Page::get_size_area(__list, 0, __list.length());
+        const auto tmp = Page::get_size_area(sub, 0, sub.length());
 
         size_area = datastruct::get_bigger_rect(tmp, size_area);
     }
@@ -127,10 +127,10 @@ int copy::selection(
 
 void copy::adjustData(const QPointF &offset)
 {
-    int counterStroke = this->m_stroke.length() - 1;
+    using namespace WCommonScript;
     const QPointF &inverso = datastruct::inverso(offset);
 
-    for(; counterStroke >= 0; counterStroke --){
-        m_stroke.operator[](counterStroke).scale(inverso);
-    }
+    for_each(this->m_stroke, [&inverso](Stroke *d) {
+        d->scale(inverso);
+    });
 }

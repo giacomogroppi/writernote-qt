@@ -81,7 +81,7 @@ private:
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
 
     static point_s at_translation(const point_s &point, cint page);
-    static QRect get_size_area(const QList<Stroke> & item, int from, int to);
+    static QRect get_size_area(const QList<Stroke *> & item, int from, int to);
 
 public:
     const WImage &getImg() const;

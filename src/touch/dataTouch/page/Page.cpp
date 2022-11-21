@@ -629,7 +629,7 @@ void Page::decreseAlfa(const QVector<int> &pos, int decrese)
     End_painter(painter);
 }
 
-QRect Page::get_size_area(const QList<Stroke> &item, int from, int to)
+QRect Page::get_size_area(const QList<Stroke *> &item, int from, int to)
 {
     QRect result;
 
@@ -637,10 +637,10 @@ QRect Page::get_size_area(const QList<Stroke> &item, int from, int to)
         return QRect();
     }
 
-    result = item.at(from).getBiggerPointInStroke();
+    result = item.at(from)->getBiggerPointInStroke();
 
     for(; from < to; from ++){
-        const QRect tmp = item.at(from).getBiggerPointInStroke();
+        const QRect tmp = item.at(from)->getBiggerPointInStroke();
         result = datastruct::get_bigger_rect(result, tmp);
     }
 

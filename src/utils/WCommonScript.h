@@ -601,4 +601,12 @@ inline bool cmp_list(const T &l1, const T &l2, Z objectEqual)
     return false;
 }
 
+template <class T, typename Z>
+inline void for_each(T &l, Z function)
+{
+    for (const auto &tmp : l) {
+        function(tmp);
+    }
+}
+
 }

@@ -67,15 +67,22 @@ struct colore_s{
     colore_s(const QColor &color);
     colore_s(uchar u1, uchar u2, uchar u3, uchar u4);
 
+    void set_alfa(uchar alfa);
 
     uchar colore[NCOLOR];
     QColor toQColor(double division) const;
     void fromColor(const QColor &color);
 
     static colore_s from_color(const QColor &color);
+    bool operator==(const colore_s &other);
 };
 
-/*
+inline void colore_s::set_alfa(uchar alfa)
+{
+    this->colore[3] = alfa;
+}
+
+/**
  * if division == 1 the color don't change
  * if division > 0 the color the alfa is change
 */
@@ -101,6 +108,12 @@ inline colore_s colore_s::from_color(const QColor &color)
     colore_s tmp;
     tmp.fromColor(color);
     return tmp;
+}
+
+inline bool colore_s::operator==(const colore_s &other)
+{
+    static_assert(sizeof(colore) == sizeof(uchar) * 4);
+    return memcmp(this->colore, other.colore, sizeof(this->colore)) == 0;
 }
 
 /* this struct contains neither the color, nor the thickness, nor the page to which it belongs, nor the rotation, nor the id */
