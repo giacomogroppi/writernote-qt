@@ -5,6 +5,7 @@
 #include "core/WZipWriterMulti.h"
 #include <QImage>
 #include "utils/common_error_definition.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 #ifdef ALL_VERSION
 int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
@@ -17,8 +18,8 @@ int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        _page._stroke.append(Stroke());
-        Stroke &ref = _page._stroke.last();
+        _page._stroke.append(new StrokeNormal());
+        Stroke &ref = static_cast<StrokeNormal &>(*_page._stroke.last());
         err = ref.load(reader, ver_stroke);
 
         if(unlikely(err != OK))

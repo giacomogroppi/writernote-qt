@@ -132,7 +132,7 @@ void Page::drawNewPage(n_style __style)
     if(unlikely(style.thickness <= 0.0))
         style.thickness = 1;
 
-    stroke.setMetadata(-1, style.colore);
+    stroke.setMetadata(style.colore);
 
     if(unlikely(style.nx <= 0))
         style.nx = 1;

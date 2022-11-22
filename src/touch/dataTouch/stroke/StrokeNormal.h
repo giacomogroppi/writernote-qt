@@ -3,7 +3,7 @@
 #include "Stroke.h"
 #include <QList>
 
-class StrokeNormal: public Stroke{
+class StrokeNormal final: public Stroke{
 private:
     int save(WZipWriterSingle &file) const final;
     int load(WZipReaderSingle &reader, int version);
@@ -17,7 +17,7 @@ private:
 public:
     StrokeNormal(const StrokeNormal &ref);
     StrokeNormal();
-    virtual ~StrokeNormal();
+    ~StrokeNormal() final;
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const override;
     [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const final;

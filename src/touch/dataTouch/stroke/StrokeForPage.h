@@ -7,24 +7,31 @@
 #include "core/WList.h"
 #include "StrokeNormal.h"
 
-class StrokeForPage: private StrokeNormal {
+class StrokeForPage {
 private:
+    StrokeNormal _data;
 public:
     StrokeForPage();
-    ~StrokeForPage() override = default;
+    ~StrokeForPage() = default;
     void setMetadata(const colore_s &colore);
+    void append(const point_s &point, pressure_t pressure);
 
-    void reset() final;
+    void reset();
     friend class Page;
 };
 
+inline void StrokeForPage::append(const point_s &point, pressure_t pressure)
+{
+    _data.append(point, pressure);
+}
+
 inline void StrokeForPage::reset()
 {
-    StrokeNormal::reset();
+    _data.reset();
 }
 
 inline void StrokeForPage::setMetadata(const colore_s &colore)
 {
-    StrokeNormal::setMetadata(-1, colore);
+    _data.setMetadata(-1, colore);
 }
 
