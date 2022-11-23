@@ -1,7 +1,7 @@
 #include "Stroke.h"
 #include "touch/tabletcanvas.h"
 
-Stroke* Stroke::load(WZipReaderSingle &reader, int version)
+Stroke* Stroke::load(WZipReaderSingle &reader, int version, int *ok)
 {
     W_ASSERT(0);
 }

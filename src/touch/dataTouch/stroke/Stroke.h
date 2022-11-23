@@ -66,7 +66,7 @@ private:
     void updateFlagPressure() const;
 
     virtual int save(WZipWriterSingle &file) const = 0;
-    static Stroke* load(WZipReaderSingle &reader, int version);
+    static Stroke* load(WZipReaderSingle &reader, int version, int *ok);
 
 public:
     virtual ~Stroke() = default;

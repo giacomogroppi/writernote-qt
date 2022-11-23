@@ -18,12 +18,13 @@ int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        _page._stroke.append(new StrokeNormal());
-        Stroke &ref = static_cast<StrokeNormal &>(*_page._stroke.last());
-        err = ref.load(reader, ver_stroke);
-
-        if(unlikely(err != OK))
+        auto *res = Stroke::load(reader, ver_stroke);
+        if(unlikely(res == nullptr))
             return err;
+
+        _page._stroke.append(
+                res
+                );
     }
 
     // writernote stroke [for page style]
@@ -31,12 +32,12 @@ int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        Stroke __tmp;
-        const int res = __tmp.load(reader, ver_stroke);
-        if(unlikely(res != OK))
-            return res;
+        int ok;
+        Stroke *res = Stroke::load(reader, ver_stroke, &ok);
+        if(unlikely(res == nullptr ))
+            return ERROR;
 
-        if(unlikely(res == PAGE_POINT)){
+        if(unlikely(ok == PAGE_POINT)){
             cint len = __tmp.length();
             for(k = 0; k < len; k ++){
                 _page._stroke_writernote.append(__tmp._point.at(k), __tmp.getPressure(k));
@@ -45,8 +46,8 @@ int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
     }
 
     // remove empty stroke
-    for(int i = _page.lengthStroke() - 1; i >= 0; i--){
-        if(_page.atStroke(i).length() == 0){
+    for(i = _page.lengthStroke() - 1; i >= 0; i--){
+        if(_page.atStroke(i).isEmpty() == 0){
             _page._stroke.removeAt(i);
         }
     }
