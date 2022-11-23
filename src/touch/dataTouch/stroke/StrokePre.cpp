@@ -23,6 +23,7 @@ StrokePre::~StrokePre()
 
 Stroke *StrokePre::merge()
 {
+    using namespace WCommonScript;
     W_ASSERT(this->already_merge == false);
     W_ASSERT(_point.length() == _pressure.length());
     W_ASSERT(this->_stroke != nullptr);
@@ -30,12 +31,16 @@ Stroke *StrokePre::merge()
     int i;
 
     if (this->_stroke->type() != Stroke::COMPLEX_NORMAL) {
-        W_ASSERT(this->_point.)
+        W_ASSERT(this->_point.isEmpty());
+        auto *res = this->_stroke;
+        this->_stroke = nullptr;
+        return res;
     }
 
-    for (const auto &p : qAsConst(this->_point)) {
-        _stroke->append(p, )
-    }
+
+    for_each(_point, _pressure, [&](point_s &point, pressure_t &press) {
+        _stroke->append(point, press);
+    });
 
     return this->_stroke;
 

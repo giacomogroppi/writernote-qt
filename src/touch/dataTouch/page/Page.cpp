@@ -152,11 +152,11 @@ void Page::drawNewPage(n_style __style)
 }
 
 void Page::swap(
-        QList<Stroke>       &list,
+        QList<Stroke *>       &list,
         const QVector<int>  &pos,
         int                 flag)
 {
-    int i, index;
+    int i;
     QRectF area;
 
 #ifdef DEBUGINFO
@@ -166,10 +166,8 @@ void Page::swap(
 #endif
 
     if(!(flag & PAGE_SWAP_TRIGGER_VIEW)){
-        i = pos.length();
-        for(i--; i >= 0; i--){
-            index = pos.at(i);
-            this->swap(list, index, index+1);
+        for (const auto index : qAsConst(pos)) {
+            this->swap(list, index, index + 1);
         }
         return;
     }
@@ -187,7 +185,7 @@ void Page::swap(
 /*
  * this function mantain the item already in list
 */
-void Page::swap(QList<Stroke> & list,
+void Page::swap(QList<Stroke *> & list,
                 int             from,
                 int             to)
 {

@@ -609,4 +609,20 @@ inline void for_each(T &l, Z function)
     }
 }
 
+template <class T1, class T2, typename Z>
+inline void for_each(T1 &l1, T2 &l2, Z function)
+{
+    const auto e1 = l1.end();
+    const auto e2 = l2.end();
+
+    auto b1 = l1.begin();
+    auto b2 = l2.begin();
+
+    for (; b1 != e1 and b2 != e2;) {
+        function(*b1, *b2);
+        b1++;
+        b2++;
+    }
+}
+
 }
