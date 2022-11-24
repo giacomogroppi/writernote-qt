@@ -72,9 +72,9 @@ public:
     virtual ~Stroke() = default;
 
     virtual void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const = 0;
-    [[nodiscard]] virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
+    virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
 
-    [[nodiscard]] QColor getColor(double division) const;
+    QColor getColor(double division) const;
 
 #   define stroke_append_default (-1.)
     virtual void append(const point_s &point, pressure_t pressure) = 0;
@@ -82,23 +82,26 @@ public:
     void setMetadata(int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);
     void setPositioneAudio(int m_pos_ris);
-    [[nodiscard]] virtual size_t createControll() const;
+    virtual size_t createControll() const;
 
-    [[nodiscard]] int getPosizioneAudio() const;
-    [[nodiscard]] virtual QRect getBiggerPointInStroke() const = 0;
-    [[nodiscard]] virtual bool isInside(const QRectF &rect) const = 0;
+    int getPosizioneAudio() const;
+    virtual QRect getBiggerPointInStroke() const = 0;
+    virtual bool isInside(const QRectF &rect) const = 0;
 
     void clearAudio();
 
-    [[nodiscard]] const struct metadata_stroke &getMetadata() const;
+    const struct metadata_stroke &getMetadata() const;
 
-    [[nodiscard]] bool is_highlighter() const;
-    [[nodiscard]] uchar get_alfa() const;
-    [[nodiscard]] virtual size_t getSizeInMemory() const = 0;
+    bool is_highlighter() const;
+    uchar get_alfa() const;
+    virtual size_t getSizeInMemory() const = 0;
 
-    [[nodiscard]] virtual size_t getSizeInFile() const;
+    virtual size_t getSizeInFile() const;
     virtual void decreasePrecision() = 0;
     void setAlfaColor(uchar alfa);
+
+    /** instance of *this == StrokeNormal ==> @return == NULL*/
+    virtual Stroke *makeNormal() const = 0;
 
     void setColor(const colore_s &color);
     /* this function physically adds the x and y value of the point to all of its points. */
@@ -108,7 +111,7 @@ public:
 
     virtual Stroke *clone() const;
 
-    [[nodiscard]] virtual bool isEmpty() const = 0;
+    virtual bool isEmpty() const = 0;
 
     virtual void scale(const QPointF &offset) = 0;
 

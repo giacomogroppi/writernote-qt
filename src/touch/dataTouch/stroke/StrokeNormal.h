@@ -45,6 +45,8 @@ public:
     void adjust(double zoom) final;
     void scale(const QPointF &offset) final;
 
+    Stroke *makeNormal() const final;
+
     static bool cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
@@ -66,5 +68,10 @@ protected:
     friend class page_file;
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 };
+
+inline Stroke *StrokeNormal::makeNormal() const
+{
+    return nullptr;
+}
 
 

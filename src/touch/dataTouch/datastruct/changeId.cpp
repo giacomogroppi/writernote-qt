@@ -3,18 +3,20 @@
 
 
 // this function is usable only in this .o file
-force_inline void datastruct::__changeId(int IndexPoint, Stroke &__stroke, Page &page, cbool threadSafe)
+force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &page, cbool threadSafe)
 {
     Stroke *strokeToAppend;
     int lenPointInStroke;
 
-    W_ASSERT(__stroke.is_normal());
+    W_ASSERT(stroke.makeNormal() == nullptr);
 
-    lenPointInStroke = __stroke.length();
+    StrokeNormal *strokeNormal = dynamic_cast<StrokeNormal *>(&stroke);
+
+    lenPointInStroke = strokeNormal.length();
     strokeToAppend.reset();
 
-    WDebug(false, "start" << IndexPoint << __stroke.length()
-             << __stroke.last());
+    WDebug(false, "start" << IndexPoint << strokeNormal.length()
+           << strokeNormal->last());
 
     for (   auto from = IndexPoint, to = lenPointInStroke;
             from < to;
