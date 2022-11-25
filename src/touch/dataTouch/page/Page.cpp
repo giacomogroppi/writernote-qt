@@ -156,7 +156,6 @@ void Page::swap(
         const QVector<int>  &pos,
         int                 flag)
 {
-    int i;
     QRectF area;
 
 #ifdef DEBUGINFO

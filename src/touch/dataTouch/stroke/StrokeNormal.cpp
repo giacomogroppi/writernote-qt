@@ -305,13 +305,15 @@ bool StrokeNormal::cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2)
 
 StrokeNormal* StrokeNormal::split(int index)
 {
-    StrokeNormal *ret = new StrokeNormal();
+    auto *ret = new StrokeNormal();
     ret->reset();
+
+    const auto original = index;
 
     for (auto from = index; from < this->_point.length(); from ++) {
         ret->append(
-                    _point.at(i),
-                    _pressure.at(i);
+                    _point.takeAt(original),
+                    _pressure.takeAt(original)
                     );
     }
 

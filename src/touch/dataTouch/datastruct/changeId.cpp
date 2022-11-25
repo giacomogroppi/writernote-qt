@@ -20,19 +20,7 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
         _changeIdMutex.unlock();
     }
 
-    StrokeNormal *strokeToAppend = stroke.split(IndexPoint);
-
-    lenPointInStroke = strokeNormal.length();
-    strokeToAppend->reset();
-
-    for (   auto from = IndexPoint, to = lenPointInStroke;
-            from < to;
-            from ++) {
-        strokeToAppend.append(  stroke._point.at(from),
-                                stroke.getPressure(from));
-    }
-
-    strokeToAppend.setMetadata(stroke.getMetadata());
+    StrokeNormal *strokeToAppend = strokeNormal->split(IndexPoint);
 
     if(threadSafe){
         _changeIdMutex.lock();
