@@ -302,3 +302,21 @@ bool StrokeNormal::cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2)
 
     return true;
 }
+
+StrokeNormal* StrokeNormal::split(int index)
+{
+    StrokeNormal *ret = new StrokeNormal();
+    ret->reset();
+
+    for (auto from = index; from < this->_point.length(); from ++) {
+        ret->append(
+                    _point.at(i),
+                    _pressure.at(i);
+                    );
+    }
+
+    ret->setMetadata(this->getMetadata());
+
+    return ret;
+}
+

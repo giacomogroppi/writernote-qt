@@ -1,38 +1,42 @@
 #include "datastruct.h"
 #include "utils/WCommonScript.h"
-
+#include "core/WMutexLocker.h"
 
 // this function is usable only in this .o file
 force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &page, cbool threadSafe)
 {
-    Stroke *strokeToAppend;
     int lenPointInStroke;
 
     W_ASSERT(stroke.makeNormal() == nullptr);
 
     StrokeNormal *strokeNormal = dynamic_cast<StrokeNormal *>(&stroke);
 
-    lenPointInStroke = strokeNormal.length();
-    strokeToAppend.reset();
+    if (threadSafe) {
+        _changeIdMutex.lock();
 
-    WDebug(false, "start" << IndexPoint << strokeNormal.length()
-           << strokeNormal->last());
+        // draw to old stroke with color_null
+        page.drawForceColorStroke(stroke, -1, COLOR_NULL, nullptr);
+
+        _changeIdMutex.unlock();
+    }
+
+    StrokeNormal *strokeToAppend = stroke.split(IndexPoint);
+
+    lenPointInStroke = strokeNormal.length();
+    strokeToAppend->reset();
 
     for (   auto from = IndexPoint, to = lenPointInStroke;
             from < to;
             from ++) {
-        strokeToAppend.append(  __stroke._point.at(from),
-                                __stroke.getPressure(from));
+        strokeToAppend.append(  stroke._point.at(from),
+                                stroke.getPressure(from));
     }
 
-    strokeToAppend.setMetadata(__stroke.getMetadata());
+    strokeToAppend.setMetadata(stroke.getMetadata());
 
     if(threadSafe){
         _changeIdMutex.lock();
     }
-
-    // draw to old stroke with color_null
-    page.drawForceColorStroke(__stroke, -1, COLOR_NULL, nullptr);
 
     // we remove the point
     __stroke.removeAt(IndexPoint, __stroke.length() - 1);
