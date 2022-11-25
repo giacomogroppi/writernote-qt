@@ -30,8 +30,8 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
     __stroke.removeAt(IndexPoint, __stroke.length() - 1);
 
     // we draw the new 2 stroke
-    page.drawForceColorStroke(__stroke, -1, __stroke.getColor(1.0), nullptr);
-    page.drawForceColorStroke(strokeToAppend, -1, strokeToAppend.getColor(1.0), nullptr);
+    page.drawForceColorStroke(stroke, -1, stroke.getColor(1.0), nullptr);
+    page.drawForceColorStroke(dynamic_cast<Stroke *>(&strokeToAppend), -1, strokeToAppend->getColor(1.0), nullptr);
 
     // we append the stroke
     page.append(strokeToAppend);
