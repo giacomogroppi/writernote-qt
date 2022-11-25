@@ -21,7 +21,7 @@ int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
         int ok;
         auto *res = Stroke::load(reader, ver_stroke, &ok);
         if(unlikely(ok != OK))
-            return err;
+            return ok;
 
         _page._stroke.append(
                 res
