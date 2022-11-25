@@ -173,8 +173,8 @@ void Page::swap(
     }
 
     for(cint ref : pos){
-        const Stroke & stroke = atStroke(ref);
-        list.append(stroke);
+        Stroke & stroke = atStrokeMod(ref);
+        list.append(&stroke);
     }
 
     area = this->get_size_area(pos);
