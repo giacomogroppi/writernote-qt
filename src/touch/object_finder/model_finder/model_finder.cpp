@@ -100,7 +100,5 @@ bool model::find(StrokePre &stroke)
 
     stroke.setColor(color);
 
-    W_ASSERT(not stroke.is_normal());
-
     return true;
 }

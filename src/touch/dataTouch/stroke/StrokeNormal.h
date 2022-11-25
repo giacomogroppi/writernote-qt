@@ -36,6 +36,9 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation) final;
 
+    /**
+     * This function will remove the point belonging [index, length())
+     * */
     StrokeNormal *split(int index);
 
     void reset() override;
@@ -46,6 +49,8 @@ public:
     [[nodiscard]] bool isEmpty() const final;
     void adjust(double zoom) final;
     void scale(const QPointF &offset) final;
+
+    void force_pressure(pressure_t press);
 
     Stroke *makeNormal() const final;
 
@@ -62,9 +67,14 @@ protected:
         return this->_pressure.at(0);
     }
 
+#ifdef DEBUGINFO
+    friend class page_file;
+#endif // DEBUGINFO
+
     friend class StrokeNormalFileSave;
     friend class StrokeNormalFileLoad;
     friend class Page;
+    friend class StrokeForPage;
     friend class stroke_drawer;
     friend class stroke_file;
     friend class page_file;

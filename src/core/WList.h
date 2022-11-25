@@ -131,6 +131,8 @@ inline T *WList<T>::get_first() noexcept
 
     test();
 
+    W_ASSERT(ret != nullptr);
+
     return ret;
 }
 

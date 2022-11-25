@@ -403,7 +403,9 @@ force_inline void Page::removeAt(cint i)
 {
     W_ASSERT(!(i < 0 || i >= _stroke.size()));
 
-    this->_stroke.removeAt(i);
+    auto *res = this->_stroke.takeAt(i);
+    W_ASSERT(res);
+    delete res;
 }
 
 force_inline const Stroke &Page::last() const
@@ -463,7 +465,7 @@ force_inline void Page::drawForceColorStroke(
         QPainter        *painter)
 {
     Define_PEN(pen);
-    cbool needDelete = (bool) (!painter);
+    const auto needDelete = (bool) (!painter);
 
     if(needDelete){
         if(unlikely(initImg(false)))

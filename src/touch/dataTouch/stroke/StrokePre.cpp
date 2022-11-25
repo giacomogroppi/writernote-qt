@@ -30,6 +30,10 @@ Stroke *StrokePre::merge()
 
     int i;
 
+#ifdef DEBUGINFO
+    already_merge = true;
+#endif // DEBUGINFO
+
     if (this->_stroke->type() != Stroke::COMPLEX_NORMAL) {
         W_ASSERT(this->_point.isEmpty());
         auto *res = this->_stroke;
@@ -37,51 +41,26 @@ Stroke *StrokePre::merge()
         return res;
     }
 
+    W_ASSERT(_stroke->isEmpty());
 
-    for_each(_point, _pressure, [&](point_s &point, pressure_t &press) {
-        _stroke->append(point, press);
-    });
+    _stroke->preappend(_point.length());
 
-    return this->_stroke;
-
-    if (not _stroke.is_normal()) {
-        const auto &s = dynamic_cast<const Stroke &>(*this);
-        Stroke::copy(s, res);
-        return;
-    }
-
-    const auto l = _point.length();
-
-    _stroke.preappend(l);
-
-    for (i = 0; i < l; i++) {
+    while (not _point.isEmpty()) {
         const auto *data_point = _point.get_first();
         const auto *data_press = _pressure.get_first();
 
-        res.append(*data_point, *data_press);
+        _stroke->append(*data_point, *data_press);
 
         WDelete(data_point);
         WDelete(data_press);
     }
 
-    res.setMetadata(
-                    _stroke.getMetadata()
-                );
-
-#ifdef DEBUGINFO
-    already_merge = true;
-#endif // DEBUGINFO
+    return this->_stroke;
 }
 
 void StrokePre::adjust(const QPointF &delta)
 {
-    if(likely(_stroke.is_normal())){
-        for(auto &point : this->_point){
-            point -= delta;
-        }
-    }else{
-        stroke_complex_translate(&_stroke, -delta);
-    }
+    _stroke->scale(-delta);
 }
 
 void StrokePre::setAlfaColor(int alfa)

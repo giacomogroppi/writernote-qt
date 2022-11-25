@@ -148,7 +148,7 @@ void Page::drawNewPage(n_style __style)
     drawLineOrizzontal( stroke, style, last, deltax, width_p, ct_del);
     drawLineVertical(   stroke, style, last, deltay, height_p);
 
-    stroke.__setPressureFirstPoint(    widthToPressure(style.thickness));
+    stroke.setPressure(widthToPressure(style.thickness));
 }
 
 void Page::swap(
@@ -226,10 +226,10 @@ void Page::removeAt(const QVector<int> &pos)
     }
 }
 
-void Page::append(const QList<Stroke> &stroke)
+void Page::append(const QList<Stroke *> &stroke)
 {
-    for(const auto & __tmp : qAsConst(stroke)){
-        this->append(__tmp);
+    for(const auto & tmp : qAsConst(stroke)){
+        this->append(tmp);
     }
 }
 

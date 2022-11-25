@@ -35,14 +35,17 @@ int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
     for(i = 0; i < len_stroke; i++){
         int ok;
         Stroke *res = Stroke::load(reader, ver_stroke, &ok);
-        if(unlikely(res == nullptr ))
+
+        if(res == nullptr)
             return ERROR;
 
-        if(unlikely(ok == PAGE_POINT)){
-            cint len = __tmp.length();
-            for(k = 0; k < len; k ++){
-                _page._stroke_writernote.append(__tmp._point.at(k), __tmp.getPressure(k));
-            }
+        W_ASSERT(res->type() == Stroke::COMPLEX_NORMAL);
+
+        if (unlikely(ok == PAGE_POINT)) {
+            _page._stroke_writernote.append(dynamic_cast<StrokeNormal &>(*res));
+            delete res;
+        } else {
+            _page.append(res);
         }
     }
 

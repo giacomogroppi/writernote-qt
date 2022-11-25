@@ -322,3 +322,10 @@ StrokeNormal* StrokeNormal::split(int index)
     return ret;
 }
 
+void StrokeNormal::force_pressure(pressure_t press)
+{
+    if(_pressure.length())
+        _pressure.operator[](0) = press;
+    else
+        _pressure.append(press);
+}

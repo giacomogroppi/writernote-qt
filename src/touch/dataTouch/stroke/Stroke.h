@@ -130,6 +130,10 @@ public:
     bool operator==(const Stroke &other);
     bool operator!=(const Stroke &other) { return !(*this == other); };
 
+#ifdef DEBUGINFO
+    friend class page_file;
+#endif // DEBUGINFO
+
 protected:
     Stroke &operator=(const Stroke &other);
 

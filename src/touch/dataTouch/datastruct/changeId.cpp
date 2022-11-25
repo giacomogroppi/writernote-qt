@@ -9,7 +9,7 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
 
     W_ASSERT(stroke.makeNormal() == nullptr);
 
-    StrokeNormal *strokeNormal = dynamic_cast<StrokeNormal *>(&stroke);
+    auto *strokeNormal = dynamic_cast<StrokeNormal *>(&stroke);
 
     if (threadSafe) {
         _changeIdMutex.lock();
@@ -26,12 +26,9 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
         _changeIdMutex.lock();
     }
 
-    // we remove the point
-    __stroke.removeAt(IndexPoint, __stroke.length() - 1);
-
     // we draw the new 2 stroke
-    page.drawForceColorStroke(stroke, -1, stroke.getColor(1.0), nullptr);
-    page.drawForceColorStroke(dynamic_cast<Stroke *>(&strokeToAppend), -1, strokeToAppend->getColor(1.0), nullptr);
+    page.drawForceColorStroke(stroke,           -1, stroke.getColor(1.0),           nullptr);
+    page.drawForceColorStroke(*strokeToAppend,   -1, strokeToAppend->getColor(1.0),  nullptr);
 
     // we append the stroke
     page.append(strokeToAppend);
