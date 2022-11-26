@@ -98,13 +98,13 @@ int page_file::load_ver_2(Page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        _page._stroke.append(Stroke());
-        Stroke &ref = _page._stroke.last();
+        int ok;
+        auto *ref = Stroke::load(reader, ver_stroke, &ok);
 
-        err = ref.load(reader, ver_stroke);
+        if (ok != OK)
+            return ok;
 
-        if(unlikely(err != OK))
-            return err;
+        _page._stroke.append(ref);
     }
 
     err = _page._stroke_writernote.load(reader, ver_stroke);
@@ -155,7 +155,7 @@ size_t page_file::size_in_file(const Page &_page, cbool saveImg)
     s += sizeof(int);       // len stroke
 
     for(const auto &ref: qAsConst(_page._stroke)){
-        s += ref.getSizeInFile();
+        s += ref->getSizeInFile();
     }
 
     s += _page._stroke_writernote.getSizeInFile();
