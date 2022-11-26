@@ -9,9 +9,11 @@
 
 class StrokeForPage {
 private:
-    StrokeNormal _data;
+    StrokeNormal *_data;
 
+#ifdef ALL_VERSION
     void append(const StrokeNormal &stroke);
+#endif // ALL_VERSION
 public:
     StrokeForPage();
     ~StrokeForPage() = default;
@@ -20,6 +22,8 @@ public:
 
     void setPressure(pressure_t press);
 
+    int load(WZipReaderSingle &reader, int ver_stroke);
+
     void reset();
     friend class page_file;
     friend class Page;
@@ -27,16 +31,16 @@ public:
 
 inline void StrokeForPage::append(const point_s &point, pressure_t pressure)
 {
-    _data.append(point, pressure);
+    _data->append(point, pressure);
 }
 
 inline void StrokeForPage::reset()
 {
-    _data.reset();
+    _data->reset();
 }
 
 inline void StrokeForPage::setMetadata(const colore_s &colore)
 {
-    _data.setMetadata(-1, colore);
+    _data->setMetadata(-1, colore);
 }
 

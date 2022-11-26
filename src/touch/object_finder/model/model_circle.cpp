@@ -7,7 +7,10 @@
 #include "qmath.h"
 #include "core/WLine.h"
 
-static stroke_complex_circle circle_data;
+static struct {
+    pressure_t _press;
+    double _x, _y, _r;
+} circle_data;
 constexpr not_used bool debug = false;
 
 static not_used void model_circle_print(const stroke_complex_circle *data)

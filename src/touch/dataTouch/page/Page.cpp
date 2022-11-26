@@ -280,7 +280,7 @@ struct page_thread_data{
     QVector<int>      * to_remove;
     WMutex            * append;
     QPainter          * painter;
-    QList<Stroke>     * m_stroke;
+    QList<Stroke*>    * m_stroke;
     int                 m_pos_ris;
     const Page        * parent;
 };
@@ -346,7 +346,7 @@ void * __page_load(void *__data)
 
 void Page::drawEngine(
         QPainter        &painter,
-        QList<Stroke>   &List,
+        QList<Stroke *> &List,
         int             m_pos_ris,
         bool            *changeSomething,
         cbool           use_multi_thread)

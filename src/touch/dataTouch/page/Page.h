@@ -70,7 +70,7 @@ private:
 
     void drawNewPage(n_style __style);
     
-    void drawEngine(QPainter &painter, QList<Stroke> &List, int m_pos_ris, bool *changeSomething, cbool use_multi_thread);
+    void drawEngine(QPainter &painter, QList<Stroke *> &List, int m_pos_ris, bool *changeSomething, cbool use_multi_thread);
     void draw(QPainter &painter, int m_pos_ris, bool all);
     void drawStroke(QPainter &painter, const Stroke &stroke, QPen &pen, const QColor &color) const;
 
@@ -366,7 +366,7 @@ inline void Page::at_draw_page(
         const double    zoom) const
 {
     const auto &stroke = get_stroke_page();
-    const point_s &p = stroke._data._point.at(IndexPoint);
+    const point_s &p = stroke._data->_point.at(IndexPoint);
 
     __at_draw_private(p, point, zoom, translation);
 }

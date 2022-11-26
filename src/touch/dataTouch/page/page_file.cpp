@@ -68,18 +68,19 @@ int page_file::load_ver_1(Page &_page, WZipReaderSingle &reader)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
-        _page._stroke.append(Stroke());
-        Stroke &ref = _page._stroke.last();
-        err = ref.load(reader, ver_stroke);
+        int ok;
+        auto *res = Stroke::load(reader, ver_stroke, &ok);
+
+        if(unlikely(ok != OK))
+            return ok;
 
         if(unlikely(err != OK))
             return err;
+
+        _page._stroke.append(res);
     }
 
     _page._stroke_writernote.load(reader, ver_stroke);
-    if(_page._stroke_writernote.length() && _page._stroke_writernote.getPressure() > 10){
-        _page._stroke_writernote.__setPressureFirstPoint(1.5);
-    }
 
     return err;
 }
