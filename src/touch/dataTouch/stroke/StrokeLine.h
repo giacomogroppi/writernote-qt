@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Stroke.h"
+#include "StrokeComplexInterface.h"
 
-class StrokeLine : Stroke
+class StrokeLine final : public Stroke, public StrokeComplexInterface
 {
 private:
     QPointF _pt1, _pt2;
@@ -11,44 +12,46 @@ public:
     StrokeLine();
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
-    [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
+    int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
 
-    [[nodiscard]] QColor getColor(double division) const;
+    QColor getColor(double division) const;
 
 #   define stroke_append_default (-1.)
-    virtual void append(const point_s &point, pressure_t pressure) = 0;
+    void append(const point_s &point, pressure_t pressure);
     void setMetadata(int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);
     void setPositioneAudio(int m_pos_ris);
     [[nodiscard]] virtual size_t createControll() const;
 
-    [[nodiscard]] int getPosizioneAudio() const;
-    [[nodiscard]] virtual QRect getBiggerPointInStroke() const = 0;
-    [[nodiscard]] virtual bool isInside(const QRectF &rect) const = 0;
+    int getPosizioneAudio() const;
+    QRect getBiggerPointInStroke() const;
+    bool isInside(const QRectF &rect) const;
 
     void clearAudio();
 
-    [[nodiscard]] const struct metadata_stroke &getMetadata() const;
+    const struct metadata_stroke &getMetadata() const;
 
-    [[nodiscard]] bool is_highlighter() const;
-    [[nodiscard]] uchar get_alfa() const;
-    [[nodiscard]] virtual size_t getSizeInMemory() const = 0;
+    bool is_highlighter() const;
 
-    [[nodiscard]] virtual size_t getSizeInFile() const;
-    virtual void decreasePrecision() = 0;
+    size_t getSizeInMemory() const;
+    size_t getSizeInFile() const;
+
+    void decreasePrecision();
     void setAlfaColor(uchar alfa);
 
     void setColor(const colore_s &color);
     /* this function physically adds the x and y value of the point to all of its points. */
-    virtual void movePoint(const QPointF &translation) = 0;
+    void movePoint(const QPointF &translation);
 
-    virtual void reset();
+    void reset();
     void adjust(double zoom);
-    virtual Stroke *clone() const;
+    Stroke *clone() const;
 
-    [[nodiscard]] virtual bool isEmpty() const = 0;
+    Stroke* makeNormal() final;
 
-    virtual void scale(const QPointF &offset) = 0;
+    [[nodiscard]] bool isEmpty() const;
+
+    void scale(const QPointF &offset);
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);

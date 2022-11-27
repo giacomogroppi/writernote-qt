@@ -4,7 +4,6 @@
 #include "utils/WCommonScript.h"
 #include "core/WLine.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
-#include "touch/dataTouch/stroke/stroke_complex_data.h"
 
 constexpr double    error = 5000;
 constexpr bool      debug = false;
@@ -200,36 +199,6 @@ void model_line_create(StrokePre *stroke)
 
     stroke->reset();
     stroke->set_complex(StrokeProp::COMPLEX_LINE, data);
-}
-
-void stroke_complex_line_append(Stroke *stroke, const QPointF& point)
-{
-    auto *data = (stroke_complex_line *) stroke->get_complex_data();
-    const auto dist1 = WCommonScript::distance_not_square(data->pt1, point);
-    const auto dist2 = WCommonScript::distance_not_square(data->pt2, point);
-
-    if(dist1 > dist2){
-        data->pt2 = point;
-    }else{
-        data->pt1 = point;
-    }
-}
-
-bool stroke_complex_is_inside_line(const Stroke *stroke, const WLine &line, cdouble precision)
-{
-    const auto data = (const stroke_complex_line *)stroke->get_complex_data();
-
-    W_ASSERT(stroke->is_line());
-
-    WLine _line(data->pt1, data->pt2);
-    return WLine::intersect(_line, line, precision);
-}
-
-void stroke_complex_translate_line(Stroke *stroke, const QPointF &offset)
-{
-    stroke_complex_line *data = (stroke_complex_line *)stroke->get_complex_data();
-    data->pt1 += offset;
-    data->pt2 += offset;
 }
 
 static inline void stroke_complex_normal_line_generic(
