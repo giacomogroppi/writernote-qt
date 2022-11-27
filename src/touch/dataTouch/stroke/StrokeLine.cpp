@@ -59,6 +59,61 @@ void StrokeLine::adjust(double zoom)
     this->_press /= zoom;
 }
 
+void StrokeLine::makeNormalVertical(StrokeNormal *mergeTo, int from, int to) const
+{
+    point_s tmp;
+    W_ASSERT(_pt2.x() == _pt1.x());
+    W_ASSERT(from <= to);
+
+    tmp.rx() = _pt1.x();
+
+    for(; from <= to; from ++){
+        tmp.ry() = from;
+        mergeTo->append(tmp, _press);
+    }
+}
+
+void StrokeLine::makeNormalGeneric(StrokeNormal *mergeTo, int from, int to) const
+{
+    double m, p;
+    point_s point;
+
+    W_ASSERT(from <= to);
+
+    m =     (_pt1.y() - _pt2.y()) /
+            (_pt1.x() - _pt2.x());
+
+    p = _pt1.y() - _pt1.x() * m;
+
+    for(; from <= to; from ++){
+        const double x = (double(from) - p) / m;
+        point.rx() = x;
+        point.ry() = (double) from;
+        mergeTo->append(point, _press);
+    }
+}
+
+Stroke *StrokeLine::makeNormal() const
+{
+    int from, to;
+    StrokeNormal *res = new StrokeNormal();
+
+    W_ASSERT(res->isEmpty());
+
+    from    = (int) _pt1.y();
+    to      = (int) _pt2.y();
+
+    W_ASSERT(from <= to);
+
+    if(_pt2.x() == _pt1.x()){
+        this->makeNormalVertical(res, from, to);
+    }else{
+        this->makeNormalGeneric(res, from, to);
+    }
+
+    return res;
+}
+
 bool StrokeLine::isEmpty() const
 {
     return false;

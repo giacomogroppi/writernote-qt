@@ -1,13 +1,16 @@
 #pragma once
 
 #include "Stroke.h"
-#include "StrokeComplexInterface.h"
 
-class StrokeLine final : public Stroke, public StrokeComplexInterface
+class StrokeLine final : public Stroke
 {
 private:
     QPointF _pt1, _pt2;
     pressure_t _press;
+
+    void makeNormalVertical(class StrokeNormal *mergeTo, int from, int to) const;
+    void makeNormalGeneric(class StrokeNormal *mergeTo, int from, int to) const;
+
 public:
     StrokeLine();
 
@@ -47,7 +50,7 @@ public:
     void adjust(double zoom);
     Stroke *clone() const;
 
-    Stroke* makeNormal() final;
+    Stroke* makeNormal() const;
 
     [[nodiscard]] bool isEmpty() const;
 
