@@ -106,8 +106,6 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     virtual void movePoint(const QPointF &translation) = 0;
 
-    virtual void reset();
-
     virtual Stroke *clone() const;
 
     virtual bool isEmpty() const = 0;
@@ -126,7 +124,7 @@ public:
     friend class page_file;
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 
-    bool operator==(const Stroke &other);
+    virtual bool operator==(const Stroke &other);
     bool operator!=(const Stroke &other) { return !(*this == other); };
 
 #ifdef DEBUGINFO
@@ -143,8 +141,7 @@ protected:
     void modify();
     void setBiggerData(const QRect &newRect) const;
     [[nodiscard]] bool needToUpdateBiggerData() const;
-    /* all stroke derivated class needs to implements this method to recognize yourself */
-    virtual int type() const = 0;
+
     virtual void preappend(int l) = 0;
 
     enum type_stroke_private: int{
@@ -155,6 +152,9 @@ protected:
     };
 
     friend class StrokePre;
+
+    /** all stroke derivated class needs to implements this method to recognize yourself */
+    [[nodiscard]] virtual int type() const = 0;
 };
 
 void set_press( QPen &pen, pressure_t press, double prop,

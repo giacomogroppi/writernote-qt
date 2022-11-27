@@ -46,7 +46,6 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
 
-    void reset();
     void adjust(double zoom);
     Stroke *clone() const;
 
@@ -56,11 +55,15 @@ public:
 
     void scale(const QPointF &offset);
 
+    bool operator==(const Stroke &other) final;
+
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
 private:
-    int type() const final;
     void preappend(int) final {};
+
+protected:
+    int type() const final;
 };
 

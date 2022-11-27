@@ -96,7 +96,7 @@ void StrokeLine::makeNormalGeneric(StrokeNormal *mergeTo, int from, int to) cons
 Stroke *StrokeLine::makeNormal() const
 {
     int from, to;
-    StrokeNormal *res = new StrokeNormal();
+    auto *res = new StrokeNormal();
 
     W_ASSERT(res->isEmpty());
 
@@ -117,4 +117,23 @@ Stroke *StrokeLine::makeNormal() const
 bool StrokeLine::isEmpty() const
 {
     return false;
+}
+
+QRect StrokeLine::getBiggerPointInStroke() const
+{
+    return datastruct_rect(_pt1, _pt2).toRect();
+}
+
+bool StrokeLine::operator==(const Stroke &other)
+{
+    if(dynamic_cast<Stroke &>(*this) != other)
+        return false;
+    if(this->type() != other.type())
+        return false;
+
+    const auto *s = dynamic_cast<const StrokeLine *>(&other);
+
+    return  this->_pt1 == s->_pt1 and
+            this->_pt2 == s->_pt2 and
+            this->_press == s->_press;
 }

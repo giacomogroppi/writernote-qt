@@ -224,14 +224,6 @@ void StrokeNormal::movePoint(const QPointF &translation)
     }
 }
 
-void StrokeNormal::reset()
-{
-    Stroke::reset();
-
-    _pressure.clear();
-    _point.clear();
-}
-
 Stroke *StrokeNormal::clone() const
 {
     auto *tmp = new StrokeNormal(*this);
@@ -306,7 +298,6 @@ bool StrokeNormal::cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2)
 StrokeNormal* StrokeNormal::split(int index)
 {
     auto *ret = new StrokeNormal();
-    ret->reset();
 
     const auto original = index;
 

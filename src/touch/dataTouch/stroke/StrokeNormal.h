@@ -41,7 +41,6 @@ public:
      * */
     StrokeNormal *split(int index);
 
-    void reset() override;
     [[nodiscard]] Stroke *clone() const final;
 
     void preappend(int i) final;
