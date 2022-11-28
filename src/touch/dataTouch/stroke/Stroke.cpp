@@ -6,6 +6,13 @@ Stroke* Stroke::load(WZipReaderSingle &reader, int version, int *ok)
     W_ASSERT(0);
 }
 
+void Stroke::reset_flag()
+{
+    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE;
+    W_ASSERT(this->needToUpdateBiggerData() == true);
+    W_ASSERT(this->needToUpdatePressure() == true);
+}
+
 size_t Stroke::getSizeInFile() const
 {
     size_t s = 0;
@@ -17,17 +24,7 @@ size_t Stroke::getSizeInFile() const
     return s;
 }
 
-void Stroke::reset()
-{
-    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE;
-
-    _metadata = {
-            .posizione_audio = -1,
-            .color = colore_s()
-    };
-}
-
-bool Stroke::operator==(const Stroke &other)
+bool Stroke::operator==(const Stroke &other) const
 {
     if(this->_metadata != other._metadata)
         return false;

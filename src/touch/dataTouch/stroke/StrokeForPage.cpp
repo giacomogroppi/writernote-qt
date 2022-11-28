@@ -46,3 +46,8 @@ int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
 
     return OK;
 }
+
+size_t StrokeForPage::getSizeInFile() const
+{
+    return this->_data->getSizeInFile();
+}

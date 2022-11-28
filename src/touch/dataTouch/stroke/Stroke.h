@@ -20,8 +20,8 @@ struct metadata_stroke{
     int posizione_audio;
     struct colore_s color;
 
-    bool operator!=(const metadata_stroke &other);
-    bool operator==(const metadata_stroke &other);
+    bool operator!=(const metadata_stroke &other) const;
+    bool operator==(const metadata_stroke &other) const;
 
     metadata_stroke &operator=(const metadata_stroke &other)
     {
@@ -31,12 +31,12 @@ struct metadata_stroke{
     }
 };
 
-inline bool metadata_stroke::operator!=(const metadata_stroke &other)
+inline bool metadata_stroke::operator!=(const metadata_stroke &other) const
 {
     return !(*this == other);
 }
 
-inline bool metadata_stroke::operator==(const metadata_stroke &other)
+inline bool metadata_stroke::operator==(const metadata_stroke &other) const
 {
     return  this->posizione_audio == other.posizione_audio and
             this->color == other.color;
@@ -67,6 +67,7 @@ private:
 
     virtual int save(WZipWriterSingle &file) const = 0;
 
+    void reset_flag();
 public:
     virtual ~Stroke() = default;
 
@@ -124,8 +125,8 @@ public:
     friend class page_file;
     friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 
-    virtual bool operator==(const Stroke &other);
-    bool operator!=(const Stroke &other) { return !(*this == other); };
+    virtual bool operator==(const Stroke &other) const;
+    virtual bool operator!=(const Stroke &other) const { return !(*this == other); };
 
 #ifdef DEBUGINFO
     friend class page_file;
@@ -219,12 +220,12 @@ QColor Stroke::getColor(double division) const
 
 Stroke::Stroke()
 {
-    Stroke::reset();
+    this->reset_flag();
 }
 
 Stroke::Stroke(const metadata_stroke &met)
 {
-    Stroke::reset();
+    this->reset_flag();
     this->_metadata = met;
 }
 

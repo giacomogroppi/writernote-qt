@@ -306,7 +306,7 @@ void * __page_load(void *__data)
     for(; _data->from < _data->to; _data->from ++){
         const auto &ref = extra->m_stroke->at(_data->from);
 
-        if(unlikely(ref.isEmpty())){
+        if(unlikely(ref->isEmpty())){
             mutex.lock();
 
             extra->to_remove->append(_data->from);
@@ -316,11 +316,11 @@ void * __page_load(void *__data)
             continue;
         }
 
-        const QColor &color = ref.getColor(
+        const QColor &color = ref->getColor(
             (unlikely(m_pos_ris != -1))
                     ?
                         (
-                          (ref.getPosizioneAudio() > m_pos_ris)
+                          (ref->getPosizioneAudio() > m_pos_ris)
                             ? 4
                             : 1
                         )
@@ -328,7 +328,7 @@ void * __page_load(void *__data)
                         1
         );
 
-        page->drawStroke(painter, ref, m_pen, color);
+        page->drawStroke(painter, *ref, m_pen, color);
     }
 
     End_painter(painter);

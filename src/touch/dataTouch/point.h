@@ -74,7 +74,7 @@ struct colore_s{
     void fromColor(const QColor &color);
 
     static colore_s from_color(const QColor &color);
-    bool operator==(const colore_s &other);
+    bool operator==(const colore_s &other) const;
 };
 
 inline void colore_s::set_alfa(uchar alfa)
@@ -110,7 +110,7 @@ inline colore_s colore_s::from_color(const QColor &color)
     return tmp;
 }
 
-inline bool colore_s::operator==(const colore_s &other)
+inline bool colore_s::operator==(const colore_s &other) const
 {
     static_assert(sizeof(colore) == sizeof(uchar) * 4);
     return memcmp(this->colore, other.colore, sizeof(this->colore)) == 0;

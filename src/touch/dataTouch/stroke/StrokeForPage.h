@@ -24,6 +24,10 @@ public:
 
     int load(WZipReaderSingle &reader, int ver_stroke);
 
+    size_t getSizeInFile() const;
+
+    int save(WZipWriterSingle& writer) const;
+
     void reset();
     friend class page_file;
     friend class Page;
@@ -36,7 +40,8 @@ inline void StrokeForPage::append(const point_s &point, pressure_t pressure)
 
 inline void StrokeForPage::reset()
 {
-    _data->reset();
+    delete this->_data;
+    this->_data = new StrokeNormal;
 }
 
 inline void StrokeForPage::setMetadata(const colore_s &colore)
