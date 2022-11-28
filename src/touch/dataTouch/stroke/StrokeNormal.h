@@ -10,7 +10,6 @@ private:
 
     QList<point_s> _point;
     QList<pressure_t> _pressure;
-    [[nodiscard]] static QRect getBiggerPointInStroke(QList<point_s>::const_iterator begin, QList<point_s>::const_iterator end);
     bool isInsideBiggerData(const QRect &rect) const;
     int removeAt(int i);
     int type() const final;
@@ -58,9 +57,12 @@ public:
 
     StrokeNormal& operator=(const StrokeNormal &other);
 
+    template<class T>
+    static inline QRect getBiggerPointInStroke(T begin, T end);
+
 protected:
     auto length () const { return _point.length(); }
-    auto getPressure() const{
+    auto getPressure() const {
         W_ASSERT(this->_pressure.length());
         W_ASSERT(this->_pressure.at(0) >= 0.);
         return this->_pressure.at(0);
@@ -85,4 +87,48 @@ inline Stroke *StrokeNormal::makeNormal() const
     return nullptr;
 }
 
+template<class T>
+inline QRect StrokeNormal::getBiggerPointInStroke(T begin, T end)
+{
+    QRect biggerData;
 
+    if(unlikely(begin == end)){
+        WWarning("Warning: Stroke empty");
+        return {0, 0, 0, 0};
+    }
+
+    QPoint topLeft = begin->toQPointF(1.).toPoint();
+    QPoint bottomRight = end->toQPointF(1.).toPoint();
+
+    for(; begin != end; begin ++){
+        const point_s &point = *begin;
+
+        if(topLeft.x() > point.x())
+            topLeft.setX(static_cast<int>(
+                                 point.x()
+                         ));
+
+        if(topLeft.y() > point.y())
+            topLeft.setY(static_cast<int>(
+                                 point.y()
+                         ));
+
+        if(bottomRight.x() < point.x())
+            bottomRight.setX(static_cast<int>(
+                                     point.x())
+            );
+
+        if(bottomRight.y() < point.y())
+            bottomRight.setY(static_cast<int>(
+                                     point.y()
+                             )
+            );
+    }
+
+    W_ASSERT(topLeft.x() <= bottomRight.x());
+    W_ASSERT(topLeft.y() <= bottomRight.y());
+
+    biggerData = QRect(topLeft, bottomRight);
+
+    return biggerData;
+}

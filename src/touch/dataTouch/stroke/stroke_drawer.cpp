@@ -5,29 +5,6 @@
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "touch/dataTouch/stroke/stroke_complex_data.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-constexpr double deltaColorNull = 1.08;
-#else
-constexpr double deltaColorNull = 1.3;
-#endif
-constexpr double deltaPress = 2.;
-
-force_inline void set_press(
-                            QPen &pen,
-                            const pressure_t press,
-                            const double prop,
-                            cbool is_rubber,
-                            const QColor &color)
-{
-    pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
-    if (unlikely(is_rubber)) {
-        const auto _press = pen.widthF() * deltaColorNull;
-        pen.setWidthF(_press);
-    } else {
-        pen.setColor(color);
-    }
-}
-
 force_inline void stroke_drawer::draw_circle(const Stroke &stroke)
 {
     constexpr bool not_used debCircle = false;

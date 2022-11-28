@@ -38,6 +38,9 @@ void set_press(
                             cbool is_rubber,
                             const QColor &color)
 {
+    constexpr double deltaPress = 2.;
+    constexpr double deltaColorNull = 1.3;
+
     pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
     if (unlikely(is_rubber)) {
         const auto _press = pen.widthF() * deltaColorNull;
@@ -45,4 +48,35 @@ void set_press(
     } else {
         pen.setColor(color);
     }
+}
+
+int Stroke::save(WZipWriterSingle &file) const
+{
+    const auto t = type();
+    file.write_object(_metadata);
+    file.write_object(t);
+
+    static_assert(sizeof(t) == sizeof(int));
+    return OK;
+}
+
+void Stroke::setAlfaColor(uchar alfa)
+{
+    _metadata.color.set_alfa(alfa);
+}
+
+QColor Stroke::getColor(double division) const
+{
+    return this->_metadata.color.toQColor(division);
+}
+
+Stroke::Stroke()
+{
+    this->reset_flag();
+}
+
+Stroke::Stroke(const metadata_stroke &met)
+{
+    this->reset_flag();
+    this->_metadata = met;
 }

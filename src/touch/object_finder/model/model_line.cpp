@@ -58,7 +58,6 @@ double model_line(const StrokePre *stroke)
 {
 
     int segno_var_x, segno_var_y;
-    int i;
     const point_s *one, *two;
     const auto &area = stroke->getFirstAndLast();
     auto b = stroke->constBegin();

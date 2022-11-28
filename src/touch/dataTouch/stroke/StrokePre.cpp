@@ -78,10 +78,12 @@ void StrokePre::setTime(int time)
 QRect StrokePre::getBiggerPointInStroke() const
 {
     /** TODO --> define a cache */
-    const auto res = StrokeNormal::getBiggerPointInStroke(
-                            this->_point.constBegin(),
-                            this->_point.constEnd(),
-                            this->_stroke);
+    const auto res = (_stroke->isEmpty()) ?
+                    StrokeNormal::getBiggerPointInStroke(
+                                                this->_point.constBegin(),
+                                                this->_point.constEnd()) :
+                    _stroke->getBiggerPointInStroke();
+
     return res;
 }
 

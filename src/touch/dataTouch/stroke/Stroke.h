@@ -16,6 +16,8 @@
 #include "core/WZipReaderSingle.h"
 #include "core/WImage.h"
 
+constexpr uchar current_ver = 0;
+
 struct metadata_stroke{
     int posizione_audio;
     struct colore_s color;
@@ -64,8 +66,6 @@ private:
     static_assert(sizeof(_flag) * 8 >= 4 );
 
     void updateFlagPressure() const;
-
-    virtual int save(WZipWriterSingle &file) const = 0;
 
     void reset_flag();
 public:
@@ -133,7 +133,7 @@ public:
 #endif // DEBUGINFO
 
     static Stroke* load(WZipReaderSingle &reader, int version, int *ok);
-
+    virtual int save(WZipWriterSingle &file) const;
 protected:
     Stroke &operator=(const Stroke &other);
 
@@ -206,26 +206,5 @@ inline void Stroke::setFlag(unsigned char type, bool value) const
     }else{
         f &= ~type;
     }
-}
-
-void Stroke::setAlfaColor(uchar alfa)
-{
-    _metadata.color.set_alfa(alfa);
-}
-
-QColor Stroke::getColor(double division) const
-{
-    return this->_metadata.color.toQColor(division);
-}
-
-Stroke::Stroke()
-{
-    this->reset_flag();
-}
-
-Stroke::Stroke(const metadata_stroke &met)
-{
-    this->reset_flag();
-    this->_metadata = met;
 }
 

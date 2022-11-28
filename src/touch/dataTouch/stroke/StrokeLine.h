@@ -32,12 +32,11 @@ public:
 
     void clearAudio();
 
-    const struct metadata_stroke &getMetadata() const;
-
     bool is_highlighter() const;
+    int save(WZipWriterSingle &file) const final;
 
     size_t getSizeInMemory() const;
-    size_t getSizeInFile() const;
+    size_t getSizeInFile() const final;
 
     void decreasePrecision();
     void setAlfaColor(uchar alfa);

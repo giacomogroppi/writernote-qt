@@ -8,20 +8,6 @@
 typedef uchar ver_stroke_complex;
 constexpr ver_stroke_complex _current_ver = 0;
 
-int stroke_complex_save(const Stroke *stroke, WZipWriterSingle &writer)
-{
-    const StrokeProp::flag_complex type = stroke->getProp();
-    const auto size = get_size_by_type(*stroke);
-    const auto *data = stroke->get_complex_data();
-
-    static_assert(sizeof(_current_ver) == sizeof(unsigned char));
-
-    writer.write_object(_current_ver);
-    writer.write(data, size);
-
-    return OK;
-}
-
 size_t stroke_complex_get_size_save(const Stroke *stroke)
 {
     size_t s = 0;

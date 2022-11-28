@@ -1,16 +1,32 @@
 #include "StrokeNormal.h"
 #include "StrokeNormalFile.h"
 #include "utils/WCommonScript.h"
+#include "utils/common_error_definition.h"
 
 StrokeNormal::StrokeNormal()
+    : Stroke()
 {}
 
-StrokeNormal::~StrokeNormal()
-{}
+StrokeNormal::~StrokeNormal() = default;
 
 int StrokeNormal::save(WZipWriterSingle &file) const
 {
-    W_ASSERT(0);
+    const int len_point     = this->_point.length();
+    const int len_pressure  = this->_pressure.length();
+    file.write_object(len_point);
+    file.write_object(len_pressure);
+
+    for (const auto p : qAsConst(this->_pressure)) {
+        static_assert(sizeof(p) == sizeof(pressure_t));
+        file.write_object(p);
+    }
+
+    for (const auto p : qAsConst(this->_point )){
+        static_assert(sizeof(p) == sizeof(point_s));
+        file.write_object(p);
+    }
+
+    return OK;
 }
 
 int StrokeNormal::load(WZipReaderSingle &reader, int version)
@@ -97,51 +113,6 @@ QRect StrokeNormal::getBiggerPointInStroke() const
     this->setBiggerData(b);
 
     return b;
-}
-
-QRect StrokeNormal::getBiggerPointInStroke(QList<point_s>::const_iterator begin,
-                                           QList<point_s>::const_iterator end)
-{
-    QRect biggerData;
-
-    if(unlikely(begin == end)){
-        WWarning("Warning: Stroke empty");
-        return {0, 0, 0, 0};
-    }
-
-    QPoint topLeft = begin->toQPointF(1.).toPoint();
-    QPoint bottomRight = topLeft;
-
-    for(; begin != end; begin ++){
-        const point_s &point = *begin;
-
-        if(topLeft.x() > point.x())
-            topLeft.setX(static_cast<int>(
-                                 point.x()
-                         ));
-
-        if(topLeft.y() > point.y())
-            topLeft.setY(static_cast<int>(
-                                 point.y()
-                         ));
-
-        if(bottomRight.x() < point.x())
-            bottomRight.setX(static_cast<int>(
-                                     point.x())
-            );
-
-        if(bottomRight.y() < point.y())
-            bottomRight.setY(static_cast<int>(
-                                     point.y())
-            );
-    }
-
-    W_ASSERT(topLeft.x() <= bottomRight.x());
-    W_ASSERT(topLeft.y() <= bottomRight.y());
-
-    biggerData = QRect(topLeft, bottomRight);
-
-    return biggerData;
 }
 
 bool StrokeNormal::isInsideBiggerData(const QRect &rect) const
@@ -320,3 +291,4 @@ void StrokeNormal::force_pressure(pressure_t press)
     else
         _pressure.append(press);
 }
+

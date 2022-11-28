@@ -1,6 +1,7 @@
 #include "StrokeLine.h"
 #include "touch/dataTouch/page/Page.h"
 #include "core/WLine.h"
+#include "utils/common_error_definition.h"
 
 StrokeLine::StrokeLine()
 {
@@ -124,10 +125,27 @@ QRect StrokeLine::getBiggerPointInStroke() const
     return datastruct_rect(_pt1, _pt2).toRect();
 }
 
+int StrokeLine::save(WZipWriterSingle &writer) const
+{
+    const auto res = Stroke::save(writer);
+
+    if(res != OK)
+        return res;
+
+    static_assert(sizeof(QPointF) == sizeof(double) * 2);
+
+    writer.write_object(this->_pt1);
+    writer.write_object(this->_pt2);
+    writer.write_object(this->_press);
+
+    return OK;
+}
+
 bool StrokeLine::operator==(const Stroke &other) const
 {
     if(dynamic_cast<const Stroke &>(*this) != other)
         return false;
+
     if(this->type() != other.type())
         return false;
 
@@ -141,4 +159,14 @@ bool StrokeLine::operator==(const Stroke &other) const
 bool StrokeLine::operator!=(const Stroke &other) const
 {
     return !(*this == other);
+}
+
+size_t StrokeLine::getSizeInFile() const
+{
+    static_assert(sizeof(current_ver) == sizeof(uchar));
+    return
+        sizeof(current_ver) +
+        sizeof(this->_pt1)  +
+        sizeof(this->_pt2)  +
+        sizeof(this->_press);
 }
