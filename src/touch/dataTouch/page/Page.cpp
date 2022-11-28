@@ -348,7 +348,6 @@ void Page::drawEngine(
         QPainter        &painter,
         QList<Stroke *> &List,
         int             m_pos_ris,
-        bool            *changeSomething,
         cbool           use_multi_thread)
 {
     int i, threadCount;
@@ -386,9 +385,6 @@ void Page::drawEngine(
     if(unlikely(to_remove.length())){
         WCommonScript::order_vector(to_remove);
 
-        if(likely(changeSomething))
-            *changeSomething = true;
-
         log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
 
         this->removeAt(to_remove);
@@ -400,40 +396,25 @@ inline void Page::draw(
     int         m_pos_ris,
     bool        all)
 {
-    auto list = _strokeTmp.toList();
-    bool changeSomething = true;
-
     W_ASSERT(painter.isActive());
 
     if(unlikely(all)){
-        this->drawEngine(painter, this->_stroke, m_pos_ris, NULL, true);
+        this->drawEngine(painter, this->_stroke, m_pos_ris, true);
     }
 
-    if(list.length()){
-        this->drawEngine(painter, list, m_pos_ris, &changeSomething, false);
+    if(_strokeTmp.length()){
+        this->drawEngine(painter, _strokeTmp, m_pos_ris, false);
     }
 
     W_ASSERT(painter.isActive());
-
-    if(unlikely(changeSomething)){
-        this->_strokeTmp = QVector<Stroke>::fromList(list);
-    }
 
     this->mergeList();
 }
 
 void Page::mergeList()
 {
-    int i;
-    const int len = this->_strokeTmp.length();
-    int index = _stroke.length();
-
-    for(i = 0; i < len; i++){
-        const Stroke &stroke = _strokeTmp.at(i);
-
-        _stroke.append(stroke);
-
-        index ++;
+    for(auto *s : _strokeTmp) {
+        _stroke.append(s);
     }
 
     _strokeTmp.clear();
@@ -706,13 +687,6 @@ void Page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
 
     W_ASSERT(painter.isActive());
     End_painter(painter);
-}
-
-void Page::allocateStroke(int numAllocation)
-{
-    for(int i = 0; i < numAllocation; i++){
-        this->_stroke.append(Stroke());
-    }
 }
 
 #define DO_CTRL(function) \

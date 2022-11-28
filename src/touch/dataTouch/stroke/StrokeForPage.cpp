@@ -51,3 +51,8 @@ size_t StrokeForPage::getSizeInFile() const
 {
     return this->_data->getSizeInFile();
 }
+
+void StrokeForPage::scale(const QPointF &delta)
+{
+    this->_data->scale(delta);
+}

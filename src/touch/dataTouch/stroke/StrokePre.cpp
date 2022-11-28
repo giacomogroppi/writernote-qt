@@ -66,21 +66,22 @@ void StrokePre::adjust(const QPointF &delta)
 void StrokePre::setAlfaColor(int alfa)
 {
     W_ASSERT(alfa >= 0 and alfa <= 255);
-    _stroke.setAlfaColor(alfa);
+    _stroke->setAlfaColor(alfa);
 }
 
 void StrokePre::setTime(int time)
 {
     W_ASSERT( time == -1 or time >= 0 );
-    _stroke.setPositioneAudio(time);
+    _stroke->setPositioneAudio(time);
 }
 
 QRect StrokePre::getBiggerPointInStroke() const
 {
     /** TODO --> define a cache */
-    const auto res = Stroke::getBiggerPointInStroke(this->_point.constBegin(),
-                                                    this->_point.constEnd(),
-                                                    this->_stroke);
+    const auto res = StrokeNormal::getBiggerPointInStroke(
+                            this->_point.constBegin(),
+                            this->_point.constEnd(),
+                            this->_stroke);
     return res;
 }
 

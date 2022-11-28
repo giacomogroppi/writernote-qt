@@ -124,9 +124,9 @@ QRect StrokeLine::getBiggerPointInStroke() const
     return datastruct_rect(_pt1, _pt2).toRect();
 }
 
-bool StrokeLine::operator==(const Stroke &other)
+bool StrokeLine::operator==(const Stroke &other) const
 {
-    if(dynamic_cast<Stroke &>(*this) != other)
+    if(dynamic_cast<const Stroke &>(*this) != other)
         return false;
     if(this->type() != other.type())
         return false;
@@ -136,4 +136,9 @@ bool StrokeLine::operator==(const Stroke &other)
     return  this->_pt1 == s->_pt1 and
             this->_pt2 == s->_pt2 and
             this->_press == s->_press;
+}
+
+bool StrokeLine::operator!=(const Stroke &other) const
+{
+    return !(*this == other);
 }

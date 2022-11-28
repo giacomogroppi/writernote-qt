@@ -60,17 +60,18 @@ private:
     QList<Stroke *>     _stroke;
     StrokeForPage       _stroke_writernote;
 
-    /* after adding data to the list, call triggernewimage,
-     *  and pass as all false, in this way what is
+    /**
+     * after adding data to the list, call triggernewimage,
+     * and pass as all false, in this way what is
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    QVector<Stroke *>   _strokeTmp;
+    QList<Stroke *>   _strokeTmp;
     WImage              _imgDraw;
 
     void drawNewPage(n_style __style);
     
-    void drawEngine(QPainter &painter, QList<Stroke *> &List, int m_pos_ris, bool *changeSomething, cbool use_multi_thread);
+    void drawEngine(QPainter &painter, QList<Stroke *> &List, int m_pos_ris, cbool use_multi_thread);
     void draw(QPainter &painter, int m_pos_ris, bool all);
     void drawStroke(QPainter &painter, const Stroke &stroke, QPen &pen, const QColor &color) const;
 
@@ -137,7 +138,6 @@ public:
     int getCount() const;
 
     void reset();
-    void allocateStroke(int numAllocation);
 
     int save(WZipWriterSingle &writer, cbool saveImg) const;
 

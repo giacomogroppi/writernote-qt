@@ -74,7 +74,7 @@ public:
     virtual void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const = 0;
     virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
 
-    QColor getColor(double division) const;
+    QColor getColor(double division = 1.) const;
 
 #   define stroke_append_default (-1.)
     virtual void append(const point_s &point, pressure_t pressure) = 0;

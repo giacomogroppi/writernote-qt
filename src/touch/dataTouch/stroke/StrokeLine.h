@@ -55,7 +55,8 @@ public:
 
     void scale(const QPointF &offset);
 
-    bool operator==(const Stroke &other) final;
+    bool operator==(const Stroke &other) const final;
+    bool operator!=(const Stroke &other) const final;
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);

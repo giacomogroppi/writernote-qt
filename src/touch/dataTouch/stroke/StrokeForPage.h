@@ -27,7 +27,7 @@ public:
     size_t getSizeInFile() const;
 
     int save(WZipWriterSingle& writer) const;
-
+    void scale(const QPointF& delta);
     void reset();
     friend class page_file;
     friend class Page;
