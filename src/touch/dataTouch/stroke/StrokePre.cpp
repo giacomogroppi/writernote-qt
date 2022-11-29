@@ -104,42 +104,34 @@ pressure_t StrokePre::getPressure() const
     return *this->_pressure.constBegin();
 }
 
-void StrokePre::set_complex(StrokeProp type, void *data)
-{
-    _stroke.set_complex(type, data);
-    W_ASSERT(_stroke.is_complex());
-    WDebug(StrokePreDebug, "Pointer" << this);
-}
-
 void StrokePre::reset_img()
 {
-    auto &img = dynamic_cast<WImage &>(*this);
+    auto &img = this->_img;
     img = WImage();
 }
 
 void StrokePre::draw(QPainter &painter, QPen &pen, double prop)
 {
     WDebug(StrokePreDebug, "Pointer" << this);
-    if (is_normal()) {
+    if (_stroke->isEmpty()) {
         const auto target = _img.rect();
 
         W_ASSERT(_img.isNull() == false);
 
         painter.drawImage(target, _img);
     }else {
-        W_ASSERT(not _stroke.isEmpty());
-        _stroke.draw(painter, false, 0, pen, prop);
+        _stroke->draw(painter, false, 0, pen, prop);
     }
 }
 
 QColor StrokePre::getColor(double division) const
 {
-    return _stroke.getColor(division);
+    return _stroke->getColor(division);
 }
 
 StrokePre &StrokePre::operator=(const StrokePre &other)
 {
-    _stroke.operator=(other._stroke);
+    _stroke->operator=(*other._stroke);
     _img.operator=(other._img);
     this->_point = other._point;
     this->_pressure = other._pressure;
@@ -148,14 +140,14 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     this->already_merge = other.already_merge;
 #endif // DEBUGINFO
 
-    W_ASSERT(Stroke::cmp(this->_stroke, other._stroke) == true);
+    W_ASSERT(*_stroke == *other._stroke);
 
     return *this;
 }
 
 void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop)
 {
-    const auto normal = is_normal();
+    const auto normal = not _stroke->isEmpty();
 
     if (normal) {
         QPainter painter;
@@ -190,8 +182,7 @@ out:
     } else {
         W_ASSERT(_point.isEmpty());
         W_ASSERT(_pressure.isEmpty());
-        auto *s = dynamic_cast<Stroke *>(this);
 
-        stroke_complex_append(s, point.toQPointF(1.));
+        _stroke->append(point.toQPointF(1.), press);
     }
 }
