@@ -183,6 +183,10 @@ int StrokeNormal::type() const
     return 0;
 }
 
+#ifdef ALL_VERSION
+
+#endif // ALL_VERSION
+
 StrokeNormal::StrokeNormal(const StrokeNormal &ref)
 {
     *this = ref;

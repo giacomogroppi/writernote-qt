@@ -147,59 +147,6 @@ cont:
     return precision;
 }
 
-static void model_line_vertical(StrokePre *stroke, stroke_complex_line *data)
-{
-    const auto press = stroke->getPressure();
-    const QRect FL = stroke->getFirstAndLast();
-    QPointF TL = FL.topLeft();
-    QPointF BR = FL.bottomRight();
-
-    if(TL.y() > BR.y()){
-        WCommonScript::swap(TL, BR);
-    }
-
-    const double x = TL.x();
-
-    stroke->reset();
-
-    data->pt1 = QPointF(x, TL.y());
-    data->pt2 = QPointF(x, BR.y());
-    data->press = press;
-}
-
-static void model_line_generic(StrokePre *stroke, stroke_complex_line *data)
-{
-    const auto pressure = stroke->getPressure();
-    data->pt1           = stroke->constBegin()->toQPointF(1.);
-    data->pt2           = stroke->last().       toQPointF(1.);
-
-    if(data->pt1.y() > data->pt2.y()){
-        WCommonScript::swap(data->pt1, data->pt2);
-    }
-
-    data->press = pressure;
-    stroke->reset();
-}
-
-void model_line_create(StrokePre *stroke)
-{
-    W_ASSERT(stroke);
-    bool &is_vertical = line_data.is_vertical;
-    auto *data = (stroke_complex_line *)
-            WMalloc(
-                        sizeof(stroke_complex_line)
-                    );
-
-    if(is_vertical){
-        model_line_vertical(stroke, data);
-    }else{
-        model_line_generic(stroke, data);
-    }
-
-    stroke->reset();
-    stroke->set_complex(StrokeProp::COMPLEX_LINE, data);
-}
-
 static inline void stroke_complex_normal_line_generic(
         Stroke              *_to,
         stroke_complex_line *data,

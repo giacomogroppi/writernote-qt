@@ -1,9 +1,26 @@
 #include "Stroke.h"
 #include "touch/tabletcanvas.h"
+#include "StrokeNormal.h"
 
-Stroke* Stroke::load(WZipReaderSingle &reader, int version, int *ok)
+int Stroke::load_ver_1(WZipReaderSingle &reader)
 {
-    W_ASSERT(0);
+
+}
+
+Stroke* Stroke::load(WZipReaderSingle &reader, int version_stroke, int *ok)
+{
+    switch (version_stroke) {
+    case 0:
+        if(ok)
+            *ok = ERROR_VERSION;
+        return nullptr;
+    default:
+        break;
+    }
+
+    if(ok)
+        *ok = ERROR_VERSION_NEW;
+    return nullptr;
 }
 
 void Stroke::reset_flag()
@@ -12,6 +29,8 @@ void Stroke::reset_flag()
     W_ASSERT(this->needToUpdateBiggerData() == true);
     W_ASSERT(this->needToUpdatePressure() == true);
 }
+
+
 
 size_t Stroke::getSizeInFile() const
 {

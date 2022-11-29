@@ -68,6 +68,9 @@ private:
     void updateFlagPressure() const;
 
     void reset_flag();
+
+    int load_ver_1(WZipReaderSingle &reader);
+    int load_ver_2(WZipReaderSingle &reader);
 public:
     virtual ~Stroke() = default;
 
@@ -132,7 +135,7 @@ public:
     friend class page_file;
 #endif // DEBUGINFO
 
-    static Stroke* load(WZipReaderSingle &reader, int version, int *ok);
+    static Stroke* load(WZipReaderSingle &reader, int version_stroke, int *ok);
     virtual int save(WZipWriterSingle &file) const;
 protected:
     Stroke &operator=(const Stroke &other);

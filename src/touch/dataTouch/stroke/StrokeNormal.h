@@ -13,6 +13,7 @@ private:
     bool isInsideBiggerData(const QRect &rect) const;
     int removeAt(int i);
     int type() const final;
+
 public:
     StrokeNormal(const StrokeNormal &ref);
     StrokeNormal();
@@ -72,6 +73,7 @@ protected:
     friend class page_file;
 #endif // DEBUGINFO
 
+    friend class StrokeLine;
     friend class StrokeNormalFileSave;
     friend class StrokeNormalFileLoad;
     friend class Page;

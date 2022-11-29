@@ -8,53 +8,6 @@
 #define stroke_file_size_len 4
 
 #ifdef ALL_VERSION
-force_inline int stroke_file::load_ver_0(class Stroke &_stroke, WZipReaderSingle &reader)
-{
-    int i, len_point;
-    bool page_point = false;
-    struct point_s_curr {
-        double _x, _y;
-        float press;
-    };
-
-    struct old_metadata{
-        int page, idtratto, posizione_audio;
-        struct colore_s color;
-    } meta;
-
-    point_s_curr point;
-    point_s tmp;
-
-    if(reader.read_object(len_point) < 0)
-        return ERROR;
-
-    if(reader.read_object(meta) < 0)
-        return ERROR;
-    memcpy(&_stroke._metadata.color,            &meta.color,          sizeof(_stroke._metadata.color));
-    memcpy(&_stroke._metadata.posizione_audio,  &meta.posizione_audio,sizeof(_stroke._metadata.posizione_audio));
-
-    // we don't load sheet from differente version
-    if(unlikely(meta.idtratto < 0)){
-        page_point = true;
-    }
-
-    for(i = 0; i < len_point; i++){
-        if(reader.read_object(point) < 0)
-            return ERROR;
-
-        tmp = point_s(point._x, point._y);
-
-        _stroke._point.append(tmp);
-        _stroke._pressure.append(point.press);
-    }
-
-    if(unlikely(page_point)){
-        return PAGE_POINT;
-    }
-
-    _stroke.modify();
-    return OK;
-}
 
 force_inline int stroke_file::load_ver_1(class Stroke &_stroke, WZipReaderSingle &reader)
 {

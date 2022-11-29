@@ -11,6 +11,9 @@ private:
     void makeNormalVertical(class StrokeNormal *mergeTo, int from, int to) const;
     void makeNormalGeneric(class StrokeNormal *mergeTo, int from, int to) const;
 
+    void makeGeneric(const StrokeNormal &s);
+    void makeVertical(const StrokeNormal &s);
+
 public:
     StrokeLine();
 
@@ -54,15 +57,15 @@ public:
 
     void scale(const QPointF &offset);
 
+    void preappend(int) final {};
+
     bool operator==(const Stroke &other) const final;
     bool operator!=(const Stroke &other) const final;
 
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
-private:
-    void preappend(int) final {};
-
+    static StrokeLine *make(const QPointF& pt1, const QPointF& pt2, const StrokeNormal &s);
 protected:
     int type() const final;
 };

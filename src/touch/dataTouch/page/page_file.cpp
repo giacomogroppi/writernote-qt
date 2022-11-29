@@ -8,54 +8,9 @@
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 
 #ifdef ALL_VERSION
-int page_file::load_ver_0(Page &_page, WZipReaderSingle &reader)
+int page_file::load_ver_0(Page &, WZipReaderSingle &)
 {
-    constexpr int ver_stroke = 0;
-    int i, k, len_stroke, err = OK;
-
-    // user stroke
-    if(reader.read_object(len_stroke) < 0)
-        return ERROR;
-
-    for(i = 0; i < len_stroke; i++){
-        auto *res = Stroke::load(reader, ver_stroke, &err);
-        if(unlikely(err != OK))
-            return err;
-
-        _page._stroke.append(
-                res
-                );
-    }
-
-    // writernote stroke [for page style]
-    if(reader.read_object(len_stroke) < 0)
-        return ERROR;
-
-    for(i = 0; i < len_stroke; i++){
-        int ok;
-        Stroke *res = Stroke::load(reader, ver_stroke, &ok);
-
-        if(res == nullptr)
-            return ERROR;
-
-        W_ASSERT(res->type() == Stroke::COMPLEX_NORMAL);
-
-        if (unlikely(ok == PAGE_POINT)) {
-            _page._stroke_writernote.append(dynamic_cast<StrokeNormal &>(*res));
-            delete res;
-        } else {
-            _page.append(res);
-        }
-    }
-
-    // remove empty stroke
-    for(i = _page.lengthStroke() - 1; i >= 0; i--){
-        if(_page.atStroke(i).isEmpty() == 0){
-            _page._stroke.removeAt(i);
-        }
-    }
-
-    return OK;
+    return ERROR_VERSION_NEW;
 }
 
 int page_file::load_ver_1(Page &_page, WZipReaderSingle &reader)
