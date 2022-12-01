@@ -13,13 +13,6 @@ static struct {
 } circle_data;
 constexpr not_used bool debug = false;
 
-static not_used void model_circle_print(const stroke_complex_circle *data)
-{
-    if(WCommonScript::debug_enable()){
-        qDebug() << "circle: " << data << data->_x << data->_y << data->_r << data->_press;
-    }
-}
-
 void model_circle_create(StrokePre *stroke)
 {
     const auto press = stroke->getPressure();
