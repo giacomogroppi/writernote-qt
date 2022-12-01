@@ -6,13 +6,18 @@
 class StrokeNormal final: public Stroke{
 private:
     int save(WZipWriterSingle &file) const final;
-    int load(WZipReaderSingle &reader, int version);
+    /**
+     * you need to set len_point only if you are loading a version 1 file
+     * */
+    int load(WZipReaderSingle &reader, int version, int len_point = -1);
 
     QList<point_s> _point;
     QList<pressure_t> _pressure;
     bool isInsideBiggerData(const QRect &rect) const;
     int removeAt(int i);
-    int type() const final;
+
+    int load_ver_1(WZipReaderSingle &reader, int len_stroke);
+    int load_ver_2(WZipReaderSingle &reader);
 
 public:
     StrokeNormal(const StrokeNormal &ref);
@@ -61,6 +66,8 @@ public:
     template<class T>
     static inline QRect getBiggerPointInStroke(T begin, T end);
 
+    int type() const final;
+
 protected:
     auto length () const { return _point.length(); }
     auto getPressure() const {
@@ -73,6 +80,7 @@ protected:
     friend class page_file;
 #endif // DEBUGINFO
 
+    friend class Stroke;
     friend class StrokeLine;
     friend class StrokeNormalFileSave;
     friend class StrokeNormalFileLoad;

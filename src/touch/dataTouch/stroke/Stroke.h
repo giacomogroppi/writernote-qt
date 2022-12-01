@@ -9,7 +9,6 @@
 #include "utils/common_def.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WLine.h"
-#include "stroke_complex_data.h"
 #include "touch/object_finder/model/model.h"
 #include "testing/memtest.h"
 #include "core/WZipWriterSingle.h"
@@ -69,8 +68,8 @@ private:
 
     void reset_flag();
 
-    int load_ver_1(WZipReaderSingle &reader);
-    int load_ver_2(WZipReaderSingle &reader);
+    static Stroke *load_ver_1(WZipReaderSingle &reader, int *ok);
+    static Stroke *load_ver_2(WZipReaderSingle &reader, int *ok);
 public:
     virtual ~Stroke() = default;
 
@@ -137,6 +136,10 @@ public:
 
     static Stroke* load(WZipReaderSingle &reader, int version_stroke, int *ok);
     virtual int save(WZipWriterSingle &file) const;
+
+    /** all stroke derivated class needs to implements this method to recognize yourself */
+    [[nodiscard]] virtual int type() const = 0;
+
 protected:
     Stroke &operator=(const Stroke &other);
 
@@ -156,9 +159,6 @@ protected:
     };
 
     friend class StrokePre;
-
-    /** all stroke derivated class needs to implements this method to recognize yourself */
-    [[nodiscard]] virtual int type() const = 0;
 };
 
 void set_press( QPen &pen, pressure_t press, double prop,

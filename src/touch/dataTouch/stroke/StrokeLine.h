@@ -66,7 +66,6 @@ public:
     static void copy(const Stroke &src, Stroke &dest);
 
     static StrokeLine *make(const QPointF& pt1, const QPointF& pt2, const StrokeNormal &s);
-protected:
     int type() const final;
 };
 

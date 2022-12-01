@@ -29,9 +29,74 @@ int StrokeNormal::save(WZipWriterSingle &file) const
     return OK;
 }
 
-int StrokeNormal::load(WZipReaderSingle &reader, int version)
+int StrokeNormal::load_ver_1(WZipReaderSingle &reader, int len_point)
 {
-    W_ASSERT(0);
+    int i;
+
+    struct point_s_curr {
+        double _x, _y;
+        float press;
+    };
+
+    point_s_curr point;
+    point_s tmp;
+
+    for(i = 0; i < len_point; i++){
+        if(reader.read_object(point) < 0)
+            return ERROR;
+
+        tmp = point_s(point._x, point._y);
+
+        _point.append(tmp);
+        _pressure.append(point.press);
+    }
+
+    modify();
+    return OK;
+}
+
+int StrokeNormal::load_ver_2(WZipReaderSingle &reader)
+{
+    int i;
+    int len_press, len_point;
+    pressure_t tmp;
+    point_s point_append;
+
+    if(reader.read_object(len_point) < 0)
+        return ERROR;
+    if(reader.read_object(len_press) < 0)
+        return ERROR;
+
+    W_ASSERT(len_press <= len_point);
+
+    for(i = 0; i < len_press; i++){
+        if(reader.read_object(tmp) < 0)
+            return ERROR;
+        _pressure.append(tmp);
+    }
+
+    for(i = 0; i < len_point; i++){
+        if(reader.read_object(point_append) < 0)
+            return ERROR;
+        _point.append(point_append);
+    }
+
+    modify();
+    return OK;
+}
+
+int StrokeNormal::load(WZipReaderSingle &reader, int version, int len_point)
+{
+    switch (version) {
+        case 0:
+            return ERROR_VERSION;
+        case 1:
+            return load_ver_1(reader, len_point);
+        case 2:
+            return load_ver_2(reader);
+        default:
+            return ERROR_VERSION_NEW;
+    }
 }
 
 void StrokeNormal::append(const point_s &point, pressure_t pressure)
@@ -179,8 +244,7 @@ int StrokeNormal::removeAt(int i)
 
 int StrokeNormal::type() const
 {
-    W_ASSERT(0);
-    return 0;
+    return COMPLEX_NORMAL;
 }
 
 #ifdef ALL_VERSION

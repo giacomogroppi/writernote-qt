@@ -7,41 +7,6 @@
 
 #define stroke_file_size_len 4
 
-#ifdef ALL_VERSION
-
-force_inline int stroke_file::load_ver_1(class Stroke &_stroke, WZipReaderSingle &reader)
-{
-    int i, len_point;
-
-    struct point_s_curr {
-        double _x, _y;
-        float press;
-    };
-
-    point_s_curr point;
-    point_s tmp;
-
-    if(reader.read_object(len_point) < 0)
-        return ERROR;
-    if(reader.read_object(_stroke._metadata) < 0)
-        return ERROR;
-
-    for(i = 0; i < len_point; i++){
-        if(reader.read_object(point) < 0)
-            return ERROR;
-
-        tmp = point_s(point._x, point._y);
-
-        _stroke._point.append(tmp);
-        _stroke._pressure.append(point.press);
-    }
-
-    _stroke.modify();
-    return OK;
-}
-
-#endif // ALL_VERSION
-
 #define MANAGE_ERR() return ERROR
 
 force_inline int stroke_file::load_ver_2(class Stroke &_stroke, WZipReaderSingle &reader)
