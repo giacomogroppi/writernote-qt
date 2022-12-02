@@ -2,6 +2,8 @@
 #include "touch/tabletcanvas.h"
 #include "StrokeNormal.h"
 #include "StrokeLine.h"
+#include "StrokeCircle.h"
+#include "StrokeRect.h"
 
 Stroke *Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
 {
@@ -23,7 +25,8 @@ Stroke *Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
     return s;
 }
 
-Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) {
+Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
+{
 #define ver_2_manage_error(contr)   \
     do {                            \
         if(contr)                   \
@@ -31,10 +34,7 @@ Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) {
         return nullptr;             \
     } while(0);
 
-
-
     int i;
-    Stroke *res;
     int len_press, len_point;
     pressure_t tmp;
     point_s point_append;
@@ -43,8 +43,7 @@ Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) {
     metadata_stroke meta;
 
     static_assert(sizeof(len_press) == sizeof(len_point));
-    static_assert(sizeof(len_point) == stroke_file_size_len);
-    static_assert(sizeof(_stroke._metadata) == 8);
+    static_assert(sizeof(_metadata) == 8);
 
     if(reader.read_by_size(&meta, sizeof(meta)) < 0)
         ver_2_manage_error(ok);
@@ -52,17 +51,30 @@ Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok) {
         ver_2_manage_error(ok);
 
     switch (type) {
-        case COMPLEX_NORMAL:
-            res = new StrokeNormal();
-            res->load_ver_2(reader, ok);
-            return res;
-        case COMPLEX_LINE:
-            res = new StrokeLine();
-            to_continue
+    case COMPLEX_NORMAL:
+    {
+        auto *tmp = new StrokeNormal();
+        tmp->load_ver_2(reader);
+        return tmp;
     }
-
-    if(unlikely(_stroke.is_complex())){
-        return stroke_complex_load(&_stroke, dynamic_cast<StrokeProp &>(_stroke), reader);
+    case COMPLEX_LINE:
+    {
+        auto *tmp = new StrokeLine();
+        tmp->load(reader);
+        return tmp;
+    }
+    case COMPLEX_CIRCLE:
+    {
+        auto *tmp = new StrokeCircle();
+        tmp->load(reader);
+        return tmp;
+    }
+    case COMPLEX_RECT:
+    {
+        auto *tmp = new StrokeRect();
+        tmp->load(reader);
+        return tmp;
+    }
     }
 }
 

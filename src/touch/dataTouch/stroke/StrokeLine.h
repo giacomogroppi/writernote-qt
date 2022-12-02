@@ -14,6 +14,8 @@ private:
     void makeGeneric(const StrokeNormal &s);
     void makeVertical(const StrokeNormal &s);
 
+    int load(WZipReaderSingle &reader);
+
 public:
     StrokeLine();
 
@@ -67,5 +69,7 @@ public:
 
     static StrokeLine *make(const QPointF& pt1, const QPointF& pt2, const StrokeNormal &s);
     int type() const final;
+
+    friend class Stroke;
 };
 
