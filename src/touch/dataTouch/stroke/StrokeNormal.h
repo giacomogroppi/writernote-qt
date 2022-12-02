@@ -25,7 +25,8 @@ public:
     ~StrokeNormal() final;
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const override;
-    [[nodiscard]] int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const final;
+    int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const final;
+    bool is_inside(const QRectF &rect, double precision) const final;
 
 #   define stroke_append_default (-1.)
     void append(const point_s &point, pressure_t pressure) final;

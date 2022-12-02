@@ -34,6 +34,49 @@ int StrokeLine::is_inside(const WLine &line, int from, int precision, cbool need
     return WLine::intersect(_line, line, precision);
 }
 
+bool StrokeLine::is_inside(const QRectF &area, double precision) const
+{
+    WLine lineOrizTop   (area.topLeft(),    area.topRight());
+    WLine lineOrizBot   (area.bottomLeft(), area.bottomRight());
+    WLine lineVertLeft  (area.topLeft(),    area.bottomLeft());
+    WLine lineVertRig   (area.topRight(),   area.bottomRight());
+    WLine _this         (_pt1, _pt2);
+
+    // if the square passed to the function contains one of the two points
+    if(area.contains(_pt1)){
+        WDebug(debugLine, "Contains first line" << _pt1);
+        return true;
+    }
+    if(area.contains(_pt2)){
+        WDebug(debugLine, "contains second line" << _pt2);
+        return true;
+    }
+
+    WDebug(debugLine, "intersect topLeft" << _pt1 << "bottomr" << _pt2 << "(rect)" << area);
+
+    if(WLine::intersect(_this, lineOrizTop, precision)){
+        WDebug(debugLine, "intersect 1");
+        return true;
+    }
+
+    if(WLine::intersect(_this, lineOrizBot, precision)){
+        WDebug(debugLine, "intersect 2")
+        return true;
+    }
+
+    if(WLine::intersect(_this, lineVertLeft, precision)){
+        WDebug(debugLine, "intersect 3");
+        return true;
+    }
+
+    if(WLine::intersect(_this, lineVertRig, precision)){
+        WDebug(debugLine, "intersect 4");
+        return true;
+    }
+
+    return false;
+}
+
 void StrokeLine::append(const point_s &point, pressure_t pressure)
 {
     using namespace WCommonScript;

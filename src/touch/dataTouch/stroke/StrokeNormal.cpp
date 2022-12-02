@@ -150,6 +150,24 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
     return -1;
 }
 
+bool StrokeNormal::is_inside(const QRectF &rect, double precision) const
+{
+    {
+        const auto &area = this->getBiggerPointInStroke();
+        if(!area.intersects(rect.toRect())){
+            return false;
+        }
+    }
+
+    for (const auto &p : qAsConst(this->_point)) {
+        if(datastruct_isinside(rect, p)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 size_t StrokeNormal::createControll() const
 {
     size_t controll = 0;

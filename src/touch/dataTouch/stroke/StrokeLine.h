@@ -16,11 +16,14 @@ private:
 
     int load(WZipReaderSingle &reader);
 
+    static constexpr bool debugLine = false;
+
 public:
     StrokeLine();
 
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
     int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
+    bool is_inside(const QRectF &rect, double precision) const;
 
     QColor getColor(double division) const;
 
