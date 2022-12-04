@@ -12,8 +12,6 @@ private:
 
     StrokeCircle();
 
-    void make(double x, double y, double r, pressure_t press);
-
     static constexpr bool debugCircle = false;
 public:
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
