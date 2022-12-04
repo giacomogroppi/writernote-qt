@@ -2,6 +2,7 @@
 #include "touch/dataTouch/page/Page.h"
 #include "core/WLine.h"
 #include "utils/common_error_definition.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 
 StrokeLine::StrokeLine()
 {
@@ -137,35 +138,6 @@ void StrokeLine::makeNormalGeneric(StrokeNormal *mergeTo, int from, int to) cons
     }
 }
 
-void StrokeLine::makeGeneric(const StrokeNormal& s)
-{
-    _pt1 = s._point.first();
-    _pt2 = s._point.last();
-
-    if (_pt1.y() > _pt2.y()) {
-        WCommonScript::swap(_pt1, _pt2);
-    }
-}
-
-void StrokeLine::makeVertical(const StrokeNormal& s)
-{
-    const QRect FL = {
-        s._point.first().toPoint(),
-        s._point.last().toPoint()
-    };
-    QPointF TL = FL.topLeft();
-    QPointF BR = FL.bottomRight();
-
-    if(TL.y() > BR.y()){
-        WCommonScript::swap(TL, BR);
-    }
-
-    const double x = TL.x();
-
-    _pt1 = QPointF(x, TL.y());
-    _pt2 = QPointF(x, BR.y());
-}
-
 Stroke *StrokeLine::makeNormal() const
 {
     int from, to;
@@ -206,9 +178,18 @@ int StrokeLine::save(WZipWriterSingle &writer) const
 
     static_assert(sizeof(QPointF) == sizeof(double) * 2);
 
-    writer.write_object(this->_pt1);
-    writer.write_object(this->_pt2);
-    writer.write_object(this->_press);
+    struct{
+        QPointF pt1, pt2;
+        pressure_t press;
+    } tmp_load = {
+        .pt1    = this->_pt1,
+        .pt2    = this->_pt2,
+        .press  = this->_press
+    };
+
+    writer.write_object(tmp_load);
+
+    static_assert(sizeof(tmp_load) == (sizeof(QPointF) * 2 + sizeof(float) + 4));
 
     return OK;
 }
@@ -231,22 +212,6 @@ bool StrokeLine::operator==(const Stroke &other) const
 bool StrokeLine::operator!=(const Stroke &other) const
 {
     return !(*this == other);
-}
-
-StrokeLine *StrokeLine::make(const QPointF &pt1, const QPointF &pt2, const StrokeNormal &s)
-{
-    auto *tmp = new StrokeLine;
-    const auto is_vertical = WCommonScript::is_near(pt1.x(), pt2.x(), .5);
-
-    if(is_vertical){
-        tmp->makeVertical(s);
-    }else{
-        tmp->makeGeneric(s);
-    }
-
-    tmp->_press = s.getPressure();
-
-    return tmp;
 }
 
 size_t StrokeLine::getSizeInFile() const

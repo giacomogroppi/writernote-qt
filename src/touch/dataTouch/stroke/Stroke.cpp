@@ -34,15 +34,10 @@ Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
         return nullptr;             \
     } while(0);
 
-    int i;
-    int len_press, len_point;
-    pressure_t tmp;
-    point_s point_append;
 
     int type;
     metadata_stroke meta;
 
-    static_assert(sizeof(len_press) == sizeof(len_point));
     static_assert(sizeof(_metadata) == 8);
 
     if(reader.read_by_size(&meta, sizeof(meta)) < 0)
@@ -76,6 +71,10 @@ Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
         return tmp;
     }
     }
+
+    if(ok)
+        *ok = ERROR;
+    return nullptr;
 }
 
 Stroke* Stroke::load(WZipReaderSingle &reader, int version_stroke, int *ok)

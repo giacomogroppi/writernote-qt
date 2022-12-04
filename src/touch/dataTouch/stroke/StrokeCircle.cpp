@@ -1,5 +1,13 @@
 #include "StrokeCircle.h"
 
+int StrokeCircle::load(WZipReaderSingle &reader)
+{
+    struct {
+        double _x, _y, _r;
+        pressure_t _press;
+    };
+}
+
 StrokeCircle::StrokeCircle()
 {
 

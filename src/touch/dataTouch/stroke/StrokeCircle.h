@@ -6,12 +6,19 @@ class StrokeCircle final: public Stroke
 {
 private:
     double _r, _x, _y;
+    pressure_t _press;
+
     int load(WZipReaderSingle &reader);
 
     StrokeCircle();
+
+    void make(double x, double y, double r, pressure_t press);
+
+    static constexpr bool debugCircle = false;
 public:
     void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
-    int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
+    int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const;
+    bool is_inside(const QRectF &rect, double precision) const;
 
     QColor getColor(double division) const;
 

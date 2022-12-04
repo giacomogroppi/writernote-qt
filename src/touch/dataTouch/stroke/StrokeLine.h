@@ -11,9 +11,6 @@ private:
     void makeNormalVertical(class StrokeNormal *mergeTo, int from, int to) const;
     void makeNormalGeneric(class StrokeNormal *mergeTo, int from, int to) const;
 
-    void makeGeneric(const StrokeNormal &s);
-    void makeVertical(const StrokeNormal &s);
-
     int load(WZipReaderSingle &reader);
 
     static constexpr bool debugLine = false;
@@ -73,6 +70,7 @@ public:
     static StrokeLine *make(const QPointF& pt1, const QPointF& pt2, const StrokeNormal &s);
     int type() const final;
 
+    friend class StrokeLineGenerator;
     friend class Stroke;
 };
 

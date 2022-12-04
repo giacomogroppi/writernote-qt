@@ -141,6 +141,8 @@ public:
     /** all stroke derivated class needs to implements this method to recognize yourself */
     [[nodiscard]] virtual int type() const = 0;
 
+    static constexpr double errorModel = 5000;
+
 protected:
     Stroke &operator=(const Stroke &other);
 

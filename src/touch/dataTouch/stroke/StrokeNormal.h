@@ -81,6 +81,7 @@ protected:
     friend class page_file;
 #endif // DEBUGINFO
 
+    friend class StrokeLineGenerator;
     friend class Stroke;
     friend class StrokeLine;
     friend class StrokeNormalFileSave;
