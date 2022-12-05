@@ -25,7 +25,7 @@ force_inline void stroke_drawer::draw_circle(const Stroke &stroke)
     y = tmp.y();
     x = tmp.x();
 
-    set_press(_pen, press, prop, _isRubber, this->_color);
+    set_press(_pen, press, prop, _isRubber, this->_c    olor);
     _painter.setPen(_pen);
 
     _painter.drawEllipse(QPointF(x, y), data->_r * prop, data->_r * prop);

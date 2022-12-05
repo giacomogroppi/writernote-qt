@@ -28,12 +28,12 @@ void StrokeLineGenerator::is_near_line(cdouble m, double &max, cdouble q, const 
     }
 }
 
-void StrokeLineGenerator::makeVertical(StrokeNormal *from, StrokeLine *res)
+void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine *res)
 {
     using namespace WCommonScript;
     const auto press = from->getPressure();
 
-    const QRect FL = {
+    const QRect FL {
         from->_point.first().toPoint(),
         from->_point.last().toPoint()
     };
@@ -52,7 +52,7 @@ void StrokeLineGenerator::makeVertical(StrokeNormal *from, StrokeLine *res)
     res->_data.press = press;
 }
 
-void StrokeLineGenerator::makeGeneric(StrokeNormal *from, StrokeLine *res)
+void StrokeLineGenerator::makeGeneric(const StrokePre *from, StrokeLine *res)
 {
     using namespace WCommonScript;
 
@@ -70,6 +70,8 @@ void StrokeLineGenerator::makeGeneric(StrokeNormal *from, StrokeLine *res)
 Stroke *StrokeLineGenerator::make(const StrokePre *from)
 {
     auto *tmp = new StrokeLine;
+
+    W_ASSERT(from->_stroke->isEmpty());
 
     if (line_data.is_vertical) {
         StrokeLineGenerator::makeVertical(from, tmp);
