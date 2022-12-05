@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stroke.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 class StrokeCircle final: public Stroke
 {
@@ -54,11 +55,13 @@ public:
     void adjust(double zoom);
     Stroke *clone() const;
 
-    Stroke* makeNormal() const;
+    int how_much_decrese() const;
+
+    StrokeNormal* makeNormal() const;
 
     [[nodiscard]] bool isEmpty() const;
 
-    void scale(const QPointF &offset);
+    void scale(const QPointF &offset) final;
 
     void preappend(int) final {};
 
@@ -68,7 +71,6 @@ public:
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
-    static StrokeCircle *make(const QPointF& pt1, const QPointF& pt2, const class StrokeNormal &s);
     int type() const final;
 
     friend class StrokeCircleGenerator;

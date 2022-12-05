@@ -47,7 +47,6 @@ private:
     void draw_stroke_normal(stroke_drawer_private<T, Z> &data);
 
     // complex stroke
-    void draw_circle (const Stroke &stroke);
     void draw_rect   (const Stroke &stroke);
     void draw_line   (const Stroke &stroke);
 

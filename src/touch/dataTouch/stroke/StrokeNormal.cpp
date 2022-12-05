@@ -281,6 +281,11 @@ void StrokeNormal::movePoint(const QPointF &translation)
     }
 }
 
+int StrokeNormal::how_much_decrese() const
+{
+    return this->length();
+}
+
 Stroke *StrokeNormal::clone() const
 {
     auto *tmp = new StrokeNormal(*this);

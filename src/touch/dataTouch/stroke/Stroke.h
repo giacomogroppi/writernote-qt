@@ -104,6 +104,11 @@ public:
     /** instance of *this == StrokeNormal ==> @return == NULL*/
     virtual Stroke *makeNormal() const = 0;
 
+    /**
+     * instanceof(*this) == StrokeNorml ? @result == length() : 0
+    */
+    virtual int how_much_decrese() const = 0;
+
     void setColor(const colore_s &color);
     /* this function physically adds the x and y value of the point to all of its points. */
     virtual void movePoint(const QPointF &translation) = 0;

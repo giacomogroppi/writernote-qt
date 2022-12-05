@@ -42,6 +42,8 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation) final;
 
+    int how_much_decrese() const;
+
     /**
      * This function will remove the point belonging [index, length())
      * */

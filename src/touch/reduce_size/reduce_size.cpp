@@ -62,11 +62,8 @@ void reduce_size::decrese(datastruct *data){
 static uint __howReduce(uint &i, const Page *page)
 {
     const Stroke &stroke = page->atStroke(i);
-    if(likely(stroke.is_normal()))
-        return stroke.length();
 
-    // we cannot decrease accuracy if the stroke is complex
-    return 0;
+    return stroke.how_much_decrese();
 }
 
 static uint howReduce(uint &i,

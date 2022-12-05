@@ -78,19 +78,19 @@ void RubberMethod::initRubber(const QPointF &point)
 }
 
 static force_inline void draw_null(Page *_page, const QVector<int> &point,
-                                   const QVector<int> &Stroke, bool is_left)
+                                   const QVector<int> &stroke, bool is_left)
 {
     int i, len;
 
     len = point.length();
-    Q_ASSERT(point.size() == Stroke.size());
+    Q_ASSERT(point.size() == stroke.size());
 
     for(i = 0; i < len; i++){
         cint indexPoint  = point.at(i);
-        cint indexStroke = Stroke.at(i);
+        cint indexStroke = stroke.at(i);
 
         auto &stroke = _page->atStrokeMod(indexStroke);
-        const auto length = stroke.length();
+        const auto length = stroke.stroke();
 
         _page->lock();
         _page->drawForceColorStroke(stroke, -1, COLOR_NULL, NULL);

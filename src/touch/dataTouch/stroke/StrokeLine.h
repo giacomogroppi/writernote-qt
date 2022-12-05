@@ -55,6 +55,8 @@ public:
     void adjust(double zoom);
     Stroke *clone() const;
 
+    int how_much_decrese() const;
+
     Stroke* makeNormal() const;
 
     [[nodiscard]] bool isEmpty() const;

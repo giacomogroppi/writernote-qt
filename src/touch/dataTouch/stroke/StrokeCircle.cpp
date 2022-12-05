@@ -88,6 +88,35 @@ int StrokeCircle::is_inside(const WLine &line, int from, int precision, cbool ne
     return res;
 }
 
+/**
+ * Questa funzione viene chiamata se e solo se
+ * il biggerData dello stroke è all'interno
+ * dell'area in cui stiamo cercando.
+ */
+bool StrokeCircle::is_inside(const QRectF &area, double precision) const
+{
+    int internal = 0;
+
+    W_ASSERT(area.intersects(getBiggerPointInStroke()));
+    W_ASSERT(area.topLeft().x() <= area.bottomRight().x());
+    W_ASSERT(area.topLeft().y() <= area.bottomRight().y());
+
+    if(area.contains(QPointF(_data.x, _data.y)))
+        return true;
+
+    const auto dist1 = distanceFromCenter(area.topLeft());
+    const auto dist2 = distanceFromCenter(area.bottomLeft());
+    const auto dist3 = distanceFromCenter(area.topRight());
+    const auto dist4 = distanceFromCenter(area.bottomRight());
+
+    internal += isInternal(dist1, precision);
+    internal += isInternal(dist2, precision);
+    internal += isInternal(dist3, precision);
+    internal += isInternal(dist4, precision);
+
+    return internal && internal < 4;
+}
+
 void StrokeCircle::append(const point_s &point, pressure_t pressure)
 {
     Q_UNUSED(pressure);
@@ -99,6 +128,66 @@ void StrokeCircle::adjust(double zoom)
     _data.r /= zoom;
     _data.x /= zoom;
     _data.y /= zoom;
+}
+
+int StrokeCircle::how_much_decrese() const
+{
+    return 0;
+}
+
+StrokeNormal *StrokeCircle::makeNormal() const
+{
+    double from, to;
+    point_s tmp;
+    pressure_t press;
+    QVector<point_s> _pointLeft, _pointRigth;
+    auto *_to = new StrokeNormal();
+
+    const auto appendToStroke = [&_to](
+            const QVector<point_s> &point,
+            const pressure_t press) {
+        for (const auto &p : qAsConst(point)) {
+            _to->append(p, press);
+        }
+    };
+
+    press = _data.press;
+    from =  _data.y - WCommonScript::Power(_data.r, 1);
+    to =    _data.y + WCommonScript::Power(_data.r, 1);
+
+    _pointLeft.reserve(to - from);
+    _pointRigth.reserve(to - from);
+
+    // from is the top of the circle
+    W_ASSERT(from <= to);
+
+    for(; from <= to;){
+        const auto _res = WCommonScript::Power(double(from) - _data.y, 2);   // = y^2
+        const double res1 = WCommonScript::Power(_data.r, 2) - _res;         // = x^2
+
+        W_ASSERT(res1 >= 0.);
+
+        const double res2 = qSqrt(res1);                        // = mod(x)
+
+        tmp = point_s(_data.x + res2, from);                   // = x + radius
+        _pointLeft.append(tmp);
+
+        tmp.rx() = _data.x - res2;                               // = x - radius
+        _pointRigth.insert(0, tmp);
+
+        from += 1.;
+    }
+
+    appendToStroke(_pointLeft, press);
+    appendToStroke(_pointRigth, press);
+
+    return _to;
+}
+
+void StrokeCircle::scale(const QPointF &offset)
+{
+    this->_data.x += offset.x();
+    this->_data.y += offset.y();
 }
 
 QRect StrokeCircle::getBiggerPointInStroke() const

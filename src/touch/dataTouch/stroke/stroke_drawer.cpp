@@ -5,34 +5,6 @@
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "touch/dataTouch/stroke/stroke_complex_data.h"
 
-force_inline void stroke_drawer::draw_circle(const Stroke &stroke)
-{
-    constexpr bool not_used debCircle = false;
-    point_s point;
-    QPointF tmp;
-    auto *data = (stroke_complex_circle *)stroke._complex;
-    const auto press = data->_press;
-    double y, x;
-    cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
-
-    point = point_s(data->_x, data->_y);
-
-    point = Page::at_translation(point, _page);
-    tmp = point.toQPointF(prop);
-
-    WDebug(debCircle, "prop: " << prop);
-
-    y = tmp.y();
-    x = tmp.x();
-
-    set_press(_pen, press, prop, _isRubber, this->_c    olor);
-    _painter.setPen(_pen);
-
-    _painter.drawEllipse(QPointF(x, y), data->_r * prop, data->_r * prop);
-
-    WDebug(debCircle, data->_x << data->_y << data->_r);
-}
-
 template <class T, class Z>
 void stroke_drawer::draw_stroke_normal(stroke_drawer_private<T, Z> &data)
 {

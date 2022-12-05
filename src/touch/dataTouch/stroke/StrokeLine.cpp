@@ -105,6 +105,11 @@ void StrokeLine::adjust(double zoom)
     this->_data.press /= zoom;
 }
 
+int StrokeLine::how_much_decrese() const
+{
+    return 0;
+}
+
 void StrokeLine::makeNormalVertical(StrokeNormal *mergeTo, int from, int to) const
 {
     point_s tmp;
@@ -163,6 +168,12 @@ Stroke *StrokeLine::makeNormal() const
 bool StrokeLine::isEmpty() const
 {
     return false;
+}
+
+void StrokeLine::scale(const QPointF &offset)
+{
+    this->_data.pt1 += offset;
+    this->_data.pt2 += offset;
 }
 
 QRect StrokeLine::getBiggerPointInStroke() const
