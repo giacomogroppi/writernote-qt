@@ -5,12 +5,18 @@
 class StrokeCircle final: public Stroke
 {
 private:
-    double _r, _x, _y;
-    pressure_t _press;
+    struct StrokeCircleData{
+        double x, y, r;
+        pressure_t press;
+    } _data;
 
     int load(WZipReaderSingle &reader);
 
     StrokeCircle();
+
+    double distanceFromCenter(const QPointF& point) const;
+    int isInternal(double distance, double precision) const;
+    bool oneSide(double inside, double outside, double prec) const;
 
     static constexpr bool debugCircle = false;
 public:
@@ -65,6 +71,7 @@ public:
     static StrokeCircle *make(const QPointF& pt1, const QPointF& pt2, const class StrokeNormal &s);
     int type() const final;
 
+    friend class StrokeCircleGenerator;
     friend class Stroke;
 };
 

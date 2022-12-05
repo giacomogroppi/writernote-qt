@@ -53,6 +53,9 @@ public:
 
     StrokePre &operator=(const StrokePre &other);
 
+    friend class StrokeLineGenerator;
+    friend class StrokeRectGenerator;
+    friend class StrokeCircleGenerator;
     friend class stroke_drawer;
 };
 

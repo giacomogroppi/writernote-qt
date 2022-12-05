@@ -13,7 +13,7 @@ private:
     static void makeGeneric(class StrokeNormal *from, class StrokeLine *res);
 
 public:
-    static class StrokeLine *make(StrokeNormal *from);
+    static class Stroke *make(const StrokePre *from);
     static double model_near(const class StrokePre &stroke);
 };
 

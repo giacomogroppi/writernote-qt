@@ -3,10 +3,11 @@
 #include "core/WLine.h"
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
+#include "StrokeComplexCommon.h"
 
 StrokeLine::StrokeLine()
+    : Stroke()
 {
-
 }
 
 void StrokeLine::draw(QPainter &painter,
@@ -18,10 +19,10 @@ void StrokeLine::draw(QPainter &painter,
     const auto p = prop == PROP_RESOLUTION ? prop : 1.;
 
     painter.setPen(pen);
-    set_press(pen, this->_press, p, is_rubber, this->getColor(1.));
+    set_press(pen, this->_data.press, p, is_rubber, this->getColor(1.));
 
-    const auto _topLeft     = Page::at_translation(point_s(this->_pt1), page).toQPointF(prop);
-    const auto _bottomRight = Page::at_translation(point_s(this->_pt2), page).toQPointF(prop);
+    const auto _topLeft     = Page::at_translation(point_s(this->_data.pt1), page).toQPointF(prop);
+    const auto _bottomRight = Page::at_translation(point_s(this->_data.pt2), page).toQPointF(prop);
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
@@ -31,7 +32,7 @@ int StrokeLine::is_inside(const WLine &line, int from, int precision, cbool need
 {
     Q_UNUSED(needToDeletePoint);
     W_ASSERT(from == 0);
-    WLine _line(this->_pt1, this->_pt2);
+    WLine _line(this->_data.pt1, this->_data.pt2);
     return WLine::intersect(_line, line, precision);
 }
 
@@ -41,19 +42,19 @@ bool StrokeLine::is_inside(const QRectF &area, double precision) const
     WLine lineOrizBot   (area.bottomLeft(), area.bottomRight());
     WLine lineVertLeft  (area.topLeft(),    area.bottomLeft());
     WLine lineVertRig   (area.topRight(),   area.bottomRight());
-    WLine _this         (_pt1, _pt2);
+    WLine _this         (_data.pt1, _data.pt2);
 
     // if the square passed to the function contains one of the two points
-    if(area.contains(_pt1)){
-        WDebug(debugLine, "Contains first line" << _pt1);
+    if(area.contains(_data.pt1)){
+        WDebug(debugLine, "Contains first line" << _data.pt1);
         return true;
     }
-    if(area.contains(_pt2)){
-        WDebug(debugLine, "contains second line" << _pt2);
+    if(area.contains(_data.pt2)){
+        WDebug(debugLine, "contains second line" << _data.pt2);
         return true;
     }
 
-    WDebug(debugLine, "intersect topLeft" << _pt1 << "bottomr" << _pt2 << "(rect)" << area);
+    WDebug(debugLine, "intersect topLeft" << _data.pt1 << "bottomr" << _data.pt2 << "(rect)" << area);
 
     if(WLine::intersect(_this, lineOrizTop, precision)){
         WDebug(debugLine, "intersect 1");
@@ -81,15 +82,15 @@ bool StrokeLine::is_inside(const QRectF &area, double precision) const
 void StrokeLine::append(const point_s &point, pressure_t pressure)
 {
     using namespace WCommonScript;
-    const auto dist1 = distance_not_square(_pt1, point);
-    const auto dist2 = distance_not_square(_pt2, point);
+    const auto dist1 = distance_not_square(_data.pt1, point);
+    const auto dist2 = distance_not_square(_data.pt2, point);
 
     Q_UNUSED(pressure);
 
     if(dist1 > dist2){
-        _pt2 = point;
+        _data.pt2 = point;
     }else{
-        _pt1 = point;
+        _data.pt1 = point;
     }
 }
 
@@ -99,22 +100,22 @@ void StrokeLine::decreasePrecision()
 
 void StrokeLine::adjust(double zoom)
 {
-    this->_pt1 /= zoom;
-    this->_pt2 /= zoom;
-    this->_press /= zoom;
+    this->_data.pt1 /= zoom;
+    this->_data.pt2 /= zoom;
+    this->_data.press /= zoom;
 }
 
 void StrokeLine::makeNormalVertical(StrokeNormal *mergeTo, int from, int to) const
 {
     point_s tmp;
-    W_ASSERT(_pt2.x() == _pt1.x());
+    W_ASSERT(_data.pt2.x() == _data.pt1.x());
     W_ASSERT(from <= to);
 
-    tmp.rx() = _pt1.x();
+    tmp.rx() = _data.pt1.x();
 
     for(; from <= to; from ++){
         tmp.ry() = from;
-        mergeTo->append(tmp, _press);
+        mergeTo->append(tmp, _data.press);
     }
 }
 
@@ -125,16 +126,16 @@ void StrokeLine::makeNormalGeneric(StrokeNormal *mergeTo, int from, int to) cons
 
     W_ASSERT(from <= to);
 
-    m =     (_pt1.y() - _pt2.y()) /
-            (_pt1.x() - _pt2.x());
+    m =     (_data.pt1.y() - _data.pt2.y()) /
+            (_data.pt1.x() - _data.pt2.x());
 
-    p = _pt1.y() - _pt1.x() * m;
+    p = _data.pt1.y() - _data.pt1.x() * m;
 
     for(; from <= to; from ++){
         const double x = (double(from) - p) / m;
         point.rx() = x;
         point.ry() = (double) from;
-        mergeTo->append(point, _press);
+        mergeTo->append(point, _data.press);
     }
 }
 
@@ -145,12 +146,12 @@ Stroke *StrokeLine::makeNormal() const
 
     W_ASSERT(res->isEmpty());
 
-    from    = (int) _pt1.y();
-    to      = (int) _pt2.y();
+    from    = (int) _data.pt1.y();
+    to      = (int) _data.pt2.y();
 
     W_ASSERT(from <= to);
 
-    if(_pt2.x() == _pt1.x()){
+    if(_data.pt2.x() == _data.pt1.x()){
         this->makeNormalVertical(res, from, to);
     }else{
         this->makeNormalGeneric(res, from, to);
@@ -166,7 +167,7 @@ bool StrokeLine::isEmpty() const
 
 QRect StrokeLine::getBiggerPointInStroke() const
 {
-    return datastruct_rect(_pt1, _pt2).toRect();
+    return datastruct_rect(_data.pt1, _data.pt2).toRect();
 }
 
 int StrokeLine::save(WZipWriterSingle &writer) const
@@ -178,18 +179,28 @@ int StrokeLine::save(WZipWriterSingle &writer) const
 
     static_assert(sizeof(QPointF) == sizeof(double) * 2);
 
-    struct{
-        QPointF pt1, pt2;
-        pressure_t press;
-    } tmp_load = {
-        .pt1    = this->_pt1,
-        .pt2    = this->_pt2,
-        .press  = this->_press
-    };
+    writer.write_object(this->_data);
 
-    writer.write_object(tmp_load);
+    static_assert(sizeof(this->_data) == (sizeof(QPointF) * 2 + sizeof(float) + 4));
 
-    static_assert(sizeof(tmp_load) == (sizeof(QPointF) * 2 + sizeof(float) + 4));
+    return OK;
+}
+
+int StrokeLine::load(WZipReaderSingle &reader)
+{
+    StrokeComplexCommon::current_ver ver;
+
+    if (reader.read_object(ver) < 0) {
+        return ERROR;
+    }
+
+    if(ver == 1) {
+        if (reader.read_object(this->_data)) {
+            return ERROR;
+        }
+    } else {
+        return ERROR_VERSION_NEW;
+    }
 
     return OK;
 }
@@ -204,9 +215,9 @@ bool StrokeLine::operator==(const Stroke &other) const
 
     const auto *s = dynamic_cast<const StrokeLine *>(&other);
 
-    return  this->_pt1 == s->_pt1 and
-            this->_pt2 == s->_pt2 and
-            this->_press == s->_press;
+    return  this->_data.pt1 == s->_data.pt1 and
+            this->_data.pt2 == s->_data.pt2 and
+            this->_data.press == s->_data.press;
 }
 
 bool StrokeLine::operator!=(const Stroke &other) const
@@ -216,10 +227,11 @@ bool StrokeLine::operator!=(const Stroke &other) const
 
 size_t StrokeLine::getSizeInFile() const
 {
-    static_assert(sizeof(current_ver) == sizeof(uchar));
+    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
+
     return
-        sizeof(current_ver) +
-        sizeof(this->_pt1)  +
-        sizeof(this->_pt2)  +
-        sizeof(this->_press);
+        sizeof(StrokeComplexCommon::current_ver) +
+        sizeof(this->_data.pt1)  +
+        sizeof(this->_data.pt2)  +
+        sizeof(this->_data.press);
 }

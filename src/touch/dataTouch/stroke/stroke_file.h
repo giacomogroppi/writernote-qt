@@ -14,9 +14,5 @@ class stroke_file
 
     static int load_ver_2(class Stroke &_stroke, WZipReaderSingle &reader);
 public:
-
-    static size_t get_size_in_file(const Stroke &_stroke);
-
-    static int save(const class Stroke &_stroke, WZipWriterSingle &file);
 };
 

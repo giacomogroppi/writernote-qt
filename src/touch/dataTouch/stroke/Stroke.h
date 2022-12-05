@@ -15,8 +15,6 @@
 #include "core/WZipReaderSingle.h"
 #include "core/WImage.h"
 
-constexpr uchar current_ver = 0;
-
 struct metadata_stroke{
     int posizione_audio;
     struct colore_s color;
@@ -140,8 +138,6 @@ public:
 
     /** all stroke derivated class needs to implements this method to recognize yourself */
     [[nodiscard]] virtual int type() const = 0;
-
-    static constexpr double errorModel = 5000;
 
 protected:
     Stroke &operator=(const Stroke &other);

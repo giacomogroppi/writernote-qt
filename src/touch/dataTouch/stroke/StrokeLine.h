@@ -5,8 +5,10 @@
 class StrokeLine final : public Stroke
 {
 private:
-    QPointF _pt1, _pt2;
-    pressure_t _press;
+    struct StrokeLineData{
+        QPointF pt1, pt2;
+        pressure_t press;
+    } _data;
 
     void makeNormalVertical(class StrokeNormal *mergeTo, int from, int to) const;
     void makeNormalGeneric(class StrokeNormal *mergeTo, int from, int to) const;

@@ -2,6 +2,7 @@
 #include "StrokePre.h"
 #include "StrokeLine.h"
 #include "StrokeNormal.h"
+#include "StrokeComplexCommon.h"
 
 static struct{
     double m, q;
@@ -46,9 +47,9 @@ void StrokeLineGenerator::makeVertical(StrokeNormal *from, StrokeLine *res)
 
     const double x = TL.x();
 
-    res->_pt1 = QPointF(x, TL.y());
-    res->_pt2 = QPointF(x, BR.y());
-    res->_press = press;
+    res->_data.pt1 = QPointF(x, TL.y());
+    res->_data.pt2 = QPointF(x, BR.y());
+    res->_data.press = press;
 }
 
 void StrokeLineGenerator::makeGeneric(StrokeNormal *from, StrokeLine *res)
@@ -56,17 +57,17 @@ void StrokeLineGenerator::makeGeneric(StrokeNormal *from, StrokeLine *res)
     using namespace WCommonScript;
 
     const auto pressure = from->getPressure();
-    res->_pt1 = from->_point.first();
-    res->_pt2 = from->_point.last();
+    res->_data.pt1 = from->_point.first();
+    res->_data.pt2 = from->_point.last();
 
-    if (res->_pt1.y() > res->_pt2.y()) {
-        swap(res->_pt1, res->_pt2);
+    if (res->_data.pt1.y() > res->_data.pt2.y()) {
+        swap(res->_data.pt1, res->_data.pt2);
     }
 
-    res->_press = pressure;
+    res->_data.press = pressure;
 }
 
-StrokeLine *StrokeLineGenerator::make(StrokeNormal *from)
+Stroke *StrokeLineGenerator::make(const StrokePre *from)
 {
     auto *tmp = new StrokeLine;
 
@@ -108,7 +109,7 @@ double StrokeLineGenerator::model_near(const StrokePre &stroke)
 
     /** list empty */
     if (unlikely(b == e)) {
-        return Stroke::errorModel;
+        return StrokeComplexCommon::error;
     }
 
     //WDebug(debug, __FUNCTION__ << area.topLeft() << area.bottomRight());

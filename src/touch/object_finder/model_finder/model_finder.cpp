@@ -1,6 +1,9 @@
 #include "model_finder.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "touch/object_finder/model/model.h"
+#include "touch/dataTouch/stroke/StrokeCircleGenerator.h"
+#include "touch/dataTouch/stroke/StrokeLineGenerator.h"
+#include "touch/dataTouch/stroke/StrokeRectGenerator.h"
 
 #define THREAD_FINDER 3
 
@@ -11,21 +14,21 @@ static struct{
     double is[THREAD_FINDER];
 } finder;
 
-double (*functions[])(const StrokePre *) = {
-    &model_line,
-    &model_rect,
-    &model_circle
+double (*functions[])(const StrokePre &) = {
+    &StrokeLineGenerator    ::model_near,
+    &StrokeRectGenerator    ::model_near,
+    &StrokeCircleGenerator  ::model_near
 };
 
-void (*function_create[])(StrokePre *) = {
-    &model_line_create,
-    &model_rect_create,
-    &model_circle_create
+Stroke* (*function_create[])(const StrokePre *) = {
+    &StrokeLineGenerator::make,
+    &StrokeRectGenerator::make,
+    &StrokeCircleGenerator::make
 };
 
 static struct{
     pthread_t _thread[THREAD_FINDER];
-    StrokePre *_stroke;
+    const StrokePre *_stroke;
 } ctrl;
 
 void __init__ init_finder()
@@ -44,7 +47,7 @@ static void *model_finder(void *_index)
 
     //WDebug(debug_model, __FUNCTION__ << index);
 
-    finder.is[index] = function((const StrokePre *)ctrl._stroke);
+    finder.is[index] = function(*ctrl._stroke);
 
     return nullptr;
 }

@@ -28,8 +28,6 @@ Stroke *StrokePre::merge()
     W_ASSERT(_point.length() == _pressure.length());
     W_ASSERT(this->_stroke != nullptr);
 
-    int i;
-
 #ifdef DEBUGINFO
     already_merge = true;
 #endif // DEBUGINFO

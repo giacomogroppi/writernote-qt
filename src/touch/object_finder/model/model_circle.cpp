@@ -13,29 +13,13 @@ static struct {
 } circle_data;
 constexpr not_used bool debug = false;
 
-void model_circle_create(StrokePre *stroke)
-{
-    const auto press = stroke->getPressure();
-
-    W_ASSERT(stroke);
-    circle_data._press = press;
-
-    stroke->reset();
-    auto *data = (stroke_complex_circle *)WMalloc(sizeof(stroke_complex_circle));
-    memcpy(data, &circle_data, sizeof(circle_data));
-    stroke->set_complex(
-                            StrokeProp::COMPLEX_CIRCLE,
-                            data
-                        );
-}
-
 static void model_circle_precision(const QPointF &point, double &precision)
 {
     double res;
     const auto x = circle_data._x;
     const auto y = circle_data._y;
 
-    /*
+    /**
      * X^2 + Y^2 - R = res
      */
 
@@ -83,46 +67,6 @@ double model_circle(const StrokePre *stroke)
     WDebug(debug, qstr("Cricle precision: %1").arg(precision));
 
     return precision;
-}
-
-void stroke_complex_circle_append(Stroke *stroke, const QPointF& point)
-{
-    auto *data = (stroke_complex_circle *)stroke->get_complex_data();
-    W_ASSERT(stroke->is_circle());
-
-    data->_r = WCommonScript::distance(QPointF(data->_x, data->_y), point);
-}
-
-static inline double distance_from_center(
-        const stroke_complex_circle *data,
-        const QPointF& point)
-{
-    using namespace WCommonScript;
-    return qSqrt(
-        Power(data->_x - point.x(), 2) +
-        Power(data->_y - point.y(), 2)
-    );
-}
-
-static inline int is_internal(
-        cdouble distance,
-        cdouble precision,
-        const stroke_complex_circle *data)
-{
-    const auto raggio = qSqrt(data->_r);
-    const auto real_dist1 = qSqrt(distance);
-    return real_dist1 <= raggio + precision;
-}
-
-// return true if the first distance is inside the circle,
-// and the second not
-static inline bool one_inside(
-        cdouble                     _inside,
-        cdouble                     _outside,
-        const stroke_complex_circle *_data,
-        cdouble                     prec)
-{
-    return is_internal(_inside, prec, _data) && !is_internal(_outside, prec, _data);
 }
 
 bool stroke_complex_is_inside_circle(const Stroke *stroke, const WLine &line, cdouble precision)
