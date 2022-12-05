@@ -42,7 +42,16 @@ public:
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation) final;
 
-    int how_much_decrese() const;
+    int how_much_decrese() const final;
+
+    /**
+     * @requires length() > to
+     * @ensures \old(length()) == length() - (indexTo - indexFrom + 1) &&
+     *          \forall(int i; 0 <= i < from; \old(point.at(i)) == point.at(i)) &&
+     *          \forall(int i; indexFrom <= i <= length();
+     *              \old(point.at(indexTo - indexFrom + 1)) == point.at(i))
+    */
+    void removeAt(int indexFrom, int indexTo);
 
     /**
      * This function will remove the point belonging [index, length())

@@ -80,32 +80,30 @@ void RubberMethod::initRubber(const QPointF &point)
 static force_inline void draw_null(Page *_page, const QVector<int> &point,
                                    const QVector<int> &stroke, bool is_left)
 {
-    int i, len;
-
-    len = point.length();
     Q_ASSERT(point.size() == stroke.size());
 
-    for(i = 0; i < len; i++){
-        cint indexPoint  = point.at(i);
-        cint indexStroke = stroke.at(i);
-
+    WCommonScript::for_each(point, stroke, [&_page, is_left](
+                                const int indexPoint,
+                                const int indexStroke)
+    {
         auto &stroke = _page->atStrokeMod(indexStroke);
-        const auto length = stroke.stroke();
+
+        W_ASSERT(stroke.type() == Stroke::COMPLEX_NORMAL);
 
         _page->lock();
-        _page->drawForceColorStroke(stroke, -1, COLOR_NULL, NULL);
+        _page->drawForceColorStroke(stroke, -1, COLOR_NULL, nullptr);
         _page->unlock();
 
-        if(is_left){
-            stroke.removeAt(0, indexPoint);
-        }else{
-            stroke.removeAt(indexPoint, length - 1);
+        if (is_left) {
+            ((StrokeNormal*) &stroke)->removeAt(0, indexPoint);
+        } else {
+            ((StrokeNormal*) &stroke)->removeAt(indexPoint, -1);
         }
 
         _page->lock();
         _page->drawStroke(stroke, -1);
         _page->unlock();
-    }
+    });
 }
 
 void actionRubberSinglePartial(DataPrivateMuThread *data)

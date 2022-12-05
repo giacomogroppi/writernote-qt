@@ -286,6 +286,15 @@ int StrokeNormal::how_much_decrese() const
     return this->length();
 }
 
+void StrokeNormal::removeAt(int indexFrom, int indexTo)
+{
+    if(indexTo == -1) {
+        _point.remove(indexFrom, length() - indexFrom);
+    } else {
+        _point.remove(indexFrom, indexTo - indexFrom + 1);
+    }
+}
+
 Stroke *StrokeNormal::clone() const
 {
     auto *tmp = new StrokeNormal(*this);

@@ -68,8 +68,15 @@ private:
 
     static Stroke *load_ver_1(WZipReaderSingle &reader, int *ok);
     static Stroke *load_ver_2(WZipReaderSingle &reader, int *ok);
-public:
+public:    
     virtual ~Stroke() = default;
+
+    enum type_stroke_private: int{
+            COMPLEX_NORMAL = 0,
+            COMPLEX_CIRCLE = 1,
+            COMPLEX_RECT = 2,
+            COMPLEX_LINE = 3
+    };
 
     virtual void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const = 0;
     virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
@@ -154,13 +161,6 @@ protected:
     [[nodiscard]] bool needToUpdateBiggerData() const;
 
     virtual void preappend(int l) = 0;
-
-    enum type_stroke_private: int{
-            COMPLEX_NORMAL = 0,
-            COMPLEX_CIRCLE = 1,
-            COMPLEX_RECT = 2,
-            COMPLEX_LINE = 3
-    };
 
     friend class StrokePre;
 };
