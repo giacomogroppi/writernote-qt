@@ -99,9 +99,8 @@ Stroke* Stroke::load(WZipReaderSingle &reader, int version_stroke, int *ok)
 
 void Stroke::reset_flag()
 {
-    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE;
+    _flag = UPDATE_BIGGER_DATA;
     W_ASSERT(this->needToUpdateBiggerData() == true);
-    W_ASSERT(this->needToUpdatePressure() == true);
 }
 
 
@@ -131,9 +130,6 @@ void set_press(
                             cbool is_rubber,
                             const QColor &color)
 {
-    constexpr double deltaPress = 2.;
-    constexpr double deltaColorNull = 1.3;
-
     pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
     if (unlikely(is_rubber)) {
         const auto _press = pen.widthF() * deltaColorNull;

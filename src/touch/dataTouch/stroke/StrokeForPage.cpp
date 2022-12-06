@@ -1,6 +1,7 @@
 #include "StrokeForPage.h"
 #include "touch/tabletcanvas.h"
 #include "Stroke.h"
+#include "StrokeNormal.h"
 
 StrokeForPage::StrokeForPage()
 {
@@ -55,4 +56,20 @@ size_t StrokeForPage::getSizeInFile() const
 void StrokeForPage::scale(const QPointF &delta)
 {
     this->_data->scale(delta);
+}
+
+void StrokeForPage::append(const point_s &point, pressure_t pressure)
+{
+    _data->append(point, pressure);
+}
+
+void StrokeForPage::reset()
+{
+    delete this->_data;
+    this->_data = new StrokeNormal;
+}
+
+void StrokeForPage::setMetadata(const colore_s &colore)
+{
+    _data->setMetadata(-1, colore);
 }

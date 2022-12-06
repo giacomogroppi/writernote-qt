@@ -29,6 +29,11 @@ int StrokeNormal::save(WZipWriterSingle &file) const
     return OK;
 }
 
+Stroke *StrokeNormal::makeNormal() const
+{
+    return nullptr;
+}
+
 int StrokeNormal::load_ver_1(WZipReaderSingle &reader, int len_point)
 {
     int i;
@@ -85,6 +90,13 @@ int StrokeNormal::load_ver_2(WZipReaderSingle &reader)
     return OK;
 }
 
+void StrokeNormal::modify()
+{
+    this->_flag = flag_state::UPDATE_PRESSURE;
+
+    W_ASSERT(this->needToUpdatePressure());
+}
+
 int StrokeNormal::load(WZipReaderSingle &reader, int version, int len_point)
 {
     switch (version) {
@@ -108,7 +120,17 @@ void StrokeNormal::append(const point_s &point, pressure_t pressure)
 
 void StrokeNormal::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const
 {
-    W_ASSERT(0);
+    StrokeNormal::drawData
+            <   QList<point_s>::ConstIterator,
+                QList<pressure_t>::ConstIterator> data = {
+        .begin_point = this->_point.constBegin(),
+        .end_point   = this->_point.constEnd(),
+        .begin_press = this->_pressure.constBegin(),
+        .end_press   = this->_pressure.constEnd(),
+        .press_null  = this->constantPressure()
+    };
+
+    StrokeNormal::draw(painter, is_rubber, page, pen, prop, this->getColor(1.), data);
 }
 
 int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const

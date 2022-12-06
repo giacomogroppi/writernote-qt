@@ -15,7 +15,6 @@
 #include "core/WImage.h"
 #include "touch/dataTouch/stroke/StrokeForPage.h"
 
-
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
 #define TEMP_COLOR QColor::fromRgb(105, 105, 105, 255)
@@ -24,8 +23,6 @@
 #define TEMP_SQUARE 40
 
 #define __is_ok_count() W_ASSERT(this->_count > 0);
-
-#define SetRenderPainter(painter) painter.setRenderHint(QPainter::Antialiasing, true);
 
 #define Define_PAINTER_p(painter, ___img)               \
     QPainter painter;                                   \
@@ -111,7 +108,7 @@ public:
     const Stroke & last() const;
     Stroke &lastMod();
 
-    /*
+    /**
      *  these 3 functions do not automatically launch
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
@@ -161,19 +158,20 @@ public:
     void setCount(int count);
 
     static void copy(const Page &src, Page &dest);
-    Q_CONSTEXPR static double getProportion();
-    Q_CONSTEXPR static double getHeight();
-    Q_CONSTEXPR static double getWidth();
-    Q_CONSTEXPR static QSize getResolutionSize();
+    constexpr static double getProportion();
+    constexpr static double getHeight();
+    constexpr static double getWidth();
+    constexpr static QSize getResolutionSize();
 
-    Q_CONSTEXPR static double getResolutionWidth();
-    Q_CONSTEXPR static double getResolutionHeigth();
+    constexpr static double getResolutionWidth();
+    constexpr static double getResolutionHeigth();
 
 #define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
     void drawToImage(const QVector<int> &index, WImage &img, cint flag) const;
 
     Page &operator=(const Page &other);
 
+    friend class StrokeNormal;
     friend class StrokeRect;
     friend class StrokeCircle;
     friend class StrokeLine;
@@ -275,7 +273,6 @@ Q_CONSTEXPR force_inline QSize Page::getResolutionSize()
     return QSize(Page::getResolutionWidth(), Page::getResolutionHeigth());
 }
 
-#define PROP_RESOLUTION (2.)
 Q_CONSTEXPR force_inline double Page::getResolutionWidth()
 {
     return getWidth() * PROP_RESOLUTION;
@@ -359,18 +356,6 @@ static force_inline void __at_draw_private(const point_s &from, point_s &to, con
 
     to *= zoom;
     to += translation;
-}
-
-inline void Page::at_draw_page(
-        cint            IndexPoint,
-        const QPointF   &translation,
-        point_s         &point,
-        const double    zoom) const
-{
-    const auto &stroke = get_stroke_page();
-    const point_s &p = stroke._data->_point.at(IndexPoint);
-
-    __at_draw_private(p, point, zoom, translation);
 }
 
 force_inline int Page::lengthStroke() const

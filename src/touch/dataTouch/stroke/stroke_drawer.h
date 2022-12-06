@@ -49,7 +49,6 @@ private:
     stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber);
 public:
     static void draw_stroke(QPainter &painter, const StrokePre &stroke, QPen &pen, cdouble prop);
-    static void draw_stroke(QPainter &painter, const Stroke &stroke, cint page, QPen &pen, cbool is_rubber, cdouble prop);
 };
 
 inline stroke_drawer::stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber) :

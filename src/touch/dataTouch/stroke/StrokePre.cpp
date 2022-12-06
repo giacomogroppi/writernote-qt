@@ -166,11 +166,17 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
         if (unlikely(_point.length() == 1)) {
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
-            painter.end();
         } else {
-            stroke_drawer::draw_stroke(painter,
-                                       *this,
-                                       pen, prop);
+            StrokeNormal::drawData<WList<point_s>::const_iterator,
+                    WList<pressure_t>::const_iterator> data = {
+                .begin_point = this->get_last_point(),
+                .end_point   = this->_point.constEnd(),
+                .begin_press = this->get_last_press(),
+                .end_press   = this->_pressure.constEnd(),
+                .press_null  = false
+            };
+
+            StrokeNormal::draw(painter, false, 0, pen, prop, this->_stroke->getColor(1.), data);
 
             this->_last_draw_press ++;
             this->_last_draw_point ++;

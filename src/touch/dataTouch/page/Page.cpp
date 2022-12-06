@@ -10,6 +10,7 @@
 #include <QPaintDevice>
 #include "page_file.h"
 #include "core/WZipWriterSingle.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 #define PAGE_THREAD_MAX 16
 
@@ -707,4 +708,16 @@ int Page::load(WZipReaderSingle &reader, int ver_stroke)
 void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
 {
     drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), nullptr);
+}
+
+void Page::at_draw_page(
+        cint            IndexPoint,
+        const QPointF   &translation,
+        point_s         &point,
+        const double    zoom) const
+{
+    const auto &stroke = get_stroke_page();
+    const point_s &p = stroke._data->_point.at(IndexPoint);
+
+    __at_draw_private(p, point, zoom, translation);
 }

@@ -15,6 +15,11 @@
 #include "core/WZipReaderSingle.h"
 #include "core/WImage.h"
 
+#define PROP_RESOLUTION (2.)
+#define SetRenderPainter(painter) painter.setRenderHint(QPainter::Antialiasing, true);
+constexpr double deltaPress = 2.;
+constexpr double deltaColorNull = 1.3;
+
 struct metadata_stroke{
     int posizione_audio;
     struct colore_s color;
@@ -30,17 +35,6 @@ struct metadata_stroke{
     }
 };
 
-inline bool metadata_stroke::operator!=(const metadata_stroke &other) const
-{
-    return !(*this == other);
-}
-
-inline bool metadata_stroke::operator==(const metadata_stroke &other) const
-{
-    return  this->posizione_audio == other.posizione_audio and
-            this->color == other.color;
-}
-
 class Stroke
 {
 private:
@@ -49,22 +43,16 @@ private:
     QRect _biggerData;
 
     enum flag_status : unsigned char{
-        UPDATE_BIGGER_DATA = BIT(1),
-        UPDATE_PRESSURE = BIT(2)
+        UPDATE_BIGGER_DATA = BIT(1)
     };
 
     unsigned char _flag;
-
-    [[nodiscard]] bool isPressureVal() const;
-    [[nodiscard]] bool needToUpdatePressure() const;
 
     void setFlag(unsigned char type, bool value) const;
 
     static_assert(sizeof(_flag) * 8 >= 4 );
 
-    void updateFlagPressure() const;
-
-    void reset_flag();
+    virtual void reset_flag();
 
     static Stroke *load_ver_1(WZipReaderSingle &reader, int *ok);
     static Stroke *load_ver_2(WZipReaderSingle &reader, int *ok);
@@ -156,7 +144,7 @@ protected:
 
     Stroke();
     Stroke(const metadata_stroke& met);
-    void modify();
+    virtual void modify();
     void setBiggerData(const QRect &newRect) const;
     [[nodiscard]] bool needToUpdateBiggerData() const;
 
@@ -189,20 +177,14 @@ inline void Stroke::setBiggerData(const QRect &newRect) const
 
 inline void Stroke::modify()
 {
-    _flag = UPDATE_BIGGER_DATA | UPDATE_PRESSURE;
+    _flag = UPDATE_BIGGER_DATA;
 
     W_ASSERT(this->needToUpdateBiggerData());
-    W_ASSERT(this->needToUpdatePressure());
 }
 
 inline bool Stroke::needToUpdateBiggerData() const
 {
     return _flag & UPDATE_BIGGER_DATA;
-}
-
-inline bool Stroke::needToUpdatePressure() const
-{
-    return _flag & UPDATE_PRESSURE;
 }
 
 inline void Stroke::setFlag(unsigned char type, bool value) const
@@ -215,3 +197,13 @@ inline void Stroke::setFlag(unsigned char type, bool value) const
     }
 }
 
+inline bool metadata_stroke::operator!=(const metadata_stroke &other) const
+{
+    return !(*this == other);
+}
+
+inline bool metadata_stroke::operator==(const metadata_stroke &other) const
+{
+    return  this->posizione_audio == other.posizione_audio and
+            this->color == other.color;
+}

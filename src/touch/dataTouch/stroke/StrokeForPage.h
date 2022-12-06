@@ -1,15 +1,17 @@
 #pragma once
 
+#include "core/WZipReaderSingle.h"
+#include "core/WZipWriterSingle.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "touch/dataTouch/point.h"
 #include <QPainter>
 #include <QPen>
 #include "core/WList.h"
-#include "StrokeNormal.h"
+
 
 class StrokeForPage {
 private:
-    StrokeNormal *_data;
+    class StrokeNormal *_data;
 
 #ifdef ALL_VERSION
     void append(const StrokeNormal &stroke);
@@ -32,20 +34,3 @@ public:
     friend class page_file;
     friend class Page;
 };
-
-inline void StrokeForPage::append(const point_s &point, pressure_t pressure)
-{
-    _data->append(point, pressure);
-}
-
-inline void StrokeForPage::reset()
-{
-    delete this->_data;
-    this->_data = new StrokeNormal;
-}
-
-inline void StrokeForPage::setMetadata(const colore_s &colore)
-{
-    _data->setMetadata(-1, colore);
-}
-
