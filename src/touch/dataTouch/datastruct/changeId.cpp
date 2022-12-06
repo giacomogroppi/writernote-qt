@@ -1,12 +1,10 @@
 #include "datastruct.h"
 #include "utils/WCommonScript.h"
-#include "core/WMutexLocker.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 // this function is usable only in this .o file
 force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &page, cbool threadSafe)
 {
-    int lenPointInStroke;
-
     W_ASSERT(stroke.makeNormal() == nullptr);
 
     auto *strokeNormal = dynamic_cast<StrokeNormal *>(&stroke);

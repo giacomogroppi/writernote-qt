@@ -153,7 +153,7 @@ void Page::drawNewPage(n_style __style)
 }
 
 void Page::swap(
-        QList<Stroke *>       &list,
+        QList<Stroke *>     &list,
         const QVector<int>  &pos,
         int                 flag)
 {

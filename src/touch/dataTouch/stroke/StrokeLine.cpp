@@ -4,6 +4,7 @@
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "StrokeComplexCommon.h"
+#include "StrokeNormal.h"
 
 StrokeLine::StrokeLine()
     : Stroke()

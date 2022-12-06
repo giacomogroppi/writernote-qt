@@ -193,11 +193,11 @@ void square::mergeImg(
 }
 
 static force_inline void
-preappend(QList<QList<Stroke>> & list, int num)
+preappend(QList<QList<Stroke *>> & list, int num)
 {
     while(num > 0){
         num --;
-        list.append(QList<Stroke>());
+        list.append(QList<Stroke *>());
     }
 }
 
@@ -217,7 +217,14 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
 
     this->initImg();
 
-    preappend(_stroke, len);
+    auto preappend = [&, len]() {
+        int i;
+        for (i = 0; i < len; i++) {
+            _stroke.append(QList<Stroke* > ());
+        }
+    }
+
+    //preappend(_stroke, len);
 
     for(count = 0; count < len; count ++){
         const QVector<int> & ref = index.at(count);

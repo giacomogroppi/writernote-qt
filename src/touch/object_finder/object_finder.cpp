@@ -25,7 +25,7 @@ void object_finder::endTimer()
 {
     auto &stroke = __tmp;
 
-    if (likely(stroke.is_normal())){
+    if (not stroke.isEmpty()) {
         WDebug(debug, "call");
 
         if (model::find(stroke)){

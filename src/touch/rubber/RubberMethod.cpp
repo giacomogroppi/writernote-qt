@@ -2,6 +2,7 @@
 #include "touch/tabletcanvas.h"
 #include "touch/multi_thread_data.h"
 #include "touch/rubber/rubber_ui.h"
+#include "touch/dataTouch/stroke/StrokeNormal.h"
 
 constexpr bool rubber_debug = false;
 
