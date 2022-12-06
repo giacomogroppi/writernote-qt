@@ -5,7 +5,10 @@
 class StrokeRect final: public Stroke
 {
 private:
-    QRectF _rect;
+    struct StrokeRectData{
+        QRectF rect;
+        pressure_t press;
+    } _data;
 
     int load(WZipReaderSingle &reader);
 

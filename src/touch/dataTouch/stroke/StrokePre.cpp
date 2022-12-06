@@ -2,6 +2,7 @@
 #include "core/core.h"
 #include "touch/dataTouch/stroke/stroke_drawer.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
+#include "touch/dataTouch/page/Page.h"
 
 StrokePre::StrokePre() noexcept :
     _img(1),
@@ -104,14 +105,16 @@ pressure_t StrokePre::getPressure() const
 
 void StrokePre::reset_img()
 {
-    auto &img = this->_img;
-    img = WImage();
+    _img = WImage();
 }
 
 void StrokePre::draw(QPainter &painter, QPen &pen, double prop)
 {
     WDebug(StrokePreDebug, "Pointer" << this);
+
     if (_stroke->isEmpty()) {
+        W_ASSERT(_stroke->type() == Stroke::COMPLEX_NORMAL);
+
         const auto target = _img.rect();
 
         W_ASSERT(_img.isNull() == false);
@@ -145,7 +148,7 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 
 void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop)
 {
-    const auto normal = not _stroke->isEmpty();
+    const auto normal = (_stroke->type() == Stroke::COMPLEX_NORMAL);
 
     if (normal) {
         QPainter painter;
@@ -153,28 +156,26 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
         painter.begin(&this->_img);
 
         W_ASSERT(this->_img.isNull() == false);
+
         _point.append(point);
         _pressure.append(press);
 
         core::painter_set_antialiasing(painter);
         core::painter_set_source_over(painter);
 
-        if(unlikely(_point.length() == 1)){
+        if (unlikely(_point.length() == 1)) {
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
-            goto out;
+            painter.end();
+        } else {
+            stroke_drawer::draw_stroke(painter,
+                                       *this,
+                                       pen, prop);
+
+            this->_last_draw_press ++;
+            this->_last_draw_point ++;
         }
 
-        stroke_drawer::draw_stroke(painter,
-                                   *this,
-                                   pen, prop);
-
-
-        this->_last_draw_press ++;
-        this->_last_draw_point ++;
-
-
-out:
         painter.end();
 
     } else {

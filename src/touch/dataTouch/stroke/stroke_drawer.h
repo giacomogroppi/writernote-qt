@@ -46,10 +46,6 @@ private:
     template <class T, class Z>
     void draw_stroke_normal(stroke_drawer_private<T, Z> &data);
 
-    // complex stroke
-    void draw_rect   (const Stroke &stroke);
-    void draw_line   (const Stroke &stroke);
-
     stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber);
 public:
     static void draw_stroke(QPainter &painter, const StrokePre &stroke, QPen &pen, cdouble prop);

@@ -24,6 +24,11 @@ private:
     [[nodiscard]] WList<pressure_t>::const_iterator get_last_press() const;
     [[nodiscard]] WList<point_s>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
+
+    /**
+     * @requires _stroke->type() == Stroke::COMPLEX_NORMAL
+    */
+    void draw(QPainter &painter) const;
 public:
     StrokePre() noexcept;
     ~StrokePre();
