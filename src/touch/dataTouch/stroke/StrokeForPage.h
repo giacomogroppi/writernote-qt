@@ -28,6 +28,10 @@ public:
 
     size_t getSizeInFile() const;
 
+    void draw(QPainter &painter, double zoom, double delta,
+              QPen &pen, const QPointF &pointFirstPage,
+              const class Page &page) const;
+
     int save(WZipWriterSingle& writer) const;
     void scale(const QPointF& delta);
     void reset();

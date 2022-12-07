@@ -121,6 +121,7 @@ protected:
     friend class page_file;
 #endif // DEBUGINFO
 
+    friend void actionRubberSinglePartial(DataPrivateMuThread *data);
     friend class StrokeCircleGenerator;
     friend class StrokeLineGenerator;
     friend class Stroke;

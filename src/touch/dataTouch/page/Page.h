@@ -93,6 +93,7 @@ public:
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
     void swap(QList<Stroke *> & stroke, const QVector<int> & pos, int flag);
     void swap(QList<Stroke *> & stroke, int from, int to);
+    Stroke *swap(int index, Stroke *newData);
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(cbool vis) const;

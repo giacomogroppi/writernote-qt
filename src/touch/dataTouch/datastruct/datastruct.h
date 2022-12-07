@@ -65,6 +65,11 @@ public:
     void triggerIfNone(int m_pos_ris);
     void triggerViewIfVisible(int m_pos_ris);
 
+    QList<Page>::ConstIterator constBegin()   const { return this->_page.constBegin(); }
+    QList<Page>::ConstIterator constEnd()     const { return this->_page.constEnd(); }
+    QList<Page>::iterator begin()              { return this->_page.begin(); }
+    QList<Page>::iterator end()                { return this->_page.end(); }
+
     void changeZoom(double zoom, class TabletCanvas *canvas);
 
     void drawIfInside(const QRect &area);

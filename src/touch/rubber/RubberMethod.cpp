@@ -107,6 +107,17 @@ static force_inline void draw_null(Page *_page, const QVector<int> &point,
     });
 }
 
+static bool makeNormal(Page *page, int index, Stroke *stroke)
+{
+    auto *newStroke = stroke->makeNormal();
+
+    if (newStroke) {
+        delete page->swap(index, newStroke);
+    }
+
+    return newStroke != nullptr;
+}
+
 void actionRubberSinglePartial(DataPrivateMuThread *data)
 {
     auto *private_data = (RubberPrivateData *)data->extra;
@@ -130,48 +141,57 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     W_ASSERT(from <= to);
 
     for(; from < to; from ++){
-        Stroke & stroke = _page->atStrokeMod(from);
+redo:
+        Stroke *stroke = &_page->atStrokeMod(from);
 
-        if(unlikely(stroke.isEmpty())){
+        if(unlikely(stroke->isEmpty())){
             stroke_to_remove.append(from);
             continue;
         }
 
         _index = 0;
-        while(true){
+        while(1){
             int lenPoint;
-            const int index = stroke.is_inside(area, _index, __m_size_gomma, true);
+
+            const int index = stroke->is_inside(area, _index, __m_size_gomma, true);
 
             if(index < 0)
                 break;
 
-            lenPoint = stroke.length();
-            W_ASSERT(stroke.is_normal());
+            /**
+             * Se lo stroke è diverso da Stroke::COMPLEX_NORMAL la funzione ritornerà
+             * true e bisogna richiedere allo stroke che suoi punti dobbiamo togliere.
+            */
+            if (makeNormal(_page, from, stroke))
+                goto redo;
+
+            StrokeNormal *sNormal = dynamic_cast<StrokeNormal *>(&_page->atStrokeMod(from));
+
+            lenPoint = sNormal->length();
+            W_ASSERT(sNormal->type() == Stroke::COMPLEX_NORMAL);
 
             if(index < 3){
-                if(stroke.length() - index < 3){
+                if(sNormal->length() - index < 3){
                     stroke_to_remove.append(data->from);
 
                     // we need to exit the current stroke
                     break;
                 }
 
-                W_ASSERT(stroke.length() >= 2);
+                W_ASSERT(sNormal->length() >= 2);
 
                 stroke_mod_left_point.append(index);
                 stroke_mod_left_stroke.append(from);
-                //stroke.removeAt(0, index);
 
                 goto out;
             }
 
             if(index + 3 > lenPoint){
-                if(stroke.length() < 3)
+                if(sNormal->length() < 3)
                     stroke_to_remove.append(data->from);
 
                 stroke_mod_rigth_point.append(index);
                 stroke_mod_rigth_stroke.append(from);
-                //stroke.removeAt(index, lenPoint - 1);
 
                 break;
             }

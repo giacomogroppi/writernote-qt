@@ -207,6 +207,17 @@ void Page::swap(QList<Stroke *> & list,
             );
 }
 
+Stroke *Page::swap(int index, Stroke *newData)
+{
+    auto *res = this->_stroke.at(index);
+    W_ASSERT(newData);
+
+    _stroke[index] = newData;
+
+    W_ASSERT(res);
+    return res;
+}
+
 size_t Page::get_size_in_file(cbool saveImg) const
 {
     return page_file::size_in_file(*this, saveImg);

@@ -145,39 +145,7 @@ void drawUtils::loadSingleSheet(
         cdouble zoom,        cdouble delta,
         QPen &_pen, const QPointF& pointFirstPage)
 {
-    int counterPoint, lenPoint;
-    pressure_t pressure;
-    const Stroke *__stroke = &page.get_stroke_page();
-
-redo:
-
-    lenPoint = __stroke->length();
-
-    if(!lenPoint)
-        return;
-
-    pressure = __stroke->getPressure();
-
-    if(unlikely(pressure <= 0.0)){
-        auto *_stroke = (Stroke *)__stroke;
-        _stroke->__setPressureFirstPoint(0.1);
-        goto redo;
-    }
-
-    pressure = TabletCanvas::pressureToWidth(pressure * zoom / 2.0) * delta;
-
-    _pen.setWidthF(pressure);
-    _pen.setColor(__stroke->getColor());
-
-    painter.setPen(_pen);
-
-    for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
-        const auto ref1 = datastruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
-        const auto ref2 = datastruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
-
-        painter.drawLine(ref1, ref2);
-        //painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
-    }
+    page.get_stroke_page().draw(painter, zoom, delta, _pen, pointFirstPage, page);
 }
 
 static void loadSheet(
@@ -186,24 +154,11 @@ static void loadSheet(
         QPainter        &painter,
         const double    delta)
 {
-    const Page *__page;
     const auto pointFirstPage = doc.getPointFirstPage();
-    const int lenPage = doc.lengthPage();
     const double zoom = doc.getZoom();
-    const Stroke *__stroke;
-    int counterPage, lenPoint;
 
-    for(counterPage = 0; counterPage < lenPage; counterPage ++){
-        __page = &doc.at(counterPage);
-        __stroke = &__page->get_stroke_page();
-
-        lenPoint = __stroke->length();
-
-        if(unlikely(!lenPoint)){
-            continue;
-        }
-
-        drawUtils::loadSingleSheet(painter, *__page, zoom, delta, m_pen, pointFirstPage);
+    for(const auto &page: qAsConst(doc)) {
+        drawUtils::loadSingleSheet(painter, page, zoom, delta, m_pen, pointFirstPage);
     }
 }
 

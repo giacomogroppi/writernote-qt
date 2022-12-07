@@ -53,6 +53,48 @@ size_t StrokeForPage::getSizeInFile() const
     return this->_data->getSizeInFile();
 }
 
+void StrokeForPage::draw(QPainter &painter, double zoom, double delta,
+                         QPen &pen, const QPointF &pointFirstPage,
+                         const Page &page) const
+{
+    int counterPoint, lenPoint;
+    pressure_t pressure;
+
+redo:
+
+    lenPoint = this->_data->_point.length();
+
+    if(!lenPoint)
+        return;
+
+    pressure = _data->getPressure();
+
+    /**
+     * It is due to a bug introduced a long time ago.
+    */
+    if(unlikely(pressure <= 0.0)){
+        if (_data->_point.length()) {
+            (pressure_t &)_data->_point[0] = .1f;
+        }
+        goto redo;
+    }
+
+    pressure = TabletCanvas::pressureToWidth(pressure * zoom / 2.0) * delta;
+
+    pen.setWidthF(pressure);
+    pen.setColor(_data->getColor());
+
+    painter.setPen(pen);
+
+    for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
+        const auto ref1 = datastruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
+        const auto ref2 = datastruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
+
+        painter.drawLine(ref1, ref2);
+        //painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
+    }
+}
+
 void StrokeForPage::scale(const QPointF &delta)
 {
     this->_data->scale(delta);
