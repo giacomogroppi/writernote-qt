@@ -73,6 +73,8 @@ struct colore_s{
     QColor toQColor(double division) const;
     void fromColor(const QColor &color);
 
+    uchar getAlfa() const;
+
     static colore_s from_color(const QColor &color);
     bool operator==(const colore_s &other) const;
 };
@@ -101,6 +103,11 @@ force_inline void colore_s::fromColor(const QColor &color)
     for(i = 0; i < NCOLOR; i ++){
         colore[i] = val[i];
     }
+}
+
+inline uchar colore_s::getAlfa() const
+{
+    return this->colore[3];
 }
 
 inline colore_s colore_s::from_color(const QColor &color)

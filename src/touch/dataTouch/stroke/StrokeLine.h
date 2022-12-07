@@ -24,8 +24,6 @@ public:
     int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
     bool is_inside(const QRectF &rect, double precision) const;
 
-    QColor getColor(double division) const;
-
 #   define stroke_append_default (-1.)
     void append(const point_s &point, pressure_t pressure);
     void setMetadata(int posizione_audio, const colore_s &color);

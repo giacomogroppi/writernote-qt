@@ -103,8 +103,6 @@ void Stroke::reset_flag()
     W_ASSERT(this->needToUpdateBiggerData() == true);
 }
 
-
-
 size_t Stroke::getSizeInFile() const
 {
     size_t s = 0;
@@ -159,13 +157,38 @@ QColor Stroke::getColor(double division) const
     return this->_metadata.color.toQColor(division);
 }
 
+void Stroke::setMetadata(int posizione_audio, const colore_s &color)
+{
+    this->_metadata = {
+        .posizione_audio = posizione_audio,
+        .color = color
+    };
+}
+
+size_t Stroke::createControll() const
+{
+    size_t controll = 0;
+    int i;
+
+    for(i = 0; i < NCOLOR; i++){
+        controll += _metadata.color.colore[i];
+    }
+
+    return controll;
+}
+
+void Stroke::clearAudio()
+{
+    this->_metadata.posizione_audio = -1;
+}
+
 Stroke::Stroke()
 {
-    this->reset_flag();
+    Stroke::reset_flag();
 }
 
 Stroke::Stroke(const metadata_stroke &met)
 {
-    this->reset_flag();
+    Stroke::reset_flag();
     this->_metadata = met;
 }

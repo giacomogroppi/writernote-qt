@@ -95,6 +95,11 @@ redo:
     }
 }
 
+int StrokeForPage::save(WZipWriterSingle &writer) const
+{
+    return this->_data->save(writer);
+}
+
 void StrokeForPage::scale(const QPointF &delta)
 {
     this->_data->scale(delta);

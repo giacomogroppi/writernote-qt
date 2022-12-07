@@ -222,7 +222,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
         for (i = 0; i < len; i++) {
             _stroke.append(QList<Stroke* > ());
         }
-    }
+    };
 
     //preappend(_stroke, len);
 
@@ -305,11 +305,11 @@ void square::reset()
         goto out;
 
     for(i = 0; i < len; i++){
-        QList<Stroke> ll    = _stroke.operator[](i);
+        QList<Stroke*> ll   = _stroke.operator[](i);
         Page * page         = &_canvas->getDoc()->at_mod(i + _base);
 
         for(auto &ref : ll){
-            ref.scale(_trans_img);
+            ref->scale(_trans_img);
         }
 
         page->append(ll);

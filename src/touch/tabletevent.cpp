@@ -57,14 +57,9 @@ static void AppendAll(
         canvas->_laser->endMove();
         strokeToAppend = StrokePre();
     }else{
-        Stroke stroke;
-        W_ASSERT(stroke.isEmpty());
+        auto *res = strokeToAppend.merge();
 
-        strokeToAppend.merge(stroke);
-
-        W_ASSERT(not stroke.isEmpty());
-
-        pageMod = doc.appendStroke(stroke);
+        pageMod = doc.appendStroke(res);
 
         core::get_main_window()->_preview_widget->mod(pageMod);
 

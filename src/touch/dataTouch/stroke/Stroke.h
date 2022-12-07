@@ -116,9 +116,6 @@ public:
 
     virtual void adjust(double zoom) = 0;
 
-    static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
-    static void copy(const Stroke &src, Stroke &dest);
-
     friend class Page;
     friend class xmlstruct;
     friend class stroke_drawer;
@@ -190,11 +187,27 @@ inline bool Stroke::needToUpdateBiggerData() const
 inline void Stroke::setFlag(unsigned char type, bool value) const
 {
     auto &f = (uchar &) _flag;
-    if(value){
+    if (value) {
         f |= type;
     }else{
         f &= ~type;
     }
+}
+
+inline void Stroke::setPositioneAudio(int m_pos_ris)
+{
+    W_ASSERT(m_pos_ris == -1 or m_pos_ris >= 0);
+    this->_metadata.posizione_audio = m_pos_ris;
+}
+
+inline int Stroke::getPosizioneAudio() const
+{
+    return this->_metadata.posizione_audio;
+}
+
+inline uchar Stroke::get_alfa() const
+{
+    return this->_metadata.color.getAlfa();
 }
 
 inline bool metadata_stroke::operator!=(const metadata_stroke &other) const

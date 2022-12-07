@@ -22,7 +22,7 @@ static int checkSpeed(const Document &first,
             return LEN;
 
         for(i = 0; i < len; i++){
-            if(!Stroke::cmp(page1.atStroke(i), page2.atStroke(i)))
+            if(page1.atStroke(i) != page2.atStroke(i))
                 return IDTRATTO;
         }
     }

@@ -157,8 +157,11 @@ static void loadSheet(
     const auto pointFirstPage = doc.getPointFirstPage();
     const double zoom = doc.getZoom();
 
-    for(const auto &page: qAsConst(doc)) {
-        drawUtils::loadSingleSheet(painter, page, zoom, delta, m_pen, pointFirstPage);
+    for (auto b = doc.constBegin(); b != doc.constEnd(); b++) {
+        drawUtils::loadSingleSheet(painter, *b, zoom, delta, m_pen, pointFirstPage);
     }
+    /*for(const auto &page: doc) {
+        drawUtils::loadSingleSheet(painter, page, zoom, delta, m_pen, pointFirstPage);
+    }*/
 }
 

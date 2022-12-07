@@ -65,10 +65,10 @@ public:
     void triggerIfNone(int m_pos_ris);
     void triggerViewIfVisible(int m_pos_ris);
 
-    QList<Page>::ConstIterator constBegin()   const { return this->_page.constBegin(); }
-    QList<Page>::ConstIterator constEnd()     const { return this->_page.constEnd(); }
-    QList<Page>::iterator begin()              { return this->_page.begin(); }
-    QList<Page>::iterator end()                { return this->_page.end(); }
+    auto constBegin()   const { return this->_page.constBegin(); }
+    auto constEnd()     const { return this->_page.constEnd(); }
+    auto begin()              { return this->_page.begin(); }
+    auto end()                { return this->_page.end(); }
 
     void changeZoom(double zoom, class TabletCanvas *canvas);
 
@@ -93,7 +93,7 @@ public:
     /* the draw function triggers the drawing of the points automatically */
     void append(const QList<Stroke *>& stroke, int m_pos_ris);
 
-    int  appendStroke(const Stroke *stroke); /* return value: the page of the point */
+    int  appendStroke(Stroke *stroke); /* return value: the page of the point */
     void appendStroke(Stroke *stroke, int page);
 
     void restoreLastTranslation(int heightView);
@@ -525,14 +525,13 @@ inline void datastruct::removeAt(const uint indexPage){
 
 }
 
-inline int datastruct::appendStroke(const Stroke *stroke)
+inline int datastruct::appendStroke(Stroke *stroke)
 {
     int page;
-    Stroke *n = stroke->clone();
 
-    page = this->adjustStroke(*n);
+    page = this->adjustStroke(*stroke);
 
-    this->appendStroke(n, page);
+    this->appendStroke(stroke, page);
 
     return page;
 }

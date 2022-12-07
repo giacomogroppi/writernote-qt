@@ -5,7 +5,9 @@
 
 StrokeNormal::StrokeNormal()
     : Stroke()
-{}
+{
+    StrokeNormal::reset_flag();
+}
 
 StrokeNormal::~StrokeNormal() = default;
 
@@ -362,9 +364,8 @@ StrokeNormal &StrokeNormal::operator=(const StrokeNormal &other)
 
 bool StrokeNormal::cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2)
 {
-    if (!Stroke::cmp(stroke1, stroke2)) {
+    if (stroke1 != stroke2)
         return false;
-    }
 
     if (!WCommonScript::cmp_list(
             stroke1._point,

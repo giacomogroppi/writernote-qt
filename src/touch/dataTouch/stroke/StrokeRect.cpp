@@ -1,10 +1,31 @@
 #include "StrokeRect.h"
 #include <QPainter>
 #include "touch/dataTouch/page/Page.h"
+#include "utils/common_error_definition.h"
+#include "touch/dataTouch/stroke/StrokeComplexCommon.h"
 
 StrokeRect::StrokeRect()
+    : Stroke()
 {
+}
 
+int StrokeRect::load(WZipReaderSingle &reader)
+{
+    StrokeComplexCommon::current_ver ver;
+
+    if (reader.read_object(ver) < 0) {
+        return ERROR;
+    }
+
+    if(ver == 1) {
+        if (reader.read_object(this->_data)) {
+            return ERROR;
+        }
+    } else {
+        return ERROR_VERSION_NEW;
+    }
+
+    return OK;
 }
 
 void StrokeRect::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const
