@@ -1,5 +1,7 @@
 #include "StrokeCircle.h"
 #include "touch/dataTouch/page/Page.h"
+#include "touch/dataTouch/stroke/StrokeComplexCommon.h"
+#include "utils/common_error_definition.h"
 
 int StrokeCircle::load(WZipReaderSingle &reader)
 {
@@ -193,6 +195,11 @@ StrokeNormal *StrokeCircle::makeNormal() const
     return _to;
 }
 
+bool StrokeCircle::isEmpty() const
+{
+    return false;
+}
+
 void StrokeCircle::scale(const QPointF &offset)
 {
     this->_data.x += offset.x();
@@ -227,13 +234,48 @@ QRect StrokeCircle::getBiggerPointInStroke() const
     return QRect(topLeft, bottomRight);
 }
 
+bool StrokeCircle::isInside(const QRectF &rect) const
+{
+    if (this->getBiggerPointInStroke().intersects(rect.toRect()))
+        return true;
+    return this->is_inside(rect, 0);
+}
+
 void StrokeCircle::clearAudio()
 {
+}
+
+int StrokeCircle::save(WZipWriterSingle &writer) const
+{
+    const auto res = Stroke::save(writer);
+
+    if(res != OK)
+        return res;
+
+    static_assert(sizeof(QPointF) == sizeof(double) * 2);
+
+    writer.write_object(this->_data);
+
+    static_assert(sizeof(this->_data) == (sizeof(double) * 3 + sizeof(float) + 4));
+
+    return OK;
 }
 
 size_t StrokeCircle::getSizeInMemory() const
 {
     return 0;
+}
+
+size_t StrokeCircle::getSizeInFile() const
+{
+    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
+
+    return  sizeof(StrokeComplexCommon::current_ver) +
+            sizeof(this->_data);
+}
+
+void StrokeCircle::decreasePrecision()
+{
 }
 
 size_t StrokeCircle::createControll() const

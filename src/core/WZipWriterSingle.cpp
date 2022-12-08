@@ -21,6 +21,11 @@ int WZipWriterSingle::commit_change(const QByteArray &zipName, const QByteArray 
 
     W_ASSERT(this->_allocated);
     W_ASSERT(this->_data);
+
+    /**
+     * Vuol dire che abbiamo impostato una dimensione
+     * e dobbiamo rispettarla
+    */
     W_ASSERT(this->_max == this->_offset);
 
     if(writer.init(zipName.constData()) < 0)

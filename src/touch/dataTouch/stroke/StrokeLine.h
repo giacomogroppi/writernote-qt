@@ -26,29 +26,19 @@ public:
 
 #   define stroke_append_default (-1.)
     void append(const point_s &point, pressure_t pressure);
-    void setMetadata(int posizione_audio, const colore_s &color);
-    void setMetadata(const metadata_stroke &metadata);
-    void setPositioneAudio(int m_pos_ris);
-    [[nodiscard]] virtual size_t createControll() const;
+    size_t createControll() const final;
 
-    int getPosizioneAudio() const;
     QRect getBiggerPointInStroke() const;
     bool isInside(const QRectF &rect) const;
 
     void clearAudio();
 
-    bool is_highlighter() const;
     int save(WZipWriterSingle &file) const final;
 
-    size_t getSizeInMemory() const;
+    size_t getSizeInMemory() const final;
     size_t getSizeInFile() const final;
 
     void decreasePrecision();
-    void setAlfaColor(uchar alfa);
-
-    void setColor(const colore_s &color);
-    /* this function physically adds the x and y value of the point to all of its points. */
-    void movePoint(const QPointF &translation);
 
     void adjust(double zoom);
     Stroke *clone() const;
@@ -71,6 +61,7 @@ public:
 
     static StrokeLine *make(const QPointF& pt1, const QPointF& pt2, const StrokeNormal &s);
     int type() const final;
+
 
     friend class StrokeLineGenerator;
     friend class Stroke;

@@ -247,7 +247,7 @@ void datastruct::MovePoint(
     Page &pageRef = at_mod(pageIndex);
     for(const auto &index : qAsConst(pos)){
         Stroke & stroke = pageRef.atStrokeMod(index);
-        stroke.movePoint(translation);
+        stroke.scale(translation);
     }
 }
 

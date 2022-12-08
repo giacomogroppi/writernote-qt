@@ -298,13 +298,6 @@ StrokeNormal::StrokeNormal(const StrokeNormal &ref)
     *this = ref;
 }
 
-void StrokeNormal::movePoint(const QPointF &translation)
-{
-    for(auto &p : _point) {
-        p += translation;
-    }
-}
-
 int StrokeNormal::how_much_decrese() const
 {
     return this->length();

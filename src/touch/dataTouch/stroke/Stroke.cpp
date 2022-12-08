@@ -7,15 +7,16 @@
 
 Stroke *Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
 {
+#define manage_err(pointer) do { delete pointer; return ERROR; } while(0)
     auto *s = new StrokeNormal();
     int len_point;
 
     if(ok) *ok = OK;
 
     if(reader.read_object(len_point) < 0)
-        return ERROR;
+        manage_err(s);
     if(reader.read_object(s->_metadata) < 0)
-        return ERROR;
+        manage_err(s);
 
     const auto res = s->load_ver_1(reader, len_point);
 

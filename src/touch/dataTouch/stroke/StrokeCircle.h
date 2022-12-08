@@ -33,11 +33,11 @@ public:
     bool is_inside(const QRectF &rect, double precision) const;
 
     void append(const point_s &point, pressure_t pressure);
-    [[nodiscard]] virtual size_t createControll() const;
+    virtual size_t createControll() const;
 
     int getPosizioneAudio() const;
     QRect getBiggerPointInStroke() const;
-    bool isInside(const QRectF &rect) const;
+    bool isInside(const QRectF &rect) const final;
 
     void clearAudio();
 
@@ -52,9 +52,6 @@ public:
 
     void setColor(const colore_s &color);
 
-    /* this function physically adds the x and y value of the point to all of its points. */
-    void movePoint(const QPointF &translation);
-
     void adjust(double zoom);
     Stroke *clone() const;
 
@@ -62,7 +59,7 @@ public:
 
     StrokeNormal* makeNormal() const;
 
-    [[nodiscard]] bool isEmpty() const;
+    bool isEmpty() const final;
 
     void scale(const QPointF &offset) final;
 

@@ -54,11 +54,68 @@ void StrokeRect::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, 
     painter.drawRect(QRectF(_topLeft, _bottomRight));
 }
 
+int StrokeRect::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const
+{
+    Q_UNUSED(line);
+    Q_UNUSED(precision);
+    Q_UNUSED(needToDeletePoint);
+    W_ASSERT(0);
+}
+
+bool StrokeRect::is_inside(const QRectF &rect, double precision) const
+{
+    Q_UNUSED(rect);
+    Q_UNUSED(precision);
+    W_ASSERT(0);
+}
+
+void StrokeRect::append(const point_s &point, pressure_t pressure)
+{
+    W_ASSERT(0);
+}
+
+void StrokeRect::scale(const QPointF &offset)
+{
+    this->_data.rect = QRectF(
+                    _data.rect.topLeft() + offset,
+                    _data.rect.bottomRight() + offset
+                );
+}
+
+bool StrokeRect::operator==(const Stroke &other) const
+{
+    if (other.type() != this->type())
+        return false;
+
+    return  this->_data == dynamic_cast<const StrokeRect &>(other)._data and
+            Stroke::operator==(other);
+}
+
+bool StrokeRect::operator!=(const Stroke &other) const
+{
+    return !(*this == other);
+}
+
+size_t StrokeRect::createControll() const
+{
+    return 0;
+}
+
 void StrokeRect::adjust(double zoom)
 {
     const QPointF topLeft = _data.rect.topLeft() / zoom;
     const QPointF bottomRight = _data.rect.bottomRight() / zoom;
     _data.rect = QRectF(topLeft, bottomRight);
+}
+
+Stroke *StrokeRect::clone() const
+{
+    auto *res = new StrokeRect();
+
+    res->_data = this->_data;
+    res->setMetadata(this->getMetadata());
+
+    return res;
 }
 
 int StrokeRect::how_much_decrese() const
@@ -72,7 +129,38 @@ Stroke *StrokeRect::makeNormal() const
     return nullptr;
 }
 
+bool StrokeRect::isEmpty() const
+{
+    W_ASSERT(0);
+    return false;
+}
+
 QRect StrokeRect::getBiggerPointInStroke() const
 {
     return _data.rect.toRect();
+}
+
+bool StrokeRect::isInside(const QRectF &rect) const
+{
+    return this->_data.rect.intersects(rect);
+}
+
+int StrokeRect::save(WZipWriterSingle &file) const
+{
+    Q_UNUSED(file);
+    W_ASSERT(0);
+}
+
+size_t StrokeRect::getSizeInMemory() const
+{
+    return 0;
+}
+
+size_t StrokeRect::getSizeInFile() const
+{
+    W_ASSERT(0);
+}
+
+void StrokeRect::decreasePrecision()
+{
 }

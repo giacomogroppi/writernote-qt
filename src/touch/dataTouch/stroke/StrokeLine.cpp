@@ -95,6 +95,11 @@ void StrokeLine::append(const point_s &point, pressure_t pressure)
     }
 }
 
+size_t StrokeLine::createControll() const
+{
+    return 0;
+}
+
 void StrokeLine::decreasePrecision()
 {
 }
@@ -104,6 +109,16 @@ void StrokeLine::adjust(double zoom)
     this->_data.pt1 /= zoom;
     this->_data.pt2 /= zoom;
     this->_data.press /= zoom;
+}
+
+Stroke *StrokeLine::clone() const
+{
+    auto *res = new StrokeLine();
+
+    res->_data = this->_data;
+    res->setMetadata(this->getMetadata());
+
+    return res;
 }
 
 int StrokeLine::how_much_decrese() const
@@ -182,6 +197,17 @@ QRect StrokeLine::getBiggerPointInStroke() const
     return datastruct_rect(_data.pt1, _data.pt2).toRect();
 }
 
+bool StrokeLine::isInside(const QRectF &rect) const
+{
+    if (!this->getBiggerPointInStroke().intersects(rect.toRect()))
+        return false;
+    return this->is_inside(rect, 0.);
+}
+
+void StrokeLine::clearAudio()
+{
+}
+
 int StrokeLine::save(WZipWriterSingle &writer) const
 {
     const auto res = Stroke::save(writer);
@@ -196,6 +222,11 @@ int StrokeLine::save(WZipWriterSingle &writer) const
     static_assert(sizeof(this->_data) == (sizeof(QPointF) * 2 + sizeof(float) + 4));
 
     return OK;
+}
+
+size_t StrokeLine::getSizeInMemory() const
+{
+    return 0;
 }
 
 int StrokeLine::load(WZipReaderSingle &reader)
@@ -245,10 +276,8 @@ int StrokeLine::type() const
 size_t StrokeLine::getSizeInFile() const
 {
     static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
+    static_assert(sizeof(this->_data) == (sizeof(QPointF) * 2 + sizeof(pressure_t) + 4));
 
-    return
-        sizeof(StrokeComplexCommon::current_ver) +
-        sizeof(this->_data.pt1)  +
-        sizeof(this->_data.pt2)  +
-        sizeof(this->_data.press);
+    return sizeof(StrokeComplexCommon::current_ver) +
+           sizeof(this->_data);
 }

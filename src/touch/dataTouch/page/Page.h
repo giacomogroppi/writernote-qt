@@ -434,6 +434,9 @@ force_inline Page::Page(const Page &from)
 
 force_inline Page::~Page()
 {
+    for (auto *s : qAsConst(this->_stroke)) {
+        delete s;
+    }
 }
 
 inline Page &Page::operator=(const Page &other)

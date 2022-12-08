@@ -105,10 +105,8 @@ public:
     virtual int how_much_decrese() const = 0;
 
     void setColor(const colore_s &color);
-    /* this function physically adds the x and y value of the point to all of its points. */
-    virtual void movePoint(const QPointF &translation) = 0;
 
-    virtual Stroke *clone() const;
+    virtual Stroke *clone() const = 0;
 
     virtual bool isEmpty() const = 0;
 
