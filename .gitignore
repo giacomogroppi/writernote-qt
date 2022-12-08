@@ -25,3 +25,5 @@ build-qtcreator/*
 cmake_install.cmake
 result_memcheck.txt
 writernote_*.snap
+3rdparty/libzip
+3rdparty/poppler

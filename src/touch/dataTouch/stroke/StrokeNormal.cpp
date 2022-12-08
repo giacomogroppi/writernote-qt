@@ -237,14 +237,10 @@ bool StrokeNormal::isInside(const QRectF &rect) const
     if(!this->isInsideBiggerData(rect.toRect()))
         return false;
 
-    std::any_of(_point.constBegin(), _point.constEnd(), [=](const point_s &p) {
-        return datastruct_isinside(rect, p);
-    });
-
-    /*for(const auto &ref : qAsConst(_point)){
+    for(const auto &ref : qAsConst(_point)){
         if (datastruct_isinside(rect, ref))
             return true;
-    }*/
+    }
 
     return false;
 }
