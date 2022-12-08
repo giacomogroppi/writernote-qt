@@ -132,8 +132,8 @@ QColor StrokePre::getColor(double division) const
 
 StrokePre &StrokePre::operator=(const StrokePre &other)
 {
-    _stroke->operator=(*other._stroke);
-    _img.operator=(other._img);
+    *_stroke = *other._stroke;
+    _img = other._img;
     this->_point = other._point;
     this->_pressure = other._pressure;
 

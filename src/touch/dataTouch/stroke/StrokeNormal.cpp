@@ -349,28 +349,30 @@ StrokeNormal &StrokeNormal::operator=(const StrokeNormal &other)
     this->_point = other._point;
     this->_pressure = other._pressure;
 
-    W_ASSERT(StrokeNormal::cmp(*this, other));
+    W_ASSERT(this->operator==(other));
 
     return *this;
 }
 
-bool StrokeNormal::cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2)
+bool StrokeNormal::operator==(const Stroke &_other) const
 {
-    if (stroke1 != stroke2)
+    if(this->type() == _other.type())
         return false;
 
+    const auto &other = dynamic_cast<const StrokeNormal &>(_other);
+
     if (!WCommonScript::cmp_list(
-            stroke1._point,
-            stroke2._point,
+            this->_point,
+            other._point,
             [](auto &p1, auto &p2){
                 return p1 == p2;
-        })) {
+            })) {
         return false;
     }
 
     if (!WCommonScript::cmp_list(
-            stroke1._pressure,
-            stroke2._pressure,
+            this->_pressure,
+            other._pressure,
             [](auto p1, auto p2) {
                 return p1 == p2;
             }
@@ -379,6 +381,11 @@ bool StrokeNormal::cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2)
     }
 
     return true;
+}
+
+bool StrokeNormal::operator!=(const Stroke &other) const
+{
+    return !(*this == other);
 }
 
 StrokeNormal* StrokeNormal::split(int index)

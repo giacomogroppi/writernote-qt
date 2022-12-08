@@ -59,13 +59,13 @@ public:
 
 #   define stroke_append_default (-1.)
     void append(const point_s &point, pressure_t pressure) final;
-    [[nodiscard]] size_t createControll() const final;
+    size_t createControll() const final;
 
-    [[nodiscard]] QRect getBiggerPointInStroke() const final;
-    [[nodiscard]] bool isInside(const QRectF &rect) const final;
+    QRect getBiggerPointInStroke() const final;
+    bool isInside(const QRectF &rect) const final;
 
-    [[nodiscard]] size_t getSizeInMemory() const final;
-    [[nodiscard]] size_t getSizeInFile() const final;
+    size_t getSizeInMemory() const final;
+    size_t getSizeInFile() const final;
     void decreasePrecision() final;
 
     int how_much_decrese() const final;
@@ -96,10 +96,9 @@ public:
 
     Stroke *makeNormal() const final;
 
-    static bool cmp(const StrokeNormal &stroke1, const StrokeNormal &stroke2);
-    static void copy(const Stroke &src, Stroke &dest);
-
     StrokeNormal& operator=(const StrokeNormal &other);
+    bool operator==(const Stroke &other) const final;
+    bool operator!=(const Stroke &other) const final;
 
     template<class T>
     static inline QRect getBiggerPointInStroke(T begin, T end);
