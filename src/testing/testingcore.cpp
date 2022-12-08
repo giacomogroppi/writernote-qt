@@ -112,7 +112,7 @@ int TestingCore::createFile(const QByteArray &folder)
     constexpr int len = (1024) * 4 * 128;
     int i, res;
 
-    if(unlikely(!file.open(QIODevice::WriteOnly))){
+    if(un(!file.open(QIODevice::WriteOnly))){
         qDebug() << "Impossibile start testing, file not open";
         return 1;
     }

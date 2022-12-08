@@ -74,7 +74,7 @@ force_inline QRectF WLine::toRect() const
 
 force_inline WLine &WLine::operator=(const WLine &other)
 {
-    if(unlikely(&other == this)){
+    if(un(&other == this)){
         return *this;
     }
 

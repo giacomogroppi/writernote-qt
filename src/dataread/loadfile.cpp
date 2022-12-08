@@ -56,7 +56,7 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
     if(clear)
         arr.clear();
 
-    if(unlikely(!size)){
+    if(un(!size)){
         const auto prio = (path.indexOf("audio") != -1) ? log_ui::possible_bug : log_ui::info;
         log_write->write(QString("File %1 has 0 byte").arg(path), prio);
         return OK;

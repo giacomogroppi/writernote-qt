@@ -194,11 +194,11 @@ static int extract_(const char *path, const char *path_to){
 static void printLog()
 {
     QByteArray arr;
-    if(unlikely(!NAME_LOG_EXT)){
+    if(un(!NAME_LOG_EXT)){
         printf("No log available\n");
         return;
     }
-    if(unlikely(!NAME_LOG_EXT->getData(arr))){
+    if(un(!NAME_LOG_EXT->getData(arr))){
         //printf("Error open file log in %s\n", NAME_LOG_EXT->getCurrentPosition().toUtf8().constData());
         return;
     }

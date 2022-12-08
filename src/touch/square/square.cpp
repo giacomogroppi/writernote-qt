@@ -119,7 +119,7 @@ bool square::find()
         __page = &doc->at(PageCounter);
         create = DataPrivateMuThreadInit(_dataThread, nullptr, _threadCount, __page->lengthStroke(), 0);
 
-        if(unlikely(!__page->isVisible()))
+        if(un(!__page->isVisible()))
             break;
 
         if(likely(count > index.length() - 1))
@@ -224,22 +224,33 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
         }
     };
 
-    //preappend(_stroke, len);
+    preappend();
 
-    for(count = 0; count < len; count ++){
+    for (count = 0; count < len; count ++) {
         const QVector<int> & ref = index.at(count);
         WDebug(debugSquare, ref);
         page = &data.at_mod(count + _base);
 
-        if(unlikely(ref.isEmpty()))
+        if (ref.isEmpty())
             continue;
+
+        WDebug(true, "lenPrima" << page->lengthStroke());
 
         page->drawToImage(ref, tmp, DR_IMG_INIT_IMG);
 
         this->mergeImg(tmp, _img, count + _base);
 
         page->swap(_stroke.operator[](count), ref, PAGE_SWAP_TRIGGER_VIEW);
+        WDebug(true, "lenDopo" << page->lengthStroke());
     }
+
+#ifdef DEBUGINFO
+    WCommonScript::for_each(_stroke, [](const QList<Stroke*> &list) {
+        WCommonScript::for_each(list, [](const Stroke *s) {
+            W_ASSERT(!s->isEmpty());
+        });
+    });
+#endif // DEBUGINFO
 }
 
 void square::findObjectToDrawImg()
@@ -273,7 +284,7 @@ void square::findObjectToDraw(const QList<QVector<int>> &index)
     return;
     WDebug(debugSquare, "call");
 
-    if(unlikely(index.isEmpty()))
+    if(un(index.isEmpty()))
         goto img;
 
     // find the first point
@@ -301,11 +312,19 @@ void square::reset()
 
     WDebug(debugSquare, "paste = 1");
     len = _stroke.length();
+
     if(len == 0)
         goto out;
 
-    for(i = 0; i < len; i++){
+    for (i = 0; i < len; i++) {
         QList<Stroke*> ll   = _stroke.operator[](i);
+
+#ifdef DEBUGINFO
+        WCommonScript::for_each(ll, [](const Stroke *stroke){
+            W_ASSERT(!stroke->isEmpty());
+        });
+#endif // DEBUGINFO
+
         Page * page         = &_canvas->getDoc()->at_mod(i + _base);
 
         for(auto &ref : ll){
@@ -356,7 +375,7 @@ void square::move(const QPointF &punto)
 #ifdef DEBUGINFO
     W_ASSERT(somethingInBox());
 #else
-    if(unlikely(!somethingInBox())){
+    if(un(!somethingInBox())){
         NAME_LOG_EXT->write("somethingInBox", log_ui::possible_bug);
         this->changeInstrument();
         return;
@@ -488,7 +507,7 @@ static void square_draw_square(
 void square::needReload(QPainter &painter)
 {
     if(WCommonScript::debug_enable()){
-        if(unlikely(!painter.isActive())){
+        if(un(!painter.isActive())){
             qDebug() << "Painter not active in square" << __FUNCTION__;
             std::abort();
         }

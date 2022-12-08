@@ -69,7 +69,7 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second)
 
                 _ismoving.setY(__delta);
 
-                if(unlikely(!_ismoving.isSet())){
+                if(un(!_ismoving.isSet())){
                     //qDebug() << "timer stop";
                     timer->stop();
                     return;

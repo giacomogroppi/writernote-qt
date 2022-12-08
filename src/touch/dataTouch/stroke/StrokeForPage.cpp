@@ -72,7 +72,7 @@ redo:
     /**
      * It is due to a bug introduced a long time ago.
     */
-    if(unlikely(pressure <= 0.0)){
+    if(un(pressure <= 0.0)){
         if (_data->_point.length()) {
             (pressure_t &)_data->_point[0] = .1f;
         }

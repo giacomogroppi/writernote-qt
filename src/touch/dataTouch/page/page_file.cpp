@@ -25,10 +25,10 @@ int page_file::load_ver_1(Page &_page, WZipReaderSingle &reader)
         int ok;
         auto *res = Stroke::load(reader, ver_stroke, &ok);
 
-        if(unlikely(ok != OK))
+        if(un(ok != OK))
             return ok;
 
-        if(unlikely(err != OK))
+        if(un(err != OK))
             return err;
 
         _page._stroke.append(res);
@@ -63,7 +63,7 @@ int page_file::load_ver_2(Page &_page, WZipReaderSingle &reader)
 
     err = _page._stroke_writernote.load(reader, ver_stroke);
 
-    if(unlikely(err != OK))
+    if(un(err != OK))
         return err;
 
     if(reader.read_object(size) < 0)
@@ -139,16 +139,16 @@ int page_file::save(const Page *_page, WZipWriterSingle &writer, cbool saveImg)
 
     for(i = 0; i < len; i++){
         err = _page->atStroke(i).save(writer);
-        if(unlikely(err != OK))
+        if(un(err != OK))
             return err;
     }
 
     err = _page->_stroke_writernote.save(writer);
-    if(unlikely(err != OK))
+    if(un(err != OK))
         return err;
 
     {
-        if(unlikely(saveImg)){
+        if(un(saveImg)){
             (void)_page->_imgDraw.save_and_size(arr);
         }
 

@@ -95,7 +95,7 @@ inline void WList<T>::append(const T &data) noexcept
     WNew(tmp, struct WListPrivate<T>, ());
     WNew(tmp->data, T, (data));
 
-    if(unlikely(this->_first == nullptr)){
+    if(un(this->_first == nullptr)){
         W_ASSERT(this->_last == nullptr);
         W_ASSERT(_size == 0);
 

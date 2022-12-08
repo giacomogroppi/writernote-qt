@@ -29,7 +29,7 @@ int WFile::write(const void *data, size_t size)
     W_ASSERT(this->fp);
     const auto res = fwrite(data, size, 1, this->fp);
 
-    if(unlikely(res != 1))
+    if(un(res != 1))
         return -1;
 
     return 0;

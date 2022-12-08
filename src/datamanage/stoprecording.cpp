@@ -37,7 +37,7 @@ static bool manageNotExist(const QString &path, Document *doc)
 {
     bool save = false;
 
-    if(unlikely(!QFile::exists(path))){
+    if(un(!QFile::exists(path))){
         retry_save_audio m_reciver(doc, &save);
         retry_ui m_r(nullptr, QApplication::tr("Audio missing"),
                      QApplication::tr("For some reason the audio file you just recorded no longer exists\n, if you moved it, reposition it where you got it, with the same name"),
@@ -71,7 +71,7 @@ static void saveAudio(
     constexpr int millisecond = 500;
     int i, res;
 
-    if(unlikely(!manageNotExist(path, m_currenttitle)))
+    if(un(!manageNotExist(path, m_currenttitle)))
         return;
 
     /*
@@ -138,7 +138,7 @@ void MainWindow::on_stop_rec_triggered()
 {
     Document *doc = getCurrentDoc();
 
-    if(unlikely(m_audio_recorder->isStopped())){
+    if(un(m_audio_recorder->isStopped())){
         log_write->write("The audio is not recording", log_ui::possible_bug);
         return;
     }

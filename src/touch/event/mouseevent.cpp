@@ -49,8 +49,8 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
     if(isZooming)
         return;
 
-    if(unlikely(core::get_main_window()->touch_or_pen)){
-        if(unlikely(first_touch)){
+    if(un(core::get_main_window()->touch_or_pen)){
+        if(un(first_touch)){
             first_touch = false;
             __type = QEvent::TabletPress;
         }else{
@@ -123,7 +123,7 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event)
     __last_point_move = false;
     _lastpointtouch = false;
 
-    if(unlikely(core::get_main_window()->touch_or_pen)){
+    if(un(core::get_main_window()->touch_or_pen)){
         canvas_send_touch_event(event->pos(), event->type(),
 #                        if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
                                 QTabletEvent::Pen

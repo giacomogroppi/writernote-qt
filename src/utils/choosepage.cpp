@@ -43,7 +43,7 @@ bool ChoosePage::event(QEvent *event)
 
     WDebug(eventChoose, "call");
 
-    if(unlikely(event->type() == QEvent::WindowDeactivate)){
+    if(un(event->type() == QEvent::WindowDeactivate)){
         this->hide();
         this->_curr = -1;
     }

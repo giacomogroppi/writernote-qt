@@ -32,11 +32,11 @@ void *idle_rubber(void *arg)
     for(;;){
         sem_wait(thread_group->get_pass_sem());
 
-        if(unlikely(thread_group->needToDelete())){
+        if(un(thread_group->needToDelete())){
             return nullptr;
         }
 
-        if(unlikely(data->id >= thread_group->get_create())){
+        if(un(data->id >= thread_group->get_create())){
             goto wait;
         }
 
@@ -144,7 +144,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 redo:
         Stroke *stroke = &_page->atStrokeMod(from);
 
-        if(unlikely(stroke->isEmpty())){
+        if(un(stroke->isEmpty())){
             stroke_to_remove.append(from);
             continue;
         }
@@ -259,7 +259,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
             continue;
         }
 
-        if (unlikely(stroke.is_highlighter())) {
+        if (un(stroke.is_highlighter())) {
             private_data->highlighter_delete = true;
 
             const auto currentArea = stroke.getBiggerPointInStroke();
@@ -315,7 +315,7 @@ void RubberMethod::actionRubber(const QPointF &__lastPoint, type_rubber typeRubb
     dataPrivate.highlighter_delete = false;
     dataPrivate.area = QRect();
 
-    if(unlikely(_base < 0)){
+    if(un(_base < 0)){
         this->_base = data->whichPage(lastPoint);
         _data_to_remove.append(QVector<int>());
         indexPage = _base;
@@ -370,7 +370,7 @@ void RubberMethod::actionRubber(const QPointF &__lastPoint, type_rubber typeRubb
 
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1
-    if(unlikely(data->whichPage(lastPoint) != data->whichPage(_last))){
+    if(un(data->whichPage(lastPoint) != data->whichPage(_last))){
         goto save_point;
     }
 
@@ -383,7 +383,7 @@ void RubberMethod::actionRubber(const QPointF &__lastPoint, type_rubber typeRubb
 
     lenStroke = dataPrivate.__page->lengthStroke();
 
-    if(unlikely(!lenStroke))
+    if(un(!lenStroke))
         goto out2;
 
     // we trigger the copy if the page is shared
@@ -400,7 +400,7 @@ void RubberMethod::actionRubber(const QPointF &__lastPoint, type_rubber typeRubb
 
     thread_group->postAndWait(thread_create);
 
-    if(unlikely(dataPrivate.highlighter_delete)){
+    if(un(dataPrivate.highlighter_delete)){
         dataPrivate.__page->drawIfInside(-1, dataPrivate.area);
     }
 
@@ -445,7 +445,7 @@ bool RubberMethod::is_image_not_null(int index, const Page *page,
 
     delta *= 2;
 
-    if(unlikely(img.isNull()))
+    if(un(img.isNull()))
         return false;
 
     for(i = 0; i < delta + int(xmax - xmin); i++)
@@ -482,14 +482,14 @@ int RubberMethod::endRubber(type_rubber method)
             QVector<int> &arr = _data_to_remove.operator[](i);
             Page &page = data->at_mod(i + _base);
 
-            if(unlikely(arr.isEmpty()))
+            if(un(arr.isEmpty()))
                 continue;
 
-            if(unlikely(index_mod >= 0)){
+            if(un(index_mod >= 0)){
                 index_mod = -2;
             }
 
-            if(unlikely(index_mod == -1)){
+            if(un(index_mod == -1)){
                 index_mod = i + _base;
             }
 

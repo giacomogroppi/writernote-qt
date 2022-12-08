@@ -150,10 +150,10 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
 
     const auto len = this->length();
 
-    if(unlikely(!len))
+    if(un(!len))
         return -1;
 
-    if(unlikely(i >= len))
+    if(un(i >= len))
         return -1;
 
     if(i == 0){
@@ -168,7 +168,7 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
 
         tmp = WLine(p1->toQPointF(1.), p2->toQPointF(1.));
 
-        if(unlikely(WLine::intersect(tmp, rect, precision))){
+        if(un(WLine::intersect(tmp, rect, precision))){
             return i;
         }
 
@@ -330,6 +330,8 @@ void StrokeNormal::removeAt(int indexFrom, int indexTo)
 Stroke *StrokeNormal::clone() const
 {
     auto *tmp = new StrokeNormal(*this);
+
+    W_ASSERT(*this == *tmp);
     return tmp;
 }
 
@@ -371,7 +373,7 @@ StrokeNormal &StrokeNormal::operator=(const StrokeNormal &other)
 
 bool StrokeNormal::operator==(const Stroke &_other) const
 {
-    if(this->type() == _other.type())
+    if(this->type() != _other.type())
         return false;
 
     const auto &other = dynamic_cast<const StrokeNormal &>(_other);

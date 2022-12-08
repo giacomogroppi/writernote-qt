@@ -25,7 +25,7 @@ void datastruct::changeZoom(const double zoom, TabletCanvas *canvas)
 {
     const double size = canvas->size().height();
 
-    if(unlikely(!datastruct::isOkZoom(zoom))){
+    if(un(!datastruct::isOkZoom(zoom))){
         return;
     }
 
@@ -213,7 +213,7 @@ void datastruct::restoreLastTranslation(const int heightView)
 void datastruct::scala_all(const QPointF &point, const int heightView)
 {
     constexpr double prec = .00005;
-    if(unlikely(point == QPointF(0, 0)))
+    if(un(point == QPointF(0, 0)))
         return;
 
     W_ASSERT(_pointFirstPage.x() + point.x() - prec <= 0.);
@@ -228,7 +228,7 @@ void datastruct::scala_all(const QPointF &point, const int heightView)
         cint range = this->get_range_visible();
         int first = this->getFirstPageVisible();
 
-        if(unlikely(first) < 0)
+        if(un(first) < 0)
             first = 0;
 
         this->setVisible(first, first + range);
@@ -264,7 +264,7 @@ void datastruct::removePointIndex(
 #ifdef DEBUGINFO
         W_ASSERT(WCommonScript::is_order_vector(pos));
 #else
-        if(unlikely(WCommonScript::is_order_vector(pos))){
+        if(un(WCommonScript::is_order_vector(pos))){
             NAME_LOG_EXT->write("List not order", log_ui::critic_error);
             /* in this case we need to order */
             WCommonScript::order_vector(pos);

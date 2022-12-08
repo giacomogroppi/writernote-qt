@@ -74,7 +74,7 @@ void pen_ui::on_button_size_clicked()
 }
 
 bool pen_ui::event(QEvent *event){
-    if(unlikely(event->type() == QEvent::WindowDeactivate))
+    if(un(event->type() == QEvent::WindowDeactivate))
         this->hide();
 
     return QWidget::event(event);

@@ -29,7 +29,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
     dataPaint.pen       = this->_pen;
     _isWriting          = false;
 
-    if (unlikely(_pixmap.isNull()))
+    if (un(_pixmap.isNull()))
         initPixmap(false);
 
     painter.begin(this);
@@ -40,7 +40,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
 
     painter.drawPixmap(event->rect().topLeft(), _pixmap, pixmapPortion);
 
-    if(unlikely( needToCreateNewPage or getDoc()->isEmpty())){
+    if(un( needToCreateNewPage or getDoc()->isEmpty())){
         this->getDoc()->newPage(this->_sheet->WhatIsSelected());
         core::get_main_window()->_preview_widget->newPage();
         this->updatePageCount();

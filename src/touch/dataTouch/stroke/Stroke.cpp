@@ -130,7 +130,7 @@ void set_press(
                             const QColor &color)
 {
     pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
-    if (unlikely(is_rubber)) {
+    if (un(is_rubber)) {
         const auto _press = pen.widthF() * deltaColorNull;
         pen.setWidthF(_press);
     } else {

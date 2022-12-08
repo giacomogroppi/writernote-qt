@@ -110,7 +110,7 @@ double StrokeLineGenerator::model_near(const StrokePre &stroke)
     line_data.is_vertical = false;
 
     /** list empty */
-    if (unlikely(b == e)) {
+    if (un(b == e)) {
         return StrokeComplexCommon::error;
     }
 
@@ -119,7 +119,7 @@ double StrokeLineGenerator::model_near(const StrokePre &stroke)
     {
         const double det = area.topLeft().x() - area.bottomRight().x();
 
-        if(unlikely(!det)){
+        if(un(!det)){
             WDebug(StrokeLineGeneratorDebug, "det = 0");
             is_vertical = true;
             goto cont;

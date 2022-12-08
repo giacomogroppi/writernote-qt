@@ -92,7 +92,7 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
 
     WMutexLocker _(mutex);
 
-    if(unlikely(!file.open(QIODevice::Append))){
+    if(un(!file.open(QIODevice::Append))){
         ui->text_error_show->setText("Unable to save data");
         m_permi = permi::error;
         return;

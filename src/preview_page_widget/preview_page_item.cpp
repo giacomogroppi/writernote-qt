@@ -103,7 +103,7 @@ void preview_page_item::paintEvent(QPaintEvent *)
 
     painter.drawPixmap(target, _pix);
 
-    if(unlikely(_selected)){
+    if(un(_selected)){
         pen.setWidth(1);
         pen.setColor(Qt::blue);
         painter.setPen(pen);

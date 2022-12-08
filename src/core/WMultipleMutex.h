@@ -33,7 +33,7 @@ force_inline int WMultipleMutex::blockAll()
 force_inline int WMultipleMutex::block(int from, int to)
 {
     for(; from < to; from ++){
-        if(unlikely(sem_trywait(&sem[to]))){
+        if(un(sem_trywait(&sem[to]))){
             return -WMULTIMUTEX_ALREADY_LOCK;
         }
     }

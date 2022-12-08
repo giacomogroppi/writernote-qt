@@ -108,7 +108,7 @@ int copy::selection(
 
     adjustData(pointTouch);
 
-    if(unlikely(this->isEmpty())){
+    if(un(this->isEmpty())){
         return 0;
     }
 

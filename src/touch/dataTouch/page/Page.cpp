@@ -130,15 +130,15 @@ void Page::drawNewPage(n_style __style)
         style.thickness =  TEMP_TICK;
     }
 
-    if(unlikely(style.thickness <= 0.0))
+    if(un(style.thickness <= 0.0))
         style.thickness = 1;
 
     stroke.setMetadata(style.colore);
 
-    if(unlikely(style.nx <= 0))
+    if(un(style.nx <= 0))
         style.nx = 1;
 
-    if(unlikely(style.ny <= 0))
+    if(un(style.ny <= 0))
         style.ny = 1;
 
     deltax = height_p / (double)style.nx;
@@ -160,7 +160,7 @@ void Page::swap(
     QRectF area;
 
 #ifdef DEBUGINFO
-    if(unlikely(!WCommonScript::is_order_vector(pos))){
+    if(un(!WCommonScript::is_order_vector(pos))){
         qDebug() << "List not order" << __FILE__ << __FUNCTION__;
     }
 #endif
@@ -174,6 +174,7 @@ void Page::swap(
 
     for(cint ref : pos){
         Stroke & stroke = atStrokeMod(ref);
+        W_ASSERT(!stroke.isEmpty());
         list.append(&stroke);
     }
 
@@ -227,7 +228,7 @@ size_t Page::get_size_in_file(cbool saveImg) const
 void Page::removeAt(const QVector<int> &pos)
 {
     int i;
-    if(unlikely(!WCommonScript::is_order_vector(pos))){
+    if(un(!WCommonScript::is_order_vector(pos))){
         DO_IF_DEBUG(std::abort());
         WCommonScript::order_vector((QVector<int> &)(pos));
     }
@@ -260,7 +261,7 @@ void Page::drawStroke(
 
     m_pen.setColor(color);
 
-    if(unlikely(!painter.isActive())){
+    if(un(!painter.isActive())){
         if constexpr (WCommonScript::debug_enable()){
             qDebug() << "page::drawStroke" << "painter not active";
             W_ASSERT(false);
@@ -271,7 +272,7 @@ void Page::drawStroke(
         return;
     }
 
-    if(unlikely(isRubber)){
+    if(un(isRubber)){
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
     }else if(isHigh){
         core::painter_set_source_over(painter);
@@ -279,7 +280,7 @@ void Page::drawStroke(
 
     stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
 
-    if(unlikely(isRubber)){
+    if(un(isRubber)){
         core::painter_set_source_over(painter);
     }
 
@@ -318,7 +319,7 @@ void * __page_load(void *__data)
     for(; _data->from < _data->to; _data->from ++){
         const auto &ref = extra->m_stroke->at(_data->from);
 
-        if(unlikely(ref->isEmpty())){
+        if(un(ref->isEmpty())){
             mutex.lock();
 
             extra->to_remove->append(_data->from);
@@ -329,7 +330,7 @@ void * __page_load(void *__data)
         }
 
         const QColor &color = ref->getColor(
-            (unlikely(m_pos_ris != -1))
+            (un(m_pos_ris != -1))
                     ?
                         (
                           (ref->getPosizioneAudio() > m_pos_ris)
@@ -377,7 +378,7 @@ void Page::drawEngine(
     extraData.m_pos_ris     = m_pos_ris;
     extraData.parent        = this;
 
-    if(use_multi_thread){
+    if (use_multi_thread) {
         threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length(), ~DATA_PRIVATE_FLAG_SEM);
 
         for(i = 0; i < threadCount; i++){
@@ -386,7 +387,7 @@ void Page::drawEngine(
         for(i = 0; i < threadCount; i++){
             pthread_join(thread[i], NULL);
         }
-    }else{
+    } else {
         threadData->extra   = &extraData;
         threadData->from    = 0;
         threadData->to      = List.length();
@@ -394,7 +395,7 @@ void Page::drawEngine(
         __page_load(&threadData[0]);
     }
 
-    if(unlikely(to_remove.length())){
+    if (un(to_remove.length())){
         WCommonScript::order_vector(to_remove);
 
         log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
@@ -410,7 +411,7 @@ inline void Page::draw(
 {
     W_ASSERT(painter.isActive());
 
-    if(unlikely(all)){
+    if(un(all)){
         this->drawEngine(painter, this->_stroke, m_pos_ris, true);
     }
 
@@ -439,7 +440,7 @@ void Page::drawToImage(
 {
     Define_PEN(pen);
 
-    if(unlikely(flag & DR_IMG_INIT_IMG)){
+    if(un(flag & DR_IMG_INIT_IMG)){
         __initImg(img);
     }else{
         W_ASSERT(flag == ~DR_IMG_INIT_IMG);
@@ -564,7 +565,7 @@ void Page::drawIfInside(int m_pos_ris, const QRectF &area)
     for(; index >= 0; index --){
         const Stroke &stroke = this->atStroke(index);
 
-        if(unlikely(is_inside_squade(stroke.getBiggerPointInStroke(), area))){
+        if(un(is_inside_squade(stroke.getBiggerPointInStroke(), area))){
             drawForceColorStroke(stroke, m_pos_ris, stroke.getColor(1.0), &painter);
         }
     }
@@ -607,7 +608,7 @@ void Page::decreseAlfa(const QVector<int> &pos, int decrese)
 {
     bool needInit = initImg(false);
 
-    if(unlikely(needInit)){
+    if(un(needInit)){
         WDebug(debugPage, "Warning: page not draw");
         return this->triggerRenderImage(-1, true);
     }
@@ -623,7 +624,7 @@ QRect Page::get_size_area(const QList<Stroke *> &item, int from, int to)
 {
     QRect result;
 
-    if(unlikely(from >= to)){
+    if(un(from >= to)){
         return QRect();
     }
 
@@ -648,7 +649,7 @@ QRect Page::get_size_area(const QVector<int> &pos) const
     int len = pos.length();
     QRect tmp;
 
-    if(unlikely(!len)){
+    if(un(!len)){
         return QRect();
     }
 
@@ -669,7 +670,7 @@ void Page::setCount(int newCount)
     int delta = newCount - this->_count;
     cdouble deltaY = Page::getHeight() * delta;
 
-    if(unlikely(this->_count < 0)){
+    if(un(this->_count < 0)){
         _count = newCount;
         return;
     }
@@ -703,7 +704,7 @@ void Page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
 
 #define DO_CTRL(function) \
     err = function; \
-    if(unlikely(err != OK)) \
+    if(un(err != OK)) \
         return err;
 
 int Page::save(WZipWriterSingle &writer, cbool saveImg) const

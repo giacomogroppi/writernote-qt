@@ -107,7 +107,7 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
     int res = 0;
     QString msg;
 
-    if(unlikely(!mem))
+    if(un(!mem))
         return;
 
     _mem_mutex.lock();
@@ -128,7 +128,7 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
 out:
     _mem_mutex.unlock();
 
-    if(unlikely(!res)){
+    if(un(!res)){
         msg = QString("Mem free not record. Pointer %1 File %2 Function %3").arg(QString::number((quint64)mem), file, function);
         qDebug() << msg;
         std::abort();

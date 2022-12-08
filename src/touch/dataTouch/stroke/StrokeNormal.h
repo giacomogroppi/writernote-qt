@@ -144,7 +144,7 @@ inline bool StrokeNormal::needToUpdatePressure() const
 
 inline bool StrokeNormal::constantPressure() const
 {
-    if(unlikely(needToUpdatePressure()))
+    if(un(needToUpdatePressure()))
         this->updateFlagPressure();
 
     return isPressureVal();
@@ -160,7 +160,7 @@ inline void StrokeNormal::updateFlagPressure() const
 
     len = this->length();
 
-    if(unlikely(len < 2 && _press.length() == 1)){
+    if(un(len < 2 && _press.length() == 1)){
         // lo stroke era _press const ma gli abbiamo
         // tolto troppi punti, quindi non possiamo più disegnarlo
         // con il QPainterPath
@@ -174,13 +174,13 @@ inline void StrokeNormal::updateFlagPressure() const
         W_ASSERT(_press.length() == _point.length());
     }
 
-    if(unlikely(len > 1 && _press.length() == 1)){
+    if(un(len > 1 && _press.length() == 1)){
         return;
     }
 
     W_ASSERT(_pressure.length() == _point.length());
 
-    if(unlikely(len < 3)){
+    if(un(len < 3)){
         /**
          * if we have less than 3 points we
          * cannot create a qpainterpath, so
@@ -212,7 +212,7 @@ force_inline void StrokeNormal::draw(
         const QColor &color,
         drawData<T, Z> data)
 {
-    constexpr bool not_used debug_draw_stroke = true;
+    constexpr bool not_used debug_draw_stroke = false;
     auto &painterPublic = _painter;
 
     W_ASSERT(page >= 0);
@@ -250,10 +250,10 @@ force_inline void StrokeNormal::draw(
         set_press(pen, pressure, _prop, is_rubber, color);
         painter->setPen(pen);
 
-        if (unlikely(is_rubber)) {
+        if (un(is_rubber)) {
             pen.setWidthF(pen.widthF() * deltaColorNull);
         }
-        else if(unlikely(isHigh)){
+        else if(un(isHigh)){
             const QPainter::CompositionMode curr = painter->compositionMode();
             painter->setCompositionMode(QPainter::CompositionMode_Clear);
             painter->drawPoint(lastPoint);
@@ -284,7 +284,7 @@ inline QRect StrokeNormal::getBiggerPointInStroke(T begin, T end)
 {
     QRect biggerData;
 
-    if(unlikely(begin == end)){
+    if(un(begin == end)){
         WWarning("Warning: Stroke empty");
         return {0, 0, 0, 0};
     }

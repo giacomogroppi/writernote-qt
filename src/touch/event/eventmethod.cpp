@@ -164,7 +164,7 @@ bool TabletCanvas::event(QEvent *event)
 
     //WDebug(true, name << type);
 
-    if(!WE.is_touch() || unlikely(WE.not_consider())){
+    if(!WE.is_touch() || un(WE.not_consider())){
         return QWidget::event(event);
     }
 

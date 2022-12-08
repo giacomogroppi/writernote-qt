@@ -6,7 +6,7 @@ int WZipCommon::removeFile(const char *fileZip, const char *nameFileInZip)
     struct zip_stat stat;
     zip_t *Zip = WZipCommon::openZip(fileZip, W_ZIP_WRITE);
 
-    if(unlikely(!Zip))
+    if(un(!Zip))
         return -1;
 
     zip_stat_init(&stat);

@@ -8,7 +8,7 @@ imageWidget::imageWidget(QWidget *parent, QPixmap *pixmap) : QWidget(parent)
     WNew(imgDisplayLabel, QLabel, (""));
     WNew(scrollArea, QScrollArea, ());
 
-    if(unlikely(!pixmap)){
+    if(un(!pixmap)){
         this->hide();
         return;
     }

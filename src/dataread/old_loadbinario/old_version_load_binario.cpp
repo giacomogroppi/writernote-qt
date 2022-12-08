@@ -350,7 +350,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
                 TmpAppend.rx() = tmpRef.m_x;
                 TmpAppend.ry() = tmpRef.m_y;
 
-                if (unlikely(id < 0)) {
+                if (un(id < 0)) {
                     continue;
                 } else {
                     stroke.append(TmpAppend, tmpRef.m_pressure);

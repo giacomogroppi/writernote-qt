@@ -41,7 +41,7 @@ static int mainwindow_import_image(const QList<QString> &Path, Document &doc,
 
     for(const auto &path : qAsConst(Path)){
         const auto res = doc.addImage(path, &s, zip_pos);
-        if(unlikely(res < 0))
+        if(un(res < 0))
             return -1;
     }
 

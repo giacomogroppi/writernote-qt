@@ -106,7 +106,7 @@ force_inline size_t xmlstruct::sizeFile(zip_t *filezip, const QString &namefile)
 
 force_inline bool xmlstruct::closeZip(zip_t *fileZip)
 {
-    if(unlikely(zip_close(fileZip)) == -1){
+    if(un(zip_close(fileZip)) == -1){
         return false;
     }
     return true;

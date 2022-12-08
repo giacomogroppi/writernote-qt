@@ -34,7 +34,7 @@ rubber_ui::~rubber_ui()
 
 bool rubber_ui::event(QEvent *event)
 {
-    if(unlikely(event->type() == QEvent::WindowDeactivate))
+    if(un(event->type() == QEvent::WindowDeactivate))
         this->hide();
 
     return QWidget::event(event);

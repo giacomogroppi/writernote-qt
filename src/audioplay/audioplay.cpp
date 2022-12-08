@@ -62,7 +62,7 @@ void audioplay::positionChange(qint64 position)
     parent->ui->audioSlider->blockSignals(true);
 
     duration = currentDurationMicro();
-    if(unlikely(!duration))
+    if(un(!duration))
         return user_message(QApplication::tr("The audio seems blank"));
 
     parent->ui->audioSlider->setValue((position*100)/duration);

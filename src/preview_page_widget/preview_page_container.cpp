@@ -47,7 +47,7 @@ void preview_page_container::draw(int index)
     const int selected = data->getFirstPageVisible();
     auto *ref = at_show(index);
 
-    if(unlikely(last != selected)){
+    if(un(last != selected)){
         last = selected;
         return this->drawAll();
     }
@@ -111,7 +111,7 @@ void preview_page_container::newPage()
         appendToVisible( item );
     }
 
-    if(unlikely(data->lengthPage() != this->_item_show.length()))
+    if(un(data->lengthPage() != this->_item_show.length()))
         return this->changeDocument();
 
     this->layout()->addWidget(item);

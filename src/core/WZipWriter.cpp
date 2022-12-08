@@ -23,7 +23,7 @@ int WZipWriter::write(const void *to, size_t size, const char *fileToCreate)
 
     struct zip_source *file = zip_source_buffer_create(0, 0, 0, NULL);
 
-    if(unlikely(!file))
+    if(un(!file))
         return -1;
 
     zip_source_begin_write(file);

@@ -278,7 +278,7 @@ frompdf::load_res_pdf frompdf::save_pdf(WZipWriter         &filezip,
                                                filezip,
                                                frompdf::getName_pdf(m_image.length()));
 
-    if(unlikely(res != OK))
+    if(un(res != OK))
         return load_res_pdf::not_valid_pdf;
 
     return load_res_pdf::ok;

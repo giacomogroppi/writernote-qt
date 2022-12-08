@@ -153,7 +153,7 @@ void set_press( QPen &pen, pressure_t press, double prop,
 
 inline Stroke &Stroke::operator=(const Stroke &other)
 {
-    if(unlikely(this == &other)){
+    if(un(this == &other)){
         return *this;
     }
 

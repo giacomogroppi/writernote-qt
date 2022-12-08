@@ -313,7 +313,7 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
         touch = dynamic_cast<QTabletEvent *>(e);
         const QPointF &PT = touch->position();
 
-        if(unlikely(isVisible)){
+        if(un(isVisible)){
             WDebug(eventFilterCanvasDebug, "Visible" << _property->rect() << PT);
             if(_property->rect().contains(PT.toPoint())){
                 WDebug(eventFilterCanvasDebug, "Inside" << e->type());

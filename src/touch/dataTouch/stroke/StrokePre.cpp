@@ -54,7 +54,11 @@ Stroke *StrokePre::merge()
         WDelete(data_press);
     }
 
-    return this->_stroke;
+    {
+        auto *res = this->_stroke;
+        this->_stroke = nullptr;
+        return res;
+    }
 }
 
 void StrokePre::adjust(const QPointF &delta)
@@ -132,7 +136,12 @@ QColor StrokePre::getColor(double division) const
 
 StrokePre &StrokePre::operator=(const StrokePre &other)
 {
-    *_stroke = *other._stroke;
+    if (this == &other)
+        return *this;
+
+    delete _stroke;
+    _stroke = other._stroke->clone();
+
     _img = other._img;
     this->_point = other._point;
     this->_pressure = other._pressure;
@@ -163,7 +172,7 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
         core::painter_set_antialiasing(painter);
         core::painter_set_source_over(painter);
 
-        if (unlikely(_point.length() == 1)) {
+        if (un(_point.length() == 1)) {
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
         } else {

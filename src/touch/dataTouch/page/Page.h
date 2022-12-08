@@ -235,7 +235,7 @@ inline point_s Page::at_translation(const point_s &point, cint page)
     point_s tmp;
     const double ytranslation = double(page) * Page::getHeight();
 
-    if(unlikely(!page)){
+    if(un(!page)){
         return point;
     }
 
@@ -420,6 +420,8 @@ force_inline void Page::append(Stroke *strokeAppend)
     W_ASSERT(!strokeAppend->isEmpty());
 
     this->_strokeTmp.append(strokeAppend);
+
+    W_ASSERT(*_strokeTmp.last() == *strokeAppend);
 }
 
 force_inline double Page::minHeight() const
@@ -459,7 +461,7 @@ force_inline void Page::drawForceColorStroke(
     const auto needDelete = (bool) (!painter);
 
     if(needDelete){
-        if(unlikely(initImg(false)))
+        if(un(initImg(false)))
             return this->triggerRenderImage(m_pos_ris, true);
 
         WNew(painter, QPainter, ());

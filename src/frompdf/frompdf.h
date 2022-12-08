@@ -168,7 +168,7 @@ force_inline void frompdf::draw_pdf(QPainter &painter, const double delta, cbool
 
             size.setHeight(y);
 
-            if(unlikely(IsExportingPdf)){
+            if(un(IsExportingPdf)){
                 size.setWidth(x);
             }
         }

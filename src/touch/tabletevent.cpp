@@ -39,7 +39,7 @@ static void AppendAll(
     qint64 time;
     const QPointF &PointFirstPage = doc.getPointFirstPage();
 
-    if(unlikely(strokeToAppend.isEmpty()))
+    if(un(strokeToAppend.isEmpty()))
         return;
 
     time = core::get_main_window()->m_audioplayer->getPositionSecond();
@@ -52,7 +52,7 @@ static void AppendAll(
     strokeToAppend.adjust(PointFirstPage);
 
 
-    if(unlikely(met.isLaser())){
+    if(un(met.isLaser())){
         canvas->_laser->append(strokeToAppend);
         canvas->_laser->endMove();
         strokeToAppend = StrokePre();
@@ -122,7 +122,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
     WDebug(tabletDebug, event->type() << convert(event->type()));
 
-    if(unlikely(isOut)){
+    if(un(isOut)){
         /*
          * the user is writing in a part where
          *  the sheet is not present.
@@ -134,7 +134,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
         goto end;
     }
 
-    if(unlikely(eventType == QEvent::TabletPress)){ /* first point */
+    if(un(eventType == QEvent::TabletPress)){ /* first point */
         block_scrolling = true;
         ManageStart(event);
 #if defined(WIN32) || defined(WIN64)
@@ -156,7 +156,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
 
 end:
 
-    if(unlikely(!_method.isSelection() && lastMethod.isSelection())){
+    if(un(!_method.isSelection() && lastMethod.isSelection())){
         WDebug(tabletDebug, "Square reset");
         _square->reset();
     }
@@ -185,7 +185,7 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 {
     constexpr const auto _debug = false;
     
-    if(unlikely(m_deviceDown))
+    if(un(m_deviceDown))
         return;
 
     W_ASSERT(event->type() == QEvent::TabletPress);
@@ -241,7 +241,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
         updateCursor(event);
     }
 
-    if(unlikely(!m_deviceDown))
+    if(un(!m_deviceDown))
         return;
 
     painter.begin(&_pixmap);
@@ -291,7 +291,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
         _finder->endMoving();
     }
 
-    if(unlikely(!m_deviceDown)){
+    if(un(!m_deviceDown)){
         if(_method.isSelection() && done){
             _square->reset();
         }
@@ -339,9 +339,9 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
                 data->getZoom() - .0000001;
 
     size = event->pressure();
-    alfa = unlikely(highlighter) ? _highlighter->getAlfa() : 255;
+    alfa = un(highlighter) ? _highlighter->getAlfa() : 255;
 
-    if(unlikely(!this->m_deviceDown)){
+    if(un(!this->m_deviceDown)){
         strokeTmp.setTime(static_cast<int>(
                                   core::get_main_window()->m_audio_recorder->getCurrentTime()
                 ));
@@ -350,7 +350,7 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     }
 
     tmp_point = pointTouch;
-    pressure = unlikely(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
+    pressure = un(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point, pressure, (QPen &)_pen, prop);
 }

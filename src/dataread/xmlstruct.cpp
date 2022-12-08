@@ -19,7 +19,7 @@ size_t xmlstruct::get_size_file(const QByteArray &path)
     size_t size;
     QFile file(path);
 
-    if(unlikely(!file.open(QIODevice::ReadOnly)))
+    if(un(!file.open(QIODevice::ReadOnly)))
         return 0;
 
     size = file.size();

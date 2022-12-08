@@ -15,7 +15,7 @@
 #define __init__ __attribute((constructor))
 
 #define BIT(bit) (1 << (bit-1))
-#define unlikely(exp) Q_UNLIKELY(exp)
+#define un(exp) Q_UNLIKELY(exp)
 #define likely(exp) Q_LIKELY(exp)
 #define unknown(exp) exp
 #define force_inline Q_ALWAYS_INLINE
@@ -61,7 +61,7 @@ force_inline constexpr not_used int debug_enable()
 #ifdef DEBUGINFO
 # define W_ASSERT(condition)                                                    \
     do{                                                                         \
-        if(unlikely(!!(condition) == false)){                                   \
+        if(un(!!(condition) == false)){                                   \
             qDebug() << __FUNCTION__ << __FILE__ << __LINE__ << #condition;     \
             std::abort();                                                       \
         }                                                                       \
@@ -423,7 +423,7 @@ force_inline Q_CONSTEXPR T Power(const T &value, cint power)
 {
     T res = value;
 
-    if(unlikely(power) == 0){
+    if(un(power) == 0){
         return 1;
     }
 
@@ -531,7 +531,7 @@ force_inline void append_order(QVector<T> & list, const T& element)
     len = list.length();
 
     for(i = 0; i < len; i++){
-        if(unlikely(list.at(i) > element)){
+        if(un(list.at(i) > element)){
             list.insert(i, element);
             return;
         }

@@ -142,7 +142,7 @@ void MainWindow::updateTouch()
     ui->actionbrown_color->setChecked(_canvas->_color == COLOR_BROWN);
     ui->actionpurple->setChecked(_canvas->_color == COLOR_PURPLE);
 
-    if(unlikely(!_canvas->_method.isSelection() and last.isSelection())){
+    if(un(!_canvas->_method.isSelection() and last.isSelection())){
         _canvas->_square->changeInstrument();
     }
 }

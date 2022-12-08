@@ -191,7 +191,7 @@ inline void datastruct::triggerVisibility(cdouble viewSize)
     QPointF _init(0, 0);
     QPointF _end(0, viewSize - 0.1);
 
-    if(unlikely(!len))
+    if(un(!len))
         return;
 
     _init = this->adjustPoint(_init);
@@ -200,7 +200,7 @@ inline void datastruct::triggerVisibility(cdouble viewSize)
     from = this->whichPage(_init);
     to = this->whichPage(_end);
 
-    if(unlikely(to < 0 || from < 0)){
+    if(un(to < 0 || from < 0)){
         from = 0;
         to = len - 1;
     }
@@ -223,7 +223,7 @@ force_inline bool datastruct::needToCreateNewSheet() const
 {
     cint len = this->lengthPage();
 
-    if(unlikely(len < 2))
+    if(un(len < 2))
         return true;
 
     if(at(len - 1).lengthStroke())
@@ -280,7 +280,7 @@ inline void datastruct::newPage(const n_style style)
 {
     _page.append(Page(lengthPage() + 1, style));
 
-    this->lastPage().setVisible(unlikely(lengthPage() <= 2));
+    this->lastPage().setVisible(un(lengthPage() <= 2));
     //triggerVisibility(page::getHeight() * lengthPage());
 }
 
@@ -289,7 +289,7 @@ inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int bas
     QRectF result;
     int i, len;
 
-    if(unlikely(pos.isEmpty()))
+    if(un(pos.isEmpty()))
         return result;
 
     len = pos.length();
@@ -298,7 +298,7 @@ inline QRectF datastruct::get_size_area(const QList<QVector<int>> & pos, int bas
     for(i = 1; i < len; i ++){
         const auto &vec = pos.at(i);
 
-        if(unlikely(vec.isEmpty()))
+        if(un(vec.isEmpty()))
             continue;
 
         const auto tmp = this->get_size_area(vec, base + i);
@@ -329,7 +329,7 @@ inline int datastruct::getFirstPageVisible() const
     len = this->lengthPage();
     find = 0;
 
-    if(unlikely(_pageVisible < 0)){
+    if(un(_pageVisible < 0)){
         for(i = 0; i < len; i++){
             if(at(i).isVisible()){
                 __pageVisible = i;
@@ -341,7 +341,7 @@ inline int datastruct::getFirstPageVisible() const
         find = 1;
     }
 
-    if(unlikely(!find)){
+    if(un(!find)){
         //log_write->write("Impossibile to find first page visible", log_ui::critic_error);
         __pageVisible = 0;
         for(const auto &page : _page){
@@ -370,7 +370,7 @@ inline int datastruct::get_range_visible() const
     count = 0;
 
     for(; i < len; i++){
-        if(unlikely(!at(i).isVisible()))
+        if(un(!at(i).isVisible()))
             break;
 
         count ++;
@@ -407,7 +407,7 @@ inline int datastruct::whichPage(const Stroke &stroke) const
     const auto &point = big.topLeft();
     i = this->whichPage(point);
 
-    if(unlikely(i < 0)){
+    if(un(i < 0)){
         const auto &point = big.bottomRight();
         i = this->whichPage(point);
     }
@@ -450,7 +450,7 @@ inline int datastruct::whichPage(const QPointF &point) const
     const double heigth = Page::getHeight();
     const not_used auto debug_which = false;
 
-    if(unlikely(point.y() < 0.))
+    if(un(point.y() < 0.))
         return -1;
 
     len = this->lengthPage();
@@ -470,7 +470,7 @@ inline int datastruct::whichPage(const QPointF &point) const
 
     i = WCommonScript::diff(point.y() / heigth);
 
-    if(unlikely(i >= len)){
+    if(un(i >= len)){
         WDebug(debug_which, "set to -1");
         i = -1;
         WDebug(debug_which, "set to -1" << qstr("i: %1").arg(i));
@@ -608,7 +608,7 @@ constexpr force_inline QPointF datastruct::adjustPointReverce(const QPointF &poi
 
 force_inline bool datastruct::isempty_touch() const
 {
-    return unlikely(_page.isEmpty());
+    return un(_page.isEmpty());
 }
 
 force_inline void datastruct::setVisible(int from, int to)

@@ -68,7 +68,7 @@ void datastruct::newViewAudio(int newTime)
             .mutex = _changeAudioMutex
     };
 
-    if(unlikely(newTime == 0)){
+    if(un(newTime == 0)){
         for(auto &ref : _page){
             ref.triggerRenderImage(newTime, true);
         }
@@ -79,7 +79,7 @@ void datastruct::newViewAudio(int newTime)
         extra.m_page = (Page *)&at(index);
 
         create = DataPrivateMuThreadInit(dataThread, &extra, DATASTRUCT_THREAD_MAX, extra.m_page->lengthStroke(), 0);
-        if(unlikely(create == 1)){
+        if(un(create == 1)){
             __search_new_view(&dataThread[0]);
             continue;
         }

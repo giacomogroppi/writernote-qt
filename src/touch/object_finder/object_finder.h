@@ -43,7 +43,7 @@ force_inline void object_finder::move(const QPointF& point)
 
     if(likely(_point.isSet())){
         // if the point is equal we don't have to stop the timer
-        if(unlikely(WCommonScript::is_near(_point, point, 1.))){
+        if(un(WCommonScript::is_near(_point, point, 1.))){
             return;
         }
 
