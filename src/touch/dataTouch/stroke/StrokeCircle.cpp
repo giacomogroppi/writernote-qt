@@ -130,6 +130,15 @@ void StrokeCircle::adjust(double zoom)
     _data.y /= zoom;
 }
 
+Stroke *StrokeCircle::clone() const
+{
+    StrokeCircle *res = new StrokeCircle();
+    res->_data = this->_data;
+    res->setMetadata(this->getMetadata());
+    W_ASSERT(*res == *this);
+    return res;
+}
+
 int StrokeCircle::how_much_decrese() const
 {
     return 0;
@@ -190,9 +199,40 @@ void StrokeCircle::scale(const QPointF &offset)
     this->_data.y += offset.y();
 }
 
+bool StrokeCircle::operator==(const Stroke &other) const
+{
+    if(this->type() != other.type())
+        return false;
+
+    const StrokeCircle &tmp = dynamic_cast<const StrokeCircle &>(other);
+
+    return  this->_data == tmp._data and
+            Stroke::operator==(other);
+}
+
+bool StrokeCircle::operator!=(const Stroke &other) const
+{
+    return !(*this == other);
+}
+
+int StrokeCircle::type() const
+{
+    return Stroke::COMPLEX_CIRCLE;
+}
+
 QRect StrokeCircle::getBiggerPointInStroke() const
 {
     const auto topLeft = QPoint(_data.x - _data.r, _data.y - _data.r);
     const auto bottomRight = QPoint(_data.x + _data.r, _data.y + _data.r);
     return QRect(topLeft, bottomRight);
 }
+
+void StrokeCircle::clearAudio()
+{
+}
+
+size_t StrokeCircle::createControll() const
+{
+    return 0;
+}
+

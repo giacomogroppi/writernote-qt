@@ -9,6 +9,13 @@ private:
     struct StrokeCircleData{
         double x, y, r;
         pressure_t press;
+
+        bool operator==(const StrokeCircleData &other) const {
+            return  this->press == other.press and
+                    this->x == other.x and
+                    this->y == other.y and
+                    this->r == other.r;
+        }
     } _data;
 
     int load(WZipReaderSingle &reader);
@@ -26,9 +33,6 @@ public:
     bool is_inside(const QRectF &rect, double precision) const;
 
     void append(const point_s &point, pressure_t pressure);
-    void setMetadata(int posizione_audio, const colore_s &color);
-    void setMetadata(const metadata_stroke &metadata);
-    void setPositioneAudio(int m_pos_ris);
     [[nodiscard]] virtual size_t createControll() const;
 
     int getPosizioneAudio() const;
