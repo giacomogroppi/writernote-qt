@@ -210,7 +210,7 @@ size_t StrokeNormal::createControll() const
 
 QRect StrokeNormal::getBiggerPointInStroke() const
 {
-    if (likely(!needToUpdateBiggerData())) {
+    if (!needToUpdateBiggerData()) {
         return Stroke::getBiggerPointInStroke();
     }
 
@@ -333,8 +333,7 @@ void StrokeNormal::preappend(int i)
 
 bool StrokeNormal::isEmpty() const
 {
-    const auto e = Stroke::isEmpty();
-    return e and this->_point.isEmpty();
+    return this->_point.isEmpty();
 }
 
 void StrokeNormal::adjust(double zoom)

@@ -152,6 +152,11 @@ void Stroke::setAlfaColor(uchar alfa)
     _metadata.color.set_alfa(alfa);
 }
 
+void Stroke::setColor(const colore_s &color)
+{
+    this->_metadata.color = color;
+}
+
 QColor Stroke::getColor(double division) const
 {
     return this->_metadata.color.toQColor(division);
@@ -165,6 +170,11 @@ void Stroke::setMetadata(int posizione_audio, const colore_s &color)
     };
 }
 
+void Stroke::setMetadata(const metadata_stroke &metadata)
+{
+    this->_metadata = metadata;
+}
+
 size_t Stroke::createControll() const
 {
     size_t controll = 0;
@@ -175,6 +185,12 @@ size_t Stroke::createControll() const
     }
 
     return controll;
+}
+
+QRect Stroke::getBiggerPointInStroke() const
+{
+    W_ASSERT(this->needToUpdateBiggerData() == false);
+    return this->_biggerData;
 }
 
 void Stroke::clearAudio()

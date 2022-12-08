@@ -237,6 +237,11 @@ bool StrokeLine::operator!=(const Stroke &other) const
     return !(*this == other);
 }
 
+int StrokeLine::type() const
+{
+    return Stroke::COMPLEX_LINE;
+}
+
 size_t StrokeLine::getSizeInFile() const
 {
     static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));

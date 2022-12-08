@@ -81,7 +81,7 @@ public:
     virtual size_t createControll() const;
 
     int getPosizioneAudio() const;
-    virtual QRect getBiggerPointInStroke() const = 0;
+    virtual QRect getBiggerPointInStroke() const;
     virtual bool isInside(const QRectF &rect) const = 0;
 
     void clearAudio();
@@ -143,7 +143,7 @@ protected:
     Stroke(const metadata_stroke& met);
     virtual void modify();
     void setBiggerData(const QRect &newRect) const;
-    [[nodiscard]] bool needToUpdateBiggerData() const;
+    bool needToUpdateBiggerData() const;
 
     virtual void preappend(int l) = 0;
 
@@ -203,6 +203,16 @@ inline void Stroke::setPositioneAudio(int m_pos_ris)
 inline int Stroke::getPosizioneAudio() const
 {
     return this->_metadata.posizione_audio;
+}
+
+inline const metadata_stroke &Stroke::getMetadata() const
+{
+    return this->_metadata;
+}
+
+inline bool Stroke::is_highlighter() const
+{
+    return _metadata.color.getAlfa() < 255;
 }
 
 inline uchar Stroke::get_alfa() const

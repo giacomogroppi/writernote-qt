@@ -246,7 +246,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
     Q_ASSERT(data->from <= data->to);
 
-    for(; data->from < data->to; data->from++){
+    for (; data->from < data->to; data->from++) {
         auto &stroke = _page->atStrokeMod(data->from);
         int index;
 
@@ -255,11 +255,11 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
         index = stroke.is_inside(area, 0, __m_size_gomma, false);
 
-        if(index < 0){
+        if (index < 0) {
             continue;
         }
 
-        if(unlikely(stroke.is_highlighter())){
+        if (unlikely(stroke.is_highlighter())) {
             private_data->highlighter_delete = true;
 
             const auto currentArea = stroke.getBiggerPointInStroke();
