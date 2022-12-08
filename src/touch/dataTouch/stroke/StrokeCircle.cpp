@@ -231,6 +231,11 @@ void StrokeCircle::clearAudio()
 {
 }
 
+size_t StrokeCircle::getSizeInMemory() const
+{
+    return 0;
+}
+
 size_t StrokeCircle::createControll() const
 {
     return 0;

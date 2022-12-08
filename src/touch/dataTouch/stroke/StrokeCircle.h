@@ -51,6 +51,7 @@ public:
     void setAlfaColor(uchar alfa);
 
     void setColor(const colore_s &color);
+
     /* this function physically adds the x and y value of the point to all of its points. */
     void movePoint(const QPointF &translation);
 
