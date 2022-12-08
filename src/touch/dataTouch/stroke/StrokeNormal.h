@@ -123,7 +123,6 @@ protected:
     friend class Stroke;
     friend class StrokePre;
     friend class StrokeLine;
-    friend class StrokeNormalFileSave;
     friend class StrokeNormalFileLoad;
     friend class Page;
     friend class StrokeForPage;

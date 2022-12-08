@@ -15,6 +15,10 @@ int StrokeNormal::save(WZipWriterSingle &file) const
 {
     const int len_point     = this->_point.length();
     const int len_pressure  = this->_pressure.length();
+
+    if (Stroke::save(file))
+        return ERROR;
+
     file.write_object(len_point);
     file.write_object(len_pressure);
 
@@ -252,8 +256,23 @@ size_t StrokeNormal::getSizeInMemory() const
 
 size_t StrokeNormal::getSizeInFile() const
 {
-    StrokeNormalFileSave d(*this);
-    return d.getSizeInFile() + Stroke::getSizeInFile();
+    size_t s = 0;
+    cint len_pressure = _pressure.length();
+    cint len_point    = _point.length();
+
+    static_assert(sizeof(len_pressure) == sizeof(len_point));
+    static_assert(sizeof(len_pressure) == 4);
+
+    static_assert_type(len_pressure, const int);
+    static_assert_type(len_point, const int);
+
+    s += sizeof(len_point);
+    s += sizeof(len_pressure);
+
+    s += sizeof(pressure_t)     * len_pressure;
+    s += sizeof(point_s)        * len_point;
+
+    return s + Stroke::getSizeInFile();
 }
 
 void StrokeNormal::decreasePrecision()

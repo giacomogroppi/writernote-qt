@@ -24,3 +24,4 @@ build-qtcreator/*
 .vscode/*
 cmake_install.cmake
 result_memcheck.txt
+writernote_*.snap
