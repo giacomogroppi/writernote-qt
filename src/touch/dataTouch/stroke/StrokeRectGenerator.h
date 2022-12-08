@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Stroke.h"
+#include "StrokeComplexCommon.h"
 
 class StrokeRectGenerator
 {

@@ -28,6 +28,11 @@ int StrokeRect::load(WZipReaderSingle &reader)
     return OK;
 }
 
+int StrokeRect::type() const
+{
+    return Stroke::COMPLEX_RECT;
+}
+
 void StrokeRect::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const
 {
     painter.setPen(pen);
@@ -59,6 +64,12 @@ void StrokeRect::adjust(double zoom)
 int StrokeRect::how_much_decrese() const
 {
     return 0;
+}
+
+Stroke *StrokeRect::makeNormal() const
+{
+    W_ASSERT(0);
+    return nullptr;
 }
 
 QRect StrokeRect::getBiggerPointInStroke() const
