@@ -5,7 +5,7 @@
 #include "StrokeCircle.h"
 #include "StrokeRect.h"
 
-Stroke *Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
+std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
 {
 #define manage_err(pointer) do { delete pointer; return ERROR; } while(0)
     auto *s = new StrokeNormal();
@@ -26,7 +26,7 @@ Stroke *Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
     return s;
 }
 
-Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
+std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
 {
 #define ver_2_manage_error(contr)   \
     do {                            \
@@ -78,7 +78,10 @@ Stroke* Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
     return nullptr;
 }
 
-Stroke* Stroke::load(WZipReaderSingle &reader, int version_stroke, int *ok)
+std::shared_ptr<Stroke> Stroke::load(
+        WZipReaderSingle &reader,
+        int version_stroke,
+        int *ok)
 {
     switch (version_stroke) {
         case 0:

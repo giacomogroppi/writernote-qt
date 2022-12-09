@@ -152,8 +152,7 @@ void Page::drawNewPage(n_style __style)
     stroke.setPressure(widthToPressure(style.thickness));
 }
 
-void Page::swap(
-        QList<Stroke *>     &list,
+void Page::swap(QList<std::shared_ptr<Stroke>> &list,
         const QVector<int>  &pos,
         int                 flag)
 {
@@ -173,9 +172,9 @@ void Page::swap(
     }
 
     for(cint ref : pos){
-        Stroke & stroke = atStrokeMod(ref);
+        const auto &stroke = atStrokeMod(ref);
         W_ASSERT(!stroke.isEmpty());
-        list.append(&stroke);
+        list.append(stroke);
     }
 
     area = this->get_size_area(pos);
@@ -186,7 +185,7 @@ void Page::swap(
 /*
  * this function mantain the item already in list
 */
-void Page::swap(QList<Stroke *> & list,
+void Page::swap(QList<std::shared_ptr<Stroke> > &list,
                 int             from,
                 int             to)
 {
@@ -317,9 +316,12 @@ void * __page_load(void *__data)
     Define_PAINTER_p(painter, img);
 
     for(; _data->from < _data->to; _data->from ++){
-        const auto &ref = extra->m_stroke->at(_data->from);
+        const Stroke *ref = extra->m_stroke->at(_data->from);
 
-        if(un(ref->isEmpty())){
+        qDebug() << "Page::__page_load pointer" << ref;
+        W_ASSERT(!ref->isEmpty());
+
+        /*if(un(ref->isEmpty())){
             mutex.lock();
 
             extra->to_remove->append(_data->from);
@@ -327,7 +329,7 @@ void * __page_load(void *__data)
             mutex.unlock();
 
             continue;
-        }
+        }*/
 
         const QColor &color = ref->getColor(
             (un(m_pos_ris != -1))
@@ -381,10 +383,10 @@ void Page::drawEngine(
     if (use_multi_thread) {
         threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length(), ~DATA_PRIVATE_FLAG_SEM);
 
-        for(i = 0; i < threadCount; i++){
+        for (i = 0; i < threadCount; i++) {
             pthread_create(&thread[i], NULL, __page_load, &threadData[i]);
         }
-        for(i = 0; i < threadCount; i++){
+        for (i = 0; i < threadCount; i++) {
             pthread_join(thread[i], NULL);
         }
     } else {
@@ -412,7 +414,7 @@ inline void Page::draw(
     W_ASSERT(painter.isActive());
 
     if(un(all)){
-        this->drawEngine(painter, this->_stroke, m_pos_ris, true);
+        this->drawEngine(painter, _stroke, m_pos_ris, true);
     }
 
     if(_strokeTmp.length()){
@@ -427,7 +429,9 @@ inline void Page::draw(
 void Page::mergeList()
 {
     for(auto *s : _strokeTmp) {
+        W_ASSERT(!s->isEmpty());
         _stroke.append(s);
+        W_ASSERT(*_stroke.last() == *s);
     }
 
     _strokeTmp.clear();

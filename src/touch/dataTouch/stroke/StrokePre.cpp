@@ -18,8 +18,6 @@ StrokePre::StrokePre() noexcept :
 
 StrokePre::~StrokePre()
 {
-    if(this->_stroke)
-        delete this->_stroke;
 }
 
 Stroke *StrokePre::merge()

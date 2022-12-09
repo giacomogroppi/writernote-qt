@@ -96,7 +96,7 @@ void Document::cleanAudio()
         const auto len = page.lengthStroke();
 
         for(auto k = 0; k < len; k++){
-            page.atStrokeMod(k).clearAudio();
+            page.atStrokeMod(k)->clearAudio();
         }
     }
 

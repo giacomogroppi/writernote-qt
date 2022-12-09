@@ -51,11 +51,12 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
-    WMutex _img, _append_load;
-    bool                _IsVisible = true;
-    int                 _count;
-    QList<Stroke *>     _stroke;
-    StrokeForPage       _stroke_writernote;
+    WMutex                          _img;
+    WMutex                          _append_load;
+    bool                            _IsVisible = true;
+    int                             _count;
+    QList<std::shared_ptr<Stroke>>  _stroke;
+    StrokeForPage                   _stroke_writernote;
 
     /**
      * after adding data to the list, call triggernewimage,
@@ -74,7 +75,7 @@ private:
 
     void mergeList();    
 
-    void AppendDirectly(Stroke *stroke);
+    void AppendDirectly(std::shared_ptr<Stroke> stroke);
     bool initImg(bool flag);
 
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
@@ -91,8 +92,8 @@ public:
     ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
-    void swap(QList<Stroke *> & stroke, const QVector<int> & pos, int flag);
-    void swap(QList<Stroke *> & stroke, int from, int to);
+    void swap(QList<std::shared_ptr<Stroke>> & stroke, const QVector<int> & pos, int flag);
+    void swap(QList<std::shared_ptr<Stroke>> &stroke, int from, int to);
     Stroke *swap(int index, Stroke *newData);
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
@@ -117,8 +118,8 @@ public:
     __fast void append(Stroke *stroke);
     __fast void append(const QList<Stroke *> & stroke);
 
-    __fast const Stroke       & atStroke(const uint i) const;
-    __fast Stroke             & atStrokeMod(const uint i);
+    __fast const Stroke             & atStroke(const uint i) const;
+    __fast std::shared_ptr<Stroke>  & atStrokeMod(const uint i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
     __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
@@ -244,7 +245,7 @@ inline point_s Page::at_translation(const point_s &point, cint page)
     return tmp;
 }
 
-force_inline void Page::AppendDirectly(Stroke *stroke)
+force_inline void Page::AppendDirectly(std::shared_ptr<Stroke> stroke)
 {
     this->_stroke.append(stroke);
 }
@@ -332,17 +333,15 @@ force_inline void Page::setVisible(cbool vis) const
 force_inline const Stroke &Page::atStroke(uint i) const
 {
     __is_ok_count();
-    auto *res = this->_stroke.at(i);
+    const auto res = this->_stroke.at(i);
     W_ASSERT(res);
     return *res;
 }
 
-force_inline Stroke &Page::atStrokeMod(const uint i)
+force_inline std::shared_ptr<Stroke> &Page::atStrokeMod(const uint i)
 {
     __is_ok_count();
-    auto *res = this->_stroke.operator[](i);
-    W_ASSERT(res);
-    return *res;
+    return this->_stroke.operator[](i);
 }
 
 force_inline const StrokeForPage &Page::get_stroke_page() const
@@ -391,9 +390,7 @@ force_inline void Page::removeAt(cint i)
 {
     W_ASSERT(!(i < 0 || i >= _stroke.size()));
 
-    auto *res = this->_stroke.takeAt(i);
-    W_ASSERT(res);
-    delete res;
+    (void)this->_stroke.takeAt(i);
 }
 
 force_inline const Stroke &Page::last() const
@@ -410,16 +407,13 @@ inline Stroke &Page::lastMod()
 
 force_inline void Page::append(Stroke *strokeAppend)
 {
-    DO_IF_DEBUG(
-    int not_used lastNewIndex = _strokeTmp.length();
-    );
-
-    W_ASSERT(strokeAppend);
+    W_ASSERT(strokeAppend and !strokeAppend->isEmpty());
 
     __is_ok_count();
-    W_ASSERT(!strokeAppend->isEmpty());
 
     this->_strokeTmp.append(strokeAppend);
+
+    qDebug() << "Page::append pointer" << strokeAppend;
 
     W_ASSERT(*_strokeTmp.last() == *strokeAppend);
 }
@@ -436,9 +430,6 @@ force_inline Page::Page(const Page &from)
 
 force_inline Page::~Page()
 {
-    for (auto *s : qAsConst(this->_stroke)) {
-        delete s;
-    }
 }
 
 inline Page &Page::operator=(const Page &other)

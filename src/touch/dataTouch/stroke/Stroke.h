@@ -54,8 +54,8 @@ private:
 
     virtual void reset_flag();
 
-    static Stroke *load_ver_1(WZipReaderSingle &reader, int *ok);
-    static Stroke *load_ver_2(WZipReaderSingle &reader, int *ok);
+    static std::shared_ptr<Stroke> load_ver_1(WZipReaderSingle &reader, int *ok);
+    static std::shared_ptr<Stroke> load_ver_2(WZipReaderSingle &reader, int *ok);
 public:    
     virtual ~Stroke() = default;
 
@@ -128,7 +128,7 @@ public:
     friend class page_file;
 #endif // DEBUGINFO
 
-    static Stroke* load(WZipReaderSingle &reader, int version_stroke, int *ok);
+    static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);
     virtual int save(WZipWriterSingle &file) const;
 
     /** all stroke derivated class needs to implements this method to recognize yourself */

@@ -23,7 +23,7 @@ int page_file::load_ver_1(Page &_page, WZipReaderSingle &reader)
 
     for(i = 0; i < len_stroke; i++){
         int ok;
-        auto *res = Stroke::load(reader, ver_stroke, &ok);
+        std::shared_ptr<Stroke> res = Stroke::load(reader, ver_stroke, &ok);
 
         if(un(ok != OK))
             return ok;
@@ -53,7 +53,7 @@ int page_file::load_ver_2(Page &_page, WZipReaderSingle &reader)
 
     for(i = 0; i < len_stroke; i++){
         int ok;
-        auto *ref = Stroke::load(reader, ver_stroke, &ok);
+        std::shared_ptr<Stroke> ref = Stroke::load(reader, ver_stroke, &ok);
 
         if (ok != OK)
             return ok;
