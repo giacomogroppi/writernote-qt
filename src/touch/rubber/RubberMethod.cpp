@@ -109,10 +109,10 @@ static force_inline void draw_null(Page *_page, const QVector<int> &point,
 
 static bool makeNormal(Page *page, int index, Stroke *stroke)
 {
-    auto *newStroke = stroke->makeNormal();
+    std::shared_ptr<Stroke> newStroke = stroke->makeNormal();
 
     if (newStroke) {
-        delete page->swap(index, newStroke);
+        page->swap(index, newStroke);
     }
 
     return newStroke != nullptr;

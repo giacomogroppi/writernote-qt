@@ -332,16 +332,16 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         for(int counterPoint = 0; counterPoint < __page.at(counterPage).length(); counterPoint ++){
             QList<point_old_ver_7> &ListPrivate = __page.operator[](counterPage);
-            StrokeNormal stroke;
+            std::shared_ptr<StrokeNormal> stroke(new StrokeNormal);
             int id;
 
             {
                 const point_old_ver_7 &tmp = ListPrivate.at(counterPoint);
                 id = tmp.idtratto;
-                stroke.setMetadata(tmp.m_posizioneaudio, tmp.m_color);
+                stroke->setMetadata(tmp.m_posizioneaudio, tmp.m_color);
             }
 
-            for(; counterPoint < ListPrivate.length() &&
+            for (; counterPoint < ListPrivate.length() &&
                 ListPrivate.at(counterPoint).idtratto == id;
                 counterPoint ++) {
                 const point_old_ver_7 &tmpRef = ListPrivate.at(counterPoint);
@@ -353,12 +353,12 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
                 if (un(id < 0)) {
                     continue;
                 } else {
-                    stroke.append(TmpAppend, tmpRef.m_pressure);
+                    stroke->append(TmpAppend, tmpRef.m_pressure);
                 }
             }
             
-            if(likely(id >= 0)){
-                doc->appendStroke(&stroke);
+            if (likely(id >= 0)) {
+                doc->appendStroke(stroke);
             }
         }
     }

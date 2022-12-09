@@ -51,9 +51,8 @@ void reduce_size::decrese(datastruct *data){
         Page &page = data->at_mod(pageCounter);
 
         len = page.lengthStroke();
-        for(i=0; i<len; ++i){
+        for (i = 0; i < len; i++) {
             page.atStrokeMod(i).decreasePrecision();
-
         }
     }
 }

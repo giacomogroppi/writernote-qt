@@ -132,9 +132,9 @@ void StrokeCircle::adjust(double zoom)
     _data.y /= zoom;
 }
 
-Stroke *StrokeCircle::clone() const
+std::shared_ptr<Stroke> StrokeCircle::clone() const
 {
-    StrokeCircle *res = new StrokeCircle();
+    std::shared_ptr<StrokeCircle> res(new StrokeCircle);
     res->_data = this->_data;
     res->setMetadata(this->getMetadata());
     W_ASSERT(*res == *this);
@@ -146,13 +146,13 @@ int StrokeCircle::how_much_decrese() const
     return 0;
 }
 
-StrokeNormal *StrokeCircle::makeNormal() const
+std::shared_ptr<Stroke> StrokeCircle::makeNormal() const
 {
     double from, to;
     point_s tmp;
     pressure_t press;
     QVector<point_s> _pointLeft, _pointRigth;
-    auto *_to = new StrokeNormal();
+    std::shared_ptr<StrokeNormal> _to(new StrokeNormal);
 
     const auto appendToStroke = [&_to](
             const QVector<point_s> &point,

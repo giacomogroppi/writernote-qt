@@ -172,9 +172,9 @@ void Page::swap(QList<std::shared_ptr<Stroke>> &list,
     }
 
     for(cint ref : pos){
-        const auto &stroke = atStrokeMod(ref);
-        W_ASSERT(!stroke->isEmpty());
-        list.append(stroke);
+        auto &r = this->_stroke[ref];
+        W_ASSERT(!r->isEmpty());
+        list.append(r);
     }
 
     area = this->get_size_area(pos);
@@ -238,9 +238,9 @@ void Page::removeAt(const QVector<int> &pos)
     }
 }
 
-void Page::append(const QList<Stroke *> &stroke)
+void Page::append(const QList<std::shared_ptr<Stroke>> &stroke)
 {
-    for(const auto & tmp : qAsConst(stroke)){
+    for (const auto & tmp : qAsConst(stroke)) {
         this->append(tmp);
     }
 }
@@ -428,7 +428,7 @@ inline void Page::draw(
 
 void Page::mergeList()
 {
-    for(auto *s : _strokeTmp) {
+    for(auto &s : _strokeTmp) {
         W_ASSERT(!s->isEmpty());
         _stroke.append(s);
         W_ASSERT(*_stroke.last() == *s);
@@ -624,7 +624,7 @@ void Page::decreseAlfa(const QVector<int> &pos, int decrese)
     End_painter(painter);
 }
 
-QRect Page::get_size_area(const QList<Stroke *> &item, int from, int to)
+QRect Page::get_size_area(const QList<std::shared_ptr<Stroke> > &item, int from, int to)
 {
     QRect result;
 

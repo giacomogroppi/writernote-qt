@@ -41,11 +41,11 @@ public:
     void decreasePrecision();
 
     void adjust(double zoom);
-    Stroke *clone() const;
+    std::shared_ptr<Stroke> clone() const final;
 
     int how_much_decrese() const;
 
-    Stroke* makeNormal() const;
+    std::shared_ptr<Stroke> makeNormal() const;
 
     [[nodiscard]] bool isEmpty() const;
 

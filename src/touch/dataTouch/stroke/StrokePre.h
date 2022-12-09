@@ -7,7 +7,7 @@
 class StrokePre{
 private:
     WImage _img;
-    Stroke *_stroke;
+    std::shared_ptr<Stroke> _stroke;
 
     WList<point_s>      _point;
     WList<pressure_t>   _pressure;
@@ -54,7 +54,7 @@ public:
     void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);
     [[nodiscard]] QColor getColor(double division = 1.) const;
 
-    [[nodiscard]] Stroke *merge();
+    std::shared_ptr<Stroke> merge();
 
     StrokePre &operator=(const StrokePre &other);
 

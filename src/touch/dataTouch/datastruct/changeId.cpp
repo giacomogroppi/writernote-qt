@@ -18,7 +18,7 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
         _changeIdMutex.unlock();
     }
 
-    StrokeNormal *strokeToAppend = strokeNormal->split(IndexPoint);
+    std::shared_ptr<StrokeNormal> strokeToAppend = strokeNormal->split(IndexPoint);
 
     if(threadSafe){
         _changeIdMutex.lock();

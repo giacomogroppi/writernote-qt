@@ -108,9 +108,9 @@ void StrokeRect::adjust(double zoom)
     _data.rect = QRectF(topLeft, bottomRight);
 }
 
-Stroke *StrokeRect::clone() const
+std::shared_ptr<Stroke> StrokeRect::clone() const
 {
-    auto *res = new StrokeRect();
+    std::shared_ptr<StrokeRect> res(new StrokeRect);
 
     res->_data = this->_data;
     res->setMetadata(this->getMetadata());
@@ -123,7 +123,7 @@ int StrokeRect::how_much_decrese() const
     return 0;
 }
 
-Stroke *StrokeRect::makeNormal() const
+std::shared_ptr<Stroke> StrokeRect::makeNormal() const
 {
     W_ASSERT(0);
     return nullptr;

@@ -49,25 +49,25 @@ std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
     switch (type) {
     case COMPLEX_NORMAL:
     {
-        auto *tmp = new StrokeNormal();
+        std::shared_ptr<StrokeNormal> tmp(new StrokeNormal);
         tmp->load_ver_2(reader);
         return tmp;
     }
     case COMPLEX_LINE:
     {
-        auto *tmp = new StrokeLine();
+        std::shared_ptr<StrokeLine> tmp(new StrokeLine);
         tmp->load(reader);
         return tmp;
     }
     case COMPLEX_CIRCLE:
     {
-        auto *tmp = new StrokeCircle();
+        std::shared_ptr<StrokeCircle> tmp(new StrokeCircle);
         tmp->load(reader);
         return tmp;
     }
     case COMPLEX_RECT:
     {
-        auto *tmp = new StrokeRect();
+        std::shared_ptr<StrokeRect> tmp(new StrokeRect);
         tmp->load(reader);
         return tmp;
     }

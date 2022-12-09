@@ -97,7 +97,7 @@ public:
     void setAlfaColor(uchar alfa);
 
     /** instance of *this == StrokeNormal ==> @return == NULL*/
-    virtual Stroke *makeNormal() const = 0;
+    virtual std::shared_ptr<Stroke> makeNormal() const = 0;
 
     /**
      * instanceof(*this) == StrokeNorml ? @result == length() : 0
@@ -106,7 +106,7 @@ public:
 
     void setColor(const colore_s &color);
 
-    virtual Stroke *clone() const = 0;
+    virtual std::shared_ptr<Stroke> clone() const = 0;
 
     virtual bool isEmpty() const = 0;
 

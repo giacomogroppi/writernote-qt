@@ -35,7 +35,7 @@ void copy::managePaste(
     }
 }
 
-QRect copy::get_size_area(const QList<QList<Stroke*>> &data)
+QRect copy::get_size_area(const QList<QList<std::shared_ptr<Stroke>>> &data)
 {
     QRect size_area(0, 0, 0, 0);
 
@@ -49,9 +49,11 @@ QRect copy::get_size_area(const QList<QList<Stroke*>> &data)
     return size_area;
 }
 
-void copy::__single(const QList<Stroke *> &from, QList<Stroke *> &append_data)
+void copy::__single(
+                const QList<    std::shared_ptr<Stroke>> &from,
+                QList<          std::shared_ptr<Stroke>> &append_data)
 {
-    for (const auto *currentStroke : qAsConst(from)) {
+    for (const auto &currentStroke : qAsConst(from)) {
         append_data.append(currentStroke->clone());
     }
 }
@@ -73,7 +75,7 @@ void copy::__single(const QList<Stroke *> &from, QList<Stroke *> &append_data)
 */
 int copy::selection(
         datastruct                  &data,
-        const QList<QList<Stroke*>>  &stroke,
+        const QList<QList<std::shared_ptr<Stroke>>>  &stroke,
         int                         __flags,
         const QPointF               &pointTouch)
 {
@@ -130,7 +132,7 @@ void copy::adjustData(const QPointF &offset)
     using namespace WCommonScript;
     const QPointF &inverso = datastruct::inverso(offset);
 
-    for_each(this->m_stroke, [&inverso](Stroke *d) {
+    for_each(this->m_stroke, [&inverso](std::shared_ptr<Stroke> d) {
         d->scale(inverso);
     });
 }

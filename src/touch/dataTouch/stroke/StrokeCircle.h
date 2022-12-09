@@ -53,11 +53,11 @@ public:
     void setColor(const colore_s &color);
 
     void adjust(double zoom);
-    Stroke *clone() const;
+    std::shared_ptr<Stroke> clone() const;
 
     int how_much_decrese() const;
 
-    StrokeNormal* makeNormal() const;
+    std::shared_ptr<Stroke> makeNormal() const final;
 
     bool isEmpty() const final;
 

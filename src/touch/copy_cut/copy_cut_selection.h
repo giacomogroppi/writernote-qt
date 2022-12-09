@@ -16,8 +16,16 @@ public:
 #define SELECTION_FLAGS_COPY 0
 #define SELECTION_FLAGS_CUT 1
 #define SELECTION_FLAGS_PASTE 2
-    int selection(datastruct &data, const QList<QList<Stroke *>> &stroke,
-                   int __flags, const QPointF &offsetTouch);
+
+    int selection(  datastruct &data,
+                    const QList<
+                        QList<
+                            std::shared_ptr<Stroke>
+                        >
+                    > &stroke,
+                    int __flags, const QPointF &offsetTouch);
+
+
     void past_selection(datastruct &data, QPointF &point_past);
 
     bool isEmpty() const;
@@ -34,9 +42,9 @@ private:
 #define FLAG_CUT 0x2 /* if the point is from a cut operation */
     int flags = 0;
 
-    QList<Stroke *> m_stroke;
-    void __single(const QList<Stroke *> &from, QList<Stroke *> &append_data);
-    QRect get_size_area(const QList<QList<Stroke *>> & stroke);
+    QList<std::shared_ptr<Stroke>> m_stroke;
+    void __single(const QList<std::shared_ptr<Stroke>> &from, QList<std::shared_ptr<Stroke>> &append_data);
+    QRect get_size_area(const QList<QList<std::shared_ptr<Stroke>>> & stroke);
 };
 
 inline bool copy::isSomeThingCopy() const

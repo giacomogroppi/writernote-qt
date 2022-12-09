@@ -64,8 +64,8 @@ private:
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    QList<Stroke *>   _strokeTmp;
-    WImage              _imgDraw;
+    QList<std::shared_ptr<Stroke>>   _strokeTmp;
+    WImage                          _imgDraw;
 
     void drawNewPage(n_style __style);
     
@@ -81,7 +81,7 @@ private:
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
 
     static point_s at_translation(const point_s &point, cint page);
-    static QRect get_size_area(const QList<Stroke *> & item, int from, int to);
+    static QRect get_size_area(const QList<std::shared_ptr<Stroke>> & item, int from, int to);
 
 public:
     const WImage &getImg() const;
@@ -115,11 +115,11 @@ public:
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    __fast void append(Stroke *stroke);
-    __fast void append(const QList<Stroke *> & stroke);
+    __fast void append(std::shared_ptr<Stroke> stroke);
+    __fast void append(const QList<std::shared_ptr<Stroke>> & stroke);
 
     __fast const Stroke             & atStroke(const uint i) const;
-    __fast std::shared_ptr<Stroke>  & atStrokeMod(const uint i);
+    __fast Stroke                   & atStrokeMod(const uint i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
     __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
@@ -338,10 +338,10 @@ force_inline const Stroke &Page::atStroke(uint i) const
     return *res;
 }
 
-force_inline std::shared_ptr<Stroke> &Page::atStrokeMod(const uint i)
+force_inline Stroke &Page::atStrokeMod(const uint i)
 {
     __is_ok_count();
-    return this->_stroke.operator[](i);
+    return *this->_stroke.operator[](i);
 }
 
 force_inline const StrokeForPage &Page::get_stroke_page() const
@@ -405,7 +405,7 @@ inline Stroke &Page::lastMod()
     return *this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
-force_inline void Page::append(Stroke *strokeAppend)
+force_inline void Page::append(std::shared_ptr<Stroke> strokeAppend)
 {
     W_ASSERT(strokeAppend and !strokeAppend->isEmpty());
 
@@ -413,7 +413,7 @@ force_inline void Page::append(Stroke *strokeAppend)
 
     this->_strokeTmp.append(strokeAppend);
 
-    qDebug() << "Page::append pointer" << strokeAppend;
+    qDebug() << "Page::append pointer" << strokeAppend.get();
 
     W_ASSERT(*_strokeTmp.last() == *strokeAppend);
 }

@@ -91,10 +91,10 @@ public:
     void removeAt(unsigned indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
-    void append(const QList<Stroke *>& stroke, int m_pos_ris);
+    void append(const QList<std::shared_ptr<Stroke>>& stroke, int m_pos_ris);
 
-    int  appendStroke(Stroke *stroke); /* return value: the page of the point */
-    void appendStroke(Stroke *stroke, int page);
+    int  appendStroke(std::shared_ptr<Stroke>); /* return value: the page of the point */
+    void appendStroke(std::shared_ptr<Stroke> stroke, int page);
 
     void restoreLastTranslation(int heightView);
 
@@ -492,20 +492,18 @@ inline int datastruct::whichPage(const QPointF &point) const
 
 /* the function automatically launches the drawing for the pages
  * to which data has been added*/
-inline void datastruct::append(const QList<Stroke *> &stroke, int m_pos_ris)
+inline void datastruct::append(const QList<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
 {
     QList<int> trigger;
-    uint i;
-    int WhichPage;
-    const uint len = stroke.length();
 
-    for(i = 0; i < len; i++){
-        // get the page of the point
-        WhichPage = this->appendStroke(stroke.at(i));
+    for (const auto &ref : qAsConst(stroke)) {
+        /// get the page of the point
+        const int WhichPage = this->appendStroke(ref);
 
-        // it the page is not in the list we append
-        if(trigger.indexOf(WhichPage) == -1)
+        /// it the page is not in the list we append
+        if (trigger.indexOf(WhichPage) == -1) {
             trigger.append(WhichPage);
+        }
     }
 
     this->triggerNewView(trigger, m_pos_ris, false);
@@ -525,9 +523,11 @@ inline void datastruct::removeAt(const uint indexPage){
 
 }
 
-inline int datastruct::appendStroke(Stroke *stroke)
+inline int datastruct::appendStroke(std::shared_ptr<Stroke> stroke)
 {
     int page;
+
+    W_ASSERT(stroke);
 
     page = this->adjustStroke(*stroke);
 
@@ -536,7 +536,7 @@ inline int datastruct::appendStroke(Stroke *stroke)
     return page;
 }
 
-inline void datastruct::appendStroke(Stroke *stroke, const int page)
+inline void datastruct::appendStroke(std::shared_ptr<Stroke> stroke, const int page)
 {
     this->at_mod(page).append(stroke);
 }

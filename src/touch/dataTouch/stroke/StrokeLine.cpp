@@ -111,9 +111,9 @@ void StrokeLine::adjust(double zoom)
     this->_data.press /= zoom;
 }
 
-Stroke *StrokeLine::clone() const
+std::shared_ptr<Stroke> StrokeLine::clone() const
 {
-    auto *res = new StrokeLine();
+    std::shared_ptr<StrokeLine> res(new StrokeLine);
 
     res->_data = this->_data;
     res->setMetadata(this->getMetadata());
@@ -160,10 +160,10 @@ void StrokeLine::makeNormalGeneric(StrokeNormal *mergeTo, int from, int to) cons
     }
 }
 
-Stroke *StrokeLine::makeNormal() const
+std::shared_ptr<Stroke> StrokeLine::makeNormal() const
 {
     int from, to;
-    auto *res = new StrokeNormal();
+    std::shared_ptr<StrokeNormal> res(new StrokeNormal);
 
     W_ASSERT(res->isEmpty());
 
@@ -173,9 +173,9 @@ Stroke *StrokeLine::makeNormal() const
     W_ASSERT(from <= to);
 
     if(_data.pt2.x() == _data.pt1.x()){
-        this->makeNormalVertical(res, from, to);
+        this->makeNormalVertical(res.get(), from, to);
     }else{
-        this->makeNormalGeneric(res, from, to);
+        this->makeNormalGeneric(res.get(), from, to);
     }
 
     return res;

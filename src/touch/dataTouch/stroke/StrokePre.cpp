@@ -10,7 +10,7 @@ StrokePre::StrokePre() noexcept :
     _last_draw_point(nullptr),
     _last_draw_press(nullptr)
 {
-    _stroke = new StrokeNormal();
+    _stroke = std::shared_ptr<StrokeNormal>(new StrokeNormal);
 
     W_ASSERT(_stroke->isEmpty());
     W_ASSERT(not _img.isNull());
@@ -20,7 +20,7 @@ StrokePre::~StrokePre()
 {
 }
 
-Stroke *StrokePre::merge()
+std::shared_ptr<Stroke> StrokePre::merge()
 {
     using namespace WCommonScript;
     W_ASSERT(this->already_merge == false);
@@ -33,7 +33,7 @@ Stroke *StrokePre::merge()
 
     if (this->_stroke->type() != Stroke::COMPLEX_NORMAL) {
         W_ASSERT(this->_point.isEmpty());
-        auto *res = this->_stroke;
+        std::shared_ptr<Stroke> res = this->_stroke;
         this->_stroke = nullptr;
         return res;
     }
@@ -53,7 +53,7 @@ Stroke *StrokePre::merge()
     }
 
     {
-        auto *res = this->_stroke;
+        std::shared_ptr<Stroke> res = this->_stroke;
         this->_stroke = nullptr;
         return res;
     }
@@ -137,7 +137,6 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     if (this == &other)
         return *this;
 
-    delete _stroke;
     _stroke = other._stroke->clone();
 
     _img = other._img;

@@ -220,7 +220,7 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     auto preappend = [&, len]() {
         int i;
         for (i = 0; i < len; i++) {
-            _stroke.append(QList<Stroke* > ());
+            _stroke.append(QList<std::shared_ptr<Stroke>> ());
         }
     };
 
@@ -245,8 +245,8 @@ void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
     }
 
 #ifdef DEBUGINFO
-    WCommonScript::for_each(_stroke, [](const QList<Stroke*> &list) {
-        WCommonScript::for_each(list, [](const Stroke *s) {
+    WCommonScript::for_each(_stroke, [](const QList<std::shared_ptr<Stroke>> &list) {
+        WCommonScript::for_each(list, [](std::shared_ptr<Stroke> s) {
             W_ASSERT(!s->isEmpty());
         });
     });
@@ -317,10 +317,10 @@ void square::reset()
         goto out;
 
     for (i = 0; i < len; i++) {
-        QList<Stroke*> ll   = _stroke.operator[](i);
+        QList<std::shared_ptr<Stroke>> ll   = _stroke.operator[](i);
 
 #ifdef DEBUGINFO
-        WCommonScript::for_each(ll, [](const Stroke *stroke){
+        WCommonScript::for_each(ll, [](std::shared_ptr<Stroke> stroke){
             W_ASSERT(!stroke->isEmpty());
         });
 #endif // DEBUGINFO

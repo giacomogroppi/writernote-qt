@@ -57,7 +57,7 @@ static void AppendAll(
         canvas->_laser->endMove();
         strokeToAppend = StrokePre();
     }else{
-        auto *res = strokeToAppend.merge();
+        std::shared_ptr<Stroke> res = strokeToAppend.merge();
 
         pageMod = doc.appendStroke(res);
 

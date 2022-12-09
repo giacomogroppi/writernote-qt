@@ -82,9 +82,9 @@ public:
     /**
      * This function will remove the point belonging [index, length())
      * */
-    StrokeNormal *split(int index);
+    std::shared_ptr<StrokeNormal> split(int index);
 
-    [[nodiscard]] Stroke *clone() const final;
+    std::shared_ptr<Stroke> clone() const final;
 
     void preappend(int i) final;
 
@@ -94,7 +94,7 @@ public:
 
     void force_pressure(pressure_t press);
 
-    Stroke *makeNormal() const final;
+    std::shared_ptr<Stroke> makeNormal() const final;
 
     StrokeNormal& operator=(const StrokeNormal &other);
     bool operator==(const Stroke &other) const final;
