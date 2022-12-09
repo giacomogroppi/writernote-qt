@@ -31,8 +31,9 @@ int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
     int ok;
     auto *tmp =
             dynamic_cast<StrokeNormal*>(
-                    Stroke::load(reader, ver_stroke, &ok)
+                    Stroke::load(reader, ver_stroke, &ok).get()
             );
+
     if(ok != OK){
 
             delete tmp;

@@ -173,7 +173,7 @@ void Page::swap(QList<std::shared_ptr<Stroke>> &list,
 
     for(cint ref : pos){
         const auto &stroke = atStrokeMod(ref);
-        W_ASSERT(!stroke.isEmpty());
+        W_ASSERT(!stroke->isEmpty());
         list.append(stroke);
     }
 
@@ -207,14 +207,14 @@ void Page::swap(QList<std::shared_ptr<Stroke> > &list,
             );
 }
 
-Stroke *Page::swap(int index, Stroke *newData)
+std::shared_ptr<Stroke> Page::swap(int index, std::shared_ptr<Stroke> newData)
 {
-    auto *res = this->_stroke.at(index);
+    std::shared_ptr<Stroke> res = this->_stroke.at(index);
     W_ASSERT(newData);
 
     _stroke[index] = newData;
 
-    W_ASSERT(res);
+    W_ASSERT(res.get());
     return res;
 }
 
@@ -289,12 +289,12 @@ void Page::drawStroke(
 }
 
 struct page_thread_data{
-    QVector<int>      * to_remove;
-    WMutex            * append;
-    QPainter          * painter;
-    QList<Stroke*>    * m_stroke;
-    int                 m_pos_ris;
-    const Page        * parent;
+    QVector<int>                    * to_remove;
+    WMutex                          * append;
+    QPainter                        * painter;
+    QList<std::shared_ptr<Stroke>>  * m_stroke;
+    int                             m_pos_ris;
+    const Page                      * parent;
 };
 
 /*The only way to draw in thread safe on a qpainter is to draw an image,
@@ -316,10 +316,10 @@ void * __page_load(void *__data)
     Define_PAINTER_p(painter, img);
 
     for(; _data->from < _data->to; _data->from ++){
-        const Stroke *ref = extra->m_stroke->at(_data->from);
+        const Stroke &ref = *extra->m_stroke->at(_data->from);
 
-        qDebug() << "Page::__page_load pointer" << ref;
-        W_ASSERT(!ref->isEmpty());
+        qDebug() << "Page::__page_load pointer" << &ref;
+        W_ASSERT(!ref.isEmpty());
 
         /*if(un(ref->isEmpty())){
             mutex.lock();
@@ -331,11 +331,11 @@ void * __page_load(void *__data)
             continue;
         }*/
 
-        const QColor &color = ref->getColor(
+        const QColor &color = ref.getColor(
             (un(m_pos_ris != -1))
                     ?
                         (
-                          (ref->getPosizioneAudio() > m_pos_ris)
+                          (ref.getPosizioneAudio() > m_pos_ris)
                             ? 4
                             : 1
                         )
@@ -343,7 +343,7 @@ void * __page_load(void *__data)
                         1
         );
 
-        page->drawStroke(painter, *ref, m_pen, color);
+        page->drawStroke(painter, ref, m_pen, color);
     }
 
     End_painter(painter);
@@ -361,7 +361,7 @@ void * __page_load(void *__data)
 
 void Page::drawEngine(
         QPainter        &painter,
-        QList<Stroke *> &List,
+        QList<std::shared_ptr<Stroke>> &List,
         int             m_pos_ris,
         cbool           use_multi_thread)
 {

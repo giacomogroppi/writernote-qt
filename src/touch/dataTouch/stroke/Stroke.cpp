@@ -23,7 +23,7 @@ std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
     if(res != OK and ok)
         *ok = res;
 
-    return s;
+    return std::shared_ptr<Stroke>(s);
 }
 
 std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)

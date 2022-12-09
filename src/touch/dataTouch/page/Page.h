@@ -69,7 +69,7 @@ private:
 
     void drawNewPage(n_style __style);
     
-    void drawEngine(QPainter &painter, QList<Stroke *> &List, int m_pos_ris, cbool use_multi_thread);
+    void drawEngine(QPainter &painter, QList<std::shared_ptr<Stroke>> &List, int m_pos_ris, cbool use_multi_thread);
     void draw(QPainter &painter, int m_pos_ris, bool all);
     void drawStroke(QPainter &painter, const Stroke &stroke, QPen &pen, const QColor &color) const;
 
@@ -94,7 +94,7 @@ public:
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
     void swap(QList<std::shared_ptr<Stroke>> & stroke, const QVector<int> & pos, int flag);
     void swap(QList<std::shared_ptr<Stroke>> &stroke, int from, int to);
-    Stroke *swap(int index, Stroke *newData);
+    std::shared_ptr<Stroke> swap(int index, std::shared_ptr<Stroke> newData);
 
     bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
     void setVisible(cbool vis) const;
