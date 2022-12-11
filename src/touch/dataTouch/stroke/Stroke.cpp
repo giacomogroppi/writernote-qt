@@ -71,6 +71,7 @@ std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
         tmp->load(reader);
         return tmp;
     }
+    default: break;
     }
 
     if(ok)

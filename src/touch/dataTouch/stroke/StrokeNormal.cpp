@@ -101,10 +101,10 @@ int StrokeNormal::load_ver_2(WZipReaderSingle &reader)
     return OK;
 }
 
-void StrokeNormal::modify()
+void StrokeNormal::modify() const
 {
     this->_flag = flag_state::UPDATE_PRESSURE;
-
+    Stroke::modify();
     W_ASSERT(this->needToUpdatePressure());
 }
 

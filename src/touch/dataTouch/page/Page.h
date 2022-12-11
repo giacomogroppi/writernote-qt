@@ -51,9 +51,9 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
-    WMutex                          _img;
-    WMutex                          _append_load;
-    bool                            _IsVisible = true;
+    mutable WMutex                  _img;
+    mutable WMutex                  _append_load;
+    mutable bool                    _IsVisible = true;
     int                             _count;
     QList<std::shared_ptr<Stroke>>  _stroke;
     StrokeForPage                   _stroke_writernote;
@@ -65,7 +65,7 @@ private:
      * then strokeTmp will be added to the stroke list
     */
     QList<std::shared_ptr<Stroke>>   _strokeTmp;
-    WImage                          _imgDraw;
+    mutable WImage                   _imgDraw;
 
     void drawNewPage(n_style __style);
     
@@ -191,14 +191,12 @@ public:
 
 force_inline void Page::unlock() const
 {
-    auto &m = (WMutex &) _img;
-    m.unlock();
+    this->_img.unlock();
 }
 
 force_inline void Page::lock() const
 {
-    auto &m = (WMutex &)(_img);
-    m.lock();
+    this->_img.lock();
 }
 
 force_inline double Page::currentHeight() const
@@ -236,7 +234,7 @@ inline point_s Page::at_translation(const point_s &point, cint page)
     point_s tmp;
     const double ytranslation = double(page) * Page::getHeight();
 
-    if(un(!page)){
+    if (un(!page)) {
         return point;
     }
 
@@ -326,8 +324,7 @@ ret:
 
 force_inline void Page::setVisible(cbool vis) const
 {
-    bool &IsVisible = (bool &)_IsVisible;
-    IsVisible = vis;
+    this->_IsVisible = vis;
 }
 
 force_inline const Stroke &Page::atStroke(uint i) const
@@ -372,11 +369,19 @@ inline void Page::copy(
         const Page  &src,
         Page        &dest)
 {
-    //int counterStroke, lenStroke;
-    //lenStroke = src.lengthStroke();
     dest.reset();
 
-    //dest.allocateStroke(src.lengthStroke());
+
+    dest._stroke.reserve(src._stroke.length());
+    dest._strokeTmp.reserve(src._strokeTmp.length());
+
+    for (const auto &s : src._stroke) {
+        dest._stroke.append(s->clone());
+    }
+
+    for (const auto &s : src._strokeTmp) {
+        dest._strokeTmp.append(s->clone());
+    }
 
     dest._stroke                    = src._stroke;
     dest._stroke_writernote         = src._stroke_writernote;

@@ -39,9 +39,9 @@ private:
         UPDATE_PRESSURE = BIT(2)
     };
 
-    typeof(flag_state) _flag;
+    mutable typeof(flag_state) _flag;
 
-    void modify() override;
+    void modify() const final;
     void reset_flag() final;
     bool constantPressure() const;
     void updateFlagPressure() const;
@@ -88,7 +88,7 @@ public:
 
     void preappend(int i) final;
 
-    [[nodiscard]] bool isEmpty() const final;
+    bool isEmpty() const final;
     void adjust(double zoom) final;
     void scale(const QPointF &offset) final;
 
@@ -108,7 +108,6 @@ public:
 protected:
     auto length () const { return _point.length(); }
     auto getPressure() const {
-        W_ASSERT(this->_pressure.length());
         W_ASSERT(this->_pressure.at(0) >= 0.);
         return this->_pressure.at(0);
     }

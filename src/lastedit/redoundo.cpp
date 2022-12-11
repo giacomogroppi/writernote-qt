@@ -34,21 +34,18 @@ redoundo::~redoundo()
 
 void redoundo::clear()
 {
-    uint i;
-    const uint len = m_list.length();
-
-    for(i=0; i<len; ++i){
-        this->m_list.operator[](i)->reset();
+    for (auto &l : this->m_list) {
+        l->reset();
     }
 }
 
 void redoundo::redo()
 {
-    if(indice == this->max - 1){
+    if (indice == this->max - 1) {
         return;
     }
 
-    Document::copy(*this->m_list.operator[](indice+1), *canvas->getDoc());
+    Document::copy(*this->m_list.operator[](indice + 1), *canvas->getDoc());
 
     indice ++;
 }
@@ -66,7 +63,7 @@ void redoundo::undo()
 
 void redoundo::copy()
 {
-    if(indice < max){
+    if (indice < max) {
         Document::copy(*canvas->getDoc(), *m_list.operator[](indice));
         this->indice ++;
         return;

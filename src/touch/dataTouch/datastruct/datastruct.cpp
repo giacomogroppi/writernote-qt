@@ -100,8 +100,7 @@ void datastruct::copy(const datastruct &src, datastruct &dest)
         for(i = 0; i < diff; i++){
             dest.newPage(n_style::white);
         }
-    }
-    else if(diff != 0){
+    } else if(diff != 0){
         i = - diff - 1;
 
         for(; i >= 0; i--){

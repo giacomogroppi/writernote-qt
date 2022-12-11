@@ -39,14 +39,13 @@ class Stroke
 {
 private:
     struct metadata_stroke _metadata;
-
-    QRect _biggerData;
+    mutable QRect _biggerData;
 
     enum flag_status : unsigned char{
         UPDATE_BIGGER_DATA = BIT(1)
     };
 
-    unsigned char _flag;
+    mutable unsigned char _flag;
 
     void setFlag(unsigned char type, bool value) const;
 
@@ -117,9 +116,7 @@ public:
     friend class Page;
     friend class xmlstruct;
     friend class stroke_drawer;
-    friend class stroke_file;
     friend class page_file;
-    friend void stroke_complex_adjust(Stroke *stroke, cdouble zoom);
 
     virtual bool operator==(const Stroke &other) const;
     virtual bool operator!=(const Stroke &other) const { return !(*this == other); };
@@ -132,14 +129,14 @@ public:
     virtual int save(WZipWriterSingle &file) const;
 
     /** all stroke derivated class needs to implements this method to recognize yourself */
-    [[nodiscard]] virtual int type() const = 0;
+    virtual int type() const = 0;
 
 protected:
     Stroke &operator=(const Stroke &other);
 
     Stroke();
-    Stroke(const metadata_stroke& met);
-    virtual void modify();
+    explicit Stroke(const metadata_stroke& met);
+    virtual void modify() const;
     void setBiggerData(const QRect &newRect) const;
     bool needToUpdateBiggerData() const;
 
@@ -153,7 +150,8 @@ void set_press( QPen &pen, pressure_t press, double prop,
 
 inline Stroke &Stroke::operator=(const Stroke &other)
 {
-    if(un(this == &other)){
+    W_ASSERT(this->type() == other.type());
+    if (un(this == &other)) {
         return *this;
     }
 
@@ -165,12 +163,11 @@ inline Stroke &Stroke::operator=(const Stroke &other)
 
 inline void Stroke::setBiggerData(const QRect &newRect) const
 {
-    auto &r = (QRect &) this->_biggerData;
-    r = newRect;
+    this->_biggerData = newRect;
     setFlag(UPDATE_BIGGER_DATA, false);
 }
 
-inline void Stroke::modify()
+inline void Stroke::modify() const
 {
     _flag = UPDATE_BIGGER_DATA;
 
