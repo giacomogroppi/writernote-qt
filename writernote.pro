@@ -553,7 +553,9 @@ else:android{
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
     DISTFILES += \
-        android/AndroidManifest.xml
+        android/android/AndroidManifest.xml \
+        android/android/build.gradle \
+        android/android/res/values/libs.xml
 
 
     INCLUDEPATH += $$PWD/android/libzip-android-1.0.1/jni/
