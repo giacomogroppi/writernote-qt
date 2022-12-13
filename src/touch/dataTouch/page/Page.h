@@ -58,6 +58,8 @@ private:
     QList<std::shared_ptr<Stroke>>  _stroke;
     StrokeForPage                   _stroke_writernote;
 
+    static constexpr auto pageDebug = true;
+
     /**
      * after adding data to the list, call triggernewimage,
      * and pass as all false, in this way what is
@@ -418,7 +420,7 @@ force_inline void Page::append(std::shared_ptr<Stroke> strokeAppend)
 
     this->_strokeTmp.append(strokeAppend);
 
-    qDebug() << "Page::append pointer" << strokeAppend.get();
+    WDebug(pageDebug, this->_count);
 
     W_ASSERT(*_strokeTmp.last() == *strokeAppend);
 }

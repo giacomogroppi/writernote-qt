@@ -11,7 +11,9 @@
 
 class StrokeForPage {
 private:
-    class StrokeNormal *_data;
+    std::shared_ptr<class StrokeNormal> _data;
+
+    void rep() const;
 
 #ifdef ALL_VERSION
     void append(const StrokeNormal &stroke);
@@ -35,6 +37,9 @@ public:
     int save(WZipWriterSingle& writer) const;
     void scale(const QPointF& delta);
     void reset();
+
+    StrokeForPage &operator=(const StrokeForPage &other);
+
     friend class page_file;
     friend class Page;
 };

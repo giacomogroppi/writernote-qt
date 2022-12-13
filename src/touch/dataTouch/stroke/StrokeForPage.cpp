@@ -4,13 +4,20 @@
 #include "StrokeNormal.h"
 
 StrokeForPage::StrokeForPage()
+    : _data(new StrokeNormal)
 {
-    this->_data = new StrokeNormal;
+    rep();
 }
 
 void StrokeForPage::setPressure(pressure_t press)
 {
     this->_data->force_pressure(press);
+    rep();
+}
+
+void StrokeForPage::rep() const
+{
+    W_ASSERT(this->_data.unique());
 }
 
 #ifdef ALL_VERSION
@@ -40,8 +47,7 @@ int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
         return ok;
     }
 
-    delete this->_data;
-    this->_data = tmp;
+    this->_data = std::unique_ptr<StrokeNormal>(tmp);
 
     if(_data->_pressure[0] > 10)
         _data->_pressure[0] = 1.5;
@@ -51,7 +57,9 @@ int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
 
 size_t StrokeForPage::getSizeInFile() const
 {
-    return this->_data->getSizeInFile();
+    const auto res = this->_data->getSizeInFile();
+    rep();
+    return res;
 }
 
 void StrokeForPage::draw(QPainter &painter, double zoom, double delta,
@@ -94,30 +102,50 @@ redo:
         painter.drawLine(ref1, ref2);
         //painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
     }
+
+    rep();
 }
 
 int StrokeForPage::save(WZipWriterSingle &writer) const
 {
-    return this->_data->save(writer);
+    rep();
+    const auto res = this->_data->save(writer);
+    rep();
+    return res;
 }
 
 void StrokeForPage::scale(const QPointF &delta)
 {
     this->_data->scale(delta);
+    rep();
 }
 
 void StrokeForPage::append(const point_s &point, pressure_t pressure)
 {
     _data->append(point, pressure);
+    rep();
 }
 
 void StrokeForPage::reset()
 {
-    delete this->_data;
-    this->_data = new StrokeNormal;
+    this->_data = std::shared_ptr<StrokeNormal>(new StrokeNormal);
+    rep();
+}
+
+StrokeForPage &StrokeForPage::operator=(const StrokeForPage &other)
+{
+    {
+        std::shared_ptr<Stroke> res = other._data->clone();
+        this->_data = std::dynamic_pointer_cast<StrokeNormal>(res);
+    }
+
+    rep();
+    return *this;
 }
 
 void StrokeForPage::setMetadata(const colore_s &colore)
 {
+    rep();
     _data->setMetadata(-1, colore);
+    rep();
 }

@@ -61,7 +61,13 @@ std::shared_ptr<Stroke> StrokePre::merge()
 
 void StrokePre::adjust(const QPointF &delta)
 {
-    _stroke->scale(-delta);
+    if (_stroke->isEmpty()) {
+        for (auto &p : this->_point) {
+            p -= delta;
+        }
+    } else {
+        _stroke->scale(-delta);
+    }
 }
 
 void StrokePre::setAlfaColor(int alfa)

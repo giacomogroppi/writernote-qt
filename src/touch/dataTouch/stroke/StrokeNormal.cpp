@@ -219,7 +219,7 @@ size_t StrokeNormal::createControll() const
 
 QRect StrokeNormal::getBiggerPointInStroke() const
 {
-    if (!needToUpdateBiggerData()) {
+    if (!Stroke::needToUpdateBiggerData()) {
         return Stroke::getBiggerPointInStroke();
     }
 

@@ -34,8 +34,7 @@ static void AppendAll(
 {
     /* for debug */
     StrokePre & strokeToAppend = __tmp;
-    int i, pageMod, lenPoint;
-    point_s *point;
+    int pageMod;
     qint64 time;
     const QPointF &PointFirstPage = doc.getPointFirstPage();
 
@@ -50,7 +49,6 @@ static void AppendAll(
     W_ASSERT(time < INT_MAX);
 
     strokeToAppend.adjust(PointFirstPage);
-
 
     if(un(met.isLaser())){
         canvas->_laser->append(strokeToAppend);

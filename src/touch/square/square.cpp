@@ -87,7 +87,6 @@ void * __square_search(void *__data)
 */
 bool square::find()
 {
-
     Document *doc = _canvas->getDoc();
     bool tmp_find;
     int i, create, lenPage, count;
@@ -190,15 +189,6 @@ void square::mergeImg(
     W_ASSERT(painter.isActive());
     painter.drawImage(__to, from, from.rect());
     painter.end();
-}
-
-static force_inline void
-preappend(QList<QList<Stroke *>> & list, int num)
-{
-    while(num > 0){
-        num --;
-        list.append(QList<Stroke *>());
-    }
 }
 
 void square::moveObjectIntoPrivate(QList<QVector<int>> &index)
@@ -327,7 +317,7 @@ void square::reset()
 
         Page * page         = &_canvas->getDoc()->at_mod(i + _base);
 
-        for(auto &ref : ll){
+        for (auto &ref : ll){
             ref->scale(_trans_img);
         }
 

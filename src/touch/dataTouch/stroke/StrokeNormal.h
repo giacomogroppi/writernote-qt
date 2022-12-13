@@ -288,8 +288,8 @@ inline QRect StrokeNormal::getBiggerPointInStroke(T begin, T end)
         return {0, 0, 0, 0};
     }
 
-    QPoint topLeft = begin->toQPointF(1.).toPoint();
-    QPoint bottomRight = end->toQPointF(1.).toPoint();
+    QPoint topLeft      = begin->toQPointF(1.).toPoint();
+    QPoint bottomRight  = begin->toQPointF(1.).toPoint();
 
     for(; begin != end; begin ++){
         const point_s &point = *begin;
