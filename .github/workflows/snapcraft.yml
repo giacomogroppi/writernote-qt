@@ -37,6 +37,7 @@ jobs:
 
       - name: First set up.
         run: |
+          sudo iptables -P FORWARD ACCEPT
           sudo apt-get purge --autoremove lxd
           sudo snap install --classic snapcraft
           sudo apt install python3
