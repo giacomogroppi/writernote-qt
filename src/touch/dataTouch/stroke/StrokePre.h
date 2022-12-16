@@ -3,6 +3,7 @@
 #include "Stroke.h"
 #include "core/WList.h"
 #include "core/WImage.h"
+#include "touch/object_finder/model_finder/model_finder.h"
 
 class StrokePre{
 private:
@@ -24,6 +25,8 @@ private:
     [[nodiscard]] WList<pressure_t>::const_iterator get_last_press() const;
     [[nodiscard]] WList<point_s>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
+
+    void setStrokeComplex(std::shared_ptr<Stroke> stroke);
 
     /**
      * @requires _stroke->type() == Stroke::COMPLEX_NORMAL
@@ -57,6 +60,8 @@ public:
     std::shared_ptr<Stroke> merge();
 
     StrokePre &operator=(const StrokePre &other);
+
+    friend bool model::find(StrokePre &stroke);
 
     friend class StrokeLineGenerator;
     friend class StrokeRectGenerator;

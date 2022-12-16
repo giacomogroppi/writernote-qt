@@ -28,7 +28,7 @@ void StrokeLineGenerator::is_near_line(cdouble m, double &max, cdouble q, const 
     }
 }
 
-void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine *res)
+void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine &res)
 {
     using namespace WCommonScript;
     const auto press = from->getPressure();
@@ -47,37 +47,39 @@ void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine *res)
 
     const double x = TL.x();
 
-    res->_data.pt1 = QPointF(x, TL.y());
-    res->_data.pt2 = QPointF(x, BR.y());
-    res->_data.press = press;
+    res._data.pt1 = QPointF(x, TL.y());
+    res._data.pt2 = QPointF(x, BR.y());
+    res._data.press = press;
 }
 
-void StrokeLineGenerator::makeGeneric(const StrokePre *from, StrokeLine *res)
+void StrokeLineGenerator::makeGeneric(const StrokePre *from, StrokeLine &res)
 {
     using namespace WCommonScript;
 
     const auto pressure = from->getPressure();
-    res->_data.pt1 = from->_point.first();
-    res->_data.pt2 = from->_point.last();
+    res._data.pt1 = from->_point.first();
+    res._data.pt2 = from->_point.last();
 
-    if (res->_data.pt1.y() > res->_data.pt2.y()) {
-        swap(res->_data.pt1, res->_data.pt2);
+    if (res._data.pt1.y() > res._data.pt2.y()) {
+        swap(res._data.pt1, res._data.pt2);
     }
 
-    res->_data.press = pressure;
+    res._data.press = pressure;
 }
 
-Stroke *StrokeLineGenerator::make(const StrokePre *from)
+std::shared_ptr<Stroke> StrokeLineGenerator::make(const StrokePre *from)
 {
-    auto *tmp = new StrokeLine;
+    std::shared_ptr<StrokeLine> tmp(new StrokeLine);
 
     W_ASSERT(from->_stroke->isEmpty());
 
     if (line_data.is_vertical) {
-        StrokeLineGenerator::makeVertical(from, tmp);
+        StrokeLineGenerator::makeVertical(from, *tmp);
     } else {
-        StrokeLineGenerator::makeGeneric(from, tmp);
+        StrokeLineGenerator::makeGeneric(from, *tmp);
     }
+
+    tmp->_data.press = from->getPressure();
 
     return tmp;
 }

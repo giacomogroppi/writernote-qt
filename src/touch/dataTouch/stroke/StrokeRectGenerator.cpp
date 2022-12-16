@@ -1,7 +1,8 @@
 #include "StrokeRectGenerator.h"
+#include "touch/dataTouch/stroke/StrokeRect.h"
 #include "utils/WCommonScript.h"
 
-Stroke *StrokeRectGenerator::make(const StrokePre *from)
+std::shared_ptr<Stroke> StrokeRectGenerator::make(const StrokePre *from)
 {
     W_ASSERT(0);
     return nullptr;

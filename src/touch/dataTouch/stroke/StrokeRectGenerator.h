@@ -9,7 +9,7 @@ private:
     static constexpr bool StrokeRectGeneratorDebug = false;
 
 public:
-    static class Stroke *make(const class StrokePre *from);
+    static std::shared_ptr<Stroke> make(const class StrokePre *from);
     static double model_near(const class StrokePre &stroke);
 
 };

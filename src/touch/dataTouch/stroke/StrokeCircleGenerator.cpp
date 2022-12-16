@@ -27,9 +27,9 @@ void StrokeCircleGenerator::model_circle_precision(const QPointF &point, double 
     }
 }
 
-Stroke *StrokeCircleGenerator::make(const StrokePre *from)
+std::shared_ptr<Stroke> StrokeCircleGenerator::make(const StrokePre *from)
 {
-    auto *res = new StrokeCircle();
+    std::shared_ptr<StrokeCircle> res(new StrokeCircle);
 
     W_ASSERT(from);
 

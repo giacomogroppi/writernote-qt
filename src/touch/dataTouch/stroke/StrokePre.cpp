@@ -116,6 +116,16 @@ void StrokePre::reset_img()
     _img = WImage();
 }
 
+void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
+{
+    W_ASSERT(stroke->type() != Stroke::COMPLEX_NORMAL);
+    this->_stroke = stroke;
+    this->_img = WImage();
+
+    this->_point.clear();
+    this->_pressure.clear();
+}
+
 void StrokePre::draw(QPainter &painter, QPen &pen, double prop)
 {
     WDebug(StrokePreDebug, "Pointer" << this);

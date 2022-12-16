@@ -20,10 +20,10 @@ double (*functions[])(const StrokePre &) = {
     &StrokeCircleGenerator  ::model_near
 };
 
-Stroke* (*function_create[])(const StrokePre *) = {
-    &StrokeLineGenerator::make,
-    &StrokeRectGenerator::make,
-    &StrokeCircleGenerator::make
+std::shared_ptr<Stroke> (*function_create[])(const StrokePre *) = {
+    &StrokeLineGenerator    ::make,
+    &StrokeRectGenerator    ::make,
+    &StrokeCircleGenerator  ::make
 };
 
 static struct{
@@ -80,6 +80,7 @@ bool model::find(StrokePre &stroke)
 {
     unsigned long i;
     const auto color = stroke.getColor();
+    std::shared_ptr<Stroke> res;
 
     ctrl._stroke = &stroke;
     for (i = 0; i < THREAD_FINDER; i++) {
@@ -99,7 +100,11 @@ bool model::find(StrokePre &stroke)
 
     W_ASSERT(index < THREAD_FINDER);
 
-    function_create[index](&stroke);
+    res = function_create[index](&stroke);
+
+    W_ASSERT(res != nullptr);
+
+    stroke.setStrokeComplex(res);
 
     stroke.setColor(color);
 
