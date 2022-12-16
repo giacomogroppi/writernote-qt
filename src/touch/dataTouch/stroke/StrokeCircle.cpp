@@ -208,7 +208,13 @@ void StrokeCircle::scale(const QPointF &offset)
 
 bool StrokeCircle::operator==(const Stroke &other) const
 {
-    if(this->type() != other.type())
+    if (this == &other)
+        return true;
+
+    if (this->type() != other.type())
+        return false;
+
+    if (Stroke::operator!=(other))
         return false;
 
     const StrokeCircle &tmp = dynamic_cast<const StrokeCircle &>(other);

@@ -84,7 +84,13 @@ void StrokeRect::scale(const QPointF &offset)
 
 bool StrokeRect::operator==(const Stroke &other) const
 {
+    if(this == &other)
+        return true;
+
     if (other.type() != this->type())
+        return false;
+
+    if (Stroke::operator!=(other))
         return false;
 
     return  this->_data == dynamic_cast<const StrokeRect &>(other)._data and

@@ -250,10 +250,13 @@ int StrokeLine::load(WZipReaderSingle &reader)
 
 bool StrokeLine::operator==(const Stroke &other) const
 {
+    if(this == &other)
+        return true;
+
     if(this->type() != other.type())
         return false;
 
-    if (Stroke::operator==(other))
+    if (Stroke::operator!=(other))
         return false;
 
     const auto *s = dynamic_cast<const StrokeLine *>(&other);
