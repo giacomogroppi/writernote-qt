@@ -7,7 +7,7 @@
 
 #define THREAD_FINDER 3
 
-constexpr bool debug_model = false;
+constexpr bool debug_model = true;
 constexpr double _min_precision = 30;
 
 static struct{
