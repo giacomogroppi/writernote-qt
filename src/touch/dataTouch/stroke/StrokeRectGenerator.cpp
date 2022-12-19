@@ -3,6 +3,8 @@
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
+static QRect area;
+
 bool StrokeRectGenerator::is_near_rect_x(const QRect &area, const point_s &point)
 {
     constexpr QPoint delta(50, 0);
@@ -42,8 +44,14 @@ double StrokeRectGenerator::is_near_rect(const QRect &area, const point_s &point
 
 std::shared_ptr<Stroke> StrokeRectGenerator::make(const StrokePre *from)
 {
-    W_ASSERT(0);
-    return nullptr;
+    std::shared_ptr<StrokeRect> res(new StrokeRect());
+
+    res->_data = {
+        .rect = area,
+        .press = from->getPressure()
+    };
+
+    return res;
 }
 
 double StrokeRectGenerator::model_near(const StrokePre &stroke)
@@ -56,7 +64,7 @@ double StrokeRectGenerator::model_near(const StrokePre &stroke)
     if(!is_near(stroke._point.first(), stroke._point.last(), 30))
         return StrokeComplexCommon::error;
 
-    const auto &area = stroke.getBiggerPointInStroke();
+    area = stroke.getBiggerPointInStroke();
 
     if (std::abs(area.topLeft().y() - area.bottomLeft().y()) < 40)
         return StrokeComplexCommon::error;

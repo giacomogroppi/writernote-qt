@@ -58,5 +58,6 @@ public:
     static StrokeRect *make(const QPointF& pt1, const QPointF& pt2, const class StrokeNormal &s);
     int type() const final;
 
+    friend class StrokeRectGenerator;
     friend class Stroke;
 };
