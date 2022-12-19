@@ -318,7 +318,7 @@ void * __page_load(void *__data)
     for(; _data->from < _data->to; _data->from ++){
         const Stroke &ref = *extra->m_stroke->at(_data->from);
 
-        qDebug() << "Page::__page_load pointer" << &ref;
+        WDebug(false, "Page::__page_load pointer" << &ref);
         W_ASSERT(!ref.isEmpty());
 
         /*if(un(ref->isEmpty())){

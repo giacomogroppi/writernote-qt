@@ -126,6 +126,11 @@ bool Stroke::operator==(const Stroke &other) const
     return true;
 }
 
+bool Stroke::operator!=(const Stroke &other) const
+{
+    return this->_metadata != other._metadata;
+}
+
 void set_press(
                             QPen &pen,
                             const pressure_t press,

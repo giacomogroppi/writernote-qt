@@ -119,7 +119,7 @@ public:
     friend class page_file;
 
     virtual bool operator==(const Stroke &other) const;
-    virtual bool operator!=(const Stroke &other) const { return !(*this == other); };
+    virtual bool operator!=(const Stroke &other) const;
 
 #ifdef DEBUGINFO
     friend class page_file;

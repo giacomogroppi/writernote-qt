@@ -28,7 +28,7 @@ void object_finder::endTimer()
     if (not stroke.isEmpty()) {
         WDebug(debug, "call");
 
-        if (model::find(stroke)){
+        if (model::find(stroke)) {
             _canvas->call_update();
             stroke.reset_img();
         }

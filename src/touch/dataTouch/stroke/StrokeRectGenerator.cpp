@@ -3,15 +3,41 @@
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
-double StrokeRectGenerator::is_near_rect(const QRect &area, const point_s &point)
+bool StrokeRectGenerator::is_near_rect_x(const QRect &area, const point_s &point)
 {
-    constexpr QPoint delta(20, 20);
-    if (not (area.contains(point.toPoint() - delta) ^
-            area.contains(point.toPoint() + delta)) ) {
-        return StrokeComplexCommon::error;
+    constexpr QPoint delta(50, 0);
+    const auto res1 = area.contains(point.toPoint() - delta);
+    const auto res2 = area.contains(point.toPoint() + delta);
+
+    if (not ( res1 ^ res2 )) {
+        return false;
     }
 
-    return 5.;
+    return true;
+}
+
+bool StrokeRectGenerator::is_near_rect_y(const QRect &area, const point_s &point)
+{
+    constexpr QPoint delta(0, 50);
+    const auto res1 = area.contains(point.toPoint() - delta);
+    const auto res2 = area.contains(point.toPoint() + delta);
+
+    if (not ( res1 ^ res2 )) {
+        return false;
+    }
+
+    return true;
+}
+
+double StrokeRectGenerator::is_near_rect(const QRect &area, const point_s &point)
+{
+    const auto res1 = is_near_rect_x(area, point);
+    const auto res2 = is_near_rect_y(area, point);
+
+    if( res1 or res2)
+        return 5.;
+
+    return StrokeComplexCommon::error;
 }
 
 std::shared_ptr<Stroke> StrokeRectGenerator::make(const StrokePre *from)
@@ -25,8 +51,9 @@ double StrokeRectGenerator::model_near(const StrokePre &stroke)
     using namespace WCommonScript;
 
     double precision = 0.;
+    int err = 0;
 
-    if(!is_near(stroke._point.first(), stroke._point.last(), 10))
+    if(!is_near(stroke._point.first(), stroke._point.last(), 30))
         return StrokeComplexCommon::error;
 
     const auto &area = stroke.getBiggerPointInStroke();
@@ -37,10 +64,17 @@ double StrokeRectGenerator::model_near(const StrokePre &stroke)
     for (const auto &p : stroke._point) {
         const auto res = is_near_rect(area, p);
         if (res == StrokeComplexCommon::error) {
-            return StrokeComplexCommon::error;
+
+            WDebug(StrokeRectGeneratorDebug, "err: " << err);
+
+            if(err > 30 and false)
+                return StrokeComplexCommon::error;
+            err ++;
         }
         precision += res;
     }
 
-    return precision;
+    WDebug(StrokeRectGeneratorDebug, precision);
+
+    return precision / stroke._point.length() * 3.;
 }

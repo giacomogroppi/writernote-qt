@@ -35,7 +35,7 @@ void __init__ init_finder()
 {
     int i;
 
-    for(i = 0; i < THREAD_FINDER; i++){
+    for (i = 0; i < THREAD_FINDER; i++) {
         finder.is[i] = _min_precision * 2.;
     }
 }
@@ -45,9 +45,9 @@ static void *model_finder(void *_index)
     const auto index = (intptr_t)(_index);
     auto function = functions[index];
 
-    //WDebug(debug_model, __FUNCTION__ << index);
-
     finder.is[index] = function(*ctrl._stroke);
+
+    WDebug(debug_model, "index: " << index << finder.is[index]);
 
     return nullptr;
 }
@@ -63,7 +63,7 @@ static int get_index_most_prob(cdouble min_precision)
 
         // is not enough
         if(prec > min_precision){
-            //WDebug(debug_model, __FUNCTION__ << "not enough" << prec);
+            WDebug(debug_model, __FUNCTION__ << "not enough" << prec);
             continue;
         }
 
