@@ -452,6 +452,11 @@ force_inline double distance_not_square(const QPointF& first, const QPointF& sec
     return p;
 }
 
+force_inline double distance(double y1, double y2)
+{
+    return std::abs(y1 - y2);
+}
+
 force_inline double distance(const QPointF& first, const QPointF& second)
 {
     return std::sqrt(distance_not_square(first, second));

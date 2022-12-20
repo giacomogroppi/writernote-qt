@@ -64,13 +64,22 @@ int StrokeRect::is_inside(const WLine &line, int from, int precision, cbool need
 
 bool StrokeRect::is_inside(const QRectF &rect, double precision) const
 {
-    Q_UNUSED(rect);
-    Q_UNUSED(precision);
-    W_ASSERT(0);
+    const auto r = QRectF(
+                rect.topLeft() - QPointF(precision, precision),
+                rect.bottomRight() + QPointF(precision, precision)
+                );
+    return this->_data.rect.intersects(r);
 }
 
 void StrokeRect::append(const point_s &point, pressure_t pressure)
 {
+    using namespace WCommonScript;
+    const auto distanceYLeft    = distance(point.y(), this->_data.rect.topLeft().y());
+    const auto distanceYRight   = distance(point.y(), this->_data.rect.bottomRight().y());
+
+    const auto distanceXTop     = distance(point.x(), this->_data.rect.topLeft().x());
+    const auto distanceXBottom  = distance(point.x(), this->_data.rect.bottomRight().x());
+
     W_ASSERT(0);
 }
 
