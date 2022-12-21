@@ -38,7 +38,7 @@ static void AppendAll(
     qint64 time;
     const QPointF &PointFirstPage = doc.getPointFirstPage();
 
-    if(un(strokeToAppend.isEmpty()))
+    if (un(strokeToAppend.isEmpty()))
         return;
 
     time = core::get_main_window()->m_audioplayer->getPositionSecond();
@@ -225,25 +225,19 @@ force_inline void ManageMoveSquare(const QPointF &point, class square *_square)
 
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 {
-    QPainter painter;
+    //QPainter painter;
     constexpr not_used bool debugMove = false;
     const auto &point = event->position();
 
-    if (event->deviceType() ==
-#       if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            QTabletEvent::RotationStylus
-#       else
-            QInputDevice::DeviceType::Stylus
-#       endif
-            ) {
+    if (event->deviceType() == QInputDevice::DeviceType::Stylus) {
         updateCursor(event);
     }
 
     if (un(!m_deviceDown))
         return;
 
-    painter.begin(&_pixmap);
-    W_ASSERT(painter.isActive());
+    //painter.begin(&_pixmap);
+    //W_ASSERT(painter.isActive());
 
     if (likely(_method.isInsert())) {
         updateBrush(event);
@@ -269,8 +263,8 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
         }
     }
 
-    W_ASSERT(painter.isActive());
-    painter.end();
+    //W_ASSERT(painter.isActive());
+    //painter.end();
 }
 
 force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
