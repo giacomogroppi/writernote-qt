@@ -1,22 +1,23 @@
 #include "PenMethod.h"
 
-PenMethod::PenMethod(std::function<int()> func)
+PenMethod::PenMethod(std::function<int()> getSize, std::function<qint64 ()> getTime)
     :
-      _func(func)
+      _getSize(getSize),
+      _getTime(getTime)
 {
 }
 
-bool PenMethod::touchBegin(const QPointF &point)
-{
-
-}
-
-bool PenMethod::touchUpdate(const QPointF &point)
+bool PenMethod::touchBegin(const QPointF &point, Document &doc)
 {
 
 }
 
-int PenMethod::touchEnd(const QPointF &point)
+bool PenMethod::touchUpdate(const QPointF &point, Document &doc)
+{
+
+}
+
+int PenMethod::touchEnd(const QPointF &point, Document &doc)
 {
 
 }
