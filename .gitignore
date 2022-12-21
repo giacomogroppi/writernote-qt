@@ -1,3 +1,5 @@
+.cache
+.cache/*
 null.d
 build-qtcreator/*
 cmake-build-debug/*
@@ -27,3 +29,4 @@ result_memcheck.txt
 writernote_*.snap
 3rdparty/libzip
 3rdparty/poppler
+
