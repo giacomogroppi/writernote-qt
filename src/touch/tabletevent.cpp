@@ -183,19 +183,19 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 {
     constexpr const auto _debug = false;
     
-    if(un(m_deviceDown))
+    if (un(m_deviceDown))
         return;
 
     W_ASSERT(event->type() == QEvent::TabletPress);
 
-    if(_method.isInsert()){
+    if (_method.isInsert()) {
         updatelist(event);
         _finder->move(event->position());
     }
-    else if(_method.isSelection()){
+    else if (_method.isSelection()) {
         ManageStartSquare(event->position(), _square);
-    }else if(is_rubber(event, _method)){
-        _rubber->initRubber(event->position());
+    } else if (is_rubber(event, _method)) {
+        _rubber->touchBegin(event->position());
         WDebug(_debug, "rubber is set");
         W_ASSERT(_rubber->is_set());
     }
@@ -209,12 +209,12 @@ force_inline void ManageMoveSquare(const QPointF &point, class square *_square)
 {
     _square->isMoving();
 
-    if(_square->somethingInBox()){
+    if (_square->somethingInBox()) {
         W_ASSERT(_square->get_first_point().isSet());
 
         /** a questo punto può muovere di un delta x e y */
         _square->move(point);
-    }else{
+    } else {
         /**
         * it means that the user not select anything
         * in the past
@@ -229,43 +229,42 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
     constexpr not_used bool debugMove = false;
     const auto &point = event->position();
 
-    if(event->deviceType() ==
+    if (event->deviceType() ==
 #       if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             QTabletEvent::RotationStylus
 #       else
             QInputDevice::DeviceType::Stylus
 #       endif
-            ){
+            ) {
         updateCursor(event);
     }
 
-    if(un(!m_deviceDown))
+    if (un(!m_deviceDown))
         return;
 
     painter.begin(&_pixmap);
     W_ASSERT(painter.isActive());
 
-    if(likely(_method.isInsert())){
+    if (likely(_method.isInsert())) {
         updateBrush(event);
     }
 
     _lastPoint.pos = event->position();
     _lastPoint.pressure = event->pressure();
 
-    if(likely(_method.isInsert())){
+    if (likely(_method.isInsert())) {
         updatelist(event);
         _finder->move(point);
     }
-    else if(is_rubber(event, _method)){
-        _rubber->actionRubber(point);
+    else if (is_rubber(event, _method)) {
+        _rubber->touchUpdate(point);
     }
-    else if(_method.isSelection()){
+    else if (_method.isSelection()) {
         ManageMoveSquare(point, _square);
-    }else if(_method.isText()){
+    }else if (_method.isText()) {
         if(_text_w->isIn(point)){
             
-        }
-        else{
+        } else {
             _text_w->createNew(point);
         }
     }
@@ -308,10 +307,10 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
                 _square->hideProperty();
 
         }else if(is_rubber(event, _method)){
-            index_mod = _rubber->endRubber();
-            if(index_mod >= 0){
+            index_mod = _rubber->touchEnd(event->position());
+            if (index_mod >= 0) {
                 core::get_main_window()->_preview_widget->mod(index_mod);
-            }else if(index_mod != -1){
+            } else if(index_mod != -1) {
                 core::get_main_window()->_preview_widget->mod(-1);
             }
         }

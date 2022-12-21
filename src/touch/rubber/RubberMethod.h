@@ -6,10 +6,11 @@
 #include <QPen>
 #include <pthread.h>
 #include "RubberMethod.h"
+#include "touch/tools/Tools.h"
 
 #define DEFAULT_GOMMA_SIZE 5
 
-class RubberMethod
+class RubberMethod: public Tools
 {
 private:
     bool is_image_not_null(int index, const Page *page,
@@ -19,20 +20,26 @@ private:
     PointSettable _last;
     QList<QVector<int>> _data_to_remove;
 public:
-    RubberMethod();
-    ~RubberMethod();
-    [[nodiscard]] bool is_set() const { return this->_last.isSet(); };
-
     enum type_rubber: int{
         total, /* delete all the point with the saim id */
         partial /* delete what the user touch with the pen */
     };
 
-    void actionRubber(const QPointF &point, type_rubber method, int size_gomma);
-    void initRubber(const QPointF &point);
-    int endRubber(type_rubber method);
+    RubberMethod(const type_rubber &type, const int &size_rubber);
+    ~RubberMethod();
+    [[nodiscard]] bool is_set() const { return this->_last.isSet(); };
+
+    bool touchBegin(const QPointF &point) final;
+    bool touchUpdate(const QPointF &point) final;
+    int touchEnd(const QPointF& point) final;
 
     void reset();
+
+    Q_DISABLE_COPY(RubberMethod);
+
+private:
+    const int &_size_gomma;
+    const type_rubber &_rubber_type;
 };
 
 inline void RubberMethod::reset()

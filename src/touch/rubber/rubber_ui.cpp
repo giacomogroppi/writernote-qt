@@ -11,6 +11,7 @@ constexpr auto not_used rubber_debug = false;
 
 rubber_ui::rubber_ui(QWidget *parent) :
     QWidget(parent),
+    RubberMethod(_type_gomma, _size_gomma),
     ui(new Ui::rubber_ui)
 {
     ui->setupUi(this);
@@ -54,30 +55,6 @@ void rubber_ui::on_partial_button_clicked()
     this->update_data();
 }
 
-/**
- * return -1 if no page is mod
- * return -2 if multiple pages have changed
- * return the index of the page mod
-*/
-int rubber_ui::endRubber()
-{
-    return this->_executer.endRubber(this->_type_gomma);
-}
-
-/**
- * this function is call by tabletEvent
- * it returns true if it actually deleted something, otherwise it returns false
-*/
-void rubber_ui::actionRubber(const QPointF &lastPoint)
-{
-    return this->_executer.actionRubber(lastPoint, this->_type_gomma, this->_size_gomma);
-}
-
-void rubber_ui::initRubber(const QPointF &point)
-{
-    return this->_executer.initRubber(point);
-}
-
 void rubber_ui::save_settings() const
 {
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
@@ -87,7 +64,6 @@ void rubber_ui::save_settings() const
     setting.setValue(KEY_RUBBER_TYPE, _type_gomma);
 
     setting.endGroup();
-
 }
 
 void rubber_ui::load_settings()

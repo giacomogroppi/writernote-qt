@@ -47,7 +47,9 @@ void *idle_rubber(void *arg)
     }
 }
 
-RubberMethod::RubberMethod()
+RubberMethod::RubberMethod(const type_rubber &type, const int &size_rubber)
+    : _size_gomma(size_rubber),
+      _rubber_type(type)
 {
     WNew(thread_group, thread_group_sem, ());
     thread_group->startLoop(idle_rubber);
@@ -68,14 +70,6 @@ static inline not_used QRectF rubber_get_area(const QPointF &p1, const QPointF &
                   area.bottomRight() + tmp);
 
     return area;
-}
-
-void RubberMethod::initRubber(const QPointF &point)
-{
-    auto *_canvas = core::get_canvas();
-    datastruct *data = _canvas->getDoc();
-    _last = true;
-    _last = data->adjustPoint(point);
 }
 
 static force_inline void draw_null(Page *_page, const QVector<int> &point,
@@ -287,12 +281,16 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     single_mutex.unlock();
 }
 
-void RubberMethod::actionRubber(const QPointF &__lastPoint, type_rubber typeRubber, int size_gomma)
+/**
+ * this function is call by tabletEvent
+ * it returns true if it actually deleted something, otherwise it returns false
+*/
+bool RubberMethod::touchUpdate(const QPointF &__lastPoint)
 {
     auto *_canvas = core::get_canvas();
     datastruct *data = _canvas->getDoc();
     int lenStroke, count, indexPage, thread_create;
-    cbool isTotal = (typeRubber == RubberMethod::total);
+    cbool isTotal = (_rubber_type == RubberMethod::total);
     const QPointF &lastPoint = data->adjustPoint(__lastPoint);
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
@@ -360,7 +358,7 @@ void RubberMethod::actionRubber(const QPointF &__lastPoint, type_rubber typeRubb
 
     out1:
 
-    if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _last, size_gomma)){
+    if(!is_image_not_null(indexPage, &data->at_mod(indexPage), lastPoint, _last, _size_gomma)){
         WDebug(rubber_debug, "It's null");
         goto save_point;
     }
@@ -377,7 +375,7 @@ void RubberMethod::actionRubber(const QPointF &__lastPoint, type_rubber typeRubb
     dataPrivate.data        = data;
     dataPrivate.line       = WLine(_last, lastPoint);
 
-    __m_size_gomma = size_gomma;
+    __m_size_gomma = _size_gomma;
 
     dataPrivate.__page = &data->at_mod(indexPage);
 
@@ -468,7 +466,7 @@ bool RubberMethod::is_image_not_null(int index, const Page *page,
     return false;
 }
 
-int RubberMethod::endRubber(type_rubber method)
+int RubberMethod::touchEnd(const QPointF& )
 {
     datastruct *data = core::get_canvas()->getDoc();
     int i, len = _data_to_remove.length();
@@ -476,9 +474,8 @@ int RubberMethod::endRubber(type_rubber method)
 
     W_ASSERT(data);
 
-    if(method == type_rubber::total){
-
-        for(i = 0; i < len; i ++){
+    if (_rubber_type == type_rubber::total) {
+        for (i = 0; i < len; i ++) {
             QVector<int> &arr = _data_to_remove.operator[](i);
             Page &page = data->at_mod(i + _base);
 
@@ -509,4 +506,14 @@ int RubberMethod::endRubber(type_rubber method)
 RubberMethod::~RubberMethod()
 {
     WDelete(thread_group);
+}
+
+bool RubberMethod::touchBegin(const QPointF &point)
+{
+    auto *_canvas = core::get_canvas();
+    datastruct *data = _canvas->getDoc();
+    _last = true;
+    _last = data->adjustPoint(point);
+
+    return false;
 }

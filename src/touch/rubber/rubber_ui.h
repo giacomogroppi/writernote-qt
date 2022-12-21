@@ -14,7 +14,7 @@ namespace Ui {
 class rubber_ui;
 }
 
-class rubber_ui : public QWidget
+class rubber_ui : public QWidget, public RubberMethod
 {
     Q_OBJECT
 
@@ -26,17 +26,8 @@ public:
     void load_settings();
 
     RubberMethod::type_rubber _type_gomma = RubberMethod::total;
-
-    void actionRubber(const QPointF &);
-    void initRubber(const QPointF &point);
-    int endRubber();
-
-    [[nodiscard]] bool is_set() const { return _executer.is_set(); };
-
 private:
-    RubberMethod _executer;
     int _size_gomma = DEFAULT_GOMMA_SIZE;
-    void reset();
 
     void update_data();
 
@@ -48,9 +39,4 @@ private slots:
     void on_totale_button_clicked();
     void on_partial_button_clicked();
 };
-
-force_inline void rubber_ui::reset()
-{
-    return _executer.reset();
-}
 
