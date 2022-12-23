@@ -29,9 +29,9 @@ public:
     ~RubberMethod();
     [[nodiscard]] bool is_set() const { return this->_last.isSet(); };
 
-    bool touchBegin(const QPointF &point) final;
-    bool touchUpdate(const QPointF &point) final;
-    int touchEnd(const QPointF& point) final;
+    bool touchBegin(const QPointF &point, Document &doc) final;
+    bool touchUpdate(const QPointF &point, Document &doc) final;
+    int touchEnd(const QPointF& point, Document &doc) final;
 
     void reset();
 

@@ -195,7 +195,7 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
     else if (_method.isSelection()) {
         ManageStartSquare(event->position(), _square);
     } else if (is_rubber(event, _method)) {
-        _rubber->touchBegin(event->position());
+        _rubber->touchBegin(event->position(), *getDoc());
         WDebug(_debug, "rubber is set");
         W_ASSERT(_rubber->is_set());
     }
@@ -251,7 +251,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
         _finder->move(point);
     }
     else if (is_rubber(event, _method)) {
-        _rubber->touchUpdate(point);
+        _rubber->touchUpdate(point, *getDoc());
     }
     else if (_method.isSelection()) {
         ManageMoveSquare(point, _square);
@@ -301,7 +301,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
                 _square->hideProperty();
 
         }else if(is_rubber(event, _method)){
-            index_mod = _rubber->touchEnd(event->position());
+            index_mod = _rubber->touchEnd(event->position(), *getDoc());
             if (index_mod >= 0) {
                 core::get_main_window()->_preview_widget->mod(index_mod);
             } else if(index_mod != -1) {
