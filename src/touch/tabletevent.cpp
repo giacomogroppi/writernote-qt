@@ -50,11 +50,11 @@ static void AppendAll(
 
     strokeToAppend.adjust(PointFirstPage);
 
-    if(un(met.isLaser())){
+    if (un(met.isLaser())) {
         canvas->_laser->append(strokeToAppend);
         canvas->_laser->endMove();
         strokeToAppend = StrokePre();
-    }else{
+    } else {
         std::shared_ptr<Stroke> res = strokeToAppend.merge();
 
         pageMod = doc.appendStroke(res);

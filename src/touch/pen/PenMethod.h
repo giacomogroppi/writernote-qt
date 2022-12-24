@@ -10,8 +10,9 @@ private:
     std::function<qint64()> _getTime;
 public:
     PenMethod(std::function<int()> getSize, std::function<qint64()> getTime);
-    bool touchBegin(const QPointF& point, Document &doc);
-    bool touchUpdate(const QPointF& point, Document &doc);
-    int touchEnd(const QPointF& point, Document &doc);
+
+    bool touchBegin(const QPointF& point, Document &doc) final;
+    bool touchUpdate(const QPointF& point, Document &doc) final;
+    int touchEnd(const QPointF& point, Document &doc) final;
 };
 
