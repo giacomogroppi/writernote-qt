@@ -1,3 +1,4 @@
+cd $PREFIX_LIB/
 
 git clone -b v1.6.37 https://github.com/glennrp/libpng.git libpng
 

@@ -1,9 +1,10 @@
 
-cd $PREFIX_LIB/zlib-ng/
+cd $PREFIX_LIB/libzip/
 
 echo $(pwd)
 mkdir build
 cd build
+
 cmake .. -B$PREFIX_LIB/libzip \
   -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/libzip/distrib \
   -DCMAKE_BUILD_TYPE=Release \
