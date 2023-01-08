@@ -1,5 +1,5 @@
 
-cd libzip
+cd $PREFIX_LIB/zlib-ng/
 
 echo $(pwd)
 mkdir build

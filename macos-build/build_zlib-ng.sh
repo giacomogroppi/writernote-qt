@@ -1,3 +1,4 @@
+cd $PREFIX_LIB/zlib-ng/
 
 cmake . -B$PREFIX_LIB/zlib-ng/ \
   -DCMAKE_INSTALL_PREFIX=$PREFIX_LIB/zlib-ng/distrib \
