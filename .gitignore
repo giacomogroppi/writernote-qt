@@ -29,4 +29,5 @@ result_memcheck.txt
 writernote_*.snap
 3rdparty/libzip
 3rdparty/poppler
-
+3rdparty/freetype
+3rdparty/mozjpeg
