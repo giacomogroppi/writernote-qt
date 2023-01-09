@@ -43,7 +43,8 @@ private:
     int flags = 0;
 
     QList<std::shared_ptr<Stroke>> m_stroke;
-    void __single(const QList<std::shared_ptr<Stroke>> &from, QList<std::shared_ptr<Stroke>> &append_data);
+
+    void single(const QList<std::shared_ptr<Stroke>> &from, QList<std::shared_ptr<Stroke>> &append_data);
     QRect get_size_area(const QList<QList<std::shared_ptr<Stroke>>> & stroke);
 };
 

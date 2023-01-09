@@ -180,7 +180,7 @@ if(PDFSUPPORT)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/lib/libpoppler-qt6.dll.a)
     
-    elseif(MACOS_BUILD)
+    elseif(MACOS_BUILD OR APPLE)
         set(POPPLER_DIR ${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6)
 
         message("-- Use " ${POPPLER_DIR} " as poppler include path")
@@ -193,7 +193,7 @@ if(PDFSUPPORT)
     endif()
 endif() #PDFSUPPORT
 
-if(MACOS_BUILD)
+if(MACOS_BUILD OR APPLE)
     include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/include/)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/lib/libzip.a)
 elseif(WIN)

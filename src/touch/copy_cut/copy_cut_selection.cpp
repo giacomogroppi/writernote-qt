@@ -49,7 +49,7 @@ QRect copy::get_size_area(const QList<QList<std::shared_ptr<Stroke>>> &data)
     return size_area;
 }
 
-void copy::__single(
+void copy::single(
                 const QList<    std::shared_ptr<Stroke>> &from,
                 QList<          std::shared_ptr<Stroke>> &append_data)
 {
