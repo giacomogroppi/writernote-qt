@@ -1,6 +1,8 @@
 cd $PREFIX_LIB/
 
-git clone -b v1.6.37 https://github.com/glennrp/libpng.git libpng
+sudo rm -r libpng
+
+git clone -b v1.6.39 https://github.com/glennrp/libpng.git libpng
 
 cd libpng
 

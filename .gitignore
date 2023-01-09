@@ -31,3 +31,4 @@ writernote_*.snap
 3rdparty/poppler
 3rdparty/freetype
 3rdparty/mozjpeg
+3rdparty/libpng
