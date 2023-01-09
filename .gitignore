@@ -32,3 +32,6 @@ writernote_*.snap
 3rdparty/freetype
 3rdparty/mozjpeg
 3rdparty/libpng
+3rdparty/openjpeg
+3rdparty/openjpeg.tar.gz
+.DS_Store

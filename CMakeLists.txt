@@ -89,13 +89,22 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
-if(LINUX AND NOT FLATPAK_BUILD AND NOT SNAP)
+if((LINUX OR APPLE) AND NOT FLATPAK_BUILD AND NOT SNAP)
     
-    if(NOT "$ENV{QT_VER_WRITERNOTE}" STREQUAL "")
+    message("$ENV{QT_VER_WRITERNOTE}")
+
+    if(LINUX)
+        set(LIB_TARGET "gcc_64")
+    elseif(APPLE)
+        set(LIB_TARGET "macos")
+    endif()
+
+    if(NOT ("$ENV{QT_VER_WRITERNOTE}" STREQUAL ""))
         message("-- QT_VER_WRITERNOTE set")
-        set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/$ENV{QT_VER_WRITERNOTE}/gcc_64/lib/cmake")
+        set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/$ENV{QT_VER_WRITERNOTE}/${LIB_TARGET}/lib/cmake")
     else()
-        set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.4.0/gcc_64/lib/cmake")
+        message("-- QT_VER_WRITERNOTE not set")
+        set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.4.0/${LIB_TARGET}/lib/cmake")
     endif()
     
     message("-- search qt in " ${CMAKE_PREFIX_PATH})

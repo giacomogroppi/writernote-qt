@@ -4,7 +4,8 @@ mkdir openjpeg_build
 
 curl -L https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz -o openjpeg.tar.gz
 tar xf openjpeg.tar.gz
-cd openjpeg-* || exit
+mv openjpeg-* openjpeg
+cd openjpeg || exit
 mkdir build
 cd build || exit
 
