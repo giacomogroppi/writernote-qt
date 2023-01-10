@@ -501,7 +501,7 @@ void Page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 */
 void Page::triggerRenderImage(int m_pos_ris, bool all)
 {
-    __is_ok_count();
+    rep();
 
     all = initImg(all);
 
@@ -687,7 +687,7 @@ void Page::setCount(int newCount)
 
     this->_count = newCount;
 
-    __is_ok_count();
+    rep();
 }
 
 void Page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)

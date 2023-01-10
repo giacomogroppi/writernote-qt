@@ -13,7 +13,6 @@ StrokeNormal::~StrokeNormal()
 {
     this->_point.clear();
     this->_pressure.clear();
-    Stroke::~Stroke();
 }
 
 int StrokeNormal::save(WZipWriterSingle &file) const

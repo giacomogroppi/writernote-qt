@@ -239,6 +239,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     index_selected.reserve(32);
 
     Q_ASSERT(data->from <= data->to);
+    W_ASSERT(_page);
 
     for (; data->from < data->to; data->from++) {
         auto &stroke = _page->atStrokeMod(data->from);

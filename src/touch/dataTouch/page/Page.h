@@ -22,8 +22,6 @@
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
 
-#define __is_ok_count() W_ASSERT(this->_count > 0);
-
 #define Define_PAINTER_p(painter, ___img)               \
     QPainter painter;                                   \
     if(!painter.begin(&___img)) {                       \
@@ -59,6 +57,8 @@ private:
     StrokeForPage                   _stroke_writernote;
 
     static constexpr auto pageDebug = true;
+
+    void rep() const;
 
     /**
      * after adding data to the list, call triggernewimage,
@@ -190,6 +190,13 @@ public:
     friend class copy;
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
+
+force_inline void Page::rep() const
+{
+#ifdef DEBUGINFO
+    W_ASSERT(this->_count > 0);
+#endif // DEBUGINFO
+}
 
 force_inline void Page::unlock() const
 {
@@ -331,7 +338,7 @@ force_inline void Page::setVisible(cbool vis) const
 
 force_inline const Stroke &Page::atStroke(uint i) const
 {
-    __is_ok_count();
+    rep();
     const auto res = this->_stroke.at(i);
     W_ASSERT(res);
     return *res;
@@ -339,13 +346,13 @@ force_inline const Stroke &Page::atStroke(uint i) const
 
 force_inline Stroke &Page::atStrokeMod(const uint i)
 {
-    __is_ok_count();
+    rep();
     return *this->_stroke.operator[](i);
 }
 
 force_inline const StrokeForPage &Page::get_stroke_page() const
 {
-    __is_ok_count();
+    rep();
     return this->_stroke_writernote;
 }
 
@@ -402,13 +409,13 @@ force_inline void Page::removeAt(cint i)
 
 force_inline const Stroke &Page::last() const
 {
-    __is_ok_count();
+    rep();
     return *this->_stroke.last();
 }
 
 inline Stroke &Page::lastMod()
 {
-    __is_ok_count();
+    rep();
     return *this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
@@ -416,7 +423,7 @@ force_inline void Page::append(std::shared_ptr<Stroke> strokeAppend)
 {
     W_ASSERT(strokeAppend and !strokeAppend->isEmpty());
 
-    __is_ok_count();
+    rep();
 
     this->_strokeTmp.append(strokeAppend);
 
