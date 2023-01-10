@@ -194,8 +194,8 @@ if(PDFSUPPORT)
 endif() #PDFSUPPORT
 
 if(MACOS_BUILD OR APPLE)
-    include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/include/)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/distrib/lib/libzip.a)
+    include_directories(/opt/homebrew/Cellar/libzip/1.9.2/include/)
+    target_link_libraries(${PROJECT_NAME} PRIVATE /opt/homebrew/Cellar/libzip/1.9.2/lib/libzip.dylib)
 elseif(WIN)
     include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libzip/install/include/)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/install/lib/libzip.a)
