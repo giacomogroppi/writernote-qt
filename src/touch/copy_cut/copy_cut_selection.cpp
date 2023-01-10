@@ -105,7 +105,7 @@ int copy::selection(
     this->flags = 0;
 
     for(i = 0; i < lenList; i ++){
-        __single(stroke.at(i), m_stroke);
+        single(stroke.at(i), m_stroke);
     }
 
     adjustData(pointTouch);
