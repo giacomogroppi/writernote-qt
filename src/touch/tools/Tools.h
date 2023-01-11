@@ -8,8 +8,8 @@ public:
     Tools() = default;
     ~Tools() = default;
 
-    virtual bool touchBegin(const QPointF& point, class Document &doc) = 0;
-    virtual bool touchUpdate(const QPointF& point, class Document &doc) = 0;
+    virtual bool touchBegin(const QPointF& point, double size, class Document &doc) = 0;
+    virtual bool touchUpdate(const QPointF& point, double size, class Document &doc) = 0;
 
     /**
      * return -1 if no page is mod

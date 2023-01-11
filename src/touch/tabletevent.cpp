@@ -27,49 +27,6 @@ bool TabletCanvas::isWriting() const
     return !__tmp.isEmpty();
 }
 
-static void AppendAll(
-        Document              &doc,
-        const TabletCanvas    *canvas,
-        const TabletPenMethod& met)
-{
-    /* for debug */
-    StrokePre & strokeToAppend = __tmp;
-    int pageMod;
-    qint64 time;
-    const QPointF &PointFirstPage = doc.getPointFirstPage();
-
-    if (un(strokeToAppend.isEmpty()))
-        return;
-
-    time = core::get_main_window()->m_audioplayer->getPositionSecond();
-
-    /**
-     * 2^31 ~ 2 Gs ~ 6.9 days. It's enough
-     * */
-    W_ASSERT(time < INT_MAX);
-
-    strokeToAppend.adjust(PointFirstPage);
-
-    if (un(met.isLaser())) {
-        canvas->_laser->append(strokeToAppend);
-        canvas->_laser->endMove();
-        strokeToAppend = StrokePre();
-    } else {
-        std::shared_ptr<Stroke> res = strokeToAppend.merge();
-
-        pageMod = doc.appendStroke(res);
-
-        core::get_main_window()->_preview_widget->mod(pageMod);
-
-        doc.at_mod(pageMod).triggerRenderImage(
-                static_cast<int>(time),
-                false
-        );
-    }
-
-    strokeToAppend = StrokePre();
-}
-
 static inline bool is_rubber(QTabletEvent *event, const TabletPenMethod &met)
 {
     W_ASSERT(event);
