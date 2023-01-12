@@ -17,6 +17,11 @@
 #include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "highlighter/highlighter.h"
 #include "touch/TabletPenMethod.h"
+#include "touch/tools/Tools.h"
+#include "touch/pen/PenMethod.h"
+#include "touch/rubber/RubberMethod.h"
+#include "touch/laser/LaserMethod.h"
+#include "touch/square/SquareMethod.h"
 #include <QGestureEvent>
 
 class highlighter;
@@ -90,11 +95,18 @@ class TabletCanvas : public QWidget
     Q_OBJECT
 
 private:
+    struct {
+        PenMethod *_toolsPen;
+        SquareMethod *_methodSquare;
+        RubberMethod *_methodRubber;
+        LaserMethod *_methodMethod;
+    } _Tools;
+
+    Tools *_currentTool;
 public:
     static qreal pressureToWidth(qreal pressure);
     struct Point _lastPoint;
     [[nodiscard]] bool isWriting() const;
-    PointSettable _pointload;
     void callResizeEvent();
 
 #define default_speed_value 5

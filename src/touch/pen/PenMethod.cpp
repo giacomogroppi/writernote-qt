@@ -10,7 +10,7 @@ extern StrokePre __tmp;
 
 PenMethod::PenMethod(std::function<pressure_t (double size)> getSize,
                      std::function<qint64 ()> getTime,
-                     std::function<QColor()> getColor,
+                     std::function<QColor ()> getColor,
                      QPen &pen)
     :
       _getSize(std::move(getSize)),

@@ -122,20 +122,6 @@ end:
     lastMethod = _method;
 }
 
-force_inline void ManageStartSquare(const QPointF &touch, class square *_square)
-{
-    constexpr auto not_used ManageStartdebugSquare = false;
-
-    if(_square->somethingInBox()){
-        WDebug(ManageStartdebugSquare, "Somethininbox");
-        _square->initPointMove(touch);
-    }
-    else{
-        WDebug(ManageStartdebugSquare, "not in box");
-        _square->initPoint(touch);
-    }
-}
-
 force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 {
     constexpr const auto _debug = false;
@@ -145,39 +131,13 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 
     W_ASSERT(event->type() == QEvent::TabletPress);
 
-    if (_method.isInsert()) {
-        updatelist(event);
-        _finder->move(event->position());
-    }
-    else if (_method.isSelection()) {
-        ManageStartSquare(event->position(), _square);
-    } else if (is_rubber(event, _method)) {
-        _rubber->touchBegin(event->position(), *getDoc());
-        WDebug(_debug, "rubber is set");
-        W_ASSERT(_rubber->is_set());
-    }
+    _currentTool->touchBegin(event->position(),
+                             event->pressure(),
+                             *this->getDoc());
 
     m_deviceDown = true;
     _lastPoint.pos = event->position();
     _lastPoint.pressure = event->pressure();
-}
-
-force_inline void ManageMoveSquare(const QPointF &point, class square *_square)
-{
-    _square->isMoving();
-
-    if (_square->somethingInBox()) {
-        W_ASSERT(_square->get_first_point().isSet());
-
-        /** a questo punto può muovere di un delta x e y */
-        _square->move(point);
-    } else {
-        /**
-        * it means that the user not select anything
-        * in the past
-        */
-        _square->updatePoint(point);
-    }
 }
 
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
