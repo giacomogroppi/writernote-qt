@@ -286,7 +286,9 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-bool RubberMethod::touchUpdate(const QPointF &__lastPoint, double, Document &doc)
+bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
+                               double,
+                               Document &doc)
 {
     int lenStroke, count, indexPage, thread_create;
     cbool isTotal = (_rubber_type == RubberMethod::total);
