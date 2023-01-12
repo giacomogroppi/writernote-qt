@@ -1,7 +1,7 @@
 #pragma once
 
-
 #include <QWidget>
+#include "touch/tools/Tools.h"
 
 #define DefaultS 0.30
 
@@ -16,12 +16,19 @@ namespace Ui {
 class pen_ui;
 }
 
-class pen_ui : public QWidget
+class pen_ui :  public QWidget,
+                public Tools
 {
     Q_OBJECT
 
+private:
+    std::function<int()> _getTime;
+    QColor &_color;
+    QPen &_pen;
+
 public:
-    explicit pen_ui(QWidget *parent = nullptr);
+    explicit pen_ui(QWidget *parent, std::function<int()> getTime, QColor &color,
+                    QPen &pen);
     ~pen_ui();
 
     highlighter * m_highlighter = nullptr;
@@ -34,44 +41,25 @@ public:
         pressione /* the size of the pen is decide by the pressure of the pen on the screen */
     };
 
-    double getSize(const double pressure){
-        if(m_type_pen == n_pressione::pressione){
-            return pressure;
-        }
-        return m_spessore_pen;
-    }
+    double getSize(double pressure);
 
-    inline double get_size_private(){
-        return m_spessore_pen;
-    };
-
-    inline bool IsPressure(){
-        return m_type_pen == n_pressione::pressione;
-    }
-
-    inline void setType(bool pressure){
-        if(pressure){
-            m_type_pen = n_pressione::pressione;
-        }else{
-            m_type_pen = n_pressione::spessore;
-        }
-    }
-
-    void setWidthTratto(const double size){
-        m_spessore_pen = size;
-        list_update();
-    }
+    bool IsPressure();
+    void setType(bool pressure);
+    void setWidthTratto(double size);
 
     struct last_color m_last_color;
 
-    /*
+    /**
      * if true we need to use the same
      *  data for highlighter and pen
     */
     bool same_data;
-    void change_data();
 
     void list_update();
+
+    bool touchBegin(const QPointF& point, double size, Document &doc) final;
+    bool touchUpdate(const QPointF& point, double size, Document &doc) final;
+    int touchEnd(const QPointF& point, Document &doc) final;
 
 private slots:
     void on_slider_size_valueChanged(int value);
@@ -91,3 +79,30 @@ protected:
     bool event(QEvent *) override;
 };
 
+inline void pen_ui::setWidthTratto(const double size)
+{
+    m_spessore_pen = size;
+    list_update();
+}
+
+inline void pen_ui::setType(bool pressure)
+{
+    if(pressure){
+        m_type_pen = n_pressione::pressione;
+    }else{
+        m_type_pen = n_pressione::spessore;
+    }
+}
+
+inline bool pen_ui::IsPressure()
+{
+    return m_type_pen == n_pressione::pressione;
+}
+
+inline double pen_ui::getSize(double pressure)
+{
+    if(m_type_pen == n_pressione::pressione){
+        return pressure;
+    }
+    return m_spessore_pen;
+}
