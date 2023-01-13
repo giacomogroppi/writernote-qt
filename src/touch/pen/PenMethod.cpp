@@ -18,30 +18,28 @@ PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
 
 bool PenMethod::touchBegin(const QPointF &point, double size, Document &doc)
 {
+    pressure_t pressure;
+    StrokePre &strokeTmp = __tmp;
 
+    const uchar alfa = 255;
+
+    strokeTmp.setTime(_getTime());
+    strokeTmp.setColor(_color);
+    strokeTmp.setAlfaColor(alfa);
+
+    pressure = this->_getSize(size);
+
+    strokeTmp.append(point, pressure, _pen, getProp(doc));
 }
 
 bool PenMethod::touchUpdate(const QPointF &point, double size, Document &doc)
 {
-    uchar alfa;
-    point_s tmp_point{};
     StrokePre &strokeTmp = __tmp;
     pressure_t pressure;
-    const auto prop = doc.getZoom() == PROP_RESOLUTION ?
-                      doc.getZoom() :
-                      doc.getZoom() - .0000001;
 
-    strokeTmp.setTime(static_cast<int>(
-                              this->_getTime()
-                      ));
-
-    strokeTmp.setColor(this->_color);
-    strokeTmp.setAlfaColor(alfa);
-
-    tmp_point = point;
     pressure = this->_getSize(size);
 
-    strokeTmp.append(tmp_point, pressure, (QPen &)_pen, prop);
+    strokeTmp.append(point, pressure, (QPen &)_pen, getProp(doc));
 
     core::get_canvas()->_finder->move(point);
 }
@@ -77,4 +75,12 @@ int PenMethod::touchEnd(const QPointF &, Document &doc)
     strokeToAppend = StrokePre();
 
     return pageMod;
+}
+
+double PenMethod::getProp(const Document &doc) const
+{
+    const auto prop = doc.getZoom() == PROP_RESOLUTION ?
+                      doc.getZoom() :
+                      doc.getZoom() - .0000001;
+    return prop;
 }

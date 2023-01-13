@@ -9,7 +9,7 @@ private:
     /**
      * the function must return the stroke size
      * */
-    std::function<pressure_t (double size)>    _getSize;
+    std::function<pressure_t (double size)> _getSize;
 
     /**
      * _getTime must return the time in seconds from the beginning of the recording
@@ -17,6 +17,9 @@ private:
     std::function<int()> _getTime;
     QColor _color;
     QPen &_pen;
+
+    double getProp(const Document &doc) const;
+
 public:
     PenMethod(std::function<pressure_t (double size)> getSize,
               std::function<int()> getTime,

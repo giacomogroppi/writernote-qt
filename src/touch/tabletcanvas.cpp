@@ -341,3 +341,8 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
 out:
     return ref->event(e);
 }
+
+QPen &TabletCanvas::pen()
+{
+    return _pen;
+}

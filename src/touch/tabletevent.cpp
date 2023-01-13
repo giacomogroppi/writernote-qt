@@ -174,7 +174,6 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 {
     int index_mod;
-    bool done = _square->somethingInBox();
     block_scrolling = false;
 
 #if defined(WIN32) || defined(WIN64)
@@ -224,9 +223,4 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     pressure = un(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point, pressure, (QPen &)_pen, prop);
-}
-
-QPen &TabletCanvas::pen()
-{
-    return _pen;
 }
