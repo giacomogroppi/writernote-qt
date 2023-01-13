@@ -80,7 +80,13 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     setting_load(this);
     this->m_rubber              = new class rubber_ui(this);
     this->m_text                = new class text_ui(this);
-    this->m_pen                 = new class pen_ui(this);
+    this->m_pen                 = new class pen_ui( this,
+                                                    [&]() {
+                                                        return this->m_audio_recorder->getCurrentTime();
+                                                    },
+                                                    _canvas->_color,
+                                                    _canvas->_
+                                                   );
     this->m_highlighter         = new class highlighter(this, &m_pen->same_data, m_pen);
     this->m_pen->m_highlighter  = m_highlighter;
     this->m_option_copybook     = new class option_copybook(this);

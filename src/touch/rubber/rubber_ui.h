@@ -14,7 +14,8 @@ namespace Ui {
 class rubber_ui;
 }
 
-class rubber_ui : public QWidget, public RubberMethod
+class rubber_ui :   public QWidget,
+                    public RubberMethod
 {
     Q_OBJECT
 

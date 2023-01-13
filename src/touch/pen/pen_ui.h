@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include "touch/tools/Tools.h"
+#include "PenMethod.h"
 
 #define DefaultS 0.30
 
@@ -17,7 +18,7 @@ class pen_ui;
 }
 
 class pen_ui :  public QWidget,
-                public Tools
+                public PenMethod
 {
     Q_OBJECT
 
@@ -56,10 +57,6 @@ public:
     bool same_data;
 
     void list_update();
-
-    bool touchBegin(const QPointF& point, double size, Document &doc) final;
-    bool touchUpdate(const QPointF& point, double size, Document &doc) final;
-    int touchEnd(const QPointF& point, Document &doc) final;
 
 private slots:
     void on_slider_size_valueChanged(int value);

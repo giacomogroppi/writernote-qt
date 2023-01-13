@@ -29,8 +29,6 @@ public:
     bool *same_data = nullptr;
     pen_ui *m_pen = nullptr;
 
-    void moveAll(datastruct *, QList<point_s> &point);
-
     void updateList();
 
 private slots:
