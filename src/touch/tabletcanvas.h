@@ -95,13 +95,6 @@ class TabletCanvas : public QWidget
     Q_OBJECT
 
 private:
-    struct {
-        PenMethod *_toolsPen;
-        SquareMethod *_methodSquare;
-        RubberMethod *_methodRubber;
-        LaserMethod *_methodMethod;
-    } _Tools;
-
     Tools *_currentTool;
 public:
     static qreal pressureToWidth(qreal pressure);

@@ -18,8 +18,6 @@ private:
     QColor _color;
     QPen &_pen;
 
-    double getProp(const Document &doc) const;
-
 public:
     PenMethod(std::function<pressure_t (double size)> getSize,
               std::function<int()> getTime,

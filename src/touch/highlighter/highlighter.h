@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QList>
 #include "touch/dataTouch/point.h"
+#include "HighligterMethod.h"
 
 namespace Ui {
 class highlighter;
@@ -13,7 +14,8 @@ class highlighter;
 class pen_ui;
 class datastruct;
 
-class highlighter : public QDialog
+class highlighter : public QDialog,
+                    public HighligterMethod
 {
     Q_OBJECT
 
@@ -31,17 +33,13 @@ public:
 
     void updateList();
 
+
+
 private slots:
-    //void on_slider_actionTriggered(int action);
-
     void on_button_size_clicked();
-
     void on_button_pressure_clicked();
-
     void on_same_data_stateChanged(int arg1);
-
     void on_slider_alfa_valueChanged(int value);
-
     void on_slider_size_valueChanged(int value);
 
 private:

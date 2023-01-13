@@ -9,6 +9,8 @@
 #define MAX_ALFA 150
 #define MIN_ALFA 20
 
+extern StrokePre __tmp;
+
 highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
     QDialog(parent),
     ui(new Ui::highlighter)

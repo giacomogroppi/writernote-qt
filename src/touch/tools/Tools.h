@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
+#include "currenttitle/Document.h"
 
 class Tools {
 private:
@@ -17,4 +18,14 @@ public:
      * return the index of the page mod
     */
     virtual int touchEnd(const QPointF& point, class Document &doc) = 0;
+
+    static double getProp(const Document &doc);
 };
+
+inline double Tools::getProp(const Document &doc)
+{
+    const auto prop = doc.getZoom() == PROP_RESOLUTION ?
+        doc.getZoom() :
+            doc.getZoom() - .0000001;
+    return prop;
+}

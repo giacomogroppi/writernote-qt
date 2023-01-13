@@ -76,11 +76,3 @@ int PenMethod::touchEnd(const QPointF &, Document &doc)
 
     return pageMod;
 }
-
-double PenMethod::getProp(const Document &doc) const
-{
-    const auto prop = doc.getZoom() == PROP_RESOLUTION ?
-                      doc.getZoom() :
-                      doc.getZoom() - .0000001;
-    return prop;
-}
