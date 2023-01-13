@@ -163,22 +163,9 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
     _lastPoint.pos = event->position();
     _lastPoint.pressure = event->pressure();
 
-    if (likely(_method.isInsert())) {
-        updatelist(event);
-        _finder->move(point);
-    }
-    else if (is_rubber(event, _method)) {
-        _rubber->touchUpdate(point, *getDoc());
-    }
-    else if (_method.isSelection()) {
-        ManageMoveSquare(point, _square);
-    }else if (_method.isText()) {
-        if(_text_w->isIn(point)){
-            
-        } else {
-            _text_w->createNew(point);
-        }
-    }
+    this->_currentTool->touchUpdate(event->position(),
+                                    event->pressure(),
+                                    *this->getDoc());
 
     //W_ASSERT(painter.isActive());
     //painter.end();
@@ -194,40 +181,16 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
     this->isdrawing = false;
 #endif
 
-    if(likely(_method.isInsert())){
-        AppendAll(*this->getDoc(), this, _method);
-        _finder->endMoving();
+    //W_ASSERT(0);
+    index_mod = this->_currentTool->touchEnd(event->position(), *this->getDoc());
+
+    if (index_mod >= 0) {
+        core::get_main_window()->_preview_widget->mod(index_mod);
+    } else if(index_mod != -1) {
+        core::get_main_window()->_preview_widget->mod(-1);
     }
 
-    if(un(!m_deviceDown)){
-        if(_method.isSelection() && done){
-            _square->reset();
-        }
-    }
-
-    if (m_deviceDown && event->buttons() == Qt::NoButton){
-        m_deviceDown = false;
-
-        if(_method.isSelection()){
-            if(!done){
-                _square->find();
-            }
-            if(!isForce)
-                _square->endMoving(this);
-            else
-                _square->hideProperty();
-
-        }else if(is_rubber(event, _method)){
-            index_mod = _rubber->touchEnd(event->position(), *getDoc());
-            if (index_mod >= 0) {
-                core::get_main_window()->_preview_widget->mod(index_mod);
-            } else if(index_mod != -1) {
-                core::get_main_window()->_preview_widget->mod(-1);
-            }
-        }
-    }
-
-    if(likely(_redoundo)){
+    if(likely(_redoundo and index_mod != -1)){
         _redoundo->copy();
     }
 }
@@ -261,4 +224,9 @@ void TabletCanvas::updatelist(QTabletEvent *event) const
     pressure = un(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
 
     strokeTmp.append(tmp_point, pressure, (QPen &)_pen, prop);
+}
+
+QPen &TabletCanvas::pen()
+{
+    return _pen;
 }

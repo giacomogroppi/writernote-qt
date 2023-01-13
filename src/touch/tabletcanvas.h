@@ -207,6 +207,8 @@ public:
     void send_touch_event(QTabletEvent *event);
     void send_mouse_event(QMouseEvent *event);
 
+    QPen &pen();
+
 protected:
     void tabletEvent(QTabletEvent *event) override;
     void paintEvent(QPaintEvent *event) override;

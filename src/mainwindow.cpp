@@ -85,7 +85,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
                                                         return this->m_audio_recorder->getCurrentTime();
                                                     },
                                                     _canvas->_color,
-                                                    _canvas->_
+                                                    _canvas->pen()
                                                    );
     this->m_highlighter         = new class highlighter(this, &m_pen->same_data, m_pen);
     this->m_pen->m_highlighter  = m_highlighter;

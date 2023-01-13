@@ -1,7 +1,7 @@
 #include "PenMethod.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "touch/tabletcanvas.h"
-
+#include "touch/object_finder/object_finder.h"
 #include <utility>
 
 extern StrokePre __tmp;

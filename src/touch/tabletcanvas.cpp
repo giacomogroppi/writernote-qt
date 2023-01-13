@@ -44,24 +44,6 @@ TabletCanvas::TabletCanvas()
 
     this->setAttribute(Qt::WA_AcceptTouchEvents);
 
-    _Tools = {
-            ._toolsPen = new PenMethod(
-                    [&](double pressure) -> pressure_t {
-                        return this->_pen_ui->getSize(pressure);
-                    },
-                    []() -> qint64 {
-                        return core::get_main_window()
-                                ->m_audio_recorder
-                                ->getCurrentTime();
-                    },
-                    [&]() -> QColor {
-                        return this->_color;
-                    },
-                    this->_pen),
-            ._methodSquare = new SquareMethod(),
-            ._methodRubber = new RubberMethod()
-            ._methodMethod =
-    };
     /*qDebug() << this->testAttribute(Qt::WA_AcceptTouchEvents);
     qDebug() << this->testAttribute(Qt::WA_WState_AcceptedTouchBeginEvent);
     qDebug() << this->testAttribute(Qt::WA_TouchPadAcceptSingleTouchEvents);
