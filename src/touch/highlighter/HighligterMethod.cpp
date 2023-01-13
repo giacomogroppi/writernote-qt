@@ -8,13 +8,15 @@
 extern StrokePre __tmp;
 
 HighligterMethod::HighligterMethod(
+            std::function<int()> getTime,
             std::function<pressure_t(double)> getSize,
             QPen &pen,
             QColor &color
         ):
-    _getSize(std::move(getSize)),
-    _pen(pen),
-    _color(color)
+        InsertTools(std::move(getTime),
+                    std::move(getSize),
+                    color,
+                    pen)
 {
 }
 
@@ -49,4 +51,9 @@ bool HighligterMethod::touchUpdate(const QPointF &point, double size, Document &
 int HighligterMethod::touchEnd(const QPointF &point, Document &doc)
 {
     return 0;
+}
+
+uchar HighligterMethod::getAlfa() const
+{
+    return this->;
 }

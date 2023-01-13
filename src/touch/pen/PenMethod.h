@@ -1,23 +1,11 @@
 #pragma once
 
-#include "touch/tools/Tools.h"
-#include "currenttitle/document.h"
+#include "touch/tools/InsertTools.h"
+#include "currenttitle/Document.h"
 
-class PenMethod: public Tools
+class PenMethod: public InsertTools
 {
 private:
-    /**
-     * the function must return the stroke size
-     * */
-    std::function<pressure_t (double size)> _getSize;
-
-    /**
-     * _getTime must return the time in seconds from the beginning of the recording
-     * */
-    std::function<int()> _getTime;
-    QColor _color;
-    QPen &_pen;
-
 public:
     PenMethod(std::function<pressure_t (double size)> getSize,
               std::function<int()> getTime,
@@ -27,5 +15,7 @@ public:
     bool touchBegin(const QPointF& point, double size, Document &doc) final;
     bool touchUpdate(const QPointF& point, double size, Document &doc) final;
     int touchEnd(const QPointF& point, Document &doc) final;
+
+    uchar getAlfa() const final;
 };
 
