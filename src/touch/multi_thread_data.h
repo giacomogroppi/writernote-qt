@@ -2,9 +2,9 @@
 
 #include "utils/WCommonScript.h"
 #include "utils/threadcount.h"
-#include "semaphore.h"
 #include "testing/memtest.h"
 #include "pthread.h"
+#include "core/WSemaphore.h"
 
 struct DataPrivateMuThread{
     int from, to;
@@ -22,9 +22,9 @@ private:
     int _flag;
     int _create;
 
-    sem_t _finish;
-    sem_t _pass;
-    sem_t _all_finish;
+    WSemaphore _finish;
+    WSemaphore _pass;
+    WSemaphore _all_finish;
 
     DataPrivateMuThread *_data;
     pthread_t *_thread;
@@ -36,9 +36,9 @@ public:
 
     DataPrivateMuThread *get_thread_data();
 
-    sem_t *get_pass_sem();
-    sem_t *get_finish_sem();
-    sem_t *get_all_finish_sem();
+    WSemaphore &get_pass_sem();
+    WSemaphore &get_finish_sem();
+    WSemaphore &get_all_finish_sem();
 
     bool needToDelete() const;
 
@@ -47,8 +47,8 @@ public:
     int get_create() const;
     int get_max() const;
 
-    void waitForThread(sem_t *sem);
-    void postForThread(sem_t *sem);
+    void waitForThread(WSemaphore &sem);
+    void postForThread(WSemaphore &sem);
 };
 
 force_inline bool thread_group_sem::needToDelete() const
@@ -56,40 +56,39 @@ force_inline bool thread_group_sem::needToDelete() const
     return _flag & THREAD_STOP_REQUEST;
 }
 
-force_inline sem_t *thread_group_sem::get_all_finish_sem()
+force_inline WSemaphore &thread_group_sem::get_all_finish_sem()
 {
-    return &_all_finish;
+    return _all_finish;
 }
 
-force_inline sem_t *thread_group_sem::get_pass_sem()
+force_inline WSemaphore &thread_group_sem::get_pass_sem()
 {
-    return &_pass;
+    return _pass;
 }
 
-force_inline sem_t *thread_group_sem::get_finish_sem()
+force_inline WSemaphore &thread_group_sem::get_finish_sem()
 {
-    return &_finish;
+    return _finish;
 }
 
 force_inline void thread_group_sem::startLoop(void *(*function)(void *))
 {
     int i;
     for(i = 0; i < _core; i++){
-        pthread_create(&_thread[i], NULL, function, &_data[i]);
+        pthread_create(&_thread[i], nullptr, function, &_data[i]);
     }
 }
 
-force_inline thread_group_sem::thread_group_sem()
+force_inline thread_group_sem::thread_group_sem():
+    _finish(0),
+    _pass(0),
+    _all_finish(0)
 {
     _flag = 0;
     _core = threadCount::count();
 
-    _thread = (typeof(_thread)) WMalloc(sizeof(*_thread) * _core);
-    _data = (typeof(_data)) WMalloc(sizeof(*_data) * _core);
-
-    sem_init(&_finish, 0, 0);
-    sem_init(&_pass, 0, 0);
-    sem_init(&_all_finish, 0, 0);
+    _thread = (pthread_t *) WMalloc(sizeof(*_thread) * _core);
+    _data = (DataPrivateMuThread *) WMalloc(sizeof(*_data) * _core);
 }
 
 // when call this function data should be set
@@ -99,9 +98,9 @@ inline void thread_group_sem::postAndWait(int create)
     volatile int *__create = &this->_create;
     *__create = create;
 
-    this->postForThread(&_pass);
-    this->waitForThread(&_finish);
-    this->postForThread(&_all_finish);
+    this->postForThread(_pass);
+    this->waitForThread(_finish);
+    this->postForThread(_all_finish);
 }
 
 force_inline int thread_group_sem::get_create() const
@@ -114,20 +113,19 @@ inline int thread_group_sem::get_max() const
     return _core;
 }
 
-inline void thread_group_sem::waitForThread(sem_t *sem)
+inline void thread_group_sem::waitForThread(WSemaphore &sem)
 {
     int i;
     for(i = 0; i < _core; i++){
-        sem_wait(sem);
+        sem.acquire();
     }
 }
 
-inline void thread_group_sem::postForThread(sem_t *sem)
+inline void thread_group_sem::postForThread(WSemaphore &sem)
 {
     int i;
-    W_ASSERT(sem);
     for(i = 0; i < _core; i++){
-        sem_post(sem);
+        sem.release();
     }
 }
 
@@ -135,19 +133,14 @@ force_inline thread_group_sem::~thread_group_sem()
 {
     int i;
     stopThread();
-    postForThread(&_pass);
+    postForThread(_pass);
 
     for(i = 0; i < _core; i++){
-        pthread_join(_thread[i], NULL);
+        pthread_join(_thread[i], nullptr);
     }
 
     WFree(_thread);
     WFree(_data);
-
-    sem_destroy(&_finish);
-    sem_destroy(&_pass);
-    sem_destroy(&_all_finish);
-
 }
 
 force_inline DataPrivateMuThread *thread_group_sem::get_thread_data()
@@ -160,7 +153,7 @@ force_inline void thread_group_sem::stopThread()
     _flag |= THREAD_STOP_REQUEST;
 }
 
-void DataPrivateInit(void);
+void DataPrivateInit();
 
 #define DATA_PRIVATE_FLAG_SEM BIT(1)
 int DataPrivateMuThreadInit(DataPrivateMuThread *data, void *extraData, cint maxThread, cint to, int flag);
@@ -168,8 +161,8 @@ int DataPrivateMuThreadInit(DataPrivateMuThread *data, void *extraData, cint max
 int DataPrivateCountThread(int numNewThread);
 void DataPrivateCountThreadRelease(int numReleaseThread);
 
-pthread_t *get_thread_max(void);
-DataPrivateMuThread *get_data_max(void);
+pthread_t *get_thread_max();
+DataPrivateMuThread *get_data_max();
 
 void free_thread_data(pthread_t **thread, DataPrivateMuThread **data);
 
@@ -187,7 +180,7 @@ force_inline void joinThread(pthread_t *thread, int count)
 {
     int i;
     for(i = 0; i < count; i++){
-        pthread_join(thread[i], NULL);
+        pthread_join(thread[i], nullptr);
     }
 }
 

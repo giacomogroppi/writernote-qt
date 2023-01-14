@@ -1,43 +1,32 @@
 #include "LaserMethod.h"
+
+#include <utility>
 #include "core/core.h"
-#include "touch/tabletcanvas.h"
-#include "touch/laser/Laser.h"
+#include "touch/laser/laser.h"
 
 extern StrokePre __tmp;
 
-LaserMethod::LaserMethod(std::function<pressure_t()> getPress,
-                         QPen &pen) :
-    _getPress(std::move(getPress)),
-    _pen(pen)
+LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
+                         QPen &pen,
+                         QColor &color) :
+        InsertTools([]() {return 0;},
+                    std::move(getPress),
+                    color,
+                    pen)
 {
 }
 
 bool LaserMethod::touchBegin(const QPointF &point, double size, Document &doc)
 {
+    return InsertTools::touchBegin(point, size, doc);
 }
 
 bool LaserMethod::touchUpdate(const QPointF &point, double size, Document &doc)
 {
-    uchar alfa;
-    point_s tmp_point{};
-    StrokePre &strokeTmp = __tmp;
-    pressure_t pressure;
-    const auto prop = doc.getZoom() == PROP_RESOLUTION ?
-                      doc.getZoom() :
-                      doc.getZoom() - .0000001;
-
-    strokeTmp.setTime(static_cast<int>(
-        -1
-    ));
-    strokeTmp.setColor(Qt::red);
-    strokeTmp.setAlfaColor(alfa);
-
-    tmp_point = point;
-    pressure = this->_getPress();
-    strokeTmp.append(tmp_point, pressure, (QPen &)_pen, prop);
+    return InsertTools::touchUpdate(point, size, doc);
 }
 
-int LaserMethod::touchEnd(const QPointF &point, Document &doc)
+int LaserMethod::touchEnd(const QPointF &, Document &)
 {
     auto *canvas = core::get_canvas();
 
@@ -49,4 +38,9 @@ int LaserMethod::touchEnd(const QPointF &point, Document &doc)
     __tmp = StrokePre();
 
     return -1;
+}
+
+uchar LaserMethod::getAlfa() const
+{
+    return 255;
 }

@@ -16,17 +16,17 @@ PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
 
 bool PenMethod::touchBegin(const QPointF &point, double size, Document &doc)
 {
-    InsertTools::touchBegin(point, size, doc);
+    return InsertTools::touchBegin(point, size, doc);
 }
 
 bool PenMethod::touchUpdate(const QPointF &point, double size, Document &doc)
 {
-    InsertTools::touchUpdate(point, size, doc);
+    return InsertTools::touchUpdate(point, size, doc);
 }
 
 int PenMethod::touchEnd(const QPointF &point, Document &doc)
 {
-    InsertTools::touchEnd(point, doc);
+    return InsertTools::touchEnd(point, doc);
 }
 
 uchar PenMethod::getAlfa() const

@@ -16,9 +16,6 @@
 #define LOAD_STRINGA(x, y) if(xmlstruct::load_stringa(x,y) == ERROR) goto free_;
 #define LOAD_STRINGA_RETURN(x, y) if(xmlstruct::load_stringa(x, y) == ERROR)return ERROR;
 
-#define __new
-#define __old
-
 /*
  * call then we are starting an audio
 */
@@ -40,24 +37,24 @@ private:
     static constexpr size_t get_offset_start() { return sizeof(int); };
     Document *_doc = nullptr;
 
+    /* old */ int load_file_2(WZipReaderSingle &reader);
 #ifdef ALL_VERSION
-    __old int load_file_2(WZipReaderSingle &reader);
-    __old int load_file_3(WZipReaderSingle &reader);
-    __old int load_file_4(WZipReaderSingle &reader);
-    __old int load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
-    __old int load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
-    __old int load_file_7(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
-    __old int load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
+    /* old */ int load_file_3(WZipReaderSingle &reader);
+    /* old */ int load_file_4(WZipReaderSingle &reader);
+    /* old */ int load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
+    /* old */ int load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
+    /* old */ int load_file_7(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
+    /* old */ int load_file_8(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
 
-    __old int loadbinario_0(class WZip &zip);
-    __old int loadbinario_1(class WZip &zip);
-    __old int loadbinario_2(class WZip &zip);
-    __old int loadbinario_3(class WZip &zip, int ver_stroke);
+    /* __old */ int loadbinario_0(class WZip &zip);
+    /* __old */ int loadbinario_1(class WZip &zip);
+    /* __old */ int loadbinario_2(class WZip &zip);
+    /* __old */ int loadbinario_3(class WZip &zip, int ver_stroke);
 
 #endif // ALL_VERSION
 
-    __new int loadbinario_4(class WZip &zip, int ver_stroke);
-    __new int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
+    /* new */ int loadbinario_4(class WZip &zip, int ver_stroke);
+    /* new */ int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
 
     static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
     static uchar controllOldVersion(zip_t *file);

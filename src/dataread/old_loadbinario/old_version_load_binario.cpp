@@ -422,7 +422,7 @@ int xmlstruct::loadbinario_2(class WZip &zip)
     return OK;
 }
 
-__old int xmlstruct::loadbinario_3(class WZip &zip, int ver_stroke)
+/* old */ int xmlstruct::loadbinario_3(class WZip &zip, int ver_stroke)
 {
     size_t controll, newControll;
     int lenPage, counterPage;

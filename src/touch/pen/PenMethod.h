@@ -16,6 +16,6 @@ public:
     bool touchUpdate(const QPointF& point, double size, Document &doc) final;
     int touchEnd(const QPointF& point, Document &doc) final;
 
-    uchar getAlfa() const final;
+    [[nodiscard]] uchar getAlfa() const final;
 };
 

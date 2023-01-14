@@ -30,7 +30,7 @@ void *idle_rubber(void *arg)
     auto *data = (struct DataPrivateMuThread *)arg;
 
     for(;;){
-        sem_wait(thread_group->get_pass_sem());
+        thread_group->get_pass_sem().acquire();
 
         if(un(thread_group->needToDelete())){
             return nullptr;
@@ -42,8 +42,8 @@ void *idle_rubber(void *arg)
 
         functionToCall(data);
         wait:
-        sem_post(thread_group->get_finish_sem());
-        sem_wait(thread_group->get_all_finish_sem());
+        thread_group->get_finish_sem().release();
+        thread_group->get_all_finish_sem().release();
     }
 }
 
