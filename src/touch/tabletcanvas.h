@@ -97,7 +97,7 @@ class TabletCanvas : public QWidget
 public:
     static qreal pressureToWidth(qreal pressure);
     struct Point _lastPoint;
-    [[nodiscard]] bool isWriting() const;
+    [[nodiscard]] static bool isWriting() ;
     void callResizeEvent();
 
 #define default_speed_value 5
@@ -134,8 +134,6 @@ public:
 
     Document *getDoc() const { return _doc; };
     Document *_doc;
-
-    TabletPenMethod _method;
 
     void panTriggered(QPanGesture*) {};
     void swipeTriggered(QSwipeGesture*) {};
@@ -180,18 +178,20 @@ public:
     void setTabletDevice(QTabletEvent *event) { updateCursor(event); }
 
     /* class for menu */
-    class square            *_square        = NULL;
-    class rubber_ui         *_rubber        = NULL;
-    class pen_ui            *_pen_ui        = NULL;
-    class text_ui           *_text          = NULL;
-    class highlighter       *_highlighter   = NULL;
-    class text_widgets      *_text_w        = NULL;
-    class fast_sheet_ui     *_sheet         = NULL;
-    class zoom_control      *_zoom          = NULL;
-    class redoundo          *_redoundo      = NULL;
-    class property_control  *_property      = NULL;
-    class laser             *_laser         = NULL;
-    class object_finder     *_finder        = NULL;
+    class property_control  *_property      = nullptr;
+    class square            *_square        = nullptr;
+    class rubber_ui         *_rubber        = nullptr;
+    class pen_ui            *_pen_ui        = nullptr;
+    class text_ui           *_text          = nullptr;
+    class highlighter       *_highlighter   = nullptr;
+    class text_widgets      *_text_w        = nullptr;
+    class fast_sheet_ui     *_sheet         = nullptr;
+    class zoom_control      *_zoom          = nullptr;
+    class redoundo          *_redoundo      = nullptr;
+    class laser             *_laser         = nullptr;
+    class object_finder     *_finder        = nullptr;
+
+    TabletPenMethod _method;
 
     QPixmap _pixmap;
 

@@ -27,6 +27,7 @@
 #include "core/core.h"
 #include "utils/utils.h"
 #include "preview_page_widget/preview_page_widget.h"
+#include "touch/square/square.h"
 #include "ui/toolbar.h"
 #include "ui/WStyle.h"
 #include <QListWidgetItem>
@@ -69,11 +70,7 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     this->m_buffer = new QBuffer(this);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    this->ui->layouteditor->insertWidget(1, _canvas);
-#else
     this->ui->layouteditor->insertWidget(0, _canvas);
-#endif
 
     checkupdate = new class updatecheck(ui->actionUpdate_writernote);
     
@@ -104,7 +101,11 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     NAME_LOG_EXT                = new class log_ui(this);
     this->m_audioplayer         = new class audioplay(this);
     this->m_audio_recorder      = new class AudioRecord(this);
-    this->m_laser               = new class laser(_canvas);
+    this->m_laser               = new class laser(_canvas,
+                                                  [](double press) -> pressure_t { return press; },
+                                                  this->_canvas->_color,
+                                                  this->_canvas->pen()
+                                                );
     this->_choose_page          = new class ChoosePage(this);
 
     this->_tool_bar             = new class ToolBar(this);
@@ -114,6 +115,13 @@ MainWindow::MainWindow(TabletCanvas *canvas,
 
     this->_preview_widget       = new class preview_page_widget(this, this);
     this->ui->layouteditor->insertWidget(1, _preview_widget);
+
+    _canvas->_method = TabletPenMethod(true,
+                                       m_pen,
+                                       m_rubber,
+                                       _canvas->_square,
+                                       m_highlighter,
+                                       _canvas->_laser);
 
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);

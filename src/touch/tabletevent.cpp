@@ -22,7 +22,7 @@ bool need_save_tmp = false;
 static TabletPenMethod lastMethod;
 static QEvent::Type eventType;
 
-bool TabletCanvas::isWriting() const
+bool TabletCanvas::isWriting()
 {
     return !__tmp.isEmpty();
 }
@@ -163,7 +163,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
     _lastPoint.pos = event->position();
     _lastPoint.pressure = event->pressure();
 
-    this->_currentTool->touchUpdate(event->position(),
+    this->_method.method()->touchUpdate(event->position(),
                                     event->pressure(),
                                     *this->getDoc());
 
@@ -181,7 +181,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 #endif
 
     //W_ASSERT(0);
-    index_mod = this->_currentTool->touchEnd(event->position(), *this->getDoc());
+    index_mod = this->_method.method()->touchEnd(event->position(), *this->getDoc());
 
     if (index_mod >= 0) {
         core::get_main_window()->_preview_widget->mod(index_mod);

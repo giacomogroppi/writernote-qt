@@ -8,6 +8,7 @@
 #include "utils/color_define_rgb.h"
 #include "square/square.h"
 #include "core/core.h"
+#include "touch/laser/laser.h"
 
 #define SET_CHECK(x) x->setChecked(true)
 #define SET_NOT_CHECK(x) x->setChecked(false)

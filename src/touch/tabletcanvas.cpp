@@ -22,7 +22,17 @@
 
 TabletCanvas::TabletCanvas()
     : QWidget(nullptr)
-    , _method(true)
+    , _doc(new Document)
+    , _property(new property_control(this))
+    , _square(new class square(this, _property))
+    , _finder(new object_finder(this))
+    , _method(true,
+              nullptr,
+              nullptr,
+              nullptr,
+              nullptr,
+              nullptr
+              )
     , _pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
 {
     this->setObjectName("TabletCanvas");
@@ -30,7 +40,6 @@ TabletCanvas::TabletCanvas()
     setAutoFillBackground(true);
     setAttribute(Qt::WA_TabletTracking);
 
-    WNew(_doc, Document, ());
 
     WNew(_zoom, zoom_control, ());
     WNew(_redoundo, redoundo, (this));
@@ -58,7 +67,7 @@ TabletCanvas::~TabletCanvas()
     if(_redoundo)
         WDelete(_redoundo);
 
-    WDelete(getDoc());
+    delete _doc;
 
     _method.save();
     saveScrollingSetting();

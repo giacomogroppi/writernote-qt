@@ -26,6 +26,8 @@ private:
     SquareMethod *_squareMethod;
     HighligterMethod *_highligterMethod;
     LaserMethod *_laserMethod;
+
+    void rep() const;
 public:
     explicit TabletPenMethod(bool FirstLoad,
                              PenMethod *pen,
@@ -132,5 +134,16 @@ inline bool TabletPenMethod::isInsert() const
 inline Tools *TabletPenMethod::method() const
 {
     W_ASSERT(this->_currentTools);
+    rep();
     return this->_currentTools;
+}
+
+inline void TabletPenMethod::rep() const
+{
+#ifdef DEBUGINFO
+    W_ASSERT(this->_laserMethod != nullptr);
+    W_ASSERT(this->_penMethod != nullptr);
+    W_ASSERT(this->_rubberMethod != nullptr);
+    W_ASSERT(this->_highligterMethod != nullptr);
+#endif
 }

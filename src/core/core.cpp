@@ -9,8 +9,8 @@
 #include <QCursor>
 
 bool __is_mobile_view = false;
-class MainWindow *__private_mainwindow;
-class TabletCanvas *__private_canvas;
+class MainWindow *__private_mainwindow = nullptr;
+class TabletCanvas *__private_canvas = nullptr;
 
 bool core::is_dark_mode()
 {

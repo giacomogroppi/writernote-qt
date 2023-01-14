@@ -42,7 +42,7 @@ bool SquareMethod::touchUpdate(const QPointF &point, double size, Document &doc)
     }
 }
 
-int SquareMethod::touchEnd(const QPointF &point, struct Document &doc)
+int SquareMethod::touchEnd(const QPointF &point, class Document &doc)
 {
     auto *_canvas = core::get_canvas();
     auto *_square = _canvas->_square;
