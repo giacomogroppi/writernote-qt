@@ -131,7 +131,7 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 
     W_ASSERT(event->type() == QEvent::TabletPress);
 
-    _currentTool->touchBegin(event->position(),
+    _method.method()->touchBegin(event->position(),
                              event->pressure(),
                              *this->getDoc());
 

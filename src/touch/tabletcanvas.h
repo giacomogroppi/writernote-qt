@@ -94,8 +94,6 @@ class TabletCanvas : public QWidget
 {
     Q_OBJECT
 
-private:
-    Tools *_currentTool;
 public:
     static qreal pressureToWidth(qreal pressure);
     struct Point _lastPoint;
@@ -220,8 +218,8 @@ protected:
     bool eventFilter(QObject *ref, QEvent *e) override;
 private:
 
-    void triggerNewView(const QList<int> &Page, cbool all);
-    void triggerNewView(cbool all);
+    void triggerNewView(const QList<int> &Page, cbool all) const;
+    void triggerNewView(cbool all) const;
     bool _isWriting = false;
 
     void updateCursor(const QTabletEvent *event);

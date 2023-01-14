@@ -9,7 +9,8 @@
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
-class laser : public QObject
+class laser :   public QObject,
+                public LaserMethod
 {
     Q_OBJECT
 private:
@@ -22,7 +23,8 @@ private:
     class TabletCanvas *_canvas;
 
 public:
-    explicit laser(QObject *parent);
+    explicit laser(QObject *parent, std::function<pressure_t(double)> getSize,
+                   QColor &_color, QPen &_pen);
     ~laser();
 
     void startMove();

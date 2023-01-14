@@ -118,7 +118,12 @@ void TabletCanvas::sceltacolorepenna(const QColor color)
 
 void MainWindow::updateTouch()
 {
-    static TabletPenMethod last(true);
+    static TabletPenMethod last(true,
+                                this->m_pen,
+                                this->m_rubber,
+                                this->_canvas->_square,
+                                this->m_highlighter,
+                                this->_canvas->_laser);
 
     ui->actionpen->setChecked(              _canvas->_method.isPen());
     ui->actionrubber->setChecked(           _canvas->_method.isRubber());

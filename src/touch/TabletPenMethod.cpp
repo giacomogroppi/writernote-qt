@@ -19,15 +19,41 @@ void TabletPenMethod::load()
 
     _method = (setting.value(KEY_METHOD_TOUCH, PrivateTabletMethod_Pen) .toInt());
 
+    switch (_method) {
+        case PrivateTabletMethod_Rubber:        this->setRubber(); break;
+        case PrivateTabletMethod_Highlighter:   this->setHighlighter(); break;
+        case PrivateTabletMethod_Pen:           this->setPen(); break;
+        case PrivateTabletMethod_Selection:     this->setSelection(); break;
+        case PrivateTabletMethod_Text:          this->setText(); break;
+        default: W_ASSERT(0);
+    }
+
     setting.endGroup();
 }
 
-TabletPenMethod::TabletPenMethod(const TabletPenMethod &t)
+TabletPenMethod::TabletPenMethod(const TabletPenMethod &t):
+    _method(t._method),
+    _currentTools(t._currentTools),
+    _penMethod(t._penMethod),
+    _rubberMethod(t._rubberMethod),
+    _squareMethod(t._squareMethod),
+    _highligterMethod(t._highligterMethod),
+    _laserMethod(t._laserMethod)
 {
-    this->_method = t._method;
 }
 
-TabletPenMethod::TabletPenMethod(bool FirstLoad)
+TabletPenMethod::TabletPenMethod(bool FirstLoad,
+                                 PenMethod *pen,
+                                 RubberMethod *rubber,
+                                 SquareMethod *square,
+                                 HighligterMethod *highligter,
+                                 LaserMethod *laser) :
+        _currentTools(nullptr),
+        _penMethod(pen),
+        _rubberMethod(rubber),
+        _squareMethod(square),
+        _highligterMethod(highligter),
+        _laserMethod(laser)
 {
     W_ASSERT(FirstLoad == true);
     this->load();

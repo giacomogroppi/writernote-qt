@@ -22,8 +22,8 @@
 
 TabletCanvas::TabletCanvas()
     : QWidget(nullptr)
-    , _pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
     , _method(true)
+    , _pen(QBrush(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)
 {
     this->setObjectName("TabletCanvas");
     this->resize(500, 500);
@@ -238,12 +238,12 @@ static void loadLastMethod(TabletCanvas *p)
 
 }
 
-void TabletCanvas::triggerNewView(cbool all)
+void TabletCanvas::triggerNewView(cbool all) const
 {
     getDoc()->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
 
-void TabletCanvas::triggerNewView(const QList<int> &Page, cbool all)
+void TabletCanvas::triggerNewView(const QList<int> &Page, cbool all) const
 {
     this->getDoc()->triggerNewView(Page, core::get_main_window()->m_audioplayer->getPositionSecond(), all);
 }
