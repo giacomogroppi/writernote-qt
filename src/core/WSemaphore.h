@@ -11,7 +11,7 @@ private:
 #ifdef MACOS
     std::counting_semaphore<0> _sem;
 #else
-    sem_t sem;
+    sem_t _sem;
 #endif
 public:
     WSemaphore(int init_value);
