@@ -15,7 +15,7 @@ private:
 #endif
 public:
     WSemaphore(int init_value);
-    ~WSemaphore() = default;
+    ~WSemaphore();
 
     void acquire();
     void release();
@@ -28,6 +28,13 @@ inline WSemaphore::WSemaphore(int init_value):
 {
 #ifndef MACOS
     sem_init(&_sem);
+#endif
+}
+
+inline WSemaphore::~WSemaphore()
+{
+#ifndef MACOS
+    sem_destroy(&_sem);
 #endif
 }
 
