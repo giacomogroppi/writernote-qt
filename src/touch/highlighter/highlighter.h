@@ -20,20 +20,17 @@ class highlighter : public QDialog,
     Q_OBJECT
 
 public:
-    explicit highlighter(QWidget *parent, bool *same, pen_ui * par);
+    explicit highlighter(QWidget *parent, bool &same, pen_ui * par, std::function<int()> getTime,
+                         QPen &pen, QColor &color);
     ~highlighter();
 
-    uchar getAlfa(){
-        return m_data.alfa;
-    };
-    double getSize(const double pressure);
+    uchar getAlfa() const final;
+    double getSize(double pressure);
 
-    bool *same_data = nullptr;
-    pen_ui *m_pen = nullptr;
+    bool &_same_data;
+    pen_ui *_pen = nullptr;
 
     void updateList();
-
-
 
 private slots:
     void on_button_size_clicked();
@@ -59,3 +56,8 @@ private:
 protected:
     bool event(QEvent *) override;
 };
+
+inline uchar highlighter::getAlfa() const
+{
+    return m_data.alfa;
+}

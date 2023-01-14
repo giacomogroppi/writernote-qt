@@ -5,20 +5,30 @@
 #include "touch/pen/pen_ui.h"
 #include "touch/dataTouch/datastruct/datastruct.h"
 #include <QDebug>
+#include <utility>
 
 #define MAX_ALFA 150
 #define MIN_ALFA 20
 
 extern StrokePre __tmp;
 
-highlighter::highlighter(QWidget *parent, bool *same, pen_ui *pen) :
+highlighter::highlighter(QWidget *parent,
+                         bool &same,
+                         pen_ui *m_pen,
+                         std::function<int()> getTime,
+                         QPen &pen,
+                         QColor &color) :
     QDialog(parent),
+    HighligterMethod(std::move(getTime),
+                     [&](double size) -> pressure_t { return this->getSize(size); },
+                     pen,
+                     color
+                     ),
+    _same_data(same),
+    _pen(m_pen),
     ui(new Ui::highlighter)
 {
     ui->setupUi(this);
-
-    same_data = same;
-    m_pen = pen;
 
     ui->button_pressure->setCheckable(true);
     ui->button_size->setCheckable(true);
@@ -84,15 +94,12 @@ void highlighter::updateList()
 {
     bool pressure;
 
-    if(!same_data)
-        return;
-
-    ui->same_data->setChecked(*same_data);
+    ui->same_data->setChecked(_same_data);
 
     ui->slider_alfa->setValue(m_data.alfa);
 
-    if(*same_data){
-        pressure = m_pen->IsPressure();
+    if(_same_data){
+        pressure = _pen->IsPressure();
     }else{
         pressure = m_data.pressure;
         ui->slider_size->setValue(m_data.size);
@@ -106,8 +113,8 @@ void highlighter::updateList()
 double highlighter::getSize(const double pressure)
 {
     const double size = (m_data.pressure) ? pressure*20 : m_data.size;
-    if(*same_data){
-        return m_pen->getSize(pressure)*40;
+    if(_same_data){
+        return _pen->getSize(pressure)*40;
     }
 
     return size;
@@ -115,34 +122,34 @@ double highlighter::getSize(const double pressure)
 
 void highlighter::on_button_size_clicked()
 {
-    if(*same_data){
-        m_pen->setType(false);
+    if(_same_data){
+        _pen->setType(false);
     }else{
         m_data.pressure = 0;
     }
 
-    m_pen->list_update();
+    _pen->list_update();
     updateList();
 }
 
 void highlighter::on_button_pressure_clicked()
 {
-    if(*same_data){
-        m_pen->setType(true);
+    if(_same_data){
+        _pen->setType(true);
     }else{
         m_data.pressure = 1;
     }
 
-    m_pen->list_update();
+    _pen->list_update();
     updateList();
 }
 
 void highlighter::on_same_data_stateChanged(int arg1)
 {
-    *same_data = arg1;
+    _same_data = arg1;
 
     updateList();
-    m_pen->list_update();
+    _pen->list_update();
 }
 
 void highlighter::on_slider_alfa_valueChanged(int value)
@@ -152,8 +159,8 @@ void highlighter::on_slider_alfa_valueChanged(int value)
 
 void highlighter::on_slider_size_valueChanged(int value)
 {
-    if(*same_data){
-        m_pen->setWidthTratto(double(value)/100);
+    if(_same_data){
+        _pen->setWidthTratto(double(value)/100);
     }else{
         m_data.size = double(value)/14.0;
     }

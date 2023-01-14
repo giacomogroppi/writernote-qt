@@ -1,7 +1,7 @@
 #pragma once
 
 #include "touch/tools/InsertTools.h"
-#include "currenttitle/Document.h"
+#include "currenttitle/document.h"
 
 class PenMethod: public InsertTools
 {

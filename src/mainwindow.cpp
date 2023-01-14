@@ -87,7 +87,15 @@ MainWindow::MainWindow(TabletCanvas *canvas,
                                                     _canvas->_color,
                                                     _canvas->pen()
                                                    );
-    this->m_highlighter         = new class highlighter(this, &m_pen->same_data, m_pen);
+    this->m_highlighter         = new class highlighter(this,
+                                                        m_pen->same_data,
+                                                        m_pen,
+                                                        [&]() {
+                                                            return this->m_audio_recorder->getCurrentTime();
+                                                        },
+                                                        _canvas->pen(),
+                                                        _canvas->_color
+                                                        );
     this->m_pen->m_highlighter  = m_highlighter;
     this->m_option_copybook     = new class option_copybook(this);
     this->m_text_w              = new class text_widgets(this, _canvas);

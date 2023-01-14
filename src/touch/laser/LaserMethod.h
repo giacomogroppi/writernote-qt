@@ -1,9 +1,10 @@
 #pragma once
 
-#include "touch/tools/Tools.h"
+#include "touch/tools/InsertTools.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 
-class LaserMethod: public Tools
+
+class LaserMethod: public InsertTools
 {
 private:
     std::function<pressure_t()> _getPress;

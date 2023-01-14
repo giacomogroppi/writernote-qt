@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
-#include "currenttitle/Document.h"
+#include "currenttitle/document.h"
 
 class Tools {
 private:
