@@ -134,7 +134,6 @@ void text_widgets::needToDraw(QPainter &painter)
 
         painter.drawText(tmp.toPoint(), tmp.text);
     }
-
 }
 
 bool text_widgets::event(QEvent *event)
