@@ -132,19 +132,15 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
     W_ASSERT(event->type() == QEvent::TabletPress);
 
     _method.method()->touchBegin(event->position(),
-                             event->pressure(),
-                             *this->getDoc());
+                                 event->pressure(),
+                                 *this->getDoc());
 
     m_deviceDown = true;
-    _lastPoint.pos = event->position();
-    _lastPoint.pressure = event->pressure();
 }
 
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 {
     //QPainter painter;
-    constexpr not_used bool debugMove = false;
-    const auto &point = event->position();
 
     if (event->deviceType() == QInputDevice::DeviceType::Stylus) {
         updateCursor(event);
@@ -159,10 +155,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
     if (likely(_method.isInsert())) {
         updateBrush(event);
     }
-
-    _lastPoint.pos = event->position();
-    _lastPoint.pressure = event->pressure();
-
+    
     this->_method.method()->touchUpdate(event->position(),
                                     event->pressure(),
                                     *this->getDoc());
@@ -194,33 +187,3 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
     }
 }
 
-void TabletCanvas::updatelist(QTabletEvent *event) const
-{
-    double size;
-    uchar alfa;
-    point_s tmp_point{};
-    StrokePre &strokeTmp = __tmp;
-    pressure_t pressure;
-    cbool highlighter = is_rubber(event, _method);
-    const QPointF &pointTouch = event->position();
-    const auto *data = this->getDoc();
-    const auto prop = data->getZoom() == PROP_RESOLUTION ?
-                data->getZoom() :
-                data->getZoom() - .0000001;
-
-    size = event->pressure();
-    alfa = un(highlighter) ? _highlighter->getAlfa() : 255;
-
-    if(un(!this->m_deviceDown)){
-        strokeTmp.setTime(static_cast<int>(
-                                  core::get_main_window()->m_audio_recorder->getCurrentTime()
-                ));
-        strokeTmp.setColor(_color);
-        strokeTmp.setAlfaColor(alfa);
-    }
-
-    tmp_point = pointTouch;
-    pressure = un(highlighter) ? _highlighter->getSize(size) : _pen_ui->getSize(size);
-
-    strokeTmp.append(tmp_point, pressure, (QPen &)_pen, prop);
-}

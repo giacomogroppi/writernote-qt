@@ -96,7 +96,6 @@ class TabletCanvas : public QWidget
 
 public:
     static qreal pressureToWidth(qreal pressure);
-    struct Point _lastPoint;
     [[nodiscard]] static bool isWriting() ;
     void callResizeEvent();
 
@@ -129,8 +128,6 @@ public:
 
     /* funzione che setta il cambio dell'inserimento -> penna, gomma... */
     void sceltacolorepenna(const QColor);
-
-    void updatelist(QTabletEvent *event) const;
 
     Document *getDoc() const { return _doc; };
     Document *_doc;
