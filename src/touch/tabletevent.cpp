@@ -78,7 +78,7 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
     WDebug(tabletDebug, event->type() << convert(event->type()));
 
     if(un(isOut)){
-        /*
+        /**
          * the user is writing in a part where
          *  the sheet is not present.
          * You don't have to save the point. And
@@ -99,19 +99,14 @@ void TabletCanvas::tabletEvent(QTabletEvent *event)
     else if(likely(eventType == QEvent::TabletMove)){ /* user move the pen */
         ManageMove(event);
     }
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    else if(eventType == QEvent::TabletRelease){ /* pen leaves the tablet */
-#else
     else if(eventType == QEvent::TabletRelease || eventType == QEvent::MouseButtonRelease){ /* pen leaves the tablet */
-#endif
         WDebug(tabletDebug, "Tablet release");
         this->ManageFinish(event, false);
     }
 
 end:
 
-    if(un(!_method.isSelection() && lastMethod.isSelection())){
+    if(un(!_method.isSelection() and lastMethod.isSelection())){
         WDebug(tabletDebug, "Square reset");
         _square->reset();
     }
