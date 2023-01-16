@@ -30,11 +30,13 @@ inline PointSettable::PointSettable(const QPointF &point, bool set):
     QPointF(point)
 {
     this->_set = set;
+    W_ASSERT(this->isSet() == set);
 }
 
 inline void PointSettable::setSet(bool set)
 {
     _set = set;
+    W_ASSERT(this->isSet() == set);
 }
 
 inline bool PointSettable::isSet() const noexcept
@@ -70,10 +72,10 @@ struct colore_s{
     void set_alfa(uchar alfa);
 
     uchar colore[NCOLOR];
-    QColor toQColor(double division) const;
+    [[nodiscard]] QColor toQColor(double division) const;
     void fromColor(const QColor &color);
 
-    uchar getAlfa() const;
+    [[nodiscard]] uchar getAlfa() const;
 
     static colore_s from_color(const QColor &color);
     bool operator==(const colore_s &other) const;

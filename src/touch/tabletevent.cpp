@@ -124,11 +124,13 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
     if (un(m_deviceDown))
         return;
 
+    WDebug(_debug, "");
     W_ASSERT(event->type() == QEvent::TabletPress);
 
-    _method.method()->touchBegin(event->position(),
+    if (_method.method()->touchBegin(event->position(),
                                  event->pressure(),
-                                 *this->getDoc());
+                                 *this->getDoc()))
+        this->call_update();
 
     m_deviceDown = true;
 }
@@ -136,6 +138,7 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 {
     //QPainter painter;
+    constexpr auto debug = true;
 
     if (event->deviceType() == QInputDevice::DeviceType::Stylus) {
         updateCursor(event);
@@ -143,6 +146,8 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 
     if (un(!m_deviceDown))
         return;
+
+    WDebug(debug, "");
 
     //painter.begin(&_pixmap);
     //W_ASSERT(painter.isActive());
@@ -162,14 +167,20 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 {
     int index_mod;
+    constexpr auto debug = true;
+
     block_scrolling = false;
 
 #if defined(WIN32) || defined(WIN64)
     this->isdrawing = false;
 #endif
 
-    //W_ASSERT(0);
-    index_mod = this->_method.method()->touchEnd(event->position(), *this->getDoc());
+    WDebug(debug, "");
+
+    index_mod = this->_method.method()->touchEnd(
+                event->position(),
+                *this->getDoc()
+            );
 
     if (index_mod >= 0) {
         core::get_main_window()->_preview_widget->mod(index_mod);
@@ -180,5 +191,7 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
     if(likely(_redoundo and index_mod != -1)){
         _redoundo->copy();
     }
+
+    m_deviceDown = false;
 }
 

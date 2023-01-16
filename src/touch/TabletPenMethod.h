@@ -9,7 +9,7 @@
 
 class TabletPenMethod {
 private:
-    int _method{};
+    int _method;
 #define PrivateTabletMethod_Rubber          0
 #define PrivateTabletMethod_Pen             1
 #define PrivateTabletMethod_Selection       2
@@ -57,6 +57,8 @@ public:
     [[nodiscard]] bool isLaser() const;
 
     [[nodiscard]] Tools *method() const;
+
+    TabletPenMethod &operator=(const TabletPenMethod &other);
 };
 
 inline void TabletPenMethod::setRubber()        
@@ -147,3 +149,4 @@ inline void TabletPenMethod::rep() const
     W_ASSERT(this->_highligterMethod != nullptr);
 #endif
 }
+

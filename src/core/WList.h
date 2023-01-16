@@ -173,7 +173,8 @@ template<class T>
 inline bool WList<T>::equal(const WList<T> &l1, const WList<T> &l2) noexcept
 {
     WListPrivate<T> *f1, *f2;
-    if(l1._size != l2._size)
+
+    if (l1._size != l2._size)
         return false;
 
     l1.test();
@@ -185,12 +186,14 @@ inline bool WList<T>::equal(const WList<T> &l1, const WList<T> &l2) noexcept
     while(f1){
         W_ASSERT(f2);
 
-        if(f2->data != f1->data)
+        if(*(f2->data) != *(f1->data))
             return false;
 
         f2 = f2->next;
         f1 = f1->next;
     }
+
+    W_ASSERT(f1 == f2);
 
     return true;
 }

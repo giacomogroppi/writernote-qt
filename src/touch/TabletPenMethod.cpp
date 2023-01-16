@@ -63,3 +63,21 @@ TabletPenMethod::TabletPenMethod()
 {
     this->_method = PrivateTabletMethod_Pen;
 }
+
+TabletPenMethod &TabletPenMethod::operator=(const TabletPenMethod &other)
+{
+    if (this == &other)
+        return *this;
+
+    this->_method = other._method;
+    this->_highligterMethod = other._highligterMethod;
+    this->_rubberMethod = other._rubberMethod;
+    this->_penMethod = other._penMethod;
+    this->_laserMethod = other._laserMethod;
+    this->_squareMethod = other._squareMethod;
+    this->_currentTools = other._currentTools;
+
+    rep();
+
+    return *this;
+}

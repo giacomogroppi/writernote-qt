@@ -11,7 +11,6 @@ object_finder::object_finder(QObject *parent)
     : QObject{parent}
 {
     W_ASSERT(parent);
-    W_ASSERT(parent->objectName() == "TabletCanvas");
 
     _canvas = (TabletCanvas *)parent;
 

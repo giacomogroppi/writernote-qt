@@ -10,7 +10,6 @@ property_control::property_control(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::property_control)
 {
-    W_ASSERT(this->parentWidget()->objectName() == "TabletCanvas");
     ui->setupUi(this);
 
     setStyleSheet("background:transparent;");

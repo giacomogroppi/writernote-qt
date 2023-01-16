@@ -116,13 +116,6 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     this->_preview_widget       = new class preview_page_widget(this, this);
     this->ui->layouteditor->insertWidget(1, _preview_widget);
 
-    _canvas->_method = TabletPenMethod(true,
-                                       m_pen,
-                                       m_rubber,
-                                       _canvas->_square,
-                                       m_highlighter,
-                                       _canvas->_laser);
-
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     this->m_share_file = new ShareUtils(this);
 #endif // mobile device
@@ -141,7 +134,14 @@ MainWindow::MainWindow(TabletCanvas *canvas,
     _canvas->_highlighter = m_highlighter;
     _canvas->_text_w      = m_text_w;
     _canvas->_laser       = m_laser;
-    
+
+    _canvas->_method = TabletPenMethod(true,
+                                       m_pen,
+                                       m_rubber,
+                                       _canvas->_square,
+                                       m_highlighter,
+                                       _canvas->_laser);
+
     /* redo and undo */
     connect(this, &MainWindow::RedoT, _canvas, &TabletCanvas::RedoM);
     connect(this, &MainWindow::UndoT, _canvas, &TabletCanvas::Undo);

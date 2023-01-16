@@ -296,6 +296,8 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
 
+    WDebug(true, &this->_last);
+
     W_ASSERT(_last.isSet());
 
     if(isTotal){
@@ -304,10 +306,11 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
         functionToCall = actionRubberSinglePartial;
     }
 
-    /* se è la seconda volta che viene chiamata la funzione
-    * allora dobbiamo solamente settare _base, altrimenti
-    * dobbiamo controllare se si sta rimuovendo qualcosa
-    * dalla pagina precedente o dalla successiva
+    /**
+     * se è la seconda volta che viene chiamata la funzione
+     * allora dobbiamo solamente settare _base, altrimenti
+     * dobbiamo controllare se si sta rimuovendo qualcosa
+     * dalla pagina precedente o dalla successiva
     */
     indexPage = _base;
     count = 0;
@@ -511,5 +514,8 @@ bool RubberMethod::touchBegin(const QPointF &point, double, Document &doc)
     _last = true;
     _last = doc.adjustPoint(point);
 
+    WDebug(true, &this->_last);
+
+    W_ASSERT(_last.isSet());
     return false;
 }
