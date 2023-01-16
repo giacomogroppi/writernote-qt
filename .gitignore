@@ -3,6 +3,7 @@
 null.d
 build-qtcreator/*
 cmake-build-debug/*
+cmake-build-debug-coverage/*
 .idea/*
 *.slo
 *.lo
