@@ -31,6 +31,8 @@ bool InsertTools::touchBegin(const QPointF &point, double size, class Document &
     pressure = this->_getSize(size);
 
     strokeTmp.append(point, pressure, _pen, getProp(doc));
+
+    return true;
 }
 
 bool InsertTools::touchUpdate(const QPointF &point, double size, class Document &doc)
@@ -43,6 +45,8 @@ bool InsertTools::touchUpdate(const QPointF &point, double size, class Document 
     strokeTmp.append(point, pressure, (QPen &)_pen, getProp(doc));
 
     core::get_canvas()->_finder->move(point);
+
+    return true;
 }
 
 int InsertTools::touchEnd(const QPointF &, class Document &doc)

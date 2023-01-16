@@ -25,7 +25,7 @@ public:
 inline double Tools::getProp(const Document &doc)
 {
     const auto prop = doc.getZoom() == PROP_RESOLUTION ?
-        doc.getZoom() :
+            doc.getZoom() :
             doc.getZoom() - .0000001;
     return prop;
 }

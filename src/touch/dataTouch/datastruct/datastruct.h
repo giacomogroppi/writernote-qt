@@ -7,6 +7,7 @@
 #include "touch/dataTouch/page/Page.h"
 #include "utils/WCommonScript.h"
 #include <csignal>
+#include <utility>
 #include "pthread.h"
 #include "utils_datastruct.h"
 #include "touch/object_finder/model/model.h"
@@ -93,7 +94,7 @@ public:
     /* the draw function triggers the drawing of the points automatically */
     void append(const QList<std::shared_ptr<Stroke>>& stroke, int m_pos_ris);
 
-    int  appendStroke(std::shared_ptr<Stroke>); /* return value: the page of the point */
+    int  appendStroke(const std::shared_ptr<Stroke>&); /* return value: the page of the point */
     void appendStroke(std::shared_ptr<Stroke> stroke, int page);
 
     void restoreLastTranslation(int heightView);
@@ -523,7 +524,7 @@ inline void datastruct::removeAt(const uint indexPage){
 
 }
 
-inline int datastruct::appendStroke(std::shared_ptr<Stroke> stroke)
+inline int datastruct::appendStroke(const std::shared_ptr<Stroke>& stroke)
 {
     int page;
 
@@ -538,7 +539,7 @@ inline int datastruct::appendStroke(std::shared_ptr<Stroke> stroke)
 
 inline void datastruct::appendStroke(std::shared_ptr<Stroke> stroke, const int page)
 {
-    this->at_mod(page).append(stroke);
+    this->at_mod(page).append(std::move(stroke));
 }
 
 inline QRectF datastruct::get_bigger_rect(

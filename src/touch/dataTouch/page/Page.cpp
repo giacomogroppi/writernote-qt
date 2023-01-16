@@ -496,8 +496,9 @@ void Page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
     W_ASSERT(painter->isActive());
 }
 
-/*
- * all --> indicates if all the points must be drawn from scratch, if false it is drawn over the old image
+/**
+ * all --> indicates if all the points must be drawn from scratch,
+ * if false it is drawn over the old image
 */
 void Page::triggerRenderImage(int m_pos_ris, bool all)
 {
