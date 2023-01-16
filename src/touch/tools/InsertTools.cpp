@@ -22,6 +22,8 @@ bool InsertTools::touchBegin(const QPointF &point, double size, class Document &
     pressure_t pressure;
     StrokePre &strokeTmp = __tmp;
 
+    W_ASSERT(__tmp.isEmpty());
+
     strokeTmp.setTime(_getTime());
     strokeTmp.setColor(_color);
     strokeTmp.setAlfaColor(getAlfa());
@@ -43,22 +45,14 @@ bool InsertTools::touchUpdate(const QPointF &point, double size, class Document 
     core::get_canvas()->_finder->move(point);
 }
 
-int InsertTools::touchEnd(const QPointF &point, class Document &doc)
+int InsertTools::touchEnd(const QPointF &, class Document &doc)
 {
     StrokePre & strokeToAppend = __tmp;
     int pageMod;
-    qint64 time;
     const QPointF &PointFirstPage = doc.getPointFirstPage();
 
     if (un(strokeToAppend.isEmpty()))
         return -1;
-
-    time = this->_getTime();
-
-    /**
-     * 2^31 ~ 2 Gs ~ 6.9 days. It's enough
-     * */
-    W_ASSERT(time < INT_MAX);
 
     strokeToAppend.adjust(PointFirstPage);
 
@@ -67,11 +61,13 @@ int InsertTools::touchEnd(const QPointF &point, class Document &doc)
     pageMod = doc.appendStroke(res);
 
     doc.at_mod(pageMod).triggerRenderImage(
-            static_cast<int>(time),
+            -1,
             false
     );
 
     strokeToAppend = StrokePre();
+
+    W_ASSERT(__tmp.isEmpty());
 
     return pageMod;
 }

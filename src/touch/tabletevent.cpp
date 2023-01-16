@@ -193,5 +193,6 @@ force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
     }
 
     m_deviceDown = false;
+    this->call_update();
 }
 
