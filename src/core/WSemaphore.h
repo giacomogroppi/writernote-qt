@@ -21,13 +21,13 @@ public:
     void release();
 };
 
-inline WSemaphore::WSemaphore(int init_value):
+inline WSemaphore::WSemaphore(int init_value)
 #ifdef MACOS
-    _sem(init_value)
+    : _sem(init_value)
 #endif
 {
 #ifndef MACOS
-    sem_init(&_sem);
+    sem_init(&_sem, 0, init_value);
 #endif
 }
 
