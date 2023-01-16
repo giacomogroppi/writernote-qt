@@ -25,6 +25,7 @@ void TabletPenMethod::load()
         case PrivateTabletMethod_Pen:           this->setPen(); break;
         case PrivateTabletMethod_Selection:     this->setSelection(); break;
         case PrivateTabletMethod_Text:          this->setText(); break;
+        case PrivateTabletMethod_Laser:         this->setLaser(); break;
         default: W_ASSERT(0);
     }
 
