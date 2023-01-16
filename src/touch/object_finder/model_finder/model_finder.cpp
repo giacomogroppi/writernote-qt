@@ -62,12 +62,12 @@ static int get_index_most_prob(cdouble min_precision)
         const double prec = finder.is[i];
 
         // is not enough
-        if(prec > min_precision){
+        if (prec > min_precision){
             WDebug(debug_model, __FUNCTION__ << "not enough" << prec);
             continue;
         }
 
-        if(prec < last_precision){
+        if (prec < last_precision){
             index = i;
             last_precision = prec;
         }
@@ -81,6 +81,11 @@ bool model::find(StrokePre &stroke)
     unsigned long i;
     const auto color = stroke.getColor();
     std::shared_ptr<Stroke> res;
+
+    W_ASSERT(!stroke.isEmpty());
+
+    if (!stroke._stroke->isEmpty())
+        return false;
 
     ctrl._stroke = &stroke;
     for (i = 0; i < THREAD_FINDER; i++) {

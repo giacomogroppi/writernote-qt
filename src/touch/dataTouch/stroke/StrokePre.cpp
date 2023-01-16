@@ -1,4 +1,6 @@
 #include "StrokePre.h"
+
+#include <memory>
 #include "core/core.h"
 #include "touch/dataTouch/stroke/stroke_drawer.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
@@ -10,15 +12,13 @@ StrokePre::StrokePre() noexcept :
     _last_draw_point(nullptr),
     _last_draw_press(nullptr)
 {
-    _stroke = std::shared_ptr<StrokeNormal>(new StrokeNormal);
+    _stroke = std::make_shared<StrokeNormal>();
 
     W_ASSERT(_stroke->isEmpty());
-    W_ASSERT(not _img.isNull());
+    W_ASSERT(this->isImageEmpty());
 }
 
-StrokePre::~StrokePre()
-{
-}
+StrokePre::~StrokePre() = default;
 
 std::shared_ptr<Stroke> StrokePre::merge()
 {
@@ -113,7 +113,7 @@ pressure_t StrokePre::getPressure() const
 
 void StrokePre::reset_img()
 {
-    _img = WImage();
+    _img = WImage(1);
 }
 
 void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
@@ -164,6 +164,8 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 #endif // DEBUGINFO
 
     W_ASSERT(*_stroke == *other._stroke);
+    W_ASSERT(_img == other._img);
+    W_ASSERT(_point == other._point);
 
     return *this;
 }
@@ -212,4 +214,9 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
 
         _stroke->append(point.toQPointF(1.), press);
     }
+}
+
+inline bool StrokePre::isImageEmpty() const
+{
+    return this->_img == WImage(1);
 }

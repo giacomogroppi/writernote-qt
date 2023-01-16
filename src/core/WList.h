@@ -74,7 +74,14 @@ public:
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
 
     WList<T> &operator=(const WList<T> &other);
+    bool operator==(const WList<T> &other);
 };
+
+template<class T>
+inline bool WList<T>::operator==(const WList<T> &other)
+{
+    return WList<T>::equal(*this, other);
+}
 
 template<class T>
 inline WList<T>::WList() noexcept
@@ -313,7 +320,7 @@ void WList<T>::test() const noexcept
         i++;
     }
 
-    W_ASSERT(last->next == NULL);
+    W_ASSERT(last->next == nullptr);
     W_ASSERT(last == _last);
     W_ASSERT(i == _size);
 #endif // DEBUGINFO

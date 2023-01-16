@@ -121,7 +121,7 @@ size_t Stroke::getSizeInFile() const
 
 bool Stroke::operator==(const Stroke &other) const
 {
-    if(this->_metadata != other._metadata)
+    if (this->_metadata != other._metadata)
         return false;
     return true;
 }

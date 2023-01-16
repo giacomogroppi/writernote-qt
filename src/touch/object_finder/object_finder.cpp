@@ -22,9 +22,9 @@ object_finder::object_finder(QObject *parent)
 
 void object_finder::endTimer()
 {
-    auto &stroke = __tmp;
+    StrokePre &stroke = __tmp;
 
-    if (not stroke.isEmpty()) {
+    if (!stroke.isEmpty()) {
         WDebug(debug, "call");
 
         if (model::find(stroke)) {

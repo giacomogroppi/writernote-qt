@@ -18,6 +18,8 @@ private:
 
     constexpr static bool StrokePreDebug = false;
 
+    bool isImageEmpty() const;
+
 #ifdef DEBUGINFO
     bool already_merge = false;
 #endif // DEBUGINFO
