@@ -104,7 +104,7 @@ if((LINUX OR APPLE) AND NOT FLATPAK_BUILD AND NOT SNAP)
         set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/$ENV{QT_VER_WRITERNOTE}/${LIB_TARGET}/lib/cmake")
     else()
         message("-- QT_VER_WRITERNOTE not set")
-        set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.4.0/${LIB_TARGET}/lib/cmake")
+        set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "~/Qt/6.4.2/${LIB_TARGET}/lib/cmake")
     endif()
     
     message("-- search qt in " ${CMAKE_PREFIX_PATH})

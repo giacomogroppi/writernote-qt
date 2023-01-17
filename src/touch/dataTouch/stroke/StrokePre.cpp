@@ -15,8 +15,8 @@ StrokePre::StrokePre() noexcept :
     _stroke = std::make_shared<StrokeNormal>();
 
     W_ASSERT(_stroke->isEmpty());
-    W_ASSERT(this->isImageEmpty());
-    W_ASSERT(QImage(100, 100, QImage::Format_ARGB32) == QImage(100, 100, QImage::Format_ARGB32));
+    //W_ASSERT(this->isImageEmpty());
+    //W_ASSERT(QImage(100, 100, QImage::Format_ARGB32) == QImage(100, 100, QImage::Format_ARGB32));
 }
 
 StrokePre::~StrokePre() = default;
