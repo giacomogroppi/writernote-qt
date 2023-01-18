@@ -11,6 +11,7 @@
 #include "page_file.h"
 #include "core/WZipWriterSingle.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
+#include "utils/time/current_time.h"
 
 #define PAGE_THREAD_MAX 16
 
@@ -50,7 +51,7 @@ static force_inline void __initImg(WImage &img)
 {
     img = WImage(1);
     W_ASSERT(!img.isNull());
-    //W_ASSERT(img == WImage(1));
+    W_ASSERT(img == WImage(1));
 }
 
 Page::Page(const int count, const n_style style)
@@ -514,9 +515,16 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
     W_ASSERT(painter.isActive());
     End_painter(painter);
 
-    /*return;
-    if(!imgDraw.save("~/Scrivania/tmp_foto/foto"+current_time_string()+".png", "PNG", 0))
-        std::abort();*/
+//#define PAGE_DEBUG_IMG
+#ifdef PAGE_DEBUG_IMG
+#ifdef Q_OS_LINUX
+    const QString path = "~/Scrivania/tmp_foto";
+#else
+    const QString path = "%HOME/tmp_foto";
+#endif
+    if(!this->_imgDraw.save(path + current_time_string() + ".png", "PNG", -1))
+        std::abort();
+#endif
 }
 
 #define MakeCTRL(point) \
