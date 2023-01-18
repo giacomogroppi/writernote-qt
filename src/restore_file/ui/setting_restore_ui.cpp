@@ -25,6 +25,11 @@ setting_restore_ui::setting_restore_ui(QWidget *parent,
                                        TabletCanvas *canvas,
                                        QByteArray *pp) :
     QDialog(parent),
+    m_data(true,
+           true,
+           5,
+           5,
+           true),
     ui(new Ui::setting_restore_ui)
 {
     ui->setupUi(this);
@@ -292,4 +297,13 @@ void setting_restore_ui::on_checkBox_temp_stateChanged(int arg1)
 void setting_restore_ui::on_checkBox_remove_stateChanged(int arg1)
 {
     m_data.remove_file = arg1;
+}
+
+__data::__data(bool autosave, bool temp_file, unsigned int t_temp_file, unsigned int t_autosave, bool remove_file)
+    : autosave(autosave)
+    , temp_file(temp_file)
+    , t_temp_file(t_temp_file)
+    , t_autosave(t_autosave)
+    , remove_file(remove_file)
+{
 }

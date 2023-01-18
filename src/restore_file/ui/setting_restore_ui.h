@@ -2,9 +2,15 @@
 
 #include <QDialog>
 #include <QString>
-#include "assert.h"
+#include <cassert>
 
 struct __data{
+
+#if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
+#else
+    __data(bool autosave, bool temp_file, unsigned t_temp_file, unsigned t_autosave, bool remove_file);
+#endif
+
     /* true enable */
 #if defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)
     const bool autosave = true;
