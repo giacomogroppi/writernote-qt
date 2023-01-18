@@ -123,15 +123,14 @@ void setting_restore_ui::loadData()
     m_data.t_autosave = setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt();
     m_data.remove_file = setting.value(KEY_INT_REMOVE_FILE_ENABLE, true).toBool();
 #else
-    m_data = {
-        .autosave = setting.value(KEY_INT_AUTOSAVE_ENABLE, false).toBool(),
-        .temp_file = setting.value(KEY_INT_TMP_ENABLE, true).toBool(),
-        .t_temp_file = setting.value(KEY_INT_TMP_TIME, 5).toUInt(),
+    m_data = __data(
+        setting.value(KEY_INT_AUTOSAVE_ENABLE, false).toBool(),
+        setting.value(KEY_INT_TMP_ENABLE, true).toBool(),
+        setting.value(KEY_INT_TMP_TIME, 5).toUInt(),
 
-
-        .t_autosave = setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt(),
-        .remove_file = setting.value(KEY_INT_REMOVE_FILE_ENABLE, true).toBool()
-    };
+        setting.value(KEY_INT_AUTOSAVE_TIME, 5).toUInt(),
+        setting.value(KEY_INT_REMOVE_FILE_ENABLE, true).toBool()
+    );
 #endif
 
     setting.endGroup();
