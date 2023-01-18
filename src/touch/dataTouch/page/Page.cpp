@@ -50,6 +50,7 @@ static force_inline void __initImg(WImage &img)
 {
     img = WImage(1);
     W_ASSERT(!img.isNull());
+    //W_ASSERT(img == WImage(1));
 }
 
 Page::Page(const int count, const n_style style)

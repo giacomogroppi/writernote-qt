@@ -11,7 +11,7 @@ ToolBar::ToolBar(QWidget *parent) :
     ui(new Ui::ToolBar)
 {
     constexpr auto colorOver = "#e0e0e0";
-    W_ASSERT(parent->objectName() == "MainWindow");
+    //W_ASSERT(parent->objectName() == "MainWindow");
     const auto color = ((MainWindow *)parent)->ui->toolBarcolore->palette().color(parent->backgroundRole());
 
     ui->setupUi(this);

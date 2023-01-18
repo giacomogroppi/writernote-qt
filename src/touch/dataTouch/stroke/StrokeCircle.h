@@ -35,22 +35,14 @@ public:
     void append(const point_s &point, pressure_t pressure);
     virtual size_t createControll() const;
 
-    int getPosizioneAudio() const;
     QRect getBiggerPointInStroke() const;
     bool isInside(const QRectF &rect) const final;
-
-    void clearAudio();
-
-    bool is_highlighter() const;
     int save(WZipWriterSingle &file) const final;
 
     size_t getSizeInMemory() const;
     size_t getSizeInFile() const final;
 
     void decreasePrecision();
-    void setAlfaColor(uchar alfa);
-
-    void setColor(const colore_s &color);
 
     void adjust(double zoom);
     std::shared_ptr<Stroke> clone() const;

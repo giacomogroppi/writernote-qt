@@ -130,7 +130,6 @@ public:
     double currentHeight() const;
     double currentWidth() const;
 
-    void changeId(const uint i, const int newId);
     bool userWrittenSomething() const;
     void move(const uint from, const uint to);
 

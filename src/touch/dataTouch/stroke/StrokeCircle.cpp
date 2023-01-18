@@ -247,10 +247,6 @@ bool StrokeCircle::isInside(const QRectF &rect) const
     return this->is_inside(rect, 0);
 }
 
-void StrokeCircle::clearAudio()
-{
-}
-
 int StrokeCircle::save(WZipWriterSingle &writer) const
 {
     const auto res = Stroke::save(writer);

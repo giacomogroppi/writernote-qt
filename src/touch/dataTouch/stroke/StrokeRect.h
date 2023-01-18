@@ -30,8 +30,6 @@ public:
     QRect getBiggerPointInStroke() const;
     bool isInside(const QRectF &rect) const;
 
-    void clearAudio();
-
     int save(WZipWriterSingle &file) const final;
 
     size_t getSizeInMemory() const final;

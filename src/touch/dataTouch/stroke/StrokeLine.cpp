@@ -204,10 +204,6 @@ bool StrokeLine::isInside(const QRectF &rect) const
     return this->is_inside(rect, 0.);
 }
 
-void StrokeLine::clearAudio()
-{
-}
-
 int StrokeLine::save(WZipWriterSingle &writer) const
 {
     const auto res = Stroke::save(writer);

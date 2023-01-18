@@ -1,0 +1,4 @@
+<key>NSMicrophoneUsageDescription</key>
+<string>The application requires access to the microphone because it is possible to 
+record audio while writing.</string>
+

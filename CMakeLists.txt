@@ -128,15 +128,28 @@ else()
     qt_add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${PROJECT_MOC} ${PROJECT_SOURCES} ${PROJECT_UI} src/touch/TabletPenMethod.cpp src/touch/TabletPenMethod.h)
 endif()
 
-set_target_properties(
-	${PROJECT_NAME}
-	PROPERTIES
-	AUTOUIC TRUE
-	AUTOUIC_SEARCH_PATHS "${PROJECT_SOURCE_DIR}/src"
-	AUTOMOC TRUE
-	AUTORCC TRUE
-	AUTOGEN_SOURCE_GROUP "Qt Files"
-)
+if(APPLE)
+    set_target_properties(
+        ${PROJECT_NAME}
+        PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/macos-build/Info.plist
+        AUTOUIC TRUE
+        AUTOUIC_SEARCH_PATHS "${PROJECT_SOURCE_DIR}/src"
+        AUTOMOC TRUE
+        AUTORCC TRUE
+        AUTOGEN_SOURCE_GROUP "Qt Files"
+    )
+else()
+    set_target_properties(
+    	${PROJECT_NAME}
+    	PROPERTIES
+    	AUTOUIC TRUE
+    	AUTOUIC_SEARCH_PATHS "${PROJECT_SOURCE_DIR}/src"
+    	AUTOMOC TRUE
+    	AUTORCC TRUE
+    	AUTOGEN_SOURCE_GROUP "Qt Files"
+    )
+endif()
 
 if(PDFSUPPORT)
     add_definitions(-DPDFSUPPORT)
