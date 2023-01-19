@@ -362,7 +362,6 @@ void Page::drawEngine(
 {
     int i, threadCount;
 
-
     pthread_t thread[PAGE_THREAD_MAX];
     struct DataPrivateMuThread threadData[PAGE_THREAD_MAX];
     struct page_thread_data extraData;

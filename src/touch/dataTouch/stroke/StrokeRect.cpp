@@ -146,7 +146,6 @@ std::shared_ptr<Stroke> StrokeRect::makeNormal() const
 
 bool StrokeRect::isEmpty() const
 {
-    W_ASSERT(0);
     return false;
 }
 
@@ -162,8 +161,19 @@ bool StrokeRect::isInside(const QRectF &rect) const
 
 int StrokeRect::save(WZipWriterSingle &file) const
 {
-    Q_UNUSED(file);
-    W_ASSERT(0);
+    const auto res = Stroke::save(file);
+
+    if(res != OK)
+        return res;
+
+    static_assert(sizeof(QPointF) == sizeof(double) * 2);
+
+    file.write_object(this->_data);
+
+    // 4 for alignment
+    static_assert(sizeof(this->_data) == (sizeof(QRectF) + sizeof(pressure_t) + 4));
+
+    return OK;
 }
 
 size_t StrokeRect::getSizeInMemory() const
@@ -173,7 +183,11 @@ size_t StrokeRect::getSizeInMemory() const
 
 size_t StrokeRect::getSizeInFile() const
 {
-    W_ASSERT(0);
+    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
+    static_assert(sizeof(this->_data) == (sizeof(QPointF) * 2 + sizeof(pressure_t) + 4));
+
+    return sizeof(StrokeComplexCommon::current_ver) +
+           sizeof(this->_data);
 }
 
 void StrokeRect::decreasePrecision()
