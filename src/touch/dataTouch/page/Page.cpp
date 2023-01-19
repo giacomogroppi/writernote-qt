@@ -51,7 +51,6 @@ static force_inline void __initImg(WImage &img)
 {
     img = WImage(1);
     W_ASSERT(!img.isNull());
-    W_ASSERT(img == WImage(1));
 }
 
 Page::Page(const int count, const n_style style)
@@ -291,7 +290,6 @@ void Page::drawStroke(
 }
 
 struct page_thread_data{
-    QVector<int>                    * to_remove;
     WMutex                          * append;
     QPainter                        * painter;
     QList<std::shared_ptr<Stroke>>  * m_stroke;
@@ -317,21 +315,13 @@ void * __page_load(void *__data)
     __initImg(img);
     Define_PAINTER_p(painter, img);
 
+    WDebug(true, "call");
+
     for(; _data->from < _data->to; _data->from ++){
         const Stroke &ref = *extra->m_stroke->at(_data->from);
 
         WDebug(false, "Page::__page_load pointer" << &ref);
         W_ASSERT(!ref.isEmpty());
-
-        /*if(un(ref->isEmpty())){
-            mutex.lock();
-
-            extra->to_remove->append(_data->from);
-
-            mutex.unlock();
-
-            continue;
-        }*/
 
         const QColor &color = ref.getColor(
             (un(m_pos_ris != -1))
@@ -354,11 +344,14 @@ void * __page_load(void *__data)
     mutex.lock();
 
     W_ASSERT(extra->painter->isActive());
-    extra->painter->drawImage(img.rect(), img, img.rect());
+    extra->painter->drawImage(
+            QRect(img.rect().topLeft() * 1, img.rect().bottomRight() * 1),
+            img,
+            img.rect());
 
     mutex.unlock();
 
-    return NULL;
+    return nullptr;
 }
 
 void Page::drawEngine(
@@ -369,7 +362,6 @@ void Page::drawEngine(
 {
     int i, threadCount;
 
-    QVector<int> to_remove;
 
     pthread_t thread[PAGE_THREAD_MAX];
     struct DataPrivateMuThread threadData[PAGE_THREAD_MAX];
@@ -377,7 +369,6 @@ void Page::drawEngine(
 
     extraData.append        = &_append_load;
     extraData.painter       = &painter;
-    extraData.to_remove     = &to_remove;
     extraData.m_stroke      = &List;
     extraData.m_pos_ris     = m_pos_ris;
     extraData.parent        = this;
@@ -386,10 +377,10 @@ void Page::drawEngine(
         threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length(), ~DATA_PRIVATE_FLAG_SEM);
 
         for (i = 0; i < threadCount; i++) {
-            pthread_create(&thread[i], NULL, __page_load, &threadData[i]);
+            pthread_create(&thread[i], nullptr, __page_load, &threadData[i]);
         }
         for (i = 0; i < threadCount; i++) {
-            pthread_join(thread[i], NULL);
+            pthread_join(thread[i], nullptr);
         }
     } else {
         threadData->extra   = &extraData;
@@ -397,14 +388,6 @@ void Page::drawEngine(
         threadData->to      = List.length();
 
         __page_load(&threadData[0]);
-    }
-
-    if (un(to_remove.length())){
-        WCommonScript::order_vector(to_remove);
-
-        log_write->write("Stroke is empty", log_ui::type_write::possible_bug);
-
-        this->removeAt(to_remove);
     }
 }
 
@@ -415,7 +398,7 @@ inline void Page::draw(
 {
     W_ASSERT(painter.isActive());
 
-    if(un(all)){
+    if(un(all) and _stroke.length()){
         this->drawEngine(painter, _stroke, m_pos_ris, true);
     }
 
@@ -511,6 +494,9 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
     Define_PAINTER(painter);
 
     this->draw(painter, m_pos_ris, all);
+
+    //const auto x = _imgDraw.width();
+    //painter.drawLine(100, 100, _imgDraw.width(), _imgDraw.height());
 
     W_ASSERT(painter.isActive());
     End_painter(painter);
@@ -639,7 +625,7 @@ QRect Page::get_size_area(const QList<std::shared_ptr<Stroke> > &item, int from,
     QRect result;
 
     if(un(from >= to)){
-        return QRect();
+        return {};
     }
 
     result = item.at(from)->getBiggerPointInStroke();
@@ -664,7 +650,7 @@ QRect Page::get_size_area(const QVector<int> &pos) const
     QRect tmp;
 
     if(un(!len)){
-        return QRect();
+        return {};
     }
 
     len --;
@@ -707,7 +693,7 @@ void Page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
 
     Define_PAINTER(painter);
 
-    for(const auto &index : pos){
+    for(const auto &index : qAsConst(pos)){
         const Stroke &stroke = atStroke(index);
         this->drawForceColorStroke(stroke, m_pos_ris, color, &painter);
     }

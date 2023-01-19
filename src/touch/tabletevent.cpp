@@ -138,7 +138,7 @@ force_inline void TabletCanvas::ManageStart(QTabletEvent *event)
 force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 {
     //QPainter painter;
-    constexpr auto debug = true;
+    constexpr auto debug = false;
 
     if (event->deviceType() == QInputDevice::DeviceType::Stylus) {
         updateCursor(event);
@@ -167,7 +167,7 @@ force_inline void TabletCanvas::ManageMove(QTabletEvent *event)
 force_inline void TabletCanvas::ManageFinish(QTabletEvent *event, cbool isForce)
 {
     int index_mod;
-    constexpr auto debug = true;
+    constexpr auto debug = false;
 
     block_scrolling = false;
 

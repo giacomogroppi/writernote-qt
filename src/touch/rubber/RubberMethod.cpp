@@ -410,9 +410,7 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
         dataPrivate.__page->removeAt(*dataPrivate.data_to_remove);
 
         dataPrivate.__page->mergeList();
-
     }
-
 
     out2:
     if(!isTotal){
@@ -422,6 +420,8 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
 
     save_point:
     _last = lastPoint;
+    
+    return true;
 }
 
 bool RubberMethod::is_image_not_null(int index, const Page *page,

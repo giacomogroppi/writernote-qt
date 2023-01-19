@@ -20,6 +20,7 @@ bool SquareMethod::touchBegin(const QPointF &point, double size, struct Document
         WDebug(ManageStartdebugSquare, "not in box");
         _square->initPoint(point);
     }
+    return true;
 }
 
 bool SquareMethod::touchUpdate(const QPointF &point, double size, Document &doc)
@@ -40,6 +41,8 @@ bool SquareMethod::touchUpdate(const QPointF &point, double size, Document &doc)
         */
         _square->updatePoint(point);
     }
+
+    return true;
 }
 
 int SquareMethod::touchEnd(const QPointF &point, class Document &doc)

@@ -14,9 +14,10 @@ private:
     sem_t _sem;
 #endif
 public:
-    WSemaphore(int init_value);
+    WSemaphore(int init_value = 0);
     ~WSemaphore();
 
+    bool tryWait();
     void acquire();
     void release();
 };
@@ -54,4 +55,9 @@ inline void WSemaphore::release()
 #else
     sem_post(&_sem);
 #endif
+}
+
+inline bool WSemaphore::tryWait()
+{
+    return this->_sem.try_acquire();
 }
