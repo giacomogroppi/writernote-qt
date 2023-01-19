@@ -3,6 +3,7 @@
 #include "touch/dataTouch/page/Page.h"
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/stroke/StrokeComplexCommon.h"
+#include "StrokeNormal.h"
 
 StrokeRect::StrokeRect()
     : Stroke()
@@ -140,8 +141,16 @@ int StrokeRect::how_much_decrese() const
 
 std::shared_ptr<Stroke> StrokeRect::makeNormal() const
 {
-    W_ASSERT(0);
-    return nullptr;
+    std::shared_ptr<StrokeNormal> res(new StrokeNormal);
+
+    res->append(this->_data.rect.topLeft(), this->_data.press);
+    res->append(this->_data.rect.topRight(), this->_data.press);
+    res->append(this->_data.rect.bottomRight(), this->_data.press);
+    res->append(this->_data.rect.bottomLeft(), this->_data.press);
+
+    Stroke::clone(dynamic_cast<Stroke &>(*res));
+
+    return res;
 }
 
 bool StrokeRect::isEmpty() const

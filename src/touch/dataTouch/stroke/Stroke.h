@@ -135,6 +135,7 @@ protected:
     Stroke &operator=(const Stroke &other);
 
     Stroke();
+    void clone(Stroke &out) const;
     explicit Stroke(const metadata_stroke& met);
     virtual void modify() const;
     void setBiggerData(const QRect &newRect) const;
