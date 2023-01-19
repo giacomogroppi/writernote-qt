@@ -115,6 +115,7 @@ pressure_t StrokePre::getPressure() const
 void StrokePre::reset_img()
 {
     _img = WImage(1);
+    _img.fill(Qt::transparent);
 }
 
 void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)

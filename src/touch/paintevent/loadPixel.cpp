@@ -17,7 +17,7 @@ static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, doubl
 static void drawSingleStroke(StrokePre &_stroke, QPainter &_painter, QPen &pen, double prop)
 {
     if (!_stroke.isEmpty()) {
-        //_stroke.draw(_painter, pen, prop);
+        _stroke.draw(_painter, pen, prop);
     }
 }
 

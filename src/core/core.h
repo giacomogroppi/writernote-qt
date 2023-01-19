@@ -78,5 +78,14 @@ inline void painter_set_antialiasing(QPainter &painter)
     painter.setRenderHint(QPainter::RenderHint::Antialiasing);
 }
 
+inline double scaleFactor()
+{
+#ifdef MACOS
+    return 2.;
+#else
+    return 1.;
+#endif
+}
+
 }
 

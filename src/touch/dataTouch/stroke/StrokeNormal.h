@@ -211,7 +211,7 @@ force_inline void StrokeNormal::draw(
         const QColor &color,
         drawData<T, Z> data)
 {
-    constexpr bool not_used debug_draw_stroke = false;
+    constexpr bool not_used debug_draw_stroke = true;
     auto &painterPublic = _painter;
 
     W_ASSERT(page >= 0);
@@ -225,12 +225,12 @@ force_inline void StrokeNormal::draw(
     cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
     cbool isPrivatePainter = isHigh;
 
-    if(isPrivatePainter){
+    if (isPrivatePainter) {
         img = WImage(1);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
         painter = &_painterPrivate;
-    }else{
+    } else {
         painter = &painterPublic;
     }
 
@@ -264,7 +264,7 @@ force_inline void StrokeNormal::draw(
         lastPoint = pointDraw;
     }
 
-    if(likely(isPrivatePainter)){
+    if (likely(isPrivatePainter)) {
         W_ASSERT(isHigh);
         W_ASSERT(painterPublic.compositionMode() == QPainter::CompositionMode_SourceOver);
 

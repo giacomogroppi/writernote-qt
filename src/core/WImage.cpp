@@ -6,6 +6,7 @@
 WImage::WImage(const QString &path, const char *format):
     QImage(path, format)
 {
+    this->fill(Qt::transparent);
 }
 
 size_t WImage::save_and_size(QByteArray &arr) const

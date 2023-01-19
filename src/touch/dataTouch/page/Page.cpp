@@ -51,6 +51,7 @@ static force_inline void __initImg(WImage &img)
 {
     img = WImage(1);
     W_ASSERT(!img.isNull());
+    img.fill(Qt::transparent);
 }
 
 Page::Page(const int count, const n_style style)
@@ -315,7 +316,7 @@ void * __page_load(void *__data)
     __initImg(img);
     Define_PAINTER_p(painter, img);
 
-    WDebug(true, "call");
+    WDebug(false, "call");
 
     for(; _data->from < _data->to; _data->from ++){
         const Stroke &ref = *extra->m_stroke->at(_data->from);
@@ -345,10 +346,9 @@ void * __page_load(void *__data)
 
     W_ASSERT(extra->painter->isActive());
     extra->painter->drawImage(
-            QRect(img.rect().topLeft() * 1, img.rect().bottomRight() * 1),
+            img.rect(),
             img,
             img.rect());
-
     mutex.unlock();
 
     return nullptr;
@@ -495,9 +495,6 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
 
     this->draw(painter, m_pos_ris, all);
 
-    //const auto x = _imgDraw.width();
-    //painter.drawLine(100, 100, _imgDraw.width(), _imgDraw.height());
-
     W_ASSERT(painter.isActive());
     End_painter(painter);
 
@@ -506,7 +503,7 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
 #ifdef Q_OS_LINUX
     const QString path = "~/Scrivania/tmp_foto";
 #else
-    const QString path = "%HOME/tmp_foto";
+    const QString path = "/Users/giacomo/Desktop/tmp_foto";
 #endif
     if(!this->_imgDraw.save(path + current_time_string() + ".png", "PNG", -1))
         std::abort();

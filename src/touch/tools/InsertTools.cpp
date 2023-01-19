@@ -24,6 +24,7 @@ bool InsertTools::touchBegin(const QPointF &point, double size, class Document &
 
     W_ASSERT(__tmp.isEmpty());
 
+    strokeTmp.reset_img();
     strokeTmp.setTime(_getTime());
     strokeTmp.setColor(_color);
     strokeTmp.setAlfaColor(getAlfa());
