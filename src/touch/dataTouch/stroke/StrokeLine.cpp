@@ -116,7 +116,8 @@ std::shared_ptr<Stroke> StrokeLine::clone() const
     std::shared_ptr<StrokeLine> res(new StrokeLine);
 
     res->_data = this->_data;
-    res->setMetadata(this->getMetadata());
+
+    Stroke::clone(*res);
 
     return res;
 }

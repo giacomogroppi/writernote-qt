@@ -75,13 +75,30 @@ bool StrokeRect::is_inside(const QRectF &rect, double precision) const
 void StrokeRect::append(const point_s &point, pressure_t pressure)
 {
     using namespace WCommonScript;
-    const auto distanceYLeft    = distance(point.y(), this->_data.rect.topLeft().y());
-    const auto distanceYRight   = distance(point.y(), this->_data.rect.bottomRight().y());
+    const auto distanceTopLeft = distance(point, _data.rect.topLeft());
+    const auto distanceBottomRight  = distance(point, _data.rect.bottomRight());
+    const auto distanceTopRight  = distance(point, _data.rect.topRight());
+    const auto distanceBottomLeft   = distance(point, _data.rect.bottomLeft());
 
-    const auto distanceXTop     = distance(point.x(), this->_data.rect.topLeft().x());
-    const auto distanceXBottom  = distance(point.x(), this->_data.rect.bottomRight().x());
-
-    W_ASSERT(0);
+    if(         distanceTopLeft < distanceTopRight and
+                distanceTopLeft < distanceBottomLeft and
+                distanceTopLeft < distanceBottomRight) {
+        _data.rect.setTopLeft(point);
+    } else if ( distanceTopRight < distanceTopLeft and
+                distanceTopRight < distanceBottomRight and
+                distanceTopRight < distanceBottomLeft) {
+        _data.rect.setTopRight(point);
+    } else if ( distanceBottomLeft < distanceTopLeft and
+                distanceBottomLeft < distanceTopRight and
+                distanceBottomLeft < distanceBottomRight) {
+        _data.rect.setBottomLeft(point);
+    } else if ( distanceBottomRight < distanceBottomLeft and
+                distanceBottomRight < distanceTopLeft and
+                distanceBottomRight < distanceTopRight) {
+        _data.rect.setBottomRight(point);
+    } else {
+        W_ASSERT(0);
+    }
 }
 
 void StrokeRect::scale(const QPointF &offset)
@@ -148,7 +165,7 @@ std::shared_ptr<Stroke> StrokeRect::makeNormal() const
     res->append(this->_data.rect.bottomRight(), this->_data.press);
     res->append(this->_data.rect.bottomLeft(), this->_data.press);
 
-    Stroke::clone(dynamic_cast<Stroke &>(*res));
+    Stroke::clone(*res);
 
     return res;
 }

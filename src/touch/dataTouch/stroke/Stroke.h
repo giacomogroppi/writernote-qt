@@ -216,6 +216,13 @@ inline uchar Stroke::get_alfa() const
     return this->_metadata.color.getAlfa();
 }
 
+inline void Stroke::clone(Stroke &out) const
+{
+    out._metadata = this->_metadata;
+    out._biggerData = this->_biggerData;
+    out._flag = this->_flag;
+}
+
 inline bool metadata_stroke::operator!=(const metadata_stroke &other) const
 {
     return !(*this == other);

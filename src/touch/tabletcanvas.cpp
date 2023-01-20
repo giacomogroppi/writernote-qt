@@ -242,11 +242,6 @@ qreal TabletCanvas::pressureToWidth(qreal pressure)
     return pressure * 10 + 1;
 }
 
-static void loadLastMethod(TabletCanvas *p)
-{
-
-}
-
 void TabletCanvas::triggerNewView(cbool all) const
 {
     getDoc()->triggerNewView(core::get_main_window()->m_audioplayer->getPositionSecond(), all);

@@ -136,7 +136,9 @@ std::shared_ptr<Stroke> StrokeCircle::clone() const
 {
     std::shared_ptr<StrokeCircle> res(new StrokeCircle);
     res->_data = this->_data;
-    res->setMetadata(this->getMetadata());
+
+    Stroke::clone(*res);
+
     W_ASSERT(*res == *this);
     return res;
 }
