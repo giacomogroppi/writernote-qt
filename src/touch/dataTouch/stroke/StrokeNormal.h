@@ -39,7 +39,7 @@ private:
         UPDATE_PRESSURE = BIT(2)
     };
 
-    mutable typeof(flag_state) _flag;
+    mutable unsigned char _flag;
 
     void modify() const final;
     void reset_flag() final;
