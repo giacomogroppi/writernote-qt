@@ -10,7 +10,6 @@
 #include <utility>
 #include "pthread.h"
 #include "utils_datastruct.h"
-#include "touch/object_finder/model/model.h"
 #include "core/WMutex.h"
 
 /*

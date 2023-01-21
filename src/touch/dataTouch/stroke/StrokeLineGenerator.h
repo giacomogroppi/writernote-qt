@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Stroke.h"
-#include <memory>
 
 class StrokeLineGenerator
 {

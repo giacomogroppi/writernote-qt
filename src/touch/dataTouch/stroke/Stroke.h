@@ -9,7 +9,6 @@
 #include "utils/common_def.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WLine.h"
-#include "touch/object_finder/model/model.h"
 #include "testing/memtest.h"
 #include "core/WZipWriterSingle.h"
 #include "core/WZipReaderSingle.h"

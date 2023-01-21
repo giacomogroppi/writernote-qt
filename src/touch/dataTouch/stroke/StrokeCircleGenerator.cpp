@@ -45,6 +45,7 @@ std::shared_ptr<Stroke> StrokeCircleGenerator::make(const StrokePre *from)
 
 double StrokeCircleGenerator::model_near(const StrokePre &stroke)
 {
+    using namespace WCommonScript;
     const auto area = stroke.getBiggerPointInStroke();
     constexpr auto coef = 500.;
     constexpr auto _end = 10.;
@@ -57,9 +58,9 @@ double StrokeCircleGenerator::model_near(const StrokePre &stroke)
 
     {
         const auto rect = stroke.getFirstAndLast();
-        if(!is_near(rect.topLeft(), rect.bottomRight(), _end)){
+        if (!is_near(rect.topLeft(), rect.bottomRight(), _end)) {
             WDebug(StrokeCircleGeneratorDebug, "first point and last are not near" << rect.topLeft() << rect.bottomRight());
-            return model_error;
+            return StrokeComplexCommon::error;
         }
     }
 

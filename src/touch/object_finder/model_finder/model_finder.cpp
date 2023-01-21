@@ -1,6 +1,5 @@
 #include "model_finder.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
-#include "touch/object_finder/model/model.h"
 #include "touch/dataTouch/stroke/StrokeCircleGenerator.h"
 #include "touch/dataTouch/stroke/StrokeLineGenerator.h"
 #include "touch/dataTouch/stroke/StrokeRectGenerator.h"

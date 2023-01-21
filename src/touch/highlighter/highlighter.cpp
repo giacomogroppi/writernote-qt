@@ -4,6 +4,7 @@
 #include "utils/setting_define.h"
 #include "touch/pen/pen_ui.h"
 #include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/stroke/StrokePre.h"
 #include <QDebug>
 #include <utility>
 
