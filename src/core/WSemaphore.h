@@ -12,7 +12,7 @@
 class WSemaphore {
 private:
 #ifdef SEM_UNIX
-    std::counting_semaphore<0> _sem;
+    std::counting_semaphore<> _sem;
 #else
     sem_t _sem;
 #endif
