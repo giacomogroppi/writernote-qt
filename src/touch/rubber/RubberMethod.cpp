@@ -43,7 +43,7 @@ void *idle_rubber(void *arg)
         functionToCall(data);
         wait:
         thread_group->get_finish_sem().release();
-        thread_group->get_all_finish_sem().release();
+        thread_group->get_all_finish_sem().acquire();
     }
 }
 
