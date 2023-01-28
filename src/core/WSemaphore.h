@@ -1,6 +1,9 @@
 #pragma once
 
-#ifdef MACOS
+#define SEM_UNIX
+
+#include "utils/WCommonScript.h"
+#ifdef SEM_UNIX
 #include <semaphore>
 #else
 # include "semaphore.h"
@@ -8,7 +11,7 @@
 
 class WSemaphore {
 private:
-#ifdef MACOS
+#ifdef SEM_UNIX
     std::counting_semaphore<0> _sem;
 #else
     sem_t _sem;
@@ -23,25 +26,25 @@ public:
 };
 
 inline WSemaphore::WSemaphore(int init_value)
-#ifdef MACOS
+#ifdef SEM_UNIX
     : _sem(init_value)
 #endif
 {
-#ifndef MACOS
+#ifndef SEM_UNIX
     sem_init(&_sem, 0, init_value);
 #endif
 }
 
 inline WSemaphore::~WSemaphore()
 {
-#ifndef MACOS
+#ifndef SEM_UNIX
     sem_destroy(&_sem);
 #endif
 }
 
 inline void WSemaphore::acquire()
 {
-#ifdef MACOS
+#ifdef SEM_UNIX
     _sem.acquire();
 #else
     sem_wait(&_sem);
@@ -50,7 +53,7 @@ inline void WSemaphore::acquire()
 
 inline void WSemaphore::release()
 {
-#ifdef MACOS
+#ifdef SEM_UNIX
     _sem.release();
 #else
     sem_post(&_sem);
@@ -59,5 +62,10 @@ inline void WSemaphore::release()
 
 inline bool WSemaphore::tryWait()
 {
+#ifdef SEM_UNIX
     return this->_sem.try_acquire();
+#else
+    W_ASSERT(0);
+    return false;
+#endif
 }

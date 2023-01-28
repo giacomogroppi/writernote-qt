@@ -8,7 +8,7 @@ constexpr bool rubber_debug = false;
 
 struct RubberPrivateData{
     QVector<int>    *data_find;
-    Page            *__page;
+    Page            *_page;
     WLine           line;
     datastruct      *data;
     QVector<int>    *data_to_remove;
@@ -48,7 +48,8 @@ void *idle_rubber(void *arg)
 }
 
 RubberMethod::RubberMethod(const type_rubber &type, const int &size_rubber)
-    : _size_gomma(size_rubber),
+    : _base(-1),
+      _size_gomma(size_rubber),
       _rubber_type(type)
 {
     WNew(thread_group, thread_group_sem, ());
@@ -123,7 +124,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 
     int from, to, _index;
 
-    Page *_page             = private_data->__page;
+    Page *_page             = private_data->_page;
     datastruct *_datastruct = private_data->data;
     const auto &area        = private_data->line;
 
@@ -159,7 +160,7 @@ redo:
             if (makeNormal(_page, from, stroke))
                 goto redo;
 
-            StrokeNormal *sNormal = dynamic_cast<StrokeNormal *>(&_page->atStrokeMod(from));
+            auto *sNormal = dynamic_cast<StrokeNormal *>(&_page->atStrokeMod(from));
 
             lenPoint = sNormal->length();
             W_ASSERT(sNormal->type() == Stroke::COMPLEX_NORMAL);
@@ -233,7 +234,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     QVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
 
-    Page *_page             = private_data->__page;
+    Page *_page             = private_data->_page;
     QVector<int> *_al_find  = private_data->data_find;
     const auto &area        = private_data->line;
     index_selected.reserve(32);
@@ -300,11 +301,9 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
 
     W_ASSERT(_last.isSet());
 
-    if(isTotal){
-        functionToCall = actionRubberSingleTotal;
-    }else{
-        functionToCall = actionRubberSinglePartial;
-    }
+    functionToCall = (isTotal) ?
+            actionRubberSingleTotal :
+            actionRubberSinglePartial;
 
     /**
      * se è la seconda volta che viene chiamata la funzione
@@ -317,23 +316,23 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
     dataPrivate.highlighter_delete = false;
     dataPrivate.area = QRect();
 
-    if(un(_base < 0)){
+    if (un(_base < 0)) {
         this->_base = doc.whichPage(lastPoint);
         _data_to_remove.append(QVector<int>());
         indexPage = _base;
-    }else{
+    } else {
         const auto now = doc.whichPage(lastPoint);
         int i;
 
         if(likely(now == _base))
             goto out1;
 
-        /*
+        /**
          * Il punto che ha selezionato adesso l'utente
          * si trova su una pagina precedente a quella che ha
          * selezionato prima
         */
-        if(now < _base)
+        if (now < _base)
         {
             for(i = now; i < _base; i++)
             {
@@ -343,7 +342,7 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
             _base = now;
             count = 0;
         }
-        else if(now > _base)
+        else if (now > _base)
         {
             indexPage = now;
             count = now - _base;
@@ -362,17 +361,16 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
 
     out1:
 
-    if(!is_image_not_null(indexPage, &doc.at_mod(indexPage), lastPoint, _last, _size_gomma)){
+    if (!is_image_not_null(indexPage, &doc.at_mod(indexPage), lastPoint, _last, _size_gomma)) {
         WDebug(rubber_debug, "It's null");
         goto save_point;
     }
 
     WDebug(rubber_debug, "It's not null");
 
-
     // l'utente ha prima selezionato un punto su una pagina x,
     // e poi ne ha selezionato un altro su una pagina o x-1, o x+1
-    if(un(doc.whichPage(lastPoint) != doc.whichPage(_last))){
+    if (un(doc.whichPage(lastPoint) != doc.whichPage(_last))) {
         goto save_point;
     }
 
@@ -381,16 +379,16 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
 
     __m_size_gomma = _size_gomma;
 
-    dataPrivate.__page = &doc.at_mod(indexPage);
+    dataPrivate._page = &doc.at_mod(indexPage);
 
-    lenStroke = dataPrivate.__page->lengthStroke();
+    lenStroke = dataPrivate._page->lengthStroke();
 
-    if(un(!lenStroke))
+    if (un(!lenStroke))
         goto out2;
 
     // we trigger the copy if the page is shared
     // we can't do after
-    dataPrivate.__page->atStrokeMod(0);
+    dataPrivate._page->atStrokeMod(0);
 
     dataPrivate.data_find      = &_data_to_remove.operator[](count);
     dataPrivate.data_to_remove = dataPrivate.data_find;
@@ -402,18 +400,18 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
 
     thread_group->postAndWait(thread_create);
 
-    if(un(dataPrivate.highlighter_delete)){
-        dataPrivate.__page->drawIfInside(-1, dataPrivate.area);
+    if (un(dataPrivate.highlighter_delete)) {
+        dataPrivate._page->drawIfInside(-1, dataPrivate.area);
     }
 
-    if(!isTotal){
-        dataPrivate.__page->removeAt(*dataPrivate.data_to_remove);
+    if (!isTotal) {
+        dataPrivate._page->removeAt(*dataPrivate.data_to_remove);
 
-        dataPrivate.__page->mergeList();
+        dataPrivate._page->mergeList();
     }
 
     out2:
-    if(!isTotal){
+    if (!isTotal) {
         _base = -1;
         _data_to_remove.clear();
     }

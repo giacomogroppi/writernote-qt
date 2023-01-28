@@ -464,7 +464,7 @@ force_inline void Page::drawForceColorStroke(
     Define_PEN(pen);
     const auto needDelete = (bool) (!painter);
 
-    if(needDelete){
+    if (needDelete) {
         if(un(initImg(false)))
             return this->triggerRenderImage(m_pos_ris, true);
 
@@ -478,7 +478,7 @@ force_inline void Page::drawForceColorStroke(
     this->drawStroke(*painter, stroke, pen, color);
     W_ASSERT(painter->isActive());
 
-    if(needDelete){
+    if (needDelete) {
         painter->end();
         WDelete(painter);
     }

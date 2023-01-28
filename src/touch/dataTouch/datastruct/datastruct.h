@@ -248,6 +248,7 @@ inline const __fast Page &datastruct::at(const uint page) const
 
 inline Page &datastruct::at_mod(cint page)
 {
+    W_ASSERT(page >= 0 and page < this->lengthPage());
     return _page.operator[](page);
 }
 

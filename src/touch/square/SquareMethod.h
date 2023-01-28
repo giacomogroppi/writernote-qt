@@ -4,6 +4,10 @@
 
 class SquareMethod: public Tools {
 private:
+    bool touchBeginPrivate(const QPointF& point, double size, class Document &doc);
+    bool touchUpdatePrivate(const QPointF &point, double size, class Document &doc);
+    int touchEndPrivate(const QPointF& point, class Document &doc);
+
 public:
     SquareMethod();
 

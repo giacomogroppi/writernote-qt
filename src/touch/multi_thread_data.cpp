@@ -56,16 +56,16 @@ int DataPrivateMuThreadInit(
     done = 0;
     div = WCommonScript::div_diff(to, maxThread);
 
-    for(i = 0; i < maxThread; i++){
-        if(flag & DATA_PRIVATE_FLAG_SEM){
+    if (flag & DATA_PRIVATE_FLAG_SEM) {
+        for (i = 0; i < maxThread; i++) {
             data[i].id = i;
         }
     }
 
-    if(to > maxThread){
+    if (to > maxThread) {
         count = maxThread;
 
-        for(i = 0; i < maxThread; i++){
+        for (i = 0; i < maxThread; i++) {
             data[i].from = done;
             data[i].to = done + div;
             data[i].extra = extraData;
@@ -74,7 +74,7 @@ int DataPrivateMuThreadInit(
         }
 
         data[maxThread - 1].to = to;
-    }else{
+    } else {
         count = 1;
         data[0].from = 0;
         data[0].to = to;
