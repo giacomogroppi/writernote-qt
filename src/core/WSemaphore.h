@@ -1,6 +1,8 @@
 #pragma once
 
-#define SEM_UNIX
+#ifdef APPLE
+# define SEM_UNIX
+#endif
 
 #include "utils/WCommonScript.h"
 #ifdef SEM_UNIX
