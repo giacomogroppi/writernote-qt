@@ -95,8 +95,8 @@ force_inline thread_group_sem::thread_group_sem():
 inline void thread_group_sem::postAndWait(int create)
 {
     W_ASSERT(create <= get_max());
-    volatile int *__create = &this->_create;
-    *__create = create;
+    volatile int *create_volatile = &this->_create;
+    *create_volatile = create;
 
     this->postForThread(_pass);
     this->waitForThread(_finish);
@@ -116,7 +116,7 @@ inline int thread_group_sem::get_max() const
 inline void thread_group_sem::waitForThread(WSemaphore &sem)
 {
     int i;
-    for(i = 0; i < _core; i++){
+    for (i = 0; i < _core; i++) {
         sem.acquire();
     }
 }
@@ -124,7 +124,7 @@ inline void thread_group_sem::waitForThread(WSemaphore &sem)
 inline void thread_group_sem::postForThread(WSemaphore &sem)
 {
     int i;
-    for(i = 0; i < _core; i++){
+    for (i = 0; i < _core; i++) {
         sem.release();
     }
 }

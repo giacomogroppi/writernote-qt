@@ -1,8 +1,8 @@
 #include "threadcount.h"
 #include <thread>
 
-uint threadCount::count()
+int threadCount::count()
 {
-    static int thread = std::thread::hardware_concurrency();
+    static int thread = static_cast<int>(std::thread::hardware_concurrency());
     return thread;
 }

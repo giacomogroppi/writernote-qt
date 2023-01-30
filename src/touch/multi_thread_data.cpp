@@ -7,7 +7,7 @@
 #include "core/WMutex.h"
 
 static WMutex mutex_thread_write;
-void DataPrivateInit(void)
+void DataPrivateInit()
 {
 #ifdef DEBUGINFO
 
@@ -124,14 +124,14 @@ void DataPrivateCountThreadRelease(int releaseThread)
 pthread_t *get_thread_max()
 {
     int thread = threadCount::count();
-    pthread_t * data = (pthread_t *)WMalloc(sizeof(pthread_t) * thread);
+    auto * data = (pthread_t *)WMalloc(sizeof(pthread_t) * thread);
     return data;
 }
 
 DataPrivateMuThread *get_data_max()
 {
     int thread = threadCount::count();
-    DataPrivateMuThread * data = (DataPrivateMuThread *)WMalloc(sizeof(DataPrivateMuThread) * thread);
+    auto * data = (DataPrivateMuThread *)WMalloc(sizeof(DataPrivateMuThread) * thread);
     return data;
 }
 
@@ -147,8 +147,8 @@ void free_thread_data(pthread_t **thread, DataPrivateMuThread **data)
     WFree(*thread);
     WFree(*data);
 
-    *thread = NULL;
-    *data = NULL;
+    *thread = nullptr;
+    *data = nullptr;
 }
 
 int get_thread_used()

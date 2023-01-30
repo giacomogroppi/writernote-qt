@@ -65,7 +65,6 @@ inline bool WSemaphore::tryWait()
 #ifdef SEM_UNIX
     return this->_sem.try_acquire();
 #else
-    W_ASSERT(0);
-    return false;
+    return sem_trywait(&_sem) == 0;
 #endif
 }

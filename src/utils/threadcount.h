@@ -6,6 +6,6 @@
 class threadCount
 {
 public:
-    static uint count();
+    static int count();
 };
 
