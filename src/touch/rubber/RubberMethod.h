@@ -13,7 +13,7 @@
 class RubberMethod: public Tools
 {
 private:
-    bool is_image_not_null(int index, const Page *page,
+    static bool is_image_not_null(const Page *page,
                            const QPointF &from, const QPointF &to, int delta);
 
     int _base;

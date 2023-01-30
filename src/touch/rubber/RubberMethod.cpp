@@ -332,23 +332,19 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
          * si trova su una pagina precedente a quella che ha
          * selezionato prima
         */
-        if (now < _base)
-        {
-            for(i = now; i < _base; i++)
-            {
+        if (now < _base) {
+            for (i = now; i < _base; i++) {
                 _data_to_remove.insert(0, QVector<int>());
             }
 
             _base = now;
             count = 0;
         }
-        else if (now > _base)
-        {
+        else if (now > _base) {
             indexPage = now;
             count = now - _base;
 
-            if(!(count < _data_to_remove.length()))
-            {
+            if (!(count < _data_to_remove.length())) {
                 for(i = _base; i < now; i++)
                 {
                     _data_to_remove.append(QVector<int>());
@@ -361,7 +357,11 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
 
     out1:
 
-    if (!is_image_not_null(indexPage, &doc.at_mod(indexPage), lastPoint, _last, _size_gomma)) {
+    if (!is_image_not_null(
+            &doc.at_mod(indexPage),
+            lastPoint,
+            _last,
+            _size_gomma)) {
         WDebug(rubber_debug, "It's null");
         goto save_point;
     }
@@ -422,13 +422,12 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
     return true;
 }
 
-bool RubberMethod::is_image_not_null(int index, const Page *page,
+bool RubberMethod::is_image_not_null(const Page *page,
                                      const QPointF &from, const QPointF &to,
                                      int delta)
 {
     int i, j;
 
-    W_ASSERT(index >= 0);
     W_ASSERT(page);
     W_ASSERT(delta > 0);
 
@@ -439,8 +438,12 @@ bool RubberMethod::is_image_not_null(int index, const Page *page,
     const auto xmin = qMin(from.x(), to.x());
     const auto xmax = qMax(from.x(), to.x());
 
-    const int x = xmin - delta;
-    const int y = ymin - Page::getHeight() * index - delta;
+    const int x = static_cast<int>(xmin) - delta;
+    const int y = static_cast<int>(
+                            ymin - Page::getHeight() *
+                            (page->getCount() - 1)
+                        )
+                        - delta;
     W_ASSERT(y >= 0. and y <= Page::getHeight());
 
     delta *= 2;
