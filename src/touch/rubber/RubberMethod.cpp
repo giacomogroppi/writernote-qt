@@ -14,6 +14,11 @@ struct RubberPrivateData{
     QVector<int>    *data_to_remove;
 
     int             al_find;
+
+    /**
+     * set to true if we need to had remove a stroke with alfa < {max}
+     * --> we have to redraw the strokes that were close together
+     * */
     bool            highlighter_delete;
     QRect           area;
 };
@@ -135,17 +140,17 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 
     W_ASSERT(from <= to);
 
-    for(; from < to; from ++){
+    for (; from < to; from ++) {
 redo:
         Stroke *stroke = &_page->atStrokeMod(from);
 
-        if(un(stroke->isEmpty())){
+        if (un(stroke->isEmpty())) {
             stroke_to_remove.append(from);
             continue;
         }
 
         _index = 0;
-        while(1){
+        while (true) {
             int lenPoint;
 
             const int index = stroke->is_inside(area, _index, __m_size_gomma, true);
@@ -165,7 +170,7 @@ redo:
             lenPoint = sNormal->length();
             W_ASSERT(sNormal->type() == Stroke::COMPLEX_NORMAL);
 
-            if(index < 3){
+            if (index < 3) {
                 if(sNormal->length() - index < 3){
                     stroke_to_remove.append(data->from);
 
@@ -181,7 +186,7 @@ redo:
                 goto out;
             }
 
-            if(index + 3 > lenPoint){
+            if (index + 3 > lenPoint) {
                 if(sNormal->length() < 3)
                     stroke_to_remove.append(data->from);
 
@@ -207,7 +212,7 @@ redo:
         int i = stroke_mod_stroke.length();
         W_ASSERT(stroke_mod_stroke.size() == stroke_mod_point.length());
 
-        for(i-- ; i >= 0; i --){
+        for (i-- ; i >= 0; i --) {
             cint indexStroke    = stroke_mod_stroke.at(i);
             cint indexPoint     = stroke_mod_point.at(i);
 
@@ -229,7 +234,7 @@ redo:
 
 void actionRubberSingleTotal(DataPrivateMuThread *data)
 {
-    RubberPrivateData *private_data = (RubberPrivateData *)data->extra;
+    auto *private_data = static_cast<RubberPrivateData *>(data->extra);
 
     QVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
@@ -345,8 +350,7 @@ bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
             count = now - _base;
 
             if (!(count < _data_to_remove.length())) {
-                for(i = _base; i < now; i++)
-                {
+                for (i = _base; i < now; i++) {
                     _data_to_remove.append(QVector<int>());
                 }
             }
@@ -446,21 +450,19 @@ bool RubberMethod::is_image_not_null(const Page *page,
                         - delta;
     W_ASSERT(y >= 0. and y <= Page::getHeight());
 
-    delta *= 2;
+    delta *= PROP_RESOLUTION;
 
-    if(un(img.isNull()))
+    if (un(img.isNull()))
         return false;
 
-    for(i = 0; i < delta + int(xmax - xmin); i++)
-    {
-        for(j = 0; j < delta + int(ymax - ymin); j++)
-        {
+    for (i = 0; i < delta + int(xmax - xmin); i++) {
+        for (j = 0; j < delta + int(ymax - ymin); j++) {
             const QPoint target = QPoint(x + i, y + j) * PROP_RESOLUTION;
             const QRgb pix = img.pixel(target);
 
             //WDebug(rubber_debug, name << "pixel" << pix);
 
-            if(pix){
+            if (pix) {
                 WDebug(rubber_debug, "yes");
                 return true;
             }

@@ -13,6 +13,9 @@
 class RubberMethod: public Tools
 {
 private:
+    /**
+     * Return true if the subimage QRect (from, to) is not null
+     * */
     static bool is_image_not_null(const Page *page,
                            const QPointF &from, const QPointF &to, int delta);
 

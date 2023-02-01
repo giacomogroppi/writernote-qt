@@ -625,3 +625,7 @@ force_inline void datastruct::setVisible(int from, int to)
     this->_pageVisible = -1;
 }
 
+inline void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
+{
+    at_mod(index).decreseAlfa(pos, 4);
+}

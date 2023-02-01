@@ -106,7 +106,7 @@ public:
     int type() const final;
 
 protected:
-    auto length () const { return _point.length(); }
+    int length () const { return _point.length(); }
     auto getPressure() const {
         W_ASSERT(this->_pressure.at(0) >= 0.);
         return this->_pressure.at(0);
@@ -227,6 +227,7 @@ force_inline void StrokeNormal::draw(
 
     if (isPrivatePainter) {
         img = WImage(1);
+        img.fill(Qt::transparent);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
         painter = &_painterPrivate;
@@ -252,7 +253,7 @@ force_inline void StrokeNormal::draw(
         if (un(is_rubber)) {
             pen.setWidthF(pen.widthF() * deltaColorNull);
         }
-        else if(un(isHigh)){
+        else if (un(isHigh)) {
             const QPainter::CompositionMode curr = painter->compositionMode();
             painter->setCompositionMode(QPainter::CompositionMode_Clear);
             painter->drawPoint(lastPoint);

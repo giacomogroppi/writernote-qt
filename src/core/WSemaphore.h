@@ -1,12 +1,13 @@
 #pragma once
 
-#ifdef APPLE
+#include "utils/WCommonScript.h"
+
+#if defined(Q_OS_MAC) || defined(Q_OS_IOS)
 # define SEM_UNIX
 #endif
 
-#include "utils/WCommonScript.h"
 #ifdef SEM_UNIX
-#include <semaphore>
+# include <semaphore>
 #else
 # include "semaphore.h"
 #endif
@@ -19,7 +20,7 @@ private:
     sem_t _sem;
 #endif
 public:
-    WSemaphore(int init_value = 0);
+    explicit WSemaphore(int init_value = 0);
     ~WSemaphore();
 
     bool tryWait();

@@ -71,7 +71,7 @@ datastruct::datastruct()
 
 void datastruct::triggerIfNone(int m_pos_ris)
 {
-    for(auto &page : _page){
+    for (auto &page : _page) {
         if(page._imgDraw.isNull())
             page.triggerRenderImage(m_pos_ris, true);
     }
@@ -83,11 +83,6 @@ void datastruct::reset_touch()
     _pageVisible = -1;
     _pointFirstPage = QPointF(0, 0);
     _zoom = 1.;
-}
-
-void datastruct::decreaseAlfa(const QVector<int> &pos, int index)
-{
-    at_mod(index).decreseAlfa(pos, 4);
 }
 
 void datastruct::copy(const datastruct &src, datastruct &dest)

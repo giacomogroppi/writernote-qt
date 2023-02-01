@@ -262,26 +262,17 @@ void Page::drawStroke(
 
     m_pen.setColor(color);
 
-    if(un(!painter.isActive())){
-        if constexpr (WCommonScript::debug_enable()){
-            qDebug() << "page::drawStroke" << "painter not active";
-            W_ASSERT(false);
-        }
-        else{
-            log_write->write("Painter not active", log_ui::possible_bug);
-        }
-        return;
-    }
+    W_ASSERT(painter.isActive());
 
-    if(un(isRubber)){
+    if (un(isRubber)) {
         painter.setCompositionMode(QPainter::CompositionMode_Clear);
-    }else if(isHigh){
+    } else if(isHigh) {
         core::painter_set_source_over(painter);
     }
 
     stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
 
-    if(un(isRubber)){
+    if (un(isRubber)) {
         core::painter_set_source_over(painter);
     }
 
@@ -465,7 +456,7 @@ void Page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
     uint color;
     Define_PEN(m_pen);
 
-    for(i --; i >= 0; i--){
+    for (i --; i >= 0; i--) {
         Stroke &stroke = atStrokeMod(pos.at(i));
         color = stroke.get_alfa();
 
@@ -604,8 +595,9 @@ void Page::decreseAlfa(const QVector<int> &pos, int decrese)
 {
     bool needInit = initImg(false);
 
-    if(un(needInit)){
+    if (un(needInit)) {
         WDebug(debugPage, "Warning: page not draw");
+        W_ASSERT(0);
         return this->triggerRenderImage(-1, true);
     }
 
