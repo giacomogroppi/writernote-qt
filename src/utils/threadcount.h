@@ -1,11 +1,9 @@
 #pragma once
 
-
 #include <QtGlobal>
 
-class threadCount
+namespace threadCount
 {
-public:
-    static int count();
+     int count();
 };
 
