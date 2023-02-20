@@ -8,6 +8,7 @@
 #include "core/WMutex.h"
 #include "core/AtomicSafe.h"
 #include <QThread>
+#include <QThreadPool>
 
 class SchedulerThreadData {
 public:
@@ -18,7 +19,7 @@ class Scheduler final: public QObject{
 private:
     std::vector<WPool *> _pools;
     mutable WMutex _pool_locker;
-    std::vector<QThread *> _threads;
+    QThreadPool _threads;
 
     /**
      * //@ requires
@@ -41,6 +42,9 @@ private:
 
     AtomicSafe<bool> _need_to_sort;
 
+    void allThreadFinished();
+    void startNewPool();
+    QThreadPool *getThreadPool();
 public:
     explicit Scheduler(QObject *parent = nullptr);
     ~Scheduler() final;
@@ -51,6 +55,5 @@ public:
     Q_DISABLE_COPY(Scheduler);
 private slots:
     void onPriorityChanged();
-    void threadFinished();
 };
 

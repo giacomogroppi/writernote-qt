@@ -6,12 +6,13 @@
 class WMutex
 {
 private:
-    pthread_mutex_t _m;
+    mutable pthread_mutex_t _m{};
 public:
     WMutex();
     ~WMutex();
     void lock();
     void unlock();
+    bool isLocked() const;
 };
 
 force_inline void WMutex::lock()
@@ -31,6 +32,16 @@ force_inline WMutex::~WMutex()
 
 force_inline WMutex::WMutex()
 {
-    pthread_mutex_init(&_m, NULL);
+    pthread_mutex_init(&_m, nullptr);
+}
+
+inline bool WMutex::isLocked() const
+{
+    if (pthread_mutex_trylock(&_m) != 0) {
+        return true;
+    } else {
+        pthread_mutex_unlock(&_m);
+        return false;
+    }
 }
 

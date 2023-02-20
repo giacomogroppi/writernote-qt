@@ -4,6 +4,7 @@
 WPool::WPool(QObject *parent)
     : QObject(parent)
     , _priority(0)
+    , _active_thread(0)
 {
 
 }
