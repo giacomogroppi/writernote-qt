@@ -17,8 +17,11 @@ public:
 
 class Scheduler final: public QObject{
 private:
-    std::vector<WPool *> _pools;
-    mutable WMutex _pool_locker;
+    std::vector<WPool *> _pools_active;
+    std::vector<WPool *> _pools_not_active;
+
+    mutable WMutex _pool_active_locker;
+    mutable WMutex _pool_not_active_locker;
     QThreadPool _threads;
 
     /**
@@ -42,7 +45,6 @@ private:
 
     AtomicSafe<bool> _need_to_sort;
 
-    void allThreadFinished();
     void startNewPool();
     QThreadPool *getThreadPool();
 public:
@@ -55,5 +57,6 @@ public:
     Q_DISABLE_COPY(Scheduler);
 private slots:
     void onPriorityChanged();
+    void onPoolEnd(WPool *pool);
 };
 
