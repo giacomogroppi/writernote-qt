@@ -26,3 +26,19 @@ void WPool::startJobs(QThreadPool *pool)
 
     _active_thread = static_cast<int>(this->_tasks.size());
 }
+
+void WPool::addTask(WTask *task)
+{
+    W_ASSERT(this->_active_thread == 0);
+    WMutexLocker _(this->_tasks_locker);
+    W_ASSERT(WCommonScript::contains(_tasks, task) == 0);
+    this->_tasks.push_back(task);
+
+    QObject::connect(task, &WTask::finished,
+                     this, &WPool::threadFinish);
+}
+
+void WPool::threadFinish(WTask *)
+{
+    --_active_thread;
+}

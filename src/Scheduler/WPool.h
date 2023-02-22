@@ -8,14 +8,12 @@ class WPool: public QObject {
     Q_OBJECT
 private:
     int _priority;
+    WMutex _tasks_locker;
     std::vector<WTask *> _tasks;
     AtomicSafe<int> _active_thread;
 public:
     explicit WPool(QObject *parent = nullptr);
     ~WPool() override = default;
-
-    void addTask(WTask *task);
-    void removeTask(WTask *task);
 
     /**
      * @ensures: \result >= 0
@@ -26,8 +24,13 @@ public:
 
     void startJobs(QThreadPool *pool);
 
+private slots:
+    void threadFinish(WTask *);
+
 protected:
     void setPriority(int priority);
+    void addTask(WTask *task);
+    void removeTask(WTask *task);
 
     Q_DISABLE_COPY(WPool);
 

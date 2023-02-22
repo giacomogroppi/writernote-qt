@@ -20,8 +20,9 @@ public:
     }
 
     bool operator==(const AtomicSafe &value) const {
+        const T val = value.value();
         WMutexLocker _(this->_locker);
-        return this->_value == value._value;
+        return this->_value == val;
     }
 
     bool operator!=(const AtomicSafe &value) const {
@@ -75,6 +76,15 @@ public:
     T operator+=(const T &value) {
         WMutexLocker _(this->_locker);
         return this->_value += value;
+    }
+
+    bool operator==(const T val) const {
+        WMutexLocker _(this->_locker);
+        return this->_value == val;
+    }
+
+    bool operator!=(const T val) const {
+        return (this->operator==(val));
     }
 };
 

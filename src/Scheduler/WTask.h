@@ -11,7 +11,8 @@ class WTask:    public QObject,
 public:
     explicit WTask(QObject *parent = nullptr);
     ~WTask() override = default;
-    void run() override = 0;
+
+    void run() override;
 
     Q_DISABLE_COPY(WTask);
 
@@ -21,3 +22,4 @@ signals:
      * */
     void finished(WTask *task);
 };
+

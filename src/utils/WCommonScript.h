@@ -646,4 +646,12 @@ force_inline void removeFromArray(std::vector<T> &vec, const T& object)
     }
 }
 
+template <class T>
+force_inline int contains(const std::vector<T> &vec, const T& value)
+{
+    return std::count(vec.begin(),
+                      vec.end(),
+                      value);
+}
+
 }
