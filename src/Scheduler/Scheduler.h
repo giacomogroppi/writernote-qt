@@ -55,8 +55,10 @@ public:
     void addPool(WPool *task);
 
     Q_DISABLE_COPY(Scheduler);
+
 private slots:
     void onPriorityChanged();
     void onPoolEnd(WPool *pool);
+    void onJobAvailable(WPool *pool);
 };
 

@@ -630,4 +630,20 @@ inline void for_each(T1 &l1, T2 &l2, Z function)
     }
 }
 
+template <class T>
+force_inline void removeFromArray(std::vector<T> &vec, const T& object)
+{
+    for (int i = 0; i < (int) vec.size(); i++) {
+        if(vec.at(i) == object) {
+            /**
+             * technically the compiler should execute the std::next function in O(1).
+             * */
+            vec.erase(
+                    std::next(vec.begin(),
+                              i)
+            );
+        }
+    }
+}
+
 }

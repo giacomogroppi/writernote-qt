@@ -39,6 +39,19 @@ void Scheduler::addPool(WPool *task)
                      this, &Scheduler::onPriorityChanged);
     QObject::connect(task, &WPool::jobsFinished,
                      this, &Scheduler::onPoolEnd);
+    QObject::connect(task, &WPool::jobsAvaliable,
+                     this, &Scheduler::onJobAvailable);
+}
+
+void Scheduler::onJobAvailable(WPool *pool)
+{
+    _pool_active_locker.lock();
+    _pools_active.push_back(pool);
+    _pool_active_locker.unlock();
+
+    _pool_not_active_locker.lock();
+    WCommonScript::removeFromArray(_pools_not_active, pool);
+    _pool_not_active_locker.lock();
 }
 
 bool Scheduler::is_heap() const
@@ -69,22 +82,17 @@ void Scheduler::onPoolEnd(WPool *pool)
     }
 
     _pool_active_locker.lock();
-    for (int i = 0; i < (int) _pools_active.size(); i++) {
-        if(_pools_active.at(i) == pool) {
-            /**
-             * technically the compiler should execute the std::next function in O(1).
-             * */
-            _pools_active.erase(
-                    std::next(_pools_active.begin(),
-                              i)
-            );
-        }
-    }
+    WCommonScript::removeFromArray(_pools_active, pool);
     _pool_active_locker.unlock();
 
     _pool_not_active_locker.lock();
     _pools_not_active.push_back(pool);
     _pool_not_active_locker.unlock();
+
+    QObject::disconnect(pool, &WPool::priorityChanged,
+                     this, &Scheduler::onPriorityChanged);
+    QObject::disconnect(pool, &WPool::jobsFinished,
+                     this, &Scheduler::onPoolEnd);
 
     this->startNewPool();
 }
