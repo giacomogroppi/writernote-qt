@@ -30,7 +30,7 @@ private:
     static inline QByteArray getName_img(unsigned i);
 public:
     static void copy_img(const fromimage &src, fromimage &dest);
-    friend class square;
+    friend class SquareMethod;
 
     enum load_res_img: uchar{
         ok,

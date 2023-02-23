@@ -5,6 +5,13 @@
 #include "touch/paintevent/paint.h"
 #include "log/log_ui/log_ui.h"
 
+static WMutex           __mutex_sq;
+static const Page       *__page;
+static QPointF          __f;
+static QPointF          __s;
+static QVector<int>     *__index;
+static bool             *__in_box;
+
 SquareMethod::SquareMethod(QObject *parent, property_control *prop)
     : QObject(parent)
     , _property(prop)
@@ -19,7 +26,8 @@ SquareMethod::SquareMethod(QObject *parent, property_control *prop)
     WNew(_copy, copy, ());
     _canvas = (TabletCanvas *) parent;
 
-    QObject::connect(_property, &property_control::ActionSelection, this, &SquareMethod::actionProperty);
+    QObject::connect(_property, &property_control::ActionSelection,
+                     this, &SquareMethod::actionProperty);
 
     _penna.setStyle(Qt::DotLine);
     _penna.setWidth(2);
@@ -35,10 +43,56 @@ SquareMethod::~SquareMethod()
     WDelete(_copy);
 }
 
+void SquareMethod::reset()
+{
+    int i;
+    WDebug(debugSquare, "call");
+    _pointinit.setSet(false);
+    _lastpoint.setSet(false);
+    _pointfine.setSet(false);
+
+    _in_box = false;
+
+    _need_reload = false;
+    _index_img.clear();
+
+    WDebug(debugSquare, "paste = 1");
+    const auto len = _stroke.length();
+
+    if(len == 0)
+        goto out;
+
+    for (i = 0; i < len; i++) {
+        QList<std::shared_ptr<Stroke>> ll   = _stroke.operator[](i);
+
+#ifdef DEBUGINFO
+        WCommonScript::for_each(ll, [](const std::shared_ptr<Stroke>& stroke){
+            W_ASSERT(!stroke->isEmpty());
+        });
+#endif // DEBUGINFO
+
+        Page * page         = &_canvas->getDoc()->at_mod(i + _base);
+
+        for (auto &ref : ll){
+            ref->scale(_trans_img);
+        }
+
+        page->append(ll);
+        page->triggerRenderImage(-1, false);
+    }
+
+    _stroke.clear();
+
+    out:
+    this->_img = WImage();
+    this->_stroke.clear();
+    this->_trans_img = QPointF(0.0, 0.0);
+}
+
 void * __square_search(void *__data)
 {
     W_ASSERT(__data);
-    DataPrivateMuThread *data = (DataPrivateMuThread *)__data;
+    auto *data = static_cast<DataPrivateMuThread *>(__data);
     bool in_box = false;
 
     assert(data->from <= data->to);
@@ -67,7 +121,7 @@ bool SquareMethod::touchBegin(const QPointF &point, double size, Document &doc)
 
     W_ASSERT(!somethingInBox());
 
-    _pointinit = data->adjustPoint(point);
+    _pointinit = doc.adjustPoint(point);
     W_ASSERT(_pointinit.x() >= 0.0 && _pointinit.y() >= 0.0);
     _pointinit = true;
 
@@ -124,7 +178,7 @@ void SquareMethod::actionProperty(property_control::ActionProperty action)
 
 }
 
-/*
+/**
  * la funzione capisce se all'interno del quadrato
  * della selezione c'è qualcosa in caso salva l'id
  * del tratto e setta la variabile this->check =
@@ -180,7 +234,7 @@ bool SquareMethod::find()
     }
 
     /* image selected by user */
-    const int lenImg = doc->m_img.length();
+    const int lenImg = doc->length_img();
     for(int counterImg = 0; counterImg < lenImg; counterImg++){
         const auto &ref = doc->m_img.at(counterImg);
 
@@ -330,52 +384,6 @@ void SquareMethod::findObjectToDraw(const QList<QVector<int>> &index)
 
     img:
     findObjectToDrawImg();
-}
-
-void SquareMethod::reset()
-{
-    int i, len;
-    WDebug(debugSquare, "call");
-    _pointinit.setSet(false);
-    _lastpoint.setSet(false);
-    _pointfine.setSet(false);
-
-    _in_box = false;
-
-    _need_reload = false;
-    _index_img.clear();
-
-    WDebug(debugSquare, "paste = 1");
-    len = _stroke.length();
-
-    if(len == 0)
-        goto out;
-
-    for (i = 0; i < len; i++) {
-        QList<std::shared_ptr<Stroke>> ll   = _stroke.operator[](i);
-
-#ifdef DEBUGINFO
-        WCommonScript::for_each(ll, [](std::shared_ptr<Stroke> stroke){
-            W_ASSERT(!stroke->isEmpty());
-        });
-#endif // DEBUGINFO
-
-        Page * page         = &_canvas->getDoc()->at_mod(i + _base);
-
-        for (auto &ref : ll){
-            ref->scale(_trans_img);
-        }
-
-        page->append(ll);
-        page->triggerRenderImage(-1, false);
-    }
-
-    _stroke.clear();
-
-    out:
-    this->_img = WImage();
-    this->_stroke.clear();
-    this->_trans_img = QPointF(0.0, 0.0);
 }
 
 void SquareMethod::initPointMove(const QPointF &point)

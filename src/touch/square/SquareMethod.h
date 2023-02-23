@@ -70,6 +70,10 @@ private slots:
     void actionProperty(property_control::ActionProperty action);
 
     void updatePoint(const QPointF &puntofine);
+
+    void reset();
+
+    bool find();
 };
 
 inline int SquareMethod::calculate_flags() const
