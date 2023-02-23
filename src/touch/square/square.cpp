@@ -106,7 +106,7 @@ bool square::find()
     _base = doc->getFirstPageVisible();
     lenPage = doc->lengthPage();
     _in_box = false;
-    __need_reload = false;
+    _need_reload = false;
     PageCounter = _base;
 
     __f     = topLeft;
@@ -162,7 +162,7 @@ bool square::find()
 
         reset();
     }else{
-        __need_reload = true;
+        _need_reload = true;
     }
 
     return _in_box;
@@ -296,7 +296,7 @@ void square::reset()
 
     _in_box = false;
 
-    __need_reload = false;
+    _need_reload = false;
     _index_img.clear();
 
     WDebug(debugSquare, "paste = 1");
@@ -383,7 +383,7 @@ void square::move(const QPointF &punto)
     _pointfine += delta;
 
     _lastpoint = punto;
-    __need_reload = true;
+    _need_reload = true;
 }
 
 void square::endMoving(const QWidget *pixmap)
@@ -495,14 +495,14 @@ static void square_draw_square(
 
 void square::needReload(QPainter &painter)
 {
-    if(WCommonScript::debug_enable()){
+    if constexpr (WCommonScript::debug_enable()){
         if(un(!painter.isActive())){
             qDebug() << "Painter not active in square" << __FUNCTION__;
             std::abort();
         }
     }
 
-    if(__need_reload){
+    if(_need_reload){
         const auto *data = _canvas->getDoc();
         const auto zoom = data->getZoom();
         WDebug(debugSquare, "__need_reload = true");
@@ -536,7 +536,7 @@ void square::updatePoint(const QPointF &puntofine)
 
     _pointfine = true;
 
-    __need_reload = true;
+    _need_reload = true;
 }
 
 void square::initPoint(const QPointF &point)
@@ -550,8 +550,8 @@ void square::initPoint(const QPointF &point)
     W_ASSERT(_pointinit.x() >= 0.0 && _pointinit.y() >= 0.0);
     _pointinit = true;
 
-    /* we don't need yet to draw somethings */
-    __need_reload = false;
+    /* we don't need yet to draw something */
+    _need_reload = false;
     _in_box = false;
 
     this->_property->Hide();

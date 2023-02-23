@@ -14,12 +14,12 @@ bool SquareMethod::touchBegin(const QPointF &point, double size, struct Document
 
     if(_square->somethingInBox()){
         WDebug(ManageStartdebugSquare, "Somethininbox");
-        _square->initPointMove(point);
     }
     else{
         WDebug(ManageStartdebugSquare, "not in box");
-        _square->initPoint(point);
     }
+    
+    _square->initPoint(point);
     return true;
 }
 

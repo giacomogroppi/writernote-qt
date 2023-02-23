@@ -2,6 +2,7 @@
 
 #include "WMutex.h"
 #include "WMutexLocker.h"
+#include <atomic>
 
 template <typename T>
 class AtomicSafe {

@@ -71,6 +71,7 @@ force_inline void preview_page_container::appendToVisible(preview_page_item *p)
 
 force_inline preview_page_item * preview_page_container::at_show(int i)
 {
+    W_ASSERT(i >= 0 and i < _item_show.size());
     return _item_show[i];
 }
 

@@ -247,8 +247,16 @@ Q_ALWAYS_INLINE int is_present_in_list_order_list(const QList<T> &list, const T&
     return -1;
 }
 
+    template <class T>
+    force_inline int contains(const std::vector<T> &vec, const T& value)
+    {
+        return std::count(vec.begin(),
+                          vec.end(),
+                          value);
+    }
+
 template <typename T>
-Q_ALWAYS_INLINE int is_present_in_list_order_vector(const QVector<T> &list, const T& element)
+force_inline int is_present_in_list_order_vector(const QVector<T> &list, const T& element)
 {
     W_ASSERT(is_order_vector(list));
 
@@ -261,7 +269,6 @@ Q_ALWAYS_INLINE int is_present_in_list_order_vector(const QVector<T> &list, cons
         if(tmp > element)
             return -1;
     }
-
     return -1;
 }
 
@@ -533,16 +540,21 @@ force_inline void append_order(QVector<T> & list, const T& element)
 {
     int i, len;
 
+    W_ASSERT(is_order_list(list));
+
     len = list.length();
 
-    for(i = 0; i < len; i++){
-        if(un(list.at(i) > element)){
+    for (i = 0; i < len; i++) {
+        if (un(list.at(i) > element)) {
             list.insert(i, element);
             return;
         }
     }
 
     list.append(element);
+
+    W_ASSERT(is_order_list(list));
+    W_ASSERT(list.contains(element));
 }
 
 inline constexpr size_t WStrlen(const char *str)
@@ -644,14 +656,6 @@ force_inline void removeFromArray(std::vector<T> &vec, const T& object)
             );
         }
     }
-}
-
-template <class T>
-force_inline int contains(const std::vector<T> &vec, const T& value)
-{
-    return std::count(vec.begin(),
-                      vec.end(),
-                      value);
 }
 
 }

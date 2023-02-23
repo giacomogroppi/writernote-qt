@@ -19,18 +19,18 @@ class square:   public QObject,
 {
     Q_OBJECT
 public:
-    bool somethingInBox() const;
+    [[nodiscard]] bool somethingInBox() const;
 
     void needReload(QPainter &painter);
 
     void adjustPoint();
 
     explicit square(QObject *parent, class property_control *property);
-    ~square();
+    ~square() override;
 
     void reset();
 
-    int calculate_flags() const;
+    [[nodiscard]] int calculate_flags() const;
 
     void initPoint(const QPointF &point);
     void updatePoint(const QPointF &puntofine);
@@ -53,25 +53,18 @@ public:
 
     void translate(const QPointF &offset);
 
+#ifdef DEBUGINFO
     PointSettable & get_first_point()
     {
-#ifdef DEBUGINFO
-        return _pointinit;
-#else
-        qDebug() << "Call to PointSettable & square::get_first_point in release mode";
-        std::abort();
-#endif
-    };
+        return this->_pointinit;
+    }
 
     PointSettable & get_last_point()
     {
-#ifdef DEBUGINFO
-        return _pointfine;
-#else
-        qDebug() << "Call to PointSettable & square::get_last_point in release mode";
-        std::abort();
-#endif
+        return this->_pointfine;
     }
+
+#endif // DEBUGINFO
 
 private:
     void findObjectToDrawImg();
@@ -81,7 +74,7 @@ private:
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
      * il rettangono
     */
-    bool __need_reload = false;
+    bool _need_reload = false;
 
     PointSettable _pointinit;
     PointSettable _pointfine;
