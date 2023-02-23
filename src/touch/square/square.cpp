@@ -20,62 +20,14 @@ static QPointF              __s;
 static QVector<int>         *__index;
 static bool                 *__in_box;
 
-square::square(QObject *parent, property_control *property):
-    QObject(parent)
+square::square(QObject *parent, property_control *property)
+    : QObject(parent)
+    , SquareMethod(parent, property)
 {
-    W_ASSERT(parent);
-    W_ASSERT(property);
-
-    _thread        = get_thread_max();
-    _dataThread    = get_data_max();
-    _threadCount   = get_thread_used();
-
-    _property = property;
-    WNew(_copy, copy, ());
-    _canvas = (TabletCanvas *) parent;
-
-    QObject::connect(_property, &property_control::ActionSelection, this, &square::actionProperty);
-
-    _penna.setStyle(Qt::DotLine);
-    _penna.setWidth(2);
-    _penna.setColor(QColor::fromRgb(30, 90, 255));
-    this->reset();
-
-    __in_box = &_in_box;
-
 }
 
 square::~square()
 {
-    free_thread_data(&_thread, &_dataThread);
-    WDelete(_copy);
-}
-
-void * __square_search(void *__data)
-{
-    W_ASSERT(__data);
-    DataPrivateMuThread *data = (DataPrivateMuThread *)__data;
-    bool in_box = false;
-
-    assert(data->from <= data->to);
-
-    for(; data->from < data->to;  data->from ++){
-        const Stroke &stroke = __page->atStroke(data->from);
-
-        if(datastruct_isinside(__f, __s, stroke))
-        {
-            __mutex_sq.lock();
-            __index->append(data->from);
-            __mutex_sq.unlock();
-
-            in_box = true;
-        }
-    }
-
-    if(in_box)
-        *__in_box = true;
-
-    return NULL;
 }
 
 /* 
@@ -345,7 +297,7 @@ void square::initPointMove(const QPointF &point)
 
     WDebug(debugSquare, "initPointMove" << rect.topLeft() << rect.bottomRight() << new_point);
 
-    if(!rect.contains(new_point)){
+    if (!rect.contains(new_point)) {
         WDebug(debugSquare, "Not in box");
         this->reset();
         this->initPoint(point);
