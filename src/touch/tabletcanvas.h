@@ -127,9 +127,9 @@ public:
     //void paintPixmap(QPainter &painter, QTabletEvent *event);
 
     /* funzione che setta il cambio dell'inserimento -> penna, gomma... */
-    void sceltacolorepenna(const QColor);
+    void sceltacolorepenna(const QColor &);
 
-    Document *getDoc() const { return _doc; };
+    Document *getDoc() const { W_ASSERT(_doc); return _doc; };
     Document *_doc;
 
     void panTriggered(QPanGesture*) {};
@@ -145,7 +145,7 @@ public:
 
     QColor _color = Qt::black;
 
-    static void load(QPainter &painter, const Document *data,
+    static void load(QPainter &painter, const Document &data,
                      DataPaint &dataPoint);
 
     /* la funzione è responsabile del settaggio dello spessore e del tipo per il load */

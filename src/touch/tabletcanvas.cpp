@@ -331,7 +331,7 @@ bool TabletCanvas::eventFilter(QObject *ref, QEvent *e)
 
         point_touch = touch->globalPosition() - this->mapToGlobal(this->pos());
 
-        WDebug(eventFilterCanvasDebug, "Point" << point_touch << touch->position() << _square->get_first_point() << _square->get_last_point());
+        WDebug(eventFilterCanvasDebug, "Point" << point_touch << touch->position());
 
         canvas_send_touch_event(point_touch, type, touch->pointerType(), true);
 

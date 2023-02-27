@@ -33,11 +33,12 @@ void singleLoad(QPainter        &painter,
 #define DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH 1
 #define DRAW_CREATE_SIZE_RECT_DEF_PRO 1.0
 inline QSize createSizeRect(
-        const datastruct    *data,
+        const datastruct    &data,
         const int           countHeigth,
         const double        pro)
 {
-    const auto zoom = data->getZoom();
-    return QSize(Page::getWidth(), Page::getHeight() * countHeigth) * zoom * pro;
+    const auto zoom = data.getZoom();
+    const int height = Page::getHeight();
+    return QSize(Page::getWidth(), height * countHeigth) * zoom * pro;
 }
 

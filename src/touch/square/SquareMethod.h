@@ -8,32 +8,41 @@
 #include "touch/multi_thread_data.h"
 #include "touch/square/SquareMethod.h"
 #include "touch/multi_thread_data.h"
+#include "touch/tools/Scrollable.h"
+#include "utils/WCommonScript.h"
 
-class SquareMethod: public Tools, public QObject {
-    Q_OBJECT
+class SquareMethod: public Tools, public Scrollable {
+private:
+    static constexpr auto debugSquare = false;
+    void endMoving(const QWidget *pixmap, Document &doc);
+
+    void move(const QPointF &punto, Document &doc);
 
 public:
-    explicit SquareMethod(QObject *parent, class property_control *property);
-    ~SquareMethod() override;
+    explicit SquareMethod(class property_control *property);
+    ~SquareMethod() ;
 
     bool touchBegin(const QPointF& point, double size, class Document &doc) final;
     bool touchUpdate(const QPointF& point, double size, class Document &doc) final;
     int touchEnd(const QPointF& point, class Document &doc) final;
 
     void adjustPoint();
-    void needReload(QPainter &painter);
+    void needReload(QPainter &painter, const Document &doc);
     [[nodiscard]] bool somethingInBox() const;
 
     /* definizione per i punti di spostamento */
     PointSettable _lastpoint;
 
-    void initPoint(const QPointF &point);
+    void initPoint(const QPointF &point, const Document &doc);
+    void initPointMove(const QPointF &point, const Document &doc);
 
+    void translate(const QPointF &point) final;
+    void changeInstrument();
 
 private:
-    void findObjectToDrawImg();
-    void findObjectToDraw(const QList<QVector<int> > &index);
-    void initImg();
+    void findObjectToDrawImg(Document &doc);
+    void findObjectToDraw(const QList<QVector<int> > &index, Document &doc);
+    void initImg(const Document &doc);
     /**
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
      * il rettangono
@@ -43,7 +52,7 @@ private:
     PointSettable _pointinit;
     PointSettable _pointfine;
     void mergeImg(const WImage &from, WImage &to, int page);
-    void moveObjectIntoPrivate(QList<QVector<int> > &index);
+    void moveObjectIntoPrivate(QList<QVector<int> > &index, Document &doc);
 
     WImage _img;
     QList<QList<std::shared_ptr<Stroke>>> _stroke;
@@ -57,8 +66,6 @@ private:
     bool _in_box;
     copy *_copy;
 
-    class TabletCanvas *_canvas;
-
     pthread_t *_thread;
     DataPrivateMuThread *_dataThread;
     int _threadCount;
@@ -66,14 +73,13 @@ private:
     QPointF _trans_img;
     [[nodiscard]] int calculate_flags() const;
 
-private slots:
+    void updatePoint(const QPointF &puntofine, const Document &doc);
+
+    bool find(Document &doc);
+
+protected:
+    virtual void reset();
     void actionProperty(property_control::ActionProperty action);
-
-    void updatePoint(const QPointF &puntofine);
-
-    void reset();
-
-    bool find();
 };
 
 inline int SquareMethod::calculate_flags() const
@@ -83,7 +89,7 @@ inline int SquareMethod::calculate_flags() const
     if (this->somethingInBox()) {
         flag = PROPERTY_SHOW_DELETE | PROPERTY_SHOW_COPY | PROPERTY_SHOW_CUT;
     } else {
-        if(!_copy->isEmpty()){
+        if (!_copy->isEmpty()) {
             flag = PROPERTY_SHOW_PASTE;
         }
     }
@@ -93,3 +99,14 @@ inline int SquareMethod::calculate_flags() const
     return flag;
 }
 
+inline void SquareMethod::translate(const QPointF &)
+{
+    WDebug(debugSquare, "Scroll");
+    //this->_property->Hide();
+}
+
+inline void SquareMethod::changeInstrument()
+{
+    this->reset();
+    this->_property->Hide();
+}

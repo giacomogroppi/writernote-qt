@@ -33,7 +33,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
 
     dataPaint.IsExportingPdf = false;
 
-    TabletCanvas::load(painter, &doc, dataPaint);
+    TabletCanvas::load(painter, doc, dataPaint);
 
     painter.end();
 

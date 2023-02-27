@@ -11,7 +11,7 @@ void TabletCanvas::ismoving_f()
     const auto &blockScrolling = block_scrolling;
     const double refZoom = getDoc()->getZoom();
 
-    if(!blockScrolling){
+    if (!blockScrolling) {
         translation = dynamic_cast<QPointF &>(_ismoving);
         translation /= refZoom;
 

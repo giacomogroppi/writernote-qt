@@ -46,10 +46,10 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
         this->updatePageCount();
     }
 
-    TabletCanvas::load(painter, this->getDoc(), dataPaint);
+    TabletCanvas::load(painter, *this->getDoc(), dataPaint);
 
     if (_method.isSelection()) {
-        _square->needReload(painter);
+        _square->needReload(painter, *getDoc());
     }
 
     painter.end();

@@ -33,6 +33,6 @@ inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST
     };
-    TabletCanvas::load(painter, this->data, dataPaint);
+    TabletCanvas::load(painter, *data, dataPaint);
 }
 

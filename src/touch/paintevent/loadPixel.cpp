@@ -31,7 +31,7 @@ static void draw_laser(QPainter &painter, laser *_laser, QPen &pen, double zoom)
     }
 }
 
-static void draw_for_audio(const Document *doc, DataPaint &dataPoint)
+static void draw_for_audio(const Document &doc, DataPaint &dataPoint)
 {
     static int last_m_pos_ris   = -1;
     cbool is_play          = likely((dataPoint.parent)) ?
@@ -44,21 +44,21 @@ static void draw_for_audio(const Document *doc, DataPaint &dataPoint)
         // the idea is to trigger this view only when
         // the second has change
         if(likely(last_m_pos_ris != m_pos_ris)){
-            auto *d = (Document *)doc;
-            d->newViewAudio(m_pos_ris);
+            auto &d = (Document &)doc;
+            d.newViewAudio(m_pos_ris);
             last_m_pos_ris = m_pos_ris;
         }
     }
 }
 
 void TabletCanvas::load(QPainter &painter,
-                        const Document *data,
+                        const Document &data,
                         DataPaint &dataPoint)
 {
     cbool withPdf          = dataPoint.withPdf;
-    int lenPage                     = data->lengthPage();
-    const QPointF &PointFirstPage   = data->getPointFirstPageNoZoom();
-    const auto zoom      = data->getZoom();
+    int lenPage                     = data.lengthPage();
+    const QPointF &PointFirstPage   = data.getPointFirstPageNoZoom();
+    const auto zoom                 = data.getZoom();
     const QSize sizeRect            = createSizeRect(data, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
     StrokePre &strokeToDraw = __tmp;
@@ -74,16 +74,16 @@ void TabletCanvas::load(QPainter &painter,
     pen.setStyle(Qt::PenStyle::SolidLine);
     core::painter_set_antialiasing(painter);
 
-    loadSheet(*data, pen, painter, dataPoint.m);
+    loadSheet(data, pen, painter, dataPoint.m);
 
 #ifdef PDFSUPPORT
     if(likely(withPdf))
-        data->draw_pdf(painter, dataPoint.m, dataPoint.IsExportingPdf, data->currentWidth());
+        data.draw_pdf(painter, dataPoint.m, dataPoint.IsExportingPdf, data.currentWidth());
 #else
     Q_UNUSED(withPdf);
 #endif
 
-    data->draw_img(painter);
+    data.draw_img(painter);
 
     /* stroke not already add to page */
     drawSingleStroke(strokeToDraw, painter, pen, zoom);
@@ -94,7 +94,7 @@ void TabletCanvas::load(QPainter &painter,
     draw_for_audio(data, dataPoint);
 
     if(likely(!dataPoint.IsExportingPdf)){
-        counterPage = data->getFirstPageVisible();
+        counterPage = data.getFirstPageVisible();
     }
     else{
         counterPage = 0;
@@ -103,14 +103,14 @@ void TabletCanvas::load(QPainter &painter,
     constexpr auto debugPageImg = false;
     WDebug(debugPageImg, "Start draw img from" << counterPage);
     for(; counterPage < lenPage; counterPage ++){
-        const Page &page = data->at(counterPage);
+        const Page &page = data.at(counterPage);
 
         if(!page.isVisible() && likely(!dataPoint.IsExportingPdf)){
             WDebug(debugPageImg, __func__ << "Page at index" << counterPage << "not visible: Break");
             continue;
         }
 
-        singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, data->getZoom());
+        singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, data.getZoom());
     }
 
     if(un(!dataPoint.parent))
