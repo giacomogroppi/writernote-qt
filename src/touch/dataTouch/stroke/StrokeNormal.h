@@ -133,7 +133,7 @@ protected:
 
 inline bool StrokeNormal::isPressureVal() const
 {
-    return _pressure.length() == 1 && _point.length() > 1;
+    return _pressure.length() == 1 and _point.length() > 1;
 }
 
 inline bool StrokeNormal::needToUpdatePressure() const
@@ -159,7 +159,7 @@ inline void StrokeNormal::updateFlagPressure() const
 
     len = this->length();
 
-    if(un(len < 2 && _press.length() == 1)){
+    if(un(len < 2 and _press.length() == 1)){
         // lo stroke era _press const ma gli abbiamo
         // tolto troppi punti, quindi non possiamo più disegnarlo
         // con il QPainterPath
@@ -173,7 +173,7 @@ inline void StrokeNormal::updateFlagPressure() const
         W_ASSERT(_press.length() == _point.length());
     }
 
-    if(un(len > 1 && _press.length() == 1)){
+    if(un(len > 1 and _press.length() == 1)){
         return;
     }
 

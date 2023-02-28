@@ -25,7 +25,7 @@ n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_reque
     if(this->m_request)
         return n_error_cloud::wait;
 
-    if (user == NULL && m_user == NULL)
+    if (user == NULL and m_user == NULL)
         return n_error_cloud::not_login;
 
     if(user != NULL){

@@ -58,7 +58,7 @@ void videocompress_ui::on_pushButton_4_clicked()
 
 
 static void settaggiobottoneok(videocompress_ui *parent){
-    if(parent->ui->plainTextEdit_from->toPlainText() != "" && parent->ui->textedit_destinazione->toPlainText() != "")
+    if(parent->ui->plainTextEdit_from->toPlainText() != "" and parent->ui->textedit_destinazione->toPlainText() != "")
         parent->ui->pushButton_ok->setEnabled(true);
     else
         parent->ui->pushButton_ok->setEnabled(false);

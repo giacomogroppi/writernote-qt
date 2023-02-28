@@ -42,7 +42,7 @@ bool zoom_control::zoom(const QPointF   &pointMiddle,
 {
     this->data = data;
 
-    W_ASSERT(pointMiddle.x() >= 0. && pointMiddle.y() >= 0.);
+    W_ASSERT(pointMiddle.x() >= 0. and pointMiddle.y() >= 0.);
     QPointF diff;
     {
         const QPointF newPoint = pointMiddle * (delta);

@@ -124,7 +124,7 @@ void restore::on_ok_restore_clicked()
     int index;
     restore_file_critic::n_err __res;
 
-    if(path != "" && QString(path).indexOf(APP_EXT) != -1){
+    if(path != "" and QString(path).indexOf(APP_EXT) != -1){
         if(!QFile::exists(get_name_tmp::get(path))){
             ui->message_label->setText(QApplication::tr("In %1 I can't find a restore file").arg(path));
             return;

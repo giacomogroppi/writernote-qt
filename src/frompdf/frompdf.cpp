@@ -182,7 +182,7 @@ frompdf::load_res_pdf frompdf::load_from_row_pdf(
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     /* creation of thread and append QImage to the current PDF page */
-    for(i = 0; i < len && i < countThread; i++){
+    for(i = 0; i < len and i < countThread; i++){
         page.append(doc->page(QString::number(i+1)));
 
     }
@@ -202,7 +202,7 @@ frompdf::load_res_pdf frompdf::load_from_row_pdf(
 
         W_ASSERT(create <= countThread);
 
-        for(i = 0; i < create && (pdfCount + i) < len; i++){
+        for(i = 0; i < create and (pdfCount + i) < len; i++){
             QImage *image = &list.img[pdfCount + i];
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             const auto &pdfPage = page.at(pdfCount+i);
@@ -216,7 +216,7 @@ frompdf::load_res_pdf frompdf::load_from_row_pdf(
 #endif
         }
 
-        for(i = 0; i < create && i < conv.length(); i++){
+        for(i = 0; i < create and i < conv.length(); i++){
             conv.at(i)->wait();
         }
 

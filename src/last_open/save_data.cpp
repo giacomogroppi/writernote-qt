@@ -45,7 +45,7 @@ void last_file::removeDouble()
     int i, k;
     for(i=0; i<m_data.length(); ++i){
         for(k=i; k<m_data.length(); ++k){
-            if((QString)m_data.at(i).posizione == (QString)m_data.at(k).posizione && i != k){
+            if((QString)m_data.at(i).posizione == (QString)m_data.at(k).posizione and i != k){
                 m_data.removeAt(k);
             }
         }

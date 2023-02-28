@@ -296,8 +296,8 @@ void canvas_send_touch_event(const QPointF &pos,
 static inline bool isTabletEvent(const QEvent *event)
 {
     const auto type = event->type();
-    return  type != QEvent::TabletPress &&
-            type != QEvent::TabletRelease &&
+    return  type != QEvent::TabletPress and
+            type != QEvent::TabletRelease and
             type != QEvent::TabletMove;
 }
 

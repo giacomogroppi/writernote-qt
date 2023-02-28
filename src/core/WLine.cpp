@@ -76,7 +76,7 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
                 precision
             );
 
-    return AreTouch && IsInDomain;
+    return AreTouch and IsInDomain;
 }
 
 bool WLine::intersect(const WLine &line1, const WLine &line2, int precision, QPointF *result)
@@ -86,12 +86,12 @@ bool WLine::intersect(const WLine &line1, const WLine &line2, int precision, QPo
 
     Q_UNUSED(result);
 
-    if(un(line1._is_vertical && line2._is_vertical)){
+    if(un(line1._is_vertical and line2._is_vertical)){
         WDebug(debug_WLine, "Both line are vertical")
         return false;
     }
 
-    if(likely(!line2._is_vertical && !line1._is_vertical)) {
+    if(likely(!line2._is_vertical and !line1._is_vertical)) {
         WDebug(debug_WLine, "No line vertical");
         x = (line2._p - line1._p) / (line1._m - line2._m);
         y = line2._m * x + line2._p;

@@ -18,7 +18,7 @@ void MainWindow::updatePageCount(int pageCount)
 
     this->_preview_widget->pageMove();
 
-    if(__page == pageCount && lenPage == __max)
+    if(__page == pageCount and lenPage == __max)
         return;
 
     __max = lenPage;

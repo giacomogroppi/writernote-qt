@@ -14,7 +14,7 @@
 static int mostra(const QString &comando);
 #endif // WIN
 
-#if defined(unix) && !defined(MACOS)
+#if defined(unix) and !defined(MACOS)
 #define APPLICATION_NAME (QString)"xdg-open "
 #elif defined(WIN32) || defined(WIN64) || defined(__OS2__)
 #define APPLICATION_NAME (QString)"explorer.exe "

@@ -199,17 +199,17 @@ void setting_restore_ui::secondTimer()
      * We don't want to save the file
      * while the user is writing
      * */
-    if(core::get_canvas()->isWriting())
+    if (core::get_canvas()->isWriting())
         goto restart;
 
-    if(!need_save_tmp)
+    if (!need_save_tmp)
         goto start_timer;
 
-    if(!m_path->isEmpty()){
+    if (m_path->size()) {
         path = get_name_tmp::get(*m_path);
-    }else{
+    } else {
         if(tmp_path.isEmpty()){
-            const auto day = adjustString(current_day_string());
+            const auto day  = adjustString(current_day_string());
             const auto time = adjustString(current_time_string());
             path = get_path(path::tmp_file_not_save);
 
@@ -217,20 +217,20 @@ void setting_restore_ui::secondTimer()
         }
     }
 
-    if(!tmp_path.isEmpty())
+    if (!tmp_path.isEmpty())
         path = tmp_path.toUtf8();
 
     //qDebug() << "Save tmp file in: " << path;
 
     res = ff.savefile_check_file(false) == OK;
 
-    if(!res){
-        if(try_save > 5){
+    if (!res) {
+        if (try_save > 5) {
             const auto m = qstr("We had a problem saving the temporary file in %1 for %2 times").arg(path).arg(try_save);
             dialog_critic(m);
         }
         try_save ++;
-    }else{
+    } else {
         try_save = 0;
     }
 

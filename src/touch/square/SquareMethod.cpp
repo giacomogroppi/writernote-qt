@@ -13,7 +13,9 @@ static QVector<int>     *__index;
 static bool             *__in_box;
 
 SquareMethod::SquareMethod(property_control *prop)
-    : _property(prop)
+    : _need_reload(false)
+    , _property(prop)
+    , _in_box(false)
 {
     W_ASSERT(prop);
 
@@ -40,7 +42,6 @@ SquareMethod::~SquareMethod()
 void SquareMethod::reset()
 {
     int i;
-    auto *canvas = core::get_canvas();
 
     WDebug(debugSquare, "call");
     _pointinit.setSet(false);
@@ -67,7 +68,7 @@ void SquareMethod::reset()
         });
 #endif // DEBUGINFO
 
-        Page * page         = &canvas->getDoc()->at_mod(i + _base);
+        Page * page         = &core::get_canvas()->getDoc()->at_mod(i + _base);
 
         for (auto &ref : ll){
             ref->scale(_trans_img);
@@ -111,59 +112,53 @@ void * __square_search(void *__data)
     return nullptr;
 }
 
-bool SquareMethod::touchBegin(const QPointF &point, double size, Document &doc)
+bool SquareMethod::touchBegin(const QPointF &point, double, Document &doc)
 {
+    constexpr auto not_used debugSquare = false;
     WDebug(debugSquare, "call");
 
-    W_ASSERT(!somethingInBox());
-
-    _pointinit = doc.adjustPoint(point);
-    W_ASSERT(_pointinit.x() >= 0.0 && _pointinit.y() >= 0.0);
-    _pointinit = true;
-
-    /* we don't need yet to draw something */
-    _need_reload = false;
-    _in_box = false;
-
-    this->_property->Hide();
+    if(somethingInBox()){
+        WDebug(debugSquare, "Somethininbox");
+        initPointMove(point, doc);
+    }
+    else{
+        WDebug(debugSquare, "not in box");
+        initPointSearch(point, doc);
+    }
 
     return true;
 }
 
-bool SquareMethod::touchUpdate(const QPointF &point, double size, Document &doc)
+bool SquareMethod::touchUpdate(const QPointF &point, double, Document &doc)
 {
-    //_square->isMoving();
-
     if (somethingInBox()) {
         W_ASSERT(this->_pointinit.isSet());
 
         /** a questo punto può muovere di un delta x e y */
-        move(point, doc);
+        this->move(point, doc);
     } else {
         /**
         * it means that the user not select anything
         * in the past
         */
-        updatePoint(point, doc);
+        this->updatePoint(point, doc);
     }
 
     return true;
 }
 
-int SquareMethod::touchEnd(const QPointF &point, class Document &doc)
+int SquareMethod::touchEnd(const QPointF &, class Document &doc)
 {
     auto *canvas = core::get_canvas();
     bool done = somethingInBox();
 
     if (done) {
-        reset();
-    }
-
-    if (!done) {
+        //reset();
+    } else {
         find(doc);
     }
 
-    endMoving(canvas, doc);
+    return endMoving(canvas, doc);
 }
 
 /**
@@ -384,7 +379,7 @@ void SquareMethod::initPointMove(const QPointF &point, const Document &doc)
     if (!rect.contains(new_point)) {
         WDebug(debugSquare, "Not in box");
         this->reset();
-        this->initPoint(point, doc);
+        this->initPointSearch(point, doc);
     }
 }
 
@@ -420,7 +415,7 @@ void SquareMethod::move(const QPointF &punto, Document &doc)
     _need_reload = true;
 }
 
-void SquareMethod::endMoving(const QWidget *pixmap, Document &doc)
+int SquareMethod::endMoving(const QWidget *pixmap, Document &doc)
 {
     QPoint middle;
     const auto ref = doc.getPointFirstPage();
@@ -437,6 +432,9 @@ void SquareMethod::endMoving(const QWidget *pixmap, Document &doc)
     WDebug(debugSquare, flag << middle );
 
     this->_property->Show(middle, flag);
+
+    /* for now we say multiple page has changed */
+    return -2;
 }
 
 void SquareMethod::actionProperty(property_control::ActionProperty action)
@@ -523,7 +521,7 @@ static void square_draw_square(
     const QPointF BR = data.adjustPointReverce(br);
     constexpr const auto debugDraw = true;
 
-    WDebug(debugSquare && debugDraw, tl << br << TL << BR);
+    WDebug(debugSquare and debugDraw, tl << br << TL << BR);
 
     painter.drawRect(QRectF(TL, BR));
 }
@@ -537,7 +535,7 @@ void SquareMethod::needReload(QPainter &painter, const Document &doc)
         }
     }
 
-    if(_need_reload){
+    if (_need_reload) {
         const auto zoom = doc.getZoom();
         WDebug(debugSquare, "__need_reload = true");
 
@@ -546,7 +544,7 @@ void SquareMethod::needReload(QPainter &painter, const Document &doc)
             const int len = doc.lengthPage();
             const QSize size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
 
-            W_ASSERT(size.height() >= 0 && size.width() >= 0);
+            W_ASSERT(size.height() >= 0 and size.width() >= 0);
             WDebug(debugSquare, "in_box");
 
             singleLoad(painter, _img, size, point,
@@ -558,11 +556,6 @@ void SquareMethod::needReload(QPainter &painter, const Document &doc)
     }
 }
 
-bool SquareMethod::somethingInBox() const
-{
-    return this->_in_box;
-}
-
 void SquareMethod::updatePoint(const QPointF &puntofine, const Document &doc)
 {
     WDebug(debugSquare, "call");
@@ -570,28 +563,26 @@ void SquareMethod::updatePoint(const QPointF &puntofine, const Document &doc)
 
     _pointfine = doc.adjustPoint(puntofine);
 
-    W_ASSERT(_pointfine.x() >= 0.0 && _pointinit.y() >= 0.0);
+    W_ASSERT(_pointfine.x() >= 0.0 and _pointinit.y() >= 0.0);
 
     _pointfine = true;
 
     _need_reload = true;
 }
 
-void SquareMethod::initPoint(const QPointF &point, const Document &doc)
+void SquareMethod::initPointSearch(const QPointF &point, const Document &doc)
 {
-    QPointF new_point;
-    QRectF rect(_pointinit, _pointfine);
     WDebug(debugSquare, "call");
 
-    new_point = doc.adjustPoint(point);
+    W_ASSERT(!somethingInBox());
 
-    _lastpoint = PointSettable(point, true);
+    _pointinit = doc.adjustPoint(point);
+    W_ASSERT(_pointinit.x() >= 0.0 && _pointinit.y() >= 0.0);
+    _pointinit.setSet(true);
 
-    WDebug(debugSquare, "initPointMove" << rect.topLeft() << rect.bottomRight() << new_point);
+    /* we don't need yet to draw somethings */
+    _need_reload = false;
+    _in_box = false;
 
-    if (!rect.contains(new_point)) {
-        WDebug(debugSquare, "Not in box");
-        this->reset();
-        this->initPoint(point, doc);
-    }
+    this->_property->Hide();
 }

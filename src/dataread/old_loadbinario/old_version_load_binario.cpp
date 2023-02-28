@@ -250,7 +250,7 @@ static int old_which_sheet(
 
     for(counterPage = 0; counterPage < len; counterPage++){
         page = &ListPage.at(counterPage);
-        if(page->currentHeight() >= point.m_y && page->minHeight() <= point.m_y){
+        if(page->currentHeight() >= point.m_y and page->minHeight() <= point.m_y){
             return counterPage;
         }
     }
@@ -341,7 +341,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
                 stroke->setMetadata(tmp.m_posizioneaudio, tmp.m_color);
             }
 
-            for (; counterPoint < ListPrivate.length() &&
+            for (; counterPoint < ListPrivate.length() and
                 ListPrivate.at(counterPoint).idtratto == id;
                 counterPoint ++) {
                 const point_old_ver_7 &tmpRef = ListPrivate.at(counterPoint);

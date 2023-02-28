@@ -13,7 +13,7 @@ void TabletCanvas::paintEvent(QPaintEvent *event)
     QPainter painter;
     QRect pixmapPortion;
 
-    cbool needToCreateNewPage = getDoc()->needToCreateNewSheet() && _sheet->auto_create;
+    cbool needToCreateNewPage = getDoc()->needToCreateNewSheet() and _sheet->auto_create;
 
     static DataPaint dataPaint = {
         .withPdf = true,

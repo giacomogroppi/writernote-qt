@@ -299,7 +299,7 @@ force_inline bool Page::updateFlag(
     double heightSec;
 
     W_ASSERT(zoom >= 0);
-    //W_ASSERT(FirstPoint.x() <= 0.0 && FirstPoint.y() <= 0.0);
+    //W_ASSERT(FirstPoint.x() <= 0.0 and FirstPoint.y() <= 0.0);
     W_ASSERT(heightView >= 0);
 
     heightSec = Page::getHeight() * zoom;

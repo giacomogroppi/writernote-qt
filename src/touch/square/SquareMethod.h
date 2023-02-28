@@ -14,7 +14,7 @@
 class SquareMethod: public Tools, public Scrollable {
 private:
     static constexpr auto debugSquare = false;
-    void endMoving(const QWidget *pixmap, Document &doc);
+    int endMoving(const QWidget *pixmap, Document &doc);
 
     void move(const QPointF &punto, Document &doc);
 
@@ -33,13 +33,13 @@ public:
     /* definizione per i punti di spostamento */
     PointSettable _lastpoint;
 
-    void initPoint(const QPointF &point, const Document &doc);
-    void initPointMove(const QPointF &point, const Document &doc);
-
     void translate(const QPointF &point) final;
     void changeInstrument();
 
 private:
+    void initPointSearch(const QPointF &point, const Document &doc);
+    void initPointMove(const QPointF &point, const Document &doc);
+
     void findObjectToDrawImg(Document &doc);
     void findObjectToDraw(const QList<QVector<int> > &index, Document &doc);
     void initImg(const Document &doc);
@@ -109,4 +109,9 @@ inline void SquareMethod::changeInstrument()
 {
     this->reset();
     this->_property->Hide();
+}
+
+force_inline bool SquareMethod::somethingInBox() const
+{
+    return this->_in_box;
 }

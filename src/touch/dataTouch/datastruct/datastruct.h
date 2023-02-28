@@ -387,11 +387,11 @@ force_inline bool datastruct::isOkTranslate(const QPointF &point, cbool isZoom) 
     const auto y = _pointFirstPage.y();
 
     if(!isZoom){
-        return  x + point.x() <= 0. &&
+        return  x + point.x() <= 0. and
                 y + point.y() <= 0.;
     }
 
-    return x + point.x() / _zoom <= 0. &&
+    return x + point.x() / _zoom <= 0. and
            y + point.y() / _zoom <= 0.;
 }
 
@@ -461,7 +461,7 @@ inline int datastruct::whichPage(const QPointF &point) const
         int k;
         for(k = 0; k < len; k++){
             const Page &page = at(k);
-            if(page.currentHeight() >= point.y() && page.minHeight() <= point.y()){
+            if(page.currentHeight() >= point.y() and page.minHeight() <= point.y()){
                 return i;
             }
         }

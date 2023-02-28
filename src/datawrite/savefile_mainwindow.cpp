@@ -66,7 +66,7 @@ void MainWindow::on_actionSave_File_triggered()
 
     check = (savefile_i.savefile_check_file(true) == OK);
 
-    if(!check && c)
+    if(!check and c)
         return dialog_critic("We had a problem while saving the file");
 
     c = true;

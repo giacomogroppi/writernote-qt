@@ -42,7 +42,7 @@ QByteArray get_path(path::e_path var)
     }
 
     if(var == path::tmp_file_not_save){
-        if(!createTempFolder(tmp))
+        if (!createTempFolder(tmp))
             return "";
         return tmp;
     }
@@ -69,15 +69,7 @@ static bool createTempFolder(const QString &path){
  * the function does not check if the
  * folder to save the audio exists
 */
-QString get_path_no_controll(){
+QString get_path_no_controll()
+{
     return get_path_application::exe();
-
-    /*QString tmp = getenv(POS_HOME);
-    const char slash = slash::__slash();
-
-    tmp += slash;
-    tmp += FOLDERNAME;
-
-    tmp += slash;
-    return tmp;*/
 }

@@ -116,7 +116,7 @@ bool StrokeCircle::is_inside(const QRectF &area, double precision) const
     internal += isInternal(dist3, precision);
     internal += isInternal(dist4, precision);
 
-    return internal && internal < 4;
+    return internal and internal < 4;
 }
 
 void StrokeCircle::append(const point_s &point, pressure_t pressure)

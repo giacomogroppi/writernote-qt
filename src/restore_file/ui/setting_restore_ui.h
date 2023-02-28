@@ -55,8 +55,8 @@ public:
     /* call this function when change copybook or close writernote */
     void changeCopybookFile(){
         if(m_data.remove_file
-                && m_data.temp_file
-                && (*m_path != ""
+                and m_data.temp_file
+                and (*m_path != ""
                 || tmp_path != "")){
             deleteFile();
             tmp_path = "";

@@ -38,7 +38,7 @@ void MainWindow::resFileTmpInTmpFolder()
             goto remove;
 
         if(ref.length() > pos_ext
-                && ref.mid(ref.length() - pos_ext) == qstr("." APP_EXT)){
+                and ref.mid(ref.length() - pos_ext) == qstr("." APP_EXT)){
             count++;
             continue;
         }/*else{
@@ -56,7 +56,7 @@ void MainWindow::resFileTmpInTmpFolder()
     /*
      * the only file in the folder is the current
     */
-    if(count == 1 && __l.first() == m_setting->get_curr_name_tmp()){
+    if(count == 1 and __l.first() == m_setting->get_curr_name_tmp()){
         return;
     }
 

@@ -55,7 +55,7 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second)
 
                 __delta = (double) speed_x;
                 if(cont_scoll(__delta, def_val)
-                        && scroll::x(getDoc(), _pixmap.width(), __delta)){
+                        and scroll::x(getDoc(), _pixmap.width(), __delta)){
                     _ismoving.setSet(true);
                 }
 
@@ -63,7 +63,7 @@ void TabletCanvas::scrollKinetic(QPointF first, QPointF second)
 
                 __delta = (double) speed_y;
                 if(cont_scoll(__delta, def_val)
-                        && scroll::y(getDoc(), _pixmap.height(), __delta)){
+                        and scroll::y(getDoc(), _pixmap.height(), __delta)){
                     _ismoving.setSet(true);
                 }
 

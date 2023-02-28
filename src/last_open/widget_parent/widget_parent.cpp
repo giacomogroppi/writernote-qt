@@ -23,7 +23,7 @@ widget_parent::widget_parent(QWidget *parent, last_file *ref, cbool showOnlyName
     this->parent = parent_sec;
     ui->setupUi(this);
 
-    for(i=0; i < len && i < __num; ++i){
+    for(i=0; i < len and i < __num; ++i){
         WNew(el, element_ui, (nullptr, &m_last_file->at(i), showOnlyName, i, __showFileOnlyIfExist));
 
         if(el->needToDelete){
@@ -82,8 +82,8 @@ void widget_parent::updateList()
     last_width = width_all;
 
     this->clean();
-    for(i=0; count < len_list && i < len_list; ++i){
-        for(k=0; k<len && count < len_list; ++k){
+    for(i=0; count < len_list and i < len_list; ++i){
+        for(k=0; k<len and count < len_list; ++k){
             this->ui->gridLayout->addWidget(m_element.operator[](i*len+k), i, k);
             count ++;
         }

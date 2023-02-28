@@ -5,7 +5,7 @@ merge_currenttitle::n_merge merge_currenttitle::controll(
         Document *first,
         Document *second)
 {
-    if(first->se_registato != Document::not_record && second->se_registato != Document::not_record)
+    if(first->se_registato != Document::not_record and second->se_registato != Document::not_record)
         return audio_same;
 
     return n_merge::ok;

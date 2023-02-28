@@ -37,7 +37,7 @@ static bool checkExtention(const QString &fileName)
 {
 //#if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE))
     // check if the file exist
-    if(fileName.indexOf(APP_EXT) != -1 && fileName.indexOf(".pdf") != -1){
+    if(fileName.indexOf(APP_EXT) != -1 and fileName.indexOf(".pdf") != -1){
         if(!areyousure(QApplication::tr("Error"), QApplication::tr("The file does not have the writernote extension, or a pdf extention, do you want to open it anyway?"))){
             return false;
         }
@@ -82,7 +82,7 @@ void MainWindow::openFile(const char *pos)
         return;
 
     // restore lost file
-    if(fileName.indexOf(".pdf") != -1 && fileLost::exe(fileName)){
+    if(fileName.indexOf(".pdf") != -1 and fileLost::exe(fileName)){
         if(areyousure(QApplication::tr("Restore file"), QApplication::tr("Maybe the last time you opened this file the app closed suddenly, do you want to restore the file?"))){
 
             if(restore_file_critic::restore_file(fileName)){

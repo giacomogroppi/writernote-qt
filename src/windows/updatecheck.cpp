@@ -31,7 +31,7 @@ static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, con
 
     bool find = false;
 
-    for(i=0, len = temp_2.length(); i<len && doc[i][POSNAME].toString() != c_ver; i++){
+    for(i=0, len = temp_2.length(); i<len and doc[i][POSNAME].toString() != c_ver; i++){
         if(doc[i][POSNAME].toString().indexOf(critical) != -1)
             return updatecheck::critical;
 
@@ -102,8 +102,8 @@ void updatecheck::managerFinished()
 
     testo = doc[0][POSNAME].toString();
 
-    if(VERSION_STRING != testo && testo.toUpper() != "TESTING"
-            && QString(VERSION_STRING).toUpper() != "TESTING"){
+    if(VERSION_STRING != testo and testo.toUpper() != "TESTING"
+            and QString(VERSION_STRING).toUpper() != "TESTING"){
         auto res = priority(doc, testo, VERSION_STRING);
 
         if(res == n_priority::critical){

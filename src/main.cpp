@@ -54,11 +54,11 @@ int main(int argc, char **argv)
 
     test();
 
-    if(argc == 5 && !strcmp(argv[1], COMMAND_EXTRACT)){
+    if(argc == 5 and !strcmp(argv[1], COMMAND_EXTRACT)){
         return extract_(argv[2], argv[3]);
     }
 
-    if(argc != 1 && !strcmp(argv[1], "--help")){
+    if(argc != 1 and !strcmp(argv[1], "--help")){
         printf(HELP_COMMAND);
         return 0;
     }

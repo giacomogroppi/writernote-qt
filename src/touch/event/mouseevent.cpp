@@ -68,7 +68,7 @@ void TabletCanvas::mouseMoveEvent(QMouseEvent *event)
     }
 
 #if defined(WIN32) || defined(WIN64)
-    if(this->isdrawing && m_deviceDown)
+    if(this->isdrawing and m_deviceDown)
         return;
 #endif
 
@@ -116,7 +116,7 @@ void TabletCanvas::mouseReleaseEvent(QMouseEvent *event)
     event->accept();
 
     if(m_scrolling_speed_enable
-            && __last_point_move.isSet()){
+            and __last_point_move.isSet()){
         scrollKinetic(__last_point_move, _lastpointtouch);
     }
 

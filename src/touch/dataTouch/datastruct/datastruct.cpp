@@ -156,7 +156,7 @@ void datastruct::adjustWidth(cdouble width, QPointF& translatoTo)
     bool not_used f;
     cdouble x = point.x();
 
-    if(x < 0. && biggerX <= width){
+    if(x < 0. and biggerX <= width){
         translatoTo.setX(width - biggerX);
         f = true;
         if(!isOkTranslate(translatoTo, true)){
@@ -293,7 +293,7 @@ void datastruct::removePage(const int pageIndex)
     int i, len;
     len = this->lengthPage();
 
-    W_ASSERT(pageIndex >= 0 && pageIndex < len);
+    W_ASSERT(pageIndex >= 0 and pageIndex < len);
 
     this->_page.removeAt(pageIndex);
 

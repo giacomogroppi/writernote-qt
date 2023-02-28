@@ -121,7 +121,7 @@ void ChoosePage::on_pushButton_down_clicked()
     MainWindow *main = (MainWindow *)parent();
     int maxPage = main->_canvas->getDoc()->lengthPage();
 
-    if(this->_curr >= 0 && _curr + 1 <= maxPage ){
+    if(this->_curr >= 0 and _curr + 1 <= maxPage ){
         _curr ++;
         ui->plainTextEdit->setPlainText(QString::number(_curr));
         this->on_pushButton_apply_clicked();

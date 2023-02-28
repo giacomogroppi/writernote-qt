@@ -4,17 +4,13 @@
 #include <QString>
 #include <QStandardPaths>
 
-class get_path_application
+namespace get_path_application
 {
-public:
-    /*
+    /**
      * this function return a writable position for writernote
     */
-    static QString exe();
+    inline QString exe()
+    {
+        return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    }
 };
-
-inline QString get_path_application::exe()
-{
-     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-}
-

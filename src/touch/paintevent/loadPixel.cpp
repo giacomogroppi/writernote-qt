@@ -40,7 +40,7 @@ static void draw_for_audio(const Document &doc, DataPaint &dataPoint)
     const qint64 m_pos_ris      = (is_play) ?
                                         (dataPoint.parent->m_audioplayer->getPositionSecond()) :
                                          -1;
-    if(un(is_play && !dataPoint.IsExportingPdf)){
+    if(un(is_play and !dataPoint.IsExportingPdf)){
         // the idea is to trigger this view only when
         // the second has change
         if(likely(last_m_pos_ris != m_pos_ris)){
@@ -105,7 +105,7 @@ void TabletCanvas::load(QPainter &painter,
     for(; counterPage < lenPage; counterPage ++){
         const Page &page = data.at(counterPage);
 
-        if(!page.isVisible() && likely(!dataPoint.IsExportingPdf)){
+        if(!page.isVisible() and likely(!dataPoint.IsExportingPdf)){
             WDebug(debugPageImg, __func__ << "Page at index" << counterPage << "not visible: Break");
             continue;
         }

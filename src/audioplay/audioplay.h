@@ -174,7 +174,7 @@ inline void audioplay::play()
 
     this->player->play();
 
-    if (WCommonScript::debug_enable() && !isPlay()){
+    if (WCommonScript::debug_enable() and !isPlay()){
         qDebug() << "Player not playing: ";
         abort();
     }

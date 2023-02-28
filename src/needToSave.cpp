@@ -34,7 +34,7 @@ enum MainWindow::n_need_save
 
     check1 = xml.loadfile(false, false);
 
-    if(check1 != ERROR_VERSION_NEW && check1 != OK && check1 != ERROR_CONTROLL){
+    if(check1 != ERROR_VERSION_NEW and check1 != OK and check1 != ERROR_CONTROLL){
         WDebug(debugNeedSave, qstr("Not possibile to load file in %1").arg(xml.getPath()));
         return n_need_save::unable_load;
     }

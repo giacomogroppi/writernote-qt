@@ -12,7 +12,7 @@ void MainWindow::contrUi(){
     cbool is_play =        this->m_audioplayer->isPlay();
 
     ui->pause_rec->setEnabled(is_recording);
-    ui->start_rec->setEnabled(!already_rec && !is_pause_rec && !is_recording);
+    ui->start_rec->setEnabled(!already_rec and !is_pause_rec and !is_recording);
     ui->stop_rec->setEnabled(is_recording);
 
     ui->start_play->setHidden(!is_play);

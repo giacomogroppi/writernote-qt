@@ -36,7 +36,7 @@ bool text_widgets::isIn(const QPointF &point)
     y = point.y();
 
     for(i = 0; i < len; i++)
-        if(m_list.at(i).x < x && m_list.at(i).y > y)
+        if(m_list.at(i).x < x and m_list.at(i).y > y)
             return true;
 
 

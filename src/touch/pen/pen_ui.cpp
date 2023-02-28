@@ -65,7 +65,7 @@ void pen_ui::list_update(){
     ui->slider_size->setSliderPosition(currentSize);
     ui->slider_size->setEnabled(spessore);
 
-    if(same_data && m_highlighter){
+    if(same_data and m_highlighter){
         this->m_highlighter->updateList();
     }
 }
