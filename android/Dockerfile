@@ -52,8 +52,8 @@ RUN find / -name "sdkmanager" && echo ""
 
 ENV SDK_VERSION=31
 
-RUN sdkmanager "ndk;23.1.7779620" \
-    && sdkmanager "platforms;android-${SDK_VERSION}" "platform-tools" "build-tools;${SDK_VERSION}.0.0"
+RUN sdkmanager "ndk;23.1.7779620"
+RUN sdkmanager "platforms;android-${SDK_VERSION}" "platform-tools" "build-tools;${SDK_VERSION}.0.0"
 
 # Imposta variabili d'ambiente per Qt
 ENV QT_VERSION=6.3.0
@@ -91,6 +91,8 @@ ENV CMAKE_C_COMPILER=${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/c
 RUN git clone -b v${QT_VERSION} https://code.qt.io/qt/qt5.git ${QT_POSITION} \
     && cd ${QT_POSITION} \
     && perl init-repository --module-subset=qtbase,qtsvg,qtmultimedia,qtshadertools
+
+RUN sdkmanager "platforms;android-${SDK_VERSION}"
 
 #build & install qt
 RUN cd ${QT_POSITION} \
