@@ -35,4 +35,5 @@ writernote_*.snap
 3rdparty/libpng
 3rdparty/openjpeg
 3rdparty/openjpeg.tar.gz
-.DS_Store
+*.DS_Store
+android/android/.gradle/

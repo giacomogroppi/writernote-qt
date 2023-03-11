@@ -184,7 +184,7 @@ inline void Stroke::setFlag(unsigned char type, bool value) const
     auto &f = (uchar &) _flag;
     if (value) {
         f |= type;
-    }else{
+    } else {
         f &= ~type;
     }
 }

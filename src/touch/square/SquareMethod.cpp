@@ -433,7 +433,7 @@ int SquareMethod::endMoving(const QWidget *pixmap, Document &doc)
 
     this->_property->Show(middle, flag);
 
-    /* for now we say multiple page has changed */
+    /** for now we say multiple page has changed */
     return -2;
 }
 
@@ -580,7 +580,7 @@ void SquareMethod::initPointSearch(const QPointF &point, const Document &doc)
     W_ASSERT(_pointinit.x() >= 0.0 && _pointinit.y() >= 0.0);
     _pointinit.setSet(true);
 
-    /* we don't need yet to draw somethings */
+    /** we don't need yet to draw somethings */
     _need_reload = false;
     _in_box = false;
 
