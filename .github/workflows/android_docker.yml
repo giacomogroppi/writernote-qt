@@ -1,0 +1,91 @@
+name: Android
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'updater/**'
+      - 'windows/**'
+      - 'macos-build/**'
+      - '!.github/workflows/android.yml'
+
+  pull_request:
+    branches: [ master ]
+
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'macos-build/**'
+      - '!.github/workflows/android.yml'
+
+  release:
+    types:
+      - published
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      QT: "6_4_0"
+      QT_VER: 6.4.0
+      PREFIX_LIB: "/home/runner/work/writernote-qt/writernote-qt/3rdparty"
+      PROJECT_PATH: "/home/runner/work/writernote-qt/writernote-qt/"
+      CACHE_KEY: cache-key-ci
+      ZLIB_VER: "v1.2.11"
+      RESET_CACHE: 'false'
+      SDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/sdk"
+      NDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/ndk"
+      JDK_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/jdk"
+      LIB_JPEG_TURBO: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libjpeg-turbo"
+      LIB_OPENJPEG: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libopenjpeg"
+      QT_PREFIX: "/home/runner/work/writernote-qt/Qt/6.4.0/android_arm64_v8a/"
+      POPPLER_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/poppler"
+      LIBPNG_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/libpng"
+      LIBPNG_MAKEFILE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/makefile.libpng.clang"
+      NSS_PATH: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/nss"
+      PATH_FREETYPE: "/home/runner/work/writernote-qt/writernote-qt/3rdparty/freetype"
+      ANDROID_VERSION: 28
+      armeabi_v7a_pos: "/home/runner/work/writernote-qt/writernote-qt/writernote-armeabi-v7a.apk"
+      arm64_v8a_pos: "/home/runner/work/writernote-qt/writernote-qt/writernote-arm64-v8a.apk"
+      x86_64_pos: "/home/runner/work/writernote-qt/writernote-qt/writernote-x86_64.apk"
+      x86_pos: "/home/runner/work/writernote-qt/writernote-qt/writernote-x86.apk"
+      TOOLCHAIN: "clang"
+    steps:
+      - name: "Clone"
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Build with docker
+        uses: docker/build-push-action@v4
+        with:
+          context: android/
+          file: ./Dockerfile
+          push: false
+      
+      - name: Upload file
+        if: github.event_name == 'release'
+        env:
+          GITHUB_TOKEN: ${{secrets.BOT_TOKEN}}
+        run: |
+          export VERSION=$(git describe --tags --abbrev=0)
+          export NAME_UP_ARM64=writernote-$VERSION-arm64-v8a.apk
+          
+          mkdir artifact
+          mv $arm64_v8a_pos artifact/$NAME_UP_ARM64
+
+          echo "ARTIFACT_NAME=$NAME_UP_ARM64" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@master
+        name: Upload artifact.
+        if: github.event_name == 'release'
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: artifact/

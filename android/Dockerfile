@@ -112,3 +112,31 @@ RUN cd ${QT_POSITION} \
         -DQT_HOST_PATH=${QT_PLAT_INSTALLATION} \
     && cmake --build . --parallel \
     && cmake --install .
+
+ENV LIBZIP_PATH=/opt/libzip
+ENV LIBZIP_INSTALL=${LIBZIP_PATH}/install
+ENV LIBZIP_BUILD=${LIBZIP_PATH}/build
+ENV ANDROID_TARGET_PLATFORM=arm64-v8a
+
+# build libzip
+RUN git clone -b v1.7.3 https://github.com/nih-at/libzip ${LIBZIP_PATH} \
+    && cd ${LIBZIP_PATH} \
+    && cmake . \
+        -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
+		-DCMAKE_INSTALL_PREFIX:PATH=../../${LIBZIP_INSTALL}/${ANDROID_TARGET_PLATFORM} \
+		-DANDROID_ABI=${ANDROID_TARGET_PLATFORM} \
+		-DENABLE_OPENSSL:BOOL=OFF \
+		-DENABLE_COMMONCRYPTO:BOOL=OFF \
+		-DENABLE_GNUTLS:BOOL=OFF \
+		-DENABLE_MBEDTLS:BOOL=OFF \
+		-DENABLE_OPENSSL:BOOL=OFF \
+		-DENABLE_WINDOWS_CRYPTO:BOOL=OFF \
+		-DBUILD_TOOLS:BOOL=OFF \
+		-DBUILD_REGRESS:BOOL=OFF \
+		-DBUILD_EXAMPLES:BOOL=OFF \
+		-DBUILD_SHARED_LIBS:BOOL=$want_shared \
+		-DBUILD_DOC:BOOL=OFF \
+		-DANDROID_TOOLCHAIN=clang \
+        && cmake -B${LIBZIP_BUILD} \
+        && cd ${LIBZIP_BUILD} \
+        && make install -j$(nproc --all)
