@@ -56,7 +56,7 @@ RUN sdkmanager "ndk;23.1.7779620"
 RUN sdkmanager "platforms;android-${SDK_VERSION}" "platform-tools" "build-tools;${SDK_VERSION}.0.0"
 
 # Imposta variabili d'ambiente per Qt
-ENV QT_VERSION=6.3.0
+ENV QT_VERSION=6.2.0
 ENV QT_PATH=/opt/Qt${QT_VERSION}
 ENV QT_DIR=${QT_PATH}/${QT_VERSION}/gcc_64
 ENV QT_POSITION=${HOME}qt_tmp
@@ -93,6 +93,7 @@ RUN git clone -b v${QT_VERSION} https://code.qt.io/qt/qt5.git ${QT_POSITION} \
     && perl init-repository --module-subset=qtbase,qtsvg,qtmultimedia,qtshadertools
 
 RUN sdkmanager "platforms;android-${SDK_VERSION}"
+ENV ANDROID_TARGET_PLATFORM=arm64-v8a
 
 #build & install qt
 RUN cd ${QT_POSITION} \
@@ -104,10 +105,8 @@ RUN cd ${QT_POSITION} \
         -DCMAKE_ANDROID_NDK=${ANDROID_NDK_ROOT} \
         -DANDROID_SDK_ROOT=${ANDROID_SDK_ROOT} \
         -DCMAKE_ANDROID_NDK=${ANDROID_NDK_ROOT} \
-        -DANDROID_ABI=arm64-v8a \
+        -DANDROID_ABI=${ANDROID_TARGET_PLATFORM} \
         -DANDROID_PLATFORM=${SDK_VERSION} \
-        -DCMAKE_CXX_COMPILER=${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/clang++ \
-        -DCC=${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/clang \
         -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
         -DQT_HOST_PATH=${QT_PLAT_INSTALLATION} \
     && cmake --build . --parallel \
@@ -116,7 +115,7 @@ RUN cd ${QT_POSITION} \
 ENV LIBZIP_PATH=/opt/libzip
 ENV LIBZIP_INSTALL=${LIBZIP_PATH}/install
 ENV LIBZIP_BUILD=${LIBZIP_PATH}/build
-ENV ANDROID_TARGET_PLATFORM=arm64-v8a
+
 
 # build libzip
 RUN git clone -b v1.7.3 https://github.com/nih-at/libzip ${LIBZIP_PATH} \
@@ -136,10 +135,11 @@ RUN git clone -b v1.7.3 https://github.com/nih-at/libzip ${LIBZIP_PATH} \
 		-DBUILD_EXAMPLES:BOOL=OFF \
 		-DBUILD_SHARED_LIBS:BOOL=FALSE \
 		-DBUILD_DOC:BOOL=OFF \
+        -DANDROID_PLATFORM=${SDK_VERSION} \
 		-DANDROID_TOOLCHAIN=clang \
-        && cmake -B${LIBZIP_BUILD} \
-        && cd ${LIBZIP_BUILD} \
-        && make install -j$(nproc --all)
+    && cmake -B${LIBZIP_BUILD} \
+    && cd ${LIBZIP_BUILD} \
+    && make install -j$(nproc --all)
 
 
 ENV FREETYPE_PATH=/opt/freetype
@@ -149,31 +149,65 @@ ENV FREETYPE_BUILD=${FREETYPE_PATH}/build
 # freetype
 RUN apt -y install wget
 RUN wget https://download.savannah.gnu.org/releases/freetype/freetype-2.13.0.tar.gz \
-    && mv freetype-2.13.0.tar.gz freetype.tar.gz \
-    && tar -xvzf freetype.tar.gz \
-    && cd freetype-2.13.0 \
+    && tar -xvzf freetype-2.13.0.tar.gz \
+    && mv freetype-2.13.0 ${FREETYPE_PATH} \
+    && cd ${FREETYPE_PATH} \
     && cmake . \
+        -G Ninja \
+        -B ${FREETYPE_BUILD} \
         -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
-        -DCMAKE_INSTALL_PREFIX:PATH=${FREETYPE_INSTALL} \
+        -DCMAKE_INSTALL_PREFIX=${FREETYPE_INSTALL} \
         -DANDROID_ABI=${ANDROID_TARGET_PLATFORM} \
         -DBUILD_SHARED_LIBS=FALSE \
         -DANDROID_TOOLCHAIN=clang \
-    && cmake --build ${FREETYPE_BUILD} --parallel \
-    && cmake --install ${FREETYPE_INSTALL}
+        -DANDROID_PLATFORM=${SDK_VERSION} \
+    && cd ${FREETYPE_BUILD} \
+    && ninja \
+    && ninja install
 
+ENV OPENJPEG_PATH=/opt/openjpeg
+ENV OPENJPEG_INSTALL=${OPENJPEG_PATH}/install
+ENV OPENJPEG_BUILD=${OPENJPEG_PATH}/build
+
+RUN git clone -b v2.5.0 https://github.com/uclouvain/openjpeg ${OPENJPEG_PATH} \
+    && cd ${OPENJPEG_PATH} \
+    && cmake . \
+        -G Ninja \
+        -B ${OPENJPEG_BUILD} \
+        -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
+        -DCMAKE_INSTALL_PREFIX=${OPENJPEG_INSTALL} \
+        -DANDROID_ABI=${ANDROID_TARGET_PLATFORM} \
+        -DBUILD_SHARED_LIBS=FALSE \
+        -DANDROID_TOOLCHAIN=clang \
+        -DANDROID_PLATFORM=${SDK_VERSION} \
+    && cd ${OPENJPEG_BUILD} \
+    && ninja \
+    && ninja install
 
 ENV POPPLER_BUILD=${POPPLER_PATH}/build
 ENV POPPLER_INSTALL=${POPPLER_PATH}/install
 ENV POPPLER_PATH=/opt/poppler
 
 # build poppler
-RUN git clone -b poppler-22.12.0 https://github.com/freedesktop/poppler ${POPPLER_PATH} \
+RUN git clone -b poppler-23.03.0 https://gitlab.freedesktop.org/poppler/poppler ${POPPLER_PATH} \
     && cd ${POPPLER_PATH} \
+    && export Qt6_DIR=${QT_PATH}/lib/cmake/Qt6 \
     && cmake . \
+        -G Ninja \
+        -B ${POPPLER_BUILD} \
         -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
         -DCMAKE_INSTALL_PREFIX:PATH=${POPPLER_INSTALL} \
         -DANDROID_ABI=${ANDROID_TARGET_PLATFORM} \
         -DBUILD_SHARED_LIBS=FALSE \
+        -DANDROID_PLATFORM=${SDK_VERSION} \
         -DANDROID_TOOLCHAIN=clang \
-    && cmake --build ${POPPLER_BUILD} --parallel \
-    && cmake --install ${POPPLER_INSTALL}
+        -DFREETYPE_LIBRARY=${FREETYPE_INSTALL}/lib/libfreetype.a \
+        -DFREETYPE_INCLUDE_DIRS=${FREETYPE_INSTALL}/include/freetype2 \
+        -DENABLE_DCTDECODER=unmaintained \
+        -DENABLE_BOOST=OFF \
+        -DOpenJPEG_DIR=${OPENJPEG_INSTALL}/lib/openjpeg-2.5/ \
+        -DENABLE_QT6=OFF \
+        -DENABLE_QT5=OFF \
+    && cd ${POPPLER_BUILD} \
+    && ninja \
+    && ninja install
