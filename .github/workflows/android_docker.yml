@@ -1,4 +1,4 @@
-name: Android
+name: Android docker
 
 on:
   push:
@@ -66,8 +66,8 @@ jobs:
       - name: Build with docker
         uses: docker/build-push-action@v4
         with:
-          context: android/
-          file: ./Dockerfile
+          context: ./
+          file: android/Dockerfile
           push: false
       
       - name: Upload file
