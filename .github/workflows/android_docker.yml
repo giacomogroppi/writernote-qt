@@ -10,7 +10,7 @@ on:
       - 'updater/**'
       - 'windows/**'
       - 'macos-build/**'
-      - '!.github/workflows/android.yml'
+      - '!.github/workflows/android_docker.yml'
 
   pull_request:
     branches: [ master ]
@@ -20,7 +20,7 @@ on:
       - 'LICENSE'
       - '.github/**'
       - 'macos-build/**'
-      - '!.github/workflows/android.yml'
+      - '!.github/workflows/android_docker.yml'
 
   release:
     types:
