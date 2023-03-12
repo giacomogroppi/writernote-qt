@@ -134,9 +134,46 @@ RUN git clone -b v1.7.3 https://github.com/nih-at/libzip ${LIBZIP_PATH} \
 		-DBUILD_TOOLS:BOOL=OFF \
 		-DBUILD_REGRESS:BOOL=OFF \
 		-DBUILD_EXAMPLES:BOOL=OFF \
-		-DBUILD_SHARED_LIBS:BOOL=$want_shared \
+		-DBUILD_SHARED_LIBS:BOOL=FALSE \
 		-DBUILD_DOC:BOOL=OFF \
 		-DANDROID_TOOLCHAIN=clang \
         && cmake -B${LIBZIP_BUILD} \
         && cd ${LIBZIP_BUILD} \
         && make install -j$(nproc --all)
+
+
+ENV FREETYPE_PATH=/opt/freetype
+ENV FREETYPE_INSTALL=${FREETYPE_PATH}/install
+ENV FREETYPE_BUILD=${FREETYPE_PATH}/build
+
+# freetype
+RUN apt -y install wget
+RUN wget https://download.savannah.gnu.org/releases/freetype/freetype-2.13.0.tar.gz \
+    && mv freetype-2.13.0.tar.gz freetype.tar.gz \
+    && tar -xvzf freetype.tar.gz \
+    && cd freetype-2.13.0 \
+    && cmake . \
+        -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
+        -DCMAKE_INSTALL_PREFIX:PATH=${FREETYPE_INSTALL} \
+        -DANDROID_ABI=${ANDROID_TARGET_PLATFORM} \
+        -DBUILD_SHARED_LIBS=FALSE \
+        -DANDROID_TOOLCHAIN=clang \
+    && cmake --build ${FREETYPE_BUILD} --parallel \
+    && cmake --install ${FREETYPE_INSTALL}
+
+
+ENV POPPLER_BUILD=${POPPLER_PATH}/build
+ENV POPPLER_INSTALL=${POPPLER_PATH}/install
+ENV POPPLER_PATH=/opt/poppler
+
+# build poppler
+RUN git clone -b poppler-22.12.0 https://github.com/freedesktop/poppler ${POPPLER_PATH} \
+    && cd ${POPPLER_PATH} \
+    && cmake . \
+        -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake \
+        -DCMAKE_INSTALL_PREFIX:PATH=${POPPLER_INSTALL} \
+        -DANDROID_ABI=${ANDROID_TARGET_PLATFORM} \
+        -DBUILD_SHARED_LIBS=FALSE \
+        -DANDROID_TOOLCHAIN=clang \
+    && cmake --build ${POPPLER_BUILD} --parallel \
+    && cmake --install ${POPPLER_INSTALL}
