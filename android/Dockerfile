@@ -56,7 +56,7 @@ RUN sdkmanager "ndk;23.1.7779620"
 RUN sdkmanager "platforms;android-${SDK_VERSION}" "platform-tools" "build-tools;${SDK_VERSION}.0.0"
 
 # Imposta variabili d'ambiente per Qt
-ENV QT_VERSION=6.2.0
+ENV QT_VERSION=6.4.2
 ENV QT_PATH=/opt/Qt${QT_VERSION}
 ENV QT_DIR=${QT_PATH}/${QT_VERSION}/gcc_64
 ENV QT_POSITION=${HOME}qt_tmp
