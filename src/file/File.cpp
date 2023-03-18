@@ -2,6 +2,9 @@
 #include <utility>
 #include "utils/WCommonScript.h"
 #include "utils/slash/slash.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <QFile>
 
 File::File(const QByteArray &name)
     : _name(name)
@@ -9,9 +12,22 @@ File::File(const QByteArray &name)
     W_ASSERT(!name.contains(slash::__slash()));
 }
 
-const QByteArray &File::getName() const
+const QByteArray &File::getFullName() const
 {
     return this->_name;
+}
+
+QByteArray File::getName() const
+{
+    QByteArray ret {};
+    for (const auto c : qAsConst(this->_name)) {
+        if (c == '.') {
+            return ret;
+        }
+        ret.append(c);
+    }
+    W_ASSERT(0);
+    return {};
 }
 
 QByteArray File::getExtension() const
@@ -31,4 +47,24 @@ QByteArray File::getExtension() const
 
     W_ASSERT(0);
     return {};
+}
+
+bool File::createFile(const QByteArray &position)
+{
+    W_ASSERT(position.count('.') == 1);
+    W_ASSERT(position.indexOf('.') + 1 < position.size());
+    QFile file(position);
+
+    /** file already exists */
+    if (file.open(QFile::ReadOnly)) {
+        return false;
+    }
+
+    /** we were unable to open the file in writemode*/
+    if (!file.open(QFile::WriteOnly)) {
+        return false;
+    }
+
+    file.close();
+    return true;
 }

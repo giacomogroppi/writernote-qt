@@ -17,7 +17,19 @@ public:
     explicit File(const QByteArray &name);
     ~File() = default;
 
-    const QByteArray &getName() const;
+    /**
+     * requires true
+     * ensures
+     *  getName().size() + getExtension().size() == \result.size() &&
+     *  (\forall int i; i >= 0 && i < getName().size();
+     *      \result.at(i) == getName().at(i)
+     *  ) &&
+     *  (\forall int i; i >= 0 && i < getExtension().size();
+     *      getExtension().at(i) == \result.at(i + getName().size())
+     *  )
+    */
+    const QByteArray &getFullName() const;
+    QByteArray getName() const;
 
     /**
      * requires true
@@ -27,6 +39,14 @@ public:
      *  !\result.contains('/')
     */
     QByteArray getExtension() const;
+
+    /**
+     * requires
+     *  position.count('.') == 1 &&
+     *  position.contains('.') &&
+     *  position.lastIndexOf('.') + 1 < position.size()
+    */
+    static bool createFile(const QByteArray &position);
 };
 
 

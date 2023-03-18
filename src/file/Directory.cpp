@@ -14,6 +14,17 @@ const QList<File> &Directory::getFiles() const
     return this->_files;
 }
 
+bool Directory::addFiles(const QByteArray &position)
+{
+    if (!File::createFile(position)) {
+        return false;
+    }
+
+    this->_files.append(File(position));
+
+    return true;
+}
+
 QList<File> Directory::getAllFile(const QByteArray &path)
 {
     QList<File> ret = {};

@@ -16,6 +16,12 @@ public:
     ~Directory();
 
     const QList<File>& getFiles() const;
+
+    /**
+     * requires
+     *  file in position don't exists
+    */
+    bool addFiles(const QByteArray &position);
 };
 
 
