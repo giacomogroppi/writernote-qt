@@ -68,3 +68,16 @@ bool File::createFile(const QByteArray &position)
     file.close();
     return true;
 }
+
+const QDate &File::getLastMod() const
+{
+    qWarning() << "Function not implemented";
+    return QDate();
+}
+
+bool File::operator==(const File &other) const
+{
+    if (this == &other)
+        return true;
+    return this->getFullName() == other.getFullName();
+}

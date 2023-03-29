@@ -2,7 +2,7 @@
 
 #include <QList>
 #include <QByteArray>
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
@@ -14,7 +14,7 @@
 #define CURRENT_VERSION_CURRENT_TITLE 9
 #define MIN_VERSION_CURRENT_TITLE 2
 
-class Document : public datastruct,
+class Document : public DataStruct,
 #ifdef PDFSUPPORT
                  public frompdf,
 #endif // PDFSUPPORT

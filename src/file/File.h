@@ -1,12 +1,13 @@
 #pragma once
 
 #include <QByteArray>
+#include <QDate>
 
 class File {
 private:
     QByteArray _name;
 public:
-    /**
+    /*
      * requires
      *  name.size() > 0 &&
      *  !name.contains('/') &&
@@ -17,7 +18,7 @@ public:
     explicit File(const QByteArray &name);
     ~File() = default;
 
-    /**
+    /*
      * requires true
      * ensures
      *  getName().size() + getExtension().size() == \result.size() &&
@@ -31,7 +32,7 @@ public:
     const QByteArray &getFullName() const;
     QByteArray getName() const;
 
-    /**
+    /*
      * requires true
      * ensures
      *  \result.size() >= 0 &&
@@ -40,13 +41,15 @@ public:
     */
     QByteArray getExtension() const;
 
-    /**
+    /*
      * requires
      *  position.count('.') == 1 &&
      *  position.contains('.') &&
      *  position.lastIndexOf('.') + 1 < position.size()
     */
     static bool createFile(const QByteArray &position);
+    const QDate &getLastMod() const;
+    bool operator==(const File &other) const;
 };
 
 

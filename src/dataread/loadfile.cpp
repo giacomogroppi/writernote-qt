@@ -159,7 +159,6 @@ uchar xmlstruct::controllOldVersion(zip_t *file)
     return 1;
 }
 
-#ifdef ALL_VERSION
 int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg)
 {
     int err;
@@ -196,7 +195,6 @@ int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool 
 
     return err;
 }
-#endif
 
 int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
 {
@@ -226,14 +224,10 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     static_assert(CURRENT_VERSION_CURRENT_TITLE == 9);
 
     switch (tmp_ver) {
-#ifdef ALL_VERSION
     case 0 ... CURRENT_VERSION_CURRENT_TITLE - 1:
         err = xmlstruct_read_file_old(tmp_ver, zip, LoadPdf, LoadImg);
         break;
-#else
-    case 0 ... (CURRENT_VERSION_CURRENT_TITLE - 1):
-        goto error_version;
-#endif
+
     case CURRENT_VERSION_CURRENT_TITLE:
         err = load_file_9(_doc, zip, LoadPdf, LoadImg);
         break;
@@ -255,10 +249,10 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     /*
      * in case we can not operate with the file because it's too old
     */
-#ifndef ALL_VERSION
+
     error_version:
     return ERROR_VERSION;
-#endif
+
     error_new_version:
     return ERROR_VERSION_NEW;
 }

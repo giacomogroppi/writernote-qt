@@ -1,6 +1,4 @@
 #include "testingcore.h"
-#include "mainwindow.h"
-#include "touch/tabletcanvas.h"
 #include "utils/WCommonScript.h"
 #include "datawrite/savefile.h"
 #include "dataread/xmlstruct.h"
@@ -52,7 +50,7 @@ int TestingCore::createPage(
         y = point.y();
 
         for(k = 0; k < lenPerStroke; k++){
-            point_s point;
+            Point point;
             point._x = x + deltaPerPoint + base_x;
             point._y = y + deltaPerPoint + page::getHeight() + base_y;
 

@@ -23,7 +23,6 @@ public:
     int unlock(int n);
 };
 
-
 #define WMULTIMUTEX_ALREADY_LOCK 1
 force_inline int WMultipleMutex::blockAll()
 {

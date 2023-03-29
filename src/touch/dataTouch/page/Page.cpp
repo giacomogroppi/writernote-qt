@@ -1,14 +1,14 @@
 ﻿#include "Page.h"
 #include "core/core.h"
 #include "log/log_ui/log_ui.h"
-#include "sheet/fast-sheet/fast_sheet_ui.h"
+#include "sheet/style_struct.h"
 #include <QPainter>
 #include <QPainterPath>
 #include "utils/common_error_definition.h"
 #include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
 #include <QPaintDevice>
-#include "page_file.h"
+#include "PageFile.h"
 #include "core/WZipWriterSingle.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 #include "utils/time/current_time.h"
@@ -71,12 +71,12 @@ static inline void drawLineOrizzontal(
         cdouble         &ct_del)
 {
     int i;
-    point_s point;
+    Point point;
 
     W_ASSERT(ct_del > 0);
 
     for(i = 0; i < style.nx; i++){
-        point = point_s(20, last + deltax - 20);
+        point = Point(20, last + deltax - 20);
 
         stroke.append(point, stroke_append_default);
 
@@ -96,13 +96,13 @@ static inline void drawLineVertical(
 {
     const double ct_del = deltay;
     int i;
-    point_s point;
+    Point point;
 
     W_ASSERT(height_p);
     W_ASSERT(ct_del);
 
     for(i = 0; i < style.ny; i++){
-        point = point_s(deltay - 20,
+        point = Point(deltay - 20,
                         last + 20); /* corrisponde to 0 */
 
         stroke.append(point, stroke_append_default);
@@ -222,7 +222,7 @@ std::shared_ptr<Stroke> Page::swap(int index, std::shared_ptr<Stroke> newData)
 
 size_t Page::get_size_in_file(cbool saveImg) const
 {
-    return page_file::size_in_file(*this, saveImg);
+    return PageFile::size_in_file(*this, saveImg);
 }
 
 /* the list should be order */
@@ -574,7 +574,7 @@ void Page::drawSquare(const QRect &rect)
 
     // we need to adjust the rect to our img
     {
-        point_s point1, point2;
+        Point point1, point2;
         PAGE_DRAW_SQUARE_ADJUST(point1, topLeft);
         PAGE_DRAW_SQUARE_ADJUST(point2, bottomRight);
 
@@ -620,7 +620,7 @@ QRect Page::get_size_area(const QList<std::shared_ptr<Stroke> > &item, int from,
 
     for(; from < to; from ++){
         const QRect tmp = item.at(from)->getBiggerPointInStroke();
-        result = datastruct::get_bigger_rect(result, tmp);
+        result = DataStruct::get_bigger_rect(result, tmp);
     }
 
     return result;
@@ -646,7 +646,7 @@ QRect Page::get_size_area(const QVector<int> &pos) const
 
     for(; len >= 0; len --){
         tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
-        result = datastruct::get_bigger_rect(result, tmp);
+        result = DataStruct::get_bigger_rect(result, tmp);
     }
 
     return result;
@@ -697,12 +697,12 @@ void Page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QC
 
 int Page::save(WZipWriterSingle &writer, cbool saveImg) const
 {
-    return page_file::save(this, writer, saveImg);
+    return PageFile::save(this, writer, saveImg);
 }
 
 int Page::load(WZipReaderSingle &reader, int ver_stroke)
 {
-    return page_file::load(*this, ver_stroke, reader);
+    return PageFile::load(*this, ver_stroke, reader);
 }
 
 void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
@@ -713,11 +713,11 @@ void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
 void Page::at_draw_page(
         cint            IndexPoint,
         const QPointF   &translation,
-        point_s         &point,
+        Point         &point,
         const double    zoom) const
 {
     const auto &stroke = get_stroke_page();
-    const point_s &p = stroke._data->_point.at(IndexPoint);
+    const Point &p = stroke._data->_point.at(IndexPoint);
 
     __at_draw_private(p, point, zoom, translation);
 }

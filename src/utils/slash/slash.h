@@ -1,5 +1,6 @@
 #pragma once
 
+#include "QtCore/qsystemdetection.h"
 class slash
 {
 public:
@@ -7,7 +8,7 @@ public:
     {
 #if defined (WIN32) || defined(WIN64) || defined(__OS2__)
         return '\\';
-#elif defined(unix) || defined(MACOS) || defined(IOS_WRITERNOTE)
+#elif defined(unix) || defined(IOS_WRITERNOTE) || defined(Q_OS_MAC)
         return '/';
 #endif
     };

@@ -1,10 +1,10 @@
-#include "datastruct.h"
+#include "DataStruct.h"
 
 /**
  * this function only manage the case in which
  * the first point is positive
 */
-void datastruct::controllForRepositioning(QPointF &translateTo)
+void DataStruct::controllForRepositioning(QPointF &translateTo)
 {
     if (isempty_touch())
         return;
@@ -14,5 +14,5 @@ void datastruct::controllForRepositioning(QPointF &translateTo)
     translateTo.setX((point.x() > 0) ? point.x() : 0.0);
     translateTo.setY((point.y() > 0) ? point.y() : 0.0);
 
-    datastruct::inverso(translateTo);
+    DataStruct::inverso(translateTo);
 }

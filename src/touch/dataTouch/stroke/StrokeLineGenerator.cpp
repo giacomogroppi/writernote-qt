@@ -9,7 +9,7 @@ static struct{
     bool is_vertical;
 } line_data;
 
-void StrokeLineGenerator::is_near_line(cdouble m, double &max, cdouble q, const point_s *point)
+void StrokeLineGenerator::is_near_line(cdouble m, double &max, cdouble q, const Point *point)
 {
     const auto x = point->x();
     const auto y = point->y();
@@ -98,7 +98,7 @@ force_inline void StrokeLineGenerator::model_line_adjust_m(double &m)
 double StrokeLineGenerator::model_near(const StrokePre &stroke)
 {
     int segno_var_x, segno_var_y;
-    const point_s *one, *two;
+    const Point *one, *two;
     const auto &area = stroke.getFirstAndLast();
     auto b = stroke.constBegin();
     const auto e = stroke.constEnd();

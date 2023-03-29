@@ -1,14 +1,12 @@
 #include "dataread/xmlstruct.h"
 #include "datawrite/source_read_ext.h"
+#include "sheet/style_struct.h"
 #include "utils/posizione_binario.h"
 #include "utils/common_error_definition.h"
-#include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "touch/dataTouch/page/Page.h"
 #include "core/WZip.h"
 #include "core/WZipReaderSingle.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
-
-#ifdef ALL_VERSION
 
 /* this is the data struct used for converting to the new format */
 struct point_old_ver_7{
@@ -346,7 +344,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
                 counterPoint ++) {
                 const point_old_ver_7 &tmpRef = ListPrivate.at(counterPoint);
 
-                point_s TmpAppend;
+                Point TmpAppend;
                 TmpAppend.rx() = tmpRef.m_x;
                 TmpAppend.ry() = tmpRef.m_y;
 
@@ -465,5 +463,3 @@ int xmlstruct::loadbinario_2(class WZip &zip)
 
     return OK;
 }
-
-#endif //ALL_VERSION

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QApplication>
-
 #define ERROR 0
 #define OK 1
 #define ERROR_VERSION 2

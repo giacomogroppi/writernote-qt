@@ -1,13 +1,12 @@
 #pragma once
 
-#include "touch/dataTouch/datastruct/datastruct.h"
-#include "mainwindow.h"
-#include "touch/tabletcanvas.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
+#include "touch/TabletUtils.h"
 
 class topdf
 {
 private:
-    Document *data = nullptr;
+    class Document *data = nullptr;
     const QString *path;
 
     void translate();
@@ -25,14 +24,13 @@ public:
 
 inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
 {
-    DataPaint dataPaint = {
+    TabletUtils::DataPaint dataPaint = {
         .withPdf = withPdf,
         .IsExportingPdf = true,
         .m = m,
-        .parent = nullptr,
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST
     };
-    TabletCanvas::load(painter, *data, dataPaint);
+    TabletUtils::load(painter, *data, dataPaint);
 }
 

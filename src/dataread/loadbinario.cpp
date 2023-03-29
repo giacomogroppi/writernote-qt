@@ -1,14 +1,14 @@
 #include "xmlstruct.h"
 #include "currenttitle/document.h"
 #include <zip.h>
-#include "sheet/fast-sheet/fast_sheet_ui.h"
 #include "utils/WCommonScript.h"
 #include "core/WReadZip.h"
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>
 #include "utils/common_error_definition.h"
+#include "sheet/style_struct.h"
 
-static int load_point_first_page(WZipReaderSingle &zip, datastruct &doc)
+static int load_point_first_page(WZipReaderSingle &zip, DataStruct &doc)
 {
     double init[2];
     /* point first page */
@@ -92,7 +92,7 @@ static int xmlstruct_wait_for_thread(pthread_t *thread, int num)
         return ERROR;   \
     }while(0)
 
-static int xmlstruct_create_thread(WZip& zip, int lenPage, size_t *seek, datastruct *data, int ver_stroke)
+static int xmlstruct_create_thread(WZip& zip, int lenPage, size_t *seek, DataStruct *data, int ver_stroke)
 {
     int i;
     pthread_t thread[lenPage];

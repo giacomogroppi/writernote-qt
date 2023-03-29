@@ -2,7 +2,6 @@
 
 #include "touch/tools/Tools.h"
 #include "currenttitle/document.h"
-#include "touch/property/property_control.h"
 #include "touch/copy_cut/copy_cut_selection.h"
 #include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
@@ -11,15 +10,26 @@
 #include "touch/tools/Scrollable.h"
 #include "utils/WCommonScript.h"
 
-class SquareMethod: public Tools, public Scrollable {
-private:
-    static constexpr auto debugSquare = false;
-    int endMoving(const QWidget *pixmap, Document &doc);
+enum ActionProperty: int {
+    PROPERTY_SHOW_DELETE = 0x1,
+    PROPERTY_SHOW_COPY = 0x2,
+    PROPERTY_SHOW_CUT = 0x4,
+    PROPERTY_SHOW_PASTE = 0x8
+};
 
-    void move(const QPointF &punto, Document &doc);
+enum PropertySignals: int {
+    SignalDelete,
+    SignalCopy,
+    SignalCut,
+    SignalPaste
+};
 
+class SquareMethod: public Tools, public Scrollable
+{
 public:
-    explicit SquareMethod(class property_control *property);
+    explicit SquareMethod(std::function<void()> hideProperty,
+                          std::function<void(const QPointF& point, ActionProperty signal)> showProperty,
+                          std::function<Document &()> getDoc);
     ~SquareMethod() ;
 
     bool touchBegin(const QPointF& point, double size, class Document &doc) final;
@@ -37,6 +47,14 @@ public:
     void changeInstrument();
 
 private:
+    static constexpr auto debugSquare = false;
+    int endMoving(Document &doc);
+
+    void move(const QPointF &punto, Document &doc);
+    std::function<void()> _hideProperty;
+    std::function<void(const QPointF& point, ActionProperty signal)> _showProperty;
+    std::function<Document &()> _getDoc;
+
     void initPointSearch(const QPointF &point, const Document &doc);
     void initPointMove(const QPointF &point, const Document &doc);
 
@@ -61,7 +79,6 @@ private:
     QList<int> _index_img; /* image */
 
     QPen _penna;
-    class property_control *_property;
 
     bool _in_box;
     copy *_copy;
@@ -71,18 +88,19 @@ private:
     int _threadCount;
 
     QPointF _trans_img;
-    [[nodiscard]] int calculate_flags() const;
+    [[nodiscard]] ActionProperty calculate_flags() const;
 
     void updatePoint(const QPointF &puntofine, const Document &doc);
 
     bool find(Document &doc);
 
 protected:
+    virtual void needRefreshPrivate() = 0;
     virtual void reset();
-    void actionProperty(property_control::ActionProperty action);
+    void actionProperty(PropertySignals action);
 };
 
-inline int SquareMethod::calculate_flags() const
+inline ActionProperty SquareMethod::calculate_flags() const
 {
     int flag = 0;
 
@@ -96,7 +114,7 @@ inline int SquareMethod::calculate_flags() const
 
     W_ASSERT(flag >= 0);
 
-    return flag;
+    return static_cast<ActionProperty>(flag);
 }
 
 inline void SquareMethod::translate(const QPointF &)
@@ -108,7 +126,7 @@ inline void SquareMethod::translate(const QPointF &)
 inline void SquareMethod::changeInstrument()
 {
     this->reset();
-    this->_property->Hide();
+    this->_hideProperty();
 }
 
 force_inline bool SquareMethod::somethingInBox() const

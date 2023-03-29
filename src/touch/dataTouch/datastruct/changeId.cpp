@@ -1,9 +1,9 @@
-#include "datastruct.h"
+#include "DataStruct.h"
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 
 // this function is usable only in this .o file
-force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &page, cbool threadSafe)
+force_inline void DataStruct::__changeId(int IndexPoint, Stroke &stroke, Page &page, cbool threadSafe)
 {
     W_ASSERT(stroke.makeNormal() == nullptr);
 
@@ -36,7 +36,7 @@ force_inline void datastruct::__changeId(int IndexPoint, Stroke &stroke, Page &p
     }
 }
 
-void datastruct::changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page)
+void DataStruct::changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page)
 {
     return __changeId(indexPoint, stroke, page, true);
 }

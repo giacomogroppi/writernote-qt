@@ -1,14 +1,13 @@
 #include "PenMethod.h"
-#include "touch/dataTouch/stroke/StrokePre.h"
-#include "touch/tabletcanvas.h"
-#include "touch/object_finder/object_finder.h"
 #include <utility>
 
 PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
                      std::function<int()> getTime,
+                     std::function<void()> objectMove,
                      QColor &color, QPen &pen) :
         InsertTools(std::move(getTime),
                     std::move(getSize),
+                    std::move(objectMove),
                     color,
                     pen)
 {

@@ -2,8 +2,6 @@
 #include "datawrite/source_read_ext.h"
 #include "utils/common_error_definition.h"
 
-#ifdef ALL_VERSION
-
 int xmlstruct::load_file_4(WZipReaderSingle &reader)
 {
     bool tmp_touch, translate;
@@ -54,5 +52,3 @@ int xmlstruct::load_file_4(WZipReaderSingle &reader)
 
     return OK;
 }
-
-#endif // ALL_VERSION

@@ -25,7 +25,7 @@ public:
     bool is_inside(const QRectF &rect, double precision) const;
 
 #   define stroke_append_default (-1.)
-    void append(const point_s &point, pressure_t pressure);
+    void append(const Point &point, pressure_t pressure);
     size_t createControll() const final;
 
     QRect getBiggerPointInStroke() const;

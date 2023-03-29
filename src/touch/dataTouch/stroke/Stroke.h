@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QRect>
 #include <QPainterPath>
-#include "touch/dataTouch/point.h"
+#include "touch/dataTouch/Point.h"
 #include "utils/common_def.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WLine.h"
@@ -71,7 +71,7 @@ public:
     QColor getColor(double division = 1.) const;
 
 #   define stroke_append_default (-1.)
-    virtual void append(const point_s &point, pressure_t pressure) = 0;
+    virtual void append(const Point &point, pressure_t pressure) = 0;
 
     void setMetadata(int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);

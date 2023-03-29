@@ -3,9 +3,9 @@
 #include "currenttitle/document.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
-#include "touch/tabletcanvas.h"
 #include "currenttitle/document.h"
 #include "dataread/xmlstruct.h"
+#include "touch/TabletUtils.h"
 
 void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
@@ -13,12 +13,11 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
     const double size_orizzontale = doc.biggerx();
     const double delta = (double)width / (double)size_orizzontale;
 
-    DataPaint dataPaint = {
+    TabletUtils::DataPaint dataPaint = {
         .withPdf = withPdf,
         .IsExportingPdf = false,
         .m = delta,
         //.size = QSize(width, height),
-        .parent = nullptr,
         .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST
     };
@@ -33,7 +32,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
 
     dataPaint.IsExportingPdf = false;
 
-    TabletCanvas::load(painter, doc, dataPaint);
+    TabletUtils::load(painter, doc, dataPaint);
 
     painter.end();
 

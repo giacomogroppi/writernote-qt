@@ -10,10 +10,10 @@ private:
     WImage _img;
     std::shared_ptr<Stroke> _stroke;
 
-    WList<point_s>      _point;
+    WList<Point>      _point;
     WList<pressure_t>   _pressure;
 
-    WList<point_s>      ::const_iterator   _last_draw_point;
+    WList<Point>      ::const_iterator   _last_draw_point;
     WList<pressure_t>   ::const_iterator   _last_draw_press;
 
     constexpr static bool StrokePreDebug = false;
@@ -25,7 +25,7 @@ private:
 #endif // DEBUGINFO
 
     [[nodiscard]] WList<pressure_t>::const_iterator get_last_press() const;
-    [[nodiscard]] WList<point_s>::const_iterator get_last_point() const;
+    [[nodiscard]] WList<Point>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 
     void setStrokeComplex(std::shared_ptr<Stroke> stroke);
@@ -47,7 +47,7 @@ public:
     [[nodiscard]] QRect getBiggerPointInStroke() const;
     [[nodiscard]] QRect getFirstAndLast() const;
     [[nodiscard]] pressure_t getPressure() const;
-    [[nodiscard]] const point_s &last() const;
+    [[nodiscard]] const Point &last() const;
 
     [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
     [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
@@ -56,7 +56,7 @@ public:
     void reset_img();
 
     void draw(QPainter &painter, QPen &pen, double prop);
-    void append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop);
+    void append(const Point &point, const pressure_t &press, QPen &pen, cdouble prop);
     [[nodiscard]] QColor getColor(double division = 1.) const;
 
     std::shared_ptr<Stroke> merge();
@@ -76,7 +76,7 @@ inline bool StrokePre::isEmpty() const noexcept
     return this->_point.isEmpty() and _stroke->isEmpty();
 }
 
-inline const point_s &StrokePre::last() const
+inline const Point &StrokePre::last() const
 {
     return _point.last();
 }
@@ -101,7 +101,7 @@ inline WList<pressure_t>::const_iterator StrokePre::get_last_press() const
     return _last_draw_press;
 }
 
-inline WList<point_s>::const_iterator StrokePre::get_last_point() const
+inline WList<Point>::const_iterator StrokePre::get_last_point() const
 {
     W_ASSERT(this->_point.length() > 1);
     return _last_draw_point;

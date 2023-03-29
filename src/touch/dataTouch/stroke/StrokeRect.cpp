@@ -41,13 +41,13 @@ void StrokeRect::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, 
     set_press(pen, _data.press, prop, is_rubber, this->getColor(1.));
 
     const auto _topLeft     = Page::at_translation(
-                point_s(
+                Point(
                     _data.rect.topLeft()),
                     page
                 ).toQPointF(prop);
 
     const auto _bottomRight = Page::at_translation(
-                point_s(
+                Point(
                     _data.rect.bottomRight()),
                     page
                 ).toQPointF(prop);
@@ -72,7 +72,7 @@ bool StrokeRect::is_inside(const QRectF &rect, double precision) const
     return this->_data.rect.intersects(r);
 }
 
-void StrokeRect::append(const point_s &point, pressure_t pressure)
+void StrokeRect::append(const Point &point, pressure_t pressure)
 {
     using namespace WCommonScript;
     const auto distanceTopLeft = distance(point, _data.rect.topLeft());

@@ -3,7 +3,6 @@
 #include "utils/common_error_definition.h"
 #include "core/WZipReaderSingle.h"
 
-#ifdef ALL_VERSION
 /*
  * this version of the file did not allow to save the audio
  * inside the file, the variable if_registrato was therefore
@@ -52,5 +51,3 @@ int xmlstruct::load_file_2(WZipReaderSingle &reader)
 
     return OK;
 }
-
-#endif // ALL_VERSION

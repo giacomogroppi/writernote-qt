@@ -1,2 +1,1 @@
-#!/usr/bin/bash
-grep -rnw '~/writernote-qt/src/' -e $1
+grep -rnw $PWD/src -e $1

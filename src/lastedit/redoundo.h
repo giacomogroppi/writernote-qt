@@ -13,10 +13,11 @@ private:
     QVector<Document *> m_list;
     class TabletCanvas *canvas;
     static constexpr int max = 10;
-
+    std::function<Document*()> _getDoc;
     void append(Document *doc);
+
 public:
-    redoundo(TabletCanvas *m_canvas);
+    redoundo(TabletCanvas *m_canvas, std::function<Document*()> getDoc);
     ~redoundo();
 
     void copy();

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QWidget>
+#include "utils/WCommonScript.h"
+#include <QObject>
 #include <QCloseEvent>
 #include <QString>
-#include <QDialog>
 
 #define NAME_LOG_EXT log_write
 
@@ -11,15 +11,13 @@ namespace Ui {
 class log_ui;
 }
 
-class log_ui : public QDialog
+class log_ui : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit log_ui(QWidget * parent);
+    explicit log_ui(QObject * parent, const QByteArray &positionForLog);
     ~log_ui();
-
-    void showAll();
 
     enum type_write: int{
         critic_error,
@@ -33,12 +31,11 @@ public:
 
     void print(FILE *fp, const QByteArray &str);
     bool getData(QByteArray & str);
-    const QString &getCurrentPosition() const;
+    QByteArray getCurrentPosition() const;
 private:
     QString adjust_path(const QString &str) const;
     bool check_str(const QString &str) const;
     static void addTime(QString &message);
-    Ui::log_ui *ui;
 
     enum permi: int {
         error, /* error */
@@ -46,33 +43,22 @@ private:
         enable /* ok */
     };
 
-    QString getNameLog();
+    QByteArray getNameLog();
 
     permi m_permi = permi::enable;
 
-    QString pos_log = "";
+    const QByteArray _positionLog;
+    QByteArray _nameLog;
 
     void saveData();
     int loadData();
-
-    void updateAll();
-
-    /* this function manage all error */
-    void updateError();
-
-protected:
-    void closeEvent(QCloseEvent *) override;
-
-private slots:
-    void on_button_close_clicked();
-    void on_button_enable_log_clicked();
-    void on_Button_open_log_clicked();
-    void on_button_change_position_clicked();
 };
 
-inline const QString &log_ui::getCurrentPosition() const
+inline QByteArray log_ui::getCurrentPosition() const
 {
-    return this->pos_log;
+    W_ASSERT(_positionLog.size());
+    W_ASSERT(_nameLog.size());
+    return this->_positionLog + _nameLog;
 }
 
 extern log_ui *NAME_LOG_EXT;

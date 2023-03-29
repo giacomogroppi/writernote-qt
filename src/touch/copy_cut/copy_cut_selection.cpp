@@ -1,5 +1,5 @@
 #include "copy_cut_selection.h"
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include "utils/WCommonScript.h"
 
 copy::copy()
@@ -19,18 +19,18 @@ void copy::reset()
 }
 
 void copy::managePaste(
-        datastruct      &data,
+        DataStruct      &data,
         const QPointF   &pointTouch)
 {
     QPointF tmp = pointTouch;
 
-    datastruct::inverso(tmp);
+    DataStruct::inverso(tmp);
     this->adjustData(tmp);
 
     data.append(this->m_stroke, -1);
 
     if(this->isSomeThingCopy()){
-        datastruct::inverso(tmp);
+        DataStruct::inverso(tmp);
         this->adjustData(tmp);
     }
 }
@@ -43,7 +43,7 @@ QRect copy::get_size_area(const QList<QList<std::shared_ptr<Stroke>>> &data)
 
         const auto tmp = Page::get_size_area(sub, 0, sub.length());
 
-        size_area = datastruct::get_bigger_rect(tmp, size_area);
+        size_area = DataStruct::get_bigger_rect(tmp, size_area);
     }
 
     return size_area;
@@ -74,7 +74,7 @@ void copy::single(
  * e non al widget
 */
 int copy::selection(
-        datastruct                  &data,
+        DataStruct                  &data,
         const QList<QList<std::shared_ptr<Stroke>>>  &stroke,
         int                         __flags,
         const QPointF               &pointTouch)
@@ -130,7 +130,7 @@ int copy::selection(
 void copy::adjustData(const QPointF &offset)
 {
     using namespace WCommonScript;
-    const QPointF &inverso = datastruct::inverso(offset);
+    const QPointF &inverso = DataStruct::inverso(offset);
 
     for_each(this->m_stroke, [&inverso](std::shared_ptr<Stroke> d) {
         d->scale(inverso);

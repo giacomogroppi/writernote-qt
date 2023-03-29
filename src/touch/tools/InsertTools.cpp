@@ -1,6 +1,6 @@
 #include "InsertTools.h"
-#include "touch/tabletcanvas.h"
-#include "touch/object_finder/object_finder.h"
+#include "touch/TabletUtils.h"
+#include "touch/object_finder/ObjectFinder.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include <utility>
 
@@ -8,12 +8,14 @@ extern StrokePre __tmp;
 
 InsertTools::InsertTools(std::function<int()> getTime,
                          std::function<pressure_t(double)> getSize,
+                         std::function<void()> objectMove,
                          QColor &color,
-                         QPen &pen) :
-                         _getTime(std::move(getTime)),
-                         _getSize(std::move(getSize)),
-                         _color(color),
-                         _pen(pen)
+                         QPen &pen)
+    : _getTime(std::move(getTime))
+    ,  _getSize(std::move(getSize))
+    ,  _objectMove(std::move(objectMove))
+    ,  _color(color)
+    ,  _pen(pen)
 {
 }
 
@@ -45,7 +47,7 @@ bool InsertTools::touchUpdate(const QPointF &point, double size, class Document 
 
     strokeTmp.append(point, pressure, (QPen &)_pen, getProp(doc));
 
-    core::get_canvas()->_finder->move(point);
+    this->_objectMove();
 
     return true;
 }

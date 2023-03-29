@@ -5,7 +5,7 @@
 #include "zip.h"
 #include <QList>
 #include "utils/common_error_definition.h"
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include <QPointF>
 #include <QPainter>
 #include "core/WZip.h"

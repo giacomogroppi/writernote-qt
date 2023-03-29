@@ -1,6 +1,4 @@
 #include "topdf.h"
-#include "mainwindow.h"
-#include "datawrite/qfilechoose.h"
 #include "qapplication.h"
 #include "utils/dialog_critic/dialog_critic.h"
 #include <QPdfWriter>
@@ -8,6 +6,7 @@
 #include "log/log_ui/log_ui.h"
 #include "frompdf/frompdf.h"
 #include "testing/memtest.h"
+#include "currenttitle/document.h"
 
 topdf::topdf(const QString &path, const Document &doc)
 {
@@ -91,24 +90,4 @@ bool topdf::createpdf(cbool withPdf)
     release:
     data->scala_all(pointData, INT_MAX);
     return ret;
-}
-
-void MainWindow::on_actiontopdf_triggered()
-{
-    QByteArray path_pdf;
-    const Document *doc = _canvas->getDoc();
-
-    if(doc->isempty_touch())
-        return user_message(QApplication::tr("There is nothing to convert to pdf"));
-
-    if(!qfilechoose::getFileForSave(path_pdf, TYPEFILEPDF))
-        return;
-
-    topdf filepdf(path_pdf, *doc);
-
-    if(!filepdf.createpdf(true)){
-        dialog_critic("We had a problem saving the file to " + path_pdf);
-        return;
-    }
-    user_message("Pdf file save in " + path_pdf);
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtGlobal>
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include <QString>
 #include <QList>
 #include <QImage>

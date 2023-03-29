@@ -90,7 +90,6 @@
 
 /* log position */
 #define GROUPNAME_LOG_POSITION "groupname-log-position"
-#define KEY_LOG_POSITION "key-log-position" /* QString */
 #define KEY_LOG_POSITION_DEFINE "key-log-position-define" /* int */
 
 #define GROUPNAME_LAST_LANGUAGE "groupname-last-language"

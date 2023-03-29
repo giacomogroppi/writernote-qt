@@ -1,7 +1,8 @@
 #include "StrokeForPage.h"
-#include "touch/tabletcanvas.h"
 #include "Stroke.h"
 #include "StrokeNormal.h"
+#include "utils/common_error_definition.h"
+#include "touch/TabletUtils.h"
 
 StrokeForPage::StrokeForPage()
     : _data(new StrokeNormal)
@@ -20,18 +21,15 @@ void StrokeForPage::rep() const
     W_ASSERT(this->_data.unique());
 }
 
-#ifdef ALL_VERSION
 void StrokeForPage::append(const StrokeNormal &stroke)
 {
     using namespace WCommonScript;
     auto &l = this->_data->_point;
 
-    for_each(stroke._point, [&l](const point_s &point) {
+    for_each(stroke._point, [&l](const Point &point) {
         l.append(point);
     });
 }
-
-#endif // ALL_VERSION
 
 int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
 {
@@ -88,7 +86,7 @@ redo:
         goto redo;
     }
 
-    pressure = TabletCanvas::pressureToWidth(pressure * zoom / 2.0) * delta;
+    pressure = TabletUtils::pressureToWidth(pressure * zoom / 2.0) * delta;
 
     pen.setWidthF(pressure);
     pen.setColor(_data->getColor());
@@ -96,8 +94,8 @@ redo:
     painter.setPen(pen);
 
     for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
-        const auto ref1 = datastruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
-        const auto ref2 = datastruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
+        const auto ref1 = DataStruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
+        const auto ref2 = DataStruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
 
         painter.drawLine(ref1, ref2);
         //painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
@@ -120,7 +118,7 @@ void StrokeForPage::scale(const QPointF &delta)
     rep();
 }
 
-void StrokeForPage::append(const point_s &point, pressure_t pressure)
+void StrokeForPage::append(const Point &point, pressure_t pressure)
 {
     _data->append(point, pressure);
     rep();

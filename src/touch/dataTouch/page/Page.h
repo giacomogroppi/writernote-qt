@@ -82,7 +82,7 @@ private:
 
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
 
-    static point_s at_translation(const point_s &point, cint page);
+    static Point at_translation(const Point &point, cint page);
     static QRect get_size_area(const QList<std::shared_ptr<Stroke>> & item, int from, int to);
 
 public:
@@ -124,14 +124,14 @@ public:
     __fast Stroke                   & atStrokeMod(const uint i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
-    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, point_s &point, const double zoom) const;
+    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, Point &point, const double zoom) const;
 
     double minHeight() const;
     double currentHeight() const;
     double currentWidth() const;
 
     bool userWrittenSomething() const;
-    void move(const uint from, const uint to);
+    void move(uint from, uint to);
 
     void triggerRenderImage(int m_pos_ris, bool all);
 
@@ -179,9 +179,9 @@ public:
     friend class StrokeCircle;
     friend class StrokeLine;
     friend class Stroke;
-    friend class page_file;
+    friend class PageFile;
     friend class stroke_drawer;
-    friend class datastruct;
+    friend class DataStruct;
     friend class xmlstruct;
     friend class RubberMethod;
     friend void * __page_load(void *);
@@ -237,9 +237,9 @@ force_inline void Page::reset()
     this->_imgDraw = WImage();
 }
 
-inline point_s Page::at_translation(const point_s &point, cint page)
+inline Point Page::at_translation(const Point &point, cint page)
 {
-    point_s tmp;
+    Point tmp;
     const double ytranslation = double(page) * Page::getHeight();
 
     if (un(!page)) {
@@ -355,7 +355,7 @@ force_inline const StrokeForPage &Page::get_stroke_page() const
     return this->_stroke_writernote;
 }
 
-static force_inline void __at_draw_private(const point_s &from, point_s &to, const double zoom, const QPointF &translation)
+static force_inline void __at_draw_private(const Point &from, Point &to, const double zoom, const QPointF &translation)
 {
     memcpy(&to, &from, sizeof(from));
 

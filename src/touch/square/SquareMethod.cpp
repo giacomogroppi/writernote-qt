@@ -1,7 +1,7 @@
 #include "SquareMethod.h"
 #include "core/core.h"
 #include "touch/square/square.h"
-#include "touch/tabletcanvas.h"
+#include "touch/TabletUtils.h"
 #include "touch/paintevent/paint.h"
 #include "log/log_ui/log_ui.h"
 
@@ -12,9 +12,13 @@ static QPointF          __s;
 static QVector<int>     *__index;
 static bool             *__in_box;
 
-SquareMethod::SquareMethod(property_control *prop)
-    : _need_reload(false)
-    , _property(prop)
+SquareMethod::SquareMethod(std::function<void()> hideProperty,
+                           std::function<void (const QPointF &, ActionProperty)> showProperty,
+                           std::function<Document &()> getDoc)
+    : _hideProperty(hideProperty)
+    , _showProperty(std::move(showProperty))
+    , _getDoc(getDoc)
+    , _need_reload(false)
     , _in_box(false)
 {
     W_ASSERT(prop);
@@ -68,7 +72,7 @@ void SquareMethod::reset()
         });
 #endif // DEBUGINFO
 
-        Page * page         = &core::get_canvas()->getDoc()->at_mod(i + _base);
+        Page * page         = &_getDoc().at_mod(i + _base);
 
         for (auto &ref : ll){
             ref->scale(_trans_img);
@@ -149,7 +153,6 @@ bool SquareMethod::touchUpdate(const QPointF &point, double, Document &doc)
 
 int SquareMethod::touchEnd(const QPointF &, class Document &doc)
 {
-    auto *canvas = core::get_canvas();
     bool done = somethingInBox();
 
     if (done) {
@@ -158,7 +161,7 @@ int SquareMethod::touchEnd(const QPointF &, class Document &doc)
         find(doc);
     }
 
-    return endMoving(canvas, doc);
+    return endMoving(doc);
 }
 
 /**
@@ -217,7 +220,7 @@ bool SquareMethod::find(Document &doc)
 
     /* image selected by user */
     const int lenImg = doc.length_img();
-    for(int counterImg = 0; counterImg < lenImg; counterImg++){
+    for (int counterImg = 0; counterImg < lenImg; counterImg++) {
         const auto &ref = doc.m_img.at(counterImg);
 
         tmp_find = datastruct_isinside(topLeft, bottomRight, ref.i) ||
@@ -402,7 +405,7 @@ void SquareMethod::move(const QPointF &punto, Document &doc)
 
     delta = (_lastpoint - punto) / zoom;
 
-    datastruct::inverso(delta);
+    DataStruct::inverso(delta);
 
     _trans_img += delta;
 
@@ -415,53 +418,52 @@ void SquareMethod::move(const QPointF &punto, Document &doc)
     _need_reload = true;
 }
 
-int SquareMethod::endMoving(const QWidget *pixmap, Document &doc)
+int SquareMethod::endMoving(Document &doc)
 {
     QPoint middle;
     const auto ref = doc.getPointFirstPage();
-    int flag;
-    const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
+    ActionProperty flag;
+    const auto &translation = doc.adjustPointReverce(_pointinit);
+    //const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
 
     WDebug(debugSquare, "call");
 
-    middle = QPoint(_pointinit.x() + translation.x() + ref.x(),
-                    _pointinit.y() + translation.y() + ref.y() - _property->height());
+    middle = QPoint(translation.x(),
+                    translation.y() - 50);
 
     flag = this->calculate_flags();
 
     WDebug(debugSquare, flag << middle );
 
-    this->_property->Show(middle, flag);
+    this->_showProperty(middle, flag);
 
     /** for now we say multiple page has changed */
     return -2;
 }
 
-void SquareMethod::actionProperty(property_control::ActionProperty action)
+void SquareMethod::actionProperty(PropertySignals action)
 {
     int flags = 0, dontcall_copy = 1;
-    auto *canvas = core::get_canvas();
-    Document &doc = *canvas->getDoc();
 
     switch (action) {
-        case property_control::ActionProperty::__copy:{
+        case PropertySignals::SignalCopy : {
             flags = SELECTION_FLAGS_COPY;
             break;
         }
-        case property_control::ActionProperty::__cut:{
+        case PropertySignals::SignalCut : {
             flags = SELECTION_FLAGS_CUT;
             break;
         }
-        case property_control::ActionProperty::__paste:{
+        case PropertySignals::SignalPaste: {
             flags = SELECTION_FLAGS_PASTE;
             break;
         }
-        case property_control::ActionProperty::__delete:{
+        case PropertySignals::SignalDelete: {
             _stroke.clear();
 
             //data.removePointIndex(index, base, true);
             dontcall_copy = 0;
-            _property->Hide();
+            this->_hideProperty();
             _stroke.clear();
             this->reset();
             break;
@@ -474,18 +476,17 @@ void SquareMethod::actionProperty(property_control::ActionProperty action)
         }
     }
 
-    if(dontcall_copy){
-        if(_copy->selection(doc, _stroke, flags, _pointinit)){
+    if (dontcall_copy) {
+        if (_copy->selection(_getDoc(), _stroke, flags, _pointinit)) {
             _stroke.clear();
-            _property->Hide();
+            this->_hideProperty();
             this->reset();
         }
-    }
-    else{
+    } else {
         this->reset();
     }
 
-    canvas->call_update();
+    this->needRefreshPrivate();
 }
 
 /**
@@ -513,7 +514,7 @@ force_inline void SquareMethod::adjustPoint()
 
 static void square_draw_square(
         QPainter            &painter,
-        const datastruct    &data,
+        const DataStruct    &data,
         const QPointF       &tl,
         const QPointF       &br)
 {
@@ -584,5 +585,5 @@ void SquareMethod::initPointSearch(const QPointF &point, const Document &doc)
     _need_reload = false;
     _in_box = false;
 
-    this->_property->Hide();
+    this->_hideProperty();
 }

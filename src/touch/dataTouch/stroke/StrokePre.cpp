@@ -172,7 +172,7 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     return *this;
 }
 
-void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen, cdouble prop)
+void StrokePre::append(const Point &point, const pressure_t &press, QPen &pen, cdouble prop)
 {
     const auto normal = (_stroke->type() == Stroke::COMPLEX_NORMAL);
 
@@ -193,7 +193,7 @@ void StrokePre::append(const point_s &point, const pressure_t &press, QPen &pen,
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
         } else {
-            StrokeNormal::drawData<WList<point_s>::const_iterator,
+            StrokeNormal::drawData<WList<Point>::const_iterator,
                     WList<pressure_t>::const_iterator> data = {
                 .begin_point = this->get_last_point(),
                 .end_point   = this->_point.constEnd(),

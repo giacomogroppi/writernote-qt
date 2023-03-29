@@ -1,9 +1,10 @@
 #include "Stroke.h"
-#include "touch/tabletcanvas.h"
 #include "StrokeNormal.h"
 #include "StrokeLine.h"
 #include "StrokeCircle.h"
 #include "StrokeRect.h"
+#include "utils/common_error_definition.h"
+#include "touch/TabletUtils.h"
 
 std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
 {
@@ -138,7 +139,7 @@ void set_press(
                             cbool is_rubber,
                             const QColor &color)
 {
-    pen.setWidth(TabletCanvas::pressureToWidth(press / deltaPress) * prop);
+    pen.setWidth(TabletUtils::pressureToWidth(press / deltaPress) * prop);
     if (un(is_rubber)) {
         const auto _press = pen.widthF() * deltaColorNull;
         pen.setWidthF(_press);
@@ -190,7 +191,7 @@ size_t Stroke::createControll() const
     size_t controll = 0;
     int i;
 
-    for(i = 0; i < NCOLOR; i++){
+    for (i = 0; i < NCOLOR; i++) {
         controll += _metadata.color.colore[i];
     }
 

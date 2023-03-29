@@ -2,24 +2,24 @@
 #include <QPen>
 #include <QPainter>
 #include <QDebug>
-#include "touch/property/property_control.h"
 
-square::square(QObject *parent, property_control *property)
+square::square(QObject *parent,
+               std::function<void()> hideProperty,
+               std::function<void(const QPointF& point, ActionProperty signal)> showProperty,
+               std::function<Document &()> getDoc)
     : QObject(parent)
-    , SquareMethod(property)
+    , SquareMethod(hideProperty, showProperty, getDoc)
 {
-    QObject::connect(property, &property_control::ActionSelection,
-                     [&](property_control::ActionProperty action) {
-        SquareMethod::actionProperty(action);
-    });
 }
 
-square::~square()
-= default;
-
-
+square::~square() = default;
 
 void square::reset()
 {
     SquareMethod::reset();
+}
+
+void square::needRefreshPrivate()
+{
+    emit this->needRefresh();
 }

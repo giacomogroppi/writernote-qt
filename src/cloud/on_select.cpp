@@ -4,8 +4,6 @@
 
 #ifdef CLOUD
 
-#include "ui_cloud_ui.h"
-
 void cloud_ui::on_tab_main_currentChanged(int index)
 {
     this->refresh();

@@ -7,7 +7,7 @@
 #include <streambuf>
 #include <QList>
 #include "currenttitle/document.h"
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include <zip.h>
 #include "core/WZip.h"
 
@@ -38,7 +38,6 @@ private:
     Document *_doc = nullptr;
 
     /* old */ int load_file_2(WZipReaderSingle &reader);
-#ifdef ALL_VERSION
     /* old */ int load_file_3(WZipReaderSingle &reader);
     /* old */ int load_file_4(WZipReaderSingle &reader);
     /* old */ int load_file_5(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg);
@@ -50,8 +49,6 @@ private:
     /* __old */ int loadbinario_1(class WZip &zip);
     /* __old */ int loadbinario_2(class WZip &zip);
     /* __old */ int loadbinario_3(class WZip &zip, int ver_stroke);
-
-#endif // ALL_VERSION
 
     /* new */ int loadbinario_4(class WZip &zip, int ver_stroke);
     /* new */ int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
@@ -77,9 +74,8 @@ public:
     /* return true if we can read this file */
     static bool manageMessage(const int res);
 
-#ifdef ALL_VERSION
     int xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg);
-#endif
+
     int loadfile(cbool LoadPdf, cbool LoadImg);
 
     xmlstruct(const QByteArray *path_U, Document *currenttitle_U);

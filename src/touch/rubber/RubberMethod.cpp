@@ -1,7 +1,7 @@
 #include "RubberMethod.h"
-#include "touch/tabletcanvas.h"
+#include "touch/TabletUtils.h"
 #include "touch/multi_thread_data.h"
-#include "touch/rubber/rubber_ui.h"
+#include "touch/rubber/Rubber.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 
 constexpr bool rubber_debug = false;
@@ -10,7 +10,7 @@ struct RubberPrivateData{
     QVector<int>    *data_find;
     Page            *_page;
     WLine           line;
-    datastruct      *data;
+    DataStruct      *data;
     QVector<int>    *data_to_remove;
 
     int             al_find;
@@ -130,7 +130,7 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     int from, to, _index;
 
     Page *_page             = private_data->_page;
-    datastruct *_datastruct = private_data->data;
+    DataStruct *_datastruct = private_data->data;
     const auto &area        = private_data->line;
 
     from = data->from;
@@ -267,7 +267,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
             mutex_area.lock();
 
-            private_data->area = datastruct::get_bigger_rect(currentArea, private_data->area);
+            private_data->area = DataStruct::get_bigger_rect(currentArea, private_data->area);
 
             mutex_area.unlock();
         }

@@ -13,7 +13,7 @@ private:
      * */
     int load(WZipReaderSingle &reader, int version, int len_point = -1);
 
-    QList<point_s> _point;
+    QList<Point> _point;
     QList<pressure_t> _pressure;
     bool isInsideBiggerData(const QRect &rect) const;
     int removeAt(int i);
@@ -58,7 +58,7 @@ public:
     bool is_inside(const QRectF &rect, double precision) const final;
 
 #   define stroke_append_default (-1.)
-    void append(const point_s &point, pressure_t pressure) final;
+    void append(const Point &point, pressure_t pressure) final;
     size_t createControll() const final;
 
     QRect getBiggerPointInStroke() const final;
@@ -238,7 +238,7 @@ force_inline void StrokeNormal::draw(
     lastPoint = Page::at_translation(*data.begin_point, page).toQPointF(prop);
 
     for(data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++){
-        const point_s point = Page::at_translation(*data.begin_point, page);
+        const Point point = Page::at_translation(*data.begin_point, page);
         const pressure_t pressure = *data.begin_press;
 
         if(!data.press_null){
@@ -293,7 +293,7 @@ inline QRect StrokeNormal::getBiggerPointInStroke(T begin, T end)
     QPoint bottomRight  = begin->toQPointF(1.).toPoint();
 
     for(; begin != end; begin ++){
-        const point_s &point = *begin;
+        const Point &point = *begin;
 
         if(topLeft.x() > point.x())
             topLeft.setX(static_cast<int>(

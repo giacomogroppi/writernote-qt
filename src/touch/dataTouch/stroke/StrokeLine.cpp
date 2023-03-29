@@ -22,8 +22,8 @@ void StrokeLine::draw(QPainter &painter,
     painter.setPen(pen);
     set_press(pen, this->_data.press, p, is_rubber, this->getColor(1.));
 
-    const auto _topLeft     = Page::at_translation(point_s(this->_data.pt1), page).toQPointF(prop);
-    const auto _bottomRight = Page::at_translation(point_s(this->_data.pt2), page).toQPointF(prop);
+    const auto _topLeft     = Page::at_translation(Point(this->_data.pt1), page).toQPointF(prop);
+    const auto _bottomRight = Page::at_translation(Point(this->_data.pt2), page).toQPointF(prop);
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
@@ -80,7 +80,7 @@ bool StrokeLine::is_inside(const QRectF &area, double precision) const
     return false;
 }
 
-void StrokeLine::append(const point_s &point, pressure_t pressure)
+void StrokeLine::append(const Point &point, pressure_t pressure)
 {
     using namespace WCommonScript;
     const auto dist1 = distance_not_square(_data.pt1, point);
@@ -129,7 +129,7 @@ int StrokeLine::how_much_decrese() const
 
 void StrokeLine::makeNormalVertical(StrokeNormal *mergeTo, int from, int to) const
 {
-    point_s tmp;
+    Point tmp;
     W_ASSERT(_data.pt2.x() == _data.pt1.x());
     W_ASSERT(from <= to);
 
@@ -144,7 +144,7 @@ void StrokeLine::makeNormalVertical(StrokeNormal *mergeTo, int from, int to) con
 void StrokeLine::makeNormalGeneric(StrokeNormal *mergeTo, int from, int to) const
 {
     double m, p;
-    point_s point;
+    Point point;
 
     W_ASSERT(from <= to);
 

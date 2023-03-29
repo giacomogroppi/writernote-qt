@@ -7,9 +7,6 @@
 
 #ifdef CLOUD
 
-#include "ui_cloud_ui.h"
-
-
 cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
     QDialog(parent),
     ui(new Ui::cloud_ui),

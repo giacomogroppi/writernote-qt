@@ -19,7 +19,7 @@ short int source_write_ext(zip_source_t *, const void *, int);
 #define SOURCE_WRITE(x, y, z) \
     do{                                                                 \
         int ___res = zip_source_write(x, y, z);                         \
-        if(un(___res < 0 || ___res != (typeof(___res))z)){        \
+        if(un(___res < 0 || ___res != (typeof(___res))z)){              \
             goto delete_;                                               \
         }                                                               \
     } while(0);
@@ -27,7 +27,7 @@ short int source_write_ext(zip_source_t *, const void *, int);
 #define SOURCE_WRITE_RETURN_SIZE(x, y, z) \
     do{                                                             \
         int ___res = zip_source_write(x, y, z);                     \
-        if(un(___res < 0 || ___res != (typeof(___res))z)){    \
+        if(un(___res < 0 || ___res != (typeof(___res))z)){          \
             return ERROR;                                           \
         }                                                           \
     } while(0);
@@ -35,7 +35,7 @@ short int source_write_ext(zip_source_t *, const void *, int);
 #define SOURCE_WRITE_GOTO_SIZE(x, y, z) \
     do{                                                             \
         int ___res = zip_source_write(x, y, z);                     \
-        if(un(___res < 0 || ___res != (typeof(___res))z)){    \
+        if(un(___res < 0 || ___res != (typeof(___res))z)){          \
             goto delete_;                                           \
         }                                                           \
     } while(0);

@@ -4,7 +4,7 @@
 #include <QSize>
 #include <QPointF>
 
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include "touch/dataTouch/page/Page.h"
 #include "core/WImage.h"
 
@@ -33,7 +33,7 @@ void singleLoad(QPainter        &painter,
 #define DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH 1
 #define DRAW_CREATE_SIZE_RECT_DEF_PRO 1.0
 inline QSize createSizeRect(
-        const datastruct    &data,
+        const DataStruct    &data,
         const int           countHeigth,
         const double        pro)
 {

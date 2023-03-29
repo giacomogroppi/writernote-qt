@@ -5,7 +5,7 @@
 
 static QRect area;
 
-bool StrokeRectGenerator::is_near_rect_x(const QRect &area, const point_s &point)
+bool StrokeRectGenerator::is_near_rect_x(const QRect &area, const Point &point)
 {
     constexpr QPoint delta(50, 0);
     const auto res1 = area.contains(point.toPoint() - delta);
@@ -18,7 +18,7 @@ bool StrokeRectGenerator::is_near_rect_x(const QRect &area, const point_s &point
     return true;
 }
 
-bool StrokeRectGenerator::is_near_rect_y(const QRect &area, const point_s &point)
+bool StrokeRectGenerator::is_near_rect_y(const QRect &area, const Point &point)
 {
     constexpr QPoint delta(0, 50);
     const auto res1 = area.contains(point.toPoint() - delta);
@@ -31,7 +31,7 @@ bool StrokeRectGenerator::is_near_rect_y(const QRect &area, const point_s &point
     return true;
 }
 
-double StrokeRectGenerator::is_near_rect(const QRect &area, const point_s &point)
+double StrokeRectGenerator::is_near_rect(const QRect &area, const Point &point)
 {
     const auto res1 = is_near_rect_x(area, point);
     const auto res2 = is_near_rect_y(area, point);

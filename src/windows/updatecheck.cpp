@@ -13,8 +13,6 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include "utils/dialog_critic/dialog_critic.h"
-#include "mainwindow.h"
-#include "showmessageupdate.h"
 #include "utils/platform.h"
 
 #define POSNAME "name"
@@ -56,11 +54,13 @@ void updatecheck::start()
     QObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
 }
 
-updatecheck::updatecheck(QAction *a):
-    QObject(NULL)
+updatecheck::updatecheck(QObject *parent,
+                         std::function<void(const QString &message, const QString &version)> showDialog,
+                         std::function<void(bool)> setVisibleUpdateButton)
+    : QObject(parent)
+    , _showDialog(showDialog)
+    , _setVisibleUpdateButton(setVisibleUpdateButton)
 {
-    action = a;
-
     this->start();
 }
 
@@ -102,6 +102,7 @@ void updatecheck::managerFinished()
 
     testo = doc[0][POSNAME].toString();
 
+#define VERSION_STRING "TESTING"
     if(VERSION_STRING != testo and testo.toUpper() != "TESTING"
             and QString(VERSION_STRING).toUpper() != "TESTING"){
         auto res = priority(doc, testo, VERSION_STRING);
@@ -115,17 +116,10 @@ void updatecheck::managerFinished()
         }
 
         mostra = false;
-        if(action)
-            action->setVisible(true);
-
-        ShowMessageUpdate show(nullptr, __mess, testo);
-
-        show.exec();
-        return;
-    }
-
-    if(mostra){
-        user_message("There is no update available");
+        this->_setVisibleUpdateButton(true);
+        this->_showDialog(__mess, testo);
+    } else {
+        this->_showDialog("This is the latest release", testo);
     }
 }
 

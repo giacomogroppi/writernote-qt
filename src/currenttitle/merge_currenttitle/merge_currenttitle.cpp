@@ -30,6 +30,5 @@ merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document 
     Q_UNUSED(i);
     Q_UNUSED(len);
 
-
     return n_merge::ok;
 }

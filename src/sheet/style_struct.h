@@ -2,8 +2,17 @@
 
 #define QUANTESTRUCT 5
 #define STRNOME 40
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 
+enum n_style: int{
+    line, /* draw only line */
+    white, /*
+            * in this case sheet drawing draws a single
+            * line, at the end of the sheet, of the
+            * same color as the sheet */
+    empty, /* draw from default style in last style */
+    square /* draw square */
+};
 
 struct style_struct_S{
     char nome[STRNOME + 1];

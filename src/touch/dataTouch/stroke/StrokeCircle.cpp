@@ -38,13 +38,13 @@ bool StrokeCircle::oneSide(double inside, double outside, double prec) const
 void StrokeCircle::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop_) const
 {
     constexpr bool not_used debCircle = false;
-    point_s point;
+    Point point;
     QPointF tmp;
     const auto press = _data.press;
     double y, x;
     cdouble prop = prop_ == PROP_RESOLUTION ? prop_ : 1.;
 
-    point = point_s(_data.x, _data.y);
+    point = Point(_data.x, _data.y);
 
     point = Page::at_translation(point, page);
     tmp = point.toQPointF(prop);
@@ -119,7 +119,7 @@ bool StrokeCircle::is_inside(const QRectF &area, double precision) const
     return internal and internal < 4;
 }
 
-void StrokeCircle::append(const point_s &point, pressure_t pressure)
+void StrokeCircle::append(const Point &point, pressure_t pressure)
 {
     Q_UNUSED(pressure);
     _data.r = WCommonScript::distance(QPointF(_data.x, _data.y), point);
@@ -151,13 +151,13 @@ int StrokeCircle::how_much_decrese() const
 std::shared_ptr<Stroke> StrokeCircle::makeNormal() const
 {
     double from, to;
-    point_s tmp;
+    Point tmp;
     pressure_t press;
-    QVector<point_s> _pointLeft, _pointRigth;
+    QVector<Point> _pointLeft, _pointRigth;
     std::shared_ptr<StrokeNormal> _to(new StrokeNormal);
 
     const auto appendToStroke = [&_to](
-            const QVector<point_s> &point,
+            const QVector<Point> &point,
             const pressure_t press) {
         for (const auto &p : qAsConst(point)) {
             _to->append(p, press);
@@ -182,7 +182,7 @@ std::shared_ptr<Stroke> StrokeCircle::makeNormal() const
 
         const double res2 = qSqrt(res1);                        // = mod(x)
 
-        tmp = point_s(_data.x + res2, from);                   // = x + radius
+        tmp = Point(_data.x + res2, from);                   // = x + radius
         _pointLeft.append(tmp);
 
         tmp.rx() = _data.x - res2;                               // = x - radius

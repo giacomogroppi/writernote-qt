@@ -4,7 +4,6 @@
 #include "images/fromimage.h"
 #include "frompdf/frompdf.h"
 
-#ifdef ALL_VERSION
 int xmlstruct::load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadImg)
 {
     unsigned len_pdf, len_img;
@@ -57,4 +56,3 @@ int xmlstruct::load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
     return OK;
 }
 
-#endif //ALL_VERSION

@@ -32,7 +32,7 @@ int StrokeNormal::save(WZipWriterSingle &file) const
     }
 
     for (const auto p : qAsConst(this->_point )){
-        static_assert(sizeof(p) == sizeof(point_s));
+        static_assert(sizeof(p) == sizeof(Point));
         file.write_object(p);
     }
 
@@ -54,13 +54,13 @@ int StrokeNormal::load_ver_1(WZipReaderSingle &reader, int len_point)
     };
 
     point_s_curr point;
-    point_s tmp;
+    Point tmp;
 
     for(i = 0; i < len_point; i++){
         if(reader.read_object(point) < 0)
             return ERROR;
 
-        tmp = point_s(point._x, point._y);
+        tmp = Point(point._x, point._y);
 
         _point.append(tmp);
         _pressure.append(point.press);
@@ -75,7 +75,7 @@ int StrokeNormal::load_ver_2(WZipReaderSingle &reader)
     int i;
     int len_press, len_point;
     pressure_t tmp;
-    point_s point_append;
+    Point point_append;
 
     if(reader.read_object(len_point) < 0)
         return ERROR;
@@ -121,7 +121,7 @@ int StrokeNormal::load(WZipReaderSingle &reader, int version, int len_point)
     }
 }
 
-void StrokeNormal::append(const point_s &point, pressure_t pressure)
+void StrokeNormal::append(const Point &point, pressure_t pressure)
 {
     _point.append(point);
     _pressure.append(pressure);
@@ -131,7 +131,7 @@ void StrokeNormal::append(const point_s &point, pressure_t pressure)
 void StrokeNormal::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const
 {
     StrokeNormal::drawData
-            <   QList<point_s>::ConstIterator,
+            <   QList<Point>::ConstIterator,
                 QList<pressure_t>::ConstIterator> data = {
         .begin_point = this->_point.constBegin(),
         .end_point   = this->_point.constEnd(),
@@ -145,7 +145,7 @@ void StrokeNormal::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen
 
 int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const
 {
-    const point_s *p1, *p2;
+    const Point *p1, *p2;
     WLine tmp;
 
     int &i = from;
@@ -251,7 +251,7 @@ bool StrokeNormal::isInside(const QRectF &rect) const
 
 size_t StrokeNormal::getSizeInMemory() const
 {
-    return sizeof(point_s) * this->length();
+    return sizeof(Point) * this->length();
 }
 
 size_t StrokeNormal::getSizeInFile() const
@@ -270,7 +270,7 @@ size_t StrokeNormal::getSizeInFile() const
     s += sizeof(len_pressure);
 
     s += sizeof(pressure_t)     * len_pressure;
-    s += sizeof(point_s)        * len_point;
+    s += sizeof(Point)        * len_point;
 
     return s + Stroke::getSizeInFile();
 }
@@ -307,10 +307,6 @@ int StrokeNormal::type() const
 {
     return COMPLEX_NORMAL;
 }
-
-#ifdef ALL_VERSION
-
-#endif // ALL_VERSION
 
 StrokeNormal::StrokeNormal(const StrokeNormal &ref)
 {

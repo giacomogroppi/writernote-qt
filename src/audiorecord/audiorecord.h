@@ -17,8 +17,16 @@
 class AudioRecord : public QObject
 {
     Q_OBJECT
+private:
+    std::function<void(const QString &)> _error;
+    std::function<void(int)> _durationChange;
 public:
-    explicit AudioRecord(QObject *parent);
+    /**
+     * duration is express in seconds
+    */
+    explicit AudioRecord(QObject *parent,
+                         std::function<void(const QString &)> error,
+                         std::function<void(int)> durationChange);
 
     bool isRecording() const;
     bool isPauseRecording() const;
@@ -32,7 +40,6 @@ public:
 
     void setOutputLocation(const QString &path);
 
-    void loadSettings();
     qint64 getCurrentTime();
 
     const QString getPath() const;

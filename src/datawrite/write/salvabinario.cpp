@@ -1,6 +1,5 @@
 #include "datawrite/savefile.h"
 #include "stdlib.h"
-#include <QMessageBox>
 #include <QString>
 #include "datawrite/source_read_ext.h"
 #include "images/fromimage.h"

@@ -59,10 +59,7 @@ private:
     struct WZipPrivate _data_private;
 
     bool openZip(const QByteArray &path);
-
-#ifdef ALL_VERSION
     zip_file_t *open_file_in_zip(const QByteArray &path);
-#endif
 
 public:
     WZip(const QByteArray &path, bool &ok);

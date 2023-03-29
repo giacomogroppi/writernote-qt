@@ -1,4 +1,4 @@
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include "touch/multi_thread_data.h"
 #include "pthread.h"
 #include "audioplay/audioplay.h"
@@ -52,7 +52,7 @@ void *__search_new_view(void *__data)
     return nullptr;
 }
 
-void datastruct::newViewAudio(int newTime)
+void DataStruct::newViewAudio(int newTime)
 {
     int index, create, len;
 

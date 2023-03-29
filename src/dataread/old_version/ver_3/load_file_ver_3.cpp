@@ -2,8 +2,6 @@
 #include "datawrite/source_read_ext.h"
 #include "utils/common_error_definition.h"
 
-#ifdef ALL_VERSION
-
 int xmlstruct::load_file_3(WZipReaderSingle &reader)
 {
     int temp;
@@ -42,5 +40,3 @@ int xmlstruct::load_file_3(WZipReaderSingle &reader)
 
     return OK;
 }
-
-#endif

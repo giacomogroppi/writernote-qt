@@ -3,7 +3,7 @@
 #include "core/WZipReaderSingle.h"
 #include "core/WZipWriterSingle.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
-#include "touch/dataTouch/point.h"
+#include "touch/dataTouch/Point.h"
 #include <QPainter>
 #include <QPen>
 #include "core/WList.h"
@@ -15,14 +15,13 @@ private:
 
     void rep() const;
 
-#ifdef ALL_VERSION
     void append(const StrokeNormal &stroke);
-#endif // ALL_VERSION
+
 public:
     StrokeForPage();
     ~StrokeForPage() = default;
     void setMetadata(const colore_s &colore);
-    void append(const point_s &point, pressure_t pressure);
+    void append(const Point &point, pressure_t pressure);
 
     void setPressure(pressure_t press);
 

@@ -2,7 +2,6 @@
 
 #include <QObject>
 #include <QMediaPlayer>
-#include <QSlider>
 #include <QBuffer>
 #include "qaudiooutput.h"
 #include "utils/WCommonScript.h"
@@ -51,21 +50,25 @@ public:
     void setMedia(const QString &path);
 
 private slots:
-    void positionChange(qint64 position);
-    void mediachange(const QUrl &media);
+    void positionHasChange(qint64 position);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    void updateStatus(QMediaPlayer::State newState);
-#else
     void updateStatus(QMediaPlayer::PlaybackState newState);
-#endif
+
+signals:
+    void mediaIsEmpty();
+    void errorPlaying();
+    void endMedia();
+    void stateChange();
+    /**
+     * @ brief now and max are express in seconds
+     * @ ensures
+     * @  now >= 0 && now <= max &&
+    */
+    void positionChange(int now, int max);
 
 private:
     QMediaPlayer *player;
-
-#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
     QAudioOutput *audio_output;
-#endif
 };
 
 inline bool audioplay::isPlay() const

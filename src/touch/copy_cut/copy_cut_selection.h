@@ -5,7 +5,7 @@
 #include <QList>
 
 class Stroke;
-class datastruct;
+class DataStruct;
 
 class copy
 {
@@ -17,16 +17,16 @@ public:
 #define SELECTION_FLAGS_CUT 1
 #define SELECTION_FLAGS_PASTE 2
 
-    int selection(  datastruct &data,
-                    const QList<
+    int selection(DataStruct &data,
+                  const QList<
                         QList<
                             std::shared_ptr<Stroke>
                         >
                     > &stroke,
-                    int __flags, const QPointF &offsetTouch);
+                  int __flags, const QPointF &offsetTouch);
 
 
-    void past_selection(datastruct &data, QPointF &point_past);
+    void past_selection(DataStruct &data, QPointF &point_past);
 
     bool isEmpty() const;
 
@@ -36,7 +36,7 @@ public:
     void reset();
 
 private:
-    void managePaste(datastruct &data, const QPointF &pointTouch);
+    void managePaste(DataStruct &data, const QPointF &pointTouch);
     void adjustData(const QPointF &offset);
 
 #define FLAG_CUT 0x2 /* if the point is from a cut operation */

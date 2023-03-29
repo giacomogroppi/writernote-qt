@@ -2,15 +2,15 @@
 #include <QString>
 
 #include "testing/memtest.h"
-#include "touch/dataTouch/datastruct/datastruct.h"
+#include "touch/dataTouch/datastruct/DataStruct.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
-Document::Document() :  datastruct(),
+Document::Document() : DataStruct(),
 #ifdef PDFSUPPORT
                         frompdf(),
 #endif // PDFSUPPORT
-                        fromimage()
+                       fromimage()
 {
 }
 
@@ -25,7 +25,7 @@ Document::~Document()
 
 void Document::scala_all(const QPointF &delta, int heightView)
 {
-    datastruct::scala_all(delta, heightView);
+    DataStruct::scala_all(delta, heightView);
     fromimage::move_img(delta);
 #ifdef PDFSUPPORT
     frompdf::translation_pdf(delta);
@@ -34,8 +34,8 @@ void Document::scala_all(const QPointF &delta, int heightView)
 
 void Document::repositioning()
 {
-    datastruct::setZoom(1.);
-    datastruct::setPageVisible(-1);
+    DataStruct::setZoom(1.);
+    DataStruct::setPageVisible(-1);
 
     const QPointF point = -this->getPointFirstPageNoZoom();
 
@@ -46,7 +46,7 @@ void Document::copy(const Document &src, Document &dest)
 {
     dest.audio_position_path = src.audio_position_path;
 
-    datastruct::copy(src, dest);
+    DataStruct::copy(src, dest);
 #ifdef PDFSUPPORT
     frompdf::copy_pdf(src, dest);
 #endif //PDFSUPPORT
@@ -106,7 +106,7 @@ void Document::cleanAudio()
 void Document::adjustHeight(cdouble height)
 {
     QPointF res;
-    datastruct::adjustHeight(height, res);
+    DataStruct::adjustHeight(height, res);
 
     Document::scala_all(res, static_cast<int>(height));
 }
@@ -114,7 +114,7 @@ void Document::adjustHeight(cdouble height)
 void Document::adjustAll(unsigned w, unsigned h)
 {
     QPointF res;
-    datastruct::adjustAll(w, h, res);
+    DataStruct::adjustAll(w, h, res);
 
     Document::scala_all(res, static_cast<int>(h));
 }
@@ -123,7 +123,7 @@ void Document::increaseZoom(double delta, const QSize &size)
 {
     QPointF res;
 
-    datastruct::increaseZoom(delta, size, res);
+    DataStruct::increaseZoom(delta, size, res);
 
     Document::scala_all(res, size.height());
 }
@@ -131,6 +131,6 @@ void Document::increaseZoom(double delta, const QSize &size)
 void Document::controllForRepositioning()
 {
     QPointF res;
-    datastruct::controllForRepositioning(res);
+    DataStruct::controllForRepositioning(res);
     Document::scala_all(res, INT_MAX);
 }

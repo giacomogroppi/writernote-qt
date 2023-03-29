@@ -1,5 +1,4 @@
-#ifndef UPDATECHECK_H
-#define UPDATECHECK_H
+#pragma once
 
 #define POSIZIONEPATHVERSIONE ":/image/src/windows/versione.xml"
 #define SITOGIT "https://api.github.com/repos/giacomogroppi/writernote-qt/contents/src/windows/versione.xml"
@@ -19,7 +18,8 @@ class updatecheck: public QObject
 {
     Q_OBJECT
 public:
-    updatecheck(QAction *action_update);
+    updatecheck(QObject *parent, std::function<void(const QString &message, const QString &version)> showDialog,
+                std::function<void(bool)> setVisibleUpdateButton);
     ~updatecheck();
 
     void checkupdate();
@@ -44,13 +44,14 @@ public:
         critical = 'c'
     };
 
+private:
+    std::function<void(const QString &message, const QString &version)> _showDialog;
+    std::function<void(bool)> _setVisibleUpdateButton;
 private slots:
     void managerFinished();
 
 private:
-    QAction *action;
 
     void start();
 };
 
-#endif // UPDATECHECK_H

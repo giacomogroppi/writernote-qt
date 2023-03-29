@@ -9,6 +9,7 @@ private:
 public:
     PenMethod(std::function<pressure_t (double size)> getSize,
               std::function<int()> getTime,
+              std::function<void()> objectMove,
               QColor &color,
               QPen &pen);
 

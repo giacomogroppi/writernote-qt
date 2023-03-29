@@ -24,7 +24,7 @@ public:
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const;
     bool is_inside(const QRectF &rect, double precision) const;
 
-    void append(const point_s &point, pressure_t pressure);
+    void append(const Point &point, pressure_t pressure);
     size_t createControll() const final;
 
     QRect getBiggerPointInStroke() const;

@@ -14,49 +14,6 @@
 
 static bool createTempFolder(const QString &path);
 
-/*
- * warning:
- * the pointer returning the function will be
- * deleted at the end of the call
- *
- * for audio -> if it fail to create temp
- * folder -> return NULL
-*/
-
-QByteArray get_path(path::e_path var)
-{
-    QByteArray tmp;
-    tmp = get_path_no_controll().toUtf8();
-    if(var == path::audio_pos){
-        if(!createTempFolder(tmp))
-            return "";
-
-        return tmp;
-    }
-
-    if(var == path::log){
-        tmp += "writernote-log";
-        if(!createTempFolder(tmp))
-            return "";
-        return tmp;
-    }
-
-    if(var == path::tmp_file_not_save){
-        if (!createTempFolder(tmp))
-            return "";
-        return tmp;
-    }
-
-    if(var == path::home){
-        return QByteArray(getenv(POS_HOME));
-    }
-    if(var == path::nameuser){
-        return getenv(NAME_USER);
-    }
-
-    return "";
-}
-
 static bool createTempFolder(const QString &path){
     if(!QDir(path).exists()){
         return QDir().mkdir(path);
