@@ -13,16 +13,16 @@
 
 constexpr bool debugSquare = false;
 
-class square:   public QObject,
-                public SquareMethod
+class Square: public QObject,
+              public SquareMethod
 {
     Q_OBJECT
 public:
-    explicit square(QObject *parent,
+    explicit Square(QObject *parent,
                     std::function<void()> hideProperty,
                     std::function<void(const QPointF& point, ActionProperty signal)> showProperty,
                     std::function<Document &()> getDoc);
-    ~square() override;
+    ~Square() override;
 
     void reset() override;
 private:

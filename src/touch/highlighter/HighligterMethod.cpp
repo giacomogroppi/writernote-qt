@@ -9,7 +9,7 @@ extern StrokePre __tmp;
 HighligterMethod::HighligterMethod(
             std::function<int()> getTime,
             std::function<pressure_t(double)> getSize,
-            std::function<void()> objectMove,
+            std::function<void(const QPointF&)> objectMove,
             QPen &pen,
             QColor &color
         )

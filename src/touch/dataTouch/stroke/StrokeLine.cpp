@@ -45,7 +45,7 @@ bool StrokeLine::is_inside(const QRectF &area, double precision) const
     WLine lineVertRig   (area.topRight(),   area.bottomRight());
     WLine _this         (_data.pt1, _data.pt2);
 
-    // if the square passed to the function contains one of the two points
+    // if the Square passed to the function contains one of the two points
     if(area.contains(_data.pt1)){
         WDebug(debugLine, "Contains first line" << _data.pt1);
         return true;

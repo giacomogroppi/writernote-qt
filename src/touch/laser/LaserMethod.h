@@ -8,9 +8,10 @@ class LaserMethod: public InsertTools
 {
 public:
     LaserMethod(std::function<pressure_t(double)> getPress,
-                std::function<void()> objectMove,
+                std::function<void(const QPointF&)> objectMove,
                 std::function<void(const StrokePre &stroke)> appent_to,
                 QPen &pen, QColor &color);
+
     virtual ~LaserMethod() = default;
     bool touchBegin(const QPointF& point, double size, class Document &doc) final;
     bool touchUpdate(const QPointF& point, double size, class Document &doc) final;

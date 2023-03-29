@@ -8,7 +8,9 @@ class Pen: public QObject, public PenMethod
 {
     Q_OBJECT
 public:
-    Pen(QObject *parent, std::function<int()> getTime, std::function<void()> objectMove,
+    Pen(QObject *parent,
+        std::function<int()> getTime,
+        std::function<void(const QPointF &point)> objectMove,
         QColor &color, QPen &pen);
     virtual ~Pen() = default;
 

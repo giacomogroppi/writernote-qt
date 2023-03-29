@@ -6,6 +6,9 @@
 #include "touch/laser/Laser.h"
 #include "touch/pen/Pen.h"
 #include "touch/rubber/Rubber.h"
+#include "object_finder/ObjectFinder.h"
+#include "touch/square/Square.h"
+#include "core/WImage.h"
 
 class TabletController : public QObject
 {
@@ -16,27 +19,31 @@ private:
         Pen *_pen;
         Rubber *_rubber;
         Laser *_laser;
+        Square *_square;
     } _tools;
 
+    ObjectFinder *_objectFinder;
     Tools *_currentTool;
-
     QColor _color;
     QPen _pen;
-
     Document *_doc;
 
-    void objectMove();
+    void objectMove(const QPointF &point);
     void callUpdate();
     void setAndCallTool(Tools *tool);
 
+    Document &getDoc();
+
 public:
-    explicit TabletController(QObject *parent, const std::function<int()>& getTimeRecording);
+    explicit TabletController(QObject *parent,
+                              const std::function<int()>& getTimeRecording);
 
 
 
 public slots:
     void selectRubber();
     void selectPen();
+    void selectHighligter();
     void selectSquare();
     void selectLaser();
 
@@ -47,5 +54,7 @@ public slots:
 signals:
     void onNeedRefresh();
     void onToolChanged();
+    void onPropertyHide();
+    void onPropertyShow(const QPointF &point, ActionProperty);
 };
 

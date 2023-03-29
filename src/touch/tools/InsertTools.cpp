@@ -8,7 +8,7 @@ extern StrokePre __tmp;
 
 InsertTools::InsertTools(std::function<int()> getTime,
                          std::function<pressure_t(double)> getSize,
-                         std::function<void()> objectMove,
+                         std::function<void(const QPointF &)> objectMove,
                          QColor &color,
                          QPen &pen)
     : _getTime(std::move(getTime))
@@ -47,7 +47,7 @@ bool InsertTools::touchUpdate(const QPointF &point, double size, class Document 
 
     strokeTmp.append(point, pressure, (QPen &)_pen, getProp(doc));
 
-    this->_objectMove();
+    this->_objectMove(point);
 
     return true;
 }

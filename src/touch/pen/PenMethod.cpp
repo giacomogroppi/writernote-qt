@@ -3,7 +3,7 @@
 
 PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
                      std::function<int()> getTime,
-                     std::function<void()> objectMove,
+                     std::function<void(const QPointF &point)> objectMove,
                      QColor &color, QPen &pen) :
         InsertTools(std::move(getTime),
                     std::move(getSize),

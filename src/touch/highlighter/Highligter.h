@@ -4,6 +4,7 @@
 #include "HighligterMethod.h"
 
 class Highligter: public QObject, public HighligterMethod {
+    Q_OBJECT
 private:
     enum HighligterType {
         HighligterTypePressure,
@@ -14,11 +15,11 @@ private:
     pressure_t _size;
     int _alfa;
 
-    uchar getAlfa() const override;
+    [[nodiscard]] uchar getAlfa() const override;
 public:
     explicit Highligter(QObject *parent,
                         std::function<int()> getTime,
-                        std::function<void()> objectMove,
+                        std::function<void(const QPointF &)> objectMove,
                         QColor &color,
                         QPen &pen);
 

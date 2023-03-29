@@ -8,7 +8,7 @@
 extern StrokePre __tmp;
 
 LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
-                         std::function<void()> objectMove,
+                         std::function<void(const QPointF&)> objectMove,
                          std::function<void(const StrokePre &stroke)> append_to,
                          QPen &pen,
                          QColor &color)
@@ -19,7 +19,7 @@ LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
     , std::move(objectMove)
     , color
     , pen)
-    , _append_to(append_to)
+    , _append_to(std::move(append_to))
 {
 }
 

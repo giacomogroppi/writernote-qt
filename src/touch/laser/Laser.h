@@ -24,7 +24,7 @@ private:
 public:
     explicit Laser(QObject *parent,
                    std::function<pressure_t(double)> getSize,
-                   std::function<void()> objectMove,
+                   std::function<void(const QPointF&)> objectMove,
                    QColor &color, QPen &pen,
                    std::function<void()> callUpdate);
     ~Laser();

@@ -11,7 +11,7 @@ enum n_style: int{
             * line, at the end of the sheet, of the
             * same color as the sheet */
     empty, /* draw from default style in last style */
-    square /* draw square */
+    square /* draw Square */
 };
 
 struct style_struct_S{

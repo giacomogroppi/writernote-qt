@@ -5,8 +5,17 @@ TabletController::TabletController(QObject *parent,
     : QObject{parent}
     , _doc(new Document)
 {
-    auto objectMove = [this]() { this->objectMove(); };
+    auto objectMove = [this](const QPointF &point) { this->objectMove(point); };
     auto callUpdate = [this]() { this->callUpdate(); };
+    auto getDoc = [this]() -> Document & { return this->getDoc(); };
+
+    auto showProperty = [this] (const QPointF &point, ActionProperty prop) {
+        emit this->onPropertyShow(point, prop);
+    };
+
+    auto hideProperty = [this] () {
+        emit this->onPropertyHide();
+    };
 
     this->_tools = {
         ._highligter = new Highligter (
@@ -33,12 +42,23 @@ TabletController::TabletController(QObject *parent,
                 _color,
                 _pen,
                 callUpdate
-            )
+            ),
+        ._square = new Square(
+                this,
+                hideProperty,
+                showProperty,
+                getDoc
+                )
     };
+
+    _objectFinder = new ObjectFinder(this, callUpdate);
+
+    QObject::connect(_tools._square, &Square::needRefresh, this, &TabletController::onNeedRefresh);
 }
 
-void TabletController::objectMove()
+void TabletController::objectMove(const QPointF &point)
 {
+    _objectFinder->move(point);
 }
 
 void TabletController::touchBegin(const QPointF &point, double pressure)
@@ -58,16 +78,51 @@ void TabletController::touchEnd(const QPointF &point, double pressure)
 
 void TabletController::selectRubber()
 {
+    setAndCallTool(_tools._rubber);
+}
 
+void TabletController::selectLaser()
+{
+    setAndCallTool(_tools._laser);
+}
+
+void TabletController::selectPen()
+{
+    setAndCallTool(_tools._pen);
+}
+
+void TabletController::selectSquare()
+{
+    setAndCallTool(_tools._square);
+}
+
+void TabletController::selectHighligter()
+{
+    setAndCallTool(_tools._highligter);
 }
 
 void TabletController::setAndCallTool(Tools *tool)
 {
     W_ASSERT(tool != nullptr);
-    auto *now = this->_currentTool;
+    auto *old = this->_currentTool;
 
     this->_currentTool = tool;
 
-    if (now != tool)
+    if (old != tool) {
+        if (old == this->_tools._square) {
+            this->_tools._square->reset();
+        }
+
         emit onToolChanged();
+    }
+}
+
+void TabletController::callUpdate()
+{
+    emit onNeedRefresh();
+}
+
+Document &TabletController::getDoc()
+{
+    return *this->_doc;
 }

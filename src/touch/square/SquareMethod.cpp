@@ -1,6 +1,6 @@
 #include "SquareMethod.h"
 #include "core/core.h"
-#include "touch/square/square.h"
+#include "touch/square/Square.h"
 #include "touch/TabletUtils.h"
 #include "touch/paintevent/paint.h"
 #include "log/log_ui/log_ui.h"
@@ -531,7 +531,7 @@ void SquareMethod::needReload(QPainter &painter, const Document &doc)
 {
     if constexpr (WCommonScript::debug_enable()){
         if(un(!painter.isActive())){
-            qDebug() << "Painter not active in square" << __FUNCTION__;
+            qDebug() << "Painter not active in Square" << __FUNCTION__;
             std::abort();
         }
     }

@@ -27,7 +27,7 @@ void singleLoad(QPainter        &painter,
  * @countHeigth is use when we what to
  * create a target rect that to create
  * a targetRect that spans multiple
- * pages, as in square
+ * pages, as in Square
 */
 
 #define DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH 1

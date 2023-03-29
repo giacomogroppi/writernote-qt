@@ -4,7 +4,7 @@
 
 Pen::Pen(QObject *parent,
          std::function<int ()> getTime,
-         std::function<void()> objectMove,
+         std::function<void(const QPointF &)> objectMove,
          QColor &color,
          QPen &pen)
     : PenMethod(
