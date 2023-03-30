@@ -86,6 +86,11 @@ void TabletController::selectLaser()
     setAndCallTool(_tools._laser);
 }
 
+void TabletController::selectColor(const QColor &color)
+{
+    this->_color = color;
+}
+
 void TabletController::selectPen()
 {
     setAndCallTool(_tools._pen);

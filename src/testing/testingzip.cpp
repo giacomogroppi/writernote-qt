@@ -84,7 +84,7 @@ static not_used void run_test_1()
 {
     QVector<int> data;
     QVector<int> res;
-    QByteArray to = get_path(path::home) + "/tmp_writernote_test/";
+    QByteArray to = "${HOME}/tmp_writernote_test/";
 
     WDir::createDir(to);
 

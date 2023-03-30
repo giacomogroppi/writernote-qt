@@ -21,8 +21,6 @@ SquareMethod::SquareMethod(std::function<void()> hideProperty,
     , _need_reload(false)
     , _in_box(false)
 {
-    W_ASSERT(prop);
-
     _thread        = get_thread_max();
     _dataThread    = get_data_max();
     _threadCount   = get_thread_used();
