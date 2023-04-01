@@ -1,12 +1,12 @@
 #include "restore_file_critic.h"
 #include <QFile>
-#include "utils/dialog_critic/dialog_critic.h"
 #include "dataread/xmlstruct.h"
 #include "datawrite/savefile.h"
 
 restore_file_critic::n_err restore_file_critic::restore_file_direct(
         const QByteArray &path_load,
-        const QByteArray &path_save)
+        const QByteArray &path_save,
+        std::function<void(const QString &)> showMessage)
 {
     Document cur;
 
@@ -14,7 +14,7 @@ restore_file_critic::n_err restore_file_critic::restore_file_direct(
     savefile save(&path_save, &cur);
     const int res = xml.loadfile(false, false);
 
-    if (!xmlstruct::manageMessage(res)) {
+    if (!xmlstruct::manageMessage(res, showMessage)) {
         return restore_file_critic::n_err::error_load_file;
     }
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtGlobal>
-#include <QWidget>
+#include <QObject>
 #include <QRunnable>
 
 class WTask:    public QObject,

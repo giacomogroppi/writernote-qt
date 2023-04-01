@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDialog>
 #include "cloud/cloud_controll.h"
 
 #ifdef CLOUD

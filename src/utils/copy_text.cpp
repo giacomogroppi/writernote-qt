@@ -1,10 +1,10 @@
 #include "copy_text.h"
 
 #include <QClipboard>
-#include <QApplication>
+#include "utils/WCommonScript.h"
 
 void copy_text(QString text)
 {
-    QClipboard *clip = QApplication::clipboard();
-    clip->setText(text);
+    // TOIMPLEMENT
+    W_ASSERT(0);
 }

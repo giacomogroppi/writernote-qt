@@ -1,5 +1,4 @@
 #include "audioplay.h"
-#include "utils/dialog_critic/dialog_critic.h"
 #include "testing/memtest.h"
 #include "utils/platform.h"
 #include "core/core.h"

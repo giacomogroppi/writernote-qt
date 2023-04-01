@@ -1,6 +1,4 @@
 #include "topdf.h"
-#include "qapplication.h"
-#include "utils/dialog_critic/dialog_critic.h"
 #include <QPdfWriter>
 #include <QPageSize>
 #include "log/log_ui/log_ui.h"

@@ -53,5 +53,9 @@ private slots:
 private:
 
     void start();
+
+signals:
+    /** result == true there are update */
+    void result(bool result);
 };
 

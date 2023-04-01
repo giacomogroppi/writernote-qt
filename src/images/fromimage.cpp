@@ -3,7 +3,6 @@
 #include <QBuffer>
 #include <QByteArray>
 #include <QList>
-#include <QFileDialog>
 #include "zip.h"
 #include "dataread/readlistarray.h"
 #include "datawrite/source_read_ext.h"
@@ -178,23 +177,15 @@ unsigned fromimage::insert_image(   const QString &pos,
                                     struct immagine_s &img)
 {
     QString res;
-    if(pos == ""){
-        res = QFileDialog::getOpenFileName(nullptr, "Open images", "", "Images (*.png *.xpm *.jpg *.jpeg);;All Files (*)");
-
-        if(res == "")
-            return ERROR;
-    }else{
-        res = pos;
-    }
+    W_ASSERT(pos.size());
 
     WImage immagine(res);
     img.immagini = immagine;
 
-    if(point){
+    if (point) {
         img.i = point->toPoint();
         img.f = point->toPoint() + QPoint(DELTA_POINT, DELTA_POINT);
-    }
-    else{
+    } else {
         img.i = QPoint(0, 0);
         img.f = QPoint(DELTA_POINT, DELTA_POINT);
     }

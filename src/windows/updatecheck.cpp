@@ -8,11 +8,9 @@
 #include "mostra_finestra_i.h"
 #include <QFile>
 #include <QTextStream>
-#include <QMessageBox>
 #include "utils/areyousure/areyousure.h"
 #include <QJsonArray>
 #include <QJsonDocument>
-#include "utils/dialog_critic/dialog_critic.h"
 #include "utils/platform.h"
 
 #define POSNAME "name"
@@ -77,12 +75,6 @@ void updatecheck::managerFinished()
     QString __mess;
     QString testo;
     QJsonDocument doc;
-
-#ifndef VERSION_SNAPCRAFT
-    if(mostra)
-        dialog_critic("This version of writernote was not compiled following the \ninstructions for setting the version, \nso I can't tell if there are any updates");
-    return;
-#endif
 
     if(reply->error()){
         if(mostra)

@@ -14,7 +14,8 @@ namespace restore_file_critic
         restore_ok
     };
 
-    enum n_err restore_file_direct( const QByteArray & path_load,
-                                    const QByteArray& path_save);
+    enum n_err restore_file_direct(const QByteArray & path_load,
+                                   const QByteArray& path_save,
+                                   std::function<void(const QString &)> showMessage);
 
 };

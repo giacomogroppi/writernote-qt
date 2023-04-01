@@ -3,12 +3,10 @@
 #include "xmlstruct.h"
 #include "datawrite/source_read_ext.h"
 #include "utils/common_error_definition.h"
-#include "utils/areyousure/areyousure.h"
 #include "testing/memtest.h"
 #include "core/WZip.h"
 #include "core/WZipReaderSingle.h"
 #include "log/log_ui/log_ui.h"
-#include "utils/dialog_critic/dialog_critic.h"
 
 int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
 {
@@ -86,31 +84,31 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
     return ERROR;
 }
 
-bool xmlstruct::manageMessage(const int res)
+bool xmlstruct::manageMessage(const int res, std::function<void (const QString &)> showMessage)
 {
     switch (res) {
         case OK: return true;
         case ERROR: {
-            dialog_critic("We had an internal problem loading the file");
+            showMessage("We had an internal problem loading the file");
             return false;
         }
         case ERROR_VERSION:{
-            dialog_critic("This file is too old to be read");
+            showMessage("This file is too old to be read");
             return false;
         }
         case ERROR_VERSION_NEW:{
-            dialog_critic("This file was created with a later version of writernote, and I cannot read the file.");
+            showMessage("This file was created with a later version of writernote, and I cannot read the file.");
             return false;
         }
         case ERROR_CONTROLL:{
-            return areyousure("Corrupt file", "The file is corrupt, do you want to open it anyway?");
+            return true;
         }
         case ERROR_MULTIPLE_COPYBOOK:{
-            user_message("Writernote has decided to completely change the file format, now it will no longer be possible to have more than one copybook in a file. \nTo use files created with writernote versions lower than or equal to 1.5.2h you must:\nOpen the file with a compressed archive manager, extract all the files that have the same prefix, i.e. the copybook name, and move them into a new writernote file, changing all the names of the same copybook with the prefix data.");
+            showMessage("Writernote has decided to completely change the file format, now it will no longer be possible to have more than one copybook in a file. \nTo use files created with writernote versions lower than or equal to 1.5.2h you must:\nOpen the file with a compressed archive manager, extract all the files that have the same prefix, i.e. the copybook name, and move them into a new writernote file, changing all the names of the same copybook with the prefix data.");
             return false;
         }
         case ERROR_VERSION_KEY:{
-            user_message("This file was written with the pen, and it is not possible to light it.");
+            showMessage("This file was written with the pen, and it is not possible to light it.");
             return false;
         }
         default:

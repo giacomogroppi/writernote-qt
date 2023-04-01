@@ -72,7 +72,7 @@ public:
     const QByteArray &getPath() const;
 
     /* return true if we can read this file */
-    static bool manageMessage(const int res);
+    static bool manageMessage(const int res, std::function<void(const QString &)> showMessage);
 
     int xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg);
 

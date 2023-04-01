@@ -3,7 +3,6 @@
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 #include "windows/mostra_finestra_i.h"
-#include "utils/dialog_critic/dialog_critic.h"
 #include "utils/slash/slash.h"
 #include <QDesktopServices>
 #include "../path/pathfile.h"

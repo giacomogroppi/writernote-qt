@@ -4,7 +4,6 @@
 #include "utils/path/get_path.h"
 #include "utils/time/current_time.h"
 #include "utils/mostra_explorer/mostra_explorer.h"
-#include "utils/dialog_critic/dialog_critic.h"
 #include "utils/slash/slash.h"
 #include "utils/time/current_time.h"
 #include "utils/WCommonScript.h"
@@ -15,7 +14,6 @@
 #include <pthread.h>
 #include <QDir>
 #include <QFile>
-#include <QFileDialog>
 
 static WMutex mutex;
 
