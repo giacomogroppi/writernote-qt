@@ -301,6 +301,12 @@ force_inline bool included(const T min, const T max, const T value)
     return min <= value and value <= max;
 }
 
+/**
+ * The function rounds down the passed number.
+ *
+ * @param num The double number to compute the difference for.
+ * @return The difference between the given number and its rounded-down value.
+ */
 force_inline int diff(cdouble num)
 {
     if(double(int(num)) > num){

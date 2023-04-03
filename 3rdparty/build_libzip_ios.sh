@@ -30,6 +30,9 @@ cmake .. \
     -DENABLE_MBEDTLS=FALSE \
     -DENABLE_GNUTLS=FALSE \
     -DBUILD_SHARED_LIBS=OFF \
-    -DBUILD_TOOLS=OFF
+    -DBUILD_TOOLS=OFF \
+    -DBUILD_REGRESS=OFF \
+    -DBUILD_EXAMPLES=OFF \
+    -DBUILD_DOC=OFF
 
 cmake --build . --config Release --target install

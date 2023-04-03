@@ -1,5 +1,7 @@
 #include "TabletController.h"
 
+extern StrokePre __tmp;
+
 TabletController::TabletController(QObject *parent,
                                    const std::function<int()>& getTimeRecording)
     : QObject{parent}
@@ -51,6 +53,8 @@ TabletController::TabletController(QObject *parent,
                 )
     };
 
+    __tmp = StrokePre();
+    _currentTool = _tools._pen;
     _objectFinder = new ObjectFinder(this, callUpdate);
 
     QObject::connect(_tools._square, &Square::needRefresh, this, &TabletController::onNeedRefresh);
@@ -68,12 +72,12 @@ void TabletController::touchBegin(const QPointF &point, double pressure)
 
 void TabletController::touchUpdate(const QPointF &point, double pressure)
 {
-    _currentTool->touchBegin(point, pressure, *_doc);
+    _currentTool->touchUpdate(point, pressure, *_doc);
 }
 
 void TabletController::touchEnd(const QPointF &point, double pressure)
 {
-    _currentTool->touchBegin(point, pressure, *_doc);
+    _currentTool->touchEnd(point, *_doc);
 }
 
 void TabletController::selectRubber()
@@ -89,6 +93,11 @@ void TabletController::selectLaser()
 void TabletController::selectColor(const QColor &color)
 {
     this->_color = color;
+}
+
+void TabletController::positionDocChanged(const QPointF &newPosition)
+{
+    this->_doc->setPointFirstPage(newPosition);
 }
 
 void TabletController::selectPen()

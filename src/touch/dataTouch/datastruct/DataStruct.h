@@ -407,7 +407,7 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
     const auto &point = big.topLeft();
     i = this->whichPage(point);
 
-    if(un(i < 0)){
+    if (un(i < 0)) {
         const auto &point = big.bottomRight();
         i = this->whichPage(point);
     }
@@ -450,8 +450,7 @@ inline int DataStruct::whichPage(const QPointF &point) const
     const double heigth = Page::getHeight();
     const not_used auto debug_which = false;
 
-    if(un(point.y() < 0.))
-        return -1;
+    W_ASSERT(point.y() >= 0.);
 
     len = this->lengthPage();
 
@@ -470,7 +469,7 @@ inline int DataStruct::whichPage(const QPointF &point) const
 
     i = WCommonScript::diff(point.y() / heigth);
 
-    if(un(i >= len)){
+    if (un(i >= len)) {
         WDebug(debug_which, "set to -1");
         i = -1;
         WDebug(debug_which, "set to -1" << qstr("i: %1").arg(i));
@@ -481,7 +480,7 @@ inline int DataStruct::whichPage(const QPointF &point) const
     WDebug(debug_which, qstr("i: %1 ").arg(i)
         << qstr("y %1 height %2").arg(point.y()).arg(heigth));
 
-    if(i != res){
+    if (i != res) {
         WWarning("Differente result: " << i << res);
         std::abort();
     }
