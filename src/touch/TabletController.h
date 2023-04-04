@@ -28,7 +28,7 @@ private:
     QPen _pen;
     Document *_doc;
 
-    mutable WImage _img;
+    mutable QPixmap _img;
     mutable bool _needUpdate;
 
     void objectMove(const QPointF &point);
@@ -46,7 +46,7 @@ public:
                               const std::function<bool()> &isPlaying,
                               const std::function<int()> &getTimePlaying);
 
-    const QImage &getImg();
+    const QPixmap &getImg();
 
 private:
     void checkCreatePage();

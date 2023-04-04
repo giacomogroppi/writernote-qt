@@ -127,14 +127,14 @@ inline void fromimage::draw_img(QPainter &painter, const immagine_s &img)
     fromimage::draw_img(painter, QRectF(img.i, img.f), img.immagini);
 }
 
-inline void fromimage::draw_img(QPainter &painter, const QList<immagine_s> &list)
+force_inline void fromimage::draw_img(QPainter &painter, const QList<immagine_s> &list)
 {
-    for(const auto &img : qAsConst(list)){
+    for (const auto &img : qAsConst(list)) {
         fromimage::draw_img(painter, img);
     }
 }
 
-inline void fromimage::draw_img(QPainter &painter) const
+force_inline void fromimage::draw_img(QPainter &painter) const
 {
     return fromimage::draw_img(painter, this->m_img);
 }

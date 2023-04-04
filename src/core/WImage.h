@@ -14,7 +14,6 @@ public:
     [[nodiscard]] size_t get_size_in_file() const;
     [[nodiscard]] size_t save_and_size(QByteArray &arr) const;
 
-
     bool operator==(const WImage &other) const;
 };
 

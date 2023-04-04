@@ -6,6 +6,8 @@
 
 StrokeForPage::StrokeForPage()
     : _data(new StrokeNormal)
+    , _pxm(1, false)
+    , _needToUpdate(true)
 {
     rep();
 }
@@ -13,6 +15,7 @@ StrokeForPage::StrokeForPage()
 void StrokeForPage::setPressure(pressure_t press)
 {
     this->_data->force_pressure(press);
+    _needToUpdate = true;
     rep();
 }
 
@@ -50,6 +53,8 @@ int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
     if(_data->_pressure[0] > 10)
         _data->_pressure[0] = 1.5;
 
+    _needToUpdate = true;
+
     return OK;
 }
 
@@ -67,6 +72,18 @@ void StrokeForPage::draw(QPainter &painter, double zoom, double delta,
     int counterPoint, lenPoint;
     pressure_t pressure;
 
+    if (!_needToUpdate) {
+        painter.drawPixmap(_pxm.rect(), _pxm);
+        //_pxm.toImage().save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+        return;
+    }
+
+    QPainter _painter;
+
+    _pxm = WPixmap(1, false);
+    _pxm.fill(Qt::white);
+    W_ASSERT(_painter.begin(&_pxm));
+    core::painter_set_antialiasing(_painter);
 redo:
 
     lenPoint = this->_data->_point.length();
@@ -76,37 +93,30 @@ redo:
 
     pressure = _data->getPressure();
 
-    /**
-     * It is due to a bug introduced a long time ago.
-    */
-    if(un(pressure <= 0.0)){
-        if (_data->_point.length()) {
-            (pressure_t &)_data->_point[0] = .1f;
-        }
-        goto redo;
-    }
-
     pressure = TabletUtils::pressureToWidth(pressure * zoom / 2.0) * delta;
 
     pen.setWidthF(pressure);
     pen.setColor(_data->getColor());
 
-    painter.setPen(pen);
+    _painter.setPen(pen);
 
-    for(counterPoint = 0; counterPoint < lenPoint; counterPoint += 2){
+    for (counterPoint = 0; counterPoint < lenPoint; counterPoint += 2) {
         const auto ref1 = DataStruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
         const auto ref2 = DataStruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
 
-        painter.drawLine(ref1, ref2);
+        _painter.drawLine(ref1, ref2);
         //painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
     }
+
+    _painter.end();
+    this->_needToUpdate = false;
+    painter.drawPixmap(_pxm.rect(), _pxm);
 
     rep();
 }
 
 int StrokeForPage::save(WZipWriterSingle &writer) const
 {
-    rep();
     const auto res = this->_data->save(writer);
     rep();
     return res;
@@ -121,12 +131,14 @@ void StrokeForPage::scale(const QPointF &delta)
 void StrokeForPage::append(const Point &point, pressure_t pressure)
 {
     _data->append(point, pressure);
+    _needToUpdate = true;
     rep();
 }
 
 void StrokeForPage::reset()
 {
     this->_data = std::shared_ptr<StrokeNormal>(new StrokeNormal);
+    this->_needToUpdate = true;
     rep();
 }
 
@@ -135,6 +147,7 @@ StrokeForPage &StrokeForPage::operator=(const StrokeForPage &other)
     {
         std::shared_ptr<Stroke> res = other._data->clone();
         this->_data = std::dynamic_pointer_cast<StrokeNormal>(res);
+        this->_needToUpdate = true;
     }
 
     rep();

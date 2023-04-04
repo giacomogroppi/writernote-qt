@@ -68,23 +68,12 @@ TabletController::TabletController(QObject *parent,
     QObject::connect(_tools._square, &Square::needRefresh, this, &TabletController::onNeedRefresh);
 }
 
-const QImage &TabletController::getImg()
+const QPixmap &TabletController::getImg()
 {
     if (this->_needUpdate or 1) {
-        std::chrono::milliseconds old = std::chrono::duration_cast< std::chrono::milliseconds >(
-            std::chrono::system_clock::now().time_since_epoch()
-            );
-
         this->draw();
-
-        const auto now = std::chrono::duration_cast< std::chrono::milliseconds >(
-            std::chrono::system_clock::now().time_since_epoch()
-            );
-
-        const int diff = (now - old).count();
-
-        //qDebug() <<"getImg() " << diff << "ms";
     }
+
     this->_needUpdate = false;
 
     W_ASSERT(!_img.isNull());
@@ -94,12 +83,13 @@ const QImage &TabletController::getImg()
 
 void TabletController::draw()
 {
-    if (this->getDoc().isEmpty()){
-        _img = WImage(1, false);
+    if (this->getDoc().isEmpty()) {
+        _img = WPixmap(1, false);
+        _img.fill(Qt::white);
         return;
     }
 
-    this->_img = WImage(this->getDoc().lengthPage(), false);
+    this->_img = WPixmap(this->getDoc().lengthPage(), false);
     //_img.fill(Qt::white);
     TabletUtils::DataPaint d {
         .withPdf = true,
@@ -116,14 +106,16 @@ void TabletController::draw()
     const auto old = std::chrono::duration_cast< std::chrono::milliseconds >(
         std::chrono::system_clock::now().time_since_epoch()
     );
+
     TabletUtils::load(painter, this->getDoc(), d);
+
     const auto now = std::chrono::duration_cast< std::chrono::milliseconds >(
         std::chrono::system_clock::now().time_since_epoch()
     );
 
     painter.end();
-    WDebug(true, "Draw finish" << -(old - now).count());
-    //getImg().save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+    //qDebug() << "Draw finish" << -(old - now).count() << "ms";
+    //this->_img.save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
 }
 
 void TabletController::objectMove(const QPointF &point)

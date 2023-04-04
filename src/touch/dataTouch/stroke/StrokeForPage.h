@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/WImage.h"
 #include "core/WZipReaderSingle.h"
 #include "core/WZipWriterSingle.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
@@ -7,11 +8,13 @@
 #include <QPainter>
 #include <QPen>
 #include "core/WList.h"
-
+#include "core/WPixmap.h"
 
 class StrokeForPage {
 private:
     std::shared_ptr<class StrokeNormal> _data;
+    mutable WPixmap _pxm;
+    mutable bool _needToUpdate;
 
     void rep() const;
 

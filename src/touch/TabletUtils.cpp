@@ -67,6 +67,9 @@ void TabletUtils::load(QPainter &painter,
     pen.setStyle(Qt::PenStyle::SolidLine);
     core::painter_set_antialiasing(painter);
 
+    painter.setPen(QPen(Qt::black, 5));
+    painter.drawLine(1, 1, 100, 100);
+
     loadSheet(data, pen, painter, dataPoint.m);
 
 #ifdef PDFSUPPORT
@@ -86,16 +89,15 @@ void TabletUtils::load(QPainter &painter,
 
     draw_for_audio(data, dataPoint);
 
-    if(likely(!dataPoint.IsExportingPdf)){
+    if (likely(!dataPoint.IsExportingPdf)) {
         counterPage = data.getFirstPageVisible();
     }
     else{
         counterPage = 0;
     }
 
-    constexpr auto debugPageImg = false;
-    WDebug(debugPageImg, "Start draw img from" << counterPage);
-    for(; counterPage < lenPage; counterPage ++){
+    WDebug(false, "Start draw img from" << counterPage);
+    for(counterPage = 0; counterPage < lenPage; counterPage ++){
         const Page &page = data.at(counterPage);
         /*const auto isPageVisible = page.isVisible();
         const auto isExporting = dataPoint.IsExportingPdf;
@@ -129,15 +131,24 @@ void singleLoad(
     painter.drawImage(targetRect, img);
 }
 
-void drawUtils::loadSingleSheet(
+force_inline void drawUtils::loadSingleSheet(
         QPainter &painter,   const Page &page,
         cdouble zoom,        cdouble delta,
         QPen &_pen, const QPointF& pointFirstPage)
 {
-    page.get_stroke_page().draw(painter, zoom, delta, _pen, pointFirstPage, page);
+    page
+        .get_stroke_page()
+        .draw(
+            painter,
+            zoom,
+            delta,
+            _pen,
+            pointFirstPage,
+            page
+        );
 }
 
-static void loadSheet(
+static force_inline void loadSheet(
         const Document  &doc,
         QPen            &m_pen,
         QPainter        &painter,
