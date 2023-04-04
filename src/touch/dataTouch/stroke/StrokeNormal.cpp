@@ -362,6 +362,8 @@ void StrokeNormal::scale(const QPointF &offset)
 
 StrokeNormal &StrokeNormal::operator=(const StrokeNormal &other)
 {
+    if (&other == this)
+        return *this;
     Stroke::operator=(other);
     this->_point = other._point;
     this->_pressure = other._pressure;

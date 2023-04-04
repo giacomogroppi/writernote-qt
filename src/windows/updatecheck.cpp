@@ -79,7 +79,7 @@ void updatecheck::managerFinished()
     if(reply->error()){
         if(mostra)
 #if defined(unix)
-            dialog_critic("We had a problem with internet connection " + reply->errorString());
+            this->_showDialog(qstr("We had a problem with internet connection %1").arg(reply->errorString()), "");
 #elif defined(WIN32) || defined(WIN64) || defined(MACOS)
             dialog_critic("We had a problem with internet connection " + reply->errorString() + "\nReinstall the app, or download the ssl libraries.");
 #endif

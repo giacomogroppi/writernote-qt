@@ -13,6 +13,7 @@ TabletController::TabletController(QObject *parent,
     , _isPlaying(isPlaying)
     , _getTimePlaying(getTimePlaying)
     , _needUpdate(true)
+    , _img(1, false)
 {
     auto objectMove = [this](const QPointF &point) { this->objectMove(point); };
     auto callUpdate = [this]() { this->callUpdate(); };
@@ -73,6 +74,9 @@ const QImage &TabletController::getImg()
         this->draw();
     }
     this->_needUpdate = false;
+
+    W_ASSERT(!_img.isNull());
+
     return this->_img;
 }
 
