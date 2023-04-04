@@ -71,7 +71,19 @@ TabletController::TabletController(QObject *parent,
 const QImage &TabletController::getImg()
 {
     if (this->_needUpdate or 1) {
+        std::chrono::milliseconds old = std::chrono::duration_cast< std::chrono::milliseconds >(
+            std::chrono::system_clock::now().time_since_epoch()
+            );
+
         this->draw();
+
+        const auto now = std::chrono::duration_cast< std::chrono::milliseconds >(
+            std::chrono::system_clock::now().time_since_epoch()
+            );
+
+        const int diff = (now - old).count();
+
+        //qDebug() <<"getImg() " << diff << "ms";
     }
     this->_needUpdate = false;
 
@@ -101,9 +113,16 @@ void TabletController::draw()
     };
     Define_PAINTER_p(painter, _img);
 
+    const auto old = std::chrono::duration_cast< std::chrono::milliseconds >(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
     TabletUtils::load(painter, this->getDoc(), d);
+    const auto now = std::chrono::duration_cast< std::chrono::milliseconds >(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+
     painter.end();
-    WDebug(true, "Draw finish");
+    WDebug(true, "Draw finish" << -(old - now).count());
     //getImg().save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
 }
 
