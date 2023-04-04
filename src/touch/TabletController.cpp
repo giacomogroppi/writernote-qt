@@ -1,11 +1,18 @@
 #include "TabletController.h"
+#include "sheet/style_struct.h"
+#include "TabletUtils.h"
 
 extern StrokePre __tmp;
 
 TabletController::TabletController(QObject *parent,
-                                   const std::function<int()>& getTimeRecording)
+                                   const std::function<int()>& getTimeRecording,
+                                   const std::function<bool()> &isPlaying,
+                                   const std::function<int()> &getTimePlaying)
     : QObject{parent}
     , _doc(new Document)
+    , _isPlaying(isPlaying)
+    , _getTimePlaying(getTimePlaying)
+    , _needUpdate(true)
 {
     auto objectMove = [this](const QPointF &point) { this->objectMove(point); };
     auto callUpdate = [this]() { this->callUpdate(); };
@@ -60,24 +67,71 @@ TabletController::TabletController(QObject *parent,
     QObject::connect(_tools._square, &Square::needRefresh, this, &TabletController::onNeedRefresh);
 }
 
+const QImage &TabletController::getImg()
+{
+    if (this->_needUpdate or 1) {
+        this->draw();
+    }
+    this->_needUpdate = false;
+    return this->_img;
+}
+
+void TabletController::draw()
+{
+    if (this->getDoc().isEmpty()){
+        _img = WImage(1, false);
+        return;
+    }
+
+    this->_img = WImage(this->getDoc().lengthPage(), false);
+    //_img.fill(Qt::white);
+    TabletUtils::DataPaint d {
+        .withPdf = true,
+        .IsExportingPdf = true,
+        .isPlay = this->_isPlaying,
+        .positionAudio = this->_getTimePlaying,
+        .m = 1.,
+        .laser = *_tools._laser,
+
+        DATAPAINT_DEFINEREST
+    };
+    Define_PAINTER_p(painter, _img);
+
+    TabletUtils::load(painter, this->getDoc(), d);
+    painter.end();
+    WDebug(true, "Draw finish");
+    //getImg().save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+}
+
 void TabletController::objectMove(const QPointF &point)
 {
     _objectFinder->move(point);
 }
 
+void TabletController::checkCreatePage()
+{
+    if (this->_doc->needToCreateNewSheet()) {
+        this->_doc->newPage(n_style::square);
+    }
+}
+
 void TabletController::touchBegin(const QPointF &point, double pressure)
 {
+    checkCreatePage();
     _currentTool->touchBegin(point, pressure, *_doc);
+    emit onNeedRefresh();
 }
 
 void TabletController::touchUpdate(const QPointF &point, double pressure)
 {
     _currentTool->touchUpdate(point, pressure, *_doc);
+    emit onNeedRefresh();
 }
 
 void TabletController::touchEnd(const QPointF &point, double pressure)
 {
     _currentTool->touchEnd(point, *_doc);
+    emit onNeedRefresh();
 }
 
 void TabletController::selectRubber()

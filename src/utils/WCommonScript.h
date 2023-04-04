@@ -70,6 +70,7 @@ force_inline constexpr not_used int debug_enable()
     }while(0)
 #else
 # define W_ASSERT(condition) do {} while(0)
+# define W_ASSERT_TEXT(condition, ...)
 #endif // DEBUGINFO
 
 #define discordant(first, second) ((first) * (second) < 0.0)

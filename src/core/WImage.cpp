@@ -30,9 +30,14 @@ WImage::WImage(int width, int height, QImage::Format format) : QImage(width, hei
 {
 }
 
-WImage::WImage(int page) :
-    QImage(Page::getResolutionWidth(),
-           static_cast<int>(Page::getResolutionHeigth()) * page,
+WImage::WImage(int page, bool consideringResolution) :
+    QImage(consideringResolution
+               ? Page::getResolutionWidth()
+               : Page::getWidth(),
+           static_cast<int>(consideringResolution
+                                ? Page::getResolutionHeigth()
+                                : Page::getHeight()
+                            ) * page,
            WImage::Format_ARGB32)
 {
     W_ASSERT(page > 0);

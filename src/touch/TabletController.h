@@ -28,17 +28,29 @@ private:
     QPen _pen;
     Document *_doc;
 
+    mutable WImage _img;
+    mutable bool _needUpdate;
+
     void objectMove(const QPointF &point);
     void callUpdate();
     void setAndCallTool(Tools *tool);
 
     Document &getDoc();
 
+    const std::function<bool()> _isPlaying;
+    const std::function<int()> _getTimePlaying;
+
 public:
     explicit TabletController(QObject *parent,
-                              const std::function<int()>& getTimeRecording);
+                              const std::function<int()>& getTimeRecording,
+                              const std::function<bool()> &isPlaying,
+                              const std::function<int()> &getTimePlaying);
 
+    const QImage &getImg();
 
+private:
+    void checkCreatePage();
+    void draw();
 
 public slots:
     void selectRubber();

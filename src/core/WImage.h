@@ -7,7 +7,7 @@
 class WImage: public QImage {
 public:
     explicit WImage(const QString &fileName, const char *format = nullptr);
-    explicit WImage(int page);
+    explicit WImage(int page, bool consideringResolution);
     WImage(int width, int height, QImage::Format format);
     WImage() = default;
 

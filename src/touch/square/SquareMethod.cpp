@@ -253,7 +253,7 @@ bool SquareMethod::find(Document &doc)
 
 force_inline void SquareMethod::initImg(const Document &doc)
 {
-    _img = WImage(doc.lengthPage());
+    _img = WImage(doc.lengthPage(), true);
 }
 
 void SquareMethod::mergeImg(

@@ -7,7 +7,7 @@
 #include "touch/dataTouch/page/Page.h"
 
 StrokePre::StrokePre() noexcept :
-    _img(1),
+    _img(1, true),
     _stroke(),
     _last_draw_point(nullptr),
     _last_draw_press(nullptr)
@@ -114,7 +114,7 @@ pressure_t StrokePre::getPressure() const
 
 void StrokePre::reset_img()
 {
-    _img = WImage(1);
+    _img = WImage(1, true);
     _img.fill(Qt::transparent);
 }
 
@@ -220,5 +220,5 @@ void StrokePre::append(const Point &point, const pressure_t &press, QPen &pen, c
 
 inline bool StrokePre::isImageEmpty() const
 {
-    return this->_img == WImage(1);
+    return this->_img == WImage(1, true);
 }

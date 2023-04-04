@@ -16,9 +16,9 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
     TabletUtils::DataPaint dataPaint = {
         .withPdf = withPdf,
         .IsExportingPdf = false,
+        .isPlay = [] () { return false;},
+        .positionAudio = []() {return 0; },
         .m = delta,
-        //.size = QSize(width, height),
-        .m_pixmap = nullptr,
         DATAPAINT_DEFINEREST
     };
 

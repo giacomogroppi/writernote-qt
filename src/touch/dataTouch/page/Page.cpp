@@ -49,7 +49,7 @@ static void setStylePrivate(
 
 static force_inline void __initImg(WImage &img)
 {
-    img = WImage(1);
+    img = WImage(1, true);
     W_ASSERT(!img.isNull());
     img.fill(Qt::transparent);
 }

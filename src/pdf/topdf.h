@@ -27,8 +27,10 @@ inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
     TabletUtils::DataPaint dataPaint = {
         .withPdf = withPdf,
         .IsExportingPdf = true,
+        .isPlay = []() {return false; },
+        .positionAudio = []() {return 0; },
         .m = m,
-        .m_pixmap = nullptr,
+        .laser = Optional<Laser>(),
         DATAPAINT_DEFINEREST
     };
     TabletUtils::load(painter, *data, dataPaint);

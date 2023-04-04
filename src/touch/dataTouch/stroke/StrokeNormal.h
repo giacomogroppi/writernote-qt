@@ -211,7 +211,7 @@ force_inline void StrokeNormal::draw(
         const QColor &color,
         drawData<T, Z> data)
 {
-    constexpr bool not_used debug_draw_stroke = true;
+    constexpr bool not_used debug_draw_stroke = false;
     auto &painterPublic = _painter;
 
     W_ASSERT(page >= 0);
@@ -226,7 +226,7 @@ force_inline void StrokeNormal::draw(
     cbool isPrivatePainter = isHigh;
 
     if (isPrivatePainter) {
-        img = WImage(1);
+        img = WImage(1, true);
         img.fill(Qt::transparent);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);

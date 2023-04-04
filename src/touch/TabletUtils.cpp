@@ -42,6 +42,13 @@ static void draw_for_audio(const Document &doc, TabletUtils::DataPaint &dataPoin
     }
 }
 
+void TabletUtils::loadLaser( DataPaint &data, QPainter &painter, QPen &pen, double zoom)
+{
+    if (data.laser) {
+        draw_laser(painter, *data.laser, pen, zoom);
+    }
+}
+
 void TabletUtils::load(QPainter &painter,
                         const Document &data,
                         DataPaint &dataPoint)
@@ -55,12 +62,7 @@ void TabletUtils::load(QPainter &painter,
     StrokePre &strokeToDraw = __tmp;
 
     int counterPage;
-    QPixmap *pixmap             = dataPoint.m_pixmap;
     QPen &pen                   = dataPoint.pen;
-    class Laser *_laser;
-
-    if(likely(pixmap))
-        pixmap->fill(Qt::white);
 
     pen.setStyle(Qt::PenStyle::SolidLine);
     core::painter_set_antialiasing(painter);
@@ -95,18 +97,18 @@ void TabletUtils::load(QPainter &painter,
     WDebug(debugPageImg, "Start draw img from" << counterPage);
     for(; counterPage < lenPage; counterPage ++){
         const Page &page = data.at(counterPage);
+        /*const auto isPageVisible = page.isVisible();
+        const auto isExporting = dataPoint.IsExportingPdf;
 
-        if(!page.isVisible() and likely(!dataPoint.IsExportingPdf)){
+        if (!isPageVisible and !isExporting) {
             WDebug(debugPageImg, __func__ << "Page at index" << counterPage << "not visible: Break");
             continue;
-        }
+        }*/
 
         singleLoad(painter, page.getImg(), sizeRect, PointFirstPage, counterPage, data.getZoom());
     }
 
-    if (dataPoint.laser) {
-        draw_laser(painter, *dataPoint.laser, pen, zoom);
-    }
+    TabletUtils::loadLaser(dataPoint, painter, pen, zoom);
 }
 
 void singleLoad(

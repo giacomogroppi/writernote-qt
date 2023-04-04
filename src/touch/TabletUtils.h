@@ -4,6 +4,7 @@
 #include <QPen>
 #include "currenttitle/document.h"
 #include "touch/laser/Laser.h"
+#include "utils/Optional.h"
 
 namespace drawUtils{
     void loadSingleSheet(
@@ -17,11 +18,10 @@ public:
     struct DataPaint{
         bool withPdf;
         bool IsExportingPdf;
-        std::function<bool()> isPlay;
-        std::function<int()> positionAudio;
+        const std::function<bool()> &isPlay;
+        const std::function<int()>  &positionAudio;
         double m;
-        std::optional<Laser> laser;
-        QPixmap *m_pixmap;
+        Optional<Laser> laser;
 
         QPen pen;
         Point lastPoint;
@@ -38,6 +38,8 @@ public:
 
     static double pressureToWidth(double val);
     static void load(QPainter &painter, const Document &data, DataPaint &dataPoint);
+private:
+    static void loadLaser(DataPaint &data, QPainter &painter, QPen &pen, double zoom);
 };
 
 inline double TabletUtils::pressureToWidth(double val)
