@@ -81,7 +81,7 @@ void StrokeForPage::draw(QPainter &painter, double zoom, double delta,
     QPainter _painter;
 
     _pxm = WPixmap(1, false);
-    _pxm.fill(Qt::white);
+    //_pxm.fill(Qt::white);
     W_ASSERT(_painter.begin(&_pxm));
     core::painter_set_antialiasing(_painter);
 redo:

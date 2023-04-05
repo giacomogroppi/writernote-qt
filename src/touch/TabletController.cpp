@@ -85,12 +85,12 @@ void TabletController::draw()
 {
     if (this->getDoc().isEmpty()) {
         _img = WPixmap(1, false);
-        _img.fill(Qt::white);
+
         return;
     }
 
     this->_img = WPixmap(this->getDoc().lengthPage(), false);
-    //_img.fill(Qt::white);
+
     TabletUtils::DataPaint d {
         .withPdf = true,
         .IsExportingPdf = true,
