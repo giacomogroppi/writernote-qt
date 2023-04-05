@@ -70,7 +70,7 @@ bool topdf::createpdf(cbool withPdf)
         const auto &img = data->at(i).getImg();
         const auto targetRect = QRect(0, 0, pdfWriter.width(), pdfWriter.height());
 
-        painter.drawImage(targetRect, img);
+        painter.drawPixmap(targetRect, img);
         /*this->draw(painter,
                    delta,
                    withPdf);*/

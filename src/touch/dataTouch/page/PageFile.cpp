@@ -74,7 +74,7 @@ int PageFile::load_ver_2(Page &_page, WZipReaderSingle &reader)
 
         _page._imgDraw.loadFromData(arr, "PNG");
     }else{
-        _page._imgDraw = WImage();
+        _page._imgDraw = WPixmap();
     }
 
     return OK;

@@ -4,10 +4,11 @@
 #include "core/WList.h"
 #include "core/WImage.h"
 #include "touch/object_finder/model_finder/model_finder.h"
+#include "core/WPixmap.h"
 
 class StrokePre{
 private:
-    WImage _img;
+    WPixmap _img;
     std::shared_ptr<Stroke> _stroke;
 
     WList<Point>      _point;

@@ -5,7 +5,7 @@
 
 
 // è lo stesso stroke definito nel file tabletevent.cpp
-extern StrokePre __tmp;
+extern StrokePre *__tmp;
 
 ObjectFinder::ObjectFinder(QObject *parent, std::function<void()> callUpdate)
     : QObject{parent}
@@ -19,7 +19,7 @@ ObjectFinder::ObjectFinder(QObject *parent, std::function<void()> callUpdate)
 
 void ObjectFinder::endTimer()
 {
-    StrokePre &stroke = __tmp;
+    StrokePre &stroke = *__tmp;
 
     if (!stroke.isEmpty()) {
         WDebug(debug, "call");

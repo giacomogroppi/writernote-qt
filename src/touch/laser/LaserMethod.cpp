@@ -5,7 +5,7 @@
 #include "touch/laser/Laser.h"
 #include <functional>
 
-extern StrokePre __tmp;
+extern StrokePre *__tmp;
 
 LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
                          std::function<void(const QPointF&)> objectMove,
@@ -35,11 +35,11 @@ bool LaserMethod::touchUpdate(const QPointF &point, double size, Document &doc)
 
 int LaserMethod::touchEnd(const QPointF &, Document &)
 {
-    if (un(__tmp.isEmpty()))
+    if (un(__tmp->isEmpty()))
         return -1;
 
-    this->_append_to(__tmp);
-    __tmp = StrokePre();
+    this->_append_to(*__tmp);
+    *__tmp = StrokePre();
 
     return -1;
 }

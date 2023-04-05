@@ -114,7 +114,7 @@ pressure_t StrokePre::getPressure() const
 
 void StrokePre::reset_img()
 {
-    _img = WImage(1, true);
+    _img = WPixmap(1, true);
     _img.fill(Qt::transparent);
 }
 
@@ -122,7 +122,7 @@ void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
 {
     W_ASSERT(stroke->type() != Stroke::COMPLEX_NORMAL);
     this->_stroke = stroke;
-    this->_img = WImage();
+    this->_img = WPixmap();
 
     this->_point.clear();
     this->_pressure.clear();
@@ -139,7 +139,7 @@ void StrokePre::draw(QPainter &painter, QPen &pen, double prop)
 
         W_ASSERT(_img.isNull() == false);
 
-        painter.drawImage(target, _img);
+        painter.drawPixmap(target, _img);
     }else {
         _stroke->draw(painter, false, 0, pen, prop);
     }
@@ -220,5 +220,5 @@ void StrokePre::append(const Point &point, const pressure_t &press, QPen &pen, c
 
 inline bool StrokePre::isImageEmpty() const
 {
-    return this->_img == WImage(1, true);
+    return this->_img == WPixmap(1, true);
 }

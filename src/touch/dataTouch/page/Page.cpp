@@ -47,9 +47,9 @@ static void setStylePrivate(
     }
 }
 
-static force_inline void __initImg(WImage &img)
+static force_inline void __initImg(WPixmap &img)
 {
-    img = WImage(1, true);
+    img = WPixmap(1, true);
     W_ASSERT(!img.isNull());
     img.fill(Qt::transparent);
 }
@@ -298,7 +298,7 @@ void * __page_load(void *__data)
 {
     auto *  _data = (struct DataPrivateMuThread *)__data;
     auto *  extra = (struct page_thread_data *)_data->extra;
-    WImage img;
+    WPixmap img;
     Define_PEN(m_pen);
     auto &mutex = *extra->append;
     int m_pos_ris = extra->m_pos_ris;
@@ -336,7 +336,7 @@ void * __page_load(void *__data)
     mutex.lock();
 
     W_ASSERT(extra->painter->isActive());
-    extra->painter->drawImage(
+    extra->painter->drawPixmap(
             img.rect(),
             img,
             img.rect());
@@ -414,7 +414,7 @@ void Page::mergeList()
 
 void Page::drawToImage(
     const QVector<int>  &index,
-    WImage              &img,
+    WPixmap              &img,
     cint                flag) const
 {
     Define_PEN(pen);

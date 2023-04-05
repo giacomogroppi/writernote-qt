@@ -14,6 +14,7 @@
 #include <pthread.h>
 #include "core/WImage.h"
 #include "touch/dataTouch/stroke/StrokeForPage.h"
+#include "core/WPixmap.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
@@ -67,7 +68,7 @@ private:
      * then strokeTmp will be added to the stroke list
     */
     QList<std::shared_ptr<Stroke>>   _strokeTmp;
-    mutable WImage                   _imgDraw;
+    mutable WPixmap                   _imgDraw;
 
     void drawNewPage(n_style __style);
     
@@ -86,7 +87,7 @@ private:
     static QRect get_size_area(const QList<std::shared_ptr<Stroke>> & item, int from, int to);
 
 public:
-    const WImage &getImg() const;
+    const WPixmap &getImg() const;
 
     Page();
     Page(const Page &page);
@@ -170,7 +171,7 @@ public:
     constexpr static double getResolutionHeigth();
 
 #define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
-    void drawToImage(const QVector<int> &index, WImage &img, cint flag) const;
+    void drawToImage(const QVector<int> &index, WPixmap &img, cint flag) const;
 
     Page &operator=(const Page &other);
 
@@ -234,7 +235,7 @@ force_inline void Page::reset()
     this->_IsVisible = true;
     this->_count = -1;
     this->_strokeTmp.clear();
-    this->_imgDraw = WImage();
+    this->_imgDraw = WPixmap(1, true);
 }
 
 inline Point Page::at_translation(const Point &point, cint page)
@@ -256,7 +257,7 @@ force_inline void Page::AppendDirectly(std::shared_ptr<Stroke> stroke)
     this->_stroke.append(stroke);
 }
 
-force_inline const WImage &Page::getImg() const
+force_inline const WPixmap &Page::getImg() const
 {
     return this->_imgDraw;
 }
@@ -437,6 +438,7 @@ force_inline double Page::minHeight() const
 }
 
 force_inline Page::Page(const Page &from)
+    : _imgDraw(1, true)
 {
     Page::copy(from, *this);
 }

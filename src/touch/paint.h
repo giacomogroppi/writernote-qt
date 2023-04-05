@@ -17,7 +17,7 @@
  * TabletCanvas :: load ()
 */
 void singleLoad(QPainter        &painter,
-                const WImage    &img,
+                const WPixmap   &img,
                 const QSize     &sizeRect,
                 const QPointF   &PointFirstPage,
                 cdouble counterPage,

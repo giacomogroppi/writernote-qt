@@ -16,7 +16,7 @@
 
 class Document;
 struct immagine_s{
-    WImage immagini;
+    WPixmap immagini;
     QPointF i;
     QPointF f;
 };
@@ -53,7 +53,7 @@ public:
 
     void moveImage(const QList<int> &index, const QPointF &translation);
 
-    static  void draw_img(QPainter &painter, const QRectF &rect, const QImage &img);
+    static  void draw_img(QPainter &painter, const QRectF &rect, const WPixmap &img);
     static  void draw_img(QPainter &painter, const immagine_s &img);
     static  void draw_img(QPainter &painter, const QList<immagine_s> &list);
 
@@ -108,11 +108,11 @@ inline void fromimage::moveImage(const QList<int> &index, const QPointF &transla
     }
 }
 
-inline void fromimage::draw_img(QPainter &painter, const QRectF &rect, const QImage &img)
+inline void fromimage::draw_img(QPainter &painter, const QRectF &rect, const WPixmap &img)
 {
     const QRectF draw = img.rect();
 
-    painter.drawImage(rect, img, draw);
+    painter.drawPixmap(rect, img, draw);
 }
 
 inline void fromimage::draw_img(QPainter &painter, const immagine_s &img)

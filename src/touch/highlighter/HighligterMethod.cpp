@@ -4,7 +4,7 @@
 #include "touch/object_finder/ObjectFinder.h"
 #include <utility>
 
-extern StrokePre __tmp;
+extern StrokePre *__tmp;
 
 HighligterMethod::HighligterMethod(
             std::function<int()> getTime,

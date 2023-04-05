@@ -6,7 +6,7 @@
 
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "touch/dataTouch/page/Page.h"
-#include "core/WImage.h"
+#include "core/WPixmap.h"
 
 #define DRAW_SINGLE_LOAD_DEF 1.0
 /*
@@ -17,11 +17,11 @@
  * TabletCanvas :: load ()
 */
 void singleLoad(QPainter        &painter,
-        const WImage    &img,
-        const QSize     &sizeRect,
-        const QPointF   &PointFirstPage,
-        cdouble counterPage,
-        cdouble         m);
+        const WPixmap           &img,
+        const QSize             &sizeRect,
+        const QPointF           &PointFirstPage,
+        cdouble                 counterPage,
+        cdouble                 m);
 
 /*
  * @countHeigth is use when we what to

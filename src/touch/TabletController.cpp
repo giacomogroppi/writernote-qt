@@ -2,7 +2,7 @@
 #include "sheet/style_struct.h"
 #include "TabletUtils.h"
 
-extern StrokePre __tmp;
+extern StrokePre *__tmp;
 
 TabletController::TabletController(QObject *parent,
                                    const std::function<int()>& getTimeRecording,
@@ -61,7 +61,7 @@ TabletController::TabletController(QObject *parent,
                 )
     };
 
-    __tmp = StrokePre();
+    *__tmp = StrokePre();
     _currentTool = _tools._pen;
     _objectFinder = new ObjectFinder(this, callUpdate);
 

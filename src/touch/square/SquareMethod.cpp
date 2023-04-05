@@ -83,7 +83,7 @@ void SquareMethod::reset()
     _stroke.clear();
 
     out:
-    this->_img = WImage();
+    this->_img = WPixmap();
     this->_stroke.clear();
     this->_trans_img = QPointF(0.0, 0.0);
 }
@@ -253,13 +253,13 @@ bool SquareMethod::find(Document &doc)
 
 force_inline void SquareMethod::initImg(const Document &doc)
 {
-    _img = WImage(doc.lengthPage(), true);
+    _img = WPixmap(doc.lengthPage(), true);
 }
 
 void SquareMethod::mergeImg(
-        const WImage    &from,
-        WImage          &to,
-        int             page)
+        const WPixmap    &from,
+        WPixmap          &to,
+        int              page)
 {
     QPainter painter;
     QRect rectTo = from.rect();
@@ -268,7 +268,7 @@ void SquareMethod::mergeImg(
 
     painter.begin(&to);
     W_ASSERT(painter.isActive());
-    painter.drawImage(rectTo, from, from.rect());
+    painter.drawPixmap(rectTo, from, from.rect());
     painter.end();
 }
 
@@ -277,7 +277,7 @@ void SquareMethod::moveObjectIntoPrivate(QList<QVector<int>> &index, Document &d
     int count;
     const auto len = index.length();
     Page * page;
-    WImage tmp;
+    WPixmap tmp;
 
     WDebug(debugSquare, "call");
 

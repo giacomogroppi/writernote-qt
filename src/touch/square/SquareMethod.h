@@ -69,10 +69,10 @@ private:
 
     PointSettable _pointinit;
     PointSettable _pointfine;
-    void mergeImg(const WImage &from, WImage &to, int page);
+    void mergeImg(const WPixmap &from, WPixmap &to, int page);
     void moveObjectIntoPrivate(QList<QVector<int> > &index, Document &doc);
 
-    WImage _img;
+    WPixmap _img;
     QList<QList<std::shared_ptr<Stroke>>> _stroke;
 
     int _base;

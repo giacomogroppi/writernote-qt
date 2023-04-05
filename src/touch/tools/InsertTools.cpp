@@ -4,7 +4,7 @@
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include <utility>
 
-extern StrokePre __tmp;
+extern StrokePre *__tmp;
 
 InsertTools::InsertTools(std::function<int()> getTime,
                          std::function<pressure_t(double)> getSize,
@@ -22,9 +22,9 @@ InsertTools::InsertTools(std::function<int()> getTime,
 bool InsertTools::touchBegin(const QPointF &point, double size, class Document &doc)
 {
     pressure_t pressure;
-    StrokePre &strokeTmp = __tmp;
+    StrokePre &strokeTmp = *__tmp;
 
-    W_ASSERT(__tmp.isEmpty());
+    W_ASSERT(strokeTmp.isEmpty());
 
     strokeTmp.reset_img();
     strokeTmp.setTime(_getTime());
@@ -40,7 +40,7 @@ bool InsertTools::touchBegin(const QPointF &point, double size, class Document &
 
 bool InsertTools::touchUpdate(const QPointF &point, double size, class Document &doc)
 {
-    StrokePre &strokeTmp = __tmp;
+    StrokePre &strokeTmp = *__tmp;
     pressure_t pressure;
 
     pressure = this->_getSize(size);
@@ -54,7 +54,7 @@ bool InsertTools::touchUpdate(const QPointF &point, double size, class Document 
 
 int InsertTools::touchEnd(const QPointF &, class Document &doc)
 {
-    StrokePre & strokeToAppend = __tmp;
+    StrokePre & strokeToAppend = *__tmp;
     int pageMod;
     const QPointF &PointFirstPage = doc.getPointFirstPage();
 
@@ -74,7 +74,7 @@ int InsertTools::touchEnd(const QPointF &, class Document &doc)
 
     strokeToAppend = StrokePre();
 
-    W_ASSERT(__tmp.isEmpty());
+    W_ASSERT(__tmp->isEmpty());
 
     return pageMod;
 }

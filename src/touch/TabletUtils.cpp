@@ -3,8 +3,7 @@
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "paint.h"
 
-StrokePre __tmp;
-extern StrokePre __tmp;
+StrokePre *__tmp;
 static void loadSheet(const Document &doc, QPen &m_pen, QPainter &painter, double delta);
 
 static void drawSingleStroke(StrokePre &_stroke, QPainter &_painter, QPen &pen, double prop)
@@ -59,7 +58,7 @@ void TabletUtils::load(QPainter &painter,
     const auto zoom                 = data.getZoom();
     const QSize sizeRect            = createSizeRect(data, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  dataPoint.m);
 
-    StrokePre &strokeToDraw = __tmp;
+    StrokePre &strokeToDraw = *__tmp;
 
     int counterPage;
     QPen &pen                   = dataPoint.pen;
@@ -115,7 +114,7 @@ void TabletUtils::load(QPainter &painter,
 
 void singleLoad(
         QPainter        &painter,
-        const WImage    &img,
+        const WPixmap   &pix,
         const QSize     &sizeRect,
         const QPointF   &PointFirstPage,
         cdouble         counterPage,
@@ -128,7 +127,7 @@ void singleLoad(
 
     QRectF targetRect(QPointF(x, y), sizeRect);
 
-    painter.drawImage(targetRect, img);
+    painter.drawPixmap(targetRect, pix, pix.rect());
 }
 
 force_inline void drawUtils::loadSingleSheet(

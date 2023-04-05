@@ -31,7 +31,7 @@ fromimage::load_res_img fromimage::save_img(WZipWriter              &writer,
                                     const QString           &path) const
 {
     QByteArray img_in_byte;
-    WImage img;
+    WPixmap img;
 
     if(get_img_bytearray(img_in_byte, path) != load_res_img::ok){
         return load_res_img::error;
@@ -73,7 +73,7 @@ size_t fromimage::get_size_file_img() const
 
 fromimage::load_res_img fromimage::get_img_bytearray(QByteArray &arr, const QString &path)
 {
-    WImage img(path);
+    WPixmap img(path);
 
     if(img.isNull()){
         return load_res_img::err_image_not_valid;
@@ -179,7 +179,7 @@ unsigned fromimage::insert_image(   const QString &pos,
     QString res;
     W_ASSERT(pos.size());
 
-    WImage immagine(res);
+    WPixmap immagine(res);
     img.immagini = immagine;
 
     if (point) {
