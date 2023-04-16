@@ -20,6 +20,11 @@ Highligter::Highligter(QObject *parent,
     // TODO: load data from settings
 }
 
+int Highligter::getType() const
+{
+    return Highligter::type();
+}
+
 void Highligter::setHighligterPressureConst()
 {
     this->_type = HighligterType::HighligterTypeConstSize;

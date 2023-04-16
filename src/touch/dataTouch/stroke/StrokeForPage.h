@@ -8,18 +8,20 @@
 #include <QPainter>
 #include <QPen>
 #include "core/WList.h"
+#include "core/WImage.h"
 #include "core/WPixmap.h"
 
 class StrokeForPage {
 private:
     std::shared_ptr<class StrokeNormal> _data;
-    mutable WPixmap _pxm;
-    mutable bool _needToUpdate;
 
     void rep() const;
 
     void append(const StrokeNormal &stroke);
+    mutable WPixmap _pix;
 
+    mutable bool _needToUpdate = true;
+    void draw() const;
 public:
     StrokeForPage();
     ~StrokeForPage() = default;
@@ -32,9 +34,8 @@ public:
 
     size_t getSizeInFile() const;
 
-    void draw(QPainter &painter, double zoom, double delta,
-              QPen &pen, const QPointF &pointFirstPage,
-              const class Page &page) const;
+    void draw(QPainter &painter, double delta,
+              const class Page &page, const QSize &target, const QRectF &visibleArea) const;
 
     int save(WZipWriterSingle& writer) const;
     void scale(const QPointF& delta);

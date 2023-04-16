@@ -26,7 +26,7 @@ topdf::topdf(const QString &path, const Document &doc)
 
     data->triggerNewView(page, -1, true);
 
-    Q_ASSERT(doc.lengthPage() == data->lengthPage());
+    W_ASSERT(doc.lengthPage() == data->lengthPage());
 }
 
 topdf::~topdf()

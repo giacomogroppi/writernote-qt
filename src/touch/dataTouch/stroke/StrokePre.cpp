@@ -6,11 +6,13 @@
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 #include "touch/dataTouch/page/Page.h"
 
-StrokePre::StrokePre() noexcept :
+StrokePre::StrokePre()  :
     _img(1, true),
     _stroke(),
     _last_draw_point(nullptr),
-    _last_draw_press(nullptr)
+    _last_draw_press(nullptr),
+    _min(0., 0., false),
+    _max(0., 0., false)
 {
     _stroke = std::make_shared<StrokeNormal>();
 
@@ -114,7 +116,7 @@ pressure_t StrokePre::getPressure() const
 
 void StrokePre::reset_img()
 {
-    _img = WPixmap(1, true);
+    _img = WPixmap(1, false);
     _img.fill(Qt::transparent);
 }
 
@@ -126,23 +128,6 @@ void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
 
     this->_point.clear();
     this->_pressure.clear();
-}
-
-void StrokePre::draw(QPainter &painter, QPen &pen, double prop)
-{
-    WDebug(StrokePreDebug, "Pointer" << this);
-
-    if (_stroke->isEmpty()) {
-        W_ASSERT(_stroke->type() == Stroke::COMPLEX_NORMAL);
-
-        const auto target = _img.rect();
-
-        W_ASSERT(_img.isNull() == false);
-
-        painter.drawPixmap(target, _img);
-    }else {
-        _stroke->draw(painter, false, 0, pen, prop);
-    }
 }
 
 QColor StrokePre::getColor(double division) const
@@ -160,6 +145,8 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     _img = other._img;
     this->_point = other._point;
     this->_pressure = other._pressure;
+    this->_max = other._max;
+    this->_min = other._min;
 
 #ifdef DEBUGINFO
     this->already_merge = other.already_merge;
@@ -172,26 +159,27 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     return *this;
 }
 
-void StrokePre::append(const Point &point, const pressure_t &press, QPen &pen, cdouble prop)
+void StrokePre::append(const Point &point, const pressure_t &press, QPen &_pen, double prop)
 {
     const auto normal = (_stroke->type() == Stroke::COMPLEX_NORMAL);
 
     if (normal) {
-        QPainter painter;
-
-        painter.begin(&this->_img);
-
-        W_ASSERT(this->_img.isNull() == false);
+        Define_PAINTER_p(painter, _img);
+        Define_PEN(pen);
 
         _point.append(point);
         _pressure.append(press);
 
-        core::painter_set_antialiasing(painter);
-        core::painter_set_source_over(painter);
+        painter.setPen(pen);
 
         if (un(_point.length() == 1)) {
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
+
+            _max = _point.first();
+            _max = true;
+            _min = _max;
+            _max_pressure = _pressure.last();
         } else {
             StrokeNormal::drawData<WList<Point>::const_iterator,
                     WList<pressure_t>::const_iterator> data = {
@@ -201,6 +189,20 @@ void StrokePre::append(const Point &point, const pressure_t &press, QPen &pen, c
                 .end_press   = this->_pressure.constEnd(),
                 .press_null  = false
             };
+
+            if (this->_point.last().y() > this->_max.y())
+                _max.setY(_point.last().y() + 1.);
+            if (this->_point.last().x() > this->_max.x())
+                _max.setX(_point.last().x() + 1.);
+
+            if (this->_point.last().y() < this->_min.y())
+                this->_min.setY(_point.last().y() - 1.);
+            if (this->_point.last().x() < this->_min.x())
+                this->_min.setX(_point.last().x() - 1.);
+
+            if (_max_pressure < _pressure.last()) {
+                _max_pressure = _pressure.last();
+            }
 
             StrokeNormal::draw(painter, false, 0, pen, prop, this->_stroke->getColor(1.), data);
 

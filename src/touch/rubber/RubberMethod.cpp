@@ -454,7 +454,8 @@ bool RubberMethod::is_image_not_null(const Page *page,
 
     if (un(img.isNull()))
         return false;
-    const auto &data = img.toImage();
+
+    const QImage data = img.toImage();
     for (i = 0; i < delta + int(xmax - xmin); i++) {
         for (j = 0; j < delta + int(ymax - ymin); j++) {
             const QPoint target = QPoint(x + i, y + j) * PROP_RESOLUTION;

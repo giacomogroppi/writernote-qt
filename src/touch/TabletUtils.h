@@ -6,14 +6,21 @@
 #include "touch/laser/Laser.h"
 #include "utils/Optional.h"
 
-namespace drawUtils{
-    void loadSingleSheet(
-            QPainter &painter,  const Page &page,
-            cdouble zoom,       cdouble delta,
-            QPen &_pen,         const QPointF& pointFirstPage);
-}
 
 class TabletUtils {
+private:
+    const bool _withPdf;
+    const bool _isExportingPdf;
+    const std::function<bool()> &_isPlay;
+    const std::function<int ()> &_positionAudio;
+    double _m;
+    Optional<Laser> _laser;
+    QPen _pen;
+    QRectF _visibleArea;
+
+    const Document &_doc;
+    QPainter *_painter;
+
 public:
     struct DataPaint{
         bool withPdf;
@@ -36,14 +43,76 @@ public:
     .lastPoint = Point()
     };
 
+    explicit TabletUtils(QPainter &painter, const std::function<bool()> &isPlay,
+                         const std::function<int()> &positionAudio,
+                         double m, Optional<Laser> laser, const Document &doc,
+                         bool withPdf, bool isExporting, const QRectF &visibleArea);
+    ~TabletUtils() = default;
+
+    constexpr int getTime() const;
+    constexpr bool withPdf() const;
+    constexpr void setPainter(QPainter &painter);
+    constexpr double getZoom() const;
+
     static double pressureToWidth(double val);
-    static void load(QPainter &painter, const Document &data, DataPaint &dataPoint);
+    void load();
 private:
-    static void loadLaser(DataPaint &data, QPainter &painter, QPen &pen, double zoom);
+    void loadLaser();
+
+    void drawForAudio();
+
+    constexpr Laser &getLaser();
+    constexpr QPainter &getPainter();
 };
+
+inline TabletUtils::TabletUtils(QPainter &painter, const std::function<bool()> &isPlay, const std::function<int()> &positionAudio, double m, Optional<Laser> laser, const Document &doc, bool withPdf, bool isExporting, const QRectF &visibleArea)
+    : _withPdf(withPdf)
+    , _isExportingPdf(isExporting)
+    , _doc(doc)
+    , _isPlay(isPlay)
+    , _m(m)
+    , _painter(&painter)
+    , _positionAudio(positionAudio)
+{
+    if (this->_isExportingPdf) {
+        this->_visibleArea = QRectF {
+            0., 0.,
+                Page::getWidth(),
+                Page::getHeight() * this->_doc.lengthPage()
+        };
+    } else {
+        _visibleArea = visibleArea;
+    }
+}
+
+inline constexpr QPainter &TabletUtils::getPainter()
+{
+    return *this->_painter;
+}
+
+inline constexpr Laser& TabletUtils::getLaser()
+{
+    W_ASSERT(this->_laser.has_value());
+    return *this->_laser;
+}
 
 inline double TabletUtils::pressureToWidth(double val)
 {
     return val * 10 + 1;
 }
 
+inline constexpr void TabletUtils::setPainter(QPainter &painter)
+{
+    W_ASSERT(painter.isActive());
+    this->_painter = &painter;
+}
+
+inline constexpr double TabletUtils::getZoom() const
+{
+    return this->_doc.getZoom();
+}
+
+inline constexpr int TabletUtils::getTime() const
+{
+    return this->_positionAudio();
+}

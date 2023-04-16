@@ -18,7 +18,7 @@ public:
      * return the index of the page mod
     */
     virtual int touchEnd(const QPointF& point, class Document &doc) = 0;
-
+    virtual int getType() const = 0;
     static double getProp(const Document &doc);
 };
 

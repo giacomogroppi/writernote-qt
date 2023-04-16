@@ -17,7 +17,10 @@ class Rubber : public QObject,
 
 public:
     explicit Rubber(QObject *parent);
-    ~Rubber();
+    virtual ~Rubber();
+
+    int getType() const final;
+    static constexpr int type();
 
     void setRubberTotal();
     void setRubberPartial();
@@ -28,3 +31,8 @@ private:
     RubberMethod::type_rubber _type_gomma = RubberMethod::total;
 };
 
+
+inline constexpr int Rubber::type()
+{
+    return 3;
+}

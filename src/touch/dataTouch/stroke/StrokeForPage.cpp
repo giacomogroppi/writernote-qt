@@ -3,25 +3,22 @@
 #include "StrokeNormal.h"
 #include "utils/common_error_definition.h"
 #include "touch/TabletUtils.h"
+#include <QPaintEngine>
+#include "core/WRect.h"
 
 StrokeForPage::StrokeForPage()
     : _data(new StrokeNormal)
-    , _pxm(1, false)
     , _needToUpdate(true)
 {
+    //this->_pix = WPixmap(1, true);
+
     rep();
 }
 
 void StrokeForPage::setPressure(pressure_t press)
 {
     this->_data->force_pressure(press);
-    _needToUpdate = true;
     rep();
-}
-
-void StrokeForPage::rep() const
-{
-    W_ASSERT(this->_data.unique());
 }
 
 void StrokeForPage::append(const StrokeNormal &stroke)
@@ -32,6 +29,7 @@ void StrokeForPage::append(const StrokeNormal &stroke)
     for_each(stroke._point, [&l](const Point &point) {
         l.append(point);
     });
+    rep();
 }
 
 int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
@@ -53,8 +51,7 @@ int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
     if(_data->_pressure[0] > 10)
         _data->_pressure[0] = 1.5;
 
-    _needToUpdate = true;
-
+    rep();
     return OK;
 }
 
@@ -63,56 +60,6 @@ size_t StrokeForPage::getSizeInFile() const
     const auto res = this->_data->getSizeInFile();
     rep();
     return res;
-}
-
-void StrokeForPage::draw(QPainter &painter, double zoom, double delta,
-                         QPen &pen, const QPointF &pointFirstPage,
-                         const Page &page) const
-{
-    int counterPoint, lenPoint;
-    pressure_t pressure;
-
-    if (!_needToUpdate) {
-        painter.drawPixmap(_pxm.rect(), _pxm);
-        //_pxm.toImage().save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
-        return;
-    }
-
-    QPainter _painter;
-
-    _pxm = WPixmap(1, false);
-    //_pxm.fill(Qt::white);
-    W_ASSERT(_painter.begin(&_pxm));
-    core::painter_set_antialiasing(_painter);
-redo:
-
-    lenPoint = this->_data->_point.length();
-
-    if(!lenPoint)
-        return;
-
-    pressure = _data->getPressure();
-
-    pressure = TabletUtils::pressureToWidth(pressure * zoom / 2.0) * delta;
-
-    pen.setWidthF(pressure);
-    pen.setColor(_data->getColor());
-
-    _painter.setPen(pen);
-
-    for (counterPoint = 0; counterPoint < lenPoint; counterPoint += 2) {
-        const auto ref1 = DataStruct::at_draw_page(counterPoint + 0, page, pointFirstPage, zoom * delta);
-        const auto ref2 = DataStruct::at_draw_page(counterPoint + 1, page, pointFirstPage, zoom * delta);
-
-        _painter.drawLine(ref1, ref2);
-        //painter.drawLine(ref1._x, ref1._y, ref2._x, ref2._y);
-    }
-
-    _painter.end();
-    this->_needToUpdate = false;
-    painter.drawPixmap(_pxm.rect(), _pxm);
-
-    rep();
 }
 
 int StrokeForPage::save(WZipWriterSingle &writer) const
@@ -130,15 +77,21 @@ void StrokeForPage::scale(const QPointF &delta)
 
 void StrokeForPage::append(const Point &point, pressure_t pressure)
 {
-    _data->append(point, pressure);
     _needToUpdate = true;
+
+    W_ASSERT(point.x() >= 0.);
+    W_ASSERT(point.x() < Page::getWidth());
+    W_ASSERT(point.y() >= 0.);
+    W_ASSERT(point.y() < Page::getHeight());
+
+    _data->append(point, pressure / 2.);
+
     rep();
 }
 
 void StrokeForPage::reset()
 {
     this->_data = std::shared_ptr<StrokeNormal>(new StrokeNormal);
-    this->_needToUpdate = true;
     rep();
 }
 
@@ -147,7 +100,6 @@ StrokeForPage &StrokeForPage::operator=(const StrokeForPage &other)
     {
         std::shared_ptr<Stroke> res = other._data->clone();
         this->_data = std::dynamic_pointer_cast<StrokeNormal>(res);
-        this->_needToUpdate = true;
     }
 
     rep();
@@ -156,7 +108,86 @@ StrokeForPage &StrokeForPage::operator=(const StrokeForPage &other)
 
 void StrokeForPage::setMetadata(const colore_s &colore)
 {
-    rep();
     _data->setMetadata(-1, colore);
     rep();
+}
+
+void StrokeForPage::draw(QPainter &painter, double delta,
+                         const Page &page, const QSize &target,
+                         const QRectF &visibleArea) const
+{
+    if (this->_needToUpdate) {
+        this->draw();
+        _needToUpdate = false;
+    }
+
+    const auto targetRect = WRect{(QPointF(0., Page::getHeight() * page.getIndex() * delta), target)}.intersected(visibleArea.toRect());
+
+    //qDebug() << page.getIndex() << "Target: " << target << " targetrect: " << targetRect;
+
+    const auto source = WRect(_pix.rect())
+                        / PROP_RESOLUTION;
+
+    const auto sourceDraw = WRect{source.intersected(visibleArea.toRect())} * PROP_RESOLUTION;
+
+    if (!source.isNull())
+        painter.drawPixmap(
+                targetRect,
+                this->_pix,
+                sourceDraw
+            );
+
+    //painter.drawLine(0, 0, 2000, 5000);
+
+    rep();
+}
+
+void StrokeForPage::draw() const
+{
+    _pix = WPixmap(1, true);
+    _pix.fill(Qt::transparent);
+    Define_PAINTER_p(painter, this->_pix);
+    Define_PEN(pen);
+
+    const auto lenPoint = this->_data->_point.length();
+
+    if(!lenPoint)
+        return;
+
+    auto pressure = _data->getPressure();
+
+    pressure = TabletUtils::pressureToWidth(pressure / 2.0);
+
+    pen.setWidthF(pressure);
+    pen.setColor(_data->getColor());
+
+    painter.setPen(pen);
+
+    for (auto counterPoint = 0; counterPoint < lenPoint; counterPoint += 2) {
+        auto p1 = this->_data->_point.at(counterPoint);
+        auto p2 = this->_data->_point.at(counterPoint + 1);
+
+        p1 = Point {
+            p1.x(),
+            p1.y()
+        };
+        p2 = Point {
+            p2.x(),
+            p2.y()
+        };
+
+        p1 *= PROP_RESOLUTION;
+        p2 *= PROP_RESOLUTION;
+
+        painter.drawLine(p1, p2);
+    }
+    painter.end();
+}
+
+force_inline void StrokeForPage::rep() const
+{
+    W_ASSERT(this->_data.unique());
+    for (const auto &p : this->_data->_point) {
+        W_ASSERT(p.y() <= Page::getHeight() and p.y() >= 0.);
+    }
 }

@@ -36,10 +36,22 @@ inline void painter_set_source_over(QPainter &painter)
     W_ASSERT(painter.compositionMode() == QPainter::CompositionMode_SourceOver);
 }
 
+inline void painter_set_destination_over(QPainter &painter)
+{
+    W_ASSERT(painter.isActive());
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+}
+
 inline void painter_set_antialiasing(QPainter &painter)
 {
     W_ASSERT(painter.isActive());
-    painter.setRenderHint(QPainter::RenderHint::Antialiasing);
+    painter.setRenderHints(QPainter::RenderHint::Antialiasing);
+    painter.setRenderHint(QPainter::RenderHint::SmoothPixmapTransform);
+    painter.setRenderHint(QPainter::RenderHint::TextAntialiasing);
+
+    W_ASSERT(painter.renderHints() & QPainter::RenderHint::SmoothPixmapTransform);
+    W_ASSERT(painter.renderHints() & QPainter::RenderHint::Antialiasing);
+    W_ASSERT(painter.renderHints() & QPainter::RenderHint::TextAntialiasing);
 }
 
 inline double scaleFactor()

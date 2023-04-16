@@ -39,7 +39,7 @@ void audioplay::positionHasChange(qint64 position)
     }
 
     WDebug(debugAudioPlay, this->getPositionSecond() << position);
-    emit positionChange(this->getPositionSecond(), this->currentDurationSecond());
+    emit positionChange(static_cast<int>(this->getPositionSecond()), static_cast<int>(this->currentDurationSecond()));
 }
 
 void audioplay::updateStatus(QMediaPlayer::PlaybackState newState)

@@ -21,6 +21,9 @@ public:
 
     void setType(enum TypePen type);
 
+    int getType() const final;
+    static constexpr int type();
+
 private:
     double _pressure;
     pressure_t getSize(double getPressure) const;
@@ -28,6 +31,11 @@ private:
 
     bool isPressureVariable() const;
 };
+
+inline constexpr int Pen::type()
+{
+    return 0;
+}
 
 inline bool Pen::isPressureVariable() const
 {

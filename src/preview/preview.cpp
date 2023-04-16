@@ -6,6 +6,7 @@
 #include "currenttitle/document.h"
 #include "dataread/xmlstruct.h"
 #include "touch/TabletUtils.h"
+#include "core/WRect.h"
 
 void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
@@ -13,6 +14,15 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
     const double size_orizzontale = doc.biggerx();
     const double delta = (double)width / (double)size_orizzontale;
 
+    auto isPlay = []() { return false; };
+    auto getPositionAudio = []() { return 0; };
+
+    // we you only one page obviously
+    const auto visibleArea = WRect{Page::getResolutionSize()};
+
+    TabletUtils loader (painter, isPlay, getPositionAudio, delta, Optional<Laser>(), doc, true, false, visibleArea);
+
+    /*
     TabletUtils::DataPaint dataPaint = {
         .withPdf = withPdf,
         .IsExportingPdf = false,
@@ -21,6 +31,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
         .m = delta,
         DATAPAINT_DEFINEREST
     };
+    */
 
     if(doc.isEmpty())
         return;
@@ -30,9 +41,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
     painter.begin(&ref);
     W_ASSERT(painter.isActive());
 
-    dataPaint.IsExportingPdf = false;
-
-    TabletUtils::load(painter, doc, dataPaint);
+    loader.load();
 
     painter.end();
 

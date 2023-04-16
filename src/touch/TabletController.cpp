@@ -1,8 +1,10 @@
 #include "TabletController.h"
+#include "core/WMutexLocker.h"
 #include "sheet/style_struct.h"
 #include "TabletUtils.h"
 
 extern StrokePre *__tmp;
+extern bool hasDraw;
 
 TabletController::TabletController(QObject *parent,
                                    const std::function<int()>& getTimeRecording,
@@ -13,7 +15,7 @@ TabletController::TabletController(QObject *parent,
     , _isPlaying(isPlaying)
     , _getTimePlaying(getTimePlaying)
     , _needUpdate(true)
-    , _img(1, false)
+    , _isDrawing(false)
 {
     auto objectMove = [this](const QPointF &point) { this->objectMove(point); };
     auto callUpdate = [this]() { this->callUpdate(); };
@@ -61,6 +63,14 @@ TabletController::TabletController(QObject *parent,
                 )
     };
 
+    this->_toolsContainer.append(QList<Tools*>{
+        _tools._square,
+        _tools._pen,
+        _tools._laser,
+        _tools._rubber,
+        _tools._highligter
+    });
+
     *__tmp = StrokePre();
     _currentTool = _tools._pen;
     _objectFinder = new ObjectFinder(this, callUpdate);
@@ -68,54 +78,34 @@ TabletController::TabletController(QObject *parent,
     QObject::connect(_tools._square, &Square::needRefresh, this, &TabletController::onNeedRefresh);
 }
 
-const QPixmap &TabletController::getImg()
+void TabletController::getImg(QPainter &painter, double width) const
 {
     if (this->_needUpdate or 1) {
-        this->draw();
+        this->draw(painter, width);
     }
 
     this->_needUpdate = false;
-
-    W_ASSERT(!_img.isNull());
-
-    return this->_img;
 }
 
-void TabletController::draw()
+void TabletController::draw(QPainter &painter, double width) const
 {
     if (this->getDoc().isEmpty()) {
-        _img = WPixmap(1, false);
-
         return;
     }
 
-    this->_img = WPixmap(this->getDoc().lengthPage(), false);
+    TIME_START(time_load);
+    TabletUtils loader(painter, this->_isPlaying, this->_getTimePlaying, width / Page::getWidth(), *_tools._laser, getDoc(), true, false,
+                       QRectF{
+                           getDoc().getPointFirstPage(),
+                           getDoc().getPointFirstPage() + QPointF {width, width * Page::getProportion()}
+                       });
 
-    TabletUtils::DataPaint d {
-        .withPdf = true,
-        .IsExportingPdf = true,
-        .isPlay = this->_isPlaying,
-        .positionAudio = this->_getTimePlaying,
-        .m = 1.,
-        .laser = *_tools._laser,
 
-        DATAPAINT_DEFINEREST
-    };
-    Define_PAINTER_p(painter, _img);
+    loader.load();
+    /*TabletUtils::load(painter, this->getDoc(), d);*/
 
-    const auto old = std::chrono::duration_cast< std::chrono::milliseconds >(
-        std::chrono::system_clock::now().time_since_epoch()
-    );
-
-    TabletUtils::load(painter, this->getDoc(), d);
-
-    const auto now = std::chrono::duration_cast< std::chrono::milliseconds >(
-        std::chrono::system_clock::now().time_since_epoch()
-    );
-
-    painter.end();
-    //qDebug() << "Draw finish" << -(old - now).count() << "ms";
     //this->_img.save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+    //TIME_STOP(time_load, "Load function:");
 }
 
 void TabletController::objectMove(const QPointF &point)
@@ -127,6 +117,7 @@ void TabletController::checkCreatePage()
 {
     if (this->_doc->needToCreateNewSheet()) {
         this->_doc->newPage(n_style::square);
+        emit this->onNumberOfPageChanged(_doc->lengthPage());
     }
 }
 
@@ -149,16 +140,6 @@ void TabletController::touchEnd(const QPointF &point, double pressure)
     emit onNeedRefresh();
 }
 
-void TabletController::selectRubber()
-{
-    setAndCallTool(_tools._rubber);
-}
-
-void TabletController::selectLaser()
-{
-    setAndCallTool(_tools._laser);
-}
-
 void TabletController::selectColor(const QColor &color)
 {
     this->_color = color;
@@ -166,22 +147,7 @@ void TabletController::selectColor(const QColor &color)
 
 void TabletController::positionDocChanged(const QPointF &newPosition)
 {
-    this->_doc->setPointFirstPage(newPosition);
-}
-
-void TabletController::selectPen()
-{
-    setAndCallTool(_tools._pen);
-}
-
-void TabletController::selectSquare()
-{
-    setAndCallTool(_tools._square);
-}
-
-void TabletController::selectHighligter()
-{
-    setAndCallTool(_tools._highligter);
+    this->_doc->setPointFirstPage(-newPosition);
 }
 
 void TabletController::setAndCallTool(Tools *tool)
@@ -208,4 +174,16 @@ void TabletController::callUpdate()
 Document &TabletController::getDoc()
 {
     return *this->_doc;
+}
+
+void TabletController::selectType(int type)
+{
+    for (auto *t: qAsConst(this->_toolsContainer)) {
+        if (t->getType() == type) {
+            setAndCallTool(t);
+            break;
+        }
+    }
+
+    _tools._square->reset();
 }

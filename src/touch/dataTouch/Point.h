@@ -1,4 +1,5 @@
-#pragma once
+#ifndef POINT_H
+#define POINT_H
 
 #include <QtGlobal>
 #include <QColor>
@@ -7,11 +8,41 @@
 
 #define NCOLOR 4
 
+template <class T>
+class Settable: public T {
+private:
+    bool _set;
+public:
+    Settable ()
+        : T()
+        , _set(false)
+    {
+    }
+
+    Settable<T>& operator=(const Settable<T> &other) {
+        T::operator=(other);
+        _set = other._set;
+
+        return *this;
+    }
+
+    Settable<T>& operator=(const T& other) {
+        T::operator=(other);
+        return *this;
+    }
+
+    Settable<T>& operator=(bool set) {
+        this->_set = set;
+        return *this;
+    }
+};
+
 class PointSettable : public QPointF {
 private:
     bool _set;
 public:
-    PointSettable(const QPointF &point, bool set);
+    explicit PointSettable(const QPointF &point, bool set);
+    explicit PointSettable(double x, double y, bool set);
     PointSettable();
 
     [[nodiscard]] bool isSet() const noexcept;
@@ -31,6 +62,12 @@ inline PointSettable::PointSettable(const QPointF &point, bool set):
 {
     this->_set = set;
     W_ASSERT(this->isSet() == set);
+}
+
+inline PointSettable::PointSettable(double x, double y, bool set)
+    : QPointF(x, y)
+    , _set(set)
+{
 }
 
 inline void PointSettable::setSet(bool set)
@@ -75,7 +112,10 @@ struct colore_s{
     [[nodiscard]] QColor toQColor(double division) const;
     void fromColor(const QColor &color);
 
-    [[nodiscard]] uchar getAlfa() const;
+    double getAlfa() const;
+    double getRed() const    { return this->colore[0]; };
+    double getGreen() const  { return this->colore[1]; };
+    double getBlue() const   { return this->colore[2]; };
 
     static colore_s from_color(const QColor &color);
     bool operator==(const colore_s &other) const;
@@ -107,7 +147,7 @@ force_inline void colore_s::fromColor(const QColor &color)
     }
 }
 
-inline uchar colore_s::getAlfa() const
+inline double colore_s::getAlfa() const
 {
     return this->colore[3];
 }
@@ -128,24 +168,24 @@ inline bool colore_s::operator==(const colore_s &other) const
 /* this struct contains neither the color, nor the thickness, nor the page to which it belongs, nor the rotation, nor the id */
 class Point : public QPointF{
 public:
-    Point() = default;
-    Point(double x, double y);
-    Point(const QPointF &point);
+    constexpr Point() = default;
+    constexpr Point(double x, double y);
+    constexpr Point(const QPointF &point);
 
-    [[nodiscard]] QPointF toQPointF(double scale) const;
+    constexpr QPointF toQPointF(double scale) const;
 };
 
-inline Point::Point(double x, double y) :
+inline constexpr Point::Point(double x, double y) :
     QPointF(x, y)
 {
 }
 
-force_inline Point::Point(const QPointF &point) :
+force_inline constexpr Point::Point(const QPointF &point) :
     QPointF(point)
 {
 }
 
-inline QPointF Point::toQPointF(double scale) const
+inline constexpr QPointF Point::toQPointF(double scale) const
 {
     return (*this) * scale;
 }
@@ -162,3 +202,6 @@ inline colore_s::colore_s(uchar u1, uchar u2, uchar u3, uchar u4)
     colore[2] = u3;
     colore[3] = u4;
 }
+
+
+#endif // POINT_H

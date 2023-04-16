@@ -7,6 +7,7 @@
 
 class StrokeNormal final: public Stroke{
 private:
+    void rep () const;
     int save(WZipWriterSingle &file) const final;
     /**
      * you need to set len_point only if you are loading a version 1 file
@@ -133,53 +134,54 @@ protected:
 
 inline bool StrokeNormal::isPressureVal() const
 {
+    rep();
     return _pressure.length() == 1 and _point.length() > 1;
 }
 
 inline bool StrokeNormal::needToUpdatePressure() const
 {
+    rep();
     return !!(this->_flag & flag_state::UPDATE_PRESSURE);
 }
 
 inline bool StrokeNormal::constantPressure() const
 {
-    if(un(needToUpdatePressure()))
+    if (un(needToUpdatePressure()))
         this->updateFlagPressure();
+
+    rep();
 
     return isPressureVal();
 }
 
 inline void StrokeNormal::updateFlagPressure() const
 {
-    int len, i;
     pressure_t press;
-    auto &_press = (QList<pressure_t> &)_pressure;
+    auto &_press = (QList<pressure_t> &) _pressure;
 
-    ((unsigned char &)(this->_flag)) &= flag_state::UPDATE_PRESSURE;
+    this->_flag &= flag_state::UPDATE_PRESSURE;
 
-    len = this->length();
+    const auto len = this->length();
 
-    if(un(len < 2 and _press.length() == 1)){
+    if (len < 2 and _press.length() == 1) {
         // lo stroke era _press const ma gli abbiamo
-        // tolto troppi punti, quindi non possiamo più disegnarlo
-        // con il QPainterPath
-        int i;
+        // tolto troppi punti.
         const auto press = _press.at(0);
 
-        for(i = 1; i < len; i++){
+        for (int i = 1; i < len; i++) {
             _press.append(press);
         }
 
         W_ASSERT(_press.length() == _point.length());
     }
 
-    if(un(len > 1 and _press.length() == 1)){
+    if (len > 1 and _press.length() == 1) {
         return;
     }
 
     W_ASSERT(_pressure.length() == _point.length());
 
-    if(un(len < 3)){
+    if (un(len < 3)) {
         /**
          * if we have less than 3 points we
          * cannot create a qpainterpath, so
@@ -191,14 +193,16 @@ inline void StrokeNormal::updateFlagPressure() const
 
     press = _pressure.at(0);
 
-    for(i = 0; i < len; i++){
-        if(_pressure.at(i) != press){
+    for (int i = 0; i < len; i++) {
+        if (_pressure.at(i) != press) {
             return;
         }
     }
 
     _press.clear();
     _press.append(press);
+
+    rep();
 }
 
 template<class T, class Z>
@@ -217,7 +221,7 @@ force_inline void StrokeNormal::draw(
     W_ASSERT(page >= 0);
     W_ASSERT(painterPublic.isActive());
 
-    WImage img;
+    WPixmap img;
     QPainter _painterPrivate;
     QPainter *painter;
     QPointF lastPoint, pointDraw;
@@ -226,7 +230,7 @@ force_inline void StrokeNormal::draw(
     cbool isPrivatePainter = isHigh;
 
     if (isPrivatePainter) {
-        img = WImage(1, true);
+        img = WPixmap(1, true);
         img.fill(Qt::transparent);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
@@ -237,7 +241,7 @@ force_inline void StrokeNormal::draw(
 
     lastPoint = Page::at_translation(*data.begin_point, page).toQPointF(prop);
 
-    for(data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++){
+    for (data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++) {
         const Point point = Page::at_translation(*data.begin_point, page);
         const pressure_t pressure = *data.begin_press;
 
@@ -273,7 +277,7 @@ force_inline void StrokeNormal::draw(
 
         painter->end();
 
-        painterPublic.drawImage(img.rect(), img);
+        painterPublic.drawPixmap(img.rect(), img);
     } else {
         WDebug(debug_draw_stroke, "Paint not high");
     }
@@ -325,7 +329,15 @@ inline QRect StrokeNormal::getBiggerPointInStroke(T begin, T end)
     return biggerData;
 }
 
+force_inline void StrokeNormal::rep() const
+{
+#ifdef DEBUGINFO
+    W_ASSERT((this->_point.size() == this->_pressure.size()) or (_pressure.size() == 1 and _point.size() > 1));
+#endif
+}
+
 inline void StrokeNormal::reset_flag()
 {
     this->_flag = flag_state::UPDATE_PRESSURE;
+    rep();
 }

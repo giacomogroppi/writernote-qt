@@ -42,7 +42,7 @@ static void setStylePrivate(
     }else{
         fast = true;
 
-        style.nx = TEMP_SQUARE*(Page::getHeight() / Page::getWidth());
+        style.nx = TEMP_SQUARE * (Page::getHeight() / Page::getWidth());
         style.ny = TEMP_SQUARE;
     }
 }
@@ -64,54 +64,52 @@ Page::Page(const int count, const n_style style)
 
 static inline void drawLineOrizzontal(
         StrokeForPage   &stroke,
-        style_struct_S  &style,
-        cdouble         &last,
-        double          &deltax,
-        cdouble         &width_p,
-        cdouble         &ct_del)
+        style_struct_S  &style)
 {
-    int i;
-    Point point;
+    constexpr auto initial = 20.;
+    constexpr auto lastLine = Page::getHeight() - 20.;
+    const auto delta = (lastLine - initial) / (double)style.nx;
 
-    W_ASSERT(ct_del > 0);
+    constexpr auto xLeft = 20.;
+    constexpr auto xRight = Page::getWidth() - 20.;
 
-    for(i = 0; i < style.nx; i++){
-        point = Point(20, last + deltax - 20);
+    for (int i = 0; i < style.nx; i++) {
+        const auto y = delta * double(i) + initial;
 
-        stroke.append(point, stroke_append_default);
+        const auto pointBegin = Point {xLeft, y};
+        const auto pointEnd =   Point {xRight, y};
 
-        point.rx() = width_p - 20;
-        stroke.append(point, stroke_append_default);
-
-        deltax += ct_del;
+        stroke.append(pointBegin, stroke_append_default );
+        stroke.append(pointEnd, stroke_append_default);
     }
+
+    stroke.append({xLeft, Page::getHeight() - 20.}, stroke_append_default);
+    stroke.append({xRight, Page::getHeight() - 20.}, stroke_append_default);
 }
 
 static inline void drawLineVertical(
         StrokeForPage   &stroke,
-        style_struct_S  &style,
-        const double    &last,
-        double          &deltay,
-        const double    height_p)
+        style_struct_S  &style)
 {
-    const double ct_del = deltay;
-    int i;
-    Point point;
+    constexpr auto initial = 20.;
+    constexpr auto lastLine = Page::getWidth() - 20.;
+    const auto delta = (lastLine - initial) / (double)style.ny;
 
-    W_ASSERT(height_p);
-    W_ASSERT(ct_del);
+    const auto yTop = 20.;
+    const auto yButtom = Page::getHeight() - 20.;
 
-    for(i = 0; i < style.ny; i++){
-        point = Point(deltay - 20,
-                        last + 20); /* corrisponde to 0 */
+    for (int i = 0; i < style.ny; i++) {
+        const auto x = delta * double(i) + initial;
 
-        stroke.append(point, stroke_append_default);
+        const auto pointBegin = Point {x, yTop};
+        const auto pointEnd =   Point {x, yButtom };
 
-        point.ry() = height_p + last - 20;
-        stroke.append(point, stroke_append_default);
-
-        deltay += ct_del;
+        stroke.append(pointBegin, stroke_append_default);
+        stroke.append(pointEnd, stroke_append_default);
     }
+
+    stroke.append({Page::getWidth() - 20., yTop}, stroke_append_default);
+    stroke.append({Page::getWidth() - 20., yButtom}, stroke_append_default);
 }
 
 void Page::drawNewPage(n_style __style)
@@ -119,37 +117,24 @@ void Page::drawNewPage(n_style __style)
     bool fast = false;
     double deltax, deltay, ct_del;
     struct style_struct_S style;
-    cdouble width_p    = this->getWidth();
-    cdouble height_p   = this->getHeight();
-    cdouble last = (_count - 1) * Page::getHeight();
 
     auto &stroke = this->_stroke_writernote;
 
     setStylePrivate(fast, __style, style);
 
-    if(likely(fast)){
+    if (fast) {
         style.colore.fromColor(TEMP_COLOR);
         style.thickness =  TEMP_TICK;
     }
 
-    if(un(style.thickness <= 0.0))
-        style.thickness = 1;
+    style.thickness = style.thickness >= 0. ? style.thickness : 1.;
+    style.nx = style.nx >= 0 ? style.nx : 1;
+    style.ny = style.ny >= 0 ? style.ny : 1;
 
     stroke.setMetadata(style.colore);
 
-    if(un(style.nx <= 0))
-        style.nx = 1;
-
-    if(un(style.ny <= 0))
-        style.ny = 1;
-
-    deltax = height_p / (double)style.nx;
-    deltay = width_p / (double)style.ny;
-
-    ct_del = deltax;
-
-    drawLineOrizzontal( stroke, style, last, deltax, width_p, ct_del);
-    drawLineVertical(   stroke, style, last, deltay, height_p);
+    drawLineOrizzontal( stroke, style);
+    drawLineVertical(   stroke, style);
 
     stroke.setPressure(widthToPressure(style.thickness));
 }

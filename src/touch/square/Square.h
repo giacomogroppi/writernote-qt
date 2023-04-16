@@ -24,9 +24,17 @@ public:
                     std::function<Document &()> getDoc);
     ~Square() override;
 
+    int getType() const final;
+    static constexpr int type();
+
     void reset() override;
 private:
     void needRefreshPrivate() override;
 signals:
     void needRefresh();
 };
+
+inline constexpr int Square::type()
+{
+    return 4;
+}

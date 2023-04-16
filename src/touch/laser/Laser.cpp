@@ -28,3 +28,8 @@ Laser::~Laser()
 {
     delete this->_timer;
 }
+
+int Laser::getType() const
+{
+    return Laser::type();
+}

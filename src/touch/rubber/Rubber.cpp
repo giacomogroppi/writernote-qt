@@ -34,6 +34,11 @@ Rubber::~Rubber()
     setting.endGroup();
 }
 
+int Rubber::getType() const
+{
+    return Rubber::type();
+}
+
 void Rubber::setRubberTotal()
 {
     this->_type_gomma = RubberMethod::type_rubber::total;

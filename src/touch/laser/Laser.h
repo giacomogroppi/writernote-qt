@@ -36,6 +36,8 @@ public:
     [[nodiscard]] auto begin() { return this->_stroke.begin(); };
     [[nodiscard]] auto end() { return this->_stroke.end(); };
 
+    int getType() const final;
+    static constexpr int type();
 private slots:
     void endTimer();
 
@@ -67,3 +69,7 @@ force_inline void Laser::endMove()
     _timer->start(_time);
 }
 
+inline constexpr int Laser::type()
+{
+    return 1;
+}

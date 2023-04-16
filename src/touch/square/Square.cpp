@@ -12,6 +12,11 @@ Square::Square(QObject *parent,
 {
 }
 
+int Square::getType() const
+{
+    return Square::type();
+}
+
 Square::~Square() = default;
 
 void Square::reset()

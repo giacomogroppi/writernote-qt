@@ -29,11 +29,17 @@ public:
     void clear() noexcept;
     bool equal(const WList<T> &l1, const WList<T> &l2) noexcept;
 
-    [[nodiscard]] T *get_first() noexcept;
-    [[nodiscard]] bool isEmpty() const noexcept;
-    [[nodiscard]] int length() const noexcept;
-    [[nodiscard]] const T& last() const;
-    [[nodiscard]] const T& first() const;
+    /**
+     * This function remove and return the first object of the list
+     * @return First object in the list
+    */
+    T *get_first() noexcept;
+    bool isEmpty() const noexcept;
+    constexpr int length() const noexcept;
+    const T& last() const;
+    const T& first() const;
+
+    constexpr int size() const;
 
     class iterator{
     private:
@@ -213,7 +219,7 @@ inline bool WList<T>::isEmpty() const noexcept
 }
 
 template<class T>
-inline int WList<T>::length() const noexcept
+inline constexpr int WList<T>::length() const noexcept
 {
     test();
     return this->_size;
@@ -297,6 +303,12 @@ WList<T> &WList<T>::operator=(const WList<T> &other)
     other.test();
 
     return *this;
+}
+
+template<class T>
+constexpr int WList<T>::size() const
+{
+    return this->length();
 }
 
 template<class T>

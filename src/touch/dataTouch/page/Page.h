@@ -46,7 +46,7 @@ constexpr bool debugPage = false;
 class Page
 {
 private:
-    static constexpr uint width = 1666;
+    static constexpr uint width = 1000; //1666;
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
@@ -78,7 +78,7 @@ private:
 
     void mergeList();    
 
-    void AppendDirectly(std::shared_ptr<Stroke> stroke);
+    void AppendDirectly(const std::shared_ptr<Stroke>& stroke);
     bool initImg(bool flag);
 
     void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
@@ -91,7 +91,7 @@ public:
 
     Page();
     Page(const Page &page);
-    Page(const int count, const n_style style);
+    Page(int count, const n_style style);
     ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
@@ -99,7 +99,7 @@ public:
     void swap(QList<std::shared_ptr<Stroke>> &stroke, int from, int to);
     std::shared_ptr<Stroke> swap(int index, std::shared_ptr<Stroke> newData);
 
-    bool updateFlag(const QPointF &FirstPoint, const double zoom, const double heightView);
+    bool updateFlag(const QPointF &FirstPoint, double zoom, const double heightView);
     void setVisible(cbool vis) const;
     size_t get_size_in_file(cbool saveImg) const;
 
@@ -118,14 +118,14 @@ public:
      *  the drawing of the whole sheet, they wait for
      *  the triggerRenderImage to be executed.
     */
-    __fast void append(std::shared_ptr<Stroke> stroke);
+    __fast void append(const std::shared_ptr<Stroke>& stroke);
     __fast void append(const QList<std::shared_ptr<Stroke>> & stroke);
 
-    __fast const Stroke             & atStroke(const uint i) const;
-    __fast Stroke                   & atStrokeMod(const uint i);
+    __fast const Stroke             & atStroke(uint i) const;
+    __fast Stroke                   & atStrokeMod(uint i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
-    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, Point &point, const double zoom) const;
+    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, Point &point, double zoom) const;
 
     double minHeight() const;
     double currentHeight() const;
@@ -137,6 +137,7 @@ public:
     void triggerRenderImage(int m_pos_ris, bool all);
 
     int getCount() const;
+    int getIndex() const;
 
     void reset();
 
@@ -166,6 +167,9 @@ public:
     constexpr static double getHeight();
     constexpr static double getWidth();
     constexpr static QSize getResolutionSize();
+
+    constexpr static Point size();
+    constexpr static QPoint sizePoint();
 
     constexpr static double getResolutionWidth();
     constexpr static double getResolutionHeigth();
@@ -252,7 +256,12 @@ inline Point Page::at_translation(const Point &point, cint page)
     return tmp;
 }
 
-force_inline void Page::AppendDirectly(std::shared_ptr<Stroke> stroke)
+force_inline int Page::getIndex() const
+{
+    return this->getCount() - 1;
+}
+
+force_inline void Page::AppendDirectly(const std::shared_ptr<Stroke>& stroke)
 {
     this->_stroke.append(stroke);
 }
@@ -265,6 +274,11 @@ force_inline const WPixmap &Page::getImg() const
 Q_CONSTEXPR force_inline double Page::getProportion()
 {
     return proportion;
+}
+
+Q_CONSTEXPR force_inline Point Page::size()
+{
+    return {Page::getWidth(), Page::getHeight()};
 }
 
 Q_CONSTEXPR force_inline double Page::getHeight()
@@ -419,7 +433,7 @@ inline Stroke &Page::lastMod()
     return *this->_stroke.operator[](this->lengthStroke() - 1);
 }
 
-force_inline void Page::append(std::shared_ptr<Stroke> strokeAppend)
+force_inline void Page::append(const std::shared_ptr<Stroke>& strokeAppend)
 {
     W_ASSERT(strokeAppend and !strokeAppend->isEmpty());
 
@@ -439,13 +453,12 @@ force_inline double Page::minHeight() const
 
 force_inline Page::Page(const Page &from)
     : _imgDraw(1, true)
+    , _count(-1)
 {
     Page::copy(from, *this);
 }
 
-force_inline Page::~Page()
-{
-}
+force_inline Page::~Page() = default;
 
 inline Page &Page::operator=(const Page &other)
 {
@@ -484,4 +497,9 @@ force_inline void Page::drawForceColorStroke(
         painter->end();
         WDelete(painter);
     }
+}
+
+force_inline constexpr QPoint Page::sizePoint()
+{
+    return Page::size().toPoint();
 }

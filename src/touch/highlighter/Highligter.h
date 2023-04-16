@@ -23,6 +23,11 @@ public:
                         QColor &color,
                         QPen &pen);
 
+    virtual ~Highligter() = default;
+
+    int getType() const final;
+    static constexpr int type();
+
 public slots:
     void setHighligterPressureConst();
     void setHighligterSize();
@@ -40,3 +45,7 @@ signals:
 };
 
 
+inline constexpr int Highligter::type()
+{
+    return 2;
+}

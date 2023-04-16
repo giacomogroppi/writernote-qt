@@ -24,6 +24,7 @@ public:
 
 inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
 {
+    /*
     TabletUtils::DataPaint dataPaint = {
         .withPdf = withPdf,
         .IsExportingPdf = true,
@@ -34,5 +35,17 @@ inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
         DATAPAINT_DEFINEREST
     };
     TabletUtils::load(painter, *data, dataPaint);
+    */
+    TabletUtils loader(painter,
+        [](){return false;},
+        [](){return 0;},
+        m,
+        Optional<Laser>(),
+        *data,
+        withPdf,
+        true,
+        QRectF());
+
+    loader.load();
 }
 

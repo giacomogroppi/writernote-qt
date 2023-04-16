@@ -399,6 +399,9 @@ force_inline void DataStruct::triggerNewView(int page, int m_pos_ris, cbool all)
     at_mod(page).triggerRenderImage(m_pos_ris, all);
 }
 
+/**
+ * @return >= 0 && < this->length()
+*/
 inline int DataStruct::whichPage(const Stroke &stroke) const
 {
     int i;
@@ -412,6 +415,7 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
         i = this->whichPage(point);
     }
 
+    W_ASSERT(i >= 0 and i < this->lengthPage());
     return i;
 }
 
@@ -446,47 +450,15 @@ inline void DataStruct::triggerViewIfVisible(int m_pos_ris)
 
 inline int DataStruct::whichPage(const QPointF &point) const
 {
-    int i, len;
     const double heigth = Page::getHeight();
     const not_used auto debug_which = false;
 
     W_ASSERT(point.y() >= 0.);
 
-    len = this->lengthPage();
+    const auto index = WCommonScript::diff(point.y() / heigth);
 
-#ifdef DEBUGINFO
-    const auto not_used oldMethod = [&]{
-        int k;
-        for(k = 0; k < len; k++){
-            const Page &page = at(k);
-            if(page.currentHeight() >= point.y() and page.minHeight() <= point.y()){
-                return i;
-            }
-        }
-        return -1;
-    };
-#endif // DEBUGINFO
-
-    i = WCommonScript::diff(point.y() / heigth);
-
-    if (un(i >= len)) {
-        WDebug(debug_which, "set to -1");
-        i = -1;
-        WDebug(debug_which, "set to -1" << qstr("i: %1").arg(i));
-    }
-
-#ifdef DEBUGINFO
-    const not_used auto res = oldMethod();
-    WDebug(debug_which, qstr("i: %1 ").arg(i)
-        << qstr("y %1 height %2").arg(point.y()).arg(heigth));
-
-    if (i != res) {
-        WWarning("Differente result: " << i << res);
-        std::abort();
-    }
-#endif // DEBUGINFO
-
-    return i;
+    W_ASSERT(index >= 0 and index < this->lengthPage());
+    return index;
 }
 
 /* the function automatically launches the drawing for the pages

@@ -30,16 +30,16 @@ force_inline QString get_only_name(const char *name)
     int i;
     int from, to;
 
-    for(i = 0; name[i] != '\0'; i++){
-        if(name[i] == '('){
+    for (i = 0; name[i] != '\0'; i++) {
+        if (name[i] == '(') {
             to = i;
             break;
         }
     }
 
 
-    for(; i >= 0; i--){
-        if(name[i] == ' '){
+    for (; i >= 0; i--) {
+        if (name[i] == ' ') {
             from = i;
         }
     }
@@ -666,5 +666,32 @@ force_inline void removeFromArray(std::vector<T> &vec, const T& object)
         }
     }
 }
+
+#define TIME_START(variable_name) \
+    const auto variable_name = std::chrono::high_resolution_clock::now()
+
+#define TIME_STOP(variable_name, message)                                                                                                           \
+    do {                                                                                                                                            \
+        const auto end_##variable_name = std::chrono::high_resolution_clock::now();                                                                                                                                          \
+        const double delta##variable_name = std::chrono::duration_cast<std::chrono::nanoseconds>(end_##variable_name - variable_name).count();                                                                         \
+        qDebug() << message << delta##variable_name << "ns"                                                                                                        \
+                    << 1./(delta##variable_name * (1e-9)) << "hz";                                                                                              \
+    } while (0)
+
+
+#define TIME_START_STATIC(variable_name) \
+        static auto variable_name = std::chrono::high_resolution_clock::now()
+
+#define TIME_STOP_NO_OUT(variable_name) \
+    const auto end_##variable_name = std::chrono::high_resolution_clock::now();
+
+#define TIME_STOP_STATIC(variable_name, message)                                                                                                    \
+    do {                                                                                                                                            \
+        const auto end_##variable_name = std::chrono::high_resolution_clock::now();                                                                 \
+        const double delta##variable_name = (end_##variable_name - variable_name).count();                                                          \
+        variable_name = end_##variable_name;                                                                                                        \
+        qDebug() << message << delta##variable_name << "ns"                                                                                         \
+        << 1./(delta##variable_name * (1e-9)) << "hz";                                                                                              \
+} while (0)
 
 }

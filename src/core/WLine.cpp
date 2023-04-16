@@ -8,6 +8,8 @@ WLine::WLine(const WLine &line)
     this->_m = line._m;
     this->_pt1 = line._pt1;
     this->_pt2 = line._pt2;
+    this->_is_vertical = line._is_vertical;
+    this->_p = line._p;
 }
 
 WLine::WLine(const QPointF &pt1, const QPointF &pt2)

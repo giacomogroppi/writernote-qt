@@ -15,6 +15,7 @@ public:
 
     Q_DECL_DEPRECATED_X("This function is very slow, so please don't use it...")
     bool operator==(const WPixmap &other) const;
+    WPixmap& operator=(const QPixmap &other);
 };
 
 force_inline bool WPixmap::operator==(const WPixmap &other) const
@@ -22,3 +23,8 @@ force_inline bool WPixmap::operator==(const WPixmap &other) const
     return QPixmap::toImage().operator==(other.toImage());
 }
 
+inline WPixmap &WPixmap::operator=(const QPixmap &other)
+{
+    QPixmap::operator=(other.copy());
+    return *this;
+}

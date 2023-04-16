@@ -25,6 +25,11 @@ void Pen::setType(TypePen type)
     this->_type = type;
 }
 
+int Pen::getType() const
+{
+    return Pen::type();
+}
+
 pressure_t Pen::getSize(double press) const
 {
     if (this->isPressureVariable())
