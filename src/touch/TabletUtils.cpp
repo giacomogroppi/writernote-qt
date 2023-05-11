@@ -63,10 +63,6 @@ void TabletUtils::load()
     _pen.setStyle(Qt::PenStyle::SolidLine);
     core::painter_set_antialiasing(this->getPainter());
 
-    //W_ASSERT(painter.renderHints() == QPainter::Antialiasing);
-
-    //loadSheet(data, pen, painter, dataPoint.m, {0, 0, 400, 400});
-
 #ifdef PDFSUPPORT
     if(likely(withPdf))
         data.draw_pdf(painter, dataPoint.m, dataPoint.IsExportingPdf, data.currentWidth());
@@ -81,7 +77,7 @@ void TabletUtils::load()
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
 
     WDebug(false, "Start draw img from" << counterPage);
-    for(; counterPage < lenPage; counterPage ++){
+    for(; counterPage < 1 && lenPage; counterPage ++){
         const Page &page = _doc.at(counterPage);
         const auto isPageVisible = page.isVisible();
         const auto &img = page.getImg();
@@ -92,9 +88,9 @@ void TabletUtils::load()
         }
 
         //page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, this->_visibleArea);
-        //page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, {0., 0., 200., 200.});
+        page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, {0., 0., 150., 150.});
         singleLoad(getPainter(), img, sizeRect, {0., 0.}, counterPage, _doc.getZoom());
-
+        break;
         //img.save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
 
         //page.get_stroke_page().draw(getPainter(), _m, _doc.getPointFirstPage(), page, sizeRect);

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QByteArray>
+#include "core/WByteArray.h"
 
 class WDir {
 public:
-    static int removeDir(const QByteArray &path);
-    static int createDir(const QByteArray &path);
-    static bool exists(const QByteArray &path);
+    static int removeDir(const WByteArray &path);
+    static int createDir(const WByteArray &path);
+    static bool exists(const WByteArray &path);
 };
 

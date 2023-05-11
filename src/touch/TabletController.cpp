@@ -18,7 +18,7 @@ TabletController::TabletController(QObject *parent,
     , _isDrawing(false)
 {
     auto objectMove = [this](const QPointF &point) { this->objectMove(point); };
-    auto callUpdate = [this]() { this->callUpdate(); };
+    auto callUpdate = [this]() { emit this->onNeedRefresh(0, this->getDoc().lengthPage()); };
     auto getDoc = [this]() -> Document & { return this->getDoc(); };
 
     auto showProperty = [this] (const QPointF &point, ActionProperty prop) {
@@ -59,8 +59,9 @@ TabletController::TabletController(QObject *parent,
                 this,
                 hideProperty,
                 showProperty,
-                getDoc
-                )
+                getDoc,
+                callUpdate
+            )
     };
 
     this->_toolsContainer.append(QList<Tools*>{
@@ -74,14 +75,14 @@ TabletController::TabletController(QObject *parent,
     *__tmp = StrokePre();
     _currentTool = _tools._pen;
     _objectFinder = new ObjectFinder(this, callUpdate);
-
-    QObject::connect(_tools._square, &Square::needRefresh, this, &TabletController::onNeedRefresh);
 }
 
 void TabletController::getImg(QPainter &painter, double width) const
 {
+    this->draw(painter, width);
+    return;
     if (this->_needUpdate or 1) {
-        this->draw(painter, width);
+
     }
 
     this->_needUpdate = false;
@@ -124,20 +125,34 @@ void TabletController::checkCreatePage()
 void TabletController::touchBegin(const QPointF &point, double pressure)
 {
     checkCreatePage();
-    _currentTool->touchBegin(point, pressure, *_doc);
-    emit onNeedRefresh();
+    const auto res = _currentTool->touchBegin(point, pressure, *_doc);
+    if (res >= 0) {
+        emit onNeedRefresh(0, 1);
+        //emit onNeedRefresh(res, res + 1);
+    }
 }
 
 void TabletController::touchUpdate(const QPointF &point, double pressure)
 {
-    _currentTool->touchUpdate(point, pressure, *_doc);
-    emit onNeedRefresh();
+    const auto res = _currentTool->touchUpdate(point, pressure, this->getDoc());
+    if (res >= 0) {
+        emit onNeedRefresh(0, 1);
+
+//        emit onNeedRefresh(res, res + 1);
+    }
 }
 
 void TabletController::touchEnd(const QPointF &point, double pressure)
 {
-    _currentTool->touchEnd(point, *_doc);
-    emit onNeedRefresh();
+    const auto res = _currentTool->touchEnd(point, *_doc);
+    // da aggiustare
+
+    emit onNeedRefresh(0, 1);
+    return;
+    emit onNeedRefresh(
+        res >= 0 ? res : 0,
+        res >= 0 ? res + 1: this->getDoc().lengthPage()
+    );
 }
 
 void TabletController::selectColor(const QColor &color)
@@ -164,11 +179,6 @@ void TabletController::setAndCallTool(Tools *tool)
 
         emit onToolChanged();
     }
-}
-
-void TabletController::callUpdate()
-{
-    emit onNeedRefresh();
 }
 
 Document &TabletController::getDoc()

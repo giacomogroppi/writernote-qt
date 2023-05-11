@@ -13,8 +13,8 @@ public:
                 QPen &pen, QColor &color);
 
     virtual ~LaserMethod() = default;
-    bool touchBegin(const QPointF& point, double size, class Document &doc) final;
-    bool touchUpdate(const QPointF& point, double size, class Document &doc) final;
+    int touchBegin(const QPointF& point, double size, class Document &doc) final;
+    int touchUpdate(const QPointF& point, double size, class Document &doc) final;
     int touchEnd(const QPointF& point, class Document &doc) final;
 private:
     /**

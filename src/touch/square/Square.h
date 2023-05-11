@@ -21,17 +21,18 @@ public:
     explicit Square(QObject *parent,
                     std::function<void()> hideProperty,
                     std::function<void(const QPointF& point, ActionProperty signal)> showProperty,
-                    std::function<Document &()> getDoc);
+                    std::function<Document &()> getDoc,
+                    std::function<void()> callUpdate);
     ~Square() override;
 
     int getType() const final;
     static constexpr int type();
 
     void reset() override;
+
 private:
+    std::function<void()> _callUpdate;
     void needRefreshPrivate() override;
-signals:
-    void needRefresh();
 };
 
 inline constexpr int Square::type()

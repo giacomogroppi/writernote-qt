@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QList>
-#include <QByteArray>
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
@@ -26,7 +24,7 @@ public:
 
     [[nodiscard]] bool isEmpty() const;
 
-    QString audio_position_path = "";
+    WString audio_position_path = "";
 
     void reset();
     void cleanAudio();
@@ -38,7 +36,7 @@ public:
     };
 
     n_audio_record se_registato = n_audio_record::not_record;
-    QByteArray audio_data;
+    WByteArray audio_data;
 
     Document();
     Document(const Document &);
@@ -46,10 +44,10 @@ public:
     virtual ~Document();
 
     void controllForRepositioning();
-    void increaseZoom(double delta, const QSize &size);
+    void increaseZoom(double delta, const WSizeF &size);
     void adjustAll(unsigned w, unsigned h);
     void adjustHeight(cdouble height);
-    void scala_all(const QPointF& delta, int heightView) override;
+    void scala_all(const PointF& delta, int heightView) override;
     void repositioning();
 
     static void copy(const Document &src, Document &dest);

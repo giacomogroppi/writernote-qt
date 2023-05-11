@@ -2,8 +2,6 @@
 
 #include "utils/WCommonScript.h"
 #include "testing/memtest.h"
-#include <QList>
-#include <QPointF>
 
 template <class T>
 struct WListPrivate{

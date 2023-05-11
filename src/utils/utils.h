@@ -1,10 +1,7 @@
 #pragma once
 
 
-#include <QSize>
 #include "utils/WCommonScript.h"
-#include <QList>
-#include <QScreen>
 #include <chrono>
 
 namespace utils{

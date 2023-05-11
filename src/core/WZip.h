@@ -2,8 +2,9 @@
 
 #include "zip.h"
 #include "utils/WCommonScript.h"
-#include <QString>
-#include <QObject>
+#include "core/WString.h"
+#include "Scheduler/WObject.h"
+#include "WByteArray.h"
 
 class PrivateStatus{
 private:
@@ -45,10 +46,10 @@ public:
 };
 
 struct WZipPrivate{
-    void            *_data      = NULL;
-    zip_t           *_zip       = NULL;
+    void            *_data      = nullptr;
+    zip_t           *_zip       = nullptr;
     size_t          _len_file   = 0;
-    QString         _path;
+    WString         _path;
     PrivateStatus   _status;
     bool            _have_to_close;
 };
@@ -58,11 +59,11 @@ class WZip
 private:
     struct WZipPrivate _data_private;
 
-    bool openZip(const QByteArray &path);
-    zip_file_t *open_file_in_zip(const QByteArray &path);
+    bool openZip(const WByteArray &path);
+    zip_file_t *open_file_in_zip(const WByteArray &path);
 
 public:
-    WZip(const QByteArray &path, bool &ok);
+    WZip(const WByteArray &path, bool &ok);
     WZip(WZip &zip);
     ~WZip();
 
@@ -70,7 +71,7 @@ public:
     void dealloc_file();
     zip_t *get_zip() const;
 
-    bool openFileInZip(const QByteArray &path);
+    bool openFileInZip(const WByteArray &path);
 
     [[nodiscard]] size_t length() const;
 

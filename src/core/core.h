@@ -1,10 +1,10 @@
 #pragma once
 
-#include <QObject>
 #include "utils/WCommonScript.h"
 #include "utils/platform.h"
 #include "utils/utils.h"
-#include <QPainter>
+#include "core/WPainter/WPainter.h"
+#include "Scheduler/WObject.h"
 
 extern bool __is_mobile_view;
 extern class MainWindow *__private_mainwindow;

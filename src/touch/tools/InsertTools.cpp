@@ -19,7 +19,7 @@ InsertTools::InsertTools(std::function<int()> getTime,
 {
 }
 
-bool InsertTools::touchBegin(const QPointF &point, double size, class Document &doc)
+int InsertTools::touchBegin(const QPointF &point, double size, class Document &doc)
 {
     pressure_t pressure;
     StrokePre &strokeTmp = *__tmp;
@@ -38,7 +38,7 @@ bool InsertTools::touchBegin(const QPointF &point, double size, class Document &
     return true;
 }
 
-bool InsertTools::touchUpdate(const QPointF &point, double size, class Document &doc)
+int InsertTools::touchUpdate(const QPointF &point, double size, class Document &doc)
 {
     StrokePre &strokeTmp = *__tmp;
     pressure_t pressure;

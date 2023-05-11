@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QString>
+#include <string>
 #include "cloud/struct_user.h"
 #include "shared_definition.h"
 

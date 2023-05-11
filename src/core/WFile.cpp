@@ -1,20 +1,21 @@
 #include "WFile.h"
 #include "utils/WCommonScript.h"
-#include <QFile>
+#include <filesystem>
+#include <fstream>
 
-WFile::WFile(const QByteArray &path, const char mode)
+WFile::WFile(const WByteArray &path, const char mode)
 {
     char tmp[2] = {mode, '\0'};
     fp = fopen(path.constData(), tmp);
 }
 
-WFile::WFile(const QString &path, const char mode):
-    WFile(path.toUtf8(), mode)
+WFile::WFile(const std::string &path, const char mode):
+    WFile(path.c_str(), mode)
 {
 }
 
 WFile::WFile(const char *path, const char mode):
-    WFile(QByteArray(path), mode)
+    WFile(WByteArray(path), mode)
 {
 }
 
@@ -28,6 +29,7 @@ int WFile::write(const void *data, size_t size)
 {
     W_ASSERT(this->fp);
     const auto res = fwrite(data, size, 1, this->fp);
+    //std::ofstream stream("ciao", std::ios_base::binary)
 
     if(un(res != 1))
         return -1;
@@ -35,14 +37,17 @@ int WFile::write(const void *data, size_t size)
     return 0;
 }
 
-int WFile::fileExist(const QByteArray &to)
+int WFile::fileExist(const WByteArray &to)
 {
-    if(QFile::exists(to))
+    using namespace std;
+    using namespace std::filesystem;
+
+    if (exits(to.toStdString()))
         return 0;
     return -1;
 }
 
-int WFile::readFile(QByteArray &to, const char *pathFile)
+int WFile::readFile(WByteArray &to, const char *pathFile)
 {
     FILE *fp = WFile::open(pathFile, "r");
 
@@ -56,12 +61,12 @@ int WFile::readFile(QByteArray &to, const char *pathFile)
     if(fread(data, size, 1, fp) < 1)
         return -1;
 
-    to = QByteArray(data, size);
+    to = WByteArray(data, size);
 
     return 0;
 }
 
-int WFile::saveArrIntoFile(const QByteArray &arr, const QString &path)
+int WFile::saveArrIntoFile(const WByteArray &arr, const std::string &path)
 {
     WFile file(path, 'w');
 

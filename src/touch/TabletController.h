@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QObject>
-
 #include "touch/highlighter/Highligter.h"
 #include "touch/laser/Laser.h"
 #include "touch/pen/Pen.h"
@@ -37,7 +35,6 @@ private:
     mutable std::atomic<bool> _isDrawing;
 
     void objectMove(const QPointF &point);
-    void callUpdate();
     void setAndCallTool(Tools *tool);
 
     Document &getDoc();
@@ -68,7 +65,7 @@ public slots:
     void touchEnd(const QPointF &point, double pressure);
 
 signals:
-    void onNeedRefresh();
+    void onNeedRefresh(int pageMin, int pageMax);
     void onToolChanged();
     void onPropertyHide();
     void onNumberOfPageChanged(int numerberOfPage);

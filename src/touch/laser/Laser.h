@@ -1,18 +1,16 @@
 #pragma once
 
-#include <QTimer>
-#include <QObject>
 #include "testing/memtest.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "core/WList.h"
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "LaserMethod.h"
+#include "touch/pen/Pen.h"
 
-class Laser : public QObject,
+class Laser : public WObject,
               public LaserMethod
 {
-    Q_OBJECT
 private:
     static constexpr int _size = 1;
     static constexpr int _time = 2000;
@@ -22,10 +20,10 @@ private:
     QTimer *_timer;
 
 public:
-    explicit Laser(QObject *parent,
+    explicit Laser(WObject *parent,
                    std::function<pressure_t(double)> getSize,
-                   std::function<void(const QPointF&)> objectMove,
-                   QColor &color, QPen &pen,
+                   std::function<void(const PointF&)> objectMove,
+                   colore_s &color, WPen &pen,
                    std::function<void()> callUpdate);
     ~Laser();
 

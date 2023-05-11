@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QByteArray>
+#include "core/WByteArray.h"
 #include "utils/WCommonScript.h"
 
 class WFile
@@ -8,18 +8,19 @@ class WFile
 private:
     FILE *fp;
 public:
-    WFile(const QByteArray &path, const char mode);
-    WFile(const QString &path, const char mode);
-    WFile(const char *path, const char mode);
+    explicit WFile(const WByteArray &path, char mode);
+    explicit WFile(const std::string &path, char mode);
+    explicit WFile(const char *path, char mode);
     ~WFile();
 
     bool isValid() const;
     int write(const void *data, size_t size);
 
-    static int fileExist(const QByteArray &to);
-    static int readFile(QByteArray &to, const char *pathFile);
-    static int saveArrIntoFile(const QByteArray &arr, const QString &path);
-    static FILE *open(const QByteArray &path, const char *flat);
+    static bool exits(const std::string &path);
+    static int fileExist(const WByteArray &to);
+    static int readFile(WByteArray &to, const char *pathFile);
+    static int saveArrIntoFile(const WByteArray &arr, const std::string &path);
+    static FILE *open(const WByteArray &path, const char *flat);
     static size_t size(FILE *fp);
 };
 
@@ -32,7 +33,7 @@ inline bool WFile::isValid() const
  * Pass "r" to open file in read only mode
  * Pass "w" to open file in write mode
 */
-force_inline FILE *WFile::open(const QByteArray &path, const char *flag)
+force_inline FILE *WFile::open(const WByteArray &path, const char *flag)
 {
     W_ASSERT(   WCommonScript::WStrEqual(flag, "r") == true or
                 WCommonScript::WStrEqual(flag, "w") == true);

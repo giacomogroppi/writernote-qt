@@ -1,10 +1,11 @@
 #pragma once
 
 #include "zip.h"
-#include <QByteArray>
-#include <QList>
+#include "core/WByteArray.h"
+#include "core/WList.h"
 #include "utils/common_error_definition.h"
 #include "core/WZip.h"
+#include "core/WString.h"
 
 class readListArray
 {
@@ -20,11 +21,11 @@ public:
      * ogni file, per ogni nome all'interno del list_name e apperderà tutto
      * alla lista di QByteArray
 */
-    static uchar read(const QList<QString> &list_name, zip_t *zip_file,
-                     QList<QByteArray> &arr, cbool clear);
+    static unsigned char read(const std::vector<std::string> &list_name, zip_t *zip_file,
+                     std::vector<std::string> &arr, cbool clear);
 
-    static uchar read(const QList<QString> &list_name, WZip &zip,
-                      QList<QByteArray> &arr, cbool clear);
+    static unsigned char read(const std::vector<std::string> &list_name, WZip &zip,
+                      std::vector<std::string> &arr, cbool clear);
 };
 
 

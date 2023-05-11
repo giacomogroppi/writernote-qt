@@ -114,7 +114,7 @@ void * __square_search(void *__data)
     return nullptr;
 }
 
-bool SquareMethod::touchBegin(const QPointF &point, double, Document &doc)
+int SquareMethod::touchBegin(const QPointF &point, double, Document &doc)
 {
     constexpr auto not_used debugSquare = false;
     WDebug(debugSquare, "call");
@@ -131,7 +131,7 @@ bool SquareMethod::touchBegin(const QPointF &point, double, Document &doc)
     return true;
 }
 
-bool SquareMethod::touchUpdate(const QPointF &point, double, Document &doc)
+int SquareMethod::touchUpdate(const QPointF &point, double, Document &doc)
 {
     if (somethingInBox()) {
         W_ASSERT(this->_pointinit.isSet());

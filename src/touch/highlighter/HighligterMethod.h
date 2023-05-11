@@ -12,8 +12,8 @@ public:
                      QPen &pen,
                      QColor &color);
 
-    bool touchBegin(const QPointF& point, double size, Document &doc) final;
-    bool touchUpdate(const QPointF& point, double size, Document &doc) final;
+    int touchBegin(const QPointF& point, double size, Document &doc) final;
+    int touchUpdate(const QPointF& point, double size, Document &doc) final;
     int touchEnd(const QPointF& point, Document &doc) final;
 };
 

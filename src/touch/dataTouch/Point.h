@@ -1,12 +1,14 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include <QtGlobal>
-#include <QColor>
-#include <QPointF>
-#include "utils/WCommonScript.h"
-
 #define NCOLOR 4
+
+#include "core/PointF.h"
+
+#ifdef USE_QT
+ #include <QPointF>
+#else
+#endif
 
 template <class T>
 class Settable: public T {
@@ -37,95 +39,42 @@ public:
     }
 };
 
-class PointSettable : public QPointF {
-private:
-    bool _set;
-public:
-    explicit PointSettable(const QPointF &point, bool set);
-    explicit PointSettable(double x, double y, bool set);
-    PointSettable();
-
-    [[nodiscard]] bool isSet() const noexcept;
-    void setSet(bool set);
-    PointSettable &operator=(const QPointF &point) noexcept;
-    PointSettable &operator=(const PointSettable &point) noexcept;
-    PointSettable &operator=(bool enable) noexcept;
-};
-
-force_inline PointSettable::PointSettable()
-{
-    _set = false;
-}
-
-inline PointSettable::PointSettable(const QPointF &point, bool set):
-    QPointF(point)
-{
-    this->_set = set;
-    W_ASSERT(this->isSet() == set);
-}
-
-inline PointSettable::PointSettable(double x, double y, bool set)
-    : QPointF(x, y)
-    , _set(set)
-{
-}
-
-inline void PointSettable::setSet(bool set)
-{
-    _set = set;
-    W_ASSERT(this->isSet() == set);
-}
-
-inline bool PointSettable::isSet() const noexcept
-{
-    return _set;
-}
-
-inline PointSettable &PointSettable::operator=(const QPointF &point) noexcept
-{
-    QPointF::operator=(point);
-    return *this;
-}
-
-inline PointSettable &PointSettable::operator=(const PointSettable &point) noexcept
-{
-    QPointF::operator=(point);
-    this->_set = point._set;
-    return *this;
-}
-
-inline PointSettable &PointSettable::operator=(bool enable) noexcept
-{
-    this->_set = enable;
-    return *this;
-}
-
 struct colore_s{
     colore_s() = default;
     ~colore_s() = default;
+
+#ifdef USE_QT
     colore_s(const QColor &color);
-    colore_s(uchar u1, uchar u2, uchar u3, uchar u4);
+#endif // USE_QT
 
-    void set_alfa(uchar alfa);
+    colore_s(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
 
-    uchar colore[NCOLOR];
+    void set_alfa(unsigned char alfa);
+
+    unsigned char colore[NCOLOR];
+
+#ifdef USE_QT
     [[nodiscard]] QColor toQColor(double division) const;
     void fromColor(const QColor &color);
+#endif // USE_QT
 
     double getAlfa() const;
     double getRed() const    { return this->colore[0]; };
     double getGreen() const  { return this->colore[1]; };
     double getBlue() const   { return this->colore[2]; };
 
+#ifdef USE_QT
     static colore_s from_color(const QColor &color);
+#endif // USE_QT
     bool operator==(const colore_s &other) const;
 };
 
-inline void colore_s::set_alfa(uchar alfa)
+inline void colore_s::set_alfa(unsigned char alfa)
 {
     this->colore[3] = alfa;
 }
 
+#ifdef USE_QT
 /**
  * if division == 1 the color don't change
  * if division > 0 the color the alfa is change
@@ -147,11 +96,6 @@ force_inline void colore_s::fromColor(const QColor &color)
     }
 }
 
-inline double colore_s::getAlfa() const
-{
-    return this->colore[3];
-}
-
 inline colore_s colore_s::from_color(const QColor &color)
 {
     colore_s tmp;
@@ -159,27 +103,20 @@ inline colore_s colore_s::from_color(const QColor &color)
     return tmp;
 }
 
+#endif // USE_QT
+
+inline double colore_s::getAlfa() const
+{
+    return this->colore[3];
+}
+
 inline bool colore_s::operator==(const colore_s &other) const
 {
-    static_assert(sizeof(colore) == sizeof(uchar) * 4);
+    static_assert(sizeof(colore) == sizeof(unsigned char) * 4);
     return memcmp(this->colore, other.colore, sizeof(this->colore)) == 0;
 }
 
-/* this struct contains neither the color, nor the thickness, nor the page to which it belongs, nor the rotation, nor the id */
-class Point : public QPointF{
-public:
-    constexpr Point() = default;
-    constexpr Point(double x, double y);
-    constexpr Point(const QPointF &point);
-
-    constexpr QPointF toQPointF(double scale) const;
-};
-
-inline constexpr Point::Point(double x, double y) :
-    QPointF(x, y)
-{
-}
-
+#ifdef USE_QT
 force_inline constexpr Point::Point(const QPointF &point) :
     QPointF(point)
 {
@@ -195,7 +132,12 @@ inline colore_s::colore_s(const QColor &color)
     *this = colore_s::from_color(color);
 }
 
-inline colore_s::colore_s(uchar u1, uchar u2, uchar u3, uchar u4)
+#endif // USE_QT
+
+inline colore_s::colore_s(unsigned char u1,
+                          unsigned char u2,
+                          unsigned char u3,
+                          unsigned char u4)
 {
     colore[0] = u1;
     colore[1] = u2;
@@ -203,5 +145,6 @@ inline colore_s::colore_s(uchar u1, uchar u2, uchar u3, uchar u4)
     colore[3] = u4;
 }
 
+using PointSettable = Settable<PointF>;
 
 #endif // POINT_H

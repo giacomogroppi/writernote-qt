@@ -21,12 +21,12 @@ HighligterMethod::HighligterMethod(
 {
 }
 
-bool HighligterMethod::touchBegin(const QPointF &point, double size, Document &doc)
+int HighligterMethod::touchBegin(const QPointF &point, double size, Document &doc)
 {
     return InsertTools::touchBegin(point, size, doc);
 }
 
-bool HighligterMethod::touchUpdate(const QPointF &point, double size, Document &doc)
+int HighligterMethod::touchUpdate(const QPointF &point, double size, Document &doc)
 {
     return InsertTools::touchUpdate(point, size, doc);
 }

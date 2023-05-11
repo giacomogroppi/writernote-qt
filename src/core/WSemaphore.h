@@ -2,11 +2,12 @@
 
 #include "utils/WCommonScript.h"
 
-#include <QSemaphore>
+#include <iostream>
+#include <semaphore>
 
 class WSemaphore {
 private:
-    QSemaphore _sem;
+    std::binary_semaphore _sem;
 public:
     explicit WSemaphore(int init_value = 0);
     ~WSemaphore();

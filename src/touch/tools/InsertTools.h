@@ -20,8 +20,8 @@ protected:
     virtual uchar getAlfa() const = 0;
 
 public:
-    virtual bool touchBegin(const QPointF& point, double size, class Document &doc);
-    virtual bool touchUpdate(const QPointF& point, double size, class Document &doc);
+    virtual int touchBegin(const QPointF& point, double size, class Document &doc);
+    virtual int touchUpdate(const QPointF& point, double size, class Document &doc);
     virtual int touchEnd(const QPointF& point, class Document &doc);
 };
 

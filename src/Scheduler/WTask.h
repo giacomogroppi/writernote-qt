@@ -1,15 +1,13 @@
 #pragma once
 
-#include <QtGlobal>
-#include <QObject>
-#include <QRunnable>
+#include "Scheduler/WObject.h"
 
-class WTask:    public QObject,
-                public QRunnable
+class WTask:    public WObject,
+                public QRunnable,
+
 {
-    Q_OBJECT
 public:
-    explicit WTask(QObject *parent = nullptr);
+    explicit WTask(WObject *parent = nullptr);
     ~WTask() override = default;
 
     void run() override;

@@ -2,7 +2,7 @@
 #include "testing/memtest.h"
 #include "core/WZipCommon.h"
 
-WZip::WZip(const QByteArray &path, bool &ok)
+WZip::WZip(const WByteArray &path, bool &ok)
 {
     ok = this->openZip(path);
     if(ok){
@@ -11,7 +11,7 @@ WZip::WZip(const QByteArray &path, bool &ok)
     }
 
     this->_data_private = {
-        ._data = NULL,
+        ._data = nullptr,
         ._zip = _data_private._zip,
         ._len_file = 0,
         ._path = path,
@@ -54,7 +54,7 @@ WZip::~WZip()
     DO_IF_DEBUG(this->_data_private._zip = nullptr;)
 }
 
-bool WZip::openZip(const QByteArray &pathZip)
+bool WZip::openZip(const WByteArray &pathZip)
 {
     W_ASSERT(!pathZip.isEmpty());
     W_ASSERT(this->_data_private._zip == nullptr);
@@ -69,7 +69,7 @@ bool WZip::openZip(const QByteArray &pathZip)
     return _data_private._zip != nullptr;
 }
 
-zip_file_t *WZip::open_file_in_zip(const QByteArray &nameFile)
+zip_file_t *WZip::open_file_in_zip(const WByteArray &nameFile)
 {
     zip_file_t *file;
 
@@ -79,7 +79,7 @@ zip_file_t *WZip::open_file_in_zip(const QByteArray &nameFile)
 }
 
 // return true on success
-bool WZip::openFileInZip(const QByteArray &nameFile)
+bool WZip::openFileInZip(const WByteArray &nameFile)
 {
     W_ASSERT(_data_private._zip);
     W_ASSERT(this->_data_private._status.is_zip_open());

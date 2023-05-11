@@ -6,7 +6,7 @@
 #include "currenttitle/document.h"
 #include "dataread/xmlstruct.h"
 #include "touch/TabletUtils.h"
-#include "core/WRect.h"
+#include "core/Rect.h"
 
 void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
@@ -18,7 +18,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
     auto getPositionAudio = []() { return 0; };
 
     // we you only one page obviously
-    const auto visibleArea = WRect{Page::getResolutionSize()};
+    const auto visibleArea = Rect{Page::getResolutionSize()};
 
     TabletUtils loader (painter, isPlay, getPositionAudio, delta, Optional<Laser>(), doc, true, false, visibleArea);
 

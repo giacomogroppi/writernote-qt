@@ -1,12 +1,11 @@
 #pragma once
 
-
-#include <QString>
+#include "core/WString.h"
 
 class lastModification
 {
 public:
-    static QString day(const QString &path);
-    static QString hour(const QString &path);
+    static WString day(const WString &path);
+    static WString hour(const WString &path);
 };
 

@@ -2,6 +2,7 @@
 
 #include "testing/memtest.h"
 #include "utils/WCommonScript.h"
+#include "WByteArray.h"
 
 class WZipWriterSingle {
 private:
@@ -32,7 +33,7 @@ public:
 
     void write_string(const char *str, int size);
 
-    int commit_change(const QByteArray &zipName, const QByteArray &nameFileInZip);
+    int commit_change(const WByteArray &zipName, const WByteArray &nameFileInZip);
 
     WZipWriterSingle &operator=(WZipWriterSingle &) = delete;
 

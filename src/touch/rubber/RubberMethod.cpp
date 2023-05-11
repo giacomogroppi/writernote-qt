@@ -292,7 +292,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-bool RubberMethod::touchUpdate(const QPointF &__lastPoint,
+int RubberMethod::touchUpdate(const QPointF &__lastPoint,
                                double,
                                Document &doc)
 {
@@ -513,7 +513,7 @@ RubberMethod::~RubberMethod()
     WDelete(thread_group);
 }
 
-bool RubberMethod::touchBegin(const QPointF &point, double, Document &doc)
+int RubberMethod::touchBegin(const QPointF &point, double, Document &doc)
 {
     _last = true;
     _last = doc.adjustPoint(point);

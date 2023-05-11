@@ -23,12 +23,12 @@ LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
 {
 }
 
-bool LaserMethod::touchBegin(const QPointF &point, double size, Document &doc)
+int LaserMethod::touchBegin(const QPointF &point, double size, Document &doc)
 {
     return InsertTools::touchBegin(point, size, doc);
 }
 
-bool LaserMethod::touchUpdate(const QPointF &point, double size, Document &doc)
+int LaserMethod::touchUpdate(const QPointF &point, double size, Document &doc)
 {
     return InsertTools::touchUpdate(point, size, doc);
 }

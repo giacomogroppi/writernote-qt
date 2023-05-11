@@ -1,29 +1,27 @@
+#include <sys/stat.h>
+#include <filesystem>
 #include "WDir.h"
-#include <QDir>
-#include <QString>
+#include "core/WByteArray.h"
+#include "core/WString.h"
 
-int WDir::removeDir(const QByteArray &path)
+int WDir::removeDir(const WByteArray &path)
 {
-    QDir dir(path);
+    const auto res = std::filesystem::remove_all(path.constData());
 
-    const auto res = dir.removeRecursively();
-
-    if(!res)
+    if (res < 1)
         return -1;
 
     return 0;
 }
 
-int WDir::createDir(const QByteArray &path)
+int WDir::createDir(const WByteArray &path)
 {
-    const auto res = QDir().mkdir(path);
-    if(!res)
-        return -1;
-    return 0;
+    if (std::filesystem::create_directories(path.constData()))
+        return 0;
+    return -1;
 }
 
-bool WDir::exists(const QByteArray &path)
+bool WDir::exists(const WByteArray &path)
 {
-    QDir dir(path);
-    return dir.exists();
+    return std::filesystem::is_directory(path.toStdString());
 }

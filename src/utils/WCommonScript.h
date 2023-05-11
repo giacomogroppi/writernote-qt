@@ -1,13 +1,8 @@
 #pragma once
 
-#include <QList>
-#include <QtGlobal>
-#include <QDebug>
-#include <QPointF>
-#include <QPoint>
 #include <iostream>
 #include <cmath>
-#include <qmath.h>
+#include <math.h>
 #include <cstdlib>
 #include "utils/common_def.h"
 #include <type_traits>
@@ -15,13 +10,14 @@
 #define __init__ __attribute((constructor))
 
 #define BIT(bit) (1 << (bit-1))
-#define un(exp) Q_UNLIKELY(exp)
-#define likely(exp) Q_LIKELY(exp)
-#define unknown(exp) exp
-#define force_inline Q_ALWAYS_INLINE
+#define un(exp) __builtin_expect(!!(exp), false)
+#define likely(exp) __buildin_expect(!!(exp), true)
+#define force_inline inline __attribute__((always_inline))
 #define not_used __attribute__ ((__unused__))
 #define static_assert_type(val, should_be) static_assert(std::is_same<decltype(val), should_be>::value, #val " must be " #should_be)
 #define qstr QString
+#define unused(expr) do { (void)(expr); } while (0)
+#include "touch/dataTouch/Point.h"
 
 #ifdef DEBUGINFO
 force_inline QString get_only_name(const char *name)
@@ -117,7 +113,7 @@ force_inline void swap(T &t1, T &t2)
 
 
 template <typename T>
-force_inline int is_order_list(const QList<T> &list)
+force_inline int is_order_list(const std::vector<T> &list)
 {
     int i, len;
     len = list.length();
@@ -141,7 +137,7 @@ force_inline size_t WMemcpy(void *to, const void *from, size_t size)
 }
 
 template <typename T>
-force_inline int is_order_vector(const QVector<T> &list)
+force_inline int is_order_vector(const std::vector<T> &list)
 {
     int i, len;
     len = list.length();
@@ -156,7 +152,7 @@ force_inline int is_order_vector(const QVector<T> &list)
 }
 
 template <typename T>
-force_inline int is_order_multiple(const QList<QVector<T>> &list)
+force_inline int is_order_multiple(const std::vector<std::vector<T>> &list)
 {
     int i, len;
     len = list.length();
@@ -173,7 +169,7 @@ force_inline int is_order_multiple(const QList<QVector<T>> &list)
  * otherwise use std :: sort
 */
 template <typename T>
-inline void order_list(QList<T> &list)
+inline void order_list(std::vector<T> &list)
 {
     int i, j;
     int n = list.length();
@@ -184,18 +180,14 @@ inline void order_list(QList<T> &list)
             auto &val2 = list.operator[](j+1);
 
             if (val1 > val2){
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-                __swap(val1, val2);
-#else
                 list.swapItemsAt(j, j + 1);
-#endif
             }
         }
     }
 }
 
 template <typename T>
-inline void order_vector(QVector<T> &list)
+inline void order_vector(std::vector<T> &list)
 {
     int i, j;
     int n = list.length();
@@ -206,18 +198,14 @@ inline void order_vector(QVector<T> &list)
             auto &val2 = list.operator[](j+1);
 
             if (val1 > val2){
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-                __swap(val1, val2);
-#else
                 list.swapItemsAt(j, j + 1);
-#endif
             }
         }
     }
 }
 
 template <typename T>
-inline void order_multiple(QList<QVector<T>> &list)
+inline void order_multiple(std::vector<std::vector<T>> &list)
 {
     int i, len = list.length();
 
@@ -232,7 +220,7 @@ inline void order_multiple(QList<QVector<T>> &list)
 }
 
 template <typename T>
-Q_ALWAYS_INLINE int is_present_in_list_order_list(const QList<T> &list, const T& element)
+force_inline int is_present_in_list_order_list(const std::vector<T> &list, const T& element)
 {
     //the list must be sorted
     W_ASSERT(is_order_list(list));
@@ -259,7 +247,7 @@ Q_ALWAYS_INLINE int is_present_in_list_order_list(const QList<T> &list, const T&
     }
 
 template <typename T>
-force_inline int is_present_in_list_order_vector(const QVector<T> &list, const T& element)
+force_inline int is_present_in_list_order_vector(const std::vector<T> &list, const T& element)
 {
     W_ASSERT(is_order_vector(list));
 
@@ -276,14 +264,14 @@ force_inline int is_present_in_list_order_vector(const QVector<T> &list, const T
 }
 
 template <typename T>
-force_inline void append_if_not_present(QList<T> &list, const T& value)
+force_inline void append_if_not_present(std::vector<T> &list, const T& value)
 {
     if(list.indexOf(value) == -1)
         list.append(value);
 }
 
 template<typename T>
-force_inline void append_if_not_present_order(QList<T> &list, const T& value)
+force_inline void append_if_not_present_order(std::vector<T> &list, const T& value)
 {
 #if defined(DEBUGINFO)
     Q_ASSERT(is_order(list));
@@ -356,13 +344,13 @@ force_inline void abortIfDebug(cchar *file, int line){
     qDebug() << __func__ << file << line;
     std::abort();
 #else
-    Q_UNUSED(file);
-    Q_UNUSED(line);
+    unused(file);
+    unused(line);
 #endif
 }
 
 template <typename T>
-inline void __order(QList<QVector<T>> & list){
+inline void __order(std::vector<std::vector<T>> & list){
     int i, len = list.length();
 
     for(i = 0; i < len; i++){
@@ -397,7 +385,7 @@ inline void __order(QList<QVector<T>> & list){
 # define DO_IF_DEBUG_ENABLE(enable, istr) ;
 #endif //DEBUGINFO
 
-#ifdef DEBUGINFO
+#if defined(DEBUGINFO)
 # define WDebug(enable, message)                                                                    \
     if(enable){                                                                                     \
         qDebug() << get_only_name(__PRETTY_FUNCTION__).toUtf8().constData() << "\t" << message;     \
@@ -435,7 +423,7 @@ force_inline T __MAX(T first, T second)
 }
 
 template <typename T>
-force_inline Q_CONSTEXPR T Power(const T &value, cint power)
+force_inline constexpr T Power(const T &value, cint power)
 {
     T res = value;
 
@@ -454,13 +442,13 @@ force_inline Q_CONSTEXPR T Power(const T &value, cint power)
 force_inline bool is_near(cdouble one, cdouble two, cdouble precision)
 {
     W_ASSERT(precision >= 0.);
-    return qAbs(one - two) <= precision;
+    return std::abs(one - two) <= precision;
 }
 
-force_inline double distance_not_square(const QPointF& first, const QPointF& second)
+force_inline double distance_not_square(const PointF& first, const PointF& second)
 {
     const auto p = WCommonScript::Power(first.x() - second.x(), 2) + WCommonScript::Power(first.y() - second.y(), 2);
-    if(WCommonScript::debug_enable()){
+    if constexpr (WCommonScript::debug_enable()){
         const auto not_used res = WCommonScript::Power(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
         W_ASSERT(is_near(res, p, 0.001));
     }
@@ -473,7 +461,7 @@ force_inline double distance(double y1, double y2)
     return std::abs(y1 - y2);
 }
 
-force_inline double distance(const QPointF& first, const QPointF& second)
+force_inline double distance(const PointF& first, const PointF& second)
 {
     return std::sqrt(distance_not_square(first, second));
 }
@@ -487,20 +475,20 @@ force_inline bool is_between(const double left, const double value, const double
 // return true if qMin(left, rigth) <= value <= qMax(rigth, left)
 force_inline bool is_between_change(const double left, const double value, const double rigth)
 {
-    const auto min = qMin(left, rigth);
-    const auto max = qMax(left, rigth);
+    const auto min = std::min(left, rigth);
+    const auto max = std::min(left, rigth);
 
     return min <= value and value <= max;
 }
 
-force_inline bool is_near(const QPointF &point1, const QPointF &point2, cdouble prec)
+force_inline bool is_near(const PointF &point1, const PointF &point2, cdouble prec)
 {
     return  is_near(point1.x(), point2.x(), prec) and
             is_near(point1.y(), point2.y(), prec);
 }
 
 template<typename T>
-force_inline void order_complex(const QList<T> &list, int (*cmpFunctions) (const T&, const T&))
+force_inline void order_complex(const std::vector<T> &list, int (*cmpFunctions) (const T&, const T&))
 {
     int i, j;
     int n = list.length();
@@ -519,7 +507,7 @@ force_inline void order_complex(const QList<T> &list, int (*cmpFunctions) (const
 }
 
 template<typename T>
-force_inline bool is_order_complex(const QList<T> &list, int (*cmpFunctions) (const T&, const T&))
+force_inline bool is_order_complex(const std::vector<T> &list, int (*cmpFunctions) (const T&, const T&))
 {
     int i;
     int n = list.length();
@@ -545,7 +533,7 @@ force_inline bool is_included(const T& val, const T& min, const T& max)
 }
 
 template<typename T>
-force_inline void append_order(QVector<T> & list, const T& element)
+force_inline void append_order(std::vector<T> & list, const T& element)
 {
     int i, len;
 

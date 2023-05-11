@@ -1,9 +1,5 @@
 #pragma once
 
-#include <QVector>
-#include <QList>
-#include <QPointF>
-#include <QDebug>
 #include "core/WMutex.h"
 #include "core/WZipWriterSingle.h"
 #include "core/core.h"
@@ -15,6 +11,10 @@
 #include "core/WImage.h"
 #include "touch/dataTouch/stroke/StrokeForPage.h"
 #include "core/WPixmap.h"
+#include "core/WPen.h"
+#include "core/RectF.h"
+#include "core/Point.h"
+#include "core/WSizeTemplate.h"
 
 #define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
 #define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
@@ -54,7 +54,7 @@ private:
     mutable WMutex                  _append_load;
     mutable bool                    _IsVisible = true;
     int                             _count;
-    QList<std::shared_ptr<Stroke>>  _stroke;
+    std::vector<std::shared_ptr<Stroke>>  _stroke;
     StrokeForPage                   _stroke_writernote;
 
     static constexpr auto pageDebug = true;
@@ -67,39 +67,39 @@ private:
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    QList<std::shared_ptr<Stroke>>   _strokeTmp;
+    std::vector<std::shared_ptr<Stroke>>   _strokeTmp;
     mutable WPixmap                   _imgDraw;
 
-    void drawNewPage(n_style __style);
+    void drawNewPage(n_style style);
     
-    void drawEngine(QPainter &painter, QList<std::shared_ptr<Stroke>> &List, int m_pos_ris, cbool use_multi_thread);
-    void draw(QPainter &painter, int m_pos_ris, bool all);
-    void drawStroke(QPainter &painter, const Stroke &stroke, QPen &pen, const QColor &color) const;
+    void drawEngine(WPainter &painter, std::vector<std::shared_ptr<Stroke>> &List, int m_pos_ris, cbool use_multi_thread);
+    void draw(WPainter &painter, int m_pos_ris, bool all);
+    void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const colore_s &color) const;
 
     void mergeList();    
 
     void AppendDirectly(const std::shared_ptr<Stroke>& stroke);
     bool initImg(bool flag);
 
-    void decreseAlfa(const QVector<int> &pos, QPainter *painter, int decrese);
+    void decreseAlfa(const std::vector<int> &pos, WPainter *painter, int decrese);
 
-    static Point at_translation(const Point &point, cint page);
-    static QRect get_size_area(const QList<std::shared_ptr<Stroke>> & item, int from, int to);
+    static PointF at_translation(const PointF &point, cint page);
+    static Rect get_size_area(const std::vector<std::shared_ptr<Stroke>> & item, int from, int to);
 
 public:
     const WPixmap &getImg() const;
 
     Page();
     Page(const Page &page);
-    Page(int count, const n_style style);
+    Page(int count, n_style style);
     ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
-    void swap(QList<std::shared_ptr<Stroke>> & stroke, const QVector<int> & pos, int flag);
-    void swap(QList<std::shared_ptr<Stroke>> &stroke, int from, int to);
+    void swap(WList<std::shared_ptr<Stroke>> & stroke, const std::vector<int> & pos, int flag);
+    void swap(WList<std::shared_ptr<Stroke>> &stroke, int from, int to);
     std::shared_ptr<Stroke> swap(int index, std::shared_ptr<Stroke> newData);
 
-    bool updateFlag(const QPointF &FirstPoint, double zoom, const double heightView);
+    bool updateFlag(const PointF &FirstPoint, double zoom, double heightView);
     void setVisible(cbool vis) const;
     size_t get_size_in_file(cbool saveImg) const;
 
@@ -107,7 +107,7 @@ public:
 
     bool isVisible() const;
 
-    void removeAt(const QVector<int> & pos);
+    void removeAt(const std::vector<int> & pos);
     void removeAt(cint i);
 
     const Stroke & last() const;
@@ -125,7 +125,7 @@ public:
     __fast Stroke                   & atStrokeMod(uint i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
-    __slow void at_draw_page(cint IndexPoint, const QPointF &translation, Point &point, double zoom) const;
+    __slow void at_draw_page(cint IndexPoint, const PointF &translation, PointF &point, double zoom) const;
 
     double minHeight() const;
     double currentHeight() const;
@@ -146,15 +146,15 @@ public:
     int load(WZipReaderSingle &reader, int ver_stroke);
 
     void drawStroke(const Stroke &stroke, int m_pos_ris);
-    void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const QColor &color, QPainter *painter);
-    void drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color);
+    void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const colore_s &color, WPainter *painter);
+    void drawForceColorStroke(const std::vector<int> &pos, int m_pos_ris, const colore_s &color);
 
-    void removeAndDraw(int m_pos_ris, const QVector<int> &pos, const QRectF &area);
-    void drawIfInside(int m_pos_ris, const QRectF &area);
-    void drawSquare(const QRect &rect);
-    void decreseAlfa(const QVector<int> &pos, int decrese);
+    void removeAndDraw(int m_pos_ris, const std::vector<int> &pos, const RectF &area);
+    void drawIfInside(int m_pos_ris, const RectF &area);
+    void drawSquare(const Rect &rect);
+    void decreseAlfa(const std::vector<int> &pos, int decrese);
 
-    QRect get_size_area(const QVector<int> &pos) const;
+    Rect get_size_area(const std::vector<int> &pos) const;
 
     // block for appending
     void lock() const;
@@ -166,10 +166,10 @@ public:
     constexpr static double getProportion();
     constexpr static double getHeight();
     constexpr static double getWidth();
-    constexpr static QSize getResolutionSize();
+    constexpr static WSize getResolutionSize();
 
-    constexpr static Point size();
-    constexpr static QPoint sizePoint();
+    constexpr static PointF size();
+    constexpr static PointF sizePoint();
 
     constexpr static double getResolutionWidth();
     constexpr static double getResolutionHeigth();
@@ -242,16 +242,16 @@ force_inline void Page::reset()
     this->_imgDraw = WPixmap(1, true);
 }
 
-inline Point Page::at_translation(const Point &point, cint page)
+inline PointF Page::at_translation(const PointF &point, cint page)
 {
-    Point tmp;
+    PointF tmp;
     const double ytranslation = double(page) * Page::getHeight();
 
     if (un(!page)) {
         return point;
     }
 
-    memcpy(&tmp, &point, sizeof(tmp));
+    tmp = point;
     tmp.ry() -= ytranslation;
     return tmp;
 }
@@ -263,7 +263,7 @@ force_inline int Page::getIndex() const
 
 force_inline void Page::AppendDirectly(const std::shared_ptr<Stroke>& stroke)
 {
-    this->_stroke.append(stroke);
+    this->_stroke.push_back(stroke);
 }
 
 force_inline const WPixmap &Page::getImg() const
@@ -271,43 +271,43 @@ force_inline const WPixmap &Page::getImg() const
     return this->_imgDraw;
 }
 
-Q_CONSTEXPR force_inline double Page::getProportion()
+constexpr force_inline double Page::getProportion()
 {
     return proportion;
 }
 
-Q_CONSTEXPR force_inline Point Page::size()
+constexpr force_inline PointF Page::size()
 {
     return {Page::getWidth(), Page::getHeight()};
 }
 
-Q_CONSTEXPR force_inline double Page::getHeight()
+constexpr force_inline double Page::getHeight()
 {
     return height;
 }
 
-Q_CONSTEXPR force_inline double Page::getWidth()
+constexpr force_inline double Page::getWidth()
 {
     return width;
 }
 
-Q_CONSTEXPR force_inline QSize Page::getResolutionSize()
+constexpr force_inline QSize Page::getResolutionSize()
 {
     return QSize(Page::getResolutionWidth(), Page::getResolutionHeigth());
 }
 
-Q_CONSTEXPR force_inline double Page::getResolutionWidth()
+constexpr force_inline double Page::getResolutionWidth()
 {
     return getWidth() * PROP_RESOLUTION;
 }
 
-Q_CONSTEXPR force_inline double Page::getResolutionHeigth()
+constexpr force_inline double Page::getResolutionHeigth()
 {
     return getHeight() * PROP_RESOLUTION;
 }
 
 force_inline bool Page::updateFlag(
-        const QPointF   &FirstPoint,
+        const PointF    &FirstPoint,
         cdouble         zoom,
         cdouble         heightView)
 {
@@ -322,7 +322,7 @@ force_inline bool Page::updateFlag(
     cdouble minH = heightSec * double(_count - 1) / zoom + FirstPoint.y();
     cdouble maxH = heightSec * double(_count)     / zoom + FirstPoint.y();
 
-    if(likely(heightView <= Page::getHeight() * zoom)){
+    if(heightView <= Page::getHeight() * zoom){
         // if the page is not fully visible in a window
 
         _IsVisible = discordant(maxH, minH);
@@ -370,9 +370,9 @@ force_inline const StrokeForPage &Page::get_stroke_page() const
     return this->_stroke_writernote;
 }
 
-static force_inline void __at_draw_private(const Point &from, Point &to, const double zoom, const QPointF &translation)
+static force_inline void __at_draw_private(const PointF &from, PointF &to, const double zoom, const PointF &translation)
 {
-    memcpy(&to, &from, sizeof(from));
+    to = from;
 
     to *= zoom;
     to += translation;
@@ -380,7 +380,7 @@ static force_inline void __at_draw_private(const Point &from, Point &to, const d
 
 force_inline int Page::lengthStroke() const
 {
-    return _stroke.length();
+    return _stroke.size();
 }
 
 force_inline bool Page::isVisible() const
@@ -395,15 +395,15 @@ inline void Page::copy(
     dest.reset();
 
 
-    dest._stroke.reserve(src._stroke.length());
-    dest._strokeTmp.reserve(src._strokeTmp.length());
+    dest._stroke.reserve(src._stroke.size());
+    dest._strokeTmp.reserve(src._strokeTmp.size());
 
     for (const auto &s : src._stroke) {
-        dest._stroke.append(s->clone());
+        dest._stroke.push_back(s->clone());
     }
 
     for (const auto &s : src._strokeTmp) {
-        dest._strokeTmp.append(s->clone());
+        dest._strokeTmp.push_back(s->clone());
     }
 
     dest._stroke                    = src._stroke;

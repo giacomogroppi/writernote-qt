@@ -4,7 +4,7 @@
 #include "utils/common_error_definition.h"
 #include "touch/TabletUtils.h"
 #include <QPaintEngine>
-#include "core/WRect.h"
+#include "core/Rect.h"
 
 StrokeForPage::StrokeForPage()
     : _data(new StrokeNormal)
@@ -121,14 +121,14 @@ void StrokeForPage::draw(QPainter &painter, double delta,
         _needToUpdate = false;
     }
 
-    const auto targetRect = WRect{(QPointF(0., Page::getHeight() * page.getIndex() * delta), target)}.intersected(visibleArea.toRect());
+    const auto targetRect = Rect{(QPointF(0., Page::getHeight() * page.getIndex() * delta), target)}.intersected(visibleArea.toRect());
 
     //qDebug() << page.getIndex() << "Target: " << target << " targetrect: " << targetRect;
 
-    const auto source = WRect(_pix.rect())
+    const auto source = Rect(_pix.rect())
                         / PROP_RESOLUTION;
 
-    const auto sourceDraw = WRect{source.intersected(visibleArea.toRect())} * PROP_RESOLUTION;
+    const auto sourceDraw = Rect{source.intersected(visibleArea.toRect())} * PROP_RESOLUTION;
 
     if (!source.isNull())
         painter.drawPixmap(

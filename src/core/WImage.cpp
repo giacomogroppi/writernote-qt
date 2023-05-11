@@ -3,28 +3,37 @@
 #include "touch/dataTouch/page/Page.h"
 #include <QList>
 
-WImage::WImage(const QString &path, const char *format):
+#ifdef USE_QT
+WImage::WImage(const std::string &path, const char *format):
     QImage(path, format)
 {
     this->fill(Qt::transparent);
 }
+#else
+#endif
 
-size_t WImage::save_and_size(QByteArray &arr) const
+size_t WImage::save_and_size(WByteArray &arr) const
 {
+#ifdef USE_QT
     W_ASSERT(arr.size() == 0);
     QBuffer buffer(&arr);
     buffer.open(QIODevice::WriteOnly);
     QImage::save(&buffer, "PNG");
     buffer.close();
     return arr.size();
+#else
+    static_assert(0);
+#endif
 }
 
 size_t WImage::get_size_in_file() const
 {
-    QByteArray arr;
+    WByteArray arr;
     const auto s = this->save_and_size(arr);
     return s;
 }
+
+#ifdef USE_QT
 
 WImage::WImage(int width, int height, QImage::Format format) : QImage(width, height, format)
 {
@@ -44,3 +53,6 @@ WImage::WImage(int page, bool consideringResolution) :
     const auto res = QImage::isNull();
     W_ASSERT(!res);
 }
+#else
+
+#endif

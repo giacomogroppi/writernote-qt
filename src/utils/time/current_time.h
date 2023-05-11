@@ -1,11 +1,21 @@
 #pragma once
 
-#include <QDateTime>
-#include <QTime>
-#include <QDate>
+#include <iostream>
 
-QTime current_time();
-QString current_time_string();
+class WTime {
+public:
+    WTime (int h, int m, int s);
 
-QDate current_day();
-QString current_day_string();
+    static WTime now ();
+
+    std::string toString();
+};
+
+class WDate {
+public:
+    WDate(int y, int m, int d);
+
+    static WDate now();
+
+    std::string toString();
+};
