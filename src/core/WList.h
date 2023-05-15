@@ -36,7 +36,7 @@ public:
     constexpr int length() const noexcept;
     const T& last() const;
     const T& first() const;
-
+    int indexOf(const T& index) const;
     constexpr int size() const;
 
     class iterator{

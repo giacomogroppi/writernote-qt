@@ -121,18 +121,18 @@ int StrokeNormal::load(WZipReaderSingle &reader, int version, int len_point)
     }
 }
 
-void StrokeNormal::append(const Point &point, pressure_t pressure)
+void StrokeNormal::append(const PointF &point, pressure_t pressure)
 {
     _point.append(point);
     _pressure.append(pressure);
     this->modify();
 }
 
-void StrokeNormal::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const
+void StrokeNormal::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const
 {
     StrokeNormal::drawData
-            <   QList<Point>::ConstIterator,
-                QList<pressure_t>::ConstIterator> data = {
+            <   WListFast<PointF>::const_iterator,
+                WListFast<pressure_t>::const_iterator> data = {
         .begin_point = this->_point.constBegin(),
         .end_point   = this->_point.constEnd(),
         .begin_press = this->_pressure.constBegin(),
@@ -145,7 +145,7 @@ void StrokeNormal::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen
 
 int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const
 {
-    const Point *p1, *p2;
+    const PointF *p1, *p2;
     WLine tmp;
 
     int &i = from;
@@ -162,7 +162,7 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
 
     if(i == 0){
         const auto &ref = this->getBiggerPointInStroke();
-        if(likely(!ref.intersects(rect.toRect().toRect())))
+        if(!ref.intersects(rect.toRect().castTo<int>()))
             return -1;
     }
 
@@ -170,7 +170,7 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
     for(i++; i < len; i++){
         p2 = &_point.at(i);
 
-        tmp = WLine(p1->toQPointF(1.), p2->toQPointF(1.));
+        tmp = WLine(*p1, *p2);
 
         if(un(WLine::intersect(tmp, rect, precision))){
             return i;
@@ -182,44 +182,44 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
     return -1;
 }
 
-bool StrokeNormal::is_inside(const QRectF &rect, double precision) const
+bool StrokeNormal::is_inside(const RectF &rect, double precision) const
 {
     {
         const auto &area = this->getBiggerPointInStroke();
-        if(!area.intersects(rect.toRect())){
+        if(!area.intersects(rect.castTo<int>())){
             return false;
         }
     }
 
-    for (const auto &p : qAsConst(this->_point)) {
-        if(datastruct_isinside(rect, p)) {
-            return true;
-        }
-    }
+    const auto function = [rect](const PointF &point) {
+        return datastruct_isinside(rect, point);
+    };
 
-    return false;
+    return _point.anyMatch([&rect](const PointF &point) {
+        return datastruct_isinside(rect, point);
+    });
 }
 
 size_t StrokeNormal::createControll() const
 {
     size_t controll = 0;
 
-    for(const auto &p : qAsConst(this->_point)){
+    for(const auto &p : std::as_const(this->_point)){
         controll += WCommonScript::diff(p.x());
         controll += WCommonScript::diff(p.y());
     }
 
-    for(const auto &p : qAsConst(this->_pressure)){
+    for(const auto &p : std::as_const(this->_pressure)){
         controll += WCommonScript::diff(p);
     }
 
     return controll + Stroke::createControll();
 }
 
-QRect StrokeNormal::getBiggerPointInStroke() const
+Rect StrokeNormal::getBiggerPointInStroke() const
 {
     if (!Stroke::needToUpdateBiggerData()) {
-        return Stroke::getBiggerPointInStroke();
+        return Stroke::getBiggerPointInStroke().castTo<int>();
     }
 
     const auto b = StrokeNormal::getBiggerPointInStroke(this->_point.constBegin(),

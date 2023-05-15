@@ -1,11 +1,11 @@
 #include "WPainter.h"
 
 
-#ifndef Q_OS_IOS
+#if defined(USE_QT)
 
 WPainter::WPainter(QPaintDevice * dev)
     : QPainter(dev)
 {
 }
 
-#endif // Q_OS_IOS
+#endif // USE_QT

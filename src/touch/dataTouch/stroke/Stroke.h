@@ -1,10 +1,6 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
-#include <QList>
-#include <QDebug>
-#include <QRect>
-#include <QPainterPath>
 #include "touch/dataTouch/Point.h"
 #include "utils/common_def.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
@@ -13,6 +9,9 @@
 #include "core/WZipWriterSingle.h"
 #include "core/WZipReaderSingle.h"
 #include "core/WImage.h"
+#include "core/WPainter/WPainter.h"
+#include "core/Point.h"
+#include "core/WPen.h"
 
 #define PROP_RESOLUTION (2.)
 #define SetRenderPainter(painter) painter.setRenderHint(QPainter::Antialiasing, true);
@@ -38,7 +37,7 @@ class Stroke
 {
 private:
     struct metadata_stroke _metadata;
-    mutable QRect _biggerData;
+    mutable RectF _biggerData;
 
     enum flag_status : unsigned char{
         UPDATE_BIGGER_DATA = BIT(1)
@@ -64,11 +63,11 @@ public:
             COMPLEX_LINE = 3
     };
 
-    virtual void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const = 0;
+    virtual void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const = 0;
     virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
-    virtual bool is_inside(const QRectF &rect, double precision) const = 0;
+    virtual bool is_inside(const RectF &rect, double precision) const = 0;
 
-    QColor getColor(double division = 1.) const;
+    colore_s getColor(double division = 1.) const;
 
 #   define stroke_append_default (-1.)
     virtual void append(const Point &point, pressure_t pressure) = 0;
@@ -79,20 +78,20 @@ public:
     virtual size_t createControll() const;
 
     int getPosizioneAudio() const;
-    virtual QRect getBiggerPointInStroke() const;
-    virtual bool isInside(const QRectF &rect) const = 0;
+    virtual RectF getBiggerPointInStroke() const;
+    virtual bool isInside(const RectF &rect) const = 0;
 
     void clearAudio();
 
     const struct metadata_stroke &getMetadata() const;
 
     bool is_highlighter() const;
-    uchar get_alfa() const;
+    unsigned char get_alfa() const;
     virtual size_t getSizeInMemory() const = 0;
 
     virtual size_t getSizeInFile() const;
     virtual void decreasePrecision() = 0;
-    void setAlfaColor(uchar alfa);
+    void setAlfaColor(unsigned char alfa);
 
     /** instance of *this == StrokeNormal ==> @return == NULL*/
     virtual std::shared_ptr<Stroke> makeNormal() const = 0;
@@ -108,7 +107,7 @@ public:
 
     virtual bool isEmpty() const = 0;
 
-    virtual void scale(const QPointF &offset) = 0;
+    virtual void scale(const PointF &offset) = 0;
 
     virtual void adjust(double zoom) = 0;
 
@@ -137,7 +136,7 @@ protected:
     void clone(Stroke &out) const;
     explicit Stroke(const metadata_stroke& met);
     virtual void modify() const;
-    void setBiggerData(const QRect &newRect) const;
+    void setBiggerData(const RectF &newRect) const;
     bool needToUpdateBiggerData() const;
 
     virtual void preappend(int l) = 0;
@@ -145,8 +144,8 @@ protected:
     friend class StrokePre;
 };
 
-void set_press( QPen &pen, pressure_t press, double prop,
-                cbool is_rubber, const QColor &color);
+void set_press( WPen &pen, pressure_t press, double prop,
+                cbool is_rubber, const colore_s &color);
 
 inline Stroke &Stroke::operator=(const Stroke &other)
 {
@@ -161,7 +160,7 @@ inline Stroke &Stroke::operator=(const Stroke &other)
     return *this;
 }
 
-inline void Stroke::setBiggerData(const QRect &newRect) const
+inline void Stroke::setBiggerData(const RectF &newRect) const
 {
     this->_biggerData = newRect;
     setFlag(UPDATE_BIGGER_DATA, false);
@@ -181,11 +180,10 @@ inline bool Stroke::needToUpdateBiggerData() const
 
 inline void Stroke::setFlag(unsigned char type, bool value) const
 {
-    auto &f = (uchar &) _flag;
     if (value) {
-        f |= type;
+        _flag |= type;
     } else {
-        f &= ~type;
+        _flag &= ~type;
     }
 }
 
@@ -210,7 +208,7 @@ inline bool Stroke::is_highlighter() const
     return _metadata.color.getAlfa() < 255;
 }
 
-inline uchar Stroke::get_alfa() const
+inline unsigned char Stroke::get_alfa() const
 {
     return this->_metadata.color.getAlfa();
 }

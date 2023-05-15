@@ -29,14 +29,14 @@ struct style_struct_S{
 
 class style_struct{
 private:
-    QList<style_struct_S> style;
+    WListFast<style_struct_S> style;
     int default_val = 0;
 
-    void loadFromByte(const QByteArray &arr);
+    void loadFromByte(const WByteArray &arr);
     void setDefault(style_struct_S &ref);
-    void saveInArray(QByteArray & arr);
+    void saveInArray(WByteArray & arr);
 public:
-    inline uint length() const {return style.length();}
+    inline uint length() const {return style.size();}
     style_struct();
 
     void save();
@@ -47,16 +47,16 @@ public:
 
     const style_struct_S *at(const int i) const{ return &style.at(i);}
     style_struct_S *at_mod(const int i){return &style.operator[](i);}
-    void saveDefault(const int index);
-    void createNew(const QString &name);
+    void saveDefault(int index);
+    void createNew(const WString &name);
 };
 
 inline bool operator==(const style_struct& lhs, const style_struct& rhs)
 {
-    uint i, len;
+    int i, len;
     len = lhs.length();
 
-    uchar check = len == rhs.length();
+    unsigned char check = len == rhs.length();
 
     if(!check) return false;
 

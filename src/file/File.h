@@ -1,11 +1,12 @@
 #pragma once
 
-#include <QByteArray>
-#include <QDate>
+
+#include "utils/time/current_time.h"
+#include "core/WByteArray.h"
 
 class File {
 private:
-    QByteArray _name;
+    WByteArray _name;
 public:
     /*
      * requires
@@ -15,8 +16,18 @@ public:
      * ensures
      *  getName() == name
     */
-    explicit File(const QByteArray &name);
+    explicit File(const WByteArray &name);
+    File(const std::string &path);
+
     ~File() = default;
+
+    enum OpenMode {
+        readOnly,
+        writeOnly
+    };
+
+    bool open(enum OpenMode openMode);
+    bool close();
 
     /*
      * requires true
@@ -29,8 +40,8 @@ public:
      *      getExtension().at(i) == \result.at(i + getName().size())
      *  )
     */
-    const QByteArray &getFullName() const;
-    QByteArray getName() const;
+    const WByteArray &getFullName() const;
+    WByteArray getName() const;
 
     /*
      * requires true
@@ -39,7 +50,7 @@ public:
      *  !\result.contains('.') &&
      *  !\result.contains('/')
     */
-    QByteArray getExtension() const;
+    WByteArray getExtension() const;
 
     /*
      * requires
@@ -47,9 +58,10 @@ public:
      *  position.contains('.') &&
      *  position.lastIndexOf('.') + 1 < position.size()
     */
-    static bool createFile(const QByteArray &position);
-    const QDate &getLastMod() const;
+    static bool createFile(const WByteArray &position);
+    const WDate &getLastMod() const;
     bool operator==(const File &other) const;
+    static bool exists(const WByteArray &path);
 };
 
 

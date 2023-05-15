@@ -8,25 +8,20 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include "WObject.h"
 
-template <typename Function>
-class WTimer {
+class WTimer: public WObject {
 private:
-    int millisecond;
+    int _millisecond;
+    std::function<void()> _function;
 public:
-    WTimer(int millisecond);
+    WTimer(WObject *parent, std::function<void()> function, int millisecond);
     ~WTimer() = default;
 
-    void start();
-
+    bool isActive() const;
+    void stop();
+    void start(int millisecond = -1);
 };
-
-template<typename Function>
-inline void WTimer<Function>::start()
-{
-    std::this_thread::sleep_for(std::chrono::milliseconds(millisecond));
-    Function();
-}
 
 
 #endif //WRITERNOTE_WTIMER_H

@@ -1,22 +1,17 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
-#include <QObject>
-#include <QCloseEvent>
-#include <QString>
+#include "Scheduler/WObject.h"
+#include "core/WByteArray.h"
+#include "core/WString.h"
 
 #define NAME_LOG_EXT log_write
 
-namespace Ui {
-class log_ui;
-}
 
-class log_ui : public QObject
+class log_ui : public WObject
 {
-    Q_OBJECT
-
 public:
-    explicit log_ui(QObject * parent, const QByteArray &positionForLog);
+    explicit log_ui(WObject * parent, const WByteArray &positionForLog);
     ~log_ui();
 
     enum type_write: int{
@@ -26,16 +21,16 @@ public:
         possible_bug
     };
 
-    void write(const QString &message,
+    void write(const WString &message,
                enum type_write type);
 
-    void print(FILE *fp, const QByteArray &str);
-    bool getData(QByteArray & str);
-    QByteArray getCurrentPosition() const;
+    void print(FILE *fp, const WByteArray &str);
+    bool getData(WByteArray & str);
+    WByteArray getCurrentPosition() const;
 private:
-    QString adjust_path(const QString &str) const;
-    bool check_str(const QString &str) const;
-    static void addTime(QString &message);
+    WString adjust_path(const WString &str) const;
+    bool check_str(const WString &str) const;
+    static void addTime(WString &message);
 
     enum permi: int {
         error, /* error */
@@ -43,18 +38,18 @@ private:
         enable /* ok */
     };
 
-    QByteArray getNameLog();
+    WByteArray getNameLog();
 
     permi m_permi = permi::enable;
 
-    const QByteArray _positionLog;
-    QByteArray _nameLog;
+    const WByteArray _positionLog;
+    WByteArray _nameLog;
 
     void saveData();
     int loadData();
 };
 
-inline QByteArray log_ui::getCurrentPosition() const
+inline WByteArray log_ui::getCurrentPosition() const
 {
     W_ASSERT(_positionLog.size());
     W_ASSERT(_nameLog.size());

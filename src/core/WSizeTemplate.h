@@ -8,9 +8,9 @@
 
 template <typename T>
 class WSizeTemplate {
-private:
-    explicit WSizeTemplate(T width, T height);
-    explicit WSizeTemplate();
+public:
+    constexpr explicit WSizeTemplate(T width, T height);
+    constexpr explicit WSizeTemplate();
 
     T getWidth() const;
     T getHeight() const;

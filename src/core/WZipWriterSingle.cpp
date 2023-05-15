@@ -15,7 +15,7 @@ void WZipWriterSingle::write_string(const char *str, int size)
         this->write(str, size);
 }
 
-int WZipWriterSingle::commit_change(const QByteArray &zipName, const QByteArray &nameFileInZip)
+int WZipWriterSingle::commit_change(const WByteArray &zipName, const WByteArray &nameFileInZip)
 {
     WZipWriter writer;
 

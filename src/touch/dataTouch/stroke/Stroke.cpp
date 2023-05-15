@@ -198,7 +198,7 @@ size_t Stroke::createControll() const
     return controll;
 }
 
-QRect Stroke::getBiggerPointInStroke() const
+RectF Stroke::getBiggerPointInStroke() const
 {
     W_ASSERT(this->needToUpdateBiggerData() == false);
     return this->_biggerData;

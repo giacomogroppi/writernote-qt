@@ -1,29 +1,29 @@
 #include "FileManager.h"
-#include <QDir>
+#include "core/WDir.h"
 #include <utility>
 
-FileManager::FileManager(QObject *parent, QByteArray basePath)
-    : QObject(parent)
-    , _basePath(std::move(basePath))
+FileManager::FileManager(WObject *parent, WByteArray basePath)
+    : WObject(parent)
+    , _basePath(basePath)
     , _dir(FileManager::getAllDir(_basePath))
 {
 }
 
 FileManager::~FileManager() = default;
 
-const QList<Directory> &FileManager::getDirectory() const
+const WList<Directory> &FileManager::getDirectory() const
 {
     return this->_dir;
 }
 
-QList<Directory> FileManager::getAllDir(const QByteArray &path)
+WList<Directory> FileManager::getAllDir(const WByteArray &path)
 {
-    QList<Directory> ret = {};
-    QDir dir(path);
-    QStringList directories = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    WList<Directory> ret = {};
+    Directory dir(path);
+    const auto directories = dir.allDirsInFolder();
 
     for (const auto &folder: directories) {
-        ret.append(Directory(folder.toUtf8()));
+        ret.append(Directory(folder));
     }
 
     return ret;

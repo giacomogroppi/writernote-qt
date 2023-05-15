@@ -2,6 +2,7 @@
 #define WRITERNOTE_WOBJECT_H
 
 #include "core/WVector.h"
+#include "core/WList.h"
 #include <functional>
 #include <iostream>
 
@@ -53,14 +54,18 @@
     W_EMITTABLE_PRIVATE_FUNC_2(name_signals, type1, name1, type2, name2) \
     W_EMITTABLE_PRIVATE_REGI(name_signals, type1, type2)                                              \
 
+#define DEFINE_LISTENER(name_signals) void name_signals()
+
 class WObject {
 private:
+    WList<WObject> _children;
+public:
     explicit WObject(WObject *parent);
     virtual ~WObject();
 
-    W_EMITTABLE_0(positionChanged);
-    W_EMITTABLE_1(positionOpt, int);
-    W_EMITTABLE_2(positione_cambiata, int, int);
+    //W_EMITTABLE_0(positionChanged);
+    //W_EMITTABLE_1(positionOpt, int);
+    //W_EMITTABLE_2(positione_cambiata, int, int);
 };
 
 #endif //WRITERNOTE_WOBJECT_H

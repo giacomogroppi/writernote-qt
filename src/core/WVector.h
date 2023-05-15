@@ -11,7 +11,7 @@ private:
     T *_data;
     size_t _size;
 
-    void test();
+    void test() const;
 public:
     WVector();
 
@@ -19,16 +19,25 @@ public:
     const T& get(int i) const;
     int size() const;
     void removeAt(int i);
+    void move(int from, int to);
+    void clear();
+    const T& at(int i) const;
+    void reserve(int numberOfElement);
+    T& takeAt(int i);
+    const T& last() const;
+    const T& first() const;
+    T& operator[](int index);
+    bool isEmpty() const;
 
     class iterator{
     private:
-        WVector<T> &array;
+        T *array;
         int index;
     public:
-        explicit iterator(WVector<T> *data) : array(*data), index(0) {; };
+        explicit iterator(T *data) : array(data), index(0) {; };
 
-        T* operator->()         { return array._data[index]; };
-        T &operator*() const    { return array._data[index]; };
+        T* operator->()         { return array[index]; };
+        T &operator*() const    { return array[index]; };
         constexpr bool operator==(iterator i) const         { return index == i.index; }
         constexpr bool operator!=(iterator i) const         { return index != i.index; }
         iterator &operator++()                              { index ++; return *this; }
@@ -37,20 +46,20 @@ public:
 
     class const_iterator{
     private:
-        WVector<T> &array;
+        const T *array;
         int index;
     public:
-        explicit const_iterator(const WVector<T> &data) : array(data), index(0) {  };
+        explicit const_iterator(const T *data) : array(data), index(0) {  };
 
-        const T* operator->() const   { W_ASSERT(_e); return array._data[index]; };
-        const T &operator*() const    { W_ASSERT(_e); return array._data[index]; };
+        const T* operator->() const   { W_ASSERT(_e); return array[index]; };
+        const T &operator*() const    { W_ASSERT(_e); return array[index]; };
         constexpr bool operator==(const_iterator i) const         { return index == i.index; }
         constexpr bool operator!=(const_iterator i) const         { return index != i.index; }
         const_iterator &operator++()                              { index ++; return *this; }
         const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
-    iterator begin() noexcept { test(); return iterator(this); };
+    iterator begin() noexcept { test(); return iterator(this->_data); };
     iterator end()   noexcept { test(); return iterator(nullptr);  };
 
     const_iterator constBegin() const noexcept { test(); return const_iterator(this->_data); }

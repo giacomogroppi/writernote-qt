@@ -1,7 +1,6 @@
 #pragma once
 
 #include "touch/dataTouch/Point.h"
-#include <QPen>
 #include "currenttitle/document.h"
 #include "touch/laser/Laser.h"
 #include "utils/Optional.h"
@@ -15,11 +14,11 @@ private:
     const std::function<int ()> &_positionAudio;
     double _m;
     Optional<Laser> _laser;
-    QPen _pen;
-    QRectF _visibleArea;
+    WPen _pen;
+    RectF _visibleArea;
 
     const Document &_doc;
-    QPainter *_painter;
+    WPainter *_painter;
 
 public:
     struct DataPaint{
@@ -30,7 +29,7 @@ public:
         double m;
         Optional<Laser> laser;
 
-        QPen pen;
+        WPen pen;
         Point lastPoint;
 
         void reset()
@@ -43,15 +42,15 @@ public:
     .lastPoint = Point()
     };
 
-    explicit TabletUtils(QPainter &painter, const std::function<bool()> &isPlay,
+    explicit TabletUtils(WPainter &painter, const std::function<bool()> &isPlay,
                          const std::function<int()> &positionAudio,
                          double m, Optional<Laser> laser, const Document &doc,
-                         bool withPdf, bool isExporting, const QRectF &visibleArea);
+                         bool withPdf, bool isExporting, const RectF &visibleArea);
     ~TabletUtils() = default;
 
     constexpr int getTime() const;
     constexpr bool withPdf() const;
-    constexpr void setPainter(QPainter &painter);
+    constexpr void setPainter(WPainter &painter);
     constexpr double getZoom() const;
 
     static double pressureToWidth(double val);
@@ -62,10 +61,10 @@ private:
     void drawForAudio();
 
     constexpr Laser &getLaser();
-    constexpr QPainter &getPainter();
+    constexpr WPainter &getPainter();
 };
 
-inline TabletUtils::TabletUtils(QPainter &painter, const std::function<bool()> &isPlay, const std::function<int()> &positionAudio, double m, Optional<Laser> laser, const Document &doc, bool withPdf, bool isExporting, const QRectF &visibleArea)
+inline TabletUtils::TabletUtils(WPainter &painter, const std::function<bool()> &isPlay, const std::function<int()> &positionAudio, double m, Optional<Laser> laser, const Document &doc, bool withPdf, bool isExporting, const RectF &visibleArea)
     : _withPdf(withPdf)
     , _isExportingPdf(isExporting)
     , _doc(doc)
@@ -75,7 +74,7 @@ inline TabletUtils::TabletUtils(QPainter &painter, const std::function<bool()> &
     , _positionAudio(positionAudio)
 {
     if (this->_isExportingPdf) {
-        this->_visibleArea = QRectF {
+        this->_visibleArea = RectF {
             0., 0.,
                 Page::getWidth(),
                 Page::getHeight() * this->_doc.lengthPage()

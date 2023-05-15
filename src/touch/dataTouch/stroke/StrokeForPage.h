@@ -5,11 +5,11 @@
 #include "core/WZipWriterSingle.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "touch/dataTouch/Point.h"
-#include <QPainter>
-#include <QPen>
 #include "core/WList.h"
 #include "core/WImage.h"
 #include "core/WPixmap.h"
+#include "core/Point.h"
+#include "core/WPainter/WPainter.h"
 
 class StrokeForPage {
 private:
@@ -34,11 +34,11 @@ public:
 
     size_t getSizeInFile() const;
 
-    void draw(QPainter &painter, double delta,
-              const class Page &page, const QSize &target, const QRectF &visibleArea) const;
+    void draw(WPainter &painter, double delta,
+              const class Page &page, const WSize &target, const RectF &visibleArea) const;
 
     int save(WZipWriterSingle& writer) const;
-    void scale(const QPointF& delta);
+    void scale(const PointF& delta);
     void reset();
 
     StrokeForPage &operator=(const StrokeForPage &other);

@@ -136,7 +136,7 @@ bool WLine::is_in_domain(const PointF& point, cdouble precision) const
     const auto ymax = std::max(_pt1.y(), _pt2.y());
     const auto ymin = std::min(_pt1.y(), _pt2.y());
 
-    if(!_is_vertical){
+    if (!_is_vertical) {
         const auto xmin = std::min(_pt1.x(), _pt2.x());
         const auto xmax = std::max(_pt1.x(), _pt2.x());
 
@@ -151,7 +151,7 @@ bool WLine::is_in_domain(const PointF& point, cdouble precision) const
                 check = false;
         }
 
-    }else{
+    } else {
         check = WCommonScript::is_near(this->pt1().x(), x, precision);
 
         WDebug(debug_WLine, (check ? "Line vertical is in domain [x]" : "Line vertical is not in domain [x]") << 

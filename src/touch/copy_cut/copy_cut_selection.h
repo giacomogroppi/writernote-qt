@@ -1,8 +1,9 @@
 #pragma once
 
-#include <QPointF>
-#include <QRectF>
-#include <QList>
+#include <iostream>
+#include "core/PointF.h"
+#include "core/WList.h"
+#include "core/Rect.h"
 
 class Stroke;
 class DataStruct;
@@ -18,15 +19,15 @@ public:
 #define SELECTION_FLAGS_PASTE 2
 
     int selection(DataStruct &data,
-                  const QList<
-                        QList<
+                  const WList<
+                        WList<
                             std::shared_ptr<Stroke>
                         >
                     > &stroke,
-                  int __flags, const QPointF &offsetTouch);
+                  int __flags, const PointF &offsetTouch);
 
 
-    void past_selection(DataStruct &data, QPointF &point_past);
+    void past_selection(DataStruct &data, PointF &point_past);
 
     bool isEmpty() const;
 
@@ -36,16 +37,16 @@ public:
     void reset();
 
 private:
-    void managePaste(DataStruct &data, const QPointF &pointTouch);
-    void adjustData(const QPointF &offset);
+    void managePaste(DataStruct &data, const PointF &pointTouch);
+    void adjustData(const PointF &offset);
 
 #define FLAG_CUT 0x2 /* if the point is from a cut operation */
     int flags = 0;
 
-    QList<std::shared_ptr<Stroke>> m_stroke;
+    WList<std::shared_ptr<Stroke>> m_stroke;
 
-    void single(const QList<std::shared_ptr<Stroke>> &from, QList<std::shared_ptr<Stroke>> &append_data);
-    QRect get_size_area(const QList<QList<std::shared_ptr<Stroke>>> & stroke);
+    void single(const WList<std::shared_ptr<Stroke>> &from, WList<std::shared_ptr<Stroke>> &append_data);
+    Rect get_size_area(const WList<WList<std::shared_ptr<Stroke>>> & stroke);
 };
 
 inline bool copy::isSomeThingCopy() const

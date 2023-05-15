@@ -3,6 +3,7 @@
 
 #define NCOLOR 4
 
+#include <iostream>
 #include "core/PointF.h"
 
 #ifdef USE_QT
@@ -20,6 +21,9 @@ public:
         , _set(false)
     {
     }
+
+    bool isSet() const;
+    void set(bool set);
 
     Settable<T>& operator=(const Settable<T> &other) {
         T::operator=(other);
@@ -58,10 +62,16 @@ struct colore_s{
     void fromColor(const QColor &color);
 #endif // USE_QT
 
-    double getAlfa() const;
-    double getRed() const    { return this->colore[0]; };
-    double getGreen() const  { return this->colore[1]; };
-    double getBlue() const   { return this->colore[2]; };
+    unsigned char getAlfa() const;
+    unsigned char getRed() const    { return this->colore[0]; };
+    unsigned char getGreen() const  { return this->colore[1]; };
+    unsigned char getBlue() const   { return this->colore[2]; };
+
+    static colore_s fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
+
+#define color_black       colore_s(0, 0, 0, 255)
+#define color_white       colore_s(255, 255, 255, 255)
+#define color_transparent colore_s(0, 0, 0, 0)
 
 #ifdef USE_QT
     static colore_s from_color(const QColor &color);
@@ -105,7 +115,7 @@ inline colore_s colore_s::from_color(const QColor &color)
 
 #endif // USE_QT
 
-inline double colore_s::getAlfa() const
+inline unsigned char colore_s::getAlfa() const
 {
     return this->colore[3];
 }

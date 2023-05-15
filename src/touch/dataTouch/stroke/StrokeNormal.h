@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Stroke.h"
-#include <QList>
-#include <QPainter>
 #include "touch/dataTouch/page/Page.h"
+#include "core/WListFast.h"
 
 class StrokeNormal final: public Stroke{
 private:
@@ -14,9 +13,9 @@ private:
      * */
     int load(WZipReaderSingle &reader, int version, int len_point = -1);
 
-    QList<Point> _point;
-    QList<pressure_t> _pressure;
-    bool isInsideBiggerData(const QRect &rect) const;
+    WListFast<PointF> _point;
+    WListFast<pressure_t> _pressure;
+    bool isInsideBiggerData(const Rect &rect) const;
     int removeAt(int i);
 
     int load_ver_1(WZipReaderSingle &reader, int len_stroke);
@@ -34,7 +33,7 @@ private:
     };
 
     template <class T, class Z>
-    static void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop, const QColor &color, drawData<T, Z> data);
+    static void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop, const colore_s &color, drawData<T, Z> data);
 
     enum flag_state: unsigned char {
         UPDATE_PRESSURE = BIT(2)
@@ -54,16 +53,16 @@ public:
     StrokeNormal();
     ~StrokeNormal() final;
 
-    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const override;
+    void draw(WPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const override;
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const final;
-    bool is_inside(const QRectF &rect, double precision) const final;
+    bool is_inside(const RectF &rect, double precision) const final;
 
 #   define stroke_append_default (-1.)
     void append(const Point &point, pressure_t pressure) final;
     size_t createControll() const final;
 
-    QRect getBiggerPointInStroke() const final;
-    bool isInside(const QRectF &rect) const final;
+    Rect getBiggerPointInStroke() const final;
+    bool isInside(const RectF &rect) const final;
 
     size_t getSizeInMemory() const final;
     size_t getSizeInFile() const final;
@@ -91,7 +90,7 @@ public:
 
     bool isEmpty() const final;
     void adjust(double zoom) final;
-    void scale(const QPointF &offset) final;
+    void scale(const PointF &offset) final;
 
     void force_pressure(pressure_t press);
 
@@ -102,12 +101,12 @@ public:
     bool operator!=(const Stroke &other) const final;
 
     template<class T>
-    static inline QRect getBiggerPointInStroke(T begin, T end);
+    static inline Rect getBiggerPointInStroke(T begin, T end);
 
     int type() const final;
 
 protected:
-    int length () const { return _point.length(); }
+    int length () const { return _point.size(); }
     auto getPressure() const {
         W_ASSERT(this->_pressure.at(0) >= 0.);
         return this->_pressure.at(0);
@@ -135,7 +134,7 @@ protected:
 inline bool StrokeNormal::isPressureVal() const
 {
     rep();
-    return _pressure.length() == 1 and _point.length() > 1;
+    return _pressure.size() == 1 and _point.length() > 1;
 }
 
 inline bool StrokeNormal::needToUpdatePressure() const
@@ -157,13 +156,13 @@ inline bool StrokeNormal::constantPressure() const
 inline void StrokeNormal::updateFlagPressure() const
 {
     pressure_t press;
-    auto &_press = (QList<pressure_t> &) _pressure;
+    auto &_press = (WListFast<pressure_t> &) _pressure;
 
     this->_flag &= flag_state::UPDATE_PRESSURE;
 
     const auto len = this->length();
 
-    if (len < 2 and _press.length() == 1) {
+    if (len < 2 and _press.size() == 1) {
         // lo stroke era _press const ma gli abbiamo
         // tolto troppi punti.
         const auto press = _press.at(0);
@@ -175,7 +174,7 @@ inline void StrokeNormal::updateFlagPressure() const
         W_ASSERT(_press.length() == _point.length());
     }
 
-    if (len > 1 and _press.length() == 1) {
+    if (len > 1 and _press.size() == 1) {
         return;
     }
 
@@ -207,12 +206,12 @@ inline void StrokeNormal::updateFlagPressure() const
 
 template<class T, class Z>
 force_inline void StrokeNormal::draw(
-        QPainter &_painter,
+        WPainter &_painter,
         cbool is_rubber,
         cint page,
-        QPen &pen,
+        WPen &pen,
         cdouble _prop,
-        const QColor &color,
+        const colore_s &color,
         drawData<T, Z> data)
 {
     constexpr bool not_used debug_draw_stroke = false;
@@ -222,9 +221,9 @@ force_inline void StrokeNormal::draw(
     W_ASSERT(painterPublic.isActive());
 
     WPixmap img;
-    QPainter _painterPrivate;
-    QPainter *painter;
-    QPointF lastPoint, pointDraw;
+    WPainter _painterPrivate;
+    WPainter *painter;
+    PointF lastPoint, pointDraw;
     cbool isHigh = pen.color().alpha() < 255;
     cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
     cbool isPrivatePainter = isHigh;
@@ -242,14 +241,14 @@ force_inline void StrokeNormal::draw(
     lastPoint = Page::at_translation(*data.begin_point, page).toQPointF(prop);
 
     for (data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++) {
-        const Point point = Page::at_translation(*data.begin_point, page);
+        const PointF point = Page::at_translation(*data.begin_point, page);
         const pressure_t pressure = *data.begin_press;
 
         if(!data.press_null){
             data.begin_press ++;
         }
 
-        pointDraw = point.toQPointF(prop);
+        pointDraw = point * prop;
 
         set_press(pen, pressure, _prop, is_rubber, color);
         painter->setPen(pen);
@@ -258,7 +257,7 @@ force_inline void StrokeNormal::draw(
             pen.setWidthF(pen.widthF() * deltaColorNull);
         }
         else if (un(isHigh)) {
-            const QPainter::CompositionMode curr = painter->compositionMode();
+            const WPainter::CompositionMode curr = painter->compositionMode();
             painter->setCompositionMode(QPainter::CompositionMode_Clear);
             painter->drawPoint(lastPoint);
             painter->setCompositionMode(curr);
@@ -284,17 +283,17 @@ force_inline void StrokeNormal::draw(
 }
 
 template<class T>
-inline QRect StrokeNormal::getBiggerPointInStroke(T begin, T end)
+inline Rect StrokeNormal::getBiggerPointInStroke(T begin, T end)
 {
-    QRect biggerData;
+    Rect biggerData;
 
     if(un(begin == end)){
         WWarning("Warning: Stroke empty");
         return {0, 0, 0, 0};
     }
 
-    QPoint topLeft      = begin->toQPointF(1.).toPoint();
-    QPoint bottomRight  = begin->toQPointF(1.).toPoint();
+    Point topLeft      = begin->toQPointF(1.).toPoint();
+    Point bottomRight  = begin->toQPointF(1.).toPoint();
 
     for(; begin != end; begin ++){
         const Point &point = *begin;
@@ -324,7 +323,7 @@ inline QRect StrokeNormal::getBiggerPointInStroke(T begin, T end)
     W_ASSERT(topLeft.x() <= bottomRight.x());
     W_ASSERT(topLeft.y() <= bottomRight.y());
 
-    biggerData = QRect(topLeft, bottomRight);
+    biggerData = Rect(topLeft, bottomRight);
 
     return biggerData;
 }

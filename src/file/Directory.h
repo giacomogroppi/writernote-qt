@@ -1,27 +1,29 @@
 #pragma once
 
-#include <QByteArray>
-#include <QList>
 #include "File.h"
+#include "core/WList.h"
+#include "core/WByteArray.h"
 
 class Directory
 {
 private:
-    QList<File> _files;
-    QByteArray _path;
+    WList<File> _files;
+    WByteArray _path;
 
-    QList<File> getAllFile(const QByteArray &path);
+    static WList<File> getAllFile(const WByteArray &path);
 public:
-    explicit Directory(const QByteArray &path);
+    explicit Directory(const WByteArray &path);
     ~Directory();
 
-    const QList<File>& getFiles() const;
+    const WList<File>& getFiles() const;
 
     /**
      * requires
      *  file in position don't exists
     */
-    bool addFiles(const QByteArray &position);
+    bool addFiles(const WByteArray &position);
+
+    WList<WByteArray> allDirsInFolder() const;
 };
 
 

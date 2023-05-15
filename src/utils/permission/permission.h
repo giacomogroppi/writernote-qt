@@ -10,7 +10,6 @@ public:
         writeOnly
     };
 
-    static bool folderExist(const char *file);
     static bool open(const char *file, e_permission);
 };
 

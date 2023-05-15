@@ -16,9 +16,8 @@
 #include "core/Point.h"
 #include "core/WSizeTemplate.h"
 
-#define COLOR_NULL QColor::fromRgb(255, 255, 255, 255)
-#define Define_PEN(pen) QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-#define TEMP_COLOR QColor::fromRgb(105, 105, 105, 255)
+#define COLOR_NULL colore_s::fromRgb(255, 255, 255, 255)
+#define TEMP_COLOR colore_s::fromRgb(105, 105, 105, 255)
 #define TEMP_TICK 1
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
@@ -39,7 +38,7 @@
 
 enum n_style: int;
 
-void adjustStrokePage(const QList<Stroke> &List, int count, Stroke *m_stroke);
+void adjustStrokePage(const WList<Stroke> &List, int count, Stroke *m_stroke);
 
 constexpr bool debugPage = false;
 
@@ -50,12 +49,12 @@ private:
     static constexpr double proportion = 1.4141;
     static constexpr uint height = width * proportion; // correct proportions for A4 paper size
 
-    mutable WMutex                  _img;
-    mutable WMutex                  _append_load;
-    mutable bool                    _IsVisible = true;
-    int                             _count;
-    std::vector<std::shared_ptr<Stroke>>  _stroke;
-    StrokeForPage                   _stroke_writernote;
+    mutable WMutex                      _img;
+    mutable WMutex                      _append_load;
+    mutable bool                        _IsVisible = true;
+    int                                 _count;
+    WVector<std::shared_ptr<Stroke>>    _stroke;
+    StrokeForPage                       _stroke_writernote;
 
     static constexpr auto pageDebug = true;
 
@@ -67,7 +66,7 @@ private:
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    std::vector<std::shared_ptr<Stroke>>   _strokeTmp;
+    WVector<std::shared_ptr<Stroke>>   _strokeTmp;
     mutable WPixmap                   _imgDraw;
 
     void drawNewPage(n_style style);
@@ -119,7 +118,7 @@ public:
      *  the triggerRenderImage to be executed.
     */
     __fast void append(const std::shared_ptr<Stroke>& stroke);
-    __fast void append(const QList<std::shared_ptr<Stroke>> & stroke);
+    __fast void append(const WList<std::shared_ptr<Stroke>> & stroke);
 
     __fast const Stroke             & atStroke(uint i) const;
     __fast Stroke                   & atStrokeMod(uint i);
@@ -152,9 +151,9 @@ public:
     void removeAndDraw(int m_pos_ris, const std::vector<int> &pos, const RectF &area);
     void drawIfInside(int m_pos_ris, const RectF &area);
     void drawSquare(const Rect &rect);
-    void decreseAlfa(const std::vector<int> &pos, int decrese);
+    void decreseAlfa(const WVector<int> &pos, int decrese);
 
-    Rect get_size_area(const std::vector<int> &pos) const;
+    RectF get_size_area(const WVector<int> &pos) const;
 
     // block for appending
     void lock() const;
@@ -175,7 +174,7 @@ public:
     constexpr static double getResolutionHeigth();
 
 #define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
-    void drawToImage(const QVector<int> &index, WPixmap &img, cint flag) const;
+    void drawToImage(const WVector<int> &index, WPixmap &img, cint flag) const;
 
     Page &operator=(const Page &other);
 
@@ -190,7 +189,7 @@ public:
     friend class xmlstruct;
     friend class RubberMethod;
     friend void * __page_load(void *);
-    friend void adjustStrokePage(QList<Stroke> &List, int count, Stroke *m_stroke);
+    friend void adjustStrokePage(WList<Stroke> &List, int count, Stroke *m_stroke);
     friend class copy;
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
@@ -263,7 +262,7 @@ force_inline int Page::getIndex() const
 
 force_inline void Page::AppendDirectly(const std::shared_ptr<Stroke>& stroke)
 {
-    this->_stroke.push_back(stroke);
+    this->_stroke.append(stroke);
 }
 
 force_inline const WPixmap &Page::getImg() const
@@ -291,9 +290,9 @@ constexpr force_inline double Page::getWidth()
     return width;
 }
 
-constexpr force_inline QSize Page::getResolutionSize()
+constexpr force_inline auto Page::getResolutionSize() -> WSize
 {
-    return QSize(Page::getResolutionWidth(), Page::getResolutionHeigth());
+    return WSize(Page::getResolutionWidth(), Page::getResolutionHeigth());
 }
 
 constexpr force_inline double Page::getResolutionWidth()
@@ -394,16 +393,15 @@ inline void Page::copy(
 {
     dest.reset();
 
-
     dest._stroke.reserve(src._stroke.size());
     dest._strokeTmp.reserve(src._strokeTmp.size());
 
     for (const auto &s : src._stroke) {
-        dest._stroke.push_back(s->clone());
+        dest._stroke.append(s->clone());
     }
 
     for (const auto &s : src._strokeTmp) {
-        dest._strokeTmp.push_back(s->clone());
+        dest._strokeTmp.append(s->clone());
     }
 
     dest._stroke                    = src._stroke;
@@ -452,8 +450,8 @@ force_inline double Page::minHeight() const
 }
 
 force_inline Page::Page(const Page &from)
-    : _imgDraw(1, true)
-    , _count(-1)
+    : _count(-1)
+    , _imgDraw(1, true)
 {
     Page::copy(from, *this);
 }
@@ -473,21 +471,20 @@ inline Page &Page::operator=(const Page &other)
 force_inline void Page::drawForceColorStroke(
         const Stroke    &stroke,
         cint            m_pos_ris,
-        const QColor    &color,
-        QPainter        *painter)
+        const colore_s  &color,
+        WPainter        *painter)
 {
-    Define_PEN(pen);
+    WPen pen;
     const auto needDelete = (bool) (!painter);
 
     if (needDelete) {
         if(un(initImg(false)))
             return this->triggerRenderImage(m_pos_ris, true);
 
-        WNew(painter, QPainter, ());
+        WNew(painter, WPainter, ());
 
-        if(!painter->begin(&this->_imgDraw))
+        if (!painter->begin(&this->_imgDraw))
             std::abort();
-        core::painter_set_antialiasing(*painter);
     }
 
     this->drawStroke(*painter, stroke, pen, color);
@@ -499,7 +496,10 @@ force_inline void Page::drawForceColorStroke(
     }
 }
 
-force_inline constexpr QPoint Page::sizePoint()
+force_inline constexpr PointF Page::sizePoint()
 {
-    return Page::size().toPoint();
+    return PointF {
+            Page::size().x(),
+            Page::size().y()
+    };
 }

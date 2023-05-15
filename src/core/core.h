@@ -29,6 +29,7 @@ force_inline void set_mobile_view(cbool is_tablet)
 
 #define TRANSLATION(x) QApplication::tr(x)
 
+#if defined(USE_QT)
 inline void painter_set_source_over(QPainter &painter)
 {
     W_ASSERT(painter.isActive());
@@ -53,6 +54,7 @@ inline void painter_set_antialiasing(QPainter &painter)
     W_ASSERT(painter.renderHints() & QPainter::RenderHint::Antialiasing);
     W_ASSERT(painter.renderHints() & QPainter::RenderHint::TextAntialiasing);
 }
+#endif // USE_QT
 
 inline double scaleFactor()
 {

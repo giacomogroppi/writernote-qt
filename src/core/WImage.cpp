@@ -1,7 +1,6 @@
 #include "WImage.h"
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/page/Page.h"
-#include <QList>
 
 #ifdef USE_QT
 WImage::WImage(const std::string &path, const char *format):
@@ -12,19 +11,18 @@ WImage::WImage(const std::string &path, const char *format):
 #else
 #endif
 
+#ifdef USE_QT
 size_t WImage::save_and_size(WByteArray &arr) const
 {
-#ifdef USE_QT
+
     W_ASSERT(arr.size() == 0);
     QBuffer buffer(&arr);
     buffer.open(QIODevice::WriteOnly);
     QImage::save(&buffer, "PNG");
     buffer.close();
     return arr.size();
-#else
-    static_assert(0);
-#endif
 }
+#endif
 
 size_t WImage::get_size_in_file() const
 {

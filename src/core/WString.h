@@ -19,6 +19,8 @@ public:
     WString upper() const;
     WString lower() const;
 
+    static WString fromUtf8(const char *data, int size = -1);
+
     bool operator==(const WString &other) const;
     WString &operator=(const WString &other);
 };

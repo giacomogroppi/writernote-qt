@@ -2,12 +2,9 @@
 #include "core/core.h"
 #include "log/log_ui/log_ui.h"
 #include "sheet/style_struct.h"
-#include <QPainter>
-#include <QPainterPath>
 #include "utils/common_error_definition.h"
 #include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
-#include <QPaintDevice>
 #include "PageFile.h"
 #include "core/WZipWriterSingle.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
@@ -34,7 +31,7 @@ static void setStylePrivate(
     }
     else if(res == n_style::white){
         /* we set the color manually */
-        style.colore.fromColor(Qt::black);
+        style.colore = color_black;
 
         style.nx = 1;
         style.ny = 1;
@@ -51,7 +48,7 @@ static force_inline void __initImg(WPixmap &img)
 {
     img = WPixmap(1, true);
     W_ASSERT(!img.isNull());
-    img.fill(Qt::transparent);
+    img.fill(color_transparent);
 }
 
 Page::Page(const int count, const n_style style)
@@ -76,8 +73,8 @@ static inline void drawLineOrizzontal(
     for (int i = 0; i < style.nx; i++) {
         const auto y = delta * double(i) + initial;
 
-        const auto pointBegin = Point {xLeft, y};
-        const auto pointEnd =   Point {xRight, y};
+        const auto pointBegin = PointF {xLeft, y};
+        const auto pointEnd =   PointF {xRight, y};
 
         stroke.append(pointBegin, stroke_append_default );
         stroke.append(pointEnd, stroke_append_default);
@@ -435,11 +432,11 @@ bool Page::initImg(bool flag)
     return flag;
 }
 
-void Page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
+void Page::decreseAlfa(const WVector<int> &pos, WPainter * painter, int decrese)
 {
-    int i = pos.length();
+    int i = pos.size();
     uint color;
-    Define_PEN(m_pen);
+    WPen pen;
 
     for (i --; i >= 0; i--) {
         Stroke &stroke = atStrokeMod(pos.at(i));
@@ -447,9 +444,9 @@ void Page::decreseAlfa(const QVector<int> &pos, QPainter * painter, int decrese)
 
         stroke.setAlfaColor(color / decrese);
 
-        if(painter){
-            this->drawStroke(*painter, stroke, m_pen, COLOR_NULL);
-            this->drawStroke(*painter, stroke, m_pen, stroke.getColor());
+        if (painter) {
+            this->drawStroke(*painter, stroke, pen, COLOR_NULL);
+            this->drawStroke(*painter, stroke, pen, stroke.getColor());
         }
     }
 
@@ -466,7 +463,8 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
 
     all = initImg(all);
 
-    Define_PAINTER(painter);
+    WPainter painter;
+    painter.begin(&_imgDraw);
 
     this->draw(painter, m_pos_ris, all);
 
@@ -490,11 +488,11 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
         return true;
 
 static force_inline int __is_inside_square(
-        const QRectF    &rect1,
-        const QRectF    &rect2)
+        const RectF    &rect1,
+        const RectF    &rect2)
 {
-    const QPointF &topLeft1     = rect1.topLeft();
-    const QPointF &bottomRight1 = rect1.bottomRight();
+    const PointF &topLeft1     = rect1.topLeft();
+    const PointF &bottomRight1 = rect1.bottomRight();
 
     MakeCTRL(rect2.bottomRight());
     MakeCTRL(rect2.bottomLeft());
@@ -506,8 +504,8 @@ static force_inline int __is_inside_square(
 }
 
 static force_inline int is_inside_squade(
-        const QRectF    &rect1,
-        const QRectF    &rect2)
+        const RectF    &rect1,
+        const RectF    &rect2)
 {
     // testing
     return rect1.intersects(rect2);
@@ -516,10 +514,10 @@ static force_inline int is_inside_squade(
 
 void Page::removeAndDraw(
         int                 m_pos_ris,
-        const QVector<int>  &pos,
-        const QRectF        &area)
+        const WVector<int>  &pos,
+        const RectF        &area)
 {
-    int i = pos.length();
+    int i = pos.size();
     this->drawForceColorStroke(pos, m_pos_ris, COLOR_NULL);
 
     for(i --; i >= 0; i --){
@@ -550,12 +548,14 @@ void Page::drawIfInside(int m_pos_ris, const QRectF &area)
     point.ry() = rect.function().y(); \
     at_translation(point, this->_count - 1);
 
-void Page::drawSquare(const QRect &rect)
+void Page::drawSquare(const Rect &rect)
 {
-    QRect tmp;
-    QBrush brush(COLOR_NULL, Qt::SolidPattern);
-    Define_PEN(pen);
-    Define_PAINTER(painter);
+    Rect tmp;
+    //QBrush brush(COLOR_NULL, Qt::SolidPattern);
+    WPen pen;
+    WPainter painter;
+
+    painter.begin(&_imgDraw);
 
     // we need to adjust the rect to our img
     {
@@ -563,20 +563,19 @@ void Page::drawSquare(const QRect &rect)
         PAGE_DRAW_SQUARE_ADJUST(point1, topLeft);
         PAGE_DRAW_SQUARE_ADJUST(point2, bottomRight);
 
-        tmp = QRect(point1.toQPointF(1.0).toPoint(),
-                    point2.toQPointF(1.0).toPoint());
+        tmp = Rect(point1, point2);
     }
 
-    pen.setColor(COLOR_NULL);
-    pen.setBrush(brush);
+    pen.setColorNull();
+    pen.setSolidPattern();
 
     painter.setPen(pen);
-    painter.setCompositionMode(QPainter::CompositionMode_Clear);
-    painter.fillRect(tmp, brush);
+    painter.setCompositionClear();
+    painter.fillRect(tmp.castTo<double>());
     End_painter(painter);
 }
 
-void Page::decreseAlfa(const QVector<int> &pos, int decrese)
+void Page::decreseAlfa(const WVector<int> &pos, int decrese)
 {
     bool needInit = initImg(false);
 
@@ -586,7 +585,8 @@ void Page::decreseAlfa(const QVector<int> &pos, int decrese)
         return this->triggerRenderImage(-1, true);
     }
 
-    Define_PAINTER(painter);
+    WPainter painter;
+    painter.begin(&_imgDraw);
 
     this->decreseAlfa(pos, &painter, decrese);
 
@@ -616,18 +616,18 @@ Page::Page()
     this->_count = -1;
 }
 
-QRect Page::get_size_area(const QVector<int> &pos) const
+Rect Page::get_size_area(const WVector<int> &pos) const
 {
-    QRect result;
-    int len = pos.length();
-    QRect tmp;
+    Rect result;
+    int len = pos.size();
+    Rect tmp;
 
     if(un(!len)){
         return {};
     }
 
     len --;
-    result = atStroke(pos.first()).getBiggerPointInStroke();
+    result = atStroke(pos.first()).getBiggerPointInStroke().;
 
     for(; len >= 0; len --){
         tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
@@ -659,14 +659,15 @@ void Page::setCount(int newCount)
     rep();
 }
 
-void Page::drawForceColorStroke(const QVector<int> &pos, int m_pos_ris, const QColor &color)
+void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const colore_s &color)
 {
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);
 
-    Define_PAINTER(painter);
+    WPainter painter;
+    painter.begin(&_imgDraw);
 
-    for(const auto &index : qAsConst(pos)){
+    for(const auto &index : std::as_const(pos)){
         const Stroke &stroke = atStroke(index);
         this->drawForceColorStroke(stroke, m_pos_ris, color, &painter);
     }

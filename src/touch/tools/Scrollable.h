@@ -1,10 +1,10 @@
 #pragma once
 
-#include <QPointF>
+#include "core/PointF.h"
 
 class Scrollable {
 public:
-    virtual void translate(const QPointF &point) = 0;
+    virtual void translate(const PointF &point) = 0;
 };
 
 

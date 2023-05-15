@@ -3,7 +3,6 @@
 #include "Stroke.h"
 #include "core/WList.h"
 #include "core/WPixmap.h"
-#include "qpainter.h"
 #include "touch/object_finder/model_finder/model_finder.h"
 #include "core/WPixmap.h"
 
@@ -38,14 +37,14 @@ public:
     StrokePre();
     ~StrokePre();
 
-    void adjust(const QPointF &delta);
+    void adjust(const PointF &delta);
     void setAlfaColor(int alfa);
 
     void setTime(int time);
-    void setColor(const QColor &color) noexcept;
+    void setColor(const colore_s &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
-    [[nodiscard]] QRect getBiggerPointInStroke() const;
-    [[nodiscard]] QRect getFirstAndLast() const;
+    [[nodiscard]] Rect getBiggerPointInStroke() const;
+    [[nodiscard]] Rect getFirstAndLast() const;
     [[nodiscard]] pressure_t getPressure() const;
     [[nodiscard]] const Point &last() const;
 
@@ -55,9 +54,9 @@ public:
     void reset();
     void reset_img();
 
-    void draw(QPainter &painter, QPen &pen, double prop, const QPointF &pointFirstPage);
-    void append(const Point &point, const pressure_t &press, QPen &pen, double prop);
-    [[nodiscard]] QColor getColor(double division = 1.) const;
+    void draw(WPainter &painter, WPen &pen, double prop, const PointF &pointFirstPage);
+    void append(const Point &point, const pressure_t &press, WPen &pen, double prop);
+    [[nodiscard]] colore_s getColor(double division = 1.) const;
 
     std::shared_ptr<Stroke> merge();
 
@@ -86,7 +85,7 @@ inline void StrokePre::reset()
     *this = StrokePre();
 }
 
-inline void StrokePre::setColor(const QColor &color) noexcept
+inline void StrokePre::setColor(const colore_s &color) noexcept
 {
     _stroke->setColor(colore_s(color));
 }
@@ -107,7 +106,7 @@ inline WList<Point>::const_iterator StrokePre::get_last_point() const
     return _last_draw_point;
 }
 
-force_inline void StrokePre::draw(QPainter &painter, QPen &pen, double prop, const QPointF& pointFirstPage)
+force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, const PointF& pointFirstPage)
 {
     WDebug(StrokePreDebug, "Pointer" << this);
 
@@ -118,14 +117,14 @@ force_inline void StrokePre::draw(QPainter &painter, QPen &pen, double prop, con
         if (this->_point.length() == 1)
             return;
 
-        const QRectF source {
+        const RectF source {
                            this->_min.x() - this->_max_pressure*5.,
                            this->_min.y() - this->_max_pressure*5.,
                            this->_max.x() + this->_max_pressure*5.,
                            this->_max.y() + this->_max_pressure*5.
         };
 
-        const QRectF target {
+        const RectF target {
             source.topLeft() - pointFirstPage,
             source.bottomRight() - pointFirstPage
         };

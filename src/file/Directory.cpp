@@ -1,7 +1,7 @@
 #include "Directory.h"
-#include <QDir>
+#include <filesystem>
 
-Directory::Directory(const QByteArray &path)
+Directory::Directory(const WByteArray &path)
     : _files(Directory::getAllFile(path))
     , _path(path)
 {
@@ -9,12 +9,12 @@ Directory::Directory(const QByteArray &path)
 
 Directory::~Directory() = default;
 
-const QList<File> &Directory::getFiles() const
+const WList<File> &Directory::getFiles() const
 {
     return this->_files;
 }
 
-bool Directory::addFiles(const QByteArray &position)
+bool Directory::addFiles(const WByteArray &position)
 {
     if (!File::createFile(position)) {
         return false;
@@ -25,14 +25,13 @@ bool Directory::addFiles(const QByteArray &position)
     return true;
 }
 
-QList<File> Directory::getAllFile(const QByteArray &path)
+WList<File> Directory::getAllFile(const WByteArray &path)
 {
-    QList<File> ret = {};
-    QDir dir(path);
-    const auto &files = dir.entryList(QDir::Files);
+    WList<File> ret = {};
+    Directory dir(path);
 
-    for (const auto &p : files) {
-        ret.append(File(p.toUtf8()));
+    for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
+        ret.append(File(entry.path().string()));
     }
 
     return ret;

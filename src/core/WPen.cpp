@@ -3,3 +3,11 @@
 //
 
 #include "WPen.h"
+
+WPen::WPen()
+{
+#ifdef USE_QT
+    QPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
+#else
+#endif
+}

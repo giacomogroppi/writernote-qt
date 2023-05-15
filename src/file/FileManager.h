@@ -1,25 +1,25 @@
 #pragma once
 
-#include <QObject>
 #include "utils/WCommonScript.h"
-#include <QList>
 #include "Directory.h"
+#include "Scheduler/WObject.h"
+#include "core/WByteArray.h"
+#include "core/WList.h"
 
-class FileManager final: public QObject
+class FileManager final: public WObject
 {
-    Q_OBJECT
 private:
-    const QByteArray _basePath;
-    QList<Directory> _dir;
+    const WByteArray _basePath;
+    WList<Directory> _dir;
 
-    static QList<Directory> getAllDir(const QByteArray &path);
+    static WList<Directory> getAllDir(const WByteArray &path);
 public:
-    explicit FileManager(QObject *parent, QByteArray basePath);
+    explicit FileManager(WObject *parent, WByteArray basePath);
     ~FileManager() final;
 
-    const QList<Directory> &getDirectory() const;
+    const WList<Directory> &getDirectory() const;
 
     int createNewDir();
-signals:
-    void onDirectoryChange();
+
+    W_EMITTABLE_0(onDirectoryChange);
 };

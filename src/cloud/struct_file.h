@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QByteArray>
 #include "struct_user.h"
 
 #ifdef CLOUD

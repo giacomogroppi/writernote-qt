@@ -69,13 +69,13 @@ int StrokeForPage::save(WZipWriterSingle &writer) const
     return res;
 }
 
-void StrokeForPage::scale(const QPointF &delta)
+void StrokeForPage::scale(const PointF &delta)
 {
     this->_data->scale(delta);
     rep();
 }
 
-void StrokeForPage::append(const Point &point, pressure_t pressure)
+void StrokeForPage::append(const PointF &point, pressure_t pressure)
 {
     _needToUpdate = true;
 
@@ -112,23 +112,30 @@ void StrokeForPage::setMetadata(const colore_s &colore)
     rep();
 }
 
-void StrokeForPage::draw(QPainter &painter, double delta,
-                         const Page &page, const QSize &target,
-                         const QRectF &visibleArea) const
+void StrokeForPage::draw(WPainter &painter, double delta,
+                         const Page &page, const WSize &target,
+                         const RectF &visibleArea) const
 {
     if (this->_needToUpdate) {
         this->draw();
         _needToUpdate = false;
     }
 
-    const auto targetRect = Rect{(QPointF(0., Page::getHeight() * page.getIndex() * delta), target)}.intersected(visibleArea.toRect());
+    const auto targetRect = RectF{
+        (
+                PointF(
+                        0.,
+                        Page::getHeight() * page.getIndex() * delta),
+                        target
+        )
+    }.intersected(visibleArea);
 
     //qDebug() << page.getIndex() << "Target: " << target << " targetrect: " << targetRect;
 
-    const auto source = Rect(_pix.rect())
+    const auto source = Rect(_pix.rect().castTo<int>())
                         / PROP_RESOLUTION;
 
-    const auto sourceDraw = Rect{source.intersected(visibleArea.toRect())} * PROP_RESOLUTION;
+    const auto sourceDraw = Rect{source.intersected(visibleArea.castTo<int>())} * PROP_RESOLUTION;
 
     if (!source.isNull())
         painter.drawPixmap(
@@ -145,11 +152,12 @@ void StrokeForPage::draw(QPainter &painter, double delta,
 void StrokeForPage::draw() const
 {
     _pix = WPixmap(1, true);
-    _pix.fill(Qt::transparent);
-    Define_PAINTER_p(painter, this->_pix);
-    Define_PEN(pen);
+    _pix.fill(color_transparent);
+    WPainter painter;
+    painter.begin(&_pix);
+    WPen pen;
 
-    const auto lenPoint = this->_data->_point.length();
+    const auto lenPoint = this->_data->_point.size();
 
     if(!lenPoint)
         return;
@@ -167,11 +175,11 @@ void StrokeForPage::draw() const
         auto p1 = this->_data->_point.at(counterPoint);
         auto p2 = this->_data->_point.at(counterPoint + 1);
 
-        p1 = Point {
+        p1 = PointF {
             p1.x(),
             p1.y()
         };
-        p2 = Point {
+        p2 = PointF {
             p2.x(),
             p2.y()
         };

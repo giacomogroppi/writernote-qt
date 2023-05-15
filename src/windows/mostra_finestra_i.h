@@ -1,5 +1,6 @@
 #pragma once
 
-#include <QString>
 
-void mostra_finestra_i(const QString &url);
+#include "core/WString.h"
+
+void mostra_finestra_i(const WString &url);

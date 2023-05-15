@@ -1,9 +1,5 @@
 ﻿#pragma once
 
-#include <QList>
-#include <QColor>
-#include <QDebug>
-#include <QPixmap>
 #include "touch/dataTouch/page/Page.h"
 #include "utils/WCommonScript.h"
 #include <csignal>
@@ -11,6 +7,7 @@
 #include "pthread.h"
 #include "utils_datastruct.h"
 #include "core/WMutex.h"
+#include "core/WListFast.h"
 
 /*
     IDVERTICALE -> linee verticali
@@ -35,9 +32,9 @@ class fromimage;
 class DataStruct
 {
 private:
-    QPointF _last_translation;
-    QVector<Page> _page;
-    QPointF _pointFirstPage = QPointF(0., 0.);
+    PointF _last_translation;
+    WVector<Page> _page;
+    PointF _pointFirstPage = PointF(0., 0.);
     double _zoom = 1.;
 
     // todo --> move this mutex to page
@@ -46,20 +43,20 @@ private:
 
     bool userWrittenSomething(uint frompage);
 
-    [[nodiscard]] bool isOkTranslate(const QPointF &point, cbool isZoom) const;
+    [[nodiscard]] bool isOkTranslate(const PointF &point, cbool isZoom) const;
 
     void triggerNewView(int page, int m_pos_ris, cbool all);
 
     void newPage(int num);
 
-    int _pageVisible = -1;
+    mutable int _pageVisible = -1;
 
     void __changeId(int indexPoint, Stroke &stroke, Page &page, cbool useThreadSafe);
 public:
     DataStruct();
     ~DataStruct() = default;
 
-    void triggerNewView(const QList<int> &Page, int m_pos_ris, cbool all);
+    void triggerNewView(const WList<int> &Page, int m_pos_ris, cbool all);
     void triggerNewView(int m_pos_ris, cbool all);
     void triggerIfNone(int m_pos_ris);
     void triggerViewIfVisible(int m_pos_ris);
@@ -71,16 +68,16 @@ public:
     auto begin()              { return this->_page.begin(); }
     auto end()                { return this->_page.end(); }
 
-    void drawIfInside(const QRect &area);
+    void drawIfInside(const Rect &area);
 
     [[nodiscard]] constexpr auto getZoom() const noexcept { return this->_zoom; };
-    [[nodiscard]] constexpr force_inline QPointF getPointFirstPage() const { return _zoom * _pointFirstPage; }
-    [[nodiscard]] constexpr force_inline QPointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
+    [[nodiscard]] constexpr force_inline PointF getPointFirstPage() const { return _pointFirstPage * _zoom; }
+    [[nodiscard]] constexpr force_inline PointF getPointFirstPageNoZoom() const { return _pointFirstPage; }
 
-    [[nodiscard]] int whichPage(const QPointF &point) const;
+    [[nodiscard]] int whichPage(const PointF &point) const;
     [[nodiscard]] int whichPage(const Stroke &stroke) const;
 
-    void setPointFirstPage(const QPointF &point)
+    void setPointFirstPage(const PointF &point)
     {
         _pointFirstPage = point;
         W_ASSERT(point.x() <= 0.);
@@ -90,21 +87,21 @@ public:
     void removeAt(unsigned indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
-    void append(const QList<std::shared_ptr<Stroke>>& stroke, int m_pos_ris);
+    void append(const WList<std::shared_ptr<Stroke>>& stroke, int m_pos_ris);
 
     int  appendStroke(const std::shared_ptr<Stroke>&); /* return value: the page of the point */
-    void appendStroke(std::shared_ptr<Stroke> stroke, int page);
+    void appendStroke(const std::shared_ptr<Stroke>& stroke, int page);
 
     void restoreLastTranslation(int heightView);
 
-    void removePointIndex(QList<QVector<int> > &pos, cint base, cbool __isOrder);
-    void removePointIndex(QVector<int> &pos, cint page, cbool isOrder);
+    void removePointIndex(WList<WVector<int> > &pos, cint base, cbool __isOrder);
+    void removePointIndex(WVector<int> &pos, cint page, cbool isOrder);
 
-    void MovePoint(const QList<QVector<int>> & pos, cint base, const QPointF &translation);
-    void MovePoint(const QVector<int> & pos, cint page, const QPointF &translation);
+    void MovePoint(const WList<WVector<int>> & pos, cint base, const PointF &translation);
+    void MovePoint(const WVector<int> & pos, cint page, const PointF &translation);
 
 #   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
-    static void MovePoint(QList<Stroke> &stroke, const QPointF &translation, int flag);
+    static void MovePoint(WList<Stroke> &stroke, const PointF &translation, int flag);
 
     [[nodiscard]] bool userWrittenSomething() const;
     static bool userWrittenSomething(const DataStruct &data1, const DataStruct &data2);
@@ -115,8 +112,8 @@ public:
 
     void changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page);
 
-    [[nodiscard]] constexpr QPointF adjustPointReverce(const QPointF &pointDatastruct) const;
-    [[nodiscard]] constexpr QPointF adjustPoint(const QPointF &pointRealTouch) const;
+    [[nodiscard]] constexpr PointF adjustPointReverce(const PointF &pointDatastruct) const;
+    [[nodiscard]] constexpr PointF adjustPoint(const PointF &pointRealTouch) const;
 
     [[nodiscard]] bool isempty_touch() const;
     void reset_touch();
@@ -127,25 +124,25 @@ public:
 
     [[nodiscard]] double biggery() const noexcept;
 
-    void decreaseAlfa(const QVector<int> &pos, int page);
+    void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
 
     __fast [[nodiscard]] const Page &     at(unsigned page) const;
     __fast Page &           at_mod(cint page);
 
     [[nodiscard]] Point at_draw_page(cint indexPoint, const Page &Page) const;
-    static Point at_draw_page(cint indexPoint, const Page &Page, const QPointF &PointFirstPageWithZoom, cdouble zoom);
+    static Point at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom);
 
     __fast [[nodiscard]] const Page &     lastPage() const;
 
 
-    [[nodiscard]] int lengthPage() const{ return _page.length(); }
+    [[nodiscard]] int lengthPage() const{ return _page.size(); }
     void newPage(n_style style);
 
-    [[nodiscard]] QPointF get_size_page() const{ return QPointF(Page::getWidth(), Page::getHeight()); }
+    [[nodiscard]] PointF get_size_page() const{ return PointF(Page::getWidth(), Page::getHeight()); }
 
-    __fast [[nodiscard]] QRectF get_size_area(const QVector<int> &pos, int page) const;
-    __fast [[nodiscard]] QRectF get_size_area(const QList<QVector<int>> &pos, int base) const;
+    __fast [[nodiscard]] RectF get_size_area(const WVector<int> &pos, int page) const;
+    __fast [[nodiscard]] RectF get_size_area(const WListFast<WVector<int>> &pos, int base) const;
     //__slow QRectF get_size_area(const QList<int> & id) const;
 
     [[nodiscard]] int getFirstPageVisible() const;
@@ -161,34 +158,34 @@ public:
 
     [[nodiscard]] static bool isOkZoom(double newPossibleZoom);
     static void copy(const DataStruct &src, DataStruct &dest);
-    static force_inline void inverso(QPointF &point) {point *= -1.0;};
-    static QPointF inverso(const QPointF &point) { return (-1) * point; };
-    static QRectF get_bigger_rect(const QRectF &first, const QRectF &second);
-    static QRect get_bigger_rect(const QRect &first, const QRect &second);
+    static force_inline void inverso(PointF &point) {point *= -1.0;};
+    static PointF inverso(const PointF &point) { return point * -1; };
+    static RectF get_bigger_rect(const RectF &first, const RectF &second);
+    static Rect get_bigger_rect(const Rect &first, const Rect &second);
 
     friend class xmlstruct;
     friend class TestingCore;
 
 protected:
-    void controllForRepositioning(QPointF &translateTo);
-    void increaseZoom(double delta, const QSize &size, QPointF& res);
-    void adjustAll(uint width, uint height, QPointF &res);
-    void adjustAll(const QSize &size, QPointF &res);
-    void adjustHeight(cdouble height, QPointF& translatoTo);
-    void adjustWidth(cdouble width, QPointF& translatoTo);
+    void controllForRepositioning(PointF &translateTo);
+    void increaseZoom(double delta, const WSize &size, PointF& res);
+    void adjustAll(uint width, uint height, PointF &res);
+    void adjustAll(const WSize &size, PointF &res);
+    void adjustHeight(cdouble height, PointF& translatoTo);
+    void adjustWidth(cdouble width, PointF& translatoTo);
 
-    void setZoom(typeof(DataStruct::_zoom) newZoom);
+    void setZoom(double newZoom);
     void setPageVisible(int page);
 
-    virtual void scala_all(const QPointF &point, int heightView = -1);
+    virtual void scala_all(const PointF &point, int heightView = -1);
 };
 
 inline void DataStruct::triggerVisibility(cdouble viewSize)
 {
     int from, to;
     cint len = lengthPage();
-    QPointF _init(0, 0);
-    QPointF _end(0, viewSize - 0.1);
+    PointF _init(0, 0);
+    PointF _end(0, viewSize - 0.1);
 
     if(un(!len))
         return;
@@ -261,14 +258,14 @@ force_inline __slow Point DataStruct::at_draw_page(
 
 force_inline Point DataStruct::at_draw_page(
         cint indexPoint,    const Page &Page,
-        const QPointF &PointFirstPageWithZoom,
+        const PointF &PointFirstPageWithZoom,
         cdouble zoom)
 {
-    Point point;
+    PointF point;
 
     Page.at_draw_page(indexPoint, PointFirstPageWithZoom, point, zoom);
 
-    return point;
+    return point.castTo<int>();
 }
 
 force_inline const Page &DataStruct::lastPage() const
@@ -284,21 +281,21 @@ inline void DataStruct::newPage(const n_style style)
     //triggerVisibility(page::getHeight() * lengthPage());
 }
 
-inline QRectF DataStruct::get_size_area(const QList<QVector<int>> & pos, int base) const
+inline RectF DataStruct::get_size_area(const WListFast<WVector<int>> &pos, int base) const
 {
-    QRectF result;
+    RectF result;
     int i, len;
 
     if(un(pos.isEmpty()))
         return result;
 
-    len = pos.length();
+    len = pos.size();
     result = get_size_area(pos.first(), base);
 
     for(i = 1; i < len; i ++){
         const auto &vec = pos.at(i);
 
-        if(un(vec.isEmpty()))
+        if(vec.isEmpty())
             continue;
 
         const auto tmp = this->get_size_area(vec, base + i);
@@ -308,8 +305,8 @@ inline QRectF DataStruct::get_size_area(const QList<QVector<int>> & pos, int bas
     return result;
 }
 
-inline QRectF DataStruct::get_size_area(
-        const QVector<int>  &pos,
+inline RectF DataStruct::get_size_area(
+        const WVector<int>  &pos,
         int                 __page) const
 {
     const Page & page = at(__page);
@@ -319,10 +316,9 @@ inline QRectF DataStruct::get_size_area(
 inline int DataStruct::getFirstPageVisible() const
 {
     /* the reason this function
-     * is constant is because
+     * is constant is that
      *  we don't want QList to copy all pages
      *  when they are shared. */
-    int &__pageVisible = (int &) _pageVisible;
     int i, len;
     int find;
 
@@ -332,7 +328,7 @@ inline int DataStruct::getFirstPageVisible() const
     if(un(_pageVisible < 0)){
         for(i = 0; i < len; i++){
             if(at(i).isVisible()){
-                __pageVisible = i;
+                _pageVisible = i;
                 find = 1;
                 break;
             }
@@ -343,13 +339,13 @@ inline int DataStruct::getFirstPageVisible() const
 
     if(un(!find)){
         //log_write->write("Impossibile to find first page visible", log_ui::critic_error);
-        __pageVisible = 0;
+        _pageVisible = 0;
         for(const auto &page : _page){
             page.setVisible(true);
         }
     }
 
-    return __pageVisible;
+    return _pageVisible;
 }
 
 /* this function does not consider the zoom */
@@ -380,7 +376,7 @@ inline int DataStruct::get_range_visible() const
 
 }
 
-force_inline bool DataStruct::isOkTranslate(const QPointF &point, cbool isZoom) const
+force_inline bool DataStruct::isOkTranslate(const PointF &point, cbool isZoom) const
 {
     const auto x = _pointFirstPage.x();
     const auto y = _pointFirstPage.y();
@@ -407,12 +403,12 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
     int i;
     const auto &big = stroke.getBiggerPointInStroke();
 
-    const auto &point = big.topLeft();
+    const PointF &point = big.topLeft();
     i = this->whichPage(point);
 
     if (un(i < 0)) {
-        const auto &point = big.bottomRight();
-        i = this->whichPage(point);
+        const auto &tmp = big.bottomRight();
+        i = this->whichPage(tmp);
     }
 
     W_ASSERT(i >= 0 and i < this->lengthPage());
@@ -428,9 +424,9 @@ inline void DataStruct::triggerNewView(const QList<int> &Page, int m_pos_ris, cb
 
 inline void DataStruct::triggerNewView(int m_pos_ris, cbool all)
 {
-    uint i, len;
-    len = lengthPage();
-    for(i = 0; i < len; i++)
+    int i;
+    const auto len = lengthPage();
+    for (i = 0; i < len; i++)
         this->triggerNewView(i, m_pos_ris, all);
 }
 
@@ -448,7 +444,7 @@ inline void DataStruct::triggerViewIfVisible(int m_pos_ris)
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.3);
 }
 
-inline int DataStruct::whichPage(const QPointF &point) const
+inline int DataStruct::whichPage(const PointF &point) const
 {
     const double heigth = Page::getHeight();
     const not_used auto debug_which = false;
@@ -463,11 +459,11 @@ inline int DataStruct::whichPage(const QPointF &point) const
 
 /* the function automatically launches the drawing for the pages
  * to which data has been added*/
-inline void DataStruct::append(const QList<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
+inline void DataStruct::append(const WList<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
 {
-    QList<int> trigger;
+    WList<int> trigger;
 
-    for (const auto &ref : qAsConst(stroke)) {
+    for (const auto &ref : std::as_const(stroke)) {
         /// get the page of the point
         const int WhichPage = this->appendStroke(ref);
 
@@ -484,7 +480,7 @@ inline void DataStruct::removeAt(const uint indexPage){
     int index = indexPage, len;
     this->_page.removeAt(indexPage);
 
-    Q_ASSERT(indexPage < (uint)this->lengthPage());
+    W_ASSERT(indexPage < (uint)this->lengthPage());
 
     len = lengthPage();
 
@@ -507,20 +503,20 @@ inline int DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke)
     return page;
 }
 
-inline void DataStruct::appendStroke(std::shared_ptr<Stroke> stroke, const int page)
+inline void DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke, const int page)
 {
-    this->at_mod(page).append(std::move(stroke));
+    this->at_mod(page).append(stroke);
 }
 
-inline QRectF DataStruct::get_bigger_rect(
-        const QRectF    &first,
-        const QRectF    &second)
+inline RectF DataStruct::get_bigger_rect(
+        const RectF    &first,
+        const RectF    &second)
 {
-    QPointF resultTopLeft(first.topLeft());
-    QPointF resultBottomRight(first.bottomRight());
+    PointF resultTopLeft(first.topLeft());
+    PointF resultBottomRight(first.bottomRight());
 
-    const QPointF SecTopLeft(second.topLeft());
-    const QPointF SecBottomRight(second.bottomRight());
+    const PointF SecTopLeft(second.topLeft());
+    const PointF SecBottomRight(second.bottomRight());
 
     if(resultTopLeft.x() > SecTopLeft.x())
         resultTopLeft.setX(SecTopLeft.x());
@@ -534,17 +530,17 @@ inline QRectF DataStruct::get_bigger_rect(
     if(resultBottomRight.y() < SecBottomRight.y())
         resultBottomRight.setY(SecBottomRight.y());
 
-    return QRectF(resultTopLeft, resultBottomRight);
+    return RectF(resultTopLeft, resultBottomRight);
 }
 
-force_inline QRect DataStruct::get_bigger_rect(const QRect &first, const QRect &second)
+force_inline Rect DataStruct::get_bigger_rect(const Rect &first, const Rect &second)
 {
-    QRectF __first(first);
-    QRectF __second(second);
-    return DataStruct::get_bigger_rect(__first, __second).toRect();
+    RectF firstCasted(first.castTo<double>());
+    RectF secondCasted(second.castTo<double>());
+    return DataStruct::get_bigger_rect(firstCasted, secondCasted).castTo<int>();
 }
 
-inline void DataStruct::setZoom(typeof(DataStruct::_zoom) newZoom)
+inline void DataStruct::setZoom(double newZoom)
 {
     W_ASSERT(isOkZoom(newZoom));
     _zoom = newZoom;
@@ -567,12 +563,12 @@ inline int DataStruct::adjustStroke(Stroke &stroke) const
     return page;
 }
 
-constexpr force_inline QPointF DataStruct::adjustPoint(const QPointF &pointTouchUser) const
+constexpr force_inline PointF DataStruct::adjustPoint(const PointF &pointTouchUser) const
 {
     return (pointTouchUser / getZoom() - this->getPointFirstPageNoZoom());
 }
 
-constexpr force_inline QPointF DataStruct::adjustPointReverce(const QPointF &pointDatastruct) const
+constexpr force_inline PointF DataStruct::adjustPointReverce(const PointF &pointDatastruct) const
 {
     return (pointDatastruct + this->getPointFirstPageNoZoom()) * getZoom();
 }
@@ -595,7 +591,7 @@ force_inline void DataStruct::setVisible(int from, int to)
     this->_pageVisible = -1;
 }
 
-inline void DataStruct::decreaseAlfa(const QVector<int> &pos, int index)
+inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
 {
     at_mod(index).decreseAlfa(pos, 4);
 }

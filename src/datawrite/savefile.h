@@ -4,38 +4,37 @@
 #include "utils/common_error_definition.h"
 #include "utils/WCommonScript.h"
 #include "core/WZipWriter.h"
-#include <QString>
 
 class Document;
 
 int save_audio_file(const char *posAudio,
-                    const QByteArray &path);
+                    const WByteArray &path);
 
 class savefile
 {
 private:
-    const QByteArray    *_path;
+    const WByteArray    *_path;
     Document            *_doc;
 
     int salvabinario(cbool saveImg);
 
 public:
-    savefile(const QByteArray *path, Document *currenttitle);
+    savefile(const WByteArray *path, Document *currenttitle);
     ~savefile() = default;
 
-    void setData(const QByteArray *p, Document *curr);
+    void setData(const WByteArray *p, Document *curr);
 
     int savefile_check_file(cbool saveImg);
 
-    static int moveFileIntoZip  (const QByteArray &pathFile, WZipWriter &writer, const QByteArray &nameInZip);
+    static int moveFileIntoZip  (const WByteArray &pathFile, WZipWriter &writer, const WByteArray &nameInZip);
 };
 
-inline savefile::savefile(const QByteArray *path, Document *currenttitle)
+inline savefile::savefile(const WByteArray *path, Document *currenttitle)
 {
     setData(path, currenttitle);
 }
 
-inline void savefile::setData(const QByteArray *p, Document *curr)
+inline void savefile::setData(const WByteArray *p, Document *curr)
 {
     if(p){
         this->_path = p;

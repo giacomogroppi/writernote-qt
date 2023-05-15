@@ -2,18 +2,16 @@
 
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/Point.h"
-#include <QObject>
-#include <QTimer>
-#include <QPointF>
+#include "Scheduler/WObject.h"
+#include "Scheduler/WTimer.h"
 
-class ObjectFinder : public QObject
+class ObjectFinder : public WObject
 {
-    Q_OBJECT
 public:
-    explicit ObjectFinder(QObject *parent, std::function<void()> callUpdate);
+    explicit ObjectFinder(WObject *parent, std::function<void()> callUpdate);
     ~ObjectFinder() override = default;
 
-    void move(const QPointF &point);
+    void move(const PointF &point);
     void endMoving();
     void reset();
 
@@ -23,12 +21,9 @@ private:
     PointSettable _point;
     static constexpr auto debug = false;
     static constexpr auto time = 1 * 500;
-    QTimer *_timer;
+    WTimer *_timer;
 
-    Q_DISABLE_COPY(ObjectFinder);
-
-private slots:
-    void endTimer();
+    DEFINE_LISTENER(endTimer);
 };
 
 force_inline void ObjectFinder::endMoving()
@@ -36,11 +31,11 @@ force_inline void ObjectFinder::endMoving()
     return this->reset();
 }
 
-force_inline void ObjectFinder::move(const QPointF& point)
+force_inline void ObjectFinder::move(const PointF& point)
 {
     WDebug(debug, "ObjectFinder" << __FUNCTION__);
 
-    if(likely(_point.isSet())){
+    if(_point.isSet()){
         // if the point is equal we don't have to stop the timer
         if(un(WCommonScript::is_near(_point, point, 1.))){
             return;
@@ -49,11 +44,11 @@ force_inline void ObjectFinder::move(const QPointF& point)
         // if the point is differente we neet to save it and restart the timer
         _point = point;
     }else{
-        _point.setSet(true);
+        _point.set(true);
         _point = point;
     }
 
-    if(likely(_timer->isActive())){
+    if(_timer->isActive()){
         _timer->stop();
     }
 
@@ -62,7 +57,7 @@ force_inline void ObjectFinder::move(const QPointF& point)
 
 force_inline void ObjectFinder::reset()
 {
-    _point.setSet(false);
+    _point.set(false);
     WDebug(debug, "ObjectFinder" << __FUNCTION__);
     if(isActive()){
         _timer->stop();

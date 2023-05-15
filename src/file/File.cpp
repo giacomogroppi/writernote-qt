@@ -4,23 +4,24 @@
 #include "utils/slash/slash.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <QFile>
+#include <filesystem>
+#include <fstream>
 
-File::File(const QByteArray &name)
+File::File(const WByteArray &name)
     : _name(name)
 {
     W_ASSERT(!name.contains(slash::__slash()));
 }
 
-const QByteArray &File::getFullName() const
+const WByteArray &File::getFullName() const
 {
     return this->_name;
 }
 
-QByteArray File::getName() const
+WByteArray File::getName() const
 {
-    QByteArray ret {};
-    for (const auto c : qAsConst(this->_name)) {
+    WByteArray ret {};
+    for (const auto c : std::as_const(this->_name)) {
         if (c == '.') {
             return ret;
         }
@@ -30,9 +31,9 @@ QByteArray File::getName() const
     return {};
 }
 
-QByteArray File::getExtension() const
+WByteArray File::getExtension() const
 {
-    QByteArray e = {};
+    WByteArray e = {};
     auto i = this->_name.size();
 
     for (i --; i >= 0; i --) {
@@ -49,30 +50,32 @@ QByteArray File::getExtension() const
     return {};
 }
 
-bool File::createFile(const QByteArray &position)
+bool File::createFile(const WByteArray &position)
 {
     W_ASSERT(position.count('.') == 1);
     W_ASSERT(position.indexOf('.') + 1 < position.size());
-    QFile file(position);
 
-    /** file already exists */
-    if (file.open(QFile::ReadOnly)) {
+    if (exists(position))
+        return false;
+
+    std::ofstream output_file("output.txt");
+
+    // verifica se il file è stato creato correttamente
+    if (!output_file.is_open()) {
+        std::cerr << "Errore: impossibile creare il file" << std::endl;
         return false;
     }
 
-    /** we were unable to open the file in writemode*/
-    if (!file.open(QFile::WriteOnly)) {
-        return false;
-    }
+    // chiudere il file di output
+    output_file.close();
 
-    file.close();
     return true;
 }
 
-const QDate &File::getLastMod() const
+const WDate &File::getLastMod() const
 {
-    qWarning() << "Function not implemented";
-    return QDate();
+    W_ASSERT(0);
+    return WDate();
 }
 
 bool File::operator==(const File &other) const

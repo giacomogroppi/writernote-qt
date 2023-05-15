@@ -14,7 +14,7 @@ public:
     ~WZipReaderSingle() = default;
 
     [[nodiscard]] const void* read(size_t size);
-    [[nodiscard]] int read_string(QString &str);
+    [[nodiscard]] int read_string(WString &str);
     [[nodiscard]] int read_by_size(void *to, size_t size);
 
     template <class T>
@@ -93,7 +93,7 @@ inline int WZipReaderSingle::read_object(T &object)
     return this->read_by_size(&object, sizeof(object));
 }
 
-inline int WZipReaderSingle::read_string(QString &str)
+inline int WZipReaderSingle::read_string(WString &str)
 {
     int l;
     if(this->read_object(l))
@@ -102,7 +102,7 @@ inline int WZipReaderSingle::read_string(QString &str)
     char tmp[l];
     if(l and this->read_by_size(tmp, l))
         return -1;
-    str = QString::fromUtf8(tmp, l);
+    str = WString::fromUtf8(tmp, l);
 
     return 0;
 }

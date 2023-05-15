@@ -13,7 +13,7 @@ public:
 
 class WDate {
 public:
-    WDate(int y, int m, int d);
+    WDate();
 
     static WDate now();
 

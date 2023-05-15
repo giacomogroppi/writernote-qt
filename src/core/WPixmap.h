@@ -5,6 +5,7 @@
 #endif // USE_QT
 #include "utils/WCommonScript.h"
 #include "WByteArray.h"
+#include "RectF.h"
 
 class WPixmap
 {
@@ -15,6 +16,9 @@ public:
 
     size_t get_size_in_file() const;
     size_t save_and_size(WByteArray &arr) const;
+
+    void fill(const colore_s &color);
+    RectF rect() const;
 
     bool operator==(const WPixmap &other) const;
 #ifdef USE_QT
