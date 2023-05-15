@@ -2,12 +2,12 @@
 
 #include <utility>
 
-Highligter::Highligter(QObject *parent,
+Highligter::Highligter(WObject *parent,
                        std::function<int()> getTime,
-                       std::function<void(const QPointF &)> objectMove,
-                       QColor &color,
-                       QPen &pen)
-    : QObject(parent)
+                       std::function<void(const PointF &)> objectMove,
+                       colore_s &color,
+                       WPen &pen)
+    : WObject(parent)
     , HighligterMethod(std::move(getTime),
                        [&](double press) -> pressure_t {
                             return Highligter::getSize(press);

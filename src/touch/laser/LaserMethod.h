@@ -8,14 +8,14 @@ class LaserMethod: public InsertTools
 {
 public:
     LaserMethod(std::function<pressure_t(double)> getPress,
-                std::function<void(const QPointF&)> objectMove,
+                std::function<void(const PointF&)> objectMove,
                 std::function<void(const StrokePre &stroke)> appent_to,
-                QPen &pen, QColor &color);
+                WPen &pen, colore_s &color);
 
     virtual ~LaserMethod() = default;
-    int touchBegin(const QPointF& point, double size, class Document &doc) final;
-    int touchUpdate(const QPointF& point, double size, class Document &doc) final;
-    int touchEnd(const QPointF& point, class Document &doc) final;
+    int touchBegin(const PointF& point, double size, class Document &doc) final;
+    int touchUpdate(const PointF& point, double size, class Document &doc) final;
+    int touchEnd(const PointF& point, class Document &doc) final;
 private:
     /**
      * La funzione passata da costruttore deve essere in grado di gestire l'inserimento del

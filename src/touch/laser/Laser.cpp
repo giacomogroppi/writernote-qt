@@ -3,13 +3,13 @@
 #include <utility>
 #include "touch/TabletUtils.h"
 
-Laser::Laser(QObject *parent,
+Laser::Laser(WObject *parent,
              std::function<pressure_t(double)> getSize,
-             std::function<void(const QPointF&)> objectMove,
-             QColor &color,
-             QPen &pen,
+             std::function<void(const PointF&)> objectMove,
+             colore_s &color,
+             WPen &pen,
              std::function<void()> callUpdate)
-    : QObject(parent)
+    : WObject(parent)
     , LaserMethod(
         std::move(getSize),
         std::move(objectMove),
@@ -21,7 +21,7 @@ Laser::Laser(QObject *parent,
     , _callUpdate(std::move(callUpdate))
     , _timer(new QTimer())
 {
-    QObject::connect(_timer, &QTimer::timeout, this, &Laser::endTimer);
+    WObject::connect(_timer, &QTimer::timeout, this, &Laser::endTimer);
 }
 
 Laser::~Laser()

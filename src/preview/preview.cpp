@@ -1,5 +1,5 @@
 #include "preview.h"
-#include <QPainter>
+#include "core/WPainter/WPainter.h"
 #include "currenttitle/document.h"
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
@@ -10,7 +10,7 @@
 
 void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
-    QPainter painter;
+    WPainter painter;
     const double size_orizzontale = doc.biggerx();
     const double delta = (double)width / (double)size_orizzontale;
 

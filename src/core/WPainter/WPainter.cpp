@@ -4,7 +4,7 @@
 #if defined(USE_QT)
 
 WPainter::WPainter(QPaintDevice * dev)
-    : QPainter(dev)
+    : WPainter(dev)
 {
 }
 

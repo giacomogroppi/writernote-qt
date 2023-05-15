@@ -53,7 +53,7 @@ public:
     StrokeNormal();
     ~StrokeNormal() final;
 
-    void draw(WPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const override;
+    void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const override;
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const final;
     bool is_inside(const RectF &rect, double precision) const final;
 
@@ -61,7 +61,7 @@ public:
     void append(const Point &point, pressure_t pressure) final;
     size_t createControll() const final;
 
-    Rect getBiggerPointInStroke() const final;
+    RectF getBiggerPointInStroke() const final;
     bool isInside(const RectF &rect) const final;
 
     size_t getSizeInMemory() const final;
@@ -134,7 +134,7 @@ protected:
 inline bool StrokeNormal::isPressureVal() const
 {
     rep();
-    return _pressure.size() == 1 and _point.length() > 1;
+    return _pressure.size() == 1 and _point.size() > 1;
 }
 
 inline bool StrokeNormal::needToUpdatePressure() const
@@ -183,7 +183,7 @@ inline void StrokeNormal::updateFlagPressure() const
     if (un(len < 3)) {
         /**
          * if we have less than 3 points we
-         * cannot create a qpainterpath, so
+         * cannot create a WPainterpath, so
          * we have to draw the stroke point
          * by point.
         */
@@ -224,13 +224,13 @@ force_inline void StrokeNormal::draw(
     WPainter _painterPrivate;
     WPainter *painter;
     PointF lastPoint, pointDraw;
-    cbool isHigh = pen.color().alpha() < 255;
+    cbool isHigh = pen.color().getAlfa() < 255;
     cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
     cbool isPrivatePainter = isHigh;
 
     if (isPrivatePainter) {
         img = WPixmap(1, true);
-        img.fill(Qt::transparent);
+        img.fill(color_transparent);
         _painterPrivate.begin(&img);
         SetRenderPainter(_painterPrivate);
         painter = &_painterPrivate;
@@ -238,7 +238,7 @@ force_inline void StrokeNormal::draw(
         painter = &painterPublic;
     }
 
-    lastPoint = Page::at_translation(*data.begin_point, page).toQPointF(prop);
+    lastPoint = Page::at_translation(*data.begin_point, page).toPointF(prop);
 
     for (data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++) {
         const PointF point = Page::at_translation(*data.begin_point, page);
@@ -258,7 +258,7 @@ force_inline void StrokeNormal::draw(
         }
         else if (un(isHigh)) {
             const WPainter::CompositionMode curr = painter->compositionMode();
-            painter->setCompositionMode(QPainter::CompositionMode_Clear);
+            painter->setCompositionMode(WPainter::CompositionMode_Clear);
             painter->drawPoint(lastPoint);
             painter->setCompositionMode(curr);
         }
@@ -270,7 +270,7 @@ force_inline void StrokeNormal::draw(
 
     if (likely(isPrivatePainter)) {
         W_ASSERT(isHigh);
-        W_ASSERT(painterPublic.compositionMode() == QPainter::CompositionMode_SourceOver);
+        W_ASSERT(painterPublic.compositionMode() == WPainter::CompositionMode_SourceOver);
 
         WDebug(debug_draw_stroke, "Paint high" << painterPublic.compositionMode());
 
@@ -292,8 +292,8 @@ inline Rect StrokeNormal::getBiggerPointInStroke(T begin, T end)
         return {0, 0, 0, 0};
     }
 
-    Point topLeft      = begin->toQPointF(1.).toPoint();
-    Point bottomRight  = begin->toQPointF(1.).toPoint();
+    Point topLeft      = begin->toPointF(1.).toPoint();
+    Point bottomRight  = begin->toPointF(1.).toPoint();
 
     for(; begin != end; begin ++){
         const Point &point = *begin;

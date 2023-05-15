@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QString>
-#include <QByteArray>
+#include "core/WString.h"
+#include "core/WByteArray.h"
 
 #define VAL_RES "_res"
 #define NAME_EXT "writernote"

@@ -3,7 +3,6 @@
 #include "StrokeNormal.h"
 #include "utils/common_error_definition.h"
 #include "touch/TabletUtils.h"
-#include <QPaintEngine>
 #include "core/Rect.h"
 
 StrokeForPage::StrokeForPage()

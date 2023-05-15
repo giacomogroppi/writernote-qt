@@ -4,7 +4,7 @@
  * this function only manage the case in which
  * the first point is positive
 */
-void DataStruct::controllForRepositioning(QPointF &translateTo)
+void DataStruct::controllForRepositioning(PointF &translateTo)
 {
     if (isempty_touch())
         return;

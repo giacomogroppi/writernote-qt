@@ -1,10 +1,10 @@
 #include "Scheduler.h"
 #include "core/WMutexLocker.h"
 #include "utils/threadcount.h"
-#include <QPointer>
+#include <Pointer>
 
-Scheduler::Scheduler(QObject *parent)
-    : QObject(parent)
+Scheduler::Scheduler(WObject *parent)
+    : WObject(parent)
     , _need_to_sort(false)
 {
 }
@@ -35,11 +35,11 @@ void Scheduler::addPool(WPool *task)
 
     this->createHeap();
 
-    QObject::connect(task, &WPool::priorityChanged,
+    WObject::connect(task, &WPool::priorityChanged,
                      this, &Scheduler::onPriorityChanged);
-    QObject::connect(task, &WPool::jobsFinished,
+    WObject::connect(task, &WPool::jobsFinished,
                      this, &Scheduler::onPoolEnd);
-    QObject::connect(task, &WPool::jobsAvaliable,
+    WObject::connect(task, &WPool::jobsAvaliable,
                      this, &Scheduler::onJobAvailable);
 }
 
@@ -89,9 +89,9 @@ void Scheduler::onPoolEnd(WPool *pool)
     _pools_not_active.push_back(pool);
     _pool_not_active_locker.unlock();
 
-    QObject::disconnect(pool, &WPool::priorityChanged,
+    WObject::disconnect(pool, &WPool::priorityChanged,
                      this, &Scheduler::onPriorityChanged);
-    QObject::disconnect(pool, &WPool::jobsFinished,
+    WObject::disconnect(pool, &WPool::jobsFinished,
                      this, &Scheduler::onPoolEnd);
 
     this->startNewPool();

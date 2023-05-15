@@ -1,7 +1,6 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
-#include <QString>
 
 class StrokeProp {
 public:
@@ -19,7 +18,7 @@ private:
 #ifdef DEBUGINFO
     static void checkType(int type);
 #else
-    static void checkType(int type) { Q_UNUSED(type); };
+    static void checkType(int type) { (void)(type); };
 #endif
 public:
     explicit StrokeProp (flag_complex type);
@@ -46,7 +45,6 @@ protected:
     void setProp (flag_complex type) noexcept;
 };
 
-Q_CORE_EXPORT QDataStream &operator<<(QDataStream &d, const StrokeProp &str);
 
 #ifdef DEBUGINFO
 inline QString StrokeProp::toString() const noexcept

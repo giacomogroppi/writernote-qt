@@ -1,8 +1,6 @@
 #pragma once
 
 #include "currenttitle/document.h"
-#include <QPainter>
-#include <QPen>
 #include <pthread.h>
 #include "RubberMethod.h"
 #include "touch/tools/Tools.h"
@@ -13,14 +11,14 @@ class RubberMethod: public Tools
 {
 private:
     /**
-     * Return true if the subimage QRect (from, to) is not null
+     * Return true if the subimage Rect (from, to) is not null
      * */
     static bool is_image_not_null(const Page *page,
-                           const QPointF &from, const QPointF &to, int delta);
+                           const PointF &from, const PointF &to, int delta);
 
     int _base;
     PointSettable _last;
-    QList<QVector<int>> _data_to_remove;
+    WListFast<WVector<int>> _data_to_remove;
 public:
     enum type_rubber: int{
         total, /* delete all the point with the saim id */
@@ -31,13 +29,13 @@ public:
     ~RubberMethod();
     [[nodiscard]] bool is_set() const { return this->_last.isSet(); };
 
-    int touchBegin(const QPointF &point, double press, Document &doc) final;
-    int touchUpdate(const QPointF &point, double press, Document &doc) final;
-    int touchEnd(const QPointF& point, Document &doc) final;
+    int touchBegin(const PointF &point, double press, Document &doc) final;
+    int touchUpdate(const PointF &point, double press, Document &doc) final;
+    int touchEnd(const PointF& point, Document &doc) final;
 
     void reset();
 
-    Q_DISABLE_COPY(RubberMethod);
+    // TODO -> disable copy operator
 
 private:
     const int &_size_gomma;
@@ -47,6 +45,6 @@ private:
 inline void RubberMethod::reset()
 {
     _base = -1;
-    _last.setSet(false);
+    _last.set(false);
     _data_to_remove.clear();
 }

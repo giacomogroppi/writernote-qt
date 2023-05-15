@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QPainter>
+#include "core/WPainter/WPainter.h"
 #include <QSize>
-#include <QPointF>
+#include "core/PointF.h"
 
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "touch/dataTouch/page/Page.h"
@@ -16,10 +16,10 @@
  * to copy the drawing rules used in
  * TabletCanvas :: load ()
 */
-void singleLoad(QPainter        &painter,
+void singleLoad(WPainter        &painter,
         const WPixmap           &img,
         const QSize             &sizeRect,
-        const QPointF           &PointFirstPage,
+        const PointF           &PointFirstPage,
         cdouble                 counterPage,
         cdouble                 m);
 

@@ -21,6 +21,7 @@ public:
     bool operator==(const WSizeTemplate<T> &other) const;
     WSizeTemplate<T> operator=(const WSizeTemplate<T> &other);
     WSizeTemplate<T> operator*=(const double delta);
+    WSizeTemplate<T> operator*(double val);
 };
 
 using WSizeF = WSizeTemplate<double>;

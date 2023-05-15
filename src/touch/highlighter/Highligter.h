@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QObject>
+#include "Scheduler/WObject.h"
 #include "HighligterMethod.h"
 
-class Highligter: public QObject, public HighligterMethod {
+class Highligter: public WObject, public HighligterMethod {
     Q_OBJECT
 private:
     enum HighligterType {
@@ -17,11 +17,11 @@ private:
 
     [[nodiscard]] uchar getAlfa() const override;
 public:
-    explicit Highligter(QObject *parent,
+    explicit Highligter(WObject *parent,
                         std::function<int()> getTime,
-                        std::function<void(const QPointF &)> objectMove,
-                        QColor &color,
-                        QPen &pen);
+                        std::function<void(const PointF &)> objectMove,
+                        colore_s &color,
+                        WPen &pen);
 
     virtual ~Highligter() = default;
 

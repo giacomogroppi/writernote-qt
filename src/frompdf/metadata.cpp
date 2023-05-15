@@ -2,7 +2,7 @@
 
 #ifdef PDFSUPPORT
 
-static inline void copy_double(const QPointF &point, double *data);
+static inline void copy_double(const PointF &point, double *data);
 
 frompdf::load_res_pdf frompdf::save_metadata_pdf(WZipWriterSingle &writer)
 {
@@ -33,7 +33,7 @@ frompdf::load_res_pdf frompdf::load_metadata_pdf(WZipReaderSingle &reader, int l
         if(reader.read_by_size(pos, sizeof(pos)))
             return load_res_pdf::no_metadata;
 
-        pdf.topLeft = QPointF(pos[0], pos[1]);
+        pdf.topLeft = PointF(pos[0], pos[1]);
 
         this->m_image.append(pdf);
     }
@@ -53,7 +53,7 @@ void frompdf::init_FirstLoad_pdf()
     this->m_image.append(pdf);
 }
 
-static inline void copy_double(const QPointF &point, double *data)
+static inline void copy_double(const PointF &point, double *data)
 {
     data[0] = point.x();
     data[1] = point.y();

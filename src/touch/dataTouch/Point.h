@@ -5,9 +5,10 @@
 
 #include <iostream>
 #include "core/PointF.h"
+#include <cstring>
 
 #ifdef USE_QT
- #include <QPointF>
+ #include "core/PointF.h"
 #else
 #endif
 
@@ -48,7 +49,7 @@ struct colore_s{
     ~colore_s() = default;
 
 #ifdef USE_QT
-    colore_s(const QColor &color);
+    colore_s(const colore_s &color);
 #endif // USE_QT
 
     colore_s(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
@@ -58,8 +59,8 @@ struct colore_s{
     unsigned char colore[NCOLOR];
 
 #ifdef USE_QT
-    [[nodiscard]] QColor toQColor(double division) const;
-    void fromColor(const QColor &color);
+    [[nodiscard]] colore_s tocolore_s(double division) const;
+    void fromColor(const colore_s &color);
 #endif // USE_QT
 
     unsigned char getAlfa() const;
@@ -74,7 +75,7 @@ struct colore_s{
 #define color_transparent colore_s(0, 0, 0, 0)
 
 #ifdef USE_QT
-    static colore_s from_color(const QColor &color);
+    static colore_s from_color(const colore_s &color);
 #endif // USE_QT
     bool operator==(const colore_s &other) const;
 };
@@ -89,12 +90,12 @@ inline void colore_s::set_alfa(unsigned char alfa)
  * if division == 1 the color don't change
  * if division > 0 the color the alfa is change
 */
-force_inline QColor colore_s::toQColor(cdouble division = 1.0) const
+force_inline colore_s colore_s::tocolore_s(cdouble division = 1.0) const
 {
-    return QColor::fromRgb( colore[0], colore[1], colore[2], double(colore[3])/division);
+    return colore_s::fromRgb( colore[0], colore[1], colore[2], double(colore[3])/division);
 }
 
-force_inline void colore_s::fromColor(const QColor &color)
+force_inline void colore_s::fromColor(const colore_s &color)
 {
     int val[NCOLOR];
     uchar i;
@@ -106,7 +107,7 @@ force_inline void colore_s::fromColor(const QColor &color)
     }
 }
 
-inline colore_s colore_s::from_color(const QColor &color)
+inline colore_s colore_s::from_color(const colore_s &color)
 {
     colore_s tmp;
     tmp.fromColor(color);
@@ -127,17 +128,17 @@ inline bool colore_s::operator==(const colore_s &other) const
 }
 
 #ifdef USE_QT
-force_inline constexpr Point::Point(const QPointF &point) :
-    QPointF(point)
+force_inline constexpr Point::Point(const PointF &point) :
+    PointF(point)
 {
 }
 
-inline constexpr QPointF Point::toQPointF(double scale) const
+inline constexpr PointF Point::toPointF(double scale) const
 {
     return (*this) * scale;
 }
 
-inline colore_s::colore_s(const QColor &color)
+inline colore_s::colore_s(const colore_s &color)
 {
     *this = colore_s::from_color(color);
 }

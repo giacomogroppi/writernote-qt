@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QPainter>
-#include <QPointF>
-#include <QVector>
-#include <QList>
+#include "core/WPainter/WPainter.h"
+#include "core/PointF.h"
+#include "core/WVector.h"
+#include "core/WListFast.h"
 
 #include "currenttitle/document.h"
 #include "touch/copy_cut/copy_cut_selection.h"
@@ -13,14 +13,14 @@
 
 constexpr bool debugSquare = false;
 
-class Square: public QObject,
+class Square: public WObject,
               public SquareMethod
 {
     Q_OBJECT
 public:
-    explicit Square(QObject *parent,
+    explicit Square(WObject *parent,
                     std::function<void()> hideProperty,
-                    std::function<void(const QPointF& point, ActionProperty signal)> showProperty,
+                    std::function<void(const PointF& point, ActionProperty signal)> showProperty,
                     std::function<Document &()> getDoc,
                     std::function<void()> callUpdate);
     ~Square() override;

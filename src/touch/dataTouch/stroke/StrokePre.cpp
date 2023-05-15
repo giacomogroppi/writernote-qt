@@ -62,7 +62,7 @@ std::shared_ptr<Stroke> StrokePre::merge()
     }
 }
 
-void StrokePre::adjust(const QPointF &delta)
+void StrokePre::adjust(const PointF &delta)
 {
     if (_stroke->isEmpty()) {
         for (auto &p : this->_point) {
@@ -85,7 +85,7 @@ void StrokePre::setTime(int time)
     _stroke->setPositioneAudio(time);
 }
 
-QRect StrokePre::getBiggerPointInStroke() const
+Rect StrokePre::getBiggerPointInStroke() const
 {
     /** TODO --> define a cache */
     const auto res = (_stroke->isEmpty()) ?
@@ -97,7 +97,7 @@ QRect StrokePre::getBiggerPointInStroke() const
     return res;
 }
 
-QRect StrokePre::getFirstAndLast() const
+Rect StrokePre::getFirstAndLast() const
 {
     const auto &first = *_point.constBegin();
     const auto &last  = _point.last();
@@ -130,7 +130,7 @@ void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
     this->_pressure.clear();
 }
 
-QColor StrokePre::getColor(double division) const
+colore_s StrokePre::getColor(double division) const
 {
     return _stroke->getColor(division);
 }
@@ -159,7 +159,7 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     return *this;
 }
 
-void StrokePre::append(const Point &point, const pressure_t &press, QPen &_pen, double prop)
+void StrokePre::append(const Point &point, const pressure_t &press, WPen &_pen, double prop)
 {
     const auto normal = (_stroke->type() == Stroke::COMPLEX_NORMAL);
 
@@ -216,7 +216,7 @@ void StrokePre::append(const Point &point, const pressure_t &press, QPen &_pen, 
         W_ASSERT(_point.isEmpty());
         W_ASSERT(_pressure.isEmpty());
 
-        _stroke->append(point.toQPointF(1.), press);
+        _stroke->append(point.toPointF(1.), press);
     }
 }
 

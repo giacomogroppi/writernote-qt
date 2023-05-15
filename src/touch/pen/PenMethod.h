@@ -9,13 +9,13 @@ private:
 public:
     PenMethod(std::function<pressure_t (double size)> getSize,
               std::function<int()> getTime,
-              std::function<void(const QPointF &point)> objectMove,
-              QColor &color,
-              QPen &pen);
+              std::function<void(const PointF &point)> objectMove,
+              colore_s &color,
+              WPen &pen);
 
-    int touchBegin(const QPointF& point, double size, Document &doc) final;
-    int touchUpdate(const QPointF& point, double size, Document &doc) final;
-    int touchEnd(const QPointF& point, Document &doc) final;
+    int touchBegin(const PointF& point, double size, Document &doc) final;
+    int touchUpdate(const PointF& point, double size, Document &doc) final;
+    int touchEnd(const PointF& point, Document &doc) final;
 
     [[nodiscard]] uchar getAlfa() const final;
 };

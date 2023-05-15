@@ -25,10 +25,10 @@ merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document 
 
     int i, len;
     double last = first->biggery();
-    Q_UNUSED(audio);
-    Q_UNUSED(last);
-    Q_UNUSED(i);
-    Q_UNUSED(len);
+    (void)(audio);
+    (void)(last);
+    (void)(i);
+    (void)(len);
 
     return n_merge::ok;
 }

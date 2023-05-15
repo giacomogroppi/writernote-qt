@@ -56,7 +56,7 @@ public:
     DataStruct();
     ~DataStruct() = default;
 
-    void triggerNewView(const WList<int> &Page, int m_pos_ris, cbool all);
+    void triggerNewView(const WListFast<int> &Page, int m_pos_ris, cbool all);
     void triggerNewView(int m_pos_ris, cbool all);
     void triggerIfNone(int m_pos_ris);
     void triggerViewIfVisible(int m_pos_ris);
@@ -143,7 +143,7 @@ public:
 
     __fast [[nodiscard]] RectF get_size_area(const WVector<int> &pos, int page) const;
     __fast [[nodiscard]] RectF get_size_area(const WListFast<WVector<int>> &pos, int base) const;
-    //__slow QRectF get_size_area(const QList<int> & id) const;
+    //__slow RectF get_size_area(const WListFast<int> & id) const;
 
     [[nodiscard]] int getFirstPageVisible() const;
 
@@ -317,7 +317,7 @@ inline int DataStruct::getFirstPageVisible() const
 {
     /* the reason this function
      * is constant is that
-     *  we don't want QList to copy all pages
+     *  we don't want WListFast to copy all pages
      *  when they are shared. */
     int i, len;
     int find;
@@ -415,7 +415,7 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
     return i;
 }
 
-inline void DataStruct::triggerNewView(const QList<int> &Page, int m_pos_ris, cbool all)
+inline void DataStruct::triggerNewView(const WListFast<int> &Page, int m_pos_ris, cbool all)
 {
     for(const int page: Page){
         this->triggerNewView(page, m_pos_ris, all);
@@ -461,7 +461,7 @@ inline int DataStruct::whichPage(const PointF &point) const
  * to which data has been added*/
 inline void DataStruct::append(const WList<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
 {
-    WList<int> trigger;
+    WListFast<int> trigger;
 
     for (const auto &ref : std::as_const(stroke)) {
         /// get the page of the point

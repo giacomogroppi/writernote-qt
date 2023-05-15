@@ -3,8 +3,8 @@
 
 PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
                      std::function<int()> getTime,
-                     std::function<void(const QPointF &point)> objectMove,
-                     QColor &color, QPen &pen) :
+                     std::function<void(const PointF &point)> objectMove,
+                     colore_s &color, WPen &pen) :
         InsertTools(std::move(getTime),
                     std::move(getSize),
                     std::move(objectMove),
@@ -13,17 +13,17 @@ PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
 {
 }
 
-int PenMethod::touchBegin(const QPointF &point, double size, Document &doc)
+int PenMethod::touchBegin(const PointF &point, double size, Document &doc)
 {
     return InsertTools::touchBegin(point, size, doc);
 }
 
-int PenMethod::touchUpdate(const QPointF &point, double size, Document &doc)
+int PenMethod::touchUpdate(const PointF &point, double size, Document &doc)
 {
     return InsertTools::touchUpdate(point, size, doc);
 }
 
-int PenMethod::touchEnd(const QPointF &point, Document &doc)
+int PenMethod::touchEnd(const PointF &point, Document &doc)
 {
     return InsertTools::touchEnd(point, doc);
 }

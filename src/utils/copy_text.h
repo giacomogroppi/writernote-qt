@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <QString>
+#include "core/WString.h"
 
 void copy_text(QString);
 

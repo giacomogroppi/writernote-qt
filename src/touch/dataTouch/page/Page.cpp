@@ -136,11 +136,11 @@ void Page::drawNewPage(n_style __style)
     stroke.setPressure(widthToPressure(style.thickness));
 }
 
-void Page::swap(QList<std::shared_ptr<Stroke>> &list,
-        const QVector<int>  &pos,
+void Page::swap(WListFast<std::shared_ptr<Stroke>> &list,
+        const WVector<int>  &pos,
         int                 flag)
 {
-    QRectF area;
+    RectF area;
 
 #ifdef DEBUGINFO
     if(un(!WCommonScript::is_order_vector(pos))){
@@ -169,14 +169,14 @@ void Page::swap(QList<std::shared_ptr<Stroke>> &list,
 /*
  * this function mantain the item already in list
 */
-void Page::swap(QList<std::shared_ptr<Stroke> > &list,
+void Page::swap(WListFast<std::shared_ptr<Stroke> > &list,
                 int             from,
                 int             to)
 {
     W_ASSERT(from >= to);
     DO_IF_DEBUG(
     int drop = 0;
-    QList<int> itemDrop;
+    WListFast<int> itemDrop;
     );
 
     for(to --; from <= to; to --){
@@ -208,12 +208,12 @@ size_t Page::get_size_in_file(cbool saveImg) const
 }
 
 /* the list should be order */
-void Page::removeAt(const QVector<int> &pos)
+void Page::removeAt(const WVector<int> &pos)
 {
     int i;
     if(un(!WCommonScript::is_order_vector(pos))){
         DO_IF_DEBUG(std::abort());
-        WCommonScript::order_vector((QVector<int> &)(pos));
+        WCommonScript::order_vector((WVector<int> &)(pos));
     }
 
     i = pos.length();
@@ -222,7 +222,7 @@ void Page::removeAt(const QVector<int> &pos)
     }
 }
 
-void Page::append(const QList<std::shared_ptr<Stroke>> &stroke)
+void Page::append(const WListFast<std::shared_ptr<Stroke>> &stroke)
 {
     for (const auto & tmp : qAsConst(stroke)) {
         this->append(tmp);
@@ -230,10 +230,10 @@ void Page::append(const QList<std::shared_ptr<Stroke>> &stroke)
 }
 
 void Page::drawStroke(
-        QPainter        &painter,
+        WPainter        &painter,
         const Stroke    &stroke,
-        QPen            &m_pen,
-        const QColor    &color) const
+        WPen            &m_pen,
+        const colore_s    &color) const
 {
     cbool isRubber = (color == COLOR_NULL);
     cbool isHigh = stroke.get_alfa() < 255;
@@ -247,7 +247,7 @@ void Page::drawStroke(
     W_ASSERT(painter.isActive());
 
     if (un(isRubber)) {
-        painter.setCompositionMode(QPainter::CompositionMode_Clear);
+        painter.setCompositionMode(WPainter::CompositionMode_Clear);
     } else if(isHigh) {
         core::painter_set_source_over(painter);
     }
@@ -265,13 +265,13 @@ void Page::drawStroke(
 
 struct page_thread_data{
     WMutex                          * append;
-    QPainter                        * painter;
-    QList<std::shared_ptr<Stroke>>  * m_stroke;
+    WPainter                        * painter;
+    WListFast<std::shared_ptr<Stroke>>  * m_stroke;
     int                             m_pos_ris;
     const Page                      * parent;
 };
 
-/*The only way to draw in thread safe on a qpainter is to draw an image,
+/*The only way to draw in thread safe on a WPainter is to draw an image,
  *  as it is very fast compared to drawing the stroke, first we draw
  *  all the strokes on the images, residing in the thread stack stacks,
  *  and then we draw them on top the original painter
@@ -297,7 +297,7 @@ void * __page_load(void *__data)
         WDebug(false, "Page::__page_load pointer" << &ref);
         W_ASSERT(!ref.isEmpty());
 
-        const QColor &color = ref.getColor(
+        const colore_s &color = ref.getColor(
             (un(m_pos_ris != -1))
                     ?
                         (
@@ -328,8 +328,8 @@ void * __page_load(void *__data)
 }
 
 void Page::drawEngine(
-        QPainter        &painter,
-        QList<std::shared_ptr<Stroke>> &List,
+        WPainter        &painter,
+        WListFast<std::shared_ptr<Stroke>> &List,
         int             m_pos_ris,
         cbool           use_multi_thread)
 {
@@ -364,7 +364,7 @@ void Page::drawEngine(
 }
 
 inline void Page::draw(
-    QPainter    &painter,
+    WPainter    &painter,
     int         m_pos_ris,
     bool        all)
 {
@@ -395,7 +395,7 @@ void Page::mergeList()
 }
 
 void Page::drawToImage(
-    const QVector<int>  &index,
+    const WVector<int>  &index,
     WPixmap              &img,
     cint                flag) const
 {
@@ -527,7 +527,7 @@ void Page::removeAndDraw(
     drawIfInside(m_pos_ris, area);
 }
 
-void Page::drawIfInside(int m_pos_ris, const QRectF &area)
+void Page::drawIfInside(int m_pos_ris, const RectF &area)
 {
     int index = lengthStroke() - 1;
     Define_PAINTER(painter);
@@ -593,9 +593,9 @@ void Page::decreseAlfa(const WVector<int> &pos, int decrese)
     End_painter(painter);
 }
 
-QRect Page::get_size_area(const QList<std::shared_ptr<Stroke> > &item, int from, int to)
+Rect Page::get_size_area(const WListFast<std::shared_ptr<Stroke> > &item, int from, int to)
 {
-    QRect result;
+    Rect result;
 
     if(un(from >= to)){
         return {};
@@ -604,7 +604,7 @@ QRect Page::get_size_area(const QList<std::shared_ptr<Stroke> > &item, int from,
     result = item.at(from)->getBiggerPointInStroke();
 
     for(; from < to; from ++){
-        const QRect tmp = item.at(from)->getBiggerPointInStroke();
+        const Rect tmp = item.at(from)->getBiggerPointInStroke();
         result = DataStruct::get_bigger_rect(result, tmp);
     }
 
@@ -649,10 +649,10 @@ void Page::setCount(int newCount)
     }
 
     for(i --; i >= 0; i--){
-        this->atStrokeMod(i).scale(QPointF(0., deltaY));
+        this->atStrokeMod(i).scale(PointF(0., deltaY));
     }
 
-    this->_stroke_writernote.scale(QPointF(0., deltaY));
+    this->_stroke_writernote.scale(PointF(0., deltaY));
 
     this->_count = newCount;
 
@@ -698,7 +698,7 @@ void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
 
 void Page::at_draw_page(
         cint            IndexPoint,
-        const QPointF   &translation,
+        const PointF   &translation,
         Point         &point,
         const double    zoom) const
 {

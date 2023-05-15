@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QByteArray>
+#include "core/WByteArray.h"
 
 #ifdef CLOUD
 

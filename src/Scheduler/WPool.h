@@ -4,7 +4,7 @@
 #include "WTask.h"
 #include "core/AtomicSafe.h"
 
-class WPool: public QObject {
+class WPool: public WObject {
     Q_OBJECT
 private:
     int _priority;
@@ -12,7 +12,7 @@ private:
     std::vector<WTask *> _tasks;
     AtomicSafe<int> _active_thread;
 public:
-    explicit WPool(QObject *parent = nullptr);
+    explicit WPool(WObject *parent = nullptr);
     ~WPool() override = default;
 
     /**

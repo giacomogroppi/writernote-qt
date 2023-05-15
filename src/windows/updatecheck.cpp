@@ -49,13 +49,13 @@ void updatecheck::start()
     request.setUrl(QUrl("https://api.github.com/repos/giacomogroppi/writernote-qt/tags"));
     reply = manager->get(request);
 
-    QObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
+    WObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
 }
 
-updatecheck::updatecheck(QObject *parent,
+updatecheck::updatecheck(WObject *parent,
                          std::function<void(const QString &message, const QString &version)> showDialog,
                          std::function<void(bool)> setVisibleUpdateButton)
-    : QObject(parent)
+    : WObject(parent)
     , _showDialog(showDialog)
     , _setVisibleUpdateButton(setVisibleUpdateButton)
 {

@@ -14,9 +14,9 @@ cloud_controll::cloud_controll(struct struct_user *user)
     */
     m_socket = new QTcpSocket(this);
 
-    QObject::connect(m_socket, &QTcpSocket::errorOccurred, this, &cloud_controll::error_socket);
-    QObject::connect(m_socket, &QTcpSocket::readyRead, this, &cloud_controll::ready_read);
-    QObject::connect(m_socket, &QTcpSocket::disconnected, this, &cloud_controll::disconnected);
+    WObject::connect(m_socket, &QTcpSocket::errorOccurred, this, &cloud_controll::error_socket);
+    WObject::connect(m_socket, &QTcpSocket::readyRead, this, &cloud_controll::ready_read);
+    WObject::connect(m_socket, &QTcpSocket::disconnected, this, &cloud_controll::disconnected);
 
 }
 

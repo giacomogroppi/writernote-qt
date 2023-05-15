@@ -28,38 +28,38 @@ class SquareMethod: public Tools, public Scrollable
 {
 public:
     explicit SquareMethod(std::function<void()> hideProperty,
-                          std::function<void(const QPointF& point, ActionProperty signal)> showProperty,
+                          std::function<void(const PointF& point, ActionProperty signal)> showProperty,
                           std::function<Document &()> getDoc);
     ~SquareMethod() ;
 
-    int touchBegin(const QPointF& point, double size, class Document &doc) final;
-    int touchUpdate(const QPointF& point, double size, class Document &doc) final;
-    int touchEnd(const QPointF& point, class Document &doc) final;
+    int touchBegin(const PointF& point, double size, class Document &doc) final;
+    int touchUpdate(const PointF& point, double size, class Document &doc) final;
+    int touchEnd(const PointF& point, class Document &doc) final;
 
     void adjustPoint();
-    void needReload(QPainter &painter, const Document &doc);
+    void needReload(WPainter &painter, const Document &doc);
     [[nodiscard]] bool somethingInBox() const;
 
     /* definizione per i punti di spostamento */
     PointSettable _lastpoint;
 
-    void translate(const QPointF &point) final;
+    void translate(const PointF &point) final;
     void changeInstrument();
 
 private:
     static constexpr auto debugSquare = false;
     int endMoving(Document &doc);
 
-    void move(const QPointF &punto, Document &doc);
+    void move(const PointF &punto, Document &doc);
     std::function<void()> _hideProperty;
-    std::function<void(const QPointF& point, ActionProperty signal)> _showProperty;
+    std::function<void(const PointF& point, ActionProperty signal)> _showProperty;
     std::function<Document &()> _getDoc;
 
-    void initPointSearch(const QPointF &point, const Document &doc);
-    void initPointMove(const QPointF &point, const Document &doc);
+    void initPointSearch(const PointF &point, const Document &doc);
+    void initPointMove(const PointF &point, const Document &doc);
 
     void findObjectToDrawImg(Document &doc);
-    void findObjectToDraw(const QList<QVector<int> > &index, Document &doc);
+    void findObjectToDraw(const WListFast<WVector<int> > &index, Document &doc);
     void initImg(const Document &doc);
     /**
      * la variabile bool viene settata a true quando c'è bisogno di disegnare
@@ -70,15 +70,15 @@ private:
     PointSettable _pointinit;
     PointSettable _pointfine;
     void mergeImg(const WPixmap &from, WPixmap &to, int page);
-    void moveObjectIntoPrivate(QList<QVector<int> > &index, Document &doc);
+    void moveObjectIntoPrivate(WListFast<WVector<int> > &index, Document &doc);
 
     WPixmap _img;
-    QList<QList<std::shared_ptr<Stroke>>> _stroke;
+    WListFast<WListFast<std::shared_ptr<Stroke>>> _stroke;
 
     int _base;
-    QList<int> _index_img; /* image */
+    WListFast<int> _index_img; /* image */
 
-    QPen _penna;
+    WPen _penna;
 
     bool _in_box;
     copy *_copy;
@@ -87,10 +87,10 @@ private:
     DataPrivateMuThread *_dataThread;
     int _threadCount;
 
-    QPointF _trans_img;
+    PointF _trans_img;
     [[nodiscard]] ActionProperty calculate_flags() const;
 
-    void updatePoint(const QPointF &puntofine, const Document &doc);
+    void updatePoint(const PointF &puntofine, const Document &doc);
 
     bool find(Document &doc);
 
@@ -117,7 +117,7 @@ inline ActionProperty SquareMethod::calculate_flags() const
     return static_cast<ActionProperty>(flag);
 }
 
-inline void SquareMethod::translate(const QPointF &)
+inline void SquareMethod::translate(const PointF &)
 {
     WDebug(debugSquare, "Scroll");
     //this->_property->Hide();

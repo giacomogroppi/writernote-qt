@@ -2,7 +2,7 @@
 
 #ifdef PDFSUPPORT
 
-#include <QObject>
+#include "Scheduler/WObject.h"
 #include <QThread>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

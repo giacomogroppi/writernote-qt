@@ -7,12 +7,12 @@
 // è lo stesso stroke definito nel file tabletevent.cpp
 extern StrokePre *__tmp;
 
-ObjectFinder::ObjectFinder(QObject *parent, std::function<void()> callUpdate)
-    : QObject{parent}
+ObjectFinder::ObjectFinder(WObject *parent, std::function<void()> callUpdate)
+    : WObject{parent}
     , _callUpdate(callUpdate)
 {
     _timer = new QTimer(this);
-    QObject::connect(_timer, &QTimer::timeout, this, &ObjectFinder::endTimer);
+    WObject::connect(_timer, &QTimer::timeout, this, &ObjectFinder::endTimer);
     _timer->setSingleShot(true);
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #if defined(USE_QT)
-# include <QPainter>
+# include <WPainter>
 #endif // USE_QT
 #include "core/WImage.h"
 #include "touch/dataTouch/Point.h"
@@ -14,7 +14,7 @@ class WPainter
 {
 private:
 #ifdef USE_QT
-    QPainter _painter;
+    WPainter _painter;
 #elif IOS
 #elif ANDROID
 

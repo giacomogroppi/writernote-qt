@@ -1,9 +1,9 @@
 #include "removenotwriternote.h"
-#include <QList>
-#include <QString>
+#include "core/WListFast.h"
+#include "core/WString.h"
 #include "utils/WCommonScript.h"
 
-void removeNotWriternote::exe(QList<QString> &ref)
+void removeNotWriternote::exe(WListFast<QString> &ref)
 {
     int i;
     const auto ext = qstr("." APP_EXT);

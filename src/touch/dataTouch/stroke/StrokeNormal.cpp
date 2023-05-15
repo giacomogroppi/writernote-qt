@@ -230,13 +230,13 @@ Rect StrokeNormal::getBiggerPointInStroke() const
     return b;
 }
 
-bool StrokeNormal::isInsideBiggerData(const QRect &rect) const
+bool StrokeNormal::isInsideBiggerData(const Rect &rect) const
 {
     const auto &area = this->getBiggerPointInStroke();
     return area.intersects(rect);
 }
 
-bool StrokeNormal::isInside(const QRectF &rect) const
+bool StrokeNormal::isInside(const RectF &rect) const
 {
     if(!this->isInsideBiggerData(rect.toRect()))
         return false;
@@ -353,7 +353,7 @@ void StrokeNormal::adjust(double zoom)
     }
 }
 
-void StrokeNormal::scale(const QPointF &offset)
+void StrokeNormal::scale(const PointF &offset)
 {
     for(auto &point : _point){
         point += offset;

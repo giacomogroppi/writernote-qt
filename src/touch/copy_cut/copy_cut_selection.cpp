@@ -20,9 +20,9 @@ void copy::reset()
 
 void copy::managePaste(
         DataStruct      &data,
-        const QPointF   &pointTouch)
+        const PointF   &pointTouch)
 {
-    QPointF tmp = pointTouch;
+    PointF tmp = pointTouch;
 
     DataStruct::inverso(tmp);
     this->adjustData(tmp);
@@ -35,9 +35,9 @@ void copy::managePaste(
     }
 }
 
-QRect copy::get_size_area(const QList<QList<std::shared_ptr<Stroke>>> &data)
+Rect copy::get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> &data)
 {
-    QRect size_area(0, 0, 0, 0);
+    Rect size_area(0, 0, 0, 0);
 
     for(const auto &sub : data){
 
@@ -50,8 +50,8 @@ QRect copy::get_size_area(const QList<QList<std::shared_ptr<Stroke>>> &data)
 }
 
 void copy::single(
-                const QList<    std::shared_ptr<Stroke>> &from,
-                QList<          std::shared_ptr<Stroke>> &append_data)
+                const WListFast<    std::shared_ptr<Stroke>> &from,
+                WListFast<          std::shared_ptr<Stroke>> &append_data)
 {
     for (const auto &currentStroke : qAsConst(from)) {
         append_data.append(currentStroke->clone());
@@ -75,12 +75,12 @@ void copy::single(
 */
 int copy::selection(
         DataStruct                  &data,
-        const QList<QList<std::shared_ptr<Stroke>>>  &stroke,
+        const WListFast<WListFast<std::shared_ptr<Stroke>>>  &stroke,
         int                         __flags,
-        const QPointF               &pointTouch)
+        const PointF               &pointTouch)
 {
-    QRect sizeData;
-    QPointF tmpPoint;
+    Rect sizeData;
+    PointF tmpPoint;
     int lenList, i;
 
     lenList = stroke.length();
@@ -127,10 +127,10 @@ int copy::selection(
     return (int)this->isSomeThingCut();
 }
 
-void copy::adjustData(const QPointF &offset)
+void copy::adjustData(const PointF &offset)
 {
     using namespace WCommonScript;
-    const QPointF &inverso = DataStruct::inverso(offset);
+    const PointF &inverso = DataStruct::inverso(offset);
 
     for_each(this->m_stroke, [&inverso](std::shared_ptr<Stroke> d) {
         d->scale(inverso);

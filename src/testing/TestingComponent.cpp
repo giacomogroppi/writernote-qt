@@ -39,9 +39,9 @@ static void test3_WLine(void)
 
 void __init__ testingWLine(void)
 {
-    WLine line1(QPointF(100., 100.), QPointF(100., 200.));
-    WLine line2(QPointF(95., 90.), QPointF(101., 175.));
-    WLine line3(QPointF(95., 110.), QPointF(101., 110.));
+    WLine line1(PointF(100., 100.), PointF(100., 200.));
+    WLine line2(PointF(95., 90.), PointF(101., 175.));
+    WLine line3(PointF(95., 110.), PointF(101., 110.));
 
     W_ASSERT(WLine::intersect(line1, line2, 0.));
     W_ASSERT(WLine::intersect(line1, line2, 0.));

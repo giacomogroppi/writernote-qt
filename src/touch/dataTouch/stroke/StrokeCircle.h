@@ -22,21 +22,21 @@ private:
 
     StrokeCircle();
 
-    double distanceFromCenter(const QPointF& point) const;
+    double distanceFromCenter(const PointF& point) const;
     int isInternal(double distance, double precision) const;
     bool oneSide(double inside, double outside, double prec) const;
 
     static constexpr bool debugCircle = false;
 public:
-    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
+    void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const;
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const;
-    bool is_inside(const QRectF &rect, double precision) const;
+    bool is_inside(const RectF &rect, double precision) const;
 
     void append(const Point &point, pressure_t pressure);
     virtual size_t createControll() const;
 
-    QRect getBiggerPointInStroke() const;
-    bool isInside(const QRectF &rect) const final;
+    Rect getBiggerPointInStroke() const;
+    bool isInside(const RectF &rect) const final;
     int save(WZipWriterSingle &file) const final;
 
     size_t getSizeInMemory() const;
@@ -53,7 +53,7 @@ public:
 
     bool isEmpty() const final;
 
-    void scale(const QPointF &offset) final;
+    void scale(const PointF &offset) final;
 
     void preappend(int) final {};
 

@@ -118,7 +118,7 @@ bool xmlstruct::manageMessage(const int res, std::function<void (const QString &
     return false;
 }
 
-int xmlstruct::load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data)
+int xmlstruct::load_multiplestring(zip_file_t *f, WListFast<QString> &lista, WListFast<int> &data)
 {
     int i, lunghezza, temp;
 

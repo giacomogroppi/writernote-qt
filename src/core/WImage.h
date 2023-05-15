@@ -3,7 +3,7 @@
 #ifdef USE_QT
 #include <QImage>
 #include <QBuffer>
-#include <QByteArray>
+#include "core/WByteArray.h"
 #else
 #include "core/WByteArray.h"
 #endif

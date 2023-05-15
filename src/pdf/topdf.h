@@ -11,7 +11,7 @@ private:
 
     void translate();
 
-    void draw(QPainter &painter, double m,
+    void draw(WPainter &painter, double m,
               cbool withPdf);
 
 public:
@@ -22,7 +22,7 @@ public:
 
 };
 
-inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
+inline void topdf::draw(WPainter &painter, double m, cbool withPdf)
 {
     /*
     TabletUtils::DataPaint dataPaint = {
@@ -44,7 +44,7 @@ inline void topdf::draw(QPainter &painter, double m, cbool withPdf)
         *data,
         withPdf,
         true,
-        QRectF());
+        RectF());
 
     loader.load();
 }

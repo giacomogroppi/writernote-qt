@@ -13,7 +13,7 @@ StrokeCircle::StrokeCircle()
 
 }
 
-double StrokeCircle::distanceFromCenter(const QPointF &point) const
+double StrokeCircle::distanceFromCenter(const PointF &point) const
 {
     using namespace WCommonScript;
     return qSqrt(
@@ -35,11 +35,11 @@ bool StrokeCircle::oneSide(double inside, double outside, double prec) const
             not isInternal(outside, prec);
 }
 
-void StrokeCircle::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop_) const
+void StrokeCircle::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop_) const
 {
     constexpr bool not_used debCircle = false;
     Point point;
-    QPointF tmp;
+    PointF tmp;
     const auto press = _data.press;
     double y, x;
     cdouble prop = prop_ == PROP_RESOLUTION ? prop_ : 1.;
@@ -47,7 +47,7 @@ void StrokeCircle::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen
     point = Point(_data.x, _data.y);
 
     point = Page::at_translation(point, page);
-    tmp = point.toQPointF(prop);
+    tmp = point.toPointF(prop);
 
     WDebug(debCircle, "prop: " << prop);
 
@@ -57,14 +57,14 @@ void StrokeCircle::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen
     set_press(pen, press, prop, is_rubber, this->getColor(1.));
     painter.setPen(pen);
 
-    painter.drawEllipse(QPointF(x, y), _data.r * prop, _data.r * prop);
+    painter.drawEllipse(PointF(x, y), _data.r * prop, _data.r * prop);
 
     WDebug(debCircle, _data.x << _data.y << _data.r);
 }
 
 int StrokeCircle::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const
 {
-    QPointF tl, br;
+    PointF tl, br;
 
     constexpr bool not_used debug = true;
 
@@ -95,7 +95,7 @@ int StrokeCircle::is_inside(const WLine &line, int from, int precision, cbool ne
  * il biggerData dello stroke è all'interno
  * dell'area in cui stiamo cercando.
  */
-bool StrokeCircle::is_inside(const QRectF &area, double precision) const
+bool StrokeCircle::is_inside(const RectF &area, double precision) const
 {
     int internal = 0;
 
@@ -103,7 +103,7 @@ bool StrokeCircle::is_inside(const QRectF &area, double precision) const
     W_ASSERT(area.topLeft().x() <= area.bottomRight().x());
     W_ASSERT(area.topLeft().y() <= area.bottomRight().y());
 
-    if(area.contains(QPointF(_data.x, _data.y)))
+    if(area.contains(PointF(_data.x, _data.y)))
         return true;
 
     const auto dist1 = distanceFromCenter(area.topLeft());
@@ -121,8 +121,8 @@ bool StrokeCircle::is_inside(const QRectF &area, double precision) const
 
 void StrokeCircle::append(const Point &point, pressure_t pressure)
 {
-    Q_UNUSED(pressure);
-    _data.r = WCommonScript::distance(QPointF(_data.x, _data.y), point);
+    (void)(pressure);
+    _data.r = WCommonScript::distance(PointF(_data.x, _data.y), point);
 }
 
 void StrokeCircle::adjust(double zoom)
@@ -153,11 +153,11 @@ std::shared_ptr<Stroke> StrokeCircle::makeNormal() const
     double from, to;
     Point tmp;
     pressure_t press;
-    QVector<Point> _pointLeft, _pointRigth;
+    WVector<Point> _pointLeft, _pointRigth;
     std::shared_ptr<StrokeNormal> _to(new StrokeNormal);
 
     const auto appendToStroke = [&_to](
-            const QVector<Point> &point,
+            const WVector<Point> &point,
             const pressure_t press) {
         for (const auto &p : qAsConst(point)) {
             _to->append(p, press);
@@ -202,7 +202,7 @@ bool StrokeCircle::isEmpty() const
     return false;
 }
 
-void StrokeCircle::scale(const QPointF &offset)
+void StrokeCircle::scale(const PointF &offset)
 {
     this->_data.x += offset.x();
     this->_data.y += offset.y();
@@ -235,14 +235,14 @@ int StrokeCircle::type() const
     return Stroke::COMPLEX_CIRCLE;
 }
 
-QRect StrokeCircle::getBiggerPointInStroke() const
+Rect StrokeCircle::getBiggerPointInStroke() const
 {
-    const auto topLeft = QPoint(_data.x - _data.r, _data.y - _data.r);
-    const auto bottomRight = QPoint(_data.x + _data.r, _data.y + _data.r);
-    return QRect(topLeft, bottomRight);
+    const auto topLeft = Point(_data.x - _data.r, _data.y - _data.r);
+    const auto bottomRight = Point(_data.x + _data.r, _data.y + _data.r);
+    return Rect(topLeft, bottomRight);
 }
 
-bool StrokeCircle::isInside(const QRectF &rect) const
+bool StrokeCircle::isInside(const RectF &rect) const
 {
     if (this->getBiggerPointInStroke().intersects(rect.toRect()))
         return true;
@@ -256,7 +256,7 @@ int StrokeCircle::save(WZipWriterSingle &writer) const
     if(res != OK)
         return res;
 
-    static_assert(sizeof(QPointF) == sizeof(double) * 2);
+    static_assert(sizeof(PointF) == sizeof(double) * 2);
 
     writer.write_object(this->_data);
 

@@ -1,5 +1,5 @@
 #include "xmlstruct.h"
-#include <QString>
+#include "core/WString.h"
 #include "utils/WCommonScript.h"
 #include <QFile>
 

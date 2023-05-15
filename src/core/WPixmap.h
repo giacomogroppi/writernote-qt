@@ -20,6 +20,8 @@ public:
     void fill(const colore_s &color);
     RectF rect() const;
 
+    void loadFromData(const WByteArray& data, const char *formact);
+
     bool operator==(const WPixmap &other) const;
 #ifdef USE_QT
     WPixmap& operator=(const QPixmap &other);

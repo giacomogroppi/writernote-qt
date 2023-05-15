@@ -8,9 +8,9 @@ extern StrokePre *__tmp;
 
 InsertTools::InsertTools(std::function<int()> getTime,
                          std::function<pressure_t(double)> getSize,
-                         std::function<void(const QPointF &)> objectMove,
-                         QColor &color,
-                         QPen &pen)
+                         std::function<void(const PointF &)> objectMove,
+                         colore_s &color,
+                         WPen &pen)
     : _getTime(std::move(getTime))
     ,  _getSize(std::move(getSize))
     ,  _objectMove(std::move(objectMove))
@@ -19,7 +19,7 @@ InsertTools::InsertTools(std::function<int()> getTime,
 {
 }
 
-int InsertTools::touchBegin(const QPointF &point, double size, class Document &doc)
+int InsertTools::touchBegin(const PointF &point, double size, class Document &doc)
 {
     pressure_t pressure;
     StrokePre &strokeTmp = *__tmp;
@@ -38,25 +38,25 @@ int InsertTools::touchBegin(const QPointF &point, double size, class Document &d
     return true;
 }
 
-int InsertTools::touchUpdate(const QPointF &point, double size, class Document &doc)
+int InsertTools::touchUpdate(const PointF &point, double size, class Document &doc)
 {
     StrokePre &strokeTmp = *__tmp;
     pressure_t pressure;
 
     pressure = this->_getSize(size);
 
-    strokeTmp.append(point, pressure, (QPen &)_pen, getProp(doc));
+    strokeTmp.append(point, pressure, (WPen &)_pen, getProp(doc));
 
     this->_objectMove(point);
 
     return true;
 }
 
-int InsertTools::touchEnd(const QPointF &, class Document &doc)
+int InsertTools::touchEnd(const PointF &, class Document &doc)
 {
     StrokePre & strokeToAppend = *__tmp;
     int pageMod;
-    const QPointF &PointFirstPage = doc.getPointFirstPage();
+    const PointF &PointFirstPage = doc.getPointFirstPage();
 
     if (un(strokeToAppend.isEmpty()))
         return -1;

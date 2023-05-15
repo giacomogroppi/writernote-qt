@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include "utils/common_def.h"
 #include <type_traits>
+#include <algorithm>
 
 #define __init__ __attribute((constructor))
 
@@ -18,6 +19,9 @@
 #define qstr QString
 #define unused(expr) do { (void)(expr); } while (0)
 #include "touch/dataTouch/Point.h"
+#include <vector>
+#include <iostream>
+#include <list>
 
 #ifdef DEBUGINFO
 force_inline QString get_only_name(const char *name)
@@ -102,7 +106,7 @@ force_inline void swap(T &t1, T &t2)
 }
 
 #define IS_ORDER_WITH_FUNCTION(list, function) \
-    [&](const QList<stroke> &list) -> int{ \
+    [&](const WListFast<stroke> &list) -> int{ \
         int i, len = list.length(); \
         for(i = 0; i < len; i++) { \
             if(list.at(i).function() < list.at(i+1).function()) \
@@ -402,7 +406,7 @@ force_inline void set_zero(T &value)
 #ifdef DEBUGINFO
     memset(&value, 0, sizeof(T));
 #else
-    Q_UNUSED(value);
+    (void)(value);
 #endif
 }
 

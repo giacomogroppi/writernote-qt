@@ -1,5 +1,5 @@
 #include "document.h"
-#include <QString>
+#include "core/WString.h"
 
 #include "testing/memtest.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"
@@ -23,7 +23,7 @@ Document::~Document()
 {
 }
 
-void Document::scala_all(const QPointF &delta, int heightView)
+void Document::scala_all(const PointF &delta, int heightView)
 {
     DataStruct::scala_all(delta, heightView);
     fromimage::move_img(delta);
@@ -37,7 +37,7 @@ void Document::repositioning()
     DataStruct::setZoom(1.);
     DataStruct::setPageVisible(-1);
 
-    const QPointF point = -this->getPointFirstPageNoZoom();
+    const PointF point = -this->getPointFirstPageNoZoom();
 
     Document::scala_all(point, INT_MAX);
 }
@@ -105,7 +105,7 @@ void Document::cleanAudio()
 
 void Document::adjustHeight(cdouble height)
 {
-    QPointF res;
+    PointF res;
     DataStruct::adjustHeight(height, res);
 
     Document::scala_all(res, static_cast<int>(height));
@@ -113,7 +113,7 @@ void Document::adjustHeight(cdouble height)
 
 void Document::adjustAll(unsigned w, unsigned h)
 {
-    QPointF res;
+    PointF res;
     DataStruct::adjustAll(w, h, res);
 
     Document::scala_all(res, static_cast<int>(h));
@@ -121,7 +121,7 @@ void Document::adjustAll(unsigned w, unsigned h)
 
 void Document::increaseZoom(double delta, const QSize &size)
 {
-    QPointF res;
+    PointF res;
 
     DataStruct::increaseZoom(delta, size, res);
 
@@ -130,7 +130,7 @@ void Document::increaseZoom(double delta, const QSize &size)
 
 void Document::controllForRepositioning()
 {
-    QPointF res;
+    PointF res;
     DataStruct::controllForRepositioning(res);
     Document::scala_all(res, INT_MAX);
 }

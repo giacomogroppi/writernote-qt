@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QString>
+#include "core/WString.h"
 
 /* namezip -> path
  from -> name copybook

@@ -8,13 +8,13 @@ private:
 public:
     HighligterMethod(std::function<int()> getTime,
                      std::function<pressure_t(double)> getSize,
-                     std::function<void(const QPointF &)> objectMove,
-                     QPen &pen,
-                     QColor &color);
+                     std::function<void(const PointF &)> objectMove,
+                     WPen &pen,
+                     colore_s &color);
 
-    int touchBegin(const QPointF& point, double size, Document &doc) final;
-    int touchUpdate(const QPointF& point, double size, Document &doc) final;
-    int touchEnd(const QPointF& point, Document &doc) final;
+    int touchBegin(const PointF& point, double size, Document &doc) final;
+    int touchUpdate(const PointF& point, double size, Document &doc) final;
+    int touchEnd(const PointF& point, Document &doc) final;
 };
 
 

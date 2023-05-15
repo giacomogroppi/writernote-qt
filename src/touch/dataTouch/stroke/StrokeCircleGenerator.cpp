@@ -8,7 +8,7 @@ static struct stroke_complex_circle{
     double _x, _y, _r;
 } tmp;
 
-void StrokeCircleGenerator::model_circle_precision(const QPointF &point, double &precision)
+void StrokeCircleGenerator::model_circle_precision(const PointF &point, double &precision)
 {
     double res;
     const auto x = tmp._x;

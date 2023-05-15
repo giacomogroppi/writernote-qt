@@ -1,5 +1,5 @@
 #include "StrokeRect.h"
-#include <QPainter>
+#include "core/WPainter/WPainter.h"
 #include "touch/dataTouch/page/Page.h"
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/stroke/StrokeComplexCommon.h"
@@ -34,7 +34,7 @@ int StrokeRect::type() const
     return Stroke::COMPLEX_RECT;
 }
 
-void StrokeRect::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const
+void StrokeRect::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const
 {
     painter.setPen(pen);
 
@@ -44,30 +44,30 @@ void StrokeRect::draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, 
                 Point(
                     _data.rect.topLeft()),
                     page
-                ).toQPointF(prop);
+                ).toPointF(prop);
 
     const auto _bottomRight = Page::at_translation(
                 Point(
                     _data.rect.bottomRight()),
                     page
-                ).toQPointF(prop);
+                ).toPointF(prop);
 
-    painter.drawRect(QRectF(_topLeft, _bottomRight));
+    painter.drawRect(RectF(_topLeft, _bottomRight));
 }
 
 int StrokeRect::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const
 {
-    Q_UNUSED(line);
-    Q_UNUSED(precision);
-    Q_UNUSED(needToDeletePoint);
+    (void)(line);
+    (void)(precision);
+    (void)(needToDeletePoint);
     W_ASSERT(0);
 }
 
-bool StrokeRect::is_inside(const QRectF &rect, double precision) const
+bool StrokeRect::is_inside(const RectF &rect, double precision) const
 {
-    const auto r = QRectF(
-                rect.topLeft() - QPointF(precision, precision),
-                rect.bottomRight() + QPointF(precision, precision)
+    const auto r = RectF(
+                rect.topLeft() - PointF(precision, precision),
+                rect.bottomRight() + PointF(precision, precision)
                 );
     return this->_data.rect.intersects(r);
 }
@@ -101,9 +101,9 @@ void StrokeRect::append(const Point &point, pressure_t pressure)
     }
 }
 
-void StrokeRect::scale(const QPointF &offset)
+void StrokeRect::scale(const PointF &offset)
 {
-    this->_data.rect = QRectF(
+    this->_data.rect = RectF(
                     _data.rect.topLeft() + offset,
                     _data.rect.bottomRight() + offset
                 );
@@ -136,9 +136,9 @@ size_t StrokeRect::createControll() const
 
 void StrokeRect::adjust(double zoom)
 {
-    const QPointF topLeft = _data.rect.topLeft() / zoom;
-    const QPointF bottomRight = _data.rect.bottomRight() / zoom;
-    _data.rect = QRectF(topLeft, bottomRight);
+    const PointF topLeft = _data.rect.topLeft() / zoom;
+    const PointF bottomRight = _data.rect.bottomRight() / zoom;
+    _data.rect = RectF(topLeft, bottomRight);
 }
 
 std::shared_ptr<Stroke> StrokeRect::clone() const
@@ -175,12 +175,12 @@ bool StrokeRect::isEmpty() const
     return false;
 }
 
-QRect StrokeRect::getBiggerPointInStroke() const
+Rect StrokeRect::getBiggerPointInStroke() const
 {
     return _data.rect.toRect();
 }
 
-bool StrokeRect::isInside(const QRectF &rect) const
+bool StrokeRect::isInside(const RectF &rect) const
 {
     return this->_data.rect.intersects(rect);
 }
@@ -192,12 +192,12 @@ int StrokeRect::save(WZipWriterSingle &file) const
     if(res != OK)
         return res;
 
-    static_assert(sizeof(QPointF) == sizeof(double) * 2);
+    static_assert(sizeof(PointF) == sizeof(double) * 2);
 
     file.write_object(this->_data);
 
     // 4 for alignment
-    static_assert(sizeof(this->_data) == (sizeof(QRectF) + sizeof(pressure_t) + 4));
+    static_assert(sizeof(this->_data) == (sizeof(RectF) + sizeof(pressure_t) + 4));
 
     return OK;
 }
@@ -210,7 +210,7 @@ size_t StrokeRect::getSizeInMemory() const
 size_t StrokeRect::getSizeInFile() const
 {
     static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
-    static_assert(sizeof(this->_data) == (sizeof(QPointF) * 2 + sizeof(pressure_t) + 4));
+    static_assert(sizeof(this->_data) == (sizeof(PointF) * 2 + sizeof(pressure_t) + 4));
 
     return sizeof(StrokeComplexCommon::current_ver) +
            sizeof(this->_data);

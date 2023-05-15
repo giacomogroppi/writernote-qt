@@ -28,7 +28,7 @@ int TestingCore::createPage(
         Document &doc, int page,
         int lenStroke, int lenPerStroke,
         bool is_same_pressure,
-        const QPointF &point,
+        const PointF &point,
         const double deltaPerPoint,
         const double deltaPerStroke,
         int last_id)
@@ -82,7 +82,7 @@ void TestingCore::createDocument(Document *doc)
     for(i = 0; i < T_PAGE_LEN; i++){
         page page(i+1, n_style::square);
         doc->datatouch->_page.append(page);
-        id = this->createPage(*doc, i, T_STROKE_IN_PAGE, T_POINT_IN_STROKE, false, QPointF(0, 0), 0.1, 1, id);
+        id = this->createPage(*doc, i, T_STROKE_IN_PAGE, T_POINT_IN_STROKE, false, PointF(0, 0), 0.1, 1, id);
 
         doc->datatouch->_page.operator[](i).triggerRenderImage(-1, true);
     }

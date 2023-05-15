@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <QString>
+#include "core/WString.h"
 #include <QStandardPaths>
 
 namespace get_path_application

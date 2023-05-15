@@ -10,7 +10,7 @@
 #include <atomic>
 #include "touch/tools/Tools.h"
 
-class TabletController : public QObject
+class TabletController : public WObject
 {
     Q_OBJECT
 private:
@@ -22,19 +22,19 @@ private:
         Square *_square;
     } _tools;
 
-    QList<Tools*> _toolsContainer;
+    WListFast<Tools*> _toolsContainer;
 
     ObjectFinder *_objectFinder;
     Tools *_currentTool;
-    QColor _color;
-    QPen _pen;
+    colore_s _color;
+    WPen _pen;
     Document *_doc;
 
     mutable bool _needUpdate;
 
     mutable std::atomic<bool> _isDrawing;
 
-    void objectMove(const QPointF &point);
+    void objectMove(const PointF &point);
     void setAndCallTool(Tools *tool);
 
     Document &getDoc();
@@ -43,33 +43,33 @@ private:
     const std::function<bool()> _isPlaying;
     const std::function<int()> _getTimePlaying;
     void checkCreatePage();
-    void draw(QPainter &painter, double width) const;
+    void draw(WPainter &painter, double width) const;
 public:
-    explicit TabletController(QObject *parent,
+    explicit TabletController(WObject *parent,
                               const std::function<int()>& getTimeRecording,
                               const std::function<bool()> &isPlaying,
                               const std::function<int()> &getTimePlaying);
 
-    void getImg(QPainter &painter, double width) const;
+    void getImg(WPainter &painter, double width) const;
 
     Tools* getCurrentTool() const;
 
 public slots:
     void selectType(int type);
-    void selectColor(const QColor &color);
+    void selectColor(const colore_s &color);
 
-    void positionDocChanged(const QPointF &newPosition);
+    void positionDocChanged(const PointF &newPosition);
 
-    void touchBegin(const QPointF &point, double pressure);
-    void touchUpdate(const QPointF &point, double pressure);
-    void touchEnd(const QPointF &point, double pressure);
+    void touchBegin(const PointF &point, double pressure);
+    void touchUpdate(const PointF &point, double pressure);
+    void touchEnd(const PointF &point, double pressure);
 
 signals:
     void onNeedRefresh(int pageMin, int pageMax);
     void onToolChanged();
     void onPropertyHide();
     void onNumberOfPageChanged(int numerberOfPage);
-    void onPropertyShow(const QPointF &point, ActionProperty);
+    void onPropertyShow(const PointF &point, ActionProperty);
 };
 
 inline const Document &TabletController::getDoc() const

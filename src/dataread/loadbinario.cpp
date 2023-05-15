@@ -18,7 +18,7 @@ static int load_point_first_page(WZipReaderSingle &zip, DataStruct &doc)
     if(zip.read_by_size(init, sizeof(init)) < 0)
         return -1;
 
-    doc.setPointFirstPage(QPointF(init[0], init[1]));
+    doc.setPointFirstPage(PointF(init[0], init[1]));
 
     return 0;
 }

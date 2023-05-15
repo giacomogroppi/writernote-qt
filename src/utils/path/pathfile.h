@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QString>
+#include "core/WString.h"
 
 class pathFile
 {

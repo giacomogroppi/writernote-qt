@@ -11,10 +11,10 @@ StrokeLine::StrokeLine()
 {
 }
 
-void StrokeLine::draw(QPainter &painter,
+void StrokeLine::draw(WPainter &painter,
                       cbool is_rubber,
                       cint page,
-                      QPen &pen,
+                      WPen &pen,
                       cdouble prop) const
 {
     const auto p = prop == PROP_RESOLUTION ? prop : 1.;
@@ -22,8 +22,8 @@ void StrokeLine::draw(QPainter &painter,
     painter.setPen(pen);
     set_press(pen, this->_data.press, p, is_rubber, this->getColor(1.));
 
-    const auto _topLeft     = Page::at_translation(Point(this->_data.pt1), page).toQPointF(prop);
-    const auto _bottomRight = Page::at_translation(Point(this->_data.pt2), page).toQPointF(prop);
+    const auto _topLeft     = Page::at_translation(Point(this->_data.pt1), page).toPointF(prop);
+    const auto _bottomRight = Page::at_translation(Point(this->_data.pt2), page).toPointF(prop);
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
@@ -31,13 +31,13 @@ void StrokeLine::draw(QPainter &painter,
 
 int StrokeLine::is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const
 {
-    Q_UNUSED(needToDeletePoint);
+    (void)(needToDeletePoint);
     W_ASSERT(from == 0);
     WLine _line(this->_data.pt1, this->_data.pt2);
     return WLine::intersect(_line, line, precision);
 }
 
-bool StrokeLine::is_inside(const QRectF &area, double precision) const
+bool StrokeLine::is_inside(const RectF &area, double precision) const
 {
     WLine lineOrizTop   (area.topLeft(),    area.topRight());
     WLine lineOrizBot   (area.bottomLeft(), area.bottomRight());
@@ -86,7 +86,7 @@ void StrokeLine::append(const Point &point, pressure_t pressure)
     const auto dist1 = distance_not_square(_data.pt1, point);
     const auto dist2 = distance_not_square(_data.pt2, point);
 
-    Q_UNUSED(pressure);
+    (void)(pressure);
 
     if(dist1 > dist2){
         _data.pt2 = point;
@@ -187,18 +187,18 @@ bool StrokeLine::isEmpty() const
     return false;
 }
 
-void StrokeLine::scale(const QPointF &offset)
+void StrokeLine::scale(const PointF &offset)
 {
     this->_data.pt1 += offset;
     this->_data.pt2 += offset;
 }
 
-QRect StrokeLine::getBiggerPointInStroke() const
+Rect StrokeLine::getBiggerPointInStroke() const
 {
     return datastruct_rect(_data.pt1, _data.pt2).toRect();
 }
 
-bool StrokeLine::isInside(const QRectF &rect) const
+bool StrokeLine::isInside(const RectF &rect) const
 {
     if (!this->getBiggerPointInStroke().intersects(rect.toRect()))
         return false;
@@ -212,11 +212,11 @@ int StrokeLine::save(WZipWriterSingle &writer) const
     if(res != OK)
         return res;
 
-    static_assert(sizeof(QPointF) == sizeof(double) * 2);
+    static_assert(sizeof(PointF) == sizeof(double) * 2);
 
     writer.write_object(this->_data);
 
-    static_assert(sizeof(this->_data) == (sizeof(QPointF) * 2 + sizeof(float) + 4));
+    static_assert(sizeof(this->_data) == (sizeof(PointF) * 2 + sizeof(float) + 4));
 
     return OK;
 }
@@ -276,7 +276,7 @@ int StrokeLine::type() const
 size_t StrokeLine::getSizeInFile() const
 {
     static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
-    static_assert(sizeof(this->_data) == (sizeof(QPointF) * 2 + sizeof(pressure_t) + 4));
+    static_assert(sizeof(this->_data) == (sizeof(PointF) * 2 + sizeof(pressure_t) + 4));
 
     return sizeof(StrokeComplexCommon::current_ver) +
            sizeof(this->_data);

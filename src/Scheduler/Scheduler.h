@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <QtGlobal>
-#include <QObject>
+#include "Scheduler/WObject.h"
 #include <queue>
 #include "WPool.h"
 #include "core/WMutex.h"
@@ -15,7 +15,7 @@ public:
     bool *thread;
 };
 
-class Scheduler final: public QObject{
+class Scheduler final: public WObject{
 private:
     std::vector<WPool *> _pools_active;
     std::vector<WPool *> _pools_not_active;
@@ -48,7 +48,7 @@ private:
     void startNewPool();
     QThreadPool *getThreadPool();
 public:
-    explicit Scheduler(QObject *parent = nullptr);
+    explicit Scheduler(WObject *parent = nullptr);
     ~Scheduler() final;
 
     void removePool(WPool *task);

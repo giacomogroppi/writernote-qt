@@ -1,8 +1,8 @@
 #include "fromimage.h"
 #include "stdlib.h"
 #include <QBuffer>
-#include <QByteArray>
-#include <QList>
+#include "core/WByteArray.h"
+#include "core/WListFast.h"
 #include "zip.h"
 #include "dataread/readlistarray.h"
 #include "datawrite/source_read_ext.h"
@@ -13,7 +13,7 @@
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
 fromimage::load_res_img fromimage::save_img(WZipWriter          &writer,
-                                    const QList<QString>   &pathPdf) const
+                                    const WListFast<QString>   &pathPdf) const
 {
     fromimage::load_res_img res;
 
@@ -98,8 +98,8 @@ fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, i
             return load_res_img::error;
         }
 
-        img.i = QPointF(val[0], val[1]);
-        img.f = QPointF(val[2], val[3]);
+        img.i = PointF(val[0], val[1]);
+        img.f = PointF(val[2], val[3]);
 
         m_img.append(img);
     }
@@ -109,8 +109,8 @@ fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, i
 
 fromimage::load_res_img fromimage::load_img(WZipReaderSingle &reader, int len)
 {
-    QList<QByteArray> arr;
-    QList<QString> name_list;
+    WListFast<QByteArray> arr;
+    WListFast<QString> name_list;
     uchar res;
 
     this->m_img.clear();
@@ -144,7 +144,7 @@ fromimage::load_res_img fromimage::load_single_img(const QByteArray &arr,
  * in m_img sono già presenti tutte le immagini con i metadati
  * dobbiamo solo cambiare l'immagine e l'array
 */
-fromimage::load_res_img fromimage::load_multiple_img(const QList<QByteArray> &arr)
+fromimage::load_res_img fromimage::load_multiple_img(const WListFast<QByteArray> &arr)
 {
     uint i, len;
     fromimage::load_res_img res;
@@ -160,10 +160,10 @@ fromimage::load_res_img fromimage::load_multiple_img(const QList<QByteArray> &ar
     return fromimage::load_res_img::ok;
 }
 
-QList<QString> fromimage::get_name_img()
+WListFast<QString> fromimage::get_name_img()
 {
     int i;
-    QList<QString> list;
+    WListFast<QString> list;
 
     for(i = 0; i < length_img(); ++i){
         list.append(fromimage::getName_img(i));
@@ -184,10 +184,10 @@ unsigned fromimage::insert_image(   const QString &pos,
 
     if (point) {
         img.i = point->toPoint();
-        img.f = point->toPoint() + QPoint(DELTA_POINT, DELTA_POINT);
+        img.f = point->toPoint() + Point(DELTA_POINT, DELTA_POINT);
     } else {
-        img.i = QPoint(0, 0);
-        img.f = QPoint(DELTA_POINT, DELTA_POINT);
+        img.i = Point(0, 0);
+        img.f = Point(DELTA_POINT, DELTA_POINT);
     }
 
     return OK;

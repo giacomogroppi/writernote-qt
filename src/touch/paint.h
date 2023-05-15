@@ -1,9 +1,5 @@
 #pragma once
 
-#include <QPainter>
-#include <QSize>
-#include <QPointF>
-
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "touch/dataTouch/page/Page.h"
 #include "core/WImage.h"
@@ -16,10 +12,10 @@
  * to copy the drawing rules used in
  * TabletCanvas :: load ()
 */
-void singleLoad(QPainter        &painter,
+void singleLoad(WPainter        &painter,
                 const WPixmap   &img,
-                const QSize     &sizeRect,
-                const QPointF   &PointFirstPage,
+                const WSize     &sizeRect,
+                const PointF   &PointFirstPage,
                 cdouble counterPage,
                 cdouble         m);
 
@@ -32,13 +28,13 @@ void singleLoad(QPainter        &painter,
 
 #define DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH 1
 #define DRAW_CREATE_SIZE_RECT_DEF_PRO 1.0
-inline QSize createSizeRect(
+inline WSize createSizeRect(
         const DataStruct    &data,
         const int           countHeigth,
         const double        pro)
 {
     const auto zoom = data.getZoom();
     const int height = Page::getHeight();
-    return QSize(Page::getWidth(), height * countHeigth) * zoom * pro;
+    return WSize(Page::getWidth(), height * countHeigth) * zoom * pro;
 }
 

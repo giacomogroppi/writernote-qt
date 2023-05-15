@@ -6,8 +6,8 @@
 
 constexpr auto not_used rubber_debug = false;
 
-Rubber::Rubber(QObject *parent) :
-    QObject(parent),
+Rubber::Rubber(WObject *parent) :
+    WObject(parent),
     RubberMethod(_type_gomma, _size_gomma)
 {
     this->reset();

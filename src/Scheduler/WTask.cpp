@@ -1,7 +1,7 @@
 #include "WTask.h"
 
-WTask::WTask(QObject *parent)
-    : QObject(parent)
+WTask::WTask(WObject *parent)
+    : WObject(parent)
 {
 }
 

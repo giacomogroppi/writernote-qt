@@ -2,16 +2,15 @@
 
 #include "PenMethod.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"
-#include <QObject>
+#include "Scheduler/WObject.h"
 
-class Pen: public QObject, public PenMethod
+class Pen: public WObject, public PenMethod
 {
-    Q_OBJECT
 public:
-    Pen(QObject *parent,
+    Pen(WObject *parent,
         std::function<int()> getTime,
-        std::function<void(const QPointF &point)> objectMove,
-        QColor &color, QPen &pen);
+        std::function<void(const PointF &point)> objectMove,
+        colore_s &color, WPen &pen);
     virtual ~Pen() = default;
 
     enum TypePen {

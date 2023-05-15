@@ -8,6 +8,7 @@
 #include "utils/WCommonScript.h"
 #include "core/WZipReaderSingle.h"
 #include <pthread.h>
+#include <memory>
 #include "core/WImage.h"
 #include "touch/dataTouch/stroke/StrokeForPage.h"
 #include "core/WPixmap.h"
@@ -23,7 +24,7 @@
 #define TEMP_SQUARE 40
 
 #define Define_PAINTER_p(painter, ___img)               \
-    QPainter painter;                                   \
+    WPainter painter;                                   \
     if(!painter.begin(&___img)) {                       \
         if constexpr(WCommonScript::debug_enable()){    \
             std::abort();                               \

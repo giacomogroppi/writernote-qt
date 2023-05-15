@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/Point.h"
 #include "utils/common_def.h"
@@ -14,7 +15,7 @@
 #include "core/WPen.h"
 
 #define PROP_RESOLUTION (2.)
-#define SetRenderPainter(painter) painter.setRenderHint(QPainter::Antialiasing, true);
+#define SetRenderPainter(painter) painter.setRenderHint(WPainter::Antialiasing, true);
 constexpr double deltaPress = 2.;
 constexpr double deltaColorNull = 1.3;
 

@@ -11,7 +11,7 @@ topdf::topdf(const QString &path, const Document &doc)
     uint i;
     const uint len = doc.lengthPage();
 
-    QList<int> page;
+    WListFast<int> page;
 
     this->path = &path;
 
@@ -36,14 +36,14 @@ topdf::~topdf()
 
 static inline void newpage(Document *data, const double tmp)
 {
-    data->scala_all(QPointF(0, -tmp), INT_MAX);
+    data->scala_all(PointF(0, -tmp), INT_MAX);
 }
 
 bool topdf::createpdf(cbool withPdf)
 {
     const uint lenpage = data->lengthPage();
     uint i;
-    const QPointF pointData = data->getPointFirstPage();
+    const PointF pointData = data->getPointFirstPage();
     uchar ret = 1;
     this->translate();
 
@@ -62,13 +62,13 @@ bool topdf::createpdf(cbool withPdf)
     const double size_verticale = Page::getProportion() * size_orizzontale;
     const double delta = double(width_pdf) / double(size_orizzontale);
 
-    QPainter painter(&pdfWriter);
-    //const auto targetRect = QRect(0, 0, page::getResolutionWidth(), page::getResolutionHeigth());
+    WPainter painter(&pdfWriter);
+    //const auto targetRect = Rect(0, 0, page::getResolutionWidth(), page::getResolutionHeigth());
 
 
     for (i = 0; i < lenpage; i++) {
         const auto &img = data->at(i).getImg();
-        const auto targetRect = QRect(0, 0, pdfWriter.width(), pdfWriter.height());
+        const auto targetRect = Rect(0, 0, pdfWriter.width(), pdfWriter.height());
 
         painter.drawPixmap(targetRect, img);
         /*this->draw(painter,

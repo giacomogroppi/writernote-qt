@@ -8,10 +8,10 @@
 extern StrokePre *__tmp;
 
 LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
-                         std::function<void(const QPointF&)> objectMove,
+                         std::function<void(const PointF&)> objectMove,
                          std::function<void(const StrokePre &stroke)> append_to,
-                         QPen &pen,
-                         QColor &color)
+                         WPen &pen,
+                         colore_s &color)
     : InsertTools([]() {
         return 0;
     }
@@ -23,17 +23,17 @@ LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
 {
 }
 
-int LaserMethod::touchBegin(const QPointF &point, double size, Document &doc)
+int LaserMethod::touchBegin(const PointF &point, double size, Document &doc)
 {
     return InsertTools::touchBegin(point, size, doc);
 }
 
-int LaserMethod::touchUpdate(const QPointF &point, double size, Document &doc)
+int LaserMethod::touchUpdate(const PointF &point, double size, Document &doc)
 {
     return InsertTools::touchUpdate(point, size, doc);
 }
 
-int LaserMethod::touchEnd(const QPointF &, Document &)
+int LaserMethod::touchEnd(const PointF &, Document &)
 {
     if (un(__tmp->isEmpty()))
         return -1;

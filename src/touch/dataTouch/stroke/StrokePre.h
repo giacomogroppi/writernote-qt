@@ -112,7 +112,7 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
 
     if (_stroke->isEmpty()) {
         W_ASSERT(_stroke->type() == Stroke::COMPLEX_NORMAL);
-        //W_ASSERT(painter.renderHints() & QPainter::Antialiasing);
+        //W_ASSERT(painter.renderHints() & WPainter::Antialiasing);
 
         if (this->_point.length() == 1)
             return;

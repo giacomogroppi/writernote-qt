@@ -33,13 +33,13 @@ void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine &res)
     using namespace WCommonScript;
     const auto press = from->getPressure();
 
-    const QRect FL {
+    const Rect FL {
         from->_point.first().toPoint(),
         from->_point.last().toPoint()
     };
 
-    QPointF TL = FL.topLeft();
-    QPointF BR = FL.bottomRight();
+    PointF TL = FL.topLeft();
+    PointF BR = FL.bottomRight();
 
     if (TL.y() > BR.y()) {
         swap(TL, BR);
@@ -47,8 +47,8 @@ void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine &res)
 
     const double x = TL.x();
 
-    res._data.pt1 = QPointF(x, TL.y());
-    res._data.pt2 = QPointF(x, BR.y());
+    res._data.pt1 = PointF(x, TL.y());
+    res._data.pt2 = PointF(x, BR.y());
     res._data.press = press;
 }
 

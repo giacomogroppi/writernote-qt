@@ -24,7 +24,7 @@ cloud_ui::cloud_ui(QDialog *parent, cloud_controll *cloud) :
      * the cloud controll function, which will be issued
      * by void readyread () and analyze the data
     */
-    QObject::connect(cloud, &cloud_controll::readyReadExt, this, &cloud_ui::readyRead);
+    WObject::connect(cloud, &cloud_controll::readyReadExt, this, &cloud_ui::readyRead);
 }
 
 cloud_ui::~cloud_ui()

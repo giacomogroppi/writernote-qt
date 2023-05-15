@@ -8,18 +8,19 @@
 #include "touch/dataTouch/Point.h"
 
 #ifdef USE_QT
-# include <QPen>
+# include <WPen>
 #endif
 
 class WPen {
 #ifdef USE_QT
-    QPen _pen;
+    WPen _pen;
 #endif // USE_QT
 public:
     WPen();
     void setColorNull();
     void setColor(const colore_s &color);
     const colore_s &color() const;
+    double widthF() const;
 
     // todo --> try to remove
     void setSolidPattern();

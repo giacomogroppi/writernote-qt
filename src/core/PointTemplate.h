@@ -15,8 +15,8 @@ public:
 
     ~PointTemplate() = default;
 
-    T x() const;
-    T y() const;
+    constexpr T x() const;
+    constexpr T y() const;
 
     T &rx();
     T &ry();
@@ -30,13 +30,20 @@ public:
     PointTemplate<T>& operator=(const PointTemplate<T> &other);
     bool operator==(const PointTemplate<T> &other) const;
 
-    PointTemplate<T> operator+(const PointTemplate<T> &other) const;
-    PointTemplate<T> operator*(double d) const;
-    PointTemplate<T> operator/(double d) const;
-    PointTemplate<T> operator-(const PointTemplate<T> &other) const;
+    constexpr PointTemplate<T> operator+(const PointTemplate<T> &other) const;
+    constexpr PointTemplate<T> operator*(double d) const;
+    constexpr PointTemplate<T> operator/(double d) const;
+    constexpr PointTemplate<T> operator-(const PointTemplate<T> &other) const;
 
-    PointTemplate<T> &operator*=(double d);
-    PointTemplate<T> &operator+=(const PointTemplate<T>& d);
+    constexpr PointTemplate<T> &operator*=(double d);
+    constexpr PointTemplate<T> &operator+=(const PointTemplate<T>& d);
 };
+
+template<typename T>
+inline constexpr PointTemplate<T>::PointTemplate(T x, T y)
+    : _x(x)
+    , _y(y)
+{
+}
 
 #endif //WRITERNOTE_POINTTEMPLATE_H

@@ -7,11 +7,11 @@
 constexpr bool rubber_debug = false;
 
 struct RubberPrivateData{
-    QVector<int>    *data_find;
+    WVector<int>    *data_find;
     Page            *_page;
     WLine           line;
     DataStruct      *data;
-    QVector<int>    *data_to_remove;
+    WVector<int>    *data_to_remove;
 
     int             al_find;
 
@@ -20,7 +20,7 @@ struct RubberPrivateData{
      * --> we have to redraw the strokes that were close together
      * */
     bool            highlighter_delete;
-    QRect           area;
+    Rect           area;
 };
 
 static volatile int     __m_size_gomma;
@@ -61,25 +61,25 @@ RubberMethod::RubberMethod(const type_rubber &type, const int &size_rubber)
     thread_group->startLoop(idle_rubber);
 }
 
-static inline not_used QRectF rubber_get_area(const QPointF &p1, const QPointF &p2)
+static inline not_used RectF rubber_get_area(const PointF &p1, const PointF &p2)
 {
     const auto &size = __m_size_gomma;
 
-    QRectF area = datastruct_rect(p1, p2);
-    const QPointF tmp = QPointF(size, size);
+    RectF area = datastruct_rect(p1, p2);
+    const PointF tmp = PointF(size, size);
 
     W_ASSERT(__m_size_gomma >= 0);
     W_ASSERT(area.topLeft().x() >= 0.);
     W_ASSERT(area.topLeft().y() >= 0.);
 
-    area = QRectF(area.topLeft() - tmp,
+    area = RectF(area.topLeft() - tmp,
                   area.bottomRight() + tmp);
 
     return area;
 }
 
-static force_inline void draw_null(Page *_page, const QVector<int> &point,
-                                   const QVector<int> &stroke, bool is_left)
+static force_inline void draw_null(Page *_page, const WVector<int> &point,
+                                   const WVector<int> &stroke, bool is_left)
 {
     Q_ASSERT(point.size() == stroke.size());
 
@@ -122,10 +122,10 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
 {
     auto *private_data = (RubberPrivateData *)data->extra;
 
-    QVector<int> stroke_to_remove;
-    QVector<int> stroke_mod_point,          stroke_mod_stroke;
-    QVector<int> stroke_mod_rigth_point,    stroke_mod_rigth_stroke;
-    QVector<int> stroke_mod_left_point,     stroke_mod_left_stroke;
+    WVector<int> stroke_to_remove;
+    WVector<int> stroke_mod_point,          stroke_mod_stroke;
+    WVector<int> stroke_mod_rigth_point,    stroke_mod_rigth_stroke;
+    WVector<int> stroke_mod_left_point,     stroke_mod_left_stroke;
 
     int from, to, _index;
 
@@ -236,11 +236,11 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 {
     auto *private_data = static_cast<RubberPrivateData *>(data->extra);
 
-    QVector<int> index_selected;
+    WVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
 
     Page *_page             = private_data->_page;
-    QVector<int> *_al_find  = private_data->data_find;
+    WVector<int> *_al_find  = private_data->data_find;
     const auto &area        = private_data->line;
     index_selected.reserve(32);
 
@@ -292,13 +292,13 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
  * this function is call by tabletEvent
  * it returns true if it actually deleted something, otherwise it returns false
 */
-int RubberMethod::touchUpdate(const QPointF &__lastPoint,
+int RubberMethod::touchUpdate(const PointF &__lastPoint,
                                double,
                                Document &doc)
 {
     int lenStroke, count, indexPage, thread_create;
     cbool isTotal = (_rubber_type == RubberMethod::total);
-    const QPointF &lastPoint = doc.adjustPoint(__lastPoint);
+    const PointF &lastPoint = doc.adjustPoint(__lastPoint);
     auto *dataThread = thread_group->get_thread_data();
     RubberPrivateData dataPrivate;
 
@@ -319,11 +319,11 @@ int RubberMethod::touchUpdate(const QPointF &__lastPoint,
     indexPage = _base;
     count = 0;
     dataPrivate.highlighter_delete = false;
-    dataPrivate.area = QRect();
+    dataPrivate.area = Rect();
 
     if (un(_base < 0)) {
         this->_base = doc.whichPage(lastPoint);
-        _data_to_remove.append(QVector<int>());
+        _data_to_remove.append(WVector<int>());
         indexPage = _base;
     } else {
         const auto now = doc.whichPage(lastPoint);
@@ -339,7 +339,7 @@ int RubberMethod::touchUpdate(const QPointF &__lastPoint,
         */
         if (now < _base) {
             for (i = now; i < _base; i++) {
-                _data_to_remove.insert(0, QVector<int>());
+                _data_to_remove.insert(0, WVector<int>());
             }
 
             _base = now;
@@ -351,7 +351,7 @@ int RubberMethod::touchUpdate(const QPointF &__lastPoint,
 
             if (!(count < _data_to_remove.length())) {
                 for (i = _base; i < now; i++) {
-                    _data_to_remove.append(QVector<int>());
+                    _data_to_remove.append(WVector<int>());
                 }
             }
         }
@@ -427,7 +427,7 @@ int RubberMethod::touchUpdate(const QPointF &__lastPoint,
 }
 
 bool RubberMethod::is_image_not_null(const Page *page,
-                                     const QPointF &from, const QPointF &to,
+                                     const PointF &from, const PointF &to,
                                      int delta)
 {
     int i, j;
@@ -458,7 +458,7 @@ bool RubberMethod::is_image_not_null(const Page *page,
     const QImage data = img.toImage();
     for (i = 0; i < delta + int(xmax - xmin); i++) {
         for (j = 0; j < delta + int(ymax - ymin); j++) {
-            const QPoint target = QPoint(x + i, y + j) * PROP_RESOLUTION;
+            const Point target = Point(x + i, y + j) * PROP_RESOLUTION;
             const QRgb pix = data.pixel(target);
 
             //WDebug(rubber_debug, name << "pixel" << pix);
@@ -474,14 +474,14 @@ bool RubberMethod::is_image_not_null(const Page *page,
     return false;
 }
 
-int RubberMethod::touchEnd(const QPointF&, Document &doc )
+int RubberMethod::touchEnd(const PointF&, Document &doc )
 {
     int i, len = _data_to_remove.length();
     int index_mod = -1;
 
     if (_rubber_type == type_rubber::total) {
         for (i = 0; i < len; i ++) {
-            QVector<int> &arr = _data_to_remove.operator[](i);
+            WVector<int> &arr = _data_to_remove.operator[](i);
             Page &page = doc.at_mod(i + _base);
 
             if(un(arr.isEmpty()))
@@ -513,7 +513,7 @@ RubberMethod::~RubberMethod()
     WDelete(thread_group);
 }
 
-int RubberMethod::touchBegin(const QPointF &point, double, Document &doc)
+int RubberMethod::touchBegin(const PointF &point, double, Document &doc)
 {
     _last = true;
     _last = doc.adjustPoint(point);

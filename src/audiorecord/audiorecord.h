@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QObject>
+#include "Scheduler/WObject.h"
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 # include <QAudioRecorder>
 #else
@@ -14,7 +14,7 @@
 #include <QFile>
 #include "utils/WCommonScript.h"
 
-class AudioRecord : public QObject
+class AudioRecord : public WObject
 {
     Q_OBJECT
 private:
@@ -24,7 +24,7 @@ public:
     /**
      * duration is express in seconds
     */
-    explicit AudioRecord(QObject *parent,
+    explicit AudioRecord(WObject *parent,
                          std::function<void(const QString &)> error,
                          std::function<void(int)> durationChange);
 

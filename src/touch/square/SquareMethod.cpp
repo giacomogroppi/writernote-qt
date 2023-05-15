@@ -7,13 +7,13 @@
 
 static WMutex           __mutex_sq;
 static const Page       *__page;
-static QPointF          __f;
-static QPointF          __s;
-static QVector<int>     *__index;
+static PointF          __f;
+static PointF          __s;
+static WVector<int>     *__index;
 static bool             *__in_box;
 
 SquareMethod::SquareMethod(std::function<void()> hideProperty,
-                           std::function<void (const QPointF &, ActionProperty)> showProperty,
+                           std::function<void (const PointF &, ActionProperty)> showProperty,
                            std::function<Document &()> getDoc)
     : _hideProperty(hideProperty)
     , _showProperty(std::move(showProperty))
@@ -29,7 +29,7 @@ SquareMethod::SquareMethod(std::function<void()> hideProperty,
 
     _penna.setStyle(Qt::DotLine);
     _penna.setWidth(2);
-    _penna.setColor(QColor::fromRgb(30, 90, 255));
+    _penna.setColor(colore_s::fromRgb(30, 90, 255));
     SquareMethod::reset();
 
     __in_box = &_in_box;
@@ -62,7 +62,7 @@ void SquareMethod::reset()
         goto out;
 
     for (i = 0; i < len; i++) {
-        QList<std::shared_ptr<Stroke>> ll   = _stroke.operator[](i);
+        WListFast<std::shared_ptr<Stroke>> ll   = _stroke.operator[](i);
 
 #ifdef DEBUGINFO
         WCommonScript::for_each(ll, [](const std::shared_ptr<Stroke>& stroke){
@@ -85,7 +85,7 @@ void SquareMethod::reset()
     out:
     this->_img = WPixmap();
     this->_stroke.clear();
-    this->_trans_img = QPointF(0.0, 0.0);
+    this->_trans_img = PointF(0.0, 0.0);
 }
 
 void * __square_search(void *__data)
@@ -114,7 +114,7 @@ void * __square_search(void *__data)
     return nullptr;
 }
 
-int SquareMethod::touchBegin(const QPointF &point, double, Document &doc)
+int SquareMethod::touchBegin(const PointF &point, double, Document &doc)
 {
     constexpr auto not_used debugSquare = false;
     WDebug(debugSquare, "call");
@@ -131,7 +131,7 @@ int SquareMethod::touchBegin(const QPointF &point, double, Document &doc)
     return true;
 }
 
-int SquareMethod::touchUpdate(const QPointF &point, double, Document &doc)
+int SquareMethod::touchUpdate(const PointF &point, double, Document &doc)
 {
     if (somethingInBox()) {
         W_ASSERT(this->_pointinit.isSet());
@@ -149,7 +149,7 @@ int SquareMethod::touchUpdate(const QPointF &point, double, Document &doc)
     return true;
 }
 
-int SquareMethod::touchEnd(const QPointF &, class Document &doc)
+int SquareMethod::touchEnd(const PointF &, class Document &doc)
 {
     bool done = somethingInBox();
 
@@ -173,12 +173,12 @@ bool SquareMethod::find(Document &doc)
     bool tmp_find;
     int i, create, lenPage, count;
     int PageCounter;
-    QList<QVector<int>> index;
+    WListFast<WVector<int>> index;
 
     this->adjustPoint();
 
-    const QPointF &topLeft = _pointinit;
-    const QPointF &bottomRight = _pointfine;
+    const PointF &topLeft = _pointinit;
+    const PointF &bottomRight = _pointfine;
 
 #define CTRL_POINT(point) W_ASSERT(point.x() >= 0. && point.y() >= 0.);
     CTRL_POINT(topLeft);
@@ -204,7 +204,7 @@ bool SquareMethod::find(Document &doc)
             break;
 
         if(likely(count > index.length() - 1))
-            index.append(QVector<int>());
+            index.append(WVector<int>());
 
         __index = &index.operator[](count);
 
@@ -261,8 +261,8 @@ void SquareMethod::mergeImg(
         WPixmap          &to,
         int              page)
 {
-    QPainter painter;
-    QRect rectTo = from.rect();
+    WPainter painter;
+    Rect rectTo = from.rect();
 
     rectTo.translate(0, page * Page::getResolutionHeigth());
 
@@ -272,7 +272,7 @@ void SquareMethod::mergeImg(
     painter.end();
 }
 
-void SquareMethod::moveObjectIntoPrivate(QList<QVector<int>> &index, Document &doc)
+void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Document &doc)
 {
     int count;
     const auto len = index.length();
@@ -289,14 +289,14 @@ void SquareMethod::moveObjectIntoPrivate(QList<QVector<int>> &index, Document &d
 
     auto preappend = [&, len]() {
         for (auto i = 0; i < len; i++) {
-            _stroke.append(QList<std::shared_ptr<Stroke>> ());
+            _stroke.append(WListFast<std::shared_ptr<Stroke>> ());
         }
     };
 
     preappend();
 
     for (count = 0; count < len; count ++) {
-        const QVector<int> & ref = index.at(count);
+        const WVector<int> & ref = index.at(count);
         WDebug(debugSquare, ref);
         page = &doc.at_mod(count + _base);
 
@@ -314,7 +314,7 @@ void SquareMethod::moveObjectIntoPrivate(QList<QVector<int>> &index, Document &d
     }
 
 #ifdef DEBUGINFO
-    WCommonScript::for_each(_stroke, [](const QList<std::shared_ptr<Stroke>> &list) {
+    WCommonScript::for_each(_stroke, [](const WListFast<std::shared_ptr<Stroke>> &list) {
         WCommonScript::for_each(list, [](const std::shared_ptr<Stroke>& s) {
             W_ASSERT(!s->isEmpty());
         });
@@ -345,10 +345,10 @@ void SquareMethod::findObjectToDrawImg(Document &doc)
  * in questo caso si analizza quando c'è un id
  *  uguale, e si sposta tutto il tratto
 */
-void SquareMethod::findObjectToDraw(const QList<QVector<int>> &index, Document &doc)
+void SquareMethod::findObjectToDraw(const WListFast<WVector<int>> &index, Document &doc)
 {
     const auto trans = doc.getPointFirstPage();
-    QRectF sizeData;
+    RectF sizeData;
     return;
     WDebug(debugSquare, "call");
 
@@ -365,10 +365,10 @@ void SquareMethod::findObjectToDraw(const QList<QVector<int>> &index, Document &
     findObjectToDrawImg(doc);
 }
 
-void SquareMethod::initPointMove(const QPointF &point, const Document &doc)
+void SquareMethod::initPointMove(const PointF &point, const Document &doc)
 {
-    QPointF new_point;
-    QRectF rect(_pointinit, _pointfine);
+    PointF new_point;
+    RectF rect(_pointinit, _pointfine);
     WDebug(debugSquare, "call");
 
     new_point = doc.adjustPoint(point);
@@ -384,9 +384,9 @@ void SquareMethod::initPointMove(const QPointF &point, const Document &doc)
     }
 }
 
-void SquareMethod::move(const QPointF &punto, Document &doc)
+void SquareMethod::move(const PointF &punto, Document &doc)
 {
-    QPointF delta;
+    PointF delta;
     const auto zoom = doc.getZoom();
 
     WDebug(debugSquare, "call");
@@ -418,15 +418,15 @@ void SquareMethod::move(const QPointF &punto, Document &doc)
 
 int SquareMethod::endMoving(Document &doc)
 {
-    QPoint middle;
+    Point middle;
     const auto ref = doc.getPointFirstPage();
     ActionProperty flag;
     const auto &translation = doc.adjustPointReverce(_pointinit);
-    //const QPoint &translation = -pixmap->mapFromGlobal(QPoint(0, 0));
+    //const Point &translation = -pixmap->mapFromGlobal(Point(0, 0));
 
     WDebug(debugSquare, "call");
 
-    middle = QPoint(translation.x(),
+    middle = Point(translation.x(),
                     translation.y() - 50);
 
     flag = this->calculate_flags();
@@ -493,8 +493,8 @@ void SquareMethod::actionProperty(PropertySignals action)
 */
 force_inline void SquareMethod::adjustPoint()
 {
-    QPointF &topLeft        = _pointinit;
-    QPointF &bottomRight    = _pointfine;
+    PointF &topLeft        = _pointinit;
+    PointF &bottomRight    = _pointfine;
 
     WDebug(debugSquare, topLeft << bottomRight);
 
@@ -511,21 +511,21 @@ force_inline void SquareMethod::adjustPoint()
 }
 
 static void square_draw_square(
-        QPainter            &painter,
+        WPainter            &painter,
         const DataStruct    &data,
-        const QPointF       &tl,
-        const QPointF       &br)
+        const PointF       &tl,
+        const PointF       &br)
 {
-    const QPointF TL = data.adjustPointReverce(tl);
-    const QPointF BR = data.adjustPointReverce(br);
+    const PointF TL = data.adjustPointReverce(tl);
+    const PointF BR = data.adjustPointReverce(br);
     constexpr const auto debugDraw = true;
 
     WDebug(debugSquare and debugDraw, tl << br << TL << BR);
 
-    painter.drawRect(QRectF(TL, BR));
+    painter.drawRect(RectF(TL, BR));
 }
 
-void SquareMethod::needReload(QPainter &painter, const Document &doc)
+void SquareMethod::needReload(WPainter &painter, const Document &doc)
 {
     if constexpr (WCommonScript::debug_enable()){
         if(un(!painter.isActive())){
@@ -539,7 +539,7 @@ void SquareMethod::needReload(QPainter &painter, const Document &doc)
         WDebug(debugSquare, "__need_reload = true");
 
         if(likely(somethingInBox())){
-            const QPointF point = doc.getPointFirstPage() + _trans_img * zoom;
+            const PointF point = doc.getPointFirstPage() + _trans_img * zoom;
             const int len = doc.lengthPage();
             const QSize size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
 
@@ -555,7 +555,7 @@ void SquareMethod::needReload(QPainter &painter, const Document &doc)
     }
 }
 
-void SquareMethod::updatePoint(const QPointF &puntofine, const Document &doc)
+void SquareMethod::updatePoint(const PointF &puntofine, const Document &doc)
 {
     WDebug(debugSquare, "call");
     W_ASSERT(!somethingInBox());
@@ -569,7 +569,7 @@ void SquareMethod::updatePoint(const QPointF &puntofine, const Document &doc)
     _need_reload = true;
 }
 
-void SquareMethod::initPointSearch(const QPointF &point, const Document &doc)
+void SquareMethod::initPointSearch(const PointF &point, const Document &doc)
 {
     WDebug(debugSquare, "call");
 

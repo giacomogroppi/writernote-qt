@@ -11,7 +11,7 @@ struct DatastructNewView{
     WMutex          &mutex;
 };
 
-void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> &save, Page *page)
+void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, WVector<int> &save, Page *page)
 {
     W_ASSERT(data);
     W_ASSERT(page);
@@ -23,7 +23,7 @@ void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, QVector<int> 
     }
 }
 
-void drawStroke(Page *page, QVector<int> &pos, int pos_audio)
+void drawStroke(Page *page, WVector<int> &pos, int pos_audio)
 {
     for(const auto &index : qAsConst(pos)){
         const Stroke &stroke = page->atStroke(index);
@@ -36,7 +36,7 @@ void *__search_new_view(void *__data)
     auto *_data = static_cast<DataPrivateMuThread *>(__data);
     auto *_private_data = static_cast<DatastructNewView *>(_data->extra);
     Page *_page = _private_data->m_page;
-    QVector<int> _index;
+    WVector<int> _index;
 
     __search_for_stroke(_data, _private_data->time - 1, _index, _page);
 

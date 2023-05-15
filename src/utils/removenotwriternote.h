@@ -5,6 +5,6 @@
 class removeNotWriternote
 {
 public:
-    static void exe(QList<QString> &ref);
+    static void exe(WListFast<QString> &ref);
 };
 

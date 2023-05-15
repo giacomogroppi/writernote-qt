@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <QString>
+#include "core/WString.h"
 
 namespace path {
     enum e_path: unsigned int{

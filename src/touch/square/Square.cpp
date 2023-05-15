@@ -1,13 +1,13 @@
 #include "Square.h"
-#include <QPen>
-#include <QPainter>
+#include "core/WPen.h"
+#include "core/WPainter/WPainter.h"
 #include <QDebug>
 
-Square::Square(QObject *parent,
+Square::Square(WObject *parent,
                std::function<void()> hideProperty,
-               std::function<void(const QPointF& point, ActionProperty signal)> showProperty,
+               std::function<void(const PointF& point, ActionProperty signal)> showProperty,
                std::function<Document &()> getDoc, std::function<void ()> callUpdate)
-    : QObject(parent)
+    : WObject(parent)
     , SquareMethod(hideProperty, showProperty, getDoc)
     , _callUpdate(callUpdate)
 {

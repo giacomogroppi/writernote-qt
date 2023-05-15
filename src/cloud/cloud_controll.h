@@ -4,7 +4,7 @@
 #include "request_type.h"
 #include "error_type.h"
 #include <QTcpSocket>
-#include <QObject>
+#include "Scheduler/WObject.h"
 
 #include "url.h"
 
@@ -23,7 +23,7 @@ namespace n_error_socket {
 }
 
 
-class cloud_controll: public QObject
+class cloud_controll: public WObject
 {
     Q_OBJECT
 public:

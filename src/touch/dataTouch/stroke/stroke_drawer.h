@@ -4,9 +4,8 @@
 #include "touch/dataTouch/Point.h"
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
-#include <QtGlobal>
-#include <QPainter>
-#include <QPen>
+#include "core/WPainter/WPainter.h"
+#include "core/WPen.h"
 
 class Stroke;
 class StrokePre;
@@ -36,22 +35,22 @@ public:
 
 class stroke_drawer {
 private:
-    QPainter    &_painter;
-    QPen        &_pen;
+    WPainter    &_painter;
+    WPen        &_pen;
     int         _page;
     double      _prop;
-    QColor      _color;
+    colore_s      _color;
     bool        _isRubber;
 
     template <class T, class Z>
     void draw_stroke_normal(stroke_drawer_private<T, Z> &data);
 
-    stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber);
+    stroke_drawer(WPainter &painter, WPen &pen, double prop, const colore_s &color, int page, bool is_rubber);
 public:
-    static void draw_stroke(QPainter &painter, const StrokePre &stroke, QPen &pen, cdouble prop);
+    static void draw_stroke(WPainter &painter, const StrokePre &stroke, WPen &pen, cdouble prop);
 };
 
-inline stroke_drawer::stroke_drawer(QPainter &painter, QPen &pen, double prop, const QColor &color, int page, bool is_rubber) :
+inline stroke_drawer::stroke_drawer(WPainter &painter, WPen &pen, double prop, const colore_s &color, int page, bool is_rubber) :
     _painter(painter),
     _pen(pen),
     _page(page),

@@ -12,19 +12,19 @@
 
 #include <QAction>
 #include <QNetworkReply>
-#include <QObject>
+#include "Scheduler/WObject.h"
 
-class updatecheck: public QObject
+class updatecheck: public WObject
 {
     Q_OBJECT
 public:
-    updatecheck(QObject *parent, std::function<void(const QString &message, const QString &version)> showDialog,
+    updatecheck(WObject *parent, std::function<void(const QString &message, const QString &version)> showDialog,
                 std::function<void(bool)> setVisibleUpdateButton);
     ~updatecheck();
 
     void checkupdate();
 
-    void sslErrors(QNetworkReply *, const QList<QSslError> &errors);
+    void sslErrors(QNetworkReply *, const WListFast<QSslError> &errors);
     QNetworkAccessManager *manager;
     QNetworkRequest request;
 

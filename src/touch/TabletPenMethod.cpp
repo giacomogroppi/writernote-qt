@@ -1,7 +1,6 @@
 #include "TabletPenMethod.h"
 #include "utils/WCommonScript.h"
 #include "utils/setting_define.h"
-#include <QSettings>
 
 void TabletPenMethod::save() const
 {

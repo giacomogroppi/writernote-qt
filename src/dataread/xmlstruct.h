@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 #include <streambuf>
-#include <QList>
+#include "core/WListFast.h"
 #include "currenttitle/document.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include <zip.h>
@@ -53,11 +53,11 @@ private:
     /* new */ int loadbinario_4(class WZip &zip, int ver_stroke);
     /* new */ int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
 
-    static int load_multiplestring(zip_file_t *f, QList<QString> &lista, QList<int> &data);
+    static int load_multiplestring(zip_file_t *f, WListFast<QString> &lista, WListFast<int> &data);
     static uchar controllOldVersion(zip_t *file);
 
-    static void decode0(Document *doc, QList<struct point_last> &point, QList<double> &pos_foglio);
-    static void decode1(Document *doc, QList<QList<struct point_old_ver_7>> &page);
+    static void decode0(Document *doc, WListFast<struct point_last> &point, WListFast<double> &pos_foglio);
+    static void decode1(Document *doc, WListFast<WListFast<struct point_old_ver_7>> &page);
 public:
     static size_t sizeFile(zip_t *filezip, const QString &namefile);
     static size_t sizeFile(zip_t *filezip, const char *namefile);

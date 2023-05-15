@@ -30,29 +30,29 @@ force_inline void set_mobile_view(cbool is_tablet)
 #define TRANSLATION(x) QApplication::tr(x)
 
 #if defined(USE_QT)
-inline void painter_set_source_over(QPainter &painter)
+inline void painter_set_source_over(WPainter &painter)
 {
     W_ASSERT(painter.isActive());
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    W_ASSERT(painter.compositionMode() == QPainter::CompositionMode_SourceOver);
+    painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
+    W_ASSERT(painter.compositionMode() == WPainter::CompositionMode_SourceOver);
 }
 
-inline void painter_set_destination_over(QPainter &painter)
+inline void painter_set_destination_over(WPainter &painter)
 {
     W_ASSERT(painter.isActive());
-    painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+    painter.setCompositionMode(WPainter::CompositionMode_DestinationOver);
 }
 
-inline void painter_set_antialiasing(QPainter &painter)
+inline void painter_set_antialiasing(WPainter &painter)
 {
     W_ASSERT(painter.isActive());
-    painter.setRenderHints(QPainter::RenderHint::Antialiasing);
-    painter.setRenderHint(QPainter::RenderHint::SmoothPixmapTransform);
-    painter.setRenderHint(QPainter::RenderHint::TextAntialiasing);
+    painter.setRenderHints(WPainter::RenderHint::Antialiasing);
+    painter.setRenderHint(WPainter::RenderHint::SmoothPixmapTransform);
+    painter.setRenderHint(WPainter::RenderHint::TextAntialiasing);
 
-    W_ASSERT(painter.renderHints() & QPainter::RenderHint::SmoothPixmapTransform);
-    W_ASSERT(painter.renderHints() & QPainter::RenderHint::Antialiasing);
-    W_ASSERT(painter.renderHints() & QPainter::RenderHint::TextAntialiasing);
+    W_ASSERT(painter.renderHints() & WPainter::RenderHint::SmoothPixmapTransform);
+    W_ASSERT(painter.renderHints() & WPainter::RenderHint::Antialiasing);
+    W_ASSERT(painter.renderHints() & WPainter::RenderHint::TextAntialiasing);
 }
 #endif // USE_QT
 

@@ -5,14 +5,14 @@
 
 StrokePre *__tmp;
 
-static void drawSingleStroke(StrokePre &_stroke, QPainter &_painter, QPen &pen, double prop, const QPointF& pointFirstPage)
+static void drawSingleStroke(StrokePre &_stroke, WPainter &_painter, WPen &pen, double prop, const PointF& pointFirstPage)
 {
     if (!_stroke.isEmpty()) {
         _stroke.draw(_painter, pen, prop, pointFirstPage);
     }
 }
 
-static void draw_laser(QPainter &painter, Laser &_laser, QPen &pen, double zoom)
+static void draw_laser(WPainter &painter, Laser &_laser, WPen &pen, double zoom)
 {
     auto begin = _laser.begin();
     const auto end = _laser.end();
@@ -52,7 +52,7 @@ void TabletUtils::loadLaser()
 void TabletUtils::load()
 {
     int lenPage                     = this->_doc.lengthPage();
-    const QPointF &PointFirstPage   = this->_doc.getPointFirstPageNoZoom();
+    const PointF &PointFirstPage   = this->_doc.getPointFirstPageNoZoom();
     const auto zoom                 = this->getZoom();
     const QSize sizeRect            = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
 
@@ -67,11 +67,11 @@ void TabletUtils::load()
     if(likely(withPdf))
         data.draw_pdf(painter, dataPoint.m, dataPoint.IsExportingPdf, data.currentWidth());
 #else
-    Q_UNUSED(_withPdf);
+    (void)(_withPdf);
 #endif
 
-    //painter.setRenderHints(QPainter::TextAntialiasing, false);
-    //painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, true);
+    //painter.setRenderHints(WPainter::TextAntialiasing, false);
+    //painter.setRenderHints(WPainter::Antialiasing | WPainter::SmoothPixmapTransform, true);
     drawForAudio();
 
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
@@ -111,10 +111,10 @@ constexpr bool TabletUtils::withPdf() const
 }
 
 void singleLoad(
-        QPainter        &painter,
+        WPainter        &painter,
         const WPixmap   &pix,
         const QSize     &sizeRect,
-        const QPointF   &PointFirstPage,
+        const PointF   &PointFirstPage,
         cdouble         counterPage,
         cdouble         m)
 {
@@ -123,7 +123,7 @@ void singleLoad(
 
     y *= m;
 
-    QRectF targetRect(QPointF(x, y), sizeRect);
+    RectF targetRect(PointF(x, y), sizeRect);
 
     painter.drawPixmap(targetRect, pix, pix.rect());
 }

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QList>
-#include <QVector>
+#include "core/WListFast.h"
+#include "core/WVector.h"
 #include "currenttitle/document.h"
 
 class redoundo
@@ -10,7 +10,7 @@ private:
 
     /* 0 <= indice <= 10 */
     uchar indice = 0;
-    QVector<Document *> m_list;
+    WVector<Document *> m_list;
     class TabletCanvas *canvas;
     static constexpr int max = 10;
     std::function<Document*()> _getDoc;

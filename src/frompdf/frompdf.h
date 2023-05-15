@@ -1,12 +1,6 @@
 #pragma once
 
-#include <QtGlobal>
 #include "touch/dataTouch/datastruct/DataStruct.h"
-#include <QString>
-#include <QList>
-#include <QImage>
-#include <QMap>
-#include <QPainter>
 
 #ifndef PDFSUPPORT
 class frompdf{
@@ -15,11 +9,6 @@ public:
     frompdf(void *){};
 };
 #else
-# if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#  include "poppler-qt5.h"
-# else
-#  include "poppler-qt6.h"
-#endif // PDFSUPPORT
 
 #include "images/fromimage.h"
 #define IMG_PDF_HEIGHT 292
@@ -33,8 +22,8 @@ class Pdf{
 public:
     Pdf()
     {
-        img = QList<QImage>();
-        topLeft = QPointF();
+        img = WListFast<WImage>();
+        topLeft = PointF();
     }
 
     Pdf(const Pdf &pdf)
@@ -45,27 +34,27 @@ public:
 
     ~Pdf() = default;
 
-    QList<QImage> img;
+    WListFast<WImage> img;
     
     /* top left */
-    QPointF topLeft;
+    PointF topLeft;
 };
 
 class frompdf
 {
 private:
-    QVector<Pdf> m_image;
+    WVector<Pdf> m_image;
 
-    static QByteArray getName_pdf(const unsigned i)
+    static WByteArray getName_pdf(const unsigned i)
     {
-        const auto str = SUFFIX_PDF + QString::number(i);
+        const auto str = WString(SUFFIX_PDF) + WString::number(i);
         return str.toUtf8();
     }
 
 public:
     static void copy_pdf(const frompdf &src, frompdf &dest);
 
-    void translation_pdf(const QPointF &point);
+    void translation_pdf(const PointF &point);
     void translation_pdf(double x, double y);
 
     frompdf();
@@ -81,10 +70,10 @@ public:
 
     void reset_pdf();
 
-    QList<QString> get_name_pdf(int countPdf);
+    WListFast<QString> get_name_pdf(int countPdf);
 
     /* return true if all load correctly */
-    bool load_pdf(const QList<QString> &path, QMap<load_res_pdf, uchar> &index, datastruct &data);
+    bool load_pdf(const WListFast<QString> &path, QMap<load_res_pdf, uchar> &index, datastruct &data);
     load_res_pdf load_pdf(const QString &, cbool clear, datastruct &data);
     load_res_pdf load_pdf(WZipReaderSingle &reader, int len, datastruct &data);
     load_res_pdf load_pdf(const QByteArray &path_writernote_file, int len, datastruct &data);
@@ -92,13 +81,13 @@ public:
 
     void resizing_pdf(datastruct &d, int len);
 
-    [[nodiscard]] load_res_pdf save_pdf(const QList<QString> &path, const QByteArray &path_writernote_file);
+    [[nodiscard]] load_res_pdf save_pdf(const WListFast<QString> &path, const QByteArray &path_writernote_file);
     [[nodiscard]] load_res_pdf save_pdf(const QByteArray &path, const QByteArray &path_writernote_file);
     [[nodiscard]] load_res_pdf save_pdf(WZipWriter &filezip, const QByteArray &path);
 
     load_res_pdf save_metadata_pdf(WZipWriterSingle &writer);
 
-    void draw_pdf(QPainter &painter, double delta, cbool IsExportingPdf, double currentWidth) const;
+    void draw_pdf(WPainter &painter, double delta, cbool IsExportingPdf, double currentWidth) const;
 
     unsigned insert_pdf(QByteArray &pos, const PointSettable *point);
 
@@ -133,13 +122,13 @@ inline void frompdf::copy_pdf(const frompdf &src, frompdf &dest)
 
 inline void frompdf::translation_pdf(const double x, const double y)
 {
-    translation_pdf(QPointF(x, y));
+    translation_pdf(PointF(x, y));
 }
 
-force_inline void frompdf::draw_pdf(QPainter &painter, const double delta, cbool IsExportingPdf, double currentWidth) const
+force_inline void frompdf::draw_pdf(WPainter &painter, const double delta, cbool IsExportingPdf, double currentWidth) const
 {
     int k, len_img;
-    QRectF size;
+    RectF size;
     const Pdf *pdf;
     const auto len = this->m_image.length();
 
@@ -158,7 +147,7 @@ force_inline void frompdf::draw_pdf(QPainter &painter, const double delta, cbool
     for(auto i = 0; i < len; ++i){
         pdf = &this->m_image.at(i);
         len_img = pdf->img.length();
-        size = QRectF(pdf->topLeft*delta, QSizeF(x, y));
+        size = RectF(pdf->topLeft*delta, QSizeF(x, y));
 
         for(k = 0; k < len_img; k++){
             const auto &img = pdf->img.at(k);

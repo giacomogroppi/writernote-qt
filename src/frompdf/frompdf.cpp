@@ -15,7 +15,7 @@
 #include "utils/threadcount.h"
 #include "core/WFile.h"
 
-void frompdf::translation_pdf(const QPointF &point)
+void frompdf::translation_pdf(const PointF &point)
 {
     for(auto &ref : m_image){
         ref.topLeft += point;
@@ -27,7 +27,7 @@ frompdf::frompdf()
 }
 
 bool frompdf::load_pdf(
-        const QList<QString>        &path,
+        const WListFast<QString>        &path,
         QMap<load_res_pdf, uchar>       &index,
         datastruct                  &data)
 {
@@ -65,10 +65,10 @@ frompdf::load_res_pdf frompdf::load_pdf(
     return load_from_row_pdf(arr, clear, true, 0, data);
 }
 
-QList<QString> frompdf::get_name_pdf(int count)
+WListFast<QString> frompdf::get_name_pdf(int count)
 {
     int i;
-    QList<QString> res;
+    WListFast<QString> res;
     for(i = 0; i < count; i ++){
         res.append(frompdf::getName_pdf(i));
     }
@@ -92,8 +92,8 @@ frompdf::load_res_pdf frompdf::load_pdf(const QByteArray &path_writernote_file, 
 
 frompdf::load_res_pdf frompdf::load_pdf(WZipReaderSingle &reader, int len, datastruct &data)
 {
-    QList<QByteArray> arr;
-    QList<QString> name;
+    WListFast<QByteArray> arr;
+    WListFast<QString> name;
     int i;
     frompdf::load_res_pdf res;
     WZip *zip = reader.get_zip();
@@ -150,10 +150,10 @@ frompdf::load_res_pdf frompdf::load_from_row_pdf(
     W_ASSERT(IndexPdf == 0);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QList<Poppler::Page *> page;
+    WListFast<Poppler::Page *> page;
 #endif
 
-    QList<convertImg *> conv;
+    WListFast<convertImg *> conv;
     const int countThread = threadCount::count();
 
     if(clear)
@@ -245,7 +245,7 @@ frompdf::load_res_pdf frompdf::load_from_row_pdf(
     return load_res_pdf::ok;
 }
 
-frompdf::load_res_pdf frompdf::save_pdf(const QList<QString>   &path,
+frompdf::load_res_pdf frompdf::save_pdf(const WListFast<QString>   &path,
                                 const QByteArray    &path_writernote_file)
 {
     frompdf::load_res_pdf res;
@@ -319,7 +319,7 @@ err:
 
 void frompdf::adjast_pdf(const uchar indexPdf)
 {
-    m_image.operator[](indexPdf).topLeft = QPointF(0, 0);
+    m_image.operator[](indexPdf).topLeft = PointF(0, 0);
 }
 
 unsigned frompdf::insert_pdf(QByteArray             &pos,
@@ -341,7 +341,7 @@ unsigned frompdf::insert_pdf(QByteArray             &pos,
         pdf.topLeft = *point;
     }
     else{
-        pdf.topLeft = QPointF(0.0, 0.0);
+        pdf.topLeft = PointF(0.0, 0.0);
     }
 
     this->m_image.append(pdf);

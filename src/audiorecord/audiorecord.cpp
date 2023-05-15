@@ -12,10 +12,10 @@
 #include "utils/setting_define.h"
 #include "testing/memtest.h"
 
-AudioRecord::AudioRecord(QObject *parent,
+AudioRecord::AudioRecord(WObject *parent,
                          std::function<void(const QString &)> error,
                          std::function<void(int)> durationChange)
-    : QObject(parent)
+    : WObject(parent)
     , _error(error)
     , _durationChange(durationChange)
 {
@@ -23,7 +23,7 @@ AudioRecord::AudioRecord(QObject *parent,
     m_captureSession.setRecorder(recorder);
     m_captureSession.setAudioInput(new QAudioInput(this));
 
-    QObject::connect(recorder, &QMediaRecorder::durationChanged, this, &AudioRecord::updateProgress);
+    WObject::connect(recorder, &QMediaRecorder::durationChanged, this, &AudioRecord::updateProgress);
 }
 
 void AudioRecord::updateProgress(qint64 duration)

@@ -38,7 +38,7 @@ public:
             this->withPdf = true;
         }
 #define DATAPAINT_DEFINEREST \
-    .pen = QPen(), \
+    .pen = WPen(), \
     .lastPoint = Point()
     };
 
@@ -84,7 +84,7 @@ inline TabletUtils::TabletUtils(WPainter &painter, const std::function<bool()> &
     }
 }
 
-inline constexpr QPainter &TabletUtils::getPainter()
+inline constexpr WPainter &TabletUtils::getPainter()
 {
     return *this->_painter;
 }
@@ -100,7 +100,7 @@ inline double TabletUtils::pressureToWidth(double val)
     return val * 10 + 1;
 }
 
-inline constexpr void TabletUtils::setPainter(QPainter &painter)
+inline constexpr void TabletUtils::setPainter(WPainter &painter)
 {
     W_ASSERT(painter.isActive());
     this->_painter = &painter;

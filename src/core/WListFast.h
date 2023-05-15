@@ -81,6 +81,8 @@ public:
     const_iterator cEnd()   const noexcept { test(); return const_iterator(nullptr); }
     const_iterator begin() const noexcept { test(); return const_iterator(nullptr); }
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
+
+    constexpr int indexOf(const int i) const noexcept;
 };
 
 

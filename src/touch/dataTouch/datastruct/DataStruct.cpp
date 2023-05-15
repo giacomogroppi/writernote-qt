@@ -1,5 +1,5 @@
 #include "DataStruct.h"
-#include <QList>
+#include "core/WListFast.h"
 #include <QDebug>
 #include "core/core.h"
 #include "sheet/style_struct.h"
@@ -33,7 +33,7 @@ void DataStruct::changeZoom(double zoom,
     (void)this->getFirstPageVisible();
 }
 
-void DataStruct::increaseZoom(const double delta, const QSize &size, QPointF &res)
+void DataStruct::increaseZoom(const double delta, const QSize &size, PointF &res)
 {
     this->_zoom += delta;
     this->adjustAll(size, res);
@@ -41,7 +41,7 @@ void DataStruct::increaseZoom(const double delta, const QSize &size, QPointF &re
     this->_pageVisible = -1;
 }
 
-void DataStruct::drawIfInside(const QRect &area)
+void DataStruct::drawIfInside(const Rect &area)
 {
     int i = this->getFirstPageVisible();
 
@@ -57,7 +57,7 @@ void DataStruct::drawIfInside(const QRect &area)
 
 DataStruct::DataStruct()
 {
-    _last_translation = QPointF(0., 0.);
+    _last_translation = PointF(0., 0.);
     _zoom = 1.;
 }
 
@@ -73,7 +73,7 @@ void DataStruct::reset_touch()
 {
     _page.clear();
     _pageVisible = -1;
-    _pointFirstPage = QPointF(0, 0);
+    _pointFirstPage = PointF(0, 0);
     _zoom = 1.;
 }
 
@@ -112,9 +112,9 @@ void DataStruct::copy(const DataStruct &src, DataStruct &dest)
  * di quanto basta.
  *
 */
-void DataStruct::adjustHeight(cdouble height, QPointF& translateTo)
+void DataStruct::adjustHeight(cdouble height, PointF& translateTo)
 {
-    const QPointF point = this->getPointFirstPageNoZoom();
+    const PointF point = this->getPointFirstPageNoZoom();
     uchar not_used ff = 0;
     double y = biggery();
 
@@ -141,9 +141,9 @@ void DataStruct::adjustHeight(cdouble height, QPointF& translateTo)
  * controllo che siano fuori, in caso contrario si fa il return di false e
  * bisogna rifare il pixmap
 */
-void DataStruct::adjustWidth(cdouble width, QPointF& translatoTo)
+void DataStruct::adjustWidth(cdouble width, PointF& translatoTo)
 {
-    const QPointF point = this->getPointFirstPage();
+    const PointF point = this->getPointFirstPage();
     double biggerX = biggerx();
     bool not_used f;
     cdouble x = point.x();
@@ -172,34 +172,34 @@ void DataStruct::adjustWidth(cdouble width, QPointF& translatoTo)
 */
 void DataStruct::adjustAll(uint width,
                            uint height,
-                           QPointF& res)
+                           PointF& res)
 {
     res = {0., 0.};
     adjustWidth(width, res);
     adjustHeight(height, res);
 }
 
-void DataStruct::adjustAll(const QSize &size, QPointF& res)
+void DataStruct::adjustAll(const QSize &size, PointF& res)
 {
     this->adjustAll(size.width(), size.height(), res);
 }
 
 void DataStruct::restoreLastTranslation(const int heightView)
 {
-    if(_last_translation == QPointF(0, 0))
+    if(_last_translation == PointF(0, 0))
         return;
 
     DataStruct::inverso(_last_translation);
 
     scala_all(_last_translation, heightView);
 
-    _last_translation = QPointF(0, 0);
+    _last_translation = PointF(0, 0);
 }
 
-void DataStruct::scala_all(const QPointF &point, const int heightView)
+void DataStruct::scala_all(const PointF &point, const int heightView)
 {
     constexpr double prec = .00005;
-    if(un(point == QPointF(0, 0)))
+    if(un(point == PointF(0, 0)))
         return;
 
     W_ASSERT(_pointFirstPage.x() + point.x() - prec <= 0.);
@@ -226,9 +226,9 @@ void DataStruct::scala_all(const QPointF &point, const int heightView)
 
 /* the list can be not order */
 void DataStruct::MovePoint(
-        const QVector<int>  &pos,
+        const WVector<int>  &pos,
         cint                pageIndex,
-        const QPointF       &translation)
+        const PointF       &translation)
 {
     Page &pageRef = at_mod(pageIndex);
     for(const auto &index : qAsConst(pos)){
@@ -238,7 +238,7 @@ void DataStruct::MovePoint(
 }
 
 void DataStruct::removePointIndex(
-        QVector<int>    &pos,
+        WVector<int>    &pos,
         cint            __page,
         cbool           __isOrder)
 {
@@ -267,7 +267,7 @@ void DataStruct::removePointIndex(
 }
 
 void DataStruct::removePointIndex(
-        QList<QVector<int> >    &pos,
+        WListFast<WVector<int> >    &pos,
         cint                    base,
         cbool                   __isOrder)
 {
@@ -303,13 +303,13 @@ void DataStruct::moveToPage(int newPage)
 {
     const int range = this->get_range_visible();
 
-    this->setPointFirstPage(QPointF(0., - at(newPage).minHeight()));
+    this->setPointFirstPage(PointF(0., - at(newPage).minHeight()));
 
     W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
     W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
 
     if(WCommonScript::debug_enable()){
-        const auto not_used point = this->adjustPoint(QPointF(0., 0.));
+        const auto not_used point = this->adjustPoint(PointF(0., 0.));
         const auto not_used index = this->whichPage(point);
         qDebug() << newPage << index << this->getPointFirstPage() << get_range_visible();
         W_ASSERT(index == newPage);

@@ -1,8 +1,8 @@
 #include "WPool.h"
 #include "utils/WCommonScript.h"
 
-WPool::WPool(QObject *parent)
-    : QObject(parent)
+WPool::WPool(WObject *parent)
+    : WObject(parent)
     , _priority(0)
     , _active_thread(0)
 {
@@ -34,7 +34,7 @@ void WPool::addTask(WTask *task)
     W_ASSERT(WCommonScript::contains(_tasks, task) == 0);
     this->_tasks.push_back(task);
 
-    QObject::connect(task, &WTask::finished,
+    WObject::connect(task, &WTask::finished,
                      this, &WPool::threadFinish);
 }
 

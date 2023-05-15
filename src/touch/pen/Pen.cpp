@@ -2,11 +2,11 @@
 
 #include <utility>
 
-Pen::Pen(QObject *parent,
+Pen::Pen(WObject *parent,
          std::function<int ()> getTime,
-         std::function<void(const QPointF &)> objectMove,
-         QColor &color,
-         QPen &pen)
+         std::function<void(const PointF &)> objectMove,
+         colore_s &color,
+         WPen &pen)
     : PenMethod(
         [&](double press) -> pressure_t {
             return Pen::getSize(press);

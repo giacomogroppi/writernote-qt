@@ -13,7 +13,7 @@ WPainter::WPainter(WImage *img)
   UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:imageSize];
 }
 
-void WPainter::drawLine(const QPointF &p1, const QPointF &p2)
+void WPainter::drawLine(const PointF &p1, const PointF &p2)
 {
   const double x1 = p1.x();
   const double y1 = p1.y();

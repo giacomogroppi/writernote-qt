@@ -6,7 +6,7 @@ class StrokeLine final : public Stroke
 {
 private:
     struct StrokeLineData{
-        QPointF pt1, pt2;
+        PointF pt1, pt2;
         pressure_t press;
     } _data;
 
@@ -20,16 +20,16 @@ private:
 public:
     StrokeLine();
 
-    void draw(QPainter &painter, cbool is_rubber, cint page, QPen &pen, cdouble prop) const;
+    void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const;
     int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const;
-    bool is_inside(const QRectF &rect, double precision) const;
+    bool is_inside(const RectF &rect, double precision) const;
 
 #   define stroke_append_default (-1.)
     void append(const Point &point, pressure_t pressure);
     size_t createControll() const final;
 
-    QRect getBiggerPointInStroke() const;
-    bool isInside(const QRectF &rect) const;
+    Rect getBiggerPointInStroke() const;
+    bool isInside(const RectF &rect) const;
 
     int save(WZipWriterSingle &file) const final;
 
@@ -47,7 +47,7 @@ public:
 
     [[nodiscard]] bool isEmpty() const;
 
-    void scale(const QPointF &offset);
+    void scale(const PointF &offset);
 
     void preappend(int) final {};
 
@@ -57,7 +57,7 @@ public:
     static bool cmp(const Stroke &stroke1, const Stroke &stroke2);
     static void copy(const Stroke &src, Stroke &dest);
 
-    static StrokeLine *make(const QPointF& pt1, const QPointF& pt2, const StrokeNormal &s);
+    static StrokeLine *make(const PointF& pt1, const PointF& pt2, const StrokeNormal &s);
     int type() const final;
 
 

@@ -133,11 +133,11 @@ bool Stroke::operator!=(const Stroke &other) const
 }
 
 void set_press(
-                            QPen &pen,
+                            WPen &pen,
                             const pressure_t press,
                             const double prop,
                             cbool is_rubber,
-                            const QColor &color)
+                            const colore_s &color)
 {
     pen.setWidth(TabletUtils::pressureToWidth(press / deltaPress) * prop);
     if (un(is_rubber)) {
@@ -168,9 +168,9 @@ void Stroke::setColor(const colore_s &color)
     this->_metadata.color = color;
 }
 
-QColor Stroke::getColor(double division) const
+colore_s Stroke::getColor(double division) const
 {
-    return this->_metadata.color.toQColor(division);
+    return this->_metadata.color.tocolore_s(division);
 }
 
 void Stroke::setMetadata(int posizione_audio, const colore_s &color)

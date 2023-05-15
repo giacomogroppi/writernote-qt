@@ -25,7 +25,7 @@ static void ctrlThread(DataPrivateMuThread *data, int create)
 {
 #ifdef DEBUGINFO
     int i, count;
-    QVector<int> tmp;
+    WVector<int> tmp;
 
     for(i = 0; i < create - 1; i++){
         if(data[i].to != data[i+1].from)
@@ -39,8 +39,8 @@ static void ctrlThread(DataPrivateMuThread *data, int create)
         }
     }
 #else
-    Q_UNUSED(data);
-    Q_UNUSED(create);
+    (void)(data);
+    (void)(create);
 #endif
 }
 

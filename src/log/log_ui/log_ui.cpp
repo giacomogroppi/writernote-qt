@@ -17,8 +17,8 @@
 
 static WMutex mutex;
 
-log_ui::log_ui(QObject *parent, const QByteArray &positionForLog)
-    : QObject(parent)
+log_ui::log_ui(WObject *parent, const QByteArray &positionForLog)
+    : WObject(parent)
     , _positionLog(positionForLog)
 {
     this->loadData();

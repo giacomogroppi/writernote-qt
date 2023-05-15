@@ -20,6 +20,8 @@ public:
 
     bool operator==(const WByteArray &other) const;
 
+    static WByteArray fromRawData(const char *data, int size);
+
     class iterator{
     private:
         char *array;

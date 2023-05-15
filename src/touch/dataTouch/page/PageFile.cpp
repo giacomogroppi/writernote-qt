@@ -1,9 +1,9 @@
+#include <memory>
 #include "PageFile.h"
 #include "core/WReadZip.h"
 #include "datawrite/source_read_ext.h"
 #include "Page.h"
 #include "core/WZipWriterMulti.h"
-#include <QImage>
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 
@@ -42,7 +42,7 @@ int PageFile::load_ver_2(Page &_page, WZipReaderSingle &reader)
 {
     constexpr int ver_stroke = 2;
     int err, i, len_stroke;
-    QByteArray arr;
+    WByteArray arr;
     size_t size;
 
     if(reader.read_object(len_stroke) < 0)
@@ -70,7 +70,7 @@ int PageFile::load_ver_2(Page &_page, WZipReaderSingle &reader)
         char _raw[size];
         if(reader.read_by_size(_raw, size) < 0)
             return ERROR;
-        arr = QByteArray::fromRawData((cchar *)_raw, size);
+        arr = WByteArray::fromRawData((cchar *)_raw, size);
 
         _page._imgDraw.loadFromData(arr, "PNG");
     }else{

@@ -1,6 +1,6 @@
 #include "memtest.h"
-#include <QList>
-#include <QVector>
+#include "core/WListFast.h"
+#include "core/WVector.h"
 #include "string.h"
 #include "pthread.h"
 #include "core/WMutexLocker.h"
@@ -17,12 +17,12 @@ struct mem_info
 };
 
 static WMutex _mem_mutex;
-static QList<mem_info> *_mem;
+static WListFast<mem_info> *_mem;
 
 void __init__ initMem(void)
 {
     qDebug() << "Memtest enable";
-    _mem = new QList<mem_info>();
+    _mem = new WListFast<mem_info>();
 }
 
 static void print_mem_info(const mem_info *mem)
@@ -103,7 +103,7 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
 {
     int i;
     const mem_info *tmp;
-    QList<mem_info> &__mem = *_mem;
+    WListFast<mem_info> &__mem = *_mem;
     int res = 0;
     QString msg;
 

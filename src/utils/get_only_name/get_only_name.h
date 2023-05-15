@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <QString>
+#include "core/WString.h"
 
 class get_only_name
 {

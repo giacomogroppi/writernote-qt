@@ -20,7 +20,7 @@ struct point_old_ver_7{
 
     size_t createControll() const;
     bool isIdUser() const;
-    QPointF toQPointF(const double delta) const;
+    PointF toPointF(const double delta) const;
 };
 
 struct point_last{
@@ -52,8 +52,8 @@ int xmlstruct::loadbinario_0(WZip &zip)
         bool isIdUser() const;
     };
 
-    QList<double> pos_foglio;
-    QList<point_last> point;
+    WListFast<double> pos_foglio;
+    WListFast<point_last> point;
     WZipReaderSingle reader(&zip, 0);
     int i, len;
     uint k;
@@ -120,8 +120,8 @@ int xmlstruct::loadbinario_1(class WZip &zip)
     double valoretemp;
     WZipReaderSingle reader(&zip, 0);
 
-    QList<point_last> __tmp;
-    QList<double> pos_foglio;
+    WListFast<point_last> __tmp;
+    WListFast<double> pos_foglio;
 
     if(!zip.openFileInZip(NAME_BIN))
         return ERROR;
@@ -161,7 +161,7 @@ int xmlstruct::loadbinario_1(class WZip &zip)
 }
 
 
-static void scaleAll(QList<point_last> &point, const QPointF &translation)
+static void scaleAll(WListFast<point_last> &point, const PointF &translation)
 {
     int i;
     cint len = point.length();
@@ -174,9 +174,9 @@ static void scaleAll(QList<point_last> &point, const QPointF &translation)
     }
 }
 
-static QPointF bigger(const QList<point_last> &point)
+static PointF bigger(const WListFast<point_last> &point)
 {
-    QPointF max(0.0, 0.0);
+    PointF max(0.0, 0.0);
     uint i;
     const point_last *ref;
     const uint len = point.length();
@@ -192,10 +192,10 @@ static QPointF bigger(const QList<point_last> &point)
     return max;
 }
 
-static void adjastPDF(QList<point_last> &point, QList<double> &pos_foglio)
+static void adjastPDF(WListFast<point_last> &point, WListFast<double> &pos_foglio)
 {
     uint i, len;
-    const QPointF currentSize = bigger(point);
+    const PointF currentSize = bigger(point);
     const double CorrectProportions = double(Page::getHeight()) / double(Page::getWidth());
     const uint lenPage = pos_foglio.length();
 
@@ -213,9 +213,9 @@ static void adjastPDF(QList<point_last> &point, QList<double> &pos_foglio)
     }
 }
 
-static void adjastZoom(QList<point_last> &point, QList<double> &pos_foglio)
+static void adjastZoom(WListFast<point_last> &point, WListFast<double> &pos_foglio)
 {
-    const QPointF big = bigger(point);
+    const PointF big = bigger(point);
     const double Width = Page::getWidth();
     const double delta = Width / big.x();
 
@@ -240,7 +240,7 @@ static void adjastZoom(QList<point_last> &point, QList<double> &pos_foglio)
 
 static int old_which_sheet(
         const point_last    &point,
-        QVector<Page>         &ListPage)
+        WVector<Page>         &ListPage)
 {
     const Page *page;
     uint counterPage, len;
@@ -274,14 +274,14 @@ static void toVersion7(point_old_ver_7 &to, point_last &from)
 */
 void xmlstruct::decode0(
         Document                    *data,
-        QList<struct point_last>    &point,
-        QList<double>               &pos_foglio)
+        WListFast<struct point_last>    &point,
+        WListFast<double>               &pos_foglio)
 {
     const point_last firstPoint = point.takeFirst();
     const int lenPage           = pos_foglio.length();
-    const QPointF translation(firstPoint.m_x, firstPoint.m_y);
+    const PointF translation(firstPoint.m_x, firstPoint.m_y);
 
-    QList<QList<point_old_ver_7>> pointForAppend;
+    WListFast<WListFast<point_old_ver_7>> pointForAppend;
 
     int i = 0, counterPage;
 
@@ -293,7 +293,7 @@ void xmlstruct::decode0(
     /* create the sheet */
     for(counterPage = 0; counterPage <= lenPage; counterPage ++){
         data->newPage(n_style::white);
-        pointForAppend.append(QList<point_old_ver_7> ());
+        pointForAppend.append(WListFast<point_old_ver_7> ());
     }
 
     W_ASSERT(pointForAppend.length() == data->lengthPage());
@@ -318,7 +318,7 @@ void xmlstruct::decode0(
     xmlstruct::decode1(data, pointForAppend);
 }
 
-void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__page)
+void xmlstruct::decode1(Document *doc, WListFast<WListFast<struct point_old_ver_7>> &__page)
 {
     int counterPage;
     cint lenPage = __page.length();
@@ -329,7 +329,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         for(int counterPoint = 0; counterPoint < __page.at(counterPage).length(); counterPoint ++){
-            QList<point_old_ver_7> &ListPrivate = __page.operator[](counterPage);
+            WListFast<point_old_ver_7> &ListPrivate = __page.operator[](counterPage);
             std::shared_ptr<StrokeNormal> stroke(new StrokeNormal);
             int id;
 
@@ -361,7 +361,7 @@ void xmlstruct::decode1(Document *doc, QList<QList<struct point_old_ver_7>> &__p
         }
     }
 
-    doc->_pointFirstPage = QPointF(0.0, 0.0);
+    doc->_pointFirstPage = PointF(0.0, 0.0);
 }
 
 /** versione 7 */
@@ -370,7 +370,7 @@ int xmlstruct::loadbinario_2(class WZip &zip)
     size_t controll, newControll;
     int i, len, lenPage, counterPage;
     struct point_old_ver_7 temp_point;
-    QList<QList<point_old_ver_7>> pointAppend;
+    WListFast<WListFast<point_old_ver_7>> pointAppend;
     double init[2];
     WZipReaderSingle reader(&zip, 0);
 
@@ -381,7 +381,7 @@ int xmlstruct::loadbinario_2(class WZip &zip)
     /* point first page */
     if(reader.read_object(init) < 0)
         return ERROR;
-    this->_doc->setPointFirstPage(QPointF(init[0], init[1]));
+    this->_doc->setPointFirstPage(PointF(init[0], init[1]));
 
     /* page len */
     if(reader.read_object(lenPage) < 0)
@@ -392,7 +392,7 @@ int xmlstruct::loadbinario_2(class WZip &zip)
             return ERROR;
 
         /* we add a new page */
-        pointAppend.append(QList<point_old_ver_7> ());
+        pointAppend.append(WListFast<point_old_ver_7> ());
 
         for(i = 0; i < len; i++){
             if(reader.read_object(temp_point) < 0)
@@ -436,7 +436,7 @@ int xmlstruct::loadbinario_2(class WZip &zip)
     /* point first page */
     if(reader.read_object(init) < 0)
         return ERROR;
-    this->_doc->setPointFirstPage(QPointF(init[0], init[1]));
+    this->_doc->setPointFirstPage(PointF(init[0], init[1]));
 
     /* page len */
     if(reader.read_object(lenPage) < 0)
