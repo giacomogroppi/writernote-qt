@@ -1,4 +1,5 @@
 #include "Directory.h"
+#include "core/WString.h"
 #include <filesystem>
 
 Directory::Directory(const WByteArray &path)
@@ -31,7 +32,7 @@ WList<File> Directory::getAllFile(const WByteArray &path)
     Directory dir(path);
 
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-        ret.append(File(entry.path().string()));
+        ret.append(File(WByteArray(entry.path().c_str())));
     }
 
     return ret;

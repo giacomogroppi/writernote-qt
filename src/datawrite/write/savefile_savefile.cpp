@@ -4,7 +4,6 @@
 #include "frompdf/frompdf.h"
 #include "currenttitle/document.h"
 #include "core/WZipCommon.h"
-#include <QFile>
 
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
@@ -19,7 +18,7 @@ static size_t savefile_get_size_file(const Document *doc)
     s += sizeof(int);               // version
     s += sizeof(int);               // ver_stroke
     s += sizeof(int);               // audio
-    s += sizeof(int) + doc->audio_position_path.length();
+    s += sizeof(int) + doc->audio_position_path.size();
     s += sizeof(unsigned);          // len_img
     s += sizeof(unsigned);          // len_pdf
 

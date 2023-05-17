@@ -5,7 +5,6 @@
 #include "dataread/readlistarray.h"
 #include <time.h>
 #include <stdlib.h>
-#include <QFile>
 
 #if (defined(DEBUG_CORE) || defined(DEBUGINFO)) && defined(CLOUD)
 TestingCore::TestingCore(MainWindow *__parent)

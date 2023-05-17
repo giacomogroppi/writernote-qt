@@ -3,6 +3,7 @@
 #include "touch/multi_thread_data.h"
 #include "touch/rubber/Rubber.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
+#include "core/WRgb.h"
 
 constexpr bool rubber_debug = false;
 
@@ -459,7 +460,7 @@ bool RubberMethod::is_image_not_null(const Page *page,
     for (i = 0; i < delta + int(xmax - xmin); i++) {
         for (j = 0; j < delta + int(ymax - ymin); j++) {
             const Point target = Point(x + i, y + j) * PROP_RESOLUTION;
-            const QRgb pix = data.pixel(target);
+            const WRgb pix = data.pixel(target);
 
             //WDebug(rubber_debug, name << "pixel" << pix);
 

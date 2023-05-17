@@ -1,22 +1,20 @@
 #pragma once
 
 #include "Scheduler/WObject.h"
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-# include <QAudioRecorder>
-#else
-# include <QMediaCaptureSession>
-# include <QMediaFormat>
-# include <QMediaRecorder>
-# include <QAudioInput>
-# include <QAudioDevice>
-#endif
+#ifdef USE_QT
+#include <QMediaCaptureSession>
+#include <QMediaFormat>
+#include <QMediaRecorder>
+#include <QAudioInput>
+#include <QAudioDevice>
 #include <QUrl>
 #include <QFile>
+#endif // USE_QT
 #include "utils/WCommonScript.h"
+#include "core/WString.h"
 
 class AudioRecord : public WObject
 {
-    Q_OBJECT
 private:
     std::function<void(const WString &)> _error;
     std::function<void(int)> _durationChange;
@@ -36,22 +34,18 @@ public:
     void pauseRecord();
     void stopRecording();
 
-    QMediaRecorder::Error errors() const;
-
     void setOutputLocation(const WString &path);
 
-    qint64 getCurrentTime();
+    unsigned long getCurrentTime();
 
     const WString getPath() const;
 
-private slots:
-    void updateProgress(qint64 duration);
-    void displayErrorMessage();
+
+    DEFINE_LISTENER(displayErrorMessage());
+    DEFINE_LISTENER(updateProgress(unsigned long duration));
 private:
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QAudioRecorder *recorder;
-#else
+#ifdef USE_QT
     QMediaCaptureSession m_captureSession;
     QMediaRecorder *recorder;
 #endif
@@ -59,53 +53,25 @@ private:
     friend class audioqualityoption;
 };
 
+#if defined(USE_QT)
 inline bool AudioRecord::isRecording() const
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    return this->recorder->state() == QMediaRecorder::RecordingState;
-#else
     return this->recorder->recorderState() == QMediaRecorder::RecordingState;
-#endif
 }
 
 inline bool AudioRecord::isPauseRecording() const
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    return this->recorder->state() == QMediaRecorder::PausedState;
-#else
     return this->recorder->recorderState() == QMediaRecorder::PausedState;
-#endif
 }
 
 inline bool AudioRecord::isStopped() const
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    return recorder->state() == QMediaRecorder::StoppedState;
-#else
     return recorder->recorderState() == QMediaRecorder::StoppedState;
-#endif
 }
 
 inline void AudioRecord::startRecord()
 {
     const auto path = this->getPath();
-
-#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-
-    this->m_captureSession.audioInput()->setDevice(QVariant("").value<QAudioDevice>());
-
-    QMediaFormat format;
-    {
-        format.setFileFormat(QMediaFormat::FileFormat::MPEG4);
-        format.setAudioCodec(QMediaFormat::AudioCodec::MP3);
-    }
-    recorder->setMediaFormat(format);
-    recorder->setAudioSampleRate(44100);
-    recorder->setAudioBitRate(64000);
-    recorder->setAudioChannelCount(1);
-
-    recorder->setEncodingMode(QMediaRecorder::ConstantBitRateEncoding);
-#endif
 
     QFile::remove(path);
     W_ASSERT(this->recorder->outputLocation().toLocalFile() == path);
@@ -152,3 +118,4 @@ inline const WString AudioRecord::getPath() const
 {
     return this->recorder->outputLocation().toLocalFile();
 }
+#endif // USE_QT

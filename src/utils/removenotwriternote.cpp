@@ -8,9 +8,9 @@ void removeNotWriternote::exe(WListFast<WString> &ref)
     int i;
     const auto ext = qstr("." APP_EXT);
 
-    for(i = 0; i < ref.length(); i++){
+    for(i = 0; i < ref.size(); i++){
         if(ref.at(i).indexOf(ext) == -1){
-            ref.removeAt(i);
+            ref.remove(i);
             i--;
         }
     }

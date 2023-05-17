@@ -23,10 +23,10 @@ public:
      * alla lista di WByteArray
 */
     static unsigned char read(const WListFast<WString> &list_name, zip_t *zip_file,
-                     WListFast<WString> &arr, cbool clear);
+                     WListFast<WByteArray> &arr, cbool clear);
 
     static unsigned char read(const WListFast<WString> &list_name, WZip &zip,
-                      WListFast<WString> &arr, cbool clear);
+                      WListFast<WByteArray> &arr, cbool clear);
 };
 
 

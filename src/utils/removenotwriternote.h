@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common_def.h"
+#include "core/WString.h"
 
 class removeNotWriternote
 {

@@ -164,7 +164,7 @@ int xmlstruct::loadbinario_1(class WZip &zip)
 static void scaleAll(WListFast<point_last> &point, const PointF &translation)
 {
     int i;
-    cint len = point.length();
+    cint len = point.size();
     point_last *ref;
 
     for(i = 0; i< len; i++){
@@ -179,7 +179,7 @@ static PointF bigger(const WListFast<point_last> &point)
     PointF max(0.0, 0.0);
     uint i;
     const point_last *ref;
-    const uint len = point.length();
+    const uint len = point.size();
 
     for(i = 0; i < len; i++ ){
         ref = &point.at(i);
@@ -197,17 +197,17 @@ static void adjastPDF(WListFast<point_last> &point, WListFast<double> &pos_fogli
     uint i, len;
     const PointF currentSize = bigger(point);
     const double CorrectProportions = double(Page::getHeight()) / double(Page::getWidth());
-    const uint lenPage = pos_foglio.length();
+    const uint lenPage = pos_foglio.size();
 
     const double shouldBe = currentSize.x()*CorrectProportions*lenPage;
     const double tmp = shouldBe/currentSize.y();
 
-    len = point.length();
+    len = point.size();
     for(i = 0; i < len; i++){
         point.operator[](i).m_y *= tmp;
     }
 
-    len = pos_foglio.length();
+    len = pos_foglio.size();
     for(i = 0; i < len; i++){
         pos_foglio.operator[](i) *= tmp;
     }
@@ -222,7 +222,7 @@ static void adjastZoom(WListFast<point_last> &point, WListFast<double> &pos_fogl
     point_last *ref;
 
     uint i;
-    uint len = point.length();
+    uint len = point.size();
 
     for(i = 0; i < len; i++){
         ref = &point.operator[](i);
@@ -230,7 +230,7 @@ static void adjastZoom(WListFast<point_last> &point, WListFast<double> &pos_fogl
         ref->m_y *= delta;
     }
 
-    len = pos_foglio.length();
+    len = pos_foglio.size();
     for(i = 0; i < len; i++){
         pos_foglio.operator[](i) *= delta;
     }
@@ -244,7 +244,7 @@ static int old_which_sheet(
 {
     const Page *page;
     uint counterPage, len;
-    len = ListPage.length();
+    len = ListPage.size();
 
     for(counterPage = 0; counterPage < len; counterPage++){
         page = &ListPage.at(counterPage);
@@ -253,7 +253,7 @@ static int old_which_sheet(
         }
     }
 
-    Q_ASSERT(false);
+    W_ASSERT(false);
     return -1;
 }
 
@@ -278,7 +278,7 @@ void xmlstruct::decode0(
         WListFast<double>               &pos_foglio)
 {
     const point_last firstPoint = point.takeFirst();
-    const int lenPage           = pos_foglio.length();
+    const int lenPage           = pos_foglio.size();
     const PointF translation(firstPoint.m_x, firstPoint.m_y);
 
     WListFast<WListFast<point_old_ver_7>> pointForAppend;
@@ -298,7 +298,7 @@ void xmlstruct::decode0(
 
     W_ASSERT(pointForAppend.length() == data->lengthPage());
 
-    for(i = 0; i < point.length(); i++){
+    for(i = 0; i < point.size(); i++){
         point_last pp = point.at(i);
 
         pp.m_pressure *= 0.2;
@@ -321,14 +321,14 @@ void xmlstruct::decode0(
 void xmlstruct::decode1(Document *doc, WListFast<WListFast<struct point_old_ver_7>> &__page)
 {
     int counterPage;
-    cint lenPage = __page.length();
+    cint lenPage = __page.size();
 
-    if(doc->lengthPage() != __page.length()){
+    if(doc->lengthPage() != __page.size()){
         doc->newPage(doc->lengthPage());
     }
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
-        for(int counterPoint = 0; counterPoint < __page.at(counterPage).length(); counterPoint ++){
+        for(int counterPoint = 0; counterPoint < __page.at(counterPage).size(); counterPoint ++){
             WListFast<point_old_ver_7> &ListPrivate = __page.operator[](counterPage);
             std::shared_ptr<StrokeNormal> stroke(new StrokeNormal);
             int id;
@@ -339,12 +339,12 @@ void xmlstruct::decode1(Document *doc, WListFast<WListFast<struct point_old_ver_
                 stroke->setMetadata(tmp.m_posizioneaudio, tmp.m_color);
             }
 
-            for (; counterPoint < ListPrivate.length() and
+            for (; counterPoint < ListPrivate.size() and
                 ListPrivate.at(counterPoint).idtratto == id;
                 counterPoint ++) {
                 const point_old_ver_7 &tmpRef = ListPrivate.at(counterPoint);
 
-                Point TmpAppend;
+                PointF TmpAppend;
                 TmpAppend.rx() = tmpRef.m_x;
                 TmpAppend.ry() = tmpRef.m_y;
 

@@ -23,7 +23,7 @@ Document::~Document()
 {
 }
 
-void Document::scala_all(const PointF &delta, int heightView)
+void Document::scala_all(const PointF &delta, double heightView)
 {
     DataStruct::scala_all(delta, heightView);
     fromimage::move_img(delta);
@@ -37,7 +37,7 @@ void Document::repositioning()
     DataStruct::setZoom(1.);
     DataStruct::setPageVisible(-1);
 
-    const PointF point = -this->getPointFirstPageNoZoom();
+    const PointF point = this->getPointFirstPageNoZoom() * -1.;
 
     Document::scala_all(point, INT_MAX);
 }
@@ -119,13 +119,13 @@ void Document::adjustAll(unsigned w, unsigned h)
     Document::scala_all(res, static_cast<int>(h));
 }
 
-void Document::increaseZoom(double delta, const WSize &size)
+void Document::increaseZoom(double delta, const WSizeF &size)
 {
     PointF res;
 
     DataStruct::increaseZoom(delta, size, res);
 
-    Document::scala_all(res, size.height());
+    Document::scala_all(res, size.getHeight());
 }
 
 void Document::controllForRepositioning()

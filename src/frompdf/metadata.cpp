@@ -7,7 +7,7 @@ static inline void copy_double(const PointF &point, double *data);
 frompdf::load_res_pdf frompdf::save_metadata_pdf(WZipWriterSingle &writer)
 {
     double pos[2];
-    const auto len = m_image.length();
+    const auto len = m_image.size();
 
     for(auto i = 0; i < len; i++){
         const Pdf &pdf = this->m_image.at(i);

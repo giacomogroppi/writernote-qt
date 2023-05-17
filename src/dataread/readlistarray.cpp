@@ -11,7 +11,7 @@ unsigned char readListArray::read(const WListFast<WString> &list_name,
     if(clear)
         list_arr.clear();
 
-    for(i = 0; i < list_name.length(); i++){
+    for(i = 0; i < list_name.size(); i++){
         arr.clear();
         const WString &ref = list_name.at(i);
         if(xmlstruct::readFile(zip_file, arr, false, ref, false) != OK)
@@ -32,7 +32,7 @@ unsigned char readListArray::read(const WListFast<WString> &list_name, WZip &zip
     if(clear)
         list_arr.clear();
 
-    for(i = 0; i < list_name.length(); i++){
+    for(i = 0; i < list_name.size(); i++){
         arr.clear();
         const WString &ref = list_name.at(i);
 

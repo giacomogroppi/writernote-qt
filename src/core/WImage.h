@@ -10,6 +10,9 @@
 
 #include "core/WByteArray.h"
 #include "RectF.h"
+#include "WString.h"
+#include "WRgb.h"
+#include "Point.h"
 #include <iostream>
 
 enum WImageType {
@@ -38,7 +41,7 @@ public:
     [[nodiscard]] size_t get_size_in_file() const;
     [[nodiscard]] size_t save_and_size(WByteArray &arr) const;
 
-    bool loadFromData(const WByteArray &data, const char *data);
+    bool loadFromData(const WByteArray &data, const char *formact);
 
     int height() const;
     int width() const;
@@ -58,6 +61,8 @@ public:
 #endif // USE_QT
 
     friend class WPainter;
+
+    WRgb pixel(const Point &point) const;
 };
 
 #ifdef USE_QT

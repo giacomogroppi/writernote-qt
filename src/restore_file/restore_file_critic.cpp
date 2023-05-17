@@ -1,5 +1,4 @@
 #include "restore_file_critic.h"
-#include <QFile>
 #include "dataread/xmlstruct.h"
 #include "datawrite/savefile.h"
 

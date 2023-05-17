@@ -47,7 +47,7 @@ public:
     void increaseZoom(double delta, const WSizeF &size);
     void adjustAll(unsigned w, unsigned h);
     void adjustHeight(cdouble height);
-    void scala_all(const PointF& delta, int heightView) override;
+    void scala_all(const PointF& delta, double heightView) override;
     void repositioning();
 
     static void copy(const Document &src, Document &dest);

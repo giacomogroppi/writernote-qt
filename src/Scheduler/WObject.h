@@ -86,10 +86,6 @@ private:
 public:
     explicit WObject(WObject *parent);
     virtual ~WObject();
-
-    //W_EMITTABLE_0(positionChanged);
-    //W_EMITTABLE_1(positionOpt, int);
-    //W_EMITTABLE_2(positione_cambiata, int, int);
 };
 
 #endif //WRITERNOTE_WOBJECT_H

@@ -1,6 +1,6 @@
 #include "style_struct.h"
 #include "utils/setting_define.h"
-#include <QSettings>
+#include "core/WOptionSettings.h"
 
 #define DEFAULTN 40
 #define DEFAULTTHICKNESS 1
@@ -10,17 +10,17 @@ void style_struct::loadFromByte(const WByteArray &arr)
     style_struct_S tmp;
     int i, len;
 
-    len = arr.length() / sizeof(tmp);
+    len = arr.size() / sizeof(tmp);
 
     for(i=0; i<len; ++i){
-        memcpy(&tmp, arr.mid(i*sizeof(tmp), (i+1)*sizeof(tmp)), sizeof(tmp));
+        memcpy(&tmp, arr.mid(i*sizeof(tmp), (i+1)*sizeof(tmp)).constData(), sizeof(tmp));
         this->style.append(tmp);
     }
 }
 
 void style_struct::setDefault(style_struct_S &ref)
 {
-    ref.colore.fromColor(Qt::black);
+    ref.colore = color_black;
     ref.nx = ref.ny = DEFAULTN;
     ref.thickness = DEFAULTTHICKNESS;
 }
@@ -28,7 +28,7 @@ void style_struct::setDefault(style_struct_S &ref)
 void style_struct::saveInArray(WByteArray &arr)
 {
     int i, len;
-    len = this->style.length();
+    len = this->style.size();
     for(i=0; i<len; ++i){
         const char * ref = (const char *) at(i);
         arr.append(ref, sizeof(style_struct_S));
@@ -38,34 +38,36 @@ void style_struct::saveInArray(WByteArray &arr)
 style_struct::style_struct()
 {
     WByteArray arr;
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_STYLE);
+    WOptionSettings settings;
+    settings.begin();
 
-    default_val = setting.value(KEYDEFAULTSTYLE, 0).toInt();
-    arr = setting.value(KEYSTYLE, "").toByteArray();
+    default_val = settings.value(KEYDEFAULTSTYLE, 0).toInt().first;
+    arr = settings.value(KEYSTYLE, WByteArray("")).toByteArray().first;
 
     this->loadFromByte(arr);
 
-    setting.endGroup();
+    settings.save();
 }
 
 void style_struct::save()
 {
     WByteArray arr;
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_STYLE);
+    WOptionSettings settings;
+    settings.begin();
     saveInArray(arr);
-    setting.setValue(KEYSTYLE, arr);
-    setting.setValue(KEYDEFAULTSTYLE, this->default_val);
-    setting.endGroup();
+
+    settings.setValue(KEYSTYLE, arr);
+    settings.setValue(KEYDEFAULTSTYLE, this->default_val);
+
+    settings.save();
 }
 
 void style_struct::saveDefault(const int index)
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_STYLE);
-    setting.setValue(KEYDEFAULTSTYLE, index);
-    setting.endGroup();
+    WOptionSettings settings;
+    settings.begin();
+    settings.setValue(KEYDEFAULTSTYLE, index);
+    settings.save();
 }
 
 void style_struct::createNew(const WString &name)

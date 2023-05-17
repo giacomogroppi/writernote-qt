@@ -5,6 +5,7 @@
 #include "core/WList.h"
 #include "core/Rect.h"
 #include "core/WListFast.h"
+#include "core/RectF.h"
 #include <memory>
 
 class Stroke;
@@ -48,7 +49,7 @@ private:
     WListFast<std::shared_ptr<Stroke>> m_stroke;
 
     void single(const WListFast<std::shared_ptr<Stroke>> &from, WListFast<std::shared_ptr<Stroke>> &append_data);
-    Rect get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> & stroke);
+    RectF get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> & stroke);
 };
 
 inline bool copy::isSomeThingCopy() const

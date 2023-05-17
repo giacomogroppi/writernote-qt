@@ -16,10 +16,15 @@ public:
     const char *constData() const;
     size_t size() const;
     void append(char data);
+    void append(const char *data, int size = -1);
     char at(int i) const;
+    void clear() noexcept;
+
+    WByteArray mid(int from, int to) const;
 
     bool operator==(const WByteArray &other) const;
     WByteArray &operator+(const WByteArray &other) const;
+    WByteArray &operator+=(const WByteArray &other);
 
     static WByteArray fromRawData(const char *data, int size);
 

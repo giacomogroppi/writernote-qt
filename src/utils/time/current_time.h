@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "core/WString.h"
 
 class WTime {
 public:
@@ -8,7 +9,7 @@ public:
 
     static WTime now ();
 
-    std::string toString();
+    WString toString();
 };
 
 class WDate {
@@ -17,5 +18,5 @@ public:
 
     static WDate now();
 
-    std::string toString();
+    WString toString();
 };

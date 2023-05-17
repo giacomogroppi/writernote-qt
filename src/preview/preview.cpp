@@ -8,7 +8,7 @@
 #include "touch/TabletUtils.h"
 #include "core/Rect.h"
 
-void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int width)
+void preview::get(WPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
     WPainter painter;
     const double size_orizzontale = doc.biggerx();
@@ -18,7 +18,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
     auto getPositionAudio = []() { return 0; };
 
     // we you only one page obviously
-    const auto visibleArea = Rect{Page::getResolutionSize()};
+    const auto visibleArea = RectF{Page::getResolutionSize().castTo<double>()};
 
     TabletUtils loader (painter, isPlay, getPositionAudio, delta, Optional<Laser>(), doc, true, false, visibleArea);
 
@@ -36,7 +36,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
     if(doc.isEmpty())
         return;
 
-    ref.fill(Qt::white);
+    ref.fill(color_white);
 
     painter.begin(&ref);
     W_ASSERT(painter.isActive());
@@ -47,7 +47,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
 
 }
 
-bool preview::get(QPixmap &ref, cbool withPdf,
+bool preview::get(WPixmap &ref, cbool withPdf,
                   const WByteArray &path, const int height, const int width)
 {
     Document doc;

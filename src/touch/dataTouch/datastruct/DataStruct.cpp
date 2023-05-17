@@ -32,7 +32,7 @@ void DataStruct::changeZoom(double zoom,
     (void)this->getFirstPageVisible();
 }
 
-void DataStruct::increaseZoom(const double delta, const WSize &size, PointF &res)
+void DataStruct::increaseZoom(const double delta, const WSizeF &size, PointF &res)
 {
     this->_zoom += delta;
     this->adjustAll(size, res);
@@ -169,8 +169,8 @@ void DataStruct::adjustWidth(cdouble width, PointF& translatoTo)
  * the function consider the fact that the
  * height of one sheet is bigger than the width
 */
-void DataStruct::adjustAll(uint width,
-                           uint height,
+void DataStruct::adjustAll(double width,
+                           double height,
                            PointF& res)
 {
     res = {0., 0.};
@@ -178,7 +178,7 @@ void DataStruct::adjustAll(uint width,
     adjustHeight(height, res);
 }
 
-void DataStruct::adjustAll(const WSize &size, PointF& res)
+void DataStruct::adjustAll(const WSizeF &size, PointF& res)
 {
     this->adjustAll(size.getWidth(), size.getHeight(), res);
 }
@@ -195,7 +195,7 @@ void DataStruct::restoreLastTranslation(const int heightView)
     _last_translation = PointF(0, 0);
 }
 
-void DataStruct::scala_all(const PointF &point, const int heightView)
+void DataStruct::scala_all(const PointF &point, double heightView)
 {
     constexpr double prec = .00005;
     if(un(point == PointF(0, 0)))

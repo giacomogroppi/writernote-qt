@@ -87,7 +87,7 @@ public:
     void removeAt(unsigned indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
-    void append(const WList<std::shared_ptr<Stroke>>& stroke, int m_pos_ris);
+    void append(const WListFast<std::shared_ptr<Stroke>> &stroke, int m_pos_ris);
 
     int  appendStroke(const std::shared_ptr<Stroke>&); /* return value: the page of the point */
     void appendStroke(const std::shared_ptr<Stroke>& stroke, int page);
@@ -168,16 +168,16 @@ public:
 
 protected:
     void controllForRepositioning(PointF &translateTo);
-    void increaseZoom(double delta, const WSize &size, PointF& res);
-    void adjustAll(uint width, uint height, PointF &res);
-    void adjustAll(const WSize &size, PointF &res);
+    void increaseZoom(const double delta, const WSizeF &size, PointF& res);
+    void adjustAll(double width, double height, PointF &res);
+    void adjustAll(const WSizeF &size, PointF &res);
     void adjustHeight(cdouble height, PointF& translatoTo);
     void adjustWidth(cdouble width, PointF& translatoTo);
 
     void setZoom(double newZoom);
     void setPageVisible(int page);
 
-    virtual void scala_all(const PointF &point, int heightView = -1);
+    virtual void scala_all(const PointF &point, double heightView = -1);
 };
 
 inline void DataStruct::triggerVisibility(cdouble viewSize)
@@ -459,7 +459,7 @@ inline int DataStruct::whichPage(const PointF &point) const
 
 /* the function automatically launches the drawing for the pages
  * to which data has been added*/
-inline void DataStruct::append(const WList<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
+inline void DataStruct::append(const WListFast<std::shared_ptr<Stroke>> &stroke, int m_pos_ris)
 {
     WListFast<int> trigger;
 

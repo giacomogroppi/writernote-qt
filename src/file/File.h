@@ -17,17 +17,20 @@ public:
      *  getName() == name
     */
     explicit File(const WByteArray &name);
-    explicit File(const std::string &path);
 
     ~File() = default;
 
     enum OpenMode {
         readOnly,
-        writeOnly
+        writeOnly,
+        append
     };
 
     bool open(enum OpenMode openMode);
+    int write(const WByteArray &data);
     bool close();
+
+    size_t size() const;
 
     /*
      * requires true

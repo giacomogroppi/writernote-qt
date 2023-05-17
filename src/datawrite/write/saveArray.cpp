@@ -11,13 +11,13 @@ int savefile::moveFileIntoZip(
 {
     WByteArray tmp;
 
-    if(WFile::readFile(tmp, pathFile) < 0){
+    if(WFile::readFile(tmp, pathFile.constData()) < 0){
         return ERROR;
     }
 
     W_ASSERT(static_cast<size_t>(tmp.size()) == xmlstruct::get_size_file(pathFile));
 
-    if(writer.write(tmp.constData(), tmp.size(), nameInZip))
+    if(writer.write(tmp.constData(), tmp.size(), nameInZip.constData()))
         return ERROR;
 
     return OK;

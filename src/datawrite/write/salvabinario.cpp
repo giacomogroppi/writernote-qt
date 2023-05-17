@@ -130,7 +130,7 @@ int savefile::salvabinario(cbool saveImg)
     const auto sizeFile = savefile_get_size_binary(*_doc, saveImg, seek);
 
     writer.init(nullptr, 0, sizeFile);
-    qDebug() << "size" << sizeFile;
+    WDebug(true, "Size: " << sizeFile);
 
     /* first point */
     static_assert(sizeof(init) == sizeof(double) * 2);

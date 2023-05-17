@@ -79,7 +79,7 @@ int copy::selection(
         int                         __flags,
         const PointF               &pointTouch)
 {
-    Rect sizeData;
+    RectF sizeData;
     PointF tmpPoint;
     int lenList, i;
 

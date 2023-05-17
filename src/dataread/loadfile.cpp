@@ -67,7 +67,7 @@ int xmlstruct::readFile(zip_t *fileZip, WByteArray &arr,
     data = WMalloc(size);
     SOURCE_READ_GOTO(file, data, size);
 
-    arr.append((cchar *)data, size);
+    arr.append((const char *)data, size);
 
     WFree(data);
 

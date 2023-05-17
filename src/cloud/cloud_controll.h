@@ -3,12 +3,12 @@
 #include "struct_user.h"
 #include "request_type.h"
 #include "error_type.h"
-#include <QTcpSocket>
 #include "Scheduler/WObject.h"
 
 #include "url.h"
-
 #ifdef CLOUD
+
+#include <QTcpSocket>
 
 /*
  * time waiting for responde. [int ms]
