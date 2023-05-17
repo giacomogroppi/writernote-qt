@@ -93,11 +93,12 @@ int DataPrivateCountThread(int newThread)
 
     mutex_thread_write.lock();
 
-    if(likely(threadLast - newThread > 0)){
+    if (threadLast - newThread > 0) {
         ret = newThread;
         goto release;
     }
-    if(!threadLast){
+
+    if (!threadLast) {
         ret = 0;
         goto release;
     }

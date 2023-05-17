@@ -17,7 +17,7 @@ public:
      *  getName() == name
     */
     explicit File(const WByteArray &name);
-    File(const std::string &path);
+    explicit File(const std::string &path);
 
     ~File() = default;
 

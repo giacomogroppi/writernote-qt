@@ -10,12 +10,16 @@
 
 template<typename T>
 class RectTemplate {
+private:
+    PointTemplate<T> _topLeft;
+    PointTemplate<T> _bottomRight;
 public:
     constexpr RectTemplate() = default;
     constexpr RectTemplate(const RectTemplate<T> &other);
-    constexpr explicit RectTemplate(const PointTemplate<T> &topLeft, const PointTemplate<T> &bottomRight);
-    constexpr explicit RectTemplate(const WSizeTemplate<T> &size);
+    constexpr RectTemplate(const PointTemplate<T> &topLeft, const PointTemplate<T> &bottomRight);
+    constexpr RectTemplate(const WSizeTemplate<T> &size);
     constexpr RectTemplate(T xTopLeft, T yTopLeft, T xBottomRight, T yBottomRight);
+    constexpr RectTemplate(const PointTemplate<T>&point, const WSizeTemplate<T> &size);
 
     constexpr RectTemplate addY(T y) const;
 
@@ -29,6 +33,22 @@ public:
     constexpr RectTemplate<T> &bottom(T amount);
     constexpr RectTemplate<T> &right(T amount);
 
+    RectTemplate<T> setHeight(T height);
+    RectTemplate<T> setWidth(T width);
+
+    RectTemplate<T> setY(T y);
+    RectTemplate<T> setX(T x);
+
+    void translate(const T &x, const T& y);
+
+    void setTopLeft(const PointTemplate<T> &topLeft);
+    void setTopRight(const PointTemplate<T> &topRight);
+    void setBottomLeft(const PointTemplate<T> &bottomLeft);
+    void setBottomRight(const PointTemplate<T> &bottomRight);
+
+    T y() const;
+    T x() const;
+
     template <class Z>
     constexpr RectTemplate<Z> &castTo() const;
 
@@ -40,9 +60,13 @@ public:
     constexpr bool isNull() const;
 
     constexpr RectTemplate<T>& operator=(const RectTemplate<T> &other);
-    constexpr RectTemplate<T>& operator*(T val);
-    constexpr RectTemplate<T>& operator/(T val);
-    constexpr RectTemplate<T>& operator+(const PointTemplate<T> &other);
+    constexpr RectTemplate<T>& operator*(T val) const;
+    constexpr RectTemplate<T>& operator/(T val) const;
+    constexpr RectTemplate<T>& operator+(const PointTemplate<T> &other) const;
+
+    constexpr RectTemplate<T> operator*=(double d);
+    constexpr RectTemplate<T> operator/=(double d);
+    constexpr RectTemplate<T> operator+=(const RectTemplate<T> &other);
 
     constexpr bool operator==(const RectTemplate &other) const;
 };

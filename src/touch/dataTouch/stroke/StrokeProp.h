@@ -37,7 +37,7 @@ public:
     [[nodiscard]] typeof(_prop) &PropRef() { return _prop; };
 
 #ifdef DEBUGINFO
-    [[nodiscard]] QString toString() const noexcept;
+    [[nodiscard]] WString toString() const noexcept;
 #endif
 
 protected:
@@ -47,7 +47,7 @@ protected:
 
 
 #ifdef DEBUGINFO
-inline QString StrokeProp::toString() const noexcept
+inline WString StrokeProp::toString() const noexcept
 {
     switch (_prop) {
         case COMPLEX_NORMAL:

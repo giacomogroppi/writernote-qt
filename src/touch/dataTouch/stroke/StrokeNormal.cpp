@@ -17,8 +17,8 @@ StrokeNormal::~StrokeNormal()
 
 int StrokeNormal::save(WZipWriterSingle &file) const
 {
-    const int len_point     = this->_point.length();
-    const int len_pressure  = this->_pressure.length();
+    const int len_point     = this->_point.size();
+    const int len_pressure  = this->_pressure.size();
 
     if (Stroke::save(file))
         return ERROR;
@@ -26,13 +26,13 @@ int StrokeNormal::save(WZipWriterSingle &file) const
     file.write_object(len_point);
     file.write_object(len_pressure);
 
-    for (const auto p : qAsConst(this->_pressure)) {
+    for (const auto p : std::as_const(this->_pressure)) {
         static_assert(sizeof(p) == sizeof(pressure_t));
         file.write_object(p);
     }
 
-    for (const auto p : qAsConst(this->_point )){
-        static_assert(sizeof(p) == sizeof(Point));
+    for (const auto &p : std::as_const(this->_point )){
+        static_assert(sizeof(p) == sizeof(PointF));
         file.write_object(p);
     }
 
@@ -54,13 +54,13 @@ int StrokeNormal::load_ver_1(WZipReaderSingle &reader, int len_point)
     };
 
     point_s_curr point;
-    Point tmp;
+    PointF tmp;
 
     for(i = 0; i < len_point; i++){
         if(reader.read_object(point) < 0)
             return ERROR;
 
-        tmp = Point(point._x, point._y);
+        tmp = PointF(point._x, point._y);
 
         _point.append(tmp);
         _pressure.append(point.press);
@@ -75,7 +75,7 @@ int StrokeNormal::load_ver_2(WZipReaderSingle &reader)
     int i;
     int len_press, len_point;
     pressure_t tmp;
-    Point point_append;
+    PointF point_append;
 
     if(reader.read_object(len_point) < 0)
         return ERROR;
@@ -162,7 +162,7 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
 
     if(i == 0){
         const auto &ref = this->getBiggerPointInStroke();
-        if(!ref.intersects(rect.toRect().castTo<int>()))
+        if(!ref.intersects(rect.toRect()))
             return -1;
     }
 
@@ -186,7 +186,7 @@ bool StrokeNormal::is_inside(const RectF &rect, double precision) const
 {
     {
         const auto &area = this->getBiggerPointInStroke();
-        if(!area.intersects(rect.castTo<int>())){
+        if(!area.intersects(rect)){
             return false;
         }
     }
@@ -216,10 +216,10 @@ size_t StrokeNormal::createControll() const
     return controll + Stroke::createControll();
 }
 
-Rect StrokeNormal::getBiggerPointInStroke() const
+RectF StrokeNormal::getBiggerPointInStroke() const
 {
     if (!Stroke::needToUpdateBiggerData()) {
-        return Stroke::getBiggerPointInStroke().castTo<int>();
+        return Stroke::getBiggerPointInStroke();
     }
 
     const auto b = StrokeNormal::getBiggerPointInStroke(this->_point.constBegin(),
@@ -230,7 +230,7 @@ Rect StrokeNormal::getBiggerPointInStroke() const
     return b;
 }
 
-bool StrokeNormal::isInsideBiggerData(const Rect &rect) const
+bool StrokeNormal::isInsideBiggerData(const RectF &rect) const
 {
     const auto &area = this->getBiggerPointInStroke();
     return area.intersects(rect);
@@ -238,10 +238,10 @@ bool StrokeNormal::isInsideBiggerData(const Rect &rect) const
 
 bool StrokeNormal::isInside(const RectF &rect) const
 {
-    if(!this->isInsideBiggerData(rect.toRect()))
+    if(!this->isInsideBiggerData(rect))
         return false;
 
-    for(const auto &ref : qAsConst(_point)){
+    for(const auto &ref : std::as_const(_point)){
         if (datastruct_isinside(rect, ref))
             return true;
     }
@@ -257,8 +257,8 @@ size_t StrokeNormal::getSizeInMemory() const
 size_t StrokeNormal::getSizeInFile() const
 {
     size_t s = 0;
-    cint len_pressure = _pressure.length();
-    cint len_point    = _point.length();
+    cint len_pressure = _pressure.size();
+    cint len_point    = _point.size();
 
     static_assert(sizeof(len_pressure) == sizeof(len_point));
     static_assert(sizeof(len_pressure) == 4);
@@ -292,12 +292,12 @@ int StrokeNormal::removeAt(int i)
 
     W_ASSERT(i < len);
 
-    if(this->_pressure.length() > 1){
+    if(this->_pressure.size() > 1){
         W_ASSERT(_pressure.length() == _point.length());
-        _pressure.removeAt(i);
+        _pressure.remove(i);
     }
 
-    _point.removeAt(i);
+    _point.remove(i);
     this->modify();
 
     return len < 2;
@@ -413,11 +413,11 @@ std::shared_ptr<StrokeNormal> StrokeNormal::split(int index)
 
     const auto original = index;
 
-    for (auto from = index; from < this->_point.length(); from ++) {
+    for (auto from = index; from < this->_point.size(); from ++) {
         ret->append(
                     _point.takeAt(original),
                     _pressure.takeAt(original)
-                    );
+        );
     }
 
     ret->setMetadata(this->getMetadata());
@@ -427,7 +427,7 @@ std::shared_ptr<StrokeNormal> StrokeNormal::split(int index)
 
 void StrokeNormal::force_pressure(pressure_t press)
 {
-    if(_pressure.length())
+    if(_pressure.size())
         _pressure.operator[](0) = press;
     else
         _pressure.append(press);

@@ -1,4 +1,5 @@
 #include "WTask.h"
+#include "Scheduler/WObject.h"
 
 WTask::WTask(WObject *parent)
     : WObject(parent)
@@ -7,5 +8,5 @@ WTask::WTask(WObject *parent)
 
 void WTask::run()
 {
-    emit this->finished(this);
+    W_EMIT_1(finished, this);
 }

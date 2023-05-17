@@ -5,7 +5,7 @@
 
 #include <QCryptographicHash>
 
-void toencrypy::getEcrypt(const QByteArray &arr, QByteArray &res)
+void toencrypy::getEcrypt(const WByteArray &arr, WByteArray &res)
 {
     QCryptographicHash dd(QCryptographicHash::Algorithm::Keccak_512);
 

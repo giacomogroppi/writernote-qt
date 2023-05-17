@@ -16,7 +16,7 @@ StrokeCircle::StrokeCircle()
 double StrokeCircle::distanceFromCenter(const PointF &point) const
 {
     using namespace WCommonScript;
-    return qSqrt(
+    return std::sqrt(
         Power(_data.x - point.x(), 2) +
         Power(_data.y - point.y(), 2)
                 );
@@ -24,8 +24,8 @@ double StrokeCircle::distanceFromCenter(const PointF &point) const
 
 int StrokeCircle::isInternal(double distance, double precision) const
 {
-    const auto raggio = qSqrt(_data.r);
-    const auto real_dist1 = qSqrt(distance);
+    const auto raggio = std::sqrt(_data.r);
+    const auto real_dist1 = std::sqrt(distance);
     return real_dist1 <= raggio + precision;
 }
 
@@ -38,16 +38,16 @@ bool StrokeCircle::oneSide(double inside, double outside, double prec) const
 void StrokeCircle::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop_) const
 {
     constexpr bool not_used debCircle = false;
-    Point point;
+    PointF point;
     PointF tmp;
     const auto press = _data.press;
     double y, x;
     cdouble prop = prop_ == PROP_RESOLUTION ? prop_ : 1.;
 
-    point = Point(_data.x, _data.y);
+    point = PointF(_data.x, _data.y);
 
     point = Page::at_translation(point, page);
-    tmp = point.toPointF(prop);
+    tmp = point * prop;
 
     WDebug(debCircle, "prop: " << prop);
 
@@ -119,7 +119,7 @@ bool StrokeCircle::is_inside(const RectF &area, double precision) const
     return internal and internal < 4;
 }
 
-void StrokeCircle::append(const Point &point, pressure_t pressure)
+void StrokeCircle::append(const PointF &point, pressure_t pressure)
 {
     (void)(pressure);
     _data.r = WCommonScript::distance(PointF(_data.x, _data.y), point);
@@ -151,15 +151,15 @@ int StrokeCircle::how_much_decrese() const
 std::shared_ptr<Stroke> StrokeCircle::makeNormal() const
 {
     double from, to;
-    Point tmp;
+    PointF tmp;
     pressure_t press;
-    WVector<Point> _pointLeft, _pointRigth;
+    WVector<PointF> _pointLeft, _pointRigth;
     std::shared_ptr<StrokeNormal> _to(new StrokeNormal);
 
     const auto appendToStroke = [&_to](
-            const WVector<Point> &point,
+            const WVector<PointF> &point,
             const pressure_t press) {
-        for (const auto &p : qAsConst(point)) {
+        for (const auto &p : std::as_const(point)) {
             _to->append(p, press);
         }
     };
@@ -180,9 +180,9 @@ std::shared_ptr<Stroke> StrokeCircle::makeNormal() const
 
         W_ASSERT(res1 >= 0.);
 
-        const double res2 = qSqrt(res1);                        // = mod(x)
+        const double res2 = std::sqrt(res1);                        // = mod(x)
 
-        tmp = Point(_data.x + res2, from);                   // = x + radius
+        tmp = PointF(_data.x + res2, from);                   // = x + radius
         _pointLeft.append(tmp);
 
         tmp.rx() = _data.x - res2;                               // = x - radius
@@ -219,7 +219,7 @@ bool StrokeCircle::operator==(const Stroke &other) const
     if (Stroke::operator!=(other))
         return false;
 
-    const StrokeCircle &tmp = dynamic_cast<const StrokeCircle &>(other);
+    const auto &tmp = dynamic_cast<const StrokeCircle &>(other);
 
     return  this->_data == tmp._data and
             Stroke::operator==(other);
@@ -235,16 +235,16 @@ int StrokeCircle::type() const
     return Stroke::COMPLEX_CIRCLE;
 }
 
-Rect StrokeCircle::getBiggerPointInStroke() const
+RectF StrokeCircle::getBiggerPointInStroke() const
 {
-    const auto topLeft = Point(_data.x - _data.r, _data.y - _data.r);
-    const auto bottomRight = Point(_data.x + _data.r, _data.y + _data.r);
-    return Rect(topLeft, bottomRight);
+    const auto topLeft = PointF(_data.x - _data.r, _data.y - _data.r);
+    const auto bottomRight = PointF(_data.x + _data.r, _data.y + _data.r);
+    return RectF(topLeft, bottomRight);
 }
 
 bool StrokeCircle::isInside(const RectF &rect) const
 {
-    if (this->getBiggerPointInStroke().intersects(rect.toRect()))
+    if (this->getBiggerPointInStroke().intersects(rect))
         return true;
     return this->is_inside(rect, 0);
 }
@@ -272,7 +272,7 @@ size_t StrokeCircle::getSizeInMemory() const
 
 size_t StrokeCircle::getSizeInFile() const
 {
-    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
+    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(unsigned char));
 
     return  sizeof(StrokeComplexCommon::current_ver) +
             sizeof(this->_data);

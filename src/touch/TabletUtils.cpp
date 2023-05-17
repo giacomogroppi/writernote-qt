@@ -33,7 +33,7 @@ void TabletUtils::drawForAudio()
     if(un(is_play and !_isExportingPdf)){
         // the idea is to trigger this view only when
         // the second has changed
-        if(likely(last_m_pos_ris != m_pos_ris)){
+        if(last_m_pos_ris != m_pos_ris){
             auto &l = (Document &)this->_doc;
             l.newViewAudio(m_pos_ris);
             last_m_pos_ris = m_pos_ris;
@@ -54,18 +54,17 @@ void TabletUtils::load()
     int lenPage                     = this->_doc.lengthPage();
     const PointF &PointFirstPage   = this->_doc.getPointFirstPageNoZoom();
     const auto zoom                 = this->getZoom();
-    const QSize sizeRect            = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
+    const WSizeF sizeRect            = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
 
     StrokePre &strokeToDraw = *__tmp;
 
     int counterPage;
 
-    _pen.setStyle(Qt::PenStyle::SolidLine);
-    core::painter_set_antialiasing(this->getPainter());
+    getPainter().setAntialeasing();
 
 #ifdef PDFSUPPORT
-    if(likely(withPdf))
-        data.draw_pdf(painter, dataPoint.m, dataPoint.IsExportingPdf, data.currentWidth());
+    if(_withPdf)
+        _doc.draw_pdf(getPainter(), _m, this->_isExportingPdf, _doc.currentWidth());
 #else
     (void)(_withPdf);
 #endif
@@ -113,8 +112,8 @@ constexpr bool TabletUtils::withPdf() const
 void singleLoad(
         WPainter        &painter,
         const WPixmap   &pix,
-        const QSize     &sizeRect,
-        const PointF   &PointFirstPage,
+        const WSizeF    &sizeRect,
+        const PointF    &PointFirstPage,
         cdouble         counterPage,
         cdouble         m)
 {
@@ -123,7 +122,7 @@ void singleLoad(
 
     y *= m;
 
-    RectF targetRect(PointF(x, y), sizeRect);
+    RectF targetRect(PointF(x, y), sizeRect.castTo<double>());
 
     painter.drawPixmap(targetRect, pix, pix.rect());
 }

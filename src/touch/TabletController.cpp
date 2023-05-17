@@ -12,21 +12,21 @@ TabletController::TabletController(WObject *parent,
                                    const std::function<int()> &getTimePlaying)
     : WObject{parent}
     , _doc(new Document)
-    , _isPlaying(isPlaying)
-    , _getTimePlaying(getTimePlaying)
     , _needUpdate(true)
     , _isDrawing(false)
+    , _isPlaying(isPlaying)
+    , _getTimePlaying(getTimePlaying)
 {
     auto objectMove = [this](const PointF &point) { this->objectMove(point); };
-    auto callUpdate = [this]() { emit this->onNeedRefresh(0, this->getDoc().lengthPage()); };
+    auto callUpdate = [this]() { W_EMIT_2(onNeedRefresh, 0, this->getDoc().lengthPage()); };
     auto getDoc = [this]() -> Document & { return this->getDoc(); };
 
     auto showProperty = [this] (const PointF &point, ActionProperty prop) {
-        emit this->onPropertyShow(point, prop);
+        W_EMIT_2(onPropertyShow, point, prop);
     };
 
     auto hideProperty = [this] () {
-        emit this->onPropertyHide();
+        W_EMIT_0(onPropertyHide);
     };
 
     this->_tools = {
@@ -118,7 +118,7 @@ void TabletController::checkCreatePage()
 {
     if (this->_doc->needToCreateNewSheet()) {
         this->_doc->newPage(n_style::square);
-        emit this->onNumberOfPageChanged(_doc->lengthPage());
+        W_EMIT_1(onNumberOfPageChanged, _doc->lengthPage());
     }
 }
 
@@ -127,7 +127,7 @@ void TabletController::touchBegin(const PointF &point, double pressure)
     checkCreatePage();
     const auto res = _currentTool->touchBegin(point, pressure, *_doc);
     if (res >= 0) {
-        emit onNeedRefresh(0, 1);
+        W_EMIT_2(onNeedRefresh, 0, 1);
         //emit onNeedRefresh(res, res + 1);
     }
 }
@@ -136,7 +136,7 @@ void TabletController::touchUpdate(const PointF &point, double pressure)
 {
     const auto res = _currentTool->touchUpdate(point, pressure, this->getDoc());
     if (res >= 0) {
-        emit onNeedRefresh(0, 1);
+        W_EMIT_2(onNeedRefresh, 0, 1);
 
 //        emit onNeedRefresh(res, res + 1);
     }
@@ -147,12 +147,12 @@ void TabletController::touchEnd(const PointF &point, double pressure)
     const auto res = _currentTool->touchEnd(point, *_doc);
     // da aggiustare
 
-    emit onNeedRefresh(0, 1);
+    W_EMIT_2(onNeedRefresh, 0, 1);
     return;
-    emit onNeedRefresh(
+    /*emit onNeedRefresh(
         res >= 0 ? res : 0,
         res >= 0 ? res + 1: this->getDoc().lengthPage()
-    );
+    );*/
 }
 
 void TabletController::selectColor(const colore_s &color)
@@ -177,7 +177,7 @@ void TabletController::setAndCallTool(Tools *tool)
             this->_tools._square->reset();
         }
 
-        emit onToolChanged();
+        W_EMIT_0(onToolChanged);
     }
 }
 
@@ -188,7 +188,7 @@ Document &TabletController::getDoc()
 
 void TabletController::selectType(int type)
 {
-    for (auto *t: qAsConst(this->_toolsContainer)) {
+    for (auto *t: std::as_const(this->_toolsContainer)) {
         if (t->getType() == type) {
             setAndCallTool(t);
             break;

@@ -36,7 +36,7 @@ private:
     void setDefault(style_struct_S &ref);
     void saveInArray(WByteArray & arr);
 public:
-    inline uint length() const {return style.size();}
+    inline auto length() const {return style.size();}
     style_struct();
 
     void save();

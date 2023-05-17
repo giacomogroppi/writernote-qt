@@ -13,7 +13,7 @@
 #include "testing/memtest.h"
 
 AudioRecord::AudioRecord(WObject *parent,
-                         std::function<void(const QString &)> error,
+                         std::function<void(const WString &)> error,
                          std::function<void(int)> durationChange)
     : WObject(parent)
     , _error(error)

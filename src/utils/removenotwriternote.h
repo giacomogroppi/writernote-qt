@@ -5,6 +5,6 @@
 class removeNotWriternote
 {
 public:
-    static void exe(WListFast<QString> &ref);
+    static void exe(WListFast<WString> &ref);
 };
 

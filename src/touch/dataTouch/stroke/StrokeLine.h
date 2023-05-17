@@ -25,10 +25,10 @@ public:
     bool is_inside(const RectF &rect, double precision) const;
 
 #   define stroke_append_default (-1.)
-    void append(const Point &point, pressure_t pressure);
+    void append(const PointF &point, pressure_t pressure);
     size_t createControll() const final;
 
-    Rect getBiggerPointInStroke() const;
+    RectF getBiggerPointInStroke() const;
     bool isInside(const RectF &rect) const;
 
     int save(WZipWriterSingle &file) const final;

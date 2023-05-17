@@ -139,7 +139,7 @@ void set_press(
                             cbool is_rubber,
                             const colore_s &color)
 {
-    pen.setWidth(TabletUtils::pressureToWidth(press / deltaPress) * prop);
+    pen.setWidthF(TabletUtils::pressureToWidth(press / deltaPress) * prop);
     if (un(is_rubber)) {
         const auto _press = pen.widthF() * deltaColorNull;
         pen.setWidthF(_press);
@@ -158,7 +158,7 @@ int Stroke::save(WZipWriterSingle &file) const
     return OK;
 }
 
-void Stroke::setAlfaColor(uchar alfa)
+void Stroke::setAlfaColor(unsigned char alfa)
 {
     _metadata.color.set_alfa(alfa);
 }
@@ -170,7 +170,13 @@ void Stroke::setColor(const colore_s &color)
 
 colore_s Stroke::getColor(double division) const
 {
-    return this->_metadata.color.tocolore_s(division);
+    auto c = colore_s {
+        this->_metadata.color
+    };
+
+    c.setAlfa(c.getAlfa() / division);
+
+    return c;
 }
 
 void Stroke::setMetadata(int posizione_audio, const colore_s &color)

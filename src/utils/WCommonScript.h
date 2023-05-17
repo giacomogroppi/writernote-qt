@@ -12,21 +12,19 @@
 
 #define BIT(bit) (1 << (bit-1))
 #define un(exp) __builtin_expect(!!(exp), false)
-#define likely(exp) __buildin_expect(!!(exp), true)
+#define likely(exp) __builtin_expect(!!(exp), true)
 #define force_inline inline __attribute__((always_inline))
 #define not_used __attribute__ ((__unused__))
 #define static_assert_type(val, should_be) static_assert(std::is_same<decltype(val), should_be>::value, #val " must be " #should_be)
-#define qstr QString
+#define qstr WString
 #define unused(expr) do { (void)(expr); } while (0)
 #include "touch/dataTouch/Point.h"
-#include <vector>
 #include <iostream>
-#include <list>
 
 #ifdef DEBUGINFO
-force_inline QString get_only_name(const char *name)
+force_inline WString get_only_name(const char *name)
 {
-    QString res = name;
+    WString res = name;
     int i;
     int from, to;
 
@@ -148,8 +146,6 @@ force_inline int is_order_vector(const std::vector<T> &list)
     for(i = 0; i < len - 1; i++){
         if(list.at(i) > list.at(i+1))
             return 0;
-        //if(list.at(i) > list.at(i+1))
-        //    return 0;
     }
 
     return 1;
@@ -205,21 +201,6 @@ inline void order_vector(std::vector<T> &list)
                 list.swapItemsAt(j, j + 1);
             }
         }
-    }
-}
-
-template <typename T>
-inline void order_multiple(std::vector<std::vector<T>> &list)
-{
-    int i, len = list.length();
-
-    for(i = 0; i < len; i++){
-        auto & __list = list.operator[](i);
-        order_vector(__list);
-    }
-
-    if(!is_order_multiple(list)){
-        std::abort();
     }
 }
 
@@ -590,8 +571,8 @@ inline constexpr bool WStrEqual(const char *s1, const char *s2)
  * //OVERVIEW:  objectEqual(a1, a2) have to return true if a1 == a2
  *              function will return true if the two list are equal
  * @requires !\exists( W a1, a2; a1 != a2; objectEqual(a1, a2) == true)
- * @ensure (l1.length() != l2.length()) ? \result == false :
- *                                      \exists(int i; 0 <= i && i < l1.length();
+ * @ensure (l1.length() != l2.size()) ? \result == false :
+ *                                      \exists(int i; 0 <= i && i < l1.size();
  *                                                  objectEqual(l1[i], l2[i]) == false
  *                                              ) ? \result == false : \result == true;
  * */

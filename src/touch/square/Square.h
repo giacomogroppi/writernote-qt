@@ -16,7 +16,6 @@ constexpr bool debugSquare = false;
 class Square: public WObject,
               public SquareMethod
 {
-    Q_OBJECT
 public:
     explicit Square(WObject *parent,
                     std::function<void()> hideProperty,

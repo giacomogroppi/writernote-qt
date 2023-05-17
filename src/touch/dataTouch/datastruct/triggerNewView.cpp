@@ -25,7 +25,7 @@ void __search_for_stroke(DataPrivateMuThread *data, int pos_audio, WVector<int> 
 
 void drawStroke(Page *page, WVector<int> &pos, int pos_audio)
 {
-    for(const auto &index : qAsConst(pos)){
+    for(const auto &index : std::as_const(pos)){
         const Stroke &stroke = page->atStroke(index);
         page->drawStroke(stroke, pos_audio);
     }
@@ -73,7 +73,7 @@ void DataStruct::newViewAudio(int newTime)
             ref.triggerRenderImage(newTime, true);
         }
     }
-    qDebug() << "Call with time" << newTime;
+    WDebug(true, "Call with time" << newTime);
 
     for(; index < len; index ++){
         extra.m_page = (Page *)&at(index);

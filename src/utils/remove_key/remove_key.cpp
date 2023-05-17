@@ -1,12 +1,12 @@
 #include "remove_key.h"
-#include <QSettings>
 #include "utils/setting_define.h"
+#include "core/WOptionSettings.h"
 
 void remove_key(const char *key, const char *group)
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(group);
+    WOptionSettings settings;
+    settings.begin();
 
-    setting.remove(key);
-    setting.endGroup();
+    settings.remove(key);
+    settings.save();
 }

@@ -93,7 +93,7 @@ void TestingCore::createDocument(Document *doc)
 }
 
 int TestingCore::createAndSave(
-        const QString   &pos,
+        const WString   &pos,
         Document        *doc)
 {
     if(!doc)
@@ -104,7 +104,7 @@ int TestingCore::createAndSave(
     return __tmp.savefile_check_file(true);
 }
 
-int TestingCore::createFile(const QByteArray &folder)
+int TestingCore::createFile(const WByteArray &folder)
 {
     QFile file(folder + "_tmp_write_test.txt");
     constexpr int len = (1024) * 4 * 128;
@@ -125,7 +125,7 @@ int TestingCore::createFile(const QByteArray &folder)
 
 int TestingCore::startTest()
 {
-    QByteArray path_test = "";
+    WByteArray path_test = "";
     if(createFile(path_test)){
         return 1;
     }

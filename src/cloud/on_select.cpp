@@ -24,7 +24,7 @@ static void show_log_in(cloud_ui *cloud, bool temp, struct struct_user *user){
     cloud->ui->button_log->setCheckable(temp);
 
     if(temp){
-        cloud->setWindowTitle((QString)NAME + " - log in");
+        cloud->setWindowTitle((WString)NAME + " - log in");
         cloud->ui->button_register->setChecked(false);
         cloud->ui->button_log->setChecked(true);
 
@@ -36,7 +36,7 @@ static void show_log_in(cloud_ui *cloud, bool temp, struct struct_user *user){
     cloud->ui->button_pass->setHidden(temp);
 
     if(user != NULL){
-        cloud->ui->edit_mail->setPlainText((QString)user->m_mail.m_mail);
+        cloud->ui->edit_mail->setPlainText((WString)user->m_mail.m_mail);
         cloud->ui->edit_pass->setPlainText(PASS_HIDE);
     }
 
@@ -93,7 +93,7 @@ void cloud_ui::on_button_register_clicked()
     this->ui->button_log->setChecked(false);
     this->ui->button_register->setChecked(true);
 
-    this->setWindowTitle((QString)NAME + " - register");
+    this->setWindowTitle((WString)NAME + " - register");
     this->ui->edit_repeat->setHidden(false);
     ui->label_repeat->setHidden(false);
 }

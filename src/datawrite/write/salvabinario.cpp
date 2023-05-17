@@ -150,7 +150,7 @@ int savefile::salvabinario(cbool saveImg)
     if(savefile_save_multithread_start(_doc, writer, seek, saveImg) < 0)
         return ERROR;
 
-    if(writer.commit_change(*_path, QByteArray(NAME_BIN)) < 0)
+    if(writer.commit_change(*_path, WByteArray(NAME_BIN)) < 0)
         return ERROR;
 
     return OK;

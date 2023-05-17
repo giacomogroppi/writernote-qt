@@ -14,6 +14,6 @@ enum downloadfile{
     ok
 };
 
-downloadfile dowloadfile(struct struct_user *, const char *namefile, QString &to);
+downloadfile dowloadfile(struct struct_user *, const char *namefile, WString &to);
 
 #endif // CLOUD

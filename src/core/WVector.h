@@ -5,6 +5,8 @@
 #ifndef WRITERNOTE_WVECTOR_H
 #define WRITERNOTE_WVECTOR_H
 
+#include <iostream>
+
 template <class T>
 class WVector {
 private:
@@ -15,6 +17,7 @@ private:
 public:
     WVector();
 
+    void append(const WVector<T> &other);
     void append(const T &data);
     const T& get(int i) const;
     int size() const;
@@ -28,6 +31,11 @@ public:
     const T& first() const;
     T& operator[](int index);
     bool isEmpty() const;
+    bool isOrder() const;
+    void order();
+    void insert(int index, const T& data);
+
+    const T* constData() const;
 
     class iterator{
     private:
@@ -51,8 +59,8 @@ public:
     public:
         explicit const_iterator(const T *data) : array(data), index(0) {  };
 
-        const T* operator->() const   { W_ASSERT(_e); return array[index]; };
-        const T &operator*() const    { W_ASSERT(_e); return array[index]; };
+        const T* operator->() const   { return array[index]; };
+        const T &operator*() const    { return array[index]; };
         constexpr bool operator==(const_iterator i) const         { return index == i.index; }
         constexpr bool operator!=(const_iterator i) const         { return index != i.index; }
         const_iterator &operator++()                              { index ++; return *this; }

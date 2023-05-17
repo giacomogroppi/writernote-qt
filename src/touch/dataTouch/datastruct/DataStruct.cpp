@@ -1,6 +1,5 @@
 #include "DataStruct.h"
 #include "core/WListFast.h"
-#include <QDebug>
 #include "core/core.h"
 #include "sheet/style_struct.h"
 #include "frompdf/frompdf.h"
@@ -33,15 +32,15 @@ void DataStruct::changeZoom(double zoom,
     (void)this->getFirstPageVisible();
 }
 
-void DataStruct::increaseZoom(const double delta, const QSize &size, PointF &res)
+void DataStruct::increaseZoom(const double delta, const WSize &size, PointF &res)
 {
     this->_zoom += delta;
     this->adjustAll(size, res);
-    this->triggerVisibility(size.height());
+    this->triggerVisibility(size.getHeight());
     this->_pageVisible = -1;
 }
 
-void DataStruct::drawIfInside(const Rect &area)
+void DataStruct::drawIfInside(const RectF &area)
 {
     int i = this->getFirstPageVisible();
 
@@ -115,13 +114,13 @@ void DataStruct::copy(const DataStruct &src, DataStruct &dest)
 void DataStruct::adjustHeight(cdouble height, PointF& translateTo)
 {
     const PointF point = this->getPointFirstPageNoZoom();
-    uchar not_used ff = 0;
+    unsigned char not_used ff = 0;
     double y = biggery();
 
     if(point.y() > 0.0){
         ff = 1;
         translateTo.setY( - point.y());
-        qDebug() << "Need to restore first Point" << point;
+        WDebug(true, "Need to restore first point" << point);
     }
     else if(y < height){
         ff = 2;
@@ -179,9 +178,9 @@ void DataStruct::adjustAll(uint width,
     adjustHeight(height, res);
 }
 
-void DataStruct::adjustAll(const QSize &size, PointF& res)
+void DataStruct::adjustAll(const WSize &size, PointF& res)
 {
-    this->adjustAll(size.width(), size.height(), res);
+    this->adjustAll(size.getWidth(), size.getHeight(), res);
 }
 
 void DataStruct::restoreLastTranslation(const int heightView)
@@ -208,7 +207,7 @@ void DataStruct::scala_all(const PointF &point, const int heightView)
     this->_pointFirstPage += point;
     this->_pageVisible = -1;
 
-    if(likely(heightView > 0)){
+    if(heightView > 0){
         this->triggerVisibility(heightView);
     }else{
         cint range = this->get_range_visible();
@@ -231,7 +230,7 @@ void DataStruct::MovePoint(
         const PointF       &translation)
 {
     Page &pageRef = at_mod(pageIndex);
-    for(const auto &index : qAsConst(pos)){
+    for(const auto &index : std::as_const(pos)){
         auto &stroke = pageRef.atStrokeMod(index);
         stroke.scale(translation);
     }
@@ -243,22 +242,22 @@ void DataStruct::removePointIndex(
         cbool           __isOrder)
 {
     Page *page = &at_mod(__page);
-    int i = pos.length() - 1;
+    int i = pos.size() - 1;
 
-    if(likely(__isOrder)){
+    if(__isOrder){
 
 #ifdef DEBUGINFO
         W_ASSERT(WCommonScript::is_order_vector(pos));
 #else
-        if(un(WCommonScript::is_order_vector(pos))){
+        if(!pos.isOrder()){
             NAME_LOG_EXT->write("List not order", log_ui::critic_error);
             /* in this case we need to order */
-            WCommonScript::order_vector(pos);
+            pos.order();
         }
 
 #endif
     }else{
-        WCommonScript::order_vector(pos);
+        pos.order();
     }
 
     for(; i >= 0; i --){
@@ -272,7 +271,7 @@ void DataStruct::removePointIndex(
         cbool                   __isOrder)
 {
     int i, lenList;
-    lenList = pos.length();
+    lenList = pos.size();
 
     for(i = 0; i < lenList; i++){
         removePointIndex(pos.operator[](i), base + i, __isOrder);
@@ -311,7 +310,7 @@ void DataStruct::moveToPage(int newPage)
     if(WCommonScript::debug_enable()){
         const auto not_used point = this->adjustPoint(PointF(0., 0.));
         const auto not_used index = this->whichPage(point);
-        qDebug() << newPage << index << this->getPointFirstPage() << get_range_visible();
+        WDebug(true, newPage << index << this->getPointFirstPage() << get_range_visible());
         W_ASSERT(index == newPage);
     }
 

@@ -12,9 +12,9 @@
 #define NAME_USER "USERNAME" /* saim form linux and windows */
 #include <QDir>
 
-static bool createTempFolder(const QString &path);
+static bool createTempFolder(const WString &path);
 
-static bool createTempFolder(const QString &path){
+static bool createTempFolder(const WString &path){
     if(!QDir(path).exists()){
         return QDir().mkdir(path);
     }
@@ -26,7 +26,7 @@ static bool createTempFolder(const QString &path){
  * the function does not check if the
  * folder to save the audio exists
 */
-QString get_path_no_controll()
+WString get_path_no_controll()
 {
     return get_path_application::exe();
 }

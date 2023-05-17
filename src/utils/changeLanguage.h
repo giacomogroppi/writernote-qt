@@ -3,12 +3,12 @@
 
 #include <QCoreApplication>
 
-class QString;
+class WString;
 
 class language_manager{
 public:
-    static QString loadLastLanguage();
-    static void saveCurrentLanguage(QString &language);
+    static WString loadLastLanguage();
+    static void saveCurrentLanguage(WString &language);
 
     static void setLanguage(QCoreApplication *app);
 };

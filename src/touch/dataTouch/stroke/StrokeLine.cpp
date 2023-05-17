@@ -22,8 +22,8 @@ void StrokeLine::draw(WPainter &painter,
     painter.setPen(pen);
     set_press(pen, this->_data.press, p, is_rubber, this->getColor(1.));
 
-    const auto _topLeft     = Page::at_translation(Point(this->_data.pt1), page).toPointF(prop);
-    const auto _bottomRight = Page::at_translation(Point(this->_data.pt2), page).toPointF(prop);
+    const auto _topLeft     = Page::at_translation(PointF(this->_data.pt1), page) * prop;
+    const auto _bottomRight = Page::at_translation(PointF(this->_data.pt2), page) * prop;
 
     painter.setPen(pen);
     painter.drawLine(_topLeft, _bottomRight);
@@ -80,7 +80,7 @@ bool StrokeLine::is_inside(const RectF &area, double precision) const
     return false;
 }
 
-void StrokeLine::append(const Point &point, pressure_t pressure)
+void StrokeLine::append(const PointF &point, pressure_t pressure)
 {
     using namespace WCommonScript;
     const auto dist1 = distance_not_square(_data.pt1, point);
@@ -88,9 +88,9 @@ void StrokeLine::append(const Point &point, pressure_t pressure)
 
     (void)(pressure);
 
-    if(dist1 > dist2){
+    if (dist1 > dist2) {
         _data.pt2 = point;
-    }else{
+    } else {
         _data.pt1 = point;
     }
 }
@@ -129,7 +129,7 @@ int StrokeLine::how_much_decrese() const
 
 void StrokeLine::makeNormalVertical(StrokeNormal *mergeTo, int from, int to) const
 {
-    Point tmp;
+    PointF tmp;
     W_ASSERT(_data.pt2.x() == _data.pt1.x());
     W_ASSERT(from <= to);
 
@@ -144,7 +144,7 @@ void StrokeLine::makeNormalVertical(StrokeNormal *mergeTo, int from, int to) con
 void StrokeLine::makeNormalGeneric(StrokeNormal *mergeTo, int from, int to) const
 {
     double m, p;
-    Point point;
+    PointF point;
 
     W_ASSERT(from <= to);
 
@@ -193,14 +193,14 @@ void StrokeLine::scale(const PointF &offset)
     this->_data.pt2 += offset;
 }
 
-Rect StrokeLine::getBiggerPointInStroke() const
+RectF StrokeLine::getBiggerPointInStroke() const
 {
-    return datastruct_rect(_data.pt1, _data.pt2).toRect();
+    return datastruct_rect(_data.pt1, _data.pt2);
 }
 
 bool StrokeLine::isInside(const RectF &rect) const
 {
-    if (!this->getBiggerPointInStroke().intersects(rect.toRect()))
+    if (!this->getBiggerPointInStroke().intersects(rect))
         return false;
     return this->is_inside(rect, 0.);
 }
@@ -275,7 +275,7 @@ int StrokeLine::type() const
 
 size_t StrokeLine::getSizeInFile() const
 {
-    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
+    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(unsigned char));
     static_assert(sizeof(this->_data) == (sizeof(PointF) * 2 + sizeof(pressure_t) + 4));
 
     return sizeof(StrokeComplexCommon::current_ver) +

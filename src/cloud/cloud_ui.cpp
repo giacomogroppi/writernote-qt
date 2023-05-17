@@ -32,7 +32,7 @@ cloud_ui::~cloud_ui()
     delete ui;
 }
 
-void cloud_ui::readyRead(QByteArray data, n_request::e_request last_command){
+void cloud_ui::readyRead(WByteArray data, n_request::e_request last_command){
     const char *temp = data.data();
     int return_command;
     memcpy(&return_command, temp, sizeof(int));

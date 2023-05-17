@@ -4,9 +4,9 @@
 #include "datawrite/savefile.h"
 
 restore_file_critic::n_err restore_file_critic::restore_file_direct(
-        const QByteArray &path_load,
-        const QByteArray &path_save,
-        std::function<void(const QString &)> showMessage)
+        const WByteArray &path_load,
+        const WByteArray &path_save,
+        std::function<void(const WString &)> showMessage)
 {
     Document cur;
 

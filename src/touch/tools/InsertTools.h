@@ -17,7 +17,7 @@ protected:
                 WPen &pen);
     virtual ~InsertTools() = default;
 
-    virtual uchar getAlfa() const = 0;
+    virtual unsigned char getAlfa() const = 0;
 
 public:
     virtual int touchBegin(const PointF& point, double size, class Document &doc);

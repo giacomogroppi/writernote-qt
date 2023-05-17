@@ -9,19 +9,19 @@ static struct{
     bool is_vertical;
 } line_data;
 
-void StrokeLineGenerator::is_near_line(cdouble m, double &max, cdouble q, const Point *point)
+void StrokeLineGenerator::is_near_line(double m, double &max, cdouble q, const PointF *point)
 {
     const auto x = point->x();
     const auto y = point->y();
     double res;
 
     if (line_data.is_vertical) {
-        res = qAbs(q - x);
+        res = std::abs(q - x);
         if (res > max) {
             max = res;
         }
     } else {
-        res = qAbs(x * m + q - y);
+        res = std::abs(x * m + q - y);
         if (res > max) {
             max = res;
         }
@@ -33,9 +33,9 @@ void StrokeLineGenerator::makeVertical(const StrokePre *from, StrokeLine &res)
     using namespace WCommonScript;
     const auto press = from->getPressure();
 
-    const Rect FL {
-        from->_point.first().toPoint(),
-        from->_point.last().toPoint()
+    const RectF FL {
+        from->_point.first(),
+        from->_point.last()
     };
 
     PointF TL = FL.topLeft();
@@ -86,7 +86,7 @@ std::shared_ptr<Stroke> StrokeLineGenerator::make(const StrokePre *from)
 
 force_inline void StrokeLineGenerator::model_line_adjust_m(double &m)
 {
-    const double mod = qAbs(m);
+    const double mod = std::abs(m);
     if (mod < 0.07) {
         m = 0;
     }
@@ -98,7 +98,7 @@ force_inline void StrokeLineGenerator::model_line_adjust_m(double &m)
 double StrokeLineGenerator::model_near(const StrokePre &stroke)
 {
     int segno_var_x, segno_var_y;
-    const Point *one, *two;
+    const PointF *one, *two;
     const auto &area = stroke.getFirstAndLast();
     auto b = stroke.constBegin();
     const auto e = stroke.constEnd();

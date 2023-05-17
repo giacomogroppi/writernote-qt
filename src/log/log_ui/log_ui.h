@@ -68,7 +68,7 @@ extern log_ui *NAME_LOG_EXT;
 #   define DEBUG_INFO_CALLER_MULTIPLE(caller) ,DEBUG_INFO_CALLER_SINGLE(caller)
 
 /* mode is "start" or "stop" */
-#   define DEBUG_INFO_CALL_CALLER_PRIVATE(caller, mode, thisFunction) LOG(QString(caller)+ " call " + QString(thisFunction) + " " + mode, log_ui::type_write::__caller)
+#   define DEBUG_INFO_CALL_CALLER_PRIVATE(caller, mode, thisFunction) LOG(WString(caller)+ " call " + WString(thisFunction) + " " + mode, log_ui::type_write::__caller)
 #   define DEBUG_INFO_CALL_CALLER(caller, thisFunction) DEBUG_INFO_CALL_CALLER_PRIVATE(caller, "start", thisFunction)
 #   define DEBUG_INFO_END_CALLER(caller, thisFunction) DEBUG_INFO_CALL_CALLER_PRIVATE(caller, "stop",thisFunction)
 

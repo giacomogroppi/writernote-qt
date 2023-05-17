@@ -26,6 +26,11 @@ public:
     void setSolidPattern();
 
     void setWidthF(double value);
+
+    enum WPenStyle {
+        DotLine
+    };
+    void setStyle(enum WPenStyle style);
 };
 
 

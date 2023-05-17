@@ -7,7 +7,6 @@
 
 typedef const int               cint;
 typedef const char              cchar;
-typedef const unsigned char     cuchar;
 typedef const unsigned int      cuint;
 typedef const double            cdouble;
 typedef const void              cvoid;

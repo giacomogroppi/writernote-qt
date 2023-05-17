@@ -7,6 +7,7 @@
 #include "touch/dataTouch/stroke/StrokePre.h"
 #include "LaserMethod.h"
 #include "touch/pen/Pen.h"
+#include "Scheduler/WTimer.h"
 
 class Laser : public WObject,
               public LaserMethod
@@ -17,7 +18,7 @@ private:
 
     WList<StrokePre> _stroke;
     std::function<void()> _callUpdate;
-    QTimer *_timer;
+    WTimer *_timer;
 
 public:
     explicit Laser(WObject *parent,
@@ -36,14 +37,14 @@ public:
 
     int getType() const final;
     static constexpr int type();
-private slots:
-    void endTimer();
 
+private:
+    void endTimer();
 };
 
 force_inline int Laser::length() const
 {
-    return _stroke.length();
+    return _stroke.size();
 }
 
 force_inline void Laser::append(const StrokePre &stroke)

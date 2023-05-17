@@ -1,8 +1,8 @@
 #include "Rubber.h"
 #include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
-#include <QSettings>
 #include "utils/setting_define.h"
+#include "core/WOptionSettings.h"
 
 constexpr auto not_used rubber_debug = false;
 
@@ -12,26 +12,26 @@ Rubber::Rubber(WObject *parent) :
 {
     this->reset();
 
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_RUBBER);
+    WOptionSettings settings;
+    settings.begin();
 
-    _size_gomma = setting.value(KEY_RUBBER_SIZE, DEFAULT_GOMMA_SIZE).toInt();
+    _size_gomma = settings.value(KEY_RUBBER_SIZE, DEFAULT_GOMMA_SIZE).toInt().first;
     _type_gomma = static_cast<RubberMethod::type_rubber>(
-            setting.value(KEY_RUBBER_TYPE, RubberMethod::type_rubber::total).toInt()
+            settings.value(KEY_RUBBER_TYPE, RubberMethod::type_rubber::total).toInt().first
     );
 
-    setting.endGroup();
+    settings.save();
 }
 
 Rubber::~Rubber()
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_RUBBER);
+    WOptionSettings settings;
+    settings.begin();
 
-    setting.setValue(KEY_RUBBER_SIZE, _size_gomma);
-    setting.setValue(KEY_RUBBER_TYPE, _type_gomma);
+    settings.setValue(KEY_RUBBER_SIZE, _size_gomma);
+    settings.setValue(KEY_RUBBER_TYPE, _type_gomma);
 
-    setting.endGroup();
+    settings.save();
 }
 
 int Rubber::getType() const
@@ -42,13 +42,13 @@ int Rubber::getType() const
 void Rubber::setRubberTotal()
 {
     this->_type_gomma = RubberMethod::type_rubber::total;
-    emit onRubberChange();
+    W_EMIT_0(onRubberChange);
 }
 
 void Rubber::setRubberPartial()
 {
     _type_gomma = RubberMethod::type_rubber::partial;
 
-    emit this->onRubberChange();
+    W_EMIT_0(onRubberChange);
 }
 

@@ -3,7 +3,7 @@
 #include "core/WString.h"
 #include "utils/WCommonScript.h"
 
-void removeNotWriternote::exe(WListFast<QString> &ref)
+void removeNotWriternote::exe(WListFast<WString> &ref)
 {
     int i;
     const auto ext = qstr("." APP_EXT);

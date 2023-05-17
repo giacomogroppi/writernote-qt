@@ -1,15 +1,16 @@
 #include "Square.h"
+
+#include <utility>
 #include "core/WPen.h"
 #include "core/WPainter/WPainter.h"
-#include <QDebug>
 
 Square::Square(WObject *parent,
                std::function<void()> hideProperty,
                std::function<void(const PointF& point, ActionProperty signal)> showProperty,
                std::function<Document &()> getDoc, std::function<void ()> callUpdate)
     : WObject(parent)
-    , SquareMethod(hideProperty, showProperty, getDoc)
-    , _callUpdate(callUpdate)
+    , SquareMethod(std::move(hideProperty), std::move(showProperty), std::move(getDoc))
+    , _callUpdate(std::move(callUpdate))
 {
 }
 

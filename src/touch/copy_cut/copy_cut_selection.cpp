@@ -35,13 +35,13 @@ void copy::managePaste(
     }
 }
 
-Rect copy::get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> &data)
+RectF copy::get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> &data)
 {
-    Rect size_area(0, 0, 0, 0);
+    RectF size_area(0, 0, 0, 0);
 
     for(const auto &sub : data){
 
-        const auto tmp = Page::get_size_area(sub, 0, sub.length());
+        const auto tmp = Page::get_size_area(sub, 0, sub.size());
 
         size_area = DataStruct::get_bigger_rect(tmp, size_area);
     }
@@ -53,7 +53,7 @@ void copy::single(
                 const WListFast<    std::shared_ptr<Stroke>> &from,
                 WListFast<          std::shared_ptr<Stroke>> &append_data)
 {
-    for (const auto &currentStroke : qAsConst(from)) {
+    for (const auto &currentStroke : std::as_const(from)) {
         append_data.append(currentStroke->clone());
     }
 }

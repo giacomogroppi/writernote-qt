@@ -23,6 +23,8 @@ public:
     {
     }
 
+    Settable(T value, bool set);
+
     bool isSet() const;
     void set(bool set);
 
@@ -48,9 +50,7 @@ struct colore_s{
     colore_s() = default;
     ~colore_s() = default;
 
-#ifdef USE_QT
     colore_s(const colore_s &color);
-#endif // USE_QT
 
     colore_s(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
 
@@ -68,7 +68,9 @@ struct colore_s{
     unsigned char getGreen() const  { return this->colore[1]; };
     unsigned char getBlue() const   { return this->colore[2]; };
 
-    static colore_s fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
+    void setAlfa(unsigned char newValue);
+
+    static colore_s fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
 
 #define color_black       colore_s(0, 0, 0, 255)
 #define color_white       colore_s(255, 255, 255, 255)
@@ -98,7 +100,7 @@ force_inline colore_s colore_s::tocolore_s(cdouble division = 1.0) const
 force_inline void colore_s::fromColor(const colore_s &color)
 {
     int val[NCOLOR];
-    uchar i;
+    unsigned char i;
 
     color.getRgb(&val[0], &val[1], &val[2], &val[3]);
 

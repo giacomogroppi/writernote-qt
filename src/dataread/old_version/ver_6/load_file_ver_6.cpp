@@ -8,7 +8,7 @@ int xmlstruct::load_file_6(WZipReaderSingle &reader, cbool LoadPdf, cbool LoadIm
 {
     unsigned len_pdf, len_img;
     int tmp;
-    uchar controllo_parita = 0;
+    unsigned char controllo_parita = 0;
     WZip &zip = *reader.get_zip();
 
     {

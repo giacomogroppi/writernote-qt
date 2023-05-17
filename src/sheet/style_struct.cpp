@@ -5,7 +5,7 @@
 #define DEFAULTN 40
 #define DEFAULTTHICKNESS 1
 
-void style_struct::loadFromByte(const QByteArray &arr)
+void style_struct::loadFromByte(const WByteArray &arr)
 {
     style_struct_S tmp;
     int i, len;
@@ -25,7 +25,7 @@ void style_struct::setDefault(style_struct_S &ref)
     ref.thickness = DEFAULTTHICKNESS;
 }
 
-void style_struct::saveInArray(QByteArray &arr)
+void style_struct::saveInArray(WByteArray &arr)
 {
     int i, len;
     len = this->style.length();
@@ -37,7 +37,7 @@ void style_struct::saveInArray(QByteArray &arr)
 
 style_struct::style_struct()
 {
-    QByteArray arr;
+    WByteArray arr;
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_STYLE);
 
@@ -51,7 +51,7 @@ style_struct::style_struct()
 
 void style_struct::save()
 {
-    QByteArray arr;
+    WByteArray arr;
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_STYLE);
     saveInArray(arr);
@@ -68,7 +68,7 @@ void style_struct::saveDefault(const int index)
     setting.endGroup();
 }
 
-void style_struct::createNew(const QString &name)
+void style_struct::createNew(const WString &name)
 {
     struct style_struct_S tmp;
     strncpy(tmp.nome, name.toUtf8().constData(), STRNOME);

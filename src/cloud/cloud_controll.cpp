@@ -33,7 +33,7 @@ n_error_cloud::e_error_cloud cloud_controll::action(n_request::e_request m_reque
         m_user = user;
     }
 
-    QByteArray array;
+    WByteArray array;
 
     this->m_last_request = m_request;
 
@@ -81,7 +81,7 @@ n_error_cloud::e_error_cloud cloud_controll::registerUser(struct struct_user *us
     if(user == nullptr)
         return n_error_cloud::internal_error;
 
-    QByteArray array;
+    WByteArray array;
     int temp = n_request::register_user;
 
     array.append((const char *) &temp, sizeof(int));
@@ -99,7 +99,7 @@ n_error_cloud::e_error_cloud cloud_controll::registerUser(struct struct_user *us
     return n_error_cloud::ok;
 }
 
-bool cloud_controll::write(QByteArray &array, n_request::e_request r){
+bool cloud_controll::write(WByteArray &array, n_request::e_request r){
     this->m_socket->write(array);
 
     if(!this->m_socket->waitForBytesWritten(TIME_WRITE))
@@ -116,7 +116,7 @@ n_error_cloud::e_error_cloud cloud_controll::loginUser(struct struct_user *user)
         return n_error_cloud::internal_error;
 
     int temp = n_request::login_user;
-    QByteArray array;
+    WByteArray array;
     array.append((const char *)&temp, sizeof(int));
 
     array.append((const char *)user, sizeof(struct struct_user));
@@ -142,7 +142,7 @@ n_error_socket::e_error_socket cloud_controll::connect_socket()
     if(m_socket->isWritable())
         return n_error_socket::ok_socket;
 
-    m_socket->connectToHost(QString::fromUtf8(URL_SERVER), PORT);
+    m_socket->connectToHost(WString::fromUtf8(URL_SERVER), PORT);
 
     return n_error_socket::ok_socket;
 }

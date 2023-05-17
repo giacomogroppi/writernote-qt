@@ -11,8 +11,8 @@ StrokePre::StrokePre()  :
     _stroke(),
     _last_draw_point(nullptr),
     _last_draw_press(nullptr),
-    _min(0., 0., false),
-    _max(0., 0., false)
+    _min({0., 0.}, false),
+    _max({0., 0.}, false)
 {
     _stroke = std::make_shared<StrokeNormal>();
 
@@ -27,7 +27,7 @@ std::shared_ptr<Stroke> StrokePre::merge()
 {
     using namespace WCommonScript;
     W_ASSERT(this->already_merge == false);
-    W_ASSERT(_point.length() == _pressure.length());
+    W_ASSERT(_point.size() == _pressure.size());
     W_ASSERT(this->_stroke != nullptr);
 
 #ifdef DEBUGINFO
@@ -43,7 +43,7 @@ std::shared_ptr<Stroke> StrokePre::merge()
 
     W_ASSERT(_stroke->isEmpty());
 
-    _stroke->preappend(_point.length());
+    _stroke->preappend(_point.size());
 
     while (not _point.isEmpty()) {
         const auto *data_point = _point.get_first();
@@ -69,7 +69,7 @@ void StrokePre::adjust(const PointF &delta)
             p -= delta;
         }
     } else {
-        _stroke->scale(-delta);
+        _stroke->scale(delta * -1.);
     }
 }
 
@@ -85,7 +85,7 @@ void StrokePre::setTime(int time)
     _stroke->setPositioneAudio(time);
 }
 
-Rect StrokePre::getBiggerPointInStroke() const
+RectF StrokePre::getBiggerPointInStroke() const
 {
     /** TODO --> define a cache */
     const auto res = (_stroke->isEmpty()) ?
@@ -97,14 +97,14 @@ Rect StrokePre::getBiggerPointInStroke() const
     return res;
 }
 
-Rect StrokePre::getFirstAndLast() const
+RectF StrokePre::getFirstAndLast() const
 {
     const auto &first = *_point.constBegin();
     const auto &last  = _point.last();
 
     return {
-            first.toPoint(),
-            last.toPoint()
+            first,
+            last
     };
 }
 
@@ -117,7 +117,7 @@ pressure_t StrokePre::getPressure() const
 void StrokePre::reset_img()
 {
     _img = WPixmap(1, false);
-    _img.fill(Qt::transparent);
+    _img.fill(color_transparent);
 }
 
 void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
@@ -159,20 +159,22 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     return *this;
 }
 
-void StrokePre::append(const Point &point, const pressure_t &press, WPen &_pen, double prop)
+void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen, double prop)
 {
     const auto normal = (_stroke->type() == Stroke::COMPLEX_NORMAL);
 
     if (normal) {
-        Define_PAINTER_p(painter, _img);
-        Define_PEN(pen);
+        WPainter painter;
+        WPen pen;
+
+        painter.begin(&_img);
 
         _point.append(point);
         _pressure.append(press);
 
         painter.setPen(pen);
 
-        if (un(_point.length() == 1)) {
+        if (un(_point.size() == 1)) {
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
 
@@ -181,7 +183,7 @@ void StrokePre::append(const Point &point, const pressure_t &press, WPen &_pen, 
             _min = _max;
             _max_pressure = _pressure.last();
         } else {
-            StrokeNormal::drawData<WList<Point>::const_iterator,
+            StrokeNormal::drawData<WList<PointF>::const_iterator,
                     WList<pressure_t>::const_iterator> data = {
                 .begin_point = this->get_last_point(),
                 .end_point   = this->_point.constEnd(),
@@ -216,7 +218,7 @@ void StrokePre::append(const Point &point, const pressure_t &press, WPen &_pen, 
         W_ASSERT(_point.isEmpty());
         W_ASSERT(_pressure.isEmpty());
 
-        _stroke->append(point.toPointF(1.), press);
+        _stroke->append(point, press);
     }
 }
 

@@ -21,6 +21,7 @@ public:
     bool isActive() const;
     void stop();
     void start(int millisecond = -1);
+    void setSingleShot(bool singleShot);
 };
 
 

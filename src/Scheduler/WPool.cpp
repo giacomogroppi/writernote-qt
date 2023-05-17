@@ -13,7 +13,7 @@ void WPool::setPriority(int priority)
 {
     W_ASSERT(priority >= 0);
     this->_priority = priority;
-    emit this->priorityChanged();
+    W_EMIT_0(priorityChanged);
 }
 
 void WPool::startJobs(QThreadPool *pool)

@@ -15,7 +15,6 @@
 #include "core/WPen.h"
 
 #define PROP_RESOLUTION (2.)
-#define SetRenderPainter(painter) painter.setRenderHint(WPainter::Antialiasing, true);
 constexpr double deltaPress = 2.;
 constexpr double deltaColorNull = 1.3;
 
@@ -71,7 +70,7 @@ public:
     colore_s getColor(double division = 1.) const;
 
 #   define stroke_append_default (-1.)
-    virtual void append(const Point &point, pressure_t pressure) = 0;
+    virtual void append(const PointF &point, pressure_t pressure) = 0;
 
     void setMetadata(int posizione_audio, const colore_s &color);
     void setMetadata(const metadata_stroke &metadata);
@@ -98,7 +97,7 @@ public:
     virtual std::shared_ptr<Stroke> makeNormal() const = 0;
 
     /**
-     * instanceof(*this) == StrokeNorml ? @result == length() : 0
+     * instanceof(*this) == StrokeNorml ? @result == size() : 0
     */
     virtual int how_much_decrese() const = 0;
 

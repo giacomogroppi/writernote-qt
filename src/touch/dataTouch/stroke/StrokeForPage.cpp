@@ -25,9 +25,8 @@ void StrokeForPage::append(const StrokeNormal &stroke)
     using namespace WCommonScript;
     auto &l = this->_data->_point;
 
-    for_each(stroke._point, [&l](const Point &point) {
-        l.append(point);
-    });
+    l.append(stroke._point);
+
     rep();
 }
 
@@ -112,7 +111,7 @@ void StrokeForPage::setMetadata(const colore_s &colore)
 }
 
 void StrokeForPage::draw(WPainter &painter, double delta,
-                         const Page &page, const WSize &target,
+                         const Page &page, const WSizeF &target,
                          const RectF &visibleArea) const
 {
     if (this->_needToUpdate) {
@@ -131,10 +130,10 @@ void StrokeForPage::draw(WPainter &painter, double delta,
 
     //qDebug() << page.getIndex() << "Target: " << target << " targetrect: " << targetRect;
 
-    const auto source = Rect(_pix.rect().castTo<int>())
+    const auto source = RectF(_pix.rect())
                         / PROP_RESOLUTION;
 
-    const auto sourceDraw = Rect{source.intersected(visibleArea.castTo<int>())} * PROP_RESOLUTION;
+    const auto sourceDraw = RectF{source.intersected(visibleArea)} * PROP_RESOLUTION;
 
     if (!source.isNull())
         painter.drawPixmap(

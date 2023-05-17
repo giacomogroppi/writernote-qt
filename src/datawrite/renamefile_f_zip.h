@@ -5,5 +5,5 @@
 /* namezip -> path
  from -> name copybook
  dest -> destination path */
-bool renamefile_f_zip(const QString &namezip, const QString &from, const QString &dest);
+bool renamefile_f_zip(const WString &namezip, const WString &from, const WString &dest);
 

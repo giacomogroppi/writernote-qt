@@ -2,20 +2,22 @@
 #include "stdlib.h"
 #include "string.h"
 #include "stdio.h"
+
+#include "mostra_finestra_i.h"
+#include "utils/areyousure/areyousure.h"
+#include "utils/platform.h"
+#define POSNAME "name"
+
+#ifdef USE_QT
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
-#include "mostra_finestra_i.h"
-#include <QFile>
-#include <QTextStream>
-#include "utils/areyousure/areyousure.h"
 #include <QJsonArray>
 #include <QJsonDocument>
-#include "utils/platform.h"
+#include <QFile>
+#include <QTextStream>
 
-#define POSNAME "name"
-
-static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, const char *c_ver)
+static updatecheck::n_priority priority(QJsonDocument &doc, WString &update, const char *c_ver)
 {
     const auto critical = QChar::fromLatin1(updatecheck::high);
     if(update.indexOf(critical) != -1)
@@ -27,7 +29,7 @@ static updatecheck::n_priority priority(QJsonDocument &doc, QString &update, con
 
     bool find = false;
 
-    for(i=0, len = temp_2.length(); i<len and doc[i][POSNAME].toString() != c_ver; i++){
+    for(i=0, len = temp_2.size(); i < len and doc[i][POSNAME].toString() != c_ver; i++){
         if(doc[i][POSNAME].toString().indexOf(critical) != -1)
             return updatecheck::critical;
 
@@ -53,7 +55,7 @@ void updatecheck::start()
 }
 
 updatecheck::updatecheck(WObject *parent,
-                         std::function<void(const QString &message, const QString &version)> showDialog,
+                         std::function<void(const WString &message, const WString &version)> showDialog,
                          std::function<void(bool)> setVisibleUpdateButton)
     : WObject(parent)
     , _showDialog(showDialog)
@@ -72,8 +74,8 @@ updatecheck::~updatecheck()
 
 void updatecheck::managerFinished()
 {
-    QString __mess;
-    QString testo;
+    WString __mess;
+    WString testo;
     QJsonDocument doc;
 
     if(reply->error()){
@@ -96,7 +98,7 @@ void updatecheck::managerFinished()
 
 #define VERSION_STRING "TESTING"
     if(VERSION_STRING != testo and testo.toUpper() != "TESTING"
-            and QString(VERSION_STRING).toUpper() != "TESTING"){
+            and WString(VERSION_STRING).toUpper() != "TESTING"){
         auto res = priority(doc, testo, VERSION_STRING);
 
         if(res == n_priority::critical){
@@ -120,3 +122,4 @@ void updatecheck::restart()
     this->start();
     this->mostra = true;
 }
+#endif // USE_QT

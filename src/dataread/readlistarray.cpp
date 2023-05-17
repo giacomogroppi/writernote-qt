@@ -1,11 +1,11 @@
 #include "readlistarray.h"
 #include "xmlstruct.h"
 
-uchar readListArray::read(const WListFast<QString> &list_name,
+unsigned char readListArray::read(const WListFast<WString> &list_name,
                           zip_t *zip_file,
-                          WListFast<QByteArray> &list_arr, cbool clear)
+                          WListFast<WByteArray> &list_arr, cbool clear)
 {
-    QByteArray arr;
+    WByteArray arr;
     unsigned i;
 
     if(clear)
@@ -13,7 +13,7 @@ uchar readListArray::read(const WListFast<QString> &list_name,
 
     for(i = 0; i < list_name.length(); i++){
         arr.clear();
-        const QString &ref = list_name.at(i);
+        const WString &ref = list_name.at(i);
         if(xmlstruct::readFile(zip_file, arr, false, ref, false) != OK)
             return ERROR;
         list_arr.append(arr);
@@ -22,10 +22,10 @@ uchar readListArray::read(const WListFast<QString> &list_name,
     return OK;
 }
 
-unsigned char readListArray::read(const WListFast<QString> &list_name, WZip &zip,
-                                  WListFast<QByteArray> &list_arr, cbool clear)
+unsigned char readListArray::read(const WListFast<WString> &list_name, WZip &zip,
+                                  WListFast<WByteArray> &list_arr, cbool clear)
 {
-    QByteArray arr;
+    WByteArray arr;
     unsigned i;
     auto *zipFile = zip.get_zip();
 
@@ -34,7 +34,7 @@ unsigned char readListArray::read(const WListFast<QString> &list_name, WZip &zip
 
     for(i = 0; i < list_name.length(); i++){
         arr.clear();
-        const QString &ref = list_name.at(i);
+        const WString &ref = list_name.at(i);
 
         if(xmlstruct::readFile(zipFile, arr, false, ref, false) != OK)
             return ERROR;

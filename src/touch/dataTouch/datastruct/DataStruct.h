@@ -68,7 +68,7 @@ public:
     auto begin()              { return this->_page.begin(); }
     auto end()                { return this->_page.end(); }
 
-    void drawIfInside(const Rect &area);
+    void drawIfInside(const RectF &area);
 
     [[nodiscard]] constexpr auto getZoom() const noexcept { return this->_zoom; };
     [[nodiscard]] constexpr force_inline PointF getPointFirstPage() const { return _pointFirstPage * _zoom; }
@@ -94,7 +94,7 @@ public:
 
     void restoreLastTranslation(int heightView);
 
-    void removePointIndex(WList<WVector<int> > &pos, cint base, cbool __isOrder);
+    void removePointIndex(WListFast<WVector<int> > &pos, cint base, cbool __isOrder);
     void removePointIndex(WVector<int> &pos, cint page, cbool isOrder);
 
     void MovePoint(const WList<WVector<int>> & pos, cint base, const PointF &translation);
@@ -396,7 +396,7 @@ force_inline void DataStruct::triggerNewView(int page, int m_pos_ris, cbool all)
 }
 
 /**
- * @return >= 0 && < this->length()
+ * @return >= 0 && < this->size()
 */
 inline int DataStruct::whichPage(const Stroke &stroke) const
 {

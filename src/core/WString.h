@@ -7,6 +7,7 @@
 
 
 #include "WByteArray.h"
+#include "WListFast.h"
 
 class WString {
 private:
@@ -19,10 +20,18 @@ public:
     WString upper() const;
     WString lower() const;
 
-    const char *toUtf8() const;
+    const WByteArray &toUtf8() const;
+
+    WListFast<WString> split(char character);
+
+    int lastIndexOf(char caracter) const;
+    int lastIndexOf(const char *data) const;
+    WString mid(int from, int to) const;
 
     static WString number(int number);
     static WString fromUtf8(const char *data, int size = -1);
+
+    WString arg(const WString &arg) const;
 
     bool operator==(const WString &other) const;
     WString &operator=(const WString &other);

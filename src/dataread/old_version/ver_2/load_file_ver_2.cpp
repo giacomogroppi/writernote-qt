@@ -12,7 +12,7 @@
 */
 int xmlstruct::load_file_2(WZipReaderSingle &reader)
 {
-    QString tmp_str, tmp_testi;
+    WString tmp_str, tmp_testi;
     bool temp, translate;
     bool tmp_touch;
     WZip &zip = *reader.get_zip();

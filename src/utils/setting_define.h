@@ -42,7 +42,7 @@
 //#define KEY_LAST_FILE_QUANTI "quanti_last_file"
 #define KEY_LAST_BASE_FILE "key_base_"
 
-/* method: uchar */
+/* method: unsigned char */
 #define KEY_LAST_FILE_METHOD "key-last-file-method"
 
 /* number: int */
@@ -124,7 +124,7 @@
 #define KEY_SIZE_BUTTON "key-size-button"
 
 #define GROUPNAME_MODALITY "groupname-modality"
-#define KEY_MODALITY "key-modality" /* uchar */
+#define KEY_MODALITY "key-modality" /* unsigned char */
 
 /* geometry last open file */
 #define GROUPNAME_GEOMETRY_LAST_OPEN_FILE "geometry-last-open-file"

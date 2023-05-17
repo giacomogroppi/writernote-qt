@@ -1,9 +1,7 @@
 #include "struct_user.h"
 #include "utils/setting_define.h"
-#include <QSettings>
 #include "stdio.h"
 #include "stdlib.h"
-#include <QDataStream>
 #include "utils/remove_key/remove_key.h"
 
 #ifdef CLOUD
@@ -15,7 +13,7 @@ void save_recent_user(struct struct_user *data){
 
     setting.setValue(KEY_USER_CLOUD_IS_DEFINED, true);
 
-    QByteArray array;
+    WByteArray array;
     array.setRawData((const char *)data, sizeof(struct struct_user));
 
     setting.setValue(KEY_USER_CLOUD_STRUCT, array);
@@ -40,13 +38,13 @@ struct struct_user * load_recent_user(){
     }
 
 
-    QByteArray array;
-    QByteArray default_loading;
+    WByteArray array;
+    WByteArray default_loading;
     default_loading.append(NOT_USER_RECENT);
 
     array = setting.value(KEY_USER_CLOUD_STRUCT, default_loading).toByteArray();
 
-    if(array == (QString)NOT_USER_RECENT){
+    if(array == (WString)NOT_USER_RECENT){
         setting.endGroup();
         return NULL;
     }

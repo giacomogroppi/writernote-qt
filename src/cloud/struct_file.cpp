@@ -2,7 +2,7 @@
 
 #ifdef CLOUD
 
-struct_file * bytearray_tostruct_file(QByteArray &array)
+struct_file * bytearray_tostruct_file(WByteArray &array)
 {
     if(array.size() != sizeof(struct struct_file))
         return NULL;

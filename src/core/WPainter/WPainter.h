@@ -35,9 +35,19 @@ public:
     void setPen(WPen &pen);
 
     void drawLine(const PointF &p1, const PointF &p2);
-    void drawImage(const WImage &img, const Rect &source, const Rect &target);
+    void drawImage(const RectF &target, const WImage &image, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap, const RectF &source);
+    void drawPixmap(const RectF &target, const WPixmap &pixmap);
     void drawPoint(const PointF &point);
+    void drawRect(const RectF &rect);
+    void drawEllipse(const PointF &center, double rx, double ry);
+
+    enum CompositionMode {
+        CompositionMode_Clear,
+        CompositionMode_SourceOver
+    };
+    void setCompositionMode(enum CompositionMode compositionMode);
+    WPainter::CompositionMode compositionMode() const;
 
     void fillRect(const RectF &rect);
 
@@ -45,6 +55,7 @@ public:
     void setCompositionClear();
 
     bool end();
+    bool isActive() const;
 };
 
 inline void WPainter::setColor(const colore_s &color)

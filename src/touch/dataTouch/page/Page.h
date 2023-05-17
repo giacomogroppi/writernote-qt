@@ -16,6 +16,7 @@
 #include "core/RectF.h"
 #include "core/Point.h"
 #include "core/WSizeTemplate.h"
+#include "core/WListFast.h"
 
 #define COLOR_NULL colore_s::fromRgb(255, 255, 255, 255)
 #define TEMP_COLOR colore_s::fromRgb(105, 105, 105, 255)
@@ -54,7 +55,7 @@ private:
     mutable WMutex                      _append_load;
     mutable bool                        _IsVisible = true;
     int                                 _count;
-    WVector<std::shared_ptr<Stroke>>    _stroke;
+    WListFast<std::shared_ptr<Stroke>>  _stroke;
     StrokeForPage                       _stroke_writernote;
 
     static constexpr auto pageDebug = true;
@@ -67,12 +68,12 @@ private:
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    WVector<std::shared_ptr<Stroke>>   _strokeTmp;
+    WListFast<std::shared_ptr<Stroke>>   _strokeTmp;
     mutable WPixmap                   _imgDraw;
 
     void drawNewPage(n_style style);
     
-    void drawEngine(WPainter &painter, std::vector<std::shared_ptr<Stroke>> &List, int m_pos_ris, cbool use_multi_thread);
+    void drawEngine(WPainter &painter, WListFast<std::shared_ptr<Stroke>> &List, int m_pos_ris, cbool use_multi_thread);
     void draw(WPainter &painter, int m_pos_ris, bool all);
     void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const colore_s &color) const;
 
@@ -81,10 +82,10 @@ private:
     void AppendDirectly(const std::shared_ptr<Stroke>& stroke);
     bool initImg(bool flag);
 
-    void decreseAlfa(const std::vector<int> &pos, WPainter *painter, int decrese);
+    void decreseAlfa(const WVector<int> &pos, WPainter *painter, int decrese);
 
     static PointF at_translation(const PointF &point, cint page);
-    static Rect get_size_area(const std::vector<std::shared_ptr<Stroke>> & item, int from, int to);
+    static RectF get_size_area(const WListFast<std::shared_ptr<Stroke>> & item, int from, int to);
 
 public:
     const WPixmap &getImg() const;
@@ -95,8 +96,8 @@ public:
     ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
-    void swap(WList<std::shared_ptr<Stroke>> & stroke, const std::vector<int> & pos, int flag);
-    void swap(WList<std::shared_ptr<Stroke>> &stroke, int from, int to);
+    void swap(WListFast<std::shared_ptr<Stroke>> & stroke, const WVector<int> & pos, int flag);
+    void swap(WListFast<std::shared_ptr<Stroke>> &stroke, int from, int to);
     std::shared_ptr<Stroke> swap(int index, std::shared_ptr<Stroke> newData);
 
     bool updateFlag(const PointF &FirstPoint, double zoom, double heightView);
@@ -107,7 +108,7 @@ public:
 
     bool isVisible() const;
 
-    void removeAt(const std::vector<int> & pos);
+    void removeAt(const WVector<int> & pos);
     void removeAt(cint i);
 
     const Stroke & last() const;
@@ -119,13 +120,15 @@ public:
      *  the triggerRenderImage to be executed.
     */
     __fast void append(const std::shared_ptr<Stroke>& stroke);
+    // TODO --> make template
     __fast void append(const WList<std::shared_ptr<Stroke>> & stroke);
+    __fast void append(const WListFast<std::shared_ptr<Stroke>> &stroke);
 
     __fast const Stroke             & atStroke(uint i) const;
     __fast Stroke                   & atStrokeMod(uint i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
-    __slow void at_draw_page(cint IndexPoint, const PointF &translation, PointF &point, double zoom) const;
+    __slow void at_draw_page(int IndexPoint, const PointF &translation, PointF &point, double zoom) const;
 
     double minHeight() const;
     double currentHeight() const;
@@ -147,11 +150,11 @@ public:
 
     void drawStroke(const Stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const colore_s &color, WPainter *painter);
-    void drawForceColorStroke(const std::vector<int> &pos, int m_pos_ris, const colore_s &color);
+    void drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const colore_s &color);
 
-    void removeAndDraw(int m_pos_ris, const std::vector<int> &pos, const RectF &area);
+    void removeAndDraw(int m_pos_ris, const WVector<int> &pos, const RectF &area);
     void drawIfInside(int m_pos_ris, const RectF &area);
-    void drawSquare(const Rect &rect);
+    void drawSquare(const RectF &rect);
     void decreseAlfa(const WVector<int> &pos, int decrese);
 
     RectF get_size_area(const WVector<int> &pos) const;

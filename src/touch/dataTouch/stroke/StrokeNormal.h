@@ -15,7 +15,7 @@ private:
 
     WListFast<PointF> _point;
     WListFast<pressure_t> _pressure;
-    bool isInsideBiggerData(const Rect &rect) const;
+    bool isInsideBiggerData(const RectF &rect) const;
     int removeAt(int i);
 
     int load_ver_1(WZipReaderSingle &reader, int len_stroke);
@@ -58,7 +58,7 @@ public:
     bool is_inside(const RectF &rect, double precision) const final;
 
 #   define stroke_append_default (-1.)
-    void append(const Point &point, pressure_t pressure) final;
+    void append(const PointF &point, pressure_t pressure) final;
     size_t createControll() const final;
 
     RectF getBiggerPointInStroke() const final;
@@ -71,16 +71,16 @@ public:
     int how_much_decrese() const final;
 
     /**
-     * @requires length() > to
-     * @ensures \old(length()) == length() - (indexTo - indexFrom + 1) &&
+     * @requires size() > to
+     * @ensures \old(length()) == size() - (indexTo - indexFrom + 1) &&
      *          \forall(int i; 0 <= i < from; \old(point.at(i)) == point.at(i)) &&
-     *          \forall(int i; indexFrom <= i <= length();
+     *          \forall(int i; indexFrom <= i <= size();
      *              \old(point.at(indexTo - indexFrom + 1)) == point.at(i))
     */
     void removeAt(int indexFrom, int indexTo);
 
     /**
-     * This function will remove the point belonging [index, length())
+     * This function will remove the point belonging [index, size())
      * */
     std::shared_ptr<StrokeNormal> split(int index);
 
@@ -101,7 +101,7 @@ public:
     bool operator!=(const Stroke &other) const final;
 
     template<class T>
-    static inline Rect getBiggerPointInStroke(T begin, T end);
+    static inline RectF getBiggerPointInStroke(T begin, T end);
 
     int type() const final;
 
@@ -232,13 +232,13 @@ force_inline void StrokeNormal::draw(
         img = WPixmap(1, true);
         img.fill(color_transparent);
         _painterPrivate.begin(&img);
-        SetRenderPainter(_painterPrivate);
+        _painterPrivate.setAntialeasing();
         painter = &_painterPrivate;
     } else {
         painter = &painterPublic;
     }
 
-    lastPoint = Page::at_translation(*data.begin_point, page).toPointF(prop);
+    lastPoint = Page::at_translation(*data.begin_point, page) * prop;
 
     for (data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++) {
         const PointF point = Page::at_translation(*data.begin_point, page);
@@ -257,7 +257,7 @@ force_inline void StrokeNormal::draw(
             pen.setWidthF(pen.widthF() * deltaColorNull);
         }
         else if (un(isHigh)) {
-            const WPainter::CompositionMode curr = painter->compositionMode();
+            const auto curr = painter->compositionMode();
             painter->setCompositionMode(WPainter::CompositionMode_Clear);
             painter->drawPoint(lastPoint);
             painter->setCompositionMode(curr);
@@ -268,7 +268,7 @@ force_inline void StrokeNormal::draw(
         lastPoint = pointDraw;
     }
 
-    if (likely(isPrivatePainter)) {
+    if (isPrivatePainter) {
         W_ASSERT(isHigh);
         W_ASSERT(painterPublic.compositionMode() == WPainter::CompositionMode_SourceOver);
 
@@ -283,20 +283,20 @@ force_inline void StrokeNormal::draw(
 }
 
 template<class T>
-inline Rect StrokeNormal::getBiggerPointInStroke(T begin, T end)
+inline RectF StrokeNormal::getBiggerPointInStroke(T begin, T end)
 {
-    Rect biggerData;
+    RectF biggerData;
 
     if(un(begin == end)){
         WWarning("Warning: Stroke empty");
         return {0, 0, 0, 0};
     }
 
-    Point topLeft      = begin->toPointF(1.).toPoint();
-    Point bottomRight  = begin->toPointF(1.).toPoint();
+    PointF topLeft      = *begin;
+    PointF bottomRight  = *begin;
 
     for(; begin != end; begin ++){
-        const Point &point = *begin;
+        const PointF &point = *begin;
 
         if(topLeft.x() > point.x())
             topLeft.setX(static_cast<int>(
@@ -323,7 +323,7 @@ inline Rect StrokeNormal::getBiggerPointInStroke(T begin, T end)
     W_ASSERT(topLeft.x() <= bottomRight.x());
     W_ASSERT(topLeft.y() <= bottomRight.y());
 
-    biggerData = Rect(topLeft, bottomRight);
+    biggerData = RectF(topLeft, bottomRight);
 
     return biggerData;
 }

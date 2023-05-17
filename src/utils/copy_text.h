@@ -3,5 +3,5 @@
 
 #include "core/WString.h"
 
-void copy_text(QString);
+void copy_text(WString);
 

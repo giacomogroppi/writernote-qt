@@ -4,7 +4,6 @@
 #include "HighligterMethod.h"
 
 class Highligter: public WObject, public HighligterMethod {
-    Q_OBJECT
 private:
     enum HighligterType {
         HighligterTypePressure,
@@ -15,7 +14,7 @@ private:
     pressure_t _size;
     int _alfa;
 
-    [[nodiscard]] uchar getAlfa() const override;
+    [[nodiscard]] unsigned char getAlfa() const override;
 public:
     explicit Highligter(WObject *parent,
                         std::function<int()> getTime,
@@ -28,20 +27,17 @@ public:
     int getType() const final;
     static constexpr int type();
 
-public slots:
-    void setHighligterPressureConst();
-    void setHighligterSize();
-
-    void setSize(double size);
-    void setAlfa(int alfa);
+    DEFINE_LISTENER(setHighligterPressureConst());
+    DEFINE_LISTENER(setHighligterSize());
+    DEFINE_LISTENER(setSize(double size));
+    DEFINE_LISTENER(setAlfa(int alfa));
 
 public:
     pressure_t getSize(double pressure);
 
-signals:
-    void onSizeChanged();
-    void onTypeChanged();
-    void onAlfaChanged();
+    W_EMITTABLE_0(onSizeChanged);
+    W_EMITTABLE_0(onTypeChanged);
+    W_EMITTABLE_0(onAlfaChanged);
 };
 
 

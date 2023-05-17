@@ -1,6 +1,5 @@
 #include "fromimage.h"
 #include "stdlib.h"
-#include <QBuffer>
 #include "core/WByteArray.h"
 #include "core/WListFast.h"
 #include "zip.h"
@@ -13,11 +12,11 @@
 #define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
 fromimage::load_res_img fromimage::save_img(WZipWriter          &writer,
-                                    const WListFast<QString>   &pathPdf) const
+                                    const WListFast<WString>   &pathPdf) const
 {
     fromimage::load_res_img res;
 
-    for(const auto &str : qAsConst(pathPdf)){
+    for(const auto &str : std::as_const(pathPdf)){
         res = this->save_img(writer, str);
 
         if(res != fromimage::load_res_img::ok)
@@ -28,9 +27,9 @@ fromimage::load_res_img fromimage::save_img(WZipWriter          &writer,
 }
 
 fromimage::load_res_img fromimage::save_img(WZipWriter              &writer,
-                                    const QString           &path) const
+                                    const WString           &path) const
 {
-    QByteArray img_in_byte;
+    WByteArray img_in_byte;
     WPixmap img;
 
     if(get_img_bytearray(img_in_byte, path) != load_res_img::ok){
@@ -40,7 +39,7 @@ fromimage::load_res_img fromimage::save_img(WZipWriter              &writer,
     if(!img.loadFromData(img_in_byte, "PNG"))
         return load_res_img::err_image_not_valid;
 
-    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName_img(this->length_img())))
+    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName_img(this->length_img()).constData()))
         return load_res_img::error;
 
     return load_res_img::ok;
@@ -48,7 +47,7 @@ fromimage::load_res_img fromimage::save_img(WZipWriter              &writer,
 
 fromimage::load_res_img fromimage::save_metadata_img(WZipWriterSingle &writer)
 {
-    for(const auto &img : qAsConst(m_img))
+    for(const auto &img : std::as_const(m_img))
     {
         const double val[] = {
                 img.i.x(),
@@ -71,7 +70,7 @@ size_t fromimage::get_size_file_img() const
     return s;
 }
 
-fromimage::load_res_img fromimage::get_img_bytearray(QByteArray &arr, const QString &path)
+fromimage::load_res_img fromimage::get_img_bytearray(WByteArray &arr, const WString &path)
 {
     WPixmap img(path);
 
@@ -109,9 +108,9 @@ fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, i
 
 fromimage::load_res_img fromimage::load_img(WZipReaderSingle &reader, int len)
 {
-    WListFast<QByteArray> arr;
-    WListFast<QString> name_list;
-    uchar res;
+    WListFast<WByteArray> arr;
+    WListFast<WString> name_list;
+    unsigned char res;
 
     this->m_img.clear();
 
@@ -128,7 +127,7 @@ fromimage::load_res_img fromimage::load_img(WZipReaderSingle &reader, int len)
     return fromimage::load_multiple_img(arr);
 }
 
-fromimage::load_res_img fromimage::load_single_img(const QByteArray &arr,
+fromimage::load_res_img fromimage::load_single_img(const WByteArray &arr,
                                            struct immagine_s &img)
 {
     if(!img.immagini.loadFromData(arr, "PNG"))
@@ -144,7 +143,7 @@ fromimage::load_res_img fromimage::load_single_img(const QByteArray &arr,
  * in m_img sono già presenti tutte le immagini con i metadati
  * dobbiamo solo cambiare l'immagine e l'array
 */
-fromimage::load_res_img fromimage::load_multiple_img(const WListFast<QByteArray> &arr)
+fromimage::load_res_img fromimage::load_multiple_img(const WListFast<WByteArray> &arr)
 {
     uint i, len;
     fromimage::load_res_img res;
@@ -160,10 +159,10 @@ fromimage::load_res_img fromimage::load_multiple_img(const WListFast<QByteArray>
     return fromimage::load_res_img::ok;
 }
 
-WListFast<QString> fromimage::get_name_img()
+WListFast<WString> fromimage::get_name_img()
 {
     int i;
-    WListFast<QString> list;
+    WListFast<WString> list;
 
     for(i = 0; i < length_img(); ++i){
         list.append(fromimage::getName_img(i));
@@ -172,11 +171,11 @@ WListFast<QString> fromimage::get_name_img()
     return list;
 }
 
-unsigned fromimage::insert_image(   const QString &pos,
+unsigned fromimage::insert_image(   const WString &pos,
                                     const PointSettable *point,
                                     struct immagine_s &img)
 {
-    QString res;
+    WString res;
     W_ASSERT(pos.size());
 
     WPixmap immagine(res);
@@ -196,9 +195,9 @@ unsigned fromimage::insert_image(   const QString &pos,
 /*
  * add image from position
 */
-int fromimage::addImage(    const QString &pos,
+int fromimage::addImage(    const WString &pos,
                             const PointSettable *point,
-                            const QString &path_writernote)
+                            const WString &path_writernote)
 {
     struct immagine_s img;
     WZipWriter writer;

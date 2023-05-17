@@ -6,6 +6,7 @@
 #include "utils/WCommonScript.h"
 #include "WByteArray.h"
 #include "RectF.h"
+#include "WImage.h"
 
 class WPixmap
 {
@@ -19,6 +20,8 @@ public:
 
     void fill(const colore_s &color);
     RectF rect() const;
+    WImage toImage() const;
+    bool isNull() const;
 
     void loadFromData(const WByteArray& data, const char *formact);
 

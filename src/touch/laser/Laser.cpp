@@ -19,9 +19,8 @@ Laser::Laser(WObject *parent,
         pen,
         color)
     , _callUpdate(std::move(callUpdate))
-    , _timer(new QTimer())
+    , _timer(new WTimer(this, [this]() { this->endTimer(); }, Laser::_time ))
 {
-    WObject::connect(_timer, &QTimer::timeout, this, &Laser::endTimer);
 }
 
 Laser::~Laser()

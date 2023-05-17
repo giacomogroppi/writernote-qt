@@ -1,22 +1,27 @@
 #include "TabletPenMethod.h"
 #include "utils/WCommonScript.h"
 #include "utils/setting_define.h"
+#include "core/WOptionSettings.h"
 
 void TabletPenMethod::save() const
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_METHOD_TOUCH);
+    WOptionSettings settings;
+    settings.begin();
 
-    setting.setValue(KEY_METHOD_TOUCH, _method);
-    setting.endGroup();
+    settings.setValue(KEY_METHOD_TOUCH, _method);
+    settings.save();
 }
 
 void TabletPenMethod::load()
 {
-    QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
-    setting.beginGroup(GROUPNAME_METHOD_TOUCH);
+    WOptionSettings setting;
+    setting.begin();
 
-    _method = (setting.value(KEY_METHOD_TOUCH, PrivateTabletMethod_Pen) .toInt());
+    const auto s = setting.value(KEY_METHOD_TOUCH, PrivateTabletMethod_Pen).toInt();
+    if (!s.second)
+        _method = PrivateTabletMethod_Pen;
+    else
+        _method = s.first;
 
     switch (_method) {
         case PrivateTabletMethod_Rubber:        this->setRubber(); break;
@@ -28,7 +33,7 @@ void TabletPenMethod::load()
         default: W_ASSERT(0);
     }
 
-    setting.endGroup();
+    setting.save();
 }
 
 TabletPenMethod::TabletPenMethod(const TabletPenMethod &t):

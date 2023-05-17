@@ -15,5 +15,5 @@ namespace path {
 
 #define POS_TEMP_AUDIO "tmp_audio.wav"
 
-QString get_path_no_controll();
+WString get_path_no_controll();
 

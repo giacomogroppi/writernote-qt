@@ -48,7 +48,7 @@ void preview::get(QPixmap &ref, const Document &doc, cbool withPdf, const int wi
 }
 
 bool preview::get(QPixmap &ref, cbool withPdf,
-                  const QByteArray &path, const int height, const int width)
+                  const WByteArray &path, const int height, const int width)
 {
     Document doc;
     int ok;    

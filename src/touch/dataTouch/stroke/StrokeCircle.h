@@ -32,10 +32,10 @@ public:
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const;
     bool is_inside(const RectF &rect, double precision) const;
 
-    void append(const Point &point, pressure_t pressure);
+    void append(const PointF &point, pressure_t pressure);
     virtual size_t createControll() const;
 
-    Rect getBiggerPointInStroke() const;
+    RectF getBiggerPointInStroke() const;
     bool isInside(const RectF &rect) const final;
     int save(WZipWriterSingle &file) const final;
 

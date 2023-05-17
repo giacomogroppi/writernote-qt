@@ -26,7 +26,7 @@ public:
     StrokeForPage();
     ~StrokeForPage() = default;
     void setMetadata(const colore_s &colore);
-    void append(const Point &point, pressure_t pressure);
+    void append(const PointF &point, pressure_t pressure);
 
     void setPressure(pressure_t press);
 
@@ -34,8 +34,7 @@ public:
 
     size_t getSizeInFile() const;
 
-    void draw(WPainter &painter, double delta,
-              const class Page &page, const WSize &target, const RectF &visibleArea) const;
+    void draw(WPainter &painter, double delta, const class Page &page, const WSizeF &target, const RectF &visibleArea) const;
 
     int save(WZipWriterSingle& writer) const;
     void scale(const PointF& delta);

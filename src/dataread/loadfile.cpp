@@ -8,7 +8,7 @@
 #include "core/WZipReaderSingle.h"
 #include "log/log_ui/log_ui.h"
 
-int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
+int xmlstruct::load_stringa(zip_file_t *f, WString &stringa)
 {
     int tmp;
     char *str;
@@ -30,9 +30,9 @@ int xmlstruct::load_stringa(zip_file_t *f, QString &stringa)
     return OK;
 }
 
-int xmlstruct::load_stringa(zip_file_t *f, QByteArray &str)
+int xmlstruct::load_stringa(zip_file_t *f, WByteArray &str)
 {
-    QString tmp;
+    WString tmp;
     int flag;
 
     flag = xmlstruct::load_stringa(f, tmp);
@@ -42,8 +42,8 @@ int xmlstruct::load_stringa(zip_file_t *f, QByteArray &str)
     return flag;
 }
 
-int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
-                        cbool clear, const QString &path,
+int xmlstruct::readFile(zip_t *fileZip, WByteArray &arr,
+                        cbool clear, const WString &path,
                         cbool closeZip)
 {
     zip_file_t *file;
@@ -56,7 +56,7 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
 
     if(un(!size)){
         const auto prio = (path.indexOf("audio") != -1) ? log_ui::possible_bug : log_ui::info;
-        log_write->write(QString("File %1 has 0 byte").arg(path), prio);
+        log_write->write(WString("File %1 has 0 byte").arg(path), prio);
         return OK;
     }
 
@@ -84,7 +84,7 @@ int xmlstruct::readFile(zip_t *fileZip, QByteArray &arr,
     return ERROR;
 }
 
-bool xmlstruct::manageMessage(const int res, std::function<void (const QString &)> showMessage)
+bool xmlstruct::manageMessage(const int res, std::function<void (const WString &)> showMessage)
 {
     switch (res) {
         case OK: return true;
@@ -118,7 +118,7 @@ bool xmlstruct::manageMessage(const int res, std::function<void (const QString &
     return false;
 }
 
-int xmlstruct::load_multiplestring(zip_file_t *f, WListFast<QString> &lista, WListFast<int> &data)
+int xmlstruct::load_multiplestring(zip_file_t *f, WListFast<WString> &lista, WListFast<int> &data)
 {
     int i, lunghezza, temp;
 
@@ -127,7 +127,7 @@ int xmlstruct::load_multiplestring(zip_file_t *f, WListFast<QString> &lista, WLi
         return OK;
 
 
-    QString temp_;
+    WString temp_;
 
     for(i = 0; i < lunghezza; i++){
         LOAD_STRINGA_RETURN(f, temp_);
@@ -144,7 +144,7 @@ int xmlstruct::load_multiplestring(zip_file_t *f, WListFast<QString> &lista, WLi
     return OK;
 }
 
-uchar xmlstruct::controllOldVersion(zip_t *file)
+unsigned char xmlstruct::controllOldVersion(zip_t *file)
 {
     zip_file_t *tt;
 
@@ -268,7 +268,7 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
 #define CLOSE_ZIP_AUDIO(x, y) zip_fclose(x); \
     zip_close(y);
 
-int load_audio(QByteArray &array, const QString &path)
+int load_audio(WByteArray &array, const WString &path)
 {
     int error;
     bool ok;
@@ -304,7 +304,7 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
 {
     unsigned len_pdf, len_img;
     int ver_stroke;
-    uchar controllo_parita = 0;
+    unsigned char controllo_parita = 0;
     fromimage::load_res_img res_img;
     WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
 

@@ -18,12 +18,20 @@ public:
 
     const T& at(int i) const;
     void append(const T& element);
+    void append(const WListFast<T> &other);
     void remove(int i);
+    void remove(int from, int to);
     bool isEmpty() const;
     int size() const;
     const T& first() const;
-
+    bool isOrder() const;
     void clear();
+    void move(int, int);
+    void reserve(int);
+    T& takeAt(int i);
+    const T& last() const;
+    int lastIndexOf(const T& object) const;
+    void insert(int index, const T& object);
 
     T& operator[](int i);
     bool operator==(const WListFast<T> &other) const;
@@ -31,13 +39,10 @@ public:
 
     template <typename Func>
     [[nodiscard]] bool anyMatch(Func func) const {
-        auto begin = this->begin();
-
         for (const auto &value: *this) {
             if (func(value))
                 return true;
         }
-
         return false;
     }
 
@@ -71,10 +76,10 @@ public:
         const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
-    iterator begin() noexcept { test(); return iterator(this->_data); };
+    // TODO: IMPORTANT
+    iterator begin() noexcept { test(); return iterator(nullptr); };
     iterator end()   noexcept { test(); return iterator(nullptr);  };
 
-    // TODO: IMPORTANT
     const_iterator constBegin() const noexcept { test(); return const_iterator(nullptr); }
     const_iterator constEnd()   const noexcept { test(); return const_iterator(nullptr); }
     const_iterator cBegin() const noexcept { test(); return const_iterator(nullptr); }

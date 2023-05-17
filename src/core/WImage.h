@@ -9,6 +9,7 @@
 #endif
 
 #include "core/WByteArray.h"
+#include "RectF.h"
 #include <iostream>
 
 enum WImageType {
@@ -35,6 +36,11 @@ public:
 
     [[nodiscard]] size_t get_size_in_file() const;
     [[nodiscard]] size_t save_and_size(WByteArray &arr) const;
+
+    int height() const;
+    int width() const;
+
+    RectF rect() const;
 
 #ifdef USE_QT
     [[nodiscard]] QImage toQImage() const;

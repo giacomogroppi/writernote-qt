@@ -9,7 +9,7 @@ class redoundo
 private:
 
     /* 0 <= indice <= 10 */
-    uchar indice = 0;
+    unsigned char indice = 0;
     WVector<Document *> m_list;
     class TabletCanvas *canvas;
     static constexpr int max = 10;

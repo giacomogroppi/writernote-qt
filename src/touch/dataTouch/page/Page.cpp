@@ -98,8 +98,8 @@ static inline void drawLineVertical(
     for (int i = 0; i < style.ny; i++) {
         const auto x = delta * double(i) + initial;
 
-        const auto pointBegin = Point {x, yTop};
-        const auto pointEnd =   Point {x, yButtom };
+        const auto pointBegin = PointF {x, yTop};
+        const auto pointEnd =   PointF {x, yButtom };
 
         stroke.append(pointBegin, stroke_append_default);
         stroke.append(pointEnd, stroke_append_default);
@@ -120,7 +120,7 @@ void Page::drawNewPage(n_style __style)
     setStylePrivate(fast, __style, style);
 
     if (fast) {
-        style.colore.fromColor(TEMP_COLOR);
+        style.colore = TEMP_COLOR;
         style.thickness =  TEMP_TICK;
     }
 
@@ -149,7 +149,7 @@ void Page::swap(WListFast<std::shared_ptr<Stroke>> &list,
 #endif
 
     if(!(flag & PAGE_SWAP_TRIGGER_VIEW)){
-        for (const auto index : qAsConst(pos)) {
+        for (const auto index : std::as_const(pos)) {
             this->swap(list, index, index + 1);
         }
         return;
@@ -211,20 +211,21 @@ size_t Page::get_size_in_file(cbool saveImg) const
 void Page::removeAt(const WVector<int> &pos)
 {
     int i;
-    if(un(!WCommonScript::is_order_vector(pos))){
+    if(!pos.isOrder()){
         DO_IF_DEBUG(std::abort());
-        WCommonScript::order_vector((WVector<int> &)(pos));
+        auto &vec = (WVector<int> &)pos;
+        vec.order();
     }
 
-    i = pos.length();
+    i = pos.size();
     for(i--; i >= 0; i--){
         this->removeAt(i);
     }
 }
 
-void Page::append(const WListFast<std::shared_ptr<Stroke>> &stroke)
+void Page::append(const WList<std::shared_ptr<Stroke>> &stroke)
 {
-    for (const auto & tmp : qAsConst(stroke)) {
+    for (const auto & tmp : std::as_const(stroke)) {
         this->append(tmp);
     }
 }
@@ -249,13 +250,13 @@ void Page::drawStroke(
     if (un(isRubber)) {
         painter.setCompositionMode(WPainter::CompositionMode_Clear);
     } else if(isHigh) {
-        core::painter_set_source_over(painter);
+        painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
     }
 
     stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
 
     if (un(isRubber)) {
-        core::painter_set_source_over(painter);
+        painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
     }
 
     painter.setCompositionMode(last_comp_mode);
@@ -281,13 +282,15 @@ void * __page_load(void *__data)
     auto *  _data = (struct DataPrivateMuThread *)__data;
     auto *  extra = (struct page_thread_data *)_data->extra;
     WPixmap img;
-    Define_PEN(m_pen);
+    WPen m_pen;
+    WPainter painter;
     auto &mutex = *extra->append;
     int m_pos_ris = extra->m_pos_ris;
     const Page *page = extra->parent;
 
     __initImg(img);
-    Define_PAINTER_p(painter, img);
+
+    painter.begin(&img);
 
     WDebug(false, "call");
 
@@ -331,7 +334,7 @@ void Page::drawEngine(
         WPainter        &painter,
         WListFast<std::shared_ptr<Stroke>> &List,
         int             m_pos_ris,
-        cbool           use_multi_thread)
+        bool            use_multi_thread)
 {
     int i, threadCount;
 
@@ -346,7 +349,7 @@ void Page::drawEngine(
     extraData.parent        = this;
 
     if (use_multi_thread) {
-        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.length(), ~DATA_PRIVATE_FLAG_SEM);
+        threadCount = DataPrivateMuThreadInit(threadData, &extraData, PAGE_THREAD_MAX, List.size(), ~DATA_PRIVATE_FLAG_SEM);
 
         for (i = 0; i < threadCount; i++) {
             pthread_create(&thread[i], nullptr, __page_load, &threadData[i]);
@@ -357,7 +360,7 @@ void Page::drawEngine(
     } else {
         threadData->extra   = &extraData;
         threadData->from    = 0;
-        threadData->to      = List.length();
+        threadData->to      = List.size();
 
         __page_load(&threadData[0]);
     }
@@ -370,11 +373,11 @@ inline void Page::draw(
 {
     W_ASSERT(painter.isActive());
 
-    if(un(all) and _stroke.length()){
+    if(un(all) and _stroke.size()){
         this->drawEngine(painter, _stroke, m_pos_ris, true);
     }
 
-    if(_strokeTmp.length()){
+    if(_strokeTmp.size()){
         this->drawEngine(painter, _strokeTmp, m_pos_ris, false);
     }
 
@@ -399,7 +402,8 @@ void Page::drawToImage(
     WPixmap              &img,
     cint                flag) const
 {
-    Define_PEN(pen);
+    WPen pen;
+    WPainter painter;
 
     if(un(flag & DR_IMG_INIT_IMG)){
         __initImg(img);
@@ -407,9 +411,9 @@ void Page::drawToImage(
         W_ASSERT(flag == ~DR_IMG_INIT_IMG);
     }
 
-    Define_PAINTER_p(painter, img);
+    painter.begin(&img);
 
-    for (const int __index : qAsConst(index)){
+    for (const int __index : std::as_const(index)){
         const Stroke &stroke = atStroke(__index);
         this->drawStroke(painter, stroke, pen, stroke.getColor());
     }
@@ -420,7 +424,7 @@ void Page::drawToImage(
 
 bool Page::userWrittenSomething() const
 {
-    return this->_stroke.length();
+    return this->_stroke.size();
 }
 
 bool Page::initImg(bool flag)
@@ -474,9 +478,9 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
 //#define PAGE_DEBUG_IMG
 #ifdef PAGE_DEBUG_IMG
 #ifdef Q_OS_LINUX
-    const QString path = "~/Scrivania/tmp_foto";
+    const WString path = "~/Scrivania/tmp_foto";
 #else
-    const QString path = "/Users/giacomo/Desktop/tmp_foto";
+    const WString path = "/Users/giacomo/Desktop/tmp_foto";
 #endif
     if(!this->_imgDraw.save(path + current_time_string() + ".png", "PNG", -1))
         std::abort();
@@ -521,7 +525,7 @@ void Page::removeAndDraw(
     this->drawForceColorStroke(pos, m_pos_ris, COLOR_NULL);
 
     for(i --; i >= 0; i --){
-        removeAt(pos[i]);
+        removeAt(pos.at(i));
     }
 
     drawIfInside(m_pos_ris, area);
@@ -530,7 +534,8 @@ void Page::removeAndDraw(
 void Page::drawIfInside(int m_pos_ris, const RectF &area)
 {
     int index = lengthStroke() - 1;
-    Define_PAINTER(painter);
+    WPainter painter;
+    painter.begin(&this->_imgDraw);
 
     for(; index >= 0; index --){
         const Stroke &stroke = this->atStroke(index);
@@ -548,9 +553,9 @@ void Page::drawIfInside(int m_pos_ris, const RectF &area)
     point.ry() = rect.function().y(); \
     at_translation(point, this->_count - 1);
 
-void Page::drawSquare(const Rect &rect)
+void Page::drawSquare(const RectF &rect)
 {
-    Rect tmp;
+    RectF tmp;
     //QBrush brush(COLOR_NULL, Qt::SolidPattern);
     WPen pen;
     WPainter painter;
@@ -559,11 +564,11 @@ void Page::drawSquare(const Rect &rect)
 
     // we need to adjust the rect to our img
     {
-        Point point1, point2;
+        PointF point1, point2;
         PAGE_DRAW_SQUARE_ADJUST(point1, topLeft);
         PAGE_DRAW_SQUARE_ADJUST(point2, bottomRight);
 
-        tmp = Rect(point1, point2);
+        tmp = RectF(point1, point2);
     }
 
     pen.setColorNull();
@@ -593,9 +598,9 @@ void Page::decreseAlfa(const WVector<int> &pos, int decrese)
     End_painter(painter);
 }
 
-Rect Page::get_size_area(const WListFast<std::shared_ptr<Stroke> > &item, int from, int to)
+RectF Page::get_size_area(const WListFast<std::shared_ptr<Stroke> > &item, int from, int to)
 {
-    Rect result;
+    RectF result;
 
     if(un(from >= to)){
         return {};
@@ -604,7 +609,7 @@ Rect Page::get_size_area(const WListFast<std::shared_ptr<Stroke> > &item, int fr
     result = item.at(from)->getBiggerPointInStroke();
 
     for(; from < to; from ++){
-        const Rect tmp = item.at(from)->getBiggerPointInStroke();
+        const RectF tmp = item.at(from)->getBiggerPointInStroke();
         result = DataStruct::get_bigger_rect(result, tmp);
     }
 
@@ -616,18 +621,17 @@ Page::Page()
     this->_count = -1;
 }
 
-Rect Page::get_size_area(const WVector<int> &pos) const
+RectF Page::get_size_area(const WVector<int> &pos) const
 {
-    Rect result;
+    RectF result, tmp;
     int len = pos.size();
-    Rect tmp;
 
     if(un(!len)){
         return {};
     }
 
     len --;
-    result = atStroke(pos.first()).getBiggerPointInStroke().;
+    result = atStroke(pos.first()).getBiggerPointInStroke();
 
     for(; len >= 0; len --){
         tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
@@ -697,13 +701,13 @@ void Page::drawStroke(const Stroke &stroke, int m_pos_ris)
 }
 
 void Page::at_draw_page(
-        cint            IndexPoint,
+        int            IndexPoint,
         const PointF   &translation,
-        Point         &point,
+        PointF         &point,
         const double    zoom) const
 {
     const auto &stroke = get_stroke_page();
-    const Point &p = stroke._data->_point.at(IndexPoint);
+    const auto &p = stroke._data->_point.at(IndexPoint);
 
     __at_draw_private(p, point, zoom, translation);
 }

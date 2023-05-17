@@ -27,8 +27,8 @@ SquareMethod::SquareMethod(std::function<void()> hideProperty,
 
     WNew(_copy, copy, ());
 
-    _penna.setStyle(Qt::DotLine);
-    _penna.setWidth(2);
+    _penna.setStyle(WPen::DotLine);
+    _penna.setWidthF(2);
     _penna.setColor(colore_s::fromRgb(30, 90, 255));
     SquareMethod::reset();
 
@@ -46,9 +46,9 @@ void SquareMethod::reset()
     int i;
 
     WDebug(debugSquare, "call");
-    _pointinit.setSet(false);
-    _lastpoint.setSet(false);
-    _pointfine.setSet(false);
+    _pointinit.set(false);
+    _lastpoint.set(false);
+    _pointfine.set(false);
 
     _in_box = false;
 
@@ -56,7 +56,7 @@ void SquareMethod::reset()
     _index_img.clear();
 
     WDebug(debugSquare, "paste = 1");
-    const auto len = _stroke.length();
+    const auto len = _stroke.size();
 
     if(len == 0)
         goto out;
@@ -203,7 +203,7 @@ bool SquareMethod::find(Document &doc)
         if(un(!__page->isVisible()))
             break;
 
-        if(likely(count > index.length() - 1))
+        if(count > index.size() - 1)
             index.append(WVector<int>());
 
         __index = &index.operator[](count);
@@ -239,8 +239,8 @@ bool SquareMethod::find(Document &doc)
         if(!_copy->isEmpty()){
             _pointinit = __f;
 
-            _pointinit.setSet(false);
-            _pointfine.setSet(false);
+            _pointinit.set(false);
+            _pointfine.set(false);
         }
 
         reset();
@@ -262,7 +262,7 @@ void SquareMethod::mergeImg(
         int              page)
 {
     WPainter painter;
-    Rect rectTo = from.rect();
+    RectF rectTo = from.rect();
 
     rectTo.translate(0, page * Page::getResolutionHeigth());
 
@@ -275,7 +275,7 @@ void SquareMethod::mergeImg(
 void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Document &doc)
 {
     int count;
-    const auto len = index.length();
+    const auto len = index.size();
     Page * page;
     WPixmap tmp;
 
@@ -283,7 +283,9 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
 
     _stroke.clear();
 
-    WCommonScript::order_multiple(index);
+    for (auto &list: index) {
+        list.order();
+    }
 
     this->initImg(doc);
 
@@ -324,7 +326,7 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
 
 void SquareMethod::findObjectToDrawImg(Document &doc)
 {
-    for(int index : qAsConst(_index_img)){
+    for(int index : std::as_const(_index_img)){
         const auto &ref = doc.m_img.at(index);
 
         if (ref.i.x() < _pointinit.x())
@@ -418,7 +420,7 @@ void SquareMethod::move(const PointF &punto, Document &doc)
 
 int SquareMethod::endMoving(Document &doc)
 {
-    Point middle;
+    PointF middle;
     const auto ref = doc.getPointFirstPage();
     ActionProperty flag;
     const auto &translation = doc.adjustPointReverce(_pointinit);
@@ -426,8 +428,8 @@ int SquareMethod::endMoving(Document &doc)
 
     WDebug(debugSquare, "call");
 
-    middle = Point(translation.x(),
-                    translation.y() - 50);
+    middle = PointF(translation.x(),
+                    translation.y() - 50.);
 
     flag = this->calculate_flags();
 
@@ -468,7 +470,7 @@ void SquareMethod::actionProperty(PropertySignals action)
         }
         default:{
             NAME_LOG_EXT->write(
-                    QString("It was not possibile to determinate %1").arg(QString::number((int)action)),
+                    WString("It was not possibile to determinate %1").arg(WString::number((int)action)),
                     log_ui::error_internal);
             WCommonScript::abortIfDebug(__FUNCTION__, __LINE__);
         }
@@ -529,7 +531,7 @@ void SquareMethod::needReload(WPainter &painter, const Document &doc)
 {
     if constexpr (WCommonScript::debug_enable()){
         if(un(!painter.isActive())){
-            qDebug() << "Painter not active in Square" << __FUNCTION__;
+            WDebug(true, "Painter not active in Square");
             std::abort();
         }
     }
@@ -541,7 +543,7 @@ void SquareMethod::needReload(WPainter &painter, const Document &doc)
         if(likely(somethingInBox())){
             const PointF point = doc.getPointFirstPage() + _trans_img * zoom;
             const int len = doc.lengthPage();
-            const QSize size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
+            const WSize size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
 
             W_ASSERT(size.height() >= 0 and size.width() >= 0);
             WDebug(debugSquare, "in_box");
@@ -577,7 +579,7 @@ void SquareMethod::initPointSearch(const PointF &point, const Document &doc)
 
     _pointinit = doc.adjustPoint(point);
     W_ASSERT(_pointinit.x() >= 0.0 && _pointinit.y() >= 0.0);
-    _pointinit.setSet(true);
+    _pointinit.set(true);
 
     /** we don't need yet to draw somethings */
     _need_reload = false;

@@ -19,7 +19,7 @@ public:
      * la funzione serve per leggere sia i pdf che le immagini
      * bisogna passargli un filezip già aperto, e lui provvederà ad aprire
      * ogni file, per ogni nome all'interno del list_name e apperderà tutto
-     * alla lista di QByteArray
+     * alla lista di WByteArray
 */
     static unsigned char read(const std::vector<std::string> &list_name, zip_t *zip_file,
                      std::vector<std::string> &arr, cbool clear);

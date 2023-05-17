@@ -19,6 +19,7 @@ public:
     char at(int i) const;
 
     bool operator==(const WByteArray &other) const;
+    WByteArray &operator+(const WByteArray &other) const;
 
     static WByteArray fromRawData(const char *data, int size);
 

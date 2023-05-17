@@ -27,8 +27,8 @@ frompdf::frompdf()
 }
 
 bool frompdf::load_pdf(
-        const WListFast<QString>        &path,
-        QMap<load_res_pdf, uchar>       &index,
+        const WListFast<WString>        &path,
+        QMap<load_res_pdf, unsigned char>       &index,
         datastruct                  &data)
 {
     uint i, len;
@@ -50,11 +50,11 @@ bool frompdf::load_pdf(
 }
 
 frompdf::load_res_pdf frompdf::load_pdf(
-        const QString   &path,
+        const WString   &path,
         cbool           clear,
         datastruct      &data)
 {
-    QByteArray arr;
+    WByteArray arr;
 
     if(WFile::readFile(arr, path.toUtf8().constData()) < 0)
         return load_res_pdf::not_valid_pdf;
@@ -65,10 +65,10 @@ frompdf::load_res_pdf frompdf::load_pdf(
     return load_from_row_pdf(arr, clear, true, 0, data);
 }
 
-WListFast<QString> frompdf::get_name_pdf(int count)
+WListFast<WString> frompdf::get_name_pdf(int count)
 {
     int i;
-    WListFast<QString> res;
+    WListFast<WString> res;
     for(i = 0; i < count; i ++){
         res.append(frompdf::getName_pdf(i));
     }
@@ -76,7 +76,7 @@ WListFast<QString> frompdf::get_name_pdf(int count)
     return res;
 }
 
-frompdf::load_res_pdf frompdf::load_pdf(const QByteArray &path_writernote_file, int len, datastruct &data)
+frompdf::load_res_pdf frompdf::load_pdf(const WByteArray &path_writernote_file, int len, datastruct &data)
 {
     bool ok;
     WZip zip(path_writernote_file, ok);
@@ -92,8 +92,8 @@ frompdf::load_res_pdf frompdf::load_pdf(const QByteArray &path_writernote_file, 
 
 frompdf::load_res_pdf frompdf::load_pdf(WZipReaderSingle &reader, int len, datastruct &data)
 {
-    WListFast<QByteArray> arr;
-    WListFast<QString> name;
+    WListFast<WByteArray> arr;
+    WListFast<WString> name;
     int i;
     frompdf::load_res_pdf res;
     WZip *zip = reader.get_zip();
@@ -133,10 +133,10 @@ void frompdf::resizing_pdf(datastruct &data, int lenPdf)
 }
 
 frompdf::load_res_pdf frompdf::load_from_row_pdf(
-        const QByteArray    &pos,
+        const WByteArray    &pos,
         cbool               clear,
         cbool               FirstLoad,
-        const uchar         IndexPdf,
+        const unsigned char         IndexPdf,
         datastruct          &data)
 {
     /**
@@ -183,7 +183,7 @@ frompdf::load_res_pdf frompdf::load_from_row_pdf(
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     /* creation of thread and append QImage to the current PDF page */
     for(i = 0; i < len and i < countThread; i++){
-        page.append(doc->page(QString::number(i+1)));
+        page.append(doc->page(WString::number(i+1)));
 
     }
 #endif
@@ -245,12 +245,12 @@ frompdf::load_res_pdf frompdf::load_from_row_pdf(
     return load_res_pdf::ok;
 }
 
-frompdf::load_res_pdf frompdf::save_pdf(const WListFast<QString>   &path,
-                                const QByteArray    &path_writernote_file)
+frompdf::load_res_pdf frompdf::save_pdf(const WListFast<WString>   &path,
+                                const WByteArray    &path_writernote_file)
 {
     frompdf::load_res_pdf res;
 
-    for(const auto &tmp : qAsConst(path)){
+    for(const auto &tmp : std::as_const(path)){
 
         res = this->save_pdf(tmp.toUtf8(),
                          path_writernote_file);
@@ -261,8 +261,8 @@ frompdf::load_res_pdf frompdf::save_pdf(const WListFast<QString>   &path,
     return frompdf::load_res_pdf::ok;
 }
 
-frompdf::load_res_pdf frompdf::save_pdf(const QByteArray   &pathFile,
-                                const QByteArray   &path_writernote_file)
+frompdf::load_res_pdf frompdf::save_pdf(const WByteArray   &pathFile,
+                                const WByteArray   &path_writernote_file)
 {
     WZipWriter writer;
 
@@ -272,7 +272,7 @@ frompdf::load_res_pdf frompdf::save_pdf(const QByteArray   &pathFile,
 }
 
 frompdf::load_res_pdf frompdf::save_pdf(WZipWriter         &filezip,
-                                const QByteArray   &pathFile)
+                                const WByteArray   &pathFile)
 {
     const auto res = savefile::moveFileIntoZip(pathFile,
                                                filezip,
@@ -287,9 +287,9 @@ frompdf::load_res_pdf frompdf::save_pdf(WZipWriter         &filezip,
 /*
  * add image from position
 */
-void frompdf::addPdf(QByteArray             &pos,
+void frompdf::addPdf(WByteArray             &pos,
                      const PointSettable    *point,
-                     const QByteArray       &path_writernote,
+                     const WByteArray       &path_writernote,
                      datastruct             &data)
 {
     frompdf::load_res_pdf res;
@@ -317,12 +317,12 @@ err:
         dialog_critic("We had some error");
 }
 
-void frompdf::adjast_pdf(const uchar indexPdf)
+void frompdf::adjast_pdf(const unsigned char indexPdf)
 {
     m_image.operator[](indexPdf).topLeft = PointF(0, 0);
 }
 
-unsigned frompdf::insert_pdf(QByteArray             &pos,
+unsigned frompdf::insert_pdf(WByteArray             &pos,
                              const PointSettable    *point)
 {
     assert(this->m_image.length() == 0);

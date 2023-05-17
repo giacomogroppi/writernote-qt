@@ -14,7 +14,7 @@
 */
 void singleLoad(WPainter        &painter,
                 const WPixmap   &img,
-                const WSize     &sizeRect,
+                const WSizeF    &sizeRect,
                 const PointF   &PointFirstPage,
                 cdouble counterPage,
                 cdouble         m);
@@ -28,13 +28,13 @@ void singleLoad(WPainter        &painter,
 
 #define DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH 1
 #define DRAW_CREATE_SIZE_RECT_DEF_PRO 1.0
-inline WSize createSizeRect(
+inline WSizeF createSizeRect(
         const DataStruct    &data,
         const int           countHeigth,
         const double        pro)
 {
     const auto zoom = data.getZoom();
     const int height = Page::getHeight();
-    return WSize(Page::getWidth(), height * countHeigth) * zoom * pro;
+    return WSizeF(Page::getWidth(), height * countHeigth) * zoom * pro;
 }
 

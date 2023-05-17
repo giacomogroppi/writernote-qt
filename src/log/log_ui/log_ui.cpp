@@ -17,7 +17,7 @@
 
 static WMutex mutex;
 
-log_ui::log_ui(WObject *parent, const QByteArray &positionForLog)
+log_ui::log_ui(WObject *parent, const WByteArray &positionForLog)
     : WObject(parent)
     , _positionLog(positionForLog)
 {
@@ -29,16 +29,16 @@ log_ui::~log_ui()
     this->saveData();
 }
 
-bool log_ui::getData(QByteArray &data)
+bool log_ui::getData(WByteArray &data)
 {
     if(WFile::readFile(data, this->getCurrentPosition()) < 0)
         return false;
     return true;
 }
 
-QString log_ui::adjust_path(const QString &str) const
+WString log_ui::adjust_path(const WString &str) const
 {
-    QString tmp = str;
+    WString tmp = str;
 
     tmp.replace(QChar(':'), QChar('_'));
     tmp.replace(QChar(' '), QChar('_'));
@@ -46,7 +46,7 @@ QString log_ui::adjust_path(const QString &str) const
     return tmp;
 }
 
-bool log_ui::check_str(const QString &str) const
+bool log_ui::check_str(const WString &str) const
 {
     const auto res = str.indexOf(":");
     if(res < 0)
@@ -54,10 +54,10 @@ bool log_ui::check_str(const QString &str) const
     return false;
 }
 
-void log_ui::write(const QString &stringa, log_ui::type_write var)
+void log_ui::write(const WString &stringa, log_ui::type_write var)
 {
     QFile file(this->getCurrentPosition());
-    QString tmp;
+    WString tmp;
 
     if(m_permi != permi::enable){
         qDebug() << "It's not possibile write to log because of permission";
@@ -80,22 +80,22 @@ void log_ui::write(const QString &stringa, log_ui::type_write var)
 
     log_ui::addTime(tmp);
 
-    file.write(QString("\n%1 --- %2").arg(tmp).arg(stringa).toUtf8());
+    file.write(WString("\n%1 --- %2").arg(tmp).arg(stringa).toUtf8());
 
     file.close();
 }
 
-void log_ui::print(FILE *fp, const QByteArray &str)
+void log_ui::print(FILE *fp, const WByteArray &str)
 {
     fprintf(fp, "%s", str.constData());
 }
 
-void log_ui::addTime(QString &message)
+void log_ui::addTime(WString &message)
 {
     message = current_day_string() + current_time_string() + message;
 }
 
-QByteArray log_ui::getNameLog()
+WByteArray log_ui::getNameLog()
 {
     return this->_nameLog;
 }
@@ -116,14 +116,14 @@ int log_ui::loadData()
     QSettings setting(ORGANIZATIONAME, APPLICATION_NAME);
     setting.beginGroup(GROUPNAME_LOG_POSITION);
 
-    QString _pos;
+    WString _pos;
 
     this->m_permi = static_cast<permi>(setting.value(KEY_LOG_POSITION_DEFINE, permi::enable).toInt());
 
     if(m_permi == permi::disable)
         return 0;
 
-    this->_nameLog += QString("writernote-log-%1-%2.txt")
+    this->_nameLog += WString("writernote-log-%1-%2.txt")
             .arg(adjust_path(current_day_string()))
             .arg(adjust_path(current_time_string()))
             .toUtf8();

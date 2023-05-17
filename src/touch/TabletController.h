@@ -9,10 +9,10 @@
 #include "core/WImage.h"
 #include <atomic>
 #include "touch/tools/Tools.h"
+#include "Scheduler/WObject.h"
 
 class TabletController : public WObject
 {
-    Q_OBJECT
 private:
     struct {
         Highligter *_highligter;
@@ -54,22 +54,20 @@ public:
 
     Tools* getCurrentTool() const;
 
-public slots:
-    void selectType(int type);
-    void selectColor(const colore_s &color);
+    DEFINE_LISTENER(selectType(int type));
+    DEFINE_LISTENER(selectColor(const colore_s &color));
 
-    void positionDocChanged(const PointF &newPosition);
+    DEFINE_LISTENER(positionDocChanged(const PointF &newPosition));
 
-    void touchBegin(const PointF &point, double pressure);
-    void touchUpdate(const PointF &point, double pressure);
-    void touchEnd(const PointF &point, double pressure);
+    DEFINE_LISTENER(touchBegin(const PointF &point, double pressure));
+    DEFINE_LISTENER(touchUpdate(const PointF &point, double pressure));
+    DEFINE_LISTENER(touchEnd(const PointF &point, double pressure));
 
-signals:
-    void onNeedRefresh(int pageMin, int pageMax);
-    void onToolChanged();
-    void onPropertyHide();
-    void onNumberOfPageChanged(int numerberOfPage);
-    void onPropertyShow(const PointF &point, ActionProperty);
+    W_EMITTABLE_2(onNeedRefresh, int, pageMin, int, pageMax);
+    W_EMITTABLE_0(onToolChanged);
+    W_EMITTABLE_0(onPropertyHide);
+    W_EMITTABLE_1(onNumberOfPageChanged, int, numerberOfPage);
+    W_EMITTABLE_2(onPropertyShow, const PointF&, point, ActionProperty, actionProperty);
 };
 
 inline const Document &TabletController::getDoc() const

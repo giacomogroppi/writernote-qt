@@ -33,11 +33,11 @@ public:
     */
     T *get_first() noexcept;
     bool isEmpty() const noexcept;
-    constexpr int length() const noexcept;
+    constexpr int size() const noexcept;
     const T& last() const;
     const T& first() const;
     int indexOf(const T& index) const;
-    constexpr int size() const;
+    bool isOrder() const;
 
     class iterator{
     private:
@@ -217,7 +217,7 @@ inline bool WList<T>::isEmpty() const noexcept
 }
 
 template<class T>
-inline constexpr int WList<T>::length() const noexcept
+inline constexpr int WList<T>::size() const noexcept
 {
     test();
     return this->_size;
@@ -301,12 +301,6 @@ WList<T> &WList<T>::operator=(const WList<T> &other)
     other.test();
 
     return *this;
-}
-
-template<class T>
-constexpr int WList<T>::size() const
-{
-    return this->length();
 }
 
 template<class T>

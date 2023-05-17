@@ -36,7 +36,9 @@ public:
     constexpr PointTemplate<T> operator-(const PointTemplate<T> &other) const;
 
     constexpr PointTemplate<T> &operator*=(double d);
-    constexpr PointTemplate<T> &operator+=(const PointTemplate<T>& d);
+    constexpr PointTemplate<T> &operator/=(double d);
+    constexpr PointTemplate<T> &operator+=(const PointTemplate<T> &other);
+    constexpr PointTemplate<T> &operator-=(const PointTemplate<T> &other);
 };
 
 template<typename T>

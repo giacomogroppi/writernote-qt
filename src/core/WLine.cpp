@@ -33,8 +33,8 @@ WLine::WLine(const PointF &pt1, const PointF &pt2)
     W_ASSERT(_pt2.y() >= 0.);
 
     if(!_is_vertical){
-        W_ASSERT(qAbs(_m) != HUGE_VAL);
-        W_ASSERT(qAbs(_p) != HUGE_VAL);
+        W_ASSERT(std::abs(_m) != HUGE_VAL);
+        W_ASSERT(std::abs(_p) != HUGE_VAL);
     }
 }
 

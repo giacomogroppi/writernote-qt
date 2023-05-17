@@ -11,10 +11,10 @@ private:
     WPixmap _img;
     std::shared_ptr<Stroke> _stroke;
 
-    WList<Point>      _point;
+    WList<PointF>      _point;
     WList<pressure_t>   _pressure;
 
-    WList<Point>        ::const_iterator   _last_draw_point;
+    WList<PointF>       ::const_iterator   _last_draw_point;
     WList<pressure_t>   ::const_iterator   _last_draw_press;
 
     double _max_pressure;
@@ -29,7 +29,7 @@ private:
 #endif // DEBUGINFO
 
     [[nodiscard]] WList<pressure_t>::const_iterator get_last_press() const;
-    [[nodiscard]] WList<Point>::const_iterator get_last_point() const;
+    [[nodiscard]] WList<PointF>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 
     void setStrokeComplex(std::shared_ptr<Stroke> stroke);
@@ -43,10 +43,10 @@ public:
     void setTime(int time);
     void setColor(const colore_s &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
-    [[nodiscard]] Rect getBiggerPointInStroke() const;
-    [[nodiscard]] Rect getFirstAndLast() const;
+    [[nodiscard]] RectF getBiggerPointInStroke() const;
+    [[nodiscard]] RectF getFirstAndLast() const;
     [[nodiscard]] pressure_t getPressure() const;
-    [[nodiscard]] const Point &last() const;
+    [[nodiscard]] const PointF &last() const;
 
     [[nodiscard]] auto constBegin() const { return _point.constBegin(); };
     [[nodiscard]] auto constEnd() const { return _point.constEnd(); };
@@ -55,7 +55,7 @@ public:
     void reset_img();
 
     void draw(WPainter &painter, WPen &pen, double prop, const PointF &pointFirstPage);
-    void append(const Point &point, const pressure_t &press, WPen &pen, double prop);
+    void append(const PointF &point, const pressure_t &press, WPen &pen, double prop);
     [[nodiscard]] colore_s getColor(double division = 1.) const;
 
     std::shared_ptr<Stroke> merge();
@@ -75,7 +75,7 @@ inline bool StrokePre::isEmpty() const noexcept
     return this->_point.isEmpty() and _stroke->isEmpty();
 }
 
-inline const Point &StrokePre::last() const
+inline const PointF &StrokePre::last() const
 {
     return _point.last();
 }
@@ -100,9 +100,9 @@ inline WList<pressure_t>::const_iterator StrokePre::get_last_press() const
     return _last_draw_press;
 }
 
-inline WList<Point>::const_iterator StrokePre::get_last_point() const
+inline WList<PointF>::const_iterator StrokePre::get_last_point() const
 {
-    W_ASSERT(this->_point.length() > 1);
+    W_ASSERT(this->_point.size() > 1);
     return _last_draw_point;
 }
 
@@ -114,7 +114,7 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
         W_ASSERT(_stroke->type() == Stroke::COMPLEX_NORMAL);
         //W_ASSERT(painter.renderHints() & WPainter::Antialiasing);
 
-        if (this->_point.length() == 1)
+        if (this->_point.size() == 1)
             return;
 
         const RectF source {

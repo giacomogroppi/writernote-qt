@@ -22,7 +22,7 @@ void StrokeCircleGenerator::model_circle_precision(const PointF &point, double &
             WCommonScript::Power(point.y() - y, 2)
           - tmp._r;
 
-    if(qAbs(res) > precision){
+    if(std::abs(res) > precision){
         precision = res;
     }
 }
@@ -64,7 +64,7 @@ double StrokeCircleGenerator::model_near(const StrokePre &stroke)
         }
     }
 
-    r = qAbs(area.topLeft().y() - area.bottomRight().y()) / 2.;
+    r = std::abs(area.topLeft().y() - area.bottomRight().y()) / 2.;
     x = (area.topLeft().x() + area.bottomRight().x()) / 2.;
     y = (area.topLeft().y() + area.bottomRight().y()) / 2.;
 

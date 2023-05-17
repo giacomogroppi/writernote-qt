@@ -23,7 +23,7 @@ private:
     static constexpr auto time = 1 * 500;
     WTimer *_timer;
 
-    DEFINE_LISTENER(endTimer);
+    DEFINE_LISTENER(endTimer());
 };
 
 force_inline void ObjectFinder::endMoving()

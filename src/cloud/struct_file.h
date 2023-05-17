@@ -30,6 +30,6 @@ struct struct_file{
 };
 
 
-struct struct_file * bytearray_tostruct_file(QByteArray &);
+struct struct_file * bytearray_tostruct_file(WByteArray &);
 
 #endif // CLOUD

@@ -1,9 +1,9 @@
 #include "get_file_dir.h"
 #include <QDebug>
 
-WListFast<QString> get_file_dir::get(const QString &dir)
+WListFast<WString> get_file_dir::get(const WString &dir)
 {
-    WListFast<QString> __l;
+    WListFast<WString> __l;
     QDirIterator iterator(dir, QDir::AllEntries | QDir::Hidden | QDir::System );
     while (iterator.hasNext()) {
         __l.append(iterator.next());

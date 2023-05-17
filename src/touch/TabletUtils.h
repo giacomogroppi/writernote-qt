@@ -67,11 +67,11 @@ private:
 inline TabletUtils::TabletUtils(WPainter &painter, const std::function<bool()> &isPlay, const std::function<int()> &positionAudio, double m, Optional<Laser> laser, const Document &doc, bool withPdf, bool isExporting, const RectF &visibleArea)
     : _withPdf(withPdf)
     , _isExportingPdf(isExporting)
-    , _doc(doc)
     , _isPlay(isPlay)
-    , _m(m)
-    , _painter(&painter)
     , _positionAudio(positionAudio)
+    , _m(m)
+    , _doc(doc)
+    , _painter(&painter)
 {
     if (this->_isExportingPdf) {
         this->_visibleArea = RectF {

@@ -19,8 +19,8 @@ public:
     TestingCore(class MainWindow *parent);
     int startTesting();
     void createDocument(Document *doc);
-    int createAndSave(const QString &pos, Document *doc);
-    int createFile(const QByteArray &folder);
+    int createAndSave(const WString &pos, Document *doc);
+    int createFile(const WByteArray &folder);
     int startTest();
 };
 

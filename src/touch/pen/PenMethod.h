@@ -17,6 +17,6 @@ public:
     int touchUpdate(const PointF& point, double size, Document &doc) final;
     int touchEnd(const PointF& point, Document &doc) final;
 
-    [[nodiscard]] uchar getAlfa() const final;
+    [[nodiscard]] unsigned char getAlfa() const final;
 };
 

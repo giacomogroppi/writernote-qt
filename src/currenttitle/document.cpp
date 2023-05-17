@@ -119,7 +119,7 @@ void Document::adjustAll(unsigned w, unsigned h)
     Document::scala_all(res, static_cast<int>(h));
 }
 
-void Document::increaseZoom(double delta, const QSize &size)
+void Document::increaseZoom(double delta, const WSize &size)
 {
     PointF res;
 

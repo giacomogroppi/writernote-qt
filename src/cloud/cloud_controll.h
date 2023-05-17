@@ -46,7 +46,7 @@ private:
     /*
      * return true if all is written in the socket correctly
     */
-    bool write(QByteArray &,  n_request::e_request);
+    bool write(WByteArray &,  n_request::e_request);
 
     /*
      * in m_last_request is store the last
@@ -61,7 +61,7 @@ private:
     n_error_socket::e_error_socket connect_socket();
 
 signals:
-    void readyReadExt(QByteArray, n_request::e_request);
+    void readyReadExt(WByteArray, n_request::e_request);
 
 public slots:
     void error_socket(QAbstractSocket::SocketError);

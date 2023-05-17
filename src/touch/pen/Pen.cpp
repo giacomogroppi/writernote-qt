@@ -7,7 +7,8 @@ Pen::Pen(WObject *parent,
          std::function<void(const PointF &)> objectMove,
          colore_s &color,
          WPen &pen)
-    : PenMethod(
+    : WObject(parent)
+    , PenMethod(
         [&](double press) -> pressure_t {
             return Pen::getSize(press);
         }

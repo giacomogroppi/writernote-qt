@@ -6,6 +6,6 @@
 class get_file_dir
 {
 public:
-    static WListFast<QString> get(const QString &dir);
+    static WListFast<WString> get(const WString &dir);
 };
 

@@ -6,7 +6,7 @@
 
 class toencrypy{
 public:
-    static void getEcrypt(const QByteArray &arr, QByteArray &res);
+    static void getEcrypt(const WByteArray &arr, WByteArray &res);
 };
 
 #endif // CLOUD

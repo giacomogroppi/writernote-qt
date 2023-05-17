@@ -20,7 +20,7 @@ struct RubberPrivateData{
      * --> we have to redraw the strokes that were close together
      * */
     bool            highlighter_delete;
-    Rect           area;
+    RectF           area;
 };
 
 static volatile int     __m_size_gomma;
@@ -81,7 +81,7 @@ static inline not_used RectF rubber_get_area(const PointF &p1, const PointF &p2)
 static force_inline void draw_null(Page *_page, const WVector<int> &point,
                                    const WVector<int> &stroke, bool is_left)
 {
-    Q_ASSERT(point.size() == stroke.size());
+    W_ASSERT(point.size() == stroke.size());
 
     WCommonScript::for_each(point, stroke, [&_page, is_left](
                                 const int indexPoint,
@@ -209,7 +209,7 @@ redo:
     // we don't need to do this operation
     // in order to the list
     {
-        int i = stroke_mod_stroke.length();
+        int i = stroke_mod_stroke.size();
         W_ASSERT(stroke_mod_stroke.size() == stroke_mod_point.length());
 
         for (i-- ; i >= 0; i --) {
@@ -244,7 +244,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     const auto &area        = private_data->line;
     index_selected.reserve(32);
 
-    Q_ASSERT(data->from <= data->to);
+    W_ASSERT(data->from <= data->to);
     W_ASSERT(_page);
 
     for (; data->from < data->to; data->from++) {
@@ -319,7 +319,7 @@ int RubberMethod::touchUpdate(const PointF &__lastPoint,
     indexPage = _base;
     count = 0;
     dataPrivate.highlighter_delete = false;
-    dataPrivate.area = Rect();
+    dataPrivate.area = RectF();
 
     if (un(_base < 0)) {
         this->_base = doc.whichPage(lastPoint);
@@ -349,7 +349,7 @@ int RubberMethod::touchUpdate(const PointF &__lastPoint,
             indexPage = now;
             count = now - _base;
 
-            if (!(count < _data_to_remove.length())) {
+            if (!(count < _data_to_remove.size())) {
                 for (i = _base; i < now; i++) {
                     _data_to_remove.append(WVector<int>());
                 }
@@ -396,7 +396,7 @@ int RubberMethod::touchUpdate(const PointF &__lastPoint,
 
     dataPrivate.data_find      = &_data_to_remove.operator[](count);
     dataPrivate.data_to_remove = dataPrivate.data_find;
-    dataPrivate.al_find        = dataPrivate.data_find->length();
+    dataPrivate.al_find        = dataPrivate.data_find->size();
 
     thread_create = DataPrivateMuThreadInit(dataThread, &dataPrivate,
                                             thread_group->get_max(),
@@ -437,10 +437,10 @@ bool RubberMethod::is_image_not_null(const Page *page,
 
     const auto &img = page->getImg();
 
-    const auto ymin = qMin(from.y(), to.y());
-    const auto ymax = qMax(from.y(), to.y());
-    const auto xmin = qMin(from.x(), to.x());
-    const auto xmax = qMax(from.x(), to.x());
+    const auto ymin = std::min(from.y(), to.y());
+    const auto ymax = std::min(from.y(), to.y());
+    const auto xmin = std::min(from.x(), to.x());
+    const auto xmax = std::min(from.x(), to.x());
 
     const int x = static_cast<int>(xmin) - delta;
     const int y = static_cast<int>(
@@ -455,7 +455,7 @@ bool RubberMethod::is_image_not_null(const Page *page,
     if (un(img.isNull()))
         return false;
 
-    const QImage data = img.toImage();
+    const WImage data = img.toImage();
     for (i = 0; i < delta + int(xmax - xmin); i++) {
         for (j = 0; j < delta + int(ymax - ymin); j++) {
             const Point target = Point(x + i, y + j) * PROP_RESOLUTION;
@@ -476,7 +476,7 @@ bool RubberMethod::is_image_not_null(const Page *page,
 
 int RubberMethod::touchEnd(const PointF&, Document &doc )
 {
-    int i, len = _data_to_remove.length();
+    int i, len = _data_to_remove.size();
     int index_mod = -1;
 
     if (_rubber_type == type_rubber::total) {
@@ -495,7 +495,7 @@ int RubberMethod::touchEnd(const PointF&, Document &doc )
                 index_mod = i + _base;
             }
 
-            WCommonScript::order_vector(arr);
+            arr.order();
 
             const auto rect = doc.get_size_area(arr, i + _base);
             page.removeAndDraw(-1, arr, rect);

@@ -7,7 +7,7 @@ class topdf
 {
 private:
     class Document *data = nullptr;
-    const QString *path;
+    const WString *path;
 
     void translate();
 
@@ -15,7 +15,7 @@ private:
               cbool withPdf);
 
 public:
-    topdf(const QString &path, const Document &doc);
+    topdf(const WString &path, const Document &doc);
     ~topdf();
 
     bool createpdf(cbool withPdf);

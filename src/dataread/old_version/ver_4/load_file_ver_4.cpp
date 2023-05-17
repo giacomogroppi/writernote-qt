@@ -5,9 +5,9 @@
 int xmlstruct::load_file_4(WZipReaderSingle &reader)
 {
     bool tmp_touch, translate;
-    uchar controllo_parita = 0;
-    QString tmp_testi;
-    QString tmp_str;
+    unsigned char controllo_parita = 0;
+    WString tmp_testi;
+    WString tmp_str;
     WZip &zip = *reader.get_zip();
 
     if(reader.read_string(tmp_str) < 0)

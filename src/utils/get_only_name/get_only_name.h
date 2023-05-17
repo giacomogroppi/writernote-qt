@@ -6,6 +6,6 @@
 class get_only_name
 {
 public:
-    static QString exe(const QString &path);
+    static WString exe(const WString &path);
 };
 

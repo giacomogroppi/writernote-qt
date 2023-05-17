@@ -22,7 +22,7 @@ static not_used void gen_num(WVector<int> &data, int min, int max)
     }
 }
 
-static not_used void gen_str(QByteArray &arr, int min_char, int max_char)
+static not_used void gen_str(WByteArray &arr, int min_char, int max_char)
 {
     constexpr int min = static_cast<int>('a');
     constexpr int max = static_cast<int>('z');
@@ -36,13 +36,13 @@ static not_used void gen_str(QByteArray &arr, int min_char, int max_char)
     }
 }
 
-static not_used void test_write_zip(WVector<int> &data, const QByteArray &path)
+static not_used void test_write_zip(WVector<int> &data, const WByteArray &path)
 {
     WZipWriterSingle writer;
 
     writer.init(nullptr, 0, sizeof(int) * data.length());
 
-    for(const auto ref: qAsConst(data)){
+    for(const auto ref: std::as_const(data)){
         W_ASSERT(sizeof(ref) == sizeof(int));
         writer.write_object(ref);
     }
@@ -50,7 +50,7 @@ static not_used void test_write_zip(WVector<int> &data, const QByteArray &path)
     writer.commit_change(path, "test");
 }
 
-static not_used void test_read_from_zip(WVector<int> &res, const QByteArray &path, int len)
+static not_used void test_read_from_zip(WVector<int> &res, const WByteArray &path, int len)
 {
     int i;
     bool ok;
@@ -84,7 +84,7 @@ static not_used void run_test_1()
 {
     WVector<int> data;
     WVector<int> res;
-    QByteArray to = "${HOME}/tmp_writernote_test/";
+    WByteArray to = "${HOME}/tmp_writernote_test/";
 
     WDir::createDir(to);
 

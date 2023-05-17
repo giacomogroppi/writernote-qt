@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/WPainter/WPainter.h"
-#include <QSize>
 #include "core/PointF.h"
 
 #include "touch/dataTouch/datastruct/DataStruct.h"
@@ -18,7 +17,7 @@
 */
 void singleLoad(WPainter        &painter,
         const WPixmap           &img,
-        const QSize             &sizeRect,
+        const WSize             &sizeRect,
         const PointF           &PointFirstPage,
         cdouble                 counterPage,
         cdouble                 m);
@@ -32,13 +31,13 @@ void singleLoad(WPainter        &painter,
 
 #define DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH 1
 #define DRAW_CREATE_SIZE_RECT_DEF_PRO 1.0
-inline QSize createSizeRect(
+inline WSize createSizeRect(
         const DataStruct    &data,
         const int           countHeigth,
         const double        pro)
 {
     const auto zoom = data.getZoom();
     const int height = Page::getHeight();
-    return QSize(Page::getWidth(), height * countHeigth) * zoom * pro;
+    return WSize(Page::getWidth(), height * countHeigth) * zoom * pro;
 }
 

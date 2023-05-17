@@ -101,14 +101,14 @@ size_t PageFile::size_in_file(const Page &_page, cbool saveImg)
 
     s += sizeof(int);       // len stroke
 
-    for(const auto &ref: qAsConst(_page._stroke)){
+    for(const auto &ref: std::as_const(_page._stroke)){
         s += ref->getSizeInFile();
     }
 
     s += _page._stroke_writernote.getSizeInFile();
 
     s += sizeof(size_t);    // size img
-    if(likely(saveImg)){
+    if(saveImg){
         s += _page._imgDraw.get_size_in_file();
     }
 
@@ -118,9 +118,9 @@ size_t PageFile::size_in_file(const Page &_page, cbool saveImg)
 int PageFile::save(const Page *_page, WZipWriterSingle &writer, cbool saveImg)
 {
     int i, err = OK;
-    const int len = _page->_stroke.length();
+    const int len = _page->_stroke.size();
     size_t size;
-    QByteArray arr;
+    WByteArray arr;
 
     W_ASSERT(_page);
 
@@ -148,7 +148,7 @@ int PageFile::save(const Page *_page, WZipWriterSingle &writer, cbool saveImg)
         size = arr.size();
 
         writer.write_object(size);
-        if(likely(size))
+        if(size)
             writer.write(arr.constData(), size);
     }
 

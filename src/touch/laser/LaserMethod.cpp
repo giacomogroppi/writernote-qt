@@ -44,7 +44,7 @@ int LaserMethod::touchEnd(const PointF &, Document &)
     return -1;
 }
 
-uchar LaserMethod::getAlfa() const
+unsigned char LaserMethod::getAlfa() const
 {
     return 255;
 }

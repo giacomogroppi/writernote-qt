@@ -28,7 +28,7 @@ int PenMethod::touchEnd(const PointF &point, Document &doc)
     return InsertTools::touchEnd(point, doc);
 }
 
-uchar PenMethod::getAlfa() const
+unsigned char PenMethod::getAlfa() const
 {
     return 255;
 }

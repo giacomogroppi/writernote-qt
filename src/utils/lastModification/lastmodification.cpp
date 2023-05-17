@@ -1,11 +1,6 @@
 #include "lastmodification.h"
 
-#include <QFile>
-#include <QFileInfo>
-#include <QDateTime>
-
-
-QString lastModification::day(const QString &path)
+WString lastModification::day(const WString &path)
 {
     const QFileInfo info(path);
     const QDateTime lastModified = info.lastModified();
@@ -13,7 +8,7 @@ QString lastModification::day(const QString &path)
     return lastModified.date().toString(Qt::ISODate);
 }
 
-QString lastModification::hour(const QString &path)
+WString lastModification::hour(const WString &path)
 {
     const QFileInfo info(path);
     const QDateTime lastModified = info.lastModified();

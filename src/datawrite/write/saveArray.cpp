@@ -5,11 +5,11 @@
 #include "core/WZipWriter.h"
 
 int savefile::moveFileIntoZip(
-        const QByteArray    &pathFile,
+        const WByteArray    &pathFile,
         WZipWriter          &writer,
-        const QByteArray    &nameInZip)
+        const WByteArray    &nameInZip)
 {
-    QByteArray tmp;
+    WByteArray tmp;
 
     if(WFile::readFile(tmp, pathFile) < 0){
         return ERROR;

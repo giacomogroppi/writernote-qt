@@ -6,7 +6,7 @@ int xmlstruct::load_file_3(WZipReaderSingle &reader)
 {
     int temp;
     bool tmp_touch, translate;
-    QString tmp_str;
+    WString tmp_str;
     WZip &zip = *reader.get_zip();
 
     if(reader.read_string(tmp_str) < 0)

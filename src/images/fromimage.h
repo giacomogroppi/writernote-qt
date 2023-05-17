@@ -13,7 +13,7 @@
 
 class Document;
 struct immagine_s{
-    WPixmap immagini;
+    WImage immagini;
     PointF i;
     PointF f;
 };
@@ -50,7 +50,7 @@ public:
 
     void moveImage(const WListFast<int> &index, const PointF &translation);
 
-    static  void draw_img(WPainter &painter, const RectF &rect, const WPixmap &img);
+    static  void draw_img(WPainter &painter, const RectF &rect, const WImage &img);
     static  void draw_img(WPainter &painter, const immagine_s &img);
     static  void draw_img(WPainter &painter, const WListFast<immagine_s> &list);
 
@@ -68,7 +68,7 @@ private:
 
 inline WByteArray fromimage::getName_img(const unsigned i)
 {
-    const auto tmp = WString(SUFFIX_IMG) + WString::number(uint(i));
+    const auto tmp = WString(SUFFIX_IMG) + WString::number(i);
     return tmp.toUtf8();
 }
 
@@ -105,11 +105,11 @@ inline void fromimage::moveImage(const WListFast<int> &index, const PointF &tran
     }
 }
 
-inline void fromimage::draw_img(WPainter &painter, const RectF &rect, const WPixmap &img)
+inline void fromimage::draw_img(WPainter &painter, const RectF &rect, const WImage &img)
 {
     const RectF draw = img.rect();
 
-    painter.drawPixmap(rect, img, draw);
+    painter.drawImage(rect, img, draw);
 }
 
 inline void fromimage::draw_img(WPainter &painter, const immagine_s &img)

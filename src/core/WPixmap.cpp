@@ -15,19 +15,19 @@ WPixmap::WPixmap(int page, bool consideringResolution)
 
 }
 
-WPixmap::WPixmap(const QString &path, const char *format)
+WPixmap::WPixmap(const WString &path, const char *format)
     : QPixmap(path, format)
 {
 }
 
 size_t WPixmap::get_size_in_file() const
 {
-    QByteArray arr;
+    WByteArray arr;
     const auto s = this->save_and_size(arr);
     return s;
 }
 
-size_t WPixmap::save_and_size(QByteArray &arr) const
+size_t WPixmap::save_and_size(WByteArray &arr) const
 {
     W_ASSERT(arr.size() == 0);
     QBuffer buffer(&arr);

@@ -28,13 +28,13 @@ void __init__ initMem(void)
 static void print_mem_info(const mem_info *mem)
 {
     assert(mem);
-    QString message;
+    WString message;
 
     if(mem->line > 50000 || !mem->line){
         return;
     }
 
-    message = QString("Pointer %1 File: %2 Function %3 Line %4").arg(qstr::number((quint64)mem->pointer, 16),
+    message = WString("Pointer %1 File: %2 Function %3 Line %4").arg(qstr::number((quint64)mem->pointer, 16),
                                                                          mem->file,
                                                                          mem->function,
                                                                          qstr::number(mem->line));
@@ -94,7 +94,7 @@ static not_used void print_all_mem(void)
 
     qDebug() << "Mem leak";
 
-    for(const auto &tmp : qAsConst(*_mem)){
+    for(const auto &tmp : std::as_const(*_mem)){
         print_mem_info(&tmp);
     }
 }
@@ -105,7 +105,7 @@ void WFree_private(cvoid *mem, const char *file, const char *function)
     const mem_info *tmp;
     WListFast<mem_info> &__mem = *_mem;
     int res = 0;
-    QString msg;
+    WString msg;
 
     if(un(!mem))
         return;
@@ -129,7 +129,7 @@ out:
     _mem_mutex.unlock();
 
     if(un(!res)){
-        msg = QString("Mem free not record. Pointer %1 File %2 Function %3").arg(QString::number((quint64)mem), file, function);
+        msg = WString("Mem free not record. Pointer %1 File %2 Function %3").arg(WString::number((quint64)mem), file, function);
         qDebug() << msg;
         std::abort();
     }
@@ -144,7 +144,7 @@ void WEnd_application(void)
 
     qDebug() << "Mem leak";
 
-    for(const auto &tmp : qAsConst(*_mem)){
+    for(const auto &tmp : std::as_const(*_mem)){
         print_mem_info(&tmp);
     }
 }

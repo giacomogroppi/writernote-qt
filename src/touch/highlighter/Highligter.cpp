@@ -28,13 +28,13 @@ int Highligter::getType() const
 void Highligter::setHighligterPressureConst()
 {
     this->_type = HighligterType::HighligterTypeConstSize;
-    emit onTypeChanged();
+    W_EMIT_0(onTypeChanged);
 }
 
 void Highligter::setHighligterSize()
 {
     this->_type = HighligterType::HighligterTypePressure;
-    emit onTypeChanged();
+    W_EMIT_0(onTypeChanged);
 }
 
 pressure_t Highligter::getSize(double pressure)
@@ -46,7 +46,7 @@ pressure_t Highligter::getSize(double pressure)
     return static_cast<pressure_t>(pressure) * 20.;
 }
 
-uchar Highligter::getAlfa() const
+unsigned char Highligter::getAlfa() const
 {
     return this->_alfa;
 }
@@ -55,11 +55,11 @@ void Highligter::setAlfa(int alfa)
 {
     W_ASSERT(alfa > 0 and alfa <= 255);
     this->_alfa = alfa;
-    emit onAlfaChanged();
+    W_EMIT_0(onAlfaChanged());
 }
 
 void Highligter::setSize(double size)
 {
     this->_size = static_cast<pressure_t>(size);
-    emit onSizeChanged();
+    W_EMIT_0(onSizeChanged());
 }

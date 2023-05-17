@@ -26,7 +26,7 @@ public:
 
 public slots:
     void on_tab_main_currentChanged(int index);
-    void readyRead(QByteArray data, n_request::e_request);
+    void readyRead(WByteArray data, n_request::e_request);
 
 private slots:
     void on_button_info_clicked();

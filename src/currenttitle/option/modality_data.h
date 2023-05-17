@@ -13,6 +13,6 @@ struct modality{
     char name[LEN_MODAL];
     struct __data m_data;
 
-    uchar save_when_change = MOD_ASK_SAVE;
+    unsigned char save_when_change = MOD_ASK_SAVE;
 };
 

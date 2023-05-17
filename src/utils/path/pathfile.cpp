@@ -1,7 +1,7 @@
 #include "pathfile.h"
 #include "utils/slash/slash.h"
 
-QString pathFile::remove_file(const QString &path)
+WString pathFile::remove_file(const WString &path)
 {
     const char slash = slash::__slash();
     int indexLast = path.lastIndexOf(slash);
@@ -10,7 +10,7 @@ QString pathFile::remove_file(const QString &path)
     if(indexLast != -1)
         return path.mid(0, indexLast);
 
-    const QString &ref = pathFile::changeSlash(path);
+    const WString &ref = pathFile::changeSlash(path);
     indexLast = ref.lastIndexOf(slash);
     return ref.mid(0, indexLast);
 #else
@@ -19,8 +19,8 @@ QString pathFile::remove_file(const QString &path)
 }
 
 #if defined(WIN32) || defined(WIN64) || defined(__OS2__)
-QString pathFile::changeSlash(const QString &path){
-    QString tmp = path;
+WString pathFile::changeSlash(const WString &path){
+    WString tmp = path;
     int i;
     const int len = path.length();
     for(i=0; i<len; ++i){

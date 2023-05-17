@@ -22,6 +22,6 @@ private:
      * dato Stroke in qualche punto, non nella Page.
      * */
     std::function<void(const StrokePre &stroke)> _append_to;
-    uchar getAlfa() const final;
+    unsigned char getAlfa() const final;
 };
 

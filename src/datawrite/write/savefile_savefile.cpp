@@ -80,7 +80,7 @@ int savefile::savefile_check_file(cbool saveImg)
         return ERROR;
 #endif // PDFSUPPORT
 
-    if(writer.commit_change(*_path, QByteArray(NAME_FILE)) < 0)
+    if(writer.commit_change(*_path, WByteArray(NAME_FILE)) < 0)
         return ERROR;
 
     if(this->salvabinario(saveImg) != OK){
@@ -91,12 +91,12 @@ int savefile::savefile_check_file(cbool saveImg)
 }
 
 int save_audio_file(const char *posAudio,
-                    const QByteArray &path)
+                    const WByteArray &path)
 {
     WZipWriter writer;
 
     if(writer.init(path.constData()) < 0)
         return ERROR;
 
-    return savefile::moveFileIntoZip(QByteArray(posAudio), writer, NAME_AUDIO);
+    return savefile::moveFileIntoZip(WByteArray(posAudio), writer, NAME_AUDIO);
 }

@@ -18,14 +18,14 @@ class AudioRecord : public WObject
 {
     Q_OBJECT
 private:
-    std::function<void(const QString &)> _error;
+    std::function<void(const WString &)> _error;
     std::function<void(int)> _durationChange;
 public:
     /**
      * duration is express in seconds
     */
     explicit AudioRecord(WObject *parent,
-                         std::function<void(const QString &)> error,
+                         std::function<void(const WString &)> error,
                          std::function<void(int)> durationChange);
 
     bool isRecording() const;
@@ -38,13 +38,12 @@ public:
 
     QMediaRecorder::Error errors() const;
 
-    void setOutputLocation(const QString &path);
+    void setOutputLocation(const WString &path);
 
     qint64 getCurrentTime();
 
-    const QString getPath() const;
+    const WString getPath() const;
 
-signals:
 private slots:
     void updateProgress(qint64 duration);
     void displayErrorMessage();
@@ -135,7 +134,7 @@ inline QMediaRecorder::Error AudioRecord::errors() const
     return this->recorder->error();
 }
 
-inline void AudioRecord::setOutputLocation(const QString &path)
+inline void AudioRecord::setOutputLocation(const WString &path)
 {
     QFile::remove(path);
     this->recorder->setOutputLocation(QUrl::fromLocalFile(path));
@@ -149,7 +148,7 @@ inline qint64 AudioRecord::getCurrentTime()
     return this->recorder->duration() / 1000;
 }
 
-inline const QString AudioRecord::getPath() const
+inline const WString AudioRecord::getPath() const
 {
     return this->recorder->outputLocation().toLocalFile();
 }

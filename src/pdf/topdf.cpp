@@ -6,7 +6,7 @@
 #include "testing/memtest.h"
 #include "currenttitle/document.h"
 
-topdf::topdf(const QString &path, const Document &doc)
+topdf::topdf(const WString &path, const Document &doc)
 {
     uint i;
     const uint len = doc.lengthPage();
@@ -44,7 +44,7 @@ bool topdf::createpdf(cbool withPdf)
     const uint lenpage = data->lengthPage();
     uint i;
     const PointF pointData = data->getPointFirstPage();
-    uchar ret = 1;
+    unsigned char ret = 1;
     this->translate();
 
 

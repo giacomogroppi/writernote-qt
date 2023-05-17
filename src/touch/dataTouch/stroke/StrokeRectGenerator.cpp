@@ -3,11 +3,11 @@
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/stroke/StrokePre.h"
 
-static Rect area;
+static RectF area;
 
-bool StrokeRectGenerator::is_near_rect_x(const Rect &area, const Point &point)
+bool StrokeRectGenerator::is_near_rect_x(const RectF &area, const PointF &point)
 {
-    constexpr Point delta(50, 0);
+    constexpr PointF delta(50, 0);
     const auto res1 = area.contains(point - delta);
     const auto res2 = area.contains(point + delta);
 
@@ -18,9 +18,9 @@ bool StrokeRectGenerator::is_near_rect_x(const Rect &area, const Point &point)
     return true;
 }
 
-bool StrokeRectGenerator::is_near_rect_y(const Rect &area, const Point &point)
+bool StrokeRectGenerator::is_near_rect_y(const RectF &area, const PointF &point)
 {
-    constexpr Point delta(0, 50);
+    constexpr PointF delta(0, 50);
     const auto res1 = area.contains(point - delta);
     const auto res2 = area.contains(point + delta);
 
@@ -31,7 +31,7 @@ bool StrokeRectGenerator::is_near_rect_y(const Rect &area, const Point &point)
     return true;
 }
 
-double StrokeRectGenerator::is_near_rect(const Rect &area, const Point &point)
+double StrokeRectGenerator::is_near_rect(const RectF &area, const PointF &point)
 {
     const auto res1 = is_near_rect_x(area, point);
     const auto res2 = is_near_rect_y(area, point);
@@ -84,5 +84,5 @@ double StrokeRectGenerator::model_near(const StrokePre &stroke)
 
     WDebug(StrokeRectGeneratorDebug, precision);
 
-    return precision / stroke._point.length() * 3.;
+    return precision / stroke._point.size() * 3.;
 }

@@ -41,16 +41,16 @@ void StrokeRect::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, 
     set_press(pen, _data.press, prop, is_rubber, this->getColor(1.));
 
     const auto _topLeft     = Page::at_translation(
-                Point(
+                PointF(
                     _data.rect.topLeft()),
                     page
-                ).toPointF(prop);
+                ) * prop;
 
     const auto _bottomRight = Page::at_translation(
-                Point(
+                PointF(
                     _data.rect.bottomRight()),
                     page
-                ).toPointF(prop);
+                ) * prop;
 
     painter.drawRect(RectF(_topLeft, _bottomRight));
 }
@@ -72,7 +72,7 @@ bool StrokeRect::is_inside(const RectF &rect, double precision) const
     return this->_data.rect.intersects(r);
 }
 
-void StrokeRect::append(const Point &point, pressure_t pressure)
+void StrokeRect::append(const PointF &point, pressure_t pressure)
 {
     using namespace WCommonScript;
     const auto distanceTopLeft = distance(point, _data.rect.topLeft());
@@ -175,9 +175,9 @@ bool StrokeRect::isEmpty() const
     return false;
 }
 
-Rect StrokeRect::getBiggerPointInStroke() const
+RectF StrokeRect::getBiggerPointInStroke() const
 {
-    return _data.rect.toRect();
+    return _data.rect;
 }
 
 bool StrokeRect::isInside(const RectF &rect) const
@@ -197,7 +197,14 @@ int StrokeRect::save(WZipWriterSingle &file) const
     file.write_object(this->_data);
 
     // 4 for alignment
-    static_assert(sizeof(this->_data) == (sizeof(RectF) + sizeof(pressure_t) + 4));
+    static_assert(
+        sizeof(this->_data) ==
+        (
+            sizeof(RectF) +
+            sizeof(pressure_t) +
+            4
+        )
+    );
 
     return OK;
 }
@@ -209,7 +216,7 @@ size_t StrokeRect::getSizeInMemory() const
 
 size_t StrokeRect::getSizeInFile() const
 {
-    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(uchar));
+    static_assert(sizeof(StrokeComplexCommon::current_ver) == sizeof(unsigned char));
     static_assert(sizeof(this->_data) == (sizeof(PointF) * 2 + sizeof(pressure_t) + 4));
 
     return sizeof(StrokeComplexCommon::current_ver) +

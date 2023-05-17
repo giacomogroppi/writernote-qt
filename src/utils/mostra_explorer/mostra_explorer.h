@@ -3,5 +3,5 @@
 
 #include "core/WString.h"
 
-void mostra_explorer(const QString & );
+void mostra_explorer(const WString & );
 
