@@ -55,11 +55,11 @@ void Highligter::setAlfa(int alfa)
 {
     W_ASSERT(alfa > 0 and alfa <= 255);
     this->_alfa = alfa;
-    W_EMIT_0(onAlfaChanged());
+    W_EMIT_0(onAlfaChanged);
 }
 
 void Highligter::setSize(double size)
 {
     this->_size = static_cast<pressure_t>(size);
-    W_EMIT_0(onSizeChanged());
+    W_EMIT_0(onSizeChanged);
 }

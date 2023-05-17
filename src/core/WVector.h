@@ -34,7 +34,7 @@ public:
     bool isOrder() const;
     void order();
     void insert(int index, const T& data);
-
+    T& takeFirst();
     const T* constData() const;
 
     class iterator{

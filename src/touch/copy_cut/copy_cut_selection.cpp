@@ -83,7 +83,7 @@ int copy::selection(
     PointF tmpPoint;
     int lenList, i;
 
-    lenList = stroke.length();
+    lenList = stroke.size();
 
     if(__flags == SELECTION_FLAGS_PASTE){
         //tmpPoint = data.adjustPoint(pointTouch);

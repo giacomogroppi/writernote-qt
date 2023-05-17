@@ -6,6 +6,7 @@
 #include "utils/common_error_definition.h"
 #include "core/WZip.h"
 #include "core/WString.h"
+#include "core/WListFast.h"
 
 class readListArray
 {
@@ -21,11 +22,11 @@ public:
      * ogni file, per ogni nome all'interno del list_name e apperderà tutto
      * alla lista di WByteArray
 */
-    static unsigned char read(const std::vector<std::string> &list_name, zip_t *zip_file,
-                     std::vector<std::string> &arr, cbool clear);
+    static unsigned char read(const WListFast<WString> &list_name, zip_t *zip_file,
+                     WListFast<WString> &arr, cbool clear);
 
-    static unsigned char read(const std::vector<std::string> &list_name, WZip &zip,
-                      std::vector<std::string> &arr, cbool clear);
+    static unsigned char read(const WListFast<WString> &list_name, WZip &zip,
+                      WListFast<WString> &arr, cbool clear);
 };
 
 

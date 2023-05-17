@@ -5,6 +5,8 @@
 #include "core/WList.h"
 #include <functional>
 #include <iostream>
+#include <algorithm>
+#include <utility>
 
 #define W_EMITTABLE_PRIVATE_LIST(name_signals, ...) \
     private:                                   \

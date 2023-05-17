@@ -5,6 +5,7 @@
 #include "core/WList.h"
 #include "core/Rect.h"
 #include "core/WListFast.h"
+#include <memory>
 
 class Stroke;
 class DataStruct;

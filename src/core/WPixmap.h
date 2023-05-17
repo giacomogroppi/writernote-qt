@@ -7,11 +7,13 @@
 #include "WByteArray.h"
 #include "RectF.h"
 #include "WImage.h"
+#include "WString.h"
 
 class WPixmap
 {
 public:
     explicit WPixmap(int page, bool consideringResolution);
+    WPixmap(const WString &path);
     WPixmap() = default;
     explicit WPixmap(const std::string &path, const char *format = nullptr);
 
@@ -23,7 +25,8 @@ public:
     WImage toImage() const;
     bool isNull() const;
 
-    void loadFromData(const WByteArray& data, const char *formact);
+    bool loadFromData(const WByteArray& data, const char *formact);
+    bool loadFromData(const void *data, size_t size, const char *formact);
 
     bool operator==(const WPixmap &other) const;
 #ifdef USE_QT

@@ -1,6 +1,8 @@
 #include "get_path.h"
 #include "utils/slash/slash.h"
 #include "utils/get_path_application.h"
+#include "core/WDir.h"
+#include "file/Directory.h"
 
 #if defined(unix) || defined(MACOS) || defined(IOS_WRITERNOTE)
 #define POS_HOME "HOME"
@@ -14,8 +16,8 @@
 static bool createTempFolder(const WString &path);
 
 static bool createTempFolder(const WString &path){
-    if(!Directory(path).exists()){
-        return Directory().mkdir(path);
+    if(!WDir::exists(path.toUtf8())){
+        return WDir::createDir(path.toUtf8());
     }
 
     return true;

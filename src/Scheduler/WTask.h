@@ -2,22 +2,17 @@
 
 #include "Scheduler/WObject.h"
 
-class WTask:    public WObject,
-                public QRunnable,
-
+class WTask:    public WObject
 {
 public:
     explicit WTask(WObject *parent = nullptr);
     ~WTask() override = default;
 
-    void run() override;
+    void run();
 
-    Q_DISABLE_COPY(WTask);
-
-signals:
     /**
      * @ensures task == this
      * */
-    void finished(WTask *task);
+    W_EMITTABLE_1(finished, WTask*, task);
 };
 

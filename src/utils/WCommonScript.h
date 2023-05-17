@@ -114,21 +114,6 @@ force_inline void swap(T &t1, T &t2)
     }
 
 
-template <typename T>
-force_inline int is_order_list(const std::vector<T> &list)
-{
-    int i, len;
-    len = list.length();
-    for(i = 0; i < len - 1; i++){
-        if(list.at(i) > list.at(i+1))
-            return 0;
-        //if(list.at(i) > list.at(i+1))
-        //    return 0;
-    }
-
-    return 1;
-}
-
 force_inline size_t WMemcpy(void *to, const void *from, size_t size)
 {
     W_ASSERT(from);
@@ -139,73 +124,7 @@ force_inline size_t WMemcpy(void *to, const void *from, size_t size)
 }
 
 template <typename T>
-force_inline int is_order_vector(const std::vector<T> &list)
-{
-    int i, len;
-    len = list.length();
-    for(i = 0; i < len - 1; i++){
-        if(list.at(i) > list.at(i+1))
-            return 0;
-    }
-
-    return 1;
-}
-
-template <typename T>
-force_inline int is_order_multiple(const std::vector<std::vector<T>> &list)
-{
-    int i, len;
-    len = list.length();
-    for(i = 0; i < len; i++){
-        if(!is_order_vector(list.at(i)))
-            return 0;
-    }
-
-    return 1;
-}
-
-/*
- * very fast when the list is almost sorted,
- * otherwise use std :: sort
-*/
-template <typename T>
-inline void order_list(std::vector<T> &list)
-{
-    int i, j;
-    int n = list.length();
-
-    for (i = 0; i < n - 1; i++){
-        for (j = 0; j < n - i - 1; j++){
-            auto &val1 = list.operator[](j);
-            auto &val2 = list.operator[](j+1);
-
-            if (val1 > val2){
-                list.swapItemsAt(j, j + 1);
-            }
-        }
-    }
-}
-
-template <typename T>
-inline void order_vector(std::vector<T> &list)
-{
-    int i, j;
-    int n = list.length();
-
-    for (i = 0; i < n - 1; i++){
-        for (j = 0; j < n - i - 1; j++){
-            auto &val1 = list.operator[](j);
-            auto &val2 = list.operator[](j+1);
-
-            if (val1 > val2){
-                list.swapItemsAt(j, j + 1);
-            }
-        }
-    }
-}
-
-template <typename T>
-force_inline int is_present_in_list_order_list(const std::vector<T> &list, const T& element)
+force_inline int is_present_in_list_order_list(const T &list, const T& element)
 {
     //the list must be sorted
     W_ASSERT(is_order_list(list));
@@ -223,40 +142,16 @@ force_inline int is_present_in_list_order_list(const std::vector<T> &list, const
     return -1;
 }
 
-    template <class T>
-    force_inline int contains(const std::vector<T> &vec, const T& value)
-    {
-        return std::count(vec.begin(),
-                          vec.end(),
-                          value);
-    }
 
 template <typename T>
-force_inline int is_present_in_list_order_vector(const std::vector<T> &list, const T& element)
-{
-    W_ASSERT(is_order_vector(list));
-
-    int i, len = list.length();
-    for(i = 0; i < len; i++){
-        const T& tmp = list.at(i);
-        if(tmp == element)
-            return i;
-
-        if(tmp > element)
-            return -1;
-    }
-    return -1;
-}
-
-template <typename T>
-force_inline void append_if_not_present(std::vector<T> &list, const T& value)
+force_inline void append_if_not_present(T &list, const T& value)
 {
     if(list.indexOf(value) == -1)
         list.append(value);
 }
 
 template<typename T>
-force_inline void append_if_not_present_order(std::vector<T> &list, const T& value)
+force_inline void append_if_not_present_order(T &list, const T& value)
 {
 #if defined(DEBUGINFO)
     Q_ASSERT(is_order(list));
@@ -332,15 +227,6 @@ force_inline void abortIfDebug(cchar *file, int line){
     unused(file);
     unused(line);
 #endif
-}
-
-template <typename T>
-inline void __order(std::vector<std::vector<T>> & list){
-    int i, len = list.length();
-
-    for(i = 0; i < len; i++){
-        order(list.operator[](i));
-    }
 }
 
 #define EXEC_TIME(message, function)                \
@@ -473,7 +359,7 @@ force_inline bool is_near(const PointF &point1, const PointF &point2, cdouble pr
 }
 
 template<typename T>
-force_inline void order_complex(const std::vector<T> &list, int (*cmpFunctions) (const T&, const T&))
+force_inline void order_complex(const T &list, int (*cmpFunctions) (const T&, const T&))
 {
     int i, j;
     int n = list.length();
@@ -492,7 +378,7 @@ force_inline void order_complex(const std::vector<T> &list, int (*cmpFunctions) 
 }
 
 template<typename T>
-force_inline bool is_order_complex(const std::vector<T> &list, int (*cmpFunctions) (const T&, const T&))
+force_inline bool is_order_complex(const T &list, int (*cmpFunctions) (const T&, const T&))
 {
     int i;
     int n = list.length();
@@ -518,7 +404,7 @@ force_inline bool is_included(const T& val, const T& min, const T& max)
 }
 
 template<typename T>
-force_inline void append_order(std::vector<T> & list, const T& element)
+force_inline void append_order(T & list, const T& element)
 {
     int i, len;
 
@@ -621,22 +507,6 @@ inline void for_each(T1 &l1, T2 &l2, Z function)
         function(*b1, *b2);
         b1++;
         b2++;
-    }
-}
-
-template <class T>
-force_inline void removeFromArray(std::vector<T> &vec, const T& object)
-{
-    for (int i = 0; i < (int) vec.size(); i++) {
-        if(vec.at(i) == object) {
-            /**
-             * technically the compiler should execute the std::next function in O(1).
-             * */
-            vec.erase(
-                    std::next(vec.begin(),
-                              i)
-            );
-        }
     }
 }
 

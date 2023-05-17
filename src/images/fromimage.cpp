@@ -149,7 +149,7 @@ fromimage::load_res_img fromimage::load_multiple_img(const WListFast<WByteArray>
     fromimage::load_res_img res;
     struct immagine_s img;
 
-    len = arr.length();
+    len = arr.size();
     for(i=0; i<len; ++i){
         res = fromimage::load_single_img(arr.at(i), m_img.operator[](i));
         if(res != fromimage::load_res_img::ok)
@@ -178,15 +178,15 @@ unsigned fromimage::insert_image(   const WString &pos,
     WString res;
     W_ASSERT(pos.size());
 
-    WPixmap immagine(res);
+    WImage immagine(res);
     img.immagini = immagine;
 
     if (point) {
-        img.i = point->toPoint();
-        img.f = point->toPoint() + Point(DELTA_POINT, DELTA_POINT);
+        img.i = *point;
+        img.f = *point + PointF(DELTA_POINT, DELTA_POINT);
     } else {
-        img.i = Point(0, 0);
-        img.f = Point(DELTA_POINT, DELTA_POINT);
+        img.i = PointF(0, 0);
+        img.f = PointF(DELTA_POINT, DELTA_POINT);
     }
 
     return OK;

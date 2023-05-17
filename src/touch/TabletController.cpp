@@ -162,7 +162,7 @@ void TabletController::selectColor(const colore_s &color)
 
 void TabletController::positionDocChanged(const PointF &newPosition)
 {
-    this->_doc->setPointFirstPage(-newPosition);
+    this->_doc->setPointFirstPage(newPosition * (-1.));
 }
 
 void TabletController::setAndCallTool(Tools *tool)

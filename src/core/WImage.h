@@ -29,6 +29,7 @@ private:
     void *d;
 #endif
 public:
+    WImage(const WString &path);
     explicit WImage(const std::string &fileName, const char *format = nullptr);
     explicit WImage(int page, bool consideringResolution);
     WImage(int width, int height, WImageType format);
@@ -37,10 +38,14 @@ public:
     [[nodiscard]] size_t get_size_in_file() const;
     [[nodiscard]] size_t save_and_size(WByteArray &arr) const;
 
+    bool loadFromData(const WByteArray &data, const char *data);
+
     int height() const;
     int width() const;
 
     RectF rect() const;
+
+    bool isNull() const;
 
 #ifdef USE_QT
     [[nodiscard]] QImage toQImage() const;

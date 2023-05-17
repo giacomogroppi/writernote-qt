@@ -1,6 +1,7 @@
 #include "WPool.h"
 #include "utils/WCommonScript.h"
 
+/*
 WPool::WPool(WObject *parent)
     : WObject(parent)
     , _priority(0)
@@ -42,3 +43,4 @@ void WPool::threadFinish(WTask *)
 {
     --_active_thread;
 }
+*/
