@@ -1,8 +1,8 @@
 #include "Scheduler.h"
 #include "core/WMutexLocker.h"
 #include "utils/threadcount.h"
-#include <Pointer>
 
+/*
 Scheduler::Scheduler(WObject *parent)
     : WObject(parent)
     , _need_to_sort(false)
@@ -106,3 +106,4 @@ QThreadPool *Scheduler::getThreadPool()
 {
     return &this->_threads;
 }
+*/

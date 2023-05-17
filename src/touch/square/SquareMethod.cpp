@@ -94,7 +94,7 @@ void * __square_search(void *__data)
     auto *data = static_cast<DataPrivateMuThread *>(__data);
     bool in_box = false;
 
-    assert(data->from <= data->to);
+    W_ASSERT(data->from <= data->to);
 
     for (; data->from < data->to;  data->from ++) {
         const Stroke &stroke = __page->atStroke(data->from);

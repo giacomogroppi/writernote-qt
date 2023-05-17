@@ -2,7 +2,6 @@
 
 
 #include "core/WString.h"
-#include <QStandardPaths>
 
 namespace get_path_application
 {
@@ -11,6 +10,10 @@ namespace get_path_application
     */
     inline WString exe()
     {
+    #ifdef USE_QT
         return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    #else
+
+    #endif // USE_QT
     }
 };

@@ -1,10 +1,12 @@
 #include "topdf.h"
-#include <QPdfWriter>
-#include <QPageSize>
 #include "log/log_ui/log_ui.h"
 #include "frompdf/frompdf.h"
 #include "testing/memtest.h"
 #include "currenttitle/document.h"
+
+#ifdef USE_QT
+#include <QPdfWriter>
+#include <QPageSize>
 
 topdf::topdf(const WString &path, const Document &doc)
 {
@@ -89,3 +91,5 @@ bool topdf::createpdf(cbool withPdf)
     data->scala_all(pointData, INT_MAX);
     return ret;
 }
+
+#endif // USE_QT

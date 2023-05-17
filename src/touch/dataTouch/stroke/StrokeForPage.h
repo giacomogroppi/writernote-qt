@@ -10,6 +10,7 @@
 #include "core/WPixmap.h"
 #include "core/Point.h"
 #include "core/WPainter/WPainter.h"
+#include <memory>
 
 class StrokeForPage {
 private:

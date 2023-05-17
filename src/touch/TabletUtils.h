@@ -48,7 +48,7 @@ public:
                          bool withPdf, bool isExporting, const RectF &visibleArea);
     ~TabletUtils() = default;
 
-    constexpr int getTime() const;
+    int getTime() const;
     constexpr bool withPdf() const;
     constexpr void setPainter(WPainter &painter);
     constexpr double getZoom() const;
@@ -111,7 +111,7 @@ inline constexpr double TabletUtils::getZoom() const
     return this->_doc.getZoom();
 }
 
-inline constexpr int TabletUtils::getTime() const
+inline int TabletUtils::getTime() const
 {
     return this->_positionAudio();
 }

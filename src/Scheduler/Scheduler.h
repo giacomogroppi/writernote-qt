@@ -1,20 +1,18 @@
 #pragma once
 
 #include <functional>
-#include <QtGlobal>
 #include "Scheduler/WObject.h"
 #include <queue>
 #include "WPool.h"
 #include "core/WMutex.h"
 #include "core/AtomicSafe.h"
-#include <QThread>
-#include <QThreadPool>
 
 class SchedulerThreadData {
 public:
     bool *thread;
 };
 
+/*
 class Scheduler final: public WObject{
 private:
     std::vector<WPool *> _pools_active;
@@ -24,23 +22,21 @@ private:
     mutable WMutex _pool_not_active_locker;
     QThreadPool _threads;
 
-    /**
-     * //@ requires
-     * //@   _pools is locked
-     * //@ ensures
-     * //@  (\forall int i; 0 <= i < _pools.size();
-     * //@      _pools[0]->getPriority() >= _pools[i]->getPriority())
-     * */
+     //@ requires
+     //@   _pools is locked
+     //@ ensures
+     //@  (\forall int i; 0 <= i < _pools.size();
+     //@      _pools[0]->getPriority() >= _pools[i]->getPriority())
+     //
     void createHeap();
 
-    /**
-     * //@ requires
-     * //@   _pool_locker is not locked
-     * //@ ensures
-     * //@   (*_pool_locker is not locked*) &&
-     * //@   \result <==> (\forall int i; 0 <= i < _pools.size();
-     * //@       _pools.at(0)->getPriority() >= _pools.at(i)->getPriority())
-     * */
+     //@ requires
+     //@   _pool_locker is not locked
+     //@ ensures
+     //@   (*_pool_locker is not locked*) &&
+     //@   \result <==> (\forall int i; 0 <= i < _pools.size();
+     //@       _pools.at(0)->getPriority() >= _pools.at(i)->getPriority())
+     //
     bool is_heap() const;
 
     AtomicSafe<bool> _need_to_sort;
@@ -61,4 +57,4 @@ private slots:
     void onPoolEnd(WPool *pool);
     void onJobAvailable(WPool *pool);
 };
-
+*/

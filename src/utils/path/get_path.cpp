@@ -10,13 +10,12 @@
 
 #define FOLDERNAME ".writernote"
 #define NAME_USER "USERNAME" /* saim form linux and windows */
-#include <QDir>
 
 static bool createTempFolder(const WString &path);
 
 static bool createTempFolder(const WString &path){
-    if(!QDir(path).exists()){
-        return QDir().mkdir(path);
+    if(!Directory(path).exists()){
+        return Directory().mkdir(path);
     }
 
     return true;
