@@ -42,6 +42,138 @@ public:
 };
 
 template<typename T>
+inline constexpr PointTemplate<T> &PointTemplate<T>::operator-=(const PointTemplate<T> &other)
+{
+    this->_x -= other._x;
+    this->_y -= other._y;
+
+    return *this;
+}
+
+template<typename T>
+inline constexpr PointTemplate<T> &PointTemplate<T>::operator+=(const PointTemplate<T> &other)
+{
+    this->_x += other._x;
+    this->_y += other._y;
+
+    return *this;
+}
+
+template<typename T>
+inline constexpr PointTemplate<T> &PointTemplate<T>::operator/=(double d)
+{
+    this->_x /= d;
+    this->_y /= d;
+    return *this;
+}
+
+template<typename T>
+inline constexpr PointTemplate<T> &PointTemplate<T>::operator*=(double d)
+{
+    this->_x *= d;
+    this->_y *= d;
+    return *this;
+}
+
+template<typename T>
+inline constexpr PointTemplate<T> PointTemplate<T>::operator-(const PointTemplate<T> &other) const
+{
+    auto res = PointTemplate<T>();
+    res._x = this->_x - other._x;
+    res._y = this->_y - other._y;
+
+    return res;
+}
+
+template<typename T>
+inline constexpr PointTemplate<T> PointTemplate<T>::operator/(double d) const
+{
+    auto res = PointTemplate<T>();
+    res._y = this->_y / d;
+    res._x = this->_x / d;
+    return res;
+}
+
+template<typename T>
+inline constexpr PointTemplate<T> PointTemplate<T>::operator*(double d) const
+{
+    auto res = PointTemplate<T>();
+    res._y = this->_y * d;
+    res._x = this->_x * d;
+    return res;
+}
+
+template<typename T>
+constexpr PointTemplate<T> PointTemplate<T>::operator+(const PointTemplate<T> &other) const
+{
+    auto res = PointTemplate<T>();
+    res._x = this->_x + other._x;
+    res._y = this->_y + other._y;
+
+    return res;
+}
+
+template<typename T>
+inline bool PointTemplate<T>::operator==(const PointTemplate<T> &other) const
+        {
+    return this->_x == other._x && this->_y == other._y;
+}
+
+template<typename T>
+inline PointTemplate<T> &PointTemplate<T>::operator=(const PointTemplate<T> &other)
+{
+    if (this == &other)
+        return *this;
+
+    _x = other._x;
+    _y = other._y;
+
+    return *this;
+}
+
+template<typename T>
+inline T PointTemplate<T>::setY(T y)
+{
+    _y = y;
+}
+
+template<typename T>
+inline T PointTemplate<T>::setX(T x)
+{
+    _x = x;
+}
+
+template<typename T>
+template<typename Z>
+inline PointTemplate<Z> PointTemplate<T>::castTo() const
+{
+    return PointTemplate<Z>((Z) y(), (Z) y());
+}
+
+template<typename T>
+inline T &PointTemplate<T>::ry()
+{
+    return _y;
+}
+
+template<typename T>
+inline T &PointTemplate<T>::rx() {
+    return _x;
+}
+
+template<typename T>
+inline constexpr T PointTemplate<T>::y() const
+{
+    return this->_y;
+}
+
+template<typename T>
+inline constexpr T PointTemplate<T>::x() const
+{
+    return _x;
+}
+
+template<typename T>
 inline constexpr PointTemplate<T>::PointTemplate(T x, T y)
     : _x(x)
     , _y(y)

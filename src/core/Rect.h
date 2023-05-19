@@ -17,11 +17,11 @@ public:
     constexpr RectTemplate() = default;
     constexpr RectTemplate(const RectTemplate<T> &other);
     constexpr RectTemplate(const PointTemplate<T> &topLeft, const PointTemplate<T> &bottomRight);
-    constexpr RectTemplate(const WSizeTemplate<T> &size);
+    constexpr explicit RectTemplate(const WSizeTemplate<T> &size);
     constexpr RectTemplate(T xTopLeft, T yTopLeft, T xBottomRight, T yBottomRight);
     constexpr RectTemplate(const PointTemplate<T>&point, const WSizeTemplate<T> &size);
 
-    constexpr RectTemplate addY(T y) const;
+    constexpr RectTemplate<T> addY(T y) const;
 
     const PointTemplate<T> &topLeft() const;
     const PointTemplate<T> &topRight() const;
@@ -49,8 +49,8 @@ public:
     T y() const;
     T x() const;
 
-    template <class Z>
-    constexpr RectTemplate<Z> &castTo() const;
+    template <typename Z>
+    constexpr RectTemplate<Z> castTo() const;
 
     bool intersects(const RectTemplate<T> &other) const;
     RectTemplate<T> intersected(const RectTemplate<T> &other) const;
@@ -70,6 +70,114 @@ public:
 
     constexpr bool operator==(const RectTemplate &other) const;
 };
+
+template<typename T>
+template<typename Z>
+inline constexpr RectTemplate<Z> RectTemplate<T>::castTo() const {
+    return RectTemplate<Z>(_topLeft.template castTo<Z>(), _bottomRight.template castTo<Z>());
+}
+
+template<typename T>
+inline RectTemplate<T> RectTemplate<T>::setWidth(T width)
+{
+    _bottomRight.setX(
+        _topLeft.x() + width
+    );
+    return *this;
+}
+
+template<typename T>
+inline RectTemplate<T> RectTemplate<T>::setHeight(T height)
+{
+    _bottomRight.setY(
+        _topLeft.y() + height
+    );
+    return *this;
+}
+
+template<typename T>
+inline const PointTemplate<T> &RectTemplate<T>::bottomLeft() const {
+    return PointTemplate<T> {
+        _topLeft.x(),
+        _bottomRight.y()
+    };
+}
+
+template<typename T>
+const PointTemplate<T> &RectTemplate<T>::bottomRight() const {
+    return _bottomRight;
+}
+
+template<typename T>
+inline void RectTemplate<T>::setBottomLeft(const PointTemplate<T> &bottomLeft)
+{
+    _topLeft.setX(
+            bottomLeft.x()
+    );
+
+    _bottomRight.setY(
+        bottomLeft.y()
+    );
+}
+
+template<typename T>
+const PointTemplate<T> &RectTemplate<T>::topRight() const {
+    return PointTemplate<T> {
+        _bottomRight.x(),
+        _topLeft.y()
+    };
+}
+
+template<typename T>
+const PointTemplate<T> &RectTemplate<T>::topLeft() const {
+    return this->_topLeft;
+}
+
+template<typename T>
+inline constexpr RectTemplate<T> RectTemplate<T>::addY(T y) const
+{
+    return RectTemplate {
+        _topLeft.x(),
+        _topLeft.y() + y,
+        _bottomRight.x(),
+        _bottomRight.y() + y
+    };
+}
+
+template<typename T>
+inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &point, const WSizeTemplate<T> &size)
+    : _topLeft(point)
+    , _bottomRight(point.x() + size.getWidth(), point.y() + size.getHeight())
+{
+}
+
+template<typename T>
+inline constexpr RectTemplate<T>::RectTemplate(T xTopLeft, T yTopLeft, T xBottomRight, T yBottomRight)
+    : _topLeft(xTopLeft, yTopLeft)
+    , _bottomRight(xBottomRight, yBottomRight)
+{
+}
+
+template<typename T>
+inline constexpr RectTemplate<T>::RectTemplate(const WSizeTemplate<T> &size)
+    : _topLeft((T) 0, (T) 0)
+    , _bottomRight(size.getWidth(), size.getHeight())
+{
+}
+
+template<typename T>
+inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &topLeft, const PointTemplate<T> &bottomRight)
+    : _topLeft(topLeft)
+    , _bottomRight(bottomRight)
+{
+}
+
+template<typename T>
+inline constexpr RectTemplate<T>::RectTemplate(const RectTemplate<T> &other)
+    : _bottomRight(other._bottomRight)
+    , _topLeft(other._topLeft)
+{
+}
 
 using Rect = RectTemplate<int>;
 
