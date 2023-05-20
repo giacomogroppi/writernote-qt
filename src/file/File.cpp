@@ -84,3 +84,8 @@ bool File::operator==(const File &other) const
         return true;
     return this->getFullName() == other.getFullName();
 }
+
+inline File::File()
+{
+    this->_name = "";
+}

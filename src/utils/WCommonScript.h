@@ -337,13 +337,13 @@ force_inline double distance(const PointF& first, const PointF& second)
     return std::sqrt(distance_not_square(first, second));
 }
 
-// return true if left <= value <= rigth
+// return true if left <= value <= right
 force_inline bool is_between(const double left, const double value, const double rigth)
 {
     return left <= value and value <= rigth;
 }
 
-// return true if qMin(left, rigth) <= value <= qMax(rigth, left)
+// return true if qMin(left, rigth) <= value <= qMax(right, left)
 force_inline bool is_between_change(const double left, const double value, const double rigth)
 {
     const auto min = std::min(left, rigth);

@@ -24,6 +24,11 @@ public:
     T setX(T x);
     T setY(T y);
 
+    PointTemplate<T> left(T amount) const;
+    PointTemplate<T> right(T amount) const;
+    PointTemplate<T> top(T amount) const;
+    PointTemplate<T> bottom(T amount) const;
+
     template <typename Z>
     PointTemplate<Z> castTo() const;
 
@@ -40,6 +45,42 @@ public:
     constexpr PointTemplate<T> &operator+=(const PointTemplate<T> &other);
     constexpr PointTemplate<T> &operator-=(const PointTemplate<T> &other);
 };
+
+template<typename T>
+inline PointTemplate<T> PointTemplate<T>::right(T amount) const
+{
+    return {
+        _x + amount,
+        _y
+    };
+}
+
+template<typename T>
+inline PointTemplate<T> PointTemplate<T>::top(T amount) const
+{
+    return {
+        _x,
+        _y - amount
+    };
+}
+
+template<typename T>
+inline PointTemplate<T> PointTemplate<T>::bottom(T amount) const
+{
+    return {
+        _x,
+        _y + amount
+    };
+}
+
+template<typename T>
+inline PointTemplate<T> PointTemplate<T>::left(T amount) const
+{
+    return {
+        _x - amount,
+        _y
+    };
+}
 
 template<typename T>
 inline constexpr PointTemplate<T> &PointTemplate<T>::operator-=(const PointTemplate<T> &other)
