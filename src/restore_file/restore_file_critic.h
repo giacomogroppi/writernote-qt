@@ -2,6 +2,9 @@
 
 #include "core/WString.h"
 #include "core/WByteArray.h"
+#include <functional>
+#include <iostream>
+
 
 #define VAL_RES "_res"
 #define NAME_EXT "writernote"

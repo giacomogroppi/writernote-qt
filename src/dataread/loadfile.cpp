@@ -7,6 +7,7 @@
 #include "core/WZip.h"
 #include "core/WZipReaderSingle.h"
 #include "log/log_ui/log_ui.h"
+#include <cassert>
 
 int xmlstruct::load_stringa(zip_file_t *f, WString &stringa)
 {

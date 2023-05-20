@@ -6,6 +6,8 @@
 #define WRITERNOTE_WLISTFAST_H
 
 #include <iostream>
+#include <algorithm>
+#include <utility>
 #include "utils/WCommonScript.h"
 
 // do some refactoring

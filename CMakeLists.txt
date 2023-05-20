@@ -4,7 +4,7 @@ project(writernote LANGUAGES CXX)
 include(FindPkgConfig)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(UNIX AND NOT APPLE AND NOT MINGW)
@@ -383,10 +383,6 @@ if(APPLE)
         MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/macos-build/Info.plist
     )
 else()
-    set_target_properties(
-    	${PROJECT_NAME}
-    	PROPERTIES
-    )
 endif()
 
 if(PDFSUPPORT)
@@ -423,9 +419,6 @@ if(PDFSUPPORT)
 
     elseif(LINUX)        
         message("project source " ${PROJECT_SOURCE_DIR})
-        include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/qt6/src/)
-        include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/build/qt6/src)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/poppler/install/libpoppler-qt6.so)
 
     elseif(WIN)
         include_directories(${PROJECT_SOURCE_DIR}/3rdparty/poppler/include/poppler/qt6)
