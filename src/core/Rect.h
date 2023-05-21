@@ -7,6 +7,7 @@
 
 #include "core/PointTemplate.h"
 #include "core/WSizeTemplate.h"
+#include "utils/WCommonScript.h"
 
 template<typename T>
 class RectTemplate {

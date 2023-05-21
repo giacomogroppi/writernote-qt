@@ -2,71 +2,164 @@
 #define WRITERNOTE_WBYTEARRAY_H
 
 #include <iostream>
+#include "utils/WCommonScript.h"
+
+/**
+ * TODO: implement a reserved memory
+ * */
 
 class WByteArray {
 private:
     void test() const;
     char *_data;
-    int _size;
+    unsigned _size;
 public:
     WByteArray ();
-    WByteArray(const char *data, size_t size = -1);
+    WByteArray(const char *data, int size = -1);
+    ~WByteArray();
 
     std::string toStdString() const;
     const char *constData() const;
     size_t size() const;
     void append(char data);
-    void append(const char *data, int size = -1);
+    void append(const char *data, unsigned size);
     char at(int i) const;
     void clear() noexcept;
+
+    void reserve(unsigned numerOfChar);
 
     WByteArray mid(int from, int to) const;
 
     bool operator==(const WByteArray &other) const;
-    WByteArray &operator+(const WByteArray &other) const;
+    WByteArray operator+(const WByteArray &other) const;
     WByteArray &operator+=(const WByteArray &other);
 
     static WByteArray fromRawData(const char *data, int size);
 
     class iterator{
     private:
-        char *array;
-        int index;
+        char *_array;
+        unsigned _index;
     public:
-        explicit iterator(char *data) : array(data), index(0) {; };
+        explicit iterator(char *data, unsigned index) : _array(data), _index(index) {; };
 
-        //T* operator->()         { return array._data[index]; };
-        char &operator*() const    { return array[index]; };
-        bool operator==(iterator i) const         { return index == i.index; }
-        bool operator!=(iterator i) const         { return index != i.index; }
-        iterator &operator++()                              { index ++; return *this; }
+        //T* operator->()         { return array._data[_index]; };
+        char &operator*() const    { return _array[_index]; };
+        bool operator==(iterator i) const         { return _index == i._index; }
+        bool operator!=(iterator i) const         { return _index != i._index; }
+        iterator &operator++()                              { _index ++; return *this; }
         iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
     class const_iterator{
     private:
-        const char* array;
-        int index;
+        const char* _array;
+        unsigned _index;
     public:
-        explicit const_iterator(const char *data) : array(data), index(0) {  };
+        explicit const_iterator(const char *data, unsigned index) : _array(data), _index(0) {  };
 
-        const char &operator*() const    { return array[index]; };
-        bool operator==(const_iterator i) const         { return index == i.index; }
-        bool operator!=(const_iterator i) const         { return index != i.index; }
-        const_iterator &operator++()                              { index ++; return *this; }
+        const char &operator*() const    { return _array[_index]; };
+        bool operator==(const_iterator i) const         { return _index == i._index; }
+        bool operator!=(const_iterator i) const         { return _index != i._index; }
+        const_iterator &operator++()                              { _index ++; return *this; }
         const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
-    iterator begin() noexcept { test(); return iterator(this->_data); };
-    iterator end()   noexcept { test(); return iterator(nullptr);  };
+    iterator begin() noexcept { test(); return iterator(this->_data, 0); };
+    iterator end()   noexcept { test(); return iterator(nullptr, _size);  };
 
-    const_iterator constBegin() const noexcept { test(); return const_iterator(this->_data); }
-    const_iterator constEnd()   const noexcept { test(); return const_iterator(nullptr); }
-    const_iterator cBegin() const noexcept { test(); return const_iterator(this->_data); }
-    const_iterator cEnd()   const noexcept { test(); return const_iterator(nullptr); }
-    const_iterator begin() const noexcept { test(); return const_iterator(this->_data); }
-    const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
+    const_iterator constBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
+    const_iterator constEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
+    const_iterator cBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
+    const_iterator cEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
+    const_iterator begin() const noexcept { test(); return const_iterator(this->_data, 0); }
+    const_iterator end()   const noexcept { test(); return const_iterator(nullptr, _size); }
 };
 
+inline const char *WByteArray::constData() const
+{
+    return _data;
+}
+
+inline size_t WByteArray::size() const
+{
+    return _size;
+}
+
+inline void WByteArray::append(char data)
+{
+    _data = (char *) realloc(_data, _size + 1);
+    _data[_size] = data;
+    _size ++;
+}
+
+inline std::string WByteArray::toStdString() const
+{
+    return {_data, _size};
+}
+
+inline void WByteArray::append(const char *data, unsigned size)
+{
+    W_ASSERT(size >= 0);
+    _data = (char *) realloc(_data, _size + size);
+    memcpy(_data + _size, data, size);
+    _size += size;
+}
+
+inline char WByteArray::at(int i) const
+{
+    return _data[i];
+}
+
+void WByteArray::clear() noexcept
+{
+    free(_data);
+    _data = nullptr;
+    _size = 0;
+}
+
+inline WByteArray WByteArray::mid(int from, int to) const
+{
+    W_ASSERT(from >= 0 && to <= _size);
+    W_ASSERT(from <= to);
+
+    WByteArray res;
+
+    res.reserve(to - from);
+    res.append(_data + from, to - from);
+
+    return res;
+}
+
+inline bool WByteArray::operator==(const WByteArray &other) const
+{
+    if (this->_size != other._size)
+        return false;
+    return memcmp(_data, other._data, _size) == 0;
+}
+
+inline WByteArray WByteArray::operator+(const WByteArray &other) const
+{
+    WByteArray res;
+
+    res.reserve(this->_size + other._size);
+    res.append(_data, _size);
+    res.append(other._data, other._size);
+
+    return res;
+}
+
+inline WByteArray &WByteArray::operator+=(const WByteArray &other)
+{
+    this->append(other._data, other._size);
+    return *this;
+}
+
+inline WByteArray WByteArray::fromRawData(const char *data, int size)
+{
+    WByteArray res;
+    res.append(data, size);
+    return res;
+}
 
 #endif //WRITERNOTE_WBYTEARRAY_H
