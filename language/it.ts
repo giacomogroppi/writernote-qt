@@ -296,7 +296,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="875"/>
         <source>Size button</source>
-        <translation>Dimensione bottoni</translation>
+        <translation>Dimensione pulsanti</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="884"/>
@@ -321,7 +321,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="920"/>
         <source>Hide Show Preview</source>
-        <translation>Nascondi preview</translation>
+        <translation>Nascondi anteprima</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -421,26 +421,26 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="629"/>
         <source>yellow</source>
-        <translation>Giallo</translation>
+        <translation>giallo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="638"/>
         <source>white</source>
-        <translation>Bianco</translation>
+        <translation>bianco</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="647"/>
         <source>black</source>
-        <translation>Nero</translation>
+        <translation>nero</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="656"/>
         <source>red</source>
-        <translation>Rosso</translation>
+        <translation>rosso</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="665"/>
-        <source>selezionedisegno</source>
+        <source>selezione disegno</source>
         <translation></translation>
     </message>
     <message>
@@ -478,7 +478,7 @@ WorkingDir not valid</source>
     <message>
         <location filename="../src/mainwindow.ui" line="723"/>
         <source>cloud</source>
-        <translation></translation>
+        <translation>cloud</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="728"/>
@@ -828,12 +828,12 @@ compiled without the cloud support</source>
     <message>
         <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="93"/>
         <source>I had a problem removing the temp file in %1</source>
-        <translation>Ho avuto un problema rimuovendo il file temporaneo in %1</translation>
+        <translation>Abbiamo avuto un problema rimuovendo il file temporaneo in %1</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui/setting_restore_ui.cpp" line="167"/>
         <source>We had a problem saving the file in %1</source>
-        <translation>Ho avuto un problema salvando il file in %1</translation>
+        <translation>Abbiamo avuto un problema salvando il file in %1</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="114"/>
@@ -843,7 +843,7 @@ compiled without the cloud support</source>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="129"/>
         <source>In %1 I can&apos;t find a restore file</source>
-        <translation>In %1 non ho trovato nessun file da ripristinare</translation>
+        <translation>In %1 non&apos; riesco a trovare un file di ripristino</translation>
     </message>
     <message>
         <location filename="../src/restore_file/ui_restore/restore.cpp" line="136"/>
@@ -875,7 +875,7 @@ compiled without the cloud support</source>
         <location filename="../src/savecopybook.cpp" line="29"/>
         <location filename="../src/sheet/dialog_sheet.cpp" line="87"/>
         <source>Do you want to save your changes?</source>
-        <translation>Vuoi salvare i cambiamenti?</translation>
+        <translation>Vuoi salvare le modifiche?</translation>
     </message>
     <message>
         <location filename="../src/savecopybook.cpp" line="31"/>
@@ -923,7 +923,7 @@ compiled without the cloud support</source>
     <message>
         <location filename="../src/windows/showmessageupdate.ui" line="29"/>
         <source>messaggio di aggiornamento</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">messaggio di aggiornamento</translation>
     </message>
     <message>
         <location filename="../src/windows/showmessageupdate.ui" line="49"/>
@@ -1034,7 +1034,7 @@ includerli nei file writernote</translation>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="34"/>
         <source>Audio Codec:</source>
-        <translation></translation>
+        <translation>Codec audio:</translation>
     </message>
     <message>
         <location filename="../src/audiosetting/audioqualityoption.ui" line="41"/>
@@ -1184,7 +1184,7 @@ di abbonamento</translation>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="136"/>
         <source>login</source>
-        <translation>Accedi</translation>
+        <translation>accedi</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="144"/>
@@ -1227,19 +1227,19 @@ password</source>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="287"/>
         <source>contacts</source>
-        <translation>Contatti</translation>
+        <translation>contatti</translation>
     </message>
     <message>
         <location filename="../src/cloud/cloud_ui.ui" line="321"/>
         <source>close</source>
-        <translation>Chiudi</translation>
+        <translation>chiudi</translation>
     </message>
 </context>
 <context>
     <name>default_option_ui</name>
     <message>
         <source>Cancel</source>
-        <translation>Cencella</translation>
+        <translation>cancella</translation>
     </message>
 </context>
 <context>
@@ -1966,7 +1966,7 @@ che se si blocca puoi ripristinarlo senza perdere il tuo lavoro.</translation>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="68"/>
         <source>codec</source>
-        <translation>Codec</translation>
+        <translation>codec</translation>
     </message>
     <message>
         <location filename="../src/videocompress/videocompress_ui.ui" line="80"/>
