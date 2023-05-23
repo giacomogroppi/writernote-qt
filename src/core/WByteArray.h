@@ -56,7 +56,7 @@ public:
         const char* _array;
         unsigned _index;
     public:
-        explicit const_iterator(const char *data, unsigned index) : _array(data), _index(0) {  };
+        explicit const_iterator(const char *data, unsigned index) : _array(data), _index(index) {  };
 
         const char &operator*() const    { return _array[_index]; };
         bool operator==(const_iterator i) const         { return _index == i._index; }

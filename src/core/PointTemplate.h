@@ -21,8 +21,8 @@ public:
     T &rx();
     T &ry();
 
-    T setX(T x);
-    T setY(T y);
+    PointTemplate<T> & setX(T x);
+    PointTemplate<T> & setY(T y);
 
     PointTemplate<T> left(T amount) const;
     PointTemplate<T> right(T amount) const;
@@ -173,15 +173,17 @@ inline PointTemplate<T> &PointTemplate<T>::operator=(const PointTemplate<T> &oth
 }
 
 template<typename T>
-inline T PointTemplate<T>::setY(T y)
+inline PointTemplate<T> &PointTemplate<T>::setY(T y)
 {
     _y = y;
+    return *this;
 }
 
 template<typename T>
-inline T PointTemplate<T>::setX(T x)
+inline PointTemplate<T> &PointTemplate<T>::setX(T x)
 {
     _x = x;
+    return *this;
 }
 
 template<typename T>

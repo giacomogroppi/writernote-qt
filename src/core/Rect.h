@@ -47,10 +47,10 @@ public:
 
     void translate(const T &x, const T& y);
 
-    void setTopLeft(const PointTemplate<T> &topLeft);
-    void setTopRight(const PointTemplate<T> &topRight);
-    void setBottomLeft(const PointTemplate<T> &bottomLeft);
-    void setBottomRight(const PointTemplate<T> &bottomRight);
+    RectTemplate<T>& setTopLeft(const PointTemplate<T> &topLeft);
+    RectTemplate<T>& setTopRight(const PointTemplate<T> &topRight);
+    RectTemplate<T>& setBottomLeft(const PointTemplate<T> &bottomLeft);
+    RectTemplate<T>& setBottomRight(const PointTemplate<T> &bottomRight);
 
     T y() const;
     T x() const;
@@ -76,6 +76,42 @@ public:
 
     constexpr bool operator==(const RectTemplate &other) const;
 };
+
+template<typename T>
+inline RectTemplate<T> RectTemplate<T>::intersected(const RectTemplate<T> &other) const
+{
+    if (intersects(other))
+        return {};
+
+    return {
+        std::max(this->_topLeft.x(), other._topLeft.x()),
+        std::max(this->_topLeft.y(), other._bottomRight.y()),
+
+        std::min(this->_bottomRight.x(), other._bottomRight.x()),
+        std::min(this->_bottomRight.y(), other._bottomRight.y())
+    };
+}
+
+/**
+ * @return true iff exists some are that is shared between this and other
+ * */
+template<typename T>
+inline bool RectTemplate<T>::intersects(const RectTemplate<T> &other) const
+{
+    if (this->contains(other.topLeft()) ||
+        this->contains(other.topRight()) ||
+        this->contains(other.bottomRight()) ||
+        this->contains(other.bottomLeft()))
+        return true;
+
+    if (other.contains(this->topLeft()) ||
+        other.contains(this->topRight()) ||
+        other.contains(this->bottomRight()) ||
+        other.contains(this->bottomLeft()))
+        return true;
+
+    return false;
+}
 
 template<typename T>
 inline constexpr bool RectTemplate<T>::contains(const PointTemplate<T> &point) const
@@ -199,22 +235,25 @@ inline T RectTemplate<T>::y() const
 }
 
 template<typename T>
-inline void RectTemplate<T>::setBottomRight(const PointTemplate<T> &bottomRight)
+inline RectTemplate<T>& RectTemplate<T>::setBottomRight(const PointTemplate<T> &bottomRight)
 {
     _bottomRight = bottomRight;
+    return *this;
 }
 
 template<typename T>
-inline void RectTemplate<T>::setTopRight(const PointTemplate<T> &topRight)
+inline RectTemplate<T>& RectTemplate<T>::setTopRight(const PointTemplate<T> &topRight)
 {
     _topLeft.setY(topRight.y());
     _bottomRight.setX(topRight.x());
+    return *this;
 }
 
 template<typename T>
-inline void RectTemplate<T>::setTopLeft(const PointTemplate<T> &topLeft)
+inline RectTemplate<T>& RectTemplate<T>::setTopLeft(const PointTemplate<T> &topLeft)
 {
     _topLeft = topLeft;
+    return *this;
 }
 
 template<typename T>
@@ -331,7 +370,7 @@ const PointTemplate<T> &RectTemplate<T>::bottomRight() const {
 }
 
 template<typename T>
-inline void RectTemplate<T>::setBottomLeft(const PointTemplate<T> &bottomLeft)
+inline RectTemplate<T>& RectTemplate<T>::setBottomLeft(const PointTemplate<T> &bottomLeft)
 {
     _topLeft.setX(
             bottomLeft.x()
@@ -340,6 +379,7 @@ inline void RectTemplate<T>::setBottomLeft(const PointTemplate<T> &bottomLeft)
     _bottomRight.setY(
         bottomLeft.y()
     );
+    return *this;
 }
 
 template<typename T>
@@ -396,8 +436,8 @@ inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &topLeft, 
 
 template<typename T>
 inline constexpr RectTemplate<T>::RectTemplate(const RectTemplate<T> &other)
-    : _bottomRight(other._bottomRight)
-    , _topLeft(other._topLeft)
+    : _topLeft(other._topLeft)
+    , _bottomRight(other._bottomRight)
 {
 }
 
