@@ -80,7 +80,7 @@ public:
 template<typename T>
 inline RectTemplate<T> RectTemplate<T>::intersected(const RectTemplate<T> &other) const
 {
-    if (intersects(other))
+    if (!intersects(other))
         return {};
 
     return {

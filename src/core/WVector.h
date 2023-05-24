@@ -6,16 +6,19 @@
 #define WRITERNOTE_WVECTOR_H
 
 #include <iostream>
+#include "utils/WCommonScript.h"
 
 template <class T>
 class WVector {
 private:
     T *_data;
     size_t _size;
+    size_t _reserve;
 
     void test() const;
 public:
     WVector();
+    ~WVector();
 
     void append(const WVector<T> &other);
     void append(const T &data);
@@ -77,6 +80,124 @@ public:
     const_iterator begin() const noexcept { test(); return const_iterator(this->_data); }
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
 };
+
+template<class T>
+inline void WVector<T>::clear()
+{
+    free(_data);
+    _data = nullptr;
+    _size = 0;
+    _reserve = 0;
+}
+
+template<class T>
+inline bool WVector<T>::isEmpty() const
+{
+    return size() == 0;
+}
+
+template<class T>
+inline const T *WVector<T>::constData() const
+{
+    return this->_data;
+}
+
+template<class T>
+inline bool WVector<T>::isOrder() const
+{
+    for (auto i = 0; i < size() - 1; i++) {
+        if (get(i) < get(i + 1)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+template<class T>
+inline const T &WVector<T>::last() const
+{
+    return get(size() - 1);
+}
+
+template<class T>
+inline const T &WVector<T>::first() const
+{
+    W_ASSERT(size() > 0);
+    return _data[0];
+}
+
+template<class T>
+inline int WVector<T>::size() const
+{
+    return _size;
+}
+
+template<class T>
+inline const T &WVector<T>::get(int i) const
+{
+    W_ASSERT(i >= 0 && i < size());
+    return this->_data[i];
+}
+
+template<class T>
+inline WVector<T>::~WVector()
+{
+    free(_data);
+    _data = nullptr;
+
+    _size = 0;
+    _reserve = 0;
+}
+
+template<class T>
+inline void WVector<T>::reserve(int numberOfElement)
+{
+    W_ASSERT(numberOfElement);
+
+    auto *newData = (T *) malloc (sizeof (T) * (_size + _reserve + numberOfElement));
+
+    for (size_t i = 0; i < _size; i++) {
+        newData[i] = _data[i];
+    }
+
+    _reserve += numberOfElement;
+}
+
+template <class T>
+inline void WVector<T>::append(const T& item)
+{
+    if (_reserve > 0) {
+        new (_data + sizeof (T) * _size) T(item);
+        _reserve --;
+        _size ++;
+    } else {
+        this->reserve(32);
+        return append(item);
+    }
+}
+
+template<class T>
+inline void WVector<T>::append(const WVector<T> &other)
+{
+    if (_reserve - other.size() > 0) {
+        for (auto &item: std::as_const(other)) {
+            this->append(item);
+        }
+    } else {
+        reserve(other.size() - _reserve);
+        return append(other);
+    }
+}
+
+template<class T>
+inline WVector<T>::WVector()
+    : _data(nullptr)
+    , _size(0)
+    , _reserve(0)
+{
+
+}
 
 
 #endif //WRITERNOTE_WVECTOR_H
