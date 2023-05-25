@@ -6,7 +6,7 @@ unsigned char readListArray::read(const WListFast<WString> &list_name,
                           WListFast<WByteArray> &list_arr, cbool clear)
 {
     WByteArray arr;
-    unsigned i;
+    int i;
 
     if(clear)
         list_arr.clear();
@@ -26,7 +26,7 @@ unsigned char readListArray::read(const WListFast<WString> &list_name, WZip &zip
                                   WListFast<WByteArray> &list_arr, cbool clear)
 {
     WByteArray arr;
-    unsigned i;
+    int i;
     auto *zipFile = zip.get_zip();
 
     if(clear)

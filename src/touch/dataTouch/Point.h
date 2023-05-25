@@ -22,18 +22,13 @@ public:
         , _set(false)
     {
     }
-
+    Settable(const Settable<T> &other);
     Settable(T value, bool set);
 
     bool isSet() const;
     void set(bool set);
 
-    Settable<T>& operator=(const Settable<T> &other) {
-        T::operator=(other);
-        _set = other._set;
-
-        return *this;
-    }
+    Settable<T>& operator=(const Settable<T> &other) noexcept;
 
     Settable<T>& operator=(const T& other) {
         T::operator=(other);
@@ -45,6 +40,32 @@ public:
         return *this;
     }
 };
+
+template<class T>
+inline Settable<T>::Settable(const Settable<T> &other)
+{
+    T::operator=(other);
+    _set = other._set;
+}
+
+template<class T>
+inline void Settable<T>::set(bool set)
+{
+    _set = set;
+}
+
+template<class T>
+inline bool Settable<T>::isSet() const
+{
+    return _set;
+}
+
+template<class T>
+inline Settable<T>::Settable(T value, bool set)
+    : T(value)
+    , _set(set)
+{
+}
 
 struct colore_s{
     colore_s() = default;
@@ -156,6 +177,21 @@ inline colore_s::colore_s(unsigned char u1,
     colore[1] = u2;
     colore[2] = u3;
     colore[3] = u4;
+}
+
+inline colore_s::colore_s(const colore_s &color)
+{
+    memcpy(this, &color, sizeof(*this));
+}
+
+inline void colore_s::setAlfa(unsigned char newValue)
+{
+    this->colore[3] = newValue;
+}
+
+colore_s colore_s::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
+{
+    return colore_s(u1, u2, u3, u4);
 }
 
 using PointSettable = Settable<PointF>;

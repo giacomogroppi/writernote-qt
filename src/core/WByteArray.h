@@ -13,6 +13,7 @@ private:
     void test() const;
     char *_data;
     unsigned _size;
+    unsigned _reserved;
 public:
     WByteArray ();
     WByteArray(const char *data, int size = -1);
@@ -88,9 +89,7 @@ inline size_t WByteArray::size() const
 
 inline void WByteArray::append(char data)
 {
-    _data = (char *) realloc(_data, _size + 1);
-    _data[_size] = data;
-    _size ++;
+    this->append(&data, 1);
 }
 
 inline std::string WByteArray::toStdString() const
@@ -101,7 +100,19 @@ inline std::string WByteArray::toStdString() const
 inline void WByteArray::append(const char *data, unsigned size)
 {
     W_ASSERT(size >= 0);
-    _data = (char *) realloc(_data, _size + size);
+    W_ASSERT(data);
+
+    if (_reserved > 0) {
+        if (_reserved - size < 0) {
+            _data = (char *) realloc(_data, _size + size);
+            _reserved = 0;
+        } else {
+            _reserved -= size;
+        }
+    } else {
+        _data = (char *) realloc(_data, _size + size);
+    }
+
     memcpy(_data + _size, data, size);
     _size += size;
 }
@@ -160,6 +171,13 @@ inline WByteArray WByteArray::fromRawData(const char *data, int size)
     WByteArray res;
     res.append(data, size);
     return res;
+}
+
+inline void WByteArray::reserve(unsigned int numerOfChar)
+{
+    W_ASSERT(numerOfChar > 0);
+    this->_data = (char *) realloc(_data, _size + _reserved + numerOfChar);
+    _reserved += numerOfChar;
 }
 
 #endif //WRITERNOTE_WBYTEARRAY_H

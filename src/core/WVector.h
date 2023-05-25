@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "utils/WCommonScript.h"
+#include "testing/memtest.h"
 
 template <class T>
 class WVector {
@@ -15,13 +16,15 @@ private:
     size_t _size;
     size_t _reserve;
 
+    static constexpr const auto useReserve = false;
+
     void test() const;
 public:
     WVector();
     ~WVector();
 
     void append(const WVector<T> &other);
-    void append(const T &data);
+    void append(const T &item);
     const T& get(int i) const;
     int size() const;
     void removeAt(int i);
@@ -80,6 +83,58 @@ public:
     const_iterator begin() const noexcept { test(); return const_iterator(this->_data); }
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
 };
+
+template<class T>
+inline void WVector<T>::test() const
+{
+
+}
+
+template<class T>
+inline T &WVector<T>::operator[](int index)
+{
+    return _data[index];
+}
+
+template<class T>
+inline const T &WVector<T>::at(int i) const
+{
+    return _data[i];
+}
+
+template<class T>
+inline void WVector<T>::move(int from, int to)
+{
+    const auto &tmp = this->at(from);
+    this->_data[from] = _data[to];
+    this->_data[to] = tmp;
+}
+
+template<class T>
+inline void WVector<T>::removeAt(int index)
+{
+    W_ASSERT(index >= 0 && index < size());
+
+    if (_reserve == 0 && !useReserve) {
+        auto *d = (T *) WMalloc(sizeof (T) * (_size - 1));
+
+        for (int i = 0; i < index; i++) {
+            d[i] = _data[i];
+        }
+
+        for (int i = index + 1; i < size(); i++) {
+            d[i - 1] = _data[i];
+        }
+    } else {
+        for (int i = index; i < size() - 1; i++) {
+            this->_data[i] = _data[i + 1];
+        }
+
+        _reserve ++;
+    }
+
+    _size --;
+}
 
 template<class T>
 inline void WVector<T>::clear()

@@ -13,6 +13,7 @@ private:
     T _height;
 public:
     constexpr WSizeTemplate(T width, T height) noexcept;
+    constexpr WSizeTemplate(const WSizeTemplate<T> &other) noexcept;
     constexpr WSizeTemplate() noexcept;
 
     constexpr T getWidth() const noexcept;
@@ -29,6 +30,13 @@ public:
     constexpr WSizeTemplate<T> &operator*=(double delta) noexcept;
     constexpr WSizeTemplate<T> operator*(double val) noexcept;
 };
+
+template<typename T>
+inline constexpr WSizeTemplate<T>::WSizeTemplate(const WSizeTemplate<T> &other) noexcept
+    : _width(other._width)
+    , _height(other._height)
+{
+}
 
 template<typename T>
 template<typename Z>

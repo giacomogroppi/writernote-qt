@@ -16,15 +16,17 @@ template <class T>
 class WListFast {
 private:
     void test() const;
+
+    T **_data;
     int _size;
     int _reserved;
-    T **_data;
 
     // this function remove the object from the list
     T *takeObject(int i);
 
 public:
     WListFast();
+    WListFast(const WListFast<T> &other);
     WListFast(std::initializer_list<T> args);
 
     const T& at(int i) const;
@@ -105,6 +107,16 @@ public:
     const_iterator begin() const noexcept { return const_iterator((const T **)_data, 0); }
     const_iterator end()   const noexcept { return const_iterator((const T **)_data, size()); }
 };
+
+template<class T>
+inline WListFast<T>::WListFast(const WListFast<T> &other)
+    : _data(nullptr)
+    , _size(0)
+    , _reserved(0)
+{
+    this->reserve(other.size());
+    this->append(other);
+}
 
 template<class T>
 inline WListFast<T> WListFast<T>::mid(int from, int to) const
@@ -406,8 +418,8 @@ inline const T &WListFast<T>::at(int i) const
 
 template<class T>
 inline WListFast<T>::WListFast(std::initializer_list<T> args)
-    : _size(0)
-    , _data(nullptr)
+    : _data(nullptr)
+    , _size(0)
     , _reserved(0)
 {
     this->reserve(args.size());
@@ -420,9 +432,9 @@ inline WListFast<T>::WListFast(std::initializer_list<T> args)
 
 template<class T>
 inline WListFast<T>::WListFast()
-    : _size(0)
+    : _data(nullptr)
+    , _size(0)
     , _reserved(0)
-    , _data(nullptr)
 {
     test();
 }

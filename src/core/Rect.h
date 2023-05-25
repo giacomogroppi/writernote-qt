@@ -30,8 +30,8 @@ public:
     constexpr T right() const;
 
     const PointTemplate<T> &topLeft() const;
-    const PointTemplate<T> &topRight() const;
-    const PointTemplate<T> &bottomLeft() const;
+    const PointTemplate<T> topRight() const;
+    const PointTemplate<T> bottomLeft() const;
     const PointTemplate<T> &bottomRight() const;
 
     constexpr RectTemplate<T> &left(T amount);
@@ -325,7 +325,7 @@ inline void RectTemplate<T>::translate(const T &x, const T &y)
 }
 
 template<typename T>
-constexpr RectTemplate<T> &RectTemplate<T>::left(T amount) {
+inline constexpr RectTemplate<T> &RectTemplate<T>::left(T amount) {
     return {
         _topLeft.left(amount),
         _bottomRight.left(amount)
@@ -357,7 +357,8 @@ inline RectTemplate<T> RectTemplate<T>::setHeight(T height)
 }
 
 template<typename T>
-inline const PointTemplate<T> &RectTemplate<T>::bottomLeft() const {
+inline const PointTemplate<T> RectTemplate<T>::bottomLeft() const
+{
     return PointTemplate<T> {
         _topLeft.x(),
         _bottomRight.y()
@@ -365,7 +366,8 @@ inline const PointTemplate<T> &RectTemplate<T>::bottomLeft() const {
 }
 
 template<typename T>
-const PointTemplate<T> &RectTemplate<T>::bottomRight() const {
+inline const PointTemplate<T> &RectTemplate<T>::bottomRight() const
+{
     return _bottomRight;
 }
 
@@ -383,7 +385,8 @@ inline RectTemplate<T>& RectTemplate<T>::setBottomLeft(const PointTemplate<T> &b
 }
 
 template<typename T>
-const PointTemplate<T> &RectTemplate<T>::topRight() const {
+inline const PointTemplate<T> RectTemplate<T>::topRight() const
+{
     return PointTemplate<T> {
         _bottomRight.x(),
         _topLeft.y()
@@ -391,7 +394,8 @@ const PointTemplate<T> &RectTemplate<T>::topRight() const {
 }
 
 template<typename T>
-const PointTemplate<T> &RectTemplate<T>::topLeft() const {
+inline const PointTemplate<T> &RectTemplate<T>::topLeft() const
+{
     return this->_topLeft;
 }
 
