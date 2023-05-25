@@ -29,7 +29,7 @@ SquareMethod::SquareMethod(std::function<void()> hideProperty,
 
     _penna.setStyle(WPen::DotLine);
     _penna.setWidthF(2);
-    _penna.setColor(colore_s::fromRgb(30, 90, 255));
+    _penna.setColor(WColor::fromRgb(30, 90, 255));
     SquareMethod::reset();
 
     __in_box = &_in_box;

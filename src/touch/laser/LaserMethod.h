@@ -10,7 +10,7 @@ public:
     LaserMethod(std::function<pressure_t(double)> getPress,
                 std::function<void(const PointF&)> objectMove,
                 std::function<void(const StrokePre &stroke)> appent_to,
-                WPen &pen, colore_s &color);
+                WPen &pen, WColor &color);
 
     virtual ~LaserMethod() = default;
     int touchBegin(const PointF& point, double size, class Document &doc) final;

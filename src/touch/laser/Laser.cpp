@@ -6,7 +6,7 @@
 Laser::Laser(WObject *parent,
              std::function<pressure_t(double)> getSize,
              std::function<void(const PointF&)> objectMove,
-             colore_s &color,
+             WColor &color,
              WPen &pen,
              std::function<void()> callUpdate)
     : WObject(parent)

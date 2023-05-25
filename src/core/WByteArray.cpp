@@ -10,6 +10,9 @@ WByteArray::WByteArray()
 
 WByteArray::WByteArray(const char *data, int size)
 {
+    if (size == -1)
+        size = strlen(data);
+    
     _data = (char *) malloc (size);
     memcpy(_data, data, size);
     _size = size;

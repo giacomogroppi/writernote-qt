@@ -22,7 +22,7 @@ private:
 
 #ifndef USE_QT
     WImage &_img;
-    colore_s _color;
+    WColor _color;
 #endif
 
 public:
@@ -31,7 +31,7 @@ public:
 
     bool begin(WPixmap *pixmap);
     void begin(WImage *image);
-    void setColor(const colore_s &color);
+    void setColor(const WColor &color);
     void setPen(WPen &pen);
 
     void drawLine(const PointF &p1, const PointF &p2);
@@ -58,7 +58,7 @@ public:
     bool isActive() const;
 };
 
-inline void WPainter::setColor(const colore_s &color)
+inline void WPainter::setColor(const WColor &color)
 {
     this->_color = color;
 }

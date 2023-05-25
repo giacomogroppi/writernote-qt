@@ -41,7 +41,7 @@ public:
     void setAlfaColor(int alfa);
 
     void setTime(int time);
-    void setColor(const colore_s &color) noexcept;
+    void setColor(const WColor &color) noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] RectF getBiggerPointInStroke() const;
     [[nodiscard]] RectF getFirstAndLast() const;
@@ -56,7 +56,7 @@ public:
 
     void draw(WPainter &painter, WPen &pen, double prop, const PointF &pointFirstPage);
     void append(const PointF &point, const pressure_t &press, WPen &pen, double prop);
-    [[nodiscard]] colore_s getColor(double division = 1.) const;
+    [[nodiscard]] WColor getColor(double division = 1.) const;
 
     std::shared_ptr<Stroke> merge();
 
@@ -85,9 +85,9 @@ inline void StrokePre::reset()
     *this = StrokePre();
 }
 
-inline void StrokePre::setColor(const colore_s &color) noexcept
+inline void StrokePre::setColor(const WColor &color) noexcept
 {
-    _stroke->setColor(colore_s(color));
+    _stroke->setColor(WColor(color));
 }
 
 inline const Stroke &StrokePre::get_stroke_for_draw() const

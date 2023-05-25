@@ -5,11 +5,12 @@
 
 bool permission::open(const char *file, e_permission request)
 {
+    WByteArray path(file, strlen(file));
     if(request == e_permission::exist){
-        return File::exists(file);
+        return File::exists(path);
     }
 
-    File file_temp(file);
+    File file_temp(path);
 
     if(request == e_permission::readOnly){
         if (!file_temp.open(File::OpenMode::readOnly))

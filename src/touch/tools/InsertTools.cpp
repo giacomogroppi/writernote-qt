@@ -9,7 +9,7 @@ extern StrokePre *__tmp;
 InsertTools::InsertTools(std::function<int()> getTime,
                          std::function<pressure_t(double)> getSize,
                          std::function<void(const PointF &)> objectMove,
-                         colore_s &color,
+                         WColor &color,
                          WPen &pen)
     : _getTime(std::move(getTime))
     ,  _getSize(std::move(getSize))

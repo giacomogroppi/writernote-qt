@@ -137,7 +137,7 @@ void set_press(
                             const pressure_t press,
                             const double prop,
                             cbool is_rubber,
-                            const colore_s &color)
+                            const WColor &color)
 {
     pen.setWidthF(TabletUtils::pressureToWidth(press / deltaPress) * prop);
     if (un(is_rubber)) {
@@ -163,14 +163,14 @@ void Stroke::setAlfaColor(unsigned char alfa)
     _metadata.color.set_alfa(alfa);
 }
 
-void Stroke::setColor(const colore_s &color)
+void Stroke::setColor(const WColor &color)
 {
     this->_metadata.color = color;
 }
 
-colore_s Stroke::getColor(double division) const
+WColor Stroke::getColor(double division) const
 {
-    auto c = colore_s {
+    auto c = WColor {
         this->_metadata.color
     };
 
@@ -179,7 +179,7 @@ colore_s Stroke::getColor(double division) const
     return c;
 }
 
-void Stroke::setMetadata(int posizione_audio, const colore_s &color)
+void Stroke::setMetadata(int posizione_audio, const WColor &color)
 {
     this->_metadata = {
         .posizione_audio = posizione_audio,

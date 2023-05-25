@@ -10,7 +10,7 @@ public:
                      std::function<pressure_t(double)> getSize,
                      std::function<void(const PointF &)> objectMove,
                      WPen &pen,
-                     colore_s &color);
+                     WColor &color);
 
     int touchBegin(const PointF& point, double size, Document &doc) final;
     int touchUpdate(const PointF& point, double size, Document &doc) final;

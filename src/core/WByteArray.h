@@ -27,13 +27,14 @@ public:
     char at(int i) const;
     void clear() noexcept;
 
-    void reserve(unsigned numerOfChar);
+    void reserve(unsigned numberOfChar);
 
     WByteArray mid(int from, int to) const;
 
     bool operator==(const WByteArray &other) const;
     WByteArray operator+(const WByteArray &other) const;
     WByteArray &operator+=(const WByteArray &other);
+    WByteArray &operator=(const char *data);
 
     static WByteArray fromRawData(const char *data, int size);
 
@@ -173,11 +174,16 @@ inline WByteArray WByteArray::fromRawData(const char *data, int size)
     return res;
 }
 
-inline void WByteArray::reserve(unsigned int numerOfChar)
+inline void WByteArray::reserve(unsigned int numberOfChar)
 {
-    W_ASSERT(numerOfChar > 0);
-    this->_data = (char *) realloc(_data, _size + _reserved + numerOfChar);
-    _reserved += numerOfChar;
+    W_ASSERT(numberOfChar > 0);
+    this->_data = (char *) realloc(_data, _size + _reserved + numberOfChar);
+    _reserved += numberOfChar;
+}
+
+inline void WByteArray::test() const
+{
+
 }
 
 #endif //WRITERNOTE_WBYTEARRAY_H

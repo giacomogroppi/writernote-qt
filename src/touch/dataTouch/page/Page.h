@@ -18,8 +18,8 @@
 #include "core/WSizeTemplate.h"
 #include "core/WListFast.h"
 
-#define COLOR_NULL colore_s::fromRgb(255, 255, 255, 255)
-#define TEMP_COLOR colore_s::fromRgb(105, 105, 105, 255)
+#define COLOR_NULL WColor::fromRgb(255, 255, 255, 255)
+#define TEMP_COLOR WColor::fromRgb(105, 105, 105, 255)
 #define TEMP_TICK 1
 #define TEMP_N_X 40
 #define TEMP_SQUARE 40
@@ -75,7 +75,7 @@ private:
     
     void drawEngine(WPainter &painter, WListFast<std::shared_ptr<Stroke>> &List, int m_pos_ris, cbool use_multi_thread);
     void draw(WPainter &painter, int m_pos_ris, bool all);
-    void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const colore_s &color) const;
+    void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const WColor &color) const;
 
     void mergeList();    
 
@@ -149,8 +149,8 @@ public:
     int load(WZipReaderSingle &reader, int ver_stroke);
 
     void drawStroke(const Stroke &stroke, int m_pos_ris);
-    void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const colore_s &color, WPainter *painter);
-    void drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const colore_s &color);
+    void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const WColor &color, WPainter *painter);
+    void drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WColor &color);
 
     void removeAndDraw(int m_pos_ris, const WVector<int> &pos, const RectF &area);
     void drawIfInside(int m_pos_ris, const RectF &area);
@@ -475,7 +475,7 @@ inline Page &Page::operator=(const Page &other)
 force_inline void Page::drawForceColorStroke(
         const Stroke    &stroke,
         cint            m_pos_ris,
-        const colore_s  &color,
+        const WColor  &color,
         WPainter        *painter)
 {
     WPen pen;

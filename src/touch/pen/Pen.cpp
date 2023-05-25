@@ -5,7 +5,7 @@
 Pen::Pen(WObject *parent,
          std::function<int ()> getTime,
          std::function<void(const PointF &)> objectMove,
-         colore_s &color,
+         WColor &color,
          WPen &pen)
     : WObject(parent)
     , PenMethod(

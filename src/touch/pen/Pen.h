@@ -10,7 +10,7 @@ public:
     Pen(WObject *parent,
         std::function<int()> getTime,
         std::function<void(const PointF &point)> objectMove,
-        colore_s &color, WPen &pen);
+        WColor &color, WPen &pen);
     virtual ~Pen() = default;
 
     enum TypePen {

@@ -155,7 +155,7 @@ void TabletController::touchEnd(const PointF &point, double pressure)
     );*/
 }
 
-void TabletController::selectColor(const colore_s &color)
+void TabletController::selectColor(const WColor &color)
 {
     this->_color = color;
 }

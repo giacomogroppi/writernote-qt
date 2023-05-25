@@ -234,7 +234,7 @@ void Page::drawStroke(
         WPainter        &painter,
         const Stroke    &stroke,
         WPen            &m_pen,
-        const colore_s    &color) const
+        const WColor    &color) const
 {
     cbool isRubber = (color == COLOR_NULL);
     cbool isHigh = stroke.get_alfa() < 255;
@@ -300,7 +300,7 @@ void * __page_load(void *__data)
         WDebug(false, "Page::__page_load pointer" << &ref);
         W_ASSERT(!ref.isEmpty());
 
-        const colore_s &color = ref.getColor(
+        const WColor &color = ref.getColor(
             (un(m_pos_ris != -1))
                     ?
                         (
@@ -663,7 +663,7 @@ void Page::setCount(int newCount)
     rep();
 }
 
-void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const colore_s &color)
+void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WColor &color)
 {
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);

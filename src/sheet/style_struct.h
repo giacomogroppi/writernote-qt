@@ -22,7 +22,7 @@ struct style_struct_S{
      * ny : number of vertical line
     */
 
-    struct colore_s colore;
+    struct WColor colore;
 
     int thickness;
 };
@@ -61,7 +61,7 @@ inline bool operator==(const style_struct& lhs, const style_struct& rhs)
     if(!check) return false;
 
     for(i=0; i<len; i++){
-        if(memcmp(&lhs.at(i)->colore, &rhs.at(i)->colore, sizeof(colore_s)) != 0)
+        if(memcmp(&lhs.at(i)->colore, &rhs.at(i)->colore, sizeof(WColor)) != 0)
             return false;
 
         if(lhs.at(i)->nx != rhs.at(i)->nx)

@@ -104,7 +104,7 @@ StrokeForPage &StrokeForPage::operator=(const StrokeForPage &other)
     return *this;
 }
 
-void StrokeForPage::setMetadata(const colore_s &colore)
+void StrokeForPage::setMetadata(const WColor &colore)
 {
     _data->setMetadata(-1, colore);
     rep();

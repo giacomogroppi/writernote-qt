@@ -33,7 +33,7 @@ private:
     };
 
     template <class T, class Z>
-    static void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop, const colore_s &color, drawData<T, Z> data);
+    static void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop, const WColor &color, drawData<T, Z> data);
 
     enum flag_state: unsigned char {
         UPDATE_PRESSURE = BIT(2)
@@ -211,7 +211,7 @@ force_inline void StrokeNormal::draw(
         cint page,
         WPen &pen,
         cdouble _prop,
-        const colore_s &color,
+        const WColor &color,
         drawData<T, Z> data)
 {
     constexpr bool not_used debug_draw_stroke = false;

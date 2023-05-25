@@ -18,8 +18,8 @@ class WPen {
 public:
     WPen();
     void setColorNull();
-    void setColor(const colore_s &color);
-    const colore_s &color() const;
+    void setColor(const WColor &color);
+    const WColor &color() const;
     double widthF() const;
 
     // todo --> try to remove

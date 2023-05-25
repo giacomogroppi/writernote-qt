@@ -11,7 +11,7 @@ LaserMethod::LaserMethod(std::function<pressure_t(double)> getPress,
                          std::function<void(const PointF&)> objectMove,
                          std::function<void(const StrokePre &stroke)> append_to,
                          WPen &pen,
-                         colore_s &color)
+                         WColor &color)
     : InsertTools([]() {
         return 0;
     }

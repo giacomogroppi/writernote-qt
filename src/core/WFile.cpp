@@ -15,7 +15,7 @@ WFile::WFile(const std::string &path, const char mode):
 }
 
 WFile::WFile(const char *path, const char mode):
-    WFile(WByteArray(path), mode)
+    WFile(WByteArray(path, strlen(path)), mode)
 {
 }
 
@@ -49,7 +49,7 @@ int WFile::fileExist(const WByteArray &to)
 
 int WFile::readFile(WByteArray &to, const char *pathFile)
 {
-    FILE *fp = WFile::open(pathFile, "r");
+    FILE *fp = WFile::open(WByteArray {pathFile, static_cast<int>(strlen(pathFile))}, "r");
 
     if(!fp)
         return -1;

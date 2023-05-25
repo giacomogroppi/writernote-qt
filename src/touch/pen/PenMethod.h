@@ -10,7 +10,7 @@ public:
     PenMethod(std::function<pressure_t (double size)> getSize,
               std::function<int()> getTime,
               std::function<void(const PointF &point)> objectMove,
-              colore_s &color,
+              WColor &color,
               WPen &pen);
 
     int touchBegin(const PointF& point, double size, Document &doc) final;

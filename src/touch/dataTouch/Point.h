@@ -67,21 +67,21 @@ inline Settable<T>::Settable(T value, bool set)
 {
 }
 
-struct colore_s{
-    colore_s() = default;
-    ~colore_s() = default;
+struct WColor{
+    WColor() = default;
+    ~WColor() = default;
 
-    colore_s(const colore_s &color);
+    WColor(const WColor &color);
 
-    colore_s(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
+    WColor(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
 
     void set_alfa(unsigned char alfa);
 
     unsigned char colore[NCOLOR];
 
 #ifdef USE_QT
-    [[nodiscard]] colore_s tocolore_s(double division) const;
-    void fromColor(const colore_s &color);
+    [[nodiscard]] WColor tocolore_s(double division) const;
+    void fromColor(const WColor &color);
 #endif // USE_QT
 
     unsigned char getAlfa() const;
@@ -91,19 +91,19 @@ struct colore_s{
 
     void setAlfa(unsigned char newValue);
 
-    static colore_s fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
+    static WColor fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
 
-#define color_black       colore_s(0, 0, 0, 255)
-#define color_white       colore_s(255, 255, 255, 255)
-#define color_transparent colore_s(0, 0, 0, 0)
+#define color_black       WColor(0, 0, 0, 255)
+#define color_white       WColor(255, 255, 255, 255)
+#define color_transparent WColor(0, 0, 0, 0)
 
 #ifdef USE_QT
-    static colore_s from_color(const colore_s &color);
+    static WColor from_color(const WColor &color);
 #endif // USE_QT
-    bool operator==(const colore_s &other) const;
+    bool operator==(const WColor &other) const;
 };
 
-inline void colore_s::set_alfa(unsigned char alfa)
+inline void WColor::set_alfa(unsigned char alfa)
 {
     this->colore[3] = alfa;
 }
@@ -113,12 +113,12 @@ inline void colore_s::set_alfa(unsigned char alfa)
  * if division == 1 the color don't change
  * if division > 0 the color the alfa is change
 */
-force_inline colore_s colore_s::tocolore_s(cdouble division = 1.0) const
+force_inline WColor WColor::tocolore_s(cdouble division = 1.0) const
 {
-    return colore_s::fromRgb( colore[0], colore[1], colore[2], double(colore[3])/division);
+    return WColor::fromRgb( colore[0], colore[1], colore[2], double(colore[3])/division);
 }
 
-force_inline void colore_s::fromColor(const colore_s &color)
+force_inline void WColor::fromColor(const WColor &color)
 {
     int val[NCOLOR];
     unsigned char i;
@@ -130,21 +130,21 @@ force_inline void colore_s::fromColor(const colore_s &color)
     }
 }
 
-inline colore_s colore_s::from_color(const colore_s &color)
+inline WColor WColor::from_color(const WColor &color)
 {
-    colore_s tmp;
+    WColor tmp;
     tmp.fromColor(color);
     return tmp;
 }
 
 #endif // USE_QT
 
-inline unsigned char colore_s::getAlfa() const
+inline unsigned char WColor::getAlfa() const
 {
     return this->colore[3];
 }
 
-inline bool colore_s::operator==(const colore_s &other) const
+inline bool WColor::operator==(const WColor &other) const
 {
     static_assert(sizeof(colore) == sizeof(unsigned char) * 4);
     return memcmp(this->colore, other.colore, sizeof(this->colore)) == 0;
@@ -161,17 +161,17 @@ inline constexpr PointF Point::toPointF(double scale) const
     return (*this) * scale;
 }
 
-inline colore_s::colore_s(const colore_s &color)
+inline WColor::WColor(const WColor &color)
 {
-    *this = colore_s::from_color(color);
+    *this = WColor::from_color(color);
 }
 
 #endif // USE_QT
 
-inline colore_s::colore_s(unsigned char u1,
-                          unsigned char u2,
-                          unsigned char u3,
-                          unsigned char u4)
+inline WColor::WColor(unsigned char u1,
+                      unsigned char u2,
+                      unsigned char u3,
+                      unsigned char u4)
 {
     colore[0] = u1;
     colore[1] = u2;
@@ -179,19 +179,19 @@ inline colore_s::colore_s(unsigned char u1,
     colore[3] = u4;
 }
 
-inline colore_s::colore_s(const colore_s &color)
+inline WColor::WColor(const WColor &color)
 {
     memcpy(this, &color, sizeof(*this));
 }
 
-inline void colore_s::setAlfa(unsigned char newValue)
+inline void WColor::setAlfa(unsigned char newValue)
 {
     this->colore[3] = newValue;
 }
 
-colore_s colore_s::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
+WColor WColor::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
 {
-    return colore_s(u1, u2, u3, u4);
+    return WColor(u1, u2, u3, u4);
 }
 
 using PointSettable = Settable<PointF>;

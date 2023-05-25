@@ -4,7 +4,7 @@
 PenMethod::PenMethod(std::function<pressure_t(double)> getSize,
                      std::function<int()> getTime,
                      std::function<void(const PointF &point)> objectMove,
-                     colore_s &color, WPen &pen) :
+                     WColor &color, WPen &pen) :
         InsertTools(std::move(getTime),
                     std::move(getSize),
                     std::move(objectMove),

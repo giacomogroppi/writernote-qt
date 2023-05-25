@@ -13,7 +13,7 @@ struct point_old_ver_7{
     double m_x, m_y, rotation;
     float m_pressure;
     int m_posizioneaudio;
-    struct colore_s m_color;
+    struct WColor m_color;
 
     int idtratto;
     int page; /* indicates which page the point is on */
@@ -27,7 +27,7 @@ struct point_last{
     double m_x, m_y, rotation;
     float m_pressure;
     int m_posizioneaudio;
-    struct colore_s m_color;
+    struct WColor m_color;
     int idtratto;
 };
 

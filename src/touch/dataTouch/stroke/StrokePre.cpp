@@ -130,7 +130,7 @@ void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
     this->_pressure.clear();
 }
 
-colore_s StrokePre::getColor(double division) const
+WColor StrokePre::getColor(double division) const
 {
     return _stroke->getColor(division);
 }

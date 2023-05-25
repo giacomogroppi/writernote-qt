@@ -20,7 +20,7 @@ constexpr double deltaColorNull = 1.3;
 
 struct metadata_stroke{
     int posizione_audio;
-    struct colore_s color;
+    struct WColor color;
 
     bool operator!=(const metadata_stroke &other) const;
     bool operator==(const metadata_stroke &other) const;
@@ -67,12 +67,12 @@ public:
     virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
     virtual bool is_inside(const RectF &rect, double precision) const = 0;
 
-    colore_s getColor(double division = 1.) const;
+    WColor getColor(double division = 1.) const;
 
 #   define stroke_append_default (-1.)
     virtual void append(const PointF &point, pressure_t pressure) = 0;
 
-    void setMetadata(int posizione_audio, const colore_s &color);
+    void setMetadata(int posizione_audio, const WColor &color);
     void setMetadata(const metadata_stroke &metadata);
     void setPositioneAudio(int m_pos_ris);
     virtual size_t createControll() const;
@@ -101,7 +101,7 @@ public:
     */
     virtual int how_much_decrese() const = 0;
 
-    void setColor(const colore_s &color);
+    void setColor(const WColor &color);
 
     virtual std::shared_ptr<Stroke> clone() const = 0;
 
@@ -145,7 +145,7 @@ protected:
 };
 
 void set_press( WPen &pen, pressure_t press, double prop,
-                cbool is_rubber, const colore_s &color);
+                cbool is_rubber, const WColor &color);
 
 inline Stroke &Stroke::operator=(const Stroke &other)
 {

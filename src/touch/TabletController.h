@@ -26,7 +26,7 @@ private:
 
     ObjectFinder *_objectFinder;
     Tools *_currentTool;
-    colore_s _color;
+    WColor _color;
     WPen _pen;
     Document *_doc;
 
@@ -55,7 +55,7 @@ public:
     Tools* getCurrentTool() const;
 
     DEFINE_LISTENER(selectType(int type));
-    DEFINE_LISTENER(selectColor(const colore_s &color));
+    DEFINE_LISTENER(selectColor(const WColor &color));
 
     DEFINE_LISTENER(positionDocChanged(const PointF &newPosition));
 

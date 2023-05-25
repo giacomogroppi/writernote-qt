@@ -19,7 +19,7 @@ public:
     explicit Highligter(WObject *parent,
                         std::function<int()> getTime,
                         std::function<void(const PointF &)> objectMove,
-                        colore_s &color,
+                        WColor &color,
                         WPen &pen);
 
     virtual ~Highligter() = default;

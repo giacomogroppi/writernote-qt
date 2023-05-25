@@ -39,18 +39,18 @@ private:
     WPen        &_pen;
     int         _page;
     double      _prop;
-    colore_s      _color;
+    WColor      _color;
     bool        _isRubber;
 
     template <class T, class Z>
     void draw_stroke_normal(stroke_drawer_private<T, Z> &data);
 
-    stroke_drawer(WPainter &painter, WPen &pen, double prop, const colore_s &color, int page, bool is_rubber);
+    stroke_drawer(WPainter &painter, WPen &pen, double prop, const WColor &color, int page, bool is_rubber);
 public:
     static void draw_stroke(WPainter &painter, const StrokePre &stroke, WPen &pen, cdouble prop);
 };
 
-inline stroke_drawer::stroke_drawer(WPainter &painter, WPen &pen, double prop, const colore_s &color, int page, bool is_rubber) :
+inline stroke_drawer::stroke_drawer(WPainter &painter, WPen &pen, double prop, const WColor &color, int page, bool is_rubber) :
     _painter(painter),
     _pen(pen),
     _page(page),

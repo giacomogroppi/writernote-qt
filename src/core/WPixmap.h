@@ -20,7 +20,7 @@ public:
     size_t get_size_in_file() const;
     size_t save_and_size(WByteArray &arr) const;
 
-    void fill(const colore_s &color);
+    void fill(const WColor &color);
     RectF rect() const;
     WImage toImage() const;
     bool isNull() const;
