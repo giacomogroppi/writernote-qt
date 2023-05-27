@@ -8,7 +8,8 @@
 #include <cstring>
 
 #ifdef USE_QT
- #include "core/PointF.h"
+# include "core/PointF.h"
+# include <QColor>
 #else
 #endif
 
@@ -73,6 +74,10 @@ struct WColor{
 
     WColor(const WColor &color);
 
+#ifdef USE_QT
+    WColor (const QColor &other);
+#endif // USE_QT
+
     WColor(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
 
     void set_alfa(unsigned char alfa);
@@ -99,6 +104,7 @@ struct WColor{
 
 #ifdef USE_QT
     static WColor from_color(const WColor &color);
+    QColor toQColor() const;
 #endif // USE_QT
     bool operator==(const WColor &other) const;
 };
@@ -109,27 +115,6 @@ inline void WColor::set_alfa(unsigned char alfa)
 }
 
 #ifdef USE_QT
-/**
- * if division == 1 the color don't change
- * if division > 0 the color the alfa is change
-*/
-force_inline WColor WColor::tocolore_s(cdouble division = 1.0) const
-{
-    return WColor::fromRgb( colore[0], colore[1], colore[2], double(colore[3])/division);
-}
-
-force_inline void WColor::fromColor(const WColor &color)
-{
-    int val[NCOLOR];
-    unsigned char i;
-
-    color.getRgb(&val[0], &val[1], &val[2], &val[3]);
-
-    for(i = 0; i < NCOLOR; i ++){
-        colore[i] = val[i];
-    }
-}
-
 inline WColor WColor::from_color(const WColor &color)
 {
     WColor tmp;
@@ -149,24 +134,6 @@ inline bool WColor::operator==(const WColor &other) const
     static_assert(sizeof(colore) == sizeof(unsigned char) * 4);
     return memcmp(this->colore, other.colore, sizeof(this->colore)) == 0;
 }
-
-#ifdef USE_QT
-force_inline constexpr Point::Point(const PointF &point) :
-    PointF(point)
-{
-}
-
-inline constexpr PointF Point::toPointF(double scale) const
-{
-    return (*this) * scale;
-}
-
-inline WColor::WColor(const WColor &color)
-{
-    *this = WColor::from_color(color);
-}
-
-#endif // USE_QT
 
 inline WColor::WColor(unsigned char u1,
                       unsigned char u2,

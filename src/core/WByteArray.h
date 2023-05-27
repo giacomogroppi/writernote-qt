@@ -26,6 +26,8 @@ public:
     void append(const char *data, unsigned size);
     char at(int i) const;
     void clear() noexcept;
+    void insert(const WByteArray &data, unsigned index);
+    bool isEmpty() const;
 
     void reserve(unsigned numberOfChar);
 
@@ -35,6 +37,7 @@ public:
     WByteArray operator+(const WByteArray &other) const;
     WByteArray &operator+=(const WByteArray &other);
     WByteArray &operator=(const char *data);
+    char &operator[](int i);
 
     static WByteArray fromRawData(const char *data, int size);
 
@@ -43,7 +46,8 @@ public:
         char *_array;
         unsigned _index;
     public:
-        explicit iterator(char *data, unsigned index) : _array(data), _index(index) {; };
+        explicit iterator(char *data, unsigned index) : _array(data), _index(index) { };
+        explicit iterator(WByteArray &d, int index) : _array(d._data), _index(index) {};
 
         //T* operator->()         { return array._data[_index]; };
         char &operator*() const    { return _array[_index]; };
@@ -59,6 +63,7 @@ public:
         unsigned _index;
     public:
         explicit const_iterator(const char *data, unsigned index) : _array(data), _index(index) {  };
+        const_iterator(const WByteArray &d, unsigned index) : _array(d._data), _index(index) {};
 
         const char &operator*() const    { return _array[_index]; };
         bool operator==(const_iterator i) const         { return _index == i._index; }
@@ -76,6 +81,9 @@ public:
     const_iterator cEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
     const_iterator begin() const noexcept { test(); return const_iterator(this->_data, 0); }
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr, _size); }
+
+    friend class iterator;
+    friend class const_iterator;
 };
 
 inline const char *WByteArray::constData() const
@@ -128,6 +136,11 @@ void WByteArray::clear() noexcept
     free(_data);
     _data = nullptr;
     _size = 0;
+}
+
+inline bool WByteArray::isEmpty() const
+{
+    return this->_size == 0;
 }
 
 inline WByteArray WByteArray::mid(int from, int to) const

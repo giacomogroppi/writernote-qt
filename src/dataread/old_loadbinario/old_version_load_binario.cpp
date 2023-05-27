@@ -296,7 +296,7 @@ void xmlstruct::decode0(
         pointForAppend.append(WListFast<point_old_ver_7> ());
     }
 
-    W_ASSERT(pointForAppend.length() == data->lengthPage());
+    W_ASSERT(pointForAppend.size() == data->lengthPage());
 
     for(i = 0; i < point.size(); i++){
         point_last pp = point.at(i);

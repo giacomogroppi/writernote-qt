@@ -5,6 +5,10 @@
 #ifndef WRITERNOTE_POINTTEMPLATE_H
 #define WRITERNOTE_POINTTEMPLATE_H
 
+#ifdef USE_QT
+# include <QPointF>
+#endif // USE_QT
+
 template <typename T>
 class PointTemplate {
 private:
@@ -34,6 +38,7 @@ public:
 
     PointTemplate<T>& operator=(const PointTemplate<T> &other);
     bool operator==(const PointTemplate<T> &other) const;
+    bool operator!=(const PointTemplate<T> &other) const;
 
     constexpr PointTemplate<T> operator+(const PointTemplate<T> &other) const;
     constexpr PointTemplate<T> operator*(double d) const;
@@ -45,6 +50,12 @@ public:
     constexpr PointTemplate<T> &operator+=(const PointTemplate<T> &other);
     constexpr PointTemplate<T> &operator-=(const PointTemplate<T> &other);
 };
+
+template<typename T>
+inline bool PointTemplate<T>::operator!=(const PointTemplate<T> &other) const
+{
+    return not this->operator==(other);
+}
 
 template<typename T>
 inline PointTemplate<T> PointTemplate<T>::right(T amount) const

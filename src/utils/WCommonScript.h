@@ -22,9 +22,9 @@
 #include <iostream>
 
 #ifdef DEBUGINFO
-force_inline WString get_only_name(const char *name)
+force_inline std::string get_only_name(const char *name)
 {
-    WString res = name;
+    std::string res = name;
     int i;
     int from, to;
 
@@ -42,7 +42,7 @@ force_inline WString get_only_name(const char *name)
         }
     }
 
-    return res.mid(from + 1, to - from - 1);
+    return res.substr(from + 1, to - from - 1);
 }
 #endif
 
@@ -62,7 +62,7 @@ force_inline constexpr not_used int debug_enable()
 # define W_ASSERT_TEXT(condition, ...)                                                                  \
     do{                                                                                                 \
         if(un(!!(condition) == false)){                                                                 \
-            qDebug() << __FUNCTION__ << __FILE__ << __LINE__ << #condition << __VA_ARGS__;              \
+            std::cout << __FUNCTION__ << __FILE__ << __LINE__ << #condition << __VA_ARGS__;              \
             std::abort();                                                                               \
         }                                                                                               \
     }while(0)
@@ -221,7 +221,7 @@ inline int is_present_in_list(const T *list, size_t len, const T val)
 
 force_inline void abortIfDebug(cchar *file, int line){
 #ifdef DEBUGINFO
-    qDebug() << __func__ << file << line;
+    std::cout << __func__ << file << line;
     std::abort();
 #else
     unused(file);
@@ -259,7 +259,7 @@ force_inline void abortIfDebug(cchar *file, int line){
 #if defined(DEBUGINFO)
 # define WDebug(enable, message)                                                                    \
     if(enable){                                                                                     \
-        qDebug() << get_only_name(__PRETTY_FUNCTION__).toUtf8().constData() << "\t" << message;     \
+        std::cout << get_only_name(__PRETTY_FUNCTION__).c_str() << "\t" << message;     \
     }
 # define WWarning(message) WDebug(true, message)
 #else
@@ -517,7 +517,7 @@ inline void for_each(T1 &l1, T2 &l2, Z function)
     do {                                                                                                                                            \
         const auto end_##variable_name = std::chrono::high_resolution_clock::now();                                                                                                                                          \
         const double delta##variable_name = std::chrono::duration_cast<std::chrono::nanoseconds>(end_##variable_name - variable_name).count();                                                                         \
-        qDebug() << message << delta##variable_name << "ns"                                                                                                        \
+            std::cout << message << delta##variable_name << "ns"                                                                                                        \
                     << 1./(delta##variable_name * (1e-9)) << "hz";                                                                                              \
     } while (0)
 

@@ -40,7 +40,6 @@ public:
 
     Document();
     Document(const Document &);
-
     virtual ~Document();
 
     void controllForRepositioning();

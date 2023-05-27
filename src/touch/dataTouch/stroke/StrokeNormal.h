@@ -171,14 +171,14 @@ inline void StrokeNormal::updateFlagPressure() const
             _press.append(press);
         }
 
-        W_ASSERT(_press.length() == _point.length());
+        W_ASSERT(_press.size() == _point.size());
     }
 
     if (len > 1 and _press.size() == 1) {
         return;
     }
 
-    W_ASSERT(_pressure.length() == _point.length());
+    W_ASSERT(_pressure.size() == _point.size());
 
     if (un(len < 3)) {
         /**

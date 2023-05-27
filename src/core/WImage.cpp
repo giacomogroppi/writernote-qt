@@ -3,8 +3,12 @@
 #include "touch/dataTouch/page/Page.h"
 
 #ifdef USE_QT
+#include <QImage>
+#include <QBuffer>
+#include <QString
+
 WImage::WImage(const std::string &path, const char *format):
-    QImage(path, format)
+    QImage(path.c_str(), format)
 {
     this->fill(Qt::transparent);
 }

@@ -1,8 +1,9 @@
 #pragma once
 
-#if defined(USE_QT)
-# include <WPainter>
+#ifdef USE_QT
+# include <QPainter>
 #endif // USE_QT
+
 #include "core/WImage.h"
 #include "touch/dataTouch/Point.h"
 #include "core/Rect.h"
@@ -14,7 +15,8 @@ class WPainter
 {
 private:
 #ifdef USE_QT
-    WPainter _painter;
+    QPainter *_painter;
+    bool _allocated;
 #elif IOS
 #elif ANDROID
 
@@ -28,6 +30,10 @@ private:
 public:
     WPainter();
     ~WPainter();
+
+#ifdef USE_QT
+    WPainter (QPainter *painter);
+#endif // USE_QT
 
     bool begin(WPixmap *pixmap);
     void begin(WImage *image);
@@ -44,7 +50,8 @@ public:
 
     enum CompositionMode {
         CompositionMode_Clear,
-        CompositionMode_SourceOver
+        CompositionMode_SourceOver,
+        CompositionMode_DestinationOver
     };
     void setCompositionMode(enum CompositionMode compositionMode);
     WPainter::CompositionMode compositionMode() const;
@@ -54,12 +61,26 @@ public:
     void setAntialeasing();
     void setCompositionClear();
 
+
     bool end();
     bool isActive() const;
 };
 
+#ifdef USE_QT
+inline WPainter::WPainter(QPainter *painter)
+    : _painter(painter)
+    , _allocated(false)
+{
+}
+#endif // USE_QT
+
+
 inline void WPainter::setColor(const WColor &color)
 {
+#ifdef USE_QT
+    this->_painter->setPen(color.toQColor());
+#else
     this->_color = color;
+#endif
 }
 

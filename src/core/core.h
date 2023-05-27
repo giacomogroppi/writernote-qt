@@ -43,16 +43,12 @@ inline void painter_set_destination_over(WPainter &painter)
     painter.setCompositionMode(WPainter::CompositionMode_DestinationOver);
 }
 
-inline void painter_set_antialiasing(WPainter &painter)
+inline void painter_set_antialiasing(QPainter &painter)
 {
     W_ASSERT(painter.isActive());
-    painter.setRenderHints(WPainter::RenderHint::Antialiasing);
-    painter.setRenderHint(WPainter::RenderHint::SmoothPixmapTransform);
-    painter.setRenderHint(WPainter::RenderHint::TextAntialiasing);
-
-    W_ASSERT(painter.renderHints() & WPainter::RenderHint::SmoothPixmapTransform);
-    W_ASSERT(painter.renderHints() & WPainter::RenderHint::Antialiasing);
-    W_ASSERT(painter.renderHints() & WPainter::RenderHint::TextAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.setRenderHint(QPainter::TextAntialiasing);
 }
 #endif // USE_QT
 

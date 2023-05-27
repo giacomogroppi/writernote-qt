@@ -19,7 +19,7 @@
 
 static updatecheck::n_priority priority(QJsonDocument &doc, WString &update, const char *c_ver)
 {
-    const auto critical = QChar::fromLatin1(updatecheck::high);
+    const auto critical = QChar::fromLatin1(updatecheck::high).toLatin1();
     if(update.indexOf(critical) != -1)
         return updatecheck::critical;
 
@@ -51,7 +51,10 @@ void updatecheck::start()
     request.setUrl(QUrl("https://api.github.com/repos/giacomogroppi/writernote-qt/tags"));
     reply = manager->get(request);
 
-    WObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
+    QObject::connect(reply, &QNetworkReply::finished, [this] () {
+        this->managerFinished();
+    });
+    //QObject::connect(reply, &QNetworkReply::finished, this, &updatecheck::managerFinished);
 }
 
 updatecheck::updatecheck(WObject *parent,
@@ -90,15 +93,15 @@ void updatecheck::managerFinished()
         return;
     }
 
-    testo = reply->readAll();
+    testo = reply->readAll().constData();
 
-    doc = QJsonDocument::fromJson(testo.toUtf8());
+    doc = QJsonDocument::fromJson(testo.toUtf8().constData());
 
     testo = doc[0][POSNAME].toString();
 
 #define VERSION_STRING "TESTING"
-    if(VERSION_STRING != testo and testo.toUpper() != "TESTING"
-            and WString(VERSION_STRING).toUpper() != "TESTING"){
+    if(testo != VERSION_STRING and testo.upper() != "TESTING"
+            and WString(VERSION_STRING).upper() != "TESTING"){
         auto res = priority(doc, testo, VERSION_STRING);
 
         if(res == n_priority::critical){

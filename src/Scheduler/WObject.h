@@ -3,6 +3,7 @@
 
 #include "core/WVector.h"
 #include "core/WList.h"
+#include "core/WListFast.h"
 #include <functional>
 #include <iostream>
 #include <algorithm>
@@ -13,10 +14,11 @@
     WVector<std::function<void( __VA_ARGS__)>> w_object_observer_##name_signals; \
 
 #define W_EMITTABLE_PRIVATE_REGI(name_signals, ...) \
-    private: \
+    public: \
     void reg##name_signals(std::function<void(__VA_ARGS__)> nameFunc) {                    \
         this->w_object_observer_##name_signals.append(nameFunc);                                \
-    }
+    } \
+    private:
 
 #define W_EMITTABLE_PRIVATE_FUNC_0(name_signals) \
     /* funzione chiamata internamente quando il segnale viene lanciato */        \
@@ -80,9 +82,13 @@
         } \
     } while(0)
 
+#define w_connect_lister(object, name_signals, listener) \
+    (object)->reg##name_signals(listener)
+
 class WObject {
 private:
-    WList<WObject> _children;
+    WObject *_parent;
+    WListFast<WObject *> _children;
 public:
     explicit WObject(WObject *parent);
     virtual ~WObject();

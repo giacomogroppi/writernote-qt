@@ -11,6 +11,10 @@
 
 class WPixmap
 {
+private:
+#ifdef USE_QT
+    QPixmap _pixmap;
+#endif // USE_QT
 public:
     explicit WPixmap(int page, bool consideringResolution);
     WPixmap(const WString &path);
@@ -31,18 +35,24 @@ public:
     bool operator==(const WPixmap &other) const;
 #ifdef USE_QT
     WPixmap& operator=(const QPixmap &other);
+    QPixmap &getPixmap();
 #endif
 };
 
 #ifdef USE_QT
 force_inline bool WPixmap::operator==(const WPixmap &other) const
 {
-    return QPixmap::toImage().operator==(other.toImage());
+    return _pixmap.toImage().operator==(other.toImage());
 }
 
 inline WPixmap &WPixmap::operator=(const QPixmap &other)
 {
-    QPixmap::operator=(other.copy());
+    _pixmap.operator=(other.copy());
     return *this;
+}
+
+inline QPixmap &WPixmap::getPixmap()
+{
+    return this->_pixmap;
 }
 #endif

@@ -32,8 +32,11 @@ public:
     const T& at(int i) const;
     void append(const T& element);
     void append(const WListFast<T> &other);
+
     void remove(int index);
     void remove(int from, int to);
+    void remove(const T &item);
+
     constexpr bool isEmpty() const;
     constexpr int size() const;
     const T& first() const;
@@ -107,6 +110,15 @@ public:
     const_iterator begin() const noexcept { return const_iterator((const T **)_data, 0); }
     const_iterator end()   const noexcept { return const_iterator((const T **)_data, size()); }
 };
+
+template<class T>
+inline void WListFast<T>::remove(const T &item)
+{
+    const auto index = indexOf(item);
+    if (index >= 0) {
+        remove(index);
+    }
+}
 
 template<class T>
 inline WListFast<T>::WListFast(const WListFast<T> &other)

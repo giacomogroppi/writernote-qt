@@ -3,3 +3,10 @@
 //
 
 #include "WString.h"
+
+#ifdef USE_QT
+WString::WString(const QString &other)
+    : _data(other.toUtf8().constData(), other.size())
+{
+}
+#endif

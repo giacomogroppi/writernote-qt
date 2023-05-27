@@ -50,13 +50,11 @@ public:
 
     bool isNull() const;
 
-#ifdef USE_QT
-    [[nodiscard]] QImage toQImage() const;
-#endif
-
     bool operator==(const WImage &other) const;
 
 #ifdef USE_QT
+    [[nodiscard]] QImage toQImage() const;
+
     WImage &operator=(const QImage &other);
 #endif // USE_QT
 

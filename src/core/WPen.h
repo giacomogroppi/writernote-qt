@@ -8,12 +8,12 @@
 #include "touch/dataTouch/Point.h"
 
 #ifdef USE_QT
-# include <WPen>
+# include <QPen>
 #endif
 
 class WPen {
 #ifdef USE_QT
-    WPen _pen;
+    QPen _pen;
 #endif // USE_QT
 public:
     WPen();

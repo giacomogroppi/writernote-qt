@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
+#include "core/WString.h"
 
 class StrokeProp {
 public:

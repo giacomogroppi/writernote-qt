@@ -13,6 +13,10 @@
 #include "Scheduler/WObject.h"
 #include "core/WString.h"
 
+#ifdef USE_QT
+# include <QtNetwork/QNetworkAccessManager>
+#endif // USE_QT
+
 class updatecheck: public WObject
 {
 public:
@@ -39,6 +43,10 @@ private:
     std::function<void(const WString &message, const WString &version)> _showDialog;
     std::function<void(bool)> _setVisibleUpdateButton;
 
+    DEFINE_LISTENER(managerFinished());
+    /** result == true there are update */
+    W_EMITTABLE_1(result, bool, result);
+
 #if defined(USE_QT)
     void sslErrors(QNetworkReply *, const WListFast<QSslError> &errors);
     QNetworkAccessManager *manager;
@@ -46,12 +54,6 @@ private:
 
 
     QNetworkReply *reply;
-
-private slots:
-    void managerFinished();
-signals:
-    /** result == true there are update */
-    void result(bool result);
 
 #endif // USE_QT
 

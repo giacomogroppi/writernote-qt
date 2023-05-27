@@ -18,5 +18,5 @@ public:
 
     static WDate now();
 
-    WString toString();
+    WString toString() const;
 };

@@ -14,7 +14,7 @@ static not_used void gen_num(WVector<int> &data, int min, int max)
     int i;
     const int gen = Random::random(min, max);
 
-    data.prepend(gen);
+    data.reserve(gen);
 
     for(i = 0; i < gen; i++){
         const int res = Random::random(0, INT_MAX);
@@ -40,7 +40,7 @@ static not_used void test_write_zip(WVector<int> &data, const WByteArray &path)
 {
     WZipWriterSingle writer;
 
-    writer.init(nullptr, 0, sizeof(int) * data.length());
+    writer.init(nullptr, 0, sizeof(int) * data.size());
 
     for(const auto ref: std::as_const(data)){
         W_ASSERT(sizeof(ref) == sizeof(int));
@@ -71,9 +71,9 @@ static not_used void test_check_equal(const WVector<int> &d1, const WVector<int>
     int tmp1, tmp2;
     int i;
 
-    W_ASSERT(d1.length() == d2.length());
+    W_ASSERT(d1.size() == d2.size());
 
-    for(i = 0; i < d1.length(); i++){
+    for(i = 0; i < d1.size(); i++){
         tmp1 = d1.at(i);
         tmp2 = d2.at(i);
         W_ASSERT(tmp1 == tmp2);
@@ -93,7 +93,7 @@ static not_used void run_test_1()
     gen_str(to, 5, 10);
 
     test_write_zip(data, to);
-    test_read_from_zip(res, to, data.length());
+    test_read_from_zip(res, to, data.size());
 
     /* check if data is equal */
     test_check_equal(data, res);
