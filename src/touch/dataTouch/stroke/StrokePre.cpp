@@ -117,7 +117,7 @@ pressure_t StrokePre::getPressure() const
 void StrokePre::reset_img()
 {
     _img = WPixmap(1, false);
-    _img.fill(color_transparent);
+    _img.fill({color_transparent});
 }
 
 void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)

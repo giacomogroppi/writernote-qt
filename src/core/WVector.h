@@ -46,6 +46,11 @@ public:
     void insert(int index, const T& data);
     T takeFirst();
     const T* constData() const;
+    int indexOf(const T &object);
+
+    WVector<T> &operator=(const WVector<T> &other);
+    bool operator==(const WVector<T> &other) const;
+    bool operator!=(const WVector<T> &other) const;
 
     class iterator{
     private:
@@ -235,6 +240,27 @@ inline const T *WVector<T>::constData() const
 }
 
 template<class T>
+inline int WVector<T>::indexOf(const T &object)
+{
+    const auto pos = std::find(_data.cbegin(), _data.cend(), object);
+    if (pos == _data.cend())
+        return -1;
+    return pos - _data.cbegin();
+}
+
+template<class T>
+inline bool WVector<T>::operator==(const WVector<T> &other) const
+{
+    return this->_data == other._data;
+}
+
+template<class T>
+inline bool WVector<T>::operator!=(const WVector<T> &other) const
+{
+    return this->_data != other._data;
+}
+
+template<class T>
 inline bool WVector<T>::isOrder() const
 {
     for (auto i = 0; i < size() - 1; i++) {
@@ -335,9 +361,26 @@ inline void WVector<T>::append(const WVector<T> &other)
 
 template<class T>
 inline WVector<T>::WVector()
+    : _data()
 {
 
 }
+
+#ifdef USE_QT
+template <class T>
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WVector<T> &p)
+{
+    d.nospace() << "WVector(";
+
+    for (const auto &item: std::as_const(p)) {
+        d.nospace() << item ;
+    }
+
+    d.nospace() << ")";
+
+    return d.space();
+}
+#endif // USE_QT
 
 
 #endif //WRITERNOTE_WVECTOR_H

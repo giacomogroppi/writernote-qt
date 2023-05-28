@@ -25,6 +25,7 @@ public:
     explicit AudioRecord(WObject *parent,
                          std::function<void(const WString &)> error,
                          std::function<void(int)> durationChange);
+    ~AudioRecord();
 
     bool isRecording() const;
     bool isPauseRecording() const;
@@ -95,11 +96,6 @@ inline void AudioRecord::stopRecording()
     recorder->stop();
 }
 
-inline QMediaRecorder::Error AudioRecord::errors() const
-{
-    return this->recorder->error();
-}
-
 inline void AudioRecord::setOutputLocation(const WString &path)
 {
     QFile::remove(path);
@@ -107,7 +103,7 @@ inline void AudioRecord::setOutputLocation(const WString &path)
 }
 
 /* return time in second */
-inline qint64 AudioRecord::getCurrentTime()
+inline unsigned long AudioRecord::getCurrentTime()
 {
     if(!isRecording())
         return 0;

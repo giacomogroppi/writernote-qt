@@ -130,7 +130,7 @@ void StrokeForPage::draw(WPainter &painter, double delta,
 
     //qDebug() << page.getIndex() << "Target: " << target << " targetrect: " << targetRect;
 
-    const auto source = RectF(_pix.rect())
+    const auto source = RectF(_pix.rect().castTo<double>())
                         / PROP_RESOLUTION;
 
     const auto sourceDraw = RectF{source.intersected(visibleArea)} * PROP_RESOLUTION;
@@ -150,7 +150,7 @@ void StrokeForPage::draw(WPainter &painter, double delta,
 void StrokeForPage::draw() const
 {
     _pix = WPixmap(1, true);
-    _pix.fill(color_transparent);
+    _pix.fill({color_transparent});
     WPainter painter;
     painter.begin(&_pix);
     WPen pen;

@@ -3,6 +3,7 @@
 #ifdef USE_QT
 # include <QPainter>
 # include <QBrush>
+# include "QtGui/qpdfwriter.h"
 #endif // USE_QT
 
 #include "core/WImage.h"
@@ -34,6 +35,7 @@ public:
 
 #ifdef USE_QT
     WPainter (QPainter *painter);
+    WPainter (QPdfWriter *pdfWriter);
     void setBrush(const QBrush &brush);
 #endif // USE_QT
 
@@ -47,6 +49,7 @@ public:
     void drawPixmap(const RectF &target, const WPixmap &pixmap, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap);
     void drawPixmap(const Rect &target, const WPixmap &pixmap);
+    void drawPixmap(const Rect &target, const WPixmap &pixmap, const Rect &source);
     void drawPoint(const PointF &point);
     void drawRect(const RectF &rect);
     void drawEllipse(const PointF &center, double rx, double ry);

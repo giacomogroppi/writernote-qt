@@ -32,8 +32,8 @@ static void ctrlThread(DataPrivateMuThread *data, int create)
             std::abort();
 
         count = data[i].from;
-        for(; count < data[i].to; count ++){
-            if(tmp.indexOf(count) != -1)
+        for (; count < data[i].to; count ++) {
+            if (tmp.indexOf(count) != -1)
                 std::abort();
             tmp.append(count);
         }

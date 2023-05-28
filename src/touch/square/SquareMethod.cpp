@@ -262,7 +262,7 @@ void SquareMethod::mergeImg(
         int              page)
 {
     WPainter painter;
-    RectF rectTo = from.rect();
+    auto rectTo = from.rect();
 
     rectTo.translate(0, page * Page::getResolutionHeigth());
 
@@ -300,6 +300,7 @@ void SquareMethod::moveObjectIntoPrivate(WListFast<WVector<int>> &index, Documen
     for (count = 0; count < len; count ++) {
         const WVector<int> & ref = index.at(count);
         WDebug(debugSquare, ref);
+
         page = &doc.at_mod(count + _base);
 
         if (ref.isEmpty())
@@ -545,7 +546,7 @@ void SquareMethod::needReload(WPainter &painter, const Document &doc)
             const int len = doc.lengthPage();
             const WSize size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
 
-            W_ASSERT(size.height() >= 0 and size.width() >= 0);
+            W_ASSERT(size.getHeight() >= 0 and size.getWidth() >= 0);
             WDebug(debugSquare, "in_box");
 
             singleLoad(painter, _img, size, point,

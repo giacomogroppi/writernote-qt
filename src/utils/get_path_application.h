@@ -1,6 +1,8 @@
 #pragma once
 
-
+#ifdef USE_QT
+# include "QtCore/qstandardpaths.h"
+#endif
 #include "core/WString.h"
 
 namespace get_path_application

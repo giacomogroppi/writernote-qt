@@ -52,7 +52,13 @@ bool topdf::createpdf(cbool withPdf)
 
     QPdfWriter pdfWriter(*this->path);
     //pdfWriter.setPageSize(QPageSize(QPageSize::A4));
-    pdfWriter.setPageSize(QPageSize(Page::getResolutionSize() * .25));
+
+    const auto size = QSize {
+        static_cast<int>(Page::getResolutionWidth()),
+        static_cast<int>(Page::getResolutionHeigth())
+    };
+
+    pdfWriter.setPageSize(QPageSize(size * .25));
 #if !(defined(ANDROID_WRITERNOTE) || defined(IOS_WRITERNOTE)) && defined(PDFSUPPORT)
     //pdfWriter.setResolution(data->m_pdf->resolution);
 #else

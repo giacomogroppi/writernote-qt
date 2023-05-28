@@ -293,7 +293,7 @@ int StrokeNormal::removeAt(int i)
     W_ASSERT(i < len);
 
     if(this->_pressure.size() > 1){
-        W_ASSERT(_pressure.length() == _point.length());
+        W_ASSERT(_pressure.size() == _point.size());
         _pressure.remove(i);
     }
 

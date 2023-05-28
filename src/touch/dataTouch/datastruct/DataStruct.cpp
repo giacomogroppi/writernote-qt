@@ -247,7 +247,7 @@ void DataStruct::removePointIndex(
     if(__isOrder){
 
 #ifdef DEBUGINFO
-        W_ASSERT(WCommonScript::is_order_vector(pos));
+        W_ASSERT(pos.isOrder());
 #else
         if(!pos.isOrder()){
             NAME_LOG_EXT->write("List not order", log_ui::critic_error);

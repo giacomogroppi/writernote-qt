@@ -211,7 +211,7 @@ redo:
     // in order to the list
     {
         int i = stroke_mod_stroke.size();
-        W_ASSERT(stroke_mod_stroke.size() == stroke_mod_point.length());
+        W_ASSERT(stroke_mod_stroke.size() == stroke_mod_point.size());
 
         for (i-- ; i >= 0; i --) {
             cint indexStroke    = stroke_mod_stroke.at(i);

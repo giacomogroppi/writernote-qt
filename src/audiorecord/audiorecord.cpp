@@ -2,7 +2,7 @@
 #include "core/core.h"
 
 #ifdef USE_QT
-#include <QMediaRecorder>
+# include <QMediaRecorder>
 #endif // USE_QT
 
 #include "utils/setting_define.h"
@@ -16,19 +16,26 @@ AudioRecord::AudioRecord(WObject *parent,
     , _durationChange(durationChange)
 {
 #ifdef USE_QT
-    this->recorder = new QMediaRecorder(this);
+    this->recorder = new QMediaRecorder(nullptr);
     m_captureSession.setRecorder(recorder);
-    m_captureSession.setAudioInput(new QAudioInput(this));
+    m_captureSession.setAudioInput(new QAudioInput(nullptr));
 
-    QObject::connect(recorder, &QMediaRecorder::durationChanged, this, &AudioRecord::updateProgress);
+    QObject::connect(recorder, &QMediaRecorder::durationChanged, [this] (unsigned long d) {
+        this->updateProgress(d);
+    });
 #endif
 }
-#ifdef USE_QT
-void AudioRecord::updateProgress(qint64 duration)
-{
-    if (this->errors() != QMediaRecorder::NoError)
-        return;
 
+AudioRecord::~AudioRecord()
+{
+#ifdef USE_QT
+    delete this->recorder;
+#endif // USE_QT
+}
+
+#ifdef USE_QT
+void AudioRecord::updateProgress(unsigned long duration)
+{
     this->_durationChange(duration / 1000);
 }
 

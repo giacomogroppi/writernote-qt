@@ -323,8 +323,7 @@ void * __page_load(void *__data)
     W_ASSERT(extra->painter->isActive());
     extra->painter->drawPixmap(
             img.rect(),
-            img,
-            img.rect());
+            img);
     mutex.unlock();
 
     return nullptr;
