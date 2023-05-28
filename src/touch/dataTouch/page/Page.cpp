@@ -48,7 +48,7 @@ static force_inline void __initImg(WPixmap &img)
 {
     img = WPixmap(1, true);
     W_ASSERT(!img.isNull());
-    img.fill(color_transparent);
+    img.fill({color_transparent});
 }
 
 Page::Page(const int count, const n_style style)
@@ -143,7 +143,7 @@ void Page::swap(WListFast<std::shared_ptr<Stroke>> &list,
     RectF area;
 
 #ifdef DEBUGINFO
-    if(un(!WCommonScript::is_order_vector(pos))){
+    if(un(!pos.isOrder())){
         qDebug() << "List not order" << __FILE__ << __FUNCTION__;
     }
 #endif

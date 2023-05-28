@@ -17,4 +17,9 @@ void WPainter::setAntialeasing()
     _painter->setRenderHint(QPainter::TextAntialiasing);
 }
 
+void WPainter::setBrush(const QBrush &brush)
+{
+    this->_painter->setBrush(brush);
+}
+
 #endif // USE_QT

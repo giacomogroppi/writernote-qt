@@ -21,6 +21,11 @@
 #include "touch/dataTouch/Point.h"
 #include <iostream>
 
+#ifdef USE_QT
+# include <QtGlobal>
+# include <QDebug>
+#endif // USE_QT
+
 #ifdef DEBUGINFO
 force_inline std::string get_only_name(const char *name)
 {
@@ -256,10 +261,16 @@ force_inline void abortIfDebug(cchar *file, int line){
 # define DO_IF_DEBUG_ENABLE(enable, istr) ;
 #endif //DEBUGINFO
 
+#if defined(USE_QT)
+# define DEBUGGER_OUT qDebug()
+#else
+# define DEBUGGER_OUT std::cout
+#endif
+
 #if defined(DEBUGINFO)
 # define WDebug(enable, message)                                                                    \
     if(enable){                                                                                     \
-        std::cout << get_only_name(__PRETTY_FUNCTION__).c_str() << "\t" << message;     \
+        DEBUGGER_OUT << get_only_name(__PRETTY_FUNCTION__).c_str() << "\t" << message;     \
     }
 # define WWarning(message) WDebug(true, message)
 #else

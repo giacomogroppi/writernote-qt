@@ -10,11 +10,12 @@
 #include "WString.h"
 
 class WPixmap
+#ifdef USE_QT
+    : public QPixmap
+#endif // USE_QT
 {
 private:
-#ifdef USE_QT
-    QPixmap _pixmap;
-#endif // USE_QT
+
 public:
     explicit WPixmap(int page, bool consideringResolution);
     WPixmap(const WString &path);
@@ -25,7 +26,7 @@ public:
     size_t save_and_size(WByteArray &arr) const;
 
     void fill(const WColor &color);
-    RectF rect() const;
+    Rect rect() const;
     WImage toImage() const;
     bool isNull() const;
 
@@ -33,26 +34,4 @@ public:
     bool loadFromData(const void *data, size_t size, const char *formact);
 
     bool operator==(const WPixmap &other) const;
-#ifdef USE_QT
-    WPixmap& operator=(const QPixmap &other);
-    QPixmap &getPixmap();
-#endif
 };
-
-#ifdef USE_QT
-force_inline bool WPixmap::operator==(const WPixmap &other) const
-{
-    return _pixmap.toImage().operator==(other.toImage());
-}
-
-inline WPixmap &WPixmap::operator=(const QPixmap &other)
-{
-    _pixmap.operator=(other.copy());
-    return *this;
-}
-
-inline QPixmap &WPixmap::getPixmap()
-{
-    return this->_pixmap;
-}
-#endif

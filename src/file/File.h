@@ -33,6 +33,7 @@ public:
     static bool createFile(const WByteArray &position);
     const WDate &getLastMod() const;
     bool operator==(const File &other) const;
+    bool operator!=(const File &other) const;
     static bool exists(const WByteArray &path);
 
     constexpr bool isOpen() const noexcept;

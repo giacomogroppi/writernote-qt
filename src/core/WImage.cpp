@@ -5,7 +5,7 @@
 #ifdef USE_QT
 #include <QImage>
 #include <QBuffer>
-#include <QString
+#include <QString>
 
 WImage::WImage(const std::string &path, const char *format):
     QImage(path.c_str(), format)
@@ -37,8 +37,13 @@ size_t WImage::get_size_in_file() const
 
 #ifdef USE_QT
 
-WImage::WImage(int width, int height, QImage::Format format) : QImage(width, height, format)
+WImage::WImage(int width, int height, WImageType format)
+    : QImage(
+        width,
+        height,
+        format == WImageType::png ? QImage::Format_ARGB32 : QImage::Format_ARGB32)
 {
+    W_ASSERT(format == WImageType::png);
 }
 
 WImage::WImage(int page, bool consideringResolution) :

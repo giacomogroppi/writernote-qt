@@ -2,6 +2,7 @@
 
 #ifdef USE_QT
 # include <QPainter>
+# include <QBrush>
 #endif // USE_QT
 
 #include "core/WImage.h"
@@ -33,6 +34,7 @@ public:
 
 #ifdef USE_QT
     WPainter (QPainter *painter);
+    void setBrush(const QBrush &brush);
 #endif // USE_QT
 
     bool begin(WPixmap *pixmap);
@@ -44,6 +46,7 @@ public:
     void drawImage(const RectF &target, const WImage &image, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap);
+    void drawPixmap(const Rect &target, const WPixmap &pixmap);
     void drawPoint(const PointF &point);
     void drawRect(const RectF &rect);
     void drawEllipse(const PointF &center, double rx, double ry);

@@ -10,6 +10,11 @@
 #include "WListFast.h"
 #include "WByteArray.h"
 
+#ifdef USE_QT
+# include <QString>
+#endif // USE_QT
+
+#ifndef USE_QT
 class WString {
 private:
     WByteArray _data;
@@ -21,11 +26,7 @@ public:
     WString (const WString &other);
     WString(const std::string &other);
 
-#ifdef USE_QT
-    WString(const QString &other);
-#endif // USE_QT
-
-    WString upper() const;
+    WString toUpper() const;
     WString lower() const;
 
     int size() const;
@@ -230,9 +231,12 @@ inline bool WString::operator!=(const WString &other) const
     return !(*this == other);
 }
 
-
-
 inline WString operator+(const char *s1, const WString &s2)
 { WString t = WString::fromUtf8(s1); t += s2; return t; }
+
+#else
+using WString = QString;
+#endif // USE_QT
+
 
 #endif //WRITERNOTE_WSTRING_H

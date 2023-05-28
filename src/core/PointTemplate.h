@@ -7,6 +7,7 @@
 
 #ifdef USE_QT
 # include <QPointF>
+# include <QDataStream>
 #endif // USE_QT
 
 template <typename T>

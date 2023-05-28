@@ -24,6 +24,20 @@ public:
     bool addFiles(const WByteArray &position);
 
     WList<WByteArray> allDirsInFolder() const;
+
+
+    bool operator ==(const Directory &other) const;
+    bool operator !=(const Directory &other) const;
 };
+
+inline bool Directory::operator ==(const Directory &other) const
+{
+    return _path == other._path;
+}
+
+inline bool Directory::operator !=(const Directory &other) const
+{
+    return !(*this == other);
+}
 
 

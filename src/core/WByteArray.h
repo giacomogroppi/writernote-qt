@@ -4,16 +4,19 @@
 #include <iostream>
 #include "utils/WCommonScript.h"
 
-/**
- * TODO: implement a reserved memory
- * */
+#ifdef USE_QT
+# include <QByteArray>
+#endif // USE_QT
 
-class WByteArray {
+#ifndef USE_QT
+class WByteArray
+{
 private:
     void test() const;
     char *_data;
     unsigned _size;
     unsigned _reserved;
+
 public:
     WByteArray ();
     WByteArray(const char *data, int size = -1);
@@ -84,6 +87,7 @@ public:
 
     friend class iterator;
     friend class const_iterator;
+
 };
 
 inline const char *WByteArray::constData() const
@@ -198,5 +202,8 @@ inline void WByteArray::test() const
 {
 
 }
+#else
+using WByteArray = QByteArray;
+#endif // USE_QT
 
 #endif //WRITERNOTE_WBYTEARRAY_H

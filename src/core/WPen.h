@@ -9,14 +9,21 @@
 
 #ifdef USE_QT
 # include <QPen>
+# include <QBrush>
 #endif
 
 class WPen {
+private:
 #ifdef USE_QT
     QPen _pen;
 #endif // USE_QT
 public:
     WPen();
+
+#ifdef USE_QT
+    void setBrush(const QBrush &brush);
+#endif // USE_QT
+
     void setColorNull();
     void setColor(const WColor &color);
     const WColor &color() const;

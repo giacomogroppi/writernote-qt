@@ -11,3 +11,10 @@ WPen::WPen()
 #else
 #endif
 }
+
+#ifdef USE_QT
+void WPen::setBrush(const QBrush &brush)
+{
+    this->_pen.setBrush(brush);
+}
+#endif // USE_QT

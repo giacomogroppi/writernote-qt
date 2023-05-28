@@ -36,7 +36,7 @@ void preview::get(WPixmap &ref, const Document &doc, cbool withPdf, const int wi
     if(doc.isEmpty())
         return;
 
-    ref.fill(color_white);
+    ref.fill({color_white});
 
     painter.begin(&ref);
     W_ASSERT(painter.isActive());

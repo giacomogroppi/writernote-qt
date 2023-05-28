@@ -230,7 +230,7 @@ force_inline void StrokeNormal::draw(
 
     if (isPrivatePainter) {
         img = WPixmap(1, true);
-        img.fill(color_transparent);
+        img.fill(WColor(color_transparent));
         _painterPrivate.begin(&img);
         _painterPrivate.setAntialeasing();
         painter = &_painterPrivate;
@@ -276,7 +276,13 @@ force_inline void StrokeNormal::draw(
 
         painter->end();
 
-        painterPublic.drawPixmap(img.rect(), img);
+        const auto r = img.rect();
+        painterPublic.drawPixmap(
+            Rect(
+                Point{r.topLeft().x(), r.topLeft().y()},
+                Point{r.bottomRight().x(), r.bottomRight().y()}
+            ),
+            img);
     } else {
         WDebug(debug_draw_stroke, "Paint not high");
     }

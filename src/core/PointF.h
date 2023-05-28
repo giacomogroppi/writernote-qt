@@ -6,35 +6,20 @@
 #define WRITERNOTE_POINTF_H
 
 #include "PointTemplate.h"
-
-/*class PointF {
-private:
-    double _x, _y;
-public:
-    explicit PointF(double x, double y);
-    explicit PointF();
-    ~PointF() = default;
-
-    double x() const;
-    double y() const;
-
-    double &rx();
-    double &ry();
-
-    void setX(double x);
-    void setY(double y);
-
-    PointF& operator=(const PointF &other);
-    bool operator==(const PointF &other) const;
-
-    PointF& operator+(const PointF &other);
-    PointF& operator*(double d);
-    PointF& operator/(double d);
-
-    PointF &operator*=(double d);
-    PointF &operator+=(const PointF& d);
-};*/
+#ifdef USE_QT
+# include <QDebug>
+#endif // USE_QT
 
 using PointF = PointTemplate<double>;
+
+#ifdef USE_QT
+
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointF &p)
+{
+    d.nospace() << "PointF(" << p.x() << ',' << p.y() << ')';
+    return d.space();
+}
+
+#endif // USE_QT
 
 #endif //WRITERNOTE_POINTF_H

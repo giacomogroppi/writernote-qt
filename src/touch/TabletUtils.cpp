@@ -124,5 +124,5 @@ void singleLoad(
 
     RectF targetRect(PointF(x, y), sizeRect.castTo<double>());
 
-    painter.drawPixmap(targetRect, pix, pix.rect());
+    painter.drawPixmap(targetRect, pix, pix.rect().castTo<double>());
 }

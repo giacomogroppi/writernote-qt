@@ -16,7 +16,7 @@ WString get_only_name::exe(const WString &path)
         tmp = pathFile::changeSlash(path);
     const WListFastFast<WString> list = tmp.split('\\');
 #else
-    const WListFast<WString> list = path.split(slash);
+    const auto list = path.split(slash);
 #endif
 
     if(!list.size())

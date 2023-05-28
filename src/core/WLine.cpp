@@ -1,4 +1,5 @@
 #include "WLine.h"
+#include "core/WString.h"
 
 constexpr auto debug_WLine = false;
 
@@ -44,7 +45,7 @@ bool WLine::belongs(const PointF &point, cdouble precision) const
     W_ASSERT(!this->_is_vertical);
     const auto res = WCommonScript::is_near(this->_m * point.x() + this->_p, point.y(), precision);
 
-    WDebug(debug_WLine, "\t" << "Result" << res << qstr("m %1 point.x() %2 _p %3 point.y() %4 precision %5").arg(_m).arg(point.x()).arg(_p).arg(point.y()).arg(precision));
+    WDebug(debug_WLine, "\t" << "Result" << res << qstr("m %1 point.x() %2 _p %3 point.y() %4 precision %5").arg(_m).arg(point.x()).arg(_p).arg(point.y()).arg(precision).toStdString());
 
     if(is_in_domain(point, precision)){
         WDebug(debug_WLine, "\t" << "It's in domain");

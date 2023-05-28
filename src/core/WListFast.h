@@ -451,5 +451,18 @@ inline WListFast<T>::WListFast()
     test();
 }
 
+#ifdef USE_QT
+template <class T>
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WListFast<T> &p)
+{
+    d.nospace() << "ListFast(";
+
+    for (const auto &item: std::as_const(p)) {
+        d.nospace() << item ;
+    }
+
+    return d.space();
+}
+#endif // USE_QT
 
 #endif //WRITERNOTE_WLISTFAST_H

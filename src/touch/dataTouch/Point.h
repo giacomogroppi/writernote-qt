@@ -98,13 +98,20 @@ struct WColor{
 
     static WColor fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
 
-#define color_black       WColor(0, 0, 0, 255)
-#define color_white       WColor(255, 255, 255, 255)
-#define color_transparent WColor(0, 0, 0, 0)
+#ifndef USE_QT
+# define color_black       WColor(0, 0, 0, 255)
+# define color_white       WColor(255, 255, 255, 255)
+# define color_transparent WColor(0, 0, 0, 0)
+#else
+# define color_black       Qt::black
+# define color_white       Qt::white
+# define color_transparent Qt::transparent
+#endif
 
 #ifdef USE_QT
     static WColor from_color(const WColor &color);
     QColor toQColor() const;
+    WColor &operator=(const QColor &other);
 #endif // USE_QT
     bool operator==(const WColor &other) const;
 };
@@ -120,6 +127,20 @@ inline WColor WColor::from_color(const WColor &color)
     WColor tmp;
     tmp.fromColor(color);
     return tmp;
+}
+
+inline WColor &WColor::operator=(const QColor &other)
+{
+    int c[4];
+    other.getRgb(c, c + 1, c + 2, c + 3);
+
+    for (int i = 0; i < 4; i++) {
+        this->colore[i] = c[i];
+    }
+
+    static_assert(c + 1 == &c[1]);
+
+    return *this;
 }
 
 #endif // USE_QT
