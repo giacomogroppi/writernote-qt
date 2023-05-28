@@ -11,25 +11,29 @@
 #include "WByteArray.h"
 #include "WString.h"
 
+#ifndef USE_QT
 class WVariant {
 public:
     WVariant(const WVariant &other);
     WVariant(const WByteArray &data);
     WVariant(int data);
 
-    std::pair<int, bool> toInt();
-    std::pair<WString, bool> toString();
-    std::pair<WByteArray, bool> &toByteArray();
+    int toInt();
+    WString toString();
+    WByteArray &toByteArray();
 
     template <class T>
-    std::pair<WListFast<T>, T> toWListFast();
+    WListFast<T> toWListFast();
 
     template <class T>
-    std::pair<WList<T>, T> toWList();
+    WList<T> toWList();
 
     template <class T>
-    std::pair<WVector<T>, T> toWVector();
+    WVector<T> toWVector();
 };
+#else
+using WVariant = QVariant;
+#endif // USE_QT
 
 
 #endif //WRITERNOTE_WVARIANT_H

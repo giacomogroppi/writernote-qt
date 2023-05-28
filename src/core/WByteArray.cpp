@@ -1,6 +1,7 @@
 #include "WByteArray.h"
 #include "utils/WCommonScript.h"
 
+#ifndef USE_QT
 WByteArray::WByteArray()
     : _data(nullptr)
     , _size(0)
@@ -25,5 +26,5 @@ WByteArray::~WByteArray()
     this->_data = nullptr;
     this->_size = 0;
 }
-
+#endif
 

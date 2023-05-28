@@ -15,9 +15,9 @@ Rubber::Rubber(WObject *parent) :
     WOptionSettings settings;
     settings.begin();
 
-    _size_gomma = settings.value(KEY_RUBBER_SIZE, DEFAULT_GOMMA_SIZE).toInt().first;
+    _size_gomma = settings.value(KEY_RUBBER_SIZE, DEFAULT_GOMMA_SIZE).toInt();
     _type_gomma = static_cast<RubberMethod::type_rubber>(
-            settings.value(KEY_RUBBER_TYPE, RubberMethod::type_rubber::total).toInt().first
+        settings.value(KEY_RUBBER_TYPE, RubberMethod::type_rubber::total).toInt()
     );
 
     settings.save();

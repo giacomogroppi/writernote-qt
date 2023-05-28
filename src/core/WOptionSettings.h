@@ -9,8 +9,15 @@
 #include "WByteArray.h"
 #include "WVariant.h"
 
-class WOptionSettings {
+#ifdef USE_QT
+# include <QSettings>
+#endif // USE_QT
 
+class WOptionSettings {
+private:
+#ifdef USE_QT
+    QSettings *settings;
+#endif // USE_QT
 public:
     WOptionSettings() = default;
     void begin();

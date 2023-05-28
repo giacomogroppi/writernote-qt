@@ -18,10 +18,8 @@ void TabletPenMethod::load()
     setting.begin();
 
     const auto s = setting.value(KEY_METHOD_TOUCH, PrivateTabletMethod_Pen).toInt();
-    if (!s.second)
-        _method = PrivateTabletMethod_Pen;
-    else
-        _method = s.first;
+
+    _method = s;
 
     switch (_method) {
         case PrivateTabletMethod_Rubber:        this->setRubber(); break;

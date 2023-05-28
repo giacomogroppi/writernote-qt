@@ -7,7 +7,7 @@
 WPen::WPen()
 {
 #ifdef USE_QT
-    WPen pen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
+    this->_pen = QPen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
 #else
 #endif
 }

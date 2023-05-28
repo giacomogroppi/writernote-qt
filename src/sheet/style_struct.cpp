@@ -41,8 +41,8 @@ style_struct::style_struct()
     WOptionSettings settings;
     settings.begin();
 
-    default_val = settings.value(KEYDEFAULTSTYLE, 0).toInt().first;
-    arr = settings.value(KEYSTYLE, WByteArray("")).toByteArray().first;
+    default_val = settings.value(KEYDEFAULTSTYLE, 0).toInt();
+    arr = settings.value(KEYSTYLE, WByteArray("")).toByteArray();
 
     this->loadFromByte(arr);
 

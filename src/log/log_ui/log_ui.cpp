@@ -116,7 +116,7 @@ int log_ui::loadData()
 
     WString _pos;
 
-    this->m_permi = static_cast<permi>(settings.value(KEY_LOG_POSITION_DEFINE, permi::enable).toInt().first);
+    this->m_permi = static_cast<permi>(settings.value(KEY_LOG_POSITION_DEFINE, permi::enable).toInt());
 
     if(m_permi == permi::disable)
         return 0;
