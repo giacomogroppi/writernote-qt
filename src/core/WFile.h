@@ -7,21 +7,35 @@ class WFile
 {
 private:
     FILE *fp;
+    WByteArray _path;
 public:
     explicit WFile(const WByteArray &path, char mode);
+    explicit WFile(const WByteArray &path);
     explicit WFile(const std::string &path, char mode);
     explicit WFile(const char *path, char mode);
     ~WFile();
 
+    enum: int {
+        WFileReadOnly,
+        WFileWrite,
+        WFileAppend
+    };
+
+    bool open (int openMode);
     bool isValid() const;
     int write(const void *data, size_t size);
+    int read (void *to, size_t size);
+
+    bool close();
+    size_t size() const;
 
     static bool exits(const std::string &path);
     static int fileExist(const WByteArray &to);
     static int readFile(WByteArray &to, const char *pathFile);
     static int saveArrIntoFile(const WByteArray &arr, const std::string &path);
-    static FILE *open(const WByteArray &path, const char *flat);
-    static size_t size(FILE *fp);
+    static WFile open(const WByteArray &path, char openMode);
+private:
+    static size_t sizefp(FILE *fp);
 };
 
 inline bool WFile::isValid() const
@@ -29,30 +43,24 @@ inline bool WFile::isValid() const
     return !!this->fp;
 }
 
+inline size_t WFile::size() const
+{
+    W_ASSERT(this->fp != nullptr);
+    return WFile::sizefp(this->fp);
+}
+
 /**
  * Pass "r" to open file in read only mode
  * Pass "w" to open file in write mode
 */
-force_inline FILE *WFile::open(const WByteArray &path, const char *flag)
+force_inline WFile WFile::open(const WByteArray &path, char openMode)
 {
-    W_ASSERT(   WCommonScript::WStrEqual(flag, "r") == true or
-                WCommonScript::WStrEqual(flag, "w") == true);
-
-#if defined(WIN32) || defined(WIN64)
-    FILE *fp;
-    if(*flag == 'r'){
-        fp = fopen(path.constData(), "rb");
-    }else{
-        fp = fopen(path.constData(), "wb");
-    }
-
-    return fp;
-#else
-    return fopen(path.constData(), flag);
-#endif
+    return WFile {
+        path, openMode
+    };
 }
 
-inline size_t WFile::size(FILE *fp)
+inline size_t WFile::sizefp(FILE *fp)
 {
     W_ASSERT(fp);
     W_ASSERT(ftell(fp) == 0);

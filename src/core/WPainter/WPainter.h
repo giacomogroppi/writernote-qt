@@ -34,7 +34,7 @@ public:
     ~WPainter();
 
 #ifdef USE_QT
-    WPainter (QPainter *painter);
+    explicit WPainter (QPainter *painter);
     WPainter (QPdfWriter *pdfWriter);
     void setBrush(const QBrush &brush);
 #endif // USE_QT
@@ -62,8 +62,6 @@ public:
     void setCompositionMode(enum CompositionMode compositionMode);
     WPainter::CompositionMode compositionMode() const;
 
-    void fillRect(const RectF &rect);
-
     void setAntialeasing();
     void setCompositionClear();
 
@@ -78,15 +76,248 @@ inline WPainter::WPainter(QPainter *painter)
     , _allocated(false)
 {
 }
-#endif // USE_QT
-
 
 inline void WPainter::setColor(const WColor &color)
 {
-#ifdef USE_QT
     this->_painter->setPen(color.toQColor());
-#else
-    this->_color = color;
-#endif
 }
 
+WPainter::WPainter()
+    : _painter(new QPainter())
+    , _allocated(true)
+{
+
+}
+
+WPainter::WPainter(QPdfWriter *pdfWriter)
+    : _painter(new QPainter())
+    , _allocated(true)
+{
+    _painter->begin(pdfWriter);
+}
+
+inline void WPainter::begin(WImage *image)
+{
+    _painter->begin(image);
+}
+
+inline bool WPainter::begin(WPixmap *pixmap)
+{
+    return _painter->begin(pixmap);
+}
+
+inline void WPainter::drawLine(const PointF &p1, const PointF &p2)
+{
+    const QPointF qtPoint1 = {
+            p1.x(),
+            p1.y()
+    };
+    const QPointF qtPoint2 = {
+            p2.x(),
+            p2.y()
+    };
+    this->_painter->drawLine(qtPoint1, qtPoint2);
+}
+
+inline void WPainter::setPen(WPen &pen)
+{
+    this->_painter->setPen(pen._pen);
+}
+
+inline void WPainter::drawImage(const RectF &target, const WImage &image, const RectF &source)
+{
+    const auto convertToQt = [](const RectF &rect) -> QRectF {
+        return {
+                QPointF {
+                        rect.topLeft().x(),
+                        rect.topLeft().y()
+                },
+                QPointF {
+                        rect.bottomRight().x(),
+                        rect.bottomRight().y()
+                }
+        };
+    };
+    const auto qtTarget = convertToQt(target);
+    const auto qtSource = convertToQt(source);
+
+    this->_painter->drawImage(qtTarget, image, qtSource);
+}
+
+inline void WPainter::drawPixmap(const RectF &target, const WPixmap &pixmap, const RectF &source)
+{
+    constexpr auto convertToQt = [](const RectF &rect) -> QRectF {
+        return {
+                QPointF {
+                        rect.topLeft().x(),
+                        rect.topLeft().y()
+                },
+                QPointF {
+                        rect.bottomRight().x(),
+                        rect.bottomRight().y()
+                }
+        };
+    };
+    const auto qtTarget = convertToQt(target);
+    const auto qtSource = convertToQt(source);
+
+    this->_painter->drawPixmap(qtTarget, pixmap, qtSource);
+}
+
+inline void WPainter::drawPixmap(const RectF &target, const WPixmap &pixmap)
+{
+    const auto convertToQt = [](const RectF &rect) -> QRectF {
+        return {
+                QPointF {
+                        rect.topLeft().x(),
+                        rect.topLeft().y()
+                },
+                QPointF {
+                        rect.bottomRight().x(),
+                        rect.bottomRight().y()
+                }
+        };
+    };
+    const QRect qtTarget = convertToQt(target).toRect();
+
+    this->_painter->drawPixmap(qtTarget, pixmap);
+}
+
+void WPainter::drawPixmap(const Rect &target, const WPixmap &pixmap)
+{
+    const auto convertToQt = [](const Rect &rect) -> QRect {
+        return {
+                QPoint {
+                        rect.topLeft().x(),
+                        rect.topLeft().y()
+                },
+                QPoint {
+                        rect.bottomRight().x(),
+                        rect.bottomRight().y()
+                }
+        };
+    };
+    const QRect qtTarget = convertToQt(target);
+
+    this->_painter->drawPixmap(qtTarget, pixmap);
+}
+
+inline void WPainter::drawPixmap(const Rect &target, const WPixmap &pixmap, const Rect &source)
+{
+    const auto convertToQt = [](const Rect &rect) -> QRectF {
+        return {
+                QPoint {
+                        rect.topLeft().x(),
+                        rect.topLeft().y()
+                },
+                QPoint {
+                        rect.bottomRight().x(),
+                        rect.bottomRight().y()
+                }
+        };
+    };
+    const auto qtTarget = convertToQt(target);
+    const auto qtSource = convertToQt(source);
+
+    this->_painter->drawPixmap(qtTarget, pixmap, qtSource);
+}
+
+inline void WPainter::drawPoint(const PointF &point)
+{
+    this->_painter->drawPoint(QPointF {
+        point.x(), point.y()
+    });
+}
+
+inline void WPainter::drawRect(const RectF &rect)
+{
+    const auto convertToQt = [](const RectF &rect) -> QRectF {
+        return {
+                QPointF {
+                        rect.topLeft().x(),
+                        rect.topLeft().y()
+                },
+                QPointF {
+                        rect.bottomRight().x(),
+                        rect.bottomRight().y()
+                }
+        };
+    };
+
+    const auto qtRect = convertToQt(rect);
+
+    _painter->drawRect(qtRect);
+}
+
+inline void WPainter::drawEllipse(const PointF &center, double rx, double ry)
+{
+    _painter->drawEllipse(QPointF {
+        center.x(),
+        center.y()
+    }, rx, ry);
+}
+
+inline bool WPainter::isActive() const
+{
+    return this->_painter->isActive();
+}
+
+inline bool WPainter::end()
+{
+    return this->_painter->end();
+}
+
+WPainter::CompositionMode WPainter::compositionMode() const
+{
+    const auto c = _painter->compositionMode();
+
+    switch (c) {
+        case QPainter::CompositionMode::CompositionMode_Clear:
+            return WPainter::CompositionMode::CompositionMode_Clear;
+        case QPainter::CompositionMode::CompositionMode_SourceOver:
+            return WPainter::CompositionMode::CompositionMode_SourceOver;
+        case QPainter::CompositionMode::CompositionMode_DestinationOut:
+            return WPainter::CompositionMode::CompositionMode_DestinationOver;
+        case QPainter::CompositionMode_DestinationOver: break;
+        case QPainter::CompositionMode_Source: break;
+        case QPainter::CompositionMode_Destination: break;
+        case QPainter::CompositionMode_SourceIn: break;
+        case QPainter::CompositionMode_DestinationIn: break;
+        case QPainter::CompositionMode_SourceOut: break;
+        case QPainter::CompositionMode_SourceAtop: break;
+        case QPainter::CompositionMode_DestinationAtop: break;
+        case QPainter::CompositionMode_Xor: break;
+        case QPainter::CompositionMode_Plus: break;
+        case QPainter::CompositionMode_Multiply: break;
+        case QPainter::CompositionMode_Screen: break;
+        case QPainter::CompositionMode_Overlay: break;
+        case QPainter::CompositionMode_Darken: break;
+        case QPainter::CompositionMode_Lighten: break;
+        case QPainter::CompositionMode_ColorDodge: break;
+        case QPainter::CompositionMode_ColorBurn: break;
+        case QPainter::CompositionMode_HardLight: break;
+        case QPainter::CompositionMode_SoftLight: break;
+        case QPainter::CompositionMode_Difference: break;
+        case QPainter::CompositionMode_Exclusion: break;
+        case QPainter::RasterOp_SourceOrDestination: break;
+        case QPainter::RasterOp_SourceAndDestination: break;
+        case QPainter::RasterOp_SourceXorDestination: break;
+        case QPainter::RasterOp_NotSourceAndNotDestination: break;
+        case QPainter::RasterOp_NotSourceOrNotDestination: break;
+        case QPainter::RasterOp_NotSourceXorDestination: break;
+        case QPainter::RasterOp_NotSource: break;
+        case QPainter::RasterOp_NotSourceAndDestination: break;
+        case QPainter::RasterOp_SourceAndNotDestination: break;
+        case QPainter::RasterOp_NotSourceOrDestination: break;
+        case QPainter::RasterOp_SourceOrNotDestination: break;
+        case QPainter::RasterOp_ClearDestination: break;
+        case QPainter::RasterOp_SetDestination: break;
+        case QPainter::RasterOp_NotDestination: break;
+    }
+    W_ASSERT_TEXT(true, "not known composition mode " << (int) c);
+    std::abort();
+    return WPainter::CompositionMode::CompositionMode_DestinationOver;
+}
+
+
+#endif // USE_QT

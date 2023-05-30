@@ -6,21 +6,27 @@
 #include "WPool.h"
 #include "core/WMutex.h"
 #include "core/AtomicSafe.h"
+#include "WTask.h"
+#include "core/WSemaphore.h"
+#include <thread>
 
 class SchedulerThreadData {
 public:
     bool *thread;
 };
 
-/*
+
 class Scheduler final: public WObject{
 private:
-    std::vector<WPool *> _pools_active;
-    std::vector<WPool *> _pools_not_active;
+    WVector<WTask *> _pools_main_thread;
+    WVector<WTask *> _pools_not_active;
+    WVector<std::thread> _threads;
 
-    mutable WMutex _pool_active_locker;
-    mutable WMutex _pool_not_active_locker;
-    QThreadPool _threads;
+    mutable WSemaphore _sem;
+    mutable WSemaphore _semMain;
+
+    mutable WMutex _lockMain;
+    mutable WMutex _lock_heap;
 
      //@ requires
      //@   _pools is locked
@@ -39,22 +45,19 @@ private:
      //
     bool is_heap() const;
 
-    AtomicSafe<bool> _need_to_sort;
+    void loop(int index);
 
-    void startNewPool();
-    QThreadPool *getThreadPool();
+    AtomicSafe<bool> _need_to_sort;
+    bool _needToDie;
+
 public:
     explicit Scheduler(WObject *parent = nullptr);
     ~Scheduler() final;
 
-    void removePool(WPool *task);
-    void addPool(WPool *task);
+    void addTask(WTask *task);
 
-    Q_DISABLE_COPY(Scheduler);
+    constexpr bool needToDie() const noexcept;
 
-private slots:
-    void onPriorityChanged();
-    void onPoolEnd(WPool *pool);
-    void onJobAvailable(WPool *pool);
+    void exit();
 };
-*/
+

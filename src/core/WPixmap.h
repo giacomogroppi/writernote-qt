@@ -8,6 +8,7 @@
 #include "RectF.h"
 #include "WImage.h"
 #include "WString.h"
+#include "touch/dataTouch/Point.h"
 
 class WPixmap
 #ifdef USE_QT
@@ -18,7 +19,7 @@ private:
 
 public:
     explicit WPixmap(int page, bool consideringResolution);
-    WPixmap(const WString &path);
+    explicit WPixmap(const WString &path);
     WPixmap() = default;
     explicit WPixmap(const std::string &path, const char *format = nullptr);
 
@@ -31,7 +32,7 @@ public:
     bool isNull() const;
 
     bool loadFromData(const WByteArray& data, const char *formact);
-    bool loadFromData(const void *data, size_t size, const char *formact);
 
+    [[deprecated("This function is very slow, and it's deprecated")]]
     bool operator==(const WPixmap &other) const;
 };

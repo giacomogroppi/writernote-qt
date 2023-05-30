@@ -435,7 +435,7 @@ bool Page::initImg(bool flag)
     return flag;
 }
 
-void Page::decreseAlfa(const WVector<int> &pos, WPainter * painter, int decrese)
+void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrese)
 {
     int i = pos.size();
     uint color;
@@ -547,39 +547,7 @@ void Page::drawIfInside(int m_pos_ris, const RectF &area)
     End_painter(painter);
 }
 
-#define PAGE_DRAW_SQUARE_ADJUST(point, function) \
-    point.rx() = rect.function().x(); \
-    point.ry() = rect.function().y(); \
-    at_translation(point, this->_count - 1);
-
-void Page::drawSquare(const RectF &rect)
-{
-    RectF tmp;
-    //QBrush brush(COLOR_NULL, Qt::SolidPattern);
-    WPen pen;
-    WPainter painter;
-
-    painter.begin(&_imgDraw);
-
-    // we need to adjust the rect to our img
-    {
-        PointF point1, point2;
-        PAGE_DRAW_SQUARE_ADJUST(point1, topLeft);
-        PAGE_DRAW_SQUARE_ADJUST(point2, bottomRight);
-
-        tmp = RectF(point1, point2);
-    }
-
-    pen.setColorNull();
-    pen.setSolidPattern();
-
-    painter.setPen(pen);
-    painter.setCompositionClear();
-    painter.fillRect(tmp.castTo<double>());
-    End_painter(painter);
-}
-
-void Page::decreseAlfa(const WVector<int> &pos, int decrese)
+void Page::decreaseAlfa(const WVector<int> &pos, int decrease)
 {
     bool needInit = initImg(false);
 
@@ -592,7 +560,7 @@ void Page::decreseAlfa(const WVector<int> &pos, int decrese)
     WPainter painter;
     painter.begin(&_imgDraw);
 
-    this->decreseAlfa(pos, &painter, decrese);
+    this->decreaseAlfa(pos, &painter, decrease);
 
     End_painter(painter);
 }

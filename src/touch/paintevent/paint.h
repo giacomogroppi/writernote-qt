@@ -8,7 +8,7 @@
 #include "core/WPixmap.h"
 
 #define DRAW_SINGLE_LOAD_DEF 1.0
-/*
+/**
  * the function is useful when you have an
  * image with strokes and you want to
  * draw it on the surface, without having
@@ -19,8 +19,8 @@ void singleLoad(WPainter        &painter,
         const WPixmap           &img,
         const WSize             &sizeRect,
         const PointF           &PointFirstPage,
-        cdouble                 counterPage,
-        cdouble                 m);
+        double                 counterPage,
+        double                 m);
 
 /*
  * @countHeigth is use when we what to

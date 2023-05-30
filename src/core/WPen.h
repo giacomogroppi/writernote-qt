@@ -26,7 +26,7 @@ public:
 
     void setColorNull();
     void setColor(const WColor &color);
-    const WColor &color() const;
+    WColor color() const;
     double widthF() const;
 
     // todo --> try to remove
@@ -38,6 +38,8 @@ public:
         DotLine
     };
     void setStyle(enum WPenStyle style);
+
+    friend class WPainter;
 };
 
 

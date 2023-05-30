@@ -17,9 +17,9 @@ void xmlstruct::setData(const WByteArray *path_U, Document *currenttitle_U)
 size_t xmlstruct::get_size_file(const WByteArray &path)
 {
     size_t size;
-    File file(path);
+    WFile file(path);
 
-    if (!file.open(File::OpenMode::readOnly))
+    if (!file.open(WFile::WFileReadOnly))
         return 0;
 
     size = file.size();

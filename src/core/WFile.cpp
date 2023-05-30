@@ -2,11 +2,33 @@
 #include "utils/WCommonScript.h"
 #include <filesystem>
 #include <fstream>
+#include "utils/platform.h"
+
+static const char *convertToCanonical (char mode)
+{
+    switch (mode) {
+    case WFile::WFileAppend:
+        return "a";
+    case WFile::WFileReadOnly: {
+        if (is_windows)
+            return "rb";
+        return "r";
+    }
+    case WFile::WFileWrite: {
+        if (is_windows)
+            return "wb";
+        return "w";
+    }
+    }
+    W_ASSERT(0);
+    return nullptr;
+}
 
 WFile::WFile(const WByteArray &path, const char mode)
 {
-    char tmp[2] = {mode, '\0'};
-    fp = fopen(path.constData(), tmp);
+    const auto *m = convertToCanonical(mode);
+
+    fp = fopen(path.constData(), m);
 }
 
 WFile::WFile(const std::string &path, const char mode):
@@ -25,6 +47,13 @@ WFile::~WFile()
         fclose(this->fp);
 }
 
+bool WFile::open(int openMode)
+{
+    W_ASSERT(this->fp == nullptr);
+    this->fp = fopen(this->_path.constData(), convertToCanonical(openMode));
+    return fp != nullptr;
+}
+
 int WFile::write(const void *data, size_t size)
 {
     W_ASSERT(this->fp);
@@ -35,6 +64,20 @@ int WFile::write(const void *data, size_t size)
         return -1;
 
     return 0;
+}
+
+int WFile::read(void *to, size_t size)
+{
+    W_ASSERT(fp != nullptr);
+    const auto res = fread(to, size, 1, this->fp);
+    return res < 1;
+}
+
+bool WFile::close()
+{
+    W_ASSERT(fp);
+    const auto res = fclose(fp);
+    return res == 0;
 }
 
 int WFile::fileExist(const WByteArray &to)
@@ -49,17 +92,18 @@ int WFile::fileExist(const WByteArray &to)
 
 int WFile::readFile(WByteArray &to, const char *pathFile)
 {
-    FILE *fp = WFile::open(pathFile, "r");
+    WFile f (pathFile, WFile::WFileReadOnly);
 
-    if(!fp)
+    if(f.isValid())
         return -1;
 
-    const auto size = WFile::size(fp);
+    const auto size = f.size();
 
     char data[size];
 
-    if(fread(data, size, 1, fp) < 1)
+    if (f.read(data, size) < 0) {
         return -1;
+    }
 
     to = WByteArray(data, size);
 

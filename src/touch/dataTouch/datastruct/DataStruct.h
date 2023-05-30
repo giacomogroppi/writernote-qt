@@ -593,5 +593,5 @@ force_inline void DataStruct::setVisible(int from, int to)
 
 inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
 {
-    at_mod(index).decreseAlfa(pos, 4);
+    at_mod(index).decreaseAlfa(pos, 4);
 }

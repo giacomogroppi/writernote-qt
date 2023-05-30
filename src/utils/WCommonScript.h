@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <math.h>
+#include <cmath>
 #include <cstdlib>
 #include "utils/common_def.h"
 #include <type_traits>
@@ -18,7 +18,6 @@
 #define static_assert_type(val, should_be) static_assert(std::is_same<decltype(val), should_be>::value, #val " must be " #should_be)
 #define qstr WString
 #define unused(expr) do { (void)(expr); } while (0)
-#include "touch/dataTouch/Point.h"
 #include <iostream>
 
 #ifdef USE_QT
@@ -62,12 +61,18 @@ force_inline constexpr not_used int debug_enable()
 }
 
 #ifdef DEBUGINFO
+#if defined(USE_QT)
+# define DEBUGGER_OUT qDebug()
+#else
+# define DEBUGGER_OUT std::cout
+#endif
+
 # define W_ASSERT(condition) W_ASSERT_TEXT(condition, "")
 
 # define W_ASSERT_TEXT(condition, ...)                                                                  \
     do{                                                                                                 \
         if(un(!!(condition) == false)){                                                                 \
-            std::cout << __FUNCTION__ << __FILE__ << __LINE__ << #condition << __VA_ARGS__;              \
+            DEBUGGER_OUT << __FUNCTION__ << __FILE__ << __LINE__ << #condition << __VA_ARGS__;              \
             std::abort();                                                                               \
         }                                                                                               \
     }while(0)
@@ -261,12 +266,6 @@ force_inline void abortIfDebug(cchar *file, int line){
 # define DO_IF_DEBUG_ENABLE(enable, istr) ;
 #endif //DEBUGINFO
 
-#if defined(USE_QT)
-# define DEBUGGER_OUT qDebug()
-#else
-# define DEBUGGER_OUT std::cout
-#endif
-
 #if defined(DEBUGINFO)
 # define WDebug(enable, message)                                                                    \
     if(enable){                                                                                     \
@@ -286,22 +285,6 @@ force_inline void set_zero(T &value)
 #else
     (void)(value);
 #endif
-}
-
-template <typename T>
-force_inline T __MIN(T first, T second)
-{
-    if(first < second)
-        return first;
-    return second;
-}
-
-template <typename T>
-force_inline T __MAX(T first, T second)
-{
-    if(first < second)
-        return first;
-    return second;
 }
 
 template <typename T>
@@ -327,25 +310,9 @@ force_inline bool is_near(cdouble one, cdouble two, cdouble precision)
     return std::abs(one - two) <= precision;
 }
 
-force_inline double distance_not_square(const PointF& first, const PointF& second)
-{
-    const auto p = WCommonScript::Power(first.x() - second.x(), 2) + WCommonScript::Power(first.y() - second.y(), 2);
-    if constexpr (WCommonScript::debug_enable()){
-        const auto not_used res = WCommonScript::Power(first.x() - second.x(), 2) + std::pow(first.y() - second.y(), 2);
-        W_ASSERT(is_near(res, p, 0.001));
-    }
-
-    return p;
-}
-
 force_inline double distance(double y1, double y2)
 {
     return std::abs(y1 - y2);
-}
-
-force_inline double distance(const PointF& first, const PointF& second)
-{
-    return std::sqrt(distance_not_square(first, second));
 }
 
 // return true if left <= value <= right
@@ -361,12 +328,6 @@ force_inline bool is_between_change(const double left, const double value, const
     const auto max = std::min(left, rigth);
 
     return min <= value and value <= max;
-}
-
-force_inline bool is_near(const PointF &point1, const PointF &point2, cdouble prec)
-{
-    return  is_near(point1.x(), point2.x(), prec) and
-            is_near(point1.y(), point2.y(), prec);
 }
 
 template<typename T>

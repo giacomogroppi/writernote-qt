@@ -33,6 +33,10 @@ private:
 #endif
 public:
     WImage(const WString &path);
+
+#ifdef USE_QT
+    WImage (QImage img);
+#endif // USE_QT
     explicit WImage(const std::string &fileName, const char *format = nullptr);
     explicit WImage(int page, bool consideringResolution);
     WImage(int width, int height, WImageType format);
@@ -53,8 +57,6 @@ public:
     bool operator==(const WImage &other) const;
 
 #ifdef USE_QT
-    [[nodiscard]] QImage toQImage() const;
-
     WImage &operator=(const QImage &other);
 #endif // USE_QT
 
@@ -65,13 +67,40 @@ public:
 
 #ifdef USE_QT
 
+inline bool WImage::isNull() const
+{
+    return QImage::isNull();
+}
+
+inline RectF WImage::rect() const
+{
+    const auto qtRect = QImage::rect();
+    const auto tl = qtRect.topLeft();
+    const auto rb = qtRect.bottomRight();
+
+    return RectF {
+            (double) tl.x(),
+            (double) tl.y(),
+            (double) rb.x(),
+            (double) rb.y()
+    };
+}
+
 inline bool WImage::operator==(const WImage &other) const
 {
     return QImage::operator==(other);
 }
-#endif
 
-#ifdef USE_QT
+inline int WImage::width() const
+{
+    return QImage::width();
+}
+
+inline int WImage::height() const
+{
+    return QImage::height();
+}
+
 inline WImage &WImage::operator=(const QImage &other)
 {
     if (this == &other)
@@ -79,5 +108,17 @@ inline WImage &WImage::operator=(const QImage &other)
     QImage::operator==(other);
     return *this;
 }
-#endif
+
+inline WImage::WImage(QImage img)
+    : QImage(std::move(img))
+{
+
+}
+
+inline WRgb WImage::pixel(const Point &point) const
+{
+    return QImage::pixel(point.x(), point.y());
+}
+
+#endif // USE_QT
 

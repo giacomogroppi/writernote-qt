@@ -110,12 +110,12 @@ constexpr bool TabletUtils::withPdf() const
 }
 
 void singleLoad(
-        WPainter        &painter,
-        const WPixmap   &pix,
-        const WSizeF    &sizeRect,
-        const PointF    &PointFirstPage,
-        cdouble         counterPage,
-        cdouble         m)
+        WPainter       &painter,
+        const WPixmap  &pix,
+        const WSize    &sizeRect,
+        const PointF   &PointFirstPage,
+        double         counterPage,
+        double         m)
 {
     double x = PointFirstPage.x() * m;
     double y = PointFirstPage.y() + Page::getHeight() * counterPage;

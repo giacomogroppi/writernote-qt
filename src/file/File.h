@@ -3,10 +3,12 @@
 
 #include "utils/time/current_time.h"
 #include "core/WByteArray.h"
+#include "core/WFile.h"
 
 class File {
 private:
     WByteArray _name;
+    WFile *_file;
 public:
     explicit File(const WByteArray &name);
 
@@ -19,9 +21,7 @@ public:
         append = 0x2
     };
 
-    bool open(int openMode);
-    int write(const WByteArray &data);
-    bool close();
+    void reload();
 
     size_t size() const;
 

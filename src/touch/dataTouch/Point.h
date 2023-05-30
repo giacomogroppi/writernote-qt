@@ -6,6 +6,8 @@
 #include <iostream>
 #include "core/PointF.h"
 #include <cstring>
+#include "utils/WCommonScript.h"
+
 
 #ifdef USE_QT
 # include "core/PointF.h"
@@ -41,6 +43,18 @@ public:
         return *this;
     }
 };
+
+template<class T>
+inline Settable<T> &Settable<T>::operator=(const Settable<T> &other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    this->_set = other._set;
+    T::operator=(dynamic_cast<const T &>(other));
+
+    return *this;
+}
 
 template<class T>
 inline Settable<T>::Settable(const Settable<T> &other)
@@ -110,7 +124,7 @@ struct WColor{
 
 #ifdef USE_QT
     static WColor from_color(const WColor &color);
-    QColor toQColor() const;
+    [[nodiscard]] QColor toQColor() const;
     WColor &operator=(const QColor &other);
 #endif // USE_QT
     bool operator==(const WColor &other) const;
@@ -124,7 +138,7 @@ inline void WColor::set_alfa(unsigned char alfa)
 #ifdef USE_QT
 inline WColor WColor::from_color(const WColor &color)
 {
-    WColor tmp;
+    WColor tmp {};
     tmp.fromColor(color);
     return tmp;
 }
@@ -141,6 +155,29 @@ inline WColor &WColor::operator=(const QColor &other)
     static_assert(c + 1 == &c[1]);
 
     return *this;
+}
+
+QColor WColor::toQColor() const
+{
+    return QColor::fromRgb(
+            colore[0],
+            colore[1],
+            colore[2],
+            colore[3]
+            );
+}
+
+
+inline WColor::WColor(const QColor &other)
+    : colore {
+        (unsigned char) other.red(),
+        (unsigned char) other.green(),
+        (unsigned char) other.blue(),
+        (unsigned char) other.alpha()
+    }
+{
+
+    W_ASSERT(other.alpha() < UCHAR_MAX);
 }
 
 #endif // USE_QT
@@ -160,11 +197,13 @@ inline WColor::WColor(unsigned char u1,
                       unsigned char u2,
                       unsigned char u3,
                       unsigned char u4)
+    : colore {
+        u1,
+        u2,
+        u3,
+        u4
+    }
 {
-    colore[0] = u1;
-    colore[1] = u2;
-    colore[2] = u3;
-    colore[3] = u4;
 }
 
 inline WColor::WColor(const WColor &color)
@@ -177,9 +216,9 @@ inline void WColor::setAlfa(unsigned char newValue)
     this->colore[3] = newValue;
 }
 
-WColor WColor::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
+inline WColor WColor::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
 {
-    return WColor(u1, u2, u3, u4);
+    return {u1, u2, u3, u4};
 }
 
 using PointSettable = Settable<PointF>;

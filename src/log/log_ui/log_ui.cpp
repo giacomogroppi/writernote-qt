@@ -55,7 +55,7 @@ bool log_ui::check_str(const WString &str) const
 
 void log_ui::write(const WString &stringa, log_ui::type_write var)
 {
-    File file(this->getCurrentPosition());
+    WFile file(this->getCurrentPosition(), WFile::WFileWrite);
     WString tmp;
 
     if(m_permi != permi::enable){
@@ -78,7 +78,8 @@ void log_ui::write(const WString &stringa, log_ui::type_write var)
 
     log_ui::addTime(tmp);
 
-    file.write(WString("\n%1 --- %2").arg(tmp).arg(stringa).toUtf8());
+    const auto msg = WString("\n%1 --- %2").arg(tmp).arg(stringa).toUtf8();
+    file.write(msg, msg.size());
 
     file.close();
 }

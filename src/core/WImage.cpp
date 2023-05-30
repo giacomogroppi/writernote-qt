@@ -18,7 +18,6 @@ WImage::WImage(const std::string &path, const char *format):
 #ifdef USE_QT
 size_t WImage::save_and_size(WByteArray &arr) const
 {
-
     W_ASSERT(arr.size() == 0);
     QBuffer buffer(&arr);
     buffer.open(QIODevice::WriteOnly);

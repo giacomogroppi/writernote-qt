@@ -10,10 +10,10 @@ bool permission::open(const char *file, e_permission request)
         return File::exists(path);
     }
 
-    File file_temp(path);
+    WFile file_temp(path);
 
-    if(request == e_permission::readOnly){
-        if (!file_temp.open(File::OpenMode::readOnly))
+    if (request == e_permission::readOnly) {
+        if (!file_temp.open(WFile::WFileReadOnly))
             return false;
         file_temp.close();
         return true;
@@ -21,7 +21,7 @@ bool permission::open(const char *file, e_permission request)
 
 
     if (request == e_permission::writeOnly) {
-        if (!file_temp.open(File::OpenMode::writeOnly))
+        if (!file_temp.open(WFile::WFileWrite))
             return false;
         file_temp.close();
         return true;

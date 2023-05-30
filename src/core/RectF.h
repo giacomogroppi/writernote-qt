@@ -6,6 +6,7 @@
 #define WRITERNOTE_RECTF_H
 
 #include "Rect.h"
+#include "core/PointF.h"
 
 using RectF = RectTemplate<double>;
 

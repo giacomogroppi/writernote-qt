@@ -82,7 +82,7 @@ private:
     void AppendDirectly(const std::shared_ptr<Stroke>& stroke);
     bool initImg(bool flag);
 
-    void decreseAlfa(const WVector<int> &pos, WPainter *painter, int decrese);
+    void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrese);
 
     static PointF at_translation(const PointF &point, cint page);
     static RectF get_size_area(const WListFast<std::shared_ptr<Stroke>> & item, int from, int to);
@@ -96,7 +96,7 @@ public:
     ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
-    void swap(WListFast<std::shared_ptr<Stroke>> & stroke, const WVector<int> & pos, int flag);
+    void swap(WListFast<std::shared_ptr<Stroke>> &stroke, const WVector<int> & pos, int flag);
     void swap(WListFast<std::shared_ptr<Stroke>> &stroke, int from, int to);
     std::shared_ptr<Stroke> swap(int index, std::shared_ptr<Stroke> newData);
 
@@ -154,8 +154,7 @@ public:
 
     void removeAndDraw(int m_pos_ris, const WVector<int> &pos, const RectF &area);
     void drawIfInside(int m_pos_ris, const RectF &area);
-    void drawSquare(const RectF &rect);
-    void decreseAlfa(const WVector<int> &pos, int decrese);
+    void decreaseAlfa(const WVector<int> &pos, int decrease);
 
     RectF get_size_area(const WVector<int> &pos) const;
 
@@ -506,4 +505,11 @@ force_inline constexpr PointF Page::sizePoint()
             Page::size().x(),
             Page::size().y()
     };
+}
+
+inline void Page::append(const WListFast<std::shared_ptr<Stroke>> &stroke)
+{
+    for (auto &ref: stroke) {
+        this->append(ref);
+    }
 }

@@ -28,7 +28,10 @@ public:
     ~WVector();
 
     void append(const WVector<T> &other);
+
     void append(const T &item);
+    void append(T &&item);
+
     const T& get(int i) const;
     int size() const;
     void removeAt(int i);
@@ -43,11 +46,14 @@ public:
     bool isEmpty() const;
     bool isOrder() const;
     void order();
+
+    void insert(int index, T &&data);
     void insert(int index, const T& data);
+
     T takeFirst();
     const T* constData() const;
     int indexOf(const T &object);
-
+    void remove(const T& object);
     WVector<T> &operator=(const WVector<T> &other);
     bool operator==(const WVector<T> &other) const;
     bool operator!=(const WVector<T> &other) const;
@@ -101,6 +107,24 @@ public:
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
      */
 };
+
+template<class T>
+inline void WVector<T>::insert(int index, T &&data)
+{
+    this->_data.insert(
+            _data.begin() + index,
+            std::move(data)
+    );
+}
+
+template<class T>
+inline void WVector<T>::insert(int index, const T &data)
+{
+    this->_data.insert(
+            _data.begin() + index,
+            data
+    );
+}
 
 template<class T>
 inline void WVector<T>::order()
@@ -325,6 +349,12 @@ inline void WVector<T>::reserve(int numberOfElement)
     _reserve += numberOfElement;
      */
     _data.reserve(numberOfElement);
+}
+
+template <class T>
+inline void WVector<T>::append(T &&item)
+{
+    _data.push_back(std::move(item));
 }
 
 template <class T>

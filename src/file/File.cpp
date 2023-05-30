@@ -9,6 +9,7 @@
 
 File::File(const WByteArray &name)
     : _name(name)
+    , _file(new WFile(name))
 {
     W_ASSERT(!name.contains(slash::__slash()));
 }
