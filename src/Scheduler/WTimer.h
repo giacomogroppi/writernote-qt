@@ -15,11 +15,11 @@
 class WTimer: public WObject {
 private:
     mutable WRecursiveLock _lock;
+    int _currentId = 0;
     bool _isActive;
     int _millisecond;
 
     std::function<void()> _function;
-    std::thread _thread;
 public:
     WTimer(WObject *parent, std::function<void()> function, int millisecond);
     ~WTimer() = default;

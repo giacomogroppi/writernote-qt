@@ -22,6 +22,7 @@ WTimer::WTimer(WObject *parent, std::function<void()> function, int millisecond)
     , _millisecond(millisecond)
     , _function(std::move(function))
     , _isActive(false)
+    , _currentId(0)
 {
 
 }
@@ -31,10 +32,26 @@ void WTimer::start(int millisecond)
     if (millisecond != -1)
         this->_millisecond = millisecond;
 
-    this->_thread = std::thread([this]() -> void {
+    this->_lock.lock();
+
+    const auto myId = _currentId;
+    this->_currentId ++;
+
+    this->_lock.unlock();
+
+    std::thread([this, myId]() -> void {
         for (;;) {
             _isActive = true;
             std::this_thread::sleep_for(std::chrono::milliseconds (this->_millisecond));
+
+            {
+                WMutexLocker _(this->_lock);
+                if (myId < _currentId) {
+                    // we need to kill this thread since someone call exit
+                    return;
+                }
+            }
+
             Scheduler::addTaskMainThread(
                     new TaskTimer(this->_function)
             );
@@ -42,7 +59,7 @@ void WTimer::start(int millisecond)
             if (isSingleShot())
                 return;
         }
-    });
+    }).detach();
 }
 
 bool WTimer::isActive() const
@@ -62,3 +79,10 @@ void WTimer::setSingleShot(bool singleShot)
     WMutexLocker _(this->_lock);
     this->_isActive = singleShot;
 }
+
+void WTimer::stop()
+{
+    WMutexLocker _(this->_lock);
+    this->_currentId ++;
+}
+

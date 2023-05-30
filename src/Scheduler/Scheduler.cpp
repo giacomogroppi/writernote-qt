@@ -41,9 +41,7 @@ Scheduler::Scheduler(WObject *parent)
     }
 }
 
-Scheduler::~Scheduler()
-{
-}
+Scheduler::~Scheduler() = default;
 
 void Scheduler::createHeap()
 {

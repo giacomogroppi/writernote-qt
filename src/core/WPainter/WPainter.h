@@ -60,7 +60,7 @@ public:
         CompositionMode_DestinationOver
     };
     void setCompositionMode(enum CompositionMode compositionMode);
-    WPainter::CompositionMode compositionMode() const;
+    [[nodiscard]] WPainter::CompositionMode compositionMode() const;
 
     void setAntialeasing();
     void setCompositionClear();
@@ -317,6 +317,19 @@ WPainter::CompositionMode WPainter::compositionMode() const
     W_ASSERT_TEXT(true, "not known composition mode " << (int) c);
     std::abort();
     return WPainter::CompositionMode::CompositionMode_DestinationOver;
+}
+
+inline void WPainter::setCompositionMode(WPainter::CompositionMode compositionMode)
+{
+    QPainter::CompositionMode qtCompositionMode;
+
+    switch (compositionMode) {
+        case WPainter::CompositionMode_Clear: qtCompositionMode = QPainter::CompositionMode_Clear;
+        case WPainter::CompositionMode_DestinationOver: qtCompositionMode = QPainter::CompositionMode_DestinationOver;
+        case WPainter::CompositionMode_SourceOver: qtCompositionMode = QPainter::CompositionMode_SourceOver;
+    }
+
+    this->_painter->setCompositionMode(qtCompositionMode);
 }
 
 
