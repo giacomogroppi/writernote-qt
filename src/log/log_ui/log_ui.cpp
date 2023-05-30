@@ -71,7 +71,7 @@ void log_ui::write(const WString &stringa, log_ui::type_write var)
 
     WMutexLocker _(mutex);
 
-    if (!file.open(File::OpenMode::append)) {
+    if (!file.open(WFile::WFileAppend)) {
         m_permi = permi::error;
         return;
     }

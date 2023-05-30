@@ -3,19 +3,20 @@
 #include "File.h"
 #include "core/WList.h"
 #include "core/WByteArray.h"
+#include "core/WFile.h"
 
 class Directory
 {
 private:
-    WList<File> _files;
+    WList<WFile> _files;
     WByteArray _path;
 
-    static WList<File> getAllFile(const WByteArray &path);
+    static WList<WFile> getAllFile(const WByteArray &path);
 public:
     explicit Directory(const WByteArray &path);
     ~Directory();
 
-    const WList<File>& getFiles() const;
+    const WList<WFile>& getFiles() const;
 
     /**
      * requires
@@ -39,5 +40,4 @@ inline bool Directory::operator !=(const Directory &other) const
 {
     return !(*this == other);
 }
-
 

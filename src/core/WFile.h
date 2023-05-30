@@ -2,12 +2,15 @@
 
 #include "core/WByteArray.h"
 #include "utils/WCommonScript.h"
+#include "utils/time/current_time.h"
+
 
 class WFile
 {
 private:
     FILE *fp;
     WByteArray _path;
+    WDate lastMod;
 public:
     explicit WFile(const WByteArray &path, char mode);
     explicit WFile(const WByteArray &path);
@@ -34,6 +37,15 @@ public:
     static int readFile(WByteArray &to, const char *pathFile);
     static int saveArrIntoFile(const WByteArray &arr, const std::string &path);
     static WFile open(const WByteArray &path, char openMode);
+
+    bool operator==(const WFile &other) const;
+    bool operator!=(const WFile &other) const;
+
+    static bool exists(const WByteArray& array) noexcept;
+
+    constexpr const WByteArray & getName() const noexcept;
+    WDate getLastMod() const noexcept;
+
 private:
     static size_t sizefp(FILE *fp);
 };
@@ -70,3 +82,14 @@ inline size_t WFile::sizefp(FILE *fp)
 
     return size;
 }
+
+inline constexpr const WByteArray & WFile::getName() const noexcept
+{
+    return this->_path;
+}
+
+inline WDate WFile::getLastMod() const noexcept
+{
+    return this->lastMod;
+}
+

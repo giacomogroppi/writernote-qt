@@ -112,7 +112,7 @@ constexpr bool TabletUtils::withPdf() const
 void singleLoad(
         WPainter       &painter,
         const WPixmap  &pix,
-        const WSize    &sizeRect,
+        const WSizeF    &sizeRect,
         const PointF   &PointFirstPage,
         double         counterPage,
         double         m)

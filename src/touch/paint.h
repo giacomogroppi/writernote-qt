@@ -16,8 +16,8 @@ void singleLoad(WPainter        &painter,
                 const WPixmap   &img,
                 const WSizeF    &sizeRect,
                 const PointF   &PointFirstPage,
-                cdouble counterPage,
-                cdouble         m);
+                double counterPage,
+                double         m);
 
 /**
  * @countHeigth is use when we what to

@@ -39,7 +39,7 @@ public:
     void clear();
     const T& at(int i) const;
     void reserve(int numberOfElement);
-    T& takeAt(int i);
+    T takeAt(int i);
     const T& last() const;
     const T& first() const;
     T& operator[](int index);
@@ -107,6 +107,19 @@ public:
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
      */
 };
+
+template<class T>
+inline T WVector<T>::takeAt(int i)
+{
+    W_ASSERT(i >= 0 && i < size());
+    auto iterator = this->_data.begin() + i;
+
+    T element = std::move(_data[i]);
+
+    _data.erase(iterator);
+
+    return element;
+}
 
 template<class T>
 inline void WVector<T>::insert(int index, T &&data)

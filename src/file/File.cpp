@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <fstream>
 
+/*
 File::File(const WByteArray &name)
     : _name(name)
     , _file(new WFile(name))
@@ -90,3 +91,4 @@ inline File::File()
 {
     this->_name = "";
 }
+*/

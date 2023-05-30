@@ -5,7 +5,7 @@
 #include "core/WByteArray.h"
 #include "core/WFile.h"
 
-class File {
+/*class File {
 private:
     WByteArray _name;
     WFile *_file;
@@ -38,5 +38,5 @@ public:
 
     constexpr bool isOpen() const noexcept;
 };
-
+*/
 

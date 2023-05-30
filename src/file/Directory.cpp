@@ -10,31 +10,40 @@ Directory::Directory(const WByteArray &path)
 
 Directory::~Directory() = default;
 
-const WList<File> &Directory::getFiles() const
+const WList<WFile> &Directory::getFiles() const
 {
     return this->_files;
 }
 
 bool Directory::addFiles(const WByteArray &position)
 {
-    if (!File::createFile(position)) {
-        return false;
-    }
+    W_ASSERT(0);
 
-    this->_files.append(File(position));
+    this->_files.append(WFile(position));
 
     return true;
 }
 
-WList<File> Directory::getAllFile(const WByteArray &path)
+WList<WFile> Directory::getAllFile(const WByteArray &path)
 {
-    WList<File> ret = {};
+    WList<WFile> ret = {};
     Directory dir(path);
 
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-        ret.append(File(WByteArray(entry.path().c_str())));
+        ret.append(WFile(WByteArray(entry.path().c_str())));
     }
 
     return ret;
+}
+
+WList<WByteArray> Directory::allDirsInFolder() const
+{
+    WList<WByteArray> res {};
+
+    for (const auto& entry : std::as_const(_files)) {
+        res.append(entry.getName());
+    }
+
+    return res;
 }
 

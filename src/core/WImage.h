@@ -67,6 +67,11 @@ public:
 
 #ifdef USE_QT
 
+inline bool WImage::loadFromData(const WByteArray &data, const char *formact)
+{
+    return QImage::loadFromData(data, formact);
+}
+
 inline bool WImage::isNull() const
 {
     return QImage::isNull();
@@ -118,6 +123,11 @@ inline WImage::WImage(QImage img)
 inline WRgb WImage::pixel(const Point &point) const
 {
     return QImage::pixel(point.x(), point.y());
+}
+
+inline WImage::WImage(const WString &path)
+    : QImage(path)
+{
 }
 
 #endif // USE_QT

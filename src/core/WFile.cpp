@@ -24,6 +24,11 @@ static const char *convertToCanonical (char mode)
     return nullptr;
 }
 
+bool WFile::exists(const WByteArray& array) noexcept
+{
+    return std::filesystem::exists(array.toStdString());
+}
+
 WFile::WFile(const WByteArray &path, const char mode)
 {
     const auto *m = convertToCanonical(mode);
@@ -121,4 +126,9 @@ int WFile::saveArrIntoFile(const WByteArray &arr, const std::string &path)
         return -2;
 
     return 0;
+}
+
+bool WFile::exits(const std::string &path)
+{
+    return std::filesystem::exists(path);
 }

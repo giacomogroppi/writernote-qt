@@ -4,6 +4,7 @@
 #include "touch/TabletUtils.h"
 #include "touch/paintevent/paint.h"
 #include "log/log_ui/log_ui.h"
+#include "touch/paint.h"
 
 static WMutex           __mutex_sq;
 static const Page       *__page;
@@ -544,7 +545,7 @@ void SquareMethod::needReload(WPainter &painter, const Document &doc)
         if(likely(somethingInBox())){
             const PointF point = doc.getPointFirstPage() + _trans_img * zoom;
             const int len = doc.lengthPage();
-            const WSize size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
+            const WSizeF size = createSizeRect(doc, len, DRAW_CREATE_SIZE_RECT_DEF_PRO);
 
             W_ASSERT(size.getHeight() >= 0 and size.getWidth() >= 0);
             WDebug(debugSquare, "in_box");
