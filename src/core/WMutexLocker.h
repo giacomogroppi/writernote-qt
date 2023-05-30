@@ -2,12 +2,13 @@
 
 #include "core/WMutex.h"
 
+template <class T>
 class WMutexLocker
 {
 private:
-    WMutex &_m;
+    T &_m;
 public:
-    WMutexLocker(WMutex &mutex) : _m(mutex) { _m.lock(); };
+    WMutexLocker(T &mutex) : _m(mutex) { _m.lock(); };
     ~WMutexLocker() { _m.unlock(); }
 };
 

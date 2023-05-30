@@ -7,11 +7,6 @@ WTask::WTask(WObject *parent)
 {
 }
 
-void WTask::run()
-{
-    W_EMIT_1(finished, this);
-}
-
 void WTask::releaseJoiner() noexcept
 {
     for (int i = 0; i < this->_waiter; i++) {

@@ -4,6 +4,7 @@
 #include "WMutexLocker.h"
 #include <atomic>
 
+/*
 template <typename T>
 class AtomicSafe {
 private:
@@ -64,7 +65,7 @@ public:
         return this->_value;
     }
 
-    T operator() (AtomicSafe<T> &value) {
+    T operator() (AtomicSafe<T> &value) const {
         WMutexLocker _(value._locker);
         return this->value;
     }
@@ -88,5 +89,6 @@ public:
         return (this->operator==(val));
     }
 };
-
-
+*/
+template<class T>
+using AtomicSafe = std::atomic<T>;

@@ -2,12 +2,14 @@
 #include "core/WMutexLocker.h"
 #include "utils/threadcount.h"
 
+static Scheduler *instance;
 
 Scheduler::Scheduler(WObject *parent)
     : WObject(parent)
     , _need_to_sort(false)
     , _threads()
 {
+    instance = this;
     // TODO --> change this parameter
     _threads.reserve(8);
     std::vector<std::thread> thread;
@@ -16,8 +18,9 @@ Scheduler::Scheduler(WObject *parent)
         _threads.append(std::thread([this, i]() {
             const auto isMainThread = i == 0;
 
-            WSemaphore *sem = isMainThread ? &this->_semMain : &this->_sem;
+            WSemaphore *sem = isMainThread ? &this->_semMain : &this->_semGeneral;
             WMutex *mux = isMainThread ? &this->_lockMain : &this->_lock_heap;
+            WVector<WTask *> *tasksHeap = isMainThread ? &this->_Task_Main : &_Task_General;
 
             // loop
             for (;;) {
@@ -28,7 +31,7 @@ Scheduler::Scheduler(WObject *parent)
                     return;
 
                 mux->lock();
-                task = this->_pools_main_thread.takeFirst();
+                task = this->_Task_Main.takeFirst();
                 mux->unlock();
 
                 task->run();
@@ -45,8 +48,8 @@ Scheduler::~Scheduler()
 void Scheduler::createHeap()
 {
     /*
-    std::make_heap(_pools_not_active.begin(),
-                   _pools_not_active.end(),
+    std::make_heap(_Task_General.begin(),
+                   _Task_General.end(),
                    [](WTask *a, WTask *b) {
         return a->getPriority() < b->getPriority();
     });
@@ -66,29 +69,27 @@ bool Scheduler::is_heap() const
     return true;
     /*
     WMutexLocker _(this->_pool_active_locker);
-    const auto r = this->_pools_not_active.at(0)->getPriority();
+    const auto r = this->_Task_General.at(0)->getPriority();
 
-    for (int i = 1; i < (int)this->_pools_not_active.size(); i++) {
-        if (r < this->_pools_not_active.at(i)->getPriority())
+    for (int i = 1; i < (int)this->_Task_General.size(); i++) {
+        if (r < this->_Task_General.at(i)->getPriority())
             return false;
     }
     return true;
 */
 }
 
-void Scheduler::loop(int index)
-{
-    for (;;) {
-        this->_sem.acquire();
-        this->_lock_heap.lock();
-        auto *task = this->_pools_not_active.takeAt(0);
-        this->_lock_heap.unlock();
-        task->run();
-    }
-}
-
 constexpr bool Scheduler::needToDie() const noexcept
 {
     return this->_needToDie;
+}
+
+void Scheduler::addTaskMainThread(WTask *task)
+{
+    W_ASSERT(task);
+
+    WMutexLocker _(instance->_lockMain);
+    instance->_Task_Main.append(task);
+    instance->_semMain.release();
 }
 

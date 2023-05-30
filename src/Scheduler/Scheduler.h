@@ -18,11 +18,12 @@ public:
 
 class Scheduler final: public WObject{
 private:
-    WVector<WTask *> _pools_main_thread;
-    WVector<WTask *> _pools_not_active;
+    WVector<WTask *> _Task_Main;
+    WVector<WTask *> _Task_General;
+
     WVector<std::thread> _threads;
 
-    mutable WSemaphore _sem;
+    mutable WSemaphore _semGeneral;
     mutable WSemaphore _semMain;
 
     mutable WMutex _lockMain;
@@ -45,8 +46,6 @@ private:
      //
     bool is_heap() const;
 
-    void loop(int index);
-
     AtomicSafe<bool> _need_to_sort;
     bool _needToDie;
 
@@ -54,9 +53,11 @@ public:
     explicit Scheduler(WObject *parent = nullptr);
     ~Scheduler() final;
 
-    void addTask(WTask *task);
 
     constexpr bool needToDie() const noexcept;
+
+    void addTask(WTask *task);
+    static void addTaskMainThread(WTask *task);
 
     void exit();
 };

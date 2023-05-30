@@ -12,7 +12,7 @@ public:
     explicit WTask(WObject *parent = nullptr);
     ~WTask() override = default;
 
-    void run();
+    virtual void run() = 0;
     void join();
 
     void releaseJoiner() noexcept;
