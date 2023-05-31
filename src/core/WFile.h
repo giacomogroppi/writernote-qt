@@ -93,3 +93,13 @@ inline WDate WFile::getLastMod() const noexcept
     return this->lastMod;
 }
 
+inline bool WFile::operator==(const WFile &other) const
+{
+    return this->_path == other._path;
+}
+
+inline bool WFile::operator!=(const WFile &other) const
+{
+    return !WFile::operator==(other);
+}
+

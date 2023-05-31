@@ -82,14 +82,14 @@ inline void WPainter::setColor(const WColor &color)
     this->_painter->setPen(color.toQColor());
 }
 
-WPainter::WPainter()
+inline WPainter::WPainter()
     : _painter(new QPainter())
     , _allocated(true)
 {
 
 }
 
-WPainter::WPainter(QPdfWriter *pdfWriter)
+inline WPainter::WPainter(QPdfWriter *pdfWriter)
     : _painter(new QPainter())
     , _allocated(true)
 {
@@ -183,7 +183,7 @@ inline void WPainter::drawPixmap(const RectF &target, const WPixmap &pixmap)
     this->_painter->drawPixmap(qtTarget, pixmap);
 }
 
-void WPainter::drawPixmap(const Rect &target, const WPixmap &pixmap)
+inline void WPainter::drawPixmap(const Rect &target, const WPixmap &pixmap)
 {
     const auto convertToQt = [](const Rect &rect) -> QRect {
         return {
@@ -267,7 +267,7 @@ inline bool WPainter::end()
     return this->_painter->end();
 }
 
-WPainter::CompositionMode WPainter::compositionMode() const
+inline WPainter::CompositionMode WPainter::compositionMode() const
 {
     const auto c = _painter->compositionMode();
 

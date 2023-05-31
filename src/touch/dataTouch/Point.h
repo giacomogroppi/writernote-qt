@@ -157,7 +157,7 @@ inline WColor &WColor::operator=(const QColor &other)
     return *this;
 }
 
-QColor WColor::toQColor() const
+inline QColor WColor::toQColor() const
 {
     return QColor::fromRgb(
             colore[0],
