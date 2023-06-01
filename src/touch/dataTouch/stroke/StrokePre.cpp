@@ -188,7 +188,6 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
                 .begin_point = this->get_last_point(),
                 .end_point   = this->_point.constEnd(),
                 .begin_press = this->get_last_press(),
-                .end_press   = this->_pressure.constEnd(),
                 .press_null  = false
             };
 

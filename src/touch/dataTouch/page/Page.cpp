@@ -376,7 +376,7 @@ inline void Page::draw(
         this->drawEngine(painter, _stroke, m_pos_ris, true);
     }
 
-    if(_strokeTmp.size()){
+    if (_strokeTmp.size()) {
         this->drawEngine(painter, _strokeTmp, m_pos_ris, false);
     }
 

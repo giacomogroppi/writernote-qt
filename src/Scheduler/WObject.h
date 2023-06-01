@@ -15,7 +15,7 @@
 
 #define W_EMITTABLE_PRIVATE_REGI(name_signals, ...) \
     public: \
-    void reg##name_signals(std::function<void(__VA_ARGS__)> nameFunc) {                    \
+    void reg##name_signals(const std::function<void(__VA_ARGS__)> &nameFunc) {                    \
         this->w_object_observer_##name_signals.append(nameFunc);                                \
     } \
     private:

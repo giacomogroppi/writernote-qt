@@ -28,8 +28,15 @@ private:
     template <class T, class Z>
     struct drawData{
         T begin_point, end_point;
-        Z begin_press, end_press;
+        Z begin_press;
         bool press_null;
+
+        drawData &operator=(const drawData<T, Z> &other) {
+            this->begin_point = other.begin_point;
+            this->begin_press = other.begin_press;
+            this->end_point = other.end_point;
+            this->press_null = other.press_null;
+        }
     };
 
     template <class T, class Z>
@@ -242,7 +249,7 @@ force_inline void StrokeNormal::draw(
 
     for (data.begin_point ++; data.begin_point != data.end_point; data.begin_point ++) {
         const PointF point = Page::at_translation(*data.begin_point, page);
-        const pressure_t pressure = *data.begin_press;
+        const pressure_t pressure = *(data.begin_press);
 
         if(!data.press_null){
             data.begin_press ++;

@@ -176,8 +176,10 @@ inline WColor::WColor(const QColor &other)
         (unsigned char) other.alpha()
     }
 {
-
-    W_ASSERT(other.alpha() < UCHAR_MAX);
+    W_ASSERT(other.red() <= UCHAR_MAX);
+    W_ASSERT(other.green() <= UCHAR_MAX);
+    W_ASSERT(other.blue() <= UCHAR_MAX);
+    W_ASSERT(other.alpha() <= UCHAR_MAX);
 }
 
 #endif // USE_QT
