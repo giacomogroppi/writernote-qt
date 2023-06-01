@@ -27,7 +27,8 @@ private:
 
     template <class T, class Z>
     struct drawData{
-        T begin_point, end_point;
+        T begin_point;
+        const T end_point;
         Z begin_press;
         bool press_null;
 
@@ -231,9 +232,9 @@ force_inline void StrokeNormal::draw(
     WPainter _painterPrivate;
     WPainter *painter;
     PointF lastPoint, pointDraw;
-    cbool isHigh = pen.color().getAlfa() < 255;
-    cdouble prop = _prop == PROP_RESOLUTION ? _prop : 1.;
-    cbool isPrivatePainter = isHigh;
+    const bool isHigh = pen.color().getAlfa() < 255;
+    const double prop = _prop == PROP_RESOLUTION ? _prop : 1.;
+    const bool isPrivatePainter = isHigh;
 
     if (isPrivatePainter) {
         img = WPixmap(1, true);

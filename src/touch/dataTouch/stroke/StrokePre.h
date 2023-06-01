@@ -32,7 +32,7 @@ private:
     [[nodiscard]] WList<PointF>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 
-    void setStrokeComplex(std::shared_ptr<Stroke> stroke);
+    void setStrokeComplex(const std::shared_ptr<Stroke>& stroke);
 public:
     StrokePre();
     ~StrokePre();

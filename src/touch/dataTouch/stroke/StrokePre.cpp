@@ -120,7 +120,7 @@ void StrokePre::reset_img()
     _img.fill({color_transparent});
 }
 
-void StrokePre::setStrokeComplex(std::shared_ptr<Stroke> stroke)
+void StrokePre::setStrokeComplex(const std::shared_ptr<Stroke>& stroke)
 {
     W_ASSERT(stroke->type() != Stroke::COMPLEX_NORMAL);
     this->_stroke = stroke;
@@ -173,6 +173,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
         _pressure.append(press);
 
         painter.setPen(pen);
+        painter.setAntialeasing();
 
         if (un(_point.size() == 1)) {
             _last_draw_point = this->_point.constBegin();
@@ -191,15 +192,12 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
                 .press_null  = false
             };
 
-            if (this->_point.last().y() > this->_max.y())
-                _max.setY(_point.last().y() + 1.);
-            if (this->_point.last().x() > this->_max.x())
-                _max.setX(_point.last().x() + 1.);
+            // TODO: consider pressure
+            _max.setY(_point.last().y() > _max.y() ? _point.last().y() + 1. : _max.y());
+            _max.setX(_point.last().x() > _max.x() ? _point.last().x() + 1. : _max.x());
 
-            if (this->_point.last().y() < this->_min.y())
-                this->_min.setY(_point.last().y() - 1.);
-            if (this->_point.last().x() < this->_min.x())
-                this->_min.setX(_point.last().x() - 1.);
+            _min.setY(_point.last().y() < _min.y() ? _point.last().y() - 1. : _min.y());
+            _min.setX(_point.last().x() < _min.x() ? _point.last().x() - 1. : _min.x());
 
             if (_max_pressure < _pressure.last()) {
                 _max_pressure = _pressure.last();

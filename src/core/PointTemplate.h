@@ -168,7 +168,7 @@ constexpr PointTemplate<T> PointTemplate<T>::operator+(const PointTemplate<T> &o
 
 template<typename T>
 inline bool PointTemplate<T>::operator==(const PointTemplate<T> &other) const
-        {
+{
     return this->_x == other._x && this->_y == other._y;
 }
 

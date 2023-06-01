@@ -3,7 +3,10 @@
 #include "Scheduler/WObject.h"
 #include "HighligterMethod.h"
 
-class Highligter: public WObject, public HighligterMethod {
+class Highligter final:
+        public WObject,
+        public HighligterMethod
+{
 private:
     enum HighligterType {
         HighligterTypePressure,
@@ -22,7 +25,7 @@ public:
                         WColor &color,
                         WPen &pen);
 
-    virtual ~Highligter() = default;
+    ~Highligter() final = default;
 
     int getType() const final;
     static constexpr int type();
