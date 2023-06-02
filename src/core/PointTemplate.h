@@ -202,7 +202,7 @@ template<typename T>
 template<typename Z>
 inline PointTemplate<Z> PointTemplate<T>::castTo() const
 {
-    return PointTemplate<Z>((Z) y(), (Z) y());
+    return PointTemplate<Z>((Z) x(), (Z) y());
 }
 
 template<typename T>

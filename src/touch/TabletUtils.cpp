@@ -17,7 +17,7 @@ static void draw_laser(WPainter &painter, Laser &_laser, WPen &pen, double zoom)
     auto begin = _laser.begin();
     const auto end = _laser.end();
 
-    W_ASSERT_TEXT(0, "TODO");
+    W_ASSERT_TEXT(0, "TODO view area {0., 0.}");
     for(; begin != end; begin ++){
         drawSingleStroke(*begin, painter, pen, zoom, {0., 0.});
     }
@@ -27,14 +27,13 @@ void TabletUtils::drawForAudio()
 {
     static int last_m_pos_ris   = -1;
     const bool is_play          = _isPlay();
-    const auto m_pos_ris        = (is_play) ?
-                                  (_positionAudio()) :
-                                  -1;
-    if(un(is_play and !_isExportingPdf)){
+    const auto m_pos_ris = (is_play) ? (_positionAudio()) : -1;
+
+    if (un(is_play and !_isExportingPdf)) {
         // the idea is to trigger this view only when
         // the second has changed
         if(last_m_pos_ris != m_pos_ris){
-            auto &l = (Document &)this->_doc;
+            auto &l = (Document &) this->_doc;
             l.newViewAudio(m_pos_ris);
             last_m_pos_ris = m_pos_ris;
         }
@@ -86,11 +85,12 @@ void TabletUtils::load()
             continue;
         }
 
-        //page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, this->_visibleArea);
         page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, {0., 0., 150., 150.});
         singleLoad(getPainter(), img, sizeRect, {0., 0.}, counterPage, _doc.getZoom());
-        break;
+
         //img.save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+
+        break;
 
         //page.get_stroke_page().draw(getPainter(), _m, _doc.getPointFirstPage(), page, sizeRect);
         //singleLoad(getPainter(), img, sizeRect, PointFirstPage, counterPage, _doc.getZoom());
@@ -122,7 +122,9 @@ void singleLoad(
 
     y *= m;
 
-    RectF targetRect(PointF(x, y), sizeRect.castTo<double>());
+    const RectF targetRect(PointF(x, y), sizeRect.castTo<double>());
+    const RectF source = pix.rect().castTo<double>();
 
-    painter.drawPixmap(targetRect, pix, pix.rect().castTo<double>());
+    WDebug(true, source);
+    painter.drawPixmap(targetRect, pix, source);
 }

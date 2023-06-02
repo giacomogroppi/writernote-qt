@@ -4,11 +4,13 @@
 
 static Scheduler *instance;
 
-Scheduler::Scheduler(WObject *parent)
-    : WObject(parent)
+Scheduler::Scheduler()
+    : WObject(nullptr)
     , _need_to_sort(false)
     , _threads()
 {
+    W_ASSERT(instance == nullptr);
+
     instance = this;
     // TODO --> change this parameter
     _threads.reserve(8);

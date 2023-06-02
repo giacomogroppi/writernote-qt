@@ -72,6 +72,8 @@ inline TabletUtils::TabletUtils(WPainter &painter, const std::function<bool()> &
     , _m(m)
     , _doc(doc)
     , _painter(&painter)
+    , _visibleArea(visibleArea)
+    , _laser(laser)
 {
     if (this->_isExportingPdf) {
         this->_visibleArea = RectF {

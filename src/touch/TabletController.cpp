@@ -95,12 +95,17 @@ void TabletController::draw(WPainter &painter, double width) const
     }
 
     TIME_START(time_load);
-    TabletUtils loader(painter, this->_isPlaying, this->_getTimePlaying, width / Page::getWidth(), *_tools._laser, getDoc(), true, false,
-                       RectF{
-                           getDoc().getPointFirstPage(),
-                           getDoc().getPointFirstPage() + PointF {width, width * Page::getProportion()}
-                       });
 
+    TabletUtils loader(
+            painter, this->_isPlaying,
+            this->_getTimePlaying, width / Page::getWidth(),
+            Optional(_tools._laser), getDoc(),
+            true, false,
+            RectF{
+                getDoc().getPointFirstPage(),
+                getDoc().getPointFirstPage() + PointF {width, width * Page::getProportion()}
+            }
+    );
 
     loader.load();
     /*TabletUtils::load(painter, this->getDoc(), d);*/
@@ -148,8 +153,7 @@ void TabletController::touchEnd(const PointF &point, double pressure)
     // da aggiustare
 
     W_EMIT_2(onNeedRefresh, 0, 1);
-    return;
-    /*emit onNeedRefresh(
+   /*emit onNeedRefresh(
         res >= 0 ? res : 0,
         res >= 0 ? res + 1: this->getDoc().lengthPage()
     );*/

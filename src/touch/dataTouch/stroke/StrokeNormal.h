@@ -301,7 +301,7 @@ inline RectF StrokeNormal::getBiggerPointInStroke(T begin, T end)
 {
     RectF biggerData;
 
-    if(un(begin == end)){
+    if (un(begin == end)) {
         WWarning("Warning: Stroke empty");
         return {0, 0, 0, 0};
     }
@@ -312,6 +312,13 @@ inline RectF StrokeNormal::getBiggerPointInStroke(T begin, T end)
     for(; begin != end; begin ++){
         const PointF &point = *begin;
 
+        topLeft.setX(std::min(topLeft.x(), point.x()));
+        topLeft.setY(std::min(topLeft.y(), point.y()));
+
+        bottomRight.setX(std::max(bottomRight.x(), point.x()));
+        bottomRight.setY(std::max(bottomRight.y(), point.y()));
+
+        /*
         if(topLeft.x() > point.x())
             topLeft.setX(static_cast<int>(
                                  point.x()
@@ -332,6 +339,7 @@ inline RectF StrokeNormal::getBiggerPointInStroke(T begin, T end)
                                      point.y()
                              )
             );
+            */
     }
 
     W_ASSERT(topLeft.x() <= bottomRight.x());

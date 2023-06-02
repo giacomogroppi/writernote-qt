@@ -36,7 +36,9 @@ std::shared_ptr<Stroke> StrokePre::merge()
 
     if (this->_stroke->type() != Stroke::COMPLEX_NORMAL) {
         W_ASSERT(this->_point.isEmpty());
-        std::shared_ptr<Stroke> res = this->_stroke;
+        std::shared_ptr<Stroke> res = std::move(this->_stroke);
+        W_ASSERT(res.unique());
+        W_ASSERT(_stroke == nullptr);
         this->_stroke = nullptr;
         return res;
     }

@@ -71,12 +71,17 @@ Rect WPixmap::rect() const
     const auto qtTopLeft = qtRect.topLeft();
     const auto qtBottomRight = qtRect.bottomRight();
 
-    return Rect {
+    WDebug(true, qtTopLeft.x() << qtTopLeft.y() << qtBottomRight.x() << qtBottomRight.y());
+
+    auto res = Rect {
         qtTopLeft.x(),
-        qtTopLeft.x(),
+        qtTopLeft.y(),
         qtBottomRight.x(),
         qtBottomRight.y()
     };
+
+    W_ASSERT(res.bottomRight().x() == qtBottomRight.x());
+    return res;
 }
 
 WPixmap::WPixmap(const WString &path)

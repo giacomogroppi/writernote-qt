@@ -81,11 +81,11 @@ template<typename T>
 inline RectTemplate<T> RectTemplate<T>::intersected(const RectTemplate<T> &other) const
 {
     if (!intersects(other))
-        return {};
+        return { (T) 0, (T) 0, (T) 0, (T) 0 };
 
     return {
         std::max(this->_topLeft.x(), other._topLeft.x()),
-        std::max(this->_topLeft.y(), other._bottomRight.y()),
+        std::max(this->_topLeft.y(), other._topLeft.y()),
 
         std::min(this->_bottomRight.x(), other._bottomRight.x()),
         std::min(this->_bottomRight.y(), other._bottomRight.y())
@@ -116,10 +116,10 @@ inline bool RectTemplate<T>::intersects(const RectTemplate<T> &other) const
 template<typename T>
 inline constexpr bool RectTemplate<T>::contains(const PointTemplate<T> &point) const
 {
-    return  point.x() >= _topLeft.x() &&
-            point.y() >= _topLeft.y() &&
-            point.x() <= _bottomRight.x() &&
-            point.y() <= _bottomRight.y();
+    return  point.x() > _topLeft.x() &&
+            point.y() > _topLeft.y() &&
+            point.x() < _bottomRight.x() &&
+            point.y() < _bottomRight.y();
 }
 
 template<typename T>
@@ -219,7 +219,7 @@ inline constexpr T RectTemplate<T>::top() const
 template<typename T>
 inline constexpr bool RectTemplate<T>::isNull() const
 {
-    return top() > bottom() || left() > right();
+    return top() == bottom() || left() == right();
 }
 
 template<typename T>

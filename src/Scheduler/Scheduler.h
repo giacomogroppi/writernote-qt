@@ -50,7 +50,7 @@ private:
     bool _needToDie;
 
 public:
-    explicit Scheduler(WObject *parent = nullptr);
+    explicit Scheduler();
     ~Scheduler() final;
 
 

@@ -17,9 +17,6 @@ WObject::~WObject()
 {
     WDebug(true, "Call with children size: " << _children.size() << " and parent = " << _parent);
 
-    auto b = _children.begin();
-    auto e = _children.end();
-
     while (_children.size()) {
         delete _children.at(0);
     }

@@ -45,6 +45,8 @@ public:
     void setPen(WPen &pen);
 
     void drawLine(const PointF &p1, const PointF &p2);
+    void drawLine(int x1, int y1, int x2, int y2);
+
     void drawImage(const RectF &target, const WImage &image, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap);
@@ -330,6 +332,11 @@ inline void WPainter::setCompositionMode(WPainter::CompositionMode compositionMo
     }
 
     this->_painter->setCompositionMode(qtCompositionMode);
+}
+
+inline void WPainter::drawLine(int x1, int y1, int x2, int y2)
+{
+    this->_painter->drawLine(x1, y1, x2, y2);
 }
 
 

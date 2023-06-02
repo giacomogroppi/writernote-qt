@@ -8,31 +8,32 @@ class Optional
 {
     static_assert(!std::is_pointer<T>());
 private:
-    T *data;
+    T *_data;
 public:
-    Optional(T &data) { this->data = &data; };
-    Optional() { this->data = nullptr; }
+    explicit Optional(T *data) : _data(data) {}
+    explicit Optional(T &data) : _data(&data) {};
+    Optional() : _data(nullptr) {}
 
-    Optional<T>& operator=(T &data) { this->data = &data; return *this; };
+    Optional<T>& operator=(T &data) { this->_data = &data; return *this; };
     Optional<T>& operator=(T &&data) = delete;
 
     bool operator==(const Optional<T> &other) const
     {
-        if (this->data == nullptr and other.data == nullptr)
+        if (this->_data == nullptr and other._data == nullptr)
             return true;
-        if (this->data != nullptr and other.data != nullptr) {
-            return data->operator==(*other.data);
+        if (this->data != nullptr and other._data != nullptr) {
+            return _data->operator==(*other.data);
         }
 
         return false;
     }
 
-    bool has_value () const { return this->data != nullptr;};
-    T& operator->() { return *this->data; };
-    const T& operator->() const { return *this->data; };
+    bool has_value () const { return this->_data != nullptr;};
+    T& operator->() { return *this->_data; };
+    const T& operator->() const { return *this->_data; };
 
     constexpr explicit operator bool() const noexcept { return has_value(); }
 
-    constexpr const T& operator*() const { return *this->data; };
-    constexpr T& operator*() { return *this->data; };
+    constexpr const T& operator*() const { return *this->_data; };
+    constexpr T& operator*() { return *this->_data; };
 };
