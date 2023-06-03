@@ -18,6 +18,10 @@
 #define static_assert_type(val, should_be) static_assert(std::is_same<decltype(val), should_be>::value, #val " must be " #should_be)
 #define qstr WString
 #define unused(expr) do { (void)(expr); } while (0)
+#define WDISABILE_COPY(ClassName) \
+    ClassName(const ClassName &) = delete;\
+    ClassName &operator=(const ClassName &) = delete;
+
 #include <iostream>
 
 #ifdef USE_QT

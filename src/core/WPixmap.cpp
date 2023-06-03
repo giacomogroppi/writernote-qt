@@ -34,7 +34,9 @@ WImage WPixmap::toImage() const
 
 bool WPixmap::operator==(const WPixmap &other) const
 {
-    return QPixmap::toImage() == other.toImage();
+    const QImage image1 = toImage();
+    const QImage image2 = other.toImage();
+    return image1 == image2;
 }
 
 bool WPixmap::loadFromData(const WByteArray &data, const char *formact)
