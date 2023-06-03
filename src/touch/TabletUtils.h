@@ -50,7 +50,7 @@ public:
 
     int getTime() const;
     constexpr bool withPdf() const;
-    constexpr void setPainter(WPainter &painter);
+    void setPainter(WPainter &painter) noexcept;
     constexpr double getZoom() const;
 
     static double pressureToWidth(double val);
@@ -102,7 +102,7 @@ inline double TabletUtils::pressureToWidth(double val)
     return val * 10 + 1;
 }
 
-inline constexpr void TabletUtils::setPainter(WPainter &painter)
+inline void TabletUtils::setPainter(WPainter &painter) noexcept
 {
     W_ASSERT(painter.isActive());
     this->_painter = &painter;
