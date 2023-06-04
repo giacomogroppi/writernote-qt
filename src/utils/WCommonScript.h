@@ -30,7 +30,7 @@
 #endif // USE_QT
 
 #ifdef DEBUGINFO
-force_inline constexpr std::string get_only_name(const char *name)
+force_inline std::string get_only_name(const char *name)
 {
     std::string res = name;
     int i;
