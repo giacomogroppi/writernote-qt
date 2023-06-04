@@ -21,6 +21,8 @@ private:
     int _size;
     int _reserved;
 
+    static constexpr int numberOfObjectReserved = 128;
+
     // this function remove the object from the list
     T *takeObject(int i);
 
@@ -28,9 +30,11 @@ public:
     WListFast();
     WListFast(const WListFast<T> &other);
     WListFast(std::initializer_list<T> args);
+    WListFast(WListFast<T> &&other) noexcept;
 
     const T& at(int i) const;
     void append(const T& element);
+    void append(T &&object);
     void append(const WListFast<T> &other);
 
     void remove(int index);
@@ -376,7 +380,8 @@ inline bool WListFast<T>::isOrder() const
 }
 
 template<class T>
-inline const T &WListFast<T>::first() const {
+inline const T &WListFast<T>::first() const
+{
     return *this->_data[0];
 }
 
@@ -441,15 +446,25 @@ inline void WListFast<T>::append(const T &element)
 {
     _size++;
 
-    if (_reserved == 0) {
-        this->_data = (T **)realloc(_data, (this->_size) * sizeof (T *));
-        this->_data[_size - 1] = new T(element);
-    } else {
-        this->_data[_size - 1] = new T(element);
-        _reserved --;
-    }
+    if (_reserved == 0)
+        reserve(WListFast::numberOfObjectReserved);
+
+    this->_data[_size - 1] = new T(element);
+    _reserved --;
 
     test();
+}
+
+template <class T>
+inline void WListFast<T>::append(T &&object)
+{
+    if (_reserved == 0)
+        reserve(WListFast::numberOfObjectReserved);
+
+    this->_data[_size] = new T(std::move(object));
+
+    _size ++;
+    _reserved --;
 }
 
 template<class T>
@@ -480,6 +495,17 @@ inline WListFast<T>::WListFast()
     , _reserved(0)
 {
     test();
+}
+
+template <class T>
+inline WListFast<T>::WListFast(WListFast && other) noexcept
+    : _data(other._data)
+    , _size(other._size)
+    , _reserved(other._reserved)
+{
+    other._data = nullptr;
+    other._size = 0;
+    other._reserved = 0;
 }
 
 #ifdef USE_QT

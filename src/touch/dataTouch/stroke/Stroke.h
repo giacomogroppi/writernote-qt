@@ -22,6 +22,20 @@ struct metadata_stroke{
     int posizione_audio;
     struct WColor color;
 
+    metadata_stroke () = default;
+    metadata_stroke (int position_audio, const WColor &c)
+        : posizione_audio(position_audio)
+        , color(c)
+    {
+
+    }
+
+    metadata_stroke (metadata_stroke && other) noexcept
+        : posizione_audio(std::move(other.posizione_audio))
+        , color(std::move(other.color))
+    {
+    }
+
     bool operator!=(const metadata_stroke &other) const;
     bool operator==(const metadata_stroke &other) const;
 
@@ -133,6 +147,8 @@ protected:
     Stroke &operator=(const Stroke &other);
 
     Stroke();
+    Stroke(Stroke &&other) noexcept ;
+
     void clone(Stroke &out) const;
     explicit Stroke(const metadata_stroke& met);
     virtual void modify() const;
@@ -218,6 +234,14 @@ inline void Stroke::clone(Stroke &out) const
     out._metadata = this->_metadata;
     out._biggerData = this->_biggerData;
     out._flag = this->_flag;
+}
+
+inline Stroke::Stroke(Stroke &&other) noexcept
+    : _flag(other._flag)
+    , _metadata(std::move(other._metadata))
+    , _biggerData(other._biggerData)
+{
+
 }
 
 inline bool metadata_stroke::operator!=(const metadata_stroke &other) const

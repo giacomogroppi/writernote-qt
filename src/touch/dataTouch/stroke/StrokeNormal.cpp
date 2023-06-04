@@ -434,3 +434,11 @@ void StrokeNormal::force_pressure(pressure_t press)
         _pressure.append(press);
 }
 
+StrokeNormal::StrokeNormal(StrokeNormal &&other) noexcept
+    : Stroke(dynamic_cast<Stroke&&> (other))
+    , _flag(other._flag)
+    , _point(std::move(other._point))
+    , _pressure(std::move(other._pressure))
+{
+}
+

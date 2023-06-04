@@ -181,10 +181,7 @@ WColor Stroke::getColor(double division) const
 
 void Stroke::setMetadata(int posizione_audio, const WColor &color)
 {
-    this->_metadata = {
-        .posizione_audio = posizione_audio,
-        .color = color
-    };
+    this->_metadata = metadata_stroke(posizione_audio, color);
 }
 
 void Stroke::setMetadata(const metadata_stroke &metadata)

@@ -59,6 +59,7 @@ private:
 public:
     StrokeNormal(const StrokeNormal &ref);
     StrokeNormal();
+    StrokeNormal(StrokeNormal &&other) noexcept;
     ~StrokeNormal() final;
 
     void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const override;
