@@ -32,10 +32,12 @@ private:
     void *d;
 #endif
 public:
-    WImage(const WString &path);
+    explicit WImage(const WString &path) noexcept;
+    WImage (WImage &&other) noexcept;
+    WImage (const WImage &other) noexcept;
 
 #ifdef USE_QT
-    WImage (QImage img);
+    explicit WImage (QImage img);
 #endif // USE_QT
     explicit WImage(const std::string &fileName, const char *format = nullptr);
     explicit WImage(int page, bool consideringResolution);
@@ -55,6 +57,7 @@ public:
     bool isNull() const;
 
     bool operator==(const WImage &other) const;
+    WImage &operator=(WImage &&other) noexcept;
 
 #ifdef USE_QT
     WImage &operator=(const QImage &other);
@@ -125,10 +128,26 @@ inline WRgb WImage::pixel(const Point &point) const
     return QImage::pixel(point.x(), point.y());
 }
 
-inline WImage::WImage(const WString &path)
+inline WImage::WImage(const WString &path) noexcept
     : QImage(path)
 {
 }
+
+inline WImage::WImage(WImage &&other) noexcept
+    : QImage(std::move(other))
+{
+
+}
+
+inline WImage &WImage::operator=(WImage &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+    QImage::operator=(std::move(other));
+    return *this;
+}
+
+inline WImage::WImage(const WImage &other) noexcept = default;
 
 #endif // USE_QT
 

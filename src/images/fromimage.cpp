@@ -1,15 +1,7 @@
 #include "fromimage.h"
-#include "stdlib.h"
-#include "core/WByteArray.h"
 #include "core/WListFast.h"
-#include "zip.h"
 #include "dataread/readlistarray.h"
-#include "datawrite/source_read_ext.h"
-#include "currenttitle/document.h"
-#include "dataread/xmlstruct.h"
 #include "core/WZipWriter.h"
-
-#define FIRST_SOURCE_READ(x, y, z) ARGUMENT(x,y,z)return ERROR;
 
 fromimage::load_res_img fromimage::save_img(WZipWriter          &writer,
                                     const WListFast<WString>   &pathPdf) const
@@ -178,8 +170,7 @@ unsigned fromimage::insert_image(   const WString &pos,
     WString res;
     W_ASSERT(pos.size());
 
-    WImage immagine(res);
-    img.immagini = immagine;
+    img.immagini = std::move(WImage(res));
 
     if (point) {
         img.i = *point;

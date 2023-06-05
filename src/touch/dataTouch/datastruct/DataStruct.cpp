@@ -76,6 +76,7 @@ void DataStruct::reset_touch()
     _zoom = 1.;
 }
 
+// TODO: remove this method
 void DataStruct::copy(const DataStruct &src, DataStruct &dest)
 {
     int i;
@@ -95,7 +96,7 @@ void DataStruct::copy(const DataStruct &src, DataStruct &dest)
     }
 
     for(i = 0; i < len; i++){
-        Page::copy(src._page.at(i), dest._page.operator[](i));
+        dest._page.operator[](i) = src._page.at(i);
     }
 
     dest._zoom = src._zoom;
@@ -143,7 +144,7 @@ void DataStruct::adjustHeight(cdouble height, PointF& translateTo)
 void DataStruct::adjustWidth(cdouble width, PointF& translatoTo)
 {
     const PointF point = this->getPointFirstPage();
-    double biggerX = biggerx();
+    double biggerX = this->biggerX();
     bool not_used f;
     cdouble x = point.x();
 

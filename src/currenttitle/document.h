@@ -55,7 +55,7 @@ public:
 force_inline bool Document::isEmpty() const
 {
     const auto res =
-            isempty_touch() and
+            isEmptyTouch() and
 #ifdef PDFSUPPORT
             frompdf::length_pdf() == 0 and
 #endif // PDFSUPPORT

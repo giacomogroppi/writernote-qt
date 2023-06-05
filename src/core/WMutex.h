@@ -9,6 +9,12 @@ private:
     mutable pthread_mutex_t _m{};
 public:
     WMutex();
+
+    WMutex(const WMutex &other) = delete;
+    WMutex(WMutex &&other) = delete;
+
+    WMutex &operator=(const WMutex &other) = delete;
+
     ~WMutex();
     void lock();
     void unlock();

@@ -22,7 +22,7 @@ private:
 
     constexpr static bool StrokePreDebug = false;
 
-    bool isImageEmpty() const;
+    [[nodiscard]] bool isImageEmpty() const;
 
 #ifdef DEBUGINFO
     bool already_merge = false;
@@ -34,8 +34,10 @@ private:
 
     void setStrokeComplex(const std::shared_ptr<Stroke>& stroke);
 public:
-    StrokePre();
-    ~StrokePre();
+    StrokePre ();
+    StrokePre (const StrokePre &other) noexcept;
+    StrokePre (StrokePre &&other) noexcept;
+    ~StrokePre() noexcept;
 
     void adjust(const PointF &delta);
     void setAlfaColor(int alfa);

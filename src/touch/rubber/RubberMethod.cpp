@@ -268,7 +268,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
             mutex_area.lock();
 
-            private_data->area = DataStruct::get_bigger_rect(currentArea, private_data->area);
+            private_data->area = DataStruct::getBiggerRect(currentArea, private_data->area);
 
             mutex_area.unlock();
         }
@@ -498,7 +498,7 @@ int RubberMethod::touchEnd(const PointF&, Document &doc )
 
             arr.order();
 
-            const auto rect = doc.get_size_area(arr, i + _base);
+            const auto rect = doc.getSizeArea(arr, i + _base);
             page.removeAndDraw(-1, arr, rect);
         }
 

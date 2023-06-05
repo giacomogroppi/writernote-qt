@@ -56,8 +56,8 @@ public:
     DataStruct();
     ~DataStruct() = default;
 
-    void triggerNewView(const WListFast<int> &Page, int m_pos_ris, cbool all);
-    void triggerNewView(int m_pos_ris, cbool all);
+    void triggerNewView(const WListFast<int> &Page, int m_pos_ris, bool all);
+    void triggerNewView(int m_pos_ris, bool all);
     void triggerIfNone(int m_pos_ris);
     void triggerViewIfVisible(int m_pos_ris);
 
@@ -84,12 +84,15 @@ public:
         W_ASSERT(point.y() <= 0.);
     }
 
-    void removeAt(unsigned indexPage);
+    void removeAt(int indexPage);
 
     /* the draw function triggers the drawing of the points automatically */
     void append(const WListFast<std::shared_ptr<Stroke>> &stroke, int m_pos_ris);
 
+    int  appendStroke(std::shared_ptr<Stroke> &&object);
     int  appendStroke(const std::shared_ptr<Stroke>&); /* return value: the page of the point */
+
+    void appendStroke(std::shared_ptr<Stroke> &&object, int page);
     void appendStroke(const std::shared_ptr<Stroke>& stroke, int page);
 
     void restoreLastTranslation(int heightView);
@@ -115,10 +118,10 @@ public:
     [[nodiscard]] constexpr PointF adjustPointReverce(const PointF &pointDatastruct) const;
     [[nodiscard]] constexpr PointF adjustPoint(const PointF &pointRealTouch) const;
 
-    [[nodiscard]] bool isempty_touch() const;
+    [[nodiscard]] bool isEmptyTouch() const;
     void reset_touch();
     void triggerVisibility(cdouble viewSize);
-    [[nodiscard]] double biggerx() const noexcept;
+    [[nodiscard]] double biggerX() const noexcept;
 
     [[nodiscard]] bool needToCreateNewSheet() const;
 
@@ -127,10 +130,12 @@ public:
     void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
 
-    __fast [[nodiscard]] const Page &     at(unsigned page) const;
+    __fast [[nodiscard]] const Page & at(int page) const;
     __fast Page &           at_mod(cint page);
 
+    [[deprecated("Legacy function, to be removed")]]
     [[nodiscard]] Point at_draw_page(cint indexPoint, const Page &Page) const;
+    [[deprecated("Logacy function, to be removed")]]
     static Point at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom);
 
     __fast [[nodiscard]] const Page &     lastPage() const;
@@ -139,11 +144,11 @@ public:
     [[nodiscard]] int lengthPage() const{ return _page.size(); }
     void newPage(n_style style);
 
-    [[nodiscard]] PointF get_size_page() const{ return PointF(Page::getWidth(), Page::getHeight()); }
+    [[nodiscard]] PointF get_size_page() const{ return {Page::getWidth(), Page::getHeight()}; }
 
-    __fast [[nodiscard]] RectF get_size_area(const WVector<int> &pos, int page) const;
+    __fast [[nodiscard]] RectF getSizeArea(const WVector<int> &pos, int page) const;
     __fast [[nodiscard]] RectF get_size_area(const WListFast<WVector<int>> &pos, int base) const;
-    //__slow RectF get_size_area(const WListFast<int> & id) const;
+    //__slow RectF getSizeArea(const WListFast<int> & id) const;
 
     [[nodiscard]] int getFirstPageVisible() const;
 
@@ -160,7 +165,7 @@ public:
     static void copy(const DataStruct &src, DataStruct &dest);
     static force_inline void inverso(PointF &point) {point *= -1.0;};
     static PointF inverso(const PointF &point) { return point * -1; };
-    static RectF get_bigger_rect(const RectF &first, const RectF &second);
+    static RectF getBiggerRect(const RectF &first, const RectF &second);
     static Rect get_bigger_rect(const Rect &first, const Rect &second);
 
     friend class xmlstruct;
@@ -168,7 +173,7 @@ public:
 
 protected:
     void controllForRepositioning(PointF &translateTo);
-    void increaseZoom(const double delta, const WSizeF &size, PointF& res);
+    void increaseZoom(double delta, const WSizeF &size, PointF& res);
     void adjustAll(double width, double height, PointF &res);
     void adjustAll(const WSizeF &size, PointF &res);
     void adjustHeight(cdouble height, PointF& translatoTo);
@@ -210,7 +215,7 @@ inline void DataStruct::triggerVisibility(cdouble viewSize)
     this->setVisible(from, to);
 }
 
-inline double DataStruct::biggerx() const noexcept
+inline double DataStruct::biggerX() const noexcept
 {
     return (Page::getWidth() + this->getPointFirstPageNoZoom().x()) * _zoom;
 }
@@ -237,7 +242,7 @@ force_inline double DataStruct::biggery() const noexcept
     return (last.currentHeight() + this->getPointFirstPageNoZoom().y()) * zoom;
 }
 
-inline const __fast Page &DataStruct::at(const uint page) const
+inline const Page & DataStruct::at(int page) const
 {
     return _page.at(page);
 }
@@ -275,9 +280,11 @@ force_inline const Page &DataStruct::lastPage() const
 
 inline void DataStruct::newPage(const n_style style)
 {
-    _page.append(Page(lengthPage() + 1, style));
+    Page page (_page.size() + 1, style);
+    page.setVisible(_page.size() <= 2);
 
-    this->lastPage().setVisible(un(lengthPage() <= 2));
+    _page.append(std::move (page));
+
     //triggerVisibility(page::getHeight() * lengthPage());
 }
 
@@ -290,7 +297,7 @@ inline RectF DataStruct::get_size_area(const WListFast<WVector<int>> &pos, int b
         return result;
 
     len = pos.size();
-    result = get_size_area(pos.first(), base);
+    result = getSizeArea(pos.first(), base);
 
     for(i = 1; i < len; i ++){
         const auto &vec = pos.at(i);
@@ -298,19 +305,18 @@ inline RectF DataStruct::get_size_area(const WListFast<WVector<int>> &pos, int b
         if(vec.isEmpty())
             continue;
 
-        const auto tmp = this->get_size_area(vec, base + i);
-        result = DataStruct::get_bigger_rect(result, tmp);
+        const auto tmp = this->getSizeArea(vec, base + i);
+        result = DataStruct::getBiggerRect(result, tmp);
     }
 
     return result;
 }
 
-inline RectF DataStruct::get_size_area(
+inline RectF DataStruct::getSizeArea(
         const WVector<int>  &pos,
-        int                 __page) const
+        int                 page) const
 {
-    const Page & page = at(__page);
-    return page.get_size_area(pos);
+    return at(page).get_size_area(pos);
 }
 
 inline int DataStruct::getFirstPageVisible() const
@@ -351,7 +357,7 @@ inline int DataStruct::getFirstPageVisible() const
 /* this function does not consider the zoom */
 inline double DataStruct::currentWidth() const
 {
-    return biggerx();
+    return biggerX();
 }
 
 /*
@@ -415,14 +421,14 @@ inline int DataStruct::whichPage(const Stroke &stroke) const
     return i;
 }
 
-inline void DataStruct::triggerNewView(const WListFast<int> &Page, int m_pos_ris, cbool all)
+inline void DataStruct::triggerNewView(const WListFast<int> &Page, int m_pos_ris, bool all)
 {
     for(const int page: Page){
         this->triggerNewView(page, m_pos_ris, all);
     }
 }
 
-inline void DataStruct::triggerNewView(int m_pos_ris, cbool all)
+inline void DataStruct::triggerNewView(int m_pos_ris, bool all)
 {
     int i;
     const auto len = lengthPage();
@@ -432,14 +438,13 @@ inline void DataStruct::triggerNewView(int m_pos_ris, cbool all)
 
 inline void DataStruct::triggerViewIfVisible(int m_pos_ris)
 {
-    uint i, len;
-    len = lengthPage();
-    for( i = 0; i < len; i++)
-        if(at(i).isVisible())
-            at_mod(i).triggerRenderImage(m_pos_ris, true);
+    for (auto &page: this->_page) {
+        if (page.isVisible())
+            page.triggerRenderImage(m_pos_ris, true);
+    }
 }
 
-[[nodiscard]] force_inline bool DataStruct::isOkZoom(const double newPossibleZoom)
+[[nodiscard]] force_inline bool DataStruct::isOkZoom(double newPossibleZoom)
 {
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.3);
 }
@@ -476,7 +481,7 @@ inline void DataStruct::append(const WListFast<std::shared_ptr<Stroke>> &stroke,
     this->triggerNewView(trigger, m_pos_ris, false);
 }
 
-inline void DataStruct::removeAt(const uint indexPage){
+inline void DataStruct::removeAt(int indexPage){
     int index = indexPage, len;
     this->_page.removeAt(indexPage);
 
@@ -488,6 +493,14 @@ inline void DataStruct::removeAt(const uint indexPage){
         at_mod(index).setCount(index + 1);
     }
 
+}
+
+inline int DataStruct::appendStroke(std::shared_ptr<Stroke> &&object)
+{
+    const auto page = adjustStroke(*object);
+    this->appendStroke(std::move (object), page);
+
+    return page;
 }
 
 inline int DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke)
@@ -503,41 +516,44 @@ inline int DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke)
     return page;
 }
 
-inline void DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke, const int page)
+inline void DataStruct::appendStroke(std::shared_ptr<Stroke> &&object, int page)
+{
+    at_mod(page).append(std::move (object));
+}
+
+inline void DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke, int page)
 {
     this->at_mod(page).append(stroke);
 }
 
-inline RectF DataStruct::get_bigger_rect(
+inline RectF DataStruct::getBiggerRect(
         const RectF    &first,
         const RectF    &second)
 {
-    PointF resultTopLeft(first.topLeft());
-    PointF resultBottomRight(first.bottomRight());
+    PointF resultTopLeft;
+    PointF resultBottomRight;
 
-    const PointF SecTopLeft(second.topLeft());
-    const PointF SecBottomRight(second.bottomRight());
+    const auto tl1 = first.topLeft();
+    const auto tl2 = second.topLeft();
+    const auto br1 = first.bottomRight();
+    const auto br2 = second.bottomRight();
 
-    if(resultTopLeft.x() > SecTopLeft.x())
-        resultTopLeft.setX(SecTopLeft.x());
+    resultTopLeft
+            .setX(std::min(tl1.x(), tl2.x()))
+            .setY(std::min(tl1.y(), tl2.y()));
 
-    if(resultTopLeft.y() > SecTopLeft.y())
-        resultTopLeft.setY(SecTopLeft.y());
+    resultBottomRight
+            .setX(std::max(br1.x(), br2.x()))
+            .setY(std::max(br1.y(), br2.y()));
 
-    if(resultBottomRight.x() < SecBottomRight.x())
-        resultBottomRight.setX(SecBottomRight.x());
-
-    if(resultBottomRight.y() < SecBottomRight.y())
-        resultBottomRight.setY(SecBottomRight.y());
-
-    return RectF(resultTopLeft, resultBottomRight);
+    return {resultTopLeft, resultBottomRight};
 }
 
 force_inline Rect DataStruct::get_bigger_rect(const Rect &first, const Rect &second)
 {
     RectF firstCasted(first.castTo<double>());
     RectF secondCasted(second.castTo<double>());
-    return DataStruct::get_bigger_rect(firstCasted, secondCasted).castTo<int>();
+    return DataStruct::getBiggerRect(firstCasted, secondCasted).castTo<int>();
 }
 
 inline void DataStruct::setZoom(double newZoom)
@@ -573,7 +589,7 @@ constexpr force_inline PointF DataStruct::adjustPointReverce(const PointF &point
     return (pointDatastruct + this->getPointFirstPageNoZoom()) * getZoom();
 }
 
-force_inline bool DataStruct::isempty_touch() const
+force_inline bool DataStruct::isEmptyTouch() const
 {
     return un(_page.isEmpty());
 }

@@ -14,6 +14,16 @@
 
 static force_inline double widthToPressure(double v) { return v/10.0; };
 
+Page::Page(Page &&other) noexcept
+    : _count(other._count)
+    , _stroke(std::move(other._stroke))
+    , _strokeTmp(std::move(other._stroke))
+    , _imgDraw(std::move(other._imgDraw))
+    , _IsVisible(other._IsVisible)
+    , _stroke_writernote(std::move(other._stroke_writernote))
+{
+}
+
 static void setStylePrivate(
     bool            &fast,
     n_style         res,
@@ -577,7 +587,7 @@ RectF Page::get_size_area(const WListFast<std::shared_ptr<Stroke> > &item, int f
 
     for(; from < to; from ++){
         const RectF tmp = item.at(from)->getBiggerPointInStroke();
-        result = DataStruct::get_bigger_rect(result, tmp);
+        result = DataStruct::getBiggerRect(result, tmp);
     }
 
     return result;
@@ -602,7 +612,7 @@ RectF Page::get_size_area(const WVector<int> &pos) const
 
     for(; len >= 0; len --){
         tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
-        result = DataStruct::get_bigger_rect(result, tmp);
+        result = DataStruct::getBiggerRect(result, tmp);
     }
 
     return result;

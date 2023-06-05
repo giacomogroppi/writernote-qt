@@ -22,7 +22,7 @@ class fromimage{
 private:
     WListFast<struct immagine_s> m_img;
     WListFast<WString> get_name_img();
-    unsigned insert_image(const WString &__pos, const PointSettable *point, struct immagine_s &img);
+    static unsigned insert_image(const WString &__pos, const PointSettable *point, struct immagine_s &img);
 
     static inline WByteArray getName_img(unsigned i);
 public:
@@ -62,7 +62,7 @@ public:
 private:
     static load_res_img get_img_bytearray(WByteArray &arr, const WString &path) ;
     load_res_img load_metadata_img(WZipReaderSingle &reader, int len);
-    load_res_img load_single_img(const WByteArray &arr, struct immagine_s &img);
+    static load_res_img load_single_img(const WByteArray &arr, struct immagine_s &img);
     load_res_img load_multiple_img(const WListFast<WByteArray> &arr);
 };
 

@@ -25,6 +25,7 @@ private:
     void draw() const;
 public:
     StrokeForPage();
+    StrokeForPage(StrokeForPage &&other) noexcept;
     ~StrokeForPage() = default;
     void setMetadata(const WColor &colore);
     void append(const PointF &point, pressure_t pressure);

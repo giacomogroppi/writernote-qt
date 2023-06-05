@@ -197,3 +197,10 @@ force_inline void StrokeForPage::rep() const
         W_ASSERT(p.y() <= Page::getHeight() and p.y() >= 0.);
     }
 }
+
+StrokeForPage::StrokeForPage(StrokeForPage &&other) noexcept
+    : _needToUpdate(other._needToUpdate)
+    , _data(std::move(other._data))
+    , _pix(std::move(other._pix))
+{
+}

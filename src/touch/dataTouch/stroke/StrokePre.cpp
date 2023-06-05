@@ -58,8 +58,8 @@ std::shared_ptr<Stroke> StrokePre::merge()
     }
 
     {
-        std::shared_ptr<Stroke> res = this->_stroke;
-        this->_stroke = nullptr;
+        std::shared_ptr<Stroke> res = std::move(this->_stroke);
+        W_ASSERT(_stroke == nullptr);
         return res;
     }
 }
@@ -159,6 +159,33 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
     W_ASSERT(_point == other._point);
 
     return *this;
+}
+
+StrokePre::StrokePre(const StrokePre &other) noexcept
+    : _max_pressure(other._max_pressure)
+    , _last_draw_point(other._last_draw_point)
+    , _last_draw_press(other._last_draw_press)
+    , _point(other._point)
+    , _max(other._max)
+    , _min(other._min)
+    , _stroke(other._stroke)
+    , _pressure(other._pressure)
+    , _img(other._img)
+{
+
+}
+
+StrokePre::StrokePre(StrokePre &&other) noexcept
+    : _img(std::move(other._img))
+    , _max_pressure(other._max_pressure)
+    , _last_draw_point(other._last_draw_point)
+    , _last_draw_press(other._last_draw_press)
+    , _max(other._max)
+    , _point(std::move(other._point))
+    , _pressure(std::move(other._pressure))
+    , _min(other._min)
+    , _stroke(std::move(other._stroke))
+{
 }
 
 void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen, double prop)

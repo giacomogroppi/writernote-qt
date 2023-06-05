@@ -29,7 +29,9 @@ void WPixmap::fill(const WColor &color)
 
 WImage WPixmap::toImage() const
 {
-    return {QPixmap::toImage()};
+    return WImage {
+        std::move(QPixmap::toImage())
+    };
 }
 
 bool WPixmap::operator==(const WPixmap &other) const

@@ -20,10 +20,13 @@ private:
 
 public:
     WList() noexcept;
+    WList(WList<T> &&other) noexcept;
     WList(const WList<T> &l) noexcept;
     ~WList() noexcept;
 
     void append(const T &data) noexcept;
+    void append(T &&data) noexcept;
+
     void clear() noexcept;
     bool equal(const WList<T> &l1, const WList<T> &l2) noexcept;
 
@@ -95,10 +98,51 @@ inline WList<T>::WList() noexcept
     _size = 0;
 }
 
+template<class T>
+inline WList<T>::WList(WList<T> &&other) noexcept
+    : _first(other._first)
+    , _last(other._last)
+    , _size(other._size)
+{
+    other._first = nullptr;
+    other._last = nullptr;
+    other._size = 0;
+}
+
 template <class T>
 inline WList<T>::~WList() noexcept
 {
     this->clear();
+}
+
+template <class T>
+inline void WList<T>::append(T &&data) noexcept
+{
+    struct WListPrivate<T> *tmp;
+
+    test();
+
+    WNew(tmp, struct WListPrivate<T>, ());
+    WNew(tmp->data, T, (std::move(data)));
+
+    if (un(this->_first == nullptr)) {
+        W_ASSERT(this->_last == nullptr);
+        W_ASSERT(_size == 0);
+
+        this->_first = tmp;
+        this->_first->next = nullptr;
+        this->_last = this->_first;
+    } else {
+        W_ASSERT(this->_last->next == nullptr);
+
+        this->_last->next = tmp;
+        this->_last = tmp;
+        this->_last->next = nullptr;
+    }
+
+    _size ++;
+
+    test();
 }
 
 template <class T>
@@ -111,15 +155,15 @@ inline void WList<T>::append(const T &data) noexcept
     WNew(tmp, struct WListPrivate<T>, ());
     WNew(tmp->data, T, (data));
 
-    if(un(this->_first == nullptr)){
+    if (un(this->_first == nullptr)) {
         W_ASSERT(this->_last == nullptr);
         W_ASSERT(_size == 0);
 
         this->_first = tmp;
         this->_first->next = nullptr;
         this->_last = this->_first;
-    }else{
-        W_ASSERT(this->_last->next == NULL);
+    } else {
+        W_ASSERT(this->_last->next == nullptr);
 
         this->_last->next = tmp;
         this->_last = tmp;

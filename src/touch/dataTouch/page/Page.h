@@ -90,9 +90,10 @@ private:
 public:
     const WPixmap &getImg() const;
 
-    Page();
-    Page(const Page &page);
-    Page(int count, n_style style);
+    Page ();
+    Page (Page &&other) noexcept;
+    Page (const Page &page);
+    Page (int count, n_style style);
     ~Page();
 
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
@@ -120,6 +121,7 @@ public:
      *  the triggerRenderImage to be executed.
     */
     __fast void append(const std::shared_ptr<Stroke>& stroke);
+    __fast void append(std::shared_ptr<Stroke> &&stroke);
     // TODO --> make template
     __fast void append(const WList<std::shared_ptr<Stroke>> & stroke);
     __fast void append(const WListFast<std::shared_ptr<Stroke>> &stroke);
@@ -164,7 +166,7 @@ public:
 
     void setCount(int count);
 
-    static void copy(const Page &src, Page &dest);
+    //static void copy(const Page &src, Page &dest);
     constexpr static double getProportion();
     constexpr static double getHeight();
     constexpr static double getWidth();
@@ -390,7 +392,7 @@ force_inline bool Page::isVisible() const
     return this->_IsVisible;
 }
 
-inline void Page::copy(
+/*inline void Page::copy(
         const Page  &src,
         Page        &dest)
 {
@@ -413,7 +415,7 @@ inline void Page::copy(
     dest._imgDraw                   = src._imgDraw;
     dest._IsVisible                 = src._IsVisible;
     dest._count                     = src._count;
-}
+}*/
 
 force_inline void Page::removeAt(cint i)
 {
@@ -432,6 +434,13 @@ inline Stroke &Page::lastMod()
 {
     rep();
     return *this->_stroke.operator[](this->lengthStroke() - 1);
+}
+
+inline void Page::append(std::shared_ptr<Stroke> &&stroke)
+{
+    W_ASSERT(stroke != nullptr);
+    _strokeTmp.append(std::move(stroke));
+    rep();
 }
 
 force_inline void Page::append(const std::shared_ptr<Stroke>& strokeAppend)
@@ -456,7 +465,8 @@ force_inline Page::Page(const Page &from)
     : _count(-1)
     , _imgDraw(1, true)
 {
-    Page::copy(from, *this);
+    *this = from;
+    //Page::copy(from, *this);
 }
 
 force_inline Page::~Page() = default;
@@ -467,7 +477,25 @@ inline Page &Page::operator=(const Page &other)
         return *this;
     }
 
-    Page::copy(other, *this);
+    reset();
+
+    _stroke.reserve(other._stroke.size());
+    _strokeTmp.reserve(other._strokeTmp.size());
+
+    for (const auto &s : other._stroke) {
+        _stroke.append(s->clone());
+    }
+
+    for (const auto &s : other._strokeTmp) {
+        _strokeTmp.append(std::move(s->clone()));
+    }
+
+    _stroke                    = other._stroke;
+    _stroke_writernote         = other._stroke_writernote;
+    _strokeTmp                 = other._strokeTmp;
+    _imgDraw                   = other._imgDraw;
+    _IsVisible                 = other._IsVisible;
+    _count                     = other._count;
     return *this;
 }
 

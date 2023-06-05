@@ -6,7 +6,7 @@
 */
 void DataStruct::controllForRepositioning(PointF &translateTo)
 {
-    if (isempty_touch())
+    if (isEmptyTouch())
         return;
 
     const auto point = this->getPointFirstPage();

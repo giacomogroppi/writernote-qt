@@ -43,7 +43,7 @@ RectF copy::get_size_area(const WListFast<WListFast<std::shared_ptr<Stroke>>> &d
 
         const auto tmp = Page::get_size_area(sub, 0, sub.size());
 
-        size_area = DataStruct::get_bigger_rect(tmp, size_area);
+        size_area = DataStruct::getBiggerRect(tmp, size_area);
     }
 
     return size_area;
