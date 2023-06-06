@@ -587,7 +587,7 @@ RectF Page::get_size_area(const WListFast<std::shared_ptr<Stroke> > &item, int f
 
     for(; from < to; from ++){
         const RectF tmp = item.at(from)->getBiggerPointInStroke();
-        result = DataStruct::getBiggerRect(result, tmp);
+        result = DataStruct::joinRect(result, tmp);
     }
 
     return result;
@@ -612,7 +612,7 @@ RectF Page::get_size_area(const WVector<int> &pos) const
 
     for(; len >= 0; len --){
         tmp = atStroke(pos.at(len)).getBiggerPointInStroke();
-        result = DataStruct::getBiggerRect(result, tmp);
+        result = DataStruct::joinRect(result, tmp);
     }
 
     return result;

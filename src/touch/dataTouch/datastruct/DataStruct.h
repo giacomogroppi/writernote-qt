@@ -9,39 +9,22 @@
 #include "core/WMutex.h"
 #include "core/WListFast.h"
 
-/*
-    IDVERTICALE -> linee verticali
-    IDORIZZONALE -> linee orizzonali
-*/
-
 class frompdf;
 class fromimage;
-
-
-#define IDVERTICALE -2
-#define IDORIZZONTALE -1
-#define IDUNKNOWN -6
-
-#define WRIT_CHANG(arr, tmp)    \
-    if(arr[0] < arr[1]){        \
-        tmp = arr[0];           \
-        arr[0] = arr[1];        \
-        arr[1] = tmp;           \
-    }
 
 class DataStruct
 {
 private:
     PointF _last_translation;
     WVector<Page> _page;
-    PointF _pointFirstPage = PointF(0., 0.);
+    PointF _pointFirstPage = {0., 0.};
     double _zoom = 1.;
 
     // todo --> move this mutex to page
     WMutex _changeIdMutex;
     WMutex _changeAudioMutex;
 
-    bool userWrittenSomething(uint frompage);
+    bool userWrittenSomething(int fromPage);
 
     [[nodiscard]] bool isOkTranslate(const PointF &point, cbool isZoom) const;
 
@@ -103,9 +86,6 @@ public:
     void MovePoint(const WList<WVector<int>> & pos, cint base, const PointF &translation);
     void MovePoint(const WVector<int> & pos, cint page, const PointF &translation);
 
-#   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
-    static void MovePoint(WList<Stroke> &stroke, const PointF &translation, int flag);
-
     [[nodiscard]] bool userWrittenSomething() const;
     static bool userWrittenSomething(const DataStruct &data1, const DataStruct &data2);
 
@@ -140,7 +120,6 @@ public:
 
     __fast [[nodiscard]] const Page &     lastPage() const;
 
-
     [[nodiscard]] int lengthPage() const{ return _page.size(); }
     void newPage(n_style style);
 
@@ -165,8 +144,11 @@ public:
     static void copy(const DataStruct &src, DataStruct &dest);
     static force_inline void inverso(PointF &point) {point *= -1.0;};
     static PointF inverso(const PointF &point) { return point * -1; };
-    static RectF getBiggerRect(const RectF &first, const RectF &second);
+    static RectF joinRect(const RectF &first, const RectF &second);
     static Rect get_bigger_rect(const Rect &first, const Rect &second);
+
+#   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
+    static void MovePoint(WList<Stroke> &stroke, const PointF &translation, int flag);
 
     friend class xmlstruct;
     friend class TestingCore;
@@ -306,7 +288,7 @@ inline RectF DataStruct::get_size_area(const WListFast<WVector<int>> &pos, int b
             continue;
 
         const auto tmp = this->getSizeArea(vec, base + i);
-        result = DataStruct::getBiggerRect(result, tmp);
+        result = DataStruct::joinRect(result, tmp);
     }
 
     return result;
@@ -526,34 +508,29 @@ inline void DataStruct::appendStroke(const std::shared_ptr<Stroke>& stroke, int 
     this->at_mod(page).append(stroke);
 }
 
-inline RectF DataStruct::getBiggerRect(
+// TODO: move this function in RectF
+inline RectF DataStruct::joinRect(
         const RectF    &first,
         const RectF    &second)
 {
-    PointF resultTopLeft;
-    PointF resultBottomRight;
-
     const auto tl1 = first.topLeft();
     const auto tl2 = second.topLeft();
     const auto br1 = first.bottomRight();
     const auto br2 = second.bottomRight();
 
-    resultTopLeft
-            .setX(std::min(tl1.x(), tl2.x()))
-            .setY(std::min(tl1.y(), tl2.y()));
-
-    resultBottomRight
-            .setX(std::max(br1.x(), br2.x()))
-            .setY(std::max(br1.y(), br2.y()));
-
-    return {resultTopLeft, resultBottomRight};
+    return {
+        std::min(tl1.x(), tl2.x()),
+        std::min(tl1.y(), tl2.y()),
+        std::max(br1.x(), br2.x()),
+        std::max(br1.y(), br2.y())
+    };
 }
 
 force_inline Rect DataStruct::get_bigger_rect(const Rect &first, const Rect &second)
 {
     RectF firstCasted(first.castTo<double>());
     RectF secondCasted(second.castTo<double>());
-    return DataStruct::getBiggerRect(firstCasted, secondCasted).castTo<int>();
+    return DataStruct::joinRect(firstCasted, secondCasted).castTo<int>();
 }
 
 inline void DataStruct::setZoom(double newZoom)

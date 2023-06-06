@@ -55,9 +55,10 @@ void DataStruct::drawIfInside(const RectF &area)
 }
 
 DataStruct::DataStruct()
+    : _last_translation(0., 0.)
+    , _zoom(1.)
+    , _pageVisible(-1)
 {
-    _last_translation = PointF(0., 0.);
-    _zoom = 1.;
 }
 
 void DataStruct::triggerIfNone(int m_pos_ris)
@@ -245,21 +246,10 @@ void DataStruct::removePointIndex(
     Page *page = &at_mod(__page);
     int i = pos.size() - 1;
 
-    if(__isOrder){
-
-#ifdef DEBUGINFO
-        W_ASSERT(pos.isOrder());
-#else
-        if(!pos.isOrder()){
-            NAME_LOG_EXT->write("List not order", log_ui::critic_error);
-            /* in this case we need to order */
-            pos.order();
-        }
-
-#endif
-    }else{
+    if (!__isOrder)
         pos.order();
-    }
+
+    W_ASSERT(pos.isOrder());
 
     for(; i >= 0; i --){
         page->removeAt(pos.at(i));
@@ -308,7 +298,7 @@ void DataStruct::moveToPage(int newPage)
     W_ASSERT(this->getPointFirstPageNoZoom().x() <= 0.);
     W_ASSERT(this->getPointFirstPageNoZoom().y() <= 0.);
 
-    if(WCommonScript::debug_enable()){
+    if constexpr (WCommonScript::debug_enable()){
         const auto not_used point = this->adjustPoint(PointF(0., 0.));
         const auto not_used index = this->whichPage(point);
         WDebug(true, newPage << index << this->getPointFirstPage() << get_range_visible());
@@ -346,11 +336,11 @@ void DataStruct::insertPage(const Page &Page, int index)
     }
 }
 
-bool DataStruct::userWrittenSomething(uint frompage)
+bool DataStruct::userWrittenSomething(int fromPage)
 {
-    const uint len = lengthPage();
-    for(; frompage < len; frompage++){
-        if(at(frompage).userWrittenSomething())
+    const auto len = lengthPage();
+    for(; fromPage < len; fromPage++){
+        if(at(fromPage).userWrittenSomething())
             return true;
     }
 

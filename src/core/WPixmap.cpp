@@ -9,6 +9,12 @@ WPixmap::WPixmap(WPixmap &&other) noexcept
 
 }
 
+WPixmap::WPixmap(const WPixmap &other) noexcept
+    : QPixmap(static_cast<const QPixmap &>(other))
+{
+
+}
+
 WPixmap::WPixmap(int page, bool consideringResolution)
     : QPixmap(
         consideringResolution
@@ -99,6 +105,22 @@ WPixmap::WPixmap(const WString &path)
 {
     WImage img(path);
     WPixmap::fromImage(img);
+}
+
+WPixmap &WPixmap::operator=(const WPixmap &other) noexcept
+{
+    if (this == &other)
+        return *this;
+    QPixmap::operator=(other);
+    return *this;
+}
+
+WPixmap &WPixmap::operator=(WPixmap &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+    QPixmap::operator=(std::move(other));
+    return *this;
 }
 
 #endif

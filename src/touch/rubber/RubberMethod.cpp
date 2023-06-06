@@ -268,7 +268,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
 
             mutex_area.lock();
 
-            private_data->area = DataStruct::getBiggerRect(currentArea, private_data->area);
+            private_data->area = DataStruct::joinRect(currentArea, private_data->area);
 
             mutex_area.unlock();
         }

@@ -18,12 +18,13 @@ class WPixmap
 private:
 
 public:
+    WPixmap() = default;
+    WPixmap (const WPixmap &other) noexcept;
+    WPixmap (WPixmap &&other) noexcept;
+
     explicit WPixmap(int page, bool consideringResolution);
     explicit WPixmap(const WString &path);
-    WPixmap() = default;
     explicit WPixmap(const std::string &path, const char *format = nullptr);
-    WPixmap (WPixmap &&other) noexcept;
-    WPixmap (const WPixmap &other) noexcept;
 
     size_t get_size_in_file() const;
     size_t save_and_size(WByteArray &arr) const;

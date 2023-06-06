@@ -21,6 +21,7 @@ private:
     */
 
     std::vector<T> _data;
+    static constexpr auto numberOfAllocation = 64;
 
     void test() const;
 public:
@@ -386,6 +387,7 @@ inline void WVector<T>::append(const T& item)
         return append(item);
     }
      */
+
     _data.push_back(item);
 }
 
@@ -410,6 +412,17 @@ inline WVector<T>::WVector()
     : _data()
 {
 
+}
+
+template <class T>
+inline WVector<T>::WVector(const WVector<T> &other) noexcept
+    : _data(other._data)
+{}
+
+template <class T>
+inline WVector<T>::WVector(WVector<T> &&other) noexcept
+    : _data(std::move(other._data))
+{
 }
 
 #ifdef USE_QT
