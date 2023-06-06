@@ -60,7 +60,7 @@ void Scheduler::createHeap()
 void Scheduler::addTask(WTask *task)
 {
     WMutexLocker _(_lock_heap);
-
+    this->_Task_General.append(task);
     this->_need_to_sort = true;
 }
 

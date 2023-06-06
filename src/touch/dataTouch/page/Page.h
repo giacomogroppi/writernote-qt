@@ -92,7 +92,7 @@ public:
 
     Page ();
     Page (Page &&other) noexcept;
-    Page (const Page &page);
+    Page (const Page &from);
     Page (int count, n_style style);
     ~Page();
 

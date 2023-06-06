@@ -58,9 +58,9 @@ inline Settable<T> &Settable<T>::operator=(const Settable<T> &other) noexcept
 
 template<class T>
 inline Settable<T>::Settable(const Settable<T> &other)
+    : T(static_cast<const T&>(other))
+    , _set(other._set)
 {
-    T::operator=(other);
-    _set = other._set;
 }
 
 template<class T>
@@ -127,6 +127,7 @@ struct WColor{
     [[nodiscard]] QColor toQColor() const;
     WColor &operator=(const QColor &other);
 #endif // USE_QT
+    WColor &operator=(const WColor &other);
     bool operator==(const WColor &other) const;
 };
 
@@ -134,6 +135,8 @@ inline void WColor::set_alfa(unsigned char alfa)
 {
     this->colore[3] = alfa;
 }
+
+
 
 #ifdef USE_QT
 inline WColor WColor::from_color(const WColor &color)
@@ -221,6 +224,18 @@ inline void WColor::setAlfa(unsigned char newValue)
 inline WColor WColor::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
 {
     return {u1, u2, u3, u4};
+}
+
+inline WColor &WColor::operator=(const WColor &other)
+{
+    if (this == &other)
+        return *this;
+
+    for (int i = 0; i < NCOLOR; i++) {
+        this->colore[i] = other.colore[i];
+    }
+
+    return *this;
 }
 
 using PointSettable = Settable<PointF>;

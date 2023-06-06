@@ -237,9 +237,9 @@ inline void Stroke::clone(Stroke &out) const
 }
 
 inline Stroke::Stroke(Stroke &&other) noexcept
-    : _flag(other._flag)
-    , _metadata(std::move(other._metadata))
+    : _metadata(std::move(other._metadata))
     , _biggerData(other._biggerData)
+    , _flag(other._flag)
 {
 
 }

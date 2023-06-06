@@ -53,6 +53,7 @@ public:
     static WString fromUtf8(const char *data, int size = -1);
 
     WString arg(const WString &arg) const;
+    WString arg(int a) const;
 
     bool operator==(const WString &other) const;
     bool operator!=(const WString &other) const;
@@ -65,12 +66,12 @@ public:
     WByteArray::iterator begin() noexcept { test(); return WByteArray::iterator(this->_data, 0); };
     WByteArray::iterator end()   noexcept { test(); return WByteArray::iterator(_data, _data.size());  };
 
-    WByteArray::const_iterator constBegin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
-    WByteArray::const_iterator constEnd()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
-    WByteArray::const_iterator cBegin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
-    WByteArray::const_iterator cEnd()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
-    WByteArray::const_iterator begin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
-    WByteArray::const_iterator end()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
+    [[nodiscard]] auto constBegin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
+    [[nodiscard]] auto constEnd()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
+    [[nodiscard]] auto cBegin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
+    [[nodiscard]] auto cEnd()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
+    [[nodiscard]] auto begin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
+    [[nodiscard]] auto end()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
 };
 
 inline int WString::size() const
@@ -101,7 +102,7 @@ inline WListFast<WString> WString::split(char character) const
     return res;
 }
 
-int WString::indexOf(const WString &other) const
+inline int WString::indexOf(const WString &other) const
 {
     W_ASSERT(other.size() > 0);
 
@@ -142,7 +143,7 @@ inline int WString::indexOf(char character) const
     return -1;
 }
 
-int WString::lastIndexOf(char character) const
+inline int WString::lastIndexOf(char character) const
 {
     for (int i = size() - 1; i >= 0; i --) {
         if (at(i) == character) {
@@ -153,7 +154,7 @@ int WString::lastIndexOf(char character) const
     return -1;
 }
 
-void WString::replace(char oldChar, char newChar)
+inline void WString::replace(char oldChar, char newChar)
 {
     for (int i = 0; i < this->size(); i++) {
         if (at(i) == oldChar) {

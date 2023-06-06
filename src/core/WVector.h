@@ -25,6 +25,8 @@ private:
     void test() const;
 public:
     WVector();
+    WVector(const WVector<T> &other) noexcept;
+    WVector(WVector<T> &&other) noexcept;
     ~WVector();
 
     void append(const WVector<T> &other);
@@ -55,6 +57,7 @@ public:
     int indexOf(const T &object);
     void remove(const T& object);
     WVector<T> &operator=(const WVector<T> &other);
+    WVector<T> &operator=(WVector &&other) noexcept;
     bool operator==(const WVector<T> &other) const;
     bool operator!=(const WVector<T> &other) const;
 

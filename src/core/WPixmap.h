@@ -22,6 +22,8 @@ public:
     explicit WPixmap(const WString &path);
     WPixmap() = default;
     explicit WPixmap(const std::string &path, const char *format = nullptr);
+    WPixmap (WPixmap &&other) noexcept;
+    WPixmap (const WPixmap &other) noexcept;
 
     size_t get_size_in_file() const;
     size_t save_and_size(WByteArray &arr) const;
@@ -35,4 +37,7 @@ public:
 
     [[deprecated("This function is very slow, and it's deprecated")]]
     bool operator==(const WPixmap &other) const;
+
+    WPixmap &operator=(const WPixmap &other) noexcept;
+    WPixmap &operator=(WPixmap &&other) noexcept;
 };

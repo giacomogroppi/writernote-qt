@@ -23,6 +23,7 @@
     ClassName &operator=(const ClassName &) = delete;
 
 #include <iostream>
+#include <cstring>
 
 #ifdef USE_QT
 # include <QtGlobal>

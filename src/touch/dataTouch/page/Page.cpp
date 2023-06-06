@@ -15,12 +15,12 @@
 static force_inline double widthToPressure(double v) { return v/10.0; };
 
 Page::Page(Page &&other) noexcept
-    : _count(other._count)
+    : _IsVisible(other._IsVisible)
+    , _count(other._count)
     , _stroke(std::move(other._stroke))
+    , _stroke_writernote(std::move(other._stroke_writernote))
     , _strokeTmp(std::move(other._stroke))
     , _imgDraw(std::move(other._imgDraw))
-    , _IsVisible(other._IsVisible)
-    , _stroke_writernote(std::move(other._stroke_writernote))
 {
 }
 

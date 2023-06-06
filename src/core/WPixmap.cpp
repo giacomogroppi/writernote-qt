@@ -3,6 +3,12 @@
 #include "touch/dataTouch/page/Page.h"
 
 #ifdef USE_QT
+WPixmap::WPixmap(WPixmap &&other) noexcept
+    : QPixmap(std::move(static_cast<QPixmap &&>(other)))
+{
+
+}
+
 WPixmap::WPixmap(int page, bool consideringResolution)
     : QPixmap(
         consideringResolution

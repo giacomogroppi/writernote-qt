@@ -26,7 +26,7 @@ public:
     const char *constData() const;
     size_t size() const;
     void append(char data);
-    void append(const char *data, unsigned size);
+    void append(const char *data, unsigned int size);
     char at(int i) const;
     void clear() noexcept;
     void insert(const WByteArray &data, unsigned index);
@@ -110,13 +110,13 @@ inline std::string WByteArray::toStdString() const
     return {_data, _size};
 }
 
-inline void WByteArray::append(const char *data, unsigned size)
+inline void WByteArray::append(const char *data, unsigned int size)
 {
     W_ASSERT(size >= 0);
     W_ASSERT(data);
 
     if (_reserved > 0) {
-        if (_reserved - size < 0) {
+        if (_reserved < size) {
             _data = (char *) realloc(_data, _size + size);
             _reserved = 0;
         } else {
@@ -164,7 +164,7 @@ inline bool WByteArray::operator==(const WByteArray &other) const
 {
     if (this->_size != other._size)
         return false;
-    return memcmp(_data, other._data, _size) == 0;
+    return WCommonScript::WMemcpy(_data, other._data, _size) == 0;
 }
 
 inline WByteArray WByteArray::operator+(const WByteArray &other) const

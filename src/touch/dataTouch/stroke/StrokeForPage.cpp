@@ -199,8 +199,8 @@ force_inline void StrokeForPage::rep() const
 }
 
 StrokeForPage::StrokeForPage(StrokeForPage &&other) noexcept
-    : _needToUpdate(other._needToUpdate)
-    , _data(std::move(other._data))
+    : _data(std::move(other._data))
     , _pix(std::move(other._pix))
+    , _needToUpdate(other._needToUpdate)
 {
 }

@@ -17,6 +17,7 @@ private:
 public:
     constexpr PointTemplate() = default;
     constexpr PointTemplate(T x, T y);
+    constexpr PointTemplate(const PointTemplate<T> &other) noexcept;
 
     ~PointTemplate() = default;
 
@@ -51,6 +52,14 @@ public:
     constexpr PointTemplate<T> &operator+=(const PointTemplate<T> &other);
     constexpr PointTemplate<T> &operator-=(const PointTemplate<T> &other);
 };
+
+template<typename T>
+inline constexpr PointTemplate<T>::PointTemplate(const PointTemplate<T> &other) noexcept
+    : _x(other._x)
+    , _y(other._y)
+{
+
+}
 
 template<typename T>
 inline bool PointTemplate<T>::operator!=(const PointTemplate<T> &other) const

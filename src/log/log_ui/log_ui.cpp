@@ -79,7 +79,7 @@ void log_ui::write(const WString &stringa, log_ui::type_write var)
     log_ui::addTime(tmp);
 
     const auto msg = WString("\n%1 --- %2").arg(tmp).arg(stringa).toUtf8();
-    file.write(msg, msg.size());
+    file.write(msg.constData(), msg.size());
 
     file.close();
 }

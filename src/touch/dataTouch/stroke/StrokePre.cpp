@@ -162,29 +162,29 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 }
 
 StrokePre::StrokePre(const StrokePre &other) noexcept
-    : _max_pressure(other._max_pressure)
+    : _img(other._img)
+    , _stroke(other._stroke)
+    , _point(other._point)
+    , _pressure(other._pressure)
     , _last_draw_point(other._last_draw_point)
     , _last_draw_press(other._last_draw_press)
-    , _point(other._point)
-    , _max(other._max)
+    , _max_pressure(other._max_pressure)
     , _min(other._min)
-    , _stroke(other._stroke)
-    , _pressure(other._pressure)
-    , _img(other._img)
+    , _max(other._max)
 {
 
 }
 
 StrokePre::StrokePre(StrokePre &&other) noexcept
     : _img(std::move(other._img))
-    , _max_pressure(other._max_pressure)
-    , _last_draw_point(other._last_draw_point)
-    , _last_draw_press(other._last_draw_press)
-    , _max(other._max)
+    , _stroke(std::move(other._stroke))
     , _point(std::move(other._point))
     , _pressure(std::move(other._pressure))
+    , _last_draw_point(other._last_draw_point)
+    , _last_draw_press(other._last_draw_press)
+    , _max_pressure(other._max_pressure)
     , _min(other._min)
-    , _stroke(std::move(other._stroke))
+    , _max(other._max)
 {
 }
 

@@ -31,13 +31,6 @@ private:
         const T end_point;
         Z begin_press;
         bool press_null;
-
-        drawData &operator=(const drawData<T, Z> &other) {
-            this->begin_point = other.begin_point;
-            this->begin_press = other.begin_press;
-            this->end_point = other.end_point;
-            this->press_null = other.press_null;
-        }
     };
 
     template <class T, class Z>
