@@ -1,7 +1,8 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
-#include <zip.h>
+#include "core/FileContainer.h"
+#include "core/FileWriter.h"
 
 class WZipWriter {
 private:
@@ -10,11 +11,11 @@ private:
     bool already_write;
     bool already_init;
 #endif
-    struct zip          *_zip;
+    FileContainer          *_zip;
 
-    static struct zip* openZip(const char *path);
-    static int add_file(zip_t *fileZip, const char *fileName, zip_source_t *file);
-    static int commit_change(zip_source_t *file_change);
+    static FileContainer* openZip(const char *path);
+    static int add_file(FileContainer *fileZip, const char *fileName, FileWriter *file);
+    static int commit_change(FileWriter *file_change);
     static void destroy_file(struct zip_source *file);
 
     void close_zip();
@@ -31,8 +32,8 @@ public:
 inline void WZipWriter::close_zip()
 {
     W_ASSERT(this->_zip);
-    zip_close(this->_zip);
-    this->_zip = NULL;
+    _zip->close();
+    this->_zip = nullptr;
 }
 
 inline WZipWriter::~WZipWriter()

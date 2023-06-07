@@ -1,6 +1,5 @@
 #pragma once
 
-#include "zip.h"
 #include "core/WByteArray.h"
 #include "core/WList.h"
 #include "utils/common_error_definition.h"
@@ -22,7 +21,7 @@ public:
      * ogni file, per ogni nome all'interno del list_name e apperderà tutto
      * alla lista di WByteArray
 */
-    static unsigned char read(const WListFast<WString> &list_name, zip_t *zip_file,
+    static unsigned char read(const WListFast<WString> &list_name, FileContainer *zip_file,
                      WListFast<WByteArray> &arr, cbool clear);
 
     static unsigned char read(const WListFast<WString> &list_name, WZip &zip,

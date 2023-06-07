@@ -2,7 +2,6 @@
 
 #include "core/WZipReaderSingle.h"
 #include "core/WZipWriter.h"
-#include "zip.h"
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "core/WZip.h"

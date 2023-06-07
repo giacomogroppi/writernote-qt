@@ -1,19 +1,14 @@
 #pragma once
 
 
-#include "zip.h"
 #include "utils/WCommonScript.h"
 
-short int source_read_ext(zip_file *, void *, int);
-short int source_write_ext(zip_source_t *, const void *, int);
-
 /* read */
-#define SOURCE_READ_EXT(x, y, z) check+=zip_fread(x, y, z) == -1
 
-#define ARGUMENT(x, y, z) if(un(zip_fread(x, y,z)==-1))
+#define ARGUMENT(x, y, z) if(un((x).read(y, z) == -1))
 
-#define SOURCE_READ_GOTO(x, y, z) ARGUMENT(x,y,z)goto free_;
-#define SOURCE_READ_RETURN_SIZE(x, y, z) ARGUMENT(x, y, z)return ERROR;
+#define SOURCE_READ_GOTO(x, y, z) ARGUMENT(x,y,z) goto free_;
+#define SOURCE_READ_RETURN_SIZE(x, y, z) ARGUMENT(x, y, z) return ERROR;
 
 /* write */
 #define SOURCE_WRITE(x, y, z) \

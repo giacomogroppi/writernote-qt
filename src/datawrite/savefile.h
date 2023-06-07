@@ -1,6 +1,5 @@
 #pragma once
 
-#include <zip.h>
 #include "utils/common_error_definition.h"
 #include "utils/WCommonScript.h"
 #include "core/WZipWriter.h"

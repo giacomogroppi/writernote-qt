@@ -1,10 +1,10 @@
 #pragma once
 
-#include "zip.h"
 #include "utils/WCommonScript.h"
 #include "core/WString.h"
 #include "Scheduler/WObject.h"
 #include "WByteArray.h"
+#include "FileContainer.h"
 
 class PrivateStatus{
 private:
@@ -47,7 +47,7 @@ public:
 
 struct WZipPrivate{
     void            *_data      = nullptr;
-    zip_t           *_zip       = nullptr;
+    FileContainer   *_zip       = nullptr;
     size_t          _len_file   = 0;
     WString         _path;
     PrivateStatus   _status;
@@ -60,7 +60,6 @@ private:
     struct WZipPrivate _data_private;
 
     bool openZip(const WByteArray &path);
-    zip_file_t *open_file_in_zip(const WByteArray &path);
 
 public:
     WZip(const WByteArray &path, bool &ok);
@@ -69,13 +68,13 @@ public:
 
     void close_zip();
     void dealloc_file();
-    zip_t *get_zip() const;
+    FileContainer *get_zip() const;
 
     bool openFileInZip(const WByteArray &path);
 
     [[nodiscard]] size_t length() const;
 
-    static size_t get_size_file(zip_t *zip, const char *name);
+    static size_t get_size_file(FileContainer *zip, const WString &name);
 
     const char *get_data() const;
 
@@ -110,24 +109,13 @@ force_inline const char *WZip::get_data() const
     return (const char *)this->_data_private._data;
 }
 
-force_inline zip_t* WZip::get_zip() const
+force_inline FileContainer* WZip::get_zip() const
 {
     W_ASSERT(this->_data_private._zip);
     return this->_data_private._zip;
 }
 
-force_inline size_t WZip::get_size_file(zip_t *zip, const char *name)
+force_inline size_t WZip::get_size_file(FileContainer *zip, const WString &name)
 {
-    struct zip_stat st;
-    zip_stat_init(&st);
-
-    /*
-     * Upon successful completion 0 is returned. Otherwise,
-     * -1 is returned and the error information in archive
-     * is set to indicate the error
-    */
-    if(zip_stat(zip, name, ZIP_STAT_SIZE, &st) < 0)
-        return 0;
-
-    return st.size;
+    return zip->sizeOfFile(name);
 }
