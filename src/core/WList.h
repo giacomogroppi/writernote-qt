@@ -35,12 +35,14 @@ public:
      * @return First object in the list
     */
     T *get_first() noexcept;
-    bool isEmpty() const noexcept;
-    constexpr int size() const noexcept;
+    [[nodiscard]] bool isEmpty() const noexcept;
+    [[nodiscard]] constexpr int size() const noexcept;
     const T& last() const;
     const T& first() const;
-    int indexOf(const T& index) const;
-    bool isOrder() const;
+    constexpr int indexOf(const T& index) const;
+    constexpr bool isOrder() const;
+
+    T&& takeFirst() noexcept;
 
     class iterator{
     private:
@@ -80,9 +82,50 @@ public:
     const_iterator begin() const noexcept { test(); return const_iterator(_first); }
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
 
+    WList<T> &operator=(WList<T> &&other) noexcept;
     WList<T> &operator=(const WList<T> &other);
     bool operator==(const WList<T> &other);
 };
+
+template<class T>
+inline WList<T> &WList<T>::operator=(WList<T> &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    WListPrivate<T> next = _first;
+    while (next != nullptr) {
+        auto *n = next->next;
+        delete next->data;
+        delete next;
+        next = n;
+    }
+
+    this->_first = other._first;
+    this->_last = other._last;
+    this->_size = other._size;
+
+    other._first = nullptr;
+    other._last = nullptr;
+    other._size = 0;
+
+    return *this;
+}
+
+template<class T>
+inline T &&WList<T>::takeFirst() noexcept
+{
+    T res = std::move (*this->_first->data);
+    WListPrivate<T> *nextFirst = _first->next;
+
+    delete _first->data;
+    delete _first;
+
+    this->_first = nextFirst;
+    this->_size --;
+
+    return std::move(res);
+}
 
 template<class T>
 inline bool WList<T>::operator==(const WList<T> &other)
@@ -122,8 +165,8 @@ inline void WList<T>::append(T &&data) noexcept
 
     test();
 
-    WNew(tmp, struct WListPrivate<T>, ());
-    WNew(tmp->data, T, (std::move(data)));
+    tmp = new struct WListPrivate<T>();
+    tmp->data = new T(std::move(data));
 
     if (un(this->_first == nullptr)) {
         W_ASSERT(this->_last == nullptr);
@@ -152,8 +195,8 @@ inline void WList<T>::append(const T &data) noexcept
 
     test();
 
-    WNew(tmp, struct WListPrivate<T>, ());
-    WNew(tmp->data, T, (data));
+    tmp = new struct WListPrivate<T>();
+    tmp->data = new T(data);
 
     if (un(this->_first == nullptr)) {
         W_ASSERT(this->_last == nullptr);
@@ -185,7 +228,7 @@ inline T *WList<T>::get_first() noexcept
     if(_first->next == nullptr)
         _last = _first->next;
 
-    WDelete(this->_first);
+    delete this->_first;
     this->_first = next;
 
     _size --;
@@ -325,8 +368,8 @@ WList<T> &WList<T>::operator=(const WList<T> &other)
 
         while(curr){
             auto *next = curr->next;
-            WDelete(curr->data);
-            WDelete(curr);
+            delete curr->data;
+            delete curr;
             curr = next;
         }
     }

@@ -18,8 +18,8 @@ public:
 
 class Scheduler final: public WObject{
 private:
-    WVector<WTask *> _Task_Main;
-    WVector<WTask *> _Task_General;
+    WList<WTask *> _task_Main;
+    WList<WTask *> _task_General;
 
     WVector<std::thread> _threads;
 
@@ -56,7 +56,7 @@ public:
 
     constexpr bool needToDie() const noexcept;
 
-    void addTask(WTask *task);
+    void addTaskGeneric(WTask *task);
     static void addTaskMainThread(WTask *task);
 
     void exit();

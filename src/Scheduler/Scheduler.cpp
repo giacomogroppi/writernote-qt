@@ -22,7 +22,7 @@ Scheduler::Scheduler()
 
             WSemaphore *sem = isMainThread ? &this->_semMain : &this->_semGeneral;
             WMutex *mux = isMainThread ? &this->_lockMain : &this->_lock_heap;
-            WVector<WTask *> *tasksHeap = isMainThread ? &this->_Task_Main : &_Task_General;
+            WList<WTask *> *tasksHeap = isMainThread ? &this->_task_Main : &_task_General;
 
             // loop
             for (;;) {
@@ -33,7 +33,7 @@ Scheduler::Scheduler()
                     return;
 
                 mux->lock();
-                task = this->_Task_Main.takeFirst();
+                task = tasksHeap->takeFirst();
                 mux->unlock();
 
                 task->run();
@@ -48,8 +48,8 @@ Scheduler::~Scheduler() = default;
 void Scheduler::createHeap()
 {
     /*
-    std::make_heap(_Task_General.begin(),
-                   _Task_General.end(),
+    std::make_heap(_task_General.begin(),
+                   _task_General.end(),
                    [](WTask *a, WTask *b) {
         return a->getPriority() < b->getPriority();
     });
@@ -57,10 +57,10 @@ void Scheduler::createHeap()
     W_ASSERT(this->is_heap());
 }
 
-void Scheduler::addTask(WTask *task)
+void Scheduler::addTaskGeneric(WTask *task)
 {
     WMutexLocker _(_lock_heap);
-    this->_Task_General.append(task);
+    this->_task_General.append(task);
     this->_need_to_sort = true;
 }
 
@@ -69,10 +69,10 @@ bool Scheduler::is_heap() const
     return true;
     /*
     WMutexLocker _(this->_pool_active_locker);
-    const auto r = this->_Task_General.at(0)->getPriority();
+    const auto r = this->_task_General.at(0)->getPriority();
 
-    for (int i = 1; i < (int)this->_Task_General.size(); i++) {
-        if (r < this->_Task_General.at(i)->getPriority())
+    for (int i = 1; i < (int)this->_task_General.size(); i++) {
+        if (r < this->_task_General.at(i)->getPriority())
             return false;
     }
     return true;
@@ -89,7 +89,7 @@ void Scheduler::addTaskMainThread(WTask *task)
     W_ASSERT(task);
 
     WMutexLocker _(instance->_lockMain);
-    instance->_Task_Main.append(task);
+    instance->_task_Main.append(task);
     instance->_semMain.release();
 }
 

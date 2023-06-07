@@ -28,7 +28,7 @@ void WPool::startJobs(QThreadPool *pool)
     _active_thread = static_cast<int>(this->_tasks.size());
 }
 
-void WPool::addTask(WTask *task)
+void WPool::addTaskGeneric(WTask *task)
 {
     W_ASSERT(this->_active_thread == 0);
     WMutexLocker _(this->_tasks_locker);
