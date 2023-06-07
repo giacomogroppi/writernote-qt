@@ -88,6 +88,12 @@ public:
 };
 
 template<class T>
+constexpr bool WList<T>::isOrder() const
+{
+    return false;
+}
+
+template<class T>
 inline WList<T> &WList<T>::operator=(WList<T> &&other) noexcept
 {
     if (this == &other)

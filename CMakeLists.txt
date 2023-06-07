@@ -328,7 +328,7 @@ set(PROJECT_SOURCES
         src/core/WOptionSettings.h
         src/core/WVariant.h
         src/core/WRgb.h
-        )
+        src/core/WAbstractList.cpp src/core/WAbstractList.h)
 
 if(APPLE)
     add_definitions(-DMACOS)
