@@ -7,6 +7,7 @@
 
 #include "WString.h"
 #include "FileReader.h"
+#include "FileWriter.h"
 
 class FileContainer {
 private:
@@ -24,7 +25,9 @@ public:
      * \return a FileFinder for read this file
      * */
     FileReader &getFileReader(const WString &nameFile);
+    int addFile(const FileWriter &nameFile);
 
+    void closeFileReader (FileReader &file) const;
 
     [[nodiscard]]
     bool isOpen() const;

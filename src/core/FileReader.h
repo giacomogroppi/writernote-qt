@@ -35,9 +35,10 @@ size_t FileReader::readRaw(void *to, size_t size) const
 {
     if (size > _data->size()) {
         memcpy(to, _data->constData(), size);
+        return size;
     }
 
-    return size;
+    return _data->size();
 }
 
 #endif //TESTING_QML_FILEREADER_H

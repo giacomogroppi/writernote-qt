@@ -2,7 +2,7 @@
 #include "xmlstruct.h"
 
 unsigned char readListArray::read(const WListFast<WString> &list_name,
-                          zip_t *zip_file,
+                          FileContainer *zip_file,
                           WListFast<WByteArray> &list_arr, cbool clear)
 {
     WByteArray arr;

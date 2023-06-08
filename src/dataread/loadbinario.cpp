@@ -1,6 +1,5 @@
 #include "xmlstruct.h"
 #include "currenttitle/document.h"
-#include <zip.h>
 #include "utils/WCommonScript.h"
 #include "core/WReadZip.h"
 #include "core/WZipReaderSingle.h"

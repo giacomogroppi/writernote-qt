@@ -6,9 +6,19 @@
 #define TESTING_QML_FILEWRITER_H
 
 #include "FileInstance.h"
+#include "WString.h"
 
 class FileWriter: public FileInstance {
+public:
+    FileWriter (const WString &nameFile);
 
+    [[nodiscard]]
+    bool isOk() const;
+
+    [[nodiscard]]
+    size_t write (const void *data, size_t size);
+
+    void destroy() noexcept;
 };
 
 

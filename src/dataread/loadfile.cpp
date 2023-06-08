@@ -9,48 +9,13 @@
 #include "log/log_ui/log_ui.h"
 #include <cassert>
 
-int xmlstruct::load_stringa(FileReader *f, WString &stringa)
-{
-    int tmp;
-    char *str;
-
-    SOURCE_READ_RETURN_SIZE(f, &tmp, sizeof(tmp));
-
-    if(tmp){
-        str = (char *)WMalloc(sizeof(char) * (tmp + 1));
-
-        SOURCE_READ_RETURN_SIZE(f, str, sizeof(char)*tmp);
-
-        str[tmp] = '\0';
-
-        stringa = str;
-
-        WFree(str);
-    }
-
-    return OK;
-}
-
-int xmlstruct::load_stringa(zip_file_t *f, WByteArray &str)
-{
-    WString tmp;
-    int flag;
-
-    flag = xmlstruct::load_stringa(f, tmp);
-    
-    str = tmp.toUtf8();
-
-    return flag;
-}
-
-int xmlstruct::readFile(zip_t *fileZip, WByteArray &arr,
+int xmlstruct::readFile(FileContainer *fileZip, WByteArray &arr,
                         cbool clear, const WString &path,
                         cbool closeZip)
 {
-    zip_file_t *file;
     void *data;
 
-    const size_t size = xmlstruct::sizeFile(fileZip, path);
+    const size_t size = fileZip->sizeOfFile(path);
 
     if(clear)
         arr.clear();
@@ -61,31 +26,31 @@ int xmlstruct::readFile(zip_t *fileZip, WByteArray &arr,
         return OK;
     }
 
-    file = zip_fopen(fileZip, path.toUtf8().constData(), 0);
-    if(file == nullptr)
+    FileReader &file = fileZip->getFileReader(path);
+    if(!file.isOk())
         return ERROR;
 
     data = WMalloc(size);
-    SOURCE_READ_GOTO(file, data, size);
+    if (file.readRaw(data, size) != size)
+        goto free_;
 
     arr.append((const char *)data, size);
 
     WFree(data);
-
-    zip_fclose(file);
+    fileZip->closeFileReader(file);
     if(closeZip)
-        zip_close(fileZip);
+        fileZip->close();
 
     return OK;
 
     free_:
-    zip_fclose(file);
+    fileZip->closeFileReader(file);
     if(closeZip)
-        zip_close(fileZip);
+        fileZip->close();
     return ERROR;
 }
 
-bool xmlstruct::manageMessage(const int res, std::function<void (const WString &)> showMessage)
+bool xmlstruct::manageMessage(const int res, const std::function<void (const WString &)>& showMessage)
 {
     switch (res) {
         case OK: return true;
@@ -119,45 +84,6 @@ bool xmlstruct::manageMessage(const int res, std::function<void (const WString &
     return false;
 }
 
-int xmlstruct::load_multiplestring(zip_file_t *f, WListFast<WString> &lista, WListFast<int> &data)
-{
-    int i, lunghezza, temp;
-
-    SOURCE_READ_RETURN_SIZE(f, &lunghezza, sizeof(lunghezza));
-    if(!lunghezza)
-        return OK;
-
-
-    WString temp_;
-
-    for(i = 0; i < lunghezza; i++){
-        LOAD_STRINGA_RETURN(f, temp_);
-
-        lista.append(temp_);
-    }
-
-    for(i = 0; i < lunghezza; i++){
-        SOURCE_READ_RETURN_SIZE(f, &temp, sizeof(temp));
-
-        data.append(temp);
-    }
-
-    return OK;
-}
-
-unsigned char xmlstruct::controllOldVersion(zip_t *file)
-{
-    zip_file_t *tt;
-
-    tt = zip_fopen(file, "indice.xml", 0);
-    if(tt == nullptr){
-        return 0;
-    }
-    zip_fclose(tt);
-    zip_close(file);
-    return 1;
-}
-
 int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg)
 {
     int err;
@@ -167,27 +93,7 @@ int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool 
     WZipReaderSingle reader(&zip, xmlstruct::get_offset_start());
 
     switch (ver) {
-        case 0 ... 2:
-            err = load_file_2(reader);
-            break;
-        case 3:
-            err = load_file_3(reader);
-            break;
-        case 4:
-            err = load_file_4(reader);
-            break;
-        case 5:
-            err = load_file_5(reader, LoadPdf, LoadImg);
-            break;
-        case 6:
-            err = load_file_6(reader, LoadPdf, LoadImg);
-            break;
-        case 7:
-            err = load_file_7(reader, LoadPdf, LoadImg);
-            break;
-        case 8:
-            err = load_file_8(reader, LoadPdf, LoadImg);
-            break;
+
         default:
             std::abort();
     }
@@ -283,22 +189,6 @@ int load_audio(WByteArray &array, const WString &path)
     error = xmlstruct::readFile(zip.get_zip(), array, true, NAME_AUDIO, false);
 
     return error;
-}
-
-size_t  xmlstruct::sizeFile(zip_t *filezip, const char *namefile)
-{
-    struct zip_stat st;
-    zip_stat_init(&st);
-
-    /*
-     * Upon successful completion 0 is returned. Otherwise,
-     * -1 is returned and the error information in archive
-     * is set to indicate the error
-    */
-    if(zip_stat(filezip, namefile, ZIP_STAT_SIZE, &st) < 0)
-        return 0;
-
-    return st.size;
 }
 
 int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg)
