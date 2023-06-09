@@ -247,7 +247,7 @@ void DataStruct::removePointIndex(
     int i = pos.size() - 1;
 
     if (!__isOrder)
-        pos.order();
+        WAbstractList::sort(pos);
 
     W_ASSERT(pos.isOrder());
 

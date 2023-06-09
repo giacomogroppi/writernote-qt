@@ -496,7 +496,7 @@ int RubberMethod::touchEnd(const PointF&, Document &doc )
                 index_mod = i + _base;
             }
 
-            arr.order();
+            WAbstractList::sort(arr);
 
             const auto rect = doc.getSizeArea(arr, i + _base);
             page.removeAndDraw(-1, arr, rect);

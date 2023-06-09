@@ -72,6 +72,8 @@ public:
     [[nodiscard]] auto cEnd()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
     [[nodiscard]] auto begin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
     [[nodiscard]] auto end()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
+
+    friend bool operator<(const WString &first, const WString &second);
 };
 
 inline int WString::size() const
@@ -230,6 +232,18 @@ inline WString WString::arg(const WString &arg) const
 inline bool WString::operator!=(const WString &other) const
 {
     return !(*this == other);
+}
+
+inline bool operator<(const WString &first, const WString &second)
+{
+    int i;
+    for (i = 0; i < first.size() and i < second.size(); i++) {
+        if (first.at(i) > second.at(i))
+            return false;
+    }
+    if (first.size() < second.size())
+        return true;
+    return false;
 }
 
 inline WString operator+(const char *s1, const WString &s2)

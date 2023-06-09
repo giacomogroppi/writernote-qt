@@ -7,6 +7,7 @@
 
 #include "WByteArray.h"
 #include "FileInstance.h"
+#include <memory>
 
 class FileReader: public FileInstance {
     std::shared_ptr<const WByteArray> _data;

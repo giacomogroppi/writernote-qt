@@ -221,10 +221,10 @@ size_t Page::get_size_in_file(cbool saveImg) const
 void Page::removeAt(const WVector<int> &pos)
 {
     int i;
-    if(!pos.isOrder()){
+    if(!WAbstractList::isSorted(pos)){
         DO_IF_DEBUG(std::abort());
         auto &vec = (WVector<int> &)pos;
-        vec.order();
+        WAbstractList::sort(vec);
     }
 
     i = pos.size();

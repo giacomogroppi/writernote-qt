@@ -8,9 +8,46 @@
 #include <iostream>
 #include "utils/WCommonScript.h"
 #include "testing/memtest.h"
+#include "WAbstractList.h"
+
+/*
 
 template <class T>
-class WVector {
+class WVectorIterator {
+private:
+    T *array;
+    int index;
+public:
+    explicit WVectorIterator(T *data) : array(data), index(0) {; };
+
+    T* operator->()         { return array[index]; };
+    T &operator*() const    { return array[index]; };
+    constexpr bool operator==(WVectorIterator i) const         { return index == i.index; }
+    constexpr bool operator!=(WVectorIterator i) const         { return index != i.index; }
+    WVectorIterator &operator++()                              { index ++; return *this; }
+    WVectorIterator operator++(int) { auto copy = *this; ++*this; return copy; }
+};
+
+template <class T>
+class WVectorConstIterator {
+private:
+    const T *array;
+    int index;
+public:
+    explicit WVectorConstIterator(const T *data) : array(data), index(0) {  };
+
+    const T* operator->() const   { return array[index]; };
+    const T &operator*() const    { return array[index]; };
+    constexpr bool operator==(WVectorConstIterator i) const         { return index == i.index; }
+    constexpr bool operator!=(WVectorConstIterator i) const         { return index != i.index; }
+    WVectorConstIterator &operator++()                              { index ++; return *this; }
+    WVectorConstIterator operator++(int) { auto copy = *this; ++*this; return copy; }
+};
+*/
+
+template <class T>
+class WVector
+{
 private:
     /*
     T *_data;
@@ -30,6 +67,9 @@ public:
     WVector(WVector<T> &&other) noexcept;
     ~WVector();
 
+    using const_iterator = std::vector<T>::const_iterator;
+    using iterator = std::vector<T>::iterator;
+
     void append(const WVector<T> &other);
 
     void append(const T &item);
@@ -47,8 +87,6 @@ public:
     const T& first() const;
     T& operator[](int index);
     bool isEmpty() const;
-    bool isOrder() const;
-    void order();
 
     void insert(int index, T &&data);
     void insert(int index, const T& data);
@@ -62,43 +100,13 @@ public:
     bool operator==(const WVector<T> &other) const;
     bool operator!=(const WVector<T> &other) const;
 
-    class iterator{
-    private:
-        T *array;
-        int index;
-    public:
-        explicit iterator(T *data) : array(data), index(0) {; };
+    iterator begin()    noexcept { return _data.begin(); }
+    iterator end()      noexcept { return _data.end(); }
 
-        T* operator->()         { return array[index]; };
-        T &operator*() const    { return array[index]; };
-        constexpr bool operator==(iterator i) const         { return index == i.index; }
-        constexpr bool operator!=(iterator i) const         { return index != i.index; }
-        iterator &operator++()                              { index ++; return *this; }
-        iterator operator++(int) { auto copy = *this; ++*this; return copy; }
-    };
-
-    class const_iterator{
-    private:
-        const T *array;
-        int index;
-    public:
-        explicit const_iterator(const T *data) : array(data), index(0) {  };
-
-        const T* operator->() const   { return array[index]; };
-        const T &operator*() const    { return array[index]; };
-        constexpr bool operator==(const_iterator i) const         { return index == i.index; }
-        constexpr bool operator!=(const_iterator i) const         { return index != i.index; }
-        const_iterator &operator++()                              { index ++; return *this; }
-        const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
-    };
-
-    auto begin()    noexcept { return _data.begin(); }
-    auto end()      noexcept { return _data.end(); }
-
-    auto constBegin()   const noexcept { return _data.cbegin(); }
-    auto constEnd()     const noexcept { return _data.cend(); }
-    auto begin()        const noexcept { return _data.cbegin(); }
-    auto end()          const noexcept { return _data.cend(); }
+    const_iterator constBegin()   const noexcept { return _data.cbegin(); }
+    const_iterator constEnd()     const noexcept { return _data.cend(); }
+    const_iterator begin()        const noexcept { return _data.cbegin(); }
+    const_iterator end()          const noexcept { return _data.cend(); }
     /*
     iterator begin() noexcept { test(); return iterator(this->_data); };
     iterator end()   noexcept { test(); return iterator(nullptr);  };
@@ -111,6 +119,20 @@ public:
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
      */
 };
+
+template<class T>
+inline WVector<T> &WVector<T>::operator=(const WVector<T> &other)
+{
+    _data = other._data;
+    return *this;
+}
+
+template <class T>
+inline WVector<T> &WVector<T>::operator=(WVector<T> &&other) noexcept
+{
+    _data = std::move(other._data);
+    return *this;
+}
 
 template<class T>
 inline T WVector<T>::takeAt(int i)
@@ -141,19 +163,6 @@ inline void WVector<T>::insert(int index, const T &data)
             _data.begin() + index,
             data
     );
-}
-
-template<class T>
-inline void WVector<T>::order()
-{
-    std::sort(_data.begin(), _data.end());
-    for (int i = 0; i < size(); i++) {
-        for (int j = 0; j < i; j++) {
-            if (at(j) > at(i)) {
-                this->move(i, j);
-            }
-        }
-    }
 }
 
 template<class T>
@@ -302,18 +311,6 @@ inline bool WVector<T>::operator!=(const WVector<T> &other) const
 }
 
 template<class T>
-inline bool WVector<T>::isOrder() const
-{
-    for (auto i = 0; i < size() - 1; i++) {
-        if (get(i) < get(i + 1)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-template<class T>
 inline const T &WVector<T>::last() const
 {
     return get(size() - 1);
@@ -440,6 +437,5 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WVector<T> &p)
     return d.space();
 }
 #endif // USE_QT
-
 
 #endif //WRITERNOTE_WVECTOR_H

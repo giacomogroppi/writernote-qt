@@ -9,11 +9,13 @@
 #include <algorithm>
 #include <utility>
 #include "utils/WCommonScript.h"
+#include "WAbstractList.h"
 
 // do some refactoring
 // this list if O(1) in index access
 template <class T>
-class WListFast {
+class WListFast
+{
 private:
     void test() const;
 
@@ -41,13 +43,9 @@ public:
     void remove(int from, int to);
     void remove(const T &item);
 
-    constexpr bool isEmpty() const;
-    constexpr int size() const;
+    [[nodiscard]] constexpr bool isEmpty() const;
+    [[nodiscard]] constexpr int size() const;
     const T& first() const;
-    bool isOrder() const;
-
-    template<typename Func>
-    bool isOrder(Func func) const;
 
     void clear();
     void move(int, int);
@@ -74,7 +72,8 @@ public:
         return false;
     }
 
-    class iterator{
+    class iterator
+    {
     private:
         T ** _array;
         int _index;
@@ -88,9 +87,11 @@ public:
         iterator &operator++()                              { _index ++; return *this; }
         iterator operator++(int) { auto copy = *this; ++*this; return copy; }
         iterator operator+(int i) const { return iterator(_array, _index + i); }
+        iterator operator-(int i) const { return iterator(_array, _index - i); };
     };
 
-    class const_iterator{
+    class const_iterator
+    {
     private:
         const T ** _array;
         int _index;
@@ -116,17 +117,15 @@ public:
         const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
-    iterator begin() noexcept { return iterator((T **)_data, 0); };
-    iterator end()   noexcept { return iterator((T **)_data, size());  };
+    [[nodiscard]] iterator begin() noexcept { return iterator((T **)_data, 0); };
+    [[nodiscard]] iterator end()   noexcept { return iterator((T **)_data, size());  };
 
-    const_iterator constBegin() const noexcept {
-        return const_iterator((const T **)_data, 0);
-    }
-    const_iterator constEnd()   const noexcept { return const_iterator((const T **)_data, size()); }
-    const_iterator cBegin() const noexcept { return const_iterator((const T **)_data, 0); }
-    const_iterator cEnd()   const noexcept { return const_iterator((const T **)_data, size()); }
-    const_iterator begin() const noexcept { return const_iterator((const T **)_data, 0); }
-    const_iterator end()   const noexcept { return const_iterator((const T **)_data, size()); }
+    [[nodiscard]] const_iterator constBegin() const noexcept { return const_iterator((const T **)_data, 0); }
+    [[nodiscard]] const_iterator constEnd()   const noexcept { return const_iterator((const T **)_data, size()); }
+    [[nodiscard]] const_iterator cBegin() const noexcept { return const_iterator((const T **)_data, 0); }
+    [[nodiscard]] const_iterator cEnd()   const noexcept { return const_iterator((const T **)_data, size()); }
+    [[nodiscard]] const_iterator begin() const noexcept { return const_iterator((const T **)_data, 0); }
+    [[nodiscard]] const_iterator end()   const noexcept { return const_iterator((const T **)_data, size()); }
 };
 
 template<class T>
@@ -367,16 +366,6 @@ inline void WListFast<T>::clear()
 {
     *this = WListFast<T>();
     test();
-}
-
-template<class T>
-inline bool WListFast<T>::isOrder() const
-{
-    for (int i = 0; i < size() - 1; i++) {
-        if (at(i) < at(i + 1))
-            return false;
-    }
-    return true;
 }
 
 template<class T>
