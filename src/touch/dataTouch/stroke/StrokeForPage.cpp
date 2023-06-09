@@ -204,3 +204,11 @@ StrokeForPage::StrokeForPage(StrokeForPage &&other) noexcept
     , _needToUpdate(other._needToUpdate)
 {
 }
+
+StrokeForPage &StrokeForPage::operator=(StrokeForPage &&other) noexcept
+{
+    this->_data = std::move(other._data);
+    this->_pix = std::move(other._pix);
+    this->_needToUpdate = other._needToUpdate;
+    return *this;
+}

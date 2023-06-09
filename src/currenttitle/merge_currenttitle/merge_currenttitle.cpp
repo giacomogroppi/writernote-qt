@@ -13,12 +13,8 @@ merge_currenttitle::n_merge merge_currenttitle::controll(
 
 merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document *second, n_audio audio)
 {
-    Document current_first;
-    Document current_second;
-
-    Document::copy(current_first, *first);
-    Document::copy(current_second, *second);
-
+    Document current_first(*first);
+    Document current_second(*second);
 
     if(controll(first, second) != n_merge::ok)
         return n_merge::internal_error;

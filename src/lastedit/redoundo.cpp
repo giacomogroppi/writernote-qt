@@ -45,7 +45,7 @@ void redoundo::redo()
         return;
     }
 
-    Document::copy(*this->m_list.operator[](indice + 1), *_getDoc());
+    *_getDoc() = *m_list.at(indice + 1);
 
     indice ++;
 }
@@ -56,7 +56,7 @@ void redoundo::undo()
     if(indice == 0)
         return;
 
-    Document::copy(*this->m_list.operator[](indice-1), *_getDoc());
+    *_getDoc() = *m_list.at(indice - 1);
 
     indice --;
 }
@@ -64,12 +64,12 @@ void redoundo::undo()
 void redoundo::copy()
 {
     if (indice < max) {
-        Document::copy(*_getDoc(), *m_list.operator[](indice));
+        *m_list.operator[](indice) = *_getDoc();
         this->indice ++;
         return;
     }
 
     Document *point = this->m_list.takeFirst();
     append(point);
-    Document::copy(*_getDoc(), *m_list.operator[](indice-1));
+    *m_list.operator[](indice - 1) = *_getDoc();
 }

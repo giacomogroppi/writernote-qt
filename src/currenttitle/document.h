@@ -38,8 +38,9 @@ public:
     n_audio_record se_registato = n_audio_record::not_record;
     WByteArray audio_data;
 
-    Document();
-    Document(const Document &);
+    Document () noexcept;
+    Document (const Document &other) noexcept;
+    Document (Document &&other) noexcept;
     virtual ~Document();
 
     void controllForRepositioning();
@@ -49,7 +50,8 @@ public:
     void scala_all(const PointF& delta, double heightView) override;
     void repositioning();
 
-    static void copy(const Document &src, Document &dest);
+    Document &operator=(const Document &other) noexcept;
+    Document &operator=(Document &&other) noexcept;
 };
 
 force_inline bool Document::isEmpty() const

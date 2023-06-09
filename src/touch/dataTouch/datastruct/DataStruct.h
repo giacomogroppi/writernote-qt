@@ -37,6 +37,8 @@ private:
     void __changeId(int indexPoint, Stroke &stroke, Page &page, cbool useThreadSafe);
 public:
     DataStruct();
+    DataStruct(const DataStruct &other) noexcept;
+    DataStruct(DataStruct &&other) noexcept;
     ~DataStruct() = default;
 
     void triggerNewView(const WListFast<int> &Page, int m_pos_ris, bool all);
@@ -141,11 +143,13 @@ public:
     void insertPage(const Page &Page, int index);
 
     [[nodiscard]] static bool isOkZoom(double newPossibleZoom);
-    static void copy(const DataStruct &src, DataStruct &dest);
     static force_inline void inverso(PointF &point) {point *= -1.0;};
     static PointF inverso(const PointF &point) { return point * -1; };
     static RectF joinRect(const RectF &first, const RectF &second);
     static Rect get_bigger_rect(const Rect &first, const Rect &second);
+
+    DataStruct &operator=(const DataStruct &other) noexcept;
+    DataStruct &operator=(DataStruct &&other) noexcept;
 
 #   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
     static void MovePoint(WList<Stroke> &stroke, const PointF &translation, int flag);

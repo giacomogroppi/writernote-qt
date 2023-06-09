@@ -6,7 +6,7 @@
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
-Document::Document() : DataStruct(),
+Document::Document() noexcept : DataStruct(),
 #ifdef PDFSUPPORT
                         frompdf(),
 #endif // PDFSUPPORT
@@ -14,14 +14,16 @@ Document::Document() : DataStruct(),
 {
 }
 
-Document::Document(const Document &src)
+Document::Document(const Document &src) noexcept
+    : DataStruct(src)
+    , fromimage(src)
+#ifdef PDFSUPPORT
+    , frompdf(src)
+#endif // PDFSUPPORT
 {
-    Document::copy(src, *this);
 }
 
-Document::~Document()
-{
-}
+Document::~Document() = default;
 
 void Document::scala_all(const PointF &delta, double heightView)
 {
@@ -42,17 +44,19 @@ void Document::repositioning()
     Document::scala_all(point, INT_MAX);
 }
 
+/*
 void Document::copy(const Document &src, Document &dest)
 {
     dest.audio_position_path = src.audio_position_path;
 
-    DataStruct::copy(src, dest);
+    static_cast<DataStruct &>(dest) = static_cast<const DataStruct &> (src);
 #ifdef PDFSUPPORT
     frompdf::copy_pdf(src, dest);
 #endif //PDFSUPPORT
     fromimage::copy_img(src, dest);
     dest.se_registato = src.se_registato;
 }
+*/
 
 size_t Document::createSingleControll() const
 {
@@ -133,4 +137,43 @@ void Document::controllForRepositioning()
     PointF res;
     DataStruct::controllForRepositioning(res);
     Document::scala_all(res, INT_MAX);
+}
+
+Document::Document(Document &&other) noexcept
+    : DataStruct(std::move (other))
+    , fromimage(std::move (other))
+#ifdef PDFSUPPORT
+    , frompdf(std::move(other))
+#endif // PDFSUPPORT
+{
+
+}
+
+Document &Document::operator=(const Document &other) noexcept
+{
+    if (this == &other)
+        return *this;
+    DataStruct::operator=(other);
+    fromimage::operator=(other);
+
+#ifdef PDFSUPPORT
+    frompdf::operator=(other);
+#endif // PDFSUPPORT
+
+    return *this;
+}
+
+Document &Document::operator=(Document &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    DataStruct::operator=(std::move(static_cast<DataStruct&>(other)));
+    fromimage::operator=(std::move(static_cast<fromimage &>(other)));
+
+#ifdef PDFSUPPORT
+    frompdf::operator=(std::move(static_cast<frompdf&>(other)));
+#endif // PDFSUPPORT
+
+    return *this;
 }

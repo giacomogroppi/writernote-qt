@@ -77,36 +77,6 @@ void DataStruct::reset_touch()
     _zoom = 1.;
 }
 
-// TODO: remove this method
-void DataStruct::copy(const DataStruct &src, DataStruct &dest)
-{
-    int i;
-    const int len = src.lengthPage();
-    int diff = len - dest.lengthPage();
-
-    if(diff > 0){
-        for(i = 0; i < diff; i++){
-            dest.newPage(n_style::white);
-        }
-    } else if(diff != 0){
-        i = - diff - 1;
-
-        for(; i >= 0; i--){
-            dest.removePage(i);
-        }
-    }
-
-    for(i = 0; i < len; i++){
-        dest._page.operator[](i) = src._page.at(i);
-    }
-
-    dest._zoom = src._zoom;
-    dest._pageVisible = src._pageVisible;
-    dest._pointFirstPage = src._pointFirstPage;
-
-    dest._last_translation = src._last_translation;
-}
-
 /*
  * la funzione controlla che non si sia delle parti
  * del pixmap fuori dal foglio, in caso scala tutto
@@ -391,4 +361,57 @@ bool DataStruct::userWrittenSomething(const DataStruct &data1, const DataStruct 
     }
 
     return false;
+}
+
+DataStruct &DataStruct::operator=(const DataStruct &other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    this->_pageVisible = other._pageVisible;
+    this->_zoom = other._zoom;
+    this->_last_translation = other._last_translation;
+    this->_page = other._page;
+    this->_pointFirstPage = other._pointFirstPage;
+
+    W_ASSERT(*this == other);
+
+    return *this;
+}
+
+DataStruct &DataStruct::operator=(DataStruct &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    this->_pageVisible = other._pageVisible;
+    this->_zoom = other._zoom;
+    this->_last_translation = other._last_translation;
+    this->_page = std::move(other._page);
+    this->_pointFirstPage = other._pointFirstPage;
+
+    other.reset_touch();
+
+    W_ASSERT(other.isEmptyTouch());
+
+    return *this;
+}
+
+DataStruct::DataStruct(DataStruct &&other) noexcept
+    : _last_translation(other._last_translation)
+    , _page(std::move (other._page))
+    , _pointFirstPage(other._pointFirstPage)
+    , _zoom(other._zoom)
+    , _pageVisible(other._pageVisible)
+{
+    other.reset_touch();
+}
+
+DataStruct::DataStruct(const DataStruct &other) noexcept
+    : _last_translation(other._last_translation)
+    , _page(other._page)
+    , _pointFirstPage(other._pointFirstPage)
+    , _zoom(other._zoom)
+    , _pageVisible(other._pageVisible)
+{
 }

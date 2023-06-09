@@ -38,6 +38,8 @@ public:
     [[nodiscard]] int addImage(const WString &pos, const PointSettable *point, const WString &writernote_file);
 
     explicit fromimage();
+    fromimage (const fromimage &other) noexcept;
+    fromimage (fromimage &&other) noexcept;
 
     [[nodiscard]] int length_img() const { return m_img.size(); };
     [[nodiscard]] fromimage::load_res_img load_img(WZipReaderSingle &zip, int len);
@@ -57,6 +59,9 @@ public:
 
     void reset_img();
     [[nodiscard]] size_t get_size_file_img() const;
+
+    fromimage &operator=(const fromimage &other) noexcept;
+    fromimage &operator=(fromimage &&other) noexcept;
 
 private:
     static load_res_img get_img_bytearray(WByteArray &arr, const WString &path) ;

@@ -43,6 +43,7 @@ public:
     void reset();
 
     StrokeForPage &operator=(const StrokeForPage &other);
+    StrokeForPage &operator=(StrokeForPage &&other) noexcept;
 
     friend class page_file;
     friend class Page;
