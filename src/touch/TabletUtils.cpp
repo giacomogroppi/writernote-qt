@@ -96,7 +96,7 @@ void TabletUtils::load()
         //singleLoad(getPainter(), img, sizeRect, PointFirstPage, counterPage, _doc.getZoom());
     }
 
-    _doc.draw_img(getPainter());
+    _doc.drawImage(getPainter());
 
     /* stroke not already add to page */
     drawSingleStroke(strokeToDraw, getPainter(), _pen, zoom * _m, _doc.getPointFirstPageNoZoom());

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
-#include "core/FileContainer.h"
-#include "core/FileWriter.h"
+#include "FileContainer/FileContainer.h"
+#include "FileContainer/FileWriter.h"
 
 class WZipWriter {
 private:

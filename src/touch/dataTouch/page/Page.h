@@ -1,12 +1,11 @@
 #pragma once
 
 #include "core/WMutex.h"
-#include "core/WZipWriterSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
 #include "core/core.h"
 #include "touch/dataTouch/stroke/Stroke.h"
 #include "utils/common_def.h"
 #include "utils/WCommonScript.h"
-#include "core/WZipReaderSingle.h"
 #include <pthread.h>
 #include <memory>
 #include "core/WImage.h"

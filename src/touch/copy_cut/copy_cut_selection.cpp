@@ -22,15 +22,14 @@ void copy::managePaste(
         DataStruct      &data,
         const PointF   &pointTouch)
 {
-    PointF tmp = pointTouch;
+    PointF tmp = pointTouch * -1.;
 
-    DataStruct::inverso(tmp);
     this->adjustData(tmp);
 
     data.append(this->m_stroke, -1);
 
     if(this->isSomeThingCopy()){
-        DataStruct::inverso(tmp);
+        tmp *= -1.;
         this->adjustData(tmp);
     }
 }
@@ -130,9 +129,9 @@ int copy::selection(
 void copy::adjustData(const PointF &offset)
 {
     using namespace WCommonScript;
-    const PointF &inverso = DataStruct::inverso(offset);
+    const PointF &inverso = offset * -1.;
 
-    for_each(this->m_stroke, [&inverso](std::shared_ptr<Stroke> d) {
+    for_each(this->m_stroke, [&inverso](const std::shared_ptr<Stroke>& d) {
         d->scale(inverso);
     });
 }

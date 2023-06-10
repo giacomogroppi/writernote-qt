@@ -14,9 +14,9 @@ std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
 
     if(ok) *ok = OK;
 
-    if(reader.read_object(len_point) < 0)
+    if(reader.readObject(len_point) < 0)
         manage_err(s);
-    if(reader.read_object(s->_metadata) < 0)
+    if(reader.readObject(s->_metadata) < 0)
         manage_err(s);
 
     const auto res = s->load_ver_1(reader, len_point);
@@ -42,9 +42,9 @@ std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
 
     static_assert(sizeof(_metadata) == 8);
 
-    if(reader.read_by_size(&meta, sizeof(meta)) < 0)
+    if(reader.readBySize(&meta, sizeof(meta)) < 0)
         ver_2_manage_error(ok);
-    if(reader.read_object(type) < 0)
+    if(reader.readObject(type) < 0)
         ver_2_manage_error(ok);
 
     switch (type) {

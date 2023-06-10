@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/WZip.h"
+#include "FileContainer/WZip.h"
 #include "utils/WCommonScript.h"
 
 class WZipReaderSingle
@@ -14,28 +14,28 @@ public:
     ~WZipReaderSingle() = default;
 
     [[nodiscard]] const void* read(size_t size);
-    [[nodiscard]] int read_string(WString &str);
-    [[nodiscard]] int read_by_size(void *to, size_t size);
+    [[nodiscard]] int readString(WString &str);
+    [[nodiscard]] int readBySize(void *to, size_t size);
 
     template <class T>
-    [[nodiscard]] int read_object(T &object);
+    [[nodiscard]] int readObject(T &object);
 
-    [[nodiscard]] size_t get_offset() const;
+    [[nodiscard]] size_t getOffset() const;
 
     void init(WZip *zip, size_t offset);
 
-    [[nodiscard]] bool is_data_available() const;
+    [[nodiscard]] bool isDataAvailable() const;
 
-    WZip *get_zip();
+    WZip *getZip();
 };
 
-inline bool WZipReaderSingle::is_data_available() const
+inline bool WZipReaderSingle::isDataAvailable() const
 {
     W_ASSERT(_zip);
     return _zip->is_data_available();
 }
 
-inline WZip *WZipReaderSingle::get_zip()
+inline WZip *WZipReaderSingle::getZip()
 {
     W_ASSERT(_zip);
     return this->_zip;
@@ -60,12 +60,12 @@ inline const void *WZipReaderSingle::read(size_t size)
     return ret;
 }
 
-inline size_t WZipReaderSingle::get_offset() const
+inline size_t WZipReaderSingle::getOffset() const
 {
     return this->offset;
 }
 
-inline int WZipReaderSingle::read_by_size(void *to, size_t size)
+inline int WZipReaderSingle::readBySize(void *to, size_t size)
 {
     DO_IF_DEBUG(
     const auto off = this->offset;
@@ -88,19 +88,19 @@ inline int WZipReaderSingle::read_by_size(void *to, size_t size)
 }
 
 template <class T>
-inline int WZipReaderSingle::read_object(T &object)
+inline int WZipReaderSingle::readObject(T &object)
 {
-    return this->read_by_size(&object, sizeof(object));
+    return this->readBySize(&object, sizeof(object));
 }
 
-inline int WZipReaderSingle::read_string(WString &str)
+inline int WZipReaderSingle::readString(WString &str)
 {
     int l;
-    if(this->read_object(l))
+    if(this->readObject(l))
         return -1;
 
     char tmp[l];
-    if(l and this->read_by_size(tmp, l))
+    if(l and this->readBySize(tmp, l))
         return -1;
     str = WString::fromUtf8(tmp, l);
 

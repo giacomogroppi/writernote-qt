@@ -10,7 +10,7 @@
 #include "core/WListFast.h"
 
 class frompdf;
-class fromimage;
+class ImageContainerDrawable;
 
 class DataStruct
 {
@@ -117,15 +117,17 @@ public:
 
     [[deprecated("Legacy function, to be removed")]]
     [[nodiscard]] Point at_draw_page(cint indexPoint, const Page &Page) const;
-    [[deprecated("Logacy function, to be removed")]]
+    [[deprecated("Legacy function, to be removed")]]
     static Point at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom);
 
     __fast [[nodiscard]] const Page &     lastPage() const;
 
-    [[nodiscard]] int lengthPage() const{ return _page.size(); }
+    [[nodiscard]]
+    int lengthPage() const{ return _page.size(); }
     void newPage(n_style style);
 
-    [[nodiscard]] PointF get_size_page() const{ return {Page::getWidth(), Page::getHeight()}; }
+    [[nodiscard]]
+    PointF get_size_page() const{ return {Page::getWidth(), Page::getHeight()}; }
 
     __fast [[nodiscard]] RectF getSizeArea(const WVector<int> &pos, int page) const;
     __fast [[nodiscard]] RectF get_size_area(const WListFast<WVector<int>> &pos, int base) const;
@@ -143,13 +145,13 @@ public:
     void insertPage(const Page &Page, int index);
 
     [[nodiscard]] static bool isOkZoom(double newPossibleZoom);
-    static force_inline void inverso(PointF &point) {point *= -1.0;};
-    static PointF inverso(const PointF &point) { return point * -1; };
     static RectF joinRect(const RectF &first, const RectF &second);
     static Rect get_bigger_rect(const Rect &first, const Rect &second);
 
     DataStruct &operator=(const DataStruct &other) noexcept;
     DataStruct &operator=(DataStruct &&other) noexcept;
+
+    bool operator==(const DataStruct &other) const;
 
 #   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
     static void MovePoint(WList<Stroke> &stroke, const PointF &translation, int flag);

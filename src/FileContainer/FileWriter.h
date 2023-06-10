@@ -6,7 +6,7 @@
 #define TESTING_QML_FILEWRITER_H
 
 #include "FileInstance.h"
-#include "WString.h"
+#include "core/WString.h"
 
 class FileWriter: public FileInstance {
 public:

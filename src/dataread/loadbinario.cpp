@@ -2,7 +2,7 @@
 #include "currenttitle/document.h"
 #include "utils/WCommonScript.h"
 #include "core/WReadZip.h"
-#include "core/WZipReaderSingle.h"
+#include "FileContainer/WZipReaderSingle.h"
 #include <pthread.h>
 #include "utils/common_error_definition.h"
 #include "sheet/style_struct.h"
@@ -14,7 +14,7 @@ static int load_point_first_page(WZipReaderSingle &zip, DataStruct &doc)
 
     static_assert(sizeof(init) == sizeof(double) * 2);
 
-    if(zip.read_by_size(init, sizeof(init)) < 0)
+    if(zip.readBySize(init, sizeof(init)) < 0)
         return -1;
 
     doc.setPointFirstPage(PointF(init[0], init[1]));
@@ -27,7 +27,7 @@ static int read_number_page(WZipReaderSingle &zip, int &len)
     /* page len */
     static_assert(sizeof(len) == sizeof(int));
 
-    if(zip.read_object(len) < 0)
+    if(zip.readObject(len) < 0)
         return -1;
 
     W_ASSERT(len > 0);
@@ -39,7 +39,7 @@ static int read_zoom(WZipReaderSingle &zip, double &zoom)
 {
     static_assert(sizeof(zoom) == sizeof(double));
 
-    if(zip.read_object(zoom) < 0)
+    if(zip.readObject(zoom) < 0)
         return -1;
 
     return 0;
@@ -48,7 +48,7 @@ static int read_zoom(WZipReaderSingle &zip, double &zoom)
 static int read_ctrl(WZipReaderSingle &zip, size_t &ctrl)
 {
     static_assert(sizeof(ctrl) == sizeof(size_t));
-    if(zip.read_object(ctrl) < 0)
+    if(zip.readObject(ctrl) < 0)
         return -1;
     return 0;
 }
@@ -145,7 +145,7 @@ int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
 
     size_t seek[lenPage];
 
-    if(reader.read_by_size(seek, sizeof(size_t) * lenPage))
+    if(reader.readBySize(seek, sizeof(size_t) * lenPage))
         MANAGE_ERR();
 
     if(xmlstruct_create_thread(zip, lenPage, seek, _doc, ver_stroke) < 0)

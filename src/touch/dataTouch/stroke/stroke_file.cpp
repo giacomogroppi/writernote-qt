@@ -2,7 +2,7 @@
 #include "touch/dataTouch/stroke/Stroke.h"
 #include "currenttitle/document.h"
 #include "core/WReadZip.h"
-#include "core/WZipWriterSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
 #include "datawrite/source_read_ext.h"
 
 #define stroke_file_size_len 4

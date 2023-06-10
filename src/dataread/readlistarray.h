@@ -3,7 +3,7 @@
 #include "core/WByteArray.h"
 #include "core/WList.h"
 #include "utils/common_error_definition.h"
-#include "core/WZip.h"
+#include "FileContainer/WZip.h"
 #include "core/WString.h"
 #include "core/WListFast.h"
 

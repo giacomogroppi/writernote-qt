@@ -6,29 +6,23 @@
 #include "frompdf/frompdf.h"
 #include "images/fromimage.h"
 
-Document::Document() noexcept : DataStruct(),
+Document::Document() noexcept
+    : DataStruct()
 #ifdef PDFSUPPORT
-                        frompdf(),
+    , frompdf()
 #endif // PDFSUPPORT
-                       fromimage()
+    , ImageContainerDrawable()
 {
 }
 
-Document::Document(const Document &src) noexcept
-    : DataStruct(src)
-    , fromimage(src)
-#ifdef PDFSUPPORT
-    , frompdf(src)
-#endif // PDFSUPPORT
-{
-}
+Document::Document(const Document &src) noexcept = default;
 
 Document::~Document() = default;
 
 void Document::scala_all(const PointF &delta, double heightView)
 {
     DataStruct::scala_all(delta, heightView);
-    fromimage::move_img(delta);
+    ImageContainerDrawable::moveImage(delta);
 #ifdef PDFSUPPORT
     frompdf::translation_pdf(delta);
 #endif // PDFSUPPORT
@@ -47,14 +41,14 @@ void Document::repositioning()
 /*
 void Document::copy(const Document &src, Document &dest)
 {
-    dest.audio_position_path = src.audio_position_path;
+    dest._audioPositionPath = src._audioPositionPath;
 
     static_cast<DataStruct &>(dest) = static_cast<const DataStruct &> (src);
 #ifdef PDFSUPPORT
     frompdf::copy_pdf(src, dest);
 #endif //PDFSUPPORT
-    fromimage::copy_img(src, dest);
-    dest.se_registato = src.se_registato;
+    ImageContainerDrawable::copy_img(src, dest);
+    dest._audioRecordStatus = src._audioRecordStatus;
 }
 */
 
@@ -79,10 +73,10 @@ size_t Document::createSingleControll() const
 
 void Document::reset()
 {
-    this->se_registato = Document::not_record;
-    this->audio_position_path = "";
+    this->_audioRecordStatus = Document::not_record;
+    this->_audioPositionPath = "";
 
-    this->audio_data.clear();
+    this->_audioRawData.clear();
 
     reset_touch();
 #ifdef PDFSUPPORT
@@ -104,7 +98,7 @@ void Document::cleanAudio()
         }
     }
 
-    this->se_registato = Document::n_audio_record::not_record;
+    this->_audioRecordStatus = Document::AudioRecordStatus::not_record;
 }
 
 void Document::adjustHeight(cdouble height)
@@ -141,10 +135,13 @@ void Document::controllForRepositioning()
 
 Document::Document(Document &&other) noexcept
     : DataStruct(std::move (other))
-    , fromimage(std::move (other))
+    , ImageContainerDrawable(std::move (other))
 #ifdef PDFSUPPORT
     , frompdf(std::move(other))
 #endif // PDFSUPPORT
+    , _audioRecordStatus(other._audioRecordStatus)
+    , _audioRawData(std::move(other._audioRawData))
+    , _audioPositionPath(std::move(other._audioPositionPath))
 {
 
 }
@@ -154,7 +151,7 @@ Document &Document::operator=(const Document &other) noexcept
     if (this == &other)
         return *this;
     DataStruct::operator=(other);
-    fromimage::operator=(other);
+    ImageContainerDrawable::operator=(other);
 
 #ifdef PDFSUPPORT
     frompdf::operator=(other);
@@ -169,11 +166,47 @@ Document &Document::operator=(Document &&other) noexcept
         return *this;
 
     DataStruct::operator=(std::move(static_cast<DataStruct&>(other)));
-    fromimage::operator=(std::move(static_cast<fromimage &>(other)));
+    ImageContainerDrawable::operator=(std::move(static_cast<ImageContainerDrawable &>(other)));
 
 #ifdef PDFSUPPORT
     frompdf::operator=(std::move(static_cast<frompdf&>(other)));
 #endif // PDFSUPPORT
 
+    _audioRecordStatus = other._audioRecordStatus;
+    _audioRawData = std::move(other._audioRawData);
+    _audioPositionPath = std::move(other._audioPositionPath);
+
     return *this;
+}
+
+void Document::setAudioPath(const WString &path) noexcept
+{
+    this->_audioPositionPath = path;
+}
+
+void Document::setRecordStatus(Document::AudioRecordStatus status)
+{
+    this->_audioRecordStatus = status;
+}
+
+const WString &Document::getAudioPath() const
+{
+    // TODO: move this function in .h file
+    return this->_audioPositionPath;
+}
+
+bool Document::isRecorded() const
+{
+    return this->_audioRecordStatus != Document::AudioRecordStatus::not_record;
+}
+
+const WByteArray &Document::getAudioData() const
+{
+    // TODO: move this function in .h file
+    return this->_audioRawData;
+}
+
+Document::AudioRecordStatus Document::recordStatus() const
+{
+    return this->_audioRecordStatus;
 }

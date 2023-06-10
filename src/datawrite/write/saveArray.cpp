@@ -1,8 +1,8 @@
 #include "datawrite/savefile.h"
 #include "dataread/xmlstruct.h"
-#include "core/WZipWriter.h"
+#include "FileContainer/WZipWriter.h"
 #include "core/WFile.h"
-#include "core/WZipWriter.h"
+#include "FileContainer/WZipWriter.h"
 
 int savefile::moveFileIntoZip(
         const WByteArray    &pathFile,

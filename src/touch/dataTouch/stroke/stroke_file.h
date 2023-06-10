@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/WZipWriterSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
 #include "utils/WCommonScript.h"
 #include "utils/common_error_definition.h"
-#include "core/WZipReaderSingle.h"
+#include "FileContainer/WZipReaderSingle.h"
 
 class stroke_file
 {

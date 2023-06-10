@@ -2,7 +2,7 @@
 
 void WZipReaderSingle::init(WZip *zip, size_t offset)
 {
-    W_ASSERT(this->_zip == NULL);
+    W_ASSERT(this->_zip == nullptr);
     W_ASSERT(this->offset == 0);
     this->_zip = zip;
     this->offset = offset;

@@ -1,6 +1,6 @@
 #include "WZip.h"
 #include "testing/memtest.h"
-#include "core/WZipCommon.h"
+#include "FileContainer/WZipCommon.h"
 
 WZip::WZip(const WByteArray &path, bool &ok)
 {

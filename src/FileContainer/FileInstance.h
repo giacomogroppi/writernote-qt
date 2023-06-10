@@ -5,7 +5,7 @@
 #ifndef TESTING_QML_FILEINSTANCE_H
 #define TESTING_QML_FILEINSTANCE_H
 
-#include "WByteArray.h"
+#include "core/WByteArray.h"
 
 /**
  * Oggetto del file in un FileContainer.

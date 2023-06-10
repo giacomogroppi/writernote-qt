@@ -160,7 +160,7 @@ void DataStruct::restoreLastTranslation(const int heightView)
     if(_last_translation == PointF(0, 0))
         return;
 
-    DataStruct::inverso(_last_translation);
+    _last_translation *= -1;
 
     scala_all(_last_translation, heightView);
 
@@ -219,7 +219,7 @@ void DataStruct::removePointIndex(
     if (!__isOrder)
         WAbstractList::sort(pos);
 
-    W_ASSERT(pos.isOrder());
+    W_ASSERT(WAbstractList::isSorted(pos));
 
     for(; i >= 0; i --){
         page->removeAt(pos.at(i));

@@ -8,7 +8,7 @@
 #include "core/WListFast.h"
 #include "currenttitle/document.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"
-#include "core/WZip.h"
+#include "FileContainer/WZip.h"
 
 #define LOAD_MULTIPLESTRING(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) goto free_;
 #define LOAD_MULTIPLESTRING_RETURN(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) return ERROR;

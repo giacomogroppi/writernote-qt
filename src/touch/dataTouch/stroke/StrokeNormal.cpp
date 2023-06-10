@@ -57,7 +57,7 @@ int StrokeNormal::load_ver_1(WZipReaderSingle &reader, int len_point)
     PointF tmp;
 
     for(i = 0; i < len_point; i++){
-        if(reader.read_object(point) < 0)
+        if(reader.readObject(point) < 0)
             return ERROR;
 
         tmp = PointF(point._x, point._y);
@@ -77,21 +77,21 @@ int StrokeNormal::load_ver_2(WZipReaderSingle &reader)
     pressure_t tmp;
     PointF point_append;
 
-    if(reader.read_object(len_point) < 0)
+    if(reader.readObject(len_point) < 0)
         return ERROR;
-    if(reader.read_object(len_press) < 0)
+    if(reader.readObject(len_press) < 0)
         return ERROR;
 
     W_ASSERT(len_press <= len_point);
 
     for(i = 0; i < len_press; i++){
-        if(reader.read_object(tmp) < 0)
+        if(reader.readObject(tmp) < 0)
             return ERROR;
         _pressure.append(tmp);
     }
 
     for(i = 0; i < len_point; i++){
-        if(reader.read_object(point_append) < 0)
+        if(reader.readObject(point_append) < 0)
             return ERROR;
         _point.append(point_append);
     }

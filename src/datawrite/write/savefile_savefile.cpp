@@ -3,7 +3,7 @@
 #include "images/fromimage.h"
 #include "frompdf/frompdf.h"
 #include "currenttitle/document.h"
-#include "core/WZipCommon.h"
+#include "FileContainer/WZipCommon.h"
 
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
@@ -18,7 +18,7 @@ static size_t savefile_get_size_file(const Document *doc)
     s += sizeof(int);               // version
     s += sizeof(int);               // ver_stroke
     s += sizeof(int);               // audio
-    s += sizeof(int) + doc->audio_position_path.size();
+    s += sizeof(int) + doc->getAudioPath().size();
     s += sizeof(unsigned);          // len_img
     s += sizeof(unsigned);          // len_pdf
 
@@ -26,20 +26,20 @@ static size_t savefile_get_size_file(const Document *doc)
     s += doc->get_size_file_pdf();
 #endif // PDFSUPPORT
 
-    s += doc->get_size_file_img();
+    s += doc->getSizeFileImage();
     return s;
 }
 
-static void savefile_save_record_state(WZipWriterSingle &writer, Document *doc)
+static void savefile_save_record_state(WZipWriterSingle &writer, const Document &doc)
 {
-    int tmp = static_cast<int>(doc->se_registato);
+    int tmp = static_cast<int>(doc.recordStatus());
     writer.write_object(tmp);
 }
 
 int savefile::savefile_check_file(cbool saveImg)
 {
     int ver_stroke;
-    fromimage::load_res_img res_img;
+    ImageContainerDrawable::load_res_img res_img;
     WZipWriterSingle writer;
 
 #ifdef PDFSUPPORT
@@ -58,19 +58,19 @@ int savefile::savefile_check_file(cbool saveImg)
     writer.write_object((const int &)CURRENT_VERSION_CURRENT_TITLE);
     writer.write_object(ver_stroke);
 
-    savefile_save_record_state(writer, _doc);
+    savefile_save_record_state(writer, *_doc);
 
-    writer.write_string(_doc->audio_position_path.toUtf8().constData(), _doc->audio_position_path.size());
+    writer.write_string(_doc->getAudioPath().toUtf8().constData(), _doc->getAudioPath().size());
 
 #ifdef PDFSUPPORT
     writer.write_object(_doc->length_pdf());
 #else
     writer.write_object(static_cast<int>(0));
 #endif // PDFSUPPORT
-    writer.write_object(_doc->length_img());
+    writer.write_object(_doc->lengthImage());
 
-    res_img = _doc->save_metadata_img(writer);
-    if(res_img != fromimage::load_res_img::ok)
+    res_img = _doc->saveMetadataImage(writer);
+    if(res_img != ImageContainerDrawable::load_res_img::ok)
         return ERROR;
 
 #ifdef PDFSUPPORT

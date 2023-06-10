@@ -2,7 +2,7 @@
 
 #include "utils/common_error_definition.h"
 #include "utils/WCommonScript.h"
-#include "core/WZipWriter.h"
+#include "FileContainer/WZipWriter.h"
 #include "core/WByteArray.h"
 
 class Document;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/WZipWriterSingle.h"
-#include "core/WZipWriter.h"
+#include "FileContainer/WZipWriterSingle.h"
+#include "FileContainer/WZipWriter.h"
 
 class WZipWriterDataPrivate{
 private:

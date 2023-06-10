@@ -1,8 +1,8 @@
 #pragma once
 
 #include "StrokeNormal.h"
-#include "core/WZipReaderSingle.h"
-#include "core/WZipWriterSingle.h"
+#include "FileContainer/WZipReaderSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
 
 class StrokeNormalFileLoad {
 private:

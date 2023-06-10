@@ -4,8 +4,8 @@
 #include "datawrite/source_read_ext.h"
 #include "utils/common_error_definition.h"
 #include "testing/memtest.h"
-#include "core/WZip.h"
-#include "core/WZipReaderSingle.h"
+#include "FileContainer/WZip.h"
+#include "FileContainer/WZipReaderSingle.h"
 #include "log/log_ui/log_ui.h"
 #include <cassert>
 
@@ -122,7 +122,7 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
 
     {
         WZipReaderSingle reader(&zip, 0);
-        if(reader.read_object(tmp_ver) < 0)
+        if(reader.readObject(tmp_ver) < 0)
             return ERROR;
     }
 
@@ -196,29 +196,32 @@ int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadIm
     unsigned len_pdf, len_img;
     int ver_stroke;
     unsigned char controllo_parita = 0;
-    fromimage::load_res_img res_img;
+    ImageContainerDrawable::load_res_img res_img;
     WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
+    WString audioPath;
 
-    if(singleReader.read_object(ver_stroke))
+    if(singleReader.readObject(ver_stroke))
         return ERROR;
 
     {
         int tmp;
         static_assert(sizeof(tmp) == sizeof(int));
-        if(singleReader.read_object(tmp))
+        if(singleReader.readObject(tmp))
             return ERROR;
-        doc->se_registato = static_cast<Document::n_audio_record>(tmp);
+        doc->setRecordStatus(static_cast<Document::AudioRecordStatus>(tmp));
     }
 
-    if(singleReader.read_string(doc->audio_position_path))
+    if (singleReader.readString(audioPath))
         return ERROR;
 
-    if(singleReader.read_object(len_pdf) || singleReader.read_object(len_img))
+    doc->setAudioPath(audioPath);
+
+    if (singleReader.readObject(len_pdf) || singleReader.readObject(len_img))
         return ERROR;
 
-    if(LoadImg){
-        res_img = doc->load_img(singleReader, len_img);
-        if(res_img != fromimage::load_res_img::ok){
+    if (LoadImg) {
+        res_img = doc->loadImage(singleReader, len_img);
+        if(res_img != ImageContainerDrawable::load_res_img::ok){
             return ERROR;
         }
     }

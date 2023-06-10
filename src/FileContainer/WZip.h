@@ -3,7 +3,7 @@
 #include "utils/WCommonScript.h"
 #include "core/WString.h"
 #include "Scheduler/WObject.h"
-#include "WByteArray.h"
+#include "core/WByteArray.h"
 #include "FileContainer.h"
 
 class PrivateStatus{

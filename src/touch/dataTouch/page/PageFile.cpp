@@ -3,7 +3,7 @@
 #include "core/WReadZip.h"
 #include "datawrite/source_read_ext.h"
 #include "Page.h"
-#include "core/WZipWriterMulti.h"
+#include "FileContainer/WZipWriterMulti.h"
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 
@@ -17,7 +17,7 @@ int PageFile::load_ver_1(Page &_page, WZipReaderSingle &reader)
     constexpr int ver_stroke = 1;
     int i, len_stroke, err = OK;
 
-    if(reader.read_object(len_stroke) < 0)
+    if(reader.readObject(len_stroke) < 0)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
@@ -45,7 +45,7 @@ int PageFile::load_ver_2(Page &_page, WZipReaderSingle &reader)
     WByteArray arr;
     size_t size;
 
-    if(reader.read_object(len_stroke) < 0)
+    if(reader.readObject(len_stroke) < 0)
         return ERROR;
 
     for(i = 0; i < len_stroke; i++){
@@ -63,12 +63,12 @@ int PageFile::load_ver_2(Page &_page, WZipReaderSingle &reader)
     if(un(err != OK))
         return err;
 
-    if(reader.read_object(size) < 0)
+    if(reader.readObject(size) < 0)
         return ERROR;
 
     if(size){
         char _raw[size];
-        if(reader.read_by_size(_raw, size) < 0)
+        if(reader.readBySize(_raw, size) < 0)
             return ERROR;
         arr = WByteArray::fromRawData((cchar *)_raw, size);
 

@@ -10,7 +10,7 @@ public:
 };
 #else
 
-#include "images/fromimage.h"
+#include "images/ImageContainerDrawable.h"
 #include "core/WMap.h"
 
 #define IMG_PDF_HEIGHT 292
@@ -153,7 +153,7 @@ force_inline void frompdf::draw_pdf(WPainter &painter, const double delta, cbool
 
         for(k = 0; k < len_img; k++){
             const auto &img = pdf->img.at(k);
-            fromimage::draw_img(painter, size, img);
+            ImageContainerDrawable::draw_img(painter, size, img);
 
             size.setY(size.y() + y);
 

@@ -14,6 +14,7 @@ private:
 public:
     explicit WFile(const WByteArray &path, char mode);
     explicit WFile(const WByteArray &path);
+    explicit WFile(const WString &path);
     explicit WFile(const std::string &path, char mode);
     explicit WFile(const char *path, char mode);
     ~WFile();
@@ -28,6 +29,9 @@ public:
     bool isValid() const;
     int write(const void *data, size_t size);
     int read (void *to, size_t size);
+
+    template <class T>
+    void read (T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value);
 
     bool close();
     size_t size() const;
@@ -101,5 +105,17 @@ inline bool WFile::operator==(const WFile &other) const
 inline bool WFile::operator!=(const WFile &other) const
 {
     return !WFile::operator==(other);
+}
+
+inline WFile::WFile(const WString &path)
+    : WFile (path.toUtf8())
+{
+
+}
+
+template<class T>
+inline void WFile::read(T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value)
+{
+    fread(&ref, sizeof (ref), 1, this->fp);
 }
 

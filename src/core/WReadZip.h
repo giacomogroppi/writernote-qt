@@ -1,9 +1,9 @@
 #pragma once
 
-#include "WZip.h"
+#include "FileContainer/WZip.h"
 #include "stdio.h"
 #include "utils/WCommonScript.h"
-#include "core/WZipReaderSingle.h"
+#include "FileContainer/WZipReaderSingle.h"
 #include <vector>
 
 class WReadZip{
@@ -35,5 +35,5 @@ force_inline WZipReaderSingle *WReadZip::get_reader(int id)
 force_inline size_t WReadZip::get_current_distance(int index_thread) const
 {
     W_ASSERT(thread_created < index_thread);
-    return _reader[index_thread].get_offset();
+    return _reader[index_thread].getOffset();
 }

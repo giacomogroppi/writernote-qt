@@ -25,7 +25,7 @@ void WEnd_application();
     }while(0);
 
 
-// like this: WNew(m_img, fromimage, (this));
+// like this: WNew(m_img, ImageContainerDrawable, (this));
 
 # define WNew(pointer, type, arg) \
     do{ \

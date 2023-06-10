@@ -14,5 +14,5 @@ void DataStruct::controllForRepositioning(PointF &translateTo)
     translateTo.setX((point.x() > 0) ? point.x() : 0.0);
     translateTo.setY((point.y() > 0) ? point.y() : 0.0);
 
-    DataStruct::inverso(translateTo);
+    translateTo *= -1.;
 }

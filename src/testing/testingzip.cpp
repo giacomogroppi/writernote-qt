@@ -4,8 +4,8 @@
 #include "utils/WCommonScript.h"
 #include "utils/path/get_path.h"
 #include "core/WDir.h"
-#include "core/WZipWriterSingle.h"
-#include "core/WZipReaderSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
+#include "FileContainer/WZipReaderSingle.h"
 
 #if (defined(DEBUG_CORE) || defined(DEBUGINFO))
 
@@ -61,7 +61,7 @@ static not_used void test_read_from_zip(WVector<int> &res, const WByteArray &pat
 
     for(i = 0; i < len; i++){
         int tmp;
-        W_ASSERT(reader.read_object(tmp) == 0);
+        W_ASSERT(reader.readObject(tmp) == 0);
         res.append(tmp);
     }
 }

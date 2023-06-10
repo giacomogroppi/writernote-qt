@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/WZipWriterSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
 #include "utils/WCommonScript.h"
-#include "core/WZipReaderSingle.h"
+#include "FileContainer/WZipReaderSingle.h"
 
 class PageFile
 {

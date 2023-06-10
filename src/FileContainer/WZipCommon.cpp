@@ -1,6 +1,6 @@
 #include "WZipCommon.h"
 #include "utils/WCommonScript.h"
-#include "core/FileContainer.h"
+#include "FileContainer/FileContainer.h"
 
 int WZipCommon::removeFile(const char *fileZip, const char *nameFileInZip)
 {

@@ -6,7 +6,7 @@
 #include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
 #include "PageFile.h"
-#include "core/WZipWriterSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 #include "utils/time/current_time.h"
 
@@ -153,7 +153,7 @@ void Page::swap(WListFast<std::shared_ptr<Stroke>> &list,
     RectF area;
 
 #ifdef DEBUGINFO
-    if(un(!pos.isOrder())){
+    if(un(!WAbstractList::isSorted(pos))){
         qDebug() << "List not order" << __FILE__ << __FUNCTION__;
     }
 #endif

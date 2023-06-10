@@ -5,15 +5,22 @@
 #ifndef TESTING_QML_FILECONTAINER_H
 #define TESTING_QML_FILECONTAINER_H
 
-#include "WString.h"
+#include "core/WString.h"
 #include "FileReader.h"
 #include "FileWriter.h"
+#include "core/WListFast.h"
 
 class FileContainer {
 private:
+    using pair = std::pair<WString, std::shared_ptr<WByteArray>>;
+
+
     WString _path;
+    WListFast<pair> _subFiles;
+    bool _isOk;
+
 public:
-    FileContainer(const WString &path);
+    FileContainer(WString path);
 
     enum FileContainerOpenMode {
         Read,
@@ -38,6 +45,8 @@ public:
     bool close();
 
     bool remove(const WString &path);
+
+    void load_ver_0(const void *string, size_t size) noexcept;
 };
 
 

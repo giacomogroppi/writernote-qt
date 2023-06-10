@@ -5,7 +5,7 @@
 #ifndef TESTING_QML_FILEREADER_H
 #define TESTING_QML_FILEREADER_H
 
-#include "WByteArray.h"
+#include "core/WByteArray.h"
 #include "FileInstance.h"
 #include <memory>
 

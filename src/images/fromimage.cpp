@@ -1,43 +1,43 @@
 #include "fromimage.h"
 #include "core/WListFast.h"
 #include "dataread/readlistarray.h"
-#include "core/WZipWriter.h"
+#include "FileContainer/WZipWriter.h"
 
-fromimage::load_res_img fromimage::save_img(WZipWriter          &writer,
-                                    const WListFast<WString>   &pathPdf) const
+ImageContainerDrawable::load_res_img ImageContainerDrawable::saveImage(WZipWriter          &file,
+                                                                       const WListFast<WString>   &path) const
 {
-    fromimage::load_res_img res;
+    ImageContainerDrawable::load_res_img res;
 
-    for(const auto &str : std::as_const(pathPdf)){
-        res = this->save_img(writer, str);
+    for(const auto &str : std::as_const(path)){
+        res = this->saveImage(file, str);
 
-        if(res != fromimage::load_res_img::ok)
+        if(res != ImageContainerDrawable::load_res_img::ok)
             return res;
     }
 
-    return fromimage::load_res_img::ok;
+    return ImageContainerDrawable::load_res_img::ok;
 }
 
-fromimage::load_res_img fromimage::save_img(WZipWriter              &writer,
-                                    const WString           &path) const
+ImageContainerDrawable::load_res_img ImageContainerDrawable::saveImage(WZipWriter              &file,
+                                                                       const WString           &path) const
 {
     WByteArray img_in_byte;
     WPixmap img;
 
-    if(get_img_bytearray(img_in_byte, path) != load_res_img::ok){
+    if(getImageRawData(img_in_byte, path) != load_res_img::ok){
         return load_res_img::error;
     }
 
     if(!img.loadFromData(img_in_byte, "PNG"))
         return load_res_img::err_image_not_valid;
 
-    if(writer.write(img_in_byte.constData(), img_in_byte.size(), fromimage::getName_img(this->length_img()).constData()))
+    if(file.write(img_in_byte.constData(), img_in_byte.size(), ImageContainerDrawable::getName_img(this->lengthImage()).constData()))
         return load_res_img::error;
 
     return load_res_img::ok;
 }
 
-fromimage::load_res_img fromimage::save_metadata_img(WZipWriterSingle &writer)
+ImageContainerDrawable::load_res_img ImageContainerDrawable::saveMetadataImage(WZipWriterSingle &writer)
 {
     for(const auto &img : std::as_const(m_img))
     {
@@ -56,13 +56,13 @@ fromimage::load_res_img fromimage::save_metadata_img(WZipWriterSingle &writer)
     return load_res_img::ok;
 }
 
-size_t fromimage::get_size_file_img() const
+size_t ImageContainerDrawable::getSizeFileImage() const
 {
-    const size_t s = sizeof(double) * 4 * this->length_img();
+    const size_t s = sizeof(double) * 4 * this->lengthImage();
     return s;
 }
 
-fromimage::load_res_img fromimage::get_img_bytearray(WByteArray &arr, const WString &path)
+ImageContainerDrawable::load_res_img ImageContainerDrawable::getImageRawData(WByteArray &arr, const WString &path)
 {
     WPixmap img(path);
 
@@ -76,7 +76,7 @@ fromimage::load_res_img fromimage::get_img_bytearray(WByteArray &arr, const WStr
     return load_res_img::ok;
 }
 
-fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, int len)
+ImageContainerDrawable::load_res_img ImageContainerDrawable::loadMetadataImage(WZipReaderSingle &reader, int len)
 {
     int i;
     double val[4];
@@ -85,7 +85,7 @@ fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, i
     static_assert(sizeof(val) == sizeof(double) * 4);
 
     for(i = 0; i < len; ++i){
-        if(reader.read_by_size(val, sizeof(val))){
+        if(reader.readBySize(val, sizeof(val))){
             return load_res_img::error;
         }
 
@@ -98,7 +98,7 @@ fromimage::load_res_img fromimage::load_metadata_img(WZipReaderSingle &reader, i
     return load_res_img::ok;
 }
 
-fromimage::load_res_img fromimage::load_img(WZipReaderSingle &reader, int len)
+ImageContainerDrawable::load_res_img ImageContainerDrawable::loadImage(WZipReaderSingle &zip, int len)
 {
     WListFast<WByteArray> arr;
     WListFast<WString> name_list;
@@ -108,19 +108,19 @@ fromimage::load_res_img fromimage::load_img(WZipReaderSingle &reader, int len)
 
     name_list = this->get_name_img();
 
-    if(this->load_metadata_img(reader, len) != load_res_img::ok)
+    if(this->loadMetadataImage(zip, len) != load_res_img::ok)
         return load_res_img::err_meta_data;
 
-    res = readListArray::read(name_list, *(reader.get_zip()), arr, false);
+    res = readListArray::read(name_list, *(zip.getZip()), arr, false);
     if(res != OK){
-        return fromimage::load_res_img::error;
+        return ImageContainerDrawable::load_res_img::error;
     }
 
-    return fromimage::load_multiple_img(arr);
+    return ImageContainerDrawable::loadMultipleImage(arr);
 }
 
-fromimage::load_res_img fromimage::load_single_img(const WByteArray &arr,
-                                           struct immagine_s &img)
+ImageContainerDrawable::load_res_img ImageContainerDrawable::loadSingleImage(const WByteArray &arr,
+                                                                             struct immagine_s &img)
 {
     if(!img.immagini.loadFromData(arr, "PNG"))
         return load_res_img::error;
@@ -135,37 +135,37 @@ fromimage::load_res_img fromimage::load_single_img(const WByteArray &arr,
  * in m_img sono già presenti tutte le immagini con i metadati
  * dobbiamo solo cambiare l'immagine e l'array
 */
-fromimage::load_res_img fromimage::load_multiple_img(const WListFast<WByteArray> &arr)
+ImageContainerDrawable::load_res_img ImageContainerDrawable::loadMultipleImage(const WListFast<WByteArray> &arr)
 {
     uint i, len;
-    fromimage::load_res_img res;
+    ImageContainerDrawable::load_res_img res;
     struct immagine_s img;
 
     len = arr.size();
     for(i=0; i<len; ++i){
-        res = fromimage::load_single_img(arr.at(i), m_img.operator[](i));
-        if(res != fromimage::load_res_img::ok)
+        res = ImageContainerDrawable::loadSingleImage(arr.at(i), m_img.operator[](i));
+        if(res != ImageContainerDrawable::load_res_img::ok)
             return res;
     }
 
-    return fromimage::load_res_img::ok;
+    return ImageContainerDrawable::load_res_img::ok;
 }
 
-WListFast<WString> fromimage::get_name_img()
+WListFast<WString> ImageContainerDrawable::get_name_img()
 {
     int i;
     WListFast<WString> list;
 
-    for(i = 0; i < length_img(); ++i){
-        list.append(fromimage::getName_img(i));
+    for(i = 0; i < lengthImage(); ++i){
+        list.append(ImageContainerDrawable::getName_img(i));
     }
 
     return list;
 }
 
-unsigned fromimage::insert_image(   const WString &pos,
-                                    const PointSettable *point,
-                                    struct immagine_s &img)
+unsigned ImageContainerDrawable::insert_image(const WString &pos,
+                                              const PointSettable *point,
+                                              struct immagine_s &img)
 {
     WString res;
     W_ASSERT(pos.size());
@@ -186,9 +186,9 @@ unsigned fromimage::insert_image(   const WString &pos,
 /*
  * add image from position
 */
-int fromimage::addImage(    const WString &pos,
-                            const PointSettable *point,
-                            const WString &path_writernote)
+int ImageContainerDrawable::addImage(const WString &pos,
+                                     const PointSettable *point,
+                                     const WString &path_writernote)
 {
     struct immagine_s img;
     WZipWriter writer;
@@ -201,7 +201,7 @@ int fromimage::addImage(    const WString &pos,
 
     this->m_img.append(img);
 
-    if(this->save_img(writer, pos) != fromimage::ok)
+    if(this->saveImage(writer, pos) != ImageContainerDrawable::ok)
         return -3;
 
     return 0;

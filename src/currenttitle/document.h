@@ -12,36 +12,39 @@
 #define CURRENT_VERSION_CURRENT_TITLE 9
 #define MIN_VERSION_CURRENT_TITLE 2
 
-class Document : public DataStruct,
+class Document :
+        public DataStruct,
 #ifdef PDFSUPPORT
-                 public frompdf,
+        public frompdf,
 #endif // PDFSUPPORT
-                 public fromimage
-        {
-private:
+        public ImageContainerDrawable
+{
 public:
-    [[nodiscard]] size_t createSingleControll() const;
+    Document () noexcept;
+    Document (const Document &other) noexcept;
+    Document (Document &&other) noexcept;
+    virtual ~Document();
 
-    [[nodiscard]] bool isEmpty() const;
+    [[nodiscard]]
+    size_t createSingleControll() const;
 
-    WString audio_position_path = "";
+    [[nodiscard]]
+    bool isEmpty() const;
 
-    void reset();
-    void cleanAudio();
-
-    enum n_audio_record{
+    enum AudioRecordStatus{
         not_record,
         record_file,
         record_zip
     };
 
-    n_audio_record se_registato = n_audio_record::not_record;
-    WByteArray audio_data;
+    void setRecordStatus (AudioRecordStatus status);
+    AudioRecordStatus recordStatus() const;
+    bool isRecorded() const;
+    const WByteArray &getAudioData() const;
+    const WString &getAudioPath() const;
 
-    Document () noexcept;
-    Document (const Document &other) noexcept;
-    Document (Document &&other) noexcept;
-    virtual ~Document();
+    void reset();
+    void cleanAudio();
 
     void controllForRepositioning();
     void increaseZoom(double delta, const WSizeF &size);
@@ -52,15 +55,22 @@ public:
 
     Document &operator=(const Document &other) noexcept;
     Document &operator=(Document &&other) noexcept;
+
+    void setAudioPath(const WString &path) noexcept;
+
+private:
+    WString _audioPositionPath;
+    AudioRecordStatus _audioRecordStatus = AudioRecordStatus::not_record;
+    WByteArray _audioRawData;
 };
 
 force_inline bool Document::isEmpty() const
 {
     const auto res =
             isEmptyTouch() and
-#ifdef PDFSUPPORT
+            #ifdef PDFSUPPORT
             frompdf::length_pdf() == 0 and
 #endif // PDFSUPPORT
-            fromimage::length_img() == 0;
+            ImageContainerDrawable::lengthImage() == 0;
     return res;
 }

@@ -218,7 +218,7 @@ bool SquareMethod::find(Document &doc)
     }
 
     /* image selected by user */
-    const int lenImg = doc.length_img();
+    const int lenImg = doc.lengthImage();
     for (int counterImg = 0; counterImg < lenImg; counterImg++) {
         const auto &ref = doc.m_img.at(counterImg);
 
@@ -407,7 +407,7 @@ void SquareMethod::move(const PointF &punto, Document &doc)
 
     delta = (_lastpoint - punto) / zoom;
 
-    DataStruct::inverso(delta);
+    delta *= -1.;
 
     _trans_img += delta;
 

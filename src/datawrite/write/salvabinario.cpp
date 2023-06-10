@@ -3,9 +3,9 @@
 #include "core/WString.h"
 #include "datawrite/source_read_ext.h"
 #include "images/fromimage.h"
-#include "core/WZipWriterSingle.h"
+#include "FileContainer/WZipWriterSingle.h"
 #include "currenttitle/document.h"
-#include "core/WZipWriterMulti.h"
+#include "FileContainer/WZipWriterMulti.h"
 
 static size_t savefile_get_size_page(const Page &_page, cbool saveImg)
 {
