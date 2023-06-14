@@ -7,7 +7,7 @@
 #include "WByteArray.h"
 #include "RectF.h"
 #include "WImage.h"
-#include "WString.h"
+#include "String/WString.h"
 #include "touch/dataTouch/Point.h"
 
 class WPixmap

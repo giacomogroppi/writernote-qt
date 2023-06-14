@@ -4,7 +4,7 @@
 #include "core/WList.h"
 #include "utils/common_error_definition.h"
 #include "FileContainer/WZip.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 #include "core/WListFast.h"
 
 class readListArray

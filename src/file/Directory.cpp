@@ -1,5 +1,5 @@
 #include "Directory.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 #include <filesystem>
 
 Directory::Directory(const WByteArray &path)

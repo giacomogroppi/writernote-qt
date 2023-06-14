@@ -1,6 +1,6 @@
 #pragma once
 
 
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 void mostra_finestra_i(const WString &url);

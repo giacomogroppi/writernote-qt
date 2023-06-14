@@ -5,11 +5,11 @@
 #ifndef WRITERNOTE_WVARIANT_H
 #define WRITERNOTE_WVARIANT_H
 
-#include "WListFast.h"
-#include "WList.h"
-#include "WVector.h"
-#include "WByteArray.h"
-#include "WString.h"
+#include "core/WListFast.h"
+#include "core/WList.h"
+#include "core/WVector.h"
+#include "core/WByteArray.h"
+#include "core/String/WString.h"
 
 #ifndef USE_QT
 class WVariant {

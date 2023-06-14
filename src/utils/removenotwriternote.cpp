@@ -1,6 +1,6 @@
 #include "removenotwriternote.h"
 #include "core/WListFast.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 #include "utils/WCommonScript.h"
 
 void removeNotWriternote::exe(WListFast<WString> &ref)

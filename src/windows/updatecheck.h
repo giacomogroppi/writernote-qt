@@ -11,7 +11,7 @@
 #endif
 
 #include "Scheduler/WObject.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 #ifdef USE_QT
 # include <QtNetwork/QNetworkAccessManager>

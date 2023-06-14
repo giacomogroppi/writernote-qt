@@ -11,7 +11,7 @@
 #include <QFile>
 #endif // USE_QT
 #include "utils/WCommonScript.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 class AudioRecord : public WObject
 {

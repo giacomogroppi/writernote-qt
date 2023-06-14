@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 class pathFile
 {

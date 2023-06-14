@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 void copy_text(WString);
 

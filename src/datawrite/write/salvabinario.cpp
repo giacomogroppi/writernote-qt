@@ -1,6 +1,6 @@
 #include "datawrite/savefile.h"
 #include "stdlib.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 #include "datawrite/source_read_ext.h"
 #include "images/fromimage.h"
 #include "FileContainer/WZipWriterSingle.h"

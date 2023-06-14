@@ -1,20 +1,12 @@
-//
-// Created by Giacomo Groppi on 30/04/23.
-//
+#pragma once
 
-#ifndef WRITERNOTE_WSTRING_H
-#define WRITERNOTE_WSTRING_H
-
-
-#include "WByteArray.h"
-#include "WListFast.h"
-#include "WByteArray.h"
+#include "core/WByteArray.h"
+#include "core/WListFast.h"
 
 #ifdef USE_QT
-# include <QString>
-#endif // USE_QT
+# error "Qt in use but import wronge class"
+#endif
 
-#ifndef USE_QT
 class WString {
 private:
     WByteArray _data;
@@ -248,10 +240,3 @@ inline bool operator<(const WString &first, const WString &second)
 
 inline WString operator+(const char *s1, const WString &s2)
 { WString t = WString::fromUtf8(s1); t += s2; return t; }
-
-#else
-using WString = QString;
-#endif // USE_QT
-
-
-#endif //WRITERNOTE_WSTRING_H

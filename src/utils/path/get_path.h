@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 namespace path {
     enum e_path: unsigned int{

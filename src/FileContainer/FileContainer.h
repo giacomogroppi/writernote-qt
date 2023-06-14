@@ -5,7 +5,7 @@
 #ifndef TESTING_QML_FILECONTAINER_H
 #define TESTING_QML_FILECONTAINER_H
 
-#include "core/WString.h"
+#include "core/String/WString.h"
 #include "FileReader.h"
 #include "FileWriter.h"
 #include "core/WListFast.h"

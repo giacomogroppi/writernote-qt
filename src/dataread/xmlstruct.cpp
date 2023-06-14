@@ -1,5 +1,5 @@
 #include "xmlstruct.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 #include "utils/WCommonScript.h"
 #include "file/File.h"
 

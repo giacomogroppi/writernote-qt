@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 class WTime {
     int _hour, _minute, _second;

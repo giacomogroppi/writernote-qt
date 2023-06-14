@@ -1,5 +1,5 @@
 #include "document.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 #include "testing/memtest.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"

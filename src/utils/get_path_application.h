@@ -3,7 +3,7 @@
 #ifdef USE_QT
 # include "QtCore/qstandardpaths.h"
 #endif
-#include "core/WString.h"
+#include "core/String/WString.h"
 
 namespace get_path_application
 {

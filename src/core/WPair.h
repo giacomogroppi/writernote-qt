@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include "utils/WCommonScript.h"
+#include "VersionFileController.h"
 
 template <class K, class T, typename = std::enable_if_t<!std::is_pointer_v<K> && !std::is_pointer_v<T>>>
 class WPair
@@ -30,7 +32,19 @@ public:
     void setKey(const K &key) {this->_key = key;};
     void setValue(const T &value) {this->_value = value;};
 
+    /**
+     * \return < 0 iff it fail
+     * */
+    template <class K2, class T2, class Readable>
+    static int load (const VersionFileController &versionController, Readable &readable, WPair<K2, T2> &result)
+    {
+        if (K2::load(versionController, readable, result._key) < 0)
+            return -1;
 
+        if (T2::load(versionController, readable, result._value) < 0)
+            return -1;
+        return 0;
+    }
 
     bool operator==(const WPair<K, T> &other)
     {

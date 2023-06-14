@@ -1,7 +1,7 @@
 #pragma once
 
 #include "utils/WCommonScript.h"
-#include "core/WString.h"
+#include "core/String/WString.h"
 #include "Scheduler/WObject.h"
 #include "core/WByteArray.h"
 #include "FileContainer.h"

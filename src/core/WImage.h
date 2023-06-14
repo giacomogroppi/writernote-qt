@@ -10,7 +10,7 @@
 
 #include "core/WByteArray.h"
 #include "RectF.h"
-#include "WString.h"
+#include "String/WString.h"
 #include "WRgb.h"
 #include "Point.h"
 #include <iostream>
