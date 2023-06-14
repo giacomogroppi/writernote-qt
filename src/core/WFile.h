@@ -124,7 +124,7 @@ inline WFile::WFile(const WString &path)
 template<class T>
 inline int WFile::read(T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value)
 {
-    if (fread(&ref, sizeof (ref), 1, this->fp) != sizeof (ref))
+    if (fread(&ref, sizeof (ref), 1, this->fp) != 1)
         return -1;
     return 0;
 }
