@@ -1,6 +1,8 @@
 #pragma once
 
-template <class K, class T>
+#include <iostream>
+
+template <class K, class T, typename = std::enable_if_t<!std::is_pointer_v<K> && !std::is_pointer_v<T>>>
 class WPair
 {
 private:
@@ -9,6 +11,14 @@ private:
 public:
     explicit WPair() = default;
     explicit WPair(const K &key, const T &value);
+
+    explicit WPair(K &&key, T &&value) noexcept;
+    explicit WPair(const K& key, T &&value) noexcept;
+    explicit WPair(K &&key, const T &value) noexcept;
+
+    WPair(const WPair<K, T> &other) noexcept;
+    WPair(WPair<K, T> &&other) noexcept;
+
     ~WPair() = default;
 
     const K& getKey() const {return this->_key;};
@@ -21,6 +31,7 @@ public:
     void setValue(const T &value) {this->_value = value;};
 
 
+
     bool operator==(const WPair<K, T> &other)
     {
         if (this == &other)
@@ -30,11 +41,9 @@ public:
     }
 };
 
-
-template<class K, class T>
-inline WPair<K, T>::WPair(const K &key, const T &value)
+template<class K, class T, typename T3>
+inline WPair<K, T, T3>::WPair(const K &key, const T &value)
     : _key(key)
     , _value(value)
 {
 }
-

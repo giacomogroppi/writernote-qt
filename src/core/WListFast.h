@@ -10,6 +10,7 @@
 #include <utility>
 #include "utils/WCommonScript.h"
 #include "WAbstractList.h"
+#include "VersionFileController.h"
 
 // do some refactoring
 // this list if O(1) in index access
@@ -71,6 +72,12 @@ public:
         }
         return false;
     }
+
+    /**
+     * \return < 0 if error
+     * */
+    template <class Readable>
+    static int load (const VersionFileController &versionController, Readable &file, WListFast<T> &result);
 
     class iterator
     {
@@ -220,6 +227,39 @@ force_inline void WListFast<T>::test() const
         }
     }
 #endif // DEBUGINFO
+}
+
+template <class T>
+template <class Readable>
+inline int WListFast<T>::load(const VersionFileController &versionController, Readable &file, WListFast<T> &result)
+{
+    result = WListFast<T> ();
+    switch (versionController.versionWListFast()) {
+        case 0:
+            int i, element;
+
+            if (file.read(element) < 0) {
+                return -1;
+            }
+
+            result.reserve(element);
+
+            for (i = 0; i < element; i++) {
+                T tmp;
+
+                if (T::load (versionController, file, tmp) < 0 ) {
+                    result = WListFast<T>();
+                    return -1;
+                }
+
+                result.append(
+                    std::move (tmp)
+                );
+            }
+            return 0;
+        default:
+            return -1;
+    }
 }
 
 template<class T>

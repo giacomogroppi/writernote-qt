@@ -9,14 +9,16 @@
 #include "FileReader.h"
 #include "FileWriter.h"
 #include "core/WListFast.h"
+#include "core/WFile.h"
+#include "core/WPair.h"
+#include "core/pointer/SharedPtr.h"
 
 class FileContainer {
 private:
-    using pair = std::pair<WString, std::shared_ptr<WByteArray>>;
-
+    using Pair = WPair<WString, SharedPtr<WByteArray>>;
 
     WString _path;
-    WListFast<pair> _subFiles;
+    WListFast<Pair> _subFiles;
     bool _isOk;
 
 public:
@@ -46,7 +48,7 @@ public:
 
     bool remove(const WString &path);
 
-    void load_ver_0(const void *string, size_t size) noexcept;
+    int load_ver_0(WFile &file, size_t size) noexcept;
 };
 
 

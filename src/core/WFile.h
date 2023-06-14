@@ -28,10 +28,18 @@ public:
     bool open (int openMode);
     bool isValid() const;
     int write(const void *data, size_t size);
+
+
+    /**
+     * \return < 0 in case of error
+     * */
     int read (void *to, size_t size);
 
+    /**
+     * \return < 0 in case of error
+     * */
     template <class T>
-    void read (T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value);
+    int read (T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value);
 
     bool close();
     size_t size() const;
@@ -114,8 +122,10 @@ inline WFile::WFile(const WString &path)
 }
 
 template<class T>
-inline void WFile::read(T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value)
+inline int WFile::read(T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value)
 {
-    fread(&ref, sizeof (ref), 1, this->fp);
+    if (fread(&ref, sizeof (ref), 1, this->fp) != sizeof (ref))
+        return -1;
+    return 0;
 }
 

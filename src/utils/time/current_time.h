@@ -10,6 +10,7 @@ public:
 
     static WTime now ();
 
+    [[nodiscard]]
     WString toString() const;
 };
 
@@ -23,5 +24,6 @@ public:
 
     static WDate now();
 
+    [[nodiscard]]
     WString toString() const;
 };

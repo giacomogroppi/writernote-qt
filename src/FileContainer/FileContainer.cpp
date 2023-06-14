@@ -5,6 +5,7 @@
 #include "FileContainer.h"
 #include "core/WFile.h"
 #include "utils/WCommonScript.h"
+#include "core/pointer/SharedPtr.h"
 
 #include <utility>
 
@@ -21,22 +22,34 @@ FileContainer::FileContainer(WString path)
         return;
     }
 
-    char d [file.size()];
-    file.read(d, file.size());
+    static_assert_type(version, int);
+    static_assert (sizeof (version) == 4);
 
-    WCommonScript::WMemcpy(d, &version, sizeof (version));
+    file.read(version);
 
     switch (version) {
         case 0:
-            load_ver_0(d + sizeof (version), file.size());
+            load_ver_0(file, file.size());
             _isOk = true;
             break;
         default:
             break;
     }
+
+    file.close();
 }
 
-void FileContainer::load_ver_0(const void *raw, size_t size) noexcept
+// TODO: Use WFile
+int FileContainer::load_ver_0(WFile &file, size_t size) noexcept
 {
-    static_assert(0, "To implement");
+    size_t stack = 0;
+
+    const auto versionFileController = VersionFileController::loadVersion(file);
+
+    if (WListFast<Pair>::load(versionFileController, file, _subFiles) < 0) {
+        // TODO manage error
+        W_ASSERT(0);
+    }
+
+    // static_assert(0, "To implement");
 }
