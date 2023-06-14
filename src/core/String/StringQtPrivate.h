@@ -21,8 +21,6 @@ public:
     WString (const QByteArray &other) noexcept
         : QString (other) {};
 
-    WString (QByteArray &&other) noexcept
-        : QString (std::move (other)) {};
 
     WString (const char *data) noexcept
             : QString (data)
@@ -39,9 +37,25 @@ public:
             : QString(std::move(other)) {}
 
     template <class Readable>
-    static int load (const VersionFileController& load, Readable &readable, WString &result)
+    static int load (const VersionFileController& versionController, Readable &readable, WString &result)
     {
+        if (versionController.versionWString() != 1)
+            return -1;
 
+        result = WString();
+
+        int size;
+
+        if (readable.read(size) < 0)
+            return -1;
+        result.reserve(size);
+
+        char8_t d[size];
+        if (readable.read (d, size) < 0)
+            return -1;
+
+        result.append(QUtf8StringView(d, size));
+        return 0;
     }
 
     WString &operator=(const WString &other) noexcept

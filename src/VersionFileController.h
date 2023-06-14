@@ -29,4 +29,6 @@ public:
 
 
     int versionWListFast() const;
+
+    constexpr int versionWString() const noexcept;
 };
