@@ -23,14 +23,10 @@ int WZipWriter::write(const void *to, size_t size, const char *fileToCreate)
 
     auto file = FileWriter(fileToCreate);
 
-    if(un(file.isOk()))
+    if (un(file.isOk()))
         return -1;
 
-    const auto res = file.write(to, size);
-    if(res != static_cast<int64_t>(size)){
-        file.destroy();
-        return -1;
-    }
+    file.write(to, size);
 
     if (this->_zip->addFile(file) < 0) {
         file.destroy();

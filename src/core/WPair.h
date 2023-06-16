@@ -38,6 +38,8 @@ public:
     template <class K2, class T2, class Readable>
     static int load (const VersionFileController &versionController, Readable &readable, WPair<K2, T2> &result)
     {
+        if (versionController.versionWPair() != WPair::currentVersion)
+            return -1;
         if (K2::load(versionController, readable, result._key) < 0)
             return -1;
 
@@ -53,6 +55,8 @@ public:
         return this->_key == other._key &&
                this->_value == other._value;
     }
+
+    static constexpr int currentVersion = 0;
 };
 
 template<class K, class T, typename T3>

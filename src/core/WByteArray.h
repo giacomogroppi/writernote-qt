@@ -9,6 +9,7 @@
 #endif // USE_QT
 
 #ifndef USE_QT
+// TODO: add move constructor
 class WByteArray
 {
 private:

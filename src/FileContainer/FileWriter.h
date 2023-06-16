@@ -9,14 +9,20 @@
 #include "core/String/WString.h"
 
 class FileWriter: public FileInstance {
+private:
+    static constexpr auto dataReservePerTime = 2048;
+    WByteArray  _data;
+    WString _name;
 public:
-    FileWriter (const WString &nameFile);
+    explicit FileWriter (WString nameFile);
+    FileWriter (FileWriter &&other) noexcept;
 
-    [[nodiscard]]
+    [[nodiscard]] [[deprecated]]
     bool isOk() const;
 
-    [[nodiscard]]
-    size_t write (const void *data, size_t size);
+    WDISABILE_COPY(FileWriter);
+
+    void write (const void *data, size_t size);
 
     void destroy() noexcept;
 };

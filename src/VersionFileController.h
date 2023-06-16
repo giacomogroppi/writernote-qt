@@ -28,7 +28,7 @@ public:
     static VersionFileController loadVersion (Readable &readable);
 
 
-    int versionWListFast() const;
-
+    constexpr int versionWListFast() const;
     constexpr int versionWString() const noexcept;
+    constexpr int versionWPair() const noexcept;
 };

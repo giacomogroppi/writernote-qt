@@ -2,6 +2,7 @@
 
 #include "Scheduler/WObject.h"
 #include "core/WSemaphore.h"
+#include "utils/WCommonScript.h"
 
 class WTask: public WObject
 {
@@ -16,6 +17,8 @@ public:
     void join();
 
     void releaseJoiner() noexcept;
+
+    WDISABILE_COPY(WTask);
 
     /**
      * @ensures task == this

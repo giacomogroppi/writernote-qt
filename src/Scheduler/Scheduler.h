@@ -27,7 +27,7 @@ private:
     mutable WSemaphore _semMain;
 
     mutable WMutex _lockMain;
-    mutable WMutex _lock_heap;
+    mutable WMutex _lockGeneric;
 
      //@ requires
      //@   _pools is locked
@@ -59,6 +59,6 @@ public:
     void addTaskGeneric(WTask *task);
     static void addTaskMainThread(WTask *task);
 
+
     void exit();
 };
-

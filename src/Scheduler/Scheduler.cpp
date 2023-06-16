@@ -21,7 +21,7 @@ Scheduler::Scheduler()
             const auto isMainThread = i == 0;
 
             WSemaphore *sem = isMainThread ? &this->_semMain : &this->_semGeneral;
-            WMutex *mux = isMainThread ? &this->_lockMain : &this->_lock_heap;
+            WMutex *mux = isMainThread ? &this->_lockMain : &this->_lockGeneric;
             WList<WTask *> *tasksHeap = isMainThread ? &this->_task_Main : &_task_General;
 
             // loop
@@ -59,7 +59,7 @@ void Scheduler::createHeap()
 
 void Scheduler::addTaskGeneric(WTask *task)
 {
-    WMutexLocker _(_lock_heap);
+    WMutexLocker _(_lockGeneric);
     this->_task_General.append(task);
     this->_need_to_sort = true;
 }
