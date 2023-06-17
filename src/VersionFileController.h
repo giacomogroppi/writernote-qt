@@ -23,13 +23,14 @@ private:
             currentVersionWListFast = 0,
             currentVersionWString = 0,
             currentVersionWPair = 0,
-            currentversionSharedPtr = 0;
-
+            currentversionSharedPtr = 0,
+            currentVersionWByteArray = 0;
 
     unsigned short _versionWListFast;
     unsigned short _versionWString;
     unsigned short _versionWPair;
     unsigned short _versionSharedPtr;
+    unsigned short _versionWByteArray;
 public:
     /**
      * It's required for template Readable to have read method
@@ -42,4 +43,5 @@ public:
     constexpr auto getVersionWString()       const noexcept -> int { return this->_versionWString; };
     constexpr auto getVersionWPair()         const noexcept -> int { return this->_versionWPair; };
     constexpr auto getVersionSharedPtr()     const noexcept -> int { return this->_versionSharedPtr; }
+    constexpr auto getVersionWByteArray()    const noexcept -> int { return _versionWByteArray; }
 };
