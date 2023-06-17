@@ -3,12 +3,12 @@
 #ifdef USE_QT
 #include <QImage>
 #include <QBuffer>
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #else
 #include "core/WByteArray.h"
 #endif
 
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "RectF.h"
 #include "String/WString.h"
 #include "WRgb.h"

@@ -7,6 +7,7 @@
 #include <QString>
 
 #include "VersionFileController.h"
+#include "Writable.h"
 
 class WString: public QString {
 public:
@@ -37,9 +38,9 @@ public:
             : QString(std::move(other)) {}
 
     template <class Readable>
-    static int load (const VersionFileController& versionController, Readable &readable, WString &result)
+    static auto load (const VersionFileController& versionController, Readable &readable, WString &result) -> int
     {
-        if (versionController.versionWString() != 1)
+        if (versionController.getVersionWString() != 1)
             return -1;
 
         result = WString();
@@ -58,18 +59,36 @@ public:
         return 0;
     }
 
-    WString &operator=(const WString &other) noexcept
+    auto operator=(const WString &other) noexcept -> WString &
     {
         if (this == &other)
             return *this;
         QString::operator=(other);
         return *this;
     };
-    WString &operator=(WString &&other) noexcept
+
+    auto operator=(WString &&other) noexcept -> WString &
     {
         if (this == &other)
             return *this;
         QString::operator=(std::move (other));
         return *this;
+    }
+
+    /**
+     * @return &lt 0 iff writable fail
+     * */
+    template <class Writable>
+        requires (std::is_base_of_v<WritableAbstract, Writable>)
+    static auto save (Writable &writable, const WString &str) -> int
+    {
+        int size = static_cast<int>(str.size());
+
+        if (writable.write(size) < 0)
+            return -1;
+
+        if (writable.write(str.toUtf8().constData(), size) < 0)
+            return -1;
+        return 0;
     }
 };

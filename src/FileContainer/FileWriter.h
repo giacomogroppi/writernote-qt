@@ -10,7 +10,7 @@
 
 class FileWriter: public FileInstance {
 private:
-    static constexpr auto dataReservePerTime = 2048;
+    static constexpr unsigned long dataReservePerTime = 1024;
     WByteArray  _data;
     WString _name;
 public:

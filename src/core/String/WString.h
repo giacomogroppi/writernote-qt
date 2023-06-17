@@ -6,7 +6,7 @@
 #define WRITERNOTE_WSTRING_H
 
 
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/WListFast.h"
 #include "VersionFileController.h"
 

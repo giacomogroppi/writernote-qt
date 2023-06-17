@@ -2,20 +2,21 @@
 #include "utils/WCommonScript.h"
 #include <filesystem>
 #include <fstream>
+#include <utility>
 #include "utils/platform.h"
 
-static const char *convertToCanonical (char mode)
+static auto convertToCanonical (char mode) -> const char *
 {
     switch (mode) {
     case WFile::WFileAppend:
         return "a";
     case WFile::WFileReadOnly: {
-        if (is_windows)
+        if constexpr (is_windows)
             return "rb";
         return "r";
     }
     case WFile::WFileWrite: {
-        if (is_windows)
+        if constexpr (is_windows)
             return "wb";
         return "w";
     }
@@ -24,15 +25,15 @@ static const char *convertToCanonical (char mode)
     return nullptr;
 }
 
-WFile::WFile(const WByteArray &path)
-        : _path(path)
-        , fp(nullptr)
+WFile::WFile(WByteArray path)
+        : _path(std::move(path))
+        , _fp(nullptr)
         , lastMod()
 {
 
 }
 
-bool WFile::exists(const WByteArray& array) noexcept
+auto WFile::exists(const WByteArray& array) noexcept -> bool
 {
     return std::filesystem::exists(array.toStdString());
 }
@@ -41,7 +42,7 @@ WFile::WFile(const WByteArray &path, const char mode)
 {
     const auto *m = convertToCanonical(mode);
 
-    fp = fopen(path.constData(), m);
+    _fp = fopen(path.constData(), m);
 }
 
 WFile::WFile(const std::string &path, const char mode):
@@ -56,21 +57,21 @@ WFile::WFile(const char *path, const char mode):
 
 WFile::~WFile()
 {
-    if(this->fp)
-        fclose(this->fp);
+    if(this->_fp)
+        fclose(this->_fp);
 }
 
-bool WFile::open(int openMode)
+auto WFile::open(int openMode) -> bool
 {
-    W_ASSERT(this->fp == nullptr);
-    this->fp = fopen(this->_path.constData(), convertToCanonical(openMode));
-    return fp != nullptr;
+    W_ASSERT(this->_fp == nullptr);
+    this->_fp = fopen(this->_path.constData(), convertToCanonical(openMode));
+    return _fp != nullptr;
 }
 
-int WFile::write(const void *data, size_t size)
+auto WFile::write(const void *data, size_t size) -> int
 {
-    W_ASSERT(this->fp);
-    const auto res = fwrite(data, size, 1, this->fp);
+    W_ASSERT(this->_fp);
+    const auto res = fwrite(data, size, 1, this->_fp);
     //std::ofstream stream("ciao", std::ios_base::binary)
 
     if(un(res != 1))
@@ -79,21 +80,21 @@ int WFile::write(const void *data, size_t size)
     return 0;
 }
 
-int WFile::read(void *to, size_t size)
+auto WFile::read(void *to, size_t size) -> int
 {
-    W_ASSERT(fp != nullptr);
-    const auto res = fread(to, size, 1, this->fp);
+    W_ASSERT(_fp != nullptr);
+    const auto res = fread(to, size, 1, this->_fp);
     return res < 1;
 }
 
-bool WFile::close()
+auto WFile::close() -> bool
 {
-    W_ASSERT(fp);
-    const auto res = fclose(fp);
+    W_ASSERT(_fp);
+    const auto res = fclose(_fp);
     return res == 0;
 }
 
-int WFile::fileExist(const WByteArray &to)
+auto WFile::fileExist(const WByteArray &to) -> int
 {
     using namespace std;
     using namespace std::filesystem;
@@ -103,7 +104,7 @@ int WFile::fileExist(const WByteArray &to)
     return -1;
 }
 
-int WFile::readFile(WByteArray &to, const char *pathFile)
+auto WFile::readFile(WByteArray &to, const char *pathFile) -> int
 {
     WFile f (pathFile, WFile::WFileReadOnly);
 
@@ -123,7 +124,7 @@ int WFile::readFile(WByteArray &to, const char *pathFile)
     return 0;
 }
 
-int WFile::saveArrIntoFile(const WByteArray &arr, const std::string &path)
+auto WFile::saveArrIntoFile(const WByteArray &arr, const std::string &path) -> int
 {
     WFile file(path, 'w');
 
@@ -136,7 +137,7 @@ int WFile::saveArrIntoFile(const WByteArray &arr, const std::string &path)
     return 0;
 }
 
-bool WFile::exits(const std::string &path)
+auto WFile::exits(const std::string &path) -> bool
 {
     return std::filesystem::exists(path);
 }

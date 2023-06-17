@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/String/WString.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include <functional>
 #include <iostream>
 

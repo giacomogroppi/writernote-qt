@@ -9,7 +9,7 @@ WZipWriter::WZipWriter()
 #endif
 }
 
-int WZipWriter::write(const void *to, size_t size, const char *fileToCreate)
+auto WZipWriter::write(const void *to, size_t size, const char *fileToCreate) -> int
 {
 #ifdef DEBUGINFO
     W_ASSERT(this->already_write == false);

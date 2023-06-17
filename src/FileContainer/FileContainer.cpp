@@ -36,7 +36,20 @@ FileContainer::FileContainer(WString path)
             break;
     }
 
-    file.close();
+        file.close();
+}
+
+bool FileContainer::close()
+{
+    WFile file(this->_path);
+
+    if (not file.open(WFile::WFileWrite))
+        return false;
+
+    if (WListFast<Pair>::save<WFile>(file, this->_subFiles) < 0)
+        return false;
+
+    return true;
 }
 
 // TODO: Use WFile

@@ -2,7 +2,7 @@
 
 #include "File.h"
 #include "core/WList.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/WFile.h"
 
 class Directory
@@ -13,7 +13,9 @@ private:
 
     static WList<WFile> getAllFile(const WByteArray &path);
 public:
-    explicit Directory(const WByteArray &path);
+    explicit Directory (const WByteArray &path);
+    Directory (Directory &&other) noexcept = default;
+    Directory (const Directory &other) noexcept = delete;
     ~Directory();
 
     const WList<WFile>& getFiles() const;
@@ -22,13 +24,15 @@ public:
      * requires
      *  file in position don't exists
     */
-    bool addFiles(const WByteArray &position);
+    auto addFiles(const WByteArray &position) -> bool;
 
-    WList<WByteArray> allDirsInFolder() const;
+    auto allDirsInFolder() const -> WList<WByteArray>;
 
+    auto operator ==(const Directory &other) const -> bool;
+    auto operator !=(const Directory &other) const -> bool;
 
-    bool operator ==(const Directory &other) const;
-    bool operator !=(const Directory &other) const;
+    auto operator=(const Directory &other) noexcept -> Directory & = delete;
+    auto operator=(Directory &&other) noexcept -> Directory & = default;
 };
 
 inline bool Directory::operator ==(const Directory &other) const

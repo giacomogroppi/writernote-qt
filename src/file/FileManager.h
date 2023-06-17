@@ -3,7 +3,7 @@
 #include "utils/WCommonScript.h"
 #include "Directory.h"
 #include "Scheduler/WObject.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/WList.h"
 
 class FileManager final: public WObject

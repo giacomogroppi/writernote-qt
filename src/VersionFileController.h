@@ -19,7 +19,17 @@ public:
 
 class VersionFileController {
 private:
+    static constexpr unsigned short
+            currentVersionWListFast = 0,
+            currentVersionWString = 0,
+            currentVersionWPair = 0,
+            currentversionSharedPtr = 0;
 
+
+    unsigned short _versionWListFast;
+    unsigned short _versionWString;
+    unsigned short _versionWPair;
+    unsigned short _versionSharedPtr;
 public:
     /**
      * It's required for template Readable to have read method
@@ -28,7 +38,8 @@ public:
     static VersionFileController loadVersion (Readable &readable);
 
 
-    constexpr int versionWListFast() const;
-    constexpr int versionWString() const noexcept;
-    constexpr int versionWPair() const noexcept;
+    constexpr auto getVersionWListFast()     const noexcept -> int { return this->_versionWListFast; };
+    constexpr auto getVersionWString()       const noexcept -> int { return this->_versionWString; };
+    constexpr auto getVersionWPair()         const noexcept -> int { return this->_versionWPair; };
+    constexpr auto getVersionSharedPtr()     const noexcept -> int { return this->_versionSharedPtr; }
 };

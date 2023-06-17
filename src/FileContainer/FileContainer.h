@@ -44,6 +44,9 @@ public:
     [[nodiscard]]
     size_t sizeOfFile(const WString &path) const;
 
+    /**
+     * \return false iff it fail
+    */
     bool close();
 
     bool remove(const WString &path);

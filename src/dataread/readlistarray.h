@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/WList.h"
 #include "utils/common_error_definition.h"
 #include "FileContainer/WZip.h"

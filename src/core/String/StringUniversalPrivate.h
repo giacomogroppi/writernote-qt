@@ -2,6 +2,7 @@
 
 #include "core/WByteArray.h"
 #include "core/WListFast.h"
+#include "core/WVector.h"
 
 #ifdef USE_QT
 # error "Qt in use but import wronge class"
@@ -9,7 +10,7 @@
 
 class WString {
 private:
-    WByteArray _data;
+    WVector<char> _data;
     void test() const {};
 public:
     WString() = default;
@@ -17,6 +18,9 @@ public:
     WString(const WByteArray &str);
     WString (const WString &other);
     WString(const std::string &other);
+
+    WString (WString &&other) noexcept;
+
 
     WString toUpper() const;
     WString lower() const;

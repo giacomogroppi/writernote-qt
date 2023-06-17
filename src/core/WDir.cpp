@@ -1,7 +1,7 @@
 #include <sys/stat.h>
 #include <filesystem>
 #include "WDir.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/String/WString.h"
 
 int WDir::removeDir(const WByteArray &path)

@@ -8,7 +8,7 @@
 #include "core/WListFast.h"
 #include "core/WList.h"
 #include "core/WVector.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/String/WString.h"
 
 #ifndef USE_QT

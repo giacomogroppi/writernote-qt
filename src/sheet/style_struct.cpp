@@ -56,8 +56,8 @@ void style_struct::save()
     settings.begin();
     saveInArray(arr);
 
-    settings.setValue(KEYSTYLE, arr);
-    settings.setValue(KEYDEFAULTSTYLE, this->default_val);
+    settings.setValue({KEYSTYLE}, arr);
+    settings.setValue({KEYDEFAULTSTYLE}, this->default_val);
 
     settings.save();
 }
@@ -66,7 +66,7 @@ void style_struct::saveDefault(const int index)
 {
     WOptionSettings settings;
     settings.begin();
-    settings.setValue(KEYDEFAULTSTYLE, index);
+    settings.setValue({KEYDEFAULTSTYLE}, index);
     settings.save();
 }
 

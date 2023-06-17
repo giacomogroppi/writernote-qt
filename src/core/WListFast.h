@@ -11,6 +11,7 @@
 #include "utils/WCommonScript.h"
 #include "WAbstractList.h"
 #include "VersionFileController.h"
+#include "Writable.h"
 
 // do some refactoring
 // this list if O(1) in index access
@@ -111,28 +112,52 @@ public:
             return *_array[_index];
         };
 
-        const_iterator &operator=(const const_iterator &other) {
+        auto operator=(const const_iterator &other) -> const_iterator & {
             if (this == &other) return *this;
             this->_array = other._array;
             this->_index = other._index;
             return *this;
         }
 
-        constexpr bool operator==(const_iterator i) const         { return _index == i._index && _array == i._array; }
-        constexpr bool operator!=(const_iterator i) const         { return _index != i._index && _array == i._array; }
-        const_iterator &operator++()                              { _index ++; return *this; }
-        const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
+        constexpr auto operator==(const_iterator i) const -> bool         { return _index == i._index && _array == i._array; }
+        constexpr auto operator!=(const_iterator i) const -> bool         { return _index != i._index && _array == i._array; }
+        auto operator++() -> const_iterator &                             { _index ++; return *this; }
+        auto operator++(int) -> const_iterator { auto copy = *this; ++*this; return copy; }
     };
 
-    [[nodiscard]] iterator begin() noexcept { return iterator((T **)_data, 0); };
-    [[nodiscard]] iterator end()   noexcept { return iterator((T **)_data, size());  };
+    [[nodiscard]] auto begin() noexcept -> iterator { return iterator((T **)_data, 0); };
+    [[nodiscard]] auto end()   noexcept -> iterator { return iterator((T **)_data, size());  };
 
-    [[nodiscard]] const_iterator constBegin() const noexcept { return const_iterator((const T **)_data, 0); }
-    [[nodiscard]] const_iterator constEnd()   const noexcept { return const_iterator((const T **)_data, size()); }
-    [[nodiscard]] const_iterator cBegin() const noexcept { return const_iterator((const T **)_data, 0); }
-    [[nodiscard]] const_iterator cEnd()   const noexcept { return const_iterator((const T **)_data, size()); }
-    [[nodiscard]] const_iterator begin() const noexcept { return const_iterator((const T **)_data, 0); }
-    [[nodiscard]] const_iterator end()   const noexcept { return const_iterator((const T **)_data, size()); }
+    [[nodiscard]] auto constBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
+    [[nodiscard]] auto constEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
+    [[nodiscard]] auto cBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
+    [[nodiscard]] auto cEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
+    [[nodiscard]] auto begin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
+    [[nodiscard]] auto end()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
+
+    /**
+     * \param writable needs to have save(const void *data, size_t size) and it needs to return < 0 in case
+     *  of failure and it needs to have save(const T &param) for non class object
+     *
+     * \return -1 in case of error
+     * */
+    template <class Writable, class T2 = T>
+        requires (std::is_base_of_v<WritableAbstract, Writable>)
+    static
+    auto save(Writable &writable, const WListFast<T2> &list) noexcept -> int
+    {
+        static_assert_type(list._size, int);
+
+        if (writable.write(list._size) < 0) {
+            return -1;
+        }
+
+        for (const auto &ref: std::as_const(list)) {
+            if (T2::save(writable, ref) < 0)
+                return -1;
+        }
+        return 0;
+    }
 };
 
 template<class T>
@@ -155,7 +180,7 @@ inline WListFast<T>::WListFast(const WListFast<T> &other)
 }
 
 template<class T>
-inline WListFast<T> WListFast<T>::mid(int from, int to) const
+inline auto WListFast<T>::mid(int from, int to) const -> WListFast<T>
 {
     W_ASSERT(from >= 0 && to <= size());
     W_ASSERT(from <= to);
@@ -171,7 +196,8 @@ inline WListFast<T> WListFast<T>::mid(int from, int to) const
 }
 
 template<class T>
-inline int WListFast<T>::indexOf(const T &value) const {
+inline auto WListFast<T>::indexOf(const T &value) const -> int
+{
     for (int i = 0; i < size(); ++i) {
         if (at(i) == value)
             return i;
@@ -231,10 +257,14 @@ force_inline void WListFast<T>::test() const
 
 template <class T>
 template <class Readable>
-inline int WListFast<T>::load(const VersionFileController &versionController, Readable &file, WListFast<T> &result)
+inline auto WListFast<T>::load(
+                const VersionFileController &versionController,
+                Readable &file,
+                WListFast<T> &result
+            ) -> int
 {
     result = WListFast<T> ();
-    switch (versionController.versionWListFast()) {
+    switch (versionController.getVersionWListFast()) {
         case 0:
             int i, element;
 

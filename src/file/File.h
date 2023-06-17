@@ -2,7 +2,7 @@
 
 
 #include "utils/time/current_time.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/WFile.h"
 
 /*class File {

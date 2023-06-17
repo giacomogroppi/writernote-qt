@@ -16,6 +16,9 @@ bool FileWriter::isOk() const
 
 void FileWriter::write(const void *data, size_t size)
 {
+    if (_data.capacity() < size)
+        _data.reserve(FileWriter::dataReservePerTime + size);
+
     this->_data.append(static_cast<const char *>(data), size);
 }
 

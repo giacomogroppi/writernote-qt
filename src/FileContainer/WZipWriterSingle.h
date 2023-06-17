@@ -2,7 +2,7 @@
 
 #include "testing/memtest.h"
 #include "utils/WCommonScript.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 
 class WZipWriterSingle {
 private:

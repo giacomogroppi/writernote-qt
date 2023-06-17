@@ -6,7 +6,7 @@
 #define WRITERNOTE_WOPTIONSETTINGS_H
 
 
-#include "WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "WVariant.h"
 
 #ifdef USE_QT

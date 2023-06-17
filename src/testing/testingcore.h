@@ -3,7 +3,7 @@
 
 #include "core/String/WString.h"
 #include "core/PointF.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "currenttitle/document.h"
 
 #if defined(DEBUG_CORE) || defined(DEBUGINFO)

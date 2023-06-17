@@ -2,7 +2,7 @@
 
 #include "utils/WCommonScript.h"
 #include "Scheduler/WObject.h"
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/String/WString.h"
 
 #define NAME_LOG_EXT log_write

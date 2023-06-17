@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 
 class WDir {
 public:

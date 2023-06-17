@@ -4,7 +4,7 @@
 # include <QPixmap>
 #endif // USE_QT
 #include "utils/WCommonScript.h"
-#include "WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "RectF.h"
 #include "WImage.h"
 #include "String/WString.h"

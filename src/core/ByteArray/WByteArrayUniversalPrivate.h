@@ -1,15 +1,12 @@
-#ifndef WRITERNOTE_WBYTEARRAY_H
-#define WRITERNOTE_WBYTEARRAY_H
+#pragma once
 
 #include <iostream>
 #include "utils/WCommonScript.h"
 
 #ifdef USE_QT
-# include <QByteArray>
-#endif // USE_QT
+# error "Trying using WByteArrayUniversal with Qt"
+#endif
 
-#ifndef USE_QT
-// TODO: add move constructor
 class WByteArray
 {
 private:
@@ -21,6 +18,7 @@ private:
 public:
     WByteArray ();
     WByteArray(const char *data, int size = -1);
+    WByteArray (WByteArray &&other) noexcept;
     ~WByteArray();
 
     std::string toStdString() const;
@@ -203,8 +201,13 @@ inline void WByteArray::test() const
 {
 
 }
-#else
-using WByteArray = QByteArray;
-#endif // USE_QT
 
-#endif //WRITERNOTE_WBYTEARRAY_H
+inline WByteArray::WByteArray(WByteArray &&other) noexcept
+    : _data (other._data)
+    , _size (other._size)
+    , _reserved (other._reserved)
+{
+    other._data = nullptr;
+    other._size = 0;
+    other._reserved = 0;
+}

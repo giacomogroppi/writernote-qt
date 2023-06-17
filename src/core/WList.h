@@ -24,6 +24,7 @@ public:
     WList(const WList<T> &l) noexcept;
     ~WList() noexcept;
 
+    template <typename U = T, typename = std::enable_if_t<std::is_copy_constructible_v<U>>>
     void append(const T &data) noexcept;
     void append(T &&data) noexcept;
 
@@ -195,6 +196,7 @@ inline void WList<T>::append(T &&data) noexcept
 }
 
 template <class T>
+template <typename U, typename>
 inline void WList<T>::append(const T &data) noexcept
 {
     struct WListPrivate<T> *tmp;

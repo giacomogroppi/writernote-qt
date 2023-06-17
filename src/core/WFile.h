@@ -1,23 +1,27 @@
 #pragma once
 
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "utils/WCommonScript.h"
 #include "utils/time/current_time.h"
+#include "Readable.h"
 
 
-class WFile
+class WFile final: public ReadableAbstract, public WritableAbstract
 {
 private:
-    FILE *fp;
+    FILE *_fp;
     WByteArray _path;
     WDate lastMod;
 public:
     explicit WFile(const WByteArray &path, char mode);
-    explicit WFile(const WByteArray &path);
+    explicit WFile(WByteArray path);
     explicit WFile(const WString &path);
     explicit WFile(const std::string &path, char mode);
     explicit WFile(const char *path, char mode);
     ~WFile();
+
+    WFile (const WFile &other) noexcept = default;
+    WFile (WFile &&file) noexcept;
 
     enum: int {
         WFileReadOnly,
@@ -25,66 +29,95 @@ public:
         WFileAppend
     };
 
-    bool open (int openMode);
-    bool isValid() const;
-    int write(const void *data, size_t size);
+    /**
+     * \return false iff it fail
+     * */
+    auto open (int openMode) -> bool;
+    auto isValid() const -> bool;
+
+    /**
+     * @return integer &lt 0 in case of error
+     * */
+    auto write(const void *data, size_t size) -> int;
+
+    /**
+     * @return integer &lt 0 in case of error
+     * */
+    template <class T>
+        requires (std::is_arithmetic_v<T> && !std::is_pointer_v<T>)
+    auto write(const T& data) -> int;
 
 
     /**
      * \return < 0 in case of error
      * */
-    int read (void *to, size_t size);
+    auto read (void *to, size_t size) -> int;
 
     /**
      * \return < 0 in case of error
      * */
     template <class T>
-    int read (T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value);
+    auto read (T &ref) -> int requires (!std::is_pointer<T>::value && !std::is_class<T>::value);
 
-    bool close();
-    size_t size() const;
+    auto close() -> bool;
+    auto size() const -> size_t;
 
-    static bool exits(const std::string &path);
-    static int fileExist(const WByteArray &to);
-    static int readFile(WByteArray &to, const char *pathFile);
-    static int saveArrIntoFile(const WByteArray &arr, const std::string &path);
-    static WFile open(const WByteArray &path, char openMode);
+    static auto exits(const std::string &path) -> bool;
+    static auto fileExist(const WByteArray &to) -> int;
+    static auto readFile(WByteArray &to, const char *pathFile) -> int;
+    static auto saveArrIntoFile(const WByteArray &arr, const std::string &path) -> int;
+    static auto open(const WByteArray &path, char openMode) -> WFile;
 
-    bool operator==(const WFile &other) const;
-    bool operator!=(const WFile &other) const;
+    auto operator==(const WFile &other) const -> bool;
+    auto operator!=(const WFile &other) const -> bool;
 
-    static bool exists(const WByteArray& array) noexcept;
+    static auto exists(const WByteArray& array) noexcept -> bool;
 
-    constexpr const WByteArray & getName() const noexcept;
-    WDate getLastMod() const noexcept;
+    constexpr auto getName() const noexcept -> const WByteArray &;
+    auto getLastMod() const noexcept -> WDate;
+
+    auto operator=(WFile &&other) noexcept -> WFile & {
+        if (this == &other)
+            return *this;
+
+        W_ASSERT_TEXT(this->_fp == nullptr, qstr("File in position: %1").arg(_path));
+
+        this->_fp = other._fp;
+        this->_path = std::move (other._path);
+        this->lastMod = std::move (other.lastMod);
+
+        other._fp = nullptr;
+        other._path = "";
+        return *this;
+    }
 
 private:
-    static size_t sizefp(FILE *fp);
+    static auto sizefp(FILE *fp) -> size_t;
 };
 
-inline bool WFile::isValid() const
+inline auto WFile::isValid() const -> bool
 {
-    return !!this->fp;
+    return this->_fp != nullptr;
 }
 
-inline size_t WFile::size() const
+inline auto WFile::size() const -> size_t
 {
-    W_ASSERT(this->fp != nullptr);
-    return WFile::sizefp(this->fp);
+    W_ASSERT(this->_fp != nullptr);
+    return WFile::sizefp(this->_fp);
 }
 
 /**
  * Pass "r" to open file in read only mode
  * Pass "w" to open file in write mode
 */
-force_inline WFile WFile::open(const WByteArray &path, char openMode)
+force_inline auto WFile::open(const WByteArray &path, char openMode) -> WFile
 {
     return WFile {
         path, openMode
     };
 }
 
-inline size_t WFile::sizefp(FILE *fp)
+inline auto WFile::sizefp(FILE *fp) -> size_t
 {
     W_ASSERT(fp);
     W_ASSERT(ftell(fp) == 0);
@@ -95,36 +128,53 @@ inline size_t WFile::sizefp(FILE *fp)
     return size;
 }
 
-inline constexpr const WByteArray & WFile::getName() const noexcept
+inline constexpr auto WFile::getName() const noexcept -> const WByteArray &
 {
     return this->_path;
 }
 
-inline WDate WFile::getLastMod() const noexcept
+inline auto WFile::getLastMod() const noexcept -> WDate
 {
     return this->lastMod;
 }
 
-inline bool WFile::operator==(const WFile &other) const
+inline auto WFile::operator==(const WFile &other) const -> bool
 {
     return this->_path == other._path;
 }
 
-inline bool WFile::operator!=(const WFile &other) const
+inline auto WFile::operator!=(const WFile &other) const -> bool
 {
     return !WFile::operator==(other);
 }
 
 inline WFile::WFile(const WString &path)
-    : WFile (path.toUtf8())
+    : WFile (WByteArray(path.toUtf8()))
 {
 
 }
 
-template<class T>
-inline int WFile::read(T &ref) requires (!std::is_pointer<T>::value && !std::is_class<T>::value)
+inline WFile::WFile(WFile &&file) noexcept
+    : _path(std::move (file._path))
+    , _fp(file._fp)
+    , lastMod(std::move(file.lastMod))
 {
-    if (fread(&ref, sizeof (ref), 1, this->fp) != 1)
+    file._fp = nullptr;
+    file._path = "";
+}
+
+
+template<class T>
+    requires (std::is_arithmetic_v<T> && !std::is_pointer_v<T>)
+inline auto WFile::write(const T &data) -> int
+{
+    return write(&data, sizeof(data));
+}
+
+template<class T>
+inline auto WFile::read(T &ref) -> int requires (!std::is_pointer<T>::value && !std::is_class<T>::value)
+{
+    if (fread(&ref, sizeof (ref), 1, this->_fp) != 1)
         return -1;
     return 0;
 }
