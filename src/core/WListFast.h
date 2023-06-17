@@ -12,6 +12,7 @@
 #include "WAbstractList.h"
 #include "VersionFileController.h"
 #include "Writable.h"
+#include "Readable.h"
 
 // do some refactoring
 // this list if O(1) in index access
@@ -78,6 +79,7 @@ public:
      * \return < 0 if error
      * */
     template <class Readable>
+            requires (std::is_base_of_v<ReadableAbstract, Readable>)
     static int load (const VersionFileController &versionController, Readable &file, WListFast<T> &result);
 
     class iterator
@@ -112,12 +114,7 @@ public:
             return *_array[_index];
         };
 
-        auto operator=(const const_iterator &other) -> const_iterator & {
-            if (this == &other) return *this;
-            this->_array = other._array;
-            this->_index = other._index;
-            return *this;
-        }
+        auto operator=(const const_iterator &other) -> const_iterator & = default;
 
         constexpr auto operator==(const_iterator i) const -> bool         { return _index == i._index && _array == i._array; }
         constexpr auto operator!=(const_iterator i) const -> bool         { return _index != i._index && _array == i._array; }
@@ -257,6 +254,7 @@ force_inline void WListFast<T>::test() const
 
 template <class T>
 template <class Readable>
+    requires (std::is_base_of_v<ReadableAbstract, Readable>)
 inline auto WListFast<T>::load(
                 const VersionFileController &versionController,
                 Readable &file,
