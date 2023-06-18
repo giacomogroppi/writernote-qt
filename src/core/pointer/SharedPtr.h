@@ -19,7 +19,6 @@ public:
     SharedPtr(T *object) noexcept;
 
     template<class Z>
-        requires (std::is_const<T>())
     SharedPtr(SharedPtr<Z> &other);
 
 
@@ -73,13 +72,12 @@ public:
     auto operator=(SharedPtr<T> &&other) const noexcept -> const SharedPtr<T> &;
 
     // T const
-    template <class Z> requires (std::is_const<T>())
+    template <class Z>
     auto operator=(const SharedPtr<Z> &other) noexcept -> SharedPtr<T> &;
 };
 
 template<class T>
 template<class Z>
-    requires(std::is_const<T>())
 inline SharedPtr<T>::SharedPtr(SharedPtr<Z> &other)
      : std::shared_ptr<T>(other)
 {

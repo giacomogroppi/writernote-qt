@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 07/06/23.
-//
-
-#ifndef TESTING_QML_FILECONTAINER_H
-#define TESTING_QML_FILECONTAINER_H
+#pragma once
 
 #include "core/String/WString.h"
 #include "FileReader.h"
@@ -39,7 +34,23 @@ public:
     [[nodiscard]]
     auto getFileReader(const WString &nameFile) const noexcept -> FileReader;
 
-    auto addFile(const FileWriter &nameFile) -> int;
+    /**
+     * \param file File to be added
+     * \return &lt 0 in case of error
+     * */
+    auto addFile(const FileWriter &file) -> int;
+
+    /**
+     * \param file File to be added
+     * \return &lt 0 in case of error
+     * */
+    auto addFile(FileWriter &&file) -> int;
+
+    /**
+     * \param file File to be added
+     * \return &lt 0 in case of error
+     * */
+    auto addFile(WString name, WByteArray data) -> int;
 
     auto closeFileReader (FileReader &file) const -> void;
 
@@ -59,5 +70,7 @@ public:
     auto load_ver_0(WFile &file, size_t size) noexcept -> int;
 };
 
-
-#endif //TESTING_QML_FILECONTAINER_H
+inline auto FileContainer::closeFileReader(FileReader &file) const -> void
+{
+    
+}

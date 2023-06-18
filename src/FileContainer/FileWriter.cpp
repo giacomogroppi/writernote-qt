@@ -33,3 +33,13 @@ FileWriter::FileWriter(FileWriter &&other) noexcept
     , _data(std::move(other._data))
 {
 }
+
+auto FileWriter::getName() const noexcept -> const WString &
+{
+    return _name;
+}
+
+auto FileWriter::getData() const noexcept -> const WByteArray &
+{
+    return _data;
+}

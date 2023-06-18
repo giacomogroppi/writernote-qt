@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 07/06/23.
-//
-
-#ifndef TESTING_QML_FILEWRITER_H
-#define TESTING_QML_FILEWRITER_H
+#pragma once
 
 #include "FileInstance.h"
 #include "core/String/WString.h"
@@ -24,8 +19,10 @@ public:
 
     void write (const void *data, size_t size);
 
+    auto getName() const noexcept -> const WString &;
+    auto getData() const noexcept -> const WByteArray &;
+
     void destroy() noexcept;
+
+    friend class FileContainer;
 };
-
-
-#endif //TESTING_QML_FILEWRITER_H

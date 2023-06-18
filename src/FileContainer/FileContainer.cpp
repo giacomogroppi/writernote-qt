@@ -70,7 +70,39 @@ FileReader FileContainer::getFileReader(const WString &nameFile) const noexcept
     if (it == _subFiles.end())
         return {};
 
-    const SharedPtr<WByteArray> t = it->getValue();
     SharedPtr<WByteArray> tmp = it->getValue();
-    return FileReader(tmp);
+    return {tmp};
+}
+
+auto FileContainer::addFile(FileWriter &&file) -> int
+{
+    return this->addFile(file.getName(), std::move(file._data));
+}
+
+auto FileContainer::addFile(const FileWriter &file) -> int
+{
+    return this->addFile(file.getName(), file.getData());
+}
+
+auto FileContainer::addFile(WString name, WByteArray data) -> int
+{
+    for (auto &ref: _subFiles) {
+        if (ref.getKey() == name) {
+            ref.setValue(
+                    SharedPtr<WByteArray>(
+                            new WByteArray(std::move (data))
+                    )
+            );
+            return 0;
+        }
+    }
+
+    _subFiles.append(
+            Pair (
+                    std::move(name),
+                    SharedPtr(new WByteArray(std::move(data)))
+            )
+    );
+
+    return 0;
 }
