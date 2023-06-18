@@ -3,6 +3,9 @@
 #include <iostream>
 #include <type_traits>
 
+#include "Writable.h"
+#include "Readable.h"
+
 // SFINAE test
 template <typename T>
 class HasReadFunction
@@ -23,21 +26,32 @@ private:
             currentVersionWListFast = 0,
             currentVersionWString = 0,
             currentVersionWPair = 0,
-            currentversionSharedPtr = 0,
+            currentVersionSharedPtr = 0,
             currentVersionWByteArray = 0;
 
+    long _isOk;
     unsigned short _versionWListFast;
     unsigned short _versionWString;
     unsigned short _versionWPair;
     unsigned short _versionSharedPtr;
     unsigned short _versionWByteArray;
+
+    VersionFileController() = default;
+
 public:
+    VersionFileController (VersionFileController &&other) noexcept;
+
     /**
      * It's required for template Readable to have read method
      * */
     template <class Readable>
+            requires (std::is_base_of_v<ReadableAbstract, Readable>)
     static VersionFileController loadVersion (Readable &readable);
 
+    /**
+     * \return true iff it's load corrently
+     * */
+    bool isOk() const noexcept;
 
     constexpr auto getVersionWListFast()     const noexcept -> int { return this->_versionWListFast; };
     constexpr auto getVersionWString()       const noexcept -> int { return this->_versionWString; };
@@ -45,3 +59,31 @@ public:
     constexpr auto getVersionSharedPtr()     const noexcept -> int { return this->_versionSharedPtr; }
     constexpr auto getVersionWByteArray()    const noexcept -> int { return _versionWByteArray; }
 };
+
+template<class Readable>
+    requires (std::is_base_of_v<ReadableAbstract, Readable>)
+inline VersionFileController VersionFileController::loadVersion(Readable &readable)
+{
+    VersionFileController result;
+    short versionVersionFileController;
+
+    result._isOk = readable.read(&versionVersionFileController, sizeof (versionVersionFileController)) >= 0;
+
+    if (!result._isOk)
+        return result;
+
+    unsigned short *d[] = {
+            &result._versionWListFast,
+            &result._versionWString,
+            &result._versionWPair,
+            &result._versionSharedPtr,
+            &result._versionWByteArray
+    };
+
+    for (int i = 0; i < sizeof (d); i++) {
+        if (readable.read (&d[i], sizeof (*d)) < 0)
+            result._isOk = 0;
+    }
+
+    return result;
+}

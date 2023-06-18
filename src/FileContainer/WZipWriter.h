@@ -11,7 +11,7 @@ private:
     bool already_write;
     bool already_init;
 #endif
-    FileContainer          *_zip;
+    FileContainer *_zip;
 
     static FileContainer* openZip(const char *path);
     static int add_file(FileContainer *fileZip, const char *fileName, FileWriter *file);
@@ -22,7 +22,6 @@ private:
 
 public:
     WZipWriter();
-
     ~WZipWriter();
 
     int init(const char *file);
@@ -55,4 +54,9 @@ inline int WZipWriter::init(const char *fileZip)
         return -1;
     }
     return 0;
+}
+
+inline FileContainer *WZipWriter::openZip(const char *path)
+{
+    return new FileContainer(WString(path));
 }

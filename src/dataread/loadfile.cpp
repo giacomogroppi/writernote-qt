@@ -114,9 +114,6 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     if(!ok)
         return ERROR;
 
-    if(xmlstruct::controllOldVersion(zip.get_zip()))
-        return ERROR_MULTIPLE_COPYBOOK;
-
     if(!zip.openFileInZip(NAME_FILE))
         return ERROR;
 

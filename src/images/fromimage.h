@@ -35,7 +35,8 @@ public:
         err_image_not_valid
     };
 
-    [[nodiscard]] int addImage(const WString &pos, const PointSettable *point, const WString &writernote_file);
+    [[nodiscard]]
+    auto addImage(const WString &pos, const PointSettable *point, const WString &writernote_file) -> int;
 
     explicit ImageContainerDrawable();
     ImageContainerDrawable (const ImageContainerDrawable &other) noexcept;
@@ -58,10 +59,11 @@ public:
     void drawImage(WPainter &painter) const;
 
     void reset_img();
-    [[nodiscard]] size_t getSizeFileImage() const;
+    [[nodiscard]]
+    auto getSizeFileImage() const -> size_t;
 
-    ImageContainerDrawable &operator=(const ImageContainerDrawable &other) noexcept;
-    ImageContainerDrawable &operator=(ImageContainerDrawable &&other) noexcept;
+    auto operator=(const ImageContainerDrawable &other) noexcept -> ImageContainerDrawable &;
+    auto operator=(ImageContainerDrawable &&other) noexcept -> ImageContainerDrawable &;
 
 private:
     static load_res_img getImageRawData(WByteArray &arr, const WString &path) ;

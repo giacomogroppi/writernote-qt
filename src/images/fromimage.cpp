@@ -206,3 +206,35 @@ int ImageContainerDrawable::addImage(const WString &pos,
 
     return 0;
 }
+
+ImageContainerDrawable &ImageContainerDrawable::operator=(const ImageContainerDrawable &other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    this->m_img = other.m_img;
+
+    return *this;
+}
+
+ImageContainerDrawable &ImageContainerDrawable::operator=(ImageContainerDrawable &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    m_img = std::move (other.m_img);
+
+    return *this;
+}
+
+ImageContainerDrawable::ImageContainerDrawable(const ImageContainerDrawable &other) noexcept
+    : m_img(other.m_img)
+{
+
+}
+
+ImageContainerDrawable::ImageContainerDrawable(ImageContainerDrawable &&other) noexcept
+    : m_img (std::move(other.m_img))
+{
+
+}

@@ -3,6 +3,9 @@
 #include <QDir>
 #include <QDirIterator>
 
+#include "core/String/WString.h"
+#include "core/WListFast.h"
+
 class get_file_dir
 {
 public:

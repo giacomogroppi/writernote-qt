@@ -163,7 +163,12 @@ inline WListFast<T> &WListFast<T>::operator=(WListFast<T> &&other) noexcept
 {
     if (this == &other)
         return *this;
-    this->clear();
+
+    for (int i = size() - 1; i >= 0; i--) {
+        delete this->_data[i];
+    }
+
+    free (this->_data);
 
     this->_data = other._data;
     this->_size = other._size;

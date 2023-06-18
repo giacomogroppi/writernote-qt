@@ -29,7 +29,11 @@ public:
     size_t createSingleControll() const;
 
     [[nodiscard]]
-    bool isEmpty() const;
+    auto isEmpty() const -> bool;
+
+    template <class Readable>
+            requires (std::is_base_of_v<ReadableAbstract, Readable>())
+    static auto read (const VersionFileController &versionController, Readable &readable, Document &doc) -> int;
 
     enum AudioRecordStatus{
         not_record,

@@ -30,10 +30,6 @@ private:
     /* new */ int loadbinario_4(class WZip &zip, int ver_stroke);
     /* new */ int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
 
-    static unsigned char controllOldVersion(FileContainer *file);
-
-    static void decode0(Document *doc, WListFast<struct point_last> &point, WListFast<double> &pos_foglio);
-    static void decode1(Document *doc, WListFast<WListFast<struct point_old_ver_7>> &page);
 public:
     static int load_stringa(FileReader *f, WString &stringa);
     static int load_stringa(FileReader *f, WByteArray &str);

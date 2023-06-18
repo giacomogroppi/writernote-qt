@@ -37,7 +37,7 @@ public:
     auto operator=(const char *str) noexcept -> WByteArray &;
 };
 
-auto WByteArray::operator=(const char *str) noexcept -> WByteArray &
+inline auto WByteArray::operator=(const char *str) noexcept -> WByteArray &
 {
     QByteArray::operator=(str);
     return *this;

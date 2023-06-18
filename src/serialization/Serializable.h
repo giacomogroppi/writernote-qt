@@ -2,8 +2,8 @@
 
 class Serializable {
 public:
-    virtual Serializable() = default;
+    Serializable() = default;
     virtual ~Serializable() = default;
 
     virtual int write(void *data) const;
-}
+};
