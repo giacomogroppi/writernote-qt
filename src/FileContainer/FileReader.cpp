@@ -5,12 +5,12 @@ FileReader::FileReader()
 {
 }
 
-FileReader::FileReader(std::shared_ptr<const WByteArray> &data)
+FileReader::FileReader(const SharedPtr<const WByteArray> &data)
         : _data(data)
 {
 }
 
-FileReader::FileReader(std::shared_ptr<const WByteArray> &&data)
+FileReader::FileReader(SharedPtr<const WByteArray> &&data)
         : _data(std::move(data))
 {
 }

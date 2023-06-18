@@ -70,5 +70,7 @@ FileReader FileContainer::getFileReader(const WString &nameFile) const noexcept
     if (it == _subFiles.end())
         return {};
 
-    return {it->getValue()};
+    const SharedPtr<WByteArray> t = it->getValue();
+    SharedPtr<WByteArray> tmp = it->getValue();
+    return FileReader(tmp);
 }

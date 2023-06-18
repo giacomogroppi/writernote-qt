@@ -18,6 +18,11 @@ public:
     SharedPtr(const std::shared_ptr<T> &object) noexcept;
     SharedPtr(T *object) noexcept;
 
+    template<class Z>
+        requires (std::is_const<T>())
+    SharedPtr(SharedPtr<Z> &other);
+
+
     template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
     static auto load (const VersionFileController &version, Readable &readable, SharedPtr<T> &result) -> int
     {
@@ -63,7 +68,39 @@ public:
 
     auto operator=(const SharedPtr<T> &other) noexcept -> SharedPtr<T> &;
     auto operator=(SharedPtr<T> &&other) noexcept -> SharedPtr<T> &;
+
+    auto operator=(const SharedPtr<T> &other) const noexcept -> const SharedPtr<T> &;
+    auto operator=(SharedPtr<T> &&other) const noexcept -> const SharedPtr<T> &;
+
+    // T const
+    template <class Z> requires (std::is_const<T>())
+    auto operator=(const SharedPtr<Z> &other) noexcept -> SharedPtr<T> &;
 };
+
+template<class T>
+template<class Z>
+    requires(std::is_const<T>())
+inline SharedPtr<T>::SharedPtr(SharedPtr<Z> &other)
+     : std::shared_ptr<T>(other)
+{
+
+}
+
+template<class T>
+inline auto SharedPtr<T>::operator=(const SharedPtr<T> &other) const noexcept -> const SharedPtr<T> &
+{
+    if (this == &other) return *this;
+    std::shared_ptr<T>::operator=(other);
+    return *this;
+}
+
+template<class T>
+inline auto SharedPtr<T>::operator=(SharedPtr<T> &&other) const noexcept -> const SharedPtr<T> &
+{
+    if (this == &other) return *this;
+    std::shared_ptr<T>::operator=(std::move(other));
+    return *this;
+}
 
 template<class T>
 inline SharedPtr<T>::SharedPtr(T *object) noexcept
