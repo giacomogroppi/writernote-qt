@@ -45,6 +45,8 @@ public:
     StrokeForPage &operator=(const StrokeForPage &other);
     StrokeForPage &operator=(StrokeForPage &&other) noexcept;
 
+    auto operator==(const StrokeForPage &other) const noexcept -> bool;
+
     friend class page_file;
     friend class Page;
 };

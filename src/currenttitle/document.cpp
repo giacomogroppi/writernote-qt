@@ -117,7 +117,7 @@ void Document::adjustAll(unsigned w, unsigned h)
     Document::scala_all(res, static_cast<int>(h));
 }
 
-void Document::increaseZoom(double delta, const WSizeF &size)
+auto Document::increaseZoom(double delta, const WSizeF &size) -> void
 {
     PointF res;
 
@@ -126,7 +126,7 @@ void Document::increaseZoom(double delta, const WSizeF &size)
     Document::scala_all(res, size.getHeight());
 }
 
-void Document::controllForRepositioning()
+auto Document::controllForRepositioning() -> void
 {
     PointF res;
     DataStruct::controllForRepositioning(res);
@@ -146,7 +146,7 @@ Document::Document(Document &&other) noexcept
 
 }
 
-Document &Document::operator=(const Document &other) noexcept
+auto Document::operator=(const Document &other) noexcept -> Document &
 {
     if (this == &other)
         return *this;
@@ -160,7 +160,7 @@ Document &Document::operator=(const Document &other) noexcept
     return *this;
 }
 
-Document &Document::operator=(Document &&other) noexcept
+auto Document::operator=(Document &&other) noexcept -> Document &
 {
     if (this == &other)
         return *this;
@@ -189,24 +189,24 @@ void Document::setRecordStatus(Document::AudioRecordStatus status)
     this->_audioRecordStatus = status;
 }
 
-const WString &Document::getAudioPath() const
+auto Document::getAudioPath() const -> const WString &
 {
     // TODO: move this function in .h file
     return this->_audioPositionPath;
 }
 
-bool Document::isRecorded() const
+auto Document::isRecorded() const -> bool
 {
     return this->_audioRecordStatus != Document::AudioRecordStatus::not_record;
 }
 
-const WByteArray &Document::getAudioData() const
+auto Document::getAudioData() const -> const WByteArray &
 {
     // TODO: move this function in .h file
     return this->_audioRawData;
 }
 
-Document::AudioRecordStatus Document::recordStatus() const
+auto Document::recordStatus() const -> Document::AudioRecordStatus
 {
     return this->_audioRecordStatus;
 }

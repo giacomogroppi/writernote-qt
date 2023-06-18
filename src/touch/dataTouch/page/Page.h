@@ -180,7 +180,10 @@ public:
 #define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
     void drawToImage(const WVector<int> &index, WPixmap &img, cint flag) const;
 
-    Page &operator=(const Page &other);
+    auto operator=(const Page &other) noexcept -> Page &;
+    auto operator=(Page &&other) noexcept -> Page &;
+
+    auto operator==(const Page &other) const noexcept -> bool;
 
     friend class StrokeNormal;
     friend class StrokeRect;
@@ -468,9 +471,9 @@ force_inline Page::Page(const Page &from)
     //Page::copy(from, *this);
 }
 
-force_inline Page::~Page() = default;
+inline Page::~Page() = default;
 
-inline Page &Page::operator=(const Page &other)
+inline Page &Page::operator=(const Page &other) noexcept
 {
     if(this == &other){
         return *this;
@@ -539,4 +542,24 @@ inline void Page::append(const WListFast<std::shared_ptr<Stroke>> &stroke)
     for (auto &ref: stroke) {
         this->append(ref);
     }
+}
+
+inline auto Page::operator==(const Page &other) const noexcept -> bool
+{
+    return  this->_stroke == other._stroke &&
+            this->_IsVisible == other._IsVisible &&
+            this->_strokeTmp == other._strokeTmp &&
+            this->_stroke_writernote == other._stroke_writernote &&
+            this->_count == other._count;
+}
+
+inline auto Page::operator=(Page &&other) noexcept -> Page &
+{
+    this->_stroke = std::move(other._stroke);
+    this->_count = other._count;
+    this->_strokeTmp = std::move(other._strokeTmp);
+    this->_stroke_writernote = std::move(other._stroke_writernote);
+    this->_IsVisible = other._IsVisible;
+    this->_imgDraw = std::move(other._imgDraw);
+    return *this;
 }

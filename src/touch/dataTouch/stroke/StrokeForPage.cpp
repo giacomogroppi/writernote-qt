@@ -212,3 +212,10 @@ StrokeForPage &StrokeForPage::operator=(StrokeForPage &&other) noexcept
     this->_needToUpdate = other._needToUpdate;
     return *this;
 }
+
+auto StrokeForPage::operator==(const StrokeForPage &other) const noexcept -> bool
+{
+    return  this->_needToUpdate == other._needToUpdate &&
+            this->_data == other._data &&
+            this->_pix == other._pix;
+}

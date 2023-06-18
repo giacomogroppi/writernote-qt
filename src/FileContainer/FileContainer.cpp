@@ -8,6 +8,7 @@
 FileContainer::FileContainer(WString path)
     : _path(std::move(path))
     , _isOk(false)
+    , _file(_path)
 {
     WFile file (_path);
     size_t offset = 0;
@@ -105,4 +106,35 @@ auto FileContainer::addFile(WString name, WByteArray data) -> int
     );
 
     return 0;
+}
+
+auto FileContainer::remove(const WString &path) -> bool
+{
+    int index = -1;
+    for (int i = 0; i < _subFiles.size(); i++) {
+        if (_subFiles.at(i).getKey() == path) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1)
+        return false;
+
+    _subFiles.remove(index);
+    return true;
+}
+
+auto FileContainer::sizeOfFile(const WString &path) const -> size_t
+{
+    return this->dataOf(path)->size();
+}
+
+auto FileContainer::dataOf(const WString &name) const -> SharedPtr<WByteArray>
+{
+    for (const auto & _subFile : _subFiles) {
+        if (_subFile.getKey() == name)
+            return _subFile.getValue();
+    }
+    return nullptr;
 }

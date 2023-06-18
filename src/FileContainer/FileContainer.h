@@ -18,6 +18,9 @@ private:
     WString _path;
     WListFast<Pair> _subFiles;
     bool _isOk;
+    WFile _file;
+
+    auto dataOf (const WString &name) const -> SharedPtr<WByteArray>;
 
 public:
     explicit FileContainer(WString path);
@@ -73,4 +76,9 @@ public:
 inline auto FileContainer::closeFileReader(FileReader &file) const -> void
 {
     
+}
+
+inline auto FileContainer::isOpen() const -> bool
+{
+    return this->_file.isValid();
 }

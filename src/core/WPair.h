@@ -5,7 +5,7 @@
 #include "VersionFileController.h"
 #include "Writable.h"
 
-template <class K, class T, typename = std::enable_if_t<!std::is_pointer_v<K> && !std::is_pointer_v<T>>>
+template <class K, class T>
 class WPair
 {
 private:
@@ -71,8 +71,46 @@ public:
     static constexpr int currentVersion = 0;
 };
 
-template<class K, class T, typename T3>
-inline WPair<K, T, T3>::WPair(const K &key, const T &value)
+template<class K, class T>
+WPair<K, T>::WPair(WPair<K, T> &&other) noexcept
+    : _key (std::move (other._key))
+    , _value (std::move(other._value))
+{
+
+}
+
+template<class K, class T>
+inline WPair<K, T>::WPair(const WPair<K, T> &other) noexcept
+    : _key(other._key)
+    , _value(other._value)
+{
+
+}
+
+template<class K, class T>
+inline WPair<K, T>::WPair(K &&key, const T &value) noexcept
+    : _key(std::move(key))
+    , _value(value)
+{
+
+}
+
+template<class K, class T>
+inline WPair<K, T>::WPair(const K &key, T &&value) noexcept
+    : _key(key)
+    , _value(std::move(value))
+{
+}
+
+template<class K, class T>
+inline WPair<K, T>::WPair(K &&key, T &&value) noexcept
+    : _key (std::move(key))
+    , _value(std::move(value))
+{
+}
+
+template<class K, class T>
+inline WPair<K, T>::WPair(const K &key, const T &value)
     : _key(key)
     , _value(value)
 {

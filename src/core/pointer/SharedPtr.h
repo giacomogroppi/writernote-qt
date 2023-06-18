@@ -21,7 +21,6 @@ public:
     template<class Z>
     SharedPtr(SharedPtr<Z> &other);
 
-
     template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
     static auto load (const VersionFileController &version, Readable &readable, SharedPtr<T> &result) -> int
     {
@@ -75,6 +74,20 @@ public:
     template <class Z>
     auto operator=(const SharedPtr<Z> &other) noexcept -> SharedPtr<T> &;
 };
+
+template<class T>
+inline SharedPtr<T>::SharedPtr(const SharedPtr<T> &other) noexcept
+    : std::shared_ptr<T>(other)
+{
+
+}
+
+template<class T>
+inline SharedPtr<T>::SharedPtr(SharedPtr<T> &&other) noexcept
+    : std::shared_ptr<T>(std::move(other))
+{
+
+}
 
 template<class T>
 template<class Z>

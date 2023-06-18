@@ -65,6 +65,7 @@ public:
     T& operator[](int i);
     bool operator==(const WListFast<T> &other) const;
     WListFast<T>& operator=(const WListFast<T> &other);
+    WListFast<T>& operator=(WListFast<T> &&other) noexcept;
 
     template <typename Func>
     [[nodiscard]] bool anyMatch(Func func) const {
@@ -156,6 +157,24 @@ public:
         return 0;
     }
 };
+
+template<class T>
+inline WListFast<T> &WListFast<T>::operator=(WListFast<T> &&other) noexcept
+{
+    if (this == &other)
+        return *this;
+    this->clear();
+
+    this->_data = other._data;
+    this->_size = other._size;
+    this->_reserved = other._reserved;
+
+    other._data = nullptr;
+    other._size = 0;
+    other._reserved = 0;
+
+    return *this;
+}
 
 template<class T>
 inline void WListFast<T>::remove(const T &item)

@@ -415,3 +415,14 @@ DataStruct::DataStruct(const DataStruct &other) noexcept
     , _pageVisible(other._pageVisible)
 {
 }
+
+bool DataStruct::operator==(const DataStruct &other) const
+{
+    if (this == &other)
+        return true;
+    return  this->_pageVisible == other._pageVisible &&
+            this->_zoom == other._zoom &&
+            this->_last_translation == other._last_translation &&
+            this->_page == other._page &&
+            this->_pointFirstPage == other._pointFirstPage;
+}
