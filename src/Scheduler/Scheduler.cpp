@@ -43,7 +43,16 @@ Scheduler::Scheduler()
     }
 }
 
-Scheduler::~Scheduler() = default;
+Scheduler::~Scheduler()
+{
+    this->_needToDie = true;
+
+    this->_semMain.release(_threads.size());
+    this->_semGeneral.release(_threads.size());
+
+    for (auto &ref: _threads)
+        ref.join();
+}
 
 void Scheduler::createHeap()
 {

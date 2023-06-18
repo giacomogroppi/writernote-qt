@@ -24,6 +24,7 @@ public:
     bool tryWait();
     void acquire();
     void release();
+    void release(int n);
 };
 
 inline WSemaphore::WSemaphore(int init_value)
@@ -72,4 +73,10 @@ inline bool WSemaphore::tryWait()
     }
     return false;
 #endif
+}
+
+inline void WSemaphore::release(int n)
+{
+    for (int i = 0; i < n; i++)
+        release();
 }
