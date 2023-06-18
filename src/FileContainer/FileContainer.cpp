@@ -1,7 +1,3 @@
-//
-// Created by Giacomo Groppi on 07/06/23.
-//
-
 #include "FileContainer.h"
 #include "core/WFile.h"
 #include "utils/WCommonScript.h"
@@ -52,7 +48,6 @@ bool FileContainer::close()
     return true;
 }
 
-// TODO: Use WFile
 int FileContainer::load_ver_0(WFile &file, size_t size) noexcept
 {
     size_t stack = 0;
@@ -60,9 +55,20 @@ int FileContainer::load_ver_0(WFile &file, size_t size) noexcept
     const auto versionFileController = VersionFileController::loadVersion(file);
 
     if (WListFast<Pair>::load(versionFileController, file, _subFiles) < 0) {
-        // TODO manage error
-        W_ASSERT(0);
+        return -1;
     }
 
-    // static_assert(0, "To implement");
+    return 0;
+}
+
+FileReader FileContainer::getFileReader(const WString &nameFile) const noexcept
+{
+    const auto it = std::find_if(_subFiles.begin(), _subFiles.end(), [&nameFile](const Pair &pair) {
+        return pair.getKey() == nameFile;
+    });
+
+    if (it == _subFiles.end())
+        return {};
+
+    return {it->getValue()};
 }

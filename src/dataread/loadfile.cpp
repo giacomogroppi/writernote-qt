@@ -26,7 +26,7 @@ int xmlstruct::readFile(FileContainer *fileZip, WByteArray &arr,
         return OK;
     }
 
-    FileReader &file = fileZip->getFileReader(path);
+    FileReader file = fileZip->getFileReader(path);
     if(!file.isOk())
         return ERROR;
 

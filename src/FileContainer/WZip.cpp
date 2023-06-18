@@ -80,7 +80,7 @@ bool WZip::openFileInZip(const WByteArray &nameFile)
     this->_data_private._len_file = WZip::get_size_file(_data_private._zip, nameFile.constData());
     this->_data_private._data = WMalloc(_data_private._len_file);
 
-    auto &file = _data_private._zip->getFileReader(nameFile);
+    auto file = _data_private._zip->getFileReader(nameFile);
 
     if(!file.isOk())
         return false;

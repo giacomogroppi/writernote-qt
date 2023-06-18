@@ -15,14 +15,17 @@
 
 class FileContainer {
 private:
-    using Pair = WPair<WString, SharedPtr<WByteArray>>;
+    using Pair = WPair<
+                WString,
+                SharedPtr<WByteArray>
+            >;
 
     WString _path;
     WListFast<Pair> _subFiles;
     bool _isOk;
 
 public:
-    FileContainer(WString path);
+    explicit FileContainer(WString path);
 
     enum FileContainerOpenMode {
         Read,
@@ -33,25 +36,27 @@ public:
      * \param nameFile name of the subfile in this file
      * \return a FileFinder for read this file
      * */
-    FileReader &getFileReader(const WString &nameFile);
-    int addFile(const FileWriter &nameFile);
+    [[nodiscard]]
+    auto getFileReader(const WString &nameFile) const noexcept -> FileReader;
 
-    void closeFileReader (FileReader &file) const;
+    auto addFile(const FileWriter &nameFile) -> int;
+
+    auto closeFileReader (FileReader &file) const -> void;
 
     [[nodiscard]]
-    bool isOpen() const;
+    auto isOpen() const -> bool;
 
     [[nodiscard]]
-    size_t sizeOfFile(const WString &path) const;
+    auto sizeOfFile(const WString &path) const -> size_t;
 
     /**
      * \return false iff it fail
     */
-    bool close();
+    auto close() -> bool;
 
-    bool remove(const WString &path);
+    auto remove(const WString &path) -> bool;
 
-    int load_ver_0(WFile &file, size_t size) noexcept;
+    auto load_ver_0(WFile &file, size_t size) noexcept -> int;
 };
 
 

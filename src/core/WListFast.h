@@ -288,6 +288,7 @@ inline auto WListFast<T>::load(
         default:
             return -1;
     }
+    return -1;
 }
 
 template<class T>

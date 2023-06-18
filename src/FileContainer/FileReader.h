@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 07/06/23.
-//
-
-#ifndef TESTING_QML_FILEREADER_H
-#define TESTING_QML_FILEREADER_H
+#pragma once
 
 #include "core/ByteArray/WByteArray.h"
 #include "FileInstance.h"
@@ -12,6 +7,7 @@
 class FileReader: public FileInstance {
     std::shared_ptr<const WByteArray> _data;
 public:
+    FileReader ();
     FileReader (std::shared_ptr<const WByteArray> &data);
     FileReader (std::shared_ptr<const WByteArray> &&data);
     ~FileReader() = default;
@@ -22,16 +18,6 @@ public:
     size_t readRaw(void *to, size_t size) const;
 };
 
-inline FileReader::FileReader(std::shared_ptr<const WByteArray> &data)
-    : _data(data)
-{
-
-}
-
-inline FileReader::FileReader(std::shared_ptr<const WByteArray> &&data)
-    : _data(std::move(data))
-{}
-
 size_t FileReader::readRaw(void *to, size_t size) const
 {
     if (size > _data->size()) {
@@ -41,5 +27,3 @@ size_t FileReader::readRaw(void *to, size_t size) const
 
     return _data->size();
 }
-
-#endif //TESTING_QML_FILEREADER_H
