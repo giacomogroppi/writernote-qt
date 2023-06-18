@@ -48,13 +48,10 @@ std::shared_ptr<Stroke> StrokePre::merge()
     _stroke->preappend(_point.size());
 
     while (not _point.isEmpty()) {
-        const auto *data_point = _point.get_first();
-        const auto *data_press = _pressure.get_first();
+        const auto data_point = std::move(_point.get_first());
+        const auto data_press = std::move(_pressure.get_first());
 
-        _stroke->append(*data_point, *data_press);
-
-        WDelete(data_point);
-        WDelete(data_press);
+        _stroke->append(data_point, data_press);
     }
 
     {

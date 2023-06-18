@@ -35,7 +35,7 @@ public:
      * This function remove and return the first object of the list
      * @return First object in the list
     */
-    T *get_first() noexcept;
+    T get_first() noexcept;
     [[nodiscard]] bool isEmpty() const noexcept;
     [[nodiscard]] constexpr int size() const noexcept;
     const T& last() const;
@@ -227,15 +227,16 @@ inline void WList<T>::append(const T &data) noexcept
 }
 
 template <class T>
-inline T *WList<T>::get_first() noexcept
+inline T WList<T>::get_first() noexcept
 {
     test();
-    T *ret = this->_first->data;
+    T ret = std::move(*this->_first->data);
     struct WListPrivate<T> *next = this->_first->next;
 
     if(_first->next == nullptr)
         _last = _first->next;
 
+    delete this->_first->data;
     delete this->_first;
     this->_first = next;
 
@@ -243,9 +244,7 @@ inline T *WList<T>::get_first() noexcept
 
     test();
 
-    W_ASSERT(ret != nullptr);
-
-    return ret;
+    return std::move(ret);
 }
 
 template<class T>

@@ -17,7 +17,7 @@ static void draw_laser(WPainter &painter, Laser &_laser, WPen &pen, double zoom)
     auto begin = _laser.begin();
     const auto end = _laser.end();
 
-    W_ASSERT_TEXT(0, "TODO view area {0., 0.}");
+    // TODO view area {0., 0.}
     for(; begin != end; begin ++){
         drawSingleStroke(*begin, painter, pen, zoom, {0., 0.});
     }
