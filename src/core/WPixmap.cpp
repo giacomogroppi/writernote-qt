@@ -80,7 +80,7 @@ size_t WPixmap::save_and_size(WByteArray &arr) const
     return arr.size();
 }
 
-Rect WPixmap::rect() const
+WRect WPixmap::rect() const
 {
     const auto qtRect = QPixmap::rect();
 
@@ -89,7 +89,7 @@ Rect WPixmap::rect() const
 
     WDebug(true, qtTopLeft.x() << qtTopLeft.y() << qtBottomRight.x() << qtBottomRight.y());
 
-    auto res = Rect {
+    auto res = WRect {
         qtTopLeft.x(),
         qtTopLeft.y(),
         qtBottomRight.x(),

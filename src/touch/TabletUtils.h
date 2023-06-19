@@ -30,7 +30,7 @@ public:
         Optional<Laser> laser;
 
         WPen pen;
-        Point lastPoint;
+        WPoint lastPoint;
 
         void reset()
         {

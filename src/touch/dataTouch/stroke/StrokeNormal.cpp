@@ -252,7 +252,7 @@ bool StrokeNormal::isInside(const RectF &rect) const
 
 size_t StrokeNormal::getSizeInMemory() const
 {
-    return sizeof(Point) * this->length();
+    return sizeof(WPoint) * this->length();
 }
 
 size_t StrokeNormal::getSizeInFile() const
@@ -271,7 +271,7 @@ size_t StrokeNormal::getSizeInFile() const
     s += sizeof(len_pressure);
 
     s += sizeof(pressure_t)     * len_pressure;
-    s += sizeof(Point)        * len_point;
+    s += sizeof(WPoint) * len_point;
 
     return s + Stroke::getSizeInFile();
 }

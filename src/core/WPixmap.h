@@ -30,7 +30,7 @@ public:
     size_t save_and_size(WByteArray &arr) const;
 
     void fill(const WColor &color);
-    Rect rect() const;
+    WRect rect() const;
     WImage toImage() const;
     bool isNull() const;
 

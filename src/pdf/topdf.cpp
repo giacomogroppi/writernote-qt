@@ -76,7 +76,7 @@ bool topdf::createpdf(cbool withPdf)
 
     for (i = 0; i < lenpage; i++) {
         const auto &img = data->at(i).getImg();
-        const auto targetRect = Rect(0, 0, pdfWriter.width(), pdfWriter.height());
+        const auto targetRect = WRect(0, 0, pdfWriter.width(), pdfWriter.height());
 
         painter.drawPixmap(targetRect, img);
         /*this->draw(painter,

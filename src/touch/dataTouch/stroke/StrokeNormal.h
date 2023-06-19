@@ -280,11 +280,11 @@ force_inline void StrokeNormal::draw(
 
         const auto r = img.rect();
         painterPublic.drawPixmap(
-            Rect(
-                Point{r.topLeft().x(), r.topLeft().y()},
-                Point{r.bottomRight().x(), r.bottomRight().y()}
+                WRect(
+                        WPoint{r.topLeft().x(), r.topLeft().y()},
+                        WPoint{r.bottomRight().x(), r.bottomRight().y()}
             ),
-            img);
+                img);
     } else {
         WDebug(debug_draw_stroke, "Paint not high");
     }

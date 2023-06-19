@@ -445,6 +445,6 @@ inline constexpr RectTemplate<T>::RectTemplate(const RectTemplate<T> &other)
 {
 }
 
-using Rect = RectTemplate<int>;
+using WRect = RectTemplate<int>;
 
 #endif //TESTING_QML_WRECT_H

@@ -7,7 +7,7 @@
 
 #include "PointTemplate.h"
 
-using Point = PointTemplate<int>;
+using WPoint = PointTemplate<int>;
 
 
 #endif //WRITERNOTE_POINT_H

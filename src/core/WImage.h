@@ -65,7 +65,7 @@ public:
 
     friend class WPainter;
 
-    WRgb pixel(const Point &point) const;
+    WRgb pixel(const WPoint &point) const;
 };
 
 #ifdef USE_QT
@@ -123,7 +123,7 @@ inline WImage::WImage(QImage img)
 
 }
 
-inline WRgb WImage::pixel(const Point &point) const
+inline WRgb WImage::pixel(const WPoint &point) const
 {
     return QImage::pixel(point.x(), point.y());
 }

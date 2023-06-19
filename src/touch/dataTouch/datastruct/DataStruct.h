@@ -116,9 +116,9 @@ public:
     __fast Page &           at_mod(cint page);
 
     [[deprecated("Legacy function, to be removed")]]
-    [[nodiscard]] Point at_draw_page(cint indexPoint, const Page &Page) const;
+    [[nodiscard]] WPoint at_draw_page(cint indexPoint, const Page &Page) const;
     [[deprecated("Legacy function, to be removed")]]
-    static Point at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom);
+    static WPoint at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom);
 
     __fast [[nodiscard]] const Page &     lastPage() const;
 
@@ -146,7 +146,7 @@ public:
 
     [[nodiscard]] static bool isOkZoom(double newPossibleZoom);
     static RectF joinRect(const RectF &first, const RectF &second);
-    static Rect get_bigger_rect(const Rect &first, const Rect &second);
+    static WRect get_bigger_rect(const WRect &first, const WRect &second);
 
     DataStruct &operator=(const DataStruct &other) noexcept;
     DataStruct &operator=(DataStruct &&other) noexcept;
@@ -242,14 +242,14 @@ inline Page &DataStruct::at_mod(cint page)
 }
 
 // this function is not threadSave
-force_inline __slow Point DataStruct::at_draw_page(
+force_inline __slow WPoint DataStruct::at_draw_page(
         cint indexPoint,
         const Page &Page) const
 {
     return DataStruct::at_draw_page(indexPoint, Page, getPointFirstPage(), _zoom);
 }
 
-force_inline Point DataStruct::at_draw_page(
+force_inline WPoint DataStruct::at_draw_page(
         cint indexPoint,    const Page &Page,
         const PointF &PointFirstPageWithZoom,
         cdouble zoom)
@@ -532,7 +532,7 @@ inline RectF DataStruct::joinRect(
     };
 }
 
-force_inline Rect DataStruct::get_bigger_rect(const Rect &first, const Rect &second)
+force_inline WRect DataStruct::get_bigger_rect(const WRect &first, const WRect &second)
 {
     RectF firstCasted(first.castTo<double>());
     RectF secondCasted(second.castTo<double>());

@@ -50,8 +50,8 @@ public:
     void drawImage(const RectF &target, const WImage &image, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap, const RectF &source);
     void drawPixmap(const RectF &target, const WPixmap &pixmap);
-    void drawPixmap(const Rect &target, const WPixmap &pixmap);
-    void drawPixmap(const Rect &target, const WPixmap &pixmap, const Rect &source);
+    void drawPixmap(const WRect &target, const WPixmap &pixmap);
+    void drawPixmap(const WRect &target, const WPixmap &pixmap, const WRect &source);
     void drawPoint(const PointF &point);
     void drawRect(const RectF &rect);
     void drawEllipse(const PointF &center, double rx, double ry);
@@ -185,9 +185,9 @@ inline void WPainter::drawPixmap(const RectF &target, const WPixmap &pixmap)
     this->_painter->drawPixmap(qtTarget, pixmap);
 }
 
-inline void WPainter::drawPixmap(const Rect &target, const WPixmap &pixmap)
+inline void WPainter::drawPixmap(const WRect &target, const WPixmap &pixmap)
 {
-    const auto convertToQt = [](const Rect &rect) -> QRect {
+    const auto convertToQt = [](const WRect &rect) -> QRect {
         return {
                 QPoint {
                         rect.topLeft().x(),
@@ -204,9 +204,9 @@ inline void WPainter::drawPixmap(const Rect &target, const WPixmap &pixmap)
     this->_painter->drawPixmap(qtTarget, pixmap);
 }
 
-inline void WPainter::drawPixmap(const Rect &target, const WPixmap &pixmap, const Rect &source)
+inline void WPainter::drawPixmap(const WRect &target, const WPixmap &pixmap, const WRect &source)
 {
-    const auto convertToQt = [](const Rect &rect) -> QRectF {
+    const auto convertToQt = [](const WRect &rect) -> QRectF {
         return {
                 QPoint {
                         rect.topLeft().x(),
