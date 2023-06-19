@@ -39,6 +39,12 @@ public:
     template <typename Z>
     PointTemplate<Z> castTo() const;
 
+    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>())
+    static auto load (const VersionFileController &versionController, Readable &readable, PointTemplate<T> &src) -> int;
+
+    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>())
+    static auto write (Writable &writable, const PointTemplate<T> &src) -> int;
+
     PointTemplate<T>& operator=(const PointTemplate<T> &other);
     bool operator==(const PointTemplate<T> &other) const;
     bool operator!=(const PointTemplate<T> &other) const;

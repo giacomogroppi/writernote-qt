@@ -74,8 +74,17 @@ public:
     /* the draw function triggers the drawing of the points automatically */
     void append(const WListFast<std::shared_ptr<Stroke>> &stroke, int m_pos_ris);
 
-    int  appendStroke(std::shared_ptr<Stroke> &&object);
-    int  appendStroke(const std::shared_ptr<Stroke>&); /* return value: the page of the point */
+    /**
+     * This method take the object from 'object'
+     * \param stroke to be added
+     * \return the index of the page to which the stroke was added
+     * */
+    auto  appendStroke(std::shared_ptr<Stroke> &&object) -> int;
+    /**
+     * \param stroke to be added
+     * \return the index of the page to which the stroke was added
+     * */
+    auto  appendStroke(const std::shared_ptr<Stroke>& stroke) -> int; /* return value: the page of the point */
 
     void appendStroke(std::shared_ptr<Stroke> &&object, int page);
     void appendStroke(const std::shared_ptr<Stroke>& stroke, int page);
@@ -89,9 +98,9 @@ public:
     void MovePoint(const WVector<int> & pos, cint page, const PointF &translation);
 
     [[nodiscard]] bool userWrittenSomething() const;
-    static bool userWrittenSomething(const DataStruct &data1, const DataStruct &data2);
 
-    [[nodiscard]] int adjustStroke(Stroke &stroke) const;
+    [[nodiscard]]
+    auto adjustStroke(Stroke &stroke) const -> int;
 
     void moveNextPoint(uint &pos, uint len = 0, int id = -6);
 
@@ -115,11 +124,10 @@ public:
     __fast [[nodiscard]] const Page & at(int page) const;
     __fast Page &           at_mod(cint page);
 
-    [[deprecated("Legacy function, to be removed")]]
-    [[nodiscard]] WPoint at_draw_page(cint indexPoint, const Page &Page) const;
-    [[deprecated("Legacy function, to be removed")]]
-    static WPoint at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom);
+    [[deprecated]] [[nodiscard]]
+    WPoint at_draw_page(cint indexPoint, const Page &Page) const;
 
+    [[deprecated]]
     __fast [[nodiscard]] const Page &     lastPage() const;
 
     [[nodiscard]]
@@ -133,28 +141,39 @@ public:
     __fast [[nodiscard]] RectF get_size_area(const WListFast<WVector<int>> &pos, int base) const;
     //__slow RectF getSizeArea(const WListFast<int> & id) const;
 
-    [[nodiscard]] int getFirstPageVisible() const;
+    auto getFirstPageVisible() const -> int;
 
     void setVisible(int from, int to);
-    [[nodiscard]] double currentWidth() const;
+
+    auto currentWidth() const -> double;
     void moveToPage(int page);
-    [[nodiscard]] int getLastPageVisible() const;
+
+    auto getLastPageVisible() const -> int;
     void newViewAudio(int newTime);
 
     [[nodiscard]] int get_range_visible() const;
     void insertPage(const Page &Page, int index);
 
-    [[nodiscard]] static bool isOkZoom(double newPossibleZoom);
-    static RectF joinRect(const RectF &first, const RectF &second);
-    static WRect get_bigger_rect(const WRect &first, const WRect &second);
+    // read
+    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>())
+    static auto load (const VersionFileController &versionControll, Readable &readable, DataStruct &result) -> int;
 
-    DataStruct &operator=(const DataStruct &other) noexcept;
-    DataStruct &operator=(DataStruct &&other) noexcept;
+    // write
+    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>())
+    static auto write (Writable &readable, const DataStruct &source) -> int;
 
-    bool operator==(const DataStruct &other) const;
+    auto operator=(const DataStruct &other) noexcept -> DataStruct &;
+    auto operator=(DataStruct &&other) noexcept -> DataStruct &;
+    auto operator==(const DataStruct &other) const -> bool;
 
 #   define DATASTRUCT_MUST_TRASLATE_PATH BIT(1)
     static void MovePoint(WList<Stroke> &stroke, const PointF &translation, int flag);
+    static bool userWrittenSomething(const DataStruct &data1, const DataStruct &data2);
+
+    static auto isOkZoom(double newPossibleZoom) -> bool;
+    static auto joinRect(const RectF &first, const RectF &second) -> RectF;
+    static auto get_bigger_rect(const WRect &first, const WRect &second) -> WRect;
+    static auto at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom) -> WPoint;
 
     friend class xmlstruct;
     friend class TestingCore;
@@ -432,7 +451,7 @@ inline void DataStruct::triggerViewIfVisible(int m_pos_ris)
     }
 }
 
-[[nodiscard]] force_inline bool DataStruct::isOkZoom(double newPossibleZoom)
+force_inline bool DataStruct::isOkZoom(double newPossibleZoom)
 {
     return !(newPossibleZoom >= 2.0 || newPossibleZoom <= 0.3);
 }
@@ -593,4 +612,53 @@ force_inline void DataStruct::setVisible(int from, int to)
 inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
 {
     at_mod(index).decreaseAlfa(pos, 4);
+}
+
+template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>())
+inline auto DataStruct::load(
+            const VersionFileController &versionControll,
+            Readable &readable,
+            DataStruct &result
+        ) -> int
+{
+    if (versionControll.getVersionDataStruct() != 0)
+        return -1;
+
+    if (readable.load (versionControll, &result._zoom, sizeof (result._zoom)) < 0)
+        return -1;
+
+    if (PointF::load (versionControll, readable, result._pointFirstPage) < 0)
+        return -1;
+
+    if (PointF::load (versionControll, readable, result._last_translation) < 0)
+        return -1;
+
+    if (readable.read (&result._pageVisible, sizeof (result._pageVisible)) < 0)
+        return -1;
+
+    if (WVector<Page>::load (readable, result._page) < 0)
+        return -1;
+
+    return 0;
+}
+
+template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>())
+inline auto DataStruct::write (Writable &writable, const DataStruct &source) -> int
+{
+    if (writable.write (&source._zoom, sizeof (source._zoom)) < 0)
+        return -1;
+
+    if (PointF::write (writable, source._pointFirstPage) < 0)
+        return -1;
+
+    if (PointF::write (writable, source._last_translation) < 0)
+        return -1;
+
+    if (writable.write (&source._pageVisible, sizeof (source._pageVisible)) < 0)
+        return -1;
+
+    if (WVector<Page>::save (writable, source._page) < 0)
+        return -1;
+
+    return 0;
 }

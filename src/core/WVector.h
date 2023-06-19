@@ -9,6 +9,9 @@
 #include "utils/WCommonScript.h"
 #include "testing/memtest.h"
 #include "WAbstractList.h"
+#include "Writable.h"
+#include "Readable.h"
+#include "VersionFileController.h"
 
 /*
 
@@ -118,6 +121,37 @@ public:
     const_iterator begin() const noexcept { test(); return const_iterator(this->_data); }
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
      */
+
+
+    /**
+     * \return < 0 if error
+     * */
+    template <class Readable>
+    requires (std::is_base_of_v<ReadableAbstract, Readable>)
+    static int load (const VersionFileController &versionController, Readable &file, WVector<T> &result);
+
+    /**
+     * \param writable needs to have save(const void *data, size_t size) and it needs to return < 0 in case
+     *  of failure and it needs to have save(const T &param) for non class object
+     *
+     * \return -1 in case of error
+     * */
+    template <class Writable, class T2 = T> requires (std::is_base_of_v<WritableAbstract, Writable>)
+    static
+    auto save(Writable &writable, const WVector<T2> &list) noexcept -> int
+    {
+        static_assert_type(list._size, int);
+
+        if (writable.write(list._size) < 0) {
+            return -1;
+        }
+
+        for (const auto &ref: std::as_const(list)) {
+            if (T2::save(writable, ref) < 0)
+                return -1;
+        }
+        return 0;
+    }
 };
 
 template<class T>
@@ -437,5 +471,43 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WVector<T> &p)
     return d.space();
 }
 #endif // USE_QT
+
+template <class T>
+template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
+inline auto WVector<T>::load(
+        const VersionFileController &versionController,
+        Readable &file,
+        WVector<T> &result
+) -> int
+{
+    result = WListFast<T> ();
+    switch (versionController.getVersionWListFast()) {
+        case 0:
+            int i, element;
+
+            if (file.read(element) < 0) {
+                return -1;
+            }
+
+            result.reserve(element);
+
+            for (i = 0; i < element; i++) {
+                T tmp;
+
+                if (T::load (versionController, file, tmp) < 0 ) {
+                    result = WListFast<T>();
+                    return -1;
+                }
+
+                result.append(
+                        std::move (tmp)
+                );
+            }
+            return 0;
+        default:
+            return -1;
+    }
+    return -1;
+}
 
 #endif //WRITERNOTE_WVECTOR_H

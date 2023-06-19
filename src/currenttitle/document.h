@@ -35,6 +35,10 @@ public:
             requires (std::is_base_of_v<ReadableAbstract, Readable>())
     static auto read (const VersionFileController &versionController, Readable &readable, Document &doc) -> int;
 
+    template <class Writable>
+            requires (std::is_base_of_v<WritableAbstract, Writable>())
+    static auto write (Writable &writable, const Document &doc) -> int;
+
     enum AudioRecordStatus{
         not_record,
         record_file,
@@ -77,4 +81,17 @@ force_inline bool Document::isEmpty() const
 #endif // PDFSUPPORT
             ImageContainerDrawable::lengthImage() == 0;
     return res;
+}
+
+template<class Writable>
+requires (std::is_base_of_v<WritableAbstract, Writable>())
+auto Document::write(Writable &writable, const Document &doc) -> int
+{
+    if (DataStruct::write (writable, doc) < 0)
+        return -1;
+    if (ImageContainerDrawable::write (writable, doc) < 0)
+        return -1;
+    if (PdfContainerDrawable::write (writable, doc) < 0)
+        return -1;
+    return 0;
 }
