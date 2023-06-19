@@ -14,9 +14,7 @@
 
 class Document :
         public DataStruct,
-#ifdef PDFSUPPORT
-        public frompdf,
-#endif // PDFSUPPORT
+        public PdfContainerDrawable,
         public ImageContainerDrawable
 {
 public:
@@ -32,11 +30,11 @@ public:
     auto isEmpty() const -> bool;
 
     template <class Readable>
-            requires (std::is_base_of_v<ReadableAbstract, Readable>())
-    static auto read (const VersionFileController &versionController, Readable &readable, Document &doc) -> int;
+            requires (std::is_base_of_v<ReadableAbstract, Readable>)
+    static auto read (const VersionFileController &versionController, Readable &readable) -> std::pair<int, Document>;
 
     template <class Writable>
-            requires (std::is_base_of_v<WritableAbstract, Writable>())
+            requires (std::is_base_of_v<WritableAbstract, Writable>)
     static auto write (Writable &writable, const Document &doc) -> int;
 
     enum AudioRecordStatus{
@@ -76,15 +74,12 @@ force_inline bool Document::isEmpty() const
 {
     const auto res =
             isEmptyTouch() and
-            #ifdef PDFSUPPORT
-            frompdf::length_pdf() == 0 and
-#endif // PDFSUPPORT
+            PdfContainerDrawable::length_pdf() == 0 and
             ImageContainerDrawable::lengthImage() == 0;
     return res;
 }
 
-template<class Writable>
-requires (std::is_base_of_v<WritableAbstract, Writable>())
+template<class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
 auto Document::write(Writable &writable, const Document &doc) -> int
 {
     if (DataStruct::write (writable, doc) < 0)

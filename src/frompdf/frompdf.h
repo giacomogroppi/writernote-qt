@@ -3,10 +3,36 @@
 #include "touch/dataTouch/datastruct/DataStruct.h"
 
 #ifndef PDFSUPPORT
-class frompdf{
+class PdfContainerDrawable{
 public:
     unsigned char var;
-    frompdf(void *){};
+    PdfContainerDrawable(void *) { };
+    PdfContainerDrawable() = default;
+    PdfContainerDrawable(PdfContainerDrawable &&other) noexcept = default;
+    PdfContainerDrawable(const PdfContainerDrawable &other) noexcept = default;
+
+    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
+    static auto load (const VersionFileController &versionController, Readable &readable) -> std::pair<int, PdfContainerDrawable>
+    {
+        // TODO: implement
+        return {0, PdfContainerDrawable()};
+    };
+
+    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
+    static auto write (Writable &writable, const PdfContainerDrawable &source) -> int
+    {
+        // TODO: implement
+        return 0;
+    };
+
+    auto length_pdf() const noexcept -> int
+    {
+        return 0;
+    }
+
+    auto operator=(PdfContainerDrawable && object) -> PdfContainerDrawable & = default;
+    auto operator=(const PdfContainerDrawable &object) -> PdfContainerDrawable & = default;
+
 };
 #else
 

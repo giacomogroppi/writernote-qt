@@ -62,6 +62,12 @@ public:
     [[nodiscard]]
     auto getSizeFileImage() const -> size_t;
 
+    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
+    static auto load (const VersionFileController &versionController, Readable &readable) -> std::pair<int, ImageContainerDrawable>;
+
+    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
+    static auto write (Writable &writable, const ImageContainerDrawable &source) -> int;
+
     auto operator=(const ImageContainerDrawable &other) noexcept -> ImageContainerDrawable &;
     auto operator=(ImageContainerDrawable &&other) noexcept -> ImageContainerDrawable &;
 

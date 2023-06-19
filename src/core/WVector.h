@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 28/04/23.
-//
-
-#ifndef WRITERNOTE_WVECTOR_H
-#define WRITERNOTE_WVECTOR_H
+#pragma once
 
 #include <iostream>
 #include "utils/WCommonScript.h"
@@ -128,7 +123,7 @@ public:
      * */
     template <class Readable>
     requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static int load (const VersionFileController &versionController, Readable &file, WVector<T> &result);
+    static auto load (const VersionFileController &versionController, Readable &file) -> std::pair<int, WVector<T>>;
 
     /**
      * \param writable needs to have save(const void *data, size_t size) and it needs to return < 0 in case
@@ -140,14 +135,15 @@ public:
     static
     auto save(Writable &writable, const WVector<T2> &list) noexcept -> int
     {
-        static_assert_type(list._size, int);
+        const int size = list.size();
+        static_assert_type(size, const int);
 
-        if (writable.write(list._size) < 0) {
+        if (writable.write(&size, sizeof (size)) < 0) {
             return -1;
         }
 
         for (const auto &ref: std::as_const(list)) {
-            if (T2::save(writable, ref) < 0)
+            if (T2::write(writable, ref) < 0)
                 return -1;
         }
         return 0;
@@ -476,38 +472,36 @@ template <class T>
 template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
 inline auto WVector<T>::load(
         const VersionFileController &versionController,
-        Readable &file,
-        WVector<T> &result
-) -> int
+        Readable &file
+) -> std::pair<int, WVector<T>>
 {
-    result = WListFast<T> ();
+    std::pair<int, WVector<T>> result(-1, WVector<T>());
+
     switch (versionController.getVersionWListFast()) {
         case 0:
             int i, element;
 
             if (file.read(element) < 0) {
-                return -1;
+                return result;
             }
 
-            result.reserve(element);
+            result.second.reserve(element);
 
             for (i = 0; i < element; i++) {
-                T tmp;
+                const auto [res, object] = T::load (versionController, file);
 
-                if (T::load (versionController, file, tmp) < 0 ) {
-                    result = WListFast<T>();
-                    return -1;
-                }
+                if (res < 0)
+                    return result;
 
-                result.append(
-                        std::move (tmp)
+                result.second.append(
+                        std::move (object)
                 );
             }
-            return 0;
-        default:
-            return -1;
+            result.first = 0;
+            return result;
     }
-    return -1;
+
+    result.first = -1;
+    return result;
 }
 
-#endif //WRITERNOTE_WVECTOR_H

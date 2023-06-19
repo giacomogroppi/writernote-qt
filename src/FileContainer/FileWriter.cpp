@@ -14,12 +14,13 @@ bool FileWriter::isOk() const
     return true;
 }
 
-void FileWriter::write(const void *data, size_t size)
+int FileWriter::write(const void *data, size_t size)
 {
     if (_data.capacity() < size)
         _data.reserve(FileWriter::dataReservePerTime + size);
 
     this->_data.append(static_cast<const char *>(data), size);
+    return 0;
 }
 
 void FileWriter::destroy() noexcept

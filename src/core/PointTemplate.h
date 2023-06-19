@@ -10,6 +10,8 @@
 # include <QDataStream>
 #endif // USE_QT
 
+#include "VersionFileController.h"
+
 template <typename T>
 class PointTemplate {
 private:
@@ -39,10 +41,10 @@ public:
     template <typename Z>
     PointTemplate<Z> castTo() const;
 
-    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>())
-    static auto load (const VersionFileController &versionController, Readable &readable, PointTemplate<T> &src) -> int;
+    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
+    static auto load (const VersionFileController &versionController, Readable &readable, PointTemplate<T> &result) -> int;
 
-    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>())
+    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
     static auto write (Writable &writable, const PointTemplate<T> &src) -> int;
 
     PointTemplate<T>& operator=(const PointTemplate<T> &other);
@@ -59,6 +61,34 @@ public:
     constexpr PointTemplate<T> &operator+=(const PointTemplate<T> &other);
     constexpr PointTemplate<T> &operator-=(const PointTemplate<T> &other);
 };
+
+template<typename T>
+template<class Writable> requires(std::is_base_of_v<WritableAbstract, Writable>)
+inline auto PointTemplate<T>::write(Writable &writable, const PointTemplate<T> &src) -> int
+{
+    if (writable.write (&src._x, sizeof (T)) < 0)
+        return -1;
+    if (writable.write (&src._y, sizeof (T)) < 0)
+        return -1;
+    return 0;
+}
+
+template<typename T>
+template<class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
+inline auto PointTemplate<T>::load(const VersionFileController &versionController, Readable &readable,
+                            PointTemplate<T> &result) -> int
+{
+    if (versionController.getVersionPointTemplate() != 0)
+        return -1;
+
+    if (readable.read (&result._x, sizeof (T)) < 0)
+        return -1;
+
+    if (readable.read (&result._y, sizeof (T)) < 0)
+        return -1;
+
+    return 0;
+}
 
 template<typename T>
 inline constexpr PointTemplate<T>::PointTemplate(PointTemplate<T> &&other) noexcept

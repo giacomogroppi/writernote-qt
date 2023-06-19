@@ -131,17 +131,17 @@ public:
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
     __slow void at_draw_page(int IndexPoint, const PointF &translation, PointF &point, double zoom) const;
 
-    double minHeight() const;
-    double currentHeight() const;
-    double currentWidth() const;
+    auto minHeight() const -> double;
+    auto currentHeight() const -> double;
+    auto currentWidth() const -> double;
 
-    bool userWrittenSomething() const;
-    void move(uint from, uint to);
+    auto userWrittenSomething() const -> bool;
+    auto move(uint from, uint to) -> void;
 
     void triggerRenderImage(int m_pos_ris, bool all);
 
-    int getCount() const;
-    int getIndex() const;
+    auto getCount() const -> int;
+    auto getIndex() const -> int;
 
     void reset();
 
@@ -164,6 +164,12 @@ public:
     void unlock() const;
 
     void setCount(int count);
+
+    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
+    static auto write (Writable &writable, const Page &page) -> int;
+
+    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
+    static auto load (const VersionFileController &versionController, Readable &readable) -> std::pair<int, Page>;
 
     //static void copy(const Page &src, Page &dest);
     constexpr static double getProportion();

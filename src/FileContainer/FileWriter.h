@@ -3,7 +3,8 @@
 #include "FileInstance.h"
 #include "core/String/WString.h"
 
-class FileWriter: public FileInstance {
+class FileWriter final: public FileInstance, public WritableAbstract
+{
 private:
     static constexpr unsigned long dataReservePerTime = 1024;
     WByteArray  _data;
@@ -17,7 +18,7 @@ public:
 
     WDISABILE_COPY(FileWriter);
 
-    void write (const void *data, size_t size);
+    int write (const void *data, size_t size) final;
 
     auto getName() const noexcept -> const WString &;
     auto getData() const noexcept -> const WByteArray &;

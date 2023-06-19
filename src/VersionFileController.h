@@ -27,7 +27,9 @@ private:
             currentVersionWString = 0,
             currentVersionWPair = 0,
             currentVersionSharedPtr = 0,
-            currentVersionWByteArray = 0;
+            currentVersionWByteArray = 0,
+            currentVersionDataStruct = 0,
+            currentVersionPointTemplate = 0;
 
     long _isOk;
     unsigned short _versionWListFast;
@@ -35,10 +37,13 @@ private:
     unsigned short _versionWPair;
     unsigned short _versionSharedPtr;
     unsigned short _versionWByteArray;
+    unsigned short _versionDataStruct;
+    unsigned short _versionPointTemplate;
 
-    VersionFileController() = default;
 
 public:
+    VersionFileController() = default;
+
     VersionFileController (VersionFileController &&other) noexcept;
 
     /**
@@ -58,6 +63,8 @@ public:
     constexpr auto getVersionWPair()         const noexcept -> int { return this->_versionWPair; };
     constexpr auto getVersionSharedPtr()     const noexcept -> int { return this->_versionSharedPtr; }
     constexpr auto getVersionWByteArray()    const noexcept -> int { return _versionWByteArray; }
+    constexpr auto getVersionDataStruct()    const noexcept -> int { return _versionDataStruct; };
+    constexpr auto getVersionPointTemplate() const noexcept -> int { return _versionPointTemplate; };
 };
 
 template<class Readable>
@@ -77,7 +84,9 @@ inline VersionFileController VersionFileController::loadVersion(Readable &readab
             &result._versionWString,
             &result._versionWPair,
             &result._versionSharedPtr,
-            &result._versionWByteArray
+            &result._versionWByteArray,
+            &result._versionDataStruct,
+            &result._versionPointTemplate
     };
 
     for (int i = 0; i < sizeof (d); i++) {

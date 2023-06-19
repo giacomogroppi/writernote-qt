@@ -8,9 +8,7 @@
 
 Document::Document() noexcept
     : DataStruct()
-#ifdef PDFSUPPORT
-    , frompdf()
-#endif // PDFSUPPORT
+    , PdfContainerDrawable()
     , ImageContainerDrawable()
 {
 }
@@ -153,9 +151,7 @@ auto Document::operator=(const Document &other) noexcept -> Document &
     DataStruct::operator=(other);
     ImageContainerDrawable::operator=(other);
 
-#ifdef PDFSUPPORT
-    frompdf::operator=(other);
-#endif // PDFSUPPORT
+    PdfContainerDrawable::operator=(other);
 
     return *this;
 }
@@ -168,9 +164,7 @@ auto Document::operator=(Document &&other) noexcept -> Document &
     DataStruct::operator=(std::move(static_cast<DataStruct&>(other)));
     ImageContainerDrawable::operator=(std::move(static_cast<ImageContainerDrawable &>(other)));
 
-#ifdef PDFSUPPORT
-    frompdf::operator=(std::move(static_cast<frompdf&>(other)));
-#endif // PDFSUPPORT
+    PdfContainerDrawable::operator=(std::move(static_cast<PdfContainerDrawable&>(other)));
 
     _audioRecordStatus = other._audioRecordStatus;
     _audioRawData = std::move(other._audioRawData);
@@ -182,6 +176,18 @@ auto Document::operator=(Document &&other) noexcept -> Document &
 void Document::setAudioPath(const WString &path) noexcept
 {
     this->_audioPositionPath = path;
+}
+
+static void test()
+{
+    Document doc;
+    FileWriter tmp("prova");
+    const bool t = std::is_base_of_v<WritableAbstract, FileWriter>;
+    Document::write(tmp, doc);
+
+    WFile c(WByteArray("ciao"));
+
+    doc = std::move(Document::read(VersionFileController(), c).second);
 }
 
 void Document::setRecordStatus(Document::AudioRecordStatus status)
@@ -209,4 +215,34 @@ auto Document::getAudioData() const -> const WByteArray &
 auto Document::recordStatus() const -> Document::AudioRecordStatus
 {
     return this->_audioRecordStatus;
+}
+
+template<class Readable> requires(std::is_base_of_v<ReadableAbstract, Readable>)
+inline auto Document::read(const VersionFileController &versionController, Readable &readable) -> std::pair<int, Document>
+{
+    std::pair<int, Document> result (-1, Document());
+
+    {
+        auto [res, data] = std::move(DataStruct::load (versionController, readable));
+        if (res < 0)
+            return result;
+        static_cast<DataStruct&>(result.second) = std::move (data);
+    }
+
+    {
+        auto [res, data] = std::move (ImageContainerDrawable::load (versionController, readable));
+        if (res < 0)
+            return result;
+        static_cast<ImageContainerDrawable&>(result.second) = std::move (data);
+    }
+
+    {
+        auto [res, data] = std::move (PdfContainerDrawable::load (versionController, readable));
+        if (res < 0)
+            return result;
+        static_cast<PdfContainerDrawable&>(result.second) = std::move (data);
+    }
+
+    result.first = 0;
+    return result;
 }

@@ -9,7 +9,7 @@
 #include "core/WMutex.h"
 #include "core/WListFast.h"
 
-class frompdf;
+class PdfContainerDrawable;
 class ImageContainerDrawable;
 
 class DataStruct
@@ -127,7 +127,6 @@ public:
     [[deprecated]] [[nodiscard]]
     WPoint at_draw_page(cint indexPoint, const Page &Page) const;
 
-    [[deprecated]]
     __fast [[nodiscard]] const Page &     lastPage() const;
 
     [[nodiscard]]
@@ -155,11 +154,11 @@ public:
     void insertPage(const Page &Page, int index);
 
     // read
-    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>())
-    static auto load (const VersionFileController &versionControll, Readable &readable, DataStruct &result) -> int;
+    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
+    static auto load (const VersionFileController &versionControl, Readable &readable) -> std::pair<int, DataStruct>;
 
     // write
-    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>())
+    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
     static auto write (Writable &readable, const DataStruct &source) -> int;
 
     auto operator=(const DataStruct &other) noexcept -> DataStruct &;
@@ -614,35 +613,42 @@ inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
     at_mod(index).decreaseAlfa(pos, 4);
 }
 
-template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>())
+template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
 inline auto DataStruct::load(
-            const VersionFileController &versionControll,
-            Readable &readable,
-            DataStruct &result
-        ) -> int
+            const VersionFileController &versionControl,
+            Readable &readable
+        ) -> std::pair<int, DataStruct>
 {
-    if (versionControll.getVersionDataStruct() != 0)
-        return -1;
+    std::pair<int, DataStruct> result (-1, DataStruct());
 
-    if (readable.load (versionControll, &result._zoom, sizeof (result._zoom)) < 0)
-        return -1;
+    if (versionControl.getVersionDataStruct() != 0)
+        return result;
 
-    if (PointF::load (versionControll, readable, result._pointFirstPage) < 0)
-        return -1;
+    if (readable.read (&result.second._zoom, sizeof (result.second._zoom)) < 0)
+        return result;
 
-    if (PointF::load (versionControll, readable, result._last_translation) < 0)
-        return -1;
+    if (PointF::load (versionControl, readable, result.second._pointFirstPage) < 0)
+        return result;
 
-    if (readable.read (&result._pageVisible, sizeof (result._pageVisible)) < 0)
-        return -1;
+    if (PointF::load (versionControl, readable, result.second._last_translation) < 0)
+        return result;
 
-    if (WVector<Page>::load (readable, result._page) < 0)
-        return -1;
+    if (readable.read (&result.second._pageVisible, sizeof (result.second._pageVisible)) < 0)
+        return result;
 
-    return 0;
+    {
+        auto [res, vec] = WVector<Page>::load (versionControl, readable);
+        if (res < 0)
+            return result;
+        result.second._page = std::move (vec);
+    }
+
+    result.first = 0;
+
+    return result;
 }
 
-template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>())
+template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
 inline auto DataStruct::write (Writable &writable, const DataStruct &source) -> int
 {
     if (writable.write (&source._zoom, sizeof (source._zoom)) < 0)
