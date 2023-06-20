@@ -16,6 +16,7 @@
 #include "core/Point.h"
 #include "core/WSizeTemplate.h"
 #include "core/WListFast.h"
+#include "core/pointer/SharedPtr.h"
 
 #define COLOR_NULL WColor::fromRgb(255, 255, 255, 255)
 #define TEMP_COLOR WColor::fromRgb(105, 105, 105, 255)
@@ -54,7 +55,7 @@ private:
     mutable WMutex                      _append_load;
     mutable bool                        _IsVisible = true;
     int                                 _count;
-    WListFast<std::shared_ptr<Stroke>>  _stroke;
+    WListFast<SharedPtr<Stroke>>  _stroke;
     StrokeForPage                       _stroke_writernote;
 
     static constexpr auto pageDebug = true;
@@ -67,12 +68,12 @@ private:
      * to be drawn will be drawn above the current image, and
      * then strokeTmp will be added to the stroke list
     */
-    WListFast<std::shared_ptr<Stroke>>   _strokeTmp;
+    WListFast<SharedPtr<Stroke>>   _strokeTmp;
     mutable WPixmap                   _imgDraw;
 
     void drawNewPage(n_style style);
     
-    void drawEngine(WPainter &painter, WListFast<std::shared_ptr<Stroke>> &List, int m_pos_ris, cbool use_multi_thread);
+    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &List, int m_pos_ris, bool use_multi_thread);
     void draw(WPainter &painter, int m_pos_ris, bool all);
     void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const WColor &color) const;
 
@@ -165,11 +166,9 @@ public:
 
     void setCount(int count);
 
-    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static auto write (Writable &writable, const Page &page) -> int;
+    static auto write (WritableAbstract &writable, const Page &page) -> int;
 
-    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &readable) -> std::pair<int, Page>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>;
 
     //static void copy(const Page &src, Page &dest);
     constexpr static double getProportion();
@@ -568,4 +567,21 @@ inline auto Page::operator=(Page &&other) noexcept -> Page &
     this->_IsVisible = other._IsVisible;
     this->_imgDraw = std::move(other._imgDraw);
     return *this;
+}
+
+inline auto Page::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>
+{
+    std::pair<int, Page> result(-1, Page());
+
+    if (versionController.getVersionPage() != 0)
+        return result;
+
+    {
+        auto [res, list] = WListFast<SharedPtr<Stroke>>::load (versionController, readable);
+        if (res < 0)
+            return result;
+
+        result.second._stroke = std::move (list);
+    }
+
 }

@@ -79,9 +79,7 @@ public:
     /**
      * \return < 0 if error
      * */
-    template <class Readable>
-            requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static int load (const VersionFileController &versionController, Readable &file, WListFast<T> &result);
+    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> std::pair<int, WListFast<T>>;
 
     class iterator
     {
@@ -277,42 +275,41 @@ force_inline void WListFast<T>::test() const
 }
 
 template <class T>
-template <class Readable>
-    requires (std::is_base_of_v<ReadableAbstract, Readable>)
 inline auto WListFast<T>::load(
                 const VersionFileController &versionController,
-                Readable &file,
-                WListFast<T> &result
-            ) -> int
+                ReadableAbstract &file
+            ) -> std::pair<int, WListFast<T>>
 {
-    result = WListFast<T> ();
+    std::pair<int, WListFast<T>> result (-1, WListFast<T>());
+
     switch (versionController.getVersionWListFast()) {
         case 0:
             int i, element;
 
-            if (file.read(element) < 0) {
-                return -1;
+            if (file.read(&element, sizeof (element)) < 0) {
+                return result;
             }
 
-            result.reserve(element);
+            result.second.reserve(element);
 
             for (i = 0; i < element; i++) {
                 T tmp;
 
-                if (T::load (versionController, file, tmp) < 0 ) {
-                    result = WListFast<T>();
-                    return -1;
+                auto [res, data] = T::load (versionController, file);
+                if (res < 0 ) {
+                    return {-1, WListFast<T>()};
                 }
 
-                result.append(
+                result.second.append(
                     std::move (tmp)
                 );
             }
-            return 0;
+            result.first = 0;
+            return result;
         default:
-            return -1;
+            return {-1, WListFast<T>()};
     }
-    return -1;
+    return {-1, WListFast<T>()};
 }
 
 template<class T>

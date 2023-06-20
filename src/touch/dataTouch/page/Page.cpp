@@ -19,7 +19,7 @@ Page::Page(Page &&other) noexcept
     , _count(other._count)
     , _stroke(std::move(other._stroke))
     , _stroke_writernote(std::move(other._stroke_writernote))
-    , _strokeTmp(std::move(other._stroke))
+    , _strokeTmp(std::move(other._strokeTmp))
     , _imgDraw(std::move(other._imgDraw))
 {
 }
@@ -277,7 +277,7 @@ void Page::drawStroke(
 struct page_thread_data{
     WMutex                          * append;
     WPainter                        * painter;
-    WListFast<std::shared_ptr<Stroke>>  * m_stroke;
+    WListFast<SharedPtr<Stroke>>    * m_stroke;
     int                             m_pos_ris;
     const Page                      * parent;
 };
@@ -341,7 +341,7 @@ void * __page_load(void *__data)
 
 void Page::drawEngine(
         WPainter        &painter,
-        WListFast<std::shared_ptr<Stroke>> &List,
+        WListFast<SharedPtr<Stroke>> &List,
         int             m_pos_ris,
         bool            use_multi_thread)
 {

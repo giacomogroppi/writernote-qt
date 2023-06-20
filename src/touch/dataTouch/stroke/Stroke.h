@@ -93,11 +93,11 @@ public:
 
     int getPosizioneAudio() const;
     virtual RectF getBiggerPointInStroke() const;
-    virtual bool isInside(const RectF &rect) const = 0;
+    virtual auto isInside(const RectF &rect) const -> bool = 0;
 
     void clearAudio();
 
-    const struct metadata_stroke &getMetadata() const;
+    auto getMetadata() const -> const struct metadata_stroke &;
 
     bool is_highlighter() const;
     unsigned char get_alfa() const;
@@ -137,6 +137,10 @@ public:
     friend class page_file;
 #endif // DEBUGINFO
 
+    // new way
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Stroke*>;
+
+    // old way
     static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);
     virtual int save(WZipWriterSingle &file) const;
 

@@ -55,8 +55,11 @@ int FileContainer::load_ver_0(WFile &file, size_t size) noexcept
 
     const auto versionFileController = VersionFileController::loadVersion(file);
 
-    if (WListFast<Pair>::load(versionFileController, file, _subFiles) < 0) {
-        return -1;
+    {
+        auto [res, data] = WListFast<Pair>::load (versionFileController, file);
+        if (res < 0)
+            return -1;
+        _subFiles = std::move (data);
     }
 
     return 0;
@@ -64,15 +67,16 @@ int FileContainer::load_ver_0(WFile &file, size_t size) noexcept
 
 FileReader FileContainer::getFileReader(const WString &nameFile) const noexcept
 {
-    const auto it = std::find_if(_subFiles.begin(), _subFiles.end(), [&nameFile](const Pair &pair) {
-        return pair.getKey() == nameFile;
-    });
+    for (const auto &ref: std::as_const(_subFiles)) {
+        if (ref.getKey() == nameFile) {
+            SharedPtr<WByteArray> tmp = ref.getValue();
+            return  {
+                tmp
+            };
+        }
+    }
 
-    if (it == _subFiles.end())
-        return {};
-
-    SharedPtr<WByteArray> tmp = it->getValue();
-    return {tmp};
+    return {};
 }
 
 auto FileContainer::addFile(FileWriter &&file) -> int

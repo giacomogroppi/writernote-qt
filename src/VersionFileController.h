@@ -29,7 +29,8 @@ private:
             currentVersionSharedPtr = 0,
             currentVersionWByteArray = 0,
             currentVersionDataStruct = 0,
-            currentVersionPointTemplate = 0;
+            currentVersionPointTemplate = 0,
+            currentVersionPage = 0;
 
     long _isOk;
     unsigned short _versionWListFast;
@@ -39,7 +40,7 @@ private:
     unsigned short _versionWByteArray;
     unsigned short _versionDataStruct;
     unsigned short _versionPointTemplate;
-
+    unsigned short _versionPage;
 
 public:
     VersionFileController() = default;
@@ -65,6 +66,7 @@ public:
     constexpr auto getVersionWByteArray()    const noexcept -> int { return _versionWByteArray; }
     constexpr auto getVersionDataStruct()    const noexcept -> int { return _versionDataStruct; };
     constexpr auto getVersionPointTemplate() const noexcept -> int { return _versionPointTemplate; };
+    constexpr auto getVersionPage()          const noexcept -> int { return _versionPage; }
 };
 
 template<class Readable>
@@ -86,7 +88,8 @@ inline VersionFileController VersionFileController::loadVersion(Readable &readab
             &result._versionSharedPtr,
             &result._versionWByteArray,
             &result._versionDataStruct,
-            &result._versionPointTemplate
+            &result._versionPointTemplate,
+            &result._versionPage
     };
 
     for (int i = 0; i < sizeof (d); i++) {

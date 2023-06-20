@@ -36,22 +36,25 @@ public:
     /**
      * \return value &lt 0 iff it fail
      * */
-    template <class K2, class T2, class Readable>
-    static auto load (const VersionFileController &versionController, Readable &readable, WPair<K2, T2> &result) -> int
+    template <class K2, class T2>
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WPair<K2, T2>>
     {
+        WPair<K2, T2> result;
+
         if (versionController.getVersionWPair() != 0)
-            return -1;
+            return {-1, result};
+
         if (K2::load(versionController, readable, result._key) < 0)
-            return -1;
+            return {-1, result};
 
         if (T2::load(versionController, readable, result._value) < 0)
-            return -1;
-        return 0;
+            return {-1, result};
+
+        return {0, result};
     }
 
-    template <class K2, class T2, class Writable>
-        requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static auto save (Writable &writable, const WPair<K2, T2> &object)
+    template <class K2, class T2>
+    static auto save (WritableAbstract &writable, const WPair<K2, T2> &object)
     {
         if (K2::save(writable, object._key) < 0)
             return -1;

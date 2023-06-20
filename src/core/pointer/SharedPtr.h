@@ -21,28 +21,25 @@ public:
     template<class Z>
     SharedPtr(SharedPtr<Z> &other);
 
-    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &version, Readable &readable, SharedPtr<T> &result) -> int
+    static auto load (const VersionFileController &version, ReadableAbstract &readable) -> std::pair<int, SharedPtr<T>>
     {
+        SharedPtr<T> result;
         bool is_value_present;
 
         if (version.getVersionSharedPtr() != 0)
-            return -1;
+            return {-1, result};
 
-        if (readable.read(is_value_present) < 0) {
-            return -1;
+        if (readable.read(&is_value_present, sizeof (is_value_present)) < 0) {
+            return {-1, result};
         }
 
-        result = SharedPtr<T>(new T());
-        //SharedPtr<T> tmp = std::shared_ptr<T>(new T());
+        auto [res, data] = T::load (version, readable);
+        if (res < 0)
+            return {-1, result};
 
-        if (T::load(version, readable, *result.get()) < 0) {
-            return -1;
-        }
+        result = std::move (data);
 
-        //result = std::move(tmp);
-
-        return 0;
+        return {0, result};
     }
 
     /**
