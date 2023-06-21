@@ -41,11 +41,10 @@ public:
     template <typename Z>
     PointTemplate<Z> castTo() const;
 
-    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &readable, PointTemplate<T> &result) -> int;
+    static
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, PointTemplate<T>>;
 
-    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static auto write (Writable &writable, const PointTemplate<T> &src) -> int;
+    static auto write (WritableAbstract &writable, const PointTemplate<T> &src) -> int;
 
     PointTemplate<T>& operator=(const PointTemplate<T> &other);
     bool operator==(const PointTemplate<T> &other) const;
@@ -63,8 +62,10 @@ public:
 };
 
 template<typename T>
-template<class Writable> requires(std::is_base_of_v<WritableAbstract, Writable>)
-inline auto PointTemplate<T>::write(Writable &writable, const PointTemplate<T> &src) -> int
+inline auto PointTemplate<T>::write(
+        WritableAbstract &writable,
+        const PointTemplate<T> &src
+    ) -> int
 {
     if (writable.write (&src._x, sizeof (T)) < 0)
         return -1;
@@ -74,20 +75,23 @@ inline auto PointTemplate<T>::write(Writable &writable, const PointTemplate<T> &
 }
 
 template<typename T>
-template<class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-inline auto PointTemplate<T>::load(const VersionFileController &versionController, Readable &readable,
-                            PointTemplate<T> &result) -> int
+inline auto PointTemplate<T>::load(
+            const VersionFileController &versionController,
+            ReadableAbstract &readable
+        ) -> std::pair<int, PointTemplate<T>>
 {
+    PointTemplate<T> result;
+
     if (versionController.getVersionPointTemplate() != 0)
-        return -1;
+        return {-1, result};
 
     if (readable.read (&result._x, sizeof (T)) < 0)
-        return -1;
+        return {-1, result};
 
     if (readable.read (&result._y, sizeof (T)) < 0)
-        return -1;
+        return {-1, result};
 
-    return 0;
+    return {0, result};
 }
 
 template<typename T>

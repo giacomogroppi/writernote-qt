@@ -617,35 +617,40 @@ template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable
 inline auto DataStruct::load(
             const VersionFileController &versionControl,
             Readable &readable
-        ) -> std::pair<int, DataStruct>
-{
-    std::pair<int, DataStruct> result (-1, DataStruct());
+        ) -> std::pair<int, DataStruct> {
+    DataStruct result;
 
     if (versionControl.getVersionDataStruct() != 0)
-        return result;
+        return {-1, result};
 
-    if (readable.read (&result.second._zoom, sizeof (result.second._zoom)) < 0)
-        return result;
-
-    if (PointF::load (versionControl, readable, result.second._pointFirstPage) < 0)
-        return result;
-
-    if (PointF::load (versionControl, readable, result.second._last_translation) < 0)
-        return result;
-
-    if (readable.read (&result.second._pageVisible, sizeof (result.second._pageVisible)) < 0)
-        return result;
+    if (readable.read(&result._zoom, sizeof(result._zoom)) < 0)
+        return {-1, result};
 
     {
-        auto [res, vec] = WVector<Page>::load (versionControl, readable);
+        auto [res, point] = PointF::load(versionControl, readable);
         if (res < 0)
-            return result;
-        result.second._page = std::move (vec);
+            return {-1, result};
+        result._pointFirstPage = std::move(point);
     }
 
-    result.first = 0;
+    {
+        auto [res, point] = PointF::load(versionControl, readable);
+        if (res < 0)
+            return {-1, result};
+        result._last_translation = std::move(point);
+    }
 
-    return result;
+    if (readable.read(&result._pageVisible, sizeof(result._pageVisible)) < 0)
+        return {-1, result};
+
+    {
+        auto [res, vec] = WVector<Page>::load(versionControl, readable);
+        if (res < 0)
+            return {-1, result};
+        result._page = std::move(vec);
+    }
+
+    return {-1, result};
 }
 
 template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
