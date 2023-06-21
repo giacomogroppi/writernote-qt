@@ -132,9 +132,9 @@ void StrokeCircle::adjust(double zoom)
     _data.y /= zoom;
 }
 
-std::shared_ptr<Stroke> StrokeCircle::clone() const
+std::unique_ptr<Stroke> StrokeCircle::clone() const
 {
-    std::shared_ptr<StrokeCircle> res(new StrokeCircle);
+    std::unique_ptr<StrokeCircle> res(new StrokeCircle);
     res->_data = this->_data;
 
     Stroke::clone(*res);
@@ -148,13 +148,13 @@ int StrokeCircle::how_much_decrese() const
     return 0;
 }
 
-std::shared_ptr<Stroke> StrokeCircle::makeNormal() const
+std::unique_ptr<Stroke> StrokeCircle::makeNormal() const
 {
     double from, to;
     PointF tmp;
     pressure_t press;
     WVector<PointF> _pointLeft, _pointRigth;
-    std::shared_ptr<StrokeNormal> _to(new StrokeNormal);
+    std::unique_ptr<StrokeNormal> _to(new StrokeNormal);
 
     const auto appendToStroke = [&_to](
             const WVector<PointF> &point,
@@ -285,5 +285,28 @@ void StrokeCircle::decreasePrecision()
 size_t StrokeCircle::createControll() const
 {
     return 0;
+}
+
+inline auto StrokeCircle::loadPtr(const VersionFileController &versionController,
+                           ReadableAbstract &readable) -> std::pair<int, StrokeCircle *>
+{
+    if (versionController.getVersionStrokeCircle() != 0)
+        return {-1, nullptr};
+
+    auto* d = new StrokeCircle;
+
+    if (readable.read(&d->_data.r, sizeof(d->_data.r)) < 0)
+        return {-1, nullptr};
+
+    if (readable.read(&d->_data.y, sizeof(d->_data.y)) < 0)
+        return {-1, nullptr};
+
+    if (readable.read(&d->_data.x, sizeof(d->_data.x)) < 0)
+        return {-1, nullptr};
+
+    if (readable.read(&d->_data.press, sizeof(d->_data.press)) < 0)
+        return {-1, nullptr};
+
+    return {0, d};
 }
 

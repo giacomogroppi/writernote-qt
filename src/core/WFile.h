@@ -51,7 +51,7 @@ public:
     /**
      * \return < 0 in case of error
      * */
-    auto read (void *to, size_t size) -> int;
+    auto read (void *to, size_t size) const -> int final;
 
     /**
      * \return < 0 in case of error

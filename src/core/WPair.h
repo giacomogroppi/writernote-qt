@@ -36,7 +36,7 @@ public:
     /**
      * \return value &lt 0 iff it fail
      * */
-    template <class K2, class T2>
+    template <class K2 = K, class T2 = T>
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WPair<K2, T2>>
     {
         WPair<K2, T2> result;
@@ -44,11 +44,19 @@ public:
         if (versionController.getVersionWPair() != 0)
             return {-1, result};
 
-        if (K2::load(versionController, readable, result._key) < 0)
-            return {-1, result};
+        {
+            auto [k, data] = K2::load (versionController, readable);
+            if (k < 0)
+                return {-1, result};
+            result._key = std::move (data);
+        }
 
-        if (T2::load(versionController, readable, result._value) < 0)
-            return {-1, result};
+        {
+            auto [k, data] = T2::load(versionController, readable);
+            if (k < 0)
+                return {-1, result};
+            result._value = std::move (data);
+        }
 
         return {0, result};
     }
@@ -63,6 +71,9 @@ public:
         return 0;
     }
 
+    auto operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> &;
+    auto operator=(const WPair<K, T> &other) noexcept -> WPair<K, T> &;
+
     auto operator==(const WPair<K, T> &other) -> bool
     {
         if (this == &other)
@@ -73,6 +84,14 @@ public:
 
     static constexpr int currentVersion = 0;
 };
+
+template<class K, class T>
+inline auto WPair<K, T>::operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> &
+{
+    _value = std::move (other._value);
+    _key = std::move(other._key);
+    return *this;
+}
 
 template<class K, class T>
 WPair<K, T>::WPair(WPair<K, T> &&other) noexcept

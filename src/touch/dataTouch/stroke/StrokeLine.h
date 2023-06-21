@@ -39,11 +39,11 @@ public:
     void decreasePrecision();
 
     void adjust(double zoom);
-    std::shared_ptr<Stroke> clone() const final;
+    std::unique_ptr<Stroke> clone() const final;
 
     int how_much_decrese() const;
 
-    std::shared_ptr<Stroke> makeNormal() const;
+    std::unique_ptr<Stroke> makeNormal() const;
 
     [[nodiscard]] bool isEmpty() const;
 
@@ -60,6 +60,8 @@ public:
     static StrokeLine *make(const PointF& pt1, const PointF& pt2, const StrokeNormal &s);
     int type() const final;
 
+    static
+    auto loadPtr(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeLine*>;
 
     friend class StrokeLineGenerator;
     friend class Stroke;

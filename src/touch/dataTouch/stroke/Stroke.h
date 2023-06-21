@@ -30,21 +30,40 @@ struct metadata_stroke{
 
     }
 
+    metadata_stroke(const metadata_stroke &other) noexcept = default;
+
     metadata_stroke (metadata_stroke && other) noexcept
         : posizione_audio(std::move(other.posizione_audio))
         , color(std::move(other.color))
     {
     }
 
+    static
+    auto load (const VersionFileController &versionController, ReadableAbstract &reader)
+        -> std::pair<int, metadata_stroke>
+    {
+        metadata_stroke result;
+
+        if (versionController.getVersionMetadataStroke() != 0)
+            return {-1, result};
+
+        if (reader.read(&result.posizione_audio, sizeof (result.posizione_audio)) < 0)
+            return {-1, result};
+
+        auto [res, color] = WColor::load (versionController, reader);
+        if (res < 0)
+            return {-1, result};
+
+        result.color = std::move (color);
+
+        return {0, result};
+    }
+
     bool operator!=(const metadata_stroke &other) const;
     bool operator==(const metadata_stroke &other) const;
 
-    metadata_stroke &operator=(const metadata_stroke &other)
-    {
-        this->color = other.color;
-        this->posizione_audio = other.posizione_audio;
-        return *this;
-    }
+    metadata_stroke &operator=(const metadata_stroke &other) noexcept = default;
+    metadata_stroke &operator=(metadata_stroke &&other) noexcept = default;
 };
 
 class Stroke
@@ -70,6 +89,8 @@ private:
 public:    
     virtual ~Stroke() = default;
 
+    // remove this enum
+    [[deprecated]]
     enum type_stroke_private: int{
             COMPLEX_NORMAL = 0,
             COMPLEX_CIRCLE = 1,
@@ -108,7 +129,7 @@ public:
     void setAlfaColor(unsigned char alfa);
 
     /** instance of *this == StrokeNormal ==> @return == NULL*/
-    virtual std::shared_ptr<Stroke> makeNormal() const = 0;
+    virtual std::unique_ptr<Stroke> makeNormal() const = 0;
 
     /**
      * instanceof(*this) == StrokeNorml ? @result == size() : 0
@@ -117,7 +138,7 @@ public:
 
     void setColor(const WColor &color);
 
-    virtual std::shared_ptr<Stroke> clone() const = 0;
+    virtual std::unique_ptr<Stroke> clone() const = 0;
 
     virtual bool isEmpty() const = 0;
 
@@ -138,7 +159,7 @@ public:
 #endif // DEBUGINFO
 
     // new way
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Stroke*>;
+    static auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Stroke*>;
 
     // old way
     static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);

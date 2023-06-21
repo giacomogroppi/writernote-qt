@@ -27,6 +27,63 @@ std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
     return std::shared_ptr<Stroke>(s);
 }
 
+auto Stroke::loadPtr(const VersionFileController &versionController,
+                     ReadableAbstract &readable) -> std::pair<int, Stroke *>
+{
+    std::pair<int, Stroke*> r {-1, nullptr};
+    int type;
+
+    if (readable.read (&type, sizeof (type))) {
+        return {-1, nullptr};
+    }
+
+    switch (versionController.getVersionStroke()) {
+        case 0: {
+            switch (type) {
+                case COMPLEX_NORMAL:
+                    r = StrokeNormal::loadPtr (versionController, readable);
+                    break;
+                case COMPLEX_CIRCLE:
+                    r = StrokeCircle::loadPtr (versionController, readable);
+                    break;
+                case COMPLEX_LINE:
+                    r = StrokeLine::loadPtr   (versionController, readable);
+                    break;
+                case COMPLEX_RECT:
+                    r = StrokeRect::loadPtr   (versionController, readable);
+                    break;
+                default: return {-1, nullptr};
+            }
+        }
+    }
+
+    if (r.first < 0)
+        return {-1, nullptr};
+
+    {
+        auto [res, meta] = metadata_stroke::load (versionController, readable);
+        if (res < 0) {
+            delete r.second;
+            return {-1, nullptr};
+        }
+        r.second->_metadata = std::move (meta);
+    }
+
+    if (readable.read(&r.second->_flag, sizeof (r.second->_flag)) < 0) {
+        delete r.second;
+        return {-1, nullptr};
+    }
+
+    {
+        auto [res, rect] = RectF::load(versionController, readable);
+        if (res < 0) {
+            delete r.second;
+            return {-1, nullptr};
+        }
+        r.second->_biggerData = std::move (rect);
+    }
+}
+
 std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)
 {
 #define ver_2_manage_error(contr)   \

@@ -4,5 +4,5 @@
 
 class ReadableAbstract {
 public:
-    virtual int read (void *to, size_t size) = 0;
+    virtual int read (void *to, size_t size) const = 0;
 };

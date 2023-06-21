@@ -30,7 +30,9 @@ private:
             currentVersionWByteArray = 0,
             currentVersionDataStruct = 0,
             currentVersionPointTemplate = 0,
-            currentVersionPage = 0;
+            currentVersionPage = 0,
+            currentVersionStroke = 0,
+            currentVersionStrokeCirle = 0;
 
     long _isOk;
     unsigned short _versionWListFast;
@@ -41,6 +43,8 @@ private:
     unsigned short _versionDataStruct;
     unsigned short _versionPointTemplate;
     unsigned short _versionPage;
+    unsigned short _versionStroke;
+    unsigned short _versionStrokeCircle;
 
 public:
     VersionFileController() = default;
@@ -67,13 +71,17 @@ public:
     constexpr auto getVersionDataStruct()    const noexcept -> int { return _versionDataStruct; };
     constexpr auto getVersionPointTemplate() const noexcept -> int { return _versionPointTemplate; };
     constexpr auto getVersionPage()          const noexcept -> int { return _versionPage; }
+    constexpr auto getVersionStroke()        const noexcept -> int { return _versionStroke; }
+    constexpr auto getVersionStrokeCircle()  const noexcept -> int { return _versionStrokeCircle; };
+    constexpr auto getVersionRectTemplate()  const noexcept -> int;
+    constexpr auto getVersionMetadataStroke() const noexcept -> int;
 };
 
 template<class Readable>
     requires (std::is_base_of_v<ReadableAbstract, Readable>)
 inline VersionFileController VersionFileController::loadVersion(Readable &readable)
 {
-    VersionFileController result;
+    VersionFileController result{};
     short versionVersionFileController;
 
     result._isOk = readable.read(&versionVersionFileController, sizeof (versionVersionFileController)) >= 0;
@@ -89,7 +97,9 @@ inline VersionFileController VersionFileController::loadVersion(Readable &readab
             &result._versionWByteArray,
             &result._versionDataStruct,
             &result._versionPointTemplate,
-            &result._versionPage
+            &result._versionPage,
+            &result._versionStroke,
+            &result._versionStrokeCircle
     };
 
     for (int i = 0; i < sizeof (d); i++) {

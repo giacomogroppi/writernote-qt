@@ -21,13 +21,14 @@ public:
     WByteArray (const char *d) noexcept;
     WByteArray (const char *d, size_t size) noexcept;
 
-    template <class Writable>
-            requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static auto save (Writable &writable, const WByteArray &object) -> int;
+    static
+    auto save (WritableAbstract &writable, const WByteArray &object) -> int;
 
-    template <class Readable>
-            requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &readable, WByteArray &result) -> int;
+    static
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
+
+    static
+    auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> std::pair<int, WByteArray*>;
 
     auto operator=(WByteArray &&other) noexcept -> WByteArray & = default;
     auto operator=(const WByteArray &other) noexcept -> WByteArray & = default;
@@ -85,32 +86,28 @@ inline auto WByteArray::operator=(const QByteArray &other) noexcept -> WByteArra
     return *this;
 }
 
-template<class Readable>
-    requires(std::is_base_of_v<ReadableAbstract, Readable>)
 inline auto WByteArray::load(
         const VersionFileController &versionController,
-        Readable &readable,
-        WByteArray &result) -> int
+        ReadableAbstract &readable) -> std::pair<int, WByteArray>
 {
+    WByteArray result;
     if (versionController.getVersionWByteArray() != 0)
-        return -1;
+        return {-1, result};
 
     size_t size;
     if (readable.read(&size, sizeof(size)) < 0)
-        return -1;
+        return {-1, result};
 
     char d[size];
     if (readable.read(d, size) < 0)
-        return -1;
+        return {-1, result};
 
     result = WByteArray(d, size);
 
-    return 0;
+    return {0, result};
 }
 
-template<class Writable>
-    requires(std::is_base_of_v<WritableAbstract, Writable>)
-inline auto WByteArray::save(Writable &writable, const WByteArray &object) -> int
+inline auto WByteArray::save(WritableAbstract &writable, const WByteArray &object) -> int
 {
     size_t size = object.size();
 
@@ -120,6 +117,18 @@ inline auto WByteArray::save(Writable &writable, const WByteArray &object) -> in
     if (writable.write(object.constData(), size) < 0)
         return -1;
     return 0;
+}
+
+inline auto WByteArray::loadPtr(
+        const VersionFileController &versionFile,
+        ReadableAbstract &readableAbstract
+    ) -> std::pair<int, WByteArray *>
+{
+    auto [res, data] = WByteArray::load (versionFile, readableAbstract);
+    if (res)
+        return {-1, nullptr};
+
+    return {-1, new WByteArray (std::move (data))};
 }
 
 

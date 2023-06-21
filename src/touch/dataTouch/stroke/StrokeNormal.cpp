@@ -39,7 +39,7 @@ int StrokeNormal::save(WZipWriterSingle &file) const
     return OK;
 }
 
-std::shared_ptr<Stroke> StrokeNormal::makeNormal() const
+std::unique_ptr<Stroke> StrokeNormal::makeNormal() const
 {
     return nullptr;
 }
@@ -328,9 +328,9 @@ void StrokeNormal::removeAt(int indexFrom, int indexTo)
     }
 }
 
-std::shared_ptr<Stroke> StrokeNormal::clone() const
+std::unique_ptr<Stroke> StrokeNormal::clone() const
 {
-    std::shared_ptr<StrokeNormal> tmp(new StrokeNormal(*this));
+    std::unique_ptr<StrokeNormal> tmp(new StrokeNormal(*this));
 
     W_ASSERT(*this == *tmp);
     return tmp;

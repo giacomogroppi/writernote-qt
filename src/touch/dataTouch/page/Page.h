@@ -571,17 +571,48 @@ inline auto Page::operator=(Page &&other) noexcept -> Page &
 
 inline auto Page::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>
 {
-    std::pair<int, Page> result(-1, Page());
+    Page result;
 
     if (versionController.getVersionPage() != 0)
-        return result;
+        return {-1, result};
+
+    static_assert_type(result._count, int);
+    static_assert_type(result._IsVisible, bool);
+
+    if (readable.read(&result._count, sizeof (&result._count)) < 0)
+        return {-1, result};
+
+    if (readable.read(&result._IsVisible, sizeof (result._IsVisible)) < 0)
+        return {-1, result};
 
     {
         auto [res, list] = WListFast<SharedPtr<Stroke>>::load (versionController, readable);
         if (res < 0)
-            return result;
+            return {-1, result};
 
-        result.second._stroke = std::move (list);
+        result._stroke = std::move (list);
     }
 
+    {
+        auto [res, list] = WListFast<SharedPtr<Stroke>>::load (versionController, readable);
+        if (res < 0)
+            return {-1, result};
+        result._strokeTmp = std::move (list);
+    }
+
+    {
+        auto [res, str] = StrokeForPage::load (versionController, readable);
+        if (res < 0)
+            return {-1, result};
+        result._stroke_writernote = std::move (str);
+    }
+
+    {
+        auto [res, img] = WPixmap::load (versionController, readable);
+        if (res < 0)
+            return {-1, result};
+        result._imgDraw = std::move (img);
+    }
+
+    return {0, result};
 }

@@ -32,19 +32,19 @@ public:
 
     int save(WZipWriterSingle &file) const final;
 
-    size_t getSizeInMemory() const final;
-    size_t getSizeInFile() const final;
+    auto getSizeInMemory() const -> size_t final;
+    auto getSizeInFile() const -> size_t final;
 
     void decreasePrecision();
 
     void adjust(double zoom);
-    std::shared_ptr<Stroke> clone() const;
+    auto clone() const -> std::unique_ptr<Stroke> final;
 
     int how_much_decrese() const;
 
-    std::shared_ptr<Stroke> makeNormal() const;
+    auto makeNormal() const -> std::unique_ptr<Stroke>;
 
-    bool isEmpty() const;
+    auto isEmpty() const -> bool final;
 
     void scale(const PointF &offset);
 
@@ -55,6 +55,9 @@ public:
 
     static StrokeRect *make(const PointF& pt1, const PointF& pt2, const class StrokeNormal &s);
     int type() const final;
+
+    static
+    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeRect*>;
 
     friend class StrokeRectGenerator;
     friend class Stroke;

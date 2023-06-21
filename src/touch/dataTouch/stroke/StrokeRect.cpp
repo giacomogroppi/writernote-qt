@@ -141,9 +141,9 @@ void StrokeRect::adjust(double zoom)
     _data.rect = RectF(topLeft, bottomRight);
 }
 
-std::shared_ptr<Stroke> StrokeRect::clone() const
+std::unique_ptr<Stroke> StrokeRect::clone() const
 {
-    std::shared_ptr<StrokeRect> res(new StrokeRect);
+    std::unique_ptr<StrokeRect> res(new StrokeRect);
 
     res->_data = this->_data;
     res->setMetadata(this->getMetadata());
@@ -156,9 +156,9 @@ int StrokeRect::how_much_decrese() const
     return 0;
 }
 
-std::shared_ptr<Stroke> StrokeRect::makeNormal() const
+std::unique_ptr<Stroke> StrokeRect::makeNormal() const
 {
-    std::shared_ptr<StrokeNormal> res(new StrokeNormal);
+    std::unique_ptr<StrokeNormal> res(new StrokeNormal);
 
     res->append(this->_data.rect.topLeft(), this->_data.press);
     res->append(this->_data.rect.topRight(), this->_data.press);

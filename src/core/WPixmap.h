@@ -39,6 +39,9 @@ public:
     [[deprecated("This function is very slow, and it's deprecated")]]
     bool operator==(const WPixmap &other) const;
 
+    static
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WPixmap>;
+
     WPixmap &operator=(const WPixmap &other) noexcept;
     WPixmap &operator=(WPixmap &&other) noexcept;
 };

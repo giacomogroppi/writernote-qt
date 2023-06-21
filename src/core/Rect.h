@@ -75,6 +75,33 @@ public:
     constexpr RectTemplate<T> operator+=(const RectTemplate<T> &other);
 
     constexpr bool operator==(const RectTemplate &other) const;
+
+    static
+    auto load(const VersionFileController &versionController, ReadableAbstract &reader)
+        noexcept -> std::pair<int, RectTemplate<T>>
+    {
+        RectTemplate<T> d;
+        if (versionController.getVersionRectTemplate() != 0)
+            return {-1, RectTemplate<T>()};
+
+        {
+            auto [res, point] = PointTemplate<T>::load (versionController, reader);
+            if (res < 0)
+                return {-1, d};
+
+            d._topLeft = std::move(point);
+        }
+
+        {
+            auto [res, point] = PointTemplate<T>::load (versionController, reader);
+            if (res < 0)
+                return {-1, d};
+
+            d._bottomRight = std::move(point);
+        }
+
+        return {-1, d};
+    }
 };
 
 template<typename T>

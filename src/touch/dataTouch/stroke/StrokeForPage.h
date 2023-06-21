@@ -32,6 +32,9 @@ public:
 
     void setPressure(pressure_t press);
 
+    static
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeForPage>;
+
     int load(WZipReaderSingle &reader, int ver_stroke);
 
     size_t getSizeInFile() const;

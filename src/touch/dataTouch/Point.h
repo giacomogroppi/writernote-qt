@@ -82,6 +82,7 @@ inline Settable<T>::Settable(T value, bool set)
 {
 }
 
+// TODO move this class in a proper file
 struct WColor{
     WColor() = default;
     ~WColor() = default;
@@ -93,6 +94,7 @@ struct WColor{
 #endif // USE_QT
 
     WColor(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
+    WColor(WColor &&other) noexcept;
 
     void set_alfa(unsigned char alfa);
 
@@ -111,6 +113,9 @@ struct WColor{
     void setAlfa(unsigned char newValue);
 
     static WColor fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
+
+    static
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WColor>;
 
 #ifndef USE_QT
 # define color_black       WColor(0, 0, 0, 255)

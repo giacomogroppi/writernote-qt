@@ -3,17 +3,18 @@
 #include "FileContainer/WZip.h"
 #include "utils/WCommonScript.h"
 
-class WZipReaderSingle
+class WZipReaderSingle final: public ReadableAbstract
 {
 private:
     WZip *_zip;
-    size_t offset;
+    mutable size_t offset;
 public:
     WZipReaderSingle();
     WZipReaderSingle(WZip *zip, size_t offset);
     ~WZipReaderSingle() = default;
 
-    [[nodiscard]] const void* read(size_t size);
+    int read (void *to, size_t size) const;
+    [[nodiscard]] const void* read(size_t size) const;
     [[nodiscard]] int readString(WString &str);
     [[nodiscard]] int readBySize(void *to, size_t size);
 
@@ -48,10 +49,10 @@ force_inline WZipReaderSingle::WZipReaderSingle(WZip *zip, size_t offset):
     this->init(zip, offset);
 }
 
-inline const void *WZipReaderSingle::read(size_t size)
+inline const void *WZipReaderSingle::read(size_t size) const
 {
     if(!(size + offset <= this->_zip->length())){
-        return NULL;
+        return nullptr;
     }
 
     const auto *ret = _zip->get_data() + offset;
@@ -104,6 +105,16 @@ inline int WZipReaderSingle::readString(WString &str)
         return -1;
     str = WString::fromUtf8(tmp, l);
 
+    return 0;
+}
+
+inline int WZipReaderSingle::read(void *to, size_t size) const
+{
+    const auto *data = this->read (size);
+    if (!size) {
+        return -1;
+    }
+    WCommonScript::WMemcpy(to, data, size);
     return 0;
 }
 

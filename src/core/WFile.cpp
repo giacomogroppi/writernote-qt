@@ -80,7 +80,7 @@ auto WFile::write(const void *data, size_t size) -> int
     return 0;
 }
 
-auto WFile::read(void *to, size_t size) -> int
+auto WFile::read(void *to, size_t size) const -> int
 {
     W_ASSERT(_fp != nullptr);
     const auto res = fread(to, size, 1, this->_fp);

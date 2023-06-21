@@ -45,11 +45,11 @@ public:
     void decreasePrecision();
 
     void adjust(double zoom);
-    std::shared_ptr<Stroke> clone() const;
+    std::unique_ptr<Stroke> clone() const;
 
     int how_much_decrese() const;
 
-    std::shared_ptr<Stroke> makeNormal() const final;
+    std::unique_ptr<Stroke> makeNormal() const final;
 
     bool isEmpty() const final;
 
@@ -64,6 +64,9 @@ public:
     static void copy(const Stroke &src, Stroke &dest);
 
     int type() const final;
+
+    static
+    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeCircle*>;
 
     friend class StrokeCircleGenerator;
     friend class Stroke;

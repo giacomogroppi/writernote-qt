@@ -21,6 +21,8 @@ public:
     template<class Z>
     SharedPtr(SharedPtr<Z> &other);
 
+    SharedPtr(std::unique_ptr<T> && object) noexcept;
+
     static auto load (const VersionFileController &version, ReadableAbstract &readable) -> std::pair<int, SharedPtr<T>>
     {
         SharedPtr<T> result;
@@ -33,7 +35,10 @@ public:
             return {-1, result};
         }
 
-        auto [res, data] = T::load (version, readable);
+        auto [res, data] = T::loadPtr (version, readable);
+
+        static_assert (std::is_pointer_v<decltype(data)>);
+
         if (res < 0)
             return {-1, result};
 
@@ -71,6 +76,13 @@ public:
     template <class Z>
     auto operator=(const SharedPtr<Z> &other) noexcept -> SharedPtr<T> &;
 };
+
+template<class T>
+inline SharedPtr<T>::SharedPtr(std::unique_ptr<T> &&object) noexcept
+    : std::shared_ptr<T>(std::move(object))
+{
+
+}
 
 template<class T>
 inline SharedPtr<T>::SharedPtr(const SharedPtr<T> &other) noexcept

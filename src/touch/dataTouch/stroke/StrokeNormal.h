@@ -74,10 +74,10 @@ public:
 
     /**
      * @requires size() > to
-     * @ensures \old(length()) == size() - (indexTo - indexFrom + 1) &&
-     *          \forall(int i; 0 <= i < from; \old(point.at(i)) == point.at(i)) &&
-     *          \forall(int i; indexFrom <= i <= size();
-     *              \old(point.at(indexTo - indexFrom + 1)) == point.at(i))
+     * @ensures old(length()) == size() - (indexTo - indexFrom + 1) &&
+     *          forall(int i; 0 <= i < from; old(point.at(i)) == point.at(i)) &&
+     *          forall(int i; indexFrom <= i <= size();
+     *              old(point.at(indexTo - indexFrom + 1)) == point.at(i))
     */
     void removeAt(int indexFrom, int indexTo);
 
@@ -86,7 +86,7 @@ public:
      * */
     std::shared_ptr<StrokeNormal> split(int index);
 
-    std::shared_ptr<Stroke> clone() const final;
+    std::unique_ptr<Stroke> clone() const final;
 
     void preappend(int i) final;
 
@@ -96,7 +96,7 @@ public:
 
     void force_pressure(pressure_t press);
 
-    std::shared_ptr<Stroke> makeNormal() const final;
+    std::unique_ptr<Stroke> makeNormal() const final;
 
     StrokeNormal& operator=(const StrokeNormal &other);
     bool operator==(const Stroke &other) const final;
@@ -106,6 +106,9 @@ public:
     static inline RectF getBiggerPointInStroke(T begin, T end);
 
     int type() const final;
+
+    static
+    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeNormal*>;
 
 protected:
     int length () const { return _point.size(); }
