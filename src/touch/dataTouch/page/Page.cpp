@@ -221,11 +221,8 @@ size_t Page::get_size_in_file(cbool saveImg) const
 void Page::removeAt(const WVector<int> &pos)
 {
     int i;
-    if(!WAbstractList::isSorted(pos)){
-        DO_IF_DEBUG(std::abort());
-        auto &vec = (WVector<int> &)pos;
-        WAbstractList::sort(vec);
-    }
+
+    W_ASSERT(WAbstractList::isSorted(pos));
 
     i = pos.size();
     for(i--; i >= 0; i--){
@@ -235,6 +232,7 @@ void Page::removeAt(const WVector<int> &pos)
 
 void Page::append(const WList<std::shared_ptr<Stroke>> &stroke)
 {
+    reserve(stroke.size());
     for (const auto & tmp : std::as_const(stroke)) {
         this->append(tmp);
     }

@@ -122,6 +122,7 @@ public:
     */
     __fast void append(const std::shared_ptr<Stroke>& stroke);
     __fast void append(std::shared_ptr<Stroke> &&stroke);
+    __fast void reserve(int stroke);
     // TODO --> make template
     __fast void append(const WList<std::shared_ptr<Stroke>> & stroke);
     __fast void append(const WListFast<std::shared_ptr<Stroke>> &stroke);
