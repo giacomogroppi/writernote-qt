@@ -178,6 +178,7 @@ void Document::setAudioPath(const WString &path) noexcept
     this->_audioPositionPath = path;
 }
 
+// TODO: Remove this test method
 static void test()
 {
     Document doc;

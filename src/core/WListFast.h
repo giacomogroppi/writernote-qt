@@ -77,9 +77,11 @@ public:
     }
 
     /**
+     * You can use this method only if <T> has the method load
      * \return < 0 if error
      * */
     static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> std::pair<int, WListFast<T>>;
+
 
     class iterator
     {

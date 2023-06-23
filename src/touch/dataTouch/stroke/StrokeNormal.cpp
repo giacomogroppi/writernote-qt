@@ -442,3 +442,25 @@ StrokeNormal::StrokeNormal(StrokeNormal &&other) noexcept
 {
 }
 
+auto StrokeNormal::loadPtr(const VersionFileController &versionController,
+                           ReadableAbstract &readable) -> std::pair<int, StrokeNormal *>
+{
+    if (versionController.getVersionStrokeNormal() != 0)
+        return {-1, nullptr};
+
+    std::unique_ptr<StrokeNormal> result(new StrokeNormal());
+
+    {
+        auto [res, d] = WListFast<PointF>::load(versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        result->_point = std::move(d);
+    }
+
+    {
+        auto [res, d] = WListFast<pressure_t>::load(versionController, readable);
+    }
+
+    return {0, result.release()};
+}
+

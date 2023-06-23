@@ -59,7 +59,7 @@ public:
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const final;
     bool is_inside(const RectF &rect, double precision) const final;
 
-#   define stroke_append_default (-1.)
+#   define stroke_append_default (-1.0f)
     void append(const PointF &point, pressure_t pressure) final;
     size_t createControll() const final;
 
@@ -107,6 +107,10 @@ public:
 
     int type() const final;
 
+    /**
+     * This method assume that the stroke to be load is StrokeNormal and
+     * it don't load/call method to load internal data of Stroke
+     */
     static
     auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeNormal*>;
 

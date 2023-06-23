@@ -63,18 +63,19 @@ public:
      * */
     bool isOk() const noexcept;
 
-    constexpr auto getVersionWListFast()     const noexcept -> int { return this->_versionWListFast; };
-    constexpr auto getVersionWString()       const noexcept -> int { return this->_versionWString; };
-    constexpr auto getVersionWPair()         const noexcept -> int { return this->_versionWPair; };
-    constexpr auto getVersionSharedPtr()     const noexcept -> int { return this->_versionSharedPtr; }
-    constexpr auto getVersionWByteArray()    const noexcept -> int { return _versionWByteArray; }
-    constexpr auto getVersionDataStruct()    const noexcept -> int { return _versionDataStruct; };
-    constexpr auto getVersionPointTemplate() const noexcept -> int { return _versionPointTemplate; };
-    constexpr auto getVersionPage()          const noexcept -> int { return _versionPage; }
-    constexpr auto getVersionStroke()        const noexcept -> int { return _versionStroke; }
-    constexpr auto getVersionStrokeCircle()  const noexcept -> int { return _versionStrokeCircle; };
-    constexpr auto getVersionRectTemplate()  const noexcept -> int;
-    constexpr auto getVersionMetadataStroke() const noexcept -> int;
+    constexpr auto getVersionWListFast()        const noexcept -> int { return this->_versionWListFast; };
+    constexpr auto getVersionWString()          const noexcept -> int { return this->_versionWString; };
+    constexpr auto getVersionWPair()            const noexcept -> int { return this->_versionWPair; };
+    constexpr auto getVersionSharedPtr()        const noexcept -> int { return this->_versionSharedPtr; }
+    constexpr auto getVersionWByteArray()       const noexcept -> int { return _versionWByteArray; }
+    constexpr auto getVersionDataStruct()       const noexcept -> int { return _versionDataStruct; };
+    constexpr auto getVersionPointTemplate()    const noexcept -> int { return _versionPointTemplate; };
+    constexpr auto getVersionPage()             const noexcept -> int { return _versionPage; }
+    constexpr auto getVersionStroke()           const noexcept -> int { return _versionStroke; }
+    constexpr auto getVersionStrokeCircle()     const noexcept -> int { return _versionStrokeCircle; };
+    constexpr auto getVersionRectTemplate()     const noexcept -> int;
+    constexpr auto getVersionMetadataStroke()   const noexcept -> int;
+    constexpr auto getVersionStrokeNormal()     const noexcept -> int;
 };
 
 template<class Readable>

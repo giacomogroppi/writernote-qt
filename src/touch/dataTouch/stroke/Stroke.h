@@ -104,7 +104,6 @@ public:
 
     WColor getColor(double division = 1.) const;
 
-#   define stroke_append_default (-1.)
     virtual void append(const PointF &point, pressure_t pressure) = 0;
 
     void setMetadata(int posizione_audio, const WColor &color);

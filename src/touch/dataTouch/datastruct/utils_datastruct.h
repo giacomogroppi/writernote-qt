@@ -4,7 +4,61 @@
 #include "core/Rect.h"
 #include "core/RectF.h"
 
-typedef float pressure_t;
+
+class pressure_t{
+private:
+    float _d;
+public:
+    pressure_t() = default;
+    pressure_t(const pressure_t &other) noexcept = default;
+    pressure_t(pressure_t &&other) noexcept = default;
+
+    pressure_t (float data) noexcept;
+
+    auto get() const -> float;
+
+    auto operator=(float d) -> pressure_t &;
+    auto operator=(double d) -> pressure_t& = delete;
+
+    auto operator=(const pressure_t &other) -> pressure_t & = default;
+    auto operator=(pressure_t &&other) -> pressure_t & = default;
+
+    auto operator*(float other) const -> float { return _d * other; }
+    auto operator/(float other) const -> float { return _d / other; }
+
+    auto operator>=(float other) const -> bool { return _d >= other;}
+    auto operator>(float other)  const -> bool { return _d > other;}
+    auto operator<=(float other) const -> bool { return _d <= other;}
+    auto operator<(float other)  const -> bool { return _d < other;}
+
+    auto operator>=(const pressure_t& other) const -> bool { return _d >= other._d; }
+    auto operator>(const pressure_t& other)  const -> bool { return _d > other._d; }
+    auto operator<=(const pressure_t& other) const -> bool { return _d <= other._d; }
+    auto operator<(const pressure_t& other)  const -> bool { return _d < other._d; }
+
+    auto operator==(float other) const -> bool { return _d == other; }
+    auto operator!=(float other) const -> bool { return _d != other; }
+
+    auto operator==(const pressure_t &other) const -> bool { return _d == other._d; }
+    auto operator!=(const pressure_t &other) const -> bool { return _d != other._d; }
+
+    auto operator/=(const pressure_t &other) -> pressure_t & { _d /= other._d; return *this; };
+    auto operator/=(float other) -> pressure_t & { _d /= other; return *this; };
+    auto operator ()() const -> double { return _d; }
+
+};
+
+inline float operator+(float one, const pressure_t &two)
+{ return one + two.get(); }
+
+inline float operator-(float one, const pressure_t &two)
+{ return one - two.get(); }
+
+inline float operator/(float one, const pressure_t &two)
+{ return one / two.get(); }
+
+inline float operator*(float one, const pressure_t &two)
+{ return one * two.get(); }
 
 force_inline RectF datastruct_rect(const PointF &p1, const PointF &p2)
 {

@@ -17,7 +17,7 @@ private:
     WList<PointF>       ::const_iterator   _last_draw_point;
     WList<pressure_t>   ::const_iterator   _last_draw_press;
 
-    double _max_pressure;
+    pressure_t _max_pressure;
     PointSettable _min, _max;
 
     constexpr static bool StrokePreDebug = false;
