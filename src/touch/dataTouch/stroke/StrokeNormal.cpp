@@ -459,7 +459,13 @@ auto StrokeNormal::loadPtr(const VersionFileController &versionController,
 
     {
         auto [res, d] = WListFast<pressure_t>::load(versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        result->_pressure = std::move(d);
     }
+
+    if (readable.read(&result->_flag, sizeof(result->_flat)) < 0)
+        {-1, nullptr};
 
     return {0, result.release()};
 }
