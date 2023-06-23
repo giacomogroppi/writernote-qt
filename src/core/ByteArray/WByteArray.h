@@ -3,5 +3,5 @@
 #ifdef USE_QT
 # include "WByteArrayQtPrivate.h"
 #else
-# inlcude "WByteArrayUniversalPrivate.h"
+# include "WByteArrayUniversalPrivate.h"
 #endif // USE_QT

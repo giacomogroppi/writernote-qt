@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/WByteArray.h"
+#include "core/ByteArray/WByteArray.h"
 #include "core/WListFast.h"
 #include "core/WVector.h"
 
