@@ -47,7 +47,7 @@ int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
     this->_data = std::unique_ptr<StrokeNormal>(tmp);
 
     if(_data->_pressure[0] > 10)
-        _data->_pressure[0] = 1.5f;
+        _data->_pressure[0] = 1.5;
 
     rep();
     return OK;
@@ -82,7 +82,7 @@ void StrokeForPage::append(const PointF &point, pressure_t pressure)
     W_ASSERT(point.y() >= 0.);
     W_ASSERT(point.y() < Page::getHeight());
 
-    _data->append(point, pressure / 2.0f);
+    _data->append(point, pressure / 2.);
 
     rep();
 }
@@ -162,7 +162,7 @@ void StrokeForPage::draw() const
 
     auto pressure = _data->getPressure();
 
-    pressure = TabletUtils::pressureToWidth(pressure / 2.0);
+    pressure = TabletUtils::pressureToWidth(pressure / 2.);
 
     pen.setWidthF(pressure);
     pen.setColor(_data->getColor());

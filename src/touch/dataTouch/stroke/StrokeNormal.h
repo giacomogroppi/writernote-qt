@@ -59,7 +59,7 @@ public:
     int is_inside(const WLine &line, int from, int precision, cbool needToDeletePoint) const final;
     bool is_inside(const RectF &rect, double precision) const final;
 
-#   define stroke_append_default (-1.0f)
+#   define stroke_append_default (-1.)
     void append(const PointF &point, pressure_t pressure) final;
     size_t createControll() const final;
 
