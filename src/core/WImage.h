@@ -5,7 +5,7 @@
 #include <QBuffer>
 #include "core/ByteArray/WByteArray.h"
 #else
-#include "core/WByteArray.h"
+# include "core/ByteArray/WByteArray.h"
 #endif
 
 #include "core/ByteArray/WByteArray.h"

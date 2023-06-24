@@ -10,7 +10,7 @@
 
 class WString {
 private:
-    WVector<char> _data;
+    WByteArray _data;
     void test() const {};
 public:
     WString() = default;
@@ -20,7 +20,6 @@ public:
     WString(const std::string &other);
 
     WString (WString &&other) noexcept;
-
 
     WString toUpper() const;
     WString lower() const;
@@ -59,15 +58,18 @@ public:
     WString &operator+=(char c);
     char &operator[](int i);
 
-    WByteArray::iterator begin() noexcept { test(); return WByteArray::iterator(this->_data, 0); };
-    WByteArray::iterator end()   noexcept { test(); return WByteArray::iterator(_data, _data.size());  };
+    using Iterator = WByteArray::iterator;
+    using ConstIterator = WByteArray::const_iterator;
 
-    [[nodiscard]] auto constBegin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
-    [[nodiscard]] auto constEnd()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
-    [[nodiscard]] auto cBegin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
-    [[nodiscard]] auto cEnd()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
-    [[nodiscard]] auto begin() const noexcept { test(); return WByteArray::const_iterator(this->_data, 0); }
-    [[nodiscard]] auto end()   const noexcept { test(); return WByteArray::const_iterator(nullptr, _data.size()); }
+    Iterator begin() noexcept { return _data.begin(); };
+    Iterator end()   noexcept { return _data.end(); };
+
+    [[nodiscard]] auto constBegin() const noexcept  { return _data.constBegin(); }
+    [[nodiscard]] auto constEnd()   const noexcept  { return _data.constEnd(); }
+    [[nodiscard]] auto cBegin() const noexcept      { return _data.constBegin(); }
+    [[nodiscard]] auto cEnd()   const noexcept      { return _data.constEnd(); }
+    [[nodiscard]] auto begin() const noexcept       { return _data.constBegin(); }
+    [[nodiscard]] auto end()   const noexcept       { return _data.constEnd(); }
 
     friend bool operator<(const WString &first, const WString &second);
 };

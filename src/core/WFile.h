@@ -155,8 +155,8 @@ inline WFile::WFile(const WString &path)
 }
 
 inline WFile::WFile(WFile &&file) noexcept
-    : _path(std::move (file._path))
-    , _fp(file._fp)
+    : _fp(file._fp)
+    , _path(std::move (file._path))
     , lastMod(std::move(file.lastMod))
 {
     file._fp = nullptr;

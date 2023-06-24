@@ -162,7 +162,7 @@ void StrokeForPage::draw() const
 
     auto pressure = _data->getPressure();
 
-    pressure = TabletUtils::pressureToWidth(pressure / 2.0f);
+    pressure = TabletUtils::pressureToWidth(pressure / 2.0);
 
     pen.setWidthF(pressure);
     pen.setColor(_data->getColor());

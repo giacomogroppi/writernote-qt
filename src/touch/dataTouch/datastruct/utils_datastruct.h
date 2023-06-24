@@ -13,12 +13,13 @@ public:
     pressure_t(const pressure_t &other) noexcept = default;
     pressure_t(pressure_t &&other) noexcept = default;
 
+    pressure_t (double data) noexcept;
     pressure_t (float data) noexcept;
 
     auto get() const -> float;
 
     auto operator=(float d) -> pressure_t &;
-    auto operator=(double d) -> pressure_t& = delete;
+    auto operator=(double d) -> pressure_t&;
 
     auto operator=(const pressure_t &other) -> pressure_t & = default;
     auto operator=(pressure_t &&other) -> pressure_t & = default;
@@ -44,8 +45,16 @@ public:
 
     auto operator/=(const pressure_t &other) -> pressure_t & { _d /= other._d; return *this; };
     auto operator/=(float other) -> pressure_t & { _d /= other; return *this; };
-    auto operator ()() const -> double { return _d; }
+    auto operator ()() const -> double { return static_cast<double>(_d); }
 
+    static
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, pressure_t>;
+
+    static
+    auto save (WritableAbstract &writable, const pressure_t &pressure) -> int;
+
+    operator float() const { return _d; }
+    operator double() const { return _d; }
 };
 
 inline float operator+(float one, const pressure_t &two)

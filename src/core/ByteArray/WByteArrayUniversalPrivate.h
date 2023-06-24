@@ -15,10 +15,12 @@ private:
     unsigned _size;
     unsigned _reserved;
 
+    using CharType = char;
 public:
     WByteArray ();
     WByteArray(const char *data, int size = -1);
     WByteArray (WByteArray &&other) noexcept;
+    WByteArray (const WByteArray &other) noexcept;
     ~WByteArray();
 
     std::string toStdString() const;
@@ -77,16 +79,18 @@ public:
     iterator begin() noexcept { test(); return iterator(this->_data, 0); };
     iterator end()   noexcept { test(); return iterator(nullptr, _size);  };
 
-    const_iterator constBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
-    const_iterator constEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
-    const_iterator cBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
-    const_iterator cEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
-    const_iterator begin() const noexcept { test(); return const_iterator(this->_data, 0); }
-    const_iterator end()   const noexcept { test(); return const_iterator(nullptr, _size); }
+    auto constBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
+    auto constEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
+    auto cBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
+    auto cEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
+    auto begin() const noexcept { test(); return const_iterator(this->_data, 0); }
+    auto end()   const noexcept { test(); return const_iterator(nullptr, _size); }
 
     friend class iterator;
     friend class const_iterator;
 
+    auto operator=(WByteArray &&other) noexcept -> WByteArray &;
+    auto operator=(const WByteArray &other) noexcept -> WByteArray &;
 };
 
 inline const char *WByteArray::constData() const
@@ -210,4 +214,44 @@ inline WByteArray::WByteArray(WByteArray &&other) noexcept
     other._data = nullptr;
     other._size = 0;
     other._reserved = 0;
+}
+
+inline auto WByteArray::operator=(WByteArray &&other) noexcept -> WByteArray &
+{
+    this->clear();
+
+    this->_data = other._data;
+    this->_size = other._size;
+    this->_reserved = other._reserved;
+
+    other._data = nullptr;
+    other._size = 0;
+    other._reserved = 0;
+
+    return *this;
+}
+
+inline auto WByteArray::operator=(const WByteArray &other) noexcept -> WByteArray &
+{
+    if (this == &other)
+        return *this;
+
+    free(_data);
+    _data = (char *) malloc(sizeof (CharType) * other._size);
+
+    WCommonScript::WMemcpy(_data, other._data, other.size());
+
+    this->_size = other._size;
+    this->_reserved = 0;
+
+    return *this;
+}
+
+inline WByteArray::WByteArray(const WByteArray &other) noexcept
+    : _data(nullptr)
+    , _size(0)
+    , _reserved(0)
+{
+    this->reserve(other.size());
+    this->append(other.constData(), other.size());
 }
