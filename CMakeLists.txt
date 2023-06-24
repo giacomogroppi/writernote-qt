@@ -183,7 +183,7 @@ set(PROJECT_SOURCES
     src/currenttitle/merge_currenttitle/merge_currenttitle.cpp
     src/currenttitle/document.cpp
 
-        )
+)
 
 if(APPLE)
     add_definitions(-DMACOS)
