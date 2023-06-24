@@ -13,16 +13,18 @@ public:
     pressure_t(const pressure_t &other) noexcept = default;
     pressure_t(pressure_t &&other) noexcept = default;
 
-    pressure_t (double data) noexcept;
-    pressure_t (float data) noexcept;
+    pressure_t (double data) noexcept : _d(data) {};
+    pressure_t (float data) noexcept  : _d(data) { };
 
-    auto get() const -> float;
+    auto get() const -> float { return _d; };
 
-    auto operator=(float d) -> pressure_t &;
-    auto operator=(double d) -> pressure_t&;
+    auto operator=(float d) -> pressure_t & { _d = d; return *this; };
+    auto operator=(double d) -> pressure_t& { _d = d; return *this;};
 
     auto operator=(const pressure_t &other) -> pressure_t & = default;
     auto operator=(pressure_t &&other) -> pressure_t & = default;
+
+
 
     auto operator*(float other) const -> float { return _d * other; }
     auto operator/(float other) const -> float { return _d / other; }
@@ -32,13 +34,24 @@ public:
     auto operator<=(float other) const -> bool { return _d <= other;}
     auto operator<(float other)  const -> bool { return _d < other;}
 
+    auto operator==(float other) const -> bool { return _d == other; }
+    auto operator!=(float other) const -> bool { return _d != other; }
+
+    auto operator*(double other) const -> double { return _d * other; }
+    auto operator/(double other) const -> double { return _d / other; }
+
+    auto operator>=(double other) const -> double { return _d >= other;}
+    auto operator>(double other)  const -> double { return _d > other;}
+    auto operator<=(double other) const -> double { return _d <= other;}
+    auto operator<(double other)  const -> double { return _d < other;}
+
+    auto operator==(double other) const -> bool { return _d == other; }
+    auto operator!=(double other) const -> bool { return _d != other; }
+
     auto operator>=(const pressure_t& other) const -> bool { return _d >= other._d; }
     auto operator>(const pressure_t& other)  const -> bool { return _d > other._d; }
     auto operator<=(const pressure_t& other) const -> bool { return _d <= other._d; }
     auto operator<(const pressure_t& other)  const -> bool { return _d < other._d; }
-
-    auto operator==(float other) const -> bool { return _d == other; }
-    auto operator!=(float other) const -> bool { return _d != other; }
 
     auto operator==(const pressure_t &other) const -> bool { return _d == other._d; }
     auto operator!=(const pressure_t &other) const -> bool { return _d != other._d; }

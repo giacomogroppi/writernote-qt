@@ -120,10 +120,10 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
             return;
 
         const RectF source {
-                           this->_min.x() - this->_max_pressure*5.,
-                           this->_min.y() - this->_max_pressure*5.,
-                           this->_max.x() + this->_max_pressure*5.,
-                           this->_max.y() + this->_max_pressure*5.
+                           this->_min.x() - this->_max_pressure * 5.,
+                           this->_min.y() - this->_max_pressure * 5.,
+                           this->_max.x() + this->_max_pressure * 5.,
+                           this->_max.y() + this->_max_pressure * 5.
         };
 
         const RectF target {

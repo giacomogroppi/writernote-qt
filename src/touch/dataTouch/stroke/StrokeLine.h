@@ -41,13 +41,13 @@ public:
     void adjust(double zoom);
     std::unique_ptr<Stroke> clone() const final;
 
-    int how_much_decrese() const;
+    int how_much_decrese() const final;
 
-    std::unique_ptr<Stroke> makeNormal() const;
+    std::unique_ptr<Stroke> makeNormal() const final;
 
-    [[nodiscard]] bool isEmpty() const;
+    [[nodiscard]] bool isEmpty() const final;
 
-    void scale(const PointF &offset);
+    void scale(const PointF &offset) final;
 
     void preappend(int) final {};
 

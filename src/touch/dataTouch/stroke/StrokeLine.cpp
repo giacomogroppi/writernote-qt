@@ -281,3 +281,33 @@ size_t StrokeLine::getSizeInFile() const
     return sizeof(StrokeComplexCommon::current_ver) +
            sizeof(this->_data);
 }
+
+auto StrokeLine::loadPtr(const VersionFileController &versionController,
+                         ReadableAbstract &readable) -> std::pair<int, StrokeLine *>
+{
+    std::unique_ptr<StrokeLine> d(new StrokeLine);
+    if (versionController.getVersionStrokeLine() != 0)
+        return {-1, nullptr};
+    {
+        auto [res, point] = PointF::load(versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        d->_data.pt1 = std::move(point);
+    }
+
+    {
+        auto [res, point] = PointF::load(versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        d->_data.pt2 = std::move(point);
+    }
+
+    {
+        auto [res, pressure] = pressure_t::load(versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        d->_data.press = std::move(pressure);
+    }
+
+    return {0, d.release()};
+}
