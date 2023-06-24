@@ -159,6 +159,7 @@ public:
 
     // new way
     static auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Stroke*>;
+    static auto write (WritableAbstract &writable, const Stroke &stroke) -> int;
 
     // old way
     static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);

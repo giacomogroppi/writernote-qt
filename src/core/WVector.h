@@ -126,8 +126,8 @@ public:
     static auto load (const VersionFileController &versionController, Readable &file) -> std::pair<int, WVector<T>>;
 
     /**
-     * \param writable needs to have save(const void *data, size_t size) and it needs to return < 0 in case
-     *  of failure and it needs to have save(const T &param) for non class object
+     * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case
+     *  of failure and it needs to have write(const T &param) for non class object
      *
      * \return -1 in case of error
      * */

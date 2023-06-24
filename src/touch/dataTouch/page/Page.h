@@ -122,12 +122,14 @@ public:
     */
     __fast void append(const std::shared_ptr<Stroke>& stroke);
     __fast void append(std::shared_ptr<Stroke> &&stroke);
-    __fast void reserve(int stroke);
+    __fast void reserve(int stroke) { _strokeTmp.reserve(stroke); } ;
     // TODO --> make template
     __fast void append(const WList<std::shared_ptr<Stroke>> & stroke);
     __fast void append(const WListFast<std::shared_ptr<Stroke>> &stroke);
 
+    [[deprecated]]
     __fast const Stroke             & atStroke(uint i) const;
+    [[deprecated]]
     __fast Stroke                   & atStrokeMod(uint i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
@@ -138,6 +140,8 @@ public:
     auto currentWidth() const -> double;
 
     auto userWrittenSomething() const -> bool;
+
+    [[deprecated]]
     auto move(uint from, uint to) -> void;
 
     void triggerRenderImage(int m_pos_ris, bool all);
@@ -616,4 +620,28 @@ inline auto Page::load(const VersionFileController &versionController, ReadableA
     }
 
     return {0, result};
+}
+
+// TODO: move into cpp file
+inline auto Page::write(WritableAbstract &writable, const Page &page) -> int
+{
+    if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)
+        return -1;
+
+    if (writable.write(&page._count, sizeof(page._count)) < 0) return -1;
+    if (writable.write(&page._IsVisible, sizeof(page._IsVisible)) < 0) return -1;
+
+    if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)
+        return -1;
+
+    if (WListFast<SharedPtr<Stroke>>::write(writable, page._strokeTmp) < 0)
+        return -1;
+
+    if (StrokeForPage::write(writable, page._stroke_writernote) < 0)
+        return -1;
+
+    if (WPixmap::write(writable, page._imgDraw) < 0)
+        return -1;
+
+    return 0;
 }

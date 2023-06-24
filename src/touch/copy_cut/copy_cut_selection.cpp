@@ -63,7 +63,7 @@ void copy::single(
  *
  *
  * TODO: implement a 'history' of copies and points.
- * In such a way that the user can save by
+ * In such a way that the user can write by
  * copying or cutting, multiple strokes.
  *
  * Return 1 if we need to remove the stroke

@@ -77,6 +77,9 @@ public:
     constexpr auto getVersionMetadataStroke()   const noexcept -> int;
     constexpr auto getVersionStrokeNormal()     const noexcept -> int;
     constexpr auto getVersionStrokeLine()       const noexcept -> int;
+    constexpr auto getVersionStrokeRect()       const noexcept -> int;
+    constexpr auto getVersionPressure()         const noexcept -> int;
+    constexpr auto getVersioneWColor()          const noexcept -> int;
 };
 
 template<class Readable>

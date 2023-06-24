@@ -22,7 +22,7 @@ public:
     WByteArray (const char *d, size_t size) noexcept;
 
     static
-    auto save (WritableAbstract &writable, const WByteArray &object) -> int;
+    auto write (WritableAbstract &writable, const WByteArray &object) -> int;
 
     static
     auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
@@ -107,7 +107,7 @@ inline auto WByteArray::load(
     return {0, result};
 }
 
-inline auto WByteArray::save(WritableAbstract &writable, const WByteArray &object) -> int
+inline auto WByteArray::write(WritableAbstract &writable, const WByteArray &object) -> int
 {
     size_t size = object.size();
 

@@ -25,7 +25,7 @@ static bool createTempFolder(const WString &path){
 
 /*
  * the function does not check if the
- * folder to save the audio exists
+ * folder to write the audio exists
 */
 WString get_path_no_controll()
 {

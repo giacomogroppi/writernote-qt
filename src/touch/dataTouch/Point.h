@@ -243,6 +243,31 @@ inline WColor &WColor::operator=(const WColor &other)
     return *this;
 }
 
+
+inline WColor::WColor(WColor &&other) noexcept
+    : colore {
+        other.colore[0],
+        other.colore[1],
+        other.colore[2],
+        other.colore[3]
+    }
+{
+}
+
+inline auto
+WColor::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WColor>
+{
+    WColor result;
+    if (versionController.getVersioneWColor() != 0)
+        return {-1, result};
+
+    for (auto& i : result.colore) {
+        if (readable.read(&i, sizeof (result.colore[0])) < 0)
+            return {-1, result};
+    }
+    return {0, result};
+}
+
 using PointSettable = Settable<PointF>;
 
 #endif // POINT_H

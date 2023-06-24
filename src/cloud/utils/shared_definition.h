@@ -15,7 +15,7 @@
 /* key for log in */
 #define KEY_LOG 2
 
-/* key for save file */
+/* key for write file */
 #define KEY_SAVE 3
 
 /* asks the server how much money he has in his checking account */

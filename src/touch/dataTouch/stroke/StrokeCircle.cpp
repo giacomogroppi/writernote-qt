@@ -287,7 +287,7 @@ size_t StrokeCircle::createControll() const
     return 0;
 }
 
-inline auto StrokeCircle::loadPtr(const VersionFileController &versionController,
+auto StrokeCircle::loadPtr(const VersionFileController &versionController,
                            ReadableAbstract &readable) -> std::pair<int, StrokeCircle *>
 {
     if (versionController.getVersionStrokeCircle() != 0)

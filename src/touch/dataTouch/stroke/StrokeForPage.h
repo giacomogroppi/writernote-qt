@@ -35,6 +35,8 @@ public:
     static
     auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeForPage>;
 
+    static auto write (WritableAbstract &writable, const StrokeForPage &strokeForPage) -> int;
+
     int load(WZipReaderSingle &reader, int ver_stroke);
 
     size_t getSizeInFile() const;

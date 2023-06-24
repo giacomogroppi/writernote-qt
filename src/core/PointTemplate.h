@@ -27,8 +27,8 @@ public:
     constexpr T x() const;
     constexpr T y() const;
 
-    T &rx();
-    T &ry();
+    constexpr T &rx() noexcept;
+    constexpr T &ry() noexcept;
 
     PointTemplate<T> & setX(T x);
     PointTemplate<T> & setY(T y);
@@ -263,13 +263,14 @@ inline PointTemplate<Z> PointTemplate<T>::castTo() const
 }
 
 template<typename T>
-inline T &PointTemplate<T>::ry()
+inline constexpr T &PointTemplate<T>::ry() noexcept
 {
     return _y;
 }
 
 template<typename T>
-inline T &PointTemplate<T>::rx() {
+inline constexpr T &PointTemplate<T>::rx() noexcept
+{
     return _x;
 }
 

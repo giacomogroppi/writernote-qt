@@ -133,7 +133,7 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
 
         W_ASSERT(_img.isNull() == false);
 
-        //_img.save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+        //_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
 
         painter.drawPixmap(target,
                            _img,

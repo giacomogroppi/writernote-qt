@@ -41,6 +41,7 @@ public:
 
     static
     auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WPixmap>;
+    static auto write(WritableAbstract &writable, const WPixmap &pixmap) -> int;
 
     WPixmap &operator=(const WPixmap &other) noexcept;
     WPixmap &operator=(WPixmap &&other) noexcept;

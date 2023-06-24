@@ -110,7 +110,7 @@ void TabletController::draw(WPainter &painter, double width) const
     loader.load();
     /*TabletUtils::load(painter, this->getDoc(), d);*/
 
-    //this->_img.save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+    //this->_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
     //TIME_STOP(time_load, "Load function:");
 }
 

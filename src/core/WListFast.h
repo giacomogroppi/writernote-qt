@@ -134,24 +134,23 @@ public:
     [[nodiscard]] auto end()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
 
     /**
-     * \param writable needs to have save(const void *data, size_t size) and it needs to return < 0 in case
-     *  of failure and it needs to have save(const T &param) for non class object
+     * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case
+     *  of failure and it needs to have write(const T &param) for non class object
      *
      * \return -1 in case of error
      * */
-    template <class Writable, class T2 = T>
-        requires (std::is_base_of_v<WritableAbstract, Writable>)
+    template <class T2 = T>
     static
-    auto save(Writable &writable, const WListFast<T2> &list) noexcept -> int
+    auto write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> int
     {
         static_assert_type(list._size, int);
 
-        if (writable.write(list._size) < 0) {
+        if (writable.write(&list._size, sizeof(list._size)) < 0) {
             return -1;
         }
 
         for (const auto &ref: std::as_const(list)) {
-            if (T2::save(writable, ref) < 0)
+            if (T2::write(writable, ref) < 0)
                 return -1;
         }
         return 0;

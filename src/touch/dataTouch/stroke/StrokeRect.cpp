@@ -226,3 +226,26 @@ size_t StrokeRect::getSizeInFile() const
 void StrokeRect::decreasePrecision()
 {
 }
+
+auto StrokeRect::loadPtr(const VersionFileController &versionController,
+                         ReadableAbstract &readable) -> std::pair<int, StrokeRect *>
+{
+    std::unique_ptr<StrokeRect> d(new StrokeRect);
+    if (versionController.getVersionStrokeRect() != 0)
+        return {-1, nullptr};
+    {
+        auto [res, data] = RectF::load(versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        d->_data.rect = data;
+    }
+
+    {
+        auto [res, data] = pressure_t::load(versionController, readable);
+        if (res < 0)
+            return {-1, nullptr};
+        d->_data.press = data;
+    }
+
+    return {0, d.release()};
+}

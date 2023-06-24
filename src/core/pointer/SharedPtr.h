@@ -51,7 +51,7 @@ public:
      * @return &lt 0 in case Writable fail
      * */
     template <class Writable> requires(std::is_base_of_v<WritableAbstract, Writable>)
-    static auto save (Writable &writable, const SharedPtr<T> &object) -> int
+    static auto write (Writable &writable, const SharedPtr<T> &object) -> int
     {
         const bool is_present = object.get() != nullptr;
         const T& ref = *object.get();
@@ -59,7 +59,7 @@ public:
         if (writable.write(&is_present, sizeof (is_present)) < 0)
             return -1;
 
-        if (is_present and T::save (writable, ref) < 0) {
+        if (is_present and T::write (writable, ref) < 0) {
             return -1;
         }
 

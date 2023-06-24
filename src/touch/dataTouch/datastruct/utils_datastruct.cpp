@@ -5,3 +5,5 @@ bool datastruct_isinside(const PointF &topleft, const PointF &bottonright, const
 {
     return stroke.isInside(RectF(topleft, bottonright));
 }
+
+

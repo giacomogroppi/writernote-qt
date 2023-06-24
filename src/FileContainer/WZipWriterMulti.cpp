@@ -75,7 +75,7 @@ WZipWriterMulti::~WZipWriterMulti()
 }
 
 /*
- * the save function writes the data to file, commits and then closes the file
+ * the write function writes the data to file, commits and then closes the file
 */
 int WZipWriterMulti::commit()
 {

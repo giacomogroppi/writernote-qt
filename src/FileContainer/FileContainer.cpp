@@ -43,7 +43,7 @@ bool FileContainer::close()
     if (not file.open(WFile::WFileWrite))
         return false;
 
-    if (WListFast<Pair>::save<WFile>(file, this->_subFiles) < 0)
+    if (WListFast<Pair>::write(file, this->_subFiles) < 0)
         return false;
 
     return true;

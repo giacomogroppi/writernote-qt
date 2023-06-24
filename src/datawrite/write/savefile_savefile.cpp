@@ -9,7 +9,7 @@
 
 /*
  * the function save the copybook and all it's data
- * if save_audio == true -> save also the audio
+ * if save_audio == true -> write also the audio
 */
 
 static size_t savefile_get_size_file(const Document *doc)

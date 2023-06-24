@@ -37,7 +37,7 @@ namespace WAbstractList {
         }
 
         for (const auto &ref: std::as_const(list)) {
-            if (K::save(writable, list) < 0)
+            if (K::write(writable, list) < 0)
                 return -1;
         }
         return 0;

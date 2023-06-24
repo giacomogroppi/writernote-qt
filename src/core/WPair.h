@@ -62,11 +62,11 @@ public:
     }
 
     template <class K2, class T2>
-    static auto save (WritableAbstract &writable, const WPair<K2, T2> &object)
+    static auto write (WritableAbstract &writable, const WPair<K2, T2> &object)
     {
-        if (K2::save(writable, object._key) < 0)
+        if (K2::write(writable, object._key) < 0)
             return -1;
-        if (T2::save(writable, object._value) < 0)
+        if (T2::write(writable, object._value) < 0)
             return -1;
         return 0;
     }

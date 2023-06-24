@@ -41,7 +41,7 @@ force_inline void ObjectFinder::move(const PointF& point)
             return;
         }
 
-        // if the point is differente we neet to save it and restart the timer
+        // if the point is differente we neet to write it and restart the timer
         _point = point;
     }else{
         _point.set(true);

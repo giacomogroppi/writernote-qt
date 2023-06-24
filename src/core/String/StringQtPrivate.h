@@ -80,7 +80,7 @@ public:
     /**
      * @return &lt 0 iff writable fail
      * */
-    static auto save (WritableAbstract &writable, const WString &str) -> int
+    static auto write (WritableAbstract &writable, const WString &str) -> int
     {
         int size = static_cast<int>(str.size());
 

@@ -70,6 +70,17 @@ public:
     operator double() const { return _d; }
 };
 
+inline auto pressure_t::load(const VersionFileController &versionController,
+                      ReadableAbstract &readable) -> std::pair<int, pressure_t>
+{
+    if (versionController.getVersionPressure() != 0)
+        return {-1, 0.};
+    pressure_t result{};
+    if (readable.read(&result._d, sizeof (result._d)) < 0)
+        return {-1, 0.};
+    return {0, result};
+}
+
 inline float operator+(float one, const pressure_t &two)
 { return one + two.get(); }
 

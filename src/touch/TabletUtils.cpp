@@ -88,7 +88,7 @@ void TabletUtils::load()
         page.get_stroke_page().draw(getPainter(), _m, page, sizeRect, {0., 0., 150., 150.});
         singleLoad(getPainter(), img, sizeRect, {0., 0.}, counterPage, _doc.getZoom());
 
-        //img.save("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
+        //img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
 
         break;
 
