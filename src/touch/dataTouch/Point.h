@@ -26,12 +26,19 @@ public:
     {
     }
     Settable(const Settable<T> &other);
+    Settable(Settable<T> &&other) noexcept = default;
     Settable(T value, bool set);
 
     bool isSet() const;
     void set(bool set);
 
     Settable<T>& operator=(const Settable<T> &other) noexcept;
+
+    auto operator=(Settable<T> &&other) noexcept -> Settable<T>& {
+        this->_set = other._set;
+        T::operator=(std::move(other));
+        return *this;
+    }
 
     Settable<T>& operator=(const T& other) {
         T::operator=(other);
@@ -257,8 +264,8 @@ inline WColor::WColor(WColor &&other) noexcept
 inline auto
 WColor::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WColor>
 {
-    WColor result;
-    if (versionController.getVersioneWColor() != 0)
+    WColor result{};
+    if (versionController.getVersionWColor() != 0)
         return {-1, result};
 
     for (auto& i : result.colore) {

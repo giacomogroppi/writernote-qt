@@ -22,37 +22,39 @@ public:
 
 class VersionFileController {
 private:
-    static constexpr unsigned short
-            currentVersionWListFast = 0,
-            currentVersionWString = 0,
-            currentVersionWPair = 0,
-            currentVersionSharedPtr = 0,
-            currentVersionWByteArray = 0,
-            currentVersionDataStruct = 0,
-            currentVersionPointTemplate = 0,
-            currentVersionPage = 0,
-            currentVersionStroke = 0,
-            currentVersionStrokeCirle = 0;
+#   define DEFINE_VERSION(name, version)                                        \
+    private:                                                                    \
+    static constexpr unsigned short currentVersion##name = version;             \
+    unsigned short _version##name;                                              \
+    public:                                                                     \
+    constexpr auto getVersion##name() const -> int { return _version##name; }
 
     long _isOk;
-    unsigned short _versionWListFast;
-    unsigned short _versionWString;
-    unsigned short _versionWPair;
-    unsigned short _versionSharedPtr;
-    unsigned short _versionWByteArray;
-    unsigned short _versionDataStruct;
-    unsigned short _versionPointTemplate;
-    unsigned short _versionPage;
-    unsigned short _versionStroke;
-    unsigned short _versionStrokeCircle;
+    DEFINE_VERSION(WListFast, 0);
+    DEFINE_VERSION(WString, 0);
+    DEFINE_VERSION(WPair, 0);
+    DEFINE_VERSION(SharedPtr, 0);
+    DEFINE_VERSION(WByteArray, 0);
+    DEFINE_VERSION(DataStruct, 0);
+    DEFINE_VERSION(PointTemplate, 0);
+    DEFINE_VERSION(Page, 0);
+    DEFINE_VERSION(Stroke, 0);
+    DEFINE_VERSION(StrokeCircle, 0);
+    DEFINE_VERSION(RectTemplate, 0);
+    DEFINE_VERSION(MetadataStroke, 0);
+    DEFINE_VERSION(StrokeNormal, 0);
+    DEFINE_VERSION(StrokeLine, 0);
+    DEFINE_VERSION(StrokeRect, 0 );
+    DEFINE_VERSION(Pressure, 0);
+    DEFINE_VERSION(WColor, 0);
 
 public:
     VersionFileController() = default;
 
-    VersionFileController (VersionFileController &&other) noexcept;
+    VersionFileController (VersionFileController &&other) noexcept = default;
 
     /**
-     * It's required for template Readable to have read method
+     * It's required for template Readable to have ReadableAbstract as base class
      * */
     template <class Readable>
             requires (std::is_base_of_v<ReadableAbstract, Readable>)
@@ -62,24 +64,6 @@ public:
      * \return true iff it's load corrently
      * */
     bool isOk() const noexcept;
-
-    constexpr auto getVersionWListFast()        const noexcept -> int { return this->_versionWListFast; };
-    constexpr auto getVersionWString()          const noexcept -> int { return this->_versionWString; };
-    constexpr auto getVersionWPair()            const noexcept -> int { return this->_versionWPair; };
-    constexpr auto getVersionSharedPtr()        const noexcept -> int { return this->_versionSharedPtr; }
-    constexpr auto getVersionWByteArray()       const noexcept -> int { return _versionWByteArray; }
-    constexpr auto getVersionDataStruct()       const noexcept -> int { return _versionDataStruct; };
-    constexpr auto getVersionPointTemplate()    const noexcept -> int { return _versionPointTemplate; };
-    constexpr auto getVersionPage()             const noexcept -> int { return _versionPage; }
-    constexpr auto getVersionStroke()           const noexcept -> int { return _versionStroke; }
-    constexpr auto getVersionStrokeCircle()     const noexcept -> int { return _versionStrokeCircle; };
-    constexpr auto getVersionRectTemplate()     const noexcept -> int;
-    constexpr auto getVersionMetadataStroke()   const noexcept -> int;
-    constexpr auto getVersionStrokeNormal()     const noexcept -> int;
-    constexpr auto getVersionStrokeLine()       const noexcept -> int;
-    constexpr auto getVersionStrokeRect()       const noexcept -> int;
-    constexpr auto getVersionPressure()         const noexcept -> int;
-    constexpr auto getVersioneWColor()          const noexcept -> int;
 };
 
 template<class Readable>
@@ -95,16 +79,6 @@ inline VersionFileController VersionFileController::loadVersion(Readable &readab
         return result;
 
     unsigned short *d[] = {
-            &result._versionWListFast,
-            &result._versionWString,
-            &result._versionWPair,
-            &result._versionSharedPtr,
-            &result._versionWByteArray,
-            &result._versionDataStruct,
-            &result._versionPointTemplate,
-            &result._versionPage,
-            &result._versionStroke,
-            &result._versionStrokeCircle
     };
 
     for (int i = 0; i < sizeof (d); i++) {
