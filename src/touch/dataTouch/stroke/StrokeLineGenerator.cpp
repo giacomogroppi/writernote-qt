@@ -67,9 +67,9 @@ void StrokeLineGenerator::makeGeneric(const StrokePre *from, StrokeLine &res)
     res._data.press = pressure;
 }
 
-std::shared_ptr<Stroke> StrokeLineGenerator::make(const StrokePre *from)
+std::unique_ptr<Stroke> StrokeLineGenerator::make(const StrokePre *from)
 {
-    std::shared_ptr<StrokeLine> tmp(new StrokeLine);
+    std::unique_ptr<StrokeLine> tmp(new StrokeLine);
 
     W_ASSERT(from->_stroke->isEmpty());
 

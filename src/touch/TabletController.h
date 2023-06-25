@@ -46,9 +46,9 @@ private:
     void draw(WPainter &painter, double width) const;
 public:
     explicit TabletController(WObject *parent,
-                              const std::function<int()>& getTimeRecording,
+                              const std::function<int()>  &getTimeRecording,
                               const std::function<bool()> &isPlaying,
-                              const std::function<int()> &getTimePlaying);
+                              const std::function<int()>  &getTimePlaying);
 
     void getImg(WPainter &painter, double width) const;
 

@@ -19,7 +19,7 @@ double (*functions[])(const StrokePre &) = {
     &StrokeCircleGenerator  ::model_near
 };
 
-std::shared_ptr<Stroke> (*function_create[])(const StrokePre *) = {
+std::unique_ptr<Stroke> (*function_create[])(const StrokePre *) = {
     &StrokeLineGenerator    ::make,
     &StrokeRectGenerator    ::make,
     &StrokeCircleGenerator  ::make
@@ -79,7 +79,7 @@ bool model::find(StrokePre &stroke)
 {
     unsigned long i;
     const auto color = stroke.getColor();
-    std::shared_ptr<Stroke> res;
+    std::unique_ptr<Stroke> res;
 
     W_ASSERT(!stroke.isEmpty());
 
@@ -108,7 +108,7 @@ bool model::find(StrokePre &stroke)
 
     W_ASSERT(res != nullptr);
 
-    stroke.setStrokeComplex(res);
+    stroke.setStrokeComplex(std::move(res));
 
     stroke.setColor(color);
 

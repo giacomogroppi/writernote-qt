@@ -2,6 +2,7 @@
 
 #include "Stroke.h"
 #include "StrokeComplexCommon.h"
+#include "StrokePre.h"
 
 class StrokeRectGenerator
 {
@@ -13,7 +14,7 @@ private:
     static double is_near_rect(const RectF &area, const PointF &point);
 
 public:
-    static std::shared_ptr<Stroke> make(const class StrokePre *from);
+    static std::unique_ptr<Stroke> make(const StrokePre *from);
     static double model_near(const class StrokePre &stroke);
 
 };

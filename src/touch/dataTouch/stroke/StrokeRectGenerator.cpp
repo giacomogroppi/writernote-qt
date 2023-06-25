@@ -42,9 +42,9 @@ double StrokeRectGenerator::is_near_rect(const RectF &area, const PointF &point)
     return StrokeComplexCommon::error;
 }
 
-std::shared_ptr<Stroke> StrokeRectGenerator::make(const StrokePre *from)
+std::unique_ptr<Stroke> StrokeRectGenerator::make(const StrokePre *from)
 {
-    std::shared_ptr<StrokeRect> res(new StrokeRect());
+    std::unique_ptr<StrokeRect> res(new StrokeRect());
 
     res->_data = {
         .rect = area,

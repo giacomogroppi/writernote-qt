@@ -14,7 +14,7 @@ StrokePre::StrokePre()  :
     _min({0., 0.}, false),
     _max({0., 0.}, false)
 {
-    _stroke = std::make_shared<StrokeNormal>();
+    _stroke = std::unique_ptr<StrokeNormal>();
 
     W_ASSERT(_stroke->isEmpty());
     //W_ASSERT(this->isImageEmpty());
@@ -119,10 +119,10 @@ void StrokePre::reset_img()
     _img.fill({color_transparent});
 }
 
-void StrokePre::setStrokeComplex(const std::shared_ptr<Stroke>& stroke)
+void StrokePre::setStrokeComplex(std::unique_ptr<Stroke> &&stroke)
 {
     W_ASSERT(stroke->type() != Stroke::COMPLEX_NORMAL);
-    this->_stroke = stroke;
+    this->_stroke = std::move(stroke);
     this->_img = WPixmap();
 
     this->_point.clear();
@@ -160,7 +160,7 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 
 StrokePre::StrokePre(const StrokePre &other) noexcept
     : _img(other._img)
-    , _stroke(other._stroke)
+    , _stroke(other._stroke->clone())
     , _point(other._point)
     , _pressure(other._pressure)
     , _last_draw_point(other._last_draw_point)
@@ -169,7 +169,6 @@ StrokePre::StrokePre(const StrokePre &other) noexcept
     , _min(other._min)
     , _max(other._max)
 {
-
 }
 
 StrokePre::StrokePre(StrokePre &&other) noexcept
@@ -201,7 +200,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
         painter.setPen(pen);
         painter.setAntialeasing();
 
-        if (un(_point.size() == 1)) {
+        if (_point.size() == 1) {
             _last_draw_point = this->_point.constBegin();
             _last_draw_press = this->_pressure.constBegin();
 

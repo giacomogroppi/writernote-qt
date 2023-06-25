@@ -13,7 +13,7 @@ private:
     static void makeGeneric(const class StrokePre *from, class StrokeLine &res);
 
 public:
-    static std::shared_ptr<Stroke> make(const StrokePre *from);
+    static std::unique_ptr<Stroke> make(const StrokePre *from);
     static double model_near(const class StrokePre &stroke);
 };
 

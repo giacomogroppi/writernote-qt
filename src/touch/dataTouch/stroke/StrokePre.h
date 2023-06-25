@@ -6,10 +6,11 @@
 #include "touch/object_finder/model_finder/model_finder.h"
 #include "core/WPixmap.h"
 
-class StrokePre{
+class StrokePre
+{
 private:
     WPixmap _img;
-    std::shared_ptr<Stroke> _stroke;
+    std::unique_ptr<Stroke> _stroke;
 
     WList<PointF>      _point;
     WList<pressure_t>   _pressure;
@@ -32,7 +33,7 @@ private:
     [[nodiscard]] WList<PointF>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 
-    void setStrokeComplex(const std::shared_ptr<Stroke>& stroke);
+    void setStrokeComplex(std::unique_ptr<Stroke> &&stroke);
 public:
     StrokePre ();
     StrokePre (const StrokePre &other) noexcept;
@@ -111,6 +112,8 @@ inline WList<PointF>::const_iterator StrokePre::get_last_point() const
 force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, const PointF& pointFirstPage)
 {
     WDebug(StrokePreDebug, "Pointer" << this);
+
+    painter.setAntialeasing();
 
     if (_stroke->isEmpty()) {
         W_ASSERT(_stroke->type() == Stroke::COMPLEX_NORMAL);

@@ -101,9 +101,12 @@ void TabletController::draw(WPainter &painter, double width) const
             this->_getTimePlaying, width / Page::getWidth(),
             Optional(_tools._laser), getDoc(),
             true, false,
-            RectF{
+            RectF {
+                // top left of the page
                 getDoc().getPointFirstPage(),
-                getDoc().getPointFirstPage() + PointF {width, width * Page::getProportion()}
+
+                // bottom right of the page
+                getDoc().getPointFirstPage() + PointF { width, width * Page::getProportion() }
             }
     );
 

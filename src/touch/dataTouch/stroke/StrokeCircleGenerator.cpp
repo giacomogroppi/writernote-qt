@@ -27,9 +27,9 @@ void StrokeCircleGenerator::model_circle_precision(const PointF &point, double &
     }
 }
 
-std::shared_ptr<Stroke> StrokeCircleGenerator::make(const StrokePre *from)
+std::unique_ptr<Stroke> StrokeCircleGenerator::make(const StrokePre *from)
 {
-    std::shared_ptr<StrokeCircle> res(new StrokeCircle);
+    std::unique_ptr<StrokeCircle> res(new StrokeCircle);
 
     W_ASSERT(from);
 
