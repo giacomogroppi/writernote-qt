@@ -6,9 +6,10 @@ class WritableAbstract {
 public:
     virtual auto write (const void *data, size_t size) -> int = 0;
 
-    /*
-    virtual auto write (int object) -> int = 0;
-    virtual auto write (long object) -> int = 0;
-    virtual auto write (size_t object)
-     */
+    template <class T>
+            requires (std::is_arithmetic_v<T> && sizeof (T) <= sizeof(long))
+    auto write (T d) -> int
+    {
+        return write (&d, sizeof(d));
+    }
 };

@@ -205,18 +205,21 @@ bool StrokeLine::isInside(const RectF &rect) const
     return this->is_inside(rect, 0.);
 }
 
-int StrokeLine::save(WZipWriterSingle &writer) const
+auto StrokeLine::save(WritableAbstract &writer) const -> int
 {
     const auto res = Stroke::save(writer);
 
     if(res != OK)
         return res;
 
-    static_assert(sizeof(PointF) == sizeof(double) * 2);
+    if (PointF::write(writer, _data.pt1) < 0)
+        return ERROR;
 
-    writer.write_object(this->_data);
+    if (PointF::write(writer, _data.pt2) < 0)
+        return ERROR;
 
-    static_assert(sizeof(this->_data) == (sizeof(PointF) * 2 + sizeof(float) + 4));
+    if (pressure_t::save(writer, _data.press) < 0)
+        return ERROR;
 
     return OK;
 }

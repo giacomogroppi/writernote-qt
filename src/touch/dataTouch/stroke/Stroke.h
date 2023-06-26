@@ -13,6 +13,7 @@
 #include "core/WPainter/WPainter.h"
 #include "core/Point.h"
 #include "core/WPen.h"
+#include "utils/common_error_definition.h"
 
 #define PROP_RESOLUTION (2.)
 constexpr double deltaPress = 2.;
@@ -172,14 +173,18 @@ public:
     static auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Stroke*>;
     static auto write (WritableAbstract &writable, const Stroke &stroke) -> int;
 
-    // old way
-    static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);
-    virtual int save(WZipWriterSingle &file) const;
-
     /** all stroke derivated class needs to implements this method to recognize yourself */
     virtual int type() const = 0;
 
 protected:
+    // old way
+    static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);
+    /**
+     * All the class that extend this method needs to call Stroke::save and than save
+     * his content, because load expect this structure.
+     * */
+    virtual int save(WritableAbstract &file) const;
+
     Stroke &operator=(const Stroke &other);
 
     Stroke();
@@ -280,13 +285,9 @@ inline Stroke::Stroke(Stroke &&other) noexcept
 
 }
 
-auto Stroke::write(WritableAbstract &writable, const Stroke &stroke) -> int
+inline auto Stroke::write(WritableAbstract &writable, const Stroke &stroke) -> int
 {
-    if (metadata_stroke::write(writable, stroke._metadata) < 0) {
-        return -1;
-    }
-    static_assert(0);
-    return 0;
+    return stroke.save(writable) == ERROR ? -1 : 0;
 }
 
 inline bool metadata_stroke::operator!=(const metadata_stroke &other) const

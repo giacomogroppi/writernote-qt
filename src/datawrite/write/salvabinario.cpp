@@ -65,7 +65,7 @@ static void *salvafile_thread_save(void *_data)
     const auto saveImg = data->_saveImg;
     WZipWriterSingle &writer = *data->_writer;
 
-    const auto res = _page->save(writer, saveImg);
+    const auto res = Page::write(writer, *_page);
 
     if(res != OK)
         return (void *)1UL;

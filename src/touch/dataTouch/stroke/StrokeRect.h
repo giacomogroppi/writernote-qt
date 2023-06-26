@@ -30,7 +30,7 @@ public:
     RectF getBiggerPointInStroke() const;
     bool isInside(const RectF &rect) const;
 
-    int save(WZipWriterSingle &file) const final;
+    int save(WritableAbstract &file) const final;
 
     auto getSizeInMemory() const -> size_t final;
     auto getSizeInFile() const -> size_t final;

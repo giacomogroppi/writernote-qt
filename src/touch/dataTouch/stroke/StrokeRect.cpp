@@ -185,7 +185,7 @@ bool StrokeRect::isInside(const RectF &rect) const
     return this->_data.rect.intersects(rect);
 }
 
-int StrokeRect::save(WZipWriterSingle &file) const
+int StrokeRect::save(WritableAbstract &file) const
 {
     const auto res = Stroke::save(file);
 

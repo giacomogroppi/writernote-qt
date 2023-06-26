@@ -15,7 +15,7 @@ StrokeNormal::~StrokeNormal()
     this->_pressure.clear();
 }
 
-int StrokeNormal::save(WZipWriterSingle &file) const
+int StrokeNormal::save(WritableAbstract &file) const
 {
     const int len_point     = this->_point.size();
     const int len_pressure  = this->_pressure.size();

@@ -214,7 +214,7 @@ std::shared_ptr<Stroke> Page::swap(int index, std::shared_ptr<Stroke> newData)
 
 size_t Page::get_size_in_file(cbool saveImg) const
 {
-    return PageFile::size_in_file(*this, saveImg);
+    return Page::getSizeFile(*this, saveImg);
 }
 
 /* the list should be order */
@@ -225,7 +225,7 @@ void Page::removeAt(const WVector<int> &pos)
     W_ASSERT(WAbstractList::isSorted(pos));
 
     i = pos.size();
-    for(i--; i >= 0; i--){
+    for (i--; i >= 0; i--) {
         this->removeAt(i);
     }
 }
@@ -653,21 +653,6 @@ void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WC
 
     W_ASSERT(painter.isActive());
     End_painter(painter);
-}
-
-#define DO_CTRL(function) \
-    err = function; \
-    if(un(err != OK)) \
-        return err;
-
-int Page::save(WZipWriterSingle &writer, cbool saveImg) const
-{
-    return PageFile::save(this, writer, saveImg);
-}
-
-int Page::load(WZipReaderSingle &reader, int ver_stroke)
-{
-    return PageFile::load(*this, ver_stroke, reader);
 }
 
 void Page::drawStroke(const Stroke &stroke, int m_pos_ris)

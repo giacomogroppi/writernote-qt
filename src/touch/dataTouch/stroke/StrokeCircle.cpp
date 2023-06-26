@@ -249,18 +249,25 @@ bool StrokeCircle::isInside(const RectF &rect) const
     return this->is_inside(rect, 0);
 }
 
-int StrokeCircle::save(WZipWriterSingle &writer) const
+int StrokeCircle::save(WritableAbstract &writer) const
 {
     const auto res = Stroke::save(writer);
 
     if(res != OK)
         return res;
 
-    static_assert(sizeof(PointF) == sizeof(double) * 2);
+    if (writer.write(this->_data.r) < 0)
+        return ERROR;
+    if (writer.write(this->_data.y) < 0)
+        return ERROR;
+    if (writer.write(this->_data.x) < 0)
+        return ERROR;
+    if (pressure_t::save(writer, this->_data.press) < 0)
+        return ERROR;
 
-    writer.write_object(this->_data);
-
-    static_assert(sizeof(this->_data) == (sizeof(double) * 3 + sizeof(float) + 4));
+    static_assert_type(_data.r, double);
+    static_assert_type(_data.x, double);
+    static_assert_type(_data.y, double);
 
     return OK;
 }

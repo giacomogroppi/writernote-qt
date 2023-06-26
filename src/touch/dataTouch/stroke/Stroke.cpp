@@ -207,11 +207,15 @@ void set_press(
     }
 }
 
-int Stroke::save(WZipWriterSingle &file) const
+int Stroke::save(WritableAbstract &file) const
 {
-    const auto t = type();
-    file.write_object(_metadata);
-    file.write_object(t);
+    const int t = type();
+
+    if (metadata_stroke::write(file, this->_metadata) < 0)
+        return ERROR;
+
+    if (file.write(&t, sizeof(t)))
+        return -1;
 
     static_assert(sizeof(t) == sizeof(int));
     return OK;

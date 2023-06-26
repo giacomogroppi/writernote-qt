@@ -7,7 +7,7 @@
 class StrokeNormal final: public Stroke{
 private:
     void rep () const;
-    int save(WZipWriterSingle &file) const final;
+    int save(WritableAbstract &file) const final;
     /**
      * you need to set len_point only if you are loading a version 1 file
      * */

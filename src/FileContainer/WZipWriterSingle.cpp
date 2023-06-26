@@ -35,7 +35,7 @@ int WZipWriterSingle::commit_change(const WByteArray &zipName, const WByteArray 
     return 0;
 }
 
-void WZipWriterSingle::write(const void *from, size_t size_object)
+auto WZipWriterSingle::write(const void *from, size_t size_object) -> int
 {
     W_ASSERT(this->_offset + size_object <= this->_max);
     W_ASSERT(size_object);
@@ -52,6 +52,8 @@ void WZipWriterSingle::write(const void *from, size_t size_object)
     }
 #endif
     this->_offset += size_object;
+
+    return 0;
 }
 
 

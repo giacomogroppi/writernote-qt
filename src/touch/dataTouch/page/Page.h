@@ -151,10 +151,6 @@ public:
 
     void reset();
 
-    int save(WZipWriterSingle &writer, cbool saveImg) const;
-
-    int load(WZipReaderSingle &reader, int ver_stroke);
-
     void drawStroke(const Stroke &stroke, int m_pos_ris);
     void drawForceColorStroke(const Stroke &stroke, cint m_pos_ris, const WColor &color, WPainter *painter);
     void drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WColor &color);
@@ -172,8 +168,8 @@ public:
     void setCount(int count);
 
     static auto write (WritableAbstract &writable, const Page &page) -> int;
-
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>;
+    static auto getSizeFile(const Page &page, bool saveImage) -> int;
 
     //static void copy(const Page &src, Page &dest);
     constexpr static double getProportion();
@@ -187,7 +183,7 @@ public:
     constexpr static double getResolutionWidth();
     constexpr static double getResolutionHeigth();
 
-#define DR_IMG_INIT_IMG BIT(1) // init the image with a image trasparent
+#define DR_IMG_INIT_IMG BIT(1) // init the image with a image transparent
     void drawToImage(const WVector<int> &index, WPixmap &img, cint flag) const;
 
     auto operator=(const Page &other) noexcept -> Page &;
@@ -623,6 +619,7 @@ inline auto Page::load(const VersionFileController &versionController, ReadableA
 }
 
 // TODO: move into cpp file
+// TODO: add option to not save the image
 inline auto Page::write(WritableAbstract &writable, const Page &page) -> int
 {
     if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)

@@ -4,7 +4,7 @@
 #include "utils/WCommonScript.h"
 #include "core/ByteArray/WByteArray.h"
 
-class WZipWriterSingle {
+class WZipWriterSingle final: public WritableAbstract {
 private:
     /* _data must already be allocated */
     char    *_data;
@@ -18,7 +18,7 @@ public:
 
     void init(char *_data, size_t min, size_t max);
 
-    void write(const void *from, size_t size_object);
+    int write(const void *from, size_t size_object) ;
 
     void *get_data();
     size_t get_offset() const;

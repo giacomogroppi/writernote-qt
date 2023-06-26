@@ -7,6 +7,7 @@
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/stroke/StrokeNormal.h"
 
+/*
 int PageFile::load_ver_0(Page &, WZipReaderSingle &)
 {
     return ERROR_VERSION_NEW;
@@ -26,9 +27,6 @@ int PageFile::load_ver_1(Page &_page, WZipReaderSingle &reader)
 
         if(un(ok != OK))
             return ok;
-
-        if(un(err != OK))
-            return err;
 
         _page._stroke.append(res);
     }
@@ -127,7 +125,7 @@ int PageFile::save(const Page *_page, WZipWriterSingle &writer, cbool saveImg)
     static_assert(sizeof(len) == sizeof(int));
     static_assert(sizeof(size) == sizeof(size_t));
 
-    /* stroke len */
+    // stroke len
     writer.write_object(len);
 
     for(i = 0; i < len; i++){
@@ -154,3 +152,4 @@ int PageFile::save(const Page *_page, WZipWriterSingle &writer, cbool saveImg)
 
     return OK;
 }
+*/
