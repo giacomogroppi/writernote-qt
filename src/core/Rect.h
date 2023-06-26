@@ -103,6 +103,19 @@ public:
 
         return {-1, d};
     }
+
+    /**
+     * \return -1 in case of error
+     */
+    static
+    auto write (WritableAbstract &writable, const RectTemplate<T> &source) -> int
+    {
+        if (PointTemplate<T>::write(writable, source._topLeft) < 0)
+            return -1;
+        if (PointTemplate<T>::write(writable, source._bottomRight) < 0)
+            return -1;
+        return 0;
+    }
 };
 
 template<typename T>

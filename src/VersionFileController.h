@@ -52,6 +52,9 @@ private:
 public:
     VersionFileController() = default;
 
+    [[deprecated("This copy constructor will be removed")]]
+    VersionFileController (const VersionFileController &other) noexcept = default;
+
     VersionFileController (VersionFileController &&other) noexcept = default;
 
     /**
@@ -65,6 +68,8 @@ public:
      * \return true iff it's load corrently
      * */
     bool isOk() const noexcept;
+
+    auto operator=(VersionFileController &&other) noexcept -> VersionFileController& = default;
 };
 
 template<class Readable>

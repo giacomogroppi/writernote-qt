@@ -54,18 +54,21 @@ static int read_ctrl(WZipReaderSingle &zip, size_t &ctrl)
 }
 
 struct xmlstruct_thread_data{
-    WZipReaderSingle    *_reader;
-    Page                *_page;
-    int                 _ver_stroke;
+    WZipReaderSingle        *_reader;
+    Page                    *_page;
+    VersionFileController   _versionController;
 };
 
 static void *xmlstruct_thread_load(void *_data)
 {
     auto *data = static_cast<struct xmlstruct_thread_data *>(_data);
     WZipReaderSingle &reader = *data->_reader;
-    const auto res = data->_page->load(reader, data->_ver_stroke);
-    if(res != OK)
+    auto [res, page] = Page::load(data->_versionController, *data->_reader);
+
+    if (res < 0)
         return (void *)1UL;
+
+    *data->_page = std::move(page);
 
     return nullptr;
 }
@@ -91,22 +94,23 @@ static int xmlstruct_wait_for_thread(pthread_t *thread, int num)
         return ERROR;   \
     }while(0)
 
-static int xmlstruct_create_thread(WZip& zip, int lenPage, size_t *seek, DataStruct *data, int ver_stroke)
+// TODO: move this method in DataStruct to make the load multithread
+static int xmlstruct_create_thread(WZip& zip, int lenPage, size_t *seek, DataStruct *data)
 {
     int i;
     pthread_t thread[lenPage];
     struct xmlstruct_thread_data thread_data[lenPage];
     WReadZip zipReader(&zip, lenPage, seek);
 
-    for(i = 0; i < lenPage; i++){
+    for (i = 0; i < lenPage; i++) {
         data->newPage(n_style::white);
     }
 
-    for(i = 0; i < lenPage; i ++){
+    for (i = 0; i < lenPage; i ++) {
         thread_data[i] = {
-                ._reader        = zipReader.get_reader(i),
-                ._page          = &data->at_mod(i),
-                ._ver_stroke    = ver_stroke
+                ._reader            = zipReader.get_reader(i),
+                ._page              = &data->at_mod(i),
+                ._versionController = VersionFileController()
         };
 
         pthread_create( &thread[i],
@@ -120,43 +124,4 @@ static int xmlstruct_create_thread(WZip& zip, int lenPage, size_t *seek, DataStr
     }
 
     return 0;
-}
-
-int xmlstruct::loadbinario_4(class WZip &zip, int ver_stroke)
-{
-    size_t controll, newControll;
-    int lenPage;
-    WZipReaderSingle reader(&zip, 0);
-
-    if(!zip.openFileInZip(NAME_BIN))
-        return ERROR;
-
-    if(load_point_first_page(reader, *this->_doc) < 0)
-        MANAGE_ERR();
-
-    if(read_zoom(reader, _doc->_zoom) < 0)
-        MANAGE_ERR();
-
-    if(read_ctrl(reader, controll) < 0)
-        MANAGE_ERR();
-
-    if(read_number_page(reader, lenPage) < 0)
-        MANAGE_ERR();
-
-    size_t seek[lenPage];
-
-    if(reader.readBySize(seek, sizeof(size_t) * lenPage))
-        MANAGE_ERR();
-
-    if(xmlstruct_create_thread(zip, lenPage, seek, _doc, ver_stroke) < 0)
-        MANAGE_ERR();
-
-    zip.dealloc_file();
-
-    newControll = _doc->createSingleControll();
-
-    if(controll != newControll)
-        return ERROR_CONTROLL;
-
-    return OK;
 }

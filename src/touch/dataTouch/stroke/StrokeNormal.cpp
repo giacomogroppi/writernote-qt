@@ -23,18 +23,12 @@ int StrokeNormal::save(WritableAbstract &file) const
     if (Stroke::save(file))
         return ERROR;
 
-    file.write_object(len_point);
-    file.write_object(len_pressure);
 
-    for (const auto p : std::as_const(this->_pressure)) {
-        static_assert(sizeof(p) == sizeof(pressure_t));
-        file.write_object(p);
-    }
+    if (WListFast<PointF>::write(file, this->_point) < 0)
+        return ERROR;
 
-    for (const auto &p : std::as_const(this->_point )){
-        static_assert(sizeof(p) == sizeof(PointF));
-        file.write_object(p);
-    }
+    if (WListFast<pressure_t>::write(file, this->_pressure) < 0)
+        return ERROR;
 
     return OK;
 }

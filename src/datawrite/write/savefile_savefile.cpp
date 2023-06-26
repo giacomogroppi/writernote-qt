@@ -8,7 +8,7 @@
 #define SAVE_STRINGA(x, y) if(savefile::save_string(x, y) != OK) goto delete_;
 
 /*
- * the function save the copybook and all it's data
+ * the function write the copybook and all it's data
  * if save_audio == true -> write also the audio
 */
 

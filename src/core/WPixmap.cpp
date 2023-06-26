@@ -63,10 +63,11 @@ bool WPixmap::isNull() const
     return QPixmap::isNull();
 }
 
-size_t WPixmap::get_size_in_file() const
+size_t WPixmap::getSizeInFile(const WPixmap &source)
 {
     WByteArray arr;
-    const auto s = this->save_and_size(arr);
+    const auto s = source.save_and_size(arr);
+
     return s;
 }
 

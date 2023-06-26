@@ -262,7 +262,7 @@ int StrokeCircle::save(WritableAbstract &writer) const
         return ERROR;
     if (writer.write(this->_data.x) < 0)
         return ERROR;
-    if (pressure_t::save(writer, this->_data.press) < 0)
+    if (pressure_t::write(writer, this->_data.press) < 0)
         return ERROR;
 
     static_assert_type(_data.r, double);

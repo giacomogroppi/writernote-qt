@@ -28,7 +28,7 @@ namespace WAbstractList {
 
     /*
     template <class T, class K, class Writable>
-    auto save (const T &list, Writable &writable) noexcept -> int
+    auto write (const T &list, Writable &writable) noexcept -> int
     {
         static_assert_type(list._size, int);
 

@@ -192,19 +192,11 @@ int StrokeRect::save(WritableAbstract &file) const
     if(res != OK)
         return res;
 
-    static_assert(sizeof(PointF) == sizeof(double) * 2);
+    if (RectF::write(file, this->_data.rect) < 0)
+        return ERROR;
 
-    file.write_object(this->_data);
-
-    // 4 for alignment
-    static_assert(
-        sizeof(this->_data) ==
-        (
-            sizeof(RectF) +
-            sizeof(pressure_t) +
-            4
-        )
-    );
+    if (pressure_t::write(file, this->_data.press) < 0)
+        return ERROR;
 
     return OK;
 }

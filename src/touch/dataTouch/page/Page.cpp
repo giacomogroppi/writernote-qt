@@ -646,7 +646,7 @@ void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WC
     WPainter painter;
     painter.begin(&_imgDraw);
 
-    for(const auto &index : std::as_const(pos)){
+    for (const auto &index: std::as_const(pos)) {
         const Stroke &stroke = atStroke(index);
         this->drawForceColorStroke(stroke, m_pos_ris, color, &painter);
     }
@@ -670,4 +670,21 @@ void Page::at_draw_page(
     const auto &p = stroke._data->_point.at(IndexPoint);
 
     __at_draw_private(p, point, zoom, translation);
+}
+
+int Page::getSizeFile(const Page &page, bool saveImage)
+{
+    size_t s = 0;
+    s += sizeof(saveImage);
+    s += WListFast<SharedPtr<Stroke>>::getSizeFile(page._stroke);
+    s += sizeof (page._count);
+    s += sizeof (page._IsVisible);
+    s += WListFast<SharedPtr<Stroke>>::getSizeFile(page._strokeTmp);
+    s += page._stroke_writernote.getSizeInFile();
+
+    if (saveImage) {
+        s += WPixmap::getSizeInFile(page._imgDraw);
+    }
+
+    return 0;
 }

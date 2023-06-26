@@ -134,7 +134,7 @@ int PageFile::save(const Page *_page, WZipWriterSingle &writer, cbool saveImg)
             return err;
     }
 
-    err = _page->_stroke_writernote.save(writer);
+    err = _page->_stroke_writernote.write(writer);
     if(un(err != OK))
         return err;
 

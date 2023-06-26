@@ -37,13 +37,10 @@ public:
 
     static auto write (WritableAbstract &writable, const StrokeForPage &strokeForPage) -> int;
 
-    int load(WZipReaderSingle &reader, int ver_stroke);
-
     size_t getSizeInFile() const;
 
     void draw(WPainter &painter, double delta, const class Page &page, const WSizeF &target, const RectF &visibleArea) const;
 
-    int save(WZipWriterSingle& writer) const;
     void scale(const PointF& delta);
     void reset();
 

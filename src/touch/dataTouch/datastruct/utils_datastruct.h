@@ -65,7 +65,7 @@ public:
 
     // TODO: rename this method in write
     static
-    auto save (WritableAbstract &writable, const pressure_t &pressure) -> int;
+    auto write (WritableAbstract &writable, const pressure_t &pressure) -> int;
 
     operator float() const { return _d; }
     operator double() const { return _d; }
@@ -80,6 +80,13 @@ inline auto pressure_t::load(const VersionFileController &versionController,
     if (readable.read(&result._d, sizeof (result._d)) < 0)
         return {-1, 0.};
     return {0, result};
+}
+
+inline int pressure_t::write(WritableAbstract &writable, const pressure_t &pressure)
+{
+    if (writable.write(pressure._d) < 0)
+        return -1;
+    return 0;
 }
 
 inline float operator+(float one, const pressure_t &two)

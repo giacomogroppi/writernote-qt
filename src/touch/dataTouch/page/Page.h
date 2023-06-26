@@ -167,7 +167,7 @@ public:
 
     void setCount(int count);
 
-    static auto write (WritableAbstract &writable, const Page &page) -> int;
+    static auto write (WritableAbstract &writable, const Page &page, bool saveImage = true) -> int;
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>;
     static auto getSizeFile(const Page &page, bool saveImage) -> int;
 
@@ -619,9 +619,12 @@ inline auto Page::load(const VersionFileController &versionController, ReadableA
 }
 
 // TODO: move into cpp file
-// TODO: add option to not save the image
-inline auto Page::write(WritableAbstract &writable, const Page &page) -> int
+// TODO: add option to not write the image
+inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveImage) -> int
 {
+    if (writable.write(saveImage) < 0)
+        return -1;
+
     if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)
         return -1;
 
@@ -637,7 +640,7 @@ inline auto Page::write(WritableAbstract &writable, const Page &page) -> int
     if (StrokeForPage::write(writable, page._stroke_writernote) < 0)
         return -1;
 
-    if (WPixmap::write(writable, page._imgDraw) < 0)
+    if (saveImage && WPixmap::write(writable, page._imgDraw) < 0)
         return -1;
 
     return 0;

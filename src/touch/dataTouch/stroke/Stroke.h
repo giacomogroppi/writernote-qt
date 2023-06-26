@@ -180,7 +180,7 @@ protected:
     // old way
     static std::shared_ptr<Stroke> load(WZipReaderSingle &reader, int version_stroke, int *ok);
     /**
-     * All the class that extend this method needs to call Stroke::save and than save
+     * All the class that extend this method needs to call Stroke::save and than write
      * his content, because load expect this structure.
      * */
     virtual int save(WritableAbstract &file) const;

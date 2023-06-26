@@ -26,7 +26,7 @@ public:
     explicit WPixmap(const WString &path);
     explicit WPixmap(const std::string &path, const char *format = nullptr);
 
-    size_t get_size_in_file() const;
+    static size_t getSizeInFile(const WPixmap &source);
     size_t save_and_size(WByteArray &arr) const;
 
     void fill(const WColor &color);

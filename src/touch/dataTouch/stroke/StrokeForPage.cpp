@@ -30,39 +30,9 @@ void StrokeForPage::append(const StrokeNormal &stroke)
     rep();
 }
 
-int StrokeForPage::load(WZipReaderSingle &reader, int ver_stroke)
-{
-    int ok;
-    auto *tmp =
-            dynamic_cast<StrokeNormal*>(
-                    Stroke::load(reader, ver_stroke, &ok).get()
-            );
-
-    if(ok != OK){
-
-            delete tmp;
-        return ok;
-    }
-
-    this->_data = std::unique_ptr<StrokeNormal>(tmp);
-
-    if(_data->_pressure[0] > 10.)
-        _data->_pressure[0] = 1.5;
-
-    rep();
-    return OK;
-}
-
 size_t StrokeForPage::getSizeInFile() const
 {
     const auto res = this->_data->getSizeInFile();
-    rep();
-    return res;
-}
-
-int StrokeForPage::save(WZipWriterSingle &writer) const
-{
-    const auto res = this->_data->save(writer);
     rep();
     return res;
 }

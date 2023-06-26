@@ -155,6 +155,20 @@ public:
         }
         return 0;
     }
+
+    template <class T2 = T>
+    static
+        auto getSizeFile(const WListFast<T2> &list) noexcept -> size_t
+    {
+        size_t s = 0;
+        s += sizeof (int);
+
+        for (const auto &ref: std::as_const(list)) {
+            s += T2::getSizeFile(ref);
+        }
+
+        return s;
+    }
 };
 
 template<class T>

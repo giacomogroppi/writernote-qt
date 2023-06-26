@@ -218,7 +218,7 @@ auto StrokeLine::save(WritableAbstract &writer) const -> int
     if (PointF::write(writer, _data.pt2) < 0)
         return ERROR;
 
-    if (pressure_t::save(writer, _data.press) < 0)
+    if (pressure_t::write(writer, _data.press) < 0)
         return ERROR;
 
     return OK;
