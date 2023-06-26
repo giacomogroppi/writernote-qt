@@ -219,3 +219,42 @@ auto StrokeForPage::operator==(const StrokeForPage &other) const noexcept -> boo
             this->_data == other._data &&
             this->_pix == other._pix;
 }
+
+auto StrokeForPage::load(const VersionFileController &versionController,
+                         ReadableAbstract &readable) -> std::pair<int, StrokeForPage>
+{
+    StrokeForPage result;
+
+    if (versionController.getVersionStrokeForPage() != 0)
+        return {-1, std::move(result)};
+
+    {
+        auto [res, data] = SharedPtr<StrokeNormal>::load(versionController, readable);
+        if (res < 0)
+            return {-1, std::move(result)};
+        result._data = std::move(data);
+    }
+
+    {
+        auto [res, data] = WPixmap::load(versionController, readable);
+        if (res < 0)
+            return {-1, std::move(result)};
+        result._pix = std::move(data);
+    }
+
+    if (readable.read(&result._needToUpdate, sizeof(result._needToUpdate)) < 0)
+        return {-1, std::move(result)};
+
+    return {0, std::move(result)};
+}
+
+auto StrokeForPage::write(WritableAbstract &writable, const StrokeForPage &strokeForPage) -> int
+{
+    if (SharedPtr<StrokeNormal>::write(writable, strokeForPage._data) < 0)
+        return -1;
+    if (WPixmap::write(writable, strokeForPage._pix) < 0)
+        return -1;
+    if (writable.write(&strokeForPage._needToUpdate, sizeof(strokeForPage._needToUpdate)) < 0)
+        return -1;
+    return 0;
+}

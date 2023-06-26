@@ -14,7 +14,7 @@
 
 class StrokeForPage {
 private:
-    std::shared_ptr<class StrokeNormal> _data;
+    SharedPtr<class StrokeNormal> _data;
 
     void rep() const;
 
@@ -51,6 +51,8 @@ public:
     StrokeForPage &operator=(StrokeForPage &&other) noexcept;
 
     auto operator==(const StrokeForPage &other) const noexcept -> bool;
+
+
 
     friend class page_file;
     friend class Page;

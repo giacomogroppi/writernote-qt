@@ -47,6 +47,7 @@ private:
     DEFINE_VERSION(StrokeRect, 0 );
     DEFINE_VERSION(Pressure, 0);
     DEFINE_VERSION(WColor, 0);
+    DEFINE_VERSION(StrokeForPage, 0);
 
 public:
     VersionFileController() = default;
