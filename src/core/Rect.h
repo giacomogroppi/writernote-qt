@@ -65,7 +65,8 @@ public:
 
     constexpr bool isNull() const;
 
-    constexpr RectTemplate<T>& operator=(const RectTemplate<T> &other);
+    constexpr auto operator=(const RectTemplate<T> &other) -> RectTemplate<T>&;
+    constexpr auto operator=(RectTemplate<T> &&other) -> RectTemplate<T>& = default;
     constexpr RectTemplate<T> operator*(T val) const;
     constexpr RectTemplate<T> operator/(T val) const;
     constexpr RectTemplate<T> operator+(const PointTemplate<T> &other) const;

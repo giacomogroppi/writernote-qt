@@ -59,6 +59,17 @@ struct metadata_stroke{
         return {0, result};
     }
 
+    static
+    auto write (WritableAbstract &writable, const metadata_stroke &metadata) -> int
+    {
+        if (writable.write(&metadata.posizione_audio, sizeof(metadata.posizione_audio)) < 0)
+            return -1;
+        if (WColor::write(writable, metadata.color) < 0)
+            return -1;
+
+        return 0;
+    }
+
     bool operator!=(const metadata_stroke &other) const;
     bool operator==(const metadata_stroke &other) const;
 
@@ -108,10 +119,10 @@ public:
 
     void setMetadata(int posizione_audio, const WColor &color);
     void setMetadata(const metadata_stroke &metadata);
-    void setPositioneAudio(int m_pos_ris);
+    void setPositionAudio(int m_pos_ris);
     virtual size_t createControll() const;
 
-    int getPosizioneAudio() const;
+    int getPosizionAudio() const;
     virtual RectF getBiggerPointInStroke() const;
     virtual auto isInside(const RectF &rect) const -> bool = 0;
 
@@ -120,15 +131,15 @@ public:
     auto getMetadata() const -> const struct metadata_stroke &;
 
     bool is_highlighter() const;
-    unsigned char get_alfa() const;
-    virtual size_t getSizeInMemory() const = 0;
+    auto getAlfa() const -> unsigned char;
+    virtual auto getSizeInMemory() const -> size_t = 0;
 
-    virtual size_t getSizeInFile() const;
+    virtual auto getSizeInFile() const -> size_t;
     virtual void decreasePrecision() = 0;
     void setAlfaColor(unsigned char alfa);
 
     /** instance of *this == StrokeNormal ==> @return == NULL*/
-    virtual std::unique_ptr<Stroke> makeNormal() const = 0;
+    virtual auto makeNormal() const -> std::unique_ptr<Stroke> = 0;
 
     /**
      * instanceof(*this) == StrokeNorml ? @result == size() : 0
@@ -137,9 +148,9 @@ public:
 
     void setColor(const WColor &color);
 
-    virtual std::unique_ptr<Stroke> clone() const = 0;
+    virtual auto clone() const -> std::unique_ptr<Stroke> = 0;
 
-    virtual bool isEmpty() const = 0;
+    virtual auto isEmpty() const -> bool = 0;
 
     virtual void scale(const PointF &offset) = 0;
 
@@ -150,8 +161,8 @@ public:
     friend class stroke_drawer;
     friend class page_file;
 
-    virtual bool operator==(const Stroke &other) const;
-    virtual bool operator!=(const Stroke &other) const;
+    virtual auto operator==(const Stroke &other) const -> bool;
+    virtual auto operator!=(const Stroke &other) const -> bool;
 
 #ifdef DEBUGINFO
     friend class page_file;
@@ -228,13 +239,13 @@ inline void Stroke::setFlag(unsigned char type, bool value) const
     }
 }
 
-inline void Stroke::setPositioneAudio(int m_pos_ris)
+inline void Stroke::setPositionAudio(int m_pos_ris)
 {
     W_ASSERT(m_pos_ris == -1 or m_pos_ris >= 0);
     this->_metadata.posizione_audio = m_pos_ris;
 }
 
-inline int Stroke::getPosizioneAudio() const
+inline int Stroke::getPosizionAudio() const
 {
     return this->_metadata.posizione_audio;
 }
@@ -249,7 +260,7 @@ inline bool Stroke::is_highlighter() const
     return _metadata.color.getAlfa() < 255;
 }
 
-inline unsigned char Stroke::get_alfa() const
+inline unsigned char Stroke::getAlfa() const
 {
     return this->_metadata.color.getAlfa();
 }
@@ -267,6 +278,15 @@ inline Stroke::Stroke(Stroke &&other) noexcept
     , _flag(other._flag)
 {
 
+}
+
+auto Stroke::write(WritableAbstract &writable, const Stroke &stroke) -> int
+{
+    if (metadata_stroke::write(writable, stroke._metadata) < 0) {
+        return -1;
+    }
+    static_assert(0);
+    return 0;
 }
 
 inline bool metadata_stroke::operator!=(const metadata_stroke &other) const

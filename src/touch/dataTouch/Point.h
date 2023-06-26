@@ -124,6 +124,9 @@ struct WColor{
     static
     auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WColor>;
 
+    static
+    auto write (WritableAbstract &writable, const WColor &color) -> int;
+
 #ifndef USE_QT
 # define color_black       WColor(0, 0, 0, 255)
 # define color_white       WColor(255, 255, 255, 255)
@@ -273,6 +276,14 @@ WColor::load(const VersionFileController &versionController, ReadableAbstract &r
             return {-1, result};
     }
     return {0, result};
+}
+
+inline auto WColor::write(WritableAbstract &writable, const WColor &color) -> int
+{
+    static_assert(sizeof(color.colore) == sizeof(unsigned char) * 4);
+    if (writable.write(&color.colore, sizeof (color.colore)) < 0)
+        return -1;
+    return 0;
 }
 
 using PointSettable = Settable<PointF>;

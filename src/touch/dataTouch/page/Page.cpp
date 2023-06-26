@@ -245,7 +245,7 @@ void Page::drawStroke(
         const WColor    &color) const
 {
     cbool isRubber = (color == COLOR_NULL);
-    cbool isHigh = stroke.get_alfa() < 255;
+    cbool isHigh = stroke.getAlfa() < 255;
     const auto last_comp_mode = painter.compositionMode();
     constexpr not_used bool measureTime = false;
     constexpr not_used bool debColor = false;
@@ -312,7 +312,7 @@ void * __page_load(void *__data)
             (un(m_pos_ris != -1))
                     ?
                         (
-                          (ref.getPosizioneAudio() > m_pos_ris)
+                          (ref.getPosizionAudio() > m_pos_ris)
                             ? 4
                             : 1
                         )
@@ -451,7 +451,7 @@ void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrese
 
     for (i --; i >= 0; i--) {
         Stroke &stroke = atStrokeMod(pos.at(i));
-        color = stroke.get_alfa();
+        color = stroke.getAlfa();
 
         stroke.setAlfaColor(color / decrese);
 

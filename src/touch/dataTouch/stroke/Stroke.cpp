@@ -82,6 +82,8 @@ auto Stroke::loadPtr(const VersionFileController &versionController,
         }
         r.second->_biggerData = std::move (rect);
     }
+
+    return {0, r.second};
 }
 
 std::shared_ptr<Stroke> Stroke::load_ver_2(WZipReaderSingle &reader, int *ok)

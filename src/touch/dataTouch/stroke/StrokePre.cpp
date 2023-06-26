@@ -81,7 +81,7 @@ void StrokePre::setAlfaColor(int alfa)
 void StrokePre::setTime(int time)
 {
     W_ASSERT( time == -1 or time >= 0 );
-    _stroke->setPositioneAudio(time);
+    _stroke->setPositionAudio(time);
 }
 
 RectF StrokePre::getBiggerPointInStroke() const
