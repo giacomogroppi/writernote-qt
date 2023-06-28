@@ -18,6 +18,8 @@ public:
 
     void releaseJoiner() noexcept;
 
+    void setDestroyLater(bool needToDestroy);
+
     WDISABILE_COPY(WTask);
 
     /**
@@ -26,3 +28,14 @@ public:
     W_EMITTABLE_1(finished, WTask*, task)
 };
 
+class WTaskFunction final: public WTask {
+private:
+    std::function<void()> _method;
+public:
+    WTaskFunction (WObject *parent, std::function<void()> method) : WTask(parent), _method(method) {};
+
+    void run ()
+    {
+        _method();
+    }
+};

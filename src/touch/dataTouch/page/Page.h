@@ -17,6 +17,7 @@
 #include "core/WSizeTemplate.h"
 #include "core/WListFast.h"
 #include "core/pointer/SharedPtr.h"
+#include "core/WVector.h"
 
 #define COLOR_NULL WColor::fromRgb(255, 255, 255, 255)
 #define TEMP_COLOR WColor::fromRgb(105, 105, 105, 255)

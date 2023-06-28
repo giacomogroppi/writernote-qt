@@ -1,9 +1,7 @@
 #ifndef WRITERNOTE_WOBJECT_H
 #define WRITERNOTE_WOBJECT_H
 
-#include "core/WVector.h"
-#include "core/WList.h"
-#include "core/WListFast.h"
+#include <vector>
 #include <functional>
 #include <iostream>
 #include <algorithm>
@@ -11,12 +9,12 @@
 
 #define W_EMITTABLE_PRIVATE_LIST(name_signals, ...) \
     private:                                   \
-    WVector<std::function<void( __VA_ARGS__)>> w_object_observer_##name_signals; \
+    std::vector<std::function<void( __VA_ARGS__)>> w_object_observer_##name_signals; \
 
 #define W_EMITTABLE_PRIVATE_REGI(name_signals, ...) \
     public: \
     void reg##name_signals(const std::function<void(__VA_ARGS__)> &nameFunc) {                    \
-        this->w_object_observer_##name_signals.append(nameFunc);                                \
+        this->w_object_observer_##name_signals.push_back(nameFunc);                                \
     } \
     private:
 
@@ -88,7 +86,7 @@
 class WObject {
 private:
     WObject *_parent;
-    WListFast<WObject *> _children;
+    std::vector<WObject *> _children;
 public:
     explicit WObject(WObject *parent);
     virtual ~WObject();

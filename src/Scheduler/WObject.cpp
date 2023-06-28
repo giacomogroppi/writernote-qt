@@ -9,7 +9,7 @@ WObject::WObject(WObject *parent)
     : _parent(parent)
 {
     if (parent) {
-        parent->_children.append(this);
+        parent->_children.push_back(this);
     }
 }
 
@@ -22,6 +22,10 @@ WObject::~WObject()
     }
 
     if (_parent) {
-        _parent->_children.remove(this);
+        auto position = std::find(_parent->_children.begin(), _parent->_children.end(), this);
+
+        W_ASSERT(position != _parent->_children.end());
+
+        _parent->_children.erase(position);
     }
 }

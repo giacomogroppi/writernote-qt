@@ -34,7 +34,7 @@ private:
 
 public:
     /*
-     * @seek è un array di distanze e ogni posizione segna la distanza
+     * \param seek è un array di distanze e ogni posizione segna la distanza
      * rispetto al primo byte in cui il thread va a scrivere
      * */
     WZipWriterMulti(const char *fileZip, const char *fileInZip,

@@ -7,31 +7,6 @@
 #include "currenttitle/document.h"
 #include "FileContainer/WZipWriterMulti.h"
 
-static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *seek)
-{
-    size_t size = 0;
-    int i, len;
-
-    size += sizeof(double) * 2;         // first point
-
-    size += sizeof(doc.getZoom());   // zoom
-    size += sizeof(size_t);                     // controll
-
-    {
-        len = doc.lengthPage();
-        size += sizeof(int);            // number of page saved
-        size += sizeof(size_t) * len;   // size seek array
-    }
-
-    for(i = 0; i < len; i++){
-        const auto &page = doc.at(i);
-        seek[i] = size;
-        size += savefile_get_size_page(page, saveImg);
-    }
-
-    return size;
-}
-
 static int savefile_save_seek(Document *doc, WZipWriterSingle &writer, size_t *seek)
 {
     W_ASSERT(doc);
@@ -114,38 +89,8 @@ static int savefile_save_multithread_start(Document *doc, WZipWriterSingle &writ
     return 0;
 }
 
+// TODO: remove this legacy method
 int savefile::salvabinario(cbool saveImg)
 {
-    const size_t controll = _doc->createSingleControll();
-    const auto &pointInit = _doc->getPointFirstPageNoZoom();
-    const double init[2] = { pointInit.x(), pointInit.y() };
-    WZipWriterSingle writer;
-    size_t seek[_doc->lengthPage()];
-    const auto sizeFile = savefile_get_size_binary(*_doc, saveImg, seek);
-
-    writer.init(nullptr, 0, sizeFile);
-    WDebug(true, "Size: " << sizeFile);
-
-    /* first point */
-    static_assert(sizeof(init) == sizeof(double) * 2);
-    writer.write(init, sizeof(init));
-
-    writer.write_object(_doc->getZoom());
-
-    writer.write_object(controll);
-
-    savefile_save_seek(this->_doc, writer, seek);
-
-#ifdef DEBUGINFO
-    if(_doc->lengthPage())
-        W_ASSERT(writer.get_offset() == seek[0]);
-#endif // DEBUGINFO
-
-    if(savefile_save_multithread_start(_doc, writer, seek, saveImg) < 0)
-        return ERROR;
-
-    if(writer.commit_change(*_path, WByteArray(NAME_BIN)) < 0)
-        return ERROR;
-
-    return OK;
+    return ERROR;
 }

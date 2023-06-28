@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include "testing/memtest.h"
 #include "core/WMutex.h"
+#include "core/WVector.h"
 
 static WMutex mutex_thread_write;
 void DataPrivateInit()

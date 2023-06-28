@@ -8,7 +8,9 @@
 #include "core/AtomicSafe.h"
 #include "WTask.h"
 #include "core/WSemaphore.h"
+#include "core/WList.h"
 #include <thread>
+#include "core/WVector.h"
 
 class SchedulerThreadData {
 public:

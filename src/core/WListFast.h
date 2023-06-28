@@ -13,6 +13,9 @@
 #include "VersionFileController.h"
 #include "Writable.h"
 #include "Readable.h"
+#include "core/AtomicSafe.h"
+#include "Scheduler/WTask.h"
+#include "FileContainer/MemWritable.h"
 
 // do some refactoring
 // this list if O(1) in index access
@@ -153,6 +156,51 @@ public:
             if (T2::write(writable, ref) < 0)
                 return -1;
         }
+        return 0;
+    }
+
+    template <class StartNewThreadFunction, class T2 = T>
+    static
+    auto writeMultiThread (WritableAbstract &writable, const WListFast<T2> &list, StartNewThreadFunction startNewThread) noexcept -> int
+    {
+        int i = 0;
+        static_assert_type(list._size, int);
+
+        WListFast<WTask> threads;
+        MemWritable w[list._size];
+        volatile bool result = false;
+
+        threads.reserve(list.size());
+
+        for (const auto &ref: std::as_const(list)) {
+            threads.append(startNewThread ([ref, &result, &w, i]() {
+                if (T2::write (w[i], ref) < 0)
+                    result = true;
+                }
+            ));
+            i++;
+        }
+
+        for (auto &thread: threads) {
+            thread.join();
+        }
+
+        // implement write stack and write data to original writer
+        if (writable.write(list._size) < 0)
+            return -1;
+
+        for (i = 0; i < list.size(); i++) {
+            size_t s = w[i].getCurrentSize();
+            if (writable.write(&s, sizeof(s)) < 0)
+                return -1;
+        }
+
+        for (i = 0; i < list.size(); i++) {
+            // optimize this copy
+            if (w[i].merge(writable) < 0)
+                return -1;
+        }
+
         return 0;
     }
 };
