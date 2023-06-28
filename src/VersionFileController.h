@@ -48,6 +48,7 @@ private:
     DEFINE_VERSION(Pressure, 0);
     DEFINE_VERSION(WColor, 0);
     DEFINE_VERSION(StrokeForPage, 0);
+    DEFINE_VERSION(WPixmap, 0);
 
 public:
     VersionFileController() = default;

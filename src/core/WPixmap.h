@@ -34,6 +34,7 @@ public:
     WImage toImage() const;
     bool isNull() const;
 
+    auto getRawDataPNG() const -> WByteArray;
     bool loadFromData(const WByteArray& data, const char *formact);
 
     [[deprecated("This function is very slow, and it's deprecated")]]

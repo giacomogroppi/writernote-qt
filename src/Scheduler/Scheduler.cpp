@@ -38,6 +38,10 @@ Scheduler::Scheduler()
 
                 task->run();
                 task->releaseJoiner();
+
+                if (task->isDeleteLater()) {
+                    delete task;
+                }
             }
         }));
     }
