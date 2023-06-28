@@ -7,12 +7,6 @@
 #include "currenttitle/document.h"
 #include "FileContainer/WZipWriterMulti.h"
 
-static size_t savefile_get_size_page(const Page &_page, cbool saveImg)
-{
-    const auto res = _page.get_size_in_file(saveImg);
-    return res;
-}
-
 static size_t savefile_get_size_binary(Document &doc, cbool saveImg, size_t *seek)
 {
     size_t size = 0;

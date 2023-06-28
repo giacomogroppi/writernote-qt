@@ -103,12 +103,14 @@ public:
 
     bool updateFlag(const PointF &FirstPoint, double zoom, double heightView);
     void setVisible(cbool vis) const;
-    size_t get_size_in_file(cbool saveImg) const;
 
     __fast int lengthStroke() const;
 
     bool isVisible() const;
 
+    /**
+     * \param pos to order positions of the stroke to be removed
+     * */
     void removeAt(const WVector<int> & pos);
     void removeAt(cint i);
 
@@ -169,7 +171,6 @@ public:
 
     static auto write (WritableAbstract &writable, const Page &page, bool saveImage = true) -> int;
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>;
-    static auto getSizeFile(const Page &page, bool saveImage) -> int;
 
     //static void copy(const Page &src, Page &dest);
     constexpr static double getProportion();

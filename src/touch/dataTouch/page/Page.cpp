@@ -212,11 +212,6 @@ std::shared_ptr<Stroke> Page::swap(int index, std::shared_ptr<Stroke> newData)
     return res;
 }
 
-size_t Page::get_size_in_file(cbool saveImg) const
-{
-    return Page::getSizeFile(*this, saveImg);
-}
-
 /* the list should be order */
 void Page::removeAt(const WVector<int> &pos)
 {
@@ -672,19 +667,3 @@ void Page::at_draw_page(
     __at_draw_private(p, point, zoom, translation);
 }
 
-int Page::getSizeFile(const Page &page, bool saveImage)
-{
-    size_t s = 0;
-    s += sizeof(saveImage);
-    s += WListFast<SharedPtr<Stroke>>::getSizeFile(page._stroke);
-    s += sizeof (page._count);
-    s += sizeof (page._IsVisible);
-    s += WListFast<SharedPtr<Stroke>>::getSizeFile(page._strokeTmp);
-    s += page._stroke_writernote.getSizeInFile();
-
-    if (saveImage) {
-        s += WPixmap::getSizeInFile(page._imgDraw);
-    }
-
-    return 0;
-}
