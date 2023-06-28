@@ -103,60 +103,14 @@ int xmlstruct::xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool 
 
 int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
 {
-    int err = 0;
-    int tmp_ver;
-    bool ok;
+    FileContainer fileContainer(*_path);
 
-    static_assert(sizeof(tmp_ver) == xmlstruct::get_offset_start());
-
-    _doc->reset();
-    auto zip = WZip(*_path, ok);
-    if(!ok)
+    if (!fileContainer.isOk())
         return ERROR;
 
-    if(!zip.openFileInZip(NAME_FILE))
-        return ERROR;
 
-    {
-        WZipReaderSingle reader(&zip, 0);
-        if(reader.readObject(tmp_ver) < 0)
-            return ERROR;
-    }
 
-    static_assert(CURRENT_VERSION_CURRENT_TITLE == 9);
-
-    switch (tmp_ver) {
-    case 0 ... CURRENT_VERSION_CURRENT_TITLE - 1:
-        err = xmlstruct_read_file_old(tmp_ver, zip, LoadPdf, LoadImg);
-        break;
-
-    case CURRENT_VERSION_CURRENT_TITLE:
-        err = load_file_9(_doc, zip, LoadPdf, LoadImg);
-        break;
-    default:
-        goto error_new_version;
-    }
-
-    if(err != OK)
-        goto free_;
-
-    this->_doc->triggerNewView(-1, true);
-
-    _doc->triggerVisibility(Page::getHeight() * _doc->lengthPage());
-    return OK;
-
-    free_:
-    return err;
-
-    /*
-     * in case we can not operate with the file because it's too old
-    */
-
-    error_version:
-    return ERROR_VERSION;
-
-    error_new_version:
-    return ERROR_VERSION_NEW;
+    return ERROR;
 }
 
 /**

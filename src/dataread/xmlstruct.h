@@ -10,11 +10,6 @@
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "FileContainer/WZip.h"
 
-#define LOAD_MULTIPLESTRING(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) goto free_;
-#define LOAD_MULTIPLESTRING_RETURN(x, y, z) if(xmlstruct::load_multiplestring(x,y,z) == ERROR) return ERROR;
-#define LOAD_STRINGA(x, y) if(xmlstruct::load_stringa(x,y) == ERROR) goto free_;
-#define LOAD_STRINGA_RETURN(x, y) if(xmlstruct::load_stringa(x, y) == ERROR)return ERROR;
-
 /*
  * call then we are starting an audio
 */
@@ -29,6 +24,9 @@ private:
 
     /* new */ int loadbinario_4(class WZip &zip, int ver_stroke);
     /* new */ int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
+
+    constexpr static const auto nameFile = "FileTouch";
+    constexpr static const auto nameAudio = "FileAudio";
 
 public:
     static int load_stringa(FileReader *f, WString &stringa);

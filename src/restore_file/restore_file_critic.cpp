@@ -7,10 +7,11 @@ restore_file_critic::n_err restore_file_critic::restore_file_direct(
         const WByteArray &path_save,
         std::function<void(const WString &)> showMessage)
 {
-    Document cur;
+    Document curr;
 
     xmlstruct xml(path_load, cur);
     savefile save(&path_save, &cur);
+
     const int res = xml.loadfile(false, false);
 
     if (!xmlstruct::manageMessage(res, showMessage)) {

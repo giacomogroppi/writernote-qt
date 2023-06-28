@@ -9,9 +9,10 @@
 #include "Writable.h"
 #include <QByteArray>
 
-class WByteArray: public QByteArray {
+class WByteArray: public QByteArray
+{
 public:
-    WByteArray() = default;
+    constexpr WByteArray() noexcept = default;
     WByteArray(const WByteArray &other) noexcept = default;
     WByteArray(WByteArray &&other) noexcept = default;
 

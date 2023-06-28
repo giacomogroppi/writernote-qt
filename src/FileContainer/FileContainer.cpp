@@ -33,7 +33,7 @@ FileContainer::FileContainer(WString path)
             break;
     }
 
-        file.close();
+    file.close();
 }
 
 bool FileContainer::close()
@@ -141,4 +141,9 @@ auto FileContainer::dataOf(const WString &name) const -> SharedPtr<WByteArray>
             return _subFile.getValue();
     }
     return nullptr;
+}
+
+auto FileContainer::isOk() const -> bool
+{
+    return this->_isOk;
 }

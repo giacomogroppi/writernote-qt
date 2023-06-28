@@ -68,6 +68,11 @@ public:
     */
     auto close() -> bool;
 
+    /**
+     * return True in case the file was load correctly
+     * */
+    auto isOk() const -> bool;
+
     auto remove(const WString &path) -> bool;
 
     auto load_ver_0(WFile &file, size_t size) noexcept -> int;
