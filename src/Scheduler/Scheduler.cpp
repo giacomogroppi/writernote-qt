@@ -8,6 +8,7 @@ Scheduler::Scheduler()
     : WObject(nullptr)
     , _need_to_sort(false)
     , _threads()
+    , _needToDie(false)
 {
     W_ASSERT(instance == nullptr);
 
@@ -20,21 +21,29 @@ Scheduler::Scheduler()
         _threads.append(std::thread([this, i]() {
             const auto isMainThread = i == 0;
 
-            WSemaphore *sem = isMainThread ? &this->_semMain : &this->_semGeneral;
-            WMutex *mux = isMainThread ? &this->_lockMain : &this->_lockGeneric;
-            WList<WTask *> *tasksHeap = isMainThread ? &this->_task_Main : &_task_General;
+            WSemaphore *sem =           isMainThread ? &this->_semMain      : &this->_semGeneral;
+            WMutex *mux =               isMainThread ? &this->_lockMain     : &this->_lockGeneric;
+            WList<WTask *> *tasksHeap = isMainThread ? &this->_task_Main    : &this->_task_General;
 
             // loop
             for (;;) {
                 WTask *task;
                 sem->acquire();
 
-                if (this->needToDie())
-                    return;
-
                 mux->lock();
-                task = tasksHeap->takeFirst();
+
+                task = tasksHeap->size()
+                        ? tasksHeap->takeFirst()
+                        : nullptr;
+
                 mux->unlock();
+
+                if (this->needToDie()) {
+                    // we need to release the thread that has make the join
+                    if (task)
+                        task->releaseJoiner();
+                    return;
+                }
 
                 task->run();
                 task->releaseJoiner();
@@ -74,6 +83,7 @@ void Scheduler::addTaskGeneric(WTask *task)
 {
     WMutexLocker _(_lockGeneric);
     this->_task_General.append(task);
+    this->_semGeneral.release();
     this->_need_to_sort = true;
 }
 
