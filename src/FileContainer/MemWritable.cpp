@@ -22,7 +22,7 @@ auto MemWritable::merge(WritableAbstract &writable) -> int
     }
 
     // write the last object
-    if (writable.write(*(_allocatedMemory.end() --), _internalStack) < 0)
+    if (writable.write(*(_allocatedMemory.rbegin()), _internalStack) < 0)
         return -1;
 
     return 0;
@@ -48,9 +48,12 @@ int MemWritable::write(const void *data, size_t size)
         this->_size += MemWritable::sizePage;
     }
 
+    if (_size + _internalStack >= MemWritable::sizePage * _allocatedMemory.size())
+        _allocatedMemory.push_back(malloc(MemWritable::sizePage));
+
     if (size != 0) {
         WCommonScript::WMemcpy(
-                static_cast<char *>(*(_allocatedMemory.end() --)) + this->_internalStack,
+                static_cast<char *>(*_allocatedMemory.rbegin()) + _internalStack,
                 static_cast<const char *>(data) + internalDistance,
                 size
         );
