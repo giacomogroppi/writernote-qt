@@ -1,21 +1,33 @@
 #include "WTask.h"
 #include "Scheduler/WObject.h"
+#include "core/WMutexLocker.h"
 
-WTask::WTask(WObject *parent)
+WTask::WTask(WObject *parent, bool deleteLater)
     : WObject(parent)
     , _waiter(0)
+    , _deleteLater(deleteLater)
+    , _waiterLock()
+    , _hasFinish(false)
 {
 }
 
 void WTask::releaseJoiner() noexcept
 {
-    for (int i = 0; i < this->_waiter; i++) {
-        this->_sem.release();
-    }
+    WMutexLocker _(this->_waiterLock);
+    this->_sem.release(_waiter);
+    _waiter = 0;
+    _hasFinish = true;
 }
 
 void WTask::join()
 {
-    _waiter ++;
+    {
+        WMutexLocker _(this->_waiterLock);
+
+        if (_hasFinish)
+            return;
+
+        _waiter ++;
+    }
     this->_sem.acquire();
 }

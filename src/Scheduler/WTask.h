@@ -5,15 +5,18 @@
 #include "Scheduler/WObject.h"
 #include "core/WSemaphore.h"
 #include "utils/WCommonScript.h"
+#include "core/WMutex.h"
 
 class WTask: public WObject
 {
 private:
+    WMutex _waiterLock;
     int _waiter;
     WSemaphore _sem;
-    bool _deleteLater;
+    bool _deleteLater : 1;
+    bool _hasFinish : 1;
 public:
-    explicit WTask(WObject *parent = nullptr);
+    explicit WTask(WObject *parent = nullptr, bool destroyLater = false);
     ~WTask() override = default;
 
     virtual void run() = 0;
@@ -26,6 +29,7 @@ public:
     /**
      * \return True iff you should delete this task after call "run"
      * */
+    [[nodiscard]]
     auto isDeleteLater() const -> bool;
 
     WDISABILE_COPY(WTask);
@@ -50,7 +54,10 @@ class WTaskFunction final: public WTask {
 private:
     std::function<void()> _method;
 public:
-    WTaskFunction (WObject *parent, std::function<void()> method) : WTask(parent), _method(std::move(method)) {};
+    WTaskFunction (WObject *parent, std::function<void()> method, bool destroyLater = false)
+        : WTask(parent, destroyLater)
+        , _method(std::move(method))
+        {};
     ~WTaskFunction() final = default;
 
     void run () final

@@ -164,26 +164,32 @@ public:
     auto writeMultiThread (WritableAbstract &writable, const WListFast<T2> &list, StartNewThreadFunction startNewThread) noexcept -> int
     {
         int i = 0;
+        int res;
         static_assert_type(list._size, int);
 
-        WListFast<WTask> threads;
+        WListFast<WTask*> threads;
         MemWritable w[list._size];
-        volatile bool result = false;
+        volatile bool needToAbort = false;
 
         threads.reserve(list.size());
 
         for (const auto &ref: std::as_const(list)) {
-            threads.append(startNewThread ([ref, &result, &w, i]() {
+            threads.append(startNewThread ([ref, &needToAbort, &w, i]() {
                 if (T2::write (w[i], ref) < 0)
-                    result = true;
+                    needToAbort = true;
                 }
             ));
             i++;
         }
 
         for (auto &thread: threads) {
-            thread.join();
+            thread->join();
         }
+
+        std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
+
+        if (needToAbort)
+            return -1;
 
         // implement write stack and write data to original writer
         if (writable.write(list._size) < 0)
@@ -192,6 +198,11 @@ public:
         for (i = 0; i < list.size(); i++) {
             size_t s = w[i].getCurrentSize();
             if (writable.write(&s, sizeof(s)) < 0)
+                return -1;
+        }
+
+        for (MemWritable& singleWriter: w) {
+            if (singleWriter.merge(writable) < 0)
                 return -1;
         }
 
