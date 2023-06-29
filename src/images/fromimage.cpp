@@ -252,3 +252,10 @@ auto ImageContainerDrawable::load(const VersionFileController &versionController
 
     return {0, result};
 }
+
+auto ImageContainerDrawable::write(WritableAbstract &writable, const ImageContainerDrawable &source) -> int
+{
+    if (WListFast<ImageDrawable>::write(writable, source.m_img) < 0)
+        return -1;
+    return 0;
+}

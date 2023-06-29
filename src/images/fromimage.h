@@ -75,6 +75,9 @@ protected:
      * */
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, ImageContainerDrawable>;
 
+    /**
+     * \resurn &lt 0 in case of error
+     * */
     static auto write (WritableAbstract &writable, const ImageContainerDrawable &source) -> int;
 };
 

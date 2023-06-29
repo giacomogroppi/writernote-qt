@@ -10,7 +10,7 @@ public:
     PointF f;
 
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, ImageDrawable>;
-    static auto write (WritableAbstract &writable, const ImageDrawable &source) -> int;
+    static auto write (WritableAbstract &writable, const ImageDrawable &source) noexcept -> int;
 
 };
 

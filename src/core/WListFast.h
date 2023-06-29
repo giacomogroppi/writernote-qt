@@ -144,7 +144,7 @@ public:
      * */
     template <class T2 = T>
     static
-    auto write(WritableAbstract &writable, const WListFast<T2> &list) noexcept -> int
+    auto write(WritableAbstract &writable, const WListFast<T2> &list) -> int
     {
         static_assert_type(list._size, int);
 

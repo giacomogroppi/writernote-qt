@@ -32,7 +32,7 @@ auto ImageDrawable::load(const VersionFileController &versionController,
     return {0, result};
 }
 
-auto ImageDrawable::write(WritableAbstract &writable, const ImageDrawable &source) -> int
+auto ImageDrawable::write(WritableAbstract &writable, const ImageDrawable &source) noexcept -> int
 {
     if (WImage::write(writable, source.immagini) < 0)
         return -1;
