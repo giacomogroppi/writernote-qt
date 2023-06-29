@@ -48,6 +48,8 @@ private:
     DEFINE_VERSION(WColor, 0);
     DEFINE_VERSION(StrokeForPage, 0);
     DEFINE_VERSION(WPixmap, 0);
+    DEFINE_VERSION(ImageDrawable, 0);
+    DEFINE_VERSION(WImage, 0);
 
 public:
     VersionFileController() = default;

@@ -56,8 +56,13 @@ public:
 
     bool isNull() const;
 
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WImage>;
+    static auto write (WritableAbstract &writable, const WImage &source) -> int;
+
     bool operator==(const WImage &other) const;
     WImage &operator=(WImage &&other) noexcept;
+
+    auto getRawDataPNG() const -> WByteArray;
 
 #ifdef USE_QT
     WImage &operator=(const QImage &other);
@@ -145,6 +150,16 @@ inline WImage &WImage::operator=(WImage &&other) noexcept
         return *this;
     QImage::operator=(std::move(other));
     return *this;
+}
+
+inline auto WImage::getRawDataPNG() const -> WByteArray
+{
+    QByteArray arr;
+    QBuffer buffer(&arr);
+    buffer.open(QIODevice::WriteOnly);
+    QImage::save(&buffer, "PNG");
+    buffer.close();
+    return {std::move(arr)};
 }
 
 inline WImage::WImage(const WImage &other) noexcept = default;

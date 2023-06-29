@@ -4,6 +4,7 @@
 
 class ImageDrawable {
 public:
+    // TODO: make this variable private
     WImage immagini;
     PointF i;
     PointF f;

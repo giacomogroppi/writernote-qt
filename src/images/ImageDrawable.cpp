@@ -5,6 +5,40 @@ auto ImageDrawable::load(const VersionFileController &versionController,
 {
     ImageDrawable result;
 
-    // TODO: Add static method load in WImage
-    static_assert(0);
+    if (versionController.getVersionImageDrawable() != 0)
+        return {-1, {}};
+
+    {
+        auto [res, image] = WImage::load(versionController, readable);
+        if (res < 0)
+            return {-1, {}};
+        result.immagini = std::move(image);
+    }
+
+    {
+        auto [res, point] = PointF::load(versionController, readable);
+        if (res < 0)
+            return {-1, {}};
+        result.i = std::move(point);
+    }
+
+    {
+        auto [res, point] = PointF::load(versionController, readable);
+        if (res < 0)
+            return {-1, {}};
+        result.f = std::move(point);
+    }
+
+    return {0, result};
+}
+
+auto ImageDrawable::write(WritableAbstract &writable, const ImageDrawable &source) -> int
+{
+    if (WImage::write(writable, source.immagini) < 0)
+        return -1;
+    if (PointF::write(writable, source.i) < 0)
+        return -1;
+    if (PointF::write(writable, source.f) < 0)
+        return -1;
+    return 0;
 }

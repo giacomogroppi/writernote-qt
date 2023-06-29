@@ -59,6 +59,31 @@ WImage::WImage(int page, bool consideringResolution) :
     const auto res = QImage::isNull();
     W_ASSERT(!res);
 }
+
+auto
+WImage::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WImage>
+{
+    WImage result;
+
+    if (versionController.getVersionWImage() != 0)
+        return {-1, {}};
+
+    auto [res, raw] = WByteArray::load(versionController, readable);
+    if (res < 0)
+        return {-1, {}};
+
+    if (!result.loadFromData(raw, "PNG"))
+        return {-1, {}};
+
+    return {0, std::move(result)};
+}
 #else
 
-#endif
+#endif // USE_QT
+
+auto WImage::write(WritableAbstract &writable, const WImage &image) -> int
+{
+    if (WByteArray::write(writable, image.getRawDataPNG()) < 0)
+        return -1;
+    return 0;
+}
