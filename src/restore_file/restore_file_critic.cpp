@@ -9,8 +9,8 @@ restore_file_critic::n_err restore_file_critic::restore_file_direct(
 {
     Document curr;
 
-    xmlstruct xml(path_load, cur);
-    savefile save(&path_save, &cur);
+    xmlstruct xml(path_load, curr);
+    savefile save(&path_save, &curr);
 
     const int res = xml.loadfile(false, false);
 

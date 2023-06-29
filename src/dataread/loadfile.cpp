@@ -31,7 +31,7 @@ int xmlstruct::readFile(FileContainer *fileZip, WByteArray &arr,
         return ERROR;
 
     data = WMalloc(size);
-    if (file.readRaw(data, size) != size)
+    if (file.read(data, size) < 0)
         goto free_;
 
     arr.append((const char *)data, size);
@@ -108,9 +108,21 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
     if (!fileContainer.isOk())
         return ERROR;
 
+    auto fileReader = fileContainer.getFileReader(xmlstruct::nameFile);
 
+    auto [res, versionController] = VersionFileController::load(fileReader);
 
-    return ERROR;
+    if (res < 0)
+        return ERROR;
+
+    auto [r, doc] = Document::load(versionController, fileReader);
+
+    if (r < 0)
+        return ERROR;
+
+    *_doc = std::move(doc);
+
+    return OK;
 }
 
 /**

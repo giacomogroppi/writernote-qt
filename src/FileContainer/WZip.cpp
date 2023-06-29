@@ -85,7 +85,7 @@ bool WZip::openFileInZip(const WByteArray &nameFile)
     if(!file.isOk())
         return false;
 
-    const auto res = file.readRaw(_data_private._data, _data_private._len_file);
+    const auto res = file.read(_data_private._data, _data_private._len_file);
 
     if(res != static_cast<size_t>(_data_private._len_file)){
         _data_private._zip->close();

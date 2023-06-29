@@ -29,7 +29,6 @@ private:
     public:                                                                     \
     constexpr auto getVersion##name() const -> int { return _version##name; }
 
-    long _isOk;
     DEFINE_VERSION(WListFast, 0);
     DEFINE_VERSION(WString, 0);
     DEFINE_VERSION(WPair, 0);
@@ -58,40 +57,26 @@ public:
 
     VersionFileController (VersionFileController &&other) noexcept = default;
 
-    /**
-     * It's required for template Readable to have ReadableAbstract as base class
-     * */
-    template <class Readable>
-            requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static VersionFileController loadVersion (Readable &readable);
-
-    /**
-     * \return true iff it's load corrently
-     * */
-    bool isOk() const noexcept;
+    static auto load (ReadableAbstract &readable) -> std::pair<int, VersionFileController>;
 
     auto operator=(VersionFileController &&other) noexcept -> VersionFileController& = default;
 };
 
-template<class Readable>
-    requires (std::is_base_of_v<ReadableAbstract, Readable>)
-inline VersionFileController VersionFileController::loadVersion(Readable &readable)
+inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair<int, VersionFileController>
 {
     VersionFileController result{};
     short versionVersionFileController;
 
-    result._isOk = readable.read(&versionVersionFileController, sizeof (versionVersionFileController)) >= 0;
-
-    if (!result._isOk)
-        return result;
+    if (readable.read(versionVersionFileController) < 0)
+        return {-1, result};
 
     unsigned short *d[] = {
     };
 
     for (int i = 0; i < sizeof (d); i++) {
         if (readable.read (&d[i], sizeof (*d)) < 0)
-            result._isOk = 0;
+            return {-1, result};
     }
 
-    return result;
+    return {0, result};
 }

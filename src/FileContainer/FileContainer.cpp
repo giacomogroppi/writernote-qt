@@ -53,7 +53,10 @@ int FileContainer::load_ver_0(WFile &file, size_t size) noexcept
 {
     size_t stack = 0;
 
-    const auto versionFileController = VersionFileController::loadVersion(file);
+    const auto [result, versionFileController] = VersionFileController::load(file);
+
+    if (result < 0)
+        return -1;
 
     {
         auto [res, data] = WListFast<Pair>::load (versionFileController, file);

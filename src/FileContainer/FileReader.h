@@ -5,8 +5,10 @@
 #include "core/pointer/SharedPtr.h"
 #include <memory>
 
-class FileReader: public FileInstance {
+class FileReader final: public FileInstance, public ReadableAbstract
+{
     SharedPtr<const WByteArray> _data;
+    mutable size_t _delta;
 public:
     FileReader ();
     FileReader (const SharedPtr<const WByteArray> &data);
@@ -16,15 +18,16 @@ public:
     [[nodiscard]]
     bool isOk() const;
 
-    size_t readRaw(void *to, size_t size) const;
+    auto read(void *to, size_t size) const -> int final;
 };
 
-inline size_t FileReader::readRaw(void *to, size_t size) const
+inline auto FileReader::read(void *to, size_t size) const -> int
 {
-    if (size > _data->size()) {
-        memcpy(to, _data->constData(), size);
-        return size;
-    }
+    if (_delta + size > _data->size())
+        return -1;
 
-    return _data->size();
+    WCommonScript::WMemcpy(to, _data->constData() + _delta, size);
+    _delta += size;
+
+    return 0;
 }
