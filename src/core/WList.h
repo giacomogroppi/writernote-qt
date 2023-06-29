@@ -43,7 +43,7 @@ public:
     constexpr int indexOf(const T& index) const;
     constexpr bool isOrder() const;
 
-    T&& takeFirst() noexcept;
+    T takeFirst() noexcept;
 
     class iterator{
     private:
@@ -120,8 +120,9 @@ inline WList<T> &WList<T>::operator=(WList<T> &&other) noexcept
 }
 
 template<class T>
-inline T &&WList<T>::takeFirst() noexcept
+inline T WList<T>::takeFirst() noexcept
 {
+    W_ASSERT(size() > 0);
     T res = std::move (*this->_first->data);
     WListPrivate<T> *nextFirst = _first->next;
 
@@ -130,6 +131,9 @@ inline T &&WList<T>::takeFirst() noexcept
 
     this->_first = nextFirst;
     this->_size --;
+
+    if (_size == 0)
+        _last = nullptr;
 
     return std::move(res);
 }
