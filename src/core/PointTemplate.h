@@ -47,6 +47,8 @@ public:
     static auto write (WritableAbstract &writable, const PointTemplate<T> &src) -> int;
 
     PointTemplate<T>& operator=(const PointTemplate<T> &other);
+    auto operator=(PointTemplate<T> &&other) -> PointTemplate<T>& = default;
+
     bool operator==(const PointTemplate<T> &other) const;
     bool operator!=(const PointTemplate<T> &other) const;
 

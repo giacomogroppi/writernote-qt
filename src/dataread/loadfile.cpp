@@ -59,11 +59,11 @@ bool xmlstruct::manageMessage(const int res, const std::function<void (const WSt
             return false;
         }
         case ERROR_VERSION:{
-            showMessage("This file is too old to be read");
+            showMessage("This file is too old to be load");
             return false;
         }
         case ERROR_VERSION_NEW:{
-            showMessage("This file was created with a later version of writernote, and I cannot read the file.");
+            showMessage("This file was created with a later version of writernote, and I cannot load the file.");
             return false;
         }
         case ERROR_CONTROLL:{
@@ -129,7 +129,7 @@ int xmlstruct::loadfile(cbool LoadPdf, cbool LoadImg)
  * the function automatically opens and
  * closes the file containing the audio
  * TODO -> adjust the function so that more
- * than one audio file can be read, and add
+ * than one audio file can be load, and add
  * the currenttitle data to support more
  * than one audio
  *
@@ -152,63 +152,4 @@ int load_audio(WByteArray &array, const WString &path)
     error = xmlstruct::readFile(zip.get_zip(), array, true, NAME_AUDIO, false);
 
     return error;
-}
-
-int xmlstruct::load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg)
-{
-    unsigned len_pdf, len_img;
-    int ver_stroke;
-    unsigned char controllo_parita = 0;
-    ImageContainerDrawable::load_res_img res_img;
-    WZipReaderSingle singleReader(&zip, xmlstruct::get_offset_start());
-    WString audioPath;
-
-    if(singleReader.readObject(ver_stroke))
-        return ERROR;
-
-    {
-        int tmp;
-        static_assert(sizeof(tmp) == sizeof(int));
-        if(singleReader.readObject(tmp))
-            return ERROR;
-        doc->setRecordStatus(static_cast<Document::AudioRecordStatus>(tmp));
-    }
-
-    if (singleReader.readString(audioPath))
-        return ERROR;
-
-    doc->setAudioPath(audioPath);
-
-    if (singleReader.readObject(len_pdf) || singleReader.readObject(len_img))
-        return ERROR;
-
-    if (LoadImg) {
-        res_img = doc->loadImage(singleReader, len_img);
-        if(res_img != ImageContainerDrawable::load_res_img::ok){
-            return ERROR;
-        }
-    }
-
-#ifdef PDFSUPPORT
-    if(LoadPdf){
-        const auto res = doc->load_pdf(singleReader, static_cast<int>(len_pdf), *doc);
-
-        if(res != frompdf::ok)
-            return ERROR;
-    }
-#endif // PDFSUPPORT
-
-    zip.dealloc_file();
-
-    const auto res = loadbinario_4(zip, ver_stroke);
-    if(res == ERROR)
-        return res;
-    else if(res == ERROR_CONTROLL)
-        /* we want to continue to load the file, but we need to return we had a problem */
-        controllo_parita = 1;
-
-    if(controllo_parita)
-        return ERROR_CONTROLL;
-
-    return OK;
 }

@@ -107,7 +107,7 @@ inline auto WFile::size() const -> size_t
 }
 
 /**
- * Pass "r" to open file in read only mode
+ * Pass "r" to open file in load only mode
  * Pass "w" to open file in write mode
 */
 force_inline auto WFile::open(const WByteArray &path, char openMode) -> WFile

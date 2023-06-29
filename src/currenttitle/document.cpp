@@ -188,7 +188,7 @@ static void test()
 
     WFile c(WByteArray("ciao"));
 
-    doc = std::move(Document::read(VersionFileController(), c).second);
+    doc = std::move(Document::load(VersionFileController(), c).second);
 }
 
 void Document::setRecordStatus(Document::AudioRecordStatus status)
@@ -218,8 +218,7 @@ auto Document::recordStatus() const -> Document::AudioRecordStatus
     return this->_audioRecordStatus;
 }
 
-template<class Readable> requires(std::is_base_of_v<ReadableAbstract, Readable>)
-inline auto Document::read(const VersionFileController &versionController, Readable &readable) -> std::pair<int, Document>
+auto Document::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Document>
 {
     std::pair<int, Document> result (-1, Document());
 

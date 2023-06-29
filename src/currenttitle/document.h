@@ -29,9 +29,7 @@ public:
     [[nodiscard]]
     auto isEmpty() const -> bool;
 
-    template <class Readable>
-            requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto read (const VersionFileController &versionController, Readable &readable) -> std::pair<int, Document>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Document>;
 
     template <class Writable>
             requires (std::is_base_of_v<WritableAbstract, Writable>)

@@ -101,8 +101,7 @@ private:
 public:    
     virtual ~Stroke() = default;
 
-    // remove this enum
-    [[deprecated]]
+    // TODO: remove this enum
     enum type_stroke_private: int{
             COMPLEX_NORMAL = 0,
             COMPLEX_CIRCLE = 1,

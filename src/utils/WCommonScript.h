@@ -92,7 +92,7 @@ force_inline constexpr not_used int debug_enable()
  * this function controll an enum load from setting
  * When you load a value from QSetting, and apply an implicit cast to it, it is saved correctly
  * inside the variable. If in a later version of the application, this option is removed,
- * QSetting will still read the previously saved value, which maybe is outside the enumeration, so you have to fix it.
+ * QSetting will still load the previously saved value, which maybe is outside the enumeration, so you have to fix it.
  *
  * Quando si carica un valore da QSetting, e gli si applica un cast implicito, esso viene salvato correttamente
  * all'interno della variabile. Se in una versione successiva dell'applicazione, questa opzione viene tolta,

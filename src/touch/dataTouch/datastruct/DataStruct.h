@@ -153,14 +153,6 @@ public:
     [[nodiscard]] int get_range_visible() const;
     void insertPage(const Page &Page, int index);
 
-    // read
-    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionControl, Readable &readable) -> std::pair<int, DataStruct>;
-
-    // write
-    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static auto write (Writable &readable, const DataStruct &source) -> int;
-
     auto operator=(const DataStruct &other) noexcept -> DataStruct &;
     auto operator=(DataStruct &&other) noexcept -> DataStruct &;
     auto operator==(const DataStruct &other) const -> bool;
@@ -174,7 +166,6 @@ public:
     static auto get_bigger_rect(const WRect &first, const WRect &second) -> WRect;
     static auto at_draw_page(cint indexPoint, const Page &Page, const PointF &PointFirstPageWithZoom, cdouble zoom) -> WPoint;
 
-    friend class xmlstruct;
     friend class TestingCore;
 
 protected:
@@ -187,6 +178,12 @@ protected:
 
     void setZoom(double newZoom);
     void setPageVisible(int page);
+
+    // load
+    static auto load (const VersionFileController &versionControl, ReadableAbstract &readable) -> std::pair<int, DataStruct>;
+
+    // write
+    static auto write (WritableAbstract &readable, const DataStruct &source) -> int;
 
     virtual void scala_all(const PointF &point, double heightView = -1);
 };
@@ -613,10 +610,9 @@ inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
     at_mod(index).decreaseAlfa(pos, 4);
 }
 
-template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
 inline auto DataStruct::load(
             const VersionFileController &versionControl,
-            Readable &readable
+            ReadableAbstract &readable
         ) -> std::pair<int, DataStruct> {
     DataStruct result;
 
@@ -653,8 +649,7 @@ inline auto DataStruct::load(
     return {-1, result};
 }
 
-template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
-inline auto DataStruct::write (Writable &writable, const DataStruct &source) -> int
+inline auto DataStruct::write (WritableAbstract &writable, const DataStruct &source) -> int
 {
     if (writable.write (&source._zoom, sizeof (source._zoom)) < 0)
         return -1;

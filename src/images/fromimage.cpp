@@ -80,7 +80,7 @@ ImageContainerDrawable::load_res_img ImageContainerDrawable::loadMetadataImage(W
 {
     int i;
     double val[4];
-    struct immagine_s img;
+    ImageDrawable img;
 
     static_assert(sizeof(val) == sizeof(double) * 4);
 
@@ -120,7 +120,7 @@ ImageContainerDrawable::load_res_img ImageContainerDrawable::loadImage(WZipReade
 }
 
 ImageContainerDrawable::load_res_img ImageContainerDrawable::loadSingleImage(const WByteArray &arr,
-                                                                             struct immagine_s &img)
+                                                                             ImageDrawable &img)
 {
     if(!img.immagini.loadFromData(arr, "PNG"))
         return load_res_img::error;
@@ -137,12 +137,12 @@ ImageContainerDrawable::load_res_img ImageContainerDrawable::loadSingleImage(con
 */
 ImageContainerDrawable::load_res_img ImageContainerDrawable::loadMultipleImage(const WListFast<WByteArray> &arr)
 {
-    uint i, len;
+    int i, len;
     ImageContainerDrawable::load_res_img res;
-    struct immagine_s img;
+    ImageDrawable img;
 
     len = arr.size();
-    for(i=0; i<len; ++i){
+    for (i = 0; i < len; i++){
         res = ImageContainerDrawable::loadSingleImage(arr.at(i), m_img.operator[](i));
         if(res != ImageContainerDrawable::load_res_img::ok)
             return res;
@@ -165,7 +165,7 @@ WListFast<WString> ImageContainerDrawable::get_name_img()
 
 unsigned ImageContainerDrawable::insert_image(const WString &pos,
                                               const PointSettable *point,
-                                              struct immagine_s &img)
+                                              ImageDrawable &img)
 {
     WString res;
     W_ASSERT(pos.size());
@@ -190,7 +190,7 @@ int ImageContainerDrawable::addImage(const WString &pos,
                                      const PointSettable *point,
                                      const WString &path_writernote)
 {
-    struct immagine_s img;
+    ImageDrawable img;
     WZipWriter writer;
 
     if(writer.init(path_writernote.toUtf8().constData()))
@@ -237,4 +237,18 @@ ImageContainerDrawable::ImageContainerDrawable(ImageContainerDrawable &&other) n
     : m_img (std::move(other.m_img))
 {
 
+}
+
+auto ImageContainerDrawable::load(const VersionFileController &versionController,
+                                  ReadableAbstract &readable) -> std::pair<int, ImageContainerDrawable>
+{
+    ImageContainerDrawable result;
+
+    auto [res, d] = WListFast<ImageDrawable>::load(versionController, readable);
+    if (res < 0)
+        return {-1, result};
+
+    result.m_img = std::move(d);
+
+    return {0, result};
 }

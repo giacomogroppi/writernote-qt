@@ -3,9 +3,9 @@
 
 #include "utils/WCommonScript.h"
 
-/* read */
+/* load */
 
-#define ARGUMENT(x, y, z) if(un((x).read(y, z) == -1))
+#define ARGUMENT(x, y, z) if(un((x).load(y, z) == -1))
 
 #define SOURCE_READ_GOTO(x, y, z) ARGUMENT(x,y,z) goto free_;
 #define SOURCE_READ_RETURN_SIZE(x, y, z) ARGUMENT(x, y, z) return ERROR;

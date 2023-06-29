@@ -22,9 +22,6 @@ private:
     static constexpr size_t get_offset_start() { return sizeof(int); };
     Document *_doc = nullptr;
 
-    /* new */ int loadbinario_4(class WZip &zip, int ver_stroke);
-    /* new */ int load_file_9(Document *doc, WZip &zip, cbool LoadPdf, cbool LoadImg);
-
     constexpr static const auto nameFile = "FileTouch";
     constexpr static const auto nameAudio = "FileAudio";
 
@@ -39,7 +36,7 @@ public:
     [[nodiscard]]
     const WByteArray &getPath() const;
 
-    /* return true if we can read this file */
+    /* return true if we can load this file */
     static bool manageMessage(int res, const std::function<void(const WString &)>& showMessage);
 
     int xmlstruct_read_file_old(int ver, WZip &zip, cbool LoadPdf, cbool LoadImg);

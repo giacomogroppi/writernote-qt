@@ -6,25 +6,25 @@
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "FileContainer/WZip.h"
 #include "core/WImage.h"
+#include "ImageDrawable.h"
 
 #define DELTA_POINT 200
 #define SUFFIX_IMG "_img_"
 
 class Document;
-struct immagine_s{
-    WImage immagini;
-    PointF i;
-    PointF f;
-};
 
-class ImageContainerDrawable{
+class ImageContainerDrawable
+{
 private:
-    WListFast<struct immagine_s> m_img;
+    WListFast<ImageDrawable> m_img;
     WListFast<WString> get_name_img();
-    static unsigned insert_image(const WString &__pos, const PointSettable *point, struct immagine_s &img);
+    static unsigned insert_image(const WString &__pos, const PointSettable *point, ImageDrawable &img);
 
     static inline WByteArray getName_img(unsigned i);
 public:
+    ImageContainerDrawable (const ImageContainerDrawable &other) noexcept;
+    ImageContainerDrawable (ImageContainerDrawable &&other) noexcept;
+
     static void copy_img(const ImageContainerDrawable &src, ImageContainerDrawable &dest);
     friend class SquareMethod;
 
@@ -39,8 +39,6 @@ public:
     auto addImage(const WString &pos, const PointSettable *point, const WString &writernote_file) -> int;
 
     explicit ImageContainerDrawable();
-    ImageContainerDrawable (const ImageContainerDrawable &other) noexcept;
-    ImageContainerDrawable (ImageContainerDrawable &&other) noexcept;
 
     [[nodiscard]] int lengthImage() const { return m_img.size(); };
     [[nodiscard]] ImageContainerDrawable::load_res_img loadImage(WZipReaderSingle &zip, int len);
@@ -53,8 +51,8 @@ public:
     void moveImage(const WListFast<int> &index, const PointF &translation);
 
     static  void drawImage(WPainter &painter, const RectF &rect, const WImage &img);
-    static  void drawImage(WPainter &painter, const immagine_s &img);
-    static  void drawImage(WPainter &painter, const WListFast<immagine_s> &list);
+    static  void drawImage(WPainter &painter, const ImageDrawable &img);
+    static  void drawImage(WPainter &painter, const WListFast<ImageDrawable> &list);
 
     void drawImage(WPainter &painter) const;
 
@@ -62,20 +60,22 @@ public:
     [[nodiscard]]
     auto getSizeFileImage() const -> size_t;
 
-    template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &readable) -> std::pair<int, ImageContainerDrawable>;
-
-    template <class Writable> requires (std::is_base_of_v<WritableAbstract, Writable>)
-    static auto write (Writable &writable, const ImageContainerDrawable &source) -> int;
-
     auto operator=(const ImageContainerDrawable &other) noexcept -> ImageContainerDrawable &;
     auto operator=(ImageContainerDrawable &&other) noexcept -> ImageContainerDrawable &;
 
 private:
     static load_res_img getImageRawData(WByteArray &arr, const WString &path) ;
     load_res_img loadMetadataImage(WZipReaderSingle &reader, int len);
-    static load_res_img loadSingleImage(const WByteArray &arr, struct immagine_s &img);
+    static load_res_img loadSingleImage(const WByteArray &arr, ImageDrawable &img);
     load_res_img loadMultipleImage(const WListFast<WByteArray> &arr);
+
+protected:
+    /**
+     * \return &lt 0 in case of error
+     * */
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, ImageContainerDrawable>;
+
+    static auto write (WritableAbstract &writable, const ImageContainerDrawable &source) -> int;
 };
 
 inline WByteArray ImageContainerDrawable::getName_img(const unsigned i)
@@ -122,7 +122,7 @@ inline void ImageContainerDrawable::drawImage(WPainter &painter, const RectF &re
     painter.drawImage(rect, img, draw);
 }
 
-inline void ImageContainerDrawable::drawImage(WPainter &painter, const immagine_s &img)
+inline void ImageContainerDrawable::drawImage(WPainter &painter, const ImageDrawable &img)
 {
     int check;
 
@@ -134,7 +134,7 @@ inline void ImageContainerDrawable::drawImage(WPainter &painter, const immagine_
     ImageContainerDrawable::drawImage(painter, RectF(img.i, img.f), img.immagini);
 }
 
-force_inline void ImageContainerDrawable::drawImage(WPainter &painter, const WListFast<immagine_s> &list)
+force_inline void ImageContainerDrawable::drawImage(WPainter &painter, const WListFast<ImageDrawable> &list)
 {
     for (const auto &img : std::as_const(list)) {
         ImageContainerDrawable::drawImage(painter, img);

@@ -32,7 +32,7 @@ public:
 
     /**
      * \param nameFile name of the subfile in this file
-     * \return a FileFinder for read this file
+     * \return a FileFinder for load this file
      * */
     [[nodiscard]]
     auto getFileReader(const WString &nameFile) const noexcept -> FileReader;

@@ -6,7 +6,7 @@ class ReadableAbstract {
 public:
     /**
      * \param to The block of memory to write
-     * \param size The size of the read
+     * \param size The size of the load
      * \return &lt 0 in case of error
      * */
     virtual int read (void *to, size_t size) const = 0;

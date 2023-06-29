@@ -11,6 +11,17 @@ public:
     PdfContainerDrawable(PdfContainerDrawable &&other) noexcept = default;
     PdfContainerDrawable(const PdfContainerDrawable &other) noexcept = default;
 
+
+
+    auto length_pdf() const noexcept -> int
+    {
+        return 0;
+    }
+
+    auto operator=(PdfContainerDrawable && object) -> PdfContainerDrawable & = default;
+    auto operator=(const PdfContainerDrawable &object) -> PdfContainerDrawable & = default;
+
+protected:
     template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
     static auto load (const VersionFileController &versionController, Readable &readable) -> std::pair<int, PdfContainerDrawable>
     {
@@ -24,15 +35,6 @@ public:
         // TODO: implement
         return 0;
     };
-
-    auto length_pdf() const noexcept -> int
-    {
-        return 0;
-    }
-
-    auto operator=(PdfContainerDrawable && object) -> PdfContainerDrawable & = default;
-    auto operator=(const PdfContainerDrawable &object) -> PdfContainerDrawable & = default;
-
 };
 #else
 
