@@ -10,7 +10,6 @@
 #include "core/WSemaphore.h"
 #include "core/WList.h"
 #include <thread>
-#include <sys/semaphore.h>
 #include "core/WVector.h"
 
 class SchedulerThreadData {
