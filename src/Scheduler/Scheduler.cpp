@@ -88,16 +88,6 @@ void Scheduler::createHeap()
     W_ASSERT(this->is_heap());
 }
 
-void Scheduler::addTaskGeneric(WTask *task)
-{
-    WMutexLocker _(_lockGeneric);
-    this->_task_General.append(task);
-
-    this->_semGeneral.release();
-
-    this->_need_to_sort = true;
-}
-
 bool Scheduler::is_heap() const
 {
     return true;

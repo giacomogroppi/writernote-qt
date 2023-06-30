@@ -16,6 +16,8 @@ public:
     ~MemWritable();
 
     auto write (const void *data, size_t size) -> int final;
+
+    [[nodiscard]]
     auto getCurrentSize() const -> size_t;
 
     /**

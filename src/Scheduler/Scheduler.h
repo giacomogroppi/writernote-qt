@@ -66,5 +66,27 @@ public:
     static
     Scheduler &getInstance();
 
-    void exit();
+    /**
+     * This function is used to create a new task within the scheduler with "needToDeleteLater"
+     * set to false, so it is up to whoever receives the task to destroy it.
+     * The function pass will be executed in a generic thread
+     * */
+    static constexpr auto startNewTask = [] (std::function<void()> function) -> WTask * {
+        WTask *task = new WTaskFunction(nullptr, std::move(function));
+
+        task->setDestroyLater(false);
+
+        Scheduler::getInstance().addTaskGeneric(task);
+        return task;
+    };
 };
+
+inline void Scheduler::addTaskGeneric(WTask *task)
+{
+    WMutexLocker _(_lockGeneric);
+    this->_task_General.append(task);
+
+    this->_semGeneral.release();
+
+    this->_need_to_sort = true;
+}

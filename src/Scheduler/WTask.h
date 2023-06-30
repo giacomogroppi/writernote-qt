@@ -24,7 +24,7 @@ public:
 
     void releaseJoiner() noexcept;
 
-    void setDestroyLater(bool needToDestroy);
+    constexpr void setDestroyLater(bool needToDestroy);
 
     /**
      * \return True iff you should delete this task after call "run"
@@ -45,7 +45,7 @@ inline auto WTask::isDeleteLater() const -> bool
     return this->_deleteLater;
 }
 
-inline void WTask::setDestroyLater(bool needToDestroy)
+inline constexpr void WTask::setDestroyLater(bool needToDestroy)
 {
     this->_deleteLater = needToDestroy;
 }
