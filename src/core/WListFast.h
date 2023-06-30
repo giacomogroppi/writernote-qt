@@ -39,6 +39,7 @@ public:
     WListFast(const WListFast<T> &other);
     WListFast(std::initializer_list<T> args);
     WListFast(WListFast<T> &&other) noexcept;
+    ~WListFast() noexcept;
 
     const T& at(int i) const;
     void append(const T& element);
@@ -159,6 +160,12 @@ public:
         return 0;
     }
 
+    /**
+     * To load the data save with this method it's required to call WListFast::loadMultiThread
+     * \param list The list to save
+     * \param startNewThread Function that receive a std::function<void()> and return the WTask * associated
+     * \param writable Writable
+     * */
     template <class StartNewThreadFunction, class T2 = T>
     static
     auto writeMultiThread (WritableAbstract &writable, const WListFast<T2> &list, StartNewThreadFunction startNewThread) noexcept -> int
@@ -514,7 +521,15 @@ inline void WListFast<T>::reserve(int reserve)
 template<class T>
 inline void WListFast<T>::clear()
 {
-    *this = WListFast<T>();
+    for (int i = 0; i < this->_size; i++) {
+        delete _data[i];
+    }
+
+    free (_data);
+    _data = nullptr;
+    _size = 0;
+    _reserved = 0;
+
     test();
 }
 
@@ -660,5 +675,11 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WListFast<T> &p)
     return d.space();
 }
 #endif // USE_QT
+
+template <class T>
+inline WListFast<T>::~WListFast() noexcept
+{
+    this->clear();
+}
 
 #endif //WRITERNOTE_WLISTFAST_H
