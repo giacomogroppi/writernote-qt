@@ -9,6 +9,8 @@ Scheduler::Scheduler()
     , _need_to_sort(false)
     , _threads()
     , _needToDie(false)
+    , _semGeneral(0)
+    , _semMain(0)
 {
     W_ASSERT(instance == nullptr);
 
@@ -30,25 +32,21 @@ Scheduler::Scheduler()
                 WTask *task;
                 sem->acquire();
 
-                mux->lock();
-
-                task = tasksHeap->size()
-                        ? tasksHeap->takeFirst()
-                        : nullptr;
-
-                mux->unlock();
-
                 if (this->needToDie()) {
-                    // we need to release the thread that has make the join
-                    if (task)
-                        task->releaseJoiner();
                     return;
                 }
+
+                {
+                    WMutexLocker _(*mux);
+                    task = tasksHeap->takeFirst();
+                }
+
+                const auto needToDeleteLater = task->isDeleteLater();
 
                 task->run();
                 task->releaseJoiner();
 
-                if (task->isDeleteLater()) {
+                if (needToDeleteLater) {
                     delete task;
                 }
             }
@@ -58,13 +56,24 @@ Scheduler::Scheduler()
 
 Scheduler::~Scheduler()
 {
+    _needToDieLock.lock();
     this->_needToDie = true;
 
-    this->_semMain.release(_threads.size());
+    this->_semMain.release(1);
     this->_semGeneral.release(_threads.size());
+
+    _needToDieLock.unlock();
 
     for (auto &ref: _threads)
         ref.join();
+
+    for (auto *t: this->_task_General)
+        t->releaseJoiner();
+
+    for (auto *t: this->_task_Main)
+        t->releaseJoiner();
+
+    instance = nullptr;
 }
 
 void Scheduler::createHeap()
@@ -83,7 +92,9 @@ void Scheduler::addTaskGeneric(WTask *task)
 {
     WMutexLocker _(_lockGeneric);
     this->_task_General.append(task);
+
     this->_semGeneral.release();
+
     this->_need_to_sort = true;
 }
 
@@ -102,8 +113,9 @@ bool Scheduler::is_heap() const
 */
 }
 
-constexpr bool Scheduler::needToDie() const noexcept
+bool Scheduler::needToDie() const noexcept
 {
+    WMutexLocker locker (this->_needToDieLock);
     return this->_needToDie;
 }
 
@@ -113,6 +125,11 @@ void Scheduler::addTaskMainThread(WTask *task)
 
     WMutexLocker _(instance->_lockMain);
     instance->_task_Main.append(task);
+
     instance->_semMain.release();
 }
 
+Scheduler &Scheduler::getInstance()
+{
+    return *instance;
+}

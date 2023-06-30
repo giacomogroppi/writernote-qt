@@ -10,6 +10,7 @@
 #include "core/WSemaphore.h"
 #include "core/WList.h"
 #include <thread>
+#include <sys/semaphore.h>
 #include "core/WVector.h"
 
 class SchedulerThreadData {
@@ -18,7 +19,8 @@ public:
 };
 
 
-class Scheduler final: public WObject{
+class Scheduler final: public WObject
+{
 private:
     WList<WTask *> _task_Main;
     WList<WTask *> _task_General;
@@ -49,18 +51,21 @@ private:
     bool is_heap() const;
 
     AtomicSafe<bool> _need_to_sort;
-    bool _needToDie;
+
+    mutable WMutex _needToDieLock;
+    volatile bool _needToDie;
 
 public:
     explicit Scheduler();
     ~Scheduler() final;
 
-
-    constexpr bool needToDie() const noexcept;
+    bool needToDie() const noexcept;
 
     void addTaskGeneric(WTask *task);
     static void addTaskMainThread(WTask *task);
 
+    static
+    Scheduler &getInstance();
 
     void exit();
 };
