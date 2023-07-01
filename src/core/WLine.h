@@ -20,11 +20,12 @@ private:
 
 public:
     WLine() = default;
+    WLine(WLine &&other) noexcept = default;
     WLine(const WLine &line);
-    WLine(const PointF &topLeft, const PointF &bottomRigth);
+    WLine(const PointF &topLeft, const PointF &bottomRight);
     WLine(double xt, double yt, double xb, double yb);
 
-    static bool intersect(const WLine &line1, const WLine &line2, int precision, PointF *result = nullptr);
+    static bool intersect(const WLine &line1, const WLine &line2, double precision, PointF *result = nullptr);
     bool is_in_domain(const PointF& point, double precision) const;
     RectF toRect() const;
 

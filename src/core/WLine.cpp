@@ -81,7 +81,7 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
     return AreTouch and IsInDomain;
 }
 
-bool WLine::intersect(const WLine &line1, const WLine &line2, int precision, PointF *result)
+bool WLine::intersect(const WLine &line1, const WLine &line2, double precision, PointF *result)
 {
     double x, y;
     bool touch;
