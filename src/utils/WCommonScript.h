@@ -138,8 +138,6 @@ force_inline size_t WMemcpy(void *to, const void *from, size_t size)
     return size;
 }
 
-
-
 template <typename T>
 force_inline int is_present_in_list_order_list(const T &list, const T& element)
 {

@@ -101,6 +101,16 @@ inline float operator/(float one, const pressure_t &two)
 inline float operator*(float one, const pressure_t &two)
 { return one * two.get(); }
 
+
+#ifdef USE_QT
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const pressure_t &p)
+{
+    d.nospace() << "pressure_t(" << p.get() << ")";
+    return d;
+}
+#endif // USE_QT
+
+
 force_inline RectF datastruct_rect(const PointF &p1, const PointF &p2)
 {
     double xt, yt, xb, yb;

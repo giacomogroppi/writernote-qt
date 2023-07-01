@@ -60,7 +60,7 @@ public:
 
     bool needToDie() const noexcept;
 
-    void addTaskGeneric(WTask *task);
+    static void addTaskGeneric(WTask *task);
     static void addTaskMainThread(WTask *task);
 
     static
@@ -76,17 +76,18 @@ public:
 
         task->setDestroyLater(false);
 
-        Scheduler::getInstance().addTaskGeneric(task);
+        Scheduler::addTaskGeneric(task);
         return task;
     };
 };
 
 inline void Scheduler::addTaskGeneric(WTask *task)
 {
-    WMutexLocker _(_lockGeneric);
-    this->_task_General.append(task);
+    auto &sched = Scheduler::getInstance();
+    WMutexLocker _(sched._lockGeneric);
+    sched._task_General.append(task);
 
-    this->_semGeneral.release();
+    sched._semGeneral.release();
 
-    this->_need_to_sort = true;
+    sched._need_to_sort = true;
 }
