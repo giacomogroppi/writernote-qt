@@ -16,6 +16,7 @@
 #include "core/AtomicSafe.h"
 #include "Scheduler/WTask.h"
 #include "FileContainer/MemWritable.h"
+#include "FileContainer/MemReadable.h"
 
 // do some refactoring
 // this list if O(1) in index access
@@ -36,14 +37,19 @@ private:
 
 public:
     WListFast();
+
+    /**
+     * \param reserve The reserve number of element
+     * */
+    explicit WListFast(int reserve);
     WListFast(const WListFast<T> &other);
     WListFast(std::initializer_list<T> args);
     WListFast(WListFast<T> &&other) noexcept;
     ~WListFast() noexcept;
 
     const T& at(int i) const;
-    void append(const T& element);
-    void append(T &&object);
+    auto append(const T& element) -> WListFast<T>&;
+    auto append(T &&object) -> WListFast<T>&;
     void append(const WListFast<T> &other);
 
     void remove(int index);
@@ -64,6 +70,7 @@ public:
     void insert(int index, const T& object);
     T takeFirst();
 
+    [[nodiscard]]
     WListFast<T> mid(int from, int to) const;
 
     T& operator[](int i);
@@ -145,20 +152,7 @@ public:
      * */
     template <class T2 = T>
     static
-    auto write(WritableAbstract &writable, const WListFast<T2> &list) -> int
-    {
-        static_assert_type(list._size, int);
-
-        if (writable.write(&list._size, sizeof(list._size)) < 0) {
-            return -1;
-        }
-
-        for (const auto &ref: std::as_const(list)) {
-            if (T2::write(writable, ref) < 0)
-                return -1;
-        }
-        return 0;
-    }
+    auto write(WritableAbstract &writable, const WListFast<T2> &list) -> int;
 
     /**
      * To load the data save with this method it's required to call WListFast::loadMultiThread
@@ -166,29 +160,136 @@ public:
      * \param startNewThread Function that receive a std::function<void()> and return the WTask * associated
      * \param writable Writable
      * */
-    template <class StartNewThreadFunction, class T2 = T>
+    template <class T2 = T>
     static
-    auto writeMultiThread (WritableAbstract &writable, const WListFast<T2> &list, StartNewThreadFunction startNewThread) noexcept -> int;
+    auto writeMultiThread (
+            WritableAbstract &writable,
+            const WListFast<T2> &list,
+            const std::function<WTask *(
+                std::function<void()>
+            )> &startNewThread
+    ) noexcept -> int;
 
-    template<class StartNewThreadFunction, class T2 = T>
+    template<class T2 = T>
     static
-    auto loadMultiThread (const VersionFileController &versionController,
-                          ReadableAbstract &readable,
-                          StartNewThreadFunction startNewThread) noexcept -> std::pair<int, WListFast<T2>>;
+    auto loadMultiThread (
+                            const VersionFileController &versionController,
+                            ReadableAbstract &readable,
+                            const std::function<WTask *(
+                                    std::function<void()>
+                            )> &startNewThread
+                        ) noexcept -> std::pair<int, WListFast<T2>>;
 
+    static auto load  (
+                const VersionFileController &versionController,
+                ReadableAbstract &readable,
+                std::function<std::pair<int, T>(
+                            const VersionFileController &versionController,
+                            ReadableAbstract &readable
+                        )> func
+            ) -> std::pair<int, WListFast<T>>;
+
+    static auto write (
+                WritableAbstract &writable,
+                const WListFast<T> &list,
+                std::function<int(
+                        WritableAbstract &writable,
+                        const T&
+                )> save
+            ) -> int;
 };
 
 template<class T>
-template<class StartNewThreadFunction, class T2>
-inline auto WListFast<T>::writeMultiThread(WritableAbstract &writable, const WListFast<T2> &list,
-                                    StartNewThreadFunction startNewThread) noexcept -> int
+inline WListFast<T>::WListFast(int reserve)
+    : _data(nullptr)
+    , _size(0)
+    , _reserved(0)
+{
+    this->reserve(reserve);
+}
+
+template <class T>
+inline auto WListFast<T>::load(
+        const VersionFileController &versionController,
+        ReadableAbstract &readable,
+        std::function<
+                std::pair<int, T>(
+                    const VersionFileController &versionController,
+                    ReadableAbstract &readable)
+                > func) -> std::pair<int, WListFast<T>>
+{
+    std::pair<int, WListFast<T>> result (-1, WListFast<T>());
+
+    switch (versionController.getVersionWListFast()) {
+        case 0:
+            int i, element;
+
+            if (readable.read(&element, sizeof (element)) < 0) {
+                return result;
+            }
+
+            result.second.reserve(element);
+
+            for (i = 0; i < element; i++) {
+                auto [res, data] = func (versionController, readable);
+                if (res < 0 ) {
+                    return {-1, WListFast<T>()};
+                }
+
+                result.second.append(
+                        std::move (data)
+                );
+            }
+            result.first = 0;
+            return result;
+        default:
+            return {-1, WListFast<T>()};
+    }
+    return {-1, WListFast<T>()};
+}
+
+template <class T>
+inline auto WListFast<T>::write(
+            WritableAbstract &writable,
+            const WListFast<T> &list,
+            std::function<int(WritableAbstract &writable, const T&)> save
+        ) -> int
+{
+    static_assert_type(list._size, int);
+
+    if (writable.write(&list._size, sizeof(list._size)) < 0) {
+        return -1;
+    }
+
+    for (const auto &ref: std::as_const(list)) {
+        if (save(writable, ref) < 0)
+            return -1;
+    }
+    return 0;
+}
+
+template <class T>
+template <class T2>
+inline auto WListFast<T>::write(WritableAbstract &writable, const WListFast<T2> &list) -> int
+{
+    return WListFast<T2>::write(writable, list, [] (WritableAbstract &writable, const T2 &object) -> int {
+        return T2::write (writable, object);
+    });
+}
+
+template<class T>
+template<class T2>
+inline auto WListFast<T>::writeMultiThread(
+            WritableAbstract &writable,
+            const WListFast<T2> &list,
+            const std::function<WTask *(
+                    std::function<void()>
+            )> &startNewThread
+        ) noexcept -> int
 {
     int i = 0;
     int res;
     static_assert_type(list._size, int);
-
-    if (writable.write(&list._size, sizeof (list._size)) < 0)
-        return -1;
 
     WListFast<WTask*> threads;
     MemWritable w[list._size];
@@ -196,6 +297,7 @@ inline auto WListFast<T>::writeMultiThread(WritableAbstract &writable, const WLi
 
     threads.reserve(list.size());
 
+    // create threads with corresponding data
     for (const auto &ref: std::as_const(list)) {
         threads.append(startNewThread ([ref, &needToAbort, &w, i]() {
                 if (T2::write (w[i], ref) < 0)
@@ -205,32 +307,45 @@ inline auto WListFast<T>::writeMultiThread(WritableAbstract &writable, const WLi
         i++;
     }
 
+    // join the threads
     for (auto &thread: threads) {
         thread->join();
     }
 
+    // delete the threads
     std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
 
     if (needToAbort)
         return -1;
 
-    // implement write stack and write data to original writer
-    if (writable.write(list._size) < 0)
-        return -1;
+    // write to writer the seek information
+    {
+        WListFast<size_t> seek(list.size());
+        size_t seekDelta = 0;
 
-    for (i = 0; i < list.size(); i++) {
-        size_t s = w[i].getCurrentSize();
-        if (writable.write(&s, sizeof(s)) < 0)
+        for (i = 0; i < list.size(); i++) {
+            seekDelta += w[i].getCurrentSize();
+            seek.append(seekDelta);
+        }
+
+        if (WListFast<size_t>::write(
+                writable,
+                seek,
+                [](WritableAbstract &writable, size_t item) {
+                    return writable.write(&item, sizeof(item));
+                }) < 0
+            )
             return -1;
     }
 
+    // we merge all the single writer in the main writer
     for (MemWritable& singleWriter: w) {
         if (singleWriter.merge(writable) < 0)
             return -1;
     }
 
     for (i = 0; i < list.size(); i++) {
-        // optimize this copy
+        // TODO: optimize this copy
         if (w[i].merge(writable) < 0)
             return -1;
     }
@@ -240,82 +355,95 @@ inline auto WListFast<T>::writeMultiThread(WritableAbstract &writable, const WLi
 
 
 template<class T>
-template<class StartNewThreadFunction, class T2>
+template<class T2>
 inline auto WListFast<T>::loadMultiThread(
             const VersionFileController &versionController,
             ReadableAbstract &readable,
-            StartNewThreadFunction startNewThread
+            const std::function<WTask *(
+                    std::function<void()>
+            )> &startNewThread
         ) noexcept -> std::pair<int, WListFast<T2>>
 {
-    int i = 0;
-    int size;
-    WListFast<T2> result;
-
     if (versionController.getVersionWListFast() != 0)
         return {-1, {}};
 
-    if (readable.read(&size, sizeof(size)) < 0)
-        return -1;
-
+    int i;
+    WListFast<T2> result;
     WListFast<WTask*> threads;
-    MemWritable w[size];
+    WListFast<size_t> seek;
     volatile bool needToAbort = false;
 
-    threads.reserve(size);
+    {
+        // load seek array
+        auto [tmp, seekLoad] = WListFast<size_t>::load(
+                versionController,
+                readable,
+                [](const VersionFileController &, ReadableAbstract &readable) -> std::pair<int, size_t> {
+                    size_t t;
+                    if (readable.read(&t, sizeof(t)))
+                        return {-1, 0};
+                    return {0, t};
+                });
 
-    // reserve data
-    result._size = size;
+        if (tmp < 0)
+            return {-1, {}};
+
+        seek = std::move(seekLoad);
+    }
+
+    if (!seek.size()) {
+        return {0, {}};
+    }
+
+    MemReadable readers[seek.size()];
+
+    char rawData[seek.last()];
+    if (readable.read (rawData, seek.last()) < 0)
+        return {-1, {}};
+
+    for (i = 0; i < seek.size(); i++) {
+        readers[i]
+            .setData(
+                    rawData + ((i == 0) ? 0 : seek[i - 1]),
+                    seek[i]
+            );
+    }
+
+    result._data = (T**) malloc (sizeof (T*) * seek.size());
+    result._size = seek.size();
     result._reserved = 0;
-    result._data = malloc (sizeof (T*) * size);
 
-    for (i = 0; i < size; i++) {
+    for (i = 0; i < seek.size(); i++) {
         threads.append(
                 startNewThread (
-                    [&versionController, &needToAbort, readable, i]() {
-                        auto [res, data] = T2::load (versionController, readable)
+                        [&versionController, &needToAbort, &readers, i, &result]() {
+                            auto [res, data] = T2::load (versionController, readers[i]);
 
-                        if (T2::write (w[i], ref) < 0)
-                            needToAbort = true;
-                    }
-        ));
-        i++;
+                            if (res < 0) {
+                                needToAbort = true;
+                                return;
+                            }
+
+                            result._data[i] = new T (std::move (data));
+                        }
+                )
+        );
     }
 
     for (auto &thread: threads) {
         thread->join();
     }
 
+    if (needToAbort)
+        return {-1, {}};
+
     std::for_each(threads.begin(), threads.end(), [](WTask *t) { delete t; });
 
-    if (needToAbort)
-        return -1;
-
-    // implement write stack and write data to original writer
-    if (writable.write(list._size) < 0)
-        return -1;
-
-    for (i = 0; i < list.size(); i++) {
-        size_t s = w[i].getCurrentSize();
-        if (writable.write(&s, sizeof(s)) < 0)
-            return -1;
-    }
-
-    for (MemWritable& singleWriter: w) {
-        if (singleWriter.merge(writable) < 0)
-            return -1;
-    }
-
-    for (i = 0; i < list.size(); i++) {
-        // optimize this copy
-        if (w[i].merge(writable) < 0)
-            return -1;
-    }
-
-    return 0;
+    return {0, result};
 }
 
 template<class T>
-inline WListFast<T> &WListFast<T>::operator=(WListFast<T> &&other) noexcept
+inline auto WListFast<T>::operator=(WListFast<T> &&other) noexcept -> WListFast<T> &
 {
     if (this == &other)
         return *this;
@@ -326,9 +454,9 @@ inline WListFast<T> &WListFast<T>::operator=(WListFast<T> &&other) noexcept
 
     free (this->_data);
 
-    this->_data = other._data;
-    this->_size = other._size;
-    this->_reserved = other._reserved;
+    this->_data         = other._data;
+    this->_size         = other._size;
+    this->_reserved     = other._reserved;
 
     other._data = nullptr;
     other._size = 0;
@@ -438,36 +566,13 @@ inline auto WListFast<T>::load(
                 ReadableAbstract &file
             ) -> std::pair<int, WListFast<T>>
 {
-    std::pair<int, WListFast<T>> result (-1, WListFast<T>());
-
-    switch (versionController.getVersionWListFast()) {
-        case 0:
-            int i, element;
-
-            if (file.read(&element, sizeof (element)) < 0) {
-                return result;
+    return WListFast<T>::load(
+            versionController,
+            file,
+            [](const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, T> {
+                return T::load(versionController, readable);
             }
-
-            result.second.reserve(element);
-
-            for (i = 0; i < element; i++) {
-                T tmp;
-
-                auto [res, data] = T::load (versionController, file);
-                if (res < 0 ) {
-                    return {-1, WListFast<T>()};
-                }
-
-                result.second.append(
-                    std::move (tmp)
-                );
-            }
-            result.first = 0;
-            return result;
-        default:
-            return {-1, WListFast<T>()};
-    }
-    return {-1, WListFast<T>()};
+    );
 }
 
 template<class T>
@@ -556,6 +661,7 @@ inline int WListFast<T>::lastIndexOf(const T &object) const
 template<class T>
 inline const T &WListFast<T>::last() const
 {
+    W_ASSERT(size() != 0);
     return at(size() - 1);
 }
 
@@ -687,7 +793,7 @@ inline void WListFast<T>::append(const WListFast<T> &other)
 }
 
 template<class T>
-inline void WListFast<T>::append(const T &element)
+inline auto WListFast<T>::append(const T &element) -> WListFast<T>&
 {
     _size++;
 
@@ -698,10 +804,11 @@ inline void WListFast<T>::append(const T &element)
     _reserved --;
 
     test();
+    return *this;
 }
 
 template <class T>
-inline void WListFast<T>::append(T &&object)
+inline auto WListFast<T>::append(T &&object) -> WListFast<T>&
 {
     if (_reserved == 0)
         reserve(WListFast::numberOfObjectReserved);
@@ -710,6 +817,7 @@ inline void WListFast<T>::append(T &&object)
 
     _size ++;
     _reserved --;
+    return *this;
 }
 
 template<class T>
@@ -760,10 +868,10 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WListFast<T> &p)
     d.nospace() << "ListFast(";
 
     for (const auto &item: std::as_const(p)) {
-        d.nospace() << item ;
+        d.space() << item << ",";
     }
 
-    return d.space();
+    return d.space() << " )";
 }
 #endif // USE_QT
 
