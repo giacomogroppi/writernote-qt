@@ -520,7 +520,7 @@ inline auto WListFast<T>::mid(int from, int to) const -> WListFast<T>
     W_ASSERT(from >= 0 && to <= size());
     W_ASSERT(from <= to);
 
-    auto &res = WListFast<T>();
+    auto res = WListFast<T>();
 
     res.reserve(to - from);
     for (int i = from; i < to; i++) {
