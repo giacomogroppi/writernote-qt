@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 13/05/23.
-//
-
-#ifndef WRITERNOTE_WLISTFAST_H
-#define WRITERNOTE_WLISTFAST_H
+#pragma once
 
 #include <iostream>
 #include <algorithm>
@@ -18,7 +13,7 @@
 #include "FileContainer/MemWritable.h"
 #include "FileContainer/MemReadable.h"
 
-// do some refactoring
+// TODO: do some refactoring
 // this list if O(1) in index access
 template <class T>
 class WListFast
@@ -42,13 +37,47 @@ public:
      * \param reserve The reserve number of element
      * */
     explicit WListFast(int reserve);
+
+    /**
+     * \brief Copy constructor
+     * */
     WListFast(const WListFast<T> &other);
+
+    /**
+     * \brief Copy constructor
+     * \param args The item to add to the list
+     * */
     WListFast(std::initializer_list<T> args);
+
+    /**
+     * \brief Move constructor.
+     *  This method will erase the list pass as parameter
+     * \param other The list to move
+     * */
     WListFast(WListFast<T> &&other) noexcept;
     ~WListFast() noexcept;
 
+    /**
+     * \brief It's a O(1) operation
+     * \param i The index of the item you want, it must be in the range [0, size())
+     * \return The item in position "i"
+     * */
     const T& at(int i) const;
+
+    /**
+     * \brief Append the element to the list with a copy
+     *  This method is O(1) if the list have some reserve space, otherwise is O(n)
+     * \param element The element to append
+     * \return The reference to the list
+     * */
     auto append(const T& element) -> WListFast<T>&;
+
+    /**
+     * \brief Append the element to the list with a copy
+     *  This method is O(1) if the list have some reserve space, otherwise is O(n)
+     * \param element The element to append
+     * \return The reference to the list
+     * */
     auto append(T &&object) -> WListFast<T>&;
     void append(const WListFast<T> &other);
 
@@ -148,7 +177,7 @@ public:
      * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case
      *  of failure and it needs to have write(const T &param) for non class object
      *
-     * \return -1 in case of error
+     * \return &lt 0 in case of error
      * */
     template <class T2 = T>
     static
@@ -159,6 +188,7 @@ public:
      * \param list The list to save
      * \param startNewThread Function that receive a std::function<void()> and return the WTask * associated
      * \param writable Writable
+     * \return &lt 0 in case of error
      * */
     template <class T2 = T>
     static
@@ -592,7 +622,7 @@ inline void WListFast<T>::move(int from, int to)
 }
 
 template<class T>
-inline WListFast<T> &WListFast<T>::operator=(const WListFast<T> &other)
+inline auto WListFast<T>::operator=(const WListFast<T> &other) -> WListFast<T> &
 {
     if (this == &other)
         return *this;
@@ -880,5 +910,3 @@ inline WListFast<T>::~WListFast() noexcept
 {
     this->clear();
 }
-
-#endif //WRITERNOTE_WLISTFAST_H
