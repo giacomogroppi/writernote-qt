@@ -61,7 +61,7 @@ public:
     bool intersects(const RectTemplate<T> &other) const;
     RectTemplate<T> intersected(const RectTemplate<T> &other) const;
 
-    constexpr bool contains(const PointTemplate<T> &point) const;
+    constexpr bool contains(const PointTemplate<T> &point, double precision = 0.) const;
 
     constexpr bool isNull() const;
 
@@ -155,12 +155,12 @@ inline bool RectTemplate<T>::intersects(const RectTemplate<T> &other) const
 }
 
 template<typename T>
-inline constexpr bool RectTemplate<T>::contains(const PointTemplate<T> &point) const
+inline constexpr bool RectTemplate<T>::contains(const PointTemplate<T> &point, double precision) const
 {
-    return  point.x() > _topLeft.x() &&
-            point.y() > _topLeft.y() &&
-            point.x() < _bottomRight.x() &&
-            point.y() < _bottomRight.y();
+    return  point.x() > _topLeft.x() - precision &&
+            point.y() > _topLeft.y() - precision &&
+            point.x() < _bottomRight.x() + precision &&
+            point.y() < _bottomRight.y() + precision;
 }
 
 template<typename T>
@@ -473,9 +473,9 @@ inline constexpr RectTemplate<T>::RectTemplate(const WSizeTemplate<T> &size)
 }
 
 template<typename T>
-inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &topLeft, const PointTemplate<T> &bottomRight)
-    : _topLeft(topLeft)
-    , _bottomRight(bottomRight)
+inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &pt1, const PointTemplate<T> &pt2)
+    : _topLeft(std::max(pt1.x(), pt2.x()), std::max(pt1.y(), pt2.y()))
+    , _bottomRight(std::max(pt1.x(), pt2.x()), std::max(pt1.y(), pt2.y()))
 {
 }
 

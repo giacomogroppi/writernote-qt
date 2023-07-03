@@ -69,99 +69,105 @@ bool WLine::intersect_vertical(const WLine &line, const WLine &vertical, cdouble
     const double y = xTouch * line._m + line._p;
     
     cbool AreTouch = line.belongs(
-                            PointF(xTouch, y),
-                            precision
-                        );
+            {xTouch, y},
+            precision
+    );
 
     cbool IsInDomain = vertical.is_in_domain(
-                PointF(xTouch, y),
-                precision
-            );
+            {xTouch, y},
+            precision
+    );
 
     return AreTouch and IsInDomain;
 }
 
-bool WLine::intersect(const WLine &line1, const WLine &line2, double precision, PointF *result)
+bool WLine::intersect(const WLine &line1, const WLine &line2, double precision, PointF *)
 {
-    double x, y;
-    bool touch;
-
-    (void) result;
-    //(void)(result);
-
-    if (un(line1._is_vertical and line2._is_vertical)) {
-        WDebug(debug_WLine, "Both line are vertical")
+    // TODO: the domain [return false is false in some cases]
+    if (line1.is_vertical() && line2.is_vertical())
         return false;
-    }
 
     if (!line2._is_vertical and !line1._is_vertical) {
         WDebug(debug_WLine, "No line vertical");
-        x = (line2._p - line1._p) / (line1._m - line2._m);
-        y = line2._m * x + line2._p;
+        const auto x = (line2._p - line1._p) / (line1._m - line2._m);
+        const auto y = line2._m * x + line2._p;
 
-        touch = line2.is_in_domain(PointF(x, y), precision);
+        const auto isInDomain = line2.is_in_domain({x, y}, precision);
 
-        WDebug(debug_WLine, (touch ? "First in domain" : "First not in domain"));
+        WDebug(debug_WLine, (isInDomain ? "First in domain" : "First not in domain"));
 
-        if (touch and line1.is_in_domain(PointF(x, y), precision)) {
+        if (isInDomain and line1.is_in_domain(PointF(x, y), precision)) {
             WDebug(debug_WLine, "Second in domain");
+            return true;
         } else {
-            touch = false;
+            return false;
         }
-
-    }else{
+    } else {
         WDebug(debug_WLine, (line2._is_vertical ? "First line vertical" : "Second line vertical"));
+
+        bool result;
         if (line2._is_vertical) {
-            touch = WLine::intersect_vertical(line1, line2, precision);
+            result = WLine::intersect_vertical(line1, line2, precision);
         } else {
-            touch =  WLine::intersect_vertical(line2, line1, precision);
+            result =  WLine::intersect_vertical(line2, line1, precision);
         }
 
         WDebug(debug_WLine, line1.pt1() << line1.pt2() << line2.pt1() << line2.pt2());
+        return result;
     }
-
-    WDebug(debug_WLine, qstr("Are line intersect? %1").arg(touch ? "Yes" : "No"));
-    return touch;
 }
 
-bool WLine::is_in_domain(const PointF& point, cdouble precision) const
+bool WLine::is_in_domain(const PointF& point, double precision) const
 {
     W_ASSERT(precision >= 0.);
 
-    bool check;
-    const auto real_precision = precision / 2.;
+    return RectF {
+        _pt1,
+        _pt2
+    }.contains(point, precision);
 
-    const auto x = point.x();
-    const auto y = point.y();
+    const auto yMax = std::max(_pt1.y(), _pt2.y());
+    const auto yMin = std::min(_pt1.y(), _pt2.y());
 
-    const auto ymax = std::max(_pt1.y(), _pt2.y());
-    const auto ymin = std::min(_pt1.y(), _pt2.y());
 
-    if (!_is_vertical) {
-        const auto xmin = std::min(_pt1.x(), _pt2.x());
-        const auto xmax = std::max(_pt1.x(), _pt2.x());
+    if (is_vertical()) {
+        bool check;
 
-        check = WCommonScript::is_between(xmin - real_precision, x, xmax + real_precision);
-        WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [x]" : "not in domain [x]"));
-
-        if(WCommonScript::is_between(ymin - real_precision, y, ymax + real_precision)){
-            WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [y]" : "not in domain [y]"));                    
-        }else{
-            WDebug(debug_WLine, "Line not vertical" << (check ? "in domain [y]" : "not in domain [y]"));
-            if(check)
-                check = false;
-        }
-
-    } else {
-        check = WCommonScript::is_near(this->pt1().x(), x, precision);
+        check = WCommonScript::is_near(this->pt1().x(), point.x(), precision);
 
         WDebug(debug_WLine, (check ? "Line vertical is in domain [x]" : "Line vertical is not in domain [x]") << 
-                "x_vertical" << pt1() << "x_point" << x << "Precision" << precision);
+                "x_vertical" << pt1() << "x_point" << point.x() << "Precision" << precision);
 
-        check = check and WCommonScript::is_between(ymin - real_precision, y, ymax + real_precision);
-        WDebug(debug_WLine, (check ? "Line vertical is in domain [y]" : "Line vertical is not in domain [y]") << 
-                "y_min_vertical" << ymin << "y_max_vertical" << ymax << "y_point" << y);
+        check = check and WCommonScript::is_between(yMin, point.y(), yMax);
+        WDebug(debug_WLine, (check ? "Line vertical is in domain [y]" : "Line vertical is not in domain [y]") <<
+                                                                                                              "y_min_vertical" << yMin << "y_max_vertical" << yMax << "y_point" << point.y());
+        return check;
+    } else {
+        const auto xMin = std::min(_pt1.x(), _pt2.x());
+        const auto xMax = std::max(_pt1.x(), _pt2.x());
+
+        bool isXBetween = WCommonScript::is_between(
+                xMin,
+                point.x(),
+                xMax,
+                precision
+        );
+
+        const auto isYBetween = WCommonScript::is_between(
+                yMin,
+                point.y(),
+                yMax,
+                precision
+        );
+
+        WDebug(debug_WLine, "Line not vertical" << (isXBetween ? "in domain [x]" : "not in domain [x]"));
+
+        if (isXBetween and isYBetween) {
+            WDebug(debug_WLine, "Line not vertical" << (isXBetween ? "in domain [y]" : "not in domain [y]"));
+            return true;
+        } else {
+            WDebug(debug_WLine, "Line not vertical" << (isXBetween ? "in domain [y]" : "not in domain [y]"));
+            return false;
+        }
     }
-
-    return check;
 }

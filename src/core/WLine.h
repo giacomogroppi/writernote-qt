@@ -25,14 +25,60 @@ public:
     WLine(const PointF &topLeft, const PointF &bottomRight);
     WLine(double xt, double yt, double xb, double yb);
 
+    auto top (double amount) const -> WLine;
+    auto bottom (double amount) const -> WLine;
+    auto left (double amount) const -> WLine;
+    auto right (double amount) const -> WLine;
+
     static bool intersect(const WLine &line1, const WLine &line2, double precision, PointF *result = nullptr);
+
+    /**
+     * By definition if the line is vertical and precision is 0. the return value is always false
+     * \param precision The precision of the search
+     * \return True if the parameter passed as an argument is inside the rectangle formed by the colon of the ray
+     * */
     bool is_in_domain(const PointF& point, double precision) const;
     RectF toRect() const;
 
     void get_point(PointF &tl, PointF &br) const;
 
     WLine &operator=(const WLine &other);
+
+    friend QDebug operator<<(QDebug d, const WLine &p);
+
 };
+
+inline auto WLine::top(double amount) const -> WLine
+{
+    return {
+        this->_pt1.top(amount),
+        this->_pt2.top(amount)
+    };
+}
+
+inline auto WLine::bottom(double amount) const -> WLine
+{
+    return {
+        this->_pt1.bottom(amount),
+        this->_pt2.bottom(amount)
+    };
+}
+
+inline auto WLine::left(double amount) const -> WLine
+{
+    return {
+        this->_pt1.left(amount),
+        this->_pt2.left(amount)
+    };
+}
+
+inline auto WLine::right(double amount) const -> WLine
+{
+    return {
+        this->_pt1.right(amount),
+        this->_pt2.right(amount)
+    };
+}
 
 force_inline bool WLine::is_vertical() const
 {
@@ -84,3 +130,12 @@ force_inline WLine &WLine::operator=(const WLine &other)
 
     return *this;
 }
+
+#ifdef USE_QT
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WLine &p)
+{
+    d.space() << "WLine(";
+    d.nospace() << p._pt1 << ", " << p._pt2;
+    return d.nospace() << ")";
+}
+#endif // USE_QT

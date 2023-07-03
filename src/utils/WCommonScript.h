@@ -309,7 +309,7 @@ force_inline constexpr T Power(const T &value, cint power)
     return res;
 }
 
-force_inline bool is_near(cdouble one, cdouble two, cdouble precision)
+force_inline bool is_near(double one, double two, double precision)
 {
     W_ASSERT(precision >= 0.);
     return std::abs(one - two) <= precision;
@@ -321,9 +321,10 @@ force_inline double distance(double y1, double y2)
 }
 
 // return true if left <= value <= right
-force_inline bool is_between(const double left, const double value, const double rigth)
+force_inline bool is_between(double left, double value, double rigth, double precision = 0.)
 {
-    return left <= value and value <= rigth;
+    W_ASSERT(precision >= 0.);
+    return left - precision <= value and value <= rigth + precision;
 }
 
 // return true if qMin(left, rigth) <= value <= qMax(right, left)

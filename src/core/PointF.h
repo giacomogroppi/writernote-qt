@@ -18,7 +18,7 @@ using PointF = PointTemplate<double>;
 inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointF &p)
 {
     d.nospace() << "PointF(" << p.x() << ',' << p.y() << ')';
-    return d.space();
+    return d.nospace();
 }
 
 #endif // USE_QT
