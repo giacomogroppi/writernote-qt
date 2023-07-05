@@ -191,7 +191,7 @@ force_inline bool included(const T min, const T max, const T value)
  * @param num The double number to compute the difference for.
  * @return The difference between the given number and its rounded-down value.
  */
-force_inline int diff(cdouble num)
+force_inline int diff(double num)
 {
     if(double(int(num)) > num){
         // bisogna troncare
@@ -200,9 +200,13 @@ force_inline int diff(cdouble num)
     return double(int(num));
 }
 
-force_inline int ecc(cdouble num)
+/**
+ * TODO: translate in english
+ * \return L'approssimazione per eccesso del numbero
+ * */
+force_inline int ecc(double num)
 {
-    if(double(int(num)) >= num){
+    if (double(int(num)) >= num) {
         return double(int(num));
     }
 
