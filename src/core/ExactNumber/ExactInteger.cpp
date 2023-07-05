@@ -131,6 +131,7 @@ auto ExactInteger::addDigit(int digit) -> ExactInteger &
 
 auto ExactInteger::operator*=(const ExactInteger &other) -> ExactInteger &
 {
+    ExactInteger result;
     std::vector<int> partialSums;
 
     for (int i = 0; i < _digits.size(); ++i) {
@@ -155,10 +156,7 @@ auto ExactInteger::operator*=(const ExactInteger &other) -> ExactInteger &
             partialSums.push_back(carry);
     }
 
-    for (int i = 0; i < partialSums.size(); ++i) {
-        addDigit(partialSums[i]);
-    }
-
+    *this = std::move(partialSums);
     return *this;
 }
 
@@ -245,4 +243,25 @@ auto ExactInteger::multiplyBy10() const -> ExactInteger
     ExactInteger result(*this);
     result.addDigit(0);
     return result;
+}
+
+ExactInteger::ExactInteger(std::vector<int> digits)
+    : _digits(std::move(digits))
+{
+
+}
+
+ExactInteger::ExactInteger(const std::string& str)
+    : _digits()
+{
+    for (char c: str) {
+        W_ASSERT(c >= '0' and c <= '9');
+        const int realDigit = c - '0';
+        addDigit(realDigit);
+    }
+}
+
+auto ExactInteger::operator==(const ExactInteger &other) const -> bool
+{
+    return _digits == other._digits;
 }
