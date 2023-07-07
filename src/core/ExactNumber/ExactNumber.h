@@ -2,20 +2,25 @@
 
 #include <cstdio>
 #include "utils/WCommonScript.h"
+#include "ExactInteger.h"
+#include "core/String/WString.h"
 
 class ExactNumber {
 private:
+    using String = WString;
     /**
      * true if negative
      * */
     bool sign: 1;
-    unsigned long n;
-    unsigned long d;
+    ExactInteger n;
+    ExactInteger d;
 
     auto simplify() -> bool;
 
 public:
     explicit ExactNumber(long value);
+    explicit ExactNumber(const String& value);
+    explicit ExactNumber(const String& num, const String& den);
     explicit ExactNumber(long numerator, long denominator);
     explicit ExactNumber(long double number);
     ExactNumber();
@@ -33,8 +38,6 @@ public:
     auto operator*(const ExactNumber &other) const -> ExactNumber;
 
     auto operator==(const ExactNumber &other) const -> bool;
-
-    operator size_t () const { return n / d; }
 
     friend QDebug operator<<(QDebug d, const ExactNumber &p);
 };

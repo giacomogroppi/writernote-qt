@@ -1,267 +1,334 @@
 #include "ExactInteger.h"
 
-ExactInteger::ExactInteger(int number)
-    : _digits()
+ExactInteger::ExactInteger(ExactInteger::Digit u)
+    : digits(1, u)
 {
-    const auto numberOfDigit = WCommonScript::ecc(std::log10(number));
-    _digits.reserve(numberOfDigit);
+}
 
-    for (int i = 0; i < numberOfDigit; i++) {
-        const int pow = std::pow(10, numberOfDigit - i - 1);
-        const auto digit = (number / pow) % 10;
-        addDigit(digit);
+ExactInteger::ExactInteger(const std::string &s)
+    : digits(1, 0)
+{
+    std::istringstream iss(s);
+    iss >> *this;
+    if (iss.fail() || !iss.eof())
+    {
+        throw std::runtime_error("Error: ExactInteger::string");
     }
 }
 
-auto ExactInteger::operator-=(const ExactInteger &other) -> ExactInteger &
+ExactInteger::ExactInteger(const ExactInteger &copy)
+    : digits(copy.digits)
+{}
+
+ExactInteger ExactInteger::operator++(int)
 {
-    int borrow = 0;
-    int maxDigits = std::max(_digits.size(), other._digits.size());
+    ExactInteger w(*this);
+    ++(*this);
+    return w;
+}
 
-    for (int i = 0; i < maxDigits; ++i) {
-        int digitDiff = borrow;
+ExactInteger &ExactInteger::operator++()
+{
+    for (size_t j = 0; j < digits.size() && ++digits[j] == 0; ++j);
 
-        if (i < _digits.size())
-            digitDiff += _digits[i];
-
-        if (i < other._digits.size())
-            digitDiff -= other._digits[i];
-
-        if (digitDiff < 0) {
-            digitDiff += 10;
-            borrow = -1;
-        } else {
-            borrow = 0;
-        }
-
-        addDigit(digitDiff);
-    }
-
-    // Rimuovi le eventuali cifre iniziali zero
-    while (_digits.size() > 1 && _digits.back() == 0) {
-        _digits.pop_back();
+    if (digits.back() == 0) {
+        digits.push_back(1);
     }
 
     return *this;
 }
 
-auto ExactInteger::operator/=(const ExactInteger &other) -> ExactInteger &
+ExactInteger& ExactInteger::operator%= (const ExactInteger& rhs)
 {
-    if (other._digits.size() == 1 && other._digits[0] == 0) {
-        std::cout << "Errore: divisione per zero." << std::endl;
-        return *this;
+    ExactInteger q;
+    divide(rhs, q, *this);
+    return *this;
+}
+
+void ExactInteger::divide(ExactInteger v, ExactInteger& q, ExactInteger& r) const
+{
+    // Handle special cases (m < n).
+    if (v.digits.back() == 0)
+    {
+        throw std::overflow_error("Error: ExactInteger::overflow");
     }
+    r.digits = digits;
+    const size_t n = v.digits.size();
+    if (digits.size() < n) { q.digits.assign(1, 0); return; } // Normalize divisor (v[n-1] >= BASE/2).
+    unsigned d = BITS;
+    for (Digit vn = v.digits.back(); vn != 0; vn >>= 1, --d);
+    v <<= d;
+    r <<= d;
+    const Digit vn = v.digits.back();
 
-    ExactInteger quotient;
-    ExactInteger dividend(*this);
+    // Ensure first single-digit quotient (u[m-1] < v[n-1]).
+    r.digits.push_back(0);
+    const size_t m = r.digits.size();
+    q.digits.resize(m - n);
+    ExactInteger w;
+    w.digits.resize(n + 1);
+    const Wigit MAX_DIGIT = (static_cast<Wigit>(1) << BITS) - 1;
+    for (size_t j = m - n; j-- != 0;)
+    {
+        // Estimate quotient digit.
+        Wigit qhat = std::min(MAX_DIGIT,
+                              (static_cast<Wigit>(r.digits[j + n]) << BITS |
+                               r.digits[j + n - 1]) / vn);
 
-    while (dividend._digits.size() > 0 && dividend.isGreaterThan(other)) {
-        int currentDigit = 0;
-        ExactInteger partialDividend;
-
-        while (partialDividend.isLessThanOrEqualTo(other) && currentDigit < 10) {
-            partialDividend = partialDividend.multiplyBy10();
-            partialDividend = partialDividend + dividend._digits.back();
-            dividend._digits.pop_back();
-            ++currentDigit;
+        // Compute partial product (w = qhat * v).
+        Wigit k = 0;
+        for (size_t i = 0; i < n; ++i)
+        {
+            k += qhat * v.digits[i];
+            w.digits[i] = static_cast<Digit>(k);
+            k >>= BITS;
         }
+        w.digits[n] = static_cast<Digit>(k);
 
-        currentDigit--;
-
-        while (currentDigit >= 0) {
-            int quotientDigit = 0;
-
-            while (partialDividend.isLessThanOrEqualTo(other)) {
-                partialDividend = partialDividend - other;
-                ++quotientDigit;
+        // Check if qhat is too large (u - w < 0).
+        bool is_trial = true;
+        while (is_trial)
+        {
+            size_t i = n;
+            for (; i != 0 && r.digits[j + i] == w.digits[i]; --i);
+            if ((is_trial = (r.digits[j + i] < w.digits[i])))
+            {
+                // Adjust partial product (w -= v).
+                --qhat;
+                k = 0;
+                for (i = 0; i < n; ++i)
+                {
+                    k = k + w.digits[i] - v.digits[i];
+                    w.digits[i] = static_cast<Digit>(k);
+                    k = ((k >> BITS) ? -1 : 0);
+                }
+                w.digits[n] = static_cast<Digit>(k + w.digits[n]);
             }
+        }
+        q.digits[j] = static_cast<Digit>(qhat);
 
-            quotient.addDigit(quotientDigit);
-
-            partialDividend = partialDividend.multiplyBy10();
-            partialDividend = partialDividend + dividend._digits.back();
-            dividend._digits.pop_back();
-
-            --currentDigit;
+        // Compute partial remainder (u -= w).
+        k = 0;
+        for (size_t i = 0; i < n; ++i)
+        {
+            k = k + r.digits[j + i] - w.digits[i];
+            r.digits[j + i] = static_cast<Digit>(k);
+            k = ((k >> BITS) ? -1 : 0);
         }
     }
 
-    std::reverse(quotient._digits.begin(), quotient._digits.end());
-    *this = std::move(quotient);
-    return *this;
+    // Denormalize remainder.
+    q.trim();
+    r.digits.resize(n);
+    r >>= d;
 }
 
-auto ExactInteger::digitAt(int index) const -> int
+ExactInteger& ExactInteger::operator<<= (size_t rhs)
 {
-    return this->_digits[index];
-}
-
-auto ExactInteger::operator+=(const ExactInteger &other) -> ExactInteger &
-{
-    int carry = 0;
-    int maxDigits = std::max(_digits.size(), other._digits.size());
-
-    for (int i = 0; i < maxDigits; ++i) {
-        int digitSum = carry;
-
-        if (i < _digits.size())
-            digitSum += _digits[i];
-
-        if (i < other._digits.size())
-            digitSum += other._digits[i];
-
-        carry = digitSum / 10;
-        digitSum %= 10;
-
-        addDigit(digitSum);
-    }
-
-    if (carry > 0)
-        addDigit(carry);
-
-    return *this;
-}
-
-auto ExactInteger::addDigit(int digit) -> ExactInteger &
-{
-    W_ASSERT(digit >= 0 and digit <= 9);
-    _digits.push_back(digit);
-    return *this;
-}
-
-auto ExactInteger::operator*=(const ExactInteger &other) -> ExactInteger &
-{
-    ExactInteger result;
-    std::vector<int> partialSums;
-
-    for (int i = 0; i < _digits.size(); ++i) {
-        int carry = 0;
-
-        for (int j = 0; j < other._digits.size(); ++j) {
-            int partialProduct = _digits[i] * other._digits[j] + carry;
-
-            if (i + j < partialSums.size())
-                partialProduct += partialSums[i + j];
-
-            carry = partialProduct / 10;
-            partialProduct %= 10;
-
-            if (i + j < partialSums.size())
-                partialSums[i + j] = partialProduct;
-            else
-                partialSums.push_back(partialProduct);
+    if (digits.back() != 0 && rhs != 0)
+    {
+        const size_t n = rhs / BITS;
+        digits.insert(digits.begin(), n, 0);
+        rhs -= n * BITS;
+        Wigit k = 0;
+        for (size_t j = n; j < digits.size(); ++j)
+        {
+            k |= static_cast<Wigit>(digits[j]) << rhs;
+            digits[j] = static_cast<Digit>(k);
+            k >>= BITS;
         }
-
-        if (carry > 0)
-            partialSums.push_back(carry);
+        if (k != 0)
+        {
+            digits.push_back(static_cast<Digit>(k));
+        }
     }
-
-    *this = std::move(partialSums);
     return *this;
 }
 
-auto ExactInteger::operator+(int number) const -> ExactInteger
+ExactInteger& ExactInteger::operator>>= (size_t rhs)
 {
-    ExactInteger result(*this);
-    result += ExactInteger(number);
-    return result;
+    const size_t n = rhs / BITS;
+    if (n >= digits.size())
+    {
+        digits.assign(1, 0);
+    }
+    else
+    {
+        digits.erase(digits.begin(), digits.begin() + n);
+        rhs -= n * BITS;
+        Wigit k = 0;
+        for (size_t j = digits.size(); j-- != 0;)
+        {
+            k = k << BITS | digits[j];
+            digits[j] = static_cast<Digit>(k >> rhs);
+            k = static_cast<Digit>(k);
+        }
+        trim();
+    }
+    return *this;
 }
 
-auto ExactInteger::operator-(int number) const -> ExactInteger
+ExactInteger& ExactInteger::operator*= (const ExactInteger& rhs)
 {
-    ExactInteger result(*this);
-    result -= number;
-    return result;
+    *this = (*this) * rhs;
+    return *this;
 }
 
-auto ExactInteger::operator*(int number) const -> ExactInteger
+ExactInteger& ExactInteger::operator&= (const ExactInteger& rhs)
 {
-    ExactInteger result(*this);
-    result *= number;
-    return result;
+    const size_t n = rhs.digits.size();
+    if (digits.size() > n)
+    {
+        digits.resize(n);
+    }
+    for (size_t j = 0; j < digits.size(); ++j)
+    {
+        digits[j] &= rhs.digits[j];
+    }
+    trim();
+    return *this;
 }
 
-auto ExactInteger::operator/(int number) const -> ExactInteger
+ExactInteger& ExactInteger::operator^= (const ExactInteger& rhs)
 {
-    ExactInteger result(*this);
-    result /= number;
-    return result;
+    const size_t n = rhs.digits.size();
+    if (digits.size() < n)
+    {
+        digits.resize(n, 0);
+    }
+    for (size_t j = 0; j < n; ++j)
+    {
+        digits[j] ^= rhs.digits[j];
+    }
+    trim();
+    return *this;
 }
 
-auto ExactInteger::operator+(const ExactInteger& number) const -> ExactInteger
+ExactInteger& ExactInteger::operator+= (const ExactInteger& rhs)
 {
-    ExactInteger result(*this);
-    result += ExactInteger(number);
-    return result;
+    const size_t n = rhs.digits.size();
+    if (digits.size() < n)
+    {
+        digits.resize(n, 0);
+    }
+    size_t j = 0;
+    Wigit k = 0;
+    for (; j < n; ++j)
+    {
+        k = k + digits[j] + rhs.digits[j];
+        digits[j] = static_cast<Digit>(k);
+        k >>= BITS;
+    }
+    for (; k != 0 && j < digits.size(); ++j)
+    {
+        k += digits[j];
+        digits[j] = static_cast<Digit>(k);
+        k >>= BITS;
+    }
+    if (k != 0)
+    {
+        digits.push_back(1);
+    }
+    return *this;
 }
 
-auto ExactInteger::operator-(const ExactInteger& number) const -> ExactInteger
+ExactInteger& ExactInteger::operator-= (const ExactInteger& rhs)
 {
-    ExactInteger result(*this);
-    result -= number;
-    return result;
+    W_ASSERT((*this) >= rhs);
+    size_t j = 0;
+    Wigit k = 0;
+    for (; j < rhs.digits.size(); ++j)
+    {
+        k = k + digits[j] - rhs.digits[j];
+        digits[j] = static_cast<Digit>(k);
+        k = ((k >> BITS) ? -1 : 0);
+    }
+    for (; k != 0 && j < digits.size(); ++j)
+    {
+        k += digits[j];
+        digits[j] = static_cast<Digit>(k);
+        k = ((k >> BITS) ? -1 : 0);
+    }
+    trim();
+    return *this;
 }
 
-auto ExactInteger::operator*(const ExactInteger& number) const -> ExactInteger
+ExactInteger& ExactInteger::operator/= (const ExactInteger& rhs)
 {
-    ExactInteger result(*this);
-    result *= number;
-    return result;
+    ExactInteger r;
+    divide(rhs, *this, r);
+    return *this;
 }
 
-auto ExactInteger::operator/(const ExactInteger& number) const -> ExactInteger
+ExactInteger& ExactInteger::operator|= (const ExactInteger& rhs)
 {
-    ExactInteger result(*this);
-    result /= number;
-    return result;
+    const size_t n = rhs.digits.size();
+    if (digits.size() < n)
+    {
+        digits.resize(n, 0);
+    }
+    for (size_t j = 0; j < n; ++j)
+    {
+        digits[j] |= rhs.digits[j];
+    }
+    return *this;
 }
 
-auto ExactInteger::isLessThanOrEqualTo(const ExactInteger &other) const -> bool
+ExactInteger& ExactInteger::operator-- ()
 {
-    return !isGreaterThan(other);
+    if (digits.back() == 0)
+    {
+        throw std::underflow_error("Error: ExactInteger::underflow");
+    }
+    for (size_t j = 0; j < digits.size() && digits[j]-- == 0; ++j);
+    trim();
+    return *this;
 }
 
-auto ExactInteger::isGreaterThan(const ExactInteger &other) const -> bool
+std::string ExactInteger::to_string() const
 {
-    if (_digits.size() > other._digits.size())
-        return true;
-    if (_digits.size() < other._digits.size())
-        return false;
+    std::ostringstream oss;
+    ExactInteger q(*this), r;
+    do
+    {
+        q.divide(10, q, r);
+        oss << r.digits[0];
+    } while (q.digits.back() != 0);
+    std::string s(oss.str());
+    std::reverse(s.begin(), s.end());
+    return s;
+}
 
-    for (int i = _digits.size() - 1; i >= 0; --i) {
-        if (_digits[i] > other._digits[i])
-            return true;
-        if (_digits[i] < other._digits[i])
-            return false;
+ExactInteger::Digit ExactInteger::to_uint() const
+{
+    return digits[0];
+}
+
+ExactInteger ExactInteger::gcd(const ExactInteger& other) const
+{
+    ExactInteger a(*this);
+    ExactInteger b(other);
+
+    while (b != ExactInteger("0")) {
+        ExactInteger temp(b);
+        b = a % b;
+        a = temp;
     }
 
-    return false;
+    return a;
 }
 
-auto ExactInteger::multiplyBy10() const -> ExactInteger
+ExactInteger ExactInteger::operator-- (int)
 {
-    ExactInteger result(*this);
-    result.addDigit(0);
-    return result;
+    ExactInteger w(*this);
+    --(*this);
+    return w;
 }
 
-ExactInteger::ExactInteger(std::vector<int> digits)
-    : _digits(std::move(digits))
+void ExactInteger::trim()
 {
-
-}
-
-ExactInteger::ExactInteger(const std::string& str)
-    : _digits()
-{
-    for (char c: str) {
-        W_ASSERT(c >= '0' and c <= '9');
-        const int realDigit = c - '0';
-        addDigit(realDigit);
+    while (digits.back() == 0 && digits.size() > 1)
+    {
+        digits.pop_back();
     }
-}
-
-auto ExactInteger::operator==(const ExactInteger &other) const -> bool
-{
-    return _digits == other._digits;
 }

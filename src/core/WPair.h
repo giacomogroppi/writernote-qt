@@ -74,7 +74,7 @@ public:
     auto operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> &;
     auto operator=(const WPair<K, T> &other) noexcept -> WPair<K, T> &;
 
-    auto operator==(const WPair<K, T> &other) -> bool
+    auto operator==(const WPair<K, T> &other) const -> bool
     {
         if (this == &other)
             return true;
