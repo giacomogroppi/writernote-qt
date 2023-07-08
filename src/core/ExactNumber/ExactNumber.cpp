@@ -125,7 +125,7 @@ auto ExactNumber::operator+(const ExactNumber &other) const -> ExactNumber
     return result;
 }
 
-ExactNumber::ExactNumber(long value)
+ExactNumber::ExactNumber(int value)
     : n(value)
     , d(1)
     , sign(value < 0)

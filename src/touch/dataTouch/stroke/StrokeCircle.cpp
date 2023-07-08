@@ -80,8 +80,8 @@ int StrokeCircle::is_inside(const WLine &line, int from, int precision, cbool ne
 
     WDebug(debug, distance1 << distance2 << tl << br);
 
-    if(     WCommonScript::is_near(distance1, _data.r, precision) or
-            WCommonScript::is_near(distance2, _data.r, precision))
+    if(     WCommonScript::is_near(distance1, _data.r, (double) precision) or
+            WCommonScript::is_near(distance2, _data.r, (double) precision))
         return true;
 
     cbool res = oneSide(distance1, distance2, precision) ||

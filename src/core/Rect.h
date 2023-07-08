@@ -61,7 +61,7 @@ public:
     bool intersects(const RectTemplate<T> &other) const;
     RectTemplate<T> intersected(const RectTemplate<T> &other) const;
 
-    constexpr bool contains(const PointTemplate<T> &point, double precision = 0.) const;
+    constexpr bool contains(const PointTemplate<T> &point, T precision = T(0)) const;
 
     constexpr bool isNull() const;
 
@@ -155,7 +155,7 @@ inline bool RectTemplate<T>::intersects(const RectTemplate<T> &other) const
 }
 
 template<typename T>
-inline constexpr bool RectTemplate<T>::contains(const PointTemplate<T> &point, double precision) const
+inline constexpr bool RectTemplate<T>::contains(const PointTemplate<T> &point, T precision) const
 {
     return  point.x() > _topLeft.x() - precision &&
             point.y() > _topLeft.y() - precision &&
@@ -474,8 +474,8 @@ inline constexpr RectTemplate<T>::RectTemplate(const WSizeTemplate<T> &size)
 
 template<typename T>
 inline constexpr RectTemplate<T>::RectTemplate(const PointTemplate<T> &pt1, const PointTemplate<T> &pt2)
-    : _topLeft(std::max(pt1.x(), pt2.x()), std::max(pt1.y(), pt2.y()))
-    , _bottomRight(std::max(pt1.x(), pt2.x()), std::max(pt1.y(), pt2.y()))
+    : _topLeft(WCommonScript::max(pt1.x(), pt2.x()), WCommonScript::max(pt1.y(), pt2.y()))
+    , _bottomRight(WCommonScript::max(pt1.x(), pt2.x()), WCommonScript::max(pt1.y(), pt2.y()))
 {
 }
 

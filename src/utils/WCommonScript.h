@@ -313,26 +313,36 @@ force_inline constexpr T Power(const T &value, cint power)
     return res;
 }
 
-force_inline bool is_near(double one, double two, double precision)
+    template <class T>
+    inline T abs(T one)
+    {
+        if (one < T(0))
+            return -one;
+        return one;
+    }
+
+template <class T>
+force_inline bool is_near(T one, T two, T precision)
 {
-    W_ASSERT(precision >= 0.);
-    return std::abs(one - two) <= precision;
+    W_ASSERT(precision >= T(0));
+    return WCommonScript::abs(one - two) <= precision;
 }
 
 force_inline double distance(double y1, double y2)
 {
-    return std::abs(y1 - y2);
+    return WCommonScript::abs(y1 - y2);
 }
 
 // return true if left <= value <= right
-force_inline bool is_between(double left, double value, double rigth, double precision = 0.)
+template <class T>
+force_inline bool is_between(T left, T value, T rigth, T precision = T(0))
 {
-    W_ASSERT(precision >= 0.);
+    W_ASSERT(precision >= T(0));
     return left - precision <= value and value <= rigth + precision;
 }
 
 // return true if qMin(left, rigth) <= value <= qMax(right, left)
-force_inline bool is_between_change(const double left, const double value, const double rigth)
+force_inline bool is_between_change(double left, double value, double rigth)
 {
     const auto min = std::min(left, rigth);
     const auto max = std::min(left, rigth);
@@ -518,5 +528,21 @@ inline void for_each(T1 &l1, T2 &l2, Z function)
         qDebug() << message << delta##variable_name << "ns"                                                                                         \
         << 1./(delta##variable_name * (1e-9)) << "hz";                                                                                              \
 } while (0)
+
+template <class T>
+inline T max (T one, T two)
+{
+    if (one >= two)
+        return one;
+    return two;
+}
+
+template <class T>
+inline T min(T one, T two)
+{
+    if (one >= two)
+        return two;
+    return one;
+}
 
 }
