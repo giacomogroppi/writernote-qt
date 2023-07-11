@@ -8,18 +8,14 @@ template <class Precision = double>
 class WLineTemplate
 {
 private:
-    static constexpr auto debug_WLine = false;
+    static constexpr auto debug_WLine = true;
     Precision _m, _p;
     PointTemplate<Precision> _pt1, _pt2;
     bool _is_vertical;
 
     static bool intersect_vertical(const WLineTemplate &line, const WLineTemplate &vertical, Precision precision);
-    bool belongs(const PointTemplate<Precision> &point, Precision precision) const;
 
-    const PointTemplate<Precision> &pt1() const;
-    const PointTemplate<Precision> &pt2() const;
-
-    bool is_vertical() const;
+    bool isVertical() const;
 
 public:
     WLineTemplate() = default;
@@ -33,6 +29,17 @@ public:
     auto left (Precision amount) const -> WLineTemplate<Precision>;
     auto right (Precision amount) const -> WLineTemplate<Precision>;
 
+    auto addTop(Precision precision) const -> WLineTemplate<Precision>;
+    auto addLeft(Precision precision) const -> WLineTemplate<Precision>;
+    auto addRight(Precision precision) const -> WLineTemplate<Precision>;
+    auto addBottom(Precision precision) const -> WLineTemplate<Precision>;
+
+    /**
+     * \return A new WLineTemplate grow left with the same _m
+     * */
+    auto growLeft(Precision amount) const -> WLineTemplate<Precision>;
+    auto growRight(Precision amount) const -> WLineTemplate<Precision>;
+
     static bool intersect(
             const WLineTemplate<Precision> &line1,
             const WLineTemplate<Precision> &line2,
@@ -43,18 +50,147 @@ public:
      * \param precision The precision of the search
      * \return True if the parameter passed as an argument is inside the rectangle formed by the colon of the ray
      * */
-    bool is_in_domain(const PointTemplate<Precision>& point, Precision precision) const;
+    bool isInDomain(const PointTemplate<Precision>& point, Precision precision) const;
     RectTemplate<Precision> toRect() const;
 
     void get_point(PointTemplate<Precision> &tl, PointTemplate<Precision> &br) const;
 
     WLineTemplate<Precision> &operator=(const WLineTemplate<Precision> &other);
 
+    bool belongs(const PointTemplate<Precision> &point, Precision precision) const;
+
     auto operator==(const WLineTemplate<Precision> &other) const -> bool;
+
+    auto isUp(const PointTemplate<Precision> &point) const -> bool;
+    auto isDown(const PointTemplate<Precision> &point) const -> bool;
+
+    auto pointAt(Precision x) const -> Precision;
+
+    auto pt1() const -> const PointTemplate<Precision> &;
+    auto pt2() const -> const PointTemplate<Precision> &;
 
     friend QDebug operator<<(QDebug d, const WLineTemplate<Precision> &p);
 };
 
+template<class Precision>
+inline auto WLineTemplate<Precision>::growLeft(Precision amount) const -> WLineTemplate<Precision>
+{
+    W_ASSERT(amount >= 0);
+    //W_ASSERT(!isVertical());
+
+    const auto isPt1 = _pt1.x() < _pt2.x();
+    const auto minX = isPt1 ? _pt1.x() : _pt2.x();
+    const auto shouldBe = this->pointAt(minX - amount);
+
+    return {
+            {minX - amount, shouldBe},
+            isPt1 ? _pt2 : _pt1
+    };
+}
+
+template<class Precision>
+inline auto WLineTemplate<Precision>::growRight(Precision amount) const -> WLineTemplate<Precision>
+{
+    W_ASSERT(amount >= 0);
+    //W_ASSERT(!isVertical());
+
+    const auto isPt1 = _pt1.x() > _pt2.x();
+    const auto maxX = isPt1 ? _pt1.x() : _pt2.x();
+    const auto shouldBe = this->pointAt(maxX + amount);
+
+    return {
+            isPt1 ? _pt2 : _pt1,
+            {maxX + amount, shouldBe}
+    };
+}
+
+template <class Precision>
+inline auto WLineTemplate<Precision>::pointAt(Precision x) const -> Precision
+{
+    return _m * x + _p;
+}
+
+template <class Precision>
+inline auto WLineTemplate<Precision>::isUp(const PointTemplate<Precision> &point) const -> bool
+{
+    W_ASSERT (!isVertical());
+
+    const auto myY = pointAt(point.x());
+    return point.y() <= myY;
+}
+
+template <class Precision>
+inline auto WLineTemplate<Precision>::isDown(const PointTemplate<Precision> &point) const -> bool
+{
+    W_ASSERT (!isVertical());
+
+    const auto myY = pointAt(point.x());
+    return point.y() >= myY;
+}
+
+template <class Precision>
+inline auto WLineTemplate<Precision>::addBottom(Precision precision) const -> WLineTemplate<Precision>
+{
+    if (_pt1.y() > _pt2.y) {
+        return {
+            _pt1.bottom(precision),
+            _pt2
+        };
+    } else {
+        return {
+            _pt1,
+            _pt2.bottom(precision)
+        };
+    }
+}
+
+template <class Precision>
+inline auto WLineTemplate<Precision>::addLeft(Precision precision) const -> WLineTemplate<Precision>
+{
+    if (_pt1.x() < _pt2.x()) {
+        return {
+            _pt1.left(precision),
+            _pt2
+        };
+    } else {
+        return {
+            _pt1,
+            _pt2.left(precision)
+        };
+    }
+}
+
+template <class Precision>
+inline auto WLineTemplate<Precision>::addRight(Precision precision) const -> WLineTemplate<Precision>
+{
+    if (_pt1.x() > _pt2.x()) {
+        return {
+                _pt1.right(precision),
+                _pt2
+        };
+    } else {
+        return {
+                _pt1,
+                _pt2.right(precision)
+        };
+    }
+}
+
+template <class Precision>
+inline auto WLineTemplate<Precision>::addTop(Precision precision) const -> WLineTemplate<Precision>
+{
+    if (_pt1.y() < _pt2.y()) {
+        return {
+                _pt1.top(precision),
+                _pt2
+        };
+    } else {
+        return {
+                _pt1,
+                _pt2.top(precision)
+        };
+    }
+}
 
 template <class Precision>
 inline auto WLineTemplate<Precision>::top(Precision amount) const -> WLineTemplate<Precision>
@@ -93,7 +229,7 @@ inline auto WLineTemplate<Precision>::right(Precision amount) const -> WLineTemp
 }
 
 template <class Precision>
-inline bool WLineTemplate<Precision>::is_vertical() const
+inline bool WLineTemplate<Precision>::isVertical() const
 {
     return this->_is_vertical;
 }
@@ -139,7 +275,7 @@ inline RectTemplate<Precision> WLineTemplate<Precision>::toRect() const
 template <class Precision>
 inline WLineTemplate<Precision> &WLineTemplate<Precision>::operator=(const WLineTemplate<Precision> &other)
 {
-    if(un(&other == this)){
+    if (&other == this) {
         return *this;
     }
 
@@ -170,13 +306,13 @@ inline WLineTemplate<Precision>::WLineTemplate(
     _pt1 = pt1;
     _pt2 = pt2;
 
-    const Precision deltax = _pt1.x() - _pt2.x();
-    const Precision deltay = _pt1.y() - _pt2.y();
+    const Precision dx = _pt1.x() - _pt2.x();
+    const Precision dy = _pt1.y() - _pt2.y();
 
-    _is_vertical = (deltax == Precision((int) 0));
+    _is_vertical = (dx == Precision((int) 0));
 
     if (!_is_vertical) {
-        _m = deltay / deltax ;
+        _m = dy / dx ;
     }
 
     _p = _pt1.y() - _pt1.x() * _m;
@@ -191,28 +327,27 @@ inline WLineTemplate<Precision>::WLineTemplate(
 template <class Precision>
 inline bool WLineTemplate<Precision>::belongs(const PointTemplate<Precision> &point, Precision precision) const
 {
-    W_ASSERT(!this->_is_vertical);
-    const auto res = WCommonScript::is_near(this->_m * point.x() + this->_p, point.y(), precision);
+    W_ASSERT(!isVertical());
+
+    // new implementation
+    const auto isUp = this->isUp(point.top(precision));
+    const auto isDown = this->isDown(point.bottom(precision));
+
+    return isUp and isDown and isInDomain(point, precision);
 
     /*
-    WDebug(debug_WLine, "\t" << "Result" << res << qstr("m %1 point.x() %2 _p %3 point.y() %4 precision %5")
-        .arg(_m)
-        .arg(point.x())
-        .arg(_p)
-        .arg(point.y())
-        .arg(precision)
-        .toStdString());
-    */
+    const auto res = WCommonScript::is_near(this->_m * point.x() + this->_p, point.y(), precision);
 
-    if(is_in_domain(point, precision)){
-        WDebug(debug_WLine, "\t" << "It's in domain");
+    if (isInDomain(point, precision)) {
+        WDebug(debug_WLine, "\t" << "It's in domain" << point);
         if(res)
             return true;
     }else{
-        WDebug(debug_WLine, "\t" << "It's not in domain");
+        WDebug(debug_WLine, "\t" << "It's not in domain" << point << _pt1 << _pt2);
     }
 
     return false;
+     */
 }
 
 template <class Precision>
@@ -221,20 +356,20 @@ inline bool WLineTemplate<Precision>::intersect_vertical(
         const WLineTemplate<Precision> &vertical,
         Precision precision)
 {
-    W_ASSERT(vertical._is_vertical);
-    W_ASSERT(!line._is_vertical);
+    W_ASSERT(vertical.isVertical());
+    W_ASSERT(!line.isVertical());
     W_ASSERT(vertical._pt1.x() == vertical._pt2.x());
 
     const Precision xTouch = vertical.pt1().x();
 
     const Precision y = xTouch * line._m + line._p;
 
-    cbool AreTouch = line.belongs(
+    const bool AreTouch = line.belongs(
             {xTouch, y},
             precision
     );
 
-    cbool IsInDomain = vertical.is_in_domain(
+    const bool IsInDomain = vertical.isInDomain(
             {xTouch, y},
             precision
     );
@@ -246,45 +381,85 @@ template <class Precision>
 bool WLineTemplate<Precision>::intersect(
         const WLineTemplate<Precision> &line1,
         const WLineTemplate<Precision> &line2,
-        Precision precision,
+        Precision fakePrecision,
         Precision *)
 {
+    const auto precision = fakePrecision / 2;
     // TODO: the domain [return false is false in some cases]
-    if (line1.is_vertical() && line2.is_vertical())
+    if (line1.isVertical() && line2.isVertical())
         return false;
 
-    if (!line2._is_vertical and !line1._is_vertical) {
-        WDebug(debug_WLine, "No line vertical");
-        const auto x = (line2._p - line1._p) / (line1._m - line2._m);
-        const auto y = line2._m * x + line2._p;
+    const auto isTouch = [](
+                const WLineTemplate<Precision> &line1,
+                const WLineTemplate<Precision> &line2
+            ) -> bool {
 
-        const auto isInDomain = line2.is_in_domain({x, y}, precision);
+        if (!line2.isVertical() and !line1.isVertical()) {
+            WDebug(debug_WLine, "No line vertical");
+            const auto x = (line2._p - line1._p) / (line1._m - line2._m);
+            const auto y = line2._m * x + line2._p;
 
-        WDebug(debug_WLine, (isInDomain ? "First in domain" : "First not in domain"));
+            const auto isInDomain = line2.isInDomain({x, y}, Precision(0));
 
-        if (isInDomain and line1.is_in_domain({x, y}, precision)) {
-            WDebug(debug_WLine, "Second in domain");
-            return true;
+            WDebug(debug_WLine, "Possible point of touch is" << PointTemplate<Precision>(x, y));
+            WDebug(debug_WLine, (isInDomain ? "First in domain" : "First not in domain"));
+
+            if (isInDomain and line1.isInDomain({x, y}, Precision(0))) {
+                WDebug(debug_WLine, "Second in domain");
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
-        }
-    } else {
-        WDebug(debug_WLine, (line2._is_vertical ? "First line vertical" : "Second line vertical"));
+            WDebug(debug_WLine, (line2.isVertical() ? "First line vertical" : "Second line vertical"));
 
-        bool result;
-        if (line2._is_vertical) {
-            result = WLineTemplate::intersect_vertical(line1, line2, precision);
-        } else {
-            result =  WLineTemplate::intersect_vertical(line2, line1, precision);
+            bool result;
+            if (line2.isVertical()) {
+                result = WLineTemplate::intersect_vertical(line1, line2, Precision(0));
+            } else {
+                result =  WLineTemplate::intersect_vertical(line2, line1, Precision(0));
+            }
+
+            WDebug(debug_WLine, line1.pt1() << line1.pt2() << line2.pt1() << line2.pt2());
+            return result;
         }
 
-        WDebug(debug_WLine, line1.pt1() << line1.pt2() << line2.pt1() << line2.pt2());
-        return result;
-    }
+    };
+
+    /*
+    const WLineTemplate<Precision> line1Up      = line1.top(precision)      .addLeft(precision).addRight(precision);
+    const WLineTemplate<Precision> line1Down    = line1.bottom(precision)   .addLeft(precision).addRight(precision);
+
+    const WLineTemplate<Precision> line2Up      = line2.top(precision)      .addLeft(precision).addRight(precision);
+    const WLineTemplate<Precision> line2Down    = line2.bottom(precision)   .addLeft(precision).addRight(precision);
+    */
+
+    const WLineTemplate<Precision> line1Up      = line1.top(precision)      .growLeft(precision).growRight(precision);
+    const WLineTemplate<Precision> line1Down    = line1.bottom(precision)   .growLeft(precision).growRight(precision);
+
+    const WLineTemplate<Precision> line2Up      = line2.top(precision)      .growLeft(precision).growRight(precision);
+    const WLineTemplate<Precision> line2Down    = line2.bottom(precision)   .growLeft(precision).growRight(precision);
+
+    W_ASSERT(line1Up._m == line1._m);
+    W_ASSERT(line2Up._m == line2._m);
+
+    W_ASSERT(line1Up._m == line1Down._m);
+    W_ASSERT(line2Up._m == line2Down._m);
+
+    if (isTouch(line1Up, line2Up))
+        return true;
+    if (isTouch(line1Up, line2Down))
+        return true;
+    if (isTouch(line1Down, line2Up))
+        return true;
+    if (isTouch(line1Down, line2Down))
+        return true;
+
+    return false;
 }
 
 template <class Precision>
-inline bool WLineTemplate<Precision>::is_in_domain(
+inline bool WLineTemplate<Precision>::isInDomain(
         const PointTemplate<Precision>& point,
         Precision precision) const
 {
@@ -294,51 +469,6 @@ inline bool WLineTemplate<Precision>::is_in_domain(
             _pt1,
             _pt2
     }.contains(point, precision);
-
-    const auto yMax = std::max(_pt1.y(), _pt2.y());
-    const auto yMin = std::min(_pt1.y(), _pt2.y());
-
-
-    if (is_vertical()) {
-        bool check;
-
-        check = WCommonScript::is_near(this->pt1().x(), point.x(), precision);
-
-        WDebug(debug_WLine, (check ? "Line vertical is in domain [x]" : "Line vertical is not in domain [x]") <<
-                                                                                                              "x_vertical" << pt1() << "x_point" << point.x() << "Precision" << precision);
-
-        check = check and WCommonScript::is_between(yMin, point.y(), yMax);
-        WDebug(debug_WLine, (check ? "Line vertical is in domain [y]" : "Line vertical is not in domain [y]") <<
-                                                                                                              "y_min_vertical" << yMin << "y_max_vertical" << yMax << "y_point" << point.y());
-        return check;
-    } else {
-        const auto xMin = std::min(_pt1.x(), _pt2.x());
-        const auto xMax = std::max(_pt1.x(), _pt2.x());
-
-        bool isXBetween = WCommonScript::is_between(
-                xMin,
-                point.x(),
-                xMax,
-                precision
-        );
-
-        const auto isYBetween = WCommonScript::is_between(
-                yMin,
-                point.y(),
-                yMax,
-                precision
-        );
-
-        WDebug(debug_WLine, "Line not vertical" << (isXBetween ? "in domain [x]" : "not in domain [x]"));
-
-        if (isXBetween and isYBetween) {
-            WDebug(debug_WLine, "Line not vertical" << (isXBetween ? "in domain [y]" : "not in domain [y]"));
-            return true;
-        } else {
-            WDebug(debug_WLine, "Line not vertical" << (isXBetween ? "in domain [y]" : "not in domain [y]"));
-            return false;
-        }
-    }
 }
 
 #ifdef USE_QT

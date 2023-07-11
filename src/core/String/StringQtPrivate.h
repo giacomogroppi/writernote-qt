@@ -37,6 +37,25 @@ public:
     WString (QString &&other) noexcept
             : QString(std::move(other)) {}
 
+    auto reverse () const -> WString
+    {
+        WString tmp;
+        for (int i = size() - 1; i >= 0; i--)
+            tmp.append(at(i));
+        return tmp;
+    }
+
+    auto remove(char c) const -> WString
+    {
+        WString result;
+        for (const auto caracter: *this) {
+            if (caracter == c)
+                continue;
+            result.append(caracter);
+        }
+        return result;
+    }
+
     static auto load (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WString>
     {
         WString result;

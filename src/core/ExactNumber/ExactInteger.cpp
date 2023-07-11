@@ -10,10 +10,7 @@ ExactInteger::ExactInteger(const std::string &s)
 {
     std::istringstream iss(s);
     iss >> *this;
-    if (iss.fail() || !iss.eof())
-    {
-        throw std::runtime_error("Error: ExactInteger::string");
-    }
+    W_ASSERT(not (iss.fail() || !iss.eof()));
 }
 
 ExactInteger::ExactInteger(const ExactInteger &copy)
@@ -48,13 +45,15 @@ ExactInteger& ExactInteger::operator%= (const ExactInteger& rhs)
 void ExactInteger::divide(ExactInteger v, ExactInteger& q, ExactInteger& r) const
 {
     // Handle special cases (m < n).
-    if (v.digits.back() == 0)
-    {
-        throw std::overflow_error("Error: ExactInteger::overflow");
-    }
+    //W_ASSERT_TEXT (v.digits.back() == 0, "Division by 0" << v.digits);
+
     r.digits = digits;
     const size_t n = v.digits.size();
-    if (digits.size() < n) { q.digits.assign(1, 0); return; } // Normalize divisor (v[n-1] >= BASE/2).
+
+    if (digits.size() < n) {
+        q.digits.assign(1, 0); return;
+    } // Normalize divisor (v[n-1] >= BASE/2).
+
     unsigned d = BITS;
     for (Digit vn = v.digits.back(); vn != 0; vn >>= 1, --d);
     v <<= d;
@@ -234,7 +233,7 @@ ExactInteger& ExactInteger::operator+= (const ExactInteger& rhs)
 
 ExactInteger& ExactInteger::operator-= (const ExactInteger& rhs)
 {
-    W_ASSERT((*this) >= rhs);
+    W_ASSERT_TEXT((*this) >= rhs, *this << "is less than" << rhs);
     size_t j = 0;
     Wigit k = 0;
     for (; j < rhs.digits.size(); ++j)

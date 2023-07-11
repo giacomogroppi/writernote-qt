@@ -77,9 +77,7 @@ private:
 #ifdef USE_QT
 inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const ExactInteger &p)
 {
-    d.space() << "ExactInteger(";
-    d.nospace() << p.to_string();
-    return d.nospace() << ")";
+    return d << p.to_string();
 }
 #endif // USE_QT
 

@@ -132,7 +132,7 @@ double StrokeLineGenerator::model_near(const StrokePre &stroke)
 
     model_line_adjust_m(m);
 
-    WDebug(StrokeLineGeneratorDebug, qstr("m: %1 q: %2 is_vertical %3").arg(m).arg(q).arg(line_data.is_vertical));
+    WDebug(StrokeLineGeneratorDebug, qstr("m: %1 q: %2 isVertical %3").arg(m).arg(q).arg(line_data.is_vertical));
 
 cont:
     segno_var_x = segno_var_y = 0;

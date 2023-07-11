@@ -15,10 +15,12 @@ private:
     ExactInteger n;
     ExactInteger d;
 
+    std::string tmpValue;
+
     auto simplify() -> bool;
 
 public:
-    explicit ExactNumber(int value);
+    ExactNumber(int value);
     ExactNumber(const String& value);
     explicit ExactNumber(const String& num, const String& den);
     explicit ExactNumber(long numerator, long denominator);
@@ -27,6 +29,7 @@ public:
     ExactNumber(const ExactNumber &other) noexcept = default;
     ExactNumber(ExactNumber &&other) noexcept = default;
 
+    auto isPositive() const -> bool;
     auto isNegative() const -> bool;
 
     auto operator+=(const ExactNumber &other) -> ExactNumber&;
@@ -50,17 +53,29 @@ public:
     auto operator=(const ExactNumber &other) noexcept -> ExactNumber& = default;
     auto operator=(ExactNumber &&other) noexcept -> ExactNumber& = default;
 
+    auto operator()() const -> std::string;
+
     friend QDebug operator<<(QDebug d, const ExactNumber &p);
 };
+
+inline auto ExactNumber::operator()() const -> std::string
+{
+    return (isPositive() ? "+" : "-") + this->n.to_string() + "/" + this->d.to_string();
+}
 
 inline auto ExactNumber::isNegative() const -> bool
 {
     return sign == 1;
 }
 
+inline auto ExactNumber::isPositive() const -> bool
+{
+    return !isNegative();
+}
+
 #ifdef USE_QT
 inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const ExactNumber &p)
 {
-    return d.nospace() << "ExactNumber(" << (p.sign == true ? "-" : "+") << p.n << "/" << p.d << ")";
+    return d.nospace() << "(" << (p.sign == true ? "-" : "+") << p.n << "/" << p.d << ")";
 }
 #endif // USE_QT

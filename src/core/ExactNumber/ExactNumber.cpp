@@ -5,6 +5,9 @@
 
 auto ExactNumber::operator==(const ExactNumber &other) const -> bool
 {
+    if (n == ExactInteger(0) and other.n == ExactInteger(0))
+        return true;
+
     return  this->sign == other.sign and
             this->d == other.d and
             this->n == other.n;
@@ -20,9 +23,13 @@ auto ExactNumber::simplify() -> bool
     W_ASSERT(d % max == 0);
     W_ASSERT(n % max == 0);
 
+    W_ASSERT(d != ExactInteger(0));
+
     this->d /= max;
     this->n /= max;
     mod = true;
+
+    tmpValue = this->operator()();
 
     return mod;
 }
@@ -44,10 +51,12 @@ auto ExactNumber::operator*=(const ExactNumber &other) -> ExactNumber &
 
 auto ExactNumber::operator/=(const ExactNumber &other) -> ExactNumber &
 {
-    if (this->sign && other.sign)
+    if (this->sign == other.sign)
         sign = false;
-    if (sign != other.sign)
+    else if (sign != other.sign)
         sign = true;
+
+    W_ASSERT(other.n != ExactInteger(0));
 
     d *= other.n;
     n *= other.d;
@@ -84,37 +93,48 @@ auto ExactNumber::operator*(const ExactNumber &other) const -> ExactNumber
 
 ExactNumber::ExactNumber()
     : sign(false)
-    , n (1)
-    , d (0)
+    , n (0)
+    , d (1)
 {
-
+    simplify();
 }
 
 auto ExactNumber::operator+=(const ExactNumber &other) -> ExactNumber &
 {
-    if (sign != other.sign) {
-        // we need to decide the sign
-        if (n / d > other.n / d) {
-            // we keep the sign
-            n = n * other.d + other.n * d;
-
-            d = d * other.d;
-        } else {
-            // we change the sign
-            n = n * other.d - other.n * d;
-
-            d = d * other.d;
-        }
-    } else {
-        // no problem
-        // we keep the sign
-        n = n * other.d + other.n * d;
-
-        d = d * other.d;
+    if ((isPositive() and other.isPositive()) or (isNegative() and other.isNegative())) {
+        this->n = n * other.d + d * other.n;
+        this->d = d * other.d;
+        simplify();
+        return *this;
     }
 
-    simplify();
+    if (*this < other) {
+        ExactNumber tmp(other);
+        tmp += *this;
+        *this = std::move(tmp);
+        return *this;
+    }
 
+    W_ASSERT(*this >= other);
+
+    const auto shouldKeepSign =
+            ((*this > ExactNumber(0)) ? *this : -*this) >
+            ((other > ExactNumber(0)) ? other : -other);
+
+    const auto f = n * other.d;
+    const auto s = d * other.n;
+
+    if (f > s) {
+        n = f - s;
+    } else {
+        n = s - f;
+    }
+
+    if (not shouldKeepSign)
+        sign = !sign;
+
+    d = d * other.d;
+    simplify();
     return *this;
 }
 
@@ -130,7 +150,7 @@ ExactNumber::ExactNumber(int value)
     , d(1)
     , sign(value < 0)
 {
-
+    simplify();
 }
 
 ExactNumber::ExactNumber(long double number)
@@ -159,8 +179,6 @@ ExactNumber::ExactNumber(const ExactNumber::String &value)
     , n(0)
     , sign(false)
 {
-    WString num, den;
-
     if (value.isEmpty()) {
         return;
     }
@@ -172,26 +190,103 @@ ExactNumber::ExactNumber(const ExactNumber::String &value)
 
     const auto firstIndex = value.indexOf('.');
 
-    WString numerator;
-    for (int i = value.size() - 1; i >= 0; i--) {
-        if (value[i] == '.' or value[i] == ',')
-            continue;
-        numerator.append(value[i]);
+    int index;
+    if ((index = value.indexOf('.')) != -1) {
+        n = value.remove('.').toStdString();
+        d = 1;
+        for (int i = value.size() - 1; i > index; i--)
+            d *= 10;
+    } else {
+        n = value.toStdString();
+        d = 1;
     }
-
-    n = num.toStdString();
-    d = den.toStdString();
-
-    n *= std::pow(10, den.size() - 1);
-    d *= std::pow(10, den.size() - 1);
 
     simplify();
 }
 
 ExactNumber::ExactNumber(const ExactNumber::String &num, const ExactNumber::String &den)
-    : n(num.toStdString())
+    : n("1")
     , d(den.toStdString())
     , sign(false)
 {
+    if (num[0] == '-' or num[0] == '+') {
+        sign = num[0] == '-';
+        n = num.mid(1).toStdString();
+    } else {
+        n = num.toStdString();
+    }
+    simplify();
+}
 
+auto ExactNumber::operator-() const -> ExactNumber
+{
+    ExactNumber result(*this);
+    result.sign = result.sign ? false : true;
+    return result;
+}
+
+auto ExactNumber::operator<=(const ExactNumber &other) const -> bool
+{
+    if (n == 0 and other.n == 0)
+        return true;
+    if (isNegative() and other.isPositive())
+        return true;
+    if (isPositive() and other.isNegative())
+        return false;
+
+    ExactInteger myNum = n * other.d;
+    ExactInteger otherNun  = other.n * d;
+    return myNum <= otherNun;
+}
+
+auto ExactNumber::operator<(const ExactNumber &other) const -> bool
+{
+    if (isNegative() and other.isPositive())
+        return true;
+    if (isPositive() and other.isNegative())
+        return false;
+
+    ExactInteger myNum = n * other.d;
+    ExactInteger otherNum = other.n * d;
+    return myNum < otherNum;
+}
+
+auto ExactNumber::operator>=(const ExactNumber &other) const -> bool
+{
+    if (n == 0 and other.n == 0)
+        return true;
+
+    if (isNegative() and other.isPositive())
+        return false;
+    if (isPositive() and other.isNegative())
+        return true;
+
+    ExactInteger myNum = n * other.d;
+    ExactInteger otherNun  = other.n * d;
+    return myNum >= otherNun;
+}
+
+auto ExactNumber::operator>(const ExactNumber &other) const -> bool
+{
+    if (isNegative() and other.isPositive())
+        return false;
+    if (isPositive() and other.isNegative())
+        return true;
+
+    ExactInteger myNum = n * other.d;
+    ExactInteger otherNum = other.n * d;
+    return myNum > otherNum;
+}
+
+auto ExactNumber::operator-(const ExactNumber &other) const -> ExactNumber
+{
+    ExactNumber result(*this);
+    result -= other;
+    return result;
+}
+
+auto ExactNumber::operator-=(const ExactNumber &other) -> ExactNumber&
+{
+    (*this) += (-other);
+    return *this;
 }
