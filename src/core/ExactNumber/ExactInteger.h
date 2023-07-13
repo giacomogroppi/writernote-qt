@@ -10,7 +10,10 @@
 using std::size_t;
 
 #include "utils/WCommonScript.h"
-#include <QDebug>
+
+#ifdef USE_QT
+# include <QDebug>
+#endif // USE_QT
 
 class ExactInteger
 {
@@ -71,7 +74,9 @@ private:
 
     void trim();
 
+#ifdef USE_QT
     friend QDebug operator<<(QDebug d, const ExactInteger &p);
+#endif // USE_QT
 };
 
 #ifdef USE_QT

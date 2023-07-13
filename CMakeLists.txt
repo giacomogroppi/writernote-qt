@@ -60,7 +60,6 @@ set(PROJECT_SOURCES
     src/utils/get_only_name/get_only_name.cpp
     src/utils/threadcount.cpp
     src/utils/get_file_dir/get_file_dir.cpp
-    src/testing/TestingComponent.cpp
     src/testing/memtest.cpp
     src/testing/testingcore.cpp
     src/testing/testingzip.cpp

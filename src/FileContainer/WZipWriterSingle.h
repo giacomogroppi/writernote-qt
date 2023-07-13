@@ -3,6 +3,7 @@
 #include "testing/memtest.h"
 #include "utils/WCommonScript.h"
 #include "core/ByteArray/WByteArray.h"
+#include "Writable.h"
 
 class WZipWriterSingle final: public WritableAbstract {
 private:

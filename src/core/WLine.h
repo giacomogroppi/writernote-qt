@@ -69,7 +69,9 @@ public:
     auto pt1() const -> const PointTemplate<Precision> &;
     auto pt2() const -> const PointTemplate<Precision> &;
 
+#ifdef USE_QT
     friend QDebug operator<<(QDebug d, const WLineTemplate<Precision> &p);
+#endif // USE_QT
 };
 
 template<class Precision>

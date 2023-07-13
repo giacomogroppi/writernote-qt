@@ -56,29 +56,7 @@ public:
         return result;
     }
 
-    static auto load (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WString>
-    {
-        WString result;
-
-        if (versionController.getVersionWString() != 1)
-            return {-1, result};
-
-        result = WString();
-
-        int size;
-
-        if (readable.read(&size, sizeof (size)) < 0)
-            return {-1, result};
-        result.reserve(size);
-
-        char8_t d[size];
-
-        if (readable.read (d, size) < 0)
-            return {-1, result};
-
-        result.append(QUtf8StringView(d, size));
-        return {0, result};
-    }
+    static auto load (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WString>;
 
     auto operator=(const WString &other) noexcept -> WString &
     {
@@ -99,15 +77,7 @@ public:
     /**
      * @return &lt 0 iff writable fail
      * */
-    static auto write (WritableAbstract &writable, const WString &str) -> int
-    {
-        int size = static_cast<int>(str.size());
+    static auto write (WritableAbstract &writable, const WString &str) -> int;
 
-        if (writable.write(&size, sizeof (size)) < 0)
-            return -1;
-
-        if (writable.write(str.toUtf8().constData(), size) < 0)
-            return -1;
-        return 0;
-    }
+    void append(const char *d, int size);
 };

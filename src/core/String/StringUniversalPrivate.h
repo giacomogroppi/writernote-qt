@@ -42,6 +42,7 @@ public:
 
     void insert(const WByteArray &other, int index);
 
+    void reserve(int numberOfChar);
     void remove(int index);
 
     static WString number(int number);
@@ -58,6 +59,9 @@ public:
     WString &operator+=(char c);
     char &operator[](int i);
 
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WString>;
+    static auto write (WritableAbstract &writable, const WString &data) -> int;
+
     using Iterator = WByteArray::iterator;
     using ConstIterator = WByteArray::const_iterator;
 
@@ -72,6 +76,8 @@ public:
     [[nodiscard]] auto end()   const noexcept       { return _data.constEnd(); }
 
     friend bool operator<(const WString &first, const WString &second);
+
+    void append(const char *data, int size);
 };
 
 inline int WString::size() const
@@ -242,6 +248,11 @@ inline bool operator<(const WString &first, const WString &second)
     if (first.size() < second.size())
         return true;
     return false;
+}
+
+inline void WString::append(const char *data, int size)
+{
+    this->_data.append(data, size);
 }
 
 inline WString operator+(const char *s1, const WString &s2)

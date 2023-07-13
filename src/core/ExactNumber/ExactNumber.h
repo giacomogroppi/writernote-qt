@@ -55,7 +55,9 @@ public:
 
     auto operator()() const -> std::string;
 
+#ifdef USE_QT
     friend QDebug operator<<(QDebug d, const ExactNumber &p);
+#endif // USE_QT
 };
 
 inline auto ExactNumber::operator()() const -> std::string
