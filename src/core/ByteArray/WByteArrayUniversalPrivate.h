@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "utils/WCommonScript.h"
+#include "VersionFileController.h"
 
 #ifdef USE_QT
 # error "Trying using WByteArrayUniversal with Qt"
@@ -44,6 +45,11 @@ public:
     char &operator[](int i);
 
     static WByteArray fromRawData(const char *data, int size);
+
+    auto capacity() const -> int;
+
+    static auto load  (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
+    static auto write (WritableAbstract &writable, const WByteArray &data) -> int;
 
     class iterator{
     private:
@@ -254,4 +260,9 @@ inline WByteArray::WByteArray(const WByteArray &other) noexcept
 {
     this->reserve(other.size());
     this->append(other.constData(), other.size());
+}
+
+inline auto WByteArray::capacity() const -> int
+{
+    return this->_reserved;
 }
