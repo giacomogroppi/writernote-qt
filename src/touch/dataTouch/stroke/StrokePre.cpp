@@ -14,7 +14,7 @@ StrokePre::StrokePre()  :
     _min({0., 0.}, false),
     _max({0., 0.}, false)
 {
-    _stroke = std::unique_ptr<StrokeNormal>();
+    _stroke = std::unique_ptr<StrokeNormal>(new StrokeNormal);
 
     W_ASSERT(_stroke->isEmpty());
     //W_ASSERT(this->isImageEmpty());

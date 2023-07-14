@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <algorithm>
 
+
 #define __init__ __attribute((constructor))
 
 #define BIT(bit) (1 << (bit-1))
@@ -297,7 +298,7 @@ force_inline void set_zero(T &value)
 }
 
 template <typename T>
-force_inline constexpr T Power(const T &value, cint power)
+inline constexpr T Power(const T &value, cint power)
 {
     T res = value;
 
@@ -543,6 +544,12 @@ inline T min(T one, T two)
     if (one >= two)
         return two;
     return one;
+}
+
+template <class T>
+inline T toRad (T value)
+{
+    return value / 180 * M_PI;
 }
 
 }

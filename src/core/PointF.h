@@ -14,16 +14,6 @@
 
 using PointF = PointTemplate<double>;
 
-#ifdef USE_QT
-template <class T>
-inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointTemplate<T> &p)
-{
-    d.nospace() << "PointTemplate(" << p.x() << ',' << p.y() << ')';
-    return d.nospace();
-}
-
-#endif // USE_QT
-
 namespace WCommonScript {
     // TODO: move this function into static PointTemplate function
 

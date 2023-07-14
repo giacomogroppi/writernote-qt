@@ -275,10 +275,7 @@ ExactInteger& ExactInteger::operator|= (const ExactInteger& rhs)
 
 ExactInteger& ExactInteger::operator-- ()
 {
-    if (digits.back() == 0)
-    {
-        throw std::underflow_error("Error: ExactInteger::underflow");
-    }
+    W_ASSERT(digits.back() != 0);
     for (size_t j = 0; j < digits.size() && digits[j]-- == 0; ++j);
     trim();
     return *this;

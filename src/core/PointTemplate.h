@@ -1,16 +1,15 @@
-//
-// Created by Giacomo Groppi on 10/05/23.
-//
-
-#ifndef WRITERNOTE_POINTTEMPLATE_H
-#define WRITERNOTE_POINTTEMPLATE_H
+#pragma once
 
 #ifdef USE_QT
 # include <QPointF>
+# include <QDebug>
 # include <QDataStream>
 #endif // USE_QT
 
+#include <cmath>
 #include "VersionFileController.h"
+#include "utils/WCommonScript.h"
+
 
 template <typename T>
 class PointTemplate {
@@ -30,24 +29,27 @@ public:
     constexpr T &rx() noexcept;
     constexpr T &ry() noexcept;
 
-    PointTemplate<T> & setX(T x);
-    PointTemplate<T> & setY(T y);
+    auto setX(T x) -> PointTemplate<T> &;
+    auto setY(T y) -> PointTemplate<T> &;
 
-    PointTemplate<T> left(T amount) const;
-    PointTemplate<T> right(T amount) const;
-    PointTemplate<T> top(T amount) const;
-    PointTemplate<T> bottom(T amount) const;
+    auto left(T amount) const -> PointTemplate<T>;
+    auto right(T amount) const -> PointTemplate<T>;
+    auto top(T amount) const -> PointTemplate<T>;
+    auto bottom(T amount) const -> PointTemplate<T>;
 
     template <typename Z>
     PointTemplate<Z> castTo() const;
 
+    auto rotate (const PointTemplate<T> &cir, T angle) const -> PointTemplate<T>;
+
     static
     auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, PointTemplate<T>>;
 
-    static auto write (WritableAbstract &writable, const PointTemplate<T> &src) -> int;
+    static
+    auto write (WritableAbstract &writable, const PointTemplate<T> &src) -> int;
 
-    PointTemplate<T>& operator=(const PointTemplate<T> &other);
-    auto operator=(PointTemplate<T> &&other) -> PointTemplate<T>& = default;
+    auto operator=(const PointTemplate<T> &other) -> PointTemplate<T>&;
+    auto operator=(PointTemplate<T> &&other) noexcept -> PointTemplate<T>& = default;
 
     bool operator==(const PointTemplate<T> &other) const;
     bool operator!=(const PointTemplate<T> &other) const;
@@ -295,4 +297,40 @@ inline constexpr PointTemplate<T>::PointTemplate(const T& x, const T& y)
 {
 }
 
-#endif //WRITERNOTE_POINTTEMPLATE_H
+template <class T>
+inline auto PointTemplate<T>::rotate(const PointTemplate<T> &cir, T angle) const -> PointTemplate<T>
+{
+    const auto currentDeltaX = x() - cir.x();
+    const auto currentDeltaY = -(y() - cir.y());
+    const auto currentDistance = std::sqrt(
+            WCommonScript::Power(
+                    x() - cir.x(), 2
+            ) +
+            WCommonScript::Power(
+                    y() - cir.y(), 2
+            )
+    );
+
+    const auto currentAngle = currentDistance > 0
+            ? std::acos(static_cast<double>((x() - cir.x()) / currentDistance))
+            : 0;
+    const auto newCurrentAngle = currentAngle + static_cast<double>(WCommonScript::toRad(angle));
+
+    const auto newX = std::cos(newCurrentAngle) * currentDistance + cir.x();
+    const auto newY = std::sin(newCurrentAngle) * currentDistance + cir.y();
+
+    return {
+        newX,
+        newY
+    };
+}
+
+#ifdef USE_QT
+template <class T>
+inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointTemplate<T> &p)
+{
+    d.nospace() << "PointTemplate(" << p.x() << ',' << p.y() << ')';
+    return d.nospace();
+}
+
+#endif // USE_QT
