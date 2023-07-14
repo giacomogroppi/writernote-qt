@@ -70,7 +70,7 @@ public:
     auto pt2() const -> const PointTemplate<Precision> &;
 
 #ifdef USE_QT
-    friend QDebug operator<<(QDebug d, const WLineTemplate<Precision> &p);
+    friend QDebug operator<<(QDebug d, const WLineTemplate<> &p);
 #endif // USE_QT
 };
 

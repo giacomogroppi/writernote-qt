@@ -36,7 +36,7 @@ force_inline std::string get_only_name(const char *name)
 {
     std::string res = name;
     int i;
-    int from, to;
+    int from = 0, to;
 
     for (i = 0; name[i] != '\0'; i++) {
         if (name[i] == '(') {
@@ -44,7 +44,6 @@ force_inline std::string get_only_name(const char *name)
             break;
         }
     }
-
 
     for (; i >= 0; i--) {
         if (name[i] == ' ') {

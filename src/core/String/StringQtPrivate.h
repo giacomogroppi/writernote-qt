@@ -37,21 +37,24 @@ public:
     WString (QString &&other) noexcept
             : QString(std::move(other)) {}
 
+    [[nodiscard]]
     auto reverse () const -> WString
     {
         WString tmp;
+        tmp.reserve(size());
         for (int i = size() - 1; i >= 0; i--)
-            tmp.append(at(i));
+            tmp += at(i);
         return tmp;
     }
 
+    [[nodiscard]]
     auto remove(char c) const -> WString
     {
         WString result;
         for (const auto caracter: *this) {
             if (caracter == c)
                 continue;
-            result.append(caracter);
+               result.append(caracter);
         }
         return result;
     }
@@ -79,5 +82,16 @@ public:
      * */
     static auto write (WritableAbstract &writable, const WString &str) -> int;
 
-    void append(const char *d, int size);
+    void append(const char *d, int size = -1)
+    {
+        if (size == -1)
+            QString::append(d);
+        else
+            QString::append(QByteArray(d, size));
+    }
+
+    void append (const QChar c)
+    {
+        QString::append(c);
+    }
 };
