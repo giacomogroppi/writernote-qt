@@ -48,20 +48,20 @@ constexpr bool debugPage = false;
 class Page
 {
 private:
-    static constexpr uint width = 1000; //1666;
+    static constexpr unsigned width = 1000; //1666;
     static constexpr double proportion = 1.4141;
-    static constexpr uint height = width * proportion; // correct proportions for A4 paper size
+    static constexpr unsigned height = width * proportion; // correct proportions for A4 paper size
 
     mutable WMutex                      _img;
     mutable WMutex                      _append_load;
-    mutable bool                        _IsVisible = true;
+    mutable bool                        _isVisible = true;
     int                                 _count;
-    WListFast<SharedPtr<Stroke>>  _stroke;
+    WListFast<SharedPtr<Stroke>>        _stroke;
     StrokeForPage                       _stroke_writernote;
 
     static constexpr auto pageDebug = true;
 
-    void rep() const;
+    void rep() const noexcept;
 
     /**
      * after adding data to the list, call triggernewimage,
@@ -72,18 +72,18 @@ private:
     WListFast<SharedPtr<Stroke>>   _strokeTmp;
     mutable WPixmap                   _imgDraw;
 
-    void drawNewPage(n_style style);
+    void drawNewPage(n_style style) noexcept;
     
-    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &List, int m_pos_ris, bool use_multi_thread);
-    void draw(WPainter &painter, int m_pos_ris, bool all);
-    void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const WColor &color) const;
+    void drawEngine(WPainter &painter, WListFast<SharedPtr<Stroke>> &List, int m_pos_ris, bool use_multi_thread) noexcept;
+    void draw(WPainter &painter, int m_pos_ris, bool all) noexcept;
+    void drawStroke(WPainter &painter, const Stroke &stroke, WPen &pen, const WColor &color) const noexcept;
 
-    void mergeList();    
+    void mergeList() noexcept;
 
     void AppendDirectly(const std::shared_ptr<Stroke>& stroke);
     bool initImg(bool flag);
 
-    void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrese);
+    void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrease);
 
     static PointF at_translation(const PointF &point, cint page);
     static RectF get_size_area(const WListFast<std::shared_ptr<Stroke>> & item, int from, int to);
@@ -103,7 +103,7 @@ public:
     std::shared_ptr<Stroke> swap(int index, std::shared_ptr<Stroke> newData);
 
     bool updateFlag(const PointF &FirstPoint, double zoom, double heightView);
-    void setVisible(cbool vis) const;
+    void setVisible(bool vis) const;
 
     __fast int lengthStroke() const;
 
@@ -113,7 +113,7 @@ public:
      * \param pos to order positions of the stroke to be removed
      * */
     void removeAt(const WVector<int> & pos);
-    void removeAt(cint i);
+    void removeAt(int i);
 
     const Stroke & last() const;
     Stroke &lastMod();
@@ -131,9 +131,9 @@ public:
     __fast void append(const WListFast<std::shared_ptr<Stroke>> &stroke);
 
     [[deprecated]]
-    __fast const Stroke             & atStroke(uint i) const;
+    __fast const Stroke             & atStroke(int i) const;
     [[deprecated]]
-    __fast Stroke                   & atStrokeMod(uint i);
+    __fast Stroke                   & atStrokeMod(int i);
 
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
     __slow void at_draw_page(int IndexPoint, const PointF &translation, PointF &point, double zoom) const;
@@ -209,8 +209,7 @@ public:
     friend void actionRubberSingleTotal(struct DataPrivateMuThread *_data);
 };
 
-force_inline void Page::rep() const
-{
+force_inline void Page::rep() const noexcept {
 #ifdef DEBUGINFO
     W_ASSERT(this->_count > 0);
 #endif // DEBUGINFO
@@ -250,7 +249,7 @@ force_inline void Page::reset()
 {
     this->_stroke.clear();
     this->_stroke_writernote.reset();
-    this->_IsVisible = true;
+    this->_isVisible = true;
     this->_count = -1;
     this->_strokeTmp.clear();
     this->_imgDraw = WPixmap(1, true);
@@ -339,32 +338,32 @@ force_inline bool Page::updateFlag(
     if(heightView <= Page::getHeight() * zoom){
         // if the page is not fully visible in a window
 
-        _IsVisible = discordant(maxH, minH);
+        _isVisible = discordant(maxH, minH);
 
-        if(_IsVisible)
+        if(_isVisible)
             goto ret;
     }
 
-    _IsVisible =    WCommonScript::included(0.0, heightView, minH) or
-                    WCommonScript::included(0.0, heightView, maxH);
+    _isVisible = WCommonScript::included(0.0, heightView, minH) or
+                 WCommonScript::included(0.0, heightView, maxH);
 
 ret:
-    WDebug(debugPage, "count"   << _count
-             << "minH"          << minH
-             << "heightView"    << heightView
-             << "maxH"          << maxH
-             << "zoom"          << zoom
-             << _IsVisible);
+    WDebug(debugPage, "count" << _count
+                              << "minH" << minH
+                              << "heightView" << heightView
+                              << "maxH" << maxH
+                              << "zoom" << zoom
+                              << _isVisible);
 
-    return _IsVisible;
+    return _isVisible;
 }
 
-force_inline void Page::setVisible(cbool vis) const
+force_inline void Page::setVisible(bool vis) const
 {
-    this->_IsVisible = vis;
+    this->_isVisible = vis;
 }
 
-force_inline const Stroke &Page::atStroke(uint i) const
+force_inline const Stroke &Page::atStroke(int i) const
 {
     rep();
     const auto res = this->_stroke.at(i);
@@ -372,7 +371,7 @@ force_inline const Stroke &Page::atStroke(uint i) const
     return *res;
 }
 
-force_inline Stroke &Page::atStrokeMod(const uint i)
+force_inline Stroke &Page::atStrokeMod(int i)
 {
     rep();
     return *this->_stroke.operator[](i);
@@ -399,7 +398,7 @@ force_inline int Page::lengthStroke() const
 
 force_inline bool Page::isVisible() const
 {
-    return this->_IsVisible;
+    return this->_isVisible;
 }
 
 /*inline void Page::copy(
@@ -427,7 +426,7 @@ force_inline bool Page::isVisible() const
     dest._count                     = src._count;
 }*/
 
-force_inline void Page::removeAt(cint i)
+force_inline void Page::removeAt(int i)
 {
     W_ASSERT(!(i < 0 || i >= _stroke.size()));
 
@@ -448,22 +447,19 @@ inline Stroke &Page::lastMod()
 
 inline void Page::append(std::shared_ptr<Stroke> &&stroke)
 {
-    W_ASSERT(stroke != nullptr);
-    _strokeTmp.append(std::move(stroke));
+    W_ASSERT(stroke and not stroke->isEmpty());
+
     rep();
+
+    this->_strokeTmp.append(std::move(stroke));
+
+    WDebug(pageDebug, this->_count);
 }
 
 force_inline void Page::append(const std::shared_ptr<Stroke>& strokeAppend)
 {
-    W_ASSERT(strokeAppend and !strokeAppend->isEmpty());
-
-    rep();
-
-    this->_strokeTmp.append(strokeAppend);
-
-    WDebug(pageDebug, this->_count);
-
-    W_ASSERT(*_strokeTmp.last() == *strokeAppend);
+    std::shared_ptr<Stroke> stroke = strokeAppend;
+    return this->append(std::move(stroke));
 }
 
 force_inline double Page::minHeight() const
@@ -476,7 +472,6 @@ force_inline Page::Page(const Page &from)
     , _imgDraw(1, true)
 {
     *this = from;
-    //Page::copy(from, *this);
 }
 
 inline Page::~Page() = default;
@@ -504,7 +499,7 @@ inline Page &Page::operator=(const Page &other) noexcept
     _stroke_writernote         = other._stroke_writernote;
     _strokeTmp                 = other._strokeTmp;
     _imgDraw                   = other._imgDraw;
-    _IsVisible                 = other._IsVisible;
+    _isVisible                 = other._isVisible;
     _count                     = other._count;
     return *this;
 }
@@ -555,7 +550,7 @@ inline void Page::append(const WListFast<std::shared_ptr<Stroke>> &stroke)
 inline auto Page::operator==(const Page &other) const noexcept -> bool
 {
     return  this->_stroke == other._stroke &&
-            this->_IsVisible == other._IsVisible &&
+            this->_isVisible == other._isVisible &&
             this->_strokeTmp == other._strokeTmp &&
             this->_stroke_writernote == other._stroke_writernote &&
             this->_count == other._count;
@@ -567,7 +562,7 @@ inline auto Page::operator=(Page &&other) noexcept -> Page &
     this->_count = other._count;
     this->_strokeTmp = std::move(other._strokeTmp);
     this->_stroke_writernote = std::move(other._stroke_writernote);
-    this->_IsVisible = other._IsVisible;
+    this->_isVisible = other._isVisible;
     this->_imgDraw = std::move(other._imgDraw);
     return *this;
 }
@@ -580,12 +575,12 @@ inline auto Page::load(const VersionFileController &versionController, ReadableA
         return {-1, result};
 
     static_assert_type(result._count, int);
-    static_assert_type(result._IsVisible, bool);
+    static_assert_type(result._isVisible, bool);
 
     if (readable.read(&result._count, sizeof (&result._count)) < 0)
         return {-1, result};
 
-    if (readable.read(&result._IsVisible, sizeof (result._IsVisible)) < 0)
+    if (readable.read(&result._isVisible, sizeof (result._isVisible)) < 0)
         return {-1, result};
 
     {
@@ -631,7 +626,7 @@ inline auto Page::write(WritableAbstract &writable, const Page &page, bool saveI
         return -1;
 
     if (writable.write(&page._count, sizeof(page._count)) < 0) return -1;
-    if (writable.write(&page._IsVisible, sizeof(page._IsVisible)) < 0) return -1;
+    if (writable.write(&page._isVisible, sizeof(page._isVisible)) < 0) return -1;
 
     if (WListFast<SharedPtr<Stroke>>::write(writable, page._stroke) < 0)
         return -1;

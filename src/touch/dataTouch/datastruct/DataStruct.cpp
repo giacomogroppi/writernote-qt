@@ -87,7 +87,7 @@ void DataStruct::adjustHeight(cdouble height, PointF& translateTo)
 {
     const PointF point = this->getPointFirstPageNoZoom();
     unsigned char not_used ff = 0;
-    double y = biggery();
+    double y = this->_page.size() * Page::height;
 
     if(point.y() > 0.0){
         ff = 1;
@@ -196,9 +196,9 @@ void DataStruct::scala_all(const PointF &point, double heightView)
 }
 
 /* the list can be not order */
-void DataStruct::MovePoint(
+void DataStruct::movePoint(
         const WVector<int>  &pos,
-        cint                pageIndex,
+        int pageIndex,
         const PointF       &translation)
 {
     Page &pageRef = at_mod(pageIndex);
@@ -228,8 +228,8 @@ void DataStruct::removePointIndex(
 
 void DataStruct::removePointIndex(
         WListFast<WVector<int> >    &pos,
-        cint                    base,
-        cbool                   __isOrder)
+        int base,
+        bool __isOrder)
 {
     int i, lenList;
     lenList = pos.size();

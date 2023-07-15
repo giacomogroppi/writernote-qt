@@ -15,7 +15,7 @@
 static force_inline double widthToPressure(double v) { return v/10.0; };
 
 Page::Page(Page &&other) noexcept
-    : _IsVisible(other._IsVisible)
+    : _isVisible(other._isVisible)
     , _count(other._count)
     , _stroke(std::move(other._stroke))
     , _stroke_writernote(std::move(other._stroke_writernote))
@@ -64,7 +64,7 @@ static force_inline void __initImg(WPixmap &img)
 Page::Page(const int count, const n_style style)
 {
     this->_count = count;
-    this->_IsVisible = true;
+    this->_isVisible = true;
     drawNewPage(style);
     this->mergeList();
 }
@@ -119,10 +119,9 @@ static inline void drawLineVertical(
     stroke.append({Page::getWidth() - 20., yButtom}, stroke_append_default);
 }
 
-void Page::drawNewPage(n_style __style)
+void Page::drawNewPage(n_style __style) noexcept
 {
     bool fast = false;
-    double deltax, deltay, ct_del;
     struct style_struct_S style;
 
     auto &stroke = this->_stroke_writernote;
@@ -236,9 +235,8 @@ void Page::append(const WList<std::shared_ptr<Stroke>> &stroke)
 void Page::drawStroke(
         WPainter        &painter,
         const Stroke    &stroke,
-        WPen            &m_pen,
-        const WColor    &color) const
-{
+        WPen            &pen,
+        const WColor    &color) const noexcept {
     cbool isRubber = (color == COLOR_NULL);
     cbool isHigh = stroke.getAlfa() < 255;
     const auto last_comp_mode = painter.compositionMode();
@@ -246,7 +244,7 @@ void Page::drawStroke(
     constexpr not_used bool debColor = false;
     cint page = _count - 1;
 
-    m_pen.setColor(color);
+    pen.setColor(color);
 
     W_ASSERT(painter.isActive());
 
@@ -256,7 +254,7 @@ void Page::drawStroke(
         painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
     }
 
-    stroke.draw(painter, isRubber, page, m_pen, PROP_RESOLUTION);
+    stroke.draw(painter, isRubber, page, pen, PROP_RESOLUTION);
 
     if (un(isRubber)) {
         painter.setCompositionMode(WPainter::CompositionMode_SourceOver);
@@ -336,8 +334,7 @@ void Page::drawEngine(
         WPainter        &painter,
         WListFast<SharedPtr<Stroke>> &List,
         int             m_pos_ris,
-        bool            use_multi_thread)
-{
+        bool            use_multi_thread) noexcept {
     int i, threadCount;
 
     pthread_t thread[PAGE_THREAD_MAX];
@@ -371,8 +368,7 @@ void Page::drawEngine(
 inline void Page::draw(
     WPainter    &painter,
     int         m_pos_ris,
-    bool        all)
-{
+    bool        all) noexcept {
     W_ASSERT(painter.isActive());
 
     if(un(all) and _stroke.size()){
@@ -388,8 +384,7 @@ inline void Page::draw(
     this->mergeList();
 }
 
-void Page::mergeList()
-{
+void Page::mergeList() noexcept {
     for(auto &s : _strokeTmp) {
         W_ASSERT(!s->isEmpty());
         _stroke.append(s);
@@ -438,7 +433,7 @@ bool Page::initImg(bool flag)
     return flag;
 }
 
-void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrese)
+void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrease)
 {
     int i = pos.size();
     uint color;
@@ -448,7 +443,7 @@ void Page::decreaseAlfa(const WVector<int> &pos, WPainter * painter, int decrese
         Stroke &stroke = atStrokeMod(pos.at(i));
         color = stroke.getAlfa();
 
-        stroke.setAlfaColor(color / decrese);
+        stroke.setAlfaColor(color / decrease);
 
         if (painter) {
             this->drawStroke(*painter, stroke, pen, COLOR_NULL);

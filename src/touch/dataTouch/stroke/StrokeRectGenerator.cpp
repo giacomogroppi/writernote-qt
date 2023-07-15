@@ -61,7 +61,8 @@ double StrokeRectGenerator::model_near(const StrokePre &stroke)
     double precision = 0.;
     int err = 0;
 
-    if(!is_near(stroke._point.first(), stroke._point.last(), 30))
+    if( !is_near(stroke._point.first().x(), stroke._point.last().x(), 30) or
+        !is_near(stroke._point.first().y(), stroke._point.last().y(), 30))
         return StrokeComplexCommon::error;
 
     area = stroke.getBiggerPointInStroke();

@@ -38,8 +38,11 @@ public:
     auto bottom(T amount) const -> PointTemplate<T>;
 
     template <typename Z>
-    PointTemplate<Z> castTo() const;
+    auto castTo() const -> PointTemplate<Z>;
 
+    /**
+     * \param angle it's an angle expressed in degrees, a positive angle corresponds to a clockwise rotation
+     * */
     auto rotate (const PointTemplate<T> &cir, T angle) const -> PointTemplate<T>;
 
     static
@@ -54,15 +57,15 @@ public:
     bool operator==(const PointTemplate<T> &other) const;
     bool operator!=(const PointTemplate<T> &other) const;
 
-    constexpr PointTemplate<T> operator+(const PointTemplate<T> &other) const;
-    constexpr PointTemplate<T> operator*(double d) const;
-    constexpr PointTemplate<T> operator/(double d) const;
-    constexpr PointTemplate<T> operator-(const PointTemplate<T> &other) const;
+    constexpr auto operator+(const PointTemplate<T> &other) const -> PointTemplate<T>;
+    constexpr auto operator*(double d) const -> PointTemplate<T>;
+    constexpr auto operator/(double d) const -> PointTemplate<T>;
+    constexpr auto operator-(const PointTemplate<T> &other) const -> PointTemplate<T>;
 
-    constexpr PointTemplate<T> &operator*=(double d);
-    constexpr PointTemplate<T> &operator/=(double d);
-    constexpr PointTemplate<T> &operator+=(const PointTemplate<T> &other);
-    constexpr PointTemplate<T> &operator-=(const PointTemplate<T> &other);
+    constexpr auto operator*=(double d) -> PointTemplate<T>&;
+    constexpr auto operator/=(double d) -> PointTemplate<T>&;
+    constexpr auto operator+=(const PointTemplate<T> &other) -> PointTemplate<T>&;
+    constexpr auto operator-=(const PointTemplate<T> &other) -> PointTemplate<T>&;
 };
 
 template<typename T>

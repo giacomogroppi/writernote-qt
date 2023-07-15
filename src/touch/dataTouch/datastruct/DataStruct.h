@@ -91,18 +91,16 @@ public:
 
     void restoreLastTranslation(int heightView);
 
-    void removePointIndex(WListFast<WVector<int> > &pos, cint base, cbool __isOrder);
+    void removePointIndex(WListFast<WVector<int> > &pos, int base, bool __isOrder);
     void removePointIndex(WVector<int> &pos, cint page, cbool isOrder);
 
-    void MovePoint(const WList<WVector<int>> & pos, cint base, const PointF &translation);
-    void MovePoint(const WVector<int> & pos, cint page, const PointF &translation);
+    void movePoint(const WList<WVector<int>> & pos, int base, const PointF &translation);
+    void movePoint(const WVector<int> & pos, int pageIndex, const PointF &translation);
 
     [[nodiscard]] bool userWrittenSomething() const;
 
     [[nodiscard]]
     auto adjustStroke(Stroke &stroke) const -> int;
-
-    void moveNextPoint(uint &pos, uint len = 0, int id = -6);
 
     void changeIdThreadSave(int indexPoint, Stroke &stroke, Page &page);
 
@@ -115,8 +113,6 @@ public:
     [[nodiscard]] double biggerX() const noexcept;
 
     [[nodiscard]] bool needToCreateNewSheet() const;
-
-    [[nodiscard]] double biggery() const noexcept;
 
     void decreaseAlfa(const WVector<int> &pos, int page);
     void removePage(int page);
@@ -236,13 +232,6 @@ force_inline bool DataStruct::needToCreateNewSheet() const
         return true;
 
     return false;
-}
-
-force_inline double DataStruct::biggery() const noexcept
-{
-    const auto &last = lastPage();
-    const auto zoom = this->getZoom();
-    return (last.currentHeight() + this->getPointFirstPageNoZoom().y()) * zoom;
 }
 
 inline const Page & DataStruct::at(int page) const

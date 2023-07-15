@@ -19,12 +19,6 @@ merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document 
     if(controll(first, second) != n_merge::ok)
         return n_merge::internal_error;
 
-    int i, len;
-    double last = first->biggery();
-    (void)(audio);
-    (void)(last);
-    (void)(i);
-    (void)(len);
+    W_ASSERT_TEXT(0, "NOT IMPLEMENTED");
 
-    return n_merge::ok;
 }

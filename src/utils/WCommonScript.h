@@ -321,10 +321,10 @@ inline constexpr T Power(const T &value, cint power)
         return one;
     }
 
-template <class T>
-force_inline bool is_near(T one, T two, T precision)
+template <class T, class Z>
+force_inline bool is_near(T one, T two, Z precision)
 {
-    W_ASSERT(precision >= T(0));
+    W_ASSERT(precision >= Z(0));
     return WCommonScript::abs(one - two) <= precision;
 }
 
@@ -335,10 +335,10 @@ force_inline double distance(double y1, double y2)
 
 // return true if left <= value <= right
 template <class T>
-force_inline bool is_between(T left, T value, T rigth, T precision = T(0))
+force_inline bool is_between(T left, T value, T right, T precision = T(0))
 {
     W_ASSERT(precision >= T(0));
-    return left - precision <= value and value <= rigth + precision;
+    return left - precision <= value and value <= right + precision;
 }
 
 // return true if qMin(left, rigth) <= value <= qMax(right, left)
