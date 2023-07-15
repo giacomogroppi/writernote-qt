@@ -178,7 +178,7 @@ void Document::setAudioPath(const WString &path) noexcept
     this->_audioPositionPath = path;
 }
 
-// TODO: Remove this test method
+// TODO: Remove this rep method
 static void test()
 {
     Document doc;
@@ -223,21 +223,21 @@ auto Document::load(const VersionFileController &versionController, ReadableAbst
     std::pair<int, Document> result (-1, Document());
 
     {
-        auto [res, data] = std::move(DataStruct::load (versionController, readable));
+        auto [res, data] = DataStruct::load (versionController, readable);
         if (res < 0)
             return result;
         static_cast<DataStruct&>(result.second) = std::move (data);
     }
 
     {
-        auto [res, data] = std::move (ImageContainerDrawable::load (versionController, readable));
+        auto [res, data] = ImageContainerDrawable::load (versionController, readable);
         if (res < 0)
             return result;
         static_cast<ImageContainerDrawable&>(result.second) = std::move (data);
     }
 
     {
-        auto [res, data] = std::move (PdfContainerDrawable::load (versionController, readable));
+        auto [res, data] = PdfContainerDrawable::load (versionController, readable);
         if (res < 0)
             return result;
         static_cast<PdfContainerDrawable&>(result.second) = std::move (data);

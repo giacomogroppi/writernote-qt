@@ -11,15 +11,16 @@
 class WByteArray
 {
 private:
-    void test() const;
-    char *_data;
-    unsigned _size;
-    unsigned _reserved;
-
+    using Size = unsigned long;
     using CharType = char;
+
+    void rep() const;
+    char *_data;
+    Size _size;
+    Size _reserved;
 public:
     WByteArray ();
-    WByteArray(const char *data, int size = -1);
+    WByteArray(const char *data, Size size = 0);
     WByteArray (WByteArray &&other) noexcept;
     WByteArray (const WByteArray &other) noexcept;
     ~WByteArray();
@@ -28,15 +29,15 @@ public:
     const char *constData() const;
     size_t size() const;
     void append(char data);
-    void append(const char *data, unsigned int size);
-    char at(int i) const;
+    void append(const char *data, Size size);
+    char at(Size i) const;
     void clear() noexcept;
-    void insert(const WByteArray &data, unsigned index);
-    bool isEmpty() const;
+    void insert(const WByteArray &data, Size index) noexcept;
+    bool isEmpty() const noexcept;
 
-    void reserve(unsigned numberOfChar);
+    void reserve(Size numberOfChar);
 
-    WByteArray mid(int from, int to) const;
+    WByteArray mid(Size from, Size to) const;
 
     bool operator==(const WByteArray &other) const;
     WByteArray operator+(const WByteArray &other) const;
@@ -44,20 +45,22 @@ public:
     WByteArray &operator=(const char *data);
     char &operator[](int i);
 
-    static WByteArray fromRawData(const char *data, int size);
+    static WByteArray fromRawData(const char *data, Size size);
 
-    auto capacity() const -> int;
+    auto capacity() const -> unsigned long;
 
     static auto load  (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
     static auto write (WritableAbstract &writable, const WByteArray &data) -> int;
 
+    static auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> std::pair<int, WByteArray*>;
+
     class iterator{
     private:
         char *_array;
-        unsigned _index;
+        Size _index;
     public:
-        explicit iterator(char *data, unsigned index) : _array(data), _index(index) { };
-        explicit iterator(WByteArray &d, int index) : _array(d._data), _index(index) {};
+        explicit iterator(char *data, Size index) : _array(data), _index(index) { };
+        explicit iterator(WByteArray &d, Size index) : _array(d._data), _index(index) {};
 
         //T* operator->()         { return array._data[_index]; };
         char &operator*() const    { return _array[_index]; };
@@ -70,10 +73,10 @@ public:
     class const_iterator{
     private:
         const char* _array;
-        unsigned _index;
+        Size _index;
     public:
-        explicit const_iterator(const char *data, unsigned index) : _array(data), _index(index) {  };
-        const_iterator(const WByteArray &d, unsigned index) : _array(d._data), _index(index) {};
+        explicit const_iterator(const char *data, Size index) : _array(data), _index(index) {  };
+        const_iterator(const WByteArray &d, Size index) : _array(d._data), _index(index) {};
 
         const char &operator*() const    { return _array[_index]; };
         bool operator==(const_iterator i) const         { return _index == i._index; }
@@ -82,15 +85,15 @@ public:
         const_iterator operator++(int) { auto copy = *this; ++*this; return copy; }
     };
 
-    iterator begin() noexcept { test(); return iterator(this->_data, 0); };
-    iterator end()   noexcept { test(); return iterator(nullptr, _size);  };
+    iterator begin() noexcept { rep(); return iterator(this->_data, 0); };
+    iterator end()   noexcept { rep(); return iterator(nullptr, _size);  };
 
-    auto constBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
-    auto constEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
-    auto cBegin() const noexcept { test(); return const_iterator(this->_data, 0); }
-    auto cEnd()   const noexcept { test(); return const_iterator(nullptr, _size); }
-    auto begin() const noexcept { test(); return const_iterator(this->_data, 0); }
-    auto end()   const noexcept { test(); return const_iterator(nullptr, _size); }
+    auto constBegin() const noexcept { rep(); return const_iterator(this->_data, 0); }
+    auto constEnd()   const noexcept { rep(); return const_iterator(nullptr, _size); }
+    auto cBegin() const noexcept { rep(); return const_iterator(this->_data, 0); }
+    auto cEnd()   const noexcept { rep(); return const_iterator(nullptr, _size); }
+    auto begin() const noexcept { rep(); return const_iterator(this->_data, 0); }
+    auto end()   const noexcept { rep(); return const_iterator(nullptr, _size); }
 
     friend class iterator;
     friend class const_iterator;
@@ -119,7 +122,7 @@ inline std::string WByteArray::toStdString() const
     return {_data, _size};
 }
 
-inline void WByteArray::append(const char *data, unsigned int size)
+inline void WByteArray::append(const char *data, Size size)
 {
     W_ASSERT(size >= 0);
     W_ASSERT(data);
@@ -139,7 +142,7 @@ inline void WByteArray::append(const char *data, unsigned int size)
     _size += size;
 }
 
-inline char WByteArray::at(int i) const
+inline char WByteArray::at(Size i) const
 {
     return _data[i];
 }
@@ -151,12 +154,12 @@ void WByteArray::clear() noexcept
     _size = 0;
 }
 
-inline bool WByteArray::isEmpty() const
+inline bool WByteArray::isEmpty() const noexcept
 {
     return this->_size == 0;
 }
 
-inline WByteArray WByteArray::mid(int from, int to) const
+inline WByteArray WByteArray::mid(Size from, Size to) const
 {
     W_ASSERT(from >= 0 && to <= _size);
     W_ASSERT(from <= to);
@@ -193,21 +196,21 @@ inline WByteArray &WByteArray::operator+=(const WByteArray &other)
     return *this;
 }
 
-inline WByteArray WByteArray::fromRawData(const char *data, int size)
+inline WByteArray WByteArray::fromRawData(const char *data, Size size)
 {
     WByteArray res;
     res.append(data, size);
     return res;
 }
 
-inline void WByteArray::reserve(unsigned int numberOfChar)
+inline void WByteArray::reserve(Size numberOfChar)
 {
     W_ASSERT(numberOfChar > 0);
     this->_data = (char *) realloc(_data, _size + _reserved + numberOfChar);
     _reserved += numberOfChar;
 }
 
-inline void WByteArray::test() const
+inline void WByteArray::rep() const
 {
 
 }
@@ -262,7 +265,7 @@ inline WByteArray::WByteArray(const WByteArray &other) noexcept
     this->append(other.constData(), other.size());
 }
 
-inline auto WByteArray::capacity() const -> int
+inline auto WByteArray::capacity() const -> unsigned long
 {
     return this->_reserved;
 }

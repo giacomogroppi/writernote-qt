@@ -30,8 +30,8 @@ void FileWriter::destroy() noexcept
 }
 
 FileWriter::FileWriter(FileWriter &&other) noexcept
-    : _name(std::move(other._name))
-    , _data(std::move(other._data))
+    : _data(std::move(other._data))
+    , _name(std::move(other._name))
 {
 }
 

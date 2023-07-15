@@ -6,20 +6,6 @@
 #include "Writable.h"
 #include "Readable.h"
 
-// SFINAE test
-template <typename T>
-class HasReadFunction
-{
-private:
-    typedef char YesType[1];
-    typedef char NoType[2];
-
-    template <typename C> static YesType& test( decltype(&C::load) ) ;
-    template <typename C> static NoType& test(...);
-public:
-    enum { value = sizeof(test<T>(0)) == sizeof(YesType) };
-};
-
 class VersionFileController {
 private:
 #   define DEFINE_VERSION(name, version)                                        \

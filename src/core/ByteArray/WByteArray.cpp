@@ -9,9 +9,9 @@ WByteArray::WByteArray()
 {
 }
 
-WByteArray::WByteArray(const char *data, int size)
+WByteArray::WByteArray(const char *data, Size size)
 {
-    if (size == -1)
+    if (size == 0)
         size = strlen(data);
 
     _data = (char *) malloc (size);
@@ -28,3 +28,47 @@ WByteArray::~WByteArray()
 }
 #endif
 
+auto WByteArray::load(
+        const VersionFileController &versionController,
+        ReadableAbstract &readable) -> std::pair<int, WByteArray>
+{
+    WByteArray result;
+    if (versionController.getVersionWByteArray() != 0)
+        return {-1, result};
+
+    unsigned long size;
+    if (readable.read(&size, sizeof(size)) < 0)
+        return {-1, result};
+
+    char d[size];
+    if (readable.read(d, size) < 0)
+        return {-1, result};
+
+    result = WByteArray(d, size);
+
+    return {0, result};
+}
+
+auto WByteArray::write(WritableAbstract &writable, const WByteArray &object) -> int
+{
+    unsigned long size = object.size();
+
+    if (writable.write(&size, sizeof(size_t)) < 0)
+        return -1;
+
+    if (writable.write(object.constData(), size) < 0)
+        return -1;
+    return 0;
+}
+
+auto WByteArray::loadPtr(
+        const VersionFileController &versionFile,
+        ReadableAbstract &readableAbstract
+) -> std::pair<int, WByteArray *>
+{
+    auto [res, data] = WByteArray::load (versionFile, readableAbstract);
+    if (res)
+        return {-1, nullptr};
+
+    return {-1, new WByteArray (std::move (data))};
+}
