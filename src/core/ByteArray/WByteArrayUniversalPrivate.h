@@ -47,7 +47,7 @@ public:
 
     static WByteArray fromRawData(const char *data, Size size);
 
-    auto capacity() const -> unsigned long;
+    auto capacity() const -> Size;
 
     static auto load  (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
     static auto write (WritableAbstract &writable, const WByteArray &data) -> int;
@@ -100,6 +100,8 @@ public:
 
     auto operator=(WByteArray &&other) noexcept -> WByteArray &;
     auto operator=(const WByteArray &other) noexcept -> WByteArray &;
+
+    void remove(int i) noexcept;
 };
 
 inline const char *WByteArray::constData() const
@@ -265,7 +267,7 @@ inline WByteArray::WByteArray(const WByteArray &other) noexcept
     this->append(other.constData(), other.size());
 }
 
-inline auto WByteArray::capacity() const -> unsigned long
+inline auto WByteArray::capacity() const -> Size
 {
     return this->_reserved;
 }

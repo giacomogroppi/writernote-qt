@@ -14,7 +14,7 @@ private:
     void test() const {};
 public:
     WString() = default;
-    WString (const char *);
+    WString (const char *string);
     WString(const WByteArray &str);
     WString (const WString &other);
     WString(const std::string &other);
@@ -24,11 +24,13 @@ public:
     WString toUpper() const;
     WString lower() const;
 
+    [[nodiscard]]
     int size() const;
-    int legth() const;
 
+    [[nodiscard]]
     const WByteArray &toUtf8() const;
 
+    [[nodiscard]]
     WListFast<WString> split(char character) const;
 
     char at(int index) const;
@@ -253,6 +255,48 @@ inline bool operator<(const WString &first, const WString &second)
 inline void WString::append(const char *data, int size)
 {
     this->_data.append(data, size);
+}
+
+inline WString::WString(const char *string)
+    : _data(string)
+{
+
+}
+
+inline WString::WString(const WString &other)
+    : _data(other._data)
+{
+
+}
+
+WString::WString(const std::string &other)
+    : _data(other.c_str(), other.size())
+{
+
+}
+
+inline WString WString::toUpper() const
+{
+    WString result(*this);
+    for (auto &c: result)
+        if (c >= 'a' and c <= 'z')
+            c += 'A' - 'a';
+    return result;
+}
+
+inline void WString::insert(const WByteArray &other, int index)
+{
+    _data.insert(other, index);
+}
+
+inline void WString::reserve(int numberOfChar)
+{
+    _data.reserve(numberOfChar);
+}
+
+inline void WString::remove(int index)
+{
+    _data.remove(index);
 }
 
 inline WString operator+(const char *s1, const WString &s2)

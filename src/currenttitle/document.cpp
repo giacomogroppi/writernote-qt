@@ -53,9 +53,9 @@ void Document::copy(const Document &src, Document &dest)
 size_t Document::createSingleControll() const
 {
     size_t ctrl = 0;
-    uint counterPage, counterStroke;
-    const uint lenPage = lengthPage();
-    uint lenStroke;
+    int counterPage, counterStroke;
+    const auto lenPage = lengthPage();
+    int lenStroke;
 
     for(counterPage = 0; counterPage < lenPage; counterPage++){
         const Page &page = at(counterPage);
