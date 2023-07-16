@@ -30,6 +30,7 @@ public:
     const char *constData() const;
     size_t size() const;
     void append(char data);
+    void append(const WByteArray &other);
     void append(const char *data, Size size);
     char at(Size i) const;
     void clear() noexcept;
@@ -274,4 +275,9 @@ inline WByteArray::WByteArray(const WByteArray &other) noexcept
 inline auto WByteArray::capacity() const -> Size
 {
     return this->_reserved;
+}
+
+inline void WByteArray::append(const WByteArray &other)
+{
+    this->append(other.constData(), other.size());
 }

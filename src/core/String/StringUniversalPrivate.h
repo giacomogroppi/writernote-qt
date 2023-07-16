@@ -16,10 +16,9 @@ public:
     WString() = default;
     WString (const char *string);
     WString(const WByteArray &str);
+    WString(WString &&other) noexcept = default;
     WString (const WString &other);
     WString(const std::string &other);
-
-    WString (WString &&other) noexcept;
 
     WString toUpper() const;
     WString lower() const;
@@ -79,7 +78,7 @@ public:
 
     friend bool operator<(const WString &first, const WString &second);
 
-    void append(const char *data, int size);
+    WString& append(const char *data, int size);
 };
 
 inline int WString::size() const
@@ -252,7 +251,7 @@ inline bool operator<(const WString &first, const WString &second)
     return false;
 }
 
-inline void WString::append(const char *data, int size)
+inline WString& WString::append(const char *data, int size)
 {
     this->_data.append(data, size);
 }
@@ -297,6 +296,40 @@ inline void WString::reserve(int numberOfChar)
 inline void WString::remove(int index)
 {
     _data.remove(index);
+}
+
+inline WString &WString::operator=(const WString &other)
+{
+    if (this == &other)
+        return *this;
+    this->_data = other._data;
+    return *this;
+}
+
+inline bool WString::operator==(const WString &other) const
+{
+    return this->_data == other._data;
+}
+
+inline WString WString::operator+(const WString &other)
+{
+    WString result;
+    result.reserve(this->size() + other.size());
+    result
+        .append(_data.constData(), _data.size())
+        .append(other._data.constData(), _data.size());
+}
+
+inline WString &WString::operator+=(const WString &other)
+{
+    _data.append(other._data);
+    return *this;
+}
+
+inline WString &WString::operator+=(char c)
+{
+    _data.append(c);
+    return *this;
 }
 
 inline WString operator+(const char *s1, const WString &s2)
