@@ -8,36 +8,33 @@
 template <class K, class T>
 class WPair
 {
-private:
-    K _key;
-    T _value;
 public:
     explicit WPair() = default;
     explicit WPair(const K &key, const T &value);
 
-    explicit WPair(K &&key, T &&value) noexcept;
-    explicit WPair(const K& key, T &&value) noexcept;
-    explicit WPair(K &&key, const T &value) noexcept;
+    WPair(K &&key, T &&value) noexcept;
+    WPair(const K& key, T &&value) noexcept;
+    WPair(K &&key, const T &value) noexcept;
 
     WPair(const WPair<K, T> &other) noexcept;
     WPair(WPair<K, T> &&other) noexcept;
 
     ~WPair() = default;
 
-    auto getKey() const -> const K& { return this->_key; };
-    auto getKey() -> K& { return this->_key; };
+    auto getKey() const -> const K& { return this->first; };
+    auto getKey() -> K& { return this->first; };
 
-    auto getValue() const -> const T& { return this->_value; };
-    auto getValue () -> T& { return this->_value; };
+    auto getValue() const -> const T& { return this->second; };
+    auto getValue () -> T& { return this->second; };
 
-    void setKey(const K &key) { this->_key = key; };
-    void setValue(const T &value) { this->_value = value; };
+    void setKey(const K &key) { this->first = key; };
+    void setValue(const T &value) { this->second = value; };
 
     /**
      * \return value &lt 0 iff it fail
      * */
     template <class K2 = K, class T2 = T>
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WPair<K2, T2>>
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPair<K2, T2>>
     {
         WPair<K2, T2> result;
 
@@ -48,14 +45,14 @@ public:
             auto [k, data] = K2::load (versionController, readable);
             if (k < 0)
                 return {-1, result};
-            result._key = std::move (data);
+            result.first = std::move (data);
         }
 
         {
             auto [k, data] = T2::load(versionController, readable);
             if (k < 0)
                 return {-1, result};
-            result._value = std::move (data);
+            result.second = std::move (data);
         }
 
         return {0, result};
@@ -64,76 +61,79 @@ public:
     template <class K2, class T2>
     static auto write (WritableAbstract &writable, const WPair<K2, T2> &object)
     {
-        if (K2::write(writable, object._key) < 0)
+        if (K2::write(writable, object.first) < 0)
             return -1;
-        if (T2::write(writable, object._value) < 0)
+        if (T2::write(writable, object.second) < 0)
             return -1;
         return 0;
     }
 
     auto operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> &;
-    auto operator=(const WPair<K, T> &other) noexcept -> WPair<K, T> &;
+    template <class K2 = K, class T2 = T>
+    auto operator=(const WPair<K2, T2> &other) noexcept -> WPair<K, T> &;
 
     auto operator==(const WPair<K, T> &other) const -> bool
     {
         if (this == &other)
             return true;
-        return this->_key == other._key &&
-               this->_value == other._value;
+        return this->first == other.first &&
+               this->second == other.second;
     }
 
     static constexpr int currentVersion = 0;
+    K first;
+    T second;
 };
 
 template<class K, class T>
 inline auto WPair<K, T>::operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> &
 {
-    _value = std::move (other._value);
-    _key = std::move(other._key);
+    second = std::move (other.second);
+    first = std::move(other.first);
     return *this;
 }
 
 template<class K, class T>
 WPair<K, T>::WPair(WPair<K, T> &&other) noexcept
-    : _key (std::move (other._key))
-    , _value (std::move(other._value))
+    : first (std::move (other.first))
+    , second (std::move(other.second))
 {
 
 }
 
 template<class K, class T>
 inline WPair<K, T>::WPair(const WPair<K, T> &other) noexcept
-    : _key(other._key)
-    , _value(other._value)
+    : first(other.first)
+    , second(other.second)
 {
 
 }
 
 template<class K, class T>
 inline WPair<K, T>::WPair(K &&key, const T &value) noexcept
-    : _key(std::move(key))
-    , _value(value)
+    : first(std::move(key))
+    , second(value)
 {
 
 }
 
 template<class K, class T>
 inline WPair<K, T>::WPair(const K &key, T &&value) noexcept
-    : _key(key)
-    , _value(std::move(value))
+    : first(key)
+    , second(std::move(value))
 {
 }
 
 template<class K, class T>
 inline WPair<K, T>::WPair(K &&key, T &&value) noexcept
-    : _key (std::move(key))
-    , _value(std::move(value))
+    : first (std::move(key))
+    , second(std::move(value))
 {
 }
 
 template<class K, class T>
 inline WPair<K, T>::WPair(const K &key, const T &value)
-    : _key(key)
-    , _value(value)
+    : first(key)
+    , second(value)
 {
 }

@@ -122,7 +122,7 @@ struct WColor{
     static WColor fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WColor>;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WColor>;
 
     static
     auto write (WritableAbstract &writable, const WColor &color) -> int;
@@ -265,7 +265,7 @@ inline WColor::WColor(WColor &&other) noexcept
 }
 
 inline auto
-WColor::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WColor>
+WColor::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WColor>
 {
     WColor result{};
     if (versionController.getVersionWColor() != 0)

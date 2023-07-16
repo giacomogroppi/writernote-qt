@@ -191,7 +191,7 @@ auto StrokeForPage::operator==(const StrokeForPage &other) const noexcept -> boo
 }
 
 auto StrokeForPage::load(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> std::pair<int, StrokeForPage>
+                         ReadableAbstract &readable) -> WPair<int, StrokeForPage>
 {
     StrokeForPage result;
 

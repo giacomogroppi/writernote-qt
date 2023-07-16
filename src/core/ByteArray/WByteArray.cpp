@@ -1,5 +1,6 @@
 #include "WByteArray.h"
 #include "utils/WCommonScript.h"
+#include "core/WPair.h"
 
 #ifndef USE_QT
 WByteArray::WByteArray()
@@ -30,7 +31,7 @@ WByteArray::~WByteArray()
 
 auto WByteArray::load(
         const VersionFileController &versionController,
-        ReadableAbstract &readable) -> std::pair<int, WByteArray>
+        ReadableAbstract &readable) -> WPair<int, WByteArray>
 {
     WByteArray result;
     if (versionController.getVersionWByteArray() != 0)
@@ -64,7 +65,7 @@ auto WByteArray::write(WritableAbstract &writable, const WByteArray &object) -> 
 auto WByteArray::loadPtr(
         const VersionFileController &versionFile,
         ReadableAbstract &readableAbstract
-) -> std::pair<int, WByteArray *>
+) -> WPair<int, WByteArray *>
 {
     auto [res, data] = WByteArray::load (versionFile, readableAbstract);
     if (res < 0)

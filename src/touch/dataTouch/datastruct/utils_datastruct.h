@@ -61,7 +61,7 @@ public:
     auto operator ()() const -> double { return static_cast<double>(_d); }
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, pressure_t>;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, pressure_t>;
 
     // TODO: rename this method in write
     static
@@ -72,7 +72,7 @@ public:
 };
 
 inline auto pressure_t::load(const VersionFileController &versionController,
-                      ReadableAbstract &readable) -> std::pair<int, pressure_t>
+                      ReadableAbstract &readable) -> WPair<int, pressure_t>
 {
     if (versionController.getVersionPressure() != 0)
         return {-1, 0.};

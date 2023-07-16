@@ -240,7 +240,7 @@ ImageContainerDrawable::ImageContainerDrawable(ImageContainerDrawable &&other) n
 }
 
 auto ImageContainerDrawable::load(const VersionFileController &versionController,
-                                  ReadableAbstract &readable) -> std::pair<int, ImageContainerDrawable>
+                                  ReadableAbstract &readable) -> WPair<int, ImageContainerDrawable>
 {
     ImageContainerDrawable result;
 

@@ -8,23 +8,23 @@
 template <typename T>
 class AtomicSafe {
 private:
-    T _value;
+    T second;
     mutable WMutex _locker;
 public:
     static_assert(!std::is_pointer<T>::value, "template type must not be a pointer type");
 
-    explicit AtomicSafe(const T value) : _value(value), _locker() {}
+    explicit AtomicSafe(const T value) : second(value), _locker() {}
     ~AtomicSafe() = default;
 
     T value() const {
         WMutexLocker _(this->_locker);
-        return this->_value;
+        return this->second;
     }
 
     bool operator==(const AtomicSafe &value) const {
         const T val = value.value();
         WMutexLocker _(this->_locker);
-        return this->_value == val;
+        return this->second == val;
     }
 
     bool operator!=(const AtomicSafe &value) const {
@@ -33,7 +33,7 @@ public:
 
     AtomicSafe& operator=(const T &value) {
         WMutexLocker _(this->_locker);
-        this->_value = value;
+        this->second = value;
         return *this;
     }
 
@@ -41,28 +41,28 @@ public:
         const T val = value.get();
 
         WMutexLocker _(this->_locker);
-        this->_value = value._value;
+        this->second = value.second;
         return *this;
     }
 
     const T& operator*() {
         WMutexLocker _(this->_locker);
-        return this->_value;
+        return this->second;
     }
 
     T operator++() {
         WMutexLocker _(this->_locker);
-        return ++this->_value;
+        return ++this->second;
     }
 
     T operator--() {
         WMutexLocker _(this->_locker);
-        return --this->_value;
+        return --this->second;
     }
 
     T operator*() const {
         WMutexLocker _(this->_locker);
-        return this->_value;
+        return this->second;
     }
 
     T operator() (AtomicSafe<T> &value) const {
@@ -72,17 +72,17 @@ public:
 
     T operator-=(const T &value) {
         WMutexLocker _(this->_locker);
-        return this->_value -= value;
+        return this->second -= value;
     }
 
     T operator+=(const T &value) {
         WMutexLocker _(this->_locker);
-        return this->_value += value;
+        return this->second += value;
     }
 
     bool operator==(const T val) const {
         WMutexLocker _(this->_locker);
-        return this->_value == val;
+        return this->second == val;
     }
 
     bool operator!=(const T val) const {

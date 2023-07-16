@@ -3,6 +3,7 @@
 #include <iostream>
 #include "utils/WCommonScript.h"
 #include "VersionFileController.h"
+#include "core/WPair.h"
 
 #ifdef USE_QT
 # error "Trying using WByteArrayUniversal with Qt"
@@ -52,10 +53,10 @@ public:
     /**
      * \return &lt 0 iff an error occurs
      * */
-    static auto load  (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
+    static auto load  (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WByteArray>;
     static auto write (WritableAbstract &writable, const WByteArray &data) -> int;
 
-    static auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> std::pair<int, WByteArray*>;
+    static auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> WPair<int, WByteArray*>;
 
     class iterator{
     private:

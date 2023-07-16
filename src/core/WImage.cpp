@@ -61,7 +61,7 @@ WImage::WImage(int page, bool consideringResolution) :
 }
 
 auto
-WImage::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WImage>
+WImage::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>
 {
     WImage result;
 

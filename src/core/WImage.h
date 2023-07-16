@@ -56,7 +56,7 @@ public:
 
     bool isNull() const;
 
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WImage>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>;
     static auto write (WritableAbstract &writable, const WImage &source) -> int;
 
     bool operator==(const WImage &other) const;

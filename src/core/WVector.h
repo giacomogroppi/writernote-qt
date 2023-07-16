@@ -9,6 +9,8 @@
 #include "VersionFileController.h"
 #include "FileContainer/MemWritable.h"
 #include "Scheduler/WTask.h"
+#include "core/WPair.h"
+
 
 /*
 
@@ -125,7 +127,7 @@ public:
      * */
     template <class Readable>
     requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &file) -> std::pair<int, WVector<T>>;
+    static auto load (const VersionFileController &versionController, Readable &file) -> WPair<int, WVector<T>>;
 
     /**
      * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case
@@ -520,9 +522,10 @@ template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable
 inline auto WVector<T>::load(
         const VersionFileController &versionController,
         Readable &file
-) -> std::pair<int, WVector<T>>
+) -> WPair<int, WVector<T>>
 {
-    std::pair<int, WVector<T>> result(-1, WVector<T>());
+    // TODO: adjust
+    WPair<int, WVector<T>> result(-1, WVector<T>());
 
     switch (versionController.getVersionWListFast()) {
         case 0:

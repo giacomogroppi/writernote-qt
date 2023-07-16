@@ -9,6 +9,7 @@
 #include <cmath>
 #include "VersionFileController.h"
 #include "utils/WCommonScript.h"
+#include "core/WPair.h"
 
 
 template <typename T>
@@ -46,7 +47,7 @@ public:
     auto rotate (const PointTemplate<T> &cir, T angle) const -> PointTemplate<T>;
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, PointTemplate<T>>;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, PointTemplate<T>>;
 
     static
     auto write (WritableAbstract &writable, const PointTemplate<T> &src) -> int;
@@ -85,7 +86,7 @@ template<typename T>
 inline auto PointTemplate<T>::load(
             const VersionFileController &versionController,
             ReadableAbstract &readable
-        ) -> std::pair<int, PointTemplate<T>>
+        ) -> WPair<int, PointTemplate<T>>
 {
     PointTemplate<T> result;
 

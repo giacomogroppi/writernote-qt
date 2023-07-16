@@ -295,7 +295,7 @@ size_t StrokeCircle::createControll() const
 }
 
 auto StrokeCircle::loadPtr(const VersionFileController &versionController,
-                           ReadableAbstract &readable) -> std::pair<int, StrokeCircle *>
+                           ReadableAbstract &readable) -> WPair<int, StrokeCircle *>
 {
     if (versionController.getVersionStrokeCircle() != 0)
         return {-1, nullptr};

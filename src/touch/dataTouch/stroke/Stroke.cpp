@@ -28,9 +28,9 @@ std::shared_ptr<Stroke> Stroke::load_ver_1(WZipReaderSingle &reader, int *ok)
 }
 
 auto Stroke::loadPtr(const VersionFileController &versionController,
-                     ReadableAbstract &readable) -> std::pair<int, Stroke *>
+                     ReadableAbstract &readable) -> WPair<int, Stroke *>
 {
-    std::pair<int, Stroke*> r {-1, nullptr};
+    WPair<int, Stroke*> r {-1, nullptr};
     int type;
 
     if (readable.read (&type, sizeof (type))) {

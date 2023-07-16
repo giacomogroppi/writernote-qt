@@ -12,6 +12,8 @@
 #include "Scheduler/WTask.h"
 #include "FileContainer/MemWritable.h"
 #include "FileContainer/MemReadable.h"
+#include "core/WPair.h"
+
 
 // TODO: do some refactoring
 // this list if O(1) in index access
@@ -120,7 +122,7 @@ public:
      * You can use this method only if <T> has the method load
      * \return < 0 if error
      * */
-    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> std::pair<int, WListFast<T>>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> WPair<int, WListFast<T>>;
 
 
     class iterator
@@ -208,16 +210,16 @@ public:
                             const std::function<WTask *(
                                     std::function<void()>
                             )> &startNewThread
-                        ) noexcept -> std::pair<int, WListFast<T2>>;
+                        ) noexcept -> WPair<int, WListFast<T2>>;
 
     static auto load  (
                 const VersionFileController &versionController,
                 ReadableAbstract &readable,
-                std::function<std::pair<int, T>(
+                std::function<WPair<int, T>(
                             const VersionFileController &versionController,
                             ReadableAbstract &readable
                         )> func
-            ) -> std::pair<int, WListFast<T>>;
+            ) -> WPair<int, WListFast<T>>;
 
     static auto write (
                 WritableAbstract &writable,
@@ -243,12 +245,12 @@ inline auto WListFast<T>::load(
         const VersionFileController &versionController,
         ReadableAbstract &readable,
         std::function<
-                std::pair<int, T>(
+                WPair<int, T>(
                     const VersionFileController &versionController,
                     ReadableAbstract &readable)
-                > func) -> std::pair<int, WListFast<T>>
+                > func) -> WPair<int, WListFast<T>>
 {
-    std::pair<int, WListFast<T>> result (-1, WListFast<T>());
+    WPair<int, WListFast<T>> result (-1, WListFast<T>());
 
     switch (versionController.getVersionWListFast()) {
         case 0:
@@ -392,7 +394,7 @@ inline auto WListFast<T>::loadMultiThread(
             const std::function<WTask *(
                     std::function<void()>
             )> &startNewThread
-        ) noexcept -> std::pair<int, WListFast<T2>>
+        ) noexcept -> WPair<int, WListFast<T2>>
 {
     if (versionController.getVersionWListFast() != 0)
         return {-1, {}};
@@ -408,7 +410,7 @@ inline auto WListFast<T>::loadMultiThread(
         auto [tmp, seekLoad] = WListFast<size_t>::load(
                 versionController,
                 readable,
-                [](const VersionFileController &, ReadableAbstract &readable) -> std::pair<int, size_t> {
+                [](const VersionFileController &, ReadableAbstract &readable) -> WPair<int, size_t> {
                     size_t t;
                     if (readable.read(&t, sizeof(t)))
                         return {-1, 0};
@@ -594,12 +596,12 @@ template <class T>
 inline auto WListFast<T>::load(
                 const VersionFileController &versionController,
                 ReadableAbstract &file
-            ) -> std::pair<int, WListFast<T>>
+            ) -> WPair<int, WListFast<T>>
 {
     return WListFast<T>::load(
             versionController,
             file,
-            [](const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, T> {
+            [](const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, T> {
                 return T::load(versionController, readable);
             }
     );

@@ -171,7 +171,7 @@ public:
     void setCount(int count);
 
     static auto write (WritableAbstract &writable, const Page &page, bool saveImage = true) -> int;
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Page>;
 
     //static void copy(const Page &src, Page &dest);
     constexpr static double getProportion();
@@ -567,7 +567,7 @@ inline auto Page::operator=(Page &&other) noexcept -> Page &
     return *this;
 }
 
-inline auto Page::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Page>
+inline auto Page::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Page>
 {
     Page result;
 

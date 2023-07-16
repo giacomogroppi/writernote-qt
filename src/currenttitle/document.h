@@ -29,7 +29,7 @@ public:
     [[nodiscard]]
     auto isEmpty() const -> bool;
 
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Document>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Document>;
 
     template <class Writable>
             requires (std::is_base_of_v<WritableAbstract, Writable>)

@@ -286,7 +286,7 @@ size_t StrokeLine::getSizeInFile() const
 }
 
 auto StrokeLine::loadPtr(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> std::pair<int, StrokeLine *>
+                         ReadableAbstract &readable) -> WPair<int, StrokeLine *>
 {
     std::unique_ptr<StrokeLine> d(new StrokeLine);
     if (versionController.getVersionStrokeLine() != 0)

@@ -220,7 +220,7 @@ void StrokeRect::decreasePrecision()
 }
 
 auto StrokeRect::loadPtr(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> std::pair<int, StrokeRect *>
+                         ReadableAbstract &readable) -> WPair<int, StrokeRect *>
 {
     std::unique_ptr<StrokeRect> d(new StrokeRect);
     if (versionController.getVersionStrokeRect() != 0)

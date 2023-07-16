@@ -41,7 +41,7 @@ public:
     bool operator==(const WPixmap &other) const;
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WPixmap>;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPixmap>;
     static auto write(WritableAbstract &writable, const WPixmap &pixmap) -> int;
 
     WPixmap &operator=(const WPixmap &other) noexcept;

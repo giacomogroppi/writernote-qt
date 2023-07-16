@@ -176,7 +176,7 @@ protected:
     void setPageVisible(int page);
 
     // load
-    static auto load (const VersionFileController &versionControl, ReadableAbstract &readable) -> std::pair<int, DataStruct>;
+    static auto load (const VersionFileController &versionControl, ReadableAbstract &readable) -> WPair<int, DataStruct>;
 
     // write
     static auto write (WritableAbstract &readable, const DataStruct &source) -> int;
@@ -602,7 +602,7 @@ inline void DataStruct::decreaseAlfa(const WVector<int> &pos, int index)
 inline auto DataStruct::load(
             const VersionFileController &versionControl,
             ReadableAbstract &readable
-        ) -> std::pair<int, DataStruct> {
+        ) -> WPair<int, DataStruct> {
     DataStruct result;
 
     if (versionControl.getVersionDataStruct() != 0)

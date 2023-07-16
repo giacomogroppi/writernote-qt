@@ -23,7 +23,7 @@ public:
 
     SharedPtr(std::unique_ptr<T> && object) noexcept;
 
-    static auto load (const VersionFileController &version, ReadableAbstract &readable) -> std::pair<int, SharedPtr<T>>
+    static auto load (const VersionFileController &version, ReadableAbstract &readable) -> WPair<int, SharedPtr<T>>
     {
         SharedPtr<T> result;
         bool is_value_present;

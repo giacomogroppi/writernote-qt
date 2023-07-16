@@ -79,7 +79,7 @@ public:
 
     static
     auto load(const VersionFileController &versionController, ReadableAbstract &reader)
-        noexcept -> std::pair<int, RectTemplate<T>>
+        noexcept -> WPair<int, RectTemplate<T>>
     {
         RectTemplate<T> d;
         if (versionController.getVersionRectTemplate() != 0)

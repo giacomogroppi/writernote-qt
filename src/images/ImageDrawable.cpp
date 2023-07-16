@@ -1,7 +1,7 @@
 #include "ImageDrawable.h"
 
 auto ImageDrawable::load(const VersionFileController &versionController,
-                         ReadableAbstract &readable) -> std::pair<int, ImageDrawable>
+                         ReadableAbstract &readable) -> WPair<int, ImageDrawable>
 {
     ImageDrawable result;
 

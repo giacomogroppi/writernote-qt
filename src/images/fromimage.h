@@ -73,7 +73,7 @@ protected:
     /**
      * \return &lt 0 in case of error
      * */
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, ImageContainerDrawable>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, ImageContainerDrawable>;
 
     /**
      * \resurn &lt 0 in case of error

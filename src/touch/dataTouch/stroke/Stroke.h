@@ -41,7 +41,7 @@ struct metadata_stroke{
 
     static
     auto load (const VersionFileController &versionController, ReadableAbstract &reader)
-        -> std::pair<int, metadata_stroke>
+        -> WPair<int, metadata_stroke>
     {
         metadata_stroke result;
 
@@ -169,7 +169,7 @@ public:
 #endif // DEBUGINFO
 
     // new way
-    static auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Stroke*>;
+    static auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Stroke*>;
     static auto write (WritableAbstract &writable, const Stroke &stroke) -> int;
 
     /** all stroke derivated class needs to implements this method to recognize yourself */

@@ -112,7 +112,7 @@ public:
      * it don't load/call method to load internal data of Stroke
      */
     static
-    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeNormal*>;
+    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, StrokeNormal*>;
 
 protected:
     int length () const { return _point.size(); }

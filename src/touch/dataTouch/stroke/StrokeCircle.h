@@ -66,7 +66,7 @@ public:
     int type() const final;
 
     static
-    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeCircle*>;
+    auto loadPtr (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, StrokeCircle*>;
 
     friend class StrokeCircleGenerator;
     friend class Stroke;

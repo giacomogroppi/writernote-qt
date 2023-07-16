@@ -218,9 +218,9 @@ auto Document::recordStatus() const -> Document::AudioRecordStatus
     return this->_audioRecordStatus;
 }
 
-auto Document::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, Document>
+auto Document::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, Document>
 {
-    std::pair<int, Document> result (-1, Document());
+    WPair<int, Document> result (-1, Document());
 
     {
         auto [res, data] = DataStruct::load (versionController, readable);

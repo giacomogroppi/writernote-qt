@@ -7,6 +7,7 @@
 
 #include "VersionFileController.h"
 #include "Writable.h"
+#include "core/WPair.h"
 #include <QByteArray>
 
 class WByteArray: public QByteArray
@@ -26,10 +27,10 @@ public:
     auto write (WritableAbstract &writable, const WByteArray &object) -> int;
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WByteArray>;
 
     static
-    auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> std::pair<int, WByteArray*>;
+    auto loadPtr (const VersionFileController &versionFile, ReadableAbstract &readableAbstract) -> WPair<int, WByteArray*>;
 
     auto operator=(WByteArray &&other) noexcept -> WByteArray & = default;
     auto operator=(const WByteArray &other) noexcept -> WByteArray & = default;
@@ -89,7 +90,7 @@ inline auto WByteArray::operator=(const QByteArray &other) noexcept -> WByteArra
 
 inline auto WByteArray::load(
         const VersionFileController &versionController,
-        ReadableAbstract &readable) -> std::pair<int, WByteArray>
+        ReadableAbstract &readable) -> WPair<int, WByteArray>
 {
     WByteArray result;
     if (versionController.getVersionWByteArray() != 0)
@@ -123,7 +124,7 @@ inline auto WByteArray::write(WritableAbstract &writable, const WByteArray &obje
 inline auto WByteArray::loadPtr(
         const VersionFileController &versionFile,
         ReadableAbstract &readableAbstract
-    ) -> std::pair<int, WByteArray *>
+    ) -> WPair<int, WByteArray *>
 {
     auto [res, data] = WByteArray::load (versionFile, readableAbstract);
     if (res)

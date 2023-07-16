@@ -23,7 +23,7 @@ public:
 
 protected:
     template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &readable) -> std::pair<int, PdfContainerDrawable>
+    static auto load (const VersionFileController &versionController, Readable &readable) -> WPair<int, PdfContainerDrawable>
     {
         // TODO: implement
         return {0, PdfContainerDrawable()};

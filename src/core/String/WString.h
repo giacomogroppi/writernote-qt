@@ -12,7 +12,7 @@
 
 // TODO: move all this version in different header file
 
-inline auto WString::load (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WString>
+inline auto WString::load (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WString>
 {
     WString result;
 

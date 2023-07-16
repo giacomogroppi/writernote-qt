@@ -61,7 +61,7 @@ public:
     WString &operator+=(char c);
     char &operator[](int i);
 
-    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WString>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WString>;
     static auto write (WritableAbstract &writable, const WString &data) -> int;
 
     using Iterator = WByteArray::iterator;

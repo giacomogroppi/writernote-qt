@@ -125,7 +125,7 @@ WPixmap &WPixmap::operator=(WPixmap &&other) noexcept
 }
 
 auto
-WPixmap::load(const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, WPixmap>
+WPixmap::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPixmap>
 {
     if (versionController.getVersionWPixmap() != 0)
         return {-1, {}};

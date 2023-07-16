@@ -437,7 +437,7 @@ StrokeNormal::StrokeNormal(StrokeNormal &&other) noexcept
 }
 
 auto StrokeNormal::loadPtr(const VersionFileController &versionController,
-                           ReadableAbstract &readable) -> std::pair<int, StrokeNormal *>
+                           ReadableAbstract &readable) -> WPair<int, StrokeNormal *>
 {
     if (versionController.getVersionStrokeNormal() != 0)
         return {-1, nullptr};

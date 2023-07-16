@@ -33,7 +33,7 @@ public:
     void setPressure(pressure_t press);
 
     static
-    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> std::pair<int, StrokeForPage>;
+    auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, StrokeForPage>;
 
     static auto write (WritableAbstract &writable, const StrokeForPage &strokeForPage) -> int;
 

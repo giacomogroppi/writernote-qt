@@ -59,7 +59,7 @@ public:
         return result;
     }
 
-    static auto load (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WString>;
+    static auto load (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WString>;
 
     auto operator=(const WString &other) noexcept -> WString &
     {
