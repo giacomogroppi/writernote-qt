@@ -49,6 +49,9 @@ public:
 
     auto capacity() const -> Size;
 
+    /**
+     * \return &lt 0 iff an error occurs
+     * */
     static auto load  (const VersionFileController& versionController, ReadableAbstract &readable) -> std::pair<int, WByteArray>;
     static auto write (WritableAbstract &writable, const WByteArray &data) -> int;
 

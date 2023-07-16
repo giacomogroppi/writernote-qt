@@ -67,8 +67,8 @@ auto WByteArray::loadPtr(
 ) -> std::pair<int, WByteArray *>
 {
     auto [res, data] = WByteArray::load (versionFile, readableAbstract);
-    if (res)
+    if (res < 0)
         return {-1, nullptr};
 
-    return {-1, new WByteArray (std::move (data))};
+    return {res, new WByteArray (std::move (data))};
 }
