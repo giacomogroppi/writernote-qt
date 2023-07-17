@@ -25,16 +25,17 @@ public:
     WString toUpper() const;
     WString lower() const;
 
-    bool isEmpty() const;
+    [[nodiscard]]
+    auto isEmpty() const -> bool;
 
     [[nodiscard]]
-    int size() const;
+    auto size() const -> int;
 
     [[nodiscard]]
-    const WByteArray &toUtf8() const;
+    auto toUtf8() const -> const WByteArray&;
 
     [[nodiscard]]
-    WListFast<WString> split(char character) const;
+    auto split(char character) const -> WListFast<WString>;
 
     char at(int index) const;
 
@@ -49,23 +50,23 @@ public:
     void insert(const WString &other, int index);
 
     void reserve(int numberOfChar);
-    auto remove(int index) -> WString&;
+    auto remove(int index) -> void;
     auto remove(int index) const -> WString;
 
     static WString number(int number);
     static WString fromUtf8(const char *data, int size = -1);
 
-    WString arg(const WString &arg) const;
-    WString arg(int a) const;
+    auto arg(const WString &arg) const -> WString;
+    auto arg(int a) const -> WString;
 
     bool operator==(const WString &other) const;
     bool operator!=(const WString &other) const;
-    WString &operator=(const WString &other);
-    WString operator+(const WString &other);
-    WString &operator+=(const WString &other);
-    WString &operator+=(char c);
-    char &operator[](int i);
-    char operator[](int i) const;
+    auto operator=(const WString &other) -> WString &;
+    auto operator+(const WString &other) -> WString;
+    auto operator+=(const WString &other) -> WString&;
+    auto operator+=(char c) -> WString&;
+    auto operator[](int i) -> char &;
+    auto operator[](int i) const -> char;
 
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WString>;
     static auto write (WritableAbstract &writable, const WString &data) -> int;
@@ -299,10 +300,9 @@ inline void WString::reserve(int numberOfChar)
     _data.reserve(numberOfChar);
 }
 
-inline auto WString::remove(int index) -> WString&
+inline auto WString::remove(int index) -> void
 {
     _data.remove(index);
-    return *this;
 }
 
 inline auto WString::operator=(const WString &other) -> WString&
