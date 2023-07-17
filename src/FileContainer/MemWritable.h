@@ -21,7 +21,14 @@ public:
     auto getCurrentSize() const -> size_t;
 
     /**
-     * \return -1 in case of errors otherwise it return 0
+     * \return &lt 0 in case of errors otherwise it return 0
      */
-    int merge (WritableAbstract &writable);
+    auto merge (WritableAbstract &writable) -> int;
+
+    /**
+     * \param append Function for append data to a custom object.
+     *  This function has to return &lt 0 in case of error
+     * \return &lt in case "append" return an error
+     * */
+    auto merge (std::function<int(const void *d, size_t size)> append) -> int;
 };

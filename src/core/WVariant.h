@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 16/05/23.
-//
-
-#ifndef WRITERNOTE_WVARIANT_H
-#define WRITERNOTE_WVARIANT_H
+#pragma once
 
 #include "core/WListFast.h"
 #include "core/WList.h"
@@ -13,27 +8,33 @@
 
 #ifndef USE_QT
 class WVariant {
+private:
+    WByteArray _data;
 public:
-    WVariant(const WVariant &other);
-    WVariant(const WByteArray &data);
-    WVariant(int data);
+    WVariant (const WVariant &other) = default;
+    WVariant (WVariant &&other) noexcept = default;
 
-    int toInt();
-    WString toString();
-    WByteArray &toByteArray();
+    explicit WVariant (const void *raw, int size);
 
-    template <class T>
-    WListFast<T> toWListFast();
+    explicit WVariant (const WByteArray &data);
+    explicit WVariant (int data);
 
-    template <class T>
-    WList<T> toWList();
+    auto toInt() -> int;
+    auto toString() -> WString;
+    auto toByteArray() -> WByteArray;
 
     template <class T>
-    WVector<T> toWVector();
+    auto toWListFast() -> WListFast<T>;
+
+    template <class T>
+    auto toWList() -> WList<T>;
+
+    template <class T>
+    auto toWVector() -> WVector<T>;
+
+    auto operator=(const WVariant& other) noexcept -> WVariant& = default;
+    auto operator=(WVariant &&other) noexcept -> WVariant& = default;
 };
 #else
 using WVariant = QVariant;
 #endif // USE_QT
-
-
-#endif //WRITERNOTE_WVARIANT_H
