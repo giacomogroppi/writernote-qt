@@ -10,14 +10,24 @@ class WPair
 {
 public:
     explicit WPair() = default;
-    explicit WPair(const K &key, const T &value);
 
-    WPair(K &&key, T &&value) noexcept;
-    WPair(const K& key, T &&value) noexcept;
-    WPair(K &&key, const T &value) noexcept;
+    template <class K2 = K, class T2 = T>
+    explicit WPair(const K2 &key, const T2 &value);
 
-    WPair(const WPair<K, T> &other) noexcept;
-    WPair(WPair<K, T> &&other) noexcept;
+    template <class K2 = K, class T2 = T>
+    WPair(K2 &&key, T2 &&value) noexcept;
+
+    template <class K2 = K, class T2 = T>
+    WPair(const K2& key, T2 &&value) noexcept;
+
+    template <class K2 = K, class T2 = T>
+    WPair(K2 &&key, const T2 &value) noexcept;
+
+    template <class K2 = K, class T2 = T>
+    WPair(const WPair<K2, T2> &other) noexcept;
+
+    template <class K2 = K, class T2 = T>
+    WPair(WPair<K2, T2> &&other) noexcept;
 
     ~WPair() = default;
 
@@ -68,7 +78,9 @@ public:
         return 0;
     }
 
-    auto operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> &;
+    template <class K2 = K, class T2 = T>
+    auto operator=(WPair<K2, T2> &&other) noexcept -> WPair<K, T> &;
+
     template <class K2 = K, class T2 = T>
     auto operator=(const WPair<K2, T2> &other) noexcept -> WPair<K, T> &;
 
@@ -86,7 +98,17 @@ public:
 };
 
 template<class K, class T>
-inline auto WPair<K, T>::operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> &
+template<class K2, class T2>
+inline auto WPair<K, T>::operator=(const WPair<K2, T2> &other) noexcept -> WPair<K, T> &
+{
+    this->first = other.first;
+    this->second = other.second;
+    return *this;
+}
+
+template<class K, class T>
+template <class K2, class T2>
+inline auto WPair<K, T>::operator=(WPair<K2, T2> &&other) noexcept -> WPair<K, T> &
 {
     second = std::move (other.second);
     first = std::move(other.first);
@@ -94,7 +116,8 @@ inline auto WPair<K, T>::operator=(WPair<K, T> &&other) noexcept -> WPair<K, T> 
 }
 
 template<class K, class T>
-WPair<K, T>::WPair(WPair<K, T> &&other) noexcept
+template <class K2, class T2>
+WPair<K, T>::WPair(WPair<K2, T2> &&other) noexcept
     : first (std::move (other.first))
     , second (std::move(other.second))
 {
@@ -102,7 +125,8 @@ WPair<K, T>::WPair(WPair<K, T> &&other) noexcept
 }
 
 template<class K, class T>
-inline WPair<K, T>::WPair(const WPair<K, T> &other) noexcept
+template <class K2, class T2>
+inline WPair<K, T>::WPair(const WPair<K2, T2> &other) noexcept
     : first(other.first)
     , second(other.second)
 {
@@ -110,29 +134,32 @@ inline WPair<K, T>::WPair(const WPair<K, T> &other) noexcept
 }
 
 template<class K, class T>
-inline WPair<K, T>::WPair(K &&key, const T &value) noexcept
-    : first(std::move(key))
+template <class K2, class T2>
+inline WPair<K, T>::WPair(K2 &&key, const T2 &value) noexcept
+    : first(std::forward<K2>(key))
     , second(value)
 {
-
 }
 
 template<class K, class T>
-inline WPair<K, T>::WPair(const K &key, T &&value) noexcept
+template <class K2, class T2>
+inline WPair<K, T>::WPair(const K2 &key, T2 &&value) noexcept
     : first(key)
-    , second(std::move(value))
+    , second(std::forward<T2>(value))
 {
 }
 
 template<class K, class T>
-inline WPair<K, T>::WPair(K &&key, T &&value) noexcept
-    : first (std::move(key))
-    , second(std::move(value))
+template <class K2, class T2>
+inline WPair<K, T>::WPair(K2 &&key, T2 &&value) noexcept
+    : first (std::forward<K2>(key))
+    , second(std::forward<T2>(value))
 {
 }
 
 template<class K, class T>
-inline WPair<K, T>::WPair(const K &key, const T &value)
+template <class K2, class T2>
+inline WPair<K, T>::WPair(const K2 &key, const T2 &value)
     : first(key)
     , second(value)
 {

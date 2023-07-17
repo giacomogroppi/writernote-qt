@@ -492,7 +492,7 @@ inline Page &Page::operator=(const Page &other) noexcept
     }
 
     for (const auto &s : other._strokeTmp) {
-        _strokeTmp.append(std::move(s->clone()));
+        _strokeTmp.append(s->clone());
     }
 
     _stroke                    = other._stroke;

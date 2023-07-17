@@ -137,9 +137,9 @@ Document::Document(Document &&other) noexcept
 #ifdef PDFSUPPORT
     , frompdf(std::move(other))
 #endif // PDFSUPPORT
+    , _audioPositionPath(std::move(other._audioPositionPath))
     , _audioRecordStatus(other._audioRecordStatus)
     , _audioRawData(std::move(other._audioRawData))
-    , _audioPositionPath(std::move(other._audioPositionPath))
 {
 
 }
@@ -176,19 +176,6 @@ auto Document::operator=(Document &&other) noexcept -> Document &
 void Document::setAudioPath(const WString &path) noexcept
 {
     this->_audioPositionPath = path;
-}
-
-// TODO: Remove this rep method
-static void test()
-{
-    Document doc;
-    FileWriter tmp("prova");
-    const bool t = std::is_base_of_v<WritableAbstract, FileWriter>;
-    Document::write(tmp, doc);
-
-    WFile c(WByteArray("ciao"));
-
-    doc = std::move(Document::load(VersionFileController(), c).second);
 }
 
 void Document::setRecordStatus(Document::AudioRecordStatus status)

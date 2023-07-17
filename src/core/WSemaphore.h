@@ -34,7 +34,7 @@ inline WSemaphore::WSemaphore(int init_value)
 #if __cplusplus > 201703L  && USE_NEW_SEMAPHORE
     : _sem(init_value)
 #else
-    : count_(0)
+    : count_(init_value)
 #endif
 {
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "core/ByteArray/WByteArray.h"
 #include "core/WListFast.h"
 #include "core/WVector.h"
@@ -15,9 +17,9 @@ private:
 public:
     WString() = default;
     WString (const char *string);
-    WString(const WByteArray &str);
+    WString(WByteArray str);
     WString(WString &&other) noexcept = default;
-    WString (const WString &other);
+    WString (const WString &other) = default;
     WString(const std::string &other);
 
     WString toUpper() const;
@@ -42,6 +44,7 @@ public:
     WString mid(int from, int to) const;
 
     void insert(const WByteArray &other, int index);
+    void insert(const WString &other, int index);
 
     void reserve(int numberOfChar);
     void remove(int index);
@@ -254,16 +257,11 @@ inline bool operator<(const WString &first, const WString &second)
 inline WString& WString::append(const char *data, int size)
 {
     this->_data.append(data, size);
+    return *this;
 }
 
 inline WString::WString(const char *string)
     : _data(string)
-{
-
-}
-
-inline WString::WString(const WString &other)
-    : _data(other._data)
 {
 
 }
@@ -318,6 +316,7 @@ inline WString WString::operator+(const WString &other)
     result
         .append(_data.constData(), _data.size())
         .append(other._data.constData(), _data.size());
+    return result;
 }
 
 inline WString &WString::operator+=(const WString &other)
@@ -330,6 +329,38 @@ inline WString &WString::operator+=(char c)
 {
     _data.append(c);
     return *this;
+}
+
+inline WString WString::arg(int a) const
+{
+    WString result (*this);
+    WString number = WString::number(a);
+    const auto index = indexOf('%');
+
+    if (index < 0)
+        return {};
+
+    if (index + 1 == size())
+        return *this;
+
+    if (number.size())
+        result[index] = number[0];
+    if (number.size() > 1)
+        result[index + 1] = number[1];
+    result.insert(number.mid(2, number.size()), index + 2);
+
+    return result;
+}
+
+inline void WString::insert(const WString &other, int index)
+{
+    return insert(other._data, index);
+}
+
+inline WString::WString(WByteArray str)
+    : _data(std::move(str))
+{
+
 }
 
 inline WString operator+(const char *s1, const WString &s2)

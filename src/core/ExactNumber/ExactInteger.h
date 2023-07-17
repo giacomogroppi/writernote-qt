@@ -25,6 +25,7 @@ public:
     ExactInteger(Digit u = 0);
     ExactInteger(const std::string& s);
     ExactInteger(const ExactInteger& copy);
+    ExactInteger(ExactInteger &&other) noexcept = default;
 
     ExactInteger operator++ (int);
     ExactInteger& operator++ ();
@@ -68,6 +69,9 @@ public:
     Digit to_uint() const;
     std::string to_string() const;
     ExactInteger gcd(const ExactInteger& other) const;
+
+    auto operator=(const ExactInteger &other) noexcept -> ExactInteger& = default;
+    auto operator=(ExactInteger &&other) noexcept -> ExactInteger& = default;
 
 private:
     std::vector<Digit> digits;

@@ -226,6 +226,7 @@ if(DEBUG_CORE)
     SET (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-DDEBUG_CORE")
 endif()
 
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
@@ -293,7 +294,7 @@ endif() #PDFSUPPORT
 
 if(MACOS_BUILD OR APPLE)
     include_directories(/opt/homebrew/Cellar/libzip/1.9.2/include/)
-    target_link_libraries(${PROJECT_NAME} PRIVATE /opt/homebrew/Cellar/libzip/1.9.2/lib/libzip.dylib)
+    #target_link_libraries(${PROJECT_NAME} PRIVATE /opt/homebrew/Cellar/libzip/1.9.2/lib/libzip.dylib)
 elseif(WIN)
     include_directories(${PROJECT_SOURCE_DIR}/3rdparty/libzip/install/include/)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/3rdparty/libzip/install/lib/libzip.a)

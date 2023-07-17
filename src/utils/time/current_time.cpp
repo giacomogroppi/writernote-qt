@@ -10,9 +10,9 @@ WString WDate::toString() const
 }
 
 WDate::WDate(int year, int mount, int day)
-    : _year((char) year)
+    : _day((char) day)
     , _mount((char) mount)
-    , _day((char) day)
+    , _year((char) year)
 {
     W_ASSERT(year < CHAR_MAX);
     W_ASSERT(mount >= 1 and mount <= 12);
@@ -20,9 +20,9 @@ WDate::WDate(int year, int mount, int day)
 }
 
 WDate::WDate()
-    : _year(0)
+    : _day(0)
     , _mount(0)
-    , _day(0)
+    , _year(0)
 {
 
 }

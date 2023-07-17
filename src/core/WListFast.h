@@ -320,7 +320,6 @@ inline auto WListFast<T>::writeMultiThread(
         ) noexcept -> int
 {
     int i = 0;
-    int res;
     static_assert_type(list._size, int);
 
     WListFast<WTask*> threads;
