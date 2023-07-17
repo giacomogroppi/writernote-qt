@@ -4,6 +4,7 @@
 
 void copy_text(WString text)
 {
-    // TOIMPLEMENT
+    unused(text);
+    // TODO: IMPLEMENT
     W_ASSERT(0);
 }

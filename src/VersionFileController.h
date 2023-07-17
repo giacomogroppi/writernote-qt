@@ -61,8 +61,8 @@ inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair
     unsigned short *d[] = {
     };
 
-    for (int i = 0; i < sizeof (d); i++) {
-        if (readable.read (&d[i], sizeof (*d)) < 0)
+    for (auto & i : d) {
+        if (readable.read (&i, sizeof (*d)) < 0)
             return {-1, result};
     }
 

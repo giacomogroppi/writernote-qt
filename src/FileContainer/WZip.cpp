@@ -87,7 +87,7 @@ bool WZip::openFileInZip(const WByteArray &nameFile)
 
     const auto res = file.read(_data_private._data, _data_private._len_file);
 
-    if(res != static_cast<size_t>(_data_private._len_file)){
+    if(res < 0){
         _data_private._zip->close();
         WFree(_data_private._data);
         _data_private._data = nullptr;

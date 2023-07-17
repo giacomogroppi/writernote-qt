@@ -17,12 +17,8 @@ StrokeNormal::~StrokeNormal()
 
 int StrokeNormal::save(WritableAbstract &file) const
 {
-    const int len_point     = this->_point.size();
-    const int len_pressure  = this->_pressure.size();
-
     if (Stroke::save(file))
         return ERROR;
-
 
     if (WListFast<PointF>::write(file, this->_point) < 0)
         return ERROR;
