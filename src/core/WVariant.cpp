@@ -6,12 +6,14 @@ WVariant::WVariant(const void *raw, int size)
             static_cast<const char *>(raw),
             size
     )
+    , _version()
 {
 
 }
 
 WVariant::WVariant(int data)
     : _data()
+    , _version()
 {
     _data.reserve(sizeof(data));
     MemWritable m;
@@ -25,6 +27,7 @@ WVariant::WVariant(int data)
 
 WVariant::WVariant(const WByteArray &data)
     : _data()
+    , _version()
 {
     MemWritable writable;
     WByteArray::write(writable, data);
@@ -45,4 +48,22 @@ auto WVariant::toInt() -> int
         return -1;
     }
     return result;
+}
+
+auto WVariant::create(VersionFileController version, WByteArray d) -> WVariant
+{
+    WVariant result;
+
+    result._data = std::move(d);
+    result._version = std::move(version);
+
+    return result;
+}
+
+auto WVariant::toString() -> WString
+{
+    const auto [r, d] = this->loadFromClass<WString>();
+    if (r < 0)
+        return {};
+    return d;
 }

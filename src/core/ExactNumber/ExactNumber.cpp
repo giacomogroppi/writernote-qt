@@ -16,7 +16,6 @@ auto ExactNumber::operator==(const ExactNumber &other) const -> bool
 auto ExactNumber::simplify() -> bool
 {
     ExactInteger max("0");
-    bool mod = false;
 
     max = this->d.gcd(n);
 
@@ -27,11 +26,10 @@ auto ExactNumber::simplify() -> bool
 
     this->d /= max;
     this->n /= max;
-    mod = true;
 
     tmpValue = this->operator()();
 
-    return mod;
+    return max != 1;
 }
 
 auto ExactNumber::operator*=(const ExactNumber &other) -> ExactNumber &
@@ -67,9 +65,9 @@ auto ExactNumber::operator/=(const ExactNumber &other) -> ExactNumber &
 }
 
 ExactNumber::ExactNumber(long numerator, long denominator)
-    : d(denominator)
+    : sign(false)
     , n(numerator)
-    , sign(false)
+    , d(denominator)
 {
     if (d < 0 ^ n < 0)
         sign = true;
@@ -146,17 +144,17 @@ auto ExactNumber::operator+(const ExactNumber &other) const -> ExactNumber
 }
 
 ExactNumber::ExactNumber(int value)
-    : n(value)
+    : sign(value < 0)
+    , n(value)
     , d(1)
-    , sign(value < 0)
 {
     simplify();
 }
 
 ExactNumber::ExactNumber(long double number)
-    : d(0)
+    : sign(number < 0.)
     , n(0)
-    , sign(number < 0.)
+    , d(0)
 {
     double tmp;
     int exp = 0;
@@ -175,9 +173,9 @@ ExactNumber::ExactNumber(long double number)
 }
 
 ExactNumber::ExactNumber(const ExactNumber::String &value)
-    : d(1)
+    : sign(false)
     , n(0)
-    , sign(false)
+    , d(1)
 {
     if (value.isEmpty()) {
         return;
@@ -205,9 +203,9 @@ ExactNumber::ExactNumber(const ExactNumber::String &value)
 }
 
 ExactNumber::ExactNumber(const ExactNumber::String &num, const ExactNumber::String &den)
-    : n("1")
+    : sign(false)
+    , n("1")
     , d(den.toStdString())
-    , sign(false)
 {
     if (num[0] == '-' or num[0] == '+') {
         sign = num[0] == '-';

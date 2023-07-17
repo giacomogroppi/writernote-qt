@@ -1,10 +1,4 @@
-//
-// Created by Giacomo Groppi on 16/05/23.
-//
-
-#ifndef WRITERNOTE_WOPTIONSETTINGS_H
-#define WRITERNOTE_WOPTIONSETTINGS_H
-
+#pragma once
 
 #include "core/ByteArray/WByteArray.h"
 #include "WVariant.h"
@@ -30,4 +24,3 @@ public:
 };
 
 
-#endif //WRITERNOTE_WOPTIONSETTINGS_H

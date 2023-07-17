@@ -25,6 +25,8 @@ public:
     WString toUpper() const;
     WString lower() const;
 
+    bool isEmpty() const;
+
     [[nodiscard]]
     int size() const;
 
@@ -41,13 +43,14 @@ public:
     int lastIndexOf(char character) const;
     int lastIndexOf(const char *data) const;
     void replace(char oldChar, char newChar);
-    WString mid(int from, int to) const;
+    WString mid(int from, int to = -1) const;
 
     void insert(const WByteArray &other, int index);
     void insert(const WString &other, int index);
 
     void reserve(int numberOfChar);
-    void remove(int index);
+    auto remove(int index) -> WString&;
+    auto remove(int index) const -> WString;
 
     static WString number(int number);
     static WString fromUtf8(const char *data, int size = -1);
@@ -62,6 +65,7 @@ public:
     WString &operator+=(const WString &other);
     WString &operator+=(char c);
     char &operator[](int i);
+    char operator[](int i) const;
 
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WString>;
     static auto write (WritableAbstract &writable, const WString &data) -> int;
@@ -82,6 +86,8 @@ public:
     friend bool operator<(const WString &first, const WString &second);
 
     WString& append(const char *data, int size);
+
+    std::string toStdString() const noexcept;
 };
 
 inline int WString::size() const
@@ -180,6 +186,8 @@ inline char &WString::operator[](int i)
 
 inline WString WString::mid(int from, int to) const
 {
+    if (to == -1)
+        to = size();
     return _data.mid(from, to);
 }
 
@@ -291,12 +299,13 @@ inline void WString::reserve(int numberOfChar)
     _data.reserve(numberOfChar);
 }
 
-inline void WString::remove(int index)
+inline auto WString::remove(int index) -> WString&
 {
     _data.remove(index);
+    return *this;
 }
 
-inline WString &WString::operator=(const WString &other)
+inline auto WString::operator=(const WString &other) -> WString&
 {
     if (this == &other)
         return *this;
@@ -361,6 +370,28 @@ inline WString::WString(WByteArray str)
     : _data(std::move(str))
 {
 
+}
+
+inline bool WString::isEmpty() const
+{
+    return this->_data.isEmpty();
+}
+
+char WString::operator[](int i) const
+{
+    return this->_data[i];
+}
+
+inline std::string WString::toStdString() const noexcept
+{
+    return this->_data.toStdString();
+}
+
+inline auto WString::remove(int index) const -> WString
+{
+    WString result (*this);
+    result.remove(index);
+    return result;
 }
 
 inline WString operator+(const char *s1, const WString &s2)

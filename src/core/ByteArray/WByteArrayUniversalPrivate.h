@@ -46,6 +46,7 @@ public:
     WByteArray &operator+=(const WByteArray &other);
     WByteArray &operator=(const char *data);
     char &operator[](int i);
+    char operator[](int i) const;
 
     static WByteArray fromRawData(const char *data, Size size);
 
@@ -280,4 +281,16 @@ inline auto WByteArray::capacity() const -> Size
 inline void WByteArray::append(const WByteArray &other)
 {
     this->append(other.constData(), other.size());
+}
+
+inline char WByteArray::operator[](int i) const
+{
+    W_ASSERT(i >= 0 and i < size());
+    return this->_data[i];
+}
+
+inline char &WByteArray::operator[](int i)
+{
+    W_ASSERT(i >= 0 and i < size());
+    return this->_data[i];
 }

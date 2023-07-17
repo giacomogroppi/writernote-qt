@@ -2,6 +2,7 @@
 
 #include "Writable.h"
 #include <vector>
+#include <functional>
 
 class MemWritable final: public WritableAbstract
 {

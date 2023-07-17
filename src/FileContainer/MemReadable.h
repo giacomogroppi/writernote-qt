@@ -10,6 +10,8 @@ class MemReadable final: public ReadableAbstract
     size_t _max;
 public:
     MemReadable();
+    explicit MemReadable(const void *data, size_t max);
+
     auto read (void *to, size_t size) const -> int final;
 
     MemReadable &setData(const void *data, size_t max);

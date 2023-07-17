@@ -40,14 +40,13 @@ private:
 public:
     VersionFileController() = default;
 
-    [[deprecated("This copy constructor will be removed")]]
     VersionFileController (const VersionFileController &other) noexcept = default;
-
     VersionFileController (VersionFileController &&other) noexcept = default;
 
     static auto load (ReadableAbstract &readable) -> std::pair<int, VersionFileController>;
 
     auto operator=(VersionFileController &&other) noexcept -> VersionFileController& = default;
+    auto operator=(const VersionFileController &other) noexcept -> VersionFileController& = default;
 };
 
 inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair<int, VersionFileController>

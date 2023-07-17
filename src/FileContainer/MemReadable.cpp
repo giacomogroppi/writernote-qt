@@ -24,9 +24,17 @@ auto MemReadable::read(void *to, size_t size) const -> int
 }
 
 MemReadable::MemReadable()
-    : _seek(0)
+    : _data(nullptr)
+    , _seek(0)
     , _max(0)
-    , _data(nullptr)
+{
+
+}
+
+MemReadable::MemReadable(const void *data, size_t max)
+     : _data(static_cast<const char *>(data))
+     , _seek(0)
+     , _max(max)
 {
 
 }
