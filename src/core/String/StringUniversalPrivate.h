@@ -22,6 +22,8 @@ public:
     WString (const WString &other) = default;
     WString(const std::string &other);
 
+    ~WString() = default;
+
     WString toUpper() const;
     WString lower() const;
 

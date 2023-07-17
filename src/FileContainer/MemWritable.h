@@ -31,5 +31,5 @@ public:
      *  This function has to return &lt 0 in case of error
      * \return &lt in case "append" return an error
      * */
-    auto merge (std::function<int(const void *d, size_t size)> append) -> int;
+    auto merge (const std::function<int(const void *d, size_t size)>& append) -> int;
 };

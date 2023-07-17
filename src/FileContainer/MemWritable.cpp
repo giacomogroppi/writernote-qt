@@ -15,17 +15,9 @@ auto MemWritable::getCurrentSize() const -> size_t
 
 auto MemWritable::merge(WritableAbstract &writable) -> int
 {
-    // write all the blocks
-    for (auto iter = _allocatedMemory.cbegin(); iter < _allocatedMemory.cend() - 1; iter ++) {
-        if (writable.write(*iter, MemWritable::sizePage) < 0)
-            return -1;
-    }
-
-    // write the last object
-    if (writable.write(*(_allocatedMemory.rbegin()), _internalStack) < 0)
-        return -1;
-
-    return 0;
+    return this->merge([&writable](const void *d, size_t size) -> int {
+        return writable.write(d, size);
+    });
 }
 
 int MemWritable::write(const void *data, size_t size)
@@ -69,6 +61,21 @@ MemWritable::~MemWritable()
     for (auto *page: _allocatedMemory) {
         free(page);
     }
+}
+
+auto MemWritable::merge(const std::function<int(const void *, size_t)>& append) -> int
+{
+    // write all the blocks
+    for (auto iter = _allocatedMemory.cbegin(); iter < _allocatedMemory.cend() - 1; iter ++) {
+        if (append(*iter, MemWritable::sizePage) < 0)
+            return -1;
+    }
+
+    // write the last object
+    if (append(*(_allocatedMemory.rbegin()), _internalStack) < 0)
+        return -1;
+
+    return 0;
 }
 
 
