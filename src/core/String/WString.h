@@ -10,8 +10,20 @@
 # include "StringUniversalPrivate.h"
 #endif // USE_QT
 
-// TODO: move all this version in different header file
+/**
+ * Class for implement hash of WString
+ * */
+struct WStringHash {
+    std::size_t operator()(const WString& string) const {
+        // TODO: implement something better
+        std::size_t s = 0;
+        for (int i = 0; i < string.size(); i++)
+            s += static_cast<int>(string.charAt(i));
+        return s;
+    }
+};
 
+// TODO: move all this in a cpp file
 inline auto WString::load (const VersionFileController& versionController, ReadableAbstract &readable) -> WPair<int, WString>
 {
     WString result;

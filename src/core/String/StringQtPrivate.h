@@ -94,4 +94,8 @@ public:
     {
         QString::append(c);
     }
+
+    auto charAt(int i) const -> char {
+        return at(i).toLatin1();
+    }
 };

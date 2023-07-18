@@ -1,6 +1,7 @@
 #include "WVariant.h"
 #include "FileContainer/MemWritable.h"
 
+#if !defined(USE_QT)
 WVariant::WVariant(const void *raw, int size)
     : _data(
             static_cast<const char *>(raw),
@@ -67,3 +68,9 @@ auto WVariant::toString() -> WString
         return {};
     return d;
 }
+
+auto WVariant::toRaw() const noexcept -> const WByteArray &
+{
+    return this->_data;
+}
+#endif

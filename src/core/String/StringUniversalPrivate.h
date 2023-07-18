@@ -15,12 +15,12 @@ private:
     WByteArray _data;
     void test() const {};
 public:
-    WString() = default;
+    WString () = default;
     WString (const char *string);
-    WString(WByteArray str);
-    WString(WString &&other) noexcept = default;
-    WString (const WString &other) = default;
-    WString(const std::string &other);
+    WString (WByteArray str);
+    WString (WString &&other) noexcept = default;
+    WString (const WString &other) noexcept = default;
+    WString (const std::string &other);
 
     ~WString() = default;
 
@@ -39,7 +39,8 @@ public:
     [[nodiscard]]
     auto split(char character) const -> WListFast<WString>;
 
-    char at(int index) const;
+    auto at(int index) const -> char;
+    auto charAt(int index) const -> char;
 
     int indexOf(const WString &other) const;
     int indexOf(char character) const;
@@ -63,7 +64,6 @@ public:
 
     bool operator==(const WString &other) const;
     bool operator!=(const WString &other) const;
-    auto operator=(const WString &other) -> WString &;
     auto operator+(const WString &other) -> WString;
     auto operator+=(const WString &other) -> WString&;
     auto operator+=(char c) -> WString&;
@@ -91,6 +91,14 @@ public:
     WString& append(const char *data, int size);
 
     std::string toStdString() const noexcept;
+
+    auto operator>(const WString &other) const noexcept -> bool;
+    auto operator>=(const WString &other) const noexcept -> bool;
+    auto operator<=(const WString &other) const noexcept -> bool;
+    auto operator<(const WString &other) const noexcept -> bool;
+
+    auto operator=(const WString &other) noexcept -> WString& = default;
+    auto operator=(WString &&other) noexcept -> WString& = default;
 };
 
 inline int WString::size() const
@@ -307,14 +315,6 @@ inline auto WString::remove(int index) -> void
     _data.remove(index);
 }
 
-inline auto WString::operator=(const WString &other) -> WString&
-{
-    if (this == &other)
-        return *this;
-    this->_data = other._data;
-    return *this;
-}
-
 inline bool WString::operator==(const WString &other) const
 {
     return this->_data == other._data;
@@ -394,6 +394,11 @@ inline auto WString::remove(int index) const -> WString
     WString result (*this);
     result.remove(index);
     return result;
+}
+
+inline auto WString::charAt(int index) const -> char
+{
+    return at(index);
 }
 
 inline WString operator+(const char *s1, const WString &s2)

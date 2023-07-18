@@ -48,6 +48,8 @@ public:
 
     auto operator=(const WVariant& other) noexcept -> WVariant& = default;
     auto operator=(WVariant &&other) noexcept -> WVariant& = default;
+
+    auto toRaw() const noexcept -> const WByteArray &;
 };
 
 template<class T>

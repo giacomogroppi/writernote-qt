@@ -1,7 +1,3 @@
-//
-// Created by Giacomo Groppi on 16/05/23.
-//
-
 #include "WOptionSettings.h"
 #include "utils/setting_define.h"
 
@@ -34,4 +30,24 @@ void WOptionSettings::setValue(const WByteArray &key, const WVariant &value)
 {
     this->settings->setValue(key, value);
 }
+
+#else
+
+void WOptionSettings::remove(const WByteArray &key)
+{
+    _map.remove(key);
+}
+
+auto WOptionSettings::value(const WByteArray &key, const WVariant &defaultMessage) -> WVariant
+{
+    if (this->_map.isPresent(key))
+        return _map.get(key);
+    return defaultMessage;
+}
+
+void WOptionSettings::setValue(const WByteArray &key, const WVariant &value)
+{
+    this->_map.set(key, value.toRaw());
+}
+
 #endif // USE_QT

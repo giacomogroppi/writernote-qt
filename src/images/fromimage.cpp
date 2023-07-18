@@ -170,7 +170,7 @@ unsigned ImageContainerDrawable::insert_image(const WString &pos,
     WString res;
     W_ASSERT(pos.size());
 
-    img.immagini = std::move(WImage(res));
+    img.immagini = WImage(res);
 
     if (point) {
         img.i = *point;

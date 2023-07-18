@@ -3,6 +3,7 @@
 #include "core/ByteArray/WByteArray.h"
 #include "WVariant.h"
 #include "core/WMap.h"
+#include "core/String/WString.h"
 
 #ifdef USE_QT
 # include <QSettings>
@@ -14,7 +15,8 @@ private:
 #ifdef USE_QT
     QSettings *settings;
 #else
-    WMap<WString, WByteArray> _map;
+    static constexpr auto nameFileConfiguration = "writernote_configuration.txt";
+    WMap<WString, WByteArray, WStringHash> _map;
 #endif // USE_QT
 public:
     WOptionSettings() = default;
@@ -23,11 +25,7 @@ public:
 
     void remove(const WByteArray &key);
 
-    WVariant value(const WByteArray &key, const WVariant &defaultMessage);
+    auto value(const WByteArray &key, const WVariant &defaultMessage) -> WVariant;
     void setValue(const WByteArray &key, const WVariant &value);
 };
 
-
-void prova (){
-    std::unordered_map<WString, int> d;
-}
