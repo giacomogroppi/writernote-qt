@@ -1,7 +1,3 @@
-//
-// Created by Giacomo Groppi on 10/05/23.
-//
-
 #include "WTimer.h"
 #include "Scheduler.h"
 
@@ -19,10 +15,10 @@ public:
 
 WTimer::WTimer(WObject *parent, std::function<void()> function, int millisecond)
     : WObject(parent)
+    , _currentId(0)
+    , _isActive(false)
     , _millisecond(millisecond)
     , _function(std::move(function))
-    , _isActive(false)
-    , _currentId(0)
 {
 
 }

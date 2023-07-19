@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 10/05/23.
-//
-
-#ifndef WRITERNOTE_WTIMER_H
-#define WRITERNOTE_WTIMER_H
+#pragma once
 
 #include <thread>
 #include <chrono>
@@ -12,7 +7,8 @@
 #include "core/AtomicSafe.h"
 #include "core/WRecursiveLock.h"
 
-class WTimer: public WObject {
+class WTimer: public WObject
+{
 private:
     mutable WRecursiveLock _lock;
     int _currentId = 0;
@@ -22,15 +18,17 @@ private:
     std::function<void()> _function;
 public:
     WTimer(WObject *parent, std::function<void()> function, int millisecond);
-    ~WTimer() = default;
+    ~WTimer() override = default;
 
     bool isActive() const;
     void stop();
     void start(int millisecond = -1);
     void setSingleShot(bool singleShot);
 
+    /**
+     * It will return the value of clock() when the timer should be triggered
+     * */
+    auto getEnd() const -> unsigned long;
+
     bool isSingleShot() const noexcept;
 };
-
-
-#endif //WRITERNOTE_WTIMER_H

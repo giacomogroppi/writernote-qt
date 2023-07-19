@@ -6,11 +6,11 @@ static Scheduler *instance;
 
 Scheduler::Scheduler()
     : WObject(nullptr)
-    , _need_to_sort(false)
     , _threads()
-    , _needToDie(false)
     , _semGeneral(0)
     , _semMain(0)
+    , _need_to_sort(false)
+    , _needToDie(false)
 {
     W_ASSERT(instance == nullptr);
 

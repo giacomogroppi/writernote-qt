@@ -11,6 +11,8 @@
 #include "core/WList.h"
 #include <thread>
 #include "core/WVector.h"
+#include "core/WHeap.h"
+#include "WTimer.h"
 
 class SchedulerThreadData {
 public:
@@ -32,27 +34,22 @@ private:
     mutable WMutex _lockMain;
     mutable WMutex _lockGeneric;
 
-     //@ requires
-     //@   _pools is locked
-     //@ ensures
-     //@  (\forall int i; 0 <= i < _pools.size();
-     //@      _pools[0]->getPriority() >= _pools[i]->getPriority())
-     //
     void createHeap();
 
-     //@ requires
-     //@   _pool_locker is not locked
-     //@ ensures
-     //@   (*_pool_locker is not locked*) &&
-     //@   \result <==> (\forall int i; 0 <= i < _pools.size();
-     //@       _pools.at(0)->getPriority() >= _pools.at(i)->getPriority())
-     //
     bool is_heap() const;
 
     AtomicSafe<bool> _need_to_sort;
 
     mutable WMutex _needToDieLock;
     volatile bool _needToDie;
+
+    struct WTimerComparator {
+        unsigned long operator()(const WTimer& timer) const {
+            return timer.getEnd();
+        }
+    };
+
+    WHeap<WTimer, WTimerComparator, true> _timerWaiting;
 
 public:
     explicit Scheduler();

@@ -81,12 +81,12 @@ private:
     void mergeList() noexcept;
 
     void AppendDirectly(const std::shared_ptr<Stroke>& stroke);
-    bool initImg(bool flag);
+    auto initImg(bool flag) -> bool;
 
     void decreaseAlfa(const WVector<int> &pos, WPainter *painter, int decrease);
 
-    static PointF at_translation(const PointF &point, cint page);
-    static RectF get_size_area(const WListFast<std::shared_ptr<Stroke>> & item, int from, int to);
+    static auto at_translation(const PointF &point, cint page) -> PointF;
+    static auto get_size_area(const WListFast<std::shared_ptr<Stroke>> & item, int from, int to) -> RectF;
 
 public:
     const WPixmap &getImg() const;
@@ -100,7 +100,7 @@ public:
 #define PAGE_SWAP_TRIGGER_VIEW BIT(1)
     void swap(WListFast<std::shared_ptr<Stroke>> &stroke, const WVector<int> & pos, int flag);
     void swap(WListFast<std::shared_ptr<Stroke>> &stroke, int from, int to);
-    std::shared_ptr<Stroke> swap(int index, std::shared_ptr<Stroke> newData);
+    auto swap(int index, std::shared_ptr<Stroke> newData) -> std::shared_ptr<Stroke>;
 
     bool updateFlag(const PointF &FirstPoint, double zoom, double heightView);
     void setVisible(bool vis) const;
@@ -162,7 +162,7 @@ public:
     void drawIfInside(int m_pos_ris, const RectF &area);
     void decreaseAlfa(const WVector<int> &pos, int decrease);
 
-    RectF get_size_area(const WVector<int> &pos) const;
+    auto get_size_area(const WVector<int> &pos) const -> RectF;
 
     // block for appending
     void lock() const;

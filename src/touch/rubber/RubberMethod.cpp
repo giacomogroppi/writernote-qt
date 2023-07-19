@@ -29,7 +29,11 @@ static WMutex           single_mutex;
 static WMutex           mutex_area;
 static thread_group_sem *thread_group;
 
-static void (*functionToCall)(DataPrivateMuThread *);
+static void (*functionToCall)(DataPrivateMuThread &);
+
+constexpr const auto rubberMethod = [](struct DataPrivateMuThread& d) {
+    functionToCall (d);
+};
 
 void *idle_rubber(void *arg)
 {
@@ -46,7 +50,7 @@ void *idle_rubber(void *arg)
             goto wait;
         }
 
-        functionToCall(data);
+        functionToCall(*data);
         wait:
         thread_group->get_finish_sem().release();
         thread_group->get_all_finish_sem().acquire();
@@ -119,9 +123,9 @@ static bool makeNormal(Page *page, int index, Stroke *stroke)
     return newStroke != nullptr;
 }
 
-void actionRubberSinglePartial(DataPrivateMuThread *data)
+void actionRubberSinglePartial(DataPrivateMuThread &data)
 {
-    auto *private_data = (RubberPrivateData *)data->extra;
+    auto *private_data = (RubberPrivateData *)data.extra;
 
     WVector<int> stroke_to_remove;
     WVector<int> stroke_mod_point,          stroke_mod_stroke;
@@ -134,8 +138,8 @@ void actionRubberSinglePartial(DataPrivateMuThread *data)
     DataStruct *_datastruct = private_data->data;
     const auto &area        = private_data->line;
 
-    from = data->from;
-    to = data->to;
+    from = data.from;
+    to = data.to;
 
     stroke_to_remove.reserve(12);
 
@@ -173,7 +177,7 @@ redo:
 
             if (index < 3) {
                 if(sNormal->length() - index < 3){
-                    stroke_to_remove.append(data->from);
+                    stroke_to_remove.append(data.from);
 
                     // we need to exit the current stroke
                     break;
@@ -189,7 +193,7 @@ redo:
 
             if (index + 3 > lenPoint) {
                 if(sNormal->length() < 3)
-                    stroke_to_remove.append(data->from);
+                    stroke_to_remove.append(data.from);
 
                 stroke_mod_rigth_point.append(index);
                 stroke_mod_rigth_stroke.append(from);
@@ -233,9 +237,9 @@ redo:
     single_mutex.unlock();
 }
 
-void actionRubberSingleTotal(DataPrivateMuThread *data)
+void actionRubberSingleTotal(DataPrivateMuThread &data)
 {
-    auto *private_data = static_cast<RubberPrivateData *>(data->extra);
+    auto *private_data = static_cast<RubberPrivateData *>(data.extra);
 
     WVector<int> index_selected;
     cint data_already_len   = private_data->al_find;
@@ -245,14 +249,14 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     const auto &area        = private_data->line;
     index_selected.reserve(32);
 
-    W_ASSERT(data->from <= data->to);
+    W_ASSERT(data.from <= data.to);
     W_ASSERT(_page);
 
-    for (; data->from < data->to; data->from++) {
-        auto &stroke = _page->atStrokeMod(data->from);
+    for (; data.from < data.to; data.from++) {
+        auto &stroke = _page->atStrokeMod(data.from);
         int index;
 
-        if(WCommonScript::is_present_in_list(_al_find->constData(), data_already_len, data->from))
+        if(WCommonScript::is_present_in_list(_al_find->constData(), data_already_len, data.from))
             continue;
 
         index = stroke.is_inside(area, 0, __m_size_gomma, false);
@@ -273,7 +277,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
             mutex_area.unlock();
         }
 
-        index_selected.append(data->from);
+        index_selected.append(data.from);
 
     }
 
@@ -284,7 +288,7 @@ void actionRubberSingleTotal(DataPrivateMuThread *data)
     single_mutex.lock();
 
     _al_find->append(index_selected);
-    private_data->data->decreaseAlfa(index_selected, _page->_count - 1);
+    private_data->data->decreaseAlfa(index_selected, _page->getCount() - 1);
 
     single_mutex.unlock();
 }

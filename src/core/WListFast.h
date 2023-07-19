@@ -118,13 +118,6 @@ public:
         return false;
     }
 
-    /**
-     * You can use this method only if <T> has the method load
-     * \return < 0 if error
-     * */
-    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> WPair<int, WListFast<T>>;
-
-
     class iterator
     {
     private:
@@ -220,6 +213,12 @@ public:
                             ReadableAbstract &readable
                         )> func
             ) -> WPair<int, WListFast<T>>;
+
+    /**
+     * You can use this method only if <T> has the method load
+     * \return < 0 if error
+     * */
+    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> WPair<int, WListFast<T>>;
 
     static auto write (
                 WritableAbstract &writable,
