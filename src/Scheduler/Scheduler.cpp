@@ -11,6 +11,9 @@ Scheduler::Scheduler()
     , _semMain(0)
     , _need_to_sort(false)
     , _needToDie(false)
+    , _timersWaiting([](const WTimer *t1, const WTimer *t2)-> bool {
+        return t1->getEnd() >= t2->getEnd();
+    })
 {
     W_ASSERT(instance == nullptr);
 
@@ -175,4 +178,12 @@ auto Scheduler::addTimer(WTimer *timer) -> void
 
     WMutexLocker _(this->_muxTimers);
     return this->addTimerUnsafe(timer);
+}
+
+auto Scheduler::removeTimer(WTimer *timer) -> void
+{
+    W_ASSERT(timer != nullptr);
+    WMutexLocker _(this->_muxTimers);
+    if (_timersWaiting.removeIfPresent(timer))
+        this->_c.notify_all();
 }

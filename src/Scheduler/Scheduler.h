@@ -43,13 +43,7 @@ private:
     mutable WMutex _needToDieLock;
     volatile bool _needToDie;
 
-    struct WTimerComparator {
-        unsigned long operator()(const WTimer& timer) const {
-            return timer.getEnd();
-        }
-    };
-
-    WHeap<WTimer*, WTimerComparator, true> _timersWaiting;
+    WHeap<WTimer*, true> _timersWaiting;
     //WSemaphore _semTimers;
     std::mutex _muxTimers;
     std::condition_variable _c;

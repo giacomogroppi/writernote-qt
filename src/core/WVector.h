@@ -97,10 +97,20 @@ public:
     const T* constData() const;
     int indexOf(const T &object);
     void remove(const T& object);
-    WVector<T> &operator=(const WVector<T> &other);
-    WVector<T> &operator=(WVector &&other) noexcept;
-    bool operator==(const WVector<T> &other) const;
-    bool operator!=(const WVector<T> &other) const;
+
+
+    /**
+     * \return True iff we have remove the object
+     * \param cmp return true iff v1 >= v2
+     * \tparam ascendingOrder if the list is order in ascending order [crescente]
+     */
+    template <bool ascendingOrder = true>
+    auto removeOrder(const T& object, const std::function<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
+
+    auto operator=(const WVector<T> &other) -> WVector<T>&;
+    auto operator=(WVector &&other) noexcept -> WVector<T>&;
+    auto operator==(const WVector<T> &other) const -> bool;
+    auto operator!=(const WVector<T> &other) const -> bool;
 
     iterator begin()    noexcept { return _data.begin(); }
     iterator end()      noexcept { return _data.end(); }

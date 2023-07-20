@@ -62,3 +62,8 @@ auto WTimer::trigger() -> void
     this->_function();
 }
 
+auto WTimer::getEnd() const -> unsigned long
+{
+    return this->_millisecond + this->_timeStart;
+}
+
