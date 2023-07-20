@@ -300,6 +300,7 @@ int StrokeNormal::type() const
 }
 
 StrokeNormal::StrokeNormal(const StrokeNormal &ref)
+    : _flag(ref._flag)
 {
     *this = ref;
 }
@@ -426,9 +427,9 @@ void StrokeNormal::force_pressure(pressure_t press)
 
 StrokeNormal::StrokeNormal(StrokeNormal &&other) noexcept
     : Stroke(dynamic_cast<Stroke&&> (other))
-    , _flag(other._flag)
     , _point(std::move(other._point))
     , _pressure(std::move(other._pressure))
+    , _flag(other._flag)
 {
 }
 

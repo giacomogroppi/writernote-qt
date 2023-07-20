@@ -32,9 +32,8 @@ Scheduler::Scheduler()
                 WTask *task;
                 sem->acquire();
 
-                if (this->needToDie()) {
+                if (this->needToDie())
                     return;
-                }
 
                 {
                     WMutexLocker _(*mux);
@@ -52,6 +51,46 @@ Scheduler::Scheduler()
             }
         }));
     }
+
+    // start a new threads for timers
+    _threads.append(std::thread([this]() {
+        using namespace std;
+        using namespace chrono;
+
+        for (;;) {
+            using namespace std::chrono;
+            std::unique_lock<std::mutex> lk (this->_muxTimers);
+
+            const auto shouldWaitFor = this->_timersWaiting.getFirst()->getDuration();
+            //const auto lastValueEnd = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+            const auto lastValueEnd = _timersWaiting.getFirst()->getEnd();
+
+            this->_c.wait_for(lk, shouldWaitFor * 1ms, [&lastValueEnd, this]{
+                // if the list has been modified we need to reschedule the
+                // timer for std::condition_value, or we need to die
+                return this->_timersWaiting.getFirst()->getEnd() != lastValueEnd || needToDie();
+            });
+
+            if (needToDie())
+                return;
+
+            if (_timersWaiting.getFirst()->getEnd() < lastValueEnd) {
+                // we need to wait
+                continue;
+            }
+
+            auto *timer = _timersWaiting.takeFirst();
+
+            // mutex is already locked
+            Scheduler::addTaskMainThread(new WTaskFunction(nullptr, [timer]() {
+                timer->trigger();
+            }, true));
+
+            if (not timer->isSingleShot()) {
+                Scheduler::getInstance().addTimerUnsafe(timer);
+            }
+        }
+    }));
 }
 
 Scheduler::~Scheduler()
@@ -122,4 +161,18 @@ void Scheduler::addTaskMainThread(WTask *task)
 Scheduler &Scheduler::getInstance()
 {
     return *instance;
+}
+
+auto Scheduler::addTimerUnsafe(WTimer *timer) -> void
+{
+    _timersWaiting.add(timer);
+    _c.notify_all();
+}
+
+auto Scheduler::addTimer(WTimer *timer) -> void
+{
+    W_ASSERT(timer != nullptr);
+
+    WMutexLocker _(this->_muxTimers);
+    return this->addTimerUnsafe(timer);
 }

@@ -11,9 +11,9 @@ class WTimer: public WObject
 {
 private:
     mutable WRecursiveLock _lock;
-    int _currentId = 0;
     bool _isActive;
-    int _millisecond;
+    unsigned long _millisecond;
+    unsigned long _timeStart;
 
     std::function<void()> _function;
 public:
@@ -26,9 +26,22 @@ public:
     void setSingleShot(bool singleShot);
 
     /**
-     * It will return the value of clock() when the timer should be triggered
+     * \return the value of clock() when the timer should be triggered
      * */
     auto getEnd() const -> unsigned long;
 
+    /**
+     * \return The duration in milliseconds of the timer
+     * */
+     auto getDuration() const -> unsigned long;
+
     bool isSingleShot() const noexcept;
+
+    friend class Scheduler;
+
+protected:
+    /**
+     * This method is call when the scheduler decide
+     * */
+    auto trigger() -> void;
 };

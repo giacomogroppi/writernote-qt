@@ -49,7 +49,10 @@ private:
         }
     };
 
-    WHeap<WTimer, WTimerComparator, true> _timerWaiting;
+    WHeap<WTimer*, WTimerComparator, true> _timersWaiting;
+    //WSemaphore _semTimers;
+    std::mutex _muxTimers;
+    std::condition_variable _c;
 
 public:
     explicit Scheduler();
@@ -76,6 +79,20 @@ public:
         Scheduler::addTaskGeneric(task);
         return task;
     };
+
+    /**
+     * \param timer The timer to schedule
+     * */
+    auto addTimer (WTimer *timer) -> void;
+
+    auto removeTimer (WTimer *timer) -> void;
+
+private:
+
+    /**
+     * This method is NOT thread save
+     * */
+    auto addTimerUnsafe (WTimer *timer) -> void;
 };
 
 inline void Scheduler::addTaskGeneric(WTask *task)
