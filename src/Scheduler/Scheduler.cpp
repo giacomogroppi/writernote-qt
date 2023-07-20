@@ -64,11 +64,14 @@ Scheduler::Scheduler()
             using namespace std::chrono;
             std::unique_lock<std::mutex> lk (this->_muxTimers);
 
-            const auto shouldWaitFor = this->_timersWaiting.getFirst()->getDuration();
+            const auto shouldWaitFor = (_timersWaiting.isEmpty()
+                    ? std::chrono::milliseconds (100'000).count()
+                    : this->_timersWaiting.getFirst()->getDuration());
+
             //const auto lastValueEnd = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
             const auto lastValueEnd = _timersWaiting.getFirst()->getEnd();
 
-            this->_c.wait_for(lk, shouldWaitFor * 1ms, [&lastValueEnd, this]{
+            this->_c.wait_for(lk, std::chrono::milliseconds (shouldWaitFor), [&lastValueEnd, this]{
                 // if the list has been modified we need to reschedule the
                 // timer for std::condition_value, or we need to die
                 return this->_timersWaiting.getFirst()->getEnd() != lastValueEnd || needToDie();

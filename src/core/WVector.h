@@ -72,6 +72,9 @@ public:
     using const_iterator = typename std::vector<T>::const_iterator;
     using iterator = typename std::vector<T>::iterator;
 
+    using riterator = typename std::vector<T>::reverse_iterator;
+    using rconst_iterator = typename std::vector<T>::const_reverse_iterator;
+
     void append(const WVector<T> &other);
 
     void append(const T &item);
@@ -100,12 +103,18 @@ public:
 
 
     /**
-     * \return True iff we have remove the object
+     * This method requires that the list is order in ascending order [crescente]
+     * \return True iff we have remove the object passed
      * \param cmp return true iff v1 >= v2
-     * \tparam ascendingOrder if the list is order in ascending order [crescente]
      */
-    template <bool ascendingOrder = true>
-    auto removeOrder(const T& object, const std::function<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
+    auto removeOrderAscending(const T& object, const std::function<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
+
+    /**
+     * This method requires that the list is order in descending order
+     * \param cmp return true iff v1 >= v2
+     * \return true iff we have remove the object passed
+     * */
+    auto removeOrderDescending(const T& object, const std::function<bool(const T& v1, const T& v2)> &cmp) noexcept -> bool;
 
     auto operator=(const WVector<T> &other) -> WVector<T>&;
     auto operator=(WVector &&other) noexcept -> WVector<T>&;
@@ -131,6 +140,8 @@ public:
     const_iterator end()   const noexcept { test(); return const_iterator(nullptr); }
      */
 
+    auto rbegin() -> riterator;
+    auto rend() -> riterator ;
 
     /**
      * \return < 0 if error
@@ -208,6 +219,29 @@ public:
         return 0;
     }
 };
+
+template<class T>
+auto WVector<T>::removeOrderDescending(
+            const T &object,
+            const std::function<bool(const T &, const T &)> &cmp
+        ) noexcept -> bool
+{
+    // ordine decrescente
+    const auto iterator = std::lower_bound(
+            rbegin(),
+            rend(),
+            object,
+            cmp
+    );
+
+    if (iterator == rend())
+        return false;
+    const int index = size() - std::distance(rbegin(), iterator);
+
+    removeAt(index);
+
+    return true;
+}
 
 template<class T>
 inline WVector<T> &WVector<T>::operator=(const WVector<T> &other)
@@ -565,3 +599,39 @@ inline auto WVector<T>::load(
     return result;
 }
 
+template <class T>
+inline auto WVector<T>::removeOrderAscending(
+            const T &object,
+            const std::function<bool(const T &, const T &)> &cmp
+        ) noexcept -> bool
+{
+    // ordine crescente
+    const auto iterator = std::lower_bound(
+            rbegin(),
+            rend(),
+            object,
+            [cmp](const T& v1, const T& v2) -> bool {
+                return !cmp(v1, v2);
+            }
+    );
+
+    if (iterator == rend())
+        return false;
+    const int index = size() - std::distance(rbegin(), iterator);
+
+    removeAt(index);
+
+    return true;
+}
+
+template <class T>
+auto WVector<T>::rend() -> riterator
+{
+    return this->_data.rend();
+}
+
+template <class T>
+auto WVector<T>::rbegin() -> riterator
+{
+    return this->_data.rbegin();
+}

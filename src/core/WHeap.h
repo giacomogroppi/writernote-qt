@@ -70,12 +70,22 @@ public:
      * \return True iff we have remove value from the heap
      * */
     bool removeIfPresent(const T &value) noexcept;
+
+    auto isEmpty() const noexcept -> bool;
 };
+
+template <class T, bool min>
+auto WHeap<T, min>::isEmpty() const noexcept -> bool
+{
+    return this->_d.isEmpty();
+}
 
 template <class T, bool min>
 inline auto WHeap<T, min>::removeIfPresent(const T &value) noexcept -> bool
 {
-    return _d.removeOrder<min>(value, _cmpOriginal);
+    if constexpr (min)
+        _d.removeOrderAscending(value, _cmpOriginal);
+    return _d.removeOrderDescending(value, _cmpOriginal);
 }
 
 template<class T, bool min>
