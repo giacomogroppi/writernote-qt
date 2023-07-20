@@ -69,7 +69,9 @@ Scheduler::Scheduler()
                     : this->_timersWaiting.getFirst()->getDuration());
 
             //const auto lastValueEnd = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-            const auto lastValueEnd = _timersWaiting.getFirst()->getEnd();
+            const auto lastValueEnd = _timersWaiting.isEmpty()
+                    ? std::chrono::milliseconds (100'000).count()
+                    : _timersWaiting.getFirst()->getEnd();
 
             this->_c.wait_for(lk, std::chrono::milliseconds (shouldWaitFor), [&lastValueEnd, this]{
                 // if the list has been modified we need to reschedule the
