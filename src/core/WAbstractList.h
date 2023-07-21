@@ -27,5 +27,16 @@ namespace WAbstractList {
     }
 
 
+    /**
+     * \tparam Iterator The iterator
+     * \param begin The begin iterator
+     * \param end The end iterator
+     * \return end iff object is not between [begin, end)
+     * */
+    template <class Iterator, class T>
+    auto binary_search(Iterator begin, Iterator end, const T& object) -> Iterator
+    {
+        
+    }
 };
 #endif //WRITERNOTE_WABSTRACTLIST_H
