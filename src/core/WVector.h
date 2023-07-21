@@ -246,13 +246,13 @@ auto WVector<T>::removeOrderDescending(
     const int index = size() - distance - 1;
     int lastIndex = index;
 
-    for (int i = index; i < size(); i++) {
+    for (int i = index; i > 0; i--) {
         if (at(i) != object)
             break;
         lastIndex = i;
     }
 
-    removeAll(index, lastIndex + 1);
+    removeAll(lastIndex, index + 1);
 
     return true;
 }
@@ -464,8 +464,7 @@ inline const T &WVector<T>::last() const
 template<class T>
 inline const T &WVector<T>::first() const
 {
-    W_ASSERT(size() > 0);
-    return _data[0];
+    return at(0);
 }
 
 template<class T>
