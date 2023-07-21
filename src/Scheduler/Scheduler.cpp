@@ -132,10 +132,10 @@ void Scheduler::createHeap()
         return a->getPriority() < b->getPriority();
     });
      */
-    W_ASSERT(this->is_heap());
+    W_ASSERT(this->isHeap());
 }
 
-bool Scheduler::is_heap() const
+bool Scheduler::isHeap() const
 {
     return true;
     /*

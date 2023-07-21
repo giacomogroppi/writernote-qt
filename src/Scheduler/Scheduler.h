@@ -14,12 +14,6 @@
 #include "core/WHeap.h"
 #include "WTimer.h"
 
-class SchedulerThreadData {
-public:
-    bool *thread;
-};
-
-
 class Scheduler final: public WObject
 {
 private:
@@ -36,7 +30,7 @@ private:
 
     void createHeap();
 
-    bool is_heap() const;
+    bool isHeap() const;
 
     AtomicSafe<bool> _need_to_sort;
 

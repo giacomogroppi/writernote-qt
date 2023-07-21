@@ -477,7 +477,7 @@ inline void DataStruct::removeAt(int indexPage){
     int index = indexPage, len;
     this->_page.removeAt(indexPage);
 
-    W_ASSERT(indexPage < (uint)this->lengthPage());
+    W_ASSERT(indexPage < this->lengthPage());
 
     len = lengthPage();
 

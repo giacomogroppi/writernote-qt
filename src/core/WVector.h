@@ -67,6 +67,7 @@ public:
     WVector();
     WVector(const WVector<T> &other) noexcept;
     WVector(WVector<T> &&other) noexcept;
+    WVector(std::initializer_list<T> &&object) noexcept;
     ~WVector();
 
     using const_iterator = typename std::vector<T>::const_iterator;
@@ -82,6 +83,11 @@ public:
 
     const T& get(int i) const;
     int size() const;
+
+    /**
+     * Remove all the object [from, to)
+     * */
+    void removeAll(int from, int to);
     void removeAt(int i);
     void move(int from, int to);
     void clear();
@@ -234,13 +240,28 @@ auto WVector<T>::removeOrderDescending(
             cmp
     );
 
-    if (iterator == rend())
+    if (iterator == rbegin())
         return false;
-    const int index = size() - std::distance(rbegin(), iterator);
+    const int distance = std::distance(rend(), iterator);
+    const int index = size() - distance - 1;
+    int lastIndex = index;
 
-    removeAt(index);
+    for (int i = index; i < size(); i++) {
+        if (at(i) != object)
+            break;
+        lastIndex = i;
+    }
+
+    removeAll(index, lastIndex + 1);
 
     return true;
+}
+
+template <class T>
+auto WVector<T>::removeAll(int from, int to) -> void
+{
+    W_ASSERT(from >= 0 and from < to and to <= size());
+    _data.erase(begin() + from, begin() + to);
 }
 
 template<class T>
@@ -392,6 +413,7 @@ inline void WVector<T>::removeAt(int index)
 template<class T>
 inline void WVector<T>::clear()
 {
+    _data.clear();
     /*
     free(_data);
     _data = nullptr;
@@ -540,6 +562,13 @@ inline WVector<T>::WVector(const WVector<T> &other) noexcept
 {}
 
 template <class T>
+WVector<T>::WVector(std::initializer_list<T> &&object) noexcept
+    : _data(std::move(object))
+{
+
+}
+
+template <class T>
 inline WVector<T>::WVector(WVector<T> &&other) noexcept
     : _data(std::move(other._data))
 {
@@ -552,7 +581,7 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WVector<T> &p)
     d.nospace() << "WVector(";
 
     for (const auto &item: std::as_const(p)) {
-        d.nospace() << item ;
+        d.nospace() << item << ",";
     }
 
     d.nospace() << ")";
@@ -607,17 +636,17 @@ inline auto WVector<T>::removeOrderAscending(
 {
     // ordine crescente
     const auto iterator = std::lower_bound(
-            rbegin(),
-            rend(),
+            begin(),
+            end(),
             object,
             [cmp](const T& v1, const T& v2) -> bool {
                 return !cmp(v1, v2);
             }
     );
 
-    if (iterator == rend())
+    if (iterator == end())
         return false;
-    const int index = size() - std::distance(rbegin(), iterator);
+    const int index = std::distance(begin(), iterator);
 
     removeAt(index);
 
