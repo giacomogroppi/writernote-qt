@@ -94,17 +94,17 @@ public:
     const T& at(int i) const;
     void reserve(int numberOfElement);
     T takeAt(int i);
-    const T& last() const;
-    const T& first() const;
-    T& operator[](int index);
-    bool isEmpty() const;
+    auto last() const ->  const T&;
+    auto first() const -> const T&;
+    auto operator[](int index) -> T&;
+    auto isEmpty() const -> bool;
 
     void insert(int index, T &&data);
     void insert(int index, const T& data);
 
-    T takeFirst();
-    const T* constData() const;
-    int indexOf(const T &object);
+    auto takeFirst() -> T;
+    auto constData() const -> const T*;
+    auto indexOf(const T &object) -> int;
     void remove(const T& object);
 
 
@@ -152,9 +152,7 @@ public:
     /**
      * \return < 0 if error
      * */
-    template <class Readable>
-    requires (std::is_base_of_v<ReadableAbstract, Readable>)
-    static auto load (const VersionFileController &versionController, Readable &file) -> WPair<int, WVector<T>>;
+    static auto load (const VersionFileController &versionController, ReadableAbstract &file) -> WPair<int, WVector<T>>;
 
     /**
      * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case
@@ -233,26 +231,29 @@ auto WVector<T>::removeOrderDescending(
         ) noexcept -> bool
 {
     // ordine decrescente
-    const auto iterator = std::lower_bound(
-            rbegin(),
-            rend(),
+    const auto iterator = WAbstractList::binary_search<WVector<T>::iterator, T, true>(
+            begin(),
+            end(),
             object,
             cmp
     );
 
-    if (iterator == rbegin())
+    if (iterator == end())
         return false;
-    const int distance = std::distance(rend(), iterator);
-    const int index = size() - distance - 1;
+
+    const int indexFirst = end() - iterator;
+    const int index = size() - indexFirst - 1;
     int lastIndex = index;
 
-    for (int i = index; i > 0; i--) {
+    for (auto i = indexFirst; i < size(); i++) {
         if (at(i) != object)
             break;
         lastIndex = i;
     }
 
-    removeAll(lastIndex, index + 1);
+    WDebug(true, "Before" << *this);
+    removeAll(indexFirst, lastIndex + 1);
+    WDebug(true, "After" << *this);
 
     return true;
 }
@@ -590,10 +591,9 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const WVector<T> &p)
 #endif // USE_QT
 
 template <class T>
-template <class Readable> requires (std::is_base_of_v<ReadableAbstract, Readable>)
 inline auto WVector<T>::load(
         const VersionFileController &versionController,
-        Readable &file
+        ReadableAbstract &file
 ) -> WPair<int, WVector<T>>
 {
     // TODO: adjust
@@ -633,8 +633,16 @@ inline auto WVector<T>::removeOrderAscending(
             const std::function<bool(const T &, const T &)> &cmp
         ) noexcept -> bool
 {
+#ifdef DEBUGINFO
+    for (int i = 0; i < size() - 1; i++) {
+        const bool isEquals = at(i) == at(i+1);
+        const auto cmpResult = !cmp(at(i), at(i+1));
+        W_ASSERT(isEquals || cmpResult);
+    }
+#endif // DEBUGINFO
+
     // ordine crescente
-    const auto iterator = std::lower_bound(
+    const auto iterator = WAbstractList::binary_search<WVector<T>::iterator, T, false>(
             begin(),
             end(),
             object,
@@ -645,9 +653,13 @@ inline auto WVector<T>::removeOrderAscending(
 
     if (iterator == end())
         return false;
-    const int index = std::distance(begin(), iterator);
+    const int index = iterator - begin();
+
+    WDebug(true, "Before" << *this);
 
     removeAt(index);
+
+    WDebug(true, "After" << *this);
 
     return true;
 }
