@@ -123,11 +123,15 @@ namespace WAbstractList {
             return end;
 
         for (;;) {
-            result --;
-            if (*result != object)
-                return result + 1;
-        }
+            WDebug(false, "Cicle")
+            if (result == begin)
+                return result;
 
-        return result;
+            result --;
+            if (*result != object) {
+                WDebug(false, "return");
+                return result + 1;
+            }
+        }
     }
 };

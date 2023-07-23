@@ -38,6 +38,8 @@ public:
     ExactInteger& operator/= (const ExactInteger& rhs);
     ExactInteger& operator%= (const ExactInteger& rhs);
 
+    auto isPrime() const -> bool;
+
     void divide(ExactInteger v, ExactInteger& q, ExactInteger& r) const;
 
     ExactInteger& operator<<= (size_t rhs);

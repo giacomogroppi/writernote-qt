@@ -62,6 +62,8 @@ public:
      * */
     auto getFirst() -> const T&;
 
+    auto size() const -> int;
+
     auto add (const T& data) -> void;
     auto add (T&& data) -> void;
 
@@ -171,4 +173,10 @@ WHeap<T, min>::WHeap(std::function<bool(const T &, const T &)> cmp) noexcept
     })
 {
 
+}
+
+template <class T, bool min>
+auto WHeap<T, min>::size() const -> int
+{
+    return this->_d.size();
 }

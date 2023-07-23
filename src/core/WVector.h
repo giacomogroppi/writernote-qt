@@ -241,9 +241,9 @@ auto WVector<T>::removeOrderDescending(
     if (iterator == end())
         return false;
 
-    const int indexFirst = end() - iterator;
+    const int indexFirst = iterator - begin();
     const int index = size() - indexFirst - 1;
-    int lastIndex = index;
+    int lastIndex = indexFirst;
 
     for (auto i = indexFirst; i < size(); i++) {
         if (at(i) != object)
@@ -647,19 +647,23 @@ inline auto WVector<T>::removeOrderAscending(
             end(),
             object,
             [cmp](const T& v1, const T& v2) -> bool {
-                return !cmp(v1, v2);
+                return cmp(v1, v2);
             }
     );
 
     if (iterator == end())
         return false;
     const int index = iterator - begin();
+    int lastIndex = index;
 
-    WDebug(true, "Before" << *this);
+    for (int i = index; i < size(); i++) {
+        if (at(i) != object) {
+            break;
+        }
+        lastIndex = i;
+    }
 
-    removeAt(index);
-
-    WDebug(true, "After" << *this);
+    removeAll(index, lastIndex + 1);
 
     return true;
 }

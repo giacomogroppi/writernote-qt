@@ -76,7 +76,9 @@ Scheduler::Scheduler()
             this->_c.wait_for(lk, std::chrono::milliseconds (shouldWaitFor), [&lastValueEnd, this]{
                 // if the list has been modified we need to reschedule the
                 // timer for std::condition_value, or we need to die
-                return this->_timersWaiting.getFirst()->getEnd() != lastValueEnd || needToDie();
+                return needToDie() || (
+                        _timersWaiting.size() &&
+                        _timersWaiting.getFirst()->getEnd() != lastValueEnd);
             });
 
             if (needToDie())
@@ -110,6 +112,7 @@ Scheduler::~Scheduler()
     this->_semGeneral.release(_threads.size());
 
     _needToDieLock.unlock();
+    _c.notify_all();
 
     for (auto &ref: _threads)
         ref.join();
