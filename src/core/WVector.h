@@ -273,14 +273,14 @@ inline WVector<T> &WVector<T>::operator=(const WVector<T> &other)
 }
 
 template <class T>
-inline WVector<T> &WVector<T>::operator=(WVector<T> &&other) noexcept
+auto WVector<T>::operator=(WVector<T> &&other) noexcept -> WVector<T> &
 {
     _data = std::move(other._data);
     return *this;
 }
 
 template<class T>
-inline T WVector<T>::takeAt(int i)
+auto WVector<T>::takeAt(int i) -> T
 {
     W_ASSERT(i >= 0 && i < size());
     auto iterator = this->_data.begin() + i;
@@ -293,7 +293,7 @@ inline T WVector<T>::takeAt(int i)
 }
 
 template<class T>
-inline void WVector<T>::insert(int index, T &&data)
+void WVector<T>::insert(int index, T &&data)
 {
     this->_data.insert(
             _data.begin() + index,
@@ -302,7 +302,7 @@ inline void WVector<T>::insert(int index, T &&data)
 }
 
 template<class T>
-inline void WVector<T>::insert(int index, const T &data)
+void WVector<T>::insert(int index, const T &data)
 {
     this->_data.insert(
             _data.begin() + index,
@@ -311,7 +311,7 @@ inline void WVector<T>::insert(int index, const T &data)
 }
 
 template<class T>
-inline T WVector<T>::takeFirst()
+auto WVector<T>::takeFirst() -> T
 {
     T copy = std::move(_data.at(0));
     _data.erase(_data.begin(), _data.begin() + 1);
@@ -357,13 +357,13 @@ inline void WVector<T>::test() const
 }
 
 template<class T>
-inline T &WVector<T>::operator[](int index)
+inline auto WVector<T>::operator[](int index) -> T &
 {
     return _data[index];
 }
 
 template<class T>
-inline const T &WVector<T>::at(int i) const
+auto WVector<T>::at(int i) const -> const T&
 {
     return _data[i];
 }
@@ -424,19 +424,19 @@ inline void WVector<T>::clear()
 }
 
 template<class T>
-inline bool WVector<T>::isEmpty() const
+auto WVector<T>::isEmpty() const -> bool
 {
     return size() == 0;
 }
 
 template<class T>
-inline const T *WVector<T>::constData() const
+inline auto WVector<T>::constData() const -> const T *
 {
     return this->_data.data();
 }
 
 template<class T>
-inline int WVector<T>::indexOf(const T &object)
+inline auto WVector<T>::indexOf(const T &object) -> int
 {
     const auto pos = std::find(_data.cbegin(), _data.cend(), object);
     if (pos == _data.cend())
@@ -445,37 +445,37 @@ inline int WVector<T>::indexOf(const T &object)
 }
 
 template<class T>
-inline bool WVector<T>::operator==(const WVector<T> &other) const
+inline auto WVector<T>::operator==(const WVector<T> &other) const -> bool
 {
     return this->_data == other._data;
 }
 
 template<class T>
-inline bool WVector<T>::operator!=(const WVector<T> &other) const
+inline auto WVector<T>::operator!=(const WVector<T> &other) const -> bool
 {
     return this->_data != other._data;
 }
 
 template<class T>
-inline const T &WVector<T>::last() const
+inline auto WVector<T>::last() const -> const T &
 {
     return get(size() - 1);
 }
 
 template<class T>
-inline const T &WVector<T>::first() const
+inline auto WVector<T>::first() const -> const T &
 {
     return at(0);
 }
 
 template<class T>
-inline int WVector<T>::size() const
+inline auto WVector<T>::size() const -> int
 {
     return _data.size();
 }
 
 template<class T>
-inline const T &WVector<T>::get(int i) const
+inline auto WVector<T>::get(int i) const -> const T &
 {
     W_ASSERT(i >= 0 && i < size());
     return this->_data[i];
@@ -569,7 +569,7 @@ WVector<T>::WVector(std::initializer_list<T> &&object) noexcept
 }
 
 template <class T>
-inline WVector<T>::WVector(WVector<T> &&other) noexcept
+WVector<T>::WVector(WVector<T> &&other) noexcept
     : _data(std::move(other._data))
 {
 }

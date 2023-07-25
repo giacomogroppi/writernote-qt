@@ -20,5 +20,5 @@ merge_currenttitle::n_merge merge_currenttitle::merge(Document *first, Document 
         return n_merge::internal_error;
 
     W_ASSERT_TEXT(0, "NOT IMPLEMENTED");
-
+    return merge_currenttitle::n_merge::internal_error;
 }
