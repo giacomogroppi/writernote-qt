@@ -242,7 +242,6 @@ auto WVector<T>::removeOrderDescending(
         return false;
 
     const int indexFirst = iterator - begin();
-    const int index = size() - indexFirst - 1;
     int lastIndex = indexFirst;
 
     for (auto i = indexFirst; i < size(); i++) {

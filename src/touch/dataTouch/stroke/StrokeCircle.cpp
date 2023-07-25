@@ -6,6 +6,7 @@
 int StrokeCircle::load(WZipReaderSingle &reader)
 {
     W_ASSERT(0);
+    return -1;
 }
 
 StrokeCircle::StrokeCircle()

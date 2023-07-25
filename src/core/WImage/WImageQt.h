@@ -1,91 +1,72 @@
-#pragma once
+#pragma one
 
-#ifdef USE_QT
-#include <QImage>
-#include <QBuffer>
-#include "core/ByteArray/WByteArray.h"
-#else
-# include "core/ByteArray/WByteArray.h"
-#endif
+#ifndef USE_QT
+# error "Try using qt without USE_QT set
+#endif // USE_QT
 
 #include "core/ByteArray/WByteArray.h"
+#include "WImagePrivateCommon.h"
 #include "RectF.h"
 #include "String/WString.h"
 #include "WRgb.h"
 #include "Point.h"
 #include <iostream>
 
-enum WImageType {
-    png
-};
-
-class WImage
-#ifdef USE_QT
-        : public QImage
-#endif
-        {
-private:
-#ifdef Q_OS_IOS
-    /**
-     * this is a NSImage object
-    */
-    void *d;
-#endif
+class WImage : public QImage
+{
 public:
     explicit WImage(const WString &path) noexcept;
     WImage (WImage &&other) noexcept;
     WImage (const WImage &other) noexcept;
 
-#ifdef USE_QT
     explicit WImage (QImage img);
-#endif // USE_QT
+
     explicit WImage(const std::string &fileName, const char *format = nullptr);
     explicit WImage(int page, bool consideringResolution);
     WImage(int width, int height, WImageType format);
     WImage() = default;
 
-    [[nodiscard]] size_t get_size_in_file() const;
-    [[nodiscard]] size_t save_and_size(WByteArray &arr) const;
+    [[nodiscard]]
+    auto get_size_in_file() const -> size_t;
+    
+    [[nodiscard]]
+    auto save_and_size(WByteArray &arr) const -> size_t;
 
     bool loadFromData(const WByteArray &data, const char *formact);
 
-    int height() const;
-    int width() const;
+    auto height() const -> int;
+    auto width() const -> int;
 
-    RectF rect() const;
+    auto rect() const -> RectF;
 
     bool isNull() const;
 
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>;
     static auto write (WritableAbstract &writable, const WImage &source) -> int;
 
-    bool operator==(const WImage &other) const;
-    WImage &operator=(WImage &&other) noexcept;
+    auto operator==(const WImage &other) const -> bool;
+    auto operator=(WImage &&other) noexcept -> WImage &;
 
     auto getRawDataPNG() const -> WByteArray;
 
-#ifdef USE_QT
     WImage &operator=(const QImage &other);
-#endif // USE_QT
 
     friend class WPainter;
 
     WRgb pixel(const WPoint &point) const;
 };
 
-#ifdef USE_QT
-
-inline bool WImage::loadFromData(const WByteArray &data, const char *formact)
+auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
 {
     return QImage::loadFromData(data, formact);
 }
 
-inline bool WImage::isNull() const
+auto WImage::isNull() const -> bool
 {
     return QImage::isNull();
 }
 
-inline RectF WImage::rect() const
+auto WImage::rect() const -> RectF
 {
     const auto qtRect = QImage::rect();
     const auto tl = qtRect.topLeft();
@@ -99,22 +80,22 @@ inline RectF WImage::rect() const
     };
 }
 
-inline bool WImage::operator==(const WImage &other) const
+auto WImage::operator==(const WImage &other) const -> bool
 {
     return QImage::operator==(other);
 }
 
-inline int WImage::width() const
+auto WImage::width() const -> int
 {
     return QImage::width();
 }
 
-inline int WImage::height() const
+auto WImage::height() const -> int
 {
     return QImage::height();
 }
 
-inline WImage &WImage::operator=(const QImage &other)
+auto &WImage::operator=(const QImage &other) -> WImage
 {
     if (this == &other)
         return *this;
@@ -122,29 +103,29 @@ inline WImage &WImage::operator=(const QImage &other)
     return *this;
 }
 
-inline WImage::WImage(QImage img)
+WImage::WImage(QImage img)
     : QImage(std::move(img))
 {
 
 }
 
-inline WRgb WImage::pixel(const WPoint &point) const
+auto WImage::pixel(const WPoint &point) const -> WRgb
 {
     return QImage::pixel(point.x(), point.y());
 }
 
-inline WImage::WImage(const WString &path) noexcept
+WImage::WImage(const WString &path) noexcept
     : QImage(path)
 {
 }
 
-inline WImage::WImage(WImage &&other) noexcept
+WImage::WImage(WImage &&other) noexcept
     : QImage(std::move(other))
 {
 
 }
 
-inline WImage &WImage::operator=(WImage &&other) noexcept
+auto WImage::operator=(WImage &&other) noexcept -> WImage &
 {
     if (this == &other)
         return *this;
@@ -152,7 +133,7 @@ inline WImage &WImage::operator=(WImage &&other) noexcept
     return *this;
 }
 
-inline auto WImage::getRawDataPNG() const -> WByteArray
+auto WImage::getRawDataPNG() const -> WByteArray
 {
     QByteArray arr;
     QBuffer buffer(&arr);
@@ -162,7 +143,5 @@ inline auto WImage::getRawDataPNG() const -> WByteArray
     return {std::move(arr)};
 }
 
-inline WImage::WImage(const WImage &other) noexcept = default;
-
-#endif // USE_QT
+WImage::WImage(const WImage &other) noexcept = default;
 

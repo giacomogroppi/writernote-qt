@@ -6,7 +6,7 @@
 # include "QtGui/qpdfwriter.h"
 #endif // USE_QT
 
-#include "core/WImage.h"
+#include "core/WImage/WImage.h"
 #include "touch/dataTouch/Point.h"
 #include "core/Rect.h"
 #include "core/WPixmap.h"

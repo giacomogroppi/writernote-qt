@@ -9,7 +9,7 @@
 #include "testing/memtest.h"
 #include "FileContainer/WZipWriterSingle.h"
 #include "FileContainer/WZipReaderSingle.h"
-#include "core/WImage.h"
+#include "core/WImage/WImage.h"
 #include "core/WPainter/WPainter.h"
 #include "core/Point.h"
 #include "core/WPen.h"
@@ -110,6 +110,11 @@ public:
     };
 
     virtual void draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen, cdouble prop) const = 0;
+    
+    /**
+     * \return -1 in case the stroke is not touched by the line
+     */
+    [[deprecated]]
     virtual int is_inside(const WLine &rect, int from, int precision, cbool needToDeletePoint) const = 0;
     virtual bool is_inside(const RectF &rect, double precision) const = 0;
 

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "core/WImage.h"
+#include "core/WImage/WImage.h"
 #include "FileContainer/WZipReaderSingle.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "touch/dataTouch/Point.h"
 #include "core/WList.h"
-#include "core/WImage.h"
 #include "core/WPixmap.h"
 #include "core/Point.h"
 #include "core/WPainter/WPainter.h"

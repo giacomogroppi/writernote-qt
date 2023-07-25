@@ -26,7 +26,6 @@ private:
 
     /**
      * It will create a heap
-     * \return True if the data structure has been modified
      * */
     auto createHeap() -> void;
 public:

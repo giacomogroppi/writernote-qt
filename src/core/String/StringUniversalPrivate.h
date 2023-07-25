@@ -88,9 +88,9 @@ public:
 
     friend bool operator<(const WString &first, const WString &second);
 
-    WString& append(const char *data, int size);
+    auto append(const char *data, long size) -> WString&;
 
-    std::string toStdString() const noexcept;
+    auto toStdString() const noexcept -> std::string;
 
     auto operator>(const WString &other) const noexcept -> bool;
     auto operator>=(const WString &other) const noexcept -> bool;
@@ -273,7 +273,7 @@ inline bool operator<(const WString &first, const WString &second)
     return false;
 }
 
-inline WString& WString::append(const char *data, int size)
+auto WString::append(const char *data, long size) -> WString&
 {
     this->_data.append(data, size);
     return *this;

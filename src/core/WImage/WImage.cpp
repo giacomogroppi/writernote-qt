@@ -12,10 +12,7 @@ WImage::WImage(const std::string &path, const char *format):
 {
     this->fill(Qt::transparent);
 }
-#else
-#endif
 
-#ifdef USE_QT
 size_t WImage::save_and_size(WByteArray &arr) const
 {
     W_ASSERT(arr.size() == 0);
@@ -25,16 +22,6 @@ size_t WImage::save_and_size(WByteArray &arr) const
     buffer.close();
     return arr.size();
 }
-#endif
-
-size_t WImage::get_size_in_file() const
-{
-    WByteArray arr;
-    const auto s = this->save_and_size(arr);
-    return s;
-}
-
-#ifdef USE_QT
 
 WImage::WImage(int width, int height, WImageType format)
     : QImage(

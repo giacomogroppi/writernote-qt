@@ -61,6 +61,7 @@ int StrokeRect::is_inside(const WLine &line, int from, int precision, cbool need
     (void)(precision);
     (void)(needToDeletePoint);
     W_ASSERT(0);
+    return -1;
 }
 
 bool StrokeRect::is_inside(const RectF &rect, double precision) const

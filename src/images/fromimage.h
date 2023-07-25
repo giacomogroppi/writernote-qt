@@ -5,7 +5,7 @@
 #include "utils/common_error_definition.h"
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "FileContainer/WZip.h"
-#include "core/WImage.h"
+#include "core/WImage/WImage.h"
 #include "ImageDrawable.h"
 
 #define DELTA_POINT 200

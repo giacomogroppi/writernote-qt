@@ -8,7 +8,7 @@
 #include "utils/WCommonScript.h"
 #include <pthread.h>
 #include <memory>
-#include "core/WImage.h"
+#include "core/WImage/WImage.h"
 #include "touch/dataTouch/stroke/StrokeForPage.h"
 #include "core/WPixmap.h"
 #include "core/WPen.h"
