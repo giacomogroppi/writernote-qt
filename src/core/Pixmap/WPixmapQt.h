@@ -5,8 +5,8 @@
 #include <QPixmap>
 #include "utils/WCommonScript.h"
 #include "core/ByteArray/WByteArray.h"
-#include "RectF.h"
-#include "WImage.h"
+#include "core/RectF.h"
+#include "core/Image/WImage.h"
 #include "core/String/WString.h"
 #include "touch/dataTouch/Point.h"
 

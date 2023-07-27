@@ -1,16 +1,16 @@
-#pragma one
+#pragma once
 
-#ifndef USE_QT
-# error "Try using qt without USE_QT set
-#endif // USE_QT
+#ifdef USE_QT
 
 #include "core/ByteArray/WByteArray.h"
 #include "WImagePrivateCommon.h"
-#include "RectF.h"
-#include "String/WString.h"
-#include "WRgb.h"
-#include "Point.h"
+#include "core/RectF.h"
+#include "core/String/WString.h"
+#include "core/WRgb.h"
+#include "core/Point.h"
 #include <iostream>
+#include <QBuffer>
+#include <QImage>
 
 class WImage : public QImage
 {
@@ -95,7 +95,7 @@ auto WImage::height() const -> int
     return QImage::height();
 }
 
-auto &WImage::operator=(const QImage &other) -> WImage
+auto WImage::operator=(const QImage &other) -> WImage&
 {
     if (this == &other)
         return *this;
@@ -145,3 +145,4 @@ auto WImage::getRawDataPNG() const -> WByteArray
 
 WImage::WImage(const WImage &other) noexcept = default;
 
+#endif // USE_QT

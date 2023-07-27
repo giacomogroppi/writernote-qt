@@ -22,9 +22,9 @@ private:
     int load_ver_2(WZipReaderSingle &reader);
 
     /**
-     * T and Z must be iterator
+     * \tparam T Iterator for points
+     * \tparam Z Iterator for pressure
     */
-
     template <class T, class Z>
     struct drawData{
         T begin_point;

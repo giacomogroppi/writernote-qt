@@ -145,25 +145,25 @@ int StrokeNormal::is_inside(const WLine &rect, int from, int precision, cbool ne
 
     const auto len = this->length();
 
-    if(un(!len))
+    if (!len)
         return -1;
 
-    if(un(i >= len))
+    if (i >= len)
         return -1;
 
-    if(i == 0){
+    if (i == 0){
         const auto &ref = this->getBiggerPointInStroke();
         if(!ref.intersects(rect.toRect()))
             return -1;
     }
 
     p1 = &_point.at(i);
-    for(i++; i < len; i++){
+    for (i++; i < len; i++) {
         p2 = &_point.at(i);
 
         tmp = WLine(*p1, *p2);
 
-        if(un(WLine::intersect(tmp, rect, precision))){
+        if (WLine::intersect(tmp, rect, precision)) {
             return i;
         }
 

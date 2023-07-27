@@ -26,8 +26,8 @@ static auto convertToCanonical (char mode) -> const char *
 }
 
 WFile::WFile(WByteArray path)
-        : _path(std::move(path))
-        , _fp(nullptr)
+        : _fp(nullptr)
+        , _path(std::move(path))
         , lastMod()
 {
 
