@@ -56,17 +56,17 @@ public:
     WRgb pixel(const WPoint &point) const;
 };
 
-auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
+inline auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
 {
     return QImage::loadFromData(data, formact);
 }
 
-auto WImage::isNull() const -> bool
+inline auto WImage::isNull() const -> bool
 {
     return QImage::isNull();
 }
 
-auto WImage::rect() const -> RectF
+inline auto WImage::rect() const -> RectF
 {
     const auto qtRect = QImage::rect();
     const auto tl = qtRect.topLeft();
@@ -80,22 +80,22 @@ auto WImage::rect() const -> RectF
     };
 }
 
-auto WImage::operator==(const WImage &other) const -> bool
+inline auto WImage::operator==(const WImage &other) const -> bool
 {
     return QImage::operator==(other);
 }
 
-auto WImage::width() const -> int
+inline auto WImage::width() const -> int
 {
     return QImage::width();
 }
 
-auto WImage::height() const -> int
+inline auto WImage::height() const -> int
 {
     return QImage::height();
 }
 
-auto WImage::operator=(const QImage &other) -> WImage&
+inline auto WImage::operator=(const QImage &other) -> WImage&
 {
     if (this == &other)
         return *this;
@@ -103,29 +103,29 @@ auto WImage::operator=(const QImage &other) -> WImage&
     return *this;
 }
 
-WImage::WImage(QImage img)
+inline WImage::WImage(QImage img)
     : QImage(std::move(img))
 {
 
 }
 
-auto WImage::pixel(const WPoint &point) const -> WRgb
+inline auto WImage::pixel(const WPoint &point) const -> WRgb
 {
     return QImage::pixel(point.x(), point.y());
 }
 
-WImage::WImage(const WString &path) noexcept
+inline WImage::WImage(const WString &path) noexcept
     : QImage(path)
 {
 }
 
-WImage::WImage(WImage &&other) noexcept
+inline WImage::WImage(WImage &&other) noexcept
     : QImage(std::move(other))
 {
 
 }
 
-auto WImage::operator=(WImage &&other) noexcept -> WImage &
+inline auto WImage::operator=(WImage &&other) noexcept -> WImage &
 {
     if (this == &other)
         return *this;
@@ -133,7 +133,7 @@ auto WImage::operator=(WImage &&other) noexcept -> WImage &
     return *this;
 }
 
-auto WImage::getRawDataPNG() const -> WByteArray
+inline auto WImage::getRawDataPNG() const -> WByteArray
 {
     QByteArray arr;
     QBuffer buffer(&arr);
@@ -143,6 +143,6 @@ auto WImage::getRawDataPNG() const -> WByteArray
     return {std::move(arr)};
 }
 
-WImage::WImage(const WImage &other) noexcept = default;
+inline WImage::WImage(const WImage &other) noexcept = default;
 
 #endif // USE_QT

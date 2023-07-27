@@ -4,9 +4,9 @@
 
 WTask::WTask(WObject *parent, bool deleteLater)
     : WObject(parent)
+    , _waiterLock()
     , _waiter(0)
     , _deleteLater(deleteLater)
-    , _waiterLock()
     , _hasFinish(false)
 {
 }

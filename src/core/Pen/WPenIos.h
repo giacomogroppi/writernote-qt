@@ -1,7 +1,9 @@
 #pragma once
 
 #include "touch/dataTouch/Point.h"
+#include "utils/platform.h"
 
+#if is_ios || (is_mac && !USE_QT)
 class WPen
 {
 public:
@@ -29,3 +31,4 @@ private:
     double _size;
     WPenStyle _style;
 };
+#endif

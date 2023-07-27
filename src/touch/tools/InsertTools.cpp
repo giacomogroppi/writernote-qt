@@ -63,7 +63,7 @@ int InsertTools::touchEnd(const PointF &, class Document &doc)
 
     strokeToAppend.adjust(PointFirstPage);
 
-    std::shared_ptr<Stroke> res = std::move(strokeToAppend.merge());
+    std::shared_ptr<Stroke> res = strokeToAppend.merge();
 
     pageMod = doc.appendStroke(res);
 

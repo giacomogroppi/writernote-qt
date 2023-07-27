@@ -1,9 +1,10 @@
 #include "WPenIos.h"
 
+#if is_ios || (is_mac && !USE_QT)
 WPen::WPen()
-    : _style(WPenStyle::DotLine)
+    : _color(color_black)
     , _size(1.)
-    , _color(color_black)
+    , _style(WPenStyle::DotLine)
 {
     
 }
@@ -37,3 +38,4 @@ void WPen::setStyle(enum WPenStyle style)
 {
     this->_style = style;
 }
+#endif
