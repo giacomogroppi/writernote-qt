@@ -39,6 +39,7 @@ public:
 
     void reserve(Size numberOfChar);
 
+    [[nodiscard]]
     WByteArray mid(Size from, Size to) const;
 
     bool operator==(const WByteArray &other) const;
@@ -107,7 +108,7 @@ public:
     auto operator=(WByteArray &&other) noexcept -> WByteArray &;
     auto operator=(const WByteArray &other) noexcept -> WByteArray &;
 
-    void remove(int i) noexcept;
+    void remove(int index) noexcept;
 };
 
 inline const char *WByteArray::constData() const
@@ -293,4 +294,32 @@ inline char &WByteArray::operator[](int i)
 {
     W_ASSERT(i >= 0 and i < size());
     return this->_data[i];
+}
+
+inline void WByteArray::insert(const WByteArray &data, WByteArray::Size index) noexcept
+{
+    using namespace WCommonScript;
+
+    if (_reserved < data.size())
+        reserve(data.size() - _reserved);
+
+    // first we need to move our memory
+    WMemmove(
+            _data + sizeof (CharType) * (index + data.size()),
+            _data + sizeof (CharType) * index,
+            data.size()
+            );
+
+    // copy the memory in data in index
+    WMemmove(_data + sizeof (CharType) * index,
+             data._data,
+             data.size());
+}
+
+inline void WByteArray::remove(int index) noexcept
+{
+    using namespace WCommonScript;
+    W_ASSERT(index >= 0 and index < size());
+
+    WMemmove(_data + sizeof (CharType) * index, _data + sizeof (CharType) * (index + 1), size() - index - 1);
 }

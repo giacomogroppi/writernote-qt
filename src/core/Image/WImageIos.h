@@ -1,13 +1,13 @@
 #pragma once
 
 
-#include "RectF.h"
+#include "core/RectF.h"
 #include "WImagePrivateCommon.h"
 #include "core/String/WString.h"
 #include "core/PointF.h"
 #include "core/Point.h"
 #include "core/WRgb.h"
-#include "touch/DataTouch/Point.h"
+#include "touch/dataTouch/Point.h"
 
 class WImage
 {

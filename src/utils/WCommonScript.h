@@ -129,6 +129,14 @@ force_inline void swap(T &t1, T &t2)
     }
 
 
+force_inline void WMemmove(void *to, const void *from, unsigned long size)
+{
+    W_ASSERT(from);
+    W_ASSERT(to);
+    W_ASSERT(size != 0);
+    memmove(to, from, size);
+}
+
 force_inline size_t WMemcpy(void *to, const void *from, size_t size)
 {
     W_ASSERT(from);

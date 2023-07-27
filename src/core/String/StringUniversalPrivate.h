@@ -263,13 +263,22 @@ inline bool WString::operator!=(const WString &other) const
 
 inline bool operator<(const WString &first, const WString &second)
 {
-    int i;
-    for (i = 0; i < first.size() and i < second.size(); i++) {
-        if (first.at(i) > second.at(i))
-            return false;
-    }
+    unsigned long i;
+
     if (first.size() < second.size())
         return true;
+
+    auto b1 = first.begin(), b2 = second.begin();
+    auto e1 = first.end(), e2 = second.end();
+
+    for (; b1 != e1 and b2 != e2; b1 ++, b2 ++) {
+        if (*b1 == *b2)
+            continue;
+        if (*b1 > *b2)
+            return false;
+        return true;
+    }
+
     return false;
 }
 
