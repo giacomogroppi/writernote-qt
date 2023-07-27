@@ -4,10 +4,9 @@
 #include "utils/WCommonScript.h"
 #include "VersionFileController.h"
 #include "core/WPair.h"
+#include "utils/platform.h"
 
-#ifdef USE_QT
-# error "Trying using WByteArrayUniversal with Qt"
-#endif
+#if is_ios || (is_mac && !USE_QT)
 
 class WByteArray
 {
@@ -45,7 +44,7 @@ public:
     bool operator==(const WByteArray &other) const;
     WByteArray operator+(const WByteArray &other) const;
     WByteArray &operator+=(const WByteArray &other);
-    WByteArray &operator=(const char *data);
+    WByteArray &operator=(const char *data) noexcept;
     char &operator[](int i);
     char operator[](int i) const;
 
@@ -302,7 +301,7 @@ inline void WByteArray::insert(const WByteArray &data, WByteArray::Size index) n
 
     if (_reserved < data.size())
         reserve(data.size() - _reserved);
-
+    
     // first we need to move our memory
     WMemmove(
             _data + sizeof (CharType) * (index + data.size()),
@@ -323,3 +322,21 @@ inline void WByteArray::remove(int index) noexcept
 
     WMemmove(_data + sizeof (CharType) * index, _data + sizeof (CharType) * (index + 1), size() - index - 1);
 }
+
+inline auto WByteArray::operator=(const char *str) noexcept -> WByteArray&
+{
+    using namespace WCommonScript;
+    const Size size = strlen (str);
+    
+    if (_reserved + _size < size + 1) {
+        reserve (size - this->_reserved - _size + 1);
+    }
+    
+    WMemcpy(_data, str, size);
+    _data[size] = '\0';
+    
+    return *this;
+}
+
+#endif
+

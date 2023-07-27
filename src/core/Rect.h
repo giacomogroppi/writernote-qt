@@ -1,9 +1,4 @@
-//
-// Created by Giacomo Groppi on 13/04/23.
-//
-
-#ifndef TESTING_QML_WRECT_H
-#define TESTING_QML_WRECT_H
+#pragma once
 
 #include "core/PointTemplate.h"
 #include "core/WSizeTemplate.h"
@@ -42,6 +37,9 @@ public:
     RectTemplate<T> setHeight(T height);
     RectTemplate<T> setWidth(T width);
 
+    auto height() const -> T;
+    auto width() const  -> T;
+    
     RectTemplate<T> setY(T y);
     RectTemplate<T> setX(T x);
 
@@ -504,6 +502,16 @@ inline constexpr RectTemplate<T>::RectTemplate(const RectTemplate<T> &other)
 {
 }
 
-using WRect = RectTemplate<int>;
+template <class T>
+inline auto RectTemplate<T>::height() const -> T
+{
+    return this->_bottomRight.y() - this->_topLeft.y();
+}
 
-#endif //TESTING_QML_WRECT_H
+template <class T>
+inline auto RectTemplate<T>::width() const -> T
+{
+    return this->_bottomRight.x() - this->_topLeft.x();
+}
+
+using WRect = RectTemplate<int>;
