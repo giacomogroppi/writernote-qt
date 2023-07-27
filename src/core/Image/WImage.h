@@ -1,8 +1,10 @@
 #pragma once
 
+#include "utils/platform.h"
+
 #ifdef USE_QT
 # include "WImageQt.h"
-#else
+#elif is_ios == 1 || is_mac == 1
     // TODO: manage android import
-# import "WImageIos.h"
+# include "WImageIos.h"
 #endif // USE_QT

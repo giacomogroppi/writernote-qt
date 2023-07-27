@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/WImage.h"
+#include "core/Image/WImage.h"
 #include "utils/common_def.h"
-#include "core/WPixmap.h"
+#include "core/Pixmap/WPixmap.h"
 
 class Document;
 class TabletCanvas;

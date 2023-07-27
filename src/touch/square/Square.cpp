@@ -1,7 +1,7 @@
 #include "Square.h"
 
 #include <utility>
-#include "core/WPen.h"
+#include "core/Pen/WPen.h"
 #include "core/WPainter/WPainter.h"
 
 Square::Square(WObject *parent,

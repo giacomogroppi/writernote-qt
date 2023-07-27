@@ -1,19 +1,16 @@
 #pragma once
 
 #ifdef USE_QT
-# include <QPixmap>
-#endif // USE_QT
+
+#include <QPixmap>
 #include "utils/WCommonScript.h"
 #include "core/ByteArray/WByteArray.h"
 #include "RectF.h"
 #include "WImage.h"
-#include "String/WString.h"
+#include "core/String/WString.h"
 #include "touch/dataTouch/Point.h"
 
-class WPixmap
-#ifdef USE_QT
-    : public QPixmap
-#endif // USE_QT
+class WPixmap : public QPixmap
 {
 private:
 
@@ -44,6 +41,8 @@ public:
     auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WPixmap>;
     static auto write(WritableAbstract &writable, const WPixmap &pixmap) -> int;
 
-    WPixmap &operator=(const WPixmap &other) noexcept;
-    WPixmap &operator=(WPixmap &&other) noexcept;
+    auto operator=(const WPixmap &other) noexcept -> WPixmap &;
+    auto operator=(WPixmap &&other) noexcept -> WPixmap &;
 };
+
+#endif // USE_QT

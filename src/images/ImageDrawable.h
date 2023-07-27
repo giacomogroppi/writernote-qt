@@ -1,6 +1,7 @@
 #pragma once
 
-#include "core/WImage/WImage.h"
+#include "core/Image/WImage.h"
+#include "core/PointF.h"
 
 class ImageDrawable {
 public:

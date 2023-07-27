@@ -7,8 +7,7 @@
 #include "core/PointF.h"
 #include "core/Point.h"
 #include "core/WRgb.h"
-
-//#import <Cocoa/Cocoa.h>
+#include "touch/DataTouch/Point.h"
 
 class WImage
 {
@@ -35,7 +34,7 @@ public:
     [[nodiscard]]
     auto save_and_size(WByteArray &arr) const -> size_t;
 
-    bool loadFromData(const WByteArray &data, const char *formact);
+    auto loadFromData(const WByteArray &data, const char *formact) -> bool;
 
     auto height() const -> int;
     auto width() const -> int;
@@ -44,6 +43,8 @@ public:
 
     auto isNull() const -> bool;
 
+    auto fill(const WColor &color) -> void;
+    
     static auto load (const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>;
     static auto write (WritableAbstract &writable, const WImage &source) -> int;
 
@@ -55,5 +56,7 @@ public:
 
     friend class WPainter;
 
+    auto toImage() const -> WImage;
+    
     auto pixel(const WPoint &point) const -> WRgb;
 };

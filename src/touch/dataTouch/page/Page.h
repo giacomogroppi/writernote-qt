@@ -8,10 +8,10 @@
 #include "utils/WCommonScript.h"
 #include <pthread.h>
 #include <memory>
-#include "core/WImage/WImage.h"
+#include "core/Image/WImage.h"
 #include "touch/dataTouch/stroke/StrokeForPage.h"
-#include "core/WPixmap.h"
-#include "core/WPen.h"
+#include "core/Pixmap/WPixmap.h"
+#include "core/Pen/WPen.h"
 #include "core/RectF.h"
 #include "core/Point.h"
 #include "core/WSizeTemplate.h"

@@ -27,8 +27,34 @@
 # define is_ios 0
 #endif
 
+#ifdef __APPLE__
+#  include <TargetConditionals.h>
+#  if TARGET_OS_MACCATALYST
+     // Mac's Catalyst (ports iOS API into Mac, like UIKit).
+#    define is_mac 1
+#    define is_ios 0
+#  elif TARGET_OS_IPHONE
+     // iOS, tvOS, or watchOS device
+#    define is_mac 0
+#    define is_ios 1
+#  elif TARGET_OS_MAC
+     // Other kinds of Apple platforms
+#    define is_mac 1
+#    define is_ios 0
+#  else
+#    error "Unknown Apple platform"
+#    endif
+#else
+#  define is_mac 0
+#  define is_ios 0
+#  error "Prova"
+#endif // __APPLE__
+
 force_inline bool is_mobile_static()
 {
     return is_android || is_ios;
 }
 
+static_assert(is_mac == 0 or is_mac == 1);
+static_assert(is_ios == 0 or is_ios == 1);
+static_assert(is_mac + is_ios == 1);

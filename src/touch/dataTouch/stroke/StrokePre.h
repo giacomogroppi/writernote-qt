@@ -2,9 +2,9 @@
 
 #include "Stroke.h"
 #include "core/WList.h"
-#include "core/WPixmap.h"
+#include "core/Pixmap/WPixmap.h"
 #include "touch/object_finder/model_finder/model_finder.h"
-#include "core/WPixmap.h"
+#include "core/Pixmap/WPixmap.h"
 
 class StrokePre
 {

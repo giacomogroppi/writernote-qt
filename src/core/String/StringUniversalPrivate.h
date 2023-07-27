@@ -31,7 +31,7 @@ public:
     auto isEmpty() const -> bool;
 
     [[nodiscard]]
-    auto size() const -> int;
+    auto size() const -> unsigned long;
 
     [[nodiscard]]
     auto toUtf8() const -> const WByteArray&;
@@ -42,12 +42,12 @@ public:
     auto at(int index) const -> char;
     auto charAt(int index) const -> char;
 
-    int indexOf(const WString &other) const;
-    int indexOf(char character) const;
-    int lastIndexOf(char character) const;
-    int lastIndexOf(const char *data) const;
+    auto indexOf(const WString &other) const -> int;
+    auto indexOf(char character) const -> int;
+    auto lastIndexOf(char character) const -> int;
+    auto lastIndexOf(const char *data) const -> int;
     void replace(char oldChar, char newChar);
-    WString mid(int from, int to = -1) const;
+    auto mid(int from, int to = -1) const -> WString;
 
     void insert(const WByteArray &other, int index);
     void insert(const WString &other, int index);
@@ -56,8 +56,8 @@ public:
     auto remove(int index) -> void;
     auto remove(int index) const -> WString;
 
-    static WString number(int number);
-    static WString fromUtf8(const char *data, int size = -1);
+    static auto number(int number) -> WString;
+    static auto fromUtf8(const char *data, int size = -1) -> WString;
 
     auto arg(const WString &arg) const -> WString;
     auto arg(int a) const -> WString;
@@ -101,7 +101,7 @@ public:
     auto operator=(WString &&other) noexcept -> WString& = default;
 };
 
-inline int WString::size() const
+inline unsigned long WString::size() const
 {
     return this->_data.size();
 }

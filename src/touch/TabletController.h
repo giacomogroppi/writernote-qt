@@ -6,7 +6,7 @@
 #include "touch/rubber/Rubber.h"
 #include "object_finder/ObjectFinder.h"
 #include "touch/square/Square.h"
-#include "core/WImage/WImage.h"
+#include "core/Image/WImage.h"
 #include <atomic>
 #include "touch/tools/Tools.h"
 #include "Scheduler/WObject.h"

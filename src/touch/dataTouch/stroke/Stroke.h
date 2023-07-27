@@ -9,10 +9,10 @@
 #include "testing/memtest.h"
 #include "FileContainer/WZipWriterSingle.h"
 #include "FileContainer/WZipReaderSingle.h"
-#include "core/WImage/WImage.h"
+#include "core/Image/WImage.h"
 #include "core/WPainter/WPainter.h"
 #include "core/Point.h"
-#include "core/WPen.h"
+#include "core/Pen/WPen.h"
 #include "utils/common_error_definition.h"
 
 #define PROP_RESOLUTION (2.)

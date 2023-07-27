@@ -46,6 +46,7 @@ WImage::WImage(int page, bool consideringResolution) :
     const auto res = QImage::isNull();
     W_ASSERT(!res);
 }
+#endif // USE_QT
 
 auto
 WImage::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>
@@ -64,9 +65,6 @@ WImage::load(const VersionFileController &versionController, ReadableAbstract &r
 
     return {0, std::move(result)};
 }
-#else
-
-#endif // USE_QT
 
 auto WImage::write(WritableAbstract &writable, const WImage &image) -> int
 {

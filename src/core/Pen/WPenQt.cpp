@@ -1,24 +1,19 @@
-//
-// Created by Giacomo Groppi on 08/05/23.
-//
+#include "touch/dataTouch/page/Page.h"
 
-#include "WPen.h"
+#ifdef USE_QT
+
+#include "WPenQt.h"
 
 WPen::WPen()
 {
-#ifdef USE_QT
     this->_pen = QPen(QBrush(), 1.0, Qt::SolidLine, Qt::MPenCapStyle, Qt::RoundJoin);
-#else
-#endif
 }
 
-#ifdef USE_QT
 void WPen::setBrush(const QBrush &brush)
 {
     this->_pen.setBrush(brush);
 }
 
-#include "touch/dataTouch/page/Page.h"
 void WPen::setColorNull()
 {
     this->setColor(COLOR_NULL);
@@ -48,11 +43,12 @@ void WPen::setStyle(WPenStyle style)
     this->_pen.setStyle(s);
 }
 
-double WPen::widthF() const {
+auto WPen::widthF() const -> double
+{
     return this->_pen.widthF();
 }
 
-WColor WPen::color() const
+auto WPen::color() const -> WColor
 {
     return {this->_pen.color()};
 }

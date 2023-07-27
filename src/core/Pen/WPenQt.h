@@ -1,28 +1,19 @@
-//
-// Created by Giacomo Groppi on 08/05/23.
-//
+#pragma once
 
-#ifndef WRITERNOTE_WPEN_H
-#define WRITERNOTE_WPEN_H
+#ifdef USE_QT
 
 #include "touch/dataTouch/Point.h"
 
-#ifdef USE_QT
-# include <QPen>
-# include <QBrush>
-#endif
+#include <QPen>
+#include <QBrush>
 
 class WPen {
 private:
-#ifdef USE_QT
     QPen _pen;
-#endif // USE_QT
 public:
     WPen();
 
-#ifdef USE_QT
     void setBrush(const QBrush &brush);
-#endif // USE_QT
 
     void setColorNull();
     void setColor(const WColor &color);
@@ -42,5 +33,4 @@ public:
     friend class WPainter;
 };
 
-
-#endif //WRITERNOTE_WPEN_H
+#endif // USE_QT

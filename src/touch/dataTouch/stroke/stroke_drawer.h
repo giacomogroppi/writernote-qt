@@ -5,7 +5,7 @@
 #include "utils/WCommonScript.h"
 #include "touch/dataTouch/datastruct/utils_datastruct.h"
 #include "core/WPainter/WPainter.h"
-#include "core/WPen.h"
+#include "core/Pen/WPen.h"
 
 class Stroke;
 class StrokePre;

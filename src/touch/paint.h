@@ -2,7 +2,7 @@
 
 #include "touch/dataTouch/datastruct/DataStruct.h"
 #include "touch/dataTouch/page/Page.h"
-#include "core/WImage/WImage.h"
+#include "core/Image/WImage.h"
 
 #define DRAW_SINGLE_LOAD_DEF 1.0
 /**
