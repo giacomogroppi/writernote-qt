@@ -7,9 +7,11 @@
 #include "utils/WCommonScript.h"
 #include "Writable.h"
 #include "Readable.h"
+#include "core/WPair.h"
 
 template <class T>
-class SharedPtr: public std::shared_ptr<T> {
+class SharedPtr: public std::shared_ptr<T>
+{
 public:
     SharedPtr() noexcept = default;
     SharedPtr(SharedPtr<T> &&other) noexcept;

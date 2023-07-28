@@ -5,46 +5,44 @@
 #import "WImage.h"
 #include "touch/DataTouch/Page/Page.h"
 
-#define getData(data) (__bridge NSImage *) data
-
 struct WImagePrivate {
     NSImage *image;
+    WImagePrivate() : image(nullptr) {}
 };
 
 WImage::WImage () noexcept
-    : d(nullptr)
+    : _d(new WImagePrivate)
 {
     //d = (__bridge void *)[[NSImage alloc] init];
 }
 
 WImage::WImage (int page, bool consideringResolution)
-    : d(nullptr)
+    : _d(new WImagePrivate)
 {
     const NSInteger width  = consideringResolution ? Page::getResolutionWidth() : Page::getWidth();
     const NSInteger height = static_cast<int>(
                                 consideringResolution ? Page::getResolutionHeigth() : Page::getHeight()
                              ) * page;
-    d = (__bridge void *)[[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+    _d->image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
 }
 
 WImage::WImage (int width, int height, WImageType format)
-    : d(nullptr)
+    : _d(new WImagePrivate)
 {
-    d = (__bridge void *)[[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+    _d->image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
 }
 
 WImage::WImage (WImage &&other) noexcept
-    : d(other.d)
+    : _d(std::move(other._d))
 {
-    other.d = nullptr;
 }
 
 WImage::WImage (const WImage &other) noexcept
-    : d(nullptr)
+    : _d(new WImagePrivate)
 {
-    NSImage *originalImage = (__bridge NSImage *)other.d;
+    NSImage *originalImage = other._d->image;
     NSImage *imageCopy = [originalImage mutableCopy];
-    this->d = (__bridge void *)imageCopy;
+    _d->image = imageCopy;
 }
 
 auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
@@ -54,7 +52,7 @@ auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
     NSData *imageData = [NSData dataWithBytes:data.constData() length:data.size()];
 
     // Crea un oggetto NSImage utilizzando i dati PNG
-    this->d = (__bridge void *)[[NSImage alloc] initWithData:imageData];
+    _d->image = [[NSImage alloc] initWithData:imageData];
 
     return true;
 }
@@ -62,7 +60,7 @@ auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
 auto WImage::save_and_size(WByteArray &arr) const -> size_t
 {
     // Assume you have an existing NSImage object named "image"
-    NSImage *image = getData(d);
+    NSImage *image = _d->image;
 
     // Crea un oggetto NSBitmapImageRep utilizzando il TIFFRepresentation dell'immagine
     NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[image TIFFRepresentation]];
@@ -84,34 +82,33 @@ auto WImage::operator==(const WImage &other) const -> bool
 {
     if (this == &other)
         return true;
-    const NSImage *my = getData(d);
-    const NSImage *ot = getData(other.d);
+    const NSImage *my = _d->image;
+    const NSImage *ot = other._d->image;
     return [my isEqualTo:ot];
 }
 
 auto WImage::operator=(WImage &&other) noexcept -> WImage &
 {
-    this->d = other.d;
-    other.d = nullptr;
+    this->_d = std::move(other._d);
     return *this;
 }
 
 auto WImage::operator=(const WImage &other) noexcept -> WImage &
 {
     NSImage *copy = [[NSImage alloc] init];
-    d = (__bridge void *)[copy mutableCopy];
+    _d->image = [copy mutableCopy];
     return *this;
 }
 
 WImage::WImage(const WString &path) noexcept
-    : d(nullptr)
+    : _d(new WImagePrivate)
 {
     const char *position = path.toUtf8().constData();
     NSString *s = [NSString stringWithUTF8String:position];
     NSURL *url = [[NSURL alloc] initWithString:s];
     
     NSImage *image = [[NSImage alloc] initWithContentsOfURL:url];
-    d = (__bridge void *) image;
+    _d->image = image;
 }
 
 auto WImage::toImage() const -> WImage
@@ -128,7 +125,7 @@ auto WImage::getRawDataPNG() const -> WByteArray
 
 auto WImage::rect() const -> RectF
 {
-    NSImage *img = getData(d);
+    NSImage *img = _d->image;
     NSSize size = img.size;
     return RectF {
         0., 0.,
@@ -139,12 +136,12 @@ auto WImage::rect() const -> RectF
 
 auto WImage::isNull() const -> bool
 {
-    return this->d != nullptr;
+    return _d->image;
 }
 
 auto WImage::fill(const WColor &color) -> void
 {
-    NSImage *image = getData(d);
+    NSImage *image = _d->image;
     const auto rect = this->rect();
     
     [image lockFocus];
@@ -159,7 +156,7 @@ auto WImage::fill(const WColor &color) -> void
 
 auto WImage::pixel(const WPoint &point) const -> WRgb
 {
-    NSImage *image = getData(d);
+    NSImage *image = _d->image;
     NSBitmapImageRep* raw_img = [NSBitmapImageRep imageRepWithData:[image TIFFRepresentation]];
     NSColor* color = [raw_img colorAtX:point.x() y:point.y()];
     

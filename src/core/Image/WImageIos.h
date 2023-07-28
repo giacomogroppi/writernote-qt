@@ -13,11 +13,6 @@
 class WImage
 {
 private:
-
-    /**
-     * this is a NSImage object
-    */
-    void *d;
     UniquePtr<struct WImagePrivate> _d;
     
 public:
