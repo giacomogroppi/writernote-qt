@@ -7,6 +7,10 @@
 
 #define getData(data) (__bridge NSImage *) data
 
+struct WImagePrivate {
+    NSImage *image;
+};
+
 WImage::WImage () noexcept
     : d(nullptr)
 {

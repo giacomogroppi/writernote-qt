@@ -8,6 +8,7 @@
 #include "core/Point.h"
 #include "core/WRgb.h"
 #include "touch/dataTouch/Point.h"
+#include "core/Pointer/UniquePtr.h"
 
 class WImage
 {
@@ -17,7 +18,8 @@ private:
      * this is a NSImage object
     */
     void *d;
-
+    UniquePtr<struct WImagePrivate> _d;
+    
 public:
     explicit WImage(const WString &path) noexcept;
     WImage (WImage &&other) noexcept;
