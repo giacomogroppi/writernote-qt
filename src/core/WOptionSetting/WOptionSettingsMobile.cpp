@@ -22,7 +22,8 @@ void WOptionSettings::setValue(const WByteArray &key, const WVariant &value)
 
 auto WOptionSettings::begin() -> bool
 {
-    WFile file (WOptionSettings::getPathWritable().toUtf8(), WFile::WFileReadOnly);
+    WFile file (WOptionSettings::getPathWritable().toUtf8() + WOptionSettings::nameFileConfiguration,
+                WFile::WFileReadOnly);
     
     if (not file.isValid())
         return false;
@@ -33,6 +34,31 @@ auto WOptionSettings::begin() -> bool
         return false;
     
     auto [res, data] = WMap<WString, WByteArray, WStringHash>::load (version, file);
+    
+    if (res < 0)
+        return false;
+    
+    this->_map = std::move(data);
+    
+    return true;
+}
+
+auto WOptionSettings::save() const -> bool
+{
+    WFile file (WOptionSettings::getPathWritable().toUtf8() + WOptionSettings::nameFileConfiguration,
+                WFile::WFileWrite);
+    
+    if (not file.isValid())
+        return false;
+    
+    const auto res = VersionFileController::write (file);
+    
+    if (res < 0) return false;
+    
+    if (WMap<WString, WByteArray, WStringHash>::write (file, _map) < 0)
+        return false;
+    
+    return true;
 }
 
 #endif

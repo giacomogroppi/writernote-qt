@@ -5,6 +5,7 @@
 
 #include "Writable.h"
 #include "Readable.h"
+#include "utils/WCommonScript.h"
 
 class VersionFileController {
 private:
@@ -45,7 +46,8 @@ public:
     VersionFileController (VersionFileController &&other) noexcept = default;
 
     static auto load (ReadableAbstract &readable) -> std::pair<int, VersionFileController>;
-
+    static auto write (WritableAbstract &writable) -> int;
+    
     auto operator=(VersionFileController &&other) noexcept -> VersionFileController& = default;
     auto operator=(const VersionFileController &other) noexcept -> VersionFileController& = default;
 };
@@ -66,5 +68,13 @@ inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair
             return {-1, result};
     }
 
+    W_ASSERT(0);
+    
     return {0, result};
+}
+
+inline auto VersionFileController::write(WritableAbstract& writable) -> int
+{
+    W_ASSERT(0);
+    return 0;
 }
