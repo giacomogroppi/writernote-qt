@@ -4,11 +4,7 @@
 #import <Foundation/Foundation.h>
 #import "WImage.h"
 #include "touch/DataTouch/Page/Page.h"
-
-struct WImagePrivate {
-    NSImage *image;
-    WImagePrivate() : image(nullptr) {}
-};
+#include "WImagePrivate.h"
 
 WImage::WImage () noexcept
     : _d(new WImagePrivate)

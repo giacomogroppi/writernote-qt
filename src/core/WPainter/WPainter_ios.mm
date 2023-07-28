@@ -1,42 +1,95 @@
 #include "WPainter.h"
+#include "core/Image/WImage.h"
+#include "core/Image/WImagePrivate.h"
 
-/*
 #import <CoreFoundation/CoreFoundation.h>
-#import <UIKit/UIKit.h>
-#import <CoreGraphics/CoreGraphics.h>
+#import <Cocoa/Cocoa.h>
 
-
-WPainter::WPainter(WImage *img)
-  : _img(img)
+auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> NSCompositingOperation
 {
-  CGSize imageSize = CGSizeMake(100, 100);
-  UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:imageSize];
+    switch (compositionMode)
+    {
+        case WPainter::CompositionMode::CompositionMode_Clear:
+            return NSCompositingOperation::NSCompositingOperationClear;
+        case WPainter::CompositionMode::CompositionMode_SourceOver:
+            return NSCompositingOperation::NSCompositingOperationSourceOver;
+        case WPainter::CompositionMode::CompositionMode_DestinationOver:
+            return NSCompositingOperation::NSCompositingOperationDestinationOver;
+    }
+    W_ASSERT_TEXT(0, "Composition mode not implemented");
 }
 
-void WPainter::drawLine(const PointF &p1, const PointF &p2)
+auto createNSColor (const WColor &color) -> NSColor*
 {
-  const double x1 = p1.x();
-  const double y1 = p1.y();
-  const double x2 = p2.x();
-  const double y2 = p2.y();
-
-  UIGraphicsBeginImageContextWithOptions(((UIImage *)_img->d).size, NO, 0);
-
-  [(UIImage *)_img->d drawAtPoint:CGPointZero];
-
-  CGContextRef context = UIGraphicsGetCurrentContext();
-  CGContextSetLineWidth(context, 5.0);
-  CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:this->color.getRed() / 255.0f
-                                                     green:this->color.getGreen() / 255.0f
-                                                     blue:this->color.getBlue() / 255.0f
-                                                     alpha:this->color.getAlfa() / 255.0f].CGColor);
-  CGContextMoveToPoint(context, x1, y1);
-  CGContextAddLineToPoint(context, x2, y2);
-  CGContextStrokePath(context);
-
-  _img->d = UIGraphicsGetImageFromCurrentImageContext();
-
-  UIGraphicsEndImageContext();
+    return [NSColor
+                colorWithRed:color.getRed()
+                green:color.getGreen()
+                blue:color.getBlue()
+                alpha:color.getAlfa()];
 }
 
-*/
+WPainter::WPainter() noexcept
+    : _target(nullptr)
+    , _isAntialeasing(false)
+    , _compositionMode(WPainter::CompositionMode::CompositionMode_SourceOver)
+{
+    
+}
+
+void WPainter::drawEllipse (const PointF &center, double rx, double ry)
+{
+    
+}
+
+void WPainter::drawImage (const RectF &target, const WImage &image, const RectF &source)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        const NSImage *imageSource = image._d->image;
+        const NSImage *imageTarget = _target->_d->image;
+        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
+        
+        NSRect targetRect = NSMakeRect(
+                                       target.topLeft().x(),        target.topLeft().y(),
+                                       target.bottomRight().x(),    target.bottomRight().y());
+        
+        [imageTarget drawInRect:targetRect];
+        
+        NSRect sourceRect = NSMakeRect (source.topLeft().x(),       source.topLeft().y(),
+                                        source.bottomRight().x(),   source.bottomRight().y());
+        
+        [imageSource drawInRect:sourceRect fromRect:NSZeroRect operation:realCompositionMode fraction:1.0];
+        
+        [imageTarget unlockFocus];
+    });
+}
+
+void WPainter::drawLine(int x1, int y1, int x2, int y2)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        const NSImage *image = _target->_d->image;
+        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
+        const double width = this->_pen.widthF();
+        NSColor *color = createNSColor(this->_color);
+        
+        // Imposta lo spessore della linea
+        [NSBezierPath setDefaultLineWidth:width];
+
+        // Imposta il colore della linea
+        [color set];
+
+        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
+        
+        // Disegna la semiretta, specificando i punti di inizio e fine
+        NSPoint startPoint = NSMakePoint(x1, y1); // Punto di inizio della semiretta
+        NSPoint endPoint = NSMakePoint(x2, y2); // Punto di fine della semiretta
+
+        // Crea il percorso della semiretta e disegnala
+        NSBezierPath *linePath = [NSBezierPath bezierPath];
+        [linePath moveToPoint:startPoint];
+        [linePath lineToPoint:endPoint];
+        [linePath stroke];
+
+        // Fine del disegno, sblocca il contesto
+        [image unlockFocus];
+    });
+}
