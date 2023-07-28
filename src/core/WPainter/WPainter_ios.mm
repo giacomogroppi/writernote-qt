@@ -38,7 +38,35 @@ WPainter::WPainter() noexcept
 
 void WPainter::drawEllipse (const PointF &center, double rx, double ry)
 {
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        const NSImage *image = _target->_d->image;
+        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
+        const double width = this->_pen.widthF();
+        NSColor *color = createNSColor(this->_color);
+        
+        [NSBezierPath setDefaultLineWidth:width];
+        
+        [color set];
+        
+        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
+        
+        [image lockFocus];
+        
+        // set the width
+        [NSBezierPath setDefaultLineWidth:width];
+        
+        // set the color
+        [color set];
+        
+        // Disegna l'ellisse, specificando il rettangolo in cui disegnarlo
+        NSRect ellipseRect = NSMakeRect(center.x() - rx, center.y() - ry, center.x() + rx, center.y() + ry);
+        NSBezierPath *ellipsePath = [NSBezierPath bezierPathWithOvalInRect:ellipseRect];
+        [ellipsePath stroke];
+        
+        // Fine del disegno, sblocca il contesto
+        [image unlockFocus];
+        
+    });
 }
 
 void WPainter::drawImage (const RectF &target, const WImage &image, const RectF &source)
