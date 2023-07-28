@@ -153,11 +153,10 @@ auto WPixmap::getRawDataPNG() const -> WByteArray
     return {std::move(arr)};
 }
 
-#endif // USE_QT
-
 auto WPixmap::write(WritableAbstract &writable, const WPixmap &pixmap) -> int
 {
     if (WByteArray::write(writable, pixmap.getRawDataPNG()) < 0)
         return -1;
     return 0;
 }
+#endif // USE_QT

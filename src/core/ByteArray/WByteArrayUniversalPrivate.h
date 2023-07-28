@@ -155,7 +155,7 @@ inline char WByteArray::at(Size i) const
     return _data[i];
 }
 
-void WByteArray::clear() noexcept
+inline void WByteArray::clear() noexcept
 {
     free(_data);
     _data = nullptr;

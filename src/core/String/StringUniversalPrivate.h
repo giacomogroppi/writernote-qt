@@ -39,7 +39,7 @@ public:
     [[nodiscard]]
     auto split(char character) const -> WListFast<WString>;
 
-    auto at(int index) const -> char;
+    auto at(unsigned long index) const -> char;
     auto charAt(int index) const -> char;
 
     auto indexOf(const WString &other) const -> int;
@@ -170,9 +170,19 @@ inline int WString::indexOf(char character) const
     return -1;
 }
 
+inline auto WString::lastIndexOf(const char *str) const -> int
+{
+    const auto s = strlen(str);
+    for (int i = size() - 1 - s; i >= 0; i--) {
+        if (strcmp(this->_data.constData(), str) == 0)
+            return i;
+    }
+    return -1;
+}
+
 inline int WString::lastIndexOf(char character) const
 {
-    for (int i = size() - 1; i >= 0; i --) {
+    for (long i = size() - 1; i >= 0; i --) {
         if (at(i) == character) {
             return i;
         }
@@ -215,7 +225,7 @@ inline WString WString::number(int number)
     return res;
 }
 
-inline char WString::at(int index) const
+inline char WString::at(unsigned long index) const
 {
     return _data.at(index);
 }
@@ -282,7 +292,7 @@ inline bool operator<(const WString &first, const WString &second)
     return false;
 }
 
-auto WString::append(const char *data, long size) -> WString&
+inline auto WString::append(const char *data, long size) -> WString&
 {
     this->_data.append(data, size);
     return *this;
@@ -294,7 +304,7 @@ inline WString::WString(const char *string)
 
 }
 
-WString::WString(const std::string &other)
+inline WString::WString(const std::string &other)
     : _data(other.c_str(), other.size())
 {
 
@@ -388,7 +398,7 @@ inline bool WString::isEmpty() const
     return this->_data.isEmpty();
 }
 
-char WString::operator[](int i) const
+inline auto WString::operator[](int i) const -> char
 {
     return this->_data[i];
 }

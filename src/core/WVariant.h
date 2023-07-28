@@ -8,7 +8,8 @@
 
 #ifndef USE_QT
 // TODO: create more portable .h file
-class WVariant {
+class WVariant
+{
 private:
     WByteArray _data;
     VersionFileController _version;

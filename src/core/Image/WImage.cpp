@@ -48,8 +48,7 @@ WImage::WImage(int page, bool consideringResolution) :
 }
 #endif // USE_QT
 
-auto
-WImage::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>
+auto WImage::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WImage>
 {
     WImage result;
 

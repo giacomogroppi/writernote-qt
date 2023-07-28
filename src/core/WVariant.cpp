@@ -51,6 +51,14 @@ auto WVariant::toInt() -> int
     return result;
 }
 
+auto WVariant::toByteArray() -> WByteArray
+{
+    const auto [r, d] = this->loadFromClass<WByteArray>();
+    if (r < 0)
+        return {};
+    return d;
+}
+
 auto WVariant::create(VersionFileController version, WByteArray d) -> WVariant
 {
     WVariant result;
