@@ -21,7 +21,7 @@ public:
     void setPen(const WPen &pen); // done
 
     void drawLine(const PointF &p1, const PointF &p2); // done
-    void drawLine(int x1, int y1, int x2, int y2);
+    void drawLine(int x1, int y1, int x2, int y2); // done
 
     void drawImage   (const RectF &target, const WImage &image, const RectF &source); // done
     void drawPixmap  (const RectF &target, const WPixmap &pixmap, const RectF &source); // done
@@ -37,13 +37,13 @@ public:
         CompositionMode_SourceOver,
         CompositionMode_DestinationOver
     };
-    void setCompositionMode(enum CompositionMode compositionMode);
+    void setCompositionMode(enum CompositionMode compositionMode); // done
     
     [[nodiscard]]
-    auto compositionMode() const -> WPainter::CompositionMode;
+    auto compositionMode() const -> WPainter::CompositionMode; // done
 
-    void setAntialeasing();
-    void setCompositionClear();
+    void setAntialeasing(); // done
+    void setCompositionClear(); // done
 
     bool end() { return true; };
     bool isActive() const { return this->_target != nullptr; };

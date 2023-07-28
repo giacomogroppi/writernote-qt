@@ -78,6 +78,8 @@ void WPainter::drawImage (const RectF &target, const WImage &image, const RectF 
         const NSImage *imageTarget = _target->_d->image;
         const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
         
+        [imageTarget lockFocus];
+        
         NSRect targetRect = NSMakeRect(
                                        target.topLeft().x(),        target.topLeft().y(),
                                        target.bottomRight().x(),    target.bottomRight().y());
@@ -102,6 +104,8 @@ void WPainter::drawLine(int x1, int y1, int x2, int y2)
         const double width = this->_pen.widthF();
         NSColor *color = createNSColor(this->_color);
         
+        [image lockFocus];
+        
         // Imposta lo spessore della linea
         [NSBezierPath setDefaultLineWidth:width];
 
@@ -121,6 +125,61 @@ void WPainter::drawLine(int x1, int y1, int x2, int y2)
         [linePath stroke];
 
         // Fine del disegno, sblocca il contesto
+        [image unlockFocus];
+    });
+}
+
+void WPainter::drawPoint (const PointF &point)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        WMutexLocker _(this->_lock);
+        const NSImage *image = _target->_d->image;
+        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
+        const double width = this->_pen.widthF();
+        NSColor *color = createNSColor(this->_color);
+        
+        [image lockFocus];
+
+        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
+
+        NSPoint pointIos = NSMakePoint(point.x(), point.y()); // Posizione del punto
+        NSBezierPath *pointPath = [NSBezierPath bezierPath];
+        [pointPath appendBezierPathWithOvalInRect:NSMakeRect(pointIos.x - width / 2.0, pointIos.y - width / 2.0, width, width)];
+        [color set];
+        [pointPath fill];
+
+        [image unlockFocus];
+    });
+}
+
+void WPainter::drawRect(const RectF &rect)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        WMutexLocker _(this->_lock);
+        const NSImage *image = _target->_d->image;
+        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
+        const double width = this->_pen.widthF();
+        NSColor *color = createNSColor(this->_color);
+        
+        [image lockFocus];
+        
+        // Imposta lo spessore del tratto
+        [NSBezierPath setDefaultLineWidth:width];
+        
+        // Imposta il colore del tratto
+        [color set];
+        
+        // Imposta la modalità di composizione
+        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
+        
+        NSRect rectangleRect = NSMakeRect(
+                                          rect.topLeft().x(),
+                                          rect.topLeft().y(),
+                                          rect.bottomRight().x(),
+                                          rect.bottomRight().y());
+        NSBezierPath *rectanglePath = [NSBezierPath bezierPathWithRect:rectangleRect];
+        [rectanglePath stroke];
+        
         [image unlockFocus];
     });
 }
