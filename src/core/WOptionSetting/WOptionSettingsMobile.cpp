@@ -1,5 +1,5 @@
 #include "WOptionSettings.h"
-#include "WFile.h"
+#include "core/WFile.h"
 
 #if is_ios || is_android || (is_mac && !USE_QT)
 

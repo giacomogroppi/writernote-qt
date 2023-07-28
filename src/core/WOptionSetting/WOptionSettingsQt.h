@@ -3,7 +3,7 @@
 #ifdef USE_QT
 
 #include "core/ByteArray/WByteArray.h"
-#include "WVariant.h"
+#include "core/WVariant.h"
 #include "core/WMap.h"
 #include "core/String/WString.h"
 

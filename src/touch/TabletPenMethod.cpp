@@ -1,7 +1,7 @@
 #include "TabletPenMethod.h"
 #include "utils/WCommonScript.h"
 #include "utils/setting_define.h"
-#include "core/WOptionSettings.h"
+#include "core/WOptionSetting/WOptionSettings.h"
 
 void TabletPenMethod::save() const
 {

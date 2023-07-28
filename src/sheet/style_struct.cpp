@@ -1,6 +1,6 @@
 #include "style_struct.h"
 #include "utils/setting_define.h"
-#include "core/WOptionSettings.h"
+#include "core/WOptionSetting/WOptionSettings.h"
 
 #define DEFAULTN 40
 #define DEFAULTTHICKNESS 1

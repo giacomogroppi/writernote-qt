@@ -10,7 +10,7 @@
 #include "core/WMutex.h"
 #include "core/WMutexLocker.h"
 #include "file/File.h"
-#include "core/WOptionSettings.h"
+#include "core/WOptionSetting/WOptionSettings.h"
 #include <pthread.h>
 #include "utils/time/current_time.h"
 

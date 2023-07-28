@@ -2,7 +2,7 @@
 #include "utils/WCommonScript.h"
 #include "touch/multi_thread_data.h"
 #include "utils/setting_define.h"
-#include "core/WOptionSettings.h"
+#include "core/WOptionSetting/WOptionSettings.h"
 
 constexpr auto not_used rubber_debug = false;
 

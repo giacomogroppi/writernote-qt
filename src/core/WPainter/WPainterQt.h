@@ -26,7 +26,6 @@ public:
     WPainter();
     ~WPainter();
 
-
     explicit WPainter (QPainter *painter);
     WPainter (QPdfWriter *pdfWriter);
     void setBrush(const QBrush &brush);
