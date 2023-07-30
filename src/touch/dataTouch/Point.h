@@ -117,6 +117,11 @@ struct WColor{
     unsigned char getGreen() const  { return this->colore[1]; };
     unsigned char getBlue() const   { return this->colore[2]; };
 
+    double getAlfaNormalize() const {return this->colore[3]; };
+    double getRedNormalize() const { return this->colore[0]; };
+    double getGreenNormalize() const { return this->colore[1]; };
+    double getBlueNormalize() const { return this->colore[2]; } ;
+    
     void setAlfa(unsigned char newValue);
 
     static WColor fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4 = 255);

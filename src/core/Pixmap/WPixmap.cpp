@@ -159,4 +159,5 @@ auto WPixmap::write(WritableAbstract &writable, const WPixmap &pixmap) -> int
         return -1;
     return 0;
 }
+
 #endif // USE_QT

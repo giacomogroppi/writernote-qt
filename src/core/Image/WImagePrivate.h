@@ -2,10 +2,11 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import <Cocoa/Cocoa.h>
+#import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
 struct WImagePrivate {
-    NSImage *image;
+    UIImage *image;
+    UIGraphicsImageRenderer *_renderer;
     WImagePrivate() : image(nullptr) {}
 };

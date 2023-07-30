@@ -3,25 +3,37 @@
 #include "core/Image/WImagePrivate.h"
 
 #import <CoreFoundation/CoreFoundation.h>
-#import <Cocoa/Cocoa.h>
+//#import <Cocoa/Cocoa.h>
+#import <UIKit/UIKit.h>
 
-auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> NSCompositingOperation
+class WPainterPrivate {
+public:
+    CGContextRef context;
+    
+    WPainterPrivate (CGContextRef context)
+        : context(context)
+    {
+        UIGraphicsPushContext(context);
+    }
+};
+
+auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> CGBlendMode
 {
     switch (compositionMode)
     {
         case WPainter::CompositionMode::CompositionMode_Clear:
-            return NSCompositingOperation::NSCompositingOperationClear;
+            return CGBlendMode::kCGBlendModeClear;
         case WPainter::CompositionMode::CompositionMode_SourceOver:
-            return NSCompositingOperation::NSCompositingOperationSourceOver;
+            return CGBlendMode::kCGBlendModeDestinationIn;
         case WPainter::CompositionMode::CompositionMode_DestinationOver:
-            return NSCompositingOperation::NSCompositingOperationDestinationOver;
+            return CGBlendMode::kCGBlendModeDestinationOver;
     }
     W_ASSERT_TEXT(0, "Composition mode not implemented");
 }
 
-auto createNSColor (const WColor &color) -> NSColor*
+auto createNSColor (const WColor &color) -> UIColor*
 {
-    return [NSColor
+    return [UIColor
                 colorWithRed:color.getRed()
                 green:color.getGreen()
                 blue:color.getBlue()
@@ -40,33 +52,21 @@ void WPainter::drawEllipse (const PointF &center, double rx, double ry)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         WMutexLocker _(this->_lock);
-        const NSImage *image = _target->_d->image;
-        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
+        const auto *image = _target->_d->image;
         const double width = this->_pen.widthF();
-        NSColor *color = createNSColor(this->_color);
+        auto *color = createNSColor(this->_color);
+
+        [image drawAtPoint:CGPointZero];
+            
+        // Impostare il colore e la dimensione dello stroke
+        [color setStroke];
+        UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(center.x() - rx / 2.,
+                                                                               center.y() - ry / 2.,
+                                                                               center.x() + rx / 2.,
+                                                                               center.y() + ry / 2.)];
+        path.lineWidth = width;
         
-        [NSBezierPath setDefaultLineWidth:width];
-        
-        [color set];
-        
-        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
-        
-        [image lockFocus];
-        
-        // set the width
-        [NSBezierPath setDefaultLineWidth:width];
-        
-        // set the color
-        [color set];
-        
-        // Disegna l'ellisse, specificando il rettangolo in cui disegnarlo
-        NSRect ellipseRect = NSMakeRect(center.x() - rx, center.y() - ry, center.x() + rx, center.y() + ry);
-        NSBezierPath *ellipsePath = [NSBezierPath bezierPathWithOvalInRect:ellipseRect];
-        [ellipsePath stroke];
-        
-        // Fine del disegno, sblocca il contesto
-        [image unlockFocus];
-        
+        [path stroke];
     });
 }
 
@@ -74,24 +74,12 @@ void WPainter::drawImage (const RectF &target, const WImage &image, const RectF 
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         WMutexLocker _(this->_lock);
-        const NSImage *imageSource = image._d->image;
-        const NSImage *imageTarget = _target->_d->image;
-        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
+        auto *imageSource = (UIImage *)image._d->image;
         
-        [imageTarget lockFocus];
-        
-        NSRect targetRect = NSMakeRect(
-                                       target.topLeft().x(),        target.topLeft().y(),
-                                       target.bottomRight().x(),    target.bottomRight().y());
-        
-        [imageTarget drawInRect:targetRect];
-        
-        NSRect sourceRect = NSMakeRect (source.topLeft().x(),       source.topLeft().y(),
-                                        source.bottomRight().x(),   source.bottomRight().y());
-        
-        [imageSource drawInRect:sourceRect fromRect:NSZeroRect operation:realCompositionMode fraction:1.0];
-        
-        [imageTarget unlockFocus];
+        CGRect targetRect = CGRectMake(target.topLeft().x(), target.topLeft().y(), target.bottomRight().x(), target.bottomRight().y());
+        CGRect sourceRect = CGRectMake(source.topLeft().x(), source.topLeft().y(), source.bottomRight().x(), source.bottomRight().y());
+
+        [imageSource drawInRect:sourceRect];
     });
 }
 
@@ -99,88 +87,40 @@ void WPainter::drawLine(int x1, int y1, int x2, int y2)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         WMutexLocker _(this->_lock);
-        const NSImage *image = _target->_d->image;
-        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
         const double width = this->_pen.widthF();
-        NSColor *color = createNSColor(this->_color);
+        auto *color = createNSColor(this->_color);
         
-        [image lockFocus];
-        
-        // Imposta lo spessore della linea
-        [NSBezierPath setDefaultLineWidth:width];
-
-        // Imposta il colore della linea
-        [color set];
-
-        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
-        
-        // Disegna la semiretta, specificando i punti di inizio e fine
-        NSPoint startPoint = NSMakePoint(x1, y1); // Punto di inizio della semiretta
-        NSPoint endPoint = NSMakePoint(x2, y2); // Punto di fine della semiretta
-
-        // Crea il percorso della semiretta e disegnala
-        NSBezierPath *linePath = [NSBezierPath bezierPath];
-        [linePath moveToPoint:startPoint];
-        [linePath lineToPoint:endPoint];
-        [linePath stroke];
-
-        // Fine del disegno, sblocca il contesto
-        [image unlockFocus];
+        [color setStroke];
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        path.lineWidth = width;
+        [path moveToPoint:CGPointMake(x1, y1)];
+        [path addLineToPoint:CGPointMake(x2, y2)];
+        [path stroke];
     });
 }
 
 void WPainter::drawPoint (const PointF &point)
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        WMutexLocker _(this->_lock);
-        const NSImage *image = _target->_d->image;
-        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
-        const double width = this->_pen.widthF();
-        NSColor *color = createNSColor(this->_color);
-        
-        [image lockFocus];
-
-        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
-
-        NSPoint pointIos = NSMakePoint(point.x(), point.y()); // Posizione del punto
-        NSBezierPath *pointPath = [NSBezierPath bezierPath];
-        [pointPath appendBezierPathWithOvalInRect:NSMakeRect(pointIos.x - width / 2.0, pointIos.y - width / 2.0, width, width)];
-        [color set];
-        [pointPath fill];
-
-        [image unlockFocus];
+    return this->drawRect(RectF {
+        point.x() - 1., point.y() - 1.,
+        point.x() + 1., point.y() + 1.
     });
 }
 
-void WPainter::drawRect(const RectF &rect)
+void WPainter::drawRect(const RectF &rectWriternote)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         WMutexLocker _(this->_lock);
-        const NSImage *image = _target->_d->image;
-        const auto realCompositionMode = getAdaptCompositionMode(this->_compositionMode);
         const double width = this->_pen.widthF();
-        NSColor *color = createNSColor(this->_color);
+        auto *color = createNSColor(this->_color);
         
-        [image lockFocus];
-        
-        // Imposta lo spessore del tratto
-        [NSBezierPath setDefaultLineWidth:width];
-        
-        // Imposta il colore del tratto
-        [color set];
-        
-        // Imposta la modalità di composizione
-        [[NSGraphicsContext currentContext] setCompositingOperation:realCompositionMode];
-        
-        NSRect rectangleRect = NSMakeRect(
-                                          rect.topLeft().x(),
-                                          rect.topLeft().y(),
-                                          rect.bottomRight().x(),
-                                          rect.bottomRight().y());
-        NSBezierPath *rectanglePath = [NSBezierPath bezierPathWithRect:rectangleRect];
-        [rectanglePath stroke];
-        
-        [image unlockFocus];
+        const CGRect rect = CGRectMake(rectWriternote.topLeft().x(), rectWriternote.topLeft().y(), rectWriternote.bottomRight().x(), rectWriternote.bottomRight().y());
+
+        [color setStroke];
+        UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:rect];
+        path.lineWidth = width;
+
+        [path stroke];
     });
 }
 
@@ -225,6 +165,9 @@ void WPainter::setPen(const WPen &pen)
 void WPainter::setAntialeasing()
 {
     WMutexLocker _(this->_lock);
+    W_ASSERT(this->_d);
+    CGContextSetAllowsAntialiasing(_d->context, YES);
+    CGContextSetShouldAntialias(_d->context, YES);
     this->_isAntialeasing = true;
 }
 
@@ -243,6 +186,10 @@ void WPainter::setCompositionMode(enum CompositionMode compositionMode)
 {
     WMutexLocker _(this->_lock);
     this->_compositionMode = compositionMode;
+    
+    auto realCompositionMode = getAdaptCompositionMode(_compositionMode);
+    
+    CGContextSetBlendMode(_d->context, realCompositionMode);
 }
 
 bool WPainter::begin(WImage *pixmap)
@@ -250,5 +197,25 @@ bool WPainter::begin(WImage *pixmap)
     WMutexLocker _(this->_lock);
     W_ASSERT_TEXT(this->_target == nullptr, "Trying to begin on an WPainter not ended");
     this->_target = pixmap;
+    this->_d = new WPainterPrivate (UIGraphicsGetCurrentContext());
+    
+    UIImage *t = _target->_d->image;
+    
+    // draw our image
+    UIGraphicsBeginImageContextWithOptions(t.size, NO, 0.0);
+    [t drawAtPoint:CGPointZero];
+    
+    return true;
+}
+
+auto WPainter::end() -> bool
+{
+    
+    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+    _target->_d->image = result;
+    
+    delete this->_d;
+    
+    UIGraphicsEndImageContext();
     return true;
 }

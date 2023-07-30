@@ -1,15 +1,16 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
 #import "WImage.h"
 #include "touch/DataTouch/Page/Page.h"
 #include "WImagePrivate.h"
+#import <UIKit/UIKit.h>
 
 WImage::WImage () noexcept
     : _d(new WImagePrivate)
 {
     //d = (__bridge void *)[[NSImage alloc] init];
+    _d->_renderer = [UIGraphicsImageRenderer alloc];
 }
 
 WImage::WImage (int page, bool consideringResolution)
@@ -19,13 +20,16 @@ WImage::WImage (int page, bool consideringResolution)
     const NSInteger height = static_cast<int>(
                                 consideringResolution ? Page::getResolutionHeigth() : Page::getHeight()
                              ) * page;
-    _d->image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+    
+    _d->image = [[UIImage alloc] init];
+    _d->_renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(width, height)];
 }
 
 WImage::WImage (int width, int height, WImageType format)
     : _d(new WImagePrivate)
 {
-    _d->image = [[NSImage alloc] initWithSize:NSMakeSize(width, height)];
+    _d->image = [[UIImage alloc] init];
+    _d->_renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(width, height)];
 }
 
 WImage::WImage (WImage &&other) noexcept
@@ -36,8 +40,8 @@ WImage::WImage (WImage &&other) noexcept
 WImage::WImage (const WImage &other) noexcept
     : _d(new WImagePrivate)
 {
-    NSImage *originalImage = other._d->image;
-    NSImage *imageCopy = [originalImage mutableCopy];
+    UIImage *originalImage = other._d->image;
+    UIImage *imageCopy = [originalImage mutableCopy];
     _d->image = imageCopy;
 }
 
@@ -48,7 +52,7 @@ auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
     NSData *imageData = [NSData dataWithBytes:data.constData() length:data.size()];
 
     // Crea un oggetto NSImage utilizzando i dati PNG
-    _d->image = [[NSImage alloc] initWithData:imageData];
+    _d->image = [[UIImage alloc] initWithData:imageData];
 
     return true;
 }
@@ -56,16 +60,13 @@ auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
 auto WImage::save_and_size(WByteArray &arr) const -> size_t
 {
     // Assume you have an existing NSImage object named "image"
-    NSImage *image = _d->image;
-
-    // Crea un oggetto NSBitmapImageRep utilizzando il TIFFRepresentation dell'immagine
-    NSBitmapImageRep *bitmapRep = [NSBitmapImageRep imageRepWithData:[image TIFFRepresentation]];
+    UIImage *image = _d->image;
 
     // Crea un buffer dati per contenere l'immagine codificata in PNG
     NSMutableData *imageData = [NSMutableData data];
 
     // Codifica l'immagine in PNG e aggiungi i dati al buffer
-    NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
+    NSData *pngData = UIImagePNGRepresentation((UIImage *) image);
     [imageData appendData:pngData];
     arr = WByteArray (
                       static_cast<const char *>(imageData.bytes),
@@ -78,9 +79,15 @@ auto WImage::operator==(const WImage &other) const -> bool
 {
     if (this == &other)
         return true;
-    const NSImage *my = _d->image;
-    const NSImage *ot = other._d->image;
-    return [my isEqualTo:ot];
+    const UIImage *my = _d->image;
+    const UIImage *ot = other._d->image;
+
+    NSData *d1 = UIImagePNGRepresentation((UIImage *) my);
+    NSData *d2 = UIImagePNGRepresentation((UIImage *) ot);
+    
+    W_ASSERT([d1 isEqual: d2] == [my isEqual:ot]);
+    
+    return [my isEqual:ot];
 }
 
 auto WImage::operator=(WImage &&other) noexcept -> WImage &
@@ -91,7 +98,7 @@ auto WImage::operator=(WImage &&other) noexcept -> WImage &
 
 auto WImage::operator=(const WImage &other) noexcept -> WImage &
 {
-    NSImage *copy = [[NSImage alloc] init];
+    UIImage *copy = [[UIImage alloc] init];
     _d->image = [copy mutableCopy];
     return *this;
 }
@@ -101,10 +108,8 @@ WImage::WImage(const WString &path) noexcept
 {
     const char *position = path.toUtf8().constData();
     NSString *s = [NSString stringWithUTF8String:position];
-    NSURL *url = [[NSURL alloc] initWithString:s];
     
-    NSImage *image = [[NSImage alloc] initWithContentsOfURL:url];
-    _d->image = image;
+    _d->image = [UIImage imageWithContentsOfFile:s];
 }
 
 auto WImage::toImage() const -> WImage
@@ -121,8 +126,8 @@ auto WImage::getRawDataPNG() const -> WByteArray
 
 auto WImage::rect() const -> RectF
 {
-    NSImage *img = _d->image;
-    NSSize size = img.size;
+    UIImage *img = _d->image;
+    CGSize size = img.size;
     return RectF {
         0., 0.,
         size.width,
@@ -137,29 +142,37 @@ auto WImage::isNull() const -> bool
 
 auto WImage::fill(const WColor &color) -> void
 {
-    NSImage *image = _d->image;
     const auto rect = this->rect();
+
+    //NSColor *color = [NSColor colorWithCalibrateRed:color.getRed() green:color.getGreen() blue:color.getBlue() alpha:color.getAlfa()];
+    [[UIColor colorWithRed:color.getRedNormalize() green:color.getGreenNormalize() blue:color.getBlueNormalize() alpha:color.getAlfaNormalize()] setFill];
     
-    [image lockFocus];
-
-    NSColor *rectangleColor = [NSColor colorWithCalibratedRed:color.getRed() green:color.getGreen() blue:color.getBlue() alpha:color.getAlfa()];
-
-    [rectangleColor set];
-    NSRectFill(NSMakeRect(0, 0, rect.width(), rect.height()));
-
-    [image unlockFocus];
+    UIRectFill (CGRectMake(rect.topLeft().x(), rect.topLeft().y(), rect.bottomRight().x(), rect.bottomRight().y()));
+    
+    _d->image = UIGraphicsGetImageFromCurrentImageContext();
 }
 
 auto WImage::pixel(const WPoint &point) const -> WRgb
 {
-    NSImage *image = _d->image;
-    NSBitmapImageRep* raw_img = [NSBitmapImageRep imageRepWithData:[image TIFFRepresentation]];
-    NSColor* color = [raw_img colorAtX:point.x() y:point.y()];
+    UIImage *image = _d->image;
     
-    const char blue = color.blueComponent * 255;
-    const char green = color.greenComponent * 255;
-    const char red = color.redComponent * 255;
-    const char alfa = color.alphaComponent * 255;
+    CGImageRef imageRef = [image CGImage];
+    CGDataProviderRef provider = CGImageGetDataProvider(imageRef);
+    CFDataRef data = CGDataProviderCopyData(provider);
+    const UInt8* bytes = CFDataGetBytePtr(data);
+
+    size_t bytesPerRow = CGImageGetBytesPerRow(imageRef);
+    size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
+    size_t componentsPerPixel = CGImageGetBitsPerPixel(imageRef) / bitsPerComponent;
+        
+    size_t pixelIndex = ((size_t)point.y() * bytesPerRow) + ((size_t)point.x() * componentsPerPixel);
+
+    UInt8 red = bytes[pixelIndex];
+    UInt8 green = bytes[pixelIndex + 1];
+    UInt8 blue = bytes[pixelIndex + 2];
+    UInt8 alpha = bytes[pixelIndex + 3];
+
+    CFRelease(data);
     
-    return red | green << 8 | blue << 16 | alfa << 24;
+    return red | green << 8 | blue << 16 | alpha << 24;
 }

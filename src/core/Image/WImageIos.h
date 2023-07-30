@@ -12,10 +12,11 @@
 
 class WImage
 {
-private:
+public:
+    // try to make this private
+    // only access should be in the bridge for ios
     UniquePtr<struct WImagePrivate> _d;
     
-public:
     explicit WImage(const WString &path) noexcept;
     WImage (WImage &&other) noexcept;
     WImage (const WImage &other) noexcept;

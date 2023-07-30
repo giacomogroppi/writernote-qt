@@ -45,11 +45,12 @@ public:
     void setAntialeasing(); // done
     void setCompositionClear(); // done
 
-    bool end() { return true; };
+    bool end();
     bool isActive() const { return this->_target != nullptr; };
     
 private:
     mutable WMutex _lock;
+    class WPainterPrivate *_d;
     WImage *_target;
     WPen _pen;
     WColor _color;
