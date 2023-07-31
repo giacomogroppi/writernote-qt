@@ -165,6 +165,7 @@ bool Scheduler::needToDie() const noexcept
 
 Scheduler &Scheduler::getInstance()
 {
+    W_ASSERT(instance != nullptr);
     return *instance;
 }
 
@@ -177,9 +178,9 @@ auto Scheduler::addTimerUnsafe(WTimer *timer) -> void
 auto Scheduler::addTimer(WTimer *timer) -> void
 {
     W_ASSERT(timer != nullptr);
-
+    
     WMutexLocker _(this->_muxTimers);
-    return this->addTimerUnsafe(timer);
+    this->addTimerUnsafe(timer);
 }
 
 auto Scheduler::removeTimer(WTimer *timer) -> void

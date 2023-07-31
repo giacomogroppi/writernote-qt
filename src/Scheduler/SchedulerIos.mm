@@ -5,10 +5,7 @@
 #if is_ios
 static auto executeOnMainThread (dispatch_block_t method)
 {
-    if (![NSThread isMainThread])
-        dispatch_sync(dispatch_get_main_queue(), method);
-    else
-        method();
+    dispatch_async(dispatch_get_main_queue(), method);
 }
 
 void Scheduler::addTaskMainThread(WTask *task)
