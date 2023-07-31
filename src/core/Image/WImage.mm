@@ -155,7 +155,7 @@ auto WImage::rect() const -> RectF
 
 auto WImage::isNull() const -> bool
 {
-    return _d->image;
+    return _rect.isNull();
 }
 
 auto WImage::fill(const WColor &color) -> void
