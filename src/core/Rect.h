@@ -514,4 +514,12 @@ inline auto RectTemplate<T>::width() const -> T
     return this->_bottomRight.x() - this->_topLeft.x();
 }
 
+template <class T>
+inline std::ostream& operator<<(std::ostream& os, const RectTemplate<T>& dt)
+{
+    os << dt.topLeft();
+    os << dt.bottomRight();
+    return os;
+}
+
 using WRect = RectTemplate<int>;

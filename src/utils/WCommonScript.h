@@ -8,6 +8,9 @@
 #include <type_traits>
 #include <algorithm>
 
+#if DEBUG
+# define DEBUGINFO
+#endif
 
 #define __init__ __attribute((constructor))
 

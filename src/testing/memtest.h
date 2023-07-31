@@ -3,7 +3,7 @@
 #include "utils/WCommonScript.h"
 
 #ifdef DEBUGINFO
-#   define DEBUG_MEM
+//#   define DEBUG_MEM
 #endif
 
 // debug for memory

@@ -80,7 +80,7 @@ public:
         if (this == &other)
             return *this;
 
-        W_ASSERT_TEXT(this->_fp == nullptr, qstr("File in position: %1").arg(_path));
+        W_ASSERT(this->_fp == nullptr);
 
         this->_fp = other._fp;
         this->_path = std::move (other._path);

@@ -117,10 +117,10 @@ struct WColor{
     unsigned char getGreen() const  { return this->colore[1]; };
     unsigned char getBlue() const   { return this->colore[2]; };
 
-    double getAlfaNormalize() const {return this->colore[3]; };
-    double getRedNormalize() const { return this->colore[0]; };
-    double getGreenNormalize() const { return this->colore[1]; };
-    double getBlueNormalize() const { return this->colore[2]; } ;
+    double getAlfaNormalize() const;
+    double getRedNormalize() const;
+    double getGreenNormalize() const;
+    double getBlueNormalize() const;
     
     void setAlfa(unsigned char newValue);
 
@@ -133,6 +133,7 @@ struct WColor{
     auto write (WritableAbstract &writable, const WColor &color) -> int;
 
 #ifndef USE_QT
+# define color_red         WColor(255, 0, 0, 255)
 # define color_black       WColor(0, 0, 0, 255)
 # define color_white       WColor(255, 255, 255, 255)
 # define color_transparent WColor(0, 0, 0, 0)
@@ -150,6 +151,37 @@ struct WColor{
     WColor &operator=(const WColor &other);
     bool operator==(const WColor &other) const;
 };
+
+inline double WColor::getRedNormalize() const
+{
+    const double value = static_cast<double>(getRed()) / 255.;
+    W_ASSERT(value >= 0. && value <= 1.);
+    return value;
+};
+
+inline double WColor::getGreenNormalize() const
+{
+    const double value = static_cast<double>(getGreen()) / 255.;
+    W_ASSERT(value >= 0. && value <= 1.);
+    return value;
+};
+
+inline double WColor::getBlueNormalize() const
+{
+    const double value = static_cast<double>(getBlue()) / 255.;
+    W_ASSERT(value >= 0. && value <= 1.);
+    return value;
+};
+
+
+inline double WColor::getAlfaNormalize() const
+{
+    unsigned char value = this->getAlfa();
+    const double valueCasted = static_cast<double>(value);
+    const double result = valueCasted / 255.;
+    W_ASSERT(result >= 0. and result <= 1.);
+    return result;
+}
 
 inline void WColor::set_alfa(unsigned char alfa)
 {

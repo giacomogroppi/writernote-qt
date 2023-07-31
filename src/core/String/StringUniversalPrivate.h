@@ -422,3 +422,9 @@ inline auto WString::charAt(int index) const -> char
 
 inline WString operator+(const char *s1, const WString &s2)
 { WString t = WString::fromUtf8(s1); t += s2; return t; }
+
+inline std::ostream& operator<<(std::ostream& os, const WString& dt)
+{
+    os << dt.toUtf8();
+    return os;
+}

@@ -34,23 +34,32 @@ auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> CGBl
 auto createNSColor (const WColor &color) -> UIColor*
 {
     return [UIColor
-                colorWithRed:color.getRed()
-                green:color.getGreen()
-                blue:color.getBlue()
-                alpha:color.getAlfa()];
+                colorWithRed:color.getRedNormalize()
+                green:color.getGreenNormalize()
+                blue:color.getBlueNormalize()
+                alpha:color.getAlfaNormalize()];
+}
+
+auto executeOnMainThread (dispatch_block_t method)
+{
+    if (![NSThread isMainThread])
+        dispatch_sync(dispatch_get_main_queue(), method);
+    else
+        method();
 }
 
 WPainter::WPainter() noexcept
     : _target(nullptr)
     , _isAntialeasing(false)
     , _compositionMode(WPainter::CompositionMode::CompositionMode_SourceOver)
+    , _color(color_black)
 {
     
 }
 
 void WPainter::drawEllipse (const PointF &center, double rx, double ry)
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         const auto *image = _target->_d->image;
         const double width = this->_pen.widthF();
@@ -72,7 +81,7 @@ void WPainter::drawEllipse (const PointF &center, double rx, double ry)
 
 void WPainter::drawImage (const RectF &target, const WImage &image, const RectF &source)
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         auto *imageSource = (UIImage *)image._d->image;
         
@@ -85,7 +94,7 @@ void WPainter::drawImage (const RectF &target, const WImage &image, const RectF 
 
 void WPainter::drawLine(int x1, int y1, int x2, int y2)
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         const double width = this->_pen.widthF();
         auto *color = createNSColor(this->_color);
@@ -109,7 +118,7 @@ void WPainter::drawPoint (const PointF &point)
 
 void WPainter::drawRect(const RectF &rectWriternote)
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         const double width = this->_pen.widthF();
         auto *color = createNSColor(this->_color);
@@ -200,9 +209,10 @@ bool WPainter::begin(WImage *pixmap)
     this->_d = new WPainterPrivate (UIGraphicsGetCurrentContext());
     
     UIImage *t = _target->_d->image;
+    CGSize rect = CGSizeMake(_target->rect().width(), _target->rect().height());
     
     // draw our image
-    UIGraphicsBeginImageContextWithOptions(t.size, NO, 0.0);
+    UIGraphicsBeginImageContextWithOptions(rect, NO, 0.0);
     [t drawAtPoint:CGPointZero];
     
     return true;
@@ -217,5 +227,8 @@ auto WPainter::end() -> bool
     delete this->_d;
     
     UIGraphicsEndImageContext();
+    
+    W_ASSERT(_target->_d->image != nullptr);
+    
     return true;
 }

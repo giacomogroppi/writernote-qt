@@ -338,3 +338,11 @@ inline Q_CORE_EXPORT QDebug operator<<(QDebug d, const PointTemplate<T> &p)
 }
 
 #endif // USE_QT
+
+template <class T>
+inline std::ostream& operator<<(std::ostream& os, const PointTemplate<T>& dt)
+{
+    os << dt.x();
+    os << dt.y();
+    return os;
+}

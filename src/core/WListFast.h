@@ -910,3 +910,12 @@ inline WListFast<T>::~WListFast() noexcept
 {
     this->clear();
 }
+
+template <class T>
+inline std::ostream& operator<<(std::ostream& os, const WListFast<T>& dt)
+{
+    for (const auto &ref: dt) {
+        os << ref;
+    }
+    return os;
+}

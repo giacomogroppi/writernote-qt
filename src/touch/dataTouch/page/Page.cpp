@@ -1,4 +1,4 @@
-﻿#include "Page.h"
+#include "Page.h"
 #include "core/core.h"
 #include "log/log_ui/log_ui.h"
 #include "sheet/style_struct.h"
@@ -153,7 +153,7 @@ void Page::swap(WListFast<std::shared_ptr<Stroke>> &list,
 
 #ifdef DEBUGINFO
     if(un(!WAbstractList::isSorted(pos))){
-        qDebug() << "List not order" << __FILE__ << __FUNCTION__;
+        WDebug(true,"List not order");
     }
 #endif
 
@@ -196,7 +196,7 @@ void Page::swap(WListFast<std::shared_ptr<Stroke> > &list,
     }
 
     DO_IF_DEBUG_ENABLE(debugPage,
-        qDebug() << "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop;
+        WDebug(true, "Page::swap" << _count - 1 << drop << "Item drop, list" << itemDrop);
             );
 }
 

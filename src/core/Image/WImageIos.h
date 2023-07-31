@@ -12,6 +12,8 @@
 
 class WImage
 {
+private:
+    RectF _rect;
 public:
     // try to make this private
     // only access should be in the bridge for ios

@@ -108,7 +108,15 @@ public:
     auto operator=(const WByteArray &other) noexcept -> WByteArray &;
 
     void remove(int index) noexcept;
+    
+    friend std::ostream& operator<<(std::ostream& os, const WByteArray& dt);
 };
+
+inline std::ostream& operator<<(std::ostream& os, const WByteArray &dt)
+{
+    os << dt.constData();
+    return os;
+}
 
 inline const char *WByteArray::constData() const
 {

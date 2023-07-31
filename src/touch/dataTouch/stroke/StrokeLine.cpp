@@ -46,11 +46,11 @@ bool StrokeLine::is_inside(const RectF &area, double precision) const
     WLine _this         (_data.pt1, _data.pt2);
 
     // if the Square passed to the function contains one of the two points
-    if(area.contains(_data.pt1)){
+    if (area.contains(_data.pt1)) {
         WDebug(debugLine, "Contains first line" << _data.pt1);
         return true;
     }
-    if(area.contains(_data.pt2)){
+    if (area.contains(_data.pt2)) {
         WDebug(debugLine, "contains second line" << _data.pt2);
         return true;
     }

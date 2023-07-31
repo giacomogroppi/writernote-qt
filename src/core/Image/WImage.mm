@@ -8,6 +8,7 @@
 
 WImage::WImage () noexcept
     : _d(new WImagePrivate)
+    , _rect()
 {
     //d = (__bridge void *)[[NSImage alloc] init];
     _d->_renderer = [UIGraphicsImageRenderer alloc];
@@ -18,15 +19,17 @@ WImage::WImage (int page, bool consideringResolution)
 {
     const NSInteger width  = consideringResolution ? Page::getResolutionWidth() : Page::getWidth();
     const NSInteger height = static_cast<int>(
-                                consideringResolution ? Page::getResolutionHeigth() : Page::getHeight()
-                             ) * page;
+                                              consideringResolution ? Page::getResolutionHeigth() : Page::getHeight()
+                                              ) * page;
     
     _d->image = [[UIImage alloc] init];
     _d->_renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(width, height)];
+    _rect = RectF(0, 0, width, height);
 }
 
 WImage::WImage (int width, int height, WImageType format)
     : _d(new WImagePrivate)
+    , _rect(0, 0, width, height)
 {
     _d->image = [[UIImage alloc] init];
     _d->_renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(width, height)];
@@ -34,11 +37,13 @@ WImage::WImage (int width, int height, WImageType format)
 
 WImage::WImage (WImage &&other) noexcept
     : _d(std::move(other._d))
+    , _rect(other._rect)
 {
 }
 
 WImage::WImage (const WImage &other) noexcept
     : _d(new WImagePrivate)
+    , _rect(other._rect)
 {
     UIImage *originalImage = other._d->image;
     UIImage *imageCopy = [originalImage mutableCopy];
@@ -54,6 +59,8 @@ auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
     // Crea un oggetto NSImage utilizzando i dati PNG
     _d->image = [[UIImage alloc] initWithData:imageData];
 
+    // TODO: size of image
+    
     return true;
 }
 
@@ -93,6 +100,7 @@ auto WImage::operator==(const WImage &other) const -> bool
 auto WImage::operator=(WImage &&other) noexcept -> WImage &
 {
     this->_d = std::move(other._d);
+    this->_rect = other._rect;
     return *this;
 }
 
@@ -126,6 +134,7 @@ auto WImage::getRawDataPNG() const -> WByteArray
 
 auto WImage::rect() const -> RectF
 {
+    return this->_rect;
     UIImage *img = _d->image;
     CGSize size = img.size;
     return RectF {

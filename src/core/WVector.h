@@ -678,3 +678,13 @@ auto WVector<T>::rbegin() -> riterator
 {
     return this->_data.rbegin();
 }
+
+template <class T>
+inline std::ostream& operator<<(std::ostream& os, const WVector<T>& dt)
+{
+    // TODO: implement
+    for (const auto &ref : dt) {
+        os << ref;
+    }
+    return os;
+}
