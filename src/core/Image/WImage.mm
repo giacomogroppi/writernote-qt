@@ -86,14 +86,21 @@ auto WImage::operator==(const WImage &other) const -> bool
 {
     if (this == &other)
         return true;
+    
+    if (other._rect != _rect)
+        return false;
+    
     const UIImage *my = _d->image;
     const UIImage *ot = other._d->image;
 
-    NSData *d1 = UIImagePNGRepresentation((UIImage *) my);
+    /*
+    TODO: Create assert
+     NSData *d1 = UIImagePNGRepresentation((UIImage *) my);
     NSData *d2 = UIImagePNGRepresentation((UIImage *) ot);
     
     W_ASSERT([d1 isEqual: d2] == [my isEqual:ot]);
-    
+     */
+     
     return [my isEqual:ot];
 }
 
@@ -106,8 +113,10 @@ auto WImage::operator=(WImage &&other) noexcept -> WImage &
 
 auto WImage::operator=(const WImage &other) noexcept -> WImage &
 {
-    UIImage *copy = [[UIImage alloc] init];
-    _d->image = [copy mutableCopy];
+    /**
+     * since UIImage are immutable we can simply copy the address
+     */
+    _d->image = other._d->image;
     return *this;
 }
 

@@ -42,6 +42,8 @@ private:
     std::mutex _muxTimers;
     std::condition_variable _c;
 
+    static void manageExecution (WTask *task);
+    
 public:
     explicit Scheduler();
     ~Scheduler() final;

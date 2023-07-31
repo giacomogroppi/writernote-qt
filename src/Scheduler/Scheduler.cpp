@@ -23,12 +23,11 @@ Scheduler::Scheduler()
     std::vector<std::thread> thread;
 
     for (int i = 0; i < 8; i++) {
-        _threads.append(std::thread([this, i]() {
-            const auto isMainThread = i == 0;
-
-            WSemaphore *sem =           isMainThread ? &this->_semMain      : &this->_semGeneral;
-            WMutex *mux =               isMainThread ? &this->_lockMain     : &this->_lockGeneric;
-            WList<WTask *> *tasksHeap = isMainThread ? &this->_task_Main    : &this->_task_General;
+        _threads.append(std::thread([this, i]()
+        {
+            WSemaphore *sem =           &this->_semGeneral;
+            WMutex *mux =               &this->_lockGeneric;
+            WList<WTask *> *tasksHeap = &this->_task_General;
 
             // loop
             for (;;) {
@@ -43,14 +42,7 @@ Scheduler::Scheduler()
                     task = tasksHeap->takeFirst();
                 }
 
-                const auto needToDeleteLater = task->isDeleteLater();
-
-                task->run();
-                task->releaseJoiner();
-
-                if (needToDeleteLater) {
-                    delete task;
-                }
+                this->manageExecution(task);
             }
         }));
     }
@@ -101,6 +93,18 @@ Scheduler::Scheduler()
             }
         }
     }));
+}
+
+void Scheduler::manageExecution(WTask *task)
+{
+    const auto needToDeleteLater = task->isDeleteLater();
+
+    task->run();
+    task->releaseJoiner();
+
+    if (needToDeleteLater) {
+        delete task;
+    }
 }
 
 Scheduler::~Scheduler()
@@ -157,16 +161,6 @@ bool Scheduler::needToDie() const noexcept
 {
     WMutexLocker locker (this->_needToDieLock);
     return this->_needToDie;
-}
-
-void Scheduler::addTaskMainThread(WTask *task)
-{
-    W_ASSERT(task);
-
-    WMutexLocker _(instance->_lockMain);
-    instance->_task_Main.append(task);
-
-    instance->_semMain.release();
 }
 
 Scheduler &Scheduler::getInstance()

@@ -17,7 +17,7 @@ public:
     }
 };
 
-auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> CGBlendMode
+static auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> CGBlendMode
 {
     switch (compositionMode)
     {
@@ -31,7 +31,7 @@ auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> CGBl
     W_ASSERT_TEXT(0, "Composition mode not implemented");
 }
 
-auto createNSColor (const WColor &color) -> UIColor*
+static auto createNSColor (const WColor &color) -> UIColor*
 {
     return [UIColor
                 colorWithRed:color.getRedNormalize()
@@ -40,7 +40,7 @@ auto createNSColor (const WColor &color) -> UIColor*
                 alpha:color.getAlfaNormalize()];
 }
 
-auto executeOnMainThread (dispatch_block_t method)
+static auto executeOnMainThread (dispatch_block_t method)
 {
     if (![NSThread isMainThread])
         dispatch_sync(dispatch_get_main_queue(), method);
@@ -122,8 +122,11 @@ void WPainter::drawRect(const RectF &rectWriternote)
         WMutexLocker _(this->_lock);
         const double width = this->_pen.widthF();
         auto *color = createNSColor(this->_color);
-        
-        const CGRect rect = CGRectMake(rectWriternote.topLeft().x(), rectWriternote.topLeft().y(), rectWriternote.bottomRight().x(), rectWriternote.bottomRight().y());
+
+        const CGRect rect = CGRectMake(rectWriternote.topLeft().x(),
+                                       rectWriternote.topLeft().y(),
+                                       rectWriternote.bottomRight().x(),
+                                       rectWriternote.bottomRight().y());
 
         [color setStroke];
         UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:rect];
