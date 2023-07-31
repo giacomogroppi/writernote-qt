@@ -11,7 +11,8 @@ class WTimer: public WObject
 {
 private:
     mutable WRecursiveLock _lock;
-    bool _isActive;
+    bool _isActive: 1;
+    bool _isSingleShot: 1;
     unsigned long _millisecond;
     unsigned long _timeStart;
 

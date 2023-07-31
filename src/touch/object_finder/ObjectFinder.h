@@ -33,7 +33,7 @@ force_inline void ObjectFinder::endMoving()
 
 force_inline void ObjectFinder::move(const PointF& point)
 {
-    WDebug(debug, "ObjectFinder" << __FUNCTION__);
+    WDebug(debug, "ObjectFinder");
 
     if(_point.isSet()){
         // if the point is equal we don't have to stop the timer
