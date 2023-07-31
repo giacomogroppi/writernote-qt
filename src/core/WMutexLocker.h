@@ -8,7 +8,19 @@ class WMutexLocker
 private:
     T &_m;
 public:
-    WMutexLocker(T &mutex) : _m(mutex) { _m.lock(); };
-    ~WMutexLocker() { _m.unlock(); }
+    WMutexLocker(T &mutex);
+    ~WMutexLocker();
 };
 
+template <class T>
+inline WMutexLocker<T>::WMutexLocker (T &mutex)
+    : _m(mutex)
+{
+    _m.lock();
+}
+
+template <class T>
+inline WMutexLocker<T>::~WMutexLocker()
+{
+    _m.unlock();
+}
