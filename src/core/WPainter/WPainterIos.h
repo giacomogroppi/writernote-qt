@@ -9,12 +9,13 @@
 #include "core/Image/WImage.h"
 #include "core/Pixmap/WPixmap.h"
 #include "core/WMutex.h"
+#include "core/pointer/UniquePtr.h"
 
 class WPainter
 {
 public:
     WPainter() noexcept; // done
-    ~WPainter() = default; // done
+    ~WPainter(); // done
 
     bool begin(WImage *pixmap); // done
     void setColor(const WColor &color); // done
@@ -46,14 +47,21 @@ public:
     void setCompositionClear(); // done
 
     bool end();
-    bool isActive() const { return this->_target != nullptr; };
+    bool isActive() const;
     
 private:
     mutable WMutex _lock;
-    class WPainterPrivate *_d;
     WImage *_target;
     WPen _pen;
     WColor _color;
     enum CompositionMode _compositionMode;
     bool _isAntialeasing;
+    
+    int height() const;
+    int width() const;
 };
+
+inline auto WPainter::isActive() const -> bool
+{    
+    return _target != nullptr;
+}

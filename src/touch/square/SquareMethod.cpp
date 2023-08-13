@@ -84,7 +84,8 @@ void SquareMethod::reset()
     _stroke.clear();
 
     out:
-    this->_img = WPixmap();
+    WPixmap tmp = WPixmap();
+    this->_img = std::move(tmp);
     this->_stroke.clear();
     this->_trans_img = PointF(0.0, 0.0);
 }

@@ -80,7 +80,7 @@ force_inline constexpr not_used int debug_enable()
 # define W_ASSERT_TEXT(condition, ...)                                                                  \
     do{                                                                                                 \
         if(un(!!(condition) == false)){                                                                 \
-            DEBUGGER_OUT << __FUNCTION__ << __FILE__ << __LINE__ << #condition << __VA_ARGS__;              \
+            DEBUGGER_OUT << __FUNCTION__ << __FILE__ << __LINE__ << #condition << __VA_ARGS__;          \
             std::abort();                                                                               \
         }                                                                                               \
     }while(0)

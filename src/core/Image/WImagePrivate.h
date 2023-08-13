@@ -7,6 +7,5 @@
 
 struct WImagePrivate {
     UIImage *image;
-    UIGraphicsImageRenderer *_renderer;
     WImagePrivate() : image(nullptr) {}
 };

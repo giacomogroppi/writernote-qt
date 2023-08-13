@@ -68,13 +68,13 @@ inline auto VersionFileController::load(ReadableAbstract &readable) -> std::pair
             return {-1, result};
     }
 
-    W_ASSERT(0);
+    // TODO: implement
     
     return {0, result};
 }
 
 inline auto VersionFileController::write(WritableAbstract& writable) -> int
 {
-    W_ASSERT(0);
+    // TODO: implement
     return 0;
 }

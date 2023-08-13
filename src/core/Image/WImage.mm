@@ -10,8 +10,6 @@ WImage::WImage () noexcept
     : _d(new WImagePrivate)
     , _rect()
 {
-    //d = (__bridge void *)[[NSImage alloc] init];
-    _d->_renderer = [UIGraphicsImageRenderer alloc];
 }
 
 WImage::WImage (int page, bool consideringResolution)
@@ -23,7 +21,6 @@ WImage::WImage (int page, bool consideringResolution)
                                               ) * page;
     
     _d->image = [[UIImage alloc] init];
-    _d->_renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(width, height)];
     _rect = RectF(0, 0, width, height);
 }
 
@@ -32,13 +29,15 @@ WImage::WImage (int width, int height, WImageType format)
     , _rect(0, 0, width, height)
 {
     _d->image = [[UIImage alloc] init];
-    _d->_renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(width, height)];
 }
 
 WImage::WImage (WImage &&other) noexcept
     : _d(std::move(other._d))
     , _rect(other._rect)
 {
+    W_ASSERT(other._d == nullptr);
+    W_ASSERT(_d != nullptr);
+    other._d = UniquePtr<WImagePrivate>(new WImagePrivate());
 }
 
 WImage::WImage (const WImage &other) noexcept
@@ -53,6 +52,7 @@ WImage::WImage (const WImage &other) noexcept
 auto WImage::loadFromData(const WByteArray &data, const char *formact) -> bool
 {
     W_ASSERT(strcmp(formact, "PNG") == 0);
+    
     // Assume you have the PNG data in an NSData object named "imageData"
     NSData *imageData = [NSData dataWithBytes:data.constData() length:data.size()];
 
@@ -100,15 +100,21 @@ auto WImage::operator==(const WImage &other) const -> bool
     
     W_ASSERT([d1 isEqual: d2] == [my isEqual:ot]);
      */
-     
     return [my isEqual:ot];
 }
 
 auto WImage::operator=(WImage &&other) noexcept -> WImage &
 {
     this->_d = std::move(other._d);
+    other._d = UniquePtr<WImagePrivate>(new WImagePrivate());
     this->_rect = other._rect;
     return *this;
+}
+
+WImage::~WImage()
+{
+    W_ASSERT(_d != nullptr);
+    this->_d->image = nullptr;
 }
 
 auto WImage::operator=(const WImage &other) noexcept -> WImage &
@@ -117,6 +123,8 @@ auto WImage::operator=(const WImage &other) noexcept -> WImage &
      * since UIImage are immutable we can simply copy the address
      */
     _d->image = other._d->image;
+    _rect = other._rect;
+    W_ASSERT(*this == other);
     return *this;
 }
 

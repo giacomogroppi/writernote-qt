@@ -15,9 +15,9 @@ class WImage
 private:
     RectF _rect;
 public:
-    // try to make this private
+    // TODO: try to make this private
     // only access should be in the bridge for ios
-    UniquePtr<struct WImagePrivate> _d;
+    std::unique_ptr<struct WImagePrivate> _d;
     
     explicit WImage(const WString &path) noexcept;
     WImage (WImage &&other) noexcept;
@@ -28,6 +28,8 @@ public:
     explicit WImage(int page, bool consideringResolution);
     WImage(int width, int height, WImageType format);
 
+    ~WImage();
+    
     [[nodiscard]]
     auto get_size_in_file() const -> size_t;
     

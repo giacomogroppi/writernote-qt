@@ -141,7 +141,7 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 
     _stroke = other._stroke->clone();
 
-    _img = other._img;
+    this->_img = other._img;
     this->_point = other._point;
     this->_pressure = other._pressure;
     this->_max = other._max;
@@ -152,7 +152,6 @@ StrokePre &StrokePre::operator=(const StrokePre &other)
 #endif // DEBUGINFO
 
     W_ASSERT(*_stroke == *other._stroke);
-    W_ASSERT(_img == other._img);
     W_ASSERT(_point == other._point);
 
     return *this;

@@ -277,8 +277,11 @@ inline WByteArray::WByteArray(const WByteArray &other) noexcept
     , _size(0)
     , _reserved(0)
 {
-    this->reserve(other.size());
-    this->append(other.constData(), other.size());
+    const auto s = other._size;
+    if (s > 0) {
+        this->reserve(s);
+        this->append(other.constData(), other.size());
+    }
 }
 
 inline auto WByteArray::capacity() const -> Size

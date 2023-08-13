@@ -8,13 +8,7 @@
 
 class WPainterPrivate {
 public:
-    CGContextRef context;
     
-    WPainterPrivate (CGContextRef context)
-        : context(context)
-    {
-        UIGraphicsPushContext(context);
-    }
 };
 
 static auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) -> CGBlendMode
@@ -40,16 +34,35 @@ static auto createNSColor (const WColor &color) -> UIColor*
                 alpha:color.getAlfaNormalize()];
 }
 
-static auto executeOnMainThread (dispatch_block_t method)
+static auto executeOnMainThread (dispatch_block_t method, int w, int h, WImage *target) -> UIImage *
 {
-    if (![NSThread isMainThread])
-        dispatch_sync(dispatch_get_main_queue(), method);
-    else
+    __block UIImage *result = nil;
+    
+    dispatch_block_t realMethod = ^{
+        UIGraphicsBeginImageContext(CGSizeMake(w, h));
+        
+        UIImage *t = target->_d->image;
+        [t drawAtPoint:CGPointZero];
+        
         method();
+        
+        result = UIGraphicsGetImageFromCurrentImageContext();
+        result = [[UIImage alloc] init];
+        UIGraphicsEndImageContext();
+    };
+    
+    if (![NSThread isMainThread])
+        dispatch_sync(dispatch_get_main_queue(), realMethod);
+    else
+        realMethod();
+    
+    W_ASSERT(result != nil);
+    
+    return result;
 }
 
 WPainter::WPainter() noexcept
-    : _target(nullptr)
+    : _target(nil)
     , _isAntialeasing(false)
     , _compositionMode(WPainter::CompositionMode::CompositionMode_SourceOver)
     , _color(color_black)
@@ -59,14 +72,14 @@ WPainter::WPainter() noexcept
 
 void WPainter::drawEllipse (const PointF &center, double rx, double ry)
 {
-    executeOnMainThread(^{
+    _target->_d->image = executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         const auto *image = _target->_d->image;
         const double width = this->_pen.widthF();
         auto *color = createNSColor(this->_color);
 
         [image drawAtPoint:CGPointZero];
-            
+        
         // Impostare il colore e la dimensione dello stroke
         [color setStroke];
         UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(center.x() - rx / 2.,
@@ -76,12 +89,12 @@ void WPainter::drawEllipse (const PointF &center, double rx, double ry)
         path.lineWidth = width;
         
         [path stroke];
-    });
+    }, width(), height(), _target);
 }
 
 void WPainter::drawImage (const RectF &target, const WImage &image, const RectF &source)
 {
-    executeOnMainThread(^{
+    _target->_d->image = executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         auto *imageSource = (UIImage *)image._d->image;
         
@@ -89,13 +102,14 @@ void WPainter::drawImage (const RectF &target, const WImage &image, const RectF 
         CGRect sourceRect = CGRectMake(source.topLeft().x(), source.topLeft().y(), source.bottomRight().x(), source.bottomRight().y());
 
         [imageSource drawInRect:sourceRect];
-    });
+    }, width(), height(), _target);
 }
 
 void WPainter::drawLine(int x1, int y1, int x2, int y2)
 {
-    executeOnMainThread(^{
+    _target->_d->image = executeOnMainThread(^{
         WMutexLocker _(this->_lock);
+        
         const double width = this->_pen.widthF();
         auto *color = createNSColor(this->_color);
         
@@ -105,7 +119,7 @@ void WPainter::drawLine(int x1, int y1, int x2, int y2)
         [path moveToPoint:CGPointMake(x1, y1)];
         [path addLineToPoint:CGPointMake(x2, y2)];
         [path stroke];
-    });
+    }, width(), height(), _target);
 }
 
 void WPainter::drawPoint (const PointF &point)
@@ -118,7 +132,7 @@ void WPainter::drawPoint (const PointF &point)
 
 void WPainter::drawRect(const RectF &rectWriternote)
 {
-    executeOnMainThread(^{
+    _target->_d->image = executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         const double width = this->_pen.widthF();
         auto *color = createNSColor(this->_color);
@@ -133,7 +147,7 @@ void WPainter::drawRect(const RectF &rectWriternote)
         path.lineWidth = width;
 
         [path stroke];
-    });
+    }, width(), height(), _target);
 }
 
 void WPainter::drawPixmap(const RectF &target, const WPixmap& pixmap, const RectF &source)
@@ -177,9 +191,9 @@ void WPainter::setPen(const WPen &pen)
 void WPainter::setAntialeasing()
 {
     WMutexLocker _(this->_lock);
-    W_ASSERT(this->_d);
-    CGContextSetAllowsAntialiasing(_d->context, YES);
-    CGContextSetShouldAntialias(_d->context, YES);
+    // TODO: adjust this to set this property always
+    CGContextSetAllowsAntialiasing(UIGraphicsGetCurrentContext(), YES);
+    CGContextSetShouldAntialias(UIGraphicsGetCurrentContext(), YES);
     this->_isAntialeasing = true;
 }
 
@@ -201,37 +215,42 @@ void WPainter::setCompositionMode(enum CompositionMode compositionMode)
     
     auto realCompositionMode = getAdaptCompositionMode(_compositionMode);
     
-    CGContextSetBlendMode(_d->context, realCompositionMode);
+    // TODO: adjust this to set this property always
+    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), realCompositionMode);
 }
 
 bool WPainter::begin(WImage *pixmap)
 {
     WMutexLocker _(this->_lock);
-    W_ASSERT_TEXT(this->_target == nullptr, "Trying to begin on an WPainter not ended");
+    W_ASSERT_TEXT(pixmap != nullptr, "Pixmap passed as target is null");
+    W_ASSERT_TEXT(!isActive(), "Trying to begin on an WPainter not ended");
+    
     this->_target = pixmap;
-    this->_d = new WPainterPrivate (UIGraphicsGetCurrentContext());
-    
-    UIImage *t = _target->_d->image;
-    CGSize rect = CGSizeMake(_target->rect().width(), _target->rect().height());
-    
-    // draw our image
-    UIGraphicsBeginImageContextWithOptions(rect, NO, 0.0);
-    [t drawAtPoint:CGPointZero];
-    
+
     return true;
 }
 
 auto WPainter::end() -> bool
 {
-    
-    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
-    _target->_d->image = result;
-    
-    delete this->_d;
-    
-    UIGraphicsEndImageContext();
-    
-    W_ASSERT(_target->_d->image != nullptr);
+    _target = nullptr;
     
     return true;
+}
+
+WPainter::~WPainter()
+{
+    const auto wasActive = this->isActive();
+    if (wasActive)
+        this->end();
+    WDebug(wasActive, "Painter was active...");
+}
+
+auto WPainter::height() const -> int
+{
+    return this->_target->rect().height();
+}
+
+auto WPainter::width() const -> int
+{
+    return this->_target->rect().width();
 }
