@@ -39,6 +39,7 @@ static auto executeOnMainThread (dispatch_block_t method, int w, int h, WImage *
     __block UIImage *result = nil;
     
     dispatch_block_t realMethod = ^{
+        /*
         UIGraphicsBeginImageContext(CGSizeMake(w, h));
         
         UIImage *t = target->_d->image;
@@ -49,6 +50,14 @@ static auto executeOnMainThread (dispatch_block_t method, int w, int h, WImage *
         result = UIGraphicsGetImageFromCurrentImageContext();
         result = [[UIImage alloc] init];
         UIGraphicsEndImageContext();
+        */
+        
+        CGSize size = CGSizeMake(w, h);
+        UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size];
+
+        result = [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+            method();
+        }];
     };
     
     if (![NSThread isMainThread])
@@ -65,7 +74,7 @@ WPainter::WPainter() noexcept
     : _target(nil)
     , _isAntialeasing(false)
     , _compositionMode(WPainter::CompositionMode::CompositionMode_SourceOver)
-    , _color(color_black)
+    , _color(color_red)
 {
     
 }
