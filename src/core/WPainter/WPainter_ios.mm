@@ -18,7 +18,7 @@ static auto getAdaptCompositionMode (WPainter::CompositionMode compositionMode) 
         case WPainter::CompositionMode::CompositionMode_Clear:
             return CGBlendMode::kCGBlendModeClear;
         case WPainter::CompositionMode::CompositionMode_SourceOver:
-            return CGBlendMode::kCGBlendModeDestinationIn;
+            return CGBlendMode::kCGBlendModeSourceAtop;
         case WPainter::CompositionMode::CompositionMode_DestinationOver:
             return CGBlendMode::kCGBlendModeDestinationOver;
     }
@@ -34,9 +34,12 @@ static auto createNSColor (const WColor &color) -> UIColor*
                 alpha:color.getAlfaNormalize()];
 }
 
-static auto executeOnMainThread (dispatch_block_t method, int w, int h, WImage *target) -> UIImage *
+static auto executeOnMainThread (dispatch_block_t method, int w, int h, WImage *target, auto compositionMode) -> UIImage *
 {
     __block UIImage *result = nil;
+    auto realCompositionMode = getAdaptCompositionMode(compositionMode);
+    
+    W_ASSERT(target != nullptr);
     
     dispatch_block_t realMethod = ^{
         /*
@@ -52,12 +55,29 @@ static auto executeOnMainThread (dispatch_block_t method, int w, int h, WImage *
         UIGraphicsEndImageContext();
         */
         
-        CGSize size = CGSizeMake(w, h);
-        UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size];
+        @autoreleasepool {
+            CGSize size = CGSizeMake(w, h);
+            
+            // Crea un renderer di immagini con le opzioni desiderate
+            UIGraphicsImageRendererFormat *format = [UIGraphicsImageRendererFormat defaultFormat];
+            format.scale = 1;
+            format.opaque = NO;
+            format.preferredRange = UIGraphicsImageRendererFormatRangeStandard;
 
-        result = [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
-            method();
-        }];
+            UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size format:format];
+
+            result = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+                // Qui puoi eseguire il disegno dell'immagine
+                CGContextRef context = rendererContext.CGContext;
+                
+                // Esempio: Disegna un cerchio con anti-aliasing abilitato
+                CGContextSetShouldAntialias(context, YES);
+                CGContextSetBlendMode(context, realCompositionMode);
+                [target->_d->image drawAtPoint:CGPointZero];
+                target->_d->image = nil;
+                method();
+            }];
+        }
     };
     
     if (![NSThread isMainThread])
@@ -74,7 +94,7 @@ WPainter::WPainter() noexcept
     : _target(nil)
     , _isAntialeasing(false)
     , _compositionMode(WPainter::CompositionMode::CompositionMode_SourceOver)
-    , _color(color_red)
+    , _color(color_black)
 {
     
 }
@@ -98,20 +118,20 @@ void WPainter::drawEllipse (const PointF &center, double rx, double ry)
         path.lineWidth = width;
         
         [path stroke];
-    }, width(), height(), _target);
+    }, width(), height(), _target, _compositionMode);
 }
 
 void WPainter::drawImage (const RectF &target, const WImage &image, const RectF &source)
 {
     _target->_d->image = executeOnMainThread(^{
         WMutexLocker _(this->_lock);
-        auto *imageSource = (UIImage *)image._d->image;
+        auto *imageSource = image._d->image;
         
         CGRect targetRect = CGRectMake(target.topLeft().x(), target.topLeft().y(), target.bottomRight().x(), target.bottomRight().y());
         CGRect sourceRect = CGRectMake(source.topLeft().x(), source.topLeft().y(), source.bottomRight().x(), source.bottomRight().y());
-
+        
         [imageSource drawInRect:sourceRect];
-    }, width(), height(), _target);
+    }, width(), height(), _target, _compositionMode);
 }
 
 void WPainter::drawLine(int x1, int y1, int x2, int y2)
@@ -128,7 +148,7 @@ void WPainter::drawLine(int x1, int y1, int x2, int y2)
         [path moveToPoint:CGPointMake(x1, y1)];
         [path addLineToPoint:CGPointMake(x2, y2)];
         [path stroke];
-    }, width(), height(), _target);
+    }, width(), height(), _target, _compositionMode);
 }
 
 void WPainter::drawPoint (const PointF &point)
@@ -156,7 +176,7 @@ void WPainter::drawRect(const RectF &rectWriternote)
         path.lineWidth = width;
 
         [path stroke];
-    }, width(), height(), _target);
+    }, width(), height(), _target, _compositionMode);
 }
 
 void WPainter::drawPixmap(const RectF &target, const WPixmap& pixmap, const RectF &source)
@@ -201,8 +221,7 @@ void WPainter::setAntialeasing()
 {
     WMutexLocker _(this->_lock);
     // TODO: adjust this to set this property always
-    CGContextSetAllowsAntialiasing(UIGraphicsGetCurrentContext(), YES);
-    CGContextSetShouldAntialias(UIGraphicsGetCurrentContext(), YES);
+    
     this->_isAntialeasing = true;
 }
 
@@ -222,10 +241,10 @@ void WPainter::setCompositionMode(enum CompositionMode compositionMode)
     WMutexLocker _(this->_lock);
     this->_compositionMode = compositionMode;
     
-    auto realCompositionMode = getAdaptCompositionMode(_compositionMode);
+    //auto realCompositionMode = getAdaptCompositionMode(_compositionMode);
     
     // TODO: adjust this to set this property always
-    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), realCompositionMode);
+    //CGContextSetBlendMode(UIGraphicsGetCurrentContext(), realCompositionMode);
 }
 
 bool WPainter::begin(WImage *pixmap)
