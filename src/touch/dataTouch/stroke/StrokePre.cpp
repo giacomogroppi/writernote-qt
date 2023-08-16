@@ -23,6 +23,7 @@ StrokePre::StrokePre()  :
 
 StrokePre::~StrokePre() = default;
 
+// TODO: return a UniquePtr from core
 std::shared_ptr<Stroke> StrokePre::merge()
 {
     using namespace WCommonScript;
@@ -187,10 +188,12 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
 {
     const auto normal = (_stroke->type() == Stroke::COMPLEX_NORMAL);
 
+    W_ASSERT(normal);
+    
     if (normal) {
         WPainter painter;
         WPen pen;
-
+        
         painter.begin(&_img);
 
         _point.append(point);
@@ -228,7 +231,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
             }
 
             StrokeNormal::draw(painter, false, 0, pen, prop, this->_stroke->getColor(1.), data);
-
+            
             this->_last_draw_press ++;
             this->_last_draw_point ++;
         }

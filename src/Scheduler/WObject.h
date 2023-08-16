@@ -1,5 +1,4 @@
-#ifndef WRITERNOTE_WOBJECT_H
-#define WRITERNOTE_WOBJECT_H
+#pragma once
 
 #include <vector>
 #include <functional>
@@ -91,5 +90,3 @@ public:
     explicit WObject(WObject *parent);
     virtual ~WObject();
 };
-
-#endif //WRITERNOTE_WOBJECT_H

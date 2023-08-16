@@ -71,8 +71,10 @@ force_inline constexpr not_used int debug_enable()
 #ifdef DEBUGINFO
 #if defined(USE_QT)
 # define DEBUGGER_OUT qDebug()
+# define DEBUGGER_TERMINATOR
 #else
 # define DEBUGGER_OUT std::cout
+# define DEBUGGER_TERMINATOR <<std::endl
 #endif
 
 # define W_ASSERT(condition) W_ASSERT_TEXT(condition, "")
@@ -287,9 +289,9 @@ force_inline void abortIfDebug(cchar *file, int line){
 #endif //DEBUGINFO
 
 #if defined(DEBUGINFO)
-# define WDebug(enable, message)                                                                    \
-    if(enable){                                                                                     \
-        DEBUGGER_OUT << get_only_name(__PRETTY_FUNCTION__).c_str() << "\t" << message;     \
+# define WDebug(enable, message)                                                                                \
+    if(enable){                                                                                                 \
+        DEBUGGER_OUT << get_only_name(__PRETTY_FUNCTION__).c_str() << "\t" << message DEBUGGER_TERMINATOR;      \
     }
 # define WWarning(message) WDebug(true, message)
 #else

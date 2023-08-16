@@ -18,7 +18,7 @@ static void draw_laser(WPainter &painter, Laser &_laser, WPen &pen, double zoom)
     const auto end = _laser.end();
 
     // TODO view area {0., 0.}
-    for(; begin != end; begin ++){
+    for (; begin != end; begin ++) {
         drawSingleStroke(*begin, painter, pen, zoom, {0., 0.});
     }
 }
@@ -51,29 +51,29 @@ void TabletUtils::loadLaser()
 void TabletUtils::load()
 {
     int lenPage                     = this->_doc.lengthPage();
-    const PointF &PointFirstPage   = this->_doc.getPointFirstPageNoZoom();
+    const PointF &PointFirstPage    = this->_doc.getPointFirstPageNoZoom();
     const auto zoom                 = this->getZoom();
-    const WSizeF sizeRect            = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
+    const WSizeF sizeRect           = createSizeRect(this->_doc, DRAW_CREATE_SIZE_RECT_DEF_COUNTER_HEIGTH,  _m);
 
     StrokePre &strokeToDraw = *__tmp;
 
     int counterPage;
-
+    
     getPainter().setAntialeasing();
-
+    
 #ifdef PDFSUPPORT
     if(_withPdf)
         _doc.draw_pdf(getPainter(), _m, this->_isExportingPdf, _doc.currentWidth());
 #else
     (void)(_withPdf);
-#endif
+#endif // PDFSUPPORT
 
     //painter.setRenderHints(WPainter::TextAntialiasing, false);
     //painter.setRenderHints(WPainter::Antialiasing | WPainter::SmoothPixmapTransform, true);
     drawForAudio();
 
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
-
+    
     WDebug(false, "Start draw img from" << counterPage);
     for(; counterPage < 1 && lenPage; counterPage ++){
         const Page &page = _doc.at(counterPage);

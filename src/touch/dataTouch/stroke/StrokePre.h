@@ -114,7 +114,7 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
     WDebug(StrokePreDebug, "Pointer" << this);
 
     painter.setAntialeasing();
-
+    
     if (_stroke->isEmpty()) {
         W_ASSERT(_stroke->type() == Stroke::COMPLEX_NORMAL);
         //W_ASSERT(painter.renderHints() & WPainter::Antialiasing);

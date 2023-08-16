@@ -21,12 +21,6 @@
 # define is_android 0
 #endif
 
-#if defined(IOS_WRITERNOTE)
-# define is_ios 1
-#else
-# define is_ios 0
-#endif
-
 #ifdef __APPLE__
 #  include <TargetConditionals.h>
 #  if TARGET_OS_MACCATALYST
