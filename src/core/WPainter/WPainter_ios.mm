@@ -72,6 +72,7 @@ static auto executeOnMainThread (dispatch_block_t method, int w, int h, WImage *
                 
                 // Esempio: Disegna un cerchio con anti-aliasing abilitato
                 CGContextSetShouldAntialias(context, YES);
+                CGContextSetLineCap(context, kCGLineCapRound);
                 CGContextSetBlendMode(context, realCompositionMode);
                 [target->_d->image drawAtPoint:CGPointZero];
                 target->_d->image = nil;
@@ -94,7 +95,6 @@ WPainter::WPainter() noexcept
     : _target(nil)
     , _isAntialeasing(false)
     , _compositionMode(WPainter::CompositionMode::CompositionMode_SourceOver)
-    , _color(color_black)
 {
     
 }
@@ -105,7 +105,7 @@ void WPainter::drawEllipse (const PointF &center, double rx, double ry)
         WMutexLocker _(this->_lock);
         const auto *image = _target->_d->image;
         const double width = this->_pen.widthF();
-        auto *color = createNSColor(this->_color);
+        auto *color = createNSColor(this->_pen.color());
 
         [image drawAtPoint:CGPointZero];
         
@@ -125,12 +125,19 @@ void WPainter::drawImage (const RectF &target, const WImage &image, const RectF 
 {
     _target->_d->image = executeOnMainThread(^{
         WMutexLocker _(this->_lock);
-        auto *imageSource = image._d->image;
+        UIImage *imageSource = image._d->image;
         
-        CGRect targetRect = CGRectMake(target.topLeft().x(), target.topLeft().y(), target.bottomRight().x(), target.bottomRight().y());
-        CGRect sourceRect = CGRectMake(source.topLeft().x(), source.topLeft().y(), source.bottomRight().x(), source.bottomRight().y());
+        CGRect targetRect = CGRectMake(target.topLeft().x(), target.topLeft().y(), target.width(), target.height());
         
-        [imageSource drawInRect:sourceRect];
+        // Definisci la regione rettangolare da ritagliare (rect è in coordinate dell'immagine originale)
+        CGRect cropRect = CGRectMake(source.topLeft().x(), source.topLeft().y(), source.width(), source.height());
+
+        // Esegui il crop dell'immagine
+        CGImageRef imageRef = CGImageCreateWithImageInRect([image._d->image CGImage], cropRect);
+        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
+        CGImageRelease(imageRef);
+        
+        [croppedImage drawInRect:targetRect blendMode:kCGBlendModeMultiply alpha:1.0];
     }, width(), height(), _target, _compositionMode);
 }
 
@@ -140,7 +147,7 @@ void WPainter::drawLine(int x1, int y1, int x2, int y2)
         WMutexLocker _(this->_lock);
         
         const double width = this->_pen.widthF();
-        auto *color = createNSColor(this->_color);
+        auto *color = createNSColor(_pen.color());
         
         [color setStroke];
         UIBezierPath *path = [UIBezierPath bezierPath];
@@ -164,7 +171,7 @@ void WPainter::drawRect(const RectF &rectWriternote)
     _target->_d->image = executeOnMainThread(^{
         WMutexLocker _(this->_lock);
         const double width = this->_pen.widthF();
-        auto *color = createNSColor(this->_color);
+        auto *color = createNSColor(_pen.color());
 
         const CGRect rect = CGRectMake(rectWriternote.topLeft().x(),
                                        rectWriternote.topLeft().y(),
@@ -208,7 +215,7 @@ void WPainter::drawPixmap  (const WRect &target, const WPixmap &pixmap, const WR
 void WPainter::setColor(const WColor &color)
 {
     WMutexLocker _(this->_lock);
-    this->_color = color;
+    this->_pen.setColor(color);
 }
 
 void WPainter::setPen(const WPen &pen)

@@ -257,9 +257,10 @@ size_t Stroke::createControll() const
     size_t controll = 0;
     int i;
 
-    for (i = 0; i < NCOLOR; i++) {
+    // TODO: create controll for color
+    /*for (i = 0; i < NCOLOR; i++) {
         controll += _metadata.color.colore[i];
-    }
+    }*/
 
     return controll;
 }

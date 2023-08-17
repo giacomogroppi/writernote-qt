@@ -112,8 +112,6 @@ void StrokeForPage::draw(WPainter &painter, double delta,
                 sourceDraw
             );
 
-    //painter.drawLine(0, 0, 2000, 5000);
-
     rep();
 }
 

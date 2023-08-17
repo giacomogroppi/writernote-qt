@@ -19,11 +19,13 @@ void WPen::setColor(const WColor &color)
     this->_color = color;
 }
 
+// TODO: change the name to getColor
 auto WPen::color() const -> WColor
 {
     return this->_color;
 }
 
+// TODO: change the name to getWidthF
 auto WPen::widthF() const -> double
 {
     return this->_size;

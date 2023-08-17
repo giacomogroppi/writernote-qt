@@ -58,7 +58,7 @@ void TabletUtils::load()
     StrokePre &strokeToDraw = *__tmp;
 
     int counterPage;
-    
+
     getPainter().setAntialeasing();
     
 #ifdef PDFSUPPORT
@@ -95,12 +95,12 @@ void TabletUtils::load()
         //page.get_stroke_page().draw(getPainter(), _m, _doc.getPointFirstPage(), page, sizeRect);
         //singleLoad(getPainter(), img, sizeRect, PointFirstPage, counterPage, _doc.getZoom());
     }
-
+    
     _doc.drawImage(getPainter());
-
+    
     /* stroke not already add to page */
     drawSingleStroke(strokeToDraw, getPainter(), _pen, zoom * _m, _doc.getPointFirstPageNoZoom());
-
+    
     this->loadLaser();
 }
 

@@ -53,7 +53,6 @@ private:
     mutable WMutex _lock;
     WImage *_target;
     WPen _pen;
-    WColor _color;
     enum CompositionMode _compositionMode;
     bool _isAntialeasing;
     

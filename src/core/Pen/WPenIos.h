@@ -24,7 +24,7 @@ public:
         DotLine
     };
     void setStyle(enum WPenStyle style);
-
+    
     friend class WPainter;
 private:
     WColor _color;

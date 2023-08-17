@@ -90,7 +90,13 @@ inline Settable<T>::Settable(T value, bool set)
 }
 
 // TODO move this class in a proper file
-struct WColor{
+class WColor{
+private:
+    unsigned char red;
+    unsigned char green;
+    unsigned char blue;
+    unsigned char alpha;
+public:
     WColor() = default;
     ~WColor() = default;
 
@@ -100,12 +106,10 @@ struct WColor{
     WColor (const QColor &other);
 #endif // USE_QT
 
-    WColor(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
+    constexpr WColor(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4);
     WColor(WColor &&other) noexcept;
 
     void set_alfa(unsigned char alfa);
-
-    unsigned char colore[NCOLOR];
 
 #ifdef USE_QT
     [[nodiscard]] WColor tocolore_s(double division) const;
@@ -113,9 +117,9 @@ struct WColor{
 #endif // USE_QT
 
     unsigned char getAlfa() const;
-    unsigned char getRed() const    { return this->colore[0]; };
-    unsigned char getGreen() const  { return this->colore[1]; };
-    unsigned char getBlue() const   { return this->colore[2]; };
+    unsigned char getRed() const    { return red; };
+    unsigned char getGreen() const  { return green; };
+    unsigned char getBlue() const   { return blue; };
 
     double getAlfaNormalize() const;
     double getRedNormalize() const;
@@ -183,9 +187,9 @@ inline double WColor::getAlfaNormalize() const
     return result;
 }
 
-inline void WColor::set_alfa(unsigned char alfa)
+inline void WColor::set_alfa(unsigned char alpha)
 {
-    this->colore[3] = alfa;
+    this->alpha = alpha;
 }
 
 
@@ -241,36 +245,40 @@ inline WColor::WColor(const QColor &other)
 
 inline unsigned char WColor::getAlfa() const
 {
-    return this->colore[3];
+    return alpha;
 }
 
 inline bool WColor::operator==(const WColor &other) const
 {
-    static_assert(sizeof(colore) == sizeof(unsigned char) * 4);
-    return memcmp(this->colore, other.colore, sizeof(this->colore)) == 0;
+    return this->blue == other.blue
+            and this->green == other.green
+            and this->red == other.red
+            and this->alpha == other.alpha;
 }
 
-inline WColor::WColor(unsigned char u1,
-                      unsigned char u2,
-                      unsigned char u3,
-                      unsigned char u4)
-    : colore {
-        u1,
-        u2,
-        u3,
-        u4
-    }
+inline constexpr WColor::WColor(unsigned char red,
+                      unsigned char green,
+                      unsigned char blue,
+                      unsigned char alpha)
+    : red(red)
+    , green(green)
+    , blue(blue)
+    , alpha(alpha)
 {
 }
 
 inline WColor::WColor(const WColor &color)
+    : red(red)
+    , green(green)
+    , blue(blue)
+    , alpha(alpha)
 {
     memcpy(this, &color, sizeof(*this));
 }
 
 inline void WColor::setAlfa(unsigned char newValue)
 {
-    this->colore[3] = newValue;
+    this->alpha = newValue;
 }
 
 inline WColor WColor::fromRgb(unsigned char u1, unsigned char u2, unsigned char u3, unsigned char u4)
@@ -278,28 +286,9 @@ inline WColor WColor::fromRgb(unsigned char u1, unsigned char u2, unsigned char 
     return {u1, u2, u3, u4};
 }
 
-inline WColor &WColor::operator=(const WColor &other)
-{
-    if (this == &other)
-        return *this;
+inline WColor &WColor::operator=(const WColor &other) = default;
 
-    for (int i = 0; i < NCOLOR; i++) {
-        this->colore[i] = other.colore[i];
-    }
-
-    return *this;
-}
-
-
-inline WColor::WColor(WColor &&other) noexcept
-    : colore {
-        other.colore[0],
-        other.colore[1],
-        other.colore[2],
-        other.colore[3]
-    }
-{
-}
+inline WColor::WColor(WColor &&other) noexcept = default;
 
 inline auto
 WColor::load(const VersionFileController &versionController, ReadableAbstract &readable) -> WPair<int, WColor>
@@ -308,17 +297,27 @@ WColor::load(const VersionFileController &versionController, ReadableAbstract &r
     if (versionController.getVersionWColor() != 0)
         return {-1, result};
 
-    for (auto& i : result.colore) {
-        if (readable.read(&i, sizeof (result.colore[0])) < 0)
-            return {-1, result};
-    }
+    if (readable.read(result.red) < 0)
+        return {-1, {}};
+    if (readable.read(result.green) < 0)
+        return {-1, {}};
+    if (readable.read(result.blue) < 0)
+        return {-1, {}};
+    if (readable.read(result.alpha) < 0)
+        return {-1, {}};
+    
     return {0, result};
 }
 
 inline auto WColor::write(WritableAbstract &writable, const WColor &color) -> int
 {
-    static_assert(sizeof(color.colore) == sizeof(unsigned char) * 4);
-    if (writable.write(&color.colore, sizeof (color.colore)) < 0)
+    if (writable.write(color.red) < 0)
+        return -1;
+    if (writable.write(color.green) < 0)
+        return -1;
+    if (writable.write(color.blue) < 0)
+        return -1;
+    if (writable.write(color.alpha) < 0)
         return -1;
     return 0;
 }

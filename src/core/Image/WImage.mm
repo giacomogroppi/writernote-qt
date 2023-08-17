@@ -6,11 +6,13 @@
 #include "WImagePrivate.h"
 #import <UIKit/UIKit.h>
 
+constexpr const auto color_fill = WColor(255, 255, 255, 255);
+
 WImage::WImage () noexcept
     : _d(new WImagePrivate)
     , _rect()
 {
-    this->fill(color_white);
+    this->fill(color_fill);
 }
 
 WImage::WImage (int page, bool consideringResolution)
@@ -23,7 +25,7 @@ WImage::WImage (int page, bool consideringResolution)
     
     _d->image = [[UIImage alloc] init];
     _rect = RectF(0, 0, width, height);
-    this->fill(color_white);
+    this->fill(color_fill);
 }
 
 WImage::WImage (int width, int height, WImageType format)
@@ -31,7 +33,7 @@ WImage::WImage (int width, int height, WImageType format)
     , _rect(0, 0, width, height)
 {
     _d->image = [[UIImage alloc] init];
-    this->fill(color_white);
+    this->fill(color_fill);
 }
 
 WImage::WImage (WImage &&other) noexcept
@@ -169,8 +171,11 @@ auto WImage::isNull() const -> bool
     return _rect.isNull();
 }
 
-auto WImage::fill(const WColor &color) -> void
+auto WImage::fill(const WColor &_color) -> void
 {
+    WColor color = _color;
+    if (color == color_transparent)
+        color = color_white;
     const auto rect = this->rect();
     CGSize size = CGSizeMake(rect.width(), rect.height());
     
