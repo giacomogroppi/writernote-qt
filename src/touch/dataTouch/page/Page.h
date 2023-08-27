@@ -18,6 +18,7 @@
 #include "core/WListFast.h"
 #include "core/pointer/SharedPtr.h"
 #include "core/WVector.h"
+#include "core/WPainter/WPainterUnsafe.h"
 
 #define COLOR_NULL WColor::fromRgb(255, 255, 255, 255)
 #define TEMP_COLOR WColor::fromRgb(105, 105, 105, 255)
@@ -514,10 +515,10 @@ force_inline void Page::drawForceColorStroke(
     const auto needDelete = (bool) (!painter);
 
     if (needDelete) {
-        if(un(initImg(false)))
+        if (initImg(false))
             return this->triggerRenderImage(m_pos_ris, true);
 
-        WNew(painter, WPainter, ());
+        WNew(painter, WPainterUnsafe, ());
 
         if (!painter->begin(&this->_imgDraw))
             std::abort();

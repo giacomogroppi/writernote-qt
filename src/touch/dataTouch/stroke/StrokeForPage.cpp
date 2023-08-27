@@ -119,7 +119,7 @@ void StrokeForPage::draw() const
 {
     _pix = WPixmap(1, true);
     _pix.fill({color_transparent});
-    WPainter painter;
+    WPainterSafe painter;
     painter.begin(&_pix);
     WPen pen;
 

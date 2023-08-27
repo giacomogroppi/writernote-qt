@@ -3,6 +3,7 @@
 #include "Stroke.h"
 #include "touch/dataTouch/page/Page.h"
 #include "core/WListFast.h"
+#include "core/WPainter/WPainterSafe.h"
 
 class StrokeNormal final: public Stroke{
 private:
@@ -230,7 +231,7 @@ force_inline void StrokeNormal::draw(
     W_ASSERT(painterPublic.isActive());
 
     WPixmap img;
-    WPainter _painterPrivate;
+    WPainterSafe _painterPrivate;
     WPainter *painter;
     PointF lastPoint, pointDraw;
     const bool isHigh = pen.color().getAlfa() < 255;

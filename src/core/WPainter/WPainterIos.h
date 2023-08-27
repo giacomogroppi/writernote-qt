@@ -13,45 +13,50 @@
 
 class WPainter
 {
+protected:
+    virtual void execute(const std::function<void()> &function) = 0;
+
+    WPainter() noexcept;
 public:
-    WPainter() noexcept; // done
-    ~WPainter(); // done
+    virtual ~WPainter();
 
-    bool begin(WImage *pixmap); // done
-    void setColor(const WColor &color); // done
-    void setPen(const WPen &pen); // done
+    virtual bool begin(WImage *pixmap) = 0;
+    void setColor(const WColor &color);
+    void setPen(const WPen &pen);
 
-    void drawLine(const PointF &p1, const PointF &p2); // done
-    void drawLine(int x1, int y1, int x2, int y2); // done
+    void drawLine(const PointF &p1, const PointF &p2);
+    void drawLine(int x1, int y1, int x2, int y2);
 
-    void drawImage   (const RectF &target, const WImage &image, const RectF &source); // done
-    void drawPixmap  (const RectF &target, const WPixmap &pixmap, const RectF &source); // done
-    void drawPixmap  (const RectF &target, const WPixmap &pixmap); // done
-    void drawPixmap  (const WRect &target, const WPixmap &pixmap); // done
-    void drawPixmap  (const WRect &target, const WPixmap &pixmap, const WRect &source); // done
+    void drawImage   (const RectF &target, const WImage &image, const RectF &source);
+    void drawPixmap  (const RectF &target, const WPixmap &pixmap, const RectF &source);
+    void drawPixmap  (const RectF &target, const WPixmap &pixmap);
+    void drawPixmap  (const WRect &target, const WPixmap &pixmap);
+    void drawPixmap  (const WRect &target, const WPixmap &pixmap, const WRect &source);
     void drawPoint   (const PointF &point);
     void drawRect    (const RectF &rect);
-    void drawEllipse (const PointF &center, double rx, double ry); // done
+    void drawEllipse (const PointF &center, double rx, double ry);
 
     enum CompositionMode {
         CompositionMode_Clear,
         CompositionMode_SourceOver,
         CompositionMode_DestinationOver
     };
-    void setCompositionMode(enum CompositionMode compositionMode); // done
+    void setCompositionMode(enum CompositionMode compositionMode);
     
     [[nodiscard]]
-    auto compositionMode() const -> WPainter::CompositionMode; // done
+    auto compositionMode() const -> WPainter::CompositionMode;
 
-    void setAntialeasing(); // done
-    void setCompositionClear(); // done
+    void setAntialeasing();
+    void setCompositionClear();
 
-    bool end();
+    virtual bool end() = 0;
     bool isActive() const;
-    
-private:
-    mutable WMutex _lock;
+
+protected:
     WImage *_target;
+
+    mutable WMutex _lock;
+    
     WPen _pen;
     enum CompositionMode _compositionMode;
     bool _isAntialeasing;

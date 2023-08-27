@@ -263,7 +263,7 @@ void SquareMethod::mergeImg(
         WPixmap          &to,
         int              page)
 {
-    WPainter painter;
+    WPainterUnsafe painter;
     auto rectTo = from.rect();
 
     rectTo.translate(0, page * Page::getResolutionHeigth());

@@ -194,7 +194,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
         // TODO: remove this tmp statement
         _point.append(point);
         _pressure.append(press);
-        WPainter painter;
+        WPainterUnsafe painter;
         WPen pen;
         painter.setPen(pen);
         painter.setAntialeasing();
@@ -205,7 +205,7 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
     }
     
     if (normal) {
-        WPainter painter;
+        WPainterUnsafe painter;
         WPen pen;
         
         painter.begin(&_img);

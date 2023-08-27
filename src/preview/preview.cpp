@@ -7,10 +7,11 @@
 #include "dataread/xmlstruct.h"
 #include "touch/TabletUtils.h"
 #include "core/Rect.h"
+#include "core/WPainter/WPainterSafe.h"
 
 void preview::get(WPixmap &ref, const Document &doc, cbool withPdf, const int width)
 {
-    WPainter painter;
+    WPainterSafe painter;
     const double size_orizzontale = doc.biggerX();
     const double delta = (double)width / (double)size_orizzontale;
 

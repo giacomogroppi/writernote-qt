@@ -522,8 +522,8 @@ inline void for_each(T1 &l1, T2 &l2, Z function)
     do {                                                                                                                                            \
         const auto end_##variable_name = std::chrono::high_resolution_clock::now();                                                                                                                                          \
         const double delta##variable_name = std::chrono::duration_cast<std::chrono::nanoseconds>(end_##variable_name - variable_name).count();                                                                         \
-            std::cout << message << delta##variable_name << "ns"                                                                                                        \
-                    << 1./(delta##variable_name * (1e-9)) << "hz";                                                                                              \
+            std::cout << message << delta##variable_name << "ns "                                                                                                        \
+                    << 1./(delta##variable_name * (1e-9)) << "hz" << "\n";                                                                                              \
     } while (0)
 
 

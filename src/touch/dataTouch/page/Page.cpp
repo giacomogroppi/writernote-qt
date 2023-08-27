@@ -284,7 +284,7 @@ void * __page_load(void *__data)
     auto *  extra = (struct page_thread_data *)_data->extra;
     WPixmap img;
     WPen m_pen;
-    WPainter painter;
+    WPainterSafe painter;
     auto &mutex = *extra->append;
     int m_pos_ris = extra->m_pos_ris;
     const Page *page = extra->parent;
@@ -396,21 +396,21 @@ void Page::mergeList() noexcept {
 
 void Page::drawToImage(
     const WVector<int>  &index,
-    WPixmap              &img,
+    WPixmap             &img,
     cint                flag) const
 {
     WPen pen;
-    WPainter painter;
+    WPainterSafe painter;
 
-    if(un(flag & DR_IMG_INIT_IMG)){
+    if (flag & DR_IMG_INIT_IMG) {
         __initImg(img);
-    }else{
+    } else {
         W_ASSERT(flag == ~DR_IMG_INIT_IMG);
     }
 
     painter.begin(&img);
 
-    for (const int __index : std::as_const(index)){
+    for (const int __index : std::as_const(index)) {
         const Stroke &stroke = atStroke(__index);
         this->drawStroke(painter, stroke, pen, stroke.getColor());
     }
@@ -464,7 +464,7 @@ void Page::triggerRenderImage(int m_pos_ris, bool all)
 
     all = initImg(all);
 
-    WPainter painter;
+    WPainterSafe painter;
     painter.begin(&_imgDraw);
 
     this->draw(painter, m_pos_ris, all);
@@ -531,7 +531,7 @@ void Page::removeAndDraw(
 void Page::drawIfInside(int m_pos_ris, const RectF &area)
 {
     int index = lengthStroke() - 1;
-    WPainter painter;
+    WPainterSafe painter;
     painter.begin(&this->_imgDraw);
 
     for(; index >= 0; index --){
@@ -549,13 +549,13 @@ void Page::decreaseAlfa(const WVector<int> &pos, int decrease)
 {
     bool needInit = initImg(false);
 
-    if (un(needInit)) {
+    if (needInit) {
         WDebug(debugPage, "Warning: page not draw");
         W_ASSERT(0);
         return this->triggerRenderImage(-1, true);
     }
 
-    WPainter painter;
+    WPainterSafe painter;
     painter.begin(&_imgDraw);
 
     this->decreaseAlfa(pos, &painter, decrease);
@@ -633,7 +633,7 @@ void Page::drawForceColorStroke(const WVector<int> &pos, int m_pos_ris, const WC
     if(initImg(false))
         return this->triggerRenderImage(m_pos_ris, true);
 
-    WPainter painter;
+    WPainterSafe painter;
     painter.begin(&_imgDraw);
 
     for (const auto &index: std::as_const(pos)) {

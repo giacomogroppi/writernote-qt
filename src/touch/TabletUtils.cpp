@@ -58,7 +58,6 @@ void TabletUtils::load()
     StrokePre &strokeToDraw = *__tmp;
 
     int counterPage;
-
     getPainter().setAntialeasing();
     
 #ifdef PDFSUPPORT
@@ -75,7 +74,7 @@ void TabletUtils::load()
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
     
     WDebug(false, "Start draw img from" << counterPage);
-    for(; counterPage < 1 && lenPage; counterPage ++){
+    for(; counterPage < 1 && lenPage and false; counterPage ++){
         const Page &page = _doc.at(counterPage);
         const auto isPageVisible = page.isVisible();
         const auto &img = page.getImg();
@@ -112,7 +111,7 @@ constexpr bool TabletUtils::withPdf() const
 void singleLoad(
         WPainter       &painter,
         const WPixmap  &pix,
-        const WSizeF    &sizeRect,
+        const WSizeF   &sizeRect,
         const PointF   &PointFirstPage,
         double         counterPage,
         double         m)
