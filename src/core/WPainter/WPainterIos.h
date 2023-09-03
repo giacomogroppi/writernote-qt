@@ -36,6 +36,10 @@ public:
     void drawRect    (const RectF &rect);
     void drawEllipse (const PointF &center, double rx, double ry);
 
+    virtual void move (const PointF &point) = 0;
+    virtual void addCurve(const PointF &to, const PointF &control) = 0;
+    virtual void closePath () = 0;
+    
     enum CompositionMode {
         CompositionMode_Clear,
         CompositionMode_SourceOver,

@@ -136,6 +136,7 @@ public:
     [[deprecated]]
     __fast Stroke                   & atStrokeMod(int i);
 
+    [[deprecated]]
     __fast const StrokeForPage &get_stroke_page() const; //return the point written by writernote
     __slow void at_draw_page(int IndexPoint, const PointF &translation, PointF &point, double zoom) const;
 

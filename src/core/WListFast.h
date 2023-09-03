@@ -77,7 +77,7 @@ public:
     /**
      * \brief Append the element to the list with a copy
      *  This method is O(1) if the list have some reserve space, otherwise is O(n)
-     * \param element The element to append
+     * \param object The element to append
      * \return The reference to the list
      * */
     auto append(T &&object) -> WListFast<T>&;
@@ -142,7 +142,7 @@ public:
         const T ** _array;
         int _index;
     public:
-        const_iterator(const T **data, int index) noexcept : _array(data), _index(index) {};
+        const_iterator(const T **data, int index) noexcept : _array(data), _index(index) { W_ASSERT(index >= 0); };
         const_iterator(const const_iterator &other) : _array(other._array), _index(other._index) {}
 
         const T* operator->() const   { return _array[_index]; };
@@ -156,17 +156,20 @@ public:
         constexpr auto operator!=(const_iterator i) const -> bool         { return _index != i._index && _array == i._array; }
         auto operator++() -> const_iterator &                             { _index ++; return *this; }
         auto operator++(int) -> const_iterator { auto copy = *this; ++*this; return copy; }
+        
+        const_iterator operator+(int i) const { return const_iterator(_array, _index + i); }
+        const_iterator operator-(int i) const { return const_iterator(_array, _index - i); };
     };
 
     [[nodiscard]] auto begin() noexcept -> iterator { return iterator((T **)_data, 0); };
     [[nodiscard]] auto end()   noexcept -> iterator { return iterator((T **)_data, size());  };
 
-    [[nodiscard]] auto constBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
-    [[nodiscard]] auto constEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
-    [[nodiscard]] auto cBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
-    [[nodiscard]] auto cEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
-    [[nodiscard]] auto begin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
-    [[nodiscard]] auto end()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
+    auto constBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
+    auto constEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
+    auto cBegin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
+    auto cEnd()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
+    auto begin() const noexcept -> const_iterator { return const_iterator((const T **)_data, 0); }
+    auto end()   const noexcept -> const_iterator { return const_iterator((const T **)_data, size()); }
 
     /**
      * \param writable needs to have write(const void *data, size_t size) and it needs to return < 0 in case

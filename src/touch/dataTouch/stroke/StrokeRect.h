@@ -25,6 +25,7 @@ public:
     bool is_inside(const RectF &rect, double precision) const;
 
     void append(const PointF &point, pressure_t pressure);
+    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
     size_t createControll() const final;
 
     RectF getBiggerPointInStroke() const;

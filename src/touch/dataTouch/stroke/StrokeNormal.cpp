@@ -122,14 +122,9 @@ void StrokeNormal::draw(WPainter &painter, cbool is_rubber, cint page, WPen &pen
 {
     const auto constPressure = constantPressure();
 
-    StrokeNormal::drawData
-            <   WListFast<PointF>::const_iterator,
-                WListFast<pressure_t>::const_iterator> data = {
-        .begin_point = this->_point.constBegin(),
-        .end_point   = this->_point.constEnd(),
-        .begin_press = this->_pressure.constBegin(),
-        .press_null  = constPressure
-    };
+    auto data = drawData<WListFast<PointF>::const_iterator, WListFast<pressure_t>::const_iterator> (
+         this->_point.constBegin(), this->_point.constEnd(), this->_pressure.constBegin(), constPressure, 0
+    );
 
     StrokeNormal::draw(painter, is_rubber, page, pen, prop, this->getColor(1.), data);
 }
@@ -321,9 +316,11 @@ void StrokeNormal::removeAt(int indexFrom, int indexTo)
 
 std::unique_ptr<Stroke> StrokeNormal::clone() const
 {
+    StrokeNormal *s = new StrokeNormal(*this);
     std::unique_ptr<StrokeNormal> tmp(new StrokeNormal(*this));
 
     W_ASSERT(*this == *tmp);
+    WDebug(true, "Prova" << tmp);
     return tmp;
 }
 
@@ -356,6 +353,7 @@ StrokeNormal &StrokeNormal::operator=(const StrokeNormal &other)
 {
     if (&other == this)
         return *this;
+    
     Stroke::operator=(other);
     this->_point = other._point;
     this->_pressure = other._pressure;
@@ -461,3 +459,10 @@ auto StrokeNormal::loadPtr(const VersionFileController &versionController,
     return {0, result.release()};
 }
 
+void StrokeNormal::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)
+{
+    W_ASSERT(points.size() == pressures.size());
+    _point = std::move(points);
+    _pressure = std::move(pressures);
+    this->modify();
+}

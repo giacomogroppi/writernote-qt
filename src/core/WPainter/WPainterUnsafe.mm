@@ -104,3 +104,21 @@ auto WPainterUnsafe::end() -> bool
     _target = nullptr;
     return true;
 }
+
+auto WPainterUnsafe::move(const PointF &point) -> void
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextMoveToPoint(context, point.x(), point.y());
+}
+
+void WPainterUnsafe::addCurve (const PointF &to, const PointF &controll)
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextAddQuadCurveToPoint(context, to.x(), to.y(), controll.x(), controll.y());
+}
+
+void WPainterUnsafe::closePath ()
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextStrokePath(context);
+}

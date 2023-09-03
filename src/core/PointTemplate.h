@@ -55,9 +55,12 @@ public:
     auto operator=(const PointTemplate<T> &other) -> PointTemplate<T>&;
     auto operator=(PointTemplate<T> &&other) noexcept -> PointTemplate<T>& = default;
 
-    bool operator==(const PointTemplate<T> &other) const;
-    bool operator!=(const PointTemplate<T> &other) const;
+    auto operator==(const PointTemplate<T> &other) const -> bool;
+    auto operator!=(const PointTemplate<T> &other) const -> bool;
 
+    static
+    auto mid (const PointTemplate<T> &point1, const PointTemplate<T> &point2) -> PointTemplate<T>;
+    
     constexpr auto operator+(const PointTemplate<T> &other) const -> PointTemplate<T>;
     constexpr auto operator*(double d) const -> PointTemplate<T>;
     constexpr auto operator/(double d) const -> PointTemplate<T>;
@@ -80,6 +83,18 @@ inline auto PointTemplate<T>::write(
     if (writable.write (&src._y, sizeof (T)) < 0)
         return -1;
     return 0;
+}
+
+template <typename T>
+inline auto PointTemplate<T>::mid (
+                const PointTemplate<T> &point1,
+                const PointTemplate<T> &point2
+        ) -> PointTemplate<T>
+{
+    return PointTemplate<T> {
+        (point1.x() + point2.x()) / T(2),
+        (point1.y() + point2.y()) / T(2)
+    };
 }
 
 template<typename T>

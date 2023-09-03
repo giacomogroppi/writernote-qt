@@ -9,8 +9,8 @@
 StrokePre::StrokePre()  :
     _img(1, true),
     _stroke(),
-    _last_draw_point(nullptr),
-    _last_draw_press(nullptr),
+    _last_draw_point(_point.constBegin()),
+    _last_draw_press(_pressure.constBegin()),
     _min({0., 0.}, false),
     _max({0., 0.}, false)
 {
@@ -21,7 +21,7 @@ StrokePre::StrokePre()  :
     //W_ASSERT(QImage(100, 100, QImage::Format_ARGB32) == QImage(100, 100, QImage::Format_ARGB32));
 }
 
-StrokePre::~StrokePre() = default;
+StrokePre::~StrokePre() noexcept = default;
 
 // TODO: return a UniquePtr from core
 std::shared_ptr<Stroke> StrokePre::merge()
@@ -46,15 +46,11 @@ std::shared_ptr<Stroke> StrokePre::merge()
 
     W_ASSERT(_stroke->isEmpty());
 
-    _stroke->preappend(_point.size());
-
-    while (not _point.isEmpty()) {
-        const auto data_point = std::move(_point.get_first());
-        const auto data_press = std::move(_pressure.get_first());
-
-        _stroke->append(data_point, data_press);
-    }
-
+    _stroke->append(std::move(_point), std::move(_pressure));
+    
+    W_ASSERT(_point.isEmpty());
+    W_ASSERT(_pressure.isEmpty());
+    
     {
         std::shared_ptr<Stroke> res = std::move(this->_stroke);
         W_ASSERT(_stroke == nullptr);
@@ -225,13 +221,14 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
             _min = _max;
             _max_pressure = _pressure.last();
         } else {
-            StrokeNormal::drawData<WList<PointF>::const_iterator,
-                    WList<pressure_t>::const_iterator> data = {
-                .begin_point = this->get_last_point(),
-                .end_point   = this->_point.constEnd(),
-                .begin_press = this->get_last_press(),
-                .press_null  = false
-            };
+            auto data = StrokeNormal::drawData<List<PointF>::const_iterator, List<pressure_t>::const_iterator> 
+            (
+                this->get_last_point(),
+                this->_point.constEnd(),
+                this->get_last_press(),
+                false,
+                _point.size() - 1
+            );
 
             // TODO: consider pressure
             _max.setY(_point.last().y() > _max.y() ? _point.last().y() + 1. : _max.y());

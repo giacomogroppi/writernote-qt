@@ -318,3 +318,10 @@ auto StrokeCircle::loadPtr(const VersionFileController &versionController,
     return {0, d};
 }
 
+void StrokeCircle::append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures)
+{
+    W_ASSERT(points.size() == pressures.size());
+    for (int i = 0; i < points.size(); i++) {
+        this->append(points.at(i), pressures.at(i));
+    }
+}

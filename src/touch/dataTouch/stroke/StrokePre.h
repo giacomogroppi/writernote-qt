@@ -10,14 +10,17 @@
 class StrokePre
 {
 private:
+    template <class T>
+    using List = WListFast<T>;
+    
     WPixmap _img;
     std::unique_ptr<Stroke> _stroke;
 
-    WList<PointF>      _point;
-    WList<pressure_t>   _pressure;
+    List<PointF>       _point;
+    List<pressure_t>   _pressure;
 
-    WList<PointF>       ::const_iterator   _last_draw_point;
-    WList<pressure_t>   ::const_iterator   _last_draw_press;
+    List<PointF>       ::const_iterator   _last_draw_point;
+    List<pressure_t>   ::const_iterator   _last_draw_press;
 
     pressure_t _max_pressure;
     PointSettable _min, _max;
@@ -30,8 +33,8 @@ private:
     bool already_merge = false;
 #endif // DEBUGINFO
 
-    [[nodiscard]] WList<pressure_t>::const_iterator get_last_press() const;
-    [[nodiscard]] WList<PointF>::const_iterator get_last_point() const;
+    [[nodiscard]] List<pressure_t>::const_iterator get_last_press() const;
+    [[nodiscard]] List<PointF>::const_iterator get_last_point() const;
     [[nodiscard]] const Stroke &get_stroke_for_draw() const;
 
     void setStrokeComplex(std::unique_ptr<Stroke> &&stroke);
@@ -62,9 +65,9 @@ public:
     void append(const PointF &point, const pressure_t &press, WPen &pen, double prop);
     [[nodiscard]] WColor getColor(double division = 1.) const;
 
-    std::shared_ptr<Stroke> merge();
+    auto merge() -> std::shared_ptr<Stroke>;
 
-    StrokePre &operator=(const StrokePre &other);
+    auto operator=(const StrokePre &other) -> StrokePre&;
 
     friend bool model::find(StrokePre &stroke);
 
@@ -99,12 +102,12 @@ inline const Stroke &StrokePre::get_stroke_for_draw() const
     return *_stroke;
 }
 
-inline WList<pressure_t>::const_iterator StrokePre::get_last_press() const
+inline auto StrokePre::get_last_press() const -> StrokePre::List<pressure_t>::const_iterator
 {
     return _last_draw_press;
 }
 
-inline WList<PointF>::const_iterator StrokePre::get_last_point() const
+inline auto StrokePre::get_last_point() const -> StrokePre::List<PointF>::const_iterator
 {
     W_ASSERT(this->_point.size() > 1);
     return _last_draw_point;

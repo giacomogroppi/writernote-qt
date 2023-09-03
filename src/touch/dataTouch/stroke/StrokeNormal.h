@@ -27,11 +27,29 @@ private:
      * \tparam Z Iterator for pressure
     */
     template <class T, class Z>
-    struct drawData{
+    class drawData {
+    public:
+        explicit drawData (T begin_point, T end_point, Z begin_press, bool press_null, int index_start)
+                        : begin_point(begin_point)
+                        , end_point(end_point)
+                        , begin_press(begin_press)
+                        , press_null(press_null)
+                        , index_start(index_start) {}
+    protected:
         T begin_point;
         const T end_point;
         Z begin_press;
         bool press_null;
+        
+        /**
+         * TODO: translate
+         * indica l'indice della lista del primo punto
+         * questo serve per capire se ci sono punti precedenti
+         * a quello che l'iterator punta.
+         **/
+        int index_start;
+        
+        friend class StrokeNormal;
     };
 
     template <class T, class Z>
@@ -71,6 +89,8 @@ public:
     size_t getSizeInFile() const final;
     void decreasePrecision() final;
 
+    void append (WListFast<PointF> &&points, WListFast<pressure_t> &&pressures) final;
+    
     int how_much_decrese() const final;
 
     /**
@@ -273,8 +293,23 @@ force_inline void StrokeNormal::draw(
             painter->setCompositionMode(curr);
         }
 
-        painter->drawLine(lastPoint, pointDraw);
-
+        if (data.index_start == 0 || data.index_start == 1) {
+            painter->drawLine(lastPoint, pointDraw);
+        } else {
+            // do the trick
+            const auto previousPoint1 = Page::at_translation(*(data.begin_point - 1), page) * prop;
+            const auto previousPoint2 = Page::at_translation(*(data.begin_point - 2), page) * prop;
+            
+            const auto mid1 = PointF::mid(previousPoint1, previousPoint2);
+            const auto mid2 = PointF::mid(point, previousPoint1);
+            
+            painter->move(mid1);
+            painter->addCurve(mid2, previousPoint1);
+            painter->closePath();
+        }
+        
+        data.index_start ++;
+        
         lastPoint = pointDraw;
     }
 
@@ -319,29 +354,6 @@ inline RectF StrokeNormal::getBiggerPointInStroke(T begin, T end)
 
         bottomRight.setX(std::max(bottomRight.x(), point.x()));
         bottomRight.setY(std::max(bottomRight.y(), point.y()));
-
-        /*
-        if(topLeft.x() > point.x())
-            topLeft.setX(static_cast<int>(
-                                 point.x()
-                         ));
-
-        if(topLeft.y() > point.y())
-            topLeft.setY(static_cast<int>(
-                                 point.y()
-                         ));
-
-        if(bottomRight.x() < point.x())
-            bottomRight.setX(static_cast<int>(
-                                     point.x())
-            );
-
-        if(bottomRight.y() < point.y())
-            bottomRight.setY(static_cast<int>(
-                                     point.y()
-                             )
-            );
-            */
     }
 
     W_ASSERT(topLeft.x() <= bottomRight.x());

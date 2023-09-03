@@ -19,6 +19,11 @@ public:
     WPainterUnsafe() noexcept;
     ~WPainterUnsafe() final = default;
 
+    void move (const PointF &point) final;
+    
+    void addCurve(const PointF &to, const PointF &control) final;
+    void closePath () final;
+    
     bool begin(WImage *pixmap) final;
     bool end() final;
 };

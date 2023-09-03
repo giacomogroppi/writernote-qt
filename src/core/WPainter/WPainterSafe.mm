@@ -29,8 +29,6 @@ void WPainterSafe::execute(const std::function<void()> &function)
     W_ASSERT(_target != nullptr);
     
     dispatch_block_t realMethod = ^{
-        
-        
         @autoreleasepool {
             CGSize size = CGSizeMake(width(), height());
             
@@ -52,6 +50,16 @@ void WPainterSafe::execute(const std::function<void()> &function)
                 CGContextSetBlendMode(context, realCompositionMode);
                 [_target->_d->image drawAtPoint:CGPointZero];
                 _target->_d->image = nil;
+                
+                if (this->_needToMove) {
+                    CGContextMoveToPoint(context, _pointMove.x(), _pointMove.y());
+                }
+                _needToMove = false;
+                
+                if (this->_needToCurve) {
+                    CGContextAddQuadCurveToPoint(context, _to.x(), _to.y(), _controll.x(), _controll.y());
+                }
+                
                 function();
             }];
         }
@@ -79,4 +87,32 @@ bool WPainterSafe::end()
     _target = nullptr;
     
     return true;
+}
+
+void WPainterSafe::move(const PointF& point)
+{
+    this->_needToMove = true;
+    this->_pointMove = point;
+}
+
+void WPainterSafe::addCurve(const PointF &to, const PointF &controll)
+{
+    W_ASSERT(_needToCurve == false);
+    W_ASSERT(_needToMove == true);
+    _needToCurve = true;
+    _to = to;
+    _controll = controll;
+}
+
+void WPainterSafe::closePath ()
+{
+    W_ASSERT(_needToMove == true);
+    W_ASSERT(_needToCurve == true);
+    
+    this->execute([this] {
+        WMutexLocker _(this->_lock);
+        
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextStrokePath(context);
+    });
 }

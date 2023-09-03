@@ -74,7 +74,7 @@ void TabletUtils::load()
     counterPage = _isExportingPdf ? 0 : _doc.getFirstPageVisible();
     
     WDebug(false, "Start draw img from" << counterPage);
-    for(; counterPage < 1 && lenPage and false; counterPage ++){
+    for (; counterPage < 1 && lenPage and true; counterPage ++) {
         const Page &page = _doc.at(counterPage);
         const auto isPageVisible = page.isVisible();
         const auto &img = page.getImg();
