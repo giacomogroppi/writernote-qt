@@ -223,11 +223,11 @@ void StrokePre::append(const PointF &point, const pressure_t &press, WPen &_pen,
         } else {
             auto data = StrokeNormal::drawData<List<PointF>::const_iterator, List<pressure_t>::const_iterator> 
             (
-                this->get_last_point(),
+                this->_last_draw_point,
                 this->_point.constEnd(),
-                this->get_last_press(),
+                this->_last_draw_press,
                 false,
-                _point.size() - 1
+                _point.size() == 1 ? 0 : _point.size() - 2
             );
 
             // TODO: consider pressure

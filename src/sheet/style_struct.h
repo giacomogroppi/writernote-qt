@@ -22,7 +22,7 @@ struct style_struct_S{
      * ny : number of vertical line
     */
 
-    struct WColor colore;
+    class WColor colore;
 
     int thickness;
 };

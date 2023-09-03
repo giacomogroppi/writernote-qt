@@ -149,8 +149,8 @@ public:
 
 #ifdef USE_QT
     static WColor from_color(const WColor &color);
-    [[nodiscard]] QColor toQColor() const;
-    WColor &operator=(const QColor &other);
+    QColor toQColor() const;
+    auto operator=(const QColor &other) -> WColor&;
 #endif // USE_QT
     WColor &operator=(const WColor &other);
     bool operator==(const WColor &other) const;
@@ -202,43 +202,40 @@ inline WColor WColor::from_color(const WColor &color)
     return tmp;
 }
 
-inline WColor &WColor::operator=(const QColor &other)
+inline WColor WColor::tocolore_s(double division) const
 {
-    int c[4];
-    other.getRgb(c, c + 1, c + 2, c + 3);
+    return WColor (this->red / division,
+                  this->green / division,
+                  this->blue / division,
+                  this->alpha / division);
+}
 
-    for (int i = 0; i < 4; i++) {
-        this->colore[i] = c[i];
-    }
-
-    static_assert(c + 1 == &c[1]);
-
+inline auto WColor::operator=(const QColor &other) -> WColor &
+{
+    this->red = other.red();
+    this->green = other.green();
+    this->blue = other.blue();
+    this->alpha = other.alpha();
     return *this;
 }
 
-inline QColor WColor::toQColor() const
+inline WColor::WColor(const QColor &other)
+    : red(other.red())
+    , green(other.green())
+    , blue(other.blue())
+    , alpha(other.alpha())
 {
-    return QColor::fromRgb(
-            colore[0],
-            colore[1],
-            colore[2],
-            colore[3]
-            );
+
 }
 
-
-inline WColor::WColor(const QColor &other)
-    : colore {
-        (unsigned char) other.red(),
-        (unsigned char) other.green(),
-        (unsigned char) other.blue(),
-        (unsigned char) other.alpha()
-    }
+inline auto WColor::toQColor() const -> QColor
 {
-    W_ASSERT(other.red() <= UCHAR_MAX);
-    W_ASSERT(other.green() <= UCHAR_MAX);
-    W_ASSERT(other.blue() <= UCHAR_MAX);
-    W_ASSERT(other.alpha() <= UCHAR_MAX);
+    return QColor {
+        red,
+        green,
+        blue,
+        alpha
+    };
 }
 
 #endif // USE_QT
@@ -267,14 +264,7 @@ inline constexpr WColor::WColor(unsigned char red,
 {
 }
 
-inline WColor::WColor(const WColor &color)
-    : red(red)
-    , green(green)
-    , blue(blue)
-    , alpha(alpha)
-{
-    memcpy(this, &color, sizeof(*this));
-}
+inline WColor::WColor(const WColor &color) = default;
 
 inline void WColor::setAlfa(unsigned char newValue)
 {

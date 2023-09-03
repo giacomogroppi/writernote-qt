@@ -5,7 +5,7 @@
 #include "core/Pixmap/WPixmap.h"
 #include "touch/object_finder/model_finder/model_finder.h"
 #include "core/Pixmap/WPixmap.h"
-#include "touch/dataTouch/Page/Page.h"
+#include "touch/dataTouch/page/Page.h"
 
 class StrokePre
 {
@@ -142,7 +142,7 @@ force_inline void StrokePre::draw(WPainter &painter, WPen &pen, double prop, con
         //_img.write("/Users/giacomo/Desktop/tmp_foto/prova.png", "PNG");
 
         //painter.drawPixmap(target, _img, source);
-        painter.drawPixmap(RectF(0, 0, Page::getWidth(), Page::getHeight()), _img, _img.rect());
+        painter.drawPixmap(RectF(0, 0, Page::getWidth(), Page::getHeight()).castTo<int>(), _img, _img.rect());
     } else {
         _stroke->draw(painter, false, 0, pen, prop);
     }

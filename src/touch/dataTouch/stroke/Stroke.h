@@ -21,7 +21,7 @@ constexpr double deltaColorNull = 1.3;
 
 struct metadata_stroke{
     int posizione_audio;
-    struct WColor color;
+    class WColor color;
 
     metadata_stroke () = default;
     metadata_stroke (int position_audio, const WColor &c)

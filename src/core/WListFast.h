@@ -828,11 +828,10 @@ inline void WListFast<T>::append(const WListFast<T> &other)
 template<class T>
 inline auto WListFast<T>::append(const T &element) -> WListFast<T>&
 {
-    _size++;
-
     if (_reserved == 0)
         reserve(WListFast::numberOfObjectReserved);
 
+    _size++;
     this->_data[_size - 1] = new T(element);
     _reserved --;
 

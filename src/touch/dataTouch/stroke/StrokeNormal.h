@@ -293,7 +293,7 @@ force_inline void StrokeNormal::draw(
             painter->setCompositionMode(curr);
         }
 
-        if (data.index_start == 0 || data.index_start == 1) {
+        if (data.index_start == 0 || data.index_start == 1 or 1) {
             painter->drawLine(lastPoint, pointDraw);
         } else {
             // do the trick

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "WPainter.h"
+#include "utils/platform.h"
 
+#if is_ios
 class WPainterSafe final: public WPainter
 {
 protected:
@@ -29,3 +31,7 @@ private:
     bool _needToCurve = false;
     PointF _to, _controll;
 };
+#elif is_android
+#else
+using WPainterSafe = WPainter;
+#endif

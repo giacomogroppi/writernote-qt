@@ -320,7 +320,7 @@ std::unique_ptr<Stroke> StrokeNormal::clone() const
     std::unique_ptr<StrokeNormal> tmp(new StrokeNormal(*this));
 
     W_ASSERT(*this == *tmp);
-    WDebug(true, "Prova" << tmp);
+    WDebug(true, "Prova");
     return tmp;
 }
 

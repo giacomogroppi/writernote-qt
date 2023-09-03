@@ -1,6 +1,5 @@
 #include "WPainter.h"
 
-
 #if defined(USE_QT)
 
 WPainter::~WPainter()
@@ -20,6 +19,22 @@ void WPainter::setAntialeasing()
 void WPainter::setBrush(const QBrush &brush)
 {
     this->_painter->setBrush(brush);
+}
+
+void WPainter::move(const PointF &point) noexcept
+{
+    _path.moveTo(QPointF(point.x(), point.y()));
+}
+
+void WPainter::addCurve(const PointF &to, const PointF &control) noexcept
+{
+    _path.lineTo({to.x(), to.y()});
+}
+
+void WPainter::closePath () noexcept
+{
+    _painter->drawPath(_path);
+    _path = QPainterPath();
 }
 
 #endif // USE_QT

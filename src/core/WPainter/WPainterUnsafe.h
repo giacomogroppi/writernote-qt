@@ -1,8 +1,10 @@
 #pragma once
 
 #include "WPainter.h"
-#include "core/Pointer/UniquePtr.h"
+#include "core/pointer/UniquePtr.h"
+#include "utils/platform.h"
 
+#if is_ios
 /**
   * TODO: translate to english
   * Questa classe permette di mantenere il contesto attivo da quando si chiama begin() fino a quando
@@ -27,3 +29,8 @@ public:
     bool begin(WImage *pixmap) final;
     bool end() final;
 };
+#elif is_android
+
+#else
+using WPainterUnsafe = WPainter;
+#endif

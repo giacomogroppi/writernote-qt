@@ -4,8 +4,8 @@
 # error "Trying use WPainter Qt version without USE_QT set"
 #endif // USE_QT
 
-
 #include <QPainter>
+#include <QPainterPath>
 #include <QBrush>
 #include "QtGui/qpdfwriter.h"
 
@@ -58,9 +58,15 @@ public:
     void setAntialeasing();
     void setCompositionClear();
 
+    void move (const PointF& point) noexcept;
+    void addCurve(const PointF &to, const PointF &control) noexcept;
+    void closePath () noexcept;
 
     bool end();
     bool isActive() const;
+
+private:
+    QPainterPath _path;
 };
 
 inline WPainter::WPainter(QPainter *painter)
